@@ -23,6 +23,7 @@ import java.util.Set;
 
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 
 import com.google.common.base.Optional;
@@ -54,19 +55,19 @@ public class NodeModulesDiscoveryHelper {
 
 	/** @return the node_modules folder of the given project including a flag if this is a yarn workspace. */
 	public NodeModulesFolder getNodeModulesFolder(Path projectLocation) {
-		Map<File, List<String>> workspacesCache = new HashMap<>();
-		return getNodeModulesFolder(projectLocation, workspacesCache);
+		Map<Path, ProjectDescription> pdCache = new HashMap<>();
+		return getNodeModulesFolder(projectLocation, pdCache);
 	}
 
 	/** @return the node_modules folder of the given project including a flag if this is a yarn workspace. */
-	public NodeModulesFolder getNodeModulesFolder(Path projectLocation, Map<File, List<String>> workspacesCache) {
+	public NodeModulesFolder getNodeModulesFolder(Path projectLocation, Map<Path, ProjectDescription> pdCache) {
 		File projectLocationAsFile = projectLocation.toFile();
 
-		if (isYarnWorkspaceRoot(projectLocationAsFile, Optional.absent(), workspacesCache)) {
+		if (isYarnWorkspaceRoot(projectLocationAsFile, Optional.absent(), pdCache)) {
 			return new NodeModulesFolder(new File(projectLocationAsFile, N4JSGlobals.NODE_MODULES), true);
 		}
 
-		final Optional<File> workspaceRoot = getYarnWorkspaceRoot(projectLocationAsFile, workspacesCache);
+		final Optional<File> workspaceRoot = getYarnWorkspaceRoot(projectLocationAsFile, pdCache);
 		if (workspaceRoot.isPresent()) {
 			return new NodeModulesFolder(new File(workspaceRoot.get(), N4JSGlobals.NODE_MODULES), true);
 		}
@@ -78,6 +79,13 @@ public class NodeModulesDiscoveryHelper {
 		}
 
 		return null;
+	}
+
+	/** Same as {@link #findNodeModulesFolders(Collection, Map)} without cache */
+	public List<Path> findNodeModulesFolders(Collection<Path> n4jsProjects) {
+		final Map<Path, ProjectDescription> pdCache = new HashMap<>();
+
+		return findNodeModulesFolders(n4jsProjects, pdCache);
 	}
 
 	/**
@@ -93,10 +101,9 @@ public class NodeModulesDiscoveryHelper {
 	 *            paths to the root folder of N4JS projects. If a path points to a folder not containing a valid N4JS
 	 *            project, the behavior is undefined (will not be checked by this method).
 	 */
-	public List<Path> findNodeModulesFolders(Collection<Path> n4jsProjects) {
+	public List<Path> findNodeModulesFolders(Collection<Path> n4jsProjects, Map<Path, ProjectDescription> pdCache) {
 		List<Path> result = new ArrayList<>();
 
-		final Map<File, List<String>> workspacesCache = new HashMap<>();
 		final Set<File> matchingWorkspaceRoots = new LinkedHashSet<>();
 
 		for (Path projectFolderPath : n4jsProjects) {
@@ -106,7 +113,7 @@ public class NodeModulesDiscoveryHelper {
 				final Path nodeModulesPath = projectFolderPath.resolve(N4JSGlobals.NODE_MODULES);
 				result.add(nodeModulesPath);
 
-				final Optional<File> workspaceRoot = getYarnWorkspaceRoot(projectFolder, workspacesCache);
+				final Optional<File> workspaceRoot = getYarnWorkspaceRoot(projectFolder, pdCache);
 				if (workspaceRoot.isPresent()) {
 					matchingWorkspaceRoots.add(workspaceRoot.get());
 				}
@@ -136,14 +143,14 @@ public class NodeModulesDiscoveryHelper {
 	 *
 	 * @param n4jsProjectFolder
 	 *            root folder of an N4JS project that may or may not be a member of a yarn workspace.
-	 * @param workspacesCache
+	 * @param pdCache
 	 *            a cache used to avoid loading/parsing the same package.json multiple times.
 	 */
-	private Optional<File> getYarnWorkspaceRoot(File n4jsProjectFolder, Map<File, List<String>> workspacesCache) {
+	private Optional<File> getYarnWorkspaceRoot(File n4jsProjectFolder, Map<Path, ProjectDescription> pdCache) {
 		File candidate = n4jsProjectFolder.getParentFile();
 		while (candidate != null) {
 			// is candidate the root of a yarn workspace with 'n4jsProjectFolder' as one of the registered projects?
-			if (isYarnWorkspaceRoot(candidate, Optional.of(n4jsProjectFolder), workspacesCache)) {
+			if (isYarnWorkspaceRoot(candidate, Optional.of(n4jsProjectFolder), pdCache)) {
 				// yes, so return candidate
 				return Optional.of(candidate);
 			}
@@ -153,26 +160,40 @@ public class NodeModulesDiscoveryHelper {
 		return Optional.absent();
 	}
 
+	/** Same as {@link #isYarnWorkspaceRoot(File, Optional, Map)} without project folder and cache */
+	public boolean isYarnWorkspaceRoot(File folder) {
+		return isYarnWorkspaceRoot(folder, new HashMap<>());
+	}
+
+	/** Same as {@link #isYarnWorkspaceRoot(File, Optional, Map)} without project folder */
+	public boolean isYarnWorkspaceRoot(File folder, Map<Path, ProjectDescription> pdCache) {
+		return isYarnWorkspaceRoot(folder, Optional.absent(), pdCache);
+	}
+
 	/**
 	 * Note that this method is expensive, since it reads a package.json file.
 	 *
 	 * @return true iff the given folder contains a package.json file and this file has a {@code workspaces} property.
 	 */
-	public boolean isYarnWorkspaceRoot(File folder) {
-		return isYarnWorkspaceRoot(folder, Optional.absent(), new HashMap<>());
-	}
-
-	private boolean isYarnWorkspaceRoot(File folder, Optional<File> projectFolder,
-			Map<File, List<String>> workspacesCache) {
+	public boolean isYarnWorkspaceRoot(File folder, Optional<File> projectFolder,
+			Map<Path, ProjectDescription> pdCache) {
 
 		if (!folder.isDirectory()) {
 			return false;
 		}
 
 		// obtain value of property "workspaces" in package.json located in folder 'candidate'
-		final List<String> workspaces = workspacesCache.computeIfAbsent(folder,
+		final ProjectDescription prjDescr = pdCache.computeIfAbsent(folder.toPath(),
 				// load value from package.json
-				f -> projectDescriptionLoader.loadWorkspacesFromProjectDescriptionAtLocation(new FileURI(folder)));
+				p -> {
+					ProjectDescription pd = projectDescriptionLoader
+							.loadProjectDescriptionAtLocation(new FileURI(folder));
+					return pd;
+				});
+		final List<String> workspaces = (prjDescr != null && prjDescr.isYarnWorkspaceRoot())
+				? prjDescr.getWorkspaces()
+				: null;
+
 		if (workspaces == null) {
 			return false;
 		}

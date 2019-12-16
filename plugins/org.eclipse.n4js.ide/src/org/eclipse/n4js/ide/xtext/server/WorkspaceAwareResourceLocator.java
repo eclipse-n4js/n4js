@@ -34,6 +34,9 @@ public class WorkspaceAwareResourceLocator extends ResourceLocator {
 	public Resource getResource(URI uri, boolean loadOnDemand) {
 		Resource candidate = resourceSet.getURIResourceMap().get(uri);
 		if (candidate != null) {
+			if (loadOnDemand && !candidate.isLoaded()) {
+				// demandLoadHelper(candidate);
+			}
 			return candidate;
 		}
 		XProjectManager projectManager = this.workspaceManager.getProjectManager(uri);

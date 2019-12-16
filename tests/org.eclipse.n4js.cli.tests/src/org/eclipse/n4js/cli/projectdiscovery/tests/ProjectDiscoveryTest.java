@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 
 import org.eclipse.n4js.cli.N4jscFactory;
+import org.eclipse.n4js.cli.compiler.CompilerOptimizedProjectDiscoveryHelper;
 import org.eclipse.n4js.cli.projectdiscovery.tests.CreateProjectStructureUtils.ProjectDiscoveryTestData;
 import org.eclipse.n4js.utils.ProjectDiscoveryHelper;
 import org.eclipse.n4js.utils.io.FileUtils;
@@ -31,7 +32,8 @@ import org.junit.runners.Parameterized.Parameters;
 import com.google.inject.Injector;
 
 /**
- *
+ * Test checks if both {@link ProjectDiscoveryHelper} and {@link CompilerOptimizedProjectDiscoveryHelper} find all
+ * projects and their dependencies.
  */
 @RunWith(Parameterized.class)
 public class ProjectDiscoveryTest {
@@ -41,6 +43,7 @@ public class ProjectDiscoveryTest {
 	public static void init() {
 		Injector injector = N4jscFactory.getOrCreateInjector();
 		projectDiscoveryHelper = injector.getInstance(ProjectDiscoveryHelper.class);
+		compilerOptimizedProjectDiscoveryHelper = injector.getInstance(CompilerOptimizedProjectDiscoveryHelper.class);
 	}
 
 	/** Find test data files */
@@ -57,6 +60,7 @@ public class ProjectDiscoveryTest {
 
 	static File testFolder = new File("ProjectDiscoveryTests");
 	static ProjectDiscoveryHelper projectDiscoveryHelper;
+	static CompilerOptimizedProjectDiscoveryHelper compilerOptimizedProjectDiscoveryHelper;
 
 	final String testFileName;
 
@@ -75,14 +79,22 @@ public class ProjectDiscoveryTest {
 		CreateProjectStructureUtils.createFolderStructure(tmpDir.toFile(), pdtd);
 
 		Path workspaceRoot = new File(tmpDir.toFile(), pdtd.workingDir.getPath()).toPath();
-		LinkedHashSet<Path> projectDirs = projectDiscoveryHelper.collectAllProjectDirs(workspaceRoot);
 
+		LinkedHashSet<Path> projectDirs1 = projectDiscoveryHelper.collectAllProjectDirs(workspaceRoot);
+		ArrayList<String> actualFolders1 = getActualFolders(tmpDir, projectDirs1);
+		assertEquals(pdtd.expectedProjects, actualFolders1);
+
+		LinkedHashSet<Path> projectDirs2 = compilerOptimizedProjectDiscoveryHelper.collectAllProjectDirs(workspaceRoot);
+		ArrayList<String> actualFolders2 = getActualFolders(tmpDir, projectDirs2);
+		assertEquals(pdtd.expectedProjects, actualFolders2);
+	}
+
+	private ArrayList<String> getActualFolders(Path tmpDir, LinkedHashSet<Path> projectDirs) {
 		ArrayList<String> actualFolders = new ArrayList<>();
 		for (Path projectDir : projectDirs) {
 			String relativeFolder = tmpDir.relativize(projectDir).toString();
 			actualFolders.add(relativeFolder);
 		}
-
-		assertEquals(pdtd.expectedProjects, actualFolders);
+		return actualFolders;
 	}
 }

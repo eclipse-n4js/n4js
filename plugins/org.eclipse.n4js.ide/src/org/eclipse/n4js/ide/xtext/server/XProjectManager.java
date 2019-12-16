@@ -16,6 +16,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest;
@@ -50,6 +52,8 @@ import com.google.inject.Provider;
  */
 @SuppressWarnings("restriction")
 public class XProjectManager {
+	private static final Logger LOG = LogManager.getLogger(XProjectManager.class);
+
 	/** The builder. */
 	@Inject
 	protected XIncrementalBuilder incrementalBuilder;
@@ -154,6 +158,7 @@ public class XProjectManager {
 		}
 
 		persistProjectState();
+		LOG.info("Project built: " + this.baseDir);
 		return result;
 	}
 

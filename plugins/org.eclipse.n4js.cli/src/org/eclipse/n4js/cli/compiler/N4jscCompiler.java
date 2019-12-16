@@ -30,6 +30,7 @@ import org.eclipse.n4js.cli.N4jscException;
 import org.eclipse.n4js.cli.N4jscExitCode;
 import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscOptions;
+import org.eclipse.n4js.ide.server.FileBasedWorkspaceInitializer;
 import org.eclipse.n4js.ide.xtext.server.DefaultBuildRequestFactory;
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
@@ -68,6 +69,7 @@ public class N4jscCompiler {
 		this.callback = N4jscFactory.getLanguageClient();
 		this.workspaceManager = N4jscFactory.getWorkspaceManager();
 
+		setupCompilerOptimizedProjectDiscoveryHelper();
 		setPersistionOptions();
 		this.languageServer.connect(callback);
 		setupWorkspaceBuildActionListener();
@@ -121,11 +123,11 @@ public class N4jscCompiler {
 		printCompileResults(compilationTime.stop());
 	}
 
-	private void setupWorkspaceBuildActionListener() {
-		Injector injector = N4jscFactory.getOrCreateInjector();
-		DefaultBuildRequestFactory buildRequestFactory = injector.getInstance(DefaultBuildRequestFactory.class);
-		buildRequestFactory.setAfterGenerateListener(callback);
-		buildRequestFactory.setAfterDeleteListener(callback);
+	private void setupCompilerOptimizedProjectDiscoveryHelper() {
+		Injector inj = N4jscFactory.getOrCreateInjector();
+		FileBasedWorkspaceInitializer workspaceInitializer = inj.getInstance(FileBasedWorkspaceInitializer.class);
+		CompilerOptimizedProjectDiscoveryHelper copdh = inj.getInstance(CompilerOptimizedProjectDiscoveryHelper.class);
+		workspaceInitializer.setProjectDiscoveryHelper(copdh);
 	}
 
 	private void setPersistionOptions() {
@@ -133,6 +135,13 @@ public class N4jscCompiler {
 		ProjectStatePersisterConfig persisterConfig = injector.getInstance(ProjectStatePersisterConfig.class);
 		persisterConfig.setDeleteState(options.isClean());
 		persisterConfig.setWriteToDisk(!options.isNoPersist());
+	}
+
+	private void setupWorkspaceBuildActionListener() {
+		Injector injector = N4jscFactory.getOrCreateInjector();
+		DefaultBuildRequestFactory buildRequestFactory = injector.getInstance(DefaultBuildRequestFactory.class);
+		buildRequestFactory.setAfterGenerateListener(callback);
+		buildRequestFactory.setAfterDeleteListener(callback);
 	}
 
 	private void warnIfNoProjectsFound() {
