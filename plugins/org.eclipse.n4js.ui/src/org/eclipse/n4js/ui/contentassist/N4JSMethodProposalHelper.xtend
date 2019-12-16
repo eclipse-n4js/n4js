@@ -38,6 +38,7 @@ import org.eclipse.xtext.ui.editor.contentassist.AbstractCompletionProposalFacto
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
+import org.eclipse.n4js.ts.typeRefs.Wildcard
 
 /**
  * A helper class that proposes methods to be overwritten based on the prefix typed so far
@@ -111,7 +112,6 @@ class N4JSMethodProposalHelper extends AbstractCompletionProposalFactory {
 
 		var topLevel = true;
 		var boolean asyncOrGenerator = methodMember.declaredAsync || methodMember.declaredGenerator;
-//		if (methodMember.returnTypeRef !== null) {
 		var returnTypeRef = methodMember.returnTypeRef;
 
 		resolveReturnTypeTopLevel(returnTypeRef, topLevel, asyncOrGenerator);
@@ -162,6 +162,8 @@ class N4JSMethodProposalHelper extends AbstractCompletionProposalFactory {
 			if (!topLevel) strb.append("(");
 			strb.append(typeRefs.map[resolveReturnType(it, notTopLevel)].join(" | "));
 			if (!topLevel) strb.append(")");
+		} else if (returnTypeRef instanceof Wildcard) {
+			strb.append("?");
 		} else {
 			strb.append(declaredType.name);
 		}
