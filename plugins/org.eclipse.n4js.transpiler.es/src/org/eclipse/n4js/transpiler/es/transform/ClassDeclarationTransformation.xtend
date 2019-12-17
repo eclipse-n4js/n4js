@@ -13,7 +13,6 @@ package org.eclipse.n4js.transpiler.es.transform
 import com.google.common.collect.Lists
 import com.google.inject.Inject
 import java.util.List
-import javax.swing.text.html.HTML.Tag
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.GenericDeclaration
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
@@ -45,11 +44,9 @@ import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensi
  * <ul>
  * <li>requiresBefore {@link MemberPatchingTransformation}:
  *     additional members must be in place before they are transformed within this transformation.
- * <li>requiresBefore {@link SuperLiteralTransformation}:
- *     requires the tag {@link Tag#explicitSuperCall}.
  * </ul>
  */
-@RequiresBefore(MemberPatchingTransformation,SuperLiteralTransformation)
+@RequiresBefore(MemberPatchingTransformation)
 class ClassDeclarationTransformation extends Transformation {
 
 	@Inject private ClassConstructorAssistant classConstructorAssistant;

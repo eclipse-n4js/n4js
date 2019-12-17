@@ -26,6 +26,7 @@ import org.eclipse.n4js.n4JS.Statement
 import org.eclipse.n4js.n4JS.SuperLiteral
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesBefore
+import org.eclipse.n4js.transpiler.TransformationDependency.Optional
 import org.eclipse.n4js.transpiler.assistants.TypeAssistant
 import org.eclipse.n4js.transpiler.es.assistants.DelegationAssistant
 import org.eclipse.n4js.transpiler.im.ParameterizedPropertyAccessExpression_IM
@@ -46,6 +47,7 @@ import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensi
  *     this transformation relies on N4MemberDeclarations which are removed by ClassDeclarationTransformation.
  * </ul>
  */
+@Optional(AsyncAwait) // FIXME improve this: move code for transpiling super-access to AsyncAwaitTransformation OR remove transpilation of async/await completely!
 @ExcludesBefore(ClassDeclarationTransformation)
 class SuperLiteralTransformation extends Transformation {
 

@@ -298,6 +298,7 @@ class DelegationAssistant extends TransformationAssistant {
 		return result;
 	}
 
+	// FIXME next two methods only required for super-access transformation, which is only required for legacy transformation of async/await!
 	// TODO the next two methods could be aligned more closely with previous methods OR previous methods should be used instead!
 	/**
 	 * Creates a property access to the immediate super class of the given <code>baseClassDecl</code>, i.e. in the
