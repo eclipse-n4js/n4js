@@ -58,9 +58,6 @@ public class InformationRegistry {
 		/** Tag for members which were consumed from an interface. */
 		consumedFromInterface,
 
-		/** Tag for members which were filled in by way of static polyfills. */
-		staticlyPolyfilled,
-
 		/** Tag for members which are to be hidden from reflection. */
 		hiddenFromReflection
 	}
@@ -83,16 +80,6 @@ public class InformationRegistry {
 	/** Marks given member as being consumed from an interface. */
 	public void markAsConsumedFromInterface(N4MemberDeclaration element) {
 		tag(Tag.consumedFromInterface, element);
-	}
-
-	/** Tells if the given member was statically polyfilled. */
-	public boolean isStaticlyPolyfilled(N4MemberDeclaration element) {
-		return isTaggedAs(Tag.staticlyPolyfilled, element);
-	}
-
-	/** Marks given member as statically polyfilled. */
-	public void markAsStaticlyPolyfilled(N4MemberDeclaration element) {
-		tag(Tag.staticlyPolyfilled, element);
 	}
 
 	/** Tells whether the given member was marked as to be hidden from reflection. */
