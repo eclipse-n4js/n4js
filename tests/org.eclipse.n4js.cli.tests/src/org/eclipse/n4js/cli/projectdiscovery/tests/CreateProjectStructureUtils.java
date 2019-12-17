@@ -33,13 +33,16 @@ public class CreateProjectStructureUtils {
 		final boolean isProject;
 		final boolean isWorkingDir;
 		final String yarnWorkspacesFolder;
+		final String dependencies;
 
-		Folder(Folder parent, String folderName, boolean isProject, boolean isWorkingDir, String yarnWorkspacesFolder) {
+		Folder(Folder parent, String folderName, boolean isProject, boolean isWorkingDir, String yarnWorkspacesFolder,
+				String dependencies) {
 			this.parent = parent;
 			this.folderName = folderName;
 			this.isProject = isProject;
 			this.isWorkingDir = isWorkingDir;
 			this.yarnWorkspacesFolder = yarnWorkspacesFolder;
+			this.dependencies = dependencies;
 		}
 
 		int getDepth() {
@@ -55,9 +58,12 @@ public class CreateProjectStructureUtils {
 			String str = "--------------".substring(0, getDepth() + 1);
 			str += isWorkingDir ? "*" : " ";
 			str += folderName;
-			str += isProject
-					? "[PROJECT" + (yarnWorkspacesFolder == null ? "" : " workspaces=" + yarnWorkspacesFolder) + "]"
-					: "";
+			if (isProject) {
+				str += "[PROJECT";
+				str += (yarnWorkspacesFolder == null) ? "" : " workspaces= " + yarnWorkspacesFolder + " ";
+				str += (dependencies == null) ? "" : " dependencies= " + dependencies + " ";
+				str += "]";
+			}
 			return str;
 		}
 	}
@@ -178,6 +184,7 @@ public class CreateProjectStructureUtils {
 
 		boolean isProject = false;
 		String yarnWorkspacesFolder = null;
+		String dependencies = null;
 
 		if (restLine.startsWith("[") && restLine.endsWith("]")) {
 			restLine = restLine.substring(1, restLine.length() - 1).trim();
@@ -189,13 +196,29 @@ public class CreateProjectStructureUtils {
 					restLine = restLine.substring("workspaces".length()).trim();
 					if (restLine.startsWith("=")) {
 						restLine = restLine.substring(1).trim();
-						yarnWorkspacesFolder = restLine;
+						int startIndex = restLine.indexOf("[");
+						int endIndex = restLine.indexOf("]");
+						yarnWorkspacesFolder = restLine.substring(startIndex, endIndex + 1);
+
+						restLine = restLine.substring(endIndex + 1).trim();
+					}
+				}
+
+				if (restLine.startsWith("dependencies")) {
+					restLine = restLine.substring("dependencies".length()).trim();
+					if (restLine.startsWith("=")) {
+						restLine = restLine.substring(1).trim();
+						int startIndex = restLine.indexOf("{");
+						int endIndex = restLine.indexOf("}");
+						dependencies = restLine.substring(startIndex, endIndex + 1);
+
+						restLine = restLine.substring(endIndex + 1).trim();
 					}
 				}
 			}
 		}
 
-		return new Folder(parent, folderName, isProject, isWorkingDir, yarnWorkspacesFolder);
+		return new Folder(parent, folderName, isProject, isWorkingDir, yarnWorkspacesFolder, dependencies);
 	}
 
 	/** Creates the folder structure specified by {@link ProjectDiscoveryTestData} in the given dir */
@@ -211,12 +234,17 @@ public class CreateProjectStructureUtils {
 	}
 
 	private static void createPackageJson(File folderFile, Folder folder) {
-		String contents = "";
+		String contents = "{";
 		if (folder.yarnWorkspacesFolder == null) {
-			contents = "{\"name\": \"" + folder.folderName + "\", \"n4js\":{\"projectType\": \"library\"}}";
+			contents += "\"name\": \"" + folder.folderName + "\", ";
+			contents += "\"n4js\": {\"projectType\": \"library\"";
+			contents += "}";
 		} else {
-			contents = "{\"private\": true, \"workspaces\": [" + folder.yarnWorkspacesFolder + "]}";
+			contents += "\"private\": true, \"workspaces\": " + folder.yarnWorkspacesFolder + "";
 		}
+		contents += (folder.dependencies == null) ? "" : ", \"dependencies\":" + folder.dependencies;
+		contents += "}";
+
 		File packageJson = new File(folderFile, N4JSGlobals.PACKAGE_JSON);
 
 		try (PrintWriter printWriter = new PrintWriter(new FileWriter(packageJson))) {
