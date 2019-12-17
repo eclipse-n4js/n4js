@@ -243,8 +243,7 @@ public class N4GetterDeclarationImpl extends GetterDeclarationImpl implements N4
 					String _name = it.getName();
 					return Boolean.valueOf(Objects.equal(_name, "ProvidesDefaultImplementation"));
 				}
-			}))) || 
-			this.getDeclaredModifiers().contains(N4Modifier.ABSTRACT));
+			}))) || this.isDeclaredAbstract());
 	}
 
 	/**
@@ -299,6 +298,16 @@ public class N4GetterDeclarationImpl extends GetterDeclarationImpl implements N4
 			_elvis = _emptyEList;
 		}
 		return _elvis;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isDeclaredAbstract() {
+		return this.getDeclaredModifiers().contains(N4Modifier.ABSTRACT);
 	}
 
 	/**
@@ -593,6 +602,8 @@ public class N4GetterDeclarationImpl extends GetterDeclarationImpl implements N4
 		if (baseClass == N4MemberDeclaration.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.N4_MEMBER_DECLARATION___GET_DEFINED_TYPE_ELEMENT: return N4JSPackage.N4_GETTER_DECLARATION___GET_DEFINED_TYPE_ELEMENT;
+				case N4JSPackage.N4_MEMBER_DECLARATION___IS_DECLARED_ABSTRACT: return N4JSPackage.N4_GETTER_DECLARATION___IS_DECLARED_ABSTRACT;
+				case N4JSPackage.N4_MEMBER_DECLARATION___IS_ABSTRACT: return N4JSPackage.N4_GETTER_DECLARATION___IS_ABSTRACT;
 				case N4JSPackage.N4_MEMBER_DECLARATION___IS_DECLARED_STATIC: return N4JSPackage.N4_GETTER_DECLARATION___IS_DECLARED_STATIC;
 				case N4JSPackage.N4_MEMBER_DECLARATION___IS_STATIC: return N4JSPackage.N4_GETTER_DECLARATION___IS_STATIC;
 				case N4JSPackage.N4_MEMBER_DECLARATION___IS_DECLARED_FINAL: return N4JSPackage.N4_GETTER_DECLARATION___IS_DECLARED_FINAL;
@@ -634,6 +645,8 @@ public class N4GetterDeclarationImpl extends GetterDeclarationImpl implements N4
 				return isValidName();
 			case N4JSPackage.N4_GETTER_DECLARATION___GET_ANNOTATIONS:
 				return getAnnotations();
+			case N4JSPackage.N4_GETTER_DECLARATION___IS_DECLARED_ABSTRACT:
+				return isDeclaredAbstract();
 			case N4JSPackage.N4_GETTER_DECLARATION___IS_DECLARED_STATIC:
 				return isDeclaredStatic();
 			case N4JSPackage.N4_GETTER_DECLARATION___IS_STATIC:

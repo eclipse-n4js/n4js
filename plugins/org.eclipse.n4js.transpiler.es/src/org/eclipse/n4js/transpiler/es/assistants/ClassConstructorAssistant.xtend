@@ -34,7 +34,6 @@ import org.eclipse.n4js.n4JS.SuperLiteral
 import org.eclipse.n4js.n4JS.VariableStatementKeyword
 import org.eclipse.n4js.transpiler.TransformationAssistant
 import org.eclipse.n4js.transpiler.assistants.TypeAssistant
-import org.eclipse.n4js.transpiler.es.transform.SuperLiteralTransformation
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
 import org.eclipse.n4js.ts.types.MemberAccessModifier
@@ -299,82 +298,27 @@ class ClassConstructorAssistant extends TransformationAssistant {
 	}
 
 	// NOTE: compare this to the super calls generated from SuperLiterals in SuperLiteralTransformation
-	def private ExpressionStatement createDefaultSuperCall(N4ClassDeclaration classDecl, SymbolTableEntry superClassSTE,
-		FormalParameter[] fpars
-	) {
-		// S.prototype.constructor.call(this)
-		// (with S being the immediate super class)
-		//
-		// special case if ctor of S ends in a variadic c:
-		// S.prototype.constructor.apply(this, [a,b].concat(c));
-
-		val variadicCase = ! fpars.empty && fpars.last.isVariadic;
-		val genericMethodName = if(variadicCase) {"apply"} else {"call"};
-
-		val prototypeSTE = getSymbolTableEntryForMember(state.G.objectType, "prototype", false, true, true);
-		val constructorSTE = getSymbolTableEntryForMember(state.G.objectType, "constructor", false, false, true);
-		val genericCallSTE = getSymbolTableEntryForMember(state.G.functionType, genericMethodName, false, false, true);
-
-val args = new ArrayList(fpars.map[findSymbolTableEntryForElement(it , true)].map[_Argument(_IdentRef(it))]); // WARNING: .toList won't work!
-if(variadicCase) {
-	args.last.spread = true;
-}
-
-		return _ExprStmnt(_CallExpr()=>[
-			target = _SuperLiteral();//__NSSafe_PropertyAccessExpr(superClassSTE, prototypeSTE, constructorSTE, genericCallSTE);
-arguments += args;
-//			arguments += _Argument(_ThisLiteral());
-//			if( variadicCase) {
-//				val concatSTE = getSymbolTableEntryForMember(state.G.arrayType, "concat", false, false, true);
-//
-//				arguments += _Argument(_CallExpr(
-//					_PropertyAccessExpr(
-//						_ArrLit(fpars.take(fpars.size-1)
-//								.map[findSymbolTableEntryForElement(it , true)]
-//								.map[_IdentRef(it)]) // target of PropAcc
-//								, concatSTE ), // end PropAcc
-//					_IdentRef(fpars.last.findSymbolTableEntryForElement(true))
-//				)); // end CallExpr
-//			} else {
-//				arguments += fpars.map[findSymbolTableEntryForElement(it , true)].map[_Argument(_IdentRef(it))];
-//			}
+	def private ExpressionStatement createDefaultSuperCall(N4ClassDeclaration classDecl, SymbolTableEntry superClassSTE, FormalParameter[] fpars) {
+		val variadicCase = !fpars.empty && fpars.last.isVariadic;
+		val argsIter = fpars.map[findSymbolTableEntryForElement(it, true)].map[_Argument(_IdentRef(it))];
+		val args = new ArrayList(argsIter); // WARNING: .toList won't work!
+		if (variadicCase) {
+			args.last.spread = true;
+		}
+		return _ExprStmnt(_CallExpr() => [
+			target = _SuperLiteral();
+			arguments += args;
 		]);
 	}
 
 	/** To be inserted where the explicit or implicit super call would be located, normally. */
 	def private Statement[] createSubclassingErrorOddities(N4ClassDeclaration classDecl, FormalParameter[] fpars, Statement explicitSuperCall) {
-		val ErrorSTE = getSymbolTableEntryOriginal(state.G.errorType, true);
-
-		// var err = new Error(<<arguments>>);
-		// this.message = err.message;
-		// this.name = this.constructor.n4type.name;
-		// Object.defineProperty(this, 'stack', { get: function() { return err.stack; }, set: function(value) { err.stack = value; } });
-
-return #[ _ExprStmnt(_Snippet('''
-	this.name = this.constructor.n4type.name;
-	if (Error.captureStackTrace) {
-		Error.captureStackTrace(this, this.name);
-	}
-''')) ];
-//		val firstLine = _VariableStatement(
-//			_VariableDeclaration("err", _NewExpr(
-//				_IdentRef(ErrorSTE),
-//				if(explicitSuperCall!==null) {
-//					// if we have an explicit super call, then pass its arguments to "new Error()"
-//					SuperLiteralTransformation.getArgumentsFromExplicitSuperCall(explicitSuperCall)
-//				} else {
-//					// otherwise, pass through the parameters of classDecl's ctor (may be the explicit or implicit ctor)
-//					fpars.map[findSymbolTableEntryForElement(it, true)].map[_IdentRef(it)]
-//				}
-//			))
-//		);
-//		val remainingLines = _ExprStmnt(_Snippet('''
-//			this.message = err.message;
-//			this.name = this.constructor.n4type.name;
-//			Object.defineProperty(this, 'stack', { get: function() { return err.stack; }, set: function(value) { err.stack = value; } });
-//		'''));
-//
-//		return #[firstLine, remainingLines];
+		return #[ _ExprStmnt(_Snippet('''
+			this.name = this.constructor.n4type.name;
+			if (Error.captureStackTrace) {
+			    Error.captureStackTrace(this, this.name);
+			}
+		''')) ];
 	}
 
 	def private Statement[] createDelegationToFieldInitOfImplementedInterfaces(N4ClassDeclaration classDecl, SymbolTableEntry /*nullable*/ specObjSTE ) {

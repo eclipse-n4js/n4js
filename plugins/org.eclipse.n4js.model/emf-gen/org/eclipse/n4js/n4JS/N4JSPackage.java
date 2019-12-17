@@ -12895,13 +12895,31 @@ public interface N4JSPackage extends EPackage {
 	int N4_MEMBER_DECLARATION___GET_DEFINED_TYPE_ELEMENT = ANNOTABLE_ELEMENT_OPERATION_COUNT + 2;
 
 	/**
+	 * The operation id for the '<em>Is Declared Abstract</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_MEMBER_DECLARATION___IS_DECLARED_ABSTRACT = ANNOTABLE_ELEMENT_OPERATION_COUNT + 3;
+
+	/**
+	 * The operation id for the '<em>Is Abstract</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_MEMBER_DECLARATION___IS_ABSTRACT = ANNOTABLE_ELEMENT_OPERATION_COUNT + 4;
+
+	/**
 	 * The operation id for the '<em>Is Declared Static</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_DECLARATION___IS_DECLARED_STATIC = ANNOTABLE_ELEMENT_OPERATION_COUNT + 3;
+	int N4_MEMBER_DECLARATION___IS_DECLARED_STATIC = ANNOTABLE_ELEMENT_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Is Static</em>' operation.
@@ -12910,7 +12928,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_DECLARATION___IS_STATIC = ANNOTABLE_ELEMENT_OPERATION_COUNT + 4;
+	int N4_MEMBER_DECLARATION___IS_STATIC = ANNOTABLE_ELEMENT_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Is Declared Final</em>' operation.
@@ -12919,7 +12937,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_DECLARATION___IS_DECLARED_FINAL = ANNOTABLE_ELEMENT_OPERATION_COUNT + 5;
+	int N4_MEMBER_DECLARATION___IS_DECLARED_FINAL = ANNOTABLE_ELEMENT_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Is Final</em>' operation.
@@ -12928,7 +12946,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_DECLARATION___IS_FINAL = ANNOTABLE_ELEMENT_OPERATION_COUNT + 6;
+	int N4_MEMBER_DECLARATION___IS_FINAL = ANNOTABLE_ELEMENT_OPERATION_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Is Constructor</em>' operation.
@@ -12937,7 +12955,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_DECLARATION___IS_CONSTRUCTOR = ANNOTABLE_ELEMENT_OPERATION_COUNT + 7;
+	int N4_MEMBER_DECLARATION___IS_CONSTRUCTOR = ANNOTABLE_ELEMENT_OPERATION_COUNT + 9;
 
 	/**
 	 * The operation id for the '<em>Is Callable Constructor</em>' operation.
@@ -12946,7 +12964,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_DECLARATION___IS_CALLABLE_CONSTRUCTOR = ANNOTABLE_ELEMENT_OPERATION_COUNT + 8;
+	int N4_MEMBER_DECLARATION___IS_CALLABLE_CONSTRUCTOR = ANNOTABLE_ELEMENT_OPERATION_COUNT + 10;
 
 	/**
 	 * The number of operations of the '<em>N4 Member Declaration</em>' class.
@@ -12955,7 +12973,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_DECLARATION_OPERATION_COUNT = ANNOTABLE_ELEMENT_OPERATION_COUNT + 9;
+	int N4_MEMBER_DECLARATION_OPERATION_COUNT = ANNOTABLE_ELEMENT_OPERATION_COUNT + 11;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.AnnotableN4MemberDeclarationImpl <em>Annotable N4 Member Declaration</em>}' class.
@@ -13038,6 +13056,24 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int ANNOTABLE_N4_MEMBER_DECLARATION___GET_DEFINED_TYPE_ELEMENT = N4_MEMBER_DECLARATION___GET_DEFINED_TYPE_ELEMENT;
+
+	/**
+	 * The operation id for the '<em>Is Declared Abstract</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ANNOTABLE_N4_MEMBER_DECLARATION___IS_DECLARED_ABSTRACT = N4_MEMBER_DECLARATION___IS_DECLARED_ABSTRACT;
+
+	/**
+	 * The operation id for the '<em>Is Abstract</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ANNOTABLE_N4_MEMBER_DECLARATION___IS_ABSTRACT = N4_MEMBER_DECLARATION___IS_ABSTRACT;
 
 	/**
 	 * The operation id for the '<em>Is Declared Static</em>' operation.
@@ -13176,13 +13212,31 @@ public interface N4JSPackage extends EPackage {
 	int N4_MEMBER_ANNOTATION_LIST___GET_ALL_ANNOTATIONS = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>Is Declared Abstract</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_MEMBER_ANNOTATION_LIST___IS_DECLARED_ABSTRACT = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 5;
+
+	/**
+	 * The operation id for the '<em>Is Abstract</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_MEMBER_ANNOTATION_LIST___IS_ABSTRACT = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 6;
+
+	/**
 	 * The operation id for the '<em>Is Declared Static</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_ANNOTATION_LIST___IS_DECLARED_STATIC = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 5;
+	int N4_MEMBER_ANNOTATION_LIST___IS_DECLARED_STATIC = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Is Static</em>' operation.
@@ -13191,7 +13245,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_ANNOTATION_LIST___IS_STATIC = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 6;
+	int N4_MEMBER_ANNOTATION_LIST___IS_STATIC = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Is Declared Final</em>' operation.
@@ -13200,7 +13254,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_ANNOTATION_LIST___IS_DECLARED_FINAL = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 7;
+	int N4_MEMBER_ANNOTATION_LIST___IS_DECLARED_FINAL = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 9;
 
 	/**
 	 * The operation id for the '<em>Is Final</em>' operation.
@@ -13209,7 +13263,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_ANNOTATION_LIST___IS_FINAL = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 8;
+	int N4_MEMBER_ANNOTATION_LIST___IS_FINAL = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Is Constructor</em>' operation.
@@ -13218,7 +13272,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_ANNOTATION_LIST___IS_CONSTRUCTOR = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 9;
+	int N4_MEMBER_ANNOTATION_LIST___IS_CONSTRUCTOR = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 11;
 
 	/**
 	 * The operation id for the '<em>Is Callable Constructor</em>' operation.
@@ -13227,7 +13281,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_ANNOTATION_LIST___IS_CALLABLE_CONSTRUCTOR = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 10;
+	int N4_MEMBER_ANNOTATION_LIST___IS_CALLABLE_CONSTRUCTOR = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 12;
 
 	/**
 	 * The operation id for the '<em>Get Defined Type Element</em>' operation.
@@ -13236,7 +13290,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_ANNOTATION_LIST___GET_DEFINED_TYPE_ELEMENT = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 11;
+	int N4_MEMBER_ANNOTATION_LIST___GET_DEFINED_TYPE_ELEMENT = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 13;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type Ref</em>' operation.
@@ -13245,7 +13299,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_ANNOTATION_LIST___GET_DECLARED_TYPE_REF = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 12;
+	int N4_MEMBER_ANNOTATION_LIST___GET_DECLARED_TYPE_REF = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 14;
 
 	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
@@ -13254,7 +13308,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_ANNOTATION_LIST___GET_NAME = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 13;
+	int N4_MEMBER_ANNOTATION_LIST___GET_NAME = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 15;
 
 	/**
 	 * The number of operations of the '<em>N4 Member Annotation List</em>' class.
@@ -13263,7 +13317,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_ANNOTATION_LIST_OPERATION_COUNT = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 14;
+	int N4_MEMBER_ANNOTATION_LIST_OPERATION_COUNT = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 16;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4FieldDeclarationImpl <em>N4 Field Declaration</em>}' class.
@@ -13382,6 +13436,24 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int N4_FIELD_DECLARATION___GET_DECLARED_TYPE_REF = ANNOTABLE_N4_MEMBER_DECLARATION___GET_DECLARED_TYPE_REF;
+
+	/**
+	 * The operation id for the '<em>Is Declared Abstract</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_FIELD_DECLARATION___IS_DECLARED_ABSTRACT = ANNOTABLE_N4_MEMBER_DECLARATION___IS_DECLARED_ABSTRACT;
+
+	/**
+	 * The operation id for the '<em>Is Abstract</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_FIELD_DECLARATION___IS_ABSTRACT = ANNOTABLE_N4_MEMBER_DECLARATION___IS_ABSTRACT;
 
 	/**
 	 * The operation id for the '<em>Is Declared Static</em>' operation.
@@ -13971,6 +14043,15 @@ public interface N4JSPackage extends EPackage {
 	int N4_METHOD_DECLARATION___GET_DECLARED_TYPE_REF = ANNOTABLE_N4_MEMBER_DECLARATION___GET_DECLARED_TYPE_REF;
 
 	/**
+	 * The operation id for the '<em>Is Declared Abstract</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_METHOD_DECLARATION___IS_DECLARED_ABSTRACT = ANNOTABLE_N4_MEMBER_DECLARATION___IS_DECLARED_ABSTRACT;
+
+	/**
 	 * The operation id for the '<em>Is Declared Static</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -14267,6 +14348,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int N4_FIELD_ACCESSOR___GET_DEFINED_TYPE_ELEMENT = ANNOTABLE_N4_MEMBER_DECLARATION___GET_DEFINED_TYPE_ELEMENT;
+
+	/**
+	 * The operation id for the '<em>Is Declared Abstract</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_FIELD_ACCESSOR___IS_DECLARED_ABSTRACT = ANNOTABLE_N4_MEMBER_DECLARATION___IS_DECLARED_ABSTRACT;
 
 	/**
 	 * The operation id for the '<em>Is Declared Static</em>' operation.
@@ -14657,13 +14747,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_GETTER_DECLARATION___GET_DEFINED_ACCESSOR = GETTER_DECLARATION___GET_DEFINED_ACCESSOR;
 
 	/**
+	 * The operation id for the '<em>Is Declared Abstract</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_GETTER_DECLARATION___IS_DECLARED_ABSTRACT = GETTER_DECLARATION_OPERATION_COUNT + 1;
+
+	/**
 	 * The operation id for the '<em>Is Declared Static</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_GETTER_DECLARATION___IS_DECLARED_STATIC = GETTER_DECLARATION_OPERATION_COUNT + 1;
+	int N4_GETTER_DECLARATION___IS_DECLARED_STATIC = GETTER_DECLARATION_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Is Static</em>' operation.
@@ -14672,7 +14771,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_GETTER_DECLARATION___IS_STATIC = GETTER_DECLARATION_OPERATION_COUNT + 2;
+	int N4_GETTER_DECLARATION___IS_STATIC = GETTER_DECLARATION_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Is Declared Final</em>' operation.
@@ -14681,7 +14780,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_GETTER_DECLARATION___IS_DECLARED_FINAL = GETTER_DECLARATION_OPERATION_COUNT + 3;
+	int N4_GETTER_DECLARATION___IS_DECLARED_FINAL = GETTER_DECLARATION_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Is Final</em>' operation.
@@ -14690,7 +14789,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_GETTER_DECLARATION___IS_FINAL = GETTER_DECLARATION_OPERATION_COUNT + 4;
+	int N4_GETTER_DECLARATION___IS_FINAL = GETTER_DECLARATION_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Is Constructor</em>' operation.
@@ -14699,7 +14798,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_GETTER_DECLARATION___IS_CONSTRUCTOR = GETTER_DECLARATION_OPERATION_COUNT + 5;
+	int N4_GETTER_DECLARATION___IS_CONSTRUCTOR = GETTER_DECLARATION_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Is Callable Constructor</em>' operation.
@@ -14708,7 +14807,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_GETTER_DECLARATION___IS_CALLABLE_CONSTRUCTOR = GETTER_DECLARATION_OPERATION_COUNT + 6;
+	int N4_GETTER_DECLARATION___IS_CALLABLE_CONSTRUCTOR = GETTER_DECLARATION_OPERATION_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Get Annotations</em>' operation.
@@ -14717,7 +14816,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_GETTER_DECLARATION___GET_ANNOTATIONS = GETTER_DECLARATION_OPERATION_COUNT + 7;
+	int N4_GETTER_DECLARATION___GET_ANNOTATIONS = GETTER_DECLARATION_OPERATION_COUNT + 9;
 
 	/**
 	 * The operation id for the '<em>Is Abstract</em>' operation.
@@ -14726,7 +14825,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_GETTER_DECLARATION___IS_ABSTRACT = GETTER_DECLARATION_OPERATION_COUNT + 8;
+	int N4_GETTER_DECLARATION___IS_ABSTRACT = GETTER_DECLARATION_OPERATION_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Is Valid Name</em>' operation.
@@ -14735,7 +14834,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_GETTER_DECLARATION___IS_VALID_NAME = GETTER_DECLARATION_OPERATION_COUNT + 9;
+	int N4_GETTER_DECLARATION___IS_VALID_NAME = GETTER_DECLARATION_OPERATION_COUNT + 11;
 
 	/**
 	 * The operation id for the '<em>Get Defined Type Element</em>' operation.
@@ -14744,7 +14843,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_GETTER_DECLARATION___GET_DEFINED_TYPE_ELEMENT = GETTER_DECLARATION_OPERATION_COUNT + 10;
+	int N4_GETTER_DECLARATION___GET_DEFINED_TYPE_ELEMENT = GETTER_DECLARATION_OPERATION_COUNT + 12;
 
 	/**
 	 * The number of operations of the '<em>N4 Getter Declaration</em>' class.
@@ -14753,7 +14852,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_GETTER_DECLARATION_OPERATION_COUNT = GETTER_DECLARATION_OPERATION_COUNT + 11;
+	int N4_GETTER_DECLARATION_OPERATION_COUNT = GETTER_DECLARATION_OPERATION_COUNT + 13;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4SetterDeclarationImpl <em>N4 Setter Declaration</em>}' class.
@@ -14955,13 +15054,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_SETTER_DECLARATION___GET_DECLARED_TYPE_REF = SETTER_DECLARATION___GET_DECLARED_TYPE_REF;
 
 	/**
+	 * The operation id for the '<em>Is Declared Abstract</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_SETTER_DECLARATION___IS_DECLARED_ABSTRACT = SETTER_DECLARATION_OPERATION_COUNT + 1;
+
+	/**
 	 * The operation id for the '<em>Is Declared Static</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_SETTER_DECLARATION___IS_DECLARED_STATIC = SETTER_DECLARATION_OPERATION_COUNT + 1;
+	int N4_SETTER_DECLARATION___IS_DECLARED_STATIC = SETTER_DECLARATION_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Is Static</em>' operation.
@@ -14970,7 +15078,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_SETTER_DECLARATION___IS_STATIC = SETTER_DECLARATION_OPERATION_COUNT + 2;
+	int N4_SETTER_DECLARATION___IS_STATIC = SETTER_DECLARATION_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Is Declared Final</em>' operation.
@@ -14979,7 +15087,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_SETTER_DECLARATION___IS_DECLARED_FINAL = SETTER_DECLARATION_OPERATION_COUNT + 3;
+	int N4_SETTER_DECLARATION___IS_DECLARED_FINAL = SETTER_DECLARATION_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Is Final</em>' operation.
@@ -14988,7 +15096,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_SETTER_DECLARATION___IS_FINAL = SETTER_DECLARATION_OPERATION_COUNT + 4;
+	int N4_SETTER_DECLARATION___IS_FINAL = SETTER_DECLARATION_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Is Constructor</em>' operation.
@@ -14997,7 +15105,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_SETTER_DECLARATION___IS_CONSTRUCTOR = SETTER_DECLARATION_OPERATION_COUNT + 5;
+	int N4_SETTER_DECLARATION___IS_CONSTRUCTOR = SETTER_DECLARATION_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Is Callable Constructor</em>' operation.
@@ -15006,7 +15114,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_SETTER_DECLARATION___IS_CALLABLE_CONSTRUCTOR = SETTER_DECLARATION_OPERATION_COUNT + 6;
+	int N4_SETTER_DECLARATION___IS_CALLABLE_CONSTRUCTOR = SETTER_DECLARATION_OPERATION_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Get Annotations</em>' operation.
@@ -15015,7 +15123,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_SETTER_DECLARATION___GET_ANNOTATIONS = SETTER_DECLARATION_OPERATION_COUNT + 7;
+	int N4_SETTER_DECLARATION___GET_ANNOTATIONS = SETTER_DECLARATION_OPERATION_COUNT + 9;
 
 	/**
 	 * The operation id for the '<em>Is Abstract</em>' operation.
@@ -15024,7 +15132,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_SETTER_DECLARATION___IS_ABSTRACT = SETTER_DECLARATION_OPERATION_COUNT + 8;
+	int N4_SETTER_DECLARATION___IS_ABSTRACT = SETTER_DECLARATION_OPERATION_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Is Valid Name</em>' operation.
@@ -15033,7 +15141,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_SETTER_DECLARATION___IS_VALID_NAME = SETTER_DECLARATION_OPERATION_COUNT + 9;
+	int N4_SETTER_DECLARATION___IS_VALID_NAME = SETTER_DECLARATION_OPERATION_COUNT + 11;
 
 	/**
 	 * The operation id for the '<em>Get Defined Type Element</em>' operation.
@@ -15042,7 +15150,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_SETTER_DECLARATION___GET_DEFINED_TYPE_ELEMENT = SETTER_DECLARATION_OPERATION_COUNT + 10;
+	int N4_SETTER_DECLARATION___GET_DEFINED_TYPE_ELEMENT = SETTER_DECLARATION_OPERATION_COUNT + 12;
 
 	/**
 	 * The number of operations of the '<em>N4 Setter Declaration</em>' class.
@@ -15051,7 +15159,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_SETTER_DECLARATION_OPERATION_COUNT = SETTER_DECLARATION_OPERATION_COUNT + 11;
+	int N4_SETTER_DECLARATION_OPERATION_COUNT = SETTER_DECLARATION_OPERATION_COUNT + 13;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.BindingPatternImpl <em>Binding Pattern</em>}' class.
@@ -21061,6 +21169,26 @@ public interface N4JSPackage extends EPackage {
 	EOperation getN4MemberDeclaration__GetDefinedTypeElement();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4MemberDeclaration#isDeclaredAbstract() <em>Is Declared Abstract</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Declared Abstract</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.N4MemberDeclaration#isDeclaredAbstract()
+	 * @generated
+	 */
+	EOperation getN4MemberDeclaration__IsDeclaredAbstract();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4MemberDeclaration#isAbstract() <em>Is Abstract</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Abstract</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.N4MemberDeclaration#isAbstract()
+	 * @generated
+	 */
+	EOperation getN4MemberDeclaration__IsAbstract();
+
+	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4MemberDeclaration#isDeclaredStatic() <em>Is Declared Static</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -26188,6 +26316,22 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation N4_MEMBER_DECLARATION___GET_DEFINED_TYPE_ELEMENT = eINSTANCE.getN4MemberDeclaration__GetDefinedTypeElement();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Declared Abstract</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation N4_MEMBER_DECLARATION___IS_DECLARED_ABSTRACT = eINSTANCE.getN4MemberDeclaration__IsDeclaredAbstract();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Abstract</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation N4_MEMBER_DECLARATION___IS_ABSTRACT = eINSTANCE.getN4MemberDeclaration__IsAbstract();
 
 		/**
 		 * The meta object literal for the '<em><b>Is Declared Static</b></em>' operation.

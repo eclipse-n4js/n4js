@@ -422,14 +422,6 @@ public abstract class TranspilerComponent {
 		return getSymbolTableEntryInternal("N4ApiNotImplementedError", true);
 	}
 
-	//// $makeClass
-
-	/** "$makeClass" - retrieve the internal symbol table entry for the symbol "$makeClass" */
-	public SymbolTableEntryInternal steFor_$makeClass() {
-
-		return getSymbolTableEntryInternal("$makeClass", true);
-	}
-
 	//// $fieldDefaults
 
 	/** "$fieldDefaults" - retrieve the internal symbol table entry for the symbol "$fieldDefaults" */
@@ -444,14 +436,6 @@ public abstract class TranspilerComponent {
 	public SymbolTableEntryInternal steFor_$members() {
 
 		return getSymbolTableEntryInternal("$members", true);
-	}
-
-	//// $makeInterface
-
-	/** "$makeInterface" - retrieve the internal symbol table entry for the symbol "$makeInterface" */
-	public SymbolTableEntryInternal steFor_$makeInterface() {
-
-		return getSymbolTableEntryInternal("$makeInterface", true);
 	}
 
 	//// $makeEnum

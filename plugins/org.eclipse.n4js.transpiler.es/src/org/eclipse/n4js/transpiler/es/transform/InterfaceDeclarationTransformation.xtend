@@ -43,7 +43,6 @@ import org.eclipse.n4js.n4JS.SetterDeclaration
 import org.eclipse.n4js.n4JS.Statement
 import org.eclipse.n4js.n4JS.StringLiteral
 import org.eclipse.n4js.n4JS.UnaryExpression
-import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.YieldExpression
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.assistants.TypeAssistant
@@ -87,14 +86,10 @@ class InterfaceDeclarationTransformation extends Transformation {
 	def private void transformInterfaceDecl(N4InterfaceDeclaration ifcDecl) {
 		val ifcSTE = findSymbolTableEntryForElement(ifcDecl, true);
 
-ifcDecl.ownedMembersRaw += createHasInstanceMethod(ifcDecl, ifcSTE);
-// add 'n4type' getter for reflection
-ifcDecl.ownedMembersRaw += bootstrapCallAssistant.createN4TypeGetter(ifcDecl, null);
-
-		// remove abstract members (they do not have a representation in the output code)
-		ifcDecl.ownedMembersRaw.removeIf[
-			it instanceof FunctionOrFieldAccessor && (it as FunctionOrFieldAccessor).body === null
-		];
+		// add 'Symbol.hasInstance' function for supporting the 'instanceof' operator
+		ifcDecl.ownedMembersRaw += createHasInstanceMethod(ifcDecl, ifcSTE);
+		// add 'n4type' getter for reflection
+		ifcDecl.ownedMembersRaw += bootstrapCallAssistant.createN4TypeGetter(ifcDecl, null);
 
 		// replace delegation members with actual members
 		for(currMember : Lists.newArrayList(ifcDecl.ownedMembersRaw)) {
@@ -105,47 +100,25 @@ ifcDecl.ownedMembersRaw += bootstrapCallAssistant.createN4TypeGetter(ifcDecl, nu
 		}
 
 		val props = <PropertyAssignment>newArrayList;
-
 		val extendedInterfaces = bootstrapCallAssistant.createDirectlyImplementedOrExtendedInterfacesArgument(ifcDecl);
 		if (!extendedInterfaces.elements.empty) {
 			props += _PropertyNameValuePair("$extends", _ArrowFunc(false, #[], extendedInterfaces));
 		}
-
 		props += createInstanceFieldDefaultsProperty(ifcDecl, ifcSTE);
-
 		props += createInstanceMemberProperty(ifcDecl, ifcSTE);
+		props += createStaticMemberProperties(ifcDecl, ifcSTE); // includes initialization of static fields
 
-		props += createStaticMemberProperties(ifcDecl, ifcSTE);
-
-		val varDecl = createVarDecl(ifcDecl.name, props);
-//		val fieldDefaults = createInstanceFieldDefaultsObject(ifcDecl, ifcSTE);
-//		val staticFieldInits = createStaticFieldInitializations(ifcSTE, ifcDecl);
-//		val memberDefs = bootstrapCallAssistant.createInterfaceMemberDefinitionSection(ifcDecl);
-//		val makeIfcCall = bootstrapCallAssistant.createMakeInterfaceCall(ifcDecl);
-//
-//		state.tracer.copyTrace(ifcDecl, fieldDefaults);
-//		state.tracer.copyTrace(ifcDecl, staticFieldInits);
-//		state.tracer.copyTrace(ifcDecl, memberDefs);
-//		state.tracer.copyTrace(ifcDecl, makeIfcCall);
+		val varDecl = _VariableDeclaration(ifcDecl.name, _ObjLit(props));
+		state.tracer.copyTrace(ifcDecl, varDecl);
 
 		replace(ifcDecl, varDecl);
-//		val root = varDecl.eContainer.orContainingExportDeclaration;
-//		insertAfter(root, fieldDefaults + staticFieldInits + memberDefs + #[makeIfcCall]);
-	}
-
-	/**
-	 * Creates declaration of the variable that will represent the interface.
-	 */
-	def private VariableDeclaration createVarDecl(String name, Iterable<? extends PropertyAssignment> properties) {
-		return _VariableDeclaration(name)=>[
-			expression = _ObjLit(properties);
-		];
 	}
 
 	def private PropertyNameValuePair[] createInstanceFieldDefaultsProperty(N4InterfaceDeclaration ifcDecl, SymbolTableEntry ifcSTE) {
 		// $fieldDefaults: {
 		//     fieldName1: undefined,
-		//     fieldName2: () => <INIT_EXPRESSION>,
+		//     fieldName2: 42,
+		//     fieldName3: () => <INIT_EXPRESSION>,
 		//     ...
 		// }
 		val instanceFields = ifcDecl.ownedFields
@@ -186,7 +159,7 @@ ifcDecl.ownedMembersRaw += bootstrapCallAssistant.createN4TypeGetter(ifcDecl, nu
 		// }
 
 		val instanceMembersExceptFields = ifcDecl.ownedMembers
-			.filter[!static && !name.isNullOrEmpty]
+			.filter[!static && !abstract && !name.isNullOrEmpty]
 			.filter[!(it instanceof N4FieldDeclaration)]
 			.toList;
 		if (instanceMembersExceptFields.empty) {
@@ -212,7 +185,7 @@ ifcDecl.ownedMembersRaw += bootstrapCallAssistant.createN4TypeGetter(ifcDecl, nu
 		// ...
 
 		val staticMembers = ifcDecl.ownedMembers
-			.filter[static && !name.isNullOrEmpty] // FIXME reconsider removal of those with empty name (i.e. computed prop names)
+			.filter[static && !abstract && !name.isNullOrEmpty] // FIXME reconsider removal of those with empty name (i.e. computed prop names)
 			.toList;
 		if (staticMembers.empty) {
 			return #[];
@@ -342,13 +315,12 @@ ifcDecl.ownedMembersRaw += bootstrapCallAssistant.createN4TypeGetter(ifcDecl, nu
 		// for an interface 'I' with a static field 'field' we here create something like:
 		// I.field = "initial value";
 		return ifcDecl.ownedMembers.filter(N4FieldDeclaration).filter[static].filter[expression!==null]
-			// create an initialization statement per static field
 			.<N4FieldDeclaration, Statement>map[fieldDecl|
-			_ExprStmnt(_AssignmentExpr()=>[
-				lhs = _PropertyAccessExpr(ifcSTE, findSymbolTableEntryForElement(fieldDecl,true));
-				rhs = fieldDecl.expression;
-			]);
-		].toList;
+				_ExprStmnt(_AssignmentExpr() => [
+					lhs = _PropertyAccessExpr(ifcSTE, findSymbolTableEntryForElement(fieldDecl,true));
+					rhs = fieldDecl.expression;
+				]);
+			].toList;
 	}
 
 	def private N4MethodDeclaration createHasInstanceMethod(N4InterfaceDeclaration ifcDecl, SymbolTableEntry ifcSTE) {

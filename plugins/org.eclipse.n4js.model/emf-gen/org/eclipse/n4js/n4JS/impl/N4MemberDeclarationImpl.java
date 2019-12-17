@@ -175,6 +175,26 @@ public abstract class N4MemberDeclarationImpl extends AnnotableElementImpl imple
 	 * @generated
 	 */
 	@Override
+	public boolean isDeclaredAbstract() {
+		return this.getDeclaredModifiers().contains(N4Modifier.ABSTRACT);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isAbstract() {
+		return false;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public boolean isDeclaredStatic() {
 		return this.getDeclaredModifiers().contains(N4Modifier.STATIC);
 	}
@@ -478,6 +498,10 @@ public abstract class N4MemberDeclarationImpl extends AnnotableElementImpl imple
 		switch (operationID) {
 			case N4JSPackage.N4_MEMBER_DECLARATION___GET_DEFINED_TYPE_ELEMENT:
 				return getDefinedTypeElement();
+			case N4JSPackage.N4_MEMBER_DECLARATION___IS_DECLARED_ABSTRACT:
+				return isDeclaredAbstract();
+			case N4JSPackage.N4_MEMBER_DECLARATION___IS_ABSTRACT:
+				return isAbstract();
 			case N4JSPackage.N4_MEMBER_DECLARATION___IS_DECLARED_STATIC:
 				return isDeclaredStatic();
 			case N4JSPackage.N4_MEMBER_DECLARATION___IS_STATIC:

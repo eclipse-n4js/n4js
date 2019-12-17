@@ -127,12 +127,6 @@ public abstract class N4JSLanguageConstants {
 	public static final String PROPERTY__PROTO__NAME = "__proto__";
 
 	/**
-	 * Suffix used in method compilation for the local function name as reported in error stack traces. Value:
-	 * {@code "___n4"}
-	 */
-	public static final String METHOD_STACKTRACE_SUFFIX = "___n4";
-
-	/**
 	 * Key of the symbol used for storing N4JS dependency injection information in class constructors. The actual
 	 * property name is <code>Symbol.for('org.eclipse.n4js/diInfo')</code> (must be evaluated at runtime).
 	 */

@@ -67,8 +67,7 @@ class ClassDeclarationTransformation extends Transformation {
 	}
 
 	override assertPostConditions() {
-//		 assertFalse("there should not be any N4ClassDeclarations in the intermediate model",
-//			 state.im.eAllContents.exists[it instanceof N4ClassDeclaration]);
+		// none
 	}
 
 	override analyze() {
@@ -80,35 +79,19 @@ class ClassDeclarationTransformation extends Transformation {
 	}
 
 	def private void transformClassDecl(N4ClassDeclaration classDecl) {
-		val classSTE = classDecl.findSymbolTableEntryForElement(false);
+		val classSTE = findSymbolTableEntryForElement(classDecl, false);
 		val superClassSTE = typeAssistant.getSuperClassSTE(classDecl);
 
-// add 'n4type' getter for reflection
-classDecl.ownedMembersRaw += bootstrapCallAssistant.createN4TypeGetter(classDecl, superClassSTE);
+		// add 'n4type' getter for reflection
+		classDecl.ownedMembersRaw += bootstrapCallAssistant.createN4TypeGetter(classDecl, superClassSTE);
 
 		classConstructorAssistant.amendConstructor(classDecl, superClassSTE);
 
-//		val makeClassCall = bootstrapCallAssistant.createMakeClassCall(classDecl, superClassSTE);
 		val staticInits = createStaticFieldInitializations(classSTE, classDecl);
-//
-//		state.tracer.copyTrace(classDecl, ctorDecl);
-//		state.tracer.copyTrace(classDecl, makeClassCall);
-//		// note: tracing for staticInits was already set in #createStaticInitialisers() and related methods!
-//
-//		replace(classDecl, ctorDecl);
-//		insertAfter(ctorDecl.orContainingExportDeclaration, makeClassCall);
-//
-//		insertAfter(makeClassCall, staticInits);
-insertAfter(classDecl.orContainingExportDeclaration, staticInits);
+		insertAfter(classDecl.orContainingExportDeclaration, staticInits);
 
-val instanceDefs = createFieldDefinitions(classSTE, classDecl);
-insertAfter(classDecl.orContainingExportDeclaration, instanceDefs);
-
-		// change superClassRef to an equivalent extends-expression
-		// (this is a minor quirk required because superClassRef is not supported by the PrettyPrinterSwitch;
-		// for details see PrettyPrinterSwitch#caseN4ClassDeclaration())
-		classDecl.superClassRef = null;
-		classDecl.superClassExpression = __NSSafe_IdentRef(superClassSTE);
+		val instanceDefs = createFieldDefinitions(classSTE, classDecl);
+		insertAfter(classDecl.orContainingExportDeclaration, instanceDefs);
 
 		// remove fields and abstract members (they do not have a representation in the output code)
 		classDecl.ownedMembersRaw.removeIf[
@@ -137,6 +120,12 @@ insertAfter(classDecl.orContainingExportDeclaration, instanceDefs);
 					currMember.returnTypeRef = null
 			}
 		}
+
+		// change superClassRef to an equivalent extends-expression
+		// (this is a minor quirk required because superClassRef is not supported by the PrettyPrinterSwitch;
+		// for details see PrettyPrinterSwitch#caseN4ClassDeclaration())
+		classDecl.superClassRef = null;
+		classDecl.superClassExpression = __NSSafe_IdentRef(superClassSTE);
 	}
 
 	// FIXME only do this for fields that actually override a getter and/or setter!
@@ -162,45 +151,31 @@ insertAfter(classDecl.orContainingExportDeclaration, instanceDefs);
 		].toList;
 	}
 
-	// ################################################################################################################
-	// STATIC INITIALIZERS
-
 	/**
 	 * Creates a new list of statements to initialize the static fields of the given {@code classDecl}.
 	 * 
 	 * Clients of this method may modify the returned list.
 	 */
-	def protected List<Statement> createStaticFieldInitializations(SymbolTableEntry steClass, N4ClassDeclaration classDecl) {
-		// apply only to static members
-		return classDecl.ownedMembers.filter[isStatic].map[createStaticInitialiserCode(steClass)].filterNull.toList;
+	def protected List<Statement> createStaticFieldInitializations(SymbolTableEntry classSTE, N4ClassDeclaration classDecl) {
+		return classDecl.ownedMembers.filter[isStatic].filter(N4FieldDeclaration).map[createStaticInitialiserCode(classSTE)].filterNull.toList;
 	}
 
-	def private dispatch Statement createStaticInitialiserCode(N4FieldDeclaration fieldDecl, SymbolTableEntry steClass) {
-
-		if( ! fieldDecl.isStatic || fieldDecl.expression === null) return null;
+	def private Statement createStaticInitialiserCode(N4FieldDeclaration fieldDecl, SymbolTableEntry classSTE) {
+		if (fieldDecl.expression === null) {
+			return null;
+		}
 
 		val tField = state.info.getOriginalDefinedMember(fieldDecl) as TField;
+		val fieldSTE = getSymbolTableEntryOriginal(tField, true);
 
-		val exprStmnt = _ExprStmnt( _AssignmentExpr( _PropertyAccessExpr=>[
-				it.target = __NSSafe_IdentRef(steClass);
-				it.property_IM = getSymbolTableEntryOriginal(
-					tField,
-					true
-				);
-			],  fieldDecl.expression // REUSE existing expression
-		 ));
+		val exprStmnt = _ExprStmnt(
+			_AssignmentExpr(
+				_PropertyAccessExpr(__NSSafe_IdentRef(classSTE), fieldSTE),
+				fieldDecl.expression // reuse existing expression
+			)
+		);
 		state.tracer.copyTrace(fieldDecl, exprStmnt);
 
 		return exprStmnt;
-
-	}
-	def private dispatch Statement createStaticInitialiserCode(N4FieldAccessor fieldDecl, SymbolTableEntry steClass) {
-		// n.t.d.
-	}
-	def private dispatch Statement createStaticInitialiserCode(N4MethodDeclaration methodDecl, SymbolTableEntry steClass) {
-		// n.t.d.
-	}
-	def private dispatch Statement createStaticInitialiserCode(DelegatingMember accDecl, SymbolTableEntry steClass) {
-		// n.t.d.
 	}
 }
