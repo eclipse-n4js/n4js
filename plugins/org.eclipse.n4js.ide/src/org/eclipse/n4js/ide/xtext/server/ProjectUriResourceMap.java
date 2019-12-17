@@ -12,10 +12,10 @@ package org.eclipse.n4js.ide.xtext.server;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -44,7 +44,7 @@ public class ProjectUriResourceMap extends ForwardingMap<URI, Resource> {
 	@Inject
 	public ProjectUriResourceMap(WorkspaceUriResourceMap globalMap) {
 		this.globalMap = globalMap;
-		this.localContents = new HashSet<>();
+		this.localContents = Collections.newSetFromMap(new ConcurrentHashMap<>());
 	}
 
 	@Override
