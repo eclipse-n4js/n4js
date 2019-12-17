@@ -17,6 +17,7 @@ import java.util.TreeSet;
 
 import org.eclipse.n4js.flowgraphs.analysers.NullDereferenceAnalyser.IsNotNull;
 import org.eclipse.n4js.flowgraphs.dataflow.PartialResult;
+import org.eclipse.n4js.flowgraphs.dataflow.PartialResult.Type;
 import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardAssertion;
 import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardType;
 import org.eclipse.n4js.flowgraphs.dataflow.symbols.Symbol;
@@ -77,8 +78,23 @@ public class NullDereferenceResult {
 	}
 
 	private GuardAssertion getAssertion(IsNotNull inn) {
-		if ((inn.passedBranches.isEmpty() && inn.aliases.isEmpty()) || inn.terminatingGuard != null) {
-			return GuardAssertion.AlwaysHolds;
+		if (inn.passedBranches.isEmpty() && inn.aliases.isEmpty()) {
+			boolean allMayFailed = true;
+			for (PartialResult pr : inn.failedBranches) {
+				allMayFailed &= (pr.type == Type.MayFailed);
+			}
+			if (allMayFailed) {
+				return GuardAssertion.MayHolds;
+			} else {
+				return GuardAssertion.AlwaysHolds;
+			}
+		}
+		if (inn.terminatingGuard != null) {
+			if (inn.terminatingGuard.type == Type.MayFailed) {
+				return GuardAssertion.MayHolds;
+			} else {
+				return GuardAssertion.AlwaysHolds;
+			}
 		}
 		return GuardAssertion.MayHolds;
 	}

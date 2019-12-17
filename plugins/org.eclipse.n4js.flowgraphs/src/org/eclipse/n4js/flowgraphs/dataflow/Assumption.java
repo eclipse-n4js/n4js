@@ -369,7 +369,7 @@ abstract public class Assumption {
 	}
 
 	private void handleHoldResult(PartialResult result, Symbol lhs) {
-		if (result.type == PartialResult.Type.Failed) {
+		if (result.type == PartialResult.Type.Failed || result.type == PartialResult.Type.MayFailed) {
 			failedBranches.add(result);
 			aliases.remove(lhs);
 		}

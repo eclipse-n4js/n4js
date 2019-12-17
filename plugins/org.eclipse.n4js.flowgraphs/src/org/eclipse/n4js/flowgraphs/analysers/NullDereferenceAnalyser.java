@@ -26,8 +26,10 @@ import org.eclipse.n4js.flowgraphs.dataflow.symbols.Symbol;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Expression;
+import org.eclipse.n4js.n4JS.ExpressionWithTarget;
 import org.eclipse.n4js.n4JS.NullLiteral;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
+import org.eclipse.xtext.EcoreUtil2;
 
 import com.google.common.collect.Multimap;
 
@@ -105,7 +107,12 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 					return new NullDereferenceFailed(GuardType.IsUndefined, lhs);
 				}
 			} else if (rValue != null) {
-				return PartialResult.Passed;
+				ExpressionWithTarget exprWithTarget = EcoreUtil2.getContainerOfType(rValue, ExpressionWithTarget.class);
+				if (exprWithTarget != null && exprWithTarget.isOptionalChaining()) {
+					return new NullDereferenceFailed(PartialResult.Type.MayFailed, GuardType.IsUndefined, lhs);
+				} else {
+					return PartialResult.Passed;
+				}
 			}
 			return PartialResult.Unclear;
 		}
