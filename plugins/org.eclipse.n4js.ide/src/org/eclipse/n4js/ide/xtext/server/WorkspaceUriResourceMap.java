@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.ide.xtext.server;
 
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -22,6 +22,6 @@ import com.google.inject.Singleton;
  * workspace.
  */
 @Singleton
-public class WorkspaceUriResourceMap extends HashMap<URI, Resource> {
+public class WorkspaceUriResourceMap extends ConcurrentHashMap<URI, Resource> {
 	// nothing to do
 }

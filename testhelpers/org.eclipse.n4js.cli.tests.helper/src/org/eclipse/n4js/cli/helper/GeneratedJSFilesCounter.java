@@ -20,6 +20,8 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.NavigableMap;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -40,8 +42,8 @@ public class GeneratedJSFilesCounter {
 	 *            the directory to recursively search
 	 * @return the number of files ending in .js
 	 */
-	static public TreeMap<Path, HashSet<File>> getTranspiledFiles(final Path workspaceRoot) {
-		final AtomicReference<TreeMap<Path, HashSet<File>>> genFilesRef = new AtomicReference<>();
+	static public NavigableMap<Path, Set<File>> getTranspiledFiles(final Path workspaceRoot) {
+		final AtomicReference<NavigableMap<Path, Set<File>>> genFilesRef = new AtomicReference<>();
 
 		final File n4jsLibrariesRoot = findN4jsLibRoot();
 		if (n4jsLibrariesRoot == null) {
@@ -74,7 +76,7 @@ public class GeneratedJSFilesCounter {
 				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 					String fName = file.getFileName().toString();
 					if ((fName.endsWith(".js") || fName.endsWith(".jsx")) && pathContainsSrcGen(file)) {
-						TreeMap<Path, HashSet<File>> fileMap = genFilesRef.get();
+						NavigableMap<Path, Set<File>> fileMap = genFilesRef.get();
 						Path directory = file.getParent();
 						if (!fileMap.containsKey(directory)) {
 							fileMap.put(directory, new HashSet<>());

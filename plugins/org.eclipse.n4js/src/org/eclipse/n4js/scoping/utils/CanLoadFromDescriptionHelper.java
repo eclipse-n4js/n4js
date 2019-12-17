@@ -26,6 +26,7 @@ import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.resource.UserdataMapper;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
+import org.eclipse.xtext.resource.ISynchronizable;
 
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Sets;
@@ -257,7 +258,17 @@ public class CanLoadFromDescriptionHelper {
 		 * set. LSP associates projects to resource sets and we have to make sure that we do not create resources in the
 		 * wrong project context. Therefore this method if overridden for LSP.
 		 */
-		return resourceSet.createResource(resourceURI);
+		if (resourceSet instanceof ISynchronizable<?>) {
+			synchronized (((ISynchronizable<?>) resourceSet).getLock()) {
+				Resource resource = resourceSet.getResource(resourceURI, false);
+				if (resource == null) {
+					resource = resourceSet.createResource(resourceURI);
+				}
+				return resource;
+			}
+		} else {
+			return resourceSet.createResource(resourceURI);
+		}
 	}
 
 }

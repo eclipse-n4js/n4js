@@ -394,7 +394,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	 * @param description
 	 *            the description that carries the type data in its user data
 	 */
-	public boolean loadFromDescription(IResourceDescription description) {
+	public synchronized boolean loadFromDescription(IResourceDescription description) {
 		if (isLoaded)
 			throw new IllegalStateException("Resource was already loaded");
 

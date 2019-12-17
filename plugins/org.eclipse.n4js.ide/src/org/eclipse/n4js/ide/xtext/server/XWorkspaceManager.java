@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
@@ -80,8 +81,8 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 
 	private final List<ILanguageServerAccess.IBuildListener> buildListeners = new ArrayList<>();
 
-	// GH-1552: synchronized map
-	private final Map<String, ResourceDescriptionsData> fullIndex = Collections.synchronizedMap(new HashMap<>());
+	// GH-1552: concurrent map
+	private final Map<String, ResourceDescriptionsData> fullIndex = new ConcurrentHashMap<>();
 
 	private final Map<URI, Document> openDocuments = new HashMap<>();
 
