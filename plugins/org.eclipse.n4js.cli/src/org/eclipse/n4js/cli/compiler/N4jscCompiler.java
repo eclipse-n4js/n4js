@@ -30,7 +30,6 @@ import org.eclipse.n4js.cli.N4jscException;
 import org.eclipse.n4js.cli.N4jscExitCode;
 import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscOptions;
-import org.eclipse.n4js.ide.server.FileBasedWorkspaceInitializer;
 import org.eclipse.n4js.ide.xtext.server.DefaultBuildRequestFactory;
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
@@ -69,7 +68,6 @@ public class N4jscCompiler {
 		this.callback = N4jscFactory.getLanguageClient();
 		this.workspaceManager = N4jscFactory.getWorkspaceManager();
 
-		setupCompilerOptimizedProjectDiscoveryHelper();
 		setPersistionOptions();
 		this.languageServer.connect(callback);
 		setupWorkspaceBuildActionListener();
@@ -121,13 +119,6 @@ public class N4jscCompiler {
 		languageServer.initialized(new InitializedParams());
 		languageServer.joinInitBuildFinished();
 		printCompileResults(compilationTime.stop());
-	}
-
-	private void setupCompilerOptimizedProjectDiscoveryHelper() {
-		Injector inj = N4jscFactory.getOrCreateInjector();
-		FileBasedWorkspaceInitializer workspaceInitializer = inj.getInstance(FileBasedWorkspaceInitializer.class);
-		CompilerOptimizedProjectDiscoveryHelper copdh = inj.getInstance(CompilerOptimizedProjectDiscoveryHelper.class);
-		workspaceInitializer.setProjectDiscoveryHelper(copdh);
 	}
 
 	private void setPersistionOptions() {

@@ -236,6 +236,10 @@ public class CreateProjectStructureUtils {
 	private static void createPackageJson(File folderFile, Folder folder) {
 		String contents = "{";
 		if (folder.yarnWorkspacesFolder == null) {
+			String projectName = folder.folderName;
+			if (folder.parent != null && folder.parent.folderName.startsWith("@")) {
+				projectName = folder.parent.folderName + "/" + projectName;
+			}
 			contents += "\"name\": \"" + folder.folderName + "\", ";
 			contents += "\"n4js\": {\"projectType\": \"library\"";
 			contents += "}";
