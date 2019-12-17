@@ -54,18 +54,20 @@ public class N4jscLanguageClient implements LanguageClient, AfterGenerateListene
 			return;
 		}
 
-		N4jscConsole.println(issueSerializer.uri(diagnostics.getUri()));
-		for (Diagnostic diag : issueList) {
-			N4jscConsole.println(issueSerializer.diagnostics(diag));
-			switch (diag.getSeverity()) {
-			case Error:
-				errCount++;
-				break;
-			case Warning:
-				wrnCount++;
-				break;
-			default:
-				break;
+		synchronized (this) {
+			N4jscConsole.println(issueSerializer.uri(diagnostics.getUri()));
+			for (Diagnostic diag : issueList) {
+				N4jscConsole.println(issueSerializer.diagnostics(diag));
+				switch (diag.getSeverity()) {
+				case Error:
+					errCount++;
+					break;
+				case Warning:
+					wrnCount++;
+					break;
+				default:
+					break;
+				}
 			}
 		}
 	}

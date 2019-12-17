@@ -21,6 +21,7 @@ import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.utils.WildcardPathFilterHelper;
 import org.eclipse.xtext.resource.IResourceDescription;
+import org.eclipse.xtext.resource.ISynchronizable;
 
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
@@ -70,23 +71,25 @@ public abstract class AbstractN4JSCore implements IN4JSCore {
 			final IResourceDescription resourceDescription, boolean allowFullLoad) {
 		final URI resourceURI = resourceDescription.getURI();
 		Resource resource = resourceSet.getResource(resourceURI, false);
-		if (resource instanceof N4JSResource) {
-			final N4JSResource resourceCasted = (N4JSResource) resource;
-			final Script existingScript = resourceCasted.getScript();
-			final TModule existingModule = resourceCasted.getModule();
-			if (existingModule != null) {
-				// resource exists already and it already has a TModule
-				// -> simply return that
-				return existingModule;
-			} else if (existingScript != null && !existingScript.eIsProxy()) {
-				// resource exists already and it already has its AST loaded (though no TModule yet)
-				// -> we have to create the TModule from that AST instead of loading it from index
-				resourceCasted.installDerivedState(false); // trigger installation of derived state (i.e. types builder)
-				return resourceCasted.getModule();
-			}
+		TModule result = loadModuleFromResource(resource);
+		if (result != null) {
+			return result;
 		}
 		if (resource == null) {
-			resource = resourceSet.createResource(resourceURI);
+			if (resourceSet instanceof ISynchronizable<?>) {
+				synchronized (((ISynchronizable<?>) resourceSet).getLock()) {
+					resource = resourceSet.getResource(resourceURI, false);
+					result = loadModuleFromResource(resource);
+					if (result != null) {
+						return result;
+					}
+					if (resource == null) {
+						resource = resourceSet.createResource(resourceURI);
+					}
+				}
+			} else {
+				resource = resourceSet.createResource(resourceURI);
+			}
 		}
 		if (resource instanceof N4JSResource) {
 			if (resource.getContents().isEmpty()) {
@@ -105,6 +108,25 @@ public abstract class AbstractN4JSCore implements IN4JSCore {
 					casted.unload();
 					return null;
 				}
+			}
+		}
+		return null;
+	}
+
+	private TModule loadModuleFromResource(Resource resource) {
+		if (resource instanceof N4JSResource) {
+			final N4JSResource resourceCasted = (N4JSResource) resource;
+			final Script existingScript = resourceCasted.getScript();
+			final TModule existingModule = resourceCasted.getModule();
+			if (existingModule != null) {
+				// resource exists already and it already has a TModule
+				// -> simply return that
+				return existingModule;
+			} else if (existingScript != null && !existingScript.eIsProxy()) {
+				// resource exists already and it already has its AST loaded (though no TModule yet)
+				// -> we have to create the TModule from that AST instead of loading it from index
+				resourceCasted.installDerivedState(false); // trigger installation of derived state (i.e. types builder)
+				return resourceCasted.getModule();
 			}
 		}
 		return null;

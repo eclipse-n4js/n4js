@@ -16,13 +16,14 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.NavigableMap;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -44,7 +45,7 @@ public class CliCompileResult extends ProcessResult {
 	Map<String, String> projects = new LinkedHashMap<>();
 	Multimap<String, String> errors = HashMultimap.create();
 	Multimap<String, String> warnings = HashMultimap.create();
-	TreeMap<Path, HashSet<File>> transpiledFiles = new TreeMap<>();
+	NavigableMap<Path, Set<File>> transpiledFiles = new TreeMap<>();
 
 	/** Constructor: Result for in-process execution */
 	public CliCompileResult() {
@@ -139,10 +140,10 @@ public class CliCompileResult extends ProcessResult {
 
 		Path start = (dir == null) ? transpiledFiles.firstKey() : dir;
 		Collection<File> filesInDir = new LinkedList<>();
-		Map<Path, HashSet<File>> tailMap = transpiledFiles.tailMap(start);
+		Map<Path, Set<File>> tailMap = transpiledFiles.tailMap(start);
 
-		for (Iterator<Entry<Path, HashSet<File>>> it = tailMap.entrySet().iterator(); it.hasNext();) {
-			Entry<Path, HashSet<File>> next = it.next();
+		for (Iterator<Entry<Path, Set<File>>> it = tailMap.entrySet().iterator(); it.hasNext();) {
+			Entry<Path, Set<File>> next = it.next();
 			Path curDir = next.getKey();
 			if (dir == null || curDir.startsWith(dir)) {
 				filesInDir.addAll(next.getValue());

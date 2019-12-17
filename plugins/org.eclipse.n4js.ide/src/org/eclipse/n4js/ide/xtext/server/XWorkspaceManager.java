@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
@@ -25,9 +26,9 @@ import org.eclipse.lsp4j.jsonrpc.ResponseErrorException;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseError;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
 import org.eclipse.n4js.ide.xtext.server.XBuildManager.XBuildable;
-import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.xtext.ide.server.Document;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
+import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.resource.IExternalContentSupport;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
@@ -67,6 +68,9 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	@Inject
 	private IssueAcceptor issueAcceptor;
 
+	@Inject
+	private UriExtensions uriExtensions;
+
 	private XBuildManager buildManager;
 
 	private final Map<String, XProjectManager> projectName2ProjectManager = new HashMap<>();
@@ -77,8 +81,8 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 
 	private final List<ILanguageServerAccess.IBuildListener> buildListeners = new ArrayList<>();
 
-	// GH-1552: synchronized map
-	private final Map<String, ResourceDescriptionsData> fullIndex = Collections.synchronizedMap(new HashMap<>());
+	// GH-1552: concurrent map
+	private final Map<String, ResourceDescriptionsData> fullIndex = new ConcurrentHashMap<>();
 
 	private final Map<URI, Document> openDocuments = new HashMap<>();
 
@@ -494,8 +498,8 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 
 	/** @return a workspace relative URI for a given URI */
 	public URI makeWorkspaceRelative(URI uri) {
-		FileURI fileUri = new FileURI(uri);
-		URI relativeUri = fileUri.toURI().deresolve(getBaseDir());
+		URI withEmptyAuthority = uriExtensions.withEmptyAuthority(uri);
+		URI relativeUri = withEmptyAuthority.deresolve(getBaseDir());
 		return relativeUri;
 	}
 

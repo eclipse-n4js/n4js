@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class ParallelBuildManager {
 	private final ExecutorService pool = Executors.newFixedThreadPool(3);
-	private final Collection<ParallelJob<?>> jobs;
+	private final Collection<? extends ParallelJob<?>> jobs;
 	private final Map<Object, ParallelJob<?>> jobMap = new HashMap<>();
 	private final Map<Object, Set<Object>> dependencyMap = new HashMap<>();
 	private final Map<Object, Set<Object>> waitingProjectsMap = new HashMap<>();
@@ -48,9 +48,8 @@ public class ParallelBuildManager {
 		abstract public Collection<T> getDependencyIDs();
 	}
 
-	@SuppressWarnings("unchecked")
 	ParallelBuildManager(Collection<? extends ParallelJob<?>> jobs) {
-		this.jobs = (Collection<ParallelJob<?>>) jobs;
+		this.jobs = jobs;
 	}
 
 	private void init() {
@@ -72,10 +71,7 @@ public class ParallelBuildManager {
 				dependencyMap.put(jobID, new HashSet<>(dependencies));
 
 				for (Object dependency : dependencies) {
-					if (!waitingProjectsMap.containsKey(dependency)) {
-						waitingProjectsMap.put(dependency, new HashSet<>());
-					}
-					waitingProjectsMap.get(dependency).add(jobID);
+					waitingProjectsMap.computeIfAbsent(dependency, (ign) -> new HashSet<>()).add(jobID);
 				}
 			}
 		}
