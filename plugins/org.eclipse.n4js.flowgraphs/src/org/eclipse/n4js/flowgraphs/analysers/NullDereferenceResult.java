@@ -79,11 +79,11 @@ public class NullDereferenceResult {
 
 	private GuardAssertion getAssertion(IsNotNull inn) {
 		if (inn.passedBranches.isEmpty() && inn.aliases.isEmpty()) {
-			boolean allMayFailed = true;
+			boolean oneMayFailed = false;
 			for (PartialResult pr : inn.failedBranches) {
-				allMayFailed &= (pr.type == Type.MayFailed);
+				oneMayFailed |= (pr.type == Type.MayFailed);
 			}
-			if (allMayFailed) {
+			if (oneMayFailed) {
 				return GuardAssertion.MayHolds;
 			} else {
 				return GuardAssertion.AlwaysHolds;

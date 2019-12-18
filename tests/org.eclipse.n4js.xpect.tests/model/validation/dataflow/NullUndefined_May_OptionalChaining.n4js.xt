@@ -20,11 +20,96 @@ class C {
 	field: C;
 }
 
+
 function f1() {
+	let c : C;
+	// XPECT warnings --> "Variable c is undefined" at "c"
+	let x = c.field;
+}
+
+
+function f2() {
+	let c : C;
+	if (0) c = new C();
+	// XPECT warnings --> "Variable c may be undefined" at "c"
+	let x = c.field;
+}
+
+
+function f3() {
+	let c : C;
+	if (0) c = new C();
+	// XPECT nowarnings --> "Variable c is undefined" at "c"
+	let x = c?.field;
+}
+
+
+function f4() {
 	let c : C;
 	if (0) c = new C();
 	let x = c?.field;
 	// XPECT warnings --> "Variable x may be undefined" at "x"
 	x.toString();
 }
+
+
+function f5() {
+	let c : C;
+	let x = c?.field;
+	// XPECT warnings --> "Variable x may be undefined" at "x"
+	x.toString();
+}
+
+
+
+function f6() {
+	let c : C;
+	let x = c?.field;
+	if (true) {
+		x = new C();
+	}
+	// XPECT warnings --> "Variable x may be undefined" at "x"
+	x.toString();
+}
+
+
+
+function f7() {
+	let c : C;
+	let x = c?.field;
+	if (true) {
+		x = undefined;
+	}
+	// XPECT warnings --> "Variable x may be undefined" at "x"
+	x.toString();
+}
+
+
+
+function f8() {
+	let c : C;
+	let x = c?.field;
+	if (true) {
+		x = null;
+	}
+	// XPECT warnings --> "Variable x may be null or undefined" at "x"
+	x.toString();
+}
+
+
+
+function f9() {
+	let c : C;
+	let x = c?.field;
+	if (true) {
+		x = new C();
+	}
+	if (true) {
+		x = null;
+	}
+	// XPECT warnings --> "Variable x may be null or undefined" at "x"
+	x.toString();
+}
+
+
 
