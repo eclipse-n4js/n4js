@@ -1,0 +1,22 @@
+# Project Discovery Test
+# working dir marked with '*'
+
+
+# TODO GH-1314: support nested npm (with different version)
+
+
+FOLDERS
+-*P1 [PROJECT dependencies={"D1":"*","D2":"*","D3":"*"}]
+-- node_modules
+--- D1 [PROJECT]
+--- D2 [PROJECT]
+--- D3 [PROJECT]
+---- node_modules
+----- D2 [PROJECT]
+
+EXPECT
+- P1
+- P1/node_modules/D1
+- P1/node_modules/D2
+- P1/node_modules/D3
+# TODO GH-1314: - P1/node_modules/D3/node_modules/D2
