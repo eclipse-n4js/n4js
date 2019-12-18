@@ -76,6 +76,9 @@ class ClassDeclarationTransformation extends Transformation {
 		val classSTE = classDecl.findSymbolTableEntryForElement(false);
 		val superClassSTE = typeAssistant.getSuperClassSTE(classDecl);
 
+		// add 'n4type' getter for reflection
+		classDecl.ownedMembersRaw += bootstrapCallAssistant.createN4TypeGetter(classDecl, superClassSTE);
+
 		val ctorDecl = classConstructorAssistant.createCtorDecl(classDecl, superClassSTE);
 		val makeClassCall = bootstrapCallAssistant.createMakeClassCall(classDecl, superClassSTE);
 		val staticInits = createStaticFieldInitializations(classSTE, classDecl);

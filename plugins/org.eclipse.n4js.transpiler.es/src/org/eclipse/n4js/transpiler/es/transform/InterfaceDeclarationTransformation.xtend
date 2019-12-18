@@ -71,6 +71,9 @@ class InterfaceDeclarationTransformation extends Transformation {
 	def private void transformInterfaceDecl(N4InterfaceDeclaration ifcDecl) {
 		val ifcSTE = findSymbolTableEntryForElement(ifcDecl, true);
 
+		// add 'n4type' getter for reflection
+		ifcDecl.ownedMembersRaw += bootstrapCallAssistant.createN4TypeGetter(ifcDecl, null);
+
 		val varDecl = createVarDecl(ifcDecl);
 		val fieldDefaults = createInstanceFieldDefaultsObject(ifcDecl, ifcSTE);
 		val staticFieldInits = createStaticFieldInitializations(ifcSTE, ifcDecl);
