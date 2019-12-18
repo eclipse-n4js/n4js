@@ -24,14 +24,19 @@ public class NullDereferenceFailed extends PartialResult.Failed {
 	/** Symbol that did not fulfill the expectation. */
 	public final Symbol symbol;
 
-	NullDereferenceFailed(GuardType expectation, Symbol symbol) {
+	NullDereferenceFailed(Type failType, GuardType expectation, Symbol symbol) {
+		super(failType);
 		this.expectation = expectation;
 		this.symbol = symbol;
 	}
 
+	NullDereferenceFailed(GuardType expectation, Symbol symbol) {
+		this(Type.Failed, expectation, symbol);
+	}
+
 	/** Constructor. */
 	public NullDereferenceFailed(GuardType expectation) {
-		this(expectation, null);
+		this(Type.Failed, expectation, null);
 	}
 
 	@Override
