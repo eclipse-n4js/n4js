@@ -179,10 +179,8 @@ public class XProjectManager {
 		projectStateHolder.updateProjectState(request, result);
 		ResourceDescriptionsData resourceDescriptions = projectStateHolder.getIndexState().getResourceDescriptions();
 
-		Map<String, ResourceDescriptionsData> map = indexProvider.get();
-		synchronized (map.keySet()) { // GH-1552: synchronized
-			map.put(projectDescription.getName(), resourceDescriptions);
-		}
+		Map<String, ResourceDescriptionsData> concurrentMap = indexProvider.get();
+		concurrentMap.put(projectDescription.getName(), resourceDescriptions);
 		persistedProjectStateOutdated |= !result.getAffectedResources().isEmpty();
 		return result;
 	}
@@ -291,12 +289,8 @@ public class XProjectManager {
 		} else {
 			ChunkedResourceDescriptions resDescs = ChunkedResourceDescriptions.findInEmfObject(resourceSet);
 
-			Map<String, ResourceDescriptionsData> map = indexProvider.get();
-			synchronized (map.keySet()) { // GH-1552: synchronized
-				for (Map.Entry<String, ResourceDescriptionsData> entry : map.entrySet()) {
-					resDescs.setContainer(entry.getKey(), entry.getValue());
-				}
-			}
+			Map<String, ResourceDescriptionsData> concurrentMap = indexProvider.get();
+			concurrentMap.forEach(resDescs::setContainer);
 			resDescs.setContainer(projectDescription.getName(), newIndex);
 		}
 		return resourceSet;
@@ -310,11 +304,9 @@ public class XProjectManager {
 		ProjectConfigAdapter.install(result, projectConfig);
 		attachWorkspaceResourceLocator(result);
 
-		Map<String, ResourceDescriptionsData> map = indexProvider.get();
-		synchronized (map.keySet()) { // GH-1552: synchronized
-			ChunkedResourceDescriptions index = new ChunkedResourceDescriptions(map, result);
-			index.setContainer(projectDescription.getName(), newIndex);
-		}
+		Map<String, ResourceDescriptionsData> concurrentMap = indexProvider.get();
+		ChunkedResourceDescriptions index = new ChunkedResourceDescriptions(concurrentMap, result);
+		index.setContainer(projectDescription.getName(), newIndex);
 		externalContentSupport.configureResourceSet(result, openedDocumentsContentProvider);
 		return result;
 	}

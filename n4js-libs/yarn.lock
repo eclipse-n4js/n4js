@@ -684,7 +684,7 @@
 
 "@n4jsd/glob@<=7.1.*":
   version "7.1.2"
-  resolved "http://nexus3-aws.corp.numberfour.eu/repository/npm-public/@n4jsd/glob/-/glob-7.1.2.tgz#9529257fc9d6169a3994cccdac86c7918d2b98e7"
+  resolved "https://registry.npmjs.org/@n4jsd/glob/-/glob-7.1.2.tgz#9529257fc9d6169a3994cccdac86c7918d2b98e7"
   integrity sha512-IuPvFlEhdU6jXcW/dUGwiBF8aoqhAk0GhsAl9ZZq5J4xgpfPjJBcGPBrdzDqiWexTP2/jarCo5Gpn6EmkuLLMQ==
   dependencies:
     n4js-runtime-node ""
