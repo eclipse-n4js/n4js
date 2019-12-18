@@ -140,27 +140,34 @@ class BlockTransformationTest extends AbstractTranspilerTest {
 							return "!NORMAL!/" + p;
 						}.apply(this, arguments));
 					}
-				}
-			}, function(instanceProto, staticProto) {
-				var metaClass = new N4Class({
-					name: 'System2',
-					origin: 'test',
-					fqn: 'A/System2',
-					n4superType: N4Object.n4type,
-					allImplementedInterfaces: [],
-					ownedMembers: [
-						new N4Method({
-							name: 'normalize',
-							isStatic: true,
-							jsFunction: staticProto['normalize'],
+				},
+				n4type: {
+					get: function getN4type___n4() {
+						const $sym = Symbol.for('org.eclipse.n4js/reflectionInfo');
+						if (this.hasOwnProperty($sym)) {
+							return this[$sym];
+						}
+						const instanceProto = this.prototype, staticProto = this;
+						return this[$sym] = new N4Class({
+							name: 'System2',
+							origin: 'test',
+							fqn: 'A/System2',
+							n4superType: N4Object.n4type,
+							allImplementedInterfaces: [],
+							ownedMembers: [
+								new N4Method({
+									name: 'normalize',
+									isStatic: true,
+									jsFunction: staticProto['normalize'],
+									annotations: []
+								})
+							],
+							consumedMembers: [],
 							annotations: []
-						})
-					],
-					consumedMembers: [],
-					annotations: []
-				});
-				return metaClass;
-			});
+						});
+					}
+				}
+			}, undefined);
 		''';
 
 	 	// Prepare ResourceSet to contain exportedScript:
