@@ -1,0 +1,18 @@
+# Project Discovery Test
+# working dir marked with '*'
+
+
+FOLDERS
+-*SomeFolder
+-- P1 [PROJECT]
+-- @MyScope1
+--- PS1 [PROJECT]
+--- PS2 [PROJECT]
+-- @MyScope2
+--- PS3 [PROJECT]
+
+EXPECT
+- SomeFolder/P1
+- SomeFolder/@MyScope1/PS1
+- SomeFolder/@MyScope1/PS2
+- SomeFolder/@MyScope2/PS3

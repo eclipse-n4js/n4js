@@ -25,12 +25,15 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.projectDescription.ProjectDependency;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper.NodeModulesFolder;
 
@@ -53,16 +56,19 @@ import com.google.inject.Inject;
  * <li>Add projects:
  * <ol>
  * <li/>Add a found project to the result set of all projects
- * <li/>Determine if a found project is a yarn or npm project. In case of a yarn project, add also all referenced
+ * <li/>Determine whether a found project is a yarn or npm project. In case of a yarn project, add also all referenced
  * projects (referenced in the workspace property).
  * <li/>Do not overwrite already found projects.
  * </ol>
  * </li>
  * <li>Add dependencies:
  * <ol>
- * <li/>Find the node_modules folder of a project and add all direct dependencies to the set of dependencies.
+ * <li/>Find and add the dependencies of every project.
  * <li/>Do not overwrite already found dependencies.
  * <li/>Projects inside of dependencies are never considered.
+ * <li/>TODO GH-1314: Note that projects of different versions are not yet supported. Instead, only the top level npm
+ * will be used.
+ * <li/>All dependencies of plain-JS projects are omitted, since they are not necessary for building N4JS sources.
  * </ol>
  * </li>
  * <li>Merge projects and dependencies
@@ -71,15 +77,16 @@ import com.google.inject.Inject;
  * <li/>Those dependencies are added to the resulting set that do not clash with already existing projects.
  * </ol>
  * </li>
- * <li/>Emits warnings for all projects that were not found in the given root directory or one of its sub-directories.
  * </ol>
  */
 public class ProjectDiscoveryHelper {
 
+	/** */
 	@Inject
-	NodeModulesDiscoveryHelper nodeModulesDiscoveryHelper;
+	protected NodeModulesDiscoveryHelper nodeModulesDiscoveryHelper;
+	/** */
 	@Inject
-	ProjectDescriptionLoader projectDescriptionLoader;
+	protected ProjectDescriptionLoader projectDescriptionLoader;
 
 	/**
 	 * Collections all projects and uses the approach described above with each of the given workspace root folders.
@@ -88,52 +95,58 @@ public class ProjectDiscoveryHelper {
 	 * projects.
 	 */
 	public LinkedHashSet<Path> collectAllProjectDirs(Path... workspaceRoots) {
-		LinkedHashSet<Path> allProjectDirs = new LinkedHashSet<>();
+		Map<Path, ProjectDescription> pdCache = new HashMap<>();
 
-		Map<File, List<String>> workspacesCache = new HashMap<>();
-		for (Path workspaceRoot : workspaceRoots) {
-			NodeModulesFolder nodeModulesFolder = nodeModulesDiscoveryHelper.getNodeModulesFolder(workspaceRoot,
-					workspacesCache);
+		LinkedHashSet<Path> allProjectDirs = collectAllProjects(workspaceRoots, pdCache);
+		LinkedHashSet<Path> dependencies = collectNecessaryDependencies(allProjectDirs, pdCache);
+		allProjectDirs.addAll(dependencies);
+
+		return allProjectDirs;
+	}
+
+	/** Searches all projects in the given array of workspace directories */
+	private LinkedHashSet<Path> collectAllProjects(Path[] workspaceRoots, Map<Path, ProjectDescription> pdCache) {
+		LinkedHashSet<Path> allProjectDirs = new LinkedHashSet<>();
+		for (Path wsRoot : workspaceRoots) {
+			NodeModulesFolder nodeModulesFolder = nodeModulesDiscoveryHelper.getNodeModulesFolder(wsRoot, pdCache);
 
 			if (nodeModulesFolder == null) {
 				// Is neither NPM nor Yarn project
-				collectProjects(workspaceRoot, false, workspacesCache, allProjectDirs);
+				collectProjects(wsRoot, false, pdCache, allProjectDirs);
 			} else {
 				if (nodeModulesFolder.isYarnWorkspace) {
 					// Is Yarn project
 					// use projects referenced in packages
 					Path yarnProjectDir = nodeModulesFolder.nodeModulesFolder.getParentFile().toPath();
-					allProjectDirs.add(yarnProjectDir);
-					collectYarnWorkspaceProjects(yarnProjectDir, workspacesCache, allProjectDirs);
+					collectYarnWorkspaceProjects(yarnProjectDir, pdCache, allProjectDirs);
 				} else {
 					// Is NPM project
 					// given directory is a stand-alone npm project
-					allProjectDirs.add(workspaceRoot);
+					allProjectDirs.add(wsRoot);
 				}
 			}
 		}
-
-		List<Path> nodeModulesFolders = nodeModulesDiscoveryHelper.findNodeModulesFolders(allProjectDirs);
-
-		for (Path nmFolder : new LinkedHashSet<>(nodeModulesFolders)) {
-			collectProjects(nmFolder, true, workspacesCache, allProjectDirs);
-		}
-
 		return allProjectDirs;
 	}
 
-	private void collectYarnWorkspaceProjects(Path yarnProjectRoot, Map<File, List<String>> workspacesCache,
+	private void collectYarnWorkspaceProjects(Path yarnProjectRoot, Map<Path, ProjectDescription> pdCache,
 			Set<Path> projects) {
-		List<String> workspaces = workspacesCache.computeIfAbsent(yarnProjectRoot.toFile(),
-				f -> projectDescriptionLoader.loadWorkspacesFromProjectDescriptionAtLocation(new FileURI(f)));
+
+		projects.add(yarnProjectRoot);
+		ProjectDescription projectDescription = getCachedProjectDescription(yarnProjectRoot, pdCache);
+		final List<String> workspaces = (projectDescription == null) ? null : projectDescription.getWorkspaces();
+		if (workspaces == null) {
+			return;
+		}
 
 		for (String workspaceGlob : workspaces) {
-			collectGlobMatches(workspaceGlob, yarnProjectRoot, workspacesCache, projects);
+			collectGlobMatches(workspaceGlob, yarnProjectRoot, pdCache, projects);
 		}
 	}
 
-	private void collectProjects(Path root, boolean includeSubtree, Map<File, List<String>> workspacesCache,
+	private void collectProjects(Path root, boolean includeSubtree, Map<Path, ProjectDescription> pdCache,
 			Set<Path> allProjectDirs) {
+
 		if (!root.toFile().isDirectory()) {
 			return;
 		}
@@ -145,7 +158,7 @@ public class ProjectDiscoveryHelper {
 			depth = Integer.MAX_VALUE;
 		} else {
 			defaultReturn = SKIP_SUBTREE;
-			depth = 2;
+			depth = 3;
 		}
 		try {
 			EnumSet<FileVisitOption> none = EnumSet.noneOf(FileVisitOption.class);
@@ -155,7 +168,9 @@ public class ProjectDiscoveryHelper {
 					if (root.equals(dir)) {
 						return FileVisitResult.CONTINUE;
 					}
-
+					if (dir.toFile().getName().startsWith("@")) {
+						return FileVisitResult.CONTINUE;
+					}
 					if (dir.endsWith(N4JSGlobals.NODE_MODULES)) {
 						return FileVisitResult.SKIP_SUBTREE;
 					}
@@ -163,8 +178,8 @@ public class ProjectDiscoveryHelper {
 					File pckJson = dir.resolve(N4JSGlobals.PACKAGE_JSON).toFile();
 					if (pckJson.isFile()) {
 						if (!root.endsWith(N4JSGlobals.NODE_MODULES)
-								&& nodeModulesDiscoveryHelper.isYarnWorkspaceRoot(dir.toFile())) {
-							collectYarnWorkspaceProjects(dir, workspacesCache, allProjectDirs);
+								&& nodeModulesDiscoveryHelper.isYarnWorkspaceRoot(dir.toFile(), pdCache)) {
+							collectYarnWorkspaceProjects(dir, pdCache, allProjectDirs);
 						} else {
 							allProjectDirs.add(dir);
 						}
@@ -179,25 +194,32 @@ public class ProjectDiscoveryHelper {
 		}
 	}
 
-	private void collectGlobMatches(String glob, Path location, Map<File, List<String>> workspacesCache,
+	private void collectGlobMatches(String glob, Path location, Map<Path, ProjectDescription> pdCache,
 			Set<Path> allProjectDirs) {
+
+		int depth = glob.contains("**") ? Integer.MAX_VALUE : glob.split("/").length + 1;
 
 		PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher("glob:" + location.resolve(glob));
 		try {
-			Files.walkFileTree(location, new SimpleFileVisitor<Path>() {
+			EnumSet<FileVisitOption> none = EnumSet.noneOf(FileVisitOption.class);
+			Files.walkFileTree(location, none, depth, new SimpleFileVisitor<Path>() {
 				@Override
 				public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
 					if (dir.endsWith(N4JSGlobals.NODE_MODULES)) {
 						return FileVisitResult.SKIP_SUBTREE;
 					}
+
 					if (pathMatcher.matches(dir)) {
 						Path dirName = dir.getName(dir.getNameCount() - 1);
 						if (dirName.toString().startsWith("@")) {
-							collectProjects(dir, false, workspacesCache, allProjectDirs);
+							collectProjects(dir, false, pdCache, allProjectDirs);
+							return FileVisitResult.SKIP_SUBTREE;
+
 						} else {
 							File pckJson = dir.resolve(N4JSGlobals.PACKAGE_JSON).toFile();
 							if (pckJson.isFile()) {
 								allProjectDirs.add(dir);
+								return FileVisitResult.SKIP_SUBTREE;
 							}
 						}
 					}
@@ -215,4 +237,110 @@ public class ProjectDiscoveryHelper {
 		}
 	}
 
+	/** @return the potentially cached {@link ProjectDescription} for the project in the given directory */
+	private ProjectDescription getCachedProjectDescription(Path path, Map<Path, ProjectDescription> cache) {
+		if (!cache.containsKey(path)) {
+			FileURI uri = new FileURI(path.toFile());
+			ProjectDescription depPD = projectDescriptionLoader.loadProjectDescriptionAtLocation(uri);
+			cache.put(path, depPD);
+		}
+
+		return cache.get(path);
+	}
+
+	/** Searches all dependencies (ie. npm projects) of the given set of projects */
+	@SuppressWarnings("unused")
+	private LinkedHashSet<Path> collectAllDependencies(LinkedHashSet<Path> allProjectDirs,
+			Map<Path, ProjectDescription> pdCache) {
+
+		LinkedHashSet<Path> dependencies = new LinkedHashSet<>();
+		List<Path> nodeModulesFolders = nodeModulesDiscoveryHelper.findNodeModulesFolders(allProjectDirs, pdCache);
+
+		for (Path nmFolder : new LinkedHashSet<>(nodeModulesFolders)) {
+			collectProjects(nmFolder, true, pdCache, dependencies);
+		}
+		return dependencies;
+	}
+
+	/**
+	 * This method will <b>not find all</b> dependencies but only those that are actually necessary for compiling all
+	 * the projects found in the given set of workspace directories.
+	 * <p>
+	 * Necessary project dependencies are those that are either N4JS projects or non-N4JS projects that are direct
+	 * dependencies of N4JS projects.
+	 */
+	private LinkedHashSet<Path> collectNecessaryDependencies(LinkedHashSet<Path> allProjectDirs,
+			Map<Path, ProjectDescription> pdCache) {
+
+		LinkedHashSet<Path> dependencies = new LinkedHashSet<>();
+
+		for (Path nextProject : allProjectDirs) {
+			collectProjectDependencies(nextProject, pdCache, dependencies);
+		}
+
+		return dependencies;
+	}
+
+	/** Collects all (transitive) dependencies of the given project */
+	private void collectProjectDependencies(Path projectDir, Map<Path, ProjectDescription> pdCache,
+			LinkedHashSet<Path> dependencies) {
+
+		NodeModulesFolder nodeModulesFolder = nodeModulesDiscoveryHelper.getNodeModulesFolder(projectDir, pdCache);
+		Path topNodeModules = (nodeModulesFolder != null)
+				? nodeModulesFolder.nodeModulesFolder.toPath()
+				: null;
+
+		LinkedHashSet<Path> workList = new LinkedHashSet<>();
+		workList.add(projectDir);
+		while (!workList.isEmpty()) {
+			Iterator<Path> iterator = workList.iterator();
+			Path nextProject = iterator.next();
+			iterator.remove();
+
+			findDependencies(nextProject, topNodeModules, pdCache, workList, dependencies);
+		}
+	}
+
+	private void findDependencies(Path prjDir, Path topNodeModules, Map<Path, ProjectDescription> pdCache,
+			Set<Path> workList, Set<Path> dependencies) {
+
+		Path prjNodeModules = prjDir.resolve(N4JSGlobals.NODE_MODULES);
+
+		ProjectDescription prjDescr = getCachedProjectDescription(prjDir, pdCache);
+		if (prjDescr == null) {
+			return;
+		}
+
+		for (ProjectDependency dependency : prjDescr.getProjectDependencies()) {
+			String depName = dependency.getProjectName();
+
+			// Always use dependency of yarn workspace node_modules folder if it is available
+			// TODO GH-1314, remove shadow logic here
+			Path depLocation = (topNodeModules == null)
+					? prjNodeModules.resolve(depName)
+					: topNodeModules.resolve(depName);
+
+			if (!prjDir.equals(depLocation)) {
+				addDependency(depLocation, pdCache, workList, dependencies);
+			}
+		}
+	}
+
+	private void addDependency(Path depLocation, Map<Path, ProjectDescription> pdCache, Set<Path> workList,
+			Set<Path> dependencies) {
+
+		if (dependencies.contains(depLocation)) {
+			return;
+		}
+
+		Path packageJson = depLocation.resolve(N4JSGlobals.PACKAGE_JSON);
+		if (packageJson.toFile().isFile()) {
+			dependencies.add(depLocation);
+
+			ProjectDescription depPD = getCachedProjectDescription(depLocation, pdCache);
+			if (depPD != null && depPD.isHasN4JSNature()) {
+				workList.add(depLocation);
+			}
+		}
+	}
 }

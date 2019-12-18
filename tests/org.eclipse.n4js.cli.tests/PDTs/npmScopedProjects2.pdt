@@ -3,10 +3,9 @@
 
 
 FOLDERS
--*P1 [PROJECT]
--- node_modules
---- D1 [PROJECT]
+-*SomeFolder
+-- @MyScope
+--- P1 [PROJECT]
 
 EXPECT
-- P1
-- P1/node_modules/D1
+- SomeFolder/@MyScope/P1

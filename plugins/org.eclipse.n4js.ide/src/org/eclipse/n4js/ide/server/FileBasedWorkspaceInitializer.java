@@ -46,10 +46,15 @@ public class FileBasedWorkspaceInitializer implements XIWorkspaceConfigFactory {
 	@Inject
 	private FileBasedWorkspace workspace;
 
-	@Inject
 	private ProjectDiscoveryHelper projectDiscoveryHelper;
 
 	private URI knownWorkspaceBaseURI = null;
+
+	/** Sets {@link #projectDiscoveryHelper} */
+	@Inject
+	public void setProjectDiscoveryHelper(ProjectDiscoveryHelper projectDiscoveryHelper) {
+		this.projectDiscoveryHelper = projectDiscoveryHelper;
+	}
 
 	@Override
 	public IWorkspaceConfig getWorkspaceConfig(URI workspaceBaseURI) {
