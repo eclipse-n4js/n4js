@@ -237,7 +237,7 @@ abstract public class Assumption {
 	/**
 	 * Called from {@link DataFlowBranchWalker}.
 	 */
-	void callHoldsOnGuards(Guard guard) {
+	final void callHoldsOnGuards(Guard guard) {
 		checkState(isOpen());
 
 		switch (guard.asserts) {
@@ -255,7 +255,8 @@ abstract public class Assumption {
 	/**
 	 * Called from {@link DataFlowGraphExplorer}.
 	 */
-	void terminate() {
+	final void terminate() {
+		beforeTermination();
 		if (assumptionGroup.noCopies() && isOpen()) {
 			openBranch = false;
 			checkAndFinalize();
@@ -265,7 +266,7 @@ abstract public class Assumption {
 	/**
 	 * Called from {@link DataFlowBranchWalker}.
 	 */
-	void checkAndFinalize() {
+	final void checkAndFinalize() {
 		if (assumptionGroup.noCopies()) {
 			if (isOpen()) {
 				finalizeGuards();
@@ -343,6 +344,13 @@ abstract public class Assumption {
 
 		// overwrite me
 		return PartialResult.Unclear;
+	}
+
+	/**
+	 * This method gets called before the entire assumption analysis is terminated.
+	 */
+	protected void beforeTermination() {
+		// overwrite me
 	}
 
 	/*

@@ -153,6 +153,16 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 
 			return PartialResult.Unclear;
 		}
+
+		@Override
+		protected void beforeTermination() {
+			Set<Symbol> openOptChainingAliases = new HashSet<>(this.optChainingAliases);
+			openOptChainingAliases.retainAll(this.aliases);
+			if (!openOptChainingAliases.isEmpty()) {
+				this.failedBranches.add(
+						new NullDereferenceFailed(PartialResult.Type.MayFailed, GuardType.IsUndefined, this.symbol));
+			}
+		}
 	}
 
 	// TODO: not active/tested
