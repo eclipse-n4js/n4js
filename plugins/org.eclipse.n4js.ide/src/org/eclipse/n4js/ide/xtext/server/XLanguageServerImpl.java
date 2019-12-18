@@ -153,7 +153,7 @@ import com.google.inject.Inject;
 public class XLanguageServerImpl implements LanguageServer, WorkspaceService, TextDocumentService, LanguageClientAware,
 		Endpoint, JsonRpcMethodProvider, IBuildListener {
 
-	private static Logger LOG = Logger.getLogger(XLanguageServerImpl.class);
+	private static final Logger LOG = Logger.getLogger(XLanguageServerImpl.class);
 
 	@Inject
 	private XRequestManager requestManager;
@@ -245,12 +245,11 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 		access.addBuildListener(this);
 
-		System.out.println("About to initialize the server with workspace " + baseDir);
-
+		Stopwatch sw = Stopwatch.createStarted();
+		LOG.info("Start server initialization in workspace directory " + baseDir);
 		workspaceManager.initialize(baseDir);
 		workspaceManager.refreshWorkspaceConfig();
-
-		System.out.println("Done initializing the server at " + baseDir);
+		LOG.info("Server initialization done after " + sw);
 
 		initializeResult = new InitializeResult();
 		initializeResult.setCapabilities(createServerCapabilities(params));
@@ -262,7 +261,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	 * Configure the server capabilities for this instance.
 	 *
 	 * @param params
-	 *            the initialization parametrs
+	 *            the initialization parameters
 	 * @return the server capabilities
 	 */
 	protected ServerCapabilities createServerCapabilities(InitializeParams params) {
@@ -355,10 +354,11 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 				() -> {
 					try {
 						Stopwatch sw = Stopwatch.createStarted();
-						System.out.println("About to trigger initial build");
+						LOG.info("Start initial build ...");
+
 						workspaceManager.doInitialBuild(CancelIndicator.NullImpl);
 						initBuildFinished.complete(null);
-						System.out.println("Initial build done after " + sw);
+						LOG.info("Initial build done after " + sw);
 					} catch (Throwable t) {
 						t.printStackTrace();
 						initBuildFinished.completeExceptionally(t);
@@ -405,7 +405,8 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public void exit() {
-		System.out.println("Exit notification received");
+		LOG.info("Received exit notification");
+
 		// wait for all jobs to finish
 		runBuildable(() -> {
 			return (cancelIndicator) -> Collections.emptyList();
@@ -415,7 +416,8 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public CompletableFuture<Object> shutdown() {
-		System.out.println("About to shutdown");
+		LOG.info("Start shutdown");
+
 		disconnect();
 		runBuildable(() -> {
 			XBuildable buildable = workspaceManager.closeAll();
@@ -425,7 +427,8 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 				clientInitialized.complete(null);
 				initBuildFinished.complete(null);
 				shutdownAndExitHandler.shutdown();
-				System.out.println("Shutdown done");
+
+				LOG.info("Shutdown done");
 				return result;
 			};
 		});
@@ -1226,6 +1229,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	/**
 	 * @since 2.16
+	 * @return instance of {@link LanguageClient} or null iff not available
 	 */
 	public LanguageClient getLanguageClient() {
 		return client;
