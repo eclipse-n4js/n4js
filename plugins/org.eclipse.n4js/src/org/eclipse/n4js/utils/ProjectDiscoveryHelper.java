@@ -56,7 +56,7 @@ import com.google.inject.Inject;
  * <li>Add projects:
  * <ol>
  * <li/>Add a found project to the result set of all projects
- * <li/>Determine if a found project is a yarn or npm project. In case of a yarn project, add also all referenced
+ * <li/>Determine whether a found project is a yarn or npm project. In case of a yarn project, add also all referenced
  * projects (referenced in the workspace property).
  * <li/>Do not overwrite already found projects.
  * </ol>
@@ -66,6 +66,9 @@ import com.google.inject.Inject;
  * <li/>Find and add the dependencies of every project.
  * <li/>Do not overwrite already found dependencies.
  * <li/>Projects inside of dependencies are never considered.
+ * <li/>TODO GH-1314: Note that projects of different versions are not yet supported. Instead, only the top level npm
+ * will be used.
+ * <li/>All dependencies of plain-JS projects are omitted, since they are not necessary for building N4JS sources.
  * </ol>
  * </li>
  * <li>Merge projects and dependencies
@@ -102,7 +105,7 @@ public class ProjectDiscoveryHelper {
 	}
 
 	/** Searches all projects in the given array of workspace directories */
-	protected LinkedHashSet<Path> collectAllProjects(Path[] workspaceRoots, Map<Path, ProjectDescription> pdCache) {
+	private LinkedHashSet<Path> collectAllProjects(Path[] workspaceRoots, Map<Path, ProjectDescription> pdCache) {
 		LinkedHashSet<Path> allProjectDirs = new LinkedHashSet<>();
 		for (Path wsRoot : workspaceRoots) {
 			NodeModulesFolder nodeModulesFolder = nodeModulesDiscoveryHelper.getNodeModulesFolder(wsRoot, pdCache);
@@ -283,7 +286,7 @@ public class ProjectDiscoveryHelper {
 			LinkedHashSet<Path> dependencies) {
 
 		NodeModulesFolder nodeModulesFolder = nodeModulesDiscoveryHelper.getNodeModulesFolder(projectDir, pdCache);
-		Path yarnNodeModules = (nodeModulesFolder != null && nodeModulesFolder.isYarnWorkspace)
+		Path topNodeModules = (nodeModulesFolder != null)
 				? nodeModulesFolder.nodeModulesFolder.toPath()
 				: null;
 
@@ -294,11 +297,11 @@ public class ProjectDiscoveryHelper {
 			Path nextProject = iterator.next();
 			iterator.remove();
 
-			findDependencies(nextProject, yarnNodeModules, pdCache, workList, dependencies);
+			findDependencies(nextProject, topNodeModules, pdCache, workList, dependencies);
 		}
 	}
 
-	private void findDependencies(Path prjDir, Path yarnNodeModules, Map<Path, ProjectDescription> pdCache,
+	private void findDependencies(Path prjDir, Path topNodeModules, Map<Path, ProjectDescription> pdCache,
 			Set<Path> workList, Set<Path> dependencies) {
 
 		Path prjNodeModules = prjDir.resolve(N4JSGlobals.NODE_MODULES);
@@ -313,15 +316,14 @@ public class ProjectDiscoveryHelper {
 
 			// Always use dependency of yarn workspace node_modules folder if it is available
 			// TODO GH-1314, remove shadow logic here
-			Path depLocation = (yarnNodeModules == null)
+			Path depLocation = (topNodeModules == null)
 					? prjNodeModules.resolve(depName)
-					: yarnNodeModules.resolve(depName);
+					: topNodeModules.resolve(depName);
 
 			if (!prjDir.equals(depLocation)) {
 				addDependency(depLocation, pdCache, workList, dependencies);
 			}
 		}
-
 	}
 
 	private void addDependency(Path depLocation, Map<Path, ProjectDescription> pdCache, Set<Path> workList,

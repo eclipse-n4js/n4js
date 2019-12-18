@@ -30,17 +30,20 @@ public class CreateProjectStructureUtils {
 	static class Folder {
 		final Folder parent;
 		final String folderName;
-		final boolean isProject;
 		final boolean isWorkingDir;
+		final boolean isProject;
+		final boolean isPlainJS;
 		final String yarnWorkspacesFolder;
 		final String dependencies;
 
-		Folder(Folder parent, String folderName, boolean isProject, boolean isWorkingDir, String yarnWorkspacesFolder,
-				String dependencies) {
+		Folder(Folder parent, String folderName, boolean isWorkingDir, boolean isProject, boolean isPlainJS,
+				String yarnWorkspacesFolder, String dependencies) {
+
 			this.parent = parent;
 			this.folderName = folderName;
-			this.isProject = isProject;
 			this.isWorkingDir = isWorkingDir;
+			this.isProject = isProject;
+			this.isPlainJS = isPlainJS;
 			this.yarnWorkspacesFolder = yarnWorkspacesFolder;
 			this.dependencies = dependencies;
 		}
@@ -183,6 +186,7 @@ public class CreateProjectStructureUtils {
 		String restLine = folderStr.substring(folderNameEndIndex).trim();
 
 		boolean isProject = false;
+		boolean isPlainJS = false;
 		String yarnWorkspacesFolder = null;
 		String dependencies = null;
 
@@ -192,6 +196,12 @@ public class CreateProjectStructureUtils {
 				isProject = true;
 
 				restLine = restLine.substring("PROJECT".length()).trim();
+
+				if (restLine.startsWith("plainJS")) {
+					isPlainJS = true;
+					restLine = restLine.substring("plainJS".length()).trim();
+				}
+
 				if (restLine.startsWith("workspaces")) {
 					restLine = restLine.substring("workspaces".length()).trim();
 					if (restLine.startsWith("=")) {
@@ -218,7 +228,7 @@ public class CreateProjectStructureUtils {
 			}
 		}
 
-		return new Folder(parent, folderName, isProject, isWorkingDir, yarnWorkspacesFolder, dependencies);
+		return new Folder(parent, folderName, isWorkingDir, isProject, isPlainJS, yarnWorkspacesFolder, dependencies);
 	}
 
 	/** Creates the folder structure specified by {@link ProjectDiscoveryTestData} in the given dir */
@@ -241,8 +251,9 @@ public class CreateProjectStructureUtils {
 				projectName = folder.parent.folderName + "/" + projectName;
 			}
 			contents += "\"name\": \"" + folder.folderName + "\", ";
-			contents += "\"n4js\": {\"projectType\": \"library\"";
-			contents += "}";
+			if (!folder.isPlainJS) {
+				contents += "\"n4js\": {\"projectType\": \"library\"}";
+			}
 		} else {
 			contents += "\"private\": true, \"workspaces\": " + folder.yarnWorkspacesFolder + "";
 		}

@@ -41,7 +41,7 @@ public class ProjectDiscoveryTest {
 	/** Find test data files */
 	@Parameters(name = "{0}")
 	public static Collection<File> testData() {
-		File folder = new File("ProjectDiscoveryTest");
+		File folder = new File("PDTs");
 		ArrayList<File> testFiles = new ArrayList<>();
 		for (String testFileName : folder.list()) {
 			if (testFileName.endsWith(".pdt")) {
@@ -77,7 +77,7 @@ public class ProjectDiscoveryTest {
 		Path workspaceRoot = new File(tmpDir.toFile(), pdtd.workingDir.getPath()).toPath();
 
 		ArrayList<String> actualFolders = getActualFolders(tmpDir, workspaceRoot);
-		assertEquals(pdtd.expectedProjects, actualFolders);
+		assertEquals(String.join(",\n", pdtd.expectedProjects), String.join(",\n", actualFolders));
 	}
 
 	private ArrayList<String> getActualFolders(Path tmpDir, Path workspaceRoot) {
