@@ -48,7 +48,7 @@ function f4() {
 	let c : C;
 	if (0) c = new C();
 	let x = c?.field;
-	// XPECT warnings --> "Variable x may be undefined" at "x"
+	// XPECT warnings --> "Variable x may be undefined due to previous variable c" at "x"
 	x.toString();
 }
 
@@ -56,7 +56,7 @@ function f4() {
 function f5() {
 	let c : C;
 	let x = c?.field;
-	// XPECT warnings --> "Variable x may be undefined" at "x"
+	// XPECT warnings --> "Variable x is undefined due to previous variable c" at "x"
 	x.toString();
 }
 
@@ -68,7 +68,7 @@ function f6() {
 	if (true) {
 		x = new C();
 	}
-	// XPECT warnings --> "Variable x may be undefined" at "x"
+	// XPECT warnings --> "Variable x may be undefined due to previous variable c" at "x"
 	x.toString();
 }
 
@@ -80,7 +80,7 @@ function f7() {
 	if (true) {
 		x = undefined;
 	}
-	// XPECT warnings --> "Variable x may be undefined" at "x"
+	// XPECT warnings --> "Variable x is undefined" at "x"
 	x.toString();
 }
 
@@ -92,7 +92,7 @@ function f8() {
 	if (true) {
 		x = null;
 	}
-	// XPECT warnings --> "Variable x may be null or undefined" at "x"
+	// XPECT warnings --> "Variable x is null or undefined" at "x"
 	x.toString();
 }
 
@@ -113,3 +113,15 @@ function f9() {
 
 
 
+function f10() {
+	let c : C = new C();
+	if (true) {
+		c = null;
+	}
+	// XPECT warnings --> "Variable c may be null" at "c"
+	c.field;
+
+	let x = c?.field;
+	// XPECT warnings --> "Variable x may be undefined due to previous variable c" at "x"
+	x.toString();
+}
