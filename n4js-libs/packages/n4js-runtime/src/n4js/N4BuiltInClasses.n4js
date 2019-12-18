@@ -30,6 +30,7 @@ class N4Object extends Object {}
 
 abstract class N4Element extends Object {
 
+	public origin: string;
 	public annotations: Array<N4Annotation> = [];
 
 	protected constructor(@Spec spec: ~i~this) {
@@ -69,7 +70,7 @@ abstract class N4Type extends N4NamedElement {
 	public fqn: string;
 
 	public static of(n4object: any+): N4Type {
-		return n4object?.constructor?.n4type as N4Type;
+		return (n4object?.n4type || n4object?.constructor?.n4type) as N4Type;
 	}
 
 	public get isClass(): boolean {
@@ -91,9 +92,9 @@ abstract class N4Classifier extends N4Type {
 
 	public allImplementedInterfaces: Array<string> = [];
 
-	private ownedMembers: Array<N4Member> = [];
+	public ownedMembers: Array<N4Member> = [];
 
-	private consumedMembers: Array<N4Member> = [];
+	public consumedMembers: Array<N4Member> = [];
 
 	protected constructor(@Spec spec: ~i~this) {
 		super(spec);
