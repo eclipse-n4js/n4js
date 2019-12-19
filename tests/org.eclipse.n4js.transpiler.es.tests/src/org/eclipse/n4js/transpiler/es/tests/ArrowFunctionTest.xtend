@@ -158,56 +158,48 @@ class ArrowFunctionTest extends AbstractTranspilerTest {
 					value: undefined,
 					writable: true
 				}
-			}, {
-				n4type: {
-					get: function getN4type___n4() {
-						const $sym = Symbol.for('org.eclipse.n4js/reflectionInfo');
-						if (this.hasOwnProperty($sym)) {
-							return this[$sym];
-						}
-						const instanceProto = this.prototype, staticProto = this;
-						return this[$sym] = new N4Class({
-							name: 'C',
-							origin: 'test',
-							fqn: 'A/C',
-							n4superType: N4Object.n4type,
-							allImplementedInterfaces: [],
-							ownedMembers: [
-								new N4DataField({
-									name: '_data',
-									isStatic: false,
-									annotations: []
-								}),
-								new N4DataField({
-									name: 'argsTotal',
-									isStatic: false,
-									annotations: []
-								}),
-								new N4Accessor({
-									name: 'data',
-									getter: true,
-									isStatic: false,
-									annotations: []
-								}),
-								new N4Accessor({
-									name: 'data',
-									getter: false,
-									isStatic: false,
-									annotations: []
-								}),
-								new N4Method({
-									name: 'notifyListeners',
-									isStatic: false,
-									jsFunction: instanceProto['notifyListeners'],
-									annotations: []
-								})
-							],
-							consumedMembers: [],
+			}, {}, function(instanceProto, staticProto) {
+				var metaClass = new N4Class({
+					name: 'C',
+					origin: 'test',
+					fqn: 'A/C',
+					n4superType: N4Object.n4type,
+					allImplementedInterfaces: [],
+					ownedMembers: [
+						new N4DataField({
+							name: '_data',
+							isStatic: false,
 							annotations: []
-						});
-					}
-				}
-			}, undefined);
+						}),
+						new N4DataField({
+							name: 'argsTotal',
+							isStatic: false,
+							annotations: []
+						}),
+						new N4Accessor({
+							name: 'data',
+							getter: true,
+							isStatic: false,
+							annotations: []
+						}),
+						new N4Accessor({
+							name: 'data',
+							getter: false,
+							isStatic: false,
+							annotations: []
+						}),
+						new N4Method({
+							name: 'notifyListeners',
+							isStatic: false,
+							jsFunction: instanceProto['notifyListeners'],
+							annotations: []
+						})
+					],
+					consumedMembers: [],
+					annotations: []
+				});
+				return metaClass;
+			});
 		''';
 
 	 	// Prepare ResourceSet to contain exportedScript:

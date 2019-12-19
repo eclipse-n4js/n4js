@@ -32,27 +32,19 @@ console.log(x);
 function ASD() {
 	N.Error.prototype.constructor.call(this);
 }
-$makeClass(ASD, N.Error, [], {}, {
-	n4type: {
-		get: function getN4type___n4() {
-			const $sym = Symbol.for('org.eclipse.n4js/reflectionInfo');
-			if (this.hasOwnProperty($sym)) {
-				return this[$sym];
-			}
-			const instanceProto = this.prototype, staticProto = this;
-			return this[$sym] = new N4Class({
-				name: 'ASD',
-				origin: 'org.eclipse.n4js.transpiler.es5.tests',
-				fqn: 'importexport/IDEBUG_684/AT_IDEBUG_684_NamespacesOptimized_NoDuplicateDeclarartions/ASD',
-				n4superType: N.Error.n4type,
-				allImplementedInterfaces: [],
-				ownedMembers: [],
-				consumedMembers: [],
-				annotations: []
-			});
-		}
-	}
-}, undefined);
+$makeClass(ASD, N.Error, [], {}, {}, function(instanceProto, staticProto) {
+	var metaClass = new N4Class({
+		name: 'ASD',
+		origin: 'org.eclipse.n4js.transpiler.es5.tests',
+		fqn: 'importexport/IDEBUG_684/AT_IDEBUG_684_NamespacesOptimized_NoDuplicateDeclarartions/ASD',
+		n4superType: N.Error.n4type,
+		allImplementedInterfaces: [],
+		ownedMembers: [],
+		consumedMembers: [],
+		annotations: []
+	});
+	return metaClass;
+});
 --- */
 
 import * as N from "importexport/IDEBUG_684/Err"
