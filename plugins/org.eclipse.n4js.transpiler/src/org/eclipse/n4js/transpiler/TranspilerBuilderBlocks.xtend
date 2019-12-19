@@ -48,10 +48,8 @@ import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.IndexedAccessExpression
 import org.eclipse.n4js.n4JS.IntLiteral
-import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4EnumLiteral
-import org.eclipse.n4js.n4JS.N4GetterDeclaration
 import org.eclipse.n4js.n4JS.N4JSFactory
 import org.eclipse.n4js.n4JS.N4MemberAnnotationList
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
@@ -591,21 +589,6 @@ public class TranspilerBuilderBlocks
 			memberDecl.annotationList = annList;
 		}
 		return annList;
-	}
-
-	public static def N4GetterDeclaration _N4GetterDecl(LiteralOrComputedPropertyName declaredName, Block body) {
-		val result = N4JSFactory.eINSTANCE.createN4GetterDeclaration;
-		result.declaredName = declaredName;
-		result.body = body;
-		return result;
-	}
-
-	public static def N4SetterDeclaration _N4SetterDecl(LiteralOrComputedPropertyName declaredName, FormalParameter fpar, Block body) {
-		val result = N4JSFactory.eINSTANCE.createN4SetterDeclaration;
-		result.declaredName = declaredName;
-		result.fpar = fpar;
-		result.body = body;
-		return result;
 	}
 
 	public static def N4MethodDeclaration _N4MethodDecl(String name, Statement... statements) {
