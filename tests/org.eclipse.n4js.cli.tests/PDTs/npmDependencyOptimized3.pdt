@@ -1,0 +1,18 @@
+# Project Discovery Test
+# working dir marked with '*'
+
+# D4 is not expected due to optimization
+
+FOLDERS
+-*P1 [PROJECT dependencies={"D1":"*"}]
+-- node_modules
+--- D1 [PROJECT dependencies={"D2":"*","D3":"*"}]
+--- D2 [PROJECT]
+--- D3 [PROJECT plainJS dependencies={"D4":"*"}]
+--- D4 [PROJECT plainJS]
+
+EXPECT
+- P1
+- P1/node_modules/D1
+- P1/node_modules/D2
+- P1/node_modules/D3

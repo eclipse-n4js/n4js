@@ -12,6 +12,8 @@ package org.eclipse.n4js.flowgraphs.dataflow;
 
 import java.util.Objects;
 
+import com.google.common.base.Preconditions;
+
 /**
  * {@link PartialResult}s are returned from client side methods of {@link Assumption}s. {@link PartialResult} state if
  * certain data-flows, data effects or guaranteed guards can make the {@link Assumption} pass or fail. If an
@@ -33,6 +35,11 @@ abstract public class PartialResult {
 		Passed,
 		/** Used only in classes of type {@link Failed} */
 		Failed,
+		/**
+		 * Used only in classes of type {@link Failed}. Tells that there is obvious, yet uncertain reason for one branch
+		 * to fail, e.g. regarding property access of x.length in {@code let x = a?.b; x.length}.
+		 */
+		MayFailed,
 		/** Used only in classes of type {@link Unclear} */
 		Unclear
 	}
@@ -92,7 +99,13 @@ abstract public class PartialResult {
 	static public class Failed extends PartialResult {
 		/** Constructor */
 		public Failed() {
-			super(Type.Failed);
+			this(Type.Failed);
+		}
+
+		/** Constructor */
+		public Failed(Type failType) {
+			super(failType);
+			Preconditions.checkArgument(failType == Type.Failed || failType == Type.MayFailed);
 		}
 	}
 

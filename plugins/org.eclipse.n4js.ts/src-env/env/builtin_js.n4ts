@@ -352,7 +352,7 @@ public providedByRuntime  object Array<T> extends Object indexed T @Global {
 	 *
 	 * @see ES5, 15.4.4.4
 	 */
-	public concat(...items: union {T, Array<T>}): Array<T>
+	public concat(...items: union {T, Array<? extends T>}): Array<T>
 	/**
 	 * The elements of the array are converted to Strings, and these Strings are then concatenated, separated by
      * occurrences of the separator. If no separator is provided, a single comma is used as the separator.
