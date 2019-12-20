@@ -178,10 +178,10 @@ public class XStatefulIncrementalBuilder {
 		result.getNewIndex().addDescription(source, copiedDescription);
 		operationCanceledManager.checkCanceled(cancelIndicator);
 
-		if (!request.isIndexOnly()) {
+		if (request.isValidatorEnabled()) {
 			List<Issue> issues = resourceValidator.validate(resource, CheckMode.ALL, request.getCancelIndicator());
 			request.setResultIssues(source, issues);
-			boolean proceedGenerate = request.shouldGenerate(source);
+			boolean proceedGenerate = !request.containsValidationErrors(source);
 
 			if (proceedGenerate) {
 				operationCanceledManager.checkCanceled(cancelIndicator);

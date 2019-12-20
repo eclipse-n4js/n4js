@@ -108,11 +108,11 @@ public class XBuildManager {
 
 	/** A handle that can be used to trigger a build. */
 	public interface XBuildable {
-		/** Run the build */
-		List<IResourceDescription.Delta> build(CancelIndicator cancelIndicator);
-
 		/** No build is going to happen. */
 		XBuildable NO_BUILD = (cancelIndicator) -> Collections.emptyList();
+
+		/** Run the build */
+		List<IResourceDescription.Delta> build(CancelIndicator cancelIndicator);
 	}
 
 	private static final Logger LOG = LogManager.getLogger(XBuildManager.class);
@@ -121,6 +121,7 @@ public class XBuildManager {
 	public static final String CYCLIC_PROJECT_DEPENDENCIES = XBuildManager.class.getName()
 			+ ".cyclicProjectDependencies";
 
+	@Inject
 	private XWorkspaceManager workspaceManager;
 
 	@Inject
@@ -207,17 +208,6 @@ public class XBuildManager {
 		return result;
 	}
 
-	/**
-	 * Enqueue the given file collections.
-	 *
-	 * @return a buildable.
-	 */
-	public XBuildable doIncrementalBuild(List<URI> dirtyFiles, List<URI> deletedFiles, boolean doGenerate) {
-		queue(this.dirtyFiles, deletedFiles, dirtyFiles);
-		queue(this.deletedFiles, dirtyFiles, deletedFiles);
-		return (cancelIndicator) -> internalIncrementalBuild(cancelIndicator, doGenerate);
-	}
-
 	/** Performs a clean operation in all projects */
 	public void doClean(CancelIndicator cancelIndicator) {
 		for (XProjectManager projectManager : workspaceManager.getProjectManagers()) {
@@ -225,16 +215,32 @@ public class XBuildManager {
 		}
 	}
 
-	/** Update the contents of the given set. */
-	protected void queue(Set<URI> files, Collection<URI> toRemove, Collection<URI> toAdd) {
-		files.removeAll(toRemove);
-		files.addAll(toAdd);
+	/**
+	 * Enqueue the given file collections.
+	 *
+	 * @return a buildable.
+	 */
+	public XBuildable getIncrementalDirtyBuildable(List<URI> dirtyFiles, List<URI> deletedFiles) {
+		return (cancelIndicator) -> doIncrementalBuild(dirtyFiles, deletedFiles, false, cancelIndicator);
+	}
+
+	/**
+	 * Enqueue the given file collections.
+	 *
+	 * @return a buildable.
+	 */
+	public XBuildable getIncrementalGenerateBuildable(List<URI> dirtyFiles, List<URI> deletedFiles) {
+		return (cancelIndicator) -> doIncrementalBuild(dirtyFiles, deletedFiles, true, cancelIndicator);
 	}
 
 	/** Run the build on the workspace */
-	protected List<IResourceDescription.Delta> internalIncrementalBuild(CancelIndicator cancelIndicator,
-			boolean doGenerate) {
+	protected List<IResourceDescription.Delta> doIncrementalBuild(List<URI> dirtyFiles,
+			List<URI> deletedFiles, boolean doGenerate, CancelIndicator cancelIndicator) {
+
 		try {
+			queue(this.dirtyFiles, deletedFiles, dirtyFiles);
+			queue(this.deletedFiles, dirtyFiles, deletedFiles);
+
 			Map<ProjectDescription, Set<URI>> project2dirty = computeProjectToUriMap(dirtyFiles);
 			Map<ProjectDescription, Set<URI>> project2deleted = computeProjectToUriMap(deletedFiles);
 
@@ -245,12 +251,17 @@ public class XBuildManager {
 				XProjectManager projectManager = workspaceManager.getProjectManager(descr.getName());
 				Set<URI> projectDirty = project2dirty.getOrDefault(descr, Collections.emptySet());
 				Set<URI> projectDeleted = project2deleted.getOrDefault(descr, Collections.emptySet());
+
 				XBuildResult partialResult = projectManager.doIncrementalBuild(projectDirty, projectDeleted,
 						unreportedDeltas, doGenerate, cancelIndicator);
 
 				dirtyFiles.removeAll(projectDirty);
 				deletedFiles.removeAll(projectDeleted);
 				mergeWithUnreportedDeltas(partialResult.getAffectedResources());
+
+				if (doGenerate) {
+					projectManager.persistProjectState();
+				}
 			}
 			List<IResourceDescription.Delta> result = unreportedDeltas;
 			unreportedDeltas = new ArrayList<>();
@@ -265,6 +276,12 @@ public class XBuildManager {
 			deletedFiles.clear();
 			throw ce;
 		}
+	}
+
+	/** Update the contents of the given set. */
+	protected void queue(Set<URI> files, Collection<URI> toRemove, Collection<URI> toAdd) {
+		files.removeAll(toRemove);
+		files.addAll(toAdd);
 	}
 
 	private Map<ProjectDescription, Set<URI>> computeProjectToUriMap(Collection<URI> uris) {
@@ -320,12 +337,7 @@ public class XBuildManager {
 		projectManager.reportProjectIssue(msg, XBuildManager.CYCLIC_PROJECT_DEPENDENCIES, Severity.ERROR);
 	}
 
-	/** Setter. */
-	public void setWorkspaceManager(XWorkspaceManager workspaceManager) {
-		this.workspaceManager = workspaceManager;
-	}
-
-	/**  */
+	/** Persists the project state of all projects */
 	public void persistProjectState(CancelIndicator indicator) {
 		for (XProjectManager prjManager : workspaceManager.getProjectManagers()) {
 			prjManager.persistProjectState();

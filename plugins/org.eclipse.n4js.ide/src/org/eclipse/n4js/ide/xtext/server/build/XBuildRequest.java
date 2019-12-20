@@ -39,9 +39,11 @@ public class XBuildRequest {
 
 	private boolean doGenerate = true;
 
-	private boolean writeStorageResources = false;
+	private boolean doValidate = true;
 
 	private boolean indexOnly = false;
+
+	private boolean writeStorageResources = false;
 
 	private XtextResourceSet resourceSet;
 
@@ -218,11 +220,6 @@ public class XBuildRequest {
 		}
 	}
 
-	/** @return true iff the builder should perform generation on the given source file */
-	public boolean shouldGenerate(URI source) {
-		return !containsErrors(source);
-	}
-
 	/**
 	 * Getter.
 	 */
@@ -240,8 +237,22 @@ public class XBuildRequest {
 	/**
 	 * Getter.
 	 */
+	public boolean isValidatorEnabled() {
+		return this.doValidate && !isIndexOnly();
+	}
+
+	/**
+	 * Setter.
+	 */
+	public void setValidatorEnabled(boolean doValidate) {
+		this.doValidate = doValidate;
+	}
+
+	/**
+	 * Getter.
+	 */
 	public boolean isGeneratorEnabled() {
-		return this.doGenerate;
+		return this.doGenerate && isValidatorEnabled() && !isIndexOnly();
 	}
 
 	/**
@@ -308,7 +319,7 @@ public class XBuildRequest {
 	}
 
 	/** @return true iff the given source has issues of severity ERROR */
-	protected boolean containsErrors(URI source) {
+	public boolean containsValidationErrors(URI source) {
 		Collection<Issue> issues = this.resultIssues.get(source);
 		for (Issue issue : issues) {
 			Severity severity = issue.getSeverity();
