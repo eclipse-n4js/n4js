@@ -10,16 +10,13 @@
  */
 
 
-/*
- ------------------------------------------------------------------------------
- The classes defined here are provided by the runtime engine.
- See /org.eclipse.n4js.runner/res/ide-nodejs-env/n4js-es5/preload/N4BuiltInClasses.js for the compiled (and manually adapted) code.
+// NOTE:
+//
+// The implementation of the built-in types declared here is provided by file "N4BuiltInClasses.n4js"
+// in the N4JS runtime (i.e. in npm package "n4js-runtime"). These two files need to be kept in sync!
+//
+// For details see: /n4js-runtime/src/n4js/N4BuiltInClasses.n4js
 
- Use /org.eclipse.n4js/predefined/N4BuiltInClasses.n4js
- compile the corresponding classes, and manually adjust the
- compiled code as needed. The compiled code is then added to the runtime.
- ------------------------------------------------------------------------------
- */
 
 /**
  * Base class for all N4 reflective elements.

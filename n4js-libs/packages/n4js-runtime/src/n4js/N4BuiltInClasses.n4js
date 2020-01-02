@@ -11,10 +11,19 @@
 
 
 // NOTE:
+//
 // This file is only responsible for creating the output code for the below types,
 // which will be used during runtime. The below types will not be directly made
-// available to N4JS code; instead, files builtin_n4.n4ts and builtin_n4idl.n4ts
-// define the below types as built-in types.
+// available to N4JS code at compile type (type information, etc.); instead, files
+// builtin_n4.n4ts and builtin_n4idl.n4ts declare the below types as built-in types.
+//
+// This has the following consequences:
+// 1) neither "@@Global" nor "export" must be used in this file,
+// 2) no API documentation should be included in this file (instead, it should be
+//    placed in files builtin_n4.n4ts / builtin_n4idl.n4ts),
+// 3) at the end of this file, all global types need to be explicitly added to the
+//    global object, in order to make them available globally at runtime (this won't
+//    happen automatically).
 
 
 function setTargetOfAnnotations(target: Object) {
@@ -288,6 +297,7 @@ interface MigrationContext {
 }
 
 
+// add above types to the global object
 const global = Function('return this')() as Object+;
 if (typeof global === "object") {
 	global.N4Object = N4Object;

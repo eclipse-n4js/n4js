@@ -1,3 +1,23 @@
+/*
+ * Copyright (c) 2018 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+
+// NOTE:
+//
+// The implementation of the built-in types declared here is provided by file "N4BuiltInClasses.n4js"
+// in the N4JS runtime (i.e. in npm package "n4js-runtime"). These two files need to be kept in sync!
+//
+// For details see: /n4js-runtime/src/n4js/N4BuiltInClasses.n4js
+
+
 /**
  * A {@link MigrationController} schedules the actual execution of migrations. 
  * 
