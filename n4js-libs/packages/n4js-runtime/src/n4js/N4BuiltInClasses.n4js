@@ -185,7 +185,7 @@ abstract class N4Member extends N4NamedElement {
 
 @Final class N4Accessor extends N4Member {
 
-	private getter: boolean;
+	public getter: boolean;
 
 	public isGetter(): boolean {
 		return this.getter;
