@@ -23,6 +23,8 @@ import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.cli.N4jscTestFactory;
 import org.eclipse.n4js.cli.helper.SystemExitRedirecter.SystemExitException;
 import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
+import org.eclipse.xtext.testing.GlobalRegistries;
+import org.eclipse.xtext.testing.GlobalRegistries.GlobalStateMemento;
 import org.eclipse.xtext.workspace.IProjectConfig;
 
 import com.google.common.base.Stopwatch;
@@ -35,6 +37,7 @@ import com.google.inject.Injector;
 public class InProcessExecuter {
 	final private SystemOutRedirecter systemOutRedirecter = new SystemOutRedirecter();
 	final private SystemExitRedirecter systemExitRedirecter = new SystemExitRedirecter();
+	private GlobalStateMemento originalGlobalState = null;
 
 	interface N4jscProcess<ArgType> {
 		/** Invokes the starting method of this test class */
@@ -105,6 +108,8 @@ public class InProcessExecuter {
 	}
 
 	void setRedirections() {
+		originalGlobalState = GlobalRegistries.makeCopyOfGlobalState();
+
 		N4jscTestFactory.set(isEnabledBackend);
 		systemOutRedirecter.set(isMirrorSystemOut);
 		systemExitRedirecter.set();
@@ -114,5 +119,7 @@ public class InProcessExecuter {
 		systemOutRedirecter.unset();
 		systemExitRedirecter.unset();
 		N4jscTestFactory.unset();
+
+		originalGlobalState.restoreGlobalState();
 	}
 }

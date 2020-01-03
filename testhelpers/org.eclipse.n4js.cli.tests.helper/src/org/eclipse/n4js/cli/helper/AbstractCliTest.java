@@ -13,8 +13,6 @@ package org.eclipse.n4js.cli.helper;
 import static org.junit.Assert.assertEquals;
 
 import org.eclipse.n4js.cli.N4jscOptions;
-import org.eclipse.n4js.cli.N4jscTestFactory;
-import org.junit.Before;
 
 /**
  * Abstract test class to be used when testing N4JS CLI related things.
@@ -27,12 +25,6 @@ abstract public class AbstractCliTest<ArgType> {
 	/** @return instance of {@link CliCompileResult} which is filled with values later on */
 	protected CliCompileResult createResult() {
 		return new CliCompileResult();
-	}
-
-	/** Reset the injector setup */
-	@Before
-	final public void before() {
-		N4jscTestFactory.resetInjector();
 	}
 
 	/** Convenience version of {@link #n4jsc(Object, Integer)} with exist code == 0 */
