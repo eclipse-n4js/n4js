@@ -59,9 +59,8 @@ The N4JS and N4JSIDE components are organized via features. The following featur
 |        | utils.ui	           | general UI utilities
 2+| *org.eclipse.n4js.compiler.sdk* | Compilers and Transpilers
 |        | generator.common	   | *Not included in feature, logically associated.*
-|        | generator.headless  | N4JS headless generator (i.e. command line compiler).
 |        | transpiler	       | Generic transpiler infrastructure
-|        | transpiler.es	   | Transpiler to compile to EcmaScript
+|        | transpiler.es	       | Transpiler to compile to EcmaScript
 2+| *org.eclipse.n4js.json.sdk* | N4JS JSON
 |        | json	               | Xtext grammar with generator and custom code for a extensible JSON language support. Used in N4JS for the project description in terms of a `package.json` file.
 |        | json.ui	           | UI components for extensible JSON language support, e.g., proposal provider, labels, outline.
