@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.accesscontrol.tests;
 
+import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -20,28 +21,28 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.n4js.HeadlessCompilerFactory;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.n4js.N4JSLanguageConstants;
+import org.eclipse.n4js.cli.helper.CliCompileResult;
+import org.eclipse.n4js.cli.helper.CliTools;
 import org.eclipse.n4js.csv.CSVData;
 import org.eclipse.n4js.csv.CSVParser;
 import org.eclipse.n4js.csv.CSVRecord;
-import org.eclipse.n4js.generator.headless.BuildSet;
-import org.eclipse.n4js.generator.headless.IssueCollector;
-import org.eclipse.n4js.generator.headless.N4HeadlessCompiler;
-import org.eclipse.n4js.generator.headless.N4JSCompileException;
+import org.eclipse.n4js.ide.xtext.server.DiagnosticIssueConverter;
 import org.eclipse.n4js.tests.codegen.Classifier;
 import org.eclipse.n4js.tests.codegen.Member;
 import org.eclipse.n4js.tests.issues.IssueExpectations;
 import org.eclipse.n4js.utils.SimpleParserException;
 import org.eclipse.n4js.utils.io.FileDeleter;
+import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.xtext.validation.Issue;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -577,6 +578,11 @@ public class AccessControlTest {
 
 		deleteFixtureDirectory();
 
+		// Ignore issue: "ERROR: Project does not exist with project ID: n4js-runtime."
+		Collection<String> ignoreIssueCodes = new HashSet<>(
+				N4JSLanguageConstants.DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS);
+		ignoreIssueCodes.add(IssueCodes.NON_EXISTING_PROJECT);
+
 		boolean failOnExit = specification.getExpectation().isFixMe();
 		Map<MemberType, List<String>> fixMeMessages = new HashMap<>();
 
@@ -586,8 +592,7 @@ public class AccessControlTest {
 			ScenarioGenerator generator = new ScenarioGenerator(specification, memberType);
 			generator.generateScenario(Paths.get(FIXTURE_ROOT, memberType.name()));
 			List<Issue> issues = new ArrayList<>(compile(memberType));
-			issues.removeIf(issue -> N4JSLanguageConstants.DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS
-					.contains(issue.getCode()));
+			issues.removeIf(issue -> ignoreIssueCodes.contains(issue.getCode()));
 			IssueExpectations expectations = generator.createIssues();
 
 			if (specification.getExpectation().isFixMe()) {
@@ -628,19 +633,23 @@ public class AccessControlTest {
 	 * @return the generated issues
 	 */
 	private static Collection<Issue> compile(MemberType memberType) {
-		IssueCollector issueCollector = new IssueCollector();
-		try {
-			N4HeadlessCompiler hlc = HeadlessCompilerFactory.createCompilerWithDefaults();
+		File projectRoot = Paths.get(FIXTURE_ROOT, memberType.name()).toFile();
 
-			final File projectRoot = Paths.get(FIXTURE_ROOT, memberType.name()).toFile();
+		CliTools cliTools = new CliTools();
+		// cliTools.setIsMirrorSystemOut(true); // print directly to console
+		cliTools.setEnvironmentVariable("NPM_TOKEN", "dummy");
+		CliCompileResult compileResult = new CliCompileResult();
+		cliTools.callN4jscInprocess(COMPILE(projectRoot), false, compileResult);
 
-			final BuildSet buildSet = hlc.getBuildSetComputer().createAllProjectsBuildSet(Arrays.asList(projectRoot),
-					Collections.emptySet());
-			hlc.compile(buildSet, issueCollector);
-		} catch (N4JSCompileException e) {
-			// nothing to do
+		DiagnosticIssueConverter converter = new DiagnosticIssueConverter();
+		List<Issue> issues = new ArrayList<>();
+		for (Map.Entry<String, Diagnostic> uriDiagnostic : compileResult.getIssues().entries()) {
+			URI uri = URI.createURI(uriDiagnostic.getKey());
+			Diagnostic diagnostic = uriDiagnostic.getValue();
+			issues.add(converter.toIssue(uri, diagnostic, null));
 		}
-		return issueCollector.getCollectedIssues();
+
+		return issues;
 	}
 
 	/**

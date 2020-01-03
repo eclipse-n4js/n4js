@@ -79,6 +79,7 @@ public class InProcessExecuter {
 
 			if (isEnabledBackend) {
 				N4jscTestLanguageClient callback = (N4jscTestLanguageClient) N4jscFactory.getLanguageClient();
+				cliResult.issues = callback.issues;
 				cliResult.errors = callback.errors;
 				cliResult.warnings = callback.warnings;
 				cliResult.transpiledFiles = callback.transpiledFiles;

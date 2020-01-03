@@ -20,7 +20,8 @@ import org.eclipse.n4js.cli.helper.AbstractCliCompileTest.N4jscVariant;
  */
 public class CliCompileProcessResult extends CliCompileResult {
 
-	CliCompileProcessResult() {
+	/** Constructor */
+	public CliCompileProcessResult() {
 		super(N4jscVariant.exprocess);
 	}
 
