@@ -202,14 +202,16 @@ public class Project {
 						]
 					}
 				«ENDIF»
-			}
-			«IF !projectDependencies.nullOrEmpty
-			»,"dependencies": {
+			},
+			"dependencies": {
+					"n4js-runtime": "*"«
+					IF !projectDependencies.nullOrEmpty
+					»,
 					«FOR dep : projectDependencies SEPARATOR ','»
 						"«dep.projectName»": "*"
 					«ENDFOR»
+					«ENDIF»
 				}
-			«ENDIF»
 		}
 	'''
 
