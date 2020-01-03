@@ -56,7 +56,6 @@ Contributors:
 		<module>org.eclipse.n4js.transpiler.tests</module>
 		<module>org.eclipse.n4js.transpiler.es5.tests</module>
 		<module>org.eclipse.n4js.transpiler.es.tests</module>
-		<module>org.eclipse.n4js.generator.headless.tests</module>
 
 		<!-- Package.json tests -->
 		<module>org.eclipse.n4js.packagejson.xpect.tests</module>
