@@ -100,13 +100,10 @@ public class ProjectStatePersister {
 	 */
 	private static final int VERSION_1 = 1;
 
-	/**
-	 * The current version of the persistence format. Increment to support backwards compatible deserialization.
-	 */
+	/** The current version of the persistence format. Increment to support backwards compatible deserialization. */
 	private static final int CURRENT_VERSION = VERSION_1;
-	/**
-	 * The simple name of the file with the project state.
-	 */
+
+	/** The simple name of the file with the project state. */
 	public static final String FILENAME = ".n4js.projectstate";
 
 	/**
@@ -121,6 +118,7 @@ public class ProjectStatePersister {
 	 */
 	public void writeProjectState(IProjectConfig project, XIndexState state,
 			Collection<? extends HashedFileContent> files, Map<URI, ? extends Collection<Issue>> validationIssues) {
+
 		File file = getDataFile(project);
 		try (OutputStream nativeOut = Files.asByteSink(file).openBufferedStream()) {
 			writeProjectState(nativeOut, N4JSLanguageUtils.getLanguageVersion(), state, files, validationIssues);

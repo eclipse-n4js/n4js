@@ -12,6 +12,7 @@ package org.eclipse.n4js.ide.server;
 
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
+import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 
 import com.google.inject.Inject;
@@ -44,10 +45,13 @@ public class LspLogger {
 
 	/** */
 	public void log(String messageString, MessageType type) {
-		MessageParams message = new MessageParams();
-		message.setMessage(messageString);
-		message.setType(type);
-		langServer.getLanguageClient().logMessage(message);
+		LanguageClient languageClient = langServer.getLanguageClient();
+		if (languageClient != null) {
+			MessageParams message = new MessageParams();
+			message.setMessage(messageString);
+			message.setType(type);
+			languageClient.logMessage(message);
+		}
 	}
 
 }

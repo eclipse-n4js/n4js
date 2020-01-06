@@ -14,7 +14,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -128,18 +127,11 @@ public class XProjectManager {
 		this.resourceSet = createNewResourceSet(new XIndexState().getResourceDescriptions());
 	}
 
-	/** Initial build reads the project state and resolves changes. */
+	/** Initial build reads the project state and resolves changes. Generate output files. */
 	public XBuildResult doInitialBuild(CancelIndicator cancelIndicator) {
 		ResourceChangeSet changeSet = projectStateHolder.readProjectState(projectConfig);
-		XBuildResult result = doIncrementalBuild(
-				changeSet.getModified(), changeSet.getDeleted(), Collections.emptyList(), cancelIndicator,
-				buildRequest -> {
-					// during initial build, we do not want to notify about any issues sind it is
-					// done at the end of the project for the deserialized issues and the new issues
-					// altogether.
-					buildRequest.setAfterValidateListener(null);
-					return buildRequest;
-				});
+		XBuildResult result = doBuild(
+				changeSet.getModified(), changeSet.getDeleted(), Collections.emptyList(), false, true, cancelIndicator);
 
 		Map<URI, Collection<Issue>> validationIssues = projectStateHolder.getValidationIssues();
 		for (Map.Entry<URI, Collection<Issue>> locationToIssues : validationIssues.entrySet()) {
@@ -162,21 +154,25 @@ public class XProjectManager {
 		return result;
 	}
 
-	/** Build this project. */
+	/** Build increments of this project. */
 	public XBuildResult doIncrementalBuild(Set<URI> dirtyFiles, Set<URI> deletedFiles,
-			List<IResourceDescription.Delta> externalDeltas, CancelIndicator cancelIndicator) {
-		return doIncrementalBuild(dirtyFiles, deletedFiles, externalDeltas, cancelIndicator, Function.identity());
+			List<IResourceDescription.Delta> externalDeltas, boolean doGenerate, CancelIndicator cancelIndicator) {
+
+		return doBuild(dirtyFiles, deletedFiles, externalDeltas, true, doGenerate, cancelIndicator);
 	}
 
-	private XBuildResult doIncrementalBuild(Set<URI> dirtyFiles, Set<URI> deletedFiles,
-			List<IResourceDescription.Delta> externalDeltas, CancelIndicator cancelIndicator,
-			Function<? super XBuildRequest, ? extends XBuildRequest> buildRequestModification) {
+	/** Build this project. */
+	protected XBuildResult doBuild(Set<URI> dirtyFiles, Set<URI> deletedFiles,
+			List<IResourceDescription.Delta> externalDeltas, boolean propagateIssues, boolean doGenerate,
+			CancelIndicator cancelIndicator) {
+
 		URI persistenceFile = projectStateHolder.getPersistenceFile(projectConfig);
 		dirtyFiles.remove(persistenceFile);
 		deletedFiles.remove(persistenceFile);
 
-		XBuildRequest request = newBuildRequest(dirtyFiles, deletedFiles, externalDeltas, cancelIndicator);
-		request = buildRequestModification.apply(request);
+		XBuildRequest request = newBuildRequest(dirtyFiles, deletedFiles, externalDeltas, propagateIssues, doGenerate,
+				cancelIndicator);
+
 		resourceSet = request.getResourceSet(); // resourceSet is already used during the build via #getResource(URI)
 
 		XBuildResult result = incrementalBuilder.build(request);
@@ -266,7 +262,8 @@ public class XProjectManager {
 
 	/** Creates a new build request for this project. */
 	protected XBuildRequest newBuildRequest(Set<URI> changedFiles, Set<URI> deletedFiles,
-			List<IResourceDescription.Delta> externalDeltas, CancelIndicator cancelIndicator) {
+			List<IResourceDescription.Delta> externalDeltas, boolean propagateIssues, boolean doGenerate,
+			CancelIndicator cancelIndicator) {
 
 		XBuildRequest result = buildRequestFactory.getBuildRequest(changedFiles, deletedFiles, externalDeltas);
 
@@ -277,6 +274,14 @@ public class XProjectManager {
 		result.setResourceSet(createFreshResourceSet(result.getState().getResourceDescriptions()));
 		result.setCancelIndicator(cancelIndicator);
 		result.setBaseDir(baseDir);
+		result.setGeneratorEnabled(doGenerate);
+
+		if (!propagateIssues) {
+			// during initial build, we do not want to notify about any issues sind it is
+			// done at the end of the project for the deserialized issues and the new issues
+			// altogether.
+			result.setAfterValidateListener(null);
+		}
 
 		if (projectConfig instanceof N4JSProjectConfig) {
 			// TODO: merge N4JSProjectConfig#indexOnly() to IProjectConfig
