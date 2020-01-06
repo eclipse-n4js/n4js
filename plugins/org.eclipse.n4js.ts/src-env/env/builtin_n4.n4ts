@@ -12,10 +12,10 @@
 
 // NOTE:
 //
-// The implementation of the built-in types declared here is provided by file "N4BuiltInClasses.n4js"
+// The implementation of the built-in types declared here is provided by file "N4BuiltInTypes.n4js"
 // in the N4JS runtime (i.e. in npm package "n4js-runtime"). These two files need to be kept in sync!
 //
-// For details see: /n4js-runtime/src/n4js/N4BuiltInClasses.n4js
+// For details see: /n4js-runtime/src/n4js/N4BuiltInTypes.n4js
 
 
 /**

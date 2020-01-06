@@ -407,7 +407,7 @@ A/B
 A/B
 A/A
 A/B
-N4BuiltInClasses/N4Class
+N4BuiltInTypes/N4Class
 ----
 --
 
@@ -433,10 +433,10 @@ Assuming this code is defined in file `A`, this will output
 
 [source,n4js]
 ----
-N4Object.n4type.fqn:      N4BuiltInClasses/N4Object
-N4Class.n4type.fqn:       N4BuiltInClasses/N4Class
+N4Object.n4type.fqn:      N4BuiltInTypes/N4Object
+N4Class.n4type.fqn:       N4BuiltInTypes/N4Class
 A.n4type.fqn:             A/A
-A.n4type.n4superType.fqn: N4BuiltInClasses/N4Object
+A.n4type.n4superType.fqn: N4BuiltInTypes/N4Object
 ----
 
 Note that classes extending `Object` do not provide the static `n4type` getter, hat is

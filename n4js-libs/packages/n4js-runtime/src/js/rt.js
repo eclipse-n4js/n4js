@@ -9,4 +9,4 @@
  *   NumberFour AG - Initial API and implementation
  */
 import "./N4RuntimeBootstrap.js";
-import "./N4BuiltInClasses.js";
+import "./N4BuiltInTypes.js";

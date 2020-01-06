@@ -48,7 +48,7 @@ stdout:
      test.ownedMembers[10] is methodsWithAnnotation
   - test.consumedMembers is empty
  = inspect test as N4Type
-  - test.fqn is a string N4BuiltInClasses/N4Classifier
+  - test.fqn is a string N4BuiltInTypes/N4Classifier
   - test.of is a function of___n4
  = inspect test as N4NamedElement
   - test.name is a string N4Classifier
