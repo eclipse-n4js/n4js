@@ -24,7 +24,7 @@ a.constructor.n4type:
         "origin": "n4js-runtime",
         "annotations": [],
         "name": "N4Object",
-        "fqn": "N4BuiltInClasses/N4Object",
+        "fqn": "N4BuiltInTypes/N4Object",
         "allImplementedInterfaces": [],
         "ownedMembers": [],
         "consumedMembers": []
@@ -87,7 +87,7 @@ A.n4type:
         "origin": "n4js-runtime",
         "annotations": [],
         "name": "N4Object",
-        "fqn": "N4BuiltInClasses/N4Object",
+        "fqn": "N4BuiltInTypes/N4Object",
         "allImplementedInterfaces": [],
         "ownedMembers": [],
         "consumedMembers": []

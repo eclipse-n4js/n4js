@@ -44,8 +44,6 @@ Contributors:
 		<module>org.eclipse.n4js.ide</module>
 		<module>org.eclipse.n4js.ui</module>
 		<module>org.eclipse.n4js.cli</module>
-		<!-- execution environments -->
-		<module>org.eclipse.n4js.environments</module>
 		<!-- runners -->
 		<module>org.eclipse.n4js.runner</module>
 		<module>org.eclipse.n4js.runner.ui</module>

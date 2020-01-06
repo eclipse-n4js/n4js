@@ -14,21 +14,17 @@
  /* XPECT  output ~~~
 <==
 stdout:
-N4Object.n4type.fqn:      N4BuiltInClasses/N4Object
-N4Class.n4type.fqn:       N4BuiltInClasses/N4Class
+N4Object.n4type.fqn:      N4BuiltInTypes/N4Object
+N4Class.n4type.fqn:       N4BuiltInTypes/N4Class
 A.n4type.fqn:             spec_chap_06_04/Ex58_Reflection_with_Built_In_Types/A
-A.n4type.n4superType.fqn: N4BuiltInClasses/N4Object
+A.n4type.n4superType.fqn: N4BuiltInTypes/N4Object
 stderr:
 ==>
 ~~~ */
 
-/* XPECT ! compileResult ---
---- */
-// §-§-§-§-§ additional ^^^^^^^^ not in example: §-§-§-§--
 console.log('N4Object.n4type.fqn:      ' + N4Object.n4type.fqn)
 console.log('N4Class.n4type.fqn:       ' + N4Class.n4type.fqn)
 
 class A {}
 console.log('A.n4type.fqn:             ' + A.n4type.fqn)
 console.log('A.n4type.n4superType.fqn: ' + A.n4type.n4superType.fqn)
-// §-§-§-§-§ additional check not in example: §-§-§-§--

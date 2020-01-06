@@ -25,15 +25,15 @@
 stdout:
 # inspect N4Type
  = inspect test as N4Type
-  - test.fqn is a string N4BuiltInClasses/N4Type
-  - test.of is a function of
+  - test.fqn is a string N4BuiltInTypes/N4Type
+  - test.of is a function of___n4
  = inspect test as N4NamedElement
   - test.name is a string N4Type
  = inspect test as N4Element
   - test.origin is a string n4js-runtime
   - test.annotations is empty
-  - test.allAnnotations is a function allAnnotations
-  - test.anyAnnotation is a function allAnnotations
+  - test.allAnnotations is a function allAnnotations___n4
+  - test.anyAnnotation is a function allAnnotations___n4
  = inspect test as Object
   - test.prototype is not an object undefined
   - test.hasOwnProperty  is native function
