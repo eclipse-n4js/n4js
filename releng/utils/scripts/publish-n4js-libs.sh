@@ -141,6 +141,6 @@ lerna exec -- 'jq -r ".repository |= {type: \"git\", url: \"https://github.com/e
 lerna exec -- rm package.json_TEMP
 
 echo "==== STEP 8/8: Now publishing with version ${PUBLISH_VERSION} and dist-tag ${DIST_TAG}"
-lerna publish --loglevel warn --skip-git --registry="${NPM_REGISTRY}" --repo-version="${PUBLISH_VERSION}" --exact --yes --npm-tag="${DIST_TAG}"
+lerna publish --loglevel warn --no-git-tag-version --no-push --registry="${NPM_REGISTRY}" --exact --yes --dist-tag="${DIST_TAG}" "${PUBLISH_VERSION}"
 
 echo "==== PUBLISH N4JS-LIBS - DONE"
