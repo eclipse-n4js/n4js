@@ -121,18 +121,18 @@ public class N4jscCompiler {
 		printCompileResults(compilationTime.stop());
 	}
 
-	private void setupWorkspaceBuildActionListener() {
-		Injector injector = N4jscFactory.getOrCreateInjector();
-		DefaultBuildRequestFactory buildRequestFactory = injector.getInstance(DefaultBuildRequestFactory.class);
-		buildRequestFactory.setAfterGenerateListener(callback);
-		buildRequestFactory.setAfterDeleteListener(callback);
-	}
-
 	private void setPersistionOptions() {
 		Injector injector = N4jscFactory.getOrCreateInjector();
 		ProjectStatePersisterConfig persisterConfig = injector.getInstance(ProjectStatePersisterConfig.class);
 		persisterConfig.setDeleteState(options.isClean());
 		persisterConfig.setWriteToDisk(!options.isNoPersist());
+	}
+
+	private void setupWorkspaceBuildActionListener() {
+		Injector injector = N4jscFactory.getOrCreateInjector();
+		DefaultBuildRequestFactory buildRequestFactory = injector.getInstance(DefaultBuildRequestFactory.class);
+		buildRequestFactory.setAfterGenerateListener(callback);
+		buildRequestFactory.setAfterDeleteListener(callback);
 	}
 
 	private void warnIfNoProjectsFound() {

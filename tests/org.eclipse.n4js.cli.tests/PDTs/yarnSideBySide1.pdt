@@ -1,0 +1,18 @@
+# Project Discovery Test
+# working dir marked with '*'
+
+
+FOLDERS
+-*someFolder
+-- YarnWSP1 [PROJECT workspaces=["packages/*"]]
+--- packages
+---- WS1P1 [PROJECT]
+-- YarnWSP2 [PROJECT workspaces=["packages/*"]]
+--- packages
+---- WS2P1 [PROJECT]
+
+EXPECT
+- someFolder/YarnWSP1
+- someFolder/YarnWSP1/packages/WS1P1
+- someFolder/YarnWSP2
+- someFolder/YarnWSP2/packages/WS2P1

@@ -3,7 +3,7 @@
 
 
 FOLDERS
--*P1 [PROJECT workspaces="packages1/*", "packages2/*"]
+-*P1 [PROJECT workspaces=["packages1/*", "packages2/*"]]
 -- packages1
 --- D1 [PROJECT]
 -- packages2
