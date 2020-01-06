@@ -255,16 +255,17 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	 * Generation of output files is only triggered if no source files contain unsaved changes (so-called dirty files).
 	 */
 	protected XBuildable tryIncrementalGenerateBuildable(List<URI> dirtyFiles, List<URI> deletedFiles) {
-		int dirtyFilesCount = 0;
+		boolean hasSomeDirtyFiles = false;
 		for (XDocument doc : openDocuments.values()) {
 			if (doc.isDirty()) {
-				dirtyFilesCount++;
+				hasSomeDirtyFiles = true;
+				break;
 			}
 		}
-		if (dirtyFilesCount == 0) {
-			return getIncrementalGenerateBuildable(dirtyFiles, deletedFiles);
-		} else {
+		if (hasSomeDirtyFiles) {
 			return getIncrementalDirtyBuildable(dirtyFiles, deletedFiles);
+		} else {
+			return getIncrementalGenerateBuildable(dirtyFiles, deletedFiles);
 		}
 	}
 
@@ -441,12 +442,7 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 		if (resource == null) {
 			return null;
 		}
-		XDocument doc = openDocuments.get(resource.getURI());
-		if (doc != null) {
-			return doc;
-		}
-		String text = resource.getParseResult().getRootNode().getText();
-		return new XDocument(Integer.valueOf(1), text);
+		return getDocument(resource);
 	}
 
 	@Override
