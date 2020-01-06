@@ -23,10 +23,6 @@ stderr:
 ==>
 ~~~ */
 
-/* XPECT ! compileResult ---
---- */
-// §-§-§-§-§ additional ^^^^^^^^ not in example: §-§-§-§--
-
 class A {}
 class B extends A {}
 var b = new B();
@@ -35,5 +31,3 @@ console.log(b.constructor.n4type.fqn);
 console.log(b.constructor.n4type.n4superType.fqn);
 console.log(N4Type.of(b).fqn);
 console.log(N4Type.of(B.n4type).fqn);
-
-// §-§-§-§-§ additional check not in example: §-§-§-§--

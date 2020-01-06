@@ -22,13 +22,9 @@ stderr:
 ==>
 ~~~ */
 
-/* XPECT ! compileResult ---
---- */
-// §-§-§-§-§ additional ^^^^^^^^ not in example: §-§-§-§--
 console.log('N4Object.n4type.fqn:      ' + N4Object.n4type.fqn)
 console.log('N4Class.n4type.fqn:       ' + N4Class.n4type.fqn)
 
 class A {}
 console.log('A.n4type.fqn:             ' + A.n4type.fqn)
 console.log('A.n4type.n4superType.fqn: ' + A.n4type.n4superType.fqn)
-// §-§-§-§-§ additional check not in example: §-§-§-§--
