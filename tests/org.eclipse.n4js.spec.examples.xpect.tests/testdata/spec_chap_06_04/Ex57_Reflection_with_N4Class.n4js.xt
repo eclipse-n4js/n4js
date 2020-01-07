@@ -18,14 +18,10 @@ spec_chap_06_04/Ex57_Reflection_with_N4Class/B
 spec_chap_06_04/Ex57_Reflection_with_N4Class/B
 spec_chap_06_04/Ex57_Reflection_with_N4Class/A
 spec_chap_06_04/Ex57_Reflection_with_N4Class/B
-N4BuiltInClasses/N4Class
+N4BuiltInTypes/N4Class
 stderr:
 ==>
 ~~~ */
-
-/* XPECT ! compileResult ---
---- */
-// §-§-§-§-§ additional ^^^^^^^^ not in example: §-§-§-§--
 
 class A {}
 class B extends A {}
@@ -35,5 +31,3 @@ console.log(b.constructor.n4type.fqn);
 console.log(b.constructor.n4type.n4superType.fqn);
 console.log(N4Type.of(b).fqn);
 console.log(N4Type.of(B.n4type).fqn);
-
-// §-§-§-§-§ additional check not in example: §-§-§-§--

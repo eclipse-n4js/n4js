@@ -53,13 +53,22 @@ public class IssueAcceptor {
 		this.client = languageClient;
 	}
 
+	/**
+	 * The issue acceptor is disconnected on a clients message to shutdown the connection.
+	 */
+	public void disconnect() {
+		this.client = null;
+	}
+
 	/** Converts given issues to {@link Diagnostic}s and sends them to LSP client */
 	public void publishDiagnostics(URI uri, Iterable<? extends Issue> issues) {
-		PublishDiagnosticsParams publishDiagnosticsParams = new PublishDiagnosticsParams();
-		publishDiagnosticsParams.setUri(uriExtensions.toUriString(uri));
-		List<Diagnostic> diags = toDiagnostics(uri, issues);
-		publishDiagnosticsParams.setDiagnostics(diags);
-		client.publishDiagnostics(publishDiagnosticsParams);
+		if (client != null) {
+			PublishDiagnosticsParams publishDiagnosticsParams = new PublishDiagnosticsParams();
+			publishDiagnosticsParams.setUri(uriExtensions.toUriString(uri));
+			List<Diagnostic> diags = toDiagnostics(uri, issues);
+			publishDiagnosticsParams.setDiagnostics(diags);
+			client.publishDiagnostics(publishDiagnosticsParams);
+		}
 	}
 
 	/**

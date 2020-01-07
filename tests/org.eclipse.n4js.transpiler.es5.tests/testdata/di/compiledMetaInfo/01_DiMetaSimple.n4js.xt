@@ -32,7 +32,7 @@ fTypeVal N4Class {
     origin: 'n4js-runtime',
     annotations: [],
     name: 'N4Object',
-    fqn: 'N4BuiltInClasses/N4Object',
+    fqn: 'N4BuiltInTypes/N4Object',
     n4superType: undefined,
     allImplementedInterfaces: [],
     ownedMembers: [],

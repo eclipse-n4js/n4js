@@ -13,4 +13,4 @@
 
 class B extends Object {}
 // XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'n4type'." at "n4type"
-B.n4type;
+console.log('B.n4type.fqn: ' + B.n4type.fqn)

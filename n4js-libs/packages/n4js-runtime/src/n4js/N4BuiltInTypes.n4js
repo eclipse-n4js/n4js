@@ -1,0 +1,323 @@
+/*
+ * Copyright (c) 2019 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+
+// NOTE:
+//
+// This file is only responsible for creating the output code for the below types,
+// which will be used during runtime. The below types will not be directly made
+// available to N4JS code at compile type (type information, etc.); instead, files
+// builtin_n4.n4ts and builtin_n4idl.n4ts declare the below types as built-in types.
+//
+// This has the following consequences:
+// 1) neither "@@Global" nor "export" must be used in this file,
+// 2) no API documentation should be included in this file (instead, it should be
+//    placed in files builtin_n4.n4ts / builtin_n4idl.n4ts),
+// 3) at the end of this file, all global types need to be explicitly added to the
+//    global object, in order to make them available globally at runtime (this won't
+//    happen automatically).
+
+
+function setTargetOfAnnotations(target: Object) {
+	if (target['annotations']) {
+		for (const annotation of target['annotations']) {
+			Object.defineProperty(annotation, "target", { value: target, enumerable: false });
+		}
+	}
+}
+
+
+class N4Object extends Object {}
+
+abstract class N4Element extends Object {
+
+	public origin: string;
+	public annotations: Array<N4Annotation> = [];
+
+	protected constructor(@Spec spec: ~i~this) {
+		setTargetOfAnnotations(this);
+	}
+
+	public hasAnnotation(name: string): boolean {
+		return this.annotations.some(function (a) {
+			return a.name === name
+		});
+	}
+
+	public anyAnnotation(name: string): N4Annotation {
+		for (var i = this.annotations.length - 1; i >= 0; i--) {
+			var a = this.annotations[i];
+			if (a.name === name) {
+				return a;
+			}
+		}
+		return null;
+	}
+
+	public allAnnotations(name: string): Array<N4Annotation> {
+		return this.annotations.filter(function (a) {
+			return a.name === name
+		});
+	}
+}
+
+abstract class N4NamedElement extends N4Element {
+
+	public name: string;
+}
+
+abstract class N4Type extends N4NamedElement {
+
+	public fqn: string;
+
+	public static of(n4object: any+): N4Type {
+		return (n4object?.n4type || n4object?.constructor?.n4type) as N4Type;
+	}
+
+	public get isClass(): boolean {
+		return false;
+	}
+
+	public get isInterface(): boolean {
+		return false;
+	}
+
+	public get isEnum(): boolean {
+		return false;
+	}
+}
+
+abstract class N4Classifier extends N4Type {
+
+	public n4superType: N4Class;
+
+	public allImplementedInterfaces: Array<string> = [];
+
+	public ownedMembers: Array<N4Member> = [];
+
+	public consumedMembers: Array<N4Member> = [];
+
+	protected constructor(@Spec spec: ~i~this) {
+		super(spec);
+
+		for (const ownedMember of this.ownedMembers) {
+			Object.defineProperty(ownedMember, 'owner', { value: this, enumerable: false });
+			setTargetOfAnnotations(ownedMember);
+		}
+	}
+
+	public members(consumed: boolean=, inherited: boolean=, _static: boolean=): Array<? extends N4Member> {
+		var arr = this.ownedMembers.slice();
+		if (consumed) {
+			arr = arr.concat(this.consumedMembers);
+		}
+		if (inherited) {
+			if (this.n4superType instanceof N4Classifier) {
+				var tmp = this.n4superType.members(consumed, inherited, _static);
+				arr = arr.concat(tmp);
+			}
+		}
+		if (!_static) {
+			arr = arr.filter(function (m) {
+				return !m.isStatic;
+			});
+		}
+		return arr;
+	}
+
+	public membersWithAnnotation(name: string, consumed: boolean=, inherited: boolean=, _static: boolean=): Array<? extends N4Member> {
+		return this.members(consumed, inherited, _static).filter(function (m) {
+			return m.hasAnnotation(name);
+		});
+	}
+
+	public dataFields(consumed: boolean=, inherited: boolean=, _static: boolean=): Array<? extends N4DataField> {
+		return this.members(consumed, inherited, _static).filter(function (m) {
+			return m instanceof N4DataField;
+		}) as N4DataField[];
+	}
+
+	public dataFieldsWithAnnotation(name: string, consumed: boolean=, inherited: boolean=, _static: boolean=): Array<? extends N4DataField> {
+		return this.membersWithAnnotation(name, consumed, inherited, _static).filter(function (m) {
+			return m instanceof N4DataField;
+		}) as N4DataField[];
+	}
+
+	public methods(consumed: boolean=, inherited: boolean=, _static: boolean=): Array<? extends N4Method> {
+		return this.members(consumed, inherited, _static).filter(function (m) {
+			return m instanceof N4Method;
+		}) as N4Method[];
+	}
+
+	public methodsWithAnnotation(name: string, consumed: boolean=, inherited: boolean=, _static: boolean=): Array<? extends N4Method> {
+		return this.membersWithAnnotation(name, consumed, inherited, _static).filter(function (m) {
+			return m instanceof N4Method;
+		}) as N4Method[];
+	}
+}
+
+@Final class N4Class extends N4Classifier {
+
+	@Override
+	public get isClass(): boolean {
+		return true;
+	}
+}
+
+@Final class N4Interface extends N4Classifier {
+
+	@Override
+	public get isInterface(): boolean {
+		return true;
+	}
+}
+
+abstract class N4Member extends N4NamedElement {
+	public owner: N4Classifier;
+	public isStatic: boolean;
+}
+
+@Final class N4Method extends N4Member {
+	public jsFunction: Function;
+}
+
+@Final class N4DataField extends N4Member {
+}
+
+@Final class N4Accessor extends N4Member {
+
+	public getter: boolean;
+
+	public isGetter(): boolean {
+		return this.getter;
+	}
+
+	public isSetter(): boolean {
+		return !this.getter;
+	}
+}
+
+@Final class N4EnumType extends N4Type {
+
+	@Override public get isEnum(): boolean {
+		return true;
+	}
+}
+
+abstract class N4Enum extends Object {
+
+	public abstract get name(): string;
+
+	public abstract get value(): string;
+
+	@Override public toString(): string {
+		return this.value;
+	}
+
+	public abstract get n4Enum(): N4Enum;
+
+	public static get literals(): Array<? extends N4Enum> {
+		return null;
+	}
+
+	public static findLiteralByName(name: string): N4Enum {
+		for (var i = this.literals.length - 1; i >= 0; i--) {
+			if (this.literals[i].name === name) {
+				return this.literals[i];
+			}
+		}
+		return undefined;
+	}
+
+	public static findLiteralByValue (value: string): N4Enum {
+		for (var i = this.literals.length - 1; i >= 0; i--) {
+			if (this.literals[i].value === value) {
+				return this.literals[i];
+			}
+		}
+		return undefined;
+	}
+}
+
+@Final class N4StringBasedEnumType extends N4Type {
+
+	@Override public get isEnum(): boolean {
+		return true;
+	}
+}
+
+abstract class N4StringBasedEnum extends Object { // NOTE: cannot subclass 'string' as in builtin_n4.n4ts
+
+	public static get literals(): Array<? extends N4StringBasedEnum> {
+		return null;
+	}
+}
+
+@Final class N4Annotation extends Object {
+	public name: string;
+	public details: Array<string> = [];
+	public target: N4Element;
+
+	protected constructor(@Spec spec: ~i~this) {}
+}
+
+interface ~N4Provider<out T> {
+
+	public abstract get(): T
+}
+
+class N4ApiNotImplementedError extends Error {}
+
+interface MigrationController {
+
+	public abstract <TargetType extends Object> migrate(args : Array<?>) : TargetType
+
+	public abstract <TargetType extends Object> migrateWith(migration: Function, args : Array<?>) : TargetType
+	
+	public abstract get context() : MigrationContext
+}
+
+interface MigrationContext {
+
+	public abstract getTrace(argument : Object) : Array<?>
+	
+	public abstract isModified(obj : Object, property : string = undefined) : boolean
+	
+	public abstract setUserData(key : string, value : any) : void
+	
+	public abstract getUserData(key : string) : any 
+}
+
+
+// add above types to the global object
+const global = Function('return this')() as Object+;
+if (typeof global === "object") {
+	global.N4Object = N4Object;
+	global.N4Element = N4Element;
+	global.N4NamedElement = N4NamedElement;
+	global.N4Type = N4Type;
+	global.N4Classifier = N4Classifier;
+	global.N4Class = N4Class;
+	global.N4Interface = N4Interface;
+	global.N4Member = N4Member;
+	global.N4Method = N4Method;
+	global.N4DataField = N4DataField;
+	global.N4Accessor = N4Accessor;
+	global.N4EnumType = N4EnumType;
+	global.N4Enum = N4Enum;
+	global.N4StringBasedEnumType = N4StringBasedEnumType;
+	global.N4StringBasedEnum = N4StringBasedEnum;
+	global.N4Annotation = N4Annotation;
+	global.N4Provider = N4Provider;
+	global.N4ApiNotImplementedError = N4ApiNotImplementedError;
+	global.MigrationController = MigrationController;
+	global.MigrationContext = MigrationContext;
+}

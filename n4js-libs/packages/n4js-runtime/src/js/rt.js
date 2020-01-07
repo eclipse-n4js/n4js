@@ -8,5 +8,5 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-import "./rt/N4BuiltInClasses.js";
-import "./rt/N4RuntimeBootstrap.js";
+import "./N4RuntimeBootstrap.js";
+import "./N4BuiltInTypes.js";

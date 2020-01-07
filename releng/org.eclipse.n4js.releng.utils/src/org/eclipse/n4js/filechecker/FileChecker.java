@@ -218,7 +218,7 @@ public class FileChecker extends AbstractFileChecker {
 			"tools/org.eclipse.n4js.hlc/src/main/resources/org/eclipse/emf/ecore/plugin/plugin.properties",
 
 			/* API description is copied from ECMAScript Language Specification */
-			"plugins/org.eclipse.n4js.environments/src-env/env/builtin_js.n4ts",
+			"plugins/org.eclipse.n4js.ts/src-env/env/builtin_js.n4ts",
 	};
 
 	/** Same as {@link #BANNED_WORDS_WHITELIST}, but for Xsemantics. */
