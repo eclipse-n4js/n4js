@@ -17,14 +17,10 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.Diagnostic;
-import org.eclipse.lsp4j.DiagnosticSeverity;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
-import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.services.LanguageClient;
-import org.eclipse.n4js.ide.validation.N4JSIssue;
 import org.eclipse.xtext.diagnostics.Severity;
-import org.eclipse.xtext.ide.server.Document;
 import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.workspace.IProjectConfig;
@@ -46,6 +42,9 @@ public class IssueAcceptor {
 
 	@Inject
 	private XWorkspaceManager workspaceManager;
+
+	@Inject
+	private DiagnosticIssueConverter diagnosticIssueConverter;
 
 	private LanguageClient client;
 
@@ -92,7 +91,7 @@ public class IssueAcceptor {
 		List<Diagnostic> sortedDiags = new ArrayList<>();
 		for (Issue issue : issues) {
 			if (issue.getSeverity() != Severity.IGNORE) {
-				sortedDiags.add(toDiagnostic(issue));
+				sortedDiags.add(diagnosticIssueConverter.toDiagnostic(issue, workspaceManager::getDocument));
 			}
 		}
 
@@ -115,59 +114,4 @@ public class IssueAcceptor {
 		return sortedDiags;
 	}
 
-	/** Convert the given issue to a diagnostic. */
-	protected Diagnostic toDiagnostic(Issue issue) {
-		Diagnostic result = new Diagnostic();
-		result.setCode(issue.getCode());
-		result.setMessage(issue.getMessage());
-		result.setSeverity(toDiagnosticSeverity(issue.getSeverity()));
-
-		Position start = new Position(toZeroBasedInt(issue.getLineNumber()), toZeroBasedInt(issue.getColumn()));
-		Position end = null;
-		if (issue instanceof N4JSIssue) {
-			N4JSIssue n4jsIssue = (N4JSIssue) issue;
-			end = new Position(n4jsIssue.getLineNumberEnd() - 1, n4jsIssue.getColumnEnd() - 1);
-		} else {
-			URI uri = issue.getUriToProblem();
-			Document doc = null;
-			if (uri != null) {
-				doc = workspaceManager.getDocument(uri);
-			}
-			if (doc != null) {
-				end = doc.getPosition(issue.getOffset() + issue.getLength());
-			}
-			if (end == null) {
-				end = new Position(start.getLine(), start.getCharacter() + 1);
-			}
-		}
-
-		result.setRange(new Range(start, end));
-		return result;
-	}
-
-	// TODO: Remove this function when org.eclipse.xtext.validation.Issue.IssueImpl#lineNumber and #column are
-	// initialized with '0'
-	static private int toZeroBasedInt(Integer oneBasedInteger) {
-		return oneBasedInteger == null ? 0 : (oneBasedInteger - 1);
-	}
-
-	/**
-	 * Convert the severity to a lsp {@link DiagnosticSeverity}.
-	 *
-	 * Defaults to severity {@link DiagnosticSeverity#Hint hint}.
-	 */
-	protected DiagnosticSeverity toDiagnosticSeverity(Severity severity) {
-		switch (severity) {
-		case ERROR:
-			return DiagnosticSeverity.Error;
-		case IGNORE:
-			return DiagnosticSeverity.Hint;
-		case INFO:
-			return DiagnosticSeverity.Information;
-		case WARNING:
-			return DiagnosticSeverity.Warning;
-		default:
-			return DiagnosticSeverity.Hint;
-		}
-	}
 }

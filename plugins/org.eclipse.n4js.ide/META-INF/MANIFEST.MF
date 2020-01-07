@@ -5,7 +5,6 @@ Bundle-SymbolicName: org.eclipse.n4js.ide
 Bundle-Version: 0.0.1.qualifier
 Require-Bundle: org.eclipse.n4js,
  org.eclipse.n4js.ts,
- org.eclipse.n4js.generator.headless,
  org.eclipse.n4js.transpiler.es,
  org.eclipse.n4js.utils,
  org.eclipse.n4js.json,

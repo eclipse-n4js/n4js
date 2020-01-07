@@ -41,6 +41,7 @@ public class N4jscTestLanguageClient extends N4jscLanguageClient {
 	@Inject
 	XWorkspaceManager workspaceManager;
 
+	Multimap<String, Diagnostic> issues = Multimaps.synchronizedMultimap(HashMultimap.create());
 	Multimap<String, String> errors = Multimaps.synchronizedMultimap(HashMultimap.create());
 	Multimap<String, String> warnings = Multimaps.synchronizedMultimap(HashMultimap.create());
 	NavigableMap<Path, Set<File>> transpiledFiles = Collections.synchronizedNavigableMap(new TreeMap<>());
@@ -58,6 +59,7 @@ public class N4jscTestLanguageClient extends N4jscLanguageClient {
 		String uriString = issueSerializer.uri(diagnostics.getUri());
 		for (Diagnostic diag : issueList) {
 			String issueString = issueSerializer.diagnostics(diag);
+			issues.put(uriString, diag);
 
 			switch (diag.getSeverity()) {
 			case Error:
