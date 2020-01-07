@@ -213,6 +213,7 @@ class InterfaceDeclarationTransformation extends Transformation {
 			FunctionDefinition: N4JSFactory.eINSTANCE.createPropertyMethodDeclaration => [
 				it.fpars += memberDecl.fpars; // reuse existing fpars
 				it.generator = memberDecl.generator;
+				it.declaredAsync = memberDecl.async;
 			]
 			default:
 				throw new IllegalArgumentException("not a getter, setter, or method declaration")

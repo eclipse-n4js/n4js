@@ -811,6 +811,9 @@ import org.eclipse.xtext.EcoreUtil2;
 
 	@Override
 	public Boolean casePropertyMethodDeclaration(PropertyMethodDeclaration original) {
+		if (original.isAsync()) {
+			write("async ");
+		}
 		if (original.isGenerator()) {
 			write("* ");
 		}
