@@ -30,8 +30,6 @@ import com.google.common.base.Predicates;
  * folder mentioned above.
  */
 public abstract class AbstractCliJarTest extends AbstractCliCompileTest {
-	/** Standard Name of the executable jar. */
-	static public final String N4JSC_JAR = "n4jsc.jar";
 	/** Standard target folder-name, the base of maven-compile results. */
 	static public final String TARGET = "target";
 	/** Standard target folder (name+"/"), the base of maven-compile results. */

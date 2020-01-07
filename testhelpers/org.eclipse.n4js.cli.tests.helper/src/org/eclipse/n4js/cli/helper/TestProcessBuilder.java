@@ -105,7 +105,7 @@ public class TestProcessBuilder {
 	}
 
 	private String[] createCommandN4jscRun(Map<String, String> output_env, N4jscOptions options) {
-		File n4jscAbsoluteFile = new File("target/n4jsc.jar").getAbsoluteFile();
+		File n4jscAbsoluteFile = N4jscJarProvider.getAbsoluteRunnableN4jsc();
 		String n4jscFileName = n4jscAbsoluteFile.toString();
 
 		List<String> optionList = new ArrayList<>();

@@ -28,6 +28,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.n4js.cli.N4jscMain;
 import org.eclipse.n4js.cli.helper.AbstractCliCompileTest.N4jscVariant;
 import org.eclipse.xtext.util.Pair;
@@ -43,6 +44,7 @@ public class CliCompileResult extends ProcessResult {
 	final N4jscVariant n4jscVariant;
 	long deletedFilesCount;
 	Map<String, String> projects = new LinkedHashMap<>();
+	Multimap<String, Diagnostic> issues = HashMultimap.create();
 	Multimap<String, String> errors = HashMultimap.create();
 	Multimap<String, String> warnings = HashMultimap.create();
 	NavigableMap<Path, Set<File>> transpiledFiles = new TreeMap<>();
@@ -80,6 +82,16 @@ public class CliCompileResult extends ProcessResult {
 	/** @return map of all projects and their locations */
 	public Map<String, String> getProjects() {
 		return projects;
+	}
+
+	/** @return list of all files that have issues */
+	public Collection<String> getIssueFiles() {
+		return new TreeSet<>(issues.keySet());
+	}
+
+	/** @return list of all issues found in the given sources */
+	public Multimap<String, Diagnostic> getIssues() {
+		return HashMultimap.create(issues);
 	}
 
 	/** @return list of all files that have errors */
