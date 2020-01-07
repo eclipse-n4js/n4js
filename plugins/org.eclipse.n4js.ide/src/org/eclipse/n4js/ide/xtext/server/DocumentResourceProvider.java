@@ -35,7 +35,7 @@ public interface DocumentResourceProvider {
 	 *            the uri.
 	 * @return the document
 	 */
-	public Document getDocument(URI uri);
+	public XDocument getDocument(URI uri);
 
 	/**
 	 * Find the document for the given resource.
@@ -44,5 +44,5 @@ public interface DocumentResourceProvider {
 	 *            the resource.
 	 * @return the document
 	 */
-	public Document getDocument(XtextResource resource);
+	public XDocument getDocument(XtextResource resource);
 }

@@ -1,0 +1,142 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/*	XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest 
+	IssueConfiguration {
+		IssueCode "DFG_NULL_DEREFERENCE" {enabled=true}
+	}
+	END_SETUP
+ */
+
+class C {
+	field: C;
+}
+
+
+function f1() {
+	let c : C;
+	// f1 XPECT warnings --> "Variable c is undefined" at "c"
+	let x = c.field;
+}
+
+
+function f2() {
+	let c : C;
+	if (0) c = new C();
+	// f2 XPECT warnings --> "Variable c may be undefined" at "c"
+	let x = c.field;
+}
+
+
+function f3() {
+	let c : C;
+	if (0) c = new C();
+	// f3 XPECT nowarnings --> "Variable c is undefined" at "c"
+	let x = c?.field;
+}
+
+
+function f4() {
+	let c : C;
+	if (0) c = new C();
+	let x = c?.field;
+	// f4 XPECT warnings --> "Variable x may be undefined due to previous variable c" at "x"
+	x.toString();
+}
+
+
+function f5() {
+	let c : C;
+	let x = c?.field;
+	// f5 XPECT warnings --> "Variable x is undefined due to previous variable c" at "x"
+	x.toString();
+}
+
+
+
+function f6() {
+	let c : C;
+	let x = c?.field;
+	if (true) {
+		x = new C();
+	}
+	// f6 XPECT warnings --> "Variable x may be undefined due to previous variable c" at "x"
+	x.toString();
+}
+
+
+
+function f7() {
+	let c : C;
+	let x = c?.field;
+	if (true) {
+		x = undefined;
+	}
+	// f7 XPECT warnings --> "Variable x is undefined" at "x"
+	x.toString();
+}
+
+
+
+function f8() {
+	let c : C;
+	let x = c?.field;
+	if (true) {
+		x = null;
+	}
+	// f8 XPECT warnings --> "Variable x is null or undefined" at "x"
+	x.toString();
+}
+
+
+
+function f9() {
+	let c : C;
+	let x = c?.field;
+	if (true) {
+		x = new C();
+	}
+	if (true) {
+		x = null;
+	}
+	// f9 XPECT warnings --> "Variable x may be null or undefined" at "x"
+	x.toString();
+}
+
+
+
+function f10() {
+	let c : C = new C();
+	if (true) {
+		c = null;
+	}
+	// f10 XPECT warnings --> "Variable c may be null" at "c"
+	c.field;
+
+	let x = c?.field;
+	// f10 XPECT warnings --> "Variable x may be undefined due to previous variable c" at "x"
+	x.toString();
+}
+
+
+function f11() {
+	let c : C = new C();
+	let x = c?.field;
+	// f11 XPECT nowarnings --> "Variable x may be undefined" at "x"
+	x.toString();
+}
+
+
+function f12(c : C) {
+	let x = c?.field;
+	// f12 XPECT warnings --> "Variable x may be undefined" at "x"
+	x.toString();
+}

@@ -124,6 +124,7 @@ import org.eclipse.xtext.ide.server.symbol.HierarchicalDocumentSymbolService;
 import org.eclipse.xtext.ide.server.symbol.IDocumentSymbolService;
 import org.eclipse.xtext.ide.server.symbol.WorkspaceSymbolService;
 import org.eclipse.xtext.resource.IResourceDescription;
+import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
@@ -134,7 +135,7 @@ import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.base.Objects;
-import com.google.common.collect.FluentIterable;
+import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
@@ -151,7 +152,7 @@ import com.google.inject.Inject;
 public class XLanguageServerImpl implements LanguageServer, WorkspaceService, TextDocumentService, LanguageClientAware,
 		Endpoint, JsonRpcMethodProvider, IBuildListener {
 
-	private static Logger LOG = Logger.getLogger(XLanguageServerImpl.class);
+	private static final Logger LOG = Logger.getLogger(XLanguageServerImpl.class);
 
 	@Inject
 	private XRequestManager requestManager;
@@ -243,8 +244,11 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 		access.addBuildListener(this);
 
+		Stopwatch sw = Stopwatch.createStarted();
+		LOG.info("Start server initialization in workspace directory " + baseDir);
 		workspaceManager.initialize(baseDir);
 		workspaceManager.refreshWorkspaceConfig();
+		LOG.info("Server initialization done after " + sw);
 
 		initializeResult = new InitializeResult();
 		initializeResult.setCapabilities(createServerCapabilities(params));
@@ -256,7 +260,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	 * Configure the server capabilities for this instance.
 	 *
 	 * @param params
-	 *            the initialization parametrs
+	 *            the initialization parameters
 	 * @return the server capabilities
 	 */
 	protected ServerCapabilities createServerCapabilities(InitializeParams params) {
@@ -348,8 +352,12 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		requestManager.runWrite(
 				() -> {
 					try {
+						Stopwatch sw = Stopwatch.createStarted();
+						LOG.info("Start initial build ...");
+
 						workspaceManager.doInitialBuild(CancelIndicator.NullImpl);
 						initBuildFinished.complete(null);
+						LOG.info("Initial build done after " + sw);
 					} catch (Throwable t) {
 						t.printStackTrace();
 						initBuildFinished.completeExceptionally(t);
@@ -386,18 +394,40 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		issueAcceptor.connect(client);
 	}
 
+	/**
+	 * Discard all references to the language client.
+	 */
+	public void disconnect() {
+		issueAcceptor.disconnect();
+		this.client = null;
+	}
+
 	@Override
 	public void exit() {
+		LOG.info("Received exit notification");
+		joinJobs();
 		shutdownAndExitHandler.exit();
 	}
 
 	@Override
 	public CompletableFuture<Object> shutdown() {
-		clientInitialized.complete(null);
-		initBuildFinished.complete(null);
-		shutdownAndExitHandler.shutdown();
-		workspaceManager.persistProjectState(CancelIndicator.NullImpl);
-		return CompletableFuture.completedFuture(new Object());
+		LOG.info("Start shutdown");
+
+		disconnect();
+		runBuildable(() -> {
+			XBuildable buildable = workspaceManager.closeAll();
+			return (cancelIndicator) -> {
+				List<Delta> result = buildable.build(cancelIndicator);
+				workspaceManager.persistProjectState(CancelIndicator.NullImpl);
+				clientInitialized.complete(null);
+				initBuildFinished.complete(null);
+				shutdownAndExitHandler.shutdown();
+
+				LOG.info("Shutdown done");
+				return result;
+			};
+		});
+		return CompletableFuture.completedFuture(null);
 	}
 
 	@Override
@@ -432,7 +462,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	}
 
 	private boolean isSourceFileOrOpen(URI uri) {
-		if (workspaceManager.isOpenedFile(uri)) {
+		if (workspaceManager.isDocumentOpen(uri)) {
 			return true;
 		}
 		return isSourceFile(uri);
@@ -472,7 +502,14 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public void didSave(DidSaveTextDocumentParams params) {
-		// nothing to do
+		runBuildable(() -> toBuildable(params));
+	}
+
+	/**
+	 * Evaluate the params and deduce the respective build command.
+	 */
+	protected XBuildable toBuildable(DidSaveTextDocumentParams params) {
+		return workspaceManager.didSave(getURI(params.getTextDocument()));
 	}
 
 	@Override
@@ -522,9 +559,18 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	 *
 	 * @param newBuildable
 	 *            the factory for the buildable.
+	 * @return the result.
 	 */
-	protected void runBuildable(Supplier<? extends XBuildable> newBuildable) {
-		requestManager.runWrite(newBuildable::get, (cancelIndicator, buildable) -> buildable.build(cancelIndicator));
+	protected CompletableFuture<List<Delta>> runBuildable(Supplier<? extends XBuildable> newBuildable) {
+		return requestManager.runWrite(newBuildable::get,
+				(cancelIndicator, buildable) -> buildable.build(cancelIndicator));
+	}
+
+	private void joinJobs() {
+		// wait for all jobs to finish
+		runBuildable(() -> {
+			return (cancelIndicator) -> Collections.emptyList();
+		});
 	}
 
 	@Override
@@ -553,7 +599,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		}
 		BufferedCancelIndicator cancelIndicator = new BufferedCancelIndicator(originalCancelIndicator);
 		XtextResource res = workspaceManager.getResource(uri);
-		Document doc = workspaceManager.getDocument(res);
+		XDocument doc = workspaceManager.getDocument(res);
 		return Either.forRight(contentAssistService.createCompletionList(doc, res, params, cancelIndicator));
 	}
 
@@ -603,7 +649,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 			return Collections.emptyList();
 		}
 		XtextResource res = workspaceManager.getResource(uri);
-		Document doc = workspaceManager.getDocument(res);
+		XDocument doc = workspaceManager.getDocument(res);
 		return documentSymbolService.getDefinitions(doc, res, params, resourceAccess, cancelIndicator);
 	}
 
@@ -622,7 +668,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 			return Collections.emptyList();
 		}
 		XtextResource res = workspaceManager.getResource(uri);
-		Document doc = workspaceManager.getDocument(res);
+		XDocument doc = workspaceManager.getDocument(res);
 		return documentSymbolService.getReferences(doc, res, params, resourceAccess, workspaceManager.getIndex(),
 				cancelIndicator);
 	}
@@ -644,7 +690,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 			return Collections.emptyList();
 		}
 		XtextResource res = workspaceManager.getResource(uri);
-		Document doc = workspaceManager.getDocument(res);
+		XDocument doc = workspaceManager.getDocument(res);
 		return documentSymbolService.getSymbols(doc, res, params, cancelIndicator);
 	}
 
@@ -712,7 +758,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 			return IHoverService.EMPTY_HOVER;
 		}
 		XtextResource res = workspaceManager.getResource(uri);
-		Document doc = workspaceManager.getDocument(res);
+		XDocument doc = workspaceManager.getDocument(res);
 		return hoverService.hover(doc, res, params, cancelIndicator);
 	}
 
@@ -736,7 +782,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 			return ISignatureHelpService.EMPTY;
 		}
 		XtextResource res = workspaceManager.getResource(uri);
-		Document doc = workspaceManager.getDocument(res);
+		XDocument doc = workspaceManager.getDocument(res);
 		return helper.getSignatureHelp(doc, res, params, cancelIndicator);
 	}
 
@@ -757,7 +803,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 			return Collections.emptyList();
 		}
 		XtextResource res = workspaceManager.getResource(uri);
-		Document doc = workspaceManager.getDocument(res);
+		XDocument doc = workspaceManager.getDocument(res);
 		return service.getDocumentHighlights(doc, res, params, cancelIndicator);
 	}
 
@@ -778,7 +824,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 			return Collections.emptyList();
 		}
 		XtextResource res = workspaceManager.getResource(uri);
-		Document doc = workspaceManager.getDocument(res);
+		XDocument doc = workspaceManager.getDocument(res);
 
 		List<Either<Command, CodeAction>> result = new ArrayList<>();
 		if (service != null) {
@@ -852,7 +898,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 			return Collections.emptyList();
 		}
 		XtextResource res = workspaceManager.getResource(uri);
-		Document doc = workspaceManager.getDocument(res);
+		XDocument doc = workspaceManager.getDocument(res);
 		List<? extends CodeLens> result = codeLensService.computeCodeLenses(doc, res, params, cancelIndicator);
 		installURI(result, uri.toString());
 		return result;
@@ -876,7 +922,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 			return unresolved;
 		}
 		XtextResource res = workspaceManager.getResource(uri);
-		Document doc = workspaceManager.getDocument(res);
+		XDocument doc = workspaceManager.getDocument(res);
 		return resolver.resolveCodeLens(doc, res, unresolved, cancelIndicator);
 	}
 
@@ -895,7 +941,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 			return Collections.emptyList();
 		}
 		XtextResource res = workspaceManager.getResource(uri);
-		Document doc = workspaceManager.getDocument(res);
+		XDocument doc = workspaceManager.getDocument(res);
 		return formatterService.format(doc, res, params, cancelIndicator);
 	}
 
@@ -915,7 +961,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 			return Collections.emptyList();
 		}
 		XtextResource res = workspaceManager.getResource(uri);
-		Document doc = workspaceManager.getDocument(res);
+		XDocument doc = workspaceManager.getDocument(res);
 		return formatterService.format(doc, res, params, cancelIndicator);
 	}
 
@@ -1103,7 +1149,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		public <T> CompletableFuture<T> doRead(String uriStr, Function<ILanguageServerAccess.Context, T> function) {
 			URI uri = uriExtensions.toUri(uriStr);
 			XtextResource res = workspaceManager.getResource(uri);
-			Document doc = workspaceManager.getDocument(res);
+			XDocument doc = workspaceManager.getDocument(res);
 			return requestManager.runRead(cancelIndicator -> function.apply(new ILanguageServerAccess.Context(res, doc,
 					workspaceManager.isDocumentOpen(res.getURI()),
 					cancelIndicator)));
@@ -1149,31 +1195,36 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public void afterBuild(List<IResourceDescription.Delta> deltas) {
-		FluentIterable.from(deltas).filter(it -> it.getNew() != null && workspaceManager.isDocumentOpen(it.getUri()))
-				.transform(it -> it.getUri().toString()).forEach(
-						it -> {
-							access.doRead(it, ctx -> {
-								if (ctx.isDocumentOpen()) {
-									if (ctx.getResource() instanceof XtextResource) {
-										XtextResource resource = ((XtextResource) ctx.getResource());
-										IColoringService coloringService = resource.getResourceServiceProvider()
-												.get(IColoringService.class);
-										if (coloringService != null && client instanceof LanguageClientExtensions) {
-											Document doc = ctx.getDocument();
-											List<? extends ColoringInformation> coloringInfos = coloringService
-													.getColoring(resource, doc);
-											if (!IterableExtensions.isNullOrEmpty(coloringInfos)) {
-												String uri = resource.getURI().toString();
-												((LanguageClientExtensions) client)
-														.updateColoring(new ColoringParams(uri, coloringInfos));
-											}
-										}
-									}
-								}
-								semanticHighlightingRegistry.update(ctx);
-								return null;
-							});
-						});
+		for (IResourceDescription.Delta delta : deltas) {
+			if (delta.getNew() != null && workspaceManager.isDocumentOpen(delta.getUri())) {
+				String uriStr = delta.getUri().toString();
+
+				access.doRead(uriStr, ctx -> {
+					if (ctx.isDocumentOpen() && (ctx.getResource() instanceof XtextResource)
+							&& client instanceof LanguageClientExtensions) {
+
+						LanguageClientExtensions clientExtensions = (LanguageClientExtensions) client;
+						XtextResource resource = ((XtextResource) ctx.getResource());
+						IResourceServiceProvider resourceServiceProvider = resource.getResourceServiceProvider();
+						IColoringService coloringService = resourceServiceProvider.get(IColoringService.class);
+
+						if (coloringService != null) {
+							Document doc = ctx.getDocument();
+							List<? extends ColoringInformation> colInfos = coloringService.getColoring(resource, doc);
+
+							if (!IterableExtensions.isNullOrEmpty(colInfos)) {
+								String uri = resource.getURI().toString();
+								ColoringParams colParams = new ColoringParams(uri, colInfos);
+								clientExtensions.updateColoring(colParams);
+							}
+						}
+					}
+
+					semanticHighlightingRegistry.update(ctx);
+					return null;
+				});
+			}
+		}
 	}
 
 	/**
@@ -1185,6 +1236,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	/**
 	 * @since 2.16
+	 * @return instance of {@link LanguageClient} or null iff not available
 	 */
 	public LanguageClient getLanguageClient() {
 		return client;

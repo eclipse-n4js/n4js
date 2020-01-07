@@ -7,6 +7,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -14,6 +15,7 @@ import org.eclipse.xtext.xbase.lib.Functions.Function0;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.Functions.Function2;
 
+import com.google.common.util.concurrent.MoreExecutors;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -42,6 +44,8 @@ public class XRequestManager {
 	public void shutdown() {
 		queue.shutdown();
 		parallel.shutdown();
+		MoreExecutors.shutdownAndAwaitTermination(queue, 2500, TimeUnit.MILLISECONDS);
+		MoreExecutors.shutdownAndAwaitTermination(parallel, 2500, TimeUnit.MILLISECONDS);
 		cancel();
 	}
 

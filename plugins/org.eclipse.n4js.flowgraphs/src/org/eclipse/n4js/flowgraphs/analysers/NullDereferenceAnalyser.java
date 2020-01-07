@@ -26,8 +26,10 @@ import org.eclipse.n4js.flowgraphs.dataflow.symbols.Symbol;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Expression;
+import org.eclipse.n4js.n4JS.ExpressionWithTarget;
 import org.eclipse.n4js.n4JS.NullLiteral;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
+import org.eclipse.xtext.EcoreUtil2;
 
 import com.google.common.collect.Multimap;
 
@@ -81,6 +83,8 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 	}
 
 	class IsNotNull extends Assumption {
+		/** Set of all symbols that are transitively assigned to {@link #symbol} */
+		public final Set<Symbol> optChainingAliases = new HashSet<>();
 
 		IsNotNull(ControlFlowElement cfe, Symbol symbol) {
 			super(cfe, symbol);
@@ -88,6 +92,7 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 
 		IsNotNull(IsNotNull copy) {
 			super(copy);
+			this.optChainingAliases.addAll(copy.optChainingAliases);
 		}
 
 		@Override
@@ -99,14 +104,33 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 		public PartialResult holdsOnDataflow(Symbol lhs, Symbol rSymbol, Expression rValue) {
 			if (rSymbol != null) {
 				if (rSymbol.isNullLiteral() && !guardsThatNeverHold.containsKey(GuardType.IsNull)) {
-					return new NullDereferenceFailed(GuardType.IsNull, lhs);
+					if (optChainingAliases.contains(lhs)) {
+						return new NullDereferenceFailed(GuardType.IsUndefined, lhs);
+					} else {
+						return new NullDereferenceFailed(GuardType.IsNull, lhs);
+					}
 				}
 				if (rSymbol.isUndefinedLiteral() && !guardsThatNeverHold.containsKey(GuardType.IsUndefined)) {
 					return new NullDereferenceFailed(GuardType.IsUndefined, lhs);
 				}
 			} else if (rValue != null) {
-				return PartialResult.Passed;
+				ExpressionWithTarget exprWithTarget = EcoreUtil2.getContainerOfType(rValue, ExpressionWithTarget.class);
+				if (exprWithTarget != null && exprWithTarget.isOptionalChaining()) {
+					Symbol optionalSymbol = getSymbolFactory().create(exprWithTarget.getTarget());
+					if (optionalSymbol != null) {
+						// in cases like `x = c?.field` try to figure out whether `c` is null/undefined.
+						this.aliases.remove(lhs);
+						this.aliases.add(optionalSymbol);
+						this.optChainingAliases.add(optionalSymbol);
+						return PartialResult.Unclear;
+					} else {
+						return new NullDereferenceFailed(PartialResult.Type.MayFailed, GuardType.IsUndefined, lhs);
+					}
+				} else {
+					return PartialResult.Passed;
+				}
 			}
+
 			return PartialResult.Unclear;
 		}
 
@@ -128,6 +152,16 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 			}
 
 			return PartialResult.Unclear;
+		}
+
+		@Override
+		protected void beforeTermination() {
+			Set<Symbol> openOptChainingAliases = new HashSet<>(this.optChainingAliases);
+			openOptChainingAliases.retainAll(this.aliases);
+			if (!openOptChainingAliases.isEmpty()) {
+				this.failedBranches.add(
+						new NullDereferenceFailed(PartialResult.Type.MayFailed, GuardType.IsUndefined, this.symbol));
+			}
 		}
 	}
 

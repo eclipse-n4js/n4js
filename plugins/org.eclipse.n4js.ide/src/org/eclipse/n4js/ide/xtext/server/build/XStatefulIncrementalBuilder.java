@@ -178,10 +178,10 @@ public class XStatefulIncrementalBuilder {
 		result.getNewIndex().addDescription(source, copiedDescription);
 		operationCanceledManager.checkCanceled(cancelIndicator);
 
-		if (!request.isIndexOnly()) {
+		if (request.isValidatorEnabled()) {
 			List<Issue> issues = resourceValidator.validate(resource, CheckMode.ALL, request.getCancelIndicator());
 			request.setResultIssues(source, issues);
-			boolean proceedGenerate = request.shouldGenerate(source);
+			boolean proceedGenerate = !request.containsValidationErrors(source);
 
 			if (proceedGenerate) {
 				operationCanceledManager.checkCanceled(cancelIndicator);
@@ -236,16 +236,18 @@ public class XStatefulIncrementalBuilder {
 				resourceStorageFacade.saveResource((StorageAwareResource) resource, fileSystemAccess);
 			}
 		}
-		GeneratorContext generatorContext = new GeneratorContext();
-		generatorContext.setCancelIndicator(request.getCancelIndicator());
-		generator.generate(resource, fileSystemAccess, generatorContext);
-		XtextResourceSet resourceSet = request.getResourceSet();
-		for (URI noLongerCreated : previous) {
-			try {
-				resourceSet.getURIConverter().delete(noLongerCreated, CollectionLiterals.emptyMap());
-				request.setResultDeleteFile(noLongerCreated);
-			} catch (IOException e) {
-				Exceptions.sneakyThrow(e);
+		if (request.isGeneratorEnabled()) {
+			GeneratorContext generatorContext = new GeneratorContext();
+			generatorContext.setCancelIndicator(request.getCancelIndicator());
+			generator.generate(resource, fileSystemAccess, generatorContext);
+			XtextResourceSet resourceSet = request.getResourceSet();
+			for (URI noLongerCreated : previous) {
+				try {
+					resourceSet.getURIConverter().delete(noLongerCreated, CollectionLiterals.emptyMap());
+					request.setResultDeleteFile(noLongerCreated);
+				} catch (IOException e) {
+					Exceptions.sneakyThrow(e);
+				}
 			}
 		}
 	}

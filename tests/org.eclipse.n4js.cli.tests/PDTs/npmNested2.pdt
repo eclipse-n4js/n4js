@@ -1,0 +1,12 @@
+# Project Discovery Test
+# working dir marked with '*'
+
+
+FOLDERS
+- SomeFolder
+--*P1 [PROJECT]
+--- OtherFolder
+---- P2 [PROJECT]
+
+EXPECT
+- SomeFolder/P1

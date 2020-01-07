@@ -16,6 +16,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 
 import org.eclipse.n4js.cli.N4jscFactory;
@@ -31,10 +32,24 @@ import org.junit.runners.Parameterized.Parameters;
 import com.google.inject.Injector;
 
 /**
- *
+ * Abstract test to find all projects and their dependencies.
  */
 @RunWith(Parameterized.class)
 public class ProjectDiscoveryTest {
+	static ProjectDiscoveryHelper projectDiscoveryHelper;
+
+	/** Find test data files */
+	@Parameters(name = "{0}")
+	public static Collection<File> testData() {
+		File folder = new File("PDTs");
+		ArrayList<File> testFiles = new ArrayList<>();
+		for (String testFileName : folder.list()) {
+			if (testFileName.endsWith(".pdt")) {
+				testFiles.add(new File(folder, testFileName));
+			}
+		}
+		return testFiles;
+	}
 
 	/** Init the {@link ProjectDiscoveryHelper} */
 	@BeforeClass
@@ -43,46 +58,36 @@ public class ProjectDiscoveryTest {
 		projectDiscoveryHelper = injector.getInstance(ProjectDiscoveryHelper.class);
 	}
 
-	/** Find test data files */
-	@Parameters(name = "{index}: {0}")
-	public static Collection<String> testData() {
-		ArrayList<String> testFiles = new ArrayList<>();
-		for (String testFileName : testFolder.list()) {
-			if (testFileName.endsWith(".pdt")) {
-				testFiles.add(testFileName);
-			}
-		}
-		return testFiles;
-	}
-
-	static File testFolder = new File("ProjectDiscoveryTests");
-	static ProjectDiscoveryHelper projectDiscoveryHelper;
-
-	final String testFileName;
+	final File testFile;
 
 	/** Constructor */
-	public ProjectDiscoveryTest(String testFileName) {
-		this.testFileName = testFileName;
+	public ProjectDiscoveryTest(File testFile) {
+		this.testFile = testFile;
 	}
 
 	/** Execute parameterized test */
 	@Test
 	public void test() {
-		Path tmpDir = FileUtils.createTempDirectory(testFileName + "_");
+		String fileName = testFile.getName();
+		Path tmpDir = FileUtils.createTempDirectory(fileName + "_");
 
-		File testFile = new File(testFolder, testFileName);
 		ProjectDiscoveryTestData pdtd = CreateProjectStructureUtils.readPDTFile(testFile);
 		CreateProjectStructureUtils.createFolderStructure(tmpDir.toFile(), pdtd);
 
 		Path workspaceRoot = new File(tmpDir.toFile(), pdtd.workingDir.getPath()).toPath();
-		LinkedHashSet<Path> projectDirs = projectDiscoveryHelper.collectAllProjectDirs(workspaceRoot);
 
+		ArrayList<String> actualFolders = getActualFolders(tmpDir, workspaceRoot);
+		assertEquals(String.join(",\n", pdtd.expectedProjects), String.join(",\n", actualFolders));
+	}
+
+	private ArrayList<String> getActualFolders(Path tmpDir, Path workspaceRoot) {
+		LinkedHashSet<Path> projectDirs = projectDiscoveryHelper.collectAllProjectDirs(workspaceRoot);
 		ArrayList<String> actualFolders = new ArrayList<>();
 		for (Path projectDir : projectDirs) {
 			String relativeFolder = tmpDir.relativize(projectDir).toString();
 			actualFolders.add(relativeFolder);
 		}
-
-		assertEquals(pdtd.expectedProjects, actualFolders);
+		Collections.sort(actualFolders);
+		return actualFolders;
 	}
 }

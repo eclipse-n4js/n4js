@@ -35,7 +35,7 @@ testhelpers/org.eclipse.n4js.ui.tests.helper/src/org/eclipse/n4js/tests/builder/
 
 
 ## contains text in API documentation that was copied from ECMAScript Language Specification
-plugins/org.eclipse.n4js.environments/src-env/env/builtin_js.n4ts
+plugins/org.eclipse.n4js.ts/src-env/env/builtin_js.n4ts
 ## contains ECMAScript tests
 tests/org.eclipse.n4js.tests.ecmatestsuite/res/test262_5.0_LICENSE.txt
 tests/org.eclipse.n4js.tests.ecmatestsuite/res/test262_6.0_LICENSE.txt

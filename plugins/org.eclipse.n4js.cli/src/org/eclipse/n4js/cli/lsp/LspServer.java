@@ -31,12 +31,14 @@ import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 
+import com.google.common.util.concurrent.Futures;
 import com.google.inject.Injector;
 
 /**
- *
+ * The language server facade.
  */
 public class LspServer {
+
 	private final N4jscOptions options;
 
 	/** Starts the LSP server in a blocking fashion */
@@ -47,7 +49,6 @@ public class LspServer {
 
 	private LspServer(N4jscOptions options) {
 		this.options = options;
-		setPersistionOptions();
 	}
 
 	/** Starts the LSP server in a blocking fashion */
@@ -57,6 +58,7 @@ public class LspServer {
 
 		try {
 			while (true) {
+				setPersistionOptions();
 				XLanguageServerImpl languageServer = N4jscFactory.getLanguageServer();
 				setupAndRun(threadPool, languageServer);
 				N4jscFactory.resetInjector();
@@ -104,24 +106,20 @@ public class LspServer {
 
 			try (AsynchronousSocketChannel socketChannel = serverSocket.accept().get();
 					InputStream in = Channels.newInputStream(socketChannel);
-					OutputStream out = Channels.newOutputStream(socketChannel);) {
+					OutputStream out = Channels.newOutputStream(socketChannel)) {
 
 				N4jscConsole.println("Connected to LSP client");
-
 				run(languageServer, lsBuilder, in, out);
 			}
 		}
 	}
 
-	private void setupAndRunWithSystemIO(XLanguageServerImpl languageServer, Builder<LanguageClient> lsBuilder)
-			throws InterruptedException {
-
+	private void setupAndRunWithSystemIO(XLanguageServerImpl languageServer, Builder<LanguageClient> lsBuilder) {
 		run(languageServer, lsBuilder, System.in, System.out);
 	}
 
 	private void run(XLanguageServerImpl languageServer, Builder<LanguageClient> lsBuilder, InputStream in,
-			OutputStream out)
-			throws InterruptedException {
+			OutputStream out) {
 
 		Launcher<LanguageClient> launcher = lsBuilder
 				.setInput(in)
@@ -132,9 +130,7 @@ public class LspServer {
 		Future<Void> future = launcher.startListening();
 		N4jscConsole.println("LSP Server connected");
 
-		while (!future.isDone()) {
-			Thread.sleep(10_000l);
-		}
+		Futures.getUnchecked(future);
 
 		N4jscConsole.println("Shutdown connection to LSP client");
 		languageServer.getRequestManager().shutdown();

@@ -380,12 +380,12 @@ In addition, the static method `of` in `N4Type` is available to retrieve the met
 constructor. This also allows to retrieve meta-information directly for an instance of some class `C` without having
 the constructor of `C` available, for example because the constructor is not accessible.
 
-.Reflection with `N4class`
+.Reflection with `n4type`
 [example]
 --
 
 This example demonstrates how these reflective features are accessed:
-//% see /org.eclipse.n4js.transpiler.es5.tests/testdata/spec_chap_06_04/Ex57_Reflection_with_N4Class.n4js.xt
+//% see /org.eclipse.n4js.spec.examples.xpect.tests/testdata/spec_chap_06_04/Ex57_Reflection_with_N4Class.n4js.xt
 
 [source,n4js]
 ----
@@ -403,48 +403,49 @@ Assuming this code is defined in file `A`, this will output
 
 [source,n4js]
 ----
-A.B
-A.B
-A.A
-A.B
-N4BuiltInClasses.N4Class
+A/B
+A/B
+A/A
+A/B
+N4BuiltInTypes/N4Class
 ----
 --
 
 The built-in types `N4Object` and `N4Class` are also accessible.
-They are not defined in a module, thus their <<Acronyms,FQN>> returns only their simple name.
 
-.Reflection with Built-In Types
+.Reflection for Built-In Types
 [example]
 --
 
+//% see /org.eclipse.n4js.spec.examples.xpect.tests/testdata/spec_chap_06_04/Ex58_Reflection_with_Built_In_Types.n4js.xt
 
 [source,n4js]
 ----
-console.log('N4Object.n4class.fqn:      ' + N4Object.n4class.fqn)
-console.log('N4Class.n4class.fqn:       ' + N4Class.n4class.fqn)
+console.log('N4Object.n4type.fqn:      ' + N4Object.n4type.fqn)
+console.log('N4Class.n4type.fqn:       ' + N4Class.n4type.fqn)
 
 class A {}
-console.log('A.n4class.fqn:             ' + A.n4class.fqn)
-console.log('A.n4class.n4superType.fqn: ' + A.n4class.n4superType.fqn)
+console.log('A.n4type.fqn:             ' + A.n4type.fqn)
+console.log('A.n4type.n4superType.fqn: ' + A.n4type.n4superType.fqn)
 ----
 
 Assuming this code is defined in file `A`, this will output
 
 [source,n4js]
 ----
-N4Object.n4class.fqn:      N4Object
-N4Class.n4class.fqn:       N4Class
-A.n4class.fqn:             A.A
-A.n4class.n4superType.fqn: N4Object
+N4Object.n4type.fqn:      N4BuiltInTypes/N4Object
+N4Class.n4type.fqn:       N4BuiltInTypes/N4Class
+A.n4type.fqn:             A/A
+A.n4type.n4superType.fqn: N4BuiltInTypes/N4Object
 ----
 
-Note that classes extending `Object` do not provide the static `n4class` getter, hat is
+Note that classes extending `Object` do not provide the static `n4type` getter, hat is
+//% see /org.eclipse.n4js.spec.examples.xpect.tests/testdata/spec_chap_06_04/Ex58_Reflection_with_Built_In_Types_and_Object.n4js.xt
 
 [source,n4js]
 ----
 class B extends Object {}
-console.log('B.n4class.fqn:             ' + B.n4class.fqn)
+console.log('B.n4type.fqn: ' + B.n4type.fqn)
 ----
 
 would issue an error as cannot be resolved.
@@ -484,7 +485,7 @@ console.log(N4EnumType.of(e).fqn);
 
 
 
-The meta-information of an interface `X` is available via getter `n4class` defined in the `type{X}`.
+The meta-information of an interface `X` is available via getter `n4type` defined in the `type{X}`.
 This field is of type `N4Class` as well.
 Since an interface cannot have a super classs, the property `n4superTypes` will always be empty.
 Calling `isInterface` respectively on the returned `N4Class` instance will return true.
@@ -496,7 +497,7 @@ Calling `isInterface` respectively on the returned `N4Class` instance will retur
 var n: number; var b: boolean; var s: string;
 ----
 
-The meta-information for enumerations is available by means of the getter `n4class`, either statically by using the enumeration type or (in terms of an instance getter) via a literal.
+The meta-information for enumerations is available by means of the getter `n4type`, either statically by using the enumeration type or (in terms of an instance getter) via a literal.
 Calling `isEnum` on the returned `N4Class` instance will return true.
 
 [.language-n4js]
