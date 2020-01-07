@@ -97,7 +97,7 @@ public class FileBasedWorkspaceInitializer implements XIWorkspaceConfigFactory {
 	 * Skips {@link IN4JSProject}s that are already registered with the given {@code workspace}.
 	 *
 	 */
-	public void registerProjectsToFileBasedWorkspace(Iterable<FileURI> projectURIs) {
+	private void registerProjectsToFileBasedWorkspace(Iterable<FileURI> projectURIs) {
 		// TODO GH-783 refactor FileBasedWorkspace, https://github.com/eclipse/n4js/issues/783
 		// this is reverse mapping of the one that is kept in the workspace
 		Map<String, FileURI> registeredProjects = new HashMap<>();
