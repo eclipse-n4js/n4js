@@ -325,7 +325,7 @@ class TranspilerStateOperations {
 	 */
 	def public static void replace(TranspilerState state, N4InterfaceDeclaration ifcDecl, VariableDeclaration varDecl) {
 		val isExported = ifcDecl.eContainer instanceof ExportDeclaration;
-		val varStmnt = _VariableStatement(isExported, VariableStatementKeyword.CONST, varDecl);
+		val varStmnt = _VariableStatement(isExported, VariableStatementKeyword.VAR, varDecl); // FIXME GH-1602 why does CONST not work in stdlib?
 		state.replaceWithoutRewire(ifcDecl, varStmnt);
 		state.rewireSymbolTable(ifcDecl, varDecl);
 	}

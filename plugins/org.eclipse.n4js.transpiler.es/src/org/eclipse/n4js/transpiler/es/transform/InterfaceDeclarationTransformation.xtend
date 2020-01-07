@@ -337,6 +337,7 @@ class InterfaceDeclarationTransformation extends Transformation {
 		val result = _N4MethodDecl(true, declaredName, #[ _Fpar("instance") ], _Block(
 			_ReturnStmnt(
 				_Snippet("instance && instance.constructor && instance.constructor.n4type "
+					+ "&& instance.constructor.n4type.allImplementedInterfaces " // FIXME GH-1602 why is this one required?
 					+ "&& instance.constructor.n4type.allImplementedInterfaces.indexOf('" + fqn + "') !== -1"
 				)
 			)
