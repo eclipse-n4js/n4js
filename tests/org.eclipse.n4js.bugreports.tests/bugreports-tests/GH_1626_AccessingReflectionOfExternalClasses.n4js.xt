@@ -1,0 +1,79 @@
+/*
+ * Copyright (c) 2020 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.N4JSBugreportTest
+
+	ResourceSet {
+		ThisFile {}
+		File "Library.n4js" { from="GH_1626_AccessingReflectionOfExternalClasses_Library.n4js.xt" }
+	}
+
+   END_SETUP
+*/
+
+import {JsLibrary} from "Library";
+import {JsLibraryExplicit} from "Library";
+import {N4JSLibrary} from "Library";
+import {N4JSLibraryExplicit} from "Library";
+
+
+class LocalJsLibraryExplicit extends Object {} // no corresponding implicit case exists
+class LocalN4JSLibrary {}
+class LocalN4JSLibraryExplicit extends N4Object {}
+
+
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'n4type'." at "n4type"
+JsLibrary.n4type;
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'n4type'." at "n4type"
+new JsLibrary().constructor.n4type;
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'n4type'." at "n4type"
+JsLibraryExplicit.n4type;
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'n4type'." at "n4type"
+new JsLibraryExplicit().constructor.n4type;
+
+
+// XPECT noerrors --> "Couldn't resolve reference to IdentifiableElement 'n4type'." at "n4type"
+N4JSLibrary.n4type;
+// XPECT noerrors --> "Couldn't resolve reference to IdentifiableElement 'n4type'." at "n4type"
+new N4JSLibrary().constructor.n4type;
+// XPECT noerrors --> "Couldn't resolve reference to IdentifiableElement 'n4type'." at "n4type"
+N4JSLibraryExplicit.n4type;
+// XPECT noerrors --> "Couldn't resolve reference to IdentifiableElement 'n4type'." at "n4type"
+new N4JSLibraryExplicit().constructor.n4type;
+
+
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'n4type'." at "n4type"
+LocalJsLibraryExplicit.n4type;
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'n4type'." at "n4type"
+new LocalJsLibraryExplicit().constructor.n4type;
+
+
+// XPECT noerrors --> "Couldn't resolve reference to IdentifiableElement 'n4type'." at "n4type"
+LocalN4JSLibrary.n4type;
+// XPECT noerrors --> "Couldn't resolve reference to IdentifiableElement 'n4type'." at "n4type"
+new LocalN4JSLibrary().constructor.n4type;
+// XPECT noerrors --> "Couldn't resolve reference to IdentifiableElement 'n4type'." at "n4type"
+LocalN4JSLibraryExplicit.n4type;
+// XPECT noerrors --> "Couldn't resolve reference to IdentifiableElement 'n4type'." at "n4type"
+new LocalN4JSLibraryExplicit().constructor.n4type;
+
+
+
+
+// note that the supertype of JsLibrary is not N4Object (as expected)
+let n4obj: N4Object;
+// XPECT errors --> "JsLibrary is not a subtype of N4Object." at "new JsLibrary()"
+n4obj = new JsLibrary();
+
+// same goes for the constructor
+let n4ctor: type{? extends N4Object};
+// XPECT errors --> "constructor{? extends JsLibrary} is not a subtype of type{? extends N4Object}." at "new JsLibrary().constructor"
+n4ctor = new JsLibrary().constructor;
