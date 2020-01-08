@@ -27,10 +27,10 @@ import org.eclipse.n4js.transpiler.TransformationDependency.RequiresBefore
 import org.eclipse.n4js.transpiler.assistants.TypeAssistant
 import org.eclipse.n4js.transpiler.es.assistants.BootstrapCallAssistant
 import org.eclipse.n4js.transpiler.es.assistants.ClassConstructorAssistant
+import org.eclipse.n4js.transpiler.es.assistants.ClassifierAssistant
 import org.eclipse.n4js.transpiler.es.assistants.DelegationAssistant
 import org.eclipse.n4js.transpiler.im.DelegatingMember
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
-import org.eclipse.n4js.ts.types.TField
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
@@ -50,6 +50,7 @@ import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensi
 class ClassDeclarationTransformation extends Transformation {
 
 	@Inject private ClassConstructorAssistant classConstructorAssistant;
+	@Inject private ClassifierAssistant classifierAssistant;
 	@Inject private BootstrapCallAssistant bootstrapCallAssistant;
 	@Inject private DelegationAssistant delegationAssistant;
 	@Inject private TypeAssistant typeAssistant;
@@ -84,7 +85,7 @@ class ClassDeclarationTransformation extends Transformation {
 
 		classConstructorAssistant.amendConstructor(classDecl, superClassSTE);
 
-		val staticInits = createStaticFieldInitializations(classSTE, classDecl);
+		val staticInits = createStaticFieldInitializations(classDecl, classSTE);
 		insertAfter(classDecl.orContainingExportDeclaration, staticInits);
 
 		val instanceDefs = createFieldDefinitions(classSTE, classDecl);
@@ -125,8 +126,8 @@ class ClassDeclarationTransformation extends Transformation {
 		classDecl.superClassExpression = __NSSafe_IdentRef(superClassSTE);
 	}
 
-	// FIXME only do this for fields that actually override a getter and/or setter!
-	def protected List<Statement> createFieldDefinitions(SymbolTableEntry steClass, N4ClassDeclaration classDecl) {
+	// FIXME GH-1602 only do this for fields that actually override a getter and/or setter!
+	def private List<Statement> createFieldDefinitions(SymbolTableEntry steClass, N4ClassDeclaration classDecl) {
 		val objectSTE = getSymbolTableEntryOriginal(state.G.objectType, true);
 		val definePropertySTE = getSymbolTableEntryForMember(state.G.objectType, "defineProperty", false, true, true);
 		return classDecl.ownedMembers.filter[AnnotationDefinition.OVERRIDE.hasAnnotation(it)].filter(N4FieldDeclaration).map[fieldDecl|
@@ -148,31 +149,7 @@ class ClassDeclarationTransformation extends Transformation {
 		].toList;
 	}
 
-	/**
-	 * Creates a new list of statements to initialize the static fields of the given {@code classDecl}.
-	 * 
-	 * Clients of this method may modify the returned list.
-	 */
-	def protected List<Statement> createStaticFieldInitializations(SymbolTableEntry classSTE, N4ClassDeclaration classDecl) {
-		return classDecl.ownedMembers.filter[isStatic].filter(N4FieldDeclaration).map[createStaticInitialiserCode(classSTE)].filterNull.toList;
-	}
-
-	def private Statement createStaticInitialiserCode(N4FieldDeclaration fieldDecl, SymbolTableEntry classSTE) {
-		if (fieldDecl.expression === null) {
-			return null;
-		}
-
-		val tField = state.info.getOriginalDefinedMember(fieldDecl) as TField;
-		val fieldSTE = getSymbolTableEntryOriginal(tField, true);
-
-		val exprStmnt = _ExprStmnt(
-			_AssignmentExpr(
-				_PropertyAccessExpr(__NSSafe_IdentRef(classSTE), fieldSTE),
-				fieldDecl.expression // reuse existing expression
-			)
-		);
-		state.tracer.copyTrace(fieldDecl, exprStmnt);
-
-		return exprStmnt;
+	def protected List<Statement> createStaticFieldInitializations(N4ClassDeclaration classDecl, SymbolTableEntry classSTE) {
+		return classifierAssistant.createStaticFieldInitializations(classDecl, classSTE);
 	}
 }

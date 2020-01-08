@@ -22,16 +22,16 @@ import org.eclipse.n4js.transpiler.im.SymbolTableEntry
  * initializes a class declaration with migration-support related static fields. 
  */
 class N4IDLClassDeclarationTransformation extends ClassDeclarationTransformation {
-	
+
 	@Inject private extension MigrationTransformationAssistant
 	@Inject private extension N4IDLClassifierTransformationAssistant;
-	
-	override protected createStaticFieldInitializations(SymbolTableEntry steClass, N4ClassDeclaration classDecl) {
-		val statements = super.createStaticFieldInitializations(steClass, classDecl);
-		
-		statements.add(createMigrationSupportInitializer(steClass, classDecl));
-		statements.add(createImplementedInterfaceStaticInitializer(steClass, classDecl));
-		
+
+	override protected createStaticFieldInitializations(N4ClassDeclaration classDecl, SymbolTableEntry classSTE) {
+		val statements = super.createStaticFieldInitializations(classDecl, classSTE);
+
+		statements.add(createMigrationSupportInitializer(classSTE, classDecl));
+		statements.add(createImplementedInterfaceStaticInitializer(classSTE, classDecl));
+
 		return statements;
 	}	
 }
