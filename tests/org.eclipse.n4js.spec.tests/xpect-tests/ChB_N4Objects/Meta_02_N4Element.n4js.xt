@@ -27,8 +27,8 @@ stdout:
  = inspect test as N4Element
   - test.origin is a string n4js-runtime
   - test.annotations is empty
-  - test.allAnnotations is a function allAnnotations___n4
-  - test.anyAnnotation is a function allAnnotations___n4
+  - test.allAnnotations is a function allAnnotations
+  - test.anyAnnotation is a function allAnnotations
  = inspect test as Object
   - test.prototype is not an object undefined
   - test.hasOwnProperty  is native function
