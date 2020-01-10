@@ -47,6 +47,9 @@ class N4JSMethodProposalHelper extends AbstractCompletionProposalFactory {
 
 	@Inject
 	private ContainerTypesHelper containerTypesHelper;
+	
+	@Inject
+	private N4JSMethodReturnTypeHelper returnTypeResolver;
 
 	static final String OVERRIDE_ANNOTATION = AnnotationDefinition.OVERRIDE.name;
 	
@@ -55,6 +58,8 @@ class N4JSMethodProposalHelper extends AbstractCompletionProposalFactory {
 	static final String EMPTY_METHOD_BODY = " {\n\n\t}";
 
 	static final String AUTO_GENERATED_METHOD_BODY = " {\n\t\t// TODO Auto-generated method stub\n\t\t";
+	
+	
 
 	/**
 	 * This method activates the Content Assist to propose and complete methods inherited by a superclass
@@ -87,7 +92,9 @@ class N4JSMethodProposalHelper extends AbstractCompletionProposalFactory {
 			}
 		}
 	}
+	
 
+	
 	protected def void completeMethodDeclarationFromField(N4FieldDeclaration n4FieldDeclaration, INode node,
 		ContainerTypesHelper.MemberCollector memberCollector, Type tclass, ContentAssistContext context,
 		ICompletionProposalAcceptor acceptor) {
@@ -104,113 +111,26 @@ class N4JSMethodProposalHelper extends AbstractCompletionProposalFactory {
 		}
 	}
 
-	//FIXME: If an UnionTypeExpression/IntersectionExpression/IterableTypeExpression 
-	//is a type argument of a ParameterizedTypeRef it won't be recognized
-	def private String getReturnTypeAsString(TMethod methodMember) {
-
-		val StringBuilder strb = new StringBuilder();
-		if (methodMember.returnTypeRef !== null) {
-			var returnTypeRef = methodMember.returnTypeRef;
-			if (methodMember.declaredAsync || methodMember.declaredGenerator) {
-				val returnTypeName = returnTypeRef.typeArgs.get(0).declaredType.name;
-				if (returnTypeName.equalsIgnoreCase("undefined")) {
-					strb.append(": ").append("void");
-				} else {
-					strb.append(": ").append(returnTypeName);
-				}
-			} else if (returnTypeRef instanceof UnionTypeExpression) {
-				var typeRefs = returnTypeRef.typeRefs;
-				strb.append(": ").append(typeRefs.map[declaredType.name].join(" | "));
-			} else if (returnTypeRef instanceof IntersectionTypeExpression) {
-				var typeRefs = returnTypeRef.typeRefs;
-				strb.append(": ").append(typeRefs.map[declaredType.name].join(" & "));
-			} else if (returnTypeRef instanceof ParameterizedTypeRef) {
-				if(returnTypeRef.isIterableTypeExpression) {
-					var typeArgs = returnTypeRef.typeArgs;
-					strb.append(": [").append(typeArgs.map[declaredType.name].join(", ")).append("]");
-				} else {
-					strb.append(": ").append(returnTypeRef.typeRefAsString);
-				}
-			} else {
-				strb.append(": ").append(returnTypeRef.typeRefAsString);
-			}
-		}
-		return strb.toString;
-	}
-
-	def private buildMethodCompletionProposal(ContentAssistContext context, ICompletionProposalAcceptor acceptor,
-		INode node, EList<TAnnotation> annotations, TMember methodMember) {
-		var annotationString = addAnnotations(annotations);
-		var String methodBody;
-		var String methodMemberAsString;
-		if (methodMember instanceof TMethod) {
-			val String returnType = getReturnTypeAsString(methodMember);
-			methodMemberAsString = getMethodMemberAsString(methodMember);
-
-			if (returnType.equalsIgnoreCase(": void")) {
-				methodBody = EMPTY_METHOD_BODY;
-			} else {
-				val StringBuilder strb = new StringBuilder();
-				strb.append(methodMember.fpars.map[name].join(", "))
-				var String methodReturnBody;
-				if (!methodMember.fpars.isNullOrEmpty &&
-					!methodMember.fpars.get(methodMember.fpars.length - 1).variadic) {
-					methodReturnBody = "return super." + methodMember.name + "(" + strb.toString() + ");\n\t}";
-				} else if (!methodMember.fpars.isNullOrEmpty &&
-					methodMember.fpars.get(methodMember.fpars.length - 1).variadic) {
-					methodReturnBody = "return null;\n\t}";
-				} else {
-					methodReturnBody = "return super." + methodMember.name + "();\n\t}";
-				}
-				methodBody = AUTO_GENERATED_METHOD_BODY + methodReturnBody;
-			}
-
-			val proposalString = getProposalString(methodMember, annotationString, methodBody);
-			var replacementOffset = node.offset; // replace from beginning of node;
-			if (!(context.currentModel instanceof LiteralOrComputedPropertyName)) {
-				val semanticElement = node.semanticElement;
-				if (semanticElement instanceof N4FieldDeclaration)
-					if (semanticElement.annotationList === null && semanticElement.declaredModifiers.isNullOrEmpty) {
-						// calculate replacementOffset by length of prefix, because node of prefix is not accessible in case a syntax error occurred 
-						replacementOffset = context.offset - context.prefix.length;
-					}
-			}
-			val replacementLength = context.offset - node.offset; // replace from beginning of the node to the current cursor position
-			val ICompletionProposal proposal = createMethodCompletionProposal(proposalString, methodMemberAsString,
-				context, replacementOffset, replacementLength);
-			acceptor.accept(proposal);
-		}
-	}
-
-	def private getMethodMemberAsString(TMethod methodMember) {
-		val StringBuilder strb = new StringBuilder();
-		strb.append(methodMember.name).append("(").append(methodMember.fpars.map[formalParameterAsString].join(", ")).
-			append(")");
-		strb.append(getReturnTypeAsString(methodMember));
-		if (methodMember.returnValueOptional) strb.append('?');
-		return strb.toString();
-	}
-
 	def private boolean isAccessInternal(TMethod methodMember) {
 		var String accessModifier = methodMember.memberAccessModifier.toString;
-		return (accessModifier.length >= 8) && accessModifier.substring(accessModifier.length - 8, accessModifier.length).equals("Internal");
+		return (accessModifier.length >= 8) &&
+			accessModifier.substring(accessModifier.length - 8, accessModifier.length).equals("Internal");
 	}
 	
 	def private String getAccessModifier(TMethod methodMember) {
 		var String accessModifier = methodMember.memberAccessModifier.toString;
-		if(isAccessInternal(methodMember)) {
-			//remove appended "Internal" keyword, which is appended to the access modifier
+		if (isAccessInternal(methodMember)) {
+			// remove appended "Internal" keyword, which is appended to the access modifier
 			return methodMember.memberAccessModifier.toString().substring(0, accessModifier.length - 8);
 		} else {
 			return methodMember.memberAccessModifier.toString();
 		}
 	}
 
-	def private getProposalString(TMethod methodMember, String annotString,
-		String methodBody) {
+	def private getProposalString(TMethod methodMember, String annotString, String methodBody) {
 		val StringBuilder strb = new StringBuilder();
 		var annotationString = annotString;
-		if(isAccessInternal(methodMember)) annotationString = "@" + INTERNAL_ANNOTATION + "\n\t" + annotationString;
+		if (isAccessInternal(methodMember)) annotationString = "@" + INTERNAL_ANNOTATION + "\n\t" + annotationString;
 		strb.append(annotationString);
 		if (showAccessModifier(methodMember)) strb.append(getAccessModifier(methodMember) + " ");
 		if (methodMember.declaredStatic) strb.append("static ");
@@ -222,6 +142,7 @@ class N4JSMethodProposalHelper extends AbstractCompletionProposalFactory {
 		strb.append(methodBody);
 		return strb.toString();
 	}
+
 
 	def private createMethodCompletionProposal(String proposal, String methodMemberName, ContentAssistContext context,
 		int offset, int length) {
@@ -262,5 +183,81 @@ class N4JSMethodProposalHelper extends AbstractCompletionProposalFactory {
 			}
 		}
 		return methodImplemented
+	}
+
+
+
+
+
+
+
+	protected def void completeMethodDeclarationFromField(N4FieldDeclaration n4FieldDeclaration, INode node,
+		ContainerTypesHelper.MemberCollector memberCollector, Type tclass, ContentAssistContext context,
+		ICompletionProposalAcceptor acceptor) {
+
+		for (TMember methodMember : memberCollector.inheritedMembers(tclass as TClass)) {
+			val implementedMembers = memberCollector.allMembers(tclass as TClass, false, false, false);
+			if (!methodAlreadyImplemented(implementedMembers, methodMember)) {
+				if (!methodMember.declaredFinal && !methodMember.name.equals("constructor")) {
+					val annotations = methodMember.annotations;
+					buildMethodCompletionProposal(context, acceptor, node, annotations, methodMember);
+				}
+			}
+		}
+	}
+
+	def private buildMethodCompletionProposal(ContentAssistContext context, ICompletionProposalAcceptor acceptor,
+		INode node, EList<TAnnotation> annotations, TMember methodMember) {
+		var annotationString = addAnnotations(annotations);
+		var String methodBody;
+		var String methodMemberAsString;
+		if (methodMember instanceof TMethod) {
+			val String returnType = returnTypeResolver.getReturnTypeAsString(methodMember);
+			methodMemberAsString = getMethodMemberAsString(methodMember);
+
+			if ((methodMember.declaredGenerator &&
+				!(methodMember.returnTypeRef.typeArgs.get(1).declaredType instanceof AnyType)) ||
+				returnType.equalsIgnoreCase(": void")) {
+				methodBody = EMPTY_METHOD_BODY;
+			} else {
+				val StringBuilder strb = new StringBuilder();
+				strb.append(methodMember.fpars.map[name].join(", "))
+				var String methodReturnBody;
+				if (!methodMember.fpars.isNullOrEmpty &&
+					!methodMember.fpars.get(methodMember.fpars.length - 1).variadic) {
+					methodReturnBody = "return super." + methodMember.name + "(" + strb.toString() + ");\n\t}";
+				} else if (methodMember.declaredAsync || (!methodMember.fpars.isNullOrEmpty &&
+					methodMember.fpars.get(methodMember.fpars.length - 1).variadic)) {
+					methodReturnBody = "return null;\n\t}";
+				} else {
+					methodReturnBody = "return super." + methodMember.name + "();\n\t}";
+				}
+				methodBody = AUTO_GENERATED_METHOD_BODY + methodReturnBody;
+			}
+
+			val proposalString = getProposalString(methodMember, annotationString, methodBody);
+			var replacementOffset = node.offset; // replace from beginning of node;
+			if (!(context.currentModel instanceof LiteralOrComputedPropertyName)) {
+				val semanticElement = node.semanticElement;
+				if (semanticElement instanceof N4FieldDeclaration)
+					if (semanticElement.annotationList === null && semanticElement.declaredModifiers.isNullOrEmpty) {
+						// calculate replacementOffset by length of prefix, because node of prefix is not accessible in case a syntax error occurred 
+						replacementOffset = context.offset - context.prefix.length;
+					}
+			}
+			val replacementLength = context.offset - node.offset; // replace from beginning of the node to the current cursor position
+			val ICompletionProposal proposal = createMethodCompletionProposal(proposalString, methodMemberAsString,
+				context, replacementOffset, replacementLength);
+			acceptor.accept(proposal);
+		}
+	}
+
+	def private getMethodMemberAsString(TMethod methodMember) {
+		val StringBuilder strb = new StringBuilder();
+		strb.append(methodMember.name).append("(").append(methodMember.fpars.map[formalParameterAsString].join(", ")).
+			append(")");
+		strb.append(returnTypeResolver.getReturnTypeAsString(methodMember));
+		if (methodMember.returnValueOptional) strb.append('?');
+		return strb.toString();
 	}
 }
