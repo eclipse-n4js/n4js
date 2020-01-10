@@ -71,10 +71,11 @@ class A {
 	public fooNestedTypes1(): Array<Array<([string, int] & number)>> {
 		return null;
 	}
-	public fooNestedTypes2(): Generator<Generator<(int | int), int, int>, int, int> {
+	public *fooNestedTypes2(): Generator<Generator<(int | int), int, int>, int, int> {
 		return null;
 	}
-	public fooNestedTypes3(): (string & string) | int {
+	public *fooNestedTypesGenUndefined3(): Generator<Generator<(int | int), int, int>, undefined, int> {}
+	public fooNestedTypes4(): (string & string) | int {
 		return null;
 	}
 }
@@ -370,9 +371,8 @@ class B19 extends A {
 <...>
 @Override
 <...>
-	public fooNestedTypes2(): Generator<Generator<(int | int), int, int>, int, int> {
-		// TODO Auto-generated method stub
-		return super.fooNestedTypes2();
+	public *fooNestedTypes2(): Generator<Generator<(int | int), int, int>, int, int> {
+
 	}  
 <...>
 --- */
@@ -381,13 +381,27 @@ f
 
 class B20 extends A { 
 @Override
-/* XPECT contentAssist at 'f<|>' apply 'fooNestedTypes3(): (string & string) | int' ---
+/* XPECT contentAssist at 'f<|>' apply 'fooNestedTypesGenUndefined3(): Generator<Generator<(int | int), int, int>, undefined, int>' ---
 <...>
 @Override
 <...>
-	public fooNestedTypes3(): (string & string) | int {
+	public *fooNestedTypesGenUndefined3(): Generator<Generator<(int | int), int, int>, undefined, int> {
+
+	}  
+<...>
+--- */
+f 
+}
+
+class B21 extends A { 
+@Override
+/* XPECT contentAssist at 'f<|>' apply 'fooNestedTypes4(): (string & string) | int' ---
+<...>
+@Override
+<...>
+	public fooNestedTypes4(): (string & string) | int {
 		// TODO Auto-generated method stub
-		return super.fooNestedTypes3();
+		return super.fooNestedTypes4();
 	}  
 <...>
 --- */

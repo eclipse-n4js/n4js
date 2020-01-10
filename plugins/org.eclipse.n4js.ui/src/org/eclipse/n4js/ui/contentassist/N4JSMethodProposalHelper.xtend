@@ -39,6 +39,8 @@ import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.Wildcard
+import org.eclipse.n4js.ts.types.UndefinedType
+import org.eclipse.n4js.ts.types.AnyType
 
 /**
  * A helper class that proposes methods to be overwritten based on the prefix typed so far
@@ -47,11 +49,11 @@ import org.eclipse.n4js.ts.typeRefs.Wildcard
  * Otherwise, you can choose from a proposal list and confirm your choice with Enter.
  */
 class N4JSMethodProposalHelper extends AbstractCompletionProposalFactory {
-	//TODO: Add some more tests for more complicated method return types:
-	// "org.eclipse.n4js.xpect.ui.tests/testdata_nonvalidating/proposal/contentassist/ContentAssist_overriding_methods_apply.n4js.xt"
-
 	@Inject
 	private ContainerTypesHelper containerTypesHelper;
+	
+	@Inject
+	private N4JSMethodReturnTypeHelper returnTypeResolver;
 
 	static final String OVERRIDE_ANNOTATION = AnnotationDefinition.OVERRIDE.name;
 
@@ -108,78 +110,18 @@ class N4JSMethodProposalHelper extends AbstractCompletionProposalFactory {
 		}
 	}
 
-	def private String getReturnTypeAsString(TMethod methodMember) {
-
-		var topLevel = true;
-		var boolean asyncOrGenerator = methodMember.declaredAsync || methodMember.declaredGenerator;
-		var returnTypeRef = methodMember.returnTypeRef;
-
-		resolveReturnTypeTopLevel(returnTypeRef, topLevel, asyncOrGenerator);
-	}
-
-	def private String resolveReturnTypeTopLevel(TypeArgument returnTypeRef, boolean topLevel,
-		boolean asyncOrGenerator) {
-		if (topLevel && asyncOrGenerator) {
-			if (returnTypeRef instanceof TypeRef) {
-				val returnTypeName = returnTypeRef.typeArgs.get(0).declaredType.name;
-				if (returnTypeName.equalsIgnoreCase("undefined")) {
-					return ": void";
-				}
-			}
-		}
-		return ": " + resolveReturnType(returnTypeRef, topLevel);
-	}
-
-	def private String resolveReturnType(TypeArgument returnTypeRef, boolean topLevel) {
-		var StringBuilder strb = new StringBuilder();
-		val notTopLevel = false;
-		var declaredType = returnTypeRef.declaredType;
-		if (returnTypeRef instanceof ParameterizedTypeRef) {
-			if (returnTypeRef.isIterableTypeExpression) {
-				var typeArgs = returnTypeRef.typeArgs;
-				strb.append("[").append(typeArgs.map[resolveReturnType(it, notTopLevel)].join(", ")).append("]");
-			} else if (returnTypeRef.isArrayLike && returnTypeRef.typeArgs.size > 0) {
-				strb.append("Array<").append(resolveReturnType(returnTypeRef.typeArgs.get(0), notTopLevel)).append(">");
-			} else if (declaredType.name.equalsIgnoreCase("Generator")) {
-				//TODO: Simplified notation, if only the generator's first parameter is defined
-				var typeArgs = returnTypeRef.typeArgs;
-				strb.append("Generator<").append(typeArgs.map[resolveReturnType(it, notTopLevel)].join(", ")).
-					append(">");
-			} else if (declaredType.name.equalsIgnoreCase("Promise")) {
-				//TODO: Simplified notation, if only the promise's first parameter is defined
-				var typeArgs = returnTypeRef.typeArgs;
-				strb.append("Promise<").append(typeArgs.map[resolveReturnType(it, notTopLevel)].join(", ")).append(">");
-			} else {
-				strb.append(declaredType.name);
-			}
-		} else if (returnTypeRef instanceof IntersectionTypeExpression) {
-			var typeRefs = returnTypeRef.typeRefs;
-			if (!topLevel) strb.append("(");
-			strb.append(typeRefs.map[resolveReturnType(it, notTopLevel)].join(" & "));
-			if (!topLevel) strb.append(")");
-		} else if (returnTypeRef instanceof UnionTypeExpression) {
-			var typeRefs = returnTypeRef.typeRefs;
-			if (!topLevel) strb.append("(");
-			strb.append(typeRefs.map[resolveReturnType(it, notTopLevel)].join(" | "));
-			if (!topLevel) strb.append(")");
-		} else if (returnTypeRef instanceof Wildcard) {
-			strb.append("?");
-		} else {
-			strb.append(declaredType.name);
-		}
-		return strb.toString();
-	}
-
 	def private buildMethodCompletionProposal(ContentAssistContext context, ICompletionProposalAcceptor acceptor,
 		INode node, EList<TAnnotation> annotations, TMember methodMember) {
 		var annotationString = addAnnotations(annotations);
 		var String methodBody;
 		var String methodMemberAsString;
 		if (methodMember instanceof TMethod) {
-			val String returnType = getReturnTypeAsString(methodMember);
+			val String returnType = returnTypeResolver.getReturnTypeAsString(methodMember);
 			methodMemberAsString = getMethodMemberAsString(methodMember);
 
-			if (returnType.equalsIgnoreCase(": void")) {
+			if ((methodMember.declaredGenerator &&
+				!(methodMember.returnTypeRef.typeArgs.get(1).declaredType instanceof AnyType)) ||
+				returnType.equalsIgnoreCase(": void")) {
 				methodBody = EMPTY_METHOD_BODY;
 			} else {
 				val StringBuilder strb = new StringBuilder();
@@ -188,9 +130,8 @@ class N4JSMethodProposalHelper extends AbstractCompletionProposalFactory {
 				if (!methodMember.fpars.isNullOrEmpty &&
 					!methodMember.fpars.get(methodMember.fpars.length - 1).variadic) {
 					methodReturnBody = "return super." + methodMember.name + "(" + strb.toString() + ");\n\t}";
-				} else if ((methodMember.declaredAsync || methodMember.declaredGenerator) ||
-					(!methodMember.fpars.isNullOrEmpty &&
-						methodMember.fpars.get(methodMember.fpars.length - 1).variadic)) {
+				} else if (methodMember.declaredAsync || (!methodMember.fpars.isNullOrEmpty &&
+					methodMember.fpars.get(methodMember.fpars.length - 1).variadic)) {
 					methodReturnBody = "return null;\n\t}";
 				} else {
 					methodReturnBody = "return super." + methodMember.name + "();\n\t}";
@@ -219,7 +160,7 @@ class N4JSMethodProposalHelper extends AbstractCompletionProposalFactory {
 		val StringBuilder strb = new StringBuilder();
 		strb.append(methodMember.name).append("(").append(methodMember.fpars.map[formalParameterAsString].join(", ")).
 			append(")");
-		strb.append(getReturnTypeAsString(methodMember));
+		strb.append(returnTypeResolver.getReturnTypeAsString(methodMember));
 		if (methodMember.returnValueOptional) strb.append('?');
 		return strb.toString();
 	}
