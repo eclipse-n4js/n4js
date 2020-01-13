@@ -20,6 +20,7 @@ import org.eclipse.n4js.ide.server.hover.N4JSHoverService;
 import org.eclipse.n4js.ide.server.symbol.N4JSDocumentSymbolMapper;
 import org.eclipse.n4js.ide.server.symbol.N4JSHierarchicalDocumentSymbolService;
 import org.eclipse.n4js.ide.validation.N4JSDiagnosticConverter;
+import org.eclipse.n4js.ide.xtext.editor.contentassist.XIdeContentProposalAcceptor;
 import org.eclipse.n4js.ide.xtext.server.DefaultBuildRequestFactory;
 import org.eclipse.n4js.ide.xtext.server.IBuildRequestFactory;
 import org.eclipse.n4js.ide.xtext.server.WorkspaceAwareCanLoadFromDescriptionHelper;
@@ -32,6 +33,7 @@ import org.eclipse.n4js.internal.lsp.FileSystemScanner;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
 import org.eclipse.xtext.generator.IGenerator;
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
+import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalAcceptor;
 import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalProvider;
 import org.eclipse.xtext.ide.server.ILanguageServerShutdownAndExitHandler;
 import org.eclipse.xtext.ide.server.hover.HoverService;
@@ -112,6 +114,10 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public Class<? extends IFileSystemScanner> bindFileSystemScanner() {
 		return FileSystemScanner.class;
+	}
+
+	public Class<? extends IdeContentProposalAcceptor> bindIdeContentProposalAcceptor() {
+		return XIdeContentProposalAcceptor.class;
 	}
 
 }
