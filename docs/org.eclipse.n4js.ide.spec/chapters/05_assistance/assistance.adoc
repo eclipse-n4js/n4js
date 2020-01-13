@@ -587,3 +587,36 @@ If more then one option leads to a possible resolution the situation should be c
 * more then one module provides an element, which would render a formerly unresolved reference to be valid.
 * for a wildcard-imported element `X` there are unknown members and a different module provides an element `X` containing the missing members. In such a case a named import of `X` would be proposed, optionally using an alias.
 
+== AutoEdit
+
+AutoEdit can help you write JSDoc comments. It creates `@param` and `@return` tags.
+
+When you create a comment for a method e.g. `/\*`, `*/` is appended automatically.
+
+If you add another asterisk e.g. `/**` and hit enter, AutoEdit will add an asterisk to every new line and create a JSDoc comment based on the method signature.
+
+Hitting enter again, will result in another new line with an asterisk at the beginning.
+
+Given the following (`|` being the current position of your cursor):
+```
+class Foo {
+  /**| */
+  bar(s: String, n: boolean): boolean {
+    return false;
+  }
+}
+```
+Hitting enter, will result in:
+```
+class Foo {
+  /**
+   * |
+   * @param s
+   * @param n
+   * @return
+   */
+  bar(s: String, n: boolean): boolean {
+    return false;
+  }
+}
+```
