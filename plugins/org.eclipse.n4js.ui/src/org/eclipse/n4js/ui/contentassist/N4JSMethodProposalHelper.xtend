@@ -44,7 +44,7 @@ import org.eclipse.n4js.ts.types.AnyType
 class N4JSMethodProposalHelper extends AbstractCompletionProposalFactory {
 	@Inject
 	private ContainerTypesHelper containerTypesHelper;
-	
+
 	@Inject
 	private N4JSMethodReturnTypeHelper returnTypeResolver;
 
@@ -68,8 +68,7 @@ class N4JSMethodProposalHelper extends AbstractCompletionProposalFactory {
 			if (n4classdeclaration instanceof N4ClassDeclaration) {
 				val tclass = n4classdeclaration.definedType;
 				var node = NodeModelUtils.getNode(model);
-				completeMethodDeclarationFromField(model, node, memberCollector, tclass, context, acceptor)
-
+				completeMethodDeclarationFromField(model, node, memberCollector, tclass, context, acceptor);
 			}
 		}
 
