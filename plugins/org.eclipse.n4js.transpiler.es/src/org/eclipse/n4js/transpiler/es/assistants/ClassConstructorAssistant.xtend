@@ -64,18 +64,19 @@ class ClassConstructorAssistant extends TransformationAssistant {
 	def public void amendConstructor(N4ClassDeclaration classDecl, SymbolTableEntryOriginal superClassSTE) {
 
 		val explicitCtorDecl = classDecl.ownedCtor; // the constructor defined in the N4JS source code or 'null' if none was defined
+		val hasExplicitCtor = explicitCtorDecl !== null;
 		val ctorDecl = explicitCtorDecl ?: _N4MethodDecl(N4JSLanguageConstants.CONSTRUCTOR);
 
 		// -------------------------------------------------
 		// formal parameters
-		if(explicitCtorDecl!==null) {
+		if (hasExplicitCtor) {
 			// explicitly defined constructor
 			// --> nothing to be changed (use fpars from N4JS source code)
 		} else {
 			// implicit constructor
 			// --> create fpars using fpars of nearest constructor in hierarchy as template
 			val templateCtor = getNearestConstructorInHierarchy(classDecl);
-			if(templateCtor!==null) {
+			if (templateCtor!==null) {
 				ctorDecl.fpars += templateCtor.fpars.map[
 					val typeRefIM = copyAlienElement(it.typeRef);
 					_Fpar(it.name, it.variadic, typeRefIM, AnnotationDefinition.SPEC.hasAnnotation(it))
@@ -103,8 +104,18 @@ class ClassConstructorAssistant extends TransformationAssistant {
 			// no explicitCtorDecl OR no body OR no explicit super call (and no direct subclass of Error)
 			// --> add default super call (if required)
 			if(superClassSTE!==null) {
+				val fparsOfSuperCtor = if (hasExplicitCtor) {
+					// explicit ctor without an explicit super call: only allowed if the super constructor
+					// does not have any arguments, so we can simply assume empty fpars here, without actually
+					// looking up the super constructor with #getNearestConstructorInHierarchy():
+					#[]
+				} else {
+					// no explicit ctor: the already created implicit constructor in 'ctorDecl' has the
+					// same fpars as the super constructor, so we can use those as a template:
+					ctorDecl.fpars
+				};
 				idx = body.statements.insertAt(idx,
-					createDefaultSuperCall(classDecl, superClassSTE, ctorDecl.fpars));
+					createDefaultSuperCall(classDecl, superClassSTE, fparsOfSuperCtor));
 			}
 		}
 		if(isDirectSubclassOfError) {
@@ -224,7 +235,7 @@ class ClassConstructorAssistant extends TransformationAssistant {
 							val fieldSTE = findSymbolTableEntryForElement(fieldDecl, true);
 							val thisFieldName = _PropertyAccessExpr(_ThisLiteral, fieldSTE);
 							return fieldDecl.name -> if (fieldDecl.hasNonTrivialInitExpression) {
-								_AssignmentExpr(thisFieldName, fieldDecl.expression) // FIXME need to copy???
+								_AssignmentExpr(thisFieldName, fieldDecl.expression) //  reusing the expression here
 							} else {
 								thisFieldName
 							};
