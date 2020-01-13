@@ -135,7 +135,7 @@ class InterfaceDeclarationTransformation extends Transformation {
 			val tIfc = ifcSTE.originalTarget;
 			if(tIfc instanceof TInterface) {
 				return !TypeUtils.isBuiltIn(tIfc) // built-in types are not defined in Api/Impl projects -> no patching required
-					&& !(tIfc.external && !AnnotationDefinition.N4JS.hasAnnotation(tIfc)) // interface in .n4jsd file only patched in if marked @N4JS
+					&& !(typeAssistant.inN4JSD(tIfc) && !AnnotationDefinition.N4JS.hasAnnotation(tIfc)) // interface in .n4jsd file only patched in if marked @N4JS
 			}
 			return false;
 		];
