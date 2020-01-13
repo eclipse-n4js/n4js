@@ -32,14 +32,7 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.jface.viewers.StyledString
 import org.eclipse.n4js.ts.types.TAnnotation
-import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
-import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression
 import org.eclipse.xtext.ui.editor.contentassist.AbstractCompletionProposalFactory
-import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
-import org.eclipse.n4js.ts.typeRefs.TypeRef
-import org.eclipse.n4js.ts.typeRefs.TypeArgument
-import org.eclipse.n4js.ts.typeRefs.Wildcard
-import org.eclipse.n4js.ts.types.UndefinedType
 import org.eclipse.n4js.ts.types.AnyType
 
 /**
