@@ -21,7 +21,7 @@ import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.TransformationDependency.RequiresAfter
 import org.eclipse.n4js.transpiler.assistants.TypeAssistant
-import org.eclipse.n4js.transpiler.es.assistants.BootstrapCallAssistant
+import org.eclipse.n4js.transpiler.es.assistants.ReflectionAssistant
 import org.eclipse.n4js.transpiler.im.ImFactory
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 
@@ -37,7 +37,7 @@ import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensi
 @RequiresAfter(ClassDeclarationTransformation)
 class EnumDeclarationTransformation extends Transformation {
 
-	@Inject private BootstrapCallAssistant bootstrapCallAssistant;
+	@Inject private ReflectionAssistant reflectionAssistant;
 	@Inject private TypeAssistant typeAssistant;
 
 	private SymbolTableEntry n4EnumSTE;
@@ -93,7 +93,7 @@ class EnumDeclarationTransformation extends Transformation {
 		);
 
 		// add 'n4type' getter for reflection
-		bootstrapCallAssistant.addN4TypeGetter(enumDecl, classDecl);
+		reflectionAssistant.addN4TypeGetter(enumDecl, classDecl);
 
 		state.tracer.copyTrace(enumDecl, classDecl);
 

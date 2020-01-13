@@ -25,10 +25,10 @@ import org.eclipse.n4js.n4JS.Statement
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.TransformationDependency.RequiresBefore
 import org.eclipse.n4js.transpiler.assistants.TypeAssistant
-import org.eclipse.n4js.transpiler.es.assistants.BootstrapCallAssistant
 import org.eclipse.n4js.transpiler.es.assistants.ClassConstructorAssistant
 import org.eclipse.n4js.transpiler.es.assistants.ClassifierAssistant
 import org.eclipse.n4js.transpiler.es.assistants.DelegationAssistant
+import org.eclipse.n4js.transpiler.es.assistants.ReflectionAssistant
 import org.eclipse.n4js.transpiler.im.DelegatingMember
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 
@@ -51,7 +51,7 @@ class ClassDeclarationTransformation extends Transformation {
 
 	@Inject private ClassConstructorAssistant classConstructorAssistant;
 	@Inject private ClassifierAssistant classifierAssistant;
-	@Inject private BootstrapCallAssistant bootstrapCallAssistant;
+	@Inject private ReflectionAssistant reflectionAssistant;
 	@Inject private DelegationAssistant delegationAssistant;
 	@Inject private TypeAssistant typeAssistant;
 
@@ -81,7 +81,7 @@ class ClassDeclarationTransformation extends Transformation {
 		val superClassSTE = typeAssistant.getSuperClassSTE(classDecl);
 
 		// add 'n4type' getter for reflection
-		bootstrapCallAssistant.addN4TypeGetter(classDecl, classDecl);
+		reflectionAssistant.addN4TypeGetter(classDecl, classDecl);
 
 		classConstructorAssistant.amendConstructor(classDecl, superClassSTE);
 

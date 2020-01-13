@@ -13,8 +13,8 @@ package org.eclipse.n4js.transpiler.es.assistants
 import com.google.inject.Inject
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.AnnotationDefinition.RetentionPolicy
+import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.n4JS.AnnotableElement
-import org.eclipse.n4js.n4JS.ArrayLiteral
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.FieldAccessor
 import org.eclipse.n4js.n4JS.GetterDeclaration
@@ -36,9 +36,6 @@ import org.eclipse.n4js.n4JS.VariableStatementKeyword
 import org.eclipse.n4js.transpiler.InformationRegistry
 import org.eclipse.n4js.transpiler.TransformationAssistant
 import org.eclipse.n4js.transpiler.assistants.TypeAssistant
-import org.eclipse.n4js.transpiler.es.transform.ClassDeclarationTransformation
-import org.eclipse.n4js.transpiler.es.transform.EnumDeclarationTransformation
-import org.eclipse.n4js.transpiler.es.transform.InterfaceDeclarationTransformation
 import org.eclipse.n4js.transpiler.im.DelegatingMember
 import org.eclipse.n4js.ts.types.TAnnotableElement
 import org.eclipse.n4js.ts.types.TAnnotation
@@ -53,105 +50,100 @@ import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.util.SuperInterfacesIterable
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.ResourceNameComputer
-import org.eclipse.n4js.validation.JavaScriptVariantHelper
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
-import static extension org.eclipse.n4js.ts.utils.TypeUtils.*
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
- * An {@link TransformationAssistant assistant} to create call expressions for invoking <code>$makeClass</code>,
- * <code>$makeInterface</code>, and such. Used by
- * <ul>
- * <li>{@link ClassDeclarationTransformation},
- * <li>{@link InterfaceDeclarationTransformation},
- * <li>{@link EnumDeclarationTransformation}
- * </ul>
+ * Helper methods for creating output code related to reflection for classes, interfaces, and enums in N4JS.
  */
-class BootstrapCallAssistant extends TransformationAssistant {
-
-	private static final String N4TYPE = "n4type"; // FIXME move to some global place (e.g. N4JSGlobal)
+class ReflectionAssistant extends TransformationAssistant {
 
 	@Inject private TypeAssistant typeAssistant;
 	@Inject private ResourceNameComputer resourceNameComputer;
-	@Inject private JavaScriptVariantHelper jsVariantHelper;
 
-def public void addN4TypeGetter(N4TypeDeclaration typeDecl, N4ClassifierDeclaration addHere) {
-	val getter = createN4TypeGetter(typeDecl);
-	if (getter !== null) {
-		addHere.ownedMembersRaw += getter;
-	}
-}
-
-/**
- * Returns the 'n4type' getter for obtaining reflection information of the given class, interface, or enum declaration.
- * <p>
- * NOTE: Reflection is only supported for declarations that were given in the original source code, i.e. when method
- * {@link InformationRegistry#getOriginalDefinedType(N4TypeDeclaration) getOriginalDefinedType()}
- * returns a non-null value. Otherwise, this method will return <code>null</code> as well.
- * 
- * @return the 'n4type' getter for the given declaration or <code>null</code> iff the declaration does not have
- *         an original defined type.
- */
-def public N4GetterDeclaration createN4TypeGetter(N4TypeDeclaration typeDecl) {
-	val originalType = state.info.getOriginalDefinedType(typeDecl);
-	if (originalType === null) {
-		return null;
+	/**
+	 * Convenience method. Same as {@link #createN4TypeGetter(N4TypeDeclaration)}, but if creation of the
+	 * 'n4type' reflection getter is successful, the getter will be added to the given classifier; otherwise,
+	 * this method does nothing.
+	 */
+	def public void addN4TypeGetter(N4TypeDeclaration typeDecl, N4ClassifierDeclaration addHere) {
+		val getter = createN4TypeGetter(typeDecl);
+		if (getter !== null) {
+			addHere.ownedMembersRaw += getter;
+		}
 	}
 
-	val symbolObjectSTE = getSymbolTableEntryOriginal(state.G.symbolObjectType, true);
-	val forSTE = getSymbolTableEntryForMember(state.G.symbolObjectType, "for", false, true, true);
-	val hasOwnPropertySTE = getSymbolTableEntryForMember(state.G.objectType, "hasOwnProperty", false, false, true);
+	/**
+	 * Returns the 'n4type' getter for obtaining reflection information of the given class, interface, or enum declaration
+	 * or <code>null</code> if it cannot be created.
+	 * <p>
+	 * NOTE: Reflection is only supported for declarations that were given in the original source code, i.e. when method
+	 * {@link InformationRegistry#getOriginalDefinedType(N4TypeDeclaration) getOriginalDefinedType()}
+	 * returns a non-null value. Otherwise, this method will return <code>null</code> as well.
+	 * 
+	 * @return the 'n4type' getter for the given declaration or <code>null</code> iff the declaration does not have
+	 *         an original defined type.
+	 */
+	def public N4GetterDeclaration createN4TypeGetter(N4TypeDeclaration typeDecl) {
+		val originalType = state.info.getOriginalDefinedType(typeDecl);
+		if (originalType === null) {
+			return null;
+		}
 
-	val $symVarDecl = _VariableDeclaration("$sym", _CallExpr(_PropertyAccessExpr(symbolObjectSTE, forSTE), _StringLiteral("org.eclipse.n4js/reflectionInfo")));
-	val $symSTE = findSymbolTableEntryForElement($symVarDecl, true);
+		val symbolObjectSTE = getSymbolTableEntryOriginal(state.G.symbolObjectType, true);
+		val forSTE = getSymbolTableEntryForMember(state.G.symbolObjectType, "for", false, true, true);
+		val hasOwnPropertySTE = getSymbolTableEntryForMember(state.G.objectType, "hasOwnProperty", false, false, true);
 
-	return _N4GetterDecl(
-		_LiteralOrComputedPropertyName(N4TYPE),
-		_Block(
-			// const $sym = Symbol.for('org.eclipse.n4js/reflectionInfo');
-			_VariableStatement(VariableStatementKeyword.CONST,
-				$symVarDecl
-			),
-			// if (this.hasOwnProperty($sym)) {
-			//     return this[$sym];
-			// }
-			_IfStmnt(
-				_CallExpr(
-					_PropertyAccessExpr(
-						_ThisLiteral,
-						hasOwnPropertySTE
-					),
-					_IdentRef($symSTE)
+		val $symVarDecl = _VariableDeclaration("$sym", _CallExpr(_PropertyAccessExpr(symbolObjectSTE, forSTE), _StringLiteral("org.eclipse.n4js/reflectionInfo")));
+		val $symSTE = findSymbolTableEntryForElement($symVarDecl, true);
+
+		return _N4GetterDecl(
+			_LiteralOrComputedPropertyName(N4JSLanguageConstants.N4TYPE_NAME),
+			_Block(
+				// const $sym = Symbol.for('org.eclipse.n4js/reflectionInfo');
+				_VariableStatement(VariableStatementKeyword.CONST,
+					$symVarDecl
 				),
+				// if (this.hasOwnProperty($sym)) {
+				//     return this[$sym];
+				// }
+				_IfStmnt(
+					_CallExpr(
+						_PropertyAccessExpr(
+							_ThisLiteral,
+							hasOwnPropertySTE
+						),
+						_IdentRef($symSTE)
+					),
+					_ReturnStmnt(
+						_IndexAccessExpr(_ThisLiteral, _IdentRef($symSTE))
+					)
+				),
+				// return this[$sym] = new N4Class() { ...
+				if (typeDecl instanceof N4ClassDeclaration) {
+					_VariableStatement(VariableStatementKeyword.CONST,
+						_VariableDeclaration("instanceProto", _Snippet("this.prototype")), // FIXME remove!
+						_VariableDeclaration("staticProto", _ThisLiteral) // FIXME remove!
+					)
+				} else if (typeDecl instanceof N4InterfaceDeclaration) {
+					_VariableStatement(VariableStatementKeyword.CONST,
+						_VariableDeclaration("instanceProto", _Snippet("this.$members")), // FIXME remove!
+						_VariableDeclaration("staticProto", _ThisLiteral) // FIXME remove!
+					)
+				},
 				_ReturnStmnt(
-					_IndexAccessExpr(_ThisLiteral, _IdentRef($symSTE))
-				)
-			),
-			// return this[$sym] = new N4Class() { ...
-			if (typeDecl instanceof N4ClassDeclaration) {
-				_VariableStatement(VariableStatementKeyword.CONST,
-					_VariableDeclaration("instanceProto", _Snippet("this.prototype")), // FIXME remove!
-					_VariableDeclaration("staticProto", _ThisLiteral) // FIXME remove!
-				)
-			} else if (typeDecl instanceof N4InterfaceDeclaration) {
-				_VariableStatement(VariableStatementKeyword.CONST,
-					_VariableDeclaration("instanceProto", _Snippet("this.$members")), // FIXME remove!
-					_VariableDeclaration("staticProto", _ThisLiteral) // FIXME remove!
-				)
-			},
-			_ReturnStmnt(
-				_AssignmentExpr(
-					_IndexAccessExpr(_ThisLiteral, _IdentRef($symSTE)),
-					createMetaClassVariable(typeDecl, originalType).expression
+					_AssignmentExpr(
+						_IndexAccessExpr(_ThisLiteral, _IdentRef($symSTE)),
+						createMetaClassVariable(typeDecl, originalType).expression
+					)
 				)
 			)
-		)
-	) => [
-		declaredModifiers += N4Modifier.STATIC
-	];
-}
+		) => [
+			declaredModifiers += N4Modifier.STATIC
+		];
+	}
 
 	def private VariableDeclaration createMetaClassVariable(N4TypeDeclaration typeDecl, Type originalType) {
 		// var metaClass = new N4Class({
@@ -221,23 +213,6 @@ def public N4GetterDeclaration createN4TypeGetter(N4TypeDeclaration typeDecl) {
 				"annotations" -> _ArrLit(createRuntimeAnnotations(typeDecl))
 			));
 		];
-	}
-
-	def public ArrayLiteral createDirectlyImplementedOrExtendedInterfacesArgument(N4ClassifierDeclaration typeDecl) {
-		val interfaces = typeAssistant.getSuperInterfacesSTEs(typeDecl);
-
-		// the return value of this method is intended for default method patching; for this purpose, we have to
-		// filter out some of the directly implemented interfaces:
-		val directlyImplementedInterfacesFiltered = interfaces.filter[ifcSTE|
-			val tIfc = ifcSTE.originalTarget;
-			if(tIfc instanceof TInterface) {
-				return !tIfc.builtIn // built-in types are not defined in Api/Impl projects -> no patching required
-					&& !(tIfc.inN4JSD && !AnnotationDefinition.N4JS.hasAnnotation(tIfc)) // interface in .n4jsd file only patched in if marked @N4JS
-			}
-			return false;
-		];
-
-		return _ArrLit( directlyImplementedInterfacesFiltered.map[ _IdentRef(it) ] );
 	}
 
 	/**
@@ -351,9 +326,5 @@ def public N4GetterDeclaration createN4TypeGetter(N4TypeDeclaration typeDecl) {
 	private def boolean isStructurallyTyped(TN4Classifier n4Classifier) {
 		val ts = n4Classifier.typingStrategy;
 		return ts===TypingStrategy.STRUCTURAL || ts===TypingStrategy.STRUCTURAL_FIELDS;
-	}
-
-	def private boolean inN4JSD(Type type) {
-		return jsVariantHelper.isExternalMode(type);
 	}
 }

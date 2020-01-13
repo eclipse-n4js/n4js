@@ -13,7 +13,9 @@ package org.eclipse.n4js.transpiler.es.transform
 import com.google.common.collect.Lists
 import com.google.inject.Inject
 import java.util.List
+import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.AdditiveExpression
+import org.eclipse.n4js.n4JS.ArrayLiteral
 import org.eclipse.n4js.n4JS.AwaitExpression
 import org.eclipse.n4js.n4JS.BinaryBitwiseExpression
 import org.eclipse.n4js.n4JS.BinaryLogicalExpression
@@ -26,6 +28,7 @@ import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor
 import org.eclipse.n4js.n4JS.GetterDeclaration
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.MultiplicativeExpression
+import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSFactory
@@ -46,11 +49,13 @@ import org.eclipse.n4js.n4JS.UnaryExpression
 import org.eclipse.n4js.n4JS.YieldExpression
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.assistants.TypeAssistant
-import org.eclipse.n4js.transpiler.es.assistants.BootstrapCallAssistant
 import org.eclipse.n4js.transpiler.es.assistants.ClassifierAssistant
 import org.eclipse.n4js.transpiler.es.assistants.DelegationAssistant
+import org.eclipse.n4js.transpiler.es.assistants.ReflectionAssistant
 import org.eclipse.n4js.transpiler.im.DelegatingMember
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
+import org.eclipse.n4js.ts.types.TInterface
+import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.ResourceNameComputer
 
@@ -64,7 +69,7 @@ import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensi
 class InterfaceDeclarationTransformation extends Transformation {
 
 	@Inject private ClassifierAssistant classifierAssistant;
-	@Inject private BootstrapCallAssistant bootstrapCallAssistant;
+	@Inject private ReflectionAssistant reflectionAssistant;
 	@Inject private DelegationAssistant delegationAssistant;
 	@Inject private TypeAssistant typeAssistant;
 	@Inject private ResourceNameComputer resourceNameComputer;
@@ -92,7 +97,7 @@ class InterfaceDeclarationTransformation extends Transformation {
 		// add 'Symbol.hasInstance' function for supporting the 'instanceof' operator
 		ifcDecl.ownedMembersRaw += createHasInstanceMethod(ifcDecl, ifcSTE);
 		// add 'n4type' getter for reflection
-		bootstrapCallAssistant.addN4TypeGetter(ifcDecl, ifcDecl);
+		reflectionAssistant.addN4TypeGetter(ifcDecl, ifcDecl);
 
 		val staticInits = createStaticFieldInitializations(ifcDecl, ifcSTE);
 		insertAfter(ifcDecl.orContainingExportDeclaration, staticInits);
@@ -107,7 +112,7 @@ class InterfaceDeclarationTransformation extends Transformation {
 		}
 
 		val props = <PropertyAssignment>newArrayList;
-		val extendedInterfaces = bootstrapCallAssistant.createDirectlyImplementedOrExtendedInterfacesArgument(ifcDecl);
+		val extendedInterfaces = createDirectlyImplementedOrExtendedInterfacesArgument(ifcDecl);
 		if (!extendedInterfaces.elements.empty) {
 			props += _PropertyNameValuePair("$extends", _ArrowFunc(false, #[], extendedInterfaces));
 		}
@@ -119,6 +124,23 @@ class InterfaceDeclarationTransformation extends Transformation {
 		state.tracer.copyTrace(ifcDecl, varDecl);
 
 		replace(ifcDecl, varDecl);
+	}
+
+	def public ArrayLiteral createDirectlyImplementedOrExtendedInterfacesArgument(N4ClassifierDeclaration typeDecl) {
+		val interfaces = typeAssistant.getSuperInterfacesSTEs(typeDecl);
+
+		// the return value of this method is intended for default method patching; for this purpose, we have to
+		// filter out some of the directly implemented interfaces:
+		val directlyImplementedInterfacesFiltered = interfaces.filter[ifcSTE|
+			val tIfc = ifcSTE.originalTarget;
+			if(tIfc instanceof TInterface) {
+				return !TypeUtils.isBuiltIn(tIfc) // built-in types are not defined in Api/Impl projects -> no patching required
+					&& !(tIfc.external && !AnnotationDefinition.N4JS.hasAnnotation(tIfc)) // interface in .n4jsd file only patched in if marked @N4JS
+			}
+			return false;
+		];
+
+		return _ArrLit( directlyImplementedInterfacesFiltered.map[ _IdentRef(it) ] );
 	}
 
 	def private PropertyNameValuePair[] createInstanceFieldDefaultsProperty(N4InterfaceDeclaration ifcDecl, SymbolTableEntry ifcSTE) {

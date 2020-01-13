@@ -126,6 +126,9 @@ public abstract class N4JSLanguageConstants {
 	/** Name of the built-in ES2015 property '__proto__'. */
 	public static final String PROPERTY__PROTO__NAME = "__proto__";
 
+	/** Name of the getter in N4JS classes, interfaces, and enums use to obtain reflection information. */
+	public static final String N4TYPE_NAME = "n4type";
+
 	/**
 	 * Key of the symbol used for storing N4JS dependency injection information in class constructors. The actual
 	 * property name is <code>Symbol.for('org.eclipse.n4js/diInfo')</code> (must be evaluated at runtime).
