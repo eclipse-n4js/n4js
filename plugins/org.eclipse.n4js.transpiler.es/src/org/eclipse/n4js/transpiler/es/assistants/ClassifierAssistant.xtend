@@ -41,7 +41,7 @@ class ClassifierAssistant extends TransformationAssistant {
 		}
 
 		val tField = state.info.getOriginalDefinedMember(fieldDecl) as TField;
-		val fieldSTE = getSymbolTableEntryOriginal(tField, true);
+		val fieldSTE = if (tField !== null) getSymbolTableEntryOriginal(tField, true) else findSymbolTableEntryForElement(fieldDecl, true);
 
 		val exprStmnt = _ExprStmnt(
 			_AssignmentExpr(

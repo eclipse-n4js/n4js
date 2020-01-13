@@ -92,7 +92,7 @@ class InterfaceDeclarationTransformation extends Transformation {
 		// add 'Symbol.hasInstance' function for supporting the 'instanceof' operator
 		ifcDecl.ownedMembersRaw += createHasInstanceMethod(ifcDecl, ifcSTE);
 		// add 'n4type' getter for reflection
-		ifcDecl.ownedMembersRaw += bootstrapCallAssistant.createN4TypeGetter(ifcDecl, null);
+		bootstrapCallAssistant.addN4TypeGetter(ifcDecl, ifcDecl);
 
 		val staticInits = createStaticFieldInitializations(ifcDecl, ifcSTE);
 		insertAfter(ifcDecl.orContainingExportDeclaration, staticInits);

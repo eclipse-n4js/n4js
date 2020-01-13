@@ -81,7 +81,7 @@ class ClassDeclarationTransformation extends Transformation {
 		val superClassSTE = typeAssistant.getSuperClassSTE(classDecl);
 
 		// add 'n4type' getter for reflection
-		classDecl.ownedMembersRaw += bootstrapCallAssistant.createN4TypeGetter(classDecl, superClassSTE);
+		bootstrapCallAssistant.addN4TypeGetter(classDecl, classDecl);
 
 		classConstructorAssistant.amendConstructor(classDecl, superClassSTE);
 

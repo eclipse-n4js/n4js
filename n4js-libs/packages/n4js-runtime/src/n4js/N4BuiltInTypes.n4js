@@ -214,18 +214,18 @@ abstract class N4Member extends N4NamedElement {
 
 abstract class N4Enum extends Object {
 
-	public abstract get name(): string;
+	private name: string;
+	private value: string;
 
-	public abstract get value(): string;
+	public static literals: Array<? extends N4Enum>;
+
+	constructor(name: string, value: string) {
+		this.name = name;
+		this.value = value || name;
+	}
 
 	@Override public toString(): string {
 		return this.value;
-	}
-
-	public abstract get n4Enum(): N4Enum;
-
-	public static get literals(): Array<? extends N4Enum> {
-		return null;
 	}
 
 	public static findLiteralByName(name: string): N4Enum {

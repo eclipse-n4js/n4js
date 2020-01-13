@@ -16,9 +16,7 @@ import org.eclipse.n4js.AnnotationDefinition.RetentionPolicy
 import org.eclipse.n4js.n4JS.AnnotableElement
 import org.eclipse.n4js.n4JS.ArrayLiteral
 import org.eclipse.n4js.n4JS.Expression
-import org.eclipse.n4js.n4JS.ExpressionStatement
 import org.eclipse.n4js.n4JS.FieldAccessor
-import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.GetterDeclaration
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4ClassDefinition
@@ -35,17 +33,18 @@ import org.eclipse.n4js.n4JS.NewExpression
 import org.eclipse.n4js.n4JS.TypeDefiningElement
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableStatementKeyword
+import org.eclipse.n4js.transpiler.InformationRegistry
 import org.eclipse.n4js.transpiler.TransformationAssistant
 import org.eclipse.n4js.transpiler.assistants.TypeAssistant
 import org.eclipse.n4js.transpiler.es.transform.ClassDeclarationTransformation
 import org.eclipse.n4js.transpiler.es.transform.EnumDeclarationTransformation
 import org.eclipse.n4js.transpiler.es.transform.InterfaceDeclarationTransformation
 import org.eclipse.n4js.transpiler.im.DelegatingMember
-import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.n4js.ts.types.TAnnotableElement
 import org.eclipse.n4js.ts.types.TAnnotation
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
+import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TN4Classifier
 import org.eclipse.n4js.ts.types.TObjectPrototype
@@ -72,74 +71,44 @@ import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensi
  */
 class BootstrapCallAssistant extends TransformationAssistant {
 
+	private static final String N4TYPE = "n4type"; // FIXME move to some global place (e.g. N4JSGlobal)
+
 	@Inject private TypeAssistant typeAssistant;
 	@Inject private ResourceNameComputer resourceNameComputer;
 	@Inject private JavaScriptVariantHelper jsVariantHelper;
 
-	/**
-	 * Create a <code>$makeEnum</code> call, including all its required arguments.
-	 * <pre>
-	 * $makeEnum(E, false,
-	 *     [
-	 *         ['Literal0', 'Value0'],
-	 *         ['Literal1', 'Value1']
-	 *     ],
-	 *     function(instanceProto, staticProto) {}
-	 * );
-	 * </pre>
-	 */
-	def public ExpressionStatement createMakeEnumCall(N4EnumDeclaration enumDecl) {
-		val isStringBased = AnnotationDefinition.STRING_BASED.hasAnnotation(enumDecl);
-		if(isStringBased) {
-			throw new IllegalArgumentException("must not create $makeEnum() call for @StringBased enums (they are no longer represented in output code)");
-		}
-		val enumLiteralArray = _ArrLit();
-		for(literal : enumDecl.literals) {
-			enumLiteralArray.elements += _ArrayElement(_ArrLit(
-				_StringLiteral(literal.name),
-				_StringLiteral(literal.value ?: literal.name)
-			));
-		}
+def public void addN4TypeGetter(N4TypeDeclaration typeDecl, N4ClassifierDeclaration addHere) {
+	val getter = createN4TypeGetter(typeDecl);
+	if (getter !== null) {
+		addHere.ownedMembersRaw += getter;
+	}
+}
 
-		return _ExprStmnt(
-			_CallExpr => [
-				target = _IdentRef(steFor_$makeEnum);
-				arguments += #[
-					_IdentRef(findSymbolTableEntryForElement(enumDecl, false)),
-					enumLiteralArray,
-					createN4TypeMetaInfoFactoryFunction(enumDecl, null)
-				].map[_Argument(it)];
-			]
-		);
+/**
+ * Returns the 'n4type' getter for obtaining reflection information of the given class, interface, or enum declaration.
+ * <p>
+ * NOTE: Reflection is only supported for declarations that were given in the original source code, i.e. when method
+ * {@link InformationRegistry#getOriginalDefinedType(N4TypeDeclaration) getOriginalDefinedType()}
+ * returns a non-null value. Otherwise, this method will return <code>null</code> as well.
+ * 
+ * @return the 'n4type' getter for the given declaration or <code>null</code> iff the declaration does not have
+ *         an original defined type.
+ */
+def public N4GetterDeclaration createN4TypeGetter(N4TypeDeclaration typeDecl) {
+	val originalType = state.info.getOriginalDefinedType(typeDecl);
+	if (originalType === null) {
+		return null;
 	}
 
-	// TODO avoid need of a function expression for creating N4Type meta information
-	def private FunctionExpression createN4TypeMetaInfoFactoryFunction(N4TypeDeclaration typeDecl, SymbolTableEntry superClassSTE) {
-		// function(instanceProto, staticProto) {
-		//     ...
-		// }
-
-		val varDeclMetaClass = createMetaClassVariable(typeDecl, superClassSTE);
-
-		return _FunExpr(false, null, #[_Fpar("instanceProto"), _Fpar("staticProto")], _Block()=>[
-				statements += #[
-					_VariableStatement(varDeclMetaClass),
-					_SnippetAsStmnt("return metaClass;")
-				]
-			]
-		);
-	}
-
-def public N4GetterDeclaration createN4TypeGetter(N4TypeDeclaration typeDecl, SymbolTableEntry superClassSTE) {
 	val symbolObjectSTE = getSymbolTableEntryOriginal(state.G.symbolObjectType, true);
 	val forSTE = getSymbolTableEntryForMember(state.G.symbolObjectType, "for", false, true, true);
 	val hasOwnPropertySTE = getSymbolTableEntryForMember(state.G.objectType, "hasOwnProperty", false, false, true);
-	
+
 	val $symVarDecl = _VariableDeclaration("$sym", _CallExpr(_PropertyAccessExpr(symbolObjectSTE, forSTE), _StringLiteral("org.eclipse.n4js/reflectionInfo")));
 	val $symSTE = findSymbolTableEntryForElement($symVarDecl, true);
 
 	return _N4GetterDecl(
-		_LiteralOrComputedPropertyName("n4type"), // FIXME use a constant
+		_LiteralOrComputedPropertyName(N4TYPE),
 		_Block(
 			// const $sym = Symbol.for('org.eclipse.n4js/reflectionInfo');
 			_VariableStatement(VariableStatementKeyword.CONST,
@@ -175,7 +144,7 @@ def public N4GetterDeclaration createN4TypeGetter(N4TypeDeclaration typeDecl, Sy
 			_ReturnStmnt(
 				_AssignmentExpr(
 					_IndexAccessExpr(_ThisLiteral, _IdentRef($symSTE)),
-					createMetaClassVariable(typeDecl, superClassSTE).expression
+					createMetaClassVariable(typeDecl, originalType).expression
 				)
 			)
 		)
@@ -184,7 +153,7 @@ def public N4GetterDeclaration createN4TypeGetter(N4TypeDeclaration typeDecl, Sy
 	];
 }
 
-	def private VariableDeclaration createMetaClassVariable(N4TypeDeclaration typeDecl, SymbolTableEntry superClassSTE) {
+	def private VariableDeclaration createMetaClassVariable(N4TypeDeclaration typeDecl, Type originalType) {
 		// var metaClass = new N4Class({
 		//     name: 'A',
 		//     origin: 'IDE1920',
@@ -197,14 +166,13 @@ def public N4GetterDeclaration createN4TypeGetter(N4TypeDeclaration typeDecl, Sy
 		// });
 
 		val typeSTE = findSymbolTableEntryForElement(typeDecl, true);
-		val type = state.info.getOriginalDefinedType(typeDecl);
 
 		// prepare n4superType
-		val n4superType = createN4SuperTypeRef(typeDecl, superClassSTE);
+		val n4superType = createN4SuperTypeRef(typeDecl, originalType);
 
 		// prepare allImplementedInterfaces
-		val Iterable<TInterface> allImplementedInterfaces = if(type instanceof TClassifier) {
-			SuperInterfacesIterable.of(type).filter[!isStructurallyTyped]
+		val Iterable<TInterface> allImplementedInterfaces = if(originalType instanceof TClassifier) {
+			SuperInterfacesIterable.of(originalType).filter[!isStructurallyTyped]
 		} else {
 			emptyList()
 		};
@@ -222,7 +190,7 @@ def public N4GetterDeclaration createN4TypeGetter(N4TypeDeclaration typeDecl, Sy
 		// prepare consumed members
 		val consumedMembers = membersForReflection.filter[ state.info.isConsumedFromInterface(it)];
 
-		// put everything together
+		// prepare reflection class to be used
 		val metaClassSTE = switch(typeDecl) {
 			N4ClassDefinition: steFor_N4Class
 			N4InterfaceDeclaration: steFor_N4Interface
@@ -230,10 +198,11 @@ def public N4GetterDeclaration createN4TypeGetter(N4TypeDeclaration typeDecl, Sy
 			default: throw new IllegalArgumentException("cannot handle declarations of type " + typeDecl.eClass.name)
 		};
 
-
+		// prepare origin and FQN strings
 		val origin = resourceNameComputer.generateProjectDescriptor(state.resource.URI);
-		val fqn = resourceNameComputer.getFullyQualifiedTypeName(type);
+		val fqn = resourceNameComputer.getFullyQualifiedTypeName(originalType);
 
+		// put everything together
 		return _VariableDeclaration("metaClass")=>[
 			expression = _NewExpr(_IdentRef(metaClassSTE), _ObjLit(
 				"name" -> _StringLiteralForSTE(typeSTE),
@@ -349,12 +318,13 @@ def public N4GetterDeclaration createN4TypeGetter(N4TypeDeclaration typeDecl, Sy
 	/**
 	 * Create reference to n4type meta-object of the super type of given typeDefinition or 'undefined' if unavailable.
 	 */
-	def private Expression createN4SuperTypeRef(N4TypeDeclaration typeDecl, SymbolTableEntry superClassSTE) {
-		if (typeDecl instanceof N4ClassDeclaration) {
+	def private Expression createN4SuperTypeRef(N4TypeDeclaration typeDecl, Type originalType) {
+		if (typeDecl instanceof N4EnumDeclaration || originalType instanceof TEnum) {
+			return _Snippet("N4Enum.n4type");
+		} else if (typeDecl instanceof N4ClassDeclaration) {
 			// NOTE: this is a simple but still good example why it is not easy to avoid going via the TModule
 			// we could use superClassSTE here, but then we would have to duplicate logic in #getDeclaredOrImplicitSuperType()
-			val type = state.info.getOriginalDefinedType(typeDecl);
-			val superType = state.G.getDeclaredOrImplicitSuperType(type);
+			val superType = state.G.getDeclaredOrImplicitSuperType(originalType as TClass);
 			if(superType === state.G.n4ObjectType) {
 				return _Snippet("N4Object.n4type");
 			}
@@ -372,7 +342,7 @@ def public N4GetterDeclaration createN4TypeGetter(N4TypeDeclaration typeDecl, Sy
 				return undefinedRef();
 			}
 		}
-		return undefinedRef(); // applies to interfaces and enums
+		return undefinedRef(); // applies to interfaces
 	}
 
 	// ################################################################################################################

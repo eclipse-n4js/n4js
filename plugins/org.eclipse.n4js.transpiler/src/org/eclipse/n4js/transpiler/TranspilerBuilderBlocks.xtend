@@ -51,6 +51,7 @@ import org.eclipse.n4js.n4JS.IntLiteral
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4EnumLiteral
+import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4GetterDeclaration
 import org.eclipse.n4js.n4JS.N4JSFactory
 import org.eclipse.n4js.n4JS.N4MemberAnnotationList
@@ -604,6 +605,20 @@ public class TranspilerBuilderBlocks
 			memberDecl.annotationList = annList;
 		}
 		return annList;
+	}
+
+	public static def N4FieldDeclaration _N4FieldDecl(boolean isStatic, String declaredName, Expression initExpr) {
+		return _N4FieldDecl(isStatic, _LiteralOrComputedPropertyName(declaredName), initExpr);
+	}
+
+	public static def N4FieldDeclaration _N4FieldDecl(boolean isStatic, LiteralOrComputedPropertyName declaredName, Expression initExpr) {
+		val result = N4JSFactory.eINSTANCE.createN4FieldDeclaration;
+		if (isStatic) {
+			result.declaredModifiers += N4Modifier.STATIC;
+		}
+		result.declaredName = declaredName;
+		result.expression = initExpr;
+		return result;
 	}
 
 	public static def N4GetterDeclaration _N4GetterDecl(LiteralOrComputedPropertyName declaredName, Block body) {

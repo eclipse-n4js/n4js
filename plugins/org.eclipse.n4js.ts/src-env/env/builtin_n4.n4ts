@@ -275,7 +275,7 @@ public object N4Enum {
 	/**
 	 * Disallow instantiation of this type by user code.
 	 */
-	private constructor():void;
+	private constructor(name: string, value: string=):void;
 
 	/**
 	 * Returns the name of a concrete literal

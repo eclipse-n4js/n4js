@@ -11,27 +11,36 @@
 package org.eclipse.n4js.transpiler.es.transform
 
 import com.google.inject.Inject
-import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.AnnotationDefinition
-import org.eclipse.n4js.n4JS.FunctionDeclaration
+import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
-import org.eclipse.n4js.n4JS.VariableDeclaration
+import org.eclipse.n4js.n4JS.N4EnumLiteral
+import org.eclipse.n4js.n4JS.N4FieldDeclaration
+import org.eclipse.n4js.n4JS.N4JSFactory
+import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.transpiler.Transformation
+import org.eclipse.n4js.transpiler.TransformationDependency.RequiresAfter
 import org.eclipse.n4js.transpiler.assistants.TypeAssistant
 import org.eclipse.n4js.transpiler.es.assistants.BootstrapCallAssistant
+import org.eclipse.n4js.transpiler.im.ImFactory
+import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
 import static extension org.eclipse.n4js.transpiler.utils.TranspilerUtils.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
- * Transforms {@link N4EnumDeclaration}s into a <code>$makeEnum</code> call (for ordinary enums) or removes them
- * entirely (for <code>@StringBased</code> enums).
+ * Transforms {@link N4EnumDeclaration}s into a corresponding class declaration (for ordinary enums) or
+ * removes them entirely (for <code>@StringBased</code> enums).
  */
+@RequiresAfter(ClassDeclarationTransformation)
 class EnumDeclarationTransformation extends Transformation {
 
-	@Inject BootstrapCallAssistant bootstrapCallAssistant;
-	@Inject TypeAssistant typeAssistant;
+	@Inject private BootstrapCallAssistant bootstrapCallAssistant;
+	@Inject private TypeAssistant typeAssistant;
+
+	private SymbolTableEntry n4EnumSTE;
 
 
 	override assertPreConditions() {
@@ -45,7 +54,10 @@ class EnumDeclarationTransformation extends Transformation {
 	}
 
 	override analyze() {
-		// ignore
+		n4EnumSTE = getSymbolTableEntryOriginal(state.G.n4EnumType, true);
+		if (n4EnumSTE === null) {
+			throw new IllegalStateException("could not find required members of built-in types");
+		}
 	}
 
 	override transform() {
@@ -58,32 +70,64 @@ class EnumDeclarationTransformation extends Transformation {
 			// (they do not have a representation in the output code)
 			val root = enumDecl.orContainingExportDeclaration;
 			remove(root);
-		} else {
-			val EObject varOrFunDecl = createFunDecl(enumDecl);
-			val makeEnumCall = bootstrapCallAssistant.createMakeEnumCall(enumDecl);
-			state.tracer.copyTrace(enumDecl, makeEnumCall);
-
-			var EObject root;
-			if (varOrFunDecl instanceof VariableDeclaration) {
-				replace(enumDecl, varOrFunDecl);
-				root = varOrFunDecl.eContainer.orContainingExportDeclaration;
-			} else if (varOrFunDecl instanceof FunctionDeclaration) {
-				replace(enumDecl, varOrFunDecl);
-				root = varOrFunDecl.orContainingExportDeclaration;
-			}
-			insertAfter(root, makeEnumCall);
+			return;
 		}
+
+		val classDecl = N4JSFactory.eINSTANCE.createN4ClassDeclaration;
+		classDecl.name = enumDecl.name; // need to set name before creating a symbol table entry
+		val classSTE = createSymbolTableEntryIMOnly(classDecl);
+
+		val fieldsForLiterals = enumDecl.literals.map[convertLiteralToField(it, classSTE)];
+
+		classDecl.declaredModifiers += enumDecl.declaredModifiers;  // reuse existing modifiers
+		classDecl.superClassRef = ImFactory.eINSTANCE.createParameterizedTypeRef_IM => [declaredType_IM = n4EnumSTE];
+
+		classDecl.ownedMembersRaw += createEnumConstructor();
+		classDecl.ownedMembersRaw += fieldsForLiterals;
+		classDecl.ownedMembersRaw += _N4FieldDecl(
+			true,
+			"literals",
+			_ArrLit(fieldsForLiterals.map[
+				_PropertyAccessExpr(classSTE, findSymbolTableEntryForElement(it, true))
+			])
+		);
+
+		// add 'n4type' getter for reflection
+		bootstrapCallAssistant.addN4TypeGetter(enumDecl, classDecl);
+
+		state.tracer.copyTrace(enumDecl, classDecl);
+
+		replace(enumDecl, classDecl);
  	}
 
-	/**
-	 * Creates a function declaration that will represent the enumeration.
-	 */
-	def private FunctionDeclaration createFunDecl(N4EnumDeclaration enumDecl) {
-		return _FunDecl(enumDecl.name, #[ _Fpar("name"), _Fpar("value") ],
-			_SnippetAsStmnt('''
-				this.name = name;
-				this.value = value;
-			''')
+	def private N4MethodDeclaration createEnumConstructor() {
+		// constructor(name, value) {
+		//     super(name, value);
+		// }
+		val nameFpar = _Fpar("name");
+		val valueFpar = _Fpar("value");
+		val nameSTE = createSymbolTableEntryIMOnly(nameFpar);
+		val valueSTE = createSymbolTableEntryIMOnly(valueFpar);
+		return _N4MethodDecl(
+			N4JSLanguageConstants.CONSTRUCTOR,
+			#[ nameFpar, valueFpar ],
+			#[
+				_ExprStmnt(
+					_CallExpr(_SuperLiteral, _IdentRef(nameSTE), _IdentRef(valueSTE))
+				)
+			]
+		);
+	}
+
+	def private N4FieldDeclaration convertLiteralToField(N4EnumLiteral literal, SymbolTableEntry classSTE) {
+		return _N4FieldDecl(
+			true,
+			literal.name,
+			_NewExpr(
+				_IdentRef(classSTE),
+				_StringLiteral(literal.name),
+				if (literal.value !== null) _StringLiteral(literal.value)
+			)
 		);
 	}
 

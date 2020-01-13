@@ -155,13 +155,8 @@ public abstract class TranspilerComponent {
 	}
 
 	@SuppressWarnings("javadoc")
-	protected void replace(N4EnumDeclaration enumDecl, VariableDeclaration varDecl) {
-		TranspilerStateOperations.replace(state, enumDecl, varDecl);
-	}
-
-	@SuppressWarnings("javadoc")
-	protected void replace(N4EnumDeclaration enumDecl, FunctionDeclaration funDecl) {
-		TranspilerStateOperations.replace(state, enumDecl, funDecl);
+	protected void replace(N4EnumDeclaration enumDecl, N4ClassDeclaration classDecl) {
+		TranspilerStateOperations.replace(state, enumDecl, classDecl);
 	}
 
 	@SuppressWarnings("javadoc")
@@ -436,14 +431,6 @@ public abstract class TranspilerComponent {
 	public SymbolTableEntryInternal steFor_$members() {
 
 		return getSymbolTableEntryInternal("$members", true);
-	}
-
-	//// $makeEnum
-
-	/** "$makeEnum" - retrieve the internal symbol table entry for the symbol "$makeEnum" */
-	public SymbolTableEntryInternal steFor_$makeEnum() {
-
-		return getSymbolTableEntryInternal("$makeEnum", true);
 	}
 
 	//// N4Class
