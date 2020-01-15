@@ -121,7 +121,7 @@ public class ImportRewriter {
 		 *            the name of the thing to import
 		 */
 		public void addSingleImport(QualifiedName qualifiedName, Collection<ReplaceRegion> regions) {
-			toTextEdit(qualifiedName, null, findInsertionOffset(), regions);
+			addReplaceRegions(qualifiedName, null, findInsertionOffset(), regions);
 		}
 
 		/**
@@ -134,13 +134,13 @@ public class ImportRewriter {
 		public AliasLocation addSingleImport(QualifiedName qualifiedName, String alias,
 				Collection<ReplaceRegion> regions) {
 
-			return toTextEdit(qualifiedName, alias, findInsertionOffset(), regions);
+			return addReplaceRegions(qualifiedName, alias, findInsertionOffset(), regions);
 		}
 
 		/** @return Collection of all changes */
-		public Collection<ReplaceRegion> toTextEdits() {
+		public Collection<ReplaceRegion> toReplaceRegions() {
 			Collection<ReplaceRegion> regions = new ArrayList<>();
-			addTextEdits(regions);
+			addReplaceRegions(regions);
 			return regions;
 		}
 
@@ -148,15 +148,15 @@ public class ImportRewriter {
 		 * @param regions
 		 *            the accumulator for the changes
 		 */
-		public void addTextEdits(Collection<ReplaceRegion> regions) {
+		public void addReplaceRegions(Collection<ReplaceRegion> regions) {
 			int insertionOffset = findInsertionOffset();
 			for (NameAndAlias requested : requestedImports) {
-				toTextEdit(requested.getName(), requested.getAlias(), insertionOffset, regions);
+				addReplaceRegions(requested.getName(), requested.getAlias(), insertionOffset, regions);
 			}
 		}
 
 		/** Add the necessary text edits to the accumulating result. Optionally return the offset of the alias. */
-		private AliasLocation toTextEdit(QualifiedName qualifiedName, String optionalAlias, int insertionOffset,
+		private AliasLocation addReplaceRegions(QualifiedName qualifiedName, String optionalAlias, int insertionOffset,
 				Collection<ReplaceRegion> regions) {
 
 			QualifiedName moduleName = qualifiedName.skipLast(1);
@@ -265,7 +265,7 @@ public class ImportRewriter {
 			String insertedCode = importSpec + " from " + syntacticModuleName + ";"
 					+ (insertionOffset != 0 ? "" : lineDelimiter);
 			ITextRegion region = new TextRegion(insertionOffset, 0);
-			replaceRegions.add(new ReplaceRegion(region, insertedCode));
+			replaceRegions.add(new XReplaceRegion(region, insertedCode));
 
 			return aliasLocation;
 		}

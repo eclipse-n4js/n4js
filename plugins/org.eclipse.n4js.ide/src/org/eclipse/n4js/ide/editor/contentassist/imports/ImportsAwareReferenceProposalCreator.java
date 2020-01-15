@@ -15,6 +15,7 @@ import static org.eclipse.n4js.utils.N4JSLanguageUtils.lastSegmentOrDefaultHost;
 import java.util.Collection;
 import java.util.Collections;
 
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -36,6 +37,7 @@ import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
 import org.eclipse.n4js.ts.types.TExportableElement;
+import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.xtext.conversion.IValueConverter;
 import org.eclipse.xtext.conversion.IValueConverterService;
@@ -119,10 +121,10 @@ public class ImportsAwareReferenceProposalCreator {
 			// iterate over candidates, filter them, and create ICompletionProposals for them
 			final Iterable<IEObjectDescription> candidates = scope.getAllElements();
 
-			// don't use candidates.forEach since we want an early exit
 			for (IEObjectDescription candidate : candidates) {
-				if (!acceptor.canAcceptMoreProposals())
+				if (!acceptor.canAcceptMoreProposals()) {
 					return;
+				}
 
 				if (filter.apply(candidate)) {
 					final QualifiedName qfn = candidate.getQualifiedName();
@@ -177,16 +179,14 @@ public class ImportsAwareReferenceProposalCreator {
 				QualifiedName qnOfEObject = qualifiedNameProvider.getFullyQualifiedName(eObj);
 				qName = qnOfEObject != null ? qnOfEObject : qName;
 			}
-
 			String description = getDescription(qName, name, version);
 			String label = getLabel(qName, name, version);
+			String kind = getKind(candidate);
 			result.setLabel(label);
 			result.setDescription(description);
-
-			IEObjectDescription descriptionFullQN = scope.getSingleElement(QualifiedName.create(shortQName));
+			result.setKind(kind);
 
 			Collection<ReplaceRegion> regions = getImportChanges(name.toString(), resource, scope, candidate, filter);
-
 			if (regions != null && !regions.isEmpty()) {
 				result.getTextReplacements().addAll(regions);
 			}
@@ -226,6 +226,27 @@ public class ImportsAwareReferenceProposalCreator {
 			}
 		}
 		return result;
+	}
+
+	private String getKind(IEObjectDescription candidate) {
+		EClass eClass = candidate.getEClass();
+		String kind = ContentAssistEntry.KIND_TEXT;
+		if (TypesPackage.eINSTANCE.getTClass() == eClass) {
+			kind = ContentAssistEntry.KIND_CLASS;
+		}
+		if (TypesPackage.eINSTANCE.getTInterface() == eClass) {
+			kind = ContentAssistEntry.KIND_INTERFACE;
+		}
+		if (TypesPackage.eINSTANCE.getTEnum() == eClass) {
+			kind = ContentAssistEntry.KIND_ENUM;
+		}
+		if (TypesPackage.eINSTANCE.getTFunction() == eClass) {
+			kind = ContentAssistEntry.KIND_FUNCTION;
+		}
+		if (TypesPackage.eINSTANCE.getTVariable() == eClass) {
+			kind = ContentAssistEntry.KIND_VARIABLE;
+		}
+		return kind;
 	}
 
 	/**
@@ -337,7 +358,7 @@ public class ImportsAwareReferenceProposalCreator {
 
 		ImportChanges importChanges = importRewriter.create("\n", resource);
 		importChanges.addImport(qualifiedName, alias);
-		Collection<ReplaceRegion> regions = importChanges.toTextEdits();
+		Collection<ReplaceRegion> regions = importChanges.toReplaceRegions();
 		return regions;
 	}
 
