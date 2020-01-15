@@ -23,6 +23,7 @@ import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.ts.utils.N4TSGlobals;
+import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.xtext.naming.QualifiedName;
 
 import com.google.common.collect.ImmutableSet;
@@ -101,6 +102,11 @@ public final class N4JSGlobals {
 			N4JSX_FILE_EXTENSION,
 			JSX_FILE_EXTENSION,
 			JS_FILE_EXTENSION)));
+
+	/**
+	 * Name of the N4JS Git repository, i.e. "n4js". Same as {@link UtilN4#N4JS_GIT_REPOSITORY_NAME}.
+	 */
+	public static final String N4JS_GIT_REPOSITORY_NAME = UtilN4.N4JS_GIT_REPOSITORY_NAME;
 
 	/**
 	 * Name of the top-level folder in the N4JS Git repository containing the main N4JS plugins.

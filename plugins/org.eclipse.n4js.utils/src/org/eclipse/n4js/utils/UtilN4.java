@@ -44,6 +44,11 @@ import com.google.common.collect.ImmutableList;
  */
 public class UtilN4 {
 
+	/**
+	 * Name of the N4JS Git repository, i.e. "n4js".
+	 */
+	public static final String N4JS_GIT_REPOSITORY_NAME = "n4js";
+
 	private static Logger logger = Logger.getLogger(UtilN4.class);
 
 	private static final Iterable<Pair<String, String>> CHARS_TO_ESCAPED_CHARS = ImmutableList
@@ -300,8 +305,8 @@ public class UtilN4 {
 	}
 
 	/**
-	 * Assuming the current working directory lies somewhere inside an N4JS repository clone, this method will return
-	 * the root folder (i.e. the folder named "n4js"). Otherwise, an {@link IllegalStateException} exception is thrown.
+	 * Same as {@link #findN4jsRepoRootPathFailSafe()}, but throws an {@link IllegalStateException} exception if the
+	 * path cannot be obtained.
 	 * <p>
 	 * Not intended to be used in production (only in MWE2 work flows, tests, etc.).
 	 */
@@ -317,19 +322,23 @@ public class UtilN4 {
 	}
 
 	/**
-	 * Assuming the current working directory lies somewhere inside an N4JS repository clone, this method will return
-	 * the root folder (i.e. the folder named "n4js"). Otherwise, <code>null</code> is returned.
+	 * Assuming the current working directory lies somewhere inside ...
+	 * <ol>
+	 * <li>an N4JS repository clone OR
+	 * <li>a sibling repository clone
+	 * </ol>
+	 * this method will return the root folder (i.e. the folder named "n4js"). Otherwise, <code>null</code> is returned.
 	 * <p>
 	 * Not intended to be used in production (only in MWE2 work flows, tests, etc.).
 	 */
 	public static Path findN4jsRepoRootPathFailSafe() {
 		try {
-			// derive root path from current working directory
+			// derive path of parent folder containing an N4JS Git repository, starting at current working directory
 			File curr = new File("").getCanonicalFile();
-			while (curr != null && curr.isDirectory() && !isN4jsRepoRoot(curr)) {
-				curr = curr.getParentFile();
+			while (curr != null && !isN4jsRepoRoot(new File(curr, N4JS_GIT_REPOSITORY_NAME))) {
+				curr = curr.isDirectory() ? curr.getParentFile() : null;
 			}
-			return curr != null ? curr.toPath() : null;
+			return curr != null ? curr.toPath().resolve(N4JS_GIT_REPOSITORY_NAME) : null;
 		} catch (IOException e) {
 			return null;
 		}
@@ -340,6 +349,7 @@ public class UtilN4 {
 	 */
 	public static boolean isN4jsRepoRoot(File folder) {
 		return folder.isDirectory()
+				&& N4JS_GIT_REPOSITORY_NAME.equals(folder.getName())
 				&& new File(folder, "plugins/" + UtilN4.class.getPackage().getName()).isDirectory();
 	}
 

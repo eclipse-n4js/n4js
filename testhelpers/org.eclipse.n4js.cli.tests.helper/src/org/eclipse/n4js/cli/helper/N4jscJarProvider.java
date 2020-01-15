@@ -13,8 +13,11 @@ package org.eclipse.n4js.cli.helper;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.apache.log4j.Logger;
+import org.eclipse.n4js.utils.UtilN4;
 
 /**
  * Utility methods for accessing the {@code n4jsc.jar} built in maven project {@code org.eclipse.n4js.hlc} during the
@@ -27,9 +30,10 @@ public class N4jscJarProvider {
 	public static final String PROVIDED_N4JSC_JAR_ENV = "PROVIDED_N4JSC_JAR";
 
 	/**
-	 * Path and file name of default n4jsc.jar to use if environment variable {@link #PROVIDED_N4JSC_JAR_ENV} is unset.
+	 * Relative path and file name of default n4jsc.jar to use for testing purposes if environment variable
+	 * {@link #PROVIDED_N4JSC_JAR_ENV} is unset. This path is relative to the root of an N4JS Git repository clone.
 	 */
-	public static final String DEFAULT_N4JSC_JAR = "target/n4jsc.jar";
+	public static final Path DEFAULT_N4JSC_JAR = Paths.get("target", "n4jsc.jar");
 
 	/**
 	 * Returns with the absolute file resource representing the location of the {@code n4jsc.jar}. If no location is
@@ -43,9 +47,10 @@ public class N4jscJarProvider {
 		final File jar;
 		final String providedJar = System.getenv(PROVIDED_N4JSC_JAR_ENV);
 		if (null == providedJar || "".equals(providedJar.trim()) || "null".equals(providedJar)) {
+			final Path defaultJar = UtilN4.findN4jsRepoRootPath().resolve(DEFAULT_N4JSC_JAR);
 			LOGGER.info("Environment variable \"" + PROVIDED_N4JSC_JAR_ENV + "\" is unset; using default \""
-					+ DEFAULT_N4JSC_JAR + "\"");
-			jar = new File(DEFAULT_N4JSC_JAR).getAbsoluteFile();
+					+ defaultJar + "\"");
+			jar = defaultJar.toFile().getAbsoluteFile();
 		} else {
 			LOGGER.info("Environment variable \"" + PROVIDED_N4JSC_JAR_ENV + "\" is set to: " + providedJar);
 			jar = new File(providedJar).getAbsoluteFile();
