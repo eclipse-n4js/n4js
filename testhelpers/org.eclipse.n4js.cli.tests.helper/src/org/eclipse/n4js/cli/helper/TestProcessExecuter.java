@@ -11,7 +11,7 @@
 package org.eclipse.n4js.cli.helper;
 
 import java.io.File;
-import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -23,6 +23,7 @@ import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.binaries.nodejs.YarnBinary;
 import org.eclipse.n4js.cli.N4jscOptions;
+import org.eclipse.n4js.utils.io.ParallelReader;
 
 import com.google.common.base.Stopwatch;
 import com.google.inject.Injector;
@@ -31,10 +32,14 @@ import com.google.inject.Injector;
  * Test for checking whether plain JS files have the proper module export.
  */
 public class TestProcessExecuter {
+	final private long timeout;
+	final private TimeUnit timeoutUnit;
 	final private TestProcessBuilder testProcessBuilder;
 
 	/** Constructor */
-	public TestProcessExecuter(Injector injector) {
+	public TestProcessExecuter(Injector injector, long timeout, TimeUnit unit) {
+		this.timeout = timeout;
+		this.timeoutUnit = unit;
 		NodeJsBinary nodeJsBinary = injector.getInstance(NodeJsBinary.class);
 		NpmBinary npmBinary = injector.getInstance(NpmBinary.class);
 		YarnBinary yarnBinary = injector.getInstance(YarnBinary.class);
@@ -77,9 +82,16 @@ public class TestProcessExecuter {
 		Stopwatch sw = Stopwatch.createStarted();
 		try {
 			Process process = processBuilder.start();
-			result.exitCode = process.waitFor();
-			result.stdOut = getInputAsString(process.getInputStream());
-			result.errOut = getInputAsString(process.getErrorStream());
+
+			ParallelReader reader = new ParallelReader()
+					.add(process.getInputStream(), System.out, true, StandardCharsets.UTF_8)
+					.add(process.getErrorStream(), System.err, true, StandardCharsets.UTF_8)
+					.start()
+					.waitFor(timeout, timeoutUnit);
+
+			result.exitCode = process.exitValue();
+			result.stdOut = reader.getOutput(0);
+			result.errOut = reader.getOutput(1);
 
 		} catch (Exception e) {
 			result.exception = e;
@@ -95,12 +107,4 @@ public class TestProcessExecuter {
 
 		return result;
 	}
-
-	private String getInputAsString(InputStream is) {
-		try (java.util.Scanner scanner = new java.util.Scanner(is)) {
-			String string = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
-			return string.trim();
-		}
-	}
-
 }

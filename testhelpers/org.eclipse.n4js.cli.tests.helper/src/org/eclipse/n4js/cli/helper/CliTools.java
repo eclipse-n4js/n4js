@@ -15,6 +15,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscMain;
@@ -27,19 +28,36 @@ import com.google.inject.Injector;
  * Class to call n4jsc and other other cli tools.
  */
 public class CliTools {
+
+	/** Default timeout for executions performed via the methods in this class. */
+	public static final long DEFAULT_TIMEOUT_IN_MINUTES = 30;
+
 	private static final String RELATIVE_PATH = "...";
 
 	final private Map<String, String> environment = new HashMap<>();
-	private boolean isMirrorSystemOut = false;
 
-	/** Calls n4jsc main method and updates the {@code cliResult}. Backend is deactivated. */
+	private boolean isMirrorSystemOut = false;
+	private long timeout = DEFAULT_TIMEOUT_IN_MINUTES;
+	private TimeUnit timeoutUnit = TimeUnit.MINUTES;
+
+	/**
+	 * Calls n4jsc main method and updates the {@code cliResult}. Backend is deactivated.
+	 * <p>
+	 * NOTE: since this is performed synchronously and in-process, the timeout set via
+	 * {@link #setTimeout(long, TimeUnit)} does not apply!
+	 */
 	public void callN4jscFrontendInprocess(String[] options, boolean removeUsage, CliCompileResult result) {
 		InProcessExecuter inProcessExecuter = new InProcessExecuter(false, isMirrorSystemOut);
 		inProcessExecuter.n4jsc(new File("").getAbsoluteFile(), options, result);
 		trimOutputs(result, removeUsage);
 	}
 
-	/** Calls {@link N4jscMain#main(String[])} and updates the {@code cliResult}. */
+	/**
+	 * Calls {@link N4jscMain#main(String[])} and updates the {@code cliResult}.
+	 * <p>
+	 * NOTE: since this is performed synchronously and in-process, the timeout set via
+	 * {@link #setTimeout(long, TimeUnit)} does not apply!
+	 */
 	public void callN4jscInprocess(N4jscOptions options, boolean removeUsage, CliCompileResult result) {
 		String[] args = options.toArgs().toArray(String[]::new);
 		InProcessExecuter inProcessExecuter = new InProcessExecuter(true, isMirrorSystemOut);
@@ -84,6 +102,18 @@ public class CliTools {
 		this.isMirrorSystemOut = isMirrorSystemOut;
 	}
 
+	/**
+	 * Set a custom timeout for executions performed via this class. Default timeout is
+	 * {@value #DEFAULT_TIMEOUT_IN_MINUTES} minutes.
+	 * <p>
+	 * NOTE: this timeout does not apply to {@link #callN4jscInprocess(N4jscOptions, boolean, CliCompileResult)} and
+	 * {@link #callN4jscFrontendInprocess(String[], boolean, CliCompileResult)}.
+	 */
+	public void setTimeout(long duration, TimeUnit unit) {
+		this.timeout = duration;
+		this.timeoutUnit = unit;
+	}
+
 	/** see {@link TestProcessExecuter#runNodejs(Path, Map, Path, String[])} */
 	public ProcessResult runNodejs(Path workingDir, Path runFile, String... options) {
 		return getExProcessExecuter().runNodejs(workingDir, environment, runFile, options);
@@ -92,24 +122,34 @@ public class CliTools {
 	/** see {@link TestProcessExecuter#npmRun(Path, Map, String[])} */
 	public ProcessResult npmInstall(Path workingDir, String... options) {
 		String[] installOptions = Lists.asList("install", options).toArray(String[]::new);
-		return getExProcessExecuter().npmRun(workingDir, environment, installOptions);
+		return runNpm(workingDir, installOptions);
 	}
 
 	/** see {@link TestProcessExecuter#npmRun(Path, Map, String[])} */
 	public ProcessResult npmList(Path workingDir, String... options) {
 		String[] listOptions = Lists.asList("list", options).toArray(String[]::new);
-		return getExProcessExecuter().npmRun(workingDir, environment, listOptions);
+		return runNpm(workingDir, listOptions);
+	}
+
+	/** see {@link TestProcessExecuter#npmRun(Path, Map, String[])} */
+	public ProcessResult runNpm(Path workingDir, String... options) {
+		return getExProcessExecuter().npmRun(workingDir, environment, options);
 	}
 
 	/** see {@link TestProcessExecuter#yarnRun(Path, Map, String[])} */
 	public ProcessResult yarnInstall(Path workingDir, String... options) {
 		String[] installOptions = Lists.asList("install", options).toArray(String[]::new);
-		return getExProcessExecuter().yarnRun(workingDir, environment, installOptions);
+		return runYarn(workingDir, installOptions);
+	}
+
+	/** see {@link TestProcessExecuter#yarnRun(Path, Map, String[])} */
+	public ProcessResult runYarn(Path workingDir, String... options) {
+		return getExProcessExecuter().yarnRun(workingDir, environment, options);
 	}
 
 	private TestProcessExecuter getExProcessExecuter() {
 		Injector injector = N4jscFactory.getOrCreateInjector();
-		TestProcessExecuter tpExecuter = new TestProcessExecuter(injector);
+		TestProcessExecuter tpExecuter = new TestProcessExecuter(injector, timeout, timeoutUnit);
 		return tpExecuter;
 	}
 
