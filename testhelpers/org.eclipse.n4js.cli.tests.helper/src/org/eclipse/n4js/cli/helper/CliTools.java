@@ -159,8 +159,10 @@ public class CliTools {
 	}
 
 	static void trimOutputs(ProcessResult result, boolean removeUsage) {
-		result.stdOut = result.stdOut.replace(result.getWorkingDir(), RELATIVE_PATH);
-		result.errOut = result.errOut.replace(result.getWorkingDir(), RELATIVE_PATH);
+		String workingDirAbsolute = new File(result.getWorkingDir()).getAbsolutePath();
+
+		result.stdOut = result.stdOut.replace(workingDirAbsolute, RELATIVE_PATH);
+		result.errOut = result.errOut.replace(workingDirAbsolute, RELATIVE_PATH);
 
 		if (removeUsage) {
 			result.stdOut = result.stdOut.replace(N4jscOptions.USAGE, "");
