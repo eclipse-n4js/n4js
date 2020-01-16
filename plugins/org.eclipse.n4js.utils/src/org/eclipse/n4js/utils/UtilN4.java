@@ -44,10 +44,15 @@ import com.google.common.collect.ImmutableList;
  */
 public class UtilN4 {
 
-	/**
-	 * Name of the N4JS Git repository, i.e. "n4js".
-	 */
+	/** Name of the N4JS Git repository, i.e. "n4js". */
 	public static final String N4JS_GIT_REPOSITORY_NAME = "n4js";
+
+	/** Name of NPM's package json file. */
+	public static final String PACKAGE_JSON = "package.json";
+	/** Name of package.json property "dependencies". */
+	public static final String PACKAGE_JSON__DEPENDENCIES = "dependencies";
+	/** Name of package.json property "devDependencies". */
+	public static final String PACKAGE_JSON__DEV_DEPENDENCIES = "devDependencies";
 
 	private static Logger logger = Logger.getLogger(UtilN4.class);
 

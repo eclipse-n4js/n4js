@@ -97,7 +97,7 @@ public class BuildN4jsLibs implements IWorkflowComponent {
 		CliCompileResult compileResult = new CliCompileResult();
 		try {
 			CliTools cliTools = new CliTools();
-			cliTools.setIsMirrorSystemOut(true);
+			cliTools.setInheritIO(true);
 			cliTools.setEnvironmentVariable("NPM_TOKEN", "dummy");
 
 			ProcessResult installResult = cliTools.yarnInstall(n4jsLibsRootPath);

@@ -11,6 +11,7 @@
 package org.eclipse.n4js.cli.helper;
 
 import java.io.File;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Map;
@@ -32,12 +33,14 @@ import com.google.inject.Injector;
  * Test for checking whether plain JS files have the proper module export.
  */
 public class TestProcessExecuter {
+	final private boolean inheritIO;
 	final private long timeout;
 	final private TimeUnit timeoutUnit;
 	final private TestProcessBuilder testProcessBuilder;
 
 	/** Constructor */
-	public TestProcessExecuter(Injector injector, long timeout, TimeUnit unit) {
+	public TestProcessExecuter(Injector injector, boolean inheritIO, long timeout, TimeUnit unit) {
+		this.inheritIO = inheritIO;
 		this.timeout = timeout;
 		this.timeoutUnit = unit;
 		NodeJsBinary nodeJsBinary = injector.getInstance(NodeJsBinary.class);
@@ -66,9 +69,14 @@ public class TestProcessExecuter {
 		return joinProcess(() -> testProcessBuilder.yarnRun(workingDir, environment, options));
 	}
 
-	/** Runs n4jsc.jar in the given {@code workingDir} with the given environment additions and options */
+	/** Runs n4jsc.jar in the given {@code workingDir} with the given environment additions and options. */
 	public ProcessResult n4jscRun(Path workingDir, Map<String, String> environment, N4jscOptions options) {
 		return joinProcess(() -> testProcessBuilder.n4jscRun(workingDir, environment, options));
+	}
+
+	/** Runs the given executable in the given {@code workingDir} with the given environment additions and options. */
+	public ProcessResult run(Path workingDir, Map<String, String> environment, Path executable, String... options) {
+		return joinProcess(() -> testProcessBuilder.run(workingDir, environment, executable, options));
 	}
 
 	private ProcessResult joinProcess(Supplier<ProcessBuilder> pbs) {
@@ -83,9 +91,14 @@ public class TestProcessExecuter {
 		try {
 			Process process = processBuilder.start();
 
+			@SuppressWarnings("resource")
+			OutputStream stdout = inheritIO ? System.out : null;
+			@SuppressWarnings("resource")
+			OutputStream stderr = inheritIO ? System.err : null;
+
 			ParallelReader reader = new ParallelReader()
-					.add(process.getInputStream(), System.out, true, StandardCharsets.UTF_8)
-					.add(process.getErrorStream(), System.err, true, StandardCharsets.UTF_8)
+					.add(process.getInputStream(), stdout, true, StandardCharsets.UTF_8)
+					.add(process.getErrorStream(), stderr, true, StandardCharsets.UTF_8)
 					.start()
 					.waitFor(timeout, timeoutUnit);
 

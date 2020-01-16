@@ -156,7 +156,7 @@ public final class N4JSGlobals {
 	/**
 	 * The name of NPM's package json file.
 	 */
-	public static final String PACKAGE_JSON = "package.json";
+	public static final String PACKAGE_JSON = UtilN4.PACKAGE_JSON;
 
 	/**
 	 * String used to separate segments in the string representation of a {@link QualifiedName qualified name}.

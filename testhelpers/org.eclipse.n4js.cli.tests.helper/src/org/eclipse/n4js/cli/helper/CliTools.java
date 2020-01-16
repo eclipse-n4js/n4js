@@ -36,7 +36,7 @@ public class CliTools {
 
 	final private Map<String, String> environment = new HashMap<>();
 
-	private boolean isMirrorSystemOut = false;
+	private boolean inheritIO = false;
 	private long timeout = DEFAULT_TIMEOUT_IN_MINUTES;
 	private TimeUnit timeoutUnit = TimeUnit.MINUTES;
 
@@ -47,7 +47,7 @@ public class CliTools {
 	 * {@link #setTimeout(long, TimeUnit)} does not apply!
 	 */
 	public void callN4jscFrontendInprocess(String[] options, boolean removeUsage, CliCompileResult result) {
-		InProcessExecuter inProcessExecuter = new InProcessExecuter(false, isMirrorSystemOut);
+		InProcessExecuter inProcessExecuter = new InProcessExecuter(false, inheritIO);
 		inProcessExecuter.n4jsc(new File("").getAbsoluteFile(), options, result);
 		trimOutputs(result, removeUsage);
 	}
@@ -60,7 +60,7 @@ public class CliTools {
 	 */
 	public void callN4jscInprocess(N4jscOptions options, boolean removeUsage, CliCompileResult result) {
 		String[] args = options.toArgs().toArray(String[]::new);
-		InProcessExecuter inProcessExecuter = new InProcessExecuter(true, isMirrorSystemOut);
+		InProcessExecuter inProcessExecuter = new InProcessExecuter(true, inheritIO);
 		inProcessExecuter.n4jsc(options.getDirs().get(0), args, result);
 		trimOutputs(result, removeUsage);
 	}
@@ -98,8 +98,8 @@ public class CliTools {
 	 * Set configuration of n4jsc execution: Iff true, the output is mirrored during execution on System.out and
 	 * System.err
 	 */
-	public void setIsMirrorSystemOut(boolean isMirrorSystemOut) {
-		this.isMirrorSystemOut = isMirrorSystemOut;
+	public void setInheritIO(boolean inheritIO) {
+		this.inheritIO = inheritIO;
 	}
 
 	/**
@@ -147,9 +147,14 @@ public class CliTools {
 		return getExProcessExecuter().yarnRun(workingDir, environment, options);
 	}
 
+	/** see {@link TestProcessExecuter#run(Path, Map, Path, String...)} */
+	public ProcessResult run(Path workingDir, Path executable, String... options) {
+		return getExProcessExecuter().run(workingDir, environment, executable, options);
+	}
+
 	private TestProcessExecuter getExProcessExecuter() {
 		Injector injector = N4jscFactory.getOrCreateInjector();
-		TestProcessExecuter tpExecuter = new TestProcessExecuter(injector, timeout, timeoutUnit);
+		TestProcessExecuter tpExecuter = new TestProcessExecuter(injector, inheritIO, timeout, timeoutUnit);
 		return tpExecuter;
 	}
 

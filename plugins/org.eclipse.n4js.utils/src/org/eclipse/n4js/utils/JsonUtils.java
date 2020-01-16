@@ -14,10 +14,13 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.google.common.collect.Sets;
 import com.google.gson.Gson;
@@ -97,6 +100,46 @@ public class JsonUtils {
 		try (BufferedWriter out = Files.newBufferedWriter(path, StandardOpenOption.TRUNCATE_EXISTING)) {
 			Gson gson = new GsonBuilder().setPrettyPrinting().create();
 			gson.toJson(jsonElement, out);
+		}
+	}
+
+	/**
+	 * Same as {@link #setVersionOfDependenciesInSinglePackageJsonFile(Path, Set, JsonElement)}, but for all
+	 * package.json files in the entire folder tree below the given root folder.
+	 */
+	public static void setVersionOfDependenciesInAllPackageJsonFiles(Path rootFolder,
+			Set<String> namesOfDependencies, JsonElement versionToSet) throws FileNotFoundException, IOException {
+		List<Path> packageJsonFiles = Files.walk(rootFolder, FileVisitOption.FOLLOW_LINKS)
+				.filter(p -> UtilN4.PACKAGE_JSON.equals(p.getFileName().toString()))
+				.collect(Collectors.toList());
+		for (Path packageJsonFile : packageJsonFiles) {
+			setVersionOfDependenciesInSinglePackageJsonFile(packageJsonFile, namesOfDependencies, versionToSet);
+		}
+	}
+
+	/**
+	 * Changes the version of all dependencies and devDependencies to packages with a name contained in
+	 * {@code namesOfDependencies} to the given version. Names given in the set that are not among the dependencies in
+	 * the package.json file will be ignored; dependencies in the package.json file that are not denoted by the names in
+	 * the set will remain unchanged.
+	 */
+	public static void setVersionOfDependenciesInSinglePackageJsonFile(Path packageJsonFile,
+			Set<String> namesOfDependencies, JsonElement versionToSet) throws FileNotFoundException, IOException {
+		if (namesOfDependencies.isEmpty()) {
+			return;
+		}
+		JsonElement root = JsonUtils.loadJson(packageJsonFile);
+		boolean changed = false;
+		JsonElement deps = JsonUtils.getDeep(root, UtilN4.PACKAGE_JSON__DEPENDENCIES);
+		if (deps != null && deps.isJsonObject()) {
+			changed |= JsonUtils.changeProperties((JsonObject) deps, namesOfDependencies, versionToSet);
+		}
+		JsonElement devDeps = JsonUtils.getDeep(root, UtilN4.PACKAGE_JSON__DEV_DEPENDENCIES);
+		if (devDeps != null && devDeps.isJsonObject()) {
+			changed |= JsonUtils.changeProperties((JsonObject) devDeps, namesOfDependencies, versionToSet);
+		}
+		if (changed) {
+			JsonUtils.saveJson(packageJsonFile, root);
 		}
 	}
 }

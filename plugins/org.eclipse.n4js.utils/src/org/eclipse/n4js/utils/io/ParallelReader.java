@@ -140,7 +140,7 @@ public class ParallelReader {
 				: new BufferedReader(r);
 		BufferedWriter forwardToBuff = forwardTo instanceof BufferedWriter
 				? (BufferedWriter) forwardTo
-				: new BufferedWriter(forwardTo);
+				: (forwardTo != null ? new BufferedWriter(forwardTo) : null);
 		Exhauster exhauster = new Exhauster(rBuff, forwardToBuff, flush);
 		exhausters.add(exhauster);
 		return this;
