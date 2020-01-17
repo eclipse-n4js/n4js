@@ -13,6 +13,7 @@ package org.eclipse.n4js.utils.process;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -31,8 +32,7 @@ public class ProcessExecutor {
 	@Inject
 	private OutputStreamPrinterThreadProvider printerThreadProvider;
 
-	private static final long DEFAULT_PROCESS_TIMEOUT = 240L;
-	private static final long DEFAULT_THREAD_TIMEOUT = 30_000L;
+	private static final long DEFAULT_TIMEOUT = 240L; // in seconds
 	private static final int ERROR_EXIT_CODE = -1;
 	private static final Logger LOGGER = Logger.getLogger(ProcessExecutor.class);
 
@@ -42,6 +42,14 @@ public class ProcessExecutor {
 	 */
 	public ProcessResult execute(final Process process) {
 		return execute(process, null, OutputRedirection.SUPPRESS);
+	}
+
+	/**
+	 * Same as {@link #execute(Process, String, OutputRedirection, long, TimeUnit)}, using a default timeout of
+	 * {@value #DEFAULT_TIMEOUT} seconds.
+	 */
+	public ProcessResult execute(final Process process, final String processName, final OutputRedirection redirect) {
+		return execute(process, processName, redirect, DEFAULT_TIMEOUT, SECONDS);
 	}
 
 	/**
@@ -56,11 +64,16 @@ public class ProcessExecutor {
 	 *            indicates if captured output should be swallowed or not. If {@link OutputRedirection#SUPPRESS}, then
 	 *            the captured process output will not be flushed to an output streams, in other words, it will not be
 	 *            redirected.
+	 * @param timeout
+	 *            the timeout duration.
+	 * @param timeoutUnit
+	 *            the {@link TimeUnit} of the given timeout duration.
 	 * @return a new result object that represents the actual result of the created process execution
 	 */
-	public ProcessResult execute(final Process process, final String processName, final OutputRedirection redirect) {
+	public ProcessResult execute(final Process process, final String processName, final OutputRedirection redirect,
+			long timeout, TimeUnit timeoutUnit) {
 		// prepare name to be used in log messages
-		final String name = processName == null ? " " : " '" + processName + "' ";
+		final String name = processName == null ? " <unnamed> " : " '" + processName + "' ";
 
 		try {
 
@@ -74,15 +87,23 @@ public class ProcessExecutor {
 					OutputStreamPrinterThread stdErrThread = printerThreadProvider.getPrinterThreadForStdErr(process,
 							redirect)) {
 
-				boolean finished = process.waitFor(DEFAULT_PROCESS_TIMEOUT, SECONDS);
+				long start = System.currentTimeMillis();
+				long endExpected = start + timeoutUnit.toMillis(timeout);
+
+				boolean finished = process.waitFor(timeout, timeoutUnit);
 				if (!finished) {
 					LOGGER.error(
-							"Process didn't finish after " + DEFAULT_PROCESS_TIMEOUT + " " + SECONDS);
+							"Process didn't finish after " + timeout + " " + timeoutUnit);
 					return new ProcessResult(ERROR_EXIT_CODE, "", "");
 				}
 
-				stdOutThread.join(DEFAULT_THREAD_TIMEOUT);// ms
-				stdErrThread.join(DEFAULT_THREAD_TIMEOUT);// ms
+				stdOutThread.join(Math.max(endExpected - System.currentTimeMillis(), 1));// ms
+				stdErrThread.join(Math.max(endExpected - System.currentTimeMillis(), 1));// ms
+				if (stdOutThread.isAlive() || stdErrThread.isAlive()) {
+					LOGGER.error(
+							"Output stream printer threads didn't finish after " + timeout + " " + timeoutUnit);
+					return new ProcessResult(ERROR_EXIT_CODE, "", "");
+				}
 
 				ProcessResult processResult = new ProcessResult(process.exitValue(), stdOutThread.toString(),
 						stdErrThread.toString());
@@ -105,10 +126,9 @@ public class ProcessExecutor {
 			if (process != null && process.isAlive()) {
 				// try to force close
 				try {
-					process.destroyForcibly().waitFor(DEFAULT_PROCESS_TIMEOUT, SECONDS);
+					process.destroyForcibly().waitFor(30, SECONDS);
 				} catch (final InterruptedException e) {
-					LOGGER.error("Error while trying to forcefully terminate" + name + "process.",
-							e);
+					LOGGER.error("Error while trying to forcefully terminate" + name + "process.", e);
 				}
 				if (!process.isAlive()) {
 					LOGGER.debug("Spawned" + name + "process was successfully terminated.");
@@ -116,7 +136,7 @@ public class ProcessExecutor {
 					// there is nothing else we can do about it
 					LOGGER.error(
 							"Cannot terminate" + name + "subprocess. Termination timeouted after "
-									+ DEFAULT_PROCESS_TIMEOUT + " " + SECONDS + ".");
+									+ 30 + " " + SECONDS + ".");
 				}
 			} else {
 				LOGGER.debug("Spawned" + name + "process was successfully terminated.");
@@ -147,7 +167,7 @@ public class ProcessExecutor {
 	public ProcessResult createAndExecute(final ProcessBuilder processBuilder, String name,
 			OutputRedirection redirect) {
 		// prepare name to be used in log messages
-		String pbName = name == null ? " " : " for process '" + name + "' ";
+		String pbName = name == null ? " <unnamed> " : " for process '" + name + "' ";
 
 		if (processBuilder == null) {
 			LOGGER.error("Provided process builder" + pbName + "was null");
