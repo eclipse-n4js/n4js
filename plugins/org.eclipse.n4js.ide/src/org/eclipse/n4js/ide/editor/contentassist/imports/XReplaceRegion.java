@@ -16,7 +16,7 @@ import org.eclipse.xtext.util.ITextRegion;
 import org.eclipse.xtext.util.ReplaceRegion;
 
 /**
- *
+ * Can be removed when https://github.com/eclipse/xtext-core/pull/1355 was merged
  */
 public class XReplaceRegion extends ReplaceRegion {
 
