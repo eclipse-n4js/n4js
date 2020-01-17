@@ -11,8 +11,6 @@
 package org.eclipse.n4js.cli.helper;
 
 import java.io.File;
-import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -25,6 +23,7 @@ import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.binaries.nodejs.YarnBinary;
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.utils.io.ParallelReader;
+import org.eclipse.n4js.utils.io.ParallelReader.CapturedOutput;
 
 import com.google.common.base.Stopwatch;
 import com.google.inject.Injector;
@@ -91,20 +90,10 @@ public class TestProcessExecuter {
 		try {
 			Process process = processBuilder.start();
 
-			@SuppressWarnings("resource")
-			OutputStream stdout = inheritIO ? System.out : null;
-			@SuppressWarnings("resource")
-			OutputStream stderr = inheritIO ? System.err : null;
-
-			ParallelReader reader = new ParallelReader()
-					.add(process.getInputStream(), stdout, true, StandardCharsets.UTF_8)
-					.add(process.getErrorStream(), stderr, true, StandardCharsets.UTF_8)
-					.start()
-					.waitFor(timeout, timeoutUnit);
-
+			CapturedOutput output = ParallelReader.waitForAndCaptureOutput(process, inheritIO, timeout, timeoutUnit);
 			result.exitCode = process.exitValue();
-			result.stdOut = reader.getOutput(0);
-			result.errOut = reader.getOutput(1);
+			result.stdOut = output.stdout;
+			result.errOut = output.stderr;
 
 		} catch (Exception e) {
 			result.exception = e;

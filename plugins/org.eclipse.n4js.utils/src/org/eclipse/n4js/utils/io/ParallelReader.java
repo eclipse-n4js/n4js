@@ -20,10 +20,12 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import com.google.common.collect.Lists;
 
@@ -160,14 +162,22 @@ public class ParallelReader {
 
 	/**
 	 * Wait for all readers to be exhausted, i.e. {@link Reader#read()} returning -1 for each of them.
+	 *
+	 * @throws TimeoutException
+	 *             if the timeout expires before all readers are exhausted.
+	 * @throws InterruptedException
+	 *             if an interrupt signal is received while waiting.
 	 */
-	public ParallelReader waitFor(long timeout, TimeUnit unit) throws InterruptedException {
+	public ParallelReader waitFor(long timeout, TimeUnit unit) throws TimeoutException, InterruptedException {
 		if (actualExecutorService == null) {
 			throw new IllegalStateException("#waitFor() invoked before #start()");
 		}
-		this.actualExecutorService.shutdown();
-		this.actualExecutorService.awaitTermination(timeout, unit);
-		this.completed = true;
+		actualExecutorService.shutdown();
+		boolean success = actualExecutorService.awaitTermination(timeout, unit);
+		if (!success) {
+			throw new TimeoutException("timeout expired while waiting for exhaustion of readers");
+		}
+		completed = true;
 		return this;
 	}
 
@@ -178,7 +188,7 @@ public class ParallelReader {
 		if (!completed) {
 			throw new IllegalStateException("#getOutput() invoked before #waitFor()");
 		}
-		return this.exhausters.get(n).output.toString();
+		return exhausters.get(n).output.toString();
 	}
 
 	/**
@@ -191,6 +201,66 @@ public class ParallelReader {
 		if (!completed) {
 			throw new IllegalStateException("#getOutputMerged() invoked before #waitFor()");
 		}
-		return this.outputMerged.toString();
+		return outputMerged.toString();
+	}
+
+	/**
+	 * Output from a {@link Process} captured with method
+	 * {@link ParallelReader#waitForAndCaptureOutput(Process, boolean, long, TimeUnit)}.
+	 */
+	public static final class CapturedOutput {
+		/** The output received via the standard output stream. */
+		public final String stdout;
+		/** The output received via the standard error stream. */
+		public final String stderr;
+		/** The output of both standard output and standard error streams. */
+		public final String merged;
+
+		private CapturedOutput(String stdout, String stderr, String merged) {
+			this.stdout = stdout;
+			this.stderr = stderr;
+			this.merged = merged;
+		}
+	}
+
+	/**
+	 * Similarly to {@link Process#waitFor(long, TimeUnit)}, this method waits for the given process to terminate and
+	 * captures all its output, optionally forwarding the output to {@link System#out stdout} and {@link System#err
+	 * stderr}. The returned {@link CapturedOutput} can then be queried for the output using method
+	 * {@link #getOutput(int)} (index 0 being <code>stdout</code> and 1 being <code>stderr</code>).
+	 * <p>
+	 * Once this method returns, the given process has terminated and therefore it is safe to invoke methods such as
+	 * {@link Process#exitValue() #exitValue()} on this process.
+	 *
+	 * @throws TimeoutException
+	 *             if the timeout expires before the process terminates.
+	 * @throws InterruptedException
+	 *             if an interrupt signal is received while waiting.
+	 */
+	@SuppressWarnings("resource")
+	public static final CapturedOutput waitForAndCaptureOutput(Process process, boolean inheritIO,
+			long timeout, TimeUnit unit) throws TimeoutException, InterruptedException {
+
+		OutputStream stdout = inheritIO ? System.out : null;
+		OutputStream stderr = inheritIO ? System.err : null;
+
+		ParallelReader reader = new ParallelReader()
+				.add(process.getInputStream(), stdout, true, StandardCharsets.UTF_8)
+				.add(process.getErrorStream(), stderr, true, StandardCharsets.UTF_8)
+				.start();
+
+		boolean success = process.waitFor(timeout, unit);
+		if (!success) {
+			throw new TimeoutException("process timed out");
+		}
+
+		// The process has terminated, so usually I/O streams should be exhausted now.
+		// However, there might be a slight delay, so we need to wait with a short timeout:
+		reader.waitFor(30, TimeUnit.SECONDS);
+
+		return new CapturedOutput(
+				reader.getOutput(0),
+				reader.getOutput(1),
+				reader.getOutputMerged());
 	}
 }
