@@ -17,7 +17,7 @@ import java.util.List;
 
 import org.eclipse.n4js.binaries.nodejs.NodeYarnProcessBuilder;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
-import org.eclipse.n4js.utils.process.OutputRedirection;
+import org.eclipse.n4js.utils.io.OutputRedirection;
 import org.eclipse.n4js.utils.process.ProcessExecutionCommand;
 import org.eclipse.n4js.utils.process.ProcessExecutor;
 import org.eclipse.n4js.utils.process.ProcessResult;

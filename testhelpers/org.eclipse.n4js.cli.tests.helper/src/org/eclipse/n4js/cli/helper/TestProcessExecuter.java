@@ -23,7 +23,7 @@ import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.binaries.nodejs.YarnBinary;
 import org.eclipse.n4js.cli.N4jscOptions;
-import org.eclipse.n4js.utils.process.OutputRedirection;
+import org.eclipse.n4js.utils.io.OutputRedirection;
 import org.eclipse.n4js.utils.process.ProcessExecutor;
 
 import com.google.common.base.Stopwatch;

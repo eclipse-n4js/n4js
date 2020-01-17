@@ -18,7 +18,7 @@ import org.eclipse.n4js.runner.RunConfiguration;
 import org.eclipse.n4js.runner.RunnerFrontEnd;
 import org.eclipse.n4js.runner.nodejs.NodeRunner;
 import org.eclipse.n4js.runner.ui.RunnerFrontEndUI;
-import org.eclipse.n4js.utils.process.OutputRedirection;
+import org.eclipse.n4js.utils.io.OutputRedirection;
 import org.eclipse.n4js.utils.process.ProcessExecutor;
 import org.eclipse.n4js.utils.process.ProcessResult;
 

@@ -17,6 +17,9 @@ import static org.eclipse.swt.SWT.COLOR_RED;
 
 import java.io.OutputStream;
 
+import org.eclipse.n4js.utils.io.OutputRedirection;
+import org.eclipse.n4js.utils.io.OutputStreamProvider;
+import org.eclipse.n4js.utils.io.OutputStreamPrinterThread.OutputStreamType;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -28,10 +31,6 @@ import org.eclipse.ui.console.MessageConsoleStream;
 
 import com.google.common.base.Supplier;
 import com.google.inject.Singleton;
-
-import org.eclipse.n4js.utils.process.OutputRedirection;
-import org.eclipse.n4js.utils.process.OutputStreamPrinterThread.OutputStreamType;
-import org.eclipse.n4js.utils.process.OutputStreamProvider;
 
 /**
  * Output stream provider to the npm console.

@@ -18,6 +18,9 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
+import org.eclipse.n4js.utils.io.OutputRedirection;
+import org.eclipse.n4js.utils.io.OutputStreamPrinterThread;
+import org.eclipse.n4js.utils.io.OutputStreamPrinterThreadProvider;
 import org.eclipse.xtext.xbase.lib.StringExtensions;
 
 import com.google.inject.Singleton;
