@@ -12,6 +12,7 @@ package org.eclipse.n4js.cli.helper;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -22,10 +23,11 @@ import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.binaries.nodejs.YarnBinary;
 import org.eclipse.n4js.cli.N4jscOptions;
-import org.eclipse.n4js.utils.io.ParallelReader;
-import org.eclipse.n4js.utils.io.ParallelReader.CapturedOutput;
+import org.eclipse.n4js.utils.process.OutputRedirection;
+import org.eclipse.n4js.utils.process.ProcessExecutor;
 
 import com.google.common.base.Stopwatch;
+import com.google.common.collect.Iterables;
 import com.google.inject.Injector;
 
 /**
@@ -35,7 +37,10 @@ public class TestProcessExecuter {
 	final private boolean inheritIO;
 	final private long timeout;
 	final private TimeUnit timeoutUnit;
+
 	final private TestProcessBuilder testProcessBuilder;
+
+	final private ProcessExecutor processExecutor;
 
 	/** Constructor */
 	public TestProcessExecuter(Injector injector, boolean inheritIO, long timeout, TimeUnit unit) {
@@ -47,6 +52,7 @@ public class TestProcessExecuter {
 		YarnBinary yarnBinary = injector.getInstance(YarnBinary.class);
 		JavaBinary javaBinary = injector.getInstance(JavaBinary.class);
 		testProcessBuilder = new TestProcessBuilder(nodeJsBinary, npmBinary, yarnBinary, javaBinary);
+		processExecutor = injector.getInstance(ProcessExecutor.class);
 	}
 
 	interface ProcessSupplier {
@@ -81,19 +87,23 @@ public class TestProcessExecuter {
 	private ProcessResult joinProcess(Supplier<ProcessBuilder> pbs) {
 		ProcessBuilder processBuilder = pbs.get();
 		File workingDir = processBuilder.directory();
+		List<String> command = processBuilder.command();
 
 		ProcessResult result = new ProcessResult();
-		result.command = String.join(" ", processBuilder.command());
+		result.command = String.join(" ", command);
 		result.workingDir = workingDir.toString();
 
 		Stopwatch sw = Stopwatch.createStarted();
 		try {
 			Process process = processBuilder.start();
-
-			CapturedOutput output = ParallelReader.waitForAndCaptureOutput(process, inheritIO, timeout, timeoutUnit);
+			org.eclipse.n4js.utils.process.ProcessResult processResult = processExecutor.execute(
+					process,
+					Iterables.getFirst(command, null),
+					inheritIO ? OutputRedirection.REDIRECT : OutputRedirection.SUPPRESS,
+					timeout, timeoutUnit);
 			result.exitCode = process.exitValue();
-			result.stdOut = output.stdout;
-			result.errOut = output.stderr;
+			result.stdOut = processResult.getStdOut();
+			result.errOut = processResult.getStdErr();
 
 		} catch (Exception e) {
 			result.exception = e;
