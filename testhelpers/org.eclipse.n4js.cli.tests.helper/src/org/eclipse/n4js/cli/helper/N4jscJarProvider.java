@@ -31,7 +31,7 @@ public class N4jscJarProvider {
 
 	/**
 	 * Relative path and file name of default n4jsc.jar to use for testing purposes if environment variable
-	 * {@link #PROVIDED_N4JSC_JAR_ENV} is unset. This path is relative to the root of an N4JS Git repository clone.
+	 * {@link #PROVIDED_N4JSC_JAR_ENV} is unset. This path is relative to the root of the N4JS Git repository.
 	 */
 	public static final Path DEFAULT_N4JSC_JAR = Paths.get("target", "n4jsc.jar");
 

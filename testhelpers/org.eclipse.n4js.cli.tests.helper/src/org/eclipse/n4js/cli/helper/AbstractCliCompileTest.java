@@ -86,7 +86,7 @@ public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 	}
 
 	@Override
-	public void doN4jsc(N4jscOptions options, boolean ignoreFailure, boolean removeUsage, CliCompileResult result) {
+	protected void doN4jsc(N4jscOptions options, boolean ignoreFailure, boolean removeUsage, CliCompileResult result) {
 		cliTools.setIgnoreFailure(ignoreFailure);
 		try {
 			switch (variant) {

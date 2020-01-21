@@ -237,7 +237,7 @@ public class TesterModule implements Module {
 	private Properties tryLoadProperties(final URL url, final Properties properties) throws IOException {
 		try (final InputStream is = url.openStream()) {
 			properties.load(is);
-			// no exception --> Module properties have been successfully loaded.
+			// no exception --> module properties have been successfully loaded.
 			return properties;
 		}
 	}

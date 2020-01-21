@@ -104,8 +104,8 @@ public class JsonUtils {
 	}
 
 	/**
-	 * Same as {@link #setVersionOfDependenciesInSinglePackageJsonFile(Path, Set, JsonElement)}, but for all
-	 * package.json files in the entire folder tree below the given root folder.
+	 * Same as {@link #setVersionOfDependenciesInPackageJsonFile(Path, Set, JsonElement)}, but for all package.json
+	 * files in the entire folder tree below the given root folder.
 	 */
 	public static void setVersionOfDependenciesInAllPackageJsonFiles(Path rootFolder,
 			Set<String> namesOfDependencies, JsonElement versionToSet) throws FileNotFoundException, IOException {
@@ -113,7 +113,7 @@ public class JsonUtils {
 				.filter(p -> UtilN4.PACKAGE_JSON.equals(p.getFileName().toString()))
 				.collect(Collectors.toList());
 		for (Path packageJsonFile : packageJsonFiles) {
-			setVersionOfDependenciesInSinglePackageJsonFile(packageJsonFile, namesOfDependencies, versionToSet);
+			setVersionOfDependenciesInPackageJsonFile(packageJsonFile, namesOfDependencies, versionToSet);
 		}
 	}
 
@@ -123,7 +123,7 @@ public class JsonUtils {
 	 * the package.json file will be ignored; dependencies in the package.json file that are not denoted by the names in
 	 * the set will remain unchanged.
 	 */
-	public static void setVersionOfDependenciesInSinglePackageJsonFile(Path packageJsonFile,
+	public static void setVersionOfDependenciesInPackageJsonFile(Path packageJsonFile,
 			Set<String> namesOfDependencies, JsonElement versionToSet) throws FileNotFoundException, IOException {
 		if (namesOfDependencies.isEmpty()) {
 			return;

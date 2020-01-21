@@ -34,7 +34,7 @@ import com.google.inject.Injector;
  */
 public class TestProcessExecuter {
 	final private boolean inheritIO;
-	final boolean ignoreFailure;
+	final private boolean ignoreFailure;
 	final private long timeout;
 	final private TimeUnit timeoutUnit;
 
