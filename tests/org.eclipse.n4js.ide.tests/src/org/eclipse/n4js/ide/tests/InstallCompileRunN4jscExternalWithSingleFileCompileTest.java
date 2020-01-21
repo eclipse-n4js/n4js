@@ -55,8 +55,7 @@ public class InstallCompileRunN4jscExternalWithSingleFileCompileTest extends Abs
 		final String fileToCompile = packages + "/external.project/src-gen/Main.js";
 		final String fileToRun = fileToCompile;
 
-		ProcessResult yarnInstallResult = yarnInstall(workspace.toPath());
-		assertEquals(yarnInstallResult.toString(), 0, yarnInstallResult.getExitCode());
+		yarnInstall(workspace.toPath());
 
 		CliCompileResult cliResult = n4jsc(COMPILE(workspace));
 		assertEquals(cliResult.toString(), 5, cliResult.getTranspiledFilesCount());

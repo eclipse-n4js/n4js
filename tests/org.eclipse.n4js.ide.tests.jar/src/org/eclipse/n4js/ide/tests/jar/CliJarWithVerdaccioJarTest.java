@@ -74,17 +74,14 @@ public class CliJarWithVerdaccioJarTest extends AbstractCliJarTest {
 	public void testN4JSCliHelp() {
 
 		// Step 1: Call npm install in PSingleTestNpm folder
-		ProcessResult npmInstallResult = npmInstall(PROJECT);
-		assertEquals(npmInstallResult.toString(), 0, npmInstallResult.getExitCode());
+		npmInstall(PROJECT);
 
 		// Step 2: List all installed packages and check version of n4js-runtime
 		ProcessResult npmListResult1 = npmList(PROJECT);
-		assertEquals(npmListResult1.toString(), 0, npmListResult1.getExitCode());
 		assertTrue(npmListResult1.toString(), npmListResult1.getStdOut().contains("n4js-runtime@0.0.1"));
 
 		// Step 3: Install n4js-cli@latest in the project 'PSingleTestNpm'
-		ProcessResult npmInstallResult2 = npmInstall(PROJECT, "n4js-cli@latest");
-		assertEquals(npmInstallResult2.toString(), 0, npmInstallResult2.getExitCode());
+		npmInstall(PROJECT, "n4js-cli@latest");
 
 		// Step 4: List all installed packages and check version of n4js-cli
 		ProcessResult npmListResult2 = npmList(PROJECT);
@@ -94,7 +91,6 @@ public class CliJarWithVerdaccioJarTest extends AbstractCliJarTest {
 		// Step 5: Test that calling n4js-cli is OK
 		Path runFile = Path.of(N4JSGlobals.NODE_MODULES, "n4js-cli", "bin", "n4jsc.js");
 		ProcessResult nodeResult = runNodejs(PROJECT, runFile, "--help");
-		assertEquals(nodeResult.toString(), 0, nodeResult.getExitCode());
 		assertTrue(nodeResult.toString(), nodeResult.getStdOut().contains("Usage"));
 	}
 

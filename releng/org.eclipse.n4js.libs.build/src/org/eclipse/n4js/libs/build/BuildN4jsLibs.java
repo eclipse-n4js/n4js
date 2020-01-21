@@ -25,11 +25,9 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.cli.N4jscMain;
 import org.eclipse.n4js.cli.helper.CliCompileResult;
 import org.eclipse.n4js.cli.helper.CliTools;
-import org.eclipse.n4js.cli.helper.ProcessResult;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.utils.io.FileDeleter;
 
-import com.google.common.base.Joiner;
 import com.google.common.base.Throwables;
 
 /**
@@ -99,23 +97,10 @@ public class BuildN4jsLibs implements IWorkflowComponent {
 			cliTools.setInheritIO(true);
 			cliTools.setEnvironmentVariable("NPM_TOKEN", "dummy");
 
-			ProcessResult installResult = cliTools.yarnInstall(n4jsLibsRootPath);
-			if (installResult.getException() != null) {
-				throw new IllegalStateException("exception during yarn install", installResult.getException());
-			} else if (installResult.getExitCode() != 0) {
-				throw new IllegalStateException("non-zero exit code from yarn install: " + installResult.getExitCode());
-			}
+			cliTools.yarnInstall(n4jsLibsRootPath);
 
 			CliCompileResult compileResult = new CliCompileResult();
 			cliTools.callN4jscInprocess(COMPILE(n4jsLibsRootPath.toFile()), false, compileResult);
-			if (compileResult.getException() != null) {
-				throw new IllegalStateException("exception during n4jsc call", compileResult.getException());
-			} else if (compileResult.getExitCode() != 0) {
-				throw new IllegalStateException("non-zero exit code from n4jsc call: " + compileResult.getExitCode());
-			} else if (compileResult.getErrs() > 0) {
-				throw new IllegalStateException("errors in compiled sources: "
-						+ Joiner.on(System.lineSeparator()).join(compileResult.getErrMsgs()));
-			}
 
 		} catch (Exception e) {
 			println("EXCEPTION while compiling n4js-libs:");

@@ -27,7 +27,6 @@ import org.eclipse.n4js.utils.io.OutputRedirection;
 import org.eclipse.n4js.utils.process.ProcessExecutor;
 
 import com.google.common.base.Stopwatch;
-import com.google.common.collect.Iterables;
 import com.google.inject.Injector;
 
 /**
@@ -35,6 +34,7 @@ import com.google.inject.Injector;
  */
 public class TestProcessExecuter {
 	final private boolean inheritIO;
+	final boolean ignoreFailure;
 	final private long timeout;
 	final private TimeUnit timeoutUnit;
 
@@ -43,8 +43,10 @@ public class TestProcessExecuter {
 	final private ProcessExecutor processExecutor;
 
 	/** Constructor */
-	public TestProcessExecuter(Injector injector, boolean inheritIO, long timeout, TimeUnit unit) {
+	public TestProcessExecuter(Injector injector, boolean inheritIO, boolean ignoreFailure,
+			long timeout, TimeUnit unit) {
 		this.inheritIO = inheritIO;
+		this.ignoreFailure = ignoreFailure;
 		this.timeout = timeout;
 		this.timeoutUnit = unit;
 		NodeJsBinary nodeJsBinary = injector.getInstance(NodeJsBinary.class);
@@ -61,30 +63,31 @@ public class TestProcessExecuter {
 
 	/** Runs node with the given {@code runFile} in the given {@code workingDir} */
 	public ProcessResult runNodejs(Path workingDir, Map<String, String> environment, Path runFile, String... options) {
-		return joinProcess(() -> testProcessBuilder.nodejsRun(workingDir, environment, runFile, options));
+		return joinProcess("node", () -> testProcessBuilder.nodejsRun(workingDir, environment, runFile, options));
 	}
 
 	/** Runs npm OPTIONS in the given {@code workingDir} */
 	public ProcessResult npmRun(Path workingDir, Map<String, String> environment, String... options) {
-		return joinProcess(() -> testProcessBuilder.npmRun(workingDir, environment, options));
+		return joinProcess("npm", () -> testProcessBuilder.npmRun(workingDir, environment, options));
 	}
 
 	/** Runs yarn OPTIONS in the given {@code workingDir} */
 	public ProcessResult yarnRun(Path workingDir, Map<String, String> environment, String... options) {
-		return joinProcess(() -> testProcessBuilder.yarnRun(workingDir, environment, options));
+		return joinProcess("yarn", () -> testProcessBuilder.yarnRun(workingDir, environment, options));
 	}
 
 	/** Runs n4jsc.jar in the given {@code workingDir} with the given environment additions and options. */
 	public ProcessResult n4jscRun(Path workingDir, Map<String, String> environment, N4jscOptions options) {
-		return joinProcess(() -> testProcessBuilder.n4jscRun(workingDir, environment, options));
+		return joinProcess("n4jsc.jar", () -> testProcessBuilder.n4jscRun(workingDir, environment, options));
 	}
 
 	/** Runs the given executable in the given {@code workingDir} with the given environment additions and options. */
 	public ProcessResult run(Path workingDir, Map<String, String> environment, Path executable, String... options) {
-		return joinProcess(() -> testProcessBuilder.run(workingDir, environment, executable, options));
+		return joinProcess(executable.getFileName().toString(),
+				() -> testProcessBuilder.run(workingDir, environment, executable, options));
 	}
 
-	private ProcessResult joinProcess(Supplier<ProcessBuilder> pbs) {
+	private ProcessResult joinProcess(String executableName, Supplier<ProcessBuilder> pbs) {
 		ProcessBuilder processBuilder = pbs.get();
 		File workingDir = processBuilder.directory();
 		List<String> command = processBuilder.command();
@@ -98,7 +101,7 @@ public class TestProcessExecuter {
 			Process process = processBuilder.start();
 			org.eclipse.n4js.utils.process.ProcessResult processResult = processExecutor.execute(
 					process,
-					Iterables.getFirst(command, null),
+					executableName,
 					inheritIO ? OutputRedirection.REDIRECT : OutputRedirection.SUPPRESS,
 					timeout, timeoutUnit);
 			result.exitCode = process.exitValue();
@@ -113,9 +116,10 @@ public class TestProcessExecuter {
 
 		} finally {
 			result.duration = sw.stop().elapsed(TimeUnit.MILLISECONDS);
-
-			CliTools.trimOutputs(result, false);
 		}
+
+		CliTools.trimOutputs(result, false);
+		CliTools.checkForFailure(executableName, result, ignoreFailure);
 
 		return result;
 	}

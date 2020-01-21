@@ -18,8 +18,9 @@ import org.eclipse.n4js.cli.helper.CliTools;
 public class AbstractCliFrontendTest extends AbstractCliTest<String[]> {
 
 	@Override
-	public void doN4jsc(String[] args, boolean removeUsage, CliCompileResult result) {
+	public void doN4jsc(String[] args, boolean ignoreFailure, boolean removeUsage, CliCompileResult result) {
 		CliTools cliTools = new CliTools();
+		cliTools.setIgnoreFailure(ignoreFailure);
 		cliTools.callN4jscFrontendInprocess(args, removeUsage, result);
 	}
 
