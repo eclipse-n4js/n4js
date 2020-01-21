@@ -14,14 +14,13 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 
-import org.junit.Test;
-
 import org.eclipse.n4js.jsdoc.DocletParser;
 import org.eclipse.n4js.jsdoc.TagDictionary;
 import org.eclipse.n4js.jsdoc.dom.Doclet;
 import org.eclipse.n4js.jsdoc.dom.LineTag;
 import org.eclipse.n4js.jsdoc.dom.TagValue;
 import org.eclipse.n4js.jsdoc.dom.Text;
+import org.junit.Test;
 
 /**
  * General tests for LineTag. A lot depends on line tag specific parse method. Few tests below are just checking if
@@ -33,7 +32,7 @@ public class LineTagTest {
 	@SuppressWarnings("javadoc")
 	@Test
 	public void testSimpleLineTag() {
-		String in = "/** foo.\n * @stubLineTagTitle \n */";
+		String in = "/** foo.\n * @stubLineTagTitle\n */";
 		AbstractLineTagDefinition tag = new StubLineTagWithRegionDefinition("stubLineTagTitle");
 		DocletParser docletParser = new DocletParser(new TagDictionary<>(Arrays.asList(tag)),
 				new TagDictionary<AbstractInlineTagDefinition>());
@@ -46,7 +45,7 @@ public class LineTagTest {
 	@SuppressWarnings("javadoc")
 	@Test
 	public void testLineTagWithRegion() {
-		String in = "/** foo.\n * @stubLineTagTitle {@region value} \n */";
+		String in = "/** foo.\n * @stubLineTagTitle {@region value}\n */";
 		AbstractLineTagDefinition tag = new StubLineTagWithRegionDefinition("stubLineTagTitle");
 		DocletParser docletParser = new DocletParser(new TagDictionary<>(Arrays.asList(tag)),
 				new TagDictionary<AbstractInlineTagDefinition>());
@@ -60,7 +59,7 @@ public class LineTagTest {
 
 	@SuppressWarnings("javadoc")
 	@Test
-	public void testLineTagDescr() {
+	public void testLineTagDescrWithTrimmedSpace() {
 		String in = "/** foo."
 				+ "\n * @stubLineTagTitle  tag description. "
 				+ "\n */";
@@ -73,13 +72,31 @@ public class LineTagTest {
 		TagValue vDescription = lineTag.getValueByKey(StubLineTagWithRegionDefinition.DESCR);
 		Text tabDescription = (Text) vDescription.getContents().get(0);
 		String deString = tabDescription.getText();
-		assertEquals("tag description. ", deString);
+		assertEquals("tag description.", deString);
+	}
+
+	@SuppressWarnings("javadoc")
+	@Test
+	public void testLineTagDescrWithOutSpace() {
+		String in = "/** foo."
+				+ "\n * @stubLineTagTitle  tag description."
+				+ "\n */";
+		AbstractLineTagDefinition tag = new StubLineTagWithRegionDefinition("stubLineTagTitle");
+		DocletParser docletParser = new DocletParser(new TagDictionary<>(Arrays.asList(tag)),
+				new TagDictionary<AbstractInlineTagDefinition>());
+		Doclet doclet = docletParser.parse(in);
+
+		LineTag lineTag = doclet.getLineTags().get(0);
+		TagValue vDescription = lineTag.getValueByKey(StubLineTagWithRegionDefinition.DESCR);
+		Text tabDescription = (Text) vDescription.getContents().get(0);
+		String deString = tabDescription.getText();
+		assertEquals("tag description.", deString);
 	}
 
 	@SuppressWarnings("javadoc")
 	@Test
 	public void testLineTagWithRegionAndDescr() {
-		String in = "/** foo.\n * @stubLineTagTitle {@region value} tag description. \n */";
+		String in = "/** foo.\n * @stubLineTagTitle {@region value} tag description.\n */";
 		AbstractLineTagDefinition tag = new StubLineTagWithRegionDefinition("stubLineTagTitle");
 		DocletParser docletParser = new DocletParser(new TagDictionary<>(Arrays.asList(tag)),
 				new TagDictionary<AbstractInlineTagDefinition>());
@@ -93,7 +110,7 @@ public class LineTagTest {
 		TagValue vDescription = lineTag.getValueByKey(StubLineTagWithRegionDefinition.DESCR);
 		Text tabDescription = (Text) vDescription.getContents().get(0);
 		String deString = tabDescription.getText();
-		assertEquals("tag description. ", deString);
+		assertEquals("tag description.", deString);
 	}
 
 }

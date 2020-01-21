@@ -34,7 +34,7 @@ srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSamp
 
 ==== Description
 
-This is some documentation for a final field. *
+This is some documentation for a final field.
 
 
 
@@ -49,7 +49,7 @@ srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSamp
 
 ==== Description
 
-This is some documentation for a final getter. *
+This is some documentation for a final getter.
 
 
 ==== Semantics
@@ -72,7 +72,7 @@ srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSamp
 
 ==== Description
 
-This is some documentation for a final setter. *
+This is some documentation for a final setter.
 
 
 ==== Semantics
@@ -136,7 +136,7 @@ srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSamp
 
 ==== Description
 
-This is some documentation for a final method. *
+This is some documentation for a final method.
 
 
 ==== Semantics
