@@ -11,6 +11,7 @@
 package org.eclipse.n4js.ide.editor.contentassist.imports;
 
 /**
+ * Offsets of alias declaration in an import statement
  */
 class AliasLocation {
 	int baseOffset;
@@ -24,27 +25,27 @@ class AliasLocation {
 		this.alias = alias;
 	}
 
-	public int getBaseOffset() {
+	int getBaseOffset() {
 		return baseOffset;
 	}
 
-	public void setBaseOffset(int baseOffset) {
+	void setBaseOffset(int baseOffset) {
 		this.baseOffset = baseOffset;
 	}
 
-	public int getRelativeOffset() {
+	int getRelativeOffset() {
 		return relativeOffset;
 	}
 
-	public void setRelativeOffset(int relativeOffset) {
+	void setRelativeOffset(int relativeOffset) {
 		this.relativeOffset = relativeOffset;
 	}
 
-	public String getAlias() {
+	String getAlias() {
 		return alias;
 	}
 
-	public void setAlias(String alias) {
+	void setAlias(String alias) {
 		this.alias = alias;
 	}
 
