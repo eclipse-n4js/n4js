@@ -7,7 +7,8 @@
   "internalVersion": "2019-03-15T08:46:12Z",
   "description": "N4JS compiler and command line tools.",
   "scripts": {
-    "postinstall": "node ./npm-postinstall.js",
+    "postinstall": "node -r esm ./npm-postinstall.js",
+    "n4jsc": "node -r esm ./npm-n4jsc.js",
     "build": "./npm-build.sh",
     "test": "mocha -r esm tests"
   },
@@ -26,6 +27,8 @@
   },
   "dependencies": {
     "@n4jsd/debug": "<=4.1.*",
+    "follow-redirects": "1.9.0",
+    "decompress": "4.2.0",
     "debug": "~4.1.1",
     "esm": "3.2.25",
     "npmlog": "4.1.2",

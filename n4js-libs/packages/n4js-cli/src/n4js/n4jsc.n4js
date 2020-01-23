@@ -1,0 +1,229 @@
+/*
+ * Copyright (c) 2019 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+
+import * as path from "path";
+import * as childProcess from "child_process";
+import * as fs from "fs";
+
+import * as lib_decompress+ from "decompress";
+import * as log+ from "npmlog";
+import * as followRedirects+ from 'follow-redirects';
+
+const decompress  = (lib_decompress as any+) as {function(string, string): Promise<any,any>};
+
+
+
+const JAVA_DEFAULT = "java";
+const JRE_VERSION_START = "11.";
+const JRE_LOCAL_DIR = "jre";
+const JRE_URL_DIR = "https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-11.0.6%2B10/";
+const JRE_INFO_MAP = new Map<Platform, JreInfo>([
+    [Platform.aix,     {bin: "bin/java", name: "OpenJDK11U-jre_ppc64_aix_hotspot_11.0.6_10.tar.gz"}],
+    [Platform.darwin,  {bin: "Contents/Home/bin/java", name: "OpenJDK11U-jre_x64_mac_hotspot_11.0.6_10.tar.gz"}],
+    [Platform.freebsd, {bin: "bin/java", name: "OpenJDK11U-jre_x64_linux_hotspot_11.0.6_10.tar.gz"}],
+    [Platform.linux,   {bin: "bin/java", name: "OpenJDK11U-jre_x64_linux_hotspot_11.0.6_10.tar.gz"}],
+    [Platform.openbsd, {bin: "bin/java", name: "OpenJDK11U-jre_x64_linux_hotspot_11.0.6_10.tar.gz"}],
+    [Platform.sunos,   null],
+    [Platform.win32,   {bin: "bin/java", name: "OpenJDK11U-jre_x86-32_windows_hotspot_11.0.6_10.zip"}]]
+     as Iterable<Iterable2<Platform, JreInfo>>);
+
+
+@StringBased
+enum Platform {
+    aix,
+    darwin,
+    freebsd,
+    linux,
+    openbsd,
+    sunos,
+    win32
+}
+
+interface ~JreInfo {
+    public bin: string;
+    public name: string;
+}
+
+
+/**
+ * Runs N4jsc in a blocking fashion by executing n4jsc.jar with Java.
+ * In case the bin folder contains a JRE, it will be used. Otherwise,
+ * the globally available Java will be used.
+ * The arguments will be collected from process.argv
+ */
+export public async function runN4jscSync() {
+    const args = getArgs();
+
+    let exitCode : int = await runN4jsc(args);
+    if (exitCode !== 0) {
+        process.exit(exitCode);
+    }
+}
+
+/**
+ * Runs N4jsc by executing n4jsc.jar with Java and returns a promise.
+ * In case the bin folder contains a JRE, it will be used. Otherwise,
+ * the globally available Java will be used.
+ */
+export public function runN4jsc(args: string[]) : Promise<int, ?> {
+    let java = getJavaCommand();
+    let p: Promise<int, ?> = new Promise<int, int>((resolve, reject) => {
+        childProcess.spawn(java, args, {
+            stdio: "inherit",
+            env: Object.assign({ NODEJS_PATH: process.argv[0] }, process.env)
+        }).on("close", (code: int) => {
+            if (code === 0) {
+                resolve(0);
+            } else {
+                reject(code);
+            }
+        });
+    });
+    return p;
+}
+
+
+/**
+ * Returns arguments for the call to Java which where passed to this script.
+ * If not set by environment variable, a default Java maximum memory value of 4GB will be set.
+ */
+function getArgs() : Array<string> {
+    const args = ["-jar", path.resolve(__dirname, "../bin/n4jsc.jar")].concat(process.argv.slice(2));
+    if (!/-Xmx/.test(process.env.JAVA_TOOL_OPTIONS as string)) {
+        args.unshift("-Xmx4096m");
+    }
+    return args;
+}
+
+/**
+ * Returns Java command "java".
+ * In case the bin folder contains a JRE, this function returns the absolute path
+ * to the Java executable.
+ */
+function getJavaCommand() : string {
+    const jreInfo = JRE_INFO_MAP.get(process.platform as Platform);
+    if (jreInfo) {
+        const absJreDir = process.cwd() + "/" + JRE_LOCAL_DIR;
+
+        if (fs.existsSync(absJreDir)) {
+            const directories = fs.readdirSync(absJreDir, { withFileTypes: true }) as fs.Dirent[];
+            const dirNames = directories
+                .filter(dirent => dirent.isDirectory())
+                .map(dirent => dirent.name);
+
+            for (const dirName of dirNames) {
+                const absJreJavaPath = absJreDir + "/" + dirName + "/" + jreInfo.bin;
+                if (fs.existsSync(absJreJavaPath)) {
+                    log.info("n4js-cli", "Using JRE of n4jsc/bin/" + JRE_LOCAL_DIR + "/" + dirName);
+                    return absJreJavaPath;
+                }
+            }
+        }
+    }
+
+    return JAVA_DEFAULT;
+}
+
+export public async function ensureJRE() : void {
+    const version = getJavaVersion();
+    if (version && version.startsWith(JRE_VERSION_START)) {
+        log.info("n4js-cli", "JRE found.");
+        // JRE globally available in correct version
+        return;
+    }
+
+    const java = getJavaCommand();
+    if (java != JAVA_DEFAULT) {
+        // JRE already locally available
+        return;
+    }
+
+    // Download and extract JRE
+    const jreInfo = JRE_INFO_MAP.get(process.platform as Platform);
+    if (jreInfo) {
+        log.info("n4js-cli", "JRE not found. Downloading and extracting JRE into local folder.");
+        await downloadJRE(jreInfo);
+        extractJRE(jreInfo);
+
+    } else {
+        log.info("n4js-cli", "Platform not supported: " + process.platform);
+        log.info("n4js-cli", "Please install JRE11+ and make the call to 'bin/java' globally available.");
+    }
+}
+
+/**
+ * Returns the version of the installed Java.
+ */
+function getJavaVersion() : string {
+    const spawn = childProcess.spawnSync('java', ['-version']);
+    if (spawn.error) {
+        return spawn.error.toString();
+    }
+    if (spawn.stderr) {
+        const data = spawn.stderr.toString().split('\n')[0];
+        const javaVersion : string|boolean = new RegExp('java version').test(data) ? data.split(' ')[2].replace(/"/g, '') : false;
+        if (javaVersion !== false) {
+            // Java installed
+            return javaVersion as string;
+        } else {
+            // No Java installed
+            return null;
+        }
+    }
+    return null;
+}
+
+/**
+ * Downloads the AdoptOpenJDK JRE.
+ */
+async function downloadJRE(jreInfo: JreInfo) : Promise<any, any> {
+    const jreUrl = JRE_URL_DIR + jreInfo.name;
+    log.info("n4js-cli", "downloading JRE from " + jreUrl);
+
+    return new Promise<any, any>((resolve, reject) => {
+            followRedirects.https.get(jreUrl,
+                (response : any+) => {
+                    const file = fs.createWriteStream(jreInfo.name);
+                    response.pipe(file);
+                    log.info("n4js-cli", "receiving JRE ...");
+
+                    response.on("error",
+                        err => {
+                            log.error("n4js-cli", err);
+                            reject(err);
+                        });
+                    response.on("end",
+                        () => {
+                            log.info("n4js-cli", "JRE written to file n4js-cli/bin/" + jreInfo.name);
+                            resolve();
+                        });
+                });
+        });
+}
+
+/** 
+ * Extracts the downloaded JRE to the folder bin/JRE_LOCAL_DIR
+ */
+function extractJRE(jreInfo: JreInfo) {
+    const outputDir = process.cwd() + "/" + JRE_LOCAL_DIR;
+
+    log.info("n4js-cli", "Cleaning " + outputDir);
+    if (fs.existsSync(outputDir)) {
+        fs.rmdirSync(outputDir); 
+    }
+
+    decompress(jreInfo.name, outputDir)
+        .then(files => {
+            log.info("n4js-cli", "JRE extracted to " + outputDir);
+        });
+}
+

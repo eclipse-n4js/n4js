@@ -9,6 +9,8 @@
  *   NumberFour AG - Initial API and implementation
  */
 
+
+import {runN4jsc} from "n4jsc";
 import {resolve as pathResolve} from "path";
 import {spawn} from "child_process";
 import debug from "debug";
@@ -55,44 +57,33 @@ export public interface ~Options {
  * Returns a promise.
  */
 export public async function n4jsc(goal: Goal, dir: string, options: Options+ =) {
-    return new Promise<int, int>((resolve, reject) => {
-        log("goal=%s dir=%s options: %O", goal, dir, options);
-        const args = ["-jar", pathResolve(__dirname, "..", "bin", "n4jsc.jar"), goal, dir];
-        if (!/-Xmx/.test(process.env.JAVA_TOOL_OPTIONS as string)) {
-            args.unshift("-Xmx4096m");
+    log("goal=%s dir=%s options: %O", goal, dir, options);
+    const args = ["-jar", pathResolve(__dirname, "..", "bin", "n4jsc.jar"), goal, dir];
+    if (!/-Xmx/.test(process.env.JAVA_TOOL_OPTIONS as string)) {
+        args.unshift("-Xmx4096m");
+    }
+    const optionsFieldNames = new Set<string>(Options.n4type.dataFields().map(f => f.name));
+
+    for (const [key, value] of Object.entries(options)) {
+        if (!optionsFieldNames.has(key)) {
+            log("unknown option:", key, value);
+            continue;
         }
-        const optionsFieldNames = new Set<string>(Options.n4type.dataFields().map(f => f.name));
-
-        for (const [key, value] of Object.entries(options)) {
-            if (!optionsFieldNames.has(key)) {
-                log("unknown option:", key, value);
-                continue;
-            }
-            const isBool = typeof value === "boolean";
-            if (isBool && !value) {
-                continue; // skip
-            }
-            args.push((key.length > 1 ? "--" : "-") + key);
-            if (!isBool) {
-                args.push(String(value));
-            }
+        const isBool = typeof value === "boolean";
+        if (isBool && !value) {
+            continue; // skip
         }
-
-        if (log.enabled) {
-            args.push("--verbose");
+        args.push((key.length > 1 ? "--" : "-") + key);
+        if (!isBool) {
+            args.push(String(value));
         }
+    }
 
-        log("calling n4jsc:", args);
+    if (log.enabled) {
+        args.push("--verbose");
+    }
 
-        spawn("java", args, {
-            stdio: "inherit",
-            env: Object.assign({ NODEJS_PATH: process.argv[0] }, process.env)
-        }).on("close", (code: int) => {
-            if (code === 0) {
-                resolve(0);
-            } else {
-                reject(code);
-            }
-        });
-    });
+    log("calling n4jsc:", args);
+    
+    return runN4jsc(args);
 }

@@ -11,6 +11,8 @@
 /*eslint-disable no-console */
 "use strict";
 
+import {ensureJRE} from "./src-gen/n4jsc.js";
+
 const lib_path = require("path");
 const lib_fs = require("fs");
 const log = require("npmlog");
@@ -45,3 +47,5 @@ if (jarPath) {
         lib_fs.copyFileSync(jarPath, outPath);
     }
 }
+
+ensureJRE();
