@@ -20,7 +20,8 @@ Require-Bundle: org.eclipse.n4js.releng.utils;resolution:=optional,
  com.jcraft.jsch;bundle-version="0.1.53",
  org.slf4j.api,
  org.apache.commons.logging;resolution:=optional,
- org.eclipse.equinox.common;resolution:=optional
+ org.eclipse.equinox.common;resolution:=optional,
+ com.google.gson
 Export-Package: org.eclipse.n4js.fileextensions,
  org.eclipse.n4js.utils,
  org.eclipse.n4js.utils.beans,

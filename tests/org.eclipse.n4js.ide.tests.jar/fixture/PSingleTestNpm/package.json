@@ -2,7 +2,7 @@
 	"name": "PSingleTestNpm",
 	"version": "0.0.1",
 	"dependencies": {
-		"n4js-runtime": "test"
+		"n4js-runtime": ""
 	},
 	"n4js": {
 		"projectType": "library",

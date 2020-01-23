@@ -140,7 +140,7 @@ lerna exec -- cp package.json package.json_TEMP
 lerna exec -- 'jq -r ".repository |= {type: \"git\", url: \"https://github.com/eclipse/n4js/tree/master/n4js-libs/packages/$LERNA_PACKAGE_NAME\"}" package.json_TEMP > package.json'
 lerna exec -- rm package.json_TEMP
 
-echo "==== STEP 8/8: Now publishing with version ${PUBLISH_VERSION} and dist-tag ${DIST_TAG}"
+echo "==== STEP 8/8: Now publishing with version '${PUBLISH_VERSION}' and dist-tag '${DIST_TAG}' to registry ${NPM_REGISTRY}"
 lerna publish --loglevel warn --no-git-tag-version --no-push --registry="${NPM_REGISTRY}" --exact --yes --dist-tag="${DIST_TAG}" "${PUBLISH_VERSION}"
 
 echo "==== PUBLISH N4JS-LIBS - DONE"

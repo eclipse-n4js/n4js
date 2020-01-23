@@ -57,7 +57,6 @@ public class IncompleteApiImplementationJarTest extends AbstractCliJarTest {
 		Path fileA = project.resolve("src-gen/AT_IDE-1510_Missing_Method.js");
 
 		ProcessResult nodejsResult = runNodejs(workspace, fileA);
-		assertEquals(nodejsResult.toString(), 0, nodejsResult.getExitCode());
 		assertTrue(nodejsResult.toString(), nodejsResult.getStdOut()
 				.contains("Hello from Implementation one.x.impl::p.A.n4js !"));
 		assertTrue(nodejsResult.toString(), nodejsResult.getStdOut()

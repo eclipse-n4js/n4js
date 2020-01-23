@@ -24,6 +24,7 @@ import org.eclipse.n4js.json.JSON.JSONStringLiteral;
 import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
+import org.eclipse.n4js.utils.UtilN4;
 
 import com.google.common.collect.Lists;
 
@@ -40,9 +41,9 @@ public enum PackageJsonProperties {
 	/** Key of package.json property "private". */
 	PRIVATE("private", "Whether npm should refuse to publish this package.", JSONBooleanLiteral.class),
 	/** Key of package.json property "dependencies". */
-	DEPENDENCIES("dependencies", "Dependencies of this npm", JSONObject.class),
+	DEPENDENCIES(UtilN4.PACKAGE_JSON__DEPENDENCIES, "Dependencies of this npm", JSONObject.class),
 	/** Key of package.json property "devDependences". */
-	DEV_DEPENDENCIES("devDependencies", "Development dependencies of this npm", JSONObject.class),
+	DEV_DEPENDENCIES(UtilN4.PACKAGE_JSON__DEV_DEPENDENCIES, "Development dependencies of this npm", JSONObject.class),
 	/** Key of package.json property "main". */
 	MAIN("main", "Main module. Path is relative to package root"),
 	/** Key of package.json property "n4js". */

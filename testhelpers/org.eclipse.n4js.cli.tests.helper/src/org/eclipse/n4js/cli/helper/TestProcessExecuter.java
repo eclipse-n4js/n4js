@@ -11,8 +11,8 @@
 package org.eclipse.n4js.cli.helper;
 
 import java.io.File;
-import java.io.InputStream;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -23,6 +23,8 @@ import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.binaries.nodejs.YarnBinary;
 import org.eclipse.n4js.cli.N4jscOptions;
+import org.eclipse.n4js.utils.io.OutputRedirection;
+import org.eclipse.n4js.utils.process.ProcessExecutor;
 
 import com.google.common.base.Stopwatch;
 import com.google.inject.Injector;
@@ -31,15 +33,28 @@ import com.google.inject.Injector;
  * Test for checking whether plain JS files have the proper module export.
  */
 public class TestProcessExecuter {
+	final private boolean inheritIO;
+	final private boolean ignoreFailure;
+	final private long timeout;
+	final private TimeUnit timeoutUnit;
+
 	final private TestProcessBuilder testProcessBuilder;
 
+	final private ProcessExecutor processExecutor;
+
 	/** Constructor */
-	public TestProcessExecuter(Injector injector) {
+	public TestProcessExecuter(Injector injector, boolean inheritIO, boolean ignoreFailure,
+			long timeout, TimeUnit unit) {
+		this.inheritIO = inheritIO;
+		this.ignoreFailure = ignoreFailure;
+		this.timeout = timeout;
+		this.timeoutUnit = unit;
 		NodeJsBinary nodeJsBinary = injector.getInstance(NodeJsBinary.class);
 		NpmBinary npmBinary = injector.getInstance(NpmBinary.class);
 		YarnBinary yarnBinary = injector.getInstance(YarnBinary.class);
 		JavaBinary javaBinary = injector.getInstance(JavaBinary.class);
 		testProcessBuilder = new TestProcessBuilder(nodeJsBinary, npmBinary, yarnBinary, javaBinary);
+		processExecutor = injector.getInstance(ProcessExecutor.class);
 	}
 
 	interface ProcessSupplier {
@@ -48,38 +63,50 @@ public class TestProcessExecuter {
 
 	/** Runs node with the given {@code runFile} in the given {@code workingDir} */
 	public ProcessResult runNodejs(Path workingDir, Map<String, String> environment, Path runFile, String... options) {
-		return joinProcess(() -> testProcessBuilder.nodejsRun(workingDir, environment, runFile, options));
+		return joinProcess("node", () -> testProcessBuilder.nodejsRun(workingDir, environment, runFile, options));
 	}
 
 	/** Runs npm OPTIONS in the given {@code workingDir} */
 	public ProcessResult npmRun(Path workingDir, Map<String, String> environment, String... options) {
-		return joinProcess(() -> testProcessBuilder.npmRun(workingDir, environment, options));
+		return joinProcess("npm", () -> testProcessBuilder.npmRun(workingDir, environment, options));
 	}
 
 	/** Runs yarn OPTIONS in the given {@code workingDir} */
 	public ProcessResult yarnRun(Path workingDir, Map<String, String> environment, String... options) {
-		return joinProcess(() -> testProcessBuilder.yarnRun(workingDir, environment, options));
+		return joinProcess("yarn", () -> testProcessBuilder.yarnRun(workingDir, environment, options));
 	}
 
-	/** Runs n4jsc.jar in the given {@code workingDir} with the given environment additions and options */
+	/** Runs n4jsc.jar in the given {@code workingDir} with the given environment additions and options. */
 	public ProcessResult n4jscRun(Path workingDir, Map<String, String> environment, N4jscOptions options) {
-		return joinProcess(() -> testProcessBuilder.n4jscRun(workingDir, environment, options));
+		return joinProcess("n4jsc.jar", () -> testProcessBuilder.n4jscRun(workingDir, environment, options));
 	}
 
-	private ProcessResult joinProcess(Supplier<ProcessBuilder> pbs) {
+	/** Runs the given executable in the given {@code workingDir} with the given environment additions and options. */
+	public ProcessResult run(Path workingDir, Map<String, String> environment, Path executable, String... options) {
+		return joinProcess(executable.getFileName().toString(),
+				() -> testProcessBuilder.run(workingDir, environment, executable, options));
+	}
+
+	private ProcessResult joinProcess(String executableName, Supplier<ProcessBuilder> pbs) {
 		ProcessBuilder processBuilder = pbs.get();
 		File workingDir = processBuilder.directory();
+		List<String> command = processBuilder.command();
 
 		ProcessResult result = new ProcessResult();
-		result.command = String.join(" ", processBuilder.command());
+		result.command = String.join(" ", command);
 		result.workingDir = workingDir.toString();
 
 		Stopwatch sw = Stopwatch.createStarted();
 		try {
 			Process process = processBuilder.start();
-			result.exitCode = process.waitFor();
-			result.stdOut = getInputAsString(process.getInputStream());
-			result.errOut = getInputAsString(process.getErrorStream());
+			org.eclipse.n4js.utils.process.ProcessResult processResult = processExecutor.execute(
+					process,
+					executableName,
+					inheritIO ? OutputRedirection.REDIRECT : OutputRedirection.SUPPRESS,
+					timeout, timeoutUnit);
+			result.exitCode = process.exitValue();
+			result.stdOut = processResult.getStdOut();
+			result.errOut = processResult.getStdErr();
 
 		} catch (Exception e) {
 			result.exception = e;
@@ -89,18 +116,11 @@ public class TestProcessExecuter {
 
 		} finally {
 			result.duration = sw.stop().elapsed(TimeUnit.MILLISECONDS);
-
-			CliTools.trimOutputs(result, false);
 		}
+
+		CliTools.trimOutputs(result, false);
+		CliTools.checkForFailure(executableName, result, ignoreFailure);
 
 		return result;
 	}
-
-	private String getInputAsString(InputStream is) {
-		try (java.util.Scanner scanner = new java.util.Scanner(is)) {
-			String string = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
-			return string.trim();
-		}
-	}
-
 }

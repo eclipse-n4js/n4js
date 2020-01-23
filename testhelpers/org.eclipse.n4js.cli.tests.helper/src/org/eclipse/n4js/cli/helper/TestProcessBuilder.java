@@ -29,6 +29,8 @@ import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.binaries.nodejs.YarnBinary;
 import org.eclipse.n4js.cli.N4jscOptions;
 
+import com.google.common.base.Optional;
+
 /**
  * Concrete runner, i.e. runner implementation for node.js engine.
  */
@@ -50,7 +52,7 @@ public class TestProcessBuilder {
 		this.javaBinary = javaBinary;
 	}
 
-	/** @return a started process: {@code node -r esm fileToRun} */
+	/** @return a process: {@code node -r esm fileToRun} */
 	public ProcessBuilder nodejsRun(Path workingDirectory, Map<String, String> environment, Path fileToRun,
 			String[] options) {
 
@@ -58,22 +60,29 @@ public class TestProcessBuilder {
 		return createProcessBuilder(workingDirectory, cmd, environment);
 	}
 
-	/** @return a started process: {@code npm install} */
+	/** @return a process: {@code npm install} */
 	public ProcessBuilder npmRun(Path workingDirectory, Map<String, String> environment, String[] options) {
 		final String[] cmd = createCommandNpmRun(environment, options);
 		return createProcessBuilder(workingDirectory, cmd, environment);
 	}
 
-	/** @return a started process: {@code yarn install} */
+	/** @return a process: {@code yarn install} */
 	public ProcessBuilder yarnRun(Path workingDirectory, Map<String, String> environment, String[] options) {
 		final String[] cmd = createCommandYarnRun(environment, options);
 		return createProcessBuilder(workingDirectory, cmd, environment);
 	}
 
-	/** @return a started java Process {@code java -jar n4jsc.jar OPTIONS} */
+	/** @return a Java process: {@code java -jar n4jsc.jar OPTIONS} */
 	public ProcessBuilder n4jscRun(Path workingDirectory, Map<String, String> environment, N4jscOptions options) {
 		Binary.inheritNodeJsPathEnvVariable(environment); // necessary?
 		final String[] cmd = createCommandN4jscRun(environment, options);
+		return createProcessBuilder(workingDirectory, cmd, environment);
+	}
+
+	/** @return a process for running the given executable. */
+	public ProcessBuilder run(Path workingDirectory, Map<String, String> environment, Path executable,
+			String[] options) {
+		final String[] cmd = createCommand(workingDirectory, environment, executable, options);
 		return createProcessBuilder(workingDirectory, cmd, environment);
 	}
 
@@ -89,18 +98,18 @@ public class TestProcessBuilder {
 		optionList.addAll(Arrays.asList(options));
 		String[] cmdOptions = optionList.toArray(String[]::new);
 
-		List<String> cmd = getCommands(output_env, nodeJsBinary.getBinaryAbsolutePath(), cmdOptions);
+		List<String> cmd = getCommands(output_env, nodeJsBinary, cmdOptions);
 
 		return cmd.toArray(new String[0]);
 	}
 
 	private String[] createCommandNpmRun(Map<String, String> output_env, String[] options) {
-		List<String> cmd = getCommands(output_env, npmBinary.getBinaryAbsolutePath(), options);
+		List<String> cmd = getCommands(output_env, npmBinary, options);
 		return cmd.toArray(new String[0]);
 	}
 
 	private String[] createCommandYarnRun(Map<String, String> output_env, String[] options) {
-		List<String> cmd = getCommands(output_env, yarnBinary.getBinaryAbsolutePath(), options);
+		List<String> cmd = getCommands(output_env, yarnBinary, options);
 		return cmd.toArray(new String[0]);
 	}
 
@@ -114,20 +123,36 @@ public class TestProcessBuilder {
 		optionList.addAll(options.toArgs());
 		String[] cmdOptions = optionList.toArray(String[]::new);
 
-		List<String> cmd = getCommands(output_env, javaBinary.getBinaryAbsolutePath(), cmdOptions);
+		List<String> cmd = getCommands(output_env, javaBinary, cmdOptions);
 		return cmd.toArray(new String[0]);
 	}
 
-	private List<String> getCommands(Map<String, String> output_env, String binaryFileName, String... options) {
-		File binaryFile = new File(binaryFileName);
+	private String[] createCommand(Path workingDirectory, Map<String, String> output_env,
+			Path executable, String[] options) {
+		List<String> cmd = getCommands(Optional.of(workingDirectory), output_env, executable, options);
+		return cmd.toArray(new String[0]);
+	}
 
-		String additionalPath = binaryFile.getParent();
+	private List<String> getCommands(Map<String, String> output_env, Binary binary, String... options) {
+		String binaryPathAndName = binary.getBinaryAbsolutePath();
+		Path binaryPath = new File(binaryPathAndName).toPath();
+		return getCommands(Optional.absent(), output_env, binaryPath, options);
+	}
+
+	private List<String> getCommands(Optional<Path> workingDirectory, Map<String, String> output_env, Path executable,
+			String... options) {
+
+		Path executableAbsolute = workingDirectory.isPresent()
+				? workingDirectory.get().resolve(executable)
+				: executable.toAbsolutePath();
+
+		String additionalPath = executableAbsolute.getParent().toString();
 		output_env.put(Binary.PATH, additionalPath);
 
 		ArrayList<String> cmd = new ArrayList<>();
 
 		// start command line with absolute path to binary
-		String npmPath = "\"" + binaryFileName + "\"";
+		String npmPath = "\"" + executableAbsolute.toString() + "\"";
 
 		if (isWindows()) {
 			cmd.addAll(Arrays.asList(NodeYarnProcessBuilder.WIN_SHELL_COMAMNDS));
