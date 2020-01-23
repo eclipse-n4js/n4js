@@ -20,33 +20,32 @@ import org.eclipse.n4js.cli.N4jscOptions;
 abstract public class AbstractCliTest<ArgType> {
 
 	/** Invokes the starting method of this test class */
-	abstract public void doN4jsc(ArgType arg, boolean removeUsage, CliCompileResult cliResult);
+	abstract protected void doN4jsc(ArgType arg, boolean ignoreFailure, boolean removeUsage,
+			CliCompileResult cliResult);
 
 	/** @return instance of {@link CliCompileResult} which is filled with values later on */
 	protected CliCompileResult createResult() {
 		return new CliCompileResult();
 	}
 
-	/** Convenience version of {@link #n4jsc(Object, Integer)} with exist code == 0 */
+	/** Convenience version of {@link #n4jsc(Object, int)} with exit code == 0. */
 	protected CliCompileResult n4jsc(ArgType args) {
-		return n4jsc(args, null);
+		return n4jsc(args, 0);
 	}
 
-	/** Convenience version of {@link #n4jsc(Object, Integer, boolean)} with exist code == 0 and removeUsage == true */
-	protected CliCompileResult n4jsc(ArgType args, Integer exitCode) {
+	/** Convenience version of {@link #n4jsc(Object, int, boolean)} with removeUsage == true. */
+	protected CliCompileResult n4jsc(ArgType args, int exitCode) {
 		return n4jsc(args, exitCode, true);
 	}
 
 	/**
-	 * Calls main entry point of N4jsc with the given args. Checks that the given exit code equals the actual exit code
-	 * of the invocation. Removes {@link N4jscOptions#USAGE} text if desired.
+	 * Calls main entry point of N4jsc with the given args. Checks that the actual exit code of the invocation the given
+	 * exit code, but no other assertions are performed. Removes {@link N4jscOptions#USAGE} text if desired.
 	 */
-	protected CliCompileResult n4jsc(ArgType args, Integer exitCode, boolean removeUsage) {
+	protected CliCompileResult n4jsc(ArgType args, int exitCode, boolean removeUsage) {
 		CliCompileResult cliResult = createResult();
-		doN4jsc(args, removeUsage, cliResult);
-		if (exitCode != null) {
-			assertEquals(cliResult.toString(), (int) exitCode, cliResult.getExitCode());
-		}
+		doN4jsc(args, true, removeUsage, cliResult);
+		assertEquals(cliResult.toString(), exitCode, cliResult.getExitCode());
 		return cliResult;
 	}
 

@@ -55,8 +55,7 @@ public class InstallCompileRunN4jscExternalWithSingleProjectCompileTest extends 
 		final String projectToCompile = packages + "/external.project";
 		final String fileToRun = projectToCompile + "/src-gen/Main.js";
 
-		ProcessResult yarnInstallResult = yarnInstall(workspace.toPath());
-		assertEquals(yarnInstallResult.toString(), 0, yarnInstallResult.getExitCode());
+		yarnInstall(workspace.toPath());
 
 		CliCompileResult cliResult = n4jsc(COMPILE(workspace));
 		assertEquals(cliResult.toString(), 5, cliResult.getTranspiledFilesCount());

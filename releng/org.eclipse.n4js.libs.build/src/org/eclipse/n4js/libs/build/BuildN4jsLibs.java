@@ -25,11 +25,9 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.cli.N4jscMain;
 import org.eclipse.n4js.cli.helper.CliCompileResult;
 import org.eclipse.n4js.cli.helper.CliTools;
-import org.eclipse.n4js.cli.helper.ProcessResult;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.utils.io.FileDeleter;
 
-import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
 
 /**
@@ -94,27 +92,18 @@ public class BuildN4jsLibs implements IWorkflowComponent {
 	}
 
 	private static void compile(Path n4jsLibsRootPath) {
-		CliCompileResult compileResult = new CliCompileResult();
 		try {
 			CliTools cliTools = new CliTools();
-			cliTools.setIsMirrorSystemOut(true);
+			cliTools.setInheritIO(true);
 			cliTools.setEnvironmentVariable("NPM_TOKEN", "dummy");
 
-			ProcessResult installResult = cliTools.yarnInstall(n4jsLibsRootPath);
-			Preconditions.checkState(installResult.getExitCode() == 0, installResult);
+			cliTools.yarnInstall(n4jsLibsRootPath);
 
+			CliCompileResult compileResult = new CliCompileResult();
 			cliTools.callN4jscInprocess(COMPILE(n4jsLibsRootPath.toFile()), false, compileResult);
 
-			Preconditions.checkState(compileResult.getExitCode() == 0, "Error during n4jsc call");
-			Preconditions.checkState(compileResult.getErrs() == 0, "Errors in compiled sources");
-
-		} catch (IllegalStateException e) {
-			// comes from Preconditions.checkState()
-			println(e.toString());
-
 		} catch (Exception e) {
-			println("ERROR during building libs");
-			println(e.toString());
+			println("EXCEPTION while compiling n4js-libs:");
 			e.printStackTrace();
 
 			Throwable root = Throwables.getRootCause(e);
@@ -122,6 +111,8 @@ public class BuildN4jsLibs implements IWorkflowComponent {
 				println("Root cause:");
 				root.printStackTrace();
 			}
+
+			Throwables.throwIfUnchecked(e);
 			throw new RuntimeException(e);
 		}
 	}

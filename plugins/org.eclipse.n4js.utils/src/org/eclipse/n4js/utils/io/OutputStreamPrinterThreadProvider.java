@@ -8,10 +8,10 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.utils.process;
+package org.eclipse.n4js.utils.io;
 
-import static org.eclipse.n4js.utils.process.OutputStreamPrinterThread.OutputStreamType.STD_ERR;
-import static org.eclipse.n4js.utils.process.OutputStreamPrinterThread.OutputStreamType.STD_OUT;
+import static org.eclipse.n4js.utils.io.OutputStreamPrinterThread.OutputStreamType.STD_ERR;
+import static org.eclipse.n4js.utils.io.OutputStreamPrinterThread.OutputStreamType.STD_OUT;
 
 import java.io.OutputStream;
 

@@ -16,10 +16,12 @@ import org.eclipse.n4js.ide.server.FileBasedWorkspaceInitializer;
 import org.eclipse.n4js.ide.server.N4JSOutputConfigurationProvider;
 import org.eclipse.n4js.ide.server.N4JSProjectDescriptionFactory;
 import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
+import org.eclipse.n4js.ide.server.codeActions.N4JSCodeActionService;
 import org.eclipse.n4js.ide.server.hover.N4JSHoverService;
 import org.eclipse.n4js.ide.server.symbol.N4JSDocumentSymbolMapper;
 import org.eclipse.n4js.ide.server.symbol.N4JSHierarchicalDocumentSymbolService;
 import org.eclipse.n4js.ide.validation.N4JSDiagnosticConverter;
+import org.eclipse.n4js.ide.xtext.editor.contentassist.XIdeContentProposalAcceptor;
 import org.eclipse.n4js.ide.xtext.server.DefaultBuildRequestFactory;
 import org.eclipse.n4js.ide.xtext.server.IBuildRequestFactory;
 import org.eclipse.n4js.ide.xtext.server.WorkspaceAwareCanLoadFromDescriptionHelper;
@@ -32,8 +34,10 @@ import org.eclipse.n4js.internal.lsp.FileSystemScanner;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
 import org.eclipse.xtext.generator.IGenerator;
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
+import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalAcceptor;
 import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalProvider;
 import org.eclipse.xtext.ide.server.ILanguageServerShutdownAndExitHandler;
+import org.eclipse.xtext.ide.server.codeActions.ICodeActionService2;
 import org.eclipse.xtext.ide.server.hover.HoverService;
 import org.eclipse.xtext.ide.server.symbol.DocumentSymbolMapper;
 import org.eclipse.xtext.ide.server.symbol.HierarchicalDocumentSymbolService;
@@ -43,7 +47,7 @@ import org.eclipse.xtext.validation.IDiagnosticConverter;
 /**
  * Use this class to register ide components.
  */
-@SuppressWarnings({ "javadoc" })
+@SuppressWarnings({ "restriction", "javadoc" })
 public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public ClassLoader bindClassLoaderToInstance() {
@@ -112,6 +116,15 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public Class<? extends IFileSystemScanner> bindFileSystemScanner() {
 		return FileSystemScanner.class;
+	}
+
+	public Class<? extends IdeContentProposalAcceptor> bindIdeContentProposalAcceptor() {
+		return XIdeContentProposalAcceptor.class;
+	}
+
+	/** TODO: Xtext: should not restrict access here */
+	public Class<? extends ICodeActionService2> bindICodeActionService2() {
+		return N4JSCodeActionService.class;
 	}
 
 }

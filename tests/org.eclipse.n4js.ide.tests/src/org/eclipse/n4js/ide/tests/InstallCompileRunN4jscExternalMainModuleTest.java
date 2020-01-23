@@ -57,8 +57,7 @@ public class InstallCompileRunN4jscExternalMainModuleTest extends AbstractCliCom
 		final String packages = wsRoot + "/packages";
 		final String fileToRun = packages + "/external.project.mm/src-gen/Main.js";
 
-		ProcessResult yarnInstallResult = yarnInstall(workspace.toPath());
-		assertEquals(yarnInstallResult.toString(), 0, yarnInstallResult.getExitCode());
+		yarnInstall(workspace.toPath());
 
 		N4jscOptions options = COMPILE(workspace);
 		CliCompileResult cliResult = n4jsc(options);

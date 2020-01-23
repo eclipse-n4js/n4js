@@ -22,6 +22,8 @@ import org.eclipse.xtext.validation.CheckType;
 import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.validation.Issue.IssueImpl;
 
+import com.google.common.base.Strings;
+
 /**
  * Converter for Xtext {@link Issue}s and LSP {@link Diagnostic}s
  */
@@ -38,7 +40,7 @@ public class DiagnosticIssueConverter {
 		Diagnostic result = new Diagnostic();
 
 		result.setCode(issue.getCode());
-		result.setMessage(issue.getMessage());
+		result.setMessage(Strings.nullToEmpty(issue.getMessage()));
 		result.setSeverity(toSeverity(issue.getSeverity()));
 
 		Position start = new Position(toZeroBasedInt(issue.getLineNumber()), toZeroBasedInt(issue.getColumn()));

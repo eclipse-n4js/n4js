@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.utils.process;
+package org.eclipse.n4js.utils.io;
 
 /**
  * Used to control redirection of the captured process outputs.

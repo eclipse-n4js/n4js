@@ -474,6 +474,9 @@ Contributors:
 
 					</executions>
 					<configuration>
+						<excludes>
+							<exclude>**/*InSuite.java</exclude>
+						</excludes>
 						<!-- argLine needs to be one line, if you atoformat line break will break tests -->
 						<argLine>${memoryArgs} ${encodingArgs} ${coverageAgent} ${loggingArgs}</argLine>
 						<testSourceDirectory>${project.basedir}/src</testSourceDirectory>

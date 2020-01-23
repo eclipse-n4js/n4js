@@ -12,8 +12,8 @@ package org.eclipse.n4js.external;
 
 import static com.google.common.base.Throwables.getStackTraceAsString;
 import static java.lang.System.lineSeparator;
-import static org.eclipse.n4js.utils.process.OutputStreamPrinterThread.OutputStreamType.STD_ERR;
-import static org.eclipse.n4js.utils.process.OutputStreamPrinterThread.OutputStreamType.STD_OUT;
+import static org.eclipse.n4js.utils.io.OutputStreamPrinterThread.OutputStreamType.STD_ERR;
+import static org.eclipse.n4js.utils.io.OutputStreamPrinterThread.OutputStreamType.STD_OUT;
 
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
@@ -22,8 +22,8 @@ import java.util.Date;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.n4js.utils.collections.Arrays2;
-import org.eclipse.n4js.utils.process.OutputRedirection;
-import org.eclipse.n4js.utils.process.OutputStreamProvider;
+import org.eclipse.n4js.utils.io.OutputRedirection;
+import org.eclipse.n4js.utils.io.OutputStreamProvider;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;

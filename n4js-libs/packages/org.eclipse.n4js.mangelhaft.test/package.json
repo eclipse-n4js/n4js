@@ -9,7 +9,7 @@
   "private": true,
   "repository": {
     "type": "git",
-    "url": "https://github.com/NumberFour/n4js"
+    "url": "https://github.com/eclipse/n4js"
   },
   "description": "Mangelhaft framework tests.",
   "keywords": [
