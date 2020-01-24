@@ -12,7 +12,6 @@
 
 import {runN4jsc} from "n4jsc";
 import {resolve as pathResolve} from "path";
-import {spawn} from "child_process";
 import debug from "debug";
 const log = debug("n4js-cli");
 

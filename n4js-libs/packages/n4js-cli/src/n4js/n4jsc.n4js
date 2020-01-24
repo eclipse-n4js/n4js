@@ -92,12 +92,16 @@ export public function runN4jsc(args: string[]) : Promise<int, ?> {
 }
 
 
+export public function getN4jscPath(): string {
+    return path.resolve(__dirname, "..", "bin", "n4jsc.jar");
+}
+
 /**
  * Returns arguments for the call to Java which where passed to this script.
  * If not set by environment variable, a default Java maximum memory value of 4GB will be set.
  */
 function getArgs() : Array<string> {
-    const args = ["-jar", path.resolve(__dirname, "../bin/n4jsc.jar")].concat(process.argv.slice(2));
+    const args = ["-jar", getN4jscPath()].concat(process.argv.slice(2));
     if (!/-Xmx/.test(process.env.JAVA_TOOL_OPTIONS as string)) {
         args.unshift("-Xmx4096m");
     }

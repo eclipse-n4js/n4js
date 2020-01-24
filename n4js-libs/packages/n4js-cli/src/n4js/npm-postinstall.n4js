@@ -11,8 +11,7 @@
 /*eslint-disable no-console */
 "use strict";
 
-import {ensureJRE} from "n4jsc";
-import * as lib_path from "path";
+import * as lib_n4jsc from "n4jsc";
 import * as lib_fs from "fs";
 import * as lib_http from "n4js-runtime-node/http";
 import * as lib_https from "n4js-runtime-node/https";
@@ -24,7 +23,7 @@ const jarPath = env.N4JSC_JAR as string;
 
 
 if (jarPath) {
-    const outPath = lib_path.resolve(__dirname, "bin", "n4jsc.jar");
+    const outPath = lib_n4jsc.getN4jscPath();
     log.info(`${env.npm_package_name}@${env.npm_package_version}`, `Replacing ${outPath} with ${jarPath}`);
 
     if (lib_fs.existsSync(outPath)) {
@@ -59,4 +58,4 @@ if (jarPath) {
     }
 }
 
-ensureJRE();
+lib_n4jsc.ensureJRE();
