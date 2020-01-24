@@ -55,13 +55,14 @@ export public interface ~Options {
  *
  * Returns a promise.
  */
-export public async function n4jsc(goal: Goal, dir: string, options: Options+ =) {
+export public async function n4jsc(goal: Goal, dir: string=, options: Options+ =) {
     log("goal=%s dir=%s options: %O", goal, dir, options);
-    const args = ["-jar", pathResolve(__dirname, "..", "bin", "n4jsc.jar"), goal, dir];
-    if (!/-Xmx/.test(process.env.JAVA_TOOL_OPTIONS as string)) {
-        args.unshift("-Xmx4096m");
-    }
+    const args = ["-jar", pathResolve(__dirname, "..", "bin", "n4jsc.jar"), goal];
     const optionsFieldNames = new Set<string>(Options.n4type.dataFields().map(f => f.name));
+
+    if (dir) {
+        args.push(dir);
+    }
 
     for (const [key, value] of Object.entries(options)) {
         if (!optionsFieldNames.has(key)) {

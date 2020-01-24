@@ -76,6 +76,11 @@ export public async function runN4jscSync() {
  */
 export public function runN4jsc(args: string[]) : Promise<int, ?> {
     let java = getJavaCommand();
+
+    if (!/-Xmx/.test(process.env.JAVA_TOOL_OPTIONS as string)) {
+        args.unshift("-Xmx4096m");
+    }
+
     let p: Promise<int, ?> = new Promise<int, int>((resolve, reject) => {
         childProcess.spawn(java, args, {
             stdio: "inherit",
@@ -102,9 +107,6 @@ export public function getN4jscPath(): string {
  */
 function getArgs() : Array<string> {
     const args = ["-jar", getN4jscPath()].concat(process.argv.slice(2));
-    if (!/-Xmx/.test(process.env.JAVA_TOOL_OPTIONS as string)) {
-        args.unshift("-Xmx4096m");
-    }
     return args;
 }
 
