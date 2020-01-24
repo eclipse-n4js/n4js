@@ -1,2 +1,2 @@
-!bin
-bin/n4jsc.jar
+!src-gen
+src-gen/*.map
