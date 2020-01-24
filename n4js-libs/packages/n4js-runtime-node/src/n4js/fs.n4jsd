@@ -56,6 +56,11 @@ export external public class Dirent {
     public isSocket(): boolean;
     public isSymbolicLink(): boolean;
 }
+export public interface ~RmdirOptions {
+    public maxRetries?: number;
+    public recursive?: boolean;
+    public retryDelay?: number;
+}
 
 //OSX only methods. Cannot be uses on linux etc.
 //export external public function lchown(string path, number uid, number gid, {function(Error?):void}? callback): void;
@@ -123,8 +128,8 @@ export external public function unlink(path: string, callback: {function(Error=)
 export external public function unlinkSync(path: string): void;
 
 @Promisifiable
-export external public function rmdir(path: string, callback: {function(Error=):void}=): void;
-export external public function rmdirSync(path: string): void;
+export external public function rmdir(path: string, options: RmdirOptions=, callback: {function(Error=):void}=): void;
+export external public function rmdirSync(path: string, options: RmdirOptions=): void;
 
 @Promisifiable
 export external public function mkdir(path: string, mode: union{number, string}=, callback: {function(Error=):void}=): void;
