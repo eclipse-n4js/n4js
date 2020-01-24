@@ -11,13 +11,17 @@
 /*eslint-disable no-console */
 "use strict";
 
-import {ensureJRE} from "./src-gen/n4jsc.js";
+import {ensureJRE} from "n4jsc";
+import * as lib_path from "path";
+import * as lib_fs from "fs";
+import * as lib_http from "n4js-runtime-node/http";
+import * as lib_https from "n4js-runtime-node/https";
+import * as log+ from "npmlog";
 
-const lib_path = require("path");
-const lib_fs = require("fs");
-const log = require("npmlog");
+
 const env = process.env;
-const jarPath = env.N4JSC_JAR;
+const jarPath = env.N4JSC_JAR as string;
+
 
 if (jarPath) {
     const outPath = lib_path.resolve(__dirname, "bin", "n4jsc.jar");
@@ -30,17 +34,24 @@ if (jarPath) {
     // minimal dep just against wget
     if (/^https?:\/\//i.test(jarPath)) {
         const stream = lib_fs.createWriteStream(outPath);
-        const download = (url) => {
-            require(/^http:\/\//i.test(url) ? "http" : "https").get(url, resp => {
+        const download = (url: string) => {
+
+            const callback = (resp: lib_http.IncomingMessage) => {
                 if (Math.trunc(resp.statusCode /100) === 3 && resp.headers.location) { // redirect
-                    download(resp.headers.location);
+                    download(resp.headers.location as string);
                 } else {
                     if (resp.statusCode !== 200) {
                         throw new Error(`Request on ${url} failed: ${resp.statusCode}`);
                     }
                     resp.pipe(stream);
                 }
-            });
+            };
+
+            if (/^http:\/\//i.test(url)) {
+                lib_http.get(url, undefined, callback);
+            } else {
+                lib_https.get(url, undefined, callback);
+            }
         };
         download(jarPath);
     } else {
