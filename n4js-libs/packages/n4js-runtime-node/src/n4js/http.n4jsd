@@ -13,10 +13,46 @@ import * as events from "events";
 import * as net from "net";
 import * as stream from "stream";
 
+
+export external public const METHODS: string[];
+export external public const STATUS_CODES: Object;
+
+export external public const maxHeaderSize: number;
+export external public let globalAgent: Agent;
+
+export external public function createServer(options: any, requestListener: {function():void}=): Server;
+export external public function get(url: string, options: RequestOptions=, callback: {function(IncomingMessage):void}=): ClientRequest;
+export external public function request(url: string, options: RequestOptions=, callback: {function(IncomingMessage):void}=): ClientRequest;
+
+export external public class RequestOptions {
+    public agent: Agent|boolean;
+    public auth: string;
+    public createConnection: Function;
+    public defaultPort: number;
+    public family: number;
+    public headers: Object;
+    public host: string;
+    public hostname: string;
+    public localAddress: string;
+    public lookup: Function;
+    public maxHeaderSize: number;
+    public method: string;
+    public path: string;
+    public port: number;
+    public protocol: string;
+    public setHost: boolean;
+    public socketPath: string;
+    public timeout: number;
+}
+
 export external public class Server extends events.EventEmitter {
     public listen(port: number, hostname: string=, backlog: number=, callback: Function=): Server;
-    public close(cb: any=): Server;
+    public setTimeout(msecs: number, callback: Function=): Server;
+    public close(callback: any=): Server;
     public address(): ~Object with { port: number; family: string; address: string; };
+    public timeout: number;
+    public keepAliveTimeout: number;
+    public headersTimeout: number;
     public maxHeadersCount: number;
 }
 export external public class ServerResponse extends events.EventEmitter implements stream.IWritableStream {
@@ -52,7 +88,7 @@ export external public class ClientRequest implements events.IEventEmitter, stre
 }
 export external public class IncomingMessage implements events.IEventEmitter, stream.IReadableStream {
     public httpVersion: string;
-    public headers: any;
+    public headers: any+;
     public rawHeaders: string[];
     public trailers: any;
     public rawTrailers: any;
