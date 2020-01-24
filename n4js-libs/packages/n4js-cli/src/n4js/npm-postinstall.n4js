@@ -18,13 +18,13 @@ import * as lib_https from "n4js-runtime-node/https";
 import * as log+ from "npmlog";
 
 
-const env = process.env;
-const jarPath = env.N4JSC_JAR as string;
+const NPM_NAME = `${process.env.npm_package_name}@${process.env.npm_package_version}`;
+const jarPath = process.env.N4JSC_JAR as string;
 
 
 if (jarPath) {
     const outPath = lib_n4jsc.getN4jscPath();
-    log.info(`${env.npm_package_name}@${env.npm_package_version}`, `Replacing ${outPath} with ${jarPath}`);
+    log.info(NPM_NAME, `Replacing ${outPath} with ${jarPath}`);
 
     if (lib_fs.existsSync(outPath)) {
         lib_fs.unlinkSync(outPath); // remove to notice any problems

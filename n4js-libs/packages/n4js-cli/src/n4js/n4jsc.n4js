@@ -22,6 +22,7 @@ const decompress  = (lib_decompress as any+) as {function(string, string): Promi
 
 
 
+const NPM_NAME = `${process.env.npm_package_name}@${process.env.npm_package_version}`;
 const JAVA_DEFAULT = "java";
 const JRE_VERSION_START = "11.";
 const JRE_LOCAL_DIR = "jre";
@@ -129,7 +130,7 @@ function getJavaCommand() : string {
             for (const dirName of dirNames) {
                 const absJreJavaPath = absJreDir + "/" + dirName + "/" + jreInfo.bin;
                 if (fs.existsSync(absJreJavaPath)) {
-                    log.info("n4js-cli", "Using JRE of n4jsc/bin/" + JRE_LOCAL_DIR + "/" + dirName);
+                    log.info(NPM_NAME, "Using JRE of n4jsc/bin/" + JRE_LOCAL_DIR + "/" + dirName);
                     return absJreJavaPath;
                 }
             }
@@ -142,7 +143,7 @@ function getJavaCommand() : string {
 export public async function ensureJRE() : void {
     const version = getJavaVersion();
     if (version && version.startsWith(JRE_VERSION_START)) {
-        log.info("n4js-cli", "JRE found.");
+        log.info(NPM_NAME, "JRE found.");
         // JRE globally available in correct version
         return;
     }
@@ -156,13 +157,13 @@ export public async function ensureJRE() : void {
     // Download and extract JRE
     const jreInfo = JRE_INFO_MAP.get(process.platform as Platform);
     if (jreInfo) {
-        log.info("n4js-cli", "JRE not found. Downloading and extracting JRE into local folder.");
+        log.info(NPM_NAME, "JRE not found. Downloading and extracting JRE into local folder.");
         await downloadJRE(jreInfo);
         extractJRE(jreInfo);
 
     } else {
-        log.info("n4js-cli", "Platform not supported: " + process.platform);
-        log.info("n4js-cli", "Please install JRE11+ and make the call to 'bin/java' globally available.");
+        log.info(NPM_NAME, "Platform not supported: " + process.platform);
+        log.info(NPM_NAME, "Please install JRE11+ and make the call to 'bin/java' globally available.");
     }
 }
 
@@ -193,14 +194,14 @@ function getJavaVersion() : string {
  */
 async function downloadJRE(jreInfo: JreInfo) : Promise<any, any> {
     const jreUrl = JRE_URL_DIR + jreInfo.name;
-    log.info("n4js-cli", "downloading JRE from " + jreUrl);
+    log.info(NPM_NAME, "downloading JRE from " + jreUrl);
 
     return new Promise<any, any>((resolve, reject) => {
             followRedirects.https.get(jreUrl,
                 (response : any+) => {
                     const file = fs.createWriteStream(jreInfo.name);
                     response.pipe(file);
-                    log.info("n4js-cli", "receiving JRE ...");
+                    log.info(NPM_NAME, "receiving JRE ...");
 
                     response.on("error",
                         err => {
@@ -209,7 +210,7 @@ async function downloadJRE(jreInfo: JreInfo) : Promise<any, any> {
                         });
                     response.on("end",
                         () => {
-                            log.info("n4js-cli", "JRE written to file n4js-cli/bin/" + jreInfo.name);
+                            log.info(NPM_NAME, "JRE written to file n4js-cli/bin/" + jreInfo.name);
                             resolve();
                         });
                 });
@@ -222,14 +223,14 @@ async function downloadJRE(jreInfo: JreInfo) : Promise<any, any> {
 function extractJRE(jreInfo: JreInfo) {
     const outputDir = process.cwd() + "/" + JRE_LOCAL_DIR;
 
-    log.info("n4js-cli", "Cleaning " + outputDir);
+    log.info(NPM_NAME, "Cleaning " + outputDir);
     if (fs.existsSync(outputDir)) {
         fs.rmdirSync(outputDir); 
     }
 
     decompress(jreInfo.name, outputDir)
         .then(files => {
-            log.info("n4js-cli", "JRE extracted to " + outputDir);
+            log.info(NPM_NAME, "JRE extracted to " + outputDir);
         });
 }
 
