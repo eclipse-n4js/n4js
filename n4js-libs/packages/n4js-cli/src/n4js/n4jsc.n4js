@@ -19,13 +19,15 @@ import * as log+ from "npmlog";
 import * as followRedirects+ from 'follow-redirects';
 
 const decompress  = (lib_decompress as any+) as {function(string, string): Promise<any,any>};
+const decompress2 : any+ = require("decompress");
 
 
 
 const NPM_NAME = `${process.env.npm_package_name}@${process.env.npm_package_version}`;
 const JAVA_DEFAULT = "java";
 const JRE_VERSION_START = "11.";
-const JRE_LOCAL_DIR = "jre";
+const BIN_DIR = path.resolve(__dirname, "..", "bin");
+const JRE_DIR = path.resolve(BIN_DIR, "jre");
 const JRE_URL_DIR = "https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-11.0.6%2B10/";
 const JRE_INFO_MAP = new Map<Platform, JreInfo>([
     [Platform.aix,     {bin: "bin/java", name: "OpenJDK11U-jre_ppc64_aix_hotspot_11.0.6_10.tar.gz"}],
@@ -77,6 +79,9 @@ export public async function runN4jscSync() {
  */
 export public function runN4jsc(args: string[]) : Promise<int, ?> {
     let java = getJavaCommand();
+    if (isLocalJre(java)) {
+        log.info(NPM_NAME, "Using JRE at " + java);
+    }
 
     if (!/-Xmx/.test(process.env.JAVA_TOOL_OPTIONS as string)) {
         args.unshift("-Xmx4096m");
@@ -99,7 +104,7 @@ export public function runN4jsc(args: string[]) : Promise<int, ?> {
 
 
 export public function getN4jscPath(): string {
-    return path.resolve(__dirname, "..", "bin", "n4jsc.jar");
+    return path.resolve(BIN_DIR, "n4jsc.jar");
 }
 
 /**
@@ -118,21 +123,16 @@ function getArgs() : Array<string> {
  */
 function getJavaCommand() : string {
     const jreInfo = JRE_INFO_MAP.get(process.platform as Platform);
-    if (jreInfo) {
-        const absJreDir = process.cwd() + "/" + JRE_LOCAL_DIR;
+    if (jreInfo && fs.existsSync(JRE_DIR)) {
+        const directories = fs.readdirSync(JRE_DIR, { withFileTypes: true }) as fs.Dirent[];
+        const dirNames = directories
+            .filter(dirent => dirent.isDirectory())
+            .map(dirent => dirent.name) as string[];
 
-        if (fs.existsSync(absJreDir)) {
-            const directories = fs.readdirSync(absJreDir, { withFileTypes: true }) as fs.Dirent[];
-            const dirNames = directories
-                .filter(dirent => dirent.isDirectory())
-                .map(dirent => dirent.name);
-
-            for (const dirName of dirNames) {
-                const absJreJavaPath = absJreDir + "/" + dirName + "/" + jreInfo.bin;
-                if (fs.existsSync(absJreJavaPath)) {
-                    log.info(NPM_NAME, "Using JRE of n4jsc/bin/" + JRE_LOCAL_DIR + "/" + dirName);
-                    return absJreJavaPath;
-                }
+        for (const dirName of dirNames) {
+            const absJreJavaPath = path.resolve(JRE_DIR, dirName, jreInfo.bin);
+            if (fs.existsSync(absJreJavaPath)) {
+                return absJreJavaPath;
             }
         }
     }
@@ -141,16 +141,15 @@ function getJavaCommand() : string {
 }
 
 export public async function ensureJRE() : void {
-    const version = getJavaVersion();
-    if (version && version.startsWith(JRE_VERSION_START)) {
-        log.info(NPM_NAME, "JRE found.");
-        // JRE globally available in correct version
+    const java = getJavaCommand();
+    if (isLocalJre(java)) {
+        log.info(NPM_NAME, "Local JRE found.");
         return;
     }
 
-    const java = getJavaCommand();
-    if (java != JAVA_DEFAULT) {
-        // JRE already locally available
+    const version = getJavaVersion();
+    if (version && version.startsWith(JRE_VERSION_START)) {
+        log.info(NPM_NAME, "Global JRE found.");
         return;
     }
 
@@ -165,6 +164,10 @@ export public async function ensureJRE() : void {
         log.info(NPM_NAME, "Platform not supported: " + process.platform);
         log.info(NPM_NAME, "Please install JRE11+ and make the call to 'bin/java' globally available.");
     }
+}
+
+function isLocalJre(javaPath: string): boolean {
+    return !!javaPath && (javaPath != JAVA_DEFAULT);
 }
 
 /**
@@ -199,7 +202,8 @@ async function downloadJRE(jreInfo: JreInfo) : Promise<any, any> {
     return new Promise<any, any>((resolve, reject) => {
             followRedirects.https.get(jreUrl,
                 (response : any+) => {
-                    const file = fs.createWriteStream(jreInfo.name);
+                    const jreFileName = getJreFileName(jreInfo);
+                    const file = fs.createWriteStream(jreFileName);
                     response.pipe(file);
                     log.info(NPM_NAME, "receiving JRE ...");
 
@@ -221,16 +225,18 @@ async function downloadJRE(jreInfo: JreInfo) : Promise<any, any> {
  * Extracts the downloaded JRE to the folder bin/JRE_LOCAL_DIR
  */
 function extractJRE(jreInfo: JreInfo) {
-    const outputDir = process.cwd() + "/" + JRE_LOCAL_DIR;
-
-    log.info(NPM_NAME, "Cleaning " + outputDir);
-    if (fs.existsSync(outputDir)) {
-        fs.rmdirSync(outputDir); 
+    if (fs.existsSync(JRE_DIR)) {
+        log.info(NPM_NAME, "Cleaning " + JRE_DIR);
+        fs.rmdirSync(JRE_DIR, {recursive: true});
     }
 
-    decompress(jreInfo.name, outputDir)
+    const jreFileName = getJreFileName(jreInfo);
+    decompress2(jreFileName, JRE_DIR)
         .then(files => {
-            log.info(NPM_NAME, "JRE extracted to " + outputDir);
+            log.info(NPM_NAME, "JRE extracted to " + JRE_DIR);
         });
 }
 
+function getJreFileName(jreInfo: JreInfo): string {
+    return path.resolve(BIN_DIR, jreInfo.name);
+}
