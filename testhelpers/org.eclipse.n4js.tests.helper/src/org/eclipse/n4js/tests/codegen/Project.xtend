@@ -83,7 +83,7 @@ public class Project {
 	String projectName;
 	String vendorId;
 	String vendorName;
-	ProjectType projectType = ProjectType.LIBRARY;
+	ProjectType projectType = ProjectType.VALIDATION;
 	String projectVersion = "1.0.0";
 	String outputFolder = "src-gen";
 	List<SourceFolder> sourceFolders;
@@ -204,9 +204,7 @@ public class Project {
 				«ENDIF»
 			},
 			"dependencies": {
-					"n4js-runtime": "*"«
-					IF !projectDependencies.nullOrEmpty
-					»,
+					«IF !projectDependencies.nullOrEmpty»
 					«FOR dep : projectDependencies SEPARATOR ','»
 						"«dep.projectName»": "*"
 					«ENDFOR»
