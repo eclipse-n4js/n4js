@@ -36,7 +36,7 @@ import org.eclipse.n4js.tests.issues.IssueExpectations;
  */
 class ScenarioGenerator {
 
-	/** The project type for N4JS projects in used in access control tests. */
+	/** The project type for N4JS projects used in access control tests. */
 	private static final ProjectType PROJECT_TYPE = ProjectType.VALIDATION;
 
 	private final TestSpecification specification;
