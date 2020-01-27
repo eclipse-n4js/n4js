@@ -96,8 +96,6 @@ public class BuildN4jsLibs implements IWorkflowComponent {
 			CliTools cliTools = new CliTools();
 			cliTools.setInheritIO(true);
 			cliTools.setEnvironmentVariable("NPM_TOKEN", "dummy");
-			// skip npm postinstall of n4js-cli because it uses *.js files in src-gen which are missing
-			cliTools.setEnvironmentVariable("N4JSCLI_SKIP_POSTINSTALL", "true");
 
 			cliTools.yarnInstall(n4jsLibsRootPath);
 

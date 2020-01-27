@@ -17,7 +17,7 @@
     "n4jsc": "./bin/n4jsc.js"
   },
   "files": [
-    "bin",
+    "bin/n4jsc.jar",
     "npm-postinstall.js",
     "src-gen",
     "src"

@@ -11,11 +11,13 @@
 
 "use strict";
 
+let path = require('path');
+let parentDir = path.dirname(process.cwd()).split(path.sep).pop();
 
-if (process.env.N4JSCLI_SKIP_POSTINSTALL && process.env.N4JSCLI_SKIP_POSTINSTALL == "true") {
+if (parentDir == "node_nodules") {
+    require("./src-gen/npm-postinstall.js");
+} else {
     const log = require("npmlog");
     const NPM_NAME = `${process.env.npm_package_name}@${process.env.npm_package_version}`;
-    log.info(NPM_NAME, "skipping npm-postinstall for n4js-cli");
-} else {
-    require("./src-gen/npm-postinstall.js");
+    log.info(NPM_NAME, "skipping npm-postinstall for n4js-cli since it is not located inside a node_modules folder and src-gen files might missing");
 }
