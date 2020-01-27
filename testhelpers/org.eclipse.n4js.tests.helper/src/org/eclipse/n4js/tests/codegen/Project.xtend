@@ -83,11 +83,19 @@ public class Project {
 	String projectName;
 	String vendorId;
 	String vendorName;
-	ProjectType projectType = ProjectType.VALIDATION;
+	ProjectType projectType;
 	String projectVersion = "1.0.0";
 	String outputFolder = "src-gen";
 	List<SourceFolder> sourceFolders;
 	List<Project> projectDependencies;
+
+	/**
+	 * Same as {@link #Project(String, String, String, ProjectType)}, but with
+	 * a default project type of {@link ProjectType#LIBRARY LIBRARY}.
+	 */
+	public new(String projectName, String vendorId, String vendorName) {
+		this(projectName, vendorId, vendorName, ProjectType.LIBRARY);
+	}
 
 	/**
 	 * Creates a new instance with the given parameters.
@@ -95,11 +103,13 @@ public class Project {
 	 * @param projectName the project ID
 	 * @param vendorId the vendor ID
 	 * @param vendorName the vendor name
+	 * @param projectType the project type
 	 */
-	public new(String projectName, String vendorId, String vendorName) {
+	public new(String projectName, String vendorId, String vendorName, ProjectType projectType) {
 		this.projectName = Objects.requireNonNull(projectName);
 		this.vendorId = Objects.requireNonNull(vendorId);
 		this.vendorName = Objects.requireNonNull(vendorName);
+		this.projectType = Objects.requireNonNull(projectType);
 	}
 
 	/**
