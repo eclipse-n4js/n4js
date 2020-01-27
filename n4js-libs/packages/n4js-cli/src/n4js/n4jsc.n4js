@@ -23,7 +23,9 @@ const decompress2 : any+ = require("decompress");
 
 
 
-const NPM_NAME = `${process.env.npm_package_name}@${process.env.npm_package_version}`;
+const NPM_NAME = process.env.npm_package_name ?? "n4js-cli";
+const NPM_VERSION = process.env.npm_package_version ? "@"+process.env.npm_package_version : "";
+const LOG_NAME = NPM_NAME + NPM_VERSION;
 const JAVA_DEFAULT = "java";
 const JRE_VERSION_START = "11.";
 const BIN_DIR = path.resolve(__dirname, "..", "bin");
@@ -80,7 +82,7 @@ export public async function runN4jscSync() {
 export public function runN4jsc(args: string[]) : Promise<int, ?> {
     let java = getJavaCommand();
     if (isLocalJre(java)) {
-        log.info(NPM_NAME, "Using JRE at " + java);
+        log.info(LOG_NAME, "Using JRE at " + java);
     }
 
     if (!/-Xmx/.test(process.env.JAVA_TOOL_OPTIONS as string)) {
@@ -143,26 +145,29 @@ function getJavaCommand() : string {
 export public async function ensureJRE() : void {
     const java = getJavaCommand();
     if (isLocalJre(java)) {
-        log.info(NPM_NAME, "Local JRE found.");
+        log.info(LOG_NAME, "Local JRE found.");
         return;
     }
 
     const version = getJavaVersion();
     if (version && version.startsWith(JRE_VERSION_START)) {
-        log.info(NPM_NAME, "Global JRE found.");
+        log.info(LOG_NAME, "Global JRE found with version " + version);
         return;
     }
 
     // Download and extract JRE
     const jreInfo = JRE_INFO_MAP.get(process.platform as Platform);
     if (jreInfo) {
-        log.info(NPM_NAME, "JRE not found. Downloading and extracting JRE into local folder.");
+        let msg = version? "Global JRE found but version not starting with '" + JRE_VERSION_START + "'." : "Global JRE found.";
+        msg += " Downloading and extracting JRE into local folder.";
+        log.info(LOG_NAME, msg);
+
         await downloadJRE(jreInfo);
         extractJRE(jreInfo);
 
     } else {
-        log.info(NPM_NAME, "Platform not supported: " + process.platform);
-        log.info(NPM_NAME, "Please install JRE11+ and make the call to 'bin/java' globally available.");
+        log.info(LOG_NAME, "Platform not supported: " + process.platform);
+        log.info(LOG_NAME, "Please install JRE11+ and make the call to 'bin/java' globally available.");
     }
 }
 
@@ -197,7 +202,12 @@ function getJavaVersion() : string {
  */
 async function downloadJRE(jreInfo: JreInfo) : Promise<any, any> {
     const jreUrl = JRE_URL_DIR + jreInfo.name;
-    log.info(NPM_NAME, "downloading JRE from " + jreUrl);
+    log.info(LOG_NAME, "downloading JRE from " + jreUrl);
+
+    if (!fs.existsSync(BIN_DIR)) {
+        log.info(LOG_NAME, "creating dir " + BIN_DIR);
+        fs.mkdirSync(BIN_DIR);
+    }
 
     return new Promise<any, any>((resolve, reject) => {
             followRedirects.https.get(jreUrl,
@@ -205,7 +215,7 @@ async function downloadJRE(jreInfo: JreInfo) : Promise<any, any> {
                     const jreFileName = getJreFileName(jreInfo);
                     const file = fs.createWriteStream(jreFileName);
                     response.pipe(file);
-                    log.info(NPM_NAME, "receiving JRE ...");
+                    log.info(LOG_NAME, "receiving JRE ...");
 
                     response.on("error",
                         err => {
@@ -214,7 +224,7 @@ async function downloadJRE(jreInfo: JreInfo) : Promise<any, any> {
                         });
                     response.on("end",
                         () => {
-                            log.info(NPM_NAME, "JRE written to file n4js-cli/bin/" + jreInfo.name);
+                            log.info(LOG_NAME, "JRE written to file " + jreFileName);
                             resolve();
                         });
                 });
@@ -226,14 +236,14 @@ async function downloadJRE(jreInfo: JreInfo) : Promise<any, any> {
  */
 function extractJRE(jreInfo: JreInfo) {
     if (fs.existsSync(JRE_DIR)) {
-        log.info(NPM_NAME, "Cleaning " + JRE_DIR);
+        log.info(LOG_NAME, "Cleaning " + JRE_DIR);
         fs.rmdirSync(JRE_DIR, {recursive: true});
     }
 
     const jreFileName = getJreFileName(jreInfo);
     decompress2(jreFileName, JRE_DIR)
         .then(files => {
-            log.info(NPM_NAME, "JRE extracted to " + JRE_DIR);
+            log.info(LOG_NAME, "JRE extracted to " + JRE_DIR);
         });
 }
 
