@@ -25,6 +25,8 @@ if [ "${N4_N4JSC_JAR}" == "" ]; then
 	exit 1;
 fi
 
+echo_exec mkdir -p bin
+
 if [[ ! ${N4_N4JSC_JAR} =~ ^https?:// ]]; then
     echo_exec cp ${N4_N4JSC_JAR} ./bin/n4jsc.jar
 elif [ "`which wget`" != "" ]; then
