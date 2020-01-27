@@ -16,6 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
+import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.tests.codegen.Class;
 import org.eclipse.n4js.tests.codegen.Classifier;
 import org.eclipse.n4js.tests.codegen.Field;
@@ -34,6 +35,9 @@ import org.eclipse.n4js.tests.issues.IssueExpectations;
  * given specification and member type.
  */
 class ScenarioGenerator {
+
+	/** The project type for N4JS projects in used in access control tests. */
+	private static final ProjectType PROJECT_TYPE = ProjectType.VALIDATION;
 
 	private final TestSpecification specification;
 	private final MemberType memberType;
@@ -150,7 +154,7 @@ class ScenarioGenerator {
 				module.addClassifier(factory);
 			module.addClassifier(client);
 
-			Project project = new Project("SameModule", "sameVendor", "SameVendor");
+			Project project = new Project("SameModule", "sameVendor", "SameVendor", PROJECT_TYPE);
 			project.createSourceFolder("src").addModule(module);
 			result.add(project.create(destination));
 			break;
@@ -159,7 +163,7 @@ class ScenarioGenerator {
 			Module supplierModule = createSupplierModule(supplier, factory, implementer);
 			Module clientModule = createClientModule(client, supplier, factory, supplierModule);
 
-			Project project = new Project("SameProject", "sameVendor", "SameVendor");
+			Project project = new Project("SameProject", "sameVendor", "SameVendor", PROJECT_TYPE);
 			project.createSourceFolder("src").addModule(supplierModule).addModule(clientModule);
 			result.add(project.create(destination));
 			break;
@@ -583,7 +587,7 @@ class ScenarioGenerator {
 	 * @return the newly created project
 	 */
 	private Project createSupplierProject(Module supplierModule, String vendorId) {
-		Project supplierProject = new Project("SupplierProject", vendorId, vendorId + "_name");
+		Project supplierProject = new Project("SupplierProject", vendorId, vendorId + "_name", PROJECT_TYPE);
 		supplierProject.createSourceFolder("src").addModule(supplierModule);
 		return supplierProject;
 	}
@@ -602,7 +606,7 @@ class ScenarioGenerator {
 	 * @return the newly created project
 	 */
 	private Project createClientProject(Module clientModule, String vendorId, Project supplierProject) {
-		Project clientProject = new Project("ClientProject", vendorId, vendorId + "_name");
+		Project clientProject = new Project("ClientProject", vendorId, vendorId + "_name", PROJECT_TYPE);
 		clientProject.addProjectDependency(supplierProject);
 		clientProject.createSourceFolder("src").addModule(clientModule);
 		return clientProject;
