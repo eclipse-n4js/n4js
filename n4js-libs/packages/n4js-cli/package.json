@@ -8,7 +8,6 @@
   "description": "N4JS compiler and command line tools.",
   "scripts": {
     "postinstall": "node -r esm ./npm-postinstall.js",
-    "n4jsc": "node -r esm ./src-gen/npm-n4jsc.js",
     "build": "./npm-build.sh",
     "test": "mocha -r esm tests"
   },
@@ -17,6 +16,7 @@
     "n4jsc": "./bin/n4jsc.js"
   },
   "files": [
+    "bin/n4jsc.js",
     "bin/n4jsc.jar",
     "npm-postinstall.js",
     "src-gen",

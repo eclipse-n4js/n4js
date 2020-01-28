@@ -1,3 +1,5 @@
+#!/usr/bin/env node --experimental-modules --no-warnings
+
 /**
  * Copyright (c) 2016 NumberFour AG.
  * All rights reserved. This program and the accompanying materials
