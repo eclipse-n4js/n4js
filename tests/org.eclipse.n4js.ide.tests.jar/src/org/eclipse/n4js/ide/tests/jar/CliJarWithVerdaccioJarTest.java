@@ -89,7 +89,7 @@ public class CliJarWithVerdaccioJarTest extends AbstractCliJarTest {
 		assertTrue(npmListResult2.toString(), npmListResult2.getStdOut().contains("n4js-cli@0.0.1"));
 
 		// Step 5: Test that calling n4js-cli is OK
-		Path runFile = Path.of(N4JSGlobals.NODE_MODULES, "n4js-cli", "src-gen", "npm-n4jsc.js");
+		Path runFile = Path.of(N4JSGlobals.NODE_MODULES, ".bin", "n4jsc");
 		ProcessResult nodeResult = runNodejs(PROJECT, runFile, "--help");
 		assertTrue(nodeResult.toString(), nodeResult.getStdOut().contains("Usage"));
 	}
