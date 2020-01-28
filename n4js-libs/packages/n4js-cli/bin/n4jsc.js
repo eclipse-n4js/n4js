@@ -1,4 +1,4 @@
-#!/usr/bin/env node --experimental-modules --no-warnings
+#!/usr/bin/env node
 
 /**
  * Copyright (c) 2016 NumberFour AG.
@@ -12,6 +12,11 @@
  */
 "use strict";
 
-import {runN4jscSync} from "n4jsc";
 
-runN4jscSync();
+require = require("esm")(module);
+let n4jsc = require("../src-gen/n4jsc.js");
+
+
+// import {runN4jscSync} from "n4jsc";
+
+n4jsc.runN4jscSync();
