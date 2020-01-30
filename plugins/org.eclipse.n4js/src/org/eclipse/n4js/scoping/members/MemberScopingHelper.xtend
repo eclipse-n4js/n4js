@@ -331,7 +331,26 @@ class MemberScopingHelper {
 	 * Creates member scope with parent containing members of implicit super types.
 	 */
 	private def dispatch IScope membersOfType(ContainerType<?> type, MemberScopeRequest request) {
-		return memberScopeFactory.create(IScope.NULLSCOPE, type, request.context, request.staticAccess,
+		var parentScope = if (jsVariantHelper.activateDynamicPseudoScope(request.context)) { // cf. sec. 13.1
+			new DynamicPseudoScope()
+		} else {
+			IScope.NULLSCOPE
+		};
+
+		if (!request.staticAccess && type instanceof TObjectPrototype) {
+			// TObjectPrototypes defined in builtin_js.n4ts and builtin_n4.n4ts are allowed to extend primitive
+			// types, and the following is required to support auto-boxing in such a case:
+			val rootSuperType = getRootSuperType(type as TObjectPrototype);
+			if (rootSuperType instanceof PrimitiveType) {
+				val boxedType = rootSuperType.autoboxedType;
+				if(boxedType!==null) {
+					parentScope = memberScopeFactory.create(parentScope, boxedType, request.context,
+						request.staticAccess, request.structFieldInitMode, request.isDynamicType);
+				}
+			}
+		}
+
+		return memberScopeFactory.create(parentScope, type, request.context, request.staticAccess,
 			request.structFieldInitMode, request.isDynamicType);
 	}
 
@@ -375,5 +394,17 @@ class MemberScopingHelper {
 		if (result === null)
 			throw new IllegalStateException("type or context must be contained in a ResourceSet")
 		return result;
+	}
+
+	def private Type getRootSuperType(TObjectPrototype type) {
+		var Type curr = type;
+		var Type next;
+		do {
+			next = if(curr instanceof TObjectPrototype) curr.superType?.declaredType;
+			if (next !== null) {
+				curr = next;
+			}
+		} while (next !== null);
+		return curr;
 	}
 }

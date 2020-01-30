@@ -18,7 +18,6 @@ import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.PrimitiveType;
 import org.eclipse.n4js.ts.types.TClass;
-import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TInterface;
 import org.eclipse.n4js.ts.types.TObjectPrototype;
 import org.eclipse.n4js.ts.types.TStructuralType;
@@ -102,15 +101,6 @@ public abstract class AbstractHierachyTraverser<Result> extends TypesSwitch<Bool
 		if (guard.tryNext(object)) {
 			if (process(object)) {
 				return true;
-			}
-			TClassifier autoboxedType = object.getAutoboxedType();
-			if (autoboxedType != null) {
-				ParameterizedTypeRef autoboxedTypeRef = TypeRefsFactory.eINSTANCE.createParameterizedTypeRef();
-				autoboxedTypeRef.setDeclaredType(autoboxedType);
-				Boolean result = doProcess(autoboxedTypeRef);
-				if (Boolean.TRUE.equals(result)) {
-					return result;
-				}
 			}
 			PrimitiveType assignmentCompatible = object.getAssignmentCompatible();
 			if (assignmentCompatible != null) {
