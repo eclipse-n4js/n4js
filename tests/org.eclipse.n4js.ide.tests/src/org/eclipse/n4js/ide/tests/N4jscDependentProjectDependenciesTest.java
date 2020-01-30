@@ -18,7 +18,6 @@ import java.io.IOException;
 
 import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
 import org.eclipse.n4js.cli.helper.CliCompileResult;
-import org.eclipse.n4js.cli.helper.ProcessResult;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
@@ -50,8 +49,7 @@ public class N4jscDependentProjectDependenciesTest extends AbstractCliCompileTes
 	/** Test failure when compiling without target platform file. */
 	@Test
 	public void testSuccessfulCompilationWithInterdependentProjects() {
-		ProcessResult yarnInstallResult = yarnInstall(workspace.toPath());
-		assertEquals(yarnInstallResult.toString(), 0, yarnInstallResult.getExitCode());
+		yarnInstall(workspace.toPath());
 
 		CliCompileResult cliResult = n4jsc(COMPILE(workspace));
 		assertEquals(cliResult.toString(), 3, cliResult.getTranspiledFilesCount());

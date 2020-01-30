@@ -56,8 +56,7 @@ public class InstallFromManifestCompileRunN4jscExternalImportsTest extends Abstr
 		final String packages = wsRoot + "/packages";
 		final String fileToRun = packages + "/P3/src-gen/f3.js";
 
-		ProcessResult yarnInstallResult = yarnInstall(workspace.toPath());
-		assertEquals(yarnInstallResult.toString(), 0, yarnInstallResult.getExitCode());
+		yarnInstall(workspace.toPath());
 
 		CliCompileResult cliResult = n4jsc(COMPILE(workspace));
 		assertEquals(cliResult.toString(), 7, cliResult.getTranspiledFilesCount());

@@ -207,8 +207,7 @@ public class TesterModule implements Module {
 		} catch (final IOException e) {
 			// Assuming OSGi platform is not running
 			if (e instanceof MalformedURLException) {
-				LOGGER.info(
-						"Cannot locate module properties. Does the platform running? Trying to load properties for tests.");
+				// Cannot locate module properties. Does the platform running? Trying to load properties for tests.
 				try {
 					final ProtectionDomain domain = getClass().getProtectionDomain();
 					if (null != domain) {
@@ -238,7 +237,7 @@ public class TesterModule implements Module {
 	private Properties tryLoadProperties(final URL url, final Properties properties) throws IOException {
 		try (final InputStream is = url.openStream()) {
 			properties.load(is);
-			LOGGER.info("Module properties have been successfully loaded.");
+			// no exception --> module properties have been successfully loaded.
 			return properties;
 		}
 	}

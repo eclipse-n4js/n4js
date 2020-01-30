@@ -18,7 +18,7 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.eclipse.n4js.utils.ExecutableLookupUtil;
-import org.eclipse.n4js.utils.process.OutputRedirection;
+import org.eclipse.n4js.utils.io.OutputRedirection;
 import org.eclipse.n4js.utils.process.ProcessExecutor;
 import org.eclipse.n4js.utils.process.ProcessResult;
 

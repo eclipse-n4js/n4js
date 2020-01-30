@@ -11,6 +11,7 @@
 package org.eclipse.n4js.ide.editor.contentassist;
 
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.n4js.ide.editor.contentassist.imports.ImportsAwareReferenceProposalCreator;
 import org.eclipse.n4js.scoping.utils.AbstractDescriptionWithError;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;

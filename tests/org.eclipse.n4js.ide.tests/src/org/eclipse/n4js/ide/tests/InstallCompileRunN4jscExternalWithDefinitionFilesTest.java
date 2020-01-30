@@ -61,8 +61,7 @@ public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends Abstr
 		final String packages = wsRoot + "/packages";
 		final String fileToRun = packages + "/" + PROJECT_NAME_N4JS + "/src-gen/Main.js";
 
-		ProcessResult yarnInstallResult = yarnInstall(workspace.toPath());
-		assertEquals(yarnInstallResult.toString(), 0, yarnInstallResult.getExitCode());
+		yarnInstall(workspace.toPath());
 
 		N4jscOptions options = COMPILE(workspace);
 		CliCompileResult cliResult = n4jsc(options);
@@ -81,8 +80,7 @@ public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends Abstr
 		final String packages = wsRoot + "/packages";
 		final String fileToRun = packages + "/" + PROJECT_NAME_N4JSX + "/src-gen/MainX.js";
 
-		ProcessResult yarnInstallResult = yarnInstall(workspace.toPath());
-		assertEquals(yarnInstallResult.toString(), 0, yarnInstallResult.getExitCode());
+		yarnInstall(workspace.toPath());
 
 		N4jscOptions options = COMPILE(workspace);
 		CliCompileResult cliResult = n4jsc(options);

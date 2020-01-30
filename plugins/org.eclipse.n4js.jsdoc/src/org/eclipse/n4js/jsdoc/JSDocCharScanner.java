@@ -412,8 +412,11 @@ public class JSDocCharScanner {
 	}
 
 	/**
-	 * Temporary sets end of text in order to ensure that sub-parsers do not exceed that point. Has to be undone via
+	 * Temporarily sets end of text in order to ensure that sub-parsers do not exceed that point. Has to be undone via
 	 * {@link #unfence()} eventually. The fencePosition must be AFTER the current offset!
+	 *
+	 * @param fencePosition
+	 *            the end of the fence, this position is excluded from current area.
 	 */
 	public void fence(int fencePosition) {
 		if (offset > fencePosition) {

@@ -8,14 +8,14 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.utils.process;
+package org.eclipse.n4js.utils.io;
 
 import java.io.OutputStream;
 
+import org.eclipse.n4js.utils.io.OutputStreamPrinterThread.OutputStreamType;
+
 import com.google.inject.ImplementedBy;
 import com.google.inject.Singleton;
-
-import org.eclipse.n4js.utils.process.OutputStreamPrinterThread.OutputStreamType;
 
 /**
  * Provides {@link OutputStream output stream} for clients.

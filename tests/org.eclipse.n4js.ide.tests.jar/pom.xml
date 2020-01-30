@@ -26,39 +26,6 @@ Contributors:
 
 	<build>
 		<plugins>
-			<!-- Copy the executable jar to target/tools folder of this bundle so that the integration tests can use it -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<version>${maven-dependency-plugin.version}</version>
-				<executions>
-					<execution>
-						<id>copy</id>
-						<phase>process-sources</phase>
-						<goals>
-							<goal>copy</goal>
-						</goals>
-						<configuration>
-							<artifactItems>
-								<artifactItem>
-									<groupId>org.eclipse.n4js</groupId>
-									<artifactId>org.eclipse.n4js.cli</artifactId>
-									<classifier>jar-with-dependencies</classifier>
-									<type>jar</type>
-									<overWrite>true</overWrite>
-									<outputDirectory>${project.build.directory}/</outputDirectory>
-									<destFileName>${hlc.jar-shortname}</destFileName>
-								</artifactItem>
-							</artifactItems>
-							<outputDirectory>${project.build.directory}/tools</outputDirectory>
-							<overWriteReleases>true</overWriteReleases>
-							<overWriteSnapshots>true</overWriteSnapshots>
-							<localRepositoryDirectory>${project.build.directory}/localyDownloadedMvnRepo</localRepositoryDirectory>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
