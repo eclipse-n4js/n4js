@@ -2,8 +2,8 @@
 	"name": "n4js-vscode-extension",
 	"displayName": "N4JS VS Code extension",
 	"description": "LSP server extension for N4JS",
-	"version": "0.0.1",
-	"publisher": "eclipse/n4js",
+	"version": "0.18.0",
+	"publisher": "n4js",
 	"license": "EPL-1.0",
 	"repository": {
 		"type": "git",
@@ -13,7 +13,7 @@
 		"url": "https://github.com/Eclipse/n4js/issues"
 	},
 	"engines": {
-		"vscode": "^1.32.0"
+		"vscode": "^1.41.1"
 	},
 	"categories": [
 		"Languages"
@@ -21,7 +21,7 @@
 	"activationEvents": [
 		"onLanguage:n4js"
 	],
-	"main": "src-gen/extension",
+	"main": "./extension",
 	"contributes": {
 		"languages": [
 			{
@@ -47,24 +47,17 @@
 		]
 	},
 	"devDependencies": {
-		"typescript": "^3.4.1"
+		"@types/vscode": "^1.41.0"
 	},
 	"dependencies": {
-		"n4js-runtime": "",
-		"n4js-runtime-node": "0.14.5",
-		"vsce": "^1.59.0",
-		"vscode": "^1.1.33",
-		"@types/node": "^11.13.0",
-		"vscode-jsonrpc": "^4.0.0",
-		"vscode-languageclient": "^5.2.1",
-		"vscode-languageserver-types": "^3.14.0"
+		"n4js-cli": "latest",
+		"n4js-runtime": "latest",
+		"n4js-runtime-node": "latest",
+    	"n4js-runtime-es2015": "latest",
+		"vscode-jsonrpc": "5.0.1",
+		"vscode-languageclient": "6.1.0"
 	},
-	"scripts": {
-		"prepublish": "node ./node_modules/vscode/bin/install && tsc -p ./src",
-		"compile": "tsc -p ./src",
-		"watch": "tsc -w -p ./src",
-		"update-vscode": "node ./node_modules/vscode/bin/install"
-	},
+	"scripts": {},
 	"n4js": {
 		"projectType": "library",
 		"sources": {
@@ -74,7 +67,8 @@
 		},
 		"output": "src-gen",
 		"requiredRuntimeLibraries": [
-			"n4js-runtime-node"
+			"n4js-runtime-node",
+      		"n4js-runtime-es2015"
 		]
 	}
 }

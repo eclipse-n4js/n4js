@@ -80,6 +80,27 @@ export public async function runN4jscSync() {
  * the globally available Java will be used.
  */
 export public function runN4jsc(args: string[]) : Promise<int, ?> {
+    let spawnOptions: childProcess.SpawnOptions = { stdio: "inherit", env: Object.assign({ NODEJS_PATH: process.argv[0] }, process.env)};
+    let n4jscProcess = createN4JSProcess(args, spawnOptions);
+    let promise: Promise<int, ?> = new Promise<int, int>((resolve, reject) => {
+        n4jscProcess.on("close", (code: int) => {
+            if (code === 0) {
+                resolve(0);
+            } else {
+                reject(code);
+            }
+        });
+    });
+
+    return promise;
+}
+
+/**
+ * Runs N4jsc by executing n4jsc.jar with Java and returns a promise.
+ * In case the bin folder contains a JRE, it will be used. Otherwise,
+ * the globally available Java will be used.
+ */
+export public function createN4JSProcess(args: string[], spawnOptions: childProcess.SpawnOptions) : childProcess.ChildProcess {
     let java = getJavaCommand();
     if (isLocalJre(java)) {
         log.info(LOG_NAME, "Using JRE at " + java);
@@ -89,19 +110,9 @@ export public function runN4jsc(args: string[]) : Promise<int, ?> {
         args.unshift("-Xmx4096m");
     }
 
-    let p: Promise<int, ?> = new Promise<int, int>((resolve, reject) => {
-        childProcess.spawn(java, args, {
-            stdio: "inherit",
-            env: Object.assign({ NODEJS_PATH: process.argv[0] }, process.env)
-        }).on("close", (code: int) => {
-            if (code === 0) {
-                resolve(0);
-            } else {
-                reject(code);
-            }
-        });
-    });
-    return p;
+    let spawnedProcess = childProcess.spawn(java, args, spawnOptions);
+
+    return spawnedProcess;
 }
 
 

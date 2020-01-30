@@ -10,9 +10,11 @@
  */
 
 
-import {runN4jsc} from "n4jsc";
+import {runN4jsc, createN4JSProcess} from "n4jsc";
 import {resolve as pathResolve} from "path";
 import debug from "debug";
+import * as childProcess from "child_process";
+
 const log = debug("n4js-cli");
 
 @StringBased
@@ -55,7 +57,31 @@ export public interface ~Options {
  *
  * Returns a promise.
  */
-export public async function n4jsc(goal: Goal, dir: string=, options: Options+ =) {
+export public function n4jsc(goal: Goal, dir: string=, options: Options+ =) : Promise<int, ?> {
+    const args = getArgs(goal, dir, options);
+    return runN4jsc(args);
+}
+
+/**
+ * Calls n4jsc with the given set of arguments, e.g.
+ *
+ * "port": "1234"
+ * "clean": true
+ *
+ * Any stdout/stderr will be logged as is.
+ * 
+ * Unless set per `JAVA_TOOL_OPTIONS` heap usage is defaulted to 4096m.
+ *
+ * Call `n4jsc -h` for more details.
+ *
+ * Returns a ChildProcess.
+ */
+export public function n4jscProcess(goal: Goal, dir: string, options: Options+, spawnOptions: childProcess.SpawnOptions) : childProcess.ChildProcess {
+    const args = getArgs(goal, dir, options);
+    return createN4JSProcess(args, spawnOptions);
+}
+
+function getArgs(goal: Goal, dir: string, options: Options+) : string[] {
     log("goal=%s dir=%s options: %O", goal, dir, options);
     const args = ["-jar", pathResolve(__dirname, "..", "bin", "n4jsc.jar"), goal];
     const optionsFieldNames = new Set<string>(Options.n4type.dataFields().map(f => f.name));
@@ -84,6 +110,6 @@ export public async function n4jsc(goal: Goal, dir: string=, options: Options+ =
     }
 
     log("calling n4jsc:", args);
-    
-    return runN4jsc(args);
+
+    return args;
 }

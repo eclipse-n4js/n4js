@@ -1,0 +1,83 @@
+ 
+//import * as net from 'net';
+//import * as net+ from '@types/node';
+
+//import * as VSCode+ from 'n4js-vscode-extension/vscode';
+//import { workspace, ExtensionContext } from 'vscode';
+
+//import * as VSCodeJRCP+ from 'vscode-jsonrpc';
+//import { Trace } from 'vscode-jsonrpc';
+
+//import * as VSCodeLC+ from 'vscode-languageclient';
+//import { LanguageClient, LanguageClientOptions, StreamInfo } from 'vscode-languageclient';
+
+import * as n4jscli from "n4js-cli";
+import * as net from "net";
+import * as VSCodeJRCP+ from "vscode-jsonrpc";
+
+//const net : any+ = require("net");
+//const VSCodeJRCP : any+ = require("vscode-jsonrpc");
+//const VSCodeLC : any+ = require("vscode-languageclient");
+
+const PORT = 5007;
+
+export function get(vscode: any+, vscodeLC: any+) {
+    return (context: any+ /*VSCode.ExtensionContext*/) => {
+        // The server is a started as a separate app and listens on port 5007
+        // await n4jscli.n4jsc(n4jscli.Goal.lsp, undefined, {port: PORT});
+        let outputChannel = vscode.window.createOutputChannel('N4JS Language Server');
+
+        let serverOptions = async () => {
+            outputChannel.appendLine("serverOptions");
+            //vscode.window.showErrorMessage("my error");
+
+            outputChannel.appendLine("await n4jscli.n4jsc");
+            let env = Object.assign({ NODEJS_PATH: process.argv[0] }, process.env);
+            let n4jscProcess = n4jscli.n4jscProcess(n4jscli.Goal.lsp, undefined, {port: PORT}, "inherit", env);
+
+            outputChannel.appendLine("stdout " + (n4jscProcess.stdout));
+            outputChannel.appendLine("stderr " + (n4jscProcess.stderr));
+            outputChannel.appendLine("stdin " + (n4jscProcess.stdin));
+            outputChannel.appendLine("n4jscProcess " + n4jscProcess);
+
+            n4jscProcess.stdout?.on('data', data => outputChannel.append(data));
+
+            outputChannel.appendLine("sleep");
+            await sleep(5000);
+            outputChannel.appendLine("net.connect");
+            // Connect to language server via socket
+            let socket = net.connect({port: PORT});
+            let result = {
+                writer: socket,
+                reader: socket,
+                process: n4jscProcess,
+                detached: true
+            };
+            return Promise.resolve(result);
+        };
+
+        let clientOptions = {
+            documentSelector: ['n4js'],
+            synchronize: {
+                fileEvents: vscode.workspace.createFileSystemWatcher('{/**/*.+(n4js|n4jsd|n4jsx|n4idl),/**/package.json}')
+            },
+            outputChannel: outputChannel,
+        }; 
+        
+        // Create the language client and start the client.
+        let lc = new vscodeLC.LanguageClient('N4JS Language Server', serverOptions, clientOptions, true);
+        // enable tracing (.Off, .Messages, .Verbose)
+        lc.trace = VSCodeJRCP.Trace.Verbose;
+        let disposable = lc.start();
+        
+        // Push the disposable to the context's subscriptions so that the 
+        // client can be deactivated on extension deactivation
+        context.subscriptions.push(disposable);
+    };
+}
+
+async function sleep(ms: number) {
+    return new Promise<any,any>((resolve) => {
+        setTimeout(resolve, ms);
+    });
+}
