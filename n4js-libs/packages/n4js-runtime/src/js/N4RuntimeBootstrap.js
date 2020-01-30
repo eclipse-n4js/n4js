@@ -10,7 +10,7 @@
  */
 /*eslint-disable new-cap, no-proto, strict */
 
-import {getGlobalObject} from "./GlobalObject";
+import _globalThis from "./_globalThis";
 
 
 var symHasInstance = Symbol.hasInstance,
@@ -269,13 +269,12 @@ function $n4promisifyMethod(receiver, methodName, args, multiSuccessValues, noEr
 }
 
 //expose in global scope
-const go = getGlobalObject();
-go.$makeClass = $makeClass;
-go.$makeInterface = $makeInterface;
-go.$initFieldsFromInterfaces = $initFieldsFromInterfaces;
-go.$makeEnum = $makeEnum;
+_globalThis.$makeClass = $makeClass;
+_globalThis.$makeInterface = $makeInterface;
+_globalThis.$initFieldsFromInterfaces = $initFieldsFromInterfaces;
+_globalThis.$makeEnum = $makeEnum;
 
-go.$sliceToArrayForDestruct = $sliceToArrayForDestruct;
-go.$spawn = $spawn;
-go.$n4promisifyFunction = $n4promisifyFunction;
-go.$n4promisifyMethod = $n4promisifyMethod;
+_globalThis.$sliceToArrayForDestruct = $sliceToArrayForDestruct;
+_globalThis.$spawn = $spawn;
+_globalThis.$n4promisifyFunction = $n4promisifyFunction;
+_globalThis.$n4promisifyMethod = $n4promisifyMethod;

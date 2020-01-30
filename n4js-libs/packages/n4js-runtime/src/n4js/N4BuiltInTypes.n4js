@@ -25,7 +25,7 @@
 //    global object, in order to make them available globally at runtime (this won't
 //    happen automatically).
 
-import {getGlobalObject} from "GlobalObject";
+import _globalThis from "_globalThis";
 
 function setTargetOfAnnotations(target: Object) {
 	if (target['annotations']) {
@@ -299,24 +299,23 @@ interface MigrationContext {
 
 
 // add above types to the global object
-const go = getGlobalObject();
-go.N4Object = N4Object;
-go.N4Element = N4Element;
-go.N4NamedElement = N4NamedElement;
-go.N4Type = N4Type;
-go.N4Classifier = N4Classifier;
-go.N4Class = N4Class;
-go.N4Interface = N4Interface;
-go.N4Member = N4Member;
-go.N4Method = N4Method;
-go.N4DataField = N4DataField;
-go.N4Accessor = N4Accessor;
-go.N4EnumType = N4EnumType;
-go.N4Enum = N4Enum;
-go.N4StringBasedEnumType = N4StringBasedEnumType;
-go.N4StringBasedEnum = N4StringBasedEnum;
-go.N4Annotation = N4Annotation;
-go.N4Provider = N4Provider;
-go.N4ApiNotImplementedError = N4ApiNotImplementedError;
-go.MigrationController = MigrationController;
-go.MigrationContext = MigrationContext;
+_globalThis.N4Object = N4Object;
+_globalThis.N4Element = N4Element;
+_globalThis.N4NamedElement = N4NamedElement;
+_globalThis.N4Type = N4Type;
+_globalThis.N4Classifier = N4Classifier;
+_globalThis.N4Class = N4Class;
+_globalThis.N4Interface = N4Interface;
+_globalThis.N4Member = N4Member;
+_globalThis.N4Method = N4Method;
+_globalThis.N4DataField = N4DataField;
+_globalThis.N4Accessor = N4Accessor;
+_globalThis.N4EnumType = N4EnumType;
+_globalThis.N4Enum = N4Enum;
+_globalThis.N4StringBasedEnumType = N4StringBasedEnumType;
+_globalThis.N4StringBasedEnum = N4StringBasedEnum;
+_globalThis.N4Annotation = N4Annotation;
+_globalThis.N4Provider = N4Provider;
+_globalThis.N4ApiNotImplementedError = N4ApiNotImplementedError;
+_globalThis.MigrationController = MigrationController;
+_globalThis.MigrationContext = MigrationContext;

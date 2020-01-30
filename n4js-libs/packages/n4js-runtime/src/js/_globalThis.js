@@ -9,7 +9,10 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-export function getGlobalObject() {
+function getGlobalObject() {
+	// Implementation note: don't use the idiom "Function('return this')()" for obtaining
+	// the global object, because this may cause Content Security Policy (CSP) violations
+	// in certain contexts and with certain CSP configurations.
 	if (typeof globalThis === "object") {
 		return globalThis;
 	}
@@ -18,3 +21,5 @@ export function getGlobalObject() {
 	}
 	return self;
 }
+
+export default getGlobalObject();
