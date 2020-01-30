@@ -1,50 +1,50 @@
- 
-//import * as net from 'net';
-//import * as net+ from '@types/node';
-
-//import * as VSCode+ from 'n4js-vscode-extension/vscode';
-//import { workspace, ExtensionContext } from 'vscode';
-
-//import * as VSCodeJRCP+ from 'vscode-jsonrpc';
-//import { Trace } from 'vscode-jsonrpc';
-
-//import * as VSCodeLC+ from 'vscode-languageclient';
-//import { LanguageClient, LanguageClientOptions, StreamInfo } from 'vscode-languageclient';
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
 
 import * as n4jscli from "n4js-cli";
 import * as net from "net";
+import * as childProcess from "child_process";
 import * as VSCodeJRCP+ from "vscode-jsonrpc";
-
-//const net : any+ = require("net");
-//const VSCodeJRCP : any+ = require("vscode-jsonrpc");
-//const VSCodeLC : any+ = require("vscode-languageclient");
 
 const PORT = 5007;
 
-export function get(vscode: any+, vscodeLC: any+) {
+let n4jscProcess: childProcess.ChildProcess;
+
+export function getActivate(vscode: any+, vscodeLC: any+): any {
     return (context: any+ /*VSCode.ExtensionContext*/) => {
-        // The server is a started as a separate app and listens on port 5007
-        // await n4jscli.n4jsc(n4jscli.Goal.lsp, undefined, {port: PORT});
         let outputChannel = vscode.window.createOutputChannel('N4JS Language Server');
 
         let serverOptions = async () => {
-            outputChannel.appendLine("serverOptions");
+            outputChannel.appendLine("Start LSP extension");
             //vscode.window.showErrorMessage("my error");
 
-            outputChannel.appendLine("await n4jscli.n4jsc");
             let env = Object.assign({ NODEJS_PATH: process.argv[0] }, process.env);
-            let n4jscProcess = n4jscli.n4jscProcess(n4jscli.Goal.lsp, undefined, {port: PORT}, "inherit", env);
+            let spawnOptions: childProcess.SpawnOptions = { env: env };
+            // The server is a started as a separate app and listens on port 5007
+            n4jscProcess = n4jscli.n4jscProcess(n4jscli.Goal.lsp, undefined, {port: PORT}, spawnOptions);
 
-            outputChannel.appendLine("stdout " + (n4jscProcess.stdout));
-            outputChannel.appendLine("stderr " + (n4jscProcess.stderr));
-            outputChannel.appendLine("stdin " + (n4jscProcess.stdin));
-            outputChannel.appendLine("n4jscProcess " + n4jscProcess);
+            n4jscProcess.stdout.on('data', (data:any+) => outputChannel.append(data.toString()));
+            n4jscProcess.stderr.on('data', (data:any+) => outputChannel.append(data.toString()));
+            n4jscProcess.on('message', (data:any+) => outputChannel.append(data.toString()));
 
-            n4jscProcess.stdout?.on('data', data => outputChannel.append(data));
+            let serverReady = new Promise<any, any>((resolve, reject) => {
+                n4jscProcess.stdout.on('data', (data:any+) => {
+                    let receivedServerOutput = data.toString();
+                    if (receivedServerOutput?.startsWith("Listening for LSP clients")) {
+                        resolve();
+                    }
+                });
+            });
+            await serverReady;
 
-            outputChannel.appendLine("sleep");
-            await sleep(5000);
-            outputChannel.appendLine("net.connect");
             // Connect to language server via socket
             let socket = net.connect({port: PORT});
             let result = {
@@ -73,6 +73,22 @@ export function get(vscode: any+, vscodeLC: any+) {
         // Push the disposable to the context's subscriptions so that the 
         // client can be deactivated on extension deactivation
         context.subscriptions.push(disposable);
+    };
+}
+
+export function getDeactivate(vscode: any+, vscodeLC: any+): {function() : Promise<any, any> } {
+    return () => {
+        if (!n4jscProcess) {
+            return undefined;
+        }
+
+        n4jscProcess.kill();
+
+        return new Promise<any, any>((resolve, reject) => {
+            n4jscProcess.on('exit', () => {
+                resolve();
+            });
+        });
     };
 }
 

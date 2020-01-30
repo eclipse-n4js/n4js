@@ -22,5 +22,6 @@ require = require("esm")(module);
 const extensionProvider = require("./src-gen/extensionProvider.js");
 
 module.exports = {
-    activate: extensionProvider.get(vscode, vscodeLC)
+    activate: extensionProvider.getActivate(vscode, vscodeLC),
+    deactivate: extensionProvider.getDeactivate(vscode, vscodeLC)
 }
