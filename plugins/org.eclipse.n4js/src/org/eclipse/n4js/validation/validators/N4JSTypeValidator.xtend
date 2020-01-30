@@ -503,6 +503,11 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 			if (typeRef.isDynamic) {
 				return;
 			}
+			
+			val potentialNewExpression = objectLiteral.eContainer?.eContainer;
+			if (!(potentialNewExpression instanceof NewExpression)) {
+				return;
+			}
 
 			var type = typeRef.declaredType;
 			if (type===null && typeRef instanceof BoundThisTypeRef) {
