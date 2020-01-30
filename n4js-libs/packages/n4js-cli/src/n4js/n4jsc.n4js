@@ -18,8 +18,7 @@ import * as lib_decompress+ from "decompress";
 import * as log+ from "npmlog";
 import * as followRedirects+ from 'follow-redirects';
 
-const decompress  = (lib_decompress as any+) as {function(string, string): Promise<any,any>};
-const decompress2 : any+ = require("decompress");
+const decompress = (lib_decompress.default as any+) as {function(string, string): Promise<any,any>};
 
 
 
@@ -62,7 +61,8 @@ interface ~JreInfo {
 /**
  * Runs N4jsc in a blocking fashion by executing n4jsc.jar with Java.
  * In case the bin folder contains a JRE, it will be used. Otherwise,
- * the globally available Java will be used.
+ * the globally available Java will be used. Java XmX option will be
+ * set to 4GB if not set already.
  * The arguments will be collected from process.argv
  */
 export public async function runN4jscSync() {
@@ -77,7 +77,8 @@ export public async function runN4jscSync() {
 /**
  * Runs N4jsc by executing n4jsc.jar with Java and returns a promise.
  * In case the bin folder contains a JRE, it will be used. Otherwise,
- * the globally available Java will be used.
+ * the globally available Java will be used. Java XmX option will be
+ * set to 4GB if not set already.
  */
 export public function runN4jsc(args: string[]) : Promise<int, ?> {
     let spawnOptions: childProcess.SpawnOptions = { stdio: "inherit", env: Object.assign({ NODEJS_PATH: process.argv[0] }, process.env)};
@@ -96,9 +97,10 @@ export public function runN4jsc(args: string[]) : Promise<int, ?> {
 }
 
 /**
- * Runs N4jsc by executing n4jsc.jar with Java and returns a promise.
+ * Creates and returns a process to execute the n4jsc.jar with Java.
  * In case the bin folder contains a JRE, it will be used. Otherwise,
- * the globally available Java will be used.
+ * the globally available Java will be used. Java XmX option will be
+ * set to 4GB if not set already.
  */
 export public function createN4JSProcess(args: string[], spawnOptions: childProcess.SpawnOptions) : childProcess.ChildProcess {
     let java = getJavaCommand();
@@ -153,6 +155,12 @@ function getJavaCommand() : string {
     return JAVA_DEFAULT;
 }
 
+
+/**
+ * Checks whether Java 11 is available globally. If not checks whether 
+ * Java is available in the local bin folder. If not Java JRE is downloaded
+ * and extracted to the local bin folder. 
+ */
 export public async function ensureJRE() : void {
     const java = getJavaCommand();
     if (isLocalJre(java)) {
@@ -252,8 +260,8 @@ function extractJRE(jreInfo: JreInfo) {
     }
 
     const jreFileName = getJreFileName(jreInfo);
-    decompress2(jreFileName, JRE_DIR)
-        .then(files => {
+    
+    Promise.resolve(decompress(jreFileName, JRE_DIR)).then(files => {
             log.info(LOG_NAME, "JRE extracted to " + JRE_DIR);
         });
 }

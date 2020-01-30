@@ -17,7 +17,7 @@ export external public interface ChildProcess extends IEventEmitter {
     public pid: int;
     public connected: boolean;
     public disconnect(): void;
-    public kill(signal: string=);
+    public kill(signal: string=): boolean;
     @Promisifiable
     public send(message: Object, sendHandle: any=, callback: {function(res: any)}=): boolean;
     public stderr: IReadableStream;
