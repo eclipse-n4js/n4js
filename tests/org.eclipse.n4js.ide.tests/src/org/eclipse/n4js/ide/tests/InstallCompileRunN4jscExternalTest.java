@@ -53,9 +53,9 @@ public class InstallCompileRunN4jscExternalTest extends AbstractCliCompileTest {
 	@Test
 	@Ignore // GH-1510
 	public void testCompileAndRunWithExternalDependencies() {
-		final String wsRoot = workspace.getAbsolutePath().toString();
-		final String packages = wsRoot + "/packages";
-		final String fileToRun = packages + "/external.project/src-gen/Main.js";
+		final Path wsRoot = workspace.getAbsoluteFile().toPath();
+		final Path project = wsRoot.resolve("packages").resolve("external.project");
+		final Path fileToRun = project.resolve("src-gen").resolve("Main.js");
 
 		ProcessResult yarnInstallResult = yarnInstall(workspace.toPath());
 		// error An unexpected error occurred: "could not find a copy of eslint to link in:
@@ -73,7 +73,7 @@ public class InstallCompileRunN4jscExternalTest extends AbstractCliCompileTest {
 		expectedString += "limit, logger, methodOverride, multipart, query, request, response, responseTime, ";
 		expectedString += "session, static, staticCache, timeout, urlencoded, vhost";
 
-		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRun));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), fileToRun);
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
 

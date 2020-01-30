@@ -51,12 +51,13 @@ public class N4jscScopedProjectTest extends AbstractCliCompileTest {
 	 */
 	@Test
 	public void testNpmScopes() {
-		CliCompileResult cliResult = n4jsc(COMPILE(workspace));
-		assertEquals(cliResult.toString(), 12, cliResult.getTranspiledFilesCount());
+		Path project = proot.toPath().resolve("XClient");
+		Path srcFolder = project.resolve("src-gen");
+		Path testFile1 = srcFolder.resolve("ClientModule1.js");
+		Path testFile2 = srcFolder.resolve("ClientModule2.js");
 
-		String srcFolder = proot + "/XClient/src-gen/";
-		String testFile1 = srcFolder + "ClientModule1.js";
-		String testFile2 = srcFolder + "ClientModule2.js";
+		CliCompileResult cliResult = n4jsc(COMPILE(workspace));
+		assertEquals(cliResult.toString(), 2, cliResult.getTranspiledFilesCount(project));
 
 		String expectedString = "";
 		expectedString += "Hello from A in @myScope/Lib!\n";
@@ -66,10 +67,10 @@ public class N4jscScopedProjectTest extends AbstractCliCompileTest {
 		expectedString += "Hello from D in @myScope/Lib!\n";
 		expectedString += "Hello from D in Lib!";
 
-		ProcessResult nodejsResult1 = runNodejs(workspace.toPath(), Path.of(testFile1));
+		ProcessResult nodejsResult1 = runNodejs(workspace.toPath(), testFile1);
 		assertEquals(nodejsResult1.toString(), expectedString, nodejsResult1.getStdOut());
 
-		ProcessResult nodejsResult2 = runNodejs(workspace.toPath(), Path.of(testFile2));
+		ProcessResult nodejsResult2 = runNodejs(workspace.toPath(), testFile2);
 		assertEquals(nodejsResult2.toString(), expectedString, nodejsResult2.getStdOut());
 	}
 
