@@ -54,17 +54,17 @@ export external public function spawnSync(command: string, args: string[] =, opt
     error: Error;
 };
 
-export external public class ~SpawnOptions {
-	cwd: string;
-	env: Object;
-	argv0: string;
-	stdio: Array<any>|string;
-	detached: boolean;
-	uid: number;
-	gid: number;
-	serialization: string;
-	shell: boolean|string;
-	windowsVerbatimArguments: boolean;
-	windowsHide: boolean;
+export external public interface ~SpawnOptions {
+	cwd?: string;
+	env?: Object;
+	argv0?: string;
+	stdio?: Array<any>|string;
+	detached?: boolean;
+	uid?: number;
+	gid?: number;
+	serialization?: string;
+	shell?: boolean|string;
+	windowsVerbatimArguments?: boolean;
+	windowsHide?: boolean;
 }
 
