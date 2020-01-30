@@ -13,7 +13,7 @@
 
 	ResourceSet {
 		ThisFile {}
-		File "Library.n4js" { from="GH_1626_AccessingReflectionOfExternalClasses_Library.n4js.xt" }
+		File "Library.n4js" { from="GH_1626_AccessingReflectionOfExternalClasses_Library.n4jsd" }
 	}
 
    END_SETUP
