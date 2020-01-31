@@ -542,6 +542,14 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 			}
 			val lhsName = switch (container) {
 				VariableDeclaration: container.name
+				AssignmentExpression: {
+					val lhs = container.lhs;
+					switch (lhs) {
+						IdentifierRef: lhs.idAsText
+						ParameterizedPropertyAccessExpression: lhs.propertyAsText
+						default: "the receiving object"
+					}
+				}
 				Argument: "the receiving parameter"
 				default: "the receiving object"
 			};

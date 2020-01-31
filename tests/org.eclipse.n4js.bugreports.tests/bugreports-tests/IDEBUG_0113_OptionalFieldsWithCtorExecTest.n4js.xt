@@ -47,7 +47,7 @@ var cb = new C({s:"Hello"});
 console.log(cb.s)
 console.log(cb.n)
 
-// XPECT warnings --> "superfluous is not defined in ~~this[C]." at "superfluous"
+// XPECT warnings --> "superfluous is not defined in ~~this[C]; it will not have any effect in the spec constructor." at "superfluous"
 var cc = new C({s:"Hello", superfluous: "nobody needs that", n: 42});
 console.log(cc.s)
 console.log(cc.n)

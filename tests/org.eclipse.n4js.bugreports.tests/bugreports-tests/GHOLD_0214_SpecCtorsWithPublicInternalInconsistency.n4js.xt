@@ -17,7 +17,7 @@ class A {
     @Internal public a: int;
 }
 
-// XPECT warnings --> "a is not defined in ~i~this[A]." at "a"
+// XPECT warnings --> "a is not defined in ~i~this[A]; it will not have any effect in the spec constructor." at "a"
 let x = new A({ a: 5 }); // value has to be initialized
 
 /* XPECT output ---
