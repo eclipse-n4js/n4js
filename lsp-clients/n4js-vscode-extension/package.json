@@ -12,6 +12,7 @@
 	"bugs": {
 		"url": "https://github.com/Eclipse/n4js/issues"
 	},
+    "icon": "images/n4js_logo.png",
 	"engines": {
 		"vscode": "^1.41.1"
 	},
