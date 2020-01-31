@@ -1,7 +1,7 @@
 {
 	"name": "n4js-vscode-extension",
 	"displayName": "N4JS VSCode extension",
-	"description": "LSP server extension for N4JS",
+	"description": "Language support for N4JS",
 	"version": "0.18.0",
 	"publisher": "n4js",
 	"license": "EPL-1.0",
@@ -17,7 +17,7 @@
 		"vscode": "^1.41.1"
 	},
 	"categories": [
-		"Languages"
+		"Programming Languages"
 	],
 	"activationEvents": [
 		"onLanguage:n4js"
