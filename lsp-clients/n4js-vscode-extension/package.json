@@ -1,6 +1,6 @@
 {
 	"name": "n4js-vscode-extension",
-	"displayName": "N4JS VS Code extension",
+	"displayName": "N4JS VSCode extension",
 	"description": "LSP server extension for N4JS",
 	"version": "0.18.0",
 	"publisher": "n4js",
