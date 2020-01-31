@@ -24,7 +24,7 @@ var ol = { s: "Hello", n: 42 };
 // XPECT nowarnings --> "ol may be used elsewhere, we cannot issue warning here" at "ol"
 new C(ol) ;
 
-// XPECT warnings --> "weird is not defined in ~i~this[C]." at "weird"
+// XPECT warnings --> "weird is not defined in ~i~this[C]; it will not have any effect in the spec constructor." at "weird"
 new C( { s: "Hello", weird: true } );
 
 class D extends C {
@@ -38,12 +38,12 @@ class D extends C {
 // XPECT nowarnings -->
 new D( { s: "Hello", b: true} )
 
-// XPECT warnings --> "weird is not defined in ~i~this[D]." at "weird"
+// XPECT warnings --> "weird is not defined in ~i~this[D]; it will not have any effect in the spec constructor." at "weird"
 new D( {s: "Hello", b: true, weird: true} )
 
 // XPECT warnings ---
-// "anotherWeird is not defined in ~i~this[D]." at "anotherWeird"
-// "weird is not defined in ~i~this[D]." at "weird"
+// "anotherWeird is not defined in ~i~this[D]; it will not have any effect in the spec constructor." at "anotherWeird"
+// "weird is not defined in ~i~this[D]; it will not have any effect in the spec constructor." at "weird"
 // ---
 new D( {s: "Hello", b: true, weird: true, anotherWeird: false} )
 
@@ -54,7 +54,7 @@ class E extends D {
 // XPECT nowarnings -->
 new E( { s: "Hello", b: true} )
 
-// XPECT warnings --> "weird is not defined in ~i~this[E]." at "weird"
+// XPECT warnings --> "weird is not defined in ~i~this[E]; it will not have any effect in the spec constructor." at "weird"
 new E( {s: "Hello", b: true, weird: true} )
 
 class F<T> {

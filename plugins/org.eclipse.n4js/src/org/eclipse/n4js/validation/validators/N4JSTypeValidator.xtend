@@ -97,6 +97,8 @@ import static org.eclipse.n4js.ts.typeRefs.TypeRefsPackage.Literals.PARAMETERIZE
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.n4js.n4JS.ArrayElement
 
 /**
  * Class for validating the N4JS types.
@@ -503,11 +505,6 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 			if (typeRef.isDynamic) {
 				return;
 			}
-			
-			val potentialNewExpression = objectLiteral.eContainer?.eContainer;
-			if (!(potentialNewExpression instanceof NewExpression)) {
-				return;
-			}
 
 			var type = typeRef.declaredType;
 			if (type===null && typeRef instanceof BoundThisTypeRef) {
@@ -523,27 +520,46 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 				return;
 			}
 
+			val usedInSpecConstructor = objectLiteral.eContainer?.eContainer instanceof NewExpression;
 			val ctor = containerTypesHelper.fromContext(objectLiteral).findConstructor(type as ContainerType<?>);
 			val strategyFilter = new TypingStrategyFilter(typingStrategy,
 				typingStrategy === TypingStrategy.STRUCTURAL_WRITE_ONLY_FIELDS,
 				isSpecArgumentToSpecCtor(objectLiteral, ctor));
+			val strategyFilterIncludeNotAccessible = new TypingStrategyFilter(typingStrategy,
+				typingStrategy === TypingStrategy.STRUCTURAL_WRITE_ONLY_FIELDS,
+				isSpecArgumentToSpecCtor(objectLiteral, ctor), true);
 			val expectedMembers = containerTypesHelper.fromContext(objectLiteral).allMembers(
-				type as ContainerType<?>).filter[member|strategyFilter.apply(member)].map[member|member.name].
-				toSet();
+				type as ContainerType<?>).filter[member|strategyFilter.apply(member)].map[member|member.name].toSet();
+			val expectedMembersPlusNotAccessibles = containerTypesHelper.fromContext(objectLiteral).allMembers(
+				type as ContainerType<?>).filter[member|strategyFilterIncludeNotAccessible.apply(member)].map[member|member.name].toSet();
 
 			// These are available via the 'with' keyword add them to the accepted ones
 			typeRef.structuralMembers.forEach[member|expectedMembers.add(member.name)];
 
 			val inputMembers = (objectLiteral.definedType as ContainerType<?>).ownedMembers;
 			for (property : inputMembers) {
-				if (!expectedMembers.contains(property.name)) {
+				if (!expectedMembers.contains(property.name) && !expectedMembersPlusNotAccessibles.contains(property.name)) {
 					var astElement = property.astElement;
 					if (astElement instanceof PropertyNameValuePair) {
 						astElement = astElement.declaredName;
 					}
-					val message = getMessageForCLF_SPEC_SUPERFLUOUS_PROPERTIES(property.name,
-						typeRef.typeRefAsString);
-					addIssue(message, astElement, CLF_SPEC_SUPERFLUOUS_PROPERTIES);
+					if (usedInSpecConstructor) {
+						val message = getMessageForCLF_SPEC_SUPERFLUOUS_PROPERTIES(property.name, typeRef.typeRefAsString);
+						addIssue(message, astElement, CLF_SPEC_SUPERFLUOUS_PROPERTIES);
+					} else {
+						var EObject container = objectLiteral;
+						while (container instanceof ObjectLiteral || container instanceof ArrayLiteral || container instanceof ArrayElement) {
+							container = container.eContainer;
+						}
+						val lhsName = switch (container) {
+							VariableDeclaration: container.name
+							Argument: "the receiving parameter"
+							default: "the receiving object"
+						};
+						
+						val message = getMessageForCLF_SUPERFLUOUS_PROPERTIES(property.name, typeRef.typeRefAsString, lhsName);
+						addIssue(message, astElement, CLF_SUPERFLUOUS_PROPERTIES);
+					}
 				}
 			};
 		}
