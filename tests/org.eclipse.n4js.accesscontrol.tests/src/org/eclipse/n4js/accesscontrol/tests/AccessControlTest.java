@@ -23,7 +23,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +41,6 @@ import org.eclipse.n4js.tests.codegen.Member;
 import org.eclipse.n4js.tests.issues.IssueExpectations;
 import org.eclipse.n4js.utils.SimpleParserException;
 import org.eclipse.n4js.utils.io.FileDeleter;
-import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.xtext.validation.Issue;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -578,11 +576,6 @@ public class AccessControlTest {
 
 		deleteFixtureDirectory();
 
-		// Ignore issue: "ERROR: Project does not exist with project ID: n4js-runtime."
-		Collection<String> ignoreIssueCodes = new HashSet<>(
-				N4JSLanguageConstants.DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS);
-		ignoreIssueCodes.add(IssueCodes.NON_EXISTING_PROJECT);
-
 		boolean failOnExit = specification.getExpectation().isFixMe();
 		Map<MemberType, List<String>> fixMeMessages = new HashMap<>();
 
@@ -592,7 +585,8 @@ public class AccessControlTest {
 			ScenarioGenerator generator = new ScenarioGenerator(specification, memberType);
 			generator.generateScenario(Paths.get(FIXTURE_ROOT, memberType.name()));
 			List<Issue> issues = new ArrayList<>(compile(memberType));
-			issues.removeIf(issue -> ignoreIssueCodes.contains(issue.getCode()));
+			issues.removeIf(issue -> N4JSLanguageConstants.DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS
+					.contains(issue.getCode()));
 			IssueExpectations expectations = generator.createIssues();
 
 			if (specification.getExpectation().isFixMe()) {
@@ -637,9 +631,20 @@ public class AccessControlTest {
 
 		CliTools cliTools = new CliTools();
 		// cliTools.setIsMirrorSystemOut(true); // print directly to console
+		cliTools.setIgnoreFailure(true); // some test cases contain compile errors => custom failure checking required
 		cliTools.setEnvironmentVariable("NPM_TOKEN", "dummy");
 		CliCompileResult compileResult = new CliCompileResult();
 		cliTools.callN4jscInprocess(COMPILE(projectRoot), false, compileResult);
+
+		Exception compileException = compileResult.getException();
+		if (compileException != null) {
+			compileException.printStackTrace();
+			fail("exception during compilation: " + compileResult);
+		}
+		if (compileResult.getExitCode() != 0) {
+			fail("non-zero exit code from compilation: " + compileResult.getExitCode() + System.lineSeparator()
+					+ compileResult);
+		}
 
 		DiagnosticIssueConverter converter = new DiagnosticIssueConverter();
 		List<Issue> issues = new ArrayList<>();
