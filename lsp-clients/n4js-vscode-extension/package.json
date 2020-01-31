@@ -53,7 +53,7 @@
 		"n4js-cli": "latest",
 		"n4js-runtime": "latest",
 		"n4js-runtime-node": "latest",
-    	"n4js-runtime-es2015": "latest",
+		"n4js-runtime-es2015": "latest",
 		"vscode-jsonrpc": "5.0.1",
 		"vscode-languageclient": "6.1.0"
 	},
@@ -68,7 +68,7 @@
 		"output": "src-gen",
 		"requiredRuntimeLibraries": [
 			"n4js-runtime-node",
-      		"n4js-runtime-es2015"
+			"n4js-runtime-es2015"
 		]
 	}
 }
