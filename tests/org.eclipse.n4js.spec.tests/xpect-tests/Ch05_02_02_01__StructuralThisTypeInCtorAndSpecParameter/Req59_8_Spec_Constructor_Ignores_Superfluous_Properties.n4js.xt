@@ -17,7 +17,7 @@ class C {
     constructor(@Spec spec : ~i~this) {}
 }
 
-// XPECT warnings --> "n is not defined in ~i~this[C]." at "n"
+// XPECT warnings --> "n is not defined in ~i~this[C]; it will not have any effect in the spec constructor." at "n"
 new C( { s: "Hello", n: 42 });
 
 var ol = { s: "Hello", n: 42 };

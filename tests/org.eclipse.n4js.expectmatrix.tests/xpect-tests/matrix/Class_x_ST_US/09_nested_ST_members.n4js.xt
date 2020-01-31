@@ -35,7 +35,7 @@ class G {
 	}
 }
 
-// XPECT warnings --> "foo is not defined in ~i~this[C]." at "foo"
+// XPECT warnings --> "foo is not defined in ~i~this[C]; it will not have any effect in the spec constructor." at "foo"
 var c_nom : C = new C({n: 3, foo: function (){} });
 var c_str : ~C = {n: 3, foo: function (){} };
 var c_fld : ~~C = {n: 3};
@@ -88,13 +88,13 @@ var f3aOK : ~C = g.f({n: 3, foo: function (){} });
 var f3b : C = g.f({n: 3});
 
 // type returned incompatible XPECT errors -->"Structural type ~~C is not a subtype of non-structural type C." at "g.ff({n: 3, foo: function (){} })"
-// XPECT warnings --> "foo is not defined in ~~C." at "foo"
+// XPECT warnings --> "foo is not defined in ~~C; it will not be accessible from the receiving parameter." at "foo"
 var f4a : C = g.ff({n: 3, foo: function (){} });
-// noerrors but XPECT warnings --> "foo is not defined in ~~C." at "foo"
+// noerrors but XPECT warnings --> "foo is not defined in ~~C; it will not be accessible from the receiving parameter." at "foo"
 var f4aOK : ~~C = g.ff({n: 3, foo: function (){} });
 
 // type returned incompatible XPECT errors -->"Structural type ~~C is not a subtype of non-structural type C." at "g.ff({n: 3, foo: function (){} })"
-// XPECT warnings --> "foo is not defined in ~~C." at "foo"
+// XPECT warnings --> "foo is not defined in ~~C; it will not be accessible from the receiving parameter." at "foo"
 var f4b : C = g.ff({n: 3, foo: function (){} });
-// noerrors but XPECT warnings --> "foo is not defined in ~~C." at "foo"
+// noerrors but XPECT warnings --> "foo is not defined in ~~C; it will not be accessible from the receiving parameter." at "foo"
 var f4bOK : ~~C = g.ff({n: 3, foo: function (){} });

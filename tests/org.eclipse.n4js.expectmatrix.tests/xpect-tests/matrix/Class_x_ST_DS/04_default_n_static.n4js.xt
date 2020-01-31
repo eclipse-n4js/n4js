@@ -28,7 +28,7 @@ class ~E2 {
 // static members are not required XPECT noerrors -->
 var e1 : E1 = {i: 3};
 
-// full instantiation, noerrors but XPECT warnings --> "j is not defined in E1." at "j"
+// full instantiation, noerrors but XPECT warnings --> "j is not defined in E1; it will not be accessible from e2." at "j"
 var e2 : E1 = {i: 3, j: 4};
 
 // defaulted members are required XPECT errors --> "~Object with { i: number } is not a structural subtype of E2: missing field j." at "{i: 3}"

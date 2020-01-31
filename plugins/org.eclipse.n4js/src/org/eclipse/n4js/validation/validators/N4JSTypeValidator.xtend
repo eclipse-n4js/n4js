@@ -536,9 +536,19 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 			// These are available via the 'with' keyword add them to the accepted ones
 			typeRef.structuralMembers.forEach[member|expectedMembers.add(member.name)];
 
+			var EObject container = objectLiteral;
+			while (container instanceof ObjectLiteral || container instanceof ArrayLiteral || container instanceof ArrayElement) {
+				container = container.eContainer;
+			}
+			val lhsName = switch (container) {
+				VariableDeclaration: container.name
+				Argument: "the receiving parameter"
+				default: "the receiving object"
+			};
+
 			val inputMembers = (objectLiteral.definedType as ContainerType<?>).ownedMembers;
 			for (property : inputMembers) {
-				if (!expectedMembers.contains(property.name) && !expectedMembersPlusNotAccessibles.contains(property.name)) {
+				if (!expectedMembers.contains(property.name)) {
 					var astElement = property.astElement;
 					if (astElement instanceof PropertyNameValuePair) {
 						astElement = astElement.declaredName;
@@ -546,17 +556,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 					if (usedInSpecConstructor) {
 						val message = getMessageForCLF_SPEC_SUPERFLUOUS_PROPERTIES(property.name, typeRef.typeRefAsString);
 						addIssue(message, astElement, CLF_SPEC_SUPERFLUOUS_PROPERTIES);
-					} else {
-						var EObject container = objectLiteral;
-						while (container instanceof ObjectLiteral || container instanceof ArrayLiteral || container instanceof ArrayElement) {
-							container = container.eContainer;
-						}
-						val lhsName = switch (container) {
-							VariableDeclaration: container.name
-							Argument: "the receiving parameter"
-							default: "the receiving object"
-						};
-						
+					} else if (!expectedMembersPlusNotAccessibles.contains(property.name)) {
 						val message = getMessageForCLF_SUPERFLUOUS_PROPERTIES(property.name, typeRef.typeRefAsString, lhsName);
 						addIssue(message, astElement, CLF_SUPERFLUOUS_PROPERTIES);
 					}

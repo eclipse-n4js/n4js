@@ -45,7 +45,7 @@ var b1 = new B({s: "S", t: "T", n: new C()});
 // n missing but required by anonymous interface XPECT errors --> "~Object with { s: string; t: string } is not a structural subtype of ~~B with { n: C }: missing structural field n." at "{s: "S", t: "T"}"
 var b2 = new B({s: "S", t: "T"});
 
-// passing additional non-existent parameter (cf. IDEBUG-99), noerrors but XPECT warnings --> "m is not defined in ~~this[B]." at "m"
+// passing additional non-existent parameter (cf. IDEBUG-99), noerrors but XPECT warnings --> "m is not defined in ~~this[B]; it will not have any effect in the spec constructor." at "m"
 var b3 = new B({s: "S", t: "T", n: new C(), m: "M"});
 
 // n set to null XPECT noerrors -->
