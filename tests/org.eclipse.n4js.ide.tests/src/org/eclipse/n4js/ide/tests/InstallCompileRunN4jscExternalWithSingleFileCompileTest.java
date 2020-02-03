@@ -50,19 +50,18 @@ public class InstallCompileRunN4jscExternalWithSingleFileCompileTest extends Abs
 	 */
 	@Test
 	public void testCompileAndRunWithExternalDependencies() {
-		final String wsRoot = workspace.getAbsolutePath().toString();
-		final String packages = wsRoot + "/packages";
-		final String fileToCompile = packages + "/external.project/src-gen/Main.js";
-		final String fileToRun = fileToCompile;
+		final Path wsRoot = workspace.getAbsoluteFile().toPath();
+		final Path project = wsRoot.resolve("packages").resolve("external.project");
+		final Path fileToRun = project.resolve("src-gen").resolve("Main.js");
 
 		yarnInstall(workspace.toPath());
 
 		CliCompileResult cliResult = n4jsc(COMPILE(workspace));
-		assertEquals(cliResult.toString(), 5, cliResult.getTranspiledFilesCount());
+		assertEquals(cliResult.toString(), 1, cliResult.getTranspiledFilesCount(project));
 
 		String expectedString = "Application was created!";
 
-		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRun));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), fileToRun);
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
 

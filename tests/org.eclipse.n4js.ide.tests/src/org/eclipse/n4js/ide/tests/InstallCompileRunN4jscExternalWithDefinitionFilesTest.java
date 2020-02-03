@@ -57,17 +57,17 @@ public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends Abstr
 	 */
 	@Test
 	public void testCompileAndRunWithExternalDependenciesAndDefinitionFiles() {
-		final String wsRoot = workspace.getAbsolutePath().toString();
-		final String packages = wsRoot + "/packages";
-		final String fileToRun = packages + "/" + PROJECT_NAME_N4JS + "/src-gen/Main.js";
+		final Path wsRoot = workspace.getAbsoluteFile().toPath();
+		final Path project = wsRoot.resolve("packages").resolve(PROJECT_NAME_N4JS);
+		final Path fileToRun = project.resolve("src-gen").resolve("Main.js");
 
 		yarnInstall(workspace.toPath());
 
 		N4jscOptions options = COMPILE(workspace);
 		CliCompileResult cliResult = n4jsc(options);
-		assertEquals(cliResult.toString(), 6, cliResult.getTranspiledFilesCount());
+		assertEquals(cliResult.toString(), 1, cliResult.getTranspiledFilesCount(project));
 
-		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRun));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), fileToRun);
 		assertEquals(nodejsResult.toString(), EXPECTED, nodejsResult.getStdOut());
 	}
 
@@ -76,17 +76,17 @@ public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends Abstr
 	 */
 	@Test
 	public void testCompileAndRunWithExternalDependenciesAndDefinitionFilesFromN4JSX() {
-		final String wsRoot = workspace.getAbsolutePath().toString();
-		final String packages = wsRoot + "/packages";
-		final String fileToRun = packages + "/" + PROJECT_NAME_N4JSX + "/src-gen/MainX.js";
+		final Path wsRoot = workspace.getAbsoluteFile().toPath();
+		final Path project = wsRoot.resolve("packages").resolve(PROJECT_NAME_N4JSX);
+		final Path fileToRun = project.resolve("src-gen").resolve("MainX.js");
 
 		yarnInstall(workspace.toPath());
 
 		N4jscOptions options = COMPILE(workspace);
 		CliCompileResult cliResult = n4jsc(options);
-		assertEquals(cliResult.toString(), 6, cliResult.getTranspiledFilesCount());
+		assertEquals(cliResult.toString(), 1, cliResult.getTranspiledFilesCount(project));
 
-		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRun));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), fileToRun);
 		assertEquals(nodejsResult.toString(), EXPECTED, nodejsResult.getStdOut());
 	}
 

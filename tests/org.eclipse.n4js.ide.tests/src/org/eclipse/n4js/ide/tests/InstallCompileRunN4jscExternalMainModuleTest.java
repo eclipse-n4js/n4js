@@ -53,15 +53,15 @@ public class InstallCompileRunN4jscExternalMainModuleTest extends AbstractCliCom
 	 */
 	@Test
 	public void testCompileAndRunWithExternalDependencies() {
-		final String wsRoot = workspace.getAbsolutePath().toString();
-		final String packages = wsRoot + "/packages";
-		final String fileToRun = packages + "/external.project.mm/src-gen/Main.js";
+		final Path wsRoot = workspace.getAbsoluteFile().toPath();
+		final Path project = wsRoot.resolve("packages").resolve("external.project.mm");
+		final Path fileToRun = project.resolve("src-gen").resolve("Main.js");
 
 		yarnInstall(workspace.toPath());
 
 		N4jscOptions options = COMPILE(workspace);
 		CliCompileResult cliResult = n4jsc(options);
-		assertEquals(cliResult.toString(), 5, cliResult.getTranspiledFilesCount());
+		assertEquals(cliResult.toString(), 1, cliResult.getTranspiledFilesCount(project));
 
 		String expectedString = "express imported\n";
 		expectedString += "jade imported\n";
@@ -72,7 +72,7 @@ public class InstallCompileRunN4jscExternalMainModuleTest extends AbstractCliCom
 		expectedString += "next imported\n";
 		expectedString += "body-parser imported";
 
-		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRun));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), fileToRun);
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
 

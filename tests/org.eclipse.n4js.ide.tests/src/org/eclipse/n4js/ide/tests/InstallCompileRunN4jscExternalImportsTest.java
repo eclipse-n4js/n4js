@@ -55,9 +55,9 @@ public class InstallCompileRunN4jscExternalImportsTest extends AbstractCliCompil
 	@Test
 	@Ignore // GH-1510
 	public void testCompileAndRunWithExternalDependencies() {
-		final String wsRoot = workspace.getAbsolutePath().toString();
-		final String packages = wsRoot + "/packages";
-		final String fileToRun = packages + "/external.project/src-gen/Main.js";
+		final Path wsRoot = workspace.getAbsoluteFile().toPath();
+		final Path project = wsRoot.resolve("packages").resolve("external.project");
+		final Path fileToRun = project.resolve("src-gen").resolve("Main.js");
 
 		ProcessResult yarnInstallResult = yarnInstall(workspace.toPath());
 		assertEquals(yarnInstallResult.toString(), 1, yarnInstallResult.getExitCode());
@@ -72,7 +72,7 @@ public class InstallCompileRunN4jscExternalImportsTest extends AbstractCliCompil
 				+ "react-dom is not undefined true\n"
 				+ "imports from libs are different true";
 
-		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRun));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), fileToRun);
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
 
