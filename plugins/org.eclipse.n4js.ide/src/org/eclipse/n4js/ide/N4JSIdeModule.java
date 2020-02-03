@@ -11,6 +11,7 @@
 package org.eclipse.n4js.ide;
 
 import org.eclipse.n4js.generator.N4JSCompositeGenerator;
+import org.eclipse.n4js.ide.editor.contentassist.CamelCasePrefixMatcher;
 import org.eclipse.n4js.ide.editor.contentassist.N4JSIdeContentProposalProvider;
 import org.eclipse.n4js.ide.server.FileBasedWorkspaceInitializer;
 import org.eclipse.n4js.ide.server.N4JSOutputConfigurationProvider;
@@ -34,6 +35,8 @@ import org.eclipse.n4js.internal.lsp.FileSystemScanner;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
 import org.eclipse.xtext.generator.IGenerator;
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
+import org.eclipse.xtext.ide.editor.contentassist.FQNPrefixMatcher;
+import org.eclipse.xtext.ide.editor.contentassist.IPrefixMatcher;
 import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalAcceptor;
 import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalProvider;
 import org.eclipse.xtext.ide.server.ILanguageServerShutdownAndExitHandler;
@@ -125,6 +128,14 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 	/** TODO: Xtext: should not restrict access here */
 	public Class<? extends ICodeActionService2> bindICodeActionService2() {
 		return N4JSCodeActionService.class;
+	}
+
+	public Class<? extends IPrefixMatcher> bindIPrefixMatcher() {
+		return FQNPrefixMatcher.class;
+	}
+
+	public Class<? extends IPrefixMatcher.IgnoreCase> bindIPrefixMatcherDelegate() {
+		return CamelCasePrefixMatcher.class;
 	}
 
 }

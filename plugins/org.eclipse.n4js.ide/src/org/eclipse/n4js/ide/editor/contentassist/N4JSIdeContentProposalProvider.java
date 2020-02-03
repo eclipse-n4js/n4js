@@ -60,13 +60,16 @@ public class N4JSIdeContentProposalProvider extends IdeContentProposalProvider {
 	protected void _createProposals(CrossReference crossReference, ContentAssistContext context,
 			IIdeContentProposalAcceptor acceptor) {
 
+		if (context.getCurrentModel() == null || context.getCurrentModel().eIsProxy()) {
+			return;
+		}
+
 		// because rule "TypeReference" in TypeExpressions.xtext (overridden in N4JS.xtext) is a wildcard fragment,
 		// the standard behavior of the super method would fail in the following case:
 		ParserRule containingParserRule = GrammarUtil.containingParserRule(crossReference);
 		if (containingParserRule != n4jsGrammarAccess.getTypeReferenceRule()) {
 			String featureName = GrammarUtil.containingAssignment(crossReference).getFeature();
-
-			if (featureName == TypeRefsPackage.eINSTANCE.getParameterizedTypeRef_DeclaredType().getName()) {
+			if (featureName.equals(TypeRefsPackage.eINSTANCE.getParameterizedTypeRef_DeclaredType().getName())) {
 				lookupCrossReference(crossReference,
 						TypeRefsPackage.eINSTANCE.getParameterizedTypeRef_DeclaredType(),
 						context, acceptor, new N4JSCandidateFilter());
@@ -80,6 +83,14 @@ public class N4JSIdeContentProposalProvider extends IdeContentProposalProvider {
 				ref = GrammarUtil.getReference(crossReference, context.getCurrentModel().eClass());
 			} else {
 				ref = GrammarUtil.getReference(crossReference);
+			}
+			if (ref == null && containingParserRule == n4jsGrammarAccess.getTypeReferenceRule()) {
+				String featureName = GrammarUtil.containingAssignment(crossReference).getFeature();
+				if (featureName.equals(TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE.getName())) {
+					ref = TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE;
+				} else if (featureName.equals(TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__AST_NAMESPACE.getName())) {
+					ref = TypeRefsPackage.eINSTANCE.getParameterizedTypeRef_AstNamespace();
+				}
 			}
 			if (ref != null) {
 				lookupCrossReference(crossReference, ref, context, acceptor, new N4JSCandidateFilter());
