@@ -13,3 +13,5 @@ node_modules
 lib
 nohup.out
 .DS_Store
+*.vsix
+package-lock.json
