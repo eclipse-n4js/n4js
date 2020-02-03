@@ -12,31 +12,11 @@ export function getActivate(vscode, vscodeLC) {
 		let outputChannel = vscode.window.createOutputChannel('N4JS Language Server');
 		let serverOptions = async()=>{
 			outputChannel.appendLine("Start LSP extension");
-			let env = Object.assign({
-				NODEJS_PATH: process.argv[0]
-			}, process.env);
-			let spawnOptions = {
-				env: env
-			};
-			n4jscProcess = n4jscli.n4jscProcess('lsp', undefined, {
-				port: PORT
-			}, spawnOptions);
-			n4jscProcess.stdout.on('data', (data)=>outputChannel.append(data.toString()));
-			n4jscProcess.stderr.on('data', (data)=>outputChannel.append(data.toString()));
-			n4jscProcess.on('message', (data)=>outputChannel.append(data.toString()));
-			let serverReady = new Promise((resolve, reject)=>{
-				n4jscProcess.stdout.on('data', (data)=>{
-					let $opt;
-					let receivedServerOutput = data.toString();
-					if (($opt = receivedServerOutput) == null ? void 0 : $opt.startsWith("Listening for LSP clients")) {
-						resolve();
-					}
-				});
-			});
-			await serverReady;
-			let socket = net.connect({
-				port: PORT
-			});
+			let socket = await connectToRunningN4jsLspServer(PORT, outputChannel);
+			if (!socket) {
+				outputChannel.appendLine("Unable to connect to an already running LSP server (port=" + PORT + "). Start new instance.");
+				socket = await startN4jsLspServerAndConnect(PORT, outputChannel);
+			}
 			let result = {
 				writer: socket,
 				reader: socket,
@@ -72,6 +52,67 @@ export function getDeactivate(vscode, vscodeLC) {
 			});
 		});
 	};
+}
+async function startN4jsLspServerAndConnect(port, outputChannel) {
+	let env = Object.assign({
+		NODEJS_PATH: process.argv[0]
+	}, process.env);
+	let spawnOptions = {
+		env: env
+	};
+	n4jscProcess = n4jscli.n4jscProcess('lsp', undefined, {
+		port: port
+	}, spawnOptions);
+	n4jscProcess.stdout.on('data', (data)=>outputChannel.append(data.toString()));
+	n4jscProcess.stderr.on('data', (data)=>outputChannel.append(data.toString()));
+	n4jscProcess.on('message', (data)=>outputChannel.append(data.toString()));
+	let serverReady = new Promise((resolve, reject)=>{
+		let waitForListenMsg = (data)=>{
+			let $opt;
+			let receivedServerOutput = data.toString();
+			if (($opt = receivedServerOutput) == null ? void 0 : $opt.startsWith("Listening for LSP clients")) {
+				n4jscProcess.stdout.removeListener("data", waitForListenMsg);
+				resolve();
+			}
+		};
+		n4jscProcess.stdout.on('data', waitForListenMsg);
+	});
+	await serverReady;
+	let socket = net.connect({
+		port: port
+	});
+	return socket;
+}
+async function connectToRunningN4jsLspServer(port, outputChannel) {
+	let timeout = 1000;
+	let connectionPromise = new Promise((resolve, reject)=>{
+		try {
+			let timer = setTimeout(()=>{
+				clientSocket.end();
+				resolve(null);
+			}, timeout);
+			let clientSocket = net.createConnection({
+				port: port
+			});
+			clientSocket.on('connect', ()=>{
+				outputChannel.appendLine("Connected to a already running LSP server (port=" + PORT + ")");
+				clearTimeout(timer);
+				resolve(null);
+			});
+			clientSocket.on('error', (err)=>{
+				clearTimeout(timer);
+				clientSocket.destroy();
+				resolve(null);
+			});
+			clientSocket.on('disconnect', ()=>{
+				resolve(null);
+			});
+			resolve(clientSocket);
+		} catch(err) {}
+		return null;
+	});
+	let result = await connectionPromise;
+	return result;
 }
 async function sleep(ms) {
 	return new Promise((resolve)=>{

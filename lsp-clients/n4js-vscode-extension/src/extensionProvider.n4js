@@ -26,27 +26,12 @@ export function getActivate(vscode: any+, vscodeLC: any+): any {
             outputChannel.appendLine("Start LSP extension");
             //vscode.window.showErrorMessage("my error");
 
-            let env = Object.assign({ NODEJS_PATH: process.argv[0] }, process.env);
-            let spawnOptions: childProcess.SpawnOptions = { env: env };
-            // The server is a started as a separate app and listens on port 5007
-            n4jscProcess = n4jscli.n4jscProcess(n4jscli.Goal.lsp, undefined, {port: PORT}, spawnOptions);
+            let socket = await connectToRunningN4jsLspServer(PORT, outputChannel);
+            if (!socket) {
+                outputChannel.appendLine("Unable to connect to an already running LSP server (port="+PORT+"). Start new instance.");
+                socket = await startN4jsLspServerAndConnect(PORT, outputChannel);
+            }
 
-            n4jscProcess.stdout.on('data', (data:any+) => outputChannel.append(data.toString()));
-            n4jscProcess.stderr.on('data', (data:any+) => outputChannel.append(data.toString()));
-            n4jscProcess.on('message', (data:any+) => outputChannel.append(data.toString()));
-
-            let serverReady = new Promise<any, any>((resolve, reject) => {
-                n4jscProcess.stdout.on('data', (data:any+) => {
-                    let receivedServerOutput = data.toString();
-                    if (receivedServerOutput?.startsWith("Listening for LSP clients")) {
-                        resolve();
-                    }
-                });
-            });
-            await serverReady;
-
-            // Connect to language server via socket
-            let socket = net.connect({port: PORT});
             let result = {
                 writer: socket,
                 reader: socket,
@@ -91,6 +76,70 @@ export function getDeactivate(vscode: any+, vscodeLC: any+): {function() : Promi
         });
     };
 }
+
+
+async function startN4jsLspServerAndConnect(port: number, outputChannel: any+): net.Socket {
+    let env = Object.assign({ NODEJS_PATH: process.argv[0] }, process.env);
+    let spawnOptions: childProcess.SpawnOptions = { env: env };
+
+    // The server is a started as a separate app and listens on port 5007
+    n4jscProcess = n4jscli.n4jscProcess(n4jscli.Goal.lsp, undefined, {port: port}, spawnOptions);
+    n4jscProcess.stdout.on('data', (data:any+) => outputChannel.append(data.toString()));
+    n4jscProcess.stderr.on('data', (data:any+) => outputChannel.append(data.toString()));
+    n4jscProcess.on('message', (data:any+) => outputChannel.append(data.toString()));
+
+    let serverReady = new Promise<any, any>((resolve, reject) => {
+        let waitForListenMsg = (data:any+) => {
+            let receivedServerOutput = data.toString();
+            if (receivedServerOutput?.startsWith("Listening for LSP clients")) {
+                n4jscProcess.stdout.removeListener("data", waitForListenMsg);
+                resolve();
+            }
+        };
+
+        n4jscProcess.stdout.on('data', waitForListenMsg);
+    });
+    await serverReady;
+
+    // Connect to language server via socket
+    let socket = net.connect({port: port});
+    return socket;
+}
+
+async function connectToRunningN4jsLspServer(port: number, outputChannel: any+): net.Socket {
+    let timeout = 1000;
+
+    let connectionPromise = new Promise<net.Socket, any>((resolve, reject) => {
+        try {
+            let timer = setTimeout(() => {
+                    clientSocket.end();
+                    resolve(null);
+                }, timeout);
+
+            let clientSocket = net.createConnection({port: port});
+            clientSocket.on('connect', () => {
+                    outputChannel.appendLine("Connected to a already running LSP server (port="+PORT+")");
+                    clearTimeout(timer);
+                    resolve(null);
+                })
+            clientSocket.on('error', (err: any+) => {
+                    clearTimeout(timer);
+                    clientSocket.destroy();
+                    resolve(null);
+                })
+            clientSocket.on('disconnect', () => {
+                    resolve(null);
+                });
+
+            resolve(clientSocket);
+        } catch(err) {}
+        
+        return null;
+    });
+
+    let result = await connectionPromise;
+    return result;
+};
 
 async function sleep(ms: number) {
     return new Promise<any,any>((resolve) => {

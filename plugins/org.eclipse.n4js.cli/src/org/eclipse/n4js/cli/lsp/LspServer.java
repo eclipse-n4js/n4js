@@ -102,6 +102,7 @@ public class LspServer {
 
 		try (AsynchronousServerSocketChannel serverSocket = AsynchronousServerSocketChannel.open().bind(address);) {
 
+			// Attention: the VSCode LSP extension is waiting for this line 'Listening for LSP clients'.
 			N4jscConsole.println("Listening for LSP clients on port " + options.getPort() + "...");
 
 			try (AsynchronousSocketChannel socketChannel = serverSocket.accept().get();
