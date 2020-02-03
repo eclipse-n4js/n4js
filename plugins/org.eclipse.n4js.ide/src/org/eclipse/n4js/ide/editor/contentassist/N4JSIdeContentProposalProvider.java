@@ -12,11 +12,11 @@ package org.eclipse.n4js.ide.editor.contentassist;
 
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.n4js.ide.editor.contentassist.imports.ImportsAwareReferenceProposalCreator;
-import org.eclipse.n4js.scoping.utils.AbstractDescriptionWithError;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.TypesPackage;
+import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
 import org.eclipse.xtext.CrossReference;
 import org.eclipse.xtext.GrammarUtil;
 import org.eclipse.xtext.ParserRule;
@@ -41,8 +41,9 @@ public class N4JSIdeContentProposalProvider extends IdeContentProposalProvider {
 		@Override
 		public boolean apply(IEObjectDescription candidate) {
 			QualifiedName qualifiedName = candidate.getQualifiedName();
+			final IEObjectDescription eObjectDescription = candidate;
 			// Don't propose any erroneous descriptions.
-			return !AbstractDescriptionWithError.isErrorDescription_XTEND_MVN_BUG_HACK(candidate)
+			return !IEObjectDescriptionWithError.isErrorDescription(eObjectDescription)
 					&& !N4TSQualifiedNameProvider.GLOBAL_NAMESPACE_SEGMENT.equals(qualifiedName.getFirstSegment())
 					&& !N4TSQualifiedNameProvider.isModulePolyfill(qualifiedName)
 					&& !N4TSQualifiedNameProvider.isPolyfill(qualifiedName);
