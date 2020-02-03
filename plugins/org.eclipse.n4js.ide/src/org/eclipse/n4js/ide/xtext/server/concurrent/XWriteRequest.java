@@ -36,7 +36,9 @@ public class XWriteRequest<U, V> extends XAbstractRequest<V> {
 		try {
 			previous.join();
 		} catch (Throwable t) {
-			// ignore
+			if (!requestManager.isCancelException(t)) {
+				LOG.error("Error during request: ", t);
+			}
 		}
 		try {
 			U intermediateResult = this.nonCancellable.apply();

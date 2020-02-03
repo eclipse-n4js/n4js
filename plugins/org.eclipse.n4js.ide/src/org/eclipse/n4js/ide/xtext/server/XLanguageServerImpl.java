@@ -1121,12 +1121,12 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 							: ServiceEndpoints.getSupportedMethods(ext.getClass());
 					for (Map.Entry<String, JsonRpcMethod> entry : supportedExtensions.entrySet()) {
 						if (supportedMethods.containsKey(entry.getKey())) {
-							XLanguageServerImpl.LOG.error("The json rpc method \'" + entry.getKey()
+							LOG.error("The json rpc method \'" + entry.getKey()
 									+ "\' can not be an extension as it is already defined in the LSP standard.");
 						} else {
 							JsonRpcMethod existing = extensions.put(entry.getKey(), entry.getValue());
 							if (existing != null && !Objects.equal(existing, entry.getValue())) {
-								XLanguageServerImpl.LOG.error("An incompatible LSP extension \'" + entry.getKey()
+								LOG.error("An incompatible LSP extension \'" + entry.getKey()
 										+ "\' has already been registered. Using 1 ignoring 2. \n1 : " + existing
 										+ " \n2 : " + entry.getValue());
 								extensions.put(entry.getKey(), existing);
