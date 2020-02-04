@@ -15,16 +15,13 @@ import * as childProcess from "child_process";
 import * as fs from "fs";
 
 import * as lib_decompress+ from "decompress";
-import * as log+ from "npmlog";
+import * as npmlog+ from "npmlog";
 import * as followRedirects+ from 'follow-redirects';
 
 const decompress = (lib_decompress.default as any+) as {function(string, string): Promise<any,any>};
 
 
 
-const NPM_NAME = process.env.npm_package_name ?? "n4js-cli";
-const NPM_VERSION = process.env.npm_package_version ? "@"+process.env.npm_package_version : "";
-const LOG_NAME = NPM_NAME + NPM_VERSION;
 const JAVA_DEFAULT = "java";
 const JRE_VERSION_START = "11.";
 const BIN_DIR = path.resolve(__dirname, "..", "bin");
@@ -65,10 +62,10 @@ interface ~JreInfo {
  * set to 4GB if not set already.
  * The arguments will be collected from process.argv
  */
-export public async function runN4jscSync() {
+export public async function runN4jscSync(log: {function(string)} = npmlog.info) {
     const args = getArgs();
 
-    let exitCode : int = await runN4jsc(args);
+    let exitCode : int = await runN4jsc(args, log);
     if (exitCode !== 0) {
         process.exit(exitCode);
     }
@@ -80,9 +77,9 @@ export public async function runN4jscSync() {
  * the globally available Java will be used. Java XmX option will be
  * set to 4GB if not set already.
  */
-export public function runN4jsc(args: string[]) : Promise<int, ?> {
+export public function runN4jsc(args: string[], log: {function(string)} = npmlog.info) : Promise<int, ?> {
     let spawnOptions: childProcess.SpawnOptions = { stdio: "inherit", env: Object.assign({ NODEJS_PATH: process.argv[0] }, process.env)};
-    let n4jscProcess = createN4JSProcess(args, spawnOptions);
+    let n4jscProcess = createN4JSProcess(args, spawnOptions, log);
     let promise: Promise<int, ?> = new Promise<int, int>((resolve, reject) => {
         n4jscProcess.on("close", (code: int) => {
             if (code === 0) {
@@ -102,10 +99,10 @@ export public function runN4jsc(args: string[]) : Promise<int, ?> {
  * the globally available Java will be used. Java XmX option will be
  * set to 4GB if not set already.
  */
-export public function createN4JSProcess(args: string[], spawnOptions: childProcess.SpawnOptions) : childProcess.ChildProcess {
+export public function createN4JSProcess(args: string[], spawnOptions: childProcess.SpawnOptions, log: {function(string)} = npmlog.info) : childProcess.ChildProcess {
     let java = getJavaCommand();
     if (isLocalJre(java)) {
-        log.info(LOG_NAME, "Using JRE at " + java);
+        log("Using JRE at " + java);
     }
 
     if (!/-Xmx/.test(process.env.JAVA_TOOL_OPTIONS as string)) {
@@ -159,34 +156,34 @@ function getJavaCommand() : string {
 /**
  * Checks whether Java 11 is available globally. If not checks whether 
  * Java is available in the local bin folder. If not Java JRE is downloaded
- * and extracted to the local bin folder. 
+ * and extracted to the local bin folder.
  */
-export public async function ensureJRE() : void {
+export public async function ensureJRE(log: {function(string)} = npmlog.info) : void {
     const java = getJavaCommand();
     if (isLocalJre(java)) {
-        log.info(LOG_NAME, "Local JRE found.");
+        log("Local JRE found.");
         return;
     }
 
-    const version = getJavaVersion();
-    if (version && version.startsWith(JRE_VERSION_START)) {
-        log.info(LOG_NAME, "Global JRE found with version " + version);
+    let versionInfo = getJavaVersionInfo();
+    if (versionInfo.suffices) {
+        log("Global JRE found with version " + versionInfo.version);
         return;
     }
 
     // Download and extract JRE
     const jreInfo = JRE_INFO_MAP.get(process.platform as Platform);
     if (jreInfo) {
-        let msg = version? "Global JRE found but version not starting with '" + JRE_VERSION_START + "'." : "Global JRE found.";
+        let msg = versionInfo.suffices? "Global JRE found." : "Global JRE found but version not starting with '" + JRE_VERSION_START + "'.";
         msg += " Downloading and extracting JRE into local folder.";
-        log.info(LOG_NAME, msg);
+        log(msg);
 
-        await downloadJRE(jreInfo);
-        extractJRE(jreInfo);
+        await downloadJRE(jreInfo, log);
+        extractJRE(jreInfo, log);
 
     } else {
-        log.info(LOG_NAME, "Platform not supported: " + process.platform);
-        log.info(LOG_NAME, "Please install JRE11+ and make the call to 'bin/java' globally available.");
+        log("Platform not supported: " + process.platform);
+        log("Please install JRE11+ and make the call to 'bin/java' globally available.");
     }
 }
 
@@ -194,10 +191,22 @@ function isLocalJre(javaPath: string): boolean {
     return !!javaPath && (javaPath != JAVA_DEFAULT);
 }
 
+
+/**
+ * Returns an object literal that contains the Java version of the available environment
+ * and the boolean flag 'suffices' which is true if n4jsc.jar can be executed using this Java version.
+ */
+export public function getJavaVersionInfo() : ~Object with {version: string, suffices: boolean} {
+    const version = getJavaVersion();
+    const suffices: boolean = !!version && version.startsWith(JRE_VERSION_START);
+
+    return {version: version, suffices: suffices};
+}
+
 /**
  * Returns the version of the installed Java.
  */
-function getJavaVersion() : string {
+export public function getJavaVersion() : string {
     const spawn = childProcess.spawnSync('java', ['-version']);
     if (spawn.error) {
         return spawn.error.toString();
@@ -219,12 +228,12 @@ function getJavaVersion() : string {
 /**
  * Downloads the AdoptOpenJDK JRE.
  */
-async function downloadJRE(jreInfo: JreInfo) : Promise<any, any> {
+async function downloadJRE(jreInfo: JreInfo, log: {function(string)}) : Promise<any, any> {
     const jreUrl = JRE_URL_DIR + jreInfo.name;
-    log.info(LOG_NAME, "downloading JRE from " + jreUrl);
+    log("downloading JRE from " + jreUrl);
 
     if (!fs.existsSync(BIN_DIR)) {
-        log.info(LOG_NAME, "creating dir " + BIN_DIR);
+        log("creating dir " + BIN_DIR);
         fs.mkdirSync(BIN_DIR);
     }
 
@@ -234,16 +243,16 @@ async function downloadJRE(jreInfo: JreInfo) : Promise<any, any> {
                     const jreFileName = getJreFileName(jreInfo);
                     const file = fs.createWriteStream(jreFileName);
                     response.pipe(file);
-                    log.info(LOG_NAME, "receiving JRE ...");
+                    log("receiving JRE ...");
 
                     response.on("error",
                         err => {
-                            log.error("n4js-cli", err);
+                            log("n4js-cli" + err);
                             reject(err);
                         });
                     response.on("end",
                         () => {
-                            log.info(LOG_NAME, "JRE written to file " + jreFileName);
+                            log("JRE written to file " + jreFileName);
                             resolve();
                         });
                 });
@@ -253,16 +262,16 @@ async function downloadJRE(jreInfo: JreInfo) : Promise<any, any> {
 /** 
  * Extracts the downloaded JRE to the folder bin/JRE_LOCAL_DIR
  */
-function extractJRE(jreInfo: JreInfo) {
+function extractJRE(jreInfo: JreInfo, log: {function(string)}) {
     if (fs.existsSync(JRE_DIR)) {
-        log.info(LOG_NAME, "Cleaning " + JRE_DIR);
+        log("Cleaning " + JRE_DIR);
         fs.rmdirSync(JRE_DIR, {recursive: true});
     }
 
     const jreFileName = getJreFileName(jreInfo);
     
     Promise.resolve(decompress(jreFileName, JRE_DIR)).then(files => {
-            log.info(LOG_NAME, "JRE extracted to " + JRE_DIR);
+            log("JRE extracted to " + JRE_DIR);
         });
 }
 

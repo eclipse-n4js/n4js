@@ -2,6 +2,7 @@
 
 import 'n4js-runtime'
 import * as n4jscli from 'n4js-cli'
+import * as n4jsc from 'n4js-cli/src-gen/n4jsc'
 import * as net from 'net'
 import * as VSCodeJRCP from 'vscode-jsonrpc'
 
@@ -54,6 +55,8 @@ export function getDeactivate(vscode, vscodeLC) {
 	};
 }
 async function startN4jsLspServerAndConnect(port, outputChannel) {
+	let logFn = (text)=>outputChannel.appendLine(text);
+	await n4jsc.ensureJRE(logFn);
 	let env = Object.assign({
 		NODEJS_PATH: process.argv[0]
 	}, process.env);
@@ -62,7 +65,7 @@ async function startN4jsLspServerAndConnect(port, outputChannel) {
 	};
 	n4jscProcess = n4jscli.n4jscProcess('lsp', undefined, {
 		port: port
-	}, spawnOptions);
+	}, spawnOptions, logFn);
 	n4jscProcess.stdout.on('data', (data)=>outputChannel.append(data.toString()));
 	n4jscProcess.stderr.on('data', (data)=>outputChannel.append(data.toString()));
 	n4jscProcess.on('message', (data)=>outputChannel.append(data.toString()));
@@ -97,7 +100,7 @@ async function connectToRunningN4jsLspServer(port, outputChannel) {
 			clientSocket.on('connect', ()=>{
 				outputChannel.appendLine("Connected to a already running LSP server (port=" + PORT + ")");
 				clearTimeout(timer);
-				resolve(null);
+				resolve(clientSocket);
 			});
 			clientSocket.on('error', (err)=>{
 				clearTimeout(timer);
@@ -107,7 +110,6 @@ async function connectToRunningN4jsLspServer(port, outputChannel) {
 			clientSocket.on('disconnect', ()=>{
 				resolve(null);
 			});
-			resolve(clientSocket);
 		} catch(err) {}
 		return null;
 	});

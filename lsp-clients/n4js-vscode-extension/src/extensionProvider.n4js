@@ -10,6 +10,7 @@
  */
 
 import * as n4jscli from "n4js-cli";
+import * as n4jsc from "n4js-cli/n4jsc";
 import * as net from "net";
 import * as childProcess from "child_process";
 import * as VSCodeJRCP+ from "vscode-jsonrpc";
@@ -25,6 +26,7 @@ export function getActivate(vscode: any+, vscodeLC: any+): any {
         let serverOptions = async () => {
             outputChannel.appendLine("Start LSP extension");
             //vscode.window.showErrorMessage("my error");
+
 
             let socket = await connectToRunningN4jsLspServer(PORT, outputChannel);
             if (!socket) {
@@ -79,11 +81,14 @@ export function getDeactivate(vscode: any+, vscodeLC: any+): {function() : Promi
 
 
 async function startN4jsLspServerAndConnect(port: number, outputChannel: any+): net.Socket {
+    let logFn = (text: string) => outputChannel.appendLine(text) as {function(string)};
+    await n4jsc.ensureJRE(logFn);
+
     let env = Object.assign({ NODEJS_PATH: process.argv[0] }, process.env);
     let spawnOptions: childProcess.SpawnOptions = { env: env };
 
     // The server is a started as a separate app and listens on port 5007
-    n4jscProcess = n4jscli.n4jscProcess(n4jscli.Goal.lsp, undefined, {port: port}, spawnOptions);
+    n4jscProcess = n4jscli.n4jscProcess(n4jscli.Goal.lsp, undefined, {port: port}, spawnOptions, logFn);
     n4jscProcess.stdout.on('data', (data:any+) => outputChannel.append(data.toString()));
     n4jscProcess.stderr.on('data', (data:any+) => outputChannel.append(data.toString()));
     n4jscProcess.on('message', (data:any+) => outputChannel.append(data.toString()));
@@ -120,7 +125,7 @@ async function connectToRunningN4jsLspServer(port: number, outputChannel: any+):
             clientSocket.on('connect', () => {
                     outputChannel.appendLine("Connected to a already running LSP server (port="+PORT+")");
                     clearTimeout(timer);
-                    resolve(null);
+                    resolve(clientSocket);
                 })
             clientSocket.on('error', (err: any+) => {
                     clearTimeout(timer);
@@ -131,7 +136,7 @@ async function connectToRunningN4jsLspServer(port: number, outputChannel: any+):
                     resolve(null);
                 });
 
-            resolve(clientSocket);
+            //resolve(clientSocket);
         } catch(err) {}
         
         return null;

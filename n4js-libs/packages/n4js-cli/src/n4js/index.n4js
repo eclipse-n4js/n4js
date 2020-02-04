@@ -15,7 +15,10 @@ import {resolve as pathResolve} from "path";
 import debug from "debug";
 import * as childProcess from "child_process";
 
-const log = debug("n4js-cli");
+
+const debugLog = debug("n4js-cli");
+const logFn: {function(string)} = (text: string) => {debugLog(text);};
+
 
 @StringBased
 export public enum Goal {
@@ -57,9 +60,9 @@ export public interface ~Options {
  *
  * Returns a promise.
  */
-export public function n4jsc(goal: Goal, dir: string=, options: Options+ =) : Promise<int, ?> {
-    const args = getArgs(goal, dir, options);
-    return runN4jsc(args);
+export public function n4jsc(goal: Goal, dir: string=, options: Options+ =, log: {function(string)} = logFn) : Promise<int, ?> {
+    const args = getArgs(goal, dir, options, log);
+    return runN4jsc(args, logFn);
 }
 
 /**
@@ -76,16 +79,17 @@ export public function n4jsc(goal: Goal, dir: string=, options: Options+ =) : Pr
  *
  * Returns a ChildProcess.
  */
-export public function n4jscProcess(goal: Goal, dir: string, options: Options+, spawnOptions: childProcess.SpawnOptions) : childProcess.ChildProcess {
-    const args = getArgs(goal, dir, options);
-    log("calling n4jsc:", args);
-    return createN4JSProcess(args, spawnOptions);
+export public function n4jscProcess(goal: Goal, dir: string, options: Options+, spawnOptions: childProcess.SpawnOptions, log: {function(string)}) : childProcess.ChildProcess {
+    const args = getArgs(goal, dir, options, log);
+    log("calling n4jsc " + args.join(" "));
+    return createN4JSProcess(args, spawnOptions, log);
 }
 
-function getArgs(goal: Goal, dir: string, options: Options+) : string[] {
-    log("goal=%s dir=%s options: %O", goal, dir, options);
+function getArgs(goal: Goal, dir: string, options: Options+, log: {function(string)}) : string[] {
     const args = ["-jar", pathResolve(__dirname, "..", "bin", "n4jsc.jar"), goal];
     const optionsFieldNames = new Set<string>(Options.n4type.dataFields().map(f => f.name));
+    const optionsString = Object.entries(options).map((entry) => Array.from(entry).join(":")).join(" ");
+    log(`goal=${goal} dir=${dir} options: ${optionsString}`);
 
     if (dir) {
         args.push(dir);
@@ -93,7 +97,7 @@ function getArgs(goal: Goal, dir: string, options: Options+) : string[] {
 
     for (const [key, value] of Object.entries(options)) {
         if (!optionsFieldNames.has(key)) {
-            log("unknown option:", key, value);
+            log("unknown option: key=" + key + " value=" + value);
             continue;
         }
         const isBool = typeof value === "boolean";
@@ -106,7 +110,7 @@ function getArgs(goal: Goal, dir: string, options: Options+) : string[] {
         }
     }
 
-    if (log.enabled) {
+    if (debugLog.enabled) {
         args.push("--verbose");
     }
 

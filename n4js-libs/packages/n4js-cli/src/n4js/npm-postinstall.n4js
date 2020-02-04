@@ -18,20 +18,23 @@ import * as lib_https from "n4js-runtime-node/https";
 import * as log+ from "npmlog";
 
 
-const NPM_NAME = `${process.env.npm_package_name}@${process.env.npm_package_version}`;
-const jarPath = process.env.N4JSC_JAR as string;
+const JAR_PATH = process.env.N4JSC_JAR as string;
+const NPM_NAME = process.env.npm_package_name ?? "n4js-cli";
+const NPM_VERSION = process.env.npm_package_version ? "@"+process.env.npm_package_version : "";
+const LOG_NAME = NPM_NAME + NPM_VERSION;
+const LOG_FN = (text: string) => {log.info(LOG_NAME, text);}
 
 
-if (jarPath) {
+if (JAR_PATH) {
     const outPath = lib_n4jsc.getN4jscPath();
-    log.info(NPM_NAME, `Replacing ${outPath} with ${jarPath}`);
+    LOG_FN(`Replacing ${outPath} with ${JAR_PATH}`);
 
     if (lib_fs.existsSync(outPath)) {
         lib_fs.unlinkSync(outPath); // remove to notice any problems
     }
 
     // minimal dep just against wget
-    if (/^https?:\/\//i.test(jarPath)) {
+    if (/^https?:\/\//i.test(JAR_PATH)) {
         const stream = lib_fs.createWriteStream(outPath);
         const download = (url: string) => {
 
@@ -52,10 +55,10 @@ if (jarPath) {
                 lib_https.get(url, undefined, callback);
             }
         };
-        download(jarPath);
+        download(JAR_PATH);
     } else {
-        lib_fs.copyFileSync(jarPath, outPath);
+        lib_fs.copyFileSync(JAR_PATH, outPath);
     }
 }
 
-lib_n4jsc.ensureJRE();
+lib_n4jsc.ensureJRE(LOG_FN);

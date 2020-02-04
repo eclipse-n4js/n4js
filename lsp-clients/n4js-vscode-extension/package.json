@@ -55,6 +55,7 @@
 		"n4js-runtime": "latest",
 		"n4js-runtime-node": "latest",
 		"n4js-runtime-es2015": "latest",
+		"npmlog": "4.1.2",
 		"vscode-jsonrpc": "5.0.1",
 		"vscode-languageclient": "6.1.0"
 	},
