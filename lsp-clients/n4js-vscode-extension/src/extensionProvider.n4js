@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 NumberFour AG.
+ * Copyright (c) 2020 NumberFour AG.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -87,7 +87,7 @@ async function startN4jsLspServerAndConnect(port: number, outputChannel: any+): 
     let env = Object.assign({ NODEJS_PATH: process.argv[0] }, process.env);
     let spawnOptions: childProcess.SpawnOptions = { env: env };
 
-    // The server is a started as a separate app and listens on port 5007
+    // The server is started as a separate app and listens on port 5007
     n4jscProcess = n4jscli.n4jscProcess(n4jscli.Goal.lsp, undefined, {port: port}, spawnOptions, logFn);
     n4jscProcess.stdout.on('data', (data:any+) => outputChannel.append(data.toString()));
     n4jscProcess.stderr.on('data', (data:any+) => outputChannel.append(data.toString()));

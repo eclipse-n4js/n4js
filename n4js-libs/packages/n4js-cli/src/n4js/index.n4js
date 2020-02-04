@@ -89,7 +89,7 @@ function getArgs(goal: Goal, dir: string, options: Options+, log: {function(stri
     const args = ["-jar", pathResolve(__dirname, "..", "bin", "n4jsc.jar"), goal];
     const optionsFieldNames = new Set<string>(Options.n4type.dataFields().map(f => f.name));
     const optionsString = Object.entries(options).map((entry) => Array.from(entry).join(":")).join(" ");
-    log(`goal=${goal} dir=${dir} options: ${optionsString}`);
+    log(`goal=${goal}; dir=${dir}; options=${optionsString}`);
 
     if (dir) {
         args.push(dir);
