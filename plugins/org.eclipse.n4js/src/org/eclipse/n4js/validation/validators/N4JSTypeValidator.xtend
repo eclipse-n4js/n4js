@@ -17,8 +17,10 @@ import java.util.LinkedList
 import java.util.List
 import java.util.TreeSet
 import org.eclipse.emf.common.util.EList
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.Argument
+import org.eclipse.n4js.n4JS.ArrayElement
 import org.eclipse.n4js.n4JS.ArrayLiteral
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.AssignmentOperator
@@ -97,8 +99,6 @@ import static org.eclipse.n4js.ts.typeRefs.TypeRefsPackage.Literals.PARAMETERIZE
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.n4js.n4JS.ArrayElement
 
 /**
  * Class for validating the N4JS types.
@@ -519,8 +519,9 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 			if (structuralMembers.isEmpty && type == RuleEnvironmentExtensions.objectType(G)) {
 				return;
 			}
-
-			val usedInSpecConstructor = objectLiteral.eContainer?.eContainer instanceof NewExpression;
+			
+			
+			val isSpecArgument = isSpecArgument(objectLiteral);
 			val ctor = containerTypesHelper.fromContext(objectLiteral).findConstructor(type as ContainerType<?>);
 			val strategyFilter = new TypingStrategyFilter(typingStrategy,
 				typingStrategy === TypingStrategy.STRUCTURAL_WRITE_ONLY_FIELDS,
@@ -547,11 +548,11 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 					switch (lhs) {
 						IdentifierRef: lhs.idAsText
 						ParameterizedPropertyAccessExpression: lhs.propertyAsText
-						default: "the receiving object"
+						default: "type " + typeRef.declaredType.name
 					}
 				}
 				Argument: "the receiving parameter"
-				default: "the receiving object"
+				default: "type " + typeRef.declaredType.name
 			};
 
 			val inputMembers = (objectLiteral.definedType as ContainerType<?>).ownedMembers;
@@ -561,7 +562,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 					if (astElement instanceof PropertyNameValuePair) {
 						astElement = astElement.declaredName;
 					}
-					if (usedInSpecConstructor) {
+					if (isSpecArgument) {
 						val message = getMessageForCLF_SPEC_SUPERFLUOUS_PROPERTIES(property.name, typeRef.typeRefAsString);
 						addIssue(message, astElement, CLF_SPEC_SUPERFLUOUS_PROPERTIES);
 					} else if (!expectedMembersPlusNotAccessibles.contains(property.name)) {
@@ -573,6 +574,28 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		}
 	}
 
+
+	def private boolean isSpecArgument(ObjectLiteral objectLiteral) {
+		val usedInConstructor = objectLiteral.eContainer?.eContainer instanceof NewExpression;
+		if (usedInConstructor) {
+			val newExpression = objectLiteral.eContainer?.eContainer as NewExpression;
+			val newTypeRef = ts.tau(newExpression); // no context, we only need the number of fpars
+			var newType = newTypeRef.declaredType;
+			if (newType===null && newTypeRef instanceof BoundThisTypeRef) {
+				newType = (newTypeRef as BoundThisTypeRef).actualThisTypeRef?.declaredType;
+			}
+			if (newType instanceof ContainerType<?>) {
+				val newCtor = containerTypesHelper.fromContext(newExpression).findConstructor(newType);
+				val pos = newExpression.arguments.indexOf(objectLiteral.eContainer);
+				if (newCtor !== null && pos >= 0) {
+					val formalParam = newCtor.getFparForArgIdx(pos);
+					val hasSpecAnnotation = formalParam.annotations.exists[an|an.name.equals("Spec")];
+					return hasSpecAnnotation;
+				}
+			}
+		}
+		return false;
+	}
 
 
 	def private void internalCheckUseOfUndefinedExpression(RuleEnvironment G, Expression expression,
