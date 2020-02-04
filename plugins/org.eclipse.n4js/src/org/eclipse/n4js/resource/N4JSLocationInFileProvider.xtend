@@ -25,6 +25,7 @@ import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.xtext.resource.DefaultLocationInFileProvider
 import org.eclipse.xtext.resource.ILocationInFileProviderExtension
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
+import org.eclipse.n4js.ts.types.TStructuralType
 
 /**
  * A location in file provider that is aware of inferred types. The location
@@ -84,11 +85,15 @@ class N4JSLocationInFileProvider extends DefaultLocationInFileProvider {
 				element
 			TMember case element.composed:
 				element
+			TStructuralType case element.name === null && element.astElement === null: {
+				val parent = element.eContainer
+				return convertToSource(parent)
+			}
 			SyntaxRelatedTElement: {
 				if (element.astElement === null) {
 					if (NodeModelUtils.getNode(element) !== null) {
 						return element;
-					} 					
+					}			
 					throw new IllegalStateException()
 				}
 				element.astElement
