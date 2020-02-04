@@ -18,6 +18,7 @@ import org.eclipse.lsp4j.Command;
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.xtext.ide.server.codeActions.ICodeActionService2;
+import org.eclipse.xtext.service.OperationCanceledManager;
 
 import com.google.inject.Inject;
 
@@ -29,6 +30,9 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 
 	@Inject
 	N4JSQuickfixProvider quickfixProvider;
+
+	@Inject
+	OperationCanceledManager cancelManager;
 
 	@Override
 	public List<Either<Command, CodeAction>> getCodeActions(Options options) {
@@ -43,9 +47,11 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 		}
 
 		for (Diagnostic diag : diagnostics) {
+			cancelManager.checkCanceled(options.getCancelIndicator());
 			quickfixProvider.addQuickfix(diag.getCode(), options, acceptor);
 		}
 
+		cancelManager.checkCanceled(options.getCancelIndicator());
 		return acceptor.getList();
 	}
 

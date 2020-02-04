@@ -96,6 +96,7 @@ import org.eclipse.n4js.ide.server.HeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.ide.xtext.server.XBuildManager.XBuildable;
 import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
 import org.eclipse.n4js.ide.xtext.server.concurrent.XRequestManager;
+import org.eclipse.n4js.ide.xtext.server.contentassist.XContentAssistService;
 import org.eclipse.n4js.ide.xtext.server.findReferences.XWorkspaceResourceAccess;
 import org.eclipse.n4js.ide.xtext.server.rename.XIRenameService;
 import org.eclipse.xtext.findReferences.IReferenceFinder;
@@ -112,7 +113,6 @@ import org.eclipse.xtext.ide.server.codelens.ICodeLensResolver;
 import org.eclipse.xtext.ide.server.codelens.ICodeLensService;
 import org.eclipse.xtext.ide.server.coloring.IColoringService;
 import org.eclipse.xtext.ide.server.commands.ExecutableCommandRegistry;
-import org.eclipse.xtext.ide.server.contentassist.ContentAssistService;
 import org.eclipse.xtext.ide.server.formatting.FormattingService;
 import org.eclipse.xtext.ide.server.hover.IHoverService;
 import org.eclipse.xtext.ide.server.occurrences.IDocumentHighlightService;
@@ -594,7 +594,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	protected Either<List<CompletionItem>, CompletionList> completion(CancelIndicator originalCancelIndicator,
 			CompletionParams params) {
 		URI uri = getURI(params);
-		ContentAssistService contentAssistService = getService(uri, ContentAssistService.class);
+		XContentAssistService contentAssistService = getService(uri, XContentAssistService.class);
 		if (contentAssistService == null) {
 			return Either.forRight(new CompletionList());
 		}
