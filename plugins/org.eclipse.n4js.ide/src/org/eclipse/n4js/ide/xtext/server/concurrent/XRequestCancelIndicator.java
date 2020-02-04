@@ -22,18 +22,17 @@ public class XRequestCancelIndicator implements CancelIndicator, CancelChecker, 
 
 	@Override
 	public void cancel() {
-		this.requestFuture.cancel(true);
+		requestFuture.cancel(true);
 	}
 
 	@Override
 	public boolean isCanceled() {
-		this.checkCanceled();
-		return false;
+		return requestFuture.isCancelled();
 	}
 
 	@Override
 	public void checkCanceled() {
-		if (this.requestFuture.isCancelled()) {
+		if (requestFuture.isCancelled()) {
 			throw new CancellationException();
 		}
 	}

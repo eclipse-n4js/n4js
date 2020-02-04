@@ -180,6 +180,7 @@ public class XStatefulIncrementalBuilder {
 
 		if (request.isValidatorEnabled()) {
 			List<Issue> issues = resourceValidator.validate(resource, CheckMode.ALL, request.getCancelIndicator());
+			operationCanceledManager.checkCanceled(request.getCancelIndicator());
 			request.setResultIssues(source, issues);
 			boolean proceedGenerate = !request.containsValidationErrors(source);
 
