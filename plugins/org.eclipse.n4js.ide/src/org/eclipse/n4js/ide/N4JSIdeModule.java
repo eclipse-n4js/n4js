@@ -14,6 +14,7 @@ import org.eclipse.n4js.generator.N4JSCompositeGenerator;
 import org.eclipse.n4js.ide.editor.contentassist.CamelCasePrefixMatcher;
 import org.eclipse.n4js.ide.editor.contentassist.N4JSIdeContentProposalProvider;
 import org.eclipse.n4js.ide.server.FileBasedWorkspaceInitializer;
+import org.eclipse.n4js.ide.server.N4JSDocumentExtensions;
 import org.eclipse.n4js.ide.server.N4JSOutputConfigurationProvider;
 import org.eclipse.n4js.ide.server.N4JSProjectDescriptionFactory;
 import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
@@ -39,6 +40,7 @@ import org.eclipse.xtext.ide.editor.contentassist.FQNPrefixMatcher;
 import org.eclipse.xtext.ide.editor.contentassist.IPrefixMatcher;
 import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalAcceptor;
 import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalProvider;
+import org.eclipse.xtext.ide.server.DocumentExtensions;
 import org.eclipse.xtext.ide.server.ILanguageServerShutdownAndExitHandler;
 import org.eclipse.xtext.ide.server.codeActions.ICodeActionService2;
 import org.eclipse.xtext.ide.server.hover.HoverService;
@@ -136,6 +138,10 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public Class<? extends IPrefixMatcher.IgnoreCase> bindIPrefixMatcherDelegate() {
 		return CamelCasePrefixMatcher.class;
+	}
+
+	public Class<? extends DocumentExtensions> bindN4JSDocumentExtensions() {
+		return N4JSDocumentExtensions.class;
 	}
 
 }
