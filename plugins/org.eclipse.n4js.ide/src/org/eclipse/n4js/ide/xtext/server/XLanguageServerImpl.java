@@ -7,6 +7,7 @@
  */
 package org.eclipse.n4js.ide.xtext.server;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -597,7 +598,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		if (contentAssistService == null) {
 			return Either.forRight(new CompletionList());
 		}
-		BufferedCancelIndicator cancelIndicator = new BufferedCancelIndicator(originalCancelIndicator);
+		BufferedCancelIndicator cancelIndicator = new BufferedCancelIndicator(
+				originalCancelIndicator,
+				Duration.ofMillis(750));
 		XtextResource res = workspaceManager.getResource(uri);
 		XDocument doc = workspaceManager.getDocument(res);
 		return Either.forRight(contentAssistService.createCompletionList(doc, res, params, cancelIndicator));
