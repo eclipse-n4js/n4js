@@ -76,9 +76,9 @@ public class InstallCompileRunN4jscExternalShadowNestedNodeModulesTest extends A
 	 */
 	@Test
 	public void testCompileAndRunWithExternalDependencies() {
-		final String wsRoot = workspace.getAbsolutePath().toString();
-		final String packages = wsRoot + "/packages";
-		final String fileToRun = packages + "/P/src-gen/Main.js";
+		final Path wsRoot = workspace.getAbsoluteFile().toPath();
+		final Path project = wsRoot.resolve("packages").resolve("P");
+		final Path fileToRun = project.resolve("src-gen").resolve("Main.js");
 
 		N4jscOptions options = COMPILE(workspace);
 		CliCompileResult cliResult = n4jsc(options);
@@ -88,7 +88,7 @@ public class InstallCompileRunN4jscExternalShadowNestedNodeModulesTest extends A
 		expectedString += "#methodOld() in version 2.0.0\n";
 		expectedString += "#methodNew() in version 2.0.0";
 
-		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRun));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), fileToRun);
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
 }

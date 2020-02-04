@@ -56,9 +56,11 @@ public class InstallFromPackageJsonCompileRunN4jscExternalImportsTest extends Ab
 	@Test
 	@Ignore // GH-1510
 	public void testCompileAndRunWithExternalDependencies() {
-		final String wsRoot = workspace.getAbsolutePath().toString();
-		final String packages = wsRoot + "/packages";
-		final String fileToRun = packages + "/P3/src-gen/f3.js";
+		final Path wsRoot = workspace.getAbsoluteFile().toPath();
+		final Path project1 = wsRoot.resolve("packages").resolve("P1");
+		final Path project2 = wsRoot.resolve("packages").resolve("P2");
+		final Path project3 = wsRoot.resolve("packages").resolve("P3");
+		final Path fileToRun = project3.resolve("src-gen").resolve("f3.js");
 
 		ProcessResult yarnInstallResult = yarnInstall(workspace.toPath());
 		assertEquals(yarnInstallResult.toString(), 1, yarnInstallResult.getExitCode());
@@ -66,7 +68,8 @@ public class InstallFromPackageJsonCompileRunN4jscExternalImportsTest extends Ab
 				yarnInstallResult.getErrOut().contains("could not find a copy of eslint to link in"));
 
 		CliCompileResult cliResult = n4jsc(COMPILE(workspace));
-		assertEquals(cliResult.toString(), 3, cliResult.getTranspiledFilesCount());
+		assertEquals(cliResult.toString(), 3, cliResult.getTranspiledFilesCount(project1)
+				+ cliResult.getTranspiledFilesCount(project2) + cliResult.getTranspiledFilesCount(project3));
 
 		String expectedString = "P1\n";
 		expectedString += "react is not undefined true\n";
@@ -75,7 +78,7 @@ public class InstallFromPackageJsonCompileRunN4jscExternalImportsTest extends Ab
 		expectedString += "P2\n";
 		expectedString += "React is not undefined true";
 
-		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRun));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), fileToRun);
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
 
