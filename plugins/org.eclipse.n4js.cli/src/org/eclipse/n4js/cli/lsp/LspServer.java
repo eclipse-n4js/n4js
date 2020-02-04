@@ -79,7 +79,7 @@ public class LspServer {
 	private void setupAndRun(ExecutorService threadPool, XLanguageServerImpl languageServer)
 			throws InterruptedException, ExecutionException, IOException {
 
-		Builder<LanguageClient> lsBuilder = new Builder<LanguageClient>()
+		Builder<LanguageClient> lsBuilder = new PatchedLauncherBuilder<LanguageClient>()
 				.setLocalService(languageServer)
 				.setRemoteInterface(LanguageClient.class)
 				.setExecutorService(threadPool)
