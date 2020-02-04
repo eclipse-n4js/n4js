@@ -34,7 +34,8 @@
 					".n4js",
 					".n4jsd",
 					".n4jsx",
-					".json"
+					".json",
+					".n4idl"
 				],
 				"configuration": "./n4js.configuration.json"
 			}
