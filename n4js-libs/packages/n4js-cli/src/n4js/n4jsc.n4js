@@ -215,7 +215,7 @@ export public function getJavaVersion() : string {
         // common print outs of 'java -version' are:
         // - openjdk version "11.0.6" 2020-01-14
         // - java version "11.0.4" 2019-07-16 LTS
-        const regex = new RegExp('.*\"(?<version>[0-9]+\.[0-9]+\.[0-9]+)\".*');
+        const regex = new RegExp('\"(?<version>\d+\.\d+\.\d+)\"');
         const data = spawn.stderr.toString().split('\n')[0];
         const groups = data.match(regex)?.groups;
         const javaVersion = groups?.version as string;
