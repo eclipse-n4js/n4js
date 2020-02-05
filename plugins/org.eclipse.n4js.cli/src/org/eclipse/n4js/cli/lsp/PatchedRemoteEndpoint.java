@@ -16,9 +16,8 @@ import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import org.apache.log4j.Logger;
 import org.eclipse.lsp4j.jsonrpc.Endpoint;
 import org.eclipse.lsp4j.jsonrpc.MessageConsumer;
 import org.eclipse.lsp4j.jsonrpc.RemoteEndpoint;
@@ -39,7 +38,7 @@ import org.eclipse.lsp4j.jsonrpc.messages.ResponseMessage;
 public class PatchedRemoteEndpoint extends RemoteEndpoint {
 
 	// Deliberately use the logger of the super class.
-	private static final Logger LOG = Logger.getLogger(RemoteEndpoint.class.getName());
+	private static final Logger LOG = Logger.getLogger(RemoteEndpoint.class);
 
 	private final Endpoint localEndpoint;
 	private final Function<Throwable, ResponseError> exceptionHandler;
@@ -88,6 +87,9 @@ public class PatchedRemoteEndpoint extends RemoteEndpoint {
 			if (cancelParams != null) {
 				if (cancelParams instanceof CancelParams) {
 					String id = ((CancelParams) cancelParams).getId();
+
+					LOG.warn("Client cancels: " + id);
+
 					CompletableFuture<?> future;
 					synchronized (receivedRequestMap) {
 						future = receivedRequestMap.remove(id);
@@ -95,23 +97,38 @@ public class PatchedRemoteEndpoint extends RemoteEndpoint {
 					if (future != null)
 						future.cancel(true);
 					else
-						LOG.warning("Unmatched cancel notification for request id " + id);
+						LOG.debug("Unmatched cancel notification for request id " + id);
 					return true;
 				} else {
-					LOG.warning("Cancellation support is disabled, since the '"
+					LOG.warn("Cancellation support is disabled, since the '"
 							+ MessageJsonHandler.CANCEL_METHOD.getMethodName()
 							+ "' method has been registered explicitly.");
 				}
 			} else {
-				LOG.warning("Missing 'params' attribute of cancel notification.");
+				LOG.warn("Missing 'params' attribute of cancel notification.");
 			}
 		}
 		return false;
 	}
 
 	@Override
+	protected void handleNotification(NotificationMessage notificationMessage) {
+		if (!handleCancellation(notificationMessage)) {
+			// Forward the notification to the local endpoint
+			LOG.warn("Client notifies: " + notificationMessage.getMethod());
+			try {
+				localEndpoint.notify(notificationMessage.getMethod(), notificationMessage.getParams());
+			} catch (Exception exception) {
+				LOG.warn("Notification threw an exception: " + notificationMessage, exception);
+			}
+		}
+	}
+
+	@Override
 	protected void handleRequest(RequestMessage requestMessage) {
 		CompletableFuture<?> future;
+		final String messageId = requestMessage.getId();
+		LOG.warn("Client requests: " + messageId + " / " + requestMessage.getMethod());
 		try {
 			// Forward the request to the local endpoint
 			future = localEndpoint.request(requestMessage.getMethod(), requestMessage.getParams());
@@ -129,7 +146,6 @@ public class PatchedRemoteEndpoint extends RemoteEndpoint {
 				return;
 		}
 
-		final String messageId = requestMessage.getId();
 		synchronized (receivedRequestMap) {
 			receivedRequestMap.put(messageId, future);
 		}
@@ -137,10 +153,7 @@ public class PatchedRemoteEndpoint extends RemoteEndpoint {
 			// Reply with the result object that was computed by the local endpoint
 			out.consume(createResultResponseMessage(requestMessage, result));
 		}).thenAccept((result) -> {
-			// request was handled correctly - remove the entry from the map
-			synchronized (receivedRequestMap) {
-				receivedRequestMap.remove(messageId);
-			}
+			LOG.warn("Server response: " + messageId + " / " + requestMessage.getMethod());
 		}).exceptionally((Throwable t) -> {
 			// The local endpoint has failed computing a result - reply with an error response
 			ResponseMessage responseMessage;
@@ -149,6 +162,7 @@ public class PatchedRemoteEndpoint extends RemoteEndpoint {
 						+ "') has been cancelled";
 				ResponseError errorObject = new ResponseError(ResponseErrorCode.RequestCancelled, message, null);
 				responseMessage = createErrorResponseMessage(requestMessage, errorObject);
+				LOG.warn("Server cancels: " + messageId + " / " + requestMessage.getMethod());
 			} else {
 				ResponseError errorObject = exceptionHandler.apply(t);
 				if (errorObject == null) {
@@ -156,17 +170,20 @@ public class PatchedRemoteEndpoint extends RemoteEndpoint {
 							t);
 				}
 				responseMessage = createErrorResponseMessage(requestMessage, errorObject);
-				synchronized (receivedRequestMap) {
-					receivedRequestMap.remove(messageId);
-				}
+				LOG.warn("Server errors: " + messageId + " / " + requestMessage.getMethod());
 			}
 			out.consume(responseMessage);
+			return null;
+		}).thenApply((obj) -> {
+			synchronized (receivedRequestMap) {
+				receivedRequestMap.remove(messageId);
+			}
 			return null;
 		});
 	}
 
 	private static ResponseError fallbackResponseError(String header, Throwable throwable) {
-		LOG.log(Level.SEVERE, header + ": " + throwable.getMessage(), throwable);
+		LOG.error(header + ": " + throwable.getMessage(), throwable);
 		ResponseError error = new ResponseError();
 		error.setMessage(header + ".");
 		error.setCode(ResponseErrorCode.InternalError);

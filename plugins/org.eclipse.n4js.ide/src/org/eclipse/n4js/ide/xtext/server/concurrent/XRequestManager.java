@@ -9,6 +9,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.log4j.Logger;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.xbase.lib.Functions.Function0;
@@ -26,6 +27,8 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class XRequestManager {
+
+	private static final Logger LOG = Logger.getLogger(XRequestManager.class);
 
 	@Inject
 	private ExecutorService parallel;
@@ -52,23 +55,26 @@ public class XRequestManager {
 	/**
 	 * Run the given cancellable logic as a read request.
 	 */
-	public <V> CompletableFuture<V> runRead(Function1<? super CancelIndicator, ? extends V> cancellable) {
-		return submit(new XReadRequest<>(this, cancellable, parallel));
+	public <V> CompletableFuture<V> runRead(String description,
+			Function1<? super CancelIndicator, ? extends V> cancellable) {
+		return submit(new XReadRequest<>(this, description, cancellable, parallel));
 	}
 
 	/**
 	 * Perform the given write and run the cancellable logic afterwards.
 	 */
 	public <U, V> CompletableFuture<V> runWrite(
+			String description,
 			Function0<? extends U> nonCancellable,
 			Function2<? super CancelIndicator, ? super U, ? extends V> cancellable) {
-		return submit(new XWriteRequest<>(this, nonCancellable, cancellable, cancel()));
+		return submit(new XWriteRequest<>(this, description, nonCancellable, cancellable, cancel()));
 	}
 
 	/**
 	 * Submit the given request.
 	 */
 	protected <V> CompletableFuture<V> submit(XAbstractRequest<V> request) {
+		LOG.warn("submit: " + request);
 		requests.add(request);
 		queue.submit(request);
 		return request.get();
@@ -79,6 +85,7 @@ public class XRequestManager {
 	 */
 	protected CompletableFuture<Void> cancel() {
 		List<XAbstractRequest<?>> localRequests = requests;
+		LOG.warn("cancel: " + localRequests);
 		requests = new ArrayList<>();
 		CompletableFuture<?>[] cfs = new CompletableFuture<?>[localRequests.size()];
 		for (int i = 0, max = localRequests.size(); i < max; i++) {
