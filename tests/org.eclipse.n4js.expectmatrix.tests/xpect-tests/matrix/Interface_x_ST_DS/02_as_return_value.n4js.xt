@@ -40,7 +40,7 @@ class C1 {
 	// return value must be ~I, all well XPECT noerrors -->
 	public f2b () : ~I<int> { return {x: 3, foo: this.f}; };
 
-	// return value must be ~~I, all well noerrors but XPECT warnings --> "foo is not defined in ~~I<int>; it will not be accessible from the receiving object." at "foo"
+	// return value must be ~~I, all well noerrors but XPECT warnings --> "foo is not defined in ~~I<int>; it will not be accessible from references of type I." at "foo"
 	public f3 () : ~~I<int> { return {x: 3, foo: this.f}; };
 }
 
@@ -57,7 +57,7 @@ class C2 {
 	// ~Object with { ~Object with { int i; } x; {function():void} foo; } is not a subtype of ~I<A>.
 	public f2b () : ~I<A> { return {x: {i: 3}, foo: this.f}; };
 
-	// GHOLD-250 ATTENTION return value must be ~~I, all well, noerrors but XPECT warnings --> "foo is not defined in ~~I<A>; it will not be accessible from the receiving object." at "foo"
+	// GHOLD-250 ATTENTION return value must be ~~I, all well, noerrors but XPECT warnings --> "foo is not defined in ~~I<A>; it will not be accessible from references of type I." at "foo"
 	// ~Object with { ~Object with { int i; } x; {function():void} foo; } is not a subtype of ~~I<A>.
 	public f3 () : ~~I<A> { return {x: {i: 3}, foo: this.f}; };
 

@@ -56,6 +56,6 @@ class Y extends A2 {
 }
 var y1 : Y = new Y({k:1});
 console.log(y1) // expect output: { s: undefined }
-// XPECT warnings -->"s is not defined in ~~A2 with { k: number }; it will not have any effect in the spec constructor." at "s"
+// XPECT warnings -->"s is not defined in ~~A2 with { k: number }; it will not be accessible from the receiving parameter." at "s"
 var y2 : Y = new Y({k:2, s:"y2"});
 console.log(y2) // expect output: { s: undefined }

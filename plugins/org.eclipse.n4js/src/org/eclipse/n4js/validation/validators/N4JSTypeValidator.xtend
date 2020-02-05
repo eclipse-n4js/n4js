@@ -548,11 +548,11 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 					switch (lhs) {
 						IdentifierRef: lhs.idAsText
 						ParameterizedPropertyAccessExpression: lhs.propertyAsText
-						default: "type " + typeRef.declaredType.name
+						default: "references of type " + typeRef.declaredType.name
 					}
 				}
 				Argument: "the receiving parameter"
-				default: "type " + typeRef.declaredType.name
+				default: "references of type " + typeRef.declaredType.name
 			};
 
 			val inputMembers = (objectLiteral.definedType as ContainerType<?>).ownedMembers;

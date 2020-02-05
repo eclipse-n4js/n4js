@@ -39,13 +39,13 @@ new D({prop: "", propOther: "", propUnknown: ""});
 
 
 new C(
-	// not a spec argument XPECT warnings --> "propUnknown is not defined in ~C; it will not be accessible from the receiving parameter." at "propUnknown"
+	// not a spec argument XPECT warnings --> "propUnknown is not defined in ~i~this[C]; it will not be accessible from the receiving parameter." at "propUnknown"
 	{prop: "", propOther: "", propUnknown: ""},
 	/* works XPECT warnings ---
 	"propOther is not defined in ~i~this[C]; it will not have any effect in the spec constructor." at "propOther"
 	"propUnknown is not defined in ~i~this[C]; it will not have any effect in the spec constructor." at "propUnknown"
 	--- */
 	{prop: "", propOther: "", propUnknown: ""},
-	// not a spec argument XPECT warnings --> "propUnknown is not defined in ~C; it will not be accessible from the receiving parameter." at "propUnknown"
+	// not a spec argument XPECT warnings --> "propUnknown is not defined in ~i~this[C]; it will not be accessible from the receiving parameter." at "propUnknown"
 	{prop: "", propOther: "", propUnknown: ""}
 );
