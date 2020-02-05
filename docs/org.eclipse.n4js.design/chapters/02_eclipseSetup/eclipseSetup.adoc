@@ -72,3 +72,22 @@ You may need to adjust some settings in Eclipse, most importantly
 
 * *Text file encoding* to ``Other: UTF-8`` and
 * *New text file line delimiter* to ``Unix`` .
+
+
+
+== LSP and Visual Studio Code
+
+To use the LSP server in combination with VS Code, the N4JS VSCode extension is necessary.
+Usually, this can be installed via VS Code marketplace and/or distributable package.
+For development purposes, a third why of installing the N4JS VSCode extension is recommended.
+
+=== Setup N4JS VSCode Extension
+
+Follow these steps to setup the N4JS VSCode Extension for development purposes:
+* Create a symlink folder from the extension directory of VSCode `~/.vscode/extensions/` to the implementation inside the n4js git clone `git/n4js/lsp-clients/n4js-vscode-extension`.
+* Run `npm install` inside the  `n4js-vscode-extension`.
+* Restart/reload VSCode
+* Check VSCode output called _N4JS LSP Server_ for output messages.
+
+This extension will download several dependencies such as `n4js-cli` which contains `n4jsc.jar` that is used to start the lsp server.
+In case a locally started lsp server should be used instead, e.g. for debugging purposes, start an lsp server before starting VSCode on port 5007.
