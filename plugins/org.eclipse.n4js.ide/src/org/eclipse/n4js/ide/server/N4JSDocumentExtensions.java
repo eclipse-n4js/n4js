@@ -16,13 +16,12 @@ import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 import org.eclipse.xtext.ide.server.DocumentExtensions;
-import org.eclipse.xtext.resource.ClasspathUriUtil;
 import org.eclipse.xtext.util.ITextRegion;
 
 import com.google.inject.Singleton;
 
 /**
- *
+ * Allow to obtain a file system location from a n4scheme URI.
  */
 @Singleton
 public class N4JSDocumentExtensions extends DocumentExtensions {
@@ -34,21 +33,8 @@ public class N4JSDocumentExtensions extends DocumentExtensions {
 			if (N4Scheme.isResourceWithN4Scheme(resource)) {
 				URI uri = resource.getURI();
 				URIConverter uriConverter = resource.getResourceSet().getURIConverter();
-				String[] allSegments = new String[uri.segmentCount() + 1];
-				allSegments[0] = "env";
-				for (int i = 0; i < uri.segmentCount(); i++) {
-					allSegments[i + 1] = uri.segment(i);
-				}
-				URI classpathURI = URI.createHierarchicalURI(
-						ClasspathUriUtil.CLASSPATH_SCHEME,
-						uri.authority(),
-						uri.device(),
-						allSegments,
-						uri.query(),
-						uri.fragment());
-
+				URI classpathURI = N4Scheme.toClasspathURI(uri);
 				URI resolvedURI = uriConverter.normalize(classpathURI);
-				System.out.println(resolvedURI);
 				return new Location(resolvedURI.toString(), result.getRange());
 			}
 		}
