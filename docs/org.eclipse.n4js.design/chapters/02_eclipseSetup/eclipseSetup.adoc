@@ -85,9 +85,20 @@ For development purposes, a third why of installing the N4JS VSCode extension is
 
 Follow these steps to setup the N4JS VSCode Extension for development purposes:
 * Create a symlink folder from the extension directory of VSCode `~/.vscode/extensions/` to the implementation inside the n4js git clone `git/n4js/lsp-clients/n4js-vscode-extension`.
-* Run `npm install` inside the  `n4js-vscode-extension`.
+* Run `npm install` inside the `n4js-vscode-extension`.
 * Restart/reload VSCode
 * Check VSCode output called _N4JS LSP Server_ for output messages.
 
 This extension will download several dependencies such as `n4js-cli` which contains `n4jsc.jar` that is used to start the lsp server.
 In case a locally started lsp server should be used instead, e.g. for debugging purposes, start an lsp server before starting VSCode on port 5007.
+
+=== Local Changes on N4js-Libs
+
+In case of local changes of n4js-libs one way of including them is to use a local verdaccio.
+The verdaccio is first populated by running maven, and then used when executing `npm install` in the directory `n4js-vscode-extension`.
+
+* Start docker
+* Run maven with: `mvn -DnoTests -DstartAndKeepVerdaccio -PbuildProduct clean verify`
+* Change directory to `n4js-vscode-extension`
+* Remove `node_modules` folder and `package-lock.json` file
+* Install from local verdaccio with: `npm install --registry http://localhost:4873`
