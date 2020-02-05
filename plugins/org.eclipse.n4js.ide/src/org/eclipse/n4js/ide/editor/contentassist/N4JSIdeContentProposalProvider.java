@@ -10,15 +10,21 @@
  */
 package org.eclipse.n4js.ide.editor.contentassist;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.n4js.ide.editor.contentassist.imports.ImportsAwareReferenceProposalCreator;
+import org.eclipse.n4js.n4JS.JSXElement;
+import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
+import org.eclipse.xtext.AbstractElement;
+import org.eclipse.xtext.Assignment;
 import org.eclipse.xtext.CrossReference;
 import org.eclipse.xtext.GrammarUtil;
+import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.ParserRule;
 import org.eclipse.xtext.ide.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ide.editor.contentassist.IIdeContentProposalAcceptor;
@@ -88,7 +94,8 @@ public class N4JSIdeContentProposalProvider extends IdeContentProposalProvider {
 				String featureName = GrammarUtil.containingAssignment(crossReference).getFeature();
 				if (featureName.equals(TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE.getName())) {
 					ref = TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE;
-				} else if (featureName.equals(TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__AST_NAMESPACE.getName())) {
+				} else if (featureName
+						.equals(TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__AST_NAMESPACE.getName())) {
 					ref = TypeRefsPackage.eINSTANCE.getParameterizedTypeRef_AstNamespace();
 				}
 			}
@@ -98,6 +105,32 @@ public class N4JSIdeContentProposalProvider extends IdeContentProposalProvider {
 		}
 
 		// super._createProposals(crossReference, context, acceptor);
+	}
+
+	@Override
+	protected void _createProposals(Keyword keyword, ContentAssistContext context,
+			IIdeContentProposalAcceptor acceptor) {
+		EObject currentModel = context.getCurrentModel();
+		EObject previousModel = context.getPreviousModel();
+		if (currentModel instanceof ParameterizedPropertyAccessExpression ||
+				previousModel instanceof ParameterizedPropertyAccessExpression)
+			return; // filter out all keywords if we are in the context of a property access
+		if (currentModel instanceof JSXElement || previousModel instanceof JSXElement)
+			return; // filter out all keywords if we are in the context of a JSX element
+		if (!Character.isAlphabetic(keyword.getValue().charAt(0)))
+			return; // filter out operators
+		if (keyword.getValue().length() < 5)
+			return; // filter out short keywords
+		super._createProposals(keyword, context, acceptor);
+	}
+
+	@Override
+	protected void _createProposals(Assignment assignment, ContentAssistContext context,
+			IIdeContentProposalAcceptor acceptor) {
+		AbstractElement terminal = assignment.getTerminal();
+		if (terminal instanceof CrossReference) {
+			createProposals(terminal, context, acceptor);
+		}
 	}
 
 	/**
