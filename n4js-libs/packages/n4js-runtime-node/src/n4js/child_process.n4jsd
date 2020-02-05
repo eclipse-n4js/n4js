@@ -17,7 +17,7 @@ export external public interface ChildProcess extends IEventEmitter {
     public pid: int;
     public connected: boolean;
     public disconnect(): void;
-    public kill(signal: string=);
+    public kill(signal: string=): boolean;
     @Promisifiable
     public send(message: Object, sendHandle: any=, callback: {function(res: any)}=): boolean;
     public stderr: IReadableStream;
@@ -43,7 +43,7 @@ export external public function execSync(command: string, options: Object=): uni
 export external public function execFileSync(file: string, args: string[] =, options: Object=): union{Buffer, string};
 
 export external public function fork(modulePath: string, args: string[] =, options: Object=): ChildProcess;
-export external public function spawn(command: string, args: string[] =, options: Object=): ChildProcess;
+export external public function spawn(command: string, args: string[] =, options: SpawnOptions=): ChildProcess;
 export external public function spawnSync(command: string, args: string[] =, options: Object=): ~Object with {
     pid: int;
     output: ?[];
@@ -54,4 +54,17 @@ export external public function spawnSync(command: string, args: string[] =, opt
     error: Error;
 };
 
+export external public interface ~SpawnOptions {
+	cwd?: string;
+	env?: Object;
+	argv0?: string;
+	stdio?: Array<any>|string;
+	detached?: boolean;
+	uid?: number;
+	gid?: number;
+	serialization?: string;
+	shell?: boolean|string;
+	windowsVerbatimArguments?: boolean;
+	windowsHide?: boolean;
+}
 

@@ -33,6 +33,7 @@ public class TypingStrategyFilter implements Predicate<TMember> {
 	private final TypingStrategy typingStrategy;
 	private final boolean isWriteAccess;
 	private final boolean inSpecCtor;
+	private final boolean ignoreAccessModifier;
 
 	/**
 	 * Creates new instance intended for read access and without <code>@Spec</code>-constructor semantics.
@@ -50,9 +51,22 @@ public class TypingStrategyFilter implements Predicate<TMember> {
 	 *            this flag to <code>true</code>.
 	 */
 	public TypingStrategyFilter(TypingStrategy typingStrategy, boolean isWriteAccess, boolean inSpecCtor) {
+		this(typingStrategy, isWriteAccess, inSpecCtor, false);
+	}
+
+	/**
+	 * Creates new instance.
+	 *
+	 * @param ignoreAccessModifier
+	 *            if set to true, the filter will include non-public members.
+	 */
+	public TypingStrategyFilter(TypingStrategy typingStrategy, boolean isWriteAccess, boolean inSpecCtor,
+			boolean ignoreAccessModifier) {
+
 		this.typingStrategy = typingStrategy;
 		this.isWriteAccess = isWriteAccess;
 		this.inSpecCtor = inSpecCtor;
+		this.ignoreAccessModifier = ignoreAccessModifier;
 	}
 
 	/**
@@ -64,7 +78,10 @@ public class TypingStrategyFilter implements Predicate<TMember> {
 
 	@Override
 	public boolean apply(TMember member) {
-		if (member.isStatic() || member.getMemberAccessModifier() != MemberAccessModifier.PUBLIC) {
+		if (member.isStatic()) {
+			return false;
+		}
+		if (!ignoreAccessModifier && member.getMemberAccessModifier() != MemberAccessModifier.PUBLIC) {
 			return false;
 		}
 

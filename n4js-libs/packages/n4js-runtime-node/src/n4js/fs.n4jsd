@@ -46,6 +46,21 @@ export external public class WriteStream extends stream.Writable {
     public close(): void;
     public bytesWritten: number;
 }
+export external public class Dirent {
+    public name: string;
+    public isBlockDevice(): boolean;
+    public isCharacterDevice(): boolean;
+    public isDirectory(): boolean;
+    public isFIFO(): boolean;
+    public isFile(): boolean;
+    public isSocket(): boolean;
+    public isSymbolicLink(): boolean;
+}
+export public interface ~RmdirOptions {
+    public maxRetries?: number;
+    public recursive?: boolean;
+    public retryDelay?: number;
+}
 
 //OSX only methods. Cannot be uses on linux etc.
 //export external public function lchown(string path, number uid, number gid, {function(Error?):void}? callback): void;
@@ -113,8 +128,8 @@ export external public function unlink(path: string, callback: {function(Error=)
 export external public function unlinkSync(path: string): void;
 
 @Promisifiable
-export external public function rmdir(path: string, callback: {function(Error=):void}=): void;
-export external public function rmdirSync(path: string): void;
+export external public function rmdir(path: string, options: RmdirOptions=, callback: {function(Error=):void}=): void;
+export external public function rmdirSync(path: string, options: RmdirOptions=): void;
 
 @Promisifiable
 export external public function mkdir(path: string, mode: union{number, string}=, callback: {function(Error=):void}=): void;
@@ -125,8 +140,12 @@ export external public function mkdtemp(prefix: string, callback: {function(Erro
 export external public function mkdtempSync(prefix: string): string;
 
 @Promisifiable
+export external public function copyFile(src: string, dest: string, flags: number=, callback: {function(Error, string):void}=): void;
+export external public function copyFileSync(src: string, dest: string, flags: number=): string;
+
+@Promisifiable
 export external public function readdir(path: string, callback: {function(Error, string[]): void}=): void;
-export external public function readdirSync(path: string): string[];
+export external public function readdirSync(path: string, options: string | ~Object with {encoding?: string, withFileTypes?: boolean} =): string[]|Dirent[];
 
 @Promisifiable
 export external public function close(fd: number, callback: {function(Error=):void}=): void;

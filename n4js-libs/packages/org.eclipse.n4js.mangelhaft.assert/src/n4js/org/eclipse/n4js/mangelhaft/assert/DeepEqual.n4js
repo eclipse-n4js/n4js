@@ -27,8 +27,8 @@ function deepEqualRec(actual: any, expected: any, visited: WeakMap<Object, any>,
         return actual === expected;
     }
     
-    const actualObj: Object = actual as Object;
-    const expectedObj: Object = expected as Object;
+    const actualObj: Object = actual;
+    const expectedObj: Object = expected;
     
     if (!ignorePrototype) {
        const actualPrototype = Object.getPrototypeOf(actualObj);

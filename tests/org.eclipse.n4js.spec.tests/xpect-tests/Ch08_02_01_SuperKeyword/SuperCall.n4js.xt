@@ -60,7 +60,7 @@ class T1Sub extends T1 {
 	public f : string;
 
 	constructor() {
-		// XPECT warnings --> "f is not defined in ~~this[T1]." at "f"
+		// XPECT warnings --> "f is not defined in ~~this[T1]; it will not be accessible from the receiving parameter." at "f"
 		super( {f: "hi there!"} );				// ok
 	}
 }
@@ -72,8 +72,8 @@ class T1Sub2 extends T1 {
 	constructor() {
 		// No error since IDEBUG-262:  noerrors --> "~Object with { number f; number n; } is not a structural subtype of ~~T1Sub2: f failed: number is not equal to string." at "{f: 43, n: 42}"
 		/* XPECT warnings ---
-		   "f is not defined in ~~this[T1]." at "f"
-		   "n is not defined in ~~this[T1]." at "n"
+		   "f is not defined in ~~this[T1]; it will not be accessible from the receiving parameter." at "f"
+		   "n is not defined in ~~this[T1]; it will not be accessible from the receiving parameter." at "n"
 		   --- */
 		super( {f: 43, n: 42} );				// f here is only resolved against ~~T and there is no property !
 	}

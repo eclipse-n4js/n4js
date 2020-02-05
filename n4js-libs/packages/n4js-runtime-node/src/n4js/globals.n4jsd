@@ -12,3 +12,22 @@
 
 export external public const global: Object+;
 
+export external public function setTimeout(callback: () => void, ms: number, ...args: any[]): Timeout;
+export external public function clearTimeout(timeoutId: Timeout): void;
+export external public function setInterval(callback: () => void, ms: number, ...args: any[]): Timeout;
+export external public function clearInterval(intervalId: Timeout): void;
+export external public function setImmediate(callback: () => void, ...args: any[]): Immediate;
+export external public function clearImmediate(immediateId: Immediate): void;
+
+export external public class Timeout {
+	public hasRef(): boolean;
+	public ref(): Timeout;
+	public refresh(): Timeout;
+	public unref(): Timeout;
+}
+
+export external public class Immediate {
+	public hasRef(): boolean;
+	public ref(): Immediate;
+	public unref(): Immediate;
+}

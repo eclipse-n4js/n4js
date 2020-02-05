@@ -271,7 +271,7 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 
 	/** Triggers an incremental build, and will generate output files. */
 	protected XBuildable getIncrementalGenerateBuildable(List<URI> dirtyFiles, List<URI> deletedFiles) {
-		XBuildManager.XBuildable buildable = buildManager.getIncrementalDirtyBuildable(dirtyFiles, deletedFiles);
+		XBuildManager.XBuildable buildable = buildManager.getIncrementalGenerateBuildable(dirtyFiles, deletedFiles);
 		return (cancelIndicator) -> {
 			List<IResourceDescription.Delta> deltas = buildable.build(cancelIndicator);
 			afterBuild(deltas);

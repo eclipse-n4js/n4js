@@ -86,7 +86,9 @@ public class ImportUtil {
 
 		@Override
 		public void accept(ContentAssistEntry entry, int priority) {
-			caEntries.add(entry);
+			if (entry != null) {
+				caEntries.add(entry);
+			}
 		}
 
 		@Override
