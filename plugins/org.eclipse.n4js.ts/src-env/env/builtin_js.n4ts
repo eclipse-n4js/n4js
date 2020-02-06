@@ -2015,4 +2015,5 @@ public providedByRuntime class Promise<out S, out F> extends Object @Global {
 public providedByRuntime class TEMP_ReturnTypeOfMatchExec extends Array<string> {
 	public index: number;
 	public input: string;
+	public groups?: any+;
 }

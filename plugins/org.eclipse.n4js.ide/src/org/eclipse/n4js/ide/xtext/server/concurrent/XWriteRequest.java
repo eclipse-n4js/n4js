@@ -22,10 +22,13 @@ public class XWriteRequest<U, V> extends XAbstractRequest<V> {
 	/**
 	 * Standard constructor.
 	 */
-	public XWriteRequest(XRequestManager requestManager, Function0<? extends U> nonCancellable,
+	public XWriteRequest(
+			XRequestManager requestManager,
+			String description,
+			Function0<? extends U> nonCancellable,
 			Function2<? super CancelIndicator, ? super U, ? extends V> cancellable,
 			CompletableFuture<Void> previous) {
-		super(requestManager);
+		super(requestManager, description);
 		this.nonCancellable = nonCancellable;
 		this.cancellable = cancellable;
 		this.previous = previous;
@@ -36,17 +39,17 @@ public class XWriteRequest<U, V> extends XAbstractRequest<V> {
 		try {
 			previous.join();
 		} catch (Throwable t) {
-			// ignore
+			if (!requestManager.isCancelException(t)) {
+				LOG.error("Error during request: ", t);
+			}
 		}
 		try {
 			U intermediateResult = this.nonCancellable.apply();
 			cancelIndicator.checkCanceled();
-			result.complete(cancellable.apply(cancelIndicator, intermediateResult));
+			V writeResult = cancellable.apply(cancelIndicator, intermediateResult);
+			complete(writeResult);
 		} catch (Throwable t) {
-			if (!requestManager.isCancelException(t)) {
-				LOG.error("Error during request: ", t);
-			}
-			result.completeExceptionally(t);
+			completeExceptionally(t);
 		}
 	}
 

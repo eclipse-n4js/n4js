@@ -212,11 +212,16 @@ export public function getJavaVersion() : string {
         return spawn.error.toString();
     }
     if (spawn.stderr) {
+        // common print outs of 'java -version' are:
+        // - openjdk version "11.0.6" 2020-01-14
+        // - java version "11.0.4" 2019-07-16 LTS
+        const regex = /\"(?<version>\d+\.\d+\.\d+)\"/;
         const data = spawn.stderr.toString().split('\n')[0];
-        const javaVersion : string|boolean = new RegExp('java version').test(data) ? data.split(' ')[2].replace(/"/g, '') : false;
-        if (javaVersion !== false) {
+        const groups = data.match(regex)?.groups;
+        const javaVersion = groups?.version as string;
+        if (javaVersion) {
             // Java installed
-            return javaVersion as string;
+            return javaVersion;
         } else {
             // No Java installed
             return null;

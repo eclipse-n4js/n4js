@@ -45,6 +45,7 @@ import org.eclipse.xtext.ide.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ide.editor.contentassist.ContentAssistEntry;
 import org.eclipse.xtext.ide.editor.contentassist.IIdeContentProposalAcceptor;
 import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalCreator;
+import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalPriorities;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -79,6 +80,9 @@ public class ImportsAwareReferenceProposalCreator {
 
 	@Inject
 	private IQualifiedNameProvider qualifiedNameProvider;
+
+	@Inject
+	private IdeContentProposalPriorities proposalPriorities;
 
 	private static final EReference[] referencesSupportingImportedElements = {
 			N4JSPackage.Literals.IDENTIFIER_REF__ID,
@@ -139,7 +143,7 @@ public class ImportsAwareReferenceProposalCreator {
 							filter,
 							proposalFactory);
 
-					acceptor.accept(proposal, 0);
+					acceptor.accept(proposal, proposalPriorities.getCrossRefPriority(candidate, proposal));
 				}
 			}
 		}

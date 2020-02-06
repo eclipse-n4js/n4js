@@ -48,7 +48,6 @@ import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.extensions.ExpressionExtensions
 import org.eclipse.n4js.scoping.N4JSScopeProvider
 import org.eclipse.n4js.scoping.members.TypingStrategyFilter
-import org.eclipse.n4js.scoping.utils.AbstractDescriptionWithError
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
@@ -89,6 +88,7 @@ import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
+import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
@@ -310,7 +310,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 					val hiddenTypeDscr = scope.getSingleElement(QualifiedName.create(it.name));
 					val hiddenType = hiddenTypeDscr?.getEObjectOrProxy;
 					if (hiddenType instanceof Type &&
-						!(AbstractDescriptionWithError.isErrorDescription_XTEND_MVN_BUG_HACK(hiddenTypeDscr))) {
+						!(IEObjectDescriptionWithError.isErrorDescription(hiddenTypeDscr))) {
 						val message = getMessageForVIS_TYPE_PARAMETER_HIDES_TYPE(name, hiddenType.keyword);
 						addIssue(message, it, VIS_TYPE_PARAMETER_HIDES_TYPE);
 					}

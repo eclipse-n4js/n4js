@@ -241,8 +241,8 @@ public class XBuildManager {
 			queue(this.dirtyFiles, deletedFiles, dirtyFiles);
 			queue(this.deletedFiles, dirtyFiles, deletedFiles);
 
-			Map<ProjectDescription, Set<URI>> project2dirty = computeProjectToUriMap(dirtyFiles);
-			Map<ProjectDescription, Set<URI>> project2deleted = computeProjectToUriMap(deletedFiles);
+			Map<ProjectDescription, Set<URI>> project2dirty = computeProjectToUriMap(this.dirtyFiles);
+			Map<ProjectDescription, Set<URI>> project2deleted = computeProjectToUriMap(this.deletedFiles);
 
 			SetView<ProjectDescription> allDescriptions = Sets.union(project2dirty.keySet(), project2deleted.keySet());
 			List<ProjectDescription> sortedDescriptions = sortByDependencies(allDescriptions);
@@ -255,8 +255,8 @@ public class XBuildManager {
 				XBuildResult partialResult = projectManager.doIncrementalBuild(projectDirty, projectDeleted,
 						unreportedDeltas, doGenerate, cancelIndicator);
 
-				dirtyFiles.removeAll(projectDirty);
-				deletedFiles.removeAll(projectDeleted);
+				this.dirtyFiles.removeAll(projectDirty);
+				this.deletedFiles.removeAll(projectDeleted);
 				mergeWithUnreportedDeltas(partialResult.getAffectedResources());
 
 				if (doGenerate) {
@@ -270,11 +270,11 @@ public class XBuildManager {
 		} catch (CancellationException ce) {
 			throw ce;
 
-		} catch (Exception ce) {
+		} catch (Exception e) {
 			// recover
-			dirtyFiles.clear();
-			deletedFiles.clear();
-			throw ce;
+			this.dirtyFiles.clear();
+			this.deletedFiles.clear();
+			throw e;
 		}
 	}
 
