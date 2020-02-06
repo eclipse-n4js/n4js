@@ -45,7 +45,21 @@
 				"scopeName": "source.n4js",
 				"path": "./syntaxes/n4js.tmLanguage.json"
 			}
-		]
+		],
+		"commands": [
+			{
+				"command": "n4js.clean",
+				"title": "N4JS: Clean"
+			}
+		],
+		"activationEvents": ["onCommand:n4js.clean"],
+		"menus": {
+			"commandPalette": [
+				{
+					"command": "n4js.clean"
+				}
+			]
+		}
 	},
 	"devDependencies": {
 		"@types/vscode": "^1.41.0"
