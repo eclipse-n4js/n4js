@@ -40,7 +40,11 @@ Solidus : '/';
 
 Colon : ':';
 
+LessThanSign : '<';
+
 EqualsSign : '=';
+
+GreaterThanSign : '>';
 
 QuestionMark : '?';
 
@@ -49,6 +53,8 @@ LeftSquareBracket : '[';
 RightSquareBracket : ']';
 
 CircumflexAccent : '^';
+
+KW__ : '_';
 
 LeftCurlyBracket : '{';
 
@@ -78,7 +84,7 @@ RULE_UNICODE_DIGIT : RULE_UNICODE_DIGIT_FRAGMENT;
 
 RULE_UNICODE_LETTER : RULE_UNICODE_LETTER_FRAGMENT;
 
-RULE_PATTERN_CHARACTER_NO_DASH : ~(('^'|'$'|'\\'|'.'|'*'|'+'|'?'|'('|')'|'['|']'|'{'|'}'|'|'|'-'));
+RULE_PATTERN_CHARACTER_NO_DASH : ~(('^'|'$'|'\\'|'.'|'*'|'+'|'?'|'('|')'|'['|']'|'{'|'}'|'|'|'-'|'<'|'>'));
 
 fragment RULE_HEX_DIGIT : (RULE_DECIMAL_DIGIT_FRAGMENT|'a'..'f'|'A'..'F');
 

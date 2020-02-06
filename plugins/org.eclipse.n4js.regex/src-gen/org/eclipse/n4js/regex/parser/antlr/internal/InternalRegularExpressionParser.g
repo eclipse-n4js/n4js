@@ -572,16 +572,30 @@ ruleLookAhead returns [EObject current=null]
 			newLeafNode(otherlv_2, grammarAccess.getLookAheadAccess().getQuestionMarkKeyword_2());
 		}
 		(
-			otherlv_3=EqualsSign
+			(
+				lv_backwards_3_0=LessThanSign
+				{
+					newLeafNode(lv_backwards_3_0, grammarAccess.getLookAheadAccess().getBackwardsLessThanSignKeyword_3_0());
+				}
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getLookAheadRule());
+					}
+					setWithLastConsumed($current, "backwards", true, "<");
+				}
+			)
+		)?
+		(
+			otherlv_4=EqualsSign
 			{
-				newLeafNode(otherlv_3, grammarAccess.getLookAheadAccess().getEqualsSignKeyword_3_0());
+				newLeafNode(otherlv_4, grammarAccess.getLookAheadAccess().getEqualsSignKeyword_4_0());
 			}
 			    |
 			(
 				(
-					lv_not_4_0=ExclamationMark
+					lv_not_5_0=ExclamationMark
 					{
-						newLeafNode(lv_not_4_0, grammarAccess.getLookAheadAccess().getNotExclamationMarkKeyword_3_1_0());
+						newLeafNode(lv_not_5_0, grammarAccess.getLookAheadAccess().getNotExclamationMarkKeyword_4_1_0());
 					}
 					{
 						if ($current==null) {
@@ -595,9 +609,9 @@ ruleLookAhead returns [EObject current=null]
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getLookAheadAccess().getPatternDisjunctionParserRuleCall_4_0());
+					newCompositeNode(grammarAccess.getLookAheadAccess().getPatternDisjunctionParserRuleCall_5_0());
 				}
-				lv_pattern_5_0=ruleDisjunction
+				lv_pattern_6_0=ruleDisjunction
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getLookAheadRule());
@@ -605,15 +619,15 @@ ruleLookAhead returns [EObject current=null]
 					set(
 						$current,
 						"pattern",
-						lv_pattern_5_0,
+						lv_pattern_6_0,
 						"org.eclipse.n4js.regex.RegularExpression.Disjunction");
 					afterParserOrEnumRuleCall();
 				}
 			)
 		)
-		otherlv_6=RightParenthesis
+		otherlv_7=RightParenthesis
 		{
-			newLeafNode(otherlv_6, grammarAccess.getLookAheadAccess().getRightParenthesisKeyword_5());
+			newLeafNode(otherlv_7, grammarAccess.getLookAheadAccess().getRightParenthesisKeyword_6());
 		}
 	)
 ;
@@ -830,6 +844,28 @@ rulePatternCharacter returns [EObject current=null]
 						$current = createModelElement(grammarAccess.getPatternCharacterRule());
 					}
 					setWithLastConsumed($current, "value", lv_value_0_11, null);
+				}
+				    |
+				lv_value_0_12=LessThanSign
+				{
+					newLeafNode(lv_value_0_12, grammarAccess.getPatternCharacterAccess().getValueLessThanSignKeyword_0_11());
+				}
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getPatternCharacterRule());
+					}
+					setWithLastConsumed($current, "value", lv_value_0_12, null);
+				}
+				    |
+				lv_value_0_13=GreaterThanSign
+				{
+					newLeafNode(lv_value_0_13, grammarAccess.getPatternCharacterAccess().getValueGreaterThanSignKeyword_0_12());
+				}
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getPatternCharacterRule());
+					}
+					setWithLastConsumed($current, "value", lv_value_0_13, null);
 				}
 			)
 		)
@@ -1565,39 +1601,31 @@ ruleCharacterClassAtom returns [EObject current=null]
 						setWithLastConsumed($current, "character", lv_character_1_18, null);
 					}
 					    |
-					lv_character_1_19=RULE_PATTERN_CHARACTER_NO_DASH
+					lv_character_1_19=LessThanSign
 					{
-						newLeafNode(lv_character_1_19, grammarAccess.getCharacterClassAtomAccess().getCharacterPATTERN_CHARACTER_NO_DASHTerminalRuleCall_1_0_18());
+						newLeafNode(lv_character_1_19, grammarAccess.getCharacterClassAtomAccess().getCharacterLessThanSignKeyword_1_0_18());
 					}
 					{
 						if ($current==null) {
 							$current = createModelElement(grammarAccess.getCharacterClassAtomRule());
 						}
-						setWithLastConsumed(
-							$current,
-							"character",
-							lv_character_1_19,
-							"org.eclipse.n4js.regex.RegularExpression.PATTERN_CHARACTER_NO_DASH");
+						setWithLastConsumed($current, "character", lv_character_1_19, null);
 					}
 					    |
-					lv_character_1_20=RULE_UNICODE_LETTER
+					lv_character_1_20=GreaterThanSign
 					{
-						newLeafNode(lv_character_1_20, grammarAccess.getCharacterClassAtomAccess().getCharacterUNICODE_LETTERTerminalRuleCall_1_0_19());
+						newLeafNode(lv_character_1_20, grammarAccess.getCharacterClassAtomAccess().getCharacterGreaterThanSignKeyword_1_0_19());
 					}
 					{
 						if ($current==null) {
 							$current = createModelElement(grammarAccess.getCharacterClassAtomRule());
 						}
-						setWithLastConsumed(
-							$current,
-							"character",
-							lv_character_1_20,
-							"org.eclipse.n4js.regex.RegularExpression.UNICODE_LETTER");
+						setWithLastConsumed($current, "character", lv_character_1_20, null);
 					}
 					    |
-					lv_character_1_21=RULE_UNICODE_DIGIT
+					lv_character_1_21=RULE_PATTERN_CHARACTER_NO_DASH
 					{
-						newLeafNode(lv_character_1_21, grammarAccess.getCharacterClassAtomAccess().getCharacterUNICODE_DIGITTerminalRuleCall_1_0_20());
+						newLeafNode(lv_character_1_21, grammarAccess.getCharacterClassAtomAccess().getCharacterPATTERN_CHARACTER_NO_DASHTerminalRuleCall_1_0_20());
 					}
 					{
 						if ($current==null) {
@@ -1607,6 +1635,36 @@ ruleCharacterClassAtom returns [EObject current=null]
 							$current,
 							"character",
 							lv_character_1_21,
+							"org.eclipse.n4js.regex.RegularExpression.PATTERN_CHARACTER_NO_DASH");
+					}
+					    |
+					lv_character_1_22=RULE_UNICODE_LETTER
+					{
+						newLeafNode(lv_character_1_22, grammarAccess.getCharacterClassAtomAccess().getCharacterUNICODE_LETTERTerminalRuleCall_1_0_21());
+					}
+					{
+						if ($current==null) {
+							$current = createModelElement(grammarAccess.getCharacterClassAtomRule());
+						}
+						setWithLastConsumed(
+							$current,
+							"character",
+							lv_character_1_22,
+							"org.eclipse.n4js.regex.RegularExpression.UNICODE_LETTER");
+					}
+					    |
+					lv_character_1_23=RULE_UNICODE_DIGIT
+					{
+						newLeafNode(lv_character_1_23, grammarAccess.getCharacterClassAtomAccess().getCharacterUNICODE_DIGITTerminalRuleCall_1_0_22());
+					}
+					{
+						if ($current==null) {
+							$current = createModelElement(grammarAccess.getCharacterClassAtomRule());
+						}
+						setWithLastConsumed(
+							$current,
+							"character",
+							lv_character_1_23,
 							"org.eclipse.n4js.regex.RegularExpression.UNICODE_DIGIT");
 					}
 				)
@@ -1765,29 +1823,75 @@ ruleGroup returns [EObject current=null]
 		(
 			(
 				(
-					lv_nonCapturing_2_0=QuestionMark
-					{
-						newLeafNode(lv_nonCapturing_2_0, grammarAccess.getGroupAccess().getNonCapturingQuestionMarkKeyword_2_0_0());
-					}
-					{
-						if ($current==null) {
-							$current = createModelElement(grammarAccess.getGroupRule());
+					(
+						lv_named_2_0=QuestionMark
+						{
+							newLeafNode(lv_named_2_0, grammarAccess.getGroupAccess().getNamedQuestionMarkKeyword_2_0_0_0());
 						}
-						setWithLastConsumed($current, "nonCapturing", true, "?");
-					}
+						{
+							if ($current==null) {
+								$current = createModelElement(grammarAccess.getGroupRule());
+							}
+							setWithLastConsumed($current, "named", true, "?");
+						}
+					)
 				)
+				otherlv_3=LessThanSign
+				{
+					newLeafNode(otherlv_3, grammarAccess.getGroupAccess().getLessThanSignKeyword_2_0_1());
+				}
+				(
+					(
+						{
+							newCompositeNode(grammarAccess.getGroupAccess().getNameRegExpIdentifierNameParserRuleCall_2_0_2_0());
+						}
+						lv_name_4_0=ruleRegExpIdentifierName
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getGroupRule());
+							}
+							set(
+								$current,
+								"name",
+								lv_name_4_0,
+								"org.eclipse.n4js.regex.RegularExpression.RegExpIdentifierName");
+							afterParserOrEnumRuleCall();
+						}
+					)
+				)
+				otherlv_5=GreaterThanSign
+				{
+					newLeafNode(otherlv_5, grammarAccess.getGroupAccess().getGreaterThanSignKeyword_2_0_3());
+				}
 			)
-			otherlv_3=Colon
-			{
-				newLeafNode(otherlv_3, grammarAccess.getGroupAccess().getColonKeyword_2_1());
-			}
+			    |
+			(
+				(
+					(
+						lv_nonCapturing_6_0=QuestionMark
+						{
+							newLeafNode(lv_nonCapturing_6_0, grammarAccess.getGroupAccess().getNonCapturingQuestionMarkKeyword_2_1_0_0());
+						}
+						{
+							if ($current==null) {
+								$current = createModelElement(grammarAccess.getGroupRule());
+							}
+							setWithLastConsumed($current, "nonCapturing", true, "?");
+						}
+					)
+				)
+				otherlv_7=Colon
+				{
+					newLeafNode(otherlv_7, grammarAccess.getGroupAccess().getColonKeyword_2_1_1());
+				}
+			)
 		)?
 		(
 			(
 				{
 					newCompositeNode(grammarAccess.getGroupAccess().getPatternDisjunctionParserRuleCall_3_0());
 				}
-				lv_pattern_4_0=ruleDisjunction
+				lv_pattern_8_0=ruleDisjunction
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getGroupRule());
@@ -1795,15 +1899,156 @@ ruleGroup returns [EObject current=null]
 					set(
 						$current,
 						"pattern",
-						lv_pattern_4_0,
+						lv_pattern_8_0,
 						"org.eclipse.n4js.regex.RegularExpression.Disjunction");
 					afterParserOrEnumRuleCall();
 				}
 			)
 		)
-		otherlv_5=RightParenthesis
+		otherlv_9=RightParenthesis
 		{
-			newLeafNode(otherlv_5, grammarAccess.getGroupAccess().getRightParenthesisKeyword_4());
+			newLeafNode(otherlv_9, grammarAccess.getGroupAccess().getRightParenthesisKeyword_4());
+		}
+	)
+;
+
+// Entry rule entryRuleRegExpIdentifierName
+entryRuleRegExpIdentifierName returns [String current=null]:
+	{ newCompositeNode(grammarAccess.getRegExpIdentifierNameRule()); }
+	iv_ruleRegExpIdentifierName=ruleRegExpIdentifierName
+	{ $current=$iv_ruleRegExpIdentifierName.current.getText(); }
+	EOF;
+
+// Rule RegExpIdentifierName
+ruleRegExpIdentifierName returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		{
+			newCompositeNode(grammarAccess.getRegExpIdentifierNameAccess().getRegExpIdentifierStartParserRuleCall_0());
+		}
+		this_RegExpIdentifierStart_0=ruleRegExpIdentifierStart
+		{
+			$current.merge(this_RegExpIdentifierStart_0);
+		}
+		{
+			afterParserOrEnumRuleCall();
+		}
+		(
+			{
+				newCompositeNode(grammarAccess.getRegExpIdentifierNameAccess().getRegExpIdentifierPartParserRuleCall_1());
+			}
+			this_RegExpIdentifierPart_1=ruleRegExpIdentifierPart
+			{
+				$current.merge(this_RegExpIdentifierPart_1);
+			}
+			{
+				afterParserOrEnumRuleCall();
+			}
+		)*
+	)
+;
+
+// Entry rule entryRuleRegExpIdentifierStart
+entryRuleRegExpIdentifierStart returns [String current=null]:
+	{ newCompositeNode(grammarAccess.getRegExpIdentifierStartRule()); }
+	iv_ruleRegExpIdentifierStart=ruleRegExpIdentifierStart
+	{ $current=$iv_ruleRegExpIdentifierStart.current.getText(); }
+	EOF;
+
+// Rule RegExpIdentifierStart
+ruleRegExpIdentifierStart returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		this_UNICODE_LETTER_0=RULE_UNICODE_LETTER
+		{
+			$current.merge(this_UNICODE_LETTER_0);
+		}
+		{
+			newLeafNode(this_UNICODE_LETTER_0, grammarAccess.getRegExpIdentifierStartAccess().getUNICODE_LETTERTerminalRuleCall_0());
+		}
+		    |
+		kw=DollarSign
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getRegExpIdentifierStartAccess().getDollarSignKeyword_1());
+		}
+		    |
+		kw=KW__
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getRegExpIdentifierStartAccess().get_Keyword_2());
+		}
+		    |
+		this_UNICODE_ESCAPE_3=RULE_UNICODE_ESCAPE
+		{
+			$current.merge(this_UNICODE_ESCAPE_3);
+		}
+		{
+			newLeafNode(this_UNICODE_ESCAPE_3, grammarAccess.getRegExpIdentifierStartAccess().getUNICODE_ESCAPETerminalRuleCall_3());
+		}
+	)
+;
+
+// Entry rule entryRuleRegExpIdentifierPart
+entryRuleRegExpIdentifierPart returns [String current=null]:
+	{ newCompositeNode(grammarAccess.getRegExpIdentifierPartRule()); }
+	iv_ruleRegExpIdentifierPart=ruleRegExpIdentifierPart
+	{ $current=$iv_ruleRegExpIdentifierPart.current.getText(); }
+	EOF;
+
+// Rule RegExpIdentifierPart
+ruleRegExpIdentifierPart returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		this_UNICODE_LETTER_0=RULE_UNICODE_LETTER
+		{
+			$current.merge(this_UNICODE_LETTER_0);
+		}
+		{
+			newLeafNode(this_UNICODE_LETTER_0, grammarAccess.getRegExpIdentifierPartAccess().getUNICODE_LETTERTerminalRuleCall_0());
+		}
+		    |
+		this_UNICODE_DIGIT_1=RULE_UNICODE_DIGIT
+		{
+			$current.merge(this_UNICODE_DIGIT_1);
+		}
+		{
+			newLeafNode(this_UNICODE_DIGIT_1, grammarAccess.getRegExpIdentifierPartAccess().getUNICODE_DIGITTerminalRuleCall_1());
+		}
+		    |
+		kw=DollarSign
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getRegExpIdentifierPartAccess().getDollarSignKeyword_2());
+		}
+		    |
+		kw=KW__
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getRegExpIdentifierPartAccess().get_Keyword_3());
+		}
+		    |
+		this_UNICODE_ESCAPE_4=RULE_UNICODE_ESCAPE
+		{
+			$current.merge(this_UNICODE_ESCAPE_4);
+		}
+		{
+			newLeafNode(this_UNICODE_ESCAPE_4, grammarAccess.getRegExpIdentifierPartAccess().getUNICODE_ESCAPETerminalRuleCall_4());
 		}
 	)
 ;

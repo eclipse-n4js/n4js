@@ -35,10 +35,6 @@ public interface ExactQuantifier extends Quantifier
   /**
    * Returns the value of the '<em><b>Min</b></em>' attribute.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Min</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Min</em>' attribute.
    * @see #setMin(int)
@@ -61,10 +57,6 @@ public interface ExactQuantifier extends Quantifier
   /**
    * Returns the value of the '<em><b>Max</b></em>' attribute.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Max</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Max</em>' attribute.
    * @see #setMax(int)
@@ -87,10 +79,6 @@ public interface ExactQuantifier extends Quantifier
   /**
    * Returns the value of the '<em><b>Unbounded Max</b></em>' attribute.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Unbounded Max</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Unbounded Max</em>' attribute.
    * @see #setUnboundedMax(boolean)

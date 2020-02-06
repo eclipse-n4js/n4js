@@ -366,6 +366,8 @@ public class RegularExpressionSemanticSequencer extends AbstractDelegatingSemant
 	 *         character='}' | 
 	 *         character='|' | 
 	 *         character='/' | 
+	 *         character='<' | 
+	 *         character='>' | 
 	 *         character=PATTERN_CHARACTER_NO_DASH | 
 	 *         character=UNICODE_LETTER | 
 	 *         character=UNICODE_DIGIT
@@ -617,7 +619,7 @@ public class RegularExpressionSemanticSequencer extends AbstractDelegatingSemant
 	 *     Group returns Group
 	 *
 	 * Constraint:
-	 *     (nonCapturing?='?'? pattern=Disjunction)
+	 *     (((named?='?' name=RegExpIdentifierName) | nonCapturing?='?')? pattern=Disjunction)
 	 */
 	protected void sequence_Group(ISerializationContext context, Group semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -633,7 +635,7 @@ public class RegularExpressionSemanticSequencer extends AbstractDelegatingSemant
 	 *     Term returns Group
 	 *
 	 * Constraint:
-	 *     (nonCapturing?='?'? pattern=Disjunction quantifier=Quantifier?)
+	 *     (((named?='?' name=RegExpIdentifierName) | nonCapturing?='?')? pattern=Disjunction quantifier=Quantifier?)
 	 */
 	protected void sequence_Group_Term(ISerializationContext context, Group semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -767,7 +769,7 @@ public class RegularExpressionSemanticSequencer extends AbstractDelegatingSemant
 	 *     LookAhead returns LookAhead
 	 *
 	 * Constraint:
-	 *     (not?='!'? pattern=Disjunction)
+	 *     (backwards?='<'? not?='!'? pattern=Disjunction)
 	 */
 	protected void sequence_LookAhead(ISerializationContext context, LookAhead semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -791,7 +793,9 @@ public class RegularExpressionSemanticSequencer extends AbstractDelegatingSemant
 	 *         value='!' | 
 	 *         value='{' | 
 	 *         value='}' | 
-	 *         value=']'
+	 *         value=']' | 
+	 *         value='<' | 
+	 *         value='>'
 	 *     )
 	 */
 	protected void sequence_PatternCharacter(ISerializationContext context, PatternCharacter semanticObject) {
@@ -820,7 +824,9 @@ public class RegularExpressionSemanticSequencer extends AbstractDelegatingSemant
 	 *             value='!' | 
 	 *             value='{' | 
 	 *             value='}' | 
-	 *             value=']'
+	 *             value=']' | 
+	 *             value='<' | 
+	 *             value='>'
 	 *         ) 
 	 *         quantifier=Quantifier?
 	 *     )

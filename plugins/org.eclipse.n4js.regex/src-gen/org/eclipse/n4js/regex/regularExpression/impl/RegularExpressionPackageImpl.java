@@ -489,7 +489,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * @generated
    */
   @Override
-  public EAttribute getLookAhead_Not()
+  public EAttribute getLookAhead_Backwards()
   {
     return (EAttribute)lookAheadEClass.getEStructuralFeatures().get(0);
   }
@@ -500,9 +500,20 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * @generated
    */
   @Override
+  public EAttribute getLookAhead_Not()
+  {
+    return (EAttribute)lookAheadEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public EReference getLookAhead_Pattern()
   {
-    return (EReference)lookAheadEClass.getEStructuralFeatures().get(1);
+    return (EReference)lookAheadEClass.getEStructuralFeatures().get(2);
   }
 
   /**
@@ -808,7 +819,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * @generated
    */
   @Override
-  public EAttribute getGroup_NonCapturing()
+  public EAttribute getGroup_Named()
   {
     return (EAttribute)groupEClass.getEStructuralFeatures().get(0);
   }
@@ -819,9 +830,31 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * @generated
    */
   @Override
+  public EAttribute getGroup_Name()
+  {
+    return (EAttribute)groupEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EAttribute getGroup_NonCapturing()
+  {
+    return (EAttribute)groupEClass.getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public EReference getGroup_Pattern()
   {
-    return (EReference)groupEClass.getEStructuralFeatures().get(1);
+    return (EReference)groupEClass.getEStructuralFeatures().get(3);
   }
 
   /**
@@ -1062,6 +1095,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
     createEAttribute(wordBoundaryEClass, WORD_BOUNDARY__NOT);
 
     lookAheadEClass = createEClass(LOOK_AHEAD);
+    createEAttribute(lookAheadEClass, LOOK_AHEAD__BACKWARDS);
     createEAttribute(lookAheadEClass, LOOK_AHEAD__NOT);
     createEReference(lookAheadEClass, LOOK_AHEAD__PATTERN);
 
@@ -1107,6 +1141,8 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
     backspaceEClass = createEClass(BACKSPACE);
 
     groupEClass = createEClass(GROUP);
+    createEAttribute(groupEClass, GROUP__NAMED);
+    createEAttribute(groupEClass, GROUP__NAME);
     createEAttribute(groupEClass, GROUP__NON_CAPTURING);
     createEReference(groupEClass, GROUP__PATTERN);
 
@@ -1218,6 +1254,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
     initEAttribute(getWordBoundary_Not(), ecorePackage.getEBoolean(), "not", null, 0, 1, WordBoundary.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(lookAheadEClass, LookAhead.class, "LookAhead", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getLookAhead_Backwards(), ecorePackage.getEBoolean(), "backwards", null, 0, 1, LookAhead.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getLookAhead_Not(), ecorePackage.getEBoolean(), "not", null, 0, 1, LookAhead.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getLookAhead_Pattern(), this.getPattern(), null, "pattern", null, 0, 1, LookAhead.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -1263,6 +1300,8 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
     initEClass(backspaceEClass, Backspace.class, "Backspace", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(groupEClass, Group.class, "Group", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getGroup_Named(), ecorePackage.getEBoolean(), "named", null, 0, 1, Group.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getGroup_Name(), ecorePackage.getEString(), "name", null, 0, 1, Group.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getGroup_NonCapturing(), ecorePackage.getEBoolean(), "nonCapturing", null, 0, 1, Group.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getGroup_Pattern(), this.getPattern(), null, "pattern", null, 0, 1, Group.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 

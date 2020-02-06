@@ -23,6 +23,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegularExpression.ecore#//WordBoundary/not"/>
     </genClasses>
     <genClasses ecoreClass="RegularExpression.ecore#//LookAhead">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegularExpression.ecore#//LookAhead/backwards"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegularExpression.ecore#//LookAhead/not"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RegularExpression.ecore#//LookAhead/pattern"/>
     </genClasses>
@@ -63,6 +64,8 @@
     <genClasses ecoreClass="RegularExpression.ecore#//EscapedCharacterClassAtom"/>
     <genClasses ecoreClass="RegularExpression.ecore#//Backspace"/>
     <genClasses ecoreClass="RegularExpression.ecore#//Group">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegularExpression.ecore#//Group/named"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegularExpression.ecore#//Group/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegularExpression.ecore#//Group/nonCapturing"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RegularExpression.ecore#//Group/pattern"/>
     </genClasses>

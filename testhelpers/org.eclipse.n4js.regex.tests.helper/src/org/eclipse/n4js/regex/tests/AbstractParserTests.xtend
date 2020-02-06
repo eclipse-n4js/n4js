@@ -241,6 +241,28 @@ abstract class AbstractParserTests extends Assert {
 	def void testIdentityEscape_05() {
 		'''/\\u2029/'''.assertValid
 	}
+	
+	@Test
+	def void testLookBehind() {
+		'''/(?<=$abc)def/'''.assertValid
+		'''/^f.o(?<=foo)$/'''.assertValid
+		'''/^foo(?<!foo)$/'''.assertValid
+		'''/^f.o(?<!foo)$/'''.assertValid
+		'''/^foooo(?<=fo+)$/'''.assertValid
+		'''/^foooo(?<=fo*)$/'''.assertValid
+	}
+	
+	@Test
+	def void testNamedGroups() {
+		'''/(?<=(?<a>\w){3})f/u'''.assertValid
+		'''/(?<=(?<a>\w)+)f/'''.assertValid
+		'''/((?<=\w{3}))f/'''.assertValid
+		'''/(?<a>(?<=\w{3}))f/'''.assertValid
+		'''/(?<!(?<a>\d){3})f/u'''.assertValid
+		'''/(?<!(?<a>\D){3})f|f/u'''.assertValid
+		'''/(?<a>\k<a>\w)../'''.assertValid
+		'''/\k<a>(?<a>b)\w\k<a>/'''.assertValid
+	}
 
 	@Test
 	def void testExampleHandlebarsCompiler_01() {

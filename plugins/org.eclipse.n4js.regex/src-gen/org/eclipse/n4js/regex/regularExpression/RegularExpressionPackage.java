@@ -299,13 +299,22 @@ public interface RegularExpressionPackage extends EPackage
   int LOOK_AHEAD__QUANTIFIER = ASSERTION__QUANTIFIER;
 
   /**
+   * The feature id for the '<em><b>Backwards</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LOOK_AHEAD__BACKWARDS = ASSERTION_FEATURE_COUNT + 0;
+
+  /**
    * The feature id for the '<em><b>Not</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int LOOK_AHEAD__NOT = ASSERTION_FEATURE_COUNT + 0;
+  int LOOK_AHEAD__NOT = ASSERTION_FEATURE_COUNT + 1;
 
   /**
    * The feature id for the '<em><b>Pattern</b></em>' containment reference.
@@ -314,7 +323,7 @@ public interface RegularExpressionPackage extends EPackage
    * @generated
    * @ordered
    */
-  int LOOK_AHEAD__PATTERN = ASSERTION_FEATURE_COUNT + 1;
+  int LOOK_AHEAD__PATTERN = ASSERTION_FEATURE_COUNT + 2;
 
   /**
    * The number of structural features of the '<em>Look Ahead</em>' class.
@@ -323,7 +332,7 @@ public interface RegularExpressionPackage extends EPackage
    * @generated
    * @ordered
    */
-  int LOOK_AHEAD_FEATURE_COUNT = ASSERTION_FEATURE_COUNT + 2;
+  int LOOK_AHEAD_FEATURE_COUNT = ASSERTION_FEATURE_COUNT + 3;
 
   /**
    * The meta object id for the '{@link org.eclipse.n4js.regex.regularExpression.impl.PatternCharacterImpl <em>Pattern Character</em>}' class.
@@ -909,13 +918,31 @@ public interface RegularExpressionPackage extends EPackage
   int GROUP__QUANTIFIER = PATTERN__QUANTIFIER;
 
   /**
+   * The feature id for the '<em><b>Named</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int GROUP__NAMED = PATTERN_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int GROUP__NAME = PATTERN_FEATURE_COUNT + 1;
+
+  /**
    * The feature id for the '<em><b>Non Capturing</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int GROUP__NON_CAPTURING = PATTERN_FEATURE_COUNT + 0;
+  int GROUP__NON_CAPTURING = PATTERN_FEATURE_COUNT + 2;
 
   /**
    * The feature id for the '<em><b>Pattern</b></em>' containment reference.
@@ -924,7 +951,7 @@ public interface RegularExpressionPackage extends EPackage
    * @generated
    * @ordered
    */
-  int GROUP__PATTERN = PATTERN_FEATURE_COUNT + 1;
+  int GROUP__PATTERN = PATTERN_FEATURE_COUNT + 3;
 
   /**
    * The number of structural features of the '<em>Group</em>' class.
@@ -933,7 +960,7 @@ public interface RegularExpressionPackage extends EPackage
    * @generated
    * @ordered
    */
-  int GROUP_FEATURE_COUNT = PATTERN_FEATURE_COUNT + 2;
+  int GROUP_FEATURE_COUNT = PATTERN_FEATURE_COUNT + 4;
 
   /**
    * The meta object id for the '{@link org.eclipse.n4js.regex.regularExpression.impl.QuantifierImpl <em>Quantifier</em>}' class.
@@ -1331,6 +1358,17 @@ public interface RegularExpressionPackage extends EPackage
   EClass getLookAhead();
 
   /**
+   * Returns the meta object for the attribute '{@link org.eclipse.n4js.regex.regularExpression.LookAhead#isBackwards <em>Backwards</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Backwards</em>'.
+   * @see org.eclipse.n4js.regex.regularExpression.LookAhead#isBackwards()
+   * @see #getLookAhead()
+   * @generated
+   */
+  EAttribute getLookAhead_Backwards();
+
+  /**
    * Returns the meta object for the attribute '{@link org.eclipse.n4js.regex.regularExpression.LookAhead#isNot <em>Not</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -1632,6 +1670,28 @@ public interface RegularExpressionPackage extends EPackage
    * @generated
    */
   EClass getGroup();
+
+  /**
+   * Returns the meta object for the attribute '{@link org.eclipse.n4js.regex.regularExpression.Group#isNamed <em>Named</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Named</em>'.
+   * @see org.eclipse.n4js.regex.regularExpression.Group#isNamed()
+   * @see #getGroup()
+   * @generated
+   */
+  EAttribute getGroup_Named();
+
+  /**
+   * Returns the meta object for the attribute '{@link org.eclipse.n4js.regex.regularExpression.Group#getName <em>Name</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Name</em>'.
+   * @see org.eclipse.n4js.regex.regularExpression.Group#getName()
+   * @see #getGroup()
+   * @generated
+   */
+  EAttribute getGroup_Name();
 
   /**
    * Returns the meta object for the attribute '{@link org.eclipse.n4js.regex.regularExpression.Group#isNonCapturing <em>Non Capturing</em>}'.
@@ -1979,6 +2039,14 @@ public interface RegularExpressionPackage extends EPackage
     EClass LOOK_AHEAD = eINSTANCE.getLookAhead();
 
     /**
+     * The meta object literal for the '<em><b>Backwards</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute LOOK_AHEAD__BACKWARDS = eINSTANCE.getLookAhead_Backwards();
+
+    /**
      * The meta object literal for the '<em><b>Not</b></em>' attribute feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -2241,6 +2309,22 @@ public interface RegularExpressionPackage extends EPackage
      * @generated
      */
     EClass GROUP = eINSTANCE.getGroup();
+
+    /**
+     * The meta object literal for the '<em><b>Named</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute GROUP__NAMED = eINSTANCE.getGroup_Named();
+
+    /**
+     * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute GROUP__NAME = eINSTANCE.getGroup_Name();
 
     /**
      * The meta object literal for the '<em><b>Non Capturing</b></em>' attribute feature.

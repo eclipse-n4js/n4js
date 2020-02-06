@@ -31,6 +31,7 @@ import org.eclipse.n4js.regex.regularExpression.RegularExpressionPackage;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.regex.regularExpression.impl.LookAheadImpl#isBackwards <em>Backwards</em>}</li>
  *   <li>{@link org.eclipse.n4js.regex.regularExpression.impl.LookAheadImpl#isNot <em>Not</em>}</li>
  *   <li>{@link org.eclipse.n4js.regex.regularExpression.impl.LookAheadImpl#getPattern <em>Pattern</em>}</li>
  * </ul>
@@ -39,6 +40,26 @@ import org.eclipse.n4js.regex.regularExpression.RegularExpressionPackage;
  */
 public class LookAheadImpl extends AssertionImpl implements LookAhead
 {
+  /**
+   * The default value of the '{@link #isBackwards() <em>Backwards</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #isBackwards()
+   * @generated
+   * @ordered
+   */
+  protected static final boolean BACKWARDS_EDEFAULT = false;
+
+  /**
+   * The cached value of the '{@link #isBackwards() <em>Backwards</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #isBackwards()
+   * @generated
+   * @ordered
+   */
+  protected boolean backwards = BACKWARDS_EDEFAULT;
+
   /**
    * The default value of the '{@link #isNot() <em>Not</em>}' attribute.
    * <!-- begin-user-doc -->
@@ -88,6 +109,31 @@ public class LookAheadImpl extends AssertionImpl implements LookAhead
   protected EClass eStaticClass()
   {
     return RegularExpressionPackage.Literals.LOOK_AHEAD;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public boolean isBackwards()
+  {
+    return backwards;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public void setBackwards(boolean newBackwards)
+  {
+    boolean oldBackwards = backwards;
+    backwards = newBackwards;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, RegularExpressionPackage.LOOK_AHEAD__BACKWARDS, oldBackwards, backwards));
   }
 
   /**
@@ -191,6 +237,8 @@ public class LookAheadImpl extends AssertionImpl implements LookAhead
   {
     switch (featureID)
     {
+      case RegularExpressionPackage.LOOK_AHEAD__BACKWARDS:
+        return isBackwards();
       case RegularExpressionPackage.LOOK_AHEAD__NOT:
         return isNot();
       case RegularExpressionPackage.LOOK_AHEAD__PATTERN:
@@ -209,6 +257,9 @@ public class LookAheadImpl extends AssertionImpl implements LookAhead
   {
     switch (featureID)
     {
+      case RegularExpressionPackage.LOOK_AHEAD__BACKWARDS:
+        setBackwards((Boolean)newValue);
+        return;
       case RegularExpressionPackage.LOOK_AHEAD__NOT:
         setNot((Boolean)newValue);
         return;
@@ -229,6 +280,9 @@ public class LookAheadImpl extends AssertionImpl implements LookAhead
   {
     switch (featureID)
     {
+      case RegularExpressionPackage.LOOK_AHEAD__BACKWARDS:
+        setBackwards(BACKWARDS_EDEFAULT);
+        return;
       case RegularExpressionPackage.LOOK_AHEAD__NOT:
         setNot(NOT_EDEFAULT);
         return;
@@ -249,6 +303,8 @@ public class LookAheadImpl extends AssertionImpl implements LookAhead
   {
     switch (featureID)
     {
+      case RegularExpressionPackage.LOOK_AHEAD__BACKWARDS:
+        return backwards != BACKWARDS_EDEFAULT;
       case RegularExpressionPackage.LOOK_AHEAD__NOT:
         return not != NOT_EDEFAULT;
       case RegularExpressionPackage.LOOK_AHEAD__PATTERN:
@@ -268,7 +324,9 @@ public class LookAheadImpl extends AssertionImpl implements LookAhead
     if (eIsProxy()) return super.toString();
 
     StringBuilder result = new StringBuilder(super.toString());
-    result.append(" (not: ");
+    result.append(" (backwards: ");
+    result.append(backwards);
+    result.append(", not: ");
     result.append(not);
     result.append(')');
     return result.toString();

@@ -295,7 +295,7 @@ public class RegularExpressionGrammarAccess extends AbstractGrammarElementFinder
 		//{WordBoundary}
 		public Action getWordBoundaryAction_0() { return cWordBoundaryAction_0; }
 		
-		//WORD_BOUNDARY | not?=NOT_WORD_BOUNDARY
+		//(WORD_BOUNDARY | not?=NOT_WORD_BOUNDARY)
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 		
 		//WORD_BOUNDARY
@@ -313,19 +313,21 @@ public class RegularExpressionGrammarAccess extends AbstractGrammarElementFinder
 		private final Action cLookAheadAction_0 = (Action)cGroup.eContents().get(0);
 		private final Keyword cLeftParenthesisKeyword_1 = (Keyword)cGroup.eContents().get(1);
 		private final Keyword cQuestionMarkKeyword_2 = (Keyword)cGroup.eContents().get(2);
-		private final Alternatives cAlternatives_3 = (Alternatives)cGroup.eContents().get(3);
-		private final Keyword cEqualsSignKeyword_3_0 = (Keyword)cAlternatives_3.eContents().get(0);
-		private final Assignment cNotAssignment_3_1 = (Assignment)cAlternatives_3.eContents().get(1);
-		private final Keyword cNotExclamationMarkKeyword_3_1_0 = (Keyword)cNotAssignment_3_1.eContents().get(0);
-		private final Assignment cPatternAssignment_4 = (Assignment)cGroup.eContents().get(4);
-		private final RuleCall cPatternDisjunctionParserRuleCall_4_0 = (RuleCall)cPatternAssignment_4.eContents().get(0);
-		private final Keyword cRightParenthesisKeyword_5 = (Keyword)cGroup.eContents().get(5);
+		private final Assignment cBackwardsAssignment_3 = (Assignment)cGroup.eContents().get(3);
+		private final Keyword cBackwardsLessThanSignKeyword_3_0 = (Keyword)cBackwardsAssignment_3.eContents().get(0);
+		private final Alternatives cAlternatives_4 = (Alternatives)cGroup.eContents().get(4);
+		private final Keyword cEqualsSignKeyword_4_0 = (Keyword)cAlternatives_4.eContents().get(0);
+		private final Assignment cNotAssignment_4_1 = (Assignment)cAlternatives_4.eContents().get(1);
+		private final Keyword cNotExclamationMarkKeyword_4_1_0 = (Keyword)cNotAssignment_4_1.eContents().get(0);
+		private final Assignment cPatternAssignment_5 = (Assignment)cGroup.eContents().get(5);
+		private final RuleCall cPatternDisjunctionParserRuleCall_5_0 = (RuleCall)cPatternAssignment_5.eContents().get(0);
+		private final Keyword cRightParenthesisKeyword_6 = (Keyword)cGroup.eContents().get(6);
 		
 		//LookAhead:
-		//	{LookAhead} '(' '?' ('=' | not?='!') pattern=Disjunction ')';
+		//	{LookAhead} '(' '?' backwards?='<'? ('=' | not?='!') pattern=Disjunction ')';
 		@Override public ParserRule getRule() { return rule; }
 		
-		//{LookAhead} '(' '?' ('=' | not?='!') pattern=Disjunction ')'
+		//{LookAhead} '(' '?' backwards?='<'? ('=' | not?='!') pattern=Disjunction ')'
 		public Group getGroup() { return cGroup; }
 		
 		//{LookAhead}
@@ -337,26 +339,32 @@ public class RegularExpressionGrammarAccess extends AbstractGrammarElementFinder
 		//'?'
 		public Keyword getQuestionMarkKeyword_2() { return cQuestionMarkKeyword_2; }
 		
-		//'=' | not?='!'
-		public Alternatives getAlternatives_3() { return cAlternatives_3; }
+		//backwards?='<'?
+		public Assignment getBackwardsAssignment_3() { return cBackwardsAssignment_3; }
+		
+		//'<'
+		public Keyword getBackwardsLessThanSignKeyword_3_0() { return cBackwardsLessThanSignKeyword_3_0; }
+		
+		//('=' | not?='!')
+		public Alternatives getAlternatives_4() { return cAlternatives_4; }
 		
 		//'='
-		public Keyword getEqualsSignKeyword_3_0() { return cEqualsSignKeyword_3_0; }
+		public Keyword getEqualsSignKeyword_4_0() { return cEqualsSignKeyword_4_0; }
 		
 		//not?='!'
-		public Assignment getNotAssignment_3_1() { return cNotAssignment_3_1; }
+		public Assignment getNotAssignment_4_1() { return cNotAssignment_4_1; }
 		
 		//'!'
-		public Keyword getNotExclamationMarkKeyword_3_1_0() { return cNotExclamationMarkKeyword_3_1_0; }
+		public Keyword getNotExclamationMarkKeyword_4_1_0() { return cNotExclamationMarkKeyword_4_1_0; }
 		
 		//pattern=Disjunction
-		public Assignment getPatternAssignment_4() { return cPatternAssignment_4; }
+		public Assignment getPatternAssignment_5() { return cPatternAssignment_5; }
 		
 		//Disjunction
-		public RuleCall getPatternDisjunctionParserRuleCall_4_0() { return cPatternDisjunctionParserRuleCall_4_0; }
+		public RuleCall getPatternDisjunctionParserRuleCall_5_0() { return cPatternDisjunctionParserRuleCall_5_0; }
 		
 		//')'
-		public Keyword getRightParenthesisKeyword_5() { return cRightParenthesisKeyword_5; }
+		public Keyword getRightParenthesisKeyword_6() { return cRightParenthesisKeyword_6; }
 	}
 	public class AtomElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.regex.RegularExpression.Atom");
@@ -404,17 +412,20 @@ public class RegularExpressionGrammarAccess extends AbstractGrammarElementFinder
 		private final Keyword cValueLeftCurlyBracketKeyword_0_8 = (Keyword)cValueAlternatives_0.eContents().get(8);
 		private final Keyword cValueRightCurlyBracketKeyword_0_9 = (Keyword)cValueAlternatives_0.eContents().get(9);
 		private final Keyword cValueRightSquareBracketKeyword_0_10 = (Keyword)cValueAlternatives_0.eContents().get(10);
+		private final Keyword cValueLessThanSignKeyword_0_11 = (Keyword)cValueAlternatives_0.eContents().get(11);
+		private final Keyword cValueGreaterThanSignKeyword_0_12 = (Keyword)cValueAlternatives_0.eContents().get(12);
 		
 		//PatternCharacter:
 		//	value=(PATTERN_CHARACTER_NO_DASH | UNICODE_LETTER | UNICODE_DIGIT |
 		//	'-' |
-		//	',' | '=' | ':' | '!' | '{' | '}' | ']');
+		//	',' | '=' | ':' | '!' | '{' | '}' | ']' | '<' | '>');
 		@Override public ParserRule getRule() { return rule; }
 		
-		//value=(PATTERN_CHARACTER_NO_DASH | UNICODE_LETTER | UNICODE_DIGIT | '-' | ',' | '=' | ':' | '!' | '{' | '}' | ']')
+		//value=(PATTERN_CHARACTER_NO_DASH | UNICODE_LETTER | UNICODE_DIGIT | '-' | ',' | '=' | ':' | '!' | '{' | '}' | ']' | '<'
+		//| '>')
 		public Assignment getValueAssignment() { return cValueAssignment; }
 		
-		//(PATTERN_CHARACTER_NO_DASH | UNICODE_LETTER | UNICODE_DIGIT | '-' | ',' | '=' | ':' | '!' | '{' | '}' | ']')
+		//(PATTERN_CHARACTER_NO_DASH | UNICODE_LETTER | UNICODE_DIGIT | '-' | ',' | '=' | ':' | '!' | '{' | '}' | ']' | '<' | '>')
 		public Alternatives getValueAlternatives_0() { return cValueAlternatives_0; }
 		
 		//PATTERN_CHARACTER_NO_DASH
@@ -449,6 +460,12 @@ public class RegularExpressionGrammarAccess extends AbstractGrammarElementFinder
 		
 		//']'
 		public Keyword getValueRightSquareBracketKeyword_0_10() { return cValueRightSquareBracketKeyword_0_10; }
+		
+		//'<'
+		public Keyword getValueLessThanSignKeyword_0_11() { return cValueLessThanSignKeyword_0_11; }
+		
+		//'>'
+		public Keyword getValueGreaterThanSignKeyword_0_12() { return cValueGreaterThanSignKeyword_0_12; }
 	}
 	public class WildcardElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.regex.RegularExpression.Wildcard");
@@ -684,7 +701,7 @@ public class RegularExpressionGrammarAccess extends AbstractGrammarElementFinder
 		//=> ({CharacterClassRange.left=current} '-' right=CharacterClassAtom)?
 		public Group getGroup_1() { return cGroup_1; }
 		
-		//{CharacterClassRange.left=current} '-' right=CharacterClassAtom
+		//({CharacterClassRange.left=current} '-' right=CharacterClassAtom)
 		public Group getGroup_1_0() { return cGroup_1_0; }
 		
 		//{CharacterClassRange.left=current}
@@ -723,28 +740,30 @@ public class RegularExpressionGrammarAccess extends AbstractGrammarElementFinder
 		private final Keyword cCharacterRightCurlyBracketKeyword_1_0_15 = (Keyword)cCharacterAlternatives_1_0.eContents().get(15);
 		private final Keyword cCharacterVerticalLineKeyword_1_0_16 = (Keyword)cCharacterAlternatives_1_0.eContents().get(16);
 		private final Keyword cCharacterSolidusKeyword_1_0_17 = (Keyword)cCharacterAlternatives_1_0.eContents().get(17);
-		private final RuleCall cCharacterPATTERN_CHARACTER_NO_DASHTerminalRuleCall_1_0_18 = (RuleCall)cCharacterAlternatives_1_0.eContents().get(18);
-		private final RuleCall cCharacterUNICODE_LETTERTerminalRuleCall_1_0_19 = (RuleCall)cCharacterAlternatives_1_0.eContents().get(19);
-		private final RuleCall cCharacterUNICODE_DIGITTerminalRuleCall_1_0_20 = (RuleCall)cCharacterAlternatives_1_0.eContents().get(20);
+		private final Keyword cCharacterLessThanSignKeyword_1_0_18 = (Keyword)cCharacterAlternatives_1_0.eContents().get(18);
+		private final Keyword cCharacterGreaterThanSignKeyword_1_0_19 = (Keyword)cCharacterAlternatives_1_0.eContents().get(19);
+		private final RuleCall cCharacterPATTERN_CHARACTER_NO_DASHTerminalRuleCall_1_0_20 = (RuleCall)cCharacterAlternatives_1_0.eContents().get(20);
+		private final RuleCall cCharacterUNICODE_LETTERTerminalRuleCall_1_0_21 = (RuleCall)cCharacterAlternatives_1_0.eContents().get(21);
+		private final RuleCall cCharacterUNICODE_DIGITTerminalRuleCall_1_0_22 = (RuleCall)cCharacterAlternatives_1_0.eContents().get(22);
 		
 		//CharacterClassAtom:
 		//	EscapedCharacterClassAtom | character=(',' | '=' | ':' | '!' |
-		//	'-' | '^' | '$' | '.' | '*' | '+' | '?' | '(' | ')' | '[' | '{' | '}' | '|' | '/' | PATTERN_CHARACTER_NO_DASH |
-		//	UNICODE_LETTER | UNICODE_DIGIT);
+		//	'-' | '^' | '$' | '.' | '*' | '+' | '?' | '(' | ')' | '[' | '{' | '}' | '|' | '/' | '<' | '>' |
+		//	PATTERN_CHARACTER_NO_DASH | UNICODE_LETTER | UNICODE_DIGIT);
 		@Override public ParserRule getRule() { return rule; }
 		
 		//EscapedCharacterClassAtom | character=(',' | '=' | ':' | '!' | '-' | '^' | '$' | '.' | '*' | '+' | '?' | '(' | ')' | '['
-		//| '{' | '}' | '|' | '/' | PATTERN_CHARACTER_NO_DASH | UNICODE_LETTER | UNICODE_DIGIT)
+		//| '{' | '}' | '|' | '/' | '<' | '>' | PATTERN_CHARACTER_NO_DASH | UNICODE_LETTER | UNICODE_DIGIT)
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//EscapedCharacterClassAtom
 		public RuleCall getEscapedCharacterClassAtomParserRuleCall_0() { return cEscapedCharacterClassAtomParserRuleCall_0; }
 		
 		//character=(',' | '=' | ':' | '!' | '-' | '^' | '$' | '.' | '*' | '+' | '?' | '(' | ')' | '[' | '{' | '}' | '|' | '/' |
-		//PATTERN_CHARACTER_NO_DASH | UNICODE_LETTER | UNICODE_DIGIT)
+		//'<' | '>' | PATTERN_CHARACTER_NO_DASH | UNICODE_LETTER | UNICODE_DIGIT)
 		public Assignment getCharacterAssignment_1() { return cCharacterAssignment_1; }
 		
-		//(',' | '=' | ':' | '!' | '-' | '^' | '$' | '.' | '*' | '+' | '?' | '(' | ')' | '[' | '{' | '}' | '|' | '/' |
+		//(',' | '=' | ':' | '!' | '-' | '^' | '$' | '.' | '*' | '+' | '?' | '(' | ')' | '[' | '{' | '}' | '|' | '/' | '<' | '>' |
 		//PATTERN_CHARACTER_NO_DASH | UNICODE_LETTER | UNICODE_DIGIT)
 		public Alternatives getCharacterAlternatives_1_0() { return cCharacterAlternatives_1_0; }
 		
@@ -802,14 +821,20 @@ public class RegularExpressionGrammarAccess extends AbstractGrammarElementFinder
 		//'/'
 		public Keyword getCharacterSolidusKeyword_1_0_17() { return cCharacterSolidusKeyword_1_0_17; }
 		
+		//'<'
+		public Keyword getCharacterLessThanSignKeyword_1_0_18() { return cCharacterLessThanSignKeyword_1_0_18; }
+		
+		//'>'
+		public Keyword getCharacterGreaterThanSignKeyword_1_0_19() { return cCharacterGreaterThanSignKeyword_1_0_19; }
+		
 		//PATTERN_CHARACTER_NO_DASH
-		public RuleCall getCharacterPATTERN_CHARACTER_NO_DASHTerminalRuleCall_1_0_18() { return cCharacterPATTERN_CHARACTER_NO_DASHTerminalRuleCall_1_0_18; }
+		public RuleCall getCharacterPATTERN_CHARACTER_NO_DASHTerminalRuleCall_1_0_20() { return cCharacterPATTERN_CHARACTER_NO_DASHTerminalRuleCall_1_0_20; }
 		
 		//UNICODE_LETTER
-		public RuleCall getCharacterUNICODE_LETTERTerminalRuleCall_1_0_19() { return cCharacterUNICODE_LETTERTerminalRuleCall_1_0_19; }
+		public RuleCall getCharacterUNICODE_LETTERTerminalRuleCall_1_0_21() { return cCharacterUNICODE_LETTERTerminalRuleCall_1_0_21; }
 		
 		//UNICODE_DIGIT
-		public RuleCall getCharacterUNICODE_DIGITTerminalRuleCall_1_0_20() { return cCharacterUNICODE_DIGITTerminalRuleCall_1_0_20; }
+		public RuleCall getCharacterUNICODE_DIGITTerminalRuleCall_1_0_22() { return cCharacterUNICODE_DIGITTerminalRuleCall_1_0_22; }
 	}
 	public class EscapedCharacterClassAtomElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.regex.RegularExpression.EscapedCharacterClassAtom");
@@ -886,19 +911,28 @@ public class RegularExpressionGrammarAccess extends AbstractGrammarElementFinder
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Action cGroupAction_0 = (Action)cGroup.eContents().get(0);
 		private final Keyword cLeftParenthesisKeyword_1 = (Keyword)cGroup.eContents().get(1);
-		private final Group cGroup_2 = (Group)cGroup.eContents().get(2);
-		private final Assignment cNonCapturingAssignment_2_0 = (Assignment)cGroup_2.eContents().get(0);
-		private final Keyword cNonCapturingQuestionMarkKeyword_2_0_0 = (Keyword)cNonCapturingAssignment_2_0.eContents().get(0);
-		private final Keyword cColonKeyword_2_1 = (Keyword)cGroup_2.eContents().get(1);
+		private final Alternatives cAlternatives_2 = (Alternatives)cGroup.eContents().get(2);
+		private final Group cGroup_2_0 = (Group)cAlternatives_2.eContents().get(0);
+		private final Assignment cNamedAssignment_2_0_0 = (Assignment)cGroup_2_0.eContents().get(0);
+		private final Keyword cNamedQuestionMarkKeyword_2_0_0_0 = (Keyword)cNamedAssignment_2_0_0.eContents().get(0);
+		private final Keyword cLessThanSignKeyword_2_0_1 = (Keyword)cGroup_2_0.eContents().get(1);
+		private final Assignment cNameAssignment_2_0_2 = (Assignment)cGroup_2_0.eContents().get(2);
+		private final RuleCall cNameRegExpIdentifierNameParserRuleCall_2_0_2_0 = (RuleCall)cNameAssignment_2_0_2.eContents().get(0);
+		private final Keyword cGreaterThanSignKeyword_2_0_3 = (Keyword)cGroup_2_0.eContents().get(3);
+		private final Group cGroup_2_1 = (Group)cAlternatives_2.eContents().get(1);
+		private final Assignment cNonCapturingAssignment_2_1_0 = (Assignment)cGroup_2_1.eContents().get(0);
+		private final Keyword cNonCapturingQuestionMarkKeyword_2_1_0_0 = (Keyword)cNonCapturingAssignment_2_1_0.eContents().get(0);
+		private final Keyword cColonKeyword_2_1_1 = (Keyword)cGroup_2_1.eContents().get(1);
 		private final Assignment cPatternAssignment_3 = (Assignment)cGroup.eContents().get(3);
 		private final RuleCall cPatternDisjunctionParserRuleCall_3_0 = (RuleCall)cPatternAssignment_3.eContents().get(0);
 		private final Keyword cRightParenthesisKeyword_4 = (Keyword)cGroup.eContents().get(4);
 		
 		//Group:
-		//	{Group} '(' (nonCapturing?='?' ':')? pattern=Disjunction ')';
+		//	{Group} '(' (named?='?' '<' name=RegExpIdentifierName '>'
+		//	| nonCapturing?='?' ':')? pattern=Disjunction ')';
 		@Override public ParserRule getRule() { return rule; }
 		
-		//{Group} '(' (nonCapturing?='?' ':')? pattern=Disjunction ')'
+		//{Group} '(' (named?='?' '<' name=RegExpIdentifierName '>' | nonCapturing?='?' ':')? pattern=Disjunction ')'
 		public Group getGroup() { return cGroup; }
 		
 		//{Group}
@@ -907,17 +941,41 @@ public class RegularExpressionGrammarAccess extends AbstractGrammarElementFinder
 		//'('
 		public Keyword getLeftParenthesisKeyword_1() { return cLeftParenthesisKeyword_1; }
 		
-		//(nonCapturing?='?' ':')?
-		public Group getGroup_2() { return cGroup_2; }
+		//(named?='?' '<' name=RegExpIdentifierName '>' | nonCapturing?='?' ':')?
+		public Alternatives getAlternatives_2() { return cAlternatives_2; }
 		
-		//nonCapturing?='?'
-		public Assignment getNonCapturingAssignment_2_0() { return cNonCapturingAssignment_2_0; }
+		//named?='?' '<' name=RegExpIdentifierName '>'
+		public Group getGroup_2_0() { return cGroup_2_0; }
+		
+		//named?='?'
+		public Assignment getNamedAssignment_2_0_0() { return cNamedAssignment_2_0_0; }
 		
 		//'?'
-		public Keyword getNonCapturingQuestionMarkKeyword_2_0_0() { return cNonCapturingQuestionMarkKeyword_2_0_0; }
+		public Keyword getNamedQuestionMarkKeyword_2_0_0_0() { return cNamedQuestionMarkKeyword_2_0_0_0; }
+		
+		//'<'
+		public Keyword getLessThanSignKeyword_2_0_1() { return cLessThanSignKeyword_2_0_1; }
+		
+		//name=RegExpIdentifierName
+		public Assignment getNameAssignment_2_0_2() { return cNameAssignment_2_0_2; }
+		
+		//RegExpIdentifierName
+		public RuleCall getNameRegExpIdentifierNameParserRuleCall_2_0_2_0() { return cNameRegExpIdentifierNameParserRuleCall_2_0_2_0; }
+		
+		//'>'
+		public Keyword getGreaterThanSignKeyword_2_0_3() { return cGreaterThanSignKeyword_2_0_3; }
+		
+		//nonCapturing?='?' ':'
+		public Group getGroup_2_1() { return cGroup_2_1; }
+		
+		//nonCapturing?='?'
+		public Assignment getNonCapturingAssignment_2_1_0() { return cNonCapturingAssignment_2_1_0; }
+		
+		//'?'
+		public Keyword getNonCapturingQuestionMarkKeyword_2_1_0_0() { return cNonCapturingQuestionMarkKeyword_2_1_0_0; }
 		
 		//':'
-		public Keyword getColonKeyword_2_1() { return cColonKeyword_2_1; }
+		public Keyword getColonKeyword_2_1_1() { return cColonKeyword_2_1_1; }
 		
 		//pattern=Disjunction
 		public Assignment getPatternAssignment_3() { return cPatternAssignment_3; }
@@ -927,6 +985,83 @@ public class RegularExpressionGrammarAccess extends AbstractGrammarElementFinder
 		
 		//')'
 		public Keyword getRightParenthesisKeyword_4() { return cRightParenthesisKeyword_4; }
+	}
+	public class RegExpIdentifierNameElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.regex.RegularExpression.RegExpIdentifierName");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final RuleCall cRegExpIdentifierStartParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final RuleCall cRegExpIdentifierPartParserRuleCall_1 = (RuleCall)cGroup.eContents().get(1);
+		
+		//RegExpIdentifierName:
+		//	RegExpIdentifierStart RegExpIdentifierPart*;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//RegExpIdentifierStart RegExpIdentifierPart*
+		public Group getGroup() { return cGroup; }
+		
+		//RegExpIdentifierStart
+		public RuleCall getRegExpIdentifierStartParserRuleCall_0() { return cRegExpIdentifierStartParserRuleCall_0; }
+		
+		//RegExpIdentifierPart*
+		public RuleCall getRegExpIdentifierPartParserRuleCall_1() { return cRegExpIdentifierPartParserRuleCall_1; }
+	}
+	public class RegExpIdentifierStartElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.regex.RegularExpression.RegExpIdentifierStart");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final RuleCall cUNICODE_LETTERTerminalRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
+		private final Keyword cDollarSignKeyword_1 = (Keyword)cAlternatives.eContents().get(1);
+		private final Keyword c_Keyword_2 = (Keyword)cAlternatives.eContents().get(2);
+		private final RuleCall cUNICODE_ESCAPETerminalRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
+		
+		//RegExpIdentifierStart:
+		//	UNICODE_LETTER | '$' | '_' | UNICODE_ESCAPE;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//UNICODE_LETTER | '$' | '_' | UNICODE_ESCAPE
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//UNICODE_LETTER
+		public RuleCall getUNICODE_LETTERTerminalRuleCall_0() { return cUNICODE_LETTERTerminalRuleCall_0; }
+		
+		//'$'
+		public Keyword getDollarSignKeyword_1() { return cDollarSignKeyword_1; }
+		
+		//'_'
+		public Keyword get_Keyword_2() { return c_Keyword_2; }
+		
+		//UNICODE_ESCAPE
+		public RuleCall getUNICODE_ESCAPETerminalRuleCall_3() { return cUNICODE_ESCAPETerminalRuleCall_3; }
+	}
+	public class RegExpIdentifierPartElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.regex.RegularExpression.RegExpIdentifierPart");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final RuleCall cUNICODE_LETTERTerminalRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
+		private final RuleCall cUNICODE_DIGITTerminalRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		private final Keyword cDollarSignKeyword_2 = (Keyword)cAlternatives.eContents().get(2);
+		private final Keyword c_Keyword_3 = (Keyword)cAlternatives.eContents().get(3);
+		private final RuleCall cUNICODE_ESCAPETerminalRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
+		
+		//RegExpIdentifierPart:
+		//	UNICODE_LETTER | UNICODE_DIGIT | '$' | '_' | UNICODE_ESCAPE;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//UNICODE_LETTER | UNICODE_DIGIT | '$' | '_' | UNICODE_ESCAPE
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//UNICODE_LETTER
+		public RuleCall getUNICODE_LETTERTerminalRuleCall_0() { return cUNICODE_LETTERTerminalRuleCall_0; }
+		
+		//UNICODE_DIGIT
+		public RuleCall getUNICODE_DIGITTerminalRuleCall_1() { return cUNICODE_DIGITTerminalRuleCall_1; }
+		
+		//'$'
+		public Keyword getDollarSignKeyword_2() { return cDollarSignKeyword_2; }
+		
+		//'_'
+		public Keyword get_Keyword_3() { return c_Keyword_3; }
+		
+		//UNICODE_ESCAPE
+		public RuleCall getUNICODE_ESCAPETerminalRuleCall_4() { return cUNICODE_ESCAPETerminalRuleCall_4; }
 	}
 	public class QuantifierElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.regex.RegularExpression.Quantifier");
@@ -1125,6 +1260,9 @@ public class RegularExpressionGrammarAccess extends AbstractGrammarElementFinder
 	private final EscapedCharacterClassAtomElements pEscapedCharacterClassAtom;
 	private final BackspaceElements pBackspace;
 	private final GroupElements pGroup;
+	private final RegExpIdentifierNameElements pRegExpIdentifierName;
+	private final RegExpIdentifierStartElements pRegExpIdentifierStart;
+	private final RegExpIdentifierPartElements pRegExpIdentifierPart;
 	private final QuantifierElements pQuantifier;
 	private final SimpleQuantifierElements pSimpleQuantifier;
 	private final ExactQuantifierElements pExactQuantifier;
@@ -1179,6 +1317,9 @@ public class RegularExpressionGrammarAccess extends AbstractGrammarElementFinder
 		this.pEscapedCharacterClassAtom = new EscapedCharacterClassAtomElements();
 		this.pBackspace = new BackspaceElements();
 		this.pGroup = new GroupElements();
+		this.pRegExpIdentifierName = new RegExpIdentifierNameElements();
+		this.pRegExpIdentifierStart = new RegExpIdentifierStartElements();
+		this.pRegExpIdentifierPart = new RegExpIdentifierPartElements();
 		this.pQuantifier = new QuantifierElements();
 		this.pSimpleQuantifier = new SimpleQuantifierElements();
 		this.pExactQuantifier = new ExactQuantifierElements();
@@ -1317,7 +1458,7 @@ public class RegularExpressionGrammarAccess extends AbstractGrammarElementFinder
 	}
 	
 	//LookAhead:
-	//	{LookAhead} '(' '?' ('=' | not?='!') pattern=Disjunction ')';
+	//	{LookAhead} '(' '?' backwards?='<'? ('=' | not?='!') pattern=Disjunction ')';
 	public LookAheadElements getLookAheadAccess() {
 		return pLookAhead;
 	}
@@ -1339,7 +1480,7 @@ public class RegularExpressionGrammarAccess extends AbstractGrammarElementFinder
 	//PatternCharacter:
 	//	value=(PATTERN_CHARACTER_NO_DASH | UNICODE_LETTER | UNICODE_DIGIT |
 	//	'-' |
-	//	',' | '=' | ':' | '!' | '{' | '}' | ']');
+	//	',' | '=' | ':' | '!' | '{' | '}' | ']' | '<' | '>');
 	public PatternCharacterElements getPatternCharacterAccess() {
 		return pPatternCharacter;
 	}
@@ -1463,8 +1604,8 @@ public class RegularExpressionGrammarAccess extends AbstractGrammarElementFinder
 	
 	//CharacterClassAtom:
 	//	EscapedCharacterClassAtom | character=(',' | '=' | ':' | '!' |
-	//	'-' | '^' | '$' | '.' | '*' | '+' | '?' | '(' | ')' | '[' | '{' | '}' | '|' | '/' | PATTERN_CHARACTER_NO_DASH |
-	//	UNICODE_LETTER | UNICODE_DIGIT);
+	//	'-' | '^' | '$' | '.' | '*' | '+' | '?' | '(' | ')' | '[' | '{' | '}' | '|' | '/' | '<' | '>' |
+	//	PATTERN_CHARACTER_NO_DASH | UNICODE_LETTER | UNICODE_DIGIT);
 	public CharacterClassAtomElements getCharacterClassAtomAccess() {
 		return pCharacterClassAtom;
 	}
@@ -1501,13 +1642,44 @@ public class RegularExpressionGrammarAccess extends AbstractGrammarElementFinder
 	}
 	
 	//Group:
-	//	{Group} '(' (nonCapturing?='?' ':')? pattern=Disjunction ')';
+	//	{Group} '(' (named?='?' '<' name=RegExpIdentifierName '>'
+	//	| nonCapturing?='?' ':')? pattern=Disjunction ')';
 	public GroupElements getGroupAccess() {
 		return pGroup;
 	}
 	
 	public ParserRule getGroupRule() {
 		return getGroupAccess().getRule();
+	}
+	
+	//RegExpIdentifierName:
+	//	RegExpIdentifierStart RegExpIdentifierPart*;
+	public RegExpIdentifierNameElements getRegExpIdentifierNameAccess() {
+		return pRegExpIdentifierName;
+	}
+	
+	public ParserRule getRegExpIdentifierNameRule() {
+		return getRegExpIdentifierNameAccess().getRule();
+	}
+	
+	//RegExpIdentifierStart:
+	//	UNICODE_LETTER | '$' | '_' | UNICODE_ESCAPE;
+	public RegExpIdentifierStartElements getRegExpIdentifierStartAccess() {
+		return pRegExpIdentifierStart;
+	}
+	
+	public ParserRule getRegExpIdentifierStartRule() {
+		return getRegExpIdentifierStartAccess().getRule();
+	}
+	
+	//RegExpIdentifierPart:
+	//	UNICODE_LETTER | UNICODE_DIGIT | '$' | '_' | UNICODE_ESCAPE;
+	public RegExpIdentifierPartElements getRegExpIdentifierPartAccess() {
+		return pRegExpIdentifierPart;
+	}
+	
+	public ParserRule getRegExpIdentifierPartRule() {
+		return getRegExpIdentifierPartAccess().getRule();
 	}
 	
 	//Quantifier:
@@ -1628,7 +1800,7 @@ public class RegularExpressionGrammarAccess extends AbstractGrammarElementFinder
 	}
 	
 	//terminal PATTERN_CHARACTER_NO_DASH:
-	//	!('^' | '$' | '\\' | '.' | '*' | '+' | '?' | '(' | ')' | '[' | ']' | '{' | '}' | '|' | '-');
+	//	!('^' | '$' | '\\' | '.' | '*' | '+' | '?' | '(' | ')' | '[' | ']' | '{' | '}' | '|' | '-' | '<' | '>');
 	public TerminalRule getPATTERN_CHARACTER_NO_DASHRule() {
 		return tPATTERN_CHARACTER_NO_DASH;
 	}

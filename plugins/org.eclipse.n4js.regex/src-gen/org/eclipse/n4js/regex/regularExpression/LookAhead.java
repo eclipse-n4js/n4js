@@ -21,6 +21,7 @@ package org.eclipse.n4js.regex.regularExpression;
  * The following features are supported:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.regex.regularExpression.LookAhead#isBackwards <em>Backwards</em>}</li>
  *   <li>{@link org.eclipse.n4js.regex.regularExpression.LookAhead#isNot <em>Not</em>}</li>
  *   <li>{@link org.eclipse.n4js.regex.regularExpression.LookAhead#getPattern <em>Pattern</em>}</li>
  * </ul>
@@ -32,12 +33,30 @@ package org.eclipse.n4js.regex.regularExpression;
 public interface LookAhead extends Assertion
 {
   /**
+   * Returns the value of the '<em><b>Backwards</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Backwards</em>' attribute.
+   * @see #setBackwards(boolean)
+   * @see org.eclipse.n4js.regex.regularExpression.RegularExpressionPackage#getLookAhead_Backwards()
+   * @model
+   * @generated
+   */
+  boolean isBackwards();
+
+  /**
+   * Sets the value of the '{@link org.eclipse.n4js.regex.regularExpression.LookAhead#isBackwards <em>Backwards</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Backwards</em>' attribute.
+   * @see #isBackwards()
+   * @generated
+   */
+  void setBackwards(boolean value);
+
+  /**
    * Returns the value of the '<em><b>Not</b></em>' attribute.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Not</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Not</em>' attribute.
    * @see #setNot(boolean)
@@ -60,10 +79,6 @@ public interface LookAhead extends Assertion
   /**
    * Returns the value of the '<em><b>Pattern</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Pattern</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Pattern</em>' containment reference.
    * @see #setPattern(Pattern)
