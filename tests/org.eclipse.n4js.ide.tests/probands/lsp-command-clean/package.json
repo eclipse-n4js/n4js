@@ -1,0 +1,16 @@
+{
+	"name": "lsp-command-clean",
+	"version": "1.0.0",
+	"main": "src-gen/Module.js",
+	"n4js" : {
+		"projectType": "validation",
+		"sources": {
+			"source": [
+				"src"
+			]
+		},
+		"output": "src-gen",
+		"requiredRuntimeLibraries": [
+		]
+	}
+}
