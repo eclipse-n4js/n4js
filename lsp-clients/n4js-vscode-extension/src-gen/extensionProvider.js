@@ -37,8 +37,8 @@ export function getActivate(vscode, vscodeLC) {
 		};
 		let lc = new vscodeLC.LanguageClient('N4JS Language Server', serverOptions, clientOptions, true);
 		lc.trace = VSCodeJRCP.Trace.Verbose;
-		let disposable = lc.start();
-		context.subscriptions.push(disposable);
+		let disposableLangClient = lc.start();
+		context.subscriptions.push(disposableLangClient);
 	};
 }
 export function getDeactivate(vscode, vscodeLC) {
