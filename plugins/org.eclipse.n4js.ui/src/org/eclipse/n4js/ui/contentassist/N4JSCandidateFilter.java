@@ -13,6 +13,7 @@ package org.eclipse.n4js.ui.contentassist;
 import org.eclipse.n4js.scoping.utils.AbstractDescriptionWithError;
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
 import org.eclipse.n4js.ui.proposals.imports.ImportsAwareReferenceProposalCreator;
+import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
 
@@ -26,8 +27,9 @@ public class N4JSCandidateFilter implements Predicate<IEObjectDescription> {
 	@Override
 	public boolean apply(IEObjectDescription candidate) {
 		QualifiedName qualifiedName = candidate.getQualifiedName();
+		final IEObjectDescription eObjectDescription = candidate;
 		// Don't propose any erroneous descriptions.
-		return !AbstractDescriptionWithError.isErrorDescription_XTEND_MVN_BUG_HACK(candidate)
+		return !IEObjectDescriptionWithError.isErrorDescription(eObjectDescription)
 				&& !N4TSQualifiedNameProvider.GLOBAL_NAMESPACE_SEGMENT.equals(qualifiedName.getFirstSegment())
 				&& !N4TSQualifiedNameProvider.isModulePolyfill(qualifiedName)
 				&& !N4TSQualifiedNameProvider.isPolyfill(qualifiedName);

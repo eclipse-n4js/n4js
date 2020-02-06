@@ -12,7 +12,7 @@
 	"bugs": {
 		"url": "https://github.com/Eclipse/n4js/issues"
 	},
-    "icon": "images/n4js_logo.png",
+	"icon": "images/n4js_logo.png",
 	"engines": {
 		"vscode": "^1.41.1"
 	},
@@ -34,7 +34,8 @@
 					".n4js",
 					".n4jsd",
 					".n4jsx",
-					".json"
+					".json",
+					".n4idl"
 				],
 				"configuration": "./n4js.configuration.json"
 			}
@@ -48,7 +49,8 @@
 		]
 	},
 	"devDependencies": {
-		"@types/vscode": "^1.41.0"
+		"@types/vscode": "^1.41.0",
+		"vsce": "1.71.0"
 	},
 	"dependencies": {
 		"n4js-cli": "latest",

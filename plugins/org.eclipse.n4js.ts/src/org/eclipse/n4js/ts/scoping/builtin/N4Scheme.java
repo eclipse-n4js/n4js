@@ -16,6 +16,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.xtext.resource.ClasspathUriUtil;
 import org.eclipse.xtext.util.Strings;
 
 /**
@@ -67,6 +68,25 @@ public interface N4Scheme {
 	 */
 	static boolean isResourceWithN4Scheme(Resource res) {
 		return isN4Scheme(res.getURI());
+	}
+
+	/**
+	 * Convert the given n4scheme-URI to a classpath-URI.
+	 */
+	static URI toClasspathURI(URI uriWithN4Scheme) {
+		String[] allSegments = new String[uriWithN4Scheme.segmentCount() + 1];
+		allSegments[0] = "env";
+		for (int i = 0; i < uriWithN4Scheme.segmentCount(); i++) {
+			allSegments[i + 1] = uriWithN4Scheme.segment(i);
+		}
+		URI classpathURI = URI.createHierarchicalURI(
+				ClasspathUriUtil.CLASSPATH_SCHEME,
+				uriWithN4Scheme.authority(),
+				uriWithN4Scheme.device(),
+				allSegments,
+				uriWithN4Scheme.query(),
+				uriWithN4Scheme.fragment());
+		return classpathURI;
 	}
 
 	/**
