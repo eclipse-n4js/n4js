@@ -22,7 +22,7 @@ import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 /**
- *
+ * Provides commands for LSP clients
  */
 public class N4JSCommandService implements IExecutableCommandService {
 	private static final String N4JS_CLEAN = "n4js.clean";
