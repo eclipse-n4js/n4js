@@ -38,6 +38,15 @@ public class BuiltInSchemeResourceLocator extends ResourceLocator {
 	public Resource getResource(URI uri, boolean loadOnDemand) {
 		if (N4Scheme.isN4Scheme(uri)) {
 			return builtInSchemeResourceSet.getResource(uri, loadOnDemand);
+		} else {
+			// try to find the built-in resource with a normalized URI
+			Resource resource = builtInSchemeResourceSet.getResource(uri, false);
+			if (resource != null) {
+				if (!resource.isLoaded() && loadOnDemand) {
+					demandLoadHelper(resource);
+				}
+				return resource;
+			}
 		}
 		return basicGetResource(uri, loadOnDemand);
 	}

@@ -12,7 +12,12 @@ package org.eclipse.n4js.ide;
 
 import org.eclipse.n4js.N4JSRuntimeModule;
 import org.eclipse.n4js.N4JSStandaloneSetup;
+import org.eclipse.n4js.json.ide.JSONIdeSetup;
+import org.eclipse.n4js.regex.ide.RegularExpressionIdeSetup;
+import org.eclipse.n4js.semver.ide.SemverIdeSetup;
 import org.eclipse.n4js.tester.TesterModule;
+import org.eclipse.n4js.ts.ide.TypeExpressionsIdeSetup;
+import org.eclipse.n4js.ts.ide.TypesIdeSetup;
 import org.eclipse.xtext.ide.server.ServerModule;
 import org.eclipse.xtext.util.Modules2;
 
@@ -28,6 +33,15 @@ public class N4JSIdeSetup extends N4JSStandaloneSetup {
 	public Injector createInjector() {
 		return Guice.createInjector(
 				Modules2.mixin(new ServerModule(), new N4JSRuntimeModule(), new N4JSIdeModule(), new TesterModule()));
+	}
+
+	@Override
+	protected void setupOtherLanguages() {
+		new RegularExpressionIdeSetup().createInjectorAndDoEMFRegistration();
+		new TypesIdeSetup().createInjectorAndDoEMFRegistration();
+		new TypeExpressionsIdeSetup().createInjectorAndDoEMFRegistration();
+		new JSONIdeSetup().createInjectorAndDoEMFRegistration();
+		new SemverIdeSetup().createInjectorAndDoEMFRegistration();
 	}
 
 }
