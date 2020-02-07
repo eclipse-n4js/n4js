@@ -33,6 +33,7 @@ import org.eclipse.n4js.cli.helper.SystemOutRedirecter;
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -71,9 +72,13 @@ public class CommandRebuildTest {
 	private N4jscTestLanguageClient client;
 	private XLanguageServerImpl languageServer;
 
+	private FileTime prjStateTime;
+	private FileTime genFileTime;
+
 	/** Sets up the language server and client */
 	@Before
-	public void init() {
+	public void init() throws IOException, InterruptedException {
+		// init
 		N4jscTestFactory.set(true);
 		languageServer = N4jscFactory.getLanguageServer();
 		client = (N4jscTestLanguageClient) N4jscFactory.getLanguageClient();
@@ -94,21 +99,32 @@ public class CommandRebuildTest {
 		languageServer.initialize(initParams);
 		languageServer.initialized(null);
 		languageServer.joinInitBuildFinished();
+
+		// check pre-state
+		assertEquals(0, client.getErrorsCount());
+		prjStateTime = Files.readAttributes(prjStatePath, BasicFileAttributes.class).creationTime();
+		genFileTime = Files.readAttributes(genFileStatePath, BasicFileAttributes.class).creationTime();
+
+		// wait two seconds because file time does not consider milliseconds
+		Thread.sleep(2000);
+		client.resetCounters();
+	}
+
+	/** remove generated files */
+	@After
+	public void cleanup() {
+		languageServer.clean();
+
+		// wait for previous command to finish
+		ExecuteCommandParams cmdUnknownParams = new ExecuteCommandParams("unknown.command", Collections.emptyList());
+		languageServer.executeCommand(cmdUnknownParams).join();
 	}
 
 	/** Expectation is that files '.n4js.projectstate' and 'src-gen/Module.js' are changed due to rebuild action. */
 	@Test
-	public void testCommandRebuild() throws IOException, InterruptedException {
-		// check pre-state
-		assertEquals(0, client.getErrorsCount());
-		FileTime prjStateTime = Files.readAttributes(prjStatePath, BasicFileAttributes.class).creationTime();
-		FileTime genFileTime = Files.readAttributes(genFileStatePath, BasicFileAttributes.class).creationTime();
-
-		// wait two seconds because file time does not consider milliseconds
-		Thread.sleep(2000);
+	public void testCommandRebuild() throws IOException {
 
 		// send command under test
-		client.resetCounters();
 		ExecuteCommandParams cmdCleanParams = new ExecuteCommandParams("n4js.rebuild", Collections.emptyList());
 		CompletableFuture<Object> future = languageServer.executeCommand(cmdCleanParams);
 		future.join();
@@ -128,13 +144,8 @@ public class CommandRebuildTest {
 	/** Expectation is that files '.n4js.projectstate' and 'src-gen/Module.js' are NOT changed. */
 	@Test
 	public void testRebuildWithoutClean() throws IOException {
-		// check pre-state
-		assertEquals(0, client.getErrorsCount());
-		FileTime prjStateTime = Files.readAttributes(prjStatePath, BasicFileAttributes.class).creationTime();
-		FileTime genFileTime = Files.readAttributes(genFileStatePath, BasicFileAttributes.class).creationTime();
 
 		// send command under test
-		client.resetCounters();
 		languageServer.reinitWorkspace();
 
 		// wait for previous command to finish
