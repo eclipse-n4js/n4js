@@ -10,6 +10,10 @@
  */
 package org.eclipse.n4js.ide.validation;
 
+import static com.google.common.collect.Lists.newArrayList;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
@@ -27,6 +31,7 @@ import org.eclipse.xtext.resource.XtextSyntaxDiagnostic;
 import org.eclipse.xtext.util.IAcceptor;
 import org.eclipse.xtext.util.ITextRegionWithLineInformation;
 import org.eclipse.xtext.util.LineAndColumn;
+import org.eclipse.xtext.validation.AbstractValidationDiagnostic;
 import org.eclipse.xtext.validation.CheckType;
 import org.eclipse.xtext.validation.DiagnosticConverterImpl;
 import org.eclipse.xtext.validation.FeatureBasedDiagnostic;
@@ -190,5 +195,34 @@ public class N4JSDiagnosticConverter extends DiagnosticConverterImpl {
 		result.lineNumberEnd = lineAndColumnEnd.getLine();
 		result.columnEnd = lineAndColumnEnd.getColumn();
 		return result;
+	}
+
+	/** Overwritten to catch stacktrace. */
+	@Override
+	protected String[] getIssueData(org.eclipse.emf.common.util.Diagnostic diagnostic) {
+		if (diagnostic instanceof AbstractValidationDiagnostic) {
+			AbstractValidationDiagnostic diagnosticImpl = (AbstractValidationDiagnostic) diagnostic;
+			return diagnosticImpl.getIssueData();
+		} else {
+			// replace any EObjects by their URIs
+			EObject causer = getCauser(diagnostic);
+			List<String> issueData = newArrayList();
+			for (Object object : diagnostic.getData()) {
+				if (object != causer && object instanceof EObject) {
+					EObject eObject = (EObject) object;
+					issueData.add(EcoreUtil.getURI(eObject).toString());
+				} else if (object instanceof String) {
+					issueData.add((String) object);
+				} else if (object instanceof Throwable) {
+					/** Catch this throwable and put it into the message */
+					Throwable thr = ((Throwable) object);
+					StringWriter sw = new StringWriter();
+					thr.printStackTrace(new PrintWriter(sw));
+					String stacktraceAsString = sw.toString();
+					issueData.add(stacktraceAsString);
+				}
+			}
+			return issueData.toArray(new String[issueData.size()]);
+		}
 	}
 }
