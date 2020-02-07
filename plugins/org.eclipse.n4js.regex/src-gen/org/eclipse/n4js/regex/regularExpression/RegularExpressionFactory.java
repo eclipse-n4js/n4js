@@ -95,13 +95,13 @@ public interface RegularExpressionFactory extends EFactory
   WordBoundary createWordBoundary();
 
   /**
-   * Returns a new object of class '<em>Look Ahead</em>'.
+   * Returns a new object of class '<em>Abstract Look Ahead</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return a new object of class '<em>Look Ahead</em>'.
+   * @return a new object of class '<em>Abstract Look Ahead</em>'.
    * @generated
    */
-  LookAhead createLookAhead();
+  AbstractLookAhead createAbstractLookAhead();
 
   /**
    * Returns a new object of class '<em>Pattern Character</em>'.
@@ -300,6 +300,24 @@ public interface RegularExpressionFactory extends EFactory
    * @generated
    */
   Sequence createSequence();
+
+  /**
+   * Returns a new object of class '<em>Look Ahead</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Look Ahead</em>'.
+   * @generated
+   */
+  LookAhead createLookAhead();
+
+  /**
+   * Returns a new object of class '<em>Look Behind</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Look Behind</em>'.
+   * @generated
+   */
+  LookBehind createLookBehind();
 
   /**
    * Returns a new object of class '<em>Character Class Range</em>'.

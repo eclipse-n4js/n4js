@@ -18,6 +18,7 @@ import org.eclipse.emf.ecore.EReference;
 
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
+import org.eclipse.n4js.regex.regularExpression.AbstractLookAhead;
 import org.eclipse.n4js.regex.regularExpression.Assertion;
 import org.eclipse.n4js.regex.regularExpression.AtomEscape;
 import org.eclipse.n4js.regex.regularExpression.Backspace;
@@ -38,6 +39,7 @@ import org.eclipse.n4js.regex.regularExpression.IdentityEscapeSequence;
 import org.eclipse.n4js.regex.regularExpression.LineEnd;
 import org.eclipse.n4js.regex.regularExpression.LineStart;
 import org.eclipse.n4js.regex.regularExpression.LookAhead;
+import org.eclipse.n4js.regex.regularExpression.LookBehind;
 import org.eclipse.n4js.regex.regularExpression.Pattern;
 import org.eclipse.n4js.regex.regularExpression.PatternCharacter;
 import org.eclipse.n4js.regex.regularExpression.Quantifier;
@@ -114,7 +116,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass lookAheadEClass = null;
+  private EClass abstractLookAheadEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -269,6 +271,20 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * @generated
    */
   private EClass sequenceEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass lookAheadEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass lookBehindEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -478,9 +494,9 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * @generated
    */
   @Override
-  public EClass getLookAhead()
+  public EClass getAbstractLookAhead()
   {
-    return lookAheadEClass;
+    return abstractLookAheadEClass;
   }
 
   /**
@@ -489,9 +505,9 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * @generated
    */
   @Override
-  public EAttribute getLookAhead_Backwards()
+  public EAttribute getAbstractLookAhead_Not()
   {
-    return (EAttribute)lookAheadEClass.getEStructuralFeatures().get(0);
+    return (EAttribute)abstractLookAheadEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -500,20 +516,9 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * @generated
    */
   @Override
-  public EAttribute getLookAhead_Not()
+  public EReference getAbstractLookAhead_Pattern()
   {
-    return (EAttribute)lookAheadEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  public EReference getLookAhead_Pattern()
-  {
-    return (EReference)lookAheadEClass.getEStructuralFeatures().get(2);
+    return (EReference)abstractLookAheadEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -775,7 +780,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * @generated
    */
   @Override
-  public EAttribute getCharacterClassAtom_Character()
+  public EAttribute getCharacterClassAtom_Characters()
   {
     return (EAttribute)characterClassAtomEClass.getEStructuralFeatures().get(0);
   }
@@ -819,7 +824,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * @generated
    */
   @Override
-  public EAttribute getGroup_Named()
+  public EAttribute getGroup_NonCapturing()
   {
     return (EAttribute)groupEClass.getEStructuralFeatures().get(0);
   }
@@ -830,7 +835,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * @generated
    */
   @Override
-  public EAttribute getGroup_Name()
+  public EAttribute getGroup_Named()
   {
     return (EAttribute)groupEClass.getEStructuralFeatures().get(1);
   }
@@ -841,7 +846,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * @generated
    */
   @Override
-  public EAttribute getGroup_NonCapturing()
+  public EAttribute getGroup_Name()
   {
     return (EAttribute)groupEClass.getEStructuralFeatures().get(2);
   }
@@ -1017,6 +1022,28 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * @generated
    */
   @Override
+  public EClass getLookAhead()
+  {
+    return lookAheadEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EClass getLookBehind()
+  {
+    return lookBehindEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public EClass getCharacterClassRange()
   {
     return characterClassRangeEClass;
@@ -1094,10 +1121,9 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
     wordBoundaryEClass = createEClass(WORD_BOUNDARY);
     createEAttribute(wordBoundaryEClass, WORD_BOUNDARY__NOT);
 
-    lookAheadEClass = createEClass(LOOK_AHEAD);
-    createEAttribute(lookAheadEClass, LOOK_AHEAD__BACKWARDS);
-    createEAttribute(lookAheadEClass, LOOK_AHEAD__NOT);
-    createEReference(lookAheadEClass, LOOK_AHEAD__PATTERN);
+    abstractLookAheadEClass = createEClass(ABSTRACT_LOOK_AHEAD);
+    createEAttribute(abstractLookAheadEClass, ABSTRACT_LOOK_AHEAD__NOT);
+    createEReference(abstractLookAheadEClass, ABSTRACT_LOOK_AHEAD__PATTERN);
 
     patternCharacterEClass = createEClass(PATTERN_CHARACTER);
     createEAttribute(patternCharacterEClass, PATTERN_CHARACTER__VALUE);
@@ -1134,16 +1160,16 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
     characterClassElementEClass = createEClass(CHARACTER_CLASS_ELEMENT);
 
     characterClassAtomEClass = createEClass(CHARACTER_CLASS_ATOM);
-    createEAttribute(characterClassAtomEClass, CHARACTER_CLASS_ATOM__CHARACTER);
+    createEAttribute(characterClassAtomEClass, CHARACTER_CLASS_ATOM__CHARACTERS);
 
     escapedCharacterClassAtomEClass = createEClass(ESCAPED_CHARACTER_CLASS_ATOM);
 
     backspaceEClass = createEClass(BACKSPACE);
 
     groupEClass = createEClass(GROUP);
+    createEAttribute(groupEClass, GROUP__NON_CAPTURING);
     createEAttribute(groupEClass, GROUP__NAMED);
     createEAttribute(groupEClass, GROUP__NAME);
-    createEAttribute(groupEClass, GROUP__NON_CAPTURING);
     createEReference(groupEClass, GROUP__PATTERN);
 
     quantifierEClass = createEClass(QUANTIFIER);
@@ -1165,6 +1191,10 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
 
     sequenceEClass = createEClass(SEQUENCE);
     createEReference(sequenceEClass, SEQUENCE__ELEMENTS);
+
+    lookAheadEClass = createEClass(LOOK_AHEAD);
+
+    lookBehindEClass = createEClass(LOOK_BEHIND);
 
     characterClassRangeEClass = createEClass(CHARACTER_CLASS_RANGE);
     createEReference(characterClassRangeEClass, CHARACTER_CLASS_RANGE__LEFT);
@@ -1204,7 +1234,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
     lineStartEClass.getESuperTypes().add(this.getAssertion());
     lineEndEClass.getESuperTypes().add(this.getAssertion());
     wordBoundaryEClass.getESuperTypes().add(this.getAssertion());
-    lookAheadEClass.getESuperTypes().add(this.getAssertion());
+    abstractLookAheadEClass.getESuperTypes().add(this.getAssertion());
     patternCharacterEClass.getESuperTypes().add(this.getPattern());
     wildcardEClass.getESuperTypes().add(this.getPattern());
     atomEscapeEClass.getESuperTypes().add(this.getPattern());
@@ -1231,6 +1261,8 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
     exactQuantifierEClass.getESuperTypes().add(this.getQuantifier());
     disjunctionEClass.getESuperTypes().add(this.getPattern());
     sequenceEClass.getESuperTypes().add(this.getPattern());
+    lookAheadEClass.getESuperTypes().add(this.getAbstractLookAhead());
+    lookBehindEClass.getESuperTypes().add(this.getAbstractLookAhead());
     characterClassRangeEClass.getESuperTypes().add(this.getCharacterClassElement());
 
     // Initialize classes and features; add operations and parameters
@@ -1253,10 +1285,9 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
     initEClass(wordBoundaryEClass, WordBoundary.class, "WordBoundary", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getWordBoundary_Not(), ecorePackage.getEBoolean(), "not", null, 0, 1, WordBoundary.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(lookAheadEClass, LookAhead.class, "LookAhead", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getLookAhead_Backwards(), ecorePackage.getEBoolean(), "backwards", null, 0, 1, LookAhead.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getLookAhead_Not(), ecorePackage.getEBoolean(), "not", null, 0, 1, LookAhead.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getLookAhead_Pattern(), this.getPattern(), null, "pattern", null, 0, 1, LookAhead.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEClass(abstractLookAheadEClass, AbstractLookAhead.class, "AbstractLookAhead", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getAbstractLookAhead_Not(), ecorePackage.getEBoolean(), "not", null, 0, 1, AbstractLookAhead.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getAbstractLookAhead_Pattern(), this.getPattern(), null, "pattern", null, 0, 1, AbstractLookAhead.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(patternCharacterEClass, PatternCharacter.class, "PatternCharacter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getPatternCharacter_Value(), ecorePackage.getEString(), "value", null, 0, 1, PatternCharacter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1293,16 +1324,16 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
     initEClass(characterClassElementEClass, CharacterClassElement.class, "CharacterClassElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(characterClassAtomEClass, CharacterClassAtom.class, "CharacterClassAtom", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getCharacterClassAtom_Character(), ecorePackage.getEString(), "character", null, 0, 1, CharacterClassAtom.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getCharacterClassAtom_Characters(), ecorePackage.getEString(), "characters", null, 0, 1, CharacterClassAtom.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(escapedCharacterClassAtomEClass, EscapedCharacterClassAtom.class, "EscapedCharacterClassAtom", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(backspaceEClass, Backspace.class, "Backspace", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(groupEClass, Group.class, "Group", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getGroup_NonCapturing(), ecorePackage.getEBoolean(), "nonCapturing", null, 0, 1, Group.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getGroup_Named(), ecorePackage.getEBoolean(), "named", null, 0, 1, Group.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getGroup_Name(), ecorePackage.getEString(), "name", null, 0, 1, Group.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getGroup_NonCapturing(), ecorePackage.getEBoolean(), "nonCapturing", null, 0, 1, Group.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getGroup_Pattern(), this.getPattern(), null, "pattern", null, 0, 1, Group.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(quantifierEClass, Quantifier.class, "Quantifier", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -1324,6 +1355,10 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
 
     initEClass(sequenceEClass, Sequence.class, "Sequence", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getSequence_Elements(), this.getPattern(), null, "elements", null, 0, -1, Sequence.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(lookAheadEClass, LookAhead.class, "LookAhead", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+    initEClass(lookBehindEClass, LookBehind.class, "LookBehind", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(characterClassRangeEClass, CharacterClassRange.class, "CharacterClassRange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getCharacterClassRange_Left(), this.getCharacterClassAtom(), null, "left", null, 0, 1, CharacterClassRange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

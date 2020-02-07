@@ -18,6 +18,20 @@ package org.eclipse.n4js.regex.parser.antlr.lexer;
 import org.eclipse.xtext.parser.antlr.Lexer;
 }
 
+LeftParenthesisQuestionMarkLessThanSignExclamationMark : '(?<!';
+
+LeftParenthesisQuestionMarkLessThanSignEqualsSign : '(?<=';
+
+LeftParenthesisQuestionMarkExclamationMark : '(?!';
+
+LeftParenthesisQuestionMarkColon : '(?:';
+
+LeftParenthesisQuestionMarkLessThanSign : '(?<';
+
+LeftParenthesisQuestionMarkEqualsSign : '(?=';
+
+LeftParenthesisQuestionMark : '(?';
+
 ExclamationMark : '!';
 
 DollarSign : '$';

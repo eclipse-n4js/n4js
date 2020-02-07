@@ -32,60 +32,67 @@ import java.util.HashMap;
 @SuppressWarnings("all")
 public class InternalRegularExpressionParser extends AbstractInternalAntlrParser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "ExclamationMark", "DollarSign", "LeftParenthesis", "RightParenthesis", "Asterisk", "PlusSign", "Comma", "HyphenMinus", "FullStop", "Solidus", "Colon", "LessThanSign", "EqualsSign", "GreaterThanSign", "QuestionMark", "LeftSquareBracket", "RightSquareBracket", "CircumflexAccent", "KW__", "LeftCurlyBracket", "VerticalLine", "RightCurlyBracket", "RULE_WORD_BOUNDARY", "RULE_NOT_WORD_BOUNDARY", "RULE_CHARACTER_CLASS_ESCAPE", "RULE_CONTROL_ESCAPE", "RULE_CONTROL_LETTER_ESCAPE", "RULE_HEX_DIGIT", "RULE_HEX_ESCAPE", "RULE_UNICODE_ESCAPE", "RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT", "RULE_DECIMAL_ESCAPE", "RULE_IDENTITY_ESCAPE", "RULE_UNICODE_DIGIT_FRAGMENT", "RULE_UNICODE_DIGIT", "RULE_UNICODE_LETTER_FRAGMENT", "RULE_UNICODE_LETTER", "RULE_PATTERN_CHARACTER_NO_DASH", "RULE_DECIMAL_DIGIT_FRAGMENT", "RULE_ZWJ", "RULE_ZWNJ", "RULE_BOM", "RULE_UNICODE_SPACE_SEPARATOR_FRAGMENT", "RULE_WHITESPACE_FRAGMENT", "RULE_LINE_TERMINATOR_FRAGMENT", "RULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT", "RULE_SL_COMMENT_FRAGMENT", "RULE_ML_COMMENT_FRAGMENT", "RULE_UNICODE_COMBINING_MARK_FRAGMENT", "RULE_UNICODE_CONNECTOR_PUNCTUATION_FRAGMENT", "RULE_ANY_OTHER"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "LeftParenthesisQuestionMarkLessThanSignExclamationMark", "LeftParenthesisQuestionMarkLessThanSignEqualsSign", "LeftParenthesisQuestionMarkExclamationMark", "LeftParenthesisQuestionMarkColon", "LeftParenthesisQuestionMarkLessThanSign", "LeftParenthesisQuestionMarkEqualsSign", "LeftParenthesisQuestionMark", "ExclamationMark", "DollarSign", "LeftParenthesis", "RightParenthesis", "Asterisk", "PlusSign", "Comma", "HyphenMinus", "FullStop", "Solidus", "Colon", "LessThanSign", "EqualsSign", "GreaterThanSign", "QuestionMark", "LeftSquareBracket", "RightSquareBracket", "CircumflexAccent", "KW__", "LeftCurlyBracket", "VerticalLine", "RightCurlyBracket", "RULE_WORD_BOUNDARY", "RULE_NOT_WORD_BOUNDARY", "RULE_CHARACTER_CLASS_ESCAPE", "RULE_CONTROL_ESCAPE", "RULE_CONTROL_LETTER_ESCAPE", "RULE_HEX_DIGIT", "RULE_HEX_ESCAPE", "RULE_UNICODE_ESCAPE", "RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT", "RULE_DECIMAL_ESCAPE", "RULE_IDENTITY_ESCAPE", "RULE_UNICODE_DIGIT_FRAGMENT", "RULE_UNICODE_DIGIT", "RULE_UNICODE_LETTER_FRAGMENT", "RULE_UNICODE_LETTER", "RULE_PATTERN_CHARACTER_NO_DASH", "RULE_DECIMAL_DIGIT_FRAGMENT", "RULE_ZWJ", "RULE_ZWNJ", "RULE_BOM", "RULE_UNICODE_SPACE_SEPARATOR_FRAGMENT", "RULE_WHITESPACE_FRAGMENT", "RULE_LINE_TERMINATOR_FRAGMENT", "RULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT", "RULE_SL_COMMENT_FRAGMENT", "RULE_ML_COMMENT_FRAGMENT", "RULE_UNICODE_COMBINING_MARK_FRAGMENT", "RULE_UNICODE_CONNECTOR_PUNCTUATION_FRAGMENT", "RULE_ANY_OTHER"
     };
-    public static final int LessThanSign=15;
-    public static final int RULE_WHITESPACE_FRAGMENT=47;
-    public static final int LeftParenthesis=6;
-    public static final int RULE_HEX_ESCAPE=32;
-    public static final int RightSquareBracket=20;
-    public static final int ExclamationMark=4;
-    public static final int GreaterThanSign=17;
-    public static final int RULE_CONTROL_LETTER_ESCAPE=30;
-    public static final int RULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT=49;
-    public static final int RightParenthesis=7;
-    public static final int RULE_UNICODE_COMBINING_MARK_FRAGMENT=52;
-    public static final int RULE_ZWNJ=44;
-    public static final int VerticalLine=24;
-    public static final int PlusSign=9;
-    public static final int LeftSquareBracket=19;
-    public static final int RULE_DECIMAL_ESCAPE=35;
-    public static final int RULE_ML_COMMENT_FRAGMENT=51;
-    public static final int RULE_PATTERN_CHARACTER_NO_DASH=41;
-    public static final int RULE_WORD_BOUNDARY=26;
-    public static final int RULE_UNICODE_ESCAPE=33;
-    public static final int Comma=10;
-    public static final int EqualsSign=16;
-    public static final int RULE_ZWJ=43;
-    public static final int RULE_SL_COMMENT_FRAGMENT=50;
-    public static final int HyphenMinus=11;
-    public static final int RULE_UNICODE_DIGIT_FRAGMENT=37;
-    public static final int RULE_UNICODE_LETTER=40;
-    public static final int RULE_CONTROL_ESCAPE=29;
-    public static final int RULE_UNICODE_SPACE_SEPARATOR_FRAGMENT=46;
-    public static final int Solidus=13;
-    public static final int Colon=14;
-    public static final int RightCurlyBracket=25;
-    public static final int RULE_CHARACTER_CLASS_ESCAPE=28;
+    public static final int LeftParenthesisQuestionMarkLessThanSignEqualsSign=5;
+    public static final int LessThanSign=22;
+    public static final int LeftParenthesisQuestionMark=10;
+    public static final int RULE_WHITESPACE_FRAGMENT=54;
+    public static final int LeftParenthesis=13;
+    public static final int RULE_HEX_ESCAPE=39;
+    public static final int RightSquareBracket=27;
+    public static final int ExclamationMark=11;
+    public static final int GreaterThanSign=24;
+    public static final int RULE_CONTROL_LETTER_ESCAPE=37;
+    public static final int RULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT=56;
+    public static final int RightParenthesis=14;
+    public static final int RULE_UNICODE_COMBINING_MARK_FRAGMENT=59;
+    public static final int LeftParenthesisQuestionMarkLessThanSignExclamationMark=4;
+    public static final int LeftParenthesisQuestionMarkExclamationMark=6;
+    public static final int LeftParenthesisQuestionMarkColon=7;
+    public static final int RULE_ZWNJ=51;
+    public static final int VerticalLine=31;
+    public static final int PlusSign=16;
+    public static final int LeftSquareBracket=26;
+    public static final int RULE_DECIMAL_ESCAPE=42;
+    public static final int LeftParenthesisQuestionMarkLessThanSign=8;
+    public static final int RULE_ML_COMMENT_FRAGMENT=58;
+    public static final int RULE_PATTERN_CHARACTER_NO_DASH=48;
+    public static final int RULE_WORD_BOUNDARY=33;
+    public static final int RULE_UNICODE_ESCAPE=40;
+    public static final int Comma=17;
+    public static final int EqualsSign=23;
+    public static final int RULE_ZWJ=50;
+    public static final int RULE_SL_COMMENT_FRAGMENT=57;
+    public static final int HyphenMinus=18;
+    public static final int RULE_UNICODE_DIGIT_FRAGMENT=44;
+    public static final int RULE_UNICODE_LETTER=47;
+    public static final int RULE_CONTROL_ESCAPE=36;
+    public static final int RULE_UNICODE_SPACE_SEPARATOR_FRAGMENT=53;
+    public static final int Solidus=20;
+    public static final int Colon=21;
+    public static final int RightCurlyBracket=32;
+    public static final int RULE_CHARACTER_CLASS_ESCAPE=35;
     public static final int EOF=-1;
-    public static final int Asterisk=8;
-    public static final int FullStop=12;
-    public static final int RULE_UNICODE_DIGIT=38;
-    public static final int RULE_BOM=45;
-    public static final int LeftCurlyBracket=23;
-    public static final int RULE_ANY_OTHER=54;
-    public static final int CircumflexAccent=21;
-    public static final int RULE_NOT_WORD_BOUNDARY=27;
-    public static final int KW__=22;
-    public static final int RULE_LINE_TERMINATOR_FRAGMENT=48;
-    public static final int RULE_UNICODE_LETTER_FRAGMENT=39;
-    public static final int RULE_DECIMAL_DIGIT_FRAGMENT=42;
-    public static final int QuestionMark=18;
-    public static final int DollarSign=5;
-    public static final int RULE_HEX_DIGIT=31;
-    public static final int RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT=34;
-    public static final int RULE_IDENTITY_ESCAPE=36;
-    public static final int RULE_UNICODE_CONNECTOR_PUNCTUATION_FRAGMENT=53;
+    public static final int Asterisk=15;
+    public static final int FullStop=19;
+    public static final int RULE_UNICODE_DIGIT=45;
+    public static final int LeftParenthesisQuestionMarkEqualsSign=9;
+    public static final int RULE_BOM=52;
+    public static final int LeftCurlyBracket=30;
+    public static final int RULE_ANY_OTHER=61;
+    public static final int CircumflexAccent=28;
+    public static final int RULE_NOT_WORD_BOUNDARY=34;
+    public static final int KW__=29;
+    public static final int RULE_LINE_TERMINATOR_FRAGMENT=55;
+    public static final int RULE_UNICODE_LETTER_FRAGMENT=46;
+    public static final int RULE_DECIMAL_DIGIT_FRAGMENT=49;
+    public static final int QuestionMark=25;
+    public static final int DollarSign=12;
+    public static final int RULE_HEX_DIGIT=38;
+    public static final int RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT=41;
+    public static final int RULE_IDENTITY_ESCAPE=43;
+    public static final int RULE_UNICODE_CONNECTOR_PUNCTUATION_FRAGMENT=60;
 
     // delegates
     // delegators
@@ -470,7 +477,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
             int alt6=2;
             int LA6_0 = input.LA(1);
 
-            if ( ((LA6_0>=ExclamationMark && LA6_0<=LeftParenthesis)||(LA6_0>=Comma && LA6_0<=FullStop)||(LA6_0>=Colon && LA6_0<=GreaterThanSign)||(LA6_0>=LeftSquareBracket && LA6_0<=CircumflexAccent)||LA6_0==LeftCurlyBracket||(LA6_0>=RightCurlyBracket && LA6_0<=RULE_CONTROL_LETTER_ESCAPE)||(LA6_0>=RULE_HEX_ESCAPE && LA6_0<=RULE_UNICODE_ESCAPE)||(LA6_0>=RULE_DECIMAL_ESCAPE && LA6_0<=RULE_IDENTITY_ESCAPE)||LA6_0==RULE_UNICODE_DIGIT||(LA6_0>=RULE_UNICODE_LETTER && LA6_0<=RULE_PATTERN_CHARACTER_NO_DASH)) ) {
+            if ( ((LA6_0>=LeftParenthesisQuestionMarkLessThanSignExclamationMark && LA6_0<=LeftParenthesisQuestionMarkEqualsSign)||(LA6_0>=ExclamationMark && LA6_0<=LeftParenthesis)||(LA6_0>=Comma && LA6_0<=FullStop)||(LA6_0>=Colon && LA6_0<=GreaterThanSign)||(LA6_0>=LeftSquareBracket && LA6_0<=CircumflexAccent)||LA6_0==LeftCurlyBracket||(LA6_0>=RightCurlyBracket && LA6_0<=RULE_CONTROL_LETTER_ESCAPE)||(LA6_0>=RULE_HEX_ESCAPE && LA6_0<=RULE_UNICODE_ESCAPE)||(LA6_0>=RULE_DECIMAL_ESCAPE && LA6_0<=RULE_IDENTITY_ESCAPE)||LA6_0==RULE_UNICODE_DIGIT||(LA6_0>=RULE_UNICODE_LETTER && LA6_0<=RULE_PATTERN_CHARACTER_NO_DASH)) ) {
                 alt6=1;
             }
             else if ( (LA6_0==EOF||LA6_0==RightParenthesis||LA6_0==Solidus||LA6_0==VerticalLine) ) {
@@ -556,7 +563,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                             	    int alt1=2;
                             	    int LA1_0 = input.LA(1);
 
-                            	    if ( ((LA1_0>=ExclamationMark && LA1_0<=LeftParenthesis)||(LA1_0>=Comma && LA1_0<=FullStop)||(LA1_0>=Colon && LA1_0<=GreaterThanSign)||(LA1_0>=LeftSquareBracket && LA1_0<=CircumflexAccent)||LA1_0==LeftCurlyBracket||(LA1_0>=RightCurlyBracket && LA1_0<=RULE_CONTROL_LETTER_ESCAPE)||(LA1_0>=RULE_HEX_ESCAPE && LA1_0<=RULE_UNICODE_ESCAPE)||(LA1_0>=RULE_DECIMAL_ESCAPE && LA1_0<=RULE_IDENTITY_ESCAPE)||LA1_0==RULE_UNICODE_DIGIT||(LA1_0>=RULE_UNICODE_LETTER && LA1_0<=RULE_PATTERN_CHARACTER_NO_DASH)) ) {
+                            	    if ( ((LA1_0>=LeftParenthesisQuestionMarkLessThanSignExclamationMark && LA1_0<=LeftParenthesisQuestionMarkEqualsSign)||(LA1_0>=ExclamationMark && LA1_0<=LeftParenthesis)||(LA1_0>=Comma && LA1_0<=FullStop)||(LA1_0>=Colon && LA1_0<=GreaterThanSign)||(LA1_0>=LeftSquareBracket && LA1_0<=CircumflexAccent)||LA1_0==LeftCurlyBracket||(LA1_0>=RightCurlyBracket && LA1_0<=RULE_CONTROL_LETTER_ESCAPE)||(LA1_0>=RULE_HEX_ESCAPE && LA1_0<=RULE_UNICODE_ESCAPE)||(LA1_0>=RULE_DECIMAL_ESCAPE && LA1_0<=RULE_IDENTITY_ESCAPE)||LA1_0==RULE_UNICODE_DIGIT||(LA1_0>=RULE_UNICODE_LETTER && LA1_0<=RULE_PATTERN_CHARACTER_NO_DASH)) ) {
                             	        alt1=1;
                             	    }
                             	    switch (alt1) {
@@ -668,7 +675,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     	    int alt4=2;
                     	    int LA4_0 = input.LA(1);
 
-                    	    if ( ((LA4_0>=ExclamationMark && LA4_0<=LeftParenthesis)||(LA4_0>=Comma && LA4_0<=FullStop)||(LA4_0>=Colon && LA4_0<=GreaterThanSign)||(LA4_0>=LeftSquareBracket && LA4_0<=CircumflexAccent)||LA4_0==LeftCurlyBracket||(LA4_0>=RightCurlyBracket && LA4_0<=RULE_CONTROL_LETTER_ESCAPE)||(LA4_0>=RULE_HEX_ESCAPE && LA4_0<=RULE_UNICODE_ESCAPE)||(LA4_0>=RULE_DECIMAL_ESCAPE && LA4_0<=RULE_IDENTITY_ESCAPE)||LA4_0==RULE_UNICODE_DIGIT||(LA4_0>=RULE_UNICODE_LETTER && LA4_0<=RULE_PATTERN_CHARACTER_NO_DASH)) ) {
+                    	    if ( ((LA4_0>=LeftParenthesisQuestionMarkLessThanSignExclamationMark && LA4_0<=LeftParenthesisQuestionMarkEqualsSign)||(LA4_0>=ExclamationMark && LA4_0<=LeftParenthesis)||(LA4_0>=Comma && LA4_0<=FullStop)||(LA4_0>=Colon && LA4_0<=GreaterThanSign)||(LA4_0>=LeftSquareBracket && LA4_0<=CircumflexAccent)||LA4_0==LeftCurlyBracket||(LA4_0>=RightCurlyBracket && LA4_0<=RULE_CONTROL_LETTER_ESCAPE)||(LA4_0>=RULE_HEX_ESCAPE && LA4_0<=RULE_UNICODE_ESCAPE)||(LA4_0>=RULE_DECIMAL_ESCAPE && LA4_0<=RULE_IDENTITY_ESCAPE)||LA4_0==RULE_UNICODE_DIGIT||(LA4_0>=RULE_UNICODE_LETTER && LA4_0<=RULE_PATTERN_CHARACTER_NO_DASH)) ) {
                     	        alt4=1;
                     	    }
                     	    switch (alt4) {
@@ -829,7 +836,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
             int alt8=2;
             int LA8_0 = input.LA(1);
 
-            if ( ((LA8_0>=ExclamationMark && LA8_0<=LeftParenthesis)||(LA8_0>=Comma && LA8_0<=FullStop)||(LA8_0>=Colon && LA8_0<=GreaterThanSign)||(LA8_0>=LeftSquareBracket && LA8_0<=CircumflexAccent)||LA8_0==LeftCurlyBracket||(LA8_0>=RightCurlyBracket && LA8_0<=RULE_CONTROL_LETTER_ESCAPE)||(LA8_0>=RULE_HEX_ESCAPE && LA8_0<=RULE_UNICODE_ESCAPE)||(LA8_0>=RULE_DECIMAL_ESCAPE && LA8_0<=RULE_IDENTITY_ESCAPE)||LA8_0==RULE_UNICODE_DIGIT||(LA8_0>=RULE_UNICODE_LETTER && LA8_0<=RULE_PATTERN_CHARACTER_NO_DASH)) ) {
+            if ( ((LA8_0>=LeftParenthesisQuestionMarkLessThanSignExclamationMark && LA8_0<=LeftParenthesisQuestionMarkEqualsSign)||(LA8_0>=ExclamationMark && LA8_0<=LeftParenthesis)||(LA8_0>=Comma && LA8_0<=FullStop)||(LA8_0>=Colon && LA8_0<=GreaterThanSign)||(LA8_0>=LeftSquareBracket && LA8_0<=CircumflexAccent)||LA8_0==LeftCurlyBracket||(LA8_0>=RightCurlyBracket && LA8_0<=RULE_CONTROL_LETTER_ESCAPE)||(LA8_0>=RULE_HEX_ESCAPE && LA8_0<=RULE_UNICODE_ESCAPE)||(LA8_0>=RULE_DECIMAL_ESCAPE && LA8_0<=RULE_IDENTITY_ESCAPE)||LA8_0==RULE_UNICODE_DIGIT||(LA8_0>=RULE_UNICODE_LETTER && LA8_0<=RULE_PATTERN_CHARACTER_NO_DASH)) ) {
                 alt8=1;
             }
             switch (alt8) {
@@ -856,7 +863,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                         int alt7=2;
                         int LA7_0 = input.LA(1);
 
-                        if ( ((LA7_0>=ExclamationMark && LA7_0<=LeftParenthesis)||(LA7_0>=Comma && LA7_0<=FullStop)||(LA7_0>=Colon && LA7_0<=GreaterThanSign)||(LA7_0>=LeftSquareBracket && LA7_0<=CircumflexAccent)||LA7_0==LeftCurlyBracket||(LA7_0>=RightCurlyBracket && LA7_0<=RULE_CONTROL_LETTER_ESCAPE)||(LA7_0>=RULE_HEX_ESCAPE && LA7_0<=RULE_UNICODE_ESCAPE)||(LA7_0>=RULE_DECIMAL_ESCAPE && LA7_0<=RULE_IDENTITY_ESCAPE)||LA7_0==RULE_UNICODE_DIGIT||(LA7_0>=RULE_UNICODE_LETTER && LA7_0<=RULE_PATTERN_CHARACTER_NO_DASH)) ) {
+                        if ( ((LA7_0>=LeftParenthesisQuestionMarkLessThanSignExclamationMark && LA7_0<=LeftParenthesisQuestionMarkEqualsSign)||(LA7_0>=ExclamationMark && LA7_0<=LeftParenthesis)||(LA7_0>=Comma && LA7_0<=FullStop)||(LA7_0>=Colon && LA7_0<=GreaterThanSign)||(LA7_0>=LeftSquareBracket && LA7_0<=CircumflexAccent)||LA7_0==LeftCurlyBracket||(LA7_0>=RightCurlyBracket && LA7_0<=RULE_CONTROL_LETTER_ESCAPE)||(LA7_0>=RULE_HEX_ESCAPE && LA7_0<=RULE_UNICODE_ESCAPE)||(LA7_0>=RULE_DECIMAL_ESCAPE && LA7_0<=RULE_IDENTITY_ESCAPE)||LA7_0==RULE_UNICODE_DIGIT||(LA7_0>=RULE_UNICODE_LETTER && LA7_0<=RULE_PATTERN_CHARACTER_NO_DASH)) ) {
                             alt7=1;
                         }
 
@@ -999,106 +1006,21 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
             {
             // InternalRegularExpressionParser.g:332:2: (this_Assertion_0= ruleAssertion | (this_Atom_1= ruleAtom ( ( ( ruleQuantifier ) )=> (lv_quantifier_2_0= ruleQuantifier ) )? ) )
             int alt10=2;
-            switch ( input.LA(1) ) {
-            case DollarSign:
-            case CircumflexAccent:
-            case RULE_WORD_BOUNDARY:
-            case RULE_NOT_WORD_BOUNDARY:
-                {
+            int LA10_0 = input.LA(1);
+
+            if ( ((LA10_0>=LeftParenthesisQuestionMarkLessThanSignExclamationMark && LA10_0<=LeftParenthesisQuestionMarkExclamationMark)||LA10_0==LeftParenthesisQuestionMarkEqualsSign||LA10_0==DollarSign||LA10_0==CircumflexAccent||(LA10_0>=RULE_WORD_BOUNDARY && LA10_0<=RULE_NOT_WORD_BOUNDARY)) ) {
                 alt10=1;
-                }
-                break;
-            case LeftParenthesis:
-                {
-                int LA10_2 = input.LA(2);
-
-                if ( (LA10_2==QuestionMark) ) {
-                    switch ( input.LA(3) ) {
-                    case LessThanSign:
-                        {
-                        int LA10_5 = input.LA(4);
-
-                        if ( (LA10_5==ExclamationMark||LA10_5==EqualsSign) ) {
-                            alt10=1;
-                        }
-                        else if ( (LA10_5==DollarSign||LA10_5==KW__||LA10_5==RULE_UNICODE_ESCAPE||LA10_5==RULE_UNICODE_LETTER) ) {
-                            alt10=2;
-                        }
-                        else {
-                            if (state.backtracking>0) {state.failed=true; return current;}
-                            NoViableAltException nvae =
-                                new NoViableAltException("", 10, 5, input);
-
-                            throw nvae;
-                        }
-                        }
-                        break;
-                    case ExclamationMark:
-                    case EqualsSign:
-                        {
-                        alt10=1;
-                        }
-                        break;
-                    case Colon:
-                        {
-                        alt10=2;
-                        }
-                        break;
-                    default:
-                        if (state.backtracking>0) {state.failed=true; return current;}
-                        NoViableAltException nvae =
-                            new NoViableAltException("", 10, 4, input);
-
-                        throw nvae;
-                    }
-
-                }
-                else if ( ((LA10_2>=ExclamationMark && LA10_2<=RightParenthesis)||(LA10_2>=Comma && LA10_2<=FullStop)||(LA10_2>=Colon && LA10_2<=GreaterThanSign)||(LA10_2>=LeftSquareBracket && LA10_2<=CircumflexAccent)||(LA10_2>=LeftCurlyBracket && LA10_2<=RULE_CONTROL_LETTER_ESCAPE)||(LA10_2>=RULE_HEX_ESCAPE && LA10_2<=RULE_UNICODE_ESCAPE)||(LA10_2>=RULE_DECIMAL_ESCAPE && LA10_2<=RULE_IDENTITY_ESCAPE)||LA10_2==RULE_UNICODE_DIGIT||(LA10_2>=RULE_UNICODE_LETTER && LA10_2<=RULE_PATTERN_CHARACTER_NO_DASH)) ) {
-                    alt10=2;
-                }
-                else {
-                    if (state.backtracking>0) {state.failed=true; return current;}
-                    NoViableAltException nvae =
-                        new NoViableAltException("", 10, 2, input);
-
-                    throw nvae;
-                }
-                }
-                break;
-            case ExclamationMark:
-            case Comma:
-            case HyphenMinus:
-            case FullStop:
-            case Colon:
-            case LessThanSign:
-            case EqualsSign:
-            case GreaterThanSign:
-            case LeftSquareBracket:
-            case RightSquareBracket:
-            case LeftCurlyBracket:
-            case RightCurlyBracket:
-            case RULE_CHARACTER_CLASS_ESCAPE:
-            case RULE_CONTROL_ESCAPE:
-            case RULE_CONTROL_LETTER_ESCAPE:
-            case RULE_HEX_ESCAPE:
-            case RULE_UNICODE_ESCAPE:
-            case RULE_DECIMAL_ESCAPE:
-            case RULE_IDENTITY_ESCAPE:
-            case RULE_UNICODE_DIGIT:
-            case RULE_UNICODE_LETTER:
-            case RULE_PATTERN_CHARACTER_NO_DASH:
-                {
+            }
+            else if ( ((LA10_0>=LeftParenthesisQuestionMarkColon && LA10_0<=LeftParenthesisQuestionMarkLessThanSign)||LA10_0==ExclamationMark||LA10_0==LeftParenthesis||(LA10_0>=Comma && LA10_0<=FullStop)||(LA10_0>=Colon && LA10_0<=GreaterThanSign)||(LA10_0>=LeftSquareBracket && LA10_0<=RightSquareBracket)||LA10_0==LeftCurlyBracket||LA10_0==RightCurlyBracket||(LA10_0>=RULE_CHARACTER_CLASS_ESCAPE && LA10_0<=RULE_CONTROL_LETTER_ESCAPE)||(LA10_0>=RULE_HEX_ESCAPE && LA10_0<=RULE_UNICODE_ESCAPE)||(LA10_0>=RULE_DECIMAL_ESCAPE && LA10_0<=RULE_IDENTITY_ESCAPE)||LA10_0==RULE_UNICODE_DIGIT||(LA10_0>=RULE_UNICODE_LETTER && LA10_0<=RULE_PATTERN_CHARACTER_NO_DASH)) ) {
                 alt10=2;
-                }
-                break;
-            default:
+            }
+            else {
                 if (state.backtracking>0) {state.failed=true; return current;}
                 NoViableAltException nvae =
                     new NoViableAltException("", 10, 0, input);
 
                 throw nvae;
             }
-
             switch (alt10) {
                 case 1 :
                     // InternalRegularExpressionParser.g:333:3: this_Assertion_0= ruleAssertion
@@ -1257,7 +1179,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "ruleAssertion"
-    // InternalRegularExpressionParser.g:386:1: ruleAssertion returns [EObject current=null] : (this_LineStart_0= ruleLineStart | this_LineEnd_1= ruleLineEnd | this_WordBoundary_2= ruleWordBoundary | this_LookAhead_3= ruleLookAhead ) ;
+    // InternalRegularExpressionParser.g:386:1: ruleAssertion returns [EObject current=null] : (this_LineStart_0= ruleLineStart | this_LineEnd_1= ruleLineEnd | this_WordBoundary_2= ruleWordBoundary | this_AbstractLookAhead_3= ruleAbstractLookAhead ) ;
     public final EObject ruleAssertion() throws RecognitionException {
         EObject current = null;
 
@@ -1267,17 +1189,17 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
         EObject this_WordBoundary_2 = null;
 
-        EObject this_LookAhead_3 = null;
+        EObject this_AbstractLookAhead_3 = null;
 
 
 
         	enterRule();
 
         try {
-            // InternalRegularExpressionParser.g:392:2: ( (this_LineStart_0= ruleLineStart | this_LineEnd_1= ruleLineEnd | this_WordBoundary_2= ruleWordBoundary | this_LookAhead_3= ruleLookAhead ) )
-            // InternalRegularExpressionParser.g:393:2: (this_LineStart_0= ruleLineStart | this_LineEnd_1= ruleLineEnd | this_WordBoundary_2= ruleWordBoundary | this_LookAhead_3= ruleLookAhead )
+            // InternalRegularExpressionParser.g:392:2: ( (this_LineStart_0= ruleLineStart | this_LineEnd_1= ruleLineEnd | this_WordBoundary_2= ruleWordBoundary | this_AbstractLookAhead_3= ruleAbstractLookAhead ) )
+            // InternalRegularExpressionParser.g:393:2: (this_LineStart_0= ruleLineStart | this_LineEnd_1= ruleLineEnd | this_WordBoundary_2= ruleWordBoundary | this_AbstractLookAhead_3= ruleAbstractLookAhead )
             {
-            // InternalRegularExpressionParser.g:393:2: (this_LineStart_0= ruleLineStart | this_LineEnd_1= ruleLineEnd | this_WordBoundary_2= ruleWordBoundary | this_LookAhead_3= ruleLookAhead )
+            // InternalRegularExpressionParser.g:393:2: (this_LineStart_0= ruleLineStart | this_LineEnd_1= ruleLineEnd | this_WordBoundary_2= ruleWordBoundary | this_AbstractLookAhead_3= ruleAbstractLookAhead )
             int alt11=4;
             switch ( input.LA(1) ) {
             case CircumflexAccent:
@@ -1296,7 +1218,10 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                 alt11=3;
                 }
                 break;
-            case LeftParenthesis:
+            case LeftParenthesisQuestionMarkLessThanSignExclamationMark:
+            case LeftParenthesisQuestionMarkLessThanSignEqualsSign:
+            case LeftParenthesisQuestionMarkExclamationMark:
+            case LeftParenthesisQuestionMarkEqualsSign:
                 {
                 alt11=4;
                 }
@@ -1377,21 +1302,21 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     }
                     break;
                 case 4 :
-                    // InternalRegularExpressionParser.g:421:3: this_LookAhead_3= ruleLookAhead
+                    // InternalRegularExpressionParser.g:421:3: this_AbstractLookAhead_3= ruleAbstractLookAhead
                     {
                     if ( state.backtracking==0 ) {
 
-                      			newCompositeNode(grammarAccess.getAssertionAccess().getLookAheadParserRuleCall_3());
+                      			newCompositeNode(grammarAccess.getAssertionAccess().getAbstractLookAheadParserRuleCall_3());
                       		
                     }
                     pushFollow(FOLLOW_2);
-                    this_LookAhead_3=ruleLookAhead();
+                    this_AbstractLookAhead_3=ruleAbstractLookAhead();
 
                     state._fsp--;
                     if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
-                      			current = this_LookAhead_3;
+                      			current = this_AbstractLookAhead_3;
                       			afterParserOrEnumRuleCall();
                       		
                     }
@@ -1786,28 +1711,28 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
     // $ANTLR end "ruleWordBoundary"
 
 
-    // $ANTLR start "entryRuleLookAhead"
-    // InternalRegularExpressionParser.g:544:1: entryRuleLookAhead returns [EObject current=null] : iv_ruleLookAhead= ruleLookAhead EOF ;
-    public final EObject entryRuleLookAhead() throws RecognitionException {
+    // $ANTLR start "entryRuleAbstractLookAhead"
+    // InternalRegularExpressionParser.g:544:1: entryRuleAbstractLookAhead returns [EObject current=null] : iv_ruleAbstractLookAhead= ruleAbstractLookAhead EOF ;
+    public final EObject entryRuleAbstractLookAhead() throws RecognitionException {
         EObject current = null;
 
-        EObject iv_ruleLookAhead = null;
+        EObject iv_ruleAbstractLookAhead = null;
 
 
         try {
-            // InternalRegularExpressionParser.g:544:50: (iv_ruleLookAhead= ruleLookAhead EOF )
-            // InternalRegularExpressionParser.g:545:2: iv_ruleLookAhead= ruleLookAhead EOF
+            // InternalRegularExpressionParser.g:544:58: (iv_ruleAbstractLookAhead= ruleAbstractLookAhead EOF )
+            // InternalRegularExpressionParser.g:545:2: iv_ruleAbstractLookAhead= ruleAbstractLookAhead EOF
             {
             if ( state.backtracking==0 ) {
-               newCompositeNode(grammarAccess.getLookAheadRule()); 
+               newCompositeNode(grammarAccess.getAbstractLookAheadRule()); 
             }
             pushFollow(FOLLOW_1);
-            iv_ruleLookAhead=ruleLookAhead();
+            iv_ruleAbstractLookAhead=ruleAbstractLookAhead();
 
             state._fsp--;
             if (state.failed) return current;
             if ( state.backtracking==0 ) {
-               current =iv_ruleLookAhead; 
+               current =iv_ruleAbstractLookAhead; 
             }
             match(input,EOF,FOLLOW_2); if (state.failed) return current;
 
@@ -1823,17 +1748,16 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
         }
         return current;
     }
-    // $ANTLR end "entryRuleLookAhead"
+    // $ANTLR end "entryRuleAbstractLookAhead"
 
 
-    // $ANTLR start "ruleLookAhead"
-    // InternalRegularExpressionParser.g:551:1: ruleLookAhead returns [EObject current=null] : ( () otherlv_1= LeftParenthesis otherlv_2= QuestionMark ( (lv_backwards_3_0= LessThanSign ) )? (otherlv_4= EqualsSign | ( (lv_not_5_0= ExclamationMark ) ) ) ( (lv_pattern_6_0= ruleDisjunction ) ) otherlv_7= RightParenthesis ) ;
-    public final EObject ruleLookAhead() throws RecognitionException {
+    // $ANTLR start "ruleAbstractLookAhead"
+    // InternalRegularExpressionParser.g:551:1: ruleAbstractLookAhead returns [EObject current=null] : ( ( ( () (otherlv_1= LeftParenthesisQuestionMarkEqualsSign | ( (lv_not_2_0= LeftParenthesisQuestionMarkExclamationMark ) ) ) ) | ( () (otherlv_4= LeftParenthesisQuestionMarkLessThanSignEqualsSign | ( (lv_not_5_0= LeftParenthesisQuestionMarkLessThanSignExclamationMark ) ) ) ) ) ( (lv_pattern_6_0= ruleDisjunction ) ) otherlv_7= RightParenthesis ) ;
+    public final EObject ruleAbstractLookAhead() throws RecognitionException {
         EObject current = null;
 
         Token otherlv_1=null;
-        Token otherlv_2=null;
-        Token lv_backwards_3_0=null;
+        Token lv_not_2_0=null;
         Token otherlv_4=null;
         Token lv_not_5_0=null;
         Token otherlv_7=null;
@@ -1844,127 +1768,201 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
         	enterRule();
 
         try {
-            // InternalRegularExpressionParser.g:557:2: ( ( () otherlv_1= LeftParenthesis otherlv_2= QuestionMark ( (lv_backwards_3_0= LessThanSign ) )? (otherlv_4= EqualsSign | ( (lv_not_5_0= ExclamationMark ) ) ) ( (lv_pattern_6_0= ruleDisjunction ) ) otherlv_7= RightParenthesis ) )
-            // InternalRegularExpressionParser.g:558:2: ( () otherlv_1= LeftParenthesis otherlv_2= QuestionMark ( (lv_backwards_3_0= LessThanSign ) )? (otherlv_4= EqualsSign | ( (lv_not_5_0= ExclamationMark ) ) ) ( (lv_pattern_6_0= ruleDisjunction ) ) otherlv_7= RightParenthesis )
+            // InternalRegularExpressionParser.g:557:2: ( ( ( ( () (otherlv_1= LeftParenthesisQuestionMarkEqualsSign | ( (lv_not_2_0= LeftParenthesisQuestionMarkExclamationMark ) ) ) ) | ( () (otherlv_4= LeftParenthesisQuestionMarkLessThanSignEqualsSign | ( (lv_not_5_0= LeftParenthesisQuestionMarkLessThanSignExclamationMark ) ) ) ) ) ( (lv_pattern_6_0= ruleDisjunction ) ) otherlv_7= RightParenthesis ) )
+            // InternalRegularExpressionParser.g:558:2: ( ( ( () (otherlv_1= LeftParenthesisQuestionMarkEqualsSign | ( (lv_not_2_0= LeftParenthesisQuestionMarkExclamationMark ) ) ) ) | ( () (otherlv_4= LeftParenthesisQuestionMarkLessThanSignEqualsSign | ( (lv_not_5_0= LeftParenthesisQuestionMarkLessThanSignExclamationMark ) ) ) ) ) ( (lv_pattern_6_0= ruleDisjunction ) ) otherlv_7= RightParenthesis )
             {
-            // InternalRegularExpressionParser.g:558:2: ( () otherlv_1= LeftParenthesis otherlv_2= QuestionMark ( (lv_backwards_3_0= LessThanSign ) )? (otherlv_4= EqualsSign | ( (lv_not_5_0= ExclamationMark ) ) ) ( (lv_pattern_6_0= ruleDisjunction ) ) otherlv_7= RightParenthesis )
-            // InternalRegularExpressionParser.g:559:3: () otherlv_1= LeftParenthesis otherlv_2= QuestionMark ( (lv_backwards_3_0= LessThanSign ) )? (otherlv_4= EqualsSign | ( (lv_not_5_0= ExclamationMark ) ) ) ( (lv_pattern_6_0= ruleDisjunction ) ) otherlv_7= RightParenthesis
+            // InternalRegularExpressionParser.g:558:2: ( ( ( () (otherlv_1= LeftParenthesisQuestionMarkEqualsSign | ( (lv_not_2_0= LeftParenthesisQuestionMarkExclamationMark ) ) ) ) | ( () (otherlv_4= LeftParenthesisQuestionMarkLessThanSignEqualsSign | ( (lv_not_5_0= LeftParenthesisQuestionMarkLessThanSignExclamationMark ) ) ) ) ) ( (lv_pattern_6_0= ruleDisjunction ) ) otherlv_7= RightParenthesis )
+            // InternalRegularExpressionParser.g:559:3: ( ( () (otherlv_1= LeftParenthesisQuestionMarkEqualsSign | ( (lv_not_2_0= LeftParenthesisQuestionMarkExclamationMark ) ) ) ) | ( () (otherlv_4= LeftParenthesisQuestionMarkLessThanSignEqualsSign | ( (lv_not_5_0= LeftParenthesisQuestionMarkLessThanSignExclamationMark ) ) ) ) ) ( (lv_pattern_6_0= ruleDisjunction ) ) otherlv_7= RightParenthesis
             {
-            // InternalRegularExpressionParser.g:559:3: ()
-            // InternalRegularExpressionParser.g:560:4: 
-            {
-            if ( state.backtracking==0 ) {
+            // InternalRegularExpressionParser.g:559:3: ( ( () (otherlv_1= LeftParenthesisQuestionMarkEqualsSign | ( (lv_not_2_0= LeftParenthesisQuestionMarkExclamationMark ) ) ) ) | ( () (otherlv_4= LeftParenthesisQuestionMarkLessThanSignEqualsSign | ( (lv_not_5_0= LeftParenthesisQuestionMarkLessThanSignExclamationMark ) ) ) ) )
+            int alt15=2;
+            int LA15_0 = input.LA(1);
 
-              				current = forceCreateModelElement(
-              					grammarAccess.getLookAheadAccess().getLookAheadAction_0(),
-              					current);
-              			
+            if ( (LA15_0==LeftParenthesisQuestionMarkExclamationMark||LA15_0==LeftParenthesisQuestionMarkEqualsSign) ) {
+                alt15=1;
             }
-
-            }
-
-            otherlv_1=(Token)match(input,LeftParenthesis,FOLLOW_10); if (state.failed) return current;
-            if ( state.backtracking==0 ) {
-
-              			newLeafNode(otherlv_1, grammarAccess.getLookAheadAccess().getLeftParenthesisKeyword_1());
-              		
-            }
-            otherlv_2=(Token)match(input,QuestionMark,FOLLOW_11); if (state.failed) return current;
-            if ( state.backtracking==0 ) {
-
-              			newLeafNode(otherlv_2, grammarAccess.getLookAheadAccess().getQuestionMarkKeyword_2());
-              		
-            }
-            // InternalRegularExpressionParser.g:574:3: ( (lv_backwards_3_0= LessThanSign ) )?
-            int alt13=2;
-            int LA13_0 = input.LA(1);
-
-            if ( (LA13_0==LessThanSign) ) {
-                alt13=1;
-            }
-            switch (alt13) {
-                case 1 :
-                    // InternalRegularExpressionParser.g:575:4: (lv_backwards_3_0= LessThanSign )
-                    {
-                    // InternalRegularExpressionParser.g:575:4: (lv_backwards_3_0= LessThanSign )
-                    // InternalRegularExpressionParser.g:576:5: lv_backwards_3_0= LessThanSign
-                    {
-                    lv_backwards_3_0=(Token)match(input,LessThanSign,FOLLOW_12); if (state.failed) return current;
-                    if ( state.backtracking==0 ) {
-
-                      					newLeafNode(lv_backwards_3_0, grammarAccess.getLookAheadAccess().getBackwardsLessThanSignKeyword_3_0());
-                      				
-                    }
-                    if ( state.backtracking==0 ) {
-
-                      					if (current==null) {
-                      						current = createModelElement(grammarAccess.getLookAheadRule());
-                      					}
-                      					setWithLastConsumed(current, "backwards", true, "<");
-                      				
-                    }
-
-                    }
-
-
-                    }
-                    break;
-
-            }
-
-            // InternalRegularExpressionParser.g:588:3: (otherlv_4= EqualsSign | ( (lv_not_5_0= ExclamationMark ) ) )
-            int alt14=2;
-            int LA14_0 = input.LA(1);
-
-            if ( (LA14_0==EqualsSign) ) {
-                alt14=1;
-            }
-            else if ( (LA14_0==ExclamationMark) ) {
-                alt14=2;
+            else if ( ((LA15_0>=LeftParenthesisQuestionMarkLessThanSignExclamationMark && LA15_0<=LeftParenthesisQuestionMarkLessThanSignEqualsSign)) ) {
+                alt15=2;
             }
             else {
                 if (state.backtracking>0) {state.failed=true; return current;}
                 NoViableAltException nvae =
-                    new NoViableAltException("", 14, 0, input);
+                    new NoViableAltException("", 15, 0, input);
 
                 throw nvae;
             }
-            switch (alt14) {
+            switch (alt15) {
                 case 1 :
-                    // InternalRegularExpressionParser.g:589:4: otherlv_4= EqualsSign
+                    // InternalRegularExpressionParser.g:560:4: ( () (otherlv_1= LeftParenthesisQuestionMarkEqualsSign | ( (lv_not_2_0= LeftParenthesisQuestionMarkExclamationMark ) ) ) )
                     {
-                    otherlv_4=(Token)match(input,EqualsSign,FOLLOW_13); if (state.failed) return current;
+                    // InternalRegularExpressionParser.g:560:4: ( () (otherlv_1= LeftParenthesisQuestionMarkEqualsSign | ( (lv_not_2_0= LeftParenthesisQuestionMarkExclamationMark ) ) ) )
+                    // InternalRegularExpressionParser.g:561:5: () (otherlv_1= LeftParenthesisQuestionMarkEqualsSign | ( (lv_not_2_0= LeftParenthesisQuestionMarkExclamationMark ) ) )
+                    {
+                    // InternalRegularExpressionParser.g:561:5: ()
+                    // InternalRegularExpressionParser.g:562:6: 
+                    {
                     if ( state.backtracking==0 ) {
 
-                      				newLeafNode(otherlv_4, grammarAccess.getLookAheadAccess().getEqualsSignKeyword_4_0());
-                      			
+                      						current = forceCreateModelElement(
+                      							grammarAccess.getAbstractLookAheadAccess().getLookAheadAction_0_0_0(),
+                      							current);
+                      					
                     }
+
+                    }
+
+                    // InternalRegularExpressionParser.g:568:5: (otherlv_1= LeftParenthesisQuestionMarkEqualsSign | ( (lv_not_2_0= LeftParenthesisQuestionMarkExclamationMark ) ) )
+                    int alt13=2;
+                    int LA13_0 = input.LA(1);
+
+                    if ( (LA13_0==LeftParenthesisQuestionMarkEqualsSign) ) {
+                        alt13=1;
+                    }
+                    else if ( (LA13_0==LeftParenthesisQuestionMarkExclamationMark) ) {
+                        alt13=2;
+                    }
+                    else {
+                        if (state.backtracking>0) {state.failed=true; return current;}
+                        NoViableAltException nvae =
+                            new NoViableAltException("", 13, 0, input);
+
+                        throw nvae;
+                    }
+                    switch (alt13) {
+                        case 1 :
+                            // InternalRegularExpressionParser.g:569:6: otherlv_1= LeftParenthesisQuestionMarkEqualsSign
+                            {
+                            otherlv_1=(Token)match(input,LeftParenthesisQuestionMarkEqualsSign,FOLLOW_10); if (state.failed) return current;
+                            if ( state.backtracking==0 ) {
+
+                              						newLeafNode(otherlv_1, grammarAccess.getAbstractLookAheadAccess().getLeftParenthesisQuestionMarkEqualsSignKeyword_0_0_1_0());
+                              					
+                            }
+
+                            }
+                            break;
+                        case 2 :
+                            // InternalRegularExpressionParser.g:574:6: ( (lv_not_2_0= LeftParenthesisQuestionMarkExclamationMark ) )
+                            {
+                            // InternalRegularExpressionParser.g:574:6: ( (lv_not_2_0= LeftParenthesisQuestionMarkExclamationMark ) )
+                            // InternalRegularExpressionParser.g:575:7: (lv_not_2_0= LeftParenthesisQuestionMarkExclamationMark )
+                            {
+                            // InternalRegularExpressionParser.g:575:7: (lv_not_2_0= LeftParenthesisQuestionMarkExclamationMark )
+                            // InternalRegularExpressionParser.g:576:8: lv_not_2_0= LeftParenthesisQuestionMarkExclamationMark
+                            {
+                            lv_not_2_0=(Token)match(input,LeftParenthesisQuestionMarkExclamationMark,FOLLOW_10); if (state.failed) return current;
+                            if ( state.backtracking==0 ) {
+
+                              								newLeafNode(lv_not_2_0, grammarAccess.getAbstractLookAheadAccess().getNotLeftParenthesisQuestionMarkExclamationMarkKeyword_0_0_1_1_0());
+                              							
+                            }
+                            if ( state.backtracking==0 ) {
+
+                              								if (current==null) {
+                              									current = createModelElement(grammarAccess.getAbstractLookAheadRule());
+                              								}
+                              								setWithLastConsumed(current, "not", true, "(?!");
+                              							
+                            }
+
+                            }
+
+
+                            }
+
+
+                            }
+                            break;
+
+                    }
+
+
+                    }
+
 
                     }
                     break;
                 case 2 :
-                    // InternalRegularExpressionParser.g:594:4: ( (lv_not_5_0= ExclamationMark ) )
+                    // InternalRegularExpressionParser.g:591:4: ( () (otherlv_4= LeftParenthesisQuestionMarkLessThanSignEqualsSign | ( (lv_not_5_0= LeftParenthesisQuestionMarkLessThanSignExclamationMark ) ) ) )
                     {
-                    // InternalRegularExpressionParser.g:594:4: ( (lv_not_5_0= ExclamationMark ) )
-                    // InternalRegularExpressionParser.g:595:5: (lv_not_5_0= ExclamationMark )
+                    // InternalRegularExpressionParser.g:591:4: ( () (otherlv_4= LeftParenthesisQuestionMarkLessThanSignEqualsSign | ( (lv_not_5_0= LeftParenthesisQuestionMarkLessThanSignExclamationMark ) ) ) )
+                    // InternalRegularExpressionParser.g:592:5: () (otherlv_4= LeftParenthesisQuestionMarkLessThanSignEqualsSign | ( (lv_not_5_0= LeftParenthesisQuestionMarkLessThanSignExclamationMark ) ) )
                     {
-                    // InternalRegularExpressionParser.g:595:5: (lv_not_5_0= ExclamationMark )
-                    // InternalRegularExpressionParser.g:596:6: lv_not_5_0= ExclamationMark
+                    // InternalRegularExpressionParser.g:592:5: ()
+                    // InternalRegularExpressionParser.g:593:6: 
                     {
-                    lv_not_5_0=(Token)match(input,ExclamationMark,FOLLOW_13); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
-                      						newLeafNode(lv_not_5_0, grammarAccess.getLookAheadAccess().getNotExclamationMarkKeyword_4_1_0());
+                      						current = forceCreateModelElement(
+                      							grammarAccess.getAbstractLookAheadAccess().getLookBehindAction_0_1_0(),
+                      							current);
                       					
                     }
-                    if ( state.backtracking==0 ) {
 
-                      						if (current==null) {
-                      							current = createModelElement(grammarAccess.getLookAheadRule());
-                      						}
-                      						setWithLastConsumed(current, "not", true, "!");
-                      					
                     }
+
+                    // InternalRegularExpressionParser.g:599:5: (otherlv_4= LeftParenthesisQuestionMarkLessThanSignEqualsSign | ( (lv_not_5_0= LeftParenthesisQuestionMarkLessThanSignExclamationMark ) ) )
+                    int alt14=2;
+                    int LA14_0 = input.LA(1);
+
+                    if ( (LA14_0==LeftParenthesisQuestionMarkLessThanSignEqualsSign) ) {
+                        alt14=1;
+                    }
+                    else if ( (LA14_0==LeftParenthesisQuestionMarkLessThanSignExclamationMark) ) {
+                        alt14=2;
+                    }
+                    else {
+                        if (state.backtracking>0) {state.failed=true; return current;}
+                        NoViableAltException nvae =
+                            new NoViableAltException("", 14, 0, input);
+
+                        throw nvae;
+                    }
+                    switch (alt14) {
+                        case 1 :
+                            // InternalRegularExpressionParser.g:600:6: otherlv_4= LeftParenthesisQuestionMarkLessThanSignEqualsSign
+                            {
+                            otherlv_4=(Token)match(input,LeftParenthesisQuestionMarkLessThanSignEqualsSign,FOLLOW_10); if (state.failed) return current;
+                            if ( state.backtracking==0 ) {
+
+                              						newLeafNode(otherlv_4, grammarAccess.getAbstractLookAheadAccess().getLeftParenthesisQuestionMarkLessThanSignEqualsSignKeyword_0_1_1_0());
+                              					
+                            }
+
+                            }
+                            break;
+                        case 2 :
+                            // InternalRegularExpressionParser.g:605:6: ( (lv_not_5_0= LeftParenthesisQuestionMarkLessThanSignExclamationMark ) )
+                            {
+                            // InternalRegularExpressionParser.g:605:6: ( (lv_not_5_0= LeftParenthesisQuestionMarkLessThanSignExclamationMark ) )
+                            // InternalRegularExpressionParser.g:606:7: (lv_not_5_0= LeftParenthesisQuestionMarkLessThanSignExclamationMark )
+                            {
+                            // InternalRegularExpressionParser.g:606:7: (lv_not_5_0= LeftParenthesisQuestionMarkLessThanSignExclamationMark )
+                            // InternalRegularExpressionParser.g:607:8: lv_not_5_0= LeftParenthesisQuestionMarkLessThanSignExclamationMark
+                            {
+                            lv_not_5_0=(Token)match(input,LeftParenthesisQuestionMarkLessThanSignExclamationMark,FOLLOW_10); if (state.failed) return current;
+                            if ( state.backtracking==0 ) {
+
+                              								newLeafNode(lv_not_5_0, grammarAccess.getAbstractLookAheadAccess().getNotLeftParenthesisQuestionMarkLessThanSignExclamationMarkKeyword_0_1_1_1_0());
+                              							
+                            }
+                            if ( state.backtracking==0 ) {
+
+                              								if (current==null) {
+                              									current = createModelElement(grammarAccess.getAbstractLookAheadRule());
+                              								}
+                              								setWithLastConsumed(current, "not", true, "(?<!");
+                              							
+                            }
+
+                            }
+
+
+                            }
+
+
+                            }
+                            break;
 
                     }
 
@@ -1977,18 +1975,18 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
             }
 
-            // InternalRegularExpressionParser.g:609:3: ( (lv_pattern_6_0= ruleDisjunction ) )
-            // InternalRegularExpressionParser.g:610:4: (lv_pattern_6_0= ruleDisjunction )
+            // InternalRegularExpressionParser.g:622:3: ( (lv_pattern_6_0= ruleDisjunction ) )
+            // InternalRegularExpressionParser.g:623:4: (lv_pattern_6_0= ruleDisjunction )
             {
-            // InternalRegularExpressionParser.g:610:4: (lv_pattern_6_0= ruleDisjunction )
-            // InternalRegularExpressionParser.g:611:5: lv_pattern_6_0= ruleDisjunction
+            // InternalRegularExpressionParser.g:623:4: (lv_pattern_6_0= ruleDisjunction )
+            // InternalRegularExpressionParser.g:624:5: lv_pattern_6_0= ruleDisjunction
             {
             if ( state.backtracking==0 ) {
 
-              					newCompositeNode(grammarAccess.getLookAheadAccess().getPatternDisjunctionParserRuleCall_5_0());
+              					newCompositeNode(grammarAccess.getAbstractLookAheadAccess().getPatternDisjunctionParserRuleCall_1_0());
               				
             }
-            pushFollow(FOLLOW_14);
+            pushFollow(FOLLOW_11);
             lv_pattern_6_0=ruleDisjunction();
 
             state._fsp--;
@@ -1996,7 +1994,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
             if ( state.backtracking==0 ) {
 
               					if (current==null) {
-              						current = createModelElementForParent(grammarAccess.getLookAheadRule());
+              						current = createModelElementForParent(grammarAccess.getAbstractLookAheadRule());
               					}
               					set(
               						current,
@@ -2015,7 +2013,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
             otherlv_7=(Token)match(input,RightParenthesis,FOLLOW_2); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
-              			newLeafNode(otherlv_7, grammarAccess.getLookAheadAccess().getRightParenthesisKeyword_6());
+              			newLeafNode(otherlv_7, grammarAccess.getAbstractLookAheadAccess().getRightParenthesisKeyword_2());
               		
             }
 
@@ -2039,11 +2037,11 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
         }
         return current;
     }
-    // $ANTLR end "ruleLookAhead"
+    // $ANTLR end "ruleAbstractLookAhead"
 
 
     // $ANTLR start "entryRuleAtom"
-    // InternalRegularExpressionParser.g:636:1: entryRuleAtom returns [EObject current=null] : iv_ruleAtom= ruleAtom EOF ;
+    // InternalRegularExpressionParser.g:649:1: entryRuleAtom returns [EObject current=null] : iv_ruleAtom= ruleAtom EOF ;
     public final EObject entryRuleAtom() throws RecognitionException {
         EObject current = null;
 
@@ -2051,8 +2049,8 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
         try {
-            // InternalRegularExpressionParser.g:636:45: (iv_ruleAtom= ruleAtom EOF )
-            // InternalRegularExpressionParser.g:637:2: iv_ruleAtom= ruleAtom EOF
+            // InternalRegularExpressionParser.g:649:45: (iv_ruleAtom= ruleAtom EOF )
+            // InternalRegularExpressionParser.g:650:2: iv_ruleAtom= ruleAtom EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getAtomRule()); 
@@ -2083,7 +2081,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "ruleAtom"
-    // InternalRegularExpressionParser.g:643:1: ruleAtom returns [EObject current=null] : (this_PatternCharacter_0= rulePatternCharacter | this_Wildcard_1= ruleWildcard | this_AtomEscape_2= ruleAtomEscape | this_CharacterClass_3= ruleCharacterClass | this_Group_4= ruleGroup ) ;
+    // InternalRegularExpressionParser.g:656:1: ruleAtom returns [EObject current=null] : (this_PatternCharacter_0= rulePatternCharacter | this_Wildcard_1= ruleWildcard | this_AtomEscape_2= ruleAtomEscape | this_CharacterClass_3= ruleCharacterClass | this_Group_4= ruleGroup ) ;
     public final EObject ruleAtom() throws RecognitionException {
         EObject current = null;
 
@@ -2102,11 +2100,11 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
         	enterRule();
 
         try {
-            // InternalRegularExpressionParser.g:649:2: ( (this_PatternCharacter_0= rulePatternCharacter | this_Wildcard_1= ruleWildcard | this_AtomEscape_2= ruleAtomEscape | this_CharacterClass_3= ruleCharacterClass | this_Group_4= ruleGroup ) )
-            // InternalRegularExpressionParser.g:650:2: (this_PatternCharacter_0= rulePatternCharacter | this_Wildcard_1= ruleWildcard | this_AtomEscape_2= ruleAtomEscape | this_CharacterClass_3= ruleCharacterClass | this_Group_4= ruleGroup )
+            // InternalRegularExpressionParser.g:662:2: ( (this_PatternCharacter_0= rulePatternCharacter | this_Wildcard_1= ruleWildcard | this_AtomEscape_2= ruleAtomEscape | this_CharacterClass_3= ruleCharacterClass | this_Group_4= ruleGroup ) )
+            // InternalRegularExpressionParser.g:663:2: (this_PatternCharacter_0= rulePatternCharacter | this_Wildcard_1= ruleWildcard | this_AtomEscape_2= ruleAtomEscape | this_CharacterClass_3= ruleCharacterClass | this_Group_4= ruleGroup )
             {
-            // InternalRegularExpressionParser.g:650:2: (this_PatternCharacter_0= rulePatternCharacter | this_Wildcard_1= ruleWildcard | this_AtomEscape_2= ruleAtomEscape | this_CharacterClass_3= ruleCharacterClass | this_Group_4= ruleGroup )
-            int alt15=5;
+            // InternalRegularExpressionParser.g:663:2: (this_PatternCharacter_0= rulePatternCharacter | this_Wildcard_1= ruleWildcard | this_AtomEscape_2= ruleAtomEscape | this_CharacterClass_3= ruleCharacterClass | this_Group_4= ruleGroup )
+            int alt16=5;
             switch ( input.LA(1) ) {
             case ExclamationMark:
             case Comma:
@@ -2122,12 +2120,12 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
             case RULE_UNICODE_LETTER:
             case RULE_PATTERN_CHARACTER_NO_DASH:
                 {
-                alt15=1;
+                alt16=1;
                 }
                 break;
             case FullStop:
                 {
-                alt15=2;
+                alt16=2;
                 }
                 break;
             case RULE_CHARACTER_CLASS_ESCAPE:
@@ -2138,30 +2136,32 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
             case RULE_DECIMAL_ESCAPE:
             case RULE_IDENTITY_ESCAPE:
                 {
-                alt15=3;
+                alt16=3;
                 }
                 break;
             case LeftSquareBracket:
                 {
-                alt15=4;
+                alt16=4;
                 }
                 break;
+            case LeftParenthesisQuestionMarkColon:
+            case LeftParenthesisQuestionMarkLessThanSign:
             case LeftParenthesis:
                 {
-                alt15=5;
+                alt16=5;
                 }
                 break;
             default:
                 if (state.backtracking>0) {state.failed=true; return current;}
                 NoViableAltException nvae =
-                    new NoViableAltException("", 15, 0, input);
+                    new NoViableAltException("", 16, 0, input);
 
                 throw nvae;
             }
 
-            switch (alt15) {
+            switch (alt16) {
                 case 1 :
-                    // InternalRegularExpressionParser.g:651:3: this_PatternCharacter_0= rulePatternCharacter
+                    // InternalRegularExpressionParser.g:664:3: this_PatternCharacter_0= rulePatternCharacter
                     {
                     if ( state.backtracking==0 ) {
 
@@ -2183,7 +2183,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     }
                     break;
                 case 2 :
-                    // InternalRegularExpressionParser.g:660:3: this_Wildcard_1= ruleWildcard
+                    // InternalRegularExpressionParser.g:673:3: this_Wildcard_1= ruleWildcard
                     {
                     if ( state.backtracking==0 ) {
 
@@ -2205,7 +2205,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     }
                     break;
                 case 3 :
-                    // InternalRegularExpressionParser.g:669:3: this_AtomEscape_2= ruleAtomEscape
+                    // InternalRegularExpressionParser.g:682:3: this_AtomEscape_2= ruleAtomEscape
                     {
                     if ( state.backtracking==0 ) {
 
@@ -2227,7 +2227,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     }
                     break;
                 case 4 :
-                    // InternalRegularExpressionParser.g:678:3: this_CharacterClass_3= ruleCharacterClass
+                    // InternalRegularExpressionParser.g:691:3: this_CharacterClass_3= ruleCharacterClass
                     {
                     if ( state.backtracking==0 ) {
 
@@ -2249,7 +2249,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     }
                     break;
                 case 5 :
-                    // InternalRegularExpressionParser.g:687:3: this_Group_4= ruleGroup
+                    // InternalRegularExpressionParser.g:700:3: this_Group_4= ruleGroup
                     {
                     if ( state.backtracking==0 ) {
 
@@ -2295,7 +2295,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "entryRulePatternCharacter"
-    // InternalRegularExpressionParser.g:699:1: entryRulePatternCharacter returns [EObject current=null] : iv_rulePatternCharacter= rulePatternCharacter EOF ;
+    // InternalRegularExpressionParser.g:712:1: entryRulePatternCharacter returns [EObject current=null] : iv_rulePatternCharacter= rulePatternCharacter EOF ;
     public final EObject entryRulePatternCharacter() throws RecognitionException {
         EObject current = null;
 
@@ -2303,8 +2303,8 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
         try {
-            // InternalRegularExpressionParser.g:699:57: (iv_rulePatternCharacter= rulePatternCharacter EOF )
-            // InternalRegularExpressionParser.g:700:2: iv_rulePatternCharacter= rulePatternCharacter EOF
+            // InternalRegularExpressionParser.g:712:57: (iv_rulePatternCharacter= rulePatternCharacter EOF )
+            // InternalRegularExpressionParser.g:713:2: iv_rulePatternCharacter= rulePatternCharacter EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getPatternCharacterRule()); 
@@ -2335,7 +2335,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "rulePatternCharacter"
-    // InternalRegularExpressionParser.g:706:1: rulePatternCharacter returns [EObject current=null] : ( ( (lv_value_0_1= RULE_PATTERN_CHARACTER_NO_DASH | lv_value_0_2= RULE_UNICODE_LETTER | lv_value_0_3= RULE_UNICODE_DIGIT | lv_value_0_4= HyphenMinus | lv_value_0_5= Comma | lv_value_0_6= EqualsSign | lv_value_0_7= Colon | lv_value_0_8= ExclamationMark | lv_value_0_9= LeftCurlyBracket | lv_value_0_10= RightCurlyBracket | lv_value_0_11= RightSquareBracket | lv_value_0_12= LessThanSign | lv_value_0_13= GreaterThanSign ) ) ) ;
+    // InternalRegularExpressionParser.g:719:1: rulePatternCharacter returns [EObject current=null] : ( ( (lv_value_0_1= RULE_PATTERN_CHARACTER_NO_DASH | lv_value_0_2= RULE_UNICODE_LETTER | lv_value_0_3= RULE_UNICODE_DIGIT | lv_value_0_4= HyphenMinus | lv_value_0_5= Comma | lv_value_0_6= EqualsSign | lv_value_0_7= Colon | lv_value_0_8= ExclamationMark | lv_value_0_9= LeftCurlyBracket | lv_value_0_10= RightCurlyBracket | lv_value_0_11= RightSquareBracket | lv_value_0_12= LessThanSign | lv_value_0_13= GreaterThanSign ) ) ) ;
     public final EObject rulePatternCharacter() throws RecognitionException {
         EObject current = null;
 
@@ -2357,94 +2357,94 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
         	enterRule();
 
         try {
-            // InternalRegularExpressionParser.g:712:2: ( ( ( (lv_value_0_1= RULE_PATTERN_CHARACTER_NO_DASH | lv_value_0_2= RULE_UNICODE_LETTER | lv_value_0_3= RULE_UNICODE_DIGIT | lv_value_0_4= HyphenMinus | lv_value_0_5= Comma | lv_value_0_6= EqualsSign | lv_value_0_7= Colon | lv_value_0_8= ExclamationMark | lv_value_0_9= LeftCurlyBracket | lv_value_0_10= RightCurlyBracket | lv_value_0_11= RightSquareBracket | lv_value_0_12= LessThanSign | lv_value_0_13= GreaterThanSign ) ) ) )
-            // InternalRegularExpressionParser.g:713:2: ( ( (lv_value_0_1= RULE_PATTERN_CHARACTER_NO_DASH | lv_value_0_2= RULE_UNICODE_LETTER | lv_value_0_3= RULE_UNICODE_DIGIT | lv_value_0_4= HyphenMinus | lv_value_0_5= Comma | lv_value_0_6= EqualsSign | lv_value_0_7= Colon | lv_value_0_8= ExclamationMark | lv_value_0_9= LeftCurlyBracket | lv_value_0_10= RightCurlyBracket | lv_value_0_11= RightSquareBracket | lv_value_0_12= LessThanSign | lv_value_0_13= GreaterThanSign ) ) )
+            // InternalRegularExpressionParser.g:725:2: ( ( ( (lv_value_0_1= RULE_PATTERN_CHARACTER_NO_DASH | lv_value_0_2= RULE_UNICODE_LETTER | lv_value_0_3= RULE_UNICODE_DIGIT | lv_value_0_4= HyphenMinus | lv_value_0_5= Comma | lv_value_0_6= EqualsSign | lv_value_0_7= Colon | lv_value_0_8= ExclamationMark | lv_value_0_9= LeftCurlyBracket | lv_value_0_10= RightCurlyBracket | lv_value_0_11= RightSquareBracket | lv_value_0_12= LessThanSign | lv_value_0_13= GreaterThanSign ) ) ) )
+            // InternalRegularExpressionParser.g:726:2: ( ( (lv_value_0_1= RULE_PATTERN_CHARACTER_NO_DASH | lv_value_0_2= RULE_UNICODE_LETTER | lv_value_0_3= RULE_UNICODE_DIGIT | lv_value_0_4= HyphenMinus | lv_value_0_5= Comma | lv_value_0_6= EqualsSign | lv_value_0_7= Colon | lv_value_0_8= ExclamationMark | lv_value_0_9= LeftCurlyBracket | lv_value_0_10= RightCurlyBracket | lv_value_0_11= RightSquareBracket | lv_value_0_12= LessThanSign | lv_value_0_13= GreaterThanSign ) ) )
             {
-            // InternalRegularExpressionParser.g:713:2: ( ( (lv_value_0_1= RULE_PATTERN_CHARACTER_NO_DASH | lv_value_0_2= RULE_UNICODE_LETTER | lv_value_0_3= RULE_UNICODE_DIGIT | lv_value_0_4= HyphenMinus | lv_value_0_5= Comma | lv_value_0_6= EqualsSign | lv_value_0_7= Colon | lv_value_0_8= ExclamationMark | lv_value_0_9= LeftCurlyBracket | lv_value_0_10= RightCurlyBracket | lv_value_0_11= RightSquareBracket | lv_value_0_12= LessThanSign | lv_value_0_13= GreaterThanSign ) ) )
-            // InternalRegularExpressionParser.g:714:3: ( (lv_value_0_1= RULE_PATTERN_CHARACTER_NO_DASH | lv_value_0_2= RULE_UNICODE_LETTER | lv_value_0_3= RULE_UNICODE_DIGIT | lv_value_0_4= HyphenMinus | lv_value_0_5= Comma | lv_value_0_6= EqualsSign | lv_value_0_7= Colon | lv_value_0_8= ExclamationMark | lv_value_0_9= LeftCurlyBracket | lv_value_0_10= RightCurlyBracket | lv_value_0_11= RightSquareBracket | lv_value_0_12= LessThanSign | lv_value_0_13= GreaterThanSign ) )
+            // InternalRegularExpressionParser.g:726:2: ( ( (lv_value_0_1= RULE_PATTERN_CHARACTER_NO_DASH | lv_value_0_2= RULE_UNICODE_LETTER | lv_value_0_3= RULE_UNICODE_DIGIT | lv_value_0_4= HyphenMinus | lv_value_0_5= Comma | lv_value_0_6= EqualsSign | lv_value_0_7= Colon | lv_value_0_8= ExclamationMark | lv_value_0_9= LeftCurlyBracket | lv_value_0_10= RightCurlyBracket | lv_value_0_11= RightSquareBracket | lv_value_0_12= LessThanSign | lv_value_0_13= GreaterThanSign ) ) )
+            // InternalRegularExpressionParser.g:727:3: ( (lv_value_0_1= RULE_PATTERN_CHARACTER_NO_DASH | lv_value_0_2= RULE_UNICODE_LETTER | lv_value_0_3= RULE_UNICODE_DIGIT | lv_value_0_4= HyphenMinus | lv_value_0_5= Comma | lv_value_0_6= EqualsSign | lv_value_0_7= Colon | lv_value_0_8= ExclamationMark | lv_value_0_9= LeftCurlyBracket | lv_value_0_10= RightCurlyBracket | lv_value_0_11= RightSquareBracket | lv_value_0_12= LessThanSign | lv_value_0_13= GreaterThanSign ) )
             {
-            // InternalRegularExpressionParser.g:714:3: ( (lv_value_0_1= RULE_PATTERN_CHARACTER_NO_DASH | lv_value_0_2= RULE_UNICODE_LETTER | lv_value_0_3= RULE_UNICODE_DIGIT | lv_value_0_4= HyphenMinus | lv_value_0_5= Comma | lv_value_0_6= EqualsSign | lv_value_0_7= Colon | lv_value_0_8= ExclamationMark | lv_value_0_9= LeftCurlyBracket | lv_value_0_10= RightCurlyBracket | lv_value_0_11= RightSquareBracket | lv_value_0_12= LessThanSign | lv_value_0_13= GreaterThanSign ) )
-            // InternalRegularExpressionParser.g:715:4: (lv_value_0_1= RULE_PATTERN_CHARACTER_NO_DASH | lv_value_0_2= RULE_UNICODE_LETTER | lv_value_0_3= RULE_UNICODE_DIGIT | lv_value_0_4= HyphenMinus | lv_value_0_5= Comma | lv_value_0_6= EqualsSign | lv_value_0_7= Colon | lv_value_0_8= ExclamationMark | lv_value_0_9= LeftCurlyBracket | lv_value_0_10= RightCurlyBracket | lv_value_0_11= RightSquareBracket | lv_value_0_12= LessThanSign | lv_value_0_13= GreaterThanSign )
+            // InternalRegularExpressionParser.g:727:3: ( (lv_value_0_1= RULE_PATTERN_CHARACTER_NO_DASH | lv_value_0_2= RULE_UNICODE_LETTER | lv_value_0_3= RULE_UNICODE_DIGIT | lv_value_0_4= HyphenMinus | lv_value_0_5= Comma | lv_value_0_6= EqualsSign | lv_value_0_7= Colon | lv_value_0_8= ExclamationMark | lv_value_0_9= LeftCurlyBracket | lv_value_0_10= RightCurlyBracket | lv_value_0_11= RightSquareBracket | lv_value_0_12= LessThanSign | lv_value_0_13= GreaterThanSign ) )
+            // InternalRegularExpressionParser.g:728:4: (lv_value_0_1= RULE_PATTERN_CHARACTER_NO_DASH | lv_value_0_2= RULE_UNICODE_LETTER | lv_value_0_3= RULE_UNICODE_DIGIT | lv_value_0_4= HyphenMinus | lv_value_0_5= Comma | lv_value_0_6= EqualsSign | lv_value_0_7= Colon | lv_value_0_8= ExclamationMark | lv_value_0_9= LeftCurlyBracket | lv_value_0_10= RightCurlyBracket | lv_value_0_11= RightSquareBracket | lv_value_0_12= LessThanSign | lv_value_0_13= GreaterThanSign )
             {
-            // InternalRegularExpressionParser.g:715:4: (lv_value_0_1= RULE_PATTERN_CHARACTER_NO_DASH | lv_value_0_2= RULE_UNICODE_LETTER | lv_value_0_3= RULE_UNICODE_DIGIT | lv_value_0_4= HyphenMinus | lv_value_0_5= Comma | lv_value_0_6= EqualsSign | lv_value_0_7= Colon | lv_value_0_8= ExclamationMark | lv_value_0_9= LeftCurlyBracket | lv_value_0_10= RightCurlyBracket | lv_value_0_11= RightSquareBracket | lv_value_0_12= LessThanSign | lv_value_0_13= GreaterThanSign )
-            int alt16=13;
+            // InternalRegularExpressionParser.g:728:4: (lv_value_0_1= RULE_PATTERN_CHARACTER_NO_DASH | lv_value_0_2= RULE_UNICODE_LETTER | lv_value_0_3= RULE_UNICODE_DIGIT | lv_value_0_4= HyphenMinus | lv_value_0_5= Comma | lv_value_0_6= EqualsSign | lv_value_0_7= Colon | lv_value_0_8= ExclamationMark | lv_value_0_9= LeftCurlyBracket | lv_value_0_10= RightCurlyBracket | lv_value_0_11= RightSquareBracket | lv_value_0_12= LessThanSign | lv_value_0_13= GreaterThanSign )
+            int alt17=13;
             switch ( input.LA(1) ) {
             case RULE_PATTERN_CHARACTER_NO_DASH:
                 {
-                alt16=1;
+                alt17=1;
                 }
                 break;
             case RULE_UNICODE_LETTER:
                 {
-                alt16=2;
+                alt17=2;
                 }
                 break;
             case RULE_UNICODE_DIGIT:
                 {
-                alt16=3;
+                alt17=3;
                 }
                 break;
             case HyphenMinus:
                 {
-                alt16=4;
+                alt17=4;
                 }
                 break;
             case Comma:
                 {
-                alt16=5;
+                alt17=5;
                 }
                 break;
             case EqualsSign:
                 {
-                alt16=6;
+                alt17=6;
                 }
                 break;
             case Colon:
                 {
-                alt16=7;
+                alt17=7;
                 }
                 break;
             case ExclamationMark:
                 {
-                alt16=8;
+                alt17=8;
                 }
                 break;
             case LeftCurlyBracket:
                 {
-                alt16=9;
+                alt17=9;
                 }
                 break;
             case RightCurlyBracket:
                 {
-                alt16=10;
+                alt17=10;
                 }
                 break;
             case RightSquareBracket:
                 {
-                alt16=11;
+                alt17=11;
                 }
                 break;
             case LessThanSign:
                 {
-                alt16=12;
+                alt17=12;
                 }
                 break;
             case GreaterThanSign:
                 {
-                alt16=13;
+                alt17=13;
                 }
                 break;
             default:
                 if (state.backtracking>0) {state.failed=true; return current;}
                 NoViableAltException nvae =
-                    new NoViableAltException("", 16, 0, input);
+                    new NoViableAltException("", 17, 0, input);
 
                 throw nvae;
             }
 
-            switch (alt16) {
+            switch (alt17) {
                 case 1 :
-                    // InternalRegularExpressionParser.g:716:5: lv_value_0_1= RULE_PATTERN_CHARACTER_NO_DASH
+                    // InternalRegularExpressionParser.g:729:5: lv_value_0_1= RULE_PATTERN_CHARACTER_NO_DASH
                     {
                     lv_value_0_1=(Token)match(input,RULE_PATTERN_CHARACTER_NO_DASH,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -2468,7 +2468,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     }
                     break;
                 case 2 :
-                    // InternalRegularExpressionParser.g:731:5: lv_value_0_2= RULE_UNICODE_LETTER
+                    // InternalRegularExpressionParser.g:744:5: lv_value_0_2= RULE_UNICODE_LETTER
                     {
                     lv_value_0_2=(Token)match(input,RULE_UNICODE_LETTER,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -2492,7 +2492,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     }
                     break;
                 case 3 :
-                    // InternalRegularExpressionParser.g:746:5: lv_value_0_3= RULE_UNICODE_DIGIT
+                    // InternalRegularExpressionParser.g:759:5: lv_value_0_3= RULE_UNICODE_DIGIT
                     {
                     lv_value_0_3=(Token)match(input,RULE_UNICODE_DIGIT,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -2516,7 +2516,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     }
                     break;
                 case 4 :
-                    // InternalRegularExpressionParser.g:761:5: lv_value_0_4= HyphenMinus
+                    // InternalRegularExpressionParser.g:774:5: lv_value_0_4= HyphenMinus
                     {
                     lv_value_0_4=(Token)match(input,HyphenMinus,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -2536,7 +2536,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     }
                     break;
                 case 5 :
-                    // InternalRegularExpressionParser.g:772:5: lv_value_0_5= Comma
+                    // InternalRegularExpressionParser.g:785:5: lv_value_0_5= Comma
                     {
                     lv_value_0_5=(Token)match(input,Comma,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -2556,7 +2556,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     }
                     break;
                 case 6 :
-                    // InternalRegularExpressionParser.g:783:5: lv_value_0_6= EqualsSign
+                    // InternalRegularExpressionParser.g:796:5: lv_value_0_6= EqualsSign
                     {
                     lv_value_0_6=(Token)match(input,EqualsSign,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -2576,7 +2576,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     }
                     break;
                 case 7 :
-                    // InternalRegularExpressionParser.g:794:5: lv_value_0_7= Colon
+                    // InternalRegularExpressionParser.g:807:5: lv_value_0_7= Colon
                     {
                     lv_value_0_7=(Token)match(input,Colon,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -2596,7 +2596,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     }
                     break;
                 case 8 :
-                    // InternalRegularExpressionParser.g:805:5: lv_value_0_8= ExclamationMark
+                    // InternalRegularExpressionParser.g:818:5: lv_value_0_8= ExclamationMark
                     {
                     lv_value_0_8=(Token)match(input,ExclamationMark,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -2616,7 +2616,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     }
                     break;
                 case 9 :
-                    // InternalRegularExpressionParser.g:816:5: lv_value_0_9= LeftCurlyBracket
+                    // InternalRegularExpressionParser.g:829:5: lv_value_0_9= LeftCurlyBracket
                     {
                     lv_value_0_9=(Token)match(input,LeftCurlyBracket,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -2636,7 +2636,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     }
                     break;
                 case 10 :
-                    // InternalRegularExpressionParser.g:827:5: lv_value_0_10= RightCurlyBracket
+                    // InternalRegularExpressionParser.g:840:5: lv_value_0_10= RightCurlyBracket
                     {
                     lv_value_0_10=(Token)match(input,RightCurlyBracket,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -2656,7 +2656,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     }
                     break;
                 case 11 :
-                    // InternalRegularExpressionParser.g:838:5: lv_value_0_11= RightSquareBracket
+                    // InternalRegularExpressionParser.g:851:5: lv_value_0_11= RightSquareBracket
                     {
                     lv_value_0_11=(Token)match(input,RightSquareBracket,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -2676,7 +2676,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     }
                     break;
                 case 12 :
-                    // InternalRegularExpressionParser.g:849:5: lv_value_0_12= LessThanSign
+                    // InternalRegularExpressionParser.g:862:5: lv_value_0_12= LessThanSign
                     {
                     lv_value_0_12=(Token)match(input,LessThanSign,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -2696,7 +2696,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     }
                     break;
                 case 13 :
-                    // InternalRegularExpressionParser.g:860:5: lv_value_0_13= GreaterThanSign
+                    // InternalRegularExpressionParser.g:873:5: lv_value_0_13= GreaterThanSign
                     {
                     lv_value_0_13=(Token)match(input,GreaterThanSign,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -2746,7 +2746,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "entryRuleWildcard"
-    // InternalRegularExpressionParser.g:876:1: entryRuleWildcard returns [EObject current=null] : iv_ruleWildcard= ruleWildcard EOF ;
+    // InternalRegularExpressionParser.g:889:1: entryRuleWildcard returns [EObject current=null] : iv_ruleWildcard= ruleWildcard EOF ;
     public final EObject entryRuleWildcard() throws RecognitionException {
         EObject current = null;
 
@@ -2754,8 +2754,8 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
         try {
-            // InternalRegularExpressionParser.g:876:49: (iv_ruleWildcard= ruleWildcard EOF )
-            // InternalRegularExpressionParser.g:877:2: iv_ruleWildcard= ruleWildcard EOF
+            // InternalRegularExpressionParser.g:889:49: (iv_ruleWildcard= ruleWildcard EOF )
+            // InternalRegularExpressionParser.g:890:2: iv_ruleWildcard= ruleWildcard EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getWildcardRule()); 
@@ -2786,7 +2786,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "ruleWildcard"
-    // InternalRegularExpressionParser.g:883:1: ruleWildcard returns [EObject current=null] : ( () otherlv_1= FullStop ) ;
+    // InternalRegularExpressionParser.g:896:1: ruleWildcard returns [EObject current=null] : ( () otherlv_1= FullStop ) ;
     public final EObject ruleWildcard() throws RecognitionException {
         EObject current = null;
 
@@ -2796,14 +2796,14 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
         	enterRule();
 
         try {
-            // InternalRegularExpressionParser.g:889:2: ( ( () otherlv_1= FullStop ) )
-            // InternalRegularExpressionParser.g:890:2: ( () otherlv_1= FullStop )
+            // InternalRegularExpressionParser.g:902:2: ( ( () otherlv_1= FullStop ) )
+            // InternalRegularExpressionParser.g:903:2: ( () otherlv_1= FullStop )
             {
-            // InternalRegularExpressionParser.g:890:2: ( () otherlv_1= FullStop )
-            // InternalRegularExpressionParser.g:891:3: () otherlv_1= FullStop
+            // InternalRegularExpressionParser.g:903:2: ( () otherlv_1= FullStop )
+            // InternalRegularExpressionParser.g:904:3: () otherlv_1= FullStop
             {
-            // InternalRegularExpressionParser.g:891:3: ()
-            // InternalRegularExpressionParser.g:892:4: 
+            // InternalRegularExpressionParser.g:904:3: ()
+            // InternalRegularExpressionParser.g:905:4: 
             {
             if ( state.backtracking==0 ) {
 
@@ -2846,7 +2846,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "entryRuleAtomEscape"
-    // InternalRegularExpressionParser.g:906:1: entryRuleAtomEscape returns [EObject current=null] : iv_ruleAtomEscape= ruleAtomEscape EOF ;
+    // InternalRegularExpressionParser.g:919:1: entryRuleAtomEscape returns [EObject current=null] : iv_ruleAtomEscape= ruleAtomEscape EOF ;
     public final EObject entryRuleAtomEscape() throws RecognitionException {
         EObject current = null;
 
@@ -2854,8 +2854,8 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
         try {
-            // InternalRegularExpressionParser.g:906:51: (iv_ruleAtomEscape= ruleAtomEscape EOF )
-            // InternalRegularExpressionParser.g:907:2: iv_ruleAtomEscape= ruleAtomEscape EOF
+            // InternalRegularExpressionParser.g:919:51: (iv_ruleAtomEscape= ruleAtomEscape EOF )
+            // InternalRegularExpressionParser.g:920:2: iv_ruleAtomEscape= ruleAtomEscape EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getAtomEscapeRule()); 
@@ -2886,7 +2886,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "ruleAtomEscape"
-    // InternalRegularExpressionParser.g:913:1: ruleAtomEscape returns [EObject current=null] : (this_DecimalEscapeSequence_0= ruleDecimalEscapeSequence | this_CharacterEscapeSequence_1= ruleCharacterEscapeSequence | this_ControlLetterEscapeSequence_2= ruleControlLetterEscapeSequence | this_HexEscapeSequence_3= ruleHexEscapeSequence | this_UnicodeEscapeSequence_4= ruleUnicodeEscapeSequence | this_IdentityEscapeSequence_5= ruleIdentityEscapeSequence | this_CharacterClassEscapeSequence_6= ruleCharacterClassEscapeSequence ) ;
+    // InternalRegularExpressionParser.g:926:1: ruleAtomEscape returns [EObject current=null] : (this_DecimalEscapeSequence_0= ruleDecimalEscapeSequence | this_CharacterEscapeSequence_1= ruleCharacterEscapeSequence | this_ControlLetterEscapeSequence_2= ruleControlLetterEscapeSequence | this_HexEscapeSequence_3= ruleHexEscapeSequence | this_UnicodeEscapeSequence_4= ruleUnicodeEscapeSequence | this_IdentityEscapeSequence_5= ruleIdentityEscapeSequence | this_CharacterClassEscapeSequence_6= ruleCharacterClassEscapeSequence ) ;
     public final EObject ruleAtomEscape() throws RecognitionException {
         EObject current = null;
 
@@ -2909,58 +2909,58 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
         	enterRule();
 
         try {
-            // InternalRegularExpressionParser.g:919:2: ( (this_DecimalEscapeSequence_0= ruleDecimalEscapeSequence | this_CharacterEscapeSequence_1= ruleCharacterEscapeSequence | this_ControlLetterEscapeSequence_2= ruleControlLetterEscapeSequence | this_HexEscapeSequence_3= ruleHexEscapeSequence | this_UnicodeEscapeSequence_4= ruleUnicodeEscapeSequence | this_IdentityEscapeSequence_5= ruleIdentityEscapeSequence | this_CharacterClassEscapeSequence_6= ruleCharacterClassEscapeSequence ) )
-            // InternalRegularExpressionParser.g:920:2: (this_DecimalEscapeSequence_0= ruleDecimalEscapeSequence | this_CharacterEscapeSequence_1= ruleCharacterEscapeSequence | this_ControlLetterEscapeSequence_2= ruleControlLetterEscapeSequence | this_HexEscapeSequence_3= ruleHexEscapeSequence | this_UnicodeEscapeSequence_4= ruleUnicodeEscapeSequence | this_IdentityEscapeSequence_5= ruleIdentityEscapeSequence | this_CharacterClassEscapeSequence_6= ruleCharacterClassEscapeSequence )
+            // InternalRegularExpressionParser.g:932:2: ( (this_DecimalEscapeSequence_0= ruleDecimalEscapeSequence | this_CharacterEscapeSequence_1= ruleCharacterEscapeSequence | this_ControlLetterEscapeSequence_2= ruleControlLetterEscapeSequence | this_HexEscapeSequence_3= ruleHexEscapeSequence | this_UnicodeEscapeSequence_4= ruleUnicodeEscapeSequence | this_IdentityEscapeSequence_5= ruleIdentityEscapeSequence | this_CharacterClassEscapeSequence_6= ruleCharacterClassEscapeSequence ) )
+            // InternalRegularExpressionParser.g:933:2: (this_DecimalEscapeSequence_0= ruleDecimalEscapeSequence | this_CharacterEscapeSequence_1= ruleCharacterEscapeSequence | this_ControlLetterEscapeSequence_2= ruleControlLetterEscapeSequence | this_HexEscapeSequence_3= ruleHexEscapeSequence | this_UnicodeEscapeSequence_4= ruleUnicodeEscapeSequence | this_IdentityEscapeSequence_5= ruleIdentityEscapeSequence | this_CharacterClassEscapeSequence_6= ruleCharacterClassEscapeSequence )
             {
-            // InternalRegularExpressionParser.g:920:2: (this_DecimalEscapeSequence_0= ruleDecimalEscapeSequence | this_CharacterEscapeSequence_1= ruleCharacterEscapeSequence | this_ControlLetterEscapeSequence_2= ruleControlLetterEscapeSequence | this_HexEscapeSequence_3= ruleHexEscapeSequence | this_UnicodeEscapeSequence_4= ruleUnicodeEscapeSequence | this_IdentityEscapeSequence_5= ruleIdentityEscapeSequence | this_CharacterClassEscapeSequence_6= ruleCharacterClassEscapeSequence )
-            int alt17=7;
+            // InternalRegularExpressionParser.g:933:2: (this_DecimalEscapeSequence_0= ruleDecimalEscapeSequence | this_CharacterEscapeSequence_1= ruleCharacterEscapeSequence | this_ControlLetterEscapeSequence_2= ruleControlLetterEscapeSequence | this_HexEscapeSequence_3= ruleHexEscapeSequence | this_UnicodeEscapeSequence_4= ruleUnicodeEscapeSequence | this_IdentityEscapeSequence_5= ruleIdentityEscapeSequence | this_CharacterClassEscapeSequence_6= ruleCharacterClassEscapeSequence )
+            int alt18=7;
             switch ( input.LA(1) ) {
             case RULE_DECIMAL_ESCAPE:
                 {
-                alt17=1;
+                alt18=1;
                 }
                 break;
             case RULE_CONTROL_ESCAPE:
                 {
-                alt17=2;
+                alt18=2;
                 }
                 break;
             case RULE_CONTROL_LETTER_ESCAPE:
                 {
-                alt17=3;
+                alt18=3;
                 }
                 break;
             case RULE_HEX_ESCAPE:
                 {
-                alt17=4;
+                alt18=4;
                 }
                 break;
             case RULE_UNICODE_ESCAPE:
                 {
-                alt17=5;
+                alt18=5;
                 }
                 break;
             case RULE_IDENTITY_ESCAPE:
                 {
-                alt17=6;
+                alt18=6;
                 }
                 break;
             case RULE_CHARACTER_CLASS_ESCAPE:
                 {
-                alt17=7;
+                alt18=7;
                 }
                 break;
             default:
                 if (state.backtracking>0) {state.failed=true; return current;}
                 NoViableAltException nvae =
-                    new NoViableAltException("", 17, 0, input);
+                    new NoViableAltException("", 18, 0, input);
 
                 throw nvae;
             }
 
-            switch (alt17) {
+            switch (alt18) {
                 case 1 :
-                    // InternalRegularExpressionParser.g:921:3: this_DecimalEscapeSequence_0= ruleDecimalEscapeSequence
+                    // InternalRegularExpressionParser.g:934:3: this_DecimalEscapeSequence_0= ruleDecimalEscapeSequence
                     {
                     if ( state.backtracking==0 ) {
 
@@ -2982,7 +2982,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     }
                     break;
                 case 2 :
-                    // InternalRegularExpressionParser.g:930:3: this_CharacterEscapeSequence_1= ruleCharacterEscapeSequence
+                    // InternalRegularExpressionParser.g:943:3: this_CharacterEscapeSequence_1= ruleCharacterEscapeSequence
                     {
                     if ( state.backtracking==0 ) {
 
@@ -3004,7 +3004,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     }
                     break;
                 case 3 :
-                    // InternalRegularExpressionParser.g:939:3: this_ControlLetterEscapeSequence_2= ruleControlLetterEscapeSequence
+                    // InternalRegularExpressionParser.g:952:3: this_ControlLetterEscapeSequence_2= ruleControlLetterEscapeSequence
                     {
                     if ( state.backtracking==0 ) {
 
@@ -3026,7 +3026,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     }
                     break;
                 case 4 :
-                    // InternalRegularExpressionParser.g:948:3: this_HexEscapeSequence_3= ruleHexEscapeSequence
+                    // InternalRegularExpressionParser.g:961:3: this_HexEscapeSequence_3= ruleHexEscapeSequence
                     {
                     if ( state.backtracking==0 ) {
 
@@ -3048,7 +3048,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     }
                     break;
                 case 5 :
-                    // InternalRegularExpressionParser.g:957:3: this_UnicodeEscapeSequence_4= ruleUnicodeEscapeSequence
+                    // InternalRegularExpressionParser.g:970:3: this_UnicodeEscapeSequence_4= ruleUnicodeEscapeSequence
                     {
                     if ( state.backtracking==0 ) {
 
@@ -3070,7 +3070,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     }
                     break;
                 case 6 :
-                    // InternalRegularExpressionParser.g:966:3: this_IdentityEscapeSequence_5= ruleIdentityEscapeSequence
+                    // InternalRegularExpressionParser.g:979:3: this_IdentityEscapeSequence_5= ruleIdentityEscapeSequence
                     {
                     if ( state.backtracking==0 ) {
 
@@ -3092,7 +3092,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     }
                     break;
                 case 7 :
-                    // InternalRegularExpressionParser.g:975:3: this_CharacterClassEscapeSequence_6= ruleCharacterClassEscapeSequence
+                    // InternalRegularExpressionParser.g:988:3: this_CharacterClassEscapeSequence_6= ruleCharacterClassEscapeSequence
                     {
                     if ( state.backtracking==0 ) {
 
@@ -3138,7 +3138,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "entryRuleCharacterClassEscapeSequence"
-    // InternalRegularExpressionParser.g:987:1: entryRuleCharacterClassEscapeSequence returns [EObject current=null] : iv_ruleCharacterClassEscapeSequence= ruleCharacterClassEscapeSequence EOF ;
+    // InternalRegularExpressionParser.g:1000:1: entryRuleCharacterClassEscapeSequence returns [EObject current=null] : iv_ruleCharacterClassEscapeSequence= ruleCharacterClassEscapeSequence EOF ;
     public final EObject entryRuleCharacterClassEscapeSequence() throws RecognitionException {
         EObject current = null;
 
@@ -3146,8 +3146,8 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
         try {
-            // InternalRegularExpressionParser.g:987:69: (iv_ruleCharacterClassEscapeSequence= ruleCharacterClassEscapeSequence EOF )
-            // InternalRegularExpressionParser.g:988:2: iv_ruleCharacterClassEscapeSequence= ruleCharacterClassEscapeSequence EOF
+            // InternalRegularExpressionParser.g:1000:69: (iv_ruleCharacterClassEscapeSequence= ruleCharacterClassEscapeSequence EOF )
+            // InternalRegularExpressionParser.g:1001:2: iv_ruleCharacterClassEscapeSequence= ruleCharacterClassEscapeSequence EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getCharacterClassEscapeSequenceRule()); 
@@ -3178,7 +3178,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "ruleCharacterClassEscapeSequence"
-    // InternalRegularExpressionParser.g:994:1: ruleCharacterClassEscapeSequence returns [EObject current=null] : ( (lv_sequence_0_0= RULE_CHARACTER_CLASS_ESCAPE ) ) ;
+    // InternalRegularExpressionParser.g:1007:1: ruleCharacterClassEscapeSequence returns [EObject current=null] : ( (lv_sequence_0_0= RULE_CHARACTER_CLASS_ESCAPE ) ) ;
     public final EObject ruleCharacterClassEscapeSequence() throws RecognitionException {
         EObject current = null;
 
@@ -3188,14 +3188,14 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
         	enterRule();
 
         try {
-            // InternalRegularExpressionParser.g:1000:2: ( ( (lv_sequence_0_0= RULE_CHARACTER_CLASS_ESCAPE ) ) )
-            // InternalRegularExpressionParser.g:1001:2: ( (lv_sequence_0_0= RULE_CHARACTER_CLASS_ESCAPE ) )
+            // InternalRegularExpressionParser.g:1013:2: ( ( (lv_sequence_0_0= RULE_CHARACTER_CLASS_ESCAPE ) ) )
+            // InternalRegularExpressionParser.g:1014:2: ( (lv_sequence_0_0= RULE_CHARACTER_CLASS_ESCAPE ) )
             {
-            // InternalRegularExpressionParser.g:1001:2: ( (lv_sequence_0_0= RULE_CHARACTER_CLASS_ESCAPE ) )
-            // InternalRegularExpressionParser.g:1002:3: (lv_sequence_0_0= RULE_CHARACTER_CLASS_ESCAPE )
+            // InternalRegularExpressionParser.g:1014:2: ( (lv_sequence_0_0= RULE_CHARACTER_CLASS_ESCAPE ) )
+            // InternalRegularExpressionParser.g:1015:3: (lv_sequence_0_0= RULE_CHARACTER_CLASS_ESCAPE )
             {
-            // InternalRegularExpressionParser.g:1002:3: (lv_sequence_0_0= RULE_CHARACTER_CLASS_ESCAPE )
-            // InternalRegularExpressionParser.g:1003:4: lv_sequence_0_0= RULE_CHARACTER_CLASS_ESCAPE
+            // InternalRegularExpressionParser.g:1015:3: (lv_sequence_0_0= RULE_CHARACTER_CLASS_ESCAPE )
+            // InternalRegularExpressionParser.g:1016:4: lv_sequence_0_0= RULE_CHARACTER_CLASS_ESCAPE
             {
             lv_sequence_0_0=(Token)match(input,RULE_CHARACTER_CLASS_ESCAPE,FOLLOW_2); if (state.failed) return current;
             if ( state.backtracking==0 ) {
@@ -3243,7 +3243,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "entryRuleCharacterEscapeSequence"
-    // InternalRegularExpressionParser.g:1022:1: entryRuleCharacterEscapeSequence returns [EObject current=null] : iv_ruleCharacterEscapeSequence= ruleCharacterEscapeSequence EOF ;
+    // InternalRegularExpressionParser.g:1035:1: entryRuleCharacterEscapeSequence returns [EObject current=null] : iv_ruleCharacterEscapeSequence= ruleCharacterEscapeSequence EOF ;
     public final EObject entryRuleCharacterEscapeSequence() throws RecognitionException {
         EObject current = null;
 
@@ -3251,8 +3251,8 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
         try {
-            // InternalRegularExpressionParser.g:1022:64: (iv_ruleCharacterEscapeSequence= ruleCharacterEscapeSequence EOF )
-            // InternalRegularExpressionParser.g:1023:2: iv_ruleCharacterEscapeSequence= ruleCharacterEscapeSequence EOF
+            // InternalRegularExpressionParser.g:1035:64: (iv_ruleCharacterEscapeSequence= ruleCharacterEscapeSequence EOF )
+            // InternalRegularExpressionParser.g:1036:2: iv_ruleCharacterEscapeSequence= ruleCharacterEscapeSequence EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getCharacterEscapeSequenceRule()); 
@@ -3283,7 +3283,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "ruleCharacterEscapeSequence"
-    // InternalRegularExpressionParser.g:1029:1: ruleCharacterEscapeSequence returns [EObject current=null] : ( (lv_sequence_0_0= RULE_CONTROL_ESCAPE ) ) ;
+    // InternalRegularExpressionParser.g:1042:1: ruleCharacterEscapeSequence returns [EObject current=null] : ( (lv_sequence_0_0= RULE_CONTROL_ESCAPE ) ) ;
     public final EObject ruleCharacterEscapeSequence() throws RecognitionException {
         EObject current = null;
 
@@ -3293,14 +3293,14 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
         	enterRule();
 
         try {
-            // InternalRegularExpressionParser.g:1035:2: ( ( (lv_sequence_0_0= RULE_CONTROL_ESCAPE ) ) )
-            // InternalRegularExpressionParser.g:1036:2: ( (lv_sequence_0_0= RULE_CONTROL_ESCAPE ) )
+            // InternalRegularExpressionParser.g:1048:2: ( ( (lv_sequence_0_0= RULE_CONTROL_ESCAPE ) ) )
+            // InternalRegularExpressionParser.g:1049:2: ( (lv_sequence_0_0= RULE_CONTROL_ESCAPE ) )
             {
-            // InternalRegularExpressionParser.g:1036:2: ( (lv_sequence_0_0= RULE_CONTROL_ESCAPE ) )
-            // InternalRegularExpressionParser.g:1037:3: (lv_sequence_0_0= RULE_CONTROL_ESCAPE )
+            // InternalRegularExpressionParser.g:1049:2: ( (lv_sequence_0_0= RULE_CONTROL_ESCAPE ) )
+            // InternalRegularExpressionParser.g:1050:3: (lv_sequence_0_0= RULE_CONTROL_ESCAPE )
             {
-            // InternalRegularExpressionParser.g:1037:3: (lv_sequence_0_0= RULE_CONTROL_ESCAPE )
-            // InternalRegularExpressionParser.g:1038:4: lv_sequence_0_0= RULE_CONTROL_ESCAPE
+            // InternalRegularExpressionParser.g:1050:3: (lv_sequence_0_0= RULE_CONTROL_ESCAPE )
+            // InternalRegularExpressionParser.g:1051:4: lv_sequence_0_0= RULE_CONTROL_ESCAPE
             {
             lv_sequence_0_0=(Token)match(input,RULE_CONTROL_ESCAPE,FOLLOW_2); if (state.failed) return current;
             if ( state.backtracking==0 ) {
@@ -3348,7 +3348,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "entryRuleControlLetterEscapeSequence"
-    // InternalRegularExpressionParser.g:1057:1: entryRuleControlLetterEscapeSequence returns [EObject current=null] : iv_ruleControlLetterEscapeSequence= ruleControlLetterEscapeSequence EOF ;
+    // InternalRegularExpressionParser.g:1070:1: entryRuleControlLetterEscapeSequence returns [EObject current=null] : iv_ruleControlLetterEscapeSequence= ruleControlLetterEscapeSequence EOF ;
     public final EObject entryRuleControlLetterEscapeSequence() throws RecognitionException {
         EObject current = null;
 
@@ -3356,8 +3356,8 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
         try {
-            // InternalRegularExpressionParser.g:1057:68: (iv_ruleControlLetterEscapeSequence= ruleControlLetterEscapeSequence EOF )
-            // InternalRegularExpressionParser.g:1058:2: iv_ruleControlLetterEscapeSequence= ruleControlLetterEscapeSequence EOF
+            // InternalRegularExpressionParser.g:1070:68: (iv_ruleControlLetterEscapeSequence= ruleControlLetterEscapeSequence EOF )
+            // InternalRegularExpressionParser.g:1071:2: iv_ruleControlLetterEscapeSequence= ruleControlLetterEscapeSequence EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getControlLetterEscapeSequenceRule()); 
@@ -3388,7 +3388,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "ruleControlLetterEscapeSequence"
-    // InternalRegularExpressionParser.g:1064:1: ruleControlLetterEscapeSequence returns [EObject current=null] : ( (lv_sequence_0_0= RULE_CONTROL_LETTER_ESCAPE ) ) ;
+    // InternalRegularExpressionParser.g:1077:1: ruleControlLetterEscapeSequence returns [EObject current=null] : ( (lv_sequence_0_0= RULE_CONTROL_LETTER_ESCAPE ) ) ;
     public final EObject ruleControlLetterEscapeSequence() throws RecognitionException {
         EObject current = null;
 
@@ -3398,14 +3398,14 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
         	enterRule();
 
         try {
-            // InternalRegularExpressionParser.g:1070:2: ( ( (lv_sequence_0_0= RULE_CONTROL_LETTER_ESCAPE ) ) )
-            // InternalRegularExpressionParser.g:1071:2: ( (lv_sequence_0_0= RULE_CONTROL_LETTER_ESCAPE ) )
+            // InternalRegularExpressionParser.g:1083:2: ( ( (lv_sequence_0_0= RULE_CONTROL_LETTER_ESCAPE ) ) )
+            // InternalRegularExpressionParser.g:1084:2: ( (lv_sequence_0_0= RULE_CONTROL_LETTER_ESCAPE ) )
             {
-            // InternalRegularExpressionParser.g:1071:2: ( (lv_sequence_0_0= RULE_CONTROL_LETTER_ESCAPE ) )
-            // InternalRegularExpressionParser.g:1072:3: (lv_sequence_0_0= RULE_CONTROL_LETTER_ESCAPE )
+            // InternalRegularExpressionParser.g:1084:2: ( (lv_sequence_0_0= RULE_CONTROL_LETTER_ESCAPE ) )
+            // InternalRegularExpressionParser.g:1085:3: (lv_sequence_0_0= RULE_CONTROL_LETTER_ESCAPE )
             {
-            // InternalRegularExpressionParser.g:1072:3: (lv_sequence_0_0= RULE_CONTROL_LETTER_ESCAPE )
-            // InternalRegularExpressionParser.g:1073:4: lv_sequence_0_0= RULE_CONTROL_LETTER_ESCAPE
+            // InternalRegularExpressionParser.g:1085:3: (lv_sequence_0_0= RULE_CONTROL_LETTER_ESCAPE )
+            // InternalRegularExpressionParser.g:1086:4: lv_sequence_0_0= RULE_CONTROL_LETTER_ESCAPE
             {
             lv_sequence_0_0=(Token)match(input,RULE_CONTROL_LETTER_ESCAPE,FOLLOW_2); if (state.failed) return current;
             if ( state.backtracking==0 ) {
@@ -3453,7 +3453,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "entryRuleHexEscapeSequence"
-    // InternalRegularExpressionParser.g:1092:1: entryRuleHexEscapeSequence returns [EObject current=null] : iv_ruleHexEscapeSequence= ruleHexEscapeSequence EOF ;
+    // InternalRegularExpressionParser.g:1105:1: entryRuleHexEscapeSequence returns [EObject current=null] : iv_ruleHexEscapeSequence= ruleHexEscapeSequence EOF ;
     public final EObject entryRuleHexEscapeSequence() throws RecognitionException {
         EObject current = null;
 
@@ -3461,8 +3461,8 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
         try {
-            // InternalRegularExpressionParser.g:1092:58: (iv_ruleHexEscapeSequence= ruleHexEscapeSequence EOF )
-            // InternalRegularExpressionParser.g:1093:2: iv_ruleHexEscapeSequence= ruleHexEscapeSequence EOF
+            // InternalRegularExpressionParser.g:1105:58: (iv_ruleHexEscapeSequence= ruleHexEscapeSequence EOF )
+            // InternalRegularExpressionParser.g:1106:2: iv_ruleHexEscapeSequence= ruleHexEscapeSequence EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getHexEscapeSequenceRule()); 
@@ -3493,7 +3493,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "ruleHexEscapeSequence"
-    // InternalRegularExpressionParser.g:1099:1: ruleHexEscapeSequence returns [EObject current=null] : ( (lv_sequence_0_0= RULE_HEX_ESCAPE ) ) ;
+    // InternalRegularExpressionParser.g:1112:1: ruleHexEscapeSequence returns [EObject current=null] : ( (lv_sequence_0_0= RULE_HEX_ESCAPE ) ) ;
     public final EObject ruleHexEscapeSequence() throws RecognitionException {
         EObject current = null;
 
@@ -3503,14 +3503,14 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
         	enterRule();
 
         try {
-            // InternalRegularExpressionParser.g:1105:2: ( ( (lv_sequence_0_0= RULE_HEX_ESCAPE ) ) )
-            // InternalRegularExpressionParser.g:1106:2: ( (lv_sequence_0_0= RULE_HEX_ESCAPE ) )
+            // InternalRegularExpressionParser.g:1118:2: ( ( (lv_sequence_0_0= RULE_HEX_ESCAPE ) ) )
+            // InternalRegularExpressionParser.g:1119:2: ( (lv_sequence_0_0= RULE_HEX_ESCAPE ) )
             {
-            // InternalRegularExpressionParser.g:1106:2: ( (lv_sequence_0_0= RULE_HEX_ESCAPE ) )
-            // InternalRegularExpressionParser.g:1107:3: (lv_sequence_0_0= RULE_HEX_ESCAPE )
+            // InternalRegularExpressionParser.g:1119:2: ( (lv_sequence_0_0= RULE_HEX_ESCAPE ) )
+            // InternalRegularExpressionParser.g:1120:3: (lv_sequence_0_0= RULE_HEX_ESCAPE )
             {
-            // InternalRegularExpressionParser.g:1107:3: (lv_sequence_0_0= RULE_HEX_ESCAPE )
-            // InternalRegularExpressionParser.g:1108:4: lv_sequence_0_0= RULE_HEX_ESCAPE
+            // InternalRegularExpressionParser.g:1120:3: (lv_sequence_0_0= RULE_HEX_ESCAPE )
+            // InternalRegularExpressionParser.g:1121:4: lv_sequence_0_0= RULE_HEX_ESCAPE
             {
             lv_sequence_0_0=(Token)match(input,RULE_HEX_ESCAPE,FOLLOW_2); if (state.failed) return current;
             if ( state.backtracking==0 ) {
@@ -3558,7 +3558,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "entryRuleUnicodeEscapeSequence"
-    // InternalRegularExpressionParser.g:1127:1: entryRuleUnicodeEscapeSequence returns [EObject current=null] : iv_ruleUnicodeEscapeSequence= ruleUnicodeEscapeSequence EOF ;
+    // InternalRegularExpressionParser.g:1140:1: entryRuleUnicodeEscapeSequence returns [EObject current=null] : iv_ruleUnicodeEscapeSequence= ruleUnicodeEscapeSequence EOF ;
     public final EObject entryRuleUnicodeEscapeSequence() throws RecognitionException {
         EObject current = null;
 
@@ -3566,8 +3566,8 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
         try {
-            // InternalRegularExpressionParser.g:1127:62: (iv_ruleUnicodeEscapeSequence= ruleUnicodeEscapeSequence EOF )
-            // InternalRegularExpressionParser.g:1128:2: iv_ruleUnicodeEscapeSequence= ruleUnicodeEscapeSequence EOF
+            // InternalRegularExpressionParser.g:1140:62: (iv_ruleUnicodeEscapeSequence= ruleUnicodeEscapeSequence EOF )
+            // InternalRegularExpressionParser.g:1141:2: iv_ruleUnicodeEscapeSequence= ruleUnicodeEscapeSequence EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getUnicodeEscapeSequenceRule()); 
@@ -3598,7 +3598,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "ruleUnicodeEscapeSequence"
-    // InternalRegularExpressionParser.g:1134:1: ruleUnicodeEscapeSequence returns [EObject current=null] : ( (lv_sequence_0_0= RULE_UNICODE_ESCAPE ) ) ;
+    // InternalRegularExpressionParser.g:1147:1: ruleUnicodeEscapeSequence returns [EObject current=null] : ( (lv_sequence_0_0= RULE_UNICODE_ESCAPE ) ) ;
     public final EObject ruleUnicodeEscapeSequence() throws RecognitionException {
         EObject current = null;
 
@@ -3608,14 +3608,14 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
         	enterRule();
 
         try {
-            // InternalRegularExpressionParser.g:1140:2: ( ( (lv_sequence_0_0= RULE_UNICODE_ESCAPE ) ) )
-            // InternalRegularExpressionParser.g:1141:2: ( (lv_sequence_0_0= RULE_UNICODE_ESCAPE ) )
+            // InternalRegularExpressionParser.g:1153:2: ( ( (lv_sequence_0_0= RULE_UNICODE_ESCAPE ) ) )
+            // InternalRegularExpressionParser.g:1154:2: ( (lv_sequence_0_0= RULE_UNICODE_ESCAPE ) )
             {
-            // InternalRegularExpressionParser.g:1141:2: ( (lv_sequence_0_0= RULE_UNICODE_ESCAPE ) )
-            // InternalRegularExpressionParser.g:1142:3: (lv_sequence_0_0= RULE_UNICODE_ESCAPE )
+            // InternalRegularExpressionParser.g:1154:2: ( (lv_sequence_0_0= RULE_UNICODE_ESCAPE ) )
+            // InternalRegularExpressionParser.g:1155:3: (lv_sequence_0_0= RULE_UNICODE_ESCAPE )
             {
-            // InternalRegularExpressionParser.g:1142:3: (lv_sequence_0_0= RULE_UNICODE_ESCAPE )
-            // InternalRegularExpressionParser.g:1143:4: lv_sequence_0_0= RULE_UNICODE_ESCAPE
+            // InternalRegularExpressionParser.g:1155:3: (lv_sequence_0_0= RULE_UNICODE_ESCAPE )
+            // InternalRegularExpressionParser.g:1156:4: lv_sequence_0_0= RULE_UNICODE_ESCAPE
             {
             lv_sequence_0_0=(Token)match(input,RULE_UNICODE_ESCAPE,FOLLOW_2); if (state.failed) return current;
             if ( state.backtracking==0 ) {
@@ -3663,7 +3663,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "entryRuleIdentityEscapeSequence"
-    // InternalRegularExpressionParser.g:1162:1: entryRuleIdentityEscapeSequence returns [EObject current=null] : iv_ruleIdentityEscapeSequence= ruleIdentityEscapeSequence EOF ;
+    // InternalRegularExpressionParser.g:1175:1: entryRuleIdentityEscapeSequence returns [EObject current=null] : iv_ruleIdentityEscapeSequence= ruleIdentityEscapeSequence EOF ;
     public final EObject entryRuleIdentityEscapeSequence() throws RecognitionException {
         EObject current = null;
 
@@ -3671,8 +3671,8 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
         try {
-            // InternalRegularExpressionParser.g:1162:63: (iv_ruleIdentityEscapeSequence= ruleIdentityEscapeSequence EOF )
-            // InternalRegularExpressionParser.g:1163:2: iv_ruleIdentityEscapeSequence= ruleIdentityEscapeSequence EOF
+            // InternalRegularExpressionParser.g:1175:63: (iv_ruleIdentityEscapeSequence= ruleIdentityEscapeSequence EOF )
+            // InternalRegularExpressionParser.g:1176:2: iv_ruleIdentityEscapeSequence= ruleIdentityEscapeSequence EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getIdentityEscapeSequenceRule()); 
@@ -3703,7 +3703,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "ruleIdentityEscapeSequence"
-    // InternalRegularExpressionParser.g:1169:1: ruleIdentityEscapeSequence returns [EObject current=null] : ( (lv_sequence_0_0= RULE_IDENTITY_ESCAPE ) ) ;
+    // InternalRegularExpressionParser.g:1182:1: ruleIdentityEscapeSequence returns [EObject current=null] : ( (lv_sequence_0_0= RULE_IDENTITY_ESCAPE ) ) ;
     public final EObject ruleIdentityEscapeSequence() throws RecognitionException {
         EObject current = null;
 
@@ -3713,14 +3713,14 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
         	enterRule();
 
         try {
-            // InternalRegularExpressionParser.g:1175:2: ( ( (lv_sequence_0_0= RULE_IDENTITY_ESCAPE ) ) )
-            // InternalRegularExpressionParser.g:1176:2: ( (lv_sequence_0_0= RULE_IDENTITY_ESCAPE ) )
+            // InternalRegularExpressionParser.g:1188:2: ( ( (lv_sequence_0_0= RULE_IDENTITY_ESCAPE ) ) )
+            // InternalRegularExpressionParser.g:1189:2: ( (lv_sequence_0_0= RULE_IDENTITY_ESCAPE ) )
             {
-            // InternalRegularExpressionParser.g:1176:2: ( (lv_sequence_0_0= RULE_IDENTITY_ESCAPE ) )
-            // InternalRegularExpressionParser.g:1177:3: (lv_sequence_0_0= RULE_IDENTITY_ESCAPE )
+            // InternalRegularExpressionParser.g:1189:2: ( (lv_sequence_0_0= RULE_IDENTITY_ESCAPE ) )
+            // InternalRegularExpressionParser.g:1190:3: (lv_sequence_0_0= RULE_IDENTITY_ESCAPE )
             {
-            // InternalRegularExpressionParser.g:1177:3: (lv_sequence_0_0= RULE_IDENTITY_ESCAPE )
-            // InternalRegularExpressionParser.g:1178:4: lv_sequence_0_0= RULE_IDENTITY_ESCAPE
+            // InternalRegularExpressionParser.g:1190:3: (lv_sequence_0_0= RULE_IDENTITY_ESCAPE )
+            // InternalRegularExpressionParser.g:1191:4: lv_sequence_0_0= RULE_IDENTITY_ESCAPE
             {
             lv_sequence_0_0=(Token)match(input,RULE_IDENTITY_ESCAPE,FOLLOW_2); if (state.failed) return current;
             if ( state.backtracking==0 ) {
@@ -3768,7 +3768,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "entryRuleDecimalEscapeSequence"
-    // InternalRegularExpressionParser.g:1197:1: entryRuleDecimalEscapeSequence returns [EObject current=null] : iv_ruleDecimalEscapeSequence= ruleDecimalEscapeSequence EOF ;
+    // InternalRegularExpressionParser.g:1210:1: entryRuleDecimalEscapeSequence returns [EObject current=null] : iv_ruleDecimalEscapeSequence= ruleDecimalEscapeSequence EOF ;
     public final EObject entryRuleDecimalEscapeSequence() throws RecognitionException {
         EObject current = null;
 
@@ -3776,8 +3776,8 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
         try {
-            // InternalRegularExpressionParser.g:1197:62: (iv_ruleDecimalEscapeSequence= ruleDecimalEscapeSequence EOF )
-            // InternalRegularExpressionParser.g:1198:2: iv_ruleDecimalEscapeSequence= ruleDecimalEscapeSequence EOF
+            // InternalRegularExpressionParser.g:1210:62: (iv_ruleDecimalEscapeSequence= ruleDecimalEscapeSequence EOF )
+            // InternalRegularExpressionParser.g:1211:2: iv_ruleDecimalEscapeSequence= ruleDecimalEscapeSequence EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getDecimalEscapeSequenceRule()); 
@@ -3808,7 +3808,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "ruleDecimalEscapeSequence"
-    // InternalRegularExpressionParser.g:1204:1: ruleDecimalEscapeSequence returns [EObject current=null] : ( (lv_sequence_0_0= RULE_DECIMAL_ESCAPE ) ) ;
+    // InternalRegularExpressionParser.g:1217:1: ruleDecimalEscapeSequence returns [EObject current=null] : ( (lv_sequence_0_0= RULE_DECIMAL_ESCAPE ) ) ;
     public final EObject ruleDecimalEscapeSequence() throws RecognitionException {
         EObject current = null;
 
@@ -3818,14 +3818,14 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
         	enterRule();
 
         try {
-            // InternalRegularExpressionParser.g:1210:2: ( ( (lv_sequence_0_0= RULE_DECIMAL_ESCAPE ) ) )
-            // InternalRegularExpressionParser.g:1211:2: ( (lv_sequence_0_0= RULE_DECIMAL_ESCAPE ) )
+            // InternalRegularExpressionParser.g:1223:2: ( ( (lv_sequence_0_0= RULE_DECIMAL_ESCAPE ) ) )
+            // InternalRegularExpressionParser.g:1224:2: ( (lv_sequence_0_0= RULE_DECIMAL_ESCAPE ) )
             {
-            // InternalRegularExpressionParser.g:1211:2: ( (lv_sequence_0_0= RULE_DECIMAL_ESCAPE ) )
-            // InternalRegularExpressionParser.g:1212:3: (lv_sequence_0_0= RULE_DECIMAL_ESCAPE )
+            // InternalRegularExpressionParser.g:1224:2: ( (lv_sequence_0_0= RULE_DECIMAL_ESCAPE ) )
+            // InternalRegularExpressionParser.g:1225:3: (lv_sequence_0_0= RULE_DECIMAL_ESCAPE )
             {
-            // InternalRegularExpressionParser.g:1212:3: (lv_sequence_0_0= RULE_DECIMAL_ESCAPE )
-            // InternalRegularExpressionParser.g:1213:4: lv_sequence_0_0= RULE_DECIMAL_ESCAPE
+            // InternalRegularExpressionParser.g:1225:3: (lv_sequence_0_0= RULE_DECIMAL_ESCAPE )
+            // InternalRegularExpressionParser.g:1226:4: lv_sequence_0_0= RULE_DECIMAL_ESCAPE
             {
             lv_sequence_0_0=(Token)match(input,RULE_DECIMAL_ESCAPE,FOLLOW_2); if (state.failed) return current;
             if ( state.backtracking==0 ) {
@@ -3873,7 +3873,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "entryRuleCharacterClass"
-    // InternalRegularExpressionParser.g:1232:1: entryRuleCharacterClass returns [EObject current=null] : iv_ruleCharacterClass= ruleCharacterClass EOF ;
+    // InternalRegularExpressionParser.g:1245:1: entryRuleCharacterClass returns [EObject current=null] : iv_ruleCharacterClass= ruleCharacterClass EOF ;
     public final EObject entryRuleCharacterClass() throws RecognitionException {
         EObject current = null;
 
@@ -3881,8 +3881,8 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
         try {
-            // InternalRegularExpressionParser.g:1232:55: (iv_ruleCharacterClass= ruleCharacterClass EOF )
-            // InternalRegularExpressionParser.g:1233:2: iv_ruleCharacterClass= ruleCharacterClass EOF
+            // InternalRegularExpressionParser.g:1245:55: (iv_ruleCharacterClass= ruleCharacterClass EOF )
+            // InternalRegularExpressionParser.g:1246:2: iv_ruleCharacterClass= ruleCharacterClass EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getCharacterClassRule()); 
@@ -3913,7 +3913,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "ruleCharacterClass"
-    // InternalRegularExpressionParser.g:1239:1: ruleCharacterClass returns [EObject current=null] : ( () otherlv_1= LeftSquareBracket ( ( ( ( CircumflexAccent ) ) )=> ( (lv_negated_2_0= CircumflexAccent ) ) )? ( (lv_elements_3_0= ruleCharacterClassElement ) )* otherlv_4= RightSquareBracket ) ;
+    // InternalRegularExpressionParser.g:1252:1: ruleCharacterClass returns [EObject current=null] : ( () otherlv_1= LeftSquareBracket ( ( ( ( CircumflexAccent ) ) )=> ( (lv_negated_2_0= CircumflexAccent ) ) )? ( (lv_elements_3_0= ruleCharacterClassElement ) )* otherlv_4= RightSquareBracket ) ;
     public final EObject ruleCharacterClass() throws RecognitionException {
         EObject current = null;
 
@@ -3927,14 +3927,14 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
         	enterRule();
 
         try {
-            // InternalRegularExpressionParser.g:1245:2: ( ( () otherlv_1= LeftSquareBracket ( ( ( ( CircumflexAccent ) ) )=> ( (lv_negated_2_0= CircumflexAccent ) ) )? ( (lv_elements_3_0= ruleCharacterClassElement ) )* otherlv_4= RightSquareBracket ) )
-            // InternalRegularExpressionParser.g:1246:2: ( () otherlv_1= LeftSquareBracket ( ( ( ( CircumflexAccent ) ) )=> ( (lv_negated_2_0= CircumflexAccent ) ) )? ( (lv_elements_3_0= ruleCharacterClassElement ) )* otherlv_4= RightSquareBracket )
+            // InternalRegularExpressionParser.g:1258:2: ( ( () otherlv_1= LeftSquareBracket ( ( ( ( CircumflexAccent ) ) )=> ( (lv_negated_2_0= CircumflexAccent ) ) )? ( (lv_elements_3_0= ruleCharacterClassElement ) )* otherlv_4= RightSquareBracket ) )
+            // InternalRegularExpressionParser.g:1259:2: ( () otherlv_1= LeftSquareBracket ( ( ( ( CircumflexAccent ) ) )=> ( (lv_negated_2_0= CircumflexAccent ) ) )? ( (lv_elements_3_0= ruleCharacterClassElement ) )* otherlv_4= RightSquareBracket )
             {
-            // InternalRegularExpressionParser.g:1246:2: ( () otherlv_1= LeftSquareBracket ( ( ( ( CircumflexAccent ) ) )=> ( (lv_negated_2_0= CircumflexAccent ) ) )? ( (lv_elements_3_0= ruleCharacterClassElement ) )* otherlv_4= RightSquareBracket )
-            // InternalRegularExpressionParser.g:1247:3: () otherlv_1= LeftSquareBracket ( ( ( ( CircumflexAccent ) ) )=> ( (lv_negated_2_0= CircumflexAccent ) ) )? ( (lv_elements_3_0= ruleCharacterClassElement ) )* otherlv_4= RightSquareBracket
+            // InternalRegularExpressionParser.g:1259:2: ( () otherlv_1= LeftSquareBracket ( ( ( ( CircumflexAccent ) ) )=> ( (lv_negated_2_0= CircumflexAccent ) ) )? ( (lv_elements_3_0= ruleCharacterClassElement ) )* otherlv_4= RightSquareBracket )
+            // InternalRegularExpressionParser.g:1260:3: () otherlv_1= LeftSquareBracket ( ( ( ( CircumflexAccent ) ) )=> ( (lv_negated_2_0= CircumflexAccent ) ) )? ( (lv_elements_3_0= ruleCharacterClassElement ) )* otherlv_4= RightSquareBracket
             {
-            // InternalRegularExpressionParser.g:1247:3: ()
-            // InternalRegularExpressionParser.g:1248:4: 
+            // InternalRegularExpressionParser.g:1260:3: ()
+            // InternalRegularExpressionParser.g:1261:4: 
             {
             if ( state.backtracking==0 ) {
 
@@ -3946,34 +3946,34 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
             }
 
-            otherlv_1=(Token)match(input,LeftSquareBracket,FOLLOW_15); if (state.failed) return current;
+            otherlv_1=(Token)match(input,LeftSquareBracket,FOLLOW_12); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_1, grammarAccess.getCharacterClassAccess().getLeftSquareBracketKeyword_1());
               		
             }
-            // InternalRegularExpressionParser.g:1258:3: ( ( ( ( CircumflexAccent ) ) )=> ( (lv_negated_2_0= CircumflexAccent ) ) )?
-            int alt18=2;
-            int LA18_0 = input.LA(1);
+            // InternalRegularExpressionParser.g:1271:3: ( ( ( ( CircumflexAccent ) ) )=> ( (lv_negated_2_0= CircumflexAccent ) ) )?
+            int alt19=2;
+            int LA19_0 = input.LA(1);
 
-            if ( (LA18_0==CircumflexAccent) ) {
-                int LA18_1 = input.LA(2);
+            if ( (LA19_0==CircumflexAccent) ) {
+                int LA19_1 = input.LA(2);
 
                 if ( (synpred2_InternalRegularExpressionParser()) ) {
-                    alt18=1;
+                    alt19=1;
                 }
             }
-            switch (alt18) {
+            switch (alt19) {
                 case 1 :
-                    // InternalRegularExpressionParser.g:1259:4: ( ( ( CircumflexAccent ) ) )=> ( (lv_negated_2_0= CircumflexAccent ) )
+                    // InternalRegularExpressionParser.g:1272:4: ( ( ( CircumflexAccent ) ) )=> ( (lv_negated_2_0= CircumflexAccent ) )
                     {
-                    // InternalRegularExpressionParser.g:1265:4: ( (lv_negated_2_0= CircumflexAccent ) )
-                    // InternalRegularExpressionParser.g:1266:5: (lv_negated_2_0= CircumflexAccent )
+                    // InternalRegularExpressionParser.g:1278:4: ( (lv_negated_2_0= CircumflexAccent ) )
+                    // InternalRegularExpressionParser.g:1279:5: (lv_negated_2_0= CircumflexAccent )
                     {
-                    // InternalRegularExpressionParser.g:1266:5: (lv_negated_2_0= CircumflexAccent )
-                    // InternalRegularExpressionParser.g:1267:6: lv_negated_2_0= CircumflexAccent
+                    // InternalRegularExpressionParser.g:1279:5: (lv_negated_2_0= CircumflexAccent )
+                    // InternalRegularExpressionParser.g:1280:6: lv_negated_2_0= CircumflexAccent
                     {
-                    lv_negated_2_0=(Token)match(input,CircumflexAccent,FOLLOW_15); if (state.failed) return current;
+                    lv_negated_2_0=(Token)match(input,CircumflexAccent,FOLLOW_12); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       						newLeafNode(lv_negated_2_0, grammarAccess.getCharacterClassAccess().getNegatedCircumflexAccentKeyword_2_0_0());
@@ -3999,30 +3999,30 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
             }
 
-            // InternalRegularExpressionParser.g:1280:3: ( (lv_elements_3_0= ruleCharacterClassElement ) )*
-            loop19:
+            // InternalRegularExpressionParser.g:1293:3: ( (lv_elements_3_0= ruleCharacterClassElement ) )*
+            loop20:
             do {
-                int alt19=2;
-                int LA19_0 = input.LA(1);
+                int alt20=2;
+                int LA20_0 = input.LA(1);
 
-                if ( ((LA19_0>=ExclamationMark && LA19_0<=LeftSquareBracket)||LA19_0==CircumflexAccent||(LA19_0>=LeftCurlyBracket && LA19_0<=RULE_WORD_BOUNDARY)||(LA19_0>=RULE_CHARACTER_CLASS_ESCAPE && LA19_0<=RULE_CONTROL_LETTER_ESCAPE)||(LA19_0>=RULE_HEX_ESCAPE && LA19_0<=RULE_UNICODE_ESCAPE)||(LA19_0>=RULE_DECIMAL_ESCAPE && LA19_0<=RULE_IDENTITY_ESCAPE)||LA19_0==RULE_UNICODE_DIGIT||(LA19_0>=RULE_UNICODE_LETTER && LA19_0<=RULE_PATTERN_CHARACTER_NO_DASH)) ) {
-                    alt19=1;
+                if ( ((LA20_0>=LeftParenthesisQuestionMarkLessThanSignExclamationMark && LA20_0<=LeftParenthesisQuestionMarkExclamationMark)||(LA20_0>=LeftParenthesisQuestionMarkLessThanSign && LA20_0<=LeftSquareBracket)||LA20_0==CircumflexAccent||(LA20_0>=LeftCurlyBracket && LA20_0<=RULE_WORD_BOUNDARY)||(LA20_0>=RULE_CHARACTER_CLASS_ESCAPE && LA20_0<=RULE_CONTROL_LETTER_ESCAPE)||(LA20_0>=RULE_HEX_ESCAPE && LA20_0<=RULE_UNICODE_ESCAPE)||(LA20_0>=RULE_DECIMAL_ESCAPE && LA20_0<=RULE_IDENTITY_ESCAPE)||LA20_0==RULE_UNICODE_DIGIT||(LA20_0>=RULE_UNICODE_LETTER && LA20_0<=RULE_PATTERN_CHARACTER_NO_DASH)) ) {
+                    alt20=1;
                 }
 
 
-                switch (alt19) {
+                switch (alt20) {
             	case 1 :
-            	    // InternalRegularExpressionParser.g:1281:4: (lv_elements_3_0= ruleCharacterClassElement )
+            	    // InternalRegularExpressionParser.g:1294:4: (lv_elements_3_0= ruleCharacterClassElement )
             	    {
-            	    // InternalRegularExpressionParser.g:1281:4: (lv_elements_3_0= ruleCharacterClassElement )
-            	    // InternalRegularExpressionParser.g:1282:5: lv_elements_3_0= ruleCharacterClassElement
+            	    // InternalRegularExpressionParser.g:1294:4: (lv_elements_3_0= ruleCharacterClassElement )
+            	    // InternalRegularExpressionParser.g:1295:5: lv_elements_3_0= ruleCharacterClassElement
             	    {
             	    if ( state.backtracking==0 ) {
 
             	      					newCompositeNode(grammarAccess.getCharacterClassAccess().getElementsCharacterClassElementParserRuleCall_3_0());
             	      				
             	    }
-            	    pushFollow(FOLLOW_15);
+            	    pushFollow(FOLLOW_12);
             	    lv_elements_3_0=ruleCharacterClassElement();
 
             	    state._fsp--;
@@ -4048,7 +4048,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
             	    break;
 
             	default :
-            	    break loop19;
+            	    break loop20;
                 }
             } while (true);
 
@@ -4083,7 +4083,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "entryRuleCharacterClassElement"
-    // InternalRegularExpressionParser.g:1307:1: entryRuleCharacterClassElement returns [EObject current=null] : iv_ruleCharacterClassElement= ruleCharacterClassElement EOF ;
+    // InternalRegularExpressionParser.g:1320:1: entryRuleCharacterClassElement returns [EObject current=null] : iv_ruleCharacterClassElement= ruleCharacterClassElement EOF ;
     public final EObject entryRuleCharacterClassElement() throws RecognitionException {
         EObject current = null;
 
@@ -4091,8 +4091,8 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
         try {
-            // InternalRegularExpressionParser.g:1307:62: (iv_ruleCharacterClassElement= ruleCharacterClassElement EOF )
-            // InternalRegularExpressionParser.g:1308:2: iv_ruleCharacterClassElement= ruleCharacterClassElement EOF
+            // InternalRegularExpressionParser.g:1320:62: (iv_ruleCharacterClassElement= ruleCharacterClassElement EOF )
+            // InternalRegularExpressionParser.g:1321:2: iv_ruleCharacterClassElement= ruleCharacterClassElement EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getCharacterClassElementRule()); 
@@ -4123,7 +4123,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "ruleCharacterClassElement"
-    // InternalRegularExpressionParser.g:1314:1: ruleCharacterClassElement returns [EObject current=null] : (this_CharacterClassAtom_0= ruleCharacterClassAtom ( ( ( () HyphenMinus ( ( ruleCharacterClassAtom ) ) ) )=> ( () otherlv_2= HyphenMinus ( (lv_right_3_0= ruleCharacterClassAtom ) ) ) )? ) ;
+    // InternalRegularExpressionParser.g:1327:1: ruleCharacterClassElement returns [EObject current=null] : (this_CharacterClassAtom_0= ruleCharacterClassAtom ( ( ( () HyphenMinus ( ( ruleCharacterClassAtom ) ) ) )=> ( () otherlv_2= HyphenMinus ( (lv_right_3_0= ruleCharacterClassAtom ) ) ) )? ) ;
     public final EObject ruleCharacterClassElement() throws RecognitionException {
         EObject current = null;
 
@@ -4137,18 +4137,18 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
         	enterRule();
 
         try {
-            // InternalRegularExpressionParser.g:1320:2: ( (this_CharacterClassAtom_0= ruleCharacterClassAtom ( ( ( () HyphenMinus ( ( ruleCharacterClassAtom ) ) ) )=> ( () otherlv_2= HyphenMinus ( (lv_right_3_0= ruleCharacterClassAtom ) ) ) )? ) )
-            // InternalRegularExpressionParser.g:1321:2: (this_CharacterClassAtom_0= ruleCharacterClassAtom ( ( ( () HyphenMinus ( ( ruleCharacterClassAtom ) ) ) )=> ( () otherlv_2= HyphenMinus ( (lv_right_3_0= ruleCharacterClassAtom ) ) ) )? )
+            // InternalRegularExpressionParser.g:1333:2: ( (this_CharacterClassAtom_0= ruleCharacterClassAtom ( ( ( () HyphenMinus ( ( ruleCharacterClassAtom ) ) ) )=> ( () otherlv_2= HyphenMinus ( (lv_right_3_0= ruleCharacterClassAtom ) ) ) )? ) )
+            // InternalRegularExpressionParser.g:1334:2: (this_CharacterClassAtom_0= ruleCharacterClassAtom ( ( ( () HyphenMinus ( ( ruleCharacterClassAtom ) ) ) )=> ( () otherlv_2= HyphenMinus ( (lv_right_3_0= ruleCharacterClassAtom ) ) ) )? )
             {
-            // InternalRegularExpressionParser.g:1321:2: (this_CharacterClassAtom_0= ruleCharacterClassAtom ( ( ( () HyphenMinus ( ( ruleCharacterClassAtom ) ) ) )=> ( () otherlv_2= HyphenMinus ( (lv_right_3_0= ruleCharacterClassAtom ) ) ) )? )
-            // InternalRegularExpressionParser.g:1322:3: this_CharacterClassAtom_0= ruleCharacterClassAtom ( ( ( () HyphenMinus ( ( ruleCharacterClassAtom ) ) ) )=> ( () otherlv_2= HyphenMinus ( (lv_right_3_0= ruleCharacterClassAtom ) ) ) )?
+            // InternalRegularExpressionParser.g:1334:2: (this_CharacterClassAtom_0= ruleCharacterClassAtom ( ( ( () HyphenMinus ( ( ruleCharacterClassAtom ) ) ) )=> ( () otherlv_2= HyphenMinus ( (lv_right_3_0= ruleCharacterClassAtom ) ) ) )? )
+            // InternalRegularExpressionParser.g:1335:3: this_CharacterClassAtom_0= ruleCharacterClassAtom ( ( ( () HyphenMinus ( ( ruleCharacterClassAtom ) ) ) )=> ( () otherlv_2= HyphenMinus ( (lv_right_3_0= ruleCharacterClassAtom ) ) ) )?
             {
             if ( state.backtracking==0 ) {
 
               			newCompositeNode(grammarAccess.getCharacterClassElementAccess().getCharacterClassAtomParserRuleCall_0());
               		
             }
-            pushFollow(FOLLOW_16);
+            pushFollow(FOLLOW_13);
             this_CharacterClassAtom_0=ruleCharacterClassAtom();
 
             state._fsp--;
@@ -4159,18 +4159,18 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
               			afterParserOrEnumRuleCall();
               		
             }
-            // InternalRegularExpressionParser.g:1330:3: ( ( ( () HyphenMinus ( ( ruleCharacterClassAtom ) ) ) )=> ( () otherlv_2= HyphenMinus ( (lv_right_3_0= ruleCharacterClassAtom ) ) ) )?
-            int alt20=2;
-            alt20 = dfa20.predict(input);
-            switch (alt20) {
+            // InternalRegularExpressionParser.g:1343:3: ( ( ( () HyphenMinus ( ( ruleCharacterClassAtom ) ) ) )=> ( () otherlv_2= HyphenMinus ( (lv_right_3_0= ruleCharacterClassAtom ) ) ) )?
+            int alt21=2;
+            alt21 = dfa21.predict(input);
+            switch (alt21) {
                 case 1 :
-                    // InternalRegularExpressionParser.g:1331:4: ( ( () HyphenMinus ( ( ruleCharacterClassAtom ) ) ) )=> ( () otherlv_2= HyphenMinus ( (lv_right_3_0= ruleCharacterClassAtom ) ) )
+                    // InternalRegularExpressionParser.g:1344:4: ( ( () HyphenMinus ( ( ruleCharacterClassAtom ) ) ) )=> ( () otherlv_2= HyphenMinus ( (lv_right_3_0= ruleCharacterClassAtom ) ) )
                     {
-                    // InternalRegularExpressionParser.g:1342:4: ( () otherlv_2= HyphenMinus ( (lv_right_3_0= ruleCharacterClassAtom ) ) )
-                    // InternalRegularExpressionParser.g:1343:5: () otherlv_2= HyphenMinus ( (lv_right_3_0= ruleCharacterClassAtom ) )
+                    // InternalRegularExpressionParser.g:1355:4: ( () otherlv_2= HyphenMinus ( (lv_right_3_0= ruleCharacterClassAtom ) ) )
+                    // InternalRegularExpressionParser.g:1356:5: () otherlv_2= HyphenMinus ( (lv_right_3_0= ruleCharacterClassAtom ) )
                     {
-                    // InternalRegularExpressionParser.g:1343:5: ()
-                    // InternalRegularExpressionParser.g:1344:6: 
+                    // InternalRegularExpressionParser.g:1356:5: ()
+                    // InternalRegularExpressionParser.g:1357:6: 
                     {
                     if ( state.backtracking==0 ) {
 
@@ -4182,17 +4182,17 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
                     }
 
-                    otherlv_2=(Token)match(input,HyphenMinus,FOLLOW_17); if (state.failed) return current;
+                    otherlv_2=(Token)match(input,HyphenMinus,FOLLOW_14); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       					newLeafNode(otherlv_2, grammarAccess.getCharacterClassElementAccess().getHyphenMinusKeyword_1_0_1());
                       				
                     }
-                    // InternalRegularExpressionParser.g:1354:5: ( (lv_right_3_0= ruleCharacterClassAtom ) )
-                    // InternalRegularExpressionParser.g:1355:6: (lv_right_3_0= ruleCharacterClassAtom )
+                    // InternalRegularExpressionParser.g:1367:5: ( (lv_right_3_0= ruleCharacterClassAtom ) )
+                    // InternalRegularExpressionParser.g:1368:6: (lv_right_3_0= ruleCharacterClassAtom )
                     {
-                    // InternalRegularExpressionParser.g:1355:6: (lv_right_3_0= ruleCharacterClassAtom )
-                    // InternalRegularExpressionParser.g:1356:7: lv_right_3_0= ruleCharacterClassAtom
+                    // InternalRegularExpressionParser.g:1368:6: (lv_right_3_0= ruleCharacterClassAtom )
+                    // InternalRegularExpressionParser.g:1369:7: lv_right_3_0= ruleCharacterClassAtom
                     {
                     if ( state.backtracking==0 ) {
 
@@ -4257,7 +4257,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "entryRuleCharacterClassAtom"
-    // InternalRegularExpressionParser.g:1379:1: entryRuleCharacterClassAtom returns [EObject current=null] : iv_ruleCharacterClassAtom= ruleCharacterClassAtom EOF ;
+    // InternalRegularExpressionParser.g:1392:1: entryRuleCharacterClassAtom returns [EObject current=null] : iv_ruleCharacterClassAtom= ruleCharacterClassAtom EOF ;
     public final EObject entryRuleCharacterClassAtom() throws RecognitionException {
         EObject current = null;
 
@@ -4265,8 +4265,8 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
         try {
-            // InternalRegularExpressionParser.g:1379:59: (iv_ruleCharacterClassAtom= ruleCharacterClassAtom EOF )
-            // InternalRegularExpressionParser.g:1380:2: iv_ruleCharacterClassAtom= ruleCharacterClassAtom EOF
+            // InternalRegularExpressionParser.g:1392:59: (iv_ruleCharacterClassAtom= ruleCharacterClassAtom EOF )
+            // InternalRegularExpressionParser.g:1393:2: iv_ruleCharacterClassAtom= ruleCharacterClassAtom EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getCharacterClassAtomRule()); 
@@ -4297,33 +4297,39 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "ruleCharacterClassAtom"
-    // InternalRegularExpressionParser.g:1386:1: ruleCharacterClassAtom returns [EObject current=null] : (this_EscapedCharacterClassAtom_0= ruleEscapedCharacterClassAtom | ( ( (lv_character_1_1= Comma | lv_character_1_2= EqualsSign | lv_character_1_3= Colon | lv_character_1_4= ExclamationMark | lv_character_1_5= HyphenMinus | lv_character_1_6= CircumflexAccent | lv_character_1_7= DollarSign | lv_character_1_8= FullStop | lv_character_1_9= Asterisk | lv_character_1_10= PlusSign | lv_character_1_11= QuestionMark | lv_character_1_12= LeftParenthesis | lv_character_1_13= RightParenthesis | lv_character_1_14= LeftSquareBracket | lv_character_1_15= LeftCurlyBracket | lv_character_1_16= RightCurlyBracket | lv_character_1_17= VerticalLine | lv_character_1_18= Solidus | lv_character_1_19= LessThanSign | lv_character_1_20= GreaterThanSign | lv_character_1_21= RULE_PATTERN_CHARACTER_NO_DASH | lv_character_1_22= RULE_UNICODE_LETTER | lv_character_1_23= RULE_UNICODE_DIGIT ) ) ) ) ;
+    // InternalRegularExpressionParser.g:1399:1: ruleCharacterClassAtom returns [EObject current=null] : (this_EscapedCharacterClassAtom_0= ruleEscapedCharacterClassAtom | ( ( (lv_characters_1_1= Comma | lv_characters_1_2= EqualsSign | lv_characters_1_3= Colon | lv_characters_1_4= ExclamationMark | lv_characters_1_5= HyphenMinus | lv_characters_1_6= CircumflexAccent | lv_characters_1_7= DollarSign | lv_characters_1_8= FullStop | lv_characters_1_9= Asterisk | lv_characters_1_10= PlusSign | lv_characters_1_11= QuestionMark | lv_characters_1_12= LeftParenthesis | lv_characters_1_13= RightParenthesis | lv_characters_1_14= LeftSquareBracket | lv_characters_1_15= LeftCurlyBracket | lv_characters_1_16= RightCurlyBracket | lv_characters_1_17= VerticalLine | lv_characters_1_18= Solidus | lv_characters_1_19= LessThanSign | lv_characters_1_20= GreaterThanSign | lv_characters_1_21= LeftParenthesisQuestionMark | lv_characters_1_22= LeftParenthesisQuestionMarkLessThanSign | lv_characters_1_23= LeftParenthesisQuestionMarkEqualsSign | lv_characters_1_24= LeftParenthesisQuestionMarkExclamationMark | lv_characters_1_25= LeftParenthesisQuestionMarkLessThanSignExclamationMark | lv_characters_1_26= LeftParenthesisQuestionMarkLessThanSignEqualsSign | lv_characters_1_27= RULE_PATTERN_CHARACTER_NO_DASH | lv_characters_1_28= RULE_UNICODE_LETTER | lv_characters_1_29= RULE_UNICODE_DIGIT ) ) ) ) ;
     public final EObject ruleCharacterClassAtom() throws RecognitionException {
         EObject current = null;
 
-        Token lv_character_1_1=null;
-        Token lv_character_1_2=null;
-        Token lv_character_1_3=null;
-        Token lv_character_1_4=null;
-        Token lv_character_1_5=null;
-        Token lv_character_1_6=null;
-        Token lv_character_1_7=null;
-        Token lv_character_1_8=null;
-        Token lv_character_1_9=null;
-        Token lv_character_1_10=null;
-        Token lv_character_1_11=null;
-        Token lv_character_1_12=null;
-        Token lv_character_1_13=null;
-        Token lv_character_1_14=null;
-        Token lv_character_1_15=null;
-        Token lv_character_1_16=null;
-        Token lv_character_1_17=null;
-        Token lv_character_1_18=null;
-        Token lv_character_1_19=null;
-        Token lv_character_1_20=null;
-        Token lv_character_1_21=null;
-        Token lv_character_1_22=null;
-        Token lv_character_1_23=null;
+        Token lv_characters_1_1=null;
+        Token lv_characters_1_2=null;
+        Token lv_characters_1_3=null;
+        Token lv_characters_1_4=null;
+        Token lv_characters_1_5=null;
+        Token lv_characters_1_6=null;
+        Token lv_characters_1_7=null;
+        Token lv_characters_1_8=null;
+        Token lv_characters_1_9=null;
+        Token lv_characters_1_10=null;
+        Token lv_characters_1_11=null;
+        Token lv_characters_1_12=null;
+        Token lv_characters_1_13=null;
+        Token lv_characters_1_14=null;
+        Token lv_characters_1_15=null;
+        Token lv_characters_1_16=null;
+        Token lv_characters_1_17=null;
+        Token lv_characters_1_18=null;
+        Token lv_characters_1_19=null;
+        Token lv_characters_1_20=null;
+        Token lv_characters_1_21=null;
+        Token lv_characters_1_22=null;
+        Token lv_characters_1_23=null;
+        Token lv_characters_1_24=null;
+        Token lv_characters_1_25=null;
+        Token lv_characters_1_26=null;
+        Token lv_characters_1_27=null;
+        Token lv_characters_1_28=null;
+        Token lv_characters_1_29=null;
         EObject this_EscapedCharacterClassAtom_0 = null;
 
 
@@ -4331,29 +4337,29 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
         	enterRule();
 
         try {
-            // InternalRegularExpressionParser.g:1392:2: ( (this_EscapedCharacterClassAtom_0= ruleEscapedCharacterClassAtom | ( ( (lv_character_1_1= Comma | lv_character_1_2= EqualsSign | lv_character_1_3= Colon | lv_character_1_4= ExclamationMark | lv_character_1_5= HyphenMinus | lv_character_1_6= CircumflexAccent | lv_character_1_7= DollarSign | lv_character_1_8= FullStop | lv_character_1_9= Asterisk | lv_character_1_10= PlusSign | lv_character_1_11= QuestionMark | lv_character_1_12= LeftParenthesis | lv_character_1_13= RightParenthesis | lv_character_1_14= LeftSquareBracket | lv_character_1_15= LeftCurlyBracket | lv_character_1_16= RightCurlyBracket | lv_character_1_17= VerticalLine | lv_character_1_18= Solidus | lv_character_1_19= LessThanSign | lv_character_1_20= GreaterThanSign | lv_character_1_21= RULE_PATTERN_CHARACTER_NO_DASH | lv_character_1_22= RULE_UNICODE_LETTER | lv_character_1_23= RULE_UNICODE_DIGIT ) ) ) ) )
-            // InternalRegularExpressionParser.g:1393:2: (this_EscapedCharacterClassAtom_0= ruleEscapedCharacterClassAtom | ( ( (lv_character_1_1= Comma | lv_character_1_2= EqualsSign | lv_character_1_3= Colon | lv_character_1_4= ExclamationMark | lv_character_1_5= HyphenMinus | lv_character_1_6= CircumflexAccent | lv_character_1_7= DollarSign | lv_character_1_8= FullStop | lv_character_1_9= Asterisk | lv_character_1_10= PlusSign | lv_character_1_11= QuestionMark | lv_character_1_12= LeftParenthesis | lv_character_1_13= RightParenthesis | lv_character_1_14= LeftSquareBracket | lv_character_1_15= LeftCurlyBracket | lv_character_1_16= RightCurlyBracket | lv_character_1_17= VerticalLine | lv_character_1_18= Solidus | lv_character_1_19= LessThanSign | lv_character_1_20= GreaterThanSign | lv_character_1_21= RULE_PATTERN_CHARACTER_NO_DASH | lv_character_1_22= RULE_UNICODE_LETTER | lv_character_1_23= RULE_UNICODE_DIGIT ) ) ) )
+            // InternalRegularExpressionParser.g:1405:2: ( (this_EscapedCharacterClassAtom_0= ruleEscapedCharacterClassAtom | ( ( (lv_characters_1_1= Comma | lv_characters_1_2= EqualsSign | lv_characters_1_3= Colon | lv_characters_1_4= ExclamationMark | lv_characters_1_5= HyphenMinus | lv_characters_1_6= CircumflexAccent | lv_characters_1_7= DollarSign | lv_characters_1_8= FullStop | lv_characters_1_9= Asterisk | lv_characters_1_10= PlusSign | lv_characters_1_11= QuestionMark | lv_characters_1_12= LeftParenthesis | lv_characters_1_13= RightParenthesis | lv_characters_1_14= LeftSquareBracket | lv_characters_1_15= LeftCurlyBracket | lv_characters_1_16= RightCurlyBracket | lv_characters_1_17= VerticalLine | lv_characters_1_18= Solidus | lv_characters_1_19= LessThanSign | lv_characters_1_20= GreaterThanSign | lv_characters_1_21= LeftParenthesisQuestionMark | lv_characters_1_22= LeftParenthesisQuestionMarkLessThanSign | lv_characters_1_23= LeftParenthesisQuestionMarkEqualsSign | lv_characters_1_24= LeftParenthesisQuestionMarkExclamationMark | lv_characters_1_25= LeftParenthesisQuestionMarkLessThanSignExclamationMark | lv_characters_1_26= LeftParenthesisQuestionMarkLessThanSignEqualsSign | lv_characters_1_27= RULE_PATTERN_CHARACTER_NO_DASH | lv_characters_1_28= RULE_UNICODE_LETTER | lv_characters_1_29= RULE_UNICODE_DIGIT ) ) ) ) )
+            // InternalRegularExpressionParser.g:1406:2: (this_EscapedCharacterClassAtom_0= ruleEscapedCharacterClassAtom | ( ( (lv_characters_1_1= Comma | lv_characters_1_2= EqualsSign | lv_characters_1_3= Colon | lv_characters_1_4= ExclamationMark | lv_characters_1_5= HyphenMinus | lv_characters_1_6= CircumflexAccent | lv_characters_1_7= DollarSign | lv_characters_1_8= FullStop | lv_characters_1_9= Asterisk | lv_characters_1_10= PlusSign | lv_characters_1_11= QuestionMark | lv_characters_1_12= LeftParenthesis | lv_characters_1_13= RightParenthesis | lv_characters_1_14= LeftSquareBracket | lv_characters_1_15= LeftCurlyBracket | lv_characters_1_16= RightCurlyBracket | lv_characters_1_17= VerticalLine | lv_characters_1_18= Solidus | lv_characters_1_19= LessThanSign | lv_characters_1_20= GreaterThanSign | lv_characters_1_21= LeftParenthesisQuestionMark | lv_characters_1_22= LeftParenthesisQuestionMarkLessThanSign | lv_characters_1_23= LeftParenthesisQuestionMarkEqualsSign | lv_characters_1_24= LeftParenthesisQuestionMarkExclamationMark | lv_characters_1_25= LeftParenthesisQuestionMarkLessThanSignExclamationMark | lv_characters_1_26= LeftParenthesisQuestionMarkLessThanSignEqualsSign | lv_characters_1_27= RULE_PATTERN_CHARACTER_NO_DASH | lv_characters_1_28= RULE_UNICODE_LETTER | lv_characters_1_29= RULE_UNICODE_DIGIT ) ) ) )
             {
-            // InternalRegularExpressionParser.g:1393:2: (this_EscapedCharacterClassAtom_0= ruleEscapedCharacterClassAtom | ( ( (lv_character_1_1= Comma | lv_character_1_2= EqualsSign | lv_character_1_3= Colon | lv_character_1_4= ExclamationMark | lv_character_1_5= HyphenMinus | lv_character_1_6= CircumflexAccent | lv_character_1_7= DollarSign | lv_character_1_8= FullStop | lv_character_1_9= Asterisk | lv_character_1_10= PlusSign | lv_character_1_11= QuestionMark | lv_character_1_12= LeftParenthesis | lv_character_1_13= RightParenthesis | lv_character_1_14= LeftSquareBracket | lv_character_1_15= LeftCurlyBracket | lv_character_1_16= RightCurlyBracket | lv_character_1_17= VerticalLine | lv_character_1_18= Solidus | lv_character_1_19= LessThanSign | lv_character_1_20= GreaterThanSign | lv_character_1_21= RULE_PATTERN_CHARACTER_NO_DASH | lv_character_1_22= RULE_UNICODE_LETTER | lv_character_1_23= RULE_UNICODE_DIGIT ) ) ) )
-            int alt22=2;
-            int LA22_0 = input.LA(1);
+            // InternalRegularExpressionParser.g:1406:2: (this_EscapedCharacterClassAtom_0= ruleEscapedCharacterClassAtom | ( ( (lv_characters_1_1= Comma | lv_characters_1_2= EqualsSign | lv_characters_1_3= Colon | lv_characters_1_4= ExclamationMark | lv_characters_1_5= HyphenMinus | lv_characters_1_6= CircumflexAccent | lv_characters_1_7= DollarSign | lv_characters_1_8= FullStop | lv_characters_1_9= Asterisk | lv_characters_1_10= PlusSign | lv_characters_1_11= QuestionMark | lv_characters_1_12= LeftParenthesis | lv_characters_1_13= RightParenthesis | lv_characters_1_14= LeftSquareBracket | lv_characters_1_15= LeftCurlyBracket | lv_characters_1_16= RightCurlyBracket | lv_characters_1_17= VerticalLine | lv_characters_1_18= Solidus | lv_characters_1_19= LessThanSign | lv_characters_1_20= GreaterThanSign | lv_characters_1_21= LeftParenthesisQuestionMark | lv_characters_1_22= LeftParenthesisQuestionMarkLessThanSign | lv_characters_1_23= LeftParenthesisQuestionMarkEqualsSign | lv_characters_1_24= LeftParenthesisQuestionMarkExclamationMark | lv_characters_1_25= LeftParenthesisQuestionMarkLessThanSignExclamationMark | lv_characters_1_26= LeftParenthesisQuestionMarkLessThanSignEqualsSign | lv_characters_1_27= RULE_PATTERN_CHARACTER_NO_DASH | lv_characters_1_28= RULE_UNICODE_LETTER | lv_characters_1_29= RULE_UNICODE_DIGIT ) ) ) )
+            int alt23=2;
+            int LA23_0 = input.LA(1);
 
-            if ( (LA22_0==RULE_WORD_BOUNDARY||(LA22_0>=RULE_CHARACTER_CLASS_ESCAPE && LA22_0<=RULE_CONTROL_LETTER_ESCAPE)||(LA22_0>=RULE_HEX_ESCAPE && LA22_0<=RULE_UNICODE_ESCAPE)||(LA22_0>=RULE_DECIMAL_ESCAPE && LA22_0<=RULE_IDENTITY_ESCAPE)) ) {
-                alt22=1;
+            if ( (LA23_0==RULE_WORD_BOUNDARY||(LA23_0>=RULE_CHARACTER_CLASS_ESCAPE && LA23_0<=RULE_CONTROL_LETTER_ESCAPE)||(LA23_0>=RULE_HEX_ESCAPE && LA23_0<=RULE_UNICODE_ESCAPE)||(LA23_0>=RULE_DECIMAL_ESCAPE && LA23_0<=RULE_IDENTITY_ESCAPE)) ) {
+                alt23=1;
             }
-            else if ( ((LA22_0>=ExclamationMark && LA22_0<=LeftSquareBracket)||LA22_0==CircumflexAccent||(LA22_0>=LeftCurlyBracket && LA22_0<=RightCurlyBracket)||LA22_0==RULE_UNICODE_DIGIT||(LA22_0>=RULE_UNICODE_LETTER && LA22_0<=RULE_PATTERN_CHARACTER_NO_DASH)) ) {
-                alt22=2;
+            else if ( ((LA23_0>=LeftParenthesisQuestionMarkLessThanSignExclamationMark && LA23_0<=LeftParenthesisQuestionMarkExclamationMark)||(LA23_0>=LeftParenthesisQuestionMarkLessThanSign && LA23_0<=LeftSquareBracket)||LA23_0==CircumflexAccent||(LA23_0>=LeftCurlyBracket && LA23_0<=RightCurlyBracket)||LA23_0==RULE_UNICODE_DIGIT||(LA23_0>=RULE_UNICODE_LETTER && LA23_0<=RULE_PATTERN_CHARACTER_NO_DASH)) ) {
+                alt23=2;
             }
             else {
                 if (state.backtracking>0) {state.failed=true; return current;}
                 NoViableAltException nvae =
-                    new NoViableAltException("", 22, 0, input);
+                    new NoViableAltException("", 23, 0, input);
 
                 throw nvae;
             }
-            switch (alt22) {
+            switch (alt23) {
                 case 1 :
-                    // InternalRegularExpressionParser.g:1394:3: this_EscapedCharacterClassAtom_0= ruleEscapedCharacterClassAtom
+                    // InternalRegularExpressionParser.g:1407:3: this_EscapedCharacterClassAtom_0= ruleEscapedCharacterClassAtom
                     {
                     if ( state.backtracking==0 ) {
 
@@ -4375,148 +4381,178 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     }
                     break;
                 case 2 :
-                    // InternalRegularExpressionParser.g:1403:3: ( ( (lv_character_1_1= Comma | lv_character_1_2= EqualsSign | lv_character_1_3= Colon | lv_character_1_4= ExclamationMark | lv_character_1_5= HyphenMinus | lv_character_1_6= CircumflexAccent | lv_character_1_7= DollarSign | lv_character_1_8= FullStop | lv_character_1_9= Asterisk | lv_character_1_10= PlusSign | lv_character_1_11= QuestionMark | lv_character_1_12= LeftParenthesis | lv_character_1_13= RightParenthesis | lv_character_1_14= LeftSquareBracket | lv_character_1_15= LeftCurlyBracket | lv_character_1_16= RightCurlyBracket | lv_character_1_17= VerticalLine | lv_character_1_18= Solidus | lv_character_1_19= LessThanSign | lv_character_1_20= GreaterThanSign | lv_character_1_21= RULE_PATTERN_CHARACTER_NO_DASH | lv_character_1_22= RULE_UNICODE_LETTER | lv_character_1_23= RULE_UNICODE_DIGIT ) ) )
+                    // InternalRegularExpressionParser.g:1416:3: ( ( (lv_characters_1_1= Comma | lv_characters_1_2= EqualsSign | lv_characters_1_3= Colon | lv_characters_1_4= ExclamationMark | lv_characters_1_5= HyphenMinus | lv_characters_1_6= CircumflexAccent | lv_characters_1_7= DollarSign | lv_characters_1_8= FullStop | lv_characters_1_9= Asterisk | lv_characters_1_10= PlusSign | lv_characters_1_11= QuestionMark | lv_characters_1_12= LeftParenthesis | lv_characters_1_13= RightParenthesis | lv_characters_1_14= LeftSquareBracket | lv_characters_1_15= LeftCurlyBracket | lv_characters_1_16= RightCurlyBracket | lv_characters_1_17= VerticalLine | lv_characters_1_18= Solidus | lv_characters_1_19= LessThanSign | lv_characters_1_20= GreaterThanSign | lv_characters_1_21= LeftParenthesisQuestionMark | lv_characters_1_22= LeftParenthesisQuestionMarkLessThanSign | lv_characters_1_23= LeftParenthesisQuestionMarkEqualsSign | lv_characters_1_24= LeftParenthesisQuestionMarkExclamationMark | lv_characters_1_25= LeftParenthesisQuestionMarkLessThanSignExclamationMark | lv_characters_1_26= LeftParenthesisQuestionMarkLessThanSignEqualsSign | lv_characters_1_27= RULE_PATTERN_CHARACTER_NO_DASH | lv_characters_1_28= RULE_UNICODE_LETTER | lv_characters_1_29= RULE_UNICODE_DIGIT ) ) )
                     {
-                    // InternalRegularExpressionParser.g:1403:3: ( ( (lv_character_1_1= Comma | lv_character_1_2= EqualsSign | lv_character_1_3= Colon | lv_character_1_4= ExclamationMark | lv_character_1_5= HyphenMinus | lv_character_1_6= CircumflexAccent | lv_character_1_7= DollarSign | lv_character_1_8= FullStop | lv_character_1_9= Asterisk | lv_character_1_10= PlusSign | lv_character_1_11= QuestionMark | lv_character_1_12= LeftParenthesis | lv_character_1_13= RightParenthesis | lv_character_1_14= LeftSquareBracket | lv_character_1_15= LeftCurlyBracket | lv_character_1_16= RightCurlyBracket | lv_character_1_17= VerticalLine | lv_character_1_18= Solidus | lv_character_1_19= LessThanSign | lv_character_1_20= GreaterThanSign | lv_character_1_21= RULE_PATTERN_CHARACTER_NO_DASH | lv_character_1_22= RULE_UNICODE_LETTER | lv_character_1_23= RULE_UNICODE_DIGIT ) ) )
-                    // InternalRegularExpressionParser.g:1404:4: ( (lv_character_1_1= Comma | lv_character_1_2= EqualsSign | lv_character_1_3= Colon | lv_character_1_4= ExclamationMark | lv_character_1_5= HyphenMinus | lv_character_1_6= CircumflexAccent | lv_character_1_7= DollarSign | lv_character_1_8= FullStop | lv_character_1_9= Asterisk | lv_character_1_10= PlusSign | lv_character_1_11= QuestionMark | lv_character_1_12= LeftParenthesis | lv_character_1_13= RightParenthesis | lv_character_1_14= LeftSquareBracket | lv_character_1_15= LeftCurlyBracket | lv_character_1_16= RightCurlyBracket | lv_character_1_17= VerticalLine | lv_character_1_18= Solidus | lv_character_1_19= LessThanSign | lv_character_1_20= GreaterThanSign | lv_character_1_21= RULE_PATTERN_CHARACTER_NO_DASH | lv_character_1_22= RULE_UNICODE_LETTER | lv_character_1_23= RULE_UNICODE_DIGIT ) )
+                    // InternalRegularExpressionParser.g:1416:3: ( ( (lv_characters_1_1= Comma | lv_characters_1_2= EqualsSign | lv_characters_1_3= Colon | lv_characters_1_4= ExclamationMark | lv_characters_1_5= HyphenMinus | lv_characters_1_6= CircumflexAccent | lv_characters_1_7= DollarSign | lv_characters_1_8= FullStop | lv_characters_1_9= Asterisk | lv_characters_1_10= PlusSign | lv_characters_1_11= QuestionMark | lv_characters_1_12= LeftParenthesis | lv_characters_1_13= RightParenthesis | lv_characters_1_14= LeftSquareBracket | lv_characters_1_15= LeftCurlyBracket | lv_characters_1_16= RightCurlyBracket | lv_characters_1_17= VerticalLine | lv_characters_1_18= Solidus | lv_characters_1_19= LessThanSign | lv_characters_1_20= GreaterThanSign | lv_characters_1_21= LeftParenthesisQuestionMark | lv_characters_1_22= LeftParenthesisQuestionMarkLessThanSign | lv_characters_1_23= LeftParenthesisQuestionMarkEqualsSign | lv_characters_1_24= LeftParenthesisQuestionMarkExclamationMark | lv_characters_1_25= LeftParenthesisQuestionMarkLessThanSignExclamationMark | lv_characters_1_26= LeftParenthesisQuestionMarkLessThanSignEqualsSign | lv_characters_1_27= RULE_PATTERN_CHARACTER_NO_DASH | lv_characters_1_28= RULE_UNICODE_LETTER | lv_characters_1_29= RULE_UNICODE_DIGIT ) ) )
+                    // InternalRegularExpressionParser.g:1417:4: ( (lv_characters_1_1= Comma | lv_characters_1_2= EqualsSign | lv_characters_1_3= Colon | lv_characters_1_4= ExclamationMark | lv_characters_1_5= HyphenMinus | lv_characters_1_6= CircumflexAccent | lv_characters_1_7= DollarSign | lv_characters_1_8= FullStop | lv_characters_1_9= Asterisk | lv_characters_1_10= PlusSign | lv_characters_1_11= QuestionMark | lv_characters_1_12= LeftParenthesis | lv_characters_1_13= RightParenthesis | lv_characters_1_14= LeftSquareBracket | lv_characters_1_15= LeftCurlyBracket | lv_characters_1_16= RightCurlyBracket | lv_characters_1_17= VerticalLine | lv_characters_1_18= Solidus | lv_characters_1_19= LessThanSign | lv_characters_1_20= GreaterThanSign | lv_characters_1_21= LeftParenthesisQuestionMark | lv_characters_1_22= LeftParenthesisQuestionMarkLessThanSign | lv_characters_1_23= LeftParenthesisQuestionMarkEqualsSign | lv_characters_1_24= LeftParenthesisQuestionMarkExclamationMark | lv_characters_1_25= LeftParenthesisQuestionMarkLessThanSignExclamationMark | lv_characters_1_26= LeftParenthesisQuestionMarkLessThanSignEqualsSign | lv_characters_1_27= RULE_PATTERN_CHARACTER_NO_DASH | lv_characters_1_28= RULE_UNICODE_LETTER | lv_characters_1_29= RULE_UNICODE_DIGIT ) )
                     {
-                    // InternalRegularExpressionParser.g:1404:4: ( (lv_character_1_1= Comma | lv_character_1_2= EqualsSign | lv_character_1_3= Colon | lv_character_1_4= ExclamationMark | lv_character_1_5= HyphenMinus | lv_character_1_6= CircumflexAccent | lv_character_1_7= DollarSign | lv_character_1_8= FullStop | lv_character_1_9= Asterisk | lv_character_1_10= PlusSign | lv_character_1_11= QuestionMark | lv_character_1_12= LeftParenthesis | lv_character_1_13= RightParenthesis | lv_character_1_14= LeftSquareBracket | lv_character_1_15= LeftCurlyBracket | lv_character_1_16= RightCurlyBracket | lv_character_1_17= VerticalLine | lv_character_1_18= Solidus | lv_character_1_19= LessThanSign | lv_character_1_20= GreaterThanSign | lv_character_1_21= RULE_PATTERN_CHARACTER_NO_DASH | lv_character_1_22= RULE_UNICODE_LETTER | lv_character_1_23= RULE_UNICODE_DIGIT ) )
-                    // InternalRegularExpressionParser.g:1405:5: (lv_character_1_1= Comma | lv_character_1_2= EqualsSign | lv_character_1_3= Colon | lv_character_1_4= ExclamationMark | lv_character_1_5= HyphenMinus | lv_character_1_6= CircumflexAccent | lv_character_1_7= DollarSign | lv_character_1_8= FullStop | lv_character_1_9= Asterisk | lv_character_1_10= PlusSign | lv_character_1_11= QuestionMark | lv_character_1_12= LeftParenthesis | lv_character_1_13= RightParenthesis | lv_character_1_14= LeftSquareBracket | lv_character_1_15= LeftCurlyBracket | lv_character_1_16= RightCurlyBracket | lv_character_1_17= VerticalLine | lv_character_1_18= Solidus | lv_character_1_19= LessThanSign | lv_character_1_20= GreaterThanSign | lv_character_1_21= RULE_PATTERN_CHARACTER_NO_DASH | lv_character_1_22= RULE_UNICODE_LETTER | lv_character_1_23= RULE_UNICODE_DIGIT )
+                    // InternalRegularExpressionParser.g:1417:4: ( (lv_characters_1_1= Comma | lv_characters_1_2= EqualsSign | lv_characters_1_3= Colon | lv_characters_1_4= ExclamationMark | lv_characters_1_5= HyphenMinus | lv_characters_1_6= CircumflexAccent | lv_characters_1_7= DollarSign | lv_characters_1_8= FullStop | lv_characters_1_9= Asterisk | lv_characters_1_10= PlusSign | lv_characters_1_11= QuestionMark | lv_characters_1_12= LeftParenthesis | lv_characters_1_13= RightParenthesis | lv_characters_1_14= LeftSquareBracket | lv_characters_1_15= LeftCurlyBracket | lv_characters_1_16= RightCurlyBracket | lv_characters_1_17= VerticalLine | lv_characters_1_18= Solidus | lv_characters_1_19= LessThanSign | lv_characters_1_20= GreaterThanSign | lv_characters_1_21= LeftParenthesisQuestionMark | lv_characters_1_22= LeftParenthesisQuestionMarkLessThanSign | lv_characters_1_23= LeftParenthesisQuestionMarkEqualsSign | lv_characters_1_24= LeftParenthesisQuestionMarkExclamationMark | lv_characters_1_25= LeftParenthesisQuestionMarkLessThanSignExclamationMark | lv_characters_1_26= LeftParenthesisQuestionMarkLessThanSignEqualsSign | lv_characters_1_27= RULE_PATTERN_CHARACTER_NO_DASH | lv_characters_1_28= RULE_UNICODE_LETTER | lv_characters_1_29= RULE_UNICODE_DIGIT ) )
+                    // InternalRegularExpressionParser.g:1418:5: (lv_characters_1_1= Comma | lv_characters_1_2= EqualsSign | lv_characters_1_3= Colon | lv_characters_1_4= ExclamationMark | lv_characters_1_5= HyphenMinus | lv_characters_1_6= CircumflexAccent | lv_characters_1_7= DollarSign | lv_characters_1_8= FullStop | lv_characters_1_9= Asterisk | lv_characters_1_10= PlusSign | lv_characters_1_11= QuestionMark | lv_characters_1_12= LeftParenthesis | lv_characters_1_13= RightParenthesis | lv_characters_1_14= LeftSquareBracket | lv_characters_1_15= LeftCurlyBracket | lv_characters_1_16= RightCurlyBracket | lv_characters_1_17= VerticalLine | lv_characters_1_18= Solidus | lv_characters_1_19= LessThanSign | lv_characters_1_20= GreaterThanSign | lv_characters_1_21= LeftParenthesisQuestionMark | lv_characters_1_22= LeftParenthesisQuestionMarkLessThanSign | lv_characters_1_23= LeftParenthesisQuestionMarkEqualsSign | lv_characters_1_24= LeftParenthesisQuestionMarkExclamationMark | lv_characters_1_25= LeftParenthesisQuestionMarkLessThanSignExclamationMark | lv_characters_1_26= LeftParenthesisQuestionMarkLessThanSignEqualsSign | lv_characters_1_27= RULE_PATTERN_CHARACTER_NO_DASH | lv_characters_1_28= RULE_UNICODE_LETTER | lv_characters_1_29= RULE_UNICODE_DIGIT )
                     {
-                    // InternalRegularExpressionParser.g:1405:5: (lv_character_1_1= Comma | lv_character_1_2= EqualsSign | lv_character_1_3= Colon | lv_character_1_4= ExclamationMark | lv_character_1_5= HyphenMinus | lv_character_1_6= CircumflexAccent | lv_character_1_7= DollarSign | lv_character_1_8= FullStop | lv_character_1_9= Asterisk | lv_character_1_10= PlusSign | lv_character_1_11= QuestionMark | lv_character_1_12= LeftParenthesis | lv_character_1_13= RightParenthesis | lv_character_1_14= LeftSquareBracket | lv_character_1_15= LeftCurlyBracket | lv_character_1_16= RightCurlyBracket | lv_character_1_17= VerticalLine | lv_character_1_18= Solidus | lv_character_1_19= LessThanSign | lv_character_1_20= GreaterThanSign | lv_character_1_21= RULE_PATTERN_CHARACTER_NO_DASH | lv_character_1_22= RULE_UNICODE_LETTER | lv_character_1_23= RULE_UNICODE_DIGIT )
-                    int alt21=23;
+                    // InternalRegularExpressionParser.g:1418:5: (lv_characters_1_1= Comma | lv_characters_1_2= EqualsSign | lv_characters_1_3= Colon | lv_characters_1_4= ExclamationMark | lv_characters_1_5= HyphenMinus | lv_characters_1_6= CircumflexAccent | lv_characters_1_7= DollarSign | lv_characters_1_8= FullStop | lv_characters_1_9= Asterisk | lv_characters_1_10= PlusSign | lv_characters_1_11= QuestionMark | lv_characters_1_12= LeftParenthesis | lv_characters_1_13= RightParenthesis | lv_characters_1_14= LeftSquareBracket | lv_characters_1_15= LeftCurlyBracket | lv_characters_1_16= RightCurlyBracket | lv_characters_1_17= VerticalLine | lv_characters_1_18= Solidus | lv_characters_1_19= LessThanSign | lv_characters_1_20= GreaterThanSign | lv_characters_1_21= LeftParenthesisQuestionMark | lv_characters_1_22= LeftParenthesisQuestionMarkLessThanSign | lv_characters_1_23= LeftParenthesisQuestionMarkEqualsSign | lv_characters_1_24= LeftParenthesisQuestionMarkExclamationMark | lv_characters_1_25= LeftParenthesisQuestionMarkLessThanSignExclamationMark | lv_characters_1_26= LeftParenthesisQuestionMarkLessThanSignEqualsSign | lv_characters_1_27= RULE_PATTERN_CHARACTER_NO_DASH | lv_characters_1_28= RULE_UNICODE_LETTER | lv_characters_1_29= RULE_UNICODE_DIGIT )
+                    int alt22=29;
                     switch ( input.LA(1) ) {
                     case Comma:
                         {
-                        alt21=1;
+                        alt22=1;
                         }
                         break;
                     case EqualsSign:
                         {
-                        alt21=2;
+                        alt22=2;
                         }
                         break;
                     case Colon:
                         {
-                        alt21=3;
+                        alt22=3;
                         }
                         break;
                     case ExclamationMark:
                         {
-                        alt21=4;
+                        alt22=4;
                         }
                         break;
                     case HyphenMinus:
                         {
-                        alt21=5;
+                        alt22=5;
                         }
                         break;
                     case CircumflexAccent:
                         {
-                        alt21=6;
+                        alt22=6;
                         }
                         break;
                     case DollarSign:
                         {
-                        alt21=7;
+                        alt22=7;
                         }
                         break;
                     case FullStop:
                         {
-                        alt21=8;
+                        alt22=8;
                         }
                         break;
                     case Asterisk:
                         {
-                        alt21=9;
+                        alt22=9;
                         }
                         break;
                     case PlusSign:
                         {
-                        alt21=10;
+                        alt22=10;
                         }
                         break;
                     case QuestionMark:
                         {
-                        alt21=11;
+                        alt22=11;
                         }
                         break;
                     case LeftParenthesis:
                         {
-                        alt21=12;
+                        alt22=12;
                         }
                         break;
                     case RightParenthesis:
                         {
-                        alt21=13;
+                        alt22=13;
                         }
                         break;
                     case LeftSquareBracket:
                         {
-                        alt21=14;
+                        alt22=14;
                         }
                         break;
                     case LeftCurlyBracket:
                         {
-                        alt21=15;
+                        alt22=15;
                         }
                         break;
                     case RightCurlyBracket:
                         {
-                        alt21=16;
+                        alt22=16;
                         }
                         break;
                     case VerticalLine:
                         {
-                        alt21=17;
+                        alt22=17;
                         }
                         break;
                     case Solidus:
                         {
-                        alt21=18;
+                        alt22=18;
                         }
                         break;
                     case LessThanSign:
                         {
-                        alt21=19;
+                        alt22=19;
                         }
                         break;
                     case GreaterThanSign:
                         {
-                        alt21=20;
+                        alt22=20;
+                        }
+                        break;
+                    case LeftParenthesisQuestionMark:
+                        {
+                        alt22=21;
+                        }
+                        break;
+                    case LeftParenthesisQuestionMarkLessThanSign:
+                        {
+                        alt22=22;
+                        }
+                        break;
+                    case LeftParenthesisQuestionMarkEqualsSign:
+                        {
+                        alt22=23;
+                        }
+                        break;
+                    case LeftParenthesisQuestionMarkExclamationMark:
+                        {
+                        alt22=24;
+                        }
+                        break;
+                    case LeftParenthesisQuestionMarkLessThanSignExclamationMark:
+                        {
+                        alt22=25;
+                        }
+                        break;
+                    case LeftParenthesisQuestionMarkLessThanSignEqualsSign:
+                        {
+                        alt22=26;
                         }
                         break;
                     case RULE_PATTERN_CHARACTER_NO_DASH:
                         {
-                        alt21=21;
+                        alt22=27;
                         }
                         break;
                     case RULE_UNICODE_LETTER:
                         {
-                        alt21=22;
+                        alt22=28;
                         }
                         break;
                     case RULE_UNICODE_DIGIT:
                         {
-                        alt21=23;
+                        alt22=29;
                         }
                         break;
                     default:
                         if (state.backtracking>0) {state.failed=true; return current;}
                         NoViableAltException nvae =
-                            new NoViableAltException("", 21, 0, input);
+                            new NoViableAltException("", 22, 0, input);
 
                         throw nvae;
                     }
 
-                    switch (alt21) {
+                    switch (alt22) {
                         case 1 :
-                            // InternalRegularExpressionParser.g:1406:6: lv_character_1_1= Comma
+                            // InternalRegularExpressionParser.g:1419:6: lv_characters_1_1= Comma
                             {
-                            lv_character_1_1=(Token)match(input,Comma,FOLLOW_2); if (state.failed) return current;
+                            lv_characters_1_1=(Token)match(input,Comma,FOLLOW_2); if (state.failed) return current;
                             if ( state.backtracking==0 ) {
 
-                              						newLeafNode(lv_character_1_1, grammarAccess.getCharacterClassAtomAccess().getCharacterCommaKeyword_1_0_0());
+                              						newLeafNode(lv_characters_1_1, grammarAccess.getCharacterClassAtomAccess().getCharactersCommaKeyword_1_0_0());
                               					
                             }
                             if ( state.backtracking==0 ) {
@@ -4524,19 +4560,19 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                               						if (current==null) {
                               							current = createModelElement(grammarAccess.getCharacterClassAtomRule());
                               						}
-                              						setWithLastConsumed(current, "character", lv_character_1_1, null);
+                              						setWithLastConsumed(current, "characters", lv_characters_1_1, null);
                               					
                             }
 
                             }
                             break;
                         case 2 :
-                            // InternalRegularExpressionParser.g:1417:6: lv_character_1_2= EqualsSign
+                            // InternalRegularExpressionParser.g:1430:6: lv_characters_1_2= EqualsSign
                             {
-                            lv_character_1_2=(Token)match(input,EqualsSign,FOLLOW_2); if (state.failed) return current;
+                            lv_characters_1_2=(Token)match(input,EqualsSign,FOLLOW_2); if (state.failed) return current;
                             if ( state.backtracking==0 ) {
 
-                              						newLeafNode(lv_character_1_2, grammarAccess.getCharacterClassAtomAccess().getCharacterEqualsSignKeyword_1_0_1());
+                              						newLeafNode(lv_characters_1_2, grammarAccess.getCharacterClassAtomAccess().getCharactersEqualsSignKeyword_1_0_1());
                               					
                             }
                             if ( state.backtracking==0 ) {
@@ -4544,19 +4580,19 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                               						if (current==null) {
                               							current = createModelElement(grammarAccess.getCharacterClassAtomRule());
                               						}
-                              						setWithLastConsumed(current, "character", lv_character_1_2, null);
+                              						setWithLastConsumed(current, "characters", lv_characters_1_2, null);
                               					
                             }
 
                             }
                             break;
                         case 3 :
-                            // InternalRegularExpressionParser.g:1428:6: lv_character_1_3= Colon
+                            // InternalRegularExpressionParser.g:1441:6: lv_characters_1_3= Colon
                             {
-                            lv_character_1_3=(Token)match(input,Colon,FOLLOW_2); if (state.failed) return current;
+                            lv_characters_1_3=(Token)match(input,Colon,FOLLOW_2); if (state.failed) return current;
                             if ( state.backtracking==0 ) {
 
-                              						newLeafNode(lv_character_1_3, grammarAccess.getCharacterClassAtomAccess().getCharacterColonKeyword_1_0_2());
+                              						newLeafNode(lv_characters_1_3, grammarAccess.getCharacterClassAtomAccess().getCharactersColonKeyword_1_0_2());
                               					
                             }
                             if ( state.backtracking==0 ) {
@@ -4564,19 +4600,19 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                               						if (current==null) {
                               							current = createModelElement(grammarAccess.getCharacterClassAtomRule());
                               						}
-                              						setWithLastConsumed(current, "character", lv_character_1_3, null);
+                              						setWithLastConsumed(current, "characters", lv_characters_1_3, null);
                               					
                             }
 
                             }
                             break;
                         case 4 :
-                            // InternalRegularExpressionParser.g:1439:6: lv_character_1_4= ExclamationMark
+                            // InternalRegularExpressionParser.g:1452:6: lv_characters_1_4= ExclamationMark
                             {
-                            lv_character_1_4=(Token)match(input,ExclamationMark,FOLLOW_2); if (state.failed) return current;
+                            lv_characters_1_4=(Token)match(input,ExclamationMark,FOLLOW_2); if (state.failed) return current;
                             if ( state.backtracking==0 ) {
 
-                              						newLeafNode(lv_character_1_4, grammarAccess.getCharacterClassAtomAccess().getCharacterExclamationMarkKeyword_1_0_3());
+                              						newLeafNode(lv_characters_1_4, grammarAccess.getCharacterClassAtomAccess().getCharactersExclamationMarkKeyword_1_0_3());
                               					
                             }
                             if ( state.backtracking==0 ) {
@@ -4584,19 +4620,19 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                               						if (current==null) {
                               							current = createModelElement(grammarAccess.getCharacterClassAtomRule());
                               						}
-                              						setWithLastConsumed(current, "character", lv_character_1_4, null);
+                              						setWithLastConsumed(current, "characters", lv_characters_1_4, null);
                               					
                             }
 
                             }
                             break;
                         case 5 :
-                            // InternalRegularExpressionParser.g:1450:6: lv_character_1_5= HyphenMinus
+                            // InternalRegularExpressionParser.g:1463:6: lv_characters_1_5= HyphenMinus
                             {
-                            lv_character_1_5=(Token)match(input,HyphenMinus,FOLLOW_2); if (state.failed) return current;
+                            lv_characters_1_5=(Token)match(input,HyphenMinus,FOLLOW_2); if (state.failed) return current;
                             if ( state.backtracking==0 ) {
 
-                              						newLeafNode(lv_character_1_5, grammarAccess.getCharacterClassAtomAccess().getCharacterHyphenMinusKeyword_1_0_4());
+                              						newLeafNode(lv_characters_1_5, grammarAccess.getCharacterClassAtomAccess().getCharactersHyphenMinusKeyword_1_0_4());
                               					
                             }
                             if ( state.backtracking==0 ) {
@@ -4604,19 +4640,19 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                               						if (current==null) {
                               							current = createModelElement(grammarAccess.getCharacterClassAtomRule());
                               						}
-                              						setWithLastConsumed(current, "character", lv_character_1_5, null);
+                              						setWithLastConsumed(current, "characters", lv_characters_1_5, null);
                               					
                             }
 
                             }
                             break;
                         case 6 :
-                            // InternalRegularExpressionParser.g:1461:6: lv_character_1_6= CircumflexAccent
+                            // InternalRegularExpressionParser.g:1474:6: lv_characters_1_6= CircumflexAccent
                             {
-                            lv_character_1_6=(Token)match(input,CircumflexAccent,FOLLOW_2); if (state.failed) return current;
+                            lv_characters_1_6=(Token)match(input,CircumflexAccent,FOLLOW_2); if (state.failed) return current;
                             if ( state.backtracking==0 ) {
 
-                              						newLeafNode(lv_character_1_6, grammarAccess.getCharacterClassAtomAccess().getCharacterCircumflexAccentKeyword_1_0_5());
+                              						newLeafNode(lv_characters_1_6, grammarAccess.getCharacterClassAtomAccess().getCharactersCircumflexAccentKeyword_1_0_5());
                               					
                             }
                             if ( state.backtracking==0 ) {
@@ -4624,19 +4660,19 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                               						if (current==null) {
                               							current = createModelElement(grammarAccess.getCharacterClassAtomRule());
                               						}
-                              						setWithLastConsumed(current, "character", lv_character_1_6, null);
+                              						setWithLastConsumed(current, "characters", lv_characters_1_6, null);
                               					
                             }
 
                             }
                             break;
                         case 7 :
-                            // InternalRegularExpressionParser.g:1472:6: lv_character_1_7= DollarSign
+                            // InternalRegularExpressionParser.g:1485:6: lv_characters_1_7= DollarSign
                             {
-                            lv_character_1_7=(Token)match(input,DollarSign,FOLLOW_2); if (state.failed) return current;
+                            lv_characters_1_7=(Token)match(input,DollarSign,FOLLOW_2); if (state.failed) return current;
                             if ( state.backtracking==0 ) {
 
-                              						newLeafNode(lv_character_1_7, grammarAccess.getCharacterClassAtomAccess().getCharacterDollarSignKeyword_1_0_6());
+                              						newLeafNode(lv_characters_1_7, grammarAccess.getCharacterClassAtomAccess().getCharactersDollarSignKeyword_1_0_6());
                               					
                             }
                             if ( state.backtracking==0 ) {
@@ -4644,19 +4680,19 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                               						if (current==null) {
                               							current = createModelElement(grammarAccess.getCharacterClassAtomRule());
                               						}
-                              						setWithLastConsumed(current, "character", lv_character_1_7, null);
+                              						setWithLastConsumed(current, "characters", lv_characters_1_7, null);
                               					
                             }
 
                             }
                             break;
                         case 8 :
-                            // InternalRegularExpressionParser.g:1483:6: lv_character_1_8= FullStop
+                            // InternalRegularExpressionParser.g:1496:6: lv_characters_1_8= FullStop
                             {
-                            lv_character_1_8=(Token)match(input,FullStop,FOLLOW_2); if (state.failed) return current;
+                            lv_characters_1_8=(Token)match(input,FullStop,FOLLOW_2); if (state.failed) return current;
                             if ( state.backtracking==0 ) {
 
-                              						newLeafNode(lv_character_1_8, grammarAccess.getCharacterClassAtomAccess().getCharacterFullStopKeyword_1_0_7());
+                              						newLeafNode(lv_characters_1_8, grammarAccess.getCharacterClassAtomAccess().getCharactersFullStopKeyword_1_0_7());
                               					
                             }
                             if ( state.backtracking==0 ) {
@@ -4664,19 +4700,19 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                               						if (current==null) {
                               							current = createModelElement(grammarAccess.getCharacterClassAtomRule());
                               						}
-                              						setWithLastConsumed(current, "character", lv_character_1_8, null);
+                              						setWithLastConsumed(current, "characters", lv_characters_1_8, null);
                               					
                             }
 
                             }
                             break;
                         case 9 :
-                            // InternalRegularExpressionParser.g:1494:6: lv_character_1_9= Asterisk
+                            // InternalRegularExpressionParser.g:1507:6: lv_characters_1_9= Asterisk
                             {
-                            lv_character_1_9=(Token)match(input,Asterisk,FOLLOW_2); if (state.failed) return current;
+                            lv_characters_1_9=(Token)match(input,Asterisk,FOLLOW_2); if (state.failed) return current;
                             if ( state.backtracking==0 ) {
 
-                              						newLeafNode(lv_character_1_9, grammarAccess.getCharacterClassAtomAccess().getCharacterAsteriskKeyword_1_0_8());
+                              						newLeafNode(lv_characters_1_9, grammarAccess.getCharacterClassAtomAccess().getCharactersAsteriskKeyword_1_0_8());
                               					
                             }
                             if ( state.backtracking==0 ) {
@@ -4684,19 +4720,19 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                               						if (current==null) {
                               							current = createModelElement(grammarAccess.getCharacterClassAtomRule());
                               						}
-                              						setWithLastConsumed(current, "character", lv_character_1_9, null);
+                              						setWithLastConsumed(current, "characters", lv_characters_1_9, null);
                               					
                             }
 
                             }
                             break;
                         case 10 :
-                            // InternalRegularExpressionParser.g:1505:6: lv_character_1_10= PlusSign
+                            // InternalRegularExpressionParser.g:1518:6: lv_characters_1_10= PlusSign
                             {
-                            lv_character_1_10=(Token)match(input,PlusSign,FOLLOW_2); if (state.failed) return current;
+                            lv_characters_1_10=(Token)match(input,PlusSign,FOLLOW_2); if (state.failed) return current;
                             if ( state.backtracking==0 ) {
 
-                              						newLeafNode(lv_character_1_10, grammarAccess.getCharacterClassAtomAccess().getCharacterPlusSignKeyword_1_0_9());
+                              						newLeafNode(lv_characters_1_10, grammarAccess.getCharacterClassAtomAccess().getCharactersPlusSignKeyword_1_0_9());
                               					
                             }
                             if ( state.backtracking==0 ) {
@@ -4704,19 +4740,19 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                               						if (current==null) {
                               							current = createModelElement(grammarAccess.getCharacterClassAtomRule());
                               						}
-                              						setWithLastConsumed(current, "character", lv_character_1_10, null);
+                              						setWithLastConsumed(current, "characters", lv_characters_1_10, null);
                               					
                             }
 
                             }
                             break;
                         case 11 :
-                            // InternalRegularExpressionParser.g:1516:6: lv_character_1_11= QuestionMark
+                            // InternalRegularExpressionParser.g:1529:6: lv_characters_1_11= QuestionMark
                             {
-                            lv_character_1_11=(Token)match(input,QuestionMark,FOLLOW_2); if (state.failed) return current;
+                            lv_characters_1_11=(Token)match(input,QuestionMark,FOLLOW_2); if (state.failed) return current;
                             if ( state.backtracking==0 ) {
 
-                              						newLeafNode(lv_character_1_11, grammarAccess.getCharacterClassAtomAccess().getCharacterQuestionMarkKeyword_1_0_10());
+                              						newLeafNode(lv_characters_1_11, grammarAccess.getCharacterClassAtomAccess().getCharactersQuestionMarkKeyword_1_0_10());
                               					
                             }
                             if ( state.backtracking==0 ) {
@@ -4724,19 +4760,19 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                               						if (current==null) {
                               							current = createModelElement(grammarAccess.getCharacterClassAtomRule());
                               						}
-                              						setWithLastConsumed(current, "character", lv_character_1_11, null);
+                              						setWithLastConsumed(current, "characters", lv_characters_1_11, null);
                               					
                             }
 
                             }
                             break;
                         case 12 :
-                            // InternalRegularExpressionParser.g:1527:6: lv_character_1_12= LeftParenthesis
+                            // InternalRegularExpressionParser.g:1540:6: lv_characters_1_12= LeftParenthesis
                             {
-                            lv_character_1_12=(Token)match(input,LeftParenthesis,FOLLOW_2); if (state.failed) return current;
+                            lv_characters_1_12=(Token)match(input,LeftParenthesis,FOLLOW_2); if (state.failed) return current;
                             if ( state.backtracking==0 ) {
 
-                              						newLeafNode(lv_character_1_12, grammarAccess.getCharacterClassAtomAccess().getCharacterLeftParenthesisKeyword_1_0_11());
+                              						newLeafNode(lv_characters_1_12, grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisKeyword_1_0_11());
                               					
                             }
                             if ( state.backtracking==0 ) {
@@ -4744,19 +4780,19 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                               						if (current==null) {
                               							current = createModelElement(grammarAccess.getCharacterClassAtomRule());
                               						}
-                              						setWithLastConsumed(current, "character", lv_character_1_12, null);
+                              						setWithLastConsumed(current, "characters", lv_characters_1_12, null);
                               					
                             }
 
                             }
                             break;
                         case 13 :
-                            // InternalRegularExpressionParser.g:1538:6: lv_character_1_13= RightParenthesis
+                            // InternalRegularExpressionParser.g:1551:6: lv_characters_1_13= RightParenthesis
                             {
-                            lv_character_1_13=(Token)match(input,RightParenthesis,FOLLOW_2); if (state.failed) return current;
+                            lv_characters_1_13=(Token)match(input,RightParenthesis,FOLLOW_2); if (state.failed) return current;
                             if ( state.backtracking==0 ) {
 
-                              						newLeafNode(lv_character_1_13, grammarAccess.getCharacterClassAtomAccess().getCharacterRightParenthesisKeyword_1_0_12());
+                              						newLeafNode(lv_characters_1_13, grammarAccess.getCharacterClassAtomAccess().getCharactersRightParenthesisKeyword_1_0_12());
                               					
                             }
                             if ( state.backtracking==0 ) {
@@ -4764,19 +4800,19 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                               						if (current==null) {
                               							current = createModelElement(grammarAccess.getCharacterClassAtomRule());
                               						}
-                              						setWithLastConsumed(current, "character", lv_character_1_13, null);
+                              						setWithLastConsumed(current, "characters", lv_characters_1_13, null);
                               					
                             }
 
                             }
                             break;
                         case 14 :
-                            // InternalRegularExpressionParser.g:1549:6: lv_character_1_14= LeftSquareBracket
+                            // InternalRegularExpressionParser.g:1562:6: lv_characters_1_14= LeftSquareBracket
                             {
-                            lv_character_1_14=(Token)match(input,LeftSquareBracket,FOLLOW_2); if (state.failed) return current;
+                            lv_characters_1_14=(Token)match(input,LeftSquareBracket,FOLLOW_2); if (state.failed) return current;
                             if ( state.backtracking==0 ) {
 
-                              						newLeafNode(lv_character_1_14, grammarAccess.getCharacterClassAtomAccess().getCharacterLeftSquareBracketKeyword_1_0_13());
+                              						newLeafNode(lv_characters_1_14, grammarAccess.getCharacterClassAtomAccess().getCharactersLeftSquareBracketKeyword_1_0_13());
                               					
                             }
                             if ( state.backtracking==0 ) {
@@ -4784,19 +4820,19 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                               						if (current==null) {
                               							current = createModelElement(grammarAccess.getCharacterClassAtomRule());
                               						}
-                              						setWithLastConsumed(current, "character", lv_character_1_14, null);
+                              						setWithLastConsumed(current, "characters", lv_characters_1_14, null);
                               					
                             }
 
                             }
                             break;
                         case 15 :
-                            // InternalRegularExpressionParser.g:1560:6: lv_character_1_15= LeftCurlyBracket
+                            // InternalRegularExpressionParser.g:1573:6: lv_characters_1_15= LeftCurlyBracket
                             {
-                            lv_character_1_15=(Token)match(input,LeftCurlyBracket,FOLLOW_2); if (state.failed) return current;
+                            lv_characters_1_15=(Token)match(input,LeftCurlyBracket,FOLLOW_2); if (state.failed) return current;
                             if ( state.backtracking==0 ) {
 
-                              						newLeafNode(lv_character_1_15, grammarAccess.getCharacterClassAtomAccess().getCharacterLeftCurlyBracketKeyword_1_0_14());
+                              						newLeafNode(lv_characters_1_15, grammarAccess.getCharacterClassAtomAccess().getCharactersLeftCurlyBracketKeyword_1_0_14());
                               					
                             }
                             if ( state.backtracking==0 ) {
@@ -4804,19 +4840,19 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                               						if (current==null) {
                               							current = createModelElement(grammarAccess.getCharacterClassAtomRule());
                               						}
-                              						setWithLastConsumed(current, "character", lv_character_1_15, null);
+                              						setWithLastConsumed(current, "characters", lv_characters_1_15, null);
                               					
                             }
 
                             }
                             break;
                         case 16 :
-                            // InternalRegularExpressionParser.g:1571:6: lv_character_1_16= RightCurlyBracket
+                            // InternalRegularExpressionParser.g:1584:6: lv_characters_1_16= RightCurlyBracket
                             {
-                            lv_character_1_16=(Token)match(input,RightCurlyBracket,FOLLOW_2); if (state.failed) return current;
+                            lv_characters_1_16=(Token)match(input,RightCurlyBracket,FOLLOW_2); if (state.failed) return current;
                             if ( state.backtracking==0 ) {
 
-                              						newLeafNode(lv_character_1_16, grammarAccess.getCharacterClassAtomAccess().getCharacterRightCurlyBracketKeyword_1_0_15());
+                              						newLeafNode(lv_characters_1_16, grammarAccess.getCharacterClassAtomAccess().getCharactersRightCurlyBracketKeyword_1_0_15());
                               					
                             }
                             if ( state.backtracking==0 ) {
@@ -4824,19 +4860,19 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                               						if (current==null) {
                               							current = createModelElement(grammarAccess.getCharacterClassAtomRule());
                               						}
-                              						setWithLastConsumed(current, "character", lv_character_1_16, null);
+                              						setWithLastConsumed(current, "characters", lv_characters_1_16, null);
                               					
                             }
 
                             }
                             break;
                         case 17 :
-                            // InternalRegularExpressionParser.g:1582:6: lv_character_1_17= VerticalLine
+                            // InternalRegularExpressionParser.g:1595:6: lv_characters_1_17= VerticalLine
                             {
-                            lv_character_1_17=(Token)match(input,VerticalLine,FOLLOW_2); if (state.failed) return current;
+                            lv_characters_1_17=(Token)match(input,VerticalLine,FOLLOW_2); if (state.failed) return current;
                             if ( state.backtracking==0 ) {
 
-                              						newLeafNode(lv_character_1_17, grammarAccess.getCharacterClassAtomAccess().getCharacterVerticalLineKeyword_1_0_16());
+                              						newLeafNode(lv_characters_1_17, grammarAccess.getCharacterClassAtomAccess().getCharactersVerticalLineKeyword_1_0_16());
                               					
                             }
                             if ( state.backtracking==0 ) {
@@ -4844,19 +4880,19 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                               						if (current==null) {
                               							current = createModelElement(grammarAccess.getCharacterClassAtomRule());
                               						}
-                              						setWithLastConsumed(current, "character", lv_character_1_17, null);
+                              						setWithLastConsumed(current, "characters", lv_characters_1_17, null);
                               					
                             }
 
                             }
                             break;
                         case 18 :
-                            // InternalRegularExpressionParser.g:1593:6: lv_character_1_18= Solidus
+                            // InternalRegularExpressionParser.g:1606:6: lv_characters_1_18= Solidus
                             {
-                            lv_character_1_18=(Token)match(input,Solidus,FOLLOW_2); if (state.failed) return current;
+                            lv_characters_1_18=(Token)match(input,Solidus,FOLLOW_2); if (state.failed) return current;
                             if ( state.backtracking==0 ) {
 
-                              						newLeafNode(lv_character_1_18, grammarAccess.getCharacterClassAtomAccess().getCharacterSolidusKeyword_1_0_17());
+                              						newLeafNode(lv_characters_1_18, grammarAccess.getCharacterClassAtomAccess().getCharactersSolidusKeyword_1_0_17());
                               					
                             }
                             if ( state.backtracking==0 ) {
@@ -4864,19 +4900,19 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                               						if (current==null) {
                               							current = createModelElement(grammarAccess.getCharacterClassAtomRule());
                               						}
-                              						setWithLastConsumed(current, "character", lv_character_1_18, null);
+                              						setWithLastConsumed(current, "characters", lv_characters_1_18, null);
                               					
                             }
 
                             }
                             break;
                         case 19 :
-                            // InternalRegularExpressionParser.g:1604:6: lv_character_1_19= LessThanSign
+                            // InternalRegularExpressionParser.g:1617:6: lv_characters_1_19= LessThanSign
                             {
-                            lv_character_1_19=(Token)match(input,LessThanSign,FOLLOW_2); if (state.failed) return current;
+                            lv_characters_1_19=(Token)match(input,LessThanSign,FOLLOW_2); if (state.failed) return current;
                             if ( state.backtracking==0 ) {
 
-                              						newLeafNode(lv_character_1_19, grammarAccess.getCharacterClassAtomAccess().getCharacterLessThanSignKeyword_1_0_18());
+                              						newLeafNode(lv_characters_1_19, grammarAccess.getCharacterClassAtomAccess().getCharactersLessThanSignKeyword_1_0_18());
                               					
                             }
                             if ( state.backtracking==0 ) {
@@ -4884,19 +4920,19 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                               						if (current==null) {
                               							current = createModelElement(grammarAccess.getCharacterClassAtomRule());
                               						}
-                              						setWithLastConsumed(current, "character", lv_character_1_19, null);
+                              						setWithLastConsumed(current, "characters", lv_characters_1_19, null);
                               					
                             }
 
                             }
                             break;
                         case 20 :
-                            // InternalRegularExpressionParser.g:1615:6: lv_character_1_20= GreaterThanSign
+                            // InternalRegularExpressionParser.g:1628:6: lv_characters_1_20= GreaterThanSign
                             {
-                            lv_character_1_20=(Token)match(input,GreaterThanSign,FOLLOW_2); if (state.failed) return current;
+                            lv_characters_1_20=(Token)match(input,GreaterThanSign,FOLLOW_2); if (state.failed) return current;
                             if ( state.backtracking==0 ) {
 
-                              						newLeafNode(lv_character_1_20, grammarAccess.getCharacterClassAtomAccess().getCharacterGreaterThanSignKeyword_1_0_19());
+                              						newLeafNode(lv_characters_1_20, grammarAccess.getCharacterClassAtomAccess().getCharactersGreaterThanSignKeyword_1_0_19());
                               					
                             }
                             if ( state.backtracking==0 ) {
@@ -4904,19 +4940,19 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                               						if (current==null) {
                               							current = createModelElement(grammarAccess.getCharacterClassAtomRule());
                               						}
-                              						setWithLastConsumed(current, "character", lv_character_1_20, null);
+                              						setWithLastConsumed(current, "characters", lv_characters_1_20, null);
                               					
                             }
 
                             }
                             break;
                         case 21 :
-                            // InternalRegularExpressionParser.g:1626:6: lv_character_1_21= RULE_PATTERN_CHARACTER_NO_DASH
+                            // InternalRegularExpressionParser.g:1639:6: lv_characters_1_21= LeftParenthesisQuestionMark
                             {
-                            lv_character_1_21=(Token)match(input,RULE_PATTERN_CHARACTER_NO_DASH,FOLLOW_2); if (state.failed) return current;
+                            lv_characters_1_21=(Token)match(input,LeftParenthesisQuestionMark,FOLLOW_2); if (state.failed) return current;
                             if ( state.backtracking==0 ) {
 
-                              						newLeafNode(lv_character_1_21, grammarAccess.getCharacterClassAtomAccess().getCharacterPATTERN_CHARACTER_NO_DASHTerminalRuleCall_1_0_20());
+                              						newLeafNode(lv_characters_1_21, grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkKeyword_1_0_20());
                               					
                             }
                             if ( state.backtracking==0 ) {
@@ -4924,23 +4960,19 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                               						if (current==null) {
                               							current = createModelElement(grammarAccess.getCharacterClassAtomRule());
                               						}
-                              						setWithLastConsumed(
-                              							current,
-                              							"character",
-                              							lv_character_1_21,
-                              							"org.eclipse.n4js.regex.RegularExpression.PATTERN_CHARACTER_NO_DASH");
+                              						setWithLastConsumed(current, "characters", lv_characters_1_21, null);
                               					
                             }
 
                             }
                             break;
                         case 22 :
-                            // InternalRegularExpressionParser.g:1641:6: lv_character_1_22= RULE_UNICODE_LETTER
+                            // InternalRegularExpressionParser.g:1650:6: lv_characters_1_22= LeftParenthesisQuestionMarkLessThanSign
                             {
-                            lv_character_1_22=(Token)match(input,RULE_UNICODE_LETTER,FOLLOW_2); if (state.failed) return current;
+                            lv_characters_1_22=(Token)match(input,LeftParenthesisQuestionMarkLessThanSign,FOLLOW_2); if (state.failed) return current;
                             if ( state.backtracking==0 ) {
 
-                              						newLeafNode(lv_character_1_22, grammarAccess.getCharacterClassAtomAccess().getCharacterUNICODE_LETTERTerminalRuleCall_1_0_21());
+                              						newLeafNode(lv_characters_1_22, grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkLessThanSignKeyword_1_0_21());
                               					
                             }
                             if ( state.backtracking==0 ) {
@@ -4948,23 +4980,99 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                               						if (current==null) {
                               							current = createModelElement(grammarAccess.getCharacterClassAtomRule());
                               						}
-                              						setWithLastConsumed(
-                              							current,
-                              							"character",
-                              							lv_character_1_22,
-                              							"org.eclipse.n4js.regex.RegularExpression.UNICODE_LETTER");
+                              						setWithLastConsumed(current, "characters", lv_characters_1_22, null);
                               					
                             }
 
                             }
                             break;
                         case 23 :
-                            // InternalRegularExpressionParser.g:1656:6: lv_character_1_23= RULE_UNICODE_DIGIT
+                            // InternalRegularExpressionParser.g:1661:6: lv_characters_1_23= LeftParenthesisQuestionMarkEqualsSign
                             {
-                            lv_character_1_23=(Token)match(input,RULE_UNICODE_DIGIT,FOLLOW_2); if (state.failed) return current;
+                            lv_characters_1_23=(Token)match(input,LeftParenthesisQuestionMarkEqualsSign,FOLLOW_2); if (state.failed) return current;
                             if ( state.backtracking==0 ) {
 
-                              						newLeafNode(lv_character_1_23, grammarAccess.getCharacterClassAtomAccess().getCharacterUNICODE_DIGITTerminalRuleCall_1_0_22());
+                              						newLeafNode(lv_characters_1_23, grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkEqualsSignKeyword_1_0_22());
+                              					
+                            }
+                            if ( state.backtracking==0 ) {
+
+                              						if (current==null) {
+                              							current = createModelElement(grammarAccess.getCharacterClassAtomRule());
+                              						}
+                              						setWithLastConsumed(current, "characters", lv_characters_1_23, null);
+                              					
+                            }
+
+                            }
+                            break;
+                        case 24 :
+                            // InternalRegularExpressionParser.g:1672:6: lv_characters_1_24= LeftParenthesisQuestionMarkExclamationMark
+                            {
+                            lv_characters_1_24=(Token)match(input,LeftParenthesisQuestionMarkExclamationMark,FOLLOW_2); if (state.failed) return current;
+                            if ( state.backtracking==0 ) {
+
+                              						newLeafNode(lv_characters_1_24, grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkExclamationMarkKeyword_1_0_23());
+                              					
+                            }
+                            if ( state.backtracking==0 ) {
+
+                              						if (current==null) {
+                              							current = createModelElement(grammarAccess.getCharacterClassAtomRule());
+                              						}
+                              						setWithLastConsumed(current, "characters", lv_characters_1_24, null);
+                              					
+                            }
+
+                            }
+                            break;
+                        case 25 :
+                            // InternalRegularExpressionParser.g:1683:6: lv_characters_1_25= LeftParenthesisQuestionMarkLessThanSignExclamationMark
+                            {
+                            lv_characters_1_25=(Token)match(input,LeftParenthesisQuestionMarkLessThanSignExclamationMark,FOLLOW_2); if (state.failed) return current;
+                            if ( state.backtracking==0 ) {
+
+                              						newLeafNode(lv_characters_1_25, grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkLessThanSignExclamationMarkKeyword_1_0_24());
+                              					
+                            }
+                            if ( state.backtracking==0 ) {
+
+                              						if (current==null) {
+                              							current = createModelElement(grammarAccess.getCharacterClassAtomRule());
+                              						}
+                              						setWithLastConsumed(current, "characters", lv_characters_1_25, null);
+                              					
+                            }
+
+                            }
+                            break;
+                        case 26 :
+                            // InternalRegularExpressionParser.g:1694:6: lv_characters_1_26= LeftParenthesisQuestionMarkLessThanSignEqualsSign
+                            {
+                            lv_characters_1_26=(Token)match(input,LeftParenthesisQuestionMarkLessThanSignEqualsSign,FOLLOW_2); if (state.failed) return current;
+                            if ( state.backtracking==0 ) {
+
+                              						newLeafNode(lv_characters_1_26, grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkLessThanSignEqualsSignKeyword_1_0_25());
+                              					
+                            }
+                            if ( state.backtracking==0 ) {
+
+                              						if (current==null) {
+                              							current = createModelElement(grammarAccess.getCharacterClassAtomRule());
+                              						}
+                              						setWithLastConsumed(current, "characters", lv_characters_1_26, null);
+                              					
+                            }
+
+                            }
+                            break;
+                        case 27 :
+                            // InternalRegularExpressionParser.g:1705:6: lv_characters_1_27= RULE_PATTERN_CHARACTER_NO_DASH
+                            {
+                            lv_characters_1_27=(Token)match(input,RULE_PATTERN_CHARACTER_NO_DASH,FOLLOW_2); if (state.failed) return current;
+                            if ( state.backtracking==0 ) {
+
+                              						newLeafNode(lv_characters_1_27, grammarAccess.getCharacterClassAtomAccess().getCharactersPATTERN_CHARACTER_NO_DASHTerminalRuleCall_1_0_26());
                               					
                             }
                             if ( state.backtracking==0 ) {
@@ -4974,8 +5082,56 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                               						}
                               						setWithLastConsumed(
                               							current,
-                              							"character",
-                              							lv_character_1_23,
+                              							"characters",
+                              							lv_characters_1_27,
+                              							"org.eclipse.n4js.regex.RegularExpression.PATTERN_CHARACTER_NO_DASH");
+                              					
+                            }
+
+                            }
+                            break;
+                        case 28 :
+                            // InternalRegularExpressionParser.g:1720:6: lv_characters_1_28= RULE_UNICODE_LETTER
+                            {
+                            lv_characters_1_28=(Token)match(input,RULE_UNICODE_LETTER,FOLLOW_2); if (state.failed) return current;
+                            if ( state.backtracking==0 ) {
+
+                              						newLeafNode(lv_characters_1_28, grammarAccess.getCharacterClassAtomAccess().getCharactersUNICODE_LETTERTerminalRuleCall_1_0_27());
+                              					
+                            }
+                            if ( state.backtracking==0 ) {
+
+                              						if (current==null) {
+                              							current = createModelElement(grammarAccess.getCharacterClassAtomRule());
+                              						}
+                              						setWithLastConsumed(
+                              							current,
+                              							"characters",
+                              							lv_characters_1_28,
+                              							"org.eclipse.n4js.regex.RegularExpression.UNICODE_LETTER");
+                              					
+                            }
+
+                            }
+                            break;
+                        case 29 :
+                            // InternalRegularExpressionParser.g:1735:6: lv_characters_1_29= RULE_UNICODE_DIGIT
+                            {
+                            lv_characters_1_29=(Token)match(input,RULE_UNICODE_DIGIT,FOLLOW_2); if (state.failed) return current;
+                            if ( state.backtracking==0 ) {
+
+                              						newLeafNode(lv_characters_1_29, grammarAccess.getCharacterClassAtomAccess().getCharactersUNICODE_DIGITTerminalRuleCall_1_0_28());
+                              					
+                            }
+                            if ( state.backtracking==0 ) {
+
+                              						if (current==null) {
+                              							current = createModelElement(grammarAccess.getCharacterClassAtomRule());
+                              						}
+                              						setWithLastConsumed(
+                              							current,
+                              							"characters",
+                              							lv_characters_1_29,
                               							"org.eclipse.n4js.regex.RegularExpression.UNICODE_DIGIT");
                               					
                             }
@@ -5019,7 +5175,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "entryRuleEscapedCharacterClassAtom"
-    // InternalRegularExpressionParser.g:1677:1: entryRuleEscapedCharacterClassAtom returns [EObject current=null] : iv_ruleEscapedCharacterClassAtom= ruleEscapedCharacterClassAtom EOF ;
+    // InternalRegularExpressionParser.g:1756:1: entryRuleEscapedCharacterClassAtom returns [EObject current=null] : iv_ruleEscapedCharacterClassAtom= ruleEscapedCharacterClassAtom EOF ;
     public final EObject entryRuleEscapedCharacterClassAtom() throws RecognitionException {
         EObject current = null;
 
@@ -5027,8 +5183,8 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
         try {
-            // InternalRegularExpressionParser.g:1677:66: (iv_ruleEscapedCharacterClassAtom= ruleEscapedCharacterClassAtom EOF )
-            // InternalRegularExpressionParser.g:1678:2: iv_ruleEscapedCharacterClassAtom= ruleEscapedCharacterClassAtom EOF
+            // InternalRegularExpressionParser.g:1756:66: (iv_ruleEscapedCharacterClassAtom= ruleEscapedCharacterClassAtom EOF )
+            // InternalRegularExpressionParser.g:1757:2: iv_ruleEscapedCharacterClassAtom= ruleEscapedCharacterClassAtom EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getEscapedCharacterClassAtomRule()); 
@@ -5059,7 +5215,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "ruleEscapedCharacterClassAtom"
-    // InternalRegularExpressionParser.g:1684:1: ruleEscapedCharacterClassAtom returns [EObject current=null] : (this_DecimalEscapeSequence_0= ruleDecimalEscapeSequence | this_Backspace_1= ruleBackspace | this_CharacterEscapeSequence_2= ruleCharacterEscapeSequence | this_ControlLetterEscapeSequence_3= ruleControlLetterEscapeSequence | this_HexEscapeSequence_4= ruleHexEscapeSequence | this_UnicodeEscapeSequence_5= ruleUnicodeEscapeSequence | this_IdentityEscapeSequence_6= ruleIdentityEscapeSequence | this_CharacterClassEscapeSequence_7= ruleCharacterClassEscapeSequence ) ;
+    // InternalRegularExpressionParser.g:1763:1: ruleEscapedCharacterClassAtom returns [EObject current=null] : (this_DecimalEscapeSequence_0= ruleDecimalEscapeSequence | this_Backspace_1= ruleBackspace | this_CharacterEscapeSequence_2= ruleCharacterEscapeSequence | this_ControlLetterEscapeSequence_3= ruleControlLetterEscapeSequence | this_HexEscapeSequence_4= ruleHexEscapeSequence | this_UnicodeEscapeSequence_5= ruleUnicodeEscapeSequence | this_IdentityEscapeSequence_6= ruleIdentityEscapeSequence | this_CharacterClassEscapeSequence_7= ruleCharacterClassEscapeSequence ) ;
     public final EObject ruleEscapedCharacterClassAtom() throws RecognitionException {
         EObject current = null;
 
@@ -5084,63 +5240,63 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
         	enterRule();
 
         try {
-            // InternalRegularExpressionParser.g:1690:2: ( (this_DecimalEscapeSequence_0= ruleDecimalEscapeSequence | this_Backspace_1= ruleBackspace | this_CharacterEscapeSequence_2= ruleCharacterEscapeSequence | this_ControlLetterEscapeSequence_3= ruleControlLetterEscapeSequence | this_HexEscapeSequence_4= ruleHexEscapeSequence | this_UnicodeEscapeSequence_5= ruleUnicodeEscapeSequence | this_IdentityEscapeSequence_6= ruleIdentityEscapeSequence | this_CharacterClassEscapeSequence_7= ruleCharacterClassEscapeSequence ) )
-            // InternalRegularExpressionParser.g:1691:2: (this_DecimalEscapeSequence_0= ruleDecimalEscapeSequence | this_Backspace_1= ruleBackspace | this_CharacterEscapeSequence_2= ruleCharacterEscapeSequence | this_ControlLetterEscapeSequence_3= ruleControlLetterEscapeSequence | this_HexEscapeSequence_4= ruleHexEscapeSequence | this_UnicodeEscapeSequence_5= ruleUnicodeEscapeSequence | this_IdentityEscapeSequence_6= ruleIdentityEscapeSequence | this_CharacterClassEscapeSequence_7= ruleCharacterClassEscapeSequence )
+            // InternalRegularExpressionParser.g:1769:2: ( (this_DecimalEscapeSequence_0= ruleDecimalEscapeSequence | this_Backspace_1= ruleBackspace | this_CharacterEscapeSequence_2= ruleCharacterEscapeSequence | this_ControlLetterEscapeSequence_3= ruleControlLetterEscapeSequence | this_HexEscapeSequence_4= ruleHexEscapeSequence | this_UnicodeEscapeSequence_5= ruleUnicodeEscapeSequence | this_IdentityEscapeSequence_6= ruleIdentityEscapeSequence | this_CharacterClassEscapeSequence_7= ruleCharacterClassEscapeSequence ) )
+            // InternalRegularExpressionParser.g:1770:2: (this_DecimalEscapeSequence_0= ruleDecimalEscapeSequence | this_Backspace_1= ruleBackspace | this_CharacterEscapeSequence_2= ruleCharacterEscapeSequence | this_ControlLetterEscapeSequence_3= ruleControlLetterEscapeSequence | this_HexEscapeSequence_4= ruleHexEscapeSequence | this_UnicodeEscapeSequence_5= ruleUnicodeEscapeSequence | this_IdentityEscapeSequence_6= ruleIdentityEscapeSequence | this_CharacterClassEscapeSequence_7= ruleCharacterClassEscapeSequence )
             {
-            // InternalRegularExpressionParser.g:1691:2: (this_DecimalEscapeSequence_0= ruleDecimalEscapeSequence | this_Backspace_1= ruleBackspace | this_CharacterEscapeSequence_2= ruleCharacterEscapeSequence | this_ControlLetterEscapeSequence_3= ruleControlLetterEscapeSequence | this_HexEscapeSequence_4= ruleHexEscapeSequence | this_UnicodeEscapeSequence_5= ruleUnicodeEscapeSequence | this_IdentityEscapeSequence_6= ruleIdentityEscapeSequence | this_CharacterClassEscapeSequence_7= ruleCharacterClassEscapeSequence )
-            int alt23=8;
+            // InternalRegularExpressionParser.g:1770:2: (this_DecimalEscapeSequence_0= ruleDecimalEscapeSequence | this_Backspace_1= ruleBackspace | this_CharacterEscapeSequence_2= ruleCharacterEscapeSequence | this_ControlLetterEscapeSequence_3= ruleControlLetterEscapeSequence | this_HexEscapeSequence_4= ruleHexEscapeSequence | this_UnicodeEscapeSequence_5= ruleUnicodeEscapeSequence | this_IdentityEscapeSequence_6= ruleIdentityEscapeSequence | this_CharacterClassEscapeSequence_7= ruleCharacterClassEscapeSequence )
+            int alt24=8;
             switch ( input.LA(1) ) {
             case RULE_DECIMAL_ESCAPE:
                 {
-                alt23=1;
+                alt24=1;
                 }
                 break;
             case RULE_WORD_BOUNDARY:
                 {
-                alt23=2;
+                alt24=2;
                 }
                 break;
             case RULE_CONTROL_ESCAPE:
                 {
-                alt23=3;
+                alt24=3;
                 }
                 break;
             case RULE_CONTROL_LETTER_ESCAPE:
                 {
-                alt23=4;
+                alt24=4;
                 }
                 break;
             case RULE_HEX_ESCAPE:
                 {
-                alt23=5;
+                alt24=5;
                 }
                 break;
             case RULE_UNICODE_ESCAPE:
                 {
-                alt23=6;
+                alt24=6;
                 }
                 break;
             case RULE_IDENTITY_ESCAPE:
                 {
-                alt23=7;
+                alt24=7;
                 }
                 break;
             case RULE_CHARACTER_CLASS_ESCAPE:
                 {
-                alt23=8;
+                alt24=8;
                 }
                 break;
             default:
                 if (state.backtracking>0) {state.failed=true; return current;}
                 NoViableAltException nvae =
-                    new NoViableAltException("", 23, 0, input);
+                    new NoViableAltException("", 24, 0, input);
 
                 throw nvae;
             }
 
-            switch (alt23) {
+            switch (alt24) {
                 case 1 :
-                    // InternalRegularExpressionParser.g:1692:3: this_DecimalEscapeSequence_0= ruleDecimalEscapeSequence
+                    // InternalRegularExpressionParser.g:1771:3: this_DecimalEscapeSequence_0= ruleDecimalEscapeSequence
                     {
                     if ( state.backtracking==0 ) {
 
@@ -5162,7 +5318,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     }
                     break;
                 case 2 :
-                    // InternalRegularExpressionParser.g:1701:3: this_Backspace_1= ruleBackspace
+                    // InternalRegularExpressionParser.g:1780:3: this_Backspace_1= ruleBackspace
                     {
                     if ( state.backtracking==0 ) {
 
@@ -5184,7 +5340,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     }
                     break;
                 case 3 :
-                    // InternalRegularExpressionParser.g:1710:3: this_CharacterEscapeSequence_2= ruleCharacterEscapeSequence
+                    // InternalRegularExpressionParser.g:1789:3: this_CharacterEscapeSequence_2= ruleCharacterEscapeSequence
                     {
                     if ( state.backtracking==0 ) {
 
@@ -5206,7 +5362,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     }
                     break;
                 case 4 :
-                    // InternalRegularExpressionParser.g:1719:3: this_ControlLetterEscapeSequence_3= ruleControlLetterEscapeSequence
+                    // InternalRegularExpressionParser.g:1798:3: this_ControlLetterEscapeSequence_3= ruleControlLetterEscapeSequence
                     {
                     if ( state.backtracking==0 ) {
 
@@ -5228,7 +5384,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     }
                     break;
                 case 5 :
-                    // InternalRegularExpressionParser.g:1728:3: this_HexEscapeSequence_4= ruleHexEscapeSequence
+                    // InternalRegularExpressionParser.g:1807:3: this_HexEscapeSequence_4= ruleHexEscapeSequence
                     {
                     if ( state.backtracking==0 ) {
 
@@ -5250,7 +5406,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     }
                     break;
                 case 6 :
-                    // InternalRegularExpressionParser.g:1737:3: this_UnicodeEscapeSequence_5= ruleUnicodeEscapeSequence
+                    // InternalRegularExpressionParser.g:1816:3: this_UnicodeEscapeSequence_5= ruleUnicodeEscapeSequence
                     {
                     if ( state.backtracking==0 ) {
 
@@ -5272,7 +5428,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     }
                     break;
                 case 7 :
-                    // InternalRegularExpressionParser.g:1746:3: this_IdentityEscapeSequence_6= ruleIdentityEscapeSequence
+                    // InternalRegularExpressionParser.g:1825:3: this_IdentityEscapeSequence_6= ruleIdentityEscapeSequence
                     {
                     if ( state.backtracking==0 ) {
 
@@ -5294,7 +5450,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     }
                     break;
                 case 8 :
-                    // InternalRegularExpressionParser.g:1755:3: this_CharacterClassEscapeSequence_7= ruleCharacterClassEscapeSequence
+                    // InternalRegularExpressionParser.g:1834:3: this_CharacterClassEscapeSequence_7= ruleCharacterClassEscapeSequence
                     {
                     if ( state.backtracking==0 ) {
 
@@ -5340,7 +5496,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "entryRuleBackspace"
-    // InternalRegularExpressionParser.g:1767:1: entryRuleBackspace returns [EObject current=null] : iv_ruleBackspace= ruleBackspace EOF ;
+    // InternalRegularExpressionParser.g:1846:1: entryRuleBackspace returns [EObject current=null] : iv_ruleBackspace= ruleBackspace EOF ;
     public final EObject entryRuleBackspace() throws RecognitionException {
         EObject current = null;
 
@@ -5348,8 +5504,8 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
         try {
-            // InternalRegularExpressionParser.g:1767:50: (iv_ruleBackspace= ruleBackspace EOF )
-            // InternalRegularExpressionParser.g:1768:2: iv_ruleBackspace= ruleBackspace EOF
+            // InternalRegularExpressionParser.g:1846:50: (iv_ruleBackspace= ruleBackspace EOF )
+            // InternalRegularExpressionParser.g:1847:2: iv_ruleBackspace= ruleBackspace EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getBackspaceRule()); 
@@ -5380,7 +5536,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "ruleBackspace"
-    // InternalRegularExpressionParser.g:1774:1: ruleBackspace returns [EObject current=null] : ( () this_WORD_BOUNDARY_1= RULE_WORD_BOUNDARY ) ;
+    // InternalRegularExpressionParser.g:1853:1: ruleBackspace returns [EObject current=null] : ( () this_WORD_BOUNDARY_1= RULE_WORD_BOUNDARY ) ;
     public final EObject ruleBackspace() throws RecognitionException {
         EObject current = null;
 
@@ -5390,14 +5546,14 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
         	enterRule();
 
         try {
-            // InternalRegularExpressionParser.g:1780:2: ( ( () this_WORD_BOUNDARY_1= RULE_WORD_BOUNDARY ) )
-            // InternalRegularExpressionParser.g:1781:2: ( () this_WORD_BOUNDARY_1= RULE_WORD_BOUNDARY )
+            // InternalRegularExpressionParser.g:1859:2: ( ( () this_WORD_BOUNDARY_1= RULE_WORD_BOUNDARY ) )
+            // InternalRegularExpressionParser.g:1860:2: ( () this_WORD_BOUNDARY_1= RULE_WORD_BOUNDARY )
             {
-            // InternalRegularExpressionParser.g:1781:2: ( () this_WORD_BOUNDARY_1= RULE_WORD_BOUNDARY )
-            // InternalRegularExpressionParser.g:1782:3: () this_WORD_BOUNDARY_1= RULE_WORD_BOUNDARY
+            // InternalRegularExpressionParser.g:1860:2: ( () this_WORD_BOUNDARY_1= RULE_WORD_BOUNDARY )
+            // InternalRegularExpressionParser.g:1861:3: () this_WORD_BOUNDARY_1= RULE_WORD_BOUNDARY
             {
-            // InternalRegularExpressionParser.g:1782:3: ()
-            // InternalRegularExpressionParser.g:1783:4: 
+            // InternalRegularExpressionParser.g:1861:3: ()
+            // InternalRegularExpressionParser.g:1862:4: 
             {
             if ( state.backtracking==0 ) {
 
@@ -5440,7 +5596,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "entryRuleGroup"
-    // InternalRegularExpressionParser.g:1797:1: entryRuleGroup returns [EObject current=null] : iv_ruleGroup= ruleGroup EOF ;
+    // InternalRegularExpressionParser.g:1876:1: entryRuleGroup returns [EObject current=null] : iv_ruleGroup= ruleGroup EOF ;
     public final EObject entryRuleGroup() throws RecognitionException {
         EObject current = null;
 
@@ -5448,8 +5604,8 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
         try {
-            // InternalRegularExpressionParser.g:1797:46: (iv_ruleGroup= ruleGroup EOF )
-            // InternalRegularExpressionParser.g:1798:2: iv_ruleGroup= ruleGroup EOF
+            // InternalRegularExpressionParser.g:1876:46: (iv_ruleGroup= ruleGroup EOF )
+            // InternalRegularExpressionParser.g:1877:2: iv_ruleGroup= ruleGroup EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getGroupRule()); 
@@ -5480,34 +5636,32 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "ruleGroup"
-    // InternalRegularExpressionParser.g:1804:1: ruleGroup returns [EObject current=null] : ( () otherlv_1= LeftParenthesis ( ( ( (lv_named_2_0= QuestionMark ) ) otherlv_3= LessThanSign ( (lv_name_4_0= ruleRegExpIdentifierName ) ) otherlv_5= GreaterThanSign ) | ( ( (lv_nonCapturing_6_0= QuestionMark ) ) otherlv_7= Colon ) )? ( (lv_pattern_8_0= ruleDisjunction ) ) otherlv_9= RightParenthesis ) ;
+    // InternalRegularExpressionParser.g:1883:1: ruleGroup returns [EObject current=null] : ( () (otherlv_1= LeftParenthesis | ( (lv_nonCapturing_2_0= LeftParenthesisQuestionMarkColon ) ) | ( ( (lv_named_3_0= LeftParenthesisQuestionMarkLessThanSign ) ) ( (lv_name_4_0= ruleRegExpIdentifierName ) ) otherlv_5= GreaterThanSign ) ) ( (lv_pattern_6_0= ruleDisjunction ) ) otherlv_7= RightParenthesis ) ;
     public final EObject ruleGroup() throws RecognitionException {
         EObject current = null;
 
         Token otherlv_1=null;
-        Token lv_named_2_0=null;
-        Token otherlv_3=null;
+        Token lv_nonCapturing_2_0=null;
+        Token lv_named_3_0=null;
         Token otherlv_5=null;
-        Token lv_nonCapturing_6_0=null;
         Token otherlv_7=null;
-        Token otherlv_9=null;
         AntlrDatatypeRuleToken lv_name_4_0 = null;
 
-        EObject lv_pattern_8_0 = null;
+        EObject lv_pattern_6_0 = null;
 
 
 
         	enterRule();
 
         try {
-            // InternalRegularExpressionParser.g:1810:2: ( ( () otherlv_1= LeftParenthesis ( ( ( (lv_named_2_0= QuestionMark ) ) otherlv_3= LessThanSign ( (lv_name_4_0= ruleRegExpIdentifierName ) ) otherlv_5= GreaterThanSign ) | ( ( (lv_nonCapturing_6_0= QuestionMark ) ) otherlv_7= Colon ) )? ( (lv_pattern_8_0= ruleDisjunction ) ) otherlv_9= RightParenthesis ) )
-            // InternalRegularExpressionParser.g:1811:2: ( () otherlv_1= LeftParenthesis ( ( ( (lv_named_2_0= QuestionMark ) ) otherlv_3= LessThanSign ( (lv_name_4_0= ruleRegExpIdentifierName ) ) otherlv_5= GreaterThanSign ) | ( ( (lv_nonCapturing_6_0= QuestionMark ) ) otherlv_7= Colon ) )? ( (lv_pattern_8_0= ruleDisjunction ) ) otherlv_9= RightParenthesis )
+            // InternalRegularExpressionParser.g:1889:2: ( ( () (otherlv_1= LeftParenthesis | ( (lv_nonCapturing_2_0= LeftParenthesisQuestionMarkColon ) ) | ( ( (lv_named_3_0= LeftParenthesisQuestionMarkLessThanSign ) ) ( (lv_name_4_0= ruleRegExpIdentifierName ) ) otherlv_5= GreaterThanSign ) ) ( (lv_pattern_6_0= ruleDisjunction ) ) otherlv_7= RightParenthesis ) )
+            // InternalRegularExpressionParser.g:1890:2: ( () (otherlv_1= LeftParenthesis | ( (lv_nonCapturing_2_0= LeftParenthesisQuestionMarkColon ) ) | ( ( (lv_named_3_0= LeftParenthesisQuestionMarkLessThanSign ) ) ( (lv_name_4_0= ruleRegExpIdentifierName ) ) otherlv_5= GreaterThanSign ) ) ( (lv_pattern_6_0= ruleDisjunction ) ) otherlv_7= RightParenthesis )
             {
-            // InternalRegularExpressionParser.g:1811:2: ( () otherlv_1= LeftParenthesis ( ( ( (lv_named_2_0= QuestionMark ) ) otherlv_3= LessThanSign ( (lv_name_4_0= ruleRegExpIdentifierName ) ) otherlv_5= GreaterThanSign ) | ( ( (lv_nonCapturing_6_0= QuestionMark ) ) otherlv_7= Colon ) )? ( (lv_pattern_8_0= ruleDisjunction ) ) otherlv_9= RightParenthesis )
-            // InternalRegularExpressionParser.g:1812:3: () otherlv_1= LeftParenthesis ( ( ( (lv_named_2_0= QuestionMark ) ) otherlv_3= LessThanSign ( (lv_name_4_0= ruleRegExpIdentifierName ) ) otherlv_5= GreaterThanSign ) | ( ( (lv_nonCapturing_6_0= QuestionMark ) ) otherlv_7= Colon ) )? ( (lv_pattern_8_0= ruleDisjunction ) ) otherlv_9= RightParenthesis
+            // InternalRegularExpressionParser.g:1890:2: ( () (otherlv_1= LeftParenthesis | ( (lv_nonCapturing_2_0= LeftParenthesisQuestionMarkColon ) ) | ( ( (lv_named_3_0= LeftParenthesisQuestionMarkLessThanSign ) ) ( (lv_name_4_0= ruleRegExpIdentifierName ) ) otherlv_5= GreaterThanSign ) ) ( (lv_pattern_6_0= ruleDisjunction ) ) otherlv_7= RightParenthesis )
+            // InternalRegularExpressionParser.g:1891:3: () (otherlv_1= LeftParenthesis | ( (lv_nonCapturing_2_0= LeftParenthesisQuestionMarkColon ) ) | ( ( (lv_named_3_0= LeftParenthesisQuestionMarkLessThanSign ) ) ( (lv_name_4_0= ruleRegExpIdentifierName ) ) otherlv_5= GreaterThanSign ) ) ( (lv_pattern_6_0= ruleDisjunction ) ) otherlv_7= RightParenthesis
             {
-            // InternalRegularExpressionParser.g:1812:3: ()
-            // InternalRegularExpressionParser.g:1813:4: 
+            // InternalRegularExpressionParser.g:1891:3: ()
+            // InternalRegularExpressionParser.g:1892:4: 
             {
             if ( state.backtracking==0 ) {
 
@@ -5519,43 +5673,93 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
             }
 
-            otherlv_1=(Token)match(input,LeftParenthesis,FOLLOW_18); if (state.failed) return current;
-            if ( state.backtracking==0 ) {
-
-              			newLeafNode(otherlv_1, grammarAccess.getGroupAccess().getLeftParenthesisKeyword_1());
-              		
-            }
-            // InternalRegularExpressionParser.g:1823:3: ( ( ( (lv_named_2_0= QuestionMark ) ) otherlv_3= LessThanSign ( (lv_name_4_0= ruleRegExpIdentifierName ) ) otherlv_5= GreaterThanSign ) | ( ( (lv_nonCapturing_6_0= QuestionMark ) ) otherlv_7= Colon ) )?
-            int alt24=3;
-            int LA24_0 = input.LA(1);
-
-            if ( (LA24_0==QuestionMark) ) {
-                int LA24_1 = input.LA(2);
-
-                if ( (LA24_1==Colon) ) {
-                    alt24=2;
+            // InternalRegularExpressionParser.g:1898:3: (otherlv_1= LeftParenthesis | ( (lv_nonCapturing_2_0= LeftParenthesisQuestionMarkColon ) ) | ( ( (lv_named_3_0= LeftParenthesisQuestionMarkLessThanSign ) ) ( (lv_name_4_0= ruleRegExpIdentifierName ) ) otherlv_5= GreaterThanSign ) )
+            int alt25=3;
+            switch ( input.LA(1) ) {
+            case LeftParenthesis:
+                {
+                alt25=1;
                 }
-                else if ( (LA24_1==LessThanSign) ) {
-                    alt24=1;
+                break;
+            case LeftParenthesisQuestionMarkColon:
+                {
+                alt25=2;
                 }
+                break;
+            case LeftParenthesisQuestionMarkLessThanSign:
+                {
+                alt25=3;
+                }
+                break;
+            default:
+                if (state.backtracking>0) {state.failed=true; return current;}
+                NoViableAltException nvae =
+                    new NoViableAltException("", 25, 0, input);
+
+                throw nvae;
             }
-            switch (alt24) {
+
+            switch (alt25) {
                 case 1 :
-                    // InternalRegularExpressionParser.g:1824:4: ( ( (lv_named_2_0= QuestionMark ) ) otherlv_3= LessThanSign ( (lv_name_4_0= ruleRegExpIdentifierName ) ) otherlv_5= GreaterThanSign )
+                    // InternalRegularExpressionParser.g:1899:4: otherlv_1= LeftParenthesis
                     {
-                    // InternalRegularExpressionParser.g:1824:4: ( ( (lv_named_2_0= QuestionMark ) ) otherlv_3= LessThanSign ( (lv_name_4_0= ruleRegExpIdentifierName ) ) otherlv_5= GreaterThanSign )
-                    // InternalRegularExpressionParser.g:1825:5: ( (lv_named_2_0= QuestionMark ) ) otherlv_3= LessThanSign ( (lv_name_4_0= ruleRegExpIdentifierName ) ) otherlv_5= GreaterThanSign
-                    {
-                    // InternalRegularExpressionParser.g:1825:5: ( (lv_named_2_0= QuestionMark ) )
-                    // InternalRegularExpressionParser.g:1826:6: (lv_named_2_0= QuestionMark )
-                    {
-                    // InternalRegularExpressionParser.g:1826:6: (lv_named_2_0= QuestionMark )
-                    // InternalRegularExpressionParser.g:1827:7: lv_named_2_0= QuestionMark
-                    {
-                    lv_named_2_0=(Token)match(input,QuestionMark,FOLLOW_19); if (state.failed) return current;
+                    otherlv_1=(Token)match(input,LeftParenthesis,FOLLOW_10); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
-                      							newLeafNode(lv_named_2_0, grammarAccess.getGroupAccess().getNamedQuestionMarkKeyword_2_0_0_0());
+                      				newLeafNode(otherlv_1, grammarAccess.getGroupAccess().getLeftParenthesisKeyword_1_0());
+                      			
+                    }
+
+                    }
+                    break;
+                case 2 :
+                    // InternalRegularExpressionParser.g:1904:4: ( (lv_nonCapturing_2_0= LeftParenthesisQuestionMarkColon ) )
+                    {
+                    // InternalRegularExpressionParser.g:1904:4: ( (lv_nonCapturing_2_0= LeftParenthesisQuestionMarkColon ) )
+                    // InternalRegularExpressionParser.g:1905:5: (lv_nonCapturing_2_0= LeftParenthesisQuestionMarkColon )
+                    {
+                    // InternalRegularExpressionParser.g:1905:5: (lv_nonCapturing_2_0= LeftParenthesisQuestionMarkColon )
+                    // InternalRegularExpressionParser.g:1906:6: lv_nonCapturing_2_0= LeftParenthesisQuestionMarkColon
+                    {
+                    lv_nonCapturing_2_0=(Token)match(input,LeftParenthesisQuestionMarkColon,FOLLOW_10); if (state.failed) return current;
+                    if ( state.backtracking==0 ) {
+
+                      						newLeafNode(lv_nonCapturing_2_0, grammarAccess.getGroupAccess().getNonCapturingLeftParenthesisQuestionMarkColonKeyword_1_1_0());
+                      					
+                    }
+                    if ( state.backtracking==0 ) {
+
+                      						if (current==null) {
+                      							current = createModelElement(grammarAccess.getGroupRule());
+                      						}
+                      						setWithLastConsumed(current, "nonCapturing", true, "(?:");
+                      					
+                    }
+
+                    }
+
+
+                    }
+
+
+                    }
+                    break;
+                case 3 :
+                    // InternalRegularExpressionParser.g:1919:4: ( ( (lv_named_3_0= LeftParenthesisQuestionMarkLessThanSign ) ) ( (lv_name_4_0= ruleRegExpIdentifierName ) ) otherlv_5= GreaterThanSign )
+                    {
+                    // InternalRegularExpressionParser.g:1919:4: ( ( (lv_named_3_0= LeftParenthesisQuestionMarkLessThanSign ) ) ( (lv_name_4_0= ruleRegExpIdentifierName ) ) otherlv_5= GreaterThanSign )
+                    // InternalRegularExpressionParser.g:1920:5: ( (lv_named_3_0= LeftParenthesisQuestionMarkLessThanSign ) ) ( (lv_name_4_0= ruleRegExpIdentifierName ) ) otherlv_5= GreaterThanSign
+                    {
+                    // InternalRegularExpressionParser.g:1920:5: ( (lv_named_3_0= LeftParenthesisQuestionMarkLessThanSign ) )
+                    // InternalRegularExpressionParser.g:1921:6: (lv_named_3_0= LeftParenthesisQuestionMarkLessThanSign )
+                    {
+                    // InternalRegularExpressionParser.g:1921:6: (lv_named_3_0= LeftParenthesisQuestionMarkLessThanSign )
+                    // InternalRegularExpressionParser.g:1922:7: lv_named_3_0= LeftParenthesisQuestionMarkLessThanSign
+                    {
+                    lv_named_3_0=(Token)match(input,LeftParenthesisQuestionMarkLessThanSign,FOLLOW_15); if (state.failed) return current;
+                    if ( state.backtracking==0 ) {
+
+                      							newLeafNode(lv_named_3_0, grammarAccess.getGroupAccess().getNamedLeftParenthesisQuestionMarkLessThanSignKeyword_1_2_0_0());
                       						
                     }
                     if ( state.backtracking==0 ) {
@@ -5563,7 +5767,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                       							if (current==null) {
                       								current = createModelElement(grammarAccess.getGroupRule());
                       							}
-                      							setWithLastConsumed(current, "named", true, "?");
+                      							setWithLastConsumed(current, "named", true, "(?<");
                       						
                     }
 
@@ -5572,24 +5776,18 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
                     }
 
-                    otherlv_3=(Token)match(input,LessThanSign,FOLLOW_20); if (state.failed) return current;
-                    if ( state.backtracking==0 ) {
-
-                      					newLeafNode(otherlv_3, grammarAccess.getGroupAccess().getLessThanSignKeyword_2_0_1());
-                      				
-                    }
-                    // InternalRegularExpressionParser.g:1843:5: ( (lv_name_4_0= ruleRegExpIdentifierName ) )
-                    // InternalRegularExpressionParser.g:1844:6: (lv_name_4_0= ruleRegExpIdentifierName )
+                    // InternalRegularExpressionParser.g:1934:5: ( (lv_name_4_0= ruleRegExpIdentifierName ) )
+                    // InternalRegularExpressionParser.g:1935:6: (lv_name_4_0= ruleRegExpIdentifierName )
                     {
-                    // InternalRegularExpressionParser.g:1844:6: (lv_name_4_0= ruleRegExpIdentifierName )
-                    // InternalRegularExpressionParser.g:1845:7: lv_name_4_0= ruleRegExpIdentifierName
+                    // InternalRegularExpressionParser.g:1935:6: (lv_name_4_0= ruleRegExpIdentifierName )
+                    // InternalRegularExpressionParser.g:1936:7: lv_name_4_0= ruleRegExpIdentifierName
                     {
                     if ( state.backtracking==0 ) {
 
-                      							newCompositeNode(grammarAccess.getGroupAccess().getNameRegExpIdentifierNameParserRuleCall_2_0_2_0());
+                      							newCompositeNode(grammarAccess.getGroupAccess().getNameRegExpIdentifierNameParserRuleCall_1_2_1_0());
                       						
                     }
-                    pushFollow(FOLLOW_21);
+                    pushFollow(FOLLOW_16);
                     lv_name_4_0=ruleRegExpIdentifierName();
 
                     state._fsp--;
@@ -5613,54 +5811,10 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
                     }
 
-                    otherlv_5=(Token)match(input,GreaterThanSign,FOLLOW_13); if (state.failed) return current;
+                    otherlv_5=(Token)match(input,GreaterThanSign,FOLLOW_10); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
-                      					newLeafNode(otherlv_5, grammarAccess.getGroupAccess().getGreaterThanSignKeyword_2_0_3());
-                      				
-                    }
-
-                    }
-
-
-                    }
-                    break;
-                case 2 :
-                    // InternalRegularExpressionParser.g:1868:4: ( ( (lv_nonCapturing_6_0= QuestionMark ) ) otherlv_7= Colon )
-                    {
-                    // InternalRegularExpressionParser.g:1868:4: ( ( (lv_nonCapturing_6_0= QuestionMark ) ) otherlv_7= Colon )
-                    // InternalRegularExpressionParser.g:1869:5: ( (lv_nonCapturing_6_0= QuestionMark ) ) otherlv_7= Colon
-                    {
-                    // InternalRegularExpressionParser.g:1869:5: ( (lv_nonCapturing_6_0= QuestionMark ) )
-                    // InternalRegularExpressionParser.g:1870:6: (lv_nonCapturing_6_0= QuestionMark )
-                    {
-                    // InternalRegularExpressionParser.g:1870:6: (lv_nonCapturing_6_0= QuestionMark )
-                    // InternalRegularExpressionParser.g:1871:7: lv_nonCapturing_6_0= QuestionMark
-                    {
-                    lv_nonCapturing_6_0=(Token)match(input,QuestionMark,FOLLOW_22); if (state.failed) return current;
-                    if ( state.backtracking==0 ) {
-
-                      							newLeafNode(lv_nonCapturing_6_0, grammarAccess.getGroupAccess().getNonCapturingQuestionMarkKeyword_2_1_0_0());
-                      						
-                    }
-                    if ( state.backtracking==0 ) {
-
-                      							if (current==null) {
-                      								current = createModelElement(grammarAccess.getGroupRule());
-                      							}
-                      							setWithLastConsumed(current, "nonCapturing", true, "?");
-                      						
-                    }
-
-                    }
-
-
-                    }
-
-                    otherlv_7=(Token)match(input,Colon,FOLLOW_13); if (state.failed) return current;
-                    if ( state.backtracking==0 ) {
-
-                      					newLeafNode(otherlv_7, grammarAccess.getGroupAccess().getColonKeyword_2_1_1());
+                      					newLeafNode(otherlv_5, grammarAccess.getGroupAccess().getGreaterThanSignKeyword_1_2_2());
                       				
                     }
 
@@ -5672,19 +5826,19 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
             }
 
-            // InternalRegularExpressionParser.g:1889:3: ( (lv_pattern_8_0= ruleDisjunction ) )
-            // InternalRegularExpressionParser.g:1890:4: (lv_pattern_8_0= ruleDisjunction )
+            // InternalRegularExpressionParser.g:1959:3: ( (lv_pattern_6_0= ruleDisjunction ) )
+            // InternalRegularExpressionParser.g:1960:4: (lv_pattern_6_0= ruleDisjunction )
             {
-            // InternalRegularExpressionParser.g:1890:4: (lv_pattern_8_0= ruleDisjunction )
-            // InternalRegularExpressionParser.g:1891:5: lv_pattern_8_0= ruleDisjunction
+            // InternalRegularExpressionParser.g:1960:4: (lv_pattern_6_0= ruleDisjunction )
+            // InternalRegularExpressionParser.g:1961:5: lv_pattern_6_0= ruleDisjunction
             {
             if ( state.backtracking==0 ) {
 
-              					newCompositeNode(grammarAccess.getGroupAccess().getPatternDisjunctionParserRuleCall_3_0());
+              					newCompositeNode(grammarAccess.getGroupAccess().getPatternDisjunctionParserRuleCall_2_0());
               				
             }
-            pushFollow(FOLLOW_14);
-            lv_pattern_8_0=ruleDisjunction();
+            pushFollow(FOLLOW_11);
+            lv_pattern_6_0=ruleDisjunction();
 
             state._fsp--;
             if (state.failed) return current;
@@ -5696,7 +5850,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
               					set(
               						current,
               						"pattern",
-              						lv_pattern_8_0,
+              						lv_pattern_6_0,
               						"org.eclipse.n4js.regex.RegularExpression.Disjunction");
               					afterParserOrEnumRuleCall();
               				
@@ -5707,10 +5861,10 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
             }
 
-            otherlv_9=(Token)match(input,RightParenthesis,FOLLOW_2); if (state.failed) return current;
+            otherlv_7=(Token)match(input,RightParenthesis,FOLLOW_2); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
-              			newLeafNode(otherlv_9, grammarAccess.getGroupAccess().getRightParenthesisKeyword_4());
+              			newLeafNode(otherlv_7, grammarAccess.getGroupAccess().getRightParenthesisKeyword_3());
               		
             }
 
@@ -5738,7 +5892,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "entryRuleRegExpIdentifierName"
-    // InternalRegularExpressionParser.g:1916:1: entryRuleRegExpIdentifierName returns [String current=null] : iv_ruleRegExpIdentifierName= ruleRegExpIdentifierName EOF ;
+    // InternalRegularExpressionParser.g:1986:1: entryRuleRegExpIdentifierName returns [String current=null] : iv_ruleRegExpIdentifierName= ruleRegExpIdentifierName EOF ;
     public final String entryRuleRegExpIdentifierName() throws RecognitionException {
         String current = null;
 
@@ -5746,8 +5900,8 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
         try {
-            // InternalRegularExpressionParser.g:1916:60: (iv_ruleRegExpIdentifierName= ruleRegExpIdentifierName EOF )
-            // InternalRegularExpressionParser.g:1917:2: iv_ruleRegExpIdentifierName= ruleRegExpIdentifierName EOF
+            // InternalRegularExpressionParser.g:1986:60: (iv_ruleRegExpIdentifierName= ruleRegExpIdentifierName EOF )
+            // InternalRegularExpressionParser.g:1987:2: iv_ruleRegExpIdentifierName= ruleRegExpIdentifierName EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getRegExpIdentifierNameRule()); 
@@ -5778,7 +5932,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "ruleRegExpIdentifierName"
-    // InternalRegularExpressionParser.g:1923:1: ruleRegExpIdentifierName returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_RegExpIdentifierStart_0= ruleRegExpIdentifierStart (this_RegExpIdentifierPart_1= ruleRegExpIdentifierPart )* ) ;
+    // InternalRegularExpressionParser.g:1993:1: ruleRegExpIdentifierName returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_RegExpIdentifierStart_0= ruleRegExpIdentifierStart (this_RegExpIdentifierPart_1= ruleRegExpIdentifierPart )* ) ;
     public final AntlrDatatypeRuleToken ruleRegExpIdentifierName() throws RecognitionException {
         AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -5791,18 +5945,18 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
         	enterRule();
 
         try {
-            // InternalRegularExpressionParser.g:1929:2: ( (this_RegExpIdentifierStart_0= ruleRegExpIdentifierStart (this_RegExpIdentifierPart_1= ruleRegExpIdentifierPart )* ) )
-            // InternalRegularExpressionParser.g:1930:2: (this_RegExpIdentifierStart_0= ruleRegExpIdentifierStart (this_RegExpIdentifierPart_1= ruleRegExpIdentifierPart )* )
+            // InternalRegularExpressionParser.g:1999:2: ( (this_RegExpIdentifierStart_0= ruleRegExpIdentifierStart (this_RegExpIdentifierPart_1= ruleRegExpIdentifierPart )* ) )
+            // InternalRegularExpressionParser.g:2000:2: (this_RegExpIdentifierStart_0= ruleRegExpIdentifierStart (this_RegExpIdentifierPart_1= ruleRegExpIdentifierPart )* )
             {
-            // InternalRegularExpressionParser.g:1930:2: (this_RegExpIdentifierStart_0= ruleRegExpIdentifierStart (this_RegExpIdentifierPart_1= ruleRegExpIdentifierPart )* )
-            // InternalRegularExpressionParser.g:1931:3: this_RegExpIdentifierStart_0= ruleRegExpIdentifierStart (this_RegExpIdentifierPart_1= ruleRegExpIdentifierPart )*
+            // InternalRegularExpressionParser.g:2000:2: (this_RegExpIdentifierStart_0= ruleRegExpIdentifierStart (this_RegExpIdentifierPart_1= ruleRegExpIdentifierPart )* )
+            // InternalRegularExpressionParser.g:2001:3: this_RegExpIdentifierStart_0= ruleRegExpIdentifierStart (this_RegExpIdentifierPart_1= ruleRegExpIdentifierPart )*
             {
             if ( state.backtracking==0 ) {
 
               			newCompositeNode(grammarAccess.getRegExpIdentifierNameAccess().getRegExpIdentifierStartParserRuleCall_0());
               		
             }
-            pushFollow(FOLLOW_23);
+            pushFollow(FOLLOW_17);
             this_RegExpIdentifierStart_0=ruleRegExpIdentifierStart();
 
             state._fsp--;
@@ -5817,27 +5971,27 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
               			afterParserOrEnumRuleCall();
               		
             }
-            // InternalRegularExpressionParser.g:1941:3: (this_RegExpIdentifierPart_1= ruleRegExpIdentifierPart )*
-            loop25:
+            // InternalRegularExpressionParser.g:2011:3: (this_RegExpIdentifierPart_1= ruleRegExpIdentifierPart )*
+            loop26:
             do {
-                int alt25=2;
-                int LA25_0 = input.LA(1);
+                int alt26=2;
+                int LA26_0 = input.LA(1);
 
-                if ( (LA25_0==DollarSign||LA25_0==KW__||LA25_0==RULE_UNICODE_ESCAPE||LA25_0==RULE_UNICODE_DIGIT||LA25_0==RULE_UNICODE_LETTER) ) {
-                    alt25=1;
+                if ( (LA26_0==DollarSign||LA26_0==KW__||LA26_0==RULE_UNICODE_ESCAPE||LA26_0==RULE_UNICODE_DIGIT||LA26_0==RULE_UNICODE_LETTER) ) {
+                    alt26=1;
                 }
 
 
-                switch (alt25) {
+                switch (alt26) {
             	case 1 :
-            	    // InternalRegularExpressionParser.g:1942:4: this_RegExpIdentifierPart_1= ruleRegExpIdentifierPart
+            	    // InternalRegularExpressionParser.g:2012:4: this_RegExpIdentifierPart_1= ruleRegExpIdentifierPart
             	    {
             	    if ( state.backtracking==0 ) {
 
             	      				newCompositeNode(grammarAccess.getRegExpIdentifierNameAccess().getRegExpIdentifierPartParserRuleCall_1());
             	      			
             	    }
-            	    pushFollow(FOLLOW_23);
+            	    pushFollow(FOLLOW_17);
             	    this_RegExpIdentifierPart_1=ruleRegExpIdentifierPart();
 
             	    state._fsp--;
@@ -5857,7 +6011,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
             	    break;
 
             	default :
-            	    break loop25;
+            	    break loop26;
                 }
             } while (true);
 
@@ -5886,7 +6040,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "entryRuleRegExpIdentifierStart"
-    // InternalRegularExpressionParser.g:1957:1: entryRuleRegExpIdentifierStart returns [String current=null] : iv_ruleRegExpIdentifierStart= ruleRegExpIdentifierStart EOF ;
+    // InternalRegularExpressionParser.g:2027:1: entryRuleRegExpIdentifierStart returns [String current=null] : iv_ruleRegExpIdentifierStart= ruleRegExpIdentifierStart EOF ;
     public final String entryRuleRegExpIdentifierStart() throws RecognitionException {
         String current = null;
 
@@ -5894,8 +6048,8 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
         try {
-            // InternalRegularExpressionParser.g:1957:61: (iv_ruleRegExpIdentifierStart= ruleRegExpIdentifierStart EOF )
-            // InternalRegularExpressionParser.g:1958:2: iv_ruleRegExpIdentifierStart= ruleRegExpIdentifierStart EOF
+            // InternalRegularExpressionParser.g:2027:61: (iv_ruleRegExpIdentifierStart= ruleRegExpIdentifierStart EOF )
+            // InternalRegularExpressionParser.g:2028:2: iv_ruleRegExpIdentifierStart= ruleRegExpIdentifierStart EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getRegExpIdentifierStartRule()); 
@@ -5926,7 +6080,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "ruleRegExpIdentifierStart"
-    // InternalRegularExpressionParser.g:1964:1: ruleRegExpIdentifierStart returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_UNICODE_LETTER_0= RULE_UNICODE_LETTER | kw= DollarSign | kw= KW__ | this_UNICODE_ESCAPE_3= RULE_UNICODE_ESCAPE ) ;
+    // InternalRegularExpressionParser.g:2034:1: ruleRegExpIdentifierStart returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_UNICODE_LETTER_0= RULE_UNICODE_LETTER | kw= DollarSign | kw= KW__ | this_UNICODE_ESCAPE_3= RULE_UNICODE_ESCAPE ) ;
     public final AntlrDatatypeRuleToken ruleRegExpIdentifierStart() throws RecognitionException {
         AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -5938,43 +6092,43 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
         	enterRule();
 
         try {
-            // InternalRegularExpressionParser.g:1970:2: ( (this_UNICODE_LETTER_0= RULE_UNICODE_LETTER | kw= DollarSign | kw= KW__ | this_UNICODE_ESCAPE_3= RULE_UNICODE_ESCAPE ) )
-            // InternalRegularExpressionParser.g:1971:2: (this_UNICODE_LETTER_0= RULE_UNICODE_LETTER | kw= DollarSign | kw= KW__ | this_UNICODE_ESCAPE_3= RULE_UNICODE_ESCAPE )
+            // InternalRegularExpressionParser.g:2040:2: ( (this_UNICODE_LETTER_0= RULE_UNICODE_LETTER | kw= DollarSign | kw= KW__ | this_UNICODE_ESCAPE_3= RULE_UNICODE_ESCAPE ) )
+            // InternalRegularExpressionParser.g:2041:2: (this_UNICODE_LETTER_0= RULE_UNICODE_LETTER | kw= DollarSign | kw= KW__ | this_UNICODE_ESCAPE_3= RULE_UNICODE_ESCAPE )
             {
-            // InternalRegularExpressionParser.g:1971:2: (this_UNICODE_LETTER_0= RULE_UNICODE_LETTER | kw= DollarSign | kw= KW__ | this_UNICODE_ESCAPE_3= RULE_UNICODE_ESCAPE )
-            int alt26=4;
+            // InternalRegularExpressionParser.g:2041:2: (this_UNICODE_LETTER_0= RULE_UNICODE_LETTER | kw= DollarSign | kw= KW__ | this_UNICODE_ESCAPE_3= RULE_UNICODE_ESCAPE )
+            int alt27=4;
             switch ( input.LA(1) ) {
             case RULE_UNICODE_LETTER:
                 {
-                alt26=1;
+                alt27=1;
                 }
                 break;
             case DollarSign:
                 {
-                alt26=2;
+                alt27=2;
                 }
                 break;
             case KW__:
                 {
-                alt26=3;
+                alt27=3;
                 }
                 break;
             case RULE_UNICODE_ESCAPE:
                 {
-                alt26=4;
+                alt27=4;
                 }
                 break;
             default:
                 if (state.backtracking>0) {state.failed=true; return current;}
                 NoViableAltException nvae =
-                    new NoViableAltException("", 26, 0, input);
+                    new NoViableAltException("", 27, 0, input);
 
                 throw nvae;
             }
 
-            switch (alt26) {
+            switch (alt27) {
                 case 1 :
-                    // InternalRegularExpressionParser.g:1972:3: this_UNICODE_LETTER_0= RULE_UNICODE_LETTER
+                    // InternalRegularExpressionParser.g:2042:3: this_UNICODE_LETTER_0= RULE_UNICODE_LETTER
                     {
                     this_UNICODE_LETTER_0=(Token)match(input,RULE_UNICODE_LETTER,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -5991,7 +6145,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     }
                     break;
                 case 2 :
-                    // InternalRegularExpressionParser.g:1980:3: kw= DollarSign
+                    // InternalRegularExpressionParser.g:2050:3: kw= DollarSign
                     {
                     kw=(Token)match(input,DollarSign,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -6004,7 +6158,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     }
                     break;
                 case 3 :
-                    // InternalRegularExpressionParser.g:1986:3: kw= KW__
+                    // InternalRegularExpressionParser.g:2056:3: kw= KW__
                     {
                     kw=(Token)match(input,KW__,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -6017,7 +6171,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     }
                     break;
                 case 4 :
-                    // InternalRegularExpressionParser.g:1992:3: this_UNICODE_ESCAPE_3= RULE_UNICODE_ESCAPE
+                    // InternalRegularExpressionParser.g:2062:3: this_UNICODE_ESCAPE_3= RULE_UNICODE_ESCAPE
                     {
                     this_UNICODE_ESCAPE_3=(Token)match(input,RULE_UNICODE_ESCAPE,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -6058,7 +6212,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "entryRuleRegExpIdentifierPart"
-    // InternalRegularExpressionParser.g:2003:1: entryRuleRegExpIdentifierPart returns [String current=null] : iv_ruleRegExpIdentifierPart= ruleRegExpIdentifierPart EOF ;
+    // InternalRegularExpressionParser.g:2073:1: entryRuleRegExpIdentifierPart returns [String current=null] : iv_ruleRegExpIdentifierPart= ruleRegExpIdentifierPart EOF ;
     public final String entryRuleRegExpIdentifierPart() throws RecognitionException {
         String current = null;
 
@@ -6066,8 +6220,8 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
         try {
-            // InternalRegularExpressionParser.g:2003:60: (iv_ruleRegExpIdentifierPart= ruleRegExpIdentifierPart EOF )
-            // InternalRegularExpressionParser.g:2004:2: iv_ruleRegExpIdentifierPart= ruleRegExpIdentifierPart EOF
+            // InternalRegularExpressionParser.g:2073:60: (iv_ruleRegExpIdentifierPart= ruleRegExpIdentifierPart EOF )
+            // InternalRegularExpressionParser.g:2074:2: iv_ruleRegExpIdentifierPart= ruleRegExpIdentifierPart EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getRegExpIdentifierPartRule()); 
@@ -6098,7 +6252,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "ruleRegExpIdentifierPart"
-    // InternalRegularExpressionParser.g:2010:1: ruleRegExpIdentifierPart returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_UNICODE_LETTER_0= RULE_UNICODE_LETTER | this_UNICODE_DIGIT_1= RULE_UNICODE_DIGIT | kw= DollarSign | kw= KW__ | this_UNICODE_ESCAPE_4= RULE_UNICODE_ESCAPE ) ;
+    // InternalRegularExpressionParser.g:2080:1: ruleRegExpIdentifierPart returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_UNICODE_LETTER_0= RULE_UNICODE_LETTER | this_UNICODE_DIGIT_1= RULE_UNICODE_DIGIT | kw= DollarSign | kw= KW__ | this_UNICODE_ESCAPE_4= RULE_UNICODE_ESCAPE ) ;
     public final AntlrDatatypeRuleToken ruleRegExpIdentifierPart() throws RecognitionException {
         AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -6111,48 +6265,48 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
         	enterRule();
 
         try {
-            // InternalRegularExpressionParser.g:2016:2: ( (this_UNICODE_LETTER_0= RULE_UNICODE_LETTER | this_UNICODE_DIGIT_1= RULE_UNICODE_DIGIT | kw= DollarSign | kw= KW__ | this_UNICODE_ESCAPE_4= RULE_UNICODE_ESCAPE ) )
-            // InternalRegularExpressionParser.g:2017:2: (this_UNICODE_LETTER_0= RULE_UNICODE_LETTER | this_UNICODE_DIGIT_1= RULE_UNICODE_DIGIT | kw= DollarSign | kw= KW__ | this_UNICODE_ESCAPE_4= RULE_UNICODE_ESCAPE )
+            // InternalRegularExpressionParser.g:2086:2: ( (this_UNICODE_LETTER_0= RULE_UNICODE_LETTER | this_UNICODE_DIGIT_1= RULE_UNICODE_DIGIT | kw= DollarSign | kw= KW__ | this_UNICODE_ESCAPE_4= RULE_UNICODE_ESCAPE ) )
+            // InternalRegularExpressionParser.g:2087:2: (this_UNICODE_LETTER_0= RULE_UNICODE_LETTER | this_UNICODE_DIGIT_1= RULE_UNICODE_DIGIT | kw= DollarSign | kw= KW__ | this_UNICODE_ESCAPE_4= RULE_UNICODE_ESCAPE )
             {
-            // InternalRegularExpressionParser.g:2017:2: (this_UNICODE_LETTER_0= RULE_UNICODE_LETTER | this_UNICODE_DIGIT_1= RULE_UNICODE_DIGIT | kw= DollarSign | kw= KW__ | this_UNICODE_ESCAPE_4= RULE_UNICODE_ESCAPE )
-            int alt27=5;
+            // InternalRegularExpressionParser.g:2087:2: (this_UNICODE_LETTER_0= RULE_UNICODE_LETTER | this_UNICODE_DIGIT_1= RULE_UNICODE_DIGIT | kw= DollarSign | kw= KW__ | this_UNICODE_ESCAPE_4= RULE_UNICODE_ESCAPE )
+            int alt28=5;
             switch ( input.LA(1) ) {
             case RULE_UNICODE_LETTER:
                 {
-                alt27=1;
+                alt28=1;
                 }
                 break;
             case RULE_UNICODE_DIGIT:
                 {
-                alt27=2;
+                alt28=2;
                 }
                 break;
             case DollarSign:
                 {
-                alt27=3;
+                alt28=3;
                 }
                 break;
             case KW__:
                 {
-                alt27=4;
+                alt28=4;
                 }
                 break;
             case RULE_UNICODE_ESCAPE:
                 {
-                alt27=5;
+                alt28=5;
                 }
                 break;
             default:
                 if (state.backtracking>0) {state.failed=true; return current;}
                 NoViableAltException nvae =
-                    new NoViableAltException("", 27, 0, input);
+                    new NoViableAltException("", 28, 0, input);
 
                 throw nvae;
             }
 
-            switch (alt27) {
+            switch (alt28) {
                 case 1 :
-                    // InternalRegularExpressionParser.g:2018:3: this_UNICODE_LETTER_0= RULE_UNICODE_LETTER
+                    // InternalRegularExpressionParser.g:2088:3: this_UNICODE_LETTER_0= RULE_UNICODE_LETTER
                     {
                     this_UNICODE_LETTER_0=(Token)match(input,RULE_UNICODE_LETTER,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -6169,7 +6323,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     }
                     break;
                 case 2 :
-                    // InternalRegularExpressionParser.g:2026:3: this_UNICODE_DIGIT_1= RULE_UNICODE_DIGIT
+                    // InternalRegularExpressionParser.g:2096:3: this_UNICODE_DIGIT_1= RULE_UNICODE_DIGIT
                     {
                     this_UNICODE_DIGIT_1=(Token)match(input,RULE_UNICODE_DIGIT,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -6186,7 +6340,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     }
                     break;
                 case 3 :
-                    // InternalRegularExpressionParser.g:2034:3: kw= DollarSign
+                    // InternalRegularExpressionParser.g:2104:3: kw= DollarSign
                     {
                     kw=(Token)match(input,DollarSign,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -6199,7 +6353,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     }
                     break;
                 case 4 :
-                    // InternalRegularExpressionParser.g:2040:3: kw= KW__
+                    // InternalRegularExpressionParser.g:2110:3: kw= KW__
                     {
                     kw=(Token)match(input,KW__,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -6212,7 +6366,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     }
                     break;
                 case 5 :
-                    // InternalRegularExpressionParser.g:2046:3: this_UNICODE_ESCAPE_4= RULE_UNICODE_ESCAPE
+                    // InternalRegularExpressionParser.g:2116:3: this_UNICODE_ESCAPE_4= RULE_UNICODE_ESCAPE
                     {
                     this_UNICODE_ESCAPE_4=(Token)match(input,RULE_UNICODE_ESCAPE,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -6253,7 +6407,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "entryRuleQuantifier"
-    // InternalRegularExpressionParser.g:2057:1: entryRuleQuantifier returns [EObject current=null] : iv_ruleQuantifier= ruleQuantifier EOF ;
+    // InternalRegularExpressionParser.g:2127:1: entryRuleQuantifier returns [EObject current=null] : iv_ruleQuantifier= ruleQuantifier EOF ;
     public final EObject entryRuleQuantifier() throws RecognitionException {
         EObject current = null;
 
@@ -6261,8 +6415,8 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
         try {
-            // InternalRegularExpressionParser.g:2057:51: (iv_ruleQuantifier= ruleQuantifier EOF )
-            // InternalRegularExpressionParser.g:2058:2: iv_ruleQuantifier= ruleQuantifier EOF
+            // InternalRegularExpressionParser.g:2127:51: (iv_ruleQuantifier= ruleQuantifier EOF )
+            // InternalRegularExpressionParser.g:2128:2: iv_ruleQuantifier= ruleQuantifier EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getQuantifierRule()); 
@@ -6293,7 +6447,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "ruleQuantifier"
-    // InternalRegularExpressionParser.g:2064:1: ruleQuantifier returns [EObject current=null] : (this_SimpleQuantifier_0= ruleSimpleQuantifier | this_ExactQuantifier_1= ruleExactQuantifier ) ;
+    // InternalRegularExpressionParser.g:2134:1: ruleQuantifier returns [EObject current=null] : (this_SimpleQuantifier_0= ruleSimpleQuantifier | this_ExactQuantifier_1= ruleExactQuantifier ) ;
     public final EObject ruleQuantifier() throws RecognitionException {
         EObject current = null;
 
@@ -6306,29 +6460,29 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
         	enterRule();
 
         try {
-            // InternalRegularExpressionParser.g:2070:2: ( (this_SimpleQuantifier_0= ruleSimpleQuantifier | this_ExactQuantifier_1= ruleExactQuantifier ) )
-            // InternalRegularExpressionParser.g:2071:2: (this_SimpleQuantifier_0= ruleSimpleQuantifier | this_ExactQuantifier_1= ruleExactQuantifier )
+            // InternalRegularExpressionParser.g:2140:2: ( (this_SimpleQuantifier_0= ruleSimpleQuantifier | this_ExactQuantifier_1= ruleExactQuantifier ) )
+            // InternalRegularExpressionParser.g:2141:2: (this_SimpleQuantifier_0= ruleSimpleQuantifier | this_ExactQuantifier_1= ruleExactQuantifier )
             {
-            // InternalRegularExpressionParser.g:2071:2: (this_SimpleQuantifier_0= ruleSimpleQuantifier | this_ExactQuantifier_1= ruleExactQuantifier )
-            int alt28=2;
-            int LA28_0 = input.LA(1);
+            // InternalRegularExpressionParser.g:2141:2: (this_SimpleQuantifier_0= ruleSimpleQuantifier | this_ExactQuantifier_1= ruleExactQuantifier )
+            int alt29=2;
+            int LA29_0 = input.LA(1);
 
-            if ( ((LA28_0>=Asterisk && LA28_0<=PlusSign)||LA28_0==QuestionMark) ) {
-                alt28=1;
+            if ( ((LA29_0>=Asterisk && LA29_0<=PlusSign)||LA29_0==QuestionMark) ) {
+                alt29=1;
             }
-            else if ( (LA28_0==LeftCurlyBracket) ) {
-                alt28=2;
+            else if ( (LA29_0==LeftCurlyBracket) ) {
+                alt29=2;
             }
             else {
                 if (state.backtracking>0) {state.failed=true; return current;}
                 NoViableAltException nvae =
-                    new NoViableAltException("", 28, 0, input);
+                    new NoViableAltException("", 29, 0, input);
 
                 throw nvae;
             }
-            switch (alt28) {
+            switch (alt29) {
                 case 1 :
-                    // InternalRegularExpressionParser.g:2072:3: this_SimpleQuantifier_0= ruleSimpleQuantifier
+                    // InternalRegularExpressionParser.g:2142:3: this_SimpleQuantifier_0= ruleSimpleQuantifier
                     {
                     if ( state.backtracking==0 ) {
 
@@ -6350,7 +6504,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     }
                     break;
                 case 2 :
-                    // InternalRegularExpressionParser.g:2081:3: this_ExactQuantifier_1= ruleExactQuantifier
+                    // InternalRegularExpressionParser.g:2151:3: this_ExactQuantifier_1= ruleExactQuantifier
                     {
                     if ( state.backtracking==0 ) {
 
@@ -6396,7 +6550,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "entryRuleSimpleQuantifier"
-    // InternalRegularExpressionParser.g:2093:1: entryRuleSimpleQuantifier returns [EObject current=null] : iv_ruleSimpleQuantifier= ruleSimpleQuantifier EOF ;
+    // InternalRegularExpressionParser.g:2163:1: entryRuleSimpleQuantifier returns [EObject current=null] : iv_ruleSimpleQuantifier= ruleSimpleQuantifier EOF ;
     public final EObject entryRuleSimpleQuantifier() throws RecognitionException {
         EObject current = null;
 
@@ -6404,8 +6558,8 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
         try {
-            // InternalRegularExpressionParser.g:2093:57: (iv_ruleSimpleQuantifier= ruleSimpleQuantifier EOF )
-            // InternalRegularExpressionParser.g:2094:2: iv_ruleSimpleQuantifier= ruleSimpleQuantifier EOF
+            // InternalRegularExpressionParser.g:2163:57: (iv_ruleSimpleQuantifier= ruleSimpleQuantifier EOF )
+            // InternalRegularExpressionParser.g:2164:2: iv_ruleSimpleQuantifier= ruleSimpleQuantifier EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getSimpleQuantifierRule()); 
@@ -6436,7 +6590,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "ruleSimpleQuantifier"
-    // InternalRegularExpressionParser.g:2100:1: ruleSimpleQuantifier returns [EObject current=null] : ( ( ( (lv_quantifier_0_1= PlusSign | lv_quantifier_0_2= Asterisk | lv_quantifier_0_3= QuestionMark ) ) ) ( (lv_nonGreedy_1_0= QuestionMark ) )? ) ;
+    // InternalRegularExpressionParser.g:2170:1: ruleSimpleQuantifier returns [EObject current=null] : ( ( ( (lv_quantifier_0_1= PlusSign | lv_quantifier_0_2= Asterisk | lv_quantifier_0_3= QuestionMark ) ) ) ( (lv_nonGreedy_1_0= QuestionMark ) )? ) ;
     public final EObject ruleSimpleQuantifier() throws RecognitionException {
         EObject current = null;
 
@@ -6449,49 +6603,49 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
         	enterRule();
 
         try {
-            // InternalRegularExpressionParser.g:2106:2: ( ( ( ( (lv_quantifier_0_1= PlusSign | lv_quantifier_0_2= Asterisk | lv_quantifier_0_3= QuestionMark ) ) ) ( (lv_nonGreedy_1_0= QuestionMark ) )? ) )
-            // InternalRegularExpressionParser.g:2107:2: ( ( ( (lv_quantifier_0_1= PlusSign | lv_quantifier_0_2= Asterisk | lv_quantifier_0_3= QuestionMark ) ) ) ( (lv_nonGreedy_1_0= QuestionMark ) )? )
+            // InternalRegularExpressionParser.g:2176:2: ( ( ( ( (lv_quantifier_0_1= PlusSign | lv_quantifier_0_2= Asterisk | lv_quantifier_0_3= QuestionMark ) ) ) ( (lv_nonGreedy_1_0= QuestionMark ) )? ) )
+            // InternalRegularExpressionParser.g:2177:2: ( ( ( (lv_quantifier_0_1= PlusSign | lv_quantifier_0_2= Asterisk | lv_quantifier_0_3= QuestionMark ) ) ) ( (lv_nonGreedy_1_0= QuestionMark ) )? )
             {
-            // InternalRegularExpressionParser.g:2107:2: ( ( ( (lv_quantifier_0_1= PlusSign | lv_quantifier_0_2= Asterisk | lv_quantifier_0_3= QuestionMark ) ) ) ( (lv_nonGreedy_1_0= QuestionMark ) )? )
-            // InternalRegularExpressionParser.g:2108:3: ( ( (lv_quantifier_0_1= PlusSign | lv_quantifier_0_2= Asterisk | lv_quantifier_0_3= QuestionMark ) ) ) ( (lv_nonGreedy_1_0= QuestionMark ) )?
+            // InternalRegularExpressionParser.g:2177:2: ( ( ( (lv_quantifier_0_1= PlusSign | lv_quantifier_0_2= Asterisk | lv_quantifier_0_3= QuestionMark ) ) ) ( (lv_nonGreedy_1_0= QuestionMark ) )? )
+            // InternalRegularExpressionParser.g:2178:3: ( ( (lv_quantifier_0_1= PlusSign | lv_quantifier_0_2= Asterisk | lv_quantifier_0_3= QuestionMark ) ) ) ( (lv_nonGreedy_1_0= QuestionMark ) )?
             {
-            // InternalRegularExpressionParser.g:2108:3: ( ( (lv_quantifier_0_1= PlusSign | lv_quantifier_0_2= Asterisk | lv_quantifier_0_3= QuestionMark ) ) )
-            // InternalRegularExpressionParser.g:2109:4: ( (lv_quantifier_0_1= PlusSign | lv_quantifier_0_2= Asterisk | lv_quantifier_0_3= QuestionMark ) )
+            // InternalRegularExpressionParser.g:2178:3: ( ( (lv_quantifier_0_1= PlusSign | lv_quantifier_0_2= Asterisk | lv_quantifier_0_3= QuestionMark ) ) )
+            // InternalRegularExpressionParser.g:2179:4: ( (lv_quantifier_0_1= PlusSign | lv_quantifier_0_2= Asterisk | lv_quantifier_0_3= QuestionMark ) )
             {
-            // InternalRegularExpressionParser.g:2109:4: ( (lv_quantifier_0_1= PlusSign | lv_quantifier_0_2= Asterisk | lv_quantifier_0_3= QuestionMark ) )
-            // InternalRegularExpressionParser.g:2110:5: (lv_quantifier_0_1= PlusSign | lv_quantifier_0_2= Asterisk | lv_quantifier_0_3= QuestionMark )
+            // InternalRegularExpressionParser.g:2179:4: ( (lv_quantifier_0_1= PlusSign | lv_quantifier_0_2= Asterisk | lv_quantifier_0_3= QuestionMark ) )
+            // InternalRegularExpressionParser.g:2180:5: (lv_quantifier_0_1= PlusSign | lv_quantifier_0_2= Asterisk | lv_quantifier_0_3= QuestionMark )
             {
-            // InternalRegularExpressionParser.g:2110:5: (lv_quantifier_0_1= PlusSign | lv_quantifier_0_2= Asterisk | lv_quantifier_0_3= QuestionMark )
-            int alt29=3;
+            // InternalRegularExpressionParser.g:2180:5: (lv_quantifier_0_1= PlusSign | lv_quantifier_0_2= Asterisk | lv_quantifier_0_3= QuestionMark )
+            int alt30=3;
             switch ( input.LA(1) ) {
             case PlusSign:
                 {
-                alt29=1;
+                alt30=1;
                 }
                 break;
             case Asterisk:
                 {
-                alt29=2;
+                alt30=2;
                 }
                 break;
             case QuestionMark:
                 {
-                alt29=3;
+                alt30=3;
                 }
                 break;
             default:
                 if (state.backtracking>0) {state.failed=true; return current;}
                 NoViableAltException nvae =
-                    new NoViableAltException("", 29, 0, input);
+                    new NoViableAltException("", 30, 0, input);
 
                 throw nvae;
             }
 
-            switch (alt29) {
+            switch (alt30) {
                 case 1 :
-                    // InternalRegularExpressionParser.g:2111:6: lv_quantifier_0_1= PlusSign
+                    // InternalRegularExpressionParser.g:2181:6: lv_quantifier_0_1= PlusSign
                     {
-                    lv_quantifier_0_1=(Token)match(input,PlusSign,FOLLOW_24); if (state.failed) return current;
+                    lv_quantifier_0_1=(Token)match(input,PlusSign,FOLLOW_18); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       						newLeafNode(lv_quantifier_0_1, grammarAccess.getSimpleQuantifierAccess().getQuantifierPlusSignKeyword_0_0_0());
@@ -6509,9 +6663,9 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     }
                     break;
                 case 2 :
-                    // InternalRegularExpressionParser.g:2122:6: lv_quantifier_0_2= Asterisk
+                    // InternalRegularExpressionParser.g:2192:6: lv_quantifier_0_2= Asterisk
                     {
-                    lv_quantifier_0_2=(Token)match(input,Asterisk,FOLLOW_24); if (state.failed) return current;
+                    lv_quantifier_0_2=(Token)match(input,Asterisk,FOLLOW_18); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       						newLeafNode(lv_quantifier_0_2, grammarAccess.getSimpleQuantifierAccess().getQuantifierAsteriskKeyword_0_0_1());
@@ -6529,9 +6683,9 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     }
                     break;
                 case 3 :
-                    // InternalRegularExpressionParser.g:2133:6: lv_quantifier_0_3= QuestionMark
+                    // InternalRegularExpressionParser.g:2203:6: lv_quantifier_0_3= QuestionMark
                     {
-                    lv_quantifier_0_3=(Token)match(input,QuestionMark,FOLLOW_24); if (state.failed) return current;
+                    lv_quantifier_0_3=(Token)match(input,QuestionMark,FOLLOW_18); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       						newLeafNode(lv_quantifier_0_3, grammarAccess.getSimpleQuantifierAccess().getQuantifierQuestionMarkKeyword_0_0_2());
@@ -6557,19 +6711,19 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
             }
 
-            // InternalRegularExpressionParser.g:2146:3: ( (lv_nonGreedy_1_0= QuestionMark ) )?
-            int alt30=2;
-            int LA30_0 = input.LA(1);
+            // InternalRegularExpressionParser.g:2216:3: ( (lv_nonGreedy_1_0= QuestionMark ) )?
+            int alt31=2;
+            int LA31_0 = input.LA(1);
 
-            if ( (LA30_0==QuestionMark) ) {
-                alt30=1;
+            if ( (LA31_0==QuestionMark) ) {
+                alt31=1;
             }
-            switch (alt30) {
+            switch (alt31) {
                 case 1 :
-                    // InternalRegularExpressionParser.g:2147:4: (lv_nonGreedy_1_0= QuestionMark )
+                    // InternalRegularExpressionParser.g:2217:4: (lv_nonGreedy_1_0= QuestionMark )
                     {
-                    // InternalRegularExpressionParser.g:2147:4: (lv_nonGreedy_1_0= QuestionMark )
-                    // InternalRegularExpressionParser.g:2148:5: lv_nonGreedy_1_0= QuestionMark
+                    // InternalRegularExpressionParser.g:2217:4: (lv_nonGreedy_1_0= QuestionMark )
+                    // InternalRegularExpressionParser.g:2218:5: lv_nonGreedy_1_0= QuestionMark
                     {
                     lv_nonGreedy_1_0=(Token)match(input,QuestionMark,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -6619,7 +6773,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "entryRuleExactQuantifier"
-    // InternalRegularExpressionParser.g:2164:1: entryRuleExactQuantifier returns [EObject current=null] : iv_ruleExactQuantifier= ruleExactQuantifier EOF ;
+    // InternalRegularExpressionParser.g:2234:1: entryRuleExactQuantifier returns [EObject current=null] : iv_ruleExactQuantifier= ruleExactQuantifier EOF ;
     public final EObject entryRuleExactQuantifier() throws RecognitionException {
         EObject current = null;
 
@@ -6627,8 +6781,8 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
         try {
-            // InternalRegularExpressionParser.g:2164:56: (iv_ruleExactQuantifier= ruleExactQuantifier EOF )
-            // InternalRegularExpressionParser.g:2165:2: iv_ruleExactQuantifier= ruleExactQuantifier EOF
+            // InternalRegularExpressionParser.g:2234:56: (iv_ruleExactQuantifier= ruleExactQuantifier EOF )
+            // InternalRegularExpressionParser.g:2235:2: iv_ruleExactQuantifier= ruleExactQuantifier EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getExactQuantifierRule()); 
@@ -6659,7 +6813,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "ruleExactQuantifier"
-    // InternalRegularExpressionParser.g:2171:1: ruleExactQuantifier returns [EObject current=null] : ( () otherlv_1= LeftCurlyBracket ( (lv_min_2_0= ruleINT ) ) ( (otherlv_3= Comma ( (lv_max_4_0= ruleINT ) ) ) | ( (lv_unboundedMax_5_0= Comma ) ) )? otherlv_6= RightCurlyBracket ( (lv_nonGreedy_7_0= QuestionMark ) )? ) ;
+    // InternalRegularExpressionParser.g:2241:1: ruleExactQuantifier returns [EObject current=null] : ( () otherlv_1= LeftCurlyBracket ( (lv_min_2_0= ruleINT ) ) ( (otherlv_3= Comma ( (lv_max_4_0= ruleINT ) ) ) | ( (lv_unboundedMax_5_0= Comma ) ) )? otherlv_6= RightCurlyBracket ( (lv_nonGreedy_7_0= QuestionMark ) )? ) ;
     public final EObject ruleExactQuantifier() throws RecognitionException {
         EObject current = null;
 
@@ -6677,14 +6831,14 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
         	enterRule();
 
         try {
-            // InternalRegularExpressionParser.g:2177:2: ( ( () otherlv_1= LeftCurlyBracket ( (lv_min_2_0= ruleINT ) ) ( (otherlv_3= Comma ( (lv_max_4_0= ruleINT ) ) ) | ( (lv_unboundedMax_5_0= Comma ) ) )? otherlv_6= RightCurlyBracket ( (lv_nonGreedy_7_0= QuestionMark ) )? ) )
-            // InternalRegularExpressionParser.g:2178:2: ( () otherlv_1= LeftCurlyBracket ( (lv_min_2_0= ruleINT ) ) ( (otherlv_3= Comma ( (lv_max_4_0= ruleINT ) ) ) | ( (lv_unboundedMax_5_0= Comma ) ) )? otherlv_6= RightCurlyBracket ( (lv_nonGreedy_7_0= QuestionMark ) )? )
+            // InternalRegularExpressionParser.g:2247:2: ( ( () otherlv_1= LeftCurlyBracket ( (lv_min_2_0= ruleINT ) ) ( (otherlv_3= Comma ( (lv_max_4_0= ruleINT ) ) ) | ( (lv_unboundedMax_5_0= Comma ) ) )? otherlv_6= RightCurlyBracket ( (lv_nonGreedy_7_0= QuestionMark ) )? ) )
+            // InternalRegularExpressionParser.g:2248:2: ( () otherlv_1= LeftCurlyBracket ( (lv_min_2_0= ruleINT ) ) ( (otherlv_3= Comma ( (lv_max_4_0= ruleINT ) ) ) | ( (lv_unboundedMax_5_0= Comma ) ) )? otherlv_6= RightCurlyBracket ( (lv_nonGreedy_7_0= QuestionMark ) )? )
             {
-            // InternalRegularExpressionParser.g:2178:2: ( () otherlv_1= LeftCurlyBracket ( (lv_min_2_0= ruleINT ) ) ( (otherlv_3= Comma ( (lv_max_4_0= ruleINT ) ) ) | ( (lv_unboundedMax_5_0= Comma ) ) )? otherlv_6= RightCurlyBracket ( (lv_nonGreedy_7_0= QuestionMark ) )? )
-            // InternalRegularExpressionParser.g:2179:3: () otherlv_1= LeftCurlyBracket ( (lv_min_2_0= ruleINT ) ) ( (otherlv_3= Comma ( (lv_max_4_0= ruleINT ) ) ) | ( (lv_unboundedMax_5_0= Comma ) ) )? otherlv_6= RightCurlyBracket ( (lv_nonGreedy_7_0= QuestionMark ) )?
+            // InternalRegularExpressionParser.g:2248:2: ( () otherlv_1= LeftCurlyBracket ( (lv_min_2_0= ruleINT ) ) ( (otherlv_3= Comma ( (lv_max_4_0= ruleINT ) ) ) | ( (lv_unboundedMax_5_0= Comma ) ) )? otherlv_6= RightCurlyBracket ( (lv_nonGreedy_7_0= QuestionMark ) )? )
+            // InternalRegularExpressionParser.g:2249:3: () otherlv_1= LeftCurlyBracket ( (lv_min_2_0= ruleINT ) ) ( (otherlv_3= Comma ( (lv_max_4_0= ruleINT ) ) ) | ( (lv_unboundedMax_5_0= Comma ) ) )? otherlv_6= RightCurlyBracket ( (lv_nonGreedy_7_0= QuestionMark ) )?
             {
-            // InternalRegularExpressionParser.g:2179:3: ()
-            // InternalRegularExpressionParser.g:2180:4: 
+            // InternalRegularExpressionParser.g:2249:3: ()
+            // InternalRegularExpressionParser.g:2250:4: 
             {
             if ( state.backtracking==0 ) {
 
@@ -6696,24 +6850,24 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
             }
 
-            otherlv_1=(Token)match(input,LeftCurlyBracket,FOLLOW_25); if (state.failed) return current;
+            otherlv_1=(Token)match(input,LeftCurlyBracket,FOLLOW_19); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_1, grammarAccess.getExactQuantifierAccess().getLeftCurlyBracketKeyword_1());
               		
             }
-            // InternalRegularExpressionParser.g:2190:3: ( (lv_min_2_0= ruleINT ) )
-            // InternalRegularExpressionParser.g:2191:4: (lv_min_2_0= ruleINT )
+            // InternalRegularExpressionParser.g:2260:3: ( (lv_min_2_0= ruleINT ) )
+            // InternalRegularExpressionParser.g:2261:4: (lv_min_2_0= ruleINT )
             {
-            // InternalRegularExpressionParser.g:2191:4: (lv_min_2_0= ruleINT )
-            // InternalRegularExpressionParser.g:2192:5: lv_min_2_0= ruleINT
+            // InternalRegularExpressionParser.g:2261:4: (lv_min_2_0= ruleINT )
+            // InternalRegularExpressionParser.g:2262:5: lv_min_2_0= ruleINT
             {
             if ( state.backtracking==0 ) {
 
               					newCompositeNode(grammarAccess.getExactQuantifierAccess().getMinINTParserRuleCall_2_0());
               				
             }
-            pushFollow(FOLLOW_26);
+            pushFollow(FOLLOW_20);
             lv_min_2_0=ruleINT();
 
             state._fsp--;
@@ -6737,45 +6891,45 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
             }
 
-            // InternalRegularExpressionParser.g:2209:3: ( (otherlv_3= Comma ( (lv_max_4_0= ruleINT ) ) ) | ( (lv_unboundedMax_5_0= Comma ) ) )?
-            int alt31=3;
-            int LA31_0 = input.LA(1);
+            // InternalRegularExpressionParser.g:2279:3: ( (otherlv_3= Comma ( (lv_max_4_0= ruleINT ) ) ) | ( (lv_unboundedMax_5_0= Comma ) ) )?
+            int alt32=3;
+            int LA32_0 = input.LA(1);
 
-            if ( (LA31_0==Comma) ) {
-                int LA31_1 = input.LA(2);
+            if ( (LA32_0==Comma) ) {
+                int LA32_1 = input.LA(2);
 
-                if ( (LA31_1==RightCurlyBracket) ) {
-                    alt31=2;
+                if ( (LA32_1==RightCurlyBracket) ) {
+                    alt32=2;
                 }
-                else if ( (LA31_1==RULE_UNICODE_DIGIT) ) {
-                    alt31=1;
+                else if ( (LA32_1==RULE_UNICODE_DIGIT) ) {
+                    alt32=1;
                 }
             }
-            switch (alt31) {
+            switch (alt32) {
                 case 1 :
-                    // InternalRegularExpressionParser.g:2210:4: (otherlv_3= Comma ( (lv_max_4_0= ruleINT ) ) )
+                    // InternalRegularExpressionParser.g:2280:4: (otherlv_3= Comma ( (lv_max_4_0= ruleINT ) ) )
                     {
-                    // InternalRegularExpressionParser.g:2210:4: (otherlv_3= Comma ( (lv_max_4_0= ruleINT ) ) )
-                    // InternalRegularExpressionParser.g:2211:5: otherlv_3= Comma ( (lv_max_4_0= ruleINT ) )
+                    // InternalRegularExpressionParser.g:2280:4: (otherlv_3= Comma ( (lv_max_4_0= ruleINT ) ) )
+                    // InternalRegularExpressionParser.g:2281:5: otherlv_3= Comma ( (lv_max_4_0= ruleINT ) )
                     {
-                    otherlv_3=(Token)match(input,Comma,FOLLOW_25); if (state.failed) return current;
+                    otherlv_3=(Token)match(input,Comma,FOLLOW_19); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       					newLeafNode(otherlv_3, grammarAccess.getExactQuantifierAccess().getCommaKeyword_3_0_0());
                       				
                     }
-                    // InternalRegularExpressionParser.g:2215:5: ( (lv_max_4_0= ruleINT ) )
-                    // InternalRegularExpressionParser.g:2216:6: (lv_max_4_0= ruleINT )
+                    // InternalRegularExpressionParser.g:2285:5: ( (lv_max_4_0= ruleINT ) )
+                    // InternalRegularExpressionParser.g:2286:6: (lv_max_4_0= ruleINT )
                     {
-                    // InternalRegularExpressionParser.g:2216:6: (lv_max_4_0= ruleINT )
-                    // InternalRegularExpressionParser.g:2217:7: lv_max_4_0= ruleINT
+                    // InternalRegularExpressionParser.g:2286:6: (lv_max_4_0= ruleINT )
+                    // InternalRegularExpressionParser.g:2287:7: lv_max_4_0= ruleINT
                     {
                     if ( state.backtracking==0 ) {
 
                       							newCompositeNode(grammarAccess.getExactQuantifierAccess().getMaxINTParserRuleCall_3_0_1_0());
                       						
                     }
-                    pushFollow(FOLLOW_27);
+                    pushFollow(FOLLOW_21);
                     lv_max_4_0=ruleINT();
 
                     state._fsp--;
@@ -6806,15 +6960,15 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                     }
                     break;
                 case 2 :
-                    // InternalRegularExpressionParser.g:2236:4: ( (lv_unboundedMax_5_0= Comma ) )
+                    // InternalRegularExpressionParser.g:2306:4: ( (lv_unboundedMax_5_0= Comma ) )
                     {
-                    // InternalRegularExpressionParser.g:2236:4: ( (lv_unboundedMax_5_0= Comma ) )
-                    // InternalRegularExpressionParser.g:2237:5: (lv_unboundedMax_5_0= Comma )
+                    // InternalRegularExpressionParser.g:2306:4: ( (lv_unboundedMax_5_0= Comma ) )
+                    // InternalRegularExpressionParser.g:2307:5: (lv_unboundedMax_5_0= Comma )
                     {
-                    // InternalRegularExpressionParser.g:2237:5: (lv_unboundedMax_5_0= Comma )
-                    // InternalRegularExpressionParser.g:2238:6: lv_unboundedMax_5_0= Comma
+                    // InternalRegularExpressionParser.g:2307:5: (lv_unboundedMax_5_0= Comma )
+                    // InternalRegularExpressionParser.g:2308:6: lv_unboundedMax_5_0= Comma
                     {
-                    lv_unboundedMax_5_0=(Token)match(input,Comma,FOLLOW_27); if (state.failed) return current;
+                    lv_unboundedMax_5_0=(Token)match(input,Comma,FOLLOW_21); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       						newLeafNode(lv_unboundedMax_5_0, grammarAccess.getExactQuantifierAccess().getUnboundedMaxCommaKeyword_3_1_0());
@@ -6840,25 +6994,25 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
             }
 
-            otherlv_6=(Token)match(input,RightCurlyBracket,FOLLOW_24); if (state.failed) return current;
+            otherlv_6=(Token)match(input,RightCurlyBracket,FOLLOW_18); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_6, grammarAccess.getExactQuantifierAccess().getRightCurlyBracketKeyword_4());
               		
             }
-            // InternalRegularExpressionParser.g:2255:3: ( (lv_nonGreedy_7_0= QuestionMark ) )?
-            int alt32=2;
-            int LA32_0 = input.LA(1);
+            // InternalRegularExpressionParser.g:2325:3: ( (lv_nonGreedy_7_0= QuestionMark ) )?
+            int alt33=2;
+            int LA33_0 = input.LA(1);
 
-            if ( (LA32_0==QuestionMark) ) {
-                alt32=1;
+            if ( (LA33_0==QuestionMark) ) {
+                alt33=1;
             }
-            switch (alt32) {
+            switch (alt33) {
                 case 1 :
-                    // InternalRegularExpressionParser.g:2256:4: (lv_nonGreedy_7_0= QuestionMark )
+                    // InternalRegularExpressionParser.g:2326:4: (lv_nonGreedy_7_0= QuestionMark )
                     {
-                    // InternalRegularExpressionParser.g:2256:4: (lv_nonGreedy_7_0= QuestionMark )
-                    // InternalRegularExpressionParser.g:2257:5: lv_nonGreedy_7_0= QuestionMark
+                    // InternalRegularExpressionParser.g:2326:4: (lv_nonGreedy_7_0= QuestionMark )
+                    // InternalRegularExpressionParser.g:2327:5: lv_nonGreedy_7_0= QuestionMark
                     {
                     lv_nonGreedy_7_0=(Token)match(input,QuestionMark,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -6908,7 +7062,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "entryRuleRegularExpressionFlags"
-    // InternalRegularExpressionParser.g:2273:1: entryRuleRegularExpressionFlags returns [EObject current=null] : iv_ruleRegularExpressionFlags= ruleRegularExpressionFlags EOF ;
+    // InternalRegularExpressionParser.g:2343:1: entryRuleRegularExpressionFlags returns [EObject current=null] : iv_ruleRegularExpressionFlags= ruleRegularExpressionFlags EOF ;
     public final EObject entryRuleRegularExpressionFlags() throws RecognitionException {
         EObject current = null;
 
@@ -6916,8 +7070,8 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
         try {
-            // InternalRegularExpressionParser.g:2273:63: (iv_ruleRegularExpressionFlags= ruleRegularExpressionFlags EOF )
-            // InternalRegularExpressionParser.g:2274:2: iv_ruleRegularExpressionFlags= ruleRegularExpressionFlags EOF
+            // InternalRegularExpressionParser.g:2343:63: (iv_ruleRegularExpressionFlags= ruleRegularExpressionFlags EOF )
+            // InternalRegularExpressionParser.g:2344:2: iv_ruleRegularExpressionFlags= ruleRegularExpressionFlags EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getRegularExpressionFlagsRule()); 
@@ -6948,7 +7102,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "ruleRegularExpressionFlags"
-    // InternalRegularExpressionParser.g:2280:1: ruleRegularExpressionFlags returns [EObject current=null] : ( () ( ( (lv_flags_1_1= RULE_UNICODE_LETTER | lv_flags_1_2= RULE_UNICODE_ESCAPE ) ) )* ) ;
+    // InternalRegularExpressionParser.g:2350:1: ruleRegularExpressionFlags returns [EObject current=null] : ( () ( ( (lv_flags_1_1= RULE_UNICODE_LETTER | lv_flags_1_2= RULE_UNICODE_ESCAPE ) ) )* ) ;
     public final EObject ruleRegularExpressionFlags() throws RecognitionException {
         EObject current = null;
 
@@ -6959,14 +7113,14 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
         	enterRule();
 
         try {
-            // InternalRegularExpressionParser.g:2286:2: ( ( () ( ( (lv_flags_1_1= RULE_UNICODE_LETTER | lv_flags_1_2= RULE_UNICODE_ESCAPE ) ) )* ) )
-            // InternalRegularExpressionParser.g:2287:2: ( () ( ( (lv_flags_1_1= RULE_UNICODE_LETTER | lv_flags_1_2= RULE_UNICODE_ESCAPE ) ) )* )
+            // InternalRegularExpressionParser.g:2356:2: ( ( () ( ( (lv_flags_1_1= RULE_UNICODE_LETTER | lv_flags_1_2= RULE_UNICODE_ESCAPE ) ) )* ) )
+            // InternalRegularExpressionParser.g:2357:2: ( () ( ( (lv_flags_1_1= RULE_UNICODE_LETTER | lv_flags_1_2= RULE_UNICODE_ESCAPE ) ) )* )
             {
-            // InternalRegularExpressionParser.g:2287:2: ( () ( ( (lv_flags_1_1= RULE_UNICODE_LETTER | lv_flags_1_2= RULE_UNICODE_ESCAPE ) ) )* )
-            // InternalRegularExpressionParser.g:2288:3: () ( ( (lv_flags_1_1= RULE_UNICODE_LETTER | lv_flags_1_2= RULE_UNICODE_ESCAPE ) ) )*
+            // InternalRegularExpressionParser.g:2357:2: ( () ( ( (lv_flags_1_1= RULE_UNICODE_LETTER | lv_flags_1_2= RULE_UNICODE_ESCAPE ) ) )* )
+            // InternalRegularExpressionParser.g:2358:3: () ( ( (lv_flags_1_1= RULE_UNICODE_LETTER | lv_flags_1_2= RULE_UNICODE_ESCAPE ) ) )*
             {
-            // InternalRegularExpressionParser.g:2288:3: ()
-            // InternalRegularExpressionParser.g:2289:4: 
+            // InternalRegularExpressionParser.g:2358:3: ()
+            // InternalRegularExpressionParser.g:2359:4: 
             {
             if ( state.backtracking==0 ) {
 
@@ -6978,46 +7132,46 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
             }
 
-            // InternalRegularExpressionParser.g:2295:3: ( ( (lv_flags_1_1= RULE_UNICODE_LETTER | lv_flags_1_2= RULE_UNICODE_ESCAPE ) ) )*
-            loop34:
+            // InternalRegularExpressionParser.g:2365:3: ( ( (lv_flags_1_1= RULE_UNICODE_LETTER | lv_flags_1_2= RULE_UNICODE_ESCAPE ) ) )*
+            loop35:
             do {
-                int alt34=2;
-                int LA34_0 = input.LA(1);
+                int alt35=2;
+                int LA35_0 = input.LA(1);
 
-                if ( (LA34_0==RULE_UNICODE_ESCAPE||LA34_0==RULE_UNICODE_LETTER) ) {
-                    alt34=1;
+                if ( (LA35_0==RULE_UNICODE_ESCAPE||LA35_0==RULE_UNICODE_LETTER) ) {
+                    alt35=1;
                 }
 
 
-                switch (alt34) {
+                switch (alt35) {
             	case 1 :
-            	    // InternalRegularExpressionParser.g:2296:4: ( (lv_flags_1_1= RULE_UNICODE_LETTER | lv_flags_1_2= RULE_UNICODE_ESCAPE ) )
+            	    // InternalRegularExpressionParser.g:2366:4: ( (lv_flags_1_1= RULE_UNICODE_LETTER | lv_flags_1_2= RULE_UNICODE_ESCAPE ) )
             	    {
-            	    // InternalRegularExpressionParser.g:2296:4: ( (lv_flags_1_1= RULE_UNICODE_LETTER | lv_flags_1_2= RULE_UNICODE_ESCAPE ) )
-            	    // InternalRegularExpressionParser.g:2297:5: (lv_flags_1_1= RULE_UNICODE_LETTER | lv_flags_1_2= RULE_UNICODE_ESCAPE )
+            	    // InternalRegularExpressionParser.g:2366:4: ( (lv_flags_1_1= RULE_UNICODE_LETTER | lv_flags_1_2= RULE_UNICODE_ESCAPE ) )
+            	    // InternalRegularExpressionParser.g:2367:5: (lv_flags_1_1= RULE_UNICODE_LETTER | lv_flags_1_2= RULE_UNICODE_ESCAPE )
             	    {
-            	    // InternalRegularExpressionParser.g:2297:5: (lv_flags_1_1= RULE_UNICODE_LETTER | lv_flags_1_2= RULE_UNICODE_ESCAPE )
-            	    int alt33=2;
-            	    int LA33_0 = input.LA(1);
+            	    // InternalRegularExpressionParser.g:2367:5: (lv_flags_1_1= RULE_UNICODE_LETTER | lv_flags_1_2= RULE_UNICODE_ESCAPE )
+            	    int alt34=2;
+            	    int LA34_0 = input.LA(1);
 
-            	    if ( (LA33_0==RULE_UNICODE_LETTER) ) {
-            	        alt33=1;
+            	    if ( (LA34_0==RULE_UNICODE_LETTER) ) {
+            	        alt34=1;
             	    }
-            	    else if ( (LA33_0==RULE_UNICODE_ESCAPE) ) {
-            	        alt33=2;
+            	    else if ( (LA34_0==RULE_UNICODE_ESCAPE) ) {
+            	        alt34=2;
             	    }
             	    else {
             	        if (state.backtracking>0) {state.failed=true; return current;}
             	        NoViableAltException nvae =
-            	            new NoViableAltException("", 33, 0, input);
+            	            new NoViableAltException("", 34, 0, input);
 
             	        throw nvae;
             	    }
-            	    switch (alt33) {
+            	    switch (alt34) {
             	        case 1 :
-            	            // InternalRegularExpressionParser.g:2298:6: lv_flags_1_1= RULE_UNICODE_LETTER
+            	            // InternalRegularExpressionParser.g:2368:6: lv_flags_1_1= RULE_UNICODE_LETTER
             	            {
-            	            lv_flags_1_1=(Token)match(input,RULE_UNICODE_LETTER,FOLLOW_28); if (state.failed) return current;
+            	            lv_flags_1_1=(Token)match(input,RULE_UNICODE_LETTER,FOLLOW_22); if (state.failed) return current;
             	            if ( state.backtracking==0 ) {
 
             	              						newLeafNode(lv_flags_1_1, grammarAccess.getRegularExpressionFlagsAccess().getFlagsUNICODE_LETTERTerminalRuleCall_1_0_0());
@@ -7039,9 +7193,9 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
             	            }
             	            break;
             	        case 2 :
-            	            // InternalRegularExpressionParser.g:2313:6: lv_flags_1_2= RULE_UNICODE_ESCAPE
+            	            // InternalRegularExpressionParser.g:2383:6: lv_flags_1_2= RULE_UNICODE_ESCAPE
             	            {
-            	            lv_flags_1_2=(Token)match(input,RULE_UNICODE_ESCAPE,FOLLOW_28); if (state.failed) return current;
+            	            lv_flags_1_2=(Token)match(input,RULE_UNICODE_ESCAPE,FOLLOW_22); if (state.failed) return current;
             	            if ( state.backtracking==0 ) {
 
             	              						newLeafNode(lv_flags_1_2, grammarAccess.getRegularExpressionFlagsAccess().getFlagsUNICODE_ESCAPETerminalRuleCall_1_0_1());
@@ -7073,7 +7227,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
             	    break;
 
             	default :
-            	    break loop34;
+            	    break loop35;
                 }
             } while (true);
 
@@ -7102,7 +7256,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "entryRuleINT"
-    // InternalRegularExpressionParser.g:2334:1: entryRuleINT returns [String current=null] : iv_ruleINT= ruleINT EOF ;
+    // InternalRegularExpressionParser.g:2404:1: entryRuleINT returns [String current=null] : iv_ruleINT= ruleINT EOF ;
     public final String entryRuleINT() throws RecognitionException {
         String current = null;
 
@@ -7110,8 +7264,8 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
         try {
-            // InternalRegularExpressionParser.g:2334:43: (iv_ruleINT= ruleINT EOF )
-            // InternalRegularExpressionParser.g:2335:2: iv_ruleINT= ruleINT EOF
+            // InternalRegularExpressionParser.g:2404:43: (iv_ruleINT= ruleINT EOF )
+            // InternalRegularExpressionParser.g:2405:2: iv_ruleINT= ruleINT EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getINTRule()); 
@@ -7142,7 +7296,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start "ruleINT"
-    // InternalRegularExpressionParser.g:2341:1: ruleINT returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_UNICODE_DIGIT_0= RULE_UNICODE_DIGIT )+ ;
+    // InternalRegularExpressionParser.g:2411:1: ruleINT returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_UNICODE_DIGIT_0= RULE_UNICODE_DIGIT )+ ;
     public final AntlrDatatypeRuleToken ruleINT() throws RecognitionException {
         AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -7152,26 +7306,26 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
         	enterRule();
 
         try {
-            // InternalRegularExpressionParser.g:2347:2: ( (this_UNICODE_DIGIT_0= RULE_UNICODE_DIGIT )+ )
-            // InternalRegularExpressionParser.g:2348:2: (this_UNICODE_DIGIT_0= RULE_UNICODE_DIGIT )+
+            // InternalRegularExpressionParser.g:2417:2: ( (this_UNICODE_DIGIT_0= RULE_UNICODE_DIGIT )+ )
+            // InternalRegularExpressionParser.g:2418:2: (this_UNICODE_DIGIT_0= RULE_UNICODE_DIGIT )+
             {
-            // InternalRegularExpressionParser.g:2348:2: (this_UNICODE_DIGIT_0= RULE_UNICODE_DIGIT )+
-            int cnt35=0;
-            loop35:
+            // InternalRegularExpressionParser.g:2418:2: (this_UNICODE_DIGIT_0= RULE_UNICODE_DIGIT )+
+            int cnt36=0;
+            loop36:
             do {
-                int alt35=2;
-                int LA35_0 = input.LA(1);
+                int alt36=2;
+                int LA36_0 = input.LA(1);
 
-                if ( (LA35_0==RULE_UNICODE_DIGIT) ) {
-                    alt35=1;
+                if ( (LA36_0==RULE_UNICODE_DIGIT) ) {
+                    alt36=1;
                 }
 
 
-                switch (alt35) {
+                switch (alt36) {
             	case 1 :
-            	    // InternalRegularExpressionParser.g:2349:3: this_UNICODE_DIGIT_0= RULE_UNICODE_DIGIT
+            	    // InternalRegularExpressionParser.g:2419:3: this_UNICODE_DIGIT_0= RULE_UNICODE_DIGIT
             	    {
-            	    this_UNICODE_DIGIT_0=(Token)match(input,RULE_UNICODE_DIGIT,FOLLOW_29); if (state.failed) return current;
+            	    this_UNICODE_DIGIT_0=(Token)match(input,RULE_UNICODE_DIGIT,FOLLOW_23); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
 
             	      			current.merge(this_UNICODE_DIGIT_0);
@@ -7187,13 +7341,13 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
             	    break;
 
             	default :
-            	    if ( cnt35 >= 1 ) break loop35;
+            	    if ( cnt36 >= 1 ) break loop36;
             	    if (state.backtracking>0) {state.failed=true; return current;}
                         EarlyExitException eee =
-                            new EarlyExitException(35, input);
+                            new EarlyExitException(36, input);
                         throw eee;
                 }
-                cnt35++;
+                cnt36++;
             } while (true);
 
 
@@ -7239,14 +7393,14 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
     // $ANTLR start synpred2_InternalRegularExpressionParser
     public final void synpred2_InternalRegularExpressionParser_fragment() throws RecognitionException {   
-        // InternalRegularExpressionParser.g:1259:4: ( ( ( CircumflexAccent ) ) )
-        // InternalRegularExpressionParser.g:1259:5: ( ( CircumflexAccent ) )
+        // InternalRegularExpressionParser.g:1272:4: ( ( ( CircumflexAccent ) ) )
+        // InternalRegularExpressionParser.g:1272:5: ( ( CircumflexAccent ) )
         {
-        // InternalRegularExpressionParser.g:1259:5: ( ( CircumflexAccent ) )
-        // InternalRegularExpressionParser.g:1260:5: ( CircumflexAccent )
+        // InternalRegularExpressionParser.g:1272:5: ( ( CircumflexAccent ) )
+        // InternalRegularExpressionParser.g:1273:5: ( CircumflexAccent )
         {
-        // InternalRegularExpressionParser.g:1260:5: ( CircumflexAccent )
-        // InternalRegularExpressionParser.g:1261:6: CircumflexAccent
+        // InternalRegularExpressionParser.g:1273:5: ( CircumflexAccent )
+        // InternalRegularExpressionParser.g:1274:6: CircumflexAccent
         {
         match(input,CircumflexAccent,FOLLOW_2); if (state.failed) return ;
 
@@ -7262,23 +7416,23 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
     // $ANTLR start synpred3_InternalRegularExpressionParser
     public final void synpred3_InternalRegularExpressionParser_fragment() throws RecognitionException {   
-        // InternalRegularExpressionParser.g:1331:4: ( ( () HyphenMinus ( ( ruleCharacterClassAtom ) ) ) )
-        // InternalRegularExpressionParser.g:1331:5: ( () HyphenMinus ( ( ruleCharacterClassAtom ) ) )
+        // InternalRegularExpressionParser.g:1344:4: ( ( () HyphenMinus ( ( ruleCharacterClassAtom ) ) ) )
+        // InternalRegularExpressionParser.g:1344:5: ( () HyphenMinus ( ( ruleCharacterClassAtom ) ) )
         {
-        // InternalRegularExpressionParser.g:1331:5: ( () HyphenMinus ( ( ruleCharacterClassAtom ) ) )
-        // InternalRegularExpressionParser.g:1332:5: () HyphenMinus ( ( ruleCharacterClassAtom ) )
+        // InternalRegularExpressionParser.g:1344:5: ( () HyphenMinus ( ( ruleCharacterClassAtom ) ) )
+        // InternalRegularExpressionParser.g:1345:5: () HyphenMinus ( ( ruleCharacterClassAtom ) )
         {
-        // InternalRegularExpressionParser.g:1332:5: ()
-        // InternalRegularExpressionParser.g:1333:5: 
+        // InternalRegularExpressionParser.g:1345:5: ()
+        // InternalRegularExpressionParser.g:1346:5: 
         {
         }
 
-        match(input,HyphenMinus,FOLLOW_17); if (state.failed) return ;
-        // InternalRegularExpressionParser.g:1335:5: ( ( ruleCharacterClassAtom ) )
-        // InternalRegularExpressionParser.g:1336:6: ( ruleCharacterClassAtom )
+        match(input,HyphenMinus,FOLLOW_14); if (state.failed) return ;
+        // InternalRegularExpressionParser.g:1348:5: ( ( ruleCharacterClassAtom ) )
+        // InternalRegularExpressionParser.g:1349:6: ( ruleCharacterClassAtom )
         {
-        // InternalRegularExpressionParser.g:1336:6: ( ruleCharacterClassAtom )
-        // InternalRegularExpressionParser.g:1337:7: ruleCharacterClassAtom
+        // InternalRegularExpressionParser.g:1349:6: ( ruleCharacterClassAtom )
+        // InternalRegularExpressionParser.g:1350:7: ruleCharacterClassAtom
         {
         pushFollow(FOLLOW_2);
         ruleCharacterClassAtom();
@@ -7346,24 +7500,24 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
 
     protected DFA9 dfa9 = new DFA9(this);
-    protected DFA20 dfa20 = new DFA20(this);
+    protected DFA21 dfa21 = new DFA21(this);
     static final String dfa_1s = "\12\uffff";
     static final String dfa_2s = "\1\5\3\uffff\1\5\1\uffff\2\5\1\uffff\1\5";
     static final String dfa_3s = "\1\4\3\uffff\1\4\1\uffff\2\4\1\0\1\4";
-    static final String dfa_4s = "\1\51\3\uffff\1\51\1\uffff\2\51\1\0\1\51";
+    static final String dfa_4s = "\1\60\3\uffff\1\60\1\uffff\2\60\1\0\1\60";
     static final String dfa_5s = "\1\uffff\3\1\1\uffff\1\2\4\uffff";
     static final String dfa_6s = "\1\0\7\uffff\1\1\1\uffff}>";
     static final String[] dfa_7s = {
-            "\4\5\1\2\1\1\10\5\1\3\3\5\1\uffff\1\4\7\5\1\uffff\2\5\1\uffff\2\5\1\uffff\1\5\1\uffff\2\5",
+            "\6\5\1\uffff\4\5\1\2\1\1\10\5\1\3\3\5\1\uffff\1\4\7\5\1\uffff\2\5\1\uffff\2\5\1\uffff\1\5\1\uffff\2\5",
             "",
             "",
             "",
-            "\22\5\1\uffff\10\5\1\uffff\2\5\1\uffff\2\5\1\uffff\1\6\1\uffff\2\5",
+            "\6\5\1\uffff\22\5\1\uffff\10\5\1\uffff\2\5\1\uffff\2\5\1\uffff\1\6\1\uffff\2\5",
             "",
-            "\6\5\1\7\13\5\1\uffff\2\5\1\10\5\5\1\uffff\2\5\1\uffff\2\5\1\uffff\1\6\1\uffff\2\5",
-            "\22\5\1\uffff\2\5\1\10\5\5\1\uffff\2\5\1\uffff\2\5\1\uffff\1\11\1\uffff\2\5",
+            "\6\5\1\uffff\6\5\1\7\13\5\1\uffff\2\5\1\10\5\5\1\uffff\2\5\1\uffff\2\5\1\uffff\1\6\1\uffff\2\5",
+            "\6\5\1\uffff\22\5\1\uffff\2\5\1\10\5\5\1\uffff\2\5\1\uffff\2\5\1\uffff\1\11\1\uffff\2\5",
             "\1\uffff",
-            "\22\5\1\uffff\2\5\1\10\5\5\1\uffff\2\5\1\uffff\2\5\1\uffff\1\11\1\uffff\2\5"
+            "\6\5\1\uffff\22\5\1\uffff\2\5\1\10\5\5\1\uffff\2\5\1\uffff\2\5\1\uffff\1\11\1\uffff\2\5"
     };
 
     static final short[] dfa_1 = DFA.unpackEncodedString(dfa_1s);
@@ -7409,7 +7563,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
                         else if ( (LA9_0==LeftCurlyBracket) ) {s = 4;}
 
-                        else if ( (LA9_0==EOF||(LA9_0>=ExclamationMark && LA9_0<=RightParenthesis)||(LA9_0>=Comma && LA9_0<=GreaterThanSign)||(LA9_0>=LeftSquareBracket && LA9_0<=CircumflexAccent)||(LA9_0>=VerticalLine && LA9_0<=RULE_CONTROL_LETTER_ESCAPE)||(LA9_0>=RULE_HEX_ESCAPE && LA9_0<=RULE_UNICODE_ESCAPE)||(LA9_0>=RULE_DECIMAL_ESCAPE && LA9_0<=RULE_IDENTITY_ESCAPE)||LA9_0==RULE_UNICODE_DIGIT||(LA9_0>=RULE_UNICODE_LETTER && LA9_0<=RULE_PATTERN_CHARACTER_NO_DASH)) ) {s = 5;}
+                        else if ( (LA9_0==EOF||(LA9_0>=LeftParenthesisQuestionMarkLessThanSignExclamationMark && LA9_0<=LeftParenthesisQuestionMarkEqualsSign)||(LA9_0>=ExclamationMark && LA9_0<=RightParenthesis)||(LA9_0>=Comma && LA9_0<=GreaterThanSign)||(LA9_0>=LeftSquareBracket && LA9_0<=CircumflexAccent)||(LA9_0>=VerticalLine && LA9_0<=RULE_CONTROL_LETTER_ESCAPE)||(LA9_0>=RULE_HEX_ESCAPE && LA9_0<=RULE_UNICODE_ESCAPE)||(LA9_0>=RULE_DECIMAL_ESCAPE && LA9_0<=RULE_IDENTITY_ESCAPE)||LA9_0==RULE_UNICODE_DIGIT||(LA9_0>=RULE_UNICODE_LETTER && LA9_0<=RULE_PATTERN_CHARACTER_NO_DASH)) ) {s = 5;}
 
                          
                         input.seek(index9_0);
@@ -7438,16 +7592,22 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
             throw nvae;
         }
     }
-    static final String dfa_8s = "\43\uffff";
-    static final String dfa_9s = "\1\2\42\uffff";
-    static final String dfa_10s = "\2\4\1\uffff\37\0\1\uffff";
-    static final String dfa_11s = "\2\51\1\uffff\37\0\1\uffff";
-    static final String dfa_12s = "\2\uffff\1\2\37\uffff\1\1";
-    static final String dfa_13s = "\3\uffff\1\31\1\20\1\4\1\16\1\32\1\3\1\21\1\14\1\22\1\1\1\25\1\6\1\13\1\11\1\34\1\17\1\0\1\24\1\5\1\27\1\10\1\33\1\15\1\36\1\23\1\2\1\26\1\7\1\30\1\12\1\35\1\uffff}>";
+    static final String dfa_8s = "\51\uffff";
+    static final String dfa_9s = "\1\2\50\uffff";
+    static final String dfa_10s = "\2\4\1\uffff\45\0\1\uffff";
+    static final String dfa_11s = "\2\60\1\uffff\45\0\1\uffff";
+    static final String dfa_12s = "\2\uffff\1\2\45\uffff\1\1";
+    static final String dfa_13s = "\3\uffff\1\11\1\13\1\20\1\26\1\42\1\4\1\23\1\43\1\34\1\16\1\2\1\24\1\7\1\14\1\35\1\21\1\40\1\27\1\0\1\32\1\5\1\37\1\12\1\44\1\17\1\3\1\25\1\10\1\31\1\15\1\36\1\22\1\41\1\30\1\1\1\33\1\6\1\uffff}>";
     static final String[] dfa_14s = {
-            "\7\2\1\1\12\2\1\uffff\4\2\1\uffff\3\2\1\uffff\2\2\1\uffff\2\2\1\uffff\1\2\1\uffff\2\2",
-            "\1\16\1\21\1\26\1\27\1\23\1\24\1\13\1\17\1\22\1\34\1\15\1\35\1\14\1\36\1\25\1\30\1\2\1\20\1\uffff\1\31\1\33\1\32\1\4\1\uffff\1\12\1\5\1\6\1\uffff\1\7\1\10\1\uffff\1\3\1\11\1\uffff\1\41\1\uffff\1\40\1\37",
+            "\3\2\1\uffff\12\2\1\1\12\2\1\uffff\4\2\1\uffff\3\2\1\uffff\2\2\1\uffff\2\2\1\uffff\1\2\1\uffff\2\2",
+            "\1\43\1\44\1\42\1\uffff\1\40\1\41\1\37\1\17\1\21\1\26\1\27\1\23\1\24\1\14\1\3\1\22\1\34\1\16\1\35\1\15\1\36\1\25\1\30\1\2\1\20\1\uffff\1\31\1\33\1\32\1\5\1\uffff\1\13\1\6\1\7\1\uffff\1\10\1\11\1\uffff\1\4\1\12\1\uffff\1\47\1\uffff\1\46\1\45",
             "",
+            "\1\uffff",
+            "\1\uffff",
+            "\1\uffff",
+            "\1\uffff",
+            "\1\uffff",
+            "\1\uffff",
             "\1\uffff",
             "\1\uffff",
             "\1\uffff",
@@ -7490,11 +7650,11 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
     static final short[] dfa_13 = DFA.unpackEncodedString(dfa_13s);
     static final short[][] dfa_14 = unpackEncodedStringArray(dfa_14s);
 
-    class DFA20 extends DFA {
+    class DFA21 extends DFA {
 
-        public DFA20(BaseRecognizer recognizer) {
+        public DFA21(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
-            this.decisionNumber = 20;
+            this.decisionNumber = 21;
             this.eot = dfa_8;
             this.eof = dfa_9;
             this.min = dfa_10;
@@ -7504,481 +7664,571 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
             this.transition = dfa_14;
         }
         public String getDescription() {
-            return "1330:3: ( ( ( () HyphenMinus ( ( ruleCharacterClassAtom ) ) ) )=> ( () otherlv_2= HyphenMinus ( (lv_right_3_0= ruleCharacterClassAtom ) ) ) )?";
+            return "1343:3: ( ( ( () HyphenMinus ( ( ruleCharacterClassAtom ) ) ) )=> ( () otherlv_2= HyphenMinus ( (lv_right_3_0= ruleCharacterClassAtom ) ) ) )?";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
         	int _s = s;
             switch ( s ) {
                     case 0 : 
-                        int LA20_19 = input.LA(1);
+                        int LA21_21 = input.LA(1);
 
                          
-                        int index20_19 = input.index();
+                        int index21_21 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 34;}
+                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 40;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index20_19);
+                        input.seek(index21_21);
                         if ( s>=0 ) return s;
                         break;
                     case 1 : 
-                        int LA20_12 = input.LA(1);
+                        int LA21_37 = input.LA(1);
 
                          
-                        int index20_12 = input.index();
+                        int index21_37 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 34;}
+                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 40;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index20_12);
+                        input.seek(index21_37);
                         if ( s>=0 ) return s;
                         break;
                     case 2 : 
-                        int LA20_28 = input.LA(1);
+                        int LA21_13 = input.LA(1);
 
                          
-                        int index20_28 = input.index();
+                        int index21_13 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 34;}
+                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 40;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index20_28);
+                        input.seek(index21_13);
                         if ( s>=0 ) return s;
                         break;
                     case 3 : 
-                        int LA20_8 = input.LA(1);
+                        int LA21_28 = input.LA(1);
 
                          
-                        int index20_8 = input.index();
+                        int index21_28 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 34;}
+                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 40;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index20_8);
+                        input.seek(index21_28);
                         if ( s>=0 ) return s;
                         break;
                     case 4 : 
-                        int LA20_5 = input.LA(1);
+                        int LA21_8 = input.LA(1);
 
                          
-                        int index20_5 = input.index();
+                        int index21_8 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 34;}
+                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 40;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index20_5);
+                        input.seek(index21_8);
                         if ( s>=0 ) return s;
                         break;
                     case 5 : 
-                        int LA20_21 = input.LA(1);
+                        int LA21_23 = input.LA(1);
 
                          
-                        int index20_21 = input.index();
+                        int index21_23 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 34;}
+                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 40;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index20_21);
+                        input.seek(index21_23);
                         if ( s>=0 ) return s;
                         break;
                     case 6 : 
-                        int LA20_14 = input.LA(1);
+                        int LA21_39 = input.LA(1);
 
                          
-                        int index20_14 = input.index();
+                        int index21_39 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 34;}
+                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 40;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index20_14);
+                        input.seek(index21_39);
                         if ( s>=0 ) return s;
                         break;
                     case 7 : 
-                        int LA20_30 = input.LA(1);
+                        int LA21_15 = input.LA(1);
 
                          
-                        int index20_30 = input.index();
+                        int index21_15 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 34;}
+                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 40;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index20_30);
+                        input.seek(index21_15);
                         if ( s>=0 ) return s;
                         break;
                     case 8 : 
-                        int LA20_23 = input.LA(1);
+                        int LA21_30 = input.LA(1);
 
                          
-                        int index20_23 = input.index();
+                        int index21_30 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 34;}
+                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 40;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index20_23);
+                        input.seek(index21_30);
                         if ( s>=0 ) return s;
                         break;
                     case 9 : 
-                        int LA20_16 = input.LA(1);
+                        int LA21_3 = input.LA(1);
 
                          
-                        int index20_16 = input.index();
+                        int index21_3 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 34;}
+                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 40;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index20_16);
+                        input.seek(index21_3);
                         if ( s>=0 ) return s;
                         break;
                     case 10 : 
-                        int LA20_32 = input.LA(1);
+                        int LA21_25 = input.LA(1);
 
                          
-                        int index20_32 = input.index();
+                        int index21_25 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 34;}
+                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 40;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index20_32);
+                        input.seek(index21_25);
                         if ( s>=0 ) return s;
                         break;
                     case 11 : 
-                        int LA20_15 = input.LA(1);
+                        int LA21_4 = input.LA(1);
 
                          
-                        int index20_15 = input.index();
+                        int index21_4 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 34;}
+                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 40;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index20_15);
+                        input.seek(index21_4);
                         if ( s>=0 ) return s;
                         break;
                     case 12 : 
-                        int LA20_10 = input.LA(1);
+                        int LA21_16 = input.LA(1);
 
                          
-                        int index20_10 = input.index();
+                        int index21_16 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 34;}
+                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 40;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index20_10);
+                        input.seek(index21_16);
                         if ( s>=0 ) return s;
                         break;
                     case 13 : 
-                        int LA20_25 = input.LA(1);
+                        int LA21_32 = input.LA(1);
 
                          
-                        int index20_25 = input.index();
+                        int index21_32 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 34;}
+                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 40;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index20_25);
+                        input.seek(index21_32);
                         if ( s>=0 ) return s;
                         break;
                     case 14 : 
-                        int LA20_6 = input.LA(1);
+                        int LA21_12 = input.LA(1);
 
                          
-                        int index20_6 = input.index();
+                        int index21_12 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 34;}
+                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 40;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index20_6);
+                        input.seek(index21_12);
                         if ( s>=0 ) return s;
                         break;
                     case 15 : 
-                        int LA20_18 = input.LA(1);
+                        int LA21_27 = input.LA(1);
 
                          
-                        int index20_18 = input.index();
+                        int index21_27 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 34;}
+                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 40;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index20_18);
+                        input.seek(index21_27);
                         if ( s>=0 ) return s;
                         break;
                     case 16 : 
-                        int LA20_4 = input.LA(1);
+                        int LA21_5 = input.LA(1);
 
                          
-                        int index20_4 = input.index();
+                        int index21_5 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 34;}
+                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 40;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index20_4);
+                        input.seek(index21_5);
                         if ( s>=0 ) return s;
                         break;
                     case 17 : 
-                        int LA20_9 = input.LA(1);
+                        int LA21_18 = input.LA(1);
 
                          
-                        int index20_9 = input.index();
+                        int index21_18 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 34;}
+                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 40;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index20_9);
+                        input.seek(index21_18);
                         if ( s>=0 ) return s;
                         break;
                     case 18 : 
-                        int LA20_11 = input.LA(1);
+                        int LA21_34 = input.LA(1);
 
                          
-                        int index20_11 = input.index();
+                        int index21_34 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 34;}
+                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 40;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index20_11);
+                        input.seek(index21_34);
                         if ( s>=0 ) return s;
                         break;
                     case 19 : 
-                        int LA20_27 = input.LA(1);
+                        int LA21_9 = input.LA(1);
 
                          
-                        int index20_27 = input.index();
+                        int index21_9 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 34;}
+                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 40;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index20_27);
+                        input.seek(index21_9);
                         if ( s>=0 ) return s;
                         break;
                     case 20 : 
-                        int LA20_20 = input.LA(1);
+                        int LA21_14 = input.LA(1);
 
                          
-                        int index20_20 = input.index();
+                        int index21_14 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 34;}
+                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 40;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index20_20);
+                        input.seek(index21_14);
                         if ( s>=0 ) return s;
                         break;
                     case 21 : 
-                        int LA20_13 = input.LA(1);
+                        int LA21_29 = input.LA(1);
 
                          
-                        int index20_13 = input.index();
+                        int index21_29 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 34;}
+                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 40;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index20_13);
+                        input.seek(index21_29);
                         if ( s>=0 ) return s;
                         break;
                     case 22 : 
-                        int LA20_29 = input.LA(1);
+                        int LA21_6 = input.LA(1);
 
                          
-                        int index20_29 = input.index();
+                        int index21_6 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 34;}
+                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 40;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index20_29);
+                        input.seek(index21_6);
                         if ( s>=0 ) return s;
                         break;
                     case 23 : 
-                        int LA20_22 = input.LA(1);
+                        int LA21_20 = input.LA(1);
 
                          
-                        int index20_22 = input.index();
+                        int index21_20 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 34;}
+                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 40;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index20_22);
+                        input.seek(index21_20);
                         if ( s>=0 ) return s;
                         break;
                     case 24 : 
-                        int LA20_31 = input.LA(1);
+                        int LA21_36 = input.LA(1);
 
                          
-                        int index20_31 = input.index();
+                        int index21_36 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 34;}
+                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 40;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index20_31);
+                        input.seek(index21_36);
                         if ( s>=0 ) return s;
                         break;
                     case 25 : 
-                        int LA20_3 = input.LA(1);
+                        int LA21_31 = input.LA(1);
 
                          
-                        int index20_3 = input.index();
+                        int index21_31 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 34;}
+                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 40;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index20_3);
+                        input.seek(index21_31);
                         if ( s>=0 ) return s;
                         break;
                     case 26 : 
-                        int LA20_7 = input.LA(1);
+                        int LA21_22 = input.LA(1);
 
                          
-                        int index20_7 = input.index();
+                        int index21_22 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 34;}
+                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 40;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index20_7);
+                        input.seek(index21_22);
                         if ( s>=0 ) return s;
                         break;
                     case 27 : 
-                        int LA20_24 = input.LA(1);
+                        int LA21_38 = input.LA(1);
 
                          
-                        int index20_24 = input.index();
+                        int index21_38 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 34;}
+                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 40;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index20_24);
+                        input.seek(index21_38);
                         if ( s>=0 ) return s;
                         break;
                     case 28 : 
-                        int LA20_17 = input.LA(1);
+                        int LA21_11 = input.LA(1);
 
                          
-                        int index20_17 = input.index();
+                        int index21_11 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 34;}
+                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 40;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index20_17);
+                        input.seek(index21_11);
                         if ( s>=0 ) return s;
                         break;
                     case 29 : 
-                        int LA20_33 = input.LA(1);
+                        int LA21_17 = input.LA(1);
 
                          
-                        int index20_33 = input.index();
+                        int index21_17 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 34;}
+                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 40;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index20_33);
+                        input.seek(index21_17);
                         if ( s>=0 ) return s;
                         break;
                     case 30 : 
-                        int LA20_26 = input.LA(1);
+                        int LA21_33 = input.LA(1);
 
                          
-                        int index20_26 = input.index();
+                        int index21_33 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 34;}
+                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 40;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index20_26);
+                        input.seek(index21_33);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 31 : 
+                        int LA21_24 = input.LA(1);
+
+                         
+                        int index21_24 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 40;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index21_24);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 32 : 
+                        int LA21_19 = input.LA(1);
+
+                         
+                        int index21_19 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 40;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index21_19);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 33 : 
+                        int LA21_35 = input.LA(1);
+
+                         
+                        int index21_35 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 40;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index21_35);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 34 : 
+                        int LA21_7 = input.LA(1);
+
+                         
+                        int index21_7 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 40;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index21_7);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 35 : 
+                        int LA21_10 = input.LA(1);
+
+                         
+                        int index21_10 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 40;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index21_10);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 36 : 
+                        int LA21_26 = input.LA(1);
+
+                         
+                        int index21_26 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred3_InternalRegularExpressionParser()) ) {s = 40;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index21_26);
                         if ( s>=0 ) return s;
                         break;
             }
             if (state.backtracking>0) {state.failed=true; return -1;}
             NoViableAltException nvae =
-                new NoViableAltException(getDescription(), 20, _s, input);
+                new NoViableAltException(getDescription(), 21, _s, input);
             error(nvae);
             throw nvae;
         }
@@ -7987,32 +8237,26 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
 
     public static final BitSet FOLLOW_1 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_2 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_3 = new BitSet(new long[]{0x0000035B7FBBDC70L});
-    public static final BitSet FOLLOW_4 = new BitSet(new long[]{0x0000000000002000L});
-    public static final BitSet FOLLOW_5 = new BitSet(new long[]{0x0000010200000000L});
-    public static final BitSet FOLLOW_6 = new BitSet(new long[]{0x0000000001000002L});
-    public static final BitSet FOLLOW_7 = new BitSet(new long[]{0x0000035B7FBBDC72L});
-    public static final BitSet FOLLOW_8 = new BitSet(new long[]{0x0000035B7EBBDC72L});
-    public static final BitSet FOLLOW_9 = new BitSet(new long[]{0x0000000000840302L});
-    public static final BitSet FOLLOW_10 = new BitSet(new long[]{0x0000000000040000L});
-    public static final BitSet FOLLOW_11 = new BitSet(new long[]{0x0000000000018010L});
-    public static final BitSet FOLLOW_12 = new BitSet(new long[]{0x0000000000010010L});
-    public static final BitSet FOLLOW_13 = new BitSet(new long[]{0x0000035B7FBBDCF0L});
-    public static final BitSet FOLLOW_14 = new BitSet(new long[]{0x0000000000000080L});
-    public static final BitSet FOLLOW_15 = new BitSet(new long[]{0x0000035B77BFFFF0L});
-    public static final BitSet FOLLOW_16 = new BitSet(new long[]{0x0000000000000802L});
-    public static final BitSet FOLLOW_17 = new BitSet(new long[]{0x0000035B77AFFFF0L});
-    public static final BitSet FOLLOW_18 = new BitSet(new long[]{0x0000035B7FBFDCF0L});
-    public static final BitSet FOLLOW_19 = new BitSet(new long[]{0x0000000000008000L});
-    public static final BitSet FOLLOW_20 = new BitSet(new long[]{0x0000010200400020L});
-    public static final BitSet FOLLOW_21 = new BitSet(new long[]{0x0000000000020000L});
-    public static final BitSet FOLLOW_22 = new BitSet(new long[]{0x0000000000004000L});
-    public static final BitSet FOLLOW_23 = new BitSet(new long[]{0x0000014200400022L});
-    public static final BitSet FOLLOW_24 = new BitSet(new long[]{0x0000000000040002L});
-    public static final BitSet FOLLOW_25 = new BitSet(new long[]{0x0000004000000000L});
-    public static final BitSet FOLLOW_26 = new BitSet(new long[]{0x0000000002000400L});
-    public static final BitSet FOLLOW_27 = new BitSet(new long[]{0x0000000002000000L});
-    public static final BitSet FOLLOW_28 = new BitSet(new long[]{0x0000010200000002L});
-    public static final BitSet FOLLOW_29 = new BitSet(new long[]{0x0000004000000002L});
+    public static final BitSet FOLLOW_3 = new BitSet(new long[]{0x0001ADBFDDEE3BF0L});
+    public static final BitSet FOLLOW_4 = new BitSet(new long[]{0x0000000000100000L});
+    public static final BitSet FOLLOW_5 = new BitSet(new long[]{0x0000810000000000L});
+    public static final BitSet FOLLOW_6 = new BitSet(new long[]{0x0000000080000002L});
+    public static final BitSet FOLLOW_7 = new BitSet(new long[]{0x0001ADBFDDEE3BF2L});
+    public static final BitSet FOLLOW_8 = new BitSet(new long[]{0x0001ADBF5DEE3BF2L});
+    public static final BitSet FOLLOW_9 = new BitSet(new long[]{0x0000000042018002L});
+    public static final BitSet FOLLOW_10 = new BitSet(new long[]{0x0001ADBFDDEE7BF0L});
+    public static final BitSet FOLLOW_11 = new BitSet(new long[]{0x0000000000004000L});
+    public static final BitSet FOLLOW_12 = new BitSet(new long[]{0x0001ADBBDFFFFF70L});
+    public static final BitSet FOLLOW_13 = new BitSet(new long[]{0x0000000000040002L});
+    public static final BitSet FOLLOW_14 = new BitSet(new long[]{0x0001ADBBD7FFFF70L});
+    public static final BitSet FOLLOW_15 = new BitSet(new long[]{0x0000810020001000L});
+    public static final BitSet FOLLOW_16 = new BitSet(new long[]{0x0000000001000000L});
+    public static final BitSet FOLLOW_17 = new BitSet(new long[]{0x0000A10020001002L});
+    public static final BitSet FOLLOW_18 = new BitSet(new long[]{0x0000000002000002L});
+    public static final BitSet FOLLOW_19 = new BitSet(new long[]{0x0000200000000000L});
+    public static final BitSet FOLLOW_20 = new BitSet(new long[]{0x0000000100020000L});
+    public static final BitSet FOLLOW_21 = new BitSet(new long[]{0x0000000100000000L});
+    public static final BitSet FOLLOW_22 = new BitSet(new long[]{0x0000810000000002L});
+    public static final BitSet FOLLOW_23 = new BitSet(new long[]{0x0000200000000002L});
 
 }

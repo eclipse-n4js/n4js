@@ -14,14 +14,14 @@ package org.eclipse.n4js.regex.regularExpression;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Look Ahead</b></em>'.
+ * A representation of the model object '<em><b>Look Behind</b></em>'.
  * <!-- end-user-doc -->
  *
  *
- * @see org.eclipse.n4js.regex.regularExpression.RegularExpressionPackage#getLookAhead()
+ * @see org.eclipse.n4js.regex.regularExpression.RegularExpressionPackage#getLookBehind()
  * @model
  * @generated
  */
-public interface LookAhead extends AbstractLookAhead
+public interface LookBehind extends AbstractLookAhead
 {
-} // LookAhead
+} // LookBehind

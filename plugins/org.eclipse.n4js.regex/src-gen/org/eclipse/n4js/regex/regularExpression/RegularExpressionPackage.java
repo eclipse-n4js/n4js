@@ -280,14 +280,14 @@ public interface RegularExpressionPackage extends EPackage
   int WORD_BOUNDARY_FEATURE_COUNT = ASSERTION_FEATURE_COUNT + 1;
 
   /**
-   * The meta object id for the '{@link org.eclipse.n4js.regex.regularExpression.impl.LookAheadImpl <em>Look Ahead</em>}' class.
+   * The meta object id for the '{@link org.eclipse.n4js.regex.regularExpression.impl.AbstractLookAheadImpl <em>Abstract Look Ahead</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see org.eclipse.n4js.regex.regularExpression.impl.LookAheadImpl
-   * @see org.eclipse.n4js.regex.regularExpression.impl.RegularExpressionPackageImpl#getLookAhead()
+   * @see org.eclipse.n4js.regex.regularExpression.impl.AbstractLookAheadImpl
+   * @see org.eclipse.n4js.regex.regularExpression.impl.RegularExpressionPackageImpl#getAbstractLookAhead()
    * @generated
    */
-  int LOOK_AHEAD = 7;
+  int ABSTRACT_LOOK_AHEAD = 7;
 
   /**
    * The feature id for the '<em><b>Quantifier</b></em>' containment reference.
@@ -296,16 +296,7 @@ public interface RegularExpressionPackage extends EPackage
    * @generated
    * @ordered
    */
-  int LOOK_AHEAD__QUANTIFIER = ASSERTION__QUANTIFIER;
-
-  /**
-   * The feature id for the '<em><b>Backwards</b></em>' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int LOOK_AHEAD__BACKWARDS = ASSERTION_FEATURE_COUNT + 0;
+  int ABSTRACT_LOOK_AHEAD__QUANTIFIER = ASSERTION__QUANTIFIER;
 
   /**
    * The feature id for the '<em><b>Not</b></em>' attribute.
@@ -314,7 +305,7 @@ public interface RegularExpressionPackage extends EPackage
    * @generated
    * @ordered
    */
-  int LOOK_AHEAD__NOT = ASSERTION_FEATURE_COUNT + 1;
+  int ABSTRACT_LOOK_AHEAD__NOT = ASSERTION_FEATURE_COUNT + 0;
 
   /**
    * The feature id for the '<em><b>Pattern</b></em>' containment reference.
@@ -323,16 +314,16 @@ public interface RegularExpressionPackage extends EPackage
    * @generated
    * @ordered
    */
-  int LOOK_AHEAD__PATTERN = ASSERTION_FEATURE_COUNT + 2;
+  int ABSTRACT_LOOK_AHEAD__PATTERN = ASSERTION_FEATURE_COUNT + 1;
 
   /**
-   * The number of structural features of the '<em>Look Ahead</em>' class.
+   * The number of structural features of the '<em>Abstract Look Ahead</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int LOOK_AHEAD_FEATURE_COUNT = ASSERTION_FEATURE_COUNT + 3;
+  int ABSTRACT_LOOK_AHEAD_FEATURE_COUNT = ASSERTION_FEATURE_COUNT + 2;
 
   /**
    * The meta object id for the '{@link org.eclipse.n4js.regex.regularExpression.impl.PatternCharacterImpl <em>Pattern Character</em>}' class.
@@ -447,13 +438,13 @@ public interface RegularExpressionPackage extends EPackage
   int CHARACTER_CLASS_ESCAPE_SEQUENCE__QUANTIFIER = ATOM_ESCAPE__QUANTIFIER;
 
   /**
-   * The feature id for the '<em><b>Character</b></em>' attribute.
+   * The feature id for the '<em><b>Characters</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int CHARACTER_CLASS_ESCAPE_SEQUENCE__CHARACTER = ATOM_ESCAPE_FEATURE_COUNT + 0;
+  int CHARACTER_CLASS_ESCAPE_SEQUENCE__CHARACTERS = ATOM_ESCAPE_FEATURE_COUNT + 0;
 
   /**
    * The feature id for the '<em><b>Sequence</b></em>' attribute.
@@ -493,13 +484,13 @@ public interface RegularExpressionPackage extends EPackage
   int CHARACTER_ESCAPE_SEQUENCE__QUANTIFIER = ATOM_ESCAPE__QUANTIFIER;
 
   /**
-   * The feature id for the '<em><b>Character</b></em>' attribute.
+   * The feature id for the '<em><b>Characters</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int CHARACTER_ESCAPE_SEQUENCE__CHARACTER = ATOM_ESCAPE_FEATURE_COUNT + 0;
+  int CHARACTER_ESCAPE_SEQUENCE__CHARACTERS = ATOM_ESCAPE_FEATURE_COUNT + 0;
 
   /**
    * The feature id for the '<em><b>Sequence</b></em>' attribute.
@@ -539,13 +530,13 @@ public interface RegularExpressionPackage extends EPackage
   int CONTROL_LETTER_ESCAPE_SEQUENCE__QUANTIFIER = ATOM_ESCAPE__QUANTIFIER;
 
   /**
-   * The feature id for the '<em><b>Character</b></em>' attribute.
+   * The feature id for the '<em><b>Characters</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int CONTROL_LETTER_ESCAPE_SEQUENCE__CHARACTER = ATOM_ESCAPE_FEATURE_COUNT + 0;
+  int CONTROL_LETTER_ESCAPE_SEQUENCE__CHARACTERS = ATOM_ESCAPE_FEATURE_COUNT + 0;
 
   /**
    * The feature id for the '<em><b>Sequence</b></em>' attribute.
@@ -585,13 +576,13 @@ public interface RegularExpressionPackage extends EPackage
   int HEX_ESCAPE_SEQUENCE__QUANTIFIER = ATOM_ESCAPE__QUANTIFIER;
 
   /**
-   * The feature id for the '<em><b>Character</b></em>' attribute.
+   * The feature id for the '<em><b>Characters</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int HEX_ESCAPE_SEQUENCE__CHARACTER = ATOM_ESCAPE_FEATURE_COUNT + 0;
+  int HEX_ESCAPE_SEQUENCE__CHARACTERS = ATOM_ESCAPE_FEATURE_COUNT + 0;
 
   /**
    * The feature id for the '<em><b>Sequence</b></em>' attribute.
@@ -631,13 +622,13 @@ public interface RegularExpressionPackage extends EPackage
   int UNICODE_ESCAPE_SEQUENCE__QUANTIFIER = ATOM_ESCAPE__QUANTIFIER;
 
   /**
-   * The feature id for the '<em><b>Character</b></em>' attribute.
+   * The feature id for the '<em><b>Characters</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int UNICODE_ESCAPE_SEQUENCE__CHARACTER = ATOM_ESCAPE_FEATURE_COUNT + 0;
+  int UNICODE_ESCAPE_SEQUENCE__CHARACTERS = ATOM_ESCAPE_FEATURE_COUNT + 0;
 
   /**
    * The feature id for the '<em><b>Sequence</b></em>' attribute.
@@ -677,13 +668,13 @@ public interface RegularExpressionPackage extends EPackage
   int IDENTITY_ESCAPE_SEQUENCE__QUANTIFIER = ATOM_ESCAPE__QUANTIFIER;
 
   /**
-   * The feature id for the '<em><b>Character</b></em>' attribute.
+   * The feature id for the '<em><b>Characters</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int IDENTITY_ESCAPE_SEQUENCE__CHARACTER = ATOM_ESCAPE_FEATURE_COUNT + 0;
+  int IDENTITY_ESCAPE_SEQUENCE__CHARACTERS = ATOM_ESCAPE_FEATURE_COUNT + 0;
 
   /**
    * The feature id for the '<em><b>Sequence</b></em>' attribute.
@@ -723,13 +714,13 @@ public interface RegularExpressionPackage extends EPackage
   int DECIMAL_ESCAPE_SEQUENCE__QUANTIFIER = ATOM_ESCAPE__QUANTIFIER;
 
   /**
-   * The feature id for the '<em><b>Character</b></em>' attribute.
+   * The feature id for the '<em><b>Characters</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int DECIMAL_ESCAPE_SEQUENCE__CHARACTER = ATOM_ESCAPE_FEATURE_COUNT + 0;
+  int DECIMAL_ESCAPE_SEQUENCE__CHARACTERS = ATOM_ESCAPE_FEATURE_COUNT + 0;
 
   /**
    * The feature id for the '<em><b>Sequence</b></em>' attribute.
@@ -825,13 +816,13 @@ public interface RegularExpressionPackage extends EPackage
   int CHARACTER_CLASS_ATOM = 20;
 
   /**
-   * The feature id for the '<em><b>Character</b></em>' attribute.
+   * The feature id for the '<em><b>Characters</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int CHARACTER_CLASS_ATOM__CHARACTER = CHARACTER_CLASS_ELEMENT_FEATURE_COUNT + 0;
+  int CHARACTER_CLASS_ATOM__CHARACTERS = CHARACTER_CLASS_ELEMENT_FEATURE_COUNT + 0;
 
   /**
    * The number of structural features of the '<em>Character Class Atom</em>' class.
@@ -853,13 +844,13 @@ public interface RegularExpressionPackage extends EPackage
   int ESCAPED_CHARACTER_CLASS_ATOM = 21;
 
   /**
-   * The feature id for the '<em><b>Character</b></em>' attribute.
+   * The feature id for the '<em><b>Characters</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int ESCAPED_CHARACTER_CLASS_ATOM__CHARACTER = CHARACTER_CLASS_ATOM__CHARACTER;
+  int ESCAPED_CHARACTER_CLASS_ATOM__CHARACTERS = CHARACTER_CLASS_ATOM__CHARACTERS;
 
   /**
    * The number of structural features of the '<em>Escaped Character Class Atom</em>' class.
@@ -881,13 +872,13 @@ public interface RegularExpressionPackage extends EPackage
   int BACKSPACE = 22;
 
   /**
-   * The feature id for the '<em><b>Character</b></em>' attribute.
+   * The feature id for the '<em><b>Characters</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int BACKSPACE__CHARACTER = ESCAPED_CHARACTER_CLASS_ATOM__CHARACTER;
+  int BACKSPACE__CHARACTERS = ESCAPED_CHARACTER_CLASS_ATOM__CHARACTERS;
 
   /**
    * The number of structural features of the '<em>Backspace</em>' class.
@@ -918,13 +909,22 @@ public interface RegularExpressionPackage extends EPackage
   int GROUP__QUANTIFIER = PATTERN__QUANTIFIER;
 
   /**
+   * The feature id for the '<em><b>Non Capturing</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int GROUP__NON_CAPTURING = PATTERN_FEATURE_COUNT + 0;
+
+  /**
    * The feature id for the '<em><b>Named</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int GROUP__NAMED = PATTERN_FEATURE_COUNT + 0;
+  int GROUP__NAMED = PATTERN_FEATURE_COUNT + 1;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -933,16 +933,7 @@ public interface RegularExpressionPackage extends EPackage
    * @generated
    * @ordered
    */
-  int GROUP__NAME = PATTERN_FEATURE_COUNT + 1;
-
-  /**
-   * The feature id for the '<em><b>Non Capturing</b></em>' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int GROUP__NON_CAPTURING = PATTERN_FEATURE_COUNT + 2;
+  int GROUP__NAME = PATTERN_FEATURE_COUNT + 2;
 
   /**
    * The feature id for the '<em><b>Pattern</b></em>' containment reference.
@@ -1185,6 +1176,98 @@ public interface RegularExpressionPackage extends EPackage
   int SEQUENCE_FEATURE_COUNT = PATTERN_FEATURE_COUNT + 1;
 
   /**
+   * The meta object id for the '{@link org.eclipse.n4js.regex.regularExpression.impl.LookAheadImpl <em>Look Ahead</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.eclipse.n4js.regex.regularExpression.impl.LookAheadImpl
+   * @see org.eclipse.n4js.regex.regularExpression.impl.RegularExpressionPackageImpl#getLookAhead()
+   * @generated
+   */
+  int LOOK_AHEAD = 30;
+
+  /**
+   * The feature id for the '<em><b>Quantifier</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LOOK_AHEAD__QUANTIFIER = ABSTRACT_LOOK_AHEAD__QUANTIFIER;
+
+  /**
+   * The feature id for the '<em><b>Not</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LOOK_AHEAD__NOT = ABSTRACT_LOOK_AHEAD__NOT;
+
+  /**
+   * The feature id for the '<em><b>Pattern</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LOOK_AHEAD__PATTERN = ABSTRACT_LOOK_AHEAD__PATTERN;
+
+  /**
+   * The number of structural features of the '<em>Look Ahead</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LOOK_AHEAD_FEATURE_COUNT = ABSTRACT_LOOK_AHEAD_FEATURE_COUNT + 0;
+
+  /**
+   * The meta object id for the '{@link org.eclipse.n4js.regex.regularExpression.impl.LookBehindImpl <em>Look Behind</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.eclipse.n4js.regex.regularExpression.impl.LookBehindImpl
+   * @see org.eclipse.n4js.regex.regularExpression.impl.RegularExpressionPackageImpl#getLookBehind()
+   * @generated
+   */
+  int LOOK_BEHIND = 31;
+
+  /**
+   * The feature id for the '<em><b>Quantifier</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LOOK_BEHIND__QUANTIFIER = ABSTRACT_LOOK_AHEAD__QUANTIFIER;
+
+  /**
+   * The feature id for the '<em><b>Not</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LOOK_BEHIND__NOT = ABSTRACT_LOOK_AHEAD__NOT;
+
+  /**
+   * The feature id for the '<em><b>Pattern</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LOOK_BEHIND__PATTERN = ABSTRACT_LOOK_AHEAD__PATTERN;
+
+  /**
+   * The number of structural features of the '<em>Look Behind</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LOOK_BEHIND_FEATURE_COUNT = ABSTRACT_LOOK_AHEAD_FEATURE_COUNT + 0;
+
+  /**
    * The meta object id for the '{@link org.eclipse.n4js.regex.regularExpression.impl.CharacterClassRangeImpl <em>Character Class Range</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -1192,7 +1275,7 @@ public interface RegularExpressionPackage extends EPackage
    * @see org.eclipse.n4js.regex.regularExpression.impl.RegularExpressionPackageImpl#getCharacterClassRange()
    * @generated
    */
-  int CHARACTER_CLASS_RANGE = 30;
+  int CHARACTER_CLASS_RANGE = 32;
 
   /**
    * The feature id for the '<em><b>Left</b></em>' containment reference.
@@ -1348,47 +1431,36 @@ public interface RegularExpressionPackage extends EPackage
   EAttribute getWordBoundary_Not();
 
   /**
-   * Returns the meta object for class '{@link org.eclipse.n4js.regex.regularExpression.LookAhead <em>Look Ahead</em>}'.
+   * Returns the meta object for class '{@link org.eclipse.n4js.regex.regularExpression.AbstractLookAhead <em>Abstract Look Ahead</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for class '<em>Look Ahead</em>'.
-   * @see org.eclipse.n4js.regex.regularExpression.LookAhead
+   * @return the meta object for class '<em>Abstract Look Ahead</em>'.
+   * @see org.eclipse.n4js.regex.regularExpression.AbstractLookAhead
    * @generated
    */
-  EClass getLookAhead();
+  EClass getAbstractLookAhead();
 
   /**
-   * Returns the meta object for the attribute '{@link org.eclipse.n4js.regex.regularExpression.LookAhead#isBackwards <em>Backwards</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Backwards</em>'.
-   * @see org.eclipse.n4js.regex.regularExpression.LookAhead#isBackwards()
-   * @see #getLookAhead()
-   * @generated
-   */
-  EAttribute getLookAhead_Backwards();
-
-  /**
-   * Returns the meta object for the attribute '{@link org.eclipse.n4js.regex.regularExpression.LookAhead#isNot <em>Not</em>}'.
+   * Returns the meta object for the attribute '{@link org.eclipse.n4js.regex.regularExpression.AbstractLookAhead#isNot <em>Not</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @return the meta object for the attribute '<em>Not</em>'.
-   * @see org.eclipse.n4js.regex.regularExpression.LookAhead#isNot()
-   * @see #getLookAhead()
+   * @see org.eclipse.n4js.regex.regularExpression.AbstractLookAhead#isNot()
+   * @see #getAbstractLookAhead()
    * @generated
    */
-  EAttribute getLookAhead_Not();
+  EAttribute getAbstractLookAhead_Not();
 
   /**
-   * Returns the meta object for the containment reference '{@link org.eclipse.n4js.regex.regularExpression.LookAhead#getPattern <em>Pattern</em>}'.
+   * Returns the meta object for the containment reference '{@link org.eclipse.n4js.regex.regularExpression.AbstractLookAhead#getPattern <em>Pattern</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @return the meta object for the containment reference '<em>Pattern</em>'.
-   * @see org.eclipse.n4js.regex.regularExpression.LookAhead#getPattern()
-   * @see #getLookAhead()
+   * @see org.eclipse.n4js.regex.regularExpression.AbstractLookAhead#getPattern()
+   * @see #getAbstractLookAhead()
    * @generated
    */
-  EReference getLookAhead_Pattern();
+  EReference getAbstractLookAhead_Pattern();
 
   /**
    * Returns the meta object for class '{@link org.eclipse.n4js.regex.regularExpression.PatternCharacter <em>Pattern Character</em>}'.
@@ -1631,15 +1703,15 @@ public interface RegularExpressionPackage extends EPackage
   EClass getCharacterClassAtom();
 
   /**
-   * Returns the meta object for the attribute '{@link org.eclipse.n4js.regex.regularExpression.CharacterClassAtom#getCharacter <em>Character</em>}'.
+   * Returns the meta object for the attribute '{@link org.eclipse.n4js.regex.regularExpression.CharacterClassAtom#getCharacters <em>Characters</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Character</em>'.
-   * @see org.eclipse.n4js.regex.regularExpression.CharacterClassAtom#getCharacter()
+   * @return the meta object for the attribute '<em>Characters</em>'.
+   * @see org.eclipse.n4js.regex.regularExpression.CharacterClassAtom#getCharacters()
    * @see #getCharacterClassAtom()
    * @generated
    */
-  EAttribute getCharacterClassAtom_Character();
+  EAttribute getCharacterClassAtom_Characters();
 
   /**
    * Returns the meta object for class '{@link org.eclipse.n4js.regex.regularExpression.EscapedCharacterClassAtom <em>Escaped Character Class Atom</em>}'.
@@ -1672,6 +1744,17 @@ public interface RegularExpressionPackage extends EPackage
   EClass getGroup();
 
   /**
+   * Returns the meta object for the attribute '{@link org.eclipse.n4js.regex.regularExpression.Group#isNonCapturing <em>Non Capturing</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Non Capturing</em>'.
+   * @see org.eclipse.n4js.regex.regularExpression.Group#isNonCapturing()
+   * @see #getGroup()
+   * @generated
+   */
+  EAttribute getGroup_NonCapturing();
+
+  /**
    * Returns the meta object for the attribute '{@link org.eclipse.n4js.regex.regularExpression.Group#isNamed <em>Named</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -1692,17 +1775,6 @@ public interface RegularExpressionPackage extends EPackage
    * @generated
    */
   EAttribute getGroup_Name();
-
-  /**
-   * Returns the meta object for the attribute '{@link org.eclipse.n4js.regex.regularExpression.Group#isNonCapturing <em>Non Capturing</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Non Capturing</em>'.
-   * @see org.eclipse.n4js.regex.regularExpression.Group#isNonCapturing()
-   * @see #getGroup()
-   * @generated
-   */
-  EAttribute getGroup_NonCapturing();
 
   /**
    * Returns the meta object for the containment reference '{@link org.eclipse.n4js.regex.regularExpression.Group#getPattern <em>Pattern</em>}'.
@@ -1862,6 +1934,26 @@ public interface RegularExpressionPackage extends EPackage
    * @generated
    */
   EReference getSequence_Elements();
+
+  /**
+   * Returns the meta object for class '{@link org.eclipse.n4js.regex.regularExpression.LookAhead <em>Look Ahead</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Look Ahead</em>'.
+   * @see org.eclipse.n4js.regex.regularExpression.LookAhead
+   * @generated
+   */
+  EClass getLookAhead();
+
+  /**
+   * Returns the meta object for class '{@link org.eclipse.n4js.regex.regularExpression.LookBehind <em>Look Behind</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Look Behind</em>'.
+   * @see org.eclipse.n4js.regex.regularExpression.LookBehind
+   * @generated
+   */
+  EClass getLookBehind();
 
   /**
    * Returns the meta object for class '{@link org.eclipse.n4js.regex.regularExpression.CharacterClassRange <em>Character Class Range</em>}'.
@@ -2029,22 +2121,14 @@ public interface RegularExpressionPackage extends EPackage
     EAttribute WORD_BOUNDARY__NOT = eINSTANCE.getWordBoundary_Not();
 
     /**
-     * The meta object literal for the '{@link org.eclipse.n4js.regex.regularExpression.impl.LookAheadImpl <em>Look Ahead</em>}' class.
+     * The meta object literal for the '{@link org.eclipse.n4js.regex.regularExpression.impl.AbstractLookAheadImpl <em>Abstract Look Ahead</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see org.eclipse.n4js.regex.regularExpression.impl.LookAheadImpl
-     * @see org.eclipse.n4js.regex.regularExpression.impl.RegularExpressionPackageImpl#getLookAhead()
+     * @see org.eclipse.n4js.regex.regularExpression.impl.AbstractLookAheadImpl
+     * @see org.eclipse.n4js.regex.regularExpression.impl.RegularExpressionPackageImpl#getAbstractLookAhead()
      * @generated
      */
-    EClass LOOK_AHEAD = eINSTANCE.getLookAhead();
-
-    /**
-     * The meta object literal for the '<em><b>Backwards</b></em>' attribute feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EAttribute LOOK_AHEAD__BACKWARDS = eINSTANCE.getLookAhead_Backwards();
+    EClass ABSTRACT_LOOK_AHEAD = eINSTANCE.getAbstractLookAhead();
 
     /**
      * The meta object literal for the '<em><b>Not</b></em>' attribute feature.
@@ -2052,7 +2136,7 @@ public interface RegularExpressionPackage extends EPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    EAttribute LOOK_AHEAD__NOT = eINSTANCE.getLookAhead_Not();
+    EAttribute ABSTRACT_LOOK_AHEAD__NOT = eINSTANCE.getAbstractLookAhead_Not();
 
     /**
      * The meta object literal for the '<em><b>Pattern</b></em>' containment reference feature.
@@ -2060,7 +2144,7 @@ public interface RegularExpressionPackage extends EPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference LOOK_AHEAD__PATTERN = eINSTANCE.getLookAhead_Pattern();
+    EReference ABSTRACT_LOOK_AHEAD__PATTERN = eINSTANCE.getAbstractLookAhead_Pattern();
 
     /**
      * The meta object literal for the '{@link org.eclipse.n4js.regex.regularExpression.impl.PatternCharacterImpl <em>Pattern Character</em>}' class.
@@ -2273,12 +2357,12 @@ public interface RegularExpressionPackage extends EPackage
     EClass CHARACTER_CLASS_ATOM = eINSTANCE.getCharacterClassAtom();
 
     /**
-     * The meta object literal for the '<em><b>Character</b></em>' attribute feature.
+     * The meta object literal for the '<em><b>Characters</b></em>' attribute feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EAttribute CHARACTER_CLASS_ATOM__CHARACTER = eINSTANCE.getCharacterClassAtom_Character();
+    EAttribute CHARACTER_CLASS_ATOM__CHARACTERS = eINSTANCE.getCharacterClassAtom_Characters();
 
     /**
      * The meta object literal for the '{@link org.eclipse.n4js.regex.regularExpression.impl.EscapedCharacterClassAtomImpl <em>Escaped Character Class Atom</em>}' class.
@@ -2311,6 +2395,14 @@ public interface RegularExpressionPackage extends EPackage
     EClass GROUP = eINSTANCE.getGroup();
 
     /**
+     * The meta object literal for the '<em><b>Non Capturing</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute GROUP__NON_CAPTURING = eINSTANCE.getGroup_NonCapturing();
+
+    /**
      * The meta object literal for the '<em><b>Named</b></em>' attribute feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -2325,14 +2417,6 @@ public interface RegularExpressionPackage extends EPackage
      * @generated
      */
     EAttribute GROUP__NAME = eINSTANCE.getGroup_Name();
-
-    /**
-     * The meta object literal for the '<em><b>Non Capturing</b></em>' attribute feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EAttribute GROUP__NON_CAPTURING = eINSTANCE.getGroup_NonCapturing();
 
     /**
      * The meta object literal for the '<em><b>Pattern</b></em>' containment reference feature.
@@ -2465,6 +2549,26 @@ public interface RegularExpressionPackage extends EPackage
      * @generated
      */
     EReference SEQUENCE__ELEMENTS = eINSTANCE.getSequence_Elements();
+
+    /**
+     * The meta object literal for the '{@link org.eclipse.n4js.regex.regularExpression.impl.LookAheadImpl <em>Look Ahead</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.eclipse.n4js.regex.regularExpression.impl.LookAheadImpl
+     * @see org.eclipse.n4js.regex.regularExpression.impl.RegularExpressionPackageImpl#getLookAhead()
+     * @generated
+     */
+    EClass LOOK_AHEAD = eINSTANCE.getLookAhead();
+
+    /**
+     * The meta object literal for the '{@link org.eclipse.n4js.regex.regularExpression.impl.LookBehindImpl <em>Look Behind</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.eclipse.n4js.regex.regularExpression.impl.LookBehindImpl
+     * @see org.eclipse.n4js.regex.regularExpression.impl.RegularExpressionPackageImpl#getLookBehind()
+     * @generated
+     */
+    EClass LOOK_BEHIND = eINSTANCE.getLookBehind();
 
     /**
      * The meta object literal for the '{@link org.eclipse.n4js.regex.regularExpression.impl.CharacterClassRangeImpl <em>Character Class Range</em>}' class.

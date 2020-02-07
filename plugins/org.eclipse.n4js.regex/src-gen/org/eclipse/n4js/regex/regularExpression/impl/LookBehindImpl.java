@@ -13,24 +13,24 @@ package org.eclipse.n4js.regex.regularExpression.impl;
 
 import org.eclipse.emf.ecore.EClass;
 
-import org.eclipse.n4js.regex.regularExpression.LookAhead;
+import org.eclipse.n4js.regex.regularExpression.LookBehind;
 import org.eclipse.n4js.regex.regularExpression.RegularExpressionPackage;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Look Ahead</b></em>'.
+ * An implementation of the model object '<em><b>Look Behind</b></em>'.
  * <!-- end-user-doc -->
  *
  * @generated
  */
-public class LookAheadImpl extends AbstractLookAheadImpl implements LookAhead
+public class LookBehindImpl extends AbstractLookAheadImpl implements LookBehind
 {
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  protected LookAheadImpl()
+  protected LookBehindImpl()
   {
     super();
   }
@@ -43,7 +43,7 @@ public class LookAheadImpl extends AbstractLookAheadImpl implements LookAhead
   @Override
   protected EClass eStaticClass()
   {
-    return RegularExpressionPackage.Literals.LOOK_AHEAD;
+    return RegularExpressionPackage.Literals.LOOK_BEHIND;
   }
 
-} //LookAheadImpl
+} //LookBehindImpl

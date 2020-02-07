@@ -31,9 +31,9 @@ import org.eclipse.n4js.regex.regularExpression.RegularExpressionPackage;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.regex.regularExpression.impl.GroupImpl#isNonCapturing <em>Non Capturing</em>}</li>
  *   <li>{@link org.eclipse.n4js.regex.regularExpression.impl.GroupImpl#isNamed <em>Named</em>}</li>
  *   <li>{@link org.eclipse.n4js.regex.regularExpression.impl.GroupImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.eclipse.n4js.regex.regularExpression.impl.GroupImpl#isNonCapturing <em>Non Capturing</em>}</li>
  *   <li>{@link org.eclipse.n4js.regex.regularExpression.impl.GroupImpl#getPattern <em>Pattern</em>}</li>
  * </ul>
  *
@@ -41,6 +41,26 @@ import org.eclipse.n4js.regex.regularExpression.RegularExpressionPackage;
  */
 public class GroupImpl extends PatternImpl implements Group
 {
+  /**
+   * The default value of the '{@link #isNonCapturing() <em>Non Capturing</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #isNonCapturing()
+   * @generated
+   * @ordered
+   */
+  protected static final boolean NON_CAPTURING_EDEFAULT = false;
+
+  /**
+   * The cached value of the '{@link #isNonCapturing() <em>Non Capturing</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #isNonCapturing()
+   * @generated
+   * @ordered
+   */
+  protected boolean nonCapturing = NON_CAPTURING_EDEFAULT;
+
   /**
    * The default value of the '{@link #isNamed() <em>Named</em>}' attribute.
    * <!-- begin-user-doc -->
@@ -82,26 +102,6 @@ public class GroupImpl extends PatternImpl implements Group
   protected String name = NAME_EDEFAULT;
 
   /**
-   * The default value of the '{@link #isNonCapturing() <em>Non Capturing</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #isNonCapturing()
-   * @generated
-   * @ordered
-   */
-  protected static final boolean NON_CAPTURING_EDEFAULT = false;
-
-  /**
-   * The cached value of the '{@link #isNonCapturing() <em>Non Capturing</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #isNonCapturing()
-   * @generated
-   * @ordered
-   */
-  protected boolean nonCapturing = NON_CAPTURING_EDEFAULT;
-
-  /**
    * The cached value of the '{@link #getPattern() <em>Pattern</em>}' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -130,6 +130,31 @@ public class GroupImpl extends PatternImpl implements Group
   protected EClass eStaticClass()
   {
     return RegularExpressionPackage.Literals.GROUP;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public boolean isNonCapturing()
+  {
+    return nonCapturing;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public void setNonCapturing(boolean newNonCapturing)
+  {
+    boolean oldNonCapturing = nonCapturing;
+    nonCapturing = newNonCapturing;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, RegularExpressionPackage.GROUP__NON_CAPTURING, oldNonCapturing, nonCapturing));
   }
 
   /**
@@ -180,31 +205,6 @@ public class GroupImpl extends PatternImpl implements Group
     name = newName;
     if (eNotificationRequired())
       eNotify(new ENotificationImpl(this, Notification.SET, RegularExpressionPackage.GROUP__NAME, oldName, name));
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  public boolean isNonCapturing()
-  {
-    return nonCapturing;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  public void setNonCapturing(boolean newNonCapturing)
-  {
-    boolean oldNonCapturing = nonCapturing;
-    nonCapturing = newNonCapturing;
-    if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, RegularExpressionPackage.GROUP__NON_CAPTURING, oldNonCapturing, nonCapturing));
   }
 
   /**
@@ -283,12 +283,12 @@ public class GroupImpl extends PatternImpl implements Group
   {
     switch (featureID)
     {
+      case RegularExpressionPackage.GROUP__NON_CAPTURING:
+        return isNonCapturing();
       case RegularExpressionPackage.GROUP__NAMED:
         return isNamed();
       case RegularExpressionPackage.GROUP__NAME:
         return getName();
-      case RegularExpressionPackage.GROUP__NON_CAPTURING:
-        return isNonCapturing();
       case RegularExpressionPackage.GROUP__PATTERN:
         return getPattern();
     }
@@ -305,14 +305,14 @@ public class GroupImpl extends PatternImpl implements Group
   {
     switch (featureID)
     {
+      case RegularExpressionPackage.GROUP__NON_CAPTURING:
+        setNonCapturing((Boolean)newValue);
+        return;
       case RegularExpressionPackage.GROUP__NAMED:
         setNamed((Boolean)newValue);
         return;
       case RegularExpressionPackage.GROUP__NAME:
         setName((String)newValue);
-        return;
-      case RegularExpressionPackage.GROUP__NON_CAPTURING:
-        setNonCapturing((Boolean)newValue);
         return;
       case RegularExpressionPackage.GROUP__PATTERN:
         setPattern((Pattern)newValue);
@@ -331,14 +331,14 @@ public class GroupImpl extends PatternImpl implements Group
   {
     switch (featureID)
     {
+      case RegularExpressionPackage.GROUP__NON_CAPTURING:
+        setNonCapturing(NON_CAPTURING_EDEFAULT);
+        return;
       case RegularExpressionPackage.GROUP__NAMED:
         setNamed(NAMED_EDEFAULT);
         return;
       case RegularExpressionPackage.GROUP__NAME:
         setName(NAME_EDEFAULT);
-        return;
-      case RegularExpressionPackage.GROUP__NON_CAPTURING:
-        setNonCapturing(NON_CAPTURING_EDEFAULT);
         return;
       case RegularExpressionPackage.GROUP__PATTERN:
         setPattern((Pattern)null);
@@ -357,12 +357,12 @@ public class GroupImpl extends PatternImpl implements Group
   {
     switch (featureID)
     {
+      case RegularExpressionPackage.GROUP__NON_CAPTURING:
+        return nonCapturing != NON_CAPTURING_EDEFAULT;
       case RegularExpressionPackage.GROUP__NAMED:
         return named != NAMED_EDEFAULT;
       case RegularExpressionPackage.GROUP__NAME:
         return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-      case RegularExpressionPackage.GROUP__NON_CAPTURING:
-        return nonCapturing != NON_CAPTURING_EDEFAULT;
       case RegularExpressionPackage.GROUP__PATTERN:
         return pattern != null;
     }
@@ -380,12 +380,12 @@ public class GroupImpl extends PatternImpl implements Group
     if (eIsProxy()) return super.toString();
 
     StringBuilder result = new StringBuilder(super.toString());
-    result.append(" (named: ");
+    result.append(" (nonCapturing: ");
+    result.append(nonCapturing);
+    result.append(", named: ");
     result.append(named);
     result.append(", name: ");
     result.append(name);
-    result.append(", nonCapturing: ");
-    result.append(nonCapturing);
     result.append(')');
     return result.toString();
   }

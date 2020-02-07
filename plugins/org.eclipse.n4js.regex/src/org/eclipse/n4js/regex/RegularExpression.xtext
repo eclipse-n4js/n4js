@@ -44,7 +44,7 @@ Term returns Pattern:
 ;
 
 Assertion:
-	LineStart | LineEnd | WordBoundary | LookAhead
+	LineStart | LineEnd | WordBoundary | AbstractLookAhead
 ;
 
 LineStart:
@@ -59,8 +59,11 @@ WordBoundary:
 	{WordBoundary} (WORD_BOUNDARY | not?=NOT_WORD_BOUNDARY)
 ;
 
-LookAhead:
-	{LookAhead} '(' '?' backwards?='<'? ('=' | not?='!') pattern=Disjunction ')'
+AbstractLookAhead:
+	(
+		{LookAhead} ('(?='|not?='(?!' )
+	|	{LookBehind} ('(?<='|not?='(?<!')
+	) pattern=Disjunction ')'
 ;
 
 Atom returns Pattern:
@@ -131,9 +134,9 @@ CharacterClassElement:
 
 CharacterClassAtom:
 	EscapedCharacterClassAtom |
-	character=(
+	characters=(
 		',' | '=' | ':' | '!' |
-		'-' | '^' |'$' | '.' | '*' | '+' | '?' | '(' | ')' | '[' | '{' | '}' | '|' | '/' | '<' | '>' |
+		'-' | '^' |'$' | '.' | '*' | '+' | '?' | '(' | ')' | '[' | '{' | '}' | '|' | '/' | '<' | '>' | '(?' | '(?<' | '(?=' | '(?!' | '(?<!' | '(?<=' |
 		PATTERN_CHARACTER_NO_DASH |
 		UNICODE_LETTER |
 		UNICODE_DIGIT
@@ -156,10 +159,12 @@ Backspace:
 ;
 
 Group:
-	{Group} '(' (
-		  named?='?' '<' name=RegExpIdentifierName '>'
-		| nonCapturing?='?' ':'
-	)? pattern=Disjunction ')'
+	{Group} (
+		'('
+		| nonCapturing?='(?:'
+		| named?='(?<' name=RegExpIdentifierName '>'
+		) 
+	pattern=Disjunction ')'
 ;
 
 RegExpIdentifierName:

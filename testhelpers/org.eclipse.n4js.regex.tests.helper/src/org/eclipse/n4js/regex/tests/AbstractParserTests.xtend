@@ -483,4 +483,9 @@ abstract class AbstractParserTests extends Assert {
 	def void testEqualsSign_02() {
 		'/=/g'.assertValid
 	}
+	
+	@Test
+	def void testWikipedia() {
+		'''/(?<=\.) {2,}(?=[A-Z])/'''.assertValid
+	}
 }
