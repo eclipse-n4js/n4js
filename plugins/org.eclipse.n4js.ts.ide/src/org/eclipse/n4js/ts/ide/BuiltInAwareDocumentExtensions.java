@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.server;
+package org.eclipse.n4js.ts.ide;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -24,7 +24,7 @@ import com.google.inject.Singleton;
  * Allow to obtain a file system location from a n4scheme URI.
  */
 @Singleton
-public class N4JSDocumentExtensions extends DocumentExtensions {
+public class BuiltInAwareDocumentExtensions extends DocumentExtensions {
 
 	@Override
 	public Location newLocation(Resource resource, ITextRegion textRegion) {

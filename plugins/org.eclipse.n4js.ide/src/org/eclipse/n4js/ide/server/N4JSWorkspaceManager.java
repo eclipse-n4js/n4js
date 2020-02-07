@@ -33,13 +33,25 @@ public class N4JSWorkspaceManager extends XWorkspaceManager {
 	@Override
 	public XProjectManager getProjectManager(URI uri) {
 		if (N4Scheme.isN4Scheme(uri)) {
-			Collection<XProjectManager> allProjectManagers = getProjectManagers();
-			if (!allProjectManagers.isEmpty()) {
-				XProjectManager anyProjectManager = allProjectManagers.iterator().next();
-				return anyProjectManager;
-			}
+			return anyProject();
 		}
-		return super.getProjectManager(uri);
+		XProjectManager result = super.getProjectManager(uri);
+		// Looks like we have not found a project but did return the URI earlier as a valid URI to the client
+		// so it's likely that we face a URI pointing to one of the built in types.
+		// try the same as obve and return the first project
+		if (result == null && uri.fileExtension().equals("n4ts")) {
+			return anyProject();
+		}
+		return result;
+	}
+
+	private XProjectManager anyProject() {
+		Collection<XProjectManager> allProjectManagers = getProjectManagers();
+		if (!allProjectManagers.isEmpty()) {
+			XProjectManager anyProjectManager = allProjectManagers.iterator().next();
+			return anyProjectManager;
+		}
+		return null;
 	}
 
 }

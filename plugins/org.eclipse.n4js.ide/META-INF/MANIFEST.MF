@@ -17,7 +17,12 @@ Require-Bundle: org.eclipse.n4js,
  com.google.gson,
  org.eclipse.n4js.ts.ide,
  org.eclipse.n4js.tester,
- org.eclipse.emf.ecore
+ org.eclipse.emf.ecore,
+ org.eclipse.n4js.regex.ide,
+ org.eclipse.n4js.json.ide,
+ org.eclipse.n4js.semver.ide,
+ org.eclipse.n4js.regex,
+ org.eclipse.n4js.semver
 Export-Package: org.eclipse.n4js.ide,
  org.eclipse.n4js.ide.contentassist.antlr,
  org.eclipse.n4js.ide.contentassist.antlr.internal,

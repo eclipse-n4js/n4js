@@ -247,8 +247,14 @@ public class XIndexer {
 			ResourceDescriptionsData oldIndex, XBuildContext context) {
 		try {
 			this.compilerPhases.setIndexing(context.getResourceSet(), true);
-			return IterableExtensions
-					.toList(context.executeClustered(affectedUris, it -> addToIndex(it, true, oldIndex, context)));
+			List<IResourceDescription.Delta> result = new ArrayList<>();
+			for (IResourceDescription.Delta delta : context.executeClustered(affectedUris,
+					it -> addToIndex(it, true, oldIndex, context))) {
+				if (delta != null) {
+					result.add(delta);
+				}
+			}
+			return result;
 		} finally {
 			this.compilerPhases.setIndexing(context.getResourceSet(), false);
 		}
@@ -256,13 +262,17 @@ public class XIndexer {
 
 	/**
 	 * Index the given resource.
-	 * 
+	 *
 	 * @param isPreIndexing
 	 *            can be evaluated to produce different index entries depending on the phase
 	 */
 	protected IResourceDescription.Delta addToIndex(Resource resource, boolean isPreIndexing,
 			ResourceDescriptionsData oldIndex, XBuildContext context) {
 		this.operationCanceledManager.checkCanceled(context.getCancelIndicator());
+		if (context.getResourceSet() != resource.getResourceSet()) {
+			// we are seeing an out-of-sequence resource - don't index it
+			return null;
+		}
 		URI uri = resource.getURI();
 		IResourceServiceProvider serviceProvider = context.getResourceServiceProvider(uri);
 		IResourceDescription.Manager manager = serviceProvider.getResourceDescriptionManager();

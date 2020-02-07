@@ -81,7 +81,10 @@ public class XtextResourceLocator extends StandardResourceLocator {
 		return null;
 	}
 
-	private void normalizedMapping(URI from, URI to) {
+	/**
+	 * Register a normalization entry.
+	 */
+	protected void normalizedMapping(URI from, URI to) {
 		try {
 			@SuppressWarnings("unchecked")
 			Map<URI, URI> map = (Map<URI, URI>) normalizationMap.get(resourceSet);
