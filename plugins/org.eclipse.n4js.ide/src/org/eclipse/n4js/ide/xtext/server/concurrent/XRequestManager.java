@@ -22,6 +22,10 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * Handles requests from the LSP client.
+ * <p>
+ * Synchronized API because other callers e.g. CommandService might also create worker threads which add requests.
+ *
  * @author kosyakov - Initial contribution and API
  * @since 2.11
  */
@@ -39,7 +43,6 @@ public class XRequestManager {
 	private final ExecutorService queue = Executors.newSingleThreadExecutor(
 			new ThreadFactoryBuilder().setDaemon(true).setNameFormat("XRequestManager-Queue-%d").build());
 
-	// synchronized because N4JSCommandService is creating a worker thread which also add requests
 	private List<XAbstractRequest<?>> requests = new ArrayList<>();
 
 	/**
