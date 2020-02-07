@@ -25,21 +25,21 @@ import com.google.inject.Inject;
  * Provides commands for LSP clients
  */
 public class N4JSCommandService implements IExecutableCommandService {
-	private static final String N4JS_REBUIlD = "n4js.rebuild";
+	private static final String N4JS_REBUILD = "n4js.rebuild";
 
 	@Inject
 	private XLanguageServerImpl lspServer;
 
 	@Override
 	public List<String> initialize() {
-		return Lists.newArrayList(N4JS_REBUIlD);
+		return Lists.newArrayList(N4JS_REBUILD);
 	}
 
 	@Override
 	public Object execute(ExecuteCommandParams params, ILanguageServerAccess access, CancelIndicator cancelIndicator) {
 		String command = params.getCommand();
 		switch (command) {
-		case N4JS_REBUIlD:
+		case N4JS_REBUILD:
 			lspServer.clean();
 			lspServer.reinitWorkspace();
 			break;

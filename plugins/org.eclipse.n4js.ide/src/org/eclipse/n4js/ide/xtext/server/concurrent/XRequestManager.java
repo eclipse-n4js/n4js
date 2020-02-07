@@ -1,6 +1,7 @@
 package org.eclipse.n4js.ide.xtext.server.concurrent;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
@@ -39,7 +40,8 @@ public class XRequestManager {
 	private final ExecutorService queue = Executors.newSingleThreadExecutor(
 			new ThreadFactoryBuilder().setDaemon(true).setNameFormat("XRequestManager-Queue-%d").build());
 
-	private ArrayList<XAbstractRequest<?>> requests = new ArrayList<>();
+	// synchronized because N4JSCommandService is creating a worker thread which also add requests
+	private List<XAbstractRequest<?>> requests = Collections.synchronizedList(new ArrayList<>());
 
 	/**
 	 * An orderly shutdown of this request manager.
@@ -86,7 +88,7 @@ public class XRequestManager {
 	protected CompletableFuture<Void> cancel() {
 		List<XAbstractRequest<?>> localRequests = requests;
 		LOG.warn("cancel: " + localRequests);
-		requests = new ArrayList<>();
+		requests = Collections.synchronizedList(new ArrayList<>());
 		CompletableFuture<?>[] cfs = new CompletableFuture<?>[localRequests.size()];
 		for (int i = 0, max = localRequests.size(); i < max; i++) {
 			XAbstractRequest<?> request = localRequests.get(i);

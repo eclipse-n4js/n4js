@@ -106,7 +106,6 @@ public class CommandRebuildTest {
 		setFileCreationDate(genFileStatePath);
 
 		// wait two seconds because file time does not consider milliseconds
-		// Thread.sleep(2000);
 		client.resetCounters();
 	}
 

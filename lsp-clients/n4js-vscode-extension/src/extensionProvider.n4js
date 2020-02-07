@@ -60,14 +60,6 @@ export function getActivate(vscode: any+, vscodeLC: any+): any {
         // Push the disposable to the context's subscriptions so that the 
         // client can be deactivated on extension deactivation
         context.subscriptions.push(disposableLangClient);
-
-        //// Example for command that is handled in the client extension ////
-        // const commandRebuild = 'n4js.rebuild';
-        // const commandRebuildHandler = () => {
-        //     vscode.window.showErrorMessage("Trigger n4js rebuild!!!");
-        // };
-        //const disposableCmdRebuild = vscode.commands.registerCommand(commandRebuild, commandRebuildHandler);
-        //context.subscriptions.push(disposableCmdRebuild);
     };
 }
 

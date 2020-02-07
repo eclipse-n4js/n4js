@@ -53,7 +53,9 @@
 				"title": "N4JS: Rebuild"
 			}
 		],
-		"activationEvents": ["onCommand:n4js.rebuild"],
+		"activationEvents": [
+			"onCommand:n4js.rebuild"
+		],
 		"menus": {
 			"commandPalette": [
 				{
