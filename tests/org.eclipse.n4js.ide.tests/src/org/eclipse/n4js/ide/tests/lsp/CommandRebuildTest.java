@@ -29,10 +29,13 @@ import org.eclipse.lsp4j.WorkspaceClientCapabilities;
 import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscTestFactory;
 import org.eclipse.n4js.cli.helper.N4jscTestLanguageClient;
+import org.eclipse.n4js.cli.helper.SystemOutRedirecter;
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.google.inject.Injector;
@@ -45,6 +48,20 @@ public class CommandRebuildTest {
 	static final String PROJECT_NAME = "lsp-command-rebuild";
 	static final String PROJECT_STATE_NAME = ".n4js.projectstate";
 	static final String GEN_FILE_NAME = "src-gen/Module.js";
+
+	static final SystemOutRedirecter SYSTEM_OUT_REDIRECTER = new SystemOutRedirecter();
+
+	/** Catch outputs on console to an internal buffer */
+	@BeforeClass
+	static public void redirectPrintStreams() {
+		SYSTEM_OUT_REDIRECTER.set(false);
+	}
+
+	/** Reset redirection */
+	@AfterClass
+	static public void resetPrintStreams() {
+		SYSTEM_OUT_REDIRECTER.unset();
+	}
 
 	final Path prjPath = Path.of(PROBANDS_NAME, PROJECT_NAME).toAbsolutePath();
 	final Path prjStatePath = Path.of(PROBANDS_NAME, PROJECT_NAME, PROJECT_STATE_NAME).toAbsolutePath();
