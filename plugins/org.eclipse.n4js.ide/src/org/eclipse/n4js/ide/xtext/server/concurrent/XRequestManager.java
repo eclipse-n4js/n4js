@@ -1,7 +1,6 @@
 package org.eclipse.n4js.ide.xtext.server.concurrent;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
@@ -41,12 +40,12 @@ public class XRequestManager {
 			new ThreadFactoryBuilder().setDaemon(true).setNameFormat("XRequestManager-Queue-%d").build());
 
 	// synchronized because N4JSCommandService is creating a worker thread which also add requests
-	private List<XAbstractRequest<?>> requests = Collections.synchronizedList(new ArrayList<>());
+	private List<XAbstractRequest<?>> requests = new ArrayList<>();
 
 	/**
 	 * An orderly shutdown of this request manager.
 	 */
-	public void shutdown() {
+	synchronized public void shutdown() {
 		queue.shutdown();
 		parallel.shutdown();
 		MoreExecutors.shutdownAndAwaitTermination(queue, 2500, TimeUnit.MILLISECONDS);
@@ -57,7 +56,7 @@ public class XRequestManager {
 	/**
 	 * Run the given cancellable logic as a read request.
 	 */
-	public <V> CompletableFuture<V> runRead(String description,
+	synchronized public <V> CompletableFuture<V> runRead(String description,
 			Function1<? super CancelIndicator, ? extends V> cancellable) {
 		return submit(new XReadRequest<>(this, description, cancellable, parallel));
 	}
@@ -65,7 +64,7 @@ public class XRequestManager {
 	/**
 	 * Perform the given write and run the cancellable logic afterwards.
 	 */
-	public <U, V> CompletableFuture<V> runWrite(
+	synchronized public <U, V> CompletableFuture<V> runWrite(
 			String description,
 			Function0<? extends U> nonCancellable,
 			Function2<? super CancelIndicator, ? super U, ? extends V> cancellable) {
@@ -75,7 +74,7 @@ public class XRequestManager {
 	/**
 	 * Submit the given request.
 	 */
-	protected <V> CompletableFuture<V> submit(XAbstractRequest<V> request) {
+	synchronized protected <V> CompletableFuture<V> submit(XAbstractRequest<V> request) {
 		LOG.warn("submit: " + request);
 		requests.add(request);
 		queue.submit(request);
@@ -85,10 +84,10 @@ public class XRequestManager {
 	/**
 	 * Cancel all requests in the queue.
 	 */
-	protected CompletableFuture<Void> cancel() {
+	synchronized protected CompletableFuture<Void> cancel() {
 		List<XAbstractRequest<?>> localRequests = requests;
 		LOG.warn("cancel: " + localRequests);
-		requests = Collections.synchronizedList(new ArrayList<>());
+		requests = new ArrayList<>();
 		CompletableFuture<?>[] cfs = new CompletableFuture<?>[localRequests.size()];
 		for (int i = 0, max = localRequests.size(); i < max; i++) {
 			XAbstractRequest<?> request = localRequests.get(i);
