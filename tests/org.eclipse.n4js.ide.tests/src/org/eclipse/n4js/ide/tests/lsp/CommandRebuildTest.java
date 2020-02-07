@@ -98,11 +98,14 @@ public class CommandRebuildTest {
 
 	/** Expectation is that files '.n4js.projectstate' and 'src-gen/Module.js' are changed due to rebuild action. */
 	@Test
-	public void testCommandRebuild() throws IOException {
+	public void testCommandRebuild() throws IOException, InterruptedException {
 		// check pre-state
 		assertEquals(0, client.getErrorsCount());
 		FileTime prjStateTime = Files.readAttributes(prjStatePath, BasicFileAttributes.class).creationTime();
 		FileTime genFileTime = Files.readAttributes(genFileStatePath, BasicFileAttributes.class).creationTime();
+
+		// wait two seconds because file time does not consider milliseconds
+		Thread.sleep(2000);
 
 		// send command under test
 		client.resetCounters();
