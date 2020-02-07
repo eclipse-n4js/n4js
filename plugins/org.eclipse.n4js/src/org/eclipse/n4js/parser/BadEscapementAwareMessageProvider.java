@@ -11,11 +11,11 @@
 package org.eclipse.n4js.parser;
 
 import org.eclipse.n4js.conversion.AbstractN4JSStringValueConverter;
+import org.eclipse.n4js.conversion.CompositeSyntaxErrorMessages;
 import org.eclipse.n4js.conversion.LegacyOctalIntValueConverter;
 import org.eclipse.n4js.conversion.N4JSStringValueConverter;
 import org.eclipse.n4js.conversion.N4JSValueConverterWithValueException;
 import org.eclipse.n4js.conversion.RegExLiteralConverter;
-import org.eclipse.n4js.conversion.RegExLiteralConverter.BogusRegExLiteralException;
 import org.eclipse.xtext.conversion.ValueConverterException;
 import org.eclipse.xtext.nodemodel.SyntaxErrorMessage;
 import org.eclipse.xtext.parser.antlr.SyntaxErrorMessageProvider;
@@ -46,26 +46,30 @@ public class BadEscapementAwareMessageProvider extends SyntaxErrorMessageProvide
 		if (cause instanceof LegacyOctalIntValueConverter.LeadingZerosException) {
 			return new SyntaxErrorMessage(context.getDefaultMessage(), LegacyOctalIntValueConverter.ISSUE_CODE);
 		}
-		if (cause instanceof RegExLiteralConverter.BogusRegExLiteralException) {
-			RegExLiteralConverter.BogusRegExLiteralException casted = (BogusRegExLiteralException) cause;
-			return createRangedSyntaxErrorMessage(context, RegExLiteralConverter.ISSUE_CODE, casted.getOffset(),
-					casted.getLength());
-		}
 		if (cause instanceof N4JSValueConverterWithValueException) {
-			N4JSValueConverterWithValueException casted = (N4JSValueConverterWithValueException) cause;
-			String issueCode = casted.getIssueCode();
-			if (casted.hasRange()) {
-				return createRangedSyntaxErrorMessage(context, issueCode, casted.getOffset(), casted.getLength());
-			}
-			return new SyntaxErrorMessage(context.getDefaultMessage(), issueCode);
+			return CompositeSyntaxErrorMessages.toSyntaxErrorMessage((N4JSValueConverterWithValueException) cause,
+					(vce) -> {
+						if (vce instanceof RegExLiteralConverter.BogusRegExLiteralException) {
+							return createRangedSyntaxErrorMessage(vce.getMessage(),
+									RegExLiteralConverter.ISSUE_CODE,
+									vce.getOffset(),
+									vce.getLength());
+						}
+						String issueCode = vce.getIssueCode();
+						if (vce.hasRange()) {
+							return createRangedSyntaxErrorMessage(vce.getMessage(), issueCode, vce.getOffset(),
+									vce.getLength());
+						}
+						return new SyntaxErrorMessage(vce.getMessage(), issueCode);
+					});
 		}
 		return super.getSyntaxErrorMessage(context);
 	}
 
-	private SyntaxErrorMessage createRangedSyntaxErrorMessage(IValueConverterErrorContext context, String issueCode,
+	private SyntaxErrorMessage createRangedSyntaxErrorMessage(String message, String issueCode,
 			int offset,
 			int length) {
 		String range = offset + ":" + length;
-		return new SyntaxErrorMessage(context.getDefaultMessage(), issueCode, new String[] { range });
+		return new SyntaxErrorMessage(message, issueCode, new String[] { range });
 	}
 }

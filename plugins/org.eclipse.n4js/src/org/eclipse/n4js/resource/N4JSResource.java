@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.internal.resources.ResourceException;
@@ -53,6 +54,7 @@ import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.conversion.AbstractN4JSStringValueConverter;
+import org.eclipse.n4js.conversion.CompositeSyntaxErrorMessages;
 import org.eclipse.n4js.conversion.LegacyOctalIntValueConverter;
 import org.eclipse.n4js.conversion.N4JSStringValueConverter;
 import org.eclipse.n4js.conversion.RegExLiteralConverter;
@@ -1296,44 +1298,80 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		BasicEList<Diagnostic> warningList = (BasicEList<Diagnostic>) getWarnings();
 
 		for (INode error : getParseResult().getSyntaxErrors()) {
-			XtextSyntaxDiagnostic diagnostic = createSyntaxDiagnostic(error);
-			String code = diagnostic.getCode();
-			Severity severity = IssueCodes.getDefaultSeverity(code);
-			if (AbstractN4JSStringValueConverter.WARN_ISSUE_CODE.equals(code)
-					|| RegExLiteralConverter.ISSUE_CODE.equals(code)
-					|| LegacyOctalIntValueConverter.ISSUE_CODE.equals(code)
-					|| severity == Severity.WARNING) {
-				warningList.addUnique(diagnostic);
-			} else if (!InternalSemicolonInjectingParser.SEMICOLON_INSERTED.equals(code)) {
-				errorList.addUnique(diagnostic);
-			}
+			processSyntaxDiagnostic(error, diagnostic -> {
+				String code = diagnostic.getCode();
+				Severity severity = IssueCodes.getDefaultSeverity(code);
+				if (AbstractN4JSStringValueConverter.WARN_ISSUE_CODE.equals(code)
+						|| RegExLiteralConverter.ISSUE_CODE.equals(code)
+						|| LegacyOctalIntValueConverter.ISSUE_CODE.equals(code)
+						|| severity == Severity.WARNING) {
+					warningList.addUnique(diagnostic);
+				} else if (!InternalSemicolonInjectingParser.SEMICOLON_INSERTED.equals(code)) {
+					errorList.addUnique(diagnostic);
+				}
+			});
 		}
 	}
 
-	private XtextSyntaxDiagnostic createSyntaxDiagnostic(INode error) {
-		SyntaxErrorMessage syntaxErrorMessage = error.getSyntaxErrorMessage();
-		if (isRangeBased(syntaxErrorMessage)) {
-			String[] issueData = syntaxErrorMessage.getIssueData();
-			if (issueData.length == 1) {
-				String data = issueData[0];
-				int colon = data.indexOf(':');
-				return new XtextSyntaxDiagnosticWithRange(error, Integer.valueOf(data.substring(0, colon)),
-						Integer.valueOf(data.substring(colon + 1)), null) {
+	private void processSyntaxDiagnostic(INode error, Consumer<XtextSyntaxDiagnostic> acceptor) {
+		CompositeSyntaxErrorMessages.toDiagnostic(error.getSyntaxErrorMessage(), syntaxErrorMessage -> {
+			XtextSyntaxDiagnostic diagnostic = null;
+			if (isRangeBased(syntaxErrorMessage)) {
+				String[] issueData = syntaxErrorMessage.getIssueData();
+				if (issueData.length == 1) {
+					String data = issueData[0];
+					int colon = data.indexOf(':');
+					String code = syntaxErrorMessage.getIssueCode();
+					String message = syntaxErrorMessage.getMessage();
+					int offset = Integer.parseInt(data.substring(0, colon), 10);
+					int length = Integer.parseInt(data.substring(colon + 1), 10);
+					diagnostic = new XtextSyntaxDiagnosticWithRange(error, offset,
+							length, null) {
+						@Override
+						public int getLine() {
+							if (offset >= 0) {
+								return super.getLine();
+							}
+							return getNode().getTotalStartLine();
+						}
+
+						@Override
+						public String getMessage() {
+							return message;
+						}
+
+						@Override
+						public String getCode() {
+							return code;
+						}
+					};
+				}
+			}
+			if (diagnostic == null) {
+				String code = syntaxErrorMessage.getIssueCode();
+				String message = syntaxErrorMessage.getMessage();
+				diagnostic = new XtextSyntaxDiagnostic(error) {
 					@Override
-					public int getLine() {
-						return getNode().getTotalStartLine();
+					public String getCode() {
+						return code;
+					}
+
+					@Override
+					public String getMessage() {
+						return message;
 					}
 				};
 			}
-		}
-		return new XtextSyntaxDiagnostic(error);
+			acceptor.accept(diagnostic);
+		});
 	}
 
 	private boolean isRangeBased(SyntaxErrorMessage syntaxErrorMessage) {
 		String issueCode = syntaxErrorMessage.getIssueCode();
 		return SYNTAX_DIAGNOSTIC_WITH_RANGE.equals(issueCode)
 				|| RegExLiteralConverter.ISSUE_CODE.equals(issueCode)
-				|| IssueCodes.VCO_REGEX_NAMED_GROUP.equals(issueCode);
+				|| IssueCodes.VCO_REGEX_NAMED_GROUP.equals(issueCode)
+				|| (IssueCodes.VCO_TEMPLATE_QUOTE.equals(issueCode) && syntaxErrorMessage.getIssueData() != null);
 	}
 
 	// FIXME the following method should no longer be required once TypingASTWalker is fully functional

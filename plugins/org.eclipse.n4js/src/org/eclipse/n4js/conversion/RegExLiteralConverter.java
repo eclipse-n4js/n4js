@@ -11,6 +11,7 @@
 package org.eclipse.n4js.conversion;
 
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -23,6 +24,7 @@ import org.eclipse.n4js.regex.regularExpression.CharacterClassRange;
 import org.eclipse.n4js.regex.regularExpression.ControlLetterEscapeSequence;
 import org.eclipse.n4js.regex.regularExpression.DecimalEscapeSequence;
 import org.eclipse.n4js.regex.regularExpression.Group;
+import org.eclipse.n4js.regex.regularExpression.RegularExpressionFlags;
 import org.eclipse.n4js.regex.regularExpression.RegularExpressionLiteral;
 import org.eclipse.n4js.regex.regularExpression.RegularExpressionPackage;
 import org.eclipse.n4js.validation.IssueCodes;
@@ -43,6 +45,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class RegExLiteralConverter extends AbstractValueConverter<String> {
 
+	private static final String UNICODE_REGEX = "u";
 	/**
 	 * The issue code for bogus regular expression literals.
 	 */
@@ -96,46 +99,56 @@ public class RegExLiteralConverter extends AbstractValueConverter<String> {
 		IParseResult parseResult = getRegexParser().parse(new StringReader(escaped));
 		Iterable<INode> syntaxErrors = parseResult.getSyntaxErrors();
 		Iterator<INode> iterator = syntaxErrors.iterator();
-		INode issueNode = null;
-		boolean hasErrors = false;
+		List<N4JSValueConverterWithValueException> errors = new ArrayList<>();
 		while (iterator.hasNext()) {
 			INode syntaxError = iterator.next();
 			String message = syntaxError.getSyntaxErrorMessage().getMessage();
 			if (message.contains("'<EOF>' expecting '/'")) {
-				hasErrors = true;
-				break;
+				N4JSValueConverterWithValueException mainError = new N4JSValueConverterWithValueException(
+						IssueCodes.getMessageForVCO_REGEX_INVALID(),
+						IssueCodes.VCO_REGEX_INVALID, node, syntaxError.getOffset(), syntaxError.getLength(), string,
+						null);
+				errors.add(0, mainError);
+			} else {
+				errors.add(new BogusRegExLiteralException(message, node, string,
+						syntaxError.getOffset(), syntaxError.getLength()));
 			}
-			if (issueNode == null)
-				issueNode = syntaxError;
 		}
-		if (hasErrors) {
-			throw new N4JSValueConverterWithValueException(IssueCodes.getMessageForVCO_REGEX_INVALID(),
-					IssueCodes.VCO_REGEX_INVALID, node, string, null);
-		}
-		if (issueNode != null) {
-			throw new BogusRegExLiteralException(issueNode.getSyntaxErrorMessage().getMessage(), node, string,
-					issueNode.getOffset(), issueNode.getLength());
-		}
+
 		RegularExpressionLiteral literal = (RegularExpressionLiteral) parseResult.getRootASTElement();
-		boolean hasUnicodeFlag = literal.getFlags().getFlags().contains("u");
+		RegularExpressionFlags flags = literal.getFlags();
+		boolean hasUnicodeFlag = flags != null && flags.getFlags().contains(UNICODE_REGEX);
 		TreeIterator<EObject> regExIterator = literal.eAllContents();
 		while (regExIterator.hasNext()) {
 			EObject element = regExIterator.next();
 			if (hasUnicodeFlag) {
 				if (element instanceof DecimalEscapeSequence) {
-					throw new N4JSValueConverterWithValueException(IssueCodes.getMessageForVCO_REGEX_INVALID(),
-							IssueCodes.VCO_REGEX_INVALID, node, string, null);
+					INode nodeForElement = NodeModelUtils.findActualNodeFor(element);
+					errors.add(new N4JSValueConverterWithValueException(IssueCodes.getMessageForVCO_REGEX_INVALID(),
+							IssueCodes.VCO_REGEX_INVALID, node, nodeForElement.getOffset(), nodeForElement.getLength(),
+							string, null));
 				} else if (element instanceof ControlLetterEscapeSequence) {
+					List<INode> nodesForFeature = NodeModelUtils.findNodesForFeature(element,
+							RegularExpressionPackage.Literals.CONTROL_LETTER_ESCAPE_SEQUENCE__SEQUENCE);
+					INode featureNode = nodesForFeature.get(0);
 					if (((ControlLetterEscapeSequence) element).getSequence().length() <= 2) {
-						throw new N4JSValueConverterWithValueException(IssueCodes.getMessageForVCO_REGEX_INVALID(),
-								IssueCodes.VCO_REGEX_INVALID, node, string, null);
+						errors.add(new N4JSValueConverterWithValueException(IssueCodes.getMessageForVCO_REGEX_INVALID(),
+								IssueCodes.VCO_REGEX_INVALID, node, featureNode.getOffset(), featureNode.getLength(),
+								string, null));
 					}
 				} else if (element instanceof CharacterClassRange) {
 					CharacterClassRange casted = (CharacterClassRange) element;
-					if (casted.getLeft() instanceof CharacterClassEscapeSequence
-							|| casted.getRight() instanceof CharacterClassEscapeSequence) {
-						throw new N4JSValueConverterWithValueException(IssueCodes.getMessageForVCO_REGEX_INVALID(),
-								IssueCodes.VCO_REGEX_INVALID, node, string, null);
+					if (casted.getLeft() instanceof CharacterClassEscapeSequence) {
+						INode nodeForElement = NodeModelUtils.findActualNodeFor(casted.getLeft());
+						errors.add(new N4JSValueConverterWithValueException(IssueCodes.getMessageForVCO_REGEX_INVALID(),
+								IssueCodes.VCO_REGEX_INVALID, node, nodeForElement.getOffset(),
+								nodeForElement.getLength(), string, null));
+					}
+					if (casted.getRight() instanceof CharacterClassEscapeSequence) {
+						INode nodeForElement = NodeModelUtils.findActualNodeFor(casted.getRight());
+						errors.add(new N4JSValueConverterWithValueException(IssueCodes.getMessageForVCO_REGEX_INVALID(),
+								IssueCodes.VCO_REGEX_INVALID, node, nodeForElement.getOffset(),
+								nodeForElement.getLength(), string, null));
 					}
 				}
 			}
@@ -145,11 +158,18 @@ public class RegExLiteralConverter extends AbstractValueConverter<String> {
 					List<INode> nodesForFeature = NodeModelUtils.findNodesForFeature(group,
 							RegularExpressionPackage.Literals.GROUP__NAME);
 					INode nameNode = nodesForFeature.get(0);
-					throw new N4JSValueConverterWithValueException(IssueCodes.getMessageForVCO_REGEX_NAMED_GROUP(),
+					errors.add(new N4JSValueConverterWithValueException(IssueCodes.getMessageForVCO_REGEX_NAMED_GROUP(),
 							IssueCodes.VCO_REGEX_NAMED_GROUP, node, nameNode.getOffset(), nameNode.getLength(),
-							string, null);
+							string, null));
 				}
 			}
+		}
+		if (!errors.isEmpty()) {
+			N4JSValueConverterWithValueException mainError = errors.remove(0);
+			for (N4JSValueConverterWithValueException other : errors) {
+				mainError.addSuppressed(other);
+			}
+			throw mainError;
 		}
 		return string;
 	}
@@ -159,7 +179,7 @@ public class RegExLiteralConverter extends AbstractValueConverter<String> {
 		if (result.hasError()) {
 			throw new N4JSValueConverterWithValueException(
 					IssueCodes.getMessageForVCO_REGEX_ILLEGAL_ESCAPE(jsString),
-					IssueCodes.VCO_REGEX_ILLEGAL_ESCAPE, node, result.getValue(), null);
+					IssueCodes.VCO_REGEX_ILLEGAL_ESCAPE, node, result.getErrorOffset(), 1, result.getValue(), null);
 		}
 		return result.getValue();
 	}
