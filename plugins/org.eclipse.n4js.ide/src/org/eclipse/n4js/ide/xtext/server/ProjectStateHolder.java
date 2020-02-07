@@ -13,7 +13,6 @@ package org.eclipse.n4js.ide.xtext.server;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -23,7 +22,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.ide.validation.N4JSIssue;
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersister.PersistedState;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
@@ -204,20 +202,6 @@ public class ProjectStateHolder {
 		setIndexState(result.getIndexState());
 		mergeValidationIssues(request.getResultIssues());
 		uriToHashedFileContents = newFileContents;
-
-		if (!result.getAffectedResources().isEmpty()) {
-			URI uri = result.getAffectedResources().get(0).getUri();
-			N4JSIssue n4jsIssue = new N4JSIssue();
-			n4jsIssue.setSeverity(Severity.ERROR);
-			n4jsIssue.setCode("org.eclipse.xtext.diagnostics.Diagnostic.Syntax");
-			n4jsIssue.setOffset(0);
-			n4jsIssue.setLineNumber(2);
-			n4jsIssue.setColumn(8);
-			n4jsIssue.setLineNumberEnd(2);
-			n4jsIssue.setColumnEnd(14);
-			n4jsIssue.setMessage("Test Issue");
-			mergeValidationIssues(Collections.singletonMap(uri, Collections.singletonList(n4jsIssue)));
-		}
 	}
 
 	enum SourceChangeKind {
