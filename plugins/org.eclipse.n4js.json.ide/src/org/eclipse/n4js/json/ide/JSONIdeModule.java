@@ -10,9 +10,29 @@
  */
 package org.eclipse.n4js.json.ide;
 
+import org.eclipse.n4js.json.ide.symbol.JSONDocumentSymbolKindProvider;
+import org.eclipse.n4js.json.ide.symbol.JSONDocumentSymbolNameProvider;
+import org.eclipse.n4js.json.ide.symbol.JSONHierarchicalSymbolService;
+import org.eclipse.xtext.ide.server.symbol.DocumentSymbolMapper.DocumentSymbolKindProvider;
+import org.eclipse.xtext.ide.server.symbol.DocumentSymbolMapper.DocumentSymbolNameProvider;
+import org.eclipse.xtext.ide.server.symbol.HierarchicalDocumentSymbolService;
+
 /**
  * Use this class to register ide components.
  */
+@SuppressWarnings("javadoc")
 public class JSONIdeModule extends AbstractJSONIdeModule {
-	// dummy comment
+
+	public Class<? extends HierarchicalDocumentSymbolService> bindHierarchicalDocumentSymbolService() {
+		return JSONHierarchicalSymbolService.class;
+	}
+
+	public Class<? extends DocumentSymbolNameProvider> bindDocumentSymbolNameProvider() {
+		return JSONDocumentSymbolNameProvider.class;
+	}
+
+	public Class<? extends DocumentSymbolKindProvider> bindDocumentSymbolKindProvider() {
+		return JSONDocumentSymbolKindProvider.class;
+	}
+
 }
