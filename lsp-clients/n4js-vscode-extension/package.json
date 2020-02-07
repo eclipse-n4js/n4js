@@ -49,15 +49,15 @@
 		],
 		"commands": [
 			{
-				"command": "n4js.clean",
-				"title": "N4JS: Clean"
+				"command": "n4js.rebuild",
+				"title": "N4JS: Rebuild"
 			}
 		],
-		"activationEvents": ["onCommand:n4js.clean"],
+		"activationEvents": ["onCommand:n4js.rebuild"],
 		"menus": {
 			"commandPalette": [
 				{
-					"command": "n4js.clean"
+					"command": "n4js.rebuild"
 				}
 			]
 		}

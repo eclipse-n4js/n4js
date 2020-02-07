@@ -62,12 +62,12 @@ export function getActivate(vscode: any+, vscodeLC: any+): any {
         context.subscriptions.push(disposableLangClient);
 
         //// Example for command that is handled in the client extension ////
-        // const commandClean = 'n4js.clean';
-        // const commandCleanHandler = () => {
-        //     vscode.window.showErrorMessage("Trigger n4js clean!!!");
+        // const commandRebuild = 'n4js.rebuild';
+        // const commandRebuildHandler = () => {
+        //     vscode.window.showErrorMessage("Trigger n4js rebuild!!!");
         // };
-        //const disposableCmdClean = vscode.commands.registerCommand(commandClean, commandCleanHandler);
-        //context.subscriptions.push(disposableCmdClean);
+        //const disposableCmdRebuild = vscode.commands.registerCommand(commandRebuild, commandRebuildHandler);
+        //context.subscriptions.push(disposableCmdRebuild);
     };
 }
 

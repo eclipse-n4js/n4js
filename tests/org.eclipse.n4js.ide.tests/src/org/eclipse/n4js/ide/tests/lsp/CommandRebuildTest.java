@@ -38,11 +38,11 @@ import org.junit.Test;
 import com.google.inject.Injector;
 
 /**
- * Tests the client command 'n4js.clean'
+ * Tests the client command 'n4js.rebuild'
  */
-public class CommandCleanTest {
+public class CommandRebuildTest {
 	static final String PROBANDS_NAME = "probands";
-	static final String PROJECT_NAME = "lsp-command-clean";
+	static final String PROJECT_NAME = "lsp-command-rebuild";
 	static final String PROJECT_STATE_NAME = ".n4js.projectstate";
 	static final String GEN_FILE_NAME = "src-gen/Module.js";
 
@@ -79,9 +79,9 @@ public class CommandCleanTest {
 		languageServer.joinInitBuildFinished();
 	}
 
-	/** Expectation is that files '.n4js.projectstate' and 'src-gen/Module.js' are changed due to clean action. */
+	/** Expectation is that files '.n4js.projectstate' and 'src-gen/Module.js' are changed due to rebuild action. */
 	@Test
-	public void testCommandClean() throws IOException {
+	public void testCommandRebuild() throws IOException {
 		// check pre-state
 		assertEquals(0, client.getErrorsCount());
 		FileTime prjStateTime = Files.readAttributes(prjStatePath, BasicFileAttributes.class).creationTime();
@@ -89,7 +89,7 @@ public class CommandCleanTest {
 
 		// send command under test
 		client.resetCounters();
-		ExecuteCommandParams cmdCleanParams = new ExecuteCommandParams("n4js.clean", Collections.emptyList());
+		ExecuteCommandParams cmdCleanParams = new ExecuteCommandParams("n4js.rebuild", Collections.emptyList());
 		CompletableFuture<Object> future = languageServer.executeCommand(cmdCleanParams);
 		future.join();
 
