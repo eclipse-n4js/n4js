@@ -16,6 +16,7 @@ import static org.junit.Assert.assertNotEquals;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributeView;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.util.Collections;
@@ -50,6 +51,8 @@ public class CommandRebuildTest {
 	static final String PROJECT_STATE_NAME = ".n4js.projectstate";
 	static final String GEN_FILE_NAME = "src-gen/Module.js";
 
+	static final long FILE_TIME_MILLISECONDS = 8472000;
+
 	static final SystemOutRedirecter SYSTEM_OUT_REDIRECTER = new SystemOutRedirecter();
 
 	/** Catch outputs on console to an internal buffer */
@@ -72,12 +75,9 @@ public class CommandRebuildTest {
 	private N4jscTestLanguageClient client;
 	private XLanguageServerImpl languageServer;
 
-	private FileTime prjStateTime;
-	private FileTime genFileTime;
-
 	/** Sets up the language server and client */
 	@Before
-	public void init() throws IOException, InterruptedException {
+	public void init() throws IOException {
 		// init
 		N4jscTestFactory.set(true);
 		languageServer = N4jscFactory.getLanguageServer();
@@ -102,11 +102,11 @@ public class CommandRebuildTest {
 
 		// check pre-state
 		assertEquals(0, client.getErrorsCount());
-		prjStateTime = Files.readAttributes(prjStatePath, BasicFileAttributes.class).creationTime();
-		genFileTime = Files.readAttributes(genFileStatePath, BasicFileAttributes.class).creationTime();
+		setFileCreationDate(prjStatePath);
+		setFileCreationDate(genFileStatePath);
 
 		// wait two seconds because file time does not consider milliseconds
-		Thread.sleep(2000);
+		// Thread.sleep(2000);
 		client.resetCounters();
 	}
 
@@ -135,10 +135,10 @@ public class CommandRebuildTest {
 
 		// evaluate
 		assertEquals(0, client.getErrorsCount());
-		FileTime prjStateTime2 = Files.readAttributes(prjStatePath, BasicFileAttributes.class).creationTime();
-		FileTime genFileTime2 = Files.readAttributes(genFileStatePath, BasicFileAttributes.class).creationTime();
-		assertNotEquals(prjStateTime.toString(), prjStateTime2.toString());
-		assertNotEquals(genFileTime.toString(), genFileTime2.toString());
+		FileTime prjStateTime = Files.readAttributes(prjStatePath, BasicFileAttributes.class).creationTime();
+		FileTime genFileTime = Files.readAttributes(genFileStatePath, BasicFileAttributes.class).creationTime();
+		assertNotEquals(FILE_TIME_MILLISECONDS, prjStateTime.toMillis());
+		assertNotEquals(FILE_TIME_MILLISECONDS, genFileTime.toMillis());
 	}
 
 	/** Expectation is that files '.n4js.projectstate' and 'src-gen/Module.js' are NOT changed. */
@@ -154,10 +154,15 @@ public class CommandRebuildTest {
 
 		// evaluate
 		assertEquals(0, client.getErrorsCount());
-		FileTime prjStateTime2 = Files.readAttributes(prjStatePath, BasicFileAttributes.class).creationTime();
-		FileTime genFileTime2 = Files.readAttributes(genFileStatePath, BasicFileAttributes.class).creationTime();
-		assertEquals(prjStateTime.toString(), prjStateTime2.toString());
-		assertEquals(genFileTime.toString(), genFileTime2.toString());
+		FileTime prjStateTime = Files.readAttributes(prjStatePath, BasicFileAttributes.class).creationTime();
+		FileTime genFileTime = Files.readAttributes(genFileStatePath, BasicFileAttributes.class).creationTime();
+		assertEquals(FILE_TIME_MILLISECONDS, prjStateTime.toMillis());
+		assertEquals(FILE_TIME_MILLISECONDS, genFileTime.toMillis());
 	}
 
+	private void setFileCreationDate(Path filePath) throws IOException {
+		BasicFileAttributeView attributes = Files.getFileAttributeView(filePath, BasicFileAttributeView.class);
+		FileTime time = FileTime.fromMillis(FILE_TIME_MILLISECONDS);
+		attributes.setTimes(time, time, time);
+	}
 }
