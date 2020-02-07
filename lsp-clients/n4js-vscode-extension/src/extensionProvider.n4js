@@ -55,11 +55,11 @@ export function getActivate(vscode: any+, vscodeLC: any+): any {
         let lc = new vscodeLC.LanguageClient('N4JS Language Server', serverOptions, clientOptions, true);
         // enable tracing (.Off, .Messages, .Verbose)
         lc.trace = VSCodeJRCP.Trace.Verbose;
-        let disposable = lc.start();
+        let disposableLangClient = lc.start();
         
         // Push the disposable to the context's subscriptions so that the 
         // client can be deactivated on extension deactivation
-        context.subscriptions.push(disposable);
+        context.subscriptions.push(disposableLangClient);
     };
 }
 

@@ -10,8 +10,12 @@
  */
 package org.eclipse.n4js.ts.scoping.builtin;
 
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.ResourceLocator;
 import org.eclipse.n4js.xtext.resourceset.EmptyAuthorityAddingNormalizer;
+import org.eclipse.n4js.xtext.resourceset.XtextResourceLocator;
 import org.eclipse.xtext.resource.SynchronizedXtextResourceSet;
 import org.eclipse.xtext.util.UriExtensions;
 
@@ -36,6 +40,7 @@ public class ResourceSetWithBuiltInSchemeProvider {
 			UriExtensions uriExtensions) {
 		@SuppressWarnings("hiding")
 		SynchronizedXtextResourceSet resourceSet = new SynchronizedXtextResourceSet();
+		attachXtextResourceLocator(resourceSet);
 		resourceSet.setClasspathURIContext(classLoader);
 		registrar.registerScheme(resourceSet);
 		resourceSet.setURIConverter(new EmptyAuthorityAddingNormalizer(resourceSet.getURIConverter(), uriExtensions));
@@ -49,4 +54,31 @@ public class ResourceSetWithBuiltInSchemeProvider {
 		return resourceSet;
 	}
 
+	private ResourceLocator attachXtextResourceLocator(
+			@SuppressWarnings("hiding") SynchronizedXtextResourceSet resourceSet) {
+		return new XtextResourceLocator(resourceSet) {
+			@Override
+			public Resource getResource(URI uri, boolean loadOnDemand) {
+				if (!N4Scheme.isN4Scheme(uri)) {
+					Resource result = super.getResource(uri, false);
+					if (result != null) {
+						if (!result.isLoaded() && loadOnDemand) {
+							demandLoadHelper(result);
+						}
+						return result;
+					}
+				}
+				Resource result = super.getResource(uri, loadOnDemand);
+				if (result != null && N4Scheme.isN4Scheme(uri)) {
+					URI classpathURI = N4Scheme.toClasspathURI(uri);
+					URI normalized = resourceSet.getURIConverter().normalize(classpathURI);
+					if (!normalized.equals(classpathURI)) {
+						normalizedMapping(uri, normalized);
+						resourceSet.getURIResourceMap().put(normalized, result);
+					}
+				}
+				return result;
+			}
+		};
+	}
 }

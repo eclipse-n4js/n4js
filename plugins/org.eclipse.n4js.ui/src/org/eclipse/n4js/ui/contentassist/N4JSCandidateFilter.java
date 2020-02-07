@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.ui.contentassist;
 
-import org.eclipse.n4js.scoping.utils.AbstractDescriptionWithError;
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
 import org.eclipse.n4js.ui.proposals.imports.ImportsAwareReferenceProposalCreator;
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;

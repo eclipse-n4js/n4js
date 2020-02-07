@@ -35,7 +35,8 @@
 					".n4jsd",
 					".n4jsx",
 					".json",
-					".n4idl"
+					".n4idl",
+					".n4ts"
 				],
 				"configuration": "./n4js.configuration.json"
 			}
@@ -46,7 +47,23 @@
 				"scopeName": "source.n4js",
 				"path": "./syntaxes/n4js.tmLanguage.json"
 			}
-		]
+		],
+		"commands": [
+			{
+				"command": "n4js.rebuild",
+				"title": "N4JS: Rebuild"
+			}
+		],
+		"activationEvents": [
+			"onCommand:n4js.rebuild"
+		],
+		"menus": {
+			"commandPalette": [
+				{
+					"command": "n4js.rebuild"
+				}
+			]
+		}
 	},
 	"devDependencies": {
 		"@types/vscode": "^1.41.0",

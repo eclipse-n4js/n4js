@@ -438,6 +438,10 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 
 	@Override
 	public XDocument getDocument(URI uri) {
+		XDocument doc = openDocuments.get(uri);
+		if (doc != null) {
+			return doc;
+		}
 		XtextResource resource = getResource(uri);
 		if (resource == null) {
 			return null;
