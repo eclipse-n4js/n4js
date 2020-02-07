@@ -13,6 +13,7 @@ package org.eclipse.n4js.cli.helper;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -105,6 +106,21 @@ public class N4jscTestLanguageClient extends N4jscLanguageClient {
 	@Override
 	public long getDeletionsCount() {
 		return deletedFiles.size();
+	}
+
+	/** @return all error messages of issues of a given uri */
+	public Collection<String> getErrors(String uri) {
+		return errors.get(uri);
+	}
+
+	@Override
+	public void resetCounters() {
+		super.resetCounters();
+		issues.clear();
+		errors.clear();
+		warnings.clear();
+		transpiledFiles.clear();
+		deletedFiles.clear();
 	}
 
 }

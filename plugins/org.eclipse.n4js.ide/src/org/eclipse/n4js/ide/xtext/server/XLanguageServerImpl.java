@@ -575,13 +575,20 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		});
 	}
 
-	@Override
-	public void didChangeConfiguration(DidChangeConfigurationParams params) {
+	/**
+	 * Triggers rebuild of the whole workspace
+	 */
+	public void reinitWorkspace() {
 		requestManager.runWrite("didChangeConfiguration", () -> {
 			workspaceManager.refreshWorkspaceConfig();
 			workspaceManager.doInitialBuild(CancelIndicator.NullImpl);
 			return null;
 		}, (a, b) -> null);
+	}
+
+	@Override
+	public void didChangeConfiguration(DidChangeConfigurationParams params) {
+		reinitWorkspace();
 	}
 
 	@Override

@@ -1,0 +1,7 @@
+
+export public class MyClass {
+    public field: string;
+}
+
+const c = new MyClass();
+c;
