@@ -15,6 +15,8 @@
  */
 package org.eclipse.n4js.resource;
 
+import static org.eclipse.xtext.diagnostics.Diagnostic.SYNTAX_DIAGNOSTIC_WITH_RANGE;
+
 import java.io.BufferedInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -73,8 +75,10 @@ import org.eclipse.n4js.utils.EcoreUtilN4;
 import org.eclipse.n4js.utils.N4JSLanguageHelper;
 import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
 import org.eclipse.n4js.utils.emf.ProxyResolvingResource;
+import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.xtext.diagnostics.DiagnosticMessage;
 import org.eclipse.xtext.diagnostics.ExceptionDiagnostic;
+import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.SyntaxErrorMessage;
@@ -1294,9 +1298,11 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		for (INode error : getParseResult().getSyntaxErrors()) {
 			XtextSyntaxDiagnostic diagnostic = createSyntaxDiagnostic(error);
 			String code = diagnostic.getCode();
+			Severity severity = IssueCodes.getDefaultSeverity(code);
 			if (AbstractN4JSStringValueConverter.WARN_ISSUE_CODE.equals(code)
 					|| RegExLiteralConverter.ISSUE_CODE.equals(code)
-					|| LegacyOctalIntValueConverter.ISSUE_CODE.equals(code)) {
+					|| LegacyOctalIntValueConverter.ISSUE_CODE.equals(code)
+					|| severity == Severity.WARNING) {
 				warningList.addUnique(diagnostic);
 			} else if (!InternalSemicolonInjectingParser.SEMICOLON_INSERTED.equals(code)) {
 				errorList.addUnique(diagnostic);
@@ -1306,8 +1312,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 
 	private XtextSyntaxDiagnostic createSyntaxDiagnostic(INode error) {
 		SyntaxErrorMessage syntaxErrorMessage = error.getSyntaxErrorMessage();
-		if (org.eclipse.xtext.diagnostics.Diagnostic.SYNTAX_DIAGNOSTIC_WITH_RANGE.equals(syntaxErrorMessage
-				.getIssueCode())) {
+		if (isRangeBased(syntaxErrorMessage)) {
 			String[] issueData = syntaxErrorMessage.getIssueData();
 			if (issueData.length == 1) {
 				String data = issueData[0];
@@ -1322,6 +1327,13 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			}
 		}
 		return new XtextSyntaxDiagnostic(error);
+	}
+
+	private boolean isRangeBased(SyntaxErrorMessage syntaxErrorMessage) {
+		String issueCode = syntaxErrorMessage.getIssueCode();
+		return SYNTAX_DIAGNOSTIC_WITH_RANGE.equals(issueCode)
+				|| RegExLiteralConverter.ISSUE_CODE.equals(issueCode)
+				|| IssueCodes.VCO_REGEX_NAMED_GROUP.equals(issueCode);
 	}
 
 	// FIXME the following method should no longer be required once TypingASTWalker is fully functional

@@ -12,6 +12,7 @@ package org.eclipse.n4js.conversion;
 
 import java.io.StringReader;
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
@@ -21,11 +22,14 @@ import org.eclipse.n4js.regex.regularExpression.CharacterClassEscapeSequence;
 import org.eclipse.n4js.regex.regularExpression.CharacterClassRange;
 import org.eclipse.n4js.regex.regularExpression.ControlLetterEscapeSequence;
 import org.eclipse.n4js.regex.regularExpression.DecimalEscapeSequence;
+import org.eclipse.n4js.regex.regularExpression.Group;
 import org.eclipse.n4js.regex.regularExpression.RegularExpressionLiteral;
+import org.eclipse.n4js.regex.regularExpression.RegularExpressionPackage;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.xtext.conversion.ValueConverterWithValueException;
 import org.eclipse.xtext.conversion.impl.AbstractValueConverter;
 import org.eclipse.xtext.nodemodel.INode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.parser.IParser;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
@@ -47,15 +51,15 @@ public class RegExLiteralConverter extends AbstractValueConverter<String> {
 	/**
 	 * A {@link ValueConverterWithValueException} that indicates an erroneous regular expression literal.
 	 */
-	public static class BogusRegExLiteralException extends ValueConverterWithValueException {
+	public static class BogusRegExLiteralException extends N4JSValueConverterWithValueException {
 
 		private static final long serialVersionUID = 1L;
 
 		/**
 		 * Create a new exception for the given node with the recovered value.
 		 */
-		public BogusRegExLiteralException(String message, INode node, String value) {
-			super(message, node, value, null);
+		public BogusRegExLiteralException(String message, INode node, String value, int offset, int length) {
+			super(message, ISSUE_CODE, node, offset, length, value, null);
 		}
 
 	}
@@ -92,7 +96,7 @@ public class RegExLiteralConverter extends AbstractValueConverter<String> {
 		IParseResult parseResult = getRegexParser().parse(new StringReader(escaped));
 		Iterable<INode> syntaxErrors = parseResult.getSyntaxErrors();
 		Iterator<INode> iterator = syntaxErrors.iterator();
-		String issueMessage = null;
+		INode issueNode = null;
 		boolean hasErrors = false;
 		while (iterator.hasNext()) {
 			INode syntaxError = iterator.next();
@@ -101,36 +105,49 @@ public class RegExLiteralConverter extends AbstractValueConverter<String> {
 				hasErrors = true;
 				break;
 			}
-			if (issueMessage == null)
-				issueMessage = message;
+			if (issueNode == null)
+				issueNode = syntaxError;
 		}
 		if (hasErrors) {
 			throw new N4JSValueConverterWithValueException(IssueCodes.getMessageForVCO_REGEX_INVALID(),
 					IssueCodes.VCO_REGEX_INVALID, node, string, null);
 		}
-		if (issueMessage != null) {
-			throw new BogusRegExLiteralException(issueMessage, node, string);
+		if (issueNode != null) {
+			throw new BogusRegExLiteralException(issueNode.getSyntaxErrorMessage().getMessage(), node, string,
+					issueNode.getOffset(), issueNode.getLength());
 		}
 		RegularExpressionLiteral literal = (RegularExpressionLiteral) parseResult.getRootASTElement();
-		if (literal.getFlags().getFlags().contains("u")) {
-			TreeIterator<EObject> regExIterator = literal.eAllContents();
-			while (regExIterator.hasNext()) {
-				EObject next = regExIterator.next();
-				if (next instanceof DecimalEscapeSequence) {
+		boolean hasUnicodeFlag = literal.getFlags().getFlags().contains("u");
+		TreeIterator<EObject> regExIterator = literal.eAllContents();
+		while (regExIterator.hasNext()) {
+			EObject element = regExIterator.next();
+			if (hasUnicodeFlag) {
+				if (element instanceof DecimalEscapeSequence) {
 					throw new N4JSValueConverterWithValueException(IssueCodes.getMessageForVCO_REGEX_INVALID(),
 							IssueCodes.VCO_REGEX_INVALID, node, string, null);
-				} else if (next instanceof ControlLetterEscapeSequence) {
-					if (((ControlLetterEscapeSequence) next).getSequence().length() <= 2) {
+				} else if (element instanceof ControlLetterEscapeSequence) {
+					if (((ControlLetterEscapeSequence) element).getSequence().length() <= 2) {
 						throw new N4JSValueConverterWithValueException(IssueCodes.getMessageForVCO_REGEX_INVALID(),
 								IssueCodes.VCO_REGEX_INVALID, node, string, null);
 					}
-				} else if (next instanceof CharacterClassRange) {
-					CharacterClassRange casted = (CharacterClassRange) next;
+				} else if (element instanceof CharacterClassRange) {
+					CharacterClassRange casted = (CharacterClassRange) element;
 					if (casted.getLeft() instanceof CharacterClassEscapeSequence
 							|| casted.getRight() instanceof CharacterClassEscapeSequence) {
 						throw new N4JSValueConverterWithValueException(IssueCodes.getMessageForVCO_REGEX_INVALID(),
 								IssueCodes.VCO_REGEX_INVALID, node, string, null);
 					}
+				}
+			}
+			if (element instanceof Group) {
+				Group group = (Group) element;
+				if (group.getName() != null) {
+					List<INode> nodesForFeature = NodeModelUtils.findNodesForFeature(group,
+							RegularExpressionPackage.Literals.GROUP__NAME);
+					INode nameNode = nodesForFeature.get(0);
+					throw new N4JSValueConverterWithValueException(IssueCodes.getMessageForVCO_REGEX_NAMED_GROUP(),
+							IssueCodes.VCO_REGEX_NAMED_GROUP, node, nameNode.getOffset(), nameNode.getLength(),
+							string, null);
 				}
 			}
 		}
@@ -141,8 +158,8 @@ public class RegExLiteralConverter extends AbstractValueConverter<String> {
 		StringConverterResult result = ValueConverterUtils.convertFromEscapedString(jsString, false, true, false, null);
 		if (result.hasError()) {
 			throw new N4JSValueConverterWithValueException(
-					IssueCodes.getMessageForVCO_REGEX_ILLEGAL_ESCAP(jsString),
-					IssueCodes.VCO_REGEX_ILLEGAL_ESCAP, node, result.getValue(), null);
+					IssueCodes.getMessageForVCO_REGEX_ILLEGAL_ESCAPE(jsString),
+					IssueCodes.VCO_REGEX_ILLEGAL_ESCAPE, node, result.getValue(), null);
 		}
 		return result.getValue();
 	}
