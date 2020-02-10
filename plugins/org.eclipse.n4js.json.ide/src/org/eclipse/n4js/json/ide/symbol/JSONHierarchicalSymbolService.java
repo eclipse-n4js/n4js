@@ -30,7 +30,7 @@ import org.eclipse.xtext.util.CancelIndicator;
 import com.google.inject.Inject;
 
 /**
- *
+ * Creates the JSON outline tree for LSP based editors.
  */
 public class JSONHierarchicalSymbolService extends HierarchicalDocumentSymbolService {
 

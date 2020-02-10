@@ -11,14 +11,18 @@
 package org.eclipse.n4js.json.tests.ide.symbol
 
 import org.eclipse.lsp4j.ClientCapabilities
+import org.eclipse.lsp4j.DocumentSymbol
 import org.eclipse.lsp4j.DocumentSymbolCapabilities
 import org.eclipse.lsp4j.InitializeParams
 import org.eclipse.lsp4j.TextDocumentClientCapabilities
+import org.eclipse.lsp4j.util.Ranges
 import org.eclipse.xtext.testing.AbstractLanguageServerTest
 import org.junit.Test
 
+import static org.junit.Assert.assertTrue
+
 /**
- *
+ * Tests for the outline tree
  */
 class JSONHierarchicalSymbolServiceTest extends AbstractLanguageServerTest {
 	new() {
@@ -52,35 +56,35 @@ class JSONHierarchicalSymbolServiceTest extends AbstractLanguageServerTest {
 			'''
 			expectedSymbols = '''
 				symbol "name1 : "string"" {
-				    kind: 8
+				    kind: Field
 				    range: [[1, 1] .. [1, 19]]
 				    selectionRange: [[1, 1] .. [1, 8]]
 				    details: 
 				    deprecated: false
 				}
 				symbol "name2 : true" {
-				    kind: 16
+				    kind: Number
 				    range: [[2, 1] .. [2, 15]]
 				    selectionRange: [[2, 1] .. [2, 8]]
 				    details: 
 				    deprecated: false
 				}
 				symbol "name3 : 123" {
-				    kind: 16
+				    kind: Number
 				    range: [[3, 1] .. [3, 14]]
 				    selectionRange: [[3, 1] .. [3, 8]]
 				    details: 
 				    deprecated: false
 				}
 				symbol "name4" {
-				    kind: 19
+				    kind: Object
 				    range: [[4, 1] .. [6, 2]]
 				    selectionRange: [[4, 1] .. [4, 8]]
 				    details: 
 				    deprecated: false
 				    children: [
 				        symbol "child : null" {
-				            kind: 21
+				            kind: Null
 				            range: [[5, 2] .. [5, 16]]
 				            selectionRange: [[5, 2] .. [5, 9]]
 				            details: 
@@ -89,21 +93,22 @@ class JSONHierarchicalSymbolServiceTest extends AbstractLanguageServerTest {
 				    ]
 				}
 				symbol "name5" {
-				    kind: 18
+				    kind: Array
 				    range: [[7, 1] .. [7, 33]]
 				    selectionRange: [[7, 1] .. [7, 8]]
 				    details: 
 				    deprecated: false
 				    children: [
 				        symbol ""value1"" {
-				            kind: 15
+				            kind: String
 				            range: [[7, 13] .. [7, 21]]
 				            selectionRange: [[7, 13] .. [7, 21]]
 				            details: 
 				            deprecated: false
 				        }
+				        
 				        symbol ""value2"" {
-				            kind: 15
+				            kind: String
 				            range: [[7, 23] .. [7, 31]]
 				            selectionRange: [[7, 23] .. [7, 31]]
 				            details: 
@@ -114,4 +119,26 @@ class JSONHierarchicalSymbolServiceTest extends AbstractLanguageServerTest {
 			'''
 		]
 	}
+	
+	override protected _toExpectation(DocumentSymbol it) {
+		assertTrue('''selectionRange must be contained in the range: «it»''', Ranges.containsRange(range, selectionRange))
+		// Use the symbolKind.name instead of the int value in the assertion
+		return '''
+			symbol "«name»" {
+			    kind: «kind.name»
+			    range: «range.toExpectation»
+			    selectionRange: «selectionRange.toExpectation»
+			    details: «detail»
+			    deprecated: «deprecated»
+			    «IF !children.nullOrEmpty»
+			        children: [
+			            «FOR child : children SEPARATOR'\n'»
+			                «child.toExpectation»
+			            «ENDFOR»
+			        ]
+			    «ENDIF»
+			}
+		'''
+	}
+	
 }
