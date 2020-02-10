@@ -113,14 +113,4 @@ public class N4jscTestLanguageClient extends N4jscLanguageClient {
 		return errors.get(uri);
 	}
 
-	@Override
-	public void resetCounters() {
-		super.resetCounters();
-		issues.clear();
-		errors.clear();
-		warnings.clear();
-		transpiledFiles.clear();
-		deletedFiles.clear();
-	}
-
 }
