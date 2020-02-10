@@ -10,8 +10,11 @@ Require-Bundle: org.eclipse.n4js.json,
  org.eclipse.lsp4j.jsonrpc,
  org.eclipse.lsp4j,
  com.google.inject,
- com.google.gson
+ com.google.gson,
+ org.eclipse.n4js,
+ org.eclipse.n4js.semver.model
 Export-Package: org.eclipse.n4js.json.ide,
+ org.eclipse.n4js.json.ide.contentassist,
  org.eclipse.n4js.json.ide.contentassist.antlr,
  org.eclipse.n4js.json.ide.contentassist.antlr.internal,
  org.eclipse.n4js.json.ide.symbol
