@@ -63,7 +63,7 @@ class JSONHierarchicalSymbolServiceTest extends AbstractLanguageServerTest {
 				    deprecated: false
 				}
 				symbol "name2 : true" {
-				    kind: Number
+				    kind: Boolean
 				    range: [[2, 1] .. [2, 15]]
 				    selectionRange: [[2, 1] .. [2, 8]]
 				    details: 

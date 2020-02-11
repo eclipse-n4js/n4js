@@ -64,7 +64,7 @@ public class JSONIdeContentProposalProvider extends IdeContentProposalProvider {
 		}
 		if (assignment == grammarAccess.getNameValuePairAccess().getNameAssignment_0()) {
 			List<String> namePath = CompletionUtils.getJsonPathNames(context.getCurrentModel());
-			proposePackages(context, acceptor, namePath);
+			proposeLocalPackages(context, acceptor, namePath);
 		}
 		if (assignment == grammarAccess.getNameValuePairAccess().getValueAssignment_2()
 				&& context.getCurrentModel() instanceof NameValuePair) {
@@ -74,7 +74,7 @@ public class JSONIdeContentProposalProvider extends IdeContentProposalProvider {
 		}
 	}
 
-	private void proposePackages(ContentAssistContext context, IIdeContentProposalAcceptor acceptor,
+	private void proposeLocalPackages(ContentAssistContext context, IIdeContentProposalAcceptor acceptor,
 			List<String> namePath) {
 		if (!namePath.isEmpty()) {
 			// somewhat poor heuristic: propose all projects that are known in the current workspace
