@@ -16,9 +16,11 @@ import java.util.Collection;
 
 import org.eclipse.emf.common.notify.NotificationChain;
 
+import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
@@ -28,6 +30,7 @@ import org.eclipse.emf.ecore.xcore.lib.XcoreEListExtensions;
 
 import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONPackage;
+import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.JSON.NameValuePair;
 
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
@@ -113,6 +116,26 @@ public class JSONObjectImpl extends JSONValueImpl implements JSONObject {
 	 * @generated
 	 */
 	@Override
+	public boolean isContainer() {
+		return true;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EList<EObject> getChildren() {
+		return ECollections.<EObject>unmodifiableEList(this.getNameValuePairs());
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case JSONPackage.JSON_OBJECT__NAME_VALUE_PAIRS:
@@ -187,10 +210,31 @@ public class JSONObjectImpl extends JSONValueImpl implements JSONObject {
 	 * @generated
 	 */
 	@Override
+	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
+		if (baseClass == JSONValue.class) {
+			switch (baseOperationID) {
+				case JSONPackage.JSON_VALUE___IS_CONTAINER: return JSONPackage.JSON_OBJECT___IS_CONTAINER;
+				case JSONPackage.JSON_VALUE___GET_CHILDREN: return JSONPackage.JSON_OBJECT___GET_CHILDREN;
+				default: return super.eDerivedOperationID(baseOperationID, baseClass);
+			}
+		}
+		return super.eDerivedOperationID(baseOperationID, baseClass);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
 			case JSONPackage.JSON_OBJECT___TO_STRING:
 				return toString();
+			case JSONPackage.JSON_OBJECT___IS_CONTAINER:
+				return isContainer();
+			case JSONPackage.JSON_OBJECT___GET_CHILDREN:
+				return getChildren();
 		}
 		return super.eInvoke(operationID, arguments);
 	}
