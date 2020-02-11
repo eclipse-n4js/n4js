@@ -100,7 +100,7 @@ export public function runN4jsc(args: string[], log: {function(string)} = npmlog
  * set to 4GB if not set already.
  */
 export public function createN4JSProcess(args: string[], spawnOptions: childProcess.SpawnOptions, log: {function(string)} = npmlog.info) : childProcess.ChildProcess {
-    let java = getJavaCommand();
+    let java = getJavaCommand(log);
     if (isLocalJre(java)) {
         log("Using JRE at " + java);
     }
@@ -133,8 +133,8 @@ function getArgs() : Array<string> {
  * In case the bin folder contains a JRE, this function returns the absolute path
  * to the Java executable.
  */
-function getJavaCommand() : string {
-    const jreInfo = JRE_INFO_MAP.get(process.platform as Platform);
+function getJavaCommand(log: {function(string)}) : string {
+    const jreInfo = getJreInfo(log);
     if (jreInfo && fs.existsSync(JRE_DIR)) {
         const directories = fs.readdirSync(JRE_DIR, { withFileTypes: true }) as fs.Dirent[];
         const dirNames = directories
@@ -159,7 +159,7 @@ function getJavaCommand() : string {
  * and extracted to the local bin folder.
  */
 export public async function ensureJRE(log: {function(string)} = npmlog.info) : void {
-    const java = getJavaCommand();
+    const java = getJavaCommand(log);
     if (isLocalJre(java)) {
         log("Local JRE found.");
         return;
@@ -172,7 +172,7 @@ export public async function ensureJRE(log: {function(string)} = npmlog.info) : 
     }
 
     // Download and extract JRE
-    const jreInfo = JRE_INFO_MAP.get(process.platform as Platform);
+    const jreInfo = getJreInfo(log);
     if (jreInfo) {
         let msg = versionInfo.suffices? "Global JRE found." : "Global JRE found but version not starting with '" + JRE_VERSION_START + "'.";
         msg += " Downloading and extracting JRE into local folder.";
@@ -185,6 +185,15 @@ export public async function ensureJRE(log: {function(string)} = npmlog.info) : 
         log("Platform not supported: " + process.platform);
         log("Please install JRE11+ and make the call to 'bin/java' globally available.");
     }
+}
+
+function getJreInfo(log: {function(string)}) : JreInfo {
+    const platform = process.platform as Platform;
+    if (platform == Platform.linux && isMuslLibc()) {
+        log("Musl libc is not supported by Adopt OpenJDK");
+        return null;
+    }
+    return JRE_INFO_MAP.get(process.platform as Platform);
 }
 
 function isLocalJre(javaPath: string): boolean {
@@ -282,4 +291,13 @@ function extractJRE(jreInfo: JreInfo, log: {function(string)}) {
 
 function getJreFileName(jreInfo: JreInfo): string {
     return path.resolve(BIN_DIR, jreInfo.name);
+}
+
+/** Returns true if the installed libc is musl */
+function isMuslLibc() {
+    const output = childProcess.spawnSync('ldd', ['--version']).stderr.toString('utf8');
+    if (output.indexOf('musl') > -1) {
+        return true;
+    }
+    return false;
 }
