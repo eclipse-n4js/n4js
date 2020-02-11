@@ -12,11 +12,13 @@ package org.eclipse.n4js.json.ide;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.json.ide.contentassist.JSONIdeContentProposalProvider;
+import org.eclipse.n4js.json.ide.contentassist.PatchedContentAssistService;
 import org.eclipse.n4js.json.ide.symbol.JSONDocumentSymbolKindProvider;
 import org.eclipse.n4js.json.ide.symbol.JSONDocumentSymbolNameProvider;
 import org.eclipse.n4js.json.ide.symbol.JSONHierarchicalSymbolService;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalProvider;
+import org.eclipse.xtext.ide.server.contentassist.ContentAssistService;
 import org.eclipse.xtext.ide.server.symbol.DocumentSymbolMapper.DocumentSymbolKindProvider;
 import org.eclipse.xtext.ide.server.symbol.DocumentSymbolMapper.DocumentSymbolNameProvider;
 import org.eclipse.xtext.ide.server.symbol.HierarchicalDocumentSymbolService;
@@ -49,6 +51,10 @@ public class JSONIdeModule extends AbstractJSONIdeModule {
 
 	public Class<? extends Provider<IN4JSCore>> provideN4JSCore() {
 		return N4JSCoreProvider.class;
+	}
+
+	public Class<? extends ContentAssistService> bindContentAssistService() {
+		return PatchedContentAssistService.class;
 	}
 
 	public static class N4JSCoreProvider implements Provider<IN4JSCore> {

@@ -12,10 +12,15 @@ package org.eclipse.n4js.json.tests.ide.contentassist
 
 import org.eclipse.xtext.testing.AbstractLanguageServerTest
 import org.junit.Test
+import org.eclipse.lsp4j.CompletionItem
 
 class JSONCompletionTest extends AbstractLanguageServerTest {
 	new() {
 		super("json")
+	}
+	
+	override protected _toExpectation(CompletionItem it) {
+		return '''[«kind?.name», «insertTextFormat?.name?:'PlainText'»] «super._toExpectation(it)»'''
 	}
 
 	@Test def void testKeywords() {
@@ -23,9 +28,9 @@ class JSONCompletionTest extends AbstractLanguageServerTest {
 			model = '{ "unknownAttribute" : }'
 			column = model.length - 1
 			expectedCompletionItems = '''
-				false -> false [[0, 23] .. [0, 23]]
-				null -> null [[0, 23] .. [0, 23]]
-				true -> true [[0, 23] .. [0, 23]]
+				[Keyword, PlainText] false -> false [[0, 23] .. [0, 23]]
+				[Keyword, PlainText] null -> null [[0, 23] .. [0, 23]]
+				[Keyword, PlainText] true -> true [[0, 23] .. [0, 23]]
 			'''
 		]
 	}
@@ -35,19 +40,19 @@ class JSONCompletionTest extends AbstractLanguageServerTest {
 			model = '{}'
 			column = 1
 			expectedCompletionItems = '''
-				dependencies (Dependencies of this npm) -> "dependencies": {
+				[Class, Snippet] dependencies (Dependencies of this npm) -> "dependencies": {
 				    $1
 				}$0 [[0, 1] .. [0, 1]]
-				devDependencies (Development dependencies of this npm) -> "devDependencies": {
+				[Class, Snippet] devDependencies (Development dependencies of this npm) -> "devDependencies": {
 				    $1
 				}$0 [[0, 1] .. [0, 1]]
-				main (Main module. Path is relative to package root) -> "main": "$1"$0 [[0, 1] .. [0, 1]]
-				n4js (N4JS section) -> "n4js": {
+				[Property, Snippet] main (Main module. Path is relative to package root) -> "main": "$1"$0 [[0, 1] .. [0, 1]]
+				[Class, Snippet] n4js (N4JS section) -> "n4js": {
 				    $1
 				}$0 [[0, 1] .. [0, 1]]
-				name (Npm name) -> "name": "$1"$0 [[0, 1] .. [0, 1]]
-				version (Npm semver version) -> "version": "$1"$0 [[0, 1] .. [0, 1]]
-				workspaces (Projects that are members of the yarn workspace) -> "workspaces": [
+				[Property, Snippet] name (Npm name) -> "name": "$1"$0 [[0, 1] .. [0, 1]]
+				[Property, Snippet] version (Npm semver version) -> "version": "$1"$0 [[0, 1] .. [0, 1]]
+				[Value, Snippet] workspaces (Projects that are members of the yarn workspace) -> "workspaces": [
 				    $1
 				]$0 [[0, 1] .. [0, 1]]
 			'''
@@ -66,15 +71,15 @@ class JSONCompletionTest extends AbstractLanguageServerTest {
 			column = 1
 			line = 3
 			expectedCompletionItems = '''
-				devDependencies (Development dependencies of this npm) -> "devDependencies": {
+				[Class, Snippet] devDependencies (Development dependencies of this npm) -> "devDependencies": {
 				    $1
 				}$0 [[3, 1] .. [3, 1]]
-				n4js (N4JS section) -> "n4js": {
+				[Class, Snippet] n4js (N4JS section) -> "n4js": {
 				    $1
 				}$0 [[3, 1] .. [3, 1]]
-				name (Npm name) -> "name": "$1"$0 [[3, 1] .. [3, 1]]
-				version (Npm semver version) -> "version": "$1"$0 [[3, 1] .. [3, 1]]
-				workspaces (Projects that are members of the yarn workspace) -> "workspaces": [
+				[Property, Snippet] name (Npm name) -> "name": "$1"$0 [[3, 1] .. [3, 1]]
+				[Property, Snippet] version (Npm semver version) -> "version": "$1"$0 [[3, 1] .. [3, 1]]
+				[Value, Snippet] workspaces (Projects that are members of the yarn workspace) -> "workspaces": [
 				    $1
 				]$0 [[3, 1] .. [3, 1]]
 			'''
@@ -95,35 +100,35 @@ class JSONCompletionTest extends AbstractLanguageServerTest {
 			column = 2
 			line = 4
 			expectedCompletionItems = '''
-				definesPackage -> "definesPackage": "$1"$0 [[4, 2] .. [4, 2]]
-				extendedRuntimeEnvironment -> "extendedRuntimeEnvironment": "$1"$0 [[4, 2] .. [4, 2]]
-				implementationId -> "implementationId": "$1"$0 [[4, 2] .. [4, 2]]
-				implementedProjects -> "implementedProjects": [
+				[Property, Snippet] definesPackage -> "definesPackage": "$1"$0 [[4, 2] .. [4, 2]]
+				[Property, Snippet] extendedRuntimeEnvironment -> "extendedRuntimeEnvironment": "$1"$0 [[4, 2] .. [4, 2]]
+				[Property, Snippet] implementationId -> "implementationId": "$1"$0 [[4, 2] .. [4, 2]]
+				[Value, Snippet] implementedProjects -> "implementedProjects": [
 				    $1
 				]$0 [[4, 2] .. [4, 2]]
-				mainModule (Main module specifier. Starts from source folder(s)) -> "mainModule": "$1"$0 [[4, 2] .. [4, 2]]
-				moduleFilters -> "moduleFilters": {
+				[Property, Snippet] mainModule (Main module specifier. Starts from source folder(s)) -> "mainModule": "$1"$0 [[4, 2] .. [4, 2]]
+				[Class, Snippet] moduleFilters -> "moduleFilters": {
 				    $1
 				}$0 [[4, 2] .. [4, 2]]
-				noValidate -> "noValidate": {
+				[Class, Snippet] noValidate -> "noValidate": {
 				    $1
 				}$0 [[4, 2] .. [4, 2]]
-				output (Output folder. Default is '.') -> "output": "$1"$0 [[4, 2] .. [4, 2]]
-				projectType (plainjs) -> "projectType": "$1"$0 [[4, 2] .. [4, 2]]
-				providedRuntimeLibraries -> "providedRuntimeLibraries": [
+				[Property, Snippet] output (Output folder. Default is '.') -> "output": "$1"$0 [[4, 2] .. [4, 2]]
+				[Property, Snippet] projectType (plainjs) -> "projectType": "$1"$0 [[4, 2] .. [4, 2]]
+				[Value, Snippet] providedRuntimeLibraries -> "providedRuntimeLibraries": [
 				    $1
 				]$0 [[4, 2] .. [4, 2]]
-				requiredRuntimeLibraries -> "requiredRuntimeLibraries": [
+				[Value, Snippet] requiredRuntimeLibraries -> "requiredRuntimeLibraries": [
 				    $1
 				]$0 [[4, 2] .. [4, 2]]
-				sources (Source folders) -> "sources": {
+				[Class, Snippet] sources (Source folders) -> "sources": {
 				    $1
 				}$0 [[4, 2] .. [4, 2]]
-				testedProjects (Projects that are tested by this project) -> "testedProjects": [
+				[Value, Snippet] testedProjects (Projects that are tested by this project) -> "testedProjects": [
 				    $1
 				]$0 [[4, 2] .. [4, 2]]
-				vendorId -> "vendorId": "$1"$0 [[4, 2] .. [4, 2]]
-				vendorName -> "vendorName": "$1"$0 [[4, 2] .. [4, 2]]
+				[Property, Snippet] vendorId -> "vendorId": "$1"$0 [[4, 2] .. [4, 2]]
+				[Property, Snippet] vendorName -> "vendorName": "$1"$0 [[4, 2] .. [4, 2]]
 			'''
 		]
 	}
@@ -142,7 +147,7 @@ class JSONCompletionTest extends AbstractLanguageServerTest {
 			column = 8
 			line = 4
 			expectedCompletionItems = '''
-				"definesPackage" -> "definesPackage": "$1"$0 [[4, 2] .. [4, 8]]
+				[Property, Snippet] "definesPackage" -> "definesPackage": "$1"$0 [[4, 2] .. [4, 8]]
 			'''
 		]
 	}
@@ -161,7 +166,7 @@ class JSONCompletionTest extends AbstractLanguageServerTest {
 			column = 7
 			line = 4
 			expectedCompletionItems = '''
-				"definesPackage" -> "definesPackage": "$1"$0 [[4, 2] .. [4, 7]]
+				[Property, Snippet] "definesPackage" -> "definesPackage": "$1"$0 [[4, 2] .. [4, 7]]
 			'''
 		]
 	}
@@ -178,13 +183,13 @@ class JSONCompletionTest extends AbstractLanguageServerTest {
 			column = 2
 			line = 2
 			expectedCompletionItems = '''
-				<array> (Generic name array pair) -> "${1:name}": [
+				[Value, Snippet] <array> (Generic name array pair) -> "${1:name}": [
 				    $2
 				]$0 [[2, 2] .. [2, 2]]
-				<object> (Generic name object pair) -> "${1:name}": {
+				[Class, Snippet] <object> (Generic name object pair) -> "${1:name}": {
 				    $2
 				}$0 [[2, 2] .. [2, 2]]
-				<value> (Generic name value pair) -> "${1:name}": "$2"$0 [[2, 2] .. [2, 2]]
+				[Property, Snippet] <value> (Generic name value pair) -> "${1:name}": "$2"$0 [[2, 2] .. [2, 2]]
 			'''
 		]
 	}
@@ -201,9 +206,9 @@ class JSONCompletionTest extends AbstractLanguageServerTest {
 			column = 2
 			line = 2
 			expectedCompletionItems = '''
-				false -> false [[2, 2] .. [2, 2]]
-				null -> null [[2, 2] .. [2, 2]]
-				true -> true [[2, 2] .. [2, 2]]
+				[Keyword, PlainText] false -> false [[2, 2] .. [2, 2]]
+				[Keyword, PlainText] null -> null [[2, 2] .. [2, 2]]
+				[Keyword, PlainText] true -> true [[2, 2] .. [2, 2]]
 			'''
 		]
 	}
@@ -220,10 +225,10 @@ class JSONCompletionTest extends AbstractLanguageServerTest {
 			column = '		"unknown": '.length
 			line = 2
 			expectedCompletionItems = '''
-				"*" -> "*" [[2, 13] .. [2, 13]]
-				false -> false [[2, 13] .. [2, 13]]
-				null -> null [[2, 13] .. [2, 13]]
-				true -> true [[2, 13] .. [2, 13]]
+				[Value, PlainText] "*" -> "*" [[2, 13] .. [2, 13]]
+				[Keyword, PlainText] false -> false [[2, 13] .. [2, 13]]
+				[Keyword, PlainText] null -> null [[2, 13] .. [2, 13]]
+				[Keyword, PlainText] true -> true [[2, 13] .. [2, 13]]
 			'''
 		]
 	}
@@ -240,8 +245,8 @@ class JSONCompletionTest extends AbstractLanguageServerTest {
 			column = '		"projectType": "api": '.length - 4
 			line = 2
 			expectedCompletionItems = '''
-				"api" -> "api" [[2, 17] .. [2, 20]]
-				"application" -> "application" [[2, 17] .. [2, 20]]
+				[Keyword, PlainText] "api" -> "api" [[2, 17] .. [2, 20]]
+				[Keyword, PlainText] "application" -> "application" [[2, 17] .. [2, 20]]
 			'''
 		]
 	}
@@ -258,19 +263,19 @@ class JSONCompletionTest extends AbstractLanguageServerTest {
 			column = '		"projectType": '.length
 			line = 2
 			expectedCompletionItems = '''
-				"api" -> "api" [[2, 17] .. [2, 17]]
-				"application" -> "application" [[2, 17] .. [2, 17]]
-				"definition" -> "definition" [[2, 17] .. [2, 17]]
-				"library" -> "library" [[2, 17] .. [2, 17]]
-				"plainjs" -> "plainjs" [[2, 17] .. [2, 17]]
-				"processor" -> "processor" [[2, 17] .. [2, 17]]
-				"runtimeEnvironment" -> "runtimeEnvironment" [[2, 17] .. [2, 17]]
-				"runtimeLibrary" -> "runtimeLibrary" [[2, 17] .. [2, 17]]
-				"test" -> "test" [[2, 17] .. [2, 17]]
-				"validation" -> "validation" [[2, 17] .. [2, 17]]
-				false -> false [[2, 17] .. [2, 17]]
-				null -> null [[2, 17] .. [2, 17]]
-				true -> true [[2, 17] .. [2, 17]]
+				[Keyword, PlainText] "api" -> "api" [[2, 17] .. [2, 17]]
+				[Keyword, PlainText] "application" -> "application" [[2, 17] .. [2, 17]]
+				[Keyword, PlainText] "definition" -> "definition" [[2, 17] .. [2, 17]]
+				[Keyword, PlainText] "library" -> "library" [[2, 17] .. [2, 17]]
+				[Keyword, PlainText] "plainjs" -> "plainjs" [[2, 17] .. [2, 17]]
+				[Keyword, PlainText] "processor" -> "processor" [[2, 17] .. [2, 17]]
+				[Keyword, PlainText] "runtimeEnvironment" -> "runtimeEnvironment" [[2, 17] .. [2, 17]]
+				[Keyword, PlainText] "runtimeLibrary" -> "runtimeLibrary" [[2, 17] .. [2, 17]]
+				[Keyword, PlainText] "test" -> "test" [[2, 17] .. [2, 17]]
+				[Keyword, PlainText] "validation" -> "validation" [[2, 17] .. [2, 17]]
+				[Keyword, PlainText] false -> false [[2, 17] .. [2, 17]]
+				[Keyword, PlainText] null -> null [[2, 17] .. [2, 17]]
+				[Keyword, PlainText] true -> true [[2, 17] .. [2, 17]]
 			'''
 		]
 	}

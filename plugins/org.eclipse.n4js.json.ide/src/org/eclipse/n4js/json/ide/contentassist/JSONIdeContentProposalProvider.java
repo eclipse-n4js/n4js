@@ -11,7 +11,12 @@
 package org.eclipse.n4js.json.ide.contentassist;
 
 import java.util.List;
+import java.util.Set;
 
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.json.JSON.JSONArray;
+import org.eclipse.n4js.json.JSON.JSONObject;
+import org.eclipse.n4js.json.JSON.JSONStringLiteral;
 import org.eclipse.n4js.json.JSON.NameValuePair;
 import org.eclipse.n4js.json.services.JSONGrammarAccess;
 import org.eclipse.n4js.packagejson.PackageJsonProperties;
@@ -29,6 +34,7 @@ import org.eclipse.xtext.RuleCall;
 import org.eclipse.xtext.ide.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ide.editor.contentassist.ContentAssistEntry;
 import org.eclipse.xtext.ide.editor.contentassist.IIdeContentProposalAcceptor;
+import org.eclipse.xtext.ide.editor.contentassist.IPrefixMatcher;
 import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalProvider;
 
 import com.google.inject.Inject;
@@ -42,7 +48,7 @@ public class JSONIdeContentProposalProvider extends IdeContentProposalProvider {
 	private JSONGrammarAccess grammarAccess;
 
 	@Inject
-	private JSONIdeTemplateProposalProvider templateProposalProvider;
+	private IPrefixMatcher prefixMatcher;
 
 	@Inject
 	private IN4JSCore n4jsCore;
@@ -144,8 +150,70 @@ public class JSONIdeContentProposalProvider extends IdeContentProposalProvider {
 	protected void _createProposals(RuleCall ruleCall, ContentAssistContext context,
 			IIdeContentProposalAcceptor acceptor) {
 		if (grammarAccess.getNameValuePairRule() == ruleCall.getRule()) {
-			templateProposalProvider.createNameValueProposals(context, acceptor);
+			createNameValueProposals(context, acceptor);
 		}
+	}
+
+	private void createNameValueProposals(ContentAssistContext context, IIdeContentProposalAcceptor acceptor) {
+		EObject model = context.getCurrentModel();
+		List<String> namePath = CompletionUtils.getJsonPathNames(model);
+		Set<String> alreadyUsedNames = CompletionUtils.getAlreadyUsedNames(model);
+		List<PackageJsonProperties> pathProps = PackageJsonProperties.valuesOfPath(namePath);
+		for (PackageJsonProperties pathProp : pathProps) {
+			String name = pathProp.name;
+			String label = name;
+			if (!alreadyUsedNames.contains(name) && this.isMatchingPairPrefix(context, name)) {
+				if (context.getPrefix().startsWith("\"")) {
+					label = '"' + name + '"';
+				}
+				String proposal = null;
+				String kind = null;
+				if (pathProp.valueType == JSONStringLiteral.class) {
+					proposal = String.format("\"%s\": \"$1\"$0", name);
+					kind = ContentAssistEntry.KIND_PROPERTY;
+				} else if (pathProp.valueType == JSONArray.class) {
+					proposal = String.format("\"%s\": [\n\t$1\n]$0", name);
+					kind = ContentAssistEntry.KIND_VALUE;
+				} else if (pathProp.valueType == JSONObject.class) {
+					proposal = String.format("\"%s\": {\n\t$1\n}$0", name);
+					kind = ContentAssistEntry.KIND_CLASS;
+				}
+				if (proposal != null) {
+					addTemplateProposal(proposal, label, pathProp.description, kind, context, acceptor);
+				}
+			}
+		}
+		if (pathProps.isEmpty()) {
+			addTemplateProposal("\"${1:name}\": \"$2\"$0", "<value>", "Generic name value pair",
+					ContentAssistEntry.KIND_PROPERTY, context, acceptor);
+			addTemplateProposal("\"${1:name}\": [\n\t$2\n]$0", "<array>", "Generic name array pair",
+					ContentAssistEntry.KIND_VALUE, context, acceptor);
+			addTemplateProposal("\"${1:name}\": {\n\t$2\n}$0", "<object>", "Generic name object pair",
+					ContentAssistEntry.KIND_CLASS, context, acceptor);
+		}
+	}
+
+	private void addTemplateProposal(
+			String proposal,
+			String label,
+			String description,
+			String kind,
+			ContentAssistContext context,
+			IIdeContentProposalAcceptor acceptor) {
+		if (getProposalCreator().isValidProposal(label, context.getPrefix(), context)) {
+			ContentAssistEntry entry = new ContentAssistEntry();
+			entry.setProposal(proposal);
+			entry.setPrefix(context.getPrefix());
+			entry.setKind(ContentAssistEntry.KIND_SNIPPET + ":" + kind);
+			entry.setLabel(label);
+			entry.setDescription(description);
+			acceptor.accept(entry, getProposalPriorities().getDefaultPriority(entry));
+		}
+	}
+
+	private boolean isMatchingPairPrefix(ContentAssistContext context, String name) {
+		return (this.prefixMatcher.isCandidateMatchingPrefix(name, context.getPrefix()) ||
+				this.prefixMatcher.isCandidateMatchingPrefix(("\"" + name), context.getPrefix()));
 	}
 
 }
