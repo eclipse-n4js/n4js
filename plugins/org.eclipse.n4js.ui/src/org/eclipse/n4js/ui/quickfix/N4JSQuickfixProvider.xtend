@@ -17,8 +17,6 @@ import java.util.Collections
 import java.util.Map
 import java.util.concurrent.atomic.AtomicReference
 import org.eclipse.core.resources.IMarker
-import org.eclipse.core.resources.ResourcesPlugin
-import org.eclipse.core.runtime.CoreException
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.jface.dialogs.ErrorDialog
@@ -76,7 +74,6 @@ import org.eclipse.xtext.ui.editor.quickfix.Fix
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor
 import org.eclipse.xtext.validation.Issue
 
-import static org.eclipse.core.resources.IncrementalProjectBuilder.CLEAN_BUILD
 import static org.eclipse.n4js.ui.changes.ChangeProvider.*
 import static org.eclipse.n4js.ui.quickfix.QuickfixUtil.*
 import org.eclipse.n4js.projectModel.names.N4JSProjectName
@@ -145,12 +142,6 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 		acceptor.accept(issue, 'Some Label', 'Some enlightening description.', 'SomeImage.gif', new N4Modification() {
 			override computeChanges(IModificationContext context, IMarker marker, int offset, int length, EObject element) throws Exception {
 				// <--- create and return instances of IChange here (as in the above example)
-			}
-			override supportsMultiApply() {
-				return true; // <--- true is the default; return false to turn of multi-apply completely for this quick fix
-			}
-			override isApplicableTo(IMarker marker) {
-				return true; // <--- true is the default; return value depending on 'marker' to fine-tune what other problems this quick fix is applicable to
 			}
 		});
 	}
@@ -448,7 +439,7 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 					}
 					return #[]
 				}
-					override supportsMultiApply() {
+				override supportsMultiApply() {
 					false
 				}
 
@@ -716,27 +707,7 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 	def tryInstallMissingDependencyFromNpm(Issue issue, IssueResolutionAcceptor acceptor) {
 
 		val modification = new N4Modification() {
-			var boolean multipleInvocations;
-
 			override Collection<? extends IChange> computeChanges(IModificationContext context, IMarker marker, int offset, int length, EObject element) throws Exception {
-				invokeLibraryManager(element);
-			}
-			override Collection<? extends IChange> computeOneOfMultipleChanges(IModificationContext context, IMarker marker, int offset, int length, EObject element) throws Exception {
-				invokeLibraryManager(element);
-			}
-			override void computeFinalChanges() throws Exception {
-				if (multipleInvocations) {
-					new ProgressMonitorDialog(UIUtils.shell).run(true, true, [monitor |
-						try {
-							ResourcesPlugin.getWorkspace().build(CLEAN_BUILD, monitor);
-						} catch (IllegalBinaryStateException e) {
-						} catch (CoreException e) {
-						}
-					]);
-				}
-			}
-
-			def Collection<? extends IChange> invokeLibraryManager(EObject element) throws Exception {
 				val dependency = element as ProjectReference;
 				val packageName = new N4JSProjectName(dependency.projectName);
 				val packageVersion = if (dependency instanceof ProjectDependency) {
@@ -774,7 +745,7 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 					]);
 				}
 
-			return #[];
+				return #[];
 			}
 		}
 

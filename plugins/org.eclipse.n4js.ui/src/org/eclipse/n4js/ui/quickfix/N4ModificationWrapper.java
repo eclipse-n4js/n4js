@@ -87,7 +87,6 @@ public class N4ModificationWrapper implements IModification {
 						issue.getLength(),
 						element);
 
-				modification.computeFinalChanges();
 				changeManager.applyAll(changes);
 			}
 		});

@@ -90,16 +90,6 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 
 		N4Modification modification = new N4Modification() {
 			@Override
-			public boolean supportsMultiApply() {
-				return true;
-			}
-
-			@Override
-			public boolean isApplicableTo(IMarker marker) {
-				return true;
-			}
-
-			@Override
 			public Collection<? extends IChange> computeChanges(IModificationContext context, final IMarker marker,
 					int offset, int length, EObject element) throws Exception {
 
@@ -144,11 +134,6 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 			}
 
 			@Override
-			public boolean isApplicableTo(IMarker marker) {
-				return true;
-			}
-
-			@Override
 			public Collection<? extends IChange> computeChanges(IModificationContext context, IMarker marker,
 					int offset, int length, EObject element) throws Exception {
 
@@ -182,11 +167,6 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 			}
 
 			@Override
-			public boolean isApplicableTo(IMarker marker) {
-				return true;
-			}
-
-			@Override
 			public Collection<? extends IChange> computeChanges(IModificationContext context, IMarker marker,
 					int offset, int length, EObject element) throws Exception {
 
@@ -211,16 +191,6 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 		final String description = "Registers all not registered npms so that they can be imported by modules.";
 
 		N4Modification modification = new N4Modification() {
-			@Override
-			public boolean supportsMultiApply() {
-				return true;
-			}
-
-			@Override
-			public boolean isApplicableTo(IMarker marker) {
-				return true;
-			}
-
 			@Override
 			public Collection<? extends IChange> computeChanges(IModificationContext context, IMarker marker,
 					int offset, int length, EObject element) throws Exception {
@@ -263,11 +233,6 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 			@Override
 			public boolean supportsMultiApply() {
 				return false;
-			}
-
-			@Override
-			public boolean isApplicableTo(IMarker marker) {
-				return true;
 			}
 		});
 	}
