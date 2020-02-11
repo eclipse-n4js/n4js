@@ -184,7 +184,7 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 		accept(acceptor, issue, label, description, null, modification);
 	}
 
-	/** Registers a specific npm */
+	/** Registers all npms */
 	@Fix(IssueCodes.NON_REGISTERED_PROJECT)
 	public void registerNPMs(Issue issue, IssueResolutionAcceptor acceptor) {
 		final String label = "Register npm(s)";

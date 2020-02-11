@@ -117,35 +117,6 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 	static final String OVERRIDE_ANNOTATION = AnnotationDefinition.OVERRIDE.name;
 	static final String FINAL_ANNOTATION = AnnotationDefinition.FINAL.name;
 
-	// EXAMPLE FOR STYLE #1 (lambda expression)
-
-	// @Fix(IssueCodes.SOME_CODE)
-	def someSimpleQuickFixExample(Issue issue, IssueResolutionAcceptor acceptor) {
-		// <--- do pre-processing here (if required)
-		acceptor.accept(issue, 'Some Label', 'Some enlightening description.', 'SomeImage.gif') [ context, marker, offset, length, element |
-			// <--- this is executed when the fix is actually applied
-			//      Do not use variable 'issue' here, and do not change the document here directly, but instead
-			//      create and return a list of instances of IChange using the convenience methods in ChangeProvider:
-			return #[
-				insertLineAbove(context.xtextDocument, offset, "@SomeAnnotationToBeAdded", true)
-				// <--- could add more changes here ... (separated by comma)
-			];
-		]
-	}
-
-
-	// EXAMPLE FOR STYLE #2 (anonymous class)
-
-	// @Fix(IssueCodes.SOME_CODE)
-	def someComplexQuickFixExample(Issue issue, IssueResolutionAcceptor acceptor) {
-		// <--- do pre-processing here (if required)
-		acceptor.accept(issue, 'Some Label', 'Some enlightening description.', 'SomeImage.gif', new N4Modification() {
-			override computeChanges(IModificationContext context, IMarker marker, int offset, int length, EObject element) throws Exception {
-				// <--- create and return instances of IChange here (as in the above example)
-			}
-		});
-	}
-
 	/*
 	 * If a type declaration has Java-form such as 'int foo() {}', then the following quickfix proposed
 	 * which transforms it to colon style: 'foo(): int {}'
@@ -182,8 +153,7 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 					1
 				} else {
 					0
-				}
-				;
+				};
 
 			val offsetBogusType = bogusNode.offset;
 			val bogusTypeLength = stringOfBogusType.length;
@@ -318,10 +288,8 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 	@Fix(IssueCodes.CLF_MISSING_BODY)
 	def declareMemberWithoutBodyAsAbstract(Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, "Declare member as abstract", "", null) [ context, marker, offset, length, element |
-			if (element instanceof N4MethodDeclaration) {
-				return #[addModifier(context.xtextDocument, element, N4Modifier.ABSTRACT)]
-			} else if (element instanceof N4FieldAccessor) {
-				return #[addModifier(context.xtextDocument, element, N4Modifier.ABSTRACT)]
+			switch(element) {
+				N4MethodDeclaration, N4FieldAccessor: return #[addModifier(context.xtextDocument, element, N4Modifier.ABSTRACT)]
 			}
 			return #[]
 		]
@@ -402,40 +370,36 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 			return;
 		}
 
-		var TopLevelVisibilityFix fix;
-		try {
-			fix = topLevelVisibilityFixProvider.provideFixFor("type", accessModifierSuggestion);
+		val TopLevelVisibilityFix fix = try {
+			topLevelVisibilityFixProvider.provideFixFor("type", accessModifierSuggestion);
 		} catch (IllegalArgumentException e) {
 			return
 		} // In case of empty suggestion or invalid modifiers
-		// Make final to be available in nested class
-		val finalFix = fix;
-
 		acceptor.accept(issue, fix.description, "", null,new N4Modification() {
 
 			override computeChanges(IModificationContext context, IMarker marker, int offset, int length,EObject element)
 				throws Exception {
 
-					var EObject typeDeclaration = null;
+				var EObject typeDeclaration = null;
 
-					if (element instanceof ParameterizedPropertyAccessExpression) {
-						typeDeclaration = element.property;
-					} else if (element instanceof TypeRef) {
-						typeDeclaration = element.declaredType
-					} else if (element instanceof NamedImportSpecifier) {
-						typeDeclaration = element.importedElement;
-					} else if (element instanceof IdentifierRef) {
-						typeDeclaration = element.id;
-					}
-						if (typeDeclaration === null) {
-						return #[];
-					} else if (typeDeclaration instanceof Type &&
-						typeDeclaration instanceof SyntaxRelatedTElement &&
-						typeDeclaration instanceof TAnnotableElement
+				if (element instanceof ParameterizedPropertyAccessExpression) {
+					typeDeclaration = element.property;
+				} else if (element instanceof TypeRef) {
+					typeDeclaration = element.declaredType
+				} else if (element instanceof NamedImportSpecifier) {
+					typeDeclaration = element.importedElement;
+				} else if (element instanceof IdentifierRef) {
+					typeDeclaration = element.id;
+				}
+					if (typeDeclaration === null) {
+					return #[];
+				} else if (typeDeclaration instanceof Type &&
+					typeDeclaration instanceof SyntaxRelatedTElement &&
+					typeDeclaration instanceof TAnnotableElement
 				) {
 							var declarationAstElement = (typeDeclaration as SyntaxRelatedTElement).astElement;
 							val doc = context.getXtextDocument(URI.createURI(declarationObjectUri));
-						return finalFix.changes(declarationAstElement, doc);
+						return fix.changes(declarationAstElement, doc);
 					}
 					return #[]
 				}
@@ -461,17 +425,12 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 			return;
 		}
 
-		var TopLevelVisibilityFix fix
-
-		try {
-			fix = topLevelVisibilityFixProvider.provideFixFor("variable", accessModifierSuggestion);
+		val TopLevelVisibilityFix fix = try {
+			topLevelVisibilityFixProvider.provideFixFor("variable", accessModifierSuggestion);
 		} catch (IllegalArgumentException e) {
 			// In case of empty suggestion or invalid modifiers
 			return
 		}
-
-		// Make final to be available in nested class
-		val finalFix = fix;
 
 		acceptor.accept(issue, fix.description, "", null,new N4Modification() {
 
@@ -499,7 +458,7 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 
 					if (variableNode instanceof ExportedVariableDeclaration) {
 						val statement = variableNode.eContainer;
-						return finalFix.changes(statement, doc);
+						return fix.changes(statement, doc);
 					}
 				}
 				return #[]
@@ -519,7 +478,7 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 		val accessModifierSuggestion = issue.getUserData(
 			IssueUserDataKeys.VIS_ILLEGAL_FUN_ACCESS.ACCESS_SUGGESTION);
 		val declarationObjectUri = issue.getUserData(
-		IssueUserDataKeys.VIS_ILLEGAL_FUN_ACCESS.DECLARATION_OBJECT_URI)
+			IssueUserDataKeys.VIS_ILLEGAL_FUN_ACCESS.DECLARATION_OBJECT_URI)
 
 		if (accessModifierSuggestion === null || declarationObjectUri === null) {
 			return;
@@ -530,17 +489,12 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 			return;
 		}
 
-		var TopLevelVisibilityFix fix
-		try {
-			fix = topLevelVisibilityFixProvider.provideFixFor("function", accessModifierSuggestion);
+		val TopLevelVisibilityFix fix = try {
+			topLevelVisibilityFixProvider.provideFixFor("function", accessModifierSuggestion);
 		} catch (IllegalArgumentException e) {
 			// In case of empty suggestion or invalid modifiers
 			return
 		}
-		// Make final to be available in nested class
-
-		val finalFix = fix;
-
 		acceptor.accept(issue, fix.description, "", null,new N4Modification() {
 
 			override computeChanges(IModificationContext context, IMarker marker, int offset, int length,
@@ -565,7 +519,7 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 
 					// Get target resource document
 					val doc = context.getXtextDocument(URI.createURI(declarationObjectUri));
-					return finalFix.changes(functionAstElement, doc);
+					return fix.changes(functionAstElement, doc);
 				}
 
 				return #[]
