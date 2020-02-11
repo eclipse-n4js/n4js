@@ -10,12 +10,9 @@
  */
 package org.eclipse.n4js.ide.server.codeActions;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
@@ -31,6 +28,8 @@ import org.eclipse.xtext.ide.server.Document;
 import org.eclipse.xtext.ide.server.codeActions.ICodeActionService2.Options;
 import org.eclipse.xtext.util.ReplaceRegion;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
@@ -56,7 +55,7 @@ public class N4JSQuickfixProvider implements IQuickfixProvider {
 
 	final Class<?>[] quickfixProviders = { N4JSQuickfixProvider.class };
 
-	Map<String, BiConsumer<QuickfixContext, CodeActionAcceptor>> quickfixMap = new HashMap<>();
+	Multimap<String, BiConsumer<QuickfixContext, CodeActionAcceptor>> quickfixMap = HashMultimap.create();
 
 	// @Inject
 	// private StatusHelper statusHelper;
@@ -94,11 +93,7 @@ public class N4JSQuickfixProvider implements IQuickfixProvider {
 							public void accept(QuickfixContext qc, CodeActionAcceptor caa) {
 								try {
 									method.invoke(qpInstance, qc, caa);
-								} catch (IllegalAccessException e) {
-									e.printStackTrace();
-								} catch (IllegalArgumentException e) {
-									e.printStackTrace();
-								} catch (InvocationTargetException e) {
+								} catch (Exception e) {
 									e.printStackTrace();
 								}
 							}
@@ -111,10 +106,9 @@ public class N4JSQuickfixProvider implements IQuickfixProvider {
 		}
 	}
 
-	/** Finds quick-fixes for the given issue code and ands quick-fixes iff available. */
+	/** Finds quick-fixes for the given issue code and adds these quick-fixes to the acceptor iff available. */
 	public void addQuickfix(String code, Options options, CodeActionAcceptor acceptor) {
-		BiConsumer<QuickfixContext, CodeActionAcceptor> quickfix = quickfixMap.get(code);
-		if (quickfix != null) {
+		for (BiConsumer<QuickfixContext, CodeActionAcceptor> quickfix : quickfixMap.get(code)) {
 			QuickfixContext qc = new QuickfixContext(code, options);
 			quickfix.accept(qc, acceptor);
 		}
