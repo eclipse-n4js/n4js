@@ -14,8 +14,9 @@
 //
 //- ECMAScript Language Specification. International Standard ECMA-262, 5.1 Edition, ISO/IEC,
 //  Geneva, Switzerland, June 2011.
-//  http://www.ecma-international.org/publications/standards/Ecma-262.htm
-//  A.7 Regular Expressions
+//  https://tc39.es/ecma262/#sec-patterns
+//  21.2.1 Patterns
+//  A.8 Regular Expressions
 grammar org.eclipse.n4js.regex.RegularExpression with org.eclipse.n4js.common.unicode.Unicode
 
 generate regularExpression "http://www.eclipse.org/n4js/regex/RegularExpression"
@@ -43,7 +44,7 @@ Term returns Pattern:
 ;
 
 Assertion:
-	LineStart | LineEnd | WordBoundary | LookAhead
+	LineStart | LineEnd | WordBoundary | AbstractLookAhead
 ;
 
 LineStart:
@@ -58,8 +59,11 @@ WordBoundary:
 	{WordBoundary} (WORD_BOUNDARY | not?=NOT_WORD_BOUNDARY)
 ;
 
-LookAhead:
-	{LookAhead} '(' '?' ('=' | not?='!') pattern=Disjunction ')'
+AbstractLookAhead:
+	(
+		{LookAhead} ('(?='|not?='(?!' )
+	|	{LookBehind} ('(?<='|not?='(?<!')
+	) pattern=Disjunction ')'
 ;
 
 Atom returns Pattern:
@@ -72,7 +76,7 @@ PatternCharacter:
 		UNICODE_LETTER |
 		UNICODE_DIGIT |
 		'-' |
-		',' | '=' | ':' | '!' | '{' | '}' | ']'
+		',' | '=' | ':' | '!' | '{' | '}' | ']' | '<' | '>'
 	)
 ;
 
@@ -130,9 +134,9 @@ CharacterClassElement:
 
 CharacterClassAtom:
 	EscapedCharacterClassAtom |
-	character=(
+	characters=(
 		',' | '=' | ':' | '!' |
-		'-' | '^' |'$' | '.' | '*' | '+' | '?' | '(' | ')' | '[' | '{' | '}' | '|' | '/' |
+		'-' | '^' |'$' | '.' | '*' | '+' | '?' | '(' | ')' | '[' | '{' | '}' | '|' | '/' | '<' | '>' | '(?' | '(?<' | '(?=' | '(?!' | '(?<!' | '(?<=' |
 		PATTERN_CHARACTER_NO_DASH |
 		UNICODE_LETTER |
 		UNICODE_DIGIT
@@ -155,7 +159,24 @@ Backspace:
 ;
 
 Group:
-	{Group} '(' (nonCapturing?='?' ':')? pattern=Disjunction ')'
+	{Group} (
+		'('
+		| nonCapturing?='(?:'
+		| named?='(?<' name=RegExpIdentifierName '>'
+		) 
+	pattern=Disjunction ')'
+;
+
+RegExpIdentifierName:
+	RegExpIdentifierStart RegExpIdentifierPart*
+;
+
+RegExpIdentifierStart:
+	UNICODE_LETTER|'$'|'_'|UNICODE_ESCAPE
+;
+
+RegExpIdentifierPart:
+	UNICODE_LETTER|UNICODE_DIGIT|'$'|'_'|UNICODE_ESCAPE
 ;
 
 Quantifier:
@@ -219,4 +240,4 @@ terminal UNICODE_DIGIT:
 terminal UNICODE_LETTER:
 	UNICODE_LETTER_FRAGMENT
 ;
-terminal PATTERN_CHARACTER_NO_DASH: !('^' |'$' | '\\' | '.' | '*' | '+' | '?' | '(' | ')' | '[' | ']' | '{' | '}' | '|' | '-');
+terminal PATTERN_CHARACTER_NO_DASH: !('^' |'$' | '\\' | '.' | '*' | '+' | '?' | '(' | ')' | '[' | ']' | '{' | '}' | '|' | '-' | '<' | '>');

@@ -21,7 +21,7 @@ package org.eclipse.n4js.regex.regularExpression;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.regex.regularExpression.CharacterClassAtom#getCharacter <em>Character</em>}</li>
+ *   <li>{@link org.eclipse.n4js.regex.regularExpression.CharacterClassAtom#getCharacters <em>Characters</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.regex.regularExpression.RegularExpressionPackage#getCharacterClassAtom()
@@ -31,29 +31,25 @@ package org.eclipse.n4js.regex.regularExpression;
 public interface CharacterClassAtom extends CharacterClassElement
 {
   /**
-   * Returns the value of the '<em><b>Character</b></em>' attribute.
+   * Returns the value of the '<em><b>Characters</b></em>' attribute.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Character</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Character</em>' attribute.
-   * @see #setCharacter(String)
-   * @see org.eclipse.n4js.regex.regularExpression.RegularExpressionPackage#getCharacterClassAtom_Character()
+   * @return the value of the '<em>Characters</em>' attribute.
+   * @see #setCharacters(String)
+   * @see org.eclipse.n4js.regex.regularExpression.RegularExpressionPackage#getCharacterClassAtom_Characters()
    * @model
    * @generated
    */
-  String getCharacter();
+  String getCharacters();
 
   /**
-   * Sets the value of the '{@link org.eclipse.n4js.regex.regularExpression.CharacterClassAtom#getCharacter <em>Character</em>}' attribute.
+   * Sets the value of the '{@link org.eclipse.n4js.regex.regularExpression.CharacterClassAtom#getCharacters <em>Characters</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Character</em>' attribute.
-   * @see #getCharacter()
+   * @param value the new value of the '<em>Characters</em>' attribute.
+   * @see #getCharacters()
    * @generated
    */
-  void setCharacter(String value);
+  void setCharacters(String value);
 
 } // CharacterClassAtom

@@ -33,10 +33,6 @@ public interface HexEscapeSequence extends AtomEscape, EscapedCharacterClassAtom
   /**
    * Returns the value of the '<em><b>Sequence</b></em>' attribute.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Sequence</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Sequence</em>' attribute.
    * @see #setSequence(String)

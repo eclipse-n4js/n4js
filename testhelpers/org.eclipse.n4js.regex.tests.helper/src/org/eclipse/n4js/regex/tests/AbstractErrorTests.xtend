@@ -35,7 +35,11 @@ abstract class AbstractErrorTests extends Assert {
 
 	@Test
 	def void testWikipedia() {
-		'''/(?<=\.) {2,}(?=[A-Z])/'''.assertInvalid
+		'''/(?<|=\.) {2,}(?=[A-Z])/'''.assertInvalid
 	}
 
+	@Test
+	def void test_01() {
+		'''/(?)/'''.assertInvalid
+	}
 }
