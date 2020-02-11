@@ -1371,6 +1371,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		return SYNTAX_DIAGNOSTIC_WITH_RANGE.equals(issueCode)
 				|| RegExLiteralConverter.ISSUE_CODE.equals(issueCode)
 				|| IssueCodes.VCO_REGEX_NAMED_GROUP.equals(issueCode)
+				|| IssueCodes.VCO_REGEX_ILLEGAL_ESCAPE.equals(issueCode)
 				|| (IssueCodes.VCO_TEMPLATE_QUOTE.equals(issueCode) && syntaxErrorMessage.getIssueData() != null);
 	}
 

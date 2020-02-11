@@ -42,9 +42,9 @@ class ParserTest extends AbstractParserTests {
 	@Test
 	def void testRegExCaptureGroupWarning_01() {
 		val script = '/(?<abc>)/'.parse
-		val errors = script.eResource.warnings
-		assertEquals(1, errors.size)
-		val error =  errors.head as XtextSyntaxDiagnostic
+		val warnings = script.eResource.warnings
+		assertEquals(1, warnings.size)
+		val error =  warnings.head as XtextSyntaxDiagnostic
 		assertEquals(IssueCodes.messageForVCO_REGEX_NAMED_GROUP, error.message)
 		assertEquals(3, error.length)
 		assertEquals(1, error.line)
@@ -54,9 +54,9 @@ class ParserTest extends AbstractParserTests {
 	@Test
 	def void testRegExCaptureGroupWarning_02() {
 		val script = '/(?<aa>)(?<bb>)/'.parse
-		val errors = script.eResource.warnings
-		assertEquals(2, errors.size)
-		val error =  errors.last as XtextSyntaxDiagnostic
+		val warnings = script.eResource.warnings
+		assertEquals(2, warnings.size)
+		val error =  warnings.last as XtextSyntaxDiagnostic
 		assertEquals(IssueCodes.messageForVCO_REGEX_NAMED_GROUP, error.message)
 		assertEquals(2, error.length)
 		assertEquals(1, error.line)
@@ -66,12 +66,84 @@ class ParserTest extends AbstractParserTests {
 	@Test
 	def void testRegExCaptureGroupWarning_03() {
 		val script = '/abc(def/'.parse
-		val errors = script.eResource.warnings
-		assertEquals(1, errors.size)
-		val error =  errors.head as XtextSyntaxDiagnostic
+		val warnings = script.eResource.warnings
+		assertEquals(1, warnings.size)
+		val error =  warnings.head as XtextSyntaxDiagnostic
 		assertEquals("missing ')' at '/'", error.message)
 		assertEquals(1, error.length)
 		assertEquals(1, error.line)
 		assertEquals(8, error.offset)
+	}
+	
+	@Test
+	def void testRegExCaptureGroupWarning_04() {
+		val script = '\n  /(?<abcef>)/'.parse
+		val warnings = script.eResource.warnings
+		assertEquals(1, warnings.size)
+		val error =  warnings.head as XtextSyntaxDiagnostic
+		assertEquals(IssueCodes.messageForVCO_REGEX_NAMED_GROUP, error.message)
+		assertEquals(5, error.length)
+		assertEquals(2, error.line)
+		assertEquals(7, error.offset)
+	}
+	
+	@Test
+	def void testRegExCaptureGroupWarningAfterEscapeSequence_01() {
+		val script = '  /\\u1234(?<abce>)/'.parse
+		val warnings = script.eResource.warnings
+		assertEquals(1, warnings.size)
+		val error =  warnings.head as XtextSyntaxDiagnostic
+		assertEquals(IssueCodes.messageForVCO_REGEX_NAMED_GROUP, error.message)
+		assertEquals(4, error.length)
+		assertEquals(1, error.line)
+		assertEquals(12, error.offset)
+	}
+	
+	@Test
+	def void testRegExCaptureGroupWarningAfterEscapeSequence_02() {
+		val script = '  /\\u{1234}(?<abce>)/'.parse
+		val warnings = script.eResource.warnings
+		assertEquals(1, warnings.size)
+		val error =  warnings.head as XtextSyntaxDiagnostic
+		assertEquals(IssueCodes.messageForVCO_REGEX_NAMED_GROUP, error.message)
+		assertEquals(4, error.length)
+		assertEquals(1, error.line)
+		assertEquals(14, error.offset)
+	}
+	
+	@Test
+	def void testRegExCaptureGroupWarningAfterEscapeSequence_03() {
+		val script = '  /\\u{1234}(?<abce>)\\u{1234} /'.parse
+		val warnings = script.eResource.warnings
+		assertEquals(1, warnings.size)
+		val error =  warnings.head as XtextSyntaxDiagnostic
+		assertEquals(IssueCodes.messageForVCO_REGEX_NAMED_GROUP, error.message)
+		assertEquals(4, error.length)
+		assertEquals(1, error.line)
+		assertEquals(14, error.offset)
+	}
+	
+	@Test
+	def void testRegExCaptureGroupWarningAfterEscapeSequence_04() {
+		val script = '  /\\u{1234} \\u{1234}(?<abce>)\\u{1234} /'.parse
+		val warnings = script.eResource.warnings
+		assertEquals(1, warnings.size)
+		val error =  warnings.head as XtextSyntaxDiagnostic
+		assertEquals(IssueCodes.messageForVCO_REGEX_NAMED_GROUP, error.message)
+		assertEquals(4, error.length)
+		assertEquals(1, error.line)
+		assertEquals(23, error.offset)
+	}
+	
+	@Test
+	def void testRegExIllegalEscapeSequence_01() {
+		val script = '  /\\u1/'.parse
+		val errors = script.eResource.errors
+		assertEquals(1, errors.size)
+		val error =  errors.head as XtextSyntaxDiagnostic
+		assertEquals(IssueCodes.getMessageForVCO_REGEX_ILLEGAL_ESCAPE('/\\u1/'), error.message)
+		assertEquals(1, error.length)
+		assertEquals(1, error.line)
+		assertEquals(4, error.offset)
 	}
 }

@@ -95,23 +95,34 @@ public class RegExLiteralConverter extends AbstractValueConverter<String> {
 
 	@Override
 	public String toValue(String string, INode node) {
-		String escaped = convertFromJS(string, node);
+		StringConverterResult stringConverterResult = convertFromJS(string, node);
+		String escaped = stringConverterResult.getValue();
 		IParseResult parseResult = getRegexParser().parse(new StringReader(escaped));
 		Iterable<INode> syntaxErrors = parseResult.getSyntaxErrors();
 		Iterator<INode> iterator = syntaxErrors.iterator();
 		List<N4JSValueConverterWithValueException> errors = new ArrayList<>();
+		int offsetFixup = -1;
 		while (iterator.hasNext()) {
 			INode syntaxError = iterator.next();
 			String message = syntaxError.getSyntaxErrorMessage().getMessage();
+			int localOffset = syntaxError.getOffset();
 			if (message.contains("'<EOF>' expecting '/'")) {
+				if (offsetFixup == -1) {
+					offsetFixup = node.getOffset() - node.getTotalOffset();
+				}
 				N4JSValueConverterWithValueException mainError = new N4JSValueConverterWithValueException(
 						IssueCodes.getMessageForVCO_REGEX_INVALID(),
-						IssueCodes.VCO_REGEX_INVALID, node, syntaxError.getOffset(), syntaxError.getLength(), string,
+						IssueCodes.VCO_REGEX_INVALID, node,
+						stringConverterResult.getSourceOffset(localOffset) + offsetFixup,
+						syntaxError.getLength(), string,
 						null);
 				errors.add(0, mainError);
 			} else {
+				if (offsetFixup == -1) {
+					offsetFixup = node.getOffset() - node.getTotalOffset();
+				}
 				errors.add(new BogusRegExLiteralException(message, node, string,
-						syntaxError.getOffset(), syntaxError.getLength()));
+						stringConverterResult.getSourceOffset(localOffset) + offsetFixup, syntaxError.getLength()));
 			}
 		}
 
@@ -124,30 +135,48 @@ public class RegExLiteralConverter extends AbstractValueConverter<String> {
 			if (hasUnicodeFlag) {
 				if (element instanceof DecimalEscapeSequence) {
 					INode nodeForElement = NodeModelUtils.findActualNodeFor(element);
+					if (offsetFixup == -1) {
+						offsetFixup = node.getOffset() - node.getTotalOffset();
+					}
 					errors.add(new N4JSValueConverterWithValueException(IssueCodes.getMessageForVCO_REGEX_INVALID(),
-							IssueCodes.VCO_REGEX_INVALID, node, nodeForElement.getOffset(), nodeForElement.getLength(),
+							IssueCodes.VCO_REGEX_INVALID, node,
+							stringConverterResult.getSourceOffset(nodeForElement.getOffset()) + offsetFixup,
+							nodeForElement.getLength(),
 							string, null));
 				} else if (element instanceof ControlLetterEscapeSequence) {
 					List<INode> nodesForFeature = NodeModelUtils.findNodesForFeature(element,
 							RegularExpressionPackage.Literals.CONTROL_LETTER_ESCAPE_SEQUENCE__SEQUENCE);
 					INode featureNode = nodesForFeature.get(0);
 					if (((ControlLetterEscapeSequence) element).getSequence().length() <= 2) {
+						if (offsetFixup == -1) {
+							offsetFixup = node.getOffset() - node.getTotalOffset();
+						}
 						errors.add(new N4JSValueConverterWithValueException(IssueCodes.getMessageForVCO_REGEX_INVALID(),
-								IssueCodes.VCO_REGEX_INVALID, node, featureNode.getOffset(), featureNode.getLength(),
+								IssueCodes.VCO_REGEX_INVALID, node,
+								stringConverterResult.getSourceOffset(featureNode.getOffset()) + offsetFixup,
+								featureNode.getLength(),
 								string, null));
 					}
 				} else if (element instanceof CharacterClassRange) {
 					CharacterClassRange casted = (CharacterClassRange) element;
 					if (casted.getLeft() instanceof CharacterClassEscapeSequence) {
 						INode nodeForElement = NodeModelUtils.findActualNodeFor(casted.getLeft());
+						if (offsetFixup == -1) {
+							offsetFixup = node.getOffset() - node.getTotalOffset();
+						}
 						errors.add(new N4JSValueConverterWithValueException(IssueCodes.getMessageForVCO_REGEX_INVALID(),
-								IssueCodes.VCO_REGEX_INVALID, node, nodeForElement.getOffset(),
+								IssueCodes.VCO_REGEX_INVALID, node,
+								stringConverterResult.getSourceOffset(nodeForElement.getOffset()) + offsetFixup,
 								nodeForElement.getLength(), string, null));
 					}
 					if (casted.getRight() instanceof CharacterClassEscapeSequence) {
 						INode nodeForElement = NodeModelUtils.findActualNodeFor(casted.getRight());
+						if (offsetFixup == -1) {
+							offsetFixup = node.getOffset() - node.getTotalOffset();
+						}
 						errors.add(new N4JSValueConverterWithValueException(IssueCodes.getMessageForVCO_REGEX_INVALID(),
-								IssueCodes.VCO_REGEX_INVALID, node, nodeForElement.getOffset(),
+								IssueCodes.VCO_REGEX_INVALID, node,
+								stringConverterResult.getSourceOffset(nodeForElement.getOffset()) + offsetFixup,
 								nodeForElement.getLength(), string, null));
 					}
 				}
@@ -158,8 +187,13 @@ public class RegExLiteralConverter extends AbstractValueConverter<String> {
 					List<INode> nodesForFeature = NodeModelUtils.findNodesForFeature(group,
 							RegularExpressionPackage.Literals.GROUP__NAME);
 					INode nameNode = nodesForFeature.get(0);
+					if (offsetFixup == -1) {
+						offsetFixup = node.getOffset() - node.getTotalOffset();
+					}
 					errors.add(new N4JSValueConverterWithValueException(IssueCodes.getMessageForVCO_REGEX_NAMED_GROUP(),
-							IssueCodes.VCO_REGEX_NAMED_GROUP, node, nameNode.getOffset(), nameNode.getLength(),
+							IssueCodes.VCO_REGEX_NAMED_GROUP, node,
+							stringConverterResult.getSourceOffset(nameNode.getOffset()) + offsetFixup,
+							nameNode.getLength(),
 							string, null));
 				}
 			}
@@ -174,13 +208,15 @@ public class RegExLiteralConverter extends AbstractValueConverter<String> {
 		return string;
 	}
 
-	private static String convertFromJS(String jsString, INode node) {
+	private static StringConverterResult convertFromJS(String jsString, INode node) {
 		StringConverterResult result = ValueConverterUtils.convertFromEscapedString(jsString, false, true, false, null);
 		if (result.hasError()) {
+			int offsetFixup = node.getOffset() - node.getTotalOffset();
 			throw new N4JSValueConverterWithValueException(
 					IssueCodes.getMessageForVCO_REGEX_ILLEGAL_ESCAPE(jsString),
-					IssueCodes.VCO_REGEX_ILLEGAL_ESCAPE, node, result.getErrorOffset(), 1, result.getValue(), null);
+					IssueCodes.VCO_REGEX_ILLEGAL_ESCAPE, node, result.getErrorOffset() + offsetFixup, 1,
+					result.getValue(), null);
 		}
-		return result.getValue();
+		return result;
 	}
 }
