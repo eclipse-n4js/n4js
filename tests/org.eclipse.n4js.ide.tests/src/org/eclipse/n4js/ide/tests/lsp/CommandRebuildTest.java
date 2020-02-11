@@ -115,8 +115,7 @@ public class CommandRebuildTest {
 		languageServer.clean();
 
 		// wait for previous command to finish
-		ExecuteCommandParams cmdUnknownParams = new ExecuteCommandParams("unknown.command", Collections.emptyList());
-		languageServer.executeCommand(cmdUnknownParams).join();
+		waitForRequestsDone();
 	}
 
 	/** Expectation is that files '.n4js.projectstate' and 'src-gen/Module.js' are changed due to rebuild action. */
@@ -129,8 +128,7 @@ public class CommandRebuildTest {
 		future.join();
 
 		// wait for previous command to finish
-		ExecuteCommandParams cmdUnknownParams = new ExecuteCommandParams("unknown.command", Collections.emptyList());
-		languageServer.executeCommand(cmdUnknownParams).join();
+		waitForRequestsDone();
 
 		// evaluate
 		assertEquals(0, client.getErrorsCount());
@@ -148,8 +146,7 @@ public class CommandRebuildTest {
 		languageServer.reinitWorkspace();
 
 		// wait for previous command to finish
-		ExecuteCommandParams cmdUnknownParams = new ExecuteCommandParams("unknown.command", Collections.emptyList());
-		languageServer.executeCommand(cmdUnknownParams).join();
+		waitForRequestsDone();
 
 		// evaluate
 		assertEquals(0, client.getErrorsCount());
@@ -163,5 +160,10 @@ public class CommandRebuildTest {
 		BasicFileAttributeView attributes = Files.getFileAttributeView(filePath, BasicFileAttributeView.class);
 		FileTime time = FileTime.fromMillis(FILE_TIME_MILLISECONDS);
 		attributes.setTimes(time, time, time);
+	}
+
+	private void waitForRequestsDone() {
+		ExecuteCommandParams cmdUnknownParams = new ExecuteCommandParams("unknown.command", Collections.emptyList());
+		languageServer.executeCommand(cmdUnknownParams).join();
 	}
 }
