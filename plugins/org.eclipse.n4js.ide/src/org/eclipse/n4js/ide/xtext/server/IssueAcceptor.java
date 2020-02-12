@@ -91,7 +91,7 @@ public class IssueAcceptor {
 		List<Diagnostic> sortedDiags = new ArrayList<>();
 		for (Issue issue : issues) {
 			if (issue.getSeverity() != Severity.IGNORE) {
-				sortedDiags.add(diagnosticIssueConverter.toDiagnostic(issue, workspaceManager::getDocument));
+				sortedDiags.add(diagnosticIssueConverter.toDiagnostic(issue, workspaceManager));
 			}
 		}
 

@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionContext;
@@ -23,17 +24,22 @@ import org.eclipse.lsp4j.Command;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
-import org.eclipse.n4js.ide.server.codeActions.N4JSQuickfixProvider.QuickfixContext;
 
 /**
  * Utility class to convert some changes to {@link CodeAction}s / {@link Command}s
  */
 @SuppressWarnings("restriction")
-public class CodeActionAcceptor {
+public class CodeActionAcceptor implements ICodeActionAcceptor {
 
 	List<Either<Command, CodeAction>> codeActions = new ArrayList<>();
 
+	@Override
+	public void acceptQuickfixCodeAction(QuickfixContext context, String title, Supplier<List<TextEdit>> textEdits) {
+		acceptQuickfixCodeAction(context, title, textEdits.get());
+	}
+
 	/** Adds a quick-fix code action with the given title and command created of commandID and arguments */
+	@Override
 	public void acceptQuickfixCommand(QuickfixContext context, String title, String commandID, Object... arguments) {
 		acceptQuickfixCommand(context, title, commandID, Arrays.asList(arguments));
 	}

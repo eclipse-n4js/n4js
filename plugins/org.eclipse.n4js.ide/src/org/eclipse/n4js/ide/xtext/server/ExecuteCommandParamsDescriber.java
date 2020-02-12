@@ -8,12 +8,19 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.server.codeActions;
+package org.eclipse.n4js.ide.xtext.server;
+
+import java.lang.reflect.Type;
+import java.util.Map;
 
 /**
- * Marker interface for classes that contain quick-fix methods. Quick-fix methods must be annotated with {@link Fix}
- * (Mind the information in {@link Fix}).
+ * Return the argument types for the available commands.
  */
-public interface IQuickfixProvider {
-	// marker interface
+public interface ExecuteCommandParamsDescriber {
+
+	/**
+	 * Command id to argument types.
+	 */
+	Map<String, Type[]> argumentTypes();
+
 }

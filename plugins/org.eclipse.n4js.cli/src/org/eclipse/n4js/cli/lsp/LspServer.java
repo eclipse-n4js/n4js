@@ -28,6 +28,7 @@ import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.n4js.cli.N4jscConsole;
 import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscOptions;
+import org.eclipse.n4js.ide.xtext.server.ExecuteCommandParamsTypeAdapter;
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 
@@ -83,6 +84,9 @@ public class LspServer {
 				.setLocalService(languageServer)
 				.setRemoteInterface(LanguageClient.class)
 				.setExecutorService(threadPool)
+				.configureGson(gsonBuilder -> {
+					gsonBuilder.registerTypeAdapterFactory(new ExecuteCommandParamsTypeAdapter.Factory(languageServer));
+				})
 		// .wrapMessages(a -> a)
 		// .traceMessages(trace)
 		;

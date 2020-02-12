@@ -144,12 +144,14 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * @author Sven Efftinge - Initial contribution and API
  * @since 2.11
  */
 @SuppressWarnings({ "restriction", "deprecation" })
+@Singleton
 public class XLanguageServerImpl implements LanguageServer, WorkspaceService, TextDocumentService, LanguageClientAware,
 		Endpoint, JsonRpcMethodProvider, IBuildListener {
 
@@ -185,11 +187,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	private InitializeResult initializeResult;
 
-	private final CompletableFuture<InitializedParams> clientInitialized = new CompletableFuture<>();
-
-	private final CompletableFuture<?> initBuildFinished = new CompletableFuture<>();
-
-	private final CompletableFuture<?> initCleanFinished = new CompletableFuture<>();
+	private final CompletableFuture<InitializedParams> clientInitialized;
 
 	private XWorkspaceResourceAccess resourceAccess;
 
@@ -198,6 +196,31 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	private Map<String, JsonRpcMethod> supportedMethods = null;
 
 	private final Multimap<String, Endpoint> extensionProviders = LinkedListMultimap.<String, Endpoint> create();
+
+	/**
+	 * Standard constructor.
+	 */
+	public XLanguageServerImpl() {
+		clientInitialized = new CompletableFuture<>();
+		clientInitialized.thenRun(() -> {
+			requestManager.runWrite("initialized",
+					() -> {
+						Stopwatch sw = Stopwatch.createStarted();
+						try {
+							LOG.info("Start initial build ...");
+							workspaceManager.doInitialBuild(CancelIndicator.NullImpl);
+						} catch (Throwable t) {
+							LOG.error(t.getMessage(), t);
+							throw t;
+						} finally {
+							LOG.info("Initial build done after " + sw);
+						}
+						return null;
+					},
+					(cancelIndicator, it) -> it);
+		});
+
+	}
 
 	// TODO we should probably use the DisposableRegistry here
 	/**
@@ -348,24 +371,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	@Override
 	public void initialized(InitializedParams params) {
 		clientInitialized.complete(params);
-		clientInitialized.join();
-
-		requestManager.runWrite("initialized",
-				() -> {
-					try {
-						Stopwatch sw = Stopwatch.createStarted();
-						LOG.info("Start initial build ...");
-
-						workspaceManager.doInitialBuild(CancelIndicator.NullImpl);
-						initBuildFinished.complete(null);
-						LOG.info("Initial build done after " + sw);
-					} catch (Throwable t) {
-						t.printStackTrace();
-						initBuildFinished.completeExceptionally(t);
-					}
-					return null;
-				},
-				(cancelIndicator, it) -> it);
 	}
 
 	@Deprecated
@@ -420,8 +425,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 			return (cancelIndicator) -> {
 				List<Delta> result = buildable.build(cancelIndicator);
 				workspaceManager.persistProjectState(CancelIndicator.NullImpl);
-				clientInitialized.complete(null);
-				initBuildFinished.complete(null);
 				shutdownAndExitHandler.shutdown();
 
 				LOG.info("Shutdown done");
@@ -540,17 +543,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	}
 
 	/** Deletes all generated files and clears the type index. */
-	public void clean() {
-		requestManager.runWrite("clean", () -> {
-
-			try {
-				workspaceManager.clean(CancelIndicator.NullImpl);
-				initCleanFinished.complete(null);
-			} catch (Throwable t) {
-				t.printStackTrace();
-				initCleanFinished.completeExceptionally(t);
-			}
-
+	public CompletableFuture<Void> clean() {
+		return requestManager.runWrite("clean", () -> {
+			workspaceManager.clean(CancelIndicator.NullImpl);
 			return null;
 		}, (a, b) -> null);
 	}
@@ -578,8 +573,8 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	/**
 	 * Triggers rebuild of the whole workspace
 	 */
-	public void reinitWorkspace() {
-		requestManager.runWrite("didChangeConfiguration", () -> {
+	public CompletableFuture<Void> reinitWorkspace() {
+		return requestManager.runWrite("didChangeConfiguration", () -> {
 			workspaceManager.refreshWorkspaceConfig();
 			workspaceManager.doInitialBuild(CancelIndicator.NullImpl);
 			return null;
@@ -847,19 +842,37 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 			}
 		}
 		if (service2 != null) {
-			ICodeActionService2.Options options = new ICodeActionService2.Options();
-			options.setDocument(doc);
-			options.setResource(res);
-			options.setLanguageServerAccess(access);
-			options.setCodeActionParams(params);
-			options.setCancelIndicator(cancelIndicator);
+			ICodeActionService2.Options options = toOptions(params, doc, res, cancelIndicator);
 			List<Either<Command, CodeAction>> actions = service2.getCodeActions(options);
 			if (actions != null) {
 				result.addAll(actions);
 			}
 		}
 		return result;
+	}
 
+	/**
+	 * Convert the given params to an enriched instance of options.
+	 */
+	public ICodeActionService2.Options toOptions(CodeActionParams params, CancelIndicator cancelIndicator) {
+		URI uri = getURI(params.getTextDocument());
+		XtextResource res = workspaceManager.getResource(uri);
+		XDocument doc = workspaceManager.getDocument(uri);
+		return toOptions(params, doc, res, cancelIndicator);
+	}
+
+	/**
+	 * Convert the given params to an enriched instance of options.
+	 */
+	public ICodeActionService2.Options toOptions(CodeActionParams params, XDocument doc, XtextResource res,
+			CancelIndicator cancelIndicator) {
+		ICodeActionService2.Options options = new ICodeActionService2.Options();
+		options.setDocument(doc);
+		options.setResource(res);
+		options.setLanguageServerAccess(access);
+		options.setCodeActionParams(params);
+		options.setCancelIndicator(cancelIndicator);
+		return options;
 	}
 
 	/**
@@ -1318,13 +1331,4 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		clientInitialized.join();
 	}
 
-	/** Blocks until the first build (i.e. the initial build) was finished building */
-	public void joinInitBuildFinished() {
-		initBuildFinished.join();
-	}
-
-	/** Blocks until the first clean was finished */
-	public void joinCleanFinished() {
-		initCleanFinished.join();
-	}
 }

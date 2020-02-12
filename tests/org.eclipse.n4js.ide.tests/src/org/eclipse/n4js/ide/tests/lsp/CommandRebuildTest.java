@@ -96,9 +96,8 @@ public class CommandRebuildTest {
 		initParams.setRootUri(prjURI.toString());
 
 		languageServer.connect(client);
-		languageServer.initialize(initParams);
-		languageServer.initialized(null);
-		languageServer.joinInitBuildFinished();
+		languageServer.initialize(initParams).thenRun(() -> languageServer.initialized(null));
+		languageServer.getRequestManager().runRead("joinInitBuildFinished", (ci) -> null).join();
 
 		// check pre-state
 		assertEquals(0, client.getErrorsCount());

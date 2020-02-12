@@ -105,8 +105,7 @@ public class N4jscCompiler {
 
 	private void performClean() {
 		Stopwatch compilationTime = Stopwatch.createStarted();
-		languageServer.clean();
-		languageServer.joinCleanFinished();
+		languageServer.clean().join();
 		printCleanResults(compilationTime.stop());
 	}
 
@@ -117,7 +116,7 @@ public class N4jscCompiler {
 		}
 		Stopwatch compilationTime = Stopwatch.createStarted();
 		languageServer.initialized(new InitializedParams());
-		languageServer.joinInitBuildFinished();
+		languageServer.getRequestManager().runRead("joinInitBuildFinished", (ci) -> null).join();
 		printCompileResults(compilationTime.stop());
 	}
 
