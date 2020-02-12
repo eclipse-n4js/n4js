@@ -28,6 +28,7 @@ import org.eclipse.n4js.ts.types.TModule;
  *   <li>{@link org.eclipse.n4js.n4JS.ImportDeclaration#getModule <em>Module</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.ImportDeclaration#getModuleSpecifierAsText <em>Module Specifier As Text</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.ImportDeclaration#getModuleSpecifierForm <em>Module Specifier Form</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.ImportDeclaration#isRetainedAtRunTime <em>Retained At Run Time</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.n4JS.N4JSPackage#getImportDeclaration()
@@ -137,6 +138,31 @@ public interface ImportDeclaration extends AnnotableScriptElement {
 	 * @generated
 	 */
 	void setModuleSpecifierForm(ModuleSpecifierForm value);
+
+	/**
+	 * Returns the value of the '<em><b>Retained At Run Time</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 *  Tells whether this import declaration will be present in the transpiler output code. Set during AST traversal.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Retained At Run Time</em>' attribute.
+	 * @see #setRetainedAtRunTime(boolean)
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getImportDeclaration_RetainedAtRunTime()
+	 * @model unique="false" transient="true"
+	 * @generated
+	 */
+	boolean isRetainedAtRunTime();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.ImportDeclaration#isRetainedAtRunTime <em>Retained At Run Time</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Retained At Run Time</em>' attribute.
+	 * @see #isRetainedAtRunTime()
+	 * @generated
+	 */
+	void setRetainedAtRunTime(boolean value);
 
 	/**
 	 * <!-- begin-user-doc -->

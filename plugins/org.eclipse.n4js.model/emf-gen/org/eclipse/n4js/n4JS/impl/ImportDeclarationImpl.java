@@ -47,6 +47,7 @@ import org.eclipse.n4js.ts.types.TModule;
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ImportDeclarationImpl#getModule <em>Module</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ImportDeclarationImpl#getModuleSpecifierAsText <em>Module Specifier As Text</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ImportDeclarationImpl#getModuleSpecifierForm <em>Module Specifier Form</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.ImportDeclarationImpl#isRetainedAtRunTime <em>Retained At Run Time</em>}</li>
  * </ul>
  *
  * @generated
@@ -131,6 +132,26 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * @ordered
 	 */
 	protected ModuleSpecifierForm moduleSpecifierForm = MODULE_SPECIFIER_FORM_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #isRetainedAtRunTime() <em>Retained At Run Time</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isRetainedAtRunTime()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean RETAINED_AT_RUN_TIME_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isRetainedAtRunTime() <em>Retained At Run Time</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isRetainedAtRunTime()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean retainedAtRunTime = RETAINED_AT_RUN_TIME_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -279,6 +300,29 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * @generated
 	 */
 	@Override
+	public boolean isRetainedAtRunTime() {
+		return retainedAtRunTime;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setRetainedAtRunTime(boolean newRetainedAtRunTime) {
+		boolean oldRetainedAtRunTime = retainedAtRunTime;
+		retainedAtRunTime = newRetainedAtRunTime;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.IMPORT_DECLARATION__RETAINED_AT_RUN_TIME, oldRetainedAtRunTime, retainedAtRunTime));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public boolean isBare() {
 		return this.getImportSpecifiers().isEmpty();
 	}
@@ -316,6 +360,8 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 				return getModuleSpecifierAsText();
 			case N4JSPackage.IMPORT_DECLARATION__MODULE_SPECIFIER_FORM:
 				return getModuleSpecifierForm();
+			case N4JSPackage.IMPORT_DECLARATION__RETAINED_AT_RUN_TIME:
+				return isRetainedAtRunTime();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -345,6 +391,9 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 			case N4JSPackage.IMPORT_DECLARATION__MODULE_SPECIFIER_FORM:
 				setModuleSpecifierForm((ModuleSpecifierForm)newValue);
 				return;
+			case N4JSPackage.IMPORT_DECLARATION__RETAINED_AT_RUN_TIME:
+				setRetainedAtRunTime((Boolean)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -372,6 +421,9 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 			case N4JSPackage.IMPORT_DECLARATION__MODULE_SPECIFIER_FORM:
 				setModuleSpecifierForm(MODULE_SPECIFIER_FORM_EDEFAULT);
 				return;
+			case N4JSPackage.IMPORT_DECLARATION__RETAINED_AT_RUN_TIME:
+				setRetainedAtRunTime(RETAINED_AT_RUN_TIME_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -394,6 +446,8 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 				return MODULE_SPECIFIER_AS_TEXT_EDEFAULT == null ? moduleSpecifierAsText != null : !MODULE_SPECIFIER_AS_TEXT_EDEFAULT.equals(moduleSpecifierAsText);
 			case N4JSPackage.IMPORT_DECLARATION__MODULE_SPECIFIER_FORM:
 				return moduleSpecifierForm != MODULE_SPECIFIER_FORM_EDEFAULT;
+			case N4JSPackage.IMPORT_DECLARATION__RETAINED_AT_RUN_TIME:
+				return retainedAtRunTime != RETAINED_AT_RUN_TIME_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -428,6 +482,8 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 		result.append(moduleSpecifierAsText);
 		result.append(", moduleSpecifierForm: ");
 		result.append(moduleSpecifierForm);
+		result.append(", retainedAtRunTime: ");
+		result.append(retainedAtRunTime);
 		result.append(')');
 		return result.toString();
 	}

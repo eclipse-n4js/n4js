@@ -35,6 +35,8 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#isMainModule <em>Main Module</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#isPreLinkingPhase <em>Pre Linking Phase</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#isReconciled <em>Reconciled</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.TModule#getDependenciesRunTime <em>Dependencies Run Time</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.TModule#getDependenciesLoadTimeForInheritance <em>Dependencies Load Time For Inheritance</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getTopLevelTypes <em>Top Level Types</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getVariables <em>Variables</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getInternalTypes <em>Internal Types</em>}</li>
@@ -290,6 +292,30 @@ public interface TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 * @generated
 	 */
 	void setReconciled(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Dependencies Run Time</b></em>' reference list.
+	 * The list contents are of type {@link org.eclipse.n4js.ts.types.TModule}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Dependencies Run Time</em>' reference list.
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_DependenciesRunTime()
+	 * @model
+	 * @generated
+	 */
+	EList<TModule> getDependenciesRunTime();
+
+	/**
+	 * Returns the value of the '<em><b>Dependencies Load Time For Inheritance</b></em>' reference list.
+	 * The list contents are of type {@link org.eclipse.n4js.ts.types.TModule}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Dependencies Load Time For Inheritance</em>' reference list.
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_DependenciesLoadTimeForInheritance()
+	 * @model
+	 * @generated
+	 */
+	EList<TModule> getDependenciesLoadTimeForInheritance();
 
 	/**
 	 * Returns the value of the '<em><b>Top Level Types</b></em>' containment reference list.

@@ -685,13 +685,22 @@ public interface N4JSPackage extends EPackage {
 	int IMPORT_DECLARATION__MODULE_SPECIFIER_FORM = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 4;
 
 	/**
+	 * The feature id for the '<em><b>Retained At Run Time</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMPORT_DECLARATION__RETAINED_AT_RUN_TIME = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 5;
+
+	/**
 	 * The number of structural features of the '<em>Import Declaration</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IMPORT_DECLARATION_FEATURE_COUNT = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 5;
+	int IMPORT_DECLARATION_FEATURE_COUNT = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Get All Annotations</em>' operation.
@@ -16470,6 +16479,17 @@ public interface N4JSPackage extends EPackage {
 	EAttribute getImportDeclaration_ModuleSpecifierForm();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4JS.ImportDeclaration#isRetainedAtRunTime <em>Retained At Run Time</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Retained At Run Time</em>'.
+	 * @see org.eclipse.n4js.n4JS.ImportDeclaration#isRetainedAtRunTime()
+	 * @see #getImportDeclaration()
+	 * @generated
+	 */
+	EAttribute getImportDeclaration_RetainedAtRunTime();
+
+	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.ImportDeclaration#isBare() <em>Is Bare</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -22364,6 +22384,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IMPORT_DECLARATION__MODULE_SPECIFIER_FORM = eINSTANCE.getImportDeclaration_ModuleSpecifierForm();
+
+		/**
+		 * The meta object literal for the '<em><b>Retained At Run Time</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IMPORT_DECLARATION__RETAINED_AT_RUN_TIME = eINSTANCE.getImportDeclaration_RetainedAtRunTime();
 
 		/**
 		 * The meta object literal for the '<em><b>Is Bare</b></em>' operation.

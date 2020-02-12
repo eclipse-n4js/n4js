@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.n4js.ts.types.ComposedMemberCache;
@@ -51,6 +52,8 @@ import org.eclipse.n4js.ts.types.TypesPackage;
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#isMainModule <em>Main Module</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#isPreLinkingPhase <em>Pre Linking Phase</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#isReconciled <em>Reconciled</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getDependenciesRunTime <em>Dependencies Run Time</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getDependenciesLoadTimeForInheritance <em>Dependencies Load Time For Inheritance</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getTopLevelTypes <em>Top Level Types</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getVariables <em>Variables</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getInternalTypes <em>Internal Types</em>}</li>
@@ -253,6 +256,26 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * @ordered
 	 */
 	protected boolean reconciled = RECONCILED_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getDependenciesRunTime() <em>Dependencies Run Time</em>}' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDependenciesRunTime()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<TModule> dependenciesRunTime;
+
+	/**
+	 * The cached value of the '{@link #getDependenciesLoadTimeForInheritance() <em>Dependencies Load Time For Inheritance</em>}' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDependenciesLoadTimeForInheritance()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<TModule> dependenciesLoadTimeForInheritance;
 
 	/**
 	 * The cached value of the '{@link #getTopLevelTypes() <em>Top Level Types</em>}' containment reference list.
@@ -589,6 +612,32 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * @generated
 	 */
 	@Override
+	public EList<TModule> getDependenciesRunTime() {
+		if (dependenciesRunTime == null) {
+			dependenciesRunTime = new EObjectResolvingEList<TModule>(TModule.class, this, TypesPackage.TMODULE__DEPENDENCIES_RUN_TIME);
+		}
+		return dependenciesRunTime;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EList<TModule> getDependenciesLoadTimeForInheritance() {
+		if (dependenciesLoadTimeForInheritance == null) {
+			dependenciesLoadTimeForInheritance = new EObjectResolvingEList<TModule>(TModule.class, this, TypesPackage.TMODULE__DEPENDENCIES_LOAD_TIME_FOR_INHERITANCE);
+		}
+		return dependenciesLoadTimeForInheritance;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EList<Type> getTopLevelTypes() {
 		if (topLevelTypes == null) {
 			topLevelTypes = new EObjectContainmentEList<Type>(Type.class, this, TypesPackage.TMODULE__TOP_LEVEL_TYPES);
@@ -748,6 +797,10 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 				return isPreLinkingPhase();
 			case TypesPackage.TMODULE__RECONCILED:
 				return isReconciled();
+			case TypesPackage.TMODULE__DEPENDENCIES_RUN_TIME:
+				return getDependenciesRunTime();
+			case TypesPackage.TMODULE__DEPENDENCIES_LOAD_TIME_FOR_INHERITANCE:
+				return getDependenciesLoadTimeForInheritance();
 			case TypesPackage.TMODULE__TOP_LEVEL_TYPES:
 				return getTopLevelTypes();
 			case TypesPackage.TMODULE__VARIABLES:
@@ -807,6 +860,14 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 				return;
 			case TypesPackage.TMODULE__RECONCILED:
 				setReconciled((Boolean)newValue);
+				return;
+			case TypesPackage.TMODULE__DEPENDENCIES_RUN_TIME:
+				getDependenciesRunTime().clear();
+				getDependenciesRunTime().addAll((Collection<? extends TModule>)newValue);
+				return;
+			case TypesPackage.TMODULE__DEPENDENCIES_LOAD_TIME_FOR_INHERITANCE:
+				getDependenciesLoadTimeForInheritance().clear();
+				getDependenciesLoadTimeForInheritance().addAll((Collection<? extends TModule>)newValue);
 				return;
 			case TypesPackage.TMODULE__TOP_LEVEL_TYPES:
 				getTopLevelTypes().clear();
@@ -877,6 +938,12 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 			case TypesPackage.TMODULE__RECONCILED:
 				setReconciled(RECONCILED_EDEFAULT);
 				return;
+			case TypesPackage.TMODULE__DEPENDENCIES_RUN_TIME:
+				getDependenciesRunTime().clear();
+				return;
+			case TypesPackage.TMODULE__DEPENDENCIES_LOAD_TIME_FOR_INHERITANCE:
+				getDependenciesLoadTimeForInheritance().clear();
+				return;
 			case TypesPackage.TMODULE__TOP_LEVEL_TYPES:
 				getTopLevelTypes().clear();
 				return;
@@ -930,6 +997,10 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 				return preLinkingPhase != PRE_LINKING_PHASE_EDEFAULT;
 			case TypesPackage.TMODULE__RECONCILED:
 				return reconciled != RECONCILED_EDEFAULT;
+			case TypesPackage.TMODULE__DEPENDENCIES_RUN_TIME:
+				return dependenciesRunTime != null && !dependenciesRunTime.isEmpty();
+			case TypesPackage.TMODULE__DEPENDENCIES_LOAD_TIME_FOR_INHERITANCE:
+				return dependenciesLoadTimeForInheritance != null && !dependenciesLoadTimeForInheritance.isEmpty();
 			case TypesPackage.TMODULE__TOP_LEVEL_TYPES:
 				return topLevelTypes != null && !topLevelTypes.isEmpty();
 			case TypesPackage.TMODULE__VARIABLES:

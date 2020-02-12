@@ -261,13 +261,31 @@ public interface TypesPackage extends EPackage {
 	int TMODULE__RECONCILED = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 9;
 
 	/**
+	 * The feature id for the '<em><b>Dependencies Run Time</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE__DEPENDENCIES_RUN_TIME = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 10;
+
+	/**
+	 * The feature id for the '<em><b>Dependencies Load Time For Inheritance</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE__DEPENDENCIES_LOAD_TIME_FOR_INHERITANCE = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 11;
+
+	/**
 	 * The feature id for the '<em><b>Top Level Types</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__TOP_LEVEL_TYPES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 10;
+	int TMODULE__TOP_LEVEL_TYPES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 12;
 
 	/**
 	 * The feature id for the '<em><b>Variables</b></em>' containment reference list.
@@ -276,7 +294,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__VARIABLES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 11;
+	int TMODULE__VARIABLES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 13;
 
 	/**
 	 * The feature id for the '<em><b>Internal Types</b></em>' containment reference list.
@@ -285,7 +303,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__INTERNAL_TYPES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 12;
+	int TMODULE__INTERNAL_TYPES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 14;
 
 	/**
 	 * The feature id for the '<em><b>Exposed Internal Types</b></em>' containment reference list.
@@ -294,7 +312,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__EXPOSED_INTERNAL_TYPES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 13;
+	int TMODULE__EXPOSED_INTERNAL_TYPES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 15;
 
 	/**
 	 * The feature id for the '<em><b>Ast MD5</b></em>' attribute.
@@ -303,7 +321,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__AST_MD5 = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 14;
+	int TMODULE__AST_MD5 = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 16;
 
 	/**
 	 * The feature id for the '<em><b>Composed Member Caches</b></em>' containment reference list.
@@ -312,7 +330,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__COMPOSED_MEMBER_CACHES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 15;
+	int TMODULE__COMPOSED_MEMBER_CACHES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 17;
 
 	/**
 	 * The feature id for the '<em><b>Temporary Types</b></em>' containment reference list.
@@ -321,7 +339,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__TEMPORARY_TYPES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 16;
+	int TMODULE__TEMPORARY_TYPES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 18;
 
 	/**
 	 * The feature id for the '<em><b>Module Specifier</b></em>' attribute.
@@ -330,7 +348,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__MODULE_SPECIFIER = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 17;
+	int TMODULE__MODULE_SPECIFIER = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 19;
 
 	/**
 	 * The number of structural features of the '<em>TModule</em>' class.
@@ -339,7 +357,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE_FEATURE_COUNT = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 18;
+	int TMODULE_FEATURE_COUNT = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 20;
 
 	/**
 	 * The number of operations of the '<em>TModule</em>' class.
@@ -12812,6 +12830,28 @@ public interface TypesPackage extends EPackage {
 	EAttribute getTModule_Reconciled();
 
 	/**
+	 * Returns the meta object for the reference list '{@link org.eclipse.n4js.ts.types.TModule#getDependenciesRunTime <em>Dependencies Run Time</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Dependencies Run Time</em>'.
+	 * @see org.eclipse.n4js.ts.types.TModule#getDependenciesRunTime()
+	 * @see #getTModule()
+	 * @generated
+	 */
+	EReference getTModule_DependenciesRunTime();
+
+	/**
+	 * Returns the meta object for the reference list '{@link org.eclipse.n4js.ts.types.TModule#getDependenciesLoadTimeForInheritance <em>Dependencies Load Time For Inheritance</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Dependencies Load Time For Inheritance</em>'.
+	 * @see org.eclipse.n4js.ts.types.TModule#getDependenciesLoadTimeForInheritance()
+	 * @see #getTModule()
+	 * @generated
+	 */
+	EReference getTModule_DependenciesLoadTimeForInheritance();
+
+	/**
 	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.types.TModule#getTopLevelTypes <em>Top Level Types</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -15765,6 +15805,22 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute TMODULE__RECONCILED = eINSTANCE.getTModule_Reconciled();
+
+		/**
+		 * The meta object literal for the '<em><b>Dependencies Run Time</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TMODULE__DEPENDENCIES_RUN_TIME = eINSTANCE.getTModule_DependenciesRunTime();
+
+		/**
+		 * The meta object literal for the '<em><b>Dependencies Load Time For Inheritance</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TMODULE__DEPENDENCIES_LOAD_TIME_FOR_INHERITANCE = eINSTANCE.getTModule_DependenciesLoadTimeForInheritance();
 
 		/**
 		 * The meta object literal for the '<em><b>Top Level Types</b></em>' containment reference list feature.

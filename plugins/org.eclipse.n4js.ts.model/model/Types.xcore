@@ -102,6 +102,9 @@ class TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 */
 	transient boolean reconciled
 
+	refers TModule[] dependenciesRunTime
+	refers TModule[] dependenciesLoadTimeForInheritance
+
 	// TODO jvp: what does that mean:
 	// TODO: make sure these are only top level types in the script
 	// (ß): currently these may also contain nested types since the traversal

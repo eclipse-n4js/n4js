@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.validation.validators
 
+import com.google.common.collect.Iterables
 import com.google.inject.Inject
 import com.google.inject.Provider
 import java.util.List
@@ -18,10 +19,16 @@ import java.util.regex.Pattern
 import org.eclipse.emf.common.util.URI
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.n4JS.AnnotableElement
+import org.eclipse.n4js.n4JS.IdentifierRef
+import org.eclipse.n4js.n4JS.ImportDeclaration
+import org.eclipse.n4js.n4JS.N4JSASTUtils
+import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.projectModel.IN4JSCore
+import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypesPackage
+import org.eclipse.n4js.utils.CrossReferenceUtils
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.N4JSResourceValidator
@@ -65,6 +72,48 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	override register(EValidatorRegistrar registrar) {
 		// nop
+	}
+
+	@Check
+	def void checkIllegalLoadTimeReference(IdentifierRef idRef) {
+		if (!N4JSASTUtils.isTopLevelCode(idRef)) {
+			return; // only interested in top-level == load-time references here!
+		}
+		val targetModule = CrossReferenceUtils.getTargetModule(idRef);
+		if (targetModule === null || targetModule.eIsProxy) {
+			return;
+		}
+		val containingModule = (idRef.eResource as N4JSResource).module;
+		// we know that we depend on the target module (because we have a reference to an identifiable element there);
+		// so, to check for a cycle, we just check if there is a dependency from the target module back to us:
+		val hasCycle = CrossReferenceUtils.dependsOn(targetModule, containingModule);
+		// (note that the above also works for targetModule==containingModule, because then the check boils down to
+		// checking if containingModule is contained in any cycle)
+		if (hasCycle) {
+			val message = IssueCodes.getMessageForLTD_ILLEGAL_LOAD_TIME_REFERENCE();
+			addIssue(message, idRef, IssueCodes.LTD_ILLEGAL_LOAD_TIME_REFERENCE);
+		}
+	}
+
+	@Check
+	def void checkIllegalImportOfLTSlave(ImportDeclaration importDecl) {
+		if (!importDecl.isRetainedAtRunTime()) {
+			return; // only interested in imports that are retained at run-time
+		}
+		val containingModule = (importDecl.eResource as N4JSResource).module;
+		val targetModule = importDecl.module;
+		val ltdxs = CrossReferenceUtils.getLTDXsOf(targetModule);
+
+		val isSingletonLTSlaveInThisProject = ltdxs.size() == 1
+			&& !containingModule.equals(Iterables.getFirst(ltdxs, null));
+		val isMultiLTSlaveInThisProject = ltdxs.size() > 1;
+
+		if (isSingletonLTSlaveInThisProject || isMultiLTSlaveInThisProject) {
+			// illegal import of an LTSlave
+			val kind = if (isSingletonLTSlaveInThisProject) "singleton-" else "multi-";
+			val message = IssueCodes.getMessageForLTD_ILLEGAL_IMPORT_OF_LT_SLAVE(kind, targetModule.qualifiedName);
+			addIssue(message, importDecl, N4JSPackage.eINSTANCE.importDeclaration_Module, IssueCodes.LTD_ILLEGAL_IMPORT_OF_LT_SLAVE);
+		}
 	}
 
 	/**
@@ -140,7 +189,7 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 					}
 				}
 
-				// Normal Polfyfill
+				// Normal Polyfill
 				if( script.hasPolyfill && ! module.isStaticPolyfillModule ) {
 					// IDE-1735 in case of normal Polyfill this can't be mixed with static polyfills.
 					return;
