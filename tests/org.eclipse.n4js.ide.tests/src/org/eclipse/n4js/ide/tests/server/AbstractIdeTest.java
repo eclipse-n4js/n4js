@@ -66,43 +66,94 @@ abstract public class AbstractIdeTest<T> {
 		SYSTEM_OUT_REDIRECTER.unset();
 	}
 
+	/** */
 	@Inject
 	protected IResourceServiceProvider.Registry resourceServerProviderRegistry;
+	/** */
 	@Inject
 	protected UriExtensions uriExtensions;
+	/** */
 	@Inject
 	protected XLanguageServerImpl languageServer;
+	/** */
 	@Inject
 	protected N4jscTestLanguageClient languageClient;
+	/** */
 	@Inject
 	protected LanguageInfo languageInfo;
 
+	/**
+	 * This method gets eventually called after calling on of the {@code test()} methods. Overwrite this method to
+	 * implement test logic.
+	 *
+	 * @param root
+	 *            root folder of the project
+	 * @param project
+	 *            project that was created and is used during the test
+	 * @param t
+	 *            given argument from the {@code test()} method
+	 */
 	protected void performTest(File root, Project project, T t) throws Exception {
 		// implement me
 	}
 
+	/** Overwrite this method to change the project type */
 	protected ProjectType getProjectType() {
 		return ProjectType.VALIDATION;
 	}
 
+	/**
+	 * Call this method during a test.
+	 *
+	 * @param contents
+	 *            will be added to a default module and project.
+	 */
 	protected Project test(String contents) throws Exception {
 		return test(MODULE_NAME, contents, null);
 	}
 
+	/**
+	 * Call this method during a test.
+	 *
+	 * @param contents
+	 *            added to a default module and project.
+	 * @param t
+	 *            will be passed to {@link #performTest(File, Project, Object)}.
+	 */
 	protected Project test(String contents, T t) throws Exception {
 		return test(MODULE_NAME, contents, t);
 	}
 
+	/**
+	 * Call this method during a test.
+	 *
+	 * @param moduleName
+	 *            used to create a module in a default project.
+	 * @param contents
+	 *            contents of the {@code moduleName} module.
+	 * @param t
+	 *            will be passed to {@link #performTest(File, Project, Object)}.
+	 */
 	protected Project test(String moduleName, String contents, T t) throws Exception {
 		moduleName = getModuleNameOrDefault(moduleName);
 		Map<String, String> srcFileNameToContents = Collections.singletonMap(moduleName, contents);
 		return test(srcFileNameToContents, moduleName, t);
 	}
 
+	/**
+	 * Call this method during a test.
+	 *
+	 * @param moduleNameToContents
+	 *            map that maps module names to their contents.
+	 * @param moduleName
+	 *            one moduleName of the {@code moduleNameToContents}. Will be opened during the test.
+	 * @param t
+	 *            will be passed to {@link #performTest(File, Project, Object)}.
+	 */
 	protected Project test(Map<String, String> moduleNameToContents, String moduleName, T t) throws Exception {
 		File root = createRoot();
 		Project project = createTestProjectOnDisk(root, moduleNameToContents);
-		createInjector(root);
+		createInjector();
 		startLspServer(root);
 		openFile(root, moduleName, moduleNameToContents.get(moduleName));
 		performTest(root, project, t);
@@ -110,11 +161,13 @@ abstract public class AbstractIdeTest<T> {
 		return project;
 	}
 
+	/** Creates the project root {@link File}. */
 	protected File createRoot() {
 		File root = new File(new File("").getAbsoluteFile(), WORKSPACE_FOLDER);
 		return root;
 	}
 
+	/** Creates the default project on file system. */
 	protected Project createTestProjectOnDisk(File rootDir, Map<String, String> moduleNameToContents) {
 		List<Module> modules = new ArrayList<>();
 
@@ -127,7 +180,7 @@ abstract public class AbstractIdeTest<T> {
 		return createClientProject(rootDir.toPath(), PROJECT_NAME, SRC_FOLDER, modules);
 	}
 
-	protected Project createClientProject(Path destination, String projectName, String srcFolderName,
+	private Project createClientProject(Path destination, String projectName, String srcFolderName,
 			List<Module> clientModules) {
 
 		String vendorId = "VENDOR";
@@ -150,13 +203,15 @@ abstract public class AbstractIdeTest<T> {
 		return clientProject;
 	}
 
-	protected Injector createInjector(File root) {
+	/** Creates injector for N4JS */
+	protected Injector createInjector() {
 		N4jscTestFactory.set(true);
 		Injector injector = N4jscFactory.getOrCreateInjector();
 		injector.injectMembers(this);
 		return injector;
 	}
 
+	/** Connects, initializes and waits for the initial build of the test project. */
 	protected void startLspServer(File root) {
 		ClientCapabilities capabilities = new ClientCapabilities();
 		WorkspaceClientCapabilities wcc = new WorkspaceClientCapabilities();
@@ -172,46 +227,47 @@ abstract public class AbstractIdeTest<T> {
 		languageServer.joinInitBuildFinished();
 	}
 
+	/** Opens the given file in the LSP server and waits for the triggered build to finish. */
 	protected void openFile(File root, String moduleName, String contents) {
 		Assert.assertNotNull(contents);
 		FileURI fileURI = getFileUriFromModuleName(root, moduleName);
-		open(fileURI, languageInfo.getLanguageName(), contents);
-		waitForRequestsDone();
-	}
 
-	protected FileURI getFileUriFromModuleName(File root, String moduleName) {
-		moduleName = getModuleNameOrDefault(moduleName) + "." + FILE_EXTENSION;
-		Path completeFilePath = Path.of(root.toString(), PROJECT_NAME, SRC_FOLDER, moduleName);
-		return new FileURI(completeFilePath.toFile());
-	}
-
-	protected String getModuleNameOrDefault(String moduleName) {
-		if (Strings.isNullOrEmpty(moduleName)) {
-			return MODULE_NAME;
-		}
-		return moduleName;
-	}
-
-	protected void open(FileURI fileUri, String langaugeId, String model) {
 		TextDocumentItem textDocument = new TextDocumentItem();
-		textDocument.setLanguageId(langaugeId);
-		textDocument.setUri(fileUri.toString());
+		textDocument.setLanguageId(languageInfo.getLanguageName());
+		textDocument.setUri(fileURI.toString());
 		textDocument.setVersion(1);
-		textDocument.setText(toUnixLineSeparator(model));
+		textDocument.setText(toUnixLineSeparator(contents));
 
 		DidOpenTextDocumentParams dotdp = new DidOpenTextDocumentParams();
 		dotdp.setTextDocument(textDocument);
 
 		languageServer.didOpen(dotdp);
 		waitForRequestsDone();
+
+		waitForRequestsDone();
+	}
+
+	/** Translates a given module name to a file URI used in LSP call data. */
+	protected FileURI getFileUriFromModuleName(File root, String moduleName) {
+		moduleName = getModuleNameOrDefault(moduleName) + "." + FILE_EXTENSION;
+		Path completeFilePath = Path.of(root.toString(), PROJECT_NAME, SRC_FOLDER, moduleName);
+		return new FileURI(completeFilePath.toFile());
+	}
+
+	private String getModuleNameOrDefault(String moduleName) {
+		if (Strings.isNullOrEmpty(moduleName)) {
+			return MODULE_NAME;
+		}
+		return moduleName;
+	}
+
+	/** Waits until the LSP server idles. */
+	protected void waitForRequestsDone() {
+		ExecuteCommandParams cmdUnknownParams = new ExecuteCommandParams("unknown.command", Collections.emptyList());
+		languageServer.executeCommand(cmdUnknownParams).join();
 	}
 
 	static String toUnixLineSeparator(CharSequence cs) {
 		return cs.toString().replaceAll("\r?\n", "\n");
-	}
-
-	protected void waitForRequestsDone() {
-		ExecuteCommandParams cmdUnknownParams = new ExecuteCommandParams("unknown.command", Collections.emptyList());
-		languageServer.executeCommand(cmdUnknownParams).join();
 	}
 }

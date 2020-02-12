@@ -28,6 +28,7 @@ import org.junit.Assert;
  */
 abstract public class AbstractSignatureHelpTest extends AbstractIdeTest<SignatureHelpConfiguration> {
 
+	/** Call this method in a test */
 	protected void test(SignatureHelpConfiguration shc) throws Exception {
 		test(shc.getFilePath(), shc.getModel(), shc);
 	}
@@ -46,12 +47,12 @@ abstract public class AbstractSignatureHelpTest extends AbstractIdeTest<Signatur
 		if (shc.getAssertSignatureHelp() != null) {
 			shc.getAssertSignatureHelp().apply(signatureHelp);
 		} else {
-			String actualSignatureHelp = toExpectation(signatureHelp);
+			String actualSignatureHelp = toString(signatureHelp);
 			assertEquals(shc.getExpectedSignatureHelp().trim(), actualSignatureHelp.trim());
 		}
 	}
 
-	private String toExpectation(SignatureHelp signatureHelp) {
+	private String toString(SignatureHelp signatureHelp) {
 		Integer activeSignature = signatureHelp.getActiveSignature();
 		List<SignatureInformation> signatures = signatureHelp.getSignatures();
 

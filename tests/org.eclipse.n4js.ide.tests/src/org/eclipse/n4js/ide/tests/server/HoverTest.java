@@ -22,28 +22,7 @@ public class HoverTest extends AbstractHoverTest {
 		htc.setModel("class A { foo(a: A) { } } class Main { main(a: A) { a.foo(null); } }");
 		htc.setLine(0);
 		htc.setColumn("class A { foo(a: A) { } } class Main { main(a: A) { a.fo".length());
-		htc.setExpectedHover("Hover [\n" +
-				"  contents = Either [\n" +
-				"    left = [Either [\n" +
-				"    left = null\n" +
-				"    right = MarkedString [\n" +
-				"    language = \"\"\n" +
-				"    value = \"method foo(a: A): void\"\n" +
-				"  ]\n" +
-				"  ]]\n" +
-				"    right = null\n" +
-				"  ]\n" +
-				"  range = Range [\n" +
-				"    start = Position [\n" +
-				"      line = 0\n" +
-				"      character = 54\n" +
-				"    ]\n" +
-				"    end = Position [\n" +
-				"      line = 0\n" +
-				"      character = 57\n" +
-				"    ]\n" +
-				"  ]\n" +
-				"]");
+		htc.setExpectedHover("[0:54 - 0:57] [] method foo(a: A): void");
 
 		test(htc);
 	}

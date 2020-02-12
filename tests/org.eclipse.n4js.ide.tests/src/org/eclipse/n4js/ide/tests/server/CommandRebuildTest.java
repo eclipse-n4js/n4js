@@ -59,8 +59,8 @@ public class CommandRebuildTest extends AbstractIdeTest<Void> {
 	}
 
 	@Override
-	protected Injector createInjector(File root) {
-		Injector injector = super.createInjector(root);
+	protected Injector createInjector() {
+		Injector injector = super.createInjector();
 		ProjectStatePersisterConfig persisterConfig = injector.getInstance(ProjectStatePersisterConfig.class);
 		persisterConfig.setDeleteState(false);
 		persisterConfig.setWriteToDisk(true);
