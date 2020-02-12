@@ -60,7 +60,7 @@ public class JSONDocumentSymbolKindProvider extends DocumentSymbolKindProvider {
 				return SymbolKind.Number;
 			}
 			case JSONPackage.JSON_BOOLEAN_LITERAL: {
-				return SymbolKind.Number;
+				return SymbolKind.Boolean;
 			}
 			case JSONPackage.JSON_NULL_LITERAL: {
 				return SymbolKind.Null;

@@ -118,7 +118,6 @@ public class XContentAssistService {
 		}
 		Position prefixPosition = document.getPosition(caretOffset - prefix.length());
 		result.setTextEdit(new TextEdit(new Range(prefixPosition, caretPosition), entry.getProposal()));
-		result.setKind(translateKind(entry));
 		if (!entry.getTextReplacements().isEmpty()) {
 			if (result.getAdditionalTextEdits() == null) {
 				result.setAdditionalTextEdits(new ArrayList<>(entry.getTextReplacements().size()));
@@ -127,9 +126,13 @@ public class XContentAssistService {
 				result.getAdditionalTextEdits().add(toTextEdit(it, document));
 			});
 		}
-		if (Objects.equal(entry.getKind(), ContentAssistEntry.KIND_SNIPPET)) {
+		if (entry.getKind().startsWith(ContentAssistEntry.KIND_SNIPPET + ":")) {
+			result.setInsertTextFormat(InsertTextFormat.Snippet);
+			entry.setKind(entry.getKind().substring(ContentAssistEntry.KIND_SNIPPET.length() + 1));
+		} else if (Objects.equal(entry.getKind(), ContentAssistEntry.KIND_SNIPPET)) {
 			result.setInsertTextFormat(InsertTextFormat.Snippet);
 		}
+		result.setKind(translateKind(entry));
 		return result;
 	}
 
