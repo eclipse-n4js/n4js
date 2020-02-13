@@ -62,6 +62,9 @@ abstract public class AbstractHoverTest extends AbstractIdeTest<HoverTestConfigu
 	}
 
 	String toString(Range range) {
+		if (range == null) {
+			return "[null]";
+		}
 		Position start = range.getStart();
 		Position end = range.getEnd();
 		String stringPosStr = start.getLine() + ":" + start.getCharacter();
