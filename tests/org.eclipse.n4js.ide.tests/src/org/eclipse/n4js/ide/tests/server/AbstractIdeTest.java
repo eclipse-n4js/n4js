@@ -31,9 +31,11 @@ import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.tests.codegen.Module;
 import org.eclipse.n4js.tests.codegen.Project;
 import org.eclipse.n4js.tests.codegen.Project.SourceFolder;
+import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.xtext.LanguageInfo;
 import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -56,13 +58,13 @@ abstract public class AbstractIdeTest<T> {
 
 	/** Catch outputs on console to an internal buffer */
 	@BeforeClass
-	static public void redirectPrintStreams() {
+	static final public void redirectPrintStreams() {
 		SYSTEM_OUT_REDIRECTER.set(false);
 	}
 
 	/** Reset redirection */
 	@AfterClass
-	static public void resetPrintStreams() {
+	static final public void resetPrintStreams() {
 		SYSTEM_OUT_REDIRECTER.unset();
 	}
 
@@ -81,6 +83,15 @@ abstract public class AbstractIdeTest<T> {
 	/** */
 	@Inject
 	protected LanguageInfo languageInfo;
+
+	/** Deletes the test project in case it exists. */
+	@After
+	final public void deleteTestProject() {
+		File root = getRoot();
+		if (root.exists()) {
+			FileUtils.deleteFileOrFolder(root);
+		}
+	}
 
 	/**
 	 * This method gets eventually called after calling on of the {@code test()} methods. Overwrite this method to
@@ -151,7 +162,7 @@ abstract public class AbstractIdeTest<T> {
 	 *            will be passed to {@link #performTest(File, Project, Object)}.
 	 */
 	protected Project test(Map<String, String> moduleNameToContents, String moduleName, T t) throws Exception {
-		File root = createRoot();
+		File root = getRoot();
 		Project project = createTestProjectOnDisk(root, moduleNameToContents);
 		createInjector();
 		startLspServer(root);
@@ -161,8 +172,8 @@ abstract public class AbstractIdeTest<T> {
 		return project;
 	}
 
-	/** Creates the project root {@link File}. */
-	protected File createRoot() {
+	/** @return the project root {@link File}. */
+	protected File getRoot() {
 		File root = new File(new File("").getAbsoluteFile(), WORKSPACE_FOLDER);
 		return root;
 	}
@@ -194,6 +205,8 @@ abstract public class AbstractIdeTest<T> {
 		for (Module clientModule : clientModules) {
 			sourceFolder.addModule(clientModule);
 		}
+
+		destination.toFile().mkdirs();
 		clientProject.create(destination);
 
 		Path nodeModules = destination.resolve(projectName).resolve("node_modules");
