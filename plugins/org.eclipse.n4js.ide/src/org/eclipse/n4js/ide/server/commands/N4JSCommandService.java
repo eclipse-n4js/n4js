@@ -143,7 +143,8 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 	 */
 	@ExecutableCommandHandler(N4JS_REBUILD)
 	public Void rebuild(ILanguageServerAccess access, CancelIndicator cancelIndicator) {
-		lspServer.clean().thenRun(() -> lspServer.reinitWorkspace());
+		lspServer.clean();
+		lspServer.reinitWorkspace();
 		return null;
 	}
 
