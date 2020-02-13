@@ -57,10 +57,10 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 
 	final Class<?>[] quickfixProviders = { N4JSQuickfixProvider.class };
 
-	private static class TextEditorCollector implements ICodeActionAcceptor {
+	private static class TextEditCollector implements ICodeActionAcceptor {
 		private final Map<String, List<TextEdit>> allEdits;
 
-		private TextEditorCollector() {
+		private TextEditCollector() {
 			this.allEdits = new HashMap<>();
 		}
 
@@ -222,7 +222,7 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 		if (quickfix == null) {
 			return result;
 		}
-		TextEditorCollector collector = new TextEditorCollector();
+		TextEditCollector collector = new TextEditCollector();
 		XProjectManager projectManager = getCurrentProject(options);
 		String uriString = options.getCodeActionParams().getTextDocument().getUri();
 		URI uri = uriExtensions.toUri(uriString);
@@ -246,7 +246,7 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 		if (quickfix == null) {
 			return result;
 		}
-		TextEditorCollector collector = new TextEditorCollector();
+		TextEditCollector collector = new TextEditCollector();
 		XProjectManager projectManager = getCurrentProject(options);
 		projectManager.getProjectStateHolder().getValidationIssues().forEach((uri, issues) -> {
 			TextDocumentIdentifier docIdentifier = new TextDocumentIdentifier(uriExtensions.toUriString(uri));

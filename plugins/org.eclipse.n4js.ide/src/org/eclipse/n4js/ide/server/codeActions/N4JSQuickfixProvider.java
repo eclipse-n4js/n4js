@@ -101,7 +101,7 @@ public class N4JSQuickfixProvider {
 			return;
 		}
 		ICompositeNode node = NodeModelUtils.getNode(element);
-		ICompositeNode parentNode = findParentNode(node, N4MethodDeclaration.class);
+		ICompositeNode parentNode = findParentNodeWithSemanticElementOfType(node, N4MethodDeclaration.class);
 		INode roundBracketNode = NodeModelUtilsN4.findKeywordNode(parentNode, ")");
 		List<INode> nodesForFeature = NodeModelUtils.findNodesForFeature(parentNode.getSemanticElement(),
 				N4JSPackage.Literals.TYPED_ELEMENT__BOGUS_TYPE_REF);
@@ -132,7 +132,7 @@ public class N4JSQuickfixProvider {
 		acceptor.acceptQuickfixCodeAction(context, "Convert to colon style", supplier);
 	}
 
-	private ICompositeNode findParentNode(ICompositeNode node, Class<?> semanticElementType) {
+	private ICompositeNode findParentNodeWithSemanticElementOfType(ICompositeNode node, Class<?> semanticElementType) {
 		ICompositeNode parentNode = node.getParent();
 		while (!parentNode.hasDirectSemanticElement()
 				|| !semanticElementType.isInstance(parentNode.getSemanticElement())) {
