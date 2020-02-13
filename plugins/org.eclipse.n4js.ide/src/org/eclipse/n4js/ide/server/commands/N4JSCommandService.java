@@ -10,6 +10,10 @@
  */
 package org.eclipse.n4js.ide.server.commands;
 
+import static org.eclipse.n4js.external.LibraryChange.LibraryChangeType.Install;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -23,13 +27,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
 import org.eclipse.lsp4j.CodeActionParams;
 import org.eclipse.lsp4j.ExecuteCommandParams;
+import org.eclipse.lsp4j.MessageParams;
+import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.WorkspaceEdit;
+import org.eclipse.n4js.external.LibraryChange;
+import org.eclipse.n4js.external.NpmCLI;
 import org.eclipse.n4js.ide.server.codeActions.N4JSCodeActionService;
 import org.eclipse.n4js.ide.xtext.server.ExecuteCommandParamsDescriber;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
+import org.eclipse.n4js.json.ide.codeActions.JSONCodeActionService;
+import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
+import org.eclipse.n4js.semver.SemverHelper;
+import org.eclipse.n4js.semver.SemverUtils;
+import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
+import org.eclipse.n4js.semver.model.SemverSerializer;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 import org.eclipse.xtext.ide.server.commands.IExecutableCommandService;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -66,6 +85,12 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 
 	@Inject
 	private N4JSCodeActionService codeActionService;
+
+	@Inject
+	private NpmCLI npmCli;
+
+	@Inject
+	private SemverHelper semverHelper;
 
 	/**
 	 * Methods annotated as ExecutableCommandHandler will be registered as ...drumrolls... handlers for ExecuteCommand
@@ -171,6 +196,64 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 		WorkspaceEdit edit = codeActionService.applyToProject(code, fixId,
 				lspServer.toOptions(codeActionParams, cancelIndicator));
 		access.getLanguageClient().applyEdit(new ApplyWorkspaceEditParams(edit, title));
+		return null;
+	}
+
+	/**
+	 * Install the given NPM into the workspace.
+	 *
+	 * @param cancelIndicator
+	 *            not required.
+	 */
+	@ExecutableCommandHandler(JSONCodeActionService.INSTALL_NPM)
+	public Void installNpm(
+			String packageName,
+			String version,
+			String fileUri,
+			ILanguageServerAccess access,
+			CancelIndicator cancelIndicator) {
+		lspServer.getRequestManager().runWrite("InstallNpm", () -> {
+			NPMVersionRequirement versionRequirement = semverHelper.parse(version);
+			if (versionRequirement == null) {
+				versionRequirement = SemverUtils.createEmptyVersionRequirement();
+			}
+			LibraryChange change = new LibraryChange(Install, null, new N4JSProjectName(packageName),
+					SemverSerializer.serialize(versionRequirement));
+			MultiStatus multiStatus = new MultiStatus("json", 1, null, null);
+			npmCli.batchInstall(new NullProgressMonitor(), multiStatus,
+					Arrays.asList(change),
+					new FileURI(URI.createURI(fileUri)).getParent());
+
+			return multiStatus;
+		}, (ci, ms) -> {
+			MessageParams messageParams = new MessageParams();
+			switch (ms.getSeverity()) {
+			case IStatus.INFO:
+				messageParams.setType(MessageType.Info);
+				break;
+			case IStatus.WARNING:
+				messageParams.setType(MessageType.Warning);
+				break;
+			case IStatus.ERROR:
+				messageParams.setType(MessageType.Error);
+				break;
+			default:
+				return null;
+			}
+
+			StringWriter sw = new StringWriter();
+			PrintWriter printWriter = new PrintWriter(sw);
+			for (IStatus child : ms.getChildren()) {
+				if (child.getSeverity() == ms.getSeverity()) {
+					printWriter.println(child.getMessage());
+				}
+			}
+			printWriter.flush();
+			messageParams.setMessage(sw.toString());
+			access.getLanguageClient().showMessage(messageParams);
+			return null;
+		}).whenComplete((a, b) -> lspServer.reinitWorkspace());
+
 		return null;
 	}
 

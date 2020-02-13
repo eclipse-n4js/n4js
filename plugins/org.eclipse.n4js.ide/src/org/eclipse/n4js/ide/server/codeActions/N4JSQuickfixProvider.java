@@ -193,7 +193,13 @@ public class N4JSQuickfixProvider {
 	private EObject getEObject(QuickfixContext context) {
 		Document doc = context.options.getDocument();
 		XtextResource resource = context.options.getResource();
-		return getEObject(doc, resource, context.options.getCodeActionParams().getRange());
+		return getEObject(doc, resource, context.getDiagnostic().getRange());
+	}
+
+	private EObject getEObject(Document doc, XtextResource resource, Range range) {
+		Position start = range.getStart();
+		int startOffset = doc.getOffSet(start);
+		return eObjectAtOffsetHelper.resolveContainedElementAt(resource, startOffset);
 	}
 
 	private ICompositeNode findParentNodeWithSemanticElementOfType(ICompositeNode node, Class<?> semanticElementType) {
@@ -203,12 +209,6 @@ public class N4JSQuickfixProvider {
 			parentNode = parentNode.getParent();
 		}
 		return parentNode;
-	}
-
-	private EObject getEObject(Document doc, XtextResource resource, Range range) {
-		Position start = range.getStart();
-		int startOffset = doc.getOffSet(start);
-		return eObjectAtOffsetHelper.resolveContainedElementAt(resource, startOffset);
 	}
 
 }
