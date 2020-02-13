@@ -14,6 +14,7 @@ import org.eclipse.n4js.generator.N4JSCompositeGenerator;
 import org.eclipse.n4js.ide.editor.contentassist.CamelCasePrefixMatcher;
 import org.eclipse.n4js.ide.editor.contentassist.N4JSIdeContentProposalProvider;
 import org.eclipse.n4js.ide.server.FileBasedWorkspaceInitializer;
+import org.eclipse.n4js.ide.server.N4JSLanguageServer;
 import org.eclipse.n4js.ide.server.N4JSOutputConfigurationProvider;
 import org.eclipse.n4js.ide.server.N4JSProjectDescriptionFactory;
 import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
@@ -32,19 +33,18 @@ import org.eclipse.n4js.ide.xtext.server.XBuildManager;
 import org.eclipse.n4js.ide.xtext.server.XExecutableCommandRegistry;
 import org.eclipse.n4js.ide.xtext.server.XIProjectDescriptionFactory;
 import org.eclipse.n4js.ide.xtext.server.XIWorkspaceConfigFactory;
+import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 import org.eclipse.n4js.ide.xtext.server.XProjectManager;
 import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
 import org.eclipse.n4js.ide.xtext.server.build.XStatefulIncrementalBuilder;
 import org.eclipse.n4js.internal.lsp.FileSystemScanner;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
-import org.eclipse.n4js.ts.ide.BuiltInAwareDocumentExtensions;
 import org.eclipse.xtext.generator.IGenerator;
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
 import org.eclipse.xtext.ide.editor.contentassist.FQNPrefixMatcher;
 import org.eclipse.xtext.ide.editor.contentassist.IPrefixMatcher;
 import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalAcceptor;
 import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalProvider;
-import org.eclipse.xtext.ide.server.DocumentExtensions;
 import org.eclipse.xtext.ide.server.ILanguageServerShutdownAndExitHandler;
 import org.eclipse.xtext.ide.server.codeActions.ICodeActionService2;
 import org.eclipse.xtext.ide.server.commands.ExecutableCommandRegistry;
@@ -158,8 +158,8 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 		return CamelCasePrefixMatcher.class;
 	}
 
-	public Class<? extends DocumentExtensions> bindDocumentExtensions() {
-		return BuiltInAwareDocumentExtensions.class;
+	public Class<? extends XLanguageServerImpl> bindXLanguageServerImpl() {
+		return N4JSLanguageServer.class;
 	}
 
 }

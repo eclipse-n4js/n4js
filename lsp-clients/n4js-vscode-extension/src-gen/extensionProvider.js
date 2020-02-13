@@ -28,7 +28,18 @@ export function getActivate(vscode, vscodeLC) {
 		};
 		let clientOptions = {
 			documentSelector: [
-				'n4js'
+				{
+					scheme: 'file',
+					language: 'n4js'
+				},
+				{
+					scheme: 'n4scheme',
+					language: 'n4js'
+				},
+				{
+					scheme: 'untitled',
+					language: 'n4js'
+				}
 			],
 			synchronize: {
 				fileEvents: vscode.workspace.createFileSystemWatcher('{/**/*.+(n4js|n4jsd|n4jsx|n4idl),/**/package.json}')
@@ -37,6 +48,19 @@ export function getActivate(vscode, vscodeLC) {
 		};
 		let lc = new vscodeLC.LanguageClient('N4JS Language Server', serverOptions, clientOptions, true);
 		lc.trace = VSCodeJRCP.Trace.Verbose;
+		lc.onReady().then(()=>{
+			const requestType = new vscodeLC.RequestType('n4/documentContents');
+			const textDocumentContentProvider = {
+				provideTextDocumentContent: (uri, token)=>{
+					return lc.sendRequest(requestType, {
+						uri: uri.toString()
+					}, token).then((v)=>{
+						return v || '';
+					});
+				}
+			};
+			context.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider('n4scheme', textDocumentContentProvider));
+		});
 		let disposableLangClient = lc.start();
 		context.subscriptions.push(disposableLangClient);
 	};
