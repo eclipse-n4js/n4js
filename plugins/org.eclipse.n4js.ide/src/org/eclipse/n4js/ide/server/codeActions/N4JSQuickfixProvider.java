@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.ide.server.codeActions;
 
+import static org.eclipse.n4js.ide.server.codeActions.util.ChangeProvider.replace;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -21,9 +23,14 @@ import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.n4js.ide.editor.contentassist.imports.ImportUtil;
 import org.eclipse.n4js.ide.editor.contentassist.imports.ImportsAwareReferenceProposalCreator;
+import org.eclipse.n4js.ide.server.codeActions.util.ChangeProvider;
+import org.eclipse.n4js.n4JS.N4FieldDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4MethodDeclaration;
+import org.eclipse.n4js.n4JS.PropertyNameOwner;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
+import org.eclipse.n4js.ts.types.TField;
+import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.nodemodel.NodeModelUtilsN4;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.xtext.diagnostics.Diagnostic;
@@ -41,9 +48,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * N4JS quick fixes.
- *
- * see http://www.eclipse.org/Xtext/documentation.html#quickfixes
+ * N4JS quick fixes for LSP.
  */
 @SuppressWarnings("restriction")
 @Singleton
@@ -71,7 +76,7 @@ public class N4JSQuickfixProvider {
 				Supplier<List<TextEdit>> textEdits = () -> {
 					List<TextEdit> result = new ArrayList<>();
 					for (ReplaceRegion replaceRegion : replacements) {
-						TextEdit textEdit = replace(doc, replaceRegion);
+						TextEdit textEdit = ChangeProvider.replace(doc, replaceRegion);
 						result.add(textEdit);
 					}
 					return result;
@@ -90,9 +95,7 @@ public class N4JSQuickfixProvider {
 	 */
 	@Fix(IssueCodes.TYS_INVALID_TYPE_SYNTAX)
 	public void transformJavaTypeAnnotationToColonStyle(QuickfixContext context, ICodeActionAcceptor acceptor) {
-		Document doc = context.options.getDocument();
-		XtextResource resource = context.options.getResource();
-		EObject element = getEObject(doc, resource, context.options.getCodeActionParams().getRange());
+		EObject element = getEObject(context);
 		if (!(element instanceof ParameterizedTypeRef)) {
 			return;
 		}
@@ -113,6 +116,7 @@ public class N4JSQuickfixProvider {
 		}
 
 		Supplier<List<TextEdit>> supplier = () -> {
+			Document doc = context.options.getDocument();
 			String stringOfBogusType = NodeModelUtilsN4.getTokenTextWithHiddenTokens(bogusNode);
 			ILeafNode nodeAfterBogus = NodeModelUtils.findLeafNodeAtOffset(parentNode, bogusNode.getEndOffset());
 			int spaceAfterBogusLength = 0;
@@ -132,6 +136,66 @@ public class N4JSQuickfixProvider {
 		acceptor.acceptQuickfixCodeAction(context, "Convert to colon style", supplier);
 	}
 
+	/**
+	 * Remove the questionmark qualifier fro optional fields from the old location and put it at the new location.
+	 */
+	@Fix(IssueCodes.CLF_FIELD_OPTIONAL_OLD_SYNTAX)
+	public void fixOldSyntaxForOptionalFields(QuickfixContext context, ICodeActionAcceptor acceptor) {
+		acceptor.acceptQuickfixCodeAction(context, "Change to new syntax", () -> {
+			Document doc = context.options.getDocument();
+			int offsetNameEnd = getOffsetOfNameEnd(getEObject(context).eContainer());
+			List<TextEdit> textEdits = new ArrayList<>();
+			// removes the ? at the old location
+			int endOffset = doc.getOffSet(context.getDiagnostic().getRange().getEnd());
+			textEdits.add(replace(doc, endOffset - 1, 1, ""));
+			// inserts a ? at the new location (behind the field or accessor name)
+			if (offsetNameEnd != -1) {
+				textEdits.add(replace(doc, offsetNameEnd, 0, "?"));
+			}
+			return textEdits;
+		});
+	}
+
+	/**
+	 * Update the syntax for optional function paramters.
+	 */
+	@Fix(IssueCodes.FUN_PARAM_OPTIONAL_WRONG_SYNTAX)
+	public void fixOldSyntaxForOptionalFpars(QuickfixContext context, ICodeActionAcceptor acceptor) {
+		acceptor.acceptQuickfixCodeAction(context, "Change to Default Parameter", () -> {
+			Document doc = context.options.getDocument();
+			List<TextEdit> textEdits = new ArrayList<>();
+			int endOffset = doc.getOffSet(context.getDiagnostic().getRange().getEnd());
+			textEdits.add(replace(doc, endOffset - 1, 1, " = undefined"));
+			return textEdits;
+		});
+	}
+
+	private int getOffsetOfNameEnd(EObject object) {
+		INode node;
+		if (object instanceof N4FieldDeclaration) {
+			N4FieldDeclaration fieldDecl = (N4FieldDeclaration) object;
+			if (fieldDecl.isDeclaredOptional()) {
+				return -1;
+			}
+			node = NodeModelUtils.findActualNodeFor(((PropertyNameOwner) object).getDeclaredName());
+		} else if (object instanceof TField) {
+			TField field = (TField) object;
+			if (field.isOptional()) {
+				return -1;
+			}
+			node = NodeModelUtils.findNodesForFeature(object, TypesPackage.Literals.IDENTIFIABLE_ELEMENT__NAME).get(0);
+		} else {
+			return -1;
+		}
+		return node.getEndOffset();
+	}
+
+	private EObject getEObject(QuickfixContext context) {
+		Document doc = context.options.getDocument();
+		XtextResource resource = context.options.getResource();
+		return getEObject(doc, resource, context.options.getCodeActionParams().getRange());
+	}
+
 	private ICompositeNode findParentNodeWithSemanticElementOfType(ICompositeNode node, Class<?> semanticElementType) {
 		ICompositeNode parentNode = node.getParent();
 		while (!parentNode.hasDirectSemanticElement()
@@ -145,18 +209,6 @@ public class N4JSQuickfixProvider {
 		Position start = range.getStart();
 		int startOffset = doc.getOffSet(start);
 		return eObjectAtOffsetHelper.resolveContainedElementAt(resource, startOffset);
-	}
-
-	private TextEdit replace(Document doc, ReplaceRegion replaceRegion) {
-		return replace(doc, replaceRegion.getOffset(), replaceRegion.getLength(), replaceRegion.getText());
-	}
-
-	private TextEdit replace(Document doc, int offset, int length, String newText) {
-		Position posStart = doc.getPosition(offset);
-		Position posEnd = doc.getPosition(offset + length);
-		Range rangeOfImport = new Range(posStart, posEnd);
-		TextEdit textEdit = new TextEdit(rangeOfImport, newText);
-		return textEdit;
 	}
 
 }

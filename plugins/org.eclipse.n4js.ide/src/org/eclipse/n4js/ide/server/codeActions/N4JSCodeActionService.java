@@ -169,13 +169,13 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 						acceptor.acceptQuickfixCommand(context, title + " (entire file)",
 								N4JSCommandService.COMPOSITE_FIX_FILE,
 								title,
-								context.code,
+								context.issueCode,
 								quickfix.id,
 								context.options.getCodeActionParams());
 						acceptor.acceptQuickfixCommand(context, title + " (entire project)",
 								N4JSCommandService.COMPOSITE_FIX_PROJECT,
 								title,
-								context.code,
+								context.issueCode,
 								quickfix.id,
 								context.options.getCodeActionParams());
 					}

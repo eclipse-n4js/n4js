@@ -23,14 +23,16 @@ import java.lang.annotation.Target;
  * Make sure that annotated methods:
  * <ul>
  * <li/>are public
- * <li/>have exactly two arguments, first of type {@link QuickfixContext} and second of type {@link CodeActionAcceptor}
+ * <li/>have exactly two arguments, first of type {@link QuickfixContext} and second of type {@link ICodeActionAcceptor}
  * </ul>
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.METHOD })
 @Repeatable(Fixes.class)
 public @interface Fix {
-	/** Issue code of issue that is fixed by the annotated method */
+	/**
+	 * The issue code that is about the be resolved. The annotated method will potentially produce a fix for this code.
+	 */
 	String value();
 
 	/** Returns true if the implemented fix is a multi fix. */

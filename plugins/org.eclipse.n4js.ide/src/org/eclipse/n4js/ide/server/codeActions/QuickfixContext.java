@@ -10,15 +10,45 @@
  */
 package org.eclipse.n4js.ide.server.codeActions;
 
+import org.eclipse.lsp4j.CodeActionContext;
+import org.eclipse.lsp4j.Diagnostic;
+import org.eclipse.lsp4j.util.Ranges;
 import org.eclipse.xtext.ide.server.codeActions.ICodeActionService2.Options;
 
-@SuppressWarnings({ "restriction", "javadoc" })
+/**
+ * Encapsulates the context that is made available to quickfix implementations.
+ */
+@SuppressWarnings("restriction")
 public class QuickfixContext {
-	public final String code;
+	/**
+	 * The issue code that is about the be resolved.
+	 */
+	public final String issueCode;
+	/**
+	 * The code-action options.
+	 */
 	public final Options options;
 
-	public QuickfixContext(String code, Options options) {
-		this.code = code;
+	/**
+	 * Standard constructor.
+	 */
+	public QuickfixContext(String issueCode, Options options) {
+		this.issueCode = issueCode;
 		this.options = options;
+	}
+
+	/**
+	 * Return the current diagnostic or null, if it cannot be determined generically.
+	 */
+	public Diagnostic getDiagnostic() {
+		CodeActionContext context = options.getCodeActionParams().getContext();
+		for (Diagnostic d : context.getDiagnostics()) {
+			if (issueCode.equals(d.getCode())) {
+				if (Ranges.containsRange(d.getRange(), options.getCodeActionParams().getRange())) {
+					return d;
+				}
+			}
+		}
+		return null;
 	}
 }
