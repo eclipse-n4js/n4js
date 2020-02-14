@@ -16,11 +16,11 @@ import * as fs from "fs";
 import * as lib_decompress+ from "decompress";
 import * as npmlog+ from "npmlog";
 import * as followRedirects+ from 'follow-redirects';
-import {JreInfo, Platform, JRE_INFO_MAP, JAVA_DEFAULT, BIN_DIR, JRE_URL_DIR, JRE_DIR, JRE_VERSION_START} from 'Globals';
+import {JreInfo, Platform, JRE_INFO_MAP, JAVA_DEFAULT, BIN_DIR, JRE_URL_DIR, JRE_DIR} from 'Globals';
 import {detectJavaVersion} from 'JavaVersion';
 
 const decompress = (lib_decompress.default as any+) as {function(string, string): Promise<any,any>};
-
+export const JRE_VERSION = 11;
 
 
 
@@ -30,9 +30,9 @@ const decompress = (lib_decompress.default as any+) as {function(string, string)
  * Returns an object literal that contains the Java version of the available environment
  * and the boolean flag 'suffices' which is true if n4jsc.jar can be executed using this Java version.
  */
-export public function getJavaVersionInfo() : ~Object with {version: string, suffices: boolean} {
+export public function getJavaVersionInfo() : ~Object with {version: int, suffices: boolean} {
     const version = detectJavaVersion();
-    const suffices: boolean = !!version && version.startsWith(JRE_VERSION_START);
+    const suffices: boolean = !!version && version == JRE_VERSION;
 
     return {version: version, suffices: suffices};
 }
@@ -81,14 +81,14 @@ export public async function ensureJRE(log: {function(string)} = npmlog.info) : 
 
     let versionInfo = getJavaVersionInfo();
     if (versionInfo.suffices) {
-        log("Global JRE found with version " + versionInfo.version);
+        log("Global JRE found in version " + versionInfo.version);
         return;
     }
 
     // Download and extract JRE
     const jreInfo = getJreInfo(log);
     if (jreInfo) {
-        let msg = versionInfo.suffices? "Global JRE found." : "Global JRE found but version not starting with '" + JRE_VERSION_START + "'.";
+        let msg = "Global JRE found in version " + versionInfo.version + " but required version is " + JRE_VERSION + ".";
         msg += " Downloading and extracting JRE into local folder.";
         log(msg);
 
@@ -97,7 +97,7 @@ export public async function ensureJRE(log: {function(string)} = npmlog.info) : 
 
     } else {
         log("Platform not supported: " + process.platform);
-        log("Please install JRE11+ and make the call to 'bin/java' globally available.");
+        log("Please install JRE in version " + JRE_VERSION + " and make the call to 'bin/java' globally available.");
     }
 }
 

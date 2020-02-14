@@ -20,9 +20,9 @@ const JAVA_CLASS_FILE = path.resolve(BIN_DIR, "PrintJavaVersion.class");
 
 
 /**
- * Returns the version of the installed Java or null otherwise.
+ * Returns the feature segment of the installed JRE version or null otherwise.
  */
-export public function detectJavaVersion() : string {
+export public function detectJavaVersion() : int {
     if (!fs.existsSync(JAVA_CLASS_FILE)) {
         const procCompile = childProcess.spawnSync('javac', [JAVA_SOURCE_FILE]);
         if (procCompile.error) {
@@ -37,5 +37,10 @@ export public function detectJavaVersion() : string {
     }
 
     // Executing PrintJavaVersion was successful
-    return procRun.stdout.toString().trim();
+    const versionFeature = procRun.stdout.toString().trim();
+    if (!versionFeature) {
+        return null;
+    }
+
+    return parseInt(versionFeature);
 }

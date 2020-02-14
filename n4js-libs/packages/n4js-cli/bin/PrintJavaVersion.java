@@ -12,7 +12,7 @@
 /** Utility to detect and print out the Java version */
 public class PrintJavaVersion {
 	public static void main(String[] args) {
-		String versionStr = System.getProperty("java.version");
-		System.out.println(versionStr);
+		int javaVersionFeatureSegement = Runtime.version().feature();
+		System.out.println(javaVersionFeatureSegement);
 	}
 }
