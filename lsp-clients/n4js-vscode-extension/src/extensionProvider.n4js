@@ -10,12 +10,13 @@
  */
 
 import * as n4jscli from "n4js-cli";
-import * as n4jsc from "n4js-cli/n4jsc";
+import * as jreProvider from "n4js-cli/JreProvider";
 import * as net from "net";
 import * as childProcess from "child_process";
 import * as VSCodeJRCP+ from "vscode-jsonrpc";
 
 const PORT = 5007;
+const TIMEOUT = 1000;
 
 let n4jscProcess: childProcess.ChildProcess;
 
@@ -30,7 +31,7 @@ export function getActivate(vscode: any+, vscodeLC: any+): any {
 
             let socket = await connectToRunningN4jsLspServer(PORT, outputChannel);
             if (!socket) {
-                outputChannel.appendLine("Unable to connect to an already running LSP server (port="+PORT+"). Start new instance.");
+                outputChannel.appendLine("Unable to connect to an already running LSP server (port=" + PORT + "). Start new instance.");
                 socket = await startN4jsLspServerAndConnect(PORT, outputChannel);
             }
 
@@ -82,7 +83,7 @@ export function getDeactivate(vscode: any+, vscodeLC: any+): {function() : Promi
 
 async function startN4jsLspServerAndConnect(port: number, outputChannel: any+): net.Socket {
     let logFn = (text: string) => outputChannel.appendLine(text) as {function(string)};
-    await n4jsc.ensureJRE(logFn);
+    await jreProvider.ensureJRE(logFn);
 
     let env = Object.assign({ NODEJS_PATH: process.argv[0] }, process.env);
     let spawnOptions: childProcess.SpawnOptions = { env: env };
@@ -112,18 +113,17 @@ async function startN4jsLspServerAndConnect(port: number, outputChannel: any+): 
 }
 
 async function connectToRunningN4jsLspServer(port: number, outputChannel: any+): net.Socket {
-    let timeout = 1000;
 
     let connectionPromise = new Promise<net.Socket, any>((resolve, reject) => {
         try {
             let timer = setTimeout(() => {
                     clientSocket.end();
                     resolve(null);
-                }, timeout);
+                }, TIMEOUT);
 
             let clientSocket = net.createConnection({port: port});
             clientSocket.on('connect', () => {
-                    outputChannel.appendLine("Connected to a already running LSP server (port="+PORT+")");
+                    outputChannel.appendLine("Connected to a already running LSP server (port=" + PORT + ")");
                     clearTimeout(timer);
                     resolve(clientSocket);
                 })

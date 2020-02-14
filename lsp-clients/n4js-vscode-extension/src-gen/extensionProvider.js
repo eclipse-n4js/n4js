@@ -2,11 +2,12 @@
 
 import 'n4js-runtime'
 import * as n4jscli from 'n4js-cli'
-import * as n4jsc from 'n4js-cli/src-gen/n4jsc'
+import * as jreProvider from 'n4js-cli/src-gen/JreProvider'
 import * as net from 'net'
 import * as VSCodeJRCP from 'vscode-jsonrpc'
 
 const PORT = 5007;
+const TIMEOUT = 1000;
 let n4jscProcess;
 export function getActivate(vscode, vscodeLC) {
 	return (context)=>{
@@ -56,7 +57,7 @@ export function getDeactivate(vscode, vscodeLC) {
 }
 async function startN4jsLspServerAndConnect(port, outputChannel) {
 	let logFn = (text)=>outputChannel.appendLine(text);
-	await n4jsc.ensureJRE(logFn);
+	await jreProvider.ensureJRE(logFn);
 	let env = Object.assign({
 		NODEJS_PATH: process.argv[0]
 	}, process.env);
@@ -87,13 +88,12 @@ async function startN4jsLspServerAndConnect(port, outputChannel) {
 	return socket;
 }
 async function connectToRunningN4jsLspServer(port, outputChannel) {
-	let timeout = 1000;
 	let connectionPromise = new Promise((resolve, reject)=>{
 		try {
 			let timer = setTimeout(()=>{
 				clientSocket.end();
 				resolve(null);
-			}, timeout);
+			}, TIMEOUT);
 			let clientSocket = net.createConnection({
 				port: port
 			});
