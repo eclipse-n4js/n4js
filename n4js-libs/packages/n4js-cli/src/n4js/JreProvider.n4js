@@ -82,17 +82,22 @@ export public async function ensureJRE(log: {function(string)} = npmlog.info) : 
     }
 
     let versionInfo = getJavaVersionInfo();
-    if (versionInfo.suffices) {
-        log("Global JRE found in version " + versionInfo.version);
-        return;
+    if (versionInfo.version) {
+        if (versionInfo.suffices) {
+            log("Global JRE found in version " + versionInfo.version);
+            return;
+        } else {
+            log("Global JRE found in version " + versionInfo.version + " but required version is " + JRE_VERSION + ".");
+        }
+
+    } else {
+        log("Global JRE not found.");
     }
 
     // Download and extract JRE
     const jreInfo = getJreInfo(log);
     if (jreInfo) {
-        let msg = "Global JRE found in version " + versionInfo.version + " but required version is " + JRE_VERSION + ".";
-        msg += " Downloading and extracting JRE into local folder.";
-        log(msg);
+        log("Downloading and extracting JRE into local folder.");
 
         await downloadJRE(jreInfo, log);
         extractJRE(jreInfo, log);
