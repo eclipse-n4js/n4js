@@ -61,7 +61,9 @@ export function getJavaCommand(log: {function(string)}) : string {
     return JAVA_DEFAULT;
 }
 
-
+/**
+ * Returns true iff the JRE that will be used is installed to the local bin directory of this package.
+ */
 export function isLocalJre(javaPath: string): boolean {
     return !!javaPath && (javaPath != JAVA_DEFAULT);
 }
