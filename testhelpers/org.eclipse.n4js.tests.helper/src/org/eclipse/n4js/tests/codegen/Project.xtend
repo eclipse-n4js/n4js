@@ -29,8 +29,8 @@ public class Project {
 	 * Represents a source folder that has a name and contains modules.
 	 */
 	public static class SourceFolder {
-		private String name;
-		private List<Module> modules
+		final public String name;
+		final public List<Module> modules = newLinkedList();
 
 		/**
 		 * Creates a new instance with the given parameters.
@@ -50,8 +50,6 @@ public class Project {
 		 * @return this source folder
 		 */
 		public def addModule(Module module) {
-			if (modules === null)
-				modules = newLinkedList();
 			modules.add(Objects.requireNonNull(module));
 			return this;
 		}
@@ -80,14 +78,14 @@ public class Project {
 		}
 	}
 
-	String projectName;
-	String vendorId;
-	String vendorName;
-	ProjectType projectType;
-	String projectVersion = "1.0.0";
-	String outputFolder = "src-gen";
-	List<SourceFolder> sourceFolders;
-	List<Project> projectDependencies;
+	public String projectName;
+	public String vendorId;
+	public String vendorName;
+	public ProjectType projectType;
+	public String projectVersion = "1.0.0";
+	public String outputFolder = "src-gen";
+	public List<SourceFolder> sourceFolders;
+	public List<Project> projectDependencies;
 
 	/**
 	 * Same as {@link #Project(String, String, String, ProjectType)}, but with
@@ -192,7 +190,7 @@ public class Project {
 	/**
 	 * Generates the {@link IN4JSProject#PACKAGE_JSON} for this project.
 	 */
-	public def generate() '''
+	public def String generate() '''
 		{
 			"name": "«projectName»",
 			"version": "«projectVersion»",
@@ -222,8 +220,7 @@ public class Project {
 				}
 		}
 	'''
-
-	private static def projectTypeToString(ProjectType type) {
+	private static def String projectTypeToString(ProjectType type) {
 		return switch (type) {
 			case API: "api"
 			case APPLICATION: "application"
@@ -237,7 +234,6 @@ public class Project {
 			case DEFINITION: "definition"
 		};
 	}
-
 	/**
 	 * Creates this project in the given parent directory, which must exist.
 	 *
@@ -245,32 +241,28 @@ public class Project {
 	 * the given parent directory. If there already exists a file or directory with that name
 	 * within the given parent directory, that file or directory will be (recursively) deleted.
 	 *
-	 * Afterward, the manifest file and the source folders are created within the newly created
+	 * Afterward, the package.json file and the source folders are created within the newly created
 	 * project directory.
 	 *
 	 * @param parentDirectoryPath the path to the parent directory
 	 *
 	 * @return the project directory
 	 */
-	public def create(Path parentDirectoryPath) {
+	public def File create(Path parentDirectoryPath) {
 		var File parentDirectory = Objects.requireNonNull(parentDirectoryPath).toFile
 		if (!parentDirectory.exists)
 			throw new IOException("'" + parentDirectory + "' does not exist")
 		if (!parentDirectory.directory)
 			throw new IOException("'" + parentDirectory + "' is not a directory");
-
 		val File projectDirectory = new File(parentDirectory, projectName);
 		if (projectDirectory.exists)
 			FileDeleter.delete(projectDirectory);
 		projectDirectory.mkdir();
-
 		createProjectDescriptionFile(projectDirectory);
 		createModules(projectDirectory);
-
 		return projectDirectory;
 	}
-
-	private def createProjectDescriptionFile(File parentDirectory) {
+	private def void createProjectDescriptionFile(File parentDirectory) {
 		val File filePath = new File(parentDirectory, IN4JSProject.PACKAGE_JSON);
 		var FileWriter out = null;
 		try {
@@ -281,8 +273,7 @@ public class Project {
 				out.close();
 		}
 	}
-
-	private def createModules(File parentDirectory) {
+	private def void createModules(File parentDirectory) {
 		for (sourceFolder: sourceFolders)
 			sourceFolder.create(parentDirectory)
 	}
