@@ -61,7 +61,7 @@ class N4JSElementKeywordProvider extends TypesKeywordProvider {
 	}
 
 	def dispatch String keyword(FunctionDeclaration functionDeclaration) {
-		"function"
+		null // "function" not returned since it is already part of TFunction#getFunctionAsString()
 	}
 
 	def dispatch String keyword(N4ClassifierDefinition n4ClassifierDefinition) {

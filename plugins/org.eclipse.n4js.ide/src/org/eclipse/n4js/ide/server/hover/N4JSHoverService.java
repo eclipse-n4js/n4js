@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.lsp4j.MarkedString;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
+import org.eclipse.n4js.jsdoc2spec.adoc.Html2ADocConverter;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider;
@@ -30,6 +31,7 @@ import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.util.ITextRegion;
 import org.eclipse.xtext.util.TextRegion;
 
+import com.google.common.base.Strings;
 import com.google.inject.Inject;
 
 /**
@@ -37,7 +39,6 @@ import com.google.inject.Inject;
  */
 public class N4JSHoverService extends HoverService {
 
-	private static final String MARKUP_KIND_PLAIN = "";
 	private static final String MARKUP_KIND_MARKDOWN = "markdown";
 
 	@Inject
@@ -49,6 +50,8 @@ public class N4JSHoverService extends HoverService {
 	@Inject
 	private EObjectAtOffsetHelper eobjectHelper;
 
+	final private Html2ADocConverter html2adocConverter = new Html2ADocConverter();
+
 	@Override
 	protected List<Either<String, MarkedString>> getContents(HoverContext ctx) {
 		List<Either<String, MarkedString>> contents = new LinkedList<>();
@@ -59,13 +62,15 @@ public class N4JSHoverService extends HoverService {
 		if (signature != null) {
 			String keyword = keywordProvider.keyword(element);
 			String signatureLabel = composeFirstLine(keyword, signature);
-			MarkedString mdSignatureLabel = new MarkedString(MARKUP_KIND_PLAIN, signatureLabel);
+			CharSequence signatureAdoc = html2adocConverter.transformHTML(signatureLabel);
+			MarkedString mdSignatureLabel = new MarkedString("n4js", signatureAdoc.toString());
 			contents.add(Either.forRight(mdSignatureLabel));
 		}
 
 		String documentation = documentationProvider.getDocumentation(element);
 		if (documentation != null) {
-			MarkedString mdDocumentation = new MarkedString(MARKUP_KIND_MARKDOWN, documentation);
+			CharSequence docuAdoc = html2adocConverter.transformHTML(documentation);
+			MarkedString mdDocumentation = new MarkedString(MARKUP_KIND_MARKDOWN, docuAdoc.toString());
 			contents.add(Either.forRight(mdDocumentation));
 		}
 
@@ -85,9 +90,9 @@ public class N4JSHoverService extends HoverService {
 	}
 
 	private String composeFirstLine(String keyword, String label) {
-		String htmlKeyword = keyword;
-		String htmlLabel = (label == null) ? "" : label;
-		String line = htmlKeyword + " " + htmlLabel;
+		String htmlKeyword = Strings.isNullOrEmpty(keyword) ? "" : keyword + " ";
+		String htmlLabel = Strings.nullToEmpty(label);
+		String line = htmlKeyword + htmlLabel;
 
 		return line;
 	}
