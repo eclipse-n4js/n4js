@@ -13,10 +13,10 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as childProcess from "child_process";
-import {BIN_DIR} from 'Globals';
+import {RESOURCES_DIR} from 'Globals';
 
-const JAVA_SOURCE_FILE = path.resolve(BIN_DIR, "PrintJavaVersion.java");
-const JAVA_CLASS_FILE = path.resolve(BIN_DIR, "PrintJavaVersion.class");
+const JAVA_SOURCE_FILE = path.resolve(RESOURCES_DIR, "PrintJavaVersion.java");
+const JAVA_CLASS_FILE = path.resolve(RESOURCES_DIR, "PrintJavaVersion.class");
 
 
 /**

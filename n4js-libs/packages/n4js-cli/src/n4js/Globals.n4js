@@ -15,6 +15,7 @@ import * as path from "path";
 export const JAVA_DEFAULT = "java";
 export const JAVA_OPTION_XMX = "-Xmx4096m";
 export const BIN_DIR = path.resolve(__dirname, "..", "bin");
+export const RESOURCES_DIR = path.resolve(__dirname, "..", "resources");
 export const JRE_DIR = path.resolve(BIN_DIR, "jre");
 export const N4JSC_JAR = path.resolve(BIN_DIR, "n4jsc.jar");
 export const JRE_URL_DIR = "https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-11.0.6%2B10/";
