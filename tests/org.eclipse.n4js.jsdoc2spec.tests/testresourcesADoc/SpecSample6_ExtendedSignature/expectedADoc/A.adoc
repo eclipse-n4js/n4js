@@ -21,7 +21,7 @@ include::{find}config.adoc[]
 
 [[gsec:spec_A.func]]
 [role=memberdoc]
-=== ++Function func++
+=== ++ func++
 
 ==== Signature
 

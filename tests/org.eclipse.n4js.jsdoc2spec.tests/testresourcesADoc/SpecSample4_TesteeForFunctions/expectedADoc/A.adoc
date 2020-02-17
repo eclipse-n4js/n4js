@@ -58,7 +58,7 @@ Spec for Var barvar
 
 [[gsec:spec_A.foofunc]]
 [role=memberdoc]
-=== ++Function foofunc++
+=== ++ foofunc++
 
 ==== Signature
 

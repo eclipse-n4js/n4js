@@ -90,6 +90,8 @@ public class N4JSHoverService extends HoverService {
 	}
 
 	private String composeFirstLine(String keyword, String label) {
+		// TFunction#getFunctionAsString() already contains 'function'
+		keyword = ("function".equals(keyword)) ? "" : keyword;
 		String htmlKeyword = Strings.isNullOrEmpty(keyword) ? "" : keyword + " ";
 		String htmlLabel = Strings.nullToEmpty(label);
 		String line = htmlKeyword + htmlLabel;

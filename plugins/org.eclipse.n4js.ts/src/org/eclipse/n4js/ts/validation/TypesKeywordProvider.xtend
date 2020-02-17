@@ -127,7 +127,7 @@ class TypesKeywordProvider {
 	}
 
 	def dispatch String keyword(TFunction function) {
-		null // "function" not returned since it is already part of TFunction#getFunctionAsString()
+		"function"
 	}
 
 	def dispatch String keyword(TGetter n4Getter) {
