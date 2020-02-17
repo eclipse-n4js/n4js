@@ -104,6 +104,8 @@ class TModule extends SyntaxRelatedTElement, TAnnotableElement {
 
 	refers TModule[] dependenciesRunTime
 	refers TModule[] dependenciesLoadTimeForInheritance
+	refers TModule[] runTimeCyclicModules
+	refers TModule[] ltdxs
 
 	// TODO jvp: what does that mean:
 	// TODO: make sure these are only top level types in the script

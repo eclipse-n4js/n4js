@@ -84,11 +84,8 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 			return;
 		}
 		val containingModule = (idRef.eResource as N4JSResource).module;
-		// we know that we depend on the target module (because we have a reference to an identifiable element there);
-		// so, to check for a cycle, we just check if there is a dependency from the target module back to us:
-		val hasCycle = CrossReferenceUtils.dependsOn(targetModule, containingModule);
-		// (note that the above also works for targetModule==containingModule, because then the check boils down to
-		// checking if containingModule is contained in any cycle)
+		val hasCycle = (targetModule === containingModule && !containingModule.runTimeCyclicModules.empty)
+			|| (targetModule !== containingModule && containingModule.runTimeCyclicModules.contains(targetModule)); // FIXME linear search
 		if (hasCycle) {
 			val message = IssueCodes.getMessageForLTD_ILLEGAL_LOAD_TIME_REFERENCE();
 			addIssue(message, idRef, IssueCodes.LTD_ILLEGAL_LOAD_TIME_REFERENCE);
@@ -102,7 +99,7 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 		}
 		val containingModule = (importDecl.eResource as N4JSResource).module;
 		val targetModule = importDecl.module;
-		val ltdxs = CrossReferenceUtils.getLTDXsOf(targetModule);
+		val ltdxs = targetModule.ltdxs;
 
 		val isSingletonLTSlaveInThisProject = ltdxs.size() == 1
 			&& !containingModule.equals(Iterables.getFirst(ltdxs, null));

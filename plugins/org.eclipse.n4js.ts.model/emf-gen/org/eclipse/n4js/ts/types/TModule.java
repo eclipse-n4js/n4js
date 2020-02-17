@@ -37,6 +37,8 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#isReconciled <em>Reconciled</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getDependenciesRunTime <em>Dependencies Run Time</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getDependenciesLoadTimeForInheritance <em>Dependencies Load Time For Inheritance</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.TModule#getRunTimeCyclicModules <em>Run Time Cyclic Modules</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.TModule#getLtdxs <em>Ltdxs</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getTopLevelTypes <em>Top Level Types</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getVariables <em>Variables</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getInternalTypes <em>Internal Types</em>}</li>
@@ -316,6 +318,30 @@ public interface TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 * @generated
 	 */
 	EList<TModule> getDependenciesLoadTimeForInheritance();
+
+	/**
+	 * Returns the value of the '<em><b>Run Time Cyclic Modules</b></em>' reference list.
+	 * The list contents are of type {@link org.eclipse.n4js.ts.types.TModule}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Run Time Cyclic Modules</em>' reference list.
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_RunTimeCyclicModules()
+	 * @model
+	 * @generated
+	 */
+	EList<TModule> getRunTimeCyclicModules();
+
+	/**
+	 * Returns the value of the '<em><b>Ltdxs</b></em>' reference list.
+	 * The list contents are of type {@link org.eclipse.n4js.ts.types.TModule}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Ltdxs</em>' reference list.
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_Ltdxs()
+	 * @model
+	 * @generated
+	 */
+	EList<TModule> getLtdxs();
 
 	/**
 	 * Returns the value of the '<em><b>Top Level Types</b></em>' containment reference list.
