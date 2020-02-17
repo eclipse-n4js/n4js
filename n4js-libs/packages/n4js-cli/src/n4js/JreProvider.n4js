@@ -1,0 +1,182 @@
+/*
+ * Copyright (c) 2019 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+import * as path from "path";
+import * as childProcess from "child_process";
+import * as fs from "fs";
+
+import * as lib_decompress+ from "decompress";
+import * as npmlog+ from "npmlog";
+import * as followRedirects+ from 'follow-redirects';
+import {JreInfo, Platform, JRE_INFO_MAP, JAVA_DEFAULT, BIN_DIR, JRE_URL_DIR, JRE_DIR} from 'Globals';
+import {detectJavaVersion} from 'JavaVersion';
+
+const decompress = (lib_decompress.default as any+) as {function(string, string): Promise<any,any>};
+export const JRE_VERSION = 11;
+
+
+
+
+
+/**
+ * Returns an object literal that contains the Java version of the available environment
+ * and the boolean flag 'suffices' which is true if n4jsc.jar can be executed using this Java version.
+ */
+export public function getJavaVersionInfo() : ~Object with {version: int, suffices: boolean} {
+    const version = detectJavaVersion();
+    const suffices: boolean = !!version && version == JRE_VERSION;
+
+    return {version: version, suffices: suffices};
+}
+
+/**
+ * Returns Java command "java".
+ * In case the bin folder contains a JRE, this function returns the absolute path
+ * to the Java executable.
+ */
+export function getJavaCommand(log: {function(string)}) : string {
+    const jreInfo = getJreInfo(log);
+    if (jreInfo && fs.existsSync(JRE_DIR)) {
+        const directories = fs.readdirSync(JRE_DIR, { withFileTypes: true }) as fs.Dirent[];
+        const dirNames = directories
+            .filter(dirent => dirent.isDirectory())
+            .map(dirent => dirent.name) as string[];
+
+        for (const dirName of dirNames) {
+            const absJreJavaPath = path.resolve(JRE_DIR, dirName, jreInfo.bin);
+            if (fs.existsSync(absJreJavaPath)) {
+                return absJreJavaPath;
+            }
+        }
+    }
+
+    return JAVA_DEFAULT;
+}
+
+/**
+ * Returns true iff the JRE that will be used is installed to the local bin directory of this package.
+ */
+export function isLocalJre(javaPath: string): boolean {
+    return !!javaPath && (javaPath != JAVA_DEFAULT);
+}
+
+
+/**
+ * Checks whether Java 11 is available globally. If not checks whether 
+ * Java is available in the local bin folder. If not Java JRE is downloaded
+ * and extracted to the local bin folder.
+ */
+export public async function ensureJRE(log: {function(string)} = npmlog.info) : void {
+    const java = getJavaCommand(log);
+    if (isLocalJre(java)) {
+        log("Local JRE found.");
+        return;
+    }
+
+    let versionInfo = getJavaVersionInfo();
+    if (versionInfo.version) {
+        if (versionInfo.suffices) {
+            log("Global JRE found in version " + versionInfo.version);
+            return;
+        } else {
+            log("Global JRE found in version " + versionInfo.version + " but required version is " + JRE_VERSION + ".");
+        }
+
+    } else {
+        log("Global JRE not found.");
+    }
+
+    // Download and extract JRE
+    const jreInfo = getJreInfo(log);
+    if (jreInfo) {
+        log("Downloading and extracting JRE into local folder.");
+
+        await downloadJRE(jreInfo, log);
+        extractJRE(jreInfo, log);
+
+    } else {
+        log("Platform not supported: " + process.platform);
+        log("Please install JRE in version " + JRE_VERSION + " and make the call to 'bin/java' globally available.");
+    }
+}
+
+function getJreInfo(log: {function(string)}) : JreInfo {
+    const platform = process.platform as Platform;
+    if (platform == Platform.linux && isMuslLibc()) {
+        log("Musl libc is not supported by Adopt OpenJDK");
+        return null;
+    }
+    return JRE_INFO_MAP.get(process.platform as Platform);
+}
+
+
+/**
+ * Downloads the AdoptOpenJDK JRE.
+ */
+async function downloadJRE(jreInfo: JreInfo, log: {function(string)}) : Promise<any, any> {
+    const jreUrl = JRE_URL_DIR + jreInfo.name;
+    log("downloading JRE from " + jreUrl);
+
+    if (!fs.existsSync(BIN_DIR)) {
+        log("creating dir " + BIN_DIR);
+        fs.mkdirSync(BIN_DIR);
+    }
+
+    return new Promise<any, any>((resolve, reject) => {
+            followRedirects.https.get(jreUrl,
+                (response : any+) => {
+                    const jreFileName = getJreFileName(jreInfo);
+                    const file = fs.createWriteStream(jreFileName);
+                    response.pipe(file);
+                    log("receiving JRE ...");
+
+                    response.on("error",
+                        err => {
+                            log("n4js-cli" + err);
+                            reject(err);
+                        });
+                    response.on("end",
+                        () => {
+                            log("JRE written to file " + jreFileName);
+                            resolve();
+                        });
+                });
+        });
+}
+
+/** 
+ * Extracts the downloaded JRE to the folder bin/JRE_LOCAL_DIR
+ */
+function extractJRE(jreInfo: JreInfo, log: {function(string)}) {
+    if (fs.existsSync(JRE_DIR)) {
+        log("Cleaning " + JRE_DIR);
+        fs.rmdirSync(JRE_DIR, {recursive: true});
+    }
+
+    const jreFileName = getJreFileName(jreInfo);
+    
+    Promise.resolve(decompress(jreFileName, JRE_DIR)).then(files => {
+            log("JRE extracted to " + JRE_DIR);
+        });
+}
+
+function getJreFileName(jreInfo: JreInfo): string {
+    return path.resolve(BIN_DIR, jreInfo.name);
+}
+
+/** Returns true if the installed libc is musl */
+function isMuslLibc() {
+    const output = childProcess.spawnSync('ldd', ['--version']).stderr.toString('utf8');
+    if (output.indexOf('musl') > -1) {
+        return true;
+    }
+    return false;
+}

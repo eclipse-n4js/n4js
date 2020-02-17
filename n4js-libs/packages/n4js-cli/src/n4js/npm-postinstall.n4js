@@ -9,11 +9,12 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-import * as lib_n4jsc from "n4jsc";
+import * as lib_jreProvider from "JreProvider";
 import * as lib_fs from "fs";
 import * as lib_http from "n4js-runtime-node/http";
 import * as lib_https from "n4js-runtime-node/https";
 import * as log+ from "npmlog";
+import {N4JSC_JAR} from "Globals";
 
 
 const NPM_NAME = process.env.npm_package_name ?? "n4js-cli";
@@ -24,7 +25,7 @@ const LOG_FN = (text: string) => {log.info(LOG_NAME, text);}
 
 
 replaceN4jscJar(process.env.N4JSC_JAR as string);
-lib_n4jsc.ensureJRE(LOG_FN);
+lib_jreProvider.ensureJRE(LOG_FN);
 
 
 /**
@@ -36,21 +37,20 @@ function replaceN4jscJar(envN4jscJar: string) {
         return;
     }
 
-    const outPath = lib_n4jsc.getN4jscPath();
-    LOG_FN(`Replacing ${outPath} with ${envN4jscJar}`);
+    LOG_FN(`Replacing ${N4JSC_JAR} with ${envN4jscJar}`);
 
-    if (lib_fs.existsSync(outPath)) {
+    if (lib_fs.existsSync(N4JSC_JAR)) {
         // remove to notice any problems
-        lib_fs.unlinkSync(outPath);
+        lib_fs.unlinkSync(N4JSC_JAR);
     }
 
     if (/^https?:\/\//i.test(envN4jscJar)) {
         // interpret 'envN4jscJar' as url
-        download(envN4jscJar, outPath);
+        download(envN4jscJar, N4JSC_JAR);
 
     } else {
         // interpret 'envN4jscJar' as file system path
-        lib_fs.copyFileSync(envN4jscJar, outPath);
+        lib_fs.copyFileSync(envN4jscJar, N4JSC_JAR);
     }
 }
 
