@@ -21,7 +21,7 @@ import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TEnum;
 import org.eclipse.n4js.ts.types.TInterface;
 import org.eclipse.n4js.ts.types.TModule;
-import org.eclipse.n4js.ts.utils.TypeUtils;
+import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.xtext.EcoreUtil2;
 
 /**
@@ -31,17 +31,18 @@ import org.eclipse.xtext.EcoreUtil2;
  */
 public class CrossReferenceUtils {
 
-	public static TModule getTargetModule(IdentifierRef idRef) {
+	public static TModule getTargetModule(IdentifierRef idRef, JavaScriptVariantHelper javaScriptVariantHelper) {
 		IdentifiableElement target = idRef.getId();
 		if (target == null || target.eIsProxy()) {
 			return null;
 		}
 
-		boolean isDefSiteStructInterface = target instanceof TInterface
-				&& TypeUtils.isStructural(((TInterface) target).getTypingStrategy());
+		boolean isNonN4JSInterfaceInN4JSD = target instanceof TInterface
+				&& javaScriptVariantHelper.isExternalMode(target)
+				&& !AnnotationDefinition.N4JS.hasAnnotation((TInterface) target);
 		boolean isStringBasedEnum = target instanceof TEnum
 				&& AnnotationDefinition.STRING_BASED.hasAnnotation((TEnum) target);
-		if (isDefSiteStructInterface || isStringBasedEnum) {
+		if (isNonN4JSInterfaceInN4JSD || isStringBasedEnum) {
 			return null;
 		}
 

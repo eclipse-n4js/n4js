@@ -57,7 +57,6 @@ import org.eclipse.n4js.ts.types.TMigratable
 import org.eclipse.n4js.ts.types.TMigration
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypableElement
-import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.utils.EcoreUtilN4
@@ -617,11 +616,11 @@ public class ASTProcessor extends AbstractProcessor {
 			} else {
 				targetRaw
 			};
-			val isDefSiteStructInterface = target instanceof TInterface
-				&& TypeUtils.isStructural((target as TInterface).typingStrategy);
+			val isNonN4JSInterfaceInN4JSD = target instanceof TInterface
+				&& variantHelper.isExternalMode(target) && !AnnotationDefinition.N4JS.hasAnnotation(target as TInterface);
 			val isStringBasedEnum = target instanceof TEnum
 				&& AnnotationDefinition.STRING_BASED.hasAnnotation(target as TEnum);
-			if (!isDefSiteStructInterface && !isStringBasedEnum) {
+			if (!isNonN4JSInterfaceInN4JSD && !isStringBasedEnum) {
 				cache.elementsReferencedAtRunTime += target;
 				if (target !== targetRaw) {
 					cache.elementsReferencedAtRunTime += targetRaw;
@@ -638,9 +637,9 @@ public class ASTProcessor extends AbstractProcessor {
 				}
 			}
 		} else if (node instanceof N4ClassifierDefinition) {
-			val isDefSiteStructInterface = node instanceof N4InterfaceDeclaration
-				&& TypeUtils.isStructural((node as N4InterfaceDeclaration).typingStrategy);
-			if (!isDefSiteStructInterface) {
+			val isNonN4JSInterfaceInN4JSD = node instanceof N4InterfaceDeclaration
+				&& variantHelper.isExternalMode(node) && !AnnotationDefinition.N4JS.hasAnnotation(node as N4InterfaceDeclaration);
+			if (!isNonN4JSInterfaceInN4JSD) {
 				val targetTypeRefs = node.superClassifierRefs;
 				for (targetTypeRef : targetTypeRefs) {
 					val targetDeclType = targetTypeRef?.declaredType;

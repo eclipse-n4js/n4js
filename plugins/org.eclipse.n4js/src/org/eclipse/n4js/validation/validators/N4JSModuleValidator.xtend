@@ -31,6 +31,7 @@ import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.utils.CrossReferenceUtils
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
+import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.validation.N4JSResourceValidator
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.IQualifiedNameConverter
@@ -63,6 +64,8 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 	@Inject IQualifiedNameConverter qualifiedNameConverter
 
 	@Inject IN4JSCore n4jscore;
+	
+	@Inject JavaScriptVariantHelper javaScriptVariantHelper;
 
 	/**
 	 * NEEDED
@@ -79,7 +82,7 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 		if (!N4JSASTUtils.isTopLevelCode(idRef)) {
 			return; // only interested in top-level == load-time references here!
 		}
-		val targetModule = CrossReferenceUtils.getTargetModule(idRef);
+		val targetModule = CrossReferenceUtils.getTargetModule(idRef, javaScriptVariantHelper);
 		if (targetModule === null || targetModule.eIsProxy) {
 			return;
 		}
