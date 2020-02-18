@@ -29,7 +29,7 @@ export function getActivate(vscode, vscodeLC) {
 				writer = socket;
 				reader = socket;
 			} else {
-				outputChannel.appendLine('Start new n4js lsp server.');
+				outputChannel.appendLine('Start new N4JS LSP server.');
 				await startN4jsLspServerAndConnect(PORT, outputChannel);
 				setOutputAppenders(vscode, outputChannel);
 				writer = n4jscProcess.stdin;
@@ -151,12 +151,5 @@ async function sleep(ms) {
 	return new Promise((resolve)=>{
 		setTimeout(resolve, ms);
 	});
-}
-function serialize(object) {
-	let output = '';
-	for(const property in object) {
-		output += property + ': ' + object[property] + '; ';
-	}
-	return output;
 }
 //# sourceMappingURL=extensionProvider.map

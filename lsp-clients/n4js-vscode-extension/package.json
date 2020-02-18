@@ -2,7 +2,7 @@
 	"name": "n4js-vscode-extension",
 	"displayName": "N4JS VSCode extension",
 	"description": "Language support for N4JS",
-	"version": "0.19.3",
+	"version": "0.19.4",
 	"publisher": "n4js",
 	"license": "EPL-1.0",
 	"repository": {
@@ -76,7 +76,7 @@
 					],
 					"enumDescriptions": [
 						"No tracing data is displayed.",
-						"Tracing data is displayed on the Output of N4JS language server"
+						"Tracing data is displayed in the channel 'N4JS language server' of the VSCode Output View"
 					],
 					"description": "Enables tracing of messages sent to the N4JS server. This trace can be used to diagnose N4JS Server issues. The trace may contain file paths, source code, and other potentially sensitive information from your project."
 				}
