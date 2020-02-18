@@ -80,7 +80,6 @@ public class CommandRebuildTest extends AbstractIdeTest<Void> {
 		setFileCreationDate(prjStatePath);
 		setFileCreationDate(genFileStatePath);
 
-		// wait two seconds because file time does not consider milliseconds
 		languageClient.resetCounters();
 	}
 
@@ -128,6 +127,7 @@ public class CommandRebuildTest extends AbstractIdeTest<Void> {
 		BasicFileAttributeView attributes = Files.getFileAttributeView(filePath, BasicFileAttributeView.class);
 		FileTime time = FileTime.fromMillis(FILE_TIME_MILLISECONDS);
 		attributes.setTimes(time, time, time);
+		assertEquals(FILE_TIME_MILLISECONDS, filePath);
 	}
 
 }
