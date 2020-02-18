@@ -13,7 +13,6 @@ package org.eclipse.n4js.postprocessing;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -219,9 +218,8 @@ public final class ASTMetaInfoCache {
 	/* package */ final Set<EObject> astNodesCurrentlyBeingTyped = new LinkedHashSet<>();
 	/* package */ final Queue<EObject> postponedSubTrees = new LinkedList<>(); // using LinkedList as FIFO queue, here
 	/* package */ final List<FunctionOrFieldAccessor> potentialContainersOfLocalArgumentsVariable = new LinkedList<>();
-	/* package */ final Set<IdentifiableElement> elementsReferencedAtRunTime = new HashSet<>();
-	/* package */ final Set<TModule> modulesReferencedAtRunTime = new HashSet<>();
-	/* package */ final Set<TModule> modulesReferencedAtLoadTimeForInheritance = new HashSet<>();
+	/* package */ final Set<IdentifiableElement> elementsReferencedAtRunTime = new LinkedHashSet<>();
+	/* package */ final Set<TModule> modulesReferencedAtLoadTimeForInheritance = new LinkedHashSet<>();
 
 	// @formatter:on
 
@@ -230,6 +228,8 @@ public final class ASTMetaInfoCache {
 		astNodesCurrentlyBeingTyped.clear();
 		postponedSubTrees.clear();
 		potentialContainersOfLocalArgumentsVariable.clear();
+		elementsReferencedAtRunTime.clear();
+		modulesReferencedAtLoadTimeForInheritance.clear();
 	}
 
 	/* package */ boolean isPostProcessing() {

@@ -12,10 +12,8 @@ package org.eclipse.n4js.postprocessing;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
@@ -34,7 +32,6 @@ import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.typesbuilder.N4JSTypesBuilder;
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
-import org.eclipse.n4js.utils.CrossReferenceUtils;
 import org.eclipse.n4js.utils.EcoreUtilN4;
 import org.eclipse.n4js.utils.TameAutoClosable;
 import org.eclipse.n4js.utils.UtilN4;
@@ -59,6 +56,8 @@ public class N4JSPostProcessor implements PostProcessor {
 
 	@Inject
 	private ASTProcessor astProcessor;
+	@Inject
+	private RunTimeDependencyProcessor runTimeDependencyProcessor;
 	@Inject
 	private OperationCanceledManager operationCanceledManager;
 	@Inject
@@ -99,21 +98,7 @@ public class N4JSPostProcessor implements PostProcessor {
 	public void finalizePostProcessing(PostProcessingAwareResource resource, CancelIndicator cancelIndicator) {
 		final N4JSResource resourceCasted = (N4JSResource) resource;
 		final TModule module = resourceCasted.getModule();
-
-		Set<TModule> ltdxs = new HashSet<>();
-		Set<TModule> cyclicModules = CrossReferenceUtils.getAllCyclicRunTimeDependentModules(module);
-		for (TModule cyclicModule : cyclicModules) {
-			if (cyclicModule.getDependenciesLoadTimeForInheritance().contains(module)) {
-				ltdxs.add(cyclicModule);
-			}
-		}
-
-		EcoreUtilN4.doWithDeliver(false, () -> {
-			module.getRunTimeCyclicModules().clear();
-			module.getRunTimeCyclicModules().addAll(cyclicModules);
-			module.getLtdxs().clear();
-			module.getLtdxs().addAll(ltdxs);
-		}, module);
+		runTimeDependencyProcessor.computeAndStoreRunTimeCyclesInTModule(module);
 	}
 
 	@Override

@@ -36,6 +36,7 @@ import org.eclipse.n4js.ts.typeRefs.Versionable
 import org.eclipse.n4js.ts.typeRefs.VersionedReference
 import org.eclipse.n4js.ts.types.ComposedMemberCache
 import org.eclipse.n4js.ts.types.IdentifiableElement
+import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.ParameterizedTypeRefIterable
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TEnum
@@ -178,8 +179,6 @@ class ImportDeclaration extends AnnotableScriptElement {
 	refers TModule module
 	transient String moduleSpecifierAsText
 	transient ModuleSpecifierForm moduleSpecifierForm
-	/* Tells whether this import declaration will be present in the transpiler output code. Set during AST traversal. */
-	transient boolean retainedAtRunTime
 
 	/*
 	 * Tells if this import is a so-called "bare import" of the form:
@@ -189,6 +188,15 @@ class ImportDeclaration extends AnnotableScriptElement {
 	 */
 	op boolean isBare() {
 		return importSpecifiers.empty;
+	}
+
+	/*
+	 * Tells whether this import declaration will be present in the transpiled output code.
+	 * Derived from {@link ImportSpecifier#isRetainedAtRunTime() retainedAtRunTime} and
+	 * therefore only valid after AST traversal has completed.
+	 */
+	op boolean isRetainedAtRunTime() {
+		return isBare() || importSpecifiers.exists[isRetainedAtRunTime()];
 	}
 }
 
@@ -221,10 +229,16 @@ enum ModuleSpecifierForm {
 }
 
 abstract class ImportSpecifier {
-	/** Transient flag to keep track of actual usage during scoping.
+	/*
+	 * Transient flag to keep track of actual usage during scoping.
 	 * See {@code org.eclipse.n4js.scoping.imports.OriginAwareScope}
 	 */
 	transient boolean flaggedUsedInCode
+	/*
+	 * Tells whether this import specifier will be present in the transpiled output code.
+	 * Set at the end of AST traversal.
+	 */
+	transient boolean retainedAtRunTime
 }
 
 class NamedImportSpecifier extends ImportSpecifier {
@@ -1062,6 +1076,23 @@ class ParenExpression extends PrimaryExpression {
 class IdentifierRef extends PrimaryExpression, StrictModeRelevant, org.eclipse.n4js.ts.typeRefs.Versionable {
 	refers IdentifiableElement ^id
 	transient String idAsText
+
+	/*
+	 * Similar to {@link IdentifierRef#getId() getId()}, but in case of references via the namespace of
+	 * a namespace import this method returns the actually referenced element instead of the
+	 * {@link ModuleNamespaceVirtualType} representing the namespace.
+	 */
+	op IdentifiableElement getTargetElement() {
+		val targetRaw = this.id;
+		if (targetRaw instanceof ModuleNamespaceVirtualType) {
+			val parent = this.eContainer;
+			if (parent instanceof ParameterizedPropertyAccessExpression) {
+				return parent.property;
+			}
+		}
+		return targetRaw;
+	}
+
 	/**
 	 * IdentifierReference : Identifier
 	 * 1. If this IdentifierReference is contained in strict mode code and StringValue of Identifier is "eval" or "arguments", return false.

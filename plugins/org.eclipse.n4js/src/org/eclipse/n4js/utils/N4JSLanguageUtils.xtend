@@ -33,13 +33,16 @@ import org.eclipse.n4js.n4JS.IndexedAccessExpression
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
+import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4EnumLiteral
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4GetterDeclaration
+import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.N4MemberAnnotationList
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
+import org.eclipse.n4js.n4JS.N4TypeDeclaration
 import org.eclipse.n4js.n4JS.NewExpression
 import org.eclipse.n4js.n4JS.NullLiteral
 import org.eclipse.n4js.n4JS.NumericLiteral
@@ -73,6 +76,7 @@ import org.eclipse.n4js.ts.types.MemberAccessModifier
 import org.eclipse.n4js.ts.types.TAnnotableElement
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
+import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TField
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TInterface
@@ -93,6 +97,7 @@ import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
+import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
@@ -912,6 +917,37 @@ public class N4JSLanguageUtils {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Tells whether the given declaration will have a representation in the transpiled output code.
+	 * If this method returns <code>false</code>, the declaration and its type exists only at compile type.
+	 * <p>
+	 * The implementation of this method does *NOT* rely on type model elements and can therefore be used
+	 * in early stages before the types builder has run and in the transpiler!
+	 */
+	def static boolean hasRunTimeRepresentation(N4TypeDeclaration typeDecl, JavaScriptVariantHelper javaScriptVariantHelper) {
+		val isNonN4JSInterfaceInN4JSD = typeDecl instanceof N4InterfaceDeclaration
+			&& javaScriptVariantHelper.isExternalMode(typeDecl)
+			&& !AnnotationDefinition.N4JS.hasAnnotation(typeDecl as N4InterfaceDeclaration);
+		val isStringBasedEnum = typeDecl instanceof N4EnumDeclaration
+			&& AnnotationDefinition.STRING_BASED.hasAnnotation(typeDecl as N4EnumDeclaration);
+		return !isNonN4JSInterfaceInN4JSD && !isStringBasedEnum;
+	}
+
+	/**
+	 * Tells whether the given identifiable element will have a representation in the transpiled output code.
+	 * If this method returns <code>false</code>, the element exists only at compile type.
+	 * <p>
+	 * The implementation of this method does *NOT* rely on the AST and can therefore be used in resources
+	 * that were loaded from the Xtext index.
+	 */
+	def static boolean hasRunTimeRepresentation(IdentifiableElement element, JavaScriptVariantHelper javaScriptVariantHelper) {
+		val isNonN4JSInterfaceInN4JSD = element instanceof TInterface
+			&& javaScriptVariantHelper.isExternalMode(element) && !AnnotationDefinition.N4JS.hasAnnotation(element as TInterface);
+		val isStringBasedEnum = element instanceof TEnum
+			&& AnnotationDefinition.STRING_BASED.hasAnnotation(element as TEnum);
+		return !isNonN4JSInterfaceInN4JSD && !isStringBasedEnum;
 	}
 
 	/**

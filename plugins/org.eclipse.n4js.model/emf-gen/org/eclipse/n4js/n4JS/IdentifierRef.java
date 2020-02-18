@@ -80,6 +80,19 @@ public interface IdentifierRef extends PrimaryExpression, StrictModeRelevant, Ve
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
+	 * Similar to {@link IdentifierRef#getId() getId()}, but in case of references via the namespace of
+	 * a namespace import this method returns the actually referenced element instead of the
+	 * {@link ModuleNamespaceVirtualType} representing the namespace.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	IdentifiableElement getTargetElement();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
 	 * *
 	 * IdentifierReference : Identifier
 	 * 1. If this IdentifierReference is contained in strict mode code and StringValue of Identifier is "eval" or "arguments", return false.

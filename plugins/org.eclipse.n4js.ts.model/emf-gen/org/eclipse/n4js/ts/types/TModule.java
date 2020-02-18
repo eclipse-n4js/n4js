@@ -300,6 +300,10 @@ public interface TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 * The list contents are of type {@link org.eclipse.n4js.ts.types.TModule}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Direct run-time dependencies of this module within same project.
+	 * Set at end of AST traversal (i.e. during main post-processing).
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Dependencies Run Time</em>' reference list.
 	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_DependenciesRunTime()
 	 * @model
@@ -312,6 +316,10 @@ public interface TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 * The list contents are of type {@link org.eclipse.n4js.ts.types.TModule}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Direct load-time dependencies of this module within same project iff caused by an extends/implements clause.
+	 * Set at end of AST traversal (i.e. during main post-processing).
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Dependencies Load Time For Inheritance</em>' reference list.
 	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_DependenciesLoadTimeForInheritance()
 	 * @model
@@ -324,6 +332,10 @@ public interface TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 * The list contents are of type {@link org.eclipse.n4js.ts.types.TModule}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Modules with a cyclic run-time dependency to this module. Never includes this module.
+	 * Set during finalization of post-processing.
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Run Time Cyclic Modules</em>' reference list.
 	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_RunTimeCyclicModules()
 	 * @model
@@ -336,6 +348,10 @@ public interface TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 * The list contents are of type {@link org.eclipse.n4js.ts.types.TModule}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Iff this module is an LTSlave, this property refers to the one or more LTDXs that turn this module into an LTSlave.
+	 * Set during finalization of post-processing.
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Ltdxs</em>' reference list.
 	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_Ltdxs()
 	 * @model

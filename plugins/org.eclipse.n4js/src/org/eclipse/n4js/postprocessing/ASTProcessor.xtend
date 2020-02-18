@@ -27,18 +27,13 @@ import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor
 import org.eclipse.n4js.n4JS.IdentifierRef
-import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
-import org.eclipse.n4js.n4JS.N4ClassifierDefinition
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
-import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
-import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
-import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.PropertyGetterDeclaration
 import org.eclipse.n4js.n4JS.PropertyMethodDeclaration
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
@@ -50,12 +45,8 @@ import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.YieldExpression
 import org.eclipse.n4js.n4idl.versioning.MigrationUtils
 import org.eclipse.n4js.resource.N4JSResource
-import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
-import org.eclipse.n4js.ts.types.TEnum
-import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMigratable
 import org.eclipse.n4js.ts.types.TMigration
-import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
@@ -63,7 +54,6 @@ import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.languages.N4LanguageUtils
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
-import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.xtext.util.CancelIndicator
 
@@ -102,6 +92,8 @@ public class ASTProcessor extends AbstractProcessor {
 	private TypeDeferredProcessor typeDeferredProcessor;
 	@Inject
 	private CompileTimeExpressionProcessor compileTimeExpressionProcessor;
+	@Inject
+	private RunTimeDependencyProcessor runTimeDependencyProcessor;
 	@Inject
 	private JavaScriptVariantHelper variantHelper;
 
@@ -187,31 +179,7 @@ public class ASTProcessor extends AbstractProcessor {
 			}
 		}
 		// phase 4: store run-time and load-time dependencies in TModule
-		script.module.dependenciesRunTime += cache.modulesReferencedAtRunTime
-		script.module.dependenciesLoadTimeForInheritance += cache.modulesReferencedAtLoadTimeForInheritance
-		for (importDecl : script.scriptElements.filter(ImportDeclaration)) {
-			if (importDecl.isBare) {
-				importDecl.retainedAtRunTime = true;
-			} else {
-				val iter = importDecl.importSpecifiers.iterator;
-				var boolean retained = false;
-				while (iter.hasNext && !retained) {
-					val importSpec = iter.next;
-					if (importSpec !== null) {
-						if (importSpec instanceof NamedImportSpecifier) { // also covers DefaultImportSpecifier
-							val importedElement = importSpec.importedElement;
-							retained = retained || cache.elementsReferencedAtRunTime.contains(importedElement);
-						} else if(importSpec instanceof NamespaceImportSpecifier) {
-							val namespaceVirtualType = importSpec.definedType;
-							retained = retained || cache.elementsReferencedAtRunTime.contains(namespaceVirtualType);
-						} else {
-							throw new IllegalStateException("unknown subclass of ImportSpecifier: " + importSpec.eClass.name);
-						}
-					}
-				}
-				importDecl.retainedAtRunTime = retained;
-			}
-		}
+		runTimeDependencyProcessor.storeDirectRunTimeDependenciesInTModule(script, cache);
 	}
 
 	/**
@@ -456,7 +424,7 @@ public class ASTProcessor extends AbstractProcessor {
 			}
 		}
 
-		recordReferencesToOtherModules(node, cache);
+		runTimeDependencyProcessor.recordRunTimeReferencesInCache(node, cache);
 
 		// register migrations with their source types
 		if (node instanceof FunctionDeclaration && 
@@ -604,72 +572,6 @@ public class ASTProcessor extends AbstractProcessor {
 
 			cache.storeLocalVariableReference(targetNode, sourceNode);
 		}
-	}
-
-	def private recordReferencesToOtherModules(EObject node, ASTMetaInfoCache cache) {
-		if (node instanceof IdentifierRef) {
-// FIXME use CrossReferenceUtils#getTargetModule() here!
-			val parent = node.eContainer;
-			val targetRaw = node.id;
-			val target = if (targetRaw instanceof ModuleNamespaceVirtualType && parent instanceof ParameterizedPropertyAccessExpression) {
-				(parent as ParameterizedPropertyAccessExpression).property
-			} else {
-				targetRaw
-			};
-			val isNonN4JSInterfaceInN4JSD = target instanceof TInterface
-				&& variantHelper.isExternalMode(target) && !AnnotationDefinition.N4JS.hasAnnotation(target as TInterface);
-			val isStringBasedEnum = target instanceof TEnum
-				&& AnnotationDefinition.STRING_BASED.hasAnnotation(target as TEnum);
-			if (!isNonN4JSInterfaceInN4JSD && !isStringBasedEnum) {
-				cache.elementsReferencedAtRunTime += target;
-				if (target !== targetRaw) {
-					cache.elementsReferencedAtRunTime += targetRaw;
-				}
-				// note: no need to cover the case that target is located in the AST because we are only interested in cross-module references anyway!
-				val targetModule = if (target !== null && !target.eIsProxy) EcoreUtil2.getContainerOfType(target, TModule);
-				if (isDifferentModuleInSameProject(targetModule, cache)) {
-					cache.modulesReferencedAtRunTime += targetModule;
-// FIXME remove the following:
-//					if (N4JSASTUtils.isTopLevelCode(node)) {
-////						cache.modulesReferencedAtLoadTimeNormal += targetModule;
-//cache.modulesReferencedAtLoadTimeForInheritance += targetModule;
-//					}
-				}
-			}
-		} else if (node instanceof N4ClassifierDefinition) {
-			val isNonN4JSInterfaceInN4JSD = node instanceof N4InterfaceDeclaration
-				&& variantHelper.isExternalMode(node) && !AnnotationDefinition.N4JS.hasAnnotation(node as N4InterfaceDeclaration);
-			if (!isNonN4JSInterfaceInN4JSD) {
-				val targetTypeRefs = node.superClassifierRefs;
-				for (targetTypeRef : targetTypeRefs) {
-					val targetDeclType = targetTypeRef?.declaredType;
-					cache.elementsReferencedAtRunTime += targetDeclType;
-					val targetModule = if (targetDeclType !== null && !targetDeclType.eIsProxy) EcoreUtil2.getContainerOfType(targetDeclType, TModule);
-					if (isDifferentModuleInSameProject(targetModule, cache)) {
-						cache.modulesReferencedAtRunTime += targetModule;
-						if (N4JSASTUtils.isTopLevelCode(node)) { // nested classifiers not supported yet, but let's be future proof
-							cache.modulesReferencedAtLoadTimeForInheritance += targetModule;
-						}
-					}
-				}
-			}
-		} else if (node instanceof ImportDeclaration) {
-			if (node.isBare) {
-				// must treat bare imports as a run-time dependency (instead of a pure compile-time dependency)
-				// because the transpiler can't remove bare imports, even though they are "unused" inside the
-				// importing module
-				val targetModule = node.module;
-				if (isDifferentModuleInSameProject(targetModule, cache)) {
-					cache.modulesReferencedAtRunTime += targetModule;
-				}
-			}
-		}
-	}
-
-	def boolean isDifferentModuleInSameProject(TModule module, ASTMetaInfoCache cache) {
-		return module !== null && !module.eIsProxy
-			&& module.eResource !== cache.resource
-			&& module.projectName == cache.projectName;
 	}
 
 	def private <T> List<T> bringToFront(List<T> l, T... elements) {
