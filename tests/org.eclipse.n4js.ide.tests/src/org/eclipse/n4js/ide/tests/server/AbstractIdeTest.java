@@ -238,6 +238,7 @@ abstract public class AbstractIdeTest<T> {
 		languageServer.initialize(initParams);
 		languageServer.initialized(null);
 		languageServer.joinInitBuildFinished();
+		waitForRequestsDone();
 	}
 
 	/** Opens the given file in the LSP server and waits for the triggered build to finish. */
@@ -255,8 +256,6 @@ abstract public class AbstractIdeTest<T> {
 		dotdp.setTextDocument(textDocument);
 
 		languageServer.didOpen(dotdp);
-		waitForRequestsDone();
-
 		waitForRequestsDone();
 	}
 
