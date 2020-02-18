@@ -58,6 +58,10 @@ class TypeDefs {
  */
 class TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	/**
+	 * The module's simple name, i.e. the last segment of its qualified name.
+	 */
+	String simpleName
+	/**
 	 * The qualified name of the module, which is derived from the file path. Includes the module's
 	 * file name (without extension) and the names of all ancestor folders up to, excluding the
 	 * containing project's source folder. The containing project's name is also not included,
@@ -122,6 +126,10 @@ class TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 * Set during finalization of post-processing.
 	 */
 	refers TModule[] ltdxs
+	/* Tells whether this module is an LTSlave. */
+	op boolean isLTSlave() {
+		return !this.ltdxs.empty;
+	}
 
 	// TODO jvp: what does that mean:
 	// TODO: make sure these are only top level types in the script

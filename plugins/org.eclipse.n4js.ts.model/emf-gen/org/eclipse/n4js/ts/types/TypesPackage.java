@@ -180,13 +180,22 @@ public interface TypesPackage extends EPackage {
 	int TMODULE__ANNOTATIONS = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>Simple Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE__SIMPLE_NAME = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 1;
+
+	/**
 	 * The feature id for the '<em><b>Qualified Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__QUALIFIED_NAME = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 1;
+	int TMODULE__QUALIFIED_NAME = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Project Name</b></em>' attribute.
@@ -195,7 +204,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__PROJECT_NAME = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 2;
+	int TMODULE__PROJECT_NAME = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Vendor ID</b></em>' attribute.
@@ -204,7 +213,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__VENDOR_ID = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 3;
+	int TMODULE__VENDOR_ID = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>N4jsd Module</b></em>' attribute.
@@ -213,7 +222,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__N4JSD_MODULE = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 4;
+	int TMODULE__N4JSD_MODULE = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Static Polyfill Module</b></em>' attribute.
@@ -222,7 +231,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__STATIC_POLYFILL_MODULE = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 5;
+	int TMODULE__STATIC_POLYFILL_MODULE = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Static Polyfill Aware</b></em>' attribute.
@@ -231,7 +240,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__STATIC_POLYFILL_AWARE = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 6;
+	int TMODULE__STATIC_POLYFILL_AWARE = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Main Module</b></em>' attribute.
@@ -240,7 +249,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__MAIN_MODULE = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 7;
+	int TMODULE__MAIN_MODULE = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Pre Linking Phase</b></em>' attribute.
@@ -249,7 +258,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__PRE_LINKING_PHASE = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 8;
+	int TMODULE__PRE_LINKING_PHASE = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 9;
 
 	/**
 	 * The feature id for the '<em><b>Reconciled</b></em>' attribute.
@@ -258,7 +267,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__RECONCILED = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 9;
+	int TMODULE__RECONCILED = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 10;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies Run Time</b></em>' reference list.
@@ -267,7 +276,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__DEPENDENCIES_RUN_TIME = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 10;
+	int TMODULE__DEPENDENCIES_RUN_TIME = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 11;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies Load Time For Inheritance</b></em>' reference list.
@@ -276,7 +285,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__DEPENDENCIES_LOAD_TIME_FOR_INHERITANCE = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 11;
+	int TMODULE__DEPENDENCIES_LOAD_TIME_FOR_INHERITANCE = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 12;
 
 	/**
 	 * The feature id for the '<em><b>Run Time Cyclic Modules</b></em>' reference list.
@@ -285,7 +294,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__RUN_TIME_CYCLIC_MODULES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 12;
+	int TMODULE__RUN_TIME_CYCLIC_MODULES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 13;
 
 	/**
 	 * The feature id for the '<em><b>Ltdxs</b></em>' reference list.
@@ -294,7 +303,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__LTDXS = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 13;
+	int TMODULE__LTDXS = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 14;
 
 	/**
 	 * The feature id for the '<em><b>Top Level Types</b></em>' containment reference list.
@@ -303,7 +312,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__TOP_LEVEL_TYPES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 14;
+	int TMODULE__TOP_LEVEL_TYPES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 15;
 
 	/**
 	 * The feature id for the '<em><b>Variables</b></em>' containment reference list.
@@ -312,7 +321,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__VARIABLES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 15;
+	int TMODULE__VARIABLES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 16;
 
 	/**
 	 * The feature id for the '<em><b>Internal Types</b></em>' containment reference list.
@@ -321,7 +330,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__INTERNAL_TYPES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 16;
+	int TMODULE__INTERNAL_TYPES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 17;
 
 	/**
 	 * The feature id for the '<em><b>Exposed Internal Types</b></em>' containment reference list.
@@ -330,7 +339,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__EXPOSED_INTERNAL_TYPES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 17;
+	int TMODULE__EXPOSED_INTERNAL_TYPES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 18;
 
 	/**
 	 * The feature id for the '<em><b>Ast MD5</b></em>' attribute.
@@ -339,7 +348,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__AST_MD5 = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 18;
+	int TMODULE__AST_MD5 = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 19;
 
 	/**
 	 * The feature id for the '<em><b>Composed Member Caches</b></em>' containment reference list.
@@ -348,7 +357,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__COMPOSED_MEMBER_CACHES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 19;
+	int TMODULE__COMPOSED_MEMBER_CACHES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 20;
 
 	/**
 	 * The feature id for the '<em><b>Temporary Types</b></em>' containment reference list.
@@ -357,7 +366,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__TEMPORARY_TYPES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 20;
+	int TMODULE__TEMPORARY_TYPES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 21;
 
 	/**
 	 * The feature id for the '<em><b>Module Specifier</b></em>' attribute.
@@ -366,7 +375,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__MODULE_SPECIFIER = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 21;
+	int TMODULE__MODULE_SPECIFIER = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 22;
 
 	/**
 	 * The number of structural features of the '<em>TModule</em>' class.
@@ -375,7 +384,16 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE_FEATURE_COUNT = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 22;
+	int TMODULE_FEATURE_COUNT = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 23;
+
+	/**
+	 * The operation id for the '<em>Is LT Slave</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE___IS_LT_SLAVE = SYNTAX_RELATED_TELEMENT_OPERATION_COUNT + 0;
 
 	/**
 	 * The number of operations of the '<em>TModule</em>' class.
@@ -384,7 +402,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE_OPERATION_COUNT = SYNTAX_RELATED_TELEMENT_OPERATION_COUNT + 0;
+	int TMODULE_OPERATION_COUNT = SYNTAX_RELATED_TELEMENT_OPERATION_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.ComposedMemberCacheImpl <em>Composed Member Cache</em>}' class.
@@ -12749,6 +12767,17 @@ public interface TypesPackage extends EPackage {
 	EClass getTModule();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TModule#getSimpleName <em>Simple Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Simple Name</em>'.
+	 * @see org.eclipse.n4js.ts.types.TModule#getSimpleName()
+	 * @see #getTModule()
+	 * @generated
+	 */
+	EAttribute getTModule_SimpleName();
+
+	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TModule#getQualifiedName <em>Qualified Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -12978,6 +13007,16 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getTModule_ModuleSpecifier();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TModule#isLTSlave() <em>Is LT Slave</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is LT Slave</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.TModule#isLTSlave()
+	 * @generated
+	 */
+	EOperation getTModule__IsLTSlave();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.ComposedMemberCache <em>Composed Member Cache</em>}'.
@@ -15775,6 +15814,14 @@ public interface TypesPackage extends EPackage {
 		EClass TMODULE = eINSTANCE.getTModule();
 
 		/**
+		 * The meta object literal for the '<em><b>Simple Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TMODULE__SIMPLE_NAME = eINSTANCE.getTModule_SimpleName();
+
+		/**
 		 * The meta object literal for the '<em><b>Qualified Name</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -15941,6 +15988,14 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute TMODULE__MODULE_SPECIFIER = eINSTANCE.getTModule_ModuleSpecifier();
+
+		/**
+		 * The meta object literal for the '<em><b>Is LT Slave</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TMODULE___IS_LT_SLAVE = eINSTANCE.getTModule__IsLTSlave();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.ComposedMemberCacheImpl <em>Composed Member Cache</em>}' class.

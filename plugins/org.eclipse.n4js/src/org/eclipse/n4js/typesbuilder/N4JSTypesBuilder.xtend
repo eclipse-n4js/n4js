@@ -155,6 +155,7 @@ public class N4JSTypesBuilder {
 			result.reconciled = false;
 
 			var qualifiedModuleName = resource.qualifiedModuleName;
+			result.simpleName = qualifiedModuleName.lastSegment;
 			result.qualifiedName = qualifiedNameConverter.toString(qualifiedModuleName);
 			result.preLinkingPhase = preLinkingPhase;
 

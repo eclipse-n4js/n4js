@@ -26,6 +26,7 @@ import org.eclipse.emf.common.util.EList;
  * The following features are supported:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.ts.types.TModule#getSimpleName <em>Simple Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getQualifiedName <em>Qualified Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getProjectName <em>Project Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getVendorID <em>Vendor ID</em>}</li>
@@ -54,6 +55,32 @@ import org.eclipse.emf.common.util.EList;
  * @generated
  */
 public interface TModule extends SyntaxRelatedTElement, TAnnotableElement {
+	/**
+	 * Returns the value of the '<em><b>Simple Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * *
+	 * The module's simple name, i.e. the last segment of its qualified name.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Simple Name</em>' attribute.
+	 * @see #setSimpleName(String)
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_SimpleName()
+	 * @model unique="false"
+	 * @generated
+	 */
+	String getSimpleName();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.TModule#getSimpleName <em>Simple Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Simple Name</em>' attribute.
+	 * @see #getSimpleName()
+	 * @generated
+	 */
+	void setSimpleName(String value);
+
 	/**
 	 * Returns the value of the '<em><b>Qualified Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -544,5 +571,16 @@ public interface TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 * @generated
 	 */
 	String getModuleSpecifier();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 *  Tells whether this module is an LTSlave.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isLTSlave();
 
 } // TModule

@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.ts.types.impl;
 
+import java.lang.reflect.InvocationTargetException;
+
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -43,6 +45,7 @@ import org.eclipse.n4js.ts.types.TypesPackage;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getAnnotations <em>Annotations</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getSimpleName <em>Simple Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getQualifiedName <em>Qualified Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getProjectName <em>Project Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getVendorID <em>Vendor ID</em>}</li>
@@ -78,6 +81,26 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * @ordered
 	 */
 	protected EList<TAnnotation> annotations;
+
+	/**
+	 * The default value of the '{@link #getSimpleName() <em>Simple Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getSimpleName()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String SIMPLE_NAME_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getSimpleName() <em>Simple Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getSimpleName()
+	 * @generated
+	 * @ordered
+	 */
+	protected String simpleName = SIMPLE_NAME_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getQualifiedName() <em>Qualified Name</em>}' attribute.
@@ -419,6 +442,29 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 			annotations = new EObjectContainmentEList<TAnnotation>(TAnnotation.class, this, TypesPackage.TMODULE__ANNOTATIONS);
 		}
 		return annotations;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getSimpleName() {
+		return simpleName;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setSimpleName(String newSimpleName) {
+		String oldSimpleName = simpleName;
+		simpleName = newSimpleName;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TMODULE__SIMPLE_NAME, oldSimpleName, simpleName));
 	}
 
 	/**
@@ -797,6 +843,17 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * @generated
 	 */
 	@Override
+	public boolean isLTSlave() {
+		boolean _isEmpty = this.getLtdxs().isEmpty();
+		return (!_isEmpty);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case TypesPackage.TMODULE__ANNOTATIONS:
@@ -827,6 +884,8 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 		switch (featureID) {
 			case TypesPackage.TMODULE__ANNOTATIONS:
 				return getAnnotations();
+			case TypesPackage.TMODULE__SIMPLE_NAME:
+				return getSimpleName();
 			case TypesPackage.TMODULE__QUALIFIED_NAME:
 				return getQualifiedName();
 			case TypesPackage.TMODULE__PROJECT_NAME:
@@ -885,6 +944,9 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 			case TypesPackage.TMODULE__ANNOTATIONS:
 				getAnnotations().clear();
 				getAnnotations().addAll((Collection<? extends TAnnotation>)newValue);
+				return;
+			case TypesPackage.TMODULE__SIMPLE_NAME:
+				setSimpleName((String)newValue);
 				return;
 			case TypesPackage.TMODULE__QUALIFIED_NAME:
 				setQualifiedName((String)newValue);
@@ -971,6 +1033,9 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 			case TypesPackage.TMODULE__ANNOTATIONS:
 				getAnnotations().clear();
 				return;
+			case TypesPackage.TMODULE__SIMPLE_NAME:
+				setSimpleName(SIMPLE_NAME_EDEFAULT);
+				return;
 			case TypesPackage.TMODULE__QUALIFIED_NAME:
 				setQualifiedName(QUALIFIED_NAME_EDEFAULT);
 				return;
@@ -1045,6 +1110,8 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 		switch (featureID) {
 			case TypesPackage.TMODULE__ANNOTATIONS:
 				return annotations != null && !annotations.isEmpty();
+			case TypesPackage.TMODULE__SIMPLE_NAME:
+				return SIMPLE_NAME_EDEFAULT == null ? simpleName != null : !SIMPLE_NAME_EDEFAULT.equals(simpleName);
 			case TypesPackage.TMODULE__QUALIFIED_NAME:
 				return QUALIFIED_NAME_EDEFAULT == null ? qualifiedName != null : !QUALIFIED_NAME_EDEFAULT.equals(qualifiedName);
 			case TypesPackage.TMODULE__PROJECT_NAME:
@@ -1129,11 +1196,27 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * @generated
 	 */
 	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case TypesPackage.TMODULE___IS_LT_SLAVE:
+				return isLTSlave();
+		}
+		return super.eInvoke(operationID, arguments);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (qualifiedName: ");
+		result.append(" (simpleName: ");
+		result.append(simpleName);
+		result.append(", qualifiedName: ");
 		result.append(qualifiedName);
 		result.append(", projectName: ");
 		result.append(projectName);
