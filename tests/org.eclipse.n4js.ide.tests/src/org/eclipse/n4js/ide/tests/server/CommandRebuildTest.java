@@ -127,7 +127,9 @@ public class CommandRebuildTest extends AbstractIdeTest<Void> {
 		BasicFileAttributeView attributes = Files.getFileAttributeView(filePath, BasicFileAttributeView.class);
 		FileTime time = FileTime.fromMillis(FILE_TIME_MILLISECONDS);
 		attributes.setTimes(time, time, time);
-		assertEquals(FILE_TIME_MILLISECONDS, filePath);
+
+		FileTime prjStateTime = Files.readAttributes(filePath, BasicFileAttributes.class).creationTime();
+		assertEquals(FILE_TIME_MILLISECONDS, prjStateTime.toMillis());
 	}
 
 }
