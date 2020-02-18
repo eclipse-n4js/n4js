@@ -2,7 +2,7 @@
 	"name": "n4js-vscode-extension",
 	"displayName": "N4JS VSCode extension",
 	"description": "Language support for N4JS",
-	"version": "0.19.4",
+	"version": "0.19.3",
 	"publisher": "n4js",
 	"license": "EPL-1.0",
 	"repository": {
@@ -63,6 +63,24 @@
 					"command": "n4js.rebuild"
 				}
 			]
+		},
+		"configuration": {
+			"title": "N4JS",
+			"properties": {
+				"n4js.traceOutput": {
+					"type": "string",
+					"default": "off",
+					"enum": [
+						"off",
+						"verbose"
+					],
+					"enumDescriptions": [
+						"No tracing data is displayed.",
+						"Tracing data is displayed on the Output of N4JS language server"
+					],
+					"description": "Enables tracing of messages sent to the N4JS server. This trace can be used to diagnose N4JS Server issues. The trace may contain file paths, source code, and other potentially sensitive information from your project."
+				}
+			}
 		}
 	},
 	"devDependencies": {
@@ -75,7 +93,6 @@
 		"n4js-runtime-node": "latest",
 		"n4js-runtime-es2015": "latest",
 		"npmlog": "4.1.2",
-		"vscode-jsonrpc": "5.0.1",
 		"vscode-languageclient": "6.1.0"
 	},
 	"scripts": {},
