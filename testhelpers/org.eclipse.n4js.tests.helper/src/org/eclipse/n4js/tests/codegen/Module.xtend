@@ -21,7 +21,7 @@ import java.util.Objects
  * Generates code for a module containing imports and either given classifiers or contents.
  */
 class Module {
-	final public String name;
+	final String name;
 	List<Classifier<?>> classifiers;
 	String contents;
 	Map<String, List<String>> imports;

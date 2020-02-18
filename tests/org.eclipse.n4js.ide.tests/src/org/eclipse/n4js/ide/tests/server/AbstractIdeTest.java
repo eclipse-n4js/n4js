@@ -94,7 +94,7 @@ abstract public class AbstractIdeTest<T> {
 	}
 
 	/**
-	 * This method gets eventually called after calling on of the {@code test()} methods. Overwrite this method to
+	 * This method gets eventually called after calling one of the {@code test()} methods. Overwrite this method to
 	 * implement test logic.
 	 *
 	 * @param root

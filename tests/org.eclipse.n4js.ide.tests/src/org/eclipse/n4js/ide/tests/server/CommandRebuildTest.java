@@ -72,10 +72,10 @@ public class CommandRebuildTest extends AbstractIdeTest<Void> {
 		// check pre-state
 		assertEquals(0, languageClient.getErrorsCount());
 
-		String moduleName = project.sourceFolders.get(0).modules.get(0).name;
+		String moduleName = project.getSourceFolders().get(0).getModules().get(0).getName();
 		Path prjPath = root.toPath().resolve(PROJECT_NAME).toAbsolutePath();
 		prjStatePath = prjPath.resolve(PROJECT_STATE_NAME);
-		genFileStatePath = prjPath.resolve(project.outputFolder).resolve(moduleName + ".js");
+		genFileStatePath = prjPath.resolve(project.getOutputFolder()).resolve(moduleName + ".js");
 
 		setFileCreationDate(prjStatePath);
 		setFileCreationDate(genFileStatePath);
@@ -128,8 +128,8 @@ public class CommandRebuildTest extends AbstractIdeTest<Void> {
 		FileTime time = FileTime.fromMillis(FILE_TIME_MILLISECONDS);
 		attributes.setTimes(time, time, time);
 
-		FileTime prjStateTime = Files.readAttributes(filePath, BasicFileAttributes.class).creationTime();
-		assertEquals(FILE_TIME_MILLISECONDS, prjStateTime.toMillis());
+		FileTime fileTime = Files.readAttributes(filePath, BasicFileAttributes.class).creationTime();
+		assertEquals(FILE_TIME_MILLISECONDS, fileTime.toMillis());
 	}
 
 }
