@@ -30,6 +30,7 @@ import org.eclipse.n4js.regex.regularExpression.IdentityEscapeSequence;
 import org.eclipse.n4js.regex.regularExpression.LineEnd;
 import org.eclipse.n4js.regex.regularExpression.LineStart;
 import org.eclipse.n4js.regex.regularExpression.LookAhead;
+import org.eclipse.n4js.regex.regularExpression.LookBehind;
 import org.eclipse.n4js.regex.regularExpression.PatternCharacter;
 import org.eclipse.n4js.regex.regularExpression.RegularExpressionBody;
 import org.eclipse.n4js.regex.regularExpression.RegularExpressionFlags;
@@ -235,7 +236,10 @@ public class RegularExpressionSemanticSequencer extends AbstractDelegatingSemant
 				sequence_LineStart(context, (LineStart) semanticObject); 
 				return; 
 			case RegularExpressionPackage.LOOK_AHEAD:
-				sequence_LookAhead(context, (LookAhead) semanticObject); 
+				sequence_AbstractLookAhead(context, (LookAhead) semanticObject); 
+				return; 
+			case RegularExpressionPackage.LOOK_BEHIND:
+				sequence_AbstractLookAhead(context, (LookBehind) semanticObject); 
 				return; 
 			case RegularExpressionPackage.PATTERN_CHARACTER:
 				if (rule == grammarAccess.getAtomRule()
@@ -312,6 +316,42 @@ public class RegularExpressionSemanticSequencer extends AbstractDelegatingSemant
 	
 	/**
 	 * Contexts:
+	 *     Disjunction returns LookAhead
+	 *     Disjunction.Disjunction_0_1_0 returns LookAhead
+	 *     Alternative returns LookAhead
+	 *     Alternative.Sequence_1_0 returns LookAhead
+	 *     Term returns LookAhead
+	 *     Assertion returns LookAhead
+	 *     AbstractLookAhead returns LookAhead
+	 *
+	 * Constraint:
+	 *     (not?='(?!'? pattern=Disjunction)
+	 */
+	protected void sequence_AbstractLookAhead(ISerializationContext context, LookAhead semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Disjunction returns LookBehind
+	 *     Disjunction.Disjunction_0_1_0 returns LookBehind
+	 *     Alternative returns LookBehind
+	 *     Alternative.Sequence_1_0 returns LookBehind
+	 *     Term returns LookBehind
+	 *     Assertion returns LookBehind
+	 *     AbstractLookAhead returns LookBehind
+	 *
+	 * Constraint:
+	 *     (not?='(?<!'? pattern=Disjunction)
+	 */
+	protected void sequence_AbstractLookAhead(ISerializationContext context, LookBehind semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
 	 *     Disjunction returns Sequence
 	 *     Disjunction.Disjunction_0_1_0 returns Sequence
 	 *     Alternative returns Sequence
@@ -348,27 +388,35 @@ public class RegularExpressionSemanticSequencer extends AbstractDelegatingSemant
 	 *
 	 * Constraint:
 	 *     (
-	 *         character=',' | 
-	 *         character='=' | 
-	 *         character=':' | 
-	 *         character='!' | 
-	 *         character='-' | 
-	 *         character='^' | 
-	 *         character='$' | 
-	 *         character='.' | 
-	 *         character='*' | 
-	 *         character='+' | 
-	 *         character='?' | 
-	 *         character='(' | 
-	 *         character=')' | 
-	 *         character='[' | 
-	 *         character='{' | 
-	 *         character='}' | 
-	 *         character='|' | 
-	 *         character='/' | 
-	 *         character=PATTERN_CHARACTER_NO_DASH | 
-	 *         character=UNICODE_LETTER | 
-	 *         character=UNICODE_DIGIT
+	 *         characters=',' | 
+	 *         characters='=' | 
+	 *         characters=':' | 
+	 *         characters='!' | 
+	 *         characters='-' | 
+	 *         characters='^' | 
+	 *         characters='$' | 
+	 *         characters='.' | 
+	 *         characters='*' | 
+	 *         characters='+' | 
+	 *         characters='?' | 
+	 *         characters='(' | 
+	 *         characters=')' | 
+	 *         characters='[' | 
+	 *         characters='{' | 
+	 *         characters='}' | 
+	 *         characters='|' | 
+	 *         characters='/' | 
+	 *         characters='<' | 
+	 *         characters='>' | 
+	 *         characters='(?' | 
+	 *         characters='(?<' | 
+	 *         characters='(?=' | 
+	 *         characters='(?!' | 
+	 *         characters='(?<!' | 
+	 *         characters='(?<=' | 
+	 *         characters=PATTERN_CHARACTER_NO_DASH | 
+	 *         characters=UNICODE_LETTER | 
+	 *         characters=UNICODE_DIGIT
 	 *     )
 	 */
 	protected void sequence_CharacterClassAtom(ISerializationContext context, CharacterClassAtom semanticObject) {
@@ -617,7 +665,7 @@ public class RegularExpressionSemanticSequencer extends AbstractDelegatingSemant
 	 *     Group returns Group
 	 *
 	 * Constraint:
-	 *     (nonCapturing?='?'? pattern=Disjunction)
+	 *     ((nonCapturing?='(?:' | (named?='(?<' name=RegExpIdentifierName))? pattern=Disjunction)
 	 */
 	protected void sequence_Group(ISerializationContext context, Group semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -633,7 +681,7 @@ public class RegularExpressionSemanticSequencer extends AbstractDelegatingSemant
 	 *     Term returns Group
 	 *
 	 * Constraint:
-	 *     (nonCapturing?='?'? pattern=Disjunction quantifier=Quantifier?)
+	 *     ((nonCapturing?='(?:' | (named?='(?<' name=RegExpIdentifierName))? pattern=Disjunction quantifier=Quantifier?)
 	 */
 	protected void sequence_Group_Term(ISerializationContext context, Group semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -758,24 +806,6 @@ public class RegularExpressionSemanticSequencer extends AbstractDelegatingSemant
 	
 	/**
 	 * Contexts:
-	 *     Disjunction returns LookAhead
-	 *     Disjunction.Disjunction_0_1_0 returns LookAhead
-	 *     Alternative returns LookAhead
-	 *     Alternative.Sequence_1_0 returns LookAhead
-	 *     Term returns LookAhead
-	 *     Assertion returns LookAhead
-	 *     LookAhead returns LookAhead
-	 *
-	 * Constraint:
-	 *     (not?='!'? pattern=Disjunction)
-	 */
-	protected void sequence_LookAhead(ISerializationContext context, LookAhead semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
 	 *     Atom returns PatternCharacter
 	 *     PatternCharacter returns PatternCharacter
 	 *
@@ -791,7 +821,9 @@ public class RegularExpressionSemanticSequencer extends AbstractDelegatingSemant
 	 *         value='!' | 
 	 *         value='{' | 
 	 *         value='}' | 
-	 *         value=']'
+	 *         value=']' | 
+	 *         value='<' | 
+	 *         value='>'
 	 *     )
 	 */
 	protected void sequence_PatternCharacter(ISerializationContext context, PatternCharacter semanticObject) {
@@ -820,7 +852,9 @@ public class RegularExpressionSemanticSequencer extends AbstractDelegatingSemant
 	 *             value='!' | 
 	 *             value='{' | 
 	 *             value='}' | 
-	 *             value=']'
+	 *             value=']' | 
+	 *             value='<' | 
+	 *             value='>'
 	 *         ) 
 	 *         quantifier=Quantifier?
 	 *     )

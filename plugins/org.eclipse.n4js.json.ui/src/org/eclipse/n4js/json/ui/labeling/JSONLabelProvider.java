@@ -21,7 +21,6 @@ import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONStringLiteral;
 import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.JSON.NameValuePair;
-import org.eclipse.n4js.json.ui.JSONUIModelUtils;
 import org.eclipse.xtext.ui.label.DefaultEObjectLabelProvider;
 
 import com.google.inject.Inject;
@@ -47,7 +46,7 @@ public class JSONLabelProvider extends DefaultEObjectLabelProvider {
 		final String nameDescription = String.format("%s", pair.getName());
 
 		// if the name-value-pair has no children
-		if (!JSONUIModelUtils.isContainer(value)) {
+		if (!value.isContainer()) {
 			// display its value in line
 			StyledString nameValueLabel = new StyledString(nameDescription + " : ");
 			nameValueLabel = nameValueLabel.append(this.getText(pair.getValue()), StyledString.QUALIFIER_STYLER);

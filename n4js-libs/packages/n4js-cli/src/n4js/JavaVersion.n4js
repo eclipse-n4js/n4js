@@ -1,0 +1,46 @@
+/*
+ * Copyright (c) 2019 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+
+import * as fs from "fs";
+import * as path from "path";
+import * as childProcess from "child_process";
+import {RESOURCES_DIR} from 'Globals';
+
+const JAVA_SOURCE_FILE = path.resolve(RESOURCES_DIR, "PrintJavaVersion.java");
+const JAVA_CLASS_FILE = path.resolve(RESOURCES_DIR, "PrintJavaVersion.class");
+
+
+/**
+ * Returns the feature segment of the installed JRE version or null otherwise.
+ */
+export public function detectJavaVersion() : int {
+    if (!fs.existsSync(JAVA_CLASS_FILE)) {
+        const procCompile = childProcess.spawnSync('javac', [JAVA_SOURCE_FILE]);
+        if (procCompile.error) {
+            return null;
+        }
+    }
+
+    // Compiling was successful
+    const procRun = childProcess.spawnSync('java', [JAVA_SOURCE_FILE]);
+    if (procRun.error || !procRun.stdout) {
+        return null;
+    }
+
+    // Executing PrintJavaVersion was successful
+    const versionFeature = procRun.stdout.toString().trim();
+    if (!versionFeature) {
+        return null;
+    }
+
+    return parseInt(versionFeature);
+}

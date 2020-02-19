@@ -18,11 +18,12 @@ import java.util.Map
 import java.util.Objects
 
 /**
- * Generates code for a module containing imports and classifiers.
+ * Generates code for a module containing imports and either given classifiers or contents.
  */
 class Module {
-	String name;
+	final String name;
 	List<Classifier<?>> classifiers;
+	String contents;
 	Map<String, List<String>> imports;
 
 	/**
@@ -45,7 +46,20 @@ class Module {
 
 
 	/**
+	 * Sets the given string of contents to the module built by this builder.
+	 * This will cause the classifiers to be ignored.
+	 *
+	 * @param contents the contents to add
+	 */
+	public def Module setContents(String contents) {
+		this.contents = contents;
+		return this;
+	}
+
+
+	/**
 	 * Adds the given classifier to the module built by this builder.
+	 * Note that the classifiers are ignored iff the contents are set.
 	 *
 	 * @param classifier the classifier to add
 	 */
@@ -125,10 +139,14 @@ class Module {
 	 */
 	public def generate() '''
 	«IF hasImports»
-	«generateImports()»
-
+		«generateImports()»
 	«ENDIF»
-	«generateClassifiers()»
+	
+	«IF hasContents»
+		«contents»
+	«ELSE»
+		«generateClassifiers()»
+	«ENDIF»
 	'''
 
 	private def generateImports() '''
@@ -145,5 +163,9 @@ class Module {
 
 	private def boolean hasImports() {
 		return imports !== null && !imports.empty
+	}
+
+	private def boolean hasContents() {
+		return contents !== null && !contents.empty
 	}
 }

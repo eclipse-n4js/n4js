@@ -62,8 +62,8 @@ public class IdentifierValueConverter extends IDValueConverter {
 				validityChecker);
 		if (result.hasError()) {
 			throw new N4JSValueConverterWithValueException(
-					IssueCodes.getMessageForVCO_IDENT_ESCAP_SEQ(jsString, result.getErrorOffset()),
-					IssueCodes.VCO_IDENT_ESCAP_SEQ,
+					IssueCodes.getMessageForVCO_IDENT_ESCAPE_SEQ(jsString, result.getErrorOffset()),
+					IssueCodes.VCO_IDENT_ESCAPE_SEQ,
 					node, result.getValue(), null);
 		}
 		if (result.hasInvalidChar()) {

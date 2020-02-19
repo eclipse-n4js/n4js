@@ -137,12 +137,12 @@ public class RegularExpressionSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case RegularExpressionPackage.LOOK_AHEAD:
+      case RegularExpressionPackage.ABSTRACT_LOOK_AHEAD:
       {
-        LookAhead lookAhead = (LookAhead)theEObject;
-        T result = caseLookAhead(lookAhead);
-        if (result == null) result = caseAssertion(lookAhead);
-        if (result == null) result = casePattern(lookAhead);
+        AbstractLookAhead abstractLookAhead = (AbstractLookAhead)theEObject;
+        T result = caseAbstractLookAhead(abstractLookAhead);
+        if (result == null) result = caseAssertion(abstractLookAhead);
+        if (result == null) result = casePattern(abstractLookAhead);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -350,6 +350,26 @@ public class RegularExpressionSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case RegularExpressionPackage.LOOK_AHEAD:
+      {
+        LookAhead lookAhead = (LookAhead)theEObject;
+        T result = caseLookAhead(lookAhead);
+        if (result == null) result = caseAbstractLookAhead(lookAhead);
+        if (result == null) result = caseAssertion(lookAhead);
+        if (result == null) result = casePattern(lookAhead);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case RegularExpressionPackage.LOOK_BEHIND:
+      {
+        LookBehind lookBehind = (LookBehind)theEObject;
+        T result = caseLookBehind(lookBehind);
+        if (result == null) result = caseAbstractLookAhead(lookBehind);
+        if (result == null) result = caseAssertion(lookBehind);
+        if (result == null) result = casePattern(lookBehind);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case RegularExpressionPackage.CHARACTER_CLASS_RANGE:
       {
         CharacterClassRange characterClassRange = (CharacterClassRange)theEObject;
@@ -475,17 +495,17 @@ public class RegularExpressionSwitch<T> extends Switch<T>
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Look Ahead</em>'.
+   * Returns the result of interpreting the object as an instance of '<em>Abstract Look Ahead</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
    * returning a non-null result will terminate the switch.
    * <!-- end-user-doc -->
    * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Look Ahead</em>'.
+   * @return the result of interpreting the object as an instance of '<em>Abstract Look Ahead</em>'.
    * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
    * @generated
    */
-  public T caseLookAhead(LookAhead object)
+  public T caseAbstractLookAhead(AbstractLookAhead object)
   {
     return null;
   }
@@ -838,6 +858,38 @@ public class RegularExpressionSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseSequence(Sequence object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Look Ahead</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Look Ahead</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseLookAhead(LookAhead object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Look Behind</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Look Behind</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseLookBehind(LookBehind object)
   {
     return null;
   }

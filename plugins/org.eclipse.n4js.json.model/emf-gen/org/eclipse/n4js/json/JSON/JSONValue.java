@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.json.JSON;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -28,4 +29,31 @@ import org.eclipse.emf.ecore.EObject;
  * @generated
  */
 public interface JSONValue extends EObject {
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * *
+	 * Returns {@code true} iff the given {@link JSONValue} may contain children (e.g. object, array) and does not just
+	 * represent a primitive value (e.g. string, boolean).
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isContainer();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * *
+	 * Returns the children of this value.
+	 * 	 * Returns an empty list for non-container {@link JSONValue}s.
+	 * 	 * @See {@link #isContainer(JSONValue)}
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	EList<EObject> getChildren();
 } // JSONValue
