@@ -26,6 +26,53 @@ Contributors:
 	<modules>
 		<!-- ************************************** JUnit Tests -->
 
+		<!-- Release Engineering Tools Tests -->
+		<module>org.eclipse.n4js.releng.utils.tests</module>
+
+		<!-- JSDoc tests -->
+		<module>org.eclipse.n4js.jsdoc2spec.tests</module>
+
+		<!-- Type system tests -->
+		<module>org.eclipse.n4js.ts.model.tests</module>
+		<module>org.eclipse.n4js.ts.tests</module>
+		<module>org.eclipse.n4js.ts.xpect.tests</module>
+
+		<!-- Tester tests -->
+		<module>org.eclipse.n4js.tester.tests</module>
+
+		<!-- Regex tests -->
+		<module>org.eclipse.n4js.regex.tests</module>
+
+		<!-- JS tests -->
+		<module>org.eclipse.n4js.lang.tests</module>
+		<module>org.eclipse.n4js.spec.tests</module>
+		<module>org.eclipse.n4js.tests.ecmatestsuite</module>
+		<module>org.eclipse.n4js.xpect.tests</module>
+
+		<!-- Xsemantics tests -->
+		<module>org.eclipse.n4js.xsemantics.tests</module>
+
+		<!-- transpiler tests -->
+		<module>org.eclipse.n4js.transpiler.tests</module>
+		<module>org.eclipse.n4js.transpiler.es5.tests</module>
+		<module>org.eclipse.n4js.transpiler.es.tests</module>
+
+		<!-- Package.json tests -->
+		<module>org.eclipse.n4js.packagejson.xpect.tests</module>
+		<module>org.eclipse.n4js.packagejson.xpect.ui.tests</module>
+
+		<!-- access control tests -->
+		<module>org.eclipse.n4js.accesscontrol.tests</module>
+
+		<!-- JSON tests -->
+		<module>org.eclipse.n4js.json.tests</module>
+		<module>org.eclipse.n4js.json.xpect.tests</module>
+		<module>org.eclipse.n4js.json.xpect.ui.tests</module>
+
+		<!-- SEMVER tests -->
+		<module>org.eclipse.n4js.semver.tests</module>
+
+		<!-- ************************************** JUnit Plugin Tests -->
 
 		<!-- *************************************** Headless Tools Tests -->
 		<module>org.eclipse.n4js.cli.tests</module>

@@ -130,8 +130,6 @@ public class XProjectManager {
 	/** Initial build reads the project state and resolves changes. Generate output files. */
 	public XBuildResult doInitialBuild(CancelIndicator cancelIndicator) {
 		ResourceChangeSet changeSet = projectStateHolder.readProjectState(projectConfig);
-		System.out.println(projectConfig.getName() + " (" + this.hashCode() % 100 +
-				"): changeSet in doInitialBuild is:\n" + changeSet.toString());
 
 		XBuildResult result = doBuild(
 				changeSet.getModified(), changeSet.getDeleted(), Collections.emptyList(), false, true, cancelIndicator);
@@ -185,16 +183,8 @@ public class XProjectManager {
 
 		Map<String, ResourceDescriptionsData> concurrentMap = indexProvider.get();
 		concurrentMap.put(projectDescription.getName(), resourceDescriptions);
-		System.out.println(projectConfig.getName() + " (" + this.hashCode() % 100 +
-				"): result.getAffectedResources().size()=" + result.getAffectedResources().size());
-
-		System.out.println(projectConfig.getName() + " (" + this.hashCode() % 100 +
-				"): persistedProjectStateOutdated=" + persistedProjectStateOutdated);
-
 		persistedProjectStateOutdated |= !result.getAffectedResources().isEmpty();
 
-		System.out.println(projectConfig.getName() + " (" + this.hashCode() % 100 +
-				"): persistedProjectStateOutdated=" + persistedProjectStateOutdated);
 		return result;
 	}
 
@@ -266,9 +256,6 @@ public class XProjectManager {
 
 	/** Writes the current index, file hashes and validation issues to disk */
 	public void persistProjectState() {
-		System.out.println(projectConfig.getName() + " (" + this.hashCode() % 100 +
-				"): #persistProjectState(): persistedProjectStateOutdated=" + persistedProjectStateOutdated);
-
 		if (persistedProjectStateOutdated) {
 			projectStateHolder.writeProjectState(projectConfig);
 			persistedProjectStateOutdated = false;

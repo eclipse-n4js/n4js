@@ -123,7 +123,6 @@ public class ProjectStateHolder {
 	/** Persists the project state to disk */
 	public void writeProjectState(IProjectConfig projectConfig) {
 		if (persistConfig.isWriteToDisk(projectConfig) && !uriToHashedFileContents.isEmpty()) {
-			System.out.println("projectStatePersister.writeProjectState");
 			Collection<HashedFileContent> hashFileContents = uriToHashedFileContents.values();
 			projectStatePersister.writeProjectState(projectConfig, indexState, hashFileContents, getValidationIssues());
 		}
