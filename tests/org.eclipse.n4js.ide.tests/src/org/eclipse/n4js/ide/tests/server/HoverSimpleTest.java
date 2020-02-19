@@ -15,7 +15,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 /**
- * Hover test class
+ * Hover test class for N4JS elements
  */
 public class HoverSimpleTest extends AbstractHoverTest {
 

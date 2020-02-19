@@ -27,7 +27,7 @@ import org.eclipse.xtext.testing.SignatureHelpConfiguration;
 import org.junit.Assert;
 
 /**
- * Signature help test class
+ * Abstract test class for signature protocol tests
  */
 abstract public class AbstractSignatureHelpTest extends AbstractIdeTest<SignatureHelpConfiguration> {
 

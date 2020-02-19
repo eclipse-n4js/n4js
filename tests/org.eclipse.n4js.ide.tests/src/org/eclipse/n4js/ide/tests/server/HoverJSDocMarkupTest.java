@@ -14,7 +14,7 @@ import org.eclipse.xtext.testing.HoverTestConfiguration;
 import org.junit.Test;
 
 /**
- * Hover test class
+ * Hover test class for converting html in JSDoc to adoc
  */
 public class HoverJSDocMarkupTest extends AbstractHoverTest {
 

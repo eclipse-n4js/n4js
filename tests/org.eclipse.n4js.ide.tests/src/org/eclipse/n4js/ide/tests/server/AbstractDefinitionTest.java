@@ -32,7 +32,7 @@ import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 import org.eclipse.xtext.testing.DefinitionTestConfiguration;
 
 /**
- * Signature help test class
+ * Abstract test class for defintion protocol tests
  */
 @SuppressWarnings("javadoc")
 abstract public class AbstractDefinitionTest extends AbstractIdeTest<DefinitionTestConfiguration> {

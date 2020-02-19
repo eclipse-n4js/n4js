@@ -48,7 +48,7 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 
 /**
- * Signature help test class
+ * Abstract test class for LSP protocol tests
  */
 abstract public class AbstractIdeTest<T> {
 	static final String WORKSPACE_FOLDER = "/test-data";

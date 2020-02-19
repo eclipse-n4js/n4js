@@ -31,7 +31,7 @@ import org.eclipse.xtext.testing.HoverTestConfiguration;
 import com.google.common.base.Strings;
 
 /**
- * Signature help test class
+ * Abstract test class for hover protocol tests
  */
 abstract public class AbstractHoverTest extends AbstractIdeTest<HoverTestConfiguration> {
 
