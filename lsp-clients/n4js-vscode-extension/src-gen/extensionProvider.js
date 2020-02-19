@@ -45,7 +45,8 @@ export function getActivate(vscode, vscodeLC) {
 		};
 		let clientOptions = {
 			documentSelector: [
-				'n4js'
+				'n4js',
+				'n4js.json'
 			],
 			synchronize: {
 				fileEvents: vscode.workspace.createFileSystemWatcher('{/**/*.+(n4js|n4jsd|n4jsx|n4idl),/**/package.json}')
