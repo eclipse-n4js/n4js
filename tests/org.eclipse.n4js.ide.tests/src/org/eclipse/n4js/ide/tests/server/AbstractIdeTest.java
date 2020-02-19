@@ -94,7 +94,7 @@ abstract public class AbstractIdeTest<T> {
 	}
 
 	/**
-	 * This method gets eventually called after calling on of the {@code test()} methods. Overwrite this method to
+	 * This method gets eventually called after calling one of the {@code test()} methods. Overwrite this method to
 	 * implement test logic.
 	 *
 	 * @param root
@@ -235,9 +235,10 @@ abstract public class AbstractIdeTest<T> {
 		initParams.setRootUri(new FileURI(new File(root, PROJECT_NAME)).toString());
 
 		languageServer.connect(languageClient);
-		languageServer.initialize(initParams).join();
+		languageServer.initialize(initParams);
 		languageServer.initialized(null);
 		languageServer.getRequestManager().runRead("Wait", (ci) -> null);
+		waitForRequestsDone();
 	}
 
 	/** Opens the given file in the LSP server and waits for the triggered build to finish. */

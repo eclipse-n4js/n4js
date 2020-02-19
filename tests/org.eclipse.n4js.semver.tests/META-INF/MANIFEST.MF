@@ -4,9 +4,8 @@ Bundle-Name: org.eclipse.n4js.semver.tests
 Bundle-Vendor: org.eclipse.n4js
 Bundle-Version: 0.0.1.qualifier
 Bundle-SymbolicName: org.eclipse.n4js.semver.tests;singleton:=true
-Fragment-Host: org.eclipse.n4js
-Require-Bundle: org.eclipse.n4js.semver,
- org.eclipse.xtext.testing,
+Fragment-Host: org.eclipse.n4js.semver
+Require-Bundle: org.eclipse.xtext.testing,
  org.junit,
  org.eclipse.n4js.semver.tests.helper,
  org.eclipse.n4js.semver.model,

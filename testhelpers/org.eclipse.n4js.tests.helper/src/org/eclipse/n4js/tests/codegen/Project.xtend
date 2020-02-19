@@ -29,8 +29,8 @@ public class Project {
 	 * Represents a source folder that has a name and contains modules.
 	 */
 	public static class SourceFolder {
-		final public String name;
-		final public List<Module> modules = newLinkedList();
+		final String name;
+		final List<Module> modules = newLinkedList();
 
 		/**
 		 * Creates a new instance with the given parameters.
@@ -52,6 +52,15 @@ public class Project {
 		public def addModule(Module module) {
 			modules.add(Objects.requireNonNull(module));
 			return this;
+		}
+
+		/**
+		 * Returns a list of all modules of this source folder.
+		 *
+		 * @return list of all modules of this source folder
+		 */
+		public def List<Module> getModules() {
+			return modules;
 		}
 
 		/**
@@ -78,14 +87,14 @@ public class Project {
 		}
 	}
 
-	public String projectName;
-	public String vendorId;
-	public String vendorName;
-	public ProjectType projectType;
-	public String projectVersion = "1.0.0";
-	public String outputFolder = "src-gen";
-	public List<SourceFolder> sourceFolders;
-	public List<Project> projectDependencies;
+	final String projectName;
+	final String vendorId;
+	final String vendorName;
+	final List<SourceFolder> sourceFolders = newLinkedList();
+	final List<Project> projectDependencies = newLinkedList();
+	ProjectType projectType;
+	String projectVersion = "1.0.0";
+	String outputFolder = "src-gen";
 
 	/**
 	 * Same as {@link #Project(String, String, String, ProjectType)}, but with
@@ -150,6 +159,15 @@ public class Project {
 	}
 
 	/**
+	 * Returns the output folder.
+	 * 
+	 * @return the output folder.
+	 */
+	public def String getOutputFolder() {
+		return outputFolder;
+	}
+
+	/**
 	 * Creates a source folder with the given name to this project.
 	 *
 	 * @param name the name of the source folder to add
@@ -169,10 +187,18 @@ public class Project {
 	 * @param sourceFolder the source folder to add
 	 */
 	public def Project addSourceFolder(SourceFolder sourceFolder) {
-		if (sourceFolders === null)
-			sourceFolders = newLinkedList();
 		sourceFolders.add(Objects.requireNonNull(sourceFolder));
 		return this;
+	}
+
+
+	/**
+	 * Returns a list of all source folders of this project.
+	 *
+	 * @return list of all source folders of this project.
+	 */
+	public def List<SourceFolder> getSourceFolders() {
+		return sourceFolders;
 	}
 
 	/**
@@ -181,8 +207,6 @@ public class Project {
 	 * @param projectDependency the project dependency to add
 	 */
 	public def Project addProjectDependency(Project projectDependency) {
-		if (projectDependencies === null)
-			projectDependencies = newLinkedList();
 		projectDependencies.add(Objects.requireNonNull(projectDependency));
 		return this;
 	}
@@ -220,6 +244,7 @@ public class Project {
 				}
 		}
 	'''
+
 	private static def String projectTypeToString(ProjectType type) {
 		return switch (type) {
 			case API: "api"
@@ -234,6 +259,7 @@ public class Project {
 			case DEFINITION: "definition"
 		};
 	}
+
 	/**
 	 * Creates this project in the given parent directory, which must exist.
 	 *
@@ -254,14 +280,18 @@ public class Project {
 			throw new IOException("'" + parentDirectory + "' does not exist")
 		if (!parentDirectory.directory)
 			throw new IOException("'" + parentDirectory + "' is not a directory");
+
 		val File projectDirectory = new File(parentDirectory, projectName);
 		if (projectDirectory.exists)
 			FileDeleter.delete(projectDirectory);
 		projectDirectory.mkdir();
+
 		createProjectDescriptionFile(projectDirectory);
 		createModules(projectDirectory);
+
 		return projectDirectory;
 	}
+
 	private def void createProjectDescriptionFile(File parentDirectory) {
 		val File filePath = new File(parentDirectory, IN4JSProject.PACKAGE_JSON);
 		var FileWriter out = null;
@@ -273,6 +303,7 @@ public class Project {
 				out.close();
 		}
 	}
+
 	private def void createModules(File parentDirectory) {
 		for (sourceFolder: sourceFolders)
 			sourceFolder.create(parentDirectory)
