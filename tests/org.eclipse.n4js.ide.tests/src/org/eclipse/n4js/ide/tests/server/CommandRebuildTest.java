@@ -110,7 +110,7 @@ public class CommandRebuildTest extends AbstractIdeTest<Void> {
 		test("class A { foo(a: A) { } } class Main { main(a: A) { a.foo(null); } }");
 
 		// send command under test
-		languageServer.reinitWorkspace();
+		// languageServer.reinitWorkspace();
 
 		// wait for previous command to finish
 		waitForRequestsDone();
