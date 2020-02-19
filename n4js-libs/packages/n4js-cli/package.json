@@ -18,6 +18,7 @@
   "files": [
     "bin/n4jsc.js",
     "bin/n4jsc.jar",
+    "resources/PrintJavaVersion.java",
     "npm-postinstall.js",
     "src-gen",
     "src"

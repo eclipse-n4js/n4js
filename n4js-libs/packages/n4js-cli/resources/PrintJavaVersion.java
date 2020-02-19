@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2017 NumberFour AG.
+ * Copyright (c) 2020 NumberFour AG.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,10 +8,11 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ts.ide
 
-/**
- * Use this class to register ide components.
- */
-class TypesIdeModule extends AbstractTypesIdeModule {
+/** Utility to detect and print out the Java version */
+public class PrintJavaVersion {
+	public static void main(String[] args) {
+		int javaVersionFeatureSegement = Runtime.version().feature();
+		System.out.println(javaVersionFeatureSegement);
+	}
 }
