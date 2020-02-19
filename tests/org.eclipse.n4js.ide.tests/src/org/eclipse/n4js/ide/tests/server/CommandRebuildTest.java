@@ -111,6 +111,15 @@ public class CommandRebuildTest extends AbstractIdeTest<Void> {
 	public void testRebuildWithoutClean() throws Exception {
 		test("class A { foo(a: A) { } } class Main { main(a: A) { a.foo(null); } }");
 
+		FileTime prjStateTime0 = Files.readAttributes(prjStatePath, BasicFileAttributes.class).creationTime();
+		FileTime genFileTime0 = Files.readAttributes(genFileStatePath, BasicFileAttributes.class).creationTime();
+
+		System.out.println("File attribute time of " + prjStatePath.toString());
+		System.out.println("                    is " + prjStateTime0.toMillis());
+
+		System.out.println("File attribute time of " + genFileStatePath.toString());
+		System.out.println("                    is " + genFileTime0.toMillis());
+
 		// send command under test
 		languageServer.reinitWorkspace();
 
@@ -121,6 +130,13 @@ public class CommandRebuildTest extends AbstractIdeTest<Void> {
 		assertEquals(0, languageClient.getErrorsCount());
 		FileTime prjStateTime = Files.readAttributes(prjStatePath, BasicFileAttributes.class).creationTime();
 		FileTime genFileTime = Files.readAttributes(genFileStatePath, BasicFileAttributes.class).creationTime();
+
+		System.out.println("File attribute time of " + prjStatePath.toString());
+		System.out.println("                    is " + prjStateTime.toMillis());
+
+		System.out.println("File attribute time of " + genFileStatePath.toString());
+		System.out.println("                    is " + genFileTime.toMillis());
+
 		assertEquals(FILE_TIME_MILLISECONDS, prjStateTime.toMillis());
 		assertEquals(FILE_TIME_MILLISECONDS, genFileTime.toMillis());
 	}
@@ -132,6 +148,7 @@ public class CommandRebuildTest extends AbstractIdeTest<Void> {
 
 		FileTime fileTime = Files.readAttributes(filePath, BasicFileAttributes.class).creationTime();
 		assertEquals(FILE_TIME_MILLISECONDS, fileTime.toMillis());
+		System.out.println("Set file attribute time of " + filePath.toString());
 	}
 
 }

@@ -185,6 +185,7 @@ public class XProjectManager {
 
 		Map<String, ResourceDescriptionsData> concurrentMap = indexProvider.get();
 		concurrentMap.put(projectDescription.getName(), resourceDescriptions);
+		System.out.println("result.getAffectedResources().size()=" + result.getAffectedResources().size());
 		persistedProjectStateOutdated |= !result.getAffectedResources().isEmpty();
 		return result;
 	}
@@ -257,6 +258,7 @@ public class XProjectManager {
 
 	/** Writes the current index, file hashes and validation issues to disk */
 	public void persistProjectState() {
+		System.out.println("persistedProjectStateOutdated=" + persistedProjectStateOutdated);
 		if (persistedProjectStateOutdated) {
 			projectStateHolder.writeProjectState(projectConfig);
 			persistedProjectStateOutdated = false;
