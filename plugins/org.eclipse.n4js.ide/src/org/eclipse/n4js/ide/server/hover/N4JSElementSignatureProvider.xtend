@@ -45,7 +45,7 @@ class N4JSElementSignatureProvider {
 			return get(o.eContainer);
 		}
 		else if(o instanceof ParameterizedTypeRef) {
-			return o.declaredType.name;
+			return o.typeRefAsString;
 		}
 		val id = getIdentifiableElement(o);
 		val label = doGetLabel(id, o);
@@ -121,15 +121,15 @@ class N4JSElementSignatureProvider {
 	}
 
 	def private dispatch getName(NamedElement namedElement) {
-		''' «namedElement.name»''';
+		'''«namedElement.name»''';
 	}
 
 	def private dispatch getName(IdentifiableElement identifiableElement) {
-		''' «identifiableElement.name»''';
+		'''«identifiableElement.name»''';
 	}
 
 	def private dispatch getName(TVariable tVariable) {
-		''' «if (tVariable.const) "const" else "var"» «tVariable.name»''';
+		'''«if (tVariable.const) "const" else "var"» «tVariable.name»''';
 	}
 
 }

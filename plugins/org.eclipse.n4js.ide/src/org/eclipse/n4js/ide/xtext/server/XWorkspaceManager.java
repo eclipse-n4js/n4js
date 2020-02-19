@@ -209,7 +209,8 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	public XBuildManager.XBuildable didOpen(URI uri, Integer version, String contents) {
 		openDocuments.put(uri, new XDocument(version, contents));
 
-		return getIncrementalDirtyBuildable(ImmutableList.of(uri), Collections.emptyList());
+		// return getIncrementalDirtyBuildable(ImmutableList.of(uri), Collections.emptyList()); // necessary at all?
+		return getIncrementalDirtyBuildable(Collections.emptyList(), Collections.emptyList());
 	}
 
 	/**
