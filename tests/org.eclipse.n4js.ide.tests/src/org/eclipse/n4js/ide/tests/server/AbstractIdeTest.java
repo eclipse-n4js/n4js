@@ -59,13 +59,13 @@ abstract public class AbstractIdeTest<T> {
 	/** Catch outputs on console to an internal buffer */
 	@BeforeClass
 	static final public void redirectPrintStreams() {
-		SYSTEM_OUT_REDIRECTER.set(false);
+		// SYSTEM_OUT_REDIRECTER.set(false);
 	}
 
 	/** Reset redirection */
 	@AfterClass
 	static final public void resetPrintStreams() {
-		SYSTEM_OUT_REDIRECTER.unset();
+		// SYSTEM_OUT_REDIRECTER.unset();
 	}
 
 	/** */

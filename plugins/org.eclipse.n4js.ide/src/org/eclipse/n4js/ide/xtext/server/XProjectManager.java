@@ -130,6 +130,9 @@ public class XProjectManager {
 	/** Initial build reads the project state and resolves changes. Generate output files. */
 	public XBuildResult doInitialBuild(CancelIndicator cancelIndicator) {
 		ResourceChangeSet changeSet = projectStateHolder.readProjectState(projectConfig);
+
+		System.out.println("changeSet in doInitialBuild is:\n" + changeSet.toString());
+
 		XBuildResult result = doBuild(
 				changeSet.getModified(), changeSet.getDeleted(), Collections.emptyList(), false, true, cancelIndicator);
 
