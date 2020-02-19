@@ -130,7 +130,6 @@ public class XProjectManager {
 	/** Initial build reads the project state and resolves changes. Generate output files. */
 	public XBuildResult doInitialBuild(CancelIndicator cancelIndicator) {
 		ResourceChangeSet changeSet = projectStateHolder.readProjectState(projectConfig);
-
 		XBuildResult result = doBuild(
 				changeSet.getModified(), changeSet.getDeleted(), Collections.emptyList(), false, true, cancelIndicator);
 
@@ -184,7 +183,6 @@ public class XProjectManager {
 		Map<String, ResourceDescriptionsData> concurrentMap = indexProvider.get();
 		concurrentMap.put(projectDescription.getName(), resourceDescriptions);
 		persistedProjectStateOutdated |= !result.getAffectedResources().isEmpty();
-
 		return result;
 	}
 
