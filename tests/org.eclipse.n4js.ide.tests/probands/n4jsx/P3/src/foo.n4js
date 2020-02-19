@@ -13,8 +13,3 @@ import { baz } from "bar";
 
 console.log('hello from foo.n4js');
 console.log(baz);
-
-
-export public function getMessage(): string {
-	return "hello";
-}

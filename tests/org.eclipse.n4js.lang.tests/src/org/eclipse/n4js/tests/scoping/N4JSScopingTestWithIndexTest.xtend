@@ -62,7 +62,7 @@ class N4JSScopingTestWithIndexTest {
 			"src/org/eclipse/n4js/tests/scoping/Client.n4js",
 			'''
 				<?xml version="1.0" encoding="ASCII"?>
-				<types:TModule xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typeRefs="http://www.eclipse.org/n4js/ts/TypeRefs" xmlns:types="http://www.eclipse.org/n4js/ts/Types" qualifiedName="org/eclipse/n4js/tests/scoping/Supplier" projectName="org.eclipse.n4js.lang.tests" vendorID="org.eclipse.n4js">
+				<types:TModule xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typeRefs="http://www.eclipse.org/n4js/ts/TypeRefs" xmlns:types="http://www.eclipse.org/n4js/ts/Types" simpleName="Supplier" qualifiedName="org/eclipse/n4js/tests/scoping/Supplier" projectName="org.eclipse.n4js.lang.tests" vendorID="org.eclipse.n4js">
 				  <astElement href="#/0"/>
 				  <topLevelTypes xsi:type="types:TClass" name="Supplier" exportedName="Supplier">
 				    <ownedMembers xsi:type="types:TMethod" name="foo" hasNoBody="true" declaredMemberAccessModifier="public">
@@ -85,7 +85,7 @@ class N4JSScopingTestWithIndexTest {
 			"SupplierWithBuiltIn", "src/org/eclipse/n4js/tests/scoping/ClientWithBuiltIn.n4js",
 			'''
 				<?xml version="1.0" encoding="ASCII"?>
-				<types:TModule xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typeRefs="http://www.eclipse.org/n4js/ts/TypeRefs" xmlns:types="http://www.eclipse.org/n4js/ts/Types" qualifiedName="org/eclipse/n4js/tests/scoping/SupplierWithBuiltIn" projectName="org.eclipse.n4js.lang.tests" vendorID="org.eclipse.n4js">
+				<types:TModule xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typeRefs="http://www.eclipse.org/n4js/ts/TypeRefs" xmlns:types="http://www.eclipse.org/n4js/ts/Types" simpleName="SupplierWithBuiltIn" qualifiedName="org/eclipse/n4js/tests/scoping/SupplierWithBuiltIn" projectName="org.eclipse.n4js.lang.tests" vendorID="org.eclipse.n4js">
 				  <astElement href="#/0"/>
 				  <topLevelTypes xsi:type="types:TClass" name="SupplierWithBuiltIn" exportedName="SupplierWithBuiltIn">
 				    <ownedMembers xsi:type="types:TField" name="s" declaredMemberAccessModifier="public">
