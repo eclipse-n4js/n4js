@@ -39,6 +39,8 @@ import com.google.inject.Injector;
  * The language server facade.
  */
 public class LspServer {
+	/** The LSP client will wait for this message. */
+	static final String LSP_SYNC_MESSAGE = "Listening for LSP clients";
 
 	private final N4jscOptions options;
 
@@ -54,7 +56,7 @@ public class LspServer {
 
 	/** Starts the LSP server in a blocking fashion */
 	public void start() throws Exception {
-		N4jscConsole.println("Start LSP server");
+		N4jscConsole.println("LSP server starts");
 		final ExecutorService threadPool = Executors.newCachedThreadPool();
 
 		try {
@@ -92,7 +94,6 @@ public class LspServer {
 		;
 
 		if (options.isStdio()) {
-			N4jscConsole.setSuppress(true);
 			setupAndRunWithSystemIO(languageServer, lsBuilder);
 		} else {
 			setupAndRunWithSocket(languageServer, lsBuilder);
@@ -107,7 +108,7 @@ public class LspServer {
 		try (AsynchronousServerSocketChannel serverSocket = AsynchronousServerSocketChannel.open().bind(address);) {
 
 			// Attention: the VSCode LSP extension is waiting for this line 'Listening for LSP clients'.
-			N4jscConsole.println("Listening for LSP clients on port " + options.getPort() + "...");
+			N4jscConsole.println(LSP_SYNC_MESSAGE + " on port " + options.getPort() + "...");
 
 			try (AsynchronousSocketChannel socketChannel = serverSocket.accept().get();
 					InputStream in = Channels.newInputStream(socketChannel);
@@ -120,6 +121,8 @@ public class LspServer {
 	}
 
 	private void setupAndRunWithSystemIO(XLanguageServerImpl languageServer, Builder<LanguageClient> lsBuilder) {
+		N4jscConsole.println(LSP_SYNC_MESSAGE + " on stdio");
+		N4jscConsole.setSuppress(true);
 		run(languageServer, lsBuilder, System.in, System.out);
 	}
 
