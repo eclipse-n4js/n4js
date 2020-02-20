@@ -108,28 +108,33 @@ class TModule extends SyntaxRelatedTElement, TAnnotableElement {
 
 	/*
 	 * Direct run-time dependencies of this module within same project.
+	 * <p>
 	 * Set at end of AST traversal (i.e. during main post-processing).
 	 */
-	refers TModule[] dependenciesRunTime
+	contains RunTimeDependency[] dependenciesRunTime
 	/*
-	 * Direct load-time dependencies of this module within same project iff caused by an extends/implements clause.
-	 * Set at end of AST traversal (i.e. during main post-processing).
-	 */
-	refers TModule[] dependenciesLoadTimeForInheritance
-	/*
-	 * Modules with a cyclic run-time dependency to this module. Never includes this module.
+	 * Modules within same project with a direct or indirect cyclic run-time dependency to this module.
+	 * Never includes this module.
+	 * <p>
 	 * Set during finalization of post-processing.
 	 */
-	refers TModule[] runTimeCyclicModules
+	refers TModule[] cyclicModulesRunTime
 	/*
-	 * Iff this module is an LTSlave, this property refers to the one or more LTDXs that turn this module into an LTSlave.
+	 * Modules within same project with a direct or indirect cyclic load-time dependency to this module,
+	 * taking into account only such load-time dependencies that are caused by extends/implements clauses.
+	 * Never includes this module.
+	 * <p>
 	 * Set during finalization of post-processing.
 	 */
-	refers TModule[] ltdxs
-	/* Tells whether this module is an LTSlave. */
-	op boolean isLTSlave() {
-		return !this.ltdxs.empty;
-	}
+	refers TModule[] cyclicModulesLoadTimeForInheritance
+	/*
+	 * Modules within same project that are run-time cyclic to this module AND have direct load-time dependency
+	 * to this module, taking into account only such load-time dependencies that are caused by extends/implements
+	 * clauses.
+	 * <p>
+	 * Set during finalization of post-processing.
+	 */
+	refers TModule[] runTimeCyclicLoadTimeDependents
 
 	// TODO jvp: what does that mean:
 	// TODO: make sure these are only top level types in the script
@@ -226,6 +231,22 @@ class TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	derived String moduleSpecifier get {
 		return qualifiedName
 	}
+
+	// FIXME linear search
+	op boolean hasDirectLoadTimeDependencyTo(TModule other) {
+		return dependenciesRunTime.exists[loadTimeForInheritance && target === other];
+	}
+}
+
+/*
+ * A run-time dependency from one module (i.e. <code>this.eContainer()</code>) to
+ * another module (i.e. <code>this.getTarget()</code>).
+ */
+class RunTimeDependency {
+	/* The target module of this dependency. */
+	refers TModule target
+	/* Tells whether this dependency is a load-time dependency that is caused by an extends/implements clause. */
+	boolean loadTimeForInheritance
 }
 
 /**

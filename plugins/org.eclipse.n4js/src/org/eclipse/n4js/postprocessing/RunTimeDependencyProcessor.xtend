@@ -13,6 +13,7 @@ package org.eclipse.n4js.postprocessing
 import com.google.common.collect.Sets
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import java.util.ArrayList
 import java.util.Collection
 import java.util.LinkedHashSet
 import java.util.Set
@@ -25,7 +26,9 @@ import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
+import org.eclipse.n4js.ts.types.RunTimeDependency
 import org.eclipse.n4js.ts.types.TModule
+import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
@@ -112,15 +115,18 @@ class RunTimeDependencyProcessor {
 				}
 			}
 		}
-		val modulesReferencedAtLoadTimeForInheritance = new LinkedHashSet(modulesReferencedAtRunTime);
-		modulesReferencedAtLoadTimeForInheritance.retainAll(cache.modulesReferencedAtLoadTimeForInheritance);
+		val dependenciesRunTime = new ArrayList<RunTimeDependency>(modulesReferencedAtRunTime.size);
+		for (currModule : modulesReferencedAtRunTime) {
+			val currDep = TypesFactory.eINSTANCE.createRunTimeDependency();
+			currDep.target = currModule;
+			currDep.loadTimeForInheritance = cache.modulesReferencedAtLoadTimeForInheritance.contains(currModule);
+			dependenciesRunTime += currDep;
+		}
 
 		// step 3: store direct run-time dependencies in TModule
 		EcoreUtilN4.doWithDeliver(false, [
 			module.dependenciesRunTime.clear();
-			module.dependenciesLoadTimeForInheritance.clear();
-			module.dependenciesRunTime += modulesReferencedAtRunTime
-			module.dependenciesLoadTimeForInheritance += modulesReferencedAtLoadTimeForInheritance;
+			module.dependenciesRunTime += dependenciesRunTime;
 		], module);
 	}
 
@@ -129,50 +135,69 @@ class RunTimeDependencyProcessor {
 	 * directly or indirectly required resources has finished).
 	 */
 	def package void computeAndStoreRunTimeCyclesInTModule(TModule module) {
-		// NOTE: as above, the order of LTDXs and cyclic modules is important, because we want to
-		// avoid random reordering of the same set of LTDXs and cyclic modules to avoid unnecessary
-		// changes of the TModule (see above for details)
-		val ltdxs = new LinkedHashSet<TModule>();
-		val cyclicModules = getAllCyclicRunTimeDependentModules(module); // FIXME consider optimization
-		for (cyclicModule : cyclicModules) {
-			if (cyclicModule.getDependenciesLoadTimeForInheritance().contains(module)) { // FIXME linear search
-				ltdxs.add(cyclicModule);
+		// NOTE: as above, the order of cyclicModulesRunTime and runTimeCyclicLoadTimeDependents stored in
+		// the TModule is important, because we want to avoid random reordering of the same set of modules
+		// to avoid unnecessary changes of the TModule (see above for details)
+		val cyclicModulesRunTime = <TModule>newLinkedHashSet();
+		val cyclicModulesLoadTimeForInheritance = <TModule>newLinkedHashSet();
+		getAllRunTimeCyclicModules(module, cyclicModulesRunTime, cyclicModulesLoadTimeForInheritance); // FIXME consider optimization
+		val runTimeCyclicLoadTimeDependents = new LinkedHashSet<TModule>();
+		for (cyclicModule : cyclicModulesRunTime) {
+			if (cyclicModule.hasDirectLoadTimeDependencyTo(module)) {
+				runTimeCyclicLoadTimeDependents.add(cyclicModule);
 			}
 		}
 
 		EcoreUtilN4.doWithDeliver(false, [
-			module.runTimeCyclicModules.clear();
-			module.ltdxs.clear();
-			module.runTimeCyclicModules += cyclicModules;
-			module.ltdxs += ltdxs;
+			module.cyclicModulesRunTime.clear();
+			module.cyclicModulesLoadTimeForInheritance.clear();
+			module.runTimeCyclicLoadTimeDependents.clear();
+			module.cyclicModulesRunTime += cyclicModulesRunTime;
+			module.cyclicModulesLoadTimeForInheritance += cyclicModulesLoadTimeForInheritance;
+			module.runTimeCyclicLoadTimeDependents += runTimeCyclicLoadTimeDependents;
 		], module);
 	}
 
-	def private static Set<TModule> getAllCyclicRunTimeDependentModules(TModule module) {
-		val result = new LinkedHashSet<TModule>();
-		collectCyclicRunTimeDependentModules(module, module.getDependenciesRunTime(),
-			Sets.newLinkedHashSet, Sets.newLinkedHashSet, result);
-		return result;
+	def private static void getAllRunTimeCyclicModules(TModule module, Set<TModule> addHereRunTime,
+		Set<TModule> addHereLoadTimeForInheritance) {
+
+		collectRunTimeCyclicModules(module, module.getDependenciesRunTime(),
+			Sets.newLinkedHashSet, Sets.newLinkedHashSet, true,
+			addHereRunTime, addHereLoadTimeForInheritance);
 	}
 
-	def private static void collectCyclicRunTimeDependentModules(TModule start, Collection<TModule> next,
-		Set<TModule> visited, Set<TModule> currPath, Set<TModule> addHere) {
+	def private static void collectRunTimeCyclicModules(
+		TModule start, Collection<RunTimeDependency> nextDeps,
+		Set<TModule> visited, Set<TModule> currPath, boolean currPathIsLoadTime,
+		Set<TModule> addHereRunTime, Set<TModule> addHereLoadTime) {
 
-		for (curr : next) {
-			if (curr === start) {
-				addHere.addAll(currPath);
+		for (currDep : nextDeps) {
+			val currModule = currDep.target;
+			val followedLoadTimeEdge = currDep.loadTimeForInheritance;
+			val newPathIsLoadTime = currPathIsLoadTime && followedLoadTimeEdge;
+			if (currModule === start) {
+				addHereRunTime.addAll(currPath);
+				if (newPathIsLoadTime) {
+					addHereLoadTime.addAll(currPath);
+				}
 			} else {
-				if (visited.add(curr)) {
+				if (visited.add(currModule)) {
 					try {
-						currPath.add(curr);
-						collectCyclicRunTimeDependentModules(start, curr.getDependenciesRunTime(),
-							visited, currPath, addHere);
+						currPath.add(currModule);
+						collectRunTimeCyclicModules(
+							start, currModule.getDependenciesRunTime(),
+							visited, currPath, newPathIsLoadTime,
+							addHereRunTime, addHereLoadTime);
 					} finally {
-						currPath.remove(curr);
+						currPath.remove(currModule);
 					}
 				} else {
-					if (addHere.contains(curr)) {
-						addHere.addAll(currPath);
+					if (addHereRunTime.contains(currModule)) {
+						addHereRunTime.addAll(currPath);
+						if (newPathIsLoadTime
+							&& addHereLoadTime.contains(currModule)) {
+							addHereLoadTime.addAll(currPath);
+						}
 					}
 				}
 			}

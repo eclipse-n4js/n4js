@@ -122,7 +122,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getSyntaxRelatedTElement()
 	 * @generated
 	 */
-	int SYNTAX_RELATED_TELEMENT = 53;
+	int SYNTAX_RELATED_TELEMENT = 54;
 
 	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
@@ -270,7 +270,7 @@ public interface TypesPackage extends EPackage {
 	int TMODULE__RECONCILED = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 10;
 
 	/**
-	 * The feature id for the '<em><b>Dependencies Run Time</b></em>' reference list.
+	 * The feature id for the '<em><b>Dependencies Run Time</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -279,31 +279,31 @@ public interface TypesPackage extends EPackage {
 	int TMODULE__DEPENDENCIES_RUN_TIME = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 11;
 
 	/**
-	 * The feature id for the '<em><b>Dependencies Load Time For Inheritance</b></em>' reference list.
+	 * The feature id for the '<em><b>Cyclic Modules Run Time</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__DEPENDENCIES_LOAD_TIME_FOR_INHERITANCE = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 12;
+	int TMODULE__CYCLIC_MODULES_RUN_TIME = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 12;
 
 	/**
-	 * The feature id for the '<em><b>Run Time Cyclic Modules</b></em>' reference list.
+	 * The feature id for the '<em><b>Cyclic Modules Load Time For Inheritance</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__RUN_TIME_CYCLIC_MODULES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 13;
+	int TMODULE__CYCLIC_MODULES_LOAD_TIME_FOR_INHERITANCE = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 13;
 
 	/**
-	 * The feature id for the '<em><b>Ltdxs</b></em>' reference list.
+	 * The feature id for the '<em><b>Run Time Cyclic Load Time Dependents</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__LTDXS = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 14;
+	int TMODULE__RUN_TIME_CYCLIC_LOAD_TIME_DEPENDENTS = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 14;
 
 	/**
 	 * The feature id for the '<em><b>Top Level Types</b></em>' containment reference list.
@@ -387,13 +387,13 @@ public interface TypesPackage extends EPackage {
 	int TMODULE_FEATURE_COUNT = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 23;
 
 	/**
-	 * The operation id for the '<em>Is LT Slave</em>' operation.
+	 * The operation id for the '<em>Has Direct Load Time Dependency To</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE___IS_LT_SLAVE = SYNTAX_RELATED_TELEMENT_OPERATION_COUNT + 0;
+	int TMODULE___HAS_DIRECT_LOAD_TIME_DEPENDENCY_TO__TMODULE = SYNTAX_RELATED_TELEMENT_OPERATION_COUNT + 0;
 
 	/**
 	 * The number of operations of the '<em>TModule</em>' class.
@@ -405,6 +405,52 @@ public interface TypesPackage extends EPackage {
 	int TMODULE_OPERATION_COUNT = SYNTAX_RELATED_TELEMENT_OPERATION_COUNT + 1;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.RunTimeDependencyImpl <em>Run Time Dependency</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.ts.types.impl.RunTimeDependencyImpl
+	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getRunTimeDependency()
+	 * @generated
+	 */
+	int RUN_TIME_DEPENDENCY = 2;
+
+	/**
+	 * The feature id for the '<em><b>Target</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int RUN_TIME_DEPENDENCY__TARGET = 0;
+
+	/**
+	 * The feature id for the '<em><b>Load Time For Inheritance</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int RUN_TIME_DEPENDENCY__LOAD_TIME_FOR_INHERITANCE = 1;
+
+	/**
+	 * The number of structural features of the '<em>Run Time Dependency</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int RUN_TIME_DEPENDENCY_FEATURE_COUNT = 2;
+
+	/**
+	 * The number of operations of the '<em>Run Time Dependency</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int RUN_TIME_DEPENDENCY_OPERATION_COUNT = 0;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.ComposedMemberCacheImpl <em>Composed Member Cache</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -412,7 +458,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getComposedMemberCache()
 	 * @generated
 	 */
-	int COMPOSED_MEMBER_CACHE = 2;
+	int COMPOSED_MEMBER_CACHE = 3;
 
 	/**
 	 * The feature id for the '<em><b>Cached Composed Members</b></em>' containment reference list.
@@ -458,7 +504,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTypableElement()
 	 * @generated
 	 */
-	int TYPABLE_ELEMENT = 3;
+	int TYPABLE_ELEMENT = 4;
 
 	/**
 	 * The number of structural features of the '<em>Typable Element</em>' class.
@@ -486,7 +532,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getIdentifiableElement()
 	 * @generated
 	 */
-	int IDENTIFIABLE_ELEMENT = 4;
+	int IDENTIFIABLE_ELEMENT = 5;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -532,7 +578,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTExportableElement()
 	 * @generated
 	 */
-	int TEXPORTABLE_ELEMENT = 5;
+	int TEXPORTABLE_ELEMENT = 6;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -596,7 +642,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTAnnotation()
 	 * @generated
 	 */
-	int TANNOTATION = 6;
+	int TANNOTATION = 7;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -660,7 +706,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTAnnotationArgument()
 	 * @generated
 	 */
-	int TANNOTATION_ARGUMENT = 7;
+	int TANNOTATION_ARGUMENT = 8;
 
 	/**
 	 * The number of structural features of the '<em>TAnnotation Argument</em>' class.
@@ -697,7 +743,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTAnnotationStringArgument()
 	 * @generated
 	 */
-	int TANNOTATION_STRING_ARGUMENT = 8;
+	int TANNOTATION_STRING_ARGUMENT = 9;
 
 	/**
 	 * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -743,7 +789,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTTypedElement()
 	 * @generated
 	 */
-	int TTYPED_ELEMENT = 9;
+	int TTYPED_ELEMENT = 10;
 
 	/**
 	 * The feature id for the '<em><b>Type Ref</b></em>' containment reference.
@@ -780,7 +826,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTAnnotationTypeRefArgument()
 	 * @generated
 	 */
-	int TANNOTATION_TYPE_REF_ARGUMENT = 10;
+	int TANNOTATION_TYPE_REF_ARGUMENT = 11;
 
 	/**
 	 * The feature id for the '<em><b>Type Ref</b></em>' containment reference.
@@ -826,7 +872,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTAnnotableElement()
 	 * @generated
 	 */
-	int TANNOTABLE_ELEMENT = 11;
+	int TANNOTABLE_ELEMENT = 12;
 
 	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -863,7 +909,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getType()
 	 * @generated
 	 */
-	int TYPE = 15;
+	int TYPE = 16;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1062,7 +1108,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTypeVariable()
 	 * @generated
 	 */
-	int TYPE_VARIABLE = 12;
+	int TYPE_VARIABLE = 13;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1315,7 +1361,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getInferenceVariable()
 	 * @generated
 	 */
-	int INFERENCE_VARIABLE = 13;
+	int INFERENCE_VARIABLE = 14;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1568,7 +1614,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getDeclaredTypeWithAccessModifier()
 	 * @generated
 	 */
-	int DECLARED_TYPE_WITH_ACCESS_MODIFIER = 17;
+	int DECLARED_TYPE_WITH_ACCESS_MODIFIER = 18;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1785,7 +1831,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTFunction()
 	 * @generated
 	 */
-	int TFUNCTION = 14;
+	int TFUNCTION = 15;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2137,7 +2183,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getAccessibleTypeElement()
 	 * @generated
 	 */
-	int ACCESSIBLE_TYPE_ELEMENT = 16;
+	int ACCESSIBLE_TYPE_ELEMENT = 17;
 
 	/**
 	 * The feature id for the '<em><b>Declared Type Access Modifier</b></em>' attribute.
@@ -2210,7 +2256,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getContainerType()
 	 * @generated
 	 */
-	int CONTAINER_TYPE = 18;
+	int CONTAINER_TYPE = 19;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2481,7 +2527,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getVirtualBaseType()
 	 * @generated
 	 */
-	int VIRTUAL_BASE_TYPE = 19;
+	int VIRTUAL_BASE_TYPE = 20;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2770,7 +2816,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getModuleNamespaceVirtualType()
 	 * @generated
 	 */
-	int MODULE_NAMESPACE_VIRTUAL_TYPE = 20;
+	int MODULE_NAMESPACE_VIRTUAL_TYPE = 21;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2996,7 +3042,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getPrimitiveType()
 	 * @generated
 	 */
-	int PRIMITIVE_TYPE = 21;
+	int PRIMITIVE_TYPE = 22;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3294,7 +3340,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getBuiltInType()
 	 * @generated
 	 */
-	int BUILT_IN_TYPE = 22;
+	int BUILT_IN_TYPE = 23;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3493,7 +3539,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getAnyType()
 	 * @generated
 	 */
-	int ANY_TYPE = 23;
+	int ANY_TYPE = 24;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3692,7 +3738,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getUndefinedType()
 	 * @generated
 	 */
-	int UNDEFINED_TYPE = 24;
+	int UNDEFINED_TYPE = 25;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3891,7 +3937,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getNullType()
 	 * @generated
 	 */
-	int NULL_TYPE = 25;
+	int NULL_TYPE = 26;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4090,7 +4136,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getVoidType()
 	 * @generated
 	 */
-	int VOID_TYPE = 26;
+	int VOID_TYPE = 27;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4289,7 +4335,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructuralType()
 	 * @generated
 	 */
-	int TSTRUCTURAL_TYPE = 27;
+	int TSTRUCTURAL_TYPE = 28;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4569,7 +4615,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTVersionable()
 	 * @generated
 	 */
-	int TVERSIONABLE = 28;
+	int TVERSIONABLE = 29;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4777,7 +4823,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTMigratable()
 	 * @generated
 	 */
-	int TMIGRATABLE = 29;
+	int TMIGRATABLE = 30;
 
 	/**
 	 * The feature id for the '<em><b>Migrations</b></em>' reference list.
@@ -4814,7 +4860,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTMigration()
 	 * @generated
 	 */
-	int TMIGRATION = 30;
+	int TMIGRATION = 31;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -5238,7 +5284,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTClassifier()
 	 * @generated
 	 */
-	int TCLASSIFIER = 31;
+	int TCLASSIFIER = 32;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -5572,7 +5618,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTObjectPrototype()
 	 * @generated
 	 */
-	int TOBJECT_PROTOTYPE = 32;
+	int TOBJECT_PROTOTYPE = 33;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -5951,7 +5997,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getArrayLike()
 	 * @generated
 	 */
-	int ARRAY_LIKE = 33;
+	int ARRAY_LIKE = 34;
 
 	/**
 	 * The feature id for the '<em><b>Declared Element Type</b></em>' containment reference.
@@ -5997,7 +6043,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTN4Classifier()
 	 * @generated
 	 */
-	int TN4_CLASSIFIER = 34;
+	int TN4_CLASSIFIER = 35;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -6376,7 +6422,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTClass()
 	 * @generated
 	 */
-	int TCLASS = 35;
+	int TCLASS = 36;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -6845,7 +6891,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTInterface()
 	 * @generated
 	 */
-	int TINTERFACE = 36;
+	int TINTERFACE = 37;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -7242,7 +7288,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTMember()
 	 * @generated
 	 */
-	int TMEMBER = 37;
+	int TMEMBER = 38;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -7522,7 +7568,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTMemberWithAccessModifier()
 	 * @generated
 	 */
-	int TMEMBER_WITH_ACCESS_MODIFIER = 38;
+	int TMEMBER_WITH_ACCESS_MODIFIER = 39;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -7820,7 +7866,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructMember()
 	 * @generated
 	 */
-	int TSTRUCT_MEMBER = 39;
+	int TSTRUCT_MEMBER = 40;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -8118,7 +8164,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTMethod()
 	 * @generated
 	 */
-	int TMETHOD = 40;
+	int TMETHOD = 41;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -8713,7 +8759,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructMethod()
 	 * @generated
 	 */
-	int TSTRUCT_METHOD = 41;
+	int TSTRUCT_METHOD = 42;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -9326,7 +9372,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTFormalParameter()
 	 * @generated
 	 */
-	int TFORMAL_PARAMETER = 42;
+	int TFORMAL_PARAMETER = 43;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -9471,7 +9517,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTAnonymousFormalParameter()
 	 * @generated
 	 */
-	int TANONYMOUS_FORMAL_PARAMETER = 43;
+	int TANONYMOUS_FORMAL_PARAMETER = 44;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -9634,7 +9680,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTField()
 	 * @generated
 	 */
-	int TFIELD = 44;
+	int TFIELD = 45;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -9977,7 +10023,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructField()
 	 * @generated
 	 */
-	int TSTRUCT_FIELD = 45;
+	int TSTRUCT_FIELD = 46;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -10338,7 +10384,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getFieldAccessor()
 	 * @generated
 	 */
-	int FIELD_ACCESSOR = 46;
+	int FIELD_ACCESSOR = 47;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -10672,7 +10718,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTGetter()
 	 * @generated
 	 */
-	int TGETTER = 47;
+	int TGETTER = 48;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -11015,7 +11061,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructGetter()
 	 * @generated
 	 */
-	int TSTRUCT_GETTER = 48;
+	int TSTRUCT_GETTER = 49;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -11376,7 +11422,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTSetter()
 	 * @generated
 	 */
-	int TSETTER = 49;
+	int TSETTER = 50;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -11719,7 +11765,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructSetter()
 	 * @generated
 	 */
-	int TSTRUCT_SETTER = 50;
+	int TSTRUCT_SETTER = 51;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -12080,7 +12126,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTEnum()
 	 * @generated
 	 */
-	int TENUM = 51;
+	int TENUM = 52;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -12342,7 +12388,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTEnumLiteral()
 	 * @generated
 	 */
-	int TENUM_LITERAL = 52;
+	int TENUM_LITERAL = 53;
 
 	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
@@ -12415,7 +12461,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTConstableElement()
 	 * @generated
 	 */
-	int TCONSTABLE_ELEMENT = 54;
+	int TCONSTABLE_ELEMENT = 55;
 
 	/**
 	 * The feature id for the '<em><b>Const</b></em>' attribute.
@@ -12461,7 +12507,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTVariable()
 	 * @generated
 	 */
-	int TVARIABLE = 55;
+	int TVARIABLE = 56;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -12642,7 +12688,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTypingStrategy()
 	 * @generated
 	 */
-	int TYPING_STRATEGY = 56;
+	int TYPING_STRATEGY = 57;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.TypeAccessModifier <em>Type Access Modifier</em>}' enum.
@@ -12652,7 +12698,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTypeAccessModifier()
 	 * @generated
 	 */
-	int TYPE_ACCESS_MODIFIER = 57;
+	int TYPE_ACCESS_MODIFIER = 58;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.MemberAccessModifier <em>Member Access Modifier</em>}' enum.
@@ -12662,7 +12708,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getMemberAccessModifier()
 	 * @generated
 	 */
-	int MEMBER_ACCESS_MODIFIER = 58;
+	int MEMBER_ACCESS_MODIFIER = 59;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.MemberType <em>Member Type</em>}' enum.
@@ -12672,7 +12718,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getMemberType()
 	 * @generated
 	 */
-	int MEMBER_TYPE = 59;
+	int MEMBER_TYPE = 60;
 
 	/**
 	 * The meta object id for the '<em>Parameterized Type Ref Iterable</em>' data type.
@@ -12682,7 +12728,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getParameterizedTypeRefIterable()
 	 * @generated
 	 */
-	int PARAMETERIZED_TYPE_REF_ITERABLE = 60;
+	int PARAMETERIZED_TYPE_REF_ITERABLE = 61;
 
 	/**
 	 * The meta object id for the '<em>Iterable Of TClassifier</em>' data type.
@@ -12692,7 +12738,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getIterableOfTClassifier()
 	 * @generated
 	 */
-	int ITERABLE_OF_TCLASSIFIER = 61;
+	int ITERABLE_OF_TCLASSIFIER = 62;
 
 	/**
 	 * The meta object id for the '<em>Variance</em>' data type.
@@ -12702,7 +12748,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getVariance()
 	 * @generated
 	 */
-	int VARIANCE = 62;
+	int VARIANCE = 63;
 
 	/**
 	 * The meta object id for the '<em>Name And Access</em>' data type.
@@ -12712,7 +12758,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getNameAndAccess()
 	 * @generated
 	 */
-	int NAME_AND_ACCESS = 63;
+	int NAME_AND_ACCESS = 64;
 
 	/**
 	 * The meta object id for the '<em>Member List</em>' data type.
@@ -12722,7 +12768,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getMemberList()
 	 * @generated
 	 */
-	int MEMBER_LIST = 64;
+	int MEMBER_LIST = 65;
 
 	/**
 	 * The meta object id for the '<em>TClassifier Iterable</em>' data type.
@@ -12732,7 +12778,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTClassifierIterable()
 	 * @generated
 	 */
-	int TCLASSIFIER_ITERABLE = 65;
+	int TCLASSIFIER_ITERABLE = 66;
 
 
 	/**
@@ -12877,10 +12923,10 @@ public interface TypesPackage extends EPackage {
 	EAttribute getTModule_Reconciled();
 
 	/**
-	 * Returns the meta object for the reference list '{@link org.eclipse.n4js.ts.types.TModule#getDependenciesRunTime <em>Dependencies Run Time</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.types.TModule#getDependenciesRunTime <em>Dependencies Run Time</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Dependencies Run Time</em>'.
+	 * @return the meta object for the containment reference list '<em>Dependencies Run Time</em>'.
 	 * @see org.eclipse.n4js.ts.types.TModule#getDependenciesRunTime()
 	 * @see #getTModule()
 	 * @generated
@@ -12888,37 +12934,37 @@ public interface TypesPackage extends EPackage {
 	EReference getTModule_DependenciesRunTime();
 
 	/**
-	 * Returns the meta object for the reference list '{@link org.eclipse.n4js.ts.types.TModule#getDependenciesLoadTimeForInheritance <em>Dependencies Load Time For Inheritance</em>}'.
+	 * Returns the meta object for the reference list '{@link org.eclipse.n4js.ts.types.TModule#getCyclicModulesRunTime <em>Cyclic Modules Run Time</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Dependencies Load Time For Inheritance</em>'.
-	 * @see org.eclipse.n4js.ts.types.TModule#getDependenciesLoadTimeForInheritance()
+	 * @return the meta object for the reference list '<em>Cyclic Modules Run Time</em>'.
+	 * @see org.eclipse.n4js.ts.types.TModule#getCyclicModulesRunTime()
 	 * @see #getTModule()
 	 * @generated
 	 */
-	EReference getTModule_DependenciesLoadTimeForInheritance();
+	EReference getTModule_CyclicModulesRunTime();
 
 	/**
-	 * Returns the meta object for the reference list '{@link org.eclipse.n4js.ts.types.TModule#getRunTimeCyclicModules <em>Run Time Cyclic Modules</em>}'.
+	 * Returns the meta object for the reference list '{@link org.eclipse.n4js.ts.types.TModule#getCyclicModulesLoadTimeForInheritance <em>Cyclic Modules Load Time For Inheritance</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Run Time Cyclic Modules</em>'.
-	 * @see org.eclipse.n4js.ts.types.TModule#getRunTimeCyclicModules()
+	 * @return the meta object for the reference list '<em>Cyclic Modules Load Time For Inheritance</em>'.
+	 * @see org.eclipse.n4js.ts.types.TModule#getCyclicModulesLoadTimeForInheritance()
 	 * @see #getTModule()
 	 * @generated
 	 */
-	EReference getTModule_RunTimeCyclicModules();
+	EReference getTModule_CyclicModulesLoadTimeForInheritance();
 
 	/**
-	 * Returns the meta object for the reference list '{@link org.eclipse.n4js.ts.types.TModule#getLtdxs <em>Ltdxs</em>}'.
+	 * Returns the meta object for the reference list '{@link org.eclipse.n4js.ts.types.TModule#getRunTimeCyclicLoadTimeDependents <em>Run Time Cyclic Load Time Dependents</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Ltdxs</em>'.
-	 * @see org.eclipse.n4js.ts.types.TModule#getLtdxs()
+	 * @return the meta object for the reference list '<em>Run Time Cyclic Load Time Dependents</em>'.
+	 * @see org.eclipse.n4js.ts.types.TModule#getRunTimeCyclicLoadTimeDependents()
 	 * @see #getTModule()
 	 * @generated
 	 */
-	EReference getTModule_Ltdxs();
+	EReference getTModule_RunTimeCyclicLoadTimeDependents();
 
 	/**
 	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.types.TModule#getTopLevelTypes <em>Top Level Types</em>}'.
@@ -13009,14 +13055,46 @@ public interface TypesPackage extends EPackage {
 	EAttribute getTModule_ModuleSpecifier();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TModule#isLTSlave() <em>Is LT Slave</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TModule#hasDirectLoadTimeDependencyTo(org.eclipse.n4js.ts.types.TModule) <em>Has Direct Load Time Dependency To</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Is LT Slave</em>' operation.
-	 * @see org.eclipse.n4js.ts.types.TModule#isLTSlave()
+	 * @return the meta object for the '<em>Has Direct Load Time Dependency To</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.TModule#hasDirectLoadTimeDependencyTo(org.eclipse.n4js.ts.types.TModule)
 	 * @generated
 	 */
-	EOperation getTModule__IsLTSlave();
+	EOperation getTModule__HasDirectLoadTimeDependencyTo__TModule();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.RunTimeDependency <em>Run Time Dependency</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Run Time Dependency</em>'.
+	 * @see org.eclipse.n4js.ts.types.RunTimeDependency
+	 * @generated
+	 */
+	EClass getRunTimeDependency();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.n4js.ts.types.RunTimeDependency#getTarget <em>Target</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Target</em>'.
+	 * @see org.eclipse.n4js.ts.types.RunTimeDependency#getTarget()
+	 * @see #getRunTimeDependency()
+	 * @generated
+	 */
+	EReference getRunTimeDependency_Target();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.RunTimeDependency#isLoadTimeForInheritance <em>Load Time For Inheritance</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Load Time For Inheritance</em>'.
+	 * @see org.eclipse.n4js.ts.types.RunTimeDependency#isLoadTimeForInheritance()
+	 * @see #getRunTimeDependency()
+	 * @generated
+	 */
+	EAttribute getRunTimeDependency_LoadTimeForInheritance();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.ComposedMemberCache <em>Composed Member Cache</em>}'.
@@ -15894,7 +15972,7 @@ public interface TypesPackage extends EPackage {
 		EAttribute TMODULE__RECONCILED = eINSTANCE.getTModule_Reconciled();
 
 		/**
-		 * The meta object literal for the '<em><b>Dependencies Run Time</b></em>' reference list feature.
+		 * The meta object literal for the '<em><b>Dependencies Run Time</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
@@ -15902,28 +15980,28 @@ public interface TypesPackage extends EPackage {
 		EReference TMODULE__DEPENDENCIES_RUN_TIME = eINSTANCE.getTModule_DependenciesRunTime();
 
 		/**
-		 * The meta object literal for the '<em><b>Dependencies Load Time For Inheritance</b></em>' reference list feature.
+		 * The meta object literal for the '<em><b>Cyclic Modules Run Time</b></em>' reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference TMODULE__DEPENDENCIES_LOAD_TIME_FOR_INHERITANCE = eINSTANCE.getTModule_DependenciesLoadTimeForInheritance();
+		EReference TMODULE__CYCLIC_MODULES_RUN_TIME = eINSTANCE.getTModule_CyclicModulesRunTime();
 
 		/**
-		 * The meta object literal for the '<em><b>Run Time Cyclic Modules</b></em>' reference list feature.
+		 * The meta object literal for the '<em><b>Cyclic Modules Load Time For Inheritance</b></em>' reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference TMODULE__RUN_TIME_CYCLIC_MODULES = eINSTANCE.getTModule_RunTimeCyclicModules();
+		EReference TMODULE__CYCLIC_MODULES_LOAD_TIME_FOR_INHERITANCE = eINSTANCE.getTModule_CyclicModulesLoadTimeForInheritance();
 
 		/**
-		 * The meta object literal for the '<em><b>Ltdxs</b></em>' reference list feature.
+		 * The meta object literal for the '<em><b>Run Time Cyclic Load Time Dependents</b></em>' reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference TMODULE__LTDXS = eINSTANCE.getTModule_Ltdxs();
+		EReference TMODULE__RUN_TIME_CYCLIC_LOAD_TIME_DEPENDENTS = eINSTANCE.getTModule_RunTimeCyclicLoadTimeDependents();
 
 		/**
 		 * The meta object literal for the '<em><b>Top Level Types</b></em>' containment reference list feature.
@@ -15990,12 +16068,38 @@ public interface TypesPackage extends EPackage {
 		EAttribute TMODULE__MODULE_SPECIFIER = eINSTANCE.getTModule_ModuleSpecifier();
 
 		/**
-		 * The meta object literal for the '<em><b>Is LT Slave</b></em>' operation.
+		 * The meta object literal for the '<em><b>Has Direct Load Time Dependency To</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation TMODULE___IS_LT_SLAVE = eINSTANCE.getTModule__IsLTSlave();
+		EOperation TMODULE___HAS_DIRECT_LOAD_TIME_DEPENDENCY_TO__TMODULE = eINSTANCE.getTModule__HasDirectLoadTimeDependencyTo__TModule();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.RunTimeDependencyImpl <em>Run Time Dependency</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.n4js.ts.types.impl.RunTimeDependencyImpl
+		 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getRunTimeDependency()
+		 * @generated
+		 */
+		EClass RUN_TIME_DEPENDENCY = eINSTANCE.getRunTimeDependency();
+
+		/**
+		 * The meta object literal for the '<em><b>Target</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference RUN_TIME_DEPENDENCY__TARGET = eINSTANCE.getRunTimeDependency_Target();
+
+		/**
+		 * The meta object literal for the '<em><b>Load Time For Inheritance</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute RUN_TIME_DEPENDENCY__LOAD_TIME_FOR_INHERITANCE = eINSTANCE.getRunTimeDependency_LoadTimeForInheritance();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.ComposedMemberCacheImpl <em>Composed Member Cache</em>}' class.

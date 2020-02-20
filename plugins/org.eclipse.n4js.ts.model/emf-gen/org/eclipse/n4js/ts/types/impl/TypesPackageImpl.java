@@ -45,6 +45,7 @@ import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
 import org.eclipse.n4js.ts.types.NameAndAccess;
 import org.eclipse.n4js.ts.types.NullType;
 import org.eclipse.n4js.ts.types.PrimitiveType;
+import org.eclipse.n4js.ts.types.RunTimeDependency;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TAnnotableElement;
 import org.eclipse.n4js.ts.types.TAnnotation;
@@ -115,6 +116,13 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	private EClass tModuleEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass runTimeDependencyEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -780,7 +788,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getTModule_DependenciesLoadTimeForInheritance() {
+	public EReference getTModule_CyclicModulesRunTime() {
 		return (EReference)tModuleEClass.getEStructuralFeatures().get(11);
 	}
 
@@ -790,7 +798,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getTModule_RunTimeCyclicModules() {
+	public EReference getTModule_CyclicModulesLoadTimeForInheritance() {
 		return (EReference)tModuleEClass.getEStructuralFeatures().get(12);
 	}
 
@@ -800,7 +808,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getTModule_Ltdxs() {
+	public EReference getTModule_RunTimeCyclicLoadTimeDependents() {
 		return (EReference)tModuleEClass.getEStructuralFeatures().get(13);
 	}
 
@@ -890,8 +898,38 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getTModule__IsLTSlave() {
+	public EOperation getTModule__HasDirectLoadTimeDependencyTo__TModule() {
 		return tModuleEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getRunTimeDependency() {
+		return runTimeDependencyEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getRunTimeDependency_Target() {
+		return (EReference)runTimeDependencyEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getRunTimeDependency_LoadTimeForInheritance() {
+		return (EAttribute)runTimeDependencyEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -3588,9 +3626,9 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEAttribute(tModuleEClass, TMODULE__PRE_LINKING_PHASE);
 		createEAttribute(tModuleEClass, TMODULE__RECONCILED);
 		createEReference(tModuleEClass, TMODULE__DEPENDENCIES_RUN_TIME);
-		createEReference(tModuleEClass, TMODULE__DEPENDENCIES_LOAD_TIME_FOR_INHERITANCE);
-		createEReference(tModuleEClass, TMODULE__RUN_TIME_CYCLIC_MODULES);
-		createEReference(tModuleEClass, TMODULE__LTDXS);
+		createEReference(tModuleEClass, TMODULE__CYCLIC_MODULES_RUN_TIME);
+		createEReference(tModuleEClass, TMODULE__CYCLIC_MODULES_LOAD_TIME_FOR_INHERITANCE);
+		createEReference(tModuleEClass, TMODULE__RUN_TIME_CYCLIC_LOAD_TIME_DEPENDENTS);
 		createEReference(tModuleEClass, TMODULE__TOP_LEVEL_TYPES);
 		createEReference(tModuleEClass, TMODULE__VARIABLES);
 		createEReference(tModuleEClass, TMODULE__INTERNAL_TYPES);
@@ -3599,7 +3637,11 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEReference(tModuleEClass, TMODULE__COMPOSED_MEMBER_CACHES);
 		createEReference(tModuleEClass, TMODULE__TEMPORARY_TYPES);
 		createEAttribute(tModuleEClass, TMODULE__MODULE_SPECIFIER);
-		createEOperation(tModuleEClass, TMODULE___IS_LT_SLAVE);
+		createEOperation(tModuleEClass, TMODULE___HAS_DIRECT_LOAD_TIME_DEPENDENCY_TO__TMODULE);
+
+		runTimeDependencyEClass = createEClass(RUN_TIME_DEPENDENCY);
+		createEReference(runTimeDependencyEClass, RUN_TIME_DEPENDENCY__TARGET);
+		createEAttribute(runTimeDependencyEClass, RUN_TIME_DEPENDENCY__LOAD_TIME_FOR_INHERITANCE);
 
 		composedMemberCacheEClass = createEClass(COMPOSED_MEMBER_CACHE);
 		createEReference(composedMemberCacheEClass, COMPOSED_MEMBER_CACHE__CACHED_COMPOSED_MEMBERS);
@@ -4077,10 +4119,10 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEAttribute(getTModule_MainModule(), theEcorePackage.getEBoolean(), "mainModule", null, 0, 1, TModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTModule_PreLinkingPhase(), theEcorePackage.getEBoolean(), "preLinkingPhase", null, 0, 1, TModule.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTModule_Reconciled(), theEcorePackage.getEBoolean(), "reconciled", null, 0, 1, TModule.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getTModule_DependenciesRunTime(), this.getTModule(), null, "dependenciesRunTime", null, 0, -1, TModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getTModule_DependenciesLoadTimeForInheritance(), this.getTModule(), null, "dependenciesLoadTimeForInheritance", null, 0, -1, TModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getTModule_RunTimeCyclicModules(), this.getTModule(), null, "runTimeCyclicModules", null, 0, -1, TModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getTModule_Ltdxs(), this.getTModule(), null, "ltdxs", null, 0, -1, TModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTModule_DependenciesRunTime(), this.getRunTimeDependency(), null, "dependenciesRunTime", null, 0, -1, TModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTModule_CyclicModulesRunTime(), this.getTModule(), null, "cyclicModulesRunTime", null, 0, -1, TModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTModule_CyclicModulesLoadTimeForInheritance(), this.getTModule(), null, "cyclicModulesLoadTimeForInheritance", null, 0, -1, TModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTModule_RunTimeCyclicLoadTimeDependents(), this.getTModule(), null, "runTimeCyclicLoadTimeDependents", null, 0, -1, TModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTModule_TopLevelTypes(), this.getType(), null, "topLevelTypes", null, 0, -1, TModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTModule_Variables(), this.getTVariable(), null, "variables", null, 0, -1, TModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTModule_InternalTypes(), this.getType(), null, "internalTypes", null, 0, -1, TModule.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -4090,7 +4132,12 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEReference(getTModule_TemporaryTypes(), this.getType(), null, "temporaryTypes", null, 0, -1, TModule.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTModule_ModuleSpecifier(), theEcorePackage.getEString(), "moduleSpecifier", null, 0, 1, TModule.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 
-		initEOperation(getTModule__IsLTSlave(), theEcorePackage.getEBoolean(), "isLTSlave", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		EOperation op = initEOperation(getTModule__HasDirectLoadTimeDependencyTo__TModule(), theEcorePackage.getEBoolean(), "hasDirectLoadTimeDependencyTo", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getTModule(), "other", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEClass(runTimeDependencyEClass, RunTimeDependency.class, "RunTimeDependency", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getRunTimeDependency_Target(), this.getTModule(), null, "target", null, 0, 1, RunTimeDependency.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getRunTimeDependency_LoadTimeForInheritance(), theEcorePackage.getEBoolean(), "loadTimeForInheritance", null, 0, 1, RunTimeDependency.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(composedMemberCacheEClass, ComposedMemberCache.class, "ComposedMemberCache", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getComposedMemberCache_CachedComposedMembers(), this.getTMember(), null, "cachedComposedMembers", null, 0, -1, ComposedMemberCache.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -4112,7 +4159,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEAttribute(getTAnnotation_Name(), theEcorePackage.getEString(), "name", null, 0, 1, TAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTAnnotation_Args(), this.getTAnnotationArgument(), null, "args", null, 0, -1, TAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		EOperation op = initEOperation(getTAnnotation__HasStringArgument__String(), theEcorePackage.getEBoolean(), "hasStringArgument", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		op = initEOperation(getTAnnotation__HasStringArgument__String(), theEcorePackage.getEBoolean(), "hasStringArgument", 0, 1, !IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, theEcorePackage.getEString(), "argumentValue", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getTAnnotation__GetAnnotationAsString(), theEcorePackage.getEString(), "getAnnotationAsString", 0, 1, !IS_UNIQUE, IS_ORDERED);

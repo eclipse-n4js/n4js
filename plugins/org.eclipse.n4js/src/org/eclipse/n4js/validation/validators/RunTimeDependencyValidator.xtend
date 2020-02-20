@@ -70,11 +70,11 @@ class RunTimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 			return;
 		}
 		val containingModule = (idRef.eResource as N4JSResource).module;
-		val hasCycle = (targetModule === containingModule && !containingModule.runTimeCyclicModules.empty)
-			|| (targetModule !== containingModule && containingModule.runTimeCyclicModules.contains(targetModule)); // FIXME linear search
+		val hasCycle = (targetModule === containingModule && !containingModule.cyclicModulesRunTime.empty)
+			|| (targetModule !== containingModule && containingModule.cyclicModulesRunTime.contains(targetModule)); // FIXME linear search
 		if (hasCycle) {
 			val message = IssueCodes.getMessageForLTD_ILLEGAL_LOAD_TIME_REFERENCE()
-				+ '\n' + dependencyCycleToString(containingModule, INDENT);
+				+ '\n' + dependencyCycleToString(containingModule, false, INDENT);
 			addIssue(message, idRef, IssueCodes.LTD_ILLEGAL_LOAD_TIME_REFERENCE);
 		}
 	}
@@ -85,15 +85,30 @@ class RunTimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 
 		val modulesInHealedCycles = new HashSet<TModule>();
 		for (importDecl : importDecls) {
-			if (holdsNotAnIllegalImportOfLTSlave(importDecl, modulesInHealedCycles)) {
+			val containingModule = (importDecl.eResource as N4JSResource).module;
+
+			if (holdsNotAnIllegalImportWithinLoadTimeCycle(containingModule, importDecl)
+				&& holdsNotAnIllegalImportOfLTSlave(containingModule, importDecl, modulesInHealedCycles)) {
+
 				// we have a valid import, it may contribute to healing later imports:
 				val targetModule = importDecl.module;
-				if (!targetModule.runTimeCyclicModules.empty) {
+				if (!targetModule.cyclicModulesRunTime.empty) {
 					modulesInHealedCycles += targetModule;
-					modulesInHealedCycles += targetModule.runTimeCyclicModules;
+					modulesInHealedCycles += targetModule.cyclicModulesRunTime;
 				}
 			}
 		}
+	}
+
+	def private boolean holdsNotAnIllegalImportWithinLoadTimeCycle(TModule containingModule, ImportDeclaration importDecl) {
+		val targetModule = importDecl.module;
+		if (containingModule.cyclicModulesLoadTimeForInheritance.contains(targetModule)) { // FIXME linear search
+			val message = IssueCodes.getMessageForLTD_LOAD_TIME_DEPENDENCY_CYCLE() + "\n"
+				+ dependencyCycleToString(targetModule, true, INDENT);
+			addIssue(message, importDecl, N4JSPackage.eINSTANCE.importDeclaration_Module, IssueCodes.LTD_LOAD_TIME_DEPENDENCY_CYCLE);
+			return false;
+		}
+		return true;
 	}
 
 	/**
@@ -104,18 +119,21 @@ class RunTimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 	 * </ol>
 	 * In other words, m must be the single LTDX of m’.
 	 */
-	def private boolean holdsNotAnIllegalImportOfLTSlave(ImportDeclaration importDecl, Set<TModule> modulesInHealedCycles) {
+	def private boolean holdsNotAnIllegalImportOfLTSlave(TModule containingModule, ImportDeclaration importDecl, Set<TModule> modulesInHealedCycles) {
 		if (!importDecl.isRetainedAtRunTime()) {
 			return true; // only interested in imports that are retained at run-time
 		}
 
-		val containingModule = (importDecl.eResource as N4JSResource).module;
 		val targetModule = importDecl.module;
 		if (!targetModule.isLTSlave) {
 			return true; // only interested in imports of LTSlaves
 		}
-		
-		val ltdxs = targetModule.ltdxs;
+		if (!targetModule.cyclicModulesLoadTimeForInheritance.empty) {
+			// target is part of a load-time dependency cycle, so other errors are shown already there
+			return true; // avoid unnecessary follow-up errors
+		}
+
+		val ltdxs = targetModule.runTimeCyclicLoadTimeDependents;
 		val isSingletonLTSlave = ltdxs.size() == 1
 			&& !containingModule.equals(Iterables.getFirst(ltdxs, null));
 		val isMultiLTSlave = ltdxs.size() > 1;
@@ -123,14 +141,14 @@ class RunTimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 		if (isSingletonLTSlave || isMultiLTSlave) {
 			if (!modulesInHealedCycles.contains(targetModule)) {
 				// illegal import of an LTSlave
-				val withinSameDependencyCycleCluster = targetModule.runTimeCyclicModules.contains(containingModule);
+				val withinSameDependencyCycleCluster = targetModule.cyclicModulesRunTime.contains(containingModule);
 				if (withinSameDependencyCycleCluster) {
 					// ERROR: importing a multi-LTSlave from within the dependency cycle cluster
 					// --> load-time dependency conflict
 					val otherLTDXs = otherLTDXsToString(containingModule, targetModule);
 					val message = IssueCodes.getMessageForLTD_LOAD_TIME_DEPENDENCY_CONFLICT(targetModule.simpleName, otherLTDXs) + "\n"
 						+ "Containing run-time dependency cycle cluster:\n"
-						+ dependencyCycleToString(targetModule, INDENT);
+						+ dependencyCycleToString(targetModule, false, INDENT);
 					addIssue(message, importDecl, N4JSPackage.eINSTANCE.importDeclaration_Module, IssueCodes.LTD_LOAD_TIME_DEPENDENCY_CONFLICT);
 					return false;
 				} else {
@@ -138,7 +156,7 @@ class RunTimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 					// --> will be healed by transpiler
 					val message = IssueCodes.getMessageForLTD_IMPORT_OF_LT_SLAVE(targetModule.simpleName) + "\n"
 						+ "Containing run-time dependency cycle cluster:\n"
-						+ dependencyCycleToString(targetModule, INDENT);
+						+ dependencyCycleToString(targetModule, false, INDENT);
 					addIssue(message, importDecl, N4JSPackage.eINSTANCE.importDeclaration_Module, IssueCodes.LTD_IMPORT_OF_LT_SLAVE);
 					return true; // because we assume a healing import will be added by transpiler, this import can be treated as healing in calling method
 				}
@@ -174,13 +192,14 @@ class RunTimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	def private String otherLTDXsToString(TModule module, TModule ltSlave) {
-		val otherLTDXs = ltSlave.ltdxs.filter[it !== module].toList;
+		val otherLTDXs = ltSlave.runTimeCyclicLoadTimeDependents.filter[it !== module].toList;
 		val prefix = if (otherLTDXs.size > 1) "modules " else "module ";
 		return prefix + otherLTDXs.map[simpleName].join(", ");
 	}
 
-	def private String dependencyCycleToString(TModule module, CharSequence indent) {
-		val cyclicModules = new LinkedHashSet(module.runTimeCyclicModules);
+	def private String dependencyCycleToString(TModule module, boolean onlyLoadTimeForInheritance, CharSequence indent) {
+		val cyclicModulesToUse = if (onlyLoadTimeForInheritance) module.cyclicModulesLoadTimeForInheritance else module.cyclicModulesRunTime;
+		val cyclicModules = new LinkedHashSet(cyclicModulesToUse);
 		if (cyclicModules.empty) {
 			return null;
 		}
@@ -198,7 +217,7 @@ class RunTimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 			sb.append(cyclicModule.fileName)
 			sb.append(" --> ");
 			val listStart = sb.length;
-			for (requiredModule : cyclicModule.dependenciesRunTime) {
+			for (requiredModule : cyclicModule.dependenciesRunTime.map[target]) {
 				if (cyclicModules.contains(requiredModule)) {
 					if (sb.length > listStart) {
 						sb.append(", ");
@@ -208,6 +227,10 @@ class RunTimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 			}
 		}
 		return sb.toString();
+	}
+
+	def private boolean isLTSlave(TModule module) {
+		return !module.runTimeCyclicLoadTimeDependents.empty;
 	}
 
 	def private String getFileName(TModule module) {

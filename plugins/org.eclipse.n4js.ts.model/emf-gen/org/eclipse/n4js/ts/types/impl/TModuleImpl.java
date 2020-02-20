@@ -29,12 +29,17 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.n4js.ts.types.ComposedMemberCache;
+import org.eclipse.n4js.ts.types.RunTimeDependency;
 import org.eclipse.n4js.ts.types.TAnnotableElement;
 import org.eclipse.n4js.ts.types.TAnnotation;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
+
+import org.eclipse.xtext.xbase.lib.Functions.Function1;
+
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 /**
  * <!-- begin-user-doc -->
@@ -56,9 +61,9 @@ import org.eclipse.n4js.ts.types.TypesPackage;
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#isPreLinkingPhase <em>Pre Linking Phase</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#isReconciled <em>Reconciled</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getDependenciesRunTime <em>Dependencies Run Time</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getDependenciesLoadTimeForInheritance <em>Dependencies Load Time For Inheritance</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getRunTimeCyclicModules <em>Run Time Cyclic Modules</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getLtdxs <em>Ltdxs</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getCyclicModulesRunTime <em>Cyclic Modules Run Time</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getCyclicModulesLoadTimeForInheritance <em>Cyclic Modules Load Time For Inheritance</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getRunTimeCyclicLoadTimeDependents <em>Run Time Cyclic Load Time Dependents</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getTopLevelTypes <em>Top Level Types</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getVariables <em>Variables</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getInternalTypes <em>Internal Types</em>}</li>
@@ -283,44 +288,44 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	protected boolean reconciled = RECONCILED_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getDependenciesRunTime() <em>Dependencies Run Time</em>}' reference list.
+	 * The cached value of the '{@link #getDependenciesRunTime() <em>Dependencies Run Time</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getDependenciesRunTime()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<TModule> dependenciesRunTime;
+	protected EList<RunTimeDependency> dependenciesRunTime;
 
 	/**
-	 * The cached value of the '{@link #getDependenciesLoadTimeForInheritance() <em>Dependencies Load Time For Inheritance</em>}' reference list.
+	 * The cached value of the '{@link #getCyclicModulesRunTime() <em>Cyclic Modules Run Time</em>}' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getDependenciesLoadTimeForInheritance()
+	 * @see #getCyclicModulesRunTime()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<TModule> dependenciesLoadTimeForInheritance;
+	protected EList<TModule> cyclicModulesRunTime;
 
 	/**
-	 * The cached value of the '{@link #getRunTimeCyclicModules() <em>Run Time Cyclic Modules</em>}' reference list.
+	 * The cached value of the '{@link #getCyclicModulesLoadTimeForInheritance() <em>Cyclic Modules Load Time For Inheritance</em>}' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getRunTimeCyclicModules()
+	 * @see #getCyclicModulesLoadTimeForInheritance()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<TModule> runTimeCyclicModules;
+	protected EList<TModule> cyclicModulesLoadTimeForInheritance;
 
 	/**
-	 * The cached value of the '{@link #getLtdxs() <em>Ltdxs</em>}' reference list.
+	 * The cached value of the '{@link #getRunTimeCyclicLoadTimeDependents() <em>Run Time Cyclic Load Time Dependents</em>}' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getLtdxs()
+	 * @see #getRunTimeCyclicLoadTimeDependents()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<TModule> ltdxs;
+	protected EList<TModule> runTimeCyclicLoadTimeDependents;
 
 	/**
 	 * The cached value of the '{@link #getTopLevelTypes() <em>Top Level Types</em>}' containment reference list.
@@ -680,9 +685,9 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * @generated
 	 */
 	@Override
-	public EList<TModule> getDependenciesRunTime() {
+	public EList<RunTimeDependency> getDependenciesRunTime() {
 		if (dependenciesRunTime == null) {
-			dependenciesRunTime = new EObjectResolvingEList<TModule>(TModule.class, this, TypesPackage.TMODULE__DEPENDENCIES_RUN_TIME);
+			dependenciesRunTime = new EObjectContainmentEList<RunTimeDependency>(RunTimeDependency.class, this, TypesPackage.TMODULE__DEPENDENCIES_RUN_TIME);
 		}
 		return dependenciesRunTime;
 	}
@@ -693,11 +698,11 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * @generated
 	 */
 	@Override
-	public EList<TModule> getDependenciesLoadTimeForInheritance() {
-		if (dependenciesLoadTimeForInheritance == null) {
-			dependenciesLoadTimeForInheritance = new EObjectResolvingEList<TModule>(TModule.class, this, TypesPackage.TMODULE__DEPENDENCIES_LOAD_TIME_FOR_INHERITANCE);
+	public EList<TModule> getCyclicModulesRunTime() {
+		if (cyclicModulesRunTime == null) {
+			cyclicModulesRunTime = new EObjectResolvingEList<TModule>(TModule.class, this, TypesPackage.TMODULE__CYCLIC_MODULES_RUN_TIME);
 		}
-		return dependenciesLoadTimeForInheritance;
+		return cyclicModulesRunTime;
 	}
 
 	/**
@@ -706,11 +711,11 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * @generated
 	 */
 	@Override
-	public EList<TModule> getRunTimeCyclicModules() {
-		if (runTimeCyclicModules == null) {
-			runTimeCyclicModules = new EObjectResolvingEList<TModule>(TModule.class, this, TypesPackage.TMODULE__RUN_TIME_CYCLIC_MODULES);
+	public EList<TModule> getCyclicModulesLoadTimeForInheritance() {
+		if (cyclicModulesLoadTimeForInheritance == null) {
+			cyclicModulesLoadTimeForInheritance = new EObjectResolvingEList<TModule>(TModule.class, this, TypesPackage.TMODULE__CYCLIC_MODULES_LOAD_TIME_FOR_INHERITANCE);
 		}
-		return runTimeCyclicModules;
+		return cyclicModulesLoadTimeForInheritance;
 	}
 
 	/**
@@ -719,11 +724,11 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * @generated
 	 */
 	@Override
-	public EList<TModule> getLtdxs() {
-		if (ltdxs == null) {
-			ltdxs = new EObjectResolvingEList<TModule>(TModule.class, this, TypesPackage.TMODULE__LTDXS);
+	public EList<TModule> getRunTimeCyclicLoadTimeDependents() {
+		if (runTimeCyclicLoadTimeDependents == null) {
+			runTimeCyclicLoadTimeDependents = new EObjectResolvingEList<TModule>(TModule.class, this, TypesPackage.TMODULE__RUN_TIME_CYCLIC_LOAD_TIME_DEPENDENTS);
 		}
-		return ltdxs;
+		return runTimeCyclicLoadTimeDependents;
 	}
 
 	/**
@@ -843,9 +848,13 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * @generated
 	 */
 	@Override
-	public boolean isLTSlave() {
-		boolean _isEmpty = this.getLtdxs().isEmpty();
-		return (!_isEmpty);
+	public boolean hasDirectLoadTimeDependencyTo(final TModule other) {
+		final Function1<RunTimeDependency, Boolean> _function = new Function1<RunTimeDependency, Boolean>() {
+			public Boolean apply(final RunTimeDependency it) {
+				return Boolean.valueOf((it.isLoadTimeForInheritance() && (it.getTarget() == other)));
+			}
+		};
+		return IterableExtensions.<RunTimeDependency>exists(this.getDependenciesRunTime(), _function);
 	}
 
 	/**
@@ -858,6 +867,8 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 		switch (featureID) {
 			case TypesPackage.TMODULE__ANNOTATIONS:
 				return ((InternalEList<?>)getAnnotations()).basicRemove(otherEnd, msgs);
+			case TypesPackage.TMODULE__DEPENDENCIES_RUN_TIME:
+				return ((InternalEList<?>)getDependenciesRunTime()).basicRemove(otherEnd, msgs);
 			case TypesPackage.TMODULE__TOP_LEVEL_TYPES:
 				return ((InternalEList<?>)getTopLevelTypes()).basicRemove(otherEnd, msgs);
 			case TypesPackage.TMODULE__VARIABLES:
@@ -906,12 +917,12 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 				return isReconciled();
 			case TypesPackage.TMODULE__DEPENDENCIES_RUN_TIME:
 				return getDependenciesRunTime();
-			case TypesPackage.TMODULE__DEPENDENCIES_LOAD_TIME_FOR_INHERITANCE:
-				return getDependenciesLoadTimeForInheritance();
-			case TypesPackage.TMODULE__RUN_TIME_CYCLIC_MODULES:
-				return getRunTimeCyclicModules();
-			case TypesPackage.TMODULE__LTDXS:
-				return getLtdxs();
+			case TypesPackage.TMODULE__CYCLIC_MODULES_RUN_TIME:
+				return getCyclicModulesRunTime();
+			case TypesPackage.TMODULE__CYCLIC_MODULES_LOAD_TIME_FOR_INHERITANCE:
+				return getCyclicModulesLoadTimeForInheritance();
+			case TypesPackage.TMODULE__RUN_TIME_CYCLIC_LOAD_TIME_DEPENDENTS:
+				return getRunTimeCyclicLoadTimeDependents();
 			case TypesPackage.TMODULE__TOP_LEVEL_TYPES:
 				return getTopLevelTypes();
 			case TypesPackage.TMODULE__VARIABLES:
@@ -977,19 +988,19 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 				return;
 			case TypesPackage.TMODULE__DEPENDENCIES_RUN_TIME:
 				getDependenciesRunTime().clear();
-				getDependenciesRunTime().addAll((Collection<? extends TModule>)newValue);
+				getDependenciesRunTime().addAll((Collection<? extends RunTimeDependency>)newValue);
 				return;
-			case TypesPackage.TMODULE__DEPENDENCIES_LOAD_TIME_FOR_INHERITANCE:
-				getDependenciesLoadTimeForInheritance().clear();
-				getDependenciesLoadTimeForInheritance().addAll((Collection<? extends TModule>)newValue);
+			case TypesPackage.TMODULE__CYCLIC_MODULES_RUN_TIME:
+				getCyclicModulesRunTime().clear();
+				getCyclicModulesRunTime().addAll((Collection<? extends TModule>)newValue);
 				return;
-			case TypesPackage.TMODULE__RUN_TIME_CYCLIC_MODULES:
-				getRunTimeCyclicModules().clear();
-				getRunTimeCyclicModules().addAll((Collection<? extends TModule>)newValue);
+			case TypesPackage.TMODULE__CYCLIC_MODULES_LOAD_TIME_FOR_INHERITANCE:
+				getCyclicModulesLoadTimeForInheritance().clear();
+				getCyclicModulesLoadTimeForInheritance().addAll((Collection<? extends TModule>)newValue);
 				return;
-			case TypesPackage.TMODULE__LTDXS:
-				getLtdxs().clear();
-				getLtdxs().addAll((Collection<? extends TModule>)newValue);
+			case TypesPackage.TMODULE__RUN_TIME_CYCLIC_LOAD_TIME_DEPENDENTS:
+				getRunTimeCyclicLoadTimeDependents().clear();
+				getRunTimeCyclicLoadTimeDependents().addAll((Collection<? extends TModule>)newValue);
 				return;
 			case TypesPackage.TMODULE__TOP_LEVEL_TYPES:
 				getTopLevelTypes().clear();
@@ -1066,14 +1077,14 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 			case TypesPackage.TMODULE__DEPENDENCIES_RUN_TIME:
 				getDependenciesRunTime().clear();
 				return;
-			case TypesPackage.TMODULE__DEPENDENCIES_LOAD_TIME_FOR_INHERITANCE:
-				getDependenciesLoadTimeForInheritance().clear();
+			case TypesPackage.TMODULE__CYCLIC_MODULES_RUN_TIME:
+				getCyclicModulesRunTime().clear();
 				return;
-			case TypesPackage.TMODULE__RUN_TIME_CYCLIC_MODULES:
-				getRunTimeCyclicModules().clear();
+			case TypesPackage.TMODULE__CYCLIC_MODULES_LOAD_TIME_FOR_INHERITANCE:
+				getCyclicModulesLoadTimeForInheritance().clear();
 				return;
-			case TypesPackage.TMODULE__LTDXS:
-				getLtdxs().clear();
+			case TypesPackage.TMODULE__RUN_TIME_CYCLIC_LOAD_TIME_DEPENDENTS:
+				getRunTimeCyclicLoadTimeDependents().clear();
 				return;
 			case TypesPackage.TMODULE__TOP_LEVEL_TYPES:
 				getTopLevelTypes().clear();
@@ -1132,12 +1143,12 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 				return reconciled != RECONCILED_EDEFAULT;
 			case TypesPackage.TMODULE__DEPENDENCIES_RUN_TIME:
 				return dependenciesRunTime != null && !dependenciesRunTime.isEmpty();
-			case TypesPackage.TMODULE__DEPENDENCIES_LOAD_TIME_FOR_INHERITANCE:
-				return dependenciesLoadTimeForInheritance != null && !dependenciesLoadTimeForInheritance.isEmpty();
-			case TypesPackage.TMODULE__RUN_TIME_CYCLIC_MODULES:
-				return runTimeCyclicModules != null && !runTimeCyclicModules.isEmpty();
-			case TypesPackage.TMODULE__LTDXS:
-				return ltdxs != null && !ltdxs.isEmpty();
+			case TypesPackage.TMODULE__CYCLIC_MODULES_RUN_TIME:
+				return cyclicModulesRunTime != null && !cyclicModulesRunTime.isEmpty();
+			case TypesPackage.TMODULE__CYCLIC_MODULES_LOAD_TIME_FOR_INHERITANCE:
+				return cyclicModulesLoadTimeForInheritance != null && !cyclicModulesLoadTimeForInheritance.isEmpty();
+			case TypesPackage.TMODULE__RUN_TIME_CYCLIC_LOAD_TIME_DEPENDENTS:
+				return runTimeCyclicLoadTimeDependents != null && !runTimeCyclicLoadTimeDependents.isEmpty();
 			case TypesPackage.TMODULE__TOP_LEVEL_TYPES:
 				return topLevelTypes != null && !topLevelTypes.isEmpty();
 			case TypesPackage.TMODULE__VARIABLES:
@@ -1198,8 +1209,8 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
-			case TypesPackage.TMODULE___IS_LT_SLAVE:
-				return isLTSlave();
+			case TypesPackage.TMODULE___HAS_DIRECT_LOAD_TIME_DEPENDENCY_TO__TMODULE:
+				return hasDirectLoadTimeDependencyTo((TModule)arguments.get(0));
 		}
 		return super.eInvoke(operationID, arguments);
 	}

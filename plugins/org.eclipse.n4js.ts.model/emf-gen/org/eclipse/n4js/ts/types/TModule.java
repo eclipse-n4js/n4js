@@ -37,9 +37,9 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#isPreLinkingPhase <em>Pre Linking Phase</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#isReconciled <em>Reconciled</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getDependenciesRunTime <em>Dependencies Run Time</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.TModule#getDependenciesLoadTimeForInheritance <em>Dependencies Load Time For Inheritance</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.TModule#getRunTimeCyclicModules <em>Run Time Cyclic Modules</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.TModule#getLtdxs <em>Ltdxs</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.TModule#getCyclicModulesRunTime <em>Cyclic Modules Run Time</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.TModule#getCyclicModulesLoadTimeForInheritance <em>Cyclic Modules Load Time For Inheritance</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.TModule#getRunTimeCyclicLoadTimeDependents <em>Run Time Cyclic Load Time Dependents</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getTopLevelTypes <em>Top Level Types</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getVariables <em>Variables</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getInternalTypes <em>Internal Types</em>}</li>
@@ -323,68 +323,77 @@ public interface TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	void setReconciled(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Dependencies Run Time</b></em>' reference list.
-	 * The list contents are of type {@link org.eclipse.n4js.ts.types.TModule}.
+	 * Returns the value of the '<em><b>Dependencies Run Time</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.n4js.ts.types.RunTimeDependency}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * Direct run-time dependencies of this module within same project.
+	 * <p>
 	 * Set at end of AST traversal (i.e. during main post-processing).
 	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Dependencies Run Time</em>' reference list.
+	 * @return the value of the '<em>Dependencies Run Time</em>' containment reference list.
 	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_DependenciesRunTime()
-	 * @model
+	 * @model containment="true"
 	 * @generated
 	 */
-	EList<TModule> getDependenciesRunTime();
+	EList<RunTimeDependency> getDependenciesRunTime();
 
 	/**
-	 * Returns the value of the '<em><b>Dependencies Load Time For Inheritance</b></em>' reference list.
+	 * Returns the value of the '<em><b>Cyclic Modules Run Time</b></em>' reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.ts.types.TModule}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * Direct load-time dependencies of this module within same project iff caused by an extends/implements clause.
-	 * Set at end of AST traversal (i.e. during main post-processing).
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Dependencies Load Time For Inheritance</em>' reference list.
-	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_DependenciesLoadTimeForInheritance()
-	 * @model
-	 * @generated
-	 */
-	EList<TModule> getDependenciesLoadTimeForInheritance();
-
-	/**
-	 * Returns the value of the '<em><b>Run Time Cyclic Modules</b></em>' reference list.
-	 * The list contents are of type {@link org.eclipse.n4js.ts.types.TModule}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * Modules with a cyclic run-time dependency to this module. Never includes this module.
+	 * Modules within same project with a direct or indirect cyclic run-time dependency to this module.
+	 * Never includes this module.
+	 * <p>
 	 * Set during finalization of post-processing.
 	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Run Time Cyclic Modules</em>' reference list.
-	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_RunTimeCyclicModules()
+	 * @return the value of the '<em>Cyclic Modules Run Time</em>' reference list.
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_CyclicModulesRunTime()
 	 * @model
 	 * @generated
 	 */
-	EList<TModule> getRunTimeCyclicModules();
+	EList<TModule> getCyclicModulesRunTime();
 
 	/**
-	 * Returns the value of the '<em><b>Ltdxs</b></em>' reference list.
+	 * Returns the value of the '<em><b>Cyclic Modules Load Time For Inheritance</b></em>' reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.ts.types.TModule}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * Iff this module is an LTSlave, this property refers to the one or more LTDXs that turn this module into an LTSlave.
+	 * Modules within same project with a direct or indirect cyclic load-time dependency to this module,
+	 * taking into account only such load-time dependencies that are caused by extends/implements clauses.
+	 * Never includes this module.
+	 * <p>
 	 * Set during finalization of post-processing.
 	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Ltdxs</em>' reference list.
-	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_Ltdxs()
+	 * @return the value of the '<em>Cyclic Modules Load Time For Inheritance</em>' reference list.
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_CyclicModulesLoadTimeForInheritance()
 	 * @model
 	 * @generated
 	 */
-	EList<TModule> getLtdxs();
+	EList<TModule> getCyclicModulesLoadTimeForInheritance();
+
+	/**
+	 * Returns the value of the '<em><b>Run Time Cyclic Load Time Dependents</b></em>' reference list.
+	 * The list contents are of type {@link org.eclipse.n4js.ts.types.TModule}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Modules within same project that are run-time cyclic to this module AND have direct load-time dependency
+	 * to this module, taking into account only such load-time dependencies that are caused by extends/implements
+	 * clauses.
+	 * <p>
+	 * Set during finalization of post-processing.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Run Time Cyclic Load Time Dependents</em>' reference list.
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_RunTimeCyclicLoadTimeDependents()
+	 * @model
+	 * @generated
+	 */
+	EList<TModule> getRunTimeCyclicLoadTimeDependents();
 
 	/**
 	 * Returns the value of the '<em><b>Top Level Types</b></em>' containment reference list.
@@ -575,12 +584,9 @@ public interface TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 *  Tells whether this module is an LTSlave.
-	 * <!-- end-model-doc -->
-	 * @model kind="operation" unique="false"
+	 * @model unique="false" otherUnique="false"
 	 * @generated
 	 */
-	boolean isLTSlave();
+	boolean hasDirectLoadTimeDependencyTo(TModule other);
 
 } // TModule
