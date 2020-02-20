@@ -27,6 +27,7 @@ import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.cli.compiler.N4jscLanguageClient;
 import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
+import org.eclipse.n4js.projectModel.locations.FileURI;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -108,9 +109,13 @@ public class N4jscTestLanguageClient extends N4jscLanguageClient {
 		return deletedFiles.size();
 	}
 
-	/** @return all error messages of issues of a given uri */
-	public Collection<String> getErrors(String uri) {
-		return errors.get(uri);
+	/** @return all error messages of issues for the module with the given uri. */
+	public Collection<String> getErrors(FileURI uri) {
+		return errors.get(issueSerializer.uri(uri.toString()));
 	}
 
+	/** @return all warning messages of issues for the module with the given uri. */
+	public Collection<String> getWarnings(FileURI uri) {
+		return warnings.get(issueSerializer.uri(uri.toString()));
+	}
 }

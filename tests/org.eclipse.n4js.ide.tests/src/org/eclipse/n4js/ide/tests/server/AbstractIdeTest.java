@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.eclipse.lsp4j.ClientCapabilities;
 import org.eclipse.lsp4j.DidOpenTextDocumentParams;
@@ -35,6 +37,7 @@ import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.xtext.LanguageInfo;
 import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
+import org.eclipse.xtext.xbase.lib.Pair;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -45,7 +48,7 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 
 /**
- * Signature help test class
+ * Abstract base class for LSP-based IDE tests.
  */
 abstract public class AbstractIdeTest<T> {
 	static final String WORKSPACE_FOLDER = "/test-data";
@@ -59,7 +62,7 @@ abstract public class AbstractIdeTest<T> {
 	/** Catch outputs on console to an internal buffer */
 	@BeforeClass
 	static final public void redirectPrintStreams() {
-		SYSTEM_OUT_REDIRECTER.set(false);
+		// SYSTEM_OUT_REDIRECTER.set(false);
 	}
 
 	/** Reset redirection */
@@ -149,6 +152,17 @@ abstract public class AbstractIdeTest<T> {
 		moduleName = getModuleNameOrDefault(moduleName);
 		Map<String, String> srcFileNameToContents = Collections.singletonMap(moduleName, contents);
 		return test(srcFileNameToContents, moduleName, t);
+	}
+
+	/**
+	 * Same as {@link #test(Map, String, Object)}, but name and content of the modules can be provided as {@link Pair
+	 * pairs}.
+	 */
+	protected Project test(Iterable<Pair<String, String>> moduleNameToContents, String moduleName, T t)
+			throws Exception {
+		Map<String, String> moduleNameToContentsAsMap = StreamSupport.stream(moduleNameToContents.spliterator(), false)
+				.collect(Collectors.toMap(Pair::getKey, Pair::getValue));
+		return test(moduleNameToContentsAsMap, moduleName, t);
 	}
 
 	/**
