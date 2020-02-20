@@ -187,7 +187,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	private InitializeResult initializeResult;
 
-	private final CompletableFuture<InitializedParams> clientInitialized;
+	private final CompletableFuture<InitializedParams> clientInitialized = new CompletableFuture<>();
 
 	private XWorkspaceResourceAccess resourceAccess;
 
@@ -196,31 +196,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	private Map<String, JsonRpcMethod> supportedMethods = null;
 
 	private final Multimap<String, Endpoint> extensionProviders = LinkedListMultimap.<String, Endpoint> create();
-
-	/**
-	 * Standard constructor.
-	 */
-	public XLanguageServerImpl() {
-		clientInitialized = new CompletableFuture<>();
-		clientInitialized.thenRun(() -> {
-			requestManager.runWrite("initialized",
-					() -> {
-						Stopwatch sw = Stopwatch.createStarted();
-						try {
-							LOG.info("Start initial build ...");
-							workspaceManager.doInitialBuild(CancelIndicator.NullImpl);
-						} catch (Throwable t) {
-							LOG.error(t.getMessage(), t);
-							throw t;
-						} finally {
-							LOG.info("Initial build done after " + sw);
-						}
-						return null;
-					},
-					(cancelIndicator, it) -> it);
-		});
-
-	}
 
 	// TODO we should probably use the DisposableRegistry here
 	/**
@@ -370,7 +345,23 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public void initialized(InitializedParams params) {
+		requestManager.runWrite("initialized", () -> initialBuild(), (cancelIndicator, it) -> it);
+
 		clientInitialized.complete(params);
+	}
+
+	private Void initialBuild() {
+		Stopwatch sw = Stopwatch.createStarted();
+		try {
+			LOG.info("Start initial build ...");
+			workspaceManager.doInitialBuild(CancelIndicator.NullImpl);
+		} catch (Throwable t) {
+			LOG.error(t.getMessage(), t);
+			throw t;
+		} finally {
+			LOG.info("Initial build done after " + sw);
+		}
+		return null;
 	}
 
 	@Deprecated
@@ -1329,6 +1320,11 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	/** Blocks until the lsp client sent the initialized message */
 	public void joinClientInitialized() {
 		clientInitialized.join();
+	}
+
+	/** Blocks until all requests of the language server finished */
+	public void joinServerRequests() {
+		getRequestManager().runRead("Wait", (ci) -> null).join();
 	}
 
 }

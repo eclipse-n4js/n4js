@@ -28,7 +28,6 @@ import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.tests.codegen.Project;
 import org.junit.After;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.inject.Injector;
@@ -56,7 +55,7 @@ public class CommandRebuildTest extends AbstractIdeTest<Void> {
 		languageServer.clean();
 
 		// wait for previous command to finish
-		waitForRequestsDone();
+		joinServerRequests();
 	}
 
 	@Override
@@ -86,7 +85,6 @@ public class CommandRebuildTest extends AbstractIdeTest<Void> {
 
 	/** Expectation is that files '.n4js.projectstate' and 'src-gen/Module.js' are changed due to rebuild action. */
 	@Test
-	@Ignore
 	public void testCommandRebuild() throws Exception {
 		test("class A { foo(a: A) { } } class Main { main(a: A) { a.foo(null); } }");
 
@@ -96,7 +94,7 @@ public class CommandRebuildTest extends AbstractIdeTest<Void> {
 		future.join();
 
 		// wait for previous command to finish
-		waitForRequestsDone();
+		joinServerRequests();
 
 		// evaluate
 		assertEquals(0, languageClient.getErrorsCount());
@@ -115,7 +113,7 @@ public class CommandRebuildTest extends AbstractIdeTest<Void> {
 		languageServer.reinitWorkspace();
 
 		// wait for previous command to finish
-		waitForRequestsDone();
+		joinServerRequests();
 
 		// evaluate
 		assertEquals(0, languageClient.getErrorsCount());

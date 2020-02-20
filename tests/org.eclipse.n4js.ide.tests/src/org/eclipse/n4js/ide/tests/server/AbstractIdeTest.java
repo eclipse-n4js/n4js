@@ -20,7 +20,6 @@ import java.util.Map;
 import org.eclipse.lsp4j.ClientCapabilities;
 import org.eclipse.lsp4j.DidOpenTextDocumentParams;
 import org.eclipse.lsp4j.ExecuteCommandCapabilities;
-import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.TextDocumentItem;
 import org.eclipse.lsp4j.WorkspaceClientCapabilities;
@@ -240,8 +239,7 @@ abstract public class AbstractIdeTest<T> {
 		languageServer.connect(languageClient);
 		languageServer.initialize(initParams);
 		languageServer.initialized(null);
-		languageServer.getRequestManager().runRead("Wait", (ci) -> null);
-		waitForRequestsDone();
+		joinServerRequests();
 	}
 
 	/** Opens the given file in the LSP server and waits for the triggered build to finish. */
@@ -259,7 +257,7 @@ abstract public class AbstractIdeTest<T> {
 		dotdp.setTextDocument(textDocument);
 
 		languageServer.didOpen(dotdp);
-		waitForRequestsDone();
+		joinServerRequests();
 	}
 
 	/** Translates a given module name to a file URI used in LSP call data. */
@@ -277,9 +275,8 @@ abstract public class AbstractIdeTest<T> {
 	}
 
 	/** Waits until the LSP server idles. */
-	protected void waitForRequestsDone() {
-		ExecuteCommandParams cmdUnknownParams = new ExecuteCommandParams("unknown.command", Collections.emptyList());
-		languageServer.executeCommand(cmdUnknownParams).join();
+	protected void joinServerRequests() {
+		languageServer.joinServerRequests();
 	}
 
 	static String toUnixLineSeparator(CharSequence cs) {
