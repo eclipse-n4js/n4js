@@ -857,6 +857,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	 */
 	public ICodeActionService2.Options toOptions(CodeActionParams params, XDocument doc, XtextResource res,
 			CancelIndicator cancelIndicator) {
+
 		ICodeActionService2.Options options = new ICodeActionService2.Options();
 		options.setDocument(doc);
 		options.setResource(res);

@@ -49,7 +49,7 @@ import com.google.inject.Injector;
 import com.google.inject.Singleton;
 
 /**
- *
+ * Infrastructure for LSP code actions
  */
 @SuppressWarnings("restriction")
 @Singleton

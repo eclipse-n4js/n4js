@@ -55,8 +55,9 @@ public class ExecuteCommandParamsTypeAdapter extends TypeAdapter<ExecuteCommandP
 		@Override
 		@SuppressWarnings("unchecked")
 		public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> typeToken) {
-			if (!ExecuteCommandParams.class.isAssignableFrom(typeToken.getRawType()))
+			if (!ExecuteCommandParams.class.isAssignableFrom(typeToken.getRawType())) {
 				return null;
+			}
 			ExecutableCommandRegistry commandRegistry = languageServer.getCommandRegistry();
 			Map<String, Type[]> argumentTypes = Collections.emptyMap();
 			if (commandRegistry instanceof ExecuteCommandParamsDescriber) {

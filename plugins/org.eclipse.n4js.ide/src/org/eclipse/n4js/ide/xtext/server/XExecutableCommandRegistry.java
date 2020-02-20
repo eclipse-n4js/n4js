@@ -23,17 +23,17 @@ import org.eclipse.xtext.xbase.lib.util.ReflectExtensions;
 import com.google.common.collect.Multimap;
 
 /**
- *
+ * Adds {@link #argumentTypes()} to {@link ExecutableCommandRegistry}
  */
 public class XExecutableCommandRegistry extends ExecutableCommandRegistry implements ExecuteCommandParamsDescriber {
 
 	@Override
 	public Map<String, Type[]> argumentTypes() {
 		try {
-			Multimap<String, IExecutableCommandService> services = new ReflectExtensions().get(this,
+			Multimap<String, IExecutableCommandService> registeredCommands = new ReflectExtensions().get(this,
 					"registeredCommands");
 			Map<String, Type[]> result = new HashMap<>();
-			for (IExecutableCommandService service : new HashSet<>(services.values())) {
+			for (IExecutableCommandService service : new HashSet<>(registeredCommands.values())) {
 				if (service instanceof ExecuteCommandParamsDescriber) {
 					result.putAll(((ExecuteCommandParamsDescriber) service).argumentTypes());
 				}

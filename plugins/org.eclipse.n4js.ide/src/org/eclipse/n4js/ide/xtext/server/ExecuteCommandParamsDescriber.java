@@ -13,13 +13,15 @@ package org.eclipse.n4js.ide.xtext.server;
 import java.lang.reflect.Type;
 import java.util.Map;
 
+import org.eclipse.lsp4j.ExecuteCommandParams;
+
 /**
  * Return the argument types for the available commands.
  */
 public interface ExecuteCommandParamsDescriber {
 
 	/**
-	 * Command id to argument types.
+	 * Command id to argument types. The arguments refer to {@link ExecuteCommandParams#getArguments()}.
 	 */
 	Map<String, Type[]> argumentTypes();
 

@@ -50,6 +50,7 @@ import org.eclipse.n4js.semver.SemverUtils;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.semver.model.SemverSerializer;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
+import org.eclipse.xtext.ide.server.codeActions.ICodeActionService2.Options;
 import org.eclipse.xtext.ide.server.commands.IExecutableCommandService;
 import org.eclipse.xtext.util.CancelIndicator;
 
@@ -60,6 +61,7 @@ import com.google.inject.Inject;
 /**
  * Provides commands for LSP clients
  */
+@SuppressWarnings("restriction")
 public class N4JSCommandService implements IExecutableCommandService, ExecuteCommandParamsDescriber {
 	/**
 	 * The rebuild command.
@@ -93,11 +95,11 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 	private SemverHelper semverHelper;
 
 	/**
-	 * Methods annotated as ExecutableCommandHandler will be registered as ...drumrolls... handlers for ExecuteCommand
-	 * requests. The methods are found reflectively in this class. They must define a parameter list with at least two
-	 * trailing parameters {@code ILanguageServerAccess access, CancelIndicator cancelIndicator}. All the leading
+	 * Methods annotated as {@link ExecutableCommandHandler} will be registered as handlers for ExecuteCommand requests.
+	 * The methods are found reflectively in this class. They must define a parameter list with at least the two
+	 * trailing parameters: {@code ILanguageServerAccess access, CancelIndicator cancelIndicator}. All the leading
 	 * parameters before the {@code ILanguageServerAccess} are passed by the framework. The parameter types are used to
-	 * deserialize the {@link ExecuteCommandParams#getArguments() arguments} of the execute commands in a strongly types
+	 * deserialize the {@link ExecuteCommandParams#getArguments() arguments} of the execute commands in a strongly typed
 	 * way.
 	 */
 	@Target(ElementType.METHOD)
@@ -106,22 +108,38 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 		String value();
 	}
 
-	/**
-	 * The minimal interface that a command handler must fulfil.
-	 */
-	@FunctionalInterface
-	interface IExecutableCommandHandler {
-		Object execute(ExecuteCommandParams params, ILanguageServerAccess access, CancelIndicator cancelIndicator);
+	/** Executes LSP commands by calling the appropriate method using reflection. */
+	private static class CommandHandler {
+		private final Method method;
+
+		private CommandHandler(Method method) {
+			this.method = method;
+		}
+
+		private Object execute(ExecuteCommandParams params, ILanguageServerAccess access,
+				CancelIndicator cancelIndicator) {
+
+			List<Object> actualArguments = new ArrayList<>();
+			actualArguments.addAll(params.getArguments());
+			actualArguments.add(access);
+			actualArguments.add(cancelIndicator);
+			try {
+				return method.invoke(this, actualArguments.toArray());
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				throw new RuntimeException(e);
+			}
+		}
 	}
 
-	private Map<String, IExecutableCommandHandler> handlers;
+	private Map<String, CommandHandler> handlers;
 	private Map<String, Type[]> argumentTypes;
 
 	@Override
 	public List<String> initialize() {
 		Method[] methods = getClass().getMethods();
-		Map<String, IExecutableCommandHandler> localHandlers = new HashMap<>();
+		Map<String, CommandHandler> localHandlers = new HashMap<>();
 		Map<String, Type[]> localArgumentTypes = new HashMap<>();
+
 		for (Method method : methods) {
 			ExecutableCommandHandler annotation = method.getAnnotation(ExecutableCommandHandler.class);
 			if (annotation != null) {
@@ -129,18 +147,7 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 				// -2 since the last params are the ILanguageServerAccess and the CancelIndicator
 				Type[] args = parameterTypes.subList(0, parameterTypes.size() - 2).toArray(Type[]::new);
 				localArgumentTypes.put(annotation.value(), args);
-
-				localHandlers.put(annotation.value(), (params, access, cancelIndicator) -> {
-					List<Object> actualArguments = new ArrayList<>();
-					actualArguments.addAll(params.getArguments());
-					actualArguments.add(access);
-					actualArguments.add(cancelIndicator);
-					try {
-						return method.invoke(this, actualArguments.toArray());
-					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-						throw new RuntimeException(e);
-					}
-				});
+				localHandlers.put(annotation.value(), new CommandHandler(method));
 			}
 		}
 		this.handlers = localHandlers;
@@ -178,10 +185,10 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 	 */
 	@ExecutableCommandHandler(COMPOSITE_FIX_FILE)
 	public Void fixAllInFile(String title, String code, String fixId, CodeActionParams codeActionParams,
-			ILanguageServerAccess access,
-			CancelIndicator cancelIndicator) {
-		WorkspaceEdit edit = codeActionService.applyToFile(code, fixId,
-				lspServer.toOptions(codeActionParams, cancelIndicator));
+			ILanguageServerAccess access, CancelIndicator cancelIndicator) {
+
+		Options options = lspServer.toOptions(codeActionParams, cancelIndicator);
+		WorkspaceEdit edit = codeActionService.applyToFile(code, fixId, options);
 		access.getLanguageClient().applyEdit(new ApplyWorkspaceEditParams(edit, title));
 		return null;
 	}
@@ -191,10 +198,10 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 	 */
 	@ExecutableCommandHandler(COMPOSITE_FIX_PROJECT)
 	public Void fixAllInProject(String title, String code, String fixId, CodeActionParams codeActionParams,
-			ILanguageServerAccess access,
-			CancelIndicator cancelIndicator) {
-		WorkspaceEdit edit = codeActionService.applyToProject(code, fixId,
-				lspServer.toOptions(codeActionParams, cancelIndicator));
+			ILanguageServerAccess access, CancelIndicator cancelIndicator) {
+
+		Options options = lspServer.toOptions(codeActionParams, cancelIndicator);
+		WorkspaceEdit edit = codeActionService.applyToProject(code, fixId, options);
 		access.getLanguageClient().applyEdit(new ApplyWorkspaceEditParams(edit, title));
 		return null;
 	}
@@ -212,19 +219,23 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 			String fileUri,
 			ILanguageServerAccess access,
 			CancelIndicator cancelIndicator) {
+
 		lspServer.getRequestManager().runWrite("InstallNpm", () -> {
+			// FIXME: Use CliTools in favor of npmCli
 			NPMVersionRequirement versionRequirement = semverHelper.parse(version);
 			if (versionRequirement == null) {
 				versionRequirement = SemverUtils.createEmptyVersionRequirement();
 			}
-			LibraryChange change = new LibraryChange(Install, null, new N4JSProjectName(packageName),
-					SemverSerializer.serialize(versionRequirement));
+			String normalizedVersion = SemverSerializer.serialize(versionRequirement);
+
+			N4JSProjectName projectName = new N4JSProjectName(packageName);
+			LibraryChange change = new LibraryChange(Install, null, projectName, normalizedVersion);
 			MultiStatus multiStatus = new MultiStatus("json", 1, null, null);
-			npmCli.batchInstall(new NullProgressMonitor(), multiStatus,
-					Arrays.asList(change),
-					new FileURI(URI.createURI(fileUri)).getParent());
+			FileURI targetProject = new FileURI(URI.createURI(fileUri)).getParent();
+			npmCli.batchInstall(new NullProgressMonitor(), multiStatus, Arrays.asList(change), targetProject);
 
 			return multiStatus;
+
 		}, (ci, ms) -> {
 			MessageParams messageParams = new MessageParams();
 			switch (ms.getSeverity()) {
