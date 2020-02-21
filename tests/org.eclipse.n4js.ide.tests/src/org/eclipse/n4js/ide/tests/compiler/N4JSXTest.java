@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.tests;
+package org.eclipse.n4js.ide.tests.compiler;
 
 import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
 import static org.junit.Assert.assertEquals;
@@ -24,21 +24,19 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.base.Predicates;
-
 /**
- * Basic tests of type definitions shadowing in the headless case.
+ * Basic tests for N4jsc, like checking command line options or simple compile.
  */
-public class N4jscTypeDefinitionsModuleShadowingTest extends AbstractCliCompileTest {
-
+public class N4JSXTest extends AbstractCliCompileTest {
 	File workspace;
-	File packages;
+	File proot;
+	private static final String TEST_DATA_SET__N4JSX = "n4jsx";
 
-	/** Prepare workspace. */
+	/** Prepare tests. */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace("type-definitions", Predicates.alwaysFalse(), true);
-		packages = new File(workspace, PACKAGES);
+		workspace = setupWorkspace(TEST_DATA_SET__N4JSX, true);
+		proot = new File(workspace, PACKAGES).getAbsoluteFile();
 	}
 
 	/** Delete workspace. */
@@ -47,22 +45,22 @@ public class N4jscTypeDefinitionsModuleShadowingTest extends AbstractCliCompileT
 		FileDeleter.delete(workspace.toPath(), true);
 	}
 
-	/**
-	 * Builds 'Client', 'Def' and 'Impl' and asserts no issues.
-	 */
+	/** Compile an n4jsx workspace. */
 	@Test
-	public void testSimpleTypeDefsShadowing() {
+	public void testN4JSX() {
 		CliCompileResult cliResult = n4jsc(COMPILE(workspace));
 
 		Collection<String> fileNames = cliResult.getTranspiledFileNames();
 
-		assertEquals(cliResult.toString(), 1, cliResult.getTranspiledFilesCount());
-		assertEquals(cliResult.toString(), "packages/Client/src-gen/Client.js", String.join(", ", fileNames));
-		assertEquals(cliResult.toString(), //
-				"packages/Broken_Client/package.json, "//
-						+ "packages/Broken_Client/src/Client.n4js, "//
-						+ "packages/Client/package.json",
-				String.join(", ", cliResult.getErrFiles()));
+		String expected = "packages/P1/src-gen/bar.js, ";
+		expected += "packages/P2/src-gen/foo.js, ";
+		expected += "packages/P2/src-gen/bar.js, ";
+		expected += "packages/P2/src-gen/bar2.js, ";
+		expected += "packages/P3/src-gen/bar.js, ";
+		expected += "packages/P3/src-gen/foo.js";
+
+		assertEquals(cliResult.toString(), 6, cliResult.getTranspiledFilesCount());
+		assertEquals(cliResult.toString(), expected, String.join(", ", fileNames));
 	}
 
 }

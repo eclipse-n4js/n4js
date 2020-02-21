@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.tests;
+package org.eclipse.n4js.ide.tests.compiler;
 
 import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
 import static org.junit.Assert.assertEquals;
@@ -28,19 +28,17 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Test for checking the static polyfill imports in the generated modules.
+ * Test for checking whether plain JS files have the proper module export.
  */
-public class AT_IDEBUG_654_MissingPolyfillImportsTest extends AbstractCliCompileTest {
+public class AT_IDEBUG_654_ExportPlainJsModulesTest extends AbstractCliCompileTest {
 
 	File workspace;
-	static String WS_IDEBUG_654_2 = "IDEBUG-654_2";
+	static String WS_IDEBUG_654 = "IDEBUG-654";
 
-	/**
-	 * Setup workspace.
-	 */
+	/** Setup workspace. */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace(WS_IDEBUG_654_2, false, N4JSGlobals.N4JS_RUNTIME);
+		workspace = setupWorkspace(WS_IDEBUG_654, false, N4JSGlobals.N4JS_RUNTIME);
 	}
 
 	/** Delete workspace. */
@@ -49,25 +47,18 @@ public class AT_IDEBUG_654_MissingPolyfillImportsTest extends AbstractCliCompile
 		FileDeleter.delete(workspace.toPath(), true);
 	}
 
-	/***/
+	/**  */
 	@Test
-	public void compileCheckPolyfillImports_ExpectExist() {
-
-		Path projectDir = workspace.toPath().resolve(WS_IDEBUG_654_2);
-		Path fileToRun = projectDir.resolve("src-gen/Main.js");
+	public void compileCheckModuleExportFromPlainJsFile_ExpectAvailable() {
+		Path projectDir = workspace.toPath().resolve(WS_IDEBUG_654);
+		Path fileToRun = projectDir.resolve("src-gen/Client.js");
 
 		N4jscOptions options = COMPILE(workspace);
 		CliCompileResult cliResult = n4jsc(options);
-		assertEquals(cliResult.toString(), 5, cliResult.getTranspiledFilesCount());
+		assertEquals(cliResult.toString(), 2, cliResult.getTranspiledFilesCount());
 
 		ProcessResult nodejsResult = runNodejs(projectDir, fileToRun);
-		assertEquals(nodejsResult.toString(),
-				"functionFromModuleA\n" +
-						"variableFromModuleB\n" +
-						"variableFromModuleC\n" +
-						"variableFromModuleC",
-				nodejsResult.getStdOut());
-
+		assertEquals(nodejsResult.toString(), "foo === 36: true, bar === 'bar': true", nodejsResult.getStdOut());
 	}
 
 }

@@ -8,14 +8,13 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.tests;
+package org.eclipse.n4js.ide.tests.compiler;
 
 import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
 
 import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
 import org.eclipse.n4js.cli.helper.CliCompileResult;
@@ -25,17 +24,19 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Basic tests for N4jsc, like checking command line options or simple compile.
+ * Tests a project with two project dependencies A,B such that A depends on B.
+ *
+ * In this test, we have two external projects: nuka-carousel and react. nuka-carousel depends on react via a project
+ * dependency, and file P1/src/X.n4jsx depends on both react and nuka-carousel via project dependencies.
  */
-public class N4JSXTest extends AbstractCliCompileTest {
+public class N4jscDependentProjectDependenciesTest extends AbstractCliCompileTest {
 	File workspace;
 	File proot;
-	private static final String TEST_DATA_SET__N4JSX = "n4jsx";
 
-	/** Prepare tests. */
+	/** Prepare workspace. */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace(TEST_DATA_SET__N4JSX, true);
+		workspace = setupWorkspace("external_project_dependencies", true);
 		proot = new File(workspace, PACKAGES).getAbsoluteFile();
 	}
 
@@ -45,22 +46,13 @@ public class N4JSXTest extends AbstractCliCompileTest {
 		FileDeleter.delete(workspace.toPath(), true);
 	}
 
-	/** Compile an n4jsx workspace. */
+	/** Test failure when compiling without target platform file. */
 	@Test
-	public void testN4JSX() {
+	public void testSuccessfulCompilationWithInterdependentProjects() {
+		yarnInstall(workspace.toPath());
+
 		CliCompileResult cliResult = n4jsc(COMPILE(workspace));
-
-		Collection<String> fileNames = cliResult.getTranspiledFileNames();
-
-		String expected = "packages/P1/src-gen/bar.js, ";
-		expected += "packages/P2/src-gen/foo.js, ";
-		expected += "packages/P2/src-gen/bar.js, ";
-		expected += "packages/P2/src-gen/bar2.js, ";
-		expected += "packages/P3/src-gen/bar.js, ";
-		expected += "packages/P3/src-gen/foo.js";
-
-		assertEquals(cliResult.toString(), 6, cliResult.getTranspiledFilesCount());
-		assertEquals(cliResult.toString(), expected, String.join(", ", fileNames));
+		assertEquals(cliResult.toString(), 3, cliResult.getTranspiledFilesCount());
 	}
 
 }

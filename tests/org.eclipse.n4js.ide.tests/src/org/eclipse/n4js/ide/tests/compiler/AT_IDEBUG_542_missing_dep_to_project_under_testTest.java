@@ -8,37 +8,41 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.tests;
+package org.eclipse.n4js.ide.tests.compiler;
 
 import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
 import org.eclipse.n4js.cli.helper.CliCompileResult;
-import org.eclipse.n4js.cli.helper.ProcessResult;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Test for checking whether plain JS files have the proper module export.
  */
-public class AT_IDEBUG_654_ExportPlainJsModulesTest extends AbstractCliCompileTest {
+public class AT_IDEBUG_542_missing_dep_to_project_under_testTest extends AbstractCliCompileTest {
 
 	File workspace;
-	static String WS_IDEBUG_654 = "IDEBUG-654";
+	static String WSP_542 = "IDEBUG-542";
 
-	/** Setup workspace. */
+	/**
+	 * Setup workspace with api & api-impl & compile
+	 *
+	 */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace(WS_IDEBUG_654, false, N4JSGlobals.N4JS_RUNTIME);
+		workspace = setupWorkspace(WSP_542, true,
+				N4JSGlobals.N4JS_RUNTIME,
+				N4JSGlobals.MANGELHAFT,
+				new N4JSProjectName("n4js-runtime-es2015"));
 	}
 
 	/** Delete workspace. */
@@ -47,18 +51,18 @@ public class AT_IDEBUG_654_ExportPlainJsModulesTest extends AbstractCliCompileTe
 		FileDeleter.delete(workspace.toPath(), true);
 	}
 
-	/**  */
+	/** The Problem was, that nothing was compiled. */
 	@Test
-	public void compileCheckModuleExportFromPlainJsFile_ExpectAvailable() {
-		Path projectDir = workspace.toPath().resolve(WS_IDEBUG_654);
-		Path fileToRun = projectDir.resolve("src-gen/Client.js");
+	public void testCompileOfExtendedIterator_from_RuntimeLibrary() {
 
-		N4jscOptions options = COMPILE(workspace);
+		File proot = new File(workspace, PACKAGES);
+
+		N4jscOptions options = COMPILE(proot);
+
 		CliCompileResult cliResult = n4jsc(options);
-		assertEquals(cliResult.toString(), 2, cliResult.getTranspiledFilesCount());
 
-		ProcessResult nodejsResult = runNodejs(projectDir, fileToRun);
-		assertEquals(nodejsResult.toString(), "foo === 36: true, bar === 'bar': true", nodejsResult.getStdOut());
+		// Make sure, we get here and have exactly two files compiled:
+		assertEquals(cliResult.toString(), 0, cliResult.getTranspiledFilesCount(proot.toPath().resolve("APIx")));
+		assertEquals(cliResult.toString(), 2, cliResult.getTranspiledFilesCount(proot.toPath().resolve("APIx-test")));
 	}
-
 }

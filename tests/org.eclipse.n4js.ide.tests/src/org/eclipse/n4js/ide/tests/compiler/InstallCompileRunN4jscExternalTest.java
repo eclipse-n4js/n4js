@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.tests;
+package org.eclipse.n4js.ide.tests.compiler;
 
 import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
 import static org.junit.Assert.assertEquals;
@@ -17,7 +17,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
 import org.eclipse.n4js.cli.helper.CliCompileResult;
@@ -25,20 +24,21 @@ import org.eclipse.n4js.cli.helper.ProcessResult;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
-/**
- * Downloads, installs, compiles and runs several packages that are known to be problematic in terms of how they define
- * main module.
- */
-public class InstallCompileRunN4jscExternalMainModuleTest extends AbstractCliCompileTest {
+import com.google.common.base.Predicates;
 
+/**
+ * Downloads, installs, compiles and runs 'express'.
+ */
+public class InstallCompileRunN4jscExternalTest extends AbstractCliCompileTest {
 	File workspace;
 
 	/** Prepare workspace. */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace("externalmm", true, N4JSGlobals.N4JS_RUNTIME);
+		workspace = setupWorkspace("external", Predicates.alwaysFalse(), true);
 	}
 
 	/** Delete workspace. */
@@ -48,29 +48,30 @@ public class InstallCompileRunN4jscExternalMainModuleTest extends AbstractCliCom
 	}
 
 	/**
-	 * Test for checking the npm support in the headless case by downloading third party package, importing it and
-	 * running it with Common JS.
+	 * Test for checking the npm support by downloading a third party package, importing and running it.
 	 */
 	@Test
+	@Ignore // GH-1510
 	public void testCompileAndRunWithExternalDependencies() {
 		final Path wsRoot = workspace.getAbsoluteFile().toPath();
-		final Path project = wsRoot.resolve("packages").resolve("external.project.mm");
+		final Path project = wsRoot.resolve("packages").resolve("external.project");
 		final Path fileToRun = project.resolve("src-gen").resolve("Main.js");
 
-		yarnInstall(workspace.toPath());
+		ProcessResult yarnInstallResult = yarnInstall(workspace.toPath());
+		// error An unexpected error occurred: "could not find a copy of eslint to link in:
+		// wsp/node_modules/is-promise/node_modules/listr-update-renderer/node_modules/ansi-regex/node_modules/xo/node_modules"
+		assertEquals(yarnInstallResult.toString(), 0, yarnInstallResult.getExitCode());
+		// assertTrue(yarnInstallResult.toString(),
+		// yarnInstallResult.getErrOut().contains("could not find a copy of eslint to link in"));
 
 		N4jscOptions options = COMPILE(workspace);
 		CliCompileResult cliResult = n4jsc(options);
-		assertEquals(cliResult.toString(), 1, cliResult.getTranspiledFilesCount(project));
+		assertEquals(cliResult.toString(), 1, cliResult.getTranspiledFilesCount());
 
-		String expectedString = "express imported\n";
-		expectedString += "jade imported\n";
-		expectedString += "lodash imported\n";
-		expectedString += "karma imported\n";
-		expectedString += "bar imported\n";
-		expectedString += "pouchdb-find imported\n";
-		expectedString += "next imported\n";
-		expectedString += "body-parser imported";
+		String expectedString = "express properties: Route, Router, application, bodyParser, compress, ";
+		expectedString += "cookieParser, cookieSession, csrf, default, directory, errorHandler, favicon, json, ";
+		expectedString += "limit, logger, methodOverride, multipart, query, request, response, responseTime, ";
+		expectedString += "session, static, staticCache, timeout, urlencoded, vhost";
 
 		ProcessResult nodejsResult = runNodejs(workspace.toPath(), fileToRun);
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2016 NumberFour AG.
+ * Copyright (c) 2018 NumberFour AG.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.tests;
+package org.eclipse.n4js.ide.tests.compiler;
 
 import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
 import static org.junit.Assert.assertEquals;
@@ -27,15 +27,17 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Downloads, installs, compiles and runs 'express'.
+ * Tells N4JSC to build few projects and run one of them. Projects being built have missing dependencies, so N4JSC is
+ * instructed to discover missing dependencies and to install them before compilation, which is done with
+ * {@code --installMissingDependencies} flag.
  */
-public class InstallCompileRunN4jscExternalWithSingleProjectCompileTest extends AbstractCliCompileTest {
+public class InstallFromManifestCompileRunN4jscExternalImportsTest extends AbstractCliCompileTest {
 	File workspace;
 
 	/** Prepare workspace. */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace("external_singleProjectOrFileCompile", true, N4JSGlobals.N4JS_RUNTIME);
+		workspace = setupWorkspace("external_project_install_dependencies", true, N4JSGlobals.N4JS_RUNTIME);
 	}
 
 	/** Delete workspace. */
@@ -51,15 +53,23 @@ public class InstallCompileRunN4jscExternalWithSingleProjectCompileTest extends 
 	@Test
 	public void testCompileAndRunWithExternalDependencies() {
 		final Path wsRoot = workspace.getAbsoluteFile().toPath();
-		final Path project = wsRoot.resolve("packages").resolve("external.project");
-		final Path fileToRun = project.resolve("src-gen").resolve("Main.js");
+		final Path project1 = wsRoot.resolve("packages").resolve("P1");
+		final Path project2 = wsRoot.resolve("packages").resolve("P2");
+		final Path project3 = wsRoot.resolve("packages").resolve("P3");
+		final Path fileToRun = project3.resolve("src-gen").resolve("f3.js");
 
 		yarnInstall(workspace.toPath());
 
 		CliCompileResult cliResult = n4jsc(COMPILE(workspace));
-		assertEquals(cliResult.toString(), 1, cliResult.getTranspiledFilesCount(project));
+		assertEquals(cliResult.toString(), 3, cliResult.getTranspiledFilesCount(project1)
+				+ cliResult.getTranspiledFilesCount(project2) + cliResult.getTranspiledFilesCount(project3));
 
-		String expectedString = "Application was created!";
+		String expectedString = "P1\n";
+		expectedString += "react is not undefined true\n";
+		expectedString += "react-dom is not undefined true\n";
+		expectedString += "imports from libs are different true\n";
+		expectedString += "P2\n";
+		expectedString += "React is not undefined true";
 
 		ProcessResult nodejsResult = runNodejs(workspace.toPath(), fileToRun);
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());

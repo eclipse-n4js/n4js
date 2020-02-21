@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.tests;
+package org.eclipse.n4js.ide.tests.compiler;
 
 import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
 import static org.junit.Assert.assertEquals;
@@ -28,10 +28,10 @@ import org.junit.Test;
 
 /**
  */
-public class AT_IDEBUG_542_missing_dep_to_project_under_testTest extends AbstractCliCompileTest {
+public class AT_IDEBUG_532_transpilecrashTest extends AbstractCliCompileTest {
 
 	File workspace;
-	static String WSP_542 = "IDEBUG-542";
+	static String WSP_532 = "IDEBUG-532";
 
 	/**
 	 * Setup workspace with api & api-impl & compile
@@ -39,10 +39,9 @@ public class AT_IDEBUG_542_missing_dep_to_project_under_testTest extends Abstrac
 	 */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace(WSP_542, true,
-				N4JSGlobals.N4JS_RUNTIME,
-				N4JSGlobals.MANGELHAFT,
-				new N4JSProjectName("n4js-runtime-es2015"));
+		workspace = setupWorkspace(WSP_532, true,
+				N4JSGlobals.N4JS_RUNTIME, new N4JSProjectName("n4js-runtime-es2015"),
+				new N4JSProjectName("org.eclipse.n4js.mangelhaft"));
 	}
 
 	/** Delete workspace. */
@@ -61,8 +60,9 @@ public class AT_IDEBUG_542_missing_dep_to_project_under_testTest extends Abstrac
 
 		CliCompileResult cliResult = n4jsc(options);
 
-		// Make sure, we get here and have exactly two files compiled:
+		// Make sure, we get here and have exactly one file compiled:
+
 		assertEquals(cliResult.toString(), 0, cliResult.getTranspiledFilesCount(proot.toPath().resolve("APIx")));
-		assertEquals(cliResult.toString(), 2, cliResult.getTranspiledFilesCount(proot.toPath().resolve("APIx-test")));
+		assertEquals(cliResult.toString(), 1, cliResult.getTranspiledFilesCount(proot.toPath().resolve("IMPLx")));
 	}
 }

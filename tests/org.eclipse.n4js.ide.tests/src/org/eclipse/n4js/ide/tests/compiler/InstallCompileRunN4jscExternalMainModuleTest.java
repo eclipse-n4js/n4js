@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.tests;
+package org.eclipse.n4js.ide.tests.compiler;
 
 import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
 import static org.junit.Assert.assertEquals;
@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
 import org.eclipse.n4js.cli.helper.CliCompileResult;
 import org.eclipse.n4js.cli.helper.ProcessResult;
@@ -27,15 +28,17 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Downloads, installs, compiles and runs 'express'.
+ * Downloads, installs, compiles and runs several packages that are known to be problematic in terms of how they define
+ * main module.
  */
-public class InstallCompileRunN4jscExternalWithSingleFileCompileTest extends AbstractCliCompileTest {
+public class InstallCompileRunN4jscExternalMainModuleTest extends AbstractCliCompileTest {
+
 	File workspace;
 
 	/** Prepare workspace. */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace("external_singleProjectOrFileCompile", true, N4JSGlobals.N4JS_RUNTIME);
+		workspace = setupWorkspace("externalmm", true, N4JSGlobals.N4JS_RUNTIME);
 	}
 
 	/** Delete workspace. */
@@ -51,15 +54,23 @@ public class InstallCompileRunN4jscExternalWithSingleFileCompileTest extends Abs
 	@Test
 	public void testCompileAndRunWithExternalDependencies() {
 		final Path wsRoot = workspace.getAbsoluteFile().toPath();
-		final Path project = wsRoot.resolve("packages").resolve("external.project");
+		final Path project = wsRoot.resolve("packages").resolve("external.project.mm");
 		final Path fileToRun = project.resolve("src-gen").resolve("Main.js");
 
 		yarnInstall(workspace.toPath());
 
-		CliCompileResult cliResult = n4jsc(COMPILE(workspace));
+		N4jscOptions options = COMPILE(workspace);
+		CliCompileResult cliResult = n4jsc(options);
 		assertEquals(cliResult.toString(), 1, cliResult.getTranspiledFilesCount(project));
 
-		String expectedString = "Application was created!";
+		String expectedString = "express imported\n";
+		expectedString += "jade imported\n";
+		expectedString += "lodash imported\n";
+		expectedString += "karma imported\n";
+		expectedString += "bar imported\n";
+		expectedString += "pouchdb-find imported\n";
+		expectedString += "next imported\n";
+		expectedString += "body-parser imported";
 
 		ProcessResult nodejsResult = runNodejs(workspace.toPath(), fileToRun);
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
