@@ -52,7 +52,7 @@ public class OneBasedIssuesInN4jscTest extends AbstractCliCompileTest {
 		assertEquals(cliResult.toString(), 1, cliResult.getIssues().size());
 		Diagnostic diag = cliResult.getIssues().values().iterator().next();
 		assertEquals("Couldn't resolve reference to IdentifiableElement 'x'.", diag.getMessage());
-		assertEquals("[0:0 - 0:1]", new StringLSP4J(projectRoot).toString(diag.getRange()));
+		assertEquals("[1:0 - 1:1]", new StringLSP4J(projectRoot).toString(diag.getRange()));
 	}
 
 }

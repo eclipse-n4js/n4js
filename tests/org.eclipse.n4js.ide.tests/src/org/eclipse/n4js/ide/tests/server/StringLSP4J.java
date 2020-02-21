@@ -27,16 +27,20 @@ import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.LocationLink;
 import org.eclipse.lsp4j.MarkedString;
 import org.eclipse.lsp4j.MarkupContent;
+import org.eclipse.lsp4j.ParameterInformation;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
+import org.eclipse.lsp4j.ResourceOperation;
 import org.eclipse.lsp4j.SignatureHelp;
 import org.eclipse.lsp4j.SignatureInformation;
+import org.eclipse.lsp4j.TextDocumentEdit;
 import org.eclipse.lsp4j.TextEdit;
+import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
+import org.eclipse.lsp4j.jsonrpc.messages.Tuple.Two;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.utils.Strings;
-import org.junit.Assert;
 
 /**
  * Utility to serialize LSP4J JSON results to be used in test expectations
@@ -115,6 +119,76 @@ public class StringLSP4J {
 	}
 
 	/** @return string for given element */
+	public String toString6(Either<TextDocumentEdit, ResourceOperation> documentChanges) {
+		if (documentChanges == null) {
+			return "";
+		}
+		if (documentChanges.isLeft()) {
+			return toString(documentChanges.getLeft());
+		} else {
+			return toString(documentChanges.getRight());
+		}
+	}
+
+	/** @return string for given element */
+	public String toString7(Either<String, MarkupContent> documentation) {
+		if (documentation == null) {
+			return "";
+		}
+		if (documentation.isLeft()) {
+			return documentation.getLeft();
+		} else {
+			return toString(documentation.getRight());
+		}
+	}
+
+	/** @return string for given element */
+	public String toString8(Either<String, Two<Integer, Integer>> documentation) {
+		if (documentation == null) {
+			return "";
+		}
+		if (documentation.isLeft()) {
+			return documentation.getLeft();
+		} else {
+			Two<Integer, Integer> right = documentation.getRight();
+			return "(" + right.getFirst() + "," + right.getSecond() + ")";
+		}
+	}
+
+	/** @return string for given element */
+	public String toString(ResourceOperation operation) {
+		if (operation == null) {
+			return "";
+		}
+
+		return operation.getKind();
+	}
+
+	/** @return string for given element */
+	public String toString(TextDocumentEdit edit) {
+		if (edit == null) {
+			return "";
+		}
+		String str = Strings.join(", ",
+				toString(edit.getTextDocument()),
+				Strings.toString(this::toString, edit.getEdits()));
+
+		return "(" + str + ")";
+	}
+
+	/** @return string for given element */
+	public String toString(VersionedTextDocumentIdentifier textDocument) {
+		if (textDocument == null) {
+			return "";
+		}
+		String str = Strings.join(", ",
+				textDocument.getUri(),
+				textDocument.getVersion());
+
+		return "(" + str + ")";
+	}
+
+	/** @return string for given element */
 	public String toString(Hover hover) {
 		if (hover == null) {
 			return "";
@@ -128,23 +202,38 @@ public class StringLSP4J {
 		if (signatureHelp == null) {
 			return "";
 		}
-		Integer activeSignature = signatureHelp.getActiveSignature();
-		List<SignatureInformation> signatures = signatureHelp.getSignatures();
 
-		if (signatures.size() == 0) {
-			Assert.assertNull(
-					"Signature index is expected to be null when no signatures are available. Was: " + activeSignature,
-					activeSignature);
-			return "<empty>";
+		String str = Strings.join(", ",
+				signatureHelp.getActiveSignature(),
+				signatureHelp.getActiveParameter(),
+				Strings.toString(this::toString, signatureHelp.getSignatures()));
+
+		return "(" + str + ")";
+	}
+
+	/** @return string for given element */
+	public String toString(SignatureInformation sigInfo) {
+		if (sigInfo == null) {
+			return "";
 		}
-		Assert.assertNotNull("Active signature index must not be null when signatures are available.", activeSignature);
+		String str = Strings.join(", ",
+				sigInfo.getLabel(),
+				Strings.toString(this::toString, sigInfo.getParameters()),
+				toString7(sigInfo.getDocumentation()));
 
-		Integer activeParameter = signatureHelp.getActiveParameter();
-		String param = (activeParameter == null) ? "<empty>"
-				: signatures.get(activeSignature).getParameters().get(activeParameter).getLabel().getLeft();
+		return "(" + str + ")";
+	}
 
-		String allSignatureStr = signatures.stream().map(s -> s.getLabel()).reduce("", (a, b) -> a + " | " + b);
-		return allSignatureStr + param;
+	/** @return string for given element */
+	public String toString(ParameterInformation parmInfo) {
+		if (parmInfo == null) {
+			return "";
+		}
+		String str = Strings.join(", ",
+				toString8(parmInfo.getLabel()),
+				toString7(parmInfo.getDocumentation()));
+
+		return "(" + str + ")";
 	}
 
 	/** @return string for given element */
@@ -152,8 +241,7 @@ public class StringLSP4J {
 		if (command == null) {
 			return "";
 		}
-		String str = "CMD:";
-		str += Strings.join(", ",
+		String str = Strings.join(", ",
 				command.getTitle(),
 				command.getCommand(),
 				Strings.toString(command.getArguments()));
@@ -166,16 +254,14 @@ public class StringLSP4J {
 		if (codeAction == null) {
 			return "";
 		}
-		String str = "CA:";
+		String str = Strings.join("\n",
+				"title      : " + codeAction.getTitle(),
+				"kind       : " + codeAction.getKind(),
+				"command    : " + toString(codeAction.getCommand()),
+				"diagnostics: " + Strings.join("\n", this::toString, codeAction.getDiagnostics()),
+				"edit       : " + toString(codeAction.getEdit()));
 
-		str += Strings.join(", ",
-				codeAction.getTitle(),
-				codeAction.getKind(),
-				Strings.toString(this::toString, codeAction.getDiagnostics()),
-				toString(codeAction.getEdit()),
-				toString(codeAction.getCommand()));
-
-		return "(" + str + ")";
+		return str;
 	}
 
 	/** @return string for given element */
@@ -213,7 +299,10 @@ public class StringLSP4J {
 		if (edit == null) {
 			return "";
 		}
-		String str = "" + edit.getDocumentChanges();
+		String str = Strings.join(", ",
+				Strings.toString(this::toString6, edit.getDocumentChanges()),
+				"\n   " + Strings.toString("\n   ", edit.getChanges(), this::relativize,
+						(l) -> Strings.toString(this::toString, l)));
 
 		return "(" + str + ")";
 	}

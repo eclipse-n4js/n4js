@@ -12,6 +12,8 @@ package org.eclipse.n4js.utils;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.function.Function;
 
 /**
@@ -76,6 +78,46 @@ abstract public class Strings {
 		for (Iterator<A> it = iterable.iterator(); it.hasNext();) {
 			A t = it.next();
 			str += (t == null) ? "" : accessor.apply(t);
+			if (it.hasNext()) {
+				str += delimiter;
+			}
+		}
+
+		return str;
+	}
+
+	/** Joins the given map with the given delimiter */
+	final static public <K extends Object, V extends Object> String toString(Map<K, V> map) {
+		return toString(map, Object::toString);
+	}
+
+	/** Joins the given map with the given delimiter */
+	final static public <K extends Object, V extends Object, T extends Exception> String toString(Map<K, V> map,
+			FunctionWithException<V, String, T> valueAccessor) throws T {
+
+		return toString(map, Object::toString, valueAccessor);
+	}
+
+	/** Joins the given map with the given delimiter */
+	final static public <K extends Object, V extends Object, T extends Exception> String toString(Map<K, V> map,
+			FunctionWithException<K, String, T> keyAccessor, FunctionWithException<V, String, T> valueAccessor)
+			throws T {
+
+		return toString(", ", map, keyAccessor, valueAccessor);
+	}
+
+	/** Joins the given map with the given delimiter */
+	final static public <K extends Object, V extends Object, T extends Exception> String toString(String delimiter,
+			Map<K, V> map, FunctionWithException<K, String, T> keyAccessor,
+			FunctionWithException<V, String, T> valueAccessor) throws T {
+
+		if (map == null || delimiter == null || keyAccessor == null || valueAccessor == null) {
+			return "";
+		}
+		String str = "";
+		for (Iterator<Entry<K, V>> it = map.entrySet().iterator(); it.hasNext();) {
+			Entry<K, V> e = it.next();
+			str += keyAccessor.apply(e.getKey()) + " -> " + valueAccessor.apply(e.getValue());
 			if (it.hasNext()) {
 				str += delimiter;
 			}

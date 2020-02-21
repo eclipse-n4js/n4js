@@ -37,7 +37,7 @@ public class ZeroBasedIssuesInLspTest extends AbstractIdeTest<Void> {
 		assertEquals(1, allDiagnostics.size());
 		Diagnostic diag = allDiagnostics.iterator().next();
 		assertEquals("Couldn't resolve reference to IdentifiableElement 'x'.", diag.getMessage());
-		assertEquals("[1:0 - 1:1]", getStringLSP4J().toString(diag.getRange()));
+		assertEquals("[0:0 - 0:1]", getStringLSP4J().toString(diag.getRange()));
 	}
 
 }

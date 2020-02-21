@@ -25,7 +25,7 @@ public class SignatureHelpTest extends AbstractSignatureHelpTest {
 		shc.setModel("class A { foo(a: A) { } } class Main { main(a: A) { a.foo(null); } }");
 		shc.setLine(0);
 		shc.setColumn("class A { foo(a: A) { } } class Main { main(a: A) { a.fo".length());
-		shc.setExpectedSignatureHelp("<empty>");
+		shc.setExpectedSignatureHelp("(, , [])");
 
 		test(shc);
 	}
