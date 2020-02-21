@@ -21,6 +21,7 @@ import org.eclipse.lsp4j.TextDocumentIdentifier
 import org.eclipse.lsp4j.TextDocumentPositionParams
 import org.eclipse.lsp4j.jsonrpc.messages.Either
 import org.eclipse.n4js.ide.tests.server.AbstractDefinitionTest
+import org.eclipse.n4js.ide.tests.server.StringLSP4J
 import org.eclipse.xtext.testing.DefinitionTestConfiguration
 import org.junit.Test
 
@@ -41,7 +42,7 @@ class DefinitionTest extends AbstractDefinitionTest {
 			line = 0
 			column = 7
 			expectedDefinitions = '''
-				n4scheme:/primitives_js.n4ts [33:10 - 33:16]
+				(n4scheme:/primitives_js.n4ts, [33:10 - 33:16])
 			'''
 		]
 	}
@@ -56,7 +57,7 @@ class DefinitionTest extends AbstractDefinitionTest {
 			line = 1
 			column = 0
 			expectedDefinitions = '''
-				test-project/src/MyModule.n4js [0:4 - 0:5]
+				(test-project/src/MyModule.n4js, [0:4 - 0:5])
 			'''
 		]
 	}
@@ -71,7 +72,7 @@ class DefinitionTest extends AbstractDefinitionTest {
 			line = 1
 			column = 3
 			expectedDefinitions = '''
-				n4scheme:/builtin_js.n4ts [838:15 - 838:21]
+				(n4scheme:/builtin_js.n4ts, [838:15 - 838:21])
 			'''
 		]
 	}
@@ -92,8 +93,8 @@ class DefinitionTest extends AbstractDefinitionTest {
 			definition(textDocumentPositionParams)
 		var Either<List<? extends Location>, List<? extends LocationLink>> definitions = definitionsFuture.get()
 		
-		var String actualSignatureHelp = toString(definitions)
-		assertEquals('n4scheme:/builtin_js.n4ts [838:15 - 838:21]', actualSignatureHelp.trim())
+		var String actualSignatureHelp = new StringLSP4J(root).toString(definitions)
+		assertEquals('(n4scheme:/builtin_js.n4ts, [838:15 - 838:21])', actualSignatureHelp.trim())
 	}
 
 	protected def void test(Consumer<DefinitionTestConfiguration> init) throws Exception {

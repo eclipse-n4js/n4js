@@ -18,7 +18,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 import org.eclipse.emf.common.util.URI;
@@ -67,6 +66,7 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 		@Override
 		public void acceptQuickfixCommand(QuickfixContext context, String title, String commandID,
 				Object... arguments) {
+
 			throw new UnsupportedOperationException(
 					"TODO implement composite post-text-edit-apply actions if necessary");
 		}
@@ -74,6 +74,7 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 		@Override
 		public void acceptQuickfixCodeAction(QuickfixContext context, String title,
 				Supplier<List<TextEdit>> textEdits) {
+
 			String uriString = context.options.getCodeActionParams().getTextDocument().getUri();
 			List<TextEdit> edits = textEdits.get();
 			allEdits.computeIfAbsent(uriString, ignore -> new ArrayList<>()).addAll(edits);
@@ -81,20 +82,63 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 	}
 
 	private static class QuickFixImplementation {
+		final Object instance;
+		final Method method;
 		final String id;
 		final boolean multiFix;
-		final BiConsumer<QuickfixContext, ICodeActionAcceptor> logic;
 
-		QuickFixImplementation(String id, boolean multiFix, BiConsumer<QuickfixContext, ICodeActionAcceptor> logic) {
-			this.id = id;
+		private QuickFixImplementation(Object instance, final Method method, boolean multiFix) {
+			this.instance = instance;
+			this.method = method;
+			this.id = method.getName();
 			this.multiFix = multiFix;
-			this.logic = logic;
 		}
 
-		void run(String code, Options options, ICodeActionAcceptor acceptor) {
-			logic.accept(new QuickfixContext(code, options), acceptor);
+		void compute(String code, Options options, ICodeActionAcceptor acceptor) {
+			QuickfixContext context = new QuickfixContext(code, options);
+
+			try {
+				method.invoke(instance, context, acceptor);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
+	}
+
+	private static class MultiQuickfixAcceptor implements ICodeActionAcceptor {
+		final String quickfixId;
+		final CodeActionAcceptor acceptor;
+
+		private MultiQuickfixAcceptor(String quickfixId, CodeActionAcceptor acceptor) {
+			this.quickfixId = quickfixId;
+			this.acceptor = acceptor;
+		}
+
+		@Override
+		public void acceptQuickfixCodeAction(QuickfixContext context, String title,
+				Supplier<List<TextEdit>> textEdits) {
+
+			acceptor.acceptQuickfixCodeAction(context, title, textEdits);
+			acceptor.acceptQuickfixCommand(context, title + " (entire file)",
+					N4JSCommandService.COMPOSITE_FIX_FILE,
+					title,
+					context.issueCode,
+					quickfixId,
+					context.options.getCodeActionParams());
+			acceptor.acceptQuickfixCommand(context, title + " (entire project)",
+					N4JSCommandService.COMPOSITE_FIX_PROJECT,
+					title,
+					context.issueCode,
+					quickfixId,
+					context.options.getCodeActionParams());
+		}
+
+		@Override
+		public void acceptQuickfixCommand(QuickfixContext context, String title, String commandID,
+				Object... arguments) {
+			acceptor.acceptQuickfixCommand(context, title, commandID, arguments);
+		}
 	}
 
 	@Inject
@@ -144,51 +188,8 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 	private void acceptFix(Fix fix, Object instance, Method method) {
 		String issueCode = fix.value();
 		if (!Strings.isNullOrEmpty(issueCode)) {
-			QuickFixImplementation impl = new QuickFixImplementation(method.getName(), fix.multiFix(),
-					(QuickfixContext context, ICodeActionAcceptor acceptor) -> {
-						try {
-							method.invoke(instance, context, acceptor);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					});
+			QuickFixImplementation impl = new QuickFixImplementation(instance, method, fix.multiFix());
 			quickfixMap.put(issueCode, impl);
-		}
-	}
-
-	/** Finds quick-fixes for the given issue code and adds these quick-fixes to the acceptor iff available. */
-	public void findQuickfixes(String code, Options options, ICodeActionAcceptor acceptor) {
-		for (QuickFixImplementation quickfix : quickfixMap.get(code)) {
-			if (quickfix.multiFix) {
-				quickfix.run(code, options, new ICodeActionAcceptor() {
-					@Override
-					public void acceptQuickfixCodeAction(QuickfixContext context, String title,
-							Supplier<List<TextEdit>> textEdits) {
-
-						acceptor.acceptQuickfixCodeAction(context, title, textEdits);
-						acceptor.acceptQuickfixCommand(context, title + " (entire file)",
-								N4JSCommandService.COMPOSITE_FIX_FILE,
-								title,
-								context.issueCode,
-								quickfix.id,
-								context.options.getCodeActionParams());
-						acceptor.acceptQuickfixCommand(context, title + " (entire project)",
-								N4JSCommandService.COMPOSITE_FIX_PROJECT,
-								title,
-								context.issueCode,
-								quickfix.id,
-								context.options.getCodeActionParams());
-					}
-
-					@Override
-					public void acceptQuickfixCommand(QuickfixContext context, String title, String commandID,
-							Object... arguments) {
-						acceptor.acceptQuickfixCommand(context, title, commandID, arguments);
-					}
-				});
-			} else {
-				quickfix.run(code, options, acceptor);
-			}
 		}
 	}
 
@@ -213,6 +214,14 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 		return acceptor.getList();
 	}
 
+	/** Finds quick-fixes for the given issue code and adds these quick-fixes to the acceptor iff available. */
+	public void findQuickfixes(String code, Options options, CodeActionAcceptor acceptor) {
+		for (QuickFixImplementation qfix : quickfixMap.get(code)) {
+			ICodeActionAcceptor accTmp = qfix.multiFix ? new MultiQuickfixAcceptor(qfix.id, acceptor) : acceptor;
+			qfix.compute(code, options, accTmp);
+		}
+	}
+
 	/**
 	 * Applies all fixes of the same kind to the current file.
 	 */
@@ -230,7 +239,7 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 		for (Issue issue : issues) {
 			if (code.equals(issue.getCode())) {
 				Options newOptions = copyOptions(options, options.getCodeActionParams().getTextDocument(), issue);
-				quickfix.run(code, newOptions, collector);
+				quickfix.compute(code, newOptions, collector);
 			}
 		}
 		result.setChanges(collector.allEdits);
@@ -248,15 +257,19 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 		}
 		TextEditCollector collector = new TextEditCollector();
 		XProjectManager projectManager = getCurrentProject(options);
-		projectManager.getProjectStateHolder().getValidationIssues().forEach((uri, issues) -> {
+		Map<URI, Collection<Issue>> validationIssues = projectManager.getProjectStateHolder().getValidationIssues();
+
+		for (Map.Entry<URI, Collection<Issue>> entry : validationIssues.entrySet()) {
+			URI uri = entry.getKey();
+			Collection<Issue> issues = entry.getValue();
 			TextDocumentIdentifier docIdentifier = new TextDocumentIdentifier(uriExtensions.toUriString(uri));
 			for (Issue issue : issues) {
 				if (code.equals(issue.getCode())) {
 					Options newOptions = copyOptions(options, docIdentifier, issue);
-					quickfix.run(code, newOptions, collector);
+					quickfix.compute(code, newOptions, collector);
 				}
 			}
-		});
+		}
 		result.setChanges(collector.allEdits);
 		return result;
 	}
@@ -264,10 +277,8 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 	private Options copyOptions(Options options, TextDocumentIdentifier docIdentifier, Issue issue) {
 		Diagnostic diagnostic = diagnosticIssueConverter.toDiagnostic(issue, workspaceManager);
 		CodeActionContext context = new CodeActionContext(Collections.singletonList(diagnostic));
-		CodeActionParams codeActionParams = new CodeActionParams(
-				docIdentifier, diagnostic.getRange(), context);
-		Options newOptions = languageServer.toOptions(codeActionParams,
-				options.getCancelIndicator());
+		CodeActionParams codeActionParams = new CodeActionParams(docIdentifier, diagnostic.getRange(), context);
+		Options newOptions = languageServer.toOptions(codeActionParams, options.getCancelIndicator());
 		return newOptions;
 	}
 

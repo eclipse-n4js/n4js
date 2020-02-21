@@ -109,7 +109,7 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 	}
 
 	/** Executes LSP commands by calling the appropriate method using reflection. */
-	private static class CommandHandler {
+	private class CommandHandler {
 		private final Method method;
 
 		private CommandHandler(Method method) {
@@ -124,7 +124,7 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 			actualArguments.add(access);
 			actualArguments.add(cancelIndicator);
 			try {
-				return method.invoke(this, actualArguments.toArray());
+				return method.invoke(N4JSCommandService.this, actualArguments.toArray());
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				throw new RuntimeException(e);
 			}

@@ -137,7 +137,7 @@ public class N4JSQuickfixProvider {
 	}
 
 	/**
-	 * Remove the questionmark qualifier fro optional fields from the old location and put it at the new location.
+	 * Remove the question mark qualifier from optional fields from the old location and put it at the new location.
 	 */
 	@Fix(IssueCodes.CLF_FIELD_OPTIONAL_OLD_SYNTAX)
 	public void fixOldSyntaxForOptionalFields(QuickfixContext context, ICodeActionAcceptor acceptor) {
@@ -157,7 +157,7 @@ public class N4JSQuickfixProvider {
 	}
 
 	/**
-	 * Update the syntax for optional function paramters.
+	 * Update the syntax for optional function parameters.
 	 */
 	@Fix(IssueCodes.FUN_PARAM_OPTIONAL_WRONG_SYNTAX)
 	public void fixOldSyntaxForOptionalFpars(QuickfixContext context, ICodeActionAcceptor acceptor) {

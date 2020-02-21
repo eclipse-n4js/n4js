@@ -25,7 +25,7 @@ public class HoverJSDocMarkupTest extends AbstractHoverTest {
 		htc.setModel("/** JSDoc <br> CC */class CC {};");
 		htc.setLine(0);
 		htc.setColumn("/** JSDoc <br> CC */class C".length());
-		htc.setExpectedHover("[0:26 - 0:28] [n4js] class CC, [markdown] JSDoc \n\n CC");
+		htc.setExpectedHover("[0:26 - 0:28] [[n4js] class CC, [markdown] JSDoc \n\n CC]");
 
 		test(htc);
 	}
@@ -37,7 +37,7 @@ public class HoverJSDocMarkupTest extends AbstractHoverTest {
 		htc.setModel("/** JSDoc <br/> CC */class CC {};");
 		htc.setLine(0);
 		htc.setColumn("/** JSDoc <br/> CC */class C".length());
-		htc.setExpectedHover("[0:27 - 0:29] [n4js] class CC, [markdown] JSDoc \n\n CC");
+		htc.setExpectedHover("[0:27 - 0:29] [[n4js] class CC, [markdown] JSDoc \n\n CC]");
 
 		test(htc);
 	}
@@ -49,7 +49,7 @@ public class HoverJSDocMarkupTest extends AbstractHoverTest {
 		htc.setModel("/** JSDoc <p> CC */class CC {};");
 		htc.setLine(0);
 		htc.setColumn("/** JSDoc <p> CC */class C".length());
-		htc.setExpectedHover("[0:25 - 0:27] [n4js] class CC, [markdown] JSDoc \n\n CC");
+		htc.setExpectedHover("[0:25 - 0:27] [[n4js] class CC, [markdown] JSDoc \n\n CC]");
 
 		test(htc);
 	}
@@ -61,7 +61,7 @@ public class HoverJSDocMarkupTest extends AbstractHoverTest {
 		htc.setModel("/** JSDoc <b>CC</b> */class CC {};");
 		htc.setLine(0);
 		htc.setColumn("/** JSDoc <b>CC</b> */class C".length());
-		htc.setExpectedHover("[0:28 - 0:30] [n4js] class CC, [markdown] JSDoc **CC**");
+		htc.setExpectedHover("[0:28 - 0:30] [[n4js] class CC, [markdown] JSDoc **CC**]");
 
 		test(htc);
 	}
@@ -73,7 +73,7 @@ public class HoverJSDocMarkupTest extends AbstractHoverTest {
 		htc.setModel("/** JSDoc <i>CC</i> */class CC {};");
 		htc.setLine(0);
 		htc.setColumn("/** JSDoc <i>CC</i> */class C".length());
-		htc.setExpectedHover("[0:28 - 0:30] [n4js] class CC, [markdown] JSDoc __CC__");
+		htc.setExpectedHover("[0:28 - 0:30] [[n4js] class CC, [markdown] JSDoc __CC__]");
 
 		test(htc);
 	}
@@ -85,7 +85,7 @@ public class HoverJSDocMarkupTest extends AbstractHoverTest {
 		htc.setModel("/** JSDoc <code>CC</code> */class CC {};");
 		htc.setLine(0);
 		htc.setColumn("/** JSDoc <code>CC</code> */class C".length());
-		htc.setExpectedHover("[0:34 - 0:36] [n4js] class CC, [markdown] JSDoc ``++CC++``");
+		htc.setExpectedHover("[0:34 - 0:36] [[n4js] class CC, [markdown] JSDoc ``++CC++``]");
 
 		test(htc);
 	}
