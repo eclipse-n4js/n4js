@@ -4,7 +4,6 @@ Bundle-Name: %pluginName
 Bundle-Vendor: %providerName
 Bundle-Version: 0.0.1.qualifier
 Bundle-SymbolicName: org.eclipse.n4js.ide.tests
-Export-Package: org.eclipse.n4js.ide.tests
 Require-Bundle: org.eclipse.n4js,
  org.junit,
  org.eclipse.equinox.app,

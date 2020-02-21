@@ -114,6 +114,11 @@ public class N4jscTestLanguageClient extends N4jscLanguageClient {
 		return errors.get(uri);
 	}
 
+	/** @return all diagnostics */
+	public Collection<Diagnostic> getAllDiagnostics() {
+		return issues.values();
+	}
+
 	/** @return all diagnostics of a given uri */
 	public Collection<Diagnostic> getDiagnostics(FileURI uri) {
 		String uriString = issueSerializer.uri(uri.toString());

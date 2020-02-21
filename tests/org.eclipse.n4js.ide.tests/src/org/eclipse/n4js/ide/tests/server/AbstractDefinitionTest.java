@@ -51,7 +51,7 @@ abstract public class AbstractDefinitionTest extends AbstractIdeTest<DefinitionT
 		if (dtc.getAssertDefinitions() != null) {
 			dtc.getAssertDefinitions().apply(definitions.getLeft());
 		} else {
-			String actualSignatureHelp = getStringLSP4J().toString(definitions);
+			String actualSignatureHelp = getStringLSP4J().toString4(definitions);
 			assertEquals(dtc.getExpectedDefinitions().trim(), actualSignatureHelp.trim());
 		}
 	}

@@ -286,6 +286,11 @@ abstract public class AbstractIdeTest<T> {
 		languageServer.joinServerRequests();
 	}
 
+	/** @see N4jscTestLanguageClient#getAllDiagnostics() */
+	protected Collection<Diagnostic> getAllDiagnostics() {
+		return languageClient.getAllDiagnostics();
+	}
+
 	/** @see N4jscTestLanguageClient#getDiagnostics(FileURI) */
 	protected Collection<Diagnostic> getDiagnostics(FileURI uri) {
 		return languageClient.getDiagnostics(uri);

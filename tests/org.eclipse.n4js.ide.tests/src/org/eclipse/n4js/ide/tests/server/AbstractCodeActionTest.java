@@ -23,6 +23,7 @@ import org.eclipse.lsp4j.CodeActionParams;
 import org.eclipse.lsp4j.Command;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
+import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.tests.codegen.Project;
@@ -55,6 +56,11 @@ abstract public class AbstractCodeActionTest extends AbstractIdeTest<TestCodeAct
 		CodeActionContext context = new CodeActionContext();
 		FileURI uri = getFileUriFromModuleName(root, tcac.getFilePath());
 		context.setDiagnostics(Lists.newArrayList(getDiagnostics(uri)));
+		codeActionParams.setContext(context);
+
+		TextDocumentIdentifier textDocument = new TextDocumentIdentifier();
+		textDocument.setUri(uri.toString());
+		codeActionParams.setTextDocument(textDocument);
 
 		CompletableFuture<List<Either<Command, CodeAction>>> future = languageServer.codeAction(codeActionParams);
 		List<Either<Command, CodeAction>> result = future.get();

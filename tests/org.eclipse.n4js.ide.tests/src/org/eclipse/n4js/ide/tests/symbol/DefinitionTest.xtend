@@ -93,7 +93,7 @@ class DefinitionTest extends AbstractDefinitionTest {
 			definition(textDocumentPositionParams)
 		var Either<List<? extends Location>, List<? extends LocationLink>> definitions = definitionsFuture.get()
 		
-		var String actualSignatureHelp = new StringLSP4J(root).toString(definitions)
+		var String actualSignatureHelp = new StringLSP4J(root).toString4(definitions)
 		assertEquals('(n4scheme:/builtin_js.n4ts, [838:15 - 838:21])', actualSignatureHelp.trim())
 	}
 

@@ -31,7 +31,7 @@ abstract public class Strings {
 	 * @param iterable
 	 *            to be concatenated
 	 */
-	final static public String toString(Iterable<Object> iterable) {
+	final static public String toString(Iterable<? extends Object> iterable) {
 		return toString(Object::toString, iterable);
 	}
 
@@ -48,7 +48,7 @@ abstract public class Strings {
 	}
 
 	/** Joins the given iterable with the given delimiter */
-	final static public String join(String delimiter, Iterable<Object> iterable) {
+	final static public String join(String delimiter, Iterable<? extends Object> iterable) {
 		return join(delimiter, Object::toString, iterable);
 	}
 
@@ -69,10 +69,13 @@ abstract public class Strings {
 	final static public <A, T extends Exception> String join(String delimiter,
 			FunctionWithException<A, String, T> accessor, Iterable<A> iterable) throws T {
 
+		if (iterable == null || delimiter == null || accessor == null) {
+			return "";
+		}
 		String str = "";
 		for (Iterator<A> it = iterable.iterator(); it.hasNext();) {
 			A t = it.next();
-			str += accessor.apply(t);
+			str += (t == null) ? "" : accessor.apply(t);
 			if (it.hasNext()) {
 				str += delimiter;
 			}
