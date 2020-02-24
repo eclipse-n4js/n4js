@@ -15,7 +15,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionContext;
@@ -32,11 +31,6 @@ import org.eclipse.lsp4j.jsonrpc.messages.Either;
 public class CodeActionAcceptor implements ICodeActionAcceptor {
 
 	List<Either<Command, CodeAction>> codeActions = new ArrayList<>();
-
-	@Override
-	public void acceptQuickfixCodeAction(QuickfixContext context, String title, Supplier<List<TextEdit>> textEdits) {
-		acceptQuickfixCodeAction(context, title, textEdits.get());
-	}
 
 	/** Adds a quick-fix code action with the given title and command created of commandID and arguments */
 	@Override
@@ -68,6 +62,7 @@ public class CodeActionAcceptor implements ICodeActionAcceptor {
 	}
 
 	/** Adds a quick-fix code action with the given title and text edits */
+	@Override
 	public void acceptQuickfixCodeAction(QuickfixContext context, String title, List<TextEdit> textEdits) {
 		if (textEdits == null || textEdits.isEmpty()) {
 			return;

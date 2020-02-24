@@ -11,7 +11,6 @@
 package org.eclipse.n4js.ide.server.codeActions;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 import org.eclipse.lsp4j.TextEdit;
 
@@ -23,7 +22,7 @@ public interface ICodeActionAcceptor {
 	/**
 	 * Create a quickfix with the given string and the list of edits (will be retrieved on demand).
 	 */
-	void acceptQuickfixCodeAction(QuickfixContext context, String title, Supplier<List<TextEdit>> textEdits);
+	void acceptQuickfixCodeAction(QuickfixContext context, String title, List<TextEdit> textEdits);
 
 	/**
 	 * Create a command with the given arguments as a result of applying a quickfix.

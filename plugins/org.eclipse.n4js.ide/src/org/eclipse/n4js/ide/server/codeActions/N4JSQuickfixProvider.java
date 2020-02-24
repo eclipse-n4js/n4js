@@ -15,7 +15,6 @@ import static org.eclipse.n4js.ide.server.codeActions.util.ChangeProvider.replac
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Supplier;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.lsp4j.Position;
@@ -73,14 +72,11 @@ public class N4JSQuickfixProvider {
 			if (replacements != null && !replacements.isEmpty()) {
 				String description = cae.getDescription();
 
-				Supplier<List<TextEdit>> textEdits = () -> {
-					List<TextEdit> result = new ArrayList<>();
-					for (ReplaceRegion replaceRegion : replacements) {
-						TextEdit textEdit = ChangeProvider.replace(doc, replaceRegion);
-						result.add(textEdit);
-					}
-					return result;
-				};
+				List<TextEdit> textEdits = new ArrayList<>();
+				for (ReplaceRegion replaceRegion : replacements) {
+					TextEdit textEdit = ChangeProvider.replace(doc, replaceRegion);
+					textEdits.add(textEdit);
+				}
 
 				acceptor.acceptQuickfixCodeAction(context, "Add import from module " + description, textEdits);
 			}
@@ -108,32 +104,27 @@ public class N4JSQuickfixProvider {
 		INode roundBracketNode = NodeModelUtilsN4.findKeywordNode(parentNode, ")");
 		List<INode> nodesForFeature = NodeModelUtils.findNodesForFeature(parentNode.getSemanticElement(),
 				N4JSPackage.Literals.TYPED_ELEMENT__BOGUS_TYPE_REF);
-		INode bogusNode;
-		if (!nodesForFeature.isEmpty()) {
-			bogusNode = nodesForFeature.get(0);
-		} else {
+
+		if (nodesForFeature.isEmpty()) {
 			return;
 		}
 
-		Supplier<List<TextEdit>> supplier = () -> {
-			Document doc = context.options.getDocument();
-			String stringOfBogusType = NodeModelUtilsN4.getTokenTextWithHiddenTokens(bogusNode);
-			ILeafNode nodeAfterBogus = NodeModelUtils.findLeafNodeAtOffset(parentNode, bogusNode.getEndOffset());
-			int spaceAfterBogusLength = 0;
-			if (nodeAfterBogus != null && nodeAfterBogus.getText().startsWith(" ")) {
-				spaceAfterBogusLength = 1;
-			}
-			int offsetBogusType = bogusNode.getOffset();
-			int bogusTypeLength = stringOfBogusType.length();
-			int offsetRoundBracket = roundBracketNode.getTotalOffset();
-			List<TextEdit> textEdits = new ArrayList<>();
-			// inserts the bogus type at the new location (behind the closing round bracket)
-			textEdits.add(replace(doc, offsetRoundBracket + 1, 0, ": " + stringOfBogusType));
-			// removes the bogus type and whitespace at the old location
-			textEdits.add(replace(doc, offsetBogusType, bogusTypeLength + spaceAfterBogusLength, ""));
-			return textEdits;
-		};
-		acceptor.acceptQuickfixCodeAction(context, "Convert to colon style", supplier);
+		INode bogusNode = nodesForFeature.get(0);
+		Document doc = context.options.getDocument();
+		String stringOfBogusType = NodeModelUtilsN4.getTokenTextWithHiddenTokens(bogusNode);
+		ILeafNode nodeAfterBogus = NodeModelUtils.findLeafNodeAtOffset(parentNode, bogusNode.getEndOffset());
+		int spaceAfterBogusLength = (nodeAfterBogus != null && nodeAfterBogus.getText().startsWith(" ")) ? 1 : 0;
+		int offsetBogusType = bogusNode.getOffset();
+		int bogusTypeLength = stringOfBogusType.length();
+		int offsetRoundBracket = roundBracketNode.getTotalOffset();
+
+		List<TextEdit> textEdits = new ArrayList<>();
+		// inserts the bogus type at the new location (behind the closing round bracket)
+		textEdits.add(replace(doc, offsetRoundBracket + 1, 0, ": " + stringOfBogusType));
+		// removes the bogus type and whitespace at the old location
+		textEdits.add(replace(doc, offsetBogusType, bogusTypeLength + spaceAfterBogusLength, ""));
+
+		acceptor.acceptQuickfixCodeAction(context, "Convert to colon style", textEdits);
 	}
 
 	/**
@@ -141,19 +132,17 @@ public class N4JSQuickfixProvider {
 	 */
 	@Fix(IssueCodes.CLF_FIELD_OPTIONAL_OLD_SYNTAX)
 	public void fixOldSyntaxForOptionalFields(QuickfixContext context, ICodeActionAcceptor acceptor) {
-		acceptor.acceptQuickfixCodeAction(context, "Change to new syntax", () -> {
-			Document doc = context.options.getDocument();
-			int offsetNameEnd = getOffsetOfNameEnd(getEObject(context).eContainer());
-			List<TextEdit> textEdits = new ArrayList<>();
-			// removes the ? at the old location
-			int endOffset = doc.getOffSet(context.getDiagnostic().getRange().getEnd());
-			textEdits.add(replace(doc, endOffset - 1, 1, ""));
-			// inserts a ? at the new location (behind the field or accessor name)
-			if (offsetNameEnd != -1) {
-				textEdits.add(replace(doc, offsetNameEnd, 0, "?"));
-			}
-			return textEdits;
-		});
+		Document doc = context.options.getDocument();
+		int offsetNameEnd = getOffsetOfNameEnd(getEObject(context).eContainer());
+		List<TextEdit> textEdits = new ArrayList<>();
+		// removes the ? at the old location
+		int endOffset = doc.getOffSet(context.getDiagnostic().getRange().getEnd());
+		textEdits.add(replace(doc, endOffset - 1, 1, ""));
+		// inserts a ? at the new location (behind the field or accessor name)
+		if (offsetNameEnd != -1) {
+			textEdits.add(replace(doc, offsetNameEnd, 0, "?"));
+		}
+		acceptor.acceptQuickfixCodeAction(context, "Change to new syntax", textEdits);
 	}
 
 	/**
@@ -161,13 +150,11 @@ public class N4JSQuickfixProvider {
 	 */
 	@Fix(IssueCodes.FUN_PARAM_OPTIONAL_WRONG_SYNTAX)
 	public void fixOldSyntaxForOptionalFpars(QuickfixContext context, ICodeActionAcceptor acceptor) {
-		acceptor.acceptQuickfixCodeAction(context, "Change to Default Parameter", () -> {
-			Document doc = context.options.getDocument();
-			List<TextEdit> textEdits = new ArrayList<>();
-			int endOffset = doc.getOffSet(context.getDiagnostic().getRange().getEnd());
-			textEdits.add(replace(doc, endOffset - 1, 1, " = undefined"));
-			return textEdits;
-		});
+		Document doc = context.options.getDocument();
+		List<TextEdit> textEdits = new ArrayList<>();
+		int endOffset = doc.getOffSet(context.getDiagnostic().getRange().getEnd());
+		textEdits.add(replace(doc, endOffset - 1, 1, " = undefined"));
+		acceptor.acceptQuickfixCodeAction(context, "Change to Default Parameter", textEdits);
 	}
 
 	private int getOffsetOfNameEnd(EObject object) {

@@ -18,7 +18,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.CodeAction;
@@ -72,12 +71,9 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 		}
 
 		@Override
-		public void acceptQuickfixCodeAction(QuickfixContext context, String title,
-				Supplier<List<TextEdit>> textEdits) {
-
+		public void acceptQuickfixCodeAction(QuickfixContext context, String title, List<TextEdit> textEdits) {
 			String uriString = context.options.getCodeActionParams().getTextDocument().getUri();
-			List<TextEdit> edits = textEdits.get();
-			allEdits.computeIfAbsent(uriString, ignore -> new ArrayList<>()).addAll(edits);
+			allEdits.computeIfAbsent(uriString, ignore -> new ArrayList<>()).addAll(textEdits);
 		}
 	}
 
@@ -116,9 +112,7 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 		}
 
 		@Override
-		public void acceptQuickfixCodeAction(QuickfixContext context, String title,
-				Supplier<List<TextEdit>> textEdits) {
-
+		public void acceptQuickfixCodeAction(QuickfixContext context, String title, List<TextEdit> textEdits) {
 			acceptor.acceptQuickfixCodeAction(context, title, textEdits);
 			acceptor.acceptQuickfixCommand(context, title + " (entire file)",
 					N4JSCommandService.COMPOSITE_FIX_FILE,
@@ -137,6 +131,7 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 		@Override
 		public void acceptQuickfixCommand(QuickfixContext context, String title, String commandID,
 				Object... arguments) {
+
 			acceptor.acceptQuickfixCommand(context, title, commandID, arguments);
 		}
 	}
