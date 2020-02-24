@@ -17,6 +17,7 @@ import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.xtext.ide.server.Document;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
+import org.eclipse.xtext.util.ReplaceRegion;
 
 /**
  * Collection of high-level convenience methods for creating {@link TextEdit}s.
@@ -176,6 +177,13 @@ public class ChangeProvider {
 		Position posEnd = new Position(offPosition.getLine() + 1, 0);
 		Range range = new Range(posStart, posEnd);
 		return new TextEdit(range, "");
+	}
+
+	/**
+	 * Apply the given replacement to the document.
+	 */
+	public static TextEdit replace(Document doc, ReplaceRegion replaceRegion) {
+		return replace(doc, replaceRegion.getOffset(), replaceRegion.getLength(), replaceRegion.getText());
 	}
 
 }

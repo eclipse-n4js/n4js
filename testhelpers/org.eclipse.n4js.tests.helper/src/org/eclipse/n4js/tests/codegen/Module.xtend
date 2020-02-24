@@ -140,8 +140,7 @@ class Module {
 	public def generate() '''
 	«IF hasImports»
 		«generateImports()»
-	«ENDIF»
-	
+	«ENDIF»	
 	«IF hasContents»
 		«contents»
 	«ELSE»

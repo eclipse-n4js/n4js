@@ -11,11 +11,10 @@
 package org.eclipse.n4js.ide.server.codeActions;
 
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
-import org.eclipse.n4js.ide.server.codeActions.N4JSQuickfixProvider.QuickfixContext;
 
 /**
  * Annotation for quick-fix methods.
@@ -24,12 +23,18 @@ import org.eclipse.n4js.ide.server.codeActions.N4JSQuickfixProvider.QuickfixCont
  * Make sure that annotated methods:
  * <ul>
  * <li/>are public
- * <li/>have exactly two arguments, first of type {@link QuickfixContext} and second of type {@link CodeActionAcceptor}
+ * <li/>have exactly two arguments, first of type {@link QuickfixContext} and second of type {@link ICodeActionAcceptor}
  * </ul>
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.METHOD })
+@Repeatable(Fixes.class)
 public @interface Fix {
-	/** Issue code of issue that is fixed by the annotated method */
-	String issueCode();
+	/**
+	 * The issue code that is about the be resolved. The annotated method will potentially produce a fix for this code.
+	 */
+	String value();
+
+	/** Returns true if the implemented fix is a multi fix. */
+	boolean multiFix() default true;
 }

@@ -1,23 +1,27 @@
-/*******************************************************************************
- * Copyright (c) 2016 TypeFox GmbH (http://www.typefox.io) and others.
+/**
+ * Copyright (c) 2020 NumberFour AG.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *******************************************************************************/
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
 package org.eclipse.n4js.ide.tests.server;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import org.eclipse.lsp4j.ClientCapabilities;
+import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.DidOpenTextDocumentParams;
 import org.eclipse.lsp4j.ExecuteCommandCapabilities;
-import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.TextDocumentItem;
 import org.eclipse.lsp4j.WorkspaceClientCapabilities;
@@ -45,7 +49,7 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 
 /**
- * Signature help test class
+ * Abstract test class for LSP protocol tests
  */
 abstract public class AbstractIdeTest<T> {
 	static final String WORKSPACE_FOLDER = "/test-data";
@@ -178,6 +182,11 @@ abstract public class AbstractIdeTest<T> {
 		return root;
 	}
 
+	/** @return instance of {@link StringLSP4J}. */
+	protected StringLSP4J getStringLSP4J() {
+		return new StringLSP4J(getRoot());
+	}
+
 	/** Creates the default project on file system. */
 	protected Project createTestProjectOnDisk(File rootDir, Map<String, String> moduleNameToContents) {
 		List<Module> modules = new ArrayList<>();
@@ -237,8 +246,7 @@ abstract public class AbstractIdeTest<T> {
 		languageServer.connect(languageClient);
 		languageServer.initialize(initParams);
 		languageServer.initialized(null);
-		languageServer.joinInitBuildFinished();
-		waitForRequestsDone();
+		joinServerRequests();
 	}
 
 	/** Opens the given file in the LSP server and waits for the triggered build to finish. */
@@ -256,7 +264,7 @@ abstract public class AbstractIdeTest<T> {
 		dotdp.setTextDocument(textDocument);
 
 		languageServer.didOpen(dotdp);
-		waitForRequestsDone();
+		joinServerRequests();
 	}
 
 	/** Translates a given module name to a file URI used in LSP call data. */
@@ -274,9 +282,18 @@ abstract public class AbstractIdeTest<T> {
 	}
 
 	/** Waits until the LSP server idles. */
-	protected void waitForRequestsDone() {
-		ExecuteCommandParams cmdUnknownParams = new ExecuteCommandParams("unknown.command", Collections.emptyList());
-		languageServer.executeCommand(cmdUnknownParams).join();
+	protected void joinServerRequests() {
+		languageServer.joinServerRequests();
+	}
+
+	/** @see N4jscTestLanguageClient#getAllDiagnostics() */
+	protected Collection<Diagnostic> getAllDiagnostics() {
+		return languageClient.getAllDiagnostics();
+	}
+
+	/** @see N4jscTestLanguageClient#getDiagnostics(FileURI) */
+	protected Collection<Diagnostic> getDiagnostics(FileURI uri) {
+		return languageClient.getDiagnostics(uri);
 	}
 
 	static String toUnixLineSeparator(CharSequence cs) {

@@ -10,41 +10,260 @@
  */
 package org.eclipse.n4js.ide.server.commands;
 
-import java.util.List;
+import static org.eclipse.n4js.external.LibraryChange.LibraryChangeType.Install;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
+import org.eclipse.lsp4j.CodeActionParams;
 import org.eclipse.lsp4j.ExecuteCommandParams;
+import org.eclipse.lsp4j.MessageParams;
+import org.eclipse.lsp4j.MessageType;
+import org.eclipse.lsp4j.WorkspaceEdit;
+import org.eclipse.n4js.external.LibraryChange;
+import org.eclipse.n4js.external.NpmCLI;
+import org.eclipse.n4js.ide.server.codeActions.N4JSCodeActionService;
+import org.eclipse.n4js.ide.xtext.server.ExecuteCommandParamsDescriber;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
+import org.eclipse.n4js.json.ide.codeActions.JSONCodeActionService;
+import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
+import org.eclipse.n4js.semver.SemverHelper;
+import org.eclipse.n4js.semver.SemverUtils;
+import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
+import org.eclipse.n4js.semver.model.SemverSerializer;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
+import org.eclipse.xtext.ide.server.codeActions.ICodeActionService2.Options;
 import org.eclipse.xtext.ide.server.commands.IExecutableCommandService;
 import org.eclipse.xtext.util.CancelIndicator;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 /**
  * Provides commands for LSP clients
  */
-public class N4JSCommandService implements IExecutableCommandService {
-	private static final String N4JS_REBUILD = "n4js.rebuild";
+@SuppressWarnings("restriction")
+public class N4JSCommandService implements IExecutableCommandService, ExecuteCommandParamsDescriber {
+	/**
+	 * The rebuild command.
+	 */
+	public static final String N4JS_REBUILD = "n4js.rebuild";
+
+	/**
+	 * Composite fix that will resolve all issues of the same kind in the current file.
+	 *
+	 * Should not appear on the UI of the client.
+	 */
+	public static final String COMPOSITE_FIX_FILE = "n4js.composite.fix.file";
+
+	/**
+	 * Composite fix that will resolve all issues of the same kind in the current project.
+	 *
+	 * Should not appear on the UI of the client.
+	 */
+	public static final String COMPOSITE_FIX_PROJECT = "n4js.composite.fix.project";
 
 	@Inject
 	private XLanguageServerImpl lspServer;
 
+	@Inject
+	private N4JSCodeActionService codeActionService;
+
+	@Inject
+	private NpmCLI npmCli;
+
+	@Inject
+	private SemverHelper semverHelper;
+
+	/**
+	 * Methods annotated as {@link ExecutableCommandHandler} will be registered as handlers for ExecuteCommand requests.
+	 * The methods are found reflectively in this class. They must define a parameter list with at least the two
+	 * trailing parameters: {@code ILanguageServerAccess access, CancelIndicator cancelIndicator}. All the leading
+	 * parameters before the {@code ILanguageServerAccess} are passed by the framework. The parameter types are used to
+	 * deserialize the {@link ExecuteCommandParams#getArguments() arguments} of the execute commands in a strongly typed
+	 * way.
+	 */
+	@Target(ElementType.METHOD)
+	@Retention(RetentionPolicy.RUNTIME)
+	@interface ExecutableCommandHandler {
+		String value();
+	}
+
+	/** Executes LSP commands by calling the appropriate method using reflection. */
+	private class CommandHandler {
+		private final Method method;
+
+		private CommandHandler(Method method) {
+			this.method = method;
+		}
+
+		private Object execute(ExecuteCommandParams params, ILanguageServerAccess access,
+				CancelIndicator cancelIndicator) {
+
+			List<Object> actualArguments = new ArrayList<>();
+			actualArguments.addAll(params.getArguments());
+			actualArguments.add(access);
+			actualArguments.add(cancelIndicator);
+			try {
+				return method.invoke(N4JSCommandService.this, actualArguments.toArray());
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				throw new RuntimeException(e);
+			}
+		}
+	}
+
+	private Map<String, CommandHandler> handlers;
+	private Map<String, Type[]> argumentTypes;
+
 	@Override
 	public List<String> initialize() {
-		return Lists.newArrayList(N4JS_REBUILD);
+		Method[] methods = getClass().getMethods();
+		Map<String, CommandHandler> localHandlers = new HashMap<>();
+		Map<String, Type[]> localArgumentTypes = new HashMap<>();
+
+		for (Method method : methods) {
+			ExecutableCommandHandler annotation = method.getAnnotation(ExecutableCommandHandler.class);
+			if (annotation != null) {
+				List<Type> parameterTypes = Arrays.asList(method.getGenericParameterTypes());
+				// -2 since the last params are the ILanguageServerAccess and the CancelIndicator
+				Type[] args = parameterTypes.subList(0, parameterTypes.size() - 2).toArray(Type[]::new);
+				localArgumentTypes.put(annotation.value(), args);
+				localHandlers.put(annotation.value(), new CommandHandler(method));
+			}
+		}
+		this.handlers = localHandlers;
+		this.argumentTypes = localArgumentTypes;
+		return Lists.newArrayList(localHandlers.keySet());
+	}
+
+	@Override
+	public Map<String, Type[]> argumentTypes() {
+		return Preconditions.checkNotNull(argumentTypes);
 	}
 
 	@Override
 	public Object execute(ExecuteCommandParams params, ILanguageServerAccess access, CancelIndicator cancelIndicator) {
-		String command = params.getCommand();
-		switch (command) {
-		case N4JS_REBUILD:
-			lspServer.clean();
-			lspServer.reinitWorkspace();
-			break;
-		default:
-		}
+		return handlers.get(params.getCommand()).execute(params, access, cancelIndicator);
+	}
+
+	/**
+	 * Clean the state of all workspace projects and trigger a re-initialization (new build).
+	 *
+	 * @param access
+	 *            the language server access.
+	 * @param cancelIndicator
+	 *            the cancel indicator.
+	 */
+	@ExecutableCommandHandler(N4JS_REBUILD)
+	public Void rebuild(ILanguageServerAccess access, CancelIndicator cancelIndicator) {
+		lspServer.clean();
+		lspServer.reinitWorkspace();
+		return null;
+	}
+
+	/**
+	 * Fix the issues of the same kind in the entire file.
+	 */
+	@ExecutableCommandHandler(COMPOSITE_FIX_FILE)
+	public Void fixAllInFile(String title, String code, String fixId, CodeActionParams codeActionParams,
+			ILanguageServerAccess access, CancelIndicator cancelIndicator) {
+
+		Options options = lspServer.toOptions(codeActionParams, cancelIndicator);
+		WorkspaceEdit edit = codeActionService.applyToFile(code, fixId, options);
+		access.getLanguageClient().applyEdit(new ApplyWorkspaceEditParams(edit, title));
+		return null;
+	}
+
+	/**
+	 * Fix the issues of the same kind in the entire project.
+	 */
+	@ExecutableCommandHandler(COMPOSITE_FIX_PROJECT)
+	public Void fixAllInProject(String title, String code, String fixId, CodeActionParams codeActionParams,
+			ILanguageServerAccess access, CancelIndicator cancelIndicator) {
+
+		Options options = lspServer.toOptions(codeActionParams, cancelIndicator);
+		WorkspaceEdit edit = codeActionService.applyToProject(code, fixId, options);
+		access.getLanguageClient().applyEdit(new ApplyWorkspaceEditParams(edit, title));
+		return null;
+	}
+
+	/**
+	 * Install the given NPM into the workspace.
+	 *
+	 * @param cancelIndicator
+	 *            not required.
+	 */
+	@ExecutableCommandHandler(JSONCodeActionService.INSTALL_NPM)
+	public Void installNpm(
+			String packageName,
+			String version,
+			String fileUri,
+			ILanguageServerAccess access,
+			CancelIndicator cancelIndicator) {
+
+		lspServer.getRequestManager().runWrite("InstallNpm", () -> {
+			// FIXME: Use CliTools in favor of npmCli
+			NPMVersionRequirement versionRequirement = semverHelper.parse(version);
+			if (versionRequirement == null) {
+				versionRequirement = SemverUtils.createEmptyVersionRequirement();
+			}
+			String normalizedVersion = SemverSerializer.serialize(versionRequirement);
+
+			N4JSProjectName projectName = new N4JSProjectName(packageName);
+			LibraryChange change = new LibraryChange(Install, null, projectName, normalizedVersion);
+			MultiStatus multiStatus = new MultiStatus("json", 1, null, null);
+			FileURI targetProject = new FileURI(URI.createURI(fileUri)).getParent();
+			npmCli.batchInstall(new NullProgressMonitor(), multiStatus, Arrays.asList(change), targetProject);
+
+			return multiStatus;
+
+		}, (ci, ms) -> {
+			MessageParams messageParams = new MessageParams();
+			switch (ms.getSeverity()) {
+			case IStatus.INFO:
+				messageParams.setType(MessageType.Info);
+				break;
+			case IStatus.WARNING:
+				messageParams.setType(MessageType.Warning);
+				break;
+			case IStatus.ERROR:
+				messageParams.setType(MessageType.Error);
+				break;
+			default:
+				return null;
+			}
+
+			StringWriter sw = new StringWriter();
+			PrintWriter printWriter = new PrintWriter(sw);
+			for (IStatus child : ms.getChildren()) {
+				if (child.getSeverity() == ms.getSeverity()) {
+					printWriter.println(child.getMessage());
+				}
+			}
+			printWriter.flush();
+			messageParams.setMessage(sw.toString());
+			access.getLanguageClient().showMessage(messageParams);
+			return null;
+		}).whenComplete((a, b) -> lspServer.reinitWorkspace());
 
 		return null;
 	}

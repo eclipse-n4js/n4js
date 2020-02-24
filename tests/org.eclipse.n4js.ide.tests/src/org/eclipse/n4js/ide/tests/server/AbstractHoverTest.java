@@ -1,34 +1,30 @@
-/*******************************************************************************
- * Copyright (c) 2016 TypeFox GmbH (http://www.typefox.io) and others.
+/**
+ * Copyright (c) 2020 NumberFour AG.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *******************************************************************************/
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
 package org.eclipse.n4js.ide.tests.server;
 
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 import org.eclipse.lsp4j.Hover;
-import org.eclipse.lsp4j.MarkedString;
-import org.eclipse.lsp4j.MarkupContent;
 import org.eclipse.lsp4j.Position;
-import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.TextDocumentPositionParams;
-import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.tests.codegen.Project;
 import org.eclipse.xtext.testing.HoverTestConfiguration;
 
-import com.google.common.base.Strings;
-
 /**
- * Signature help test class
+ * Abstract test class for hover protocol tests
  */
 abstract public class AbstractHoverTest extends AbstractIdeTest<HoverTestConfiguration> {
 
@@ -51,48 +47,8 @@ abstract public class AbstractHoverTest extends AbstractIdeTest<HoverTestConfigu
 		if (htc.getAssertHover() != null) {
 			htc.getAssertHover().apply(hover);
 		} else {
-			String actualSignatureHelp = toString(hover);
+			String actualSignatureHelp = getStringLSP4J().toString(hover);
 			assertEquals(htc.getExpectedHover().trim(), actualSignatureHelp.trim());
-		}
-	}
-
-	String toString(Hover hover) {
-		String str = toString(hover.getRange()) + " " + toString(hover.getContents());
-		return str;
-	}
-
-	String toString(Range range) {
-		if (range == null) {
-			return "[null]";
-		}
-		Position start = range.getStart();
-		Position end = range.getEnd();
-		String stringPosStr = start.getLine() + ":" + start.getCharacter();
-		String endPosStr = end.getLine() + ":" + end.getCharacter();
-		return "[" + stringPosStr + " - " + endPosStr + "]";
-	}
-
-	String toString(Either<List<Either<String, MarkedString>>, MarkupContent> contents) {
-		if (contents.isLeft()) {
-			List<Either<String, MarkedString>> markedStrings = contents.getLeft();
-			String str = "";
-			for (Either<String, MarkedString> ms : markedStrings) {
-				if (!Strings.isNullOrEmpty(str)) {
-					str += ", ";
-				}
-				if (ms.isLeft()) {
-					str += ms.getLeft();
-				} else {
-					MarkedString markedStr = ms.getRight();
-					str += "[" + markedStr.getLanguage() + "] " + markedStr.getValue();
-				}
-			}
-
-			return str;
-
-		} else {
-			MarkupContent markupContent = contents.getRight();
-			return "[" + markupContent.getKind() + "] " + markupContent.getValue();
 		}
 	}
 

@@ -79,6 +79,9 @@ public class IssueAcceptor {
 		if (!workspaceManager.isDocumentOpen(uri)) {
 			// Closed documents need to exist in the current workspace
 			IProjectConfig projectConfig = workspaceManager.getWorkspaceConfig().findProjectContaining(uri);
+			if (projectConfig == null) {
+				return Collections.emptyList();
+			}
 			ISourceFolder sourceFolder = projectConfig.findSourceFolderContaining(uri);
 			if (sourceFolder == null) {
 				return Collections.emptyList();
@@ -91,7 +94,7 @@ public class IssueAcceptor {
 		List<Diagnostic> sortedDiags = new ArrayList<>();
 		for (Issue issue : issues) {
 			if (issue.getSeverity() != Severity.IGNORE) {
-				sortedDiags.add(diagnosticIssueConverter.toDiagnostic(issue, workspaceManager::getDocument));
+				sortedDiags.add(diagnosticIssueConverter.toDiagnostic(issue, workspaceManager));
 			}
 		}
 

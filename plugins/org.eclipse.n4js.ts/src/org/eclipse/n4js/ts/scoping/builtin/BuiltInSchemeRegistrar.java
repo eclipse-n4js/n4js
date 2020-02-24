@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.emf.ecore.resource.URIHandler;
 import org.eclipse.emf.ecore.resource.impl.URIHandlerImpl;
 import org.eclipse.xtext.resource.ClassloaderClasspathUriResolver;
+import org.eclipse.xtext.resource.ClasspathUriUtil;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -123,9 +124,28 @@ public class BuiltInSchemeRegistrar implements N4Scheme {
 
 		@Override
 		public InputStream createInputStream(URI uri, Map<?, ?> options) throws IOException {
-			URI classpathURI = N4Scheme.toClasspathURI(uri);
+			URI classpathURI = toClasspathURI(uri);
 			URI resolvedURI = uriResolver.resolve(classLoader, classpathURI);
 			return original.createInputStream(resolvedURI, options);
+		}
+
+		/**
+		 * Convert the given n4scheme-URI to a classpath-URI.
+		 */
+		private URI toClasspathURI(URI uriWithN4Scheme) {
+			String[] allSegments = new String[uriWithN4Scheme.segmentCount() + 1];
+			allSegments[0] = "env";
+			for (int i = 0; i < uriWithN4Scheme.segmentCount(); i++) {
+				allSegments[i + 1] = uriWithN4Scheme.segment(i);
+			}
+			URI classpathURI = URI.createHierarchicalURI(
+					ClasspathUriUtil.CLASSPATH_SCHEME,
+					uriWithN4Scheme.authority(),
+					uriWithN4Scheme.device(),
+					allSegments,
+					uriWithN4Scheme.query(),
+					uriWithN4Scheme.fragment());
+			return classpathURI;
 		}
 	}
 

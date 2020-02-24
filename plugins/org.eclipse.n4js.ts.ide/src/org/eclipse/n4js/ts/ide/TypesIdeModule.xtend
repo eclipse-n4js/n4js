@@ -10,13 +10,8 @@
  */
 package org.eclipse.n4js.ts.ide
 
-import org.eclipse.xtext.ide.server.DocumentExtensions
-
 /**
  * Use this class to register ide components.
  */
 class TypesIdeModule extends AbstractTypesIdeModule {
-	def Class<? extends DocumentExtensions> bindDocumentExtensions() {
-		return BuiltInAwareDocumentExtensions
-	}
 }

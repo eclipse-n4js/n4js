@@ -287,7 +287,8 @@ public class XBuildManager {
 	private Map<ProjectDescription, Set<URI>> computeProjectToUriMap(Collection<URI> uris) {
 		Map<ProjectDescription, Set<URI>> project2uris = new HashMap<>();
 		for (URI uri : uris) {
-			ProjectDescription projectDescription = workspaceManager.getProjectManager(uri).getProjectDescription();
+			XProjectManager projectManager = workspaceManager.getProjectManager(uri);
+			ProjectDescription projectDescription = projectManager.getProjectDescription();
 			if (!project2uris.containsKey(projectDescription)) {
 				project2uris.put(projectDescription, new HashSet<>());
 			}

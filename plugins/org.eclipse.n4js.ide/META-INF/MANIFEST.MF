@@ -23,7 +23,9 @@ Require-Bundle: org.eclipse.n4js,
  org.eclipse.n4js.json.ide,
  org.eclipse.n4js.semver.ide,
  org.eclipse.n4js.regex,
- org.eclipse.n4js.semver
+ org.eclipse.n4js.semver,
+ org.eclipse.n4js.model,
+ org.eclipse.n4js.semver.model
 Export-Package: org.eclipse.n4js.ide,
  org.eclipse.n4js.ide.contentassist.antlr,
  org.eclipse.n4js.ide.contentassist.antlr.internal,
