@@ -19,7 +19,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Serializer for issues to be displayed on the user console
+ * Serializer for issues to be displayed on the user console. Uses 1-based positions.
  */
 @Singleton
 public class IssueSerializer {
@@ -30,8 +30,8 @@ public class IssueSerializer {
 	/** @return user string for an issue */
 	public String diagnostics(Diagnostic diagnostic) {
 		String position = String.format("%d:%d",
-				diagnostic.getRange().getStart().getLine(),
-				diagnostic.getRange().getStart().getCharacter());
+				diagnostic.getRange().getStart().getLine() + 1,
+				diagnostic.getRange().getStart().getCharacter() + 1);
 
 		String s = String.format("  %s %-8s %s",
 				getShortSeverity(diagnostic.getSeverity()),

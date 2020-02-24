@@ -15,11 +15,10 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 
-import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
 import org.eclipse.n4js.cli.helper.CliCompileResult;
-import org.eclipse.n4js.ide.tests.server.StringLSP4J;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
@@ -45,14 +44,14 @@ public class OneBasedIssuesInN4jscTest extends AbstractCliCompileTest {
 
 	/** test case */
 	@Test
-	public void testCompile() {
-		File projectRoot = new File(workspace, "oneBased");
-
+	public void testOneBased() {
 		CliCompileResult cliResult = n4jsc(COMPILE(workspace));
 		assertEquals(cliResult.toString(), 1, cliResult.getIssues().size());
-		Diagnostic diag = cliResult.getIssues().values().iterator().next();
-		assertEquals("Couldn't resolve reference to IdentifiableElement 'x'.", diag.getMessage());
-		assertEquals("[1:0 - 1:1]", new StringLSP4J(projectRoot).toString(diag.getRange()));
+
+		Collection<String> errMsgs = cliResult.getErrMsgs();
+		assertEquals(1, errMsgs.size());
+		assertEquals("  ERR 1:1      Couldn't resolve reference to IdentifiableElement 'x'.",
+				errMsgs.iterator().next());
 	}
 
 }

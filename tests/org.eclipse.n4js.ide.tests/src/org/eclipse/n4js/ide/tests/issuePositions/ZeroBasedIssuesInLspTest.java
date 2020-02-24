@@ -27,7 +27,7 @@ public class ZeroBasedIssuesInLspTest extends AbstractIdeTest<Void> {
 
 	/** test case */
 	@Test
-	public void test() throws Exception {
+	public void testZeroBased() throws Exception {
 		test("x");
 	}
 
