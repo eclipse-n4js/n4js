@@ -19,7 +19,6 @@ import org.eclipse.xtext.resource.OutdatedStateManager;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 
-import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 /**
@@ -263,7 +262,8 @@ public class PostProcessingAwareResource extends DerivedStateAwareResource {
 					doMainPostProcessing(cancelIndicator);
 
 					// finalization of post-processing
-					for (PostProcessingAwareResource other : Lists.reverse(otherResourcesAwaitingFinalization)) {
+					// FIXME reconsider triggering of post-processing during finalization!
+					for (PostProcessingAwareResource other : new ArrayList<>(otherResourcesAwaitingFinalization)) {
 						other.doFinalizePostProcessing(cancelIndicator);
 					}
 					doFinalizePostProcessing(cancelIndicator);
