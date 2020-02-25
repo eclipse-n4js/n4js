@@ -180,4 +180,4 @@ async function sleep(ms) {
 		setTimeout(resolve, ms);
 	});
 }
-//# sourceMappingURL=extensionProvider.map
+//# sourceMappingURL=ExtensionProvider.map

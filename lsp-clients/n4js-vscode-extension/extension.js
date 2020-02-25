@@ -19,7 +19,7 @@ const vscodeLC = require("vscode-languageclient");
 
 require = require("esm")(module);
 
-const extensionProvider = require("./src-gen/extensionProvider.js");
+const extensionProvider = require("./src-gen/ExtensionProvider.js");
 
 module.exports = {
     activate: extensionProvider.getActivate(vscode, vscodeLC),
