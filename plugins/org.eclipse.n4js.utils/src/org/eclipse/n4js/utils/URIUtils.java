@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -284,6 +285,11 @@ public class URIUtils {
 	 * <p>
 	 * Same as {@link org.eclipse.emf.common.util.URI#toFileString()}, but returns a {@link Path} instance instead of a
 	 * string.
+	 * <p>
+	 * <b>Attention: This fails on platform Windows:</b><br>
+	 * {@code Paths.get(org.eclipse.emf.common.util.URI#toFileString());} <br>
+	 * The reason is that {@link URI#toFileString()} returns a string like "\\c:\\dir" which cannot be parsed by
+	 * {@link Paths#get(java.net.URI)} due to the starting "\\".
 	 */
 	static public Path toPath(URI uri) {
 		return toFile(uri).toPath();
