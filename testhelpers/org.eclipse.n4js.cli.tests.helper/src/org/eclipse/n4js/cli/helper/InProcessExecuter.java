@@ -23,6 +23,7 @@ import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.cli.N4jscTestFactory;
 import org.eclipse.n4js.cli.helper.SystemExitRedirecter.SystemExitException;
 import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.testing.GlobalRegistries;
 import org.eclipse.xtext.testing.GlobalRegistries.GlobalStateMemento;
 import org.eclipse.xtext.workspace.IProjectConfig;
@@ -94,7 +95,7 @@ public class InProcessExecuter {
 				Set<? extends IProjectConfig> projects = workspaceManager.getWorkspaceConfig().getProjects();
 				Map<String, String> projectMap = new TreeMap<>();
 				for (IProjectConfig pConfig : projects) {
-					Path projectPath = Path.of(pConfig.getPath().toFileString());
+					Path projectPath = URIUtils.toPath(pConfig.getPath());
 					Path relativeProjectPath = workspaceRoot.toPath().relativize(projectPath);
 					projectMap.put(pConfig.getName(), relativeProjectPath.toString());
 				}

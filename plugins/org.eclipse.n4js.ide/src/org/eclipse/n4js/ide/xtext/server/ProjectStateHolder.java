@@ -27,6 +27,7 @@ import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
 import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
 import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
@@ -114,7 +115,7 @@ public class ProjectStateHolder {
 	/** Deletes the persistence file on disk */
 	public void deletePersistenceFile(IProjectConfig projectConfig) {
 		URI persistenceFileURI = getPersistenceFile(projectConfig);
-		File persistenceFile = new File(persistenceFileURI.toFileString());
+		File persistenceFile = URIUtils.toFile(persistenceFileURI);
 		if (persistenceFile.isFile()) {
 			persistenceFile.delete();
 		}

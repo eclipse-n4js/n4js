@@ -36,6 +36,7 @@ import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.model.utils.JSONModelUtils;
 import org.eclipse.n4js.packagejson.PackageJsonProperties;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.n4js.utils.io.FileDeleter;
@@ -76,7 +77,8 @@ public class N4jsLibsAccess {
 			return result;
 		}
 
-		String myLocationStr = myLocation.toFileString();
+		File myLocationFile = URIUtils.toFile(myLocation);
+		String myLocationStr = myLocationFile.toString();
 		String searchStr = File.separator + N4JS_REPO_NAME + File.separator + TEST_HELPERS_NAME
 				+ File.separator;
 		int idx = myLocationStr.indexOf(searchStr);

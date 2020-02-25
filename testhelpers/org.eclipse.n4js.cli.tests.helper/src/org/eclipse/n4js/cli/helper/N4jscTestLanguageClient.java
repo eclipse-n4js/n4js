@@ -12,7 +12,6 @@ package org.eclipse.n4js.cli.helper;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -28,6 +27,7 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.cli.compiler.N4jscLanguageClient;
 import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
 import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -94,9 +94,9 @@ public class N4jscTestLanguageClient extends N4jscLanguageClient {
 			return;
 		}
 
-		Path folder = Paths.get(generated.trimSegments(1).toFileString());
+		Path folder = URIUtils.toPath(generated.trimSegments(1));
 		URI relGenerated = workspaceManager.makeWorkspaceRelative(generated);
-		File relFile = new File(relGenerated.toFileString());
+		File relFile = URIUtils.toFile(relGenerated);
 		transpiledFiles.computeIfAbsent(folder, f -> Collections.synchronizedSet(new HashSet<File>())).add(relFile);
 		if (!transpiledFiles.containsKey(folder)) {
 			transpiledFiles.put(folder, new HashSet<File>());

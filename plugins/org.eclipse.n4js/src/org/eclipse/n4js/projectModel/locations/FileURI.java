@@ -23,6 +23,7 @@ import java.util.function.Consumer;
 import org.eclipse.emf.common.util.AbstractTreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.io.FileDeleter;
 
 import com.google.common.base.Preconditions;
@@ -72,7 +73,7 @@ public final class FileURI extends SafeURI<FileURI> {
 
 	@Override
 	public boolean exists() {
-		return new File(toURI().toFileString()).exists();
+		return URIUtils.toFile(toURI()).exists();
 	}
 
 	@Override
@@ -84,7 +85,7 @@ public final class FileURI extends SafeURI<FileURI> {
 		if (cachedFile != null) {
 			return cachedFile;
 		}
-		return cachedFile = new File(toURI().toFileString());
+		return cachedFile = URIUtils.toFile(toURI());
 	}
 
 	@Override

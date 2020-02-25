@@ -13,6 +13,7 @@ package org.eclipse.n4js.utils;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.nio.file.Path;
 
 import org.eclipse.core.resources.IContainer;
@@ -139,17 +140,6 @@ public class URIUtils {
 	}
 
 	/**
-	 * Converts the given URI to a {@link File} iff it is a {@link org.eclipse.emf.common.util.URI#isFile() file URI};
-	 * otherwise returns <code>null</code>.
-	 * <p>
-	 * Same as {@link org.eclipse.emf.common.util.URI#toFileString()}, but returns a {@link File} instance instead of a
-	 * string.
-	 */
-	static public File toFile(org.eclipse.emf.common.util.URI uri) {
-		return uri != null && uri.isFile() ? new File(uri.toFileString()) : null;
-	}
-
-	/**
 	 * Compensates for the missing {@link URI#equals(Object)} implementation in {@link URI}. Adjusts paths that contain
 	 * symlinks.
 	 *
@@ -272,4 +262,30 @@ public class URIUtils {
 		return uri;
 	}
 
+	/** Converts the given {@link org.eclipse.emf.common.util.URI} to a {@link java.net.URI} */
+	static public java.net.URI toURI(URI uri) throws URISyntaxException {
+		return new java.net.URI(uri.toString());
+	}
+
+	/**
+	 * Converts the given URI to a {@link File} iff it is a {@link org.eclipse.emf.common.util.URI#isFile() file URI};
+	 * otherwise returns <code>null</code>.
+	 * <p>
+	 * Same as {@link org.eclipse.emf.common.util.URI#toFileString()}, but returns a {@link File} instance instead of a
+	 * string.
+	 */
+	static public File toFile(URI uri) {
+		return uri != null && uri.isFile() ? new File(uri.toFileString()) : null;
+	}
+
+	/**
+	 * Converts the given URI to a {@link Path} iff it is a {@link org.eclipse.emf.common.util.URI#isFile() file URI};
+	 * otherwise returns <code>null</code>.
+	 * <p>
+	 * Same as {@link org.eclipse.emf.common.util.URI#toFileString()}, but returns a {@link Path} instance instead of a
+	 * string.
+	 */
+	static public Path toPath(URI uri) {
+		return toFile(uri).toPath();
+	}
 }
