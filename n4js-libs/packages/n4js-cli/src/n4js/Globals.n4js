@@ -26,7 +26,7 @@ export const JRE_INFO_MAP = new Map<Platform, JreInfo>([
     [Platform.linux,   {bin: "bin/java", name: "OpenJDK11U-jre_x64_linux_hotspot_11.0.6_10.tar.gz"}],
     [Platform.openbsd, {bin: "bin/java", name: "OpenJDK11U-jre_x64_linux_hotspot_11.0.6_10.tar.gz"}],
     [Platform.sunos,   null],
-    [Platform.win32,   {bin: "bin/java", name: "OpenJDK11U-jre_x86-32_windows_hotspot_11.0.6_10.zip"}]]
+    [Platform.win32,   {bin: "bin/java.exe", name: "OpenJDK11U-jre_x86-32_windows_hotspot_11.0.6_10.zip"}]]
      as Iterable<Iterable2<Platform, JreInfo>>);
 
 
