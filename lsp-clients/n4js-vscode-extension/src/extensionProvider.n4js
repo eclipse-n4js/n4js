@@ -75,7 +75,8 @@ export function getActivate(vscode: any+, vscodeLC: any+): any {
 
         let clientOptions = {
             documentSelector: [
-                { scheme: 'file', language: ['n4js', 'n4js.json'] },
+                { scheme: 'file', language: 'n4js' },
+                { scheme: 'file', language: 'n4js.json' },
                 { scheme: 'n4scheme', language: 'n4js' },
                 { scheme: 'untitled', language: 'n4js' }
             ],

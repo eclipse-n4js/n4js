@@ -47,10 +47,11 @@ export function getActivate(vscode, vscodeLC) {
 			documentSelector: [
 				{
 					scheme: 'file',
-					language: [
-						'n4js',
-						'n4js.json'
-					]
+					language: 'n4js'
+				},
+				{
+					scheme: 'file',
+					language: 'n4js.json'
 				},
 				{
 					scheme: 'n4scheme',
