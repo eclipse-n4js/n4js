@@ -13,7 +13,9 @@ import * as path from "path";
 
 
 export const JAVA_DEFAULT = "java";
-export const JAVA_OPTION_XMX = "-Xmx4096m";
+export const JAVA_VM_XMX = "-Xmx";
+export const JAVA_VM_XMX_DEFAULT = "4096m";
+
 export const BIN_DIR = path.resolve(__dirname, "..", "bin");
 export const RESOURCES_DIR = path.resolve(__dirname, "..", "resources");
 export const JRE_DIR = path.resolve(BIN_DIR, "jre");
