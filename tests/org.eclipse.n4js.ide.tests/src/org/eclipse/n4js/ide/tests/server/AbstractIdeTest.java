@@ -192,6 +192,21 @@ abstract public class AbstractIdeTest<T> {
 		return root;
 	}
 
+	/**
+	 * Same as {@link #createTestProjectOnDisk(Map)}, but name and content of the modules can be provided as {@link Pair
+	 * pairs}.
+	 */
+	protected Project createTestProjectOnDisk(Iterable<Pair<String, String>> moduleNameToContents) {
+		Map<String, String> moduleNameToContentsAsMap = StreamSupport.stream(moduleNameToContents.spliterator(), false)
+				.collect(Collectors.toMap(Pair::getKey, Pair::getValue));
+		return createTestProjectOnDisk(moduleNameToContentsAsMap);
+	}
+
+	/** Same as {@link #createTestProjectOnDisk(File, Map)}, using the {@link #getRoot() default root}. */
+	protected Project createTestProjectOnDisk(Map<String, String> moduleNameToContents) {
+		return createTestProjectOnDisk(getRoot(), moduleNameToContents);
+	}
+
 	/** Creates the default project on file system. */
 	protected Project createTestProjectOnDisk(File rootDir, Map<String, String> moduleNameToContents) {
 		List<Module> modules = new ArrayList<>();

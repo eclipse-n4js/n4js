@@ -14,6 +14,7 @@ import com.google.common.collect.Iterables
 import com.google.inject.Inject
 import java.util.HashSet
 import java.util.LinkedHashSet
+import java.util.List
 import java.util.Set
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.ImportDeclaration
@@ -206,7 +207,7 @@ class RunTimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 		cyclicModules += module;
 
 		val sb = new StringBuilder();
-		for (cyclicModule : cyclicModules) {
+		for (cyclicModule : sortModules(cyclicModules)) {
 			if (sb.length > 0) {
 				sb.append('\n');
 			}
@@ -217,7 +218,8 @@ class RunTimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 			sb.append(cyclicModule.fileName)
 			sb.append(" --> ");
 			val listStart = sb.length;
-			for (requiredModule : cyclicModule.dependenciesRunTime.map[target]) {
+			val targetsOfRunTimeDeps = cyclicModule.dependenciesRunTime.map[target];
+			for (requiredModule : sortModules(targetsOfRunTimeDeps)) {
 				if (cyclicModules.contains(requiredModule)) {
 					if (sb.length > listStart) {
 						sb.append(", ");
@@ -227,6 +229,12 @@ class RunTimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 			}
 		}
 		return sb.toString();
+	}
+
+	def private <T extends TModule> List<T> sortModules(Iterable<T> modules) {
+		return modules.sortWith([m1, m2 |
+			return CharSequence.compare(m1.simpleName, m2.simpleName);
+		]);
 	}
 
 	def private boolean isLTSlave(TModule module) {

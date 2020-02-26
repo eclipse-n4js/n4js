@@ -27,7 +27,6 @@ import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.cli.compiler.N4jscLanguageClient;
 import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
-import org.eclipse.n4js.projectModel.locations.FileURI;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -49,18 +48,32 @@ public class N4jscTestLanguageClient extends N4jscLanguageClient {
 	NavigableMap<Path, Set<File>> transpiledFiles = Collections.synchronizedNavigableMap(new TreeMap<>());
 	Set<URI> deletedFiles = Collections.synchronizedSet(new HashSet<>());
 
+	/** Clear all issues, transpiled files, and deleted files tracked by this client. */
+	public void clear() {
+		issues.clear();
+		errors.clear();
+		warnings.clear();
+		transpiledFiles.clear();
+		deletedFiles.clear();
+	}
+
 	@Override
 	public void publishDiagnostics(PublishDiagnosticsParams diagnostics) {
 		super.publishDiagnostics(diagnostics);
+
+		String uriString = getRelativeModulePath(diagnostics.getUri());
+
+		issues.removeAll(uriString);
+		errors.removeAll(uriString);
+		warnings.removeAll(uriString);
 
 		List<Diagnostic> issueList = diagnostics.getDiagnostics();
 		if (issueList.isEmpty()) {
 			return;
 		}
 
-		String uriString = issueSerializer.uri(diagnostics.getUri());
 		for (Diagnostic diag : issueList) {
-			String issueString = issueSerializer.diagnostics(diag);
+			String issueString = getIssueString(diag);
 			issues.put(uriString, diag);
 
 			switch (diag.getSeverity()) {
@@ -109,13 +122,38 @@ public class N4jscTestLanguageClient extends N4jscLanguageClient {
 		return deletedFiles.size();
 	}
 
-	/** @return all error messages of issues for the module with the given uri. */
-	public Collection<String> getErrors(FileURI uri) {
-		return errors.get(issueSerializer.uri(uri.toString()));
+	/**
+	 * @return all issues in the workspace as a multi-map from relative module path (as returned by
+	 *         {@link #getRelativeModulePath(URI)}) to {@link Diagnostic}s.
+	 */
+	public Multimap<String, Diagnostic> getIssues() {
+		return issues;
 	}
 
-	/** @return all warning messages of issues for the module with the given uri. */
-	public Collection<String> getWarnings(FileURI uri) {
-		return warnings.get(issueSerializer.uri(uri.toString()));
+	/** @return messages of errors in the module with the given URI. */
+	public Collection<String> getErrors(URI uri) {
+		return errors.get(getRelativeModulePath(uri));
+	}
+
+	/** @return messages of warnings in the module with the given URI. */
+	public Collection<String> getWarnings(URI uri) {
+		return warnings.get(getRelativeModulePath(uri));
+	}
+
+	/** @return the relative path for the module with the given URI. */
+	public String getRelativeModulePath(URI uri) {
+		return getRelativeModulePath(uri.toString());
+	}
+
+	private String getRelativeModulePath(String uriString) {
+		return issueSerializer.uri(uriString);
+	}
+
+	/**
+	 * @return string representation of the given diagnostic, computed in the same way as the strings returned by
+	 *         methods {@link #getErrors(URI)} and {@link #getWarnings(URI)}.
+	 */
+	public String getIssueString(Diagnostic diagnostic) {
+		return issueSerializer.diagnostics(diagnostic);
 	}
 }
