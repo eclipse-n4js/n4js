@@ -140,7 +140,8 @@ class RunTimeDependencyProcessor {
 		// to avoid unnecessary changes of the TModule (see above for details)
 		val cyclicModulesRunTime = <TModule>newLinkedHashSet();
 		val cyclicModulesLoadTimeForInheritance = <TModule>newLinkedHashSet();
-		getAllRunTimeCyclicModules(module, cyclicModulesRunTime, cyclicModulesLoadTimeForInheritance); // FIXME consider optimization
+		getAllRunTimeCyclicModules(module, false, cyclicModulesRunTime);
+		getAllRunTimeCyclicModules(module, true, cyclicModulesLoadTimeForInheritance);
 		val runTimeCyclicLoadTimeDependents = new LinkedHashSet<TModule>();
 		for (cyclicModule : cyclicModulesRunTime) {
 			if (cyclicModule.hasDirectLoadTimeDependencyTo(module)) {
@@ -158,46 +159,36 @@ class RunTimeDependencyProcessor {
 		], module);
 	}
 
-	def private static void getAllRunTimeCyclicModules(TModule module, Set<TModule> addHereRunTime,
-		Set<TModule> addHereLoadTimeForInheritance) {
-
-		collectRunTimeCyclicModules(module, module.getDependenciesRunTime(),
-			Sets.newLinkedHashSet, Sets.newLinkedHashSet, true,
-			addHereRunTime, addHereLoadTimeForInheritance);
+	// FIXME consider optimization
+	def private static void getAllRunTimeCyclicModules(TModule module, boolean onlyLoadTime, Set<TModule> addHereRunTime) {
+		collectRunTimeCyclicModules(module, onlyLoadTime,
+			module.getDependenciesRunTime(), Sets.newLinkedHashSet, Sets.newLinkedHashSet,
+			addHereRunTime);
 	}
 
-	def private static void collectRunTimeCyclicModules(
-		TModule start, Collection<RunTimeDependency> nextDeps,
-		Set<TModule> visited, Set<TModule> currPath, boolean currPathIsLoadTime,
-		Set<TModule> addHereRunTime, Set<TModule> addHereLoadTime) {
+	def private static void collectRunTimeCyclicModules(TModule start, boolean onlyLoadTime,
+		Collection<RunTimeDependency> nextDeps, Set<TModule> visited, Set<TModule> currPath,
+		Set<TModule> addHere) {
 
-		for (currDep : nextDeps) {
+		val nextDepsToUse = if (onlyLoadTime) nextDeps.filter[isLoadTimeForInheritance] else nextDeps;
+
+		for (currDep : nextDepsToUse) {
 			val currModule = currDep.target;
-			val followedLoadTimeEdge = currDep.loadTimeForInheritance;
-			val newPathIsLoadTime = currPathIsLoadTime && followedLoadTimeEdge;
 			if (currModule === start) {
-				addHereRunTime.addAll(currPath);
-				if (newPathIsLoadTime) {
-					addHereLoadTime.addAll(currPath);
-				}
+				addHere.addAll(currPath);
 			} else {
 				if (visited.add(currModule)) {
 					try {
 						currPath.add(currModule);
-						collectRunTimeCyclicModules(
-							start, currModule.getDependenciesRunTime(),
-							visited, currPath, newPathIsLoadTime,
-							addHereRunTime, addHereLoadTime);
+						collectRunTimeCyclicModules(start, onlyLoadTime,
+							currModule.getDependenciesRunTime(), visited, currPath,
+							addHere);
 					} finally {
 						currPath.remove(currModule);
 					}
 				} else {
-					if (addHereRunTime.contains(currModule)) {
-						addHereRunTime.addAll(currPath);
-						if (newPathIsLoadTime
-							&& addHereLoadTime.contains(currModule)) {
-							addHereLoadTime.addAll(currPath);
-						}
+					if (addHere.contains(currModule)) {
+						addHere.addAll(currPath);
 					}
 				}
 			}
