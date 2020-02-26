@@ -151,6 +151,72 @@ class RunTimeDependencyValidationIdeTest extends AbstractIdeTest<List<Pair<Strin
 	}
 
 	@Test
+	def void testIllegalLoadTimeReferencesWithinRunTimeCycle() throws Exception {
+		// add some load-time and run-time references to file B.n4js
+		val testCodeWithIllegalLoadTimeReferences = defaultTestCode.map[moduleNameToContent|
+			if (moduleNameToContent.key == "B") {
+				moduleNameToContent.key -> '''
+					«moduleNameToContent.value»
+
+					class SomeClass1 extends A {} // ok (because it's in extends/implements clause)
+					class SomeClass2 extends B {} // ok (for the same reason)
+
+					function fun1() {}
+					fun1(); // error
+
+					new A(); // error
+
+					function fun2() {
+						new A(); // ok
+					}
+				'''
+			} else {
+				moduleNameToContent // unchanged
+			}
+		];
+
+		createTestProjectOnDisk(testCodeWithIllegalLoadTimeReferences);
+		startAndWaitForLspServer();
+
+		val expectedIssuesWithIllegalLoadTimeReferences = defaultExpectedIssues + #[
+			"B" -> #[
+				'''
+					ERR 13:0     Illegal load-time reference within run-time dependency cycle cluster.
+					    *A.n4js --> Y.n4js
+					    *B.n4js --> A.n4js
+					    C.n4js --> B.n4js
+					    X.n4js --> C.n4js
+					    Y.n4js --> X.n4js
+				''',
+				'''
+					ERR 15:4     Illegal load-time reference within run-time dependency cycle cluster.
+					    *A.n4js --> Y.n4js
+					    *B.n4js --> A.n4js
+					    C.n4js --> B.n4js
+					    X.n4js --> C.n4js
+					    Y.n4js --> X.n4js
+				'''
+			]
+		];
+
+		assertIssues(expectedIssuesWithIllegalLoadTimeReferences);
+
+		// comment out the run-time dependency X -> C
+		changeFile("X", 'import "C";' -> '// import "C";');
+		waitForRequestsDone();
+cleanBuild(); // FIXME remove this line
+
+		assertNoIssues();
+
+		// re-enable the run-time dependency X -> C
+		changeFile("X", '// import "C";' -> 'import "C";');
+		waitForRequestsDone();
+cleanBuild(); // FIXME remove this line
+		
+		assertIssues(expectedIssuesWithIllegalLoadTimeReferences);
+	}
+
+	@Test
 	def void testIncrementalBuild01_openCloseRunTimeCycle() throws Exception {
 
 		createTestProjectOnDisk(defaultTestCode);
