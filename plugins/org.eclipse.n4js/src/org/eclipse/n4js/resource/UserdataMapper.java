@@ -32,6 +32,7 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.ScriptElement;
+import org.eclipse.n4js.ts.types.RunTimeDependency;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.ts.utils.TypeUtils;
@@ -67,9 +68,16 @@ public final class UserdataMapper {
 	public final static String USERDATA_KEY_SERIALIZED_SCRIPT = "serializedScript";
 
 	/**
-	 * Comma-separated list of URIs of resource URIs this resource directly depends on.
+	 * Comma-separated list of resource URIs this resource directly depends on.
 	 */
 	public final static String USERDATA_KEY_DEPENDENCIES = "dependencies";
+
+	/**
+	 * Comma-separated list of resource URIs this resource directly depends on during load time, taking into account
+	 * only such load-time dependencies that are caused by extends/implements clauses (see
+	 * {@link RunTimeDependency#isLoadTimeForInheritance()}).
+	 */
+	public final static String USERDATA_KEY_DEPENDENCIES_LOAD_TIME_FOR_INHERITANCE = "dependenciesLoadTimeForInheritance";
 
 	/**
 	 * The key in the user data map of static-polyfill contents-hash
@@ -287,23 +295,49 @@ public final class UserdataMapper {
 	 */
 	public static void writeDependenciesToUserData(N4JSResource resource, Map<String, String> userData) {
 		final Set<URI> dependencies = Sets.newLinkedHashSet();
-		computeCrossRefs(resource, targetObj -> {
-			final Resource targetRes = targetObj.eResource();
-			if (targetRes != null) {
-				dependencies.add(targetRes.getURI());
-			}
-		});
-		userData.put(USERDATA_KEY_DEPENDENCIES, joiner.join(dependencies));
+		final Set<URI> dependenciesLoadTimeForInheritance = Sets.newLinkedHashSet();
+		computeCrossRefs(resource, dependencies::add);
+		getDependenciesLoadTimeForInheritance(resource, dependenciesLoadTimeForInheritance::add);
+		userData.put(USERDATA_KEY_DEPENDENCIES,
+				joiner.join(dependencies));
+		userData.put(USERDATA_KEY_DEPENDENCIES_LOAD_TIME_FOR_INHERITANCE,
+				joiner.join(dependenciesLoadTimeForInheritance));
 	}
 
-	private static void computeCrossRefs(N4JSResource resource, IAcceptor<TModule> acceptor) {
+	private static void computeCrossRefs(N4JSResource resource, IAcceptor<URI> acceptor) {
 		final Script script = resource.getScript();
 		if (script != null && !script.eIsProxy()) {
 			for (ScriptElement elem : script.getScriptElements()) {
 				if (elem instanceof ImportDeclaration) {
 					final TModule module = ((ImportDeclaration) elem).getModule();
 					if (module != null && !module.eIsProxy()) {
-						acceptor.accept(module);
+						final Resource targetRes = module.eResource();
+						if (targetRes != null) {
+							final URI uri = targetRes.getURI();
+							if (uri != null) {
+								acceptor.accept(uri);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private static void getDependenciesLoadTimeForInheritance(N4JSResource resource, IAcceptor<URI> acceptor) {
+		final TModule module = resource.getModule();
+		if (module != null && !module.eIsProxy()) {
+			for (RunTimeDependency dep : module.getDependenciesRunTime()) {
+				if (dep.isLoadTimeForInheritance()) {
+					final TModule targetModule = dep.getTarget();
+					if (targetModule != null && !targetModule.eIsProxy()) {
+						final Resource targetRes = targetModule.eResource();
+						if (targetRes != null) {
+							final URI uri = targetRes.getURI();
+							if (uri != null) {
+								acceptor.accept(uri);
+							}
+						}
 					}
 				}
 			}
@@ -323,10 +357,24 @@ public final class UserdataMapper {
 	 * Returns none if the information is missing in the resource description.
 	 */
 	public static Optional<List<String>> readDependenciesFromDescription(IResourceDescription description) {
+		return readDependenciesFromDescription(description, USERDATA_KEY_DEPENDENCIES);
+	}
+
+	/**
+	 * Same as {@link #readDependenciesFromDescription(IResourceDescription)}, but for load-time dependencies, taking
+	 * into account only such load-time dependencies that are caused by extends/implements clauses.
+	 */
+	public static Optional<List<String>> readDependenciesLoadTimeForInheritanceFromDescription(
+			IResourceDescription description) {
+		return readDependenciesFromDescription(description, USERDATA_KEY_DEPENDENCIES_LOAD_TIME_FOR_INHERITANCE);
+	}
+
+	private static Optional<List<String>> readDependenciesFromDescription(IResourceDescription description,
+			String userDataKey) {
 		final Iterable<IEObjectDescription> modules = description
 				.getExportedObjectsByType(TypesPackage.Literals.TMODULE);
 		for (IEObjectDescription module : modules) {
-			final String dependenciesStr = module.getUserData(USERDATA_KEY_DEPENDENCIES);
+			final String dependenciesStr = module.getUserData(userDataKey);
 			if (dependenciesStr != null) {
 				return Optional.of(splitter.splitToList(dependenciesStr));
 			}
