@@ -204,14 +204,14 @@ class RunTimeDependencyValidationIdeTest extends AbstractIdeTest<List<Pair<Strin
 		// comment out the run-time dependency X -> C
 		changeFile("X", 'import "C";' -> '// import "C";');
 		joinServerRequests();
-cleanBuild(); // FIXME remove this line
+cleanBuild(); // TODO GH-1675 remove this line
 
 		assertNoIssues();
 
 		// re-enable the run-time dependency X -> C
 		changeFile("X", '// import "C";' -> 'import "C";');
 		joinServerRequests();
-cleanBuild(); // FIXME remove this line
+cleanBuild(); // TODO GH-1675 remove this line
 		
 		assertIssues(expectedIssuesWithIllegalLoadTimeReferences);
 	}
@@ -227,14 +227,14 @@ cleanBuild(); // FIXME remove this line
 		// comment out the run-time dependency X -> C
 		changeFile("X", 'import "C";' -> '// import "C";');
 		joinServerRequests();
-cleanBuild(); // FIXME remove this line
+cleanBuild(); // TODO GH-1675 remove this line
 
 		assertNoIssues();
 
 		// re-enable the run-time dependency X -> C
 		changeFile("X", '// import "C";' -> 'import "C";');
 		joinServerRequests();
-cleanBuild(); // FIXME remove this line
+cleanBuild(); // TODO GH-1675 remove this line
 		
 		assertIssues(defaultExpectedIssues);
 	}
@@ -249,7 +249,7 @@ cleanBuild(); // FIXME remove this line
 
 		changeFile("B", "extends A" -> "");
 		joinServerRequests();
-cleanBuild(); // FIXME remove this line
+cleanBuild(); // TODO GH-1675 remove this line
 
 		assertIssues(
 			"MainBad" -> #[], // original issue should be gone
@@ -260,7 +260,7 @@ cleanBuild(); // FIXME remove this line
 
 		changeFile("B", "class B " -> "class B extends A ");
 		joinServerRequests();
-cleanBuild(); // FIXME remove this line
+cleanBuild(); // TODO GH-1675 remove this line
 
 		assertIssues(defaultExpectedIssues); // original issue should have come back
 	}

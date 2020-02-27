@@ -30,7 +30,7 @@ import static org.junit.Assert.*
  * NOTE: this entire test class is redundant to class {@code RunTimeDependencyValidationIdeTest} and only provided
  * because incremental building cannot be tested in that other class yet!
  * 
- * FIXME delete this entire class
+ * TODO GH-1675 delete this entire file!
  */
 class RunTimeDependencyValidationPluginTest extends AbstractBuilderParticipantTest {
 
