@@ -80,7 +80,7 @@ class RunTimeDependencyValidationIdeTest extends AbstractIdeTest<List<Pair<Strin
 	val defaultExpectedIssues = #[
 		"MainBad" -> #[
 			'''
-				WRN 1:16     Import of load-time dependency target A will be healed by inserting an additional import in output code.
+				WRN 1:17     Import of load-time dependency target A will be healed by inserting an additional import in output code.
 				Containing run-time dependency cycle cluster:
 				    *A.n4js --> Y.n4js
 				    *B.n4js --> A.n4js
@@ -122,7 +122,7 @@ class RunTimeDependencyValidationIdeTest extends AbstractIdeTest<List<Pair<Strin
 		assertIssues(
 			"A" -> #[
 				'''
-					ERR 1:16     Load-time dependency cycle.
+					ERR 1:17     Load-time dependency cycle.
 					    *A.n4js --> C.n4js
 					    *B.n4js --> A.n4js
 					    *C.n4js --> B.n4js
@@ -130,7 +130,7 @@ class RunTimeDependencyValidationIdeTest extends AbstractIdeTest<List<Pair<Strin
 			],
 			"B" -> #[
 				'''
-					ERR 1:16     Load-time dependency cycle.
+					ERR 1:17     Load-time dependency cycle.
 					    *A.n4js --> C.n4js
 					    *B.n4js --> A.n4js
 					    *C.n4js --> B.n4js
@@ -138,7 +138,7 @@ class RunTimeDependencyValidationIdeTest extends AbstractIdeTest<List<Pair<Strin
 			],
 			"C" -> #[
 				'''
-					ERR 1:16     Load-time dependency cycle.
+					ERR 1:17     Load-time dependency cycle.
 					    *A.n4js --> C.n4js
 					    *B.n4js --> A.n4js
 					    *C.n4js --> B.n4js
@@ -181,7 +181,7 @@ class RunTimeDependencyValidationIdeTest extends AbstractIdeTest<List<Pair<Strin
 		val expectedIssuesWithIllegalLoadTimeReferences = defaultExpectedIssues + #[
 			"B" -> #[
 				'''
-					ERR 13:0     Illegal load-time reference within run-time dependency cycle cluster.
+					ERR 13:1     Illegal load-time reference within run-time dependency cycle cluster.
 					    *A.n4js --> Y.n4js
 					    *B.n4js --> A.n4js
 					    C.n4js --> B.n4js
@@ -189,7 +189,7 @@ class RunTimeDependencyValidationIdeTest extends AbstractIdeTest<List<Pair<Strin
 					    Y.n4js --> X.n4js
 				''',
 				'''
-					ERR 15:4     Illegal load-time reference within run-time dependency cycle cluster.
+					ERR 15:5     Illegal load-time reference within run-time dependency cycle cluster.
 					    *A.n4js --> Y.n4js
 					    *B.n4js --> A.n4js
 					    C.n4js --> B.n4js
@@ -254,7 +254,7 @@ cleanBuild(); // FIXME remove this line
 		assertIssues(
 			"MainBad" -> #[], // original issue should be gone
 			"MainGood" -> #[
-				"ERR 2:8      Couldn't resolve reference to IdentifiableElement 'm'."
+				"ERR 2:9      Couldn't resolve reference to IdentifiableElement 'm'."
 			]
 		);
 
