@@ -2,7 +2,7 @@
 	"name": "n4js-vscode-extension",
 	"displayName": "N4JS VSCode extension",
 	"description": "Language support for N4JS",
-	"version": "0.19.4",
+	"version": "0.19.5",
 	"publisher": "n4js",
 	"license": "EPL-1.0",
 	"repository": {
