@@ -67,13 +67,13 @@ public final class FileURI extends SafeURI<FileURI> {
 		return new FileURI(toURI().trimFragment());
 	}
 
-	public String toFileString() {
-		return toURI().toFileString();
+	public File toFile() {
+		return URIUtils.toFile(toURI());
 	}
 
 	@Override
 	public boolean exists() {
-		return URIUtils.toFile(toURI()).exists();
+		return toFile().exists();
 	}
 
 	@Override
@@ -85,7 +85,7 @@ public final class FileURI extends SafeURI<FileURI> {
 		if (cachedFile != null) {
 			return cachedFile;
 		}
-		return cachedFile = URIUtils.toFile(toURI());
+		return cachedFile = toFile();
 	}
 
 	@Override

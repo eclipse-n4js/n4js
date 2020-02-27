@@ -264,8 +264,13 @@ public class URIUtils {
 	}
 
 	/** Converts the given {@link org.eclipse.emf.common.util.URI} to a {@link java.net.URI} */
-	static public java.net.URI toURI(URI uri) throws URISyntaxException {
+	static public java.net.URI toJavaURI(URI uri) throws URISyntaxException {
 		return new java.net.URI(uri.toString());
+	}
+
+	/** Converts the given {@link java.net.URI} to a {@link org.eclipse.emf.common.util.URI} */
+	static public URI toEmfURI(java.net.URI uri) {
+		return URI.createURI(uri.toString());
 	}
 
 	/**
