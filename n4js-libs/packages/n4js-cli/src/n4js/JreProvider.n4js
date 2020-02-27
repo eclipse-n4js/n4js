@@ -109,12 +109,12 @@ export public async function ensureJRE(log: {function(string)} = npmlog.info) : 
 }
 
 function getJreInfo(log: {function(string)}) : JreInfo {
-    const platform = process.platform as Platform;
-    if (platform == Platform.linux && isMuslLibc()) {
+    const platform = process.arch + "_" + process.platform;
+    if (platform == Platform.x64_linux && isMuslLibc()) {
         log("Musl libc is not supported by Adopt OpenJDK");
         return null;
     }
-    return JRE_INFO_MAP.get(process.platform as Platform);
+    return JRE_INFO_MAP.get(platform as Platform);
 }
 
 

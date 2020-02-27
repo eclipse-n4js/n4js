@@ -292,7 +292,7 @@ public class URIUtils {
 	 * string.
 	 * <p>
 	 * <b>Attention: This fails on platform Windows:</b><br>
-	 * {@code Paths.get(org.eclipse.emf.common.util.URI#toFileString());} <br>
+	 * <code>Paths.get(org.eclipse.emf.common.util.URI#toFileString());</code><br>
 	 * The reason is that {@link URI#toFileString()} returns a string like "\\c:\\dir" which cannot be parsed by
 	 * {@link Paths#get(java.net.URI)} due to the starting "\\".
 	 */
