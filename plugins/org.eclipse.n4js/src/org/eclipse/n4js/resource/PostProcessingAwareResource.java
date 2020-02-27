@@ -10,8 +10,10 @@
  */
 package org.eclipse.n4js.resource;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Set;
 
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 import org.eclipse.xtext.resource.DerivedStateAwareResource;
@@ -72,7 +74,13 @@ public class PostProcessingAwareResource extends DerivedStateAwareResource {
 	 */
 	private Throwable postProcessingThrowable;
 
-	private final List<PostProcessingAwareResource> otherResourcesAwaitingFinalization = new ArrayList<>();
+	/**
+	 * A FIFO queue where other {@link PostProcessingAwareResource}s than <em>this</em> resource will add themselves in
+	 * order to request <em>this</em> resource to trigger finalization of post-processing for them via invoking method
+	 * {@link PostProcessor#finalizePostProcessing(PostProcessingAwareResource, CancelIndicator)
+	 * #finalizePostProcessing()}.
+	 */
+	private final Queue<PostProcessingAwareResource> otherResourcesAwaitingFinalization = new LinkedList<>();
 
 	/**
 	 * Implementations of this interface are used by a {@link PostProcessingAwareResource} to perform post-processing of
@@ -262,9 +270,12 @@ public class PostProcessingAwareResource extends DerivedStateAwareResource {
 					doMainPostProcessing(cancelIndicator);
 
 					// finalization of post-processing
-					// FIXME reconsider triggering of post-processing during finalization!
-					for (PostProcessingAwareResource other : new ArrayList<>(otherResourcesAwaitingFinalization)) {
-						other.doFinalizePostProcessing(cancelIndicator);
+					PostProcessingAwareResource other;
+					Set<PostProcessingAwareResource> done = new HashSet<>();
+					while ((other = otherResourcesAwaitingFinalization.poll()) != null) {
+						if (done.add(other)) {
+							other.doFinalizePostProcessing(cancelIndicator);
+						}
 					}
 					doFinalizePostProcessing(cancelIndicator);
 
