@@ -12,7 +12,6 @@ package org.eclipse.n4js.ide.xtext.server.build;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -25,6 +24,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.generator.GeneratorContext;
 import org.eclipse.xtext.generator.GeneratorDelegate;
@@ -263,12 +263,12 @@ public class XStatefulIncrementalBuilder {
 		IProjectConfig projectConfig = workspaceManager.getProjectConfig(resourceUri);
 		Set<OutputConfiguration> outputConfigurations = outputConfProvider.getOutputConfigurations(resource);
 		URI projectBaseUri = projectConfig.getPath();
-		Path resourcePath = Paths.get(resourceUri.toFileString());
+		Path resourcePath = URIUtils.toPath(resourceUri);
 
 		for (OutputConfiguration outputConf : outputConfigurations) {
 			for (String outputDir : outputConf.getOutputDirectories()) {
 				URI outputUri = projectBaseUri.appendSegment(outputDir);
-				Path outputPath = Paths.get(outputUri.toFileString());
+				Path outputPath = URIUtils.toPath(outputUri);
 				if (resourcePath.startsWith(outputPath)) {
 					return true;
 				}

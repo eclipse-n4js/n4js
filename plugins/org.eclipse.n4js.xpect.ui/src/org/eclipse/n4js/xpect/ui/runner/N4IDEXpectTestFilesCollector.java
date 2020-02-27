@@ -112,7 +112,7 @@ public @interface N4IDEXpectTestFilesCollector {
 				throw re;
 
 			case 1:
-				return URI.createURI(testFilesRawLocations.get(0)).toFileString();
+				return URIUtils.toFile(URI.createURI(testFilesRawLocations.get(0))).toString();
 
 			default:
 				re = new RuntimeException("unexpected number of files for provided description");

@@ -100,7 +100,7 @@ export public async function ensureJRE(log: {function(string)} = npmlog.info) : 
         log("Downloading and extracting JRE into local folder.");
 
         await downloadJRE(jreInfo, log);
-        extractJRE(jreInfo, log);
+        await extractJRE(jreInfo, log);
 
     } else {
         log("Platform not supported: " + process.platform);
@@ -109,12 +109,12 @@ export public async function ensureJRE(log: {function(string)} = npmlog.info) : 
 }
 
 function getJreInfo(log: {function(string)}) : JreInfo {
-    const platform = process.platform as Platform;
-    if (platform == Platform.linux && isMuslLibc()) {
+    const platform = process.arch + "_" + process.platform;
+    if (platform == Platform.x64_linux && isMuslLibc()) {
         log("Musl libc is not supported by Adopt OpenJDK");
         return null;
     }
-    return JRE_INFO_MAP.get(process.platform as Platform);
+    return JRE_INFO_MAP.get(platform as Platform);
 }
 
 
@@ -155,17 +155,15 @@ async function downloadJRE(jreInfo: JreInfo, log: {function(string)}) : Promise<
 /** 
  * Extracts the downloaded JRE to the folder bin/JRE_LOCAL_DIR
  */
-function extractJRE(jreInfo: JreInfo, log: {function(string)}) {
+async function extractJRE(jreInfo: JreInfo, log: {function(string)}) {
     if (fs.existsSync(JRE_DIR)) {
         log("Cleaning " + JRE_DIR);
         fs.rmdirSync(JRE_DIR, {recursive: true});
     }
 
     const jreFileName = getJreFileName(jreInfo);
-    
-    Promise.resolve(decompress(jreFileName, JRE_DIR)).then(files => {
-            log("JRE extracted to " + JRE_DIR);
-        });
+    await decompress(jreFileName, JRE_DIR);
+    log("JRE extracted to " + JRE_DIR);
 }
 
 function getJreFileName(jreInfo: JreInfo): string {

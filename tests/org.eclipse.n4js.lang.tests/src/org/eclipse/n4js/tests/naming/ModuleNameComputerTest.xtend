@@ -12,14 +12,14 @@ package org.eclipse.n4js.tests.naming
 
 import com.google.inject.Inject
 import com.google.inject.Provider
+import org.eclipse.emf.common.util.URI
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.naming.ModuleNameComputer
-import java.io.File
-import org.eclipse.emf.common.util.URI
-import org.eclipse.xtext.testing.InjectWith
-import org.eclipse.xtext.testing.XtextRunner
+import org.eclipse.n4js.utils.URIUtils
 import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.resource.XtextResourceSet
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -35,7 +35,7 @@ class ModuleNameComputerTest {
 	@Test
 	def testGetModulePath() {
 		val uri = URI.createURI("src/org/eclipse/n4js/tests/scoping/Supplier.n4js")
-		val file = new File(uri.toFileString)
+		val file = URIUtils.toFile(uri)
 		assertTrue("File exists", file.exists)
 		var rs = resourceSetProvider.get
 		val supplierResource = rs.createResource(uri)

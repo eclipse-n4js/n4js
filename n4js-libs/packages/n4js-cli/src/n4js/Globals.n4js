@@ -13,32 +13,36 @@ import * as path from "path";
 
 
 export const JAVA_DEFAULT = "java";
-export const JAVA_OPTION_XMX = "-Xmx4096m";
+export const JAVA_VM_XMX = "-Xmx";
+export const JAVA_VM_XMX_DEFAULT = "4096m";
+
 export const BIN_DIR = path.resolve(__dirname, "..", "bin");
 export const RESOURCES_DIR = path.resolve(__dirname, "..", "resources");
 export const JRE_DIR = path.resolve(BIN_DIR, "jre");
 export const N4JSC_JAR = path.resolve(BIN_DIR, "n4jsc.jar");
 export const JRE_URL_DIR = "https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-11.0.6%2B10/";
 export const JRE_INFO_MAP = new Map<Platform, JreInfo>([
-    [Platform.aix,     {bin: "bin/java", name: "OpenJDK11U-jre_ppc64_aix_hotspot_11.0.6_10.tar.gz"}],
-    [Platform.darwin,  {bin: "Contents/Home/bin/java", name: "OpenJDK11U-jre_x64_mac_hotspot_11.0.6_10.tar.gz"}],
-    [Platform.freebsd, {bin: "bin/java", name: "OpenJDK11U-jre_x64_linux_hotspot_11.0.6_10.tar.gz"}],
-    [Platform.linux,   {bin: "bin/java", name: "OpenJDK11U-jre_x64_linux_hotspot_11.0.6_10.tar.gz"}],
-    [Platform.openbsd, {bin: "bin/java", name: "OpenJDK11U-jre_x64_linux_hotspot_11.0.6_10.tar.gz"}],
-    [Platform.sunos,   null],
-    [Platform.win32,   {bin: "bin/java", name: "OpenJDK11U-jre_x86-32_windows_hotspot_11.0.6_10.zip"}]]
+    [Platform.x64_aix,     {bin: "bin/java", name: "OpenJDK11U-jre_ppc64_aix_hotspot_11.0.6_10.tar.gz"}],
+    [Platform.x64_darwin,  {bin: "Contents/Home/bin/java", name: "OpenJDK11U-jre_x64_mac_hotspot_11.0.6_10.tar.gz"}],
+    [Platform.x64_freebsd, {bin: "bin/java", name: "OpenJDK11U-jre_x64_linux_hotspot_11.0.6_10.tar.gz"}],
+    [Platform.x64_linux,   {bin: "bin/java", name: "OpenJDK11U-jre_x64_linux_hotspot_11.0.6_10.tar.gz"}],
+    [Platform.x64_openbsd, {bin: "bin/java", name: "OpenJDK11U-jre_x64_linux_hotspot_11.0.6_10.tar.gz"}],
+    [Platform.x64_sunos,   null],
+    [Platform.x32_win32,   {bin: "bin/java.exe", name: "OpenJDK11U-jre_x86-32_windows_hotspot_11.0.6_10.zip"}],
+    [Platform.x64_win32,   {bin: "bin/java.exe", name: "OpenJDK11U-jre_x64_windows_hotspot_11.0.6_10.zip"}]]
      as Iterable<Iterable2<Platform, JreInfo>>);
 
 
 @StringBased
 export enum Platform {
-    aix,
-    darwin,
-    freebsd,
-    linux,
-    openbsd,
-    sunos,
-    win32
+    x64_aix,
+    x64_darwin,
+    x64_freebsd,
+    x64_linux,
+    x64_openbsd,
+    x64_sunos,
+    x32_win32,
+    x64_win32
 }
 
 export interface ~JreInfo {

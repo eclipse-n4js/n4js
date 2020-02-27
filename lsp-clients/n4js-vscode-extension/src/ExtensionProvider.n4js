@@ -58,8 +58,7 @@ export function getActivate(vscode: any+, vscodeLC: any+): any {
                 reader = socket;
             } else {
                 outputChannel.appendLine('Start new N4JS LSP server.');
-                await startN4jsLspServerAndConnect(PORT, outputChannel); // will set n4jscProcess
-                setOutputAppenders(vscode, outputChannel);
+                await startN4jsLspServerAndConnect(PORT, vscode, outputChannel); // will set n4jscProcess
                 writer = n4jscProcess.stdin;
                 reader = n4jscProcess.stdout;
             }
@@ -75,7 +74,8 @@ export function getActivate(vscode: any+, vscodeLC: any+): any {
 
         let clientOptions = {
             documentSelector: [
-                { scheme: 'file', language: ['n4js', 'n4js.json'] },
+                { scheme: 'file', language: 'n4js' },
+                { scheme: 'file', language: 'n4js.json' },
                 { scheme: 'n4scheme', language: 'n4js' },
                 { scheme: 'untitled', language: 'n4js' }
             ],
@@ -150,17 +150,38 @@ function setOutputAppenders(vscode: any+, outputChannel: any+): void {
     }
 }
 
+function getJavaVMXmxSetting(vscode: any+): string {
+    const vmXmx = vscode.workspace.getConfiguration('').get('n4js.jreVmXmx') as string;
+    switch (vmXmx) {
+	    case 'n4jsc default':
+	        return undefined;
+	    case 'jre default':
+	        return null;
+	    default:
+	        return vmXmx;
+	}
+}
 
-async function startN4jsLspServerAndConnect(port: number, outputChannel: any+): void {
+
+async function startN4jsLspServerAndConnect(port: number, vscode: any+, outputChannel: any+): void {
     let logFn = (text: string) => outputChannel.appendLine(text) as {function(string)};
     await jreProvider.ensureJRE(logFn);
 
-    let env = Object.assign({ NODEJS_PATH: process.argv[0] }, process.env);
-    let spawnOptions: childProcess.SpawnOptions = { env: env };
+    const env = Object.assign({ NODEJS_PATH: process.argv[0] }, process.env);
+    const spawnOptions: childProcess.SpawnOptions = { env: env };
+    const n4jscOptions: ~n4jscli.Options = { stdio: true };
+    const vmOptions: ~n4jscli.VmOptions = { xmx: getJavaVMXmxSetting(vscode) };
 
     // The server is started as a separate process
-    n4jscProcess = n4jscli.n4jscProcess(n4jscli.Goal.lsp, undefined, {stdio: true}, spawnOptions, logFn);
-    n4jscProcess.on('message', (data:any+) => outputChannel.append(data.toString()));
+    n4jscProcess = n4jscli.n4jscProcess(n4jscli.Goal.lsp, undefined, n4jscOptions, vmOptions, spawnOptions, logFn);
+
+    // Set output channels
+    n4jscProcess.on('message', (data:any+) => outputChannel.appendLine(data.toString()));
+	n4jscProcess.on('error', (err:any+) => outputChannel.appendLine(err.toString()));
+	n4jscProcess.on('exit', (code) => outputChannel.appendLine('exit ' + code));
+	n4jscProcess.on('close', (code) => outputChannel.appendLine('close ' + code));
+	n4jscProcess.on('disconnect', () => outputChannel.appendLine('disconnected'));
+    setOutputAppenders(vscode, outputChannel);
 
     let serverReady = new Promise<any, any>((resolve, reject) => {
         let waitForListenMsg = (data:any+) => {
