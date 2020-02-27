@@ -203,14 +203,14 @@ class RunTimeDependencyValidationIdeTest extends AbstractIdeTest<List<Pair<Strin
 
 		// comment out the run-time dependency X -> C
 		changeFile("X", 'import "C";' -> '// import "C";');
-		waitForRequestsDone();
+		joinServerRequests();
 cleanBuild(); // FIXME remove this line
 
 		assertNoIssues();
 
 		// re-enable the run-time dependency X -> C
 		changeFile("X", '// import "C";' -> 'import "C";');
-		waitForRequestsDone();
+		joinServerRequests();
 cleanBuild(); // FIXME remove this line
 		
 		assertIssues(expectedIssuesWithIllegalLoadTimeReferences);
@@ -226,14 +226,14 @@ cleanBuild(); // FIXME remove this line
 
 		// comment out the run-time dependency X -> C
 		changeFile("X", 'import "C";' -> '// import "C";');
-		waitForRequestsDone();
+		joinServerRequests();
 cleanBuild(); // FIXME remove this line
 
 		assertNoIssues();
 
 		// re-enable the run-time dependency X -> C
 		changeFile("X", '// import "C";' -> 'import "C";');
-		waitForRequestsDone();
+		joinServerRequests();
 cleanBuild(); // FIXME remove this line
 		
 		assertIssues(defaultExpectedIssues);
@@ -248,7 +248,7 @@ cleanBuild(); // FIXME remove this line
 		assertIssues(defaultExpectedIssues);
 
 		changeFile("B", "extends A" -> "");
-		waitForRequestsDone();
+		joinServerRequests();
 cleanBuild(); // FIXME remove this line
 
 		assertIssues(
@@ -259,7 +259,7 @@ cleanBuild(); // FIXME remove this line
 		);
 
 		changeFile("B", "class B " -> "class B extends A ");
-		waitForRequestsDone();
+		joinServerRequests();
 cleanBuild(); // FIXME remove this line
 
 		assertIssues(defaultExpectedIssues); // original issue should have come back
@@ -275,7 +275,7 @@ cleanBuild(); // FIXME remove this line
 	def protected void startAndWaitForLspServer() {
 		createInjector();
 		startLspServer(getRoot());
-		waitForRequestsDone();
+		joinServerRequests();
 	}
 
 	def protected void openFile(String moduleName) throws IOException {
@@ -333,7 +333,7 @@ cleanBuild(); // FIXME remove this line
 		languageServer.clean();
 		languageServer.reinitWorkspace();
 		if (wait) {
-			waitForRequestsDone();
+			joinServerRequests();
 		}
 	}
 
@@ -391,7 +391,7 @@ cleanBuild(); // FIXME remove this line
 			val moduleName = pair.key;
 			val expectedIssues = pair.value;
 
-			val uri = getFileUriFromModuleName(root, moduleName).toURI();
+			val uri = getFileUriFromModuleName(root, moduleName);
 			val actualIssues = languageClient.getErrors(uri) + languageClient.getWarnings(uri);
 			val actualIssuesAsSet = new LinkedHashSet(actualIssues.map[trim].toList);
 			val expectedIssuesAsSet = new LinkedHashSet(expectedIssues.map[trim].toList);

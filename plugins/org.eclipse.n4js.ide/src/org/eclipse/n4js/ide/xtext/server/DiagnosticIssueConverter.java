@@ -29,14 +29,8 @@ import com.google.common.base.Strings;
  */
 public class DiagnosticIssueConverter {
 
-	/** Provides {@link #getDocument(URI)} */
-	public interface DocumentProvider {
-		/** @return the {@link Document} for the given {@link URI} */
-		Document getDocument(URI uri);
-	}
-
 	/** Convert the given issue to a diagnostic. */
-	public Diagnostic toDiagnostic(Issue issue, DocumentProvider documentProvider) {
+	public Diagnostic toDiagnostic(Issue issue, DocumentResourceProvider documentProvider) {
 		Diagnostic result = new Diagnostic();
 
 		result.setCode(issue.getCode());
@@ -113,7 +107,7 @@ public class DiagnosticIssueConverter {
 	}
 
 	/** Convert the given diagnostic to an issue. */
-	public Issue toIssue(URI uri, Diagnostic diagnostic, DocumentProvider documentProvider) {
+	public Issue toIssue(URI uri, Diagnostic diagnostic, DocumentResourceProvider documentProvider) {
 		IssueImpl issue = new Issue.IssueImpl();
 
 		issue.setSeverity(toSeverity(diagnostic.getSeverity()));

@@ -68,52 +68,11 @@ public abstract class N4Modification {
 			EObject element) throws Exception;
 
 	/**
-	 * Called if the N4Modification is applied at multiple markers. As default, this method delegates to
-	 * {@link #computeChanges(IModificationContext, IMarker, int, int, EObject)}.
-	 *
-	 * @see #computeChanges(IModificationContext, IMarker, int, int, EObject)
-	 */
-	public Collection<? extends IChange> computeOneOfMultipleChanges(
-			IModificationContext context,
-			IMarker marker,
-			int offset,
-			int length,
-			EObject element) throws Exception {
-
-		return computeChanges(context, marker, offset, length, element);
-	}
-
-	/**
 	 * Checks if the receiving N4Modification supports multi-apply, i.e. being applied to multiple issues / markers at
 	 * once. Returns <code>true</code> by default; override and return <code>false</code> to turn off multi-apply
-	 * support for this modification. Override {@link #isApplicableTo(IMarker)}, instead, to fine-tune to which other
-	 * issues / markers the receiving N4Modification can be applied.
+	 * support for this modification.
 	 */
 	public boolean supportsMultiApply() {
 		return true;
-	}
-
-	/**
-	 * Checks if the receiving N4Modification can also be applied to the given marker (in addition to being applied to
-	 * the issue / marker the N4Modification was created for). Returning true here enables support for applying a single
-	 * quick fix to multiple markers in one step.
-	 * <p>
-	 * This method will only be called if {@link #supportsMultiApply()} returns true and only for markers with the same
-	 * issue code, so the issue code need not be checked when implementing this method. Implementors may either always
-	 * return true (can be applied to any issue with the same issue code), or compute the applicability depending on the
-	 * given marker. To turn off multi-apply support entirely, override {@link #supportsMultiApply()} to return false
-	 * and then this method will be ignored.
-	 * <p>
-	 * By default, this method always returns true.
-	 */
-	public boolean isApplicableTo(@SuppressWarnings("unused") IMarker marker) {
-		return true;
-	}
-
-	/**
-	 * Is called after the last N4Modification was applied.
-	 */
-	public void computeFinalChanges() throws Exception {
-		// empty by default
 	}
 }

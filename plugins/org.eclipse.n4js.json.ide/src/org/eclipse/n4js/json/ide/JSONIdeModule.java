@@ -11,6 +11,7 @@
 package org.eclipse.n4js.json.ide;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.json.ide.codeActions.JSONCodeActionService;
 import org.eclipse.n4js.json.ide.contentassist.JSONIdeContentProposalProvider;
 import org.eclipse.n4js.json.ide.contentassist.PatchedContentAssistService;
 import org.eclipse.n4js.json.ide.symbol.JSONDocumentSymbolKindProvider;
@@ -18,6 +19,7 @@ import org.eclipse.n4js.json.ide.symbol.JSONDocumentSymbolNameProvider;
 import org.eclipse.n4js.json.ide.symbol.JSONHierarchicalSymbolService;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalProvider;
+import org.eclipse.xtext.ide.server.codeActions.ICodeActionService2;
 import org.eclipse.xtext.ide.server.contentassist.ContentAssistService;
 import org.eclipse.xtext.ide.server.symbol.DocumentSymbolMapper.DocumentSymbolKindProvider;
 import org.eclipse.xtext.ide.server.symbol.DocumentSymbolMapper.DocumentSymbolNameProvider;
@@ -30,7 +32,7 @@ import com.google.inject.Provider;
 /**
  * Use this class to register ide components.
  */
-@SuppressWarnings("javadoc")
+@SuppressWarnings({ "javadoc", "restriction" })
 public class JSONIdeModule extends AbstractJSONIdeModule {
 
 	public Class<? extends HierarchicalDocumentSymbolService> bindHierarchicalDocumentSymbolService() {
@@ -55,6 +57,10 @@ public class JSONIdeModule extends AbstractJSONIdeModule {
 
 	public Class<? extends ContentAssistService> bindContentAssistService() {
 		return PatchedContentAssistService.class;
+	}
+
+	public Class<? extends ICodeActionService2> bindCodeActionService() {
+		return JSONCodeActionService.class;
 	}
 
 	public static class N4JSCoreProvider implements Provider<IN4JSCore> {
