@@ -82,12 +82,11 @@ class RunTimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Check
 	def void checkIllegalImportOfLTSlave(Script script) {
+		val containingModule = script.module;
 		val importDecls = script.scriptElements.filter(ImportDeclaration).toList;
 
 		val modulesInHealedCycles = new HashSet<TModule>();
 		for (importDecl : importDecls) {
-			val containingModule = (importDecl.eResource as N4JSResource).module;
-
 			if (holdsNotAnIllegalImportWithinLoadTimeCycle(containingModule, importDecl)
 				&& holdsNotAnIllegalImportOfLTSlave(containingModule, importDecl, modulesInHealedCycles)) {
 
@@ -101,6 +100,10 @@ class RunTimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 		}
 	}
 
+	/**
+	 * It is an error to form load-time dependency cycles. This method will show an error on
+	 * all imports that constitute the cycle.
+	 */
 	def private boolean holdsNotAnIllegalImportWithinLoadTimeCycle(TModule containingModule, ImportDeclaration importDecl) {
 		val targetModule = importDecl.module;
 		if (containingModule.cyclicModulesLoadTimeForInheritance.contains(targetModule)) { // FIXME linear search
@@ -134,9 +137,9 @@ class RunTimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 			return true; // avoid unnecessary follow-up errors
 		}
 
-		val ltdxs = targetModule.runTimeCyclicLoadTimeDependents;
+		val ltdxs = targetModule.runTimeCyclicLoadTimeDependents; // never includes the containing module itself!
 		val isSingletonLTSlave = ltdxs.size() == 1
-			&& !containingModule.equals(Iterables.getFirst(ltdxs, null));
+			&& !containingModule.equals(Iterables.getFirst(ltdxs, null)); // excludes the one valid import of an LTSlave
 		val isMultiLTSlave = ltdxs.size() > 1;
 
 		if (isSingletonLTSlave || isMultiLTSlave) {
@@ -153,12 +156,11 @@ class RunTimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 					addIssue(message, importDecl, N4JSPackage.eINSTANCE.importDeclaration_Module, IssueCodes.LTD_LOAD_TIME_DEPENDENCY_CONFLICT);
 					return false;
 				} else {
-					// WARNING: importing an LTSlave from outside the dependency cycle cluster
-					// --> will be healed by transpiler
-					val message = IssueCodes.getMessageForLTD_IMPORT_OF_LT_SLAVE(targetModule.simpleName) + "\n"
+					// ERROR: importing an LTSlave from outside the dependency cycle cluster
+					val message = IssueCodes.getMessageForLTD_IMPORT_OF_LOAD_TIME_DEPENDENCY_TARGET(targetModule.simpleName) + "\n"
 						+ "Containing run-time dependency cycle cluster:\n"
 						+ dependencyCycleToString(targetModule, false, INDENT);
-					addIssue(message, importDecl, N4JSPackage.eINSTANCE.importDeclaration_Module, IssueCodes.LTD_IMPORT_OF_LT_SLAVE);
+					addIssue(message, importDecl, N4JSPackage.eINSTANCE.importDeclaration_Module, IssueCodes.LTD_IMPORT_OF_LOAD_TIME_DEPENDENCY_TARGET);
 					return true; // because we assume a healing import will be added by transpiler, this import can be treated as healing in calling method
 				}
 			}

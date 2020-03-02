@@ -35,7 +35,7 @@ public interface ImportSpecifier extends EObject {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * Transient flag to keep track of actual usage during scoping.
+	 * True iff this import specifier is actually used during scoping.
 	 * See {@code org.eclipse.n4js.scoping.imports.OriginAwareScope}
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Flagged Used In Code</em>' attribute.

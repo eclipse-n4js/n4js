@@ -72,12 +72,7 @@ public final class IssuesProvider implements Provider<List<Issue>> {
 				? N4JSDataCollectors.dcValidationsPackageJson
 				: N4JSDataCollectors.dcValidations;
 		List<Issue> issues;
-		// FIXME revert this change and find better solution!
-		if (!dc.hasActiveMeasurement()) {
-			try (Measurement m = dc.getMeasurement("validation");) {
-				issues = rv.validate(r, checkMode, ci);
-			}
-		} else {
+		try (Measurement m = dc.getMeasurement("validation");) {
 			issues = rv.validate(r, checkMode, ci);
 		}
 		if (!issues.contains(null)) {

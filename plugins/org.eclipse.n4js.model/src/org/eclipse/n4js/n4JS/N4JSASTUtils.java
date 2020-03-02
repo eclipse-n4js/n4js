@@ -105,7 +105,8 @@ public abstract class N4JSASTUtils {
 	}
 
 	/**
-	 * Tells whether the given AST node belongs to top-level code or is wrapped in a function or field accessor.
+	 * Returns <code>true</code> iff the given AST node belongs to top-level code, i.e. is not wrapped in a function or
+	 * field accessor.
 	 */
 	public static boolean isTopLevelCode(EObject astNode) {
 		// need ".eContainer()" in next line, because #getContainerOfType() also returns the passed-in astNode itself if

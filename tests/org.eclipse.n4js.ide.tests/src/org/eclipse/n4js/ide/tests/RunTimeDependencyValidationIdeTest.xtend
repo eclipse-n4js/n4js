@@ -58,7 +58,7 @@ class RunTimeDependencyValidationIdeTest extends AbstractIdeTest {
 	val defaultExpectedIssues = #[
 		"MainBad" -> #[
 			'''
-				(Warning, [0:16 - 0:19], Import of load-time dependency target A will be healed by inserting an additional import in output code.
+				(Error, [0:16 - 0:19], Import of load-time dependency target A will be healed by inserting an additional import in output code.
 				Containing run-time dependency cycle cluster:
 				    *A.n4js --> Y.n4js
 				    *B.n4js --> A.n4js

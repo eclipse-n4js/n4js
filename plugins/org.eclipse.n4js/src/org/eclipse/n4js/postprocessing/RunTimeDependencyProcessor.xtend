@@ -20,6 +20,7 @@ import java.util.Set
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.ImportDeclaration
+import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
@@ -77,6 +78,8 @@ class RunTimeDependencyProcessor {
 
 	/**
 	 * Invoked at the end of AST traversal (and thus, during main post-processing).
+	 * <p>
+	 * Also sets the flag {@link ImportSpecifier#getRetainedAtRunTime() retainedAtRunTime}.
 	 */
 	def package void storeDirectRunTimeDependenciesInTModule(Script script, ASTMetaInfoCache cache) {
 		val module = script.module;

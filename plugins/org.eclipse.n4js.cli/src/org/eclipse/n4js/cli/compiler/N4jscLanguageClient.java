@@ -83,22 +83,16 @@ public class N4jscLanguageClient extends AbstractN4JSLanguageClient {
 	}
 
 	/**
-	 * IMPORTANT: this does not return the number of warnings in the workspace but the number of warnings reports via
-	 * event "publishDiagnostics"! See {@link #getErrorsCount()} for details.
-	 *
-	 * @return number of warnings
+	 * @return number of warnings sent by server since last call to {@link #resetCounters()}, also counting duplicates
+	 *         in case the server sends the same issue several times.
 	 */
 	public long getWarningsCount() {
 		return wrnCount;
 	}
 
 	/**
-	 * IMPORTANT: this does not return the number of errors in the workspace! Instead, it returns the number of errors
-	 * reported by the server via event "publishDiagnostics" since {@link #resetCounters()} was invoked. If, for
-	 * example, the server sends event "publishDiagnostics" twice for the same module containing 3 errors (which is
-	 * legal), then this method will return 6 and not 3.
-	 *
-	 * @return number of errors
+	 * @return number of errors sent by server since last call to {@link #resetCounters()}, also counting duplicates in
+	 *         case the server sends the same issue several times.
 	 */
 	public long getErrorsCount() {
 		return errCount;
