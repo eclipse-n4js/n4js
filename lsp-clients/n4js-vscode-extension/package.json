@@ -2,7 +2,7 @@
 	"name": "n4js-vscode-extension",
 	"displayName": "N4JS VSCode extension",
 	"description": "Language support for N4JS",
-	"version": "0.19.4",
+	"version": "0.19.5",
 	"publisher": "n4js",
 	"license": "EPL-1.0",
 	"repository": {
@@ -87,6 +87,25 @@
 						"Tracing data is displayed in the channel 'N4JS language server' of the VSCode Output View"
 					],
 					"description": "Enables tracing of messages sent to the N4JS server. This trace can be used to diagnose N4JS Server issues. The trace may contain file paths, source code, and other potentially sensitive information from your project."
+				},
+				"n4js.jreVmXmx": {
+					"type": "string",
+					"default": "n4jsc default",
+					"enum": [
+						"n4jsc default",
+						"jre default",
+						"1G",
+						"2G",
+						"3G",
+						"4G",
+						"8G",
+						"16G"
+					],
+					"enumDescriptions": [
+						"Default maximum heap space setting of N4JSC.",
+						"Default maximum heap space setting of JRE."
+					],
+					"description": "Sets the Java VM argument '-Xmx' to the selected memory size."
 				}
 			}
 		}

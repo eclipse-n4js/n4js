@@ -30,8 +30,7 @@ export function getActivate(vscode, vscodeLC) {
 				reader = socket;
 			} else {
 				outputChannel.appendLine('Start new N4JS LSP server.');
-				await startN4jsLspServerAndConnect(PORT, outputChannel);
-				setOutputAppenders(vscode, outputChannel);
+				await startN4jsLspServerAndConnect(PORT, vscode, outputChannel);
 				writer = n4jscProcess.stdin;
 				reader = n4jscProcess.stdout;
 			}
@@ -47,10 +46,11 @@ export function getActivate(vscode, vscodeLC) {
 			documentSelector: [
 				{
 					scheme: 'file',
-					language: [
-						'n4js',
-						'n4js.json'
-					]
+					language: 'n4js'
+				},
+				{
+					scheme: 'file',
+					language: 'n4js.json'
 				},
 				{
 					scheme: 'n4scheme',
@@ -118,19 +118,39 @@ function setOutputAppenders(vscode, outputChannel) {
 			break;
 	}
 }
-async function startN4jsLspServerAndConnect(port, outputChannel) {
+function getJavaVMXmxSetting(vscode) {
+	const vmXmx = vscode.workspace.getConfiguration('').get('n4js.jreVmXmx');
+	switch(vmXmx) {
+		case 'n4jsc default':
+			return undefined;
+		case 'jre default':
+			return null;
+		default:
+			return vmXmx;
+	}
+}
+async function startN4jsLspServerAndConnect(port, vscode, outputChannel) {
 	let logFn = (text)=>outputChannel.appendLine(text);
 	await jreProvider.ensureJRE(logFn);
-	let env = Object.assign({
+	const env = Object.assign({
 		NODEJS_PATH: process.argv[0]
 	}, process.env);
-	let spawnOptions = {
+	const spawnOptions = {
 		env: env
 	};
-	n4jscProcess = n4jscli.n4jscProcess('lsp', undefined, {
+	const n4jscOptions = {
 		stdio: true
-	}, spawnOptions, logFn);
-	n4jscProcess.on('message', (data)=>outputChannel.append(data.toString()));
+	};
+	const vmOptions = {
+		xmx: getJavaVMXmxSetting(vscode)
+	};
+	n4jscProcess = n4jscli.n4jscProcess('lsp', undefined, n4jscOptions, vmOptions, spawnOptions, logFn);
+	n4jscProcess.on('message', (data)=>outputChannel.appendLine(data.toString()));
+	n4jscProcess.on('error', (err)=>outputChannel.appendLine(err.toString()));
+	n4jscProcess.on('exit', (code)=>outputChannel.appendLine('exit ' + code));
+	n4jscProcess.on('close', (code)=>outputChannel.appendLine('close ' + code));
+	n4jscProcess.on('disconnect', ()=>outputChannel.appendLine('disconnected'));
+	setOutputAppenders(vscode, outputChannel);
 	let serverReady = new Promise((resolve, reject)=>{
 		let waitForListenMsg = (data)=>{
 			let $opt;
@@ -179,4 +199,4 @@ async function sleep(ms) {
 		setTimeout(resolve, ms);
 	});
 }
-//# sourceMappingURL=extensionProvider.map
+//# sourceMappingURL=ExtensionProvider.map

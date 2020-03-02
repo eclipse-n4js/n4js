@@ -10,10 +10,11 @@
  */
 
 
+import {JAVA_VM_XMX} from "Globals";
 import * as childProcess from "child_process";
 import * as npmlog+ from "npmlog";
-import {N4JSC_JAR, JAVA_OPTION_XMX} from "Globals";
-import {getJavaCommand, isLocalJre} from "JreProvider";
+import {N4JSC_JAR} from "Globals";
+import {getJavaCommand} from "JreProvider";
 
 
 
@@ -58,19 +59,24 @@ export public function runN4jsc(args: string[], log: {function(string)} = npmlog
 /**
  * Creates and returns a process to execute the n4jsc.jar with Java.
  * In case the bin folder contains a JRE, it will be used. Otherwise,
- * the globally available Java will be used. Java XmX option will be
- * set to 4GB if not set already.
+ * the globally available Java will be used. Java Xmx vm option will
+ * overwritten iff defined in environment variable JAVA_TOOL_OPTIONS.
  */
 export public function createN4JSProcess(args: string[], spawnOptions: childProcess.SpawnOptions, log: {function(string)} = npmlog.info) : childProcess.ChildProcess {
+    const envJavaToolOptions = process.env.JAVA_TOOL_OPTIONS as string;
+    const match = envJavaToolOptions?.match(/-xmx(?<size>[\S]*)/);
+    const size = match?.groups?.size;
+    if (size) {
+        for (let i=0; i<args.length; i++) {
+            const arg = args[i];
+            if (arg.startsWith(JAVA_VM_XMX)) {
+                args[i] = JAVA_VM_XMX + size;
+            }
+        }
+    }
+
     let java = getJavaCommand(log);
-    if (isLocalJre(java)) {
-        log("Using JRE at " + java);
-    }
-
-    if (!/-Xmx/.test(process.env.JAVA_TOOL_OPTIONS as string)) {
-        args.unshift(JAVA_OPTION_XMX);
-    }
-
+    log("calling: " + java + " " + args.join(" "));
     let spawnedProcess = childProcess.spawn(java, args, spawnOptions);
 
     return spawnedProcess;
