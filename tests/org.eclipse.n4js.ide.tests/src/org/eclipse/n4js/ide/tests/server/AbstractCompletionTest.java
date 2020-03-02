@@ -12,7 +12,6 @@ package org.eclipse.n4js.ide.tests.server;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.File;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -33,7 +32,7 @@ import org.junit.Assert;
 /**
  * Abstract test class for code action protocol tests
  */
-abstract public class AbstractCompletionTest extends AbstractIdeTest<TestCompletionConfiguration> {
+abstract public class AbstractCompletionTest extends AbstractStructuredIdeTest<TestCompletionConfiguration> {
 
 	/** Call this method in a test */
 	protected void test(TestCompletionConfiguration tcc) throws Exception {
@@ -41,7 +40,7 @@ abstract public class AbstractCompletionTest extends AbstractIdeTest<TestComplet
 	}
 
 	@Override
-	protected void performTest(File root, Project project, TestCompletionConfiguration tcc)
+	protected void performTest(Project project, TestCompletionConfiguration tcc)
 			throws InterruptedException, ExecutionException {
 
 		CompletionParams completionParams = new CompletionParams();
@@ -49,7 +48,7 @@ abstract public class AbstractCompletionTest extends AbstractIdeTest<TestComplet
 		completionParams.setPosition(pos);
 
 		// CompletionContext context = new CompletionContext();
-		FileURI uri = getFileUriFromModuleName(root, tcc.getFilePath());
+		FileURI uri = getFileUriFromModuleName(tcc.getFilePath());
 		// context.set(Lists.newArrayList(getDiagnostics(uri)));
 		// completionParams.setContext(context);
 

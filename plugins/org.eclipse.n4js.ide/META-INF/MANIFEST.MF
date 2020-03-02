@@ -27,6 +27,7 @@ Require-Bundle: org.eclipse.n4js,
  org.eclipse.n4js.model,
  org.eclipse.n4js.semver.model
 Export-Package: org.eclipse.n4js.ide,
+ org.eclipse.n4js.ide.client,
  org.eclipse.n4js.ide.contentassist.antlr,
  org.eclipse.n4js.ide.contentassist.antlr.internal,
  org.eclipse.n4js.ide.contentassist.antlr.lexer,

@@ -12,18 +12,17 @@ package org.eclipse.n4js.ide.tests.issuePositions;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.File;
 import java.util.Collection;
 
 import org.eclipse.lsp4j.Diagnostic;
-import org.eclipse.n4js.ide.tests.server.AbstractIdeTest;
+import org.eclipse.n4js.ide.tests.server.AbstractStructuredIdeTest;
 import org.eclipse.n4js.tests.codegen.Project;
 import org.junit.Test;
 
 /**
  * Validates the issue locations when used as LSP server
  */
-public class ZeroBasedIssuesInLspTest extends AbstractIdeTest<Void> {
+public class ZeroBasedIssuesInLspTest extends AbstractStructuredIdeTest<Void> {
 
 	/** test case */
 	@Test
@@ -32,8 +31,8 @@ public class ZeroBasedIssuesInLspTest extends AbstractIdeTest<Void> {
 	}
 
 	@Override
-	protected void performTest(File root, Project project, Void t) throws Exception {
-		Collection<Diagnostic> allDiagnostics = getAllDiagnostics();
+	protected void performTest(Project project, Void t) throws Exception {
+		Collection<Diagnostic> allDiagnostics = getIssues().values();
 		assertEquals(1, allDiagnostics.size());
 		Diagnostic diag = allDiagnostics.iterator().next();
 		assertEquals("Couldn't resolve reference to IdentifiableElement 'x'.", diag.getMessage());

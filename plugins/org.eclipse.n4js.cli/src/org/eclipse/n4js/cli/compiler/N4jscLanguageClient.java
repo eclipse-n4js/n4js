@@ -11,18 +11,14 @@
 package org.eclipse.n4js.cli.compiler;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.Diagnostic;
-import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
-import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.n4js.cli.N4jscConsole;
-import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterDeleteListener;
-import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterGenerateListener;
+import org.eclipse.n4js.ide.client.AbstractN4JSLanguageClient;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -31,7 +27,7 @@ import com.google.inject.Singleton;
  * Overrides the lsp {@link LanguageClient} callback when used as a CLI utility
  */
 @Singleton
-public class N4jscLanguageClient implements LanguageClient, AfterGenerateListener, AfterDeleteListener {
+public class N4jscLanguageClient extends AbstractN4JSLanguageClient {
 	private long trnspCount = 0;
 	private long delCount = 0;
 	private long errCount = 0;
@@ -39,13 +35,7 @@ public class N4jscLanguageClient implements LanguageClient, AfterGenerateListene
 
 	/***/
 	@Inject
-	protected IssueSerializer issueSerializer;
-
-	@Override
-	public void telemetryEvent(Object object) {
-		// TODO Auto-generated method stub
-
-	}
+	protected N4jscIssueSerializer issueSerializer;
 
 	@Override
 	public void publishDiagnostics(PublishDiagnosticsParams diagnostics) {
@@ -75,12 +65,6 @@ public class N4jscLanguageClient implements LanguageClient, AfterGenerateListene
 	@Override
 	public void showMessage(MessageParams messageParams) {
 		N4jscConsole.println(messageParams.getMessage());
-	}
-
-	@Override
-	public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams requestParams) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

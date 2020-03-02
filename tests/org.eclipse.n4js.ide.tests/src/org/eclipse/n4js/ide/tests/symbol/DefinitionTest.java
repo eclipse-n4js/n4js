@@ -69,10 +69,8 @@ public class DefinitionTest extends AbstractDefinitionTest {
 	/***/
 	@Test
 	public void testDefinition_04() throws Exception {
-		File root = getRoot();
-		createTestProjectOnDisk(root, Collections.emptyMap());
-		createInjector();
-		startLspServer(root);
+		createTestProjectOnDisk(Collections.emptyMap());
+		startAndWaitForLspServer();
 
 		TextDocumentPositionParams textDocumentPositionParams = new TextDocumentPositionParams();
 		textDocumentPositionParams.setTextDocument(new TextDocumentIdentifier("n4scheme:/builtin_js.n4ts"));
@@ -82,6 +80,7 @@ public class DefinitionTest extends AbstractDefinitionTest {
 				.definition(textDocumentPositionParams);
 		Either<List<? extends Location>, List<? extends LocationLink>> definitions = definitionsFuture.get();
 
+		File root = getRoot();
 		String actualSignatureHelp = new StringLSP4J(root).toString4(definitions);
 		assertEquals("(n4scheme:/builtin_js.n4ts, [838:15 - 838:21])", actualSignatureHelp.trim());
 	}

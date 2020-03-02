@@ -12,7 +12,6 @@ package org.eclipse.n4js.ide.tests.server;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.File;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -26,7 +25,7 @@ import org.eclipse.xtext.testing.HoverTestConfiguration;
 /**
  * Abstract test class for hover protocol tests
  */
-abstract public class AbstractHoverTest extends AbstractIdeTest<HoverTestConfiguration> {
+abstract public class AbstractHoverTest extends AbstractStructuredIdeTest<HoverTestConfiguration> {
 
 	/** Call this method in a test */
 	protected void test(HoverTestConfiguration htc) throws Exception {
@@ -34,11 +33,11 @@ abstract public class AbstractHoverTest extends AbstractIdeTest<HoverTestConfigu
 	}
 
 	@Override
-	protected void performTest(File root, Project project, HoverTestConfiguration htc)
+	protected void performTest(Project project, HoverTestConfiguration htc)
 			throws InterruptedException, ExecutionException {
 
 		TextDocumentPositionParams textDocumentPositionParams = new TextDocumentPositionParams();
-		String completeFileUri = getFileUriFromModuleName(root, htc.getFilePath()).toString();
+		String completeFileUri = getFileUriFromModuleName(htc.getFilePath()).toString();
 		textDocumentPositionParams.setTextDocument(new TextDocumentIdentifier(completeFileUri));
 		textDocumentPositionParams.setPosition(new Position(htc.getLine(), htc.getColumn()));
 		CompletableFuture<Hover> hoverFuture = languageServer.hover(textDocumentPositionParams);
