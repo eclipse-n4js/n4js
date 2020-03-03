@@ -18,7 +18,6 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +28,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.ClientCapabilities;
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.DidChangeTextDocumentParams;
@@ -47,9 +47,9 @@ import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscTestFactory;
 import org.eclipse.n4js.cli.helper.SystemOutRedirecter;
 import org.eclipse.n4js.ide.tests.client.IdeTestLanguageClient;
-import org.eclipse.n4js.ide.tests.client.IdeTestLanguageClient.ModuleId;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
+import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.tests.codegen.Module;
@@ -97,6 +97,9 @@ abstract public class AbstractIdeTest {
 		SYSTEM_OUT_REDIRECTER.unset();
 	}
 
+	/** */
+	@Inject
+	protected XWorkspaceManager workspaceManager;
 	/** */
 	@Inject
 	protected IResourceServiceProvider.Registry resourceServerProviderRegistry;
@@ -350,25 +353,26 @@ abstract public class AbstractIdeTest {
 	 * Same as {@link #assertIssuesInModules(Map)}, but in addition to checking the modules denoted by the given map's
 	 * keys, this method will also assert that the remaining modules in the workspace do not contain any issues.
 	 */
-	protected void assertIssues(Map<ModuleId, List<String>> moduleIdToExpectedIssues) {
+	protected void assertIssues(Map<FileURI, List<String>> moduleIdToExpectedIssues) {
 		// check given expectations
 		assertIssuesInModules(moduleIdToExpectedIssues);
-		Set<ModuleId> checkedModules = moduleIdToExpectedIssues.keySet();
+		Set<FileURI> checkedModules = moduleIdToExpectedIssues.keySet();
 
 		// check that there are no other issues in the workspace
-		Multimap<ModuleId, Diagnostic> allIssues = languageClient.getIssues();
-		Set<ModuleId> modulesWithIssues = allIssues.keySet();
-		Set<ModuleId> uncheckedModulesWithIssues = new LinkedHashSet<>(modulesWithIssues);
+		Multimap<FileURI, Diagnostic> allIssues = languageClient.getIssues();
+		Set<FileURI> modulesWithIssues = allIssues.keySet();
+		Set<FileURI> uncheckedModulesWithIssues = new LinkedHashSet<>(modulesWithIssues);
 		uncheckedModulesWithIssues.removeAll(checkedModules);
 		if (!uncheckedModulesWithIssues.isEmpty()) {
 			String msg = moduleIdToExpectedIssues.size() == 0
 					? "expected no issues in workspace but found " + allIssues.size() + " issue(s):"
 					: "found one or more unexpected issues in workspace:";
 			StringBuilder sb = new StringBuilder();
-			for (ModuleId currModule : uncheckedModulesWithIssues) {
-				sb.append(currModule);
+			for (FileURI currModuleURI : uncheckedModulesWithIssues) {
+				String currModuleRelPath = getRelativePathFromModuleUri(currModuleURI);
+				sb.append(currModuleRelPath);
 				sb.append(":\n");
-				List<String> currModuleIssuesAsList = allIssues.get(currModule).stream()
+				List<String> currModuleIssuesAsList = allIssues.get(currModuleURI).stream()
 						.map(issue -> languageClient.getIssueString(issue))
 						.collect(Collectors.toList());
 				String currModuleIssuesAsString = issuesToSortedString(currModuleIssuesAsList, "    ");
@@ -382,9 +386,9 @@ abstract public class AbstractIdeTest {
 	 * Same as {@link #assertIssuesInModules(Map)}, accepting pairs from module name to issue list instead of a map from
 	 * module ID to issue list.
 	 */
-	protected Set<ModuleId> assertIssuesInModules(
+	protected void assertIssuesInModules(
 			@SuppressWarnings("unchecked") Pair<String, List<String>>... moduleNameToExpectedIssues) {
-		return assertIssuesInModules(convertModuleNamePairsToIdMap(moduleNameToExpectedIssues));
+		assertIssuesInModules(convertModuleNamePairsToIdMap(moduleNameToExpectedIssues));
 	}
 
 	/**
@@ -393,16 +397,14 @@ abstract public class AbstractIdeTest {
 	 *
 	 * @param moduleIdToExpectedIssues
 	 *            a map from module IDs to the list of expected issues in each case.
-	 * @return set of IDs of modules that have been checked, i.e. the modules
 	 */
-	protected Set<ModuleId> assertIssuesInModules(Map<ModuleId, List<String>> moduleIdToExpectedIssues) {
-		Set<ModuleId> checkedModules = new HashSet<>();
-		for (Entry<ModuleId, List<String>> pair : moduleIdToExpectedIssues.entrySet()) {
-			ModuleId moduleId = pair.getKey();
+	protected void assertIssuesInModules(Map<FileURI, List<String>> moduleIdToExpectedIssues) {
+		for (Entry<FileURI, List<String>> pair : moduleIdToExpectedIssues.entrySet()) {
+			FileURI moduleURI = pair.getKey();
 			List<String> expectedIssues = pair.getValue();
 
-			Iterable<String> actualIssues = Iterables.concat(languageClient.getErrors(moduleId),
-					languageClient.getWarnings(moduleId));
+			Iterable<String> actualIssues = Iterables.concat(languageClient.getErrors(moduleURI),
+					languageClient.getWarnings(moduleURI));
 			Set<String> actualIssuesAsSet = IterableExtensions.toSet(
 					Iterables.transform(actualIssues, String::trim));
 			Set<String> expectedIssuesAsSet = IterableExtensions.toSet(
@@ -410,16 +412,14 @@ abstract public class AbstractIdeTest {
 
 			if (!Objects.equals(expectedIssuesAsSet, actualIssuesAsSet)) {
 				String indent = "    ";
-				Assert.fail("issues in module " + moduleId + " do not meet expectation\n"
+				String moduleRelPath = getRelativePathFromModuleUri(moduleURI);
+				Assert.fail("issues in module " + moduleRelPath + " do not meet expectation\n"
 						+ "EXPECTED:\n"
 						+ issuesToSortedString(expectedIssuesAsSet, indent) + "\n"
 						+ "ACTUAL:\n"
 						+ issuesToSortedString(actualIssuesAsSet, indent));
 			}
-
-			checkedModules.add(moduleId);
 		}
-		return checkedModules;
 	}
 
 	private String issuesToSortedString(Iterable<String> issues, String indent) {
@@ -452,10 +452,10 @@ abstract public class AbstractIdeTest {
 		return result;
 	}
 
-	private <T> Map<ModuleId, T> convertModuleNamePairsToIdMap(
+	private <T> Map<FileURI, T> convertModuleNamePairsToIdMap(
 			@SuppressWarnings("unchecked") Pair<String, T>... moduleNameToExpectedIssues) {
 		return Stream.of(moduleNameToExpectedIssues).collect(Collectors.toMap(
-				p -> getModuleIdFromModuleName(p.getKey()),
+				p -> getFileUriFromModuleName(p.getKey()),
 				Pair::getValue));
 	}
 
@@ -466,10 +466,13 @@ abstract public class AbstractIdeTest {
 		return new FileURI(completeFilePath.toFile());
 	}
 
-	/** Translates a given module name to a {@link ModuleId}. */
-	protected ModuleId getModuleIdFromModuleName(String moduleName) {
-		FileURI uri = getFileUriFromModuleName(moduleName);
-		return languageClient.getModuleId(uri);
+	/**
+	 * Returns the module's path and name relative to the test workspace's {@link #getRoot() root folder}. Intended for
+	 * use in output presented to the user (e.g. messages of assertion errors).
+	 */
+	protected String getRelativePathFromModuleUri(FileURI moduleURI) {
+		URI relativeUri = workspaceManager.makeWorkspaceRelative(moduleURI.toURI());
+		return relativeUri.toFileString();
 	}
 
 	/** @return the given name if non-<code>null</code> and non-empty; otherwise {@link #MODULE_NAME}. */
@@ -486,7 +489,7 @@ abstract public class AbstractIdeTest {
 	}
 
 	/** @see IdeTestLanguageClient#getIssues() */
-	protected Multimap<ModuleId, Diagnostic> getIssues() {
+	protected Multimap<FileURI, Diagnostic> getIssues() {
 		return languageClient.getIssues();
 	}
 

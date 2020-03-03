@@ -38,39 +38,11 @@ public class IdeTestLanguageClient extends AbstractN4JSLanguageClient {
 	@Inject
 	private XWorkspaceManager workspaceManager;
 
-	private final Multimap<ModuleId, Diagnostic> issues = Multimaps.synchronizedMultimap(HashMultimap.create());
-	private final Multimap<ModuleId, String> errors = Multimaps.synchronizedMultimap(HashMultimap.create());
-	private final Multimap<ModuleId, String> warnings = Multimaps.synchronizedMultimap(HashMultimap.create());
+	private final Multimap<FileURI, Diagnostic> issues = Multimaps.synchronizedMultimap(HashMultimap.create());
+	private final Multimap<FileURI, String> errors = Multimaps.synchronizedMultimap(HashMultimap.create());
+	private final Multimap<FileURI, String> warnings = Multimaps.synchronizedMultimap(HashMultimap.create());
 
 	private StringLSP4J stringLSP4J;
-
-	/**
-	 * Identifies a module in the test workspace.
-	 * <p>
-	 * Use {@link IdeTestLanguageClient#getModuleId(FileURI)} to create instances.
-	 */
-	public static final class ModuleId {
-		final String relativeModulePath;
-
-		private ModuleId(String relativeModulePath) {
-			this.relativeModulePath = relativeModulePath;
-		}
-
-		@Override
-		public int hashCode() {
-			return relativeModulePath.hashCode();
-		}
-
-		@Override
-		public boolean equals(Object object) {
-			return object instanceof ModuleId && relativeModulePath.equals(((ModuleId) object).relativeModulePath);
-		}
-
-		@Override
-		public String toString() {
-			return relativeModulePath;
-		}
-	}
 
 	/** Clear all issues tracked by this client. */
 	public void clear() {
@@ -98,11 +70,11 @@ public class IdeTestLanguageClient extends AbstractN4JSLanguageClient {
 
 	@Override
 	public void publishDiagnostics(PublishDiagnosticsParams diagnostics) {
-		ModuleId id = getModuleId(diagnostics.getUri());
+		FileURI uri = new FileURI(URI.createURI(diagnostics.getUri()));
 
-		issues.removeAll(id);
-		errors.removeAll(id);
-		warnings.removeAll(id);
+		issues.removeAll(uri);
+		errors.removeAll(uri);
+		warnings.removeAll(uri);
 
 		List<Diagnostic> issueList = diagnostics.getDiagnostics();
 		if (issueList.isEmpty()) {
@@ -111,14 +83,14 @@ public class IdeTestLanguageClient extends AbstractN4JSLanguageClient {
 
 		for (Diagnostic diag : issueList) {
 			String issueString = getIssueString(diag);
-			issues.put(id, diag);
+			issues.put(uri, diag);
 
 			switch (diag.getSeverity()) {
 			case Error:
-				errors.put(id, issueString);
+				errors.put(uri, issueString);
 				break;
 			case Warning:
-				warnings.put(id, issueString);
+				warnings.put(uri, issueString);
 				break;
 			default:
 				// ignore
@@ -127,42 +99,24 @@ public class IdeTestLanguageClient extends AbstractN4JSLanguageClient {
 		}
 	}
 
-	/**
-	 * @return all issues in the workspace as a multi-map from module ID (as returned by {@link #getModuleId(FileURI)})
-	 *         to {@link Diagnostic}s.
-	 */
-	public Multimap<ModuleId, Diagnostic> getIssues() {
+	/** @return all issues in the workspace as a multi-map from file URI to {@link Diagnostic}s. */
+	public Multimap<FileURI, Diagnostic> getIssues() {
 		return issues;
 	}
 
-	/** Same as {@link #getIssues(ModuleId)}, but accepts a file URI. */
+	/** @return issues in the module with the given file URI. */
 	public Collection<Diagnostic> getIssues(FileURI uri) {
-		return getIssues(getModuleId(uri));
+		return issues.get(uri);
 	}
 
-	/** @return issues in the module with the given ID. */
-	public Collection<Diagnostic> getIssues(ModuleId moduleId) {
-		return issues.get(moduleId);
-	}
-
-	/** Same as {@link #getErrors(ModuleId)}, but accepts a file URI. */
+	/** @return messages of errors in the module with the given file URI. */
 	public Collection<String> getErrors(FileURI uri) {
-		return getErrors(getModuleId(uri));
+		return errors.get(uri);
 	}
 
-	/** @return messages of errors in the module with the given ID. */
-	public Collection<String> getErrors(ModuleId moduleId) {
-		return errors.get(moduleId);
-	}
-
-	/** Same as {@link #getWarnings(ModuleId)}, but accepts a file URI. */
+	/** @return messages of warnings in the module with the given file URI. */
 	public Collection<String> getWarnings(FileURI uri) {
-		return getWarnings(getModuleId(uri));
-	}
-
-	/** @return messages of warnings in the module with the given ID. */
-	public Collection<String> getWarnings(ModuleId moduleId) {
-		return warnings.get(moduleId);
+		return warnings.get(uri);
 	}
 
 	/**
@@ -172,15 +126,5 @@ public class IdeTestLanguageClient extends AbstractN4JSLanguageClient {
 	 */
 	public String getIssueString(Diagnostic diagnostic) {
 		return getStringLSP4J().toStringShort(diagnostic);
-	}
-
-	/** @return the ID for the module in the test workspace with the given URI. */
-	public ModuleId getModuleId(FileURI uri) {
-		return getModuleId(uri.toString());
-	}
-
-	private ModuleId getModuleId(String uriString) {
-		URI relativeUri = workspaceManager.makeWorkspaceRelative(URI.createURI(uriString));
-		return new ModuleId(relativeUri.toFileString());
 	}
 }
