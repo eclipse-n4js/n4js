@@ -10,13 +10,12 @@
  */
 package org.eclipse.n4js.postprocessing
 
-import com.google.common.collect.Sets
+import com.google.common.collect.Iterators
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import java.util.ArrayList
-import java.util.Collection
 import java.util.LinkedHashSet
-import java.util.Set
+import java.util.List
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.ImportDeclaration
@@ -32,6 +31,7 @@ import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.N4JSLanguageUtils
+import org.eclipse.n4js.utils.SCCUtils
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.xtext.EcoreUtil2
 
@@ -141,10 +141,8 @@ class RunTimeDependencyProcessor {
 		// NOTE: as above, the order of cyclicModulesRunTime and runTimeCyclicLoadTimeDependents stored in
 		// the TModule is important, because we want to avoid random reordering of the same set of modules
 		// to avoid unnecessary changes of the TModule (see above for details)
-		val cyclicModulesRunTime = <TModule>newLinkedHashSet();
-		val cyclicModulesLoadTimeForInheritance = <TModule>newLinkedHashSet();
-		getAllRunTimeCyclicModules(module, false, cyclicModulesRunTime);
-		getAllRunTimeCyclicModules(module, true, cyclicModulesLoadTimeForInheritance);
+		val cyclicModulesRunTime = getAllRunTimeCyclicModules(module, false);
+		val cyclicModulesLoadTimeForInheritance = getAllRunTimeCyclicModules(module, true);
 		val runTimeCyclicLoadTimeDependents = new LinkedHashSet<TModule>();
 		for (cyclicModule : cyclicModulesRunTime) {
 			if (cyclicModule.hasDirectLoadTimeDependencyTo(module)) {
@@ -163,39 +161,12 @@ class RunTimeDependencyProcessor {
 	}
 
 	// FIXME consider optimization
-	def private static void getAllRunTimeCyclicModules(TModule module, boolean onlyLoadTime, Set<TModule> addHereRunTime) {
-		collectRunTimeCyclicModules(module, onlyLoadTime,
-			module.getDependenciesRunTime(), Sets.newLinkedHashSet, Sets.newLinkedHashSet,
-			addHereRunTime);
-	}
-
-	def private static void collectRunTimeCyclicModules(TModule start, boolean onlyLoadTime,
-		Collection<RunTimeDependency> nextDeps, Set<TModule> visited, Set<TModule> currPath,
-		Set<TModule> addHere) {
-
-		val nextDepsToUse = if (onlyLoadTime) nextDeps.filter[isLoadTimeForInheritance] else nextDeps;
-
-		for (currDep : nextDepsToUse) {
-			val currModule = currDep.target;
-			if (currModule === start) {
-				addHere.addAll(currPath);
-			} else {
-				if (visited.add(currModule)) {
-					try {
-						currPath.add(currModule);
-						collectRunTimeCyclicModules(start, onlyLoadTime,
-							currModule.getDependenciesRunTime(), visited, currPath,
-							addHere);
-					} finally {
-						currPath.remove(currModule);
-					}
-				} else {
-					if (addHere.contains(currModule)) {
-						addHere.addAll(currPath);
-					}
-				}
-			}
-		}
+	def private static List<TModule> getAllRunTimeCyclicModules(TModule module, boolean onlyLoadTime) {
+		val sccs = SCCUtils.findSCCs(Iterators.singletonIterator(module), [m|
+			m.dependenciesRunTime.filter[!onlyLoadTime || isLoadTimeForInheritance].map[target]
+		]);
+		val cyclicModules = sccs.filter[remove(module)].head;
+		return cyclicModules;
 	}
 
 	def private static boolean isDifferentModuleInSameProject(TModule module, ASTMetaInfoCache cache) {
