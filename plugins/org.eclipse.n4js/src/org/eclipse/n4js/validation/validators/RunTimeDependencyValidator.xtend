@@ -157,7 +157,8 @@ class RunTimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 					return false;
 				} else {
 					// ERROR: importing an LTSlave from outside the dependency cycle cluster
-					val message = IssueCodes.getMessageForLTD_IMPORT_OF_LOAD_TIME_DEPENDENCY_TARGET(targetModule.simpleName) + "\n"
+					val healingModulesStr = healingModulesToString(targetModule);
+					val message = IssueCodes.getMessageForLTD_IMPORT_OF_LOAD_TIME_DEPENDENCY_TARGET(targetModule.simpleName, healingModulesStr) + "\n"
 						+ "Containing run-time dependency cycle cluster:\n"
 						+ dependencyCycleToString(targetModule, false, INDENT);
 					addIssue(message, importDecl, N4JSPackage.eINSTANCE.importDeclaration_Module, IssueCodes.LTD_IMPORT_OF_LOAD_TIME_DEPENDENCY_TARGET);
@@ -195,9 +196,15 @@ class RunTimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	def private String otherLTDXsToString(TModule module, TModule ltSlave) {
-		val otherLTDXs = ltSlave.runTimeCyclicLoadTimeDependents.filter[it !== module].toList;
+		val otherLTDXs = ltSlave.runTimeCyclicLoadTimeDependents.filter[it !== module].sortModules;
 		val prefix = if (otherLTDXs.size > 1) "modules " else "module ";
 		return prefix + otherLTDXs.map[simpleName].join(", ");
+	}
+
+	def private String healingModulesToString(TModule module) {
+		val healingModules = module.cyclicModulesRunTime.filter[!it.isLTSlave].sortModules;
+		val prefix = if (healingModules.size > 1) "one of the modules " else "module ";
+		return prefix + healingModules.map[simpleName].join(", ");
 	}
 
 	def private String dependencyCycleToString(TModule module, boolean onlyLoadTimeForInheritance, CharSequence indent) {
@@ -214,7 +221,7 @@ class RunTimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 				sb.append('\n');
 			}
 			sb.append(indent);
-			if (cyclicModule.isLTSlave) {
+			if (!onlyLoadTimeForInheritance && cyclicModule.isLTSlave) {
 				sb.append('*');
 			}
 			sb.append(cyclicModule.fileName)

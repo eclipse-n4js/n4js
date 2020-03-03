@@ -58,7 +58,7 @@ class RunTimeDependencyValidationIdeTest extends AbstractIdeTest {
 	val defaultExpectedIssues = #[
 		"MainBad" -> #[
 			'''
-				(Error, [0:16 - 0:19], Import of load-time dependency target A will be healed by inserting an additional import in output code.
+				(Warning, [0:16 - 0:19], (LTD) When importing modules from a run-time cycle, those that are the target of a load-time dependency (marked with * below) may only be imported after first importing one of the others. Thus, import of module A must be preceded by an import of one of the modules C, X, Y.
 				Containing run-time dependency cycle cluster:
 				    *A.n4js --> Y.n4js
 				    *B.n4js --> A.n4js
@@ -100,26 +100,26 @@ class RunTimeDependencyValidationIdeTest extends AbstractIdeTest {
 		assertIssues(
 			"A" -> #[
 				'''
-					(Error, [0:16 - 0:19], Load-time dependency cycle.
-					    *A.n4js --> C.n4js
-					    *B.n4js --> A.n4js
-					    *C.n4js --> B.n4js)
+					(Warning, [0:16 - 0:19], (LTD) Load-time dependency cycles are disallowed, because successful resolution by Javascript engine cannot be guaranteed.
+					    A.n4js --> C.n4js
+					    B.n4js --> A.n4js
+					    C.n4js --> B.n4js)
 				'''
 			],
 			"B" -> #[
 				'''
-					(Error, [0:16 - 0:19], Load-time dependency cycle.
-					    *A.n4js --> C.n4js
-					    *B.n4js --> A.n4js
-					    *C.n4js --> B.n4js)
+					(Warning, [0:16 - 0:19], (LTD) Load-time dependency cycles are disallowed, because successful resolution by Javascript engine cannot be guaranteed.
+					    A.n4js --> C.n4js
+					    B.n4js --> A.n4js
+					    C.n4js --> B.n4js)
 				'''
 			],
 			"C" -> #[
 				'''
-					(Error, [0:16 - 0:19], Load-time dependency cycle.
-					    *A.n4js --> C.n4js
-					    *B.n4js --> A.n4js
-					    *C.n4js --> B.n4js)
+					(Warning, [0:16 - 0:19], (LTD) Load-time dependency cycles are disallowed, because successful resolution by Javascript engine cannot be guaranteed.
+					    A.n4js --> C.n4js
+					    B.n4js --> A.n4js
+					    C.n4js --> B.n4js)
 				'''
 			],
 			"MainBad" -> #[
@@ -159,7 +159,7 @@ class RunTimeDependencyValidationIdeTest extends AbstractIdeTest {
 		val expectedIssuesWithIllegalLoadTimeReferences = defaultExpectedIssues + #[
 			"B" -> #[
 				'''
-					(Error, [12:0 - 12:4], Illegal load-time reference within run-time dependency cycle cluster.
+					(Warning, [12:0 - 12:4], (LTD) Load-time references to the same or other modules are not allowed within a run-time dependency cycle (except in extends/implements clauses).
 					    *A.n4js --> Y.n4js
 					    *B.n4js --> A.n4js
 					    C.n4js --> B.n4js
@@ -167,7 +167,7 @@ class RunTimeDependencyValidationIdeTest extends AbstractIdeTest {
 					    Y.n4js --> X.n4js)
 				''',
 				'''
-					(Error, [14:4 - 14:5], Illegal load-time reference within run-time dependency cycle cluster.
+					(Warning, [14:4 - 14:5], (LTD) Load-time references to the same or other modules are not allowed within a run-time dependency cycle (except in extends/implements clauses).
 					    *A.n4js --> Y.n4js
 					    *B.n4js --> A.n4js
 					    C.n4js --> B.n4js
