@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -39,14 +40,12 @@ import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.utils.EcoreUtilN4;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
-import org.eclipse.xtext.util.IAcceptor;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Sets;
 
 /**
  * The user data for exported modules contains a serialized representation of the module's content. This allows to
@@ -294,17 +293,16 @@ public final class UserdataMapper {
 	 * {@link #readDependenciesFromDescription(IResourceDescription)}.
 	 */
 	public static void writeDependenciesToUserData(N4JSResource resource, Map<String, String> userData) {
-		final Set<URI> dependencies = Sets.newLinkedHashSet();
-		final Set<URI> dependenciesLoadTimeForInheritance = Sets.newLinkedHashSet();
-		computeCrossRefs(resource, dependencies::add);
-		getDependenciesLoadTimeForInheritance(resource, dependenciesLoadTimeForInheritance::add);
+		final Set<URI> dependencies = computeCrossRefs(resource);
+		final Set<URI> dependenciesLoadTimeForInheritance = getDependenciesLoadTimeForInheritance(resource);
 		userData.put(USERDATA_KEY_DEPENDENCIES,
 				joiner.join(dependencies));
 		userData.put(USERDATA_KEY_DEPENDENCIES_LOAD_TIME_FOR_INHERITANCE,
 				joiner.join(dependenciesLoadTimeForInheritance));
 	}
 
-	private static void computeCrossRefs(N4JSResource resource, IAcceptor<URI> acceptor) {
+	private static Set<URI> computeCrossRefs(N4JSResource resource) {
+		final Set<URI> result = new LinkedHashSet<>();
 		final Script script = resource.getScript();
 		if (script != null && !script.eIsProxy()) {
 			for (ScriptElement elem : script.getScriptElements()) {
@@ -315,16 +313,18 @@ public final class UserdataMapper {
 						if (targetRes != null) {
 							final URI uri = targetRes.getURI();
 							if (uri != null) {
-								acceptor.accept(uri);
+								result.add(uri);
 							}
 						}
 					}
 				}
 			}
 		}
+		return result;
 	}
 
-	private static void getDependenciesLoadTimeForInheritance(N4JSResource resource, IAcceptor<URI> acceptor) {
+	private static Set<URI> getDependenciesLoadTimeForInheritance(N4JSResource resource) {
+		final Set<URI> result = new LinkedHashSet<>();
 		final TModule module = resource.getModule();
 		if (module != null && !module.eIsProxy()) {
 			for (RunTimeDependency dep : module.getDependenciesRunTime()) {
@@ -335,13 +335,14 @@ public final class UserdataMapper {
 						if (targetRes != null) {
 							final URI uri = targetRes.getURI();
 							if (uri != null) {
-								acceptor.accept(uri);
+								result.add(uri);
 							}
 						}
 					}
 				}
 			}
 		}
+		return result;
 	}
 
 	private static final Splitter splitter = Splitter.on(',').omitEmptyStrings();
