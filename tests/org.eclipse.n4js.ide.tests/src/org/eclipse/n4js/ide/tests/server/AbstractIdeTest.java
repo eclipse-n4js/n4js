@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -270,12 +271,29 @@ abstract public class AbstractIdeTest {
 	 * <p>
 	 * Use method {@link #changeOpenedFile(String, Pair...)} instead if the file was previously opened with one of the
 	 * {@link #openFile(String, String) #openFile()} methods.
+	 *
+	 * @param replacements
+	 *            for each pair P, the first (and only the first!) occurrence of P's key in the content of the file
+	 *            denoted by <code>fileURI</code> will be replaced by P's value.
 	 */
 	protected void changeNonOpenedFile(String moduleName,
-			@SuppressWarnings("unchecked") Pair<String, String>... replacements) throws IOException {
+			@SuppressWarnings("unchecked") Pair<String, String>... replacements) {
+		changeNonOpenedFile(moduleName, content -> applyReplacements(content, replacements));
+	}
+
+	/**
+	 * Change a non-opened file on disk and notify the LSP server.
+	 * <p>
+	 * Use method {@link #changeOpenedFile(String, Pair...)} instead if the file was previously opened with one of the
+	 * {@link #openFile(String, String) #openFile()} methods.
+	 *
+	 * @param modification
+	 *            a function returning the desired new content when given the file's current content on disk.
+	 */
+	protected void changeNonOpenedFile(String moduleName, Function<String, String> modification) {
 		FileURI fileURI = getFileURIFromModuleName(moduleName);
 		// 1) change on disk
-		changeFileOnDiskWithoutNotification(fileURI, replacements);
+		changeFileOnDiskWithoutNotification(fileURI, modification);
 		// 2) notify LSP server
 		List<FileEvent> fileEvents = Collections.singletonList(
 				new FileEvent(fileURI.toString(), FileChangeType.Changed));
@@ -290,12 +308,11 @@ abstract public class AbstractIdeTest {
 	 * of the {@link #openFile(String, String) #openFile()} methods.
 	 */
 	protected void changeOpenedFile(String moduleName,
-			@SuppressWarnings("unchecked") Pair<String, String>... replacements) throws IOException {
+			@SuppressWarnings("unchecked") Pair<String, String>... replacements) {
 		FileURI fileURI = getFileURIFromModuleName(moduleName);
-		Path filePath = fileURI.toJavaIoFile().toPath();
-		String oldContent = Files.readString(filePath);
 		// 1) change on disk
-		changeFileOnDiskWithoutNotification(fileURI, replacements);
+		Pair<String, String> oldToNewContent = changeFileOnDiskWithoutNotification(fileURI, replacements);
+		String oldContent = oldToNewContent.getKey();
 		// 2) notify LSP server
 		VersionedTextDocumentIdentifier docId = new VersionedTextDocumentIdentifier(fileURI.toString(), 1);
 		List<TextDocumentContentChangeEvent> changes = replacementsToChangeEvents(oldContent, replacements);
@@ -308,13 +325,14 @@ abstract public class AbstractIdeTest {
 	 * URI.
 	 */
 	protected void changeFileOnDiskWithoutNotification(String moduleName,
-			@SuppressWarnings("unchecked") Pair<String, String>... replacements) throws IOException {
+			@SuppressWarnings("unchecked") Pair<String, String>... replacements) {
 		FileURI fileURI = getFileURIFromModuleName(moduleName);
 		changeFileOnDiskWithoutNotification(fileURI, replacements);
 	}
 
 	/**
-	 * Changes a file on disk by applying the given replacements without notifying the LSP server.
+	 * Same as {@link #changeFileOnDiskWithoutNotification(FileURI, Function)}, but changes can be provided as string
+	 * replacements.
 	 *
 	 * @param fileURI
 	 *            URI of the file to change.
@@ -322,15 +340,31 @@ abstract public class AbstractIdeTest {
 	 *            for each pair P, the first (and only the first!) occurrence of P's key in the content of the file
 	 *            denoted by <code>fileURI</code> will be replaced by P's value.
 	 */
-	protected void changeFileOnDiskWithoutNotification(FileURI fileURI,
-			@SuppressWarnings("unchecked") Pair<String, String>... replacements) throws IOException {
-		Path filePath = fileURI.toJavaIoFile().toPath();
-		String oldContent = Files.readString(filePath);
-		String newContent = oldContent;
-		for (Pair<String, String> replacement : replacements) {
-			newContent = newContent.replaceFirst(Pattern.quote(replacement.getKey()), replacement.getValue());
+	protected Pair<String, String> changeFileOnDiskWithoutNotification(FileURI fileURI,
+			@SuppressWarnings("unchecked") Pair<String, String>... replacements) {
+		return changeFileOnDiskWithoutNotification(fileURI, content -> applyReplacements(content, replacements));
+	}
+
+	/**
+	 * Changes a file on disk by applying the given replacements without notifying the LSP server.
+	 *
+	 * @param fileURI
+	 *            URI of the file to change.
+	 * @param modification
+	 *            a function returning the desired new content when given the file's current content on disk.
+	 */
+	protected Pair<String, String> changeFileOnDiskWithoutNotification(FileURI fileURI,
+			Function<String, String> modification) {
+		try {
+			Path filePath = fileURI.toJavaIoFile().toPath();
+			String oldContent = Files.readString(filePath);
+			String newContent = modification.apply(oldContent);
+			Files.writeString(filePath, newContent, StandardOpenOption.TRUNCATE_EXISTING);
+			return new Pair<>(oldContent, newContent);
+		} catch (IOException e) {
+			// wrap in AssertionError to avoid need for test code to declare IOExceptions
+			throw new AssertionError("IOException while changing file on disk", e);
 		}
-		Files.writeString(filePath, newContent, StandardOpenOption.TRUNCATE_EXISTING);
 	}
 
 	/**
@@ -500,5 +534,14 @@ abstract public class AbstractIdeTest {
 
 	static String toUnixLineSeparator(CharSequence cs) {
 		return cs.toString().replaceAll("\r?\n", "\n");
+	}
+
+	private static String applyReplacements(CharSequence oldContent,
+			@SuppressWarnings("unchecked") Pair<String, String>... replacements) {
+		String newContent = oldContent.toString();
+		for (Pair<String, String> replacement : replacements) {
+			newContent = newContent.replaceFirst(Pattern.quote(replacement.getKey()), replacement.getValue());
+		}
+		return newContent;
 	}
 }

@@ -90,11 +90,14 @@ class RuntimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 			if (holdsNotAnIllegalImportWithinLoadtimeCycle(containingModule, importDecl)
 				&& holdsNotAnIllegalImportOfLTDTarget(containingModule, importDecl, modulesInHealedCycles)) {
 
-				// we have a valid import, it may contribute to healing later imports:
-				val targetModule = importDecl.module;
-				if (!targetModule.cyclicModulesRuntime.empty) {
-					modulesInHealedCycles += targetModule;
-					modulesInHealedCycles += targetModule.cyclicModulesRuntime;
+				if (importDecl.retainedAtRuntime) {
+					// we have a valid import that will be retained at runtime
+					// --> it may contribute to healing later imports:
+					val targetModule = importDecl.module;
+					if (!targetModule.cyclicModulesRuntime.empty) {
+						modulesInHealedCycles += targetModule;
+						modulesInHealedCycles += targetModule.cyclicModulesRuntime;
+					}
 				}
 			}
 		}
