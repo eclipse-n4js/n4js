@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2017 NumberFour AG.
+ * Copyright (c) 2020 NumberFour AG.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -74,7 +74,7 @@ class RunTimeDependencyValidationPluginTest extends AbstractBuilderParticipantTe
 	val defaultExpectedIssues = #[
 		"MainBad" -> #[
 			'''
-				line 1: Import of load-time dependency target A will be healed by inserting an additional import in output code.
+				line 1: (LTD) When importing modules from a run-time cycle, those that are the target of a load-time dependency (marked with * below) may only be imported after first importing one of the others. Thus, import of module A must be preceded by an import of one of the modules C, X, Y.
 				Containing run-time dependency cycle cluster:
 				    *A.n4js --> Y.n4js
 				    *B.n4js --> A.n4js
@@ -107,26 +107,26 @@ class RunTimeDependencyValidationPluginTest extends AbstractBuilderParticipantTe
 		assertIssues(files,
 			"A" -> #[
 				'''
-					line 1: Load-time dependency cycle.
-					    *A.n4js --> C.n4js
-					    *B.n4js --> A.n4js
-					    *C.n4js --> B.n4js
+					line 1: (LTD) Load-time dependency cycles are disallowed, because successful resolution by Javascript engine cannot be guaranteed.
+					    A.n4js --> C.n4js
+					    B.n4js --> A.n4js
+					    C.n4js --> B.n4js
 				'''
 			],
 			"B" -> #[
 				'''
-					line 1: Load-time dependency cycle.
-					    *A.n4js --> C.n4js
-					    *B.n4js --> A.n4js
-					    *C.n4js --> B.n4js
+					line 1: (LTD) Load-time dependency cycles are disallowed, because successful resolution by Javascript engine cannot be guaranteed.
+					    A.n4js --> C.n4js
+					    B.n4js --> A.n4js
+					    C.n4js --> B.n4js
 				'''
 			],
 			"C" -> #[
 				'''
-					line 1: Load-time dependency cycle.
-					    *A.n4js --> C.n4js
-					    *B.n4js --> A.n4js
-					    *C.n4js --> B.n4js
+					line 1: (LTD) Load-time dependency cycles are disallowed, because successful resolution by Javascript engine cannot be guaranteed.
+					    A.n4js --> C.n4js
+					    B.n4js --> A.n4js
+					    C.n4js --> B.n4js
 				'''
 			],
 			"MainBad" -> #[
@@ -166,7 +166,7 @@ class RunTimeDependencyValidationPluginTest extends AbstractBuilderParticipantTe
 		val expectedIssuesWithIllegalLoadTimeReferences = defaultExpectedIssues + #[
 			"B" -> #[
 				'''
-					line 13: Illegal load-time reference within run-time dependency cycle cluster.
+					line 13: (LTD) Load-time references to the same or other modules are not allowed within a run-time dependency cycle (except in extends/implements clauses).
 					    *A.n4js --> Y.n4js
 					    *B.n4js --> A.n4js
 					    C.n4js --> B.n4js
@@ -174,7 +174,7 @@ class RunTimeDependencyValidationPluginTest extends AbstractBuilderParticipantTe
 					    Y.n4js --> X.n4js
 				''',
 				'''
-					line 15: Illegal load-time reference within run-time dependency cycle cluster.
+					line 15: (LTD) Load-time references to the same or other modules are not allowed within a run-time dependency cycle (except in extends/implements clauses).
 					    *A.n4js --> Y.n4js
 					    *B.n4js --> A.n4js
 					    C.n4js --> B.n4js
