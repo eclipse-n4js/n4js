@@ -17,7 +17,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
-import org.eclipse.n4js.ts.types.RunTimeDependency;
+import org.eclipse.n4js.ts.types.RuntimeDependency;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
@@ -25,19 +25,19 @@ import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Run Time Dependency</b></em>'.
+ * An implementation of the model object '<em><b>Runtime Dependency</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.ts.types.impl.RunTimeDependencyImpl#getTarget <em>Target</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.impl.RunTimeDependencyImpl#isLoadTimeForInheritance <em>Load Time For Inheritance</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.RuntimeDependencyImpl#getTarget <em>Target</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.RuntimeDependencyImpl#isLoadtimeForInheritance <em>Loadtime For Inheritance</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class RunTimeDependencyImpl extends ProxyResolvingEObjectImpl implements RunTimeDependency {
+public class RuntimeDependencyImpl extends ProxyResolvingEObjectImpl implements RuntimeDependency {
 	/**
 	 * The cached value of the '{@link #getTarget() <em>Target</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -49,31 +49,31 @@ public class RunTimeDependencyImpl extends ProxyResolvingEObjectImpl implements 
 	protected TModule target;
 
 	/**
-	 * The default value of the '{@link #isLoadTimeForInheritance() <em>Load Time For Inheritance</em>}' attribute.
+	 * The default value of the '{@link #isLoadtimeForInheritance() <em>Loadtime For Inheritance</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isLoadTimeForInheritance()
+	 * @see #isLoadtimeForInheritance()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final boolean LOAD_TIME_FOR_INHERITANCE_EDEFAULT = false;
+	protected static final boolean LOADTIME_FOR_INHERITANCE_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isLoadTimeForInheritance() <em>Load Time For Inheritance</em>}' attribute.
+	 * The cached value of the '{@link #isLoadtimeForInheritance() <em>Loadtime For Inheritance</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isLoadTimeForInheritance()
+	 * @see #isLoadtimeForInheritance()
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean loadTimeForInheritance = LOAD_TIME_FOR_INHERITANCE_EDEFAULT;
+	protected boolean loadtimeForInheritance = LOADTIME_FOR_INHERITANCE_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected RunTimeDependencyImpl() {
+	protected RuntimeDependencyImpl() {
 		super();
 	}
 
@@ -84,7 +84,7 @@ public class RunTimeDependencyImpl extends ProxyResolvingEObjectImpl implements 
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return TypesPackage.Literals.RUN_TIME_DEPENDENCY;
+		return TypesPackage.Literals.RUNTIME_DEPENDENCY;
 	}
 
 	/**
@@ -99,7 +99,7 @@ public class RunTimeDependencyImpl extends ProxyResolvingEObjectImpl implements 
 			target = (TModule)eResolveProxy(oldTarget);
 			if (target != oldTarget) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, TypesPackage.RUN_TIME_DEPENDENCY__TARGET, oldTarget, target));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, TypesPackage.RUNTIME_DEPENDENCY__TARGET, oldTarget, target));
 			}
 		}
 		return target;
@@ -124,7 +124,7 @@ public class RunTimeDependencyImpl extends ProxyResolvingEObjectImpl implements 
 		TModule oldTarget = target;
 		target = newTarget;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.RUN_TIME_DEPENDENCY__TARGET, oldTarget, target));
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.RUNTIME_DEPENDENCY__TARGET, oldTarget, target));
 	}
 
 	/**
@@ -133,8 +133,8 @@ public class RunTimeDependencyImpl extends ProxyResolvingEObjectImpl implements 
 	 * @generated
 	 */
 	@Override
-	public boolean isLoadTimeForInheritance() {
-		return loadTimeForInheritance;
+	public boolean isLoadtimeForInheritance() {
+		return loadtimeForInheritance;
 	}
 
 	/**
@@ -143,11 +143,11 @@ public class RunTimeDependencyImpl extends ProxyResolvingEObjectImpl implements 
 	 * @generated
 	 */
 	@Override
-	public void setLoadTimeForInheritance(boolean newLoadTimeForInheritance) {
-		boolean oldLoadTimeForInheritance = loadTimeForInheritance;
-		loadTimeForInheritance = newLoadTimeForInheritance;
+	public void setLoadtimeForInheritance(boolean newLoadtimeForInheritance) {
+		boolean oldLoadtimeForInheritance = loadtimeForInheritance;
+		loadtimeForInheritance = newLoadtimeForInheritance;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.RUN_TIME_DEPENDENCY__LOAD_TIME_FOR_INHERITANCE, oldLoadTimeForInheritance, loadTimeForInheritance));
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.RUNTIME_DEPENDENCY__LOADTIME_FOR_INHERITANCE, oldLoadtimeForInheritance, loadtimeForInheritance));
 	}
 
 	/**
@@ -158,11 +158,11 @@ public class RunTimeDependencyImpl extends ProxyResolvingEObjectImpl implements 
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case TypesPackage.RUN_TIME_DEPENDENCY__TARGET:
+			case TypesPackage.RUNTIME_DEPENDENCY__TARGET:
 				if (resolve) return getTarget();
 				return basicGetTarget();
-			case TypesPackage.RUN_TIME_DEPENDENCY__LOAD_TIME_FOR_INHERITANCE:
-				return isLoadTimeForInheritance();
+			case TypesPackage.RUNTIME_DEPENDENCY__LOADTIME_FOR_INHERITANCE:
+				return isLoadtimeForInheritance();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -175,11 +175,11 @@ public class RunTimeDependencyImpl extends ProxyResolvingEObjectImpl implements 
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case TypesPackage.RUN_TIME_DEPENDENCY__TARGET:
+			case TypesPackage.RUNTIME_DEPENDENCY__TARGET:
 				setTarget((TModule)newValue);
 				return;
-			case TypesPackage.RUN_TIME_DEPENDENCY__LOAD_TIME_FOR_INHERITANCE:
-				setLoadTimeForInheritance((Boolean)newValue);
+			case TypesPackage.RUNTIME_DEPENDENCY__LOADTIME_FOR_INHERITANCE:
+				setLoadtimeForInheritance((Boolean)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -193,11 +193,11 @@ public class RunTimeDependencyImpl extends ProxyResolvingEObjectImpl implements 
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case TypesPackage.RUN_TIME_DEPENDENCY__TARGET:
+			case TypesPackage.RUNTIME_DEPENDENCY__TARGET:
 				setTarget((TModule)null);
 				return;
-			case TypesPackage.RUN_TIME_DEPENDENCY__LOAD_TIME_FOR_INHERITANCE:
-				setLoadTimeForInheritance(LOAD_TIME_FOR_INHERITANCE_EDEFAULT);
+			case TypesPackage.RUNTIME_DEPENDENCY__LOADTIME_FOR_INHERITANCE:
+				setLoadtimeForInheritance(LOADTIME_FOR_INHERITANCE_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -211,10 +211,10 @@ public class RunTimeDependencyImpl extends ProxyResolvingEObjectImpl implements 
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case TypesPackage.RUN_TIME_DEPENDENCY__TARGET:
+			case TypesPackage.RUNTIME_DEPENDENCY__TARGET:
 				return target != null;
-			case TypesPackage.RUN_TIME_DEPENDENCY__LOAD_TIME_FOR_INHERITANCE:
-				return loadTimeForInheritance != LOAD_TIME_FOR_INHERITANCE_EDEFAULT;
+			case TypesPackage.RUNTIME_DEPENDENCY__LOADTIME_FOR_INHERITANCE:
+				return loadtimeForInheritance != LOADTIME_FOR_INHERITANCE_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -229,10 +229,10 @@ public class RunTimeDependencyImpl extends ProxyResolvingEObjectImpl implements 
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (loadTimeForInheritance: ");
-		result.append(loadTimeForInheritance);
+		result.append(" (loadtimeForInheritance: ");
+		result.append(loadtimeForInheritance);
 		result.append(')');
 		return result.toString();
 	}
 
-} //RunTimeDependencyImpl
+} //RuntimeDependencyImpl

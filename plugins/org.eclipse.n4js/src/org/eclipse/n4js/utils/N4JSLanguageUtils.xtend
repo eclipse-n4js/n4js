@@ -926,7 +926,7 @@ public class N4JSLanguageUtils {
 	 * The implementation of this method does *NOT* rely on type model elements and can therefore be used
 	 * in early stages before the types builder has run and in the transpiler!
 	 */
-	def static boolean hasRunTimeRepresentation(N4TypeDeclaration typeDecl, JavaScriptVariantHelper javaScriptVariantHelper) {
+	def static boolean hasRuntimeRepresentation(N4TypeDeclaration typeDecl, JavaScriptVariantHelper javaScriptVariantHelper) {
 		val isNonN4JSInterfaceInN4JSD = typeDecl instanceof N4InterfaceDeclaration
 			&& javaScriptVariantHelper.isExternalMode(typeDecl)
 			&& !AnnotationDefinition.N4JS.hasAnnotation(typeDecl as N4InterfaceDeclaration);
@@ -942,7 +942,7 @@ public class N4JSLanguageUtils {
 	 * The implementation of this method does *NOT* rely on the AST and can therefore be used in resources
 	 * that were loaded from the Xtext index.
 	 */
-	def static boolean hasRunTimeRepresentation(IdentifiableElement element, JavaScriptVariantHelper javaScriptVariantHelper) {
+	def static boolean hasRuntimeRepresentation(IdentifiableElement element, JavaScriptVariantHelper javaScriptVariantHelper) {
 		val isNonN4JSInterfaceInN4JSD = element instanceof TInterface
 			&& javaScriptVariantHelper.isExternalMode(element) && !AnnotationDefinition.N4JS.hasAnnotation(element as TInterface);
 		val isStringBasedEnum = element instanceof TEnum

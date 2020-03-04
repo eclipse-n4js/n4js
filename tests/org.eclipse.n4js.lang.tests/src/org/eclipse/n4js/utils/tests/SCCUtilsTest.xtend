@@ -183,7 +183,7 @@ class SCCUtilsTest {
 
 	def private List<List<TModule>> findSCCs(Iterable<TModule> modules) {
 		return SCCUtils.findSCCs(modules.iterator, [ m |
-			m.dependenciesRunTime.map[target]
+			m.dependenciesRuntime.map[target]
 		]);
 	}
 
@@ -200,11 +200,11 @@ class SCCUtilsTest {
 	}
 
 	def private void dependsOn(TModule module, TModule... dependencies) {
-		module.dependenciesRunTime.clear();
+		module.dependenciesRuntime.clear();
 		for (dep : dependencies) {
-			module.dependenciesRunTime += TypesFactory.eINSTANCE.createRunTimeDependency => [
+			module.dependenciesRuntime += TypesFactory.eINSTANCE.createRuntimeDependency => [
 				target = dep;
-				loadTimeForInheritance = false;
+				loadtimeForInheritance = false;
 			];
 		}
 	}

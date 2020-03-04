@@ -241,7 +241,7 @@ abstract public class AbstractIdeTest {
 
 	/** Same as {@link #openFile(String, String)}, but content is read from disk. */
 	protected void openFile(String moduleName) throws IOException {
-		FileURI fileURI = getFileUriFromModuleName(moduleName);
+		FileURI fileURI = getFileURIFromModuleName(moduleName);
 		Path filePath = fileURI.toJavaIoFile().toPath();
 		String content = Files.readString(filePath);
 		openFile(moduleName, content);
@@ -250,7 +250,7 @@ abstract public class AbstractIdeTest {
 	/** Opens the given file in the LSP server and waits for the triggered build to finish. */
 	protected void openFile(String moduleName, String contents) {
 		Assert.assertNotNull(contents);
-		FileURI fileURI = getFileUriFromModuleName(moduleName);
+		FileURI fileURI = getFileURIFromModuleName(moduleName);
 
 		TextDocumentItem textDocument = new TextDocumentItem();
 		textDocument.setLanguageId(languageInfo.getLanguageName());
@@ -273,7 +273,7 @@ abstract public class AbstractIdeTest {
 	 */
 	protected void changeNonOpenedFile(String moduleName,
 			@SuppressWarnings("unchecked") Pair<String, String>... replacements) throws IOException {
-		FileURI fileURI = getFileUriFromModuleName(moduleName);
+		FileURI fileURI = getFileURIFromModuleName(moduleName);
 		// 1) change on disk
 		changeFileOnDiskWithoutNotification(fileURI, replacements);
 		// 2) notify LSP server
@@ -291,7 +291,7 @@ abstract public class AbstractIdeTest {
 	 */
 	protected void changeOpenedFile(String moduleName,
 			@SuppressWarnings("unchecked") Pair<String, String>... replacements) throws IOException {
-		FileURI fileURI = getFileUriFromModuleName(moduleName);
+		FileURI fileURI = getFileURIFromModuleName(moduleName);
 		Path filePath = fileURI.toJavaIoFile().toPath();
 		String oldContent = Files.readString(filePath);
 		// 1) change on disk
@@ -309,7 +309,7 @@ abstract public class AbstractIdeTest {
 	 */
 	protected void changeFileOnDiskWithoutNotification(String moduleName,
 			@SuppressWarnings("unchecked") Pair<String, String>... replacements) throws IOException {
-		FileURI fileURI = getFileUriFromModuleName(moduleName);
+		FileURI fileURI = getFileURIFromModuleName(moduleName);
 		changeFileOnDiskWithoutNotification(fileURI, replacements);
 	}
 
@@ -455,12 +455,12 @@ abstract public class AbstractIdeTest {
 	private <T> Map<FileURI, T> convertModuleNamePairsToIdMap(
 			@SuppressWarnings("unchecked") Pair<String, T>... moduleNameToExpectedIssues) {
 		return Stream.of(moduleNameToExpectedIssues).collect(Collectors.toMap(
-				p -> getFileUriFromModuleName(p.getKey()),
+				p -> getFileURIFromModuleName(p.getKey()),
 				Pair::getValue));
 	}
 
 	/** Translates a given module name to a file URI used in LSP call data. */
-	protected FileURI getFileUriFromModuleName(String moduleName) {
+	protected FileURI getFileURIFromModuleName(String moduleName) {
 		moduleName = getModuleNameOrDefault(moduleName) + "." + FILE_EXTENSION;
 		Path completeFilePath = Path.of(getRoot().toString(), PROJECT_NAME, SRC_FOLDER, moduleName);
 		return new FileURI(completeFilePath.toFile());

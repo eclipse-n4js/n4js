@@ -270,40 +270,40 @@ public interface TypesPackage extends EPackage {
 	int TMODULE__RECONCILED = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 10;
 
 	/**
-	 * The feature id for the '<em><b>Dependencies Run Time</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Dependencies Runtime</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__DEPENDENCIES_RUN_TIME = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 11;
+	int TMODULE__DEPENDENCIES_RUNTIME = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 11;
 
 	/**
-	 * The feature id for the '<em><b>Cyclic Modules Run Time</b></em>' reference list.
+	 * The feature id for the '<em><b>Cyclic Modules Runtime</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__CYCLIC_MODULES_RUN_TIME = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 12;
+	int TMODULE__CYCLIC_MODULES_RUNTIME = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 12;
 
 	/**
-	 * The feature id for the '<em><b>Cyclic Modules Load Time For Inheritance</b></em>' reference list.
+	 * The feature id for the '<em><b>Cyclic Modules Loadtime For Inheritance</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__CYCLIC_MODULES_LOAD_TIME_FOR_INHERITANCE = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 13;
+	int TMODULE__CYCLIC_MODULES_LOADTIME_FOR_INHERITANCE = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 13;
 
 	/**
-	 * The feature id for the '<em><b>Run Time Cyclic Load Time Dependents</b></em>' reference list.
+	 * The feature id for the '<em><b>Runtime Cyclic Loadtime Dependents</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__RUN_TIME_CYCLIC_LOAD_TIME_DEPENDENTS = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 14;
+	int TMODULE__RUNTIME_CYCLIC_LOADTIME_DEPENDENTS = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 14;
 
 	/**
 	 * The feature id for the '<em><b>Top Level Types</b></em>' containment reference list.
@@ -387,13 +387,13 @@ public interface TypesPackage extends EPackage {
 	int TMODULE_FEATURE_COUNT = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 23;
 
 	/**
-	 * The operation id for the '<em>Has Direct Load Time Dependency To</em>' operation.
+	 * The operation id for the '<em>Has Direct Loadtime Dependency To</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE___HAS_DIRECT_LOAD_TIME_DEPENDENCY_TO__TMODULE = SYNTAX_RELATED_TELEMENT_OPERATION_COUNT + 0;
+	int TMODULE___HAS_DIRECT_LOADTIME_DEPENDENCY_TO__TMODULE = SYNTAX_RELATED_TELEMENT_OPERATION_COUNT + 0;
 
 	/**
 	 * The number of operations of the '<em>TModule</em>' class.
@@ -405,14 +405,14 @@ public interface TypesPackage extends EPackage {
 	int TMODULE_OPERATION_COUNT = SYNTAX_RELATED_TELEMENT_OPERATION_COUNT + 1;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.RunTimeDependencyImpl <em>Run Time Dependency</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.RuntimeDependencyImpl <em>Runtime Dependency</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.ts.types.impl.RunTimeDependencyImpl
-	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getRunTimeDependency()
+	 * @see org.eclipse.n4js.ts.types.impl.RuntimeDependencyImpl
+	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getRuntimeDependency()
 	 * @generated
 	 */
-	int RUN_TIME_DEPENDENCY = 2;
+	int RUNTIME_DEPENDENCY = 2;
 
 	/**
 	 * The feature id for the '<em><b>Target</b></em>' reference.
@@ -421,34 +421,34 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int RUN_TIME_DEPENDENCY__TARGET = 0;
+	int RUNTIME_DEPENDENCY__TARGET = 0;
 
 	/**
-	 * The feature id for the '<em><b>Load Time For Inheritance</b></em>' attribute.
+	 * The feature id for the '<em><b>Loadtime For Inheritance</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int RUN_TIME_DEPENDENCY__LOAD_TIME_FOR_INHERITANCE = 1;
+	int RUNTIME_DEPENDENCY__LOADTIME_FOR_INHERITANCE = 1;
 
 	/**
-	 * The number of structural features of the '<em>Run Time Dependency</em>' class.
+	 * The number of structural features of the '<em>Runtime Dependency</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int RUN_TIME_DEPENDENCY_FEATURE_COUNT = 2;
+	int RUNTIME_DEPENDENCY_FEATURE_COUNT = 2;
 
 	/**
-	 * The number of operations of the '<em>Run Time Dependency</em>' class.
+	 * The number of operations of the '<em>Runtime Dependency</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int RUN_TIME_DEPENDENCY_OPERATION_COUNT = 0;
+	int RUNTIME_DEPENDENCY_OPERATION_COUNT = 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.ComposedMemberCacheImpl <em>Composed Member Cache</em>}' class.
@@ -12923,48 +12923,48 @@ public interface TypesPackage extends EPackage {
 	EAttribute getTModule_Reconciled();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.types.TModule#getDependenciesRunTime <em>Dependencies Run Time</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.types.TModule#getDependenciesRuntime <em>Dependencies Runtime</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Dependencies Run Time</em>'.
-	 * @see org.eclipse.n4js.ts.types.TModule#getDependenciesRunTime()
+	 * @return the meta object for the containment reference list '<em>Dependencies Runtime</em>'.
+	 * @see org.eclipse.n4js.ts.types.TModule#getDependenciesRuntime()
 	 * @see #getTModule()
 	 * @generated
 	 */
-	EReference getTModule_DependenciesRunTime();
+	EReference getTModule_DependenciesRuntime();
 
 	/**
-	 * Returns the meta object for the reference list '{@link org.eclipse.n4js.ts.types.TModule#getCyclicModulesRunTime <em>Cyclic Modules Run Time</em>}'.
+	 * Returns the meta object for the reference list '{@link org.eclipse.n4js.ts.types.TModule#getCyclicModulesRuntime <em>Cyclic Modules Runtime</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Cyclic Modules Run Time</em>'.
-	 * @see org.eclipse.n4js.ts.types.TModule#getCyclicModulesRunTime()
+	 * @return the meta object for the reference list '<em>Cyclic Modules Runtime</em>'.
+	 * @see org.eclipse.n4js.ts.types.TModule#getCyclicModulesRuntime()
 	 * @see #getTModule()
 	 * @generated
 	 */
-	EReference getTModule_CyclicModulesRunTime();
+	EReference getTModule_CyclicModulesRuntime();
 
 	/**
-	 * Returns the meta object for the reference list '{@link org.eclipse.n4js.ts.types.TModule#getCyclicModulesLoadTimeForInheritance <em>Cyclic Modules Load Time For Inheritance</em>}'.
+	 * Returns the meta object for the reference list '{@link org.eclipse.n4js.ts.types.TModule#getCyclicModulesLoadtimeForInheritance <em>Cyclic Modules Loadtime For Inheritance</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Cyclic Modules Load Time For Inheritance</em>'.
-	 * @see org.eclipse.n4js.ts.types.TModule#getCyclicModulesLoadTimeForInheritance()
+	 * @return the meta object for the reference list '<em>Cyclic Modules Loadtime For Inheritance</em>'.
+	 * @see org.eclipse.n4js.ts.types.TModule#getCyclicModulesLoadtimeForInheritance()
 	 * @see #getTModule()
 	 * @generated
 	 */
-	EReference getTModule_CyclicModulesLoadTimeForInheritance();
+	EReference getTModule_CyclicModulesLoadtimeForInheritance();
 
 	/**
-	 * Returns the meta object for the reference list '{@link org.eclipse.n4js.ts.types.TModule#getRunTimeCyclicLoadTimeDependents <em>Run Time Cyclic Load Time Dependents</em>}'.
+	 * Returns the meta object for the reference list '{@link org.eclipse.n4js.ts.types.TModule#getRuntimeCyclicLoadtimeDependents <em>Runtime Cyclic Loadtime Dependents</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Run Time Cyclic Load Time Dependents</em>'.
-	 * @see org.eclipse.n4js.ts.types.TModule#getRunTimeCyclicLoadTimeDependents()
+	 * @return the meta object for the reference list '<em>Runtime Cyclic Loadtime Dependents</em>'.
+	 * @see org.eclipse.n4js.ts.types.TModule#getRuntimeCyclicLoadtimeDependents()
 	 * @see #getTModule()
 	 * @generated
 	 */
-	EReference getTModule_RunTimeCyclicLoadTimeDependents();
+	EReference getTModule_RuntimeCyclicLoadtimeDependents();
 
 	/**
 	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.types.TModule#getTopLevelTypes <em>Top Level Types</em>}'.
@@ -13055,46 +13055,46 @@ public interface TypesPackage extends EPackage {
 	EAttribute getTModule_ModuleSpecifier();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TModule#hasDirectLoadTimeDependencyTo(org.eclipse.n4js.ts.types.TModule) <em>Has Direct Load Time Dependency To</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TModule#hasDirectLoadtimeDependencyTo(org.eclipse.n4js.ts.types.TModule) <em>Has Direct Loadtime Dependency To</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Has Direct Load Time Dependency To</em>' operation.
-	 * @see org.eclipse.n4js.ts.types.TModule#hasDirectLoadTimeDependencyTo(org.eclipse.n4js.ts.types.TModule)
+	 * @return the meta object for the '<em>Has Direct Loadtime Dependency To</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.TModule#hasDirectLoadtimeDependencyTo(org.eclipse.n4js.ts.types.TModule)
 	 * @generated
 	 */
-	EOperation getTModule__HasDirectLoadTimeDependencyTo__TModule();
+	EOperation getTModule__HasDirectLoadtimeDependencyTo__TModule();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.RunTimeDependency <em>Run Time Dependency</em>}'.
+	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.RuntimeDependency <em>Runtime Dependency</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Run Time Dependency</em>'.
-	 * @see org.eclipse.n4js.ts.types.RunTimeDependency
+	 * @return the meta object for class '<em>Runtime Dependency</em>'.
+	 * @see org.eclipse.n4js.ts.types.RuntimeDependency
 	 * @generated
 	 */
-	EClass getRunTimeDependency();
+	EClass getRuntimeDependency();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.n4js.ts.types.RunTimeDependency#getTarget <em>Target</em>}'.
+	 * Returns the meta object for the reference '{@link org.eclipse.n4js.ts.types.RuntimeDependency#getTarget <em>Target</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Target</em>'.
-	 * @see org.eclipse.n4js.ts.types.RunTimeDependency#getTarget()
-	 * @see #getRunTimeDependency()
+	 * @see org.eclipse.n4js.ts.types.RuntimeDependency#getTarget()
+	 * @see #getRuntimeDependency()
 	 * @generated
 	 */
-	EReference getRunTimeDependency_Target();
+	EReference getRuntimeDependency_Target();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.RunTimeDependency#isLoadTimeForInheritance <em>Load Time For Inheritance</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.RuntimeDependency#isLoadtimeForInheritance <em>Loadtime For Inheritance</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Load Time For Inheritance</em>'.
-	 * @see org.eclipse.n4js.ts.types.RunTimeDependency#isLoadTimeForInheritance()
-	 * @see #getRunTimeDependency()
+	 * @return the meta object for the attribute '<em>Loadtime For Inheritance</em>'.
+	 * @see org.eclipse.n4js.ts.types.RuntimeDependency#isLoadtimeForInheritance()
+	 * @see #getRuntimeDependency()
 	 * @generated
 	 */
-	EAttribute getRunTimeDependency_LoadTimeForInheritance();
+	EAttribute getRuntimeDependency_LoadtimeForInheritance();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.ComposedMemberCache <em>Composed Member Cache</em>}'.
@@ -15972,36 +15972,36 @@ public interface TypesPackage extends EPackage {
 		EAttribute TMODULE__RECONCILED = eINSTANCE.getTModule_Reconciled();
 
 		/**
-		 * The meta object literal for the '<em><b>Dependencies Run Time</b></em>' containment reference list feature.
+		 * The meta object literal for the '<em><b>Dependencies Runtime</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference TMODULE__DEPENDENCIES_RUN_TIME = eINSTANCE.getTModule_DependenciesRunTime();
+		EReference TMODULE__DEPENDENCIES_RUNTIME = eINSTANCE.getTModule_DependenciesRuntime();
 
 		/**
-		 * The meta object literal for the '<em><b>Cyclic Modules Run Time</b></em>' reference list feature.
+		 * The meta object literal for the '<em><b>Cyclic Modules Runtime</b></em>' reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference TMODULE__CYCLIC_MODULES_RUN_TIME = eINSTANCE.getTModule_CyclicModulesRunTime();
+		EReference TMODULE__CYCLIC_MODULES_RUNTIME = eINSTANCE.getTModule_CyclicModulesRuntime();
 
 		/**
-		 * The meta object literal for the '<em><b>Cyclic Modules Load Time For Inheritance</b></em>' reference list feature.
+		 * The meta object literal for the '<em><b>Cyclic Modules Loadtime For Inheritance</b></em>' reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference TMODULE__CYCLIC_MODULES_LOAD_TIME_FOR_INHERITANCE = eINSTANCE.getTModule_CyclicModulesLoadTimeForInheritance();
+		EReference TMODULE__CYCLIC_MODULES_LOADTIME_FOR_INHERITANCE = eINSTANCE.getTModule_CyclicModulesLoadtimeForInheritance();
 
 		/**
-		 * The meta object literal for the '<em><b>Run Time Cyclic Load Time Dependents</b></em>' reference list feature.
+		 * The meta object literal for the '<em><b>Runtime Cyclic Loadtime Dependents</b></em>' reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference TMODULE__RUN_TIME_CYCLIC_LOAD_TIME_DEPENDENTS = eINSTANCE.getTModule_RunTimeCyclicLoadTimeDependents();
+		EReference TMODULE__RUNTIME_CYCLIC_LOADTIME_DEPENDENTS = eINSTANCE.getTModule_RuntimeCyclicLoadtimeDependents();
 
 		/**
 		 * The meta object literal for the '<em><b>Top Level Types</b></em>' containment reference list feature.
@@ -16068,22 +16068,22 @@ public interface TypesPackage extends EPackage {
 		EAttribute TMODULE__MODULE_SPECIFIER = eINSTANCE.getTModule_ModuleSpecifier();
 
 		/**
-		 * The meta object literal for the '<em><b>Has Direct Load Time Dependency To</b></em>' operation.
+		 * The meta object literal for the '<em><b>Has Direct Loadtime Dependency To</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation TMODULE___HAS_DIRECT_LOAD_TIME_DEPENDENCY_TO__TMODULE = eINSTANCE.getTModule__HasDirectLoadTimeDependencyTo__TModule();
+		EOperation TMODULE___HAS_DIRECT_LOADTIME_DEPENDENCY_TO__TMODULE = eINSTANCE.getTModule__HasDirectLoadtimeDependencyTo__TModule();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.RunTimeDependencyImpl <em>Run Time Dependency</em>}' class.
+		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.RuntimeDependencyImpl <em>Runtime Dependency</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.ts.types.impl.RunTimeDependencyImpl
-		 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getRunTimeDependency()
+		 * @see org.eclipse.n4js.ts.types.impl.RuntimeDependencyImpl
+		 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getRuntimeDependency()
 		 * @generated
 		 */
-		EClass RUN_TIME_DEPENDENCY = eINSTANCE.getRunTimeDependency();
+		EClass RUNTIME_DEPENDENCY = eINSTANCE.getRuntimeDependency();
 
 		/**
 		 * The meta object literal for the '<em><b>Target</b></em>' reference feature.
@@ -16091,15 +16091,15 @@ public interface TypesPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference RUN_TIME_DEPENDENCY__TARGET = eINSTANCE.getRunTimeDependency_Target();
+		EReference RUNTIME_DEPENDENCY__TARGET = eINSTANCE.getRuntimeDependency_Target();
 
 		/**
-		 * The meta object literal for the '<em><b>Load Time For Inheritance</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Loadtime For Inheritance</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute RUN_TIME_DEPENDENCY__LOAD_TIME_FOR_INHERITANCE = eINSTANCE.getRunTimeDependency_LoadTimeForInheritance();
+		EAttribute RUNTIME_DEPENDENCY__LOADTIME_FOR_INHERITANCE = eINSTANCE.getRuntimeDependency_LoadtimeForInheritance();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.ComposedMemberCacheImpl <em>Composed Member Cache</em>}' class.

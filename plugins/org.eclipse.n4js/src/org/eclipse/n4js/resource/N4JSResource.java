@@ -407,7 +407,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		TModule deserializedModule = null;
 		Iterable<IEObjectDescription> modules = description.getExportedObjectsByType(TypesPackage.Literals.TMODULE);
 		for (IEObjectDescription module : modules) {
-			deserializedModule = UserdataMapper.getDeserializedModuleFromDescription(module, getURI());
+			deserializedModule = UserDataMapper.getDeserializedModuleFromDescription(module, getURI());
 			if (deserializedModule != null) {
 				break;
 			}

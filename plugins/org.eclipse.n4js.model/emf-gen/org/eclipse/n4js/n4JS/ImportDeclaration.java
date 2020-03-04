@@ -157,12 +157,12 @@ public interface ImportDeclaration extends AnnotableScriptElement {
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * Tells whether this import declaration will be present in the transpiled output code.
-	 * Derived from {@link ImportSpecifier#isRetainedAtRunTime() retainedAtRunTime} and
+	 * Derived from {@link ImportSpecifier#isRetainedAtRuntime() retainedAtRuntime} and
 	 * therefore only valid after AST traversal has completed.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
-	boolean isRetainedAtRunTime();
+	boolean isRetainedAtRuntime();
 
 } // ImportDeclaration

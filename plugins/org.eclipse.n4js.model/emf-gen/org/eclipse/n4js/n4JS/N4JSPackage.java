@@ -721,13 +721,13 @@ public interface N4JSPackage extends EPackage {
 	int IMPORT_DECLARATION___IS_BARE = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
-	 * The operation id for the '<em>Is Retained At Run Time</em>' operation.
+	 * The operation id for the '<em>Is Retained At Runtime</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IMPORT_DECLARATION___IS_RETAINED_AT_RUN_TIME = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 1;
+	int IMPORT_DECLARATION___IS_RETAINED_AT_RUNTIME = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 1;
 
 	/**
 	 * The number of operations of the '<em>Import Declaration</em>' class.
@@ -758,13 +758,13 @@ public interface N4JSPackage extends EPackage {
 	int IMPORT_SPECIFIER__FLAGGED_USED_IN_CODE = 0;
 
 	/**
-	 * The feature id for the '<em><b>Retained At Run Time</b></em>' attribute.
+	 * The feature id for the '<em><b>Retained At Runtime</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IMPORT_SPECIFIER__RETAINED_AT_RUN_TIME = 1;
+	int IMPORT_SPECIFIER__RETAINED_AT_RUNTIME = 1;
 
 	/**
 	 * The number of structural features of the '<em>Import Specifier</em>' class.
@@ -804,13 +804,13 @@ public interface N4JSPackage extends EPackage {
 	int NAMED_IMPORT_SPECIFIER__FLAGGED_USED_IN_CODE = IMPORT_SPECIFIER__FLAGGED_USED_IN_CODE;
 
 	/**
-	 * The feature id for the '<em><b>Retained At Run Time</b></em>' attribute.
+	 * The feature id for the '<em><b>Retained At Runtime</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int NAMED_IMPORT_SPECIFIER__RETAINED_AT_RUN_TIME = IMPORT_SPECIFIER__RETAINED_AT_RUN_TIME;
+	int NAMED_IMPORT_SPECIFIER__RETAINED_AT_RUNTIME = IMPORT_SPECIFIER__RETAINED_AT_RUNTIME;
 
 	/**
 	 * The feature id for the '<em><b>Imported Element</b></em>' reference.
@@ -886,13 +886,13 @@ public interface N4JSPackage extends EPackage {
 	int DEFAULT_IMPORT_SPECIFIER__FLAGGED_USED_IN_CODE = NAMED_IMPORT_SPECIFIER__FLAGGED_USED_IN_CODE;
 
 	/**
-	 * The feature id for the '<em><b>Retained At Run Time</b></em>' attribute.
+	 * The feature id for the '<em><b>Retained At Runtime</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DEFAULT_IMPORT_SPECIFIER__RETAINED_AT_RUN_TIME = NAMED_IMPORT_SPECIFIER__RETAINED_AT_RUN_TIME;
+	int DEFAULT_IMPORT_SPECIFIER__RETAINED_AT_RUNTIME = NAMED_IMPORT_SPECIFIER__RETAINED_AT_RUNTIME;
 
 	/**
 	 * The feature id for the '<em><b>Imported Element</b></em>' reference.
@@ -977,13 +977,13 @@ public interface N4JSPackage extends EPackage {
 	int NAMESPACE_IMPORT_SPECIFIER__FLAGGED_USED_IN_CODE = IMPORT_SPECIFIER__FLAGGED_USED_IN_CODE;
 
 	/**
-	 * The feature id for the '<em><b>Retained At Run Time</b></em>' attribute.
+	 * The feature id for the '<em><b>Retained At Runtime</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int NAMESPACE_IMPORT_SPECIFIER__RETAINED_AT_RUN_TIME = IMPORT_SPECIFIER__RETAINED_AT_RUN_TIME;
+	int NAMESPACE_IMPORT_SPECIFIER__RETAINED_AT_RUNTIME = IMPORT_SPECIFIER__RETAINED_AT_RUNTIME;
 
 	/**
 	 * The feature id for the '<em><b>Defined Type</b></em>' reference.
@@ -16543,14 +16543,14 @@ public interface N4JSPackage extends EPackage {
 	EOperation getImportDeclaration__IsBare();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.ImportDeclaration#isRetainedAtRunTime() <em>Is Retained At Run Time</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.ImportDeclaration#isRetainedAtRuntime() <em>Is Retained At Runtime</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Is Retained At Run Time</em>' operation.
-	 * @see org.eclipse.n4js.n4JS.ImportDeclaration#isRetainedAtRunTime()
+	 * @return the meta object for the '<em>Is Retained At Runtime</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.ImportDeclaration#isRetainedAtRuntime()
 	 * @generated
 	 */
-	EOperation getImportDeclaration__IsRetainedAtRunTime();
+	EOperation getImportDeclaration__IsRetainedAtRuntime();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.ImportSpecifier <em>Import Specifier</em>}'.
@@ -16574,15 +16574,15 @@ public interface N4JSPackage extends EPackage {
 	EAttribute getImportSpecifier_FlaggedUsedInCode();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4JS.ImportSpecifier#isRetainedAtRunTime <em>Retained At Run Time</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4JS.ImportSpecifier#isRetainedAtRuntime <em>Retained At Runtime</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Retained At Run Time</em>'.
-	 * @see org.eclipse.n4js.n4JS.ImportSpecifier#isRetainedAtRunTime()
+	 * @return the meta object for the attribute '<em>Retained At Runtime</em>'.
+	 * @see org.eclipse.n4js.n4JS.ImportSpecifier#isRetainedAtRuntime()
 	 * @see #getImportSpecifier()
 	 * @generated
 	 */
-	EAttribute getImportSpecifier_RetainedAtRunTime();
+	EAttribute getImportSpecifier_RetainedAtRuntime();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.NamedImportSpecifier <em>Named Import Specifier</em>}'.
@@ -22468,12 +22468,12 @@ public interface N4JSPackage extends EPackage {
 		EOperation IMPORT_DECLARATION___IS_BARE = eINSTANCE.getImportDeclaration__IsBare();
 
 		/**
-		 * The meta object literal for the '<em><b>Is Retained At Run Time</b></em>' operation.
+		 * The meta object literal for the '<em><b>Is Retained At Runtime</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation IMPORT_DECLARATION___IS_RETAINED_AT_RUN_TIME = eINSTANCE.getImportDeclaration__IsRetainedAtRunTime();
+		EOperation IMPORT_DECLARATION___IS_RETAINED_AT_RUNTIME = eINSTANCE.getImportDeclaration__IsRetainedAtRuntime();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.ImportSpecifierImpl <em>Import Specifier</em>}' class.
@@ -22494,12 +22494,12 @@ public interface N4JSPackage extends EPackage {
 		EAttribute IMPORT_SPECIFIER__FLAGGED_USED_IN_CODE = eINSTANCE.getImportSpecifier_FlaggedUsedInCode();
 
 		/**
-		 * The meta object literal for the '<em><b>Retained At Run Time</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Retained At Runtime</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute IMPORT_SPECIFIER__RETAINED_AT_RUN_TIME = eINSTANCE.getImportSpecifier_RetainedAtRunTime();
+		EAttribute IMPORT_SPECIFIER__RETAINED_AT_RUNTIME = eINSTANCE.getImportSpecifier_RetainedAtRuntime();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.NamedImportSpecifierImpl <em>Named Import Specifier</em>}' class.

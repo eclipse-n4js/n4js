@@ -48,7 +48,7 @@ abstract public class AbstractCompletionTest extends AbstractStructuredIdeTest<T
 		completionParams.setPosition(pos);
 
 		// CompletionContext context = new CompletionContext();
-		FileURI uri = getFileUriFromModuleName(tcc.getFilePath());
+		FileURI uri = getFileURIFromModuleName(tcc.getFilePath());
 		// context.set(Lists.newArrayList(getDiagnostics(uri)));
 		// completionParams.setContext(context);
 

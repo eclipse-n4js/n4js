@@ -86,8 +86,8 @@ public class TypesAdapterFactory extends AdapterFactoryImpl {
 				return createTModuleAdapter();
 			}
 			@Override
-			public Adapter caseRunTimeDependency(RunTimeDependency object) {
-				return createRunTimeDependencyAdapter();
+			public Adapter caseRuntimeDependency(RuntimeDependency object) {
+				return createRuntimeDependencyAdapter();
 			}
 			@Override
 			public Adapter caseComposedMemberCache(ComposedMemberCache object) {
@@ -358,16 +358,16 @@ public class TypesAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.types.RunTimeDependency <em>Run Time Dependency</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.types.RuntimeDependency <em>Runtime Dependency</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.n4js.ts.types.RunTimeDependency
+	 * @see org.eclipse.n4js.ts.types.RuntimeDependency
 	 * @generated
 	 */
-	public Adapter createRunTimeDependencyAdapter() {
+	public Adapter createRuntimeDependencyAdapter() {
 		return null;
 	}
 

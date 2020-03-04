@@ -53,7 +53,7 @@ abstract public class AbstractCodeActionTest extends AbstractStructuredIdeTest<T
 		codeActionParams.setRange(range);
 
 		CodeActionContext context = new CodeActionContext();
-		FileURI uri = getFileUriFromModuleName(tcac.getFilePath());
+		FileURI uri = getFileURIFromModuleName(tcac.getFilePath());
 		context.setDiagnostics(Lists.newArrayList(getIssues(uri)));
 		codeActionParams.setContext(context);
 

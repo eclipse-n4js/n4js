@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.ImportSpecifier#isFlaggedUsedInCode <em>Flagged Used In Code</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.ImportSpecifier#isRetainedAtRunTime <em>Retained At Run Time</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.ImportSpecifier#isRetainedAtRuntime <em>Retained At Runtime</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.n4JS.N4JSPackage#getImportSpecifier()
@@ -57,29 +57,29 @@ public interface ImportSpecifier extends EObject {
 	void setFlaggedUsedInCode(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Retained At Run Time</b></em>' attribute.
+	 * Returns the value of the '<em><b>Retained At Runtime</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * Tells whether this import specifier will be present in the transpiled output code.
 	 * Set at the end of AST traversal.
 	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Retained At Run Time</em>' attribute.
-	 * @see #setRetainedAtRunTime(boolean)
-	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getImportSpecifier_RetainedAtRunTime()
+	 * @return the value of the '<em>Retained At Runtime</em>' attribute.
+	 * @see #setRetainedAtRuntime(boolean)
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getImportSpecifier_RetainedAtRuntime()
 	 * @model unique="false" transient="true"
 	 * @generated
 	 */
-	boolean isRetainedAtRunTime();
+	boolean isRetainedAtRuntime();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.ImportSpecifier#isRetainedAtRunTime <em>Retained At Run Time</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.ImportSpecifier#isRetainedAtRuntime <em>Retained At Runtime</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Retained At Run Time</em>' attribute.
-	 * @see #isRetainedAtRunTime()
+	 * @param value the new value of the '<em>Retained At Runtime</em>' attribute.
+	 * @see #isRetainedAtRuntime()
 	 * @generated
 	 */
-	void setRetainedAtRunTime(boolean value);
+	void setRetainedAtRuntime(boolean value);
 
 } // ImportSpecifier

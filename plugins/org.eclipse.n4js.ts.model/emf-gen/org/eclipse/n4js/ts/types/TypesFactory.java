@@ -48,13 +48,13 @@ public interface TypesFactory extends EFactory {
 	TModule createTModule();
 
 	/**
-	 * Returns a new object of class '<em>Run Time Dependency</em>'.
+	 * Returns a new object of class '<em>Runtime Dependency</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Run Time Dependency</em>'.
+	 * @return a new object of class '<em>Runtime Dependency</em>'.
 	 * @generated
 	 */
-	RunTimeDependency createRunTimeDependency();
+	RuntimeDependency createRuntimeDependency();
 
 	/**
 	 * Returns a new object of class '<em>Composed Member Cache</em>'.

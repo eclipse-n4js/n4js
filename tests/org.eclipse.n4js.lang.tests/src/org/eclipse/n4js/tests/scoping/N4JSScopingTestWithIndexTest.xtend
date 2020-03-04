@@ -24,7 +24,7 @@ import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.resource.N4JSResource
-import org.eclipse.n4js.resource.UserdataMapper
+import org.eclipse.n4js.resource.UserDataMapper
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.utils.Log
@@ -127,12 +127,12 @@ class N4JSScopingTestWithIndexTest {
 		
 		
 		val moduleDescription = eoDescs.iterator.toList.findFirst[name.lastSegment == supplierClassName];
-		assertEquals("Stored user data", supplierUserData, UserdataMapper.getDeserializedModuleFromDescriptionAsString(
+		assertEquals("Stored user data", supplierUserData, UserDataMapper.getDeserializedModuleFromDescriptionAsString(
 				moduleDescription, supplierJS))
 		assertEquals("Stored astMD5 hash",
-				astMD5, moduleDescription.getUserData(UserdataMapper.USERDATA_KEY_AST_MD5))
+				astMD5, moduleDescription.getUserData(UserDataMapper.USER_DATA_KEY_AST_MD5))
 //			eoDescs.iterator.toList.findFirst[name.lastSegment == supplierClassName].getUserData(
-//				UserdataMapper::USERDATA_KEY_SERIALIZED_SCRIPT))
+//				UserDataMapper::USER_DATA_KEY_SERIALIZED_SCRIPT))
 
 		rs.resources.forEach[it.unload];
 

@@ -14,11 +14,11 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Run Time Dependency</b></em>'.
+ * A representation of the model object '<em><b>Runtime Dependency</b></em>'.
  * <!-- end-user-doc -->
  *
  * <!-- begin-model-doc -->
- * A run-time dependency from one module (i.e. <code>this.eContainer()</code>) to
+ * A runtime dependency from one module (i.e. <code>this.eContainer()</code>) to
  * another module (i.e. <code>this.getTarget()</code>).
  * <!-- end-model-doc -->
  *
@@ -26,15 +26,15 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.ts.types.RunTimeDependency#getTarget <em>Target</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.RunTimeDependency#isLoadTimeForInheritance <em>Load Time For Inheritance</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.RuntimeDependency#getTarget <em>Target</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.RuntimeDependency#isLoadtimeForInheritance <em>Loadtime For Inheritance</em>}</li>
  * </ul>
  *
- * @see org.eclipse.n4js.ts.types.TypesPackage#getRunTimeDependency()
+ * @see org.eclipse.n4js.ts.types.TypesPackage#getRuntimeDependency()
  * @model
  * @generated
  */
-public interface RunTimeDependency extends EObject {
+public interface RuntimeDependency extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Target</b></em>' reference.
 	 * <!-- begin-user-doc -->
@@ -44,14 +44,14 @@ public interface RunTimeDependency extends EObject {
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Target</em>' reference.
 	 * @see #setTarget(TModule)
-	 * @see org.eclipse.n4js.ts.types.TypesPackage#getRunTimeDependency_Target()
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getRuntimeDependency_Target()
 	 * @model
 	 * @generated
 	 */
 	TModule getTarget();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.RunTimeDependency#getTarget <em>Target</em>}' reference.
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.RuntimeDependency#getTarget <em>Target</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Target</em>' reference.
@@ -61,28 +61,28 @@ public interface RunTimeDependency extends EObject {
 	void setTarget(TModule value);
 
 	/**
-	 * Returns the value of the '<em><b>Load Time For Inheritance</b></em>' attribute.
+	 * Returns the value of the '<em><b>Loadtime For Inheritance</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 *  Tells whether this dependency is a load-time dependency that is caused by an extends/implements clause.
+	 *  Tells whether this dependency is a loadtime dependency that is caused by an extends/implements clause.
 	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Load Time For Inheritance</em>' attribute.
-	 * @see #setLoadTimeForInheritance(boolean)
-	 * @see org.eclipse.n4js.ts.types.TypesPackage#getRunTimeDependency_LoadTimeForInheritance()
+	 * @return the value of the '<em>Loadtime For Inheritance</em>' attribute.
+	 * @see #setLoadtimeForInheritance(boolean)
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getRuntimeDependency_LoadtimeForInheritance()
 	 * @model unique="false"
 	 * @generated
 	 */
-	boolean isLoadTimeForInheritance();
+	boolean isLoadtimeForInheritance();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.RunTimeDependency#isLoadTimeForInheritance <em>Load Time For Inheritance</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.RuntimeDependency#isLoadtimeForInheritance <em>Loadtime For Inheritance</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Load Time For Inheritance</em>' attribute.
-	 * @see #isLoadTimeForInheritance()
+	 * @param value the new value of the '<em>Loadtime For Inheritance</em>' attribute.
+	 * @see #isLoadtimeForInheritance()
 	 * @generated
 	 */
-	void setLoadTimeForInheritance(boolean value);
+	void setLoadtimeForInheritance(boolean value);
 
-} // RunTimeDependency
+} // RuntimeDependency

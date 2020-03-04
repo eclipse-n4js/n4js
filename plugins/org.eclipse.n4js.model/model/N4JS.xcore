@@ -192,11 +192,11 @@ class ImportDeclaration extends AnnotableScriptElement {
 
 	/*
 	 * Tells whether this import declaration will be present in the transpiled output code.
-	 * Derived from {@link ImportSpecifier#isRetainedAtRunTime() retainedAtRunTime} and
+	 * Derived from {@link ImportSpecifier#isRetainedAtRuntime() retainedAtRuntime} and
 	 * therefore only valid after AST traversal has completed.
 	 */
-	op boolean isRetainedAtRunTime() {
-		return isBare() || importSpecifiers.exists[isRetainedAtRunTime()];
+	op boolean isRetainedAtRuntime() {
+		return isBare() || importSpecifiers.exists[isRetainedAtRuntime()];
 	}
 }
 
@@ -238,7 +238,7 @@ abstract class ImportSpecifier {
 	 * Tells whether this import specifier will be present in the transpiled output code.
 	 * Set at the end of AST traversal.
 	 */
-	transient boolean retainedAtRunTime
+	transient boolean retainedAtRuntime
 }
 
 class NamedImportSpecifier extends ImportSpecifier {

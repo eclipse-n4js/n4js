@@ -293,10 +293,10 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * @generated
 	 */
 	@Override
-	public boolean isRetainedAtRunTime() {
+	public boolean isRetainedAtRuntime() {
 		return (this.isBare() || IterableExtensions.<ImportSpecifier>exists(this.getImportSpecifiers(), new Function1<ImportSpecifier, Boolean>() {
 			public Boolean apply(final ImportSpecifier it) {
-				return Boolean.valueOf(it.isRetainedAtRunTime());
+				return Boolean.valueOf(it.isRetainedAtRuntime());
 			}
 		}));
 	}
@@ -426,8 +426,8 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 		switch (operationID) {
 			case N4JSPackage.IMPORT_DECLARATION___IS_BARE:
 				return isBare();
-			case N4JSPackage.IMPORT_DECLARATION___IS_RETAINED_AT_RUN_TIME:
-				return isRetainedAtRunTime();
+			case N4JSPackage.IMPORT_DECLARATION___IS_RETAINED_AT_RUNTIME:
+				return isRetainedAtRuntime();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

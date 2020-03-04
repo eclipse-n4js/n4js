@@ -46,7 +46,7 @@ import org.eclipse.n4js.validation.validators.N4JSSyntaxValidator
 import org.eclipse.n4js.validation.validators.N4JSTypeValidator
 import org.eclipse.n4js.validation.validators.N4JSVariableValidator
 import org.eclipse.n4js.validation.validators.N4JSXValidator
-import org.eclipse.n4js.validation.validators.RunTimeDependencyValidator
+import org.eclipse.n4js.validation.validators.RuntimeDependencyValidator
 import org.eclipse.n4js.validation.validators.ThirdPartyValidator
 import org.eclipse.n4js.validation.validators.UnsupportedFeatureValidator
 import org.eclipse.xtext.service.OperationCanceledManager
@@ -107,7 +107,7 @@ import org.eclipse.xtext.validation.ComposedChecks
 	UnsupportedFeatureValidator,
 	N4IDLValidator,
 	N4IDLMigrationValidator,
-	RunTimeDependencyValidator
+	RuntimeDependencyValidator
 ])
 @Log
 /** validations are defined in composed validator classes */

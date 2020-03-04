@@ -218,8 +218,8 @@ public final class ASTMetaInfoCache {
 	/* package */ final Set<EObject> astNodesCurrentlyBeingTyped = new LinkedHashSet<>();
 	/* package */ final Queue<EObject> postponedSubTrees = new LinkedList<>(); // using LinkedList as FIFO queue, here
 	/* package */ final List<FunctionOrFieldAccessor> potentialContainersOfLocalArgumentsVariable = new LinkedList<>();
-	/* package */ final Set<IdentifiableElement> elementsReferencedAtRunTime = new LinkedHashSet<>();
-	/* package */ final Set<TModule> modulesReferencedAtLoadTimeForInheritance = new LinkedHashSet<>();
+	/* package */ final Set<IdentifiableElement> elementsReferencedAtRuntime = new LinkedHashSet<>();
+	/* package */ final Set<TModule> modulesReferencedAtLoadtimeForInheritance = new LinkedHashSet<>();
 
 	// @formatter:on
 
@@ -228,8 +228,8 @@ public final class ASTMetaInfoCache {
 		astNodesCurrentlyBeingTyped.clear();
 		postponedSubTrees.clear();
 		potentialContainersOfLocalArgumentsVariable.clear();
-		elementsReferencedAtRunTime.clear();
-		modulesReferencedAtLoadTimeForInheritance.clear();
+		elementsReferencedAtRuntime.clear();
+		modulesReferencedAtLoadtimeForInheritance.clear();
 	}
 
 	/* package */ boolean isPostProcessing() {

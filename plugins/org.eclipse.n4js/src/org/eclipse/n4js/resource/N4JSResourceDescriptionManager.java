@@ -152,9 +152,9 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 					}
 				}
 
-				boolean loadTimeDependencyOld = hasDirectLoadTimeDependencyTo(oldDesc, candidateURIString);
-				boolean loadTimeDependencyNew = hasDirectLoadTimeDependencyTo(newDesc, candidateURIString);
-				if (loadTimeDependencyOld != loadTimeDependencyNew) {
+				boolean loadtimeDependencyOld = hasDirectLoadtimeDependencyTo(oldDesc, candidateURIString);
+				boolean loadtimeDependencyNew = hasDirectLoadtimeDependencyTo(newDesc, candidateURIString);
+				if (loadtimeDependencyOld != loadtimeDependencyNew) {
 					return true;
 				}
 			}
@@ -198,11 +198,11 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 		return false;
 	}
 
-	private boolean hasDirectLoadTimeDependencyTo(IResourceDescription from, String toURIString) {
+	private boolean hasDirectLoadtimeDependencyTo(IResourceDescription from, String toURIString) {
 		if (from == null) {
 			return false;
 		}
-		Optional<List<String>> fromDeps = UserdataMapper.readDependenciesLoadTimeForInheritanceFromDescription(from);
+		Optional<List<String>> fromDeps = UserDataMapper.readDependenciesLoadtimeForInheritanceFromDescription(from);
 		return fromDeps.isPresent() && fromDeps.get().contains(toURIString);
 	}
 

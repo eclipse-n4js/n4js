@@ -37,7 +37,7 @@ abstract public class AbstractSignatureHelpTest extends AbstractStructuredIdeTes
 			throws InterruptedException, ExecutionException {
 
 		TextDocumentPositionParams textDocumentPositionParams = new TextDocumentPositionParams();
-		String completeFileUri = getFileUriFromModuleName(shc.getFilePath()).toString();
+		String completeFileUri = getFileURIFromModuleName(shc.getFilePath()).toString();
 		textDocumentPositionParams.setTextDocument(new TextDocumentIdentifier(completeFileUri));
 		textDocumentPositionParams.setPosition(new Position(shc.getLine(), shc.getColumn()));
 		CompletableFuture<SignatureHelp> signatureHelpFuture = languageServer.signatureHelp(textDocumentPositionParams);

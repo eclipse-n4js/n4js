@@ -27,17 +27,17 @@ import org.junit.Test
 import static org.junit.Assert.*
 
 /**
- * NOTE: this entire test class is redundant to class {@code RunTimeDependencyValidationIdeTest} and only provided
+ * NOTE: this entire test class is redundant to class {@code RuntimeDependencyValidationIdeTest} and only provided
  * because incremental building cannot be tested in that other class yet!
  * 
  * TODO GH-1675 delete this entire file!
  */
-class RunTimeDependencyValidationPluginTest extends AbstractBuilderParticipantTest {
+class RuntimeDependencyValidationPluginTest extends AbstractBuilderParticipantTest {
 
-	// run-time dependency cycle: C -> B -> A -> Y -> X -> C
+	// runtime dependency cycle: C -> B -> A -> Y -> X -> C
 	val defaultTestCode = #[
 		"A" -> '''
-			import "Y"; // using bare imports to represent any form of run-time dependency that is NOT a load-time dependency
+			import "Y"; // using bare imports to represent any form of runtime dependency that is NOT a load-time dependency
 			export public class A {
 				public m() {}
 			}
@@ -47,7 +47,7 @@ class RunTimeDependencyValidationPluginTest extends AbstractBuilderParticipantTe
 			export public class B extends A {}
 			function foo() {
 				// some tests will remove 'extends A' above; this reference to A makes sure we will still
-				// have a run-time dependency to A after removing 'extends A' (but not a load-time dependency)
+				// have a runtime dependency to A after removing 'extends A' (but not a load-time dependency)
 				A;
 			}
 		''',
@@ -74,8 +74,8 @@ class RunTimeDependencyValidationPluginTest extends AbstractBuilderParticipantTe
 	val defaultExpectedIssues = #[
 		"MainBad" -> #[
 			'''
-				line 1: (LTD) When importing modules from a run-time cycle, those that are the target of a load-time dependency (marked with * below) may only be imported after first importing one of the others. Thus, import of module A must be preceded by an import of one of the modules C, X, Y.
-				Containing run-time dependency cycle cluster:
+				line 1: (LTD) When importing modules from a runtime cycle, those that are the target of a load-time dependency (marked with * below) may only be imported after first importing one of the others. Thus, import of module A must be preceded by an import of one of the modules C, X, Y.
+				Containing runtime dependency cycle cluster:
 				    *A.n4js --> Y.n4js
 				    *B.n4js --> A.n4js
 				    C.n4js --> B.n4js
@@ -86,10 +86,10 @@ class RunTimeDependencyValidationPluginTest extends AbstractBuilderParticipantTe
 	];
 
 	@Test
-	def void testLoadTimeDependencyCycle() throws Exception {
+	def void testLoadtimeDependencyCycle() throws Exception {
 
 		// add a load-time dependency from A.n4js to C.n4js to obtain a load-time dependency cycle:
-		val testCodeWithLoadTimeCycle = defaultTestCode.map[moduleNameToContent|
+		val testCodeWithLoadtimeCycle = defaultTestCode.map[moduleNameToContent|
 			if (moduleNameToContent.key == "A") {
 				moduleNameToContent.key -> '''
 					import {C} from "C";
@@ -101,7 +101,7 @@ class RunTimeDependencyValidationPluginTest extends AbstractBuilderParticipantTe
 			}
 		];
 
-		val files = createTestProjectOnDisk(testCodeWithLoadTimeCycle);
+		val files = createTestProjectOnDisk(testCodeWithLoadtimeCycle);
 		cleanBuild();
 
 		assertIssues(files,
@@ -136,9 +136,9 @@ class RunTimeDependencyValidationPluginTest extends AbstractBuilderParticipantTe
 	}
 
 	@Test
-	def void testIllegalLoadTimeReferencesWithinRunTimeCycle() throws Exception {
-		// add some load-time and run-time references to file B.n4js
-		val testCodeWithIllegalLoadTimeReferences = defaultTestCode.map[moduleNameToContent|
+	def void testIllegalLoadtimeReferencesWithinRuntimeCycle() throws Exception {
+		// add some load-time and runtime references to file B.n4js
+		val testCodeWithIllegalLoadtimeReferences = defaultTestCode.map[moduleNameToContent|
 			if (moduleNameToContent.key == "B") {
 				moduleNameToContent.key -> '''
 					«moduleNameToContent.value»
@@ -160,13 +160,13 @@ class RunTimeDependencyValidationPluginTest extends AbstractBuilderParticipantTe
 			}
 		];
 
-		val files = createTestProjectOnDisk(testCodeWithIllegalLoadTimeReferences);
+		val files = createTestProjectOnDisk(testCodeWithIllegalLoadtimeReferences);
 		cleanBuild();
 
-		val expectedIssuesWithIllegalLoadTimeReferences = defaultExpectedIssues + #[
+		val expectedIssuesWithIllegalLoadtimeReferences = defaultExpectedIssues + #[
 			"B" -> #[
 				'''
-					line 13: (LTD) Load-time references to the same or other modules are not allowed within a run-time dependency cycle (except in extends/implements clauses).
+					line 13: (LTD) Load-time references to the same or other modules are not allowed within a runtime dependency cycle (except in extends/implements clauses).
 					    *A.n4js --> Y.n4js
 					    *B.n4js --> A.n4js
 					    C.n4js --> B.n4js
@@ -174,7 +174,7 @@ class RunTimeDependencyValidationPluginTest extends AbstractBuilderParticipantTe
 					    Y.n4js --> X.n4js
 				''',
 				'''
-					line 15: (LTD) Load-time references to the same or other modules are not allowed within a run-time dependency cycle (except in extends/implements clauses).
+					line 15: (LTD) Load-time references to the same or other modules are not allowed within a runtime dependency cycle (except in extends/implements clauses).
 					    *A.n4js --> Y.n4js
 					    *B.n4js --> A.n4js
 					    C.n4js --> B.n4js
@@ -184,35 +184,35 @@ class RunTimeDependencyValidationPluginTest extends AbstractBuilderParticipantTe
 			]
 		];
 
-		assertIssues(files, expectedIssuesWithIllegalLoadTimeReferences);
+		assertIssues(files, expectedIssuesWithIllegalLoadtimeReferences);
 
-		// comment out the run-time dependency X -> C
+		// comment out the runtime dependency X -> C
 		changeFile(files.get("X"), 'import "C";' -> '// import "C";');
 		waitForIncrementalBuild();
 
 		assertNoIssues();
 
-		// re-enable the run-time dependency X -> C
+		// re-enable the runtime dependency X -> C
 		changeFile(files.get("X"), '// import "C";' -> 'import "C";');
 		waitForIncrementalBuild();
 
-		assertIssues(files, expectedIssuesWithIllegalLoadTimeReferences);
+		assertIssues(files, expectedIssuesWithIllegalLoadtimeReferences);
 	}
 
 	@Test
-	def void testIncrementalBuild01_openCloseRunTimeCycle() throws Exception {
+	def void testIncrementalBuild01_openCloseRuntimeCycle() throws Exception {
 		val files = createTestProjectOnDisk(defaultTestCode);
 		cleanBuild();
 
 		assertIssues(files, defaultExpectedIssues);
 
-		// comment out the run-time dependency X -> C
+		// comment out the runtime dependency X -> C
 		changeFile(files.get("X"), 'import "C";' -> '// import "C";');
 		waitForIncrementalBuild();
 
 		assertNoIssues();
 
-		// re-enable the run-time dependency X -> C
+		// re-enable the runtime dependency X -> C
 		changeFile(files.get("X"), '// import "C";' -> 'import "C";');
 		waitForIncrementalBuild();
 
@@ -220,7 +220,7 @@ class RunTimeDependencyValidationPluginTest extends AbstractBuilderParticipantTe
 	}
 
 	@Test
-	def void testIncrementalBuild02_addRemoveLoadTimeDependency() throws Exception {
+	def void testIncrementalBuild02_addRemoveLoadtimeDependency() throws Exception {
 
 		val files = createTestProjectOnDisk(defaultTestCode);
 		cleanBuild();

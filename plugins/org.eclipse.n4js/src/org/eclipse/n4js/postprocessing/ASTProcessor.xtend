@@ -89,7 +89,7 @@ public class ASTProcessor extends AbstractProcessor {
 	@Inject
 	private CompileTimeExpressionProcessor compileTimeExpressionProcessor;
 	@Inject
-	private RunTimeDependencyProcessor runTimeDependencyProcessor;
+	private RuntimeDependencyProcessor runtimeDependencyProcessor;
 	@Inject
 	private JavaScriptVariantHelper variantHelper;
 
@@ -173,8 +173,8 @@ public class ASTProcessor extends AbstractProcessor {
 				}
 			}
 		}
-		// phase 4: store run-time and load-time dependencies in TModule
-		runTimeDependencyProcessor.storeDirectRunTimeDependenciesInTModule(script, cache);
+		// phase 4: store runtime and load-time dependencies in TModule
+		runtimeDependencyProcessor.storeDirectRuntimeDependenciesInTModule(script, cache);
 	}
 
 	/**
@@ -424,7 +424,7 @@ public class ASTProcessor extends AbstractProcessor {
 			}
 		}
 
-		runTimeDependencyProcessor.recordRunTimeReferencesInCache(node, cache);
+		runtimeDependencyProcessor.recordRuntimeReferencesInCache(node, cache);
 
 		// register migrations with their source types
 		if (node instanceof FunctionDeclaration && 

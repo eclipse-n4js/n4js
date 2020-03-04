@@ -40,7 +40,7 @@ abstract public class AbstractDefinitionTest extends AbstractStructuredIdeTest<D
 	protected void performTest(Project project, DefinitionTestConfiguration dtc)
 			throws InterruptedException, ExecutionException, URISyntaxException {
 		TextDocumentPositionParams textDocumentPositionParams = new TextDocumentPositionParams();
-		String completeFileUri = getFileUriFromModuleName(dtc.getFilePath()).toString();
+		String completeFileUri = getFileURIFromModuleName(dtc.getFilePath()).toString();
 		textDocumentPositionParams.setTextDocument(new TextDocumentIdentifier(completeFileUri));
 		textDocumentPositionParams.setPosition(new Position(dtc.getLine(), dtc.getColumn()));
 		CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> definitionsFuture = languageServer

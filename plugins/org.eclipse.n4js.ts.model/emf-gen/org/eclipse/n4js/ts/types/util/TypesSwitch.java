@@ -90,9 +90,9 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case TypesPackage.RUN_TIME_DEPENDENCY: {
-				RunTimeDependency runTimeDependency = (RunTimeDependency)theEObject;
-				T result = caseRunTimeDependency(runTimeDependency);
+			case TypesPackage.RUNTIME_DEPENDENCY: {
+				RuntimeDependency runtimeDependency = (RuntimeDependency)theEObject;
+				T result = caseRuntimeDependency(runtimeDependency);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -778,17 +778,17 @@ public class TypesSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Run Time Dependency</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Runtime Dependency</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Run Time Dependency</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Runtime Dependency</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseRunTimeDependency(RunTimeDependency object) {
+	public T caseRuntimeDependency(RuntimeDependency object) {
 		return null;
 	}
 

@@ -33,7 +33,7 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.ScriptElement;
-import org.eclipse.n4js.ts.types.RunTimeDependency;
+import org.eclipse.n4js.ts.types.RuntimeDependency;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.ts.utils.TypeUtils;
@@ -51,48 +51,48 @@ import com.google.common.collect.ImmutableMap;
  * The user data for exported modules contains a serialized representation of the module's content. This allows to
  * restore the type model without parsing or linking the complete JS file.
  *
- * The {@link UserdataMapper} provides this serialized representation and the logic to recreate the {@link EObject
+ * The {@code UserDataMapper} provides this serialized representation and the logic to recreate the {@link EObject
  * types} from that.
  */
-public final class UserdataMapper {
+public final class UserDataMapper {
 
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger LOGGER = Logger.getLogger(UserdataMapper.class);
+	private static final Logger LOGGER = Logger.getLogger(UserDataMapper.class);
 
 	/**
 	 * The key in the user data map of the module's description.
 	 */
-	public final static String USERDATA_KEY_SERIALIZED_SCRIPT = "serializedScript";
+	public final static String USER_DATA_KEY_SERIALIZED_SCRIPT = "serializedScript";
 
 	/**
 	 * Comma-separated list of resource URIs this resource directly depends on.
 	 */
-	public final static String USERDATA_KEY_DEPENDENCIES = "dependencies";
+	public final static String USER_DATA_KEY_DEPENDENCIES = "dependencies";
 
 	/**
 	 * Comma-separated list of resource URIs this resource directly depends on during load time, taking into account
 	 * only such load-time dependencies that are caused by extends/implements clauses (see
-	 * {@link RunTimeDependency#isLoadTimeForInheritance()}).
+	 * {@link RuntimeDependency#isLoadtimeForInheritance()}).
 	 */
-	public final static String USERDATA_KEY_DEPENDENCIES_LOAD_TIME_FOR_INHERITANCE = "dependenciesLoadTimeForInheritance";
+	public final static String USER_DATA_KEY_DEPENDENCIES_LOADTIME_FOR_INHERITANCE = "dependenciesLoadtimeForInheritance";
 
 	/**
 	 * The key in the user data map of static-polyfill contents-hash
 	 */
-	public final static String USERDATA_KEY_STATIC_POLYFILL_CONTENTHASH = "staticPolyfillContentHash";
+	public final static String USER_DATA_KEY_STATIC_POLYFILL_CONTENTHASH = "staticPolyfillContentHash";
 
 	/**
 	 * The key in the user data map of time stamp data. Value is a String representations of long (milliseconds).
 	 */
-	public static final String USERDATA_KEY_TIMESTAMP = "timestamp";
+	public static final String USER_DATA_KEY_TIMESTAMP = "timestamp";
 
 	/**
 	 * The key in the user data map for storing the value of transient property {@link TModule#getAstMD5()
 	 * TModule#astMD5}.
 	 */
-	public static final String USERDATA_KEY_AST_MD5 = "astMD5";
+	public static final String USER_DATA_KEY_AST_MD5 = "astMD5";
 
 	/**
 	 * Flag indicating whether the string representation contains binary or human readable data.
@@ -128,7 +128,7 @@ public final class UserdataMapper {
 
 	/**
 	 * Serializes an exported script (or other {@link EObject}) stored in given resource content at index 1, and stores
-	 * that in a map under key {@link #USERDATA_KEY_SERIALIZED_SCRIPT}.
+	 * that in a map under key {@link #USER_DATA_KEY_SERIALIZED_SCRIPT}.
 	 */
 	public static Map<String, String> createUserData(final TModule exportedModule) throws IOException,
 			UnsupportedEncodingException {
@@ -171,11 +171,11 @@ public final class UserdataMapper {
 				: baos.toString(TRANSFORMATION_CHARSET_NAME);
 
 		final HashMap<String, String> ret = new HashMap<>();
-		ret.put(USERDATA_KEY_SERIALIZED_SCRIPT, serializedScript);
+		ret.put(USER_DATA_KEY_SERIALIZED_SCRIPT, serializedScript);
 
 		final String astMD5 = exportedModule.getAstMD5();
 		if (astMD5 != null) {
-			ret.put(USERDATA_KEY_AST_MD5, astMD5);
+			ret.put(USER_DATA_KEY_AST_MD5, astMD5);
 		}
 
 		ret.put(N4JSResourceDescriptionStrategy.MAIN_MODULE_KEY, Boolean.toString(exportedModule.isMainModule()));
@@ -184,7 +184,7 @@ public final class UserdataMapper {
 		// required to trigger rebuilds even if only minor changes happened to the content.
 		if (exportedModule.isStaticPolyfillModule()) {
 			final String contentHash = Integer.toHexString(originalResource.getParseResult().getRootNode().hashCode());
-			ret.put(USERDATA_KEY_STATIC_POLYFILL_CONTENTHASH, contentHash);
+			ret.put(USER_DATA_KEY_STATIC_POLYFILL_CONTENTHASH, contentHash);
 		}
 		return ret;
 	}
@@ -203,7 +203,7 @@ public final class UserdataMapper {
 			timestamp = System.currentTimeMillis();
 		}
 		final HashMap<String, String> result = new HashMap<>();
-		result.put(USERDATA_KEY_TIMESTAMP, String.valueOf(timestamp));
+		result.put(USER_DATA_KEY_TIMESTAMP, String.valueOf(timestamp));
 		return result;
 	}
 
@@ -235,7 +235,7 @@ public final class UserdataMapper {
 	 * Reads the TModule stored in the given IEObjectDescription.
 	 */
 	public static TModule getDeserializedModuleFromDescription(IEObjectDescription eObjectDescription, URI uri) {
-		final String serializedData = eObjectDescription.getUserData(USERDATA_KEY_SERIALIZED_SCRIPT);
+		final String serializedData = eObjectDescription.getUserData(USER_DATA_KEY_SERIALIZED_SCRIPT);
 		if (Strings.isNullOrEmpty(serializedData)) {
 			return null;
 		}
@@ -263,7 +263,7 @@ public final class UserdataMapper {
 		final TModule module = (TModule) contents.get(0);
 		xres.getContents().clear();
 
-		final String astMD5 = eObjectDescription.getUserData(USERDATA_KEY_AST_MD5);
+		final String astMD5 = eObjectDescription.getUserData(USER_DATA_KEY_AST_MD5);
 		module.setAstMD5(astMD5);
 
 		return module;
@@ -283,7 +283,7 @@ public final class UserdataMapper {
 	 *         <code>false</code> otherwise
 	 */
 	public static boolean hasSerializedModule(IEObjectDescription eObjectDescription) {
-		return eObjectDescription.getUserData(USERDATA_KEY_SERIALIZED_SCRIPT) != null;
+		return eObjectDescription.getUserData(USER_DATA_KEY_SERIALIZED_SCRIPT) != null;
 	}
 
 	private static Joiner joiner = Joiner.on(",");
@@ -294,11 +294,11 @@ public final class UserdataMapper {
 	 */
 	public static void writeDependenciesToUserData(N4JSResource resource, Map<String, String> userData) {
 		final Set<URI> dependencies = computeCrossRefs(resource);
-		final Set<URI> dependenciesLoadTimeForInheritance = getDependenciesLoadTimeForInheritance(resource);
-		userData.put(USERDATA_KEY_DEPENDENCIES,
+		final Set<URI> dependenciesLoadtimeForInheritance = getDependenciesLoadtimeForInheritance(resource);
+		userData.put(USER_DATA_KEY_DEPENDENCIES,
 				joiner.join(dependencies));
-		userData.put(USERDATA_KEY_DEPENDENCIES_LOAD_TIME_FOR_INHERITANCE,
-				joiner.join(dependenciesLoadTimeForInheritance));
+		userData.put(USER_DATA_KEY_DEPENDENCIES_LOADTIME_FOR_INHERITANCE,
+				joiner.join(dependenciesLoadtimeForInheritance));
 	}
 
 	private static Set<URI> computeCrossRefs(N4JSResource resource) {
@@ -323,12 +323,12 @@ public final class UserdataMapper {
 		return result;
 	}
 
-	private static Set<URI> getDependenciesLoadTimeForInheritance(N4JSResource resource) {
+	private static Set<URI> getDependenciesLoadtimeForInheritance(N4JSResource resource) {
 		final Set<URI> result = new LinkedHashSet<>();
 		final TModule module = resource.getModule();
 		if (module != null && !module.eIsProxy()) {
-			for (RunTimeDependency dep : module.getDependenciesRunTime()) {
-				if (dep.isLoadTimeForInheritance()) {
+			for (RuntimeDependency dep : module.getDependenciesRuntime()) {
+				if (dep.isLoadtimeForInheritance()) {
 					final TModule targetModule = dep.getTarget();
 					if (targetModule != null && !targetModule.eIsProxy()) {
 						final Resource targetRes = targetModule.eResource();
@@ -358,16 +358,16 @@ public final class UserdataMapper {
 	 * Returns none if the information is missing in the resource description.
 	 */
 	public static Optional<List<String>> readDependenciesFromDescription(IResourceDescription description) {
-		return readDependenciesFromDescription(description, USERDATA_KEY_DEPENDENCIES);
+		return readDependenciesFromDescription(description, USER_DATA_KEY_DEPENDENCIES);
 	}
 
 	/**
 	 * Same as {@link #readDependenciesFromDescription(IResourceDescription)}, but for load-time dependencies, taking
 	 * into account only such load-time dependencies that are caused by extends/implements clauses.
 	 */
-	public static Optional<List<String>> readDependenciesLoadTimeForInheritanceFromDescription(
+	public static Optional<List<String>> readDependenciesLoadtimeForInheritanceFromDescription(
 			IResourceDescription description) {
-		return readDependenciesFromDescription(description, USERDATA_KEY_DEPENDENCIES_LOAD_TIME_FOR_INHERITANCE);
+		return readDependenciesFromDescription(description, USER_DATA_KEY_DEPENDENCIES_LOADTIME_FOR_INHERITANCE);
 	}
 
 	private static Optional<List<String>> readDependenciesFromDescription(IResourceDescription description,

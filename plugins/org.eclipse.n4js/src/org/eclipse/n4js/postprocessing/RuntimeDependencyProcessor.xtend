@@ -26,7 +26,7 @@ import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
-import org.eclipse.n4js.ts.types.RunTimeDependency
+import org.eclipse.n4js.ts.types.RuntimeDependency
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.utils.EcoreUtilN4
@@ -40,7 +40,7 @@ import org.eclipse.xtext.EcoreUtil2
  * as well as load-time dependency cycles (during finalization of post-processing).
  */
 @Singleton
-class RunTimeDependencyProcessor {
+class RuntimeDependencyProcessor {
 
 	@Inject
 	private JavaScriptVariantHelper variantHelper;
@@ -48,27 +48,27 @@ class RunTimeDependencyProcessor {
 	/**
 	 * Invoked during AST traversal (and thus during main post-processing).
 	 */
-	def package recordRunTimeReferencesInCache(EObject node, ASTMetaInfoCache cache) {
+	def package recordRuntimeReferencesInCache(EObject node, ASTMetaInfoCache cache) {
 		if (node instanceof IdentifierRef) {
 			val target = node.targetElement;
-			if (N4JSLanguageUtils.hasRunTimeRepresentation(target, variantHelper)) {
-				cache.elementsReferencedAtRunTime += target;
+			if (N4JSLanguageUtils.hasRuntimeRepresentation(target, variantHelper)) {
+				cache.elementsReferencedAtRuntime += target;
 				// in case of namespace imports, we also want to remember that the namespace was referenced at run time:
 				val targetRaw = node.id;
 				if (targetRaw !== target && targetRaw instanceof ModuleNamespaceVirtualType) {
-					cache.elementsReferencedAtRunTime += targetRaw;
+					cache.elementsReferencedAtRuntime += targetRaw;
 				}
 			}
 		} else if (node instanceof N4ClassifierDeclaration) {
-			if (N4JSLanguageUtils.hasRunTimeRepresentation(node, variantHelper)) {
+			if (N4JSLanguageUtils.hasRuntimeRepresentation(node, variantHelper)) {
 				val targetTypeRefs = node.superClassifierRefs;
 				for (targetTypeRef : targetTypeRefs) {
 					val targetDeclType = targetTypeRef?.declaredType;
-					cache.elementsReferencedAtRunTime += targetDeclType;
+					cache.elementsReferencedAtRuntime += targetDeclType;
 					val targetModule = if (targetDeclType !== null && !targetDeclType.eIsProxy) EcoreUtil2.getContainerOfType(targetDeclType, TModule);
 					if (isDifferentModuleInSameProject(targetModule, cache)) {
 						if (N4JSASTUtils.isTopLevelCode(node)) { // nested classifiers not supported yet, but let's be future proof
-							cache.modulesReferencedAtLoadTimeForInheritance += targetModule;
+							cache.modulesReferencedAtLoadtimeForInheritance += targetModule;
 						}
 					}
 				}
@@ -79,13 +79,13 @@ class RunTimeDependencyProcessor {
 	/**
 	 * Invoked at the end of AST traversal (and thus, during main post-processing).
 	 * <p>
-	 * Also sets the flag {@link ImportSpecifier#getRetainedAtRunTime() retainedAtRunTime}.
+	 * Also sets the flag {@link ImportSpecifier#getRetainedAtRuntime() retainedAtRuntime}.
 	 */
-	def package void storeDirectRunTimeDependenciesInTModule(Script script, ASTMetaInfoCache cache) {
+	def package void storeDirectRuntimeDependenciesInTModule(Script script, ASTMetaInfoCache cache) {
 		val module = script.module;
 		val importDecls = script.scriptElements.filter(ImportDeclaration).toList;
 
-		// step 1: set run-time retention flag in import specifiers
+		// step 1: set runtime retention flag in import specifiers
 		for (importDecl : importDecls) {
 			for (importSpec : importDecl.importSpecifiers) {
 				if (importSpec !== null) {
@@ -94,42 +94,42 @@ class RunTimeDependencyProcessor {
 						NamespaceImportSpecifier: importSpec.definedType
 						default: throw new IllegalStateException("unknown subclass of ImportSpecifier: " + importSpec.eClass.name)
 					};
-					val retained = cache.elementsReferencedAtRunTime.contains(element);
+					val retained = cache.elementsReferencedAtRuntime.contains(element);
 					EcoreUtilN4.doWithDeliver(false, [
-						importSpec.retainedAtRunTime = retained;
+						importSpec.retainedAtRuntime = retained;
 					], importSpec);
 				}
 			}
 		}
 
-		// step 2: derive direct run-time dependencies from run-time retention of imports
+		// step 2: derive direct runtime dependencies from runtime retention of imports
 		//
 		// NOTE: order of the dependencies is important, here, because a change in the TModule has
 		// significant implications (e.g. dependent modules will be rebuilt, see #isAffected() in
 		// incremental builder); so we want to avoid a random reordering of the same dependencies and
 		// therefore use a defined order derived from the order of import declarations in the AST.
 		//
-		val modulesReferencedAtRunTime = newLinkedHashSet;
+		val modulesReferencedAtRuntime = newLinkedHashSet;
 		for (importDecl : importDecls) {
-			if (importDecl.retainedAtRunTime) { // note: will also be true for bare imports
+			if (importDecl.retainedAtRuntime) { // note: will also be true for bare imports
 				val targetModule = importDecl.module;
 				if (isDifferentModuleInSameProject(targetModule, cache)) {
-					modulesReferencedAtRunTime += targetModule;
+					modulesReferencedAtRuntime += targetModule;
 				}
 			}
 		}
-		val dependenciesRunTime = new ArrayList<RunTimeDependency>(modulesReferencedAtRunTime.size);
-		for (currModule : modulesReferencedAtRunTime) {
-			val currDep = TypesFactory.eINSTANCE.createRunTimeDependency();
+		val dependenciesRuntime = new ArrayList<RuntimeDependency>(modulesReferencedAtRuntime.size);
+		for (currModule : modulesReferencedAtRuntime) {
+			val currDep = TypesFactory.eINSTANCE.createRuntimeDependency();
 			currDep.target = currModule;
-			currDep.loadTimeForInheritance = cache.modulesReferencedAtLoadTimeForInheritance.contains(currModule);
-			dependenciesRunTime += currDep;
+			currDep.loadtimeForInheritance = cache.modulesReferencedAtLoadtimeForInheritance.contains(currModule);
+			dependenciesRuntime += currDep;
 		}
 
-		// step 3: store direct run-time dependencies in TModule
+		// step 3: store direct runtime dependencies in TModule
 		EcoreUtilN4.doWithDeliver(false, [
-			module.dependenciesRunTime.clear();
-			module.dependenciesRunTime += dependenciesRunTime;
+			module.dependenciesRuntime.clear();
+			module.dependenciesRuntime += dependenciesRuntime;
 		], module);
 	}
 
@@ -137,33 +137,33 @@ class RunTimeDependencyProcessor {
 	 * Invoked during the finalization of post-processing (and thus, after the main post-processing of all
 	 * directly or indirectly required resources has finished).
 	 */
-	def package void computeAndStoreRunTimeCyclesInTModule(TModule module) {
-		// NOTE: as above, the order of cyclicModulesRunTime and runTimeCyclicLoadTimeDependents stored in
+	def package void computeAndStoreRuntimeCyclesInTModule(TModule module) {
+		// NOTE: as above, the order of cyclicModulesRuntime and runtimeCyclicLoadtimeDependents stored in
 		// the TModule is important, because we want to avoid random reordering of the same set of modules
 		// to avoid unnecessary changes of the TModule (see above for details)
-		val cyclicModulesRunTime = getAllRunTimeCyclicModules(module, false);
-		val cyclicModulesLoadTimeForInheritance = getAllRunTimeCyclicModules(module, true);
-		val runTimeCyclicLoadTimeDependents = new LinkedHashSet<TModule>();
-		for (cyclicModule : cyclicModulesRunTime) {
-			if (cyclicModule.hasDirectLoadTimeDependencyTo(module)) {
-				runTimeCyclicLoadTimeDependents.add(cyclicModule);
+		val cyclicModulesRuntime = getAllRuntimeCyclicModules(module, false);
+		val cyclicModulesLoadtimeForInheritance = getAllRuntimeCyclicModules(module, true);
+		val runtimeCyclicLoadtimeDependents = new LinkedHashSet<TModule>();
+		for (cyclicModule : cyclicModulesRuntime) {
+			if (cyclicModule.hasDirectLoadtimeDependencyTo(module)) {
+				runtimeCyclicLoadtimeDependents.add(cyclicModule);
 			}
 		}
 
 		EcoreUtilN4.doWithDeliver(false, [
-			module.cyclicModulesRunTime.clear();
-			module.cyclicModulesLoadTimeForInheritance.clear();
-			module.runTimeCyclicLoadTimeDependents.clear();
-			module.cyclicModulesRunTime += cyclicModulesRunTime;
-			module.cyclicModulesLoadTimeForInheritance += cyclicModulesLoadTimeForInheritance;
-			module.runTimeCyclicLoadTimeDependents += runTimeCyclicLoadTimeDependents;
+			module.cyclicModulesRuntime.clear();
+			module.cyclicModulesLoadtimeForInheritance.clear();
+			module.runtimeCyclicLoadtimeDependents.clear();
+			module.cyclicModulesRuntime += cyclicModulesRuntime;
+			module.cyclicModulesLoadtimeForInheritance += cyclicModulesLoadtimeForInheritance;
+			module.runtimeCyclicLoadtimeDependents += runtimeCyclicLoadtimeDependents;
 		], module);
 	}
 
 	// FIXME consider optimization
-	def private static List<TModule> getAllRunTimeCyclicModules(TModule module, boolean onlyLoadTime) {
+	def private static List<TModule> getAllRuntimeCyclicModules(TModule module, boolean onlyLoadtime) {
 		val sccs = SCCUtils.findSCCs(Iterators.singletonIterator(module), [m|
-			m.dependenciesRunTime.filter[!onlyLoadTime || isLoadTimeForInheritance].map[target]
+			m.dependenciesRuntime.filter[!onlyLoadtime || isLoadtimeForInheritance].map[target]
 		]);
 		val cyclicModules = sccs.filter[remove(module)].head;
 		return cyclicModules;
