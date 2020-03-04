@@ -64,11 +64,13 @@ class RuntimeDependencyProcessor {
 				val targetTypeRefs = node.superClassifierRefs;
 				for (targetTypeRef : targetTypeRefs) {
 					val targetDeclType = targetTypeRef?.declaredType;
-					cache.elementsReferencedAtRuntime += targetDeclType;
-					val targetModule = if (targetDeclType !== null && !targetDeclType.eIsProxy) EcoreUtil2.getContainerOfType(targetDeclType, TModule);
-					if (isDifferentModuleInSameProject(targetModule, cache)) {
-						if (N4JSASTUtils.isTopLevelCode(node)) { // nested classifiers not supported yet, but let's be future proof
-							cache.modulesReferencedAtLoadtimeForInheritance += targetModule;
+					if (N4JSLanguageUtils.hasRuntimeRepresentation(targetDeclType, variantHelper)) {
+						cache.elementsReferencedAtRuntime += targetDeclType;
+						val targetModule = if (targetDeclType !== null && !targetDeclType.eIsProxy) EcoreUtil2.getContainerOfType(targetDeclType, TModule);
+						if (isDifferentModuleInSameProject(targetModule, cache)) {
+							if (N4JSASTUtils.isTopLevelCode(node)) { // nested classifiers not supported yet, but let's be future proof
+								cache.modulesReferencedAtLoadtimeForInheritance += targetModule;
+							}
 						}
 					}
 				}
