@@ -79,7 +79,7 @@ public class CommandRebuildTest extends AbstractStructuredIdeTest<Void> {
 		setFileCreationDate(prjStatePath);
 		setFileCreationDate(genFileStatePath);
 
-		languageClient.clear(); // FIXME required?
+		languageClient.clear();
 	}
 
 	/** Expectation is that files '.n4js.projectstate' and 'src-gen/Module.js' are changed due to rebuild action. */
