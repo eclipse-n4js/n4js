@@ -55,11 +55,7 @@ class RuntimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	/**
-	 * A non-inheritance load-time reference R from a module m to an identifiable element in module m’ is an error iff
-	 * <ul>
-	 * <li>case m != m’: m, m’ are runtime cyclic to each other,
-	 * <li>case m = m’: m is runtime cyclic to some other module m’’.
-	 * </ul>
+	 * Req. GH-1678, Constraint 4
 	 */
 	@Check
 	def void checkIllegalLoadtimeReference(IdentifierRef idRef) {
@@ -104,8 +100,9 @@ class RuntimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	/**
-	 * It is an error to form load-time dependency cycles. This method will show an error on
-	 * all imports that constitute the cycle.
+	 * Req. GH-1678, Constraint 1
+	 * <p>
+	 * This method will show an error on all imports that constitute the cycle.
 	 */
 	def private boolean holdsNotAnIllegalImportWithinLoadtimeCycle(TModule containingModule, ImportDeclaration importDecl) {
 		val targetModule = importDecl.module;
@@ -119,12 +116,7 @@ class RuntimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	/**
-	 * It is an error to import an LTD target m’ from a module m except
-	 * <ol>
-	 * <li>there exists only a single LTD source of m’ and
-	 * <li>m is an LTD source of m’.
-	 * </ol>
-	 * In other words, m must be the single LTD source of m’.
+	 * Req. GH-1678, Constraints 2 and 3.
 	 */
 	def private boolean holdsNotAnIllegalImportOfLTDTarget(TModule containingModule, ImportDeclaration importDecl, Set<TModule> modulesInHealedCycles) {
 		if (!importDecl.isRetainedAtRuntime()) {
@@ -150,7 +142,7 @@ class RuntimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 				// illegal import of an LTD target
 				val withinSameDependencyCycleCluster = targetModule.cyclicModulesRuntime.contains(containingModule);
 				if (withinSameDependencyCycleCluster) {
-					// ERROR: importing a multi-LTD-target from within the dependency cycle cluster
+					// ERROR: importing a multi-LTD-target from within the dependency cycle cluster (Req. GH-1678, Constraint 2)
 					// --> load-time dependency conflict
 					val otherLTDSources = otherLTDSourcesToString(containingModule, targetModule);
 					val message = IssueCodes.getMessageForLTD_LOADTIME_DEPENDENCY_CONFLICT(targetModule.simpleName, otherLTDSources) + "\n"
@@ -159,7 +151,7 @@ class RuntimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 					addIssue(message, importDecl, N4JSPackage.eINSTANCE.importDeclaration_Module, IssueCodes.LTD_LOADTIME_DEPENDENCY_CONFLICT);
 					return false;
 				} else {
-					// ERROR: importing an LTD target from outside the dependency cycle cluster
+					// ERROR: importing an LTD target from outside the dependency cycle cluster (Req. GH-1678, Constraint 3)
 					val healingModulesStr = healingModulesToString(targetModule);
 					val message = IssueCodes.getMessageForLTD_IMPORT_OF_LOADTIME_DEPENDENCY_TARGET(targetModule.simpleName, healingModulesStr) + "\n"
 						+ "Containing runtime dependency cycle cluster:\n"
