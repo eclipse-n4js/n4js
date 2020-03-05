@@ -231,11 +231,6 @@ class TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	derived String moduleSpecifier get {
 		return qualifiedName
 	}
-
-	// FIXME linear search
-	op boolean hasDirectLoadtimeDependencyTo(TModule other) {
-		return dependenciesRuntime.exists[loadtimeForInheritance && target === other];
-	}
 }
 
 /*

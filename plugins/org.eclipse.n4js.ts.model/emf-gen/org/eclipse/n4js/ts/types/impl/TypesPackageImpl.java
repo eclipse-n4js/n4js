@@ -898,16 +898,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getTModule__HasDirectLoadtimeDependencyTo__TModule() {
-		return tModuleEClass.getEOperations().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EClass getRuntimeDependency() {
 		return runtimeDependencyEClass;
 	}
@@ -3637,7 +3627,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEReference(tModuleEClass, TMODULE__COMPOSED_MEMBER_CACHES);
 		createEReference(tModuleEClass, TMODULE__TEMPORARY_TYPES);
 		createEAttribute(tModuleEClass, TMODULE__MODULE_SPECIFIER);
-		createEOperation(tModuleEClass, TMODULE___HAS_DIRECT_LOADTIME_DEPENDENCY_TO__TMODULE);
 
 		runtimeDependencyEClass = createEClass(RUNTIME_DEPENDENCY);
 		createEReference(runtimeDependencyEClass, RUNTIME_DEPENDENCY__TARGET);
@@ -4132,9 +4121,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEReference(getTModule_TemporaryTypes(), this.getType(), null, "temporaryTypes", null, 0, -1, TModule.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTModule_ModuleSpecifier(), theEcorePackage.getEString(), "moduleSpecifier", null, 0, 1, TModule.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 
-		EOperation op = initEOperation(getTModule__HasDirectLoadtimeDependencyTo__TModule(), theEcorePackage.getEBoolean(), "hasDirectLoadtimeDependencyTo", 0, 1, !IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, this.getTModule(), "other", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
 		initEClass(runtimeDependencyEClass, RuntimeDependency.class, "RuntimeDependency", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getRuntimeDependency_Target(), this.getTModule(), null, "target", null, 0, 1, RuntimeDependency.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getRuntimeDependency_LoadtimeForInheritance(), theEcorePackage.getEBoolean(), "loadtimeForInheritance", null, 0, 1, RuntimeDependency.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -4159,7 +4145,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEAttribute(getTAnnotation_Name(), theEcorePackage.getEString(), "name", null, 0, 1, TAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTAnnotation_Args(), this.getTAnnotationArgument(), null, "args", null, 0, -1, TAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		op = initEOperation(getTAnnotation__HasStringArgument__String(), theEcorePackage.getEBoolean(), "hasStringArgument", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		EOperation op = initEOperation(getTAnnotation__HasStringArgument__String(), theEcorePackage.getEBoolean(), "hasStringArgument", 0, 1, !IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, theEcorePackage.getEString(), "argumentValue", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getTAnnotation__GetAnnotationAsString(), theEcorePackage.getEString(), "getAnnotationAsString", 0, 1, !IS_UNIQUE, IS_ORDERED);

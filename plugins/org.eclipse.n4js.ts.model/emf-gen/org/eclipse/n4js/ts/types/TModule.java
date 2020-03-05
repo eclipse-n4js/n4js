@@ -581,12 +581,4 @@ public interface TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 */
 	String getModuleSpecifier();
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model unique="false" otherUnique="false"
-	 * @generated
-	 */
-	boolean hasDirectLoadtimeDependencyTo(TModule other);
-
 } // TModule

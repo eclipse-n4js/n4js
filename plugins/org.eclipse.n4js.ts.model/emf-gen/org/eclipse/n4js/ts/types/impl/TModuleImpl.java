@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.ts.types.impl;
 
-import java.lang.reflect.InvocationTargetException;
-
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -36,10 +34,6 @@ import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
-
-import org.eclipse.xtext.xbase.lib.Functions.Function1;
-
-import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 /**
  * <!-- begin-user-doc -->
@@ -848,21 +842,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * @generated
 	 */
 	@Override
-	public boolean hasDirectLoadtimeDependencyTo(final TModule other) {
-		final Function1<RuntimeDependency, Boolean> _function = new Function1<RuntimeDependency, Boolean>() {
-			public Boolean apply(final RuntimeDependency it) {
-				return Boolean.valueOf((it.isLoadtimeForInheritance() && (it.getTarget() == other)));
-			}
-		};
-		return IterableExtensions.<RuntimeDependency>exists(this.getDependenciesRuntime(), _function);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case TypesPackage.TMODULE__ANNOTATIONS:
@@ -1199,20 +1178,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 			}
 		}
 		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
-		switch (operationID) {
-			case TypesPackage.TMODULE___HAS_DIRECT_LOADTIME_DEPENDENCY_TO__TMODULE:
-				return hasDirectLoadtimeDependencyTo((TModule)arguments.get(0));
-		}
-		return super.eInvoke(operationID, arguments);
 	}
 
 	/**

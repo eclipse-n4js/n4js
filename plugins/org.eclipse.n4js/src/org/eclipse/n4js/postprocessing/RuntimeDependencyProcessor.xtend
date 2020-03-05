@@ -190,13 +190,23 @@ class RuntimeDependencyProcessor {
 		], module);
 	}
 
-	// FIXME consider optimization
 	def private static List<TModule> getAllRuntimeCyclicModules(TModule module, boolean onlyLoadtime) {
+		// Note on performance: at this point we cannot search *all* strongly connected components in the
+		// graph, which would be more time efficient, because we are operating on a potentially (and usually)
+		// incomplete runtime dependency graph during the build. The only thing we can rely on is that the
+		// direct runtime dependencies of modules in our containing strongly connected component are up to
+		// date. Therefore, we are here only searching the SCC of 'module' (i.e. pass only 'module' as first
+		// argument to SCCUtils#findSCCs()) and do not make use of a more sophisticated algorithm for finding
+		// all SCCs such as Johnson's algorithm (cf. Johnson, SIAM Journal on Computing, Vol. 4, No. 1, 1975).
 		val sccs = SCCUtils.findSCCs(Iterators.singletonIterator(module), [m|
 			m.dependenciesRuntime.filter[!onlyLoadtime || isLoadtimeForInheritance].map[target]
 		]);
 		val cyclicModules = sccs.filter[remove(module)].head;
 		return cyclicModules;
+	}
+
+	def private boolean hasDirectLoadtimeDependencyTo(TModule from, TModule to) {
+		return from.dependenciesRuntime.exists[isLoadtimeForInheritance && target === to];
 	}
 
 	def private static boolean isDifferentModuleInSameProject(TModule module, ASTMetaInfoCache cache) {

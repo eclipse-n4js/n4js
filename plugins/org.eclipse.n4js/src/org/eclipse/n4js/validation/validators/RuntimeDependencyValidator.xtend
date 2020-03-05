@@ -68,7 +68,7 @@ class RuntimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 		}
 		val containingModule = (idRef.eResource as N4JSResource).module;
 		val hasCycle = (targetModule === containingModule && !containingModule.cyclicModulesRuntime.empty)
-			|| (targetModule !== containingModule && containingModule.cyclicModulesRuntime.contains(targetModule)); // FIXME linear search
+			|| (targetModule !== containingModule && containingModule.cyclicModulesRuntime.contains(targetModule));
 		if (hasCycle) {
 			val message = IssueCodes.getMessageForLTD_ILLEGAL_LOADTIME_REFERENCE()
 				+ '\n' + dependencyCycleToString(containingModule, false, INDENT);
@@ -106,7 +106,7 @@ class RuntimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	def private boolean holdsNotAnIllegalImportWithinLoadtimeCycle(TModule containingModule, ImportDeclaration importDecl) {
 		val targetModule = importDecl.module;
-		if (containingModule.cyclicModulesLoadtimeForInheritance.contains(targetModule)) { // FIXME linear search
+		if (containingModule.cyclicModulesLoadtimeForInheritance.contains(targetModule)) {
 			val message = IssueCodes.getMessageForLTD_LOADTIME_DEPENDENCY_CYCLE() + "\n"
 				+ dependencyCycleToString(targetModule, true, INDENT);
 			addIssue(message, importDecl, N4JSPackage.eINSTANCE.importDeclaration_Module, IssueCodes.LTD_LOADTIME_DEPENDENCY_CYCLE);

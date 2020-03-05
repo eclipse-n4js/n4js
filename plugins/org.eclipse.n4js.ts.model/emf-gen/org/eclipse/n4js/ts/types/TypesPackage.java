@@ -387,22 +387,13 @@ public interface TypesPackage extends EPackage {
 	int TMODULE_FEATURE_COUNT = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 23;
 
 	/**
-	 * The operation id for the '<em>Has Direct Loadtime Dependency To</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMODULE___HAS_DIRECT_LOADTIME_DEPENDENCY_TO__TMODULE = SYNTAX_RELATED_TELEMENT_OPERATION_COUNT + 0;
-
-	/**
 	 * The number of operations of the '<em>TModule</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE_OPERATION_COUNT = SYNTAX_RELATED_TELEMENT_OPERATION_COUNT + 1;
+	int TMODULE_OPERATION_COUNT = SYNTAX_RELATED_TELEMENT_OPERATION_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.RuntimeDependencyImpl <em>Runtime Dependency</em>}' class.
@@ -13055,16 +13046,6 @@ public interface TypesPackage extends EPackage {
 	EAttribute getTModule_ModuleSpecifier();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TModule#hasDirectLoadtimeDependencyTo(org.eclipse.n4js.ts.types.TModule) <em>Has Direct Loadtime Dependency To</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Has Direct Loadtime Dependency To</em>' operation.
-	 * @see org.eclipse.n4js.ts.types.TModule#hasDirectLoadtimeDependencyTo(org.eclipse.n4js.ts.types.TModule)
-	 * @generated
-	 */
-	EOperation getTModule__HasDirectLoadtimeDependencyTo__TModule();
-
-	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.RuntimeDependency <em>Runtime Dependency</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -16066,14 +16047,6 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute TMODULE__MODULE_SPECIFIER = eINSTANCE.getTModule_ModuleSpecifier();
-
-		/**
-		 * The meta object literal for the '<em><b>Has Direct Loadtime Dependency To</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation TMODULE___HAS_DIRECT_LOADTIME_DEPENDENCY_TO__TMODULE = eINSTANCE.getTModule__HasDirectLoadtimeDependencyTo__TModule();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.RuntimeDependencyImpl <em>Runtime Dependency</em>}' class.
