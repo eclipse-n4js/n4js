@@ -24,6 +24,8 @@ public final class N4JSDataCollectors {
 
 	public static final DataCollector dcBuild = create("Build");
 	public static final DataCollector dcAstPostprocess = create("AstPostprocess", dcBuild);
+	public static final DataCollector dcRuntimeDepsCollect = create("RuntimeDepsCollect", dcAstPostprocess);
+	public static final DataCollector dcRuntimeDepsFindCycles = create("RuntimeDepsFindCycles", dcAstPostprocess);
 	public static final DataCollector dcValidations = create("Validations", dcBuild);
 	public static final DataCollector dcValidationsPackageJson = create("Validations (package.json)", dcBuild);
 	public static final DataCollector dcTranspilation = create("Transpilation", dcBuild);

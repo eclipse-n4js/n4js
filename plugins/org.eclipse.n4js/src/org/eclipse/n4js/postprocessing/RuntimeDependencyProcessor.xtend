@@ -25,6 +25,7 @@ import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.smith.N4JSDataCollectors
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.RuntimeDependency
 import org.eclipse.n4js.ts.types.TModule
@@ -49,6 +50,15 @@ class RuntimeDependencyProcessor {
 	 * Invoked during AST traversal (and thus during main post-processing).
 	 */
 	def package recordRuntimeReferencesInCache(EObject node, ASTMetaInfoCache cache) {
+		val m = N4JSDataCollectors.dcRuntimeDepsCollect.getMeasurement();
+		try {
+			doRecordRuntimeReferencesInCache(node, cache);
+		} finally {
+			m.close();
+		}
+	}
+
+	def private doRecordRuntimeReferencesInCache(EObject node, ASTMetaInfoCache cache) {
 		if (node instanceof IdentifierRef) {
 			val target = node.targetElement;
 			if (N4JSLanguageUtils.hasRuntimeRepresentation(target, variantHelper)) {
@@ -84,6 +94,15 @@ class RuntimeDependencyProcessor {
 	 * Also sets the flag {@link ImportSpecifier#getRetainedAtRuntime() retainedAtRuntime}.
 	 */
 	def package void storeDirectRuntimeDependenciesInTModule(Script script, ASTMetaInfoCache cache) {
+		val m = N4JSDataCollectors.dcRuntimeDepsCollect.getMeasurement();
+		try {
+			doStoreDirectRuntimeDependenciesInTModule(script, cache)
+		} finally {
+			m.close();
+		}
+	}
+
+	def private void doStoreDirectRuntimeDependenciesInTModule(Script script, ASTMetaInfoCache cache) {
 		val module = script.module;
 		val importDecls = script.scriptElements.filter(ImportDeclaration).toList;
 
@@ -140,6 +159,15 @@ class RuntimeDependencyProcessor {
 	 * directly or indirectly required resources has finished).
 	 */
 	def package void computeAndStoreRuntimeCyclesInTModule(TModule module) {
+		val m = N4JSDataCollectors.dcRuntimeDepsFindCycles.getMeasurement();
+		try {
+			doComputeAndStoreRuntimeCyclesInTModule(module);
+		} finally {
+			m.close();
+		}
+	}
+
+	def private void doComputeAndStoreRuntimeCyclesInTModule(TModule module) {
 		// NOTE: as above, the order of cyclicModulesRuntime and runtimeCyclicLoadtimeDependents stored in
 		// the TModule is important, because we want to avoid random reordering of the same set of modules
 		// to avoid unnecessary changes of the TModule (see above for details)

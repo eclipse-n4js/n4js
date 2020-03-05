@@ -14,12 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.smith.DataCollector;
-import org.eclipse.n4js.smith.Measurement;
-import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.xtext.service.OperationCanceledError;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -67,18 +62,7 @@ public final class IssuesProvider implements Provider<List<Issue>> {
 	@Override
 	public List<Issue> get() throws OperationCanceledError {
 		operationCanceledManager.checkCanceled(ci);
-		URI uri = r.getURI();
-		DataCollector dc = uri != null && N4JSGlobals.PACKAGE_JSON.equals(uri.lastSegment())
-				? N4JSDataCollectors.dcValidationsPackageJson
-				: N4JSDataCollectors.dcValidations;
-		List<Issue> issues;
-		if (!dc.hasActiveMeasurement()) {
-			try (Measurement m = dc.getMeasurement("validation");) {
-				issues = rv.validate(r, checkMode, ci);
-			}
-		} else {
-			issues = rv.validate(r, checkMode, ci);
-		}
+		List<Issue> issues = rv.validate(r, checkMode, ci);
 		if (!issues.contains(null)) {
 			operationCanceledManager.checkCanceled(ci);
 			return issues;
