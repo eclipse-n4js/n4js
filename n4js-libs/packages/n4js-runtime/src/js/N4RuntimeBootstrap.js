@@ -151,7 +151,7 @@ function setN4TypeProperties(n4Type, name, modulePath, origin, members, memberAn
 
 function setN4ClassifierProperties(n4Classifier, superclass, instanceProto, staticProto, name, modulePath, origin, members, memberAnnotations, allImplementedInterfaces, annotations) {
 	const splitMembers = createMembers(instanceProto, staticProto, members, memberAnnotations);
-    n4Classifier.superclass = superclass;
+    n4Classifier.n4superType = superclass;
     n4Classifier.ownedMembers = splitMembers.ownedMembers;
     n4Classifier.consumedMembers = splitMembers.consumedMembers;
     n4Classifier.allImplementedInterfaces = allImplementedInterfaces || [];
@@ -209,7 +209,7 @@ function createAnnotation(annotationValues) {
     	annotation.name = annotationValues;
     	annotation.details = [];
 	} else {
-		val [name, details] = annotationValues;
+		const [name, details] = annotationValues;
     	annotation.name = name;
     	annotation.details = details || [];
 	}
