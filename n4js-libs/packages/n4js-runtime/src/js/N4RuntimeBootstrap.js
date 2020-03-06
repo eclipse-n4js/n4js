@@ -209,7 +209,7 @@ function createAnnotation(annotationValues) {
     	annotation.name = annotationValues;
     	annotation.details = [];
 	} else {
-		val [val, details] = annotationValues;
+		val [name, details] = annotationValues;
     	annotation.name = name;
     	annotation.details = details || [];
 	}
