@@ -12,6 +12,7 @@
 
 import _globalThis from "./_globalThis";
 
+const SYMBOL_IDENTIFIER_PREFIX = "#";
 
 var symHasInstance = Symbol.hasInstance,
     ArraySlice = Array.prototype.slice,
@@ -166,7 +167,7 @@ function createMembers(instanceProto, staticProto, memberStrings, memberAnnotati
     const consumedMembers = [];
 	if (memberStrings) {
         for (const memberString of memberStrings) {
-			const memberInfo = parseMemberInfo(memberString);
+			const memberInfo = parseMemberString(memberString);
 			const member = createMember(instanceProto, staticProto, memberInfo, annotations);
 			const members = (memberInfo.isConsumed) ? consumedMembers : ownedMembers;
             members.push(member);
@@ -220,7 +221,7 @@ function createAnnotation(annotationValues) {
     return annotation;
 }
 
-function parseMemberInfo(memberString) {
+function parseMemberString(memberString) {
 	if (!/^[mMfFgGsS][\.:]/.test(memberString)) {
 		return null;
 	}
@@ -237,9 +238,10 @@ function parseMemberInfo(memberString) {
 		default: isConsumed = undefined;
 	}
 	
-	const name = memberString.substring(idxNameStart);
+    const name = memberString.substring(idxNameStart);
+    const jsFunctionRef = (name.startsWith(SYMBOL_IDENTIFIER_PREFIX)) ? Symbol[name.substring(1)] : name;
 
-	return {memberString, name, kind, isStatic: isUpperCase, isConsumed};
+	return {memberString, name, kind, isStatic: isUpperCase, isConsumed, jsFunctionRef};
 }
 
 function createMember(instanceProto, staticProto, memberInfo, annotations) {
@@ -250,7 +252,7 @@ function createMember(instanceProto, staticProto, memberInfo, annotations) {
 			break;
 		case 'm': 
 			member = new N4Method();
-    		member.jsFunction = memberInfo.isStatic ? staticProto[memberInfo.name] : instanceProto[memberInfo.name];
+    		member.jsFunction = memberInfo.isStatic ? staticProto[memberInfo.jsFunctionRef] : instanceProto[memberInfo.jsFunctionRef];
 			break;
 		case 'g': 
 			member = new N4Accessor();

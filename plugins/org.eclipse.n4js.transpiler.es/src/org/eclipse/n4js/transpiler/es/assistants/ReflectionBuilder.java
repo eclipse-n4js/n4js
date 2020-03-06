@@ -176,10 +176,6 @@ public class ReflectionBuilder {
 
 	private JsonElement primitive(String value) {
 		value = value.replaceAll("\"", "\\\\\"");
-		if (value.contains("'")) {
-
-			// value = value.replaceAll("\\'", "\\\\\\'");
-		}
 		return new JsonPrimitive(value);
 	}
 
