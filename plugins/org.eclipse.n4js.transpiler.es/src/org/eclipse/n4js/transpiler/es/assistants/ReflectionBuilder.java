@@ -117,9 +117,9 @@ public class ReflectionBuilder {
 				: array(members);
 
 		JsonElement reflectInfo = array(
-				new JsonPrimitive(typeSTE.getName()),
-				new JsonPrimitive(modulePath),
-				new JsonPrimitive(origin),
+				primitive(typeSTE.getName()),
+				primitive(modulePath),
+				primitive(origin),
 				optMembers,
 				optMemberAnnotations,
 				optAllImplInterfaces,
@@ -136,7 +136,7 @@ public class ReflectionBuilder {
 			for (TInterface interf : superInterfaces) {
 				if (!isStructurallyTyped(interf)) {
 					String fqnInterf = resourceNameComputer.getFullyQualifiedTypeName(interf);
-					allImplInterfaces.add(new JsonPrimitive(fqnInterf));
+					allImplInterfaces.add(primitive(fqnInterf));
 				}
 			}
 		}
@@ -174,6 +174,15 @@ public class ReflectionBuilder {
 		return object;
 	}
 
+	private JsonElement primitive(String value) {
+		value = value.replaceAll("\"", "\\\\\"");
+		if (value.contains("'")) {
+
+			// value = value.replaceAll("\\'", "\\\\\\'");
+		}
+		return new JsonPrimitive(value);
+	}
+
 	private boolean isStructurallyTyped(TN4Classifier n4Classifier) {
 		TypingStrategy ts = n4Classifier.getTypingStrategy();
 		return ts == TypingStrategy.STRUCTURAL || ts == TypingStrategy.STRUCTURAL_FIELDS;
@@ -182,7 +191,7 @@ public class ReflectionBuilder {
 	private List<JsonElement> createAllMembers(Iterable<N4MemberDeclaration> allMembers) {
 		List<JsonElement> memberStrings = new ArrayList<>();
 		for (N4MemberDeclaration member : allMembers) {
-			memberStrings.add(new JsonPrimitive(createMemberString(member)));
+			memberStrings.add(primitive(createMemberString(member)));
 		}
 		return memberStrings;
 	}
@@ -264,14 +273,14 @@ public class ReflectionBuilder {
 
 	private JsonElement createRuntimeAnnotation2(TAnnotation ann) {
 		List<JsonElement> args = ann.getArgs().stream()
-				.map(arg -> new JsonPrimitive(arg.getArgAsString()))
+				.map(arg -> primitive(arg.getArgAsString()))
 				.collect(Collectors.toList());
 
 		if (args.isEmpty()) {
-			return new JsonPrimitive(ann.getName());
+			return primitive(ann.getName());
 		} else {
 			return arrayOrSelf(
-					new JsonPrimitive(ann.getName()),
+					primitive(ann.getName()),
 					array(args));
 		}
 	}
