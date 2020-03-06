@@ -40,7 +40,6 @@ import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypingStrategy;
 import org.eclipse.n4js.ts.types.util.SuperInterfacesIterable;
 import org.eclipse.n4js.utils.ResourceNameComputer;
-import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.gson.JsonArray;
@@ -132,12 +131,13 @@ public class ReflectionBuilder {
 	private List<JsonElement> getImplementedInterfaces(Type type) {
 		List<JsonElement> allImplInterfaces = new ArrayList<>();
 		if (type instanceof TClassifier) {
-			Iterable<TInterface> allImplementedInterfaces = IterableExtensions
-					.filter(SuperInterfacesIterable.of((TClassifier) type), this::isStructurallyTyped);
+			SuperInterfacesIterable superInterfaces = SuperInterfacesIterable.of((TClassifier) type);
 
-			for (TInterface interf : allImplementedInterfaces) {
-				String fqnInterf = resourceNameComputer.getFullyQualifiedTypeName(interf);
-				allImplInterfaces.add(new JsonPrimitive(fqnInterf));
+			for (TInterface interf : superInterfaces) {
+				if (!isStructurallyTyped(interf)) {
+					String fqnInterf = resourceNameComputer.getFullyQualifiedTypeName(interf);
+					allImplInterfaces.add(new JsonPrimitive(fqnInterf));
+				}
 			}
 		}
 		return allImplInterfaces;
