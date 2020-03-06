@@ -11,7 +11,7 @@
 package org.eclipse.n4js.transpiler.es.assistants
 
 import com.google.common.collect.ArrayListMultimap
-import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.google.inject.Inject
 import java.util.List
 import org.eclipse.n4js.AnnotationDefinition
@@ -401,9 +401,9 @@ class BootstrapCallAssistant extends TransformationAssistant {
 		val typeSTE = findSymbolTableEntryForElement(typeDecl, true);
 		val reflectionBuilder = new ReflectionBuilder(state, resourceNameComputer);
 		val reflectInfo = reflectionBuilder.createReflectionInfo(typeDecl, typeSTE);
-		val gson = new Gson();
+		val gson = new GsonBuilder().disableHtmlEscaping().create();
 		val origJsonString = gson.toJson(reflectInfo);
-		val quotedJsonString = "'" + origJsonString.replaceAll("'", "\'") + "'";
+		val quotedJsonString = "'" + origJsonString.replaceAll("\'", "\\\\\'") + "'";
 		
 		return _StringLiteral(quotedJsonString, quotedJsonString);
 	}
