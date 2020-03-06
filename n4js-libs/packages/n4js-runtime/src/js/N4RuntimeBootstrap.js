@@ -22,7 +22,10 @@ function defineN4TypeGetter(instance, factoryFn) {
     Object.defineProperty(instance, "n4type", {
         configurable: true, // for hot reloading/patching
         get: function() {
-            return n4type || (n4type = factoryFn());
+			if (!n4type) {
+				n4type = factoryFn();
+			}
+            return n4type;
         }
     });
 }
@@ -120,7 +123,7 @@ function $makeClass(ctor, superCtor, implementedInterfaces, instanceMethods, sta
 
 function makeReflectionsForClass(instanceProto, staticProto, reflectionString) {
 	const reflectionValues = JSON.parse(reflectionString);
-	const superclass = staticProto.__proto__;
+	const superclass = staticProto.__proto__.n4type;
 	const n4Class = new N4Class();
     setN4TypeProperties(n4Class, ...reflectionValues);
     setN4ClassifierProperties(n4Class, superclass, instanceProto, staticProto, ...reflectionValues);
@@ -179,8 +182,9 @@ function createMemberAnnotations(memberAnnotations) {
         for (const memberName of Object.keys(memberAnnotations)) {
             const annotationArray = [];
             annotations[memberName] = annotationArray;
+
             for (const memberAnnotation of memberAnnotations[memberName]) {
-                const annotation = createAnnotation(...memberAnnotation);
+                const annotation = createAnnotation(memberAnnotation);
                 if (annotation) {
                     annotationArray.push(annotation);
                 }
