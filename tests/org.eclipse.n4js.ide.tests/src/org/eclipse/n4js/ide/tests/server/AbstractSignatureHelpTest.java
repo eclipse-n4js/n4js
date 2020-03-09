@@ -12,7 +12,6 @@ package org.eclipse.n4js.ide.tests.server;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.File;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -26,7 +25,7 @@ import org.eclipse.xtext.testing.SignatureHelpConfiguration;
 /**
  * Abstract test class for signature protocol tests
  */
-abstract public class AbstractSignatureHelpTest extends AbstractIdeTest<SignatureHelpConfiguration> {
+abstract public class AbstractSignatureHelpTest extends AbstractStructuredIdeTest<SignatureHelpConfiguration> {
 
 	/** Call this method in a test */
 	protected void test(SignatureHelpConfiguration shc) throws Exception {
@@ -34,11 +33,11 @@ abstract public class AbstractSignatureHelpTest extends AbstractIdeTest<Signatur
 	}
 
 	@Override
-	protected void performTest(File root, Project project, SignatureHelpConfiguration shc)
+	protected void performTest(Project project, SignatureHelpConfiguration shc)
 			throws InterruptedException, ExecutionException {
 
 		TextDocumentPositionParams textDocumentPositionParams = new TextDocumentPositionParams();
-		String completeFileUri = getFileUriFromModuleName(root, shc.getFilePath()).toString();
+		String completeFileUri = getFileURIFromModuleName(shc.getFilePath()).toString();
 		textDocumentPositionParams.setTextDocument(new TextDocumentIdentifier(completeFileUri));
 		textDocumentPositionParams.setPosition(new Position(shc.getLine(), shc.getColumn()));
 		CompletableFuture<SignatureHelp> signatureHelpFuture = languageServer.signatureHelp(textDocumentPositionParams);

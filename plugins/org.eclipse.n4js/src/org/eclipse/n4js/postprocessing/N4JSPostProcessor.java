@@ -57,6 +57,8 @@ public class N4JSPostProcessor implements PostProcessor {
 	@Inject
 	private ASTProcessor astProcessor;
 	@Inject
+	private RuntimeDependencyProcessor runtimeDependencyProcessor;
+	@Inject
 	private OperationCanceledManager operationCanceledManager;
 	@Inject
 	private TypeSystemHelper typeSystemHelper;
@@ -90,6 +92,13 @@ public class N4JSPostProcessor implements PostProcessor {
 		} finally {
 			cache.clearTemporaryPostProcessingData();
 		}
+	}
+
+	@Override
+	public void finalizePostProcessing(PostProcessingAwareResource resource, CancelIndicator cancelIndicator) {
+		final N4JSResource resourceCasted = (N4JSResource) resource;
+		final TModule module = resourceCasted.getModule();
+		runtimeDependencyProcessor.computeAndStoreRuntimeCyclesInTModule(module);
 	}
 
 	@Override

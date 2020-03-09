@@ -26,6 +26,7 @@ import org.eclipse.emf.common.util.EList;
  * The following features are supported:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.ts.types.TModule#getSimpleName <em>Simple Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getQualifiedName <em>Qualified Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getProjectName <em>Project Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getVendorID <em>Vendor ID</em>}</li>
@@ -35,6 +36,10 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#isMainModule <em>Main Module</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#isPreLinkingPhase <em>Pre Linking Phase</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#isReconciled <em>Reconciled</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.TModule#getDependenciesRuntime <em>Dependencies Runtime</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.TModule#getCyclicModulesRuntime <em>Cyclic Modules Runtime</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.TModule#getCyclicModulesLoadtimeForInheritance <em>Cyclic Modules Loadtime For Inheritance</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.TModule#getRuntimeCyclicLoadtimeDependents <em>Runtime Cyclic Loadtime Dependents</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getTopLevelTypes <em>Top Level Types</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getVariables <em>Variables</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getInternalTypes <em>Internal Types</em>}</li>
@@ -50,6 +55,32 @@ import org.eclipse.emf.common.util.EList;
  * @generated
  */
 public interface TModule extends SyntaxRelatedTElement, TAnnotableElement {
+	/**
+	 * Returns the value of the '<em><b>Simple Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * *
+	 * The module's simple name, i.e. the last segment of its qualified name.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Simple Name</em>' attribute.
+	 * @see #setSimpleName(String)
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_SimpleName()
+	 * @model unique="false"
+	 * @generated
+	 */
+	String getSimpleName();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.TModule#getSimpleName <em>Simple Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Simple Name</em>' attribute.
+	 * @see #getSimpleName()
+	 * @generated
+	 */
+	void setSimpleName(String value);
+
 	/**
 	 * Returns the value of the '<em><b>Qualified Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -290,6 +321,79 @@ public interface TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 * @generated
 	 */
 	void setReconciled(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Dependencies Runtime</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.n4js.ts.types.RuntimeDependency}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Direct runtime dependencies of this module within same project.
+	 * <p>
+	 * Set at end of AST traversal (i.e. during main post-processing).
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Dependencies Runtime</em>' containment reference list.
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_DependenciesRuntime()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<RuntimeDependency> getDependenciesRuntime();
+
+	/**
+	 * Returns the value of the '<em><b>Cyclic Modules Runtime</b></em>' reference list.
+	 * The list contents are of type {@link org.eclipse.n4js.ts.types.TModule}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Modules within same project with a direct or indirect cyclic runtime dependency to this module.
+	 * Never includes this module.
+	 * <p>
+	 * Set during finalization of post-processing.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Cyclic Modules Runtime</em>' reference list.
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_CyclicModulesRuntime()
+	 * @model
+	 * @generated
+	 */
+	EList<TModule> getCyclicModulesRuntime();
+
+	/**
+	 * Returns the value of the '<em><b>Cyclic Modules Loadtime For Inheritance</b></em>' reference list.
+	 * The list contents are of type {@link org.eclipse.n4js.ts.types.TModule}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Modules within same project with a direct or indirect cyclic loadtime dependency to this module,
+	 * taking into account only such loadtime dependencies that are caused by extends/implements clauses.
+	 * Never includes this module.
+	 * <p>
+	 * Set during finalization of post-processing.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Cyclic Modules Loadtime For Inheritance</em>' reference list.
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_CyclicModulesLoadtimeForInheritance()
+	 * @model
+	 * @generated
+	 */
+	EList<TModule> getCyclicModulesLoadtimeForInheritance();
+
+	/**
+	 * Returns the value of the '<em><b>Runtime Cyclic Loadtime Dependents</b></em>' reference list.
+	 * The list contents are of type {@link org.eclipse.n4js.ts.types.TModule}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Modules within same project that are runtime cyclic to this module AND have direct loadtime dependency
+	 * to this module, taking into account only such loadtime dependencies that are caused by extends/implements
+	 * clauses.
+	 * <p>
+	 * Set during finalization of post-processing.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Runtime Cyclic Loadtime Dependents</em>' reference list.
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_RuntimeCyclicLoadtimeDependents()
+	 * @model
+	 * @generated
+	 */
+	EList<TModule> getRuntimeCyclicLoadtimeDependents();
 
 	/**
 	 * Returns the value of the '<em><b>Top Level Types</b></em>' containment reference list.

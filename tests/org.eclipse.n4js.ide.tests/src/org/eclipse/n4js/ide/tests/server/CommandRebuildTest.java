@@ -13,7 +13,6 @@ package org.eclipse.n4js.ide.tests.server;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -35,7 +34,7 @@ import com.google.inject.Injector;
 /**
  * Tests the client command 'n4js.rebuild'
  */
-public class CommandRebuildTest extends AbstractIdeTest<Void> {
+public class CommandRebuildTest extends AbstractStructuredIdeTest<Void> {
 	static final String PROBANDS_NAME = "probands";
 	static final String PROJECT_STATE_NAME = ".n4js.projectstate";
 
@@ -68,19 +67,19 @@ public class CommandRebuildTest extends AbstractIdeTest<Void> {
 	}
 
 	@Override
-	protected void performTest(File root, Project project, Void nothing) throws Exception {
+	protected void performTest(Project project, Void nothing) throws Exception {
 		// check pre-state
-		assertEquals(0, languageClient.getErrorsCount());
+		assertNoIssues();
 
 		String moduleName = project.getSourceFolders().get(0).getModules().get(0).getName();
-		Path prjPath = root.toPath().resolve(PROJECT_NAME).toAbsolutePath();
+		Path prjPath = getRoot().toPath().resolve(PROJECT_NAME).toAbsolutePath();
 		prjStatePath = prjPath.resolve(PROJECT_STATE_NAME);
 		genFileStatePath = prjPath.resolve(project.getOutputFolder()).resolve(moduleName + ".js");
 
 		setFileCreationDate(prjStatePath);
 		setFileCreationDate(genFileStatePath);
 
-		languageClient.resetCounters();
+		languageClient.clear();
 	}
 
 	/** Expectation is that files '.n4js.projectstate' and 'src-gen/Module.js' are changed due to rebuild action. */
@@ -97,7 +96,7 @@ public class CommandRebuildTest extends AbstractIdeTest<Void> {
 		joinServerRequests();
 
 		// evaluate
-		assertEquals(0, languageClient.getErrorsCount());
+		assertNoIssues();
 		FileTime prjStateTime = Files.readAttributes(prjStatePath, BasicFileAttributes.class).lastModifiedTime();
 		FileTime genFileTime = Files.readAttributes(genFileStatePath, BasicFileAttributes.class).lastModifiedTime();
 		assertNotEquals(FILE_TIME_MILLISECONDS, prjStateTime.toMillis());
@@ -116,7 +115,7 @@ public class CommandRebuildTest extends AbstractIdeTest<Void> {
 		joinServerRequests();
 
 		// evaluate
-		assertEquals(0, languageClient.getErrorsCount());
+		assertNoIssues();
 		FileTime prjStateTime = Files.readAttributes(prjStatePath, BasicFileAttributes.class).lastModifiedTime();
 		FileTime genFileTime = Files.readAttributes(genFileStatePath, BasicFileAttributes.class).lastModifiedTime();
 

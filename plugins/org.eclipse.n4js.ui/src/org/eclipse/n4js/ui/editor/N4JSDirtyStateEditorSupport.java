@@ -20,7 +20,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.resource.N4JSResource;
-import org.eclipse.n4js.resource.UserdataMapper;
+import org.eclipse.n4js.resource.UserDataMapper;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TypesPackage;
@@ -182,14 +182,14 @@ public class N4JSDirtyStateEditorSupport extends DirtyStateEditorSupport {
 			return false;
 		}
 		if (TypesPackage.Literals.TMODULE == newDescription.getEClass()) {
-			String newModule = newDescription.getUserData(UserdataMapper.USERDATA_KEY_SERIALIZED_SCRIPT);
-			String oldModule = oldDescription.getUserData(UserdataMapper.USERDATA_KEY_SERIALIZED_SCRIPT);
+			String newModule = newDescription.getUserData(UserDataMapper.USER_DATA_KEY_SERIALIZED_SCRIPT);
+			String oldModule = oldDescription.getUserData(UserDataMapper.USER_DATA_KEY_SERIALIZED_SCRIPT);
 			if (newModule == null || oldModule == null) {
 				return true;
 			}
 			if (!newModule.equals(oldModule)) {
-				TModule newModuleObj = UserdataMapper.getDeserializedModuleFromDescription(newDescription, uri);
-				TModule oldModuleObj = UserdataMapper.getDeserializedModuleFromDescription(oldDescription, uri);
+				TModule newModuleObj = UserDataMapper.getDeserializedModuleFromDescription(newDescription, uri);
+				TModule oldModuleObj = UserDataMapper.getDeserializedModuleFromDescription(oldDescription, uri);
 				// we deserialize the TModules and ignore the MD5 Hash
 				newModuleObj.setAstMD5("");
 				oldModuleObj.setAstMD5("");

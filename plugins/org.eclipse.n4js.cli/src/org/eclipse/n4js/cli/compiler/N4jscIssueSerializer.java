@@ -22,7 +22,7 @@ import com.google.inject.Singleton;
  * Serializer for issues to be displayed on the user console. Uses 1-based positions.
  */
 @Singleton
-public class IssueSerializer {
+public class N4jscIssueSerializer {
 
 	@Inject
 	XWorkspaceManager workspaceManager;

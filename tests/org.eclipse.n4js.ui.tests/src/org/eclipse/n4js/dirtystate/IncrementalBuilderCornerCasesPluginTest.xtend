@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.emf.common.util.URI
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.resource.N4JSResourceDescriptionManager
-import org.eclipse.n4js.resource.UserdataMapper
+import org.eclipse.n4js.resource.UserDataMapper
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ui.building.ResourceDescriptionWithoutModuleUserData
@@ -121,7 +121,7 @@ public class IncrementalBuilderCornerCasesPluginTest extends AbstractBuilderPart
 			if (N4JSGlobals.ALL_N4_FILE_EXTENSIONS.contains(description.URI.fileExtension)) {
 				var moduleDescription = description.getExportedObjectsByType(TypesPackage.Literals.TMODULE).head
 				assertNotNull(description.URI.toString, moduleDescription)
-				var moduleAsString = UserdataMapper.
+				var moduleAsString = UserDataMapper.
 					getDeserializedModuleFromDescriptionAsString(moduleDescription, description.URI)
 				assertNotNull(description.URI.toString(), moduleAsString)
 			}

@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -32,60 +33,66 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.ScriptElement;
+import org.eclipse.n4js.ts.types.RuntimeDependency;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.utils.EcoreUtilN4;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
-import org.eclipse.xtext.util.IAcceptor;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Sets;
 
 /**
  * The user data for exported modules contains a serialized representation of the module's content. This allows to
  * restore the type model without parsing or linking the complete JS file.
  *
- * The {@link UserdataMapper} provides this serialized representation and the logic to recreate the {@link EObject
+ * The {@code UserDataMapper} provides this serialized representation and the logic to recreate the {@link EObject
  * types} from that.
  */
-public final class UserdataMapper {
+public final class UserDataMapper {
 
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger LOGGER = Logger.getLogger(UserdataMapper.class);
+	private static final Logger LOGGER = Logger.getLogger(UserDataMapper.class);
 
 	/**
 	 * The key in the user data map of the module's description.
 	 */
-	public final static String USERDATA_KEY_SERIALIZED_SCRIPT = "serializedScript";
+	public final static String USER_DATA_KEY_SERIALIZED_SCRIPT = "serializedScript";
 
 	/**
-	 * Comma-separated list of URIs of resource URIs this resource directly depends on.
+	 * Comma-separated list of resource URIs this resource directly depends on.
 	 */
-	public final static String USERDATA_KEY_DEPENDENCIES = "dependencies";
+	public final static String USER_DATA_KEY_DEPENDENCIES = "dependencies";
+
+	/**
+	 * Comma-separated list of resource URIs this resource directly depends on during load time, taking into account
+	 * only such load-time dependencies that are caused by extends/implements clauses (see
+	 * {@link RuntimeDependency#isLoadtimeForInheritance()}).
+	 */
+	public final static String USER_DATA_KEY_DEPENDENCIES_LOADTIME_FOR_INHERITANCE = "dependenciesLoadtimeForInheritance";
 
 	/**
 	 * The key in the user data map of static-polyfill contents-hash
 	 */
-	public final static String USERDATA_KEY_STATIC_POLYFILL_CONTENTHASH = "staticPolyfillContentHash";
+	public final static String USER_DATA_KEY_STATIC_POLYFILL_CONTENTHASH = "staticPolyfillContentHash";
 
 	/**
 	 * The key in the user data map of time stamp data. Value is a String representations of long (milliseconds).
 	 */
-	public static final String USERDATA_KEY_TIMESTAMP = "timestamp";
+	public static final String USER_DATA_KEY_TIMESTAMP = "timestamp";
 
 	/**
 	 * The key in the user data map for storing the value of transient property {@link TModule#getAstMD5()
 	 * TModule#astMD5}.
 	 */
-	public static final String USERDATA_KEY_AST_MD5 = "astMD5";
+	public static final String USER_DATA_KEY_AST_MD5 = "astMD5";
 
 	/**
 	 * Flag indicating whether the string representation contains binary or human readable data.
@@ -121,7 +128,7 @@ public final class UserdataMapper {
 
 	/**
 	 * Serializes an exported script (or other {@link EObject}) stored in given resource content at index 1, and stores
-	 * that in a map under key {@link #USERDATA_KEY_SERIALIZED_SCRIPT}.
+	 * that in a map under key {@link #USER_DATA_KEY_SERIALIZED_SCRIPT}.
 	 */
 	public static Map<String, String> createUserData(final TModule exportedModule) throws IOException,
 			UnsupportedEncodingException {
@@ -164,11 +171,11 @@ public final class UserdataMapper {
 				: baos.toString(TRANSFORMATION_CHARSET_NAME);
 
 		final HashMap<String, String> ret = new HashMap<>();
-		ret.put(USERDATA_KEY_SERIALIZED_SCRIPT, serializedScript);
+		ret.put(USER_DATA_KEY_SERIALIZED_SCRIPT, serializedScript);
 
 		final String astMD5 = exportedModule.getAstMD5();
 		if (astMD5 != null) {
-			ret.put(USERDATA_KEY_AST_MD5, astMD5);
+			ret.put(USER_DATA_KEY_AST_MD5, astMD5);
 		}
 
 		ret.put(N4JSResourceDescriptionStrategy.MAIN_MODULE_KEY, Boolean.toString(exportedModule.isMainModule()));
@@ -177,7 +184,7 @@ public final class UserdataMapper {
 		// required to trigger rebuilds even if only minor changes happened to the content.
 		if (exportedModule.isStaticPolyfillModule()) {
 			final String contentHash = Integer.toHexString(originalResource.getParseResult().getRootNode().hashCode());
-			ret.put(USERDATA_KEY_STATIC_POLYFILL_CONTENTHASH, contentHash);
+			ret.put(USER_DATA_KEY_STATIC_POLYFILL_CONTENTHASH, contentHash);
 		}
 		return ret;
 	}
@@ -196,7 +203,7 @@ public final class UserdataMapper {
 			timestamp = System.currentTimeMillis();
 		}
 		final HashMap<String, String> result = new HashMap<>();
-		result.put(USERDATA_KEY_TIMESTAMP, String.valueOf(timestamp));
+		result.put(USER_DATA_KEY_TIMESTAMP, String.valueOf(timestamp));
 		return result;
 	}
 
@@ -228,7 +235,7 @@ public final class UserdataMapper {
 	 * Reads the TModule stored in the given IEObjectDescription.
 	 */
 	public static TModule getDeserializedModuleFromDescription(IEObjectDescription eObjectDescription, URI uri) {
-		final String serializedData = eObjectDescription.getUserData(USERDATA_KEY_SERIALIZED_SCRIPT);
+		final String serializedData = eObjectDescription.getUserData(USER_DATA_KEY_SERIALIZED_SCRIPT);
 		if (Strings.isNullOrEmpty(serializedData)) {
 			return null;
 		}
@@ -256,7 +263,7 @@ public final class UserdataMapper {
 		final TModule module = (TModule) contents.get(0);
 		xres.getContents().clear();
 
-		final String astMD5 = eObjectDescription.getUserData(USERDATA_KEY_AST_MD5);
+		final String astMD5 = eObjectDescription.getUserData(USER_DATA_KEY_AST_MD5);
 		module.setAstMD5(astMD5);
 
 		return module;
@@ -276,7 +283,7 @@ public final class UserdataMapper {
 	 *         <code>false</code> otherwise
 	 */
 	public static boolean hasSerializedModule(IEObjectDescription eObjectDescription) {
-		return eObjectDescription.getUserData(USERDATA_KEY_SERIALIZED_SCRIPT) != null;
+		return eObjectDescription.getUserData(USER_DATA_KEY_SERIALIZED_SCRIPT) != null;
 	}
 
 	private static Joiner joiner = Joiner.on(",");
@@ -286,28 +293,56 @@ public final class UserdataMapper {
 	 * {@link #readDependenciesFromDescription(IResourceDescription)}.
 	 */
 	public static void writeDependenciesToUserData(N4JSResource resource, Map<String, String> userData) {
-		final Set<URI> dependencies = Sets.newLinkedHashSet();
-		computeCrossRefs(resource, targetObj -> {
-			final Resource targetRes = targetObj.eResource();
-			if (targetRes != null) {
-				dependencies.add(targetRes.getURI());
-			}
-		});
-		userData.put(USERDATA_KEY_DEPENDENCIES, joiner.join(dependencies));
+		final Set<URI> dependencies = computeCrossRefs(resource);
+		final Set<URI> dependenciesLoadtimeForInheritance = getDependenciesLoadtimeForInheritance(resource);
+		userData.put(USER_DATA_KEY_DEPENDENCIES,
+				joiner.join(dependencies));
+		userData.put(USER_DATA_KEY_DEPENDENCIES_LOADTIME_FOR_INHERITANCE,
+				joiner.join(dependenciesLoadtimeForInheritance));
 	}
 
-	private static void computeCrossRefs(N4JSResource resource, IAcceptor<TModule> acceptor) {
+	private static Set<URI> computeCrossRefs(N4JSResource resource) {
+		final Set<URI> result = new LinkedHashSet<>();
 		final Script script = resource.getScript();
 		if (script != null && !script.eIsProxy()) {
 			for (ScriptElement elem : script.getScriptElements()) {
 				if (elem instanceof ImportDeclaration) {
 					final TModule module = ((ImportDeclaration) elem).getModule();
 					if (module != null && !module.eIsProxy()) {
-						acceptor.accept(module);
+						final Resource targetRes = module.eResource();
+						if (targetRes != null) {
+							final URI uri = targetRes.getURI();
+							if (uri != null) {
+								result.add(uri);
+							}
+						}
 					}
 				}
 			}
 		}
+		return result;
+	}
+
+	private static Set<URI> getDependenciesLoadtimeForInheritance(N4JSResource resource) {
+		final Set<URI> result = new LinkedHashSet<>();
+		final TModule module = resource.getModule();
+		if (module != null && !module.eIsProxy()) {
+			for (RuntimeDependency dep : module.getDependenciesRuntime()) {
+				if (dep.isLoadtimeForInheritance()) {
+					final TModule targetModule = dep.getTarget();
+					if (targetModule != null && !targetModule.eIsProxy()) {
+						final Resource targetRes = targetModule.eResource();
+						if (targetRes != null) {
+							final URI uri = targetRes.getURI();
+							if (uri != null) {
+								result.add(uri);
+							}
+						}
+					}
+				}
+			}
+		}
+		return result;
 	}
 
 	private static final Splitter splitter = Splitter.on(',').omitEmptyStrings();
@@ -323,10 +358,24 @@ public final class UserdataMapper {
 	 * Returns none if the information is missing in the resource description.
 	 */
 	public static Optional<List<String>> readDependenciesFromDescription(IResourceDescription description) {
+		return readDependenciesFromDescription(description, USER_DATA_KEY_DEPENDENCIES);
+	}
+
+	/**
+	 * Same as {@link #readDependenciesFromDescription(IResourceDescription)}, but for load-time dependencies, taking
+	 * into account only such load-time dependencies that are caused by extends/implements clauses.
+	 */
+	public static Optional<List<String>> readDependenciesLoadtimeForInheritanceFromDescription(
+			IResourceDescription description) {
+		return readDependenciesFromDescription(description, USER_DATA_KEY_DEPENDENCIES_LOADTIME_FOR_INHERITANCE);
+	}
+
+	private static Optional<List<String>> readDependenciesFromDescription(IResourceDescription description,
+			String userDataKey) {
 		final Iterable<IEObjectDescription> modules = description
 				.getExportedObjectsByType(TypesPackage.Literals.TMODULE);
 		for (IEObjectDescription module : modules) {
-			final String dependenciesStr = module.getUserData(USERDATA_KEY_DEPENDENCIES);
+			final String dependenciesStr = module.getUserData(userDataKey);
 			if (dependenciesStr != null) {
 				return Optional.of(splitter.splitToList(dependenciesStr));
 			}

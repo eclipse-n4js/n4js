@@ -50,7 +50,7 @@ import org.eclipse.n4js.resource.N4JSResourceDescriptionManager;
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.resource.N4JSUnloader;
 import org.eclipse.n4js.resource.PostProcessingAwareResource.PostProcessor;
-import org.eclipse.n4js.resource.UserdataMapper;
+import org.eclipse.n4js.resource.UserDataMapper;
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
 import org.eclipse.n4js.scoping.N4JSGlobalScopeProvider;
 import org.eclipse.n4js.scoping.N4JSScopeProvider;
@@ -252,10 +252,10 @@ public class N4JSRuntimeModule extends org.eclipse.n4js.AbstractN4JSRuntimeModul
 	 * Required for serializing/deserializing type instances in order to save them to the user data field of
 	 * EObjectDescriptions
 	 *
-	 * @return Class<{@link UserdataMapper}>
+	 * @return Class<{@link UserDataMapper}>
 	 */
-	public Class<? extends UserdataMapper> bindTypeUserdataMapper() {
-		return UserdataMapper.class;
+	public Class<? extends UserDataMapper> bindTypeUserDataMapper() {
+		return UserDataMapper.class;
 	}
 
 	@Override

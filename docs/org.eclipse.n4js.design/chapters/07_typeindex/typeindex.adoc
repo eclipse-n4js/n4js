@@ -212,6 +212,9 @@ Remarks:
   TModule with a newly loaded AST. These states differ in an unspecified way from their corresponding non-reconciled
   states. For example, in state *Fully Initialized ®* the TModule does not contain any DeferredTypeRefs while, at the
   same time, the TModule isn't fully processed, because proxy resolution, typing, etc. have not taken place, yet.
+* edge "postProcess" from *Fully Initialized* to *Fully Processed* is further divided into two sub-steps on implementation
+  level: "main post-processing" and "finalization of post-processing". For details, see API documentation of method
+  `#finalizePostProcessing()` in class `PostProcessingAwareResource.PostProcessor`.
 * TODO old text (clarify this; I could not reproduce this behavior): when `unloadAST` is called, `fullyInitialized` remains
   unchanged. This is why the value of `fullyInitialized` should be indeterminate in row *Loaded from Description*; it
   depends on the previous value if the state *Loaded from Description* was reached by calling `unloadAST`.

@@ -11,7 +11,7 @@
 package org.eclipse.n4js.tests.typesbuilder.extensions
 
 import org.eclipse.n4js.resource.N4JSResource
-import org.eclipse.n4js.resource.UserdataMapper
+import org.eclipse.n4js.resource.UserDataMapper
 import org.eclipse.n4js.tests.typesbuilder.utils.OrderedEmfFormatter
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.xtext.resource.IEObjectDescription
@@ -20,12 +20,12 @@ import static org.junit.Assert.*
 
 /**
  */
-class UserdataAssertionsExtension {
-	
-	def assertSerializedUserdata(Iterable<IEObjectDescription> eoDescs, CharSequence expectedTypesSerialization, boolean enableUserDataCompare, N4JSResource resource) {
+class UserDataAssertionsExtension {
+
+	def assertSerializedUserData(Iterable<IEObjectDescription> eoDescs, CharSequence expectedTypesSerialization, boolean enableUserDataCompare, N4JSResource resource) {
 		val syntaxEoDesc = eoDescs.head;
 
-		val fromUserData = UserdataMapper.getDeserializedModuleFromDescription(syntaxEoDesc,resource.URI)
+		val fromUserData = UserDataMapper.getDeserializedModuleFromDescription(syntaxEoDesc,resource.URI)
 
 		if(enableUserDataCompare) {
 			compareUserData(syntaxEoDesc, fromUserData, expectedTypesSerialization.toString)

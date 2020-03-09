@@ -282,6 +282,20 @@ public class StringLSP4J {
 		return "(" + str + ")";
 	}
 
+	/** Like {@link #toString(Diagnostic)}, but shorter, ignoring code, source, and related information. */
+	public String toStringShort(Diagnostic diagnostic) {
+		if (diagnostic == null) {
+			return "";
+		}
+
+		String str = Strings.join(", ",
+				diagnostic.getSeverity(),
+				toString(diagnostic.getRange()),
+				diagnostic.getMessage());
+
+		return "(" + str + ")";
+	}
+
 	/** @return string for given element */
 	public String toString(DiagnosticRelatedInformation dri) {
 		if (dri == null) {

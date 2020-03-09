@@ -9,6 +9,8 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-import { getMessage } from "foo";
-
 export public const baz = <div align="center">{getMessage()}</div>;
+
+export public function getMessage(): string {
+	return "hello";
+}

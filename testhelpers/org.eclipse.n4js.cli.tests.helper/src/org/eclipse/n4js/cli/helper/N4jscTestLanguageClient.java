@@ -12,7 +12,6 @@ package org.eclipse.n4js.cli.helper;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -26,7 +25,6 @@ import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.cli.compiler.N4jscLanguageClient;
 import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
-import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.common.collect.HashMultimap;
@@ -53,12 +51,17 @@ public class N4jscTestLanguageClient extends N4jscLanguageClient {
 	public void publishDiagnostics(PublishDiagnosticsParams diagnostics) {
 		super.publishDiagnostics(diagnostics);
 
+		String uriString = issueSerializer.uri(diagnostics.getUri());
+
+		issues.removeAll(uriString);
+		errors.removeAll(uriString);
+		warnings.removeAll(uriString);
+
 		List<Diagnostic> issueList = diagnostics.getDiagnostics();
 		if (issueList.isEmpty()) {
 			return;
 		}
 
-		String uriString = issueSerializer.uri(diagnostics.getUri());
 		for (Diagnostic diag : issueList) {
 			String issueString = issueSerializer.diagnostics(diag);
 			issues.put(uriString, diag);
@@ -107,22 +110,6 @@ public class N4jscTestLanguageClient extends N4jscLanguageClient {
 	@Override
 	public long getDeletionsCount() {
 		return deletedFiles.size();
-	}
-
-	/** @return all error messages of issues of a given uri */
-	public Collection<String> getErrors(String uri) {
-		return errors.get(uri);
-	}
-
-	/** @return all diagnostics */
-	public Collection<Diagnostic> getAllDiagnostics() {
-		return issues.values();
-	}
-
-	/** @return all diagnostics of a given uri */
-	public Collection<Diagnostic> getDiagnostics(FileURI uri) {
-		String uriString = issueSerializer.uri(uri.toString());
-		return issues.get(uriString);
 	}
 
 }
