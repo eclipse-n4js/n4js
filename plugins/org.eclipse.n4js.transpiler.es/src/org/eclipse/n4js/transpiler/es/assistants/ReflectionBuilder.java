@@ -23,6 +23,7 @@ import org.eclipse.n4js.n4JS.AnnotableElement;
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
 import org.eclipse.n4js.n4JS.N4GetterDeclaration;
+import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
 import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.n4JS.N4MethodDeclaration;
 import org.eclipse.n4js.n4JS.N4SetterDeclaration;
@@ -39,6 +40,7 @@ import org.eclipse.n4js.ts.types.TN4Classifier;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypingStrategy;
 import org.eclipse.n4js.ts.types.util.SuperInterfacesIterable;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.ResourceNameComputer;
 import org.eclipse.xtext.xbase.lib.Pair;
 
@@ -97,9 +99,9 @@ public class ReflectionBuilder {
 		String fqn = resourceNameComputer.getFullyQualifiedTypeName(type);
 		String modulePath = fqn.substring(0, fqn.length() - typeSTE.getName().length() - 1);
 
-		List<JsonElement> members = createAllMembers(allMembers);
+		List<JsonElement> members = createAllMembers(allMembers, (typeDecl instanceof N4InterfaceDeclaration));
 		List<Pair<String, JsonElement>> memberAnnotations = createMemberAnnotations(allMembers);
-		List<JsonElement> annotations = createRuntimeAnnotations2(typeDecl);
+		List<JsonElement> annotations = createRuntimeAnnotations(typeDecl);
 		List<JsonElement> allImplInterfaces = getImplementedInterfaces(type);
 
 		// reverse order to respect semantics of default parameters
@@ -184,10 +186,16 @@ public class ReflectionBuilder {
 		return ts == TypingStrategy.STRUCTURAL || ts == TypingStrategy.STRUCTURAL_FIELDS;
 	}
 
-	private List<JsonElement> createAllMembers(Iterable<N4MemberDeclaration> allMembers) {
+	private List<JsonElement> createAllMembers(Iterable<N4MemberDeclaration> allMembers, boolean isInterface) {
 		List<JsonElement> memberStrings = new ArrayList<>();
 		for (N4MemberDeclaration member : allMembers) {
-			memberStrings.add(primitive(createMemberString(member)));
+			// create only consumed member strings, since others are detected from constructor and prototype
+			boolean serialize = isInterface;
+			serialize |= state.info.isConsumedFromInterface(member);
+			serialize |= member.getName().startsWith(N4JSLanguageUtils.SYMBOL_IDENTIFIER_PREFIX);
+			if (serialize) {
+				memberStrings.add(primitive(createMemberString(member)));
+			}
 		}
 		return memberStrings;
 	}
@@ -223,7 +231,7 @@ public class ReflectionBuilder {
 		return kind + consumed + member.getName();
 	}
 
-	private List<JsonElement> createRuntimeAnnotations2(AnnotableElement annElem) {
+	private List<JsonElement> createRuntimeAnnotations(AnnotableElement annElem) {
 		TAnnotableElement tAnnElem = getTAnnotableElement(annElem);
 		return createRuntimeAnnotations2(tAnnElem);
 	}

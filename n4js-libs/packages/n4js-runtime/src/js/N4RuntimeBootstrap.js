@@ -165,16 +165,82 @@ function createMembers(instanceProto, staticProto, memberStrings, memberAnnotati
     const annotations = createMemberAnnotations(memberAnnotations);
     const ownedMembers = [];
     const consumedMembers = [];
-    if (memberStrings) {
-        for (const memberString of memberStrings) {
-            const memberInfo = parseMemberString(memberString);
-            const member = createMember(instanceProto, staticProto, memberInfo, annotations);
-            const members = (memberInfo.isConsumed) ? consumedMembers : ownedMembers;
-            members.push(member);
+    const detectedMemberStrings = detectMembers(instanceProto, staticProto);
+    const detectedMemberStringsReduced = [];
+    for (const memberString of detectedMemberStrings) {
+        const memberAlreadyAsConsumedGiven = memberStrings && memberStrings.includes(toConsumedMemberString(memberString));
+        if (!memberAlreadyAsConsumedGiven) {
+            detectedMemberStringsReduced.push(memberString);
         }
+    }
+    const memberStringsPlusDetected = memberStrings? detectedMemberStringsReduced.concat(memberStrings) : detectedMemberStringsReduced;
+    for (const memberString of memberStringsPlusDetected) {
+        const memberInfo = parseMemberString(memberString);
+        const member = createMember(instanceProto, staticProto, memberInfo, annotations);
+        const members = (memberInfo.isConsumed) ? consumedMembers : ownedMembers;
+        members.push(member);
     }
 
     return {ownedMembers, consumedMembers};
+}
+
+function toConsumedMemberString(memberString) {
+    return memberString[0] + ':' + memberString.substring(2);
+}
+
+function detectMembers(instanceProto, staticProto) {
+    const memberStrings = [];
+    const memberNamesInstance = Object.getOwnPropertyNames(instanceProto);
+    for (const memberName of memberNamesInstance) {
+        const memberString = detectMember(instanceProto, memberName, false);
+        if (memberString) {
+            memberStrings.push(memberString);
+        }
+    }
+    const memberNamesStatic = Object.getOwnPropertyNames(staticProto);
+    for (const memberName of memberNamesStatic) {
+        const memberString = detectMember(staticProto, memberName, true)
+        if (memberString) {
+            memberStrings.push(memberString);
+        }
+    }
+    return memberStrings;
+}
+
+function detectMember(object, memberName, isStatic) {
+    if (!isStatic && ['constructor'].includes(memberName)) {
+        return null;
+    }
+    if (isStatic && ['length', 'name', 'prototype', 'n4type', '$methods', '$extends'].includes(memberName)) {
+        return null;
+    }
+    const propDescriptor = Object.getOwnPropertyDescriptor(object, memberName);
+
+    const isFunction = propDescriptor.hasOwnProperty('value') && typeof propDescriptor.value == 'function';
+    if (isFunction) {
+        return createMemberString('m', isStatic, memberName);
+    }
+    const isField = propDescriptor.hasOwnProperty('writable');
+    if (isField) {
+        return createMemberString('f', isStatic, memberName);
+    }
+    const isSetter = propDescriptor.hasOwnProperty('set') && typeof propDescriptor.set == 'function';
+    if (isSetter) {
+        return createMemberString('s', isStatic, memberName);
+    }
+    const isGetter = propDescriptor.hasOwnProperty('get') && typeof propDescriptor.get == 'function';
+    if (isGetter) {
+        return createMemberString('g', isStatic, memberName);
+    }
+
+    throw "Unknown member type detected";
+}
+
+function createMemberString(kind, isStatic, memberName) {
+    if (isStatic) {
+        kind = kind.toUpperCase();
+    }
+    return kind + "." + memberName;
 }
 
 function createMemberAnnotations(memberAnnotations) {
