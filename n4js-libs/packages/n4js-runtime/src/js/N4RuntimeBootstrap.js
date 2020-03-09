@@ -149,14 +149,14 @@ function makeReflectionsForEnum(reflectionString) {
 function setN4TypeProperties(n4Type, name, modulePath, origin, members, memberAnnotations, allImplementedInterfaces, annotations) {
     n4Type.name = name;
     n4Type.origin = origin;
-    n4Type.annotations = createAnnotations(annotations);
+    n4Type.setAnnotations(createAnnotations(annotations));
     n4Type.fqn = modulePath + '/' + name;
 }
 
 function setN4ClassifierProperties(n4Classifier, superclass, instanceProto, staticProto, name, modulePath, origin, members, memberAnnotations, allImplementedInterfaces, annotations) {
 	const splitMembers = createMembers(instanceProto, staticProto, members, memberAnnotations);
     n4Classifier.n4superType = superclass;
-    n4Classifier.ownedMembers = splitMembers.ownedMembers;
+    n4Classifier.setOwnedMembers(splitMembers.ownedMembers);
     n4Classifier.consumedMembers = splitMembers.consumedMembers;
     n4Classifier.allImplementedInterfaces = allImplementedInterfaces || [];
 }
@@ -268,7 +268,7 @@ function createMember(instanceProto, staticProto, memberInfo, annotations) {
 	
     member.name = memberInfo.name;
     member.isStatic = memberInfo.isStatic;
-    member.annotations = annotations[memberInfo.memberString] || [];
+    member.setAnnotations(annotations[memberInfo.memberString] || []);
 	return member;
 }
 
