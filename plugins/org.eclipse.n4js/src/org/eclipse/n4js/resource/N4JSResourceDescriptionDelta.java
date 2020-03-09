@@ -25,14 +25,14 @@ import org.eclipse.xtext.util.Arrays;
 import com.google.common.collect.Sets;
 
 /**
- * Like {@link DefaultResourceDescriptionDelta}, but ignores user data key {@link UserdataMapper#USERDATA_KEY_AST_MD5}
+ * Like {@link DefaultResourceDescriptionDelta}, but ignores user data key {@link UserDataMapper#USER_DATA_KEY_AST_MD5}
  * when checking for changes with method
  * {@link org.eclipse.xtext.resource.IResourceDescription.Delta#haveEObjectDescriptionsChanged()
  * #haveEObjectDescriptionsChanged()}.
  */
 public class N4JSResourceDescriptionDelta extends DefaultResourceDescriptionDelta {
 
-	private static final Set<String> IGNORED_USERDATA_KEYS = Sets.newHashSet(UserdataMapper.USERDATA_KEY_AST_MD5);
+	private static final Set<String> IGNORED_USERDATA_KEYS = Sets.newHashSet(UserDataMapper.USER_DATA_KEY_AST_MD5);
 
 	/**
 	 * Creates an instance.

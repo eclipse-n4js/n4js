@@ -24,6 +24,7 @@ import org.eclipse.n4js.transpiler.im.IdentifierRef_IM;
 import org.eclipse.n4js.transpiler.im.Script_IM;
 import org.eclipse.n4js.ts.types.TN4Classifier;
 import org.eclipse.n4js.ts.types.TypingStrategy;
+import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
@@ -179,7 +180,7 @@ public class TranspilerUtils {
 	 */
 	public static boolean isDefSiteStructural(TN4Classifier type) {
 		final TypingStrategy ts = type.getTypingStrategy();
-		return ts != TypingStrategy.NOMINAL && ts != TypingStrategy.DEFAULT;
+		return TypeUtils.isStructural(ts);
 	}
 
 	/**

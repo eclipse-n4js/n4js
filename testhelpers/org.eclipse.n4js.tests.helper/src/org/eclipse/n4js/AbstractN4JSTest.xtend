@@ -18,7 +18,7 @@ import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.resource.ResourceSet
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.resource.N4JSResource
-import org.eclipse.n4js.resource.UserdataMapper
+import org.eclipse.n4js.resource.UserDataMapper
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.xtext.resource.XtextResourceSet
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider
@@ -154,7 +154,7 @@ public abstract class AbstractN4JSTest extends Assert {
 			val resourceDescriptions = resourceDescriptionsProvider.getResourceDescriptions(res);
 			assertFalse("index has not been filled", resourceDescriptions.allResourceDescriptions.empty);
 			val description = resourceDescriptions.getResourceDescription(uri);
-			description.exportedObjects.head.getUserData(UserdataMapper.USERDATA_KEY_SERIALIZED_SCRIPT); // trigger actual serialization into index
+			description.exportedObjects.head.getUserData(UserDataMapper.USER_DATA_KEY_SERIALIZED_SCRIPT); // trigger actual serialization into index
 			
 			// ensure that the resource is in the expected state
 			assertTrue(res.fullyInitialized);

@@ -140,7 +140,7 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 					}
 				}
 
-				// Normal Polfyfill
+				// Normal Polyfill
 				if( script.hasPolyfill && ! module.isStaticPolyfillModule ) {
 					// IDE-1735 in case of normal Polyfill this can't be mixed with static polyfills.
 					return;

@@ -23,7 +23,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.N4JSResource;
-import org.eclipse.n4js.resource.UserdataMapper;
+import org.eclipse.n4js.resource.UserDataMapper;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.ISynchronizable;
@@ -120,7 +120,7 @@ public class CanLoadFromDescriptionHelper {
 
 	/**
 	 * Tells if the receiving resource is among the dependencies of the resource represented by the given URI. For a
-	 * definition of "dependencies", see {@link UserdataMapper#readDependenciesFromDescription(IResourceDescription)}.
+	 * definition of "dependencies", see {@link UserDataMapper#readDependenciesFromDescription(IResourceDescription)}.
 	 */
 	public boolean dependsOnAny(Resource resource, Set<URI> others) {
 		if (dependsOnAny(
@@ -241,7 +241,7 @@ public class CanLoadFromDescriptionHelper {
 
 	private Optional<List<String>> readDirectDependencies(IResourceDescriptions index, URI next) {
 		IResourceDescription description = index.getResourceDescription(next);
-		return Optional.ofNullable(description).flatMap(UserdataMapper::readDependenciesFromDescription);
+		return Optional.ofNullable(description).flatMap(UserDataMapper::readDependenciesFromDescription);
 	}
 
 	/**

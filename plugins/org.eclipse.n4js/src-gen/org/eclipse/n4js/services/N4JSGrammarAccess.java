@@ -6436,7 +6436,11 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cDefaultExpressionAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
 		private final RuleCall cDefaultExpressionLogicalORExpressionParserRuleCall_1_1_0 = (RuleCall)cDefaultExpressionAssignment_1_1.eContents().get(0);
 		
-		//CoalesceExpression <In, Yield Expression:
+		///**
+		// * Coalesce Expressions as in https://tc39.es/proposal-nullish-coalescing
+		// * 
+		// * The structural assertions are implementes in the ASTStructureValidator
+		// */ CoalesceExpression <In, Yield Expression:
 		//	LogicalORExpression<In,Yield> (=> ({CoalesceExpression.expression=current} '??')
 		//	defaultExpression=LogicalORExpression<In,Yield>)*;
 		@Override public ParserRule getRule() { return rule; }
@@ -12344,7 +12348,11 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		return getLogicalOROperatorAccess().getRule();
 	}
 	
-	//CoalesceExpression <In, Yield Expression:
+	///**
+	// * Coalesce Expressions as in https://tc39.es/proposal-nullish-coalescing
+	// * 
+	// * The structural assertions are implementes in the ASTStructureValidator
+	// */ CoalesceExpression <In, Yield Expression:
 	//	LogicalORExpression<In,Yield> (=> ({CoalesceExpression.expression=current} '??')
 	//	defaultExpression=LogicalORExpression<In,Yield>)*;
 	public CoalesceExpressionElements getCoalesceExpressionAccess() {

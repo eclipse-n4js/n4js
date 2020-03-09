@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.ImportSpecifier#isFlaggedUsedInCode <em>Flagged Used In Code</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.ImportSpecifier#isRetainedAtRuntime <em>Retained At Runtime</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.n4JS.N4JSPackage#getImportSpecifier()
@@ -34,7 +35,7 @@ public interface ImportSpecifier extends EObject {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * * Transient flag to keep track of actual usage during scoping.
+	 * True iff this import specifier is actually used during scoping.
 	 * See {@code org.eclipse.n4js.scoping.imports.OriginAwareScope}
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Flagged Used In Code</em>' attribute.
@@ -54,5 +55,31 @@ public interface ImportSpecifier extends EObject {
 	 * @generated
 	 */
 	void setFlaggedUsedInCode(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Retained At Runtime</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Tells whether this import specifier will be present in the transpiled output code.
+	 * Set at the end of AST traversal.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Retained At Runtime</em>' attribute.
+	 * @see #setRetainedAtRuntime(boolean)
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getImportSpecifier_RetainedAtRuntime()
+	 * @model unique="false" transient="true"
+	 * @generated
+	 */
+	boolean isRetainedAtRuntime();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.ImportSpecifier#isRetainedAtRuntime <em>Retained At Runtime</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Retained At Runtime</em>' attribute.
+	 * @see #isRetainedAtRuntime()
+	 * @generated
+	 */
+	void setRetainedAtRuntime(boolean value);
 
 } // ImportSpecifier

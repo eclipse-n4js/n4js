@@ -12,7 +12,6 @@ package org.eclipse.n4js.ide.tests.server;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.File;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -30,7 +29,7 @@ import org.eclipse.xtext.testing.DefinitionTestConfiguration;
 /**
  * Abstract test class for defintion protocol tests
  */
-abstract public class AbstractDefinitionTest extends AbstractIdeTest<DefinitionTestConfiguration> {
+abstract public class AbstractDefinitionTest extends AbstractStructuredIdeTest<DefinitionTestConfiguration> {
 
 	/** Call this method in a test */
 	protected void test(DefinitionTestConfiguration dtc) throws Exception {
@@ -38,10 +37,10 @@ abstract public class AbstractDefinitionTest extends AbstractIdeTest<DefinitionT
 	}
 
 	@Override
-	protected void performTest(File root, Project project, DefinitionTestConfiguration dtc)
+	protected void performTest(Project project, DefinitionTestConfiguration dtc)
 			throws InterruptedException, ExecutionException, URISyntaxException {
 		TextDocumentPositionParams textDocumentPositionParams = new TextDocumentPositionParams();
-		String completeFileUri = getFileUriFromModuleName(root, dtc.getFilePath()).toString();
+		String completeFileUri = getFileURIFromModuleName(dtc.getFilePath()).toString();
 		textDocumentPositionParams.setTextDocument(new TextDocumentIdentifier(completeFileUri));
 		textDocumentPositionParams.setPosition(new Position(dtc.getLine(), dtc.getColumn()));
 		CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> definitionsFuture = languageServer

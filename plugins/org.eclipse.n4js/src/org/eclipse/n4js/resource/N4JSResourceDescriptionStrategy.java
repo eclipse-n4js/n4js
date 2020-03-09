@@ -272,7 +272,7 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 		// TODO GH-230 consider disallowing serializing reconciled modules to index with fail-safe behavior:
 		// if (module.isPreLinkingPhase() || module.isReconciled()) {
 		if (module.isPreLinkingPhase()) {
-			return UserdataMapper.createTimestampUserData(module);
+			return UserDataMapper.createTimestampUserData(module);
 		}
 		return new ForwardingMap<>() {
 
@@ -282,9 +282,9 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 			protected Map<String, String> delegate() {
 				if (delegate == null) {
 					try {
-						delegate = UserdataMapper.createUserData(module);
+						delegate = UserDataMapper.createUserData(module);
 						N4JSResource resource = (N4JSResource) module.eResource();
-						UserdataMapper.writeDependenciesToUserData(resource, delegate);
+						UserDataMapper.writeDependenciesToUserData(resource, delegate);
 					} catch (Exception e) {
 						throw new IllegalStateException(e);
 					}

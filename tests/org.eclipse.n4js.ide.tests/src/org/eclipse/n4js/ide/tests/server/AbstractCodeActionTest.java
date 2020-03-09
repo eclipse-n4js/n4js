@@ -12,7 +12,6 @@ package org.eclipse.n4js.ide.tests.server;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.File;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -35,7 +34,7 @@ import com.google.common.collect.Lists;
 /**
  * Abstract test class for code action protocol tests
  */
-abstract public class AbstractCodeActionTest extends AbstractIdeTest<TestCodeActionConfiguration> {
+abstract public class AbstractCodeActionTest extends AbstractStructuredIdeTest<TestCodeActionConfiguration> {
 
 	/** Call this method in a test */
 	protected void test(TestCodeActionConfiguration tcac) throws Exception {
@@ -43,7 +42,7 @@ abstract public class AbstractCodeActionTest extends AbstractIdeTest<TestCodeAct
 	}
 
 	@Override
-	protected void performTest(File root, Project project, TestCodeActionConfiguration tcac)
+	protected void performTest(Project project, TestCodeActionConfiguration tcac)
 			throws InterruptedException, ExecutionException {
 
 		CodeActionParams codeActionParams = new CodeActionParams();
@@ -54,8 +53,8 @@ abstract public class AbstractCodeActionTest extends AbstractIdeTest<TestCodeAct
 		codeActionParams.setRange(range);
 
 		CodeActionContext context = new CodeActionContext();
-		FileURI uri = getFileUriFromModuleName(root, tcac.getFilePath());
-		context.setDiagnostics(Lists.newArrayList(getDiagnostics(uri)));
+		FileURI uri = getFileURIFromModuleName(tcac.getFilePath());
+		context.setDiagnostics(Lists.newArrayList(getIssues(uri)));
 		codeActionParams.setContext(context);
 
 		TextDocumentIdentifier textDocument = new TextDocumentIdentifier();

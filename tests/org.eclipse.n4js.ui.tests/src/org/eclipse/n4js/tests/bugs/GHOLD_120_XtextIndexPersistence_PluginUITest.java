@@ -13,7 +13,7 @@ package org.eclipse.n4js.tests.bugs;
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Iterables.size;
 import static com.google.common.collect.Lists.newArrayList;
-import static org.eclipse.n4js.resource.UserdataMapper.USERDATA_KEY_SERIALIZED_SCRIPT;
+import static org.eclipse.n4js.resource.UserDataMapper.USER_DATA_KEY_SERIALIZED_SCRIPT;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -127,7 +127,7 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 						.filter(desc -> desc.getEClass() == TypesPackage.eINSTANCE.getTModule());
 		int beforeTModulesInBuilderStateSize = size(beforeTModulesInBuilderState);
 		int beforeTModulesInBuilderStateWithUserDataSize = size(
-				beforeTModulesInBuilderState.filter(desc -> null != desc.getUserData(USERDATA_KEY_SERIALIZED_SCRIPT)));
+				beforeTModulesInBuilderState.filter(desc -> null != desc.getUserData(USER_DATA_KEY_SERIALIZED_SCRIPT)));
 
 		persister.saveToResource(resource, builderState.getAllResourceDescriptions());
 		final Iterable<EObject> beforeCrashResource = newArrayList(resource.getContents());
@@ -153,7 +153,7 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 						.filter(desc -> desc.getEClass() == TypesPackage.eINSTANCE.getTModule());
 		int afterTModulesInBuilderStateSize = size(afterTModulesInBuilderState);
 		int afterTModulesInBuilderStateWithUserDataSize = size(
-				afterTModulesInBuilderState.filter(desc -> null != desc.getUserData(USERDATA_KEY_SERIALIZED_SCRIPT)));
+				afterTModulesInBuilderState.filter(desc -> null != desc.getUserData(USER_DATA_KEY_SERIALIZED_SCRIPT)));
 
 		persister.saveToResource(resource, builderState.getAllResourceDescriptions());
 		final Iterable<EObject> afterCrashResource = newArrayList(resource.getContents());

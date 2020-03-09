@@ -30,6 +30,7 @@ import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ImportSpecifierImpl#isFlaggedUsedInCode <em>Flagged Used In Code</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.ImportSpecifierImpl#isRetainedAtRuntime <em>Retained At Runtime</em>}</li>
  * </ul>
  *
  * @generated
@@ -54,6 +55,26 @@ public abstract class ImportSpecifierImpl extends ProxyResolvingEObjectImpl impl
 	 * @ordered
 	 */
 	protected boolean flaggedUsedInCode = FLAGGED_USED_IN_CODE_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #isRetainedAtRuntime() <em>Retained At Runtime</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isRetainedAtRuntime()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean RETAINED_AT_RUNTIME_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isRetainedAtRuntime() <em>Retained At Runtime</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isRetainedAtRuntime()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean retainedAtRuntime = RETAINED_AT_RUNTIME_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -103,10 +124,35 @@ public abstract class ImportSpecifierImpl extends ProxyResolvingEObjectImpl impl
 	 * @generated
 	 */
 	@Override
+	public boolean isRetainedAtRuntime() {
+		return retainedAtRuntime;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setRetainedAtRuntime(boolean newRetainedAtRuntime) {
+		boolean oldRetainedAtRuntime = retainedAtRuntime;
+		retainedAtRuntime = newRetainedAtRuntime;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.IMPORT_SPECIFIER__RETAINED_AT_RUNTIME, oldRetainedAtRuntime, retainedAtRuntime));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case N4JSPackage.IMPORT_SPECIFIER__FLAGGED_USED_IN_CODE:
 				return isFlaggedUsedInCode();
+			case N4JSPackage.IMPORT_SPECIFIER__RETAINED_AT_RUNTIME:
+				return isRetainedAtRuntime();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -121,6 +167,9 @@ public abstract class ImportSpecifierImpl extends ProxyResolvingEObjectImpl impl
 		switch (featureID) {
 			case N4JSPackage.IMPORT_SPECIFIER__FLAGGED_USED_IN_CODE:
 				setFlaggedUsedInCode((Boolean)newValue);
+				return;
+			case N4JSPackage.IMPORT_SPECIFIER__RETAINED_AT_RUNTIME:
+				setRetainedAtRuntime((Boolean)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -137,6 +186,9 @@ public abstract class ImportSpecifierImpl extends ProxyResolvingEObjectImpl impl
 			case N4JSPackage.IMPORT_SPECIFIER__FLAGGED_USED_IN_CODE:
 				setFlaggedUsedInCode(FLAGGED_USED_IN_CODE_EDEFAULT);
 				return;
+			case N4JSPackage.IMPORT_SPECIFIER__RETAINED_AT_RUNTIME:
+				setRetainedAtRuntime(RETAINED_AT_RUNTIME_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -151,6 +203,8 @@ public abstract class ImportSpecifierImpl extends ProxyResolvingEObjectImpl impl
 		switch (featureID) {
 			case N4JSPackage.IMPORT_SPECIFIER__FLAGGED_USED_IN_CODE:
 				return flaggedUsedInCode != FLAGGED_USED_IN_CODE_EDEFAULT;
+			case N4JSPackage.IMPORT_SPECIFIER__RETAINED_AT_RUNTIME:
+				return retainedAtRuntime != RETAINED_AT_RUNTIME_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -167,6 +221,8 @@ public abstract class ImportSpecifierImpl extends ProxyResolvingEObjectImpl impl
 		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (flaggedUsedInCode: ");
 		result.append(flaggedUsedInCode);
+		result.append(", retainedAtRuntime: ");
+		result.append(retainedAtRuntime);
 		result.append(')');
 		return result.toString();
 	}
