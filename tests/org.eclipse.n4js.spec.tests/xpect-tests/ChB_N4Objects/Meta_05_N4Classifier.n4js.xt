@@ -39,7 +39,7 @@ stdout:
      test.ownedMembers[1] is allImplementedInterfaces
      test.ownedMembers[2] is ownedMembers
      test.ownedMembers[3] is consumedMembers
-     test.ownedMembers[4] is constructor
+     test.ownedMembers[4] is setOwnedMembers
      test.ownedMembers[5] is members
      test.ownedMembers[6] is membersWithAnnotation
      test.ownedMembers[7] is dataFields
