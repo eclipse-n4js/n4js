@@ -1,13 +1,13 @@
 /*
- * Copyright (c) 2017 NumberFour AG.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *   NumberFour AG - Initial API and implementation
- */
+* Copyright (c) 2017 NumberFour AG.
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the Eclipse Public License v1.0
+* which accompanies this distribution, and is available at
+* http://www.eclipse.org/legal/epl-v10.html
+*
+* Contributors:
+*   NumberFour AG - Initial API and implementation
+*/
 /*eslint-disable new-cap, no-proto, strict */
 
 import _globalThis from "./_globalThis";
@@ -23,9 +23,9 @@ function defineN4TypeGetter(instance, factoryFn) {
     Object.defineProperty(instance, "n4type", {
         configurable: true, // for hot reloading/patching
         get: function() {
-			if (!n4type) {
-				n4type = factoryFn();
-			}
+            if (!n4type) {
+                n4type = factoryFn();
+            }
             return n4type;
         }
     });
@@ -123,25 +123,25 @@ function $makeClass(ctor, superCtor, implementedInterfaces, instanceMethods, sta
 //}
 
 function makeReflectionsForClass(instanceProto, staticProto, reflectionString) {
-	const reflectionValues = JSON.parse(reflectionString);
-	const superclass = staticProto.__proto__.n4type;
-	const n4Class = new N4Class();
+    const reflectionValues = JSON.parse(reflectionString);
+    const superclass = staticProto.__proto__.n4type;
+    const n4Class = new N4Class();
     setN4TypeProperties(n4Class, ...reflectionValues);
     setN4ClassifierProperties(n4Class, superclass, instanceProto, staticProto, ...reflectionValues);
     return n4Class;
 }
 
 function makeReflectionsForInterface(instanceProto, staticProto, reflectionString) {
-	const reflectionValues = JSON.parse(reflectionString);
-	const n4Interface = new N4Interface();
+    const reflectionValues = JSON.parse(reflectionString);
+    const n4Interface = new N4Interface();
     setN4TypeProperties(n4Interface, ...reflectionValues);
     setN4ClassifierProperties(n4Interface, undefined, instanceProto, staticProto, ...reflectionValues);
     return n4Interface;
 }
 
 function makeReflectionsForEnum(reflectionString) {
-	const reflectionValues = JSON.parse(reflectionString);
-	const n4enumType = new N4EnumType();
+    const reflectionValues = JSON.parse(reflectionString);
+    const n4enumType = new N4EnumType();
     setN4TypeProperties(n4enumType, ...reflectionValues);
     return n4enumType;
 }
@@ -154,7 +154,7 @@ function setN4TypeProperties(n4Type, name, modulePath, origin, members, memberAn
 }
 
 function setN4ClassifierProperties(n4Classifier, superclass, instanceProto, staticProto, name, modulePath, origin, members, memberAnnotations, allImplementedInterfaces, annotations) {
-	const splitMembers = createMembers(instanceProto, staticProto, members, memberAnnotations);
+    const splitMembers = createMembers(instanceProto, staticProto, members, memberAnnotations);
     n4Classifier.n4superType = superclass;
     n4Classifier.setOwnedMembers(splitMembers.ownedMembers);
     n4Classifier.consumedMembers = splitMembers.consumedMembers;
@@ -162,17 +162,17 @@ function setN4ClassifierProperties(n4Classifier, superclass, instanceProto, stat
 }
 
 function createMembers(instanceProto, staticProto, memberStrings, memberAnnotations) {
-	const annotations = createMemberAnnotations(memberAnnotations);
+    const annotations = createMemberAnnotations(memberAnnotations);
     const ownedMembers = [];
     const consumedMembers = [];
-	if (memberStrings) {
+    if (memberStrings) {
         for (const memberString of memberStrings) {
-			const memberInfo = parseMemberString(memberString);
-			const member = createMember(instanceProto, staticProto, memberInfo, annotations);
-			const members = (memberInfo.isConsumed) ? consumedMembers : ownedMembers;
+            const memberInfo = parseMemberString(memberString);
+            const member = createMember(instanceProto, staticProto, memberInfo, annotations);
+            const members = (memberInfo.isConsumed) ? consumedMembers : ownedMembers;
             members.push(member);
-        }		
-	}
+        }
+    }
 
     return {ownedMembers, consumedMembers};
 }
@@ -189,10 +189,10 @@ function createMemberAnnotations(memberAnnotations) {
                 if (annotation) {
                     annotationArray.push(annotation);
                 }
-			}
-		}
-	}
-	return annotations;
+            }
+        }
+    }
+    return annotations;
 }
 
 function createAnnotations(annotations) {
@@ -204,72 +204,72 @@ function createAnnotations(annotations) {
                 annotationArray.push(annotation);
             }
         }
-	}
-	return annotationArray;
+    }
+    return annotationArray;
 }
 
 function createAnnotation(annotationValues) {
     const annotation = new N4Annotation();
-	if (typeof annotationValues === "string") {
-    	annotation.name = annotationValues;
-    	annotation.details = [];
-	} else {
-		const [name, details] = annotationValues;
-    	annotation.name = name;
-    	annotation.details = details || [];
-	}
+    if (typeof annotationValues === "string") {
+        annotation.name = annotationValues;
+        annotation.details = [];
+    } else {
+        const [name, details] = annotationValues;
+        annotation.name = name;
+        annotation.details = details || [];
+    }
     return annotation;
 }
 
 function parseMemberString(memberString) {
-	if (!/^[mMfFgGsS][\.:]/.test(memberString)) {
-		return null;
-	}
-	const idxKind = 0;
-	const idxConsumed = idxKind + 1;
-	const idxNameStart = idxConsumed + 1;
-	const kind = memberString[idxKind].toLowerCase();	
+    if (!/^[mMfFgGsS][\.:]/.test(memberString)) {
+        return null;
+    }
+    const idxKind = 0;
+    const idxConsumed = idxKind + 1;
+    const idxNameStart = idxConsumed + 1;
+    const kind = memberString[idxKind].toLowerCase();	
     const isUpperCase = (memberString[idxKind] == memberString[idxKind].toUpperCase());
 
-	let isConsumed = undefined;
-	switch (memberString[idxConsumed].toLowerCase()) {
-		case '.': isConsumed = false; break;
-		case ':': isConsumed = true; break;
-		default: isConsumed = undefined;
-	}
-	
+    let isConsumed = undefined;
+    switch (memberString[idxConsumed].toLowerCase()) {
+        case '.': isConsumed = false; break;
+        case ':': isConsumed = true; break;
+        default: isConsumed = undefined;
+    }
+    
     const name = memberString.substring(idxNameStart);
     const jsFunctionRef = (name.startsWith(SYMBOL_IDENTIFIER_PREFIX)) ? Symbol[name.substring(1)] : name;
 
-	return {memberString, name, kind, isStatic: isUpperCase, isConsumed, jsFunctionRef};
+    return {memberString, name, kind, isStatic: isUpperCase, isConsumed, jsFunctionRef};
 }
 
 function createMember(instanceProto, staticProto, memberInfo, annotations) {
-	var member = null;
-	switch (memberInfo.kind) {
-		case 'f':
-			member = new N4DataField();
-			break;
-		case 'm': 
-			member = new N4Method();
-    		member.jsFunction = memberInfo.isStatic ? staticProto[memberInfo.jsFunctionRef] : instanceProto[memberInfo.jsFunctionRef];
-			break;
-		case 'g': 
-			member = new N4Accessor();
-    		member.getter = true;
-			break;
-		case 's':
-			member = new N4Accessor();
-    		member.getter = false;
-			break;
-		default:
-			return null;
-	}
-	
+    var member = null;
+    switch (memberInfo.kind) {
+        case 'f':
+            member = new N4DataField();
+            break;
+        case 'm': 
+            member = new N4Method();
+            member.jsFunction = memberInfo.isStatic ? staticProto[memberInfo.jsFunctionRef] : instanceProto[memberInfo.jsFunctionRef];
+            break;
+        case 'g': 
+            member = new N4Accessor();
+            member.getter = true;
+            break;
+        case 's':
+            member = new N4Accessor();
+            member.getter = false;
+            break;
+        default:
+            return null;
+    }
+    
     member.name = memberInfo.name;
     member.isStatic = memberInfo.isStatic;
     member.setAnnotations(annotations[memberInfo.memberString] || []);
-	return member;
+    return member;
 }
 
 
