@@ -25,6 +25,8 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.lsp4j.ClientCapabilities;
 import org.eclipse.lsp4j.CodeAction;
+import org.eclipse.lsp4j.CodeActionKind;
+import org.eclipse.lsp4j.CodeActionOptions;
 import org.eclipse.lsp4j.CodeActionParams;
 import org.eclipse.lsp4j.CodeLens;
 import org.eclipse.lsp4j.CodeLensOptions;
@@ -136,6 +138,7 @@ import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.base.Objects;
+import com.google.common.base.Optional;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -276,9 +279,19 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 					.anyMatch((serviceProvider) -> serviceProvider.get(ICodeLensResolver.class) != null));
 			serverCapabilities.setCodeLensProvider(codeLensOptions);
 		}
-		serverCapabilities.setCodeActionProvider(allLanguages.stream()
+		boolean supportsCodeActions = allLanguages.stream()
 				.anyMatch((serviceProvider) -> serviceProvider.get(ICodeActionService.class) != null
-						|| serviceProvider.get(ICodeActionService2.class) != null));
+						|| serviceProvider.get(ICodeActionService2.class) != null);
+		if (supportsCodeActions) {
+			Optional<List<String>> supportedKinds = getSupportedCodeActionKinds();
+			if (supportedKinds.isPresent()) {
+				serverCapabilities.setCodeActionProvider(new CodeActionOptions(supportedKinds.get()));
+			} else {
+				serverCapabilities.setCodeActionProvider(true);
+			}
+		} else {
+			serverCapabilities.setCodeActionProvider(false);
+		}
 
 		serverCapabilities.setSignatureHelpProvider(new SignatureHelpOptions(ImmutableList.of("(", ",")));
 		serverCapabilities.setTextDocumentSync(TextDocumentSyncKind.Incremental);
@@ -341,6 +354,17 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 			}
 		}
 		return serverCapabilities;
+	}
+
+	/**
+	 * Iff the receiving server makes use of {@link CodeActionKind}s, this method returns the kinds the server is using
+	 * and will send to the client under certain circumstances; otherwise returns {@link Optional#absent() absent}.
+	 * <p>
+	 * The list of kinds may be generic, such as {@link CodeActionKind#Refactor}, or the server may list out every
+	 * specific kind they provide.
+	 */
+	protected Optional<List<String>> getSupportedCodeActionKinds() {
+		return Optional.absent();
 	}
 
 	@Override

@@ -69,6 +69,12 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 	public static final String N4JS_REBUILD = "n4js.rebuild";
 
 	/**
+	 * The organize imports command. This command will organize all imports of a given file. In addition, code
+	 * completion and quick fixes are available for adding missing imports.
+	 */
+	public static final String N4JS_ORGANIZE_IMPORTS = "n4js.organizeImports";
+
+	/**
 	 * Composite fix that will resolve all issues of the same kind in the current file.
 	 *
 	 * Should not appear on the UI of the client.
@@ -268,4 +274,8 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 		return null;
 	}
 
+	@ExecutableCommandHandler(N4JS_ORGANIZE_IMPORTS)
+	public void organizeImports(String fileURI, ILanguageServerAccess access, CancelIndicator cancelIndicator) {
+		System.out.println("organize imports executed for: " + fileURI);
+	}
 }

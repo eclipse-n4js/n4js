@@ -10,18 +10,33 @@
  */
 package org.eclipse.n4js.ide.server;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.util.CancelIndicator;
 
+import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
+
 /**
- *
+ * Language server for N4JS.
  */
 public class N4JSLanguageServer extends XLanguageServerImpl implements N4JSProtocolExtensions {
+
+	@Override
+	protected Optional<List<String>> getSupportedCodeActionKinds() {
+		return Optional.of(Lists.newArrayList(
+				CodeActionKind.QuickFix,
+				CodeActionKind.Source,
+				// the following specific kind must be listed for VSCode,
+				// even though the LSP specification says otherwise:
+				CodeActionKind.SourceOrganizeImports));
+	}
 
 	@Override
 	public CompletableFuture<String> documentContents(TextDocumentIdentifier param) {

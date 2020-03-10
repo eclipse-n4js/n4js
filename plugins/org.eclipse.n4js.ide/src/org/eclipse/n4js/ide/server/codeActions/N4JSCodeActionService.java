@@ -54,6 +54,7 @@ import com.google.inject.Singleton;
 public class N4JSCodeActionService implements ICodeActionService2 {
 
 	final Class<?>[] quickfixProviders = { N4JSQuickfixProvider.class };
+	final Class<?>[] sourceActionProviders = { N4JSSourceActionProvider.class };
 
 	private static class TextEditCollector implements ICodeActionAcceptor {
 		private final Map<String, List<TextEdit>> allEdits;
@@ -75,18 +76,31 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 			String uriString = context.options.getCodeActionParams().getTextDocument().getUri();
 			allEdits.computeIfAbsent(uriString, ignore -> new ArrayList<>()).addAll(textEdits);
 		}
+
+		@Override
+		public void acceptSourceAction(String title, String kind, String commandId, Object... arguments) {
+			throw new IllegalStateException(
+					"cannot create source actions with code action acceptor " + TextEditCollector.class);
+		}
 	}
 
-	private static class QuickFixImplementation {
+	private static abstract class CodeActionImplementation {
 		final Object instance;
 		final Method method;
 		final String id;
-		final boolean multiFix;
 
-		private QuickFixImplementation(Object instance, final Method method, boolean multiFix) {
+		private CodeActionImplementation(Object instance, Method method) {
 			this.instance = instance;
 			this.method = method;
 			this.id = method.getName();
+		}
+	}
+
+	private static class QuickFixImplementation extends CodeActionImplementation {
+		final boolean multiFix;
+
+		private QuickFixImplementation(Object instance, final Method method, boolean multiFix) {
+			super(instance, method);
 			this.multiFix = multiFix;
 		}
 
@@ -99,7 +113,23 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 				e.printStackTrace();
 			}
 		}
+	}
 
+	private static class SourceActionImplementation extends CodeActionImplementation {
+
+		private SourceActionImplementation(Object instance, Method method) {
+			super(instance, method);
+		}
+
+		void compute(Options options, ICodeActionAcceptor acceptor) {
+			CodeActionParams params = options.getCodeActionParams();
+
+			try {
+				method.invoke(instance, params, acceptor);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	private static class MultiQuickfixAcceptor implements ICodeActionAcceptor {
@@ -134,6 +164,12 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 
 			acceptor.acceptQuickfixCommand(context, title, commandID, arguments);
 		}
+
+		@Override
+		public void acceptSourceAction(String title, String kind, String commandId, Object... arguments) {
+			throw new IllegalStateException(
+					"cannot create source actions with code action acceptor " + MultiQuickfixAcceptor.class);
+		}
 	}
 
 	@Inject
@@ -152,6 +188,7 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 	private OperationCanceledManager cancelManager;
 
 	private final Multimap<String, QuickFixImplementation> quickfixMap = HashMultimap.create();
+	private final List<SourceActionImplementation> sourceActions = new ArrayList<>();
 
 	/**
 	 * Using reflection, all classes of {@link #quickfixProviders} are inspected to find all methods that are annotated
@@ -174,6 +211,19 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 					Fix fix = method.getAnnotation(Fix.class);
 					if (fix != null) {
 						acceptFix(fix, qpInstance, method);
+					}
+				}
+			}
+		}
+		for (Class<?> sourceActionProvider : sourceActionProviders) {
+			Object providerInstance = injector.getInstance(sourceActionProvider);
+			Method[] methods = sourceActionProvider.getMethods();
+			for (Method method : methods) {
+				int modifiers = method.getModifiers();
+				if (Modifier.isPublic(modifiers) && !Modifier.isStatic(modifiers)) {
+					SourceAction ann = method.getAnnotation(SourceAction.class);
+					if (ann != null) {
+						sourceActions.add(new SourceActionImplementation(providerInstance, method));
 					}
 				}
 			}
@@ -205,6 +255,8 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 			findQuickfixes(diag.getCode(), options, acceptor);
 		}
 
+		findSourceActions(options, acceptor);
+
 		cancelManager.checkCanceled(options.getCancelIndicator());
 		return acceptor.getList();
 	}
@@ -214,6 +266,12 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 		for (QuickFixImplementation qfix : quickfixMap.get(code)) {
 			ICodeActionAcceptor accTmp = qfix.multiFix ? new MultiQuickfixAcceptor(qfix.id, acceptor) : acceptor;
 			qfix.compute(code, options, accTmp);
+		}
+	}
+
+	private void findSourceActions(Options options, CodeActionAcceptor acceptor) {
+		for (SourceActionImplementation impl : sourceActions) {
+			impl.compute(options, acceptor);
 		}
 	}
 
