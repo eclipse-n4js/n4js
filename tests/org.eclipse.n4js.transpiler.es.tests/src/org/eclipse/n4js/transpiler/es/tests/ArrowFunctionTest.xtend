@@ -158,7 +158,7 @@ class ArrowFunctionTest extends AbstractTranspilerTest {
 					value: undefined,
 					writable: true
 				}
-			}, {}, '["C","A","test",["f._data","f.argsTotal","g.data","s.data","m.notifyListeners"]]'
+			}, {}, '["C","A","test"]'
 			);
 		''';
 

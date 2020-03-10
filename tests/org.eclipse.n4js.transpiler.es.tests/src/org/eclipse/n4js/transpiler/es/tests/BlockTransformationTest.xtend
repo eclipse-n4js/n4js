@@ -141,7 +141,7 @@ class BlockTransformationTest extends AbstractTranspilerTest {
 						}.apply(this, arguments));
 					}
 				}
-			}, '["System2","A","test",["M.normalize"]]'
+			}, '["System2","A","test"]'
 			);
 		''';
 
