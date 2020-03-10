@@ -135,7 +135,10 @@ function makeReflectionsForInterface(instanceProto, staticProto, reflectionStrin
     const reflectionValues = JSON.parse(reflectionString);
     const n4Interface = new N4Interface();
     setN4TypeProperties(n4Interface, ...reflectionValues);
-    setN4ClassifierProperties(n4Interface, undefined, instanceProto, staticProto, ...reflectionValues);
+    // for interfaces we retrieve all reflection information from the JSON reflection string
+    // hence we pass empty object literals instead of instanceProto and staticProto.
+    // might change with ES6 classes
+    setN4ClassifierProperties(n4Interface, undefined, {}, {}, ...reflectionValues);
     return n4Interface;
 }
 
