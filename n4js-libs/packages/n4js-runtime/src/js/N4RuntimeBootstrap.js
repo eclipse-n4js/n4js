@@ -34,20 +34,45 @@ function defineN4TypeGetter(instance, factoryFn) {
 }
 
 
-/** Used for ES6 class version of N4JS */
-//function $getReflectionForClass(n4elem, moduleName, n4ElemName) {
-//    const $sym = Symbol.for('org.eclipse.n4js/reflectionInfo');
-//    if (n4elem.hasOwnProperty($sym)) {
-//        return n4elem[$sym];
-//    }
-//    // FIXME: path of require is wrong
-//    const reflectValues = require(moduleName + '.reflect')?.[n4ElemName];
-//    if (!reflectValues) {
-//        return null;
-//    }
-//    const instanceProto = n4elem.prototype;
-//    return createN4Class(instanceProto, staticProto, ...reflectValues);
-//}
+/**
+ * Returns reflection information.
+ * If it is not existing yet, it will be created and attached to the prototype using a symbol.
+ */
+function $getReflectionForClass(staticProto, reflectionString) {
+    const $sym = Symbol.for('org.eclipse.n4js/reflectionInfo');
+    if (!staticProto.hasOwnProperty($sym)) {
+	    staticProto[$sym] = makeReflectionsForClass(staticProto, reflectionString);
+    }
+    return staticProto[$sym];
+}
+
+
+
+/**
+ * Returns reflection information.
+ * If it is not existing yet, it will be created and attached to the prototype using a symbol.
+ */
+function $getReflectionForInterface(staticProto, reflectionString) {
+    const $sym = Symbol.for('org.eclipse.n4js/reflectionInfo');
+    if (!staticProto.hasOwnProperty($sym)) {
+	    staticProto[$sym] = makeReflectionsForInterface(staticProto, reflectionString);
+    }
+    return staticProto[$sym];
+}
+
+
+
+/**
+ * Returns reflection information.
+ * If it is not existing yet, it will be created and attached to the prototype using a symbol.
+ */
+function $getReflectionForEnum(staticProto, reflectionString) {
+    const $sym = Symbol.for('org.eclipse.n4js/reflectionInfo');
+    if (!staticProto.hasOwnProperty($sym)) {
+	    staticProto[$sym] = makeReflectionsForEnum(staticProto, reflectionString);
+    }
+    return staticProto[$sym];
+}
 
 
 
@@ -90,49 +115,6 @@ function $initFieldsFromInterfaces(target, interfaces, spec, mixinExclusion) {
     }
 }
 
-
-/**
- * Create an enumeration type with the given FQN and members.
- *
- * @param enumeration - the enumeration constructor function
- * @param members - An array of <String, String> tuples containing
- *                  information about the enum members
- * @param n4typeFn - Optional factory function to create the meta type (currently mandatory though, will be optional with GH-574).
- * @return The constructed enumeration type
- */
-function $makeEnum(enumeration, members, n4typeFn) {
-    var length, index, member, name, value, values, literal;
-
-    Object.setPrototypeOf(enumeration, global.N4Enum);
-    enumeration.prototype = Object.create(global.N4Enum.prototype, {});
-
-    if (n4typeFn) {
-        defineN4TypeGetter(enumeration, n4typeFn.bind(null, noop));
-    }
-
-    Object.defineProperty(enumeration.prototype, "constructor", {
-        value: enumeration
-    });
-
-    length = members.length;
-    values = new Array(length);
-    for (index = 0; index < length; ++index) {
-        member = members[index];
-        name = member[0];
-        value = member[1];
-
-        literal = new enumeration(name, value);
-        Object.defineProperty(enumeration, literal.name, {
-            enumerable: true,
-            value: literal
-        });
-        values[index] = literal;
-    }
-
-    Object.defineProperty(enumeration, 'literals', {
-        value: values
-    });
-}
 
 
 /**
@@ -221,7 +203,13 @@ function $n4promisifyMethod(receiver, methodName, args, multiSuccessValues, noEr
 }
 
 
-function makeReflectionsForClass(instanceProto, staticProto, reflectionString) {
+
+
+
+
+
+function makeReflectionsForClass(staticProto, reflectionString) {
+    const instanceProto = staticProto.prototype;
     const reflectionValues = JSON.parse(reflectionString);
     const superclass = staticProto.__proto__.n4type;
     const n4Class = new N4Class();
@@ -230,7 +218,8 @@ function makeReflectionsForClass(instanceProto, staticProto, reflectionString) {
     return n4Class;
 }
 
-function makeReflectionsForInterface(instanceProto, staticProto, reflectionString) {
+function makeReflectionsForInterface(staticProto, reflectionString) {
+    const instanceProto = staticProto.$members;
     const reflectionValues = JSON.parse(reflectionString);
     const n4Interface = new N4Interface();
     setN4TypeProperties(n4Interface, ...reflectionValues);
@@ -241,7 +230,7 @@ function makeReflectionsForInterface(instanceProto, staticProto, reflectionStrin
     return n4Interface;
 }
 
-function makeReflectionsForEnum(reflectionString) {
+function makeReflectionsForEnum(staticProto, reflectionString) {
     const reflectionValues = JSON.parse(reflectionString);
     const n4enumType = new N4EnumType();
     setN4TypeProperties(n4enumType, ...reflectionValues);
@@ -445,7 +434,6 @@ function createMember(instanceProto, staticProto, memberInfo, annotations) {
 
 //expose in global scope
 _globalThis.$initFieldsFromInterfaces = $initFieldsFromInterfaces;
-_globalThis.$makeEnum = $makeEnum;
 
 _globalThis.$sliceToArrayForDestruct = $sliceToArrayForDestruct;
 _globalThis.$spawn = $spawn;
