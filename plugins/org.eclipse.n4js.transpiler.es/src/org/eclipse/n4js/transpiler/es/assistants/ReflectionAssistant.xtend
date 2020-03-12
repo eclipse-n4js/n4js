@@ -80,6 +80,7 @@ class ReflectionAssistant extends TransformationAssistant {
 				_ReturnStmnt(
 					_CallExpr(
 						_IdentRef(methodName),
+						_ThisLiteral,
 						_StringLiteral(quotedJsonString, quotedJsonString)
 					)
 				)
