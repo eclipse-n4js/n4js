@@ -31,8 +31,11 @@ class C {
 }
 
 
-console.log(C.n4type.dataFields()[0].annotations);
-console.log(C.n4type.dataFields()[1].annotations);
+console.log(C.n4type.dataFields()[0] === C.n4type.members()[1]);
+console.log(C.n4type.dataFields()[1] === C.n4type.members()[2]);
+
+console.log(C.n4type.members()[0].annotations);
+console.log(C.n4type.members()[1].annotations);
 console.log(C.n4type.members()[2].annotations);
 console.log(C.n4type.methods(false,false,true)[0].annotations);
 console.log(C.n4type.methods(false,false,true)[1].annotations);
@@ -41,9 +44,11 @@ console.log(C.n4type.methods(false,false,true)[1].annotations);
 /* XPECT output ---
 <==
 stdout:
+true
+true
+[ N4Annotation { name: 'Parameter', details: [ '43' ] } ]
 [ N4Annotation { name: 'Parameter', details: [] } ]
 [ N4Annotation { name: 'Parameter', details: [ '42' ] } ]
-[ N4Annotation { name: 'Parameter', details: [ '43' ] } ]
 [ N4Annotation { name: 'Parameters', details: [] } ]
 [ N4Annotation { name: 'Parameters', details: [ 'woot!' ] } ]
 stderr:

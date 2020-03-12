@@ -27,24 +27,19 @@
 
 import _globalThis from "_globalThis";
 
-function setTargetOfAnnotations(target: Object) {
-	if (target['annotations']) {
-		for (const annotation of target['annotations']) {
-			Object.defineProperty(annotation, "target", { value: target, enumerable: false });
-		}
-	}
-}
 
 
 class N4Object extends Object {}
 
 abstract class N4Element extends Object {
-
 	public origin: string;
 	public annotations: Array<N4Annotation> = [];
 
-	protected constructor(@Spec spec: ~i~this) {
-		setTargetOfAnnotations(this);
+	public setAnnotations(annotations: Array<N4Annotation>): void {
+		this.annotations = annotations;
+		for (const annotation of this.annotations) {
+			Object.defineProperty(annotation, "target", { value: this, enumerable: false });
+		}
 	}
 
 	public hasAnnotation(name: string): boolean {
@@ -106,12 +101,11 @@ abstract class N4Classifier extends N4Type {
 
 	public consumedMembers: Array<N4Member> = [];
 
-	protected constructor(@Spec spec: ~i~this) {
-		super(spec);
 
+	public setOwnedMembers(ownedMembers: Array<N4Member>): void {
+		this.ownedMembers = ownedMembers;
 		for (const ownedMember of this.ownedMembers) {
 			Object.defineProperty(ownedMember, 'owner', { value: this, enumerable: false });
-			setTargetOfAnnotations(ownedMember);
 		}
 	}
 
@@ -266,8 +260,6 @@ abstract class N4StringBasedEnum extends Object { // NOTE: cannot subclass 'stri
 	public name: string;
 	public details: Array<string> = [];
 	public target: N4Element;
-
-	protected constructor(@Spec spec: ~i~this) {}
 }
 
 interface ~N4Provider<out T> {
