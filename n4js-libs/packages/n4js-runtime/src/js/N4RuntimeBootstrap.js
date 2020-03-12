@@ -433,6 +433,9 @@ function createMember(instanceProto, staticProto, memberInfo, annotations) {
 
 
 //expose in global scope
+_globalThis.$getReflectionForClass = $getReflectionForClass;
+_globalThis.$getReflectionForInterface = $getReflectionForInterface;
+_globalThis.$getReflectionForEnum = $getReflectionForEnum;
 _globalThis.$initFieldsFromInterfaces = $initFieldsFromInterfaces;
 
 _globalThis.$sliceToArrayForDestruct = $sliceToArrayForDestruct;
