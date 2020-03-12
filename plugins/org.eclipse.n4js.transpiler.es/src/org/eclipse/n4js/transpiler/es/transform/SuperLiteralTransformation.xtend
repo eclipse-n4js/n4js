@@ -27,7 +27,6 @@ import org.eclipse.n4js.n4JS.SuperLiteral
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesBefore
 import org.eclipse.n4js.transpiler.TransformationDependency.Optional
-import org.eclipse.n4js.transpiler.assistants.TypeAssistant
 import org.eclipse.n4js.transpiler.es.assistants.DelegationAssistant
 import org.eclipse.n4js.transpiler.im.ParameterizedPropertyAccessExpression_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
@@ -51,7 +50,6 @@ import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensi
 @ExcludesBefore(ClassDeclarationTransformation)
 class SuperLiteralTransformation extends Transformation {
 
-	@Inject TypeAssistant typeAssistant;
 	@Inject DelegationAssistant delegationAssistant;
 
 
@@ -97,25 +95,6 @@ class SuperLiteralTransformation extends Transformation {
 				}
 			}
 		];
-	}
-
-	def private void transformSuperCall(N4ClassDeclaration classDecl, ParameterizedCallExpression callExpr) {
-		// transform:
-		//     super(arg)
-		// -->
-		//     S.prototype.constructor.call(this, arg)
-		// (with S being the immediate super class)
-		val superClassSTE = typeAssistant.getSuperClassSTE(classDecl);
-		val prototypeSTE = getSymbolTableEntryForMember(state.G.objectType, "prototype", false, true, true);
-		val constructorSTE = getSymbolTableEntryForMember(state.G.objectType, "constructor", false, false, true);
-		val callSTE = getSymbolTableEntryForMember(state.G.functionType, "call", false, false, true);
-
-		// (note: don't have to care about static / non-static here, because we are always in a constructor)
-
-		setTarget(callExpr, __NSSafe_PropertyAccessExpr(superClassSTE, prototypeSTE, constructorSTE, callSTE));
-		addArgument(callExpr, 0, _ThisLiteral());
-
-		state.info.markAsExplicitSuperCall(callExpr);
 	}
 
 	/**
