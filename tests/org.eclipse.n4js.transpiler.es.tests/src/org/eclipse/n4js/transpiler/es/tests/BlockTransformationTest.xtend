@@ -135,36 +135,8 @@ class BlockTransformationTest extends AbstractTranspilerTest {
 				constructor() {
 					super();
 				}
-				static normalize(p) {
-					return $spawn(function *() {
-						return "!NORMAL!/" + p;
-					}.apply(this, arguments));
-				}
-				static get n4type() {
-					const $sym = Symbol.for('org.eclipse.n4js/reflectionInfo');
-					if (this.hasOwnProperty($sym)) {
-						return this[$sym];
-					}
-					const instanceProto = this.prototype, staticProto = this;
-					return this[$sym] = new N4Class({
-						name: 'System2',
-						origin: 'test',
-						fqn: 'A/System2',
-						n4superType: N4Object.n4type,
-						allImplementedInterfaces: [],
-						ownedMembers: [
-							new N4Method({
-								name: 'normalize',
-								isStatic: true,
-								jsFunction: staticProto['normalize'],
-								annotations: []
-							})
-						],
-						consumedMembers: [],
-						annotations: []
-					});
-				}
-			}
+			}, '["System2","A","test"]'
+			);
 		''';
 
 	 	// Prepare ResourceSet to contain exportedScript:

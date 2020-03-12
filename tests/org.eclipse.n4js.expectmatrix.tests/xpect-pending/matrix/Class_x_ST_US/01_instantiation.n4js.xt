@@ -52,8 +52,8 @@ a3 instanceof ~~A2;
 var a4 : ~A2 = {a: 2};
 
 /* superfluous members in field type, noerrors but XPECT warnings ---
-   "b is not defined in ~~A2." at "b"
-   "f is not defined in ~~A2." at "f"
+   "b is not defined in ~~A2; it will not be accessible from a5." at "b"
+   "f is not defined in ~~A2; it will not be accessible from a5." at "f"
    --- */
 var a5 : ~~A2 = {a: 2, b: 3, f: function () {} };
 

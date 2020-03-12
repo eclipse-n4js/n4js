@@ -14,7 +14,7 @@ import org.eclipse.n4js.N4JSUiInjectorProvider;
 import org.eclipse.n4js.XtextParametrizedRunner;
 import org.eclipse.n4js.XtextParametrizedRunner.Parameters;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
-import org.eclipse.n4js.resource.UserdataMapper;
+import org.eclipse.n4js.resource.UserDataMapper;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.ts.types.TypesPackage;
@@ -143,7 +143,7 @@ public class ReproduceInvalidIndexPluginTest extends AbstractBuilderParticipantT
 				IEObjectDescription moduleDescription = Iterables
 						.getOnlyElement(description.getExportedObjectsByType(TypesPackage.Literals.TMODULE));
 				Assert.assertNotNull(description.getURI().toString(), moduleDescription);
-				String moduleAsString = UserdataMapper.getDeserializedModuleFromDescriptionAsString(moduleDescription,
+				String moduleAsString = UserDataMapper.getDeserializedModuleFromDescriptionAsString(moduleDescription,
 						description.getURI());
 				Assert.assertNotNull(description.getURI().toString(), moduleAsString);
 			}
@@ -166,11 +166,11 @@ public class ReproduceInvalidIndexPluginTest extends AbstractBuilderParticipantT
 		IEObjectDescription moduleDescription = Iterables
 				.getOnlyElement(description.getExportedObjectsByType(TypesPackage.Literals.TMODULE));
 		Assert.assertNotNull(moduleDescription);
-		String moduleAsString = UserdataMapper.getDeserializedModuleFromDescriptionAsString(moduleDescription,
+		String moduleAsString = UserDataMapper.getDeserializedModuleFromDescriptionAsString(moduleDescription,
 				description.getURI());
 		Assert.assertNotNull(moduleAsString);
 		Assert.assertEquals("<?xml version=\"1.0\" encoding=\"ASCII\"?>\n" +
-				"<types:TModule xmi:version=\"2.0\" xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:typeRefs=\"http://www.eclipse.org/n4js/ts/TypeRefs\" xmlns:types=\"http://www.eclipse.org/n4js/ts/Types\" qualifiedName=\"Client\" projectName=\"Client\" vendorID=\"org.eclipse.n4js\">\n"
+				"<types:TModule xmi:version=\"2.0\" xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:typeRefs=\"http://www.eclipse.org/n4js/ts/TypeRefs\" xmlns:types=\"http://www.eclipse.org/n4js/ts/Types\" simpleName=\"Client\" qualifiedName=\"Client\" projectName=\"Client\" vendorID=\"org.eclipse.n4js\">\n"
 				+
 				"  <astElement href=\"#/0\"/>\n" +
 				"  <variables name=\"a\" exportedName=\"a\" const=\"true\" newExpression=\"true\">\n" +

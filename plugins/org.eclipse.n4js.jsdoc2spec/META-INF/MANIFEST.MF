@@ -5,7 +5,6 @@ Bundle-SymbolicName: org.eclipse.n4js.jsdoc2spec;singleton:=true
 Bundle-Version: 0.0.1.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.eclipse.n4js,
- org.eclipse.n4js.ui,
  org.eclipse.n4js.ts.model,
  org.eclipse.n4js.jsdoc,
  org.eclipse.n4js.ts,

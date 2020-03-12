@@ -29,7 +29,7 @@ foo({s: 42, f: function(){}});
 
 // ok
 bar({s: "Hello"});
-// XPECT warnings --> "foo is not defined in ~~S." at "foo"
+// XPECT warnings --> "foo is not defined in ~~S; it will not be accessible from the receiving parameter." at "foo"
 bar({s: "Hello", foo: function(){}});
 // "s has wrong type: int is not a subtype of string" XPECT errors --> "~Object with { s: int; foo: {function():void} } is not a structural subtype of ~~S: s failed: int is not equal to string." at "{s: 42,  foo: function(){}}"
 bar({s: 42,  foo: function(){}});

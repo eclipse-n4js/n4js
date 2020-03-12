@@ -72,7 +72,7 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 	}
 
 	private String getUsageExpectation() {
-		return "Usage: java -jar n4jsc.jar [GOAL] DIR [OPTION(s)]\n" +
+		return "Usage: n4jsc [GOAL] DIR [OPTION(s)]\n" +
 				" GOAL                           : Goals are:\n" +
 				"                                  	 compile  Compiles src folders\n" +
 				"                                  	 clean    Cleans output folders and type\n" +

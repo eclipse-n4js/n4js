@@ -629,6 +629,15 @@ public interface ImPackage extends EPackage {
 	int IDENTIFIER_REF_IM___GET_VERSION = N4JSPackage.IDENTIFIER_REF___GET_VERSION;
 
 	/**
+	 * The operation id for the '<em>Get Target Element</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDENTIFIER_REF_IM___GET_TARGET_ELEMENT = N4JSPackage.IDENTIFIER_REF___GET_TARGET_ELEMENT;
+
+	/**
 	 * The operation id for the '<em>Is Valid Simple Assignment Target</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4061,6 +4070,15 @@ public interface ImPackage extends EPackage {
 	int VERSIONED_IDENTIFIER_REF_IM_FEATURE_COUNT = IDENTIFIER_REF_IM_FEATURE_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>Get Target Element</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_IDENTIFIER_REF_IM___GET_TARGET_ELEMENT = IDENTIFIER_REF_IM___GET_TARGET_ELEMENT;
+
+	/**
 	 * The operation id for the '<em>Is Valid Simple Assignment Target</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4168,6 +4186,15 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int VERSIONED_NAMED_IMPORT_SPECIFIER_IM__FLAGGED_USED_IN_CODE = N4JSPackage.NAMED_IMPORT_SPECIFIER__FLAGGED_USED_IN_CODE;
+
+	/**
+	 * The feature id for the '<em><b>Retained At Runtime</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_NAMED_IMPORT_SPECIFIER_IM__RETAINED_AT_RUNTIME = N4JSPackage.NAMED_IMPORT_SPECIFIER__RETAINED_AT_RUNTIME;
 
 	/**
 	 * The feature id for the '<em><b>Imported Element</b></em>' reference.

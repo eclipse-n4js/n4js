@@ -25,25 +25,21 @@
 //    global object, in order to make them available globally at runtime (this won't
 //    happen automatically).
 
+import _globalThis from "_globalThis";
 
-function setTargetOfAnnotations(target: Object) {
-	if (target['annotations']) {
-		for (const annotation of target['annotations']) {
-			Object.defineProperty(annotation, "target", { value: target, enumerable: false });
-		}
-	}
-}
 
 
 class N4Object extends Object {}
 
 abstract class N4Element extends Object {
-
 	public origin: string;
 	public annotations: Array<N4Annotation> = [];
 
-	protected constructor(@Spec spec: ~i~this) {
-		setTargetOfAnnotations(this);
+	public setAnnotations(annotations: Array<N4Annotation>): void {
+		this.annotations = annotations;
+		for (const annotation of this.annotations) {
+			Object.defineProperty(annotation, "target", { value: this, enumerable: false });
+		}
 	}
 
 	public hasAnnotation(name: string): boolean {
@@ -105,12 +101,11 @@ abstract class N4Classifier extends N4Type {
 
 	public consumedMembers: Array<N4Member> = [];
 
-	protected constructor(@Spec spec: ~i~this) {
-		super(spec);
 
+	public setOwnedMembers(ownedMembers: Array<N4Member>): void {
+		this.ownedMembers = ownedMembers;
 		for (const ownedMember of this.ownedMembers) {
 			Object.defineProperty(ownedMember, 'owner', { value: this, enumerable: false });
-			setTargetOfAnnotations(ownedMember);
 		}
 	}
 
@@ -265,8 +260,6 @@ abstract class N4StringBasedEnum extends Object { // NOTE: cannot subclass 'stri
 	public name: string;
 	public details: Array<string> = [];
 	public target: N4Element;
-
-	protected constructor(@Spec spec: ~i~this) {}
 }
 
 interface ~N4Provider<out T> {
@@ -298,26 +291,23 @@ interface MigrationContext {
 
 
 // add above types to the global object
-const global = Function('return this')() as Object+;
-if (typeof global === "object") {
-	global.N4Object = N4Object;
-	global.N4Element = N4Element;
-	global.N4NamedElement = N4NamedElement;
-	global.N4Type = N4Type;
-	global.N4Classifier = N4Classifier;
-	global.N4Class = N4Class;
-	global.N4Interface = N4Interface;
-	global.N4Member = N4Member;
-	global.N4Method = N4Method;
-	global.N4DataField = N4DataField;
-	global.N4Accessor = N4Accessor;
-	global.N4EnumType = N4EnumType;
-	global.N4Enum = N4Enum;
-	global.N4StringBasedEnumType = N4StringBasedEnumType;
-	global.N4StringBasedEnum = N4StringBasedEnum;
-	global.N4Annotation = N4Annotation;
-	global.N4Provider = N4Provider;
-	global.N4ApiNotImplementedError = N4ApiNotImplementedError;
-	global.MigrationController = MigrationController;
-	global.MigrationContext = MigrationContext;
-}
+_globalThis.N4Object = N4Object;
+_globalThis.N4Element = N4Element;
+_globalThis.N4NamedElement = N4NamedElement;
+_globalThis.N4Type = N4Type;
+_globalThis.N4Classifier = N4Classifier;
+_globalThis.N4Class = N4Class;
+_globalThis.N4Interface = N4Interface;
+_globalThis.N4Member = N4Member;
+_globalThis.N4Method = N4Method;
+_globalThis.N4DataField = N4DataField;
+_globalThis.N4Accessor = N4Accessor;
+_globalThis.N4EnumType = N4EnumType;
+_globalThis.N4Enum = N4Enum;
+_globalThis.N4StringBasedEnumType = N4StringBasedEnumType;
+_globalThis.N4StringBasedEnum = N4StringBasedEnum;
+_globalThis.N4Annotation = N4Annotation;
+_globalThis.N4Provider = N4Provider;
+_globalThis.N4ApiNotImplementedError = N4ApiNotImplementedError;
+_globalThis.MigrationController = MigrationController;
+_globalThis.MigrationContext = MigrationContext;

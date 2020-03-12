@@ -211,6 +211,26 @@ public class JSONPackageImpl extends EPackageImpl implements JSONPackage {
 	 * @generated
 	 */
 	@Override
+	public EOperation getJSONValue__IsContainer() {
+		return jsonValueEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getJSONValue__GetChildren() {
+		return jsonValueEClass.getEOperations().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getJSONObject() {
 		return jsonObjectEClass;
 	}
@@ -241,6 +261,26 @@ public class JSONPackageImpl extends EPackageImpl implements JSONPackage {
 	 * @generated
 	 */
 	@Override
+	public EOperation getJSONObject__IsContainer() {
+		return jsonObjectEClass.getEOperations().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getJSONObject__GetChildren() {
+		return jsonObjectEClass.getEOperations().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getJSONArray() {
 		return jsonArrayEClass;
 	}
@@ -263,6 +303,26 @@ public class JSONPackageImpl extends EPackageImpl implements JSONPackage {
 	@Override
 	public EOperation getJSONArray__ToString() {
 		return jsonArrayEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getJSONArray__IsContainer() {
+		return jsonArrayEClass.getEOperations().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getJSONArray__GetChildren() {
+		return jsonArrayEClass.getEOperations().get(2);
 	}
 
 	/**
@@ -439,14 +499,20 @@ public class JSONPackageImpl extends EPackageImpl implements JSONPackage {
 		createEOperation(jsonDocumentEClass, JSON_DOCUMENT___TO_STRING);
 
 		jsonValueEClass = createEClass(JSON_VALUE);
+		createEOperation(jsonValueEClass, JSON_VALUE___IS_CONTAINER);
+		createEOperation(jsonValueEClass, JSON_VALUE___GET_CHILDREN);
 
 		jsonObjectEClass = createEClass(JSON_OBJECT);
 		createEReference(jsonObjectEClass, JSON_OBJECT__NAME_VALUE_PAIRS);
 		createEOperation(jsonObjectEClass, JSON_OBJECT___TO_STRING);
+		createEOperation(jsonObjectEClass, JSON_OBJECT___IS_CONTAINER);
+		createEOperation(jsonObjectEClass, JSON_OBJECT___GET_CHILDREN);
 
 		jsonArrayEClass = createEClass(JSON_ARRAY);
 		createEReference(jsonArrayEClass, JSON_ARRAY__ELEMENTS);
 		createEOperation(jsonArrayEClass, JSON_ARRAY___TO_STRING);
+		createEOperation(jsonArrayEClass, JSON_ARRAY___IS_CONTAINER);
+		createEOperation(jsonArrayEClass, JSON_ARRAY___GET_CHILDREN);
 
 		nameValuePairEClass = createEClass(NAME_VALUE_PAIR);
 		createEAttribute(nameValuePairEClass, NAME_VALUE_PAIR__NAME);
@@ -514,15 +580,27 @@ public class JSONPackageImpl extends EPackageImpl implements JSONPackage {
 
 		initEClass(jsonValueEClass, JSONValue.class, "JSONValue", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
+		initEOperation(getJSONValue__IsContainer(), theEcorePackage.getEBoolean(), "isContainer", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getJSONValue__GetChildren(), theEcorePackage.getEObject(), "getChildren", 0, -1, !IS_UNIQUE, IS_ORDERED);
+
 		initEClass(jsonObjectEClass, JSONObject.class, "JSONObject", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getJSONObject_NameValuePairs(), this.getNameValuePair(), null, "nameValuePairs", null, 0, -1, JSONObject.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getJSONObject__ToString(), theEcorePackage.getEString(), "toString", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
+		initEOperation(getJSONObject__IsContainer(), theEcorePackage.getEBoolean(), "isContainer", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getJSONObject__GetChildren(), theEcorePackage.getEObject(), "getChildren", 0, -1, !IS_UNIQUE, IS_ORDERED);
+
 		initEClass(jsonArrayEClass, JSONArray.class, "JSONArray", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getJSONArray_Elements(), this.getJSONValue(), null, "elements", null, 0, -1, JSONArray.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getJSONArray__ToString(), theEcorePackage.getEString(), "toString", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getJSONArray__IsContainer(), theEcorePackage.getEBoolean(), "isContainer", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getJSONArray__GetChildren(), theEcorePackage.getEObject(), "getChildren", 0, -1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(nameValuePairEClass, NameValuePair.class, "NameValuePair", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getNameValuePair_Name(), theEcorePackage.getEString(), "name", null, 0, 1, NameValuePair.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

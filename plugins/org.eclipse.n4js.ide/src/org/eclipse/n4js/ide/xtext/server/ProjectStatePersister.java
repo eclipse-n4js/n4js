@@ -42,6 +42,7 @@ import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
 import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.build.Source2GeneratedMapping;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -496,7 +497,7 @@ public class ProjectStatePersister {
 
 	private File getDataFile(IProjectConfig project) {
 		URI fileName = getFileName(project);
-		File file = new File(fileName.toFileString());
+		File file = URIUtils.toFile(fileName);
 		return file;
 	}
 

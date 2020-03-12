@@ -13,7 +13,7 @@ import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert";
 import {AssertionError} from "org/eclipse/n4js/mangelhaft/assert/AssertionError";
 interface ICreature {}
 
-interface I { p ? : int; }
+interface I { public p ? : int; }
 
 class Beast implements ICreature {}
 class Dog extends Beast {}

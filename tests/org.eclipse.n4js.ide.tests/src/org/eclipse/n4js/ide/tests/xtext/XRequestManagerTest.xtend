@@ -15,19 +15,20 @@ import com.google.common.util.concurrent.UncheckedExecutionException
 import com.google.common.util.concurrent.Uninterruptibles
 import com.google.inject.Guice
 import com.google.inject.Inject
+import java.util.concurrent.CancellationException
+import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import org.apache.log4j.Level
-import org.eclipse.n4js.ide.xtext.server.concurrent.XReadRequest
+import org.eclipse.n4js.ide.xtext.server.concurrent.XAbstractRequest
 import org.eclipse.n4js.ide.xtext.server.concurrent.XRequestManager
-import org.eclipse.n4js.ide.xtext.server.concurrent.XWriteRequest
 import org.eclipse.xtext.ide.server.ServerModule
 import org.eclipse.xtext.testing.logging.LoggingTester
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 
 import static org.junit.Assert.*
@@ -56,8 +57,8 @@ class XRequestManagerTest {
 
 	@Test(timeout = 1000)
 	def void testRunWriteLogExceptionNonCancellable() {
-		val logResult = LoggingTester.captureLogging(Level.ALL, XWriteRequest, [
-			val future = requestManager.runWrite([], [
+		val logResult = LoggingTester.captureLogging(Level.ALL, XAbstractRequest, [
+			val future = requestManager.runWrite("test", [], [
 				throw new RuntimeException();
 			])
 			
@@ -72,8 +73,8 @@ class XRequestManagerTest {
 
 	@Test(timeout = 1000)
 	def void testRunWriteLogExceptionCancellable() {
-		val logResult = LoggingTester.captureLogging(Level.ALL, XWriteRequest, [
-			val future = requestManager.runWrite([
+		val logResult = LoggingTester.captureLogging(Level.ALL, XAbstractRequest, [
+			val future = requestManager.runWrite("test", [
 				throw new RuntimeException();
 			], [])
 			
@@ -88,8 +89,8 @@ class XRequestManagerTest {
 
 	@Test(timeout = 1000, expected = UncheckedExecutionException)
 	def void testRunWriteCatchException() {
-		LoggingTester.captureLogging(Level.ALL, XWriteRequest, [
-			val future = requestManager.runWrite([
+		LoggingTester.captureLogging(Level.ALL, XAbstractRequest, [
+			val future = requestManager.runWrite("test", [
 				throw new RuntimeException()
 			], [])
 
@@ -101,8 +102,8 @@ class XRequestManagerTest {
 
 	@Test(timeout = 1000)
 	def void testRunReadLogException() {
-		val logResult = LoggingTester.captureLogging(Level.ALL, XReadRequest, [
-			val future = requestManager.runRead([
+		val logResult = LoggingTester.captureLogging(Level.ALL, XAbstractRequest, [
+			val future = requestManager.runRead("test", [
 				throw new RuntimeException();
 			])
 			
@@ -117,8 +118,8 @@ class XRequestManagerTest {
 
 	@Test(timeout = 1000, expected = UncheckedExecutionException)
 	def void testRunReadCatchException() {
-		LoggingTester.captureLogging(Level.ALL, XReadRequest, [
-			val future = requestManager.runRead([
+		LoggingTester.captureLogging(Level.ALL, XAbstractRequest, [
+			val future = requestManager.runRead("test", [
 				throw new RuntimeException()
 			])
 
@@ -130,7 +131,7 @@ class XRequestManagerTest {
 
 	@Test(timeout = 1000)
 	def void testRunRead() {
-		val future = requestManager.runRead [
+		val future = requestManager.runRead("test") [
 			'Foo'
 		]
 		assertEquals('Foo', Futures.getUnchecked(future))
@@ -138,13 +139,13 @@ class XRequestManagerTest {
 
 	@Test(timeout = 1000)
 	def void testRunReadConcurrent() {
-		val future = requestManager.runRead [
+		val future = requestManager.runRead("test") [
 			while (sharedState.get == 0) {
 				Uninterruptibles.sleepUninterruptibly(10, TimeUnit.MILLISECONDS)
 			}
 			sharedState.incrementAndGet
 		]
-		requestManager.runRead [
+		requestManager.runRead("test") [
 			sharedState.incrementAndGet
 		]
 		future.join
@@ -153,10 +154,10 @@ class XRequestManagerTest {
 
 	@Test(timeout = 1000)
 	def void testRunReadAfterWrite() {
-		requestManager.runWrite([], [
+		requestManager.runWrite("test", [], [
 			sharedState.incrementAndGet
 		])
-		val future = requestManager.runRead [
+		val future = requestManager.runRead("test") [
 			sharedState.get
 		]
 		assertEquals(1, Futures.<Integer>getUnchecked(future))
@@ -164,7 +165,7 @@ class XRequestManagerTest {
 
 	@Test(timeout = 1000)
 	def void testRunWrite() {
-		requestManager.runWrite([], [
+		requestManager.runWrite("test", [], [
 			sharedState.incrementAndGet
 		]).join
 		assertEquals(1, sharedState.get)
@@ -172,24 +173,22 @@ class XRequestManagerTest {
 
 	@Test(timeout = 1000)
 	def void testRunWriteAfterWrite() {
-		requestManager.runWrite([], [
+		requestManager.runWrite("test", [], [
 			sharedState.incrementAndGet
 		]).join
-		requestManager.runWrite([], [
+		requestManager.runWrite("test", [], [
 			if (sharedState.get != 0)
 				sharedState.incrementAndGet as Integer
 		]).join
 		assertEquals(2, sharedState.get)
 	}
 
-	//FIXME https://github.com/eclipse/xtext-core/issues/622
 	@Test(timeout = 1000)
-	@Ignore("https://github.com/eclipse/xtext-core/issues/622")
 	def void testRunWriteAfterRead() {
-		requestManager.runRead [
+		requestManager.runRead("test") [
 			sharedState.incrementAndGet
 		]
-		requestManager.runWrite([], [
+		requestManager.runWrite("test", [], [
 			assertEquals (1, sharedState.get)
 			sharedState.incrementAndGet
 		]).join
@@ -199,7 +198,7 @@ class XRequestManagerTest {
 	@Test(timeout = 1000)
 	def void testCancelRead() {
 		val isCanceled = new AtomicBoolean(false)
-		val future = requestManager.runRead [ cancelIndicator |
+		val future = requestManager.runRead("test") [ cancelIndicator |
 			try {
 				sharedState.incrementAndGet
 				while (!cancelIndicator.isCanceled) {
@@ -218,4 +217,69 @@ class XRequestManagerTest {
 			Uninterruptibles.sleepUninterruptibly(10, TimeUnit.MILLISECONDS)
 		}
 	}
+	
+	@Test
+	def void testWriteWaitsForReadToFinish() throws Exception {
+		val marked = new AtomicBoolean(false)
+		val countDownInRead = new CountDownLatch(1)
+		val countDownInWrite = new CountDownLatch(1)
+		val proceedWithWrite = new CountDownLatch(1)
+		val reader = requestManager.runRead("reader") [ cancelIndicator |
+			countDownInRead.countDown
+			Uninterruptibles.awaitUninterruptibly(countDownInWrite)
+			marked.set(true)
+			proceedWithWrite.countDown
+			return null
+		]
+		Uninterruptibles.awaitUninterruptibly(countDownInRead)
+		val writer = requestManager.runWrite("writer", [], [ cancelIndicator, ignored |
+			countDownInWrite.countDown
+			Uninterruptibles.awaitUninterruptibly(proceedWithWrite)
+			assertTrue(marked.get)
+			null
+		])
+		try {
+			Uninterruptibles.getUninterruptibly(writer, 100, TimeUnit.MILLISECONDS)
+			fail("Expected timeout")
+		} catch(TimeoutException e) {
+			assertFalse(marked.get()) // this should not be the case
+		}
+		countDownInWrite.countDown;
+		Uninterruptibles.getUninterruptibly(writer, 100, TimeUnit.MILLISECONDS)
+		assertTrue(reader.isDone)
+		assertFalse(reader.isCancelled)
+	}
+	
+	@Test
+	def void testWriteWaitsForReadToFinish_02() throws Exception {
+		val marked = new AtomicBoolean(false)
+		val countDownInRead = new CountDownLatch(1)
+		val countDownInWrite = new CountDownLatch(1)
+		val proceedWithWrite = new CountDownLatch(1)
+		val reader = requestManager.runRead("reader") [ cancelIndicator |
+			countDownInRead.countDown
+			Uninterruptibles.awaitUninterruptibly(countDownInWrite)
+			marked.set(true)
+			proceedWithWrite.countDown
+			throw new CancellationException
+		]
+		Uninterruptibles.awaitUninterruptibly(countDownInRead)
+		val writer = requestManager.runWrite("writer", [], [ cancelIndicator, ignored |
+			countDownInWrite.countDown
+			Uninterruptibles.awaitUninterruptibly(proceedWithWrite)
+			assertTrue(marked.get)
+			null
+		])
+		try {
+			Uninterruptibles.getUninterruptibly(writer, 100, TimeUnit.MILLISECONDS)
+			fail("Expected timeout")
+		} catch(TimeoutException e) {
+			assertFalse(marked.get()) // this should not be the case
+		}
+		countDownInWrite.countDown;
+		Uninterruptibles.getUninterruptibly(writer, 100, TimeUnit.MILLISECONDS)
+		assertTrue(reader.isDone)
+		assertTrue(reader.isCancelled)
+	}
+	
 }

@@ -17,6 +17,7 @@ import java.nio.file.Path;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.util.IAcceptor;
 import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.util.RuntimeIOException;
@@ -34,7 +35,7 @@ public class FileSystemScanner implements IFileSystemScanner {
 
 	@Override
 	public void scan(URI root, IAcceptor<URI> acceptor) {
-		File rootFile = new File(root.toFileString());
+		File rootFile = URIUtils.toFile(root);
 		if (rootFile.isDirectory()) {
 			try {
 				Path rootPath = rootFile.toPath();

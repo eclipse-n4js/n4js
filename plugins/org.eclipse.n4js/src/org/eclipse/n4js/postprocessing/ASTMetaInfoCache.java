@@ -29,6 +29,8 @@ import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
+import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
@@ -50,6 +52,7 @@ public final class ASTMetaInfoCache {
 	// (add new properties here; getters should be public, setters should have package visibility)
 
 	private final N4JSResource resource;
+	private final String projectName;
 	private final boolean hasBrokenAST;
 	private final ASTFlowInfo flowInfo;
 	private final Map<TypableElement, TypeRef> actualTypes = new HashMap<>();
@@ -59,6 +62,7 @@ public final class ASTMetaInfoCache {
 
 	/* package */ ASTMetaInfoCache(N4JSResource resource, boolean hasBrokenAST, ASTFlowInfo flowInfo) {
 		this.resource = resource;
+		this.projectName = resource.getModule().getProjectName();
 		this.hasBrokenAST = hasBrokenAST;
 		this.flowInfo = flowInfo;
 	}
@@ -66,6 +70,11 @@ public final class ASTMetaInfoCache {
 	/** @return the {@link N4JSResource} the receiving cache belongs to. */
 	public N4JSResource getResource() {
 		return resource;
+	}
+
+	/** @return the name of the containing project; see {@link TModule#getProjectName()}. */
+	public String getProjectName() {
+		return projectName;
 	}
 
 	/** @return if the resource of this cache has a broken AST. */
@@ -209,6 +218,8 @@ public final class ASTMetaInfoCache {
 	/* package */ final Set<EObject> astNodesCurrentlyBeingTyped = new LinkedHashSet<>();
 	/* package */ final Queue<EObject> postponedSubTrees = new LinkedList<>(); // using LinkedList as FIFO queue, here
 	/* package */ final List<FunctionOrFieldAccessor> potentialContainersOfLocalArgumentsVariable = new LinkedList<>();
+	/* package */ final Set<IdentifiableElement> elementsReferencedAtRuntime = new LinkedHashSet<>();
+	/* package */ final Set<TModule> modulesReferencedAtLoadtimeForInheritance = new LinkedHashSet<>();
 
 	// @formatter:on
 
@@ -217,6 +228,8 @@ public final class ASTMetaInfoCache {
 		astNodesCurrentlyBeingTyped.clear();
 		postponedSubTrees.clear();
 		potentialContainersOfLocalArgumentsVariable.clear();
+		elementsReferencedAtRuntime.clear();
+		modulesReferencedAtLoadtimeForInheritance.clear();
 	}
 
 	/* package */ boolean isPostProcessing() {

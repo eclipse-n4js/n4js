@@ -8,40 +8,19 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-/*eslint-disable no-console */
+
 "use strict";
 
-const lib_path = require("path");
-const lib_fs = require("fs");
-const log = require("npmlog");
-const env = process.env;
-const jarPath = env.N4JSC_JAR;
+let path = require('path');
+let parentDir = path.dirname(process.cwd()).split(path.sep).pop();
 
-if (jarPath) {
-    const outPath = lib_path.resolve(__dirname, "bin", "n4jsc.jar");
-    log.info(`${env.npm_package_name}@${env.npm_package_version}`, `Replacing ${outPath} with ${jarPath}`);
-
-    if (lib_fs.existsSync(outPath)) {
-        lib_fs.unlinkSync(outPath); // remove to notice any problems
-    }
-
-    // minimal dep just against wget
-    if (/^https?:\/\//i.test(jarPath)) {
-        const stream = lib_fs.createWriteStream(outPath);
-        const download = (url) => {
-            require(/^http:\/\//i.test(url) ? "http" : "https").get(url, resp => {
-                if (Math.trunc(resp.statusCode /100) === 3 && resp.headers.location) { // redirect
-                    download(resp.headers.location);
-                } else {
-                    if (resp.statusCode !== 200) {
-                        throw new Error(`Request on ${url} failed: ${resp.statusCode}`);
-                    }
-                    resp.pipe(stream);
-                }
-            });
-        };
-        download(jarPath);
-    } else {
-        lib_fs.copyFileSync(jarPath, outPath);
-    }
+if (parentDir == "node_modules") {
+	// npm-postinstall actions require populated src-gen folders. Note that:
+	// - If this package was actually installed into a node_modules folder, we know that src-gen folder is populated.
+	// - If this package was checked out as part of the yarn workspace and 'yarn install' was run, the src-gen folder is still empty.
+    require("./src-gen/npm-postinstall.js");
+} else {
+    const log = require("npmlog");
+    const NPM_NAME = `${process.env.npm_package_name}@${process.env.npm_package_version}`;
+    log.info(NPM_NAME, "skipping npm-postinstall for n4js-cli since it is not located inside a node_modules folder and src-gen files might be missing");
 }

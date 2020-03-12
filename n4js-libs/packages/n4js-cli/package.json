@@ -7,7 +7,7 @@
   "internalVersion": "2019-03-15T08:46:12Z",
   "description": "N4JS compiler and command line tools.",
   "scripts": {
-    "postinstall": "node ./npm-postinstall.js",
+    "postinstall": "node -r esm ./npm-postinstall.js",
     "build": "./npm-build.sh",
     "test": "mocha -r esm tests"
   },
@@ -16,9 +16,11 @@
     "n4jsc": "./bin/n4jsc.js"
   },
   "files": [
-    "bin",
+    "bin/n4jsc.js",
+    "bin/n4jsc.jar",
+    "resources/PrintJavaVersion.java",
     "npm-postinstall.js",
-    "src-gen/index.js",
+    "src-gen",
     "src"
   ],
   "devDependencies": {
@@ -26,6 +28,8 @@
   },
   "dependencies": {
     "@n4jsd/debug": "<=4.1.*",
+    "follow-redirects": "1.9.0",
+    "decompress": "4.2.0",
     "debug": "~4.1.1",
     "esm": "3.2.25",
     "npmlog": "4.1.2",

@@ -82,7 +82,7 @@ export public class TestExecutor {
     private static getError(ex: any, description: string): Error {
         if (!ex) return new Error("Unknown error: " + description);
         if (typeof ex === "string") return new Error(ex as string);
-        if (ex instanceof AssertionError) return ex as AssertionError;
+        if (ex instanceof AssertionError) return ex;
         return ex as Error;
     }
 

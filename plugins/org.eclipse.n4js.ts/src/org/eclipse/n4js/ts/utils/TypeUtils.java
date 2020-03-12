@@ -191,7 +191,7 @@ public class TypeUtils {
 			ref = TypeRefsFactory.eINSTANCE.createFunctionTypeRef();
 			// } else if (declaredType instanceof TStructuralType) {
 			// throw new IllegalArgumentException("a TStructuralType should not be used as declared type of a TypeRef");
-		} else if (typingStrategy != TypingStrategy.DEFAULT && typingStrategy != TypingStrategy.NOMINAL) {
+		} else if (isStructural(typingStrategy)) {
 			ref = TypeRefsFactory.eINSTANCE.createParameterizedTypeRefStructural();
 		} else {
 			ref = TypeRefsFactory.eINSTANCE.createParameterizedTypeRef();
@@ -1392,6 +1392,14 @@ public class TypeUtils {
 			return ref.getDeclaredType() == scope.getGeneratorType();
 		}
 		return false;
+	}
+
+	/**
+	 * Tells whether the given typing strategy denotes structural typing.
+	 */
+	public static boolean isStructural(TypingStrategy typingStrategy) {
+		return typingStrategy != null && typingStrategy != TypingStrategy.NOMINAL
+				&& typingStrategy != TypingStrategy.DEFAULT;
 	}
 
 	/**

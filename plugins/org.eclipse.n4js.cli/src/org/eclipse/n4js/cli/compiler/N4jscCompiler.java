@@ -37,6 +37,7 @@ import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.tester.TestCatalogSupplier;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.workspace.IProjectConfig;
 
 import com.google.common.base.Stopwatch;
@@ -105,8 +106,7 @@ public class N4jscCompiler {
 
 	private void performClean() {
 		Stopwatch compilationTime = Stopwatch.createStarted();
-		languageServer.clean();
-		languageServer.joinCleanFinished();
+		languageServer.clean().join();
 		printCleanResults(compilationTime.stop());
 	}
 
@@ -117,7 +117,7 @@ public class N4jscCompiler {
 		}
 		Stopwatch compilationTime = Stopwatch.createStarted();
 		languageServer.initialized(new InitializedParams());
-		languageServer.joinInitBuildFinished();
+		languageServer.joinServerRequests();
 		printCompileResults(compilationTime.stop());
 	}
 
@@ -161,7 +161,7 @@ public class N4jscCompiler {
 					if (prj.getPath() == null) {
 						locationStr = "[no_location]";
 					} else {
-						locationStr = workspace.relativize(Path.of(prj.getPath().toFileString())).toString();
+						locationStr = workspace.relativize(URIUtils.toPath(prj.getPath())).toString();
 						if (locationStr.isBlank()) {
 							locationStr = ".";
 						}

@@ -209,7 +209,8 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	public XBuildManager.XBuildable didOpen(URI uri, Integer version, String contents) {
 		openDocuments.put(uri, new XDocument(version, contents));
 
-		return getIncrementalDirtyBuildable(ImmutableList.of(uri), Collections.emptyList());
+		// return getIncrementalDirtyBuildable(ImmutableList.of(uri), Collections.emptyList()); // necessary at all?
+		return getIncrementalDirtyBuildable(Collections.emptyList(), Collections.emptyList());
 	}
 
 	/**
@@ -271,7 +272,7 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 
 	/** Triggers an incremental build, and will generate output files. */
 	protected XBuildable getIncrementalGenerateBuildable(List<URI> dirtyFiles, List<URI> deletedFiles) {
-		XBuildManager.XBuildable buildable = buildManager.getIncrementalDirtyBuildable(dirtyFiles, deletedFiles);
+		XBuildManager.XBuildable buildable = buildManager.getIncrementalGenerateBuildable(dirtyFiles, deletedFiles);
 		return (cancelIndicator) -> {
 			List<IResourceDescription.Delta> deltas = buildable.build(cancelIndicator);
 			afterBuild(deltas);
@@ -438,6 +439,10 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 
 	@Override
 	public XDocument getDocument(URI uri) {
+		XDocument doc = openDocuments.get(uri);
+		if (doc != null) {
+			return doc;
+		}
 		XtextResource resource = getResource(uri);
 		if (resource == null) {
 			return null;

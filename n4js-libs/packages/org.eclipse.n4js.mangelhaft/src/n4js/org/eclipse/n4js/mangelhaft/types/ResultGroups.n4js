@@ -58,7 +58,7 @@ export public class ResultGroups {
             target.errors += result.errors;
             target.skipped += result.skipped;
             if (result instanceof ResultGroups) {
-                target.results = target.results.concat(((result as Object) as ResultGroups).results); // joe TODO consider refactoring of ResultGroup and ResultGroups
+                target.results = target.results.concat(result.results); // joe TODO consider refactoring of ResultGroup and ResultGroups
             }
         }
         return target;

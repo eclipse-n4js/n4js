@@ -124,76 +124,8 @@ class ArrowFunctionTest extends AbstractTranspilerTest {
 					this._data = -1;
 					this.argsTotal = 0;
 				}
-				get data() {
-					var $capturedArgs = arguments;
-					if (this._data == -1) {
-						((function() {
-							this._data = 1;
-						}).bind(this))();
-					}
-					((function() {
-						this.argsTotal += $capturedArgs.length;
-					}).bind(this))();
-					return this._data;
-				}
-				set data(data) {
-					var $capturedArgs = arguments;
-					((function() {
-						this._data = data;
-					}).bind(this))();
-					((function() {
-						this.argsTotal += $capturedArgs.length;
-					}).bind(this))();
-					this.notifyListeners();
-				}
-				notifyListeners() {}
-				static get n4type() {
-					const $sym = Symbol.for('org.eclipse.n4js/reflectionInfo');
-					if (this.hasOwnProperty($sym)) {
-						return this[$sym];
-					}
-					const instanceProto = this.prototype, staticProto = this;
-					return this[$sym] = new N4Class({
-						name: 'C',
-						origin: 'test',
-						fqn: 'A/C',
-						n4superType: N4Object.n4type,
-						allImplementedInterfaces: [],
-						ownedMembers: [
-							new N4DataField({
-								name: '_data',
-								isStatic: false,
-								annotations: []
-							}),
-							new N4DataField({
-								name: 'argsTotal',
-								isStatic: false,
-								annotations: []
-							}),
-							new N4Accessor({
-								name: 'data',
-								getter: true,
-								isStatic: false,
-								annotations: []
-							}),
-							new N4Accessor({
-								name: 'data',
-								getter: false,
-								isStatic: false,
-								annotations: []
-							}),
-							new N4Method({
-								name: 'notifyListeners',
-								isStatic: false,
-								jsFunction: instanceProto['notifyListeners'],
-								annotations: []
-							})
-						],
-						consumedMembers: [],
-						annotations: []
-					});
-				}
-			}
+			}, {}, '["C","A","test"]'
+			);
 		''';
 
 	 	// Prepare ResourceSet to contain exportedScript:

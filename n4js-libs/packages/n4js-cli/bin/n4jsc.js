@@ -12,18 +12,8 @@
  */
 "use strict";
 
-const {resolve} = require("path");
-const {spawn} = require("child_process");
-const args = ["-jar", resolve(__dirname, "n4jsc.jar")].concat(process.argv.slice(2));
-if (!/-Xmx/.test(process.env.JAVA_TOOL_OPTIONS)) {
-    args.unshift("-Xmx4096m");
-}
 
-spawn("java", args, {
-    stdio: "inherit",
-    env: Object.assign({ NODEJS_PATH: process.argv[0] }, process.env)
-}).on("close", function(code) {
-    if (code !== 0) {
-        process.exit(code);
-    }
-});
+require = require("esm")(module);
+let n4jsc = require("../src-gen/n4jsc.js");
+
+n4jsc.runN4jscSync();

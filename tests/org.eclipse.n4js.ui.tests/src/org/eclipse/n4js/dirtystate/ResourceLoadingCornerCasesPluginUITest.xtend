@@ -84,7 +84,7 @@ class ResourceLoadingCornerCasesPluginUITest extends AbstractBuilderParticipantT
 		val editorA = openAndGetXtextEditor(fileA, page)
 		val errorsA = getEditorValidationErrors(editorA)
 		// bug fix, part 1:
-		// when commenting out the creation of m2m URIs in UserdataMapper#getDeserializedModuleFromDescription(),
+		// when commenting out the creation of m2m URIs in UserDataMapper#getDeserializedModuleFromDescription(),
 		// next line should fail with "constructor{B} is not a subtype of constructor{B}."
 		assertEquals("editor for file A should not have any errors", #[], errorsA)
 

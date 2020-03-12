@@ -141,13 +141,31 @@ public interface JSONPackage extends EPackage {
 	int JSON_VALUE_FEATURE_COUNT = 0;
 
 	/**
+	 * The operation id for the '<em>Is Container</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JSON_VALUE___IS_CONTAINER = 0;
+
+	/**
+	 * The operation id for the '<em>Get Children</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JSON_VALUE___GET_CHILDREN = 1;
+
+	/**
 	 * The number of operations of the '<em>Value</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int JSON_VALUE_OPERATION_COUNT = 0;
+	int JSON_VALUE_OPERATION_COUNT = 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.json.JSON.impl.JSONObjectImpl <em>Object</em>}' class.
@@ -187,13 +205,31 @@ public interface JSONPackage extends EPackage {
 	int JSON_OBJECT___TO_STRING = JSON_VALUE_OPERATION_COUNT + 0;
 
 	/**
+	 * The operation id for the '<em>Is Container</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JSON_OBJECT___IS_CONTAINER = JSON_VALUE_OPERATION_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Get Children</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JSON_OBJECT___GET_CHILDREN = JSON_VALUE_OPERATION_COUNT + 2;
+
+	/**
 	 * The number of operations of the '<em>Object</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int JSON_OBJECT_OPERATION_COUNT = JSON_VALUE_OPERATION_COUNT + 1;
+	int JSON_OBJECT_OPERATION_COUNT = JSON_VALUE_OPERATION_COUNT + 3;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.json.JSON.impl.JSONArrayImpl <em>Array</em>}' class.
@@ -233,13 +269,31 @@ public interface JSONPackage extends EPackage {
 	int JSON_ARRAY___TO_STRING = JSON_VALUE_OPERATION_COUNT + 0;
 
 	/**
+	 * The operation id for the '<em>Is Container</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JSON_ARRAY___IS_CONTAINER = JSON_VALUE_OPERATION_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Get Children</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JSON_ARRAY___GET_CHILDREN = JSON_VALUE_OPERATION_COUNT + 2;
+
+	/**
 	 * The number of operations of the '<em>Array</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int JSON_ARRAY_OPERATION_COUNT = JSON_VALUE_OPERATION_COUNT + 1;
+	int JSON_ARRAY_OPERATION_COUNT = JSON_VALUE_OPERATION_COUNT + 3;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.json.JSON.impl.NameValuePairImpl <em>Name Value Pair</em>}' class.
@@ -325,6 +379,24 @@ public interface JSONPackage extends EPackage {
 	int JSON_STRING_LITERAL_FEATURE_COUNT = JSON_VALUE_FEATURE_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>Is Container</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JSON_STRING_LITERAL___IS_CONTAINER = JSON_VALUE___IS_CONTAINER;
+
+	/**
+	 * The operation id for the '<em>Get Children</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JSON_STRING_LITERAL___GET_CHILDREN = JSON_VALUE___GET_CHILDREN;
+
+	/**
 	 * The operation id for the '<em>To String</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -369,6 +441,24 @@ public interface JSONPackage extends EPackage {
 	 * @ordered
 	 */
 	int JSON_NUMERIC_LITERAL_FEATURE_COUNT = JSON_VALUE_FEATURE_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Is Container</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JSON_NUMERIC_LITERAL___IS_CONTAINER = JSON_VALUE___IS_CONTAINER;
+
+	/**
+	 * The operation id for the '<em>Get Children</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JSON_NUMERIC_LITERAL___GET_CHILDREN = JSON_VALUE___GET_CHILDREN;
 
 	/**
 	 * The operation id for the '<em>To String</em>' operation.
@@ -417,6 +507,24 @@ public interface JSONPackage extends EPackage {
 	int JSON_BOOLEAN_LITERAL_FEATURE_COUNT = JSON_VALUE_FEATURE_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>Is Container</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JSON_BOOLEAN_LITERAL___IS_CONTAINER = JSON_VALUE___IS_CONTAINER;
+
+	/**
+	 * The operation id for the '<em>Get Children</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JSON_BOOLEAN_LITERAL___GET_CHILDREN = JSON_VALUE___GET_CHILDREN;
+
+	/**
 	 * The operation id for the '<em>To String</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -452,6 +560,24 @@ public interface JSONPackage extends EPackage {
 	 * @ordered
 	 */
 	int JSON_NULL_LITERAL_FEATURE_COUNT = JSON_VALUE_FEATURE_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Is Container</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JSON_NULL_LITERAL___IS_CONTAINER = JSON_VALUE___IS_CONTAINER;
+
+	/**
+	 * The operation id for the '<em>Get Children</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JSON_NULL_LITERAL___GET_CHILDREN = JSON_VALUE___GET_CHILDREN;
 
 	/**
 	 * The number of operations of the '<em>Null Literal</em>' class.
@@ -505,6 +631,26 @@ public interface JSONPackage extends EPackage {
 	EClass getJSONValue();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.json.JSON.JSONValue#isContainer() <em>Is Container</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Container</em>' operation.
+	 * @see org.eclipse.n4js.json.JSON.JSONValue#isContainer()
+	 * @generated
+	 */
+	EOperation getJSONValue__IsContainer();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.json.JSON.JSONValue#getChildren() <em>Get Children</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Children</em>' operation.
+	 * @see org.eclipse.n4js.json.JSON.JSONValue#getChildren()
+	 * @generated
+	 */
+	EOperation getJSONValue__GetChildren();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.json.JSON.JSONObject <em>Object</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -536,6 +682,26 @@ public interface JSONPackage extends EPackage {
 	EOperation getJSONObject__ToString();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.json.JSON.JSONObject#isContainer() <em>Is Container</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Container</em>' operation.
+	 * @see org.eclipse.n4js.json.JSON.JSONObject#isContainer()
+	 * @generated
+	 */
+	EOperation getJSONObject__IsContainer();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.json.JSON.JSONObject#getChildren() <em>Get Children</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Children</em>' operation.
+	 * @see org.eclipse.n4js.json.JSON.JSONObject#getChildren()
+	 * @generated
+	 */
+	EOperation getJSONObject__GetChildren();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.json.JSON.JSONArray <em>Array</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -565,6 +731,26 @@ public interface JSONPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getJSONArray__ToString();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.json.JSON.JSONArray#isContainer() <em>Is Container</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Container</em>' operation.
+	 * @see org.eclipse.n4js.json.JSON.JSONArray#isContainer()
+	 * @generated
+	 */
+	EOperation getJSONArray__IsContainer();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.json.JSON.JSONArray#getChildren() <em>Get Children</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Children</em>' operation.
+	 * @see org.eclipse.n4js.json.JSON.JSONArray#getChildren()
+	 * @generated
+	 */
+	EOperation getJSONArray__GetChildren();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.json.JSON.NameValuePair <em>Name Value Pair</em>}'.
@@ -771,6 +957,22 @@ public interface JSONPackage extends EPackage {
 		EClass JSON_VALUE = eINSTANCE.getJSONValue();
 
 		/**
+		 * The meta object literal for the '<em><b>Is Container</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation JSON_VALUE___IS_CONTAINER = eINSTANCE.getJSONValue__IsContainer();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Children</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation JSON_VALUE___GET_CHILDREN = eINSTANCE.getJSONValue__GetChildren();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.json.JSON.impl.JSONObjectImpl <em>Object</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -797,6 +999,22 @@ public interface JSONPackage extends EPackage {
 		EOperation JSON_OBJECT___TO_STRING = eINSTANCE.getJSONObject__ToString();
 
 		/**
+		 * The meta object literal for the '<em><b>Is Container</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation JSON_OBJECT___IS_CONTAINER = eINSTANCE.getJSONObject__IsContainer();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Children</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation JSON_OBJECT___GET_CHILDREN = eINSTANCE.getJSONObject__GetChildren();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.json.JSON.impl.JSONArrayImpl <em>Array</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -821,6 +1039,22 @@ public interface JSONPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation JSON_ARRAY___TO_STRING = eINSTANCE.getJSONArray__ToString();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Container</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation JSON_ARRAY___IS_CONTAINER = eINSTANCE.getJSONArray__IsContainer();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Children</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation JSON_ARRAY___GET_CHILDREN = eINSTANCE.getJSONArray__GetChildren();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.json.JSON.impl.NameValuePairImpl <em>Name Value Pair</em>}' class.

@@ -13,7 +13,7 @@ package org.eclipse.n4js.ui.building;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.resource.UserdataMapper;
+import org.eclipse.n4js.resource.UserDataMapper;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.xtext.scoping.ForwardingEObjectDescription;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -25,7 +25,7 @@ import com.google.common.collect.Iterables;
 
 /**
  * Wraps an existing {@link IResourceDescription} in order to hide the serialized TModule in the user data (see
- * {@link UserdataMapper}).
+ * {@link UserDataMapper}).
  * <p>
  * This is used by the incremental builder to enforce a fully re-load of certain resources for which the TModule info in
  * the user data is out-dated. See {@link N4JSGenerateImmediatelyBuilderState#queueAffectedResources} for details.
@@ -107,14 +107,14 @@ public class ResourceDescriptionWithoutModuleUserData implements IResourceDescri
 
 		@Override
 		public String getUserData(String key) {
-			if (UserdataMapper.USERDATA_KEY_SERIALIZED_SCRIPT.equals(key))
+			if (UserDataMapper.USER_DATA_KEY_SERIALIZED_SCRIPT.equals(key))
 				return null;
 			return delegate().getUserData(key);
 		}
 
 		@Override
 		public String[] getUserDataKeys() {
-			// no need to remove UserdataMapper#USERDATA_KEY_SERIALIZED_SCRIPT here, UserdataMapper can deal with the
+			// no need to remove UserDataMapper#USER_DATA_KEY_SERIALIZED_SCRIPT here, UserDataMapper can deal with the
 			// situation that the key exists but the value is null
 			return delegate().getUserDataKeys();
 		}

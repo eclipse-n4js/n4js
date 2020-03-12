@@ -1983,6 +1983,16 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
+	public EOperation getImportDeclaration__IsRetainedAtRuntime() {
+		return importDeclarationEClass.getEOperations().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getImportSpecifier() {
 		return importSpecifierEClass;
 	}
@@ -1995,6 +2005,16 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	@Override
 	public EAttribute getImportSpecifier_FlaggedUsedInCode() {
 		return (EAttribute)importSpecifierEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getImportSpecifier_RetainedAtRuntime() {
+		return (EAttribute)importSpecifierEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -3923,8 +3943,18 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getIdentifierRef__IsValidSimpleAssignmentTarget() {
+	public EOperation getIdentifierRef__GetTargetElement() {
 		return identifierRefEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getIdentifierRef__IsValidSimpleAssignmentTarget() {
+		return identifierRefEClass.getEOperations().get(1);
 	}
 
 	/**
@@ -7474,9 +7504,11 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEAttribute(importDeclarationEClass, IMPORT_DECLARATION__MODULE_SPECIFIER_AS_TEXT);
 		createEAttribute(importDeclarationEClass, IMPORT_DECLARATION__MODULE_SPECIFIER_FORM);
 		createEOperation(importDeclarationEClass, IMPORT_DECLARATION___IS_BARE);
+		createEOperation(importDeclarationEClass, IMPORT_DECLARATION___IS_RETAINED_AT_RUNTIME);
 
 		importSpecifierEClass = createEClass(IMPORT_SPECIFIER);
 		createEAttribute(importSpecifierEClass, IMPORT_SPECIFIER__FLAGGED_USED_IN_CODE);
+		createEAttribute(importSpecifierEClass, IMPORT_SPECIFIER__RETAINED_AT_RUNTIME);
 
 		namedImportSpecifierEClass = createEClass(NAMED_IMPORT_SPECIFIER);
 		createEReference(namedImportSpecifierEClass, NAMED_IMPORT_SPECIFIER__IMPORTED_ELEMENT);
@@ -7733,6 +7765,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		identifierRefEClass = createEClass(IDENTIFIER_REF);
 		createEReference(identifierRefEClass, IDENTIFIER_REF__ID);
 		createEAttribute(identifierRefEClass, IDENTIFIER_REF__ID_AS_TEXT);
+		createEOperation(identifierRefEClass, IDENTIFIER_REF___GET_TARGET_ELEMENT);
 		createEOperation(identifierRefEClass, IDENTIFIER_REF___IS_VALID_SIMPLE_ASSIGNMENT_TARGET);
 
 		strictModeRelevantEClass = createEClass(STRICT_MODE_RELEVANT);
@@ -8533,8 +8566,11 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEOperation(getImportDeclaration__IsBare(), theEcorePackage.getEBoolean(), "isBare", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
+		initEOperation(getImportDeclaration__IsRetainedAtRuntime(), theEcorePackage.getEBoolean(), "isRetainedAtRuntime", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
 		initEClass(importSpecifierEClass, ImportSpecifier.class, "ImportSpecifier", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getImportSpecifier_FlaggedUsedInCode(), theEcorePackage.getEBoolean(), "flaggedUsedInCode", null, 0, 1, ImportSpecifier.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getImportSpecifier_RetainedAtRuntime(), theEcorePackage.getEBoolean(), "retainedAtRuntime", null, 0, 1, ImportSpecifier.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(namedImportSpecifierEClass, NamedImportSpecifier.class, "NamedImportSpecifier", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getNamedImportSpecifier_ImportedElement(), theTypesPackage.getTExportableElement(), null, "importedElement", null, 0, 1, NamedImportSpecifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -8848,6 +8884,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEClass(identifierRefEClass, IdentifierRef.class, "IdentifierRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getIdentifierRef_Id(), theTypesPackage.getIdentifiableElement(), null, "id", null, 0, 1, IdentifierRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIdentifierRef_IdAsText(), theEcorePackage.getEString(), "idAsText", null, 0, 1, IdentifierRef.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getIdentifierRef__GetTargetElement(), theTypesPackage.getIdentifiableElement(), "getTargetElement", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getIdentifierRef__IsValidSimpleAssignmentTarget(), theEcorePackage.getEBoolean(), "isValidSimpleAssignmentTarget", 0, 1, !IS_UNIQUE, IS_ORDERED);
 

@@ -1,0 +1,19 @@
+{
+	"name": "lsp-command-rebuild",
+	"version": "1.0.0",
+	"main": "src-gen/Module.js",
+	"n4js" : {
+		"projectType": "library",
+		"sources": {
+			"source": [
+				"src"
+			]
+		},
+		"output": "src-gen",
+		"requiredRuntimeLibraries": [
+		]
+	},
+	"dependencies": {
+		"n4js-runtime": ""
+	}
+}

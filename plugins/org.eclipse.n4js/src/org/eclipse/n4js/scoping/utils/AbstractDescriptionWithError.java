@@ -32,27 +32,6 @@ public abstract class AbstractDescriptionWithError extends ForwardingEObjectDesc
 		IEObjectDescriptionWithError {
 
 	/**
-	 * This is a temporarily added method due to a bug in the Xtend Maven plugin, which causes errors when calling a
-	 * static interface method (from Xtend).
-	 *
-	 * @see "https://bugs.eclipse.org/bugs/show_bug.cgi?id=444948"
-	 */
-	public static boolean isErrorDescription_XTEND_MVN_BUG_HACK(final IEObjectDescription eObjectDescription) {
-		return IEObjectDescriptionWithError.isErrorDescription(eObjectDescription);
-	}
-
-	/**
-	 * This is a temporarily added method due to a bug in the Xtend Maven plugin, which causes errors when calling a
-	 * static interface method (from Xtend).
-	 *
-	 * @see "https://bugs.eclipse.org/bugs/show_bug.cgi?id=444948"
-	 */
-	public static IEObjectDescriptionWithError getDescriptionWithError_XTEND_MVN_BUG_HACK(
-			final IEObjectDescription eObjectDescription) {
-		return IEObjectDescriptionWithError.getDescriptionWithError(eObjectDescription);
-	}
-
-	/**
 	 * Wraps the given delegate with an error description.
 	 */
 	protected AbstractDescriptionWithError(IEObjectDescription delegate) {

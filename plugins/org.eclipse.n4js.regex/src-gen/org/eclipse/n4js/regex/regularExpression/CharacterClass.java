@@ -35,10 +35,6 @@ public interface CharacterClass extends Pattern
   /**
    * Returns the value of the '<em><b>Negated</b></em>' attribute.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Negated</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Negated</em>' attribute.
    * @see #setNegated(boolean)
@@ -62,10 +58,6 @@ public interface CharacterClass extends Pattern
    * Returns the value of the '<em><b>Elements</b></em>' containment reference list.
    * The list contents are of type {@link org.eclipse.n4js.regex.regularExpression.CharacterClassElement}.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Elements</em>' containment reference list isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Elements</em>' containment reference list.
    * @see org.eclipse.n4js.regex.regularExpression.RegularExpressionPackage#getCharacterClass_Elements()

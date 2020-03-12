@@ -80,7 +80,7 @@ public class RegularExpressionFactoryImpl extends EFactoryImpl implements Regula
       case RegularExpressionPackage.LINE_START: return createLineStart();
       case RegularExpressionPackage.LINE_END: return createLineEnd();
       case RegularExpressionPackage.WORD_BOUNDARY: return createWordBoundary();
-      case RegularExpressionPackage.LOOK_AHEAD: return createLookAhead();
+      case RegularExpressionPackage.ABSTRACT_LOOK_AHEAD: return createAbstractLookAhead();
       case RegularExpressionPackage.PATTERN_CHARACTER: return createPatternCharacter();
       case RegularExpressionPackage.WILDCARD: return createWildcard();
       case RegularExpressionPackage.ATOM_ESCAPE: return createAtomEscape();
@@ -103,6 +103,8 @@ public class RegularExpressionFactoryImpl extends EFactoryImpl implements Regula
       case RegularExpressionPackage.REGULAR_EXPRESSION_FLAGS: return createRegularExpressionFlags();
       case RegularExpressionPackage.DISJUNCTION: return createDisjunction();
       case RegularExpressionPackage.SEQUENCE: return createSequence();
+      case RegularExpressionPackage.LOOK_AHEAD: return createLookAhead();
+      case RegularExpressionPackage.LOOK_BEHIND: return createLookBehind();
       case RegularExpressionPackage.CHARACTER_CLASS_RANGE: return createCharacterClassRange();
       default:
         throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
@@ -199,10 +201,10 @@ public class RegularExpressionFactoryImpl extends EFactoryImpl implements Regula
    * @generated
    */
   @Override
-  public LookAhead createLookAhead()
+  public AbstractLookAhead createAbstractLookAhead()
   {
-    LookAheadImpl lookAhead = new LookAheadImpl();
-    return lookAhead;
+    AbstractLookAheadImpl abstractLookAhead = new AbstractLookAheadImpl();
+    return abstractLookAhead;
   }
 
   /**
@@ -467,6 +469,30 @@ public class RegularExpressionFactoryImpl extends EFactoryImpl implements Regula
   {
     SequenceImpl sequence = new SequenceImpl();
     return sequence;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public LookAhead createLookAhead()
+  {
+    LookAheadImpl lookAhead = new LookAheadImpl();
+    return lookAhead;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public LookBehind createLookBehind()
+  {
+    LookBehindImpl lookBehind = new LookBehindImpl();
+    return lookBehind;
   }
 
   /**

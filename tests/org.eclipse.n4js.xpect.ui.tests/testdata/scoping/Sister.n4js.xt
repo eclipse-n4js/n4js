@@ -11,6 +11,14 @@
 
 /* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4JSXpectPluginTest
 
+	// Suppress all issues related to run-time dependency validation, because this file tests that linking / scoping / etc.
+	// can cope with *all* cycles at compile time, even those cases that are disallowed by RunTimeDependencyValidator:
+	IssueConfiguration {
+		IssueCode "LTD_ILLEGAL_LOADTIME_REFERENCE" { enabled = false }
+		IssueCode "LTD_LOADTIME_DEPENDENCY_CONFLICT" { enabled = false }
+		IssueCode "LTD_IMPORT_OF_LOADTIME_DEPENDENCY_TARGET" { enabled = false }
+	}
+
 	Workspace {
 		JavaProject "N4JSXpectTests" {
 			Folder "model" {

@@ -71,15 +71,23 @@ public class N4JSStandaloneSetup implements ISetup {
 		EPackage.Registry.INSTANCE.put(ProjectDescriptionPackage.eNS_URI, ProjectDescriptionPackage.eINSTANCE);
 		EPackage.Registry.INSTANCE.put(XMLTypePackage.eNS_URI, XMLTypePackage.eINSTANCE);
 
+		setupOtherLanguages();
+
+		Injector injector = createInjector();
+		register(injector);
+		return injector;
+	}
+
+	/**
+	 * Can be overridden to specialize the setup of other languages, e.g. the LSP case needs to setup the LSP variants
+	 * of the other injectors.
+	 */
+	protected void setupOtherLanguages() {
 		RegularExpressionStandaloneSetup.doSetup();
 		TypesStandaloneSetup.doSetup();
 		TypeExpressionsStandaloneSetup.doSetup();
 		JSONStandaloneSetup.doSetup();
 		SemverStandaloneSetup.doSetup();
-
-		Injector injector = createInjector();
-		register(injector);
-		return injector;
 	}
 
 	/**

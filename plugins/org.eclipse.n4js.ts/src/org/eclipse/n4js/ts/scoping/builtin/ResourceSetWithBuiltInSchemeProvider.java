@@ -11,7 +11,9 @@
 package org.eclipse.n4js.ts.scoping.builtin;
 
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.ResourceLocator;
 import org.eclipse.n4js.xtext.resourceset.EmptyAuthorityAddingNormalizer;
+import org.eclipse.n4js.xtext.resourceset.XtextResourceLocator;
 import org.eclipse.xtext.resource.SynchronizedXtextResourceSet;
 import org.eclipse.xtext.util.UriExtensions;
 
@@ -36,6 +38,7 @@ public class ResourceSetWithBuiltInSchemeProvider {
 			UriExtensions uriExtensions) {
 		@SuppressWarnings("hiding")
 		SynchronizedXtextResourceSet resourceSet = new SynchronizedXtextResourceSet();
+		attachXtextResourceLocator(resourceSet);
 		resourceSet.setClasspathURIContext(classLoader);
 		registrar.registerScheme(resourceSet);
 		resourceSet.setURIConverter(new EmptyAuthorityAddingNormalizer(resourceSet.getURIConverter(), uriExtensions));
@@ -49,4 +52,8 @@ public class ResourceSetWithBuiltInSchemeProvider {
 		return resourceSet;
 	}
 
+	private ResourceLocator attachXtextResourceLocator(
+			@SuppressWarnings("hiding") SynchronizedXtextResourceSet resourceSet) {
+		return new XtextResourceLocator(resourceSet);
+	}
 }
