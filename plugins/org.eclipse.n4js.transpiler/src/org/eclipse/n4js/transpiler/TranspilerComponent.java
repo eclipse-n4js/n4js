@@ -425,12 +425,12 @@ public abstract class TranspilerComponent {
 		return getSymbolTableEntryInternal("$fieldDefaults", true);
 	}
 
-	//// $methods
+	//// $methodDefaults
 
-	/** "$methods" - retrieve the internal symbol table entry for the symbol "$methods" */
-	public SymbolTableEntryInternal steFor_$members() {
+	/** "$methodDefaults" - retrieve the internal symbol table entry for the symbol "$methodDefaults" */
+	public SymbolTableEntryInternal steFor_$methodDefaults() {
 
-		return getSymbolTableEntryInternal("$members", true);
+		return getSymbolTableEntryInternal("$methodDefaults", true);
 	}
 
 	//// N4Class

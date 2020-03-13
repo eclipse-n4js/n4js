@@ -196,7 +196,7 @@ class InterfaceDeclarationTransformation extends Transformation {
 		}
 		return #[
 			_PropertyNameValuePair(
-				steFor_$members.name,
+				steFor_$methodDefaults.name,
 				_ObjLit(
 					instanceMembersExceptFields.map[convertMemberToProperty]
 				)

@@ -124,8 +124,35 @@ class ArrowFunctionTest extends AbstractTranspilerTest {
 					this._data = -1;
 					this.argsTotal = 0;
 				}
-			}, {}, '["C","A","test"]'
-			);
+				get data() {
+					var $capturedArgs = arguments;
+					if (this._data == -1) {
+						(()=>{
+							this._data = 1;
+						})();
+					}
+					(()=>{
+						this.argsTotal += $capturedArgs.length;
+					})();
+					return this._data;
+				}
+				set data(data) {
+					var $capturedArgs = arguments;
+					(()=>{
+						this._data = data;
+					})();
+					(()=>{
+						this.argsTotal += $capturedArgs.length;
+					})();
+					this.notifyListeners();
+				}
+				notifyListeners() {}
+				static get n4type() {
+					return $getReflectionForClass(this, '["C","TestModule","Test"]');
+				}
+			}
+			//# sourceMappingURL=TestModule.map
+
 		''';
 
 	 	// Prepare ResourceSet to contain exportedScript:

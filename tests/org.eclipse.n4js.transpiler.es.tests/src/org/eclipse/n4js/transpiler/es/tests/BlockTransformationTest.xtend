@@ -125,18 +125,22 @@ class BlockTransformationTest extends AbstractTranspilerTest {
 			
 			import 'n4js-runtime'
 			
-			function fetchModule(p, o) {
-				return $spawn(function *() {
-					var module, normalizedPath = (yield System2.normalize(p));
-					return module;
-				}.apply(this, arguments));
+			async function fetchModule(p, o) {
+				var module, normalizedPath = await System2.normalize(p);
+				return module;
 			}
 			export class System2 extends N4Object {
 				constructor() {
 					super();
 				}
-			}, '["System2","A","test"]'
-			);
+				static async normalize(p) {
+					return "!NORMAL!/" + p;
+				}
+				static get n4type() {
+					return $getReflectionForClass(this, '["System2","TestModule","Test"]');
+				}
+			}
+			//# sourceMappingURL=TestModule.map
 		''';
 
 	 	// Prepare ResourceSet to contain exportedScript:
