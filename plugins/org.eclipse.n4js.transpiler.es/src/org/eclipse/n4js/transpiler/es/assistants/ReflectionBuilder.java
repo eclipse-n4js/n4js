@@ -20,7 +20,9 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.AnnotationDefinition.RetentionPolicy;
 import org.eclipse.n4js.n4JS.AnnotableElement;
+import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration;
+import org.eclipse.n4js.n4JS.N4EnumDeclaration;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
 import org.eclipse.n4js.n4JS.N4GetterDeclaration;
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
@@ -29,6 +31,7 @@ import org.eclipse.n4js.n4JS.N4MethodDeclaration;
 import org.eclipse.n4js.n4JS.N4SetterDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeDeclaration;
 import org.eclipse.n4js.n4JS.TypeDefiningElement;
+import org.eclipse.n4js.transpiler.TranspilerComponent;
 import org.eclipse.n4js.transpiler.TranspilerState;
 import org.eclipse.n4js.transpiler.im.DelegatingMember;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry;
@@ -53,10 +56,14 @@ import com.google.gson.JsonPrimitive;
  *
  */
 public class ReflectionBuilder {
+	final TranspilerComponent transpilerComponent;
 	final TranspilerState state;
 	final ResourceNameComputer resourceNameComputer;
 
-	ReflectionBuilder(TranspilerState state, ResourceNameComputer resourceNameComputer) {
+	ReflectionBuilder(TranspilerComponent transpilerComponent, TranspilerState state,
+			ResourceNameComputer resourceNameComputer) {
+
+		this.transpilerComponent = transpilerComponent;
 		this.state = state;
 		this.resourceNameComputer = resourceNameComputer;
 	}
@@ -99,7 +106,7 @@ public class ReflectionBuilder {
 		String fqn = resourceNameComputer.getFullyQualifiedTypeName(type);
 		String modulePath = fqn.substring(0, fqn.length() - typeSTE.getName().length() - 1);
 
-		List<JsonElement> members = createAllMembers(allMembers, (typeDecl instanceof N4InterfaceDeclaration));
+		List<JsonElement> members = createAllMembers(typeDecl, allMembers);
 		List<Pair<String, JsonElement>> memberAnnotations = createMemberAnnotations(allMembers);
 		List<JsonElement> annotations = createRuntimeAnnotations(typeDecl);
 		List<JsonElement> allImplInterfaces = getImplementedInterfaces(type);
@@ -186,7 +193,20 @@ public class ReflectionBuilder {
 		return ts == TypingStrategy.STRUCTURAL || ts == TypingStrategy.STRUCTURAL_FIELDS;
 	}
 
-	private List<JsonElement> createAllMembers(Iterable<N4MemberDeclaration> allMembers, boolean isInterface) {
+	private List<JsonElement> createAllMembers(N4TypeDeclaration typeDecl, Iterable<N4MemberDeclaration> allMembers) {
+		if (typeDecl instanceof N4ClassDeclaration) {
+			return createClassMembers(allMembers);
+		}
+		if (typeDecl instanceof N4InterfaceDeclaration) {
+			return createInterfaceMembers(allMembers);
+		}
+		if (typeDecl instanceof N4EnumDeclaration) {
+			return Collections.emptyList();
+		}
+		throw new RuntimeException("Unknown type to create members");
+	}
+
+	private List<JsonElement> createClassMembers(Iterable<N4MemberDeclaration> allMembers) {
 		List<JsonElement> memberStrings = new ArrayList<>();
 		for (N4MemberDeclaration member : allMembers) {
 			if (state.info.isHiddenFromReflection(member)) {
@@ -194,7 +214,7 @@ public class ReflectionBuilder {
 			}
 			// create only consumed member strings, since others are detected from constructor and prototype
 @SuppressWarnings("unused")
-			boolean serialize = isInterface;
+			boolean serialize = false;
 			serialize |= state.info.isConsumedFromInterface(member);
 			serialize |= member.getName().startsWith(N4JSLanguageUtils.SYMBOL_IDENTIFIER_PREFIX);
 // TODO GH-1693
@@ -203,6 +223,30 @@ public class ReflectionBuilder {
 //			}
 		}
 		return memberStrings;
+	}
+
+	private List<JsonElement> createInterfaceMembers(Iterable<N4MemberDeclaration> allMembers) {
+		List<JsonElement> memberStrings = new ArrayList<>();
+		for (N4MemberDeclaration member : allMembers) {
+			// do not include datafields with initializers, default methods, and #hasInstance
+			boolean serialize = !hasDefault(member)
+					&& !member.getName().equals(N4JSLanguageUtils.SYMBOL_IDENTIFIER_PREFIX + "hasInstance");
+
+			if (serialize) {
+				memberStrings.add(primitive(createMemberString(member)));
+			}
+		}
+		return memberStrings;
+	}
+
+	private boolean hasDefault(N4MemberDeclaration member) {
+		if (member instanceof N4FieldDeclaration) {
+			return ((N4FieldDeclaration) member).getExpression() != null;
+		}
+		if (member instanceof N4MethodDeclaration) {
+			return ((N4MethodDeclaration) member).getBody() != null;
+		}
+		return false;
 	}
 
 	private List<Pair<String, JsonElement>> createMemberAnnotations(Iterable<N4MemberDeclaration> allMembers) {

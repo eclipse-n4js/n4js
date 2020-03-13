@@ -70,7 +70,7 @@ abstract class N4NamedElement extends N4Element {
 	public name: string;
 }
 
-abstract class N4Type extends N4NamedElement {
+export project abstract class N4Type extends N4NamedElement {
 
 	public fqn: string;
 
@@ -91,7 +91,7 @@ abstract class N4Type extends N4NamedElement {
 	}
 }
 
-abstract class N4Classifier extends N4Type {
+export project abstract class N4Classifier extends N4Type {
 
 	public n4superType: N4Class;
 
@@ -159,7 +159,8 @@ abstract class N4Classifier extends N4Type {
 	}
 }
 
-@Final class N4Class extends N4Classifier {
+@Final
+export project class N4Class extends N4Classifier {
 
 	@Override
 	public get isClass(): boolean {
@@ -167,7 +168,8 @@ abstract class N4Classifier extends N4Type {
 	}
 }
 
-@Final class N4Interface extends N4Classifier {
+@Final
+export project class N4Interface extends N4Classifier {
 
 	@Override
 	public get isInterface(): boolean {
@@ -175,19 +177,22 @@ abstract class N4Classifier extends N4Type {
 	}
 }
 
-abstract class N4Member extends N4NamedElement {
+export project abstract class N4Member extends N4NamedElement {
 	public owner: N4Classifier;
 	public isStatic: boolean;
 }
 
-@Final class N4Method extends N4Member {
+@Final
+export project class N4Method extends N4Member {
 	public jsFunction: Function;
 }
 
-@Final class N4DataField extends N4Member {
+@Final
+export project class N4DataField extends N4Member {
 }
 
-@Final class N4Accessor extends N4Member {
+@Final
+export project class N4Accessor extends N4Member {
 
 	public getter: boolean;
 
@@ -200,7 +205,8 @@ abstract class N4Member extends N4NamedElement {
 	}
 }
 
-@Final class N4EnumType extends N4Type {
+@Final
+export project class N4EnumType extends N4Type {
 
 	@Override public get isEnum(): boolean {
 		return true;
@@ -256,7 +262,8 @@ abstract class N4StringBasedEnum extends Object { // NOTE: cannot subclass 'stri
 	}
 }
 
-@Final class N4Annotation extends Object {
+@Final
+export project class N4Annotation extends Object {
 	public name: string;
 	public details: Array<string> = [];
 	public target: N4Element;
