@@ -14,6 +14,7 @@ import com.google.common.collect.Lists
 import com.google.inject.Inject
 import java.util.List
 import org.eclipse.n4js.AnnotationDefinition
+import org.eclipse.n4js.n4JS.ArrayLiteral
 import org.eclipse.n4js.n4JS.GenericDeclaration
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4ClassExpression
@@ -31,6 +32,8 @@ import org.eclipse.n4js.transpiler.es.assistants.DelegationAssistant
 import org.eclipse.n4js.transpiler.es.assistants.ReflectionAssistant
 import org.eclipse.n4js.transpiler.im.DelegatingMember
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
+import org.eclipse.n4js.ts.types.TInterface
+import org.eclipse.n4js.ts.utils.TypeUtils
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
@@ -118,6 +121,16 @@ class ClassDeclarationTransformation extends Transformation {
 					currMember.returnTypeRef = null
 			}
 		}
+		
+		val implementedInterfaces = createDirectlyImplementedInterfacesArgument(classDecl);
+		if (!implementedInterfaces.elements.empty) {
+			classDecl.ownedMembersRaw += _N4GetterDecl(
+				_LiteralOrComputedPropertyName("$implements"),
+				_Block(
+					_ReturnStmnt(implementedInterfaces)
+				)
+			);
+		}
 
 		// change superClassRef to an equivalent extends-expression
 		// (this is a minor quirk required because superClassRef is not supported by the PrettyPrinterSwitch;
@@ -151,5 +164,22 @@ class ClassDeclarationTransformation extends Transformation {
 
 	def protected List<Statement> createStaticFieldInitializations(N4ClassDeclaration classDecl, SymbolTableEntry classSTE) {
 		return classifierAssistant.createStaticFieldInitializations(classDecl, classSTE);
+	}
+
+	def public ArrayLiteral createDirectlyImplementedInterfacesArgument(N4ClassDeclaration classDecl) {
+		val interfaces = typeAssistant.getSuperInterfacesSTEs(classDecl);
+
+		// the return value of this method is intended for default method patching; for this purpose, we have to
+		// filter out some of the directly implemented interfaces:
+		val directlyImplementedInterfacesFiltered = interfaces.filter[ifcSTE|
+			val tIfc = ifcSTE.originalTarget;
+			if(tIfc instanceof TInterface) {
+				return !TypeUtils.isBuiltIn(tIfc) // built-in types are not defined in Api/Impl projects -> no patching required
+					&& !(typeAssistant.inN4JSD(tIfc) && !AnnotationDefinition.N4JS.hasAnnotation(tIfc)) // interface in .n4jsd file only patched in if marked @N4JS
+			}
+			return false;
+		];
+
+		return _ArrLit( directlyImplementedInterfacesFiltered.map[ _IdentRef(it) ] );
 	}
 }
