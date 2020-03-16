@@ -15,26 +15,52 @@ import {N4Type, N4Classifier, N4Class, N4Interface, N4EnumType, N4Annotation, N4
 
 
 const SYMBOL_IDENTIFIER_PREFIX = "#";
+const INTERFACE_DEFAULT_FIELDS = "$fieldDefaults";
+const INTERFACE_DEFAULT_METHODS = "$methodDefaults";
+const INTERFACE_EXTENDS = "$extends";
+const CLASS_IMPLEMENTS = "$implements";
+const PROPERTY_N4TYPE = "n4type";
 
 
+export function $interfaceDefaultFields(obj: any+) : Object {
+    return (obj[INTERFACE_DEFAULT_FIELDS] || {}) as Object;
+}
+
+export function $interfaceDefaultMethods(obj: any+) : Object {
+    return (obj[INTERFACE_DEFAULT_METHODS] || {}) as Object;
+}
+
+export function $interfaceExtends(obj: any+) : () => (type{N4Interface}[]) {
+    return obj[INTERFACE_EXTENDS] as () => (type{N4Interface}[]);
+}
+
+export function $classImplements(obj: any+) : type{N4Interface}[] {
+    return obj[CLASS_IMPLEMENTS] as type{N4Interface}[];
+}
 
 export function makeReflectionsForClass(staticProto: constructor{?}, reflectionString: string): N4Class {
     const reflectionValues = new ReflectionValues(reflectionString);
+    const detectedMemberStrings = new MemberDetectorForClass(staticProto).detectMembers();
+    reflectionValues.mergeWithDetectedMembers(detectedMemberStrings);
+    const detectedAllImplementedInterfaces = detectedAllImplementedInterfacesFromClass(staticProto);
+    reflectionValues.mergeWithDetectedAllImplementedInterfaces(detectedAllImplementedInterfaces);
     const instanceProto = staticProto.prototype;
     const superclass = (staticProto.__proto__ as Object+).n4type as N4Class;
     const n4Class = new N4Class();
     setN4TypeProperties(n4Class, reflectionValues);
-    const detectedMemberStrings = detectMembersForClass(instanceProto, staticProto);
-    setN4ClassifierProperties(n4Class, superclass, instanceProto, staticProto, detectedMemberStrings, reflectionValues);
+    setN4ClassifierProperties(n4Class, superclass, instanceProto, staticProto, reflectionValues);
     return n4Class;
 }
 
-export function makeReflectionsForInterface(staticProto: constructor{?}, reflectionString: string): N4Interface {
+export function makeReflectionsForInterface(interfaceObject: Object, reflectionString: string): N4Interface {
+    const detectedMemberStrings = new MemberDetectorForInterface(interfaceObject).detectMembers();
     const reflectionValues = new ReflectionValues(reflectionString);
+    reflectionValues.mergeWithDetectedMembers(detectedMemberStrings);
+    const detectedAllImplementedInterfaces = detectedAllImplementedInterfacesFromInterface(interfaceObject);
+    reflectionValues.mergeWithDetectedAllImplementedInterfaces(detectedAllImplementedInterfaces);
     const n4Interface = new N4Interface();
     setN4TypeProperties(n4Interface, reflectionValues);
-    const detectedMemberStrings = detectMembersForInterface(staticProto);
-    setN4ClassifierProperties(n4Interface, undefined, {}, {}, detectedMemberStrings, reflectionValues);
+    setN4ClassifierProperties(n4Interface, undefined, {}, {}, reflectionValues);
     return n4Interface;
 }
 
@@ -46,18 +72,6 @@ export function makeReflectionsForEnum(staticProto: constructor{?}, reflectionSt
 }
 
 
-function $interfaceDefaultFields(obj: any+) : Object {
-    return obj.$fieldDefaults as Object;
-}
-
-function $interfaceDefaultMethods(obj: any+) : Object {
-    return obj.$methodDefaults as Object;
-}
-
-function $interfaceExtends(obj: any+) : [] {
-    return obj.$extends as [];
-}
-
 
 function setN4TypeProperties(n4Type: N4Type, reflectionValues: ReflectionValues) {
     n4Type.name = reflectionValues.name;
@@ -66,27 +80,19 @@ function setN4TypeProperties(n4Type: N4Type, reflectionValues: ReflectionValues)
     n4Type.fqn = reflectionValues.modulePath + '/' + reflectionValues.name;
 }
 
-function setN4ClassifierProperties(n4Classifier: N4Classifier, superclass: N4Class, instanceProto: Object, staticProto, detectedMemberStrings:string[], reflectionValues: ReflectionValues) {
-    const splitMembers = createMembers(instanceProto, staticProto, reflectionValues.members, reflectionValues.memberAnnotations, detectedMemberStrings);
+function setN4ClassifierProperties(n4Classifier: N4Classifier, superclass: N4Class, instanceProto: Object, staticProto, reflectionValues: ReflectionValues) {
+    const splitMembers = createMembers(instanceProto, staticProto, reflectionValues);
     n4Classifier.n4superType = superclass;
     n4Classifier.setOwnedMembers(splitMembers.ownedMembers);
     n4Classifier.consumedMembers = splitMembers.consumedMembers;
     n4Classifier.allImplementedInterfaces = reflectionValues.allImplementedInterfaces;
 }
 
-function createMembers(instanceProto: Object, staticProto, memberStrings: string[], memberAnnotations: Object, detectedMemberStrings: string[]) : MemberContainer {
-    const annotations = createMemberAnnotations(memberAnnotations);
+function createMembers(instanceProto: Object, staticProto, reflectionValues: ReflectionValues) : MemberContainer {
+    const annotations = createMemberAnnotations(reflectionValues.memberAnnotations);
     const ownedMembers : N4Member[] = [];
     const consumedMembers : N4Member[] = [];
-    const detectedMemberStringsReduced : Array<string> = [];
-    for (const memberString of detectedMemberStrings) {
-        const memberAlreadyAsConsumedGiven = memberStrings && memberStrings.includes(toConsumedMemberString(memberString));
-        if (!memberAlreadyAsConsumedGiven) {
-            detectedMemberStringsReduced.push(memberString);
-        }
-    }
-    const memberStringsPlusDetected = memberStrings? detectedMemberStringsReduced.concat(memberStrings) : detectedMemberStringsReduced;
-    for (const memberString of memberStringsPlusDetected) {
+    for (const memberString of reflectionValues.members) {
         const memberInfo = parseMemberString(memberString);
         const member = createMember(instanceProto, staticProto, memberInfo, annotations);
         const members = (memberInfo.isConsumed) ? consumedMembers : ownedMembers;
@@ -94,100 +100,6 @@ function createMembers(instanceProto: Object, staticProto, memberStrings: string
     }
 
     return {ownedMembers: ownedMembers, consumedMembers: consumedMembers};
-}
-
-function toConsumedMemberString(memberString: string) : string {
-    return memberString[0] + ':' + memberString.substring(2);
-}
-
-function detectMembersForClass(instanceProto: Object, staticProto: constructor{?}) : string[] {
-    const memberStrings : string[] = [];
-    const memberNamesInstance = Object.getOwnPropertyNames(instanceProto);
-    for (const memberName of memberNamesInstance) {
-        const memberString = detectMember(instanceProto, memberName, false);
-        if (memberString) {
-            memberStrings.push(memberString);
-        }
-    }
-    const memberNamesStatic = Object.getOwnPropertyNames(staticProto);
-    for (const memberName of memberNamesStatic) {
-        const memberString = detectMember(staticProto, memberName, true)
-        if (memberString) {
-            memberStrings.push(memberString);
-        }
-    }
-    return memberStrings;
-}
-
-function detectMembersForInterface(staticProto: constructor{?}) : string[] {
-    const memberStrings : string[] = [];
-    const interfaceDefaultFieldNames = Object.keys($interfaceDefaultFields(staticProto));
-    const interfaceDefaultMethodNames = Object.keys($interfaceDefaultMethods(staticProto));
-    const interfaceDefaultNames = interfaceDefaultFieldNames.concat(interfaceDefaultMethodNames);
-    for (const memberName of interfaceDefaultNames) {
-        const memberString = detectMember(instanceProto, memberName, false);
-        if (memberString) {
-            memberStrings.push(memberString);
-        }
-    }
-    const memberNamesStatic = Object.getOwnPropertyNames(staticProto);
-    for (const memberName of memberNamesStatic) {
-        const memberString = detectMember(staticProto, memberName, true)
-        if (memberString) {
-            memberStrings.push(memberString);
-        }
-    }
-    return memberStrings;
-}
-
-function detectMember(object: Object, memberName: string, isStatic: boolean):string {
-    if (!isStatic && ['constructor'].includes(memberName)) {
-        return null;
-    }
-    if (isStatic && ['length', 'name', 'prototype', 'n4type'].includes(memberName)) {
-        return null;
-    }
-    const propDescriptor = Object.getOwnPropertyDescriptor(object, memberName);
-    const kind = getKind(propDescriptor);
-
-    return createMemberString(kind, isStatic, memberName);
-}
-
-function excludeDetected(memberName: string, isStatic) {
-    if (!isStatic && ['constructor'].includes(memberName)) {
-        return null;
-    }
-    if (isStatic && (['length', 'name', 'prototype', 'n4type'].includes(memberName)) || memberName.startsWith('$')) {
-        return null;
-    }
-}
-
-function getKind(propDescriptor: any+): string {
-    const isFunction = propDescriptor.hasOwnProperty('value') && typeof propDescriptor.value == 'function';
-    if (isFunction) {
-        return 'm';
-    }
-    const isField = propDescriptor.hasOwnProperty('writable');
-    if (isField) {
-        return 'f';
-    }
-    const isSetter = propDescriptor.hasOwnProperty('set') && typeof propDescriptor.set == 'function';
-    if (isSetter) {
-        return 's';
-    }
-    const isGetter = propDescriptor.hasOwnProperty('get') && typeof propDescriptor.get == 'function';
-    if (isGetter) {
-        return 'g';
-    }
-
-    throw "Unknown member type detected";
-}
-
-function createMemberString(kind: string, isStatic: boolean, memberName: string): string {
-    if (isStatic) {
-        kind = kind.toUpperCase();
-    }
-    return kind + "." + memberName;
 }
 
 function createMemberAnnotations(memberAnnotations: Object) {
@@ -290,6 +202,184 @@ function createMember(instanceProto: any+, staticProto: any+, memberInfo: Member
     return member;
 }
 
+function mapInterfacesToFQN(n4interfaces : N4Interface[]) : string[] {
+    const fqns : string[] = [];
+    for (const n4interface of n4interfaces) {
+        fqns.push(n4interface.fqn);
+    }
+    return fqns;
+}
+
+export function detectedAllImplementedInterfacesFromClass(staticProto: constructor{?}): N4Interface[] {
+    console.log("staticProto");
+    console.log(staticProto);
+    const implementedInterfaces = $classImplements(staticProto.prototype) || [];
+    const detectedAllImplementedInterfaces : N4Interface[] = [];
+    for (const implementedInterface of implementedInterfaces) {
+        // FIXME: N4Object#n4type() should not be always N4Class
+        const n4Interface = (implementedInterface.n4type as Object) as N4Interface;
+        detectedAllImplementedInterfaces.push(n4Interface);
+        getAllInterfacesRek(implementedInterface, detectedAllImplementedInterfaces);
+    }
+    console.log("detectedAllImplementedInterfaces");
+    console.log(detectedAllImplementedInterfaces);
+    return detectedAllImplementedInterfaces;
+}
+
+export function detectedAllImplementedInterfacesFromInterface(interfaceObject: Object): N4Interface[] {
+    const superInterfacesFn = $interfaceExtends(interfaceObject);
+    const superInterfaces = superInterfacesFn?.() || [];
+    const detectedAllImplementedInterfaces : N4Interface[] = [];
+    for (const superInterface of superInterfaces) {
+        getAllInterfacesRek(superInterface, detectedAllImplementedInterfaces);
+    }
+    return detectedAllImplementedInterfaces;
+}
+
+function getAllInterfacesRek(interfaceObject: Object, allImplementedInterfaces : N4Interface[]): void {
+    const superInterfacesFn = $interfaceExtends(interfaceObject);
+    const superInterfaces = superInterfacesFn?.() || [];
+    for (const superInterface of superInterfaces) {
+        // FIXME: N4Object#n4type() should not be always N4Class
+        const n4Interface = (superInterface.n4type as Object) as N4Interface;
+        if (allImplementedInterfaces.indexOf(n4Interface) === -1) {
+            allImplementedInterfaces.push(n4Interface);
+            getAllInterfacesRek(superInterface, allImplementedInterfaces);
+        }
+    }
+}
+
+abstract class MemberDetector {
+    detectMembers() {
+        
+    }
+    
+    detectMember(object: Object, memberName: string, isStatic: boolean):string {
+        const propDescriptor = Object.getOwnPropertyDescriptor(object, memberName);
+        const kind = this.getKind(propDescriptor);
+    
+        return this.createMemberString(kind, isStatic, memberName);
+    }
+    
+    getKind(propDescriptor: any+): string {
+        const isFunction = propDescriptor.hasOwnProperty('value') && typeof propDescriptor.value == 'function';
+        if (isFunction) {
+            return 'm';
+        }
+        const isField = propDescriptor.hasOwnProperty('writable');
+        if (isField) {
+            return 'f';
+        }
+        const isSetter = propDescriptor.hasOwnProperty('set') && typeof propDescriptor.set == 'function';
+        if (isSetter) {
+            return 's';
+        }
+        const isGetter = propDescriptor.hasOwnProperty('get') && typeof propDescriptor.get == 'function';
+        if (isGetter) {
+            return 'g';
+        }
+    
+        throw "Unknown member type detected";
+    }
+    
+    createMemberString(kind: string, isStatic: boolean, memberName: string): string {
+        if (isStatic) {
+            kind = kind.toUpperCase();
+        }
+        return kind + "." + memberName;
+    }
+
+    contains(names: string[], name: string) : boolean {
+        return names.indexOf(name) !== -1;
+    }
+}
+
+
+class MemberDetectorForClass extends MemberDetector {
+    const excludeInstanceNames = ['constructor'];
+    const excludeStaticNames = ['length', 'name', 'prototype', PROPERTY_N4TYPE];
+    staticProto: constructor{?};
+    instanceProto: Object;
+
+    constructor(staticProto: constructor{?}) {
+        this.staticProto = staticProto;
+        this.instanceProto = staticProto.prototype;
+    }
+
+    @Override
+    detectMembers() : string[] {
+        const memberStrings : string[] = [];
+        const memberNamesInstance = Object.getOwnPropertyNames(this.instanceProto);
+
+        console.log("memberNamesInstance ");
+        console.log(memberNamesInstance);
+        for (const memberName of memberNamesInstance) {
+            if (!this.contains(MemberDetectorForClass.excludeInstanceNames, memberName)) {
+                const memberString = this.detectMember(this.instanceProto, memberName, false);
+                if (memberString) {
+                    memberStrings.push(memberString);
+                }
+            }
+        }
+        const memberNamesStatic = Object.getOwnPropertyNames(this.staticProto);
+        for (const memberName of memberNamesStatic) {
+            if (!this.contains(MemberDetectorForClass.excludeStaticNames, memberName)) {
+                const memberString = this.detectMember(this.staticProto, memberName, true)
+                if (memberString) {
+                    memberStrings.push(memberString);
+                }
+            }
+        }
+        return memberStrings;
+    }
+}
+
+
+class MemberDetectorForInterface extends MemberDetector {
+    const excludeNames = [PROPERTY_N4TYPE, INTERFACE_DEFAULT_FIELDS, INTERFACE_DEFAULT_METHODS, INTERFACE_EXTENDS];
+    interfaceObject: Object;
+    defaultFields: Object;
+    defaultMethods: Object;
+
+
+    constructor(interfaceObject: Object) {
+        this.interfaceObject = interfaceObject;
+        this.defaultFields = $interfaceDefaultFields(this.interfaceObject);
+        this.defaultMethods = $interfaceDefaultMethods(this.interfaceObject);
+    }
+
+    @Override
+    detectMembers() : string[] {
+        const memberStrings : string[] = [];
+        const interfaceDefaultFieldNames = Object.keys(this.defaultFields);
+        const interfaceDefaultMethodNames = Object.keys(this.defaultMethods);
+        for (const memberName of interfaceDefaultFieldNames) {
+            const memberString = this.detectMember(this.defaultFields, memberName, false);
+            if (memberString) {
+                memberStrings.push(memberString);
+            }
+        }
+        for (const memberName of interfaceDefaultMethodNames) {
+            const memberString = this.detectMember(this.defaultMethods, memberName, false);
+            if (memberString) {
+                memberStrings.push(memberString);
+            }
+        }
+        // FIXME: Are non-default static fields on interfaces missing?
+        const memberNamesStatic = Object.getOwnPropertyNames(this.interfaceObject);
+        for (const memberName of memberNamesStatic) {
+            if (!this.contains(MemberDetectorForInterface.excludeNames, memberName)) {
+                const memberString = this.detectMember(this.interfaceObject, memberName, true)
+                if (memberString) {
+                    memberStrings.push(memberString);
+                }
+            }
+        }
+        return memberStrings;
+    }
+}
+
+
 class ReflectionValues {
     name: string;
     modulePath: string;
@@ -305,10 +395,28 @@ class ReflectionValues {
         this.name = name as string;
         this.modulePath = modulePath as string;
         this.origin = origin as string;
-        this.members = members as string[];
+        this.members = members as string[] || [];
         this.memberAnnotations = memberAnnotations as Object;
         this.allImplementedInterfaces = allImplementedInterfaces as string[] || [];
         this.annotations = annotations as Array<string|Array<string>>;
+    }
+
+    mergeWithDetectedMembers(detectedMemberStrings: string[]) {
+        for (const memberString of detectedMemberStrings) {
+            const memberMissing = this.members.indexOf(this.toConsumedMemberString(memberString)) === -1;
+            if (memberMissing) {
+                this.members.push(memberString);
+            }
+        }
+    }
+
+    mergeWithDetectedAllImplementedInterfaces(detectedAllImplementedInterfaces: N4Interface[]) {
+        const interfaceFQNs = mapInterfacesToFQN(detectedAllImplementedInterfaces);
+        this.allImplementedInterfaces = this.allImplementedInterfaces.concat(interfaceFQNs);
+    }
+
+    toConsumedMemberString(memberString: string) : string {
+        return memberString[0] + ':' + memberString.substring(2);
     }
 }
 
