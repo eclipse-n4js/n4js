@@ -1820,7 +1820,7 @@
 		},
 		"access-modifier": {
 			"name": "storage.modifier.ts",
-			"match": "(?<![_$[:alnum:]])(?:(?<=\\.\\.\\.)|(?<!\\.))(abstract|public|protected|private|readonly|static)(?![_$[:alnum:]])(?:(?=\\.\\.\\.)|(?!\\.))"
+			"match": "(?<![_$[:alnum:]])(?:(?<=\\.\\.\\.)|(?<!\\.))(abstract|public|protected|project|private|static)(?![_$[:alnum:]])(?:(?=\\.\\.\\.)|(?!\\.))"
 		},
 		"property-accessor": {
 			"name": "storage.type.property.ts",
