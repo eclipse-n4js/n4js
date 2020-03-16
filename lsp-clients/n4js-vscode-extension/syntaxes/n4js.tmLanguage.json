@@ -202,9 +202,6 @@
 		"expressionWithoutIdentifiers": {
 			"patterns": [
 				{
-					"include": "#jsx"
-				},
-				{
 					"include": "#string"
 				},
 				{
@@ -245,6 +242,9 @@
 				},
 				{
 					"include": "#function-call"
+				},
+				{
+					"include": "#jsx"
 				},
 				{
 					"include": "#literal"
