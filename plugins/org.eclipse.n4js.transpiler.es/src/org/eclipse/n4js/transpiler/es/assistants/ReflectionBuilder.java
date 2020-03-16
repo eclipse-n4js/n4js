@@ -37,7 +37,7 @@ import org.eclipse.n4js.transpiler.im.DelegatingMember;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry;
 import org.eclipse.n4js.ts.types.TAnnotableElement;
 import org.eclipse.n4js.ts.types.TAnnotation;
-import org.eclipse.n4js.ts.types.TClassifier;
+import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TInterface;
 import org.eclipse.n4js.ts.types.TN4Classifier;
 import org.eclipse.n4js.ts.types.Type;
@@ -139,8 +139,8 @@ public class ReflectionBuilder {
 
 	private List<JsonElement> getImplementedInterfaces(Type type) {
 		List<JsonElement> allImplInterfaces = new ArrayList<>();
-		if (type instanceof TClassifier) {
-			SuperInterfacesIterable superInterfaces = SuperInterfacesIterable.of((TClassifier) type);
+		if (type instanceof TClass) {
+			SuperInterfacesIterable superInterfaces = SuperInterfacesIterable.of((TClass) type);
 
 			for (TInterface interf : superInterfaces) {
 				if (!isStructurallyTyped(interf)) {
