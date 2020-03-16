@@ -40,7 +40,7 @@ abstract public class AbstractCompletionTest extends AbstractStructuredIdeTest<T
 	}
 
 	@Override
-	protected void performTest(Project project, TestCompletionConfiguration tcc)
+	protected void performTest(Project project, String moduleName, TestCompletionConfiguration tcc)
 			throws InterruptedException, ExecutionException {
 
 		CompletionParams completionParams = new CompletionParams();

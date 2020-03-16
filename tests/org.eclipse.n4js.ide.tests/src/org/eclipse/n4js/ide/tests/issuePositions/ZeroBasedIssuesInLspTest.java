@@ -31,7 +31,7 @@ public class ZeroBasedIssuesInLspTest extends AbstractStructuredIdeTest<Void> {
 	}
 
 	@Override
-	protected void performTest(Project project, Void t) throws Exception {
+	protected void performTest(Project project, String moduleName, Void t) throws Exception {
 		Collection<Diagnostic> allDiagnostics = getIssues().values();
 		assertEquals(1, allDiagnostics.size());
 		Diagnostic diag = allDiagnostics.iterator().next();

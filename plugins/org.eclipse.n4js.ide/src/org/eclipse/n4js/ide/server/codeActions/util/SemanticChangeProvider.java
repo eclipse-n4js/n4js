@@ -281,7 +281,7 @@ public class SemanticChangeProvider {
 		}
 
 		var elementNode = NodeModelUtils.findActualNodeFor(element);
-		return ChangeProvider.insertLineAbove(document, elementNode.getOffset(), "@" + annotation, true);
+		return ChangeProvider.insertLinesAbove(document, elementNode.getOffset(), true, "@" + annotation);
 	}
 
 	/**

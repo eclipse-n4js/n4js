@@ -15,6 +15,7 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.valueOf;
 import static java.util.Collections.unmodifiableCollection;
+import static java.util.Collections.unmodifiableSet;
 
 import java.util.Collection;
 import java.util.Map;
@@ -56,7 +57,7 @@ public abstract class N4JSLanguageConstants {
 	 * You can use {@code N4JSInjectorProviderWithFilteredValidator} to configure JUnit tests
 	 * or {@code SuppressIssuesSetup} to configure Xpect tests for issue suppression.
 	 */
-	public static final Collection<String> DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS = unmodifiableCollection(newHashSet(
+	public static final Set<String> DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS = unmodifiableSet(newHashSet(
 			IssueCodes.CFG_LOCAL_VAR_UNUSED,
 			IssueCodes.DFG_NULL_DEREFERENCE
 	));

@@ -10,6 +10,10 @@
  */
 package org.eclipse.n4js.ide.server.codeActions.util;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
@@ -19,10 +23,26 @@ import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.util.ReplaceRegion;
 
+import com.google.common.base.Joiner;
+
 /**
  * Collection of high-level convenience methods for creating {@link TextEdit}s.
  */
 public class ChangeProvider {
+
+	/**
+	 * Insert the given text.
+	 */
+	public static TextEdit insert(int line, int character, String text) {
+		return replace(line, character, line, character, text);
+	}
+
+	/**
+	 * Insert the given text.
+	 */
+	public static TextEdit insert(Document doc, int offset, String text) {
+		return replace(doc, offset, 0, text);
+	}
 
 	/**
 	 * Convenience method to create a simple replacement. Provided only to allow creating such simple changes in the
@@ -33,6 +53,13 @@ public class ChangeProvider {
 		Position posEnd = new Position(endLine, endChar);
 		Range range = new Range(posStart, posEnd);
 		return new TextEdit(range, replacementText);
+	}
+
+	/**
+	 * Same as {@link #replace(Document, int, int, String)}, but accepting a {@link ReplaceRegion}.
+	 */
+	public static TextEdit replace(Document doc, ReplaceRegion replaceRegion) {
+		return replace(doc, replaceRegion.getOffset(), replaceRegion.getLength(), replaceRegion.getText());
 	}
 
 	/**
@@ -47,15 +74,21 @@ public class ChangeProvider {
 	}
 
 	/**
-	 * Insert the given string as a new line above the line at the given offset. The given string need not contain any
-	 * line delimiters and the offset need not point to the beginning of a line. If 'sameIndentation' is set to
+	 * Insert the given strings as a new lines above the line at the given offset. The given strings need not contain
+	 * any line delimiters and the offset need not point to the beginning of a line. If 'sameIndentation' is set to
 	 * <code>true</code>, the new line will be indented as the line at the given offset (i.e. same leading white space).
 	 */
-	public static TextEdit insertLineAbove(Document doc, int offset, String txt, boolean sameIndentation) {
+	public static TextEdit insertLinesAbove(Document doc, int offset, boolean sameIndentation,
+			String... linesToInsert) {
+
+		if (linesToInsert == null || linesToInsert.length == 0) {
+			throw new IllegalArgumentException("must pass in at least one line to insert");
+		}
+
 		Position offsetPos = doc.getPosition(offset);
 
 		String NL = lineDelimiter(doc, offset);
-		String replacementText = txt + NL;
+		String replacementText = Joiner.on(NL).join(linesToInsert) + NL;
 
 		if (sameIndentation) {
 			String lineContent = doc.getLineContent(offsetPos.getLine());
@@ -67,8 +100,8 @@ public class ChangeProvider {
 			replacementText = indent + replacementText;
 		}
 
-		Position posStart = doc.getPosition(offsetPos.getLine());
-		Position posEnd = doc.getPosition(offsetPos.getLine());
+		Position posStart = new Position(offsetPos.getLine(), 0);
+		Position posEnd = new Position(offsetPos.getLine(), 0);
 		Range range = new Range(posStart, posEnd);
 		return new TextEdit(range, replacementText);
 	}
@@ -83,7 +116,7 @@ public class ChangeProvider {
 	 * @return the new line sequence used in the line containing offset
 	 */
 	public static String lineDelimiter(Document doc, int offset) {
-		if (doc.getLineCount() < 1) {
+		if (doc.getLineCount() < 2) {
 			return "\n";
 		}
 
@@ -162,6 +195,36 @@ public class ChangeProvider {
 	}
 
 	/**
+	 * Extends the regions of the given {@link TextEdit}s such that there are no gaps between them that contain only
+	 * white space. Gaps which contain both white space and other characters (including comments) remain unchanged.
+	 * <p>
+	 * This is mainly intended for removal edits, i.e. edits with the empty string as {@link TextEdit#getNewText()
+	 * replacement text}, to ensure no white space remains when removing several successive statements, declarations,
+	 * etc.
+	 */
+	public static List<TextEdit> closeGapsIfEmpty(Document doc, List<? extends TextEdit> edits) {
+		if (edits.isEmpty()) {
+			return Collections.emptyList();
+		}
+		List<TextEdit> result = new ArrayList<>();
+		int size = edits.size();
+		for (int i = 0; i + 1 < size; i++) {
+			TextEdit curr = edits.get(i);
+			TextEdit next = edits.get(i + 1);
+			Position currEnd = curr.getRange().getEnd();
+			Position nextStart = next.getRange().getStart();
+			String gap = doc.getSubstring(new Range(currEnd, nextStart));
+			if (gap.isBlank()) {
+				Position newEnd = new Position(nextStart.getLine(), nextStart.getCharacter());
+				curr = new TextEdit(new Range(curr.getRange().getStart(), newEnd), curr.getNewText());
+			}
+			result.add(curr);
+		}
+		result.add(edits.get(size - 1));
+		return result;
+	}
+
+	/**
 	 * Delete line containing the given offset (the offset need not point to the beginning of the line). Will do nothing
 	 * if 'deleteOnlyIfEmpty' is set to <code>true</code> and the given line is non-empty, i.e. contains characters
 	 * other than {@link Character#isWhitespace(char) white space}.
@@ -177,13 +240,6 @@ public class ChangeProvider {
 		Position posEnd = new Position(offPosition.getLine() + 1, 0);
 		Range range = new Range(posStart, posEnd);
 		return new TextEdit(range, "");
-	}
-
-	/**
-	 * Apply the given replacement to the document.
-	 */
-	public static TextEdit replace(Document doc, ReplaceRegion replaceRegion) {
-		return replace(doc, replaceRegion.getOffset(), replaceRegion.getLength(), replaceRegion.getText());
 	}
 
 }

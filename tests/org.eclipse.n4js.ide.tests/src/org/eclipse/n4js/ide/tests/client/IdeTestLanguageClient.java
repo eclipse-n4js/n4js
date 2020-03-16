@@ -11,9 +11,14 @@
 package org.eclipse.n4js.ide.tests.client;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
+import org.eclipse.lsp4j.ApplyWorkspaceEditResponse;
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
@@ -38,11 +43,36 @@ public class IdeTestLanguageClient extends AbstractN4JSLanguageClient {
 	@Inject
 	private XWorkspaceManager workspaceManager;
 
+	private final List<IIdeTestLanguageClientListener> listeners = Collections.synchronizedList(new LinkedList<>());
+
 	private final Multimap<FileURI, Diagnostic> issues = Multimaps.synchronizedMultimap(HashMultimap.create());
 	private final Multimap<FileURI, String> errors = Multimaps.synchronizedMultimap(HashMultimap.create());
 	private final Multimap<FileURI, String> warnings = Multimaps.synchronizedMultimap(HashMultimap.create());
 
 	private StringLSP4J stringLSP4J;
+
+	/** Interface for listeners that will receive certain events sent by the LSP server. */
+	public interface IIdeTestLanguageClientListener {
+		/**
+		 * Invoked when the LSP server sends the {@link LanguageClient#applyEdit(ApplyWorkspaceEditParams)
+		 * workspace/applyEdit} request to the client during an {@link AbstractIdeTest N4JS IDE test}.
+		 * <p>
+		 * NOTE: will be invoked from one of the server's worker threads!
+		 *
+		 * @return <code>true</code> iff the workspace edit was applied.
+		 */
+		public boolean onServerRequest_applyEdit(ApplyWorkspaceEditParams params);
+	}
+
+	/** Adds a listener. */
+	public void addListener(IIdeTestLanguageClientListener listener) {
+		listeners.add(listener);
+	}
+
+	/** Removes a listener. */
+	public void removeListener(IIdeTestLanguageClientListener listener) {
+		listeners.remove(listener);
+	}
 
 	/** Clear all issues tracked by this client. */
 	public void clear() {
@@ -97,6 +127,17 @@ public class IdeTestLanguageClient extends AbstractN4JSLanguageClient {
 				break;
 			}
 		}
+	}
+
+	@Override
+	public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
+		boolean applied = false;
+		synchronized (listeners) {
+			for (IIdeTestLanguageClientListener l : listeners) {
+				applied |= l.onServerRequest_applyEdit(params);
+			}
+		}
+		return CompletableFuture.completedFuture(new ApplyWorkspaceEditResponse(applied));
 	}
 
 	/** @return all issues in the workspace as a multi-map from file URI to {@link Diagnostic}s. */

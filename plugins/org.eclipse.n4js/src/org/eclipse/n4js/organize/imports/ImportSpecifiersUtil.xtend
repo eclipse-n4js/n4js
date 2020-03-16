@@ -112,10 +112,22 @@ class ImportSpecifiersUtil {
 	 * @return true import looks broken
 	 * */
 	public static def isBrokenImport(ImportSpecifier spec) {
-		val module = spec.importedModule
+		return isBrokenImport(spec.eContainer as ImportDeclaration, spec);
+	}
+
+	/**
+	 * Returns true iff the target module of the given import declaration is invalid (null, proxy, no name).
+	 * Import specifiers are not checked.
+	 */
+	public static def isBrokenImport(ImportDeclaration decl) {
+		return isBrokenImport(decl, null);
+	}
+
+	private static def isBrokenImport(ImportDeclaration decl, ImportSpecifier spec) {
+		val module = decl.module;
 
 		// check target module
-		if (module === null || module.eIsProxy || module.qualifiedName.isNullOrEmpty)
+		if (module === null || module.eIsProxy || module.projectName.isNullOrEmpty || module.qualifiedName.isNullOrEmpty)
 			return true
 
 		// check import specifier

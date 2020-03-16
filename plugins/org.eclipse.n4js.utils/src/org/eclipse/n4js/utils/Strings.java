@@ -16,6 +16,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
 
+import com.google.common.base.Joiner;
+
 /**
  * Utility functions for strings
  */
@@ -124,5 +126,10 @@ abstract public class Strings {
 		}
 
 		return str;
+	}
+
+	/** Creates a multi-line string from the given lines, using the operating system's line separator. */
+	final static public String fromLines(String... lines) {
+		return Joiner.on(System.lineSeparator()).join(lines) + System.lineSeparator();
 	}
 }
