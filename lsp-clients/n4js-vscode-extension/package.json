@@ -25,36 +25,36 @@
 	"main": "./extension",
 	"contributes": {
 		"languages": [
-            {
-                "id": "n4js",
-                "extensions": [
-                    ".n4js",
-                    ".n4jsd",
-                    ".n4jsx",
-                    ".n4idl",
-                    ".n4ts"
-                ],
-                "configuration": "./n4js.configuration.json"
-            },
-            {
-                "id": "n4js.json",
-                "extensions": [
-                    "package.json"
-                ],
-                "configuration": "./n4js.configuration.json"
-            }
+			{
+				"id": "n4js",
+				"extensions": [
+					".n4js",
+					".n4jsd",
+					".n4jsx",
+					".n4idl",
+					".n4ts"
+				],
+				"configuration": "./n4js.configuration.json"
+			},
+			{
+				"id": "n4js.json",
+				"extensions": [
+					"package.json"
+				],
+				"configuration": "./n4js.configuration.json"
+			}
 		],
 		"grammars": [
-            {
-                "language": "n4js",
-                "scopeName": "source.n4js",
-                "path": "./syntaxes/n4js.tmLanguage.json"
-            },
-            {
-                "language": "n4js.json",
-                "scopeName": "source.n4js.json",
-                "path": "./syntaxes/n4js.json.tmLanguage.json"
-            }
+			{
+				"language": "n4js",
+				"scopeName": "source.n4js",
+				"path": "./syntaxes/n4js.tmLanguage.json"
+			},
+			{
+				"language": "n4js.json",
+				"scopeName": "source.n4js.json",
+				"path": "./syntaxes/n4js.json.tmLanguage.json"
+			}
 		],
 		"commands": [
 			{
