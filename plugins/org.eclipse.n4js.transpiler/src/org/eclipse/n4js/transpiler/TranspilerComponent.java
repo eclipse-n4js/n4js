@@ -418,6 +418,11 @@ public abstract class TranspilerComponent {
 		return getSymbolTableEntryInternal("$defaultMembers", true);
 	}
 
+	/** Returns the internal symbol table entry for the symbol "$implements". */
+	public SymbolTableEntryInternal steFor_$implementsInterfaces() {
+		return getSymbolTableEntryInternal("$implements", true);
+	}
+
 	/** Returns the internal symbol table entry for the symbol "$getReflectionForClass". */
 	public SymbolTableEntryInternal steFor_$getReflectionForClass() {
 		return getSymbolTableEntryInternal("$getReflectionForClass", true);
