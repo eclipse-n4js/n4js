@@ -628,6 +628,14 @@ public abstract class TranspilerComponent {
 		return getSymbolTableEntryInternal("register", true);
 	}
 
+	//// $implements
+
+	/** "$implements" - retrieve the internal symbol table entry for the symbol "$implements" */
+	public SymbolTableEntryInternal steFor_$implementsInterfaces() {
+
+		return getSymbolTableEntryInternal("$implements", true);
+	}
+
 	//// $n4Export
 
 	/** "$n4Export" - retrieve the internal symbol table entry for the symbol "$n4Export" */

@@ -348,12 +348,13 @@ class ClassConstructorAssistant extends TransformationAssistant {
 		ownedInstanceDataFieldsSupressMixin.addAll(classDecl.ownedSetters.filter[!isConsumedFromInterface].map[name])
 
 		val $initFieldsFromInterfacesSTE = steFor_$initFieldsFromInterfaces;
+		val $implementsInterfacesSTE = steFor_$implementsInterfaces;
 
 		return #[ _ExprStmnt(
 			_CallExpr(
 				_IdentRef($initFieldsFromInterfacesSTE),
 				_ThisLiteral,
-				_ArrLit(implementedIfcSTEs.map[_IdentRef(it)]),
+				_PropertyAccessExpr(_ThisLiteral, $implementsInterfacesSTE),
 				if (specObjSTE !== null) {
 					_IdentRef(specObjSTE)
 				} else {
