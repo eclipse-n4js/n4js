@@ -295,7 +295,7 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 	/**
 	 * Command for {@link ImportOrganizer#organizeImports(Document, Script, CancelIndicator) organizing imports} in a
 	 * single file. Triggered via the corresponding source action
-	 * {@link N4JSSourceActionProvider#organizeImports(CodeActionParams, ICodeActionAcceptor) organizeImports}
+	 * {@link N4JSSourceActionProvider#organizeImports(CodeActionParams, ICodeActionAcceptor) organizeImports}.
 	 */
 	@ExecutableCommandHandler(N4JS_ORGANIZE_IMPORTS)
 	public Void organizeImports(String uriString, ILanguageServerAccess access, CancelIndicator cancelIndicator) {

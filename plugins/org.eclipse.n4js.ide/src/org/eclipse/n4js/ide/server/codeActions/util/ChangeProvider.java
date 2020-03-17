@@ -74,8 +74,8 @@ public class ChangeProvider {
 	}
 
 	/**
-	 * Insert the given strings as a new lines above the line at the given offset. The given strings need not contain
-	 * any line delimiters and the offset need not point to the beginning of a line. If 'sameIndentation' is set to
+	 * Insert the given strings as new lines above the line at the given offset. The given strings need not contain any
+	 * line delimiters and the offset need not point to the beginning of a line. If 'sameIndentation' is set to
 	 * <code>true</code>, the new line will be indented as the line at the given offset (i.e. same leading white space).
 	 */
 	public static TextEdit insertLinesAbove(Document doc, int offset, boolean sameIndentation,
@@ -200,7 +200,7 @@ public class ChangeProvider {
 	 * <p>
 	 * This is mainly intended for removal edits, i.e. edits with the empty string as {@link TextEdit#getNewText()
 	 * replacement text}, to ensure no white space remains when removing several successive statements, declarations,
-	 * etc.
+	 * etc. while not deleting existing comments, etc.
 	 */
 	public static List<TextEdit> closeGapsIfEmpty(Document doc, List<? extends TextEdit> edits) {
 		if (edits.isEmpty()) {

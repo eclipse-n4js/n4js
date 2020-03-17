@@ -130,6 +130,7 @@ abstract public class Strings {
 
 	/** Creates a multi-line string from the given lines, using the operating system's line separator. */
 	final static public String fromLines(String... lines) {
+		// rationale for using system-specific line separator: consistency with Xtend's template string literals
 		return Joiner.on(System.lineSeparator()).join(lines) + System.lineSeparator();
 	}
 }

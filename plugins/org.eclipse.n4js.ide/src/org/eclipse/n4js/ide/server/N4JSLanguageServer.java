@@ -33,8 +33,8 @@ public class N4JSLanguageServer extends XLanguageServerImpl implements N4JSProto
 		return Optional.of(Lists.newArrayList(
 				CodeActionKind.QuickFix,
 				CodeActionKind.Source,
-				// the following specific kind must be listed for VSCode,
-				// even though the LSP specification says otherwise:
+				// the following specific kind must be listed for VSCode to work properly, even
+				// though the LSP specification says it is sufficient to only list base kinds:
 				CodeActionKind.SourceOrganizeImports));
 	}
 

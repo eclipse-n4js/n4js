@@ -101,7 +101,7 @@ class NodeModelUtilsN4Test extends AbstractN4JSTest {
 			"A"
 			/**/
 			/**/;    /******/
-		'''.assertLengthOfImportDecl(26 + 4 * System.lineSeparator.length) // node length includes three line separators!
+		'''.assertLengthOfImportDecl(26 + 4 * System.lineSeparator.length) // node length includes four line separators!
 	}
 
 	def private void assertLengthOfImportDecl(CharSequence code, int expectedLength) {
