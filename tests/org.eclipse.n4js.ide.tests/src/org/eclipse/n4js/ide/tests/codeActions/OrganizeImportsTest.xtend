@@ -464,23 +464,23 @@ class OrganizeImportsTest extends AbstractOrganizeImportsTest {
 			import {B02} from "B"
 			import {  A03, A01 }    from   "A"
 			// comment
-			import *     as   N      from"A";
+			import *     as   N      from"C";
 
 			A01;
-			N.A02;
 			A03;
 			A04;
 			B01;
 			// B02 is unused
+			N.C01;
 		''', '''
 			// some comment
 
 			import "C";
-			import * as N from "A";
 			import {A01} from "A";
 			import {A03} from "A";
 			import {A04} from "A";
 			import {B01} from "B";
+			import * as N from "C";
 			// comment
 
 			A01;

@@ -34,6 +34,7 @@ import org.eclipse.lsp4j.ClientCapabilities;
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.DidChangeTextDocumentParams;
 import org.eclipse.lsp4j.DidChangeWatchedFilesParams;
+import org.eclipse.lsp4j.DidCloseTextDocumentParams;
 import org.eclipse.lsp4j.DidOpenTextDocumentParams;
 import org.eclipse.lsp4j.ExecuteCommandCapabilities;
 import org.eclipse.lsp4j.FileChangeType;
@@ -44,6 +45,7 @@ import org.eclipse.lsp4j.ResourceChange;
 import org.eclipse.lsp4j.ResourceOperation;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.lsp4j.TextDocumentEdit;
+import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.TextDocumentItem;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
@@ -284,10 +286,15 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		openFile(moduleName, content);
 	}
 
-	/** Opens the given file in the LSP server and waits for the triggered build to finish. */
+	/** Same as {@link #openFile(FileURI, String)}, but accepts a module name instead of file URI. */
 	protected void openFile(String moduleName, String contents) {
+		openFile(getFileURIFromModuleName(moduleName), contents);
+
+	}
+
+	/** Opens the given file in the LSP server and waits for the triggered build to finish. */
+	protected void openFile(FileURI fileURI, String contents) {
 		Assert.assertNotNull(contents);
-		FileURI fileURI = getFileURIFromModuleName(moduleName);
 
 		TextDocumentItem textDocument = new TextDocumentItem();
 		textDocument.setLanguageId(languageInfo.getLanguageName());
@@ -299,6 +306,17 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		dotdp.setTextDocument(textDocument);
 
 		languageServer.didOpen(dotdp);
+		joinServerRequests();
+	}
+
+	/** Same as {@link #closeFile(FileURI)}, but accepts a module name instead of file URI. */
+	protected void closeFile(String moduleName) {
+		closeFile(getFileURIFromModuleName(moduleName));
+	}
+
+	/** Closes the given file in the LSP server and waits for the server to idle. */
+	protected void closeFile(FileURI fileURI) {
+		languageServer.didClose(new DidCloseTextDocumentParams(new TextDocumentIdentifier(fileURI.toString())));
 		joinServerRequests();
 	}
 
@@ -360,9 +378,10 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * Same as {@link #changeFileOnDiskWithoutNotification(FileURI, Function)}, but changes one or more files at once,
 	 * as defined by the given {@link WorkspaceEdit}.
 	 */
-	protected void changeFilesOnDiskWithoutNotification(WorkspaceEdit workspaceEdit) {
+	protected List<Pair<FileURI, List<TextEdit>>> changeFilesOnDiskWithoutNotification(WorkspaceEdit workspaceEdit) {
 		List<Either<TextDocumentEdit, ResourceOperation>> documentChanges = workspaceEdit.getDocumentChanges();
 		if (documentChanges != null && !documentChanges.isEmpty()) {
+			List<Pair<FileURI, List<TextEdit>>> appliedChanges = new ArrayList<>();
 			for (Either<TextDocumentEdit, ResourceOperation> documentChange : documentChanges) {
 				if (documentChange.isRight()) {
 					throw new UnsupportedOperationException(
@@ -373,17 +392,21 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 					throw new UnsupportedOperationException(
 							"text document versions not yet supported by AbstractIdeTest");
 				}
-				changeFileOnDiskWithoutNotification(getFileURIFromURIString(edit.getTextDocument().getUri()),
-						edit.getEdits());
+				FileURI fileURI = getFileURIFromURIString(edit.getTextDocument().getUri());
+				changeFileOnDiskWithoutNotification(fileURI, edit.getEdits());
+				appliedChanges.add(Pair.of(fileURI, edit.getEdits()));
 			}
-			return;
+			return appliedChanges;
 		}
 		Map<String, List<TextEdit>> changes = workspaceEdit.getChanges();
 		if (changes != null && !changes.isEmpty()) {
+			List<Pair<FileURI, List<TextEdit>>> appliedChanges = new ArrayList<>();
 			for (Entry<String, List<TextEdit>> entry : changes.entrySet()) {
-				changeFileOnDiskWithoutNotification(getFileURIFromURIString(entry.getKey()), entry.getValue());
+				FileURI fileURI = getFileURIFromURIString(entry.getKey());
+				changeFileOnDiskWithoutNotification(fileURI, entry.getValue());
+				appliedChanges.add(Pair.of(fileURI, entry.getValue()));
 			}
-			return;
+			return appliedChanges;
 		}
 		List<Either<ResourceChange, TextDocumentEdit>> resourceChanges = workspaceEdit.getResourceChanges();
 		if (resourceChanges != null && !resourceChanges.isEmpty()) {
@@ -533,12 +556,21 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	}
 
 	/**
-	 * Same as {@link #assertIssuesInModules(Map)}, but in addition to checking the modules denoted by the given map's
-	 * keys, this method will also assert that the remaining modules in the workspace do not contain any issues.
+	 * Same as {@link #assertIssues(Map, boolean)}, but with <code>withIgnoredIssues</code> always set to
+	 * <code>false</code>.
 	 */
 	protected void assertIssues(Map<FileURI, List<String>> moduleIdToExpectedIssues) {
+		assertIssues(moduleIdToExpectedIssues, false);
+	}
+
+	/**
+	 * Same as {@link #assertIssuesInModules(Map, boolean)}, but in addition to checking the modules denoted by the
+	 * given map's keys, this method will also assert that the remaining modules in the workspace do not contain any
+	 * issues. Flag <code>withIgnoredIssues</code> applies to those issues accordingly.
+	 */
+	protected void assertIssues(Map<FileURI, List<String>> moduleIdToExpectedIssues, boolean withIgnoredIssues) {
 		// check given expectations
-		assertIssuesInModules(moduleIdToExpectedIssues);
+		assertIssuesInModules(moduleIdToExpectedIssues, withIgnoredIssues);
 		Set<FileURI> checkedModules = moduleIdToExpectedIssues.keySet();
 
 		// check that there are no other issues in the workspace
@@ -552,7 +584,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 					: "found one or more unexpected issues in workspace:";
 			StringBuilder sb = new StringBuilder();
 			for (FileURI currModuleURI : uncheckedModulesWithIssues) {
-				List<String> currModuleIssuesAsList = getIssuesInFileWithoutIgnored(currModuleURI);
+				List<String> currModuleIssuesAsList = getIssuesInFile(currModuleURI, withIgnoredIssues);
 				if (!currModuleIssuesAsList.isEmpty()) { // empty if all issues in current module are ignored
 					String currModuleRelPath = getRelativePathFromModuleUri(currModuleURI);
 					sb.append(currModuleRelPath);
@@ -577,18 +609,31 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	}
 
 	/**
+	 * Same as {@link #assertIssuesInModules(Map, boolean)}, but with <code>withIgnoredIssues</code> always set to
+	 * <code>false</code>.
+	 */
+	protected void assertIssuesInModules(Map<FileURI, List<String>> moduleIdToExpectedIssues) {
+		assertIssuesInModules(moduleIdToExpectedIssues, false);
+	}
+
+	/**
 	 * Asserts issues in the modules denoted by the given map's keys. Modules for which the given map does not contain
-	 * any IDs are *not* checked to be free of issues! If this is desired use method {@link #assertIssues(Map)} instead.
+	 * any IDs are *not* checked to be free of issues! If this is desired use method {@link #assertIssues(Map, boolean)}
+	 * instead.
 	 *
 	 * @param moduleIdToExpectedIssues
 	 *            a map from module IDs to the list of expected issues in each case.
+	 * @param withIgnoredIssues
+	 *            iff <code>true</code>, even issues with an issue code that is among those returned by method
+	 *            {@link #getIgnoredIssueCodes()} will be taken into consideration.
 	 */
-	protected void assertIssuesInModules(Map<FileURI, List<String>> moduleIdToExpectedIssues) {
+	protected void assertIssuesInModules(Map<FileURI, List<String>> moduleIdToExpectedIssues,
+			boolean withIgnoredIssues) {
 		for (Entry<FileURI, List<String>> pair : moduleIdToExpectedIssues.entrySet()) {
 			FileURI moduleURI = pair.getKey();
 			List<String> expectedIssues = pair.getValue();
 
-			List<String> actualIssues = getIssuesInFileWithoutIgnored(moduleURI);
+			List<String> actualIssues = getIssuesInFile(moduleURI, withIgnoredIssues);
 			Set<String> actualIssuesAsSet = IterableExtensions.toSet(
 					Iterables.transform(actualIssues, String::trim));
 			Set<String> expectedIssuesAsSet = IterableExtensions.toSet(
@@ -606,10 +651,17 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		}
 	}
 
-	private List<String> getIssuesInFileWithoutIgnored(FileURI fileURI) {
-		return languageClient.getIssues().get(fileURI).stream()
-				.filter(issue -> !getIgnoredIssueCodes().contains(issue.getCode()))
-				.map(issue -> languageClient.getIssueString(issue))
+	/**
+	 * Returns the issues in the file denoted by the given URI. If <code>withIgnoredIssues</code> is set to
+	 * <code>true</code>, even issues with an issue code returned by method {@link #getIgnoredIssueCodes()} will be
+	 * included in the returned list.
+	 */
+	protected List<String> getIssuesInFile(FileURI fileURI, boolean withIgnoredIssues) {
+		Stream<Diagnostic> issuesInFile = languageClient.getIssues().get(fileURI).stream();
+		if (!withIgnoredIssues) {
+			issuesInFile = issuesInFile.filter(issue -> !getIgnoredIssueCodes().contains(issue.getCode()));
+		}
+		return issuesInFile.map(issue -> languageClient.getIssueString(issue))
 				.collect(Collectors.toList());
 	}
 
