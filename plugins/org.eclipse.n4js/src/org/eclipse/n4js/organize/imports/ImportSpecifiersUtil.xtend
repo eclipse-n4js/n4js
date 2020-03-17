@@ -127,7 +127,7 @@ class ImportSpecifiersUtil {
 		val module = decl.module;
 
 		// check target module
-		if (module === null || module.eIsProxy || module.projectName.isNullOrEmpty || module.qualifiedName.isNullOrEmpty)
+		if (module === null || module.eIsProxy || module.qualifiedName.isNullOrEmpty)
 			return true
 
 		// check import specifier
