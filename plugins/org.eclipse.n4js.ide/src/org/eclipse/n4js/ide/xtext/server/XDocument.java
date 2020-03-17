@@ -148,7 +148,7 @@ public class XDocument extends Document {
 	@Override
 	public XDocument applyTextDocumentChanges(Iterable<? extends TextDocumentContentChangeEvent> changes) {
 		XDocument currentDocument = this;
-		int newVersion = currentDocument.version;
+		int newVersion = currentDocument.version + 1;
 		for (TextDocumentContentChangeEvent change : changes) {
 			String newContent;
 

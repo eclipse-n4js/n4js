@@ -20,7 +20,7 @@ import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider
 import org.eclipse.xtext.xbase.lib.Pair
 
 import static org.junit.Assert.*
-import org.eclipse.n4js.resource.UserdataMapper
+import org.eclipse.n4js.resource.UserDataMapper
 import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.resource.IResourceDescription
 
@@ -46,13 +46,13 @@ class TypesAssertionsExtensions {
 		val resourceDescriptions = assertIndexHasBeenFilled(phase, testResource);
 		val eoDescs = resourceDescriptions.allResourceDescriptions.filter[URI.fileExtension != "n4ts"].map[exportedObjects].flatten
 		val syntaxEoDesc = eoDescs.head;
-		assertNotNull(phase + ": user data not found", syntaxEoDesc.getUserData(UserdataMapper.USERDATA_KEY_SERIALIZED_SCRIPT));
+		assertNotNull(phase + ": user data not found", syntaxEoDesc.getUserData(UserDataMapper.USER_DATA_KEY_SERIALIZED_SCRIPT));
 	}
 
 	def void assertUserDataCreated(String phase, IResourceDescription resourceDescription) {
 		val eoDescs = resourceDescription.exportedObjects
 		val syntaxEoDesc = eoDescs.head;
-		assertNotNull(phase + ": user data not found", syntaxEoDesc.getUserData(UserdataMapper.USERDATA_KEY_SERIALIZED_SCRIPT));
+		assertNotNull(phase + ": user data not found", syntaxEoDesc.getUserData(UserDataMapper.USER_DATA_KEY_SERIALIZED_SCRIPT));
 	}
 	
 

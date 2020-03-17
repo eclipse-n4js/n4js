@@ -12,23 +12,22 @@ package org.eclipse.n4js.tests.typesbuilder.utils
 
 import com.google.inject.Inject
 import com.google.inject.Provider
-import org.eclipse.n4js.N4JSInjectorProvider
-import org.eclipse.n4js.resource.N4JSResource
-import org.eclipse.n4js.tests.typesbuilder.extensions.N4JSResourceExtensions
-import org.eclipse.n4js.tests.typesbuilder.extensions.ResourceAssertionsExtensions
-import org.eclipse.n4js.tests.typesbuilder.extensions.TypesAssertionsExtensions
-import org.eclipse.n4js.tests.typesbuilder.extensions.UserdataAssertionsExtension
 import java.util.List
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.xtext.testing.InjectWith
-import org.eclipse.xtext.testing.XtextRunner
+import org.eclipse.n4js.N4JSInjectorProvider
+import org.eclipse.n4js.naming.N4JSQualifiedNameConverter
+import org.eclipse.n4js.resource.N4JSResource
+import org.eclipse.n4js.tests.typesbuilder.extensions.N4JSResourceExtensions
+import org.eclipse.n4js.tests.typesbuilder.extensions.ResourceAssertionsExtensions
+import org.eclipse.n4js.tests.typesbuilder.extensions.TypesAssertionsExtensions
+import org.eclipse.n4js.tests.typesbuilder.extensions.UserDataAssertionsExtension
 import org.eclipse.xtext.resource.IResourceDescription
 import org.eclipse.xtext.resource.XtextResourceSet
-import org.eclipse.xtext.xbase.lib.Pair
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
 import org.junit.runner.RunWith
-import org.eclipse.n4js.naming.N4JSQualifiedNameConverter
 
 @RunWith(XtextRunner)
 @InjectWith(N4JSInjectorProvider)
@@ -47,7 +46,7 @@ public abstract class AbstractTypesBuilderTest {
 	protected extension N4JSResourceExtensions;
 
 	@Inject
-	private extension UserdataAssertionsExtension;
+	private extension UserDataAssertionsExtension;
 
 	@Inject protected Provider<XtextResourceSet> resourceSetProvider;
 
@@ -104,7 +103,7 @@ public abstract class AbstractTypesBuilderTest {
 
 		assertExampleTypeStructure(phase, testResource)
 
-		assertSerializedUserdata(eoDescs, expectedTypesSerialization, enableUserDataCompare, testResource as N4JSResource)
+		assertSerializedUserData(eoDescs, expectedTypesSerialization, enableUserDataCompare, testResource as N4JSResource)
 
 		return getResourceDescription(testResource)
 	}

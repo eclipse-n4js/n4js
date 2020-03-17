@@ -112,7 +112,7 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 		assertTrue("Hyperlink URI must be a platform uri", uriProcess.isPlatform());
 
 		URI uriProcessFile = CommonPlugin.resolve(uriProcess);
-		File fileProcess = new File(uriProcessFile.toFileString());
+		File fileProcess = URIUtils.toFile(uriProcessFile);
 		assertTrue("File 'process.n4jsd' must exist", fileProcess.isFile());
 
 		editor = (XtextEditor) uriEditorOpener.open(uriProcess, true);

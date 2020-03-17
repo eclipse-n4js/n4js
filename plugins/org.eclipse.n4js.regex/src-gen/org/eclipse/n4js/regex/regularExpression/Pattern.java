@@ -34,10 +34,6 @@ public interface Pattern extends EObject
   /**
    * Returns the value of the '<em><b>Quantifier</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Quantifier</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Quantifier</em>' containment reference.
    * @see #setQuantifier(Quantifier)

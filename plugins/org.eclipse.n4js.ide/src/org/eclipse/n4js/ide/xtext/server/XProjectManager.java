@@ -25,6 +25,7 @@ import org.eclipse.n4js.ide.xtext.server.build.XIncrementalBuilder;
 import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
 import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
 import org.eclipse.n4js.internal.lsp.N4JSProjectConfig;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.generator.OutputConfiguration;
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
@@ -219,7 +220,7 @@ public class XProjectManager {
 		for (OutputConfiguration outputConf : outputConfigurations) {
 			for (String outputDirName : outputConf.getOutputDirectories()) {
 				URI outputUri = projectBaseUri.appendSegment(outputDirName);
-				File outputDirectory = new File(outputUri.toFileString());
+				File outputDirectory = URIUtils.toFile(outputUri);
 				outputDirs.add(outputDirectory);
 			}
 		}

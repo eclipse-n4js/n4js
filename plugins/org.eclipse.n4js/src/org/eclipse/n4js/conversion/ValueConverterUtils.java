@@ -15,6 +15,9 @@
  */
 package org.eclipse.n4js.conversion;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.xtext.util.Strings;
 
 /**
@@ -345,17 +348,35 @@ public final class ValueConverterUtils {
 	/** Result of converting a string literal to its value. */
 	public static class StringConverterResult {
 
+		static class IntPair {
+			final int sourceOffset;
+			final int targetOffset;
+
+			IntPair(int sourceOffset, int targetOffset) {
+				this.sourceOffset = sourceOffset;
+				this.targetOffset = targetOffset;
+			}
+
+			@Override
+			public String toString() {
+				return sourceOffset + "->" + targetOffset;
+			}
+		}
+
 		private CharacterValidityChecker validityChecker;
 		private StringBuilder builder;
+		private final List<IntPair> offsetMapping;
 
 		private String value = null; // will be set by #seal()
 		private int invalidCharOff = -1;
 		private int warningOff = -1;
 		private int errorOff = -1;
+		private int delta = 0;
 
 		private StringConverterResult(CharacterValidityChecker validityChecker, int capacity) {
 			this.validityChecker = validityChecker;
 			this.builder = new StringBuilder(capacity);
+			this.offsetMapping = new ArrayList<>();
 		}
 
 		/**
@@ -396,7 +417,22 @@ public final class ValueConverterUtils {
 			return errorOff;
 		}
 
+		/**
+		 * Return the real source offset for the given target offset in the string.
+		 */
+		public int getSourceOffset(int targetOffset) {
+			for (int i = offsetMapping.size() - 1; i >= 0; i--) {
+				IntPair mapping = offsetMapping.get(i);
+				if (mapping.targetOffset <= targetOffset) {
+					return mapping.sourceOffset + targetOffset - mapping.targetOffset;
+				}
+			}
+			return targetOffset;
+		}
+
 		private void append(char ch, int srcOffset) {
+			// srcOffset is given with a off-by-one error
+			maintainMapping(srcOffset - 1);
 			if (validityChecker == null || validityChecker.isValid(ch, builder.length())) {
 				builder.append(ch);
 			} else {
@@ -405,11 +441,20 @@ public final class ValueConverterUtils {
 		}
 
 		private void appendCodePoint(int codePoint, int srcOffset) {
+			// srcOffset is given with a off-by-one error
+			maintainMapping(srcOffset - 1);
 			if (validityChecker == null || (Character.isBmpCodePoint(codePoint)
 					&& validityChecker.isValid((char) codePoint, builder.length()))) {
 				builder.appendCodePoint(codePoint);
 			} else {
 				invalidCharAt(srcOffset);
+			}
+		}
+
+		private void maintainMapping(int srcOffset) {
+			if (srcOffset + delta != builder.length()) {
+				offsetMapping.add(new IntPair(srcOffset, builder.length()));
+				delta = builder.length() - srcOffset;
 			}
 		}
 

@@ -17,16 +17,6 @@ const cwd = process.cwd();
 const resolvePath = (p: string): string => lib_path.resolve(cwd, p);
 
 const nomnomOptions: Object = {
-    compile: {
-        abbr: "c",
-        metavar: "PATH",
-        transform: resolvePath,
-        help: "Compiles the given yarn workspace project / npm project."
-    },
-    clean: {
-        flag: true,
-        help: "Clean the output folder before compiling."
-    },
     testCatalog: {
         default: "http://localhost:9415/n4js/testing/sessions/testcatalog",
         metavar: "URL|PATH|NPM-relpath",
@@ -36,11 +26,6 @@ const nomnomOptions: Object = {
         abbr: "f",
         list: true,
         help: "Filter for matching test cases."
-    },
-    emitProjectTestCatalogs: {
-        default: "test-catalog-gen.json",
-        metavar: "PATH",
-        help: "When compiling, local project test catalog files are written to the targeted project folders under the given path."
     },
     xunitReportFile: {
         metavar: "PATH",

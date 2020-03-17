@@ -32,7 +32,7 @@ import org.xml.sax.InputSource;
  * Note: To escape code symbols like '~', the macro '+++' is used. A configurable alternative is the pass macro, e.g.:
  * <code>pass:q[*_Mytest_*]</code>.
  */
-class Html2ADocConverter {
+public class Html2ADocConverter {
 	private static final Map<String, String> htmlElementsToADoc = new HashMap<>();
 	private static final Map<String, String> entitiesToADoc = new HashMap<>();
 	private static final char ENTITY_START = '&';

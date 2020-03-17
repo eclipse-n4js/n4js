@@ -24,7 +24,7 @@ import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.resource.N4JSResource
-import org.eclipse.n4js.resource.UserdataMapper
+import org.eclipse.n4js.resource.UserDataMapper
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.utils.Log
@@ -62,7 +62,7 @@ class N4JSScopingTestWithIndexTest {
 			"src/org/eclipse/n4js/tests/scoping/Client.n4js",
 			'''
 				<?xml version="1.0" encoding="ASCII"?>
-				<types:TModule xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typeRefs="http://www.eclipse.org/n4js/ts/TypeRefs" xmlns:types="http://www.eclipse.org/n4js/ts/Types" qualifiedName="org/eclipse/n4js/tests/scoping/Supplier" projectName="org.eclipse.n4js.lang.tests" vendorID="org.eclipse.n4js">
+				<types:TModule xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typeRefs="http://www.eclipse.org/n4js/ts/TypeRefs" xmlns:types="http://www.eclipse.org/n4js/ts/Types" simpleName="Supplier" qualifiedName="org/eclipse/n4js/tests/scoping/Supplier" projectName="org.eclipse.n4js.lang.tests" vendorID="org.eclipse.n4js">
 				  <astElement href="#/0"/>
 				  <topLevelTypes xsi:type="types:TClass" name="Supplier" exportedName="Supplier">
 				    <ownedMembers xsi:type="types:TMethod" name="foo" hasNoBody="true" declaredMemberAccessModifier="public">
@@ -85,7 +85,7 @@ class N4JSScopingTestWithIndexTest {
 			"SupplierWithBuiltIn", "src/org/eclipse/n4js/tests/scoping/ClientWithBuiltIn.n4js",
 			'''
 				<?xml version="1.0" encoding="ASCII"?>
-				<types:TModule xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typeRefs="http://www.eclipse.org/n4js/ts/TypeRefs" xmlns:types="http://www.eclipse.org/n4js/ts/Types" qualifiedName="org/eclipse/n4js/tests/scoping/SupplierWithBuiltIn" projectName="org.eclipse.n4js.lang.tests" vendorID="org.eclipse.n4js">
+				<types:TModule xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typeRefs="http://www.eclipse.org/n4js/ts/TypeRefs" xmlns:types="http://www.eclipse.org/n4js/ts/Types" simpleName="SupplierWithBuiltIn" qualifiedName="org/eclipse/n4js/tests/scoping/SupplierWithBuiltIn" projectName="org.eclipse.n4js.lang.tests" vendorID="org.eclipse.n4js">
 				  <astElement href="#/0"/>
 				  <topLevelTypes xsi:type="types:TClass" name="SupplierWithBuiltIn" exportedName="SupplierWithBuiltIn">
 				    <ownedMembers xsi:type="types:TField" name="s" declaredMemberAccessModifier="public">
@@ -127,12 +127,12 @@ class N4JSScopingTestWithIndexTest {
 		
 		
 		val moduleDescription = eoDescs.iterator.toList.findFirst[name.lastSegment == supplierClassName];
-		assertEquals("Stored user data", supplierUserData, UserdataMapper.getDeserializedModuleFromDescriptionAsString(
+		assertEquals("Stored user data", supplierUserData, UserDataMapper.getDeserializedModuleFromDescriptionAsString(
 				moduleDescription, supplierJS))
 		assertEquals("Stored astMD5 hash",
-				astMD5, moduleDescription.getUserData(UserdataMapper.USERDATA_KEY_AST_MD5))
+				astMD5, moduleDescription.getUserData(UserDataMapper.USER_DATA_KEY_AST_MD5))
 //			eoDescs.iterator.toList.findFirst[name.lastSegment == supplierClassName].getUserData(
-//				UserdataMapper::USERDATA_KEY_SERIALIZED_SCRIPT))
+//				UserDataMapper::USER_DATA_KEY_SERIALIZED_SCRIPT))
 
 		rs.resources.forEach[it.unload];
 

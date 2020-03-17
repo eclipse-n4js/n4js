@@ -1,2 +1,4 @@
-!bin
-bin/n4jsc.jar
+!bin/
+bin/*
+!bin/n4jsc.js
+!bin/PrintJavaVersion.java

@@ -152,4 +152,17 @@ public interface ImportDeclaration extends AnnotableScriptElement {
 	 */
 	boolean isBare();
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Tells whether this import declaration will be present in the transpiled output code.
+	 * Derived from {@link ImportSpecifier#isRetainedAtRuntime() retainedAtRuntime} and
+	 * therefore only valid after AST traversal has completed.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isRetainedAtRuntime();
+
 } // ImportDeclaration

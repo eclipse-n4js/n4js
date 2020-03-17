@@ -54,7 +54,7 @@ public class N4jscOptions {
 	public static final String MARKER_RUNNER_OUPTUT = "======= =======";
 
 	/** Usage information. */
-	public static final String USAGE = "Usage: java -jar n4jsc.jar [GOAL] DIR [OPTION(s)]";
+	public static final String USAGE = "Usage: n4jsc [GOAL] DIR [OPTION(s)]";
 
 	/** Use to specify the required goal for an option. */
 	@Retention(RUNTIME)

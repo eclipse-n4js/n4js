@@ -39,7 +39,7 @@ var a2 : A<SBEnum> = { t: SBEnum.a, f: function (tt : SBEnum) : SBEnum {return t
 // structural type for variable XPECT noerrors -->
 var b1 : ~B<SBEnum> = { t: SBEnum.a, f: function (tt : SBEnum) : SBEnum {return tt;} };
 
-// structural field type for variable, noerrors but XPECT warnings --> "f is not defined in ~~B<SBEnum>." at "f"
+// structural field type for variable, noerrors but XPECT warnings --> "f is not defined in ~~B<SBEnum>; it will not be accessible from b2." at "f"
 var b2 : ~~B<SBEnum> = { t: SBEnum.a, f: function (tt : SBEnum) : SBEnum {return tt;} };
 
 // structural field type for variable XPECT noerrors -->

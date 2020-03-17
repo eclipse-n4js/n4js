@@ -90,6 +90,12 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case TypesPackage.RUNTIME_DEPENDENCY: {
+				RuntimeDependency runtimeDependency = (RuntimeDependency)theEObject;
+				T result = caseRuntimeDependency(runtimeDependency);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case TypesPackage.COMPOSED_MEMBER_CACHE: {
 				ComposedMemberCache composedMemberCache = (ComposedMemberCache)theEObject;
 				T result = caseComposedMemberCache(composedMemberCache);
@@ -768,6 +774,21 @@ public class TypesSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseTModule(TModule object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Runtime Dependency</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Runtime Dependency</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseRuntimeDependency(RuntimeDependency object) {
 		return null;
 	}
 

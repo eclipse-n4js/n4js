@@ -34,6 +34,10 @@ import org.eclipse.n4js.n4JS.N4JSPackage;
 
 import org.eclipse.n4js.ts.types.TModule;
 
+import org.eclipse.xtext.xbase.lib.Functions.Function1;
+
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
+
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Import Declaration</b></em>'.
@@ -289,6 +293,20 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * @generated
 	 */
 	@Override
+	public boolean isRetainedAtRuntime() {
+		return (this.isBare() || IterableExtensions.<ImportSpecifier>exists(this.getImportSpecifiers(), new Function1<ImportSpecifier, Boolean>() {
+			public Boolean apply(final ImportSpecifier it) {
+				return Boolean.valueOf(it.isRetainedAtRuntime());
+			}
+		}));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case N4JSPackage.IMPORT_DECLARATION__IMPORT_SPECIFIERS:
@@ -408,6 +426,8 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 		switch (operationID) {
 			case N4JSPackage.IMPORT_DECLARATION___IS_BARE:
 				return isBare();
+			case N4JSPackage.IMPORT_DECLARATION___IS_RETAINED_AT_RUNTIME:
+				return isRetainedAtRuntime();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

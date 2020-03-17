@@ -22,9 +22,9 @@
     <genClasses ecoreClass="RegularExpression.ecore#//WordBoundary">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegularExpression.ecore#//WordBoundary/not"/>
     </genClasses>
-    <genClasses ecoreClass="RegularExpression.ecore#//LookAhead">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegularExpression.ecore#//LookAhead/not"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RegularExpression.ecore#//LookAhead/pattern"/>
+    <genClasses ecoreClass="RegularExpression.ecore#//AbstractLookAhead">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegularExpression.ecore#//AbstractLookAhead/not"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RegularExpression.ecore#//AbstractLookAhead/pattern"/>
     </genClasses>
     <genClasses ecoreClass="RegularExpression.ecore#//PatternCharacter">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegularExpression.ecore#//PatternCharacter/value"/>
@@ -58,12 +58,14 @@
     </genClasses>
     <genClasses ecoreClass="RegularExpression.ecore#//CharacterClassElement"/>
     <genClasses ecoreClass="RegularExpression.ecore#//CharacterClassAtom">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegularExpression.ecore#//CharacterClassAtom/character"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegularExpression.ecore#//CharacterClassAtom/characters"/>
     </genClasses>
     <genClasses ecoreClass="RegularExpression.ecore#//EscapedCharacterClassAtom"/>
     <genClasses ecoreClass="RegularExpression.ecore#//Backspace"/>
     <genClasses ecoreClass="RegularExpression.ecore#//Group">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegularExpression.ecore#//Group/nonCapturing"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegularExpression.ecore#//Group/named"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegularExpression.ecore#//Group/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RegularExpression.ecore#//Group/pattern"/>
     </genClasses>
     <genClasses ecoreClass="RegularExpression.ecore#//Quantifier">
@@ -86,6 +88,8 @@
     <genClasses ecoreClass="RegularExpression.ecore#//Sequence">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RegularExpression.ecore#//Sequence/elements"/>
     </genClasses>
+    <genClasses ecoreClass="RegularExpression.ecore#//LookAhead"/>
+    <genClasses ecoreClass="RegularExpression.ecore#//LookBehind"/>
     <genClasses ecoreClass="RegularExpression.ecore#//CharacterClassRange">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RegularExpression.ecore#//CharacterClassRange/left"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RegularExpression.ecore#//CharacterClassRange/right"/>

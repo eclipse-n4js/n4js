@@ -45,6 +45,7 @@ import org.eclipse.xtext.validation.Issue
 
 import static org.eclipse.xtext.diagnostics.Severity.*
 import org.eclipse.xtext.validation.CheckMode
+import org.eclipse.n4js.utils.URIUtils
 
 /**
  * All sub generators should extend this class. It provides basic blocks of the logic, and
@@ -333,7 +334,7 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 		// src/a/b/c
 		val inputURI = uriExtensions.withEmptyAuthority(input.URI);
 		val completetSourceURI = inputURI.trimSegments(1).deresolve(projectLocURI)
-		var completetSource = completetSourceURI.toFileString
+		var completetSource = URIUtils.toFile(completetSourceURI).toString();
 
 		// Handling case when source container is the project root itself. (Sources { source { '.' } })
 		if (null === completetSource && project.getLocation().toURI === input.URI.trimSegments(1)) {

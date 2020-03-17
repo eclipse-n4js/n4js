@@ -58,6 +58,10 @@ class TypeDefs {
  */
 class TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	/**
+	 * The module's simple name, i.e. the last segment of its qualified name.
+	 */
+	String simpleName
+	/**
 	 * The qualified name of the module, which is derived from the file path. Includes the module's
 	 * file name (without extension) and the names of all ancestor folders up to, excluding the
 	 * containing project's source folder. The containing project's name is also not included,
@@ -101,6 +105,36 @@ class TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 * For details see {@code N4JSResource#isReconciled()}.
 	 */
 	transient boolean reconciled
+
+	/*
+	 * Direct runtime dependencies of this module within same project.
+	 * <p>
+	 * Set at end of AST traversal (i.e. during main post-processing).
+	 */
+	contains RuntimeDependency[] dependenciesRuntime
+	/*
+	 * Modules within same project with a direct or indirect cyclic runtime dependency to this module.
+	 * Never includes this module.
+	 * <p>
+	 * Set during finalization of post-processing.
+	 */
+	refers TModule[] cyclicModulesRuntime
+	/*
+	 * Modules within same project with a direct or indirect cyclic loadtime dependency to this module,
+	 * taking into account only such loadtime dependencies that are caused by extends/implements clauses.
+	 * Never includes this module.
+	 * <p>
+	 * Set during finalization of post-processing.
+	 */
+	refers TModule[] cyclicModulesLoadtimeForInheritance
+	/*
+	 * Modules within same project that are runtime cyclic to this module AND have direct loadtime dependency
+	 * to this module, taking into account only such loadtime dependencies that are caused by extends/implements
+	 * clauses.
+	 * <p>
+	 * Set during finalization of post-processing.
+	 */
+	refers TModule[] runtimeCyclicLoadtimeDependents
 
 	// TODO jvp: what does that mean:
 	// TODO: make sure these are only top level types in the script
@@ -197,6 +231,17 @@ class TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	derived String moduleSpecifier get {
 		return qualifiedName
 	}
+}
+
+/*
+ * A runtime dependency from one module (i.e. <code>this.eContainer()</code>) to
+ * another module (i.e. <code>this.getTarget()</code>).
+ */
+class RuntimeDependency {
+	/* The target module of this dependency. */
+	refers TModule target
+	/* Tells whether this dependency is a loadtime dependency that is caused by an extends/implements clause. */
+	boolean loadtimeForInheritance
 }
 
 /**

@@ -10,6 +10,11 @@
  */
 package org.eclipse.n4js.resource;
 
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Set;
+
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 import org.eclipse.xtext.resource.DerivedStateAwareResource;
 import org.eclipse.xtext.resource.OutdatedStateManager;
@@ -70,6 +75,14 @@ public class PostProcessingAwareResource extends DerivedStateAwareResource {
 	private Throwable postProcessingThrowable;
 
 	/**
+	 * A FIFO queue where other {@link PostProcessingAwareResource}s than <em>this</em> resource will add themselves in
+	 * order to request <em>this</em> resource to trigger finalization of post-processing for them via invoking method
+	 * {@link PostProcessor#finalizePostProcessing(PostProcessingAwareResource, CancelIndicator)
+	 * #finalizePostProcessing()}.
+	 */
+	private final Queue<PostProcessingAwareResource> otherResourcesAwaitingFinalization = new LinkedList<>();
+
+	/**
 	 * Implementations of this interface are used by a {@link PostProcessingAwareResource} to perform post-processing of
 	 * an EMF / Xtext resource.
 	 */
@@ -93,6 +106,27 @@ public class PostProcessingAwareResource extends DerivedStateAwareResource {
 		 * before this method is called.
 		 */
 		public void performPostProcessing(PostProcessingAwareResource resource, CancelIndicator cancelIndicator);
+
+		/**
+		 * Usually this method is invoked right after
+		 * {@link #performPostProcessing(PostProcessingAwareResource, CancelIndicator) #performPostProcessing()}
+		 * returned and just before flag {@link PostProcessingAwareResource#fullyPostProcessed #fullyPostProcessed} is
+		 * set to <code>true</code>.
+		 * <p>
+		 * However, in case the post-processing of a resource R triggers post-processing of one or more other resources
+		 * R1, ..., Rn (in this order), this method will be invoked only when the {@code #performPostProcessing()}
+		 * methods for all resources R, R1, ... Rn have returned. It is invoked in the reverse order of how
+		 * post-processing was triggered, i.e. in the order Rn, ..., R1, R.
+		 * <p>
+		 * This method allows {@link PostProcessor}s to perform some final computations that rely on results of the
+		 * (main) post-processing of required other resources.
+		 * <p>
+		 * If an exception is thrown (including cancellation) sometime during (main) post-processing of the resources or
+		 * the finalization of another resource that is finalized earlier, this method will *not* be invoked for still
+		 * pending finalizations. In the example above, if an exception were thrown during the finalization of resource
+		 * Ri, then this method would not be invoked for resources Ri-1, ..., R1, R
+		 */
+		public void finalizePostProcessing(PostProcessingAwareResource resource, CancelIndicator cancelIndicator);
 
 		/**
 		 * Discard all post-processing results stored in the given resource (if any).
@@ -209,31 +243,92 @@ public class PostProcessingAwareResource extends DerivedStateAwareResource {
 			installDerivedState(false);
 		if (isLoaded && fullyInitialized && !fullyPostProcessed && !isPostProcessing) {
 			// initiate post-processing ...
-			try {
-				postProcessingThrowable = null;
-				isPostProcessing = true;
-				if (postProcessor == null) {
-					throw new IllegalStateException("post processor is null");
-				}
-				if (cancelIndicator == null) {
-					// obtain a valid cancel indicator from Xtext
-					cancelIndicator = outdatedStateManager.newCancelIndicator(this.getResourceSet());
-				}
-				if (postProcessor.expectsLazyLinkResolution()) {
-					// in next line: call on 'super' because the method in 'this' forwards here!!
-					super.resolveLazyCrossReferences(cancelIndicator);
-				}
-				postProcessor.performPostProcessing(this, cancelIndicator);
-			} catch (Throwable th) {
-				postProcessingThrowable = th;
-				throw th;
-			} finally {
-				isPostProcessing = false;
-				// note: doesn't matter if processing succeeded, failed or was canceled
-				// (even if it failed or was canceled, we do not want to try again)
-				// Identical behavior as in ASTProcessor.processAST(RuleEnvironment, N4JSResource, CancelIndicator)
-				fullyPostProcessed = true;
+
+			if (cancelIndicator == null) {
+				// obtain a valid cancel indicator from Xtext
+				cancelIndicator = outdatedStateManager.newCancelIndicator(this.getResourceSet());
 			}
+
+			final PostProcessingAwareResource entryResource = PostProcessingEntryTracker
+					.getEntryResource(getResourceSet());
+
+			if (entryResource != null) {
+
+				// main post-processing
+				doMainPostProcessing(cancelIndicator);
+
+				// finalization of post-processing
+				// (don't do it now; tell the entryResource to do it later)
+				entryResource.otherResourcesAwaitingFinalization.add(this);
+
+			} else {
+
+				try {
+					PostProcessingEntryTracker.setEntryResource(this);
+
+					// main post-processing
+					doMainPostProcessing(cancelIndicator);
+
+					// finalization of post-processing
+					PostProcessingAwareResource other;
+					Set<PostProcessingAwareResource> done = new HashSet<>();
+					while ((other = otherResourcesAwaitingFinalization.poll()) != null) {
+						if (done.add(other)) {
+							other.doFinalizePostProcessing(cancelIndicator);
+						}
+					}
+					doFinalizePostProcessing(cancelIndicator);
+
+				} catch (Throwable th) {
+
+					for (PostProcessingAwareResource other : otherResourcesAwaitingFinalization) {
+						other.markAsPostProcessingDone();
+					}
+					markAsPostProcessingDone();
+
+					throw th;
+
+				} finally {
+
+					otherResourcesAwaitingFinalization.clear();
+					PostProcessingEntryTracker.unsetEntryResource(getResourceSet());
+				}
+			}
+		}
+	}
+
+	private void doMainPostProcessing(CancelIndicator cancelIndicator) {
+		try {
+			postProcessingThrowable = null;
+			isPostProcessing = true;
+
+			if (postProcessor == null) {
+				throw new IllegalStateException("post processor is null");
+			}
+			if (postProcessor.expectsLazyLinkResolution()) {
+				// in next line: call on 'super' because the method in 'this' forwards here!!
+				super.resolveLazyCrossReferences(cancelIndicator);
+			}
+
+			postProcessor.performPostProcessing(this, cancelIndicator);
+
+		} catch (Throwable th) {
+			markAsPostProcessingDone();
+			postProcessingThrowable = th;
+			throw th;
+		}
+	}
+
+	private void doFinalizePostProcessing(CancelIndicator cancelIndicator) {
+		try {
+			if (postProcessingThrowable == null) {
+				postProcessor.finalizePostProcessing(this, cancelIndicator);
+			}
+		} catch (Throwable th) {
+			postProcessingThrowable = th;
+			throw th;
+		} finally {
+			markAsPostProcessingDone();
 		}
 	}
 
@@ -248,5 +343,13 @@ public class PostProcessingAwareResource extends DerivedStateAwareResource {
 				fullyPostProcessed = false;
 			}
 		}
+	}
+
+	private void markAsPostProcessingDone() {
+		isPostProcessing = false;
+		// note: doesn't matter if processing succeeded, failed or was canceled
+		// (even if it failed or was canceled, we do not want to try again)
+		// Identical behavior as in ASTProcessor.processAST(RuleEnvironment, N4JSResource, CancelIndicator)
+		fullyPostProcessed = true;
 	}
 }

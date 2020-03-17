@@ -29,8 +29,8 @@ import org.eclipse.xtext.resource.IResourceServiceProvider;
 import com.google.inject.Inject;
 
 /**
- * This class provides helper methods for registering extensions in headless case. This should become obsolete when
- * extension points fully works for headless case.
+ * This class provides helper methods for registering extensions in headless case. This should become obsolete the
+ * extensions are registered by a service loaded in the headless case.
  */
 public class HeadlessExtensionRegistrationHelper {
 

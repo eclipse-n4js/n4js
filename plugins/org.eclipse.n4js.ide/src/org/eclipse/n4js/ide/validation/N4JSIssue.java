@@ -22,6 +22,8 @@ import org.eclipse.xtext.validation.CheckType;
 import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.validation.Issue.IssueImpl;
 
+import com.google.common.base.Strings;
+
 /**
  * GH-1537
  *
@@ -102,8 +104,8 @@ public class N4JSIssue extends IssueImpl implements Externalizable {
 		out.writeInt(this.getColumnEnd());
 		out.writeInt(this.getLineNumber());
 		out.writeInt(this.getLineNumberEnd());
-		out.writeUTF(this.getCode());
-		out.writeUTF(this.getMessage());
+		out.writeUTF(Strings.nullToEmpty(this.getCode()));
+		out.writeUTF(Strings.nullToEmpty(this.getMessage()));
 
 		URI uriToProblem = this.getUriToProblem();
 		String uriToProblemStr = uriToProblem == null ? NULL : uriToProblem.toString();

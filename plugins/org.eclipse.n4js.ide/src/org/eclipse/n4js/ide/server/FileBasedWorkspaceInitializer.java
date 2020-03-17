@@ -31,6 +31,7 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.ProjectDiscoveryHelper;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
 import com.google.inject.Inject;
@@ -73,7 +74,7 @@ public class FileBasedWorkspaceInitializer implements XIWorkspaceConfigFactory {
 			// TODO is this correct if we have multiple workspace URIs?
 			workspace.clear();
 
-			File workspaceRoot = new File(workspaceBaseURI.toFileString());
+			File workspaceRoot = URIUtils.toFile(workspaceBaseURI);
 
 			Set<Path> allProjectLocations = projectDiscoveryHelper.collectAllProjectDirs(workspaceRoot.toPath());
 

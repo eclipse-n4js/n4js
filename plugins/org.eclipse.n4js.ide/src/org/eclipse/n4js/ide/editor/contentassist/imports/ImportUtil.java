@@ -27,6 +27,7 @@ import org.eclipse.xtext.ide.editor.contentassist.antlr.ContentAssistContextFact
 import org.eclipse.xtext.ide.server.Document;
 import org.eclipse.xtext.ide.server.codeActions.ICodeActionService2;
 import org.eclipse.xtext.resource.XtextResource;
+import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.TextRegion;
 
 import com.google.common.base.Objects;
@@ -69,7 +70,7 @@ public class ImportUtil {
 		ContentAssistContext[] cacs = cacFactory.create(documentContent, textRegion, offsetEnd, resource);
 
 		Collection<ContentAssistContext> contexts = Arrays.asList(cacs);
-		ContentProposalAcceptorCollector acceptor = new ContentProposalAcceptorCollector();
+		ContentProposalAcceptorCollector acceptor = new ContentProposalAcceptorCollector(options.getCancelIndicator());
 		contentProposalProvider.createProposals(contexts, acceptor);
 
 		Set<ContentAssistEntry> caEntries = new LinkedHashSet<>();
@@ -83,15 +84,23 @@ public class ImportUtil {
 
 	class ContentProposalAcceptorCollector implements IIdeContentProposalAcceptor {
 		final List<ContentAssistEntry> caEntries = new ArrayList<>();
+		private final CancelIndicator cancelIndicator;
+
+		ContentProposalAcceptorCollector(CancelIndicator cancelIndicator) {
+			this.cancelIndicator = cancelIndicator;
+
+		}
 
 		@Override
 		public void accept(ContentAssistEntry entry, int priority) {
-			caEntries.add(entry);
+			if (entry != null) {
+				caEntries.add(entry);
+			}
 		}
 
 		@Override
 		public boolean canAcceptMoreProposals() {
-			return true;
+			return !cancelIndicator.isCanceled();
 		}
 
 	}

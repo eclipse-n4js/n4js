@@ -105,6 +105,16 @@ public abstract class N4JSASTUtils {
 	}
 
 	/**
+	 * Returns <code>true</code> iff the given AST node belongs to top-level code, i.e. is not wrapped in a function or
+	 * field accessor.
+	 */
+	public static boolean isTopLevelCode(EObject astNode) {
+		// need ".eContainer()" in next line, because #getContainerOfType() also returns the passed-in astNode itself if
+		// it is of the requested type (despite the method's name)
+		return EcoreUtil2.getContainerOfType(astNode.eContainer(), FunctionOrFieldAccessor.class) == null;
+	}
+
+	/**
 	 * Tells if given identifiable element is block scoped, i.e. if it is a variable declared with <code>let</code> or
 	 * <code>const</code>. Delegates to {@link VariableDeclarationContainer#isBlockScoped()}.
 	 *

@@ -55,7 +55,7 @@ import com.google.inject.Inject;
 /**
  * Collection of high-level convenience methods for creating {@link TextEdit}s.
  * <p>
- * By convention, all methods take an {@link Document} as first parameter and return an instance of IChange.
+ * By convention, all methods take an {@link Document} as first parameter and return an instance of {@link TextEdit}.
  *
  * Other than ChangeProvider the methods in this class are thought to be a tool to handle AST elements directly without
  * dealing with their textual representation.
@@ -159,7 +159,7 @@ public class SemanticChangeProvider {
 	 */
 	TextEdit addCustomModifier(Document document, ModifiableElement element, String modifier) {
 		// Copy to avoid modifying the model
-		ArrayList<N4Modifier> modifiers = new ArrayList<>(element.getDeclaredModifiers());
+		List<N4Modifier> modifiers = new ArrayList<>(element.getDeclaredModifiers());
 
 		// Add export prefix
 		String exportPrefix = modifier;
@@ -234,7 +234,7 @@ public class SemanticChangeProvider {
 	 */
 	TextEdit addModifier(Document document, ModifiableElement element, N4Modifier modifier) {
 		// Copy to not modify the model
-		ArrayList<N4Modifier> modifiers = new ArrayList<>(element.getDeclaredModifiers());
+		List<N4Modifier> modifiers = new ArrayList<>(element.getDeclaredModifiers());
 		modifiers.add(modifier);
 
 		return setModifiers(document, element, sortedModifierString(modifiers));

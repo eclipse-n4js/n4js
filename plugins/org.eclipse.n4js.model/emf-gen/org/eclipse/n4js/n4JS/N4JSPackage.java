@@ -721,13 +721,22 @@ public interface N4JSPackage extends EPackage {
 	int IMPORT_DECLARATION___IS_BARE = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
+	 * The operation id for the '<em>Is Retained At Runtime</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMPORT_DECLARATION___IS_RETAINED_AT_RUNTIME = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 1;
+
+	/**
 	 * The number of operations of the '<em>Import Declaration</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IMPORT_DECLARATION_OPERATION_COUNT = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 1;
+	int IMPORT_DECLARATION_OPERATION_COUNT = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.ImportSpecifierImpl <em>Import Specifier</em>}' class.
@@ -749,13 +758,22 @@ public interface N4JSPackage extends EPackage {
 	int IMPORT_SPECIFIER__FLAGGED_USED_IN_CODE = 0;
 
 	/**
+	 * The feature id for the '<em><b>Retained At Runtime</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMPORT_SPECIFIER__RETAINED_AT_RUNTIME = 1;
+
+	/**
 	 * The number of structural features of the '<em>Import Specifier</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IMPORT_SPECIFIER_FEATURE_COUNT = 1;
+	int IMPORT_SPECIFIER_FEATURE_COUNT = 2;
 
 	/**
 	 * The number of operations of the '<em>Import Specifier</em>' class.
@@ -784,6 +802,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int NAMED_IMPORT_SPECIFIER__FLAGGED_USED_IN_CODE = IMPORT_SPECIFIER__FLAGGED_USED_IN_CODE;
+
+	/**
+	 * The feature id for the '<em><b>Retained At Runtime</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NAMED_IMPORT_SPECIFIER__RETAINED_AT_RUNTIME = IMPORT_SPECIFIER__RETAINED_AT_RUNTIME;
 
 	/**
 	 * The feature id for the '<em><b>Imported Element</b></em>' reference.
@@ -857,6 +884,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int DEFAULT_IMPORT_SPECIFIER__FLAGGED_USED_IN_CODE = NAMED_IMPORT_SPECIFIER__FLAGGED_USED_IN_CODE;
+
+	/**
+	 * The feature id for the '<em><b>Retained At Runtime</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DEFAULT_IMPORT_SPECIFIER__RETAINED_AT_RUNTIME = NAMED_IMPORT_SPECIFIER__RETAINED_AT_RUNTIME;
 
 	/**
 	 * The feature id for the '<em><b>Imported Element</b></em>' reference.
@@ -939,6 +975,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int NAMESPACE_IMPORT_SPECIFIER__FLAGGED_USED_IN_CODE = IMPORT_SPECIFIER__FLAGGED_USED_IN_CODE;
+
+	/**
+	 * The feature id for the '<em><b>Retained At Runtime</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NAMESPACE_IMPORT_SPECIFIER__RETAINED_AT_RUNTIME = IMPORT_SPECIFIER__RETAINED_AT_RUNTIME;
 
 	/**
 	 * The feature id for the '<em><b>Defined Type</b></em>' reference.
@@ -5554,13 +5599,22 @@ public interface N4JSPackage extends EPackage {
 	int IDENTIFIER_REF___GET_VERSION = PRIMARY_EXPRESSION_OPERATION_COUNT + 0;
 
 	/**
+	 * The operation id for the '<em>Get Target Element</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDENTIFIER_REF___GET_TARGET_ELEMENT = PRIMARY_EXPRESSION_OPERATION_COUNT + 1;
+
+	/**
 	 * The operation id for the '<em>Is Valid Simple Assignment Target</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IDENTIFIER_REF___IS_VALID_SIMPLE_ASSIGNMENT_TARGET = PRIMARY_EXPRESSION_OPERATION_COUNT + 1;
+	int IDENTIFIER_REF___IS_VALID_SIMPLE_ASSIGNMENT_TARGET = PRIMARY_EXPRESSION_OPERATION_COUNT + 2;
 
 	/**
 	 * The number of operations of the '<em>Identifier Ref</em>' class.
@@ -5569,7 +5623,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IDENTIFIER_REF_OPERATION_COUNT = PRIMARY_EXPRESSION_OPERATION_COUNT + 2;
+	int IDENTIFIER_REF_OPERATION_COUNT = PRIMARY_EXPRESSION_OPERATION_COUNT + 3;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.StrictModeRelevantImpl <em>Strict Mode Relevant</em>}' class.
@@ -15836,6 +15890,15 @@ public interface N4JSPackage extends EPackage {
 	int VERSIONED_IDENTIFIER_REF_FEATURE_COUNT = IDENTIFIER_REF_FEATURE_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>Get Target Element</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_IDENTIFIER_REF___GET_TARGET_ELEMENT = IDENTIFIER_REF___GET_TARGET_ELEMENT;
+
+	/**
 	 * The operation id for the '<em>Is Valid Simple Assignment Target</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -16480,6 +16543,16 @@ public interface N4JSPackage extends EPackage {
 	EOperation getImportDeclaration__IsBare();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.ImportDeclaration#isRetainedAtRuntime() <em>Is Retained At Runtime</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Retained At Runtime</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.ImportDeclaration#isRetainedAtRuntime()
+	 * @generated
+	 */
+	EOperation getImportDeclaration__IsRetainedAtRuntime();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.ImportSpecifier <em>Import Specifier</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -16499,6 +16572,17 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getImportSpecifier_FlaggedUsedInCode();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4JS.ImportSpecifier#isRetainedAtRuntime <em>Retained At Runtime</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Retained At Runtime</em>'.
+	 * @see org.eclipse.n4js.n4JS.ImportSpecifier#isRetainedAtRuntime()
+	 * @see #getImportSpecifier()
+	 * @generated
+	 */
+	EAttribute getImportSpecifier_RetainedAtRuntime();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.NamedImportSpecifier <em>Named Import Specifier</em>}'.
@@ -18490,6 +18574,16 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getIdentifierRef_IdAsText();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.IdentifierRef#getTargetElement() <em>Get Target Element</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Target Element</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.IdentifierRef#getTargetElement()
+	 * @generated
+	 */
+	EOperation getIdentifierRef__GetTargetElement();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.IdentifierRef#isValidSimpleAssignmentTarget() <em>Is Valid Simple Assignment Target</em>}' operation.
@@ -22374,6 +22468,14 @@ public interface N4JSPackage extends EPackage {
 		EOperation IMPORT_DECLARATION___IS_BARE = eINSTANCE.getImportDeclaration__IsBare();
 
 		/**
+		 * The meta object literal for the '<em><b>Is Retained At Runtime</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation IMPORT_DECLARATION___IS_RETAINED_AT_RUNTIME = eINSTANCE.getImportDeclaration__IsRetainedAtRuntime();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.ImportSpecifierImpl <em>Import Specifier</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -22390,6 +22492,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IMPORT_SPECIFIER__FLAGGED_USED_IN_CODE = eINSTANCE.getImportSpecifier_FlaggedUsedInCode();
+
+		/**
+		 * The meta object literal for the '<em><b>Retained At Runtime</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IMPORT_SPECIFIER__RETAINED_AT_RUNTIME = eINSTANCE.getImportSpecifier_RetainedAtRuntime();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.NamedImportSpecifierImpl <em>Named Import Specifier</em>}' class.
@@ -24054,6 +24164,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IDENTIFIER_REF__ID_AS_TEXT = eINSTANCE.getIdentifierRef_IdAsText();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Target Element</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation IDENTIFIER_REF___GET_TARGET_ELEMENT = eINSTANCE.getIdentifierRef__GetTargetElement();
 
 		/**
 		 * The meta object literal for the '<em><b>Is Valid Simple Assignment Target</b></em>' operation.

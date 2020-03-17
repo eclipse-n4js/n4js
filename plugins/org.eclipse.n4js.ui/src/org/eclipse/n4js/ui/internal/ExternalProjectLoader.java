@@ -23,6 +23,7 @@ import org.eclipse.n4js.internal.N4JSBrokenProjectException;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.Tuples;
 
@@ -49,7 +50,7 @@ public class ExternalProjectLoader {
 			ProjectDescription projectDescription = packageManager.loadProjectDescriptionFromProjectRoot(rootLocation);
 
 			if (null != projectDescription) {
-				File projectRoot = new File(rootLocation.toFileString());
+				File projectRoot = URIUtils.toFile(rootLocation.toURI());
 				ExternalProject p = new ExternalProject(projectRoot, NATURE_ID, BUILDER_ID);
 				IN4JSProject pp = new N4JSEclipseProject(p, rootLocation, model);
 				N4JSExternalProject ppp = new N4JSExternalProject(projectRoot, pp);

@@ -410,9 +410,9 @@ public class TestResultsView extends ViewPart {
 					return node.getChildrenStatus().toString(true, 0, SWT.LEFT);
 				}
 			case 2:
-				final long runTime = node.getElapsedTime();
-				if (runTime > 0) {
-					return "   " + String.format("%.3f", runTime / 1000f) + " s";
+				final long runtime = node.getElapsedTime();
+				if (runtime > 0) {
+					return "   " + String.format("%.3f", runtime / 1000f) + " s";
 				}
 				if (node.getElement() instanceof TestCase) {
 					final TestCase testCase = (TestCase) node.getElement();

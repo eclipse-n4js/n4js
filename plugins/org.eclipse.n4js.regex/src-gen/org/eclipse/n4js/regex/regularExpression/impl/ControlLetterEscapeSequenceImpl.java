@@ -31,7 +31,7 @@ import org.eclipse.n4js.regex.regularExpression.RegularExpressionPackage;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.regex.regularExpression.impl.ControlLetterEscapeSequenceImpl#getCharacter <em>Character</em>}</li>
+ *   <li>{@link org.eclipse.n4js.regex.regularExpression.impl.ControlLetterEscapeSequenceImpl#getCharacters <em>Characters</em>}</li>
  *   <li>{@link org.eclipse.n4js.regex.regularExpression.impl.ControlLetterEscapeSequenceImpl#getSequence <em>Sequence</em>}</li>
  * </ul>
  *
@@ -40,24 +40,24 @@ import org.eclipse.n4js.regex.regularExpression.RegularExpressionPackage;
 public class ControlLetterEscapeSequenceImpl extends AtomEscapeImpl implements ControlLetterEscapeSequence
 {
   /**
-   * The default value of the '{@link #getCharacter() <em>Character</em>}' attribute.
+   * The default value of the '{@link #getCharacters() <em>Characters</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getCharacter()
+   * @see #getCharacters()
    * @generated
    * @ordered
    */
-  protected static final String CHARACTER_EDEFAULT = null;
+  protected static final String CHARACTERS_EDEFAULT = null;
 
   /**
-   * The cached value of the '{@link #getCharacter() <em>Character</em>}' attribute.
+   * The cached value of the '{@link #getCharacters() <em>Characters</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getCharacter()
+   * @see #getCharacters()
    * @generated
    * @ordered
    */
-  protected String character = CHARACTER_EDEFAULT;
+  protected String characters = CHARACTERS_EDEFAULT;
 
   /**
    * The default value of the '{@link #getSequence() <em>Sequence</em>}' attribute.
@@ -106,9 +106,9 @@ public class ControlLetterEscapeSequenceImpl extends AtomEscapeImpl implements C
    * @generated
    */
   @Override
-  public String getCharacter()
+  public String getCharacters()
   {
-    return character;
+    return characters;
   }
 
   /**
@@ -117,12 +117,12 @@ public class ControlLetterEscapeSequenceImpl extends AtomEscapeImpl implements C
    * @generated
    */
   @Override
-  public void setCharacter(String newCharacter)
+  public void setCharacters(String newCharacters)
   {
-    String oldCharacter = character;
-    character = newCharacter;
+    String oldCharacters = characters;
+    characters = newCharacters;
     if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, RegularExpressionPackage.CONTROL_LETTER_ESCAPE_SEQUENCE__CHARACTER, oldCharacter, character));
+      eNotify(new ENotificationImpl(this, Notification.SET, RegularExpressionPackage.CONTROL_LETTER_ESCAPE_SEQUENCE__CHARACTERS, oldCharacters, characters));
   }
 
   /**
@@ -160,8 +160,8 @@ public class ControlLetterEscapeSequenceImpl extends AtomEscapeImpl implements C
   {
     switch (featureID)
     {
-      case RegularExpressionPackage.CONTROL_LETTER_ESCAPE_SEQUENCE__CHARACTER:
-        return getCharacter();
+      case RegularExpressionPackage.CONTROL_LETTER_ESCAPE_SEQUENCE__CHARACTERS:
+        return getCharacters();
       case RegularExpressionPackage.CONTROL_LETTER_ESCAPE_SEQUENCE__SEQUENCE:
         return getSequence();
     }
@@ -178,8 +178,8 @@ public class ControlLetterEscapeSequenceImpl extends AtomEscapeImpl implements C
   {
     switch (featureID)
     {
-      case RegularExpressionPackage.CONTROL_LETTER_ESCAPE_SEQUENCE__CHARACTER:
-        setCharacter((String)newValue);
+      case RegularExpressionPackage.CONTROL_LETTER_ESCAPE_SEQUENCE__CHARACTERS:
+        setCharacters((String)newValue);
         return;
       case RegularExpressionPackage.CONTROL_LETTER_ESCAPE_SEQUENCE__SEQUENCE:
         setSequence((String)newValue);
@@ -198,8 +198,8 @@ public class ControlLetterEscapeSequenceImpl extends AtomEscapeImpl implements C
   {
     switch (featureID)
     {
-      case RegularExpressionPackage.CONTROL_LETTER_ESCAPE_SEQUENCE__CHARACTER:
-        setCharacter(CHARACTER_EDEFAULT);
+      case RegularExpressionPackage.CONTROL_LETTER_ESCAPE_SEQUENCE__CHARACTERS:
+        setCharacters(CHARACTERS_EDEFAULT);
         return;
       case RegularExpressionPackage.CONTROL_LETTER_ESCAPE_SEQUENCE__SEQUENCE:
         setSequence(SEQUENCE_EDEFAULT);
@@ -218,8 +218,8 @@ public class ControlLetterEscapeSequenceImpl extends AtomEscapeImpl implements C
   {
     switch (featureID)
     {
-      case RegularExpressionPackage.CONTROL_LETTER_ESCAPE_SEQUENCE__CHARACTER:
-        return CHARACTER_EDEFAULT == null ? character != null : !CHARACTER_EDEFAULT.equals(character);
+      case RegularExpressionPackage.CONTROL_LETTER_ESCAPE_SEQUENCE__CHARACTERS:
+        return CHARACTERS_EDEFAULT == null ? characters != null : !CHARACTERS_EDEFAULT.equals(characters);
       case RegularExpressionPackage.CONTROL_LETTER_ESCAPE_SEQUENCE__SEQUENCE:
         return SEQUENCE_EDEFAULT == null ? sequence != null : !SEQUENCE_EDEFAULT.equals(sequence);
     }
@@ -245,7 +245,7 @@ public class ControlLetterEscapeSequenceImpl extends AtomEscapeImpl implements C
     {
       switch (derivedFeatureID)
       {
-        case RegularExpressionPackage.CONTROL_LETTER_ESCAPE_SEQUENCE__CHARACTER: return RegularExpressionPackage.CHARACTER_CLASS_ATOM__CHARACTER;
+        case RegularExpressionPackage.CONTROL_LETTER_ESCAPE_SEQUENCE__CHARACTERS: return RegularExpressionPackage.CHARACTER_CLASS_ATOM__CHARACTERS;
         default: return -1;
       }
     }
@@ -278,7 +278,7 @@ public class ControlLetterEscapeSequenceImpl extends AtomEscapeImpl implements C
     {
       switch (baseFeatureID)
       {
-        case RegularExpressionPackage.CHARACTER_CLASS_ATOM__CHARACTER: return RegularExpressionPackage.CONTROL_LETTER_ESCAPE_SEQUENCE__CHARACTER;
+        case RegularExpressionPackage.CHARACTER_CLASS_ATOM__CHARACTERS: return RegularExpressionPackage.CONTROL_LETTER_ESCAPE_SEQUENCE__CHARACTERS;
         default: return -1;
       }
     }
@@ -303,8 +303,8 @@ public class ControlLetterEscapeSequenceImpl extends AtomEscapeImpl implements C
     if (eIsProxy()) return super.toString();
 
     StringBuilder result = new StringBuilder(super.toString());
-    result.append(" (character: ");
-    result.append(character);
+    result.append(" (characters: ");
+    result.append(characters);
     result.append(", sequence: ");
     result.append(sequence);
     result.append(')');

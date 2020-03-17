@@ -12,32 +12,31 @@ package org.eclipse.n4js.tests.typesbuilder
 
 import com.google.inject.Inject
 import com.google.inject.Provider
-import org.eclipse.n4js.N4JSInjectorProvider
-import org.eclipse.n4js.ts.types.TModule
-import org.eclipse.n4js.resource.N4JSResource
-import org.eclipse.n4js.resource.UserdataMapper
-import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
-import org.eclipse.n4js.ts.types.Type
-import org.eclipse.n4js.ts.types.TVariable
 import java.util.List
 import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl
+import org.eclipse.n4js.N4JSInjectorProvider
+import org.eclipse.n4js.resource.N4JSResource
+import org.eclipse.n4js.resource.UserDataMapper
+import org.eclipse.n4js.tests.typesbuilder.utils.OrderedEmfFormatter
+import org.eclipse.n4js.ts.types.IdentifiableElement
+import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
+import org.eclipse.n4js.ts.types.TModule
+import org.eclipse.n4js.ts.types.TVariable
+import org.eclipse.n4js.ts.types.Type
 import org.eclipse.xtext.EcoreUtil2
-import org.eclipse.xtext.testing.InjectWith
-import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.resource.XtextResourceSet
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.util.StringInputStream
-import org.eclipse.xtext.xbase.lib.Pair
 import org.junit.runner.RunWith
 
 import static org.junit.Assert.*
-import org.eclipse.n4js.tests.typesbuilder.utils.OrderedEmfFormatter
-import org.eclipse.n4js.ts.types.IdentifiableElement
 
 @RunWith(XtextRunner)
 @InjectWith(N4JSInjectorProvider)
@@ -85,7 +84,7 @@ abstract class AbstractN4JSClassDeclarationTypesBuilderTest {
 
 		val syntaxEoDesc = eoDescs.head
 		val fromUserData = new XMIResourceImpl()
-		fromUserData.load(new StringInputStream(syntaxEoDesc.getUserData(UserdataMapper::USERDATA_KEY_SERIALIZED_SCRIPT), "UTF-8"), null)
+		fromUserData.load(new StringInputStream(syntaxEoDesc.getUserData(UserDataMapper::USER_DATA_KEY_SERIALIZED_SCRIPT), "UTF-8"), null)
 		compareUserData(syntaxEoDesc, fromUserData)
 
 		val uri = testResource.URI

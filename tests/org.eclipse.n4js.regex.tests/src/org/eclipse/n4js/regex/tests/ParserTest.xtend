@@ -230,6 +230,36 @@ class ParserTest extends AbstractParserTests {
 	def void test_36() {
 		'''/(?:)/\u006D'''.assertValid
 	}
+	
+	@Test
+	def void test_37() {
+		'''/[(?]:/'''.assertValid
+	}
+	
+	@Test
+	def void test_38() {
+		'''/[(?!]:/'''.assertValid
+	}
+	
+	@Test
+	def void test_39() {
+		'''/[(?=!]:/'''.assertValid
+	}
+	
+	@Test
+	def void test_40() {
+		'''/[(?<!]:/'''.assertValid
+	}
+	
+	@Test
+	def void test_41() {
+		'''/[(?<]:/'''.assertValid
+	}
+	
+	@Test
+	def void test_42() {
+		'''/[(?<=]:/'''.assertValid
+	}
 
 	@Test
 	def void testUnescapedBracket_01() {

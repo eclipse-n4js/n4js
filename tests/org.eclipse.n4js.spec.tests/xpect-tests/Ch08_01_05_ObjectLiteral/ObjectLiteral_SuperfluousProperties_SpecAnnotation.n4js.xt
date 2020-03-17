@@ -1,0 +1,51 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+// Cf. requirement IDE-22501
+
+
+class C {
+	public prop: string;
+	private propOther: string;
+
+	constructor(arg0: ~i~this, @Spec arg1: ~i~this, arg2: ~i~this) {}
+}
+
+class D {
+	constructor(arg0: ~C) {}
+}
+
+let c: ~C;
+
+// works XPECT warnings --> "propUnknown is not defined in ~C; it will not be accessible from c." at "propUnknown"
+c = {prop: "", propOther: "", propUnknown: ""};
+
+function foo(arg: ~C) {}
+// works XPECT warnings --> "propUnknown is not defined in ~C; it will not be accessible from the receiving parameter." at "propUnknown"
+foo({prop: "", propOther: "", propUnknown: ""});
+
+// this is not a spec constructor XPECT warnings --> "propUnknown is not defined in ~C; it will not be accessible from the receiving parameter." at "propUnknown"
+new D({prop: "", propOther: "", propUnknown: ""});
+
+
+new C(
+	// not a spec argument XPECT warnings --> "propUnknown is not defined in ~i~this[C]; it will not be accessible from the receiving parameter." at "propUnknown"
+	{prop: "", propOther: "", propUnknown: ""},
+	/* works XPECT warnings ---
+	"propOther is not defined in ~i~this[C]; it will not have any effect in the spec constructor." at "propOther"
+	"propUnknown is not defined in ~i~this[C]; it will not have any effect in the spec constructor." at "propUnknown"
+	--- */
+	{prop: "", propOther: "", propUnknown: ""},
+	// not a spec argument XPECT warnings --> "propUnknown is not defined in ~i~this[C]; it will not be accessible from the receiving parameter." at "propUnknown"
+	{prop: "", propOther: "", propUnknown: ""}
+);

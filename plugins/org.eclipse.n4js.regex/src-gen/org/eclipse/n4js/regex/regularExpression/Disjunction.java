@@ -35,10 +35,6 @@ public interface Disjunction extends Pattern
    * Returns the value of the '<em><b>Elements</b></em>' containment reference list.
    * The list contents are of type {@link org.eclipse.n4js.regex.regularExpression.Pattern}.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Elements</em>' containment reference list isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Elements</em>' containment reference list.
    * @see org.eclipse.n4js.regex.regularExpression.RegularExpressionPackage#getDisjunction_Elements()

@@ -11,7 +11,9 @@
 package org.eclipse.n4js.resource;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
@@ -125,10 +127,13 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 		// The super implementation DefaultResourceDescriptionManager#isAffected is based on a tradeoff / some
 		// assumptions which do not hold for n4js wrt to manifest changes
 
+		String candidateURIString = candidate.getURI().toString();
+
 		// computed the first time we need it, do not compute eagerly
 		Collection<QualifiedName> namesImportedByCandidate = null;
 
 		for (IResourceDescription.Delta delta : deltas) {
+
 			if (delta.haveEObjectDescriptionsChanged()
 					&& fileExtensionTypeHelper.isTypable(delta.getUri().fileExtension())) {
 
@@ -138,11 +143,19 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 					namesImportedByCandidate = getImportedNames(candidate);
 				}
 
-				if (isAffected(namesImportedByCandidate, delta.getNew()) // we may added a new exported name!
-						|| isAffected(namesImportedByCandidate, delta.getOld())) { // we may removed an exported name
+				IResourceDescription oldDesc = delta.getOld();
+				IResourceDescription newDesc = delta.getNew();
+				if (isAffected(namesImportedByCandidate, newDesc) // we may added a new exported name!
+						|| isAffected(namesImportedByCandidate, oldDesc)) { // we may removed an exported name
 					if (hasDependencyTo(candidate, delta)) { // isAffected does not compare project names
 						return true;
 					}
+				}
+
+				boolean loadtimeDependencyOld = hasDirectLoadtimeDependencyTo(oldDesc, candidateURIString);
+				boolean loadtimeDependencyNew = hasDirectLoadtimeDependencyTo(newDesc, candidateURIString);
+				if (loadtimeDependencyOld != loadtimeDependencyNew) {
+					return true;
 				}
 			}
 		}
@@ -183,6 +196,14 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 			}
 		}
 		return false;
+	}
+
+	private boolean hasDirectLoadtimeDependencyTo(IResourceDescription from, String toURIString) {
+		if (from == null) {
+			return false;
+		}
+		Optional<List<String>> fromDeps = UserDataMapper.readDependenciesLoadtimeForInheritanceFromDescription(from);
+		return fromDeps.isPresent() && fromDeps.get().contains(toURIString);
 	}
 
 	@Override

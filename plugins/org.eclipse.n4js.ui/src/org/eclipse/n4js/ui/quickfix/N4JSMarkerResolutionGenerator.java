@@ -131,19 +131,10 @@ public class N4JSMarkerResolutionGenerator extends MarkerResolutionGenerator {
 						final int length = MarkerUtilities.getCharEnd(currMarker) - offset;
 						final EObject element = getElementForMarker(currContext, currMarker);
 
-						Collection<? extends IChange> changeSet = null;
-						if (markers.length == 1) {
-							changeSet = getN4Modification().computeChanges(
-									currContext, currMarker, offset, length, element);
-						} else {
-							changeSet = getN4Modification().computeOneOfMultipleChanges(
-									currContext, currMarker, offset, length, element);
-						}
-
+						Collection<? extends IChange> changeSet = getN4Modification().computeChanges(
+								currContext, currMarker, offset, length, element);
 						changes.addAll(changeSet);
 					}
-
-					getN4Modification().computeFinalChanges();
 
 					// perform changes
 					changeManager.applyAll(changes);
@@ -193,8 +184,7 @@ public class N4JSMarkerResolutionGenerator extends MarkerResolutionGenerator {
 				// This is why we need !isSameProblem() in next line (otherwise the Eclipse framework will show multiple
 				// entries in the dialog for applying quick fixes to multiple markers).
 				if (!isSameProblem(currMarker)
-						&& hasSameIssueCode(currMarker)
-						&& n4modification.isApplicableTo(currMarker))
+						&& hasSameIssueCode(currMarker))
 					result.add(currMarker);
 			}
 			return result.toArray(new IMarker[result.size()]);
