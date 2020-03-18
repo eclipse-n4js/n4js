@@ -146,23 +146,7 @@ class BlockTransformationTest extends AbstractTranspilerTest {
 						return this[$sym];
 					}
 					const instanceProto = this.prototype, staticProto = this;
-					return this[$sym] = new N4Class({
-						name: 'System2',
-						origin: 'test',
-						fqn: 'A/System2',
-						n4superType: N4Object.n4type,
-						allImplementedInterfaces: [],
-						ownedMembers: [
-							new N4Method({
-								name: 'normalize',
-								isStatic: true,
-								jsFunction: staticProto['normalize'],
-								annotations: []
-							})
-						],
-						consumedMembers: [],
-						annotations: []
-					});
+					return this[$sym] = $getReflectionForClass('["System2","A","test"]', TODO);
 				}
 			}
 		''';

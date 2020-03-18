@@ -35,17 +35,17 @@ stdout:
   - test.methodsWithAnnotation is a function methodsWithAnnotation
   - test.n4superType is an N4Class N4Type
   - test.n4superType is not an N4Class[object Object]
-     test.ownedMembers[0] is n4superType
-     test.ownedMembers[1] is allImplementedInterfaces
-     test.ownedMembers[2] is ownedMembers
-     test.ownedMembers[3] is consumedMembers
-     test.ownedMembers[4] is constructor
-     test.ownedMembers[5] is members
-     test.ownedMembers[6] is membersWithAnnotation
-     test.ownedMembers[7] is dataFields
-     test.ownedMembers[8] is dataFieldsWithAnnotation
-     test.ownedMembers[9] is methods
-     test.ownedMembers[10] is methodsWithAnnotation
+     test.ownedMembers[0] is setOwnedMembers
+     test.ownedMembers[1] is members
+     test.ownedMembers[2] is membersWithAnnotation
+     test.ownedMembers[3] is dataFields
+     test.ownedMembers[4] is dataFieldsWithAnnotation
+     test.ownedMembers[5] is methods
+     test.ownedMembers[6] is methodsWithAnnotation
+     test.ownedMembers[7] is n4superType
+     test.ownedMembers[8] is allImplementedInterfaces
+     test.ownedMembers[9] is ownedMembers
+     test.ownedMembers[10] is consumedMembers
   - test.consumedMembers is empty
  = inspect test as N4Type
   - test.fqn is a string N4BuiltInTypes/N4Classifier
