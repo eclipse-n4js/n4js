@@ -14,7 +14,10 @@ import static org.eclipse.n4js.utils.N4JSLanguageUtils.lastSegmentOrDefaultHost;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -125,6 +128,7 @@ public class ImportsAwareReferenceProposalCreator {
 			final IScope scope = contentAssistScopeProvider.getScopeForContentAssist(model, reference);
 			// iterate over candidates, filter them, and create ICompletionProposals for them
 			final Iterable<IEObjectDescription> candidates = scope.getAllElements();
+			final Set<URI> candidateURIs = new HashSet<>(); // note: shadowing for #getAllElements does not work
 
 			for (IEObjectDescription candidate : candidates) {
 				if (!acceptor.canAcceptMoreProposals()) {
@@ -144,7 +148,7 @@ public class ImportsAwareReferenceProposalCreator {
 							filter,
 							proposalFactory);
 
-					if (proposal != null) {
+					if (proposal != null && candidateURIs.add(candidate.getEObjectURI())) {
 						acceptor.accept(proposal, proposalPriorities.getCrossRefPriority(candidate, proposal));
 					}
 				}
@@ -193,6 +197,7 @@ public class ImportsAwareReferenceProposalCreator {
 				result.setLabel(label);
 				result.setDescription(description);
 				result.setKind(kind);
+				result.setSource(candidate.getEObjectURI());
 
 				Collection<ReplaceRegion> regions = getImportChanges(name.toString(), resource, scope, candidate,
 						filter);
