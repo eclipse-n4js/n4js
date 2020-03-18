@@ -497,6 +497,37 @@ public abstract class TranspilerComponent {
 		return getSymbolTableEntryInternal("N4Annotation", true);
 	}
 
+	//// $getReflectionForClass
+
+	/**
+	 * "$getReflectionForClass" - retrieve the internal symbol table entry for the symbol "$getReflectionForClass"
+	 */
+	public SymbolTableEntryInternal steFor_$getReflectionForClass() {
+
+		return getSymbolTableEntryInternal("$getReflectionForClass", true);
+	}
+
+	//// $getReflectionForInterface
+
+	/**
+	 * "$getReflectionForInterface" - retrieve the internal symbol table entry for the symbol
+	 * "$getReflectionForInterface"
+	 */
+	public SymbolTableEntryInternal steFor_$getReflectionForInterface() {
+
+		return getSymbolTableEntryInternal("$getReflectionForInterface", true);
+	}
+
+	//// $getReflectionForEnum
+
+	/**
+	 * "$getReflectionForEnum" - retrieve the internal symbol table entry for the symbol "$getReflectionForEnum"
+	 */
+	public SymbolTableEntryInternal steFor_$getReflectionForEnum() {
+
+		return getSymbolTableEntryInternal("$getReflectionForEnum", true);
+	}
+
 	//// $initFieldsFromInterfaces
 
 	/**

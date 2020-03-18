@@ -30,20 +30,45 @@ function defineN4TypeGetter(instance, factoryFn) {
     });
 }
 
-/** Used for ES6 class version of N4JS */
-//function $getReflectionForClass(n4elem, moduleName, n4ElemName) {
-//    const $sym = Symbol.for('org.eclipse.n4js/reflectionInfo');
-//    if (n4elem.hasOwnProperty($sym)) {
-//        return n4elem[$sym];
-//    }
-//    // FIXME: path of require is wrong
-//    const reflectValues = require(moduleName + '.reflect')?.[n4ElemName];
-//    if (!reflectValues) {
-//        return null;
-//    }
-//    const instanceProto = n4elem.prototype;
-//    return createN4Class(instanceProto, staticProto, ...reflectValues);
-//}
+
+/**
+ * Returns reflection information.
+ * If it is not existing yet, it will be created and attached to the prototype using a symbol.
+ */
+function $getReflectionForClass(staticProto, reflectionString) {
+    const $sym = Symbol.for('org.eclipse.n4js/reflectionInfo');
+    if (!staticProto.hasOwnProperty($sym)) {
+	    staticProto[$sym] = makeReflectionsForClass(staticProto, reflectionString);
+    }
+    return staticProto[$sym];
+}
+
+/**
+ * Returns reflection information.
+ * If it is not existing yet, it will be created and attached to the prototype using a symbol.
+ */
+function $getReflectionForInterface(staticProto, reflectionString) {
+    const $sym = Symbol.for('org.eclipse.n4js/reflectionInfo');
+    if (!staticProto.hasOwnProperty($sym)) {
+	    staticProto[$sym] = makeReflectionsForInterface(staticProto, reflectionString);
+    }
+    return staticProto[$sym];
+}
+
+/**
+ * Returns reflection information.
+ * If it is not existing yet, it will be created and attached to the prototype using a symbol.
+ */
+function $getReflectionForEnum(staticProto, reflectionString) {
+    const $sym = Symbol.for('org.eclipse.n4js/reflectionInfo');
+    if (!staticProto.hasOwnProperty($sym)) {
+	    staticProto[$sym] = makeReflectionsForEnum(staticProto, reflectionString);
+    }
+    return staticProto[$sym];
+}
+
+
+
 
 /**
  * Initialize the fields declared by the given interfaces in the target object 'target'.
@@ -170,7 +195,8 @@ function $n4promisifyMethod(receiver, methodName, args, multiSuccessValues, noEr
 
 
 
-function makeReflectionsForClass(instanceProto, staticProto, reflectionString) {
+function makeReflectionsForClass(staticProto, reflectionString) {
+    const instanceProto = staticProto.prototype;
     const reflectionValues = JSON.parse(reflectionString);
     const superclass = staticProto.__proto__.n4type;
     const n4Class = new N4Class();
@@ -179,7 +205,8 @@ function makeReflectionsForClass(instanceProto, staticProto, reflectionString) {
     return n4Class;
 }
 
-function makeReflectionsForInterface(instanceProto, staticProto, reflectionString) {
+function makeReflectionsForInterface(staticProto, reflectionString) {
+    const instanceProto = staticProto.$members;
     const reflectionValues = JSON.parse(reflectionString);
     const n4Interface = new N4Interface();
     setN4TypeProperties(n4Interface, ...reflectionValues);
@@ -190,7 +217,7 @@ function makeReflectionsForInterface(instanceProto, staticProto, reflectionStrin
     return n4Interface;
 }
 
-function makeReflectionsForEnum(reflectionString) {
+function makeReflectionsForEnum(staticProto, reflectionString) {
     const reflectionValues = JSON.parse(reflectionString);
     const n4enumType = new N4EnumType();
     setN4TypeProperties(n4enumType, ...reflectionValues);
@@ -216,7 +243,9 @@ function createMembers(instanceProto, staticProto, memberStrings, memberAnnotati
     const annotations = createMemberAnnotations(memberAnnotations);
     const ownedMembers = [];
     const consumedMembers = [];
-    const detectedMemberStrings = detectMembers(instanceProto, staticProto);
+// TODO GH-1693
+//  const detectedMemberStrings = detectMembers(instanceProto, staticProto);
+const detectedMemberStrings = [];
     const detectedMemberStringsReduced = [];
     for (const memberString of detectedMemberStrings) {
         const memberAlreadyAsConsumedGiven = memberStrings && memberStrings.includes(toConsumedMemberString(memberString));
@@ -393,6 +422,9 @@ function createMember(instanceProto, staticProto, memberInfo, annotations) {
 
 
 //expose in global scope
+_globalThis.$getReflectionForClass = $getReflectionForClass;
+_globalThis.$getReflectionForInterface = $getReflectionForInterface;
+_globalThis.$getReflectionForEnum = $getReflectionForEnum;
 _globalThis.$initFieldsFromInterfaces = $initFieldsFromInterfaces;
 _globalThis.$sliceToArrayForDestruct = $sliceToArrayForDestruct;
 _globalThis.$spawn = $spawn;

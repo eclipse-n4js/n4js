@@ -10,57 +10,26 @@
  */
 package org.eclipse.n4js.transpiler.es.assistants
 
+import com.google.gson.GsonBuilder
 import com.google.inject.Inject
-import org.eclipse.n4js.AnnotationDefinition
-import org.eclipse.n4js.AnnotationDefinition.RetentionPolicy
 import org.eclipse.n4js.N4JSLanguageConstants
-import org.eclipse.n4js.n4JS.AnnotableElement
-import org.eclipse.n4js.n4JS.Expression
-import org.eclipse.n4js.n4JS.FieldAccessor
-import org.eclipse.n4js.n4JS.GetterDeclaration
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
-import org.eclipse.n4js.n4JS.N4ClassDefinition
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
-import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4GetterDeclaration
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
-import org.eclipse.n4js.n4JS.N4MemberDeclaration
-import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.N4Modifier
 import org.eclipse.n4js.n4JS.N4TypeDeclaration
-import org.eclipse.n4js.n4JS.NewExpression
-import org.eclipse.n4js.n4JS.TypeDefiningElement
-import org.eclipse.n4js.n4JS.VariableDeclaration
-import org.eclipse.n4js.n4JS.VariableStatementKeyword
 import org.eclipse.n4js.transpiler.InformationRegistry
 import org.eclipse.n4js.transpiler.TransformationAssistant
-import org.eclipse.n4js.transpiler.assistants.TypeAssistant
-import org.eclipse.n4js.transpiler.im.DelegatingMember
-import org.eclipse.n4js.ts.types.TAnnotableElement
-import org.eclipse.n4js.ts.types.TAnnotation
-import org.eclipse.n4js.ts.types.TClass
-import org.eclipse.n4js.ts.types.TClassifier
-import org.eclipse.n4js.ts.types.TEnum
-import org.eclipse.n4js.ts.types.TInterface
-import org.eclipse.n4js.ts.types.TN4Classifier
-import org.eclipse.n4js.ts.types.TObjectPrototype
-import org.eclipse.n4js.ts.types.Type
-import org.eclipse.n4js.ts.types.TypingStrategy
-import org.eclipse.n4js.ts.types.util.SuperInterfacesIterable
-import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.ResourceNameComputer
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
-
-import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  * Helper methods for creating output code related to reflection for classes, interfaces, and enums in N4JS.
  */
 class ReflectionAssistant extends TransformationAssistant {
-
-	@Inject private TypeAssistant typeAssistant;
 	@Inject private ResourceNameComputer resourceNameComputer;
 
 	/**
@@ -92,51 +61,27 @@ class ReflectionAssistant extends TransformationAssistant {
 			return null;
 		}
 
-		val symbolObjectSTE = getSymbolTableEntryOriginal(state.G.symbolObjectType, true);
-		val forSTE = getSymbolTableEntryForMember(state.G.symbolObjectType, "for", false, true, true);
-		val hasOwnPropertySTE = getSymbolTableEntryForMember(state.G.objectType, "hasOwnProperty", false, false, true);
-
-		val $symVarDecl = _VariableDeclaration("$sym", _CallExpr(_PropertyAccessExpr(symbolObjectSTE, forSTE), _StringLiteral("org.eclipse.n4js/reflectionInfo")));
-		val $symSTE = findSymbolTableEntryForElement($symVarDecl, true);
+		val typeSTE = findSymbolTableEntryForElement(typeDecl, true);
+		val reflectionBuilder = new ReflectionBuilder(state, resourceNameComputer);
+		val reflectInfo = reflectionBuilder.createReflectionInfo(typeDecl, typeSTE);
+		val gson = new GsonBuilder().disableHtmlEscaping().create();
+		val origJsonString = gson.toJson(reflectInfo);
+		val quotedJsonString = "'" + origJsonString.replaceAll("\'", "\\\\\'") + "'";
+		
+		val methodName = switch (typeDecl) {
+			N4ClassDeclaration: steFor_$getReflectionForClass()
+			N4InterfaceDeclaration: steFor_$getReflectionForInterface()
+			N4EnumDeclaration: steFor_$getReflectionForEnum()
+		}
 
 		return _N4GetterDecl(
 			_LiteralOrComputedPropertyName(N4JSLanguageConstants.N4TYPE_NAME),
 			_Block(
-				// const $sym = Symbol.for('org.eclipse.n4js/reflectionInfo');
-				_VariableStatement(VariableStatementKeyword.CONST,
-					$symVarDecl
-				),
-				// if (this.hasOwnProperty($sym)) {
-				//     return this[$sym];
-				// }
-				_IfStmnt(
-					_CallExpr(
-						_PropertyAccessExpr(
-							_ThisLiteral,
-							hasOwnPropertySTE
-						),
-						_IdentRef($symSTE)
-					),
-					_ReturnStmnt(
-						_IndexAccessExpr(_ThisLiteral, _IdentRef($symSTE))
-					)
-				),
-				// return this[$sym] = new N4Class() { ...
-				if (typeDecl instanceof N4ClassDeclaration) {
-					_VariableStatement(VariableStatementKeyword.CONST,
-						_VariableDeclaration("instanceProto", _Snippet("this.prototype")), // FIXME remove!
-						_VariableDeclaration("staticProto", _ThisLiteral) // FIXME remove!
-					)
-				} else if (typeDecl instanceof N4InterfaceDeclaration) {
-					_VariableStatement(VariableStatementKeyword.CONST,
-						_VariableDeclaration("instanceProto", _Snippet("this.$members")), // FIXME remove!
-						_VariableDeclaration("staticProto", _ThisLiteral) // FIXME remove!
-					)
-				},
 				_ReturnStmnt(
-					_AssignmentExpr(
-						_IndexAccessExpr(_ThisLiteral, _IdentRef($symSTE)),
-						createMetaClassVariable(typeDecl, originalType).expression
+					_CallExpr(
+						_IdentRef(methodName),
+						_IdentRef(typeSTE),
+						_StringLiteral(quotedJsonString, quotedJsonString)
 					)
 				)
 			)
@@ -145,186 +90,4 @@ class ReflectionAssistant extends TransformationAssistant {
 		];
 	}
 
-	def private VariableDeclaration createMetaClassVariable(N4TypeDeclaration typeDecl, Type originalType) {
-		// var metaClass = new N4Class({
-		//     name: 'A',
-		//     origin: 'IDE1920',
-		//     fqn: 'A.A',
-		//     n4superType: N4Object.n4type, // 'undefined' for interfaces and enums
-		//     allImplementedInterfaces: [],
-		//     ownedMembers : [],
-		//     consumedMembers : [],
-		//     annotations : []
-		// });
-
-		val typeSTE = findSymbolTableEntryForElement(typeDecl, true);
-
-		// prepare n4superType
-		val n4superType = createN4SuperTypeRef(typeDecl, originalType);
-
-		// prepare allImplementedInterfaces
-		val Iterable<TInterface> allImplementedInterfaces = if(originalType instanceof TClassifier) {
-			SuperInterfacesIterable.of(originalType).filter[!isStructurallyTyped]
-		} else {
-			emptyList()
-		};
-
-		// choose members to include in reflection
-		val membersForReflection = if(typeDecl instanceof N4ClassifierDeclaration) {
-			typeDecl.ownedMembers.filter[!state.info.isHiddenFromReflection(it)];
-		} else {
-			#[]
-		};
-
-		// prepare owned members
-		val ownedMembers = membersForReflection.filter[!state.info.isConsumedFromInterface(it)];
-
-		// prepare consumed members
-		val consumedMembers = membersForReflection.filter[ state.info.isConsumedFromInterface(it)];
-
-		// prepare reflection class to be used
-		val metaClassSTE = switch(typeDecl) {
-			N4ClassDefinition: steFor_N4Class
-			N4InterfaceDeclaration: steFor_N4Interface
-			N4EnumDeclaration: steFor_N4EnumType
-			default: throw new IllegalArgumentException("cannot handle declarations of type " + typeDecl.eClass.name)
-		};
-
-		// prepare origin and FQN strings
-		val origin = resourceNameComputer.generateProjectDescriptor(state.resource.URI);
-		val fqn = resourceNameComputer.getFullyQualifiedTypeName(originalType);
-
-		// put everything together
-		return _VariableDeclaration("metaClass")=>[
-			expression = _NewExpr(_IdentRef(metaClassSTE), _ObjLit(
-				"name" -> _StringLiteralForSTE(typeSTE),
-				"origin" -> _StringLiteral(origin),
-				"fqn" -> _StringLiteral(fqn),
-				"n4superType" -> n4superType,
-				"allImplementedInterfaces" -> _ArrLit(
-					allImplementedInterfaces.map[resourceNameComputer.getFullyQualifiedTypeName(it)].map[_StringLiteral(it)]
-				),
-				"ownedMembers" -> _ArrLit(
-					ownedMembers.map[createMemberDescriptor]
-				),
-				"consumedMembers" -> _ArrLit(
-					consumedMembers.map[createMemberDescriptor]
-				),
-				"annotations" -> _ArrLit(createRuntimeAnnotations(typeDecl))
-			));
-		];
-	}
-
-	/**
-	 * Creates the member descriptor for the n4type meta-information. Don't confuse with the member definition created
-	 * by <code>#createMemberDefinitionForXYZ()</code> methods.
-	 */
-	def private Expression createMemberDescriptor(N4MemberDeclaration memberDecl) {
-		val memberSTE = findSymbolTableEntryForElement(memberDecl, true);
-		val n4MemberClassSTE = switch(memberDecl) {
-			N4MethodDeclaration: steFor_N4Method
-			FieldAccessor:  steFor_N4Accessor
-			N4FieldDeclaration:  steFor_N4DataField
-			default:  steFor_N4Member
-		}
-
-		return _NewExpr(_IdentRef(n4MemberClassSTE), _ObjLit(
-			"name" -> _StringLiteralForSTE(memberSTE),
-			if(memberDecl instanceof FieldAccessor) {
-				"getter" -> _BooleanLiteral(memberDecl instanceof GetterDeclaration)
-			},
-			"isStatic" -> _BooleanLiteral(memberDecl.static),
-			if(memberDecl instanceof N4MethodDeclaration && !(memberDecl as N4MethodDeclaration).abstract) {
-				val memberName = memberDecl.name;
-				val memberIsSymbol = memberName!==null && memberName.startsWith(N4JSLanguageUtils.SYMBOL_IDENTIFIER_PREFIX);
-				val memberExpr = if(!memberIsSymbol) {
-					_StringLiteralForSTE(memberSTE)
-				} else {
-					typeAssistant.getMemberNameAsSymbol(memberName)
-				};
-				if(memberDecl.static) {
-					"jsFunction" -> _IndexAccessExpr(_Snippet("staticProto"), memberExpr)
-				} else {
-					"jsFunction" -> _IndexAccessExpr(_Snippet("instanceProto"), memberExpr)
-				}
-			},
-			"annotations" -> _ArrLit(createRuntimeAnnotations(memberDecl))
-		));
-	}
-
-	def private NewExpression[] createRuntimeAnnotations(AnnotableElement annElem) {
-		val tAnnElem = switch(annElem) {
-			DelegatingMember: annElem.delegationTarget.originalTarget as TAnnotableElement
-			N4TypeDeclaration: state.info.getOriginalDefinedType(annElem)
-			N4MemberDeclaration: state.info.getOriginalDefinedMember(annElem)
-			TypeDefiningElement: {
-				// going via original AST as a fall back
-				val original = state.tracer.getOriginalASTNode(annElem);
-				if(original instanceof TypeDefiningElement) {
-					original.definedType
-				}
-			}
-		}
-		return createRuntimeAnnotations(tAnnElem);
-	}
-
-	def private NewExpression[] createRuntimeAnnotations(TAnnotableElement tAnnElem) {
-		if(tAnnElem===null) {
-			return #[]; // note that this covers the case of a N4ClassifierDeclaration without a type in the TModule
-		}
-		val runtimeAnnotations = tAnnElem.annotations.filter[
-			val retention = AnnotationDefinition.find(it.name).retention;
-			return retention===RetentionPolicy.RUNTIME || retention===RetentionPolicy.RUNTIME_TYPEFIELD;
-		];
-		return runtimeAnnotations.map[createRuntimeAnnotation];
-	}
-
-	def private NewExpression createRuntimeAnnotation(TAnnotation ann) {
-		// new N4Annotation({name : 'name', details :[ 'arg1', 'arg2' ]})
-		val n4AnnotationSTE =  steFor_N4Annotation;
-		return _NewExpr(_IdentRef(n4AnnotationSTE), _ObjLit(
-			"name" -> _StringLiteral(ann.name),
-			"details" -> _ArrLit(
-				ann.args.map[argAsString].map[_StringLiteral(it)]
-			)
-		));
-	}
-
-	/**
-	 * Create reference to n4type meta-object of the super type of given typeDefinition or 'undefined' if unavailable.
-	 */
-	def private Expression createN4SuperTypeRef(N4TypeDeclaration typeDecl, Type originalType) {
-		if (typeDecl instanceof N4EnumDeclaration || originalType instanceof TEnum) {
-			return _Snippet("N4Enum.n4type");
-		} else if (typeDecl instanceof N4ClassDeclaration) {
-			// NOTE: this is a simple but still good example why it is not easy to avoid going via the TModule
-			// we could use superClassSTE here, but then we would have to duplicate logic in #getDeclaredOrImplicitSuperType()
-			val superType = state.G.getDeclaredOrImplicitSuperType(originalType as TClass);
-			if(superType === state.G.n4ObjectType) {
-				return _Snippet("N4Object.n4type");
-			}
-			else if(superType instanceof TClass) {
-				if (superType.external && !AnnotationDefinition.N4JS.hasAnnotation(superType)) {
-					return undefinedRef(); // external classes do not have reflective information
-				}
-				val superTypeSTE = getSymbolTableEntryOriginal(superType, true);
-				val n4typeSTE = getSymbolTableEntryForMember(state.G.n4ObjectType, "n4type", false, true, true);
-				return __NSSafe_PropertyAccessExpr(superTypeSTE, n4typeSTE);
-			}
-			else if(superType instanceof TObjectPrototype) {
-				// super type is a TObjectPrototype, i.e. built-in type like Object or Error
-				// -> no 'n4superType' in these cases
-				return undefinedRef();
-			}
-		}
-		return undefinedRef(); // applies to interfaces
-	}
-
-	// ################################################################################################################
-	// UTILITY STUFF
-
-	private def boolean isStructurallyTyped(TN4Classifier n4Classifier) {
-		val ts = n4Classifier.typingStrategy;
-		return ts===TypingStrategy.STRUCTURAL || ts===TypingStrategy.STRUCTURAL_FIELDS;
-	}
 }
