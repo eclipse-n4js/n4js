@@ -141,12 +141,7 @@ class BlockTransformationTest extends AbstractTranspilerTest {
 					}.apply(this, arguments));
 				}
 				static get n4type() {
-					const $sym = Symbol.for('org.eclipse.n4js/reflectionInfo');
-					if (this.hasOwnProperty($sym)) {
-						return this[$sym];
-					}
-					const instanceProto = this.prototype, staticProto = this;
-					return this[$sym] = $getReflectionForClass('["System2","A","test"]', TODO);
+					return $getReflectionForClass(System2, '["System2","A","test",["M.normalize"]]');
 				}
 			}
 		''';

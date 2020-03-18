@@ -148,12 +148,7 @@ class ArrowFunctionTest extends AbstractTranspilerTest {
 				}
 				notifyListeners() {}
 				static get n4type() {
-					const $sym = Symbol.for('org.eclipse.n4js/reflectionInfo');
-					if (this.hasOwnProperty($sym)) {
-						return this[$sym];
-					}
-					const instanceProto = this.prototype, staticProto = this;
-					return this[$sym] = $getReflectionForClass('["C","A","test"]', TODO);
+					return $getReflectionForClass(C, '["C","A","test",["f._data","f.argsTotal","g.data","s.data","m.notifyListeners"]]');
 				}
 			}
 		''';
