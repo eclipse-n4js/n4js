@@ -263,6 +263,9 @@ public class ImportsAwareReferenceProposalCreator {
 		if (TypesPackage.eINSTANCE.getTInterface() == eClass) {
 			kind = ContentAssistEntry.KIND_INTERFACE;
 		}
+		if (TypesPackage.eINSTANCE.getTField() == eClass) {
+			kind = ContentAssistEntry.KIND_FIELD;
+		}
 		if (TypesPackage.eINSTANCE.getTEnum() == eClass) {
 			kind = ContentAssistEntry.KIND_ENUM;
 		}
@@ -270,6 +273,9 @@ public class ImportsAwareReferenceProposalCreator {
 			kind = ContentAssistEntry.KIND_FUNCTION;
 		}
 		if (TypesPackage.eINSTANCE.getTVariable() == eClass) {
+			kind = ContentAssistEntry.KIND_VARIABLE;
+		}
+		if (N4JSPackage.eINSTANCE.getVariableDeclaration() == eClass) {
 			kind = ContentAssistEntry.KIND_VARIABLE;
 		}
 		return kind;
