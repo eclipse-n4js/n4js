@@ -64,49 +64,6 @@ function $initFieldsFromInterfaces(target, interfaces, spec, mixinExclusion) {
 }
 
 /**
- * Create an enumeration type with the given FQN and members.
- *
- * @param enumeration - the enumeration constructor function
- * @param members - An array of <String, String> tuples containing
- *                  information about the enum members
- * @param n4typeFn - Optional factory function to create the meta type (currently mandatory though, will be optional with GH-574).
- * @return The constructed enumeration type
- */
-function $makeEnum(enumeration, members, n4typeFn) {
-    var length, index, member, name, value, values, literal;
-
-    Object.setPrototypeOf(enumeration, N4Enum);
-    enumeration.prototype = Object.create(N4Enum.prototype, {});
-
-    if (n4typeFn) {
-        defineN4TypeGetter(enumeration, n4typeFn.bind(null, noop));
-    }
-
-    Object.defineProperty(enumeration.prototype, "constructor", {
-        value: enumeration
-    });
-
-    length = members.length;
-    values = new Array(length);
-    for (index = 0; index < length; ++index) {
-        member = members[index];
-        name = member[0];
-        value = member[1];
-
-        literal = new enumeration(name, value);
-        Object.defineProperty(enumeration, literal.name, {
-            enumerable: true,
-            value: literal
-        });
-        values[index] = literal;
-    }
-
-    Object.defineProperty(enumeration, 'literals', {
-        value: values
-    });
-}
-
-/**
  * Helper function used when transpiling destructuring patterns. Return an array of the first 'max'
  * elements from iterable 'arr'. If the Iterable does not provide enough elements, a shorter array
  * is returned. So length of returned array is between 0 and 'max'.
@@ -193,8 +150,6 @@ function $n4promisifyMethod(receiver, methodName, args, multiSuccessValues, noEr
 
 //expose in global scope
 _globalThis.$initFieldsFromInterfaces = $initFieldsFromInterfaces;
-_globalThis.$makeEnum = $makeEnum;
-
 _globalThis.$sliceToArrayForDestruct = $sliceToArrayForDestruct;
 _globalThis.$spawn = $spawn;
 _globalThis.$n4promisifyFunction = $n4promisifyFunction;
