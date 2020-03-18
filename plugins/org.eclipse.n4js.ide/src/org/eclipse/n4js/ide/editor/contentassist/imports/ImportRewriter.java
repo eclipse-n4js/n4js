@@ -98,12 +98,25 @@ public class ImportRewriter {
 
 		}
 
+		/** @return set of all {@link NameAndAlias}es */
+		public Set<NameAndAlias> getNameAndAliases() {
+			return this.requestedImports;
+		}
+
 		/**
 		 * @param qualifiedName
 		 *            the name of the thing to import
 		 */
 		public void addImport(QualifiedName qualifiedName) {
 			requestedImports.add(new NameAndAlias(qualifiedName, null));
+		}
+
+		/**
+		 * @param nameAndAlias
+		 *            instance with name and optional alias
+		 */
+		public void addImport(NameAndAlias nameAndAlias) {
+			requestedImports.add(nameAndAlias);
 		}
 
 		/**

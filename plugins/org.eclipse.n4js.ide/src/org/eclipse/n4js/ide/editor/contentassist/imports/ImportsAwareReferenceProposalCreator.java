@@ -13,7 +13,6 @@ package org.eclipse.n4js.ide.editor.contentassist.imports;
 import static org.eclipse.n4js.utils.N4JSLanguageUtils.lastSegmentOrDefaultHost;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -61,6 +60,7 @@ import org.eclipse.xtext.util.Arrays;
 import org.eclipse.xtext.util.ReplaceRegion;
 
 import com.google.common.base.Predicate;
+import com.google.common.base.Strings;
 import com.google.inject.Inject;
 
 /**
@@ -199,10 +199,18 @@ public class ImportsAwareReferenceProposalCreator {
 				result.setKind(kind);
 				result.setSource(candidate.getEObjectURI());
 
-				Collection<ReplaceRegion> regions = getImportChanges(name.toString(), resource, scope, candidate,
-						filter);
-				if (regions != null && !regions.isEmpty()) {
-					result.getTextReplacements().addAll(regions);
+				NameAndAlias nameAndAlias = getImportChanges(name.toString(), resource, scope, candidate, filter);
+				if (nameAndAlias != null) {
+					ImportChanges importChanges = importRewriter.create("\n", resource);
+					importChanges.addImport(nameAndAlias);
+					Collection<ReplaceRegion> regions = importChanges.toReplaceRegions();
+					if (regions != null && !regions.isEmpty()) {
+						result.getTextReplacements().addAll(regions);
+					}
+					if (!Strings.isNullOrEmpty(nameAndAlias.alias)) {
+						result.setProposal(nameAndAlias.alias);
+						result.setLabel(shortQName + " as " + nameAndAlias.alias);
+					}
 				}
 			} catch (ValueConverterException e) {
 				// text does not match the concrete syntax
@@ -315,7 +323,7 @@ public class ImportsAwareReferenceProposalCreator {
 		return candidate;
 	}
 
-	private Collection<ReplaceRegion> getImportChanges(String syntacticReplacementString, Resource resource,
+	private NameAndAlias getImportChanges(String syntacticReplacementString, Resource resource,
 			IScope scope, IEObjectDescription candidate, Predicate<IEObjectDescription> filter) {
 
 		// does it even happen? check logs if first and/or second check passes
@@ -325,7 +333,7 @@ public class ImportsAwareReferenceProposalCreator {
 		if (!syntacticReplacementString.equals(actualSyntacticReplacementString)) {
 			QualifiedName shortQualifiedName = applyValueConverter(actualSyntacticReplacementString);
 			if (shortQualifiedName.getSegmentCount() == 1) {
-				return Collections.emptyList();
+				return null;
 			}
 		}
 
@@ -333,20 +341,20 @@ public class ImportsAwareReferenceProposalCreator {
 		QualifiedName originalQualifiedName = candidate.getQualifiedName();
 
 		if (qualifiedName == null) {
-			return Collections.emptyList();
+			return null;
 		}
 
 		// we could create an import statement if there is no conflict
 		if (qualifiedName.getSegmentCount() == 1) {
 			// type name is a simple name - no need to hassle with imports
-			return Collections.emptyList();
+			return null;
 		}
 
 		// Globally available elements should not generate imports
 		if (qualifiedName.getSegmentCount() == 2
 				&& N4TSQualifiedNameProvider.GLOBAL_NAMESPACE_SEGMENT.equals(qualifiedName.getFirstSegment())) {
 			// type name is a simple name from global Namespace - no need to hassle with imports
-			return Collections.emptyList();
+			return null;
 		}
 
 		String alias = null;
@@ -355,18 +363,18 @@ public class ImportsAwareReferenceProposalCreator {
 
 		// element is already imported via namespace
 		if (descriptionFullQN instanceof PlainAccessOfNamespacedImportDescription) {
-			return Collections.emptyList();
+			return null;
 		}
 
 		// element is already imported via an alias
 		if (descriptionFullQN instanceof PlainAccessOfAliasedImportDescription) {
-			return Collections.emptyList();
+			return null;
 		}
 
 		if (descriptionFullQN != null) {
 			// accessing default export via already imported namespace
 			if (descriptionFullQN.getEObjectOrProxy() instanceof ModuleNamespaceVirtualType) {
-				return Collections.emptyList();
+				return null;
 			}
 
 			// the simple name is already reachable, i.e. already in use - another import is present
@@ -374,10 +382,7 @@ public class ImportsAwareReferenceProposalCreator {
 			alias = "Alias" + UtilN4.toUpperCaseFirst(shortQName);
 		}
 
-		ImportChanges importChanges = importRewriter.create("\n", resource);
-		importChanges.addImport(qualifiedName, alias);
-		Collection<ReplaceRegion> regions = importChanges.toReplaceRegions();
-		return regions;
+		return new NameAndAlias(qualifiedName, alias);
 	}
 
 	/** In case of main module, adjust the qualified name, e.g. index.Element -> react.Element */
