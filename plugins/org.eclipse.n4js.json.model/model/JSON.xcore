@@ -24,6 +24,9 @@
 
 package org.eclipse.n4js.json.JSON
 
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.common.util.ECollections
+
 class JSONDocument {
 	/**
 	 * The content of this JSON document.
@@ -38,7 +41,26 @@ class JSONDocument {
 /**
  * Common supertype to all values that may exist in JSON. 
  */
-abstract class JSONValue {}
+abstract class JSONValue {
+	/**
+	 * Returns {@code true} iff the given {@link JSONValue} may contain children (e.g. object, array) and does not just
+	 * represent a primitive value (e.g. string, boolean).
+	 */
+	op boolean isContainer() {
+		return false
+	}
+	
+	/**
+	 * Returns the children of this value.
+	 *
+	 * Returns an empty list for non-container {@link JSONValue}s.
+	 *
+	 * @See {@link #isContainer(JSONValue)}
+	 */
+	op EObject[] getChildren() {
+		return ECollections.emptyEList
+	}
+}
 
 /**
  * Represents a JSON object.
@@ -52,6 +74,17 @@ class JSONObject extends JSONValue {
 	op String toString() {
 		return "{\n" + this.nameValuePairs.map[e | e.toString()].join(",\n") + "\n}";
 	}
+	
+	/**
+	 * Returns {@code true}.
+	 */
+	op boolean isContainer() {
+		return true
+	}
+	
+	op EObject[] getChildren() {
+		return ECollections.unmodifiableEList(nameValuePairs);
+	}
 }
 
 /**
@@ -62,6 +95,17 @@ class JSONArray extends JSONValue {
 	
 	op String toString() {
 		return "[\n" + this.elements.map[e | e.toString()].join(",\n") + "\n]";
+	}
+	
+	/**
+	 * Returns {@code true}.
+	 */
+	op boolean isContainer() {
+		return true
+	}
+	
+	op EObject[] getChildren() {
+		return ECollections.unmodifiableEList(elements);
 	}
 }
 

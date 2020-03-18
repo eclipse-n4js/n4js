@@ -18,25 +18,25 @@
 class ~Test {}
 
 let obj: Test = {
-	// XPECT warnings --> "b is not defined in Test." at "b"
+	// XPECT warnings --> "b is not defined in Test; it will not be accessible from obj." at "b"
     b: "xxx"
 }
 obj;
 
 let arrN1: Test[] = [{
-	// XPECT warnings --> "b is not defined in Test." at "b"
+	// XPECT warnings --> "b is not defined in Test; it will not be accessible from arrN1." at "b"
     b: "yyy1"
 },{
-	// XPECT warnings --> "b is not defined in Test." at "b"
+	// XPECT warnings --> "b is not defined in Test; it will not be accessible from arrN1." at "b"
     b: "yyy2"
 }]
 arrN1;
 
 let arrN2: Test[][] = [[{
-	// XPECT warnings --> "b is not defined in Test." at "b"
+	// XPECT warnings --> "b is not defined in Test; it will not be accessible from arrN2." at "b"
     b: "zzz1"
 },{
-	// XPECT warnings --> "b is not defined in Test." at "b"
+	// XPECT warnings --> "b is not defined in Test; it will not be accessible from arrN2." at "b"
     b: "zzz2"
 }]]
 arrN2;

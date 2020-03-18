@@ -37,10 +37,6 @@ public interface RegularExpressionFlags extends EObject
    * Returns the value of the '<em><b>Flags</b></em>' attribute list.
    * The list contents are of type {@link java.lang.String}.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Flags</em>' attribute list isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Flags</em>' attribute list.
    * @see org.eclipse.n4js.regex.regularExpression.RegularExpressionPackage#getRegularExpressionFlags_Flags()

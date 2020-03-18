@@ -33,13 +33,18 @@ public class N4JSWorkspaceManager extends XWorkspaceManager {
 	@Override
 	public XProjectManager getProjectManager(URI uri) {
 		if (N4Scheme.isN4Scheme(uri)) {
-			Collection<XProjectManager> allProjectManagers = getProjectManagers();
-			if (!allProjectManagers.isEmpty()) {
-				XProjectManager anyProjectManager = allProjectManagers.iterator().next();
-				return anyProjectManager;
-			}
+			return anyProject();
 		}
 		return super.getProjectManager(uri);
+	}
+
+	private XProjectManager anyProject() {
+		Collection<XProjectManager> allProjectManagers = getProjectManagers();
+		if (!allProjectManagers.isEmpty()) {
+			XProjectManager anyProjectManager = allProjectManagers.iterator().next();
+			return anyProjectManager;
+		}
+		return null;
 	}
 
 }

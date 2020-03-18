@@ -68,6 +68,7 @@ export public class SimpleAsync {
     @Description("synchronous non assert exception")
     public test3() {
         const breakpointHere = 4;
+        breakpointHere;
     }
     @Test
     @Description("asynchronous non assert exception")

@@ -13,6 +13,9 @@ package org.eclipse.n4js.tests.scoping
 import com.google.common.base.Splitter
 import com.google.inject.Inject
 import com.google.inject.Provider
+import java.util.Set
+import org.eclipse.emf.common.util.URI
+import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.ExpressionStatement
 import org.eclipse.n4js.n4JS.FunctionDeclaration
@@ -26,7 +29,7 @@ import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableStatement
-import org.eclipse.n4js.resource.UserdataMapper
+import org.eclipse.n4js.resource.UserDataMapper
 import org.eclipse.n4js.scoping.N4JSScopeProvider
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.types.IdentifiableElement
@@ -35,22 +38,19 @@ import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.utils.Log
-import java.util.Set
-import org.eclipse.emf.common.util.URI
-import org.eclipse.emf.ecore.util.EcoreUtil
-import org.eclipse.xtext.testing.InjectWith
-import org.eclipse.xtext.testing.XtextRunner
-import org.eclipse.xtext.testing.util.ParseHelper
+import org.eclipse.n4js.utils.URIUtils
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.resource.XtextResourceSet
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider
 import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.scoping.IScopeProvider
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
+import org.eclipse.xtext.testing.util.ParseHelper
 import org.junit.Test
 import org.junit.runner.RunWith
 
 import static org.junit.Assert.*
-import org.eclipse.n4js.utils.URIUtils
 
 /**
  * @see N4JSScopeProvider
@@ -222,12 +222,12 @@ class N4JSScopingTest {
 
 		val eods = resourceDescriptions.allResourceDescriptions.head.exportedObjects
 		val scriptEod = eods.head;
-		var serializedScript = scriptEod.getUserData(UserdataMapper.USERDATA_KEY_SERIALIZED_SCRIPT)
+		var serializedScript = scriptEod.getUserData(UserDataMapper.USER_DATA_KEY_SERIALIZED_SCRIPT)
 		assertNotNull("No serialized script in user data", serializedScript);
 
 		val typeEod = eods.tail.head;
 		assertEquals("A.A", typeEod.qualifiedName.toString);
-		serializedScript = typeEod.getUserData(UserdataMapper.USERDATA_KEY_SERIALIZED_SCRIPT)
+		serializedScript = typeEod.getUserData(UserDataMapper.USER_DATA_KEY_SERIALIZED_SCRIPT)
 		assertNull("No serialized script in user data", serializedScript);
 	}
 
@@ -388,7 +388,7 @@ class N4JSScopingTest {
 		assertEquals("Stored user data",
 			'''
 				<?xml version="1.0" encoding="ASCII"?>
-				<types:TModule xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typeRefs="http://www.eclipse.org/n4js/ts/TypeRefs" xmlns:types="http://www.eclipse.org/n4js/ts/Types" qualifiedName="org/eclipse/n4js/tests/scoping/Supplier" projectName="org.eclipse.n4js.lang.tests" vendorID="org.eclipse.n4js">
+				<types:TModule xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typeRefs="http://www.eclipse.org/n4js/ts/TypeRefs" xmlns:types="http://www.eclipse.org/n4js/ts/Types" simpleName="Supplier" qualifiedName="org/eclipse/n4js/tests/scoping/Supplier" projectName="org.eclipse.n4js.lang.tests" vendorID="org.eclipse.n4js">
 				  <astElement href="#/0"/>
 				  <topLevelTypes xsi:type="types:TClass" name="Supplier" exportedName="Supplier">
 				    <ownedMembers xsi:type="types:TMethod" name="foo" hasNoBody="true" declaredMemberAccessModifier="public">
@@ -399,13 +399,13 @@ class N4JSScopingTest {
 				  </topLevelTypes>
 				</types:TModule>
 			'''.toString,
-			UserdataMapper.getDeserializedModuleFromDescriptionAsString(eoDescs.head, supplierResource.URI));
+			UserDataMapper.getDeserializedModuleFromDescriptionAsString(eoDescs.head, supplierResource.URI));
 
 		assertEquals("Separately stored md5 hash matches expectations",
 			"5ef0928a4a8827880a4bdb03ff26f5fc", 
-			eoDescs.head.getUserData(UserdataMapper.USERDATA_KEY_AST_MD5));
+			eoDescs.head.getUserData(UserDataMapper.USER_DATA_KEY_AST_MD5));
 
-		val module = UserdataMapper.getDeserializedModuleFromDescription(eoDescs.head, supplierResource.URI);
+		val module = UserDataMapper.getDeserializedModuleFromDescription(eoDescs.head, supplierResource.URI);
 		assertEquals("During deserialization of a TModule the astMD5 hash is recovered from the separate user data slot",
 			"5ef0928a4a8827880a4bdb03ff26f5fc",
 			module.astMD5)

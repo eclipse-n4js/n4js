@@ -51,6 +51,9 @@ public class N4JSImportedNamespaceAwareLocalScopeProvider extends ImportedNamesp
 
 	@Override
 	protected IScope getResourceScope(Resource res, EReference reference) {
+		if (res == null) {
+			return IScope.NULLSCOPE;
+		}
 		EObject context = res.getContents().get(0);
 
 		// ||-- changed super-impl here:

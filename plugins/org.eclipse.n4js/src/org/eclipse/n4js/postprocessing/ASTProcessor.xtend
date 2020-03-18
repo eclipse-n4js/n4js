@@ -27,12 +27,12 @@ import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor
 import org.eclipse.n4js.n4JS.IdentifierRef
+import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.N4JSPackage
-import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.PropertyGetterDeclaration
 import org.eclipse.n4js.n4JS.PropertyMethodDeclaration
@@ -48,11 +48,9 @@ import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.ts.types.TMigratable
 import org.eclipse.n4js.ts.types.TMigration
 import org.eclipse.n4js.ts.types.TypableElement
-import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.N4JSLanguageUtils
-import org.eclipse.n4js.utils.languages.N4LanguageUtils
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.xtext.util.CancelIndicator
@@ -83,8 +81,6 @@ import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
 public class ASTProcessor extends AbstractProcessor {
 
 	@Inject
-	private N4JSTypeSystem ts;
-	@Inject
 	private ComputedNameProcessor computedNameProcessor;
 	@Inject
 	private TypeProcessor typeProcessor;
@@ -92,6 +88,8 @@ public class ASTProcessor extends AbstractProcessor {
 	private TypeDeferredProcessor typeDeferredProcessor;
 	@Inject
 	private CompileTimeExpressionProcessor compileTimeExpressionProcessor;
+	@Inject
+	private RuntimeDependencyProcessor runtimeDependencyProcessor;
 	@Inject
 	private JavaScriptVariantHelper variantHelper;
 
@@ -135,7 +133,6 @@ public class ASTProcessor extends AbstractProcessor {
 			log(0, "### done: " + resource.URI);
 		}
 	}
-	
 
 	/**
 	 * First method to actually perform processing of the AST. This method defines the various processing phases.
@@ -176,6 +173,8 @@ public class ASTProcessor extends AbstractProcessor {
 				}
 			}
 		}
+		// phase 4: store runtime and load-time dependencies in TModule
+		runtimeDependencyProcessor.storeDirectRuntimeDependenciesInTModule(script, cache);
 	}
 
 	/**
@@ -408,18 +407,25 @@ public class ASTProcessor extends AbstractProcessor {
 
 		typeProcessor.typeNode(G, node, cache, indentLevel);
 
-		// references to other files via import statements:
-		if (node instanceof NamedImportSpecifier) {
-			val elem = node.importedElement;
-			if(elem!==null) {
-				// make sure to use the correct type system for the other file (using our type system as a fall back)
-				val tsCorrect = N4LanguageUtils.getServiceForContext(elem, N4JSTypeSystem).orElse(ts);
-				// we're not interested in the type here, but invoking the type system will let us reuse
-				// all the logic from method TypeProcessor#getType() for handling references to other resources
-				tsCorrect.type(G, elem);
+		// references to other files via import statements
+		// NOTE: for all imports except bare imports, the following is unnecessary, because post-processing of the target
+		// resource would be triggered automatically as soon as type inference is performed on an element imported from the
+		// target resource. However, by doing this eagerly up front, the overall flow of post-processing across multiple
+		// resources is a bit easier to understand/predict. This does not lead to any additional processing being done (it's
+		// just done a bit earlier), except in case of unused imports.
+		if (node instanceof ImportDeclaration) {
+			val targetModule = node.module;
+			if (targetModule !== null && !targetModule.eIsProxy) {
+				val targetResource = targetModule.eResource;
+				if (targetResource instanceof N4JSResource) {
+					// trigger post-processing of target resource
+					targetResource.performPostProcessing(G.cancelIndicator);
+				}
 			}
 		}
-		
+
+		runtimeDependencyProcessor.recordRuntimeReferencesInCache(node, cache);
+
 		// register migrations with their source types
 		if (node instanceof FunctionDeclaration && 
 			AnnotationDefinition.MIGRATION.hasAnnotation(node as FunctionDeclaration)) {
@@ -520,7 +526,7 @@ public class ASTProcessor extends AbstractProcessor {
 			}
 		}
 	}
-	
+
 	/**
 	 * Registers the given {@link TMigration} with the corresponding
 	 * principal argument.
@@ -539,7 +545,7 @@ public class ASTProcessor extends AbstractProcessor {
 			registerMigrationWithType(migration, migration.principalArgumentType);
 		}
 	}
-	
+
 	def private void registerMigrationWithType(TMigration migration, TMigratable migratable) {
 		EcoreUtilN4.doWithDeliver(false, [
 					migratable.migrations += migration 

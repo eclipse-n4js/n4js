@@ -17,8 +17,10 @@ import java.util.LinkedList
 import java.util.List
 import java.util.TreeSet
 import org.eclipse.emf.common.util.EList
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.Argument
+import org.eclipse.n4js.n4JS.ArrayElement
 import org.eclipse.n4js.n4JS.ArrayLiteral
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.AssignmentOperator
@@ -46,7 +48,6 @@ import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.extensions.ExpressionExtensions
 import org.eclipse.n4js.scoping.N4JSScopeProvider
 import org.eclipse.n4js.scoping.members.TypingStrategyFilter
-import org.eclipse.n4js.scoping.utils.AbstractDescriptionWithError
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
@@ -87,6 +88,7 @@ import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
+import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
@@ -308,7 +310,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 					val hiddenTypeDscr = scope.getSingleElement(QualifiedName.create(it.name));
 					val hiddenType = hiddenTypeDscr?.getEObjectOrProxy;
 					if (hiddenType instanceof Type &&
-						!(AbstractDescriptionWithError.isErrorDescription_XTEND_MVN_BUG_HACK(hiddenTypeDscr))) {
+						!(IEObjectDescriptionWithError.isErrorDescription(hiddenTypeDscr))) {
 						val message = getMessageForVIS_TYPE_PARAMETER_HIDES_TYPE(name, hiddenType.keyword);
 						addIssue(message, it, VIS_TYPE_PARAMETER_HIDES_TYPE);
 					}
@@ -517,17 +519,41 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 			if (structuralMembers.isEmpty && type == RuleEnvironmentExtensions.objectType(G)) {
 				return;
 			}
-
+			
+			
+			val isSpecArgument = isSpecArgument(objectLiteral);
 			val ctor = containerTypesHelper.fromContext(objectLiteral).findConstructor(type as ContainerType<?>);
 			val strategyFilter = new TypingStrategyFilter(typingStrategy,
 				typingStrategy === TypingStrategy.STRUCTURAL_WRITE_ONLY_FIELDS,
 				isSpecArgumentToSpecCtor(objectLiteral, ctor));
+			val strategyFilterIncludeNotAccessible = new TypingStrategyFilter(typingStrategy,
+				typingStrategy === TypingStrategy.STRUCTURAL_WRITE_ONLY_FIELDS,
+				isSpecArgumentToSpecCtor(objectLiteral, ctor), true);
 			val expectedMembers = containerTypesHelper.fromContext(objectLiteral).allMembers(
-				type as ContainerType<?>).filter[member|strategyFilter.apply(member)].map[member|member.name].
-				toSet();
+				type as ContainerType<?>).filter[member|strategyFilter.apply(member)].map[member|member.name].toSet();
+			val expectedMembersPlusNotAccessibles = containerTypesHelper.fromContext(objectLiteral).allMembers(
+				type as ContainerType<?>).filter[member|strategyFilterIncludeNotAccessible.apply(member)].map[member|member.name].toSet();
 
 			// These are available via the 'with' keyword add them to the accepted ones
 			typeRef.structuralMembers.forEach[member|expectedMembers.add(member.name)];
+
+			var EObject container = objectLiteral;
+			while (container instanceof ObjectLiteral || container instanceof ArrayLiteral || container instanceof ArrayElement) {
+				container = container.eContainer;
+			}
+			val lhsName = switch (container) {
+				VariableDeclaration: container.name
+				AssignmentExpression: {
+					val lhs = container.lhs;
+					switch (lhs) {
+						IdentifierRef: lhs.idAsText
+						ParameterizedPropertyAccessExpression: lhs.propertyAsText
+						default: "references of type " + typeRef.declaredType.name
+					}
+				}
+				Argument: "the receiving parameter"
+				default: "references of type " + typeRef.declaredType.name
+			};
 
 			val inputMembers = (objectLiteral.definedType as ContainerType<?>).ownedMembers;
 			for (property : inputMembers) {
@@ -536,14 +562,40 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 					if (astElement instanceof PropertyNameValuePair) {
 						astElement = astElement.declaredName;
 					}
-					val message = getMessageForCLF_SPEC_SUPERFLUOUS_PROPERTIES(property.name,
-						typeRef.typeRefAsString);
-					addIssue(message, astElement, CLF_SPEC_SUPERFLUOUS_PROPERTIES);
+					if (isSpecArgument) {
+						val message = getMessageForCLF_SPEC_SUPERFLUOUS_PROPERTIES(property.name, typeRef.typeRefAsString);
+						addIssue(message, astElement, CLF_SPEC_SUPERFLUOUS_PROPERTIES);
+					} else if (!expectedMembersPlusNotAccessibles.contains(property.name)) {
+						val message = getMessageForCLF_SUPERFLUOUS_PROPERTIES(property.name, typeRef.typeRefAsString, lhsName);
+						addIssue(message, astElement, CLF_SUPERFLUOUS_PROPERTIES);
+					}
 				}
 			};
 		}
 	}
 
+
+	def private boolean isSpecArgument(ObjectLiteral objectLiteral) {
+		val usedInConstructor = objectLiteral.eContainer?.eContainer instanceof NewExpression;
+		if (usedInConstructor) {
+			val newExpression = objectLiteral.eContainer?.eContainer as NewExpression;
+			val newTypeRef = ts.tau(newExpression); // no context, we only need the number of fpars
+			var newType = newTypeRef.declaredType;
+			if (newType===null && newTypeRef instanceof BoundThisTypeRef) {
+				newType = (newTypeRef as BoundThisTypeRef).actualThisTypeRef?.declaredType;
+			}
+			if (newType instanceof ContainerType<?>) {
+				val newCtor = containerTypesHelper.fromContext(newExpression).findConstructor(newType);
+				val pos = newExpression.arguments.indexOf(objectLiteral.eContainer);
+				if (newCtor !== null && pos >= 0) {
+					val formalParam = newCtor.getFparForArgIdx(pos);
+					val hasSpecAnnotation = formalParam.annotations.exists[an|an.name.equals("Spec")];
+					return hasSpecAnnotation;
+				}
+			}
+		}
+		return false;
+	}
 
 
 	def private void internalCheckUseOfUndefinedExpression(RuleEnvironment G, Expression expression,

@@ -29,8 +29,8 @@ public class Project {
 	 * Represents a source folder that has a name and contains modules.
 	 */
 	public static class SourceFolder {
-		private String name;
-		private List<Module> modules
+		final String name;
+		final List<Module> modules = newLinkedList();
 
 		/**
 		 * Creates a new instance with the given parameters.
@@ -50,10 +50,17 @@ public class Project {
 		 * @return this source folder
 		 */
 		public def addModule(Module module) {
-			if (modules === null)
-				modules = newLinkedList();
 			modules.add(Objects.requireNonNull(module));
 			return this;
+		}
+
+		/**
+		 * Returns a list of all modules of this source folder.
+		 *
+		 * @return list of all modules of this source folder
+		 */
+		public def List<Module> getModules() {
+			return modules;
 		}
 
 		/**
@@ -80,14 +87,22 @@ public class Project {
 		}
 	}
 
-	String projectName;
-	String vendorId;
-	String vendorName;
-	ProjectType projectType = ProjectType.LIBRARY;
+	final String projectName;
+	final String vendorId;
+	final String vendorName;
+	final List<SourceFolder> sourceFolders = newLinkedList();
+	final List<Project> projectDependencies = newLinkedList();
+	ProjectType projectType;
 	String projectVersion = "1.0.0";
 	String outputFolder = "src-gen";
-	List<SourceFolder> sourceFolders;
-	List<Project> projectDependencies;
+
+	/**
+	 * Same as {@link #Project(String, String, String, ProjectType)}, but with
+	 * a default project type of {@link ProjectType#LIBRARY LIBRARY}.
+	 */
+	public new(String projectName, String vendorId, String vendorName) {
+		this(projectName, vendorId, vendorName, ProjectType.LIBRARY);
+	}
 
 	/**
 	 * Creates a new instance with the given parameters.
@@ -95,11 +110,13 @@ public class Project {
 	 * @param projectName the project ID
 	 * @param vendorId the vendor ID
 	 * @param vendorName the vendor name
+	 * @param projectType the project type
 	 */
-	public new(String projectName, String vendorId, String vendorName) {
+	public new(String projectName, String vendorId, String vendorName, ProjectType projectType) {
 		this.projectName = Objects.requireNonNull(projectName);
 		this.vendorId = Objects.requireNonNull(vendorId);
 		this.vendorName = Objects.requireNonNull(vendorName);
+		this.projectType = Objects.requireNonNull(projectType);
 	}
 
 	/**
@@ -142,6 +159,15 @@ public class Project {
 	}
 
 	/**
+	 * Returns the output folder.
+	 * 
+	 * @return the output folder.
+	 */
+	public def String getOutputFolder() {
+		return outputFolder;
+	}
+
+	/**
 	 * Creates a source folder with the given name to this project.
 	 *
 	 * @param name the name of the source folder to add
@@ -161,10 +187,18 @@ public class Project {
 	 * @param sourceFolder the source folder to add
 	 */
 	public def Project addSourceFolder(SourceFolder sourceFolder) {
-		if (sourceFolders === null)
-			sourceFolders = newLinkedList();
 		sourceFolders.add(Objects.requireNonNull(sourceFolder));
 		return this;
+	}
+
+
+	/**
+	 * Returns a list of all source folders of this project.
+	 *
+	 * @return list of all source folders of this project.
+	 */
+	public def List<SourceFolder> getSourceFolders() {
+		return sourceFolders;
 	}
 
 	/**
@@ -173,8 +207,6 @@ public class Project {
 	 * @param projectDependency the project dependency to add
 	 */
 	public def Project addProjectDependency(Project projectDependency) {
-		if (projectDependencies === null)
-			projectDependencies = newLinkedList();
 		projectDependencies.add(Objects.requireNonNull(projectDependency));
 		return this;
 	}
@@ -182,7 +214,7 @@ public class Project {
 	/**
 	 * Generates the {@link IN4JSProject#PACKAGE_JSON} for this project.
 	 */
-	public def generate() '''
+	public def String generate() '''
 		{
 			"name": "«projectName»",
 			"version": "«projectVersion»",
@@ -204,9 +236,7 @@ public class Project {
 				«ENDIF»
 			},
 			"dependencies": {
-					"n4js-runtime": "*"«
-					IF !projectDependencies.nullOrEmpty
-					»,
+					«IF !projectDependencies.nullOrEmpty»
 					«FOR dep : projectDependencies SEPARATOR ','»
 						"«dep.projectName»": "*"
 					«ENDFOR»
@@ -215,7 +245,7 @@ public class Project {
 		}
 	'''
 
-	private static def projectTypeToString(ProjectType type) {
+	private static def String projectTypeToString(ProjectType type) {
 		return switch (type) {
 			case API: "api"
 			case APPLICATION: "application"
@@ -237,14 +267,14 @@ public class Project {
 	 * the given parent directory. If there already exists a file or directory with that name
 	 * within the given parent directory, that file or directory will be (recursively) deleted.
 	 *
-	 * Afterward, the manifest file and the source folders are created within the newly created
+	 * Afterward, the package.json file and the source folders are created within the newly created
 	 * project directory.
 	 *
 	 * @param parentDirectoryPath the path to the parent directory
 	 *
 	 * @return the project directory
 	 */
-	public def create(Path parentDirectoryPath) {
+	public def File create(Path parentDirectoryPath) {
 		var File parentDirectory = Objects.requireNonNull(parentDirectoryPath).toFile
 		if (!parentDirectory.exists)
 			throw new IOException("'" + parentDirectory + "' does not exist")
@@ -262,7 +292,7 @@ public class Project {
 		return projectDirectory;
 	}
 
-	private def createProjectDescriptionFile(File parentDirectory) {
+	private def void createProjectDescriptionFile(File parentDirectory) {
 		val File filePath = new File(parentDirectory, IN4JSProject.PACKAGE_JSON);
 		var FileWriter out = null;
 		try {
@@ -274,7 +304,7 @@ public class Project {
 		}
 	}
 
-	private def createModules(File parentDirectory) {
+	private def void createModules(File parentDirectory) {
 		for (sourceFolder: sourceFolders)
 			sourceFolder.create(parentDirectory)
 	}

@@ -712,6 +712,111 @@ module under the given alias (which is similar to the original name if no alias 
 The name of the module is its project’s source folder’s relative path without any extension, see <<_qualified-names>> for details.
 
 
+=== Cyclic Dependencies between Modules
+
+The module system of ES6 does not support certain cases of cyclic dependencies between modules,
+causing a `ReferenceError` to be thrown at runtime when modules are being loaded. N4JS includes
+validations to disallow code that would produce such behavior. This sections details these
+validations.
+
+
+==== Motivation
+
+As an example for a cyclic dependency between modules that fails at runtime, consider the following
+two plain Javascript files:
+
+[source,js]
+----
+// A.js
+import {value} from "./B"
+
+export class A {}
+
+export function foo() {
+	console.log(value);
+}
+----
+
+[source,n4js]
+----
+// B.js
+import {A} from "./A"
+
+export class B extends A {}
+
+export const value = 'value from A';
+----
+
+If a third file imports `A.js` before `B.js` (or only imports `A.js`), then this would throw the
+following exception at runtime:
+
+----
+export class B extends A {}
+                       ^
+ReferenceError: Cannot access 'A' before initialization
+----
+
+This is caused by the following load-time behavior of Javascript: when module `A` is loaded, the import
+to `B` is encountered causing `B` to be loaded before the rest of `A` (below the import) is being processed; therefore, when the declaration of class `B` is reached, the symbol `A` has not been initialized yet.
+
+In contrast, if the third file imports `B.js` before `A.js` (or only imports `B.js`), then everythings
+works fine at runtime.
+
+
+==== Validation
+
+A dependency between two N4JS modules is called *pure compile-time dependency* if exists only due to type references or
+identifier-references to elements that do not have a representation at runtime (e.g. `@StringBased` enums). Because such
+references are removed by the transpiler (including any corresponding import), such a pure compile-time dependency does
+not apply to the output code and has no effect at runtime. If a dependency between two N4JS modules isn't a pure
+compile-time dependency, then we call it a *runtime dependency*, to highlight the fact that this dependency will
+actually be in effect in the output code and at runtime. A runtime dependency that is caused by references of which
+one or more are located on in the module's top-level code (e.g. directly on top level, in the initializer expression
+of a top-level variable or a static field, in the extends or implements clause of a classifier declaration) is called
+a *load-time dependency*, because it is required when the module is being loaded.
+
+In the following, we entirely disregard pure compile-time dependencies. We only care about runtime dependencies (of
+which some may be load-time dependencies).
+
+Given an N4JS project $P$ and the graph defined by $P$'s modules as vertices and the direct runtime dependencies
+between those modules as edges (i.e. disregarding dependencies to modules outside the project), we call each
+strongly connected component of modules in this graph with a size greater 1 a *runtime cycle cluster* of $P$.
+In such a runtime cycle cluster, each two modules are in a cyclic runtime dependency with each other. Note that
+it follows from this definition that all modules of a runtime cycle cluster are contained in the same project.
+
+To disallow code that may cause the aforementioned errors at runtime, we introduce the following constraints:
+
+.Illegal Load-Time Dependencies
+[req,id=GH-1678,version=1]
+--
+1. It is an error to form cycles of load-time dependencies between modules.
+2. Within a runtime cycle cluster $C$, no two modules in $C$ may have a direct load-time dependency to the
+   same target module in $C$.
+3. Given
+   * a project $P$ with a runtime cycle cluster $C$,
+   * two modules $M_T$, $M_S$ that both lie within $C$,
+   * a direct load-time dependency from $M_S$ to $M_T$, and
+   * a third module $M$ from outside of $C$ (note: $M$ may or may not be contained in $P$),
+
++
+then it is an error to import $M_T$ in $M$ unless this import is preceded by an import of another
+module $M_H$ that lies within $C$ and is not the target of a direct load-time dependency from any
+module within $C$.
+
+4. Given a module $M$ that lies within a runtime cycle cluster $C$, it is an error to have a reference
+   in $M$'s top-level code to any named element declared within $C$ (i.e. declared in another module
+   in $C$ or in $M$ itself), except in the extends/implements clause of a classifier declaration.
+--
+
+Note that in some cases the above constraints disallow code that would not produce a `ReferenceError` at
+runtime.
+
+The fourth constraint above is required to ensure that only top-level code can produce load-time
+dependencies; if invoking functions were allowed on top level, for example, the bodies of all functions
+could potentially introduce additional load-time dependencies.
+
+
+
 
 [.language-n4js]
 == API and Implementation Component

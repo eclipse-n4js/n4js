@@ -119,9 +119,9 @@ public class RegularExpressionAdapterFactory extends AdapterFactoryImpl
         return createWordBoundaryAdapter();
       }
       @Override
-      public Adapter caseLookAhead(LookAhead object)
+      public Adapter caseAbstractLookAhead(AbstractLookAhead object)
       {
-        return createLookAheadAdapter();
+        return createAbstractLookAheadAdapter();
       }
       @Override
       public Adapter casePatternCharacter(PatternCharacter object)
@@ -232,6 +232,16 @@ public class RegularExpressionAdapterFactory extends AdapterFactoryImpl
       public Adapter caseSequence(Sequence object)
       {
         return createSequenceAdapter();
+      }
+      @Override
+      public Adapter caseLookAhead(LookAhead object)
+      {
+        return createLookAheadAdapter();
+      }
+      @Override
+      public Adapter caseLookBehind(LookBehind object)
+      {
+        return createLookBehindAdapter();
       }
       @Override
       public Adapter caseCharacterClassRange(CharacterClassRange object)
@@ -366,16 +376,16 @@ public class RegularExpressionAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link org.eclipse.n4js.regex.regularExpression.LookAhead <em>Look Ahead</em>}'.
+   * Creates a new adapter for an object of class '{@link org.eclipse.n4js.regex.regularExpression.AbstractLookAhead <em>Abstract Look Ahead</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
    * it's useful to ignore a case when inheritance will catch all the cases anyway.
    * <!-- end-user-doc -->
    * @return the new adapter.
-   * @see org.eclipse.n4js.regex.regularExpression.LookAhead
+   * @see org.eclipse.n4js.regex.regularExpression.AbstractLookAhead
    * @generated
    */
-  public Adapter createLookAheadAdapter()
+  public Adapter createAbstractLookAheadAdapter()
   {
     return null;
   }
@@ -706,6 +716,36 @@ public class RegularExpressionAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createSequenceAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.eclipse.n4js.regex.regularExpression.LookAhead <em>Look Ahead</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.eclipse.n4js.regex.regularExpression.LookAhead
+   * @generated
+   */
+  public Adapter createLookAheadAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.eclipse.n4js.regex.regularExpression.LookBehind <em>Look Behind</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.eclipse.n4js.regex.regularExpression.LookBehind
+   * @generated
+   */
+  public Adapter createLookBehindAdapter()
   {
     return null;
   }

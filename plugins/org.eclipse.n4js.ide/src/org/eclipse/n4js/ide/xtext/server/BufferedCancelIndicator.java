@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.ide.xtext.server;
 
-import java.util.concurrent.TimeUnit;
+import java.time.Duration;
 
 import org.eclipse.xtext.util.CancelIndicator;
 
@@ -25,17 +25,17 @@ public class BufferedCancelIndicator implements CancelIndicator {
 
 	private final CancelIndicator delegate;
 
-	private final long ONE_SECOND = TimeUnit.SECONDS.toNanos(1);
-
 	private final Ticker clock;
+
+	private final long bufferNanos;
 
 	private long canceledSince;
 
 	/**
 	 * Buffer the cancellation attempts that are issued by the given delegate.
 	 */
-	public BufferedCancelIndicator(CancelIndicator delegate) {
-		this(delegate, Ticker.systemTicker());
+	public BufferedCancelIndicator(CancelIndicator delegate, Duration buffer) {
+		this(delegate, buffer, Ticker.systemTicker());
 	}
 
 	/**
@@ -44,7 +44,8 @@ public class BufferedCancelIndicator implements CancelIndicator {
 	 *
 	 * This is public for testing purpose.
 	 */
-	public BufferedCancelIndicator(CancelIndicator delegate, Ticker clock) {
+	public BufferedCancelIndicator(CancelIndicator delegate, Duration buffer, Ticker clock) {
+		this.bufferNanos = buffer.toNanos();
 		this.delegate = Preconditions.checkNotNull(delegate);
 		this.clock = Preconditions.checkNotNull(clock);
 	}
@@ -55,6 +56,6 @@ public class BufferedCancelIndicator implements CancelIndicator {
 			this.canceledSince = clock.read();
 			return false;
 		}
-		return this.canceledSince != 0 && clock.read() > this.canceledSince + ONE_SECOND;
+		return this.canceledSince != 0 && clock.read() > this.canceledSince + bufferNanos;
 	}
 }

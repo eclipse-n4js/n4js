@@ -49,7 +49,7 @@ class C {
 }
 
 new A({greet:'Hello'}).log();
-// XPECT warnings --> "n is not defined in ~i~this[A]." at "n"
+// XPECT warnings --> "n is not defined in ~i~this[A]; it will not have any effect in the spec constructor." at "n"
 new A({greet:'Hello', n: 42}).log();
 // XPECT nowarnings --> "n is given via the with keyword and assigned to the non-public field"
 new B({greet:'Hello', n: 42}).log();

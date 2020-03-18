@@ -10,14 +10,15 @@
  */
 package org.eclipse.n4js.parser;
 
+import org.eclipse.n4js.conversion.AbstractN4JSStringValueConverter;
+import org.eclipse.n4js.conversion.CompositeSyntaxErrorMessages;
+import org.eclipse.n4js.conversion.LegacyOctalIntValueConverter;
+import org.eclipse.n4js.conversion.N4JSStringValueConverter;
+import org.eclipse.n4js.conversion.N4JSValueConverterWithValueException;
+import org.eclipse.n4js.conversion.RegExLiteralConverter;
 import org.eclipse.xtext.conversion.ValueConverterException;
 import org.eclipse.xtext.nodemodel.SyntaxErrorMessage;
 import org.eclipse.xtext.parser.antlr.SyntaxErrorMessageProvider;
-
-import org.eclipse.n4js.conversion.AbstractN4JSStringValueConverter;
-import org.eclipse.n4js.conversion.N4JSStringValueConverter;
-import org.eclipse.n4js.conversion.LegacyOctalIntValueConverter;
-import org.eclipse.n4js.conversion.RegExLiteralConverter;
 
 /**
  * <p>
@@ -37,15 +38,38 @@ public class BadEscapementAwareMessageProvider extends SyntaxErrorMessageProvide
 		ValueConverterException cause = context.getValueConverterException();
 		if (cause instanceof N4JSStringValueConverter.BadEscapementException) {
 			if (((N4JSStringValueConverter.BadEscapementException) cause).isError())
-				return new SyntaxErrorMessage(context.getDefaultMessage(), AbstractN4JSStringValueConverter.ERROR_ISSUE_CODE);
-			return new SyntaxErrorMessage(context.getDefaultMessage(), AbstractN4JSStringValueConverter.WARN_ISSUE_CODE);
+				return new SyntaxErrorMessage(context.getDefaultMessage(),
+						AbstractN4JSStringValueConverter.ERROR_ISSUE_CODE);
+			return new SyntaxErrorMessage(context.getDefaultMessage(),
+					AbstractN4JSStringValueConverter.WARN_ISSUE_CODE);
 		}
 		if (cause instanceof LegacyOctalIntValueConverter.LeadingZerosException) {
 			return new SyntaxErrorMessage(context.getDefaultMessage(), LegacyOctalIntValueConverter.ISSUE_CODE);
 		}
-		if (cause instanceof RegExLiteralConverter.BogusRegExLiteralException) {
-			return new SyntaxErrorMessage(context.getDefaultMessage(), RegExLiteralConverter.ISSUE_CODE);
+		if (cause instanceof N4JSValueConverterWithValueException) {
+			return CompositeSyntaxErrorMessages.toSyntaxErrorMessage((N4JSValueConverterWithValueException) cause,
+					(vce) -> {
+						if (vce instanceof RegExLiteralConverter.BogusRegExLiteralException) {
+							return createRangedSyntaxErrorMessage(vce.getMessage(),
+									RegExLiteralConverter.ISSUE_CODE,
+									vce.getOffset(),
+									vce.getLength());
+						}
+						String issueCode = vce.getIssueCode();
+						if (vce.hasRange()) {
+							return createRangedSyntaxErrorMessage(vce.getMessage(), issueCode, vce.getOffset(),
+									vce.getLength());
+						}
+						return new SyntaxErrorMessage(vce.getMessage(), issueCode);
+					});
 		}
 		return super.getSyntaxErrorMessage(context);
+	}
+
+	private SyntaxErrorMessage createRangedSyntaxErrorMessage(String message, String issueCode,
+			int offset,
+			int length) {
+		String range = offset + ":" + length;
+		return new SyntaxErrorMessage(message, issueCode, new String[] { range });
 	}
 }

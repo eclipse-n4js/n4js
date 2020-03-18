@@ -41,10 +41,12 @@ import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.xtext.conversion.IValueConverter;
 import org.eclipse.xtext.conversion.IValueConverterService;
+import org.eclipse.xtext.conversion.ValueConverterException;
 import org.eclipse.xtext.ide.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ide.editor.contentassist.ContentAssistEntry;
 import org.eclipse.xtext.ide.editor.contentassist.IIdeContentProposalAcceptor;
 import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalCreator;
+import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalPriorities;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -79,6 +81,9 @@ public class ImportsAwareReferenceProposalCreator {
 
 	@Inject
 	private IQualifiedNameProvider qualifiedNameProvider;
+
+	@Inject
+	private IdeContentProposalPriorities proposalPriorities;
 
 	private static final EReference[] referencesSupportingImportedElements = {
 			N4JSPackage.Literals.IDENTIFIER_REF__ID,
@@ -139,7 +144,9 @@ public class ImportsAwareReferenceProposalCreator {
 							filter,
 							proposalFactory);
 
-					acceptor.accept(proposal, 0);
+					if (proposal != null) {
+						acceptor.accept(proposal, proposalPriorities.getCrossRefPriority(candidate, proposal));
+					}
 				}
 			}
 		}
@@ -171,24 +178,30 @@ public class ImportsAwareReferenceProposalCreator {
 		ContentAssistEntry result = delegateProposalFactory.createProposal(name.toString(), context);
 
 		if (result != null) {
-			int version = N4JSResourceDescriptionStrategy.getVersion(inputToUse);
-			QualifiedName qName = inputToUse.getQualifiedName();
+			try {
+				int version = N4JSResourceDescriptionStrategy.getVersion(inputToUse);
+				QualifiedName qName = inputToUse.getQualifiedName();
 
-			if (qName.equals(name)) {
-				EObject eObj = inputToUse.getEObjectOrProxy(); // performance issue! TODO: remove it
-				QualifiedName qnOfEObject = qualifiedNameProvider.getFullyQualifiedName(eObj);
-				qName = qnOfEObject != null ? qnOfEObject : qName;
-			}
-			String description = getDescription(qName, name, version);
-			String label = getLabel(qName, name, version);
-			String kind = getKind(candidate);
-			result.setLabel(label);
-			result.setDescription(description);
-			result.setKind(kind);
+				if (qName.equals(name)) {
+					EObject eObj = inputToUse.getEObjectOrProxy(); // performance issue! TODO: remove it
+					QualifiedName qnOfEObject = qualifiedNameProvider.getFullyQualifiedName(eObj);
+					qName = qnOfEObject != null ? qnOfEObject : qName;
+				}
+				String description = getDescription(qName, name, version);
+				String label = getLabel(qName, name, version);
+				String kind = getKind(candidate);
+				result.setLabel(label);
+				result.setDescription(description);
+				result.setKind(kind);
 
-			Collection<ReplaceRegion> regions = getImportChanges(name.toString(), resource, scope, candidate, filter);
-			if (regions != null && !regions.isEmpty()) {
-				result.getTextReplacements().addAll(regions);
+				Collection<ReplaceRegion> regions = getImportChanges(name.toString(), resource, scope, candidate,
+						filter);
+				if (regions != null && !regions.isEmpty()) {
+					result.getTextReplacements().addAll(regions);
+				}
+			} catch (ValueConverterException e) {
+				// text does not match the concrete syntax
+				result = null;
 			}
 		}
 

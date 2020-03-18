@@ -1,0 +1,14 @@
+{
+  "name": "n4js.json",
+  "scopeName": "source.n4js.json",
+  "fileTypes": [
+    "package.json"
+  ],
+  "foldingStartMarker": "{|(\\/\\*)",
+  "foldingStopMarker": "}|(\\*\\/)",
+  "patterns": [
+    {
+      "include": "source.json"
+    }
+  ]
+}

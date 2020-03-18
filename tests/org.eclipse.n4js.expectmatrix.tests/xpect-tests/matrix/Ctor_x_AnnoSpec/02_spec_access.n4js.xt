@@ -25,9 +25,9 @@ class A {
 }
 
 // XPECT warnings ---
-// "w is not defined in ~i~this[A]." at "w"
-// "y is not defined in ~i~this[A]." at "y"
-// "z is not defined in ~i~this[A]." at "z"
+// "w is not defined in ~i~this[A]; it will not have any effect in the spec constructor." at "w"
+// "y is not defined in ~i~this[A]; it will not have any effect in the spec constructor." at "y"
+// "z is not defined in ~i~this[A]; it will not have any effect in the spec constructor." at "z"
 // ---
 var a : A = new A({x: 1, y: 2, z: 3, w: 4});
 

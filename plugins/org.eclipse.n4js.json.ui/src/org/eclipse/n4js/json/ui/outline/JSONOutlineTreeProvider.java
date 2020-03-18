@@ -16,7 +16,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.JSON.NameValuePair;
-import org.eclipse.n4js.json.ui.JSONUIModelUtils;
 import org.eclipse.xtext.ui.editor.outline.IOutlineNode;
 import org.eclipse.xtext.ui.editor.outline.impl.DefaultOutlineTreeProvider;
 
@@ -29,8 +28,8 @@ public class JSONOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	public void createChildren(IOutlineNode parent, EObject modelElement) {
 		if (modelElement instanceof JSONDocument) {
 			JSONValue content = ((JSONDocument) modelElement).getContent();
-			if (JSONUIModelUtils.isContainer(content)) {
-				List<? extends EObject> children = JSONUIModelUtils.getChildren(content);
+			if (content.isContainer()) {
+				List<? extends EObject> children = content.getChildren();
 				for (EObject child : children) {
 					createNode(parent, child);
 				}
@@ -46,11 +45,11 @@ public class JSONOutlineTreeProvider extends DefaultOutlineTreeProvider {
 		if (modelElement instanceof NameValuePair) {
 			final NameValuePair pair = (NameValuePair) modelElement;
 			JSONValue pairValue = pair.getValue();
-			if (!JSONUIModelUtils.isContainer(pairValue)) {
+			if (!pairValue.isContainer()) {
 				// if value is not a container do not further create any outline elements
 				return;
 			} else {
-				for (EObject child : JSONUIModelUtils.getChildren(pairValue)) {
+				for (EObject child : pairValue.getChildren()) {
 					createNode(parent, child);
 				}
 				return;
@@ -62,8 +61,7 @@ public class JSONOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	@Override
 	protected void createNode(IOutlineNode parent, EObject modelElement) {
 		// make sure that non-container name-value-pairs are marked as leaf nodes
-		if (modelElement instanceof NameValuePair
-				&& !JSONUIModelUtils.isContainer(((NameValuePair) modelElement).getValue())) {
+		if (modelElement instanceof NameValuePair && !((NameValuePair) modelElement).getValue().isContainer()) {
 			createEObjectNode(parent, modelElement, this.imageDispatcher.invoke(modelElement),
 					this.textDispatcher.invoke(modelElement),
 					// mark as leaf node

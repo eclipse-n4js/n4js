@@ -10,8 +10,12 @@
  */
 package org.eclipse.n4js.json.JSON.impl;
 
+import java.lang.reflect.InvocationTargetException;
+import org.eclipse.emf.common.util.ECollections;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 import org.eclipse.n4js.json.JSON.JSONPackage;
@@ -42,6 +46,42 @@ public abstract class JSONValueImpl extends MinimalEObjectImpl.Container impleme
 	@Override
 	protected EClass eStaticClass() {
 		return JSONPackage.Literals.JSON_VALUE;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isContainer() {
+		return false;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EList<EObject> getChildren() {
+		return ECollections.<EObject>emptyEList();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case JSONPackage.JSON_VALUE___IS_CONTAINER:
+				return isContainer();
+			case JSONPackage.JSON_VALUE___GET_CHILDREN:
+				return getChildren();
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 } //JSONValueImpl

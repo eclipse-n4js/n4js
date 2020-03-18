@@ -386,7 +386,7 @@ public class NpmCLI {
 		URI projectURI = safeURI.toURI();
 		// convert platform URI to local (e.g. file) URI
 		URI projectFileURI = projectURI.isFile() ? projectURI : CommonPlugin.asLocalURI(projectURI);
-		File projectFile = new File(projectFileURI.toFileString()).getAbsoluteFile();
+		File projectFile = URIUtils.toFile(projectFileURI).getAbsoluteFile();
 		return isYarnUsed(projectFile);
 	}
 

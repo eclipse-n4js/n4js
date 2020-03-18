@@ -23,7 +23,7 @@ import org.eclipse.jface.text.DocumentEvent
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.resource.N4JSResource
-import org.eclipse.n4js.resource.UserdataMapper
+import org.eclipse.n4js.resource.UserDataMapper
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypesPackage
@@ -270,10 +270,10 @@ Assert.assertEquals("unexpected exception message", "org/eclipse/e4/ui/workbench
 			};
 		'''.parse(rs)
 		val TModule module = script.eResource.contents.get(1) as TModule;
-		val udata = UserdataMapper.createUserData(module);
+		val udata = UserDataMapper.createUserData(module);
 
-		assertTrue("Serialized script missing.",udata.containsKey( UserdataMapper.USERDATA_KEY_SERIALIZED_SCRIPT))
-		assertFalse("Time stamp not expected.",udata.containsKey( UserdataMapper.USERDATA_KEY_TIMESTAMP))
+		assertTrue("Serialized script missing.",udata.containsKey( UserDataMapper.USER_DATA_KEY_SERIALIZED_SCRIPT))
+		assertFalse("Time stamp not expected.",udata.containsKey( UserDataMapper.USER_DATA_KEY_TIMESTAMP))
 
 	}
 
@@ -291,10 +291,10 @@ Assert.assertEquals("unexpected exception message", "org/eclipse/e4/ui/workbench
 			};
 		'''.parse(rs)
 		val TModule module = script.eResource.contents.get(1) as TModule;
-		val udata = UserdataMapper.createUserData(module);
+		val udata = UserDataMapper.createUserData(module);
 
-		assertTrue("Main module data missing.",udata.containsKey( UserdataMapper.USERDATA_KEY_SERIALIZED_SCRIPT))
-		assertFalse("Time stamp not expected.",udata.containsKey( UserdataMapper.USERDATA_KEY_TIMESTAMP))
+		assertTrue("Main module data missing.",udata.containsKey( UserDataMapper.USER_DATA_KEY_SERIALIZED_SCRIPT))
+		assertFalse("Time stamp not expected.",udata.containsKey( UserDataMapper.USER_DATA_KEY_TIMESTAMP))
 	}
 
 	@Test

@@ -19,6 +19,7 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -26,12 +27,14 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.StrictModeRelevant;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.typeRefs.Versionable;
 
 import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
 
 /**
  * <!-- begin-user-doc -->
@@ -202,6 +205,23 @@ public class IdentifierRefImpl extends PrimaryExpressionImpl implements Identifi
 		idAsText = newIdAsText;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.IDENTIFIER_REF__ID_AS_TEXT, oldIdAsText, idAsText));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public IdentifiableElement getTargetElement() {
+		final IdentifiableElement targetRaw = this.getId();
+		if ((targetRaw instanceof ModuleNamespaceVirtualType)) {
+			final EObject parent = this.eContainer();
+			if ((parent instanceof ParameterizedPropertyAccessExpression)) {
+				return ((ParameterizedPropertyAccessExpression)parent).getProperty();
+			}
+		}
+		return targetRaw;
 	}
 
 	/**
@@ -384,6 +404,8 @@ public class IdentifierRefImpl extends PrimaryExpressionImpl implements Identifi
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
+			case N4JSPackage.IDENTIFIER_REF___GET_TARGET_ELEMENT:
+				return getTargetElement();
 			case N4JSPackage.IDENTIFIER_REF___IS_VALID_SIMPLE_ASSIGNMENT_TARGET:
 				return isValidSimpleAssignmentTarget();
 			case N4JSPackage.IDENTIFIER_REF___GET_VERSION:

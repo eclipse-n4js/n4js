@@ -124,20 +124,28 @@ public class BuiltInSchemeRegistrar implements N4Scheme {
 
 		@Override
 		public InputStream createInputStream(URI uri, Map<?, ?> options) throws IOException {
-			String[] allSegments = new String[uri.segmentCount() + 1];
+			URI classpathURI = toClasspathURI(uri);
+			URI resolvedURI = uriResolver.resolve(classLoader, classpathURI);
+			return original.createInputStream(resolvedURI, options);
+		}
+
+		/**
+		 * Convert the given n4scheme-URI to a classpath-URI.
+		 */
+		private URI toClasspathURI(URI uriWithN4Scheme) {
+			String[] allSegments = new String[uriWithN4Scheme.segmentCount() + 1];
 			allSegments[0] = "env";
-			for (int i = 0; i < uri.segmentCount(); i++) {
-				allSegments[i + 1] = uri.segment(i);
+			for (int i = 0; i < uriWithN4Scheme.segmentCount(); i++) {
+				allSegments[i + 1] = uriWithN4Scheme.segment(i);
 			}
 			URI classpathURI = URI.createHierarchicalURI(
 					ClasspathUriUtil.CLASSPATH_SCHEME,
-					uri.authority(),
-					uri.device(),
+					uriWithN4Scheme.authority(),
+					uriWithN4Scheme.device(),
 					allSegments,
-					uri.query(),
-					uri.fragment());
-			URI resolvedURI = uriResolver.resolve(classLoader, classpathURI);
-			return original.createInputStream(resolvedURI, options);
+					uriWithN4Scheme.query(),
+					uriWithN4Scheme.fragment());
+			return classpathURI;
 		}
 	}
 

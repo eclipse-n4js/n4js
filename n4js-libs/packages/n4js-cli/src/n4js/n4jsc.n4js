@@ -1,0 +1,93 @@
+/*
+ * Copyright (c) 2019 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+
+import {JAVA_VM_XMX} from "Globals";
+import * as childProcess from "child_process";
+import * as npmlog+ from "npmlog";
+import {N4JSC_JAR} from "Globals";
+import {getJavaCommand} from "JreProvider";
+
+
+
+/**
+ * Runs N4jsc in a blocking fashion by executing n4jsc.jar with Java.
+ * In case the bin folder contains a JRE, it will be used. Otherwise,
+ * the globally available Java will be used. Java XmX option will be
+ * set to 4GB if not set already.
+ * The arguments will be collected from process.argv
+ */
+export public async function runN4jscSync(log: {function(string)} = npmlog.info) {
+    const args = getArgsFromProcess();
+
+    let exitCode : int = await runN4jsc(args, log);
+    if (exitCode !== 0) {
+        process.exit(exitCode);
+    }
+}
+
+/**
+ * Runs N4jsc by executing n4jsc.jar with Java and returns a promise.
+ * In case the bin folder contains a JRE, it will be used. Otherwise,
+ * the globally available Java will be used. Java XmX option will be
+ * set to 4GB if not set already.
+ */
+export public function runN4jsc(args: string[], log: {function(string)} = npmlog.info) : Promise<int, ?> {
+    let spawnOptions: childProcess.SpawnOptions = { stdio: "inherit", env: Object.assign({ NODEJS_PATH: process.argv[0] }, process.env)};
+    let n4jscProcess = createN4JSProcess(args, spawnOptions, log);
+    let promise: Promise<int, ?> = new Promise<int, int>((resolve, reject) => {
+        n4jscProcess.on("close", (code: int) => {
+            if (code === 0) {
+                resolve(0);
+            } else {
+                reject(code);
+            }
+        });
+    });
+
+    return promise;
+}
+
+/**
+ * Creates and returns a process to execute the n4jsc.jar with Java.
+ * In case the bin folder contains a JRE, it will be used. Otherwise,
+ * the globally available Java will be used. Java Xmx vm option will
+ * overwritten iff defined in environment variable JAVA_TOOL_OPTIONS.
+ */
+export public function createN4JSProcess(args: string[], spawnOptions: childProcess.SpawnOptions, log: {function(string)} = npmlog.info) : childProcess.ChildProcess {
+    const envJavaToolOptions = process.env.JAVA_TOOL_OPTIONS as string;
+    const match = envJavaToolOptions?.match(/-xmx(?<size>[\S]*)/);
+    const size = match?.groups?.size;
+    if (size) {
+        for (let i=0; i<args.length; i++) {
+            const arg = args[i];
+            if (arg.startsWith(JAVA_VM_XMX)) {
+                args[i] = JAVA_VM_XMX + size;
+            }
+        }
+    }
+
+    let java = getJavaCommand(log);
+    log("calling: " + java + " " + args.join(" "));
+    let spawnedProcess = childProcess.spawn(java, args, spawnOptions);
+
+    return spawnedProcess;
+}
+
+
+/**
+ * Returns arguments for the call to Java which where passed to this script.
+ * If not set by environment variable, a default Java maximum memory value of 4GB will be set.
+ */
+function getArgsFromProcess() : Array<string> {
+    const args = ["-jar", N4JSC_JAR].concat(process.argv.slice(2));
+    return args;
+}
