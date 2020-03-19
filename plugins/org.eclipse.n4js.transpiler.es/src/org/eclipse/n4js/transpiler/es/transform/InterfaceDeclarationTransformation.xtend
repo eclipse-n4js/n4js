@@ -12,6 +12,7 @@ package org.eclipse.n4js.transpiler.es.transform
 
 import com.google.common.collect.Lists
 import com.google.inject.Inject
+import java.util.Collections
 import java.util.List
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.AdditiveExpression
@@ -338,7 +339,7 @@ class InterfaceDeclarationTransformation extends Transformation {
 	}
 
 	def protected List<Statement> createStaticFieldInitializations(N4InterfaceDeclaration ifcDecl, SymbolTableEntry ifcSTE) {
-		return classifierAssistant.createStaticFieldInitializations(ifcDecl, ifcSTE);
+		return classifierAssistant.createStaticFieldInitializations(ifcDecl, ifcSTE, Collections.emptySet);
 	}
 
 	def private N4MethodDeclaration createHasInstanceMethod(N4InterfaceDeclaration ifcDecl, SymbolTableEntry ifcSTE) {

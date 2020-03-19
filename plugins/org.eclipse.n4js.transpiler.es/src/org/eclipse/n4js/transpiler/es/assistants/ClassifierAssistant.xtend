@@ -11,6 +11,7 @@
 package org.eclipse.n4js.transpiler.es.assistants
 
 import java.util.List
+import java.util.Set
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.Statement
@@ -31,22 +32,26 @@ class ClassifierAssistant extends TransformationAssistant {
 	 * <p>
 	 * Clients of this method may modify the returned list.
 	 */
-	def public List<Statement> createStaticFieldInitializations(N4ClassifierDeclaration classifierDecl, SymbolTableEntry classifierSTE) {
-		return classifierDecl.ownedMembers.filter[isStatic].filter(N4FieldDeclaration).map[createStaticInitialiserCode(classifierSTE)].filterNull.toList;
+	def public List<Statement> createStaticFieldInitializations(N4ClassifierDeclaration classifierDecl, SymbolTableEntry classifierSTE,
+		Set<N4FieldDeclaration> fieldsWithExplicitDefinition) {
+
+		return classifierDecl.ownedMembers
+			.filter[isStatic]
+			.filter(N4FieldDeclaration)
+			.filter[!(expression===null && fieldsWithExplicitDefinition.contains(it))]
+			.map[createStaticInitialiserCode(classifierSTE)]
+			.filterNull
+			.toList;
 	}
 
 	def private Statement createStaticInitialiserCode(N4FieldDeclaration fieldDecl, SymbolTableEntry classSTE) {
-		if (fieldDecl.expression === null) {
-			return null;
-		}
-
 		val tField = state.info.getOriginalDefinedMember(fieldDecl) as TField;
 		val fieldSTE = if (tField !== null) getSymbolTableEntryOriginal(tField, true) else findSymbolTableEntryForElement(fieldDecl, true);
 
 		val exprStmnt = _ExprStmnt(
 			_AssignmentExpr(
 				_PropertyAccessExpr(__NSSafe_IdentRef(classSTE), fieldSTE),
-				fieldDecl.expression // reuse existing expression
+				fieldDecl.expression ?: undefinedRef // reuse existing expression (if present)
 			)
 		);
 		state.tracer.copyTrace(fieldDecl, exprStmnt);

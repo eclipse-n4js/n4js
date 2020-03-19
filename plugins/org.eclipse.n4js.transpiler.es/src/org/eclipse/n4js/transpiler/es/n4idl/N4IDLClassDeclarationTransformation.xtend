@@ -11,7 +11,9 @@
 package org.eclipse.n4js.transpiler.es.n4idl
 
 import com.google.inject.Inject
+import java.util.List
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
+import org.eclipse.n4js.n4JS.Statement
 import org.eclipse.n4js.transpiler.es.n4idl.assistants.MigrationTransformationAssistant
 import org.eclipse.n4js.transpiler.es.n4idl.assistants.N4IDLClassifierTransformationAssistant
 import org.eclipse.n4js.transpiler.es.transform.ClassDeclarationTransformation
@@ -26,11 +28,13 @@ class N4IDLClassDeclarationTransformation extends ClassDeclarationTransformation
 	@Inject private extension MigrationTransformationAssistant
 	@Inject private extension N4IDLClassifierTransformationAssistant;
 
-	override protected createStaticFieldInitializations(N4ClassDeclaration classDecl, SymbolTableEntry classSTE) {
-		val statements = super.createStaticFieldInitializations(classDecl, classSTE);
+	override protected List<Statement> createAdditionalClassDeclarationCode(N4ClassDeclaration classDecl, SymbolTableEntry classSTE) {
+		val statements = <Statement>newArrayList;
 
-		statements.add(createMigrationSupportInitializer(classSTE, classDecl));
-		statements.add(createImplementedInterfaceStaticInitializer(classSTE, classDecl));
+		statements += super.createAdditionalClassDeclarationCode(classDecl, classSTE);
+
+		statements += createMigrationSupportInitializer(classSTE, classDecl);
+		statements += createImplementedInterfaceStaticInitializer(classSTE, classDecl);
 
 		return statements;
 	}	

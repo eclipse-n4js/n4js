@@ -12,6 +12,7 @@ package org.eclipse.n4js.transpiler.es.transform
 
 import com.google.common.collect.Lists
 import com.google.inject.Inject
+import java.util.LinkedHashSet
 import java.util.List
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.GenericDeclaration
@@ -79,17 +80,18 @@ class ClassDeclarationTransformation extends Transformation {
 	def private void transformClassDecl(N4ClassDeclaration classDecl) {
 		val classSTE = findSymbolTableEntryForElement(classDecl, false);
 		val superClassSTE = typeAssistant.getSuperClassSTE(classDecl);
+		val fieldsRequiringExplicitDefinition = findFieldsRequiringExplicitDefinition(classDecl);
 
 		// add 'n4type' getter for reflection
 		reflectionAssistant.addN4TypeGetter(classDecl, classDecl);
 
-		classConstructorAssistant.amendConstructor(classDecl, superClassSTE);
+		classConstructorAssistant.amendConstructor(classDecl, superClassSTE, fieldsRequiringExplicitDefinition);
 
-		val staticInits = createStaticFieldInitializations(classDecl, classSTE);
-		insertAfter(classDecl.orContainingExportDeclaration, staticInits);
-
-		val instanceDefs = createFieldDefinitions(classSTE, classDecl);
-		insertAfter(classDecl.orContainingExportDeclaration, instanceDefs);
+		val belowClassDecl = newArrayList;
+		belowClassDecl += createExplicitFieldDefinitions(classSTE, fieldsRequiringExplicitDefinition);
+		belowClassDecl += classifierAssistant.createStaticFieldInitializations(classDecl, classSTE, fieldsRequiringExplicitDefinition);
+		belowClassDecl += createAdditionalClassDeclarationCode(classDecl, classSTE);
+		insertAfter(classDecl.orContainingExportDeclaration, belowClassDecl);
 
 		// remove fields and abstract members (they do not have a representation in the output code)
 		classDecl.ownedMembersRaw.removeIf[
@@ -127,12 +129,21 @@ class ClassDeclarationTransformation extends Transformation {
 	}
 
 	// FIXME GH-1602 only do this for fields that actually override a getter and/or setter!
-	def private List<Statement> createFieldDefinitions(SymbolTableEntry steClass, N4ClassDeclaration classDecl) {
+	def private LinkedHashSet<N4FieldDeclaration> findFieldsRequiringExplicitDefinition(N4ClassDeclaration classDecl) {
+		val result = newLinkedHashSet;
+		result += classDecl.ownedMembers
+			.filter[AnnotationDefinition.OVERRIDE.hasAnnotation(it)]
+			.filter(N4FieldDeclaration);
+		return result;
+	}
+
+	def private List<Statement> createExplicitFieldDefinitions(SymbolTableEntry steClass, LinkedHashSet<N4FieldDeclaration> fieldsRequiringExplicitDefinition) {
 		val objectSTE = getSymbolTableEntryOriginal(state.G.objectType, true);
 		val definePropertySTE = getSymbolTableEntryForMember(state.G.objectType, "defineProperty", false, true, true);
-		return classDecl.ownedMembers.filter[AnnotationDefinition.OVERRIDE.hasAnnotation(it)].filter(N4FieldDeclaration).map[fieldDecl|
+		val result = <Statement>newArrayList;
+		for (fieldDecl : fieldsRequiringExplicitDefinition) {
 			// Object.defineProperty(D.prototype, "s", {writable: true});
-			_ExprStmnt(
+			result += _ExprStmnt(
 				_CallExpr(
 					_PropertyAccessExpr(objectSTE, definePropertySTE),
 					if (fieldDecl.static) {
@@ -145,11 +156,13 @@ class ClassDeclarationTransformation extends Transformation {
 						"writable" -> _BooleanLiteral(true)
 					)
 				)
-			) as Statement
-		].toList;
+			);
+		}
+		return result;
 	}
 
-	def protected List<Statement> createStaticFieldInitializations(N4ClassDeclaration classDecl, SymbolTableEntry classSTE) {
-		return classifierAssistant.createStaticFieldInitializations(classDecl, classSTE);
+	/** Override to add additional output code directly after the default class declaration output code. */
+	def protected List<Statement> createAdditionalClassDeclarationCode(N4ClassDeclaration classDecl, SymbolTableEntry classSTE) {
+		return #[]; // no additional statements by default
 	}
 }

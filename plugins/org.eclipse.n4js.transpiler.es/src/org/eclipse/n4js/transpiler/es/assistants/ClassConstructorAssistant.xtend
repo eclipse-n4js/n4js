@@ -15,6 +15,7 @@ import java.util.ArrayList
 import java.util.Collection
 import java.util.LinkedHashSet
 import java.util.List
+import java.util.Set
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.n4JS.EqualityOperator
@@ -61,7 +62,7 @@ class ClassConstructorAssistant extends TransformationAssistant {
 	 * Will create a constructor declaration iff no constructor is defined in the N4JS source code AND an implicit
 	 * constructor is actually required.
 	 */
-	def public void amendConstructor(N4ClassDeclaration classDecl, SymbolTableEntryOriginal superClassSTE) {
+	def public void amendConstructor(N4ClassDeclaration classDecl, SymbolTableEntryOriginal superClassSTE, Set<N4FieldDeclaration> fieldsWithExplicitDefinition) {
 
 		val explicitCtorDecl = classDecl.ownedCtor; // the constructor defined in the N4JS source code or 'null' if none was defined
 		val hasExplicitCtor = explicitCtorDecl !== null;
@@ -94,6 +95,7 @@ class ClassConstructorAssistant extends TransformationAssistant {
 		val superCallIndex = if(explicitCtorDecl?.body!==null) explicitCtorDecl.superCallIndex else -1;
 		val hasExplicitSuperCall = superCallIndex>=0;
 		val explicitSuperCall = if(hasExplicitSuperCall) explicitCtorDecl.body.statements.get(superCallIndex);
+		var defaultSuperCall = null as ExpressionStatement;
 
 		var idx = if(hasExplicitSuperCall) superCallIndex + 1 else 0;
 
@@ -114,8 +116,8 @@ class ClassConstructorAssistant extends TransformationAssistant {
 					// same fpars as the super constructor, so we can use those as a template:
 					ctorDecl.fpars
 				};
-				idx = body.statements.insertAt(idx,
-					createDefaultSuperCall(classDecl, superClassSTE, fparsOfSuperCtor));
+				defaultSuperCall = createDefaultSuperCall(classDecl, superClassSTE, fparsOfSuperCtor);
+				idx = body.statements.insertAt(idx, defaultSuperCall);
 			}
 		}
 		if(isDirectSubclassOfError) {
@@ -137,17 +139,24 @@ class ClassConstructorAssistant extends TransformationAssistant {
 		}
 
 		// add initialization code for instance fields
-		idx = body.statements.insertAt(idx, createInstanceFieldInitCode(classDecl, specFpar, specObjSTE));
+		idx = body.statements.insertAt(idx, createInstanceFieldInitCode(classDecl, specFpar, specObjSTE, fieldsWithExplicitDefinition));
 
 		// add delegation to field initialization functions of all directly implemented interfaces
 		idx = body.statements.insertAt(idx, createDelegationToFieldInitOfImplementedInterfaces(classDecl, specObjSTE));
 
-		if (ctorDecl.eContainer === null && !ctorDecl.body.statements.empty) {
-			classDecl.ownedMembersRaw.add(0, ctorDecl);
+		// add constructor to classDecl (if necessary)
+		val ctorDeclStmnts = ctorDecl.body.statements;
+		if (ctorDecl.eContainer === null && !ctorDeclStmnts.empty) {
+			val bodyContainsOnlyDefaultSuperCall = defaultSuperCall !== null
+				&& ctorDeclStmnts.size === 1
+				&& ctorDeclStmnts.head === defaultSuperCall;
+			if (!bodyContainsOnlyDefaultSuperCall) {
+				classDecl.ownedMembersRaw.add(0, ctorDecl);
+			}
 		}
 	}
 
-	def private Statement[] createInstanceFieldInitCode(N4ClassDeclaration classDecl, FormalParameter specFpar, SymbolTableEntry specObjSTE) {
+	def private Statement[] createInstanceFieldInitCode(N4ClassDeclaration classDecl, FormalParameter specFpar, SymbolTableEntry specObjSTE, Set<N4FieldDeclaration> fieldsWithExplicitDefinition) {
 		val allFields = classDecl.ownedFields.filter[!isStatic && !isConsumedFromInterface].toList;
 		if(specFpar!==null) {
 			// we have a spec-parameter -> we are in a spec-style constructor
@@ -178,7 +187,9 @@ class ClassConstructorAssistant extends TransformationAssistant {
 			return result;
 		} else {
 			// simple: just initialize fields with data from their initializer expression
-			return allFields.map[createFieldInitCodeForSingleField];
+			return allFields
+				.filter[!(expression===null && fieldsWithExplicitDefinition.contains(it))]
+				.map[createFieldInitCodeForSingleField];
 		}
 	}
 
