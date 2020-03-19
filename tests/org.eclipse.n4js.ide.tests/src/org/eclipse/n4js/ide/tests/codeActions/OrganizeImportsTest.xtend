@@ -452,6 +452,33 @@ class OrganizeImportsTest extends AbstractOrganizeImportsTest {
 	}
 
 	@Test
+	def void testPullUpImportsToCorrectLocation() {
+		test('''
+			/* copyright header */
+
+			@@StaticPolyfillAware
+
+			console.log('this should be below the import');
+
+			import {A01} from "A";
+
+			A01;
+		''', #[
+			"(Warning, [6:0 - 6:22], The import statement should be placed on top of other statements.)"
+		], '''
+			/* copyright header */
+
+			@@StaticPolyfillAware
+
+			console.log('this should be below the import');
+
+			import {A01} from "A";«/* NOTE: not supported yet (correct location would be between the annotation and console.log()) */»
+
+			A01;
+		''')
+	}
+
+	@Test
 	def void testCombined() {
 		test('''
 			// some comment
