@@ -206,6 +206,11 @@ public class ChangeProvider {
 	 * This is mainly intended for removal edits, i.e. edits with the empty string as {@link TextEdit#getNewText()
 	 * replacement text}, to ensure no white space remains when removing several successive statements, declarations,
 	 * etc. while not deleting existing comments, etc.
+	 * <p>
+	 *
+	 * @return a copy of the given list of text edits with gaps closed as described above. Always returns a newly
+	 *         created list, but copies of individual text edits are created only as necessary (i.e. the returned list
+	 *         may contain some of the text edit instances passed in).
 	 */
 	public static List<TextEdit> closeGapsIfEmpty(Document doc, List<? extends TextEdit> edits) {
 		if (edits.isEmpty()) {

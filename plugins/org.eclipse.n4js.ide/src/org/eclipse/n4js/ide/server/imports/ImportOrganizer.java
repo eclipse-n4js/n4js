@@ -11,11 +11,10 @@
 package org.eclipse.n4js.ide.server.imports;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import org.eclipse.lsp4j.TextEdit;
@@ -58,8 +57,7 @@ public class ImportOrganizer {
 				.map(ImportDeclaration.class::cast)
 				.collect(Collectors.toList());
 
-		List<ImportRef> importRefs = createImportRefs(importDecls);
-		Collections.sort(importRefs);
+		SortedSet<ImportRef> importRefs = createImportRefs(importDecls);
 
 		List<TextEdit> textEdits = new ArrayList<>();
 		int offsetOfFirstImport = Integer.MAX_VALUE;
@@ -74,7 +72,7 @@ public class ImportOrganizer {
 
 			offsetOfFirstImport = Math.min(offsetOfFirstImport, node.getOffset());
 		}
-		textEdits = new ArrayList<>(ChangeProvider.closeGapsIfEmpty(document, textEdits));
+		textEdits = ChangeProvider.closeGapsIfEmpty(document, textEdits);
 
 		// create edit for inserting the new imports
 		String[] importStrings = importRefs.stream()
@@ -88,8 +86,8 @@ public class ImportOrganizer {
 		return textEdits;
 	}
 
-	private static List<ImportRef> createImportRefs(List<ImportDeclaration> importDecls) {
-		Set<ImportRef> result = new LinkedHashSet<>();
+	private static SortedSet<ImportRef> createImportRefs(List<ImportDeclaration> importDecls) {
+		SortedSet<ImportRef> result = new TreeSet<>();
 		int idx = 0;
 		for (ImportDeclaration importDecl : importDecls) {
 			if (importDecl.isBare()) {
@@ -109,7 +107,7 @@ public class ImportOrganizer {
 				}
 			}
 		}
-		return new ArrayList<>(result);
+		return result;
 	}
 
 	private static class ImportRef implements Comparable<ImportRef> {
@@ -215,8 +213,18 @@ public class ImportOrganizer {
 				return cmpDefault;
 			}
 			// 6) sort by name of imported element
-			return ((NamedImportSpecifier) this.importSpec).getImportedElementAsText().compareTo(
+			int cmpName = ((NamedImportSpecifier) this.importSpec).getImportedElementAsText().compareTo(
 					((NamedImportSpecifier) other.importSpec).getImportedElementAsText());
+			if (cmpName != 0) {
+				return cmpName;
+			}
+			// 7) sort by alias
+			String thisAlias = ((NamedImportSpecifier) this.importSpec).getAlias();
+			String otherAlias = ((NamedImportSpecifier) other.importSpec).getAlias();
+			int cmpAlias = thisAlias != null && otherAlias != null
+					? thisAlias.compareTo(otherAlias)
+					: Boolean.compare(thisAlias != null, otherAlias != null);
+			return cmpAlias;
 		}
 
 		private String getFQN(TModule module) {
