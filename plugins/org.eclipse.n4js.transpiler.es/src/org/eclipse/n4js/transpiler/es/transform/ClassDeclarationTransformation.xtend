@@ -56,7 +56,6 @@ class ClassDeclarationTransformation extends Transformation {
 	@Inject private DelegationAssistant delegationAssistant;
 	@Inject private TypeAssistant typeAssistant;
 
-
 	override assertPreConditions() {
 		typeAssistant.assertClassifierPreConditions();
 		assertFalse("class expressions are not supported yet",
@@ -128,12 +127,28 @@ class ClassDeclarationTransformation extends Transformation {
 		classDecl.superClassExpression = __NSSafe_IdentRef(superClassSTE);
 	}
 
-	// FIXME GH-1602 only do this for fields that actually override a getter and/or setter!
+	/**
+	 * Data fields that override an accessor require an explicit property definition along the lines of
+	 * <pre>
+	 * Object.defineProperty(D.prototype, "myField", {writable: true});
+	 * </pre>
+	 * A simple initialization of the form <code>this.myField = undefined;</code> would throw an exception at runtime (in case of
+	 * overriding only a getter) or would simply invoke the setter (in case of overriding a setter or an accessor pair).
+	 * <p>
+	 * This applies to both instance and static fields.
+	 */
 	def private LinkedHashSet<N4FieldDeclaration> findFieldsRequiringExplicitDefinition(N4ClassDeclaration classDecl) {
+		val tClass = state.info.getOriginalDefinedType(classDecl);
+		val fieldsOverridingAnAccessor = if (tClass !== null) {
+			state.memberCollector.computeOwnedFieldsOverridingAnAccessor(tClass, true)
+				.map[static -> name]
+				.toSet;
+		};
 		val result = newLinkedHashSet;
 		result += classDecl.ownedMembers
 			.filter[AnnotationDefinition.OVERRIDE.hasAnnotation(it)]
-			.filter(N4FieldDeclaration);
+			.filter(N4FieldDeclaration)
+			.filter[fieldsOverridingAnAccessor === null || fieldsOverridingAnAccessor.contains(static -> name)];
 		return result;
 	}
 
