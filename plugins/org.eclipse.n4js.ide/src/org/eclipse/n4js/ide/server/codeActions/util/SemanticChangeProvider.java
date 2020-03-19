@@ -55,10 +55,10 @@ import com.google.inject.Inject;
 /**
  * Collection of high-level convenience methods for creating {@link TextEdit}s.
  * <p>
- * By convention, all methods take an {@link Document} as first parameter and return an instance of {@link TextEdit}.
+ * By convention, all methods take a {@link Document} as first parameter and return an instance of {@link TextEdit}.
  *
- * Other than ChangeProvider the methods in this class are thought to be a tool to handle AST elements directly without
- * dealing with their textual representation.
+ * Other than {@link ChangeProvider}, the methods in this class are thought to be a tool to handle AST elements directly
+ * without dealing with their textual representation.
  */
 public class SemanticChangeProvider {
 

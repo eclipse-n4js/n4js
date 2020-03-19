@@ -26,7 +26,10 @@ import org.eclipse.xtext.util.ReplaceRegion;
 import com.google.common.base.Joiner;
 
 /**
- * Collection of high-level convenience methods for creating {@link TextEdit}s.
+ * Collection of low-level convenience methods for creating {@link TextEdit}s.
+ * <p>
+ * Class {@link SemanticChangeProvider} contains higher-level convenience methods that accept AST nodes instead of
+ * character offsets, etc.
  */
 public class ChangeProvider {
 
@@ -88,7 +91,7 @@ public class ChangeProvider {
 		Position offsetPos = doc.getPosition(offset);
 
 		String NL = lineDelimiter(doc, offset);
-		String replacementText = Joiner.on(NL).join(linesToInsert) + NL;
+		String replacementText = Joiner.on(NL).join(linesToInsert);
 
 		if (sameIndentation) {
 			String lineContent = doc.getLineContent(offsetPos.getLine());
@@ -97,8 +100,10 @@ public class ChangeProvider {
 				idx++;
 			}
 			String indent = lineContent.substring(0, idx);
-			replacementText = indent + replacementText;
+			replacementText = indent + replacementText.replace(NL, NL + indent);
 		}
+
+		replacementText = replacementText + NL;
 
 		Position posStart = new Position(offsetPos.getLine(), 0);
 		Position posEnd = new Position(offsetPos.getLine(), 0);
