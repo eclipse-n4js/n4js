@@ -12,6 +12,7 @@ package org.eclipse.n4js.ide.tests.server;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -27,7 +28,11 @@ import org.eclipse.n4js.tests.codegen.Project;
 import org.eclipse.n4js.utils.Strings;
 import org.eclipse.xtext.testing.TestCompletionConfiguration;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
+import org.eclipse.xtext.xbase.lib.Pair;
 import org.junit.Assert;
+
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 
 /**
  * Abstract test class for code action protocol tests
@@ -36,14 +41,29 @@ abstract public class AbstractCompletionTest extends AbstractStructuredIdeTest<T
 
 	static final String CURSOR_SYMBOL = "<|>";
 
+	/** Some default modules that export a number of classes, for use in the main module of organize imports tests. */
+	protected List<Pair<String, String>> getDefaultTestModules() {
+		return Lists.newArrayList();
+	}
+
 	/** Call this method in a test */
-	protected void test(String modelWithCursor, String expectation) {
-		int cursorIdx = modelWithCursor.indexOf(CURSOR_SYMBOL);
+	protected void test(String codeWithCursor, String expectedProposals) {
+		TestCompletionConfiguration tcc = createTestCompletionConfiguration(codeWithCursor, expectedProposals);
+		ArrayList<Pair<String, String>> defaultModule = Lists.newArrayList(Pair.of(MODULE_NAME, tcc.getModel()));
+		Iterable<Pair<String, String>> modules = Iterables.concat(getDefaultTestModules(), defaultModule);
+		test(modules, tcc);
+	}
+
+	/** @return {@link TestCompletionConfiguration} for a given code with cursor symbol */
+	protected TestCompletionConfiguration createTestCompletionConfiguration(String codeWithCursor,
+			String expectedProposals) {
+
+		int cursorIdx = codeWithCursor.indexOf(CURSOR_SYMBOL);
 		if (cursorIdx < 0) {
 			throw new IllegalArgumentException("Cursor symbol " + CURSOR_SYMBOL + " missing");
 		}
 
-		String model = modelWithCursor.replace(CURSOR_SYMBOL, "");
+		String model = codeWithCursor.replace(CURSOR_SYMBOL, "");
 		String[] lines = model.substring(0, cursorIdx).replaceAll("\r", "").split("\n");
 		int lineCountBeforeCursor = lines.length - 1;
 		int columnBeforeCursor = lines[lineCountBeforeCursor].length();
@@ -52,9 +72,9 @@ abstract public class AbstractCompletionTest extends AbstractStructuredIdeTest<T
 		tcc.setModel(model);
 		tcc.setLine(lineCountBeforeCursor);
 		tcc.setColumn(columnBeforeCursor);
-		tcc.setExpectedCompletionItems(expectation);
+		tcc.setExpectedCompletionItems(expectedProposals);
 
-		test(tcc.getFilePath(), tcc.getModel(), tcc);
+		return tcc;
 	}
 
 	@Override
@@ -87,7 +107,7 @@ abstract public class AbstractCompletionTest extends AbstractStructuredIdeTest<T
 		if (tcc.getAssertCompletionList() != null) {
 			tcc.getAssertCompletionList().apply(result.getRight());
 		} else {
-			String resultStr = Strings.toString(getStringLSP4J()::toString, items);
+			String resultStr = Strings.join("\n", getStringLSP4J()::toString, items);
 			assertEquals(tcc.getExpectedCompletionItems().trim(), resultStr.trim());
 		}
 	}
