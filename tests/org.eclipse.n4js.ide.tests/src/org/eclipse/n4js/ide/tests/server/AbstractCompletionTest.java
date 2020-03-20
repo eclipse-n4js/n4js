@@ -34,8 +34,26 @@ import org.junit.Assert;
  */
 abstract public class AbstractCompletionTest extends AbstractStructuredIdeTest<TestCompletionConfiguration> {
 
+	static final String CURSOR_SYMBOL = "<|>";
+
 	/** Call this method in a test */
-	protected void test(TestCompletionConfiguration tcc) throws Exception {
+	protected void test(String modelWithCursor, String expectation) {
+		int cursorIdx = modelWithCursor.indexOf(CURSOR_SYMBOL);
+		if (cursorIdx < 0) {
+			throw new IllegalArgumentException("Cursor symbol " + CURSOR_SYMBOL + " missing");
+		}
+
+		String model = modelWithCursor.replace(CURSOR_SYMBOL, "");
+		String[] lines = model.substring(0, cursorIdx).replaceAll("\r", "").split("\n");
+		int lineCountBeforeCursor = lines.length - 1;
+		int columnBeforeCursor = lines[lineCountBeforeCursor].length();
+
+		TestCompletionConfiguration tcc = new TestCompletionConfiguration();
+		tcc.setModel(model);
+		tcc.setLine(lineCountBeforeCursor);
+		tcc.setColumn(columnBeforeCursor);
+		tcc.setExpectedCompletionItems(expectation);
+
 		test(tcc.getFilePath(), tcc.getModel(), tcc);
 	}
 
