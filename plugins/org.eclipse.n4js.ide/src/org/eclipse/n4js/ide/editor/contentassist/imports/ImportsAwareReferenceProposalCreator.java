@@ -173,49 +173,49 @@ public class ImportsAwareReferenceProposalCreator {
 			Predicate<IEObjectDescription> filter,
 			IdeContentProposalCreator delegateProposalFactory) {
 
-		Resource resource = model.eResource();
-		IEObjectDescription inputToUse = getAliasedDescription(candidate, reference, context);
-
+		IEObjectDescription inputToUse = getAliasedDescription(candidate, reference);
 		QualifiedName name = inputToUse.getName();
-		String shortQName = lastSegmentOrDefaultHost(name);
 
 		ContentAssistEntry result = delegateProposalFactory.createProposal(name.toString(), context);
+		if (result == null) {
+			return null;
+		}
 
-		if (result != null) {
-			try {
-				int version = N4JSResourceDescriptionStrategy.getVersion(inputToUse);
-				QualifiedName qName = inputToUse.getQualifiedName();
+		try {
+			int version = N4JSResourceDescriptionStrategy.getVersion(inputToUse);
+			QualifiedName qName = inputToUse.getQualifiedName();
 
-				if (qName.equals(name)) {
-					EObject eObj = inputToUse.getEObjectOrProxy(); // performance issue! TODO: remove it
-					QualifiedName qnOfEObject = qualifiedNameProvider.getFullyQualifiedName(eObj);
-					qName = qnOfEObject != null ? qnOfEObject : qName;
-				}
-				String description = getDescription(qName, name, version);
-				String label = getLabel(qName, name, version);
-				String kind = getKind(candidate);
-				result.setLabel(label);
-				result.setDescription(description);
-				result.setKind(kind);
-				result.setSource(candidate.getEObjectURI());
-
-				NameAndAlias nameAndAlias = getImportChanges(name.toString(), resource, scope, candidate, filter);
-				if (nameAndAlias != null) {
-					ImportChanges importChanges = importRewriter.create("\n", resource);
-					importChanges.addImport(nameAndAlias);
-					Collection<ReplaceRegion> regions = importChanges.toReplaceRegions();
-					if (regions != null && !regions.isEmpty()) {
-						result.getTextReplacements().addAll(regions);
-					}
-					if (!Strings.isNullOrEmpty(nameAndAlias.alias)) {
-						result.setProposal(nameAndAlias.alias);
-						result.setLabel(shortQName + " as " + nameAndAlias.alias);
-					}
-				}
-			} catch (ValueConverterException e) {
-				// text does not match the concrete syntax
-				result = null;
+			if (qName.equals(name)) {
+				EObject eObj = inputToUse.getEObjectOrProxy(); // performance issue! TODO: remove it
+				QualifiedName qnOfEObject = qualifiedNameProvider.getFullyQualifiedName(eObj);
+				qName = qnOfEObject != null ? qnOfEObject : qName;
 			}
+			String description = getDescription(qName, name, version);
+			String label = getLabel(qName, name, version);
+			String kind = getKind(candidate);
+			result.setLabel(label);
+			result.setDescription(description);
+			result.setKind(kind);
+			result.setSource(candidate.getEObjectURI());
+
+			Resource resource = model.eResource();
+			NameAndAlias nameAndAlias = getImportChanges(name.toString(), resource, scope, candidate, filter);
+			if (nameAndAlias != null) {
+				ImportChanges importChanges = importRewriter.create("\n", resource);
+				importChanges.addImport(nameAndAlias);
+				Collection<ReplaceRegion> regions = importChanges.toReplaceRegions();
+				if (regions != null && !regions.isEmpty()) {
+					result.getTextReplacements().addAll(regions);
+				}
+				if (!Strings.isNullOrEmpty(nameAndAlias.alias)) {
+					String shortQName = lastSegmentOrDefaultHost(name);
+					result.setProposal(nameAndAlias.alias);
+					result.setLabel(shortQName + " as " + nameAndAlias.alias);
+				}
+			}
+		} catch (ValueConverterException e) {
+			// text does not match the concrete syntax
+			result = null;
 		}
 
 		return result;
@@ -288,34 +288,41 @@ public class ImportsAwareReferenceProposalCreator {
 	 *            the original input for which we create proposal
 	 * @param reference
 	 *            the reference
-	 * @param context
-	 *            the context
 	 * @return candidate proposal adjusted to the N4JS imports
 	 */
-	private IEObjectDescription getAliasedDescription(IEObjectDescription candidate, EReference reference,
-			ContentAssistContext context) {
+	private IEObjectDescription getAliasedDescription(IEObjectDescription candidate, EReference reference) {
+		QualifiedName aliasName = getAliasedName(candidate, reference);
+		if (aliasName != null) {
+			return new AliasedEObjectDescription(aliasName, candidate);
+		}
 
+		// no special handling, return original input
+		return candidate;
+	}
+
+	private QualifiedName getAliasedName(IEObjectDescription candidate, EReference reference) {
 		// Content assist at a location where only simple names are allowed:
 		// We found a qualified name and we'd need an import to be allowed to use
 		// that name. Consider only the simple name of the element from the index
 		// and make sure that the import is inserted as soon as the proposal is applied
 		QualifiedName inputQN = candidate.getName();
 		int inputNameSegmentCount = inputQN.getSegmentCount();
-		if (inputNameSegmentCount > 1
-				&& Arrays.contains(referencesSupportingImportedElements, reference))
-			return new AliasedEObjectDescription(QualifiedName.create(inputQN.getLastSegment()), candidate);
+		if (inputNameSegmentCount > 1 && Arrays.contains(referencesSupportingImportedElements, reference)) {
+			return QualifiedName.create(inputQN.getLastSegment());
+		}
 
 		// filter out non-importable things:
 		// globally provided things should never be imported:
 		if (inputNameSegmentCount == 2 && N4TSQualifiedNameProvider.GLOBAL_NAMESPACE_SEGMENT
-				.equals(inputQN.getFirstSegment()))
-			return new AliasedEObjectDescription(QualifiedName.create(inputQN.getLastSegment()), candidate);
+				.equals(inputQN.getFirstSegment())) {
+			return QualifiedName.create(inputQN.getLastSegment());
+		}
 
 		// special handling for default imports:
 		if (inputQN.getLastSegment().equals(N4JSLanguageConstants.EXPORT_DEFAULT_NAME)) {
 			if (TExportableElement.class.isAssignableFrom(candidate.getEClass().getInstanceClass())) {
 				if (N4JSResourceDescriptionStrategy.getExportDefault(candidate)) {
-					return new AliasedEObjectDescription(inputQN, candidate);
+					return inputQN;
 				}
 			}
 			// not accessed via namespace
@@ -323,10 +330,10 @@ public class ImportsAwareReferenceProposalCreator {
 			QualifiedName moduleName = nameNoDefault.getSegmentCount() > 1
 					? QualifiedName.create(nameNoDefault.getLastSegment())
 					: nameNoDefault;
-			return new AliasedEObjectDescription(moduleName, candidate);
+			return moduleName;
 		}
-		// no special handling, return original input
-		return candidate;
+
+		return null;
 	}
 
 	private NameAndAlias getImportChanges(String syntacticReplacementString, Resource resource,
