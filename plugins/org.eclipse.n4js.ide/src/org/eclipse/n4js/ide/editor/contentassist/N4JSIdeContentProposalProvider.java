@@ -49,10 +49,12 @@ public class N4JSIdeContentProposalProvider extends IdeContentProposalProvider {
 			QualifiedName qualifiedName = candidate.getQualifiedName();
 			final IEObjectDescription eObjectDescription = candidate;
 			// Don't propose any erroneous descriptions.
-			return !IEObjectDescriptionWithError.isErrorDescription(eObjectDescription)
-					&& !N4TSQualifiedNameProvider.GLOBAL_NAMESPACE_SEGMENT.equals(qualifiedName.getFirstSegment())
-					&& !N4TSQualifiedNameProvider.isModulePolyfill(qualifiedName)
-					&& !N4TSQualifiedNameProvider.isPolyfill(qualifiedName);
+			boolean valid = true;
+			valid &= !(IEObjectDescriptionWithError.isErrorDescription(eObjectDescription));
+			valid &= !N4TSQualifiedNameProvider.GLOBAL_NAMESPACE_SEGMENT.equals(qualifiedName.getFirstSegment());
+			valid &= !N4TSQualifiedNameProvider.isModulePolyfill(qualifiedName);
+			valid &= !N4TSQualifiedNameProvider.isPolyfill(qualifiedName);
+			return valid;
 		}
 	}
 
