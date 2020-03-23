@@ -30,9 +30,6 @@ console.log(N.Error);
 var x = N;
 console.log(x);
 class ASD extends N.Error {
-	constructor() {
-		super();
-	}
 	static get n4type() {
 		return $getReflectionForClass(ASD, '["ASD","importexport/IDEBUG_684/AT_IDEBUG_684_NamespacesOptimized_NoDuplicateDeclarartions","org.eclipse.n4js.transpiler.es5.tests"]');
 	}

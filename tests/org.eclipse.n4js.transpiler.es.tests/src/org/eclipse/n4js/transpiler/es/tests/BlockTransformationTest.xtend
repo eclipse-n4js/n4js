@@ -132,9 +132,6 @@ class BlockTransformationTest extends AbstractTranspilerTest {
 				}.apply(this, arguments));
 			}
 			export class System2 extends N4Object {
-				constructor() {
-					super();
-				}
 				static normalize(p) {
 					return $spawn(function *() {
 						return "!NORMAL!/" + p;
