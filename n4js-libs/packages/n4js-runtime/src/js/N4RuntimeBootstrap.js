@@ -71,6 +71,24 @@ function $getReflectionForEnum(staticProto, reflectionString) {
 
 
 /**
+ * Define one or more static or instance data fields of a class. This is only intended for the
+ * rare special cases in which explicit property definitions are required for a data field, due
+ * to accessor(s) being overridden by the data field.
+ *
+ * @param target - The target object. Either the constructor of a class (for static fields)
+ *                 or an instance of a class (for instance fields).
+ * @param names - One or more field names.
+ */
+function $defineFields(target, ...names) {
+    for(const name of names) {
+        Object.defineProperty(target, name, {
+            writable: true,
+            enumerable: true,
+            configurable: true
+        });
+    }
+}
+/**
  * Initialize the fields declared by the given interfaces in the target object 'target'.
  * Takes care of defaults defined in the interfaces and values provided via the optional
  * 'spec' object. Will never override properties that already exist in the target object
@@ -425,6 +443,7 @@ function createMember(instanceProto, staticProto, memberInfo, annotations) {
 _globalThis.$getReflectionForClass = $getReflectionForClass;
 _globalThis.$getReflectionForInterface = $getReflectionForInterface;
 _globalThis.$getReflectionForEnum = $getReflectionForEnum;
+_globalThis.$defineFields = $defineFields;
 _globalThis.$initFieldsFromInterfaces = $initFieldsFromInterfaces;
 _globalThis.$sliceToArrayForDestruct = $sliceToArrayForDestruct;
 _globalThis.$spawn = $spawn;

@@ -55,6 +55,7 @@ import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
 class ClassConstructorAssistant extends TransformationAssistant {
 
 	@Inject private TypeAssistant typeAssistant;
+	@Inject private ClassifierAssistant classifierAssistant;
 
 
 	/**
@@ -62,7 +63,8 @@ class ClassConstructorAssistant extends TransformationAssistant {
 	 * Will create a constructor declaration iff no constructor is defined in the N4JS source code AND an implicit
 	 * constructor is actually required.
 	 */
-	def public void amendConstructor(N4ClassDeclaration classDecl, SymbolTableEntryOriginal superClassSTE, Set<N4FieldDeclaration> fieldsWithExplicitDefinition) {
+	def public void amendConstructor(N4ClassDeclaration classDecl, SymbolTableEntry classSTE, SymbolTableEntryOriginal superClassSTE,
+		LinkedHashSet<N4FieldDeclaration> fieldsRequiringExplicitDefinition) {
 
 		val explicitCtorDecl = classDecl.ownedCtor; // the constructor defined in the N4JS source code or 'null' if none was defined
 		val hasExplicitCtor = explicitCtorDecl !== null;
@@ -138,8 +140,11 @@ class ClassConstructorAssistant extends TransformationAssistant {
 			specObjSTE = findSymbolTableEntryForElement(specObjVarDecl, true);
 		}
 
+		// add explicit definitions of instance fields (only for fields that actually require this)
+		idx = body.statements.insertAt(idx, classifierAssistant.createExplicitFieldDefinitions(classSTE, false, fieldsRequiringExplicitDefinition));
+
 		// add initialization code for instance fields
-		idx = body.statements.insertAt(idx, createInstanceFieldInitCode(classDecl, specFpar, specObjSTE, fieldsWithExplicitDefinition));
+		idx = body.statements.insertAt(idx, createInstanceFieldInitCode(classDecl, specFpar, specObjSTE, fieldsRequiringExplicitDefinition));
 
 		// add delegation to field initialization functions of all directly implemented interfaces
 		idx = body.statements.insertAt(idx, createDelegationToFieldInitOfImplementedInterfaces(classDecl, specObjSTE));

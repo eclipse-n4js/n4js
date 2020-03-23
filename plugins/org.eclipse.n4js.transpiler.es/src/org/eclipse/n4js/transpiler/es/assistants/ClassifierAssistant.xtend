@@ -10,8 +10,11 @@
  */
 package org.eclipse.n4js.transpiler.es.assistants
 
+import java.util.LinkedHashSet
 import java.util.List
 import java.util.Set
+import org.eclipse.n4js.AnnotationDefinition
+import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.Statement
@@ -26,6 +29,65 @@ import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
  */
 class ClassifierAssistant extends TransformationAssistant {
 
+	/**
+	 * Returns a set/list of data fields that require an explicit property definition. Actual creation of those explicit
+	 * property definitions is done with method {@link #createExplicitFieldDefinitions(SymbolTableEntry, boolean, LinkedHashSet)}.
+	 * 
+	 * <h3>Background</h3>
+	 * 
+	 * Data fields that override an accessor require an explicit property definition along the lines of
+	 * <pre>
+	 * Object.defineProperty(this, "myField", {writable: true, ...});
+	 * </pre>
+	 * A simple initialization of the form <code>this.myField = undefined;</code> would throw an exception at runtime (in case of
+	 * overriding only a getter) or would simply invoke the setter (in case of overriding a setter or an accessor pair).
+	 * <p>
+	 * This applies to both instance and static fields.
+	 */
+	def public LinkedHashSet<N4FieldDeclaration> findFieldsRequiringExplicitDefinition(N4ClassDeclaration classDecl) {
+		val tClass = state.info.getOriginalDefinedType(classDecl);
+		val fieldsOverridingAnAccessor = if (tClass !== null) {
+			state.memberCollector.computeOwnedFieldsOverridingAnAccessor(tClass, true)
+				.map[static -> name]
+				.toSet;
+		};
+		val result = newLinkedHashSet;
+		result += classDecl.ownedMembers
+			.filter[AnnotationDefinition.OVERRIDE.hasAnnotation(it)]
+			.filter(N4FieldDeclaration)
+			.filter[fieldsOverridingAnAccessor === null || fieldsOverridingAnAccessor.contains(static -> name)];
+		return result;
+	}
+
+	/**
+	 * Creates explicit property definitions for the fields identified by method
+	 * {@link #findFieldsRequiringExplicitDefinition(N4ClassDeclaration)}.
+	 */
+	def public List<Statement> createExplicitFieldDefinitions(SymbolTableEntry steClass, boolean staticCase,
+		LinkedHashSet<N4FieldDeclaration> fieldsRequiringExplicitDefinition) {
+
+		// Creates either
+		//   $defineFields(D, "staticFieldName1", "staticFieldName2", ...);
+		// or
+		//   $defineFields(this, "instanceFieldName1", "instanceFieldName2", ...);
+		val names = fieldsRequiringExplicitDefinition.filter[static === staticCase].map[name].map[_StringLiteral(it)].toList;
+		if (names.empty) {
+			return #[];
+		}
+		val result = _ExprStmnt(
+			_CallExpr(
+				_IdentRef(steFor_$defineFields),
+				#[
+					if (staticCase) {
+						__NSSafe_IdentRef(steClass)
+					} else {
+						_ThisLiteral
+					}
+				] + names
+			)
+		);
+		return #[ result ];
+	}
 
 	/**
 	 * Creates a new list of statements to initialize the static fields of the given classifier declaration.

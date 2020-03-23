@@ -85,12 +85,32 @@ console.log(b.field4);
 console.log(b.field5);
 console.log(b.field6);
 
+// NOTE: in accordance to the TC39 proposal for class fields, N4JS instance data fields appear
+// as owned properties on the instance object, not the prototype (in contrast to methods)
+console.log(
+	b.hasOwnProperty('field1'),
+	b.hasOwnProperty('field2'),
+	b.hasOwnProperty('field3'),
+	b.hasOwnProperty('field4'),
+	b.hasOwnProperty('field5'),
+	b.hasOwnProperty('field6'));
+
+console.log('====');
+
 console.log(B.sfield1);
 console.log(B.sfield2);
 console.log(B.sfield3);
 console.log(B.sfield4);
 console.log(B.sfield5);
 console.log(B.sfield6);
+
+console.log(
+	B.hasOwnProperty('sfield1'),
+	B.hasOwnProperty('sfield2'),
+	B.hasOwnProperty('sfield3'),
+	B.hasOwnProperty('sfield4'),
+	B.hasOwnProperty('sfield5'),
+	B.hasOwnProperty('sfield6'));
 
 console.log("END");
 
@@ -121,12 +141,15 @@ undefined
 should show up (field4)
 undefined
 should show up (field6)
+true true true true true true
+====
 undefined
 should show up (sfield2)
 undefined
 should show up (sfield4)
 undefined
 should show up (sfield6)
+true true true true true true
 END
 stderr:
 ==>

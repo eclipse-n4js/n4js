@@ -12,9 +12,7 @@ package org.eclipse.n4js.transpiler.es.transform
 
 import com.google.common.collect.Lists
 import com.google.inject.Inject
-import java.util.LinkedHashSet
 import java.util.List
-import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.GenericDeclaration
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4ClassExpression
@@ -33,10 +31,7 @@ import org.eclipse.n4js.transpiler.es.assistants.ReflectionAssistant
 import org.eclipse.n4js.transpiler.im.DelegatingMember
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 
-import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
-
 import static extension org.eclipse.n4js.transpiler.utils.TranspilerUtils.*
-import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  * Transforms {@link N4ClassDeclaration}s into a constructor function and a <code>$makeClass</code> call.
@@ -79,15 +74,15 @@ class ClassDeclarationTransformation extends Transformation {
 	def private void transformClassDecl(N4ClassDeclaration classDecl) {
 		val classSTE = findSymbolTableEntryForElement(classDecl, false);
 		val superClassSTE = typeAssistant.getSuperClassSTE(classDecl);
-		val fieldsRequiringExplicitDefinition = findFieldsRequiringExplicitDefinition(classDecl);
+		val fieldsRequiringExplicitDefinition = classifierAssistant.findFieldsRequiringExplicitDefinition(classDecl);
 
 		// add 'n4type' getter for reflection
 		reflectionAssistant.addN4TypeGetter(classDecl, classDecl);
 
-		classConstructorAssistant.amendConstructor(classDecl, superClassSTE, fieldsRequiringExplicitDefinition);
+		classConstructorAssistant.amendConstructor(classDecl, classSTE, superClassSTE, fieldsRequiringExplicitDefinition);
 
 		val belowClassDecl = newArrayList;
-		belowClassDecl += createExplicitFieldDefinitions(classSTE, fieldsRequiringExplicitDefinition);
+		belowClassDecl += classifierAssistant.createExplicitFieldDefinitions(classSTE, true, fieldsRequiringExplicitDefinition);
 		belowClassDecl += classifierAssistant.createStaticFieldInitializations(classDecl, classSTE, fieldsRequiringExplicitDefinition);
 		belowClassDecl += createAdditionalClassDeclarationCode(classDecl, classSTE);
 		insertAfter(classDecl.orContainingExportDeclaration, belowClassDecl);
@@ -125,55 +120,6 @@ class ClassDeclarationTransformation extends Transformation {
 		// for details see PrettyPrinterSwitch#caseN4ClassDeclaration())
 		classDecl.superClassRef = null;
 		classDecl.superClassExpression = __NSSafe_IdentRef(superClassSTE);
-	}
-
-	/**
-	 * Data fields that override an accessor require an explicit property definition along the lines of
-	 * <pre>
-	 * Object.defineProperty(D.prototype, "myField", {writable: true});
-	 * </pre>
-	 * A simple initialization of the form <code>this.myField = undefined;</code> would throw an exception at runtime (in case of
-	 * overriding only a getter) or would simply invoke the setter (in case of overriding a setter or an accessor pair).
-	 * <p>
-	 * This applies to both instance and static fields.
-	 */
-	def private LinkedHashSet<N4FieldDeclaration> findFieldsRequiringExplicitDefinition(N4ClassDeclaration classDecl) {
-		val tClass = state.info.getOriginalDefinedType(classDecl);
-		val fieldsOverridingAnAccessor = if (tClass !== null) {
-			state.memberCollector.computeOwnedFieldsOverridingAnAccessor(tClass, true)
-				.map[static -> name]
-				.toSet;
-		};
-		val result = newLinkedHashSet;
-		result += classDecl.ownedMembers
-			.filter[AnnotationDefinition.OVERRIDE.hasAnnotation(it)]
-			.filter(N4FieldDeclaration)
-			.filter[fieldsOverridingAnAccessor === null || fieldsOverridingAnAccessor.contains(static -> name)];
-		return result;
-	}
-
-	def private List<Statement> createExplicitFieldDefinitions(SymbolTableEntry steClass, LinkedHashSet<N4FieldDeclaration> fieldsRequiringExplicitDefinition) {
-		val objectSTE = getSymbolTableEntryOriginal(state.G.objectType, true);
-		val definePropertySTE = getSymbolTableEntryForMember(state.G.objectType, "defineProperty", false, true, true);
-		val result = <Statement>newArrayList;
-		for (fieldDecl : fieldsRequiringExplicitDefinition) {
-			// Object.defineProperty(D.prototype, "s", {writable: true});
-			result += _ExprStmnt(
-				_CallExpr(
-					_PropertyAccessExpr(objectSTE, definePropertySTE),
-					if (fieldDecl.static) {
-						__NSSafe_IdentRef(steClass)
-					} else {
-						__NSSafe_PropertyAccessExpr(steClass, steFor_prototype)
-					},
-					_StringLiteral(fieldDecl.name),
-					_ObjLit(
-						"writable" -> _BooleanLiteral(true)
-					)
-				)
-			);
-		}
-		return result;
 	}
 
 	/** Override to add additional output code directly after the default class declaration output code. */

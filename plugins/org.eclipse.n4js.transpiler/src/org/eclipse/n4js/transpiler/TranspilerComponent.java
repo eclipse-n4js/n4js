@@ -528,6 +528,16 @@ public abstract class TranspilerComponent {
 		return getSymbolTableEntryInternal("$getReflectionForEnum", true);
 	}
 
+	//// $defineFields
+
+	/**
+	 * "$defineFields" - retrieve the internal symbol table entry for the symbol "$defineFields"
+	 */
+	public SymbolTableEntryInternal steFor_$defineFields() {
+
+		return getSymbolTableEntryInternal("$defineFields", true);
+	}
+
 	//// $initFieldsFromInterfaces
 
 	/**
