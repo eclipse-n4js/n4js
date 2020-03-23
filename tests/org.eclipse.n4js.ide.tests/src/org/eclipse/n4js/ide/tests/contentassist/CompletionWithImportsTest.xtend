@@ -27,11 +27,9 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 			"MBA" -> '''
 						export class B1 {}
 						export class A2 {}''',
-			"C"   -> '''
-						export class C01 {}
-						export class C02 {}
-						export class C03 {}
-						export class C04 {}''',
+			"MC"   -> '''
+						export class C1 {}
+						export class C2 {}''',
 			"Def" -> '''
 						export class Def01 {}
 						export class Def02 {}
@@ -68,7 +66,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 			import {A1 as Alias1} from "MA";
 			let x = new A1<|>
 		''', ''' 
-			(Alias1, Class, alias for A1, , , 00000, , , , ([1:12 - 1:14], Alias1), [], [], , )
+			(Alias1, Class, alias for MA/A1, , , 00000, , , , ([1:12 - 1:14], Alias1), [], [], , )
 		''');
 	}
 
@@ -78,7 +76,39 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 			import {A1 as Alias1} from "MA";
 			let x = new Alias1<|>
 		''', ''' 
-			(Alias1, Class, alias for A1, , , 00000, , , , ([1:12 - 1:18], Alias1), [], [], , )
+			(Alias1, Class, alias for MA/A1, , , 00000, , , , ([1:12 - 1:18], Alias1), [], [], , )
+		''');
+	}
+
+	@Test
+	def void testAliasExists3() {
+		test('''
+			import {A1 as B1} from "MA";
+			B1<|>
+		''', ''' 
+			(B1, Class, alias for MA/A1, , , 00000, , , , ([1:0 - 1:2], B1), [], [], , )
+			(MBA/B1, Class, via new alias AliasB1, , , 00001, , , , ([1:0 - 1:2], AliasB1), [([0:28 - 0:28], 
+			import {B1 as AliasB1} from "MBA";)], [], , )
+		''');
+	}
+
+	@Test
+	def void testAliasExists4() {
+		test('''
+			import {A2 as AliasA} from "MA";
+			AliasA<|>;
+		''', ''' 
+			(AliasA, Class, alias for MA/A2, , , 00000, , , , ([1:0 - 1:6], AliasA), [], [], , )
+		''');
+	}
+
+	@Test
+	def void testAliasExists5() {
+		test('''
+			import {A2 as AliasA} from "MA";
+			Ali<|>;
+		''', ''' 
+			(AliasA, Class, alias for MA/A2, , , 00000, , , , ([1:0 - 1:3], AliasA), [], [], , )
 		''');
 	}
 
@@ -89,7 +119,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 			let x = new A2<|>
 		''', ''' 
 			(A2, Class, MA, , , 00000, , , , ([1:12 - 1:14], A2), [], [], , )
-			(A2 as AliasA2, Class, MBA, , , 00001, , , , ([1:12 - 1:14], AliasA2), [([0:22 - 0:22], 
+			(MBA/A2, Class, via new alias AliasA2, , , 00001, , , , ([1:12 - 1:14], AliasA2), [([0:22 - 0:22], 
 			import {A2 as AliasA2} from "MBA";)], [], , )
 		''');
 	}
@@ -100,7 +130,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 			import * as NSMA from "MA";
 			let x = new A1<|>
 		''', ''' 
-			(NSMA.A1, Class, MA, , , 00000, , , , ([1:12 - 1:14], A1), [], [], , )
+			(NSMA.A1, Class, MA/A1, , , 00000, , , , ([1:12 - 1:14], NSMA.A1), [], [], , )
 		''');
 	}
 
