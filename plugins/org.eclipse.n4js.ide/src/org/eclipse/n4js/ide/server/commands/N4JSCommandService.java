@@ -23,6 +23,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,22 +37,33 @@ import org.eclipse.lsp4j.CodeActionParams;
 import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
+import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.n4js.external.LibraryChange;
 import org.eclipse.n4js.external.NpmCLI;
+import org.eclipse.n4js.ide.server.codeActions.ICodeActionAcceptor;
 import org.eclipse.n4js.ide.server.codeActions.N4JSCodeActionService;
+import org.eclipse.n4js.ide.server.codeActions.N4JSSourceActionProvider;
+import org.eclipse.n4js.ide.server.imports.ImportOrganizer;
 import org.eclipse.n4js.ide.xtext.server.ExecuteCommandParamsDescriber;
+import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
+import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
 import org.eclipse.n4js.json.ide.codeActions.JSONCodeActionService;
+import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
+import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.SemverUtils;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.semver.model.SemverSerializer;
+import org.eclipse.xtext.ide.server.Document;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
+import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.ide.server.codeActions.ICodeActionService2.Options;
 import org.eclipse.xtext.ide.server.commands.IExecutableCommandService;
+import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.util.CancelIndicator;
 
 import com.google.common.base.Preconditions;
@@ -69,6 +81,12 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 	public static final String N4JS_REBUILD = "n4js.rebuild";
 
 	/**
+	 * The organize imports command. This command will organize all imports of a given file. In addition, code
+	 * completion and quick fixes are available for adding missing imports.
+	 */
+	public static final String N4JS_ORGANIZE_IMPORTS = "n4js.organizeImports";
+
+	/**
 	 * Composite fix that will resolve all issues of the same kind in the current file.
 	 *
 	 * Should not appear on the UI of the client.
@@ -84,6 +102,12 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 
 	@Inject
 	private XLanguageServerImpl lspServer;
+
+	@Inject
+	private XWorkspaceManager workspaceManager;
+
+	@Inject
+	private UriExtensions uriExtensions;
 
 	@Inject
 	private N4JSCodeActionService codeActionService;
@@ -268,4 +292,25 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 		return null;
 	}
 
+	/**
+	 * Command for {@link ImportOrganizer#organizeImports(Document, Script, CancelIndicator) organizing imports} in a
+	 * single file. Triggered via the corresponding source action
+	 * {@link N4JSSourceActionProvider#organizeImports(CodeActionParams, ICodeActionAcceptor) organizeImports}.
+	 */
+	@ExecutableCommandHandler(N4JS_ORGANIZE_IMPORTS)
+	public Void organizeImports(String uriString, ILanguageServerAccess access, CancelIndicator cancelIndicator) {
+		URI uri = uriExtensions.toUri(uriString);
+		XtextResource resource = workspaceManager.getResource(uri);
+		if (!(resource instanceof N4JSResource)) {
+			return null;
+		}
+		Script script = ((N4JSResource) resource).getScript();
+		XDocument document = workspaceManager.getDocument(resource);
+		List<TextEdit> edits = ImportOrganizer.organizeImports(document, script, cancelIndicator);
+
+		WorkspaceEdit workspaceEdit = new WorkspaceEdit(Collections.singletonMap(uriString, edits));
+		ApplyWorkspaceEditParams params = new ApplyWorkspaceEditParams(workspaceEdit, "Organize Imports");
+		access.getLanguageClient().applyEdit(params);
+		return null;
+	}
 }

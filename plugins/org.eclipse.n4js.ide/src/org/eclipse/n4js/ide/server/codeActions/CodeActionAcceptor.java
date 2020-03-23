@@ -23,6 +23,7 @@ import org.eclipse.lsp4j.Command;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
+import org.eclipse.n4js.ide.server.codeActions.util.CodeActionUtils;
 
 /**
  * Utility class to convert some changes to {@link CodeAction}s / {@link Command}s
@@ -97,6 +98,19 @@ public class CodeActionAcceptor implements ICodeActionAcceptor {
 				codeAction.setDiagnostics(cac.getDiagnostics());
 			}
 		}
+		codeActions.add(Either.forRight(codeAction));
+	}
+
+	@Override
+	public void acceptSourceAction(String title, String kind, String commandId, Object... arguments) {
+		if (!CodeActionUtils.isSpecialKindOf(kind, CodeActionKind.Source)) {
+			throw new IllegalArgumentException("not a source action kind: " + kind);
+		}
+		CodeAction codeAction = new CodeAction();
+		codeAction.setTitle(title);
+		codeAction.setKind(kind);
+		Command command = new Command(title, commandId, Arrays.asList(arguments));
+		codeAction.setCommand(command);
 		codeActions.add(Either.forRight(codeAction));
 	}
 

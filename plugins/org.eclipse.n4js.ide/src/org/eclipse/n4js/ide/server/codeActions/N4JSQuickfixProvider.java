@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextEdit;
@@ -48,6 +49,9 @@ import com.google.inject.Singleton;
 
 /**
  * N4JS quick fixes for LSP.
+ * <p>
+ * Quick fixes are code actions that apply to a particular issue in the code and have the LSP code action kind
+ * {@link CodeActionKind#QuickFix QuickFix}.
  */
 @SuppressWarnings("restriction")
 @Singleton

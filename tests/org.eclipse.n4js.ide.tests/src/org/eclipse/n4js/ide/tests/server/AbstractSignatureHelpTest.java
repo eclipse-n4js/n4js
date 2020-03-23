@@ -33,7 +33,7 @@ abstract public class AbstractSignatureHelpTest extends AbstractStructuredIdeTes
 	}
 
 	@Override
-	protected void performTest(Project project, SignatureHelpConfiguration shc)
+	protected void performTest(Project project, String moduleName, SignatureHelpConfiguration shc)
 			throws InterruptedException, ExecutionException {
 
 		TextDocumentPositionParams textDocumentPositionParams = new TextDocumentPositionParams();
