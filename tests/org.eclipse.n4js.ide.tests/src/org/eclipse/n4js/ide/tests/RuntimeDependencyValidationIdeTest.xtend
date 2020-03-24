@@ -63,7 +63,7 @@ class RuntimeDependencyValidationIdeTest extends AbstractIdeTest {
 	];
 
 	val defaultExpectedIssueInMainBad = '''
-		(Warning, [1:16 - 1:19], (LTD) When importing modules from a runtime cycle, those that are the target of a load-time dependency (marked with * below) may only be imported after first importing one of the others. Thus, import of module A must be preceded by an import of one of the modules C, X, Y.
+		(Error, [1:16 - 1:19], When importing modules from a runtime cycle, those that are the target of a load-time dependency (marked with * below) may only be imported after first importing one of the others. Thus, import of module A must be preceded by an import of one of the modules C, X, Y.
 		Containing runtime dependency cycle cluster:
 		    *A.n4js --> Y.n4js
 		    *B.n4js --> A.n4js
@@ -228,7 +228,7 @@ cleanBuildAndWait(); // TODO GH-1675 remove this line
 		assertIssuesInModules(#[
 			"X" -> #[
 				'''
-					(Warning, [0:16 - 0:19], (LTD) A load-time dependency target module B must only be imported once within the same runtime dependency cycle, but B is also imported by module C.
+					(Error, [0:16 - 0:19], A load-time dependency target module B must only be imported once within the same runtime dependency cycle, but B is also imported by module C.
 					Containing runtime dependency cycle cluster:
 					    *A.n4js --> Y.n4js
 					    *B.n4js --> A.n4js
@@ -239,7 +239,7 @@ cleanBuildAndWait(); // TODO GH-1675 remove this line
 			],
 			"C" -> #[
 				'''
-					(Warning, [0:16 - 0:19], (LTD) A load-time dependency target module B must only be imported once within the same runtime dependency cycle, but B is also imported by module X.
+					(Error, [0:16 - 0:19], A load-time dependency target module B must only be imported once within the same runtime dependency cycle, but B is also imported by module X.
 					Containing runtime dependency cycle cluster:
 					    *A.n4js --> Y.n4js
 					    *B.n4js --> A.n4js
@@ -286,7 +286,7 @@ cleanBuildAndWait(); // TODO GH-1675 remove this line
 		assertIssues(
 			"A" -> #[
 				'''
-					(Warning, [0:16 - 0:19], (LTD) Load-time dependency cycles are disallowed, because successful resolution by Javascript engine cannot be guaranteed.
+					(Error, [0:16 - 0:19], Load-time dependency cycles are disallowed, because successful resolution by Javascript engine cannot be guaranteed.
 					    A.n4js --> C.n4js
 					    B.n4js --> A.n4js
 					    C.n4js --> B.n4js)
@@ -294,7 +294,7 @@ cleanBuildAndWait(); // TODO GH-1675 remove this line
 			],
 			"B" -> #[
 				'''
-					(Warning, [0:16 - 0:19], (LTD) Load-time dependency cycles are disallowed, because successful resolution by Javascript engine cannot be guaranteed.
+					(Error, [0:16 - 0:19], Load-time dependency cycles are disallowed, because successful resolution by Javascript engine cannot be guaranteed.
 					    A.n4js --> C.n4js
 					    B.n4js --> A.n4js
 					    C.n4js --> B.n4js)
@@ -302,7 +302,7 @@ cleanBuildAndWait(); // TODO GH-1675 remove this line
 			],
 			"C" -> #[
 				'''
-					(Warning, [0:16 - 0:19], (LTD) Load-time dependency cycles are disallowed, because successful resolution by Javascript engine cannot be guaranteed.
+					(Error, [0:16 - 0:19], Load-time dependency cycles are disallowed, because successful resolution by Javascript engine cannot be guaranteed.
 					    A.n4js --> C.n4js
 					    B.n4js --> A.n4js
 					    C.n4js --> B.n4js)
@@ -345,7 +345,7 @@ cleanBuildAndWait(); // TODO GH-1675 remove this line
 		val expectedIssuesWithIllegalLoadtimeReferences = defaultExpectedIssues + #[
 			"B" -> #[
 				'''
-					(Warning, [12:0 - 12:4], (LTD) Load-time references to the same or other modules are not allowed within a runtime dependency cycle (except in extends/implements clauses).
+					(Error, [12:0 - 12:4], Load-time references to the same or other modules are not allowed within a runtime dependency cycle (except in extends/implements clauses).
 					    *A.n4js --> Y.n4js
 					    *B.n4js --> A.n4js
 					    C.n4js --> B.n4js
@@ -353,7 +353,7 @@ cleanBuildAndWait(); // TODO GH-1675 remove this line
 					    Y.n4js --> X.n4js)
 				''',
 				'''
-					(Warning, [14:4 - 14:5], (LTD) Load-time references to the same or other modules are not allowed within a runtime dependency cycle (except in extends/implements clauses).
+					(Error, [14:4 - 14:5], Load-time references to the same or other modules are not allowed within a runtime dependency cycle (except in extends/implements clauses).
 					    *A.n4js --> Y.n4js
 					    *B.n4js --> A.n4js
 					    C.n4js --> B.n4js
