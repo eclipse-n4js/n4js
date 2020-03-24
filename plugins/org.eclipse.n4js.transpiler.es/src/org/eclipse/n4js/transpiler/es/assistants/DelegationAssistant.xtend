@@ -235,7 +235,19 @@ class DelegationAssistant extends TransformationAssistant {
 		if(member instanceof N4FieldDeclaration) {
 			throw new IllegalArgumentException("no member function available for fields");
 		}
-		val accessToMemberDefinition = createAccessToMemberDefinition(protoOrCtorExpr, exprIsProto, member);
+		if(member instanceof N4MethodDeclaration) {
+			// for methods we can use a simple property access instead of Object.getOwnPropertyDescriptor()
+			val memberName = member.name;
+			val memberIsSymbol = memberName!==null && memberName.startsWith(N4JSLanguageUtils.SYMBOL_IDENTIFIER_PREFIX);
+			val memberSTE = findSymbolTableEntryForElement(member, true);
+			return if(!memberIsSymbol) {
+				_PropertyAccessExpr(protoOrCtorExpr, memberSTE)
+			} else {
+				_IndexAccessExpr(protoOrCtorExpr, typeAssistant.getMemberNameAsSymbol(memberName))
+			};
+		}
+		// for other members (i.e. getters and setters) we need to retrieve the property descriptor:
+		val accessToMemberDefinition = createAccessToMemberDescriptor(protoOrCtorExpr, exprIsProto, member);
 		// append ".get", ".set", or ".value" depending on member type
 		val result = _PropertyAccessExpr(accessToMemberDefinition, getPropertyDescriptorValueProperty(member));
 		return result;
@@ -243,7 +255,7 @@ class DelegationAssistant extends TransformationAssistant {
 
 	/**
 	 * Given an expression that will evaluate to a prototype or constructor, this method returns an expression that
-	 * will evaluate to the member definition of a particular member.
+	 * will evaluate to the property descriptor of a particular member.
 	 *
 	 * @param protoOrCtorExpr
 	 *         an expression that is expected to evaluate to a prototype or a constructor.
@@ -253,7 +265,7 @@ class DelegationAssistant extends TransformationAssistant {
 	 * @param member
 	 *         the member.
 	 */
-	def private Expression createAccessToMemberDefinition(Expression protoOrCtorExpr, boolean exprIsProto, N4MemberDeclaration member) {
+	def private Expression createAccessToMemberDescriptor(Expression protoOrCtorExpr, boolean exprIsProto, N4MemberDeclaration member) {
 		val memberName = member.name;
 		val memberIsSymbol = memberName!==null && memberName.startsWith(N4JSLanguageUtils.SYMBOL_IDENTIFIER_PREFIX);
 		val memberSTE = findSymbolTableEntryForElement(member, true);
