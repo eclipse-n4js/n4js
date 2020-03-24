@@ -14,6 +14,7 @@ import static org.eclipse.n4js.utils.N4JSLanguageUtils.lastSegmentOrDefaultHost;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
@@ -21,7 +22,6 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.ide.editor.contentassist.N4JSIdeContentProposalProvider.N4JSCandidateFilter;
 import org.eclipse.n4js.ide.editor.contentassist.imports.ImportRewriter.ImportChanges;
 import org.eclipse.n4js.n4JS.N4JSPackage;
@@ -53,12 +53,14 @@ import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.resource.impl.AliasedEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.IScopeProvider;
 import org.eclipse.xtext.util.ReplaceRegion;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 /**
@@ -136,10 +138,6 @@ public class ImportsAwareReferenceProposalCreator {
 
 			for (IEObjectDescription candidate : candidates) {
 
-				if (candidate instanceof PlainAccessOfNamespacedImportDescription) {
-					System.out.println(candidate.getClass().getName());
-				}
-
 				if (!acceptor.canAcceptMoreProposals()) {
 					return;
 				}
@@ -162,121 +160,10 @@ public class ImportsAwareReferenceProposalCreator {
 				}
 			}
 		}
-
-		System.out.println();
-
 	}
 
 	static enum CandidateAccessType {
 		direct, alias, namespace
-	}
-
-	class CAECandidate {
-		final IEObjectDescription candidate;
-		final IEObjectDescription candidateViaScope;
-		final boolean isCollisioningWithScope;
-		final QualifiedName qualifiedName;
-		final String shortName;
-		final String namespaceName;
-		final String aliasName;
-		final CandidateAccessType accessType;
-		final NameAndAlias addedImportNameAndAlias;
-
-		CAECandidate(IEObjectDescription candidate, EObject model,
-				IScope scope,
-				EReference reference,
-				ContentAssistContext context,
-				Predicate<IEObjectDescription> filter) {
-
-			this.candidate = candidate;
-			this.qualifiedName = getQualifiedName();
-			if (qualifiedName.toString().contains("A2")) {
-				System.out.println();
-			}
-			this.shortName = lastSegmentOrDefaultHost(qualifiedName);
-			this.candidateViaScope = scope.getSingleElement(QualifiedName.create(shortName));
-			this.isCollisioningWithScope = isCollisioningWithScope(scope);
-			this.accessType = getAccessType();
-			this.aliasName = getAliasName();
-			this.namespaceName = getNamespaceName();
-			this.addedImportNameAndAlias = getImportChanges(this, model, scope, filter);
-		}
-
-		private QualifiedName getQualifiedName() {
-			QualifiedName qName = candidate.getQualifiedName();
-			String sName = lastSegmentOrDefaultHost(qName);
-
-			if (qName.toString().equals(sName)) {
-				EObject eObj = candidate.getEObjectOrProxy(); // performance issue! TODO: remove it
-				QualifiedName qnOfEObject = qualifiedNameProvider.getFullyQualifiedName(eObj);
-				if (qnOfEObject != null) {
-					return qnOfEObject;
-				}
-			}
-
-			return candidate.getQualifiedName();
-		}
-
-		private boolean isCollisioningWithScope(IScope scope) {
-			if (candidateViaScope == null) {
-				return false;
-			}
-			IEObjectDescription elementViaScope = scope.getSingleElement(QualifiedName.create(shortName));
-			boolean resolve = false;
-			resolve |= elementViaScope instanceof PlainAccessOfAliasedImportDescription;
-			resolve |= elementViaScope instanceof PlainAccessOfNamespacedImportDescription;
-			if (resolve) {
-				EObject eObjectOrProxy = elementViaScope.getEObjectOrProxy();
-				QualifiedName qnOfEObject = qualifiedNameProvider.getFullyQualifiedName(eObjectOrProxy);
-
-				return !qnOfEObject.equals(this.qualifiedName);
-			}
-
-			return false;
-		}
-
-		private CandidateAccessType getAccessType() {
-			if (isCollisioningWithScope) {
-				return CandidateAccessType.direct;
-			}
-			if (candidateViaScope instanceof PlainAccessOfAliasedImportDescription) {
-				return CandidateAccessType.alias;
-			}
-			if (candidateViaScope instanceof PlainAccessOfNamespacedImportDescription) {
-				return CandidateAccessType.namespace;
-			}
-			return CandidateAccessType.direct;
-		}
-
-		private String getAliasName() {
-			if (accessType == CandidateAccessType.alias) {
-				return ((PlainAccessOfAliasedImportDescription) candidateViaScope).getAlias();
-			}
-			return null;
-		}
-
-		private String getNamespaceName() {
-			if (accessType == CandidateAccessType.namespace) {
-				return ((PlainAccessOfNamespacedImportDescription) candidateViaScope).getNamespacedName();
-			}
-			return null;
-		}
-
-		public boolean hasNewImport() {
-			return addedImportNameAndAlias != null;
-		}
-
-		public boolean newImportHasAlias() {
-			return hasNewImport() && !Strings.isNullOrEmpty(addedImportNameAndAlias.alias);
-		}
-
-		public boolean isAlias() {
-			return accessType == CandidateAccessType.alias;
-		}
-
-		public boolean isNamespace() {
-			return accessType == CandidateAccessType.namespace;
-		}
 	}
 
 	/**
@@ -365,7 +252,7 @@ public class ImportsAwareReferenceProposalCreator {
 			return caec.namespaceName + typeVersion;
 		}
 		if (caec.newImportHasAlias()) {
-			return qualifiedNameConverter.toString(caec.qualifiedName) + typeVersion;
+			return caec.shortName + typeVersion;
 		}
 
 		return caec.shortName + typeVersion;
@@ -379,7 +266,12 @@ public class ImportsAwareReferenceProposalCreator {
 			return qualifiedNameConverter.toString(caec.qualifiedName);
 		}
 		if (caec.newImportHasAlias()) {
-			return "via new alias " + caec.addedImportNameAndAlias.alias;
+			String descr = "via new alias " + caec.addedImportNameAndAlias.alias;
+			descr += " for " + qualifiedNameConverter.toString(caec.qualifiedName);
+			descr += "\n\n";
+			descr += "Introduces the new alias '" + caec.addedImportNameAndAlias.alias;
+			descr += "' for element " + qualifiedNameConverter.toString(caec.qualifiedName);
+			return descr;
 		}
 
 		QualifiedName caecQN = caec.qualifiedName;
@@ -426,146 +318,220 @@ public class ImportsAwareReferenceProposalCreator {
 		}
 	}
 
-	private NameAndAlias getImportChanges(CAECandidate caec, EObject model, IScope scope,
-			Predicate<IEObjectDescription> filter) {
+	class CAECandidate {
+		final IEObjectDescription candidate;
+		final IEObjectDescription candidateViaScopeShortName;
+		final boolean isScopedCandidateEqual;
+		final boolean isScopedCandidateCollisioning;
+		final QualifiedName qualifiedName;
+		final String shortName;
+		final String namespaceName;
+		final String aliasName;
+		final CandidateAccessType accessType;
+		final NameAndAlias addedImportNameAndAlias;
 
-		if (caec.accessType != CandidateAccessType.direct) {
-			return null;
+		CAECandidate(IEObjectDescription candidate, EObject model,
+				IScope scope,
+				EReference reference,
+				ContentAssistContext context,
+				Predicate<IEObjectDescription> filter) {
+
+			this.candidate = candidate;
+			this.qualifiedName = getQualifiedName();
+			this.shortName = lastSegmentOrDefaultHost(qualifiedName);
+			this.candidateViaScopeShortName = getCandidateViaScope(scope);
+			this.isScopedCandidateEqual = isEqualCandidateName(candidateViaScopeShortName, qualifiedName);
+			this.isScopedCandidateCollisioning = isScopedCandidateCollisioning(scope);
+			this.accessType = getAccessType();
+			this.aliasName = getAliasName();
+			this.namespaceName = getNamespaceName();
+			this.addedImportNameAndAlias = getImportChanges(this, model, scope, filter);
 		}
 
-		Resource resource = model.eResource();
+		private QualifiedName getQualifiedName() {
+			QualifiedName qName = candidate.getQualifiedName();
+			String sName = lastSegmentOrDefaultHost(qName);
 
-		// // does it even happen? check logs if first and/or second check passes
-		// String actualSyntacticReplacementString = getActualReplacementString(syntacticReplacementString, scope,
-		// resource, filter);
-		// // there is an import statement - apply computed replacementString
-		// if (!syntacticReplacementString.equals(actualSyntacticReplacementString)) {
-		// QualifiedName shortQualifiedName = applyValueConverter(actualSyntacticReplacementString);
-		// if (shortQualifiedName.getSegmentCount() == 1) {
-		// return null;
-		// }
-		// }
+			if (qName.toString().equals(sName)) {
+				QualifiedName qnOfEObject = getCompleteQualifiedName(candidate);
+				if (qnOfEObject != null) {
+					return qnOfEObject;
+				}
+			}
 
-		QualifiedName qualifiedName = getCandidateName(caec.candidate);
-
-		if (qualifiedName == null) {
-			return null;
+			return candidate.getQualifiedName();
 		}
 
-		// we could create an import statement if there is no conflict
-		if (qualifiedName.getSegmentCount() == 1) {
-			// type name is a simple name - no need to hassle with imports
-			return null;
-		}
-
-		// Globally available elements should not generate imports
-		if (qualifiedName.getSegmentCount() == 2
-				&& N4TSQualifiedNameProvider.GLOBAL_NAMESPACE_SEGMENT.equals(qualifiedName.getFirstSegment())) {
-			// type name is a simple name from global Namespace - no need to hassle with imports
-			return null;
-		}
-
-		String alias = null;
-
-		if (caec.candidateViaScope != null) {
-			// accessing default export via already imported namespace
-			if (caec.candidateViaScope.getEObjectOrProxy() instanceof ModuleNamespaceVirtualType) {
+		private IEObjectDescription getCandidateViaScope(IScope scope) {
+			List<IEObjectDescription> elements = Lists.newArrayList(scope.getElements(QualifiedName.create(shortName)));
+			if (elements.isEmpty()) {
 				return null;
 			}
-
-			// the simple name is already reachable, i.e. already in use - another import is present
-			// try to use an alias
-			alias = "Alias" + UtilN4.toUpperCaseFirst(caec.shortName);
-		}
-
-		return new NameAndAlias(qualifiedName, alias);
-	}
-
-	/** In case of main module, adjust the qualified name, e.g. index.Element -> react.Element */
-	private QualifiedName getCandidateName(IEObjectDescription candidate) {
-		QualifiedName qfn = candidate.getQualifiedName();
-		int qfnSegmentCount = qfn.getSegmentCount();
-		String tmodule = (qfnSegmentCount >= 2) ? qfn.getSegment(qfnSegmentCount - 2) : null;
-
-		QualifiedName candidateName;
-		IN4JSProject project = n4jsCore.findProject(candidate.getEObjectURI()).orNull();
-		if (project != null && tmodule != null && tmodule.equals(project.getMainModule())) {
-			N4JSProjectName projectName = project.getProjectName();
-			N4JSProjectName definesPackage = project.getDefinesPackageName();
-			if (definesPackage != null) {
-				projectName = definesPackage;
-			}
-			String lastSegmentOfQFN = candidate.getQualifiedName().getLastSegment().toString();
-			candidateName = QualifiedName.create(projectName.getRawName(), lastSegmentOfQFN);
-		} else {
-			candidateName = candidate.getQualifiedName();
-		}
-		return candidateName;
-	}
-
-	/**
-	 * Convert the the given qualifiedName to a valid syntax in the n4js file.
-	 */
-	private String applyValueConverter(QualifiedName qualifiedName) {
-		String result = qualifiedNameConverter.toString(qualifiedName);
-		result = valueConverter.toString(result);
-		return result;
-	}
-
-	/**
-	 * Converts the concrete syntax to a qualified name.
-	 */
-	private QualifiedName applyValueConverter(String concreteSyntax) {
-		final String semanticReplacementString = valueConverter.toValue(concreteSyntax, null);
-		final QualifiedName qualifiedName = qualifiedNameConverter.toQualifiedName(semanticReplacementString);
-		return qualifiedName;
-	}
-
-	/**
-	 * Return the to-be-inserted string if an existing import is present.
-	 */
-	public String getActualReplacementString(String syntacticReplacementString, IScope scope, Resource resource,
-			Predicate<IEObjectDescription> filter) {
-
-		if (scope != null) {
-			final QualifiedName qualifiedName = applyValueConverter(syntacticReplacementString);
-			if (qualifiedName.getSegmentCount() == 1) {
-				return syntacticReplacementString;
-			}
-			final IEObjectDescription element = scope.getSingleElement(qualifiedName);
-			if (element != null) {
-				EObject resolved = EcoreUtil.resolve(element.getEObjectOrProxy(), resource);
-				if (!resolved.eIsProxy()) {
-					IEObjectDescription description = findApplicableDescription(resolved, qualifiedName, true, scope,
-							filter);
-					if (description != null) {
-						String multisegmentProposal = applyValueConverter(description.getName());
-						return multisegmentProposal;
+			if (elements.size() > 1) {
+				for (IEObjectDescription element : elements) {
+					if (isEqualCandidateName(element, qualifiedName)) {
+						return element;
 					}
 				}
 			}
+			if (!elements.isEmpty()) {
+				return elements.get(0);
+			}
+
+			return null;
 		}
-		return syntacticReplacementString;
-	}
 
-	/**
-	 * Search for a description in the scope that points to the given element. A valid description is considered to
-	 * fulfill the {@code filter} and the last segment of the given qualifiedName has to match
-	 * {@code simpleNameMatch == true} or has to be different from the description's last name segment. If nothing can
-	 * be found, {@code null} is returned.
-	 */
-	private IEObjectDescription findApplicableDescription(EObject objectOrProxy, QualifiedName qualifiedName,
-			boolean simpleNameMatch, IScope scope, Predicate<IEObjectDescription> filter) {
+		/** @return the complete qualified name using {@link IQualifiedNameProvider} */
+		private QualifiedName getCompleteQualifiedName(IEObjectDescription objDescr) {
+			if (objDescr == null) {
+				return null;
+			}
+			EObject eObjectOrProxy = objDescr.getEObjectOrProxy(); // performance issue! TODO: remove it
+			if (eObjectOrProxy == null) {
+				return null;
+			}
+			QualifiedName qnOfEObject = qualifiedNameProvider.getFullyQualifiedName(eObjectOrProxy);
+			return qnOfEObject;
+		}
 
-		Iterable<IEObjectDescription> lookupElements = scope.getElements(objectOrProxy);
-		for (IEObjectDescription lookupElement : lookupElements) {
-			if (filter.apply(lookupElement)) {
-				if (simpleNameMatch == qualifiedName.getLastSegment()
-						.equals(lookupElement.getName().getLastSegment())) {
-					return lookupElement;
+		/** @return true iff the {@link QualifiedName} of the given objDescr equals the given qName */
+		private boolean isEqualCandidateName(IEObjectDescription objDescr, QualifiedName qName) {
+			QualifiedName qnOfEObject = getCompleteQualifiedName(objDescr);
+			if (qnOfEObject == null) {
+				return false;
+			}
+			return qnOfEObject.equals(qName);
+		}
+
+		/**
+		 * @return true iff {@link #candidate} and {@link #candidateViaScopeShortName} are different but accessible via
+		 *         the same short name
+		 */
+		private boolean isScopedCandidateCollisioning(IScope scope) {
+			if (isScopedCandidateEqual) {
+				return false;
+			}
+			if (candidateViaScopeShortName instanceof PlainAccessOfAliasedImportDescription) {
+				String candidateAlias = ((PlainAccessOfAliasedImportDescription) candidateViaScopeShortName).getAlias();
+				if (!shortName.equals(candidateAlias)) {
+					return false;
 				}
 			}
+			return true;
 		}
-		return null;
+
+		private CandidateAccessType getAccessType() {
+			if (isScopedCandidateEqual) {
+				if (candidateViaScopeShortName instanceof PlainAccessOfAliasedImportDescription) {
+					return CandidateAccessType.alias;
+				}
+				if (candidateViaScopeShortName instanceof PlainAccessOfNamespacedImportDescription) {
+					return CandidateAccessType.namespace;
+				}
+			}
+			if (candidate instanceof AliasedEObjectDescription) {
+				return CandidateAccessType.alias;
+			}
+			return CandidateAccessType.direct;
+		}
+
+		private String getAliasName() {
+			if (accessType == CandidateAccessType.alias) {
+				if (candidate instanceof AliasedEObjectDescription) {
+					return candidate.getName().toString();
+				}
+				return ((PlainAccessOfAliasedImportDescription) candidateViaScopeShortName).getAlias();
+			}
+			return null;
+		}
+
+		private String getNamespaceName() {
+			if (accessType == CandidateAccessType.namespace) {
+				return ((PlainAccessOfNamespacedImportDescription) candidateViaScopeShortName).getNamespacedName();
+			}
+			return null;
+		}
+
+		private NameAndAlias getImportChanges(CAECandidate caec, EObject model, IScope scope,
+				Predicate<IEObjectDescription> filter) {
+
+			if (caec.accessType != CandidateAccessType.direct) {
+				return null;
+			}
+
+			Resource resource = model.eResource();
+
+			QualifiedName importName = getImportName();
+
+			if (importName == null) {
+				return null;
+			}
+
+			// we could create an import statement if there is no conflict
+			if (importName.getSegmentCount() == 1) {
+				// type name is a simple name - no need to hassle with imports
+				return null;
+			}
+
+			// Globally available elements should not generate imports
+			if (importName.getSegmentCount() == 2
+					&& N4TSQualifiedNameProvider.GLOBAL_NAMESPACE_SEGMENT.equals(importName.getFirstSegment())) {
+				// type name is a simple name from global Namespace - no need to hassle with imports
+				return null;
+			}
+
+			String alias = null;
+
+			if (caec.candidateViaScopeShortName != null && caec.isScopedCandidateCollisioning) {
+				// accessing default export via already imported namespace
+				if (caec.candidateViaScopeShortName.getEObjectOrProxy() instanceof ModuleNamespaceVirtualType) {
+					return null;
+				}
+
+				// the simple name is already reachable, i.e. already in use - another import is present
+				// try to use an alias
+				alias = "Alias_" + UtilN4.toUpperCaseFirst(caec.qualifiedName.toString().replace(".", "_"));
+			}
+
+			return new NameAndAlias(importName, alias);
+		}
+
+		/** In case of main module, adjust the qualified name, e.g. index.Element -> react.Element */
+		private QualifiedName getImportName() {
+			QualifiedName qfn = candidate.getQualifiedName();
+			int qfnSegmentCount = qfn.getSegmentCount();
+			String tmodule = (qfnSegmentCount >= 2) ? qfn.getSegment(qfnSegmentCount - 2) : null;
+
+			QualifiedName candidateName;
+			IN4JSProject project = n4jsCore.findProject(candidate.getEObjectURI()).orNull();
+			if (project != null && tmodule != null && tmodule.equals(project.getMainModule())) {
+				N4JSProjectName projectName = project.getProjectName();
+				N4JSProjectName definesPackage = project.getDefinesPackageName();
+				if (definesPackage != null) {
+					projectName = definesPackage;
+				}
+				String lastSegmentOfQFN = candidate.getQualifiedName().getLastSegment().toString();
+				candidateName = QualifiedName.create(projectName.getRawName(), lastSegmentOfQFN);
+			} else {
+				candidateName = candidate.getQualifiedName();
+			}
+			return candidateName;
+		}
+
+		public boolean hasNewImport() {
+			return addedImportNameAndAlias != null;
+		}
+
+		public boolean newImportHasAlias() {
+			return hasNewImport() && !Strings.isNullOrEmpty(addedImportNameAndAlias.alias);
+		}
+
+		public boolean isAlias() {
+			return accessType == CandidateAccessType.alias;
+		}
+
+		public boolean isNamespace() {
+			return accessType == CandidateAccessType.namespace;
+		}
 	}
 }
