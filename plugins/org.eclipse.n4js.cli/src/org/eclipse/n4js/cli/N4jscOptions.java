@@ -149,15 +149,17 @@ public class N4jscOptions {
 		@GoalRequirements(goals = { N4jscGoal.compile, N4jscGoal.lsp })
 		boolean noPersist = false;
 
-		@Option(name = "--performanceReport", aliases = "-pR", //
+		@Option(name = "--performanceReport", aliases = "-pr", //
 				hidden = true, //
 				depends = "--performanceKey", //
-				usage = "[compile] enables performance data collection and specifies the location of the performance report.", //
+				usage = "[compile] enables performance data collection and specifies the location and name of the performance report. "
+						+ "If the name ends in \".csv\", CSV file format is used and an existing file will be replaced; otherwise "
+						+ "a human-readable format is used and a date/time stamp is appended to the name.", //
 				handler = N4JSCmdLineParser.N4JSFileOptionHandler.class)
 		@GoalRequirements(goals = N4jscGoal.compile)
-		File performanceReport = new File("performance-report.csv");
+		File performanceReport = new File("performance-report.txt");
 
-		@Option(name = "--performanceKey", aliases = "-pK", //
+		@Option(name = "--performanceKey", aliases = "-pk", //
 				hidden = true, //
 				usage = "[compile] specifies the data collector key of the collector whose performance data is saved in the "
 						+ "performance report.", //

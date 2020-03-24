@@ -13,6 +13,7 @@ package org.eclipse.n4js.generator
 import com.google.inject.Inject
 import java.nio.file.Path
 import java.nio.file.Paths
+import java.util.List
 import org.eclipse.emf.common.EMFPlugin
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.resource.Resource
@@ -26,10 +27,12 @@ import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.resource.N4JSCache
 import org.eclipse.n4js.resource.N4JSResource
+import org.eclipse.n4js.smith.N4JSDataCollectors
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.utils.ResourceNameComputer
 import org.eclipse.n4js.utils.StaticPolyfillHelper
+import org.eclipse.n4js.utils.URIUtils
 import org.eclipse.n4js.validation.helper.FolderContainmentHelper
 import org.eclipse.xtend.lib.annotations.Accessors
 import org.eclipse.xtext.generator.AbstractFileSystemAccess
@@ -40,12 +43,11 @@ import org.eclipse.xtext.generator.IGeneratorContext
 import org.eclipse.xtext.service.OperationCanceledManager
 import org.eclipse.xtext.util.CancelIndicator
 import org.eclipse.xtext.util.UriExtensions
+import org.eclipse.xtext.validation.CheckMode
 import org.eclipse.xtext.validation.IResourceValidator
 import org.eclipse.xtext.validation.Issue
 
 import static org.eclipse.xtext.diagnostics.Severity.*
-import org.eclipse.xtext.validation.CheckMode
-import org.eclipse.n4js.utils.URIUtils
 
 /**
  * All sub generators should extend this class. It provides basic blocks of the logic, and
@@ -209,7 +211,13 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 	 * If validation was canceled before finishing, don't assume absence of errors.
 	 */
 	private def boolean hasNoErrors(Resource input, CancelIndicator monitor) {
-		val issues = resVal.validate(input, CheckMode.ALL, monitor);
+		val m = N4JSDataCollectors.dcValidations.getMeasurement();
+		var issues = null as List<Issue>;
+		try {
+			issues = resVal.validate(input, CheckMode.ALL, monitor);
+		} finally {
+			m.close();
+		}
 		if (null === issues) {
 			// Cancellation occurred likely before all validations completed, thus can't assume absence of errors.
 			// Cancellation may result in exit via normal control-flow (this case) or via exceptional control-flow (see exception handler below)

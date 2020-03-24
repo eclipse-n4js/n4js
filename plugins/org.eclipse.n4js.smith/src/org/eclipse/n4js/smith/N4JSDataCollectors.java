@@ -32,6 +32,7 @@ public final class N4JSDataCollectors {
 	public static final DataCollector dcTranspilationStep1 = create("T1", dcTranspilation);
 	public static final DataCollector dcTranspilationStep2 = create("T2", dcTranspilation);
 	public static final DataCollector dcTranspilationStep3 = create("T3", dcTranspilation);
+	public static final DataCollector dcTEMP = create("TEMP", dcTranspilation);
 
 	public static final DataCollector dcLibMngr = create("Library Manager");
 	public static final DataCollector dcNpmInstall = create("Install NPMs", dcLibMngr);

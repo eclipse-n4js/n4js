@@ -20,6 +20,9 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -30,8 +33,29 @@ import com.google.common.base.StandardSystemProperty;
  */
 public abstract class FileUtils {
 
+	private static final DateFormat TIME_STAMP_FORMAT = new SimpleDateFormat("yyyyMMdd_HHmmss");
+
 	private FileUtils() {
 		// private.
+	}
+
+	/** Same as {@link #appendToFileName(Path, String)}, but always appends a time stamp. */
+	public static Path appendTimeStampToFileName(Path path) {
+		String timeStamp = TIME_STAMP_FORMAT.format(new Date());
+		return appendToFileName(path, timeStamp);
+	}
+
+	/** Append the given string to the path's file name, taking into account file extensions. */
+	public static Path appendToFileName(Path path, String str) {
+		String name = path.getFileName().toString();
+		int extStart = name.lastIndexOf('.');
+		String nameNew = extStart >= 0
+				? name.substring(0, extStart) + str + name.substring(extStart)
+				: name + str;
+		Path parent = path.getParent();
+		return parent != null
+				? parent.resolve(nameNew)
+				: Path.of(nameNew);
 	}
 
 	/**

@@ -12,6 +12,7 @@ package org.eclipse.n4js.cli;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -19,9 +20,11 @@ import org.apache.log4j.varia.NullAppender;
 import org.eclipse.n4js.cli.compiler.N4jscCompiler;
 import org.eclipse.n4js.smith.CollectedDataAccess;
 import org.eclipse.n4js.smith.DataCollectorCSVExporter;
+import org.eclipse.n4js.smith.DataCollectorUtils;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
+import org.eclipse.n4js.utils.io.FileUtils;
 
 /**
  * Entry point of n4jsc compiler
@@ -137,13 +140,18 @@ public class N4jscMain {
 			String performanceKey = options.getPerformanceKey();
 			File performanceReportFile = options.getPerformanceReport();
 
-			String absFileString = performanceReportFile.toPath().toAbsolutePath().toString();
+			performanceReportFile = FileUtils.appendTimeStampToFileName(performanceReportFile.toPath()).toFile();
 
-			String verb = performanceReportFile.exists() ? "Replacing " : "Writing ";
-			N4jscConsole.println(verb + "performance report: " + absFileString);
+			String absFileString = performanceReportFile.toPath().toAbsolutePath().toString();
+			N4jscConsole.println("Writing performance report: " + absFileString);
 
 			try {
-				DataCollectorCSVExporter.toFile(performanceReportFile, performanceKey);
+				if (absFileString.endsWith(".csv")) {
+					DataCollectorCSVExporter.toFile(performanceReportFile, performanceKey);
+				} else {
+					String dataStr = DataCollectorUtils.dataToString(performanceKey, "    ");
+					Files.writeString(performanceReportFile.toPath(), dataStr);
+				}
 			} catch (IOException e) {
 				throw new N4jscException(N4jscExitCode.PERFORMANCE_REPORT_ERROR);
 			}
