@@ -168,34 +168,6 @@ class DelegationAssistant extends TransformationAssistant {
 			val targetIsStatic = delegator.static;
 			val objOfInterfaceOfTargetExpr = createAccessToInterfaceObject(baseSTE, targetIsStatic);
 			createAccessToMemberFunction(objOfInterfaceOfTargetExpr, !targetIsStatic, delegator);
-//			val targetName = delegator.delegationTarget.name;
-//			val targetIsStatic = delegator.static;
-//			val targetIsSymbol = targetName!==null && targetName.startsWith(N4JSLanguageUtils.SYMBOL_IDENTIFIER_PREFIX);
-//			val targetSTE = delegator.delegationTarget;
-//			
-//			val $membersSTE =  steFor_$members;
-//			if(!targetIsSymbol) {
-//				// non-static:
-//				//     I.$members.target
-//				// static:
-//				//     I.target
-//				__NSSafe_PropertyAccessExpr(
-//					baseSTE,
-//					#[
-//						if (!targetIsStatic) $membersSTE,
-//						targetSTE
-//					].filterNull
-//				)
-//			} else {
-//				// non-static:
-//				//     I.$members[Symbol.iterator]
-//				// static:
-//				//     I[Symbol.iterator]
-//				_IndexAccessExpr(
-//					if (targetIsStatic) __NSSafe_IdentRef(baseSTE) else __NSSafe_PropertyAccessExpr(baseSTE, $membersSTE),
-//					typeAssistant.getMemberNameAsSymbol(targetName) // something like: Symbol.iterator
-//				);
-//			}
 		} else {
 			val ctorOfClassOfTarget = createAccessToClassConstructor(baseSTE, delegator.delegationSuperClassSteps);
 
