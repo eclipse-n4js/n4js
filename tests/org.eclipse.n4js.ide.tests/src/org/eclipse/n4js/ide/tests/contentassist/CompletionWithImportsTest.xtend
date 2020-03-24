@@ -87,8 +87,10 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 			B1<|>
 		''', ''' 
 			(B1, Class, alias for MA/A1, , , 00000, , , , ([1:0 - 1:2], B1), [], [], , )
-			(MBA/B1, Class, via new alias AliasB1, , , 00001, , , , ([1:0 - 1:2], AliasB1), [([0:28 - 0:28], 
-			import {B1 as AliasB1} from "MBA";)], [], , )
+			(B1, Class, via new alias Alias_MBA_B1 for MBA/B1
+			
+			Introduces the new alias 'Alias_MBA_B1' for element MBA/B1, , , 00001, , , , ([1:0 - 1:2], Alias_MBA_B1), [([0:28 - 0:28], 
+			import {B1 as Alias_MBA_B1} from "MBA";)], [], , )
 		''');
 	}
 
@@ -113,14 +115,64 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 	}
 
 	@Test
+	def void testAliasExists6() {
+		test('''
+			import {A2 as Alias1} from "MA";
+			import {A2 as Alias2} from "MBA";
+			A2<|>;
+		''', ''' 
+			(Alias1, Class, alias for MA/A2, , , 00000, , , , ([2:0 - 2:2], Alias1), [], [], , )
+			(Alias2, Class, alias for MBA/A2, , , 00001, , , , ([2:0 - 2:2], Alias2), [], [], , )
+		''');
+	}
+
+	@Test
+	def void testAliasExists7() {
+		test('''
+			import {A2 as Alias1} from "MA";
+			import {A2 as Alias2} from "MBA";
+			Ali<|>;
+		''', ''' 
+			(Alias1, Class, alias for MA/A2, , , 00000, , , , ([2:0 - 2:3], Alias1), [], [], , )
+			(Alias2, Class, alias for MBA/A2, , , 00001, , , , ([2:0 - 2:3], Alias2), [], [], , )
+		''');
+	}
+
+	@Test
+	def void testAliasExists8() {
+		test('''
+			import {A2 as A2_Alias} from "MA";
+			A2<|>;
+		''', ''' 
+			(A2, Class, MBA, , , 00000, , , , ([1:0 - 1:2], A2), [([0:34 - 0:34], 
+			import {A2} from "MBA";)], [], , )
+			(A2_Alias, Class, alias for MA/A2, , , 00001, , , , ([1:0 - 1:2], A2_Alias), [], [], , )
+		''');
+	}
+
+	@Test
+	def void testAliasExists9() {
+		test('''
+			import {A2} from "MA";
+			import {A2 as A2_Alias} from "MBA";
+			A2<|>;
+		''', ''' 
+			(A2, Class, MA, , , 00000, , , , ([2:0 - 2:2], A2), [], [], , )
+			(A2_Alias, Class, alias for MBA/A2, , , 00001, , , , ([2:0 - 2:2], A2_Alias), [], [], , )
+		''');
+	}
+
+	@Test
 	def void testAliasNecessary1() {
 		test('''
 			import {A2} from "MA";
 			let x = new A2<|>
 		''', ''' 
 			(A2, Class, MA, , , 00000, , , , ([1:12 - 1:14], A2), [], [], , )
-			(MBA/A2, Class, via new alias AliasA2, , , 00001, , , , ([1:12 - 1:14], AliasA2), [([0:22 - 0:22], 
-			import {A2 as AliasA2} from "MBA";)], [], , )
+			(A2, Class, via new alias Alias_MBA_A2 for MBA/A2
+			
+			Introduces the new alias 'Alias_MBA_A2' for element MBA/A2, , , 00001, , , , ([1:12 - 1:14], Alias_MBA_A2), [([0:22 - 0:22], 
+			import {A2 as Alias_MBA_A2} from "MBA";)], [], , )
 		''');
 	}
 
