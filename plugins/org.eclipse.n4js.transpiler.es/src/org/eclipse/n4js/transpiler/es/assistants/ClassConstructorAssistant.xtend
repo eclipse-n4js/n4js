@@ -269,7 +269,7 @@ class ClassConstructorAssistant extends TransformationAssistant {
 							val fieldSTE = findSymbolTableEntryForElement(fieldDecl, true);
 							val thisFieldName = _PropertyAccessExpr(_ThisLiteral, fieldSTE);
 							return fieldDecl.name -> if (fieldDecl.hasNonTrivialInitExpression) {
-								_AssignmentExpr(thisFieldName, fieldDecl.expression) //  reusing the expression here
+								_AssignmentExpr(thisFieldName, fieldDecl.expression) // reusing the expression here
 							} else {
 								thisFieldName
 							};

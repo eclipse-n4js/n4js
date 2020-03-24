@@ -109,7 +109,7 @@ class DependencyInjectionTransformation extends Transformation {
 	}
 
 // support for cyclic dependency injection
-// FIXME clean up
+// FIXME GH-1692 clean up
 def private ObjectLiteral convertTypePropertiesToGetter(ObjectLiteral objLit) {
 //	val props = objLit.propertyAssignments;
 //	for (var i=0;i<props.size;i++) {

@@ -201,7 +201,7 @@ import org.eclipse.xtext.EcoreUtil2;
 	@Override
 	public Boolean caseN4ClassDeclaration(N4ClassDeclaration original) {
 		write("class ");
-		write(original.getName()); // FIXME exported name!
+		write(original.getName());
 		write(' ');
 		final ParameterizedTypeRef superClassRef = original.getSuperClassRef();
 		final Expression superClassExpression = original.getSuperClassExpression();
@@ -217,10 +217,6 @@ import org.eclipse.xtext.EcoreUtil2;
 			write("extends ");
 			process(superClassExpression);
 			write(' ');
-		}
-		if (original.getSuperClassRef() != null) {
-			write("extends ");
-			// FIXME
 		}
 		processBlockLike(original.getOwnedMembersRaw(), '{', null, null, '}');
 		return DONE;
@@ -290,21 +286,9 @@ import org.eclipse.xtext.EcoreUtil2;
 		return DONE;
 	}
 
-	// FIXME align methods #processPropertyName() and #caseLiteralOrComputedPropertyName()!!!
 	@Override
 	public Boolean caseLiteralOrComputedPropertyName(LiteralOrComputedPropertyName original) {
-		switch (original.getKind()) {
-		case NUMBER:
-		case STRING:
-		case IDENTIFIER:
-			write(original.getLiteralName());
-			break;
-		case COMPUTED:
-			write('[');
-			process(original.getExpression());
-			write(']');
-			break;
-		}
+		processPropertyName(original);
 		return DONE;
 	}
 
@@ -1292,6 +1276,10 @@ import org.eclipse.xtext.EcoreUtil2;
 
 	private void processPropertyName(PropertyNameOwner owner) {
 		final LiteralOrComputedPropertyName name = owner.getDeclaredName();
+		processPropertyName(name);
+	}
+
+	private void processPropertyName(LiteralOrComputedPropertyName name) {
 		final PropertyNameKind kind = name.getKind();
 		if (kind == PropertyNameKind.COMPUTED) {
 			// computed property names:
