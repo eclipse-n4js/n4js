@@ -33,21 +33,16 @@ import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.scoping.IContentAssistScopeProvider;
 import org.eclipse.n4js.scoping.imports.PlainAccessOfAliasedImportDescription;
 import org.eclipse.n4js.scoping.imports.PlainAccessOfNamespacedImportDescription;
-import org.eclipse.n4js.services.N4JSGrammarAccess;
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
-import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.UtilN4;
-import org.eclipse.xtext.conversion.IValueConverter;
-import org.eclipse.xtext.conversion.IValueConverterService;
 import org.eclipse.xtext.conversion.ValueConverterException;
 import org.eclipse.xtext.ide.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ide.editor.contentassist.ContentAssistEntry;
 import org.eclipse.xtext.ide.editor.contentassist.IIdeContentProposalAcceptor;
 import org.eclipse.xtext.ide.editor.contentassist.IPrefixMatcher;
 import org.eclipse.xtext.ide.editor.contentassist.IProposalConflictHelper;
-import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalCreator;
 import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalPriorities;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
@@ -64,14 +59,12 @@ import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 /**
+ *
  */
-@SuppressWarnings("unused")
 public class ImportsAwareReferenceProposalCreator {
 
 	@Inject
 	private IScopeProvider scopeProvider;
-
-	private IValueConverter<String> valueConverter;
 
 	@Inject
 	private IN4JSCore n4jsCore;
@@ -94,95 +87,57 @@ public class ImportsAwareReferenceProposalCreator {
 	@Inject
 	private IProposalConflictHelper conflictHelper;
 
-	private static final EReference[] referencesSupportingImportedElements = {
-			N4JSPackage.Literals.IDENTIFIER_REF__ID,
-			TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE
-	};
-
-	@Inject
-	private void setValueConverter(IValueConverterService service, N4JSGrammarAccess grammarAccess) {
-		@SuppressWarnings({ "unchecked", "rawtypes" })
-		IValueConverter<String> converter = (IValueConverter) ((IValueConverterService.Introspectable) service)
-				.getConverter(grammarAccess
-						.getTypeReferenceNameRule()
-						.getName());
-		this.valueConverter = converter;
-	}
-
 	/**
 	 * Retrieves possible reference targets from scope, including erroneous solutions (e.g., not visible targets). This
 	 * list is further filtered here. This is a general pattern: Do not change or modify scoping for special content
 	 * assist requirements, instead filter here.
 	 *
-	 * @param proposalFactory
-	 *            usually this will be an instance of
-	 *            {@link AbstractJavaBasedContentProposalProvider.DefaultProposalCreator DefaultProposalCreator}.
 	 * @param filter
 	 *            by default an instance of {@link N4JSCandidateFilter} will be provided here.
 	 */
-	@SuppressWarnings("javadoc")
 	public void lookupCrossReference(
 			EObject model,
 			EReference reference,
 			ContentAssistContext context,
 			IIdeContentProposalAcceptor acceptor,
-			Predicate<IEObjectDescription> filter,
-			IdeContentProposalCreator proposalFactory) {
+			Predicate<IEObjectDescription> filter) {
 
-		if (model != null) {
-			final IContentAssistScopeProvider contentAssistScopeProvider = (IContentAssistScopeProvider) scopeProvider;
-			final IScope scope = contentAssistScopeProvider.getScopeForContentAssist(model, reference);
-			// iterate over candidates, filter them, and create ICompletionProposals for them
-			final Iterable<IEObjectDescription> candidates = scope.getAllElements();
-			final Set<URI> candidateURIs = new HashSet<>(); // note: shadowing for #getAllElements does not work
+		if (model == null) {
+			return;
+		}
 
-			for (IEObjectDescription candidate : candidates) {
+		final IContentAssistScopeProvider contentAssistScopeProvider = (IContentAssistScopeProvider) scopeProvider;
+		final IScope scope = contentAssistScopeProvider.getScopeForContentAssist(model, reference);
+		// iterate over candidates, filter them, and create ICompletionProposals for them
+		final Iterable<IEObjectDescription> candidates = scope.getAllElements();
+		final Set<URI> candidateURIs = new HashSet<>(); // note: shadowing for #getAllElements does not work
 
-				if (!acceptor.canAcceptMoreProposals()) {
-					return;
-				}
+		for (IEObjectDescription candidate : candidates) {
+			if (!acceptor.canAcceptMoreProposals() || !filter.apply(candidate)) {
+				return;
+			}
 
-				if (filter.apply(candidate)) {
-					final QualifiedName qfn = candidate.getQualifiedName();
-					final int qfnSegmentCount = qfn.getSegmentCount();
-					final String tmodule = (qfnSegmentCount >= 2) ? qfn.getSegment(qfnSegmentCount - 2) : null;
-
-					final ContentAssistEntry proposal = getProposal(candidate,
-							model,
-							scope,
-							reference,
-							context,
-							filter);
-
-					if (proposal != null && candidateURIs.add(candidate.getEObjectURI())) {
-						acceptor.accept(proposal, proposalPriorities.getCrossRefPriority(candidate, proposal));
-					}
-				}
+			final ContentAssistEntry proposal = getProposal(candidate, model, scope, context);
+			if (proposal != null && candidateURIs.add(candidate.getEObjectURI())) {
+				int prio = proposalPriorities.getCrossRefPriority(candidate, proposal);
+				acceptor.accept(proposal, prio);
 			}
 		}
 	}
 
-	static enum CandidateAccessType {
-		direct, alias, namespace
-	}
-
 	/**
-	 * Creates initial proposal adjusted for the N4JS imports. Then passes that proposal to the provided delegate
-	 * proposal factory. Obtained ICompletionProposal is configured with a FQNImporter as custom text. applier.
+	 * Creates proposal that can contain an N4JS import.
 	 *
 	 * @param candidate
 	 *            for which proposal is created
 	 * @return code completion proposal
 	 */
-	private ContentAssistEntry getProposal(IEObjectDescription candidate, EObject model,
-			IScope scope,
-			EReference reference,
-			ContentAssistContext context,
-			Predicate<IEObjectDescription> filter) {
+	private ContentAssistEntry getProposal(IEObjectDescription candidate, EObject model, IScope scope,
+			ContentAssistContext context) {
 
-		CAECandidate caec = new CAECandidate(candidate, model, scope, reference, context, filter);
+		CAECandidate caec = new CAECandidate(candidate, scope, context);
 
-		if (!isValidCandidate(caec, reference, context)) {
+		if (!caec.isValid) {
 			return null;
 		}
 
@@ -192,7 +147,7 @@ public class ImportsAwareReferenceProposalCreator {
 
 			String proposal = getProposal(caec);
 			String label = getLabel(caec, version);
-			String description = getDescription(caec, version);
+			String description = getDescription(caec);
 			String kind = getKind(caec);
 
 			cae.setProposal(proposal);
@@ -211,21 +166,6 @@ public class ImportsAwareReferenceProposalCreator {
 		}
 
 		return null;
-	}
-
-	boolean isValidCandidate(CAECandidate cac, EReference reference, ContentAssistContext context) {
-		String prefix = context.getPrefix();
-
-		boolean validName = false;
-		validName |= prefixMatcher.isCandidateMatchingPrefix(cac.shortName, prefix);
-		validName |= cac.isAlias() && prefixMatcher.isCandidateMatchingPrefix(cac.aliasName, prefix);
-		validName |= cac.isNamespace() && prefixMatcher.isCandidateMatchingPrefix(cac.namespaceName, prefix);
-
-		boolean valid = validName;
-		valid &= !Strings.isNullOrEmpty(cac.shortName);
-		valid &= !conflictHelper.existsConflict(cac.shortName, context);
-
-		return valid;
 	}
 
 	String getProposal(CAECandidate caec) {
@@ -258,7 +198,7 @@ public class ImportsAwareReferenceProposalCreator {
 		return caec.shortName + typeVersion;
 	}
 
-	String getDescription(CAECandidate caec, int version) {
+	String getDescription(CAECandidate caec) {
 		if (caec.isAlias()) {
 			return "alias for " + qualifiedNameConverter.toString(caec.qualifiedName);
 		}
@@ -318,11 +258,16 @@ public class ImportsAwareReferenceProposalCreator {
 		}
 	}
 
+	static enum CandidateAccessType {
+		direct, alias, namespace
+	}
+
 	class CAECandidate {
 		final IEObjectDescription candidate;
 		final IEObjectDescription candidateViaScopeShortName;
 		final boolean isScopedCandidateEqual;
 		final boolean isScopedCandidateCollisioning;
+		final boolean isValid;
 		final QualifiedName qualifiedName;
 		final String shortName;
 		final String namespaceName;
@@ -330,39 +275,56 @@ public class ImportsAwareReferenceProposalCreator {
 		final CandidateAccessType accessType;
 		final NameAndAlias addedImportNameAndAlias;
 
-		CAECandidate(IEObjectDescription candidate, EObject model,
-				IScope scope,
-				EReference reference,
-				ContentAssistContext context,
-				Predicate<IEObjectDescription> filter) {
-
+		CAECandidate(IEObjectDescription candidate, IScope scope, ContentAssistContext context) {
 			this.candidate = candidate;
+			this.shortName = getShortName();
 			this.qualifiedName = getQualifiedName();
-			this.shortName = lastSegmentOrDefaultHost(qualifiedName);
 			this.candidateViaScopeShortName = getCandidateViaScope(scope);
 			this.isScopedCandidateEqual = isEqualCandidateName(candidateViaScopeShortName, qualifiedName);
-			this.isScopedCandidateCollisioning = isScopedCandidateCollisioning(scope);
+			this.isScopedCandidateCollisioning = isScopedCandidateCollisioning();
 			this.accessType = getAccessType();
 			this.aliasName = getAliasName();
 			this.namespaceName = getNamespaceName();
-			this.addedImportNameAndAlias = getImportChanges(this, model, scope, filter);
+			this.addedImportNameAndAlias = getImportChanges(this);
+			this.isValid = isValid(context);
+		}
+
+		private String getShortName() {
+			QualifiedName qName = candidate.getQualifiedName();
+			return lastSegmentOrDefaultHost(qName);
+		}
+
+		/** @return true iff this candidate is valid and should be shown as a proposal */
+		private boolean isValid(ContentAssistContext context) {
+			String prefix = context.getPrefix();
+
+			boolean validName = false;
+			validName |= prefixMatcher.isCandidateMatchingPrefix(shortName, prefix);
+			validName |= isAlias() && prefixMatcher.isCandidateMatchingPrefix(aliasName, prefix);
+			validName |= isNamespace() && prefixMatcher.isCandidateMatchingPrefix(namespaceName, prefix);
+
+			boolean valid = validName;
+			valid &= !Strings.isNullOrEmpty(shortName);
+			valid &= !conflictHelper.existsConflict(shortName, context);
+
+			return valid;
 		}
 
 		private QualifiedName getQualifiedName() {
 			QualifiedName qName = candidate.getQualifiedName();
-			String sName = lastSegmentOrDefaultHost(qName);
 
-			if (qName.toString().equals(sName)) {
+			if (qName.toString().equals(shortName)) {
 				QualifiedName qnOfEObject = getCompleteQualifiedName(candidate);
 				if (qnOfEObject != null) {
 					return qnOfEObject;
 				}
 			}
 
-			return candidate.getQualifiedName();
+			return qName;
 		}
 
 		private IEObjectDescription getCandidateViaScope(IScope scope) {
+			// performance issue: scope.getElements
 			List<IEObjectDescription> elements = Lists.newArrayList(scope.getElements(QualifiedName.create(shortName)));
 			if (elements.isEmpty()) {
 				return null;
@@ -386,7 +348,7 @@ public class ImportsAwareReferenceProposalCreator {
 			if (objDescr == null) {
 				return null;
 			}
-			EObject eObjectOrProxy = objDescr.getEObjectOrProxy(); // performance issue! TODO: remove it
+			EObject eObjectOrProxy = objDescr.getEObjectOrProxy();
 			if (eObjectOrProxy == null) {
 				return null;
 			}
@@ -407,7 +369,7 @@ public class ImportsAwareReferenceProposalCreator {
 		 * @return true iff {@link #candidate} and {@link #candidateViaScopeShortName} are different but accessible via
 		 *         the same short name
 		 */
-		private boolean isScopedCandidateCollisioning(IScope scope) {
+		private boolean isScopedCandidateCollisioning() {
 			if (isScopedCandidateEqual) {
 				return false;
 			}
@@ -452,14 +414,10 @@ public class ImportsAwareReferenceProposalCreator {
 			return null;
 		}
 
-		private NameAndAlias getImportChanges(CAECandidate caec, EObject model, IScope scope,
-				Predicate<IEObjectDescription> filter) {
-
+		private NameAndAlias getImportChanges(CAECandidate caec) {
 			if (caec.accessType != CandidateAccessType.direct) {
 				return null;
 			}
-
-			Resource resource = model.eResource();
 
 			QualifiedName importName = getImportName();
 
