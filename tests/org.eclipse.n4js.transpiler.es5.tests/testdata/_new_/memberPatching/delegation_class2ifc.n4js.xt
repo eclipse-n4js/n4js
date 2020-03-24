@@ -103,7 +103,7 @@ console.log(c_other.g);
 c_other.s = 'hello setter!';
 console.log('========================================');
 var i : any+ = I;
-console.log(A.prototype.hasOwnProperty('m') && a.m === i.$members.m);
+console.log(A.prototype.hasOwnProperty('m') && a.m === i.$defaultMembers.m);
 console.log(A.prototype.hasOwnProperty('g'));
 console.log(A.prototype.hasOwnProperty('s'));
 console.log(!B.prototype.hasOwnProperty('m'));

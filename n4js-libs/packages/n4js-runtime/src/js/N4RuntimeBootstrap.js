@@ -102,7 +102,7 @@ function $defineFields(target, ...names) {
  */
 function $initFieldsFromInterfaces(target, interfaces, spec, mixinExclusion) {
     for(const ifc of interfaces) {
-        const defs = ifc.$fieldDefaults || {};
+        const defs = ifc.$fieldInits || {};
         for(const fieldName of Object.getOwnPropertyNames(defs)) {
             if(target.hasOwnProperty(fieldName) || mixinExclusion.hasOwnProperty(fieldName)) {
                 continue;
@@ -199,7 +199,7 @@ function makeReflectionsForClass(staticProto, reflectionString) {
 }
 
 function makeReflectionsForInterface(staticProto, reflectionString) {
-    const instanceProto = staticProto.$members;
+    const instanceProto = staticProto.$defaultMembers;
     const reflectionValues = JSON.parse(reflectionString);
     const n4Interface = new N4Interface();
     setN4TypeProperties(n4Interface, ...reflectionValues);
@@ -284,7 +284,7 @@ function detectMember(object, memberName, isStatic) {
     if (!isStatic && ['constructor'].includes(memberName)) {
         return null;
     }
-    if (isStatic && ['length', 'name', 'prototype', 'n4type', '$methods', '$extends'].includes(memberName)) {
+    if (isStatic && ['length', 'name', 'prototype', 'n4type', '$defaultMembers', '$extends'].includes(memberName)) {
         return null;
     }
     const propDescriptor = Object.getOwnPropertyDescriptor(object, memberName);

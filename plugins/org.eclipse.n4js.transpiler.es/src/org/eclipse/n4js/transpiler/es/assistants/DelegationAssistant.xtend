@@ -247,8 +247,7 @@ class DelegationAssistant extends TransformationAssistant {
 	def private Expression createAccessToInterfaceObject(SymbolTableEntry ifcSTE, boolean targetIsStatic) {
 		var Expression result = __NSSafe_IdentRef(ifcSTE);
 		if (!targetIsStatic) {
-			val $membersSTE =  steFor_$members;
-			result = _PropertyAccessExpr(result, $membersSTE);
+			result = _PropertyAccessExpr(result, steFor_$defaultMembers);
 		}
 		return result;
 	}

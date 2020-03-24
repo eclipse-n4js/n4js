@@ -144,7 +144,7 @@ class InterfaceDeclarationTransformation extends Transformation {
 	}
 
 	def private PropertyNameValuePair[] createInstanceFieldDefaultsProperty(N4InterfaceDeclaration ifcDecl, SymbolTableEntry ifcSTE) {
-		// $fieldDefaults: {
+		// $fieldInits: {
 		//     fieldName1: undefined,
 		//     fieldName2: 42,
 		//     fieldName3: () => <INIT_EXPRESSION>,
@@ -158,7 +158,7 @@ class InterfaceDeclarationTransformation extends Transformation {
 		}
 		return #[
 			_PropertyNameValuePair(
-				steFor_$fieldDefaults.name,
+				steFor_$fieldInits.name,
 				_ObjLit(
 					instanceFields.map[field|
 						field.name -> if (field.hasNonTrivialInitExpression) {
@@ -177,7 +177,7 @@ class InterfaceDeclarationTransformation extends Transformation {
 	}
 
 	def private PropertyNameValuePair[] createInstanceMemberPropertiesExceptFields(N4InterfaceDeclaration ifcDecl, SymbolTableEntry ifcSTE) {
-		// $members: {
+		// $defaultMembers: {
 		//     get getter() {
 		//     },
 		//     set setter(value) {
@@ -196,7 +196,7 @@ class InterfaceDeclarationTransformation extends Transformation {
 		}
 		return #[
 			_PropertyNameValuePair(
-				steFor_$members.name,
+				steFor_$defaultMembers.name,
 				_ObjLit(
 					instanceMembersExceptFields.map[convertMemberToProperty]
 				)
