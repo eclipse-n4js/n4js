@@ -494,9 +494,10 @@ public abstract class TranspilerComponent {
 	}
 
 	/** Returns the symbol table entry for member "assign" in "Object". */
-	public SymbolTableEntryOriginal steFor_Object_assign() {
-		return getSymbolTableEntryForMember(RuleEnvironmentExtensions.objectType(state.G),
-				"assign", false, true, true);
+	public SymbolTableEntry steFor_Object_assign() {
+		// note: Object#assign() is ES6 and thus not defined in our built-in type "Object", so
+		// we cannot use #getSymbolTableEntryForMember() here!
+		return getSymbolTableEntryInternal("assign", true);
 	}
 
 	/** Returns the symbol table entry for member "defineProperty" in "Object". */
