@@ -10,10 +10,12 @@
  */
 package org.eclipse.n4js.transpiler.es.assistants
 
+import com.google.common.collect.Lists
 import com.google.inject.Inject
 import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
+import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4GetterDeclaration
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
@@ -124,6 +126,20 @@ class DelegationAssistant extends TransformationAssistant {
 		result.delegationTargetIsAbstract = target.isAbstract;
 		if( ! target.isAbstract ) result.body = _Block();
 		return result;
+	}
+
+	/**
+	 * Convenience method for replacing each delegating member in the given declaration by an ordinary member
+	 * created with method {@link #createOrdinaryMemberForDelegatingMember(DelegatingMember)}. Will modify the
+	 * given classifier declaration.
+	 */
+	def public void replaceDelegatingMembersByOrdinaryMembers(N4ClassifierDeclaration classifierDecl) {
+		for (currMember : Lists.newArrayList(classifierDecl.ownedMembersRaw)) {
+			if (currMember instanceof DelegatingMember) {
+				val resolvedDelegatingMember = createOrdinaryMemberForDelegatingMember(currMember);
+				replace(currMember, resolvedDelegatingMember);
+			}
+		}
 	}
 
 	def public N4MemberDeclaration createOrdinaryMemberForDelegatingMember(DelegatingMember delegator) {

@@ -50,28 +50,39 @@ import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensi
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
 
 /**
- * Create the constructor function for classes (as a function declaration).
+ * Modify or create the constructor of a class declaration.
  */
 class ClassConstructorAssistant extends TransformationAssistant {
 
 	@Inject private TypeAssistant typeAssistant;
 	@Inject private ClassifierAssistant classifierAssistant;
 
-
 	/**
 	 * Amend the constructor of the given class with implicit functionality (e.g. initialization of instance fields).
-	 * Will create a constructor declaration iff no constructor is defined in the N4JS source code AND an implicit
-	 * constructor is actually required.
+	 * Will create an implicit constructor declaration iff no constructor is defined in the N4JS source code AND an
+	 * implicit constructor is actually required.
 	 */
 	def public void amendConstructor(N4ClassDeclaration classDecl, SymbolTableEntry classSTE, SymbolTableEntryOriginal superClassSTE,
 		LinkedHashSet<N4FieldDeclaration> fieldsRequiringExplicitDefinition) {
 
 		val explicitCtorDecl = classDecl.ownedCtor; // the constructor defined in the N4JS source code or 'null' if none was defined
-		val hasExplicitCtor = explicitCtorDecl !== null;
 		val ctorDecl = explicitCtorDecl ?: _N4MethodDecl(N4JSLanguageConstants.CONSTRUCTOR);
 
-		// -------------------------------------------------
-		// formal parameters
+		// amend formal parameters
+		amendFormalParametersOfConstructor(classDecl, ctorDecl, explicitCtorDecl);
+
+		// amend body
+		val isNonTrivial = amendBodyOfConstructor(classDecl, classSTE, superClassSTE,
+			ctorDecl, explicitCtorDecl, fieldsRequiringExplicitDefinition);
+
+		// add constructor to classDecl (if necessary)
+		if (ctorDecl.eContainer === null && isNonTrivial) {
+			classDecl.ownedMembersRaw.add(0, ctorDecl);
+		}
+	}
+
+	def private void amendFormalParametersOfConstructor(N4ClassDeclaration classDecl, N4MethodDeclaration ctorDecl, N4MethodDeclaration explicitCtorDecl) {
+		val hasExplicitCtor = explicitCtorDecl !== null;
 		if (hasExplicitCtor) {
 			// explicitly defined constructor
 			// --> nothing to be changed (use fpars from N4JS source code)
@@ -86,12 +97,21 @@ class ClassConstructorAssistant extends TransformationAssistant {
 				];
 			}
 		}
+	}
+
+	/**
+	 * Returns <code>true</code> iff the constructor is non-trivial, i.e. non-empty and containing more
+	 * than just the default super call.
+	 */
+	def private boolean amendBodyOfConstructor(N4ClassDeclaration classDecl, SymbolTableEntry classSTE, SymbolTableEntryOriginal superClassSTE,
+		N4MethodDeclaration ctorDecl, N4MethodDeclaration explicitCtorDecl,
+		LinkedHashSet<N4FieldDeclaration> fieldsRequiringExplicitDefinition) {
+
+		val hasExplicitCtor = explicitCtorDecl !== null;
+		val body = ctorDecl.body;
+
 		// within the (maybe newly created) fpars of our ctor, search the @Spec fpar
 		val specFpar = ctorDecl.fpars.filter[AnnotationDefinition.SPEC.hasAnnotation(it)].head;
-
-		// -------------------------------------------------
-		// body
-		val body = ctorDecl.body;
 
 		val isDirectSubclassOfError = superClassSTE?.originalTarget===state.G.errorType;
 		val superCallIndex = if(explicitCtorDecl?.body!==null) explicitCtorDecl.superCallIndex else -1;
@@ -149,16 +169,14 @@ class ClassConstructorAssistant extends TransformationAssistant {
 		// add delegation to field initialization functions of all directly implemented interfaces
 		idx = body.statements.insertAt(idx, createDelegationToFieldInitOfImplementedInterfaces(classDecl, specObjSTE));
 
-		// add constructor to classDecl (if necessary)
+		// check if constructor is non-trivial
 		val ctorDeclStmnts = ctorDecl.body.statements;
-		if (ctorDecl.eContainer === null && !ctorDeclStmnts.empty) {
-			val bodyContainsOnlyDefaultSuperCall = defaultSuperCall !== null
-				&& ctorDeclStmnts.size === 1
-				&& ctorDeclStmnts.head === defaultSuperCall;
-			if (!bodyContainsOnlyDefaultSuperCall) {
-				classDecl.ownedMembersRaw.add(0, ctorDecl);
-			}
-		}
+		val bodyContainsOnlyDefaultSuperCall = defaultSuperCall !== null
+			&& ctorDeclStmnts.size === 1
+			&& ctorDeclStmnts.head === defaultSuperCall;
+		val isNonTrivialCtor = !ctorDeclStmnts.empty && !bodyContainsOnlyDefaultSuperCall;
+
+		return isNonTrivialCtor;
 	}
 
 	def private Statement[] createInstanceFieldInitCode(N4ClassDeclaration classDecl, FormalParameter specFpar, SymbolTableEntry specObjSTE, Set<N4FieldDeclaration> fieldsWithExplicitDefinition) {

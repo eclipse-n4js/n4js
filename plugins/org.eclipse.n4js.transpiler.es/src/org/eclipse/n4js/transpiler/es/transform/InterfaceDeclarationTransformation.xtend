@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.transpiler.es.transform
 
-import com.google.common.collect.Lists
 import com.google.inject.Inject
 import java.util.Collections
 import java.util.List
@@ -53,7 +52,6 @@ import org.eclipse.n4js.transpiler.assistants.TypeAssistant
 import org.eclipse.n4js.transpiler.es.assistants.ClassifierAssistant
 import org.eclipse.n4js.transpiler.es.assistants.DelegationAssistant
 import org.eclipse.n4js.transpiler.es.assistants.ReflectionAssistant
-import org.eclipse.n4js.transpiler.im.DelegatingMember
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.utils.TypeUtils
@@ -97,21 +95,25 @@ class InterfaceDeclarationTransformation extends Transformation {
 
 		// add 'Symbol.hasInstance' function for supporting the 'instanceof' operator
 		ifcDecl.ownedMembersRaw += createHasInstanceMethod(ifcDecl, ifcSTE);
-		// add 'n4type' getter for reflection
+
 		reflectionAssistant.addN4TypeGetter(ifcDecl, ifcDecl);
 
-		val staticInits = createStaticFieldInitializations(ifcDecl, ifcSTE);
-		insertAfter(ifcDecl.orContainingExportDeclaration, staticInits);
+		val belowIfcDecl = newArrayList;
+		belowIfcDecl += createStaticFieldInitializations(ifcDecl, ifcSTE);
+		insertAfter(ifcDecl.orContainingExportDeclaration, belowIfcDecl);
+
 		ifcDecl.ownedMembersRaw.removeIf[static && it instanceof N4FieldDeclaration];
+		delegationAssistant.replaceDelegatingMembersByOrdinaryMembers(ifcDecl);
 
-		// replace delegation members with actual members
-		for(currMember : Lists.newArrayList(ifcDecl.ownedMembersRaw)) {
-			if(currMember instanceof DelegatingMember) {
-				val resolvedDelegatingMember = delegationAssistant.createOrdinaryMemberForDelegatingMember(currMember);
-				replace(currMember, resolvedDelegatingMember);
-			}
-		}
+		val ifcObjLit = createInterfaceObject(ifcDecl, ifcSTE);
+		val varDecl = _VariableDeclaration(ifcDecl.name, ifcObjLit);
+		state.tracer.copyTrace(ifcDecl, varDecl);
 
+		replace(ifcDecl, varDecl);
+	}
+
+	/** Creates an object literal for the object representing the interface of the given <code>ifcDecl</code>. */
+	def private ObjectLiteral createInterfaceObject(N4InterfaceDeclaration ifcDecl, SymbolTableEntry ifcSTE) {
 		val props = <PropertyAssignment>newArrayList;
 		val extendedInterfaces = createDirectlyImplementedOrExtendedInterfacesArgument(ifcDecl);
 		if (!extendedInterfaces.elements.empty) {
@@ -121,13 +123,10 @@ class InterfaceDeclarationTransformation extends Transformation {
 		props += createInstanceMemberPropertiesExceptFields(ifcDecl, ifcSTE);
 		props += createStaticMemberPropertiesExceptFields(ifcDecl, ifcSTE);
 
-		val varDecl = _VariableDeclaration(ifcDecl.name, _ObjLit(props));
-		state.tracer.copyTrace(ifcDecl, varDecl);
-
-		replace(ifcDecl, varDecl);
+		return _ObjLit(props);
 	}
 
-	def public ArrayLiteral createDirectlyImplementedOrExtendedInterfacesArgument(N4ClassifierDeclaration typeDecl) {
+	def private ArrayLiteral createDirectlyImplementedOrExtendedInterfacesArgument(N4ClassifierDeclaration typeDecl) {
 		val interfaces = typeAssistant.getSuperInterfacesSTEs(typeDecl);
 
 		// the return value of this method is intended for default method patching; for this purpose, we have to
@@ -152,7 +151,7 @@ class InterfaceDeclarationTransformation extends Transformation {
 		//     ...
 		// }
 		val instanceFields = ifcDecl.ownedFields
-			.filter[!static && !name.isNullOrEmpty]
+			.filter[!static && name!==null]
 			.toList;
 		if (instanceFields.empty) {
 			return #[];
@@ -189,7 +188,7 @@ class InterfaceDeclarationTransformation extends Transformation {
 		// }
 
 		val instanceMembersExceptFields = ifcDecl.ownedMembers
-			.filter[!static && !abstract && !name.isNullOrEmpty]
+			.filter[!static && !abstract && name!==null]
 			.filter[!(it instanceof N4FieldDeclaration)]
 			.toList;
 		if (instanceMembersExceptFields.empty) {
@@ -214,14 +213,14 @@ class InterfaceDeclarationTransformation extends Transformation {
 		// },
 		// ...
 
-		val staticMembers = ifcDecl.ownedMembers
-			.filter[static && !abstract && !name.isNullOrEmpty] // FIXME reconsider removal of those with empty name (i.e. computed prop names)
+		val staticMembersExceptFields = ifcDecl.ownedMembers
+			.filter[static && !abstract && name!==null]
 			.filter[!(it instanceof N4FieldDeclaration)]
 			.toList;
-		if (staticMembers.empty) {
+		if (staticMembersExceptFields.empty) {
 			return #[];
 		}
-		return staticMembers.map[convertMemberToProperty];
+		return staticMembersExceptFields.map[convertMemberToProperty];
 	}
 
 	/**
@@ -349,13 +348,12 @@ class InterfaceDeclarationTransformation extends Transformation {
 		val hasInstanceExpr = _PropertyAccessExpr(symbolSTE, hasInstanceSTE);
 		val declaredName = _LiteralOrComputedPropertyName(hasInstanceExpr, N4JSLanguageUtils.SYMBOL_IDENTIFIER_PREFIX + "hasInstance");
 
-		val ifcType = state.info.getOriginalDefinedType(ifcDecl); // FIXME avoid duplication with BootstrapCallAssistant
+		val ifcType = state.info.getOriginalDefinedType(ifcDecl);
 		val fqn = resourceNameComputer.getFullyQualifiedTypeName(ifcType);
 
 		val result = _N4MethodDecl(true, declaredName, #[ _Fpar("instance") ], _Block(
 			_ReturnStmnt(
 				_Snippet("instance && instance.constructor && instance.constructor.n4type "
-					+ "&& instance.constructor.n4type.allImplementedInterfaces " // FIXME GH-1602 why is this one required?
 					+ "&& instance.constructor.n4type.allImplementedInterfaces.indexOf('" + fqn + "') !== -1"
 				)
 			)

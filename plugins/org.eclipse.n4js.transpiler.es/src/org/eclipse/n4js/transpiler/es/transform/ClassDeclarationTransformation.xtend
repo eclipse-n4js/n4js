@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.transpiler.es.transform
 
-import com.google.common.collect.Lists
 import com.google.inject.Inject
 import java.util.List
 import org.eclipse.n4js.n4JS.GenericDeclaration
@@ -28,7 +27,6 @@ import org.eclipse.n4js.transpiler.es.assistants.ClassConstructorAssistant
 import org.eclipse.n4js.transpiler.es.assistants.ClassifierAssistant
 import org.eclipse.n4js.transpiler.es.assistants.DelegationAssistant
 import org.eclipse.n4js.transpiler.es.assistants.ReflectionAssistant
-import org.eclipse.n4js.transpiler.im.DelegatingMember
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 
 import static extension org.eclipse.n4js.transpiler.utils.TranspilerUtils.*
@@ -76,7 +74,6 @@ class ClassDeclarationTransformation extends Transformation {
 		val superClassSTE = typeAssistant.getSuperClassSTE(classDecl);
 		val fieldsRequiringExplicitDefinition = classifierAssistant.findFieldsRequiringExplicitDefinition(classDecl);
 
-		// add 'n4type' getter for reflection
 		reflectionAssistant.addN4TypeGetter(classDecl, classDecl);
 
 		classConstructorAssistant.amendConstructor(classDecl, classSTE, superClassSTE, fieldsRequiringExplicitDefinition);
@@ -87,39 +84,41 @@ class ClassDeclarationTransformation extends Transformation {
 		belowClassDecl += createAdditionalClassDeclarationCode(classDecl, classSTE);
 		insertAfter(classDecl.orContainingExportDeclaration, belowClassDecl);
 
-		// remove fields and abstract members (they do not have a representation in the output code)
-		classDecl.ownedMembersRaw.removeIf[
-			it instanceof N4FieldDeclaration
-			|| (it instanceof N4FieldAccessor && (it as N4FieldAccessor).isAbstract)
-			|| (it instanceof N4MethodDeclaration && (it as N4MethodDeclaration).isAbstract)
-		];
-
-		// replace delegation members with actual members
-		for(currMember : Lists.newArrayList(classDecl.ownedMembersRaw)) {
-			if(currMember instanceof DelegatingMember) {
-				val resolvedDelegatingMember = delegationAssistant.createOrdinaryMemberForDelegatingMember(currMember);
-				replace(currMember, resolvedDelegatingMember);
-			}
-		}
-
-		// remove type information
-		for(currMember : classDecl.ownedMembersRaw) {
-			if (currMember instanceof GenericDeclaration) {
-				currMember.typeVars.clear();
-			}
-			switch(currMember) {
-				N4GetterDeclaration:
-					currMember.declaredTypeRef = null
-				N4MethodDeclaration:
-					currMember.returnTypeRef = null
-			}
-		}
+		removeFieldsAndAbstractMembers(classDecl);
+		delegationAssistant.replaceDelegatingMembersByOrdinaryMembers(classDecl);
+		removeTypeInformation(classDecl);
 
 		// change superClassRef to an equivalent extends-expression
 		// (this is a minor quirk required because superClassRef is not supported by the PrettyPrinterSwitch;
 		// for details see PrettyPrinterSwitch#caseN4ClassDeclaration())
 		classDecl.superClassRef = null;
 		classDecl.superClassExpression = __NSSafe_IdentRef(superClassSTE);
+	}
+
+	/** Removes fields and abstract members (they do not have a representation in the output code). */
+	def private void removeFieldsAndAbstractMembers(N4ClassDeclaration classDecl) {
+		classDecl.ownedMembersRaw.removeIf[m|
+			switch (m) {
+				N4FieldDeclaration: true
+				N4FieldAccessor: m.isAbstract()
+				N4MethodDeclaration: m.isAbstract()
+				default: false
+			}
+		];
+	}
+
+	def private void removeTypeInformation(N4ClassDeclaration classDecl) {
+		for (currMember : classDecl.ownedMembersRaw) {
+			if (currMember instanceof GenericDeclaration) {
+				currMember.typeVars.clear();
+			}
+			switch (currMember) {
+				N4GetterDeclaration:
+					currMember.declaredTypeRef = null
+				N4MethodDeclaration:
+					currMember.returnTypeRef = null
+			}
+		}
 	}
 
 	/** Override to add additional output code directly after the default class declaration output code. */
