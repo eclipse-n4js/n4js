@@ -50,6 +50,7 @@ import org.eclipse.xtext.resource.impl.AliasedEObjectDescription
 import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.scoping.impl.SimpleScope
 import org.eclipse.xtext.util.IResourceScopeCache
+import org.eclipse.n4js.n4idl.scoping.utils.MultiImportedElementsMap
 
 /** internal helper collection type */
 class IEODesc2ISpec extends HashMap<IEObjectDescription, ImportSpecifier> {}
@@ -144,8 +145,11 @@ class ImportedElementsScopingHelper {
 
 		if (imports.empty) return parentScope
 
-		/** broken/invisible imported eObjects descriptions (in case of broken state of imports this can be {@link AmbiguousImportDescription})*/
-		val invalidImports = elementsMapProvider.get(script);
+		/** broken/invisible imported eObjects descriptions 
+		 *  - in case of broken state of imports this can be {@link AmbiguousImportDescription}
+		 *  - in case of alias/namespace imports multiple imported elements can have the same qualified name
+		 */
+		val invalidImports = new MultiImportedElementsMap();
 		/** valid imported eObjects descriptions (in case of broken state of imports this can be {@link AmbiguousImportDescription})*/
 		val validImports = elementsMapProvider.get(script);
 		val originatorMap = new IEODesc2ISpec
@@ -195,7 +199,7 @@ class ImportedElementsScopingHelper {
 
 				val originalName = QualifiedName.create(element.name)
 
-				if (specifier.alias !== null && !invalidImports.containsElement(originalName)) {
+				if (specifier.alias !== null) {
 					element.handleAliasedAccess(originalName, importedQName.toString, invalidImports, originatorMap, specifier)
 				}
 			} else {
