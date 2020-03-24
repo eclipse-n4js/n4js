@@ -354,6 +354,7 @@ class InterfaceDeclarationTransformation extends Transformation {
 		val result = _N4MethodDecl(true, declaredName, #[ _Fpar("instance") ], _Block(
 			_ReturnStmnt(
 				_Snippet("instance && instance.constructor && instance.constructor.n4type "
+					+ "&& instance.constructor.n4type.allImplementedInterfaces " // required because we cannot be sure "instance.constructor.n4type" is of type N4Classifier
 					+ "&& instance.constructor.n4type.allImplementedInterfaces.indexOf('" + fqn + "') !== -1"
 				)
 			)
