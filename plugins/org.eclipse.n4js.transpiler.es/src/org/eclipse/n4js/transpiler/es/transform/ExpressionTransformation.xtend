@@ -22,7 +22,6 @@ import org.eclipse.n4js.n4JS.PromisifyExpression
 import org.eclipse.n4js.n4JS.UnaryExpression
 import org.eclipse.n4js.n4JS.UnaryOperator
 import org.eclipse.n4js.transpiler.Transformation
-import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesBefore
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
 import org.eclipse.n4js.transpiler.im.ParameterizedPropertyAccessExpression_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
@@ -42,15 +41,7 @@ import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensi
 
 /**
  * Some expressions need special handling, this is done in this transformation.
- * <p>
- * Dependencies:
- * <ul>
- * <li>ExcludesBefore: AsyncAwaitTransformation<br>
- *     otherwise the 'await' expressions have already be converted to 'yield', but we need to find them in order to
- *     support auto-promisify after 'await'; see method {@link #transformExpression(AwaitExpression)}
- * </ul>
  */
-@ExcludesBefore(AsyncAwaitTransformation)
 class ExpressionTransformation extends Transformation {
 
 	/**

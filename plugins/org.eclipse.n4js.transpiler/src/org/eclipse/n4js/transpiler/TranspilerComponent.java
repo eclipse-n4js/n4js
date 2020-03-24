@@ -443,11 +443,6 @@ public abstract class TranspilerComponent {
 		return getSymbolTableEntryInternal("$initFieldsFromInterfaces", true);
 	}
 
-	/** Returns the internal symbol table entry for the symbol "__proto__". */
-	public SymbolTableEntryInternal steFor___proto__() {
-		return getSymbolTableEntryInternal("__proto__", true);
-	}
-
 	/** Returns the internal symbol table entry for the symbol "prototype". */
 	public SymbolTableEntryInternal steFor_prototype() {
 		return getSymbolTableEntryInternal("prototype", true);
@@ -471,11 +466,6 @@ public abstract class TranspilerComponent {
 	/** Returns the internal symbol table entry for the symbol "$sliceToArrayForDestruct". */
 	public SymbolTableEntryInternal steFor_$sliceToArrayForDestruct() {
 		return getSymbolTableEntryInternal("$sliceToArrayForDestruct", true);
-	}
-
-	/** Returns the internal symbol table entry for the symbol "$spawn". */
-	public SymbolTableEntryInternal steFor_$spawn() {
-		return getSymbolTableEntryInternal("$spawn", true);
 	}
 
 	/** Returns the internal symbol table entry for the symbol "$n4promisifyFunction". */

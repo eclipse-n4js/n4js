@@ -153,31 +153,6 @@ function $sliceToArrayForDestruct(arr, max) {
     }
 }
 
-/**
- * Executes the given generator step by step chaining up promises.
- *
- * @param gen - generator object to be sequentially executed.
- */
-function $spawn(gen) {
-    function exec(step, v) {
-        var res;
-        try {
-            res = this[step](v);
-        } catch (exc) {
-            return Promise.reject(exc);
-        }
-        if (res.done) {
-            return Promise.resolve(res.value);
-        } else {
-            return Promise.resolve(res.value).then(next, throwr);
-        }
-    }
-
-    var next = exec.bind(gen, "next"),
-        throwr = exec.bind(gen, "throw");
-    return next();
-}
-
 function $n4promisifyFunction(cbBasedFn, args, multiSuccessValues, noErrorValue) {
     return new Promise(function(resolve, reject) {
         args.push(function(result0, result1) {
@@ -446,6 +421,5 @@ _globalThis.$getReflectionForEnum = $getReflectionForEnum;
 _globalThis.$defineFields = $defineFields;
 _globalThis.$initFieldsFromInterfaces = $initFieldsFromInterfaces;
 _globalThis.$sliceToArrayForDestruct = $sliceToArrayForDestruct;
-_globalThis.$spawn = $spawn;
 _globalThis.$n4promisifyFunction = $n4promisifyFunction;
 _globalThis.$n4promisifyMethod = $n4promisifyMethod;

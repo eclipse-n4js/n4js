@@ -14,7 +14,6 @@ import com.google.common.collect.Lists
 import com.google.inject.Inject
 import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.Expression
-import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4GetterDeclaration
@@ -30,7 +29,6 @@ import org.eclipse.n4js.transpiler.im.DelegatingMethodDeclaration
 import org.eclipse.n4js.transpiler.im.DelegatingSetterDeclaration
 import org.eclipse.n4js.transpiler.im.ImFactory
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
-import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
 import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
@@ -312,49 +310,6 @@ class DelegationAssistant extends TransformationAssistant {
 		// create #getOwnPropertyDescriptor() call
 		val result = _CallExpr(_PropertyAccessExpr(objectSTE, getOwnPropertyDescriptorSTE), arg0, arg1);
 		return result;
-	}
-
-	// FIXME next two methods only required for super-access transformation, which is only required for legacy transformation of async/await!
-	// TODO the next two methods could be aligned more closely with previous methods OR previous methods should be used instead!
-	/**
-	 * Creates a property access to the immediate super class of the given <code>baseClassDecl</code>, i.e. in the
-	 * non-static case:
-	 * <pre>
-	 * S.prototype
-	 * </pre>
-	 * and in the static case:
-	 * <pre>
-	 * S
-	 * </pre>
-	 * (with S being the direct super class).
-	 */
-	def public Expression createAccessToSuperClass(N4ClassDeclaration baseClassDecl, boolean isStatic) {
-		val superClassSTE = typeAssistant.getSuperClassSTE(baseClassDecl);
-		val prototypeSTE = getSymbolTableEntryForMember(state.G.objectType, "prototype", false, true, true);
-		return if(!isStatic) {
-			__NSSafe_PropertyAccessExpr(superClassSTE, prototypeSTE) // S.prototype
-		} else {
-			__NSSafe_IdentRef(superClassSTE) // S
-		};
-	}
-	/**
-	 * Like {@link DelegationAssistant#createAccessToSuperClass(N4ClassDeclaration,boolean)}, but follows the property
-	 * chain until the correct class for the given member is reached (either the containing class or, if the member is
-	 * consumed from an interface, the first super class that consumed the member).
-	 */
-	def public Expression createAccessToSuperClassBequestingMember(N4ClassDeclaration baseClassDecl, boolean isStatic, SymbolTableEntryOriginal memberSTE) {
-		val tClassBase = state.info.getOriginalDefinedType(baseClassDecl);
-		val member = memberSTE.originalTarget as TMember;
-		val tClassTarget = getAncestorClassBequestingMember(tClassBase, member);
-		val dist = DelegationAssistant.getDistanceToAncestorClass(tClassBase, tClassTarget);
-		val __proto__STE =  steFor___proto__;
-		// start with immediate super class
-		var superAccess = createAccessToSuperClass(baseClassDecl, isStatic);
-		// continue along the prototype chain until correct target class is reached
-		for(i : 1..<dist) {
-			superAccess = _PropertyAccessExpr(superAccess, __proto__STE);
-		}
-		return superAccess;
 	}
 
 	/**
