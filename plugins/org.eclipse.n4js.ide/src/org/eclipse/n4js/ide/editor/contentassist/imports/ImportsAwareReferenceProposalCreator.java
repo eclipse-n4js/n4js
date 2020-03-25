@@ -304,9 +304,8 @@ public class ImportsAwareReferenceProposalCreator {
 			boolean validName = false;
 			validName |= prefixMatcher.isCandidateMatchingPrefix(shortName, prefix);
 			validName |= isAlias() && prefixMatcher.isCandidateMatchingPrefix(aliasName, prefix);
-			if (isNamespace()) {
-				validName |= prefixMatcher.isCandidateMatchingPrefix(namespaceName.getLastSegment(), prefix);
-			}
+			validName |= isNamespace()
+					&& prefixMatcher.isCandidateMatchingPrefix(namespaceName.getLastSegment(), prefix);
 
 			boolean valid = validName;
 			valid &= !Strings.isNullOrEmpty(shortName);
