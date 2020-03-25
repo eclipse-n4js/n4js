@@ -21,8 +21,6 @@ import org.eclipse.n4js.cli.compiler.N4jscCompiler;
 import org.eclipse.n4js.smith.CollectedDataAccess;
 import org.eclipse.n4js.smith.DataCollectorCSVExporter;
 import org.eclipse.n4js.smith.DataCollectorUtils;
-import org.eclipse.n4js.smith.Measurement;
-import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.io.FileUtils;
 
@@ -55,7 +53,7 @@ public class N4jscMain {
 		}
 
 		try {
-			try (Measurement m = N4JSDataCollectors.dcCli.getMeasurement(N4JSDataCollectors.N4JS_CLI_COLLECTOR_NAME)) {
+			try {
 				performGoal(options);
 			} catch (N4jscException e) {
 				throw e;

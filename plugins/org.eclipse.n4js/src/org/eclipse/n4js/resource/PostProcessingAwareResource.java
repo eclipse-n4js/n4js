@@ -15,6 +15,8 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
 
+import org.eclipse.n4js.smith.Measurement;
+import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 import org.eclipse.xtext.resource.DerivedStateAwareResource;
 import org.eclipse.xtext.resource.OutdatedStateManager;
@@ -263,7 +265,9 @@ public class PostProcessingAwareResource extends DerivedStateAwareResource {
 
 			} else {
 
-				try {
+				// need "if inactive" in next line, because reentrant invocations can happen due to
+				// references across different resource sets
+				try (Measurement m = N4JSDataCollectors.dcAstPostprocess.getMeasurementIfInactive()) {
 					PostProcessingEntryTracker.setEntryResource(this);
 
 					// main post-processing

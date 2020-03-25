@@ -47,8 +47,7 @@ public class SourceContainerAwareResourceValidator extends N4JSResourceValidator
 
 	@Override
 	public List<Issue> validate(Resource resource, CheckMode mode, CancelIndicator cancelIndicator) {
-		try (Measurement m = N4JSDataCollectors.dcManifestAwareResourceValidator
-				.getMeasurement(resource.getURI().toString());) {
+		try (Measurement m = N4JSDataCollectors.dcManifestAwareResourceValidator.getMeasurement()) {
 
 			operationCanceledManager.checkCanceled(cancelIndicator);
 			if (!isInSourceFolder(resource)) {

@@ -10,13 +10,13 @@
  */
 package org.eclipse.n4js.cli.frontend.tests;
 
-import static org.eclipse.n4js.smith.N4JSDataCollectors.N4JS_CLI_COLLECTOR_NAME;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
 import org.eclipse.n4js.cli.helper.CliCompileResult;
+import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.junit.Test;
 
 /** Front end tests for the CLI interface */
@@ -103,7 +103,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 		}
 
 		String args[] = { "compile", ".", "--performanceReport", REPORT_FILE_NAME, "--performanceKey",
-				N4JS_CLI_COLLECTOR_NAME };
+				N4JSDataCollectors.dcBuild.getId() };
 
 		CliCompileResult result = n4jsc(args, 0);
 		assertEquals(result.toString(),
@@ -143,7 +143,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 			reportFile.delete();
 		}
 
-		String args[] = { "compile", ".", "--performanceKey", N4JS_CLI_COLLECTOR_NAME };
+		String args[] = { "compile", ".", "--performanceKey", N4JSDataCollectors.dcBuild.getId() };
 		CliCompileResult result = n4jsc(args, 0);
 		assertEquals(result.toString(),
 				"Performance Data Collection is enabled.\nWriting performance report: .../performance-report.csv",

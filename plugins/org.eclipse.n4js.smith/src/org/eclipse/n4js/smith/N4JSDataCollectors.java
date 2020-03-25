@@ -20,8 +20,6 @@ public final class N4JSDataCollectors {
 
 	public static final DataCollector dcN4JSResource = create("N4JSResource");
 
-	public static final DataCollector dcTranspiler = create("Transpiler");
-
 	public static final DataCollector dcBuild = create("Build");
 
 	public static final DataCollector dcAstPostprocess = create("AstPostprocess", dcBuild);
@@ -36,7 +34,6 @@ public final class N4JSDataCollectors {
 	public static final DataCollector dcTranspilationStep1 = create("T1", dcTranspilation);
 	public static final DataCollector dcTranspilationStep2 = create("T2", dcTranspilation);
 	public static final DataCollector dcTranspilationStep3 = create("T3", dcTranspilation);
-	public static final DataCollector dcTEMP = create("TEMP", dcTranspilation);
 
 	public static final DataCollector dcLibMngr = create("Library Manager");
 	public static final DataCollector dcNpmInstall = create("Install NPMs", dcLibMngr);
@@ -61,11 +58,6 @@ public final class N4JSDataCollectors {
 	public static final DataCollector dcFlowGraphPostprocessing = create("PostProcessing", dcFlowGraphs);
 
 	public static final DataCollector dcManifestAwareResourceValidator = create("ManifestAwareResourceValidator");
-
-	public static final String N4JS_CLI_COLLECTOR_NAME = "n4jsc goal";
-	public static final String N4JS_CLI_COMPILER_COLLECTOR_NAME = "n4jsc compile";
-	public static final DataCollector dcCli = create(N4JS_CLI_COLLECTOR_NAME);
-	public static final DataCollector dcCliCompile = create(N4JS_CLI_COMPILER_COLLECTOR_NAME, dcCli);
 
 	public static DataCollector createDataCollectorForCheckMethod(String methodName) {
 		final DataCollector parent;

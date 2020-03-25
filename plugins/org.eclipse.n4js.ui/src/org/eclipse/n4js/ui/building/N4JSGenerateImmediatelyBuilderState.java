@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.ui.building;
 
-import java.time.Instant;
 import java.util.Collection;
 import java.util.Set;
 
@@ -176,7 +175,7 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 		monitor.subTask("Building " + buildData.getProjectName());
 		logBuildData(buildData, " of before #doUpdate");
 
-		try (Measurement m = N4JSDataCollectors.dcBuild.getMeasurement("build " + Instant.now());) {
+		try (Measurement m = N4JSDataCollectors.dcBuild.getMeasurement()) {
 			try {
 				IBuildParticipantInstruction instruction = IBuildParticipantInstruction.NOOP;
 
@@ -228,7 +227,7 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 		DataCollector dc = uri != null && N4JSGlobals.PACKAGE_JSON.equals(uri.lastSegment())
 				? N4JSDataCollectors.dcValidationsPackageJson
 				: N4JSDataCollectors.dcValidations;
-		try (Measurement m = dc.getMeasurement("validation");) {
+		try (Measurement m = dc.getMeasurement()) {
 			super.updateMarkers(delta, resourceSet, monitor);
 		}
 
@@ -239,7 +238,7 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 			if (instruction == null) {
 				throw new IllegalStateException();
 			}
-			try (Measurement m = N4JSDataCollectors.dcTranspilation.getMeasurement("transpilation");) {
+			try {
 				instruction.process(delta, resourceSet, subMonitor.split(1));
 
 			} catch (CoreException e) {

@@ -211,7 +211,14 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 	 * If validation was canceled before finishing, don't assume absence of errors.
 	 */
 	private def boolean hasNoErrors(Resource input, CancelIndicator monitor) {
-		val m = N4JSDataCollectors.dcValidations.getMeasurement();
+		val inputURI = input.getURI();
+		val dc = if (inputURI !== null && N4JSGlobals.PACKAGE_JSON.equals(inputURI.lastSegment())) {
+			N4JSDataCollectors.dcValidationsPackageJson
+		} else {
+			N4JSDataCollectors.dcValidations
+		};
+
+		val m = dc.getMeasurement();
 		var issues = null as List<Issue>;
 		try {
 			issues = resVal.validate(input, CheckMode.ALL, monitor);

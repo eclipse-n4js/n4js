@@ -66,7 +66,16 @@ class TimedDataCollector extends DataCollector {
 	}
 
 	@Override
-	synchronized public Measurement getMeasurement(String name) {
+	public Measurement getMeasurementIfInactive(String name) {
+		return getMeasurement(name, true);
+	}
+
+	@Override
+	public Measurement getMeasurement(String name) {
+		return getMeasurement(name, false);
+	}
+
+	synchronized private Measurement getMeasurement(String name, boolean allowReentrantInvocation) {
 		if (name == null || name.isEmpty())
 			throw new RuntimeException(TimedMeasurement.class.getName() + " needs non empty name.");
 
@@ -74,7 +83,9 @@ class TimedDataCollector extends DataCollector {
 			return NULL_MEASURMENT;
 
 		if (activeMeasurement != null) {
-			DataCollectors.INSTANCE.warn("reentrant invocation of #getMeasurement() in data collector " + id);
+			if (!allowReentrantInvocation) {
+				DataCollectors.INSTANCE.warn("reentrant invocation of #getMeasurement() in data collector " + id);
+			}
 			return NULL_MEASURMENT;
 		}
 		activeMeasurement = new TimedMeasurement(name, this::consume);
