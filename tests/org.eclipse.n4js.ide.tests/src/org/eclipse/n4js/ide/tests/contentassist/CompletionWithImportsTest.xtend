@@ -163,6 +163,24 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 	}
 
 	@Test
+	def void testAliasExists10() {
+		test('''
+			import {A1 as A2} from "MA";
+			A2<|>;
+		''', ''' 
+			(A2, Class, alias for MA/A1, , , 00000, , , , ([1:0 - 1:2], A2), [], [], , )
+			(A2, Class, via new alias Alias_MA_A2 for MA/A2
+			
+			Introduces the new alias 'Alias_MA_A2' for element MA/A2, , , 00001, , , , ([1:0 - 1:2], Alias_MA_A2), [([0:28 - 0:28], 
+			import {A2 as Alias_MA_A2} from "MA";)], [], , )
+			(A2, Class, via new alias Alias_MBA_A2 for MBA/A2
+			
+			Introduces the new alias 'Alias_MBA_A2' for element MBA/A2, , , 00002, , , , ([1:0 - 1:2], Alias_MBA_A2), [([0:28 - 0:28], 
+			import {A2 as Alias_MBA_A2} from "MBA";)], [], , )
+		''');
+	}
+
+	@Test
 	def void testAliasNecessary1() {
 		test('''
 			import {A2} from "MA";
@@ -193,6 +211,33 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 			let x = new NSMA.A1<|>
 		''', ''' 
 			(A1, Class, MA, , , 00000, , , , ([1:17 - 1:19], A1), [], [], , )
+		''');
+	}
+
+	@Test
+	def void testNamespaceExists3() {
+		test('''
+			import * as NSMA from "MA";
+			A2<|>
+		''', ''' 
+			(A2, Class, MBA, , , 00000, , , , ([1:0 - 1:2], A2), [([0:27 - 0:27], 
+			import {A2} from "MBA";)], [], , )
+			(NSMA.A2, Class, MA/A2, , , 00001, , , , ([1:0 - 1:2], NSMA.A2), [], [], , )
+		''');
+	}
+
+	@Test
+	def void testNamespaceExists4() {
+		test('''
+			import * as A2 from "MA";
+			A2<|>
+		''', ''' 
+			(A2, Color, A2, , , 00000, , , , ([1:0 - 1:2], A2), [], [], , )
+			(A2.A2, Class, MA/A2, , , 00001, , , , ([1:0 - 1:2], A2.A2), [], [], , )
+			(A2, Class, via new alias Alias_MBA_A2 for MBA/A2
+			
+			Introduces the new alias 'Alias_MBA_A2' for element MBA/A2, , , 00002, , , , ([1:0 - 1:2], Alias_MBA_A2), [([0:25 - 0:25], 
+			import {A2 as Alias_MBA_A2} from "MBA";)], [], , )
 		''');
 	}
 }
