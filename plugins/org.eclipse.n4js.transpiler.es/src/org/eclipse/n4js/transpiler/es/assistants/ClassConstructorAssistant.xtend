@@ -413,8 +413,7 @@ class ClassConstructorAssistant extends TransformationAssistant {
 				if(stmnt instanceof ExpressionStatement) {
 					val expr = stmnt.expression;
 					if(expr instanceof ParameterizedCallExpression) {
-						if(expr.target instanceof SuperLiteral
-							|| state.info.isExplicitSuperCall(expr)) {
+						if(expr.target instanceof SuperLiteral) {
 							return i;
 						}
 					}

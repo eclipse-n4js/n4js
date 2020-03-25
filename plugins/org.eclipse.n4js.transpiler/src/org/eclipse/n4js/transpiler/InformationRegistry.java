@@ -21,7 +21,6 @@ import org.eclipse.n4js.n4JS.N4EnumDeclaration;
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
 import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeDeclaration;
-import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
 import org.eclipse.n4js.n4JS.TypeDefiningElement;
 import org.eclipse.n4js.transpiler.assistants.TypeAssistant;
 import org.eclipse.n4js.transpiler.utils.ConcreteMembersOrderedForTranspiler;
@@ -52,24 +51,11 @@ public class InformationRegistry {
 	/**
 	 */
 	private enum Tag {
-		/** Tag for IM nodes that were, originally, an explicit super call. */
-		explicitSuperCall,
-
 		/** Tag for members which were consumed from an interface. */
 		consumedFromInterface,
 
 		/** Tag for members which are to be hidden from reflection. */
 		hiddenFromReflection
-	}
-
-	/** Tells if the given call expression has been derived from an explicit super call within a constructor. */
-	public boolean isExplicitSuperCall(ParameterizedCallExpression callExpr) {
-		return isTaggedAs(Tag.explicitSuperCall, callExpr);
-	}
-
-	/** Marks given call expression as being derived from an explicit super call within a constructor. */
-	public void markAsExplicitSuperCall(ParameterizedCallExpression callExpr) {
-		tag(Tag.explicitSuperCall, callExpr);
 	}
 
 	/** Tells if the given member was consumed from an interface. */

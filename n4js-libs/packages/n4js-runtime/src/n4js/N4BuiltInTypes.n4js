@@ -209,12 +209,12 @@ abstract class N4Member extends N4NamedElement {
 
 abstract class N4Enum extends Object {
 
-	private name: string;
-	private value: string;
+	public name: string;
+	public value: string;
 
 	public static literals: Array<? extends N4Enum>;
 
-	constructor(name: string, value: string) {
+	constructor(name: string, value: string=) {
 		this.name = name;
 		this.value = value || name;
 	}

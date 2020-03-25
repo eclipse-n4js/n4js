@@ -13,37 +13,11 @@ import 'n4js-runtime'
 
 export class MyExternalClass extends N4Object {
 	constructor(start, spec, end) {
-		super(start, spec, end);
+		super();
 		const $specObj = spec || {};
 		this.stuff = $specObj.stuff;
 	}
 	static get n4type() {
-		const $sym = Symbol.for('org.eclipse.n4js/reflectionInfo');
-		if (this.hasOwnProperty($sym)) {
-			return this[$sym];
-		}
-		const instanceProto = this.prototype, staticProto = this;
-		return this[$sym] = new N4Class({
-			name: 'MyExternalClass',
-			origin: 'ES6_Classes',
-			fqn: 'tests/Temp/MyExternalClass',
-			n4superType: N4Object.n4type,
-			allImplementedInterfaces: [],
-			ownedMembers: [
-				new N4DataField({
-					name: 'stuff',
-					isStatic: false,
-					annotations: []
-				}),
-				new N4Method({
-					name: 'constructor',
-					isStatic: false,
-					jsFunction: instanceProto['constructor'],
-					annotations: []
-				})
-			],
-			consumedMembers: [],
-			annotations: []
-		});
+		return $getReflectionForClass(MyExternalClass, '["MyExternalClass","AT_874_ExternalClasses","ES6_Classes_NonPrototype",["f.stuff","m.constructor"]]');
 	}
 }

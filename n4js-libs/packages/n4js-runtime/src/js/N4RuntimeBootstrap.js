@@ -17,19 +17,6 @@ const SYMBOL_IDENTIFIER_PREFIX = "#";
 var ArraySlice = Array.prototype.slice,
     noop = function() {};
 
-function defineN4TypeGetter(instance, factoryFn) {
-    var n4type;
-    Object.defineProperty(instance, "n4type", {
-        configurable: true, // for hot reloading/patching
-        get: function() {
-            if (!n4type) {
-                n4type = factoryFn();
-            }
-            return n4type;
-        }
-    });
-}
-
 
 /**
  * Returns reflection information.
@@ -68,8 +55,6 @@ function $getReflectionForEnum(staticProto, reflectionString) {
 }
 
 
-
-
 /**
  * Define one or more static or instance data fields of a class. This is only intended for the
  * rare special cases in which explicit property definitions are required for a data field, due
@@ -88,6 +73,7 @@ function $defineFields(target, ...names) {
         });
     }
 }
+
 /**
  * Initialize the fields declared by the given interfaces in the target object 'target'.
  * Takes care of defaults defined in the interfaces and values provided via the optional
