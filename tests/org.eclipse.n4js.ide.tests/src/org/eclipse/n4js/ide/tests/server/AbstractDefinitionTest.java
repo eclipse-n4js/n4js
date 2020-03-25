@@ -37,7 +37,7 @@ abstract public class AbstractDefinitionTest extends AbstractStructuredIdeTest<D
 	}
 
 	@Override
-	protected void performTest(Project project, DefinitionTestConfiguration dtc)
+	protected void performTest(Project project, String moduleName, DefinitionTestConfiguration dtc)
 			throws InterruptedException, ExecutionException, URISyntaxException {
 		TextDocumentPositionParams textDocumentPositionParams = new TextDocumentPositionParams();
 		String completeFileUri = getFileURIFromModuleName(dtc.getFilePath()).toString();

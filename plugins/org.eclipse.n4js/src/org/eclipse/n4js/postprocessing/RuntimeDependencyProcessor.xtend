@@ -50,15 +50,6 @@ class RuntimeDependencyProcessor {
 	 * Invoked during AST traversal (and thus during main post-processing).
 	 */
 	def package recordRuntimeReferencesInCache(EObject node, ASTMetaInfoCache cache) {
-		val m = N4JSDataCollectors.dcRuntimeDepsCollect.getMeasurement();
-		try {
-			doRecordRuntimeReferencesInCache(node, cache);
-		} finally {
-			m.close();
-		}
-	}
-
-	def private doRecordRuntimeReferencesInCache(EObject node, ASTMetaInfoCache cache) {
 		if (node instanceof IdentifierRef) {
 			val target = node.targetElement;
 			if (N4JSLanguageUtils.hasRuntimeRepresentation(target, variantHelper)) {
@@ -76,7 +67,13 @@ class RuntimeDependencyProcessor {
 					val targetDeclType = targetTypeRef?.declaredType;
 					if (N4JSLanguageUtils.hasRuntimeRepresentation(targetDeclType, variantHelper)) {
 						cache.elementsReferencedAtRuntime += targetDeclType;
-						val targetModule = if (targetDeclType !== null && !targetDeclType.eIsProxy) EcoreUtil2.getContainerOfType(targetDeclType, TModule);
+						// in case of namespace imports, we also want to remember that the namespace was referenced at run time:
+						val namespace = targetTypeRef.astNamespace;
+						if (namespace !== null) {
+							cache.elementsReferencedAtRuntime += namespace;
+						}
+						// remember that the target's containing module was referenced from an extends/implements clause:
+						val targetModule = if (!targetDeclType.eIsProxy) EcoreUtil2.getContainerOfType(targetDeclType, TModule);
 						if (isDifferentModuleInSameProject(targetModule, cache)) {
 							if (N4JSASTUtils.isTopLevelCode(node)) { // nested classifiers not supported yet, but let's be future proof
 								cache.modulesReferencedAtLoadtimeForInheritance += targetModule;

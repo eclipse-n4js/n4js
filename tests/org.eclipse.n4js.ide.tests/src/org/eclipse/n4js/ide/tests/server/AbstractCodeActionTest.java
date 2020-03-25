@@ -32,7 +32,12 @@ import org.eclipse.xtext.testing.AbstractLanguageServerTest.TestCodeActionConfig
 import com.google.common.collect.Lists;
 
 /**
- * Abstract test class for code action protocol tests
+ * Abstract test class for <u>low-level</u> code action protocol tests.
+ * <p>
+ * For more high-level tests related to code actions, consider sub-classing one of
+ * <ul>
+ * <li>{@link AbstractOrganizeImportsTest}.
+ * </ul>
  */
 abstract public class AbstractCodeActionTest extends AbstractStructuredIdeTest<TestCodeActionConfiguration> {
 
@@ -42,7 +47,7 @@ abstract public class AbstractCodeActionTest extends AbstractStructuredIdeTest<T
 	}
 
 	@Override
-	protected void performTest(Project project, TestCodeActionConfiguration tcac)
+	protected void performTest(Project project, String moduleName, TestCodeActionConfiguration tcac)
 			throws InterruptedException, ExecutionException {
 
 		CodeActionParams codeActionParams = new CodeActionParams();

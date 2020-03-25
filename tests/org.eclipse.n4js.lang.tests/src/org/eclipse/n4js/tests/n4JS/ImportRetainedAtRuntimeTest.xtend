@@ -27,7 +27,7 @@ import org.junit.Test
 class ImportRetainedAtRuntimeTest extends AbstractN4JSTest {
 
 	@Test
-	def void testSimple() {
+	def void testNamedImports() {
 		val resourceSet = #[
 			"ABCD.n4js" -> '''
 				export public class A {}
@@ -76,7 +76,97 @@ class ImportRetainedAtRuntimeTest extends AbstractN4JSTest {
 	}
 
 	@Test
-	def void testEnums() {
+	def void testNamespaceImports() {
+		val resourceSet = #[
+			"A.n4js" -> '''
+				export public class A {}
+			''',
+			"B.n4js" -> '''
+				export public class B {}
+			''',
+			"C.n4js" -> '''
+				export public class C {}
+			''',
+			"D.n4js" -> '''
+				export public class D {}
+			''',
+			"Main.n4js" -> '''
+				import * as NA from "A"
+				import * as NB from "B"
+				import * as NC from "C"
+				import * as ND from "D"
+				NA.A;
+				export function foo(p: NC.C) {}
+				class Main extends ND.D {}
+			'''
+		].parseAndValidateSuccessfullyMany;
+
+		val main = resourceSet.findScript("Main.n4js");
+		val importDeclA = main.scriptElements.filter(ImportDeclaration).get(0);
+		val importDeclB = main.scriptElements.filter(ImportDeclaration).get(1);
+		val importDeclC = main.scriptElements.filter(ImportDeclaration).get(2);
+		val importDeclD = main.scriptElements.filter(ImportDeclaration).get(3);
+		assertTrue(importDeclA.retainedAtRuntime);
+		assertFalse(importDeclB.retainedAtRuntime);
+		assertFalse(importDeclC.retainedAtRuntime);
+		assertTrue(importDeclD.retainedAtRuntime);
+	}
+
+	@Test
+	def void testDefaultImports() {
+		val resourceSet = #[
+			"A.n4js" -> '''
+				export default public class A {}
+			''',
+			"B.n4js" -> '''
+				export default public class B {}
+			''',
+			"C.n4js" -> '''
+				export default public class C {}
+			''',
+			"D.n4js" -> '''
+				export default public class D {}
+			''',
+			"Main.n4js" -> '''
+				import a from "A"
+				import b from "B"
+				import c from "C"
+				import d from "D"
+				a;
+				export function foo(p: c) {}
+				class Main extends d {}
+			'''
+		].parseAndValidateSuccessfullyMany;
+
+		val main = resourceSet.findScript("Main.n4js");
+		val importDeclA = main.scriptElements.filter(ImportDeclaration).get(0);
+		val importDeclB = main.scriptElements.filter(ImportDeclaration).get(1);
+		val importDeclC = main.scriptElements.filter(ImportDeclaration).get(2);
+		val importDeclD = main.scriptElements.filter(ImportDeclaration).get(3);
+		assertTrue(importDeclA.retainedAtRuntime);
+		assertFalse(importDeclB.retainedAtRuntime);
+		assertFalse(importDeclC.retainedAtRuntime);
+		assertTrue(importDeclD.retainedAtRuntime);
+	}
+
+	@Test
+	def void testBareImports() {
+		val resourceSet = #[
+			"A.n4js" -> '''
+				export public class A {}
+			''',
+			"Main.n4js" -> '''
+				import "A"
+			'''
+		].parseAndValidateSuccessfullyMany;
+
+		val main = resourceSet.findScript("Main.n4js");
+		val importDecl = main.scriptElements.filter(ImportDeclaration).head;
+		assertTrue(importDecl.retainedAtRuntime); // bare imports are always retained at runtime
+	}
+
+	@Test
+	def void testImportingEnums() {
 		val resourceSet = #[
 			"E.n4js" -> '''
 				export public enum E1 { L1, L2, L3 }
@@ -101,7 +191,7 @@ class ImportRetainedAtRuntimeTest extends AbstractN4JSTest {
 	}
 
 	@Test
-	def void testN4JSDFiles() {
+	def void testImportingFromN4JSDFiles() {
 		val resourceSet = #[
 			"Def.n4jsd" -> '''
 				export external public class C {}

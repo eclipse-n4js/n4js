@@ -143,7 +143,7 @@ class Module {
 	«ENDIF»	
 	«IF hasContents»
 		«contents»
-	«ELSE»
+	«ELSEIF hasClassifiers»
 		«generateClassifiers()»
 	«ENDIF»
 	'''
@@ -159,6 +159,10 @@ class Module {
 	«classifier.generate()»
 	«ENDFOR»
 	'''
+
+	private def boolean hasClassifiers() {
+		return classifiers !== null && !classifiers.empty;
+	}
 
 	private def boolean hasImports() {
 		return imports !== null && !imports.empty

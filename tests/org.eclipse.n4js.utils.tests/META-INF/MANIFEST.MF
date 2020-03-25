@@ -7,7 +7,10 @@ Bundle-SymbolicName: org.eclipse.n4js.utils.tests; singleton:=true
 Fragment-Host: org.eclipse.n4js.utils
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui.workbench;resolution:=optional,
- org.junit
+ org.junit,
+ org.eclipse.xtext.testing,
+ org.eclipse.n4js,
+ org.eclipse.n4js.tests.helper
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.eclipse.n4js.utils
 Automatic-Module-Name: org.eclipse.n4js.utils.tests
