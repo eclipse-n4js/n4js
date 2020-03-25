@@ -26,16 +26,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 						export class A2 {}''',
 			"MBA" -> '''
 						export class B1 {}
-						export class A2 {}''',
-			"MC"   -> '''
-						export class C1 {}
-						export class C2 {}''',
-			"Def" -> '''
-						export class Def01 {}
-						export class Def02 {}
-						export class Def03 {}
-						export class Def04 {}
-						export default class DefCls {}'''];
+						export class A2 {}'''];
 	}
 
 	@Test
@@ -238,6 +229,34 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 			
 			Introduces the new alias 'Alias_MBA_A2' for element MBA/A2, , , 00002, , , , ([1:0 - 1:2], Alias_MBA_A2), [([0:25 - 0:25], 
 			import {A2 as Alias_MBA_A2} from "MBA";)], [], , )
+		''');
+	}
+
+	@Test
+	def void testBuiltinType1() {
+		test('''
+			Obj<|>
+		''', ''' 
+			(Object, Text, Object, , , 00000, , , , ([0:0 - 0:3], Object), [], [], , )
+		''');
+	}
+
+	@Test
+	def void testBuiltinType2() {
+		test('''
+			N4En<|>
+		''', ''' 
+			(N4Enum, Text, N4Enum, , , 00000, , , , ([0:0 - 0:4], N4Enum), [], [], , )
+			(N4EnumType, Class, N4EnumType, , , 00001, , , , ([0:0 - 0:4], N4EnumType), [], [], , )
+		''');
+	}
+
+	@Test
+	def void testGlobal1() {
+		test('''
+			isNaN<|>
+		''', ''' 
+			(isNaN, Text, isNaN, , , 00000, , , , ([0:0 - 0:5], isNaN), [], [], , )
 		''');
 	}
 }
