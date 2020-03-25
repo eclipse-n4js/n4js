@@ -62,11 +62,11 @@ public abstract class DataCollector {
 	public abstract void purgeData();
 
 	// package
-	/** Return immediate child with the provided key. */
-	abstract DataCollector getChild(String key);
+	/** Return immediate child with the provided ID. */
+	abstract DataCollector getChild(String id);
 
-	/** Add given collector as child under given key. */
-	abstract void addChild(String key, DataCollector child);
+	/** Add given collector as child. */
+	abstract void addChild(DataCollector child);
 
 	/** Get keys for all immediate children. */
 	abstract Collection<String> childrenKeys();

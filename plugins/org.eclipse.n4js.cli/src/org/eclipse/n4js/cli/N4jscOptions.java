@@ -165,7 +165,7 @@ public class N4jscOptions {
 						+ "performance report.", //
 				handler = N4JSCmdLineParser.N4JSStringOptionHandler.class)
 		@GoalRequirements(goals = N4jscGoal.compile)
-		String performanceKey = N4JSDataCollectors.HEADLESS_N4JS_COMPILER_COLLECTOR_NAME;
+		String performanceKey = N4JSDataCollectors.dcBuild.getId();
 
 		// OPTIONS for goal LSP
 

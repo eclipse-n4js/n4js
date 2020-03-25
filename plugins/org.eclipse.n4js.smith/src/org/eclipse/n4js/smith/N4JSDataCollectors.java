@@ -23,11 +23,15 @@ public final class N4JSDataCollectors {
 	public static final DataCollector dcTranspiler = create("Transpiler");
 
 	public static final DataCollector dcBuild = create("Build");
+
 	public static final DataCollector dcAstPostprocess = create("AstPostprocess", dcBuild);
 	public static final DataCollector dcRuntimeDepsCollect = create("RuntimeDepsCollect", dcAstPostprocess);
 	public static final DataCollector dcRuntimeDepsFindCycles = create("RuntimeDepsFindCycles", dcAstPostprocess);
+
 	public static final DataCollector dcValidations = create("Validations", dcBuild);
+
 	public static final DataCollector dcValidationsPackageJson = create("Validations (package.json)", dcBuild);
+
 	public static final DataCollector dcTranspilation = create("Transpilation", dcBuild);
 	public static final DataCollector dcTranspilationStep1 = create("T1", dcTranspilation);
 	public static final DataCollector dcTranspilationStep2 = create("T2", dcTranspilation);
@@ -57,14 +61,6 @@ public final class N4JSDataCollectors {
 	public static final DataCollector dcFlowGraphPostprocessing = create("PostProcessing", dcFlowGraphs);
 
 	public static final DataCollector dcManifestAwareResourceValidator = create("ManifestAwareResourceValidator");
-
-	public static final String HEADLESS_N4JS_COMPILER_COLLECTOR_NAME = "Headless N4JS Compiler";
-	public static final DataCollector dcHeadless = create(HEADLESS_N4JS_COMPILER_COLLECTOR_NAME);
-	public static final DataCollector dcHeadlessBuildSetComputation = create("Compute build set", dcHeadless);
-	public static final DataCollector dcHeadlessProjectRegistration = create("Register project", dcHeadless);
-	public static final DataCollector dcHeadlessInstallMissingDeps = create("Install missing dependencies", dcHeadless);
-	public static final DataCollector dcHeadlessCompilation = create("Compilation", dcHeadless);
-	public static final DataCollector dcHeadlessRunnerTester = create("Execute runner/tester", dcHeadless);
 
 	public static final String N4JS_CLI_COLLECTOR_NAME = "n4jsc goal";
 	public static final String N4JS_CLI_COMPILER_COLLECTOR_NAME = "n4jsc compile";

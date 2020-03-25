@@ -119,14 +119,15 @@ class TimedDataCollector extends DataCollector {
 	}
 
 	@Override
-	public DataCollector getChild(String key) {
-		return this.children.get(key);
+	public DataCollector getChild(String childId) {
+		return this.children.get(childId);
 	}
 
 	@Override
-	public void addChild(String key, DataCollector child) {
-		if (this.children.containsKey(key)) {
-			throw new RuntimeException("Already contains key " + key + " with child " + this.children.get(key));
+	public void addChild(DataCollector child) {
+		String childId = child.getId();
+		if (this.children.containsKey(childId)) {
+			throw new RuntimeException("Already contains key " + childId + " with child " + this.children.get(childId));
 		}
 
 		if (this.children.containsValue(child)) {
@@ -138,7 +139,7 @@ class TimedDataCollector extends DataCollector {
 			throw new RuntimeException("Already contains child " + child + " with keys " + keys);
 		}
 
-		this.children.put(key, child);
+		this.children.put(childId, child);
 	}
 
 	@Override
