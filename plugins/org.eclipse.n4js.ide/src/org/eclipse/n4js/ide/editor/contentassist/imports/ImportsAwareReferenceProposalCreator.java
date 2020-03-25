@@ -35,6 +35,7 @@ import org.eclipse.n4js.scoping.imports.PlainAccessOfAliasedImportDescription;
 import org.eclipse.n4js.scoping.imports.PlainAccessOfNamespacedImportDescription;
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
+import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.xtext.conversion.ValueConverterException;
@@ -173,7 +174,7 @@ public class ImportsAwareReferenceProposalCreator {
 		case alias:
 			return caec.aliasName;
 		case namespace:
-			return caec.namespaceName;
+			return caec.namespaceName.toString();
 		default:
 			// noop
 		}
@@ -221,29 +222,31 @@ public class ImportsAwareReferenceProposalCreator {
 
 	private String getKind(CAECandidate caec) {
 		EClass eClass = caec.candidate.getEClass();
-		String kind = ContentAssistEntry.KIND_TEXT;
 		if (TypesPackage.eINSTANCE.getTClass() == eClass) {
-			kind = ContentAssistEntry.KIND_CLASS;
+			return ContentAssistEntry.KIND_CLASS;
 		}
 		if (TypesPackage.eINSTANCE.getTInterface() == eClass) {
-			kind = ContentAssistEntry.KIND_INTERFACE;
+			return ContentAssistEntry.KIND_INTERFACE;
 		}
 		if (TypesPackage.eINSTANCE.getTField() == eClass) {
-			kind = ContentAssistEntry.KIND_FIELD;
+			return ContentAssistEntry.KIND_FIELD;
 		}
 		if (TypesPackage.eINSTANCE.getTEnum() == eClass) {
-			kind = ContentAssistEntry.KIND_ENUM;
+			return ContentAssistEntry.KIND_ENUM;
 		}
 		if (TypesPackage.eINSTANCE.getTFunction() == eClass) {
-			kind = ContentAssistEntry.KIND_FUNCTION;
+			return ContentAssistEntry.KIND_FUNCTION;
 		}
 		if (TypesPackage.eINSTANCE.getTVariable() == eClass) {
-			kind = ContentAssistEntry.KIND_VARIABLE;
+			return ContentAssistEntry.KIND_VARIABLE;
 		}
 		if (N4JSPackage.eINSTANCE.getVariableDeclaration() == eClass) {
-			kind = ContentAssistEntry.KIND_VARIABLE;
+			return ContentAssistEntry.KIND_VARIABLE;
 		}
-		return kind;
+		if (TypesPackage.eINSTANCE.getModuleNamespaceVirtualType() == eClass) {
+			return ContentAssistEntry.KIND_COLOR;
+		}
+		return ContentAssistEntry.KIND_TEXT;
 	}
 
 	private void addImportIfNecessary(CAECandidate caec, EObject model, ContentAssistEntry proposal) {
@@ -270,7 +273,7 @@ public class ImportsAwareReferenceProposalCreator {
 		final boolean isValid;
 		final QualifiedName qualifiedName;
 		final String shortName;
-		final String namespaceName;
+		final QualifiedName namespaceName;
 		final String aliasName;
 		final CandidateAccessType accessType;
 		final NameAndAlias addedImportNameAndAlias;
@@ -279,7 +282,7 @@ public class ImportsAwareReferenceProposalCreator {
 			this.candidate = candidate;
 			this.shortName = getShortName();
 			this.qualifiedName = getQualifiedName();
-			this.candidateViaScopeShortName = getCandidateViaScope(scope);
+			this.candidateViaScopeShortName = getCorrectCandidateViaScope(scope);
 			this.isScopedCandidateEqual = isEqualCandidateName(candidateViaScopeShortName, qualifiedName);
 			this.isScopedCandidateCollisioning = isScopedCandidateCollisioning();
 			this.accessType = getAccessType();
@@ -301,7 +304,9 @@ public class ImportsAwareReferenceProposalCreator {
 			boolean validName = false;
 			validName |= prefixMatcher.isCandidateMatchingPrefix(shortName, prefix);
 			validName |= isAlias() && prefixMatcher.isCandidateMatchingPrefix(aliasName, prefix);
-			validName |= isNamespace() && prefixMatcher.isCandidateMatchingPrefix(namespaceName, prefix);
+			if (isNamespace()) {
+				validName |= prefixMatcher.isCandidateMatchingPrefix(namespaceName.getLastSegment(), prefix);
+			}
 
 			boolean valid = validName;
 			valid &= !Strings.isNullOrEmpty(shortName);
@@ -323,6 +328,12 @@ public class ImportsAwareReferenceProposalCreator {
 			return qName;
 		}
 
+		private IEObjectDescription getCorrectCandidateViaScope(IScope scope) {
+			IEObjectDescription candidateViaScope = getCandidateViaScope(scope);
+			candidateViaScope = specialcaseNamespaceShadowsOwnElement(scope, candidateViaScope);
+			return candidateViaScope;
+		}
+
 		private IEObjectDescription getCandidateViaScope(IScope scope) {
 			// performance issue: scope.getElements
 			List<IEObjectDescription> elements = Lists.newArrayList(scope.getElements(QualifiedName.create(shortName)));
@@ -341,6 +352,49 @@ public class ImportsAwareReferenceProposalCreator {
 			}
 
 			return null;
+		}
+
+		private IEObjectDescription specialcaseNamespaceShadowsOwnElement(IScope scope,
+				IEObjectDescription candidateViaScope) {
+
+			if (candidateViaScope == null) {
+				return candidateViaScope;
+			}
+
+			if (candidate.getEObjectOrProxy() instanceof ModuleNamespaceVirtualType) {
+				return candidateViaScope;
+			}
+
+			EObject eObject = candidateViaScope.getEObjectOrProxy();
+			if (!(candidateViaScope.getEObjectOrProxy() instanceof ModuleNamespaceVirtualType)) {
+				return candidateViaScope;
+			}
+
+			ModuleNamespaceVirtualType mnvt = (ModuleNamespaceVirtualType) eObject;
+			TModule module = mnvt.getModule();
+			if (module == null) {
+				return candidateViaScope;
+			}
+
+			String moduleQN = module.getQualifiedName();
+			String candidateNamespaceName = candidateViaScope.getName().toString();
+			if (!candidateNamespaceName.equals(shortName)) {
+				return candidateViaScope;
+			}
+
+			QualifiedName qualifiedNameViaModule = QualifiedName.create(moduleQN).append(shortName);
+			IEObjectDescription shadowedCandidateViaScope = scope.getSingleElement(qualifiedNameViaModule);
+			if (shadowedCandidateViaScope == null) {
+				return candidateViaScope;
+			}
+
+			QualifiedName qualifiedNameViaNamespace = QualifiedName.create(candidateNamespaceName).append(shortName);
+			if (!qualifiedName.equals(qualifiedNameViaModule)) {
+				return candidateViaScope;
+			}
+
+			// handle special case:
+			return new PlainAccessOfNamespacedImportDescription(shadowedCandidateViaScope, qualifiedNameViaNamespace);
 		}
 
 		/** @return the complete qualified name using {@link IQualifiedNameProvider} */
@@ -379,6 +433,13 @@ public class ImportsAwareReferenceProposalCreator {
 					return false;
 				}
 			}
+			if (candidateViaScopeShortName instanceof PlainAccessOfNamespacedImportDescription) {
+				QualifiedName candidateNamespaceName = ((PlainAccessOfNamespacedImportDescription) candidateViaScopeShortName)
+						.getNamespacedName();
+				if (!shortName.equals(candidateNamespaceName.toString())) {
+					return false;
+				}
+			}
 			return true;
 		}
 
@@ -407,7 +468,7 @@ public class ImportsAwareReferenceProposalCreator {
 			return null;
 		}
 
-		private String getNamespaceName() {
+		private QualifiedName getNamespaceName() {
 			if (accessType == CandidateAccessType.namespace) {
 				return ((PlainAccessOfNamespacedImportDescription) candidateViaScopeShortName).getNamespacedName();
 			}
@@ -443,7 +504,7 @@ public class ImportsAwareReferenceProposalCreator {
 			if (caec.candidateViaScopeShortName != null && caec.isScopedCandidateCollisioning) {
 				// accessing default export via already imported namespace
 				if (caec.candidateViaScopeShortName.getEObjectOrProxy() instanceof ModuleNamespaceVirtualType) {
-					return null;
+					// return null;
 				}
 
 				// the simple name is already reachable, i.e. already in use - another import is present

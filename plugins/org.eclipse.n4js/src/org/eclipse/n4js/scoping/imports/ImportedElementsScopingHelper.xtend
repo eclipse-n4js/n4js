@@ -295,7 +295,7 @@ class ImportedElementsScopingHelper {
 	private def handleNamespacedAccess(IdentifiableElement importedType, QualifiedName originalName, QualifiedName qn,
 		ImportedElementsMap invalidImports, IEODesc2ISpec originatorMap, ImportSpecifier specifier) {
 		val invalidAccess = new PlainAccessOfNamespacedImportDescription(
-			N4JSEObjectDescription.create(originalName, importedType), qn.toString)
+			N4JSEObjectDescription.create(originalName, importedType), qn)
 		invalidImports.put(originalName, invalidAccess)
 	// TODO IDEBUG-702 originatorMap.putWithOrigin(invalidAccess, specifier)
 	}
