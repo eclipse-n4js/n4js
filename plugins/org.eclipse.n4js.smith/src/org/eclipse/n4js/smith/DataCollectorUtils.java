@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.smith;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.StringJoiner;
@@ -21,6 +22,23 @@ import org.eclipse.n4js.utils.IndentLevel;
  * Utilities for data collection.
  */
 public class DataCollectorUtils {
+
+	/**
+	 * Same as {@link #dataToString(DataSeries, String)}, but will include all root data collectors.
+	 */
+	public static String allDataToString(String indent) {
+		List<String> rootKeys = new ArrayList<>(CollectedDataAccess.getCollectorsKeys());
+		Collections.sort(rootKeys);
+		StringBuilder sb = new StringBuilder();
+		for (String key : rootKeys) {
+			if (sb.length() > 0) {
+				sb.append(System.lineSeparator());
+				sb.append(System.lineSeparator());
+			}
+			sb.append(DataCollectorUtils.dataToString(key, indent));
+		}
+		return sb.toString();
+	}
 
 	/**
 	 * Same as {@link #dataToString(DataSeries, String)}, but accepts a data collector key.

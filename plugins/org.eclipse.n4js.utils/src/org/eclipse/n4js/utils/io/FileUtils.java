@@ -33,7 +33,7 @@ import com.google.common.base.StandardSystemProperty;
  */
 public abstract class FileUtils {
 
-	private static final DateFormat TIME_STAMP_FORMAT = new SimpleDateFormat("yyyyMMdd_HHmmss");
+	private static final DateFormat TIME_STAMP_FORMAT = new SimpleDateFormat("yyyyMMdd_HHmm_ss");
 
 	private FileUtils() {
 		// private.

@@ -145,13 +145,19 @@ public class N4jscMain {
 
 			try {
 				if (absFileString.endsWith(".csv")) {
+					if ("*".equals(performanceKey.trim())) {
+						throw new UnsupportedOperationException(); // a validation makes sure we won't reach this line
+					}
 					DataCollectorCSVExporter.toFile(performanceReportFile, performanceKey);
 				} else {
-					String dataStr = DataCollectorUtils.dataToString(performanceKey, "    ");
-					Files.writeString(performanceReportFile.toPath(), dataStr);
+					String indent = "    ";
+					String dataStr = "*".equals(performanceKey)
+							? DataCollectorUtils.allDataToString(indent)
+							: DataCollectorUtils.dataToString(performanceKey, indent);
+					Files.writeString(performanceReportFile.toPath(), dataStr + System.lineSeparator());
 				}
 			} catch (IOException e) {
-				throw new N4jscException(N4jscExitCode.PERFORMANCE_REPORT_ERROR);
+				throw new N4jscException(N4jscExitCode.PERFORMANCE_REPORT_ERROR, e);
 			}
 		}
 	}

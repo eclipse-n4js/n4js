@@ -153,8 +153,8 @@ public class N4jscOptions {
 				hidden = true, //
 				depends = "--performanceKey", //
 				usage = "[compile] enables performance data collection and specifies the location and name of the performance report. "
-						+ "If the name ends in \".csv\", CSV file format is used and an existing file will be replaced; otherwise "
-						+ "a human-readable format is used and a date/time stamp is appended to the name.", //
+						+ "A date/time stamp is appended to the file name. If the file name ends in \".csv\", CSV file format is emitted;"
+						+ "otherwise a human-readable format is used.", //
 				handler = N4JSCmdLineParser.N4JSFileOptionHandler.class)
 		@GoalRequirements(goals = N4jscGoal.compile)
 		File performanceReport = new File("performance-report.txt");
@@ -162,7 +162,8 @@ public class N4jscOptions {
 		@Option(name = "--performanceKey", aliases = "-pk", //
 				hidden = true, //
 				usage = "[compile] specifies the data collector key of the collector whose performance data is saved in the "
-						+ "performance report.", //
+						+ "performance report. An asterisk may be used to emit data of all root data collectors (not supported"
+						+ "for CSV output).", //
 				handler = N4JSCmdLineParser.N4JSStringOptionHandler.class)
 		@GoalRequirements(goals = N4jscGoal.compile)
 		String performanceKey = N4JSDataCollectors.dcBuild.getId();

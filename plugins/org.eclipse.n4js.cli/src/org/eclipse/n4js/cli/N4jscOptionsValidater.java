@@ -179,5 +179,9 @@ public class N4jscOptionsValidater {
 			String msg = "Missing performance key.";
 			throw new N4jscException(N4jscExitCode.OPTION_INVALID, msg);
 		}
+		if ("*".equals(options.getPerformanceKey()) && options.getPerformanceReport().getName().endsWith(".csv")) {
+			String msg = "Asterisk as performance key not supported when exporting to CSV format.";
+			throw new N4jscException(N4jscExitCode.OPTION_INVALID, msg);
+		}
 	}
 }
