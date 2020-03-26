@@ -37,7 +37,6 @@ import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.ExportableElement
 import org.eclipse.n4js.n4JS.ExportedVariableStatement
 import org.eclipse.n4js.n4JS.Expression
-import org.eclipse.n4js.n4JS.ExpressionAnnotationList
 import org.eclipse.n4js.n4JS.ExpressionStatement
 import org.eclipse.n4js.n4JS.FormalParameter
 import org.eclipse.n4js.n4JS.FunctionDeclaration
@@ -689,13 +688,7 @@ public class TranspilerBuilderBlocks
 		return result;
 	}
 
-	public static def ExpressionAnnotationList _ExprAnnoList(Annotation[] annotations) {
-		val result = N4JSFactory.eINSTANCE.createExpressionAnnotationList;
-		result.annotations += annotations;
-		return result;
-	}
-
-	public static def PropertyAssignmentAnnotationList _PropAssAnnoList(Annotation[] annotations) {
+	public static def PropertyAssignmentAnnotationList _PropertyAssignmentAnnotationList(Annotation[] annotations) {
 		val result = N4JSFactory.eINSTANCE.createPropertyAssignmentAnnotationList;
 		result.annotations += annotations;
 		return result;
