@@ -51,8 +51,7 @@ public class XIdeContentProposalAcceptor
 	public boolean canAcceptMoreProposals() {
 		boolean result = !cancelIndicator.isCanceled();
 		if (!result) {
-			// System.err.println("Cancelled");
-			result = true;// FIXME: remove
+			System.err.println("Cancelled");
 		}
 		// return true;
 		return result && entries.size() < DEFAULT_PROPOSALS_LIMIT;

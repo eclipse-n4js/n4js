@@ -60,7 +60,7 @@ import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 /**
- *
+ * Creates proposals for content assist and also adds imports of the proposed element if necessary.
  */
 public class ImportsAwareReferenceProposalCreator {
 
@@ -169,7 +169,7 @@ public class ImportsAwareReferenceProposalCreator {
 		return null;
 	}
 
-	String getProposal(CAECandidate caec) {
+	private String getProposal(CAECandidate caec) {
 		switch (caec.accessType) {
 		case alias:
 			return caec.aliasName;
@@ -184,7 +184,7 @@ public class ImportsAwareReferenceProposalCreator {
 		return caec.shortName;
 	}
 
-	String getLabel(CAECandidate caec, int version) {
+	private String getLabel(CAECandidate caec, int version) {
 		String typeVersion = (version == 0) ? "" : N4IDLGlobals.VERSION_SEPARATOR + String.valueOf(version);
 		if (caec.isAlias()) {
 			return caec.aliasName + typeVersion;
@@ -199,7 +199,7 @@ public class ImportsAwareReferenceProposalCreator {
 		return caec.shortName + typeVersion;
 	}
 
-	String getDescription(CAECandidate caec) {
+	private String getDescription(CAECandidate caec) {
 		if (caec.isAlias()) {
 			return "alias for " + qualifiedNameConverter.toString(caec.qualifiedName);
 		}
@@ -261,11 +261,11 @@ public class ImportsAwareReferenceProposalCreator {
 		}
 	}
 
-	static enum CandidateAccessType {
+	private static enum CandidateAccessType {
 		direct, alias, namespace
 	}
 
-	class CAECandidate {
+	private class CAECandidate {
 		final IEObjectDescription candidate;
 		final IEObjectDescription candidateViaScopeShortName;
 		final boolean isScopedCandidateEqual;
