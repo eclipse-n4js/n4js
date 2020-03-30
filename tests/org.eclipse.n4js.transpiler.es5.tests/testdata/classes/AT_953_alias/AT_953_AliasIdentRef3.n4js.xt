@@ -27,9 +27,6 @@ Before classes.AT_953_alias.other.dep.B bInstance call
 B.f()
 Before bHereClassInstance call
 B.f()
-interfaceElement: {
- "$methods": {}
-}
 interfaceElement meta: {
  "origin": "org.eclipse.n4js.transpiler.es5.tests",
  "annotations": [],
@@ -45,10 +42,20 @@ interfaceElement meta: {
  ],
  "consumedMembers": []
 }
-roleElement: {
- "$methods": {
-  "fR": {}
- }
+roleElement meta: {
+ "origin": "org.eclipse.n4js.transpiler.es5.tests",
+ "annotations": [],
+ "name": "R",
+ "fqn": "classes/AT_953_alias/imported/dep/R",
+ "allImplementedInterfaces": [],
+ "ownedMembers": [
+  {
+   "annotations": [],
+   "name": "fR",
+   "isStatic": false
+  }
+ ],
+ "consumedMembers": []
 }
 color: {
  "name": "BLUE",
@@ -84,11 +91,10 @@ console.log("Before bHereClassInstance call")
 bHereClassInstance.f();
 
 var interfaceElement : type{IHere} = IHere
-console.log("interfaceElement: " + JSON.stringify(interfaceElement, null, " "))
 console.log("interfaceElement meta: " + JSON.stringify(interfaceElement.n4type, null, " "))
 
 var roleElement = RHere
-console.log("roleElement: " + JSON.stringify(roleElement, null, " "))
+console.log("roleElement meta: " + JSON.stringify(roleElement.n4type, null, " "))
 
 var color : ColorHere = ColorHere.BLUE
 console.log("color: " + JSON.stringify(color, null, " "))

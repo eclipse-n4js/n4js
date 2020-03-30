@@ -37,7 +37,6 @@ import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.ExportableElement
 import org.eclipse.n4js.n4JS.ExportedVariableStatement
 import org.eclipse.n4js.n4JS.Expression
-import org.eclipse.n4js.n4JS.ExpressionAnnotationList
 import org.eclipse.n4js.n4JS.ExpressionStatement
 import org.eclipse.n4js.n4JS.FormalParameter
 import org.eclipse.n4js.n4JS.FunctionDeclaration
@@ -48,8 +47,11 @@ import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.IndexedAccessExpression
 import org.eclipse.n4js.n4JS.IntLiteral
+import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4EnumLiteral
+import org.eclipse.n4js.n4JS.N4FieldDeclaration
+import org.eclipse.n4js.n4JS.N4GetterDeclaration
 import org.eclipse.n4js.n4JS.N4JSFactory
 import org.eclipse.n4js.n4JS.N4MemberAnnotationList
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
@@ -65,6 +67,9 @@ import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.ParenExpression
 import org.eclipse.n4js.n4JS.PropertyAssignment
+import org.eclipse.n4js.n4JS.PropertyAssignmentAnnotationList
+import org.eclipse.n4js.n4JS.PropertyGetterDeclaration
+import org.eclipse.n4js.n4JS.PropertyNameKind
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4JS.RelationalExpression
 import org.eclipse.n4js.n4JS.RelationalOperator
@@ -80,6 +85,8 @@ import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.n4JS.VariableStatementKeyword
 import org.eclipse.n4js.n4JS.YieldExpression
+import org.eclipse.n4js.postprocessing.CompileTimeExpressionProcessor
+import org.eclipse.n4js.postprocessing.ComputedNameProcessor
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
 import org.eclipse.n4js.transpiler.im.ImFactory
 import org.eclipse.n4js.transpiler.im.ParameterizedPropertyAccessExpression_IM
@@ -336,15 +343,13 @@ public class TranspilerBuilderBlocks
 	public static def UnaryExpression _NOT(Expression expr) {
 		return _UnaryExpr(UnaryOperator.NOT, expr);
 	}
-	public static def BinaryLogicalExpression _OR(Expression lhs, Expression rhs) {
-		return _BinaryLogicalExpr(lhs, BinaryLogicalOperator.OR, rhs);
+
+	public static def Expression _OR(Expression... operands) {
+		return operands.reduce[op1, op2 | _BinaryLogicalExpr(op1, BinaryLogicalOperator.OR, op2) ];
 	}
-	public static def BinaryLogicalExpression _AND(Expression lhs, Expression rhs) {
-		return _BinaryLogicalExpr(lhs, BinaryLogicalOperator.AND, rhs);
-	}
-	
-	public static def Expression _AND(Iterable<Expression> operands) {
-		return operands.reduce[op1, op2 | _AND(op1, op2) ];
+
+	public static def Expression _AND(Expression... operands) {
+		return operands.reduce[op1, op2 | _BinaryLogicalExpr(op1, BinaryLogicalOperator.AND, op2) ];
 	}
 
 	public static def _Void0() {
@@ -424,9 +429,19 @@ public class TranspilerBuilderBlocks
 	}
 
 	public static def PropertyNameValuePair _PropertyNameValuePair(String name, Expression value) {
+		return _PropertyNameValuePair(_LiteralOrComputedPropertyName(name), value);
+	}
+	public static def PropertyNameValuePair _PropertyNameValuePair(LiteralOrComputedPropertyName name, Expression value) {
 		val result = N4JSFactory.eINSTANCE.createPropertyNameValuePair;
-		result.declaredName = _LiteralOrComputedPropertyName(name);
+		result.declaredName = name;
 		result.expression = value;
+		return result;
+	}
+
+	public static def PropertyGetterDeclaration _PropertyGetterDecl(String name, Statement... stmnts) {
+		val result = N4JSFactory.eINSTANCE.createPropertyGetterDeclaration;
+		result.declaredName = _LiteralOrComputedPropertyName(name);
+		result.body = _Block(stmnts);
 		return result;
 	}
 
@@ -591,10 +606,52 @@ public class TranspilerBuilderBlocks
 		return annList;
 	}
 
+	public static def N4FieldDeclaration _N4FieldDecl(boolean isStatic, String declaredName, Expression initExpr) {
+		return _N4FieldDecl(isStatic, _LiteralOrComputedPropertyName(declaredName), initExpr);
+	}
+
+	public static def N4FieldDeclaration _N4FieldDecl(boolean isStatic, LiteralOrComputedPropertyName declaredName, Expression initExpr) {
+		val result = N4JSFactory.eINSTANCE.createN4FieldDeclaration;
+		if (isStatic) {
+			result.declaredModifiers += N4Modifier.STATIC;
+		}
+		result.declaredName = declaredName;
+		result.expression = initExpr;
+		return result;
+	}
+
+	public static def N4GetterDeclaration _N4GetterDecl(LiteralOrComputedPropertyName declaredName, Block body) {
+		val result = N4JSFactory.eINSTANCE.createN4GetterDeclaration;
+		result.declaredName = declaredName;
+		result.body = body;
+		return result;
+	}
+
+	public static def N4SetterDeclaration _N4SetterDecl(LiteralOrComputedPropertyName declaredName, FormalParameter fpar, Block body) {
+		val result = N4JSFactory.eINSTANCE.createN4SetterDeclaration;
+		result.declaredName = declaredName;
+		result.fpar = fpar;
+		result.body = body;
+		return result;
+	}
+
 	public static def N4MethodDeclaration _N4MethodDecl(String name, Statement... statements) {
+		return _N4MethodDecl(name, #[], statements);
+	}
+	public static def N4MethodDeclaration _N4MethodDecl(String name, FormalParameter[] fpars, Statement... statements) {
+		return _N4MethodDecl(false, _LiteralOrComputedPropertyName(name), fpars, _Block(statements.filterNull));
+	}
+	public static def N4MethodDeclaration _N4MethodDecl(LiteralOrComputedPropertyName declaredName, Block body) {
+		return _N4MethodDecl(false, declaredName, #[], body);
+	}
+	public static def N4MethodDeclaration _N4MethodDecl(boolean isStatic, LiteralOrComputedPropertyName declaredName, FormalParameter[] fpars, Block body) {
 		val result = N4JSFactory.eINSTANCE.createN4MethodDeclaration;
-		result.declaredName = _LiteralOrComputedPropertyName(name);
-		result.body = _Block(statements.filterNull);
+		if (isStatic) {
+			result.declaredModifiers += N4Modifier.STATIC
+		}
+		result.declaredName = declaredName;
+		result.fpars += fpars;
+		result.body = body;
 		return result;
 	}
 
@@ -631,8 +688,8 @@ public class TranspilerBuilderBlocks
 		return result;
 	}
 
-	public static def ExpressionAnnotationList _ExprAnnoList(Annotation[] annotations) {
-		val result = N4JSFactory.eINSTANCE.createExpressionAnnotationList;
+	public static def PropertyAssignmentAnnotationList _PropertyAssignmentAnnotationList(Annotation[] annotations) {
+		val result = N4JSFactory.eINSTANCE.createPropertyAssignmentAnnotationList;
 		result.annotations += annotations;
 		return result;
 	}
@@ -742,7 +799,20 @@ public class TranspilerBuilderBlocks
 
 	public static def _LiteralOrComputedPropertyName(String name) {
 		val result = N4JSFactory.eINSTANCE.createLiteralOrComputedPropertyName;
+		result.kind = PropertyNameKind.STRING;
 		result.literalName = name;
+		return result;
+	}
+
+	/**
+	 * @param computedName the string representation of the computed property name. This should be the value that
+	 * is usually computed and set by {@link CompileTimeExpressionProcessor} and {@link ComputedNameProcessor}.
+	 */
+	public static def _LiteralOrComputedPropertyName(Expression nameExpr, String computedName) {
+		val result = N4JSFactory.eINSTANCE.createLiteralOrComputedPropertyName;
+		result.kind = PropertyNameKind.COMPUTED;
+		result.expression = nameExpr;
+		result.computedName = computedName;
 		return result;
 	}
 

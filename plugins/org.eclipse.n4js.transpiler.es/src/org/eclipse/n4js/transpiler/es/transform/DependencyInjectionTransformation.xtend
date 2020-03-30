@@ -16,6 +16,7 @@ import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.n4JS.ArrayLiteral
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
+import org.eclipse.n4js.n4JS.PropertyAssignment
 import org.eclipse.n4js.n4JS.Statement
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.assistants.TypeAssistant
@@ -152,7 +153,7 @@ class DependencyInjectionTransformation extends Transformation {
 		for(fpar : fpars) {
 			val fparSTE = getSymbolTableEntryOriginal(fpar, true);
 			result.elements += _ArrayElement(_ObjLit(
-				#["name" -> _StringLiteralForSTE(fparSTE) as Expression]
+				#[ _PropertyNameValuePair("name", _StringLiteralForSTE(fparSTE)) ]
 				+ fpar.typeRef.generateTypeInfo
 			));
 		}
@@ -167,7 +168,7 @@ class DependencyInjectionTransformation extends Transformation {
 		for(field : ownedInejctedFields) {
 			val fieldSTE = getSymbolTableEntryOriginal(field, true);
 			result.elements += _ArrayElement(_ObjLit(
-				#["name" -> _StringLiteralForSTE(fieldSTE) as Expression]
+				#[ _PropertyNameValuePair("name", _StringLiteralForSTE(fieldSTE)) ]
 				+ field.typeRef.generateTypeInfo
 			));
 		}
@@ -199,8 +200,8 @@ class DependencyInjectionTransformation extends Transformation {
 		for(method : ownedProviderMethods) {
 			result.elements += _ArrayElement(_ObjLit(
 				method.returnTypeRef.generateTypeInfo("to").head,
-				"name" -> _StringLiteral(method.name),
-				"args" -> method.methodInjectedParams
+				_PropertyNameValuePair("name", _StringLiteral(method.name)),
+				_PropertyNameValuePair("args", method.methodInjectedParams)
 			));
 		}
 		return result;
@@ -221,23 +222,23 @@ class DependencyInjectionTransformation extends Transformation {
 	 * Generate type information for DI. Mainly FQN of the {@link TypeRef}, or composed information
 	 * if given type is generic.
 	 */
-	def private Pair<String,Expression>[] generateTypeInfo(TypeRef typeRef) {
+	def private PropertyAssignment[] generateTypeInfo(TypeRef typeRef) {
 		typeRef.generateTypeInfo("type")
 	}
-	def private Pair<String,Expression>[] generateTypeInfo(TypeRef typeRef, String propertyName) {
+	def private PropertyAssignment[] generateTypeInfo(TypeRef typeRef, String propertyName) {
 		if (!typeRef.providerType) {
 			val declaredTypeSTE = getSymbolTableEntryOriginal(typeRef.declaredType, true);
 			return #[
-				propertyName -> __NSSafe_IdentRef(declaredTypeSTE)
+				_PropertyGetterDecl(propertyName, _ReturnStmnt(__NSSafe_IdentRef(declaredTypeSTE)))
 			];
 		} else if (typeRef instanceof ParameterizedTypeRef) {
 			// typeRef should be N4Provider<X>, fqn needs to be obtained at runtime
 			val declaredTypeSTE = getSymbolTableEntryOriginal(typeRef.declaredType, true);
 			return #[
-				propertyName -> __NSSafe_IdentRef(declaredTypeSTE),
-				"typeVar" -> _ObjLit(
+				_PropertyGetterDecl(propertyName, _ReturnStmnt(__NSSafe_IdentRef(declaredTypeSTE))),
+				_PropertyNameValuePair("typeVar", _ObjLit(
 					typeRef.typeArgs.filter(TypeRef).head.generateTypeInfo
-				)
+				))
 			];
 		} else {
 			throw new IllegalStateException("cannot generate type info for " + typeRef?.declaredType?.name);

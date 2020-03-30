@@ -36,7 +36,6 @@ import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4MemberDeclaration;
-import org.eclipse.n4js.n4JS.N4Modifier;
 import org.eclipse.n4js.n4JS.NamedElement;
 import org.eclipse.n4js.n4JS.PropertyNameKind;
 import org.eclipse.n4js.n4JS.PropertyNameOwner;
@@ -314,8 +313,7 @@ public abstract class N4FieldAccessorImpl extends AnnotableN4MemberDeclarationIm
 					String _name = it.getName();
 					return Boolean.valueOf(Objects.equal(_name, "ProvidesDefaultImplementation"));
 				}
-			}))) || 
-			this.getDeclaredModifiers().contains(N4Modifier.ABSTRACT));
+			}))) || this.isDeclaredAbstract());
 	}
 
 	/**
@@ -688,6 +686,7 @@ public abstract class N4FieldAccessorImpl extends AnnotableN4MemberDeclarationIm
 		}
 		if (baseClass == N4MemberDeclaration.class) {
 			switch (baseOperationID) {
+				case N4JSPackage.N4_MEMBER_DECLARATION___IS_ABSTRACT: return N4JSPackage.N4_FIELD_ACCESSOR___IS_ABSTRACT;
 				case N4JSPackage.N4_MEMBER_DECLARATION___GET_NAME: return N4JSPackage.N4_FIELD_ACCESSOR___GET_NAME;
 				case N4JSPackage.N4_MEMBER_DECLARATION___GET_DECLARED_TYPE_REF: return N4JSPackage.N4_FIELD_ACCESSOR___GET_DECLARED_TYPE_REF;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);

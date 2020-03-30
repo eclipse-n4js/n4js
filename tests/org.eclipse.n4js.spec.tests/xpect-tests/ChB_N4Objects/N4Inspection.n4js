@@ -25,11 +25,7 @@ function inspectPropertyAsMethod(prop : any, propName : string) {
         if (_str === "function " + propName + "() { [native code] }") {
             console.log("  -", "test." + propName + "  is native function");
         } else {
-            var _name = _str;
-            _name = _name.substring('function'.length);
-            _name = _name.substring(0, _name.indexOf('('));
-            _name = _name.trim();
-            console.log("  -", "test." + propName + " is a function " + _name);
+            console.log("  -", "test." + propName + " is a function " + (prop as Function+).name);
         }
     } else {
         console.log("  -", "test." + propName + " is a" + typeof prop);

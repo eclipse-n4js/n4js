@@ -12,7 +12,6 @@ package org.eclipse.n4js.validation.validators
 
 import java.util.List
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
 import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.IdentifierRef
@@ -51,17 +50,6 @@ class N4JSVariableValidator extends AbstractN4JSDeclarativeValidator {
 			for(IdentifierRef currRef : refs) {
 				val message = IssueCodes.getMessageForAST_VAR_DECL_RECURSIVE(varDecl.name)
 				addIssue(message, currRef, null, IssueCodes.AST_VAR_DECL_RECURSIVE)
-			}
-			// Validate Expression for Constraint 51, checking suffix of referenced functions.
-			val expression = varDecl.expression
-			if( expression instanceof IdentifierRef)
-			{
-				// pass addIssue() through lambda to void duplicate logic.
-				N4JSExpressionValidator::internalCheckNameRestrictionInMethodBodies( expression,
-						[ String message, EObject source, EStructuralFeature feature, String issueCode |
-							addIssue(message,source,feature,issueCode)
-						]
-				)
 			}
 		}
 	}

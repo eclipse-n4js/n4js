@@ -1,0 +1,156 @@
+/*
+ * Copyright (c) 2020 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+class A {
+	field1: string = "must NOT show up";
+	field2: string = "must NOT show up";
+	get field3(): string {
+		console.log("must NOT show up");
+		return "must NOT show up"
+	}
+	get field4(): string {
+		console.log("must NOT show up");
+		return "must NOT show up"
+	}
+	set field5(value: string) {
+		console.log("must NOT show up");
+	}
+	set field6(value: string) {
+		console.log("must NOT show up");
+	}
+
+	static sfield1: string = "must NOT show up";
+	static sfield2: string = "must NOT show up";
+	static get sfield3(): string {
+		console.log("must NOT show up");
+		return "must NOT show up"
+	}
+	static get sfield4(): string {
+		console.log("must NOT show up");
+		return "must NOT show up"
+	}
+	static set sfield5(value: string) {
+		console.log("must NOT show up");
+	}
+	static set sfield6(value: string) {
+		console.log("must NOT show up");
+	}
+}
+
+class B extends A {
+	@Override
+	field1:string; // no init expression!
+	@Override
+	field2:string = "should show up (field2)";
+	@Override
+	field3: string; // no init expression!
+	@Override
+	field4: string = "should show up (field4)";
+	@Override
+	field5: string; // no init expression!
+	@Override
+	field6: string = "should show up (field6)";
+
+	@Override
+	static sfield1:string; // no init expression!
+	@Override
+	static sfield2:string = "should show up (sfield2)";
+	@Override
+	static sfield3: string; // no init expression!
+	@Override
+	static sfield4: string = "should show up (sfield4)";
+	@Override
+	static sfield5: string; // no init expression!
+	@Override
+	static sfield6: string = "should show up (sfield6)";
+}
+
+console.log("START");
+
+const b = new B();
+console.log(b.field1);
+console.log(b.field2);
+console.log(b.field3);
+console.log(b.field4);
+console.log(b.field5);
+console.log(b.field6);
+
+// NOTE: in accordance to the TC39 proposal for class fields, N4JS instance data fields appear
+// as owned properties on the instance object, not the prototype (in contrast to methods)
+console.log(
+	b.hasOwnProperty('field1'),
+	b.hasOwnProperty('field2'),
+	b.hasOwnProperty('field3'),
+	b.hasOwnProperty('field4'),
+	b.hasOwnProperty('field5'),
+	b.hasOwnProperty('field6'));
+
+console.log('====');
+
+console.log(B.sfield1);
+console.log(B.sfield2);
+console.log(B.sfield3);
+console.log(B.sfield4);
+console.log(B.sfield5);
+console.log(B.sfield6);
+
+console.log(
+	B.hasOwnProperty('sfield1'),
+	B.hasOwnProperty('sfield2'),
+	B.hasOwnProperty('sfield3'),
+	B.hasOwnProperty('sfield4'),
+	B.hasOwnProperty('sfield5'),
+	B.hasOwnProperty('sfield6'));
+
+console.log("END");
+
+// these should not produce any additional output:
+
+b.field1 = "";
+b.field2 = "";
+b.field3 = "";
+b.field4 = "";
+b.field5 = "";
+b.field6 = "";
+
+B.sfield1 = "";
+B.sfield2 = "";
+B.sfield3 = "";
+B.sfield4 = "";
+B.sfield5 = "";
+B.sfield6 = "";
+
+
+/* XPECT output ---
+<==
+stdout:
+START
+undefined
+should show up (field2)
+undefined
+should show up (field4)
+undefined
+should show up (field6)
+true true true true true true
+====
+undefined
+should show up (sfield2)
+undefined
+should show up (sfield4)
+undefined
+should show up (sfield6)
+true true true true true true
+END
+stderr:
+==>
+--- */

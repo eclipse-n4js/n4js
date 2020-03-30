@@ -1952,7 +1952,7 @@ abstract class N4ClassifierDefinition extends N4TypeDefinition {
 	 */
 	contains N4MemberDeclaration[] ownedMembersRaw opposite owner
 	/**
-	 * Returns a view on ownedMembersRaw filtering out non-methods.
+	 * Returns a view on ownedMembersRaw filtering out non-members and callable constructors.
  	 */
 	op N4MemberDeclaration[] getOwnedMembers() {
 		val methods = ownedMembersRaw.filter(N4MemberDeclaration).filter[!isCallableConstructor]
@@ -2141,18 +2141,25 @@ abstract class N4MemberDeclaration extends AnnotableElement, ModifiableElement, 
 	 */
 	container N4ClassifierDefinition owner opposite ownedMembersRaw
 	op TMember getDefinedTypeElement()
+	/** Returns true iff this member is declared abstract. */
+	op boolean isDeclaredAbstract() {
+		declaredModifiers.contains(N4Modifier.ABSTRACT)
+	}
 	/**
-	 * Returns true if the member is declared as static.
+	 * Tells if this member is abstract. Fields are never abstract; other members are abstract
+	 * iff they are declared abstract or contained in an interface without having a body.
 	 */
+	op boolean isAbstract() {
+		false // will be overridden below in N4FieldAccessor and N4MethodDeclaration
+	}
+	/** Returns true if the member is declared as static. */
 	op boolean isDeclaredStatic() {
 		declaredModifiers.contains(N4Modifier.STATIC)
 	}
 	op boolean isStatic() {
 		declaredStatic
 	}
-	/**
-	 * Returns true if the member is declared as static.
-	 */
+	/** Returns true if the member is declared as static. */
 	op boolean isDeclaredFinal() {
 		annotations.exists[it.name == "Final"]
 	} // cannot access AnnotationDefinition :(
@@ -2259,7 +2266,7 @@ class N4MethodDeclaration extends AnnotableN4MemberDeclaration, MethodDeclaratio
 	op boolean isAbstract() {
 		return (eContainer instanceof N4InterfaceDeclaration && body === null &&
 			! annotations.exists[name == "ProvidesDefaultImplementation"]
-		) || declaredModifiers.contains(N4Modifier.ABSTRACT)
+		) || isDeclaredAbstract()
 	}
 	op boolean isConstructor() {
 		return name == 'constructor' && !isStatic
@@ -2288,8 +2295,8 @@ class N4MethodDeclaration extends AnnotableN4MemberDeclaration, MethodDeclaratio
 abstract class N4FieldAccessor extends AnnotableN4MemberDeclaration, FieldAccessor {
 	op boolean isAbstract() {
 		return (eContainer instanceof N4InterfaceDeclaration && body === null &&
-			! annotations.exists[name == "ProvidesDefaultImplementation"]) ||
-			declaredModifiers.contains(N4Modifier.ABSTRACT)
+			! annotations.exists[name == "ProvidesDefaultImplementation"]
+		) || isDeclaredAbstract()
 	}
 	/**
 	 * Field accessors in classes may not be called 'prototype' or 'constructor' (except for computed names).

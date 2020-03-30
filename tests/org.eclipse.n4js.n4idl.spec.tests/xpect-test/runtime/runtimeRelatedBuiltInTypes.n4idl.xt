@@ -58,8 +58,8 @@ class MyContext implements MigrationContext {
 /* Prints the runtime representation of MigrationContext and MigrationController */
 @VersionAware
 function f() {
-	console.log(MigrationContext);
-	console.log(MigrationController);
+	console.log(typeof MigrationContext);
+	console.log(typeof MigrationController);
 	console.log("N4Type.of(MigrationContext) instanceof N4Interface:", N4Type.of(MigrationContext) instanceof N4Interface);
 	console.log("N4Type.of(MigrationController) instanceof N4Interface:", N4Type.of(MigrationController) instanceof N4Interface);
 }
@@ -67,8 +67,8 @@ function f() {
 /* MigrationController and MigrationContext are defined at runtime XPECT output ---
    <==
    stdout:
-   { '$methods': {}, '$extends': [Function] }
-   { '$methods': {}, '$extends': [Function] }
+   object
+   object
    N4Type.of(MigrationContext) instanceof N4Interface: true
    N4Type.of(MigrationController) instanceof N4Interface: true
    stderr:

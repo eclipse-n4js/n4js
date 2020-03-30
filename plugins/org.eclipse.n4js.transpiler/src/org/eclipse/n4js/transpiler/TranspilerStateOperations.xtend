@@ -325,28 +325,14 @@ class TranspilerStateOperations {
 	 */
 	def public static void replace(TranspilerState state, N4InterfaceDeclaration ifcDecl, VariableDeclaration varDecl) {
 		val isExported = ifcDecl.eContainer instanceof ExportDeclaration;
-		val varStmnt = _VariableStatement(isExported, varDecl);
+		val varStmnt = _VariableStatement(isExported, VariableStatementKeyword.CONST, varDecl);
 		state.replaceWithoutRewire(ifcDecl, varStmnt);
 		state.rewireSymbolTable(ifcDecl, varDecl);
 	}
 
-	/**
-	 * Replace an enum declaration by a variable declaration. The variable declaration will be wrapped in a
-	 * newly created [Exported]VariableStatement.
-	 */
-	def public static void replace(TranspilerState state, N4EnumDeclaration enumDecl, VariableDeclaration varDecl) {
-		val isExported = enumDecl.eContainer instanceof ExportDeclaration;
-		val varStmnt = _VariableStatement(isExported, varDecl);
-		state.replaceWithoutRewire(enumDecl, varStmnt);
-		state.rewireSymbolTable(enumDecl, varDecl);
-	}
-
-	/**
-	 * Replace an enum declaration by a function declaration.
-	 */
-	def public static void replace(TranspilerState state, N4EnumDeclaration enumDecl, FunctionDeclaration funDecl) {
-		state.replaceWithoutRewire(enumDecl, funDecl);
-		state.rewireSymbolTable(enumDecl, funDecl);
+	def public static void replace(TranspilerState state, N4EnumDeclaration enumDecl, N4ClassDeclaration classDecl) {
+		state.replaceWithoutRewire(enumDecl, classDecl);
+		state.rewireSymbolTable(enumDecl, classDecl);
 	}
 
 	def public static void replace(TranspilerState state, FunctionDeclaration funDecl, VariableDeclaration varDecl) {

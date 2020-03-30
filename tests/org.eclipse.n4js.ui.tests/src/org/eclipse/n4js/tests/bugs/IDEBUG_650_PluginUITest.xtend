@@ -20,7 +20,6 @@ import org.eclipse.core.runtime.CoreException
 import org.junit.Test
 
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace
-import static org.eclipse.n4js.N4JSLanguageConstants.METHOD_STACKTRACE_SUFFIX
 import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.fullBuild
 import static org.junit.Assert.*
 
@@ -30,7 +29,7 @@ import static org.junit.Assert.*
 @SuppressWarnings("deprecation")
 class IDEBUG_650_PluginUITest extends AbstractIDEBUG_Test {
 
-	static val PATTERN = Pattern.compile('''system:\s+[{]\s+value:\s+function\s+system«METHOD_STACKTRACE_SUFFIX»\s*[(][)]''');
+	static val PATTERN = Pattern.compile('''static\s+system\s*\(\s*\)\s*\{''');
 
 	@Test
 	def void buildCheckStubsNotGeneratedForPolyfilledMember_AssertGeneratedOnce() throws CoreException {

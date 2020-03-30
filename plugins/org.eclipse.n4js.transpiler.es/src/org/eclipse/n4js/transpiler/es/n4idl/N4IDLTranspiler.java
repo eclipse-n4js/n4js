@@ -8,6 +8,7 @@ import org.eclipse.n4js.transpiler.Transformation;
 import org.eclipse.n4js.transpiler.TranspilerState;
 import org.eclipse.n4js.transpiler.es.EcmaScriptTranspiler;
 import org.eclipse.n4js.transpiler.es.transform.ClassDeclarationTransformation;
+import org.eclipse.n4js.transpiler.es.transform.EnumDeclarationTransformation;
 import org.eclipse.n4js.transpiler.es.transform.InterfaceDeclarationTransformation;
 
 import com.google.inject.Inject;
@@ -34,6 +35,9 @@ public class N4IDLTranspiler extends EcmaScriptTranspiler {
 	private Provider<N4IDLInterfaceDeclarationTransformation> interfaceDeclarationTransformation;
 
 	@Inject
+	private Provider<N4IDLEnumDeclarationTransformation> enumDeclarationTransformation;
+
+	@Inject
 	private Provider<N4IDLMigrationTransformation> migrationTransformation;
 
 	@Override
@@ -58,6 +62,10 @@ public class N4IDLTranspiler extends EcmaScriptTranspiler {
 
 			if (t instanceof InterfaceDeclarationTransformation) {
 				return interfaceDeclarationTransformation.get();
+			}
+
+			if (t instanceof EnumDeclarationTransformation) {
+				return enumDeclarationTransformation.get();
 			}
 
 			// otherwise, keep the existing transformation
