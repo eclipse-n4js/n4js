@@ -25,7 +25,6 @@ import org.eclipse.xtext.ide.editor.contentassist.IIdeContentProposalAcceptor;
 import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalProvider;
 import org.eclipse.xtext.ide.editor.contentassist.antlr.ContentAssistContextFactory;
 import org.eclipse.xtext.ide.server.Document;
-import org.eclipse.xtext.ide.server.codeActions.ICodeActionService2;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.TextRegion;
@@ -40,7 +39,6 @@ import com.google.inject.Inject;
  * functionality from other parts of the UI implementation (e.g. from a quick fix). This class should be removed when
  * reusable parts (esp. handling of imports) have been factored out of content assist code.
  */
-@SuppressWarnings("restriction")
 public class ImportUtil {
 
 	@Inject
@@ -53,24 +51,24 @@ public class ImportUtil {
 	ExecutorService executorService;
 
 	/**
-	 * Collect all possible import candidates for the given offset. If 'allowCompletion' is <code>true</code>, this is
-	 * very similar to pressing CTRL+Space at the given offset.
+	 * Collect all possible import candidates for an unresolved reference at the given range.
+	 * <p>
+	 * Delegates to content assist functionality by simulating a content assist request with the cursor located at the
+	 * end of the given range.
 	 */
-	public Set<ContentAssistEntry> findImportCandidates(ICodeActionService2.Options options) {
-		Document doc = options.getDocument();
-		String documentContent = doc.getContents();
-		Range range = options.getCodeActionParams().getRange();
-		String importIdentifier = doc.getSubstring(range);
-		int offsetStart = doc.getOffSet(range.getStart());
-		int offsetEnd = doc.getOffSet(range.getEnd());
+	public Set<ContentAssistEntry> findImportCandidates(XtextResource resource, Document document, Range range,
+			CancelIndicator cancelIndicator) {
+		String documentContent = document.getContents();
+		String importIdentifier = document.getSubstring(range);
+		int offsetStart = document.getOffSet(range.getStart());
+		int offsetEnd = document.getOffSet(range.getEnd());
 		TextRegion textRegion = new TextRegion(offsetStart, offsetEnd - offsetStart);
-		XtextResource resource = options.getResource();
 
 		cacFactory.setPool(executorService);
 		ContentAssistContext[] cacs = cacFactory.create(documentContent, textRegion, offsetEnd, resource);
 
 		Collection<ContentAssistContext> contexts = Arrays.asList(cacs);
-		ContentProposalAcceptorCollector acceptor = new ContentProposalAcceptorCollector(options.getCancelIndicator());
+		ContentProposalAcceptorCollector acceptor = new ContentProposalAcceptorCollector(cancelIndicator);
 		contentProposalProvider.createProposals(contexts, acceptor);
 
 		Set<ContentAssistEntry> caEntries = new LinkedHashSet<>();
@@ -82,7 +80,7 @@ public class ImportUtil {
 		return caEntries;
 	}
 
-	class ContentProposalAcceptorCollector implements IIdeContentProposalAcceptor {
+	private static class ContentProposalAcceptorCollector implements IIdeContentProposalAcceptor {
 		final List<ContentAssistEntry> caEntries = new ArrayList<>();
 		private final CancelIndicator cancelIndicator;
 

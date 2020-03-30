@@ -68,8 +68,10 @@ public class N4JSQuickfixProvider {
 	 */
 	@Fix(value = Diagnostic.LINKING_DIAGNOSTIC, multiFix = false)
 	public void addImportForUnresolvedReference(QuickfixContext context, ICodeActionAcceptor acceptor) {
+		XtextResource res = context.options.getResource();
 		Document doc = context.options.getDocument();
-		Set<ContentAssistEntry> caEntries = importUtil.findImportCandidates(context.options);
+		Set<ContentAssistEntry> caEntries = importUtil.findImportCandidates(res, doc,
+				context.getDiagnostic().getRange(), context.options.getCancelIndicator());
 
 		for (ContentAssistEntry cae : caEntries) {
 			ArrayList<ReplaceRegion> replacements = cae.getTextReplacements();
