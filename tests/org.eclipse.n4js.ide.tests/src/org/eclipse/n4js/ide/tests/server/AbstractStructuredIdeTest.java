@@ -106,6 +106,8 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 		openFile(moduleName, moduleNameToContents.get(moduleName));
 		try {
 			performTest(project, moduleName, t);
+		} catch (AssertionError ae) {
+			throw ae;
 		} catch (Throwable th) {
 			throw new AssertionError("exception/error in #performTest() method", th);
 		}
