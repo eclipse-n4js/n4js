@@ -19,6 +19,8 @@ import java.util.Objects
 import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.utils.io.FileDeleter
+import org.eclipse.n4js.N4JSGlobals
+import java.util.Map
 
 /**
  * Generates the code for a project.
@@ -92,6 +94,7 @@ public class Project {
 	final String vendorName;
 	final List<SourceFolder> sourceFolders = newLinkedList();
 	final List<Project> projectDependencies = newLinkedList();
+	final Map<String, Project> nodeModuleProjects = newHashMap();
 	ProjectType projectType;
 	String projectVersion = "1.0.0";
 	String outputFolder = "src-gen";
@@ -136,6 +139,15 @@ public class Project {
 	public def Project setType(ProjectType projectType) {
 		this.projectType = projectType;
 		return this;
+	}
+
+	/**
+	 * Gets the project version.
+	 *
+	 * @return projectVersion the project
+	 */
+	public def String getVersion() {
+		return this.projectVersion;
 	}
 
 	/**
@@ -209,6 +221,24 @@ public class Project {
 	public def Project addProjectDependency(Project projectDependency) {
 		projectDependencies.add(Objects.requireNonNull(projectDependency));
 		return this;
+	}
+
+	/**
+	 * Returns a list of project dependencies of this project.
+	 *
+	 * @return projectDependencies the project
+	 */
+	public def List<Project> getProjectDependencies() {
+		return this.projectDependencies;
+	}
+	
+	public def void addNodeModuleProject(Project project) {
+		this.nodeModuleProjects.put(project.projectName, project);
+		this.addProjectDependency(project);
+	}
+	
+	public def Project getNodeModuleProject(String projectName) {
+		return this.nodeModuleProjects.get(projectName);
 	}
 	
 	/**
@@ -288,6 +318,14 @@ public class Project {
 
 		createProjectDescriptionFile(projectDirectory);
 		createModules(projectDirectory);
+		
+		if (!nodeModuleProjects.isEmpty()) {
+			val File nodeModulesDirectory = new File(projectDirectory, N4JSGlobals.NODE_MODULES);
+			if (nodeModulesDirectory.exists)
+				FileDeleter.delete(nodeModulesDirectory);
+			nodeModulesDirectory.mkdir();
+			createNodeModuleProjects(nodeModulesDirectory);
+		}
 
 		return projectDirectory;
 	}
@@ -306,6 +344,11 @@ public class Project {
 
 	private def void createModules(File parentDirectory) {
 		for (sourceFolder: sourceFolders)
-			sourceFolder.create(parentDirectory)
+			sourceFolder.create(parentDirectory);
+	}
+
+	private def void createNodeModuleProjects(File parentDirectory) {
+		for (nodeModuleProject: nodeModuleProjects.values)
+			nodeModuleProject.create(parentDirectory.toPath());
 	}
 }

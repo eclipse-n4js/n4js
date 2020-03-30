@@ -1,0 +1,11 @@
+{
+	"name": "yarn-test-project",
+	"version": "1.0.0",
+	"private": true,
+	"workspaces": [
+	    "packages/*"
+    ],
+	"dependencies": {
+			"n4js-runtime": "*"
+		}
+}

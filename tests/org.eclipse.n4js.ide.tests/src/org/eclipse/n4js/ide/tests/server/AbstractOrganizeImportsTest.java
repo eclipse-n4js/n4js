@@ -117,9 +117,10 @@ public abstract class AbstractOrganizeImportsTest extends AbstractStructuredIdeT
 	 *            expected source code after organize imports was performed.
 	 */
 	protected void test(CharSequence code, List<String> expectedIssues, CharSequence expectedCode) {
-		ArrayList<Pair<String, String>> defaultModule = Lists.newArrayList(Pair.of(MODULE_NAME, code.toString()));
-		Iterable<Pair<String, String>> modules = Iterables.concat(defaultOrganizeImportsTestModules, defaultModule);
-		test(modules, MODULE_NAME, new TestOrganizeImportsConfiguration(expectedIssues, expectedCode));
+		String nameWithSelector = MODULE_NAME + MODULE_SELECTOR;
+		ArrayList<Pair<String, String>> allModule = Lists.newArrayList(Pair.of(nameWithSelector, code.toString()));
+		allModule.addAll(defaultOrganizeImportsTestModules);
+		test(allModule, new TestOrganizeImportsConfiguration(expectedIssues, expectedCode));
 	}
 
 	@Override
