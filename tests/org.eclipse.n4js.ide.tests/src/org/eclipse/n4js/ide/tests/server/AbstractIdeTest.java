@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -247,46 +248,38 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * Same as {@link #createTestProjectOnDisk(Map)}, but name and content of the modules can be provided as one or more
 	 * {@link Pair}s.
 	 */
-	protected Project createTestProjectOnDisk(
-			@SuppressWarnings("unchecked") Pair<String, String>... moduleNameToContents) {
-
-		return createTestProjectOnDisk(Arrays.asList(moduleNameToContents));
+	protected Project createTestProjectOnDisk(@SuppressWarnings("unchecked") Pair<String, String>... modulesContents) {
+		return createTestProjectOnDisk(Arrays.asList(modulesContents));
 	}
 
 	/**
 	 * Same as {@link #createTestProjectOnDisk(Map)}, but name and content of the modules can be provided as an iterable
 	 * of {@link Pair}s.
 	 */
-	protected Project createTestProjectOnDisk(Iterable<? extends Pair<String, String>> moduleNameToContents) {
-		Map<String, String> moduleNameToContentsAsMap = Streams.stream(moduleNameToContents)
+	protected Project createTestProjectOnDisk(Iterable<? extends Pair<String, String>> modulesContents) {
+		Map<String, String> modulesContentsAsMap = Streams.stream(modulesContents)
 				.collect(Collectors.toMap(Pair::getKey, Pair::getValue));
 
-		return createTestProjectOnDisk(moduleNameToContentsAsMap);
+		return createTestProjectOnDisk(modulesContentsAsMap);
 	}
 
-	/** Creates the default project on file system. */
-	protected Project createTestProjectOnDisk(Map<String, String> moduleNameToContents) {
-		return createClientProject(getRoot().toPath(), DEFAULT_PROJECT_NAME, moduleNameToContents);
+	/** Creates the default project on file system. Adds dependency to n4js-runtime. */
+	protected Project createTestProjectOnDisk(Map<String, String> modulesContents) {
+		return createClientProject(getRoot().toPath(), DEFAULT_PROJECT_NAME, modulesContents);
 	}
 
-	private Project createClientProject(Path destination, String projectName,
-			Map<String, String> moduleNameToContents) {
-
-		String nestedRuntime = NODE_MODULES + N4JS_RUNTIME_NAME;
-
+	private Project createClientProject(Path destination, String projectName, Map<String, String> modulesContents) {
+		Map<String, String> modulesContentsCpy = new HashMap<>(modulesContents);
 		LinkedHashMap<String, Map<String, String>> projectsModulesContents = new LinkedHashMap<>();
-		projectsModulesContents.put(projectName, moduleNameToContents);
-		moduleNameToContents.put(nestedRuntime, null);
-		moduleNameToContents.put(DEPENDENCIES, nestedRuntime);
+		projectsModulesContents.put(projectName, modulesContentsCpy);
+		modulesContentsCpy.put(N4JS_RUNTIME_NAME, null);
+		modulesContentsCpy.put(DEPENDENCIES, N4JS_RUNTIME_NAME);
 
-		Project project = createTestOnDisk(destination, projectsModulesContents);
-		return project;
+		return createTestOnDisk(destination, projectsModulesContents);
 	}
 
 	/** Creates the default project on file system. */
-	protected Project createTestOnDisk(
-			LinkedHashMap<String, Map<String, String>> projectsModulesContents) {
-
+	protected Project createTestOnDisk(LinkedHashMap<String, Map<String, String>> projectsModulesContents) {
 		return createTestOnDisk(getRoot().toPath(), projectsModulesContents);
 	}
 
@@ -309,10 +302,10 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		return project;
 	}
 
-	private Project createSimpleProject(String projectName, Map<String, String> moduleContents,
+	private Project createSimpleProject(String projectName, Map<String, String> modulesContents,
 			Multimap<String, String> dependencies) {
 
-		if (projectName.equals(N4JS_RUNTIME_NAME) && (moduleContents == null || moduleContents.isEmpty())) {
+		if (projectName.equals(N4JS_RUNTIME_NAME) && (modulesContents == null || modulesContents.isEmpty())) {
 			return N4JS_RUNTIME_FAKE;
 		}
 
@@ -322,8 +315,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		Project project = new Project(projectName, VENDOR, VENDOR + "_name", prjType);
 		SourceFolder sourceFolder = project.createSourceFolder(SRC_FOLDER);
 
-		for (String moduleName : moduleContents.keySet()) {
-			String contents = moduleContents.get(moduleName);
+		for (String moduleName : modulesContents.keySet()) {
+			String contents = modulesContents.get(moduleName);
 			if (moduleName.equals(DEPENDENCIES)) {
 				String[] allDeps = contents.split(",");
 				for (String dependency : allDeps) {

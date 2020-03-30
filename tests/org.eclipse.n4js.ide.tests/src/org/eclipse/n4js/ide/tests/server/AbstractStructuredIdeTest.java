@@ -80,23 +80,29 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 		return test(srcFileNameToContents, t);
 	}
 
-	/** Same as {@link #test(List, Object)}, using {@link AbstractIdeTest#DEFAULT_MODULE_NAME} as module name. */
-	protected Project test(List<Pair<String, String>> moduleNameToContents, T t) {
-		Pair<String, List<Pair<String, String>>> pair = Pair.of(DEFAULT_PROJECT_NAME, moduleNameToContents);
-		ArrayList<Pair<String, List<Pair<String, String>>>> projects = Lists.newArrayList(pair);
+	/** Same as {@link #testWS(List, Object)}, but creates a default project with name {@link #DEFAULT_PROJECT_NAME}. */
+	protected Project test(List<Pair<String, String>> modulesContents, T t) {
+		ArrayList<Pair<String, String>> modulesContentsCpy = new ArrayList<>(modulesContents);
+		modulesContentsCpy.add(Pair.of(DEPENDENCIES, N4JS_RUNTIME_NAME));
+
+		Pair<String, List<Pair<String, String>>> pairDefaultPrj = Pair.of(DEFAULT_PROJECT_NAME, modulesContentsCpy);
+		Pair<String, List<Pair<String, String>>> pairN4jsRuntime = Pair.of(NODE_MODULES + N4JS_RUNTIME_NAME, null);
+		ArrayList<Pair<String, List<Pair<String, String>>>> projects = new ArrayList<>();
+		projects.add(pairDefaultPrj);
+		projects.add(pairN4jsRuntime);
 
 		return testWS(projects, t);
 	}
 
 	/**
 	 * Same as {@link #test(LinkedHashMap, String, String, Object)}, but name and content of the modules can be provided
-	 * as {@link Pair pairs}.
+	 * as {@link Pair pairs}. Finds the selected module using the {@link #MODULE_SELECTOR}.
 	 */
-	protected Project testWS(List<Pair<String, List<Pair<String, String>>>> moduleNameToContents, T t) {
+	protected Project testWS(List<Pair<String, List<Pair<String, String>>>> projectsModulesContents, T t) {
 		String selectedProject = null;
 		String selectedModule = null;
-		LinkedHashMap<String, Map<String, String>> moduleNameToContentsAsMap = new LinkedHashMap<>();
-		for (Pair<String, List<Pair<String, String>>> project : moduleNameToContents) {
+		LinkedHashMap<String, Map<String, String>> projectsModulesContentsAsMap = new LinkedHashMap<>();
+		for (Pair<String, List<Pair<String, String>>> project : projectsModulesContents) {
 			String projectPath = project.getKey();
 			Iterable<? extends Pair<String, String>> modules = project.getValue();
 			Map<String, String> modulesMap = null;
@@ -112,7 +118,7 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 					modulesMap.put(moduleName, moduleContent.getValue());
 				}
 			}
-			moduleNameToContentsAsMap.put(projectPath, modulesMap);
+			projectsModulesContentsAsMap.put(projectPath, modulesMap);
 		}
 
 		if (selectedModule == null) {
@@ -120,7 +126,7 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 					"No module selected. Fix by appending '" + MODULE_SELECTOR + "' to one of the project modules.");
 		}
 
-		return test(moduleNameToContentsAsMap, selectedProject, selectedModule, t);
+		return test(projectsModulesContentsAsMap, selectedProject, selectedModule, t);
 	}
 
 	/**
