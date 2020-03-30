@@ -9,25 +9,23 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-
-
 import {N4Type, N4Classifier, N4Class, N4Interface, N4EnumType, N4Annotation, N4DataField, N4Accessor, N4Method, N4Member} from 'N4BuiltInTypes';
 
 
 const SYMBOL_IDENTIFIER_PREFIX = "#";
-const INTERFACE_DEFAULT_FIELDS = "$fieldDefaults";
-const INTERFACE_DEFAULT_METHODS = "$methodDefaults";
+const INTERFACE_FIELD_INITS = "$fieldInits";
+const INTERFACE_DEFAULT_MEMBERS = "$defaultMembers";
 const INTERFACE_EXTENDS = "$extends";
 const CLASS_IMPLEMENTS = "$implements";
 const PROPERTY_N4TYPE = "n4type";
 
 
-export function $interfaceDefaultFields(obj: any+) : Object {
-    return (obj[INTERFACE_DEFAULT_FIELDS] || {}) as Object;
+export function $interfaceFieldInits(obj: any+) : Object {
+    return (obj[INTERFACE_FIELD_INITS] || {}) as Object;
 }
 
-export function $interfaceDefaultMethods(obj: any+) : Object {
-    return (obj[INTERFACE_DEFAULT_METHODS] || {}) as Object;
+export function $interfaceDefaultMembers(obj: any+) : Object {
+    return (obj[INTERFACE_DEFAULT_MEMBERS] || {}) as Object;
 }
 
 export function $interfaceExtends(obj: any+) : () => (type{N4Interface}[]) {
@@ -249,10 +247,9 @@ function getAllInterfacesRek(interfaceObject: Object, allImplementedInterfaces :
 }
 
 abstract class MemberDetector {
-    detectMembers() {
-        
-    }
-    
+
+    abstract detectMembers();
+
     detectMember(object: Object, memberName: string, isStatic: boolean):string {
         const propDescriptor = Object.getOwnPropertyDescriptor(object, memberName);
         const kind = this.getKind(propDescriptor);
@@ -335,7 +332,7 @@ class MemberDetectorForClass extends MemberDetector {
 
 
 class MemberDetectorForInterface extends MemberDetector {
-    const excludeNames = [PROPERTY_N4TYPE, INTERFACE_DEFAULT_FIELDS, INTERFACE_DEFAULT_METHODS, INTERFACE_EXTENDS];
+    const excludeNames = [PROPERTY_N4TYPE, INTERFACE_FIELD_INITS, INTERFACE_DEFAULT_MEMBERS, INTERFACE_EXTENDS];
     interfaceObject: Object;
     defaultFields: Object;
     defaultMethods: Object;
@@ -343,8 +340,8 @@ class MemberDetectorForInterface extends MemberDetector {
 
     constructor(interfaceObject: Object) {
         this.interfaceObject = interfaceObject;
-        this.defaultFields = $interfaceDefaultFields(this.interfaceObject);
-        this.defaultMethods = $interfaceDefaultMethods(this.interfaceObject);
+        this.defaultFields = $interfaceFieldInits(this.interfaceObject);
+        this.defaultMethods = $interfaceDefaultMembers(this.interfaceObject);
     }
 
     @Override

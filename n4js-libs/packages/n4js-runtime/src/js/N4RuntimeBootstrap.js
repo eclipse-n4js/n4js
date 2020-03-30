@@ -12,7 +12,7 @@
 
 import _globalThis from "./_globalThis";
 import {makeReflectionsForClass, makeReflectionsForInterface, makeReflectionsForEnum} from "./ReflectionBuilder"
-import {$interfaceDefaultFields, $interfaceDefaultMethods, $interfaceExtends} from "./ReflectionBuilder"
+import {$interfaceFieldInits, $interfaceDefaultMembers, $interfaceExtends} from "./ReflectionBuilder"
 
 var ArraySlice = Array.prototype.slice;
 
@@ -87,7 +87,7 @@ function $defineFields(target, ...names) {
  */
 function $initFieldsFromInterfaces(target, interfaces, spec, mixinExclusion) {
     for (const ifc of interfaces) {
-        const defs = $interfaceDefaultFields(ifc) || {};
+        const defs = $interfaceFieldInits(ifc) || {};
         for (const fieldName of Object.getOwnPropertyNames(defs)) {
             if (target.hasOwnProperty(fieldName) || mixinExclusion.hasOwnProperty(fieldName)) {
                 continue;
