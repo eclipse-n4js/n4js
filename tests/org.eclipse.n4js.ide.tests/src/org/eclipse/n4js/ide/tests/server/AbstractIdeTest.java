@@ -54,6 +54,7 @@ import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
 import org.eclipse.lsp4j.WorkspaceClientCapabilities;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscTestFactory;
@@ -102,18 +103,20 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	static final protected String VENDOR = "VENDOR";
 	/** Name of the created test module */
 	static final protected String SRC_FOLDER = "src";
-	/** Extension of test modules */
-	static final protected String FILE_EXTENSION = "n4js";
+	/** Default extension of test modules */
+	static final protected String DEFAULT_EXTENSION = "n4js";
 	/** Default name of the created test project */
 	static final protected String DEFAULT_PROJECT_NAME = "test-project";
 	/** Default name of the created test module */
 	static final protected String DEFAULT_MODULE_NAME = "MyModule";
-	/** Reserved string to identify a dependency to another project */
-	static final protected String TAG_DEPENDENCY = "#DEPENDENCY";
+	/** Reserved string to identify comma separated list of dependencies to other projects */
+	static final protected String DEPENDENCIES = "#DEPENDENCY";
 	/** Reserved string to identify the directory 'node_modules' */
-	static final protected String TAG_NODE_MODULES = "#NODE_MODULES:";
+	static final protected String NODE_MODULES = "#NODE_MODULES:";
+	/** Reserved string to identify the directory 'node_modules' */
+	static final protected String PACKAGE_JSON = "package.json";
 	/** Reserved string to identify the src folder of a project */
-	static final protected String TAG_SRC = "#SRC:";
+	static final protected String SRC = "#SRC:";
 	/** Name of n4js library 'n4js-runtime' */
 	static final protected String N4JS_RUNTIME_NAME = "n4js-runtime";
 	/** Default project object for 'n4js-runtime' */
@@ -211,7 +214,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		capabilities.setWorkspace(wcc);
 		InitializeParams initParams = new InitializeParams();
 		initParams.setCapabilities(capabilities);
-		initParams.setRootUri(new FileURI(new File(root, DEFAULT_PROJECT_NAME)).toString());
+		initParams.setRootUri(new FileURI(root).toString());
 
 		languageClient.addListener(this);
 
@@ -263,26 +266,18 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	/** Creates the default project on file system. */
 	protected Project createTestProjectOnDisk(Map<String, String> moduleNameToContents) {
-		List<Module> modules = new ArrayList<>();
-
-		for (Map.Entry<String, String> src : moduleNameToContents.entrySet()) {
-			String fileName = src.getKey();
-			String contents = src.getValue();
-			modules.add(new Module(fileName).setContents(contents));
-		}
-
 		return createClientProject(getRoot().toPath(), DEFAULT_PROJECT_NAME, moduleNameToContents);
 	}
 
 	private Project createClientProject(Path destination, String projectName,
 			Map<String, String> moduleNameToContents) {
 
-		String nestedRuntime = TAG_NODE_MODULES + N4JS_RUNTIME_NAME;
+		String nestedRuntime = NODE_MODULES + N4JS_RUNTIME_NAME;
 
 		LinkedHashMap<String, Map<String, String>> projectsModulesContents = new LinkedHashMap<>();
 		projectsModulesContents.put(projectName, moduleNameToContents);
 		moduleNameToContents.put(nestedRuntime, null);
-		moduleNameToContents.put(TAG_DEPENDENCY, nestedRuntime);
+		moduleNameToContents.put(DEPENDENCIES, nestedRuntime);
 
 		Project project = createTestOnDisk(destination, projectsModulesContents);
 		return project;
@@ -321,23 +316,30 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 			return N4JS_RUNTIME_FAKE;
 		}
 
-		ProjectType prjType = projectName.equals(N4JS_RUNTIME_NAME) ? ProjectType.RUNTIME_ENVIRONMENT
+		ProjectType prjType = projectName.equals(N4JS_RUNTIME_NAME)
+				? ProjectType.RUNTIME_ENVIRONMENT
 				: getProjectType();
 		Project project = new Project(projectName, VENDOR, VENDOR + "_name", prjType);
 		SourceFolder sourceFolder = project.createSourceFolder(SRC_FOLDER);
 
 		for (String moduleName : moduleContents.keySet()) {
 			String contents = moduleContents.get(moduleName);
-			if (moduleName.equals(TAG_DEPENDENCY)) {
-				dependencies.put(projectName, contents);
+			if (moduleName.equals(DEPENDENCIES)) {
+				String[] allDeps = contents.split(",");
+				for (String dependency : allDeps) {
+					dependencies.put(projectName, dependency.trim());
+				}
 
-			} else if (moduleName.startsWith(TAG_NODE_MODULES)) {
-				int indexOfSrc = moduleName.indexOf(TAG_SRC);
+			} else if (moduleName.equals(PACKAGE_JSON)) {
+				project.setProjectDescriptionContent(contents);
+
+			} else if (moduleName.startsWith(NODE_MODULES)) {
+				int indexOfSrc = moduleName.indexOf(SRC);
 				if (indexOfSrc == -1) {
 					throw new IllegalArgumentException("Missing #SRC: in module location");
 				}
-				String nmName = moduleName.substring(TAG_NODE_MODULES.length(), indexOfSrc);
-				String nmModuleName = moduleName.substring(indexOfSrc + TAG_SRC.length());
+				String nmName = moduleName.substring(NODE_MODULES.length(), indexOfSrc);
+				String nmModuleName = moduleName.substring(indexOfSrc + SRC.length());
 				Project nmProject = project.getNodeModuleProject(nmName);
 				if (nmProject == null) {
 					nmProject = new Project(nmName, VENDOR, VENDOR + "_name", prjType);
@@ -345,19 +347,21 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 					project.addNodeModuleProject(nmProject);
 				}
 				SourceFolder nmSourceFolder = nmProject.getSourceFolders().get(0);
-
-				Module module = new Module(nmModuleName);
-				module.setContents(contents);
-				nmSourceFolder.addModule(module);
+				createAndAddModule(contents, nmModuleName, nmSourceFolder);
 
 			} else {
-				Module module = new Module(moduleName);
-				module.setContents(contents);
-				sourceFolder.addModule(module);
+				createAndAddModule(contents, moduleName, sourceFolder);
 			}
 		}
 
 		return project;
+	}
+
+	private void createAndAddModule(String contents, String moduleName, SourceFolder nmSourceFolder) {
+		NameAndExtension nae = getN4JSNameAndExtension(moduleName);
+		Module module = nae.extension == null ? new Module(moduleName) : new Module(nae.name, nae.extension);
+		module.setContents(contents);
+		nmSourceFolder.addModule(module);
 	}
 
 	private Project createYarnProject(LinkedHashMap<String, Map<String, String>> projectsModulesContents) {
@@ -368,8 +372,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 			String prjName = projectNameWithSelector;
 
-			if (prjName.startsWith(TAG_NODE_MODULES)) {
-				prjName = prjName.substring(TAG_NODE_MODULES.length());
+			if (prjName.startsWith(NODE_MODULES)) {
+				prjName = prjName.substring(NODE_MODULES.length());
 				Project project = createSimpleProject(prjName, moduleContents, dependencies);
 				yarnProject.addNodeModuleProject(project);
 			} else {
@@ -830,7 +834,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	/** Translates a given module name to a file URI used in LSP call data. */
 	protected FileURI getFileURIFromModuleName(String moduleName) {
-		String moduleNameWithExtension = getModuleNameOrDefault(moduleName) + "." + FILE_EXTENSION;
+		String extension = getN4JSNameAndExtension(moduleName).extension == null ? "." + DEFAULT_EXTENSION : "";
+		String moduleNameWithExtension = getModuleNameOrDefault(moduleName) + extension;
 		try {
 			Path firstMatch = Files
 					.find(getRoot().toPath(), 99, (path, options) -> path.endsWith(moduleNameWithExtension))
@@ -844,6 +849,29 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		} catch (IOException e) {
 			throw new IllegalStateException("Error when searching for module " + moduleNameWithExtension, e);
 		}
+	}
+
+	private static class NameAndExtension {
+		final String name;
+		final String extension;
+
+		NameAndExtension(String name, String extension) {
+			this.name = name;
+			this.extension = extension;
+		}
+	}
+
+	private NameAndExtension getN4JSNameAndExtension(String fileName) {
+		String name = fileName;
+		String extension = null;
+		if (fileName != null && fileName.contains(".")) {
+			String[] split = fileName.split("\\.");
+			extension = split[split.length - 1];
+			if (N4JSGlobals.ALL_N4_FILE_EXTENSIONS.contains(extension)) {
+				name = fileName.substring(0, fileName.length() - extension.length() - 1);
+			}
+		}
+		return new NameAndExtension(name, extension);
 	}
 
 	/** Converts an URI string as received by the LSP server to a {@link FileURI}. */

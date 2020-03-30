@@ -23,23 +23,42 @@ public class CompletionWithImportsWorkspaceTest extends AbstractCompletionTest {
 	override final List<Pair<String, List<Pair<String, String>>>> getDefaultTestYarnWorkspace() {
 		return #[
 			"P1*" -> #[
-				"MA"  -> '''
-							export class A1 {}
-							export class A2 {}''',
-				"MBA" -> '''
-							export class B1 {}
-							export class A2 {}''',
-				org.eclipse.n4js.ide.tests.server.AbstractIdeTest.TAG_DEPENDENCY -> N4JS_RUNTIME_NAME],
-			org.eclipse.n4js.ide.tests.server.AbstractIdeTest.TAG_NODE_MODULES + N4JS_RUNTIME_NAME -> null
+				DEPENDENCIES -> '''
+					«N4JS_RUNTIME_NAME»,
+					SomeNPM,
+					@n4jsd/SomeNPM
+				'''],
+				
+			NODE_MODULES + N4JS_RUNTIME_NAME -> null,
+			NODE_MODULES + "SomeNPM" -> #[
+				"index"  -> '''//some npm code'''],
+			NODE_MODULES + "@n4jsd/SomeNPM" -> #[
+				"index.n4jsd"  -> '''
+							export public external class A1 {}
+							''',
+				org.eclipse.n4js.ide.tests.server.AbstractIdeTest.PACKAGE_JSON  -> '''
+							{
+								"name": "@n4jsd/SomeNPM",
+								"version": "0.0.1",
+								"n4js": {
+									"projectType": "definition",
+									"definesPackage": "someNPM",
+									"sources": {
+										"source": [
+											"src"
+										]
+									}
+								}
+							}''']
 		];
 	}
 
 	@Test
-	def void test01() {
+	def void testRedirectionForDefinitionProjects() {
 		test('''
 			let x = new A1<|>
 		''', ''' 
-			(A1, Class, MA, , , 00000, , , , ([0:12 - 0:14], A1), [([0:0 - 0:0], import {A1} from "MA";
+			(A1, Class, index, , , 00000, , , , ([0:12 - 0:14], A1), [([0:0 - 0:0], import {A1} from "someNPM";
 			)], [], , )
 		''');
 	}

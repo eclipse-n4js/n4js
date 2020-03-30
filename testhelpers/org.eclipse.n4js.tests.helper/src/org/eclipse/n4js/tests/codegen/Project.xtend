@@ -98,6 +98,7 @@ public class Project {
 	ProjectType projectType;
 	String projectVersion = "1.0.0";
 	String outputFolder = "src-gen";
+	String projectDescriptionContent = null;
 
 	/**
 	 * Same as {@link #Project(String, String, String, ProjectType)}, but with
@@ -168,6 +169,25 @@ public class Project {
 	public def Project setOutputFolder(String outputFolder) {
 		this.outputFolder = outputFolder;
 		return this;
+	}
+
+	/**
+	 * Sets the content of the project description file 'package.json'
+	 * 
+	 * @param projectDescriptionContent content of package.json
+	 */
+	public def Project setProjectDescriptionContent(String projectDescriptionContent) {
+		this.projectDescriptionContent = projectDescriptionContent;
+		return this;
+	}
+
+	/**
+	 * Returns content of package.json.
+	 * 
+	 * @return content of package.json.
+	 */
+	public def String getProjectDescriptionContent() {
+		return projectDescriptionContent;
 	}
 
 	/**
@@ -245,6 +265,9 @@ public class Project {
 	 * Generates the {@link IN4JSProject#PACKAGE_JSON} for this project.
 	 */
 	public def String generate() '''
+		«IF !projectDescriptionContent.nullOrEmpty»«
+			projectDescriptionContent»
+		«ELSE»
 		{
 			"name": "«projectName»",
 			"version": "«projectVersion»",
@@ -273,6 +296,7 @@ public class Project {
 					«ENDIF»
 				}
 		}
+		«ENDIF»
 	'''
 
 	private static def String projectTypeToString(ProjectType type) {
@@ -314,7 +338,7 @@ public class Project {
 		val File projectDirectory = new File(parentDirectory, projectName);
 		if (projectDirectory.exists)
 			FileDeleter.delete(projectDirectory);
-		projectDirectory.mkdir();
+		projectDirectory.mkdirs();
 
 		createProjectDescriptionFile(projectDirectory);
 		createModules(projectDirectory);
