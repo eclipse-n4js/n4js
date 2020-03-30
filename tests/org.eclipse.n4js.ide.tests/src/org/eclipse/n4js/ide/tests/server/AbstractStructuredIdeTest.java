@@ -48,7 +48,7 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 	 *            will be added to a default module and project.
 	 */
 	protected Project test(String contents) {
-		return test(MODULE_NAME, contents, null);
+		return test(DEFAULT_MODULE_NAME, contents, null);
 	}
 
 	/**
@@ -60,7 +60,7 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 	 *            will be passed to {@link #performTest(Project, String, Object)}.
 	 */
 	protected Project test(String contents, T t) {
-		return test(MODULE_NAME, contents, t);
+		return test(DEFAULT_MODULE_NAME, contents, t);
 	}
 
 	/**
@@ -80,9 +80,9 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 		return test(srcFileNameToContents, t);
 	}
 
-	/** Same as {@link #test(List, Object)}, using {@link AbstractIdeTest#MODULE_NAME} as module name. */
+	/** Same as {@link #test(List, Object)}, using {@link AbstractIdeTest#DEFAULT_MODULE_NAME} as module name. */
 	protected Project test(List<Pair<String, String>> moduleNameToContents, T t) {
-		Pair<String, List<Pair<String, String>>> pair = Pair.of(PROJECT_NAME, moduleNameToContents);
+		Pair<String, List<Pair<String, String>>> pair = Pair.of(DEFAULT_PROJECT_NAME, moduleNameToContents);
 		ArrayList<Pair<String, List<Pair<String, String>>>> projects = Lists.newArrayList(pair);
 
 		return testWS(projects, t);

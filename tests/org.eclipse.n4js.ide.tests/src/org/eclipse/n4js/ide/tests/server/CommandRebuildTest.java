@@ -71,7 +71,7 @@ public class CommandRebuildTest extends AbstractStructuredIdeTest<Void> {
 		// check pre-state
 		assertNoIssues();
 
-		Path prjPath = getRoot().toPath().resolve(PROJECT_NAME).toAbsolutePath();
+		Path prjPath = getRoot().toPath().resolve(DEFAULT_PROJECT_NAME).toAbsolutePath();
 		prjStatePath = prjPath.resolve(PROJECT_STATE_NAME);
 		genFileStatePath = prjPath.resolve(project.getOutputFolder()).resolve(moduleName + ".js");
 

@@ -59,7 +59,7 @@ abstract public class AbstractCompletionTest extends AbstractStructuredIdeTest<T
 			for (Pair<String, List<Pair<String, String>>> project : workspace) {
 				String projectName = project.getKey();
 				if (projectName.endsWith(MODULE_SELECTOR)) {
-					String nameWithSelector = MODULE_NAME + MODULE_SELECTOR;
+					String nameWithSelector = DEFAULT_MODULE_NAME + MODULE_SELECTOR;
 					Pair<String, String> moduleContents = Pair.of(nameWithSelector, tcc.getModel());
 					List<Pair<String, String>> modulesPlusMyModule = new ArrayList<>(project.getValue());
 					modulesPlusMyModule.add(moduleContents);
@@ -77,7 +77,7 @@ abstract public class AbstractCompletionTest extends AbstractStructuredIdeTest<T
 			return;
 
 		} else {
-			String nameWithSelector = MODULE_NAME + MODULE_SELECTOR;
+			String nameWithSelector = DEFAULT_MODULE_NAME + MODULE_SELECTOR;
 			Pair<String, String> moduleContents = Pair.of(nameWithSelector, tcc.getModel());
 			ArrayList<Pair<String, String>> allModule = Lists.newArrayList(moduleContents);
 			allModule.addAll(getDefaultTestModules());

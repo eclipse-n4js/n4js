@@ -29,8 +29,8 @@ public class CompletionWithImportsWorkspaceTest extends AbstractCompletionTest {
 				"MBA" -> '''
 							export class B1 {}
 							export class A2 {}''',
-				PROJECT_DEPENDENCY -> N4JS_RUNTIME_NAME],
-			PROJECT_NODE_MODULES + N4JS_RUNTIME_NAME -> null
+				org.eclipse.n4js.ide.tests.server.AbstractIdeTest.TAG_DEPENDENCY -> N4JS_RUNTIME_NAME],
+			org.eclipse.n4js.ide.tests.server.AbstractIdeTest.TAG_NODE_MODULES + N4JS_RUNTIME_NAME -> null
 		];
 	}
 
