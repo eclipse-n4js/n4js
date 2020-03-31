@@ -210,7 +210,9 @@ function mapInterfacesToFQN(n4interfaces : N4Interface[]) : string[] {
 export function detectedAllImplementedInterfacesFromClass(staticProto: constructor{?}): N4Interface[] {
     console.log("staticProto");
     console.log(staticProto);
-    const implementedInterfaces = $classImplements(staticProto.prototype) || [];
+    const implementedInterfaces = $classImplements(staticProto) || [];
+    console.log("implementedInterfaces");
+    console.log(implementedInterfaces.length);
     const detectedAllImplementedInterfaces : N4Interface[] = [];
     for (const implementedInterface of implementedInterfaces) {
         // FIXME: N4Object#n4type() should not be always N4Class

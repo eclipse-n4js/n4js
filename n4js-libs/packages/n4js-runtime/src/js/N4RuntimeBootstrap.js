@@ -12,7 +12,7 @@
 
 import _globalThis from "./_globalThis";
 import {makeReflectionsForClass, makeReflectionsForInterface, makeReflectionsForEnum} from "./ReflectionBuilder"
-import {$interfaceFieldInits, $interfaceDefaultMembers, $interfaceExtends} from "./ReflectionBuilder"
+import {$interfaceFieldInits, detectedAllImplementedInterfacesFromClass} from "./ReflectionBuilder"
 
 var ArraySlice = Array.prototype.slice;
 
@@ -85,7 +85,8 @@ function $defineFields(target, ...names) {
  * @param spec - If invoked from a @Spec-constructor, this is the spec-object; otherwise 'undefined'.
  * @param mixinExclusion - An object with properties that must not be overridden in the target object.
  */
-function $initFieldsFromInterfaces(target, interfaces, spec, mixinExclusion) {
+function $initFieldsFromInterfaces(target, spec, mixinExclusion) {
+    const interfaces = detectedAllImplementedInterfacesFromClass(target.constructor);
     for (const ifc of interfaces) {
         const defs = $interfaceFieldInits(ifc) || {};
         for (const fieldName of Object.getOwnPropertyNames(defs)) {
@@ -103,10 +104,6 @@ function $initFieldsFromInterfaces(target, interfaces, spec, mixinExclusion) {
                 }
             }
             target[fieldName] = value;
-        }
-        const extendsFn = $interfaceExtends(ifc);
-        if (extendsFn) {
-            $initFieldsFromInterfaces(target, extendsFn(), spec, mixinExclusion);
         }
     }
 }
