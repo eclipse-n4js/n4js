@@ -15,6 +15,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionContext;
@@ -24,9 +25,9 @@ import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
+import org.eclipse.n4js.ide.tests.server.AbstractCodeActionTest.TestCodeActionConfiguration2;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.tests.codegen.Project;
-import org.eclipse.n4js.utils.Strings;
 import org.eclipse.xtext.testing.AbstractLanguageServerTest.TestCodeActionConfiguration;
 
 import com.google.common.collect.Lists;
@@ -39,26 +40,29 @@ import com.google.common.collect.Lists;
  * <li>{@link AbstractOrganizeImportsTest}.
  * </ul>
  */
-abstract public class AbstractCodeActionTest extends AbstractStructuredIdeTest<TestCodeActionConfiguration> {
+abstract public class AbstractCodeActionTest extends AbstractStructuredIdeTest<TestCodeActionConfiguration2> {
 
 	/** Call this method in a test */
-	protected void test(TestCodeActionConfiguration tcac) throws Exception {
+	protected void test(TestCodeActionConfiguration2 tcac) throws Exception {
 		test(tcac.getFilePath(), tcac.getModel(), tcac);
 	}
 
 	@Override
-	protected void performTest(Project project, String moduleName, TestCodeActionConfiguration tcac)
+	protected void performTest(Project project, String moduleName, TestCodeActionConfiguration2 tcac)
 			throws InterruptedException, ExecutionException {
 
 		CodeActionParams codeActionParams = new CodeActionParams();
 		Range range = new Range();
-		Position pos = new Position(tcac.getLine(), tcac.getColumn());
-		range.setStart(pos);
-		range.setEnd(pos);
+		Position posStart = new Position(tcac.getLine(), tcac.getColumn());
+		Position posEnd = tcac.getEndLine() >= 0 && tcac.getEndColumn() >= 0
+				? new Position(tcac.getEndLine(), tcac.getEndColumn())
+				: posStart;
+		range.setStart(posStart);
+		range.setEnd(posEnd);
 		codeActionParams.setRange(range);
 
 		CodeActionContext context = new CodeActionContext();
-		FileURI uri = getFileURIFromModuleName(tcac.getFilePath());
+		FileURI uri = getFileURIFromModuleName(moduleName);
 		context.setDiagnostics(Lists.newArrayList(getIssues(uri)));
 		codeActionParams.setContext(context);
 
@@ -71,9 +75,48 @@ abstract public class AbstractCodeActionTest extends AbstractStructuredIdeTest<T
 		if (tcac.getAssertCodeActions() != null) {
 			tcac.getAssertCodeActions().apply(result);
 		} else {
-			String resultStr = Strings.toString(getStringLSP4J()::toString3, result);
+			String resultStr = result.stream()
+					.map(cmdOrAction -> getStringLSP4J().toString3(cmdOrAction))
+					.collect(Collectors.joining("\n-----\n"));
 			assertEquals(tcac.getExpectedCodeActions().trim(), resultStr.trim());
 		}
 	}
 
+	/** Like {@link TestCodeActionConfiguration}, but non-empty ranges can be defined. */
+	public static class TestCodeActionConfiguration2 extends TestCodeActionConfiguration {
+		private int endLine = -1;
+		private int endColumn = -1;
+
+		/**
+		 * The line of the end of the code action request's {@link CodeActionParams#getRange() range} (zero based). If
+		 * undefined, {@link #getLine() line} will be used.
+		 */
+		public int getEndLine() {
+			return endLine;
+		}
+
+		/**
+		 * The line of the end of the code action request's {@link CodeActionParams#getRange() range} (zero based). If
+		 * undefined, {@link #getLine() line} will be used.
+		 */
+		public void setEndLine(int endLine) {
+			this.endLine = endLine;
+		}
+
+		/**
+		 * The column of the end of the code action request's {@link CodeActionParams#getRange() range} (zero based). If
+		 * undefined, {@link #getColumn() column} will be used.
+		 */
+		public int getEndColumn() {
+			return endColumn;
+		}
+
+		/**
+		 * The column of the end of the code action request's {@link CodeActionParams#getRange() range} (zero based). If
+		 * undefined, {@link #getColumn() column} will be used.
+		 */
+		public void setEndColumn(int endColumn) {
+			this.endColumn = endColumn;
+		}
+	}
 }
