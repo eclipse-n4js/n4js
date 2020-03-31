@@ -388,7 +388,7 @@ class ClassConstructorAssistant extends TransformationAssistant {
 			_CallExpr(
 				_IdentRef($initFieldsFromInterfacesSTE),
 				_ThisLiteral,
-				_PropertyAccessExpr(_ThisLiteral, $implementsInterfacesSTE),
+				_PropertyAccessExpr(_ThisLiteral, $implementsInterfacesSTE), // GH-1693 check obsolete?
 				if (specObjSTE !== null) {
 					_IdentRef(specObjSTE)
 				} else {

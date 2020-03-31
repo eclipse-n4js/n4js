@@ -36,6 +36,7 @@ import org.eclipse.n4js.ts.utils.TypeUtils
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
 import static extension org.eclipse.n4js.transpiler.utils.TranspilerUtils.*
+import org.eclipse.n4js.n4JS.N4Modifier
 
 /**
  * Transforms {@link N4ClassDeclaration}s into a constructor function and a <code>$makeClass</code> call.
@@ -95,13 +96,16 @@ class ClassDeclarationTransformation extends Transformation {
 		removeTypeInformation(classDecl);
 
 		val implementedInterfaces = createDirectlyImplementedInterfacesArgument(classDecl);
+		val $implements = steFor_$implementsInterfaces.name;
 		if (!implementedInterfaces.elements.empty) {
 			classDecl.ownedMembersRaw += _N4GetterDecl(
-				_LiteralOrComputedPropertyName("$implements"),
+				_LiteralOrComputedPropertyName($implements),
 				_Block(
 					_ReturnStmnt(implementedInterfaces)
 				)
-			);
+			) => [
+				declaredModifiers += N4Modifier.STATIC;
+			];
 		}
 
 		// change superClassRef to an equivalent extends-expression

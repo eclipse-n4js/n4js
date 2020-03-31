@@ -213,14 +213,12 @@ public class ReflectionBuilder {
 				continue;
 			}
 			// create only consumed member strings, since others are detected from constructor and prototype
-@SuppressWarnings("unused")
 			boolean serialize = false;
 			serialize |= state.info.isConsumedFromInterface(member);
 			serialize |= member.getName().startsWith(N4JSLanguageUtils.SYMBOL_IDENTIFIER_PREFIX);
-// TODO GH-1693
-//			if (serialize) {
+			if (serialize) {
 				memberStrings.add(primitive(createMemberString(member)));
-//			}
+			}
 		}
 		return memberStrings;
 	}
