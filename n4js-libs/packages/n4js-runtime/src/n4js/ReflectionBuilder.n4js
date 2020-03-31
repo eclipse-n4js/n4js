@@ -37,7 +37,7 @@ export function $classImplements(obj: any+) : type{N4Interface}[] {
 }
 
 export function makeReflectionsForClass(staticProto: constructor{?}, reflectionString: string): N4Class {
-    const reflectionValues = new ReflectionValues(reflectionString);
+    const reflectionValues = ReflectionValues.createForClassOrEnum(staticProto, reflectionString);
     const detectedMemberStrings = new MemberDetectorForClass(staticProto).detectMembers();
     console.log("detectedMemberStrings of " + reflectionValues.name);
     console.log(detectedMemberStrings);
@@ -54,7 +54,7 @@ export function makeReflectionsForClass(staticProto: constructor{?}, reflectionS
 
 export function makeReflectionsForInterface(interfaceObject: Object, reflectionString: string): N4Interface {
     const detectedMemberStrings = new MemberDetectorForInterface(interfaceObject).detectMembers();
-    const reflectionValues = new ReflectionValues(reflectionString);
+    const reflectionValues = ReflectionValues.createForInterface(reflectionString);
     reflectionValues.mergeWithDetectedMembers(detectedMemberStrings);
     const detectedAllImplementedInterfaces = detectedAllImplementedInterfacesFromInterface(interfaceObject);
     reflectionValues.mergeWithDetectedAllImplementedInterfaces(detectedAllImplementedInterfaces);
@@ -65,7 +65,7 @@ export function makeReflectionsForInterface(interfaceObject: Object, reflectionS
 }
 
 export function makeReflectionsForEnum(staticProto: constructor{?}, reflectionString: string): N4EnumType {
-    const reflectionValues = new ReflectionValues(reflectionString);
+    const reflectionValues = ReflectionValues.createForClassOrEnum(staticProto, reflectionString);
     const n4enumType = new N4EnumType();
     setN4TypeProperties(n4enumType, reflectionValues);
     return n4enumType;
@@ -371,6 +371,8 @@ class MemberDetectorForInterface extends MemberDetector {
 }
 
 
+
+
 class ReflectionValues {
     name: string;
     modulePath: string;
@@ -380,16 +382,33 @@ class ReflectionValues {
     allImplementedInterfaces: string[];
     annotations: Array<string|Array<string>>;
 
-    constructor(reflectionString: string) {
+
+    static createForClassOrEnum(staticProto: constructor{?}, reflectionString: string) : ReflectionValues {
+        const rv = new ReflectionValues();
+        const reflectionValues = JSON.parse(reflectionString) as [];
+        const [modulePath, origin, members, memberAnnotations, annotations] = reflectionValues;
+        rv.name = staticProto.name;
+        rv.modulePath = modulePath as string;
+        rv.origin = origin as string;
+        rv.members = members as string[] || [];
+        rv.memberAnnotations = memberAnnotations as Object;
+        rv.allImplementedInterfaces = [];
+        rv.annotations = annotations as Array<string|Array<string>>;
+        return rv;
+    }
+
+    static createForInterface(reflectionString: string) : ReflectionValues {
+        const rv = new ReflectionValues();
         const reflectionValues = JSON.parse(reflectionString) as [];
         const [name, modulePath, origin, members, memberAnnotations, annotations] = reflectionValues;
-        this.name = name as string;
-        this.modulePath = modulePath as string;
-        this.origin = origin as string;
-        this.members = members as string[] || [];
-        this.memberAnnotations = memberAnnotations as Object;
-        this.allImplementedInterfaces = [];
-        this.annotations = annotations as Array<string|Array<string>>;
+        rv.name = name as string;
+        rv.modulePath = modulePath as string;
+        rv.origin = origin as string;
+        rv.members = members as string[] || [];
+        rv.memberAnnotations = memberAnnotations as Object;
+        rv.allImplementedInterfaces = [];
+        rv.annotations = annotations as Array<string|Array<string>>;
+        return rv;
     }
 
     mergeWithDetectedMembers(detectedMemberStrings: string[]) {
@@ -402,6 +421,8 @@ class ReflectionValues {
     }
 
     mergeWithDetectedAllImplementedInterfaces(detectedAllImplementedInterfaces: N4Interface[]) {
+        console.log("detectedAllImplementedInterfaces");
+        console.log(detectedAllImplementedInterfaces);
         const interfaceFQNs = mapInterfacesToFQN(detectedAllImplementedInterfaces);
         this.allImplementedInterfaces = this.allImplementedInterfaces.concat(interfaceFQNs);
     }

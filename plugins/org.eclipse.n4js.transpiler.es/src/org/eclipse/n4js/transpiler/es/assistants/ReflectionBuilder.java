@@ -93,6 +93,9 @@ public class ReflectionBuilder {
 
 		Type type = state.info.getOriginalDefinedType(typeDecl);
 
+		// the name is written to reflection output only for interfaces
+		boolean isInterface = (typeDecl instanceof N4InterfaceDeclaration);
+
 		Iterable<N4MemberDeclaration> allMembers = (typeDecl instanceof N4ClassifierDeclaration)
 				? ((N4ClassifierDeclaration) typeDecl).getOwnedMembers()
 				: Collections.emptyList();
@@ -117,7 +120,7 @@ public class ReflectionBuilder {
 				: array(members);
 
 		JsonElement reflectInfo = array(
-				primitive(typeSTE.getName()),
+				isInterface ? primitive(typeSTE.getName()) : null,
 				primitive(modulePath),
 				primitive(origin),
 				optMembers,
@@ -182,7 +185,7 @@ public class ReflectionBuilder {
 			if (state.info.isHiddenFromReflection(member)) {
 				continue;
 			}
-			// create only consumed member strings, since others are detected from constructor and prototype
+			// create only some member strings, since others are detected from constructor and prototype
 			boolean serialize = false;
 			serialize |= !member.isStatic() && member instanceof N4FieldDeclaration;
 			serialize |= state.info.isConsumedFromInterface(member);
