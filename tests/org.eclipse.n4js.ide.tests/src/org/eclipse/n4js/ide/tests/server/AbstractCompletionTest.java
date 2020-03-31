@@ -54,34 +54,40 @@ abstract public class AbstractCompletionTest extends AbstractStructuredIdeTest<T
 	/** Call this method in a test */
 	protected void test(String codeWithCursor, String expectedProposals) {
 		TestCompletionConfiguration tcc = createTestCompletionConfiguration(codeWithCursor, expectedProposals);
+		String nameWithSelector = DEFAULT_MODULE_NAME + MODULE_SELECTOR;
+		String testModuleContents = tcc.getModel();
+		Pair<String, String> moduleContents = Pair.of(nameWithSelector, testModuleContents);
+
+		boolean moduleAdded = false;
 		if (!getDefaultTestYarnWorkspace().isEmpty()) {
 			List<Pair<String, List<Pair<String, String>>>> workspace = getDefaultTestYarnWorkspace();
 			for (Pair<String, List<Pair<String, String>>> project : workspace) {
 				String projectName = project.getKey();
 				if (projectName.endsWith(MODULE_SELECTOR)) {
-					String nameWithSelector = DEFAULT_MODULE_NAME + MODULE_SELECTOR;
-					Pair<String, String> moduleContents = Pair.of(nameWithSelector, tcc.getModel());
 					List<Pair<String, String>> modulesPlusMyModule = new ArrayList<>(project.getValue());
 					modulesPlusMyModule.add(moduleContents);
 					try {
 						ReflectExtensions reflectExtensions = new ReflectExtensions();
 						reflectExtensions.set(project, "k", projectName.substring(0, projectName.length() - 1));
 						reflectExtensions.set(project, "v", modulesPlusMyModule);
+						moduleAdded = true;
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
 				}
 			}
 
+			if (!moduleAdded) {
+				throw new IllegalStateException("No project selected. Use " + MODULE_SELECTOR);
+			}
+
 			testWS(workspace, tcc);
 			return;
 
 		} else {
-			String nameWithSelector = DEFAULT_MODULE_NAME + MODULE_SELECTOR;
-			Pair<String, String> moduleContents = Pair.of(nameWithSelector, tcc.getModel());
-			ArrayList<Pair<String, String>> allModule = Lists.newArrayList(moduleContents);
-			allModule.addAll(getDefaultTestModules());
-			test(allModule, tcc);
+			ArrayList<Pair<String, String>> allModules = Lists.newArrayList(moduleContents);
+			allModules.addAll(getDefaultTestModules());
+			test(allModules, tcc);
 		}
 	}
 

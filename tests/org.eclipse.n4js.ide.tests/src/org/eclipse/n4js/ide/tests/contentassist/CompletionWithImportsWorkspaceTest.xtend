@@ -25,18 +25,23 @@ public class CompletionWithImportsWorkspaceTest extends AbstractCompletionTest {
 			"P1*" -> #[
 				DEPENDENCIES -> '''
 					«N4JS_RUNTIME_NAME»,
+					P2,
 					SomeNPM,
 					@n4jsd/SomeNPM
+				'''],
+			"P2" -> #[
+				"LibXY" -> '''
+					export public class XY {}
 				'''],
 				
 			NODE_MODULES + N4JS_RUNTIME_NAME -> null,
 			NODE_MODULES + "SomeNPM" -> #[
-				"index"  -> '''//some npm code'''],
+				"index"  -> '''//some npm js code'''],
 			NODE_MODULES + "@n4jsd/SomeNPM" -> #[
 				"index.n4jsd"  -> '''
 							export public external class A1 {}
 							''',
-				org.eclipse.n4js.ide.tests.server.AbstractIdeTest.PACKAGE_JSON  -> '''
+				PACKAGE_JSON  -> '''
 							{
 								"name": "@n4jsd/SomeNPM",
 								"version": "0.0.1",
@@ -59,6 +64,16 @@ public class CompletionWithImportsWorkspaceTest extends AbstractCompletionTest {
 			let x = new A1<|>
 		''', ''' 
 			(A1, Class, index, , , 00000, , , , ([0:12 - 0:14], A1), [([0:0 - 0:0], import {A1} from "someNPM";
+			)], [], , )
+		''');
+	}
+
+	@Test
+	def void testNoRedirectionForNormalProjects() {
+		test('''
+			let x = new XY<|>
+		''', ''' 
+			(XY, Class, LibXY, , , 00000, , , , ([0:12 - 0:14], XY), [([0:0 - 0:0], import {XY} from "LibXY";
 			)], [], , )
 		''');
 	}

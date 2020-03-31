@@ -830,14 +830,18 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		String extension = getN4JSNameAndExtension(moduleName).extension == null ? "." + DEFAULT_EXTENSION : "";
 		String moduleNameWithExtension = getModuleNameOrDefault(moduleName) + extension;
 		try {
-			Path firstMatch = Files
+			List<Path> allMatches = Files
 					.find(getRoot().toPath(), 99, (path, options) -> path.endsWith(moduleNameWithExtension))
-					.findFirst().orElse(null);
+					.collect(Collectors.toList());
 
-			if (firstMatch == null) {
-				throw new IllegalStateException("Module not found in test project");
+			if (allMatches.isEmpty()) {
+				throw new IllegalStateException("Module not found with name " + moduleNameWithExtension);
 			}
-			return new FileURI(firstMatch.toFile());
+			if (allMatches.size() > 1) {
+				throw new IllegalStateException("Multiple modules found with name " + moduleNameWithExtension);
+			}
+
+			return new FileURI(allMatches.get(0).toFile());
 
 		} catch (IOException e) {
 			throw new IllegalStateException("Error when searching for module " + moduleNameWithExtension, e);
