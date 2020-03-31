@@ -24,6 +24,8 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.ide.editor.contentassist.N4JSIdeContentProposalProvider.N4JSCandidateFilter;
 import org.eclipse.n4js.ide.editor.contentassist.imports.ImportRewriter.ImportChanges;
+import org.eclipse.n4js.n4JS.ImportCallExpression;
+import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4idl.N4IDLGlobals;
 import org.eclipse.n4js.projectModel.IN4JSCore;
@@ -48,6 +50,7 @@ import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalPriorities;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
+import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.impl.AliasedEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
@@ -271,6 +274,8 @@ public class ImportsAwareReferenceProposalCreator {
 		final boolean isScopedCandidateEqual;
 		final boolean isScopedCandidateCollisioning;
 		final boolean isValid;
+		final EObject parentImportElement;
+		final String parentImportModuleName;
 		final QualifiedName qualifiedName;
 		final String shortName;
 		final QualifiedName namespaceName;
@@ -282,13 +287,15 @@ public class ImportsAwareReferenceProposalCreator {
 			this.candidate = candidate;
 			this.shortName = getShortName();
 			this.qualifiedName = getQualifiedName();
+			this.parentImportElement = getParentImportElement(context);
+			this.parentImportModuleName = getParentImportModuleName();
 			this.candidateViaScopeShortName = getCorrectCandidateViaScope(scope);
 			this.isScopedCandidateEqual = isEqualCandidateName(candidateViaScopeShortName, qualifiedName);
 			this.isScopedCandidateCollisioning = isScopedCandidateCollisioning();
 			this.accessType = getAccessType();
 			this.aliasName = getAliasName();
 			this.namespaceName = getNamespaceName();
-			this.addedImportNameAndAlias = getImportChanges(this);
+			this.addedImportNameAndAlias = getImportChanges();
 			this.isValid = isValid(context);
 		}
 
@@ -310,6 +317,7 @@ public class ImportsAwareReferenceProposalCreator {
 			boolean valid = validName;
 			valid &= !Strings.isNullOrEmpty(shortName);
 			valid &= !conflictHelper.existsConflict(shortName, context);
+			valid &= parentImportModuleName == null || qualifiedName.toString("/").startsWith(parentImportModuleName);
 
 			return valid;
 		}
@@ -474,8 +482,40 @@ public class ImportsAwareReferenceProposalCreator {
 			return null;
 		}
 
-		private NameAndAlias getImportChanges(CAECandidate caec) {
-			if (caec.accessType != CandidateAccessType.direct) {
+		private EObject getParentImportElement(ContentAssistContext context) {
+			INode currentNode = context.getCurrentNode();
+			while (currentNode != null) {
+				EObject semanticElement = currentNode.getSemanticElement();
+				if (semanticElement instanceof ImportCallExpression
+						|| semanticElement instanceof ImportDeclaration) {
+
+					return semanticElement;
+				}
+				currentNode = currentNode.getParent();
+			}
+			return null;
+		}
+
+		private String getParentImportModuleName() {
+			if (parentImportElement instanceof ImportCallExpression) {
+				// how could that be done?
+				return null;
+			}
+			if (parentImportElement instanceof ImportDeclaration) {
+				// GH-1704: could also be done via scoping
+				ImportDeclaration impDecl = (ImportDeclaration) parentImportElement;
+				return impDecl.getModuleSpecifierAsText();
+			}
+
+			return null;
+		}
+
+		private NameAndAlias getImportChanges() {
+			if (parentImportElement != null) {
+				return null;
+			}
+
+			if (accessType != CandidateAccessType.direct) {
 				return null;
 			}
 
@@ -500,15 +540,15 @@ public class ImportsAwareReferenceProposalCreator {
 
 			String alias = null;
 
-			if (caec.candidateViaScopeShortName != null && caec.isScopedCandidateCollisioning) {
+			if (candidateViaScopeShortName != null && isScopedCandidateCollisioning) {
 				// accessing default export via already imported namespace
-				if (caec.candidateViaScopeShortName.getEObjectOrProxy() instanceof ModuleNamespaceVirtualType) {
+				if (candidateViaScopeShortName.getEObjectOrProxy() instanceof ModuleNamespaceVirtualType) {
 					// return null;
 				}
 
 				// the simple name is already reachable, i.e. already in use - another import is present
 				// try to use an alias
-				alias = "Alias_" + UtilN4.toUpperCaseFirst(caec.qualifiedName.toString().replace(".", "_"));
+				alias = "Alias_" + UtilN4.toUpperCaseFirst(qualifiedName.toString().replace(".", "_"));
 			}
 
 			return new NameAndAlias(importName, alias);
