@@ -79,7 +79,7 @@ class RuntimeDependencyValidationPluginTest extends AbstractBuilderParticipantTe
 	];
 
 	val defaultExpectedIssueInMainBad = '''
-		line 2: (LTD) When importing modules from a runtime cycle, those that are the target of a load-time dependency (marked with * below) may only be imported after first importing one of the others. Thus, import of module A must be preceded by an import of one of the modules C, X, Y.
+		line 2: When importing modules from a runtime cycle, those that are the target of a load-time dependency (marked with * below) may only be imported after first importing one of the others. Thus, import of module A must be preceded by an import of one of the modules C, X, Y.
 		Containing runtime dependency cycle cluster:
 		    *A.n4js --> Y.n4js
 		    *B.n4js --> A.n4js
@@ -236,7 +236,7 @@ class RuntimeDependencyValidationPluginTest extends AbstractBuilderParticipantTe
 		assertIssuesInModules(files, #[
 			"X" -> #[
 				'''
-					line 1: (LTD) A load-time dependency target module B must only be imported once within the same runtime dependency cycle, but B is also imported by module C.
+					line 1: A load-time dependency target module B must only be imported once within the same runtime dependency cycle, but B is also imported by module C.
 					Containing runtime dependency cycle cluster:
 					    *A.n4js --> Y.n4js
 					    *B.n4js --> A.n4js
@@ -247,7 +247,7 @@ class RuntimeDependencyValidationPluginTest extends AbstractBuilderParticipantTe
 			],
 			"C" -> #[
 				'''
-					line 1: (LTD) A load-time dependency target module B must only be imported once within the same runtime dependency cycle, but B is also imported by module X.
+					line 1: A load-time dependency target module B must only be imported once within the same runtime dependency cycle, but B is also imported by module X.
 					Containing runtime dependency cycle cluster:
 					    *A.n4js --> Y.n4js
 					    *B.n4js --> A.n4js
@@ -293,7 +293,7 @@ class RuntimeDependencyValidationPluginTest extends AbstractBuilderParticipantTe
 		assertIssues(files,
 			"A" -> #[
 				'''
-					line 1: (LTD) Load-time dependency cycles are disallowed, because successful resolution by Javascript engine cannot be guaranteed.
+					line 1: Load-time dependency cycles are disallowed, because successful resolution by Javascript engine cannot be guaranteed.
 					    A.n4js --> C.n4js
 					    B.n4js --> A.n4js
 					    C.n4js --> B.n4js
@@ -301,7 +301,7 @@ class RuntimeDependencyValidationPluginTest extends AbstractBuilderParticipantTe
 			],
 			"B" -> #[
 				'''
-					line 1: (LTD) Load-time dependency cycles are disallowed, because successful resolution by Javascript engine cannot be guaranteed.
+					line 1: Load-time dependency cycles are disallowed, because successful resolution by Javascript engine cannot be guaranteed.
 					    A.n4js --> C.n4js
 					    B.n4js --> A.n4js
 					    C.n4js --> B.n4js
@@ -309,7 +309,7 @@ class RuntimeDependencyValidationPluginTest extends AbstractBuilderParticipantTe
 			],
 			"C" -> #[
 				'''
-					line 1: (LTD) Load-time dependency cycles are disallowed, because successful resolution by Javascript engine cannot be guaranteed.
+					line 1: Load-time dependency cycles are disallowed, because successful resolution by Javascript engine cannot be guaranteed.
 					    A.n4js --> C.n4js
 					    B.n4js --> A.n4js
 					    C.n4js --> B.n4js
@@ -352,7 +352,7 @@ class RuntimeDependencyValidationPluginTest extends AbstractBuilderParticipantTe
 		val expectedIssuesWithIllegalLoadtimeReferences = defaultExpectedIssues + #[
 			"B" -> #[
 				'''
-					line 13: (LTD) Load-time references to the same or other modules are not allowed within a runtime dependency cycle (except in extends/implements clauses).
+					line 13: Load-time references to the same or other modules are not allowed within a runtime dependency cycle (except in extends/implements clauses).
 					    *A.n4js --> Y.n4js
 					    *B.n4js --> A.n4js
 					    C.n4js --> B.n4js
@@ -360,7 +360,7 @@ class RuntimeDependencyValidationPluginTest extends AbstractBuilderParticipantTe
 					    Y.n4js --> X.n4js
 				''',
 				'''
-					line 15: (LTD) Load-time references to the same or other modules are not allowed within a runtime dependency cycle (except in extends/implements clauses).
+					line 15: Load-time references to the same or other modules are not allowed within a runtime dependency cycle (except in extends/implements clauses).
 					    *A.n4js --> Y.n4js
 					    *B.n4js --> A.n4js
 					    C.n4js --> B.n4js

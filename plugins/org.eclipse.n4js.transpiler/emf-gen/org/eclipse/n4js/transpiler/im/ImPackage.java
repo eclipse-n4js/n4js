@@ -1867,6 +1867,24 @@ public interface ImPackage extends EPackage {
 	int DELEGATING_MEMBER___GET_DEFINED_TYPE_ELEMENT = N4JSPackage.N4_MEMBER_DECLARATION___GET_DEFINED_TYPE_ELEMENT;
 
 	/**
+	 * The operation id for the '<em>Is Declared Abstract</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELEGATING_MEMBER___IS_DECLARED_ABSTRACT = N4JSPackage.N4_MEMBER_DECLARATION___IS_DECLARED_ABSTRACT;
+
+	/**
+	 * The operation id for the '<em>Is Abstract</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELEGATING_MEMBER___IS_ABSTRACT = N4JSPackage.N4_MEMBER_DECLARATION___IS_ABSTRACT;
+
+	/**
 	 * The operation id for the '<em>Is Declared Static</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2172,6 +2190,15 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int DELEGATING_GETTER_DECLARATION___GET_DEFINED_ACCESSOR = N4JSPackage.N4_GETTER_DECLARATION___GET_DEFINED_ACCESSOR;
+
+	/**
+	 * The operation id for the '<em>Is Declared Abstract</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELEGATING_GETTER_DECLARATION___IS_DECLARED_ABSTRACT = N4JSPackage.N4_GETTER_DECLARATION___IS_DECLARED_ABSTRACT;
 
 	/**
 	 * The operation id for the '<em>Is Declared Static</em>' operation.
@@ -2508,6 +2535,15 @@ public interface ImPackage extends EPackage {
 	int DELEGATING_SETTER_DECLARATION___GET_DECLARED_TYPE_REF = N4JSPackage.N4_SETTER_DECLARATION___GET_DECLARED_TYPE_REF;
 
 	/**
+	 * The operation id for the '<em>Is Declared Abstract</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELEGATING_SETTER_DECLARATION___IS_DECLARED_ABSTRACT = N4JSPackage.N4_SETTER_DECLARATION___IS_DECLARED_ABSTRACT;
+
+	/**
 	 * The operation id for the '<em>Is Declared Static</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2813,6 +2849,15 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int DELEGATING_METHOD_DECLARATION___GET_DECLARED_TYPE_REF = N4JSPackage.N4_METHOD_DECLARATION___GET_DECLARED_TYPE_REF;
+
+	/**
+	 * The operation id for the '<em>Is Declared Abstract</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELEGATING_METHOD_DECLARATION___IS_DECLARED_ABSTRACT = N4JSPackage.N4_METHOD_DECLARATION___IS_DECLARED_ABSTRACT;
 
 	/**
 	 * The operation id for the '<em>Is Declared Static</em>' operation.

@@ -18,9 +18,9 @@ stdout:
 ========================================
 called method m
 called method "a@b"
+called method Symbol.iterator
 called static method m
 called static method "a@b"
-called method Symbol.iterator
 called static method Symbol.iterator
 ========================================
 stderr:

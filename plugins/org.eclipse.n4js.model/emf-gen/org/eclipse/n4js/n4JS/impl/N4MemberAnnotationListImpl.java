@@ -210,6 +210,26 @@ public class N4MemberAnnotationListImpl extends AbstractAnnotationListImpl imple
 	 * @generated
 	 */
 	@Override
+	public boolean isDeclaredAbstract() {
+		return this.getDeclaredModifiers().contains(N4Modifier.ABSTRACT);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isAbstract() {
+		return false;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public boolean isDeclaredStatic() {
 		return this.getDeclaredModifiers().contains(N4Modifier.STATIC);
 	}
@@ -526,6 +546,8 @@ public class N4MemberAnnotationListImpl extends AbstractAnnotationListImpl imple
 		if (baseClass == N4MemberDeclaration.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.N4_MEMBER_DECLARATION___GET_DEFINED_TYPE_ELEMENT: return N4JSPackage.N4_MEMBER_ANNOTATION_LIST___GET_DEFINED_TYPE_ELEMENT;
+				case N4JSPackage.N4_MEMBER_DECLARATION___IS_DECLARED_ABSTRACT: return N4JSPackage.N4_MEMBER_ANNOTATION_LIST___IS_DECLARED_ABSTRACT;
+				case N4JSPackage.N4_MEMBER_DECLARATION___IS_ABSTRACT: return N4JSPackage.N4_MEMBER_ANNOTATION_LIST___IS_ABSTRACT;
 				case N4JSPackage.N4_MEMBER_DECLARATION___IS_DECLARED_STATIC: return N4JSPackage.N4_MEMBER_ANNOTATION_LIST___IS_DECLARED_STATIC;
 				case N4JSPackage.N4_MEMBER_DECLARATION___IS_STATIC: return N4JSPackage.N4_MEMBER_ANNOTATION_LIST___IS_STATIC;
 				case N4JSPackage.N4_MEMBER_DECLARATION___IS_DECLARED_FINAL: return N4JSPackage.N4_MEMBER_ANNOTATION_LIST___IS_DECLARED_FINAL;
@@ -552,6 +574,10 @@ public class N4MemberAnnotationListImpl extends AbstractAnnotationListImpl imple
 				return getDeclaredTypeRef();
 			case N4JSPackage.N4_MEMBER_ANNOTATION_LIST___GET_NAME:
 				return getName();
+			case N4JSPackage.N4_MEMBER_ANNOTATION_LIST___IS_DECLARED_ABSTRACT:
+				return isDeclaredAbstract();
+			case N4JSPackage.N4_MEMBER_ANNOTATION_LIST___IS_ABSTRACT:
+				return isAbstract();
 			case N4JSPackage.N4_MEMBER_ANNOTATION_LIST___IS_DECLARED_STATIC:
 				return isDeclaredStatic();
 			case N4JSPackage.N4_MEMBER_ANNOTATION_LIST___IS_STATIC:

@@ -13,14 +13,15 @@ package org.eclipse.n4js.ide.editor.contentassist.imports;
 import static org.eclipse.n4js.utils.N4JSLanguageUtils.lastSegmentOrDefaultHost;
 
 import java.util.Collection;
-import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.ide.editor.contentassist.N4JSIdeContentProposalProvider.N4JSCandidateFilter;
 import org.eclipse.n4js.ide.editor.contentassist.imports.ImportRewriter.ImportChanges;
 import org.eclipse.n4js.n4JS.N4JSPackage;
@@ -32,20 +33,17 @@ import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.scoping.IContentAssistScopeProvider;
 import org.eclipse.n4js.scoping.imports.PlainAccessOfAliasedImportDescription;
 import org.eclipse.n4js.scoping.imports.PlainAccessOfNamespacedImportDescription;
-import org.eclipse.n4js.services.N4JSGrammarAccess;
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
-import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
-import org.eclipse.n4js.ts.types.TExportableElement;
+import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.UtilN4;
-import org.eclipse.xtext.conversion.IValueConverter;
-import org.eclipse.xtext.conversion.IValueConverterService;
 import org.eclipse.xtext.conversion.ValueConverterException;
 import org.eclipse.xtext.ide.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ide.editor.contentassist.ContentAssistEntry;
 import org.eclipse.xtext.ide.editor.contentassist.IIdeContentProposalAcceptor;
-import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalCreator;
+import org.eclipse.xtext.ide.editor.contentassist.IPrefixMatcher;
+import org.eclipse.xtext.ide.editor.contentassist.IProposalConflictHelper;
 import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalPriorities;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
@@ -54,21 +52,20 @@ import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.impl.AliasedEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.IScopeProvider;
-import org.eclipse.xtext.util.Arrays;
 import org.eclipse.xtext.util.ReplaceRegion;
 
 import com.google.common.base.Predicate;
+import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 /**
+ * Creates proposals for content assist and also adds imports of the proposed element if necessary.
  */
-@SuppressWarnings("unused")
 public class ImportsAwareReferenceProposalCreator {
 
 	@Inject
 	private IScopeProvider scopeProvider;
-
-	private IValueConverter<String> valueConverter;
 
 	@Inject
 	private IN4JSCore n4jsCore;
@@ -85,381 +82,474 @@ public class ImportsAwareReferenceProposalCreator {
 	@Inject
 	private IdeContentProposalPriorities proposalPriorities;
 
-	private static final EReference[] referencesSupportingImportedElements = {
-			N4JSPackage.Literals.IDENTIFIER_REF__ID,
-			TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE
-	};
+	@Inject
+	private IPrefixMatcher prefixMatcher;
 
 	@Inject
-	private void setValueConverter(IValueConverterService service, N4JSGrammarAccess grammarAccess) {
-		@SuppressWarnings({ "unchecked", "rawtypes" })
-		IValueConverter<String> converter = (IValueConverter) ((IValueConverterService.Introspectable) service)
-				.getConverter(grammarAccess
-						.getTypeReferenceNameRule()
-						.getName());
-		this.valueConverter = converter;
-	}
+	private IProposalConflictHelper conflictHelper;
 
 	/**
 	 * Retrieves possible reference targets from scope, including erroneous solutions (e.g., not visible targets). This
 	 * list is further filtered here. This is a general pattern: Do not change or modify scoping for special content
 	 * assist requirements, instead filter here.
 	 *
-	 * @param proposalFactory
-	 *            usually this will be an instance of
-	 *            {@link AbstractJavaBasedContentProposalProvider.DefaultProposalCreator DefaultProposalCreator}.
 	 * @param filter
 	 *            by default an instance of {@link N4JSCandidateFilter} will be provided here.
 	 */
-	@SuppressWarnings("javadoc")
 	public void lookupCrossReference(
 			EObject model,
 			EReference reference,
 			ContentAssistContext context,
 			IIdeContentProposalAcceptor acceptor,
-			Predicate<IEObjectDescription> filter,
-			IdeContentProposalCreator proposalFactory) {
+			Predicate<IEObjectDescription> filter) {
 
-		if (model != null) {
-			final IContentAssistScopeProvider contentAssistScopeProvider = (IContentAssistScopeProvider) scopeProvider;
-			final IScope scope = contentAssistScopeProvider.getScopeForContentAssist(model, reference);
-			// iterate over candidates, filter them, and create ICompletionProposals for them
-			final Iterable<IEObjectDescription> candidates = scope.getAllElements();
+		if (model == null) {
+			return;
+		}
 
-			for (IEObjectDescription candidate : candidates) {
-				if (!acceptor.canAcceptMoreProposals()) {
-					return;
-				}
+		final IContentAssistScopeProvider contentAssistScopeProvider = (IContentAssistScopeProvider) scopeProvider;
+		final IScope scope = contentAssistScopeProvider.getScopeForContentAssist(model, reference);
+		// iterate over candidates, filter them, and create ICompletionProposals for them
+		final Iterable<IEObjectDescription> candidates = scope.getAllElements();
+		final Set<URI> candidateURIs = new HashSet<>(); // note: shadowing for #getAllElements does not work
 
-				if (filter.apply(candidate)) {
-					final QualifiedName qfn = candidate.getQualifiedName();
-					final int qfnSegmentCount = qfn.getSegmentCount();
-					final String tmodule = (qfnSegmentCount >= 2) ? qfn.getSegment(qfnSegmentCount - 2) : null;
+		for (IEObjectDescription candidate : candidates) {
+			if (!acceptor.canAcceptMoreProposals() || !filter.apply(candidate)) {
+				return;
+			}
 
-					final ContentAssistEntry proposal = getProposal(candidate,
-							model,
-							scope,
-							reference,
-							context,
-							filter,
-							proposalFactory);
-
-					if (proposal != null) {
-						acceptor.accept(proposal, proposalPriorities.getCrossRefPriority(candidate, proposal));
-					}
-				}
+			final ContentAssistEntry proposal = getProposal(candidate, model, scope, context);
+			if (proposal != null && candidateURIs.add(candidate.getEObjectURI())) {
+				int prio = proposalPriorities.getCrossRefPriority(candidate, proposal);
+				acceptor.accept(proposal, prio);
 			}
 		}
 	}
 
 	/**
-	 * Creates initial proposal adjusted for the N4JS imports. Then passes that proposal to the provided delegate
-	 * proposal factory. Obtained ICompletionProposal is configured with a FQNImporter as custom text. applier.
+	 * Creates proposal that can contain an N4JS import.
 	 *
 	 * @param candidate
 	 *            for which proposal is created
-	 * @param delegateProposalFactory
-	 *            delegate proposal factory
 	 * @return code completion proposal
 	 */
-	private ContentAssistEntry getProposal(IEObjectDescription candidate, EObject model,
-			IScope scope,
-			EReference reference,
-			ContentAssistContext context,
-			Predicate<IEObjectDescription> filter,
-			IdeContentProposalCreator delegateProposalFactory) {
-
-		Resource resource = model.eResource();
-		IEObjectDescription inputToUse = getAliasedDescription(candidate, reference, context);
-
-		QualifiedName name = inputToUse.getName();
-		String shortQName = lastSegmentOrDefaultHost(name);
-
-		ContentAssistEntry result = delegateProposalFactory.createProposal(name.toString(), context);
-
-		if (result != null) {
-			try {
-				int version = N4JSResourceDescriptionStrategy.getVersion(inputToUse);
-				QualifiedName qName = inputToUse.getQualifiedName();
-
-				if (qName.equals(name)) {
-					EObject eObj = inputToUse.getEObjectOrProxy(); // performance issue! TODO: remove it
-					QualifiedName qnOfEObject = qualifiedNameProvider.getFullyQualifiedName(eObj);
-					qName = qnOfEObject != null ? qnOfEObject : qName;
-				}
-				String description = getDescription(qName, name, version);
-				String label = getLabel(qName, name, version);
-				String kind = getKind(candidate);
-				result.setLabel(label);
-				result.setDescription(description);
-				result.setKind(kind);
-
-				Collection<ReplaceRegion> regions = getImportChanges(name.toString(), resource, scope, candidate,
-						filter);
-				if (regions != null && !regions.isEmpty()) {
-					result.getTextReplacements().addAll(regions);
-				}
-			} catch (ValueConverterException e) {
-				// text does not match the concrete syntax
-				result = null;
-			}
-		}
-
-		return result;
-	}
-
-	String getDescription(QualifiedName qualifiedName, QualifiedName shortName, int version) {
-		String result = "";
-		if (qualifiedName.getSegmentCount() > 1) {
-			String lastSegment = qualifiedName.getLastSegment();
-
-			String shortNameString = shortName.toString();
-			String typeVersion = (version == 0) ? "" : N4IDLGlobals.VERSION_SEPARATOR + String.valueOf(version);
-			if (shortNameString.endsWith(lastSegment)) {
-				result = qualifiedNameConverter.toString(qualifiedName.skipLast(1));
-			} else {
-				result = "alias for " + lastSegment;
-			}
-			result += typeVersion;
-		}
-		return result;
-	}
-
-	String getLabel(QualifiedName qualifiedName, QualifiedName shortName, int version) {
-		String shortNameString = shortName.toString();
-		String result = shortNameString;
-		if (qualifiedName.getSegmentCount() > 1) {
-			String lastSegment = qualifiedName.getLastSegment();
-
-			if (shortNameString.endsWith(lastSegment)) {
-				String typeVersion = (version == 0) ? "" : N4IDLGlobals.VERSION_SEPARATOR + String.valueOf(version);
-				result = lastSegment + typeVersion;
-			} else {
-				result = shortNameString;
-			}
-		}
-		return result;
-	}
-
-	private String getKind(IEObjectDescription candidate) {
-		EClass eClass = candidate.getEClass();
-		String kind = ContentAssistEntry.KIND_TEXT;
-		if (TypesPackage.eINSTANCE.getTClass() == eClass) {
-			kind = ContentAssistEntry.KIND_CLASS;
-		}
-		if (TypesPackage.eINSTANCE.getTInterface() == eClass) {
-			kind = ContentAssistEntry.KIND_INTERFACE;
-		}
-		if (TypesPackage.eINSTANCE.getTEnum() == eClass) {
-			kind = ContentAssistEntry.KIND_ENUM;
-		}
-		if (TypesPackage.eINSTANCE.getTFunction() == eClass) {
-			kind = ContentAssistEntry.KIND_FUNCTION;
-		}
-		if (TypesPackage.eINSTANCE.getTVariable() == eClass) {
-			kind = ContentAssistEntry.KIND_VARIABLE;
-		}
-		return kind;
-	}
-
-	/**
-	 * Creates proposal taking semantics of the N4JS imports into account.
-	 *
-	 * @param candidate
-	 *            the original input for which we create proposal
-	 * @param reference
-	 *            the reference
-	 * @param context
-	 *            the context
-	 * @return candidate proposal adjusted to the N4JS imports
-	 */
-	private IEObjectDescription getAliasedDescription(IEObjectDescription candidate, EReference reference,
+	private ContentAssistEntry getProposal(IEObjectDescription candidate, EObject model, IScope scope,
 			ContentAssistContext context) {
 
-		// Content assist at a location where only simple names are allowed:
-		// We found a qualified name and we'd need an import to be allowed to use
-		// that name. Consider only the simple name of the element from the index
-		// and make sure that the import is inserted as soon as the proposal is applied
-		QualifiedName inputQN = candidate.getName();
-		int inputNameSegmentCount = inputQN.getSegmentCount();
-		if (inputNameSegmentCount > 1
-				&& Arrays.contains(referencesSupportingImportedElements, reference))
-			return new AliasedEObjectDescription(QualifiedName.create(inputQN.getLastSegment()), candidate);
+		CAECandidate caec = new CAECandidate(candidate, scope, context);
 
-		// filter out non-importable things:
-		// globally provided things should never be imported:
-		if (inputNameSegmentCount == 2 && N4TSQualifiedNameProvider.GLOBAL_NAMESPACE_SEGMENT
-				.equals(inputQN.getFirstSegment()))
-			return new AliasedEObjectDescription(QualifiedName.create(inputQN.getLastSegment()), candidate);
+		if (!caec.isValid) {
+			return null;
+		}
 
-		// special handling for default imports:
-		if (inputQN.getLastSegment().equals(N4JSLanguageConstants.EXPORT_DEFAULT_NAME)) {
-			if (TExportableElement.class.isAssignableFrom(candidate.getEClass().getInstanceClass())) {
-				if (N4JSResourceDescriptionStrategy.getExportDefault(candidate)) {
-					return new AliasedEObjectDescription(inputQN, candidate);
+		try {
+			ContentAssistEntry cae = new ContentAssistEntry();
+			int version = N4JSResourceDescriptionStrategy.getVersion(candidate);
+
+			String proposal = getProposal(caec);
+			String label = getLabel(caec, version);
+			String description = getDescription(caec);
+			String kind = getKind(caec);
+
+			cae.setProposal(proposal);
+			cae.setPrefix(context.getPrefix());
+			cae.setLabel(label);
+			cae.setDescription(description);
+			cae.setKind(kind);
+			cae.setSource(candidate.getEObjectURI());
+
+			addImportIfNecessary(caec, model, cae);
+
+			return cae;
+
+		} catch (ValueConverterException e) {
+			// text does not match the concrete syntax
+		}
+
+		return null;
+	}
+
+	private String getProposal(CAECandidate caec) {
+		switch (caec.accessType) {
+		case alias:
+			return caec.aliasName;
+		case namespace:
+			return caec.namespaceName.toString();
+		default:
+			// noop
+		}
+		if (caec.newImportHasAlias()) {
+			return caec.addedImportNameAndAlias.alias;
+		}
+		return caec.shortName;
+	}
+
+	private String getLabel(CAECandidate caec, int version) {
+		String typeVersion = (version == 0) ? "" : N4IDLGlobals.VERSION_SEPARATOR + String.valueOf(version);
+		if (caec.isAlias()) {
+			return caec.aliasName + typeVersion;
+		}
+		if (caec.isNamespace()) {
+			return caec.namespaceName + typeVersion;
+		}
+		if (caec.newImportHasAlias()) {
+			return caec.shortName + typeVersion;
+		}
+
+		return caec.shortName + typeVersion;
+	}
+
+	private String getDescription(CAECandidate caec) {
+		if (caec.isAlias()) {
+			return "alias for " + qualifiedNameConverter.toString(caec.qualifiedName);
+		}
+		if (caec.isNamespace()) {
+			return qualifiedNameConverter.toString(caec.qualifiedName);
+		}
+		if (caec.newImportHasAlias()) {
+			String descr = "via new alias " + caec.addedImportNameAndAlias.alias;
+			descr += " for " + qualifiedNameConverter.toString(caec.qualifiedName);
+			descr += "\n\n";
+			descr += "Introduces the new alias '" + caec.addedImportNameAndAlias.alias;
+			descr += "' for element " + qualifiedNameConverter.toString(caec.qualifiedName);
+			return descr;
+		}
+
+		QualifiedName caecQN = caec.qualifiedName;
+		QualifiedName descrQN = (caecQN.getSegmentCount() > 1) ? caecQN.skipLast(1) : caecQN;
+		return qualifiedNameConverter.toString(descrQN);
+	}
+
+	private String getKind(CAECandidate caec) {
+		EClass eClass = caec.candidate.getEClass();
+		if (TypesPackage.eINSTANCE.getTClass() == eClass) {
+			return ContentAssistEntry.KIND_CLASS;
+		}
+		if (TypesPackage.eINSTANCE.getTInterface() == eClass) {
+			return ContentAssistEntry.KIND_INTERFACE;
+		}
+		if (TypesPackage.eINSTANCE.getTField() == eClass) {
+			return ContentAssistEntry.KIND_FIELD;
+		}
+		if (TypesPackage.eINSTANCE.getTEnum() == eClass) {
+			return ContentAssistEntry.KIND_ENUM;
+		}
+		if (TypesPackage.eINSTANCE.getTFunction() == eClass) {
+			return ContentAssistEntry.KIND_FUNCTION;
+		}
+		if (TypesPackage.eINSTANCE.getTVariable() == eClass) {
+			return ContentAssistEntry.KIND_VARIABLE;
+		}
+		if (N4JSPackage.eINSTANCE.getVariableDeclaration() == eClass) {
+			return ContentAssistEntry.KIND_VARIABLE;
+		}
+		if (TypesPackage.eINSTANCE.getModuleNamespaceVirtualType() == eClass) {
+			return ContentAssistEntry.KIND_COLOR;
+		}
+		return ContentAssistEntry.KIND_TEXT;
+	}
+
+	private void addImportIfNecessary(CAECandidate caec, EObject model, ContentAssistEntry proposal) {
+		if (caec.addedImportNameAndAlias != null) {
+			Resource resource = model.eResource();
+			ImportChanges importChanges = importRewriter.create("\n", resource);
+			importChanges.addImport(caec.addedImportNameAndAlias);
+			Collection<ReplaceRegion> regions = importChanges.toReplaceRegions();
+			if (regions != null && !regions.isEmpty()) {
+				proposal.getTextReplacements().addAll(regions);
+			}
+		}
+	}
+
+	private static enum CandidateAccessType {
+		direct, alias, namespace
+	}
+
+	private class CAECandidate {
+		final IEObjectDescription candidate;
+		final IEObjectDescription candidateViaScopeShortName;
+		final boolean isScopedCandidateEqual;
+		final boolean isScopedCandidateCollisioning;
+		final boolean isValid;
+		final QualifiedName qualifiedName;
+		final String shortName;
+		final QualifiedName namespaceName;
+		final String aliasName;
+		final CandidateAccessType accessType;
+		final NameAndAlias addedImportNameAndAlias;
+
+		CAECandidate(IEObjectDescription candidate, IScope scope, ContentAssistContext context) {
+			this.candidate = candidate;
+			this.shortName = getShortName();
+			this.qualifiedName = getQualifiedName();
+			this.candidateViaScopeShortName = getCorrectCandidateViaScope(scope);
+			this.isScopedCandidateEqual = isEqualCandidateName(candidateViaScopeShortName, qualifiedName);
+			this.isScopedCandidateCollisioning = isScopedCandidateCollisioning();
+			this.accessType = getAccessType();
+			this.aliasName = getAliasName();
+			this.namespaceName = getNamespaceName();
+			this.addedImportNameAndAlias = getImportChanges(this);
+			this.isValid = isValid(context);
+		}
+
+		private String getShortName() {
+			QualifiedName qName = candidate.getQualifiedName();
+			return lastSegmentOrDefaultHost(qName);
+		}
+
+		/** @return true iff this candidate is valid and should be shown as a proposal */
+		private boolean isValid(ContentAssistContext context) {
+			String prefix = context.getPrefix();
+
+			boolean validName = false;
+			validName |= prefixMatcher.isCandidateMatchingPrefix(shortName, prefix);
+			validName |= isAlias() && prefixMatcher.isCandidateMatchingPrefix(aliasName, prefix);
+			validName |= isNamespace()
+					&& prefixMatcher.isCandidateMatchingPrefix(namespaceName.getLastSegment(), prefix);
+
+			boolean valid = validName;
+			valid &= !Strings.isNullOrEmpty(shortName);
+			valid &= !conflictHelper.existsConflict(shortName, context);
+
+			return valid;
+		}
+
+		private QualifiedName getQualifiedName() {
+			QualifiedName qName = candidate.getQualifiedName();
+
+			if (qName.toString().equals(shortName)) {
+				QualifiedName qnOfEObject = getCompleteQualifiedName(candidate);
+				if (qnOfEObject != null) {
+					return qnOfEObject;
 				}
 			}
-			// not accessed via namespace
-			QualifiedName nameNoDefault = inputQN.skipLast(1);
-			QualifiedName moduleName = nameNoDefault.getSegmentCount() > 1
-					? QualifiedName.create(nameNoDefault.getLastSegment())
-					: nameNoDefault;
-			return new AliasedEObjectDescription(moduleName, candidate);
+
+			return qName;
 		}
-		// no special handling, return original input
-		return candidate;
-	}
 
-	private Collection<ReplaceRegion> getImportChanges(String syntacticReplacementString, Resource resource,
-			IScope scope, IEObjectDescription candidate, Predicate<IEObjectDescription> filter) {
+		private IEObjectDescription getCorrectCandidateViaScope(IScope scope) {
+			IEObjectDescription candidateViaScope = getCandidateViaScope(scope);
+			candidateViaScope = specialcaseNamespaceShadowsOwnElement(scope, candidateViaScope);
+			return candidateViaScope;
+		}
 
-		// does it even happen? check logs if first and/or second check passes
-		String actualSyntacticReplacementString = getActualReplacementString(syntacticReplacementString, scope,
-				resource, filter);
-		// there is an import statement - apply computed replacementString
-		if (!syntacticReplacementString.equals(actualSyntacticReplacementString)) {
-			QualifiedName shortQualifiedName = applyValueConverter(actualSyntacticReplacementString);
-			if (shortQualifiedName.getSegmentCount() == 1) {
-				return Collections.emptyList();
+		private IEObjectDescription getCandidateViaScope(IScope scope) {
+			// performance issue: scope.getElements
+			List<IEObjectDescription> elements = Lists.newArrayList(scope.getElements(QualifiedName.create(shortName)));
+			if (elements.isEmpty()) {
+				return null;
 			}
-		}
-
-		QualifiedName qualifiedName = getCandidateName(candidate);
-		QualifiedName originalQualifiedName = candidate.getQualifiedName();
-
-		if (qualifiedName == null) {
-			return Collections.emptyList();
-		}
-
-		// we could create an import statement if there is no conflict
-		if (qualifiedName.getSegmentCount() == 1) {
-			// type name is a simple name - no need to hassle with imports
-			return Collections.emptyList();
-		}
-
-		// Globally available elements should not generate imports
-		if (qualifiedName.getSegmentCount() == 2
-				&& N4TSQualifiedNameProvider.GLOBAL_NAMESPACE_SEGMENT.equals(qualifiedName.getFirstSegment())) {
-			// type name is a simple name from global Namespace - no need to hassle with imports
-			return Collections.emptyList();
-		}
-
-		String alias = null;
-		String shortQName = lastSegmentOrDefaultHost(originalQualifiedName);
-		IEObjectDescription descriptionFullQN = scope.getSingleElement(QualifiedName.create(shortQName));
-
-		// element is already imported via namespace
-		if (descriptionFullQN instanceof PlainAccessOfNamespacedImportDescription) {
-			return Collections.emptyList();
-		}
-
-		// element is already imported via an alias
-		if (descriptionFullQN instanceof PlainAccessOfAliasedImportDescription) {
-			return Collections.emptyList();
-		}
-
-		if (descriptionFullQN != null) {
-			// accessing default export via already imported namespace
-			if (descriptionFullQN.getEObjectOrProxy() instanceof ModuleNamespaceVirtualType) {
-				return Collections.emptyList();
-			}
-
-			// the simple name is already reachable, i.e. already in use - another import is present
-			// try to use an alias
-			alias = "Alias" + UtilN4.toUpperCaseFirst(shortQName);
-		}
-
-		ImportChanges importChanges = importRewriter.create("\n", resource);
-		importChanges.addImport(qualifiedName, alias);
-		Collection<ReplaceRegion> regions = importChanges.toReplaceRegions();
-		return regions;
-	}
-
-	/** In case of main module, adjust the qualified name, e.g. index.Element -> react.Element */
-	private QualifiedName getCandidateName(IEObjectDescription candidate) {
-		QualifiedName qfn = candidate.getQualifiedName();
-		int qfnSegmentCount = qfn.getSegmentCount();
-		String tmodule = (qfnSegmentCount >= 2) ? qfn.getSegment(qfnSegmentCount - 2) : null;
-
-		QualifiedName candidateName;
-		IN4JSProject project = n4jsCore.findProject(candidate.getEObjectURI()).orNull();
-		if (project != null && tmodule != null && tmodule.equals(project.getMainModule())) {
-			N4JSProjectName projectName = project.getProjectName();
-			N4JSProjectName definesPackage = project.getDefinesPackageName();
-			if (definesPackage != null) {
-				projectName = definesPackage;
-			}
-			String lastSegmentOfQFN = candidate.getQualifiedName().getLastSegment().toString();
-			candidateName = QualifiedName.create(projectName.getRawName(), lastSegmentOfQFN);
-		} else {
-			candidateName = candidate.getQualifiedName();
-		}
-		return candidateName;
-	}
-
-	/**
-	 * Convert the the given qualifiedName to a valid syntax in the n4js file.
-	 */
-	private String applyValueConverter(QualifiedName qualifiedName) {
-		String result = qualifiedNameConverter.toString(qualifiedName);
-		result = valueConverter.toString(result);
-		return result;
-	}
-
-	/**
-	 * Converts the concrete syntax to a qualified name.
-	 */
-	private QualifiedName applyValueConverter(String concreteSyntax) {
-		final String semanticReplacementString = valueConverter.toValue(concreteSyntax, null);
-		final QualifiedName qualifiedName = qualifiedNameConverter.toQualifiedName(semanticReplacementString);
-		return qualifiedName;
-	}
-
-	/**
-	 * Return the to-be-inserted string if an existing import is present.
-	 */
-	public String getActualReplacementString(String syntacticReplacementString, IScope scope, Resource resource,
-			Predicate<IEObjectDescription> filter) {
-
-		if (scope != null) {
-			final QualifiedName qualifiedName = applyValueConverter(syntacticReplacementString);
-			if (qualifiedName.getSegmentCount() == 1) {
-				return syntacticReplacementString;
-			}
-			final IEObjectDescription element = scope.getSingleElement(qualifiedName);
-			if (element != null) {
-				EObject resolved = EcoreUtil.resolve(element.getEObjectOrProxy(), resource);
-				if (!resolved.eIsProxy()) {
-					IEObjectDescription description = findApplicableDescription(resolved, qualifiedName, true, scope,
-							filter);
-					if (description != null) {
-						String multisegmentProposal = applyValueConverter(description.getName());
-						return multisegmentProposal;
+			if (elements.size() > 1) {
+				for (IEObjectDescription element : elements) {
+					if (isEqualCandidateName(element, qualifiedName)) {
+						return element;
 					}
 				}
 			}
+			if (!elements.isEmpty()) {
+				return elements.get(0);
+			}
+
+			return null;
 		}
-		return syntacticReplacementString;
-	}
 
-	/**
-	 * Search for a description in the scope that points to the given element. A valid description is considered to
-	 * fulfill the {@code filter} and the last segment of the given qualifiedName has to match
-	 * {@code simpleNameMatch == true} or has to be different from the description's last name segment. If nothing can
-	 * be found, {@code null} is returned.
-	 */
-	private IEObjectDescription findApplicableDescription(EObject objectOrProxy, QualifiedName qualifiedName,
-			boolean simpleNameMatch, IScope scope, Predicate<IEObjectDescription> filter) {
+		private IEObjectDescription specialcaseNamespaceShadowsOwnElement(IScope scope,
+				IEObjectDescription candidateViaScope) {
 
-		Iterable<IEObjectDescription> lookupElements = scope.getElements(objectOrProxy);
-		for (IEObjectDescription lookupElement : lookupElements) {
-			if (filter.apply(lookupElement)) {
-				if (simpleNameMatch == qualifiedName.getLastSegment()
-						.equals(lookupElement.getName().getLastSegment())) {
-					return lookupElement;
+			if (candidateViaScope == null) {
+				return candidateViaScope;
+			}
+
+			if (candidate.getEObjectOrProxy() instanceof ModuleNamespaceVirtualType) {
+				return candidateViaScope;
+			}
+
+			EObject eObject = candidateViaScope.getEObjectOrProxy();
+			if (!(candidateViaScope.getEObjectOrProxy() instanceof ModuleNamespaceVirtualType)) {
+				return candidateViaScope;
+			}
+
+			ModuleNamespaceVirtualType mnvt = (ModuleNamespaceVirtualType) eObject;
+			TModule module = mnvt.getModule();
+			if (module == null) {
+				return candidateViaScope;
+			}
+
+			String moduleQN = module.getQualifiedName();
+			String candidateNamespaceName = candidateViaScope.getName().toString();
+			if (!candidateNamespaceName.equals(shortName)) {
+				return candidateViaScope;
+			}
+
+			QualifiedName qualifiedNameViaModule = QualifiedName.create(moduleQN).append(shortName);
+			IEObjectDescription shadowedCandidateViaScope = scope.getSingleElement(qualifiedNameViaModule);
+			if (shadowedCandidateViaScope == null) {
+				return candidateViaScope;
+			}
+
+			QualifiedName qualifiedNameViaNamespace = QualifiedName.create(candidateNamespaceName).append(shortName);
+			if (!qualifiedName.equals(qualifiedNameViaModule)) {
+				return candidateViaScope;
+			}
+
+			// handle special case:
+			return new PlainAccessOfNamespacedImportDescription(shadowedCandidateViaScope, qualifiedNameViaNamespace);
+		}
+
+		/** @return the complete qualified name using {@link IQualifiedNameProvider} */
+		private QualifiedName getCompleteQualifiedName(IEObjectDescription objDescr) {
+			if (objDescr == null) {
+				return null;
+			}
+			EObject eObjectOrProxy = objDescr.getEObjectOrProxy();
+			if (eObjectOrProxy == null) {
+				return null;
+			}
+			QualifiedName qnOfEObject = qualifiedNameProvider.getFullyQualifiedName(eObjectOrProxy);
+			return qnOfEObject;
+		}
+
+		/** @return true iff the {@link QualifiedName} of the given objDescr equals the given qName */
+		private boolean isEqualCandidateName(IEObjectDescription objDescr, QualifiedName qName) {
+			QualifiedName qnOfEObject = getCompleteQualifiedName(objDescr);
+			if (qnOfEObject == null) {
+				return false;
+			}
+			return qnOfEObject.equals(qName);
+		}
+
+		/**
+		 * @return true iff {@link #candidate} and {@link #candidateViaScopeShortName} are different but accessible via
+		 *         the same short name
+		 */
+		private boolean isScopedCandidateCollisioning() {
+			if (isScopedCandidateEqual) {
+				return false;
+			}
+			if (candidateViaScopeShortName instanceof PlainAccessOfAliasedImportDescription) {
+				String candidateAlias = ((PlainAccessOfAliasedImportDescription) candidateViaScopeShortName).getAlias();
+				if (!shortName.equals(candidateAlias)) {
+					return false;
 				}
 			}
+			if (candidateViaScopeShortName instanceof PlainAccessOfNamespacedImportDescription) {
+				QualifiedName candidateNamespaceName = ((PlainAccessOfNamespacedImportDescription) candidateViaScopeShortName)
+						.getNamespacedName();
+				if (!shortName.equals(candidateNamespaceName.toString())) {
+					return false;
+				}
+			}
+			return true;
 		}
-		return null;
+
+		private CandidateAccessType getAccessType() {
+			if (isScopedCandidateEqual) {
+				if (candidateViaScopeShortName instanceof PlainAccessOfAliasedImportDescription) {
+					return CandidateAccessType.alias;
+				}
+				if (candidateViaScopeShortName instanceof PlainAccessOfNamespacedImportDescription) {
+					return CandidateAccessType.namespace;
+				}
+			}
+			if (candidate instanceof AliasedEObjectDescription) {
+				return CandidateAccessType.alias;
+			}
+			return CandidateAccessType.direct;
+		}
+
+		private String getAliasName() {
+			if (accessType == CandidateAccessType.alias) {
+				if (candidate instanceof AliasedEObjectDescription) {
+					return candidate.getName().toString();
+				}
+				return ((PlainAccessOfAliasedImportDescription) candidateViaScopeShortName).getAlias();
+			}
+			return null;
+		}
+
+		private QualifiedName getNamespaceName() {
+			if (accessType == CandidateAccessType.namespace) {
+				return ((PlainAccessOfNamespacedImportDescription) candidateViaScopeShortName).getNamespacedName();
+			}
+			return null;
+		}
+
+		private NameAndAlias getImportChanges(CAECandidate caec) {
+			if (caec.accessType != CandidateAccessType.direct) {
+				return null;
+			}
+
+			QualifiedName importName = getImportName();
+
+			if (importName == null) {
+				return null;
+			}
+
+			// we could create an import statement if there is no conflict
+			if (importName.getSegmentCount() == 1) {
+				// type name is a simple name - no need to hassle with imports
+				return null;
+			}
+
+			// Globally available elements should not generate imports
+			if (importName.getSegmentCount() == 2
+					&& N4TSQualifiedNameProvider.GLOBAL_NAMESPACE_SEGMENT.equals(importName.getFirstSegment())) {
+				// type name is a simple name from global Namespace - no need to hassle with imports
+				return null;
+			}
+
+			String alias = null;
+
+			if (caec.candidateViaScopeShortName != null && caec.isScopedCandidateCollisioning) {
+				// accessing default export via already imported namespace
+				if (caec.candidateViaScopeShortName.getEObjectOrProxy() instanceof ModuleNamespaceVirtualType) {
+					// return null;
+				}
+
+				// the simple name is already reachable, i.e. already in use - another import is present
+				// try to use an alias
+				alias = "Alias_" + UtilN4.toUpperCaseFirst(caec.qualifiedName.toString().replace(".", "_"));
+			}
+
+			return new NameAndAlias(importName, alias);
+		}
+
+		/** In case of main module, adjust the qualified name, e.g. index.Element -> react.Element */
+		private QualifiedName getImportName() {
+			QualifiedName qfn = candidate.getQualifiedName();
+			int qfnSegmentCount = qfn.getSegmentCount();
+			String tmodule = (qfnSegmentCount >= 2) ? qfn.getSegment(qfnSegmentCount - 2) : null;
+
+			QualifiedName candidateName;
+			IN4JSProject project = n4jsCore.findProject(candidate.getEObjectURI()).orNull();
+			if (project != null && tmodule != null && tmodule.equals(project.getMainModule())) {
+				N4JSProjectName projectName = project.getProjectName();
+				N4JSProjectName definesPackage = project.getDefinesPackageName();
+				if (definesPackage != null) {
+					projectName = definesPackage;
+				}
+				String lastSegmentOfQFN = candidate.getQualifiedName().getLastSegment().toString();
+				candidateName = QualifiedName.create(projectName.getRawName(), lastSegmentOfQFN);
+			} else {
+				candidateName = candidate.getQualifiedName();
+			}
+			return candidateName;
+		}
+
+		public boolean hasNewImport() {
+			return addedImportNameAndAlias != null;
+		}
+
+		public boolean newImportHasAlias() {
+			return hasNewImport() && !Strings.isNullOrEmpty(addedImportNameAndAlias.alias);
+		}
+
+		public boolean isAlias() {
+			return accessType == CandidateAccessType.alias;
+		}
+
+		public boolean isNamespace() {
+			return accessType == CandidateAccessType.namespace;
+		}
 	}
 }

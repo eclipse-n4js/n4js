@@ -19,13 +19,6 @@ import org.eclipse.n4js.utils.RecursionGuard;
 public enum GeneratorOption {
 
 	/**
-	 * Transform async functions to an ES2015 equivalent (still requires generator functions and 'yield').
-	 * <p>
-	 * See {@code AsyncAwaitTransformation}.
-	 */
-	AsyncAwait,
-
-	/**
 	 * Transforms ES2015 template literals to a corresponding ES5 equivalent.
 	 * <p>
 	 * See {@code TemplateStringTransformation}.
@@ -58,11 +51,10 @@ public enum GeneratorOption {
 	 * supported by the N4JS compiler (some language features that cannot currently be transpiled to ES5 include
 	 * <code>for..of</code> loops, let/const, yield).
 	 * <p>
-	 * Includes {@link #AsyncAwait}, {@link #TemplateStringLiterals}, {@link #ArrowFunctions}, {@link #Destructuring},
+	 * Includes {@link #TemplateStringLiterals}, {@link #ArrowFunctions}, {@link #Destructuring},
 	 * {@link #RestParameters}.
 	 */
-	ES5plus(AsyncAwait,
-			TemplateStringLiterals,
+	ES5plus(TemplateStringLiterals,
 			ArrowFunctions,
 			Destructuring,
 			RestParameters),

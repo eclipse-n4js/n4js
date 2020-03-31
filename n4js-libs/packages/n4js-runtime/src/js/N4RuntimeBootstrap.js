@@ -14,122 +14,65 @@ import _globalThis from "./_globalThis";
 
 const SYMBOL_IDENTIFIER_PREFIX = "#";
 
-var symHasInstance = Symbol.hasInstance,
-    ArraySlice = Array.prototype.slice,
+var ArraySlice = Array.prototype.slice,
     noop = function() {};
 
-function defineN4TypeGetter(instance, factoryFn) {
-    var n4type;
-    Object.defineProperty(instance, "n4type", {
-        configurable: true, // for hot reloading/patching
-        get: function() {
-            if (!n4type) {
-                n4type = factoryFn();
-            }
-            return n4type;
-        }
-    });
-}
 
-/** Call context is prototype object. */
-function mixinDefaultMethod(method) {
-    var name = method && method.name;
-    if (name && !(name in this) && !method.isStatic && method.jsFunction) {
-        this[name] = method.jsFunction.value;
+/**
+ * Returns reflection information.
+ * If it is not existing yet, it will be created and attached to the prototype using a symbol.
+ */
+function $getReflectionForClass(staticProto, reflectionString) {
+    const $sym = Symbol.for('org.eclipse.n4js/reflectionInfo');
+    if (!staticProto.hasOwnProperty($sym)) {
+	    staticProto[$sym] = makeReflectionsForClass(staticProto, reflectionString);
     }
-}
-/** Call context is prototype object. */
-function mixinDefaultMethods(iface) {
-    var n4type = iface && iface.n4type;
-    if (n4type) {
-        n4type.ownedMembers.forEach(mixinDefaultMethod, this);
-        n4type.consumedMembers.forEach(mixinDefaultMethod, this);
-    }
+    return staticProto[$sym];
 }
 
 /**
- * Setup a constructor function to work as a class.
- *
- * @param ctor - The constructor function
- * @param superCtor - The constructor function of the super class
- * @param implementedInterfaces - Array of directly implemented interfaces, excluding built-in types and
- *                                interfaces defined in definition files without annotation @N4JS.
- * @param instanceMethods - An object holding the methods for the class instance and mixed in methods
- * @param staticMethods - An object holding the descriptors for the class static methods
- * @param reflectionString - JSON string that defines reflection information that is missing in prototype and constructor.
+ * Returns reflection information.
+ * If it is not existing yet, it will be created and attached to the prototype using a symbol.
  */
-function $makeClass(ctor, superCtor, implementedInterfaces, instanceMethods, staticMethods, reflectionString) {
-    if (typeof superCtor === "function") {
-        Object.setPrototypeOf(ctor, superCtor);
+function $getReflectionForInterface(staticProto, reflectionString) {
+    const $sym = Symbol.for('org.eclipse.n4js/reflectionInfo');
+    if (!staticProto.hasOwnProperty($sym)) {
+	    staticProto[$sym] = makeReflectionsForInterface(staticProto, reflectionString);
     }
-    Object.defineProperties(ctor, staticMethods);
-
-    var proto = Object.create(superCtor.prototype, instanceMethods);
-    implementedInterfaces.forEach(mixinDefaultMethods, proto);
-    Object.defineProperty(proto, "constructor", {
-        value: ctor
-    });
-
-    if (reflectionString) {
-        defineN4TypeGetter(ctor, makeReflectionsForClass.bind(null, proto, ctor, reflectionString));
-    }
-
-    ctor.prototype = proto;
+    return staticProto[$sym];
 }
 
-
-/** Used for ES6 class version of N4JS */
-//function $getReflectionForClass(n4elem, moduleName, n4ElemName) {
-//    const $sym = Symbol.for('org.eclipse.n4js/reflectionInfo');
-//    if (n4elem.hasOwnProperty($sym)) {
-//        return n4elem[$sym];
-//    }
-//    // FIXME: path of require is wrong
-//    const reflectValues = require(moduleName + '.reflect')?.[n4ElemName];
-//    if (!reflectValues) {
-//        return null;
-//    }
-//    const instanceProto = n4elem.prototype;
-//    return createN4Class(instanceProto, staticProto, ...reflectValues);
-//}
+/**
+ * Returns reflection information.
+ * If it is not existing yet, it will be created and attached to the prototype using a symbol.
+ */
+function $getReflectionForEnum(staticProto, reflectionString) {
+    const $sym = Symbol.for('org.eclipse.n4js/reflectionInfo');
+    if (!staticProto.hasOwnProperty($sym)) {
+	    staticProto[$sym] = makeReflectionsForEnum(staticProto, reflectionString);
+    }
+    return staticProto[$sym];
+}
 
 
 /**
- * Setup a interface. Methods and field initializers are already merged into the interface object.
+ * Define one or more static or instance data fields of a class. This is only intended for the
+ * rare special cases in which explicit property definitions are required for a data field, due
+ * to accessor(s) being overridden by the data field.
  *
- * @param tinterface - The interface object.
- * @param extendedInterfacesFn - Optional function returning an array of interfaces extended by 'tinterface'.
- *                               May be 'undefined' in case no interfaces are extended.
- * @param n4typeFn - Optional factory function to create the meta type (currently mandatory though, will be optional with GH-574).
+ * @param target - The target object. Either the constructor of a class (for static fields)
+ *                 or an instance of a class (for instance fields).
+ * @param names - One or more field names.
  */
-function $makeInterface(tinterface, extendedInterfacesFn, reflectionString) {
-    tinterface.$extends = extendedInterfacesFn || (()=>[]);
-
-    if (reflectionString) {
-        defineN4TypeGetter(tinterface, makeReflectionsForInterface.bind(null, tinterface.$methods, tinterface, reflectionString));
+function $defineFields(target, ...names) {
+    for(const name of names) {
+        Object.defineProperty(target, name, {
+            writable: true,
+            enumerable: true,
+            configurable: true
+        });
     }
-
-    Object.defineProperty(tinterface, symHasInstance, {
-        /**
-         * Check whether a value is instance of a class implementing an interface.
-         *
-         * @param instance - The instance which type is to be checked whether it implements the interface
-         * @return boolean
-         */
-        value: function(instance) {
-            if (!instance || !instance.constructor || !instance.constructor.n4type || !instance.constructor.n4type.allImplementedInterfaces) {
-                return false;
-            }
-            const implementedInterface = tinterface.n4type.fqn;
-            return instance.constructor.n4type.allImplementedInterfaces.indexOf(implementedInterface) !== -1;
-        }
-    });
 }
-
-
-
-
-
 
 /**
  * Initialize the fields declared by the given interfaces in the target object 'target'.
@@ -145,7 +88,7 @@ function $makeInterface(tinterface, extendedInterfacesFn, reflectionString) {
  */
 function $initFieldsFromInterfaces(target, interfaces, spec, mixinExclusion) {
     for(const ifc of interfaces) {
-        const defs = ifc.$fieldDefaults || {};
+        const defs = ifc.$fieldInits || {};
         for(const fieldName of Object.getOwnPropertyNames(defs)) {
             if(target.hasOwnProperty(fieldName) || mixinExclusion.hasOwnProperty(fieldName)) {
                 continue;
@@ -162,51 +105,11 @@ function $initFieldsFromInterfaces(target, interfaces, spec, mixinExclusion) {
             }
             target[fieldName] = value;
         }
-        $initFieldsFromInterfaces(target, ifc.$extends(), spec, mixinExclusion);
+        const extendsFn = ifc.$extends;
+        if(extendsFn) {
+            $initFieldsFromInterfaces(target, extendsFn(), spec, mixinExclusion);
+        }
     }
-}
-
-/**
- * Create an enumeration type with the given FQN and members.
- *
- * @param enumeration - the enumeration constructor function
- * @param members - An array of <String, String> tuples containing
- *                  information about the enum members
- * @param n4typeFn - Optional factory function to create the meta type (currently mandatory though, will be optional with GH-574).
- * @return The constructed enumeration type
- */
-function $makeEnum(enumeration, members, reflectionString) {
-    var length, index, member, name, value, values, literal;
-
-    Object.setPrototypeOf(enumeration, N4Enum);
-    enumeration.prototype = Object.create(N4Enum.prototype, {});
-
-    if (reflectionString) {
-        defineN4TypeGetter(enumeration, makeReflectionsForEnum.bind(null, reflectionString));
-    }
-
-    Object.defineProperty(enumeration.prototype, "constructor", {
-        value: enumeration
-    });
-
-    length = members.length;
-    values = new Array(length);
-    for (index = 0; index < length; ++index) {
-        member = members[index];
-        name = member[0];
-        value = member[1];
-
-        literal = new enumeration(name, value);
-        Object.defineProperty(enumeration, literal.name, {
-            enumerable: true,
-            value: literal
-        });
-        values[index] = literal;
-    }
-
-    Object.defineProperty(enumeration, 'literals', {
-        value: values
-    });
 }
 
 /**
@@ -234,31 +137,6 @@ function $sliceToArrayForDestruct(arr, max) {
     } else {
         throw new TypeError("Invalid attempt to destructure non-iterable instance");
     }
-}
-
-/**
- * Executes the given generator step by step chaining up promises.
- *
- * @param gen - generator object to be sequentially executed.
- */
-function $spawn(gen) {
-    function exec(step, v) {
-        var res;
-        try {
-            res = this[step](v);
-        } catch (exc) {
-            return Promise.reject(exc);
-        }
-        if (res.done) {
-            return Promise.resolve(res.value);
-        } else {
-            return Promise.resolve(res.value).then(next, throwr);
-        }
-    }
-
-    var next = exec.bind(gen, "next"),
-        throwr = exec.bind(gen, "throw");
-    return next();
 }
 
 function $n4promisifyFunction(cbBasedFn, args, multiSuccessValues, noErrorValue) {
@@ -296,7 +174,8 @@ function $n4promisifyMethod(receiver, methodName, args, multiSuccessValues, noEr
 
 
 
-function makeReflectionsForClass(instanceProto, staticProto, reflectionString) {
+function makeReflectionsForClass(staticProto, reflectionString) {
+    const instanceProto = staticProto.prototype;
     const reflectionValues = JSON.parse(reflectionString);
     const superclass = staticProto.__proto__.n4type;
     const n4Class = new N4Class();
@@ -305,7 +184,8 @@ function makeReflectionsForClass(instanceProto, staticProto, reflectionString) {
     return n4Class;
 }
 
-function makeReflectionsForInterface(instanceProto, staticProto, reflectionString) {
+function makeReflectionsForInterface(staticProto, reflectionString) {
+    const instanceProto = staticProto.$defaultMembers;
     const reflectionValues = JSON.parse(reflectionString);
     const n4Interface = new N4Interface();
     setN4TypeProperties(n4Interface, ...reflectionValues);
@@ -316,7 +196,7 @@ function makeReflectionsForInterface(instanceProto, staticProto, reflectionStrin
     return n4Interface;
 }
 
-function makeReflectionsForEnum(reflectionString) {
+function makeReflectionsForEnum(staticProto, reflectionString) {
     const reflectionValues = JSON.parse(reflectionString);
     const n4enumType = new N4EnumType();
     setN4TypeProperties(n4enumType, ...reflectionValues);
@@ -342,7 +222,9 @@ function createMembers(instanceProto, staticProto, memberStrings, memberAnnotati
     const annotations = createMemberAnnotations(memberAnnotations);
     const ownedMembers = [];
     const consumedMembers = [];
-    const detectedMemberStrings = detectMembers(instanceProto, staticProto);
+// TODO GH-1693
+//  const detectedMemberStrings = detectMembers(instanceProto, staticProto);
+const detectedMemberStrings = [];
     const detectedMemberStringsReduced = [];
     for (const memberString of detectedMemberStrings) {
         const memberAlreadyAsConsumedGiven = memberStrings && memberStrings.includes(toConsumedMemberString(memberString));
@@ -388,7 +270,7 @@ function detectMember(object, memberName, isStatic) {
     if (!isStatic && ['constructor'].includes(memberName)) {
         return null;
     }
-    if (isStatic && ['length', 'name', 'prototype', 'n4type', '$methods', '$extends'].includes(memberName)) {
+    if (isStatic && ['length', 'name', 'prototype', 'n4type', '$defaultMembers', '$extends'].includes(memberName)) {
         return null;
     }
     const propDescriptor = Object.getOwnPropertyDescriptor(object, memberName);
@@ -519,12 +401,11 @@ function createMember(instanceProto, staticProto, memberInfo, annotations) {
 
 
 //expose in global scope
-_globalThis.$makeClass = $makeClass;
-_globalThis.$makeInterface = $makeInterface;
+_globalThis.$getReflectionForClass = $getReflectionForClass;
+_globalThis.$getReflectionForInterface = $getReflectionForInterface;
+_globalThis.$getReflectionForEnum = $getReflectionForEnum;
+_globalThis.$defineFields = $defineFields;
 _globalThis.$initFieldsFromInterfaces = $initFieldsFromInterfaces;
-_globalThis.$makeEnum = $makeEnum;
-
 _globalThis.$sliceToArrayForDestruct = $sliceToArrayForDestruct;
-_globalThis.$spawn = $spawn;
 _globalThis.$n4promisifyFunction = $n4promisifyFunction;
 _globalThis.$n4promisifyMethod = $n4promisifyMethod;

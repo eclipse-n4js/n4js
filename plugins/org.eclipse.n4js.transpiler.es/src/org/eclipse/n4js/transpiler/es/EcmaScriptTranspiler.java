@@ -22,7 +22,6 @@ import org.eclipse.n4js.transpiler.TranspilerState;
 import org.eclipse.n4js.transpiler.es.transform.ApiImplStubGenerationTransformation;
 import org.eclipse.n4js.transpiler.es.transform.ArrowFunction_Part1_Transformation;
 import org.eclipse.n4js.transpiler.es.transform.ArrowFunction_Part2_Transformation;
-import org.eclipse.n4js.transpiler.es.transform.AsyncAwaitTransformation;
 import org.eclipse.n4js.transpiler.es.transform.BlockTransformation;
 import org.eclipse.n4js.transpiler.es.transform.ClassDeclarationTransformation;
 import org.eclipse.n4js.transpiler.es.transform.DependencyInjectionTransformation;
@@ -37,7 +36,6 @@ import org.eclipse.n4js.transpiler.es.transform.ModuleWrappingTransformation;
 import org.eclipse.n4js.transpiler.es.transform.RestParameterTransformation;
 import org.eclipse.n4js.transpiler.es.transform.SanitizeImportsTransformation;
 import org.eclipse.n4js.transpiler.es.transform.StaticPolyfillTransformation;
-import org.eclipse.n4js.transpiler.es.transform.SuperLiteralTransformation;
 import org.eclipse.n4js.transpiler.es.transform.TemplateStringTransformation;
 import org.eclipse.n4js.transpiler.es.transform.TrimTransformation;
 import org.eclipse.n4js.utils.ResourceType;
@@ -64,8 +62,6 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 	@Inject
 	private Provider<StaticPolyfillTransformation> staticPolyfillTransformationProvider;
 	@Inject
-	private Provider<SuperLiteralTransformation> superLiteralTransformationProvider;
-	@Inject
 	private Provider<TemplateStringTransformation> templateStringTransformationProvider;
 	@Inject
 	private Provider<ExpressionTransformation> expressionTransformationProvider;
@@ -87,8 +83,6 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 	private Provider<ModuleWrappingTransformation> moduleWrappingTransformationProvider;
 	@Inject
 	private Provider<BlockTransformation> blockTransformationProvider;
-	@Inject
-	private Provider<AsyncAwaitTransformation> asyncAwaitTransformationProvider;
 	@Inject
 	private Provider<RestParameterTransformation> restParameterTransformationProvider;
 	@Inject
@@ -120,17 +114,15 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 				memberPatchingTransformationProvider.get(),
 				apiImplStubGenerationTransformationProvider.get(),
 				destructuringTransformation.get(),
-				superLiteralTransformationProvider.get(),
 				templateStringTransformationProvider.get(),
 				expressionTransformationProvider.get(),
 				enumAccessTransformationProvider.get(),
 				dependencyInjectionTransformation.get(),
+				enumDeclarationTransformationProvider.get(),
 				classDeclarationTransformationProvider.get(),
 				interfaceDeclarationTransformationProvider.get(),
-				enumDeclarationTransformationProvider.get(),
 				arrowFunction_Part1_TransformationProvider.get(),
 				blockTransformationProvider.get(),
-				asyncAwaitTransformationProvider.get(),
 				restParameterTransformationProvider.get(),
 				arrowFunction_Part2_TransformationProvider.get(),
 				trimTransformation.get(),

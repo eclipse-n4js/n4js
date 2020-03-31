@@ -144,7 +144,6 @@ class EnumAccessTransformation extends Transformation {
 	def private VariableDeclaration createLiteralsConstant(TEnum tEnum) {
 		val name = findUniqueNameForLiteralsConstant(tEnum);
 		val vdecl = _VariableDeclaration(name, _ArrLit(tEnum.literals.map[enumLiteralToStringLiteral]));
-		state.info.markAsToHoist(vdecl);
 		val vstmnt = _VariableStatement(vdecl);
 		val lastImport = state.im.scriptElements.filter(ImportDeclaration).last;
 		if (lastImport !== null) {
