@@ -37,12 +37,7 @@ import org.eclipse.n4js.transpiler.im.DelegatingMember;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry;
 import org.eclipse.n4js.ts.types.TAnnotableElement;
 import org.eclipse.n4js.ts.types.TAnnotation;
-import org.eclipse.n4js.ts.types.TClass;
-import org.eclipse.n4js.ts.types.TInterface;
-import org.eclipse.n4js.ts.types.TN4Classifier;
 import org.eclipse.n4js.ts.types.Type;
-import org.eclipse.n4js.ts.types.TypingStrategy;
-import org.eclipse.n4js.ts.types.util.SuperInterfacesIterable;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.ResourceNameComputer;
 import org.eclipse.xtext.xbase.lib.Pair;
@@ -109,16 +104,12 @@ public class ReflectionBuilder {
 		List<JsonElement> members = createAllMembers(typeDecl, allMembers);
 		List<Pair<String, JsonElement>> memberAnnotations = createMemberAnnotations(allMembers);
 		List<JsonElement> annotations = createRuntimeAnnotations(typeDecl);
-		List<JsonElement> allImplInterfaces = getImplementedInterfaces(type);
 
 		// reverse order to respect semantics of default parameters
 		JsonElement optAnnotations = (annotations == null || annotations.isEmpty())
 				? null
 				: array(annotations);
-		JsonElement optAllImplInterfaces = (optAnnotations == null && allImplInterfaces.isEmpty())
-				? null
-				: array(allImplInterfaces);
-		JsonElement optMemberAnnotations = (optAllImplInterfaces == null && memberAnnotations.isEmpty())
+		JsonElement optMemberAnnotations = (optAnnotations == null && memberAnnotations.isEmpty())
 				? null
 				: object(memberAnnotations);
 		JsonElement optMembers = (optMemberAnnotations == null && members.isEmpty())
@@ -131,25 +122,9 @@ public class ReflectionBuilder {
 				primitive(origin),
 				optMembers,
 				optMemberAnnotations,
-				optAllImplInterfaces,
 				optAnnotations);
 
 		return reflectInfo;
-	}
-
-	private List<JsonElement> getImplementedInterfaces(Type type) {
-		List<JsonElement> allImplInterfaces = new ArrayList<>();
-		if (type instanceof TClass) {
-			SuperInterfacesIterable superInterfaces = SuperInterfacesIterable.of((TClass) type);
-
-			for (TInterface interf : superInterfaces) {
-				if (!isStructurallyTyped(interf)) {
-					String fqnInterf = resourceNameComputer.getFullyQualifiedTypeName(interf);
-					allImplInterfaces.add(primitive(fqnInterf));
-				}
-			}
-		}
-		return allImplInterfaces;
 	}
 
 	private JsonArray array(JsonElement... elements) {
@@ -188,11 +163,6 @@ public class ReflectionBuilder {
 		return new JsonPrimitive(value);
 	}
 
-	private boolean isStructurallyTyped(TN4Classifier n4Classifier) {
-		TypingStrategy ts = n4Classifier.getTypingStrategy();
-		return ts == TypingStrategy.STRUCTURAL || ts == TypingStrategy.STRUCTURAL_FIELDS;
-	}
-
 	private List<JsonElement> createAllMembers(N4TypeDeclaration typeDecl, Iterable<N4MemberDeclaration> allMembers) {
 		if (typeDecl instanceof N4ClassDeclaration) {
 			return createClassMembers(allMembers);
@@ -214,6 +184,7 @@ public class ReflectionBuilder {
 			}
 			// create only consumed member strings, since others are detected from constructor and prototype
 			boolean serialize = false;
+			serialize |= !member.isStatic() && member instanceof N4FieldDeclaration;
 			serialize |= state.info.isConsumedFromInterface(member);
 			serialize |= member.getName().startsWith(N4JSLanguageUtils.SYMBOL_IDENTIFIER_PREFIX);
 			if (serialize) {
