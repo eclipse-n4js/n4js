@@ -18,6 +18,7 @@ import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.lsp4j.CodeActionKind;
+import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextEdit;
@@ -33,7 +34,6 @@ import org.eclipse.n4js.ts.types.TField;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.nodemodel.NodeModelUtilsN4;
 import org.eclipse.n4js.validation.IssueCodes;
-import org.eclipse.xtext.diagnostics.Diagnostic;
 import org.eclipse.xtext.ide.editor.contentassist.ContentAssistEntry;
 import org.eclipse.xtext.ide.server.Document;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
@@ -66,12 +66,17 @@ public class N4JSQuickfixProvider {
 	/**
 	 * Resolves missing import statements by re-using content assist and {@link ImportsAwareReferenceProposalCreator}
 	 */
-	@Fix(value = Diagnostic.LINKING_DIAGNOSTIC, multiFix = false)
+	@Fix(value = org.eclipse.xtext.diagnostics.Diagnostic.LINKING_DIAGNOSTIC, multiFix = false)
 	public void addImportForUnresolvedReference(QuickfixContext context, ICodeActionAcceptor acceptor) {
 		XtextResource res = context.options.getResource();
 		Document doc = context.options.getDocument();
+		Diagnostic diagnostic = context.getDiagnostic();
+		if (diagnostic == null) {
+			return;
+		}
+
 		Set<ContentAssistEntry> caEntries = importUtil.findImportCandidates(res, doc,
-				context.getDiagnostic().getRange(), context.options.getCancelIndicator());
+				diagnostic.getRange(), context.options.getCancelIndicator());
 
 		for (ContentAssistEntry cae : caEntries) {
 			ArrayList<ReplaceRegion> replacements = cae.getTextReplacements();
