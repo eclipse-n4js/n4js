@@ -86,10 +86,12 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 		modulesContentsCpy.add(Pair.of(DEPENDENCIES, N4JS_RUNTIME_NAME));
 
 		Pair<String, List<Pair<String, String>>> pairDefaultPrj = Pair.of(DEFAULT_PROJECT_NAME, modulesContentsCpy);
-		Pair<String, List<Pair<String, String>>> pairN4jsRuntime = Pair.of(NODE_MODULES + N4JS_RUNTIME_NAME, null);
+		Pair<String, String> pairN4jsRuntime = Pair.of(NODE_MODULES + N4JS_RUNTIME_NAME, null);
 		ArrayList<Pair<String, List<Pair<String, String>>>> projects = new ArrayList<>();
 		projects.add(pairDefaultPrj);
-		projects.add(pairN4jsRuntime);
+		// projects.add(pairN4jsRuntime);
+
+		modulesContentsCpy.add(pairN4jsRuntime);
 
 		return testWS(projects, t);
 	}

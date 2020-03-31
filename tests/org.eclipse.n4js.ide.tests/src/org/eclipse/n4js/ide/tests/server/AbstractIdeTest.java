@@ -272,7 +272,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		Map<String, String> modulesContentsCpy = new HashMap<>(modulesContents);
 		LinkedHashMap<String, Map<String, String>> projectsModulesContents = new LinkedHashMap<>();
 		projectsModulesContents.put(projectName, modulesContentsCpy);
-		modulesContentsCpy.put(N4JS_RUNTIME_NAME, null);
+		modulesContentsCpy.put(NODE_MODULES + N4JS_RUNTIME_NAME, null);
 		modulesContentsCpy.put(DEPENDENCIES, N4JS_RUNTIME_NAME);
 
 		return createTestOnDisk(destination, projectsModulesContents);
@@ -328,19 +328,24 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 			} else if (moduleName.startsWith(NODE_MODULES)) {
 				int indexOfSrc = moduleName.indexOf(SRC);
-				if (indexOfSrc == -1) {
-					throw new IllegalArgumentException("Missing #SRC: in module location");
+				if (moduleName.equals(NODE_MODULES + N4JS_RUNTIME_NAME) && indexOfSrc == -1) {
+					project.addNodeModuleProject(N4JS_RUNTIME_FAKE);
+
+				} else {
+					if (indexOfSrc == -1) {
+						throw new IllegalArgumentException("Missing #SRC: in module location");
+					}
+					String nmModuleName = moduleName.substring(indexOfSrc + SRC.length());
+					String nmName = moduleName.substring(NODE_MODULES.length(), indexOfSrc);
+					Project nmProject = project.getNodeModuleProject(nmName);
+					if (nmProject == null) {
+						nmProject = new Project(nmName, VENDOR, VENDOR + "_name", prjType);
+						nmProject.createSourceFolder(SRC_FOLDER);
+						project.addNodeModuleProject(nmProject);
+					}
+					SourceFolder nmSourceFolder = nmProject.getSourceFolders().get(0);
+					createAndAddModule(contents, nmModuleName, nmSourceFolder);
 				}
-				String nmName = moduleName.substring(NODE_MODULES.length(), indexOfSrc);
-				String nmModuleName = moduleName.substring(indexOfSrc + SRC.length());
-				Project nmProject = project.getNodeModuleProject(nmName);
-				if (nmProject == null) {
-					nmProject = new Project(nmName, VENDOR, VENDOR + "_name", prjType);
-					nmProject.createSourceFolder(SRC_FOLDER);
-					project.addNodeModuleProject(nmProject);
-				}
-				SourceFolder nmSourceFolder = nmProject.getSourceFolders().get(0);
-				createAndAddModule(contents, nmModuleName, nmSourceFolder);
 
 			} else {
 				createAndAddModule(contents, moduleName, sourceFolder);
