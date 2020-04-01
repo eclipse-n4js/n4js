@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2020 NumberFour AG.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse public License v1.0
+ * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
@@ -21,48 +21,48 @@ public class HoverJSDocMarkupTest extends AbstractHoverTest {
 	@Test
 	public void testHtmlBR() throws Exception {
 		testAtCursor(
-			"/** JSDoc <br> CC */class C<|>C {};",
-			"[0:26 - 0:28] [[n4js] class CC, [markdown] JSDoc \n\n CC]");
+				"/** JSDoc <br> CC */class C<|>C {};",
+				"[0:26 - 0:28] [[n4js] class CC, [markdown] JSDoc \n\n CC]");
 	}
 
 	/** html br/> */
 	@Test
 	public void testHtmlBR_() throws Exception {
 		testAtCursor(
-			"/** JSDoc <br/> CC */class C<|>C {};",
-			"[0:27 - 0:29] [[n4js] class CC, [markdown] JSDoc \n\n CC]");
+				"/** JSDoc <br/> CC */class C<|>C {};",
+				"[0:27 - 0:29] [[n4js] class CC, [markdown] JSDoc \n\n CC]");
 	}
 
 	/** html p> */
 	@Test
 	public void testHtmlP() throws Exception {
 		testAtCursor(
-			"/** JSDoc <p> CC */class C<|>C {};",
-			"[0:25 - 0:27] [[n4js] class CC, [markdown] JSDoc \n\n CC]");
+				"/** JSDoc <p> CC */class C<|>C {};",
+				"[0:25 - 0:27] [[n4js] class CC, [markdown] JSDoc \n\n CC]");
 	}
 
 	/** html b> */
 	@Test
 	public void testHtmlB() throws Exception {
 		testAtCursor(
-			"/** JSDoc <b>CC</b> */class C<|>C {};",
-			"[0:28 - 0:30] [[n4js] class CC, [markdown] JSDoc **CC**]");
+				"/** JSDoc <b>CC</b> */class C<|>C {};",
+				"[0:28 - 0:30] [[n4js] class CC, [markdown] JSDoc **CC**]");
 	}
 
 	/** html it> */
 	@Test
 	public void testHtmlI() throws Exception {
 		testAtCursor(
-			"/** JSDoc <i>CC</i> */class C<|>C {};",
-			"[0:28 - 0:30] [[n4js] class CC, [markdown] JSDoc __CC__]");
+				"/** JSDoc <i>CC</i> */class C<|>C {};",
+				"[0:28 - 0:30] [[n4js] class CC, [markdown] JSDoc __CC__]");
 	}
 
 	/** html code> */
 	@Test
 	public void testHtmlCODE() throws Exception {
 		testAtCursor(
-			"/** JSDoc <code>CC</code> */class C<|>C {};",
-			"[0:34 - 0:36] [[n4js] class CC, [markdown] JSDoc ``++CC++``]");
+				"/** JSDoc <code>CC</code> */class C<|>C {};",
+				"[0:34 - 0:36] [[n4js] class CC, [markdown] JSDoc ``++CC++``]");
 	}
 
 }
