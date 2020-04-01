@@ -13,7 +13,7 @@ package org.eclipse.n4js.ide.tests.server;
 import static org.eclipse.n4js.ide.tests.server.TestWorkspaceCreator.DEFAULT_MODULE_NAME;
 import static org.eclipse.n4js.ide.tests.server.TestWorkspaceCreator.DEFAULT_PROJECT_NAME;
 import static org.eclipse.n4js.ide.tests.server.TestWorkspaceCreator.DEPENDENCIES;
-import static org.eclipse.n4js.ide.tests.server.TestWorkspaceCreator.N4JS_RUNTIME_NAME;
+import static org.eclipse.n4js.ide.tests.server.TestWorkspaceCreator.N4JS_RUNTIME;
 import static org.eclipse.n4js.ide.tests.server.TestWorkspaceCreator.NODE_MODULES;
 
 import java.util.ArrayList;
@@ -80,6 +80,8 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 	/**
 	 * NPM setup of a single project. A n4js-runtime project will be added automatically into the local node_modules
 	 * folder.
+	 * <p>
+	 * see {@link Documentation#DEFAULT_PROJECT}
 	 */
 	protected List<Pair<String, String>> getDefaultTestModules() {
 		return Lists.newArrayList();
@@ -92,6 +94,8 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 	 * <li>all dependencies from n4js projects to n4js-runtime project
 	 * <li>selected project where the test specific module will be put into
 	 * </ul>
+	 * <p>
+	 * see {@link Documentation#DEFAULT_WORKSPACE}
 	 */
 	protected List<Pair<String, List<Pair<String, String>>>> getDefaultTestYarnWorkspace() {
 		return Lists.newArrayList();
@@ -102,8 +106,8 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 	 * returns a non-empty result, {@link #testWS(List, Object)} will be triggered. Otherwise
 	 * {@link #test(List, Object)} will be used and uses the default setup of {@link #getDefaultTestModules()}.
 	 * <p>
-	 * For further details mind the documentation of {@link #getDefaultTestYarnWorkspace()} or
-	 * {@link #getDefaultTestModules()}respectively.
+	 * For further details mind the {@link Documentation documentation} of {@link #getDefaultTestYarnWorkspace()} or
+	 * {@link #getDefaultTestModules()} respectively.
 	 */
 	protected void testInDefaultWorkspace(String content, T t) {
 		String nameWithSelector = DEFAULT_MODULE_NAME + MODULE_SELECTOR;
@@ -186,7 +190,7 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 
 	/**
 	 * Same as {@link #testWS(List, Object)}, but creates a default project with name {@link #DEFAULT_PROJECT_NAME}.
-	 * Also creates project {@link #N4JS_RUNTIME_NAME} and a dependency from default project to n4js-runtime.
+	 * Also creates project {@link #N4JS_RUNTIME} and a dependency from default project to n4js-runtime.
 	 * <p>
 	 * One module has to be selected using {@link #MODULE_SELECTOR}
 	 *
@@ -195,8 +199,8 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 	 */
 	protected Project test(List<Pair<String, String>> modulesContents, T t) {
 		ArrayList<Pair<String, String>> modulesContentsCpy = new ArrayList<>(modulesContents);
-		Pair<String, String> pairN4jsRuntime = Pair.of(NODE_MODULES + N4JS_RUNTIME_NAME, null);
-		modulesContentsCpy.add(Pair.of(DEPENDENCIES, N4JS_RUNTIME_NAME));
+		Pair<String, String> pairN4jsRuntime = Pair.of(NODE_MODULES + N4JS_RUNTIME, null);
+		modulesContentsCpy.add(Pair.of(DEPENDENCIES, N4JS_RUNTIME));
 		modulesContentsCpy.add(pairN4jsRuntime);
 
 		ArrayList<Pair<String, List<Pair<String, String>>>> projects = new ArrayList<>();

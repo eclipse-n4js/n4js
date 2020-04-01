@@ -26,7 +26,7 @@ public class CompletionWithImportsWorkspaceTest extends AbstractCompletionTest {
 		return #[
 			"P1*" -> #[
 				DEPENDENCIES -> '''
-					«N4JS_RUNTIME_NAME»,
+					«N4JS_RUNTIME»,
 					P2,
 					SomeNPM,
 					@n4jsd/SomeNPM
@@ -36,7 +36,7 @@ public class CompletionWithImportsWorkspaceTest extends AbstractCompletionTest {
 					export public class XY {}
 				'''],
 				
-			NODE_MODULES + N4JS_RUNTIME_NAME -> null,
+			NODE_MODULES + N4JS_RUNTIME -> null,
 			NODE_MODULES + "SomeNPM" -> #[
 				"index"  -> '''//some npm js code'''],
 			NODE_MODULES + "@n4jsd/SomeNPM" -> #[

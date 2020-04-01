@@ -39,6 +39,8 @@ import com.google.common.collect.Streams;
 
 /**
  * Utility to create npm/yarn workspaces for test purposes
+ * <p>
+ * Note the {@link Documentation}.
  */
 public class TestWorkspaceCreator {
 
@@ -54,18 +56,30 @@ public class TestWorkspaceCreator {
 	static final public String DEFAULT_PROJECT_NAME = "test-project";
 	/** Default name of the created test module */
 	static final public String DEFAULT_MODULE_NAME = "MyModule";
-	/** Reserved string to identify comma separated list of dependencies to other projects */
+	/**
+	 * Reserved string to identify comma separated list of dependencies to other projects.<br>
+	 * see {@link Documentation#DEPENDENCIES}
+	 */
 	static final public String DEPENDENCIES = "#DEPENDENCY";
-	/** Reserved string to identify the directory 'node_modules' */
+	/**
+	 * Reserved string to identify the directory 'node_modules'<br>
+	 * see {@link Documentation#PROJECT_NODE_MODULES} and {@link Documentation#WORKSPACE_NODE_MODULES}
+	 */
 	static final public String NODE_MODULES = "#NODE_MODULES:";
-	/** Reserved string to identify the directory 'node_modules' */
+	/**
+	 * Reserved string to identify the directory 'node_modules'<br>
+	 * see {@link Documentation#PACKAGE_JSON}
+	 */
 	static final public String PACKAGE_JSON = "package.json";
-	/** Reserved string to identify the src folder of a project */
+	/**
+	 * Reserved string to identify the src folder of a project<br>
+	 * see {@link #NODE_MODULES}
+	 */
 	static final public String SRC = "#SRC:";
 	/** Name of n4js library 'n4js-runtime' */
-	static final public String N4JS_RUNTIME_NAME = "n4js-runtime";
+	static final public String N4JS_RUNTIME = "n4js-runtime";
 	/** Default project object for 'n4js-runtime' */
-	static final public Project N4JS_RUNTIME_FAKE = new Project(N4JS_RUNTIME_NAME, VENDOR, VENDOR + "_name",
+	static final public Project N4JS_RUNTIME_FAKE = new Project(N4JS_RUNTIME, VENDOR, VENDOR + "_name",
 			ProjectType.RUNTIME_ENVIRONMENT);
 
 	/**
@@ -176,8 +190,8 @@ public class TestWorkspaceCreator {
 		Map<String, String> modulesContentsCpy = new HashMap<>(modulesContents);
 		LinkedHashMap<String, Map<String, String>> projectsModulesContents = new LinkedHashMap<>();
 		projectsModulesContents.put(projectName, modulesContentsCpy);
-		modulesContentsCpy.put(NODE_MODULES + N4JS_RUNTIME_NAME, null);
-		modulesContentsCpy.put(DEPENDENCIES, N4JS_RUNTIME_NAME);
+		modulesContentsCpy.put(NODE_MODULES + N4JS_RUNTIME, null);
+		modulesContentsCpy.put(DEPENDENCIES, N4JS_RUNTIME);
 
 		return createTestOnDisk(destination, projectsModulesContents);
 	}
@@ -209,11 +223,11 @@ public class TestWorkspaceCreator {
 	private Project createSimpleProject(String projectName, Map<String, String> modulesContents,
 			Multimap<String, String> dependencies) {
 
-		if (projectName.equals(N4JS_RUNTIME_NAME) && (modulesContents == null || modulesContents.isEmpty())) {
+		if (projectName.equals(N4JS_RUNTIME) && (modulesContents == null || modulesContents.isEmpty())) {
 			return N4JS_RUNTIME_FAKE;
 		}
 
-		ProjectType prjType = projectName.equals(N4JS_RUNTIME_NAME)
+		ProjectType prjType = projectName.equals(N4JS_RUNTIME)
 				? ProjectType.RUNTIME_ENVIRONMENT
 				: projectType;
 
@@ -233,7 +247,7 @@ public class TestWorkspaceCreator {
 
 			} else if (moduleName.startsWith(NODE_MODULES)) {
 				int indexOfSrc = moduleName.indexOf(SRC);
-				if (moduleName.equals(NODE_MODULES + N4JS_RUNTIME_NAME) && indexOfSrc == -1) {
+				if (moduleName.equals(NODE_MODULES + N4JS_RUNTIME) && indexOfSrc == -1) {
 					project.addNodeModuleProject(N4JS_RUNTIME_FAKE);
 
 				} else {
