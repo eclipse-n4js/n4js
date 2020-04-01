@@ -43,7 +43,7 @@ import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.n4js.external.LibraryChange;
 import org.eclipse.n4js.external.NpmCLI;
 import org.eclipse.n4js.ide.editor.contentassist.imports.ContentAssistEntryWithRef;
-import org.eclipse.n4js.ide.editor.contentassist.imports.ImportHelper;
+import org.eclipse.n4js.ide.editor.contentassist.imports.ImportsAwareReferenceProposalCreator;
 import org.eclipse.n4js.ide.server.codeActions.ICodeActionAcceptor;
 import org.eclipse.n4js.ide.server.codeActions.N4JSCodeActionService;
 import org.eclipse.n4js.ide.server.codeActions.N4JSSourceActionProvider;
@@ -62,7 +62,6 @@ import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.SemverUtils;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.semver.model.SemverSerializer;
-import org.eclipse.xtext.ide.editor.contentassist.ContentAssistEntry;
 import org.eclipse.xtext.ide.server.Document;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 import org.eclipse.xtext.ide.server.UriExtensions;
@@ -124,7 +123,7 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 	private SemverHelper semverHelper;
 
 	@Inject
-	private ImportHelper importHelper;
+	private ImportsAwareReferenceProposalCreator importsAwareReferenceProposalCreator;
 
 	/**
 	 * Methods annotated as {@link ExecutableCommandHandler} will be registered as handlers for ExecuteCommand requests.
@@ -316,14 +315,18 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 		XDocument document = workspaceManager.getDocument(resource);
 
 		// compute imports to be added for unresolved references
-		List<ContentAssistEntry> candidates = importHelper.findImportCandidatesForUnresolvedReferences(resource,
-				document,
-				cancelIndicator);
 		List<ImportRef> importsToBeAdded = new ArrayList<>();
-		for (ContentAssistEntry cae : candidates) {
-			if (cae instanceof ContentAssistEntryWithRef) {
-				importsToBeAdded.addAll(((ContentAssistEntryWithRef) cae).getImportRefs());
-			}
+		// List<ContentAssistEntry> candidates = importHelper.findImportCandidatesForUnresolvedReferences(resource,
+		// document, cancelIndicator);
+		// for (ContentAssistEntry cae : candidates) {
+		// if (cae instanceof ContentAssistEntryWithRef) {
+		// importsToBeAdded.addAll(((ContentAssistEntryWithRef) cae).getImportRefs());
+		// }
+		// }
+		List<ContentAssistEntryWithRef> entries = importsAwareReferenceProposalCreator
+				.lookupAllUnresolvedCrossReferences(script, cancelIndicator);
+		for (ContentAssistEntryWithRef cae : entries) {
+			importsToBeAdded.addAll(cae.getImportRefs());
 		}
 
 		// organize all imports (existing and new ones)

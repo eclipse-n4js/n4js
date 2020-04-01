@@ -12,7 +12,10 @@ package org.eclipse.n4js.ide.editor.contentassist.imports;
 
 import static org.eclipse.n4js.utils.N4JSLanguageUtils.lastSegmentOrDefaultHost;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -24,6 +27,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.formatting2.FormattingUserPreferenceHelper;
 import org.eclipse.n4js.ide.editor.contentassist.N4JSIdeContentProposalProvider.N4JSCandidateFilter;
 import org.eclipse.n4js.ide.server.imports.ImportOrganizer.ImportRef;
+import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.ImportCallExpression;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
@@ -39,6 +43,8 @@ import org.eclipse.n4js.scoping.imports.PlainAccessOfAliasedImportDescription;
 import org.eclipse.n4js.scoping.imports.PlainAccessOfNamespacedImportDescription;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
+import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TypesPackage;
@@ -56,14 +62,17 @@ import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.nodemodel.INode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.impl.AliasedEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.IScopeProvider;
+import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.ITextRegion;
 import org.eclipse.xtext.util.TextRegion;
 
 import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
@@ -72,6 +81,10 @@ import com.google.inject.Inject;
  * Creates proposals for content assist and also adds imports of the proposed element if necessary.
  */
 public class ImportsAwareReferenceProposalCreator {
+
+	private static final EReference identifierRef_id = N4JSPackage.eINSTANCE.getIdentifierRef_Id();
+	private static final EReference parameterizedTypeRef_declaredType = TypeRefsPackage.eINSTANCE
+			.getParameterizedTypeRef_DeclaredType();
 
 	@Inject
 	private IScopeProvider scopeProvider;
@@ -106,6 +119,39 @@ public class ImportsAwareReferenceProposalCreator {
 	@Inject
 	private FormattingUserPreferenceHelper formattingUserPreferenceHelper;
 
+	private static final class ProposalAcceptor implements IIdeContentProposalAcceptor {
+
+		private final boolean onlyAcceptSingleProposal;
+		private final CancelIndicator cancelIndicator;
+
+		private final List<ContentAssistEntry> entries = new ArrayList<>();
+
+		private ProposalAcceptor(boolean onlyAcceptSingleProposal, CancelIndicator cancelIndicator) {
+			this.onlyAcceptSingleProposal = onlyAcceptSingleProposal;
+			this.cancelIndicator = cancelIndicator;
+		}
+
+		@Override
+		public void accept(ContentAssistEntry newEntry, int priority) {
+			entries.add(newEntry);
+		}
+
+		public List<ContentAssistEntry> getEntries() {
+			if (cancelIndicator.isCanceled()) {
+				return Collections.emptyList();
+			}
+			return entries;
+		}
+
+		@Override
+		public boolean canAcceptMoreProposals() {
+			if (onlyAcceptSingleProposal && !entries.isEmpty()) {
+				return false;
+			}
+			return !cancelIndicator.isCanceled();
+		}
+	}
+
 	/**
 	 * Retrieves possible reference targets from scope, including erroneous solutions (e.g., not visible targets). This
 	 * list is further filtered here. This is a general pattern: Do not change or modify scoping for special content
@@ -118,6 +164,80 @@ public class ImportsAwareReferenceProposalCreator {
 			EObject model,
 			EReference reference,
 			ContentAssistContext context,
+			IIdeContentProposalAcceptor acceptor,
+			Predicate<IEObjectDescription> filter) {
+
+		lookupSingleCrossReference(
+				model, reference,
+				context.getPrefix(), context.getCurrentNode(),
+				(proposalToCheck) -> conflictHelper.existsConflict(proposalToCheck, context),
+				acceptor, filter);
+	}
+
+	public List<ContentAssistEntryWithRef> lookupAllUnresolvedCrossReferences(Script script,
+			CancelIndicator cancelIndicator) {
+		List<ContentAssistEntryWithRef> result = new ArrayList<>();
+		Iterator<EObject> iter = script.eAllContents();
+		while (iter.hasNext()) {
+			EObject curr = iter.next();
+			List<ContentAssistEntry> entries = lookupSingleUnresolvedCrossReference(curr, true, cancelIndicator);
+			if (entries.size() == 1) {
+				ContentAssistEntry entry = entries.get(0);
+				if (entry instanceof ContentAssistEntryWithRef) {
+					result.add((ContentAssistEntryWithRef) entry);
+				}
+			}
+		}
+		return result;
+	}
+
+	public List<ContentAssistEntry> lookupSingleUnresolvedCrossReference(
+			EObject model,
+			boolean onlyAcceptSingleProposal,
+			CancelIndicator cancelIndicator) {
+
+		EReference reference;
+		String prefix;
+		if (model instanceof IdentifierRef) {
+			reference = identifierRef_id;
+			prefix = ((IdentifierRef) model).getIdAsText();
+		} else if (model instanceof ParameterizedTypeRef) {
+			reference = parameterizedTypeRef_declaredType;
+			prefix = ((ParameterizedTypeRef) model).getDeclaredTypeAsText();
+		} else {
+			return Collections.emptyList(); // unsupported kind of AST node
+		}
+
+		return lookupSingleUnresolvedCrossReference(model, reference, prefix, onlyAcceptSingleProposal,
+				cancelIndicator);
+	}
+
+	private List<ContentAssistEntry> lookupSingleUnresolvedCrossReference(
+			EObject model,
+			EReference reference,
+			String prefix,
+			boolean onlyAcceptSingleProposal,
+			CancelIndicator cancelIndicator) {
+
+		Object targetObj = model.eGet(reference, false);
+		if (!(targetObj instanceof EObject)) {
+			return Collections.emptyList(); // unsupported kind of reference (e.g. many-valued)
+		}
+		if (!((EObject) targetObj).eIsProxy()) {
+			return Collections.emptyList(); // reference isn't unresolved
+		}
+
+		INode currentNode = NodeModelUtils.findActualNodeFor(model);
+		ProposalAcceptor acceptor = new ProposalAcceptor(onlyAcceptSingleProposal, cancelIndicator);
+		lookupSingleCrossReference(model, reference, prefix, currentNode, Predicates.alwaysFalse(), acceptor,
+				Predicates.alwaysTrue());
+		return acceptor.getEntries();
+	}
+
+	private void lookupSingleCrossReference(
+			EObject model,
+			EReference reference,
+			String prefix, INode currentNode, Predicate<String> conflictChecker,
 			IIdeContentProposalAcceptor acceptor,
 			Predicate<IEObjectDescription> filter) {
 
@@ -136,7 +256,8 @@ public class ImportsAwareReferenceProposalCreator {
 				return;
 			}
 
-			final ContentAssistEntry proposal = getProposal(candidate, model, scope, context);
+			final ContentAssistEntry proposal = getProposal(candidate, model, scope, prefix, currentNode,
+					conflictChecker);
 			if (proposal != null && candidateURIs.add(candidate.getEObjectURI())) {
 				int prio = proposalPriorities.getCrossRefPriority(candidate, proposal);
 				acceptor.accept(proposal, prio);
@@ -152,9 +273,9 @@ public class ImportsAwareReferenceProposalCreator {
 	 * @return code completion proposal
 	 */
 	private ContentAssistEntry getProposal(IEObjectDescription candidate, EObject model, IScope scope,
-			ContentAssistContext context) {
+			String prefix, INode currentNode, Predicate<String> conflictChecker) {
 
-		CAECandidate caec = new CAECandidate(candidate, scope, context);
+		CAECandidate caec = new CAECandidate(candidate, scope, prefix, currentNode, conflictChecker);
 
 		if (!caec.isValid) {
 			return null;
@@ -170,7 +291,7 @@ public class ImportsAwareReferenceProposalCreator {
 			String kind = getKind(caec);
 
 			cae.setProposal(proposal);
-			cae.setPrefix(context.getPrefix());
+			cae.setPrefix(prefix);
 			cae.setLabel(label);
 			cae.setDescription(description);
 			cae.setKind(kind);
@@ -347,11 +468,12 @@ public class ImportsAwareReferenceProposalCreator {
 		final CandidateAccessType accessType;
 		final NameAndAlias addedImportNameAndAlias;
 
-		CAECandidate(IEObjectDescription candidate, IScope scope, ContentAssistContext context) {
+		CAECandidate(IEObjectDescription candidate, IScope scope, String prefix, INode currentNode,
+				Predicate<String> conflictChecker) {
 			this.candidate = candidate;
 			this.shortName = getShortName();
 			this.qualifiedName = getQualifiedName();
-			this.parentImportElement = getParentImportElement(context);
+			this.parentImportElement = getParentImportElement(currentNode);
 			this.parentImportModuleName = getParentImportModuleName();
 			this.candidateViaScopeShortName = getCorrectCandidateViaScope(scope);
 			this.candidateProject = n4jsCore.findProject(candidate.getEObjectURI()).orNull();
@@ -361,7 +483,7 @@ public class ImportsAwareReferenceProposalCreator {
 			this.aliasName = getAliasName();
 			this.namespaceName = getNamespaceName();
 			this.addedImportNameAndAlias = getImportChanges();
-			this.isValid = isValid(context);
+			this.isValid = isValid(prefix, conflictChecker);
 		}
 
 		private String getShortName() {
@@ -370,9 +492,7 @@ public class ImportsAwareReferenceProposalCreator {
 		}
 
 		/** @return true iff this candidate is valid and should be shown as a proposal */
-		private boolean isValid(ContentAssistContext context) {
-			String prefix = context.getPrefix();
-
+		private boolean isValid(String prefix, Predicate<String> conflictChecker) {
 			boolean validName = false;
 			validName |= prefixMatcher.isCandidateMatchingPrefix(shortName, prefix);
 			validName |= isAlias() && prefixMatcher.isCandidateMatchingPrefix(aliasName, prefix);
@@ -381,7 +501,7 @@ public class ImportsAwareReferenceProposalCreator {
 
 			boolean valid = validName;
 			valid &= !Strings.isNullOrEmpty(shortName);
-			valid &= !conflictHelper.existsConflict(shortName, context);
+			valid &= !conflictChecker.apply(shortName);
 			valid &= parentImportModuleName == null || qualifiedName.toString("/").startsWith(parentImportModuleName);
 
 			return valid;
@@ -547,8 +667,7 @@ public class ImportsAwareReferenceProposalCreator {
 			return null;
 		}
 
-		private EObject getParentImportElement(ContentAssistContext context) {
-			INode currentNode = context.getCurrentNode();
+		private EObject getParentImportElement(INode currentNode) {
 			while (currentNode != null) {
 				EObject semanticElement = currentNode.getSemanticElement();
 				if (semanticElement instanceof ImportCallExpression

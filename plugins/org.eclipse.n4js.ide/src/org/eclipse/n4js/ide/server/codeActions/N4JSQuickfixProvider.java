@@ -14,7 +14,6 @@ import static org.eclipse.n4js.ide.server.codeActions.util.ChangeProvider.replac
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.lsp4j.CodeActionKind;
@@ -22,7 +21,6 @@ import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextEdit;
-import org.eclipse.n4js.ide.editor.contentassist.imports.ImportHelper;
 import org.eclipse.n4js.ide.editor.contentassist.imports.ImportsAwareReferenceProposalCreator;
 import org.eclipse.n4js.ide.server.codeActions.util.ChangeProvider;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
@@ -58,7 +56,7 @@ import com.google.inject.Singleton;
 public class N4JSQuickfixProvider {
 
 	@Inject
-	private ImportHelper importHelper;
+	private ImportsAwareReferenceProposalCreator importsAwareReferenceProposalCreator;
 
 	@Inject
 	private EObjectAtOffsetHelper eObjectAtOffsetHelper;
@@ -68,15 +66,15 @@ public class N4JSQuickfixProvider {
 	 */
 	@Fix(value = org.eclipse.xtext.diagnostics.Diagnostic.LINKING_DIAGNOSTIC, multiFix = false)
 	public void addImportForUnresolvedReference(QuickfixContext context, ICodeActionAcceptor acceptor) {
-		XtextResource res = context.options.getResource();
 		Document doc = context.options.getDocument();
 		Diagnostic diagnostic = context.getDiagnostic();
 		if (diagnostic == null) {
 			return;
 		}
 
-		Set<ContentAssistEntry> caEntries = importHelper.findImportCandidates(res, doc,
-				diagnostic.getRange(), context.options.getCancelIndicator());
+		EObject model = getEObject(context);
+		List<ContentAssistEntry> caEntries = importsAwareReferenceProposalCreator
+				.lookupSingleUnresolvedCrossReference(model, false, context.options.getCancelIndicator());
 
 		for (ContentAssistEntry cae : caEntries) {
 			ArrayList<ReplaceRegion> replacements = cae.getTextReplacements();
