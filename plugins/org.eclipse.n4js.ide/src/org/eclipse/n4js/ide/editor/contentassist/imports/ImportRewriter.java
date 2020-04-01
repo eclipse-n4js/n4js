@@ -13,12 +13,12 @@ package org.eclipse.n4js.ide.editor.contentassist.imports;
 import static org.eclipse.n4js.parser.InternalSemicolonInjectingParser.SEMICOLON_INSERTED;
 import static org.eclipse.n4js.utils.UtilN4.isIgnoredSyntaxErrorNode;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.ide.server.imports.ImportOrganizer.ImportRef;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.ScriptElement;
@@ -104,14 +104,6 @@ public class ImportRewriter {
 		}
 
 		/**
-		 * @param qualifiedName
-		 *            the name of the thing to import
-		 */
-		public void addImport(QualifiedName qualifiedName) {
-			requestedImports.add(new NameAndAlias(qualifiedName, null));
-		}
-
-		/**
 		 * @param nameAndAlias
 		 *            instance with name and optional alias
 		 */
@@ -121,20 +113,11 @@ public class ImportRewriter {
 
 		/**
 		 * @param qualifiedName
-		 *            the fqn of the thing to import
-		 * @param alias
-		 *            the alias to use, may be null.
-		 */
-		public void addImport(QualifiedName qualifiedName, String alias) {
-			requestedImports.add(new NameAndAlias(qualifiedName, alias));
-		}
-
-		/**
-		 * @param qualifiedName
 		 *            the name of the thing to import
 		 */
-		public void addSingleImport(QualifiedName qualifiedName, Collection<ReplaceRegion> regions) {
-			addReplaceRegions(qualifiedName, null, findInsertionOffset(), regions);
+		public void addSingleImport(QualifiedName qualifiedName, String projectName,
+				Collection<ReplaceRegion> regions, Collection<ImportRef> importRefs) {
+			addReplaceRegions(qualifiedName, null, projectName, findInsertionOffset(), regions, importRefs);
 		}
 
 		/**
@@ -144,33 +127,27 @@ public class ImportRewriter {
 		 *            the alias to use, may be null.
 		 * @return the location of the alias in the final field
 		 */
-		public AliasLocation addSingleImport(QualifiedName qualifiedName, String alias,
-				Collection<ReplaceRegion> regions) {
+		public AliasLocation addSingleImport(QualifiedName qualifiedName, String alias, String projectName,
+				Collection<ReplaceRegion> regions, Collection<ImportRef> importRefs) {
 
-			return addReplaceRegions(qualifiedName, alias, findInsertionOffset(), regions);
-		}
-
-		/** @return Collection of all changes */
-		public Collection<ReplaceRegion> toReplaceRegions() {
-			Collection<ReplaceRegion> regions = new ArrayList<>();
-			addReplaceRegions(regions);
-			return regions;
+			return addReplaceRegions(qualifiedName, alias, projectName, findInsertionOffset(), regions, importRefs);
 		}
 
 		/**
 		 * @param regions
 		 *            the accumulator for the changes
 		 */
-		public void addReplaceRegions(Collection<ReplaceRegion> regions) {
+		public void addReplaceRegions(Collection<ReplaceRegion> regions, Collection<ImportRef> importRefs) {
 			int insertionOffset = findInsertionOffset();
 			for (NameAndAlias requested : requestedImports) {
-				addReplaceRegions(requested.getName(), requested.getAlias(), insertionOffset, regions);
+				addReplaceRegions(requested.getName(), requested.getAlias(), requested.getProjectName(),
+						insertionOffset, regions, importRefs);
 			}
 		}
 
 		/** Add the necessary text edits to the accumulating result. Optionally return the offset of the alias. */
-		private AliasLocation addReplaceRegions(QualifiedName qualifiedName, String optionalAlias, int insertionOffset,
-				Collection<ReplaceRegion> regions) {
+		private AliasLocation addReplaceRegions(QualifiedName qualifiedName, String optionalAlias, String projectName,
+				int insertionOffset, Collection<ReplaceRegion> regions, Collection<ImportRef> importRefs) {
 
 			QualifiedName moduleName = qualifiedName.skipLast(1);
 			// the following code for enhancing existing ImportDeclarations makes use of the Xtext serializer, which is
@@ -182,7 +159,8 @@ public class ImportRewriter {
 			// return enhanceExistingImportDeclaration(existing, qualifiedName, optionalAlias, result);
 			// }
 			// }
-			return addNewImportDeclaration(moduleName, qualifiedName, optionalAlias, insertionOffset, regions);
+			return addNewImportDeclaration(moduleName, qualifiedName, optionalAlias, projectName, insertionOffset,
+					regions, importRefs);
 		}
 
 		// private String unquoted(String syntacticModuleName) {
@@ -250,7 +228,8 @@ public class ImportRewriter {
 		// }
 
 		private AliasLocation addNewImportDeclaration(QualifiedName moduleName, QualifiedName qualifiedName,
-				String optionalAlias, int insertionOffset, Collection<ReplaceRegion> replaceRegions) {
+				String optionalAlias, String projectName, int insertionOffset,
+				Collection<ReplaceRegion> replaceRegions, Collection<ImportRef> importRefs) {
 
 			String spacer = lazySpacer.get();
 			String syntacticModuleName = syntacticModuleName(moduleName);
@@ -279,6 +258,9 @@ public class ImportRewriter {
 					+ (insertionOffset != 0 ? "" : lineDelimiter);
 			ITextRegion region = new TextRegion(insertionOffset, 0);
 			replaceRegions.add(new XReplaceRegion(region, insertedCode));
+
+			ImportRef importRef = new ImportRef(qualifiedName.getLastSegment(), optionalAlias, projectName, moduleName);
+			importRefs.add(importRef);
 
 			return aliasLocation;
 		}

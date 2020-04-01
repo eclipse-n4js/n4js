@@ -12,6 +12,7 @@ package org.eclipse.n4js.ide.editor.contentassist.imports;
 
 import static org.eclipse.n4js.utils.N4JSLanguageUtils.lastSegmentOrDefaultHost;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -24,6 +25,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.ide.editor.contentassist.N4JSIdeContentProposalProvider.N4JSCandidateFilter;
 import org.eclipse.n4js.ide.editor.contentassist.imports.ImportRewriter.ImportChanges;
+import org.eclipse.n4js.ide.server.imports.ImportOrganizer.ImportRef;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4idl.N4IDLGlobals;
 import org.eclipse.n4js.projectModel.IN4JSCore;
@@ -143,7 +145,7 @@ public class ImportsAwareReferenceProposalCreator {
 		}
 
 		try {
-			ContentAssistEntry cae = new ContentAssistEntry();
+			ContentAssistEntryWithRef cae = new ContentAssistEntryWithRef();
 			int version = N4JSResourceDescriptionStrategy.getVersion(candidate);
 
 			String proposal = getProposal(caec);
@@ -156,7 +158,7 @@ public class ImportsAwareReferenceProposalCreator {
 			cae.setLabel(label);
 			cae.setDescription(description);
 			cae.setKind(kind);
-			cae.setSource(candidate.getEObjectURI());
+			cae.setSource(candidate);
 
 			addImportIfNecessary(caec, model, cae);
 
@@ -249,14 +251,19 @@ public class ImportsAwareReferenceProposalCreator {
 		return ContentAssistEntry.KIND_TEXT;
 	}
 
-	private void addImportIfNecessary(CAECandidate caec, EObject model, ContentAssistEntry proposal) {
+	private void addImportIfNecessary(CAECandidate caec, EObject model, ContentAssistEntryWithRef proposal) {
 		if (caec.addedImportNameAndAlias != null) {
 			Resource resource = model.eResource();
 			ImportChanges importChanges = importRewriter.create("\n", resource);
 			importChanges.addImport(caec.addedImportNameAndAlias);
-			Collection<ReplaceRegion> regions = importChanges.toReplaceRegions();
-			if (regions != null && !regions.isEmpty()) {
+			Collection<ReplaceRegion> regions = new ArrayList<>();
+			Collection<ImportRef> importRefs = new ArrayList<>();
+			importChanges.addReplaceRegions(regions, importRefs);
+			if (!regions.isEmpty()) {
 				proposal.getTextReplacements().addAll(regions);
+			}
+			if (!importRefs.isEmpty()) {
+				proposal.getImportRefs().addAll(importRefs);
 			}
 		}
 	}
@@ -268,6 +275,7 @@ public class ImportsAwareReferenceProposalCreator {
 	private class CAECandidate {
 		final IEObjectDescription candidate;
 		final IEObjectDescription candidateViaScopeShortName;
+		final IN4JSProject candidateProject;
 		final boolean isScopedCandidateEqual;
 		final boolean isScopedCandidateCollisioning;
 		final boolean isValid;
@@ -283,6 +291,7 @@ public class ImportsAwareReferenceProposalCreator {
 			this.shortName = getShortName();
 			this.qualifiedName = getQualifiedName();
 			this.candidateViaScopeShortName = getCorrectCandidateViaScope(scope);
+			this.candidateProject = n4jsCore.findProject(candidate.getEObjectURI()).orNull();
 			this.isScopedCandidateEqual = isEqualCandidateName(candidateViaScopeShortName, qualifiedName);
 			this.isScopedCandidateCollisioning = isScopedCandidateCollisioning();
 			this.accessType = getAccessType();
@@ -511,7 +520,11 @@ public class ImportsAwareReferenceProposalCreator {
 				alias = "Alias_" + UtilN4.toUpperCaseFirst(caec.qualifiedName.toString().replace(".", "_"));
 			}
 
-			return new NameAndAlias(importName, alias);
+			String projectName = caec.candidateProject != null
+					? caec.candidateProject.getProjectName().toString()
+					: null;
+
+			return new NameAndAlias(importName, alias, projectName);
 		}
 
 		/** In case of main module, adjust the qualified name, e.g. index.Element -> react.Element */
@@ -521,10 +534,9 @@ public class ImportsAwareReferenceProposalCreator {
 			String tmodule = (qfnSegmentCount >= 2) ? qfn.getSegment(qfnSegmentCount - 2) : null;
 
 			QualifiedName candidateName;
-			IN4JSProject project = n4jsCore.findProject(candidate.getEObjectURI()).orNull();
-			if (project != null && tmodule != null && tmodule.equals(project.getMainModule())) {
-				N4JSProjectName projectName = project.getProjectName();
-				N4JSProjectName definesPackage = project.getDefinesPackageName();
+			if (candidateProject != null && tmodule != null && tmodule.equals(candidateProject.getMainModule())) {
+				N4JSProjectName projectName = candidateProject.getProjectName();
+				N4JSProjectName definesPackage = candidateProject.getDefinesPackageName();
 				if (definesPackage != null) {
 					projectName = definesPackage;
 				}

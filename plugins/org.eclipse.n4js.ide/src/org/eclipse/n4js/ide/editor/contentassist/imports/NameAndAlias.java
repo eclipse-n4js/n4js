@@ -17,11 +17,14 @@ import org.eclipse.xtext.naming.QualifiedName;
 class NameAndAlias {
 	QualifiedName name;
 	String alias;
+	/** Name of the project containing the element denoted by {@link #name}. */
+	String projectName;
 
 	/** Constructor */
-	public NameAndAlias(QualifiedName qualifiedName, String alias) {
+	public NameAndAlias(QualifiedName qualifiedName, String alias, String projectName) {
 		this.name = qualifiedName;
 		this.alias = alias;
+		this.projectName = projectName;
 	}
 
 	public QualifiedName getName() {
@@ -38,6 +41,14 @@ class NameAndAlias {
 
 	public void setAlias(String alias) {
 		this.alias = alias;
+	}
+
+	public String getProjectName() {
+		return projectName;
+	}
+
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
 	}
 
 }

@@ -11,6 +11,7 @@
 package org.eclipse.n4js.ide.server.imports;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.SortedSet;
@@ -30,12 +31,15 @@ import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.utils.nodemodel.NodeModelUtilsN4;
 import org.eclipse.xtext.ide.server.Document;
+import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.util.CancelIndicator;
 
+import com.google.common.base.Joiner;
+
 /**
- * Functionality for organizing imports. See {@link #organizeImports(Document, Script, CancelIndicator)
+ * Functionality for organizing imports. See {@link #organizeImports(Document, Script, Collection, CancelIndicator)
  * #organizeImports()}.
  */
 public class ImportOrganizer {
@@ -48,7 +52,8 @@ public class ImportOrganizer {
 	 * <li>normalizing imports (e.g. only a single import specifier per import declaration).
 	 * </ul>
 	 */
-	public static List<TextEdit> organizeImports(Document document, Script script, CancelIndicator cancelIndicator) {
+	public static List<TextEdit> organizeImports(Document document, Script script,
+			Collection<ImportRef> importsToBeAdded, CancelIndicator cancelIndicator) {
 		// we rely on flag 'ImportSpecifier#flaggedUsedInCode', so ensure that post-processing was done:
 		((N4JSResource) script.eResource()).performPostProcessing(cancelIndicator);
 
@@ -58,6 +63,7 @@ public class ImportOrganizer {
 				.collect(Collectors.toList());
 
 		SortedSet<ImportRef> importRefs = createImportRefs(importDecls);
+		importRefs.addAll(importsToBeAdded);
 
 		List<TextEdit> textEdits = new ArrayList<>();
 		int offsetOfFirstImport = Integer.MAX_VALUE;
@@ -110,17 +116,19 @@ public class ImportOrganizer {
 		return result;
 	}
 
-	private static class ImportRef implements Comparable<ImportRef> {
+	public static class ImportRef implements Comparable<ImportRef> {
 
-		final ImportDeclaration importDecl;
-		final ImportSpecifier importSpec;
+		final boolean isNamed;
+		final boolean isNamespace;
+		final boolean isDefault;
+		final String elementName;
+		final String alias;
+		final String moduleSpecifier;
+		final String moduleFQN;
+
 		final int originalIndex;
 
 		ImportRef(ImportDeclaration importDecl, ImportSpecifier importSpec, int originalIndex) {
-			this.importDecl = importDecl;
-			this.importSpec = importSpec;
-			this.originalIndex = originalIndex;
-
 			if (importDecl.isBare() != (importSpec == null)) {
 				throw new IllegalArgumentException(
 						"importSpec must be null if and only if importDecl is a bare import");
@@ -132,32 +140,50 @@ public class ImportOrganizer {
 					|| (importSpec != null && ImportSpecifiersUtil.isBrokenImport(importSpec))) {
 				throw new IllegalArgumentException("must not create an ImportRef for broken imports");
 			}
+			if (importSpec != null && !(importSpec instanceof NamedImportSpecifier
+					|| importSpec instanceof NamespaceImportSpecifier)) {
+				throw new IllegalArgumentException(
+						"unknown subclass of ImportSpecifier: " + importSpec.getClass().getSimpleName());
+			}
+
+			this.isNamed = importSpec instanceof NamedImportSpecifier;
+			this.isNamespace = importSpec instanceof NamespaceImportSpecifier;
+			this.isDefault = isNamed && ((NamedImportSpecifier) importSpec).isDefaultImport();
+			this.elementName = isNamed ? ((NamedImportSpecifier) importSpec).getImportedElementAsText() : null;
+			if (isNamed) {
+				this.alias = ((NamedImportSpecifier) importSpec).getAlias();
+			} else if (isNamespace) {
+				this.alias = ((NamespaceImportSpecifier) importSpec).getAlias();
+			} else {
+				this.alias = null;
+			}
+			this.moduleSpecifier = importDecl.getModuleSpecifierAsText();
+			this.moduleFQN = getFQN(importDecl.getModule());
+			this.originalIndex = originalIndex;
+		}
+
+		public ImportRef(String elementName, String alias, String targetProjectName, QualifiedName targetModule) {
+			this.isNamed = true;
+			this.isNamespace = false;
+			this.isDefault = false;
+			this.elementName = elementName;
+			this.alias = alias;
+			this.moduleSpecifier = Joiner.on(N4JSQualifiedNameConverter.DELIMITER).join(targetModule.getSegments());
+			this.moduleFQN = targetProjectName + N4JSQualifiedNameConverter.DELIMITER + moduleSpecifier;
+			this.originalIndex = Integer.MAX_VALUE;
 		}
 
 		public boolean isBare() {
-			return importDecl.isBare();
+			return !isNamed && !isNamespace;
 		}
 
 		@Override
 		public int hashCode() {
-			if (importSpec == null) {
-				return importDecl.getModule().hashCode();
-			} else if (importSpec instanceof NamedImportSpecifier) {
-				return Objects.hash(
-						Boolean.FALSE,
-						importDecl.getModule(),
-						((NamedImportSpecifier) importSpec).isDefaultImport(),
-						((NamedImportSpecifier) importSpec).getImportedElement(),
-						((NamedImportSpecifier) importSpec).getAlias());
-			} else if (importSpec instanceof NamespaceImportSpecifier) {
-				return Objects.hash(
-						Boolean.TRUE,
-						importDecl.getModule(),
-						((NamespaceImportSpecifier) importSpec).getAlias());
-			} else {
-				throw new IllegalStateException(
-						"unknown subclass of ImportSpecifier: " + importSpec.getClass().getSimpleName());
-			}
+			// don't include 'moduleSpecifier' and 'originalIndex', because ...
+			// 1) the module specifier is redundant to 'moduleFQN' (only required to capture the desired module
+			// specifier form),
+			// 2) two imports that differ only in original index should be deemed duplicates.
+			return Objects.hash(isNamed, isNamespace, isDefault, elementName, alias, moduleFQN);
 		}
 
 		@Override
@@ -178,52 +204,43 @@ public class ImportOrganizer {
 			// 2) sort bare imports by their original index (i.e. keep their order relative to themselves)
 			if (this.isBare()) {
 				// both are bare imports:
-				if (this.importDecl.getModule() == other.importDecl.getModule()) {
+				if (Objects.equals(this.moduleFQN, other.moduleFQN)) {
 					return 0;
 				}
 				return Integer.compare(this.originalIndex, other.originalIndex);
 			}
 			// NOW: both are non-bare imports ...
 			// 3) sort by module's fully qualified name
-			int cmpModule = getFQN(this.importDecl.getModule()).compareTo(
-					getFQN(other.importDecl.getModule()));
+			int cmpModule = this.moduleFQN.compareTo(other.moduleFQN);
 			if (cmpModule != 0) {
 				return cmpModule;
 			}
 			// 4) move namespace imports to the front
-			boolean isThisNamespace = this.importSpec instanceof NamespaceImportSpecifier;
-			boolean isOtherNamespace = other.importSpec instanceof NamespaceImportSpecifier;
-			int cmpNamespace = Boolean.compare(isThisNamespace, isOtherNamespace) * -1;
+			int cmpNamespace = Boolean.compare(this.isNamespace, other.isNamespace) * -1;
 			if (cmpNamespace != 0) {
 				return cmpNamespace;
 			}
-			if (isThisNamespace && isOtherNamespace) {
+			if (this.isNamespace && other.isNamespace) {
 				// Two namespace imports for the same target module is an error case. Still, we want to handle this case
 				// gracefully.
 				// -> sort by name of namespace
-				return ((NamespaceImportSpecifier) this.importSpec).getAlias().compareTo(
-						((NamespaceImportSpecifier) other.importSpec).getAlias());
+				return this.alias.compareTo(other.alias);
 			}
 			// NOW: both are named imports ...
 			// 5) move default imports to the top
-			boolean isThisDefault = ((NamedImportSpecifier) this.importSpec).isDefaultImport();
-			boolean isOtherDefault = ((NamedImportSpecifier) other.importSpec).isDefaultImport();
-			int cmpDefault = Boolean.compare(isThisDefault, isOtherDefault) * -1;
+			int cmpDefault = Boolean.compare(this.isDefault, other.isDefault) * -1;
 			if (cmpDefault != 0) {
 				return cmpDefault;
 			}
 			// 6) sort by name of imported element
-			int cmpName = ((NamedImportSpecifier) this.importSpec).getImportedElementAsText().compareTo(
-					((NamedImportSpecifier) other.importSpec).getImportedElementAsText());
+			int cmpName = this.elementName.compareTo(other.elementName);
 			if (cmpName != 0) {
 				return cmpName;
 			}
 			// 7) sort by alias
-			String thisAlias = ((NamedImportSpecifier) this.importSpec).getAlias();
-			String otherAlias = ((NamedImportSpecifier) other.importSpec).getAlias();
-			int cmpAlias = thisAlias != null && otherAlias != null
-					? thisAlias.compareTo(otherAlias)
-					: Boolean.compare(thisAlias != null, otherAlias != null);
+			int cmpAlias = this.alias != null && other.alias != null
+					? this.alias.compareTo(other.alias)
+					: Boolean.compare(this.alias != null, other.alias != null);
 			return cmpAlias;
 		}
 
@@ -234,14 +251,12 @@ public class ImportOrganizer {
 		public String toCode() {
 			StringBuilder sb = new StringBuilder(128);
 			sb.append("import ");
-			if (importSpec instanceof NamedImportSpecifier) {
-				NamedImportSpecifier importSpecCasted = (NamedImportSpecifier) importSpec;
-				if (importSpecCasted.isDefaultImport()) {
-					sb.append(importSpecCasted.getAlias());
+			if (isNamed) {
+				if (isDefault) {
+					sb.append(alias);
 				} else {
 					sb.append('{');
-					sb.append(importSpecCasted.getImportedElementAsText());
-					String alias = importSpecCasted.getAlias();
+					sb.append(elementName);
 					if (alias != null) {
 						sb.append(" as ");
 						sb.append(alias);
@@ -249,16 +264,16 @@ public class ImportOrganizer {
 					sb.append('}');
 				}
 				sb.append(' ');
-			} else if (importSpec instanceof NamespaceImportSpecifier) {
+			} else if (isNamespace) {
 				sb.append("* as ");
-				sb.append(((NamespaceImportSpecifier) importSpec).getAlias());
+				sb.append(alias);
 				sb.append(' ');
 			}
 			if (!isBare()) {
 				sb.append("from ");
 			}
 			sb.append('"');
-			sb.append(importDecl.getModuleSpecifierAsText());
+			sb.append(moduleSpecifier);
 			sb.append('"');
 			sb.append(';');
 			return sb.toString();

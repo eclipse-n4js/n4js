@@ -13,21 +13,26 @@ package org.eclipse.n4js.ide.editor.contentassist.imports;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 
 import org.eclipse.lsp4j.Range;
+import org.eclipse.xtext.diagnostics.AbstractDiagnostic;
+import org.eclipse.xtext.diagnostics.Diagnostic;
 import org.eclipse.xtext.ide.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ide.editor.contentassist.ContentAssistEntry;
 import org.eclipse.xtext.ide.editor.contentassist.IIdeContentProposalAcceptor;
 import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalProvider;
 import org.eclipse.xtext.ide.editor.contentassist.antlr.ContentAssistContextFactory;
 import org.eclipse.xtext.ide.server.Document;
+import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.TextRegion;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.base.Objects;
 import com.google.inject.Inject;
@@ -42,13 +47,44 @@ import com.google.inject.Inject;
 public class ImportUtil {
 
 	@Inject
-	IdeContentProposalProvider contentProposalProvider;
+	private IdeContentProposalProvider contentProposalProvider;
 
 	@Inject
-	ContentAssistContextFactory cacFactory;
+	private ContentAssistContextFactory cacFactory;
 
 	@Inject
-	ExecutorService executorService;
+	private ExecutorService executorService;
+
+	public List<ContentAssistEntry> findImportCandidatesForUnresolvedReferences(XtextResource resource,
+			Document document, CancelIndicator cancelIndicator) {
+		// ensure lazy cross-references are resolved
+		// (no need to invoke the resource validator, here, because we are only interested in linking diagnostics)
+		if (resource instanceof LazyLinkingResource) {
+			((LazyLinkingResource) resource).resolveLazyCrossReferences(cancelIndicator);
+		}
+		// find import candidates for each unresolved reference
+		String documentContent = document.getContents();
+		Set<String> done = new HashSet<>();
+		List<ContentAssistEntry> result = new ArrayList<>();
+		for (org.eclipse.emf.ecore.resource.Resource.Diagnostic diagnosticEMF : resource.getErrors()) {
+			if (diagnosticEMF instanceof AbstractDiagnostic) {
+				AbstractDiagnostic diagnostic = (AbstractDiagnostic) diagnosticEMF;
+				if (Diagnostic.LINKING_DIAGNOSTIC.equals(diagnostic.getCode())) {
+					String unresolvedReferenceAsText = documentContent.substring(diagnostic.getOffset(),
+							diagnostic.getOffset() + diagnostic.getLength());
+					if (done.add(unresolvedReferenceAsText)) {
+						Set<ContentAssistEntry> candidates = findImportCandidates(resource, document,
+								diagnostic.getOffset(), diagnostic.getLength(), cancelIndicator);
+						// iff unambiguous, add candidate to the result
+						if (candidates.size() == 1) {
+							result.add(IterableExtensions.head(candidates));
+						}
+					}
+				}
+			}
+		}
+		return result;
+	}
 
 	/**
 	 * Collect all possible import candidates for an unresolved reference at the given range.
@@ -58,14 +94,19 @@ public class ImportUtil {
 	 */
 	public Set<ContentAssistEntry> findImportCandidates(XtextResource resource, Document document, Range range,
 			CancelIndicator cancelIndicator) {
+		int offset = document.getOffSet(range.getStart());
+		int length = document.getOffSet(range.getEnd()) - offset;
+		return findImportCandidates(resource, document, offset, length, cancelIndicator);
+	}
+
+	private Set<ContentAssistEntry> findImportCandidates(XtextResource resource, Document document, int offset,
+			int length, CancelIndicator cancelIndicator) {
 		String documentContent = document.getContents();
-		String importIdentifier = document.getSubstring(range);
-		int offsetStart = document.getOffSet(range.getStart());
-		int offsetEnd = document.getOffSet(range.getEnd());
-		TextRegion textRegion = new TextRegion(offsetStart, offsetEnd - offsetStart);
+		String importIdentifier = documentContent.substring(offset, offset + length);
+		TextRegion textRegion = new TextRegion(offset, length);
 
 		cacFactory.setPool(executorService);
-		ContentAssistContext[] cacs = cacFactory.create(documentContent, textRegion, offsetEnd, resource);
+		ContentAssistContext[] cacs = cacFactory.create(documentContent, textRegion, offset + length, resource);
 
 		Collection<ContentAssistContext> contexts = Arrays.asList(cacs);
 		ContentProposalAcceptorCollector acceptor = new ContentProposalAcceptorCollector(cancelIndicator);
