@@ -28,8 +28,8 @@ export function $interfaceDefaultMembers(obj: any+) : Object {
     return (obj[INTERFACE_DEFAULT_MEMBERS] || {}) as Object;
 }
 
-export function $interfaceExtends(obj: any+) : () => (type{N4Interface}[]) {
-    return obj[INTERFACE_EXTENDS] as () => (type{N4Interface}[]);
+export function $interfaceExtends(obj: any+) : type{N4Interface}[] {
+    return obj[INTERFACE_EXTENDS] as type{N4Interface}[];
 }
 
 export function $classImplements(obj: any+) : type{N4Interface}[] {
@@ -85,7 +85,7 @@ export function detectedAllImplementedInterfacesFromClass(staticProto: construct
 
 export function detectedAllImplementedInterfacesFromInterface(interfaceObject: Object): N4Interface[] {
     const superInterfacesFn = $interfaceExtends(interfaceObject);
-    const superInterfaces = superInterfacesFn?.() || [];
+    const superInterfaces = superInterfacesFn || [];
     const detectedAllImplementedInterfaces : N4Interface[] = [];
     for (const superInterface of superInterfaces) {
         getAllInterfacesRek(superInterface, detectedAllImplementedInterfaces);
@@ -112,6 +112,8 @@ function createMembers(instanceProto: Object, staticProto, reflectionValues: Ref
     const annotations = createMemberAnnotations(reflectionValues.memberAnnotations);
     const ownedMembers : N4Member[] = [];
     const consumedMembers : N4Member[] = [];
+    console.log("create members for "+ reflectionValues.name);
+    console.log(reflectionValues);
     for (const memberString of reflectionValues.members) {
         const memberInfo = parseMemberString(memberString);
         const member = createMember(instanceProto, staticProto, memberInfo, annotations);
@@ -232,7 +234,7 @@ function mapInterfacesToFQN(n4interfaces : N4Interface[]) : string[] {
 
 function getAllInterfacesRek(interfaceObject: Object, allImplementedInterfaces : N4Interface[]): void {
     const superInterfacesFn = $interfaceExtends(interfaceObject);
-    const superInterfaces = superInterfacesFn?.() || [];
+    const superInterfaces = superInterfacesFn || [];
     for (const superInterface of superInterfaces) {
         // FIXME: N4Object#n4type() should not be always N4Class
         const n4Interface = (superInterface.n4type as Object) as N4Interface;
@@ -356,7 +358,7 @@ class MemberDetectorForInterface extends MemberDetector {
                 memberStrings.push(memberString);
             }
         }
-        // FIXME: Are non-default static fields on interfaces missing?
+
         const memberNamesStatic = Object.getOwnPropertyNames(this.interfaceObject);
         for (const memberName of memberNamesStatic) {
             if (!this.contains(MemberDetectorForInterface.excludeNames, memberName)) {
