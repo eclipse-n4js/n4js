@@ -99,7 +99,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	/** Wildcard string that may be used at the start or end of a file content expectation. */
 	static final protected String FILE_CONTENT_ASSERTION_WILDCARD = "[...]";
 	/** Folder where test data is created */
-	static final protected String TEST_DATA_FOLDER = "/test-data";
+	static final protected String TEST_DATA_FOLDER = "/test-workspace";
 	/** Vendor of the created test project */
 	static final protected String VENDOR = "VENDOR";
 	/** Name of the created test module */

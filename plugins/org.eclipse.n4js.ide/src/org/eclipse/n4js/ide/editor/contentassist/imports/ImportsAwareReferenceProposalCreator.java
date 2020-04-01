@@ -502,7 +502,7 @@ public class ImportsAwareReferenceProposalCreator {
 				return null;
 			}
 			if (parentImportElement instanceof ImportDeclaration) {
-				// GH-1704: could also be done via scoping
+				// TODO GH-1704: could also be done via scoping
 				ImportDeclaration impDecl = (ImportDeclaration) parentImportElement;
 				return impDecl.getModuleSpecifierAsText();
 			}
