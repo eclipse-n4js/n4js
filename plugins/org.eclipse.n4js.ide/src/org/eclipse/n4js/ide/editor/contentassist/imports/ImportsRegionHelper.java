@@ -35,7 +35,6 @@ import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.impl.HiddenLeafNode;
 import org.eclipse.xtext.nodemodel.impl.LeafNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
-import org.eclipse.xtext.resource.XtextResource;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
@@ -51,30 +50,12 @@ public class ImportsRegionHelper {
 	private TypeExpressionsGrammarAccess typeExpressionGrammmarAccess;
 
 	/**
-	 * Calculates import offset by analyzing the provided resource.
-	 *
-	 * @See {@link #getImportRegion(Script)}
-	 */
-	public int getImportOffset(XtextResource resource) {
-		return getImportRegion(resource).offset;
-	}
-
-	/**
 	 * Calculates import offset by analyzing the provided script.
 	 *
 	 * @See {@link #getImportRegion(Script)}
 	 */
 	public int getImportOffset(Script script) {
 		return getImportRegion(script).offset;
-	}
-
-	/**
-	 * Calculates import region by analyzing the provided resource.
-	 *
-	 * @See {@link #getImportRegion(Script)}
-	 */
-	InsertionPoint getImportRegion(XtextResource xtextResource) {
-		return getImportRegion(XtextResourceUtils.getScript(xtextResource));
 	}
 
 	/**
@@ -120,7 +101,7 @@ public class ImportsRegionHelper {
 	 *            n4js resource
 	 * @return region for import statements, length 0
 	 */
-	InsertionPoint getImportRegion(Script script) {
+	private InsertionPoint getImportRegion(Script script) {
 		// In N4js imports can appear anywhere in the Script as top-level elements. So even as a last
 		// statement and more importantly scattered around.
 		InsertionPoint insertionPoint = new InsertionPoint();

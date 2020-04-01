@@ -43,7 +43,7 @@ import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.n4js.external.LibraryChange;
 import org.eclipse.n4js.external.NpmCLI;
 import org.eclipse.n4js.ide.editor.contentassist.imports.ContentAssistEntryWithRef;
-import org.eclipse.n4js.ide.editor.contentassist.imports.ImportUtil;
+import org.eclipse.n4js.ide.editor.contentassist.imports.ImportHelper;
 import org.eclipse.n4js.ide.server.codeActions.ICodeActionAcceptor;
 import org.eclipse.n4js.ide.server.codeActions.N4JSCodeActionService;
 import org.eclipse.n4js.ide.server.codeActions.N4JSSourceActionProvider;
@@ -124,7 +124,7 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 	private SemverHelper semverHelper;
 
 	@Inject
-	private ImportUtil importUtil;
+	private ImportHelper importHelper;
 
 	/**
 	 * Methods annotated as {@link ExecutableCommandHandler} will be registered as handlers for ExecuteCommand requests.
@@ -316,7 +316,8 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 		XDocument document = workspaceManager.getDocument(resource);
 
 		// compute imports to be added for unresolved references
-		List<ContentAssistEntry> candidates = importUtil.findImportCandidatesForUnresolvedReferences(resource, document,
+		List<ContentAssistEntry> candidates = importHelper.findImportCandidatesForUnresolvedReferences(resource,
+				document,
 				cancelIndicator);
 		List<ImportRef> importsToBeAdded = new ArrayList<>();
 		for (ContentAssistEntry cae : candidates) {

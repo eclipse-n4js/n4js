@@ -22,7 +22,7 @@ import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextEdit;
-import org.eclipse.n4js.ide.editor.contentassist.imports.ImportUtil;
+import org.eclipse.n4js.ide.editor.contentassist.imports.ImportHelper;
 import org.eclipse.n4js.ide.editor.contentassist.imports.ImportsAwareReferenceProposalCreator;
 import org.eclipse.n4js.ide.server.codeActions.util.ChangeProvider;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
@@ -58,7 +58,7 @@ import com.google.inject.Singleton;
 public class N4JSQuickfixProvider {
 
 	@Inject
-	private ImportUtil importUtil;
+	private ImportHelper importHelper;
 
 	@Inject
 	private EObjectAtOffsetHelper eObjectAtOffsetHelper;
@@ -75,7 +75,7 @@ public class N4JSQuickfixProvider {
 			return;
 		}
 
-		Set<ContentAssistEntry> caEntries = importUtil.findImportCandidates(res, doc,
+		Set<ContentAssistEntry> caEntries = importHelper.findImportCandidates(res, doc,
 				diagnostic.getRange(), context.options.getCancelIndicator());
 
 		for (ContentAssistEntry cae : caEntries) {

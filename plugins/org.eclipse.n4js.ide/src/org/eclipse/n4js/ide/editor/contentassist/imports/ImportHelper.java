@@ -38,13 +38,13 @@ import com.google.common.base.Objects;
 import com.google.inject.Inject;
 
 /**
- * Utility class for adding imports to a document and other import-related modifications.
+ * Helper class for adding imports to a document and other import-related modifications.
  * <p>
  * Currently, this simply delegates to the corresponding functionality in Content Assist to allow reuse of this
  * functionality from other parts of the UI implementation (e.g. from a quick fix). This class should be removed when
  * reusable parts (esp. handling of imports) have been factored out of content assist code.
  */
-public class ImportUtil {
+public class ImportHelper {
 
 	@Inject
 	private IdeContentProposalProvider contentProposalProvider;

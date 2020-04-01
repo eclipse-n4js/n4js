@@ -60,9 +60,6 @@ public class ImportRewriter {
 	@Inject
 	private N4JSGrammarAccess grammarAccess;
 
-	// @Inject
-	// private AccessibleSerializer serializer;
-
 	@Inject
 	private ImportsRegionHelper importsRegionHelper;
 
@@ -98,11 +95,6 @@ public class ImportRewriter {
 
 		}
 
-		/** @return set of all {@link NameAndAlias}es */
-		public Set<NameAndAlias> getNameAndAliases() {
-			return this.requestedImports;
-		}
-
 		/**
 		 * @param nameAndAlias
 		 *            instance with name and optional alias
@@ -112,136 +104,32 @@ public class ImportRewriter {
 		}
 
 		/**
-		 * @param qualifiedName
-		 *            the name of the thing to import
-		 */
-		public void addSingleImport(QualifiedName qualifiedName, String projectName,
-				Collection<ReplaceRegion> regions, Collection<ImportRef> importRefs) {
-			addReplaceRegions(qualifiedName, null, projectName, findInsertionOffset(), regions, importRefs);
-		}
-
-		/**
-		 * @param qualifiedName
-		 *            the FQN of the thing to import
-		 * @param alias
-		 *            the alias to use, may be null.
-		 * @return the location of the alias in the final field
-		 */
-		public AliasLocation addSingleImport(QualifiedName qualifiedName, String alias, String projectName,
-				Collection<ReplaceRegion> regions, Collection<ImportRef> importRefs) {
-
-			return addReplaceRegions(qualifiedName, alias, projectName, findInsertionOffset(), regions, importRefs);
-		}
-
-		/**
 		 * @param regions
 		 *            the accumulator for the changes
 		 */
 		public void addReplaceRegions(Collection<ReplaceRegion> regions, Collection<ImportRef> importRefs) {
 			int insertionOffset = findInsertionOffset();
 			for (NameAndAlias requested : requestedImports) {
-				addReplaceRegions(requested.getName(), requested.getAlias(), requested.getProjectName(),
+				addNewImportDeclaration(requested.getName(), requested.getAlias(), requested.getProjectName(),
 						insertionOffset, regions, importRefs);
 			}
 		}
 
-		/** Add the necessary text edits to the accumulating result. Optionally return the offset of the alias. */
-		private AliasLocation addReplaceRegions(QualifiedName qualifiedName, String optionalAlias, String projectName,
-				int insertionOffset, Collection<ReplaceRegion> regions, Collection<ImportRef> importRefs) {
-
-			QualifiedName moduleName = qualifiedName.skipLast(1);
-			// the following code for enhancing existing ImportDeclarations makes use of the Xtext serializer, which is
-			// not yet compatible with fragments in Xtext grammars (as of Xtext 2.9.1) -> deactivated for now
-			// String moduleNameAsString = unquoted(syntacticModuleName(moduleName));
-			// for (ImportDeclaration existing : existingImports) {
-			// String importedModuleName = existing.getModule().getQualifiedName();
-			// if (moduleNameAsString.equals(importedModuleName)) {
-			// return enhanceExistingImportDeclaration(existing, qualifiedName, optionalAlias, result);
-			// }
-			// }
-			return addNewImportDeclaration(moduleName, qualifiedName, optionalAlias, projectName, insertionOffset,
-					regions, importRefs);
-		}
-
-		// private String unquoted(String syntacticModuleName) {
-		// if (syntacticModuleName == null || syntacticModuleName.length() < 2)
-		// return syntacticModuleName;
-		// if (syntacticModuleName.charAt(0) == '"'
-		// && syntacticModuleName.charAt(syntacticModuleName.length() - 1) == '"')
-		// return syntacticModuleName.substring(1, syntacticModuleName.length() - 1);
-		//
-		// return syntacticModuleName;
-		// }
-		// @SuppressWarnings({ "deprecation" })
-		// private AliasLocation enhanceExistingImportDeclaration(ImportDeclaration importDeclaration,
-		// QualifiedName qualifiedName, String optionalAlias, MultiTextEdit result) {
-		//
-		// addImportSpecifier(importDeclaration, qualifiedName, optionalAlias);
-		// ICompositeNode replaceMe = NodeModelUtils.getNode(importDeclaration);
-		// int offset = replaceMe.getOffset();
-		// AliasLocationAwareBuffer observableBuffer = new AliasLocationAwareBuffer(
-		// optionalAlias,
-		// offset,
-		// grammarAccess);
-		//
-		// try {
-		// serializer.serialize(
-		// importDeclaration,
-		// observableBuffer,
-		// SaveOptions.newBuilder().noValidation().getOptions());
-		// } catch (IOException e) {
-		// throw new RuntimeException("Should never happen since we write into memory", e);
-		// }
-		// result.addChild(new ReplaceEdit(offset, replaceMe.getLength(), observableBuffer.toString()));
-		// return observableBuffer.getAliasLocation();
-		// }
-		// private void addImportSpecifier(ImportDeclaration importDeclaration, QualifiedName qualifiedName,
-		// String optionalAlias) {
-		//
-		// boolean isDefaultExport = N4JSLanguageUtils.isDefaultExport(qualifiedName);
-		//
-		// NamedImportSpecifier specifier = null;
-		// specifier = isDefaultExport ? N4JSFactory.eINSTANCE.createDefaultImportSpecifier()
-		// : N4JSFactory.eINSTANCE.createNamedImportSpecifier();
-		//
-		// // not only types, but also variables ...
-		// Iterable<TExportableElement> topLevelTypes = Iterables.concat(
-		// importDeclaration.getModule().getTopLevelTypes(),
-		// importDeclaration.getModule().getVariables());
-		//
-		// for (TExportableElement t : topLevelTypes) {
-		// if (t.getExportedName().equals(qualifiedName.getLastSegment())) {
-		// specifier.setImportedElement(t);
-		// specifier.setAlias(optionalAlias);
-		// if (optionalAlias == null && isDefaultExport) {
-		// // set to module-name
-		// specifier.setAlias(qualifiedName.getSegment(qualifiedName.getSegmentCount() - 2));
-		// }
-		// break;
-		// }
-		// }
-		//
-		// if (isDefaultExport)
-		// importDeclaration.getImportSpecifiers().add(0, specifier); // to Front
-		// else
-		// importDeclaration.getImportSpecifiers().add(specifier);
-		// }
-
-		private AliasLocation addNewImportDeclaration(QualifiedName moduleName, QualifiedName qualifiedName,
+		private void addNewImportDeclaration(QualifiedName qualifiedName,
 				String optionalAlias, String projectName, int insertionOffset,
 				Collection<ReplaceRegion> replaceRegions, Collection<ImportRef> importRefs) {
+
+			QualifiedName moduleName = qualifiedName.skipLast(1);
 
 			String spacer = lazySpacer.get();
 			String syntacticModuleName = syntacticModuleName(moduleName);
 
-			AliasLocation aliasLocation = null;
 			String importSpec = (insertionOffset != 0 ? lineDelimiter : "") + "import ";
 
 			if (!N4JSLanguageUtils.isDefaultExport(qualifiedName)) { // not an 'default' export
 				importSpec = importSpec + "{" + spacer + qualifiedName.getLastSegment();
 				if (optionalAlias != null) {
 					importSpec = importSpec + " as ";
-					aliasLocation = new AliasLocation(insertionOffset, importSpec.length(), optionalAlias);
 					importSpec = importSpec + optionalAlias;
 				}
 				importSpec = importSpec + spacer + "}";
@@ -249,7 +137,6 @@ public class ImportRewriter {
 				if (optionalAlias == null) {
 					importSpec = importSpec + N4JSLanguageUtils.lastSegmentOrDefaultHost(qualifiedName);
 				} else {
-					aliasLocation = new AliasLocation(insertionOffset, importSpec.length(), optionalAlias);
 					importSpec = importSpec + optionalAlias;
 				}
 			}
@@ -261,8 +148,6 @@ public class ImportRewriter {
 
 			ImportRef importRef = new ImportRef(qualifiedName.getLastSegment(), optionalAlias, projectName, moduleName);
 			importRefs.add(importRef);
-
-			return aliasLocation;
 		}
 
 		/** compute the syntactic string representation of the moduleName */
