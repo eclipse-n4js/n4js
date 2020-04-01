@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ide.tests.codeActions
 
+import java.util.List
 import org.eclipse.n4js.ide.tests.server.AbstractOrganizeImportsTest
 import org.junit.Test
 
@@ -18,6 +19,31 @@ import org.junit.Test
  */
 class OrganizeImportsTest extends AbstractOrganizeImportsTest {
 
+	override protected List<Pair<String, String>> getDefaultTestModules() {
+		return #[
+				"A" -> '''
+						export class A01 {}
+						export class A02 {}
+						export class A03 {}
+						export class A04 {}''',
+				"B" -> '''
+						export class B01 {}
+						export class B02 {}
+						export class B03 {}
+						export class B04 {}''',
+				"C" -> '''
+						export class C01 {}
+						export class C02 {}
+						export class C03 {}
+						export class C04 {}''',
+				"Def" -> '''
+						export class Def01 {}
+						export class Def02 {}
+						export class Def03 {}
+						export class Def04 {}
+						export default class DefCls {}'''];
+	}
+	
 	@Test
 	def void testMinimal01() {
 		test('', '');
