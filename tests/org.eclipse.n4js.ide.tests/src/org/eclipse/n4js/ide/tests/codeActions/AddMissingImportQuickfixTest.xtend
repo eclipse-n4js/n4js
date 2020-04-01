@@ -23,7 +23,7 @@ class AddMissingImportQuickfixTest extends AbstractCodeActionTest {
 		"A" -> '''
 			export public class SomeClass {}
 		''',
-		"Main" -> '''
+		"Main*" -> '''
 			// comment
 			SomeClass;
 		'''
@@ -40,7 +40,7 @@ class AddMissingImportQuickfixTest extends AbstractCodeActionTest {
 		-----
 		title      : N4JS: Organize Imports
 		kind       : source.organizeImports
-		command    : (N4JS: Organize Imports, n4js.organizeImports, [file:///Users/mark-oliver.reiser/Home/Prog/Java/n4js-main/git-repo/n4js/tests/org.eclipse.n4js.ide.tests/test-data/test-project/src/Main.n4js])
+		command    : (N4JS: Organize Imports, n4js.organizeImports, [file:///Users/mark-oliver.reiser/Home/Prog/Java/n4js-main/git-repo/n4js/tests/org.eclipse.n4js.ide.tests/test-workspace/test-project/src/Main.n4js])
 		diagnostics: 
 		edit       : 
 	''';
@@ -51,7 +51,7 @@ class AddMissingImportQuickfixTest extends AbstractCodeActionTest {
 	 */
 	@Test
 	def void testAddImportViaHover() {
-		test(testModules, "Main", new TestCodeActionConfiguration2 => [
+		test(testModules, new TestCodeActionConfiguration2 => [
 			// non-empty region denoting the region of the issue
 			line = 1
 			column = 0
@@ -67,7 +67,7 @@ class AddMissingImportQuickfixTest extends AbstractCodeActionTest {
 	 */
 	@Test
 	def void testAddImportViaQuickfixKeyboadShortcut() {
-		test(testModules, "Main", new TestCodeActionConfiguration2 => [
+		test(testModules, new TestCodeActionConfiguration2 => [
 			// empty region denoting cursor position somewhere inside "SomeClass"
 			line = 1
 			column = 3
