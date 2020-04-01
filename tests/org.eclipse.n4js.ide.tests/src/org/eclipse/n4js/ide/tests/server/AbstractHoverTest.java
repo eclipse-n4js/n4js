@@ -27,11 +27,6 @@ import org.eclipse.xtext.testing.HoverTestConfiguration;
  */
 abstract public class AbstractHoverTest extends AbstractStructuredIdeTest<HoverTestConfiguration> {
 
-	/** Call this method in a test */
-	@Deprecated
-	protected void test(HoverTestConfiguration htc) throws Exception {
-		test(htc.getFilePath(), htc.getModel(), htc);
-	}
 
 	/** Call this method in a test */
 	protected void testAtCursor(String content, String expectation) throws Exception {
