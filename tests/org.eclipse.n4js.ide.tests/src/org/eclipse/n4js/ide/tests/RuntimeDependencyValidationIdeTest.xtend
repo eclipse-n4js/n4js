@@ -81,7 +81,7 @@ class RuntimeDependencyValidationIdeTest extends AbstractIdeTest {
 	@Test
 	def void testIllegalImportOfLoadtimeTarget() {
 
-		createTestProjectOnDisk(defaultTestCode);
+		workspaceCreator.createTestProjectOnDisk(defaultTestCode);
 		startAndWaitForLspServer();
 
 		assertIssues(defaultExpectedIssues);
@@ -90,7 +90,7 @@ class RuntimeDependencyValidationIdeTest extends AbstractIdeTest {
 	@Test
 	def void testHealingThroughPreceedingImports_nonBareImport() {
 		
-		createTestProjectOnDisk(defaultTestCode);
+		workspaceCreator.createTestProjectOnDisk(defaultTestCode);
 		startAndWaitForLspServer();
 
 		assertIssues(defaultExpectedIssues);
@@ -119,7 +119,7 @@ cleanBuildAndWait(); // TODO GH-1675 remove this line
 	@Test
 	def void testHealingThroughPreceedingImports_bareImport() {
 		
-		createTestProjectOnDisk(defaultTestCode);
+		workspaceCreator.createTestProjectOnDisk(defaultTestCode);
 		startAndWaitForLspServer();
 
 		assertIssues(defaultExpectedIssues);
@@ -147,7 +147,7 @@ cleanBuildAndWait(); // TODO GH-1675 remove this line
 	@Test
 	def void testHealingThroughPreceedingImports_unusedImport() {
 		
-		createTestProjectOnDisk(defaultTestCode);
+		workspaceCreator.createTestProjectOnDisk(defaultTestCode);
 		startAndWaitForLspServer();
 
 		assertIssues(defaultExpectedIssues);
@@ -173,7 +173,7 @@ cleanBuildAndWait(); // TODO GH-1675 remove this line
 	@Test
 	def void testHealingThroughPreceedingImports_nonRetainedImport01() {
 		
-		createTestProjectOnDisk(defaultTestCode);
+		workspaceCreator.createTestProjectOnDisk(defaultTestCode);
 		startAndWaitForLspServer();
 
 		assertIssues(defaultExpectedIssues);
@@ -193,7 +193,7 @@ cleanBuildAndWait(); // TODO GH-1675 remove this line
 	@Test
 	def void testHealingThroughPreceedingImports_nonRetainedImport02() {
 		
-		createTestProjectOnDisk(defaultTestCode);
+		workspaceCreator.createTestProjectOnDisk(defaultTestCode);
 		startAndWaitForLspServer();
 
 		assertIssues(defaultExpectedIssues);
@@ -212,7 +212,7 @@ cleanBuildAndWait(); // TODO GH-1675 remove this line
 	@Test
 	def void testLoadtimeDependencyConflict() {
 
-		createTestProjectOnDisk(defaultTestCode);
+		workspaceCreator.createTestProjectOnDisk(defaultTestCode);
 		startAndWaitForLspServer();
 
 		assertIssues(defaultExpectedIssues);
@@ -280,7 +280,7 @@ cleanBuildAndWait(); // TODO GH-1675 remove this line
 			}
 		];
 
-		createTestProjectOnDisk(testCodeWithLoadtimeCycle);
+		workspaceCreator.createTestProjectOnDisk(testCodeWithLoadtimeCycle);
 		startAndWaitForLspServer();
 
 		assertIssues(
@@ -339,7 +339,7 @@ cleanBuildAndWait(); // TODO GH-1675 remove this line
 			}
 		];
 
-		createTestProjectOnDisk(testCodeWithIllegalLoadtimeReferences);
+		workspaceCreator.createTestProjectOnDisk(testCodeWithIllegalLoadtimeReferences);
 		startAndWaitForLspServer();
 
 		val expectedIssuesWithIllegalLoadtimeReferences = defaultExpectedIssues + #[
@@ -383,7 +383,7 @@ cleanBuildAndWait(); // TODO GH-1675 remove this line
 	@Test
 	def void testIncrementalBuild01_openCloseRuntimeCycle() {
 
-		createTestProjectOnDisk(defaultTestCode);
+		workspaceCreator.createTestProjectOnDisk(defaultTestCode);
 		startAndWaitForLspServer();
 
 		assertIssues(defaultExpectedIssues);
@@ -406,7 +406,7 @@ cleanBuildAndWait(); // TODO GH-1675 remove this line
 	@Test
 	def void testIncrementalBuild02_addRemoveLoadtimeDependency() {
 
-		createTestProjectOnDisk(defaultTestCode);
+		workspaceCreator.createTestProjectOnDisk(defaultTestCode);
 		startAndWaitForLspServer();
 
 		assertIssues(defaultExpectedIssues);

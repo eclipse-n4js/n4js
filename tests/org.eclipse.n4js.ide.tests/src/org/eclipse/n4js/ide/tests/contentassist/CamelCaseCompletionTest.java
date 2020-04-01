@@ -20,26 +20,26 @@ public class CamelCaseCompletionTest extends AbstractCompletionTest {
 	/***/
 	@Test
 	public void testCamelCasePrefix_01() {
-		test("EvE<|>", "(EvalError, Text, EvalError, , , 00000, , , , ([0:0 - 0:3], EvalError), [], [], , )");
+		testAtCursor("EvE<|>", "(EvalError, Text, EvalError, , , 00000, , , , ([0:0 - 0:3], EvalError), [], [], , )");
 	}
 
 	/***/
 	@Test
 	public void testCamelCasePrefix_02() {
-		test("eURIC<|>",
+		testAtCursor("eURIC<|>",
 				"(encodeURIComponent, Text, encodeURIComponent, , , 00000, , , , ([0:0 - 0:5], encodeURIComponent), [], [], , )");
 	}
 
 	/***/
 	@Test
 	public void testCamelCasePrefix_03() {
-		test("eUC<|>",
+		testAtCursor("eUC<|>",
 				"(encodeURIComponent, Text, encodeURIComponent, , , 00000, , , , ([0:0 - 0:3], encodeURIComponent), [], [], , )");
 	}
 
 	/***/
 	@Test
 	public void testCamelCasePrefix_04() {
-		test("eC<|>", "");
+		testAtCursor("eC<|>", "");
 	}
 }

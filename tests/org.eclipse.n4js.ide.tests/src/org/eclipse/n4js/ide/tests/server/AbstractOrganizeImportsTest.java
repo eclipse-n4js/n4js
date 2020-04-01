@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.ide.tests.server;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -58,29 +57,31 @@ public abstract class AbstractOrganizeImportsTest extends AbstractStructuredIdeT
 					IssueCodes.IMP_UNUSED_IMPORT,
 					IssueCodes.IMP_UNRESOLVED)));
 
-	/** Some default modules that export a number of classes, for use in the main module of organize imports tests. */
-	protected final List<Pair<String, String>> defaultOrganizeImportsTestModules = Lists.newArrayList(
-			Pair.of("A", Strings.fromLines(
-					"export class A01 {}",
-					"export class A02 {}",
-					"export class A03 {}",
-					"export class A04 {}")),
-			Pair.of("B", Strings.fromLines(
-					"export class B01 {}",
-					"export class B02 {}",
-					"export class B03 {}",
-					"export class B04 {}")),
-			Pair.of("C", Strings.fromLines(
-					"export class C01 {}",
-					"export class C02 {}",
-					"export class C03 {}",
-					"export class C04 {}")),
-			Pair.of("Def", Strings.fromLines(
-					"export class Def01 {}",
-					"export class Def02 {}",
-					"export class Def03 {}",
-					"export class Def04 {}",
-					"export default class DefCls {}")));
+	@Override
+	protected List<Pair<String, String>> getDefaultTestModules() {
+		return Lists.newArrayList(
+				Pair.of("A", Strings.fromLines(
+						"export class A01 {}",
+						"export class A02 {}",
+						"export class A03 {}",
+						"export class A04 {}")),
+				Pair.of("B", Strings.fromLines(
+						"export class B01 {}",
+						"export class B02 {}",
+						"export class B03 {}",
+						"export class B04 {}")),
+				Pair.of("C", Strings.fromLines(
+						"export class C01 {}",
+						"export class C02 {}",
+						"export class C03 {}",
+						"export class C04 {}")),
+				Pair.of("Def", Strings.fromLines(
+						"export class Def01 {}",
+						"export class Def02 {}",
+						"export class Def03 {}",
+						"export class Def04 {}",
+						"export default class DefCls {}")));
+	}
 
 	/** Configuration of organize imports tests. */
 	protected static class TestOrganizeImportsConfiguration {
@@ -107,7 +108,7 @@ public abstract class AbstractOrganizeImportsTest extends AbstractStructuredIdeT
 	}
 
 	/**
-	 * Test method for organize imports tests using the {@link #defaultOrganizeImportsTestModules}.
+	 * Test method for organize imports tests using the {@link #getDefaultTestModules()}.
 	 *
 	 * @param code
 	 *            source code before organize imports is performed.
@@ -117,10 +118,7 @@ public abstract class AbstractOrganizeImportsTest extends AbstractStructuredIdeT
 	 *            expected source code after organize imports was performed.
 	 */
 	protected void test(CharSequence code, List<String> expectedIssues, CharSequence expectedCode) {
-		String nameWithSelector = DEFAULT_MODULE_NAME + MODULE_SELECTOR;
-		ArrayList<Pair<String, String>> allModule = Lists.newArrayList(Pair.of(nameWithSelector, code.toString()));
-		allModule.addAll(defaultOrganizeImportsTestModules);
-		test(allModule, new TestOrganizeImportsConfiguration(expectedIssues, expectedCode));
+		testInDefaultWorkspace(code.toString(), new TestOrganizeImportsConfiguration(expectedIssues, expectedCode));
 	}
 
 	@Override

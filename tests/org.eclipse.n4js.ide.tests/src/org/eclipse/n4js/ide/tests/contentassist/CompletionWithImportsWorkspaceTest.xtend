@@ -9,9 +9,11 @@
  */
 package org.eclipse.n4js.ide.tests.contentassist;
 
+import java.util.List
 import org.eclipse.n4js.ide.tests.server.AbstractCompletionTest
 import org.junit.Test
-import java.util.List
+
+import static org.eclipse.n4js.ide.tests.server.TestWorkspaceCreator.*
 
 /**
  * Code completion tests for scenarios that also might add an import statement
@@ -60,7 +62,7 @@ public class CompletionWithImportsWorkspaceTest extends AbstractCompletionTest {
 
 	@Test
 	def void testRedirectionForDefinitionProjects() {
-		test('''
+		testAtCursor('''
 			let x = new A1<|>
 		''', ''' 
 			(A1, Class, index, , , 00000, , , , ([0:12 - 0:14], A1), [([0:0 - 0:0], import {A1} from "someNPM";
@@ -70,7 +72,7 @@ public class CompletionWithImportsWorkspaceTest extends AbstractCompletionTest {
 
 	@Test
 	def void testNoRedirectionForNormalProjects() {
-		test('''
+		testAtCursor('''
 			let x = new XY<|>
 		''', ''' 
 			(XY, Class, LibXY, , , 00000, , , , ([0:12 - 0:14], XY), [([0:0 - 0:0], import {XY} from "LibXY";
