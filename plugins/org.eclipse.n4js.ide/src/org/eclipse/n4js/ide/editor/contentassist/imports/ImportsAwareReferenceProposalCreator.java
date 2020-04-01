@@ -12,8 +12,6 @@ package org.eclipse.n4js.ide.editor.contentassist.imports;
 
 import static org.eclipse.n4js.utils.N4JSLanguageUtils.lastSegmentOrDefaultHost;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,25 +21,30 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.formatting2.FormattingUserPreferenceHelper;
 import org.eclipse.n4js.ide.editor.contentassist.N4JSIdeContentProposalProvider.N4JSCandidateFilter;
-import org.eclipse.n4js.ide.editor.contentassist.imports.ImportRewriter.ImportChanges;
 import org.eclipse.n4js.ide.server.imports.ImportOrganizer.ImportRef;
 import org.eclipse.n4js.n4JS.ImportCallExpression;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4idl.N4IDLGlobals;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
+import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.scoping.IContentAssistScopeProvider;
 import org.eclipse.n4js.scoping.imports.PlainAccessOfAliasedImportDescription;
 import org.eclipse.n4js.scoping.imports.PlainAccessOfNamespacedImportDescription;
+import org.eclipse.n4js.services.N4JSGrammarAccess;
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TypesPackage;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.UtilN4;
+import org.eclipse.xtext.conversion.IValueConverterService;
 import org.eclipse.xtext.conversion.ValueConverterException;
 import org.eclipse.xtext.ide.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ide.editor.contentassist.ContentAssistEntry;
@@ -57,7 +60,8 @@ import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.impl.AliasedEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.IScopeProvider;
-import org.eclipse.xtext.util.ReplaceRegion;
+import org.eclipse.xtext.util.ITextRegion;
+import org.eclipse.xtext.util.TextRegion;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
@@ -76,13 +80,16 @@ public class ImportsAwareReferenceProposalCreator {
 	private IN4JSCore n4jsCore;
 
 	@Inject
-	private ImportRewriter importRewriter;
-
-	@Inject
 	private IQualifiedNameConverter qualifiedNameConverter;
 
 	@Inject
 	private IQualifiedNameProvider qualifiedNameProvider;
+
+	@Inject
+	private IValueConverterService valueConverters;
+
+	@Inject
+	private N4JSGrammarAccess grammarAccess;
 
 	@Inject
 	private IdeContentProposalPriorities proposalPriorities;
@@ -92,6 +99,12 @@ public class ImportsAwareReferenceProposalCreator {
 
 	@Inject
 	private IProposalConflictHelper conflictHelper;
+
+	@Inject
+	private ImportRegionHelper importRegionHelper;
+
+	@Inject
+	private FormattingUserPreferenceHelper formattingUserPreferenceHelper;
 
 	/**
 	 * Retrieves possible reference targets from scope, including erroneous solutions (e.g., not visible targets). This
@@ -163,7 +176,7 @@ public class ImportsAwareReferenceProposalCreator {
 			cae.setKind(kind);
 			cae.setSource(candidate);
 
-			addImportIfNecessary(caec, model, cae);
+			addImportIfNecessary(caec, model.eResource(), cae);
 
 			return cae;
 
@@ -254,20 +267,64 @@ public class ImportsAwareReferenceProposalCreator {
 		return ContentAssistEntry.KIND_TEXT;
 	}
 
-	private void addImportIfNecessary(CAECandidate caec, EObject model, ContentAssistEntryWithRef proposal) {
-		if (caec.addedImportNameAndAlias != null) {
-			Resource resource = model.eResource();
-			ImportChanges importChanges = importRewriter.create("\n", resource, caec.addedImportNameAndAlias);
-			Collection<ReplaceRegion> regions = new ArrayList<>();
-			Collection<ImportRef> importRefs = new ArrayList<>();
-			importChanges.addReplaceRegions(regions, importRefs);
-			if (!regions.isEmpty()) {
-				proposal.getTextReplacements().addAll(regions);
+	private void addImportIfNecessary(CAECandidate caec, Resource resource, ContentAssistEntryWithRef proposal) {
+
+		NameAndAlias requestedImport = caec.addedImportNameAndAlias;
+		if (requestedImport == null) {
+			return;
+		}
+
+		Script script = N4JSResource.getScript(resource);
+		if (script == null) {
+			return;
+		}
+
+		int insertionOffset = importRegionHelper.findInsertionOffset(script);
+		String spacing = formattingUserPreferenceHelper.getSpacingPreference(resource);
+		String lineDelimiter = "\n";
+
+		QualifiedName qualifiedName = requestedImport.getName();
+		String optionalAlias = requestedImport.getAlias();
+		String projectName = requestedImport.getProjectName();
+
+		QualifiedName moduleName = qualifiedName.skipLast(1);
+
+		// create ImportRef
+		ImportRef importRef = new ImportRef(qualifiedName.getLastSegment(), optionalAlias, projectName, moduleName);
+		proposal.getImportRefs().add(importRef);
+
+		// create text replacement
+		String syntacticModuleName = syntacticModuleName(moduleName);
+
+		String importSpec = (insertionOffset != 0 ? lineDelimiter : "") + "import ";
+
+		if (!N4JSLanguageUtils.isDefaultExport(qualifiedName)) { // not an 'default' export
+			importSpec = importSpec + "{" + spacing + qualifiedName.getLastSegment();
+			if (optionalAlias != null) {
+				importSpec = importSpec + " as ";
+				importSpec = importSpec + optionalAlias;
 			}
-			if (!importRefs.isEmpty()) {
-				proposal.getImportRefs().addAll(importRefs);
+			importSpec = importSpec + spacing + "}";
+		} else { // import default exported element
+			if (optionalAlias == null) {
+				importSpec = importSpec + N4JSLanguageUtils.lastSegmentOrDefaultHost(qualifiedName);
+			} else {
+				importSpec = importSpec + optionalAlias;
 			}
 		}
+
+		String insertedCode = importSpec + " from " + syntacticModuleName + ";"
+				+ (insertionOffset != 0 ? "" : lineDelimiter);
+		ITextRegion region = new TextRegion(insertionOffset, 0);
+		proposal.getTextReplacements().add(new XReplaceRegion(region, insertedCode));
+	}
+
+	/** compute the syntactic string representation of the moduleName */
+	private String syntacticModuleName(QualifiedName moduleName) {
+		String syntacticModuleName = valueConverters.toString(
+				qualifiedNameConverter.toString(moduleName),
+				grammarAccess.getModuleSpecifierRule().getName());
+		return syntacticModuleName;
 	}
 
 	private static enum CandidateAccessType {
