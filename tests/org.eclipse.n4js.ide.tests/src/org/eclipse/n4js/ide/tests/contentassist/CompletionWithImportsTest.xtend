@@ -259,4 +259,41 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 			(isNaN, Text, isNaN, , , 00000, , , , ([0:0 - 0:5], isNaN), [], [], , )
 		''');
 	}
+
+	@Test
+	def void testInsideImportStatement1() {
+		test('''
+			import {A<|>
+		''', ''' 
+			(A1, Class, MA, , , 00000, , , , ([0:8 - 0:9], A1), [], [], , )
+			(A2, Class, MA, , , 00001, , , , ([0:8 - 0:9], A2), [], [], , )
+			(A2, Class, MBA, , , 00002, , , , ([0:8 - 0:9], A2), [], [], , )
+			(any, Text, any, , , 00003, , , , ([0:8 - 0:9], any), [], [], , )
+			(Array, Text, Array, , , 00004, , , , ([0:8 - 0:9], Array), [], [], , )
+		''');
+	}
+
+	@Test
+	def void testInsideImportStatement2() {
+		test('''
+			import {A<|> from "MA";
+		''', ''' 
+			(A1, Class, MA, , , 00000, , , , ([0:8 - 0:9], A1), [], [], , )
+			(A2, Class, MA, , , 00001, , , , ([0:8 - 0:9], A2), [], [], , )
+			(A2, Class, MBA, , , 00002, , , , ([0:8 - 0:9], A2), [], [], , )
+			(any, Text, any, , , 00003, , , , ([0:8 - 0:9], any), [], [], , )
+			(Array, Text, Array, , , 00004, , , , ([0:8 - 0:9], Array), [], [], , )
+		''');
+	}
+
+	@Test
+	def void testInsideImportStatement3() {
+		test('''
+			import {A<|>} from "MA";
+		''', ''' 
+			(A1, Class, MA, , , 00000, , , , ([0:8 - 0:9], A1), [], [], , )
+			(A2, Class, MA, , , 00001, , , , ([0:8 - 0:9], A2), [], [], , )
+		''');
+	}
+
 }

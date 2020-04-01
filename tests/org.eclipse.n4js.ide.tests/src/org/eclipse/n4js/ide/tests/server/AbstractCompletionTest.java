@@ -29,9 +29,9 @@ import org.eclipse.n4js.utils.Strings;
 import org.eclipse.xtext.testing.TestCompletionConfiguration;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
+import org.eclipse.xtext.xbase.lib.util.ReflectExtensions;
 import org.junit.Assert;
 
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 /**
@@ -41,17 +41,54 @@ abstract public class AbstractCompletionTest extends AbstractStructuredIdeTest<T
 
 	static final String CURSOR_SYMBOL = "<|>";
 
-	/** Some default modules that export a number of classes, for use in the main module of organize imports tests. */
+	/** Default modules that export a number of classes, for use in the main module of organize imports tests. */
 	protected List<Pair<String, String>> getDefaultTestModules() {
+		return Lists.newArrayList();
+	}
+
+	/** Default workspace that export a number of classes, for use in the main module of organize imports tests. */
+	protected List<Pair<String, List<Pair<String, String>>>> getDefaultTestYarnWorkspace() {
 		return Lists.newArrayList();
 	}
 
 	/** Call this method in a test */
 	protected void test(String codeWithCursor, String expectedProposals) {
 		TestCompletionConfiguration tcc = createTestCompletionConfiguration(codeWithCursor, expectedProposals);
-		ArrayList<Pair<String, String>> defaultModule = Lists.newArrayList(Pair.of(MODULE_NAME, tcc.getModel()));
-		Iterable<Pair<String, String>> modules = Iterables.concat(getDefaultTestModules(), defaultModule);
-		test(modules, tcc);
+		String nameWithSelector = DEFAULT_MODULE_NAME + MODULE_SELECTOR;
+		String testModuleContents = tcc.getModel();
+		Pair<String, String> moduleContents = Pair.of(nameWithSelector, testModuleContents);
+
+		boolean moduleAdded = false;
+		if (!getDefaultTestYarnWorkspace().isEmpty()) {
+			List<Pair<String, List<Pair<String, String>>>> workspace = getDefaultTestYarnWorkspace();
+			for (Pair<String, List<Pair<String, String>>> project : workspace) {
+				String projectName = project.getKey();
+				if (projectName.endsWith(MODULE_SELECTOR)) {
+					List<Pair<String, String>> modulesPlusMyModule = new ArrayList<>(project.getValue());
+					modulesPlusMyModule.add(moduleContents);
+					try {
+						ReflectExtensions reflectExtensions = new ReflectExtensions();
+						reflectExtensions.set(project, "k", projectName.substring(0, projectName.length() - 1));
+						reflectExtensions.set(project, "v", modulesPlusMyModule);
+						moduleAdded = true;
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+
+			if (!moduleAdded) {
+				throw new IllegalStateException("No project selected. Use " + MODULE_SELECTOR);
+			}
+
+			testWS(workspace, tcc);
+			return;
+
+		} else {
+			ArrayList<Pair<String, String>> allModules = Lists.newArrayList(moduleContents);
+			allModules.addAll(getDefaultTestModules());
+			test(allModules, tcc);
+		}
 	}
 
 	/** @return {@link TestCompletionConfiguration} for a given code with cursor symbol */
