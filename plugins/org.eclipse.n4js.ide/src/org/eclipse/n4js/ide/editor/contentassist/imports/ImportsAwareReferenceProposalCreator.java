@@ -254,8 +254,7 @@ public class ImportsAwareReferenceProposalCreator {
 	private void addImportIfNecessary(CAECandidate caec, EObject model, ContentAssistEntryWithRef proposal) {
 		if (caec.addedImportNameAndAlias != null) {
 			Resource resource = model.eResource();
-			ImportChanges importChanges = importRewriter.create("\n", resource);
-			importChanges.addImport(caec.addedImportNameAndAlias);
+			ImportChanges importChanges = importRewriter.create("\n", resource, caec.addedImportNameAndAlias);
 			Collection<ReplaceRegion> regions = new ArrayList<>();
 			Collection<ImportRef> importRefs = new ArrayList<>();
 			importChanges.addReplaceRegions(regions, importRefs);

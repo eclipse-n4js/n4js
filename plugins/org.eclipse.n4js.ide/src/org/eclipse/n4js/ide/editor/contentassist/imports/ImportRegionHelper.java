@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.ide.editor.contentassist.imports;
 
+import static org.eclipse.n4js.parser.InternalSemicolonInjectingParser.SEMICOLON_INSERTED;
+import static org.eclipse.n4js.utils.UtilN4.isIgnoredSyntaxErrorNode;
 import static org.eclipse.xtext.nodemodel.util.NodeModelUtils.findActualNodeFor;
 import static org.eclipse.xtext.nodemodel.util.NodeModelUtils.findNodesForFeature;
 
@@ -34,6 +36,7 @@ import org.eclipse.xtext.nodemodel.ILeafNode;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.impl.HiddenLeafNode;
 import org.eclipse.xtext.nodemodel.impl.LeafNode;
+import org.eclipse.xtext.nodemodel.impl.LeafNodeWithSyntaxError;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 
 import com.google.common.collect.Lists;
@@ -42,7 +45,7 @@ import com.google.inject.Inject;
 /**
  * Helper used to calculate imports region in the resource.
  */
-public class ImportsRegionHelper {
+public class ImportRegionHelper {
 	@Inject
 	private N4JSDocumentationProvider documentationProvider;
 
@@ -54,8 +57,52 @@ public class ImportsRegionHelper {
 	 *
 	 * @See {@link #getImportRegion(Script)}
 	 */
-	public int getImportOffset(Script script) {
+	public int findInsertionOffset(Script script) {
+		int result = 0;
+		List<ScriptElement> scriptElements = script.getScriptElements();
+		for (int i = 0, size = scriptElements.size(); i < size; i++) {
+			ScriptElement element = scriptElements.get(i);
+			if (element instanceof ImportDeclaration) {
+				// Instead of getting the total offset for the first non-import-declaration, we try to get the
+				// total end offset for the most recent import declaration which is followed by any other script
+				// element
+				// this is required for the linebreak handling for automatic semicolon insertion.
+				ICompositeNode importNode = NodeModelUtils.findActualNodeFor(element);
+				if (null != importNode) {
+					result = importNode.getTotalOffset() + getLengthWithoutAutomaticSemicolon(importNode);
+				}
+			} else {
+				// We assume that all import declarations are to be found in one place, thus
+				// at this point we must have seen all of them.
+				break;
+			}
+		}
+		// If previously, an existing import declaration could be found, use it as offset.
+		if (result != 0) {
+			return result;
+		}
+		// Otherwise, we assume there is no import declarations yet. Use {@link ImportsRegionHelper}
+		// to obtain an offset for the insertion of a new import declaration.
 		return getImportRegion(script).offset;
+	}
+
+	/**
+	 * Returns with the length of the node including all hidden leaf nodes but the {@link LeafNodeWithSyntaxError} one,
+	 * that was created for the automatic semicolon insertion.
+	 */
+	private static int getLengthWithoutAutomaticSemicolon(final INode node) {
+		if (node instanceof ILeafNode) {
+			return node.getLength();
+		}
+
+		int length = 0;
+		for (INode leafNode : ((ICompositeNode) node).getLeafNodes()) {
+			if (!isIgnoredSyntaxErrorNode(leafNode, SEMICOLON_INSERTED)) {
+				length += leafNode.getLength();
+			}
+		}
+
+		return length;
 	}
 
 	/**
