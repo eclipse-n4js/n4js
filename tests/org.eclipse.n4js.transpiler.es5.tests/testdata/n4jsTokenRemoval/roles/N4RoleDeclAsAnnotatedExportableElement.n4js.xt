@@ -24,8 +24,8 @@ N4Interface {
   allImplementedInterfaces: [
     'n4jsTokenRemoval/roles/N4RoleDeclAsAnnotatedExportableElement/R1',
     'n4jsTokenRemoval/roles/N4RoleDeclAsAnnotatedExportableElement/R0',
-    'n4jsTokenRemoval/roles/N4RoleDeclAsAnnotatedExportableElement/I1',
-    'n4jsTokenRemoval/roles/N4RoleDeclAsAnnotatedExportableElement/I0'
+    'n4jsTokenRemoval/roles/N4RoleDeclAsAnnotatedExportableElement/I0',
+    'n4jsTokenRemoval/roles/N4RoleDeclAsAnnotatedExportableElement/I1'
   ],
   ownedMembers: [],
   consumedMembers: []

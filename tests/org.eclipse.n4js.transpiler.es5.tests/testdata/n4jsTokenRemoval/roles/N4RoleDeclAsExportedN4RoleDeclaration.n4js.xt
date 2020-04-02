@@ -24,8 +24,8 @@ N4Interface {
   allImplementedInterfaces: [
     'n4jsTokenRemoval/roles/N4RoleDeclAsExportedN4RoleDeclaration/R1',
     'n4jsTokenRemoval/roles/N4RoleDeclAsExportedN4RoleDeclaration/R0',
-    'n4jsTokenRemoval/roles/N4RoleDeclAsExportedN4RoleDeclaration/I1',
-    'n4jsTokenRemoval/roles/N4RoleDeclAsExportedN4RoleDeclaration/I0'
+    'n4jsTokenRemoval/roles/N4RoleDeclAsExportedN4RoleDeclaration/I0',
+    'n4jsTokenRemoval/roles/N4RoleDeclAsExportedN4RoleDeclaration/I1'
   ],
   ownedMembers: [],
   consumedMembers: []
@@ -39,8 +39,8 @@ N4Interface {
   allImplementedInterfaces: [
     'n4jsTokenRemoval/roles/N4RoleDeclAsExportedN4RoleDeclaration/R1',
     'n4jsTokenRemoval/roles/N4RoleDeclAsExportedN4RoleDeclaration/R0',
-    'n4jsTokenRemoval/roles/N4RoleDeclAsExportedN4RoleDeclaration/I1',
-    'n4jsTokenRemoval/roles/N4RoleDeclAsExportedN4RoleDeclaration/I0'
+    'n4jsTokenRemoval/roles/N4RoleDeclAsExportedN4RoleDeclaration/I0',
+    'n4jsTokenRemoval/roles/N4RoleDeclAsExportedN4RoleDeclaration/I1'
   ],
   ownedMembers: [],
   consumedMembers: []
