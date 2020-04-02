@@ -38,7 +38,7 @@ abstract class N4Element extends Object {
 	public setAnnotations(annotations: Array<N4Annotation>): void {
 		this.annotations = annotations;
 		for (const annotation of this.annotations) {
-			Object.defineProperty(annotation, "target", { value: this, enumerable: false });
+			annotation.target = this;
 		}
 	}
 
@@ -105,7 +105,7 @@ export project abstract class N4Classifier extends N4Type {
 	public setOwnedMembers(ownedMembers: Array<N4Member>): void {
 		this.ownedMembers = ownedMembers;
 		for (const ownedMember of this.ownedMembers) {
-			Object.defineProperty(ownedMember, 'owner', { value: this, enumerable: false });
+			ownedMember.owner = this;
 		}
 	}
 
