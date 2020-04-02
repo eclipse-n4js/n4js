@@ -23,13 +23,13 @@ function show(label: string, members: Array<? extends N4Member>) {
 interface I {}
 interface J extends I {}
 
-interface R extends I, J {}
-interface S extends I, J, R {}
+interface R {}
+interface S extends R {}
 
 class CI implements I {}
 class CJ implements J {}
-class CR implements R {}
-class CS implements S {}
+class CR extends CI implements R {}
+class CS extends CJ implements S {}
 
 
 
@@ -44,29 +44,27 @@ console.log(CS.n4type.allImplementedInterfaces);
 
 
 
-
 /* XPECT output ---
 <==
 stdout:
 CI
-[ 'reflection/ClassImplementsInterfaces/I' ]
+[ 'reflection/ClassImplementsInterfacesWithSuperclass/I' ]
 J
 [
-  'reflection/ClassImplementsInterfaces/J',
-  'reflection/ClassImplementsInterfaces/I'
+  'reflection/ClassImplementsInterfacesWithSuperclass/J',
+  'reflection/ClassImplementsInterfacesWithSuperclass/I'
 ]
 CR
 [
-  'reflection/ClassImplementsInterfaces/R',
-  'reflection/ClassImplementsInterfaces/I',
-  'reflection/ClassImplementsInterfaces/J'
+  'reflection/ClassImplementsInterfacesWithSuperclass/I',
+  'reflection/ClassImplementsInterfacesWithSuperclass/R'
 ]
 CS
 [
-  'reflection/ClassImplementsInterfaces/S',
-  'reflection/ClassImplementsInterfaces/I',
-  'reflection/ClassImplementsInterfaces/J',
-  'reflection/ClassImplementsInterfaces/R'
+  'reflection/ClassImplementsInterfacesWithSuperclass/J',
+  'reflection/ClassImplementsInterfacesWithSuperclass/I',
+  'reflection/ClassImplementsInterfacesWithSuperclass/S',
+  'reflection/ClassImplementsInterfacesWithSuperclass/R'
 ]
 stderr:
 ==>

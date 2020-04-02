@@ -72,7 +72,9 @@ export function makeReflectionsForEnum(staticProto: constructor{?}, reflectionSt
 
 export function detectedAllImplementedInterfacesFromClass(staticProto: constructor{?}): Map<string, type{N4Interface}> {
     const implementedInterfaces = $classImplements(staticProto) || [];
-    const allImplementedInterfaces = new Map<string, type{N4Interface}>();
+    const allImplementedInterfaces = staticProto.__proto__
+        ? detectedAllImplementedInterfacesFromClass(staticProto.__proto__ as constructor{?})
+        : new Map<string, type{N4Interface}>();
     for (const implementedInterface of implementedInterfaces) {
         // FIXME: N4Object#n4type() should not be always N4Class?
         const fqn = implementedInterface.n4type.fqn;
