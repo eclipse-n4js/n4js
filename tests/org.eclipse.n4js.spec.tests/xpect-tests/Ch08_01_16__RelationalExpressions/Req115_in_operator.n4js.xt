@@ -42,12 +42,12 @@ var bin4 : boolean =  funcS() in func
 
 
 var bin5 : boolean =
-// XPECT errors --> "any is not a subtype of union{number,string}." at "func()"
+// XPECT errors --> "any is not a subtype of union{number,string,symbol}." at "func()"
 func() in new A()
 
 
 var bin6 : boolean =
-// XPECT errors --> "void is not a subtype of union{number,string}." at "funcv()"
+// XPECT errors --> "void is not a subtype of union{number,string,symbol}." at "funcv()"
 funcv() in new A()
 
 
