@@ -14,7 +14,8 @@ import org.eclipse.n4js.ide.tests.server.AbstractOrganizeImportsTest
 import org.junit.Test
 
 /**
- * Tests for source action "organize imports".
+ * Tests for source action "organize imports". Covers all cases except addition of
+ * missing imports, which is covered in {@link OrganizeImportsAddMissingTest}.
  */
 class OrganizeImportsTest extends AbstractOrganizeImportsTest {
 
