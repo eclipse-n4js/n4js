@@ -85,7 +85,7 @@ function $defineFields(target: Object, ...names: string) {
  */
 function $initFieldsFromInterfaces(target: Object, spec: Object, mixinExclusion: Object) {
     const interfaces = detectedAllImplementedInterfacesFromClass(target.constructor);
-    for (const ifc of interfaces) {
+    for (const ifc of interfaces.values()) {
         const defs: Object = $interfaceFieldInits(ifc) || {};
         for (const fieldName of Object.getOwnPropertyNames(defs)) {
             if (target.hasOwnProperty(fieldName) || mixinExclusion.hasOwnProperty(fieldName)) {
