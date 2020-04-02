@@ -23,6 +23,7 @@ import org.eclipse.n4js.n4JS.AnnotableElement;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration;
 import org.eclipse.n4js.n4JS.N4EnumDeclaration;
+import org.eclipse.n4js.n4JS.N4FieldAccessor;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
 import org.eclipse.n4js.n4JS.N4GetterDeclaration;
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
@@ -200,9 +201,11 @@ public class ReflectionBuilder {
 	private List<JsonElement> createInterfaceMembers(Iterable<N4MemberDeclaration> allMembers) {
 		List<JsonElement> memberStrings = new ArrayList<>();
 		for (N4MemberDeclaration member : allMembers) {
-			// do not include datafields with initializers, default methods, and #hasInstance
-			boolean serialize = !hasDefault(member)
-					&& !member.getName().equals(N4JSLanguageUtils.SYMBOL_IDENTIFIER_PREFIX + "hasInstance");
+			// do not datafields, default members, and #hasInstance
+			boolean serialize = true;
+			serialize &= !hasDefault(member);
+			serialize &= !member.getName().equals(N4JSLanguageUtils.SYMBOL_IDENTIFIER_PREFIX + "hasInstance");
+			serialize &= !(member instanceof N4FieldDeclaration);
 
 			if (serialize) {
 				memberStrings.add(primitive(createMemberString(member)));
@@ -217,6 +220,9 @@ public class ReflectionBuilder {
 		}
 		if (member instanceof N4MethodDeclaration) {
 			return ((N4MethodDeclaration) member).getBody() != null;
+		}
+		if (member instanceof N4FieldAccessor) {
+			return ((N4FieldAccessor) member).getBody() != null;
 		}
 		return false;
 	}
