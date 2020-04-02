@@ -19,30 +19,38 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import org.eclipse.lsp4j.TextEdit;
+import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.ide.server.codeActions.util.ChangeProvider;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
 import org.eclipse.n4js.n4JS.Script;
-import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
 import org.eclipse.n4js.organize.imports.ImportSpecifiersUtil;
 import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.services.N4JSGrammarAccess;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.utils.nodemodel.NodeModelUtilsN4;
+import org.eclipse.xtext.conversion.IValueConverterService;
 import org.eclipse.xtext.ide.server.Document;
+import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.util.CancelIndicator;
 
-import com.google.common.base.Joiner;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * Functionality for organizing imports. See {@link #organizeImports(Document, Script, Collection, CancelIndicator)
  * #organizeImports()}.
  */
+@Singleton
 public class ImportOrganizer {
+
+	@Inject
+	private IQualifiedNameConverter qualifiedNameConverter;
 
 	/**
 	 * Returns {@link TextEdit}s for organizing the imports of the given script, i.e.
@@ -52,7 +60,7 @@ public class ImportOrganizer {
 	 * <li>normalizing imports (e.g. only a single import specifier per import declaration).
 	 * </ul>
 	 */
-	public static List<TextEdit> organizeImports(Document document, Script script,
+	public List<TextEdit> organizeImports(Document document, Script script,
 			Collection<ImportRef> importsToBeAdded, CancelIndicator cancelIndicator) {
 		// we rely on flag 'ImportSpecifier#flaggedUsedInCode', so ensure that post-processing was done:
 		((N4JSResource) script.eResource()).performPostProcessing(cancelIndicator);
@@ -92,7 +100,7 @@ public class ImportOrganizer {
 		return textEdits;
 	}
 
-	private static SortedSet<ImportRef> createImportRefs(List<ImportDeclaration> importDecls) {
+	private SortedSet<ImportRef> createImportRefs(List<ImportDeclaration> importDecls) {
 		SortedSet<ImportRef> result = new TreeSet<>();
 		int idx = 0;
 		for (ImportDeclaration importDecl : importDecls) {
@@ -100,7 +108,8 @@ public class ImportOrganizer {
 				if (ImportSpecifiersUtil.isBrokenImport(importDecl)) {
 					continue;
 				}
-				result.add(new ImportRef(importDecl, null, idx++));
+				ImportRef importRef = createFromAST(importDecl, null, idx++);
+				result.add(importRef);
 			} else {
 				for (ImportSpecifier importSpec : importDecl.getImportSpecifiers()) {
 					if (!importSpec.isFlaggedUsedInCode()) {
@@ -109,11 +118,56 @@ public class ImportOrganizer {
 					if (ImportSpecifiersUtil.isBrokenImport(importSpec)) {
 						continue;
 					}
-					result.add(new ImportRef(importDecl, importSpec, idx++));
+					ImportRef importRef = createFromAST(importDecl, importSpec, idx++);
+					result.add(importRef);
 				}
 			}
 		}
 		return result;
+	}
+
+	private ImportRef createFromAST(ImportDeclaration importDecl, ImportSpecifier importSpec, int originalIndex) {
+		if (importSpec != null && !importSpec.isFlaggedUsedInCode()) {
+			throw new IllegalArgumentException("must not create an ImportRef for unused imports");
+		}
+		if ((importSpec == null && ImportSpecifiersUtil.isBrokenImport(importDecl))
+				|| (importSpec != null && ImportSpecifiersUtil.isBrokenImport(importSpec))) {
+			throw new IllegalArgumentException("must not create an ImportRef for broken imports");
+		}
+
+		TModule module = importDecl.getModule();
+		String targetProjectName = module.getProjectName();
+		QualifiedName targetModule = qualifiedNameConverter.toQualifiedName(module.getQualifiedName());
+
+		String moduleSpecifier = importDecl.getModuleSpecifierAsText();
+		if (importDecl.isBare()) {
+			return ImportRef.createBareImport(moduleSpecifier, targetProjectName, targetModule, originalIndex);
+		} else {
+			if (importSpec instanceof NamedImportSpecifier) {
+				NamedImportSpecifier importSpecCasted = (NamedImportSpecifier) importSpec;
+				if (importSpecCasted.isDefaultImport()) {
+					String localName = importSpecCasted.getAlias();
+					return ImportRef.createDefaultImport(localName, moduleSpecifier, targetProjectName, targetModule,
+							originalIndex);
+				} else {
+					String elementName = importSpecCasted.getImportedElementAsText();
+					String alias = importSpecCasted.getAlias();
+					return ImportRef.createNamedImport(elementName, alias, moduleSpecifier, targetProjectName,
+							targetModule,
+							originalIndex);
+				}
+			} else if (importSpec instanceof NamespaceImportSpecifier) {
+				String localNamespaceName = ((NamespaceImportSpecifier) importSpec).getAlias();
+				return ImportRef.createNamespaceImport(localNamespaceName, moduleSpecifier, targetProjectName,
+						targetModule,
+						originalIndex);
+			} else if (importSpec != null) {
+				throw new IllegalArgumentException(
+						"unknown subclass of ImportSpecifier: " + importSpec.getClass().getSimpleName());
+			} else {
+				throw new IllegalArgumentException("importSpec may be null only if importDecl is a bare import");
+			}
+		}
 	}
 
 	public static class ImportRef implements Comparable<ImportRef> {
@@ -124,53 +178,86 @@ public class ImportOrganizer {
 		final String elementName;
 		final String alias;
 		final String moduleSpecifier;
-		final String moduleFQN;
+		final QualifiedName moduleFQN;
 
 		final int originalIndex;
 
-		ImportRef(ImportDeclaration importDecl, ImportSpecifier importSpec, int originalIndex) {
-			if (importDecl.isBare() != (importSpec == null)) {
-				throw new IllegalArgumentException(
-						"importSpec must be null if and only if importDecl is a bare import");
+		private ImportRef(boolean isNamed, boolean isNamespace, boolean isDefault, String elementName, String alias,
+				String moduleSpecifier, QualifiedName moduleFQN, int originalIndex) {
+			if (isDefault && !isNamed) {
+				throw new IllegalArgumentException("default imports must be named imports");
 			}
-			if (importSpec != null && !importSpec.isFlaggedUsedInCode()) {
-				throw new IllegalArgumentException("must not create an ImportRef for unused imports");
+			if (elementName != null && !isNamed) {
+				throw new IllegalArgumentException("elementName may only be non-null for named imports");
 			}
-			if ((importSpec == null && ImportSpecifiersUtil.isBrokenImport(importDecl))
-					|| (importSpec != null && ImportSpecifiersUtil.isBrokenImport(importSpec))) {
-				throw new IllegalArgumentException("must not create an ImportRef for broken imports");
-			}
-			if (importSpec != null && !(importSpec instanceof NamedImportSpecifier
-					|| importSpec instanceof NamespaceImportSpecifier)) {
-				throw new IllegalArgumentException(
-						"unknown subclass of ImportSpecifier: " + importSpec.getClass().getSimpleName());
-			}
-
-			this.isNamed = importSpec instanceof NamedImportSpecifier;
-			this.isNamespace = importSpec instanceof NamespaceImportSpecifier;
-			this.isDefault = isNamed && ((NamedImportSpecifier) importSpec).isDefaultImport();
-			this.elementName = isNamed ? ((NamedImportSpecifier) importSpec).getImportedElementAsText() : null;
-			if (isNamed) {
-				this.alias = ((NamedImportSpecifier) importSpec).getAlias();
-			} else if (isNamespace) {
-				this.alias = ((NamespaceImportSpecifier) importSpec).getAlias();
-			} else {
-				this.alias = null;
-			}
-			this.moduleSpecifier = importDecl.getModuleSpecifierAsText();
-			this.moduleFQN = getFQN(importDecl.getModule());
+			Objects.requireNonNull(moduleSpecifier);
+			Objects.requireNonNull(moduleFQN);
+			this.isNamed = isNamed;
+			this.isNamespace = isNamespace;
+			this.isDefault = isDefault;
+			this.elementName = isDefault ? N4JSLanguageConstants.EXPORT_DEFAULT_NAME : elementName;
+			this.alias = alias;
+			this.moduleSpecifier = moduleSpecifier;
+			this.moduleFQN = moduleFQN;
 			this.originalIndex = originalIndex;
 		}
 
-		public ImportRef(String elementName, String alias, String targetProjectName, QualifiedName targetModule) {
-			this.isNamed = true;
-			this.isNamespace = false;
-			this.isDefault = false;
-			this.elementName = elementName;
-			this.alias = alias;
-			this.moduleSpecifier = Joiner.on(N4JSQualifiedNameConverter.DELIMITER).join(targetModule.getSegments());
-			this.moduleFQN = targetProjectName + N4JSQualifiedNameConverter.DELIMITER + moduleSpecifier;
-			this.originalIndex = Integer.MAX_VALUE;
+		public static ImportRef createBareImport(String moduleSpecifier, String targetProjectName,
+				QualifiedName targetModule, int originalIndex) {
+
+			boolean isNamed = false;
+			boolean isNamespace = false;
+			boolean isDefault = false;
+			String elementName = null;
+			String alias = null;
+			QualifiedName moduleFQN = getFQN(targetProjectName, targetModule);
+
+			return new ImportRef(isNamed, isNamespace, isDefault, elementName, alias, moduleSpecifier, moduleFQN,
+					originalIndex);
+		}
+
+		public static ImportRef createNamedImport(String elementName, String alias, String moduleSpecifier,
+				String targetProjectName, QualifiedName targetModule, int originalIndex) {
+
+			boolean isNamed = true;
+			boolean isNamespace = false;
+			boolean isDefault = false;
+			QualifiedName moduleFQN = getFQN(targetProjectName, targetModule);
+
+			return new ImportRef(isNamed, isNamespace, isDefault, elementName, alias, moduleSpecifier, moduleFQN,
+					originalIndex);
+		}
+
+		public static ImportRef createDefaultImport(String localName, String moduleSpecifier, String targetProjectName,
+				QualifiedName targetModule, int originalIndex) {
+
+			boolean isNamed = true;
+			boolean isNamespace = false;
+			boolean isDefault = true;
+			String elementName = null;
+			String alias = localName;
+			QualifiedName moduleFQN = getFQN(targetProjectName, targetModule);
+
+			return new ImportRef(isNamed, isNamespace, isDefault, elementName, alias, moduleSpecifier, moduleFQN,
+					originalIndex);
+		}
+
+		public static ImportRef createNamespaceImport(String localNamespaceName, String moduleSpecifier,
+				String targetProjectName, QualifiedName targetModule, int originalIndex) {
+
+			boolean isNamed = false;
+			boolean isNamespace = true;
+			boolean isDefault = false;
+			String elementName = null;
+			String alias = localNamespaceName;
+			QualifiedName moduleFQN = getFQN(targetProjectName, targetModule);
+
+			return new ImportRef(isNamed, isNamespace, isDefault, elementName, alias, moduleSpecifier, moduleFQN,
+					originalIndex);
+		}
+
+		private static QualifiedName getFQN(String projectName, QualifiedName moduleName) {
+			return QualifiedName.create(projectName).append(moduleName);
 		}
 
 		public boolean isBare() {
@@ -244,11 +331,12 @@ public class ImportOrganizer {
 			return cmpAlias;
 		}
 
-		private String getFQN(TModule module) {
-			return module.getProjectName() + N4JSQualifiedNameConverter.DELIMITER + module.getQualifiedName();
+		// FIXME remove this method!
+		public String toCode() {
+			return toCode("", null, null);
 		}
 
-		public String toCode() {
+		public String toCode(String spacing, IValueConverterService valueConverter, N4JSGrammarAccess grammarAccess) {
 			StringBuilder sb = new StringBuilder(128);
 			sb.append("import ");
 			if (isNamed) {
@@ -256,11 +344,13 @@ public class ImportOrganizer {
 					sb.append(alias);
 				} else {
 					sb.append('{');
+					sb.append(spacing);
 					sb.append(elementName);
 					if (alias != null) {
 						sb.append(" as ");
 						sb.append(alias);
 					}
+					sb.append(spacing);
 					sb.append('}');
 				}
 				sb.append(' ');
@@ -272,9 +362,15 @@ public class ImportOrganizer {
 			if (!isBare()) {
 				sb.append("from ");
 			}
-			sb.append('"');
-			sb.append(moduleSpecifier);
-			sb.append('"');
+			if (valueConverter != null && grammarAccess != null) {
+				String syntacticModuleSpecifier = valueConverter.toString(moduleSpecifier,
+						grammarAccess.getModuleSpecifierRule().getName());
+				sb.append(syntacticModuleSpecifier);
+			} else {
+				sb.append('"');
+				sb.append(moduleSpecifier);
+				sb.append('"');
+			}
 			sb.append(';');
 			return sb.toString();
 		}

@@ -22,6 +22,8 @@ import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.n4js.ide.editor.contentassist.imports.ImportsAwareReferenceProposalCreator;
+import org.eclipse.n4js.ide.editor.contentassist.imports.ReferenceResolution;
+import org.eclipse.n4js.ide.editor.contentassist.imports.ReferenceResolutionHelper;
 import org.eclipse.n4js.ide.server.codeActions.util.ChangeProvider;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
@@ -32,7 +34,6 @@ import org.eclipse.n4js.ts.types.TField;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.nodemodel.NodeModelUtilsN4;
 import org.eclipse.n4js.validation.IssueCodes;
-import org.eclipse.xtext.ide.editor.contentassist.ContentAssistEntry;
 import org.eclipse.xtext.ide.server.Document;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.ILeafNode;
@@ -56,10 +57,10 @@ import com.google.inject.Singleton;
 public class N4JSQuickfixProvider {
 
 	@Inject
-	private ImportsAwareReferenceProposalCreator importsAwareReferenceProposalCreator;
+	private EObjectAtOffsetHelper eObjectAtOffsetHelper;
 
 	@Inject
-	private EObjectAtOffsetHelper eObjectAtOffsetHelper;
+	private ReferenceResolutionHelper referenceResolutionHelper;
 
 	/**
 	 * Resolves missing import statements by re-using content assist and {@link ImportsAwareReferenceProposalCreator}
@@ -73,13 +74,13 @@ public class N4JSQuickfixProvider {
 		}
 
 		EObject model = getEObject(context);
-		List<ContentAssistEntry> caEntries = importsAwareReferenceProposalCreator
-				.lookupSingleUnresolvedCrossReference(model, false, context.options.getCancelIndicator());
+		List<ReferenceResolution> resolutions = referenceResolutionHelper.lookupSingleUnresolvedCrossReference(model,
+				false, context.options.getCancelIndicator());
 
-		for (ContentAssistEntry cae : caEntries) {
-			ArrayList<ReplaceRegion> replacements = cae.getTextReplacements();
+		for (ReferenceResolution resolution : resolutions) {
+			List<ReplaceRegion> replacements = resolution.textReplacements;
 			if (replacements != null && !replacements.isEmpty()) {
-				String description = cae.getDescription();
+				String description = resolution.description;
 
 				List<TextEdit> textEdits = new ArrayList<>();
 				for (ReplaceRegion replaceRegion : replacements) {

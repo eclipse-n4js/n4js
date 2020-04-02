@@ -42,8 +42,8 @@ import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.n4js.external.LibraryChange;
 import org.eclipse.n4js.external.NpmCLI;
-import org.eclipse.n4js.ide.editor.contentassist.imports.ContentAssistEntryWithRef;
-import org.eclipse.n4js.ide.editor.contentassist.imports.ImportsAwareReferenceProposalCreator;
+import org.eclipse.n4js.ide.editor.contentassist.imports.ReferenceResolution;
+import org.eclipse.n4js.ide.editor.contentassist.imports.ReferenceResolutionHelper;
 import org.eclipse.n4js.ide.server.codeActions.ICodeActionAcceptor;
 import org.eclipse.n4js.ide.server.codeActions.N4JSCodeActionService;
 import org.eclipse.n4js.ide.server.codeActions.N4JSSourceActionProvider;
@@ -123,7 +123,10 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 	private SemverHelper semverHelper;
 
 	@Inject
-	private ImportsAwareReferenceProposalCreator importsAwareReferenceProposalCreator;
+	private ReferenceResolutionHelper referenceResolutionHelper;
+
+	@Inject
+	private ImportOrganizer importOrganizer;
 
 	/**
 	 * Methods annotated as {@link ExecutableCommandHandler} will be registered as handlers for ExecuteCommand requests.
@@ -316,21 +319,16 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 
 		// compute imports to be added for unresolved references
 		List<ImportRef> importsToBeAdded = new ArrayList<>();
-		// List<ContentAssistEntry> candidates = importHelper.findImportCandidatesForUnresolvedReferences(resource,
-		// document, cancelIndicator);
-		// for (ContentAssistEntry cae : candidates) {
-		// if (cae instanceof ContentAssistEntryWithRef) {
-		// importsToBeAdded.addAll(((ContentAssistEntryWithRef) cae).getImportRefs());
-		// }
-		// }
-		List<ContentAssistEntryWithRef> entries = importsAwareReferenceProposalCreator
-				.lookupAllUnresolvedCrossReferences(script, cancelIndicator);
-		for (ContentAssistEntryWithRef cae : entries) {
-			importsToBeAdded.addAll(cae.getImportRefs());
+		List<ReferenceResolution> resolutions = referenceResolutionHelper.lookupAllUnresolvedCrossReferences(script,
+				cancelIndicator);
+		for (ReferenceResolution resolution : resolutions) {
+			if (resolution.importToBeAdded != null) {
+				importsToBeAdded.add(resolution.importToBeAdded);
+			}
 		}
 
 		// organize all imports (existing and new ones)
-		List<TextEdit> edits = ImportOrganizer.organizeImports(document, script, importsToBeAdded, cancelIndicator);
+		List<TextEdit> edits = importOrganizer.organizeImports(document, script, importsToBeAdded, cancelIndicator);
 
 		WorkspaceEdit workspaceEdit = new WorkspaceEdit(Collections.singletonMap(uriString, edits));
 		ApplyWorkspaceEditParams params = new ApplyWorkspaceEditParams(workspaceEdit, "Organize Imports");
