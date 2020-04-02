@@ -39,8 +39,6 @@ export function $classImplements(obj: any+) : type{N4Interface}[] {
 export function makeReflectionsForClass(staticProto: constructor{?}, reflectionString: string): N4Class {
     const reflectionValues = ReflectionValues.createForClassOrEnum(staticProto, reflectionString);
     const detectedMemberStrings = new MemberDetectorForClass(staticProto).detectMembers();
-    console.log("detectedMemberStrings of " + reflectionValues.name);
-    console.log(detectedMemberStrings);
     reflectionValues.mergeWithDetectedMembers(detectedMemberStrings);
     const detectedAllImplementedInterfaces = detectedAllImplementedInterfacesFromClass(staticProto);
     reflectionValues.mergeWithDetectedAllImplementedInterfaces(detectedAllImplementedInterfaces);
@@ -71,26 +69,25 @@ export function makeReflectionsForEnum(staticProto: constructor{?}, reflectionSt
     return n4enumType;
 }
 
-export function detectedAllImplementedInterfacesFromClass(staticProto: constructor{?}): N4Interface[] {
+export function detectedAllImplementedInterfacesFromClass(staticProto: constructor{?}): type{N4Interface}[] {
     const implementedInterfaces = $classImplements(staticProto) || [];
-    const detectedAllImplementedInterfaces : N4Interface[] = [];
+    const allImplementedInterfaces : type{N4Interface}[] = [];
     for (const implementedInterface of implementedInterfaces) {
-        // FIXME: N4Object#n4type() should not be always N4Class
-        const n4Interface = (implementedInterface.n4type as Object) as N4Interface;
-        detectedAllImplementedInterfaces.push(n4Interface);
-        getAllInterfacesRek(implementedInterface, detectedAllImplementedInterfaces);
+        // FIXME: N4Object#n4type() should not be always N4Class?
+        allImplementedInterfaces.push(implementedInterface);
+        getAllInterfacesRek(implementedInterface, allImplementedInterfaces);
     }
-    return detectedAllImplementedInterfaces;
+    return allImplementedInterfaces;
 }
 
-export function detectedAllImplementedInterfacesFromInterface(interfaceObject: Object): N4Interface[] {
+export function detectedAllImplementedInterfacesFromInterface(interfaceObject: Object): type{N4Interface}[] {
     const superInterfacesFn = $interfaceExtends(interfaceObject);
     const superInterfaces = superInterfacesFn || [];
-    const detectedAllImplementedInterfaces : N4Interface[] = [];
+    const allImplementedInterfaces : type{N4Interface}[] = [];
     for (const superInterface of superInterfaces) {
-        getAllInterfacesRek(superInterface, detectedAllImplementedInterfaces);
+        getAllInterfacesRek(superInterface, allImplementedInterfaces);
     }
-    return detectedAllImplementedInterfaces;
+    return allImplementedInterfaces;
 }
 
 function setN4TypeProperties(n4Type: N4Type, reflectionValues: ReflectionValues) {
@@ -112,8 +109,6 @@ function createMembers(instanceProto: Object, staticProto, reflectionValues: Ref
     const annotations = createMemberAnnotations(reflectionValues.memberAnnotations);
     const ownedMembers : N4Member[] = [];
     const consumedMembers : N4Member[] = [];
-    console.log("create members for "+ reflectionValues.name);
-    console.log(reflectionValues);
     for (const memberString of reflectionValues.members) {
         const memberInfo = parseMemberString(memberString);
         const member = createMember(instanceProto, staticProto, memberInfo, annotations);
@@ -224,22 +219,21 @@ function createMember(instanceProto: any+, staticProto: any+, memberInfo: Member
     return member;
 }
 
-function mapInterfacesToFQN(n4interfaces : N4Interface[]) : string[] {
+function mapInterfacesToFQN(n4interfaces : type{N4Interface}[]) : string[] {
     const fqns : string[] = [];
     for (const n4interface of n4interfaces) {
-        fqns.push(n4interface.fqn);
+        fqns.push(n4interface.n4type.fqn);
     }
     return fqns;
 }
 
-function getAllInterfacesRek(interfaceObject: Object, allImplementedInterfaces : N4Interface[]): void {
+function getAllInterfacesRek(interfaceObject: Object, allImplementedInterfaces : type{N4Interface}[]): void {
     const superInterfacesFn = $interfaceExtends(interfaceObject);
     const superInterfaces = superInterfacesFn || [];
     for (const superInterface of superInterfaces) {
-        // FIXME: N4Object#n4type() should not be always N4Class
-        const n4Interface = (superInterface.n4type as Object) as N4Interface;
-        if (allImplementedInterfaces.indexOf(n4Interface) === -1) {
-            allImplementedInterfaces.push(n4Interface);
+        // FIXME: N4Object#n4type() should not be always N4Class?
+        if (allImplementedInterfaces.indexOf(superInterface) === -1) {
+            allImplementedInterfaces.push(superInterface);
             getAllInterfacesRek(superInterface, allImplementedInterfaces);
         }
     }
@@ -422,9 +416,7 @@ class ReflectionValues {
         }
     }
 
-    mergeWithDetectedAllImplementedInterfaces(detectedAllImplementedInterfaces: N4Interface[]) {
-        console.log("detectedAllImplementedInterfaces");
-        console.log(detectedAllImplementedInterfaces);
+    mergeWithDetectedAllImplementedInterfaces(detectedAllImplementedInterfaces: type{N4Interface}[]) {
         const interfaceFQNs = mapInterfacesToFQN(detectedAllImplementedInterfaces);
         this.allImplementedInterfaces = this.allImplementedInterfaces.concat(interfaceFQNs);
     }

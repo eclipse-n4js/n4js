@@ -14,7 +14,7 @@
   "engines": {
     "node": ">= 8.0.0"
   },
-  "main": "./src-gen/rt.js",
+  "main": "./src-gen/index.js",
   "files": [
     "src",
     "src-gen"

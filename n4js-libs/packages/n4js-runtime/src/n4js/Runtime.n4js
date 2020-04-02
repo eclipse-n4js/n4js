@@ -10,47 +10,45 @@
  */
 /*eslint-disable new-cap, no-proto, strict */
 
-import _globalThis from "./_globalThis";
-import {makeReflectionsForClass, makeReflectionsForInterface, makeReflectionsForEnum} from "./ReflectionBuilder"
-import {$interfaceFieldInits, detectedAllImplementedInterfacesFromClass} from "./ReflectionBuilder"
-
-var ArraySlice = Array.prototype.slice;
+import _globalThis from "_globalThis";
+import {makeReflectionsForClass, makeReflectionsForInterface, makeReflectionsForEnum} from "ReflectionBuilder"
+import {$interfaceFieldInits, detectedAllImplementedInterfacesFromClass} from "ReflectionBuilder"
 
 
 /**
  * Returns reflection information.
  * If it is not existing yet, it will be created and attached to the prototype using a symbol.
  */
-function $getReflectionForClass(staticProto, reflectionString) {
-    const $sym = Symbol.for('org.eclipse.n4js/reflectionInfo');
-    if (!staticProto.hasOwnProperty($sym)) {
-	    staticProto[$sym] = makeReflectionsForClass(staticProto, reflectionString);
+function $getReflectionForClass(staticProto: Object, reflectionString: string) {
+    const reflectionInfo = Symbol.for('org.eclipse.n4js/reflectionInfo');
+    if (!staticProto.hasOwnProperty(reflectionInfo)) {
+	    staticProto[reflectionInfo] = makeReflectionsForClass(staticProto as constructor{?}, reflectionString);
     }
-    return staticProto[$sym];
+    return staticProto[reflectionInfo];
 }
 
 /**
  * Returns reflection information.
  * If it is not existing yet, it will be created and attached to the prototype using a symbol.
  */
-function $getReflectionForInterface(staticProto, reflectionString) {
-    const $sym = Symbol.for('org.eclipse.n4js/reflectionInfo');
-    if (!staticProto.hasOwnProperty($sym)) {
-	    staticProto[$sym] = makeReflectionsForInterface(staticProto, reflectionString);
+function $getReflectionForInterface(staticProto: Object, reflectionString: string) {
+    const reflectionInfo = Symbol.for('org.eclipse.n4js/reflectionInfo');
+    if (!staticProto.hasOwnProperty(reflectionInfo)) {
+	    staticProto[reflectionInfo] = makeReflectionsForInterface(staticProto, reflectionString);
     }
-    return staticProto[$sym];
+    return staticProto[reflectionInfo];
 }
 
 /**
  * Returns reflection information.
  * If it is not existing yet, it will be created and attached to the prototype using a symbol.
  */
-function $getReflectionForEnum(staticProto, reflectionString) {
-    const $sym = Symbol.for('org.eclipse.n4js/reflectionInfo');
-    if (!staticProto.hasOwnProperty($sym)) {
-	    staticProto[$sym] = makeReflectionsForEnum(staticProto, reflectionString);
+function $getReflectionForEnum(staticProto: Object, reflectionString: string) {
+    const reflectionInfo = Symbol.for('org.eclipse.n4js/reflectionInfo');
+    if (!staticProto.hasOwnProperty(reflectionInfo)) {
+	    staticProto[reflectionInfo] = makeReflectionsForEnum(staticProto as constructor{?}, reflectionString);
     }
-    return staticProto[$sym];
+    return staticProto[reflectionInfo];
 }
 
 
@@ -63,8 +61,8 @@ function $getReflectionForEnum(staticProto, reflectionString) {
  *                 or an instance of a class (for instance fields).
  * @param names - One or more field names.
  */
-function $defineFields(target, ...names) {
-    for(const name of names) {
+function $defineFields(target: Object, ...names: string) {
+    for (const name of names) {
         Object.defineProperty(target, name, {
             writable: true,
             enumerable: true,
@@ -85,10 +83,10 @@ function $defineFields(target, ...names) {
  * @param spec - If invoked from a @Spec-constructor, this is the spec-object; otherwise 'undefined'.
  * @param mixinExclusion - An object with properties that must not be overridden in the target object.
  */
-function $initFieldsFromInterfaces(target, spec, mixinExclusion) {
+function $initFieldsFromInterfaces(target: Object, spec: Object, mixinExclusion: Object) {
     const interfaces = detectedAllImplementedInterfacesFromClass(target.constructor);
     for (const ifc of interfaces) {
-        const defs = $interfaceFieldInits(ifc) || {};
+        const defs: Object = $interfaceFieldInits(ifc) || {};
         for (const fieldName of Object.getOwnPropertyNames(defs)) {
             if (target.hasOwnProperty(fieldName) || mixinExclusion.hasOwnProperty(fieldName)) {
                 continue;
@@ -100,7 +98,7 @@ function $initFieldsFromInterfaces(target, spec, mixinExclusion) {
             if (value === undefined) {
                 value = defs[fieldName];
                 if (typeof value === "function") {
-                    value = value.call(target);
+                    value = (value as Function).call(target);
                 }
             }
             target[fieldName] = value;
@@ -116,13 +114,13 @@ function $initFieldsFromInterfaces(target, spec, mixinExclusion) {
  * @param arr - the Iterable that is to be turned into an array.
  * @param max - maximum number of elements returned.
  */
-function $sliceToArrayForDestruct(arr, max) {
+function $sliceToArrayForDestruct(arr: Object, max: int) {
     if (Array.isArray(arr)) {
         return arr;
-    } else if (Symbol.iterator in Object(arr)) {
-        var ret = [],
-            it = arr[Symbol.iterator](),
-            entry;
+    } else if (Symbol.iterator in Object(arr)) { // FIXME: Add test for support of 'in' in relational expressions
+        let ret = [];
+        let it = arr[Symbol.iterator]();
+        let entry: Object+;
         while (!(entry = it.next()).done) {
             ret.push(entry.value);
             if (ret.length >= max) {
@@ -135,32 +133,32 @@ function $sliceToArrayForDestruct(arr, max) {
     }
 }
 
-function $n4promisifyFunction(cbBasedFn, args, multiSuccessValues, noErrorValue) {
-    return new Promise(function(resolve, reject) {
+function $n4promisifyFunction(cbBasedFn: Function, args: Function[], multiSuccessValues, noErrorValue) {
+    return new Promise<any, any>(function(resolve, reject) {
         args.push(function(result0, result1) {
             if (noErrorValue) {
-                resolve(multiSuccessValues ? ArraySlice.call(arguments, 0) : result0);
+                resolve(multiSuccessValues ? Array.prototype.slice(arguments as number, 0) : result0);
             } else {
                 if (result0) {
                     reject(result0);
                 } else {
-                    resolve(multiSuccessValues ? ArraySlice.call(arguments, 1) : result1);
+                    resolve(multiSuccessValues ? Array.prototype.slice(arguments as number, 1) : result1);
                 }
             }
         });
         cbBasedFn.apply(null, args);
     });
 }
-function $n4promisifyMethod(receiver, methodName, args, multiSuccessValues, noErrorValue) {
-    return new Promise(function(resolve, reject) {
+function $n4promisifyMethod(receiver: Object+, methodName, args: Function[], multiSuccessValues, noErrorValue) {
+    return new Promise<any, any>(function(resolve, reject) {
         args.push(function(result0, result1) {
             if (noErrorValue) {
-                resolve(multiSuccessValues ? ArraySlice.call(arguments, 0) : result0);
+                resolve(multiSuccessValues ? Array.prototype.slice(arguments as number, 0) : result0);
             } else {
                 if (result0) {
                     reject(result0);
                 } else {
-                    resolve(multiSuccessValues ? ArraySlice.call(arguments, 1) : result1);
+                    resolve(multiSuccessValues ? Array.prototype.slice(arguments as number, 1) : result1);
                 }
             }
         });
