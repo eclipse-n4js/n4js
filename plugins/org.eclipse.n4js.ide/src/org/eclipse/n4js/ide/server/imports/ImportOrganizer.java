@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.n4js.N4JSLanguageConstants;
+import org.eclipse.n4js.ide.editor.contentassist.imports.ImportRegionHelper;
 import org.eclipse.n4js.ide.server.codeActions.util.ChangeProvider;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
@@ -48,6 +49,9 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class ImportOrganizer {
+
+	@Inject
+	private ImportRegionHelper importRegionHelper;
 
 	@Inject
 	private IQualifiedNameConverter qualifiedNameConverter;
@@ -87,6 +91,11 @@ public class ImportOrganizer {
 			offsetOfFirstImport = Math.min(offsetOfFirstImport, node.getOffset());
 		}
 		textEdits = ChangeProvider.closeGapsIfEmpty(document, textEdits);
+
+		// if we do not have any existing imports, find correct location for adding new imports
+		if (offsetOfFirstImport == Integer.MAX_VALUE) {
+			offsetOfFirstImport = importRegionHelper.findInsertionOffset(script);
+		}
 
 		// create edit for inserting the new imports
 		String[] importStrings = importRefs.stream()

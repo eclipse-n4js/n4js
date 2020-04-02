@@ -11,7 +11,6 @@
 package org.eclipse.n4js.ide.server.codeActions.util;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
@@ -210,11 +209,11 @@ public class ChangeProvider {
 	 *
 	 * @return a copy of the given list of text edits with gaps closed as described above. Always returns a newly
 	 *         created list, but copies of individual text edits are created only as necessary (i.e. the returned list
-	 *         may contain some of the text edit instances passed in).
+	 *         may contain some of the text edit instances passed in). The returned list is guaranteed to be modifiable.
 	 */
 	public static List<TextEdit> closeGapsIfEmpty(Document doc, List<? extends TextEdit> edits) {
 		if (edits.isEmpty()) {
-			return Collections.emptyList();
+			return new ArrayList<>();
 		}
 		List<TextEdit> result = new ArrayList<>();
 		int size = edits.size();

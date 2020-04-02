@@ -51,6 +51,7 @@ import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.xtext.conversion.IValueConverterService;
 import org.eclipse.xtext.conversion.ValueConverterException;
 import org.eclipse.xtext.ide.editor.contentassist.IPrefixMatcher;
+import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -65,6 +66,7 @@ import org.eclipse.xtext.util.ITextRegion;
 import org.eclipse.xtext.util.ReplaceRegion;
 import org.eclipse.xtext.util.TextRegion;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.base.Strings;
@@ -129,6 +131,7 @@ public class ReferenceResolutionHelper {
 		private final CancelIndicator cancelIndicator;
 
 		private final List<ReferenceResolution> resolutions = new ArrayList<>();
+		private boolean valid = true;
 
 		private ResolutionAcceptor(boolean onlyAcceptSingleProposal, CancelIndicator cancelIndicator) {
 			this.onlyAcceptSingleProposal = onlyAcceptSingleProposal;
@@ -137,11 +140,14 @@ public class ReferenceResolutionHelper {
 
 		@Override
 		public void accept(ReferenceResolution newEntry) {
+			if (onlyAcceptSingleProposal && !resolutions.isEmpty()) {
+				valid = false;
+			}
 			resolutions.add(newEntry);
 		}
 
 		public List<ReferenceResolution> getResolutions() {
-			if (cancelIndicator.isCanceled()) {
+			if (!valid || cancelIndicator.isCanceled()) {
 				return Collections.emptyList();
 			}
 			return resolutions;
@@ -149,10 +155,21 @@ public class ReferenceResolutionHelper {
 
 		@Override
 		public boolean canAcceptMoreProposals() {
-			if (onlyAcceptSingleProposal && !resolutions.isEmpty()) {
-				return false;
-			}
-			return !cancelIndicator.isCanceled();
+			return valid && !cancelIndicator.isCanceled();
+		}
+	}
+
+	private static class Reference {
+		final String prefix;
+		final EObject model;
+		final EReference eReference;
+		final INode currentNode;
+
+		Reference(String prefix, EObject model, EReference eReference, INode currentNode) {
+			this.prefix = prefix;
+			this.model = model;
+			this.eReference = eReference;
+			this.currentNode = currentNode;
 		}
 	}
 
@@ -160,13 +177,21 @@ public class ReferenceResolutionHelper {
 			Script script,
 			CancelIndicator cancelIndicator) {
 
+		triggerProxyResolution(script, cancelIndicator);
+
 		List<ReferenceResolution> result = new ArrayList<>();
+		Set<String> donePrefixes = new HashSet<>();
 		Iterator<EObject> iter = script.eAllContents();
 		while (iter.hasNext()) {
 			EObject curr = iter.next();
-			List<ReferenceResolution> resolutions = lookupSingleUnresolvedCrossReference(curr, true, cancelIndicator);
-			if (!resolutions.isEmpty()) {
-				result.add(resolutions.get(0));
+			Reference reference = getUnresolvedReferenceForASTNode(curr);
+			if (reference != null && donePrefixes.add(reference.prefix)) {
+				ResolutionAcceptor acceptor = new ResolutionAcceptor(true, cancelIndicator);
+				searchResolutions(reference, true, true, Predicates.alwaysFalse(), Predicates.alwaysTrue(), acceptor);
+				List<ReferenceResolution> resolutions = acceptor.getResolutions();
+				if (!resolutions.isEmpty()) {
+					result.add(resolutions.get(0));
+				}
 			}
 		}
 		return result;
@@ -177,48 +202,55 @@ public class ReferenceResolutionHelper {
 			boolean onlyAcceptSingleProposal,
 			CancelIndicator cancelIndicator) {
 
-		EReference reference;
-		String prefix;
-		if (model instanceof IdentifierRef) {
-			reference = identifierRef_id;
-			prefix = ((IdentifierRef) model).getIdAsText();
-		} else if (model instanceof ParameterizedTypeRef) {
-			reference = parameterizedTypeRef_declaredType;
-			prefix = ((ParameterizedTypeRef) model).getDeclaredTypeAsText();
-		} else {
-			return Collections.emptyList(); // unsupported kind of AST node
+		triggerProxyResolution(model, cancelIndicator);
+		Reference reference = getUnresolvedReferenceForASTNode(model);
+		if (reference == null) {
+			return Collections.emptyList();
 		}
-
-		return lookupSingleUnresolvedCrossReference(model, reference, prefix, onlyAcceptSingleProposal,
-				cancelIndicator);
+		ResolutionAcceptor acceptor = new ResolutionAcceptor(onlyAcceptSingleProposal, cancelIndicator);
+		searchResolutions(reference, true, true, Predicates.alwaysFalse(), Predicates.alwaysTrue(), acceptor);
+		return acceptor.getResolutions();
 	}
 
-	private List<ReferenceResolution> lookupSingleUnresolvedCrossReference(
-			EObject model,
-			EReference reference,
-			String prefix,
-			boolean onlyAcceptSingleProposal,
-			CancelIndicator cancelIndicator) {
+	private void triggerProxyResolution(EObject eObject, CancelIndicator cancelIndicator) {
+		Resource resource = eObject.eResource();
+		if (resource instanceof LazyLinkingResource) {
+			((LazyLinkingResource) resource).resolveLazyCrossReferences(cancelIndicator);
+		}
+	}
 
-		Object targetObj = model.eGet(reference, true);
+	/** IMPORTANT: this method assumes proxy resolution has taken place in containing resource! */
+	private Reference getUnresolvedReferenceForASTNode(EObject astNode) {
+		EReference eReference;
+		String prefix;
+		if (astNode instanceof IdentifierRef) {
+			eReference = identifierRef_id;
+			prefix = ((IdentifierRef) astNode).getIdAsText();
+		} else if (astNode instanceof ParameterizedTypeRef) {
+			eReference = parameterizedTypeRef_declaredType;
+			prefix = ((ParameterizedTypeRef) astNode).getDeclaredTypeAsText();
+		} else {
+			return null; // unsupported kind of AST node
+		}
+
+		Object targetObj = astNode.eGet(eReference, false);
 		if (!(targetObj instanceof EObject)) {
-			return Collections.emptyList(); // unsupported kind of reference (e.g. many-valued)
+			return null; // unsupported kind of reference (e.g. many-valued)
 		}
 		if (!((EObject) targetObj).eIsProxy()) {
-			return Collections.emptyList(); // reference isn't unresolved
+			return null; // reference isn't unresolvable
 		}
 
-		INode currentNode = NodeModelUtils.findActualNodeFor(model);
-		ResolutionAcceptor acceptor = new ResolutionAcceptor(onlyAcceptSingleProposal, cancelIndicator);
-		lookupSingleCrossReference(model, reference, prefix, currentNode, Predicates.alwaysFalse(), acceptor,
-				Predicates.alwaysTrue());
-		return acceptor.getResolutions();
+		INode currentNode = NodeModelUtils.findActualNodeFor(astNode);
+
+		return new Reference(prefix, astNode, eReference, currentNode);
 	}
 
 	public void lookupSingleCrossReference(
 			EObject model,
-			EReference reference,
-			String prefix, INode currentNode, Predicate<String> conflictChecker,
+			EReference eReference,
+			String prefix, INode currentNode,
+			Predicate<String> conflictChecker,
 			IResolutionAcceptor acceptor,
 			Predicate<IEObjectDescription> filter) {
 
@@ -226,8 +258,21 @@ public class ReferenceResolutionHelper {
 			return;
 		}
 
+		Reference reference = new Reference(prefix, model, eReference, currentNode);
+		searchResolutions(reference, false, false, conflictChecker, filter, acceptor);
+	}
+
+	private void searchResolutions(
+			Reference reference,
+			boolean requireFullMatch,
+			boolean isUnresolvedReference,
+			Predicate<String> conflictChecker,
+			Predicate<IEObjectDescription> filter,
+			IResolutionAcceptor acceptor) {
+
+		final Resource resource = reference.model.eResource();
 		final IContentAssistScopeProvider contentAssistScopeProvider = (IContentAssistScopeProvider) scopeProvider;
-		final IScope scope = contentAssistScopeProvider.getScopeForContentAssist(model, reference);
+		final IScope scope = contentAssistScopeProvider.getScopeForContentAssist(reference.model, reference.eReference);
 		// iterate over candidates, filter them, and create ICompletionProposals for them
 		final Iterable<IEObjectDescription> candidates = scope.getAllElements();
 		final Set<URI> candidateURIs = new HashSet<>(); // note: shadowing for #getAllElements does not work
@@ -240,8 +285,10 @@ public class ReferenceResolutionHelper {
 				continue;
 			}
 
-			final ReferenceResolution resolution = getResolution(candidate, model, scope, prefix, currentNode,
-					conflictChecker);
+			final Optional<IScope> scopeForCollisionCheck = isUnresolvedReference ? Optional.absent()
+					: Optional.of(scope);
+			final ReferenceResolution resolution = getResolution(resource, reference.prefix, reference.currentNode,
+					requireFullMatch, candidate, scopeForCollisionCheck, conflictChecker);
 			if (resolution != null && candidateURIs.add(candidate.getEObjectURI())) {
 				acceptor.accept(resolution);
 			}
@@ -249,17 +296,23 @@ public class ReferenceResolutionHelper {
 	}
 
 	/**
-	 * Creates proposal that can contain an N4JS import.
+	 * Returns a resolution if the given candidate is a valid target element for the given prefix; otherwise
+	 * <code>null</code> is returned.
 	 *
 	 * @param candidate
-	 *            for which proposal is created
-	 * @return code completion proposal
+	 *            the {@link IEObjectDescription} representing the potential target element of the resolution.
+	 * @param scopeForCollisionCheck
+	 *            a scope that will be used for a collision check. If the reference being resolved is known to be an
+	 *            unresolved reference and <code>requireFullMatch</code> is set to <code>true</code>, then this
+	 *            collision check can safely be omitted.
+	 * @return the resolution of <code>null</code> if the candidate is not a valid match for the reference.
 	 */
-	private ReferenceResolution getResolution(IEObjectDescription candidate, EObject model, IScope scope,
-			String prefix, INode currentNode, Predicate<String> conflictChecker) {
+	private ReferenceResolution getResolution(Resource resource, String prefix, INode currentNode,
+			boolean requireFullMatch, IEObjectDescription candidate, Optional<IScope> scopeForCollisionCheck,
+			Predicate<String> conflictChecker) {
 
-		ReferenceResolutionCandidate rrc = new ReferenceResolutionCandidate(candidate, scope, prefix, currentNode,
-				conflictChecker);
+		ReferenceResolutionCandidate rrc = new ReferenceResolutionCandidate(candidate, scopeForCollisionCheck, prefix,
+				requireFullMatch, currentNode, conflictChecker);
 
 		if (!rrc.isValid) {
 			return null;
@@ -272,7 +325,7 @@ public class ReferenceResolutionHelper {
 			String label = getLabel(rrc, version);
 			String description = getDescription(rrc);
 			ImportRef importToBeAdded = getImportRef(rrc);
-			Collection<ReplaceRegion> textReplacements = getTextReplacements(model.eResource(), importToBeAdded);
+			Collection<ReplaceRegion> textReplacements = getTextReplacements(resource, importToBeAdded);
 
 			return new ReferenceResolution(candidate, proposal, label, description, importToBeAdded, textReplacements);
 
@@ -404,22 +457,26 @@ public class ReferenceResolutionHelper {
 		final CandidateAccessType accessType;
 		final NameAndAlias addedImportNameAndAlias;
 
-		ReferenceResolutionCandidate(IEObjectDescription candidate, IScope scope, String prefix, INode currentNode,
-				Predicate<String> conflictChecker) {
+		ReferenceResolutionCandidate(IEObjectDescription candidate, Optional<IScope> scopeForCollisionCheck,
+				String prefix, boolean requireFullMatch, INode currentNode, Predicate<String> conflictChecker) {
+			if (!requireFullMatch && !scopeForCollisionCheck.isPresent()) {
+				throw new IllegalArgumentException(
+						"collision check should only be omitted if a full match is required");
+			}
 			this.candidate = candidate;
+			this.candidateProject = n4jsCore.findProject(candidate.getEObjectURI()).orNull();
 			this.shortName = getShortName();
 			this.qualifiedName = getQualifiedName();
 			this.parentImportElement = getParentImportElement(currentNode);
 			this.parentImportModuleName = getParentImportModuleName();
-			this.candidateViaScopeShortName = getCorrectCandidateViaScope(scope);
-			this.candidateProject = n4jsCore.findProject(candidate.getEObjectURI()).orNull();
+			this.candidateViaScopeShortName = getCorrectCandidateViaScope(scopeForCollisionCheck);
 			this.isScopedCandidateEqual = isEqualCandidateName(candidateViaScopeShortName, qualifiedName);
 			this.isScopedCandidateCollisioning = isScopedCandidateCollisioning();
 			this.accessType = getAccessType();
 			this.aliasName = getAliasName();
 			this.namespaceName = getNamespaceName();
 			this.addedImportNameAndAlias = getImportChanges();
-			this.isValid = isValid(prefix, conflictChecker);
+			this.isValid = isValid(prefix, requireFullMatch, conflictChecker);
 		}
 
 		private String getShortName() {
@@ -428,10 +485,10 @@ public class ReferenceResolutionHelper {
 		}
 
 		/** @return true iff this candidate is valid and should be shown as a proposal */
-		private boolean isValid(String prefix, Predicate<String> conflictChecker) {
+		private boolean isValid(String prefix, boolean requireFullMatch, Predicate<String> conflictChecker) {
 			boolean validName = false;
-			validName |= prefixMatcher.isCandidateMatchingPrefix(shortName, prefix);
-			validName |= isAlias() && prefixMatcher.isCandidateMatchingPrefix(aliasName, prefix);
+			validName |= isMatch(shortName, prefix, requireFullMatch);
+			validName |= isAlias() && isMatch(aliasName, prefix, requireFullMatch);
 			validName |= isNamespace()
 					&& prefixMatcher.isCandidateMatchingPrefix(namespaceName.getLastSegment(), prefix);
 
@@ -441,6 +498,13 @@ public class ReferenceResolutionHelper {
 			valid &= parentImportModuleName == null || qualifiedName.toString("/").startsWith(parentImportModuleName);
 
 			return valid;
+		}
+
+		private boolean isMatch(String name, String prefix, boolean requireFullMatch) {
+			if (requireFullMatch) {
+				return prefix.equals(name);
+			}
+			return prefixMatcher.isCandidateMatchingPrefix(name, prefix);
 		}
 
 		private QualifiedName getQualifiedName() {
@@ -456,10 +520,14 @@ public class ReferenceResolutionHelper {
 			return qName;
 		}
 
-		private IEObjectDescription getCorrectCandidateViaScope(IScope scope) {
-			IEObjectDescription candidateViaScope = getCandidateViaScope(scope);
-			candidateViaScope = specialcaseNamespaceShadowsOwnElement(scope, candidateViaScope);
-			return candidateViaScope;
+		private IEObjectDescription getCorrectCandidateViaScope(Optional<IScope> scopeForCollisionCheck) {
+			if (scopeForCollisionCheck.isPresent()) {
+				IScope scope = scopeForCollisionCheck.get();
+				IEObjectDescription candidateViaScope = getCandidateViaScope(scope);
+				candidateViaScope = specialcaseNamespaceShadowsOwnElement(scope, candidateViaScope);
+				return candidateViaScope;
+			}
+			return null;
 		}
 
 		private IEObjectDescription getCandidateViaScope(IScope scope) {
