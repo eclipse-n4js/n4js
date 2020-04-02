@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ide.tests.server;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -116,9 +117,10 @@ public abstract class AbstractOrganizeImportsTest extends AbstractStructuredIdeT
 	 *            expected source code after organize imports was performed.
 	 */
 	protected void test(CharSequence code, List<String> expectedIssues, CharSequence expectedCode) {
-		test(Iterables.concat(defaultOrganizeImportsTestModules, Lists.newArrayList(
-				Pair.of(MODULE_NAME, code.toString()))), MODULE_NAME,
-				new TestOrganizeImportsConfiguration(expectedIssues, expectedCode));
+		String nameWithSelector = DEFAULT_MODULE_NAME + MODULE_SELECTOR;
+		ArrayList<Pair<String, String>> allModule = Lists.newArrayList(Pair.of(nameWithSelector, code.toString()));
+		allModule.addAll(defaultOrganizeImportsTestModules);
+		test(allModule, new TestOrganizeImportsConfiguration(expectedIssues, expectedCode));
 	}
 
 	@Override

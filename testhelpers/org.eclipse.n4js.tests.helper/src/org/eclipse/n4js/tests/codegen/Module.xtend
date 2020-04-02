@@ -16,12 +16,14 @@ import java.io.IOException
 import java.util.List
 import java.util.Map
 import java.util.Objects
+import org.eclipse.n4js.N4JSGlobals
 
 /**
  * Generates code for a module containing imports and either given classifiers or contents.
  */
 class Module {
 	final String name;
+	final String fExtension;
 	List<Classifier<?>> classifiers;
 	String contents;
 	Map<String, List<String>> imports;
@@ -32,7 +34,17 @@ class Module {
 	 * @param name the module name without extension
 	 */
 	public new(String name) {
+		this(name, N4JSGlobals.N4JS_FILE_EXTENSION);
+	}
+
+	/**
+	 * Creates a new instance with the given parameters.
+	 *
+	 * @param name the module name without extension
+	 */
+	public new(String name, String fExtension) {
 		this.name = Objects.requireNonNull(name);
+		this.fExtension = Objects.requireNonNull(fExtension);
 	}
 
 	/**
@@ -42,6 +54,15 @@ class Module {
 	 */
 	public def String getName() {
 		return name
+	}
+
+	/**
+	 * Returns the file extension of this module.
+	 *
+	 * @return the file extension of this module
+	 */
+	public def String getExtension() {
+		return fExtension
 	}
 
 
@@ -123,7 +144,7 @@ class Module {
 		if (!parentDirectory.directory)
 			throw new IOException("'" + parentDirectory + "' is not a directory");
 
-		val File filePath = new File(parentDirectory, this.name + ".n4js");
+		val File filePath = new File(parentDirectory, this.name + "." + fExtension);
 		var FileWriter out = null;
 		try {
 			out = new FileWriter(filePath);

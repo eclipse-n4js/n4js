@@ -10,7 +10,6 @@
 package org.eclipse.n4js.ide.tests.contentassist;
 
 import org.eclipse.n4js.ide.tests.server.AbstractCompletionTest;
-import org.eclipse.xtext.testing.TestCompletionConfiguration;
 import org.junit.Test;
 
 /**
@@ -20,43 +19,27 @@ public class CamelCaseCompletionTest extends AbstractCompletionTest {
 
 	/***/
 	@Test
-	public void testCamelCasePrefix_01() throws Exception {
-		TestCompletionConfiguration tcc = new TestCompletionConfiguration();
-		tcc.setModel("EvE");
-		tcc.setColumn(tcc.getModel().length());
-		tcc.setExpectedCompletionItems("[(EvalError, Text, , , , 00000, , , , ([0:0 - 0:3], EvalError), [], [], , )]");
-		test(tcc);
+	public void testCamelCasePrefix_01() {
+		test("EvE<|>", "(EvalError, Text, EvalError, , , 00000, , , , ([0:0 - 0:3], EvalError), [], [], , )");
 	}
 
 	/***/
 	@Test
-	public void testCamelCasePrefix_02() throws Exception {
-		TestCompletionConfiguration tcc = new TestCompletionConfiguration();
-		tcc.setModel("eURIC");
-		tcc.setColumn(tcc.getModel().length());
-		tcc.setExpectedCompletionItems(
-				"[(encodeURIComponent, Text, , , , 00000, , , , ([0:0 - 0:5], encodeURIComponent), [], [], , )]");
-		test(tcc);
+	public void testCamelCasePrefix_02() {
+		test("eURIC<|>",
+				"(encodeURIComponent, Text, encodeURIComponent, , , 00000, , , , ([0:0 - 0:5], encodeURIComponent), [], [], , )");
 	}
 
 	/***/
 	@Test
-	public void testCamelCasePrefix_03() throws Exception {
-		TestCompletionConfiguration tcc = new TestCompletionConfiguration();
-		tcc.setModel("eUC");
-		tcc.setColumn(tcc.getModel().length());
-		tcc.setExpectedCompletionItems(
-				"[(encodeURIComponent, Text, , , , 00000, , , , ([0:0 - 0:3], encodeURIComponent), [], [], , )]");
-		test(tcc);
+	public void testCamelCasePrefix_03() {
+		test("eUC<|>",
+				"(encodeURIComponent, Text, encodeURIComponent, , , 00000, , , , ([0:0 - 0:3], encodeURIComponent), [], [], , )");
 	}
 
 	/***/
 	@Test
-	public void testCamelCasePrefix_04() throws Exception {
-		TestCompletionConfiguration tcc = new TestCompletionConfiguration();
-		tcc.setModel("eC");
-		tcc.setColumn(tcc.getModel().length());
-		tcc.setExpectedCompletionItems("[]");
-		test(tcc);
+	public void testCamelCasePrefix_04() {
+		test("eC<|>", "");
 	}
 }
