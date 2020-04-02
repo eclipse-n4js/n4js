@@ -14,7 +14,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.n4js.ide.editor.contentassist.N4JSIdeContentProposalProvider.N4JSCandidateFilter;
-import org.eclipse.n4js.ide.editor.contentassist.imports.ReferenceResolutionHelper.IResolutionAcceptor;
+import org.eclipse.n4js.ide.editor.contentassist.imports.ReferenceResolutionFinder.IResolutionAcceptor;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.xtext.ide.editor.contentassist.ContentAssistContext;
@@ -33,7 +33,7 @@ import com.google.inject.Inject;
 public class ImportsAwareReferenceProposalCreator {
 
 	@Inject
-	private ReferenceResolutionHelper referenceResolutionHelper;
+	private ReferenceResolutionFinder referenceResolutionFinder;
 
 	@Inject
 	private IProposalConflictHelper conflictHelper;
@@ -56,14 +56,17 @@ public class ImportsAwareReferenceProposalCreator {
 			IIdeContentProposalAcceptor acceptor,
 			Predicate<IEObjectDescription> filter) {
 
-		referenceResolutionHelper.lookupSingleCrossReference(
-				model,
-				reference,
-				context.getPrefix(),
-				context.getCurrentNode(),
-				(proposalToCheck) -> conflictHelper.existsConflict(proposalToCheck, context),
-				new ResolutionToContentProposalAcceptor(acceptor, context),
-				filter);
+		if (model == null) {
+			return;
+		}
+
+		ReferenceDescriptor referenceDesc = new ReferenceDescriptor(context.getPrefix(), model, reference,
+				context.getCurrentNode());
+		Predicate<String> conflictChecker = (proposalToCheck) -> conflictHelper.existsConflict(proposalToCheck,
+				context);
+
+		referenceResolutionFinder.findResolutions(referenceDesc, false, false, conflictChecker, filter,
+				new ResolutionToContentProposalAcceptor(acceptor, context));
 	}
 
 	/** An {@link IResolutionAcceptor} that forwards to a given {@link IIdeContentProposalAcceptor}. */

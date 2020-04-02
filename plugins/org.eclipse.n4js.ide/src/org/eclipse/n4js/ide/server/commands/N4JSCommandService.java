@@ -48,7 +48,7 @@ import org.eclipse.n4js.ide.server.codeActions.ICodeActionAcceptor;
 import org.eclipse.n4js.ide.server.codeActions.N4JSCodeActionService;
 import org.eclipse.n4js.ide.server.codeActions.N4JSSourceActionProvider;
 import org.eclipse.n4js.ide.server.imports.ImportOrganizer;
-import org.eclipse.n4js.ide.server.imports.ImportOrganizer.ImportRef;
+import org.eclipse.n4js.ide.server.imports.ImportDescriptor;
 import org.eclipse.n4js.ide.xtext.server.ExecuteCommandParamsDescriber;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
@@ -318,9 +318,9 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 		XDocument document = workspaceManager.getDocument(resource);
 
 		// compute imports to be added for unresolved references
-		List<ImportRef> importsToBeAdded = new ArrayList<>();
-		List<ReferenceResolution> resolutions = referenceResolutionHelper.lookupAllUnresolvedCrossReferences(script,
-				cancelIndicator);
+		List<ImportDescriptor> importsToBeAdded = new ArrayList<>();
+		List<ReferenceResolution> resolutions = referenceResolutionHelper
+				.findResolutionsForAllUnresolvedReferences(script, cancelIndicator);
 		for (ReferenceResolution resolution : resolutions) {
 			if (resolution.importToBeAdded != null) {
 				importsToBeAdded.add(resolution.importToBeAdded);

@@ -74,8 +74,8 @@ public class N4JSQuickfixProvider {
 		}
 
 		EObject model = getEObject(context);
-		List<ReferenceResolution> resolutions = referenceResolutionHelper.lookupSingleUnresolvedCrossReference(model,
-				false, context.options.getCancelIndicator());
+		List<ReferenceResolution> resolutions = referenceResolutionHelper
+				.findResolutionsForUnresolvedReference(model, false, context.options.getCancelIndicator());
 
 		for (ReferenceResolution resolution : resolutions) {
 			List<ReplaceRegion> replacements = resolution.textReplacements;

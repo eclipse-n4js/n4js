@@ -15,21 +15,21 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.n4js.ide.server.imports.ImportOrganizer.ImportRef;
+import org.eclipse.n4js.ide.server.imports.ImportDescriptor;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.util.ReplaceRegion;
 
 /**
- * Each instance of this class represents one possible resolution of a reference given in the N4JS source code. There
- * may be many such possible resolutions for a single reference in the code. Class {@link ReferenceResolutionHelper} can
- * be used to obtain all possible resolutions for a given reference.
+ * Each instance of this class represents one possible resolution of a {@link ReferenceDescriptor reference given in the
+ * N4JS source code}. There may be many such possible resolutions for a single reference in the code. Class
+ * {@link ReferenceResolutionHelper} can be used to obtain all possible resolutions for a given reference.
  */
 public class ReferenceResolution {
 
 	/** The element denoted by the reference according to this resolution. */
 	public final IEObjectDescription referencedElement;
 
-	/** The proposed text to be inserted. */
+	/** The proposed text to be inserted at the location of the reference. */
 	public final String proposal;
 
 	/** A label to be shown to the user when offering this resolution. */
@@ -39,14 +39,14 @@ public class ReferenceResolution {
 	public final String description;
 
 	/** An import that has to be added in case the user chooses this resolution. May be <code>null</code>. */
-	public final ImportRef importToBeAdded;
+	public final ImportDescriptor importToBeAdded;
 
 	/** Text replacements that have to be applied in case the user chooses this resolution. May be empty. */
 	public final List<ReplaceRegion> textReplacements;
 
 	/** Creates an instance. See {@link ReferenceResolution}. */
 	public ReferenceResolution(IEObjectDescription referencedElement, String proposal, String label, String description,
-			ImportRef importToBeAdded, Collection<ReplaceRegion> textReplacements) {
+			ImportDescriptor importToBeAdded, Collection<ReplaceRegion> textReplacements) {
 		this.referencedElement = referencedElement;
 		this.proposal = proposal;
 		this.label = label;
