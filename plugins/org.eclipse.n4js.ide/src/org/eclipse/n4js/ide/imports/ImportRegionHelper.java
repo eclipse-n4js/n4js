@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.editor.contentassist.imports;
+package org.eclipse.n4js.ide.imports;
 
 import static org.eclipse.n4js.parser.InternalSemicolonInjectingParser.SEMICOLON_INSERTED;
 import static org.eclipse.n4js.utils.UtilN4.isIgnoredSyntaxErrorNode;
@@ -38,6 +38,7 @@ import org.eclipse.xtext.nodemodel.impl.HiddenLeafNode;
 import org.eclipse.xtext.nodemodel.impl.LeafNode;
 import org.eclipse.xtext.nodemodel.impl.LeafNodeWithSyntaxError;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
+import org.eclipse.xtext.util.TextRegion;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
@@ -355,5 +356,37 @@ public class ImportRegionHelper {
 		}
 		// should never be reached.
 		throw new IllegalStateException("Iteration over-stepped the passed in node.");
+	}
+
+	/**
+	 * Extended information about where to insert new text. It holds a general total offset in the document - similar to
+	 * a {@link TextRegion} instance, but contrary to that has no length as it describes the point after that insertion
+	 * should happen.
+	 *
+	 * It also carries information if the insertion has to be recomputed. The properties {@link #notBeforeTotalOffset}
+	 * and {@link #notAfterTotalOffset} mark the domain of valid recomputed insertion points.
+	 *
+	 * The property {@linkp #isBeforeJsdocDocumentation} marks insertion points associated with active jsdoc-style
+	 * ML-comments.
+	 */
+	private static class InsertionPoint {
+
+		/** Insertion point, a value of {@code -1} means not set. Zero-based total offset. */
+		int offset = -1;
+
+		/**
+		 * Flag, if set indicates that the textRegion is just in Front of an active jsdoc region for the first statement
+		 */
+		@SuppressWarnings("unused")
+		boolean isBeforeJsdocDocumentation = false;
+
+		/**
+		 * Lowest offset for possible insertion. Usually marked by existing ScriptAnnotation(s) or directives in prolog
+		 */
+		int notBeforeTotalOffset = 0;
+
+		/** Highest possible insertion point in the document. */
+		@SuppressWarnings("unused")
+		int notAfterTotalOffset = Integer.MAX_VALUE;
 	}
 }

@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.server.imports;
+package org.eclipse.n4js.ide.imports;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.n4js.formatting2.FormattingUserPreferenceHelper;
-import org.eclipse.n4js.ide.editor.contentassist.imports.ImportRegionHelper;
 import org.eclipse.n4js.ide.server.codeActions.util.ChangeProvider;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ImportSpecifier;

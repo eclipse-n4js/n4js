@@ -8,13 +8,16 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.editor.contentassist.imports;
+package org.eclipse.n4js.ide.editor.contentassist;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.n4js.ide.editor.contentassist.N4JSIdeContentProposalProvider.N4JSCandidateFilter;
-import org.eclipse.n4js.ide.editor.contentassist.imports.ReferenceResolutionFinder.IResolutionAcceptor;
+import org.eclipse.n4js.ide.imports.ReferenceDescriptor;
+import org.eclipse.n4js.ide.imports.ReferenceResolution;
+import org.eclipse.n4js.ide.imports.ReferenceResolutionFinder;
+import org.eclipse.n4js.ide.imports.ReferenceResolutionFinder.IResolutionAcceptor;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.xtext.ide.editor.contentassist.ContentAssistContext;

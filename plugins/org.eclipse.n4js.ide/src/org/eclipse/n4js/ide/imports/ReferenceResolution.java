@@ -8,14 +8,13 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.editor.contentassist.imports;
+package org.eclipse.n4js.ide.imports;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.n4js.ide.server.imports.ImportDescriptor;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.util.ReplaceRegion;
 
