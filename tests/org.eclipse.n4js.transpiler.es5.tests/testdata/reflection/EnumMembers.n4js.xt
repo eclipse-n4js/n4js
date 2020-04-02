@@ -1,0 +1,45 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP  */
+
+
+// note: this file covers GHOLD-70 and GHOLD-71 together
+
+
+
+function show(label: string, members: Array<? extends N4Member>) {
+    console.log(label, members.map((m)=>m.name).join(', '));
+}
+
+enum E {
+    value1,
+    value2,
+    value3
+}
+
+
+
+console.log(E.n4type);
+
+
+/* XPECT output ---
+<==
+stdout:
+N4EnumType {
+  origin: 'org.eclipse.n4js.transpiler.es5.tests',
+  annotations: [],
+  name: 'E',
+  fqn: 'reflection/EnumMembers/E'
+}
+stderr:
+==>
+--- */
