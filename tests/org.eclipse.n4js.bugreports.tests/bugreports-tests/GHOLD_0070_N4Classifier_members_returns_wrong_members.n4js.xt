@@ -72,7 +72,7 @@ stdout:
 ====
 only non-static: fi, mi
 only non-static: fi, mi
-also static    : fi, fiStatic, mi, miStatic
+also static    : fi, mi, miStatic, fiStatic
 ====
 only non-static: fc, mc
 only non-static: fc, mc
