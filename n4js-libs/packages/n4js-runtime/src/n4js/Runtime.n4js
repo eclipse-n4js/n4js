@@ -133,16 +133,18 @@ function $sliceToArrayForDestruct(arr: Object, max: int) {
     }
 }
 
+const ArraySlice = Array.prototype.slice;
+
 function $n4promisifyFunction(cbBasedFn: Function, args: Function[], multiSuccessValues, noErrorValue) {
     return new Promise<any, any>(function(resolve, reject) {
         args.push(function(result0, result1) {
             if (noErrorValue) {
-                resolve(multiSuccessValues ? Array.prototype.slice(arguments as number, 0) : result0);
+                resolve(multiSuccessValues ? ArraySlice.call(arguments, 0) : result0);
             } else {
                 if (result0) {
                     reject(result0);
                 } else {
-                    resolve(multiSuccessValues ? Array.prototype.slice(arguments as number, 1) : result1);
+                    resolve(multiSuccessValues ? ArraySlice.call(arguments, 1) : result1);
                 }
             }
         });
@@ -153,12 +155,12 @@ function $n4promisifyMethod(receiver: Object+, methodName, args: Function[], mul
     return new Promise<any, any>(function(resolve, reject) {
         args.push(function(result0, result1) {
             if (noErrorValue) {
-                resolve(multiSuccessValues ? Array.prototype.slice(arguments as number, 0) : result0);
+                resolve(multiSuccessValues ? ArraySlice.call(arguments, 0) : result0);
             } else {
                 if (result0) {
                     reject(result0);
                 } else {
-                    resolve(multiSuccessValues ? Array.prototype.slice(arguments as number, 1) : result1);
+                    resolve(multiSuccessValues ? ArraySlice.call(arguments, 1) : result1);
                 }
             }
         });
