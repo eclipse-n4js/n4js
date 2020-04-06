@@ -15,9 +15,15 @@
 /* XPECT output ~~~
 <==
 stdout:
-N4Interface {
+<ref *1> N4Interface {
   origin: 'org.eclipse.n4js.transpiler.es5.tests',
-  annotations: [ N4Annotation { name: 'Observable', details: [] } ],
+  annotations: [
+    N4Annotation {
+      name: 'Observable',
+      details: [],
+      target: [Circular *1]
+    }
+  ],
   name: 'R5',
   fqn: 'n4jsTokenRemoval/roles/N4RoleDeclAsAnnotatedExportableElement/R5',
   n4superType: undefined,

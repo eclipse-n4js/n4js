@@ -27,35 +27,45 @@ Before classes.AT_953_alias.other.dep.B bInstance call
 B.f()
 Before bHereClassInstance call
 B.f()
-interfaceElement meta: {
- "origin": "org.eclipse.n4js.transpiler.es5.tests",
- "annotations": [],
- "name": "I",
- "fqn": "classes/AT_953_alias/imported/dep/I",
- "allImplementedInterfaces": [],
- "ownedMembers": [
-  {
-   "annotations": [],
-   "name": "fI",
-   "isStatic": false
-  }
- ],
- "consumedMembers": []
+interfaceElement meta:
+<ref *1> N4Interface {
+  origin: 'org.eclipse.n4js.transpiler.es5.tests',
+  annotations: [],
+  name: 'I',
+  fqn: 'classes/AT_953_alias/imported/dep/I',
+  n4superType: undefined,
+  allImplementedInterfaces: [],
+  ownedMembers: [
+    N4Method {
+      origin: undefined,
+      annotations: [],
+      name: 'fI',
+      owner: [Circular *1],
+      isStatic: false,
+      jsFunction: undefined
+    }
+  ],
+  consumedMembers: []
 }
-roleElement meta: {
- "origin": "org.eclipse.n4js.transpiler.es5.tests",
- "annotations": [],
- "name": "R",
- "fqn": "classes/AT_953_alias/imported/dep/R",
- "allImplementedInterfaces": [],
- "ownedMembers": [
-  {
-   "annotations": [],
-   "name": "fR",
-   "isStatic": false
-  }
- ],
- "consumedMembers": []
+roleElement meta:
+<ref *1> N4Interface {
+  origin: 'org.eclipse.n4js.transpiler.es5.tests',
+  annotations: [],
+  name: 'R',
+  fqn: 'classes/AT_953_alias/imported/dep/R',
+  n4superType: undefined,
+  allImplementedInterfaces: [],
+  ownedMembers: [
+    N4Method {
+      origin: undefined,
+      annotations: [],
+      name: 'fR',
+      owner: [Circular *1],
+      isStatic: false,
+      jsFunction: undefined
+    }
+  ],
+  consumedMembers: []
 }
 color: {
  "name": "BLUE",
@@ -91,10 +101,12 @@ console.log("Before bHereClassInstance call")
 bHereClassInstance.f();
 
 var interfaceElement : type{IHere} = IHere
-console.log("interfaceElement meta: " + JSON.stringify(interfaceElement.n4type, null, " "))
+console.log("interfaceElement meta:")
+console.log(interfaceElement.n4type)
 
 var roleElement = RHere
-console.log("roleElement meta: " + JSON.stringify(roleElement.n4type, null, " "))
+console.log("roleElement meta:")
+console.log(roleElement.n4type)
 
 var color : ColorHere = ColorHere.BLUE
 console.log("color: " + JSON.stringify(color, null, " "))

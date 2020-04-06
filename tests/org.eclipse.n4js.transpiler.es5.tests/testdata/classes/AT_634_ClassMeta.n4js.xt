@@ -14,113 +14,91 @@
 /* XPECT output ---
 <==
 stdout:
-a.constructor.n4type: 
-{
-    "origin": "org.eclipse.n4js.transpiler.es5.tests",
-    "annotations": [],
-    "name": "A",
-    "fqn": "classes/AT_634_ClassMeta/A",
-    "n4superType": {
-        "origin": "n4js-runtime",
-        "annotations": [],
-        "name": "N4Object",
-        "fqn": "N4BuiltInTypes/N4Object",
-        "allImplementedInterfaces": [],
-        "ownedMembers": [],
-        "consumedMembers": []
+a.constructor.n4type:
+<ref *1> N4Class {
+  origin: 'org.eclipse.n4js.transpiler.es5.tests',
+  annotations: [],
+  name: 'A',
+  fqn: 'classes/AT_634_ClassMeta/A',
+  n4superType: N4Class {
+    origin: 'n4js-runtime',
+    annotations: [],
+    name: 'N4Object',
+    fqn: 'N4BuiltInTypes/N4Object',
+    n4superType: undefined,
+    allImplementedInterfaces: [],
+    ownedMembers: [],
+    consumedMembers: []
+  },
+  allImplementedInterfaces: [],
+  ownedMembers: [
+    N4DataField {
+      origin: undefined,
+      annotations: [Array],
+      name: 'field1',
+      owner: [Circular *1],
+      isStatic: false
     },
-    "allImplementedInterfaces": [],
-    "ownedMembers": [
-        {
-            "annotations": [
-                {
-                    "name": "Nfon",
-                    "details": [
-                        "read"
-                    ]
-                },
-                {
-                    "name": "Observable",
-                    "details": []
-                }
-            ],
-            "name": "field1",
-            "isStatic": false
-        },
-        {
-            "annotations": [
-                {
-                    "name": "Nfon",
-                    "details": [
-                        "write"
-                    ]
-                }
-            ],
-            "name": "field2",
-            "isStatic": false
-        },
-        {
-            "annotations": [],
-            "name": "field3",
-            "isStatic": false
-        }
-    ],
-    "consumedMembers": []
+    N4DataField {
+      origin: undefined,
+      annotations: [Array],
+      name: 'field2',
+      owner: [Circular *1],
+      isStatic: false
+    },
+    N4DataField {
+      origin: undefined,
+      annotations: [],
+      name: 'field3',
+      owner: [Circular *1],
+      isStatic: false
+    }
+  ],
+  consumedMembers: []
 }
 
 
-A.n4type: 
-{
-    "origin": "org.eclipse.n4js.transpiler.es5.tests",
-    "annotations": [],
-    "name": "A",
-    "fqn": "classes/AT_634_ClassMeta/A",
-    "n4superType": {
-        "origin": "n4js-runtime",
-        "annotations": [],
-        "name": "N4Object",
-        "fqn": "N4BuiltInTypes/N4Object",
-        "allImplementedInterfaces": [],
-        "ownedMembers": [],
-        "consumedMembers": []
+A.n4type:
+<ref *1> N4Class {
+  origin: 'org.eclipse.n4js.transpiler.es5.tests',
+  annotations: [],
+  name: 'A',
+  fqn: 'classes/AT_634_ClassMeta/A',
+  n4superType: N4Class {
+    origin: 'n4js-runtime',
+    annotations: [],
+    name: 'N4Object',
+    fqn: 'N4BuiltInTypes/N4Object',
+    n4superType: undefined,
+    allImplementedInterfaces: [],
+    ownedMembers: [],
+    consumedMembers: []
+  },
+  allImplementedInterfaces: [],
+  ownedMembers: [
+    N4DataField {
+      origin: undefined,
+      annotations: [Array],
+      name: 'field1',
+      owner: [Circular *1],
+      isStatic: false
     },
-    "allImplementedInterfaces": [],
-    "ownedMembers": [
-        {
-            "annotations": [
-                {
-                    "name": "Nfon",
-                    "details": [
-                        "read"
-                    ]
-                },
-                {
-                    "name": "Observable",
-                    "details": []
-                }
-            ],
-            "name": "field1",
-            "isStatic": false
-        },
-        {
-            "annotations": [
-                {
-                    "name": "Nfon",
-                    "details": [
-                        "write"
-                    ]
-                }
-            ],
-            "name": "field2",
-            "isStatic": false
-        },
-        {
-            "annotations": [],
-            "name": "field3",
-            "isStatic": false
-        }
-    ],
-    "consumedMembers": []
+    N4DataField {
+      origin: undefined,
+      annotations: [Array],
+      name: 'field2',
+      owner: [Circular *1],
+      isStatic: false
+    },
+    N4DataField {
+      origin: undefined,
+      annotations: [],
+      name: 'field3',
+      owner: [Circular *1],
+      isStatic: false
+    }
+  ],
+  consumedMembers: []
 }
 stderr:
 ==>
@@ -134,5 +112,7 @@ class A {
 	field3 : string;
 }
 var a = new A()
-console.log('a.constructor.n4type: \n' + JSON.stringify(a.constructor.n4type, null, 4) + '\n\n')
-console.log('A.n4type: \n' + JSON.stringify(A.n4type, null, 4))
+console.log('a.constructor.n4type:')
+console.log(a.constructor.n4type)
+console.log('\n\nA.n4type:')
+console.log(A.n4type)
