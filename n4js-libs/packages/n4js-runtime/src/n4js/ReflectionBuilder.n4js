@@ -10,7 +10,6 @@
  */
 
 import {N4Type, N4Classifier, N4Class, N4Interface, N4EnumType, N4Annotation, N4DataField, N4Accessor, N4Method, N4Member} from 'N4BuiltInTypes';
-import {IteratorExt} from "Iterator";
 
 
 const SYMBOL_IDENTIFIER_PREFIX = "#";
@@ -44,7 +43,8 @@ export function makeReflectionsForClass(staticProto: constructor{?}, reflectionS
     const detectedAllImplementedInterfaces = detectedAllImplementedInterfacesFromClass(staticProto);
     reflectionValues.mergeWithDetectedAllImplementedInterfaces(detectedAllImplementedInterfaces);
     const instanceProto = staticProto.prototype;
-    const superclass = (staticProto.__proto__ as Object+).n4type as N4Class;
+    const superclassBI = (staticProto.__proto__ as type{N4Object}).n4type;
+    const superclass = (superclassBI as Object) as N4Class; // cast from N4Class to N4Class
     const n4Class = new N4Class();
     setN4TypeProperties(n4Class, reflectionValues);
     setN4ClassifierProperties(n4Class, superclass, instanceProto, staticProto, reflectionValues);
