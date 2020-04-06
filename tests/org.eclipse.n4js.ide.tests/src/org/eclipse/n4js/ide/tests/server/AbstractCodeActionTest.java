@@ -25,7 +25,7 @@ import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
-import org.eclipse.n4js.ide.tests.server.AbstractCodeActionTest.TestCodeActionConfiguration2;
+import org.eclipse.n4js.ide.tests.server.AbstractCodeActionTest.N4JSTestCodeActionConfiguration;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.tests.codegen.Project;
 import org.eclipse.xtext.testing.AbstractLanguageServerTest.TestCodeActionConfiguration;
@@ -40,15 +40,15 @@ import com.google.common.collect.Lists;
  * <li>{@link AbstractOrganizeImportsTest}.
  * </ul>
  */
-abstract public class AbstractCodeActionTest extends AbstractStructuredIdeTest<TestCodeActionConfiguration2> {
+abstract public class AbstractCodeActionTest extends AbstractStructuredIdeTest<N4JSTestCodeActionConfiguration> {
 
 	/** Call this method in a test */
-	protected void test(TestCodeActionConfiguration2 tcac) throws Exception {
+	protected void test(N4JSTestCodeActionConfiguration tcac) throws Exception {
 		test(tcac.getFilePath(), tcac.getModel(), tcac);
 	}
 
 	@Override
-	protected void performTest(Project project, String moduleName, TestCodeActionConfiguration2 tcac)
+	protected void performTest(Project project, String moduleName, N4JSTestCodeActionConfiguration tcac)
 			throws InterruptedException, ExecutionException {
 
 		CodeActionParams codeActionParams = new CodeActionParams();
@@ -83,7 +83,7 @@ abstract public class AbstractCodeActionTest extends AbstractStructuredIdeTest<T
 	}
 
 	/** Like {@link TestCodeActionConfiguration}, but non-empty ranges can be defined. */
-	public static class TestCodeActionConfiguration2 extends TestCodeActionConfiguration {
+	public static class N4JSTestCodeActionConfiguration extends TestCodeActionConfiguration {
 		private int endLine = -1;
 		private int endColumn = -1;
 

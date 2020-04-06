@@ -51,7 +51,7 @@ class AddMissingImportQuickfixTest extends AbstractCodeActionTest {
 	 */
 	@Test
 	def void testAddImportViaHover() {
-		test(testModules, new TestCodeActionConfiguration2 => [
+		test(testModules, new N4JSTestCodeActionConfiguration => [
 			// non-empty region denoting the region of the issue
 			line = 1
 			column = 0
@@ -67,7 +67,7 @@ class AddMissingImportQuickfixTest extends AbstractCodeActionTest {
 	 */
 	@Test
 	def void testAddImportViaQuickfixKeyboadShortcut() {
-		test(testModules, new TestCodeActionConfiguration2 => [
+		test(testModules, new N4JSTestCodeActionConfiguration => [
 			// empty region denoting cursor position somewhere inside "SomeClass"
 			line = 1
 			column = 3
