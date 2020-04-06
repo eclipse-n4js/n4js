@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ide.tests.server;
 
+import static org.eclipse.n4js.ide.tests.server.TestWorkspaceCreator.DEFAULT_PROJECT_NAME;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
