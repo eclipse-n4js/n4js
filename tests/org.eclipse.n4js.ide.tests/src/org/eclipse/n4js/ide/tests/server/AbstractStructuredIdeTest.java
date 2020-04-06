@@ -10,18 +10,22 @@
  */
 package org.eclipse.n4js.ide.tests.server;
 
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import org.eclipse.n4js.tests.codegen.Project;
 import org.eclipse.xtext.xbase.lib.Pair;
+
+import com.google.common.collect.Lists;
 
 /**
  * Base class for {@link AbstractIdeTest IDE tests} in which every test case has a uniform structure and behavior.
  */
 public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
+	static final String MODULE_SELECTOR = "*";
 
 	/**
 	 * This method gets eventually called after calling one of the {@code test()} methods. Overwrite this method to
@@ -29,10 +33,13 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 	 *
 	 * @param project
 	 *            project that was created and is used during the test
+	 * @param moduleName
+	 *            name of the module passed to the {@link #test(LinkedHashMap, String, String, Object) #test())} method
+	 *            and opened.
 	 * @param t
 	 *            given argument from the {@code test()} method
 	 */
-	protected abstract void performTest(Project project, T t) throws Exception;
+	protected abstract void performTest(Project project, String moduleName, T t) throws Exception;
 
 	/**
 	 * Call this method during a test.
@@ -40,8 +47,8 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 	 * @param contents
 	 *            will be added to a default module and project.
 	 */
-	protected Project test(String contents) throws Exception {
-		return test(MODULE_NAME, contents, null);
+	protected Project test(String contents) {
+		return test(DEFAULT_MODULE_NAME, contents, null);
 	}
 
 	/**
@@ -50,10 +57,10 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 	 * @param contents
 	 *            added to a default module and project.
 	 * @param t
-	 *            will be passed to {@link #performTest(Project, Object)}.
+	 *            will be passed to {@link #performTest(Project, String, Object)}.
 	 */
-	protected Project test(String contents, T t) throws Exception {
-		return test(MODULE_NAME, contents, t);
+	protected Project test(String contents, T t) {
+		return test(DEFAULT_MODULE_NAME, contents, t);
 	}
 
 	/**
@@ -64,41 +71,91 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 	 * @param contents
 	 *            contents of the {@code moduleName} module.
 	 * @param t
-	 *            will be passed to {@link #performTest(Project, Object)}.
+	 *            will be passed to {@link #performTest(Project, String, Object)}.
 	 */
-	protected Project test(String moduleName, String contents, T t) throws Exception {
+	protected Project test(String moduleName, String contents, T t) {
 		moduleName = getModuleNameOrDefault(moduleName);
-		Map<String, String> srcFileNameToContents = Collections.singletonMap(moduleName, contents);
-		return test(srcFileNameToContents, moduleName, t);
+		String nameWithSelector = moduleName + MODULE_SELECTOR;
+		ArrayList<Pair<String, String>> srcFileNameToContents = Lists.newArrayList(Pair.of(nameWithSelector, contents));
+		return test(srcFileNameToContents, t);
+	}
+
+	/** Same as {@link #testWS(List, Object)}, but creates a default project with name {@link #DEFAULT_PROJECT_NAME}. */
+	protected Project test(List<Pair<String, String>> modulesContents, T t) {
+		ArrayList<Pair<String, String>> modulesContentsCpy = new ArrayList<>(modulesContents);
+		modulesContentsCpy.add(Pair.of(DEPENDENCIES, N4JS_RUNTIME_NAME));
+
+		Pair<String, List<Pair<String, String>>> pairDefaultPrj = Pair.of(DEFAULT_PROJECT_NAME, modulesContentsCpy);
+		Pair<String, String> pairN4jsRuntime = Pair.of(NODE_MODULES + N4JS_RUNTIME_NAME, null);
+		ArrayList<Pair<String, List<Pair<String, String>>>> projects = new ArrayList<>();
+		projects.add(pairDefaultPrj);
+		// projects.add(pairN4jsRuntime);
+
+		modulesContentsCpy.add(pairN4jsRuntime);
+
+		return testWS(projects, t);
 	}
 
 	/**
-	 * Same as {@link #test(Map, String, Object)}, but name and content of the modules can be provided as {@link Pair
-	 * pairs}.
+	 * Same as {@link #test(LinkedHashMap, String, String, Object)}, but name and content of the modules can be provided
+	 * as {@link Pair pairs}. Finds the selected module using the {@link #MODULE_SELECTOR}.
 	 */
-	protected Project test(Iterable<Pair<String, String>> moduleNameToContents, String moduleName, T t)
-			throws Exception {
-		Map<String, String> moduleNameToContentsAsMap = StreamSupport.stream(moduleNameToContents.spliterator(), false)
-				.collect(Collectors.toMap(Pair::getKey, Pair::getValue));
-		return test(moduleNameToContentsAsMap, moduleName, t);
+	protected Project testWS(List<Pair<String, List<Pair<String, String>>>> projectsModulesContents, T t) {
+		String selectedProject = null;
+		String selectedModule = null;
+		LinkedHashMap<String, Map<String, String>> projectsModulesContentsAsMap = new LinkedHashMap<>();
+		for (Pair<String, List<Pair<String, String>>> project : projectsModulesContents) {
+			String projectPath = project.getKey();
+			Iterable<? extends Pair<String, String>> modules = project.getValue();
+			Map<String, String> modulesMap = null;
+			if (modules != null) {
+				modulesMap = new HashMap<>();
+				for (Pair<String, String> moduleContent : modules) {
+					String moduleName = moduleContent.getKey();
+					if (moduleName.endsWith(MODULE_SELECTOR)) {
+						moduleName = moduleName.substring(0, moduleName.length() - 1);
+						selectedProject = projectPath;
+						selectedModule = moduleName;
+					}
+					modulesMap.put(moduleName, moduleContent.getValue());
+				}
+			}
+			projectsModulesContentsAsMap.put(projectPath, modulesMap);
+		}
+
+		if (selectedModule == null) {
+			throw new IllegalArgumentException(
+					"No module selected. Fix by appending '" + MODULE_SELECTOR + "' to one of the project modules.");
+		}
+
+		return test(projectsModulesContentsAsMap, selectedProject, selectedModule, t);
 	}
 
 	/**
 	 * Call this method during a test.
 	 *
-	 * @param moduleNameToContents
-	 *            map that maps module names to their contents.
+	 * @param projectsModulesContents
+	 *            map that maps directories to module names which map to their contents. Select the project under test
+	 *            by appending a {@link #MODULE_SELECTOR} to the directory.
 	 * @param moduleName
 	 *            one moduleName of the {@code moduleNameToContents}. Will be opened during the test.
 	 * @param t
-	 *            will be passed to {@link #performTest(Project, Object)}.
+	 *            will be passed to {@link #performTest(Project, String, Object)}.
 	 */
-	protected Project test(Map<String, String> moduleNameToContents, String moduleName, T t) throws Exception {
-		Project project = createTestProjectOnDisk(moduleNameToContents);
-		startAndWaitForLspServer();
-		openFile(moduleName, moduleNameToContents.get(moduleName));
-		performTest(project, t);
+	protected Project test(LinkedHashMap<String, Map<String, String>> projectsModulesContents, String projectPath,
+			String moduleName, T t) {
 
+		Project project = createTestOnDisk(projectsModulesContents);
+		startAndWaitForLspServer();
+		String moduleContent = projectsModulesContents.get(projectPath).get(moduleName);
+		openFile(moduleName, moduleContent);
+		try {
+			performTest(project, moduleName, t);
+		} catch (AssertionError ae) {
+			throw ae;
+		} catch (Throwable th) {
+			throw new AssertionError("exception/error in #performTest() method", th);
+		}
 		return project;
 	}
 }

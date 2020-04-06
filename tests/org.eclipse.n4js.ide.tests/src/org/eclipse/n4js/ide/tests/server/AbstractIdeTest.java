@@ -16,8 +16,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -25,29 +28,40 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
 import org.eclipse.lsp4j.ClientCapabilities;
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.DidChangeTextDocumentParams;
 import org.eclipse.lsp4j.DidChangeWatchedFilesParams;
+import org.eclipse.lsp4j.DidCloseTextDocumentParams;
 import org.eclipse.lsp4j.DidOpenTextDocumentParams;
 import org.eclipse.lsp4j.ExecuteCommandCapabilities;
 import org.eclipse.lsp4j.FileChangeType;
 import org.eclipse.lsp4j.FileEvent;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.Range;
+import org.eclipse.lsp4j.ResourceChange;
+import org.eclipse.lsp4j.ResourceOperation;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
+import org.eclipse.lsp4j.TextDocumentEdit;
+import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.TextDocumentItem;
+import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
 import org.eclipse.lsp4j.WorkspaceClientCapabilities;
+import org.eclipse.lsp4j.WorkspaceEdit;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
+import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscTestFactory;
 import org.eclipse.n4js.cli.helper.SystemOutRedirecter;
 import org.eclipse.n4js.ide.tests.client.IdeTestLanguageClient;
+import org.eclipse.n4js.ide.tests.client.IdeTestLanguageClient.IIdeTestLanguageClientListener;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
@@ -56,6 +70,7 @@ import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.tests.codegen.Module;
 import org.eclipse.n4js.tests.codegen.Project;
 import org.eclipse.n4js.tests.codegen.Project.SourceFolder;
+import org.eclipse.n4js.tests.codegen.YarnWorkspaceProject;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.xtext.LanguageInfo;
 import org.eclipse.xtext.ide.server.UriExtensions;
@@ -68,21 +83,46 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.Streams;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
 /**
  * Abstract base class for LSP-based IDE tests.
  */
-abstract public class AbstractIdeTest {
+@SuppressWarnings("deprecation")
+abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener {
 
-	static final String WORKSPACE_FOLDER = "/test-data";
-	static final String PROJECT_NAME = "test-project";
-	static final String MODULE_NAME = "MyModule";
-	static final String SRC_FOLDER = "src";
-	static final String FILE_EXTENSION = "n4js";
+	/** Wildcard string that may be used at the start or end of a file content expectation. */
+	static final protected String FILE_CONTENT_ASSERTION_WILDCARD = "[...]";
+	/** Folder where test data is created */
+	static final protected String TEST_DATA_FOLDER = "/test-workspace";
+	/** Vendor of the created test project */
+	static final protected String VENDOR = "VENDOR";
+	/** Name of the created test module */
+	static final protected String SRC_FOLDER = "src";
+	/** Default extension of test modules */
+	static final protected String DEFAULT_EXTENSION = "n4js";
+	/** Default name of the created test project */
+	static final protected String DEFAULT_PROJECT_NAME = "test-project";
+	/** Default name of the created test module */
+	static final protected String DEFAULT_MODULE_NAME = "MyModule";
+	/** Reserved string to identify comma separated list of dependencies to other projects */
+	static final protected String DEPENDENCIES = "#DEPENDENCY";
+	/** Reserved string to identify the directory 'node_modules' */
+	static final protected String NODE_MODULES = "#NODE_MODULES:";
+	/** Reserved string to identify the directory 'node_modules' */
+	static final protected String PACKAGE_JSON = "package.json";
+	/** Reserved string to identify the src folder of a project */
+	static final protected String SRC = "#SRC:";
+	/** Name of n4js library 'n4js-runtime' */
+	static final protected String N4JS_RUNTIME_NAME = "n4js-runtime";
+	/** Default project object for 'n4js-runtime' */
+	static final protected Project N4JS_RUNTIME_FAKE = new Project(N4JS_RUNTIME_NAME, VENDOR, VENDOR + "_name",
+			ProjectType.RUNTIME_ENVIRONMENT);
 
 	static final SystemOutRedirecter SYSTEM_OUT_REDIRECTER = new SystemOutRedirecter();
 
@@ -132,9 +172,14 @@ abstract public class AbstractIdeTest {
 		return ProjectType.VALIDATION;
 	}
 
+	/** Overwrite this method to ignore certain issues in {@link #assertIssues(Map)}. */
+	protected Set<String> getIgnoredIssueCodes() {
+		return N4JSLanguageConstants.DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS;
+	}
+
 	/** @return the workspace root folder as a {@link File}. */
 	protected File getRoot() {
-		File root = new File(new File("").getAbsoluteFile(), WORKSPACE_FOLDER);
+		File root = new File(new File("").getAbsoluteFile(), TEST_DATA_FOLDER);
 		return root;
 	}
 
@@ -170,12 +215,20 @@ abstract public class AbstractIdeTest {
 		capabilities.setWorkspace(wcc);
 		InitializeParams initParams = new InitializeParams();
 		initParams.setCapabilities(capabilities);
-		initParams.setRootUri(new FileURI(new File(root, PROJECT_NAME)).toString());
+		initParams.setRootUri(new FileURI(root).toString());
+
+		languageClient.addListener(this);
 
 		languageServer.connect(languageClient);
 		languageServer.initialize(initParams);
 		languageServer.initialized(null);
 		joinServerRequests();
+	}
+
+	@Override
+	public boolean onServerRequest_applyEdit(ApplyWorkspaceEditParams params) {
+		changeFilesOnDiskWithoutNotification(params.getEdit());
+		return true;
 	}
 
 	/** Like {@link #cleanBuildWithoutWait()}, but {@link #joinServerRequests() waits} for LSP server to finish. */
@@ -192,52 +245,158 @@ abstract public class AbstractIdeTest {
 	}
 
 	/**
-	 * Same as {@link #createTestProjectOnDisk(Map)}, but name and content of the modules can be provided as
+	 * Same as {@link #createTestProjectOnDisk(Map)}, but name and content of the modules can be provided as one or more
 	 * {@link Pair}s.
 	 */
-	protected Project createTestProjectOnDisk(
-			@SuppressWarnings("unchecked") Pair<String, String>... moduleNameToContents) {
-		Map<String, String> moduleNameToContentsAsMap = Stream.of(moduleNameToContents)
+	protected Project createTestProjectOnDisk(@SuppressWarnings("unchecked") Pair<String, String>... modulesContents) {
+		return createTestProjectOnDisk(Arrays.asList(modulesContents));
+	}
+
+	/**
+	 * Same as {@link #createTestProjectOnDisk(Map)}, but name and content of the modules can be provided as an iterable
+	 * of {@link Pair}s.
+	 */
+	protected Project createTestProjectOnDisk(Iterable<? extends Pair<String, String>> modulesContents) {
+		Map<String, String> modulesContentsAsMap = Streams.stream(modulesContents)
 				.collect(Collectors.toMap(Pair::getKey, Pair::getValue));
-		return createTestProjectOnDisk(moduleNameToContentsAsMap);
+
+		return createTestProjectOnDisk(modulesContentsAsMap);
+	}
+
+	/** Creates the default project on file system. Adds dependency to n4js-runtime. */
+	protected Project createTestProjectOnDisk(Map<String, String> modulesContents) {
+		return createClientProject(getRoot().toPath(), DEFAULT_PROJECT_NAME, modulesContents);
+	}
+
+	private Project createClientProject(Path destination, String projectName, Map<String, String> modulesContents) {
+		Map<String, String> modulesContentsCpy = new HashMap<>(modulesContents);
+		LinkedHashMap<String, Map<String, String>> projectsModulesContents = new LinkedHashMap<>();
+		projectsModulesContents.put(projectName, modulesContentsCpy);
+		modulesContentsCpy.put(NODE_MODULES + N4JS_RUNTIME_NAME, null);
+		modulesContentsCpy.put(DEPENDENCIES, N4JS_RUNTIME_NAME);
+
+		return createTestOnDisk(destination, projectsModulesContents);
 	}
 
 	/** Creates the default project on file system. */
-	protected Project createTestProjectOnDisk(Map<String, String> moduleNameToContents) {
-		List<Module> modules = new ArrayList<>();
-
-		for (Map.Entry<String, String> src : moduleNameToContents.entrySet()) {
-			String fileName = src.getKey();
-			String contents = src.getValue();
-			modules.add(new Module(fileName).setContents(contents));
-		}
-
-		return createClientProject(getRoot().toPath(), PROJECT_NAME, SRC_FOLDER, modules);
+	protected Project createTestOnDisk(LinkedHashMap<String, Map<String, String>> projectsModulesContents) {
+		return createTestOnDisk(getRoot().toPath(), projectsModulesContents);
 	}
 
-	private Project createClientProject(Path destination, String projectName, String srcFolderName,
-			List<Module> clientModules) {
+	private Project createTestOnDisk(Path destination,
+			LinkedHashMap<String, Map<String, String>> projectsModulesContents) {
 
-		String vendorId = "VENDOR";
-		Project clientProject = new Project(projectName, vendorId, vendorId + "_name", getProjectType());
-		Project n4jsRuntimeFake = new Project("n4js-runtime", vendorId, vendorId + "_name",
-				ProjectType.RUNTIME_ENVIRONMENT);
-		n4jsRuntimeFake.createSourceFolder(srcFolderName);
-
-		clientProject.addProjectDependency(n4jsRuntimeFake);
-		SourceFolder sourceFolder = clientProject.createSourceFolder(srcFolderName);
-		for (Module clientModule : clientModules) {
-			sourceFolder.addModule(clientModule);
+		Project project = null;
+		if (projectsModulesContents.size() == 1) {
+			Entry<String, Map<String, String>> singleProject = projectsModulesContents.entrySet().iterator().next();
+			String projectName = singleProject.getKey();
+			Map<String, String> moduleContents = singleProject.getValue();
+			project = createSimpleProject(projectName, moduleContents, HashMultimap.create());
+		} else {
+			project = createYarnProject(projectsModulesContents);
 		}
 
 		destination.toFile().mkdirs();
-		clientProject.create(destination);
+		project.create(destination);
 
-		Path nodeModules = destination.resolve(projectName).resolve("node_modules");
-		nodeModules.toFile().mkdir();
-		n4jsRuntimeFake.create(nodeModules);
+		return project;
+	}
 
-		return clientProject;
+	private Project createSimpleProject(String projectName, Map<String, String> modulesContents,
+			Multimap<String, String> dependencies) {
+
+		if (projectName.equals(N4JS_RUNTIME_NAME) && (modulesContents == null || modulesContents.isEmpty())) {
+			return N4JS_RUNTIME_FAKE;
+		}
+
+		ProjectType prjType = projectName.equals(N4JS_RUNTIME_NAME)
+				? ProjectType.RUNTIME_ENVIRONMENT
+				: getProjectType();
+		Project project = new Project(projectName, VENDOR, VENDOR + "_name", prjType);
+		SourceFolder sourceFolder = project.createSourceFolder(SRC_FOLDER);
+
+		for (String moduleName : modulesContents.keySet()) {
+			String contents = modulesContents.get(moduleName);
+			if (moduleName.equals(DEPENDENCIES)) {
+				String[] allDeps = contents.split(",");
+				for (String dependency : allDeps) {
+					dependencies.put(projectName, dependency.trim());
+				}
+
+			} else if (moduleName.equals(PACKAGE_JSON)) {
+				project.setProjectDescriptionContent(contents);
+
+			} else if (moduleName.startsWith(NODE_MODULES)) {
+				int indexOfSrc = moduleName.indexOf(SRC);
+				if (moduleName.equals(NODE_MODULES + N4JS_RUNTIME_NAME) && indexOfSrc == -1) {
+					project.addNodeModuleProject(N4JS_RUNTIME_FAKE);
+
+				} else {
+					if (indexOfSrc == -1) {
+						throw new IllegalArgumentException("Missing #SRC: in module location");
+					}
+					String nmModuleName = moduleName.substring(indexOfSrc + SRC.length());
+					String nmName = moduleName.substring(NODE_MODULES.length(), indexOfSrc);
+					Project nmProject = project.getNodeModuleProject(nmName);
+					if (nmProject == null) {
+						nmProject = new Project(nmName, VENDOR, VENDOR + "_name", prjType);
+						nmProject.createSourceFolder(SRC_FOLDER);
+						project.addNodeModuleProject(nmProject);
+					}
+					SourceFolder nmSourceFolder = nmProject.getSourceFolders().get(0);
+					createAndAddModule(contents, nmModuleName, nmSourceFolder);
+				}
+
+			} else {
+				createAndAddModule(contents, moduleName, sourceFolder);
+			}
+		}
+
+		return project;
+	}
+
+	private void createAndAddModule(String contents, String moduleName, SourceFolder nmSourceFolder) {
+		NameAndExtension nae = getN4JSNameAndExtension(moduleName);
+		Module module = nae.extension == null ? new Module(moduleName) : new Module(nae.name, nae.extension);
+		module.setContents(contents);
+		nmSourceFolder.addModule(module);
+	}
+
+	private Project createYarnProject(LinkedHashMap<String, Map<String, String>> projectsModulesContents) {
+		YarnWorkspaceProject yarnProject = new YarnWorkspaceProject("yarn-test-project", VENDOR, VENDOR + "_name");
+		Multimap<String, String> dependencies = HashMultimap.create();
+		for (String projectNameWithSelector : projectsModulesContents.keySet()) {
+			Map<String, String> moduleContents = projectsModulesContents.get(projectNameWithSelector);
+
+			String prjName = projectNameWithSelector;
+
+			if (prjName.startsWith(NODE_MODULES)) {
+				prjName = prjName.substring(NODE_MODULES.length());
+				Project project = createSimpleProject(prjName, moduleContents, dependencies);
+				yarnProject.addNodeModuleProject(project);
+			} else {
+				Project project = createSimpleProject(prjName, moduleContents, dependencies);
+				yarnProject.addProject(project);
+			}
+		}
+
+		setDependencies(yarnProject, dependencies);
+
+		return yarnProject;
+	}
+
+	private void setDependencies(YarnWorkspaceProject yarnProject, Multimap<String, String> dependencies) {
+		for (String projectName : dependencies.keySet()) {
+			Collection<String> projectDependencies = dependencies.get(projectName);
+			Project project = yarnProject.getProject(projectName);
+			for (String projectDependency : projectDependencies) {
+				Project dependency = yarnProject.getProject(projectDependency);
+				if (dependency == null) {
+					dependency = yarnProject.getNodeModuleProject(projectDependency);
+				}
+				project.addProjectDependency(dependency);
+			}
+		}
 	}
 
 	/** Same as {@link #openFile(String, String)}, but content is read from disk. */
@@ -248,10 +407,14 @@ abstract public class AbstractIdeTest {
 		openFile(moduleName, content);
 	}
 
-	/** Opens the given file in the LSP server and waits for the triggered build to finish. */
+	/** Same as {@link #openFile(FileURI, String)}, but accepts a module name instead of file URI. */
 	protected void openFile(String moduleName, String contents) {
+		openFile(getFileURIFromModuleName(moduleName), contents);
+	}
+
+	/** Opens the given file in the LSP server and waits for the triggered build to finish. */
+	protected void openFile(FileURI fileURI, String contents) {
 		Assert.assertNotNull(contents);
-		FileURI fileURI = getFileURIFromModuleName(moduleName);
 
 		TextDocumentItem textDocument = new TextDocumentItem();
 		textDocument.setLanguageId(languageInfo.getLanguageName());
@@ -263,6 +426,17 @@ abstract public class AbstractIdeTest {
 		dotdp.setTextDocument(textDocument);
 
 		languageServer.didOpen(dotdp);
+		joinServerRequests();
+	}
+
+	/** Same as {@link #closeFile(FileURI)}, but accepts a module name instead of file URI. */
+	protected void closeFile(String moduleName) {
+		closeFile(getFileURIFromModuleName(moduleName));
+	}
+
+	/** Closes the given file in the LSP server and waits for the server to idle. */
+	protected void closeFile(FileURI fileURI) {
+		languageServer.didClose(new DidCloseTextDocumentParams(new TextDocumentIdentifier(fileURI.toString())));
 		joinServerRequests();
 	}
 
@@ -309,6 +483,7 @@ abstract public class AbstractIdeTest {
 	 */
 	protected void changeOpenedFile(String moduleName,
 			@SuppressWarnings("unchecked") Pair<String, String>... replacements) {
+
 		FileURI fileURI = getFileURIFromModuleName(moduleName);
 		// 1) change on disk
 		Pair<String, String> oldToNewContent = changeFileOnDiskWithoutNotification(fileURI, replacements);
@@ -321,11 +496,61 @@ abstract public class AbstractIdeTest {
 	}
 
 	/**
+	 * Same as {@link #changeFileOnDiskWithoutNotification(FileURI, Function)}, but changes one or more files at once,
+	 * as defined by the given {@link WorkspaceEdit}.
+	 */
+	protected List<Pair<FileURI, List<TextEdit>>> changeFilesOnDiskWithoutNotification(WorkspaceEdit workspaceEdit) {
+		List<Either<TextDocumentEdit, ResourceOperation>> documentChanges = workspaceEdit.getDocumentChanges();
+		if (documentChanges != null && !documentChanges.isEmpty()) {
+			List<Pair<FileURI, List<TextEdit>>> appliedChanges = new ArrayList<>();
+			for (Either<TextDocumentEdit, ResourceOperation> documentChange : documentChanges) {
+				if (documentChange.isRight()) {
+					throw new UnsupportedOperationException(
+							"resource operations not yet supported by AbstractIdeTest");
+				}
+				TextDocumentEdit edit = documentChange.getLeft();
+				if (edit.getTextDocument().getVersion() != null) {
+					throw new UnsupportedOperationException(
+							"text document versions not yet supported by AbstractIdeTest");
+				}
+				FileURI fileURI = getFileURIFromURIString(edit.getTextDocument().getUri());
+				changeFileOnDiskWithoutNotification(fileURI, edit.getEdits());
+				appliedChanges.add(Pair.of(fileURI, edit.getEdits()));
+			}
+			return appliedChanges;
+		}
+		Map<String, List<TextEdit>> changes = workspaceEdit.getChanges();
+		if (changes != null && !changes.isEmpty()) {
+			List<Pair<FileURI, List<TextEdit>>> appliedChanges = new ArrayList<>();
+			for (Entry<String, List<TextEdit>> entry : changes.entrySet()) {
+				FileURI fileURI = getFileURIFromURIString(entry.getKey());
+				changeFileOnDiskWithoutNotification(fileURI, entry.getValue());
+				appliedChanges.add(Pair.of(fileURI, entry.getValue()));
+			}
+			return appliedChanges;
+		}
+		List<Either<ResourceChange, TextDocumentEdit>> resourceChanges = workspaceEdit.getResourceChanges();
+		if (resourceChanges != null && !resourceChanges.isEmpty()) {
+			throw new UnsupportedOperationException(
+					"deprecated property 'WorkspaceEdit#resourceChanges' is not supported");
+		}
+		throw new IllegalArgumentException("workspace edit without changes");
+	}
+
+	/** Same as {@link #changeFileOnDiskWithoutNotification(FileURI, Function)}, but accepts {@link TextEdit}s. */
+	protected Pair<String, String> changeFileOnDiskWithoutNotification(FileURI fileURI,
+			Iterable<? extends TextEdit> textEdits) {
+
+		return changeFileOnDiskWithoutNotification(fileURI, content -> applyTextEdits(content, textEdits));
+	}
+
+	/**
 	 * Same as {@link #changeFileOnDiskWithoutNotification(FileURI, Pair...)}, accepting a module name instead of a file
 	 * URI.
 	 */
 	protected void changeFileOnDiskWithoutNotification(String moduleName,
 			@SuppressWarnings("unchecked") Pair<String, String>... replacements) {
+
 		FileURI fileURI = getFileURIFromModuleName(moduleName);
 		changeFileOnDiskWithoutNotification(fileURI, replacements);
 	}
@@ -339,9 +564,11 @@ abstract public class AbstractIdeTest {
 	 * @param replacements
 	 *            for each pair P, the first (and only the first!) occurrence of P's key in the content of the file
 	 *            denoted by <code>fileURI</code> will be replaced by P's value.
+	 * @return a pair with the file's old content as key and its new content as value.
 	 */
 	protected Pair<String, String> changeFileOnDiskWithoutNotification(FileURI fileURI,
 			@SuppressWarnings("unchecked") Pair<String, String>... replacements) {
+
 		return changeFileOnDiskWithoutNotification(fileURI, content -> applyReplacements(content, replacements));
 	}
 
@@ -352,9 +579,11 @@ abstract public class AbstractIdeTest {
 	 *            URI of the file to change.
 	 * @param modification
 	 *            a function returning the desired new content when given the file's current content on disk.
+	 * @return a pair with the file's old content as key and its new content as value.
 	 */
 	protected Pair<String, String> changeFileOnDiskWithoutNotification(FileURI fileURI,
 			Function<String, String> modification) {
+
 		try {
 			Path filePath = fileURI.toJavaIoFile().toPath();
 			String oldContent = Files.readString(filePath);
@@ -364,6 +593,74 @@ abstract public class AbstractIdeTest {
 		} catch (IOException e) {
 			// wrap in AssertionError to avoid need for test code to declare IOExceptions
 			throw new AssertionError("IOException while changing file on disk", e);
+		}
+	}
+
+	/** @return contents of the file with the given URI as a string. */
+	protected String getContentOfFileOnDisk(FileURI fileURI) {
+		try {
+			Path filePath = fileURI.toJavaIoFile().toPath();
+			String content = Files.readString(filePath);
+			return content;
+		} catch (IOException e) {
+			// wrap in AssertionError to avoid need for test code to declare IOExceptions
+			throw new AssertionError("IOException while changing file on disk", e);
+		}
+	}
+
+	/**
+	 * Asserts that the file with the given URI has a particular content on disk.
+	 * <p>
+	 * The expectation string may start or end with the special wildcard string
+	 * {@value #FILE_CONTENT_ASSERTION_WILDCARD} to denote that arbitrary file content may precede or succeed the given
+	 * expectation string.
+	 */
+	protected void assertContentOfFileOnDisk(FileURI fileURI, CharSequence expectedContent) {
+		String actualContentStr = getContentOfFileOnDisk(fileURI);
+		String expectedContentStr = expectedContent.toString();
+		// trim
+		actualContentStr = actualContentStr.trim();
+		expectedContentStr = expectedContentStr.trim();
+		// normalize line breaks
+		if (!System.lineSeparator().equals("\n")) {
+			actualContentStr = actualContentStr.replace(System.lineSeparator(), "\n");
+			expectedContentStr = expectedContentStr.replace(System.lineSeparator(), "\n");
+		}
+		// handle wildcards
+		String expectedContentStrBeforeRemovingWildcards = expectedContentStr;
+		boolean wildcardAtStart = expectedContentStr.startsWith(FILE_CONTENT_ASSERTION_WILDCARD);
+		if (wildcardAtStart) {
+			expectedContentStr = expectedContentStr
+					.substring(FILE_CONTENT_ASSERTION_WILDCARD.length())
+					.trim();
+		}
+		boolean wildcardAtEnd = expectedContentStr.endsWith(FILE_CONTENT_ASSERTION_WILDCARD);
+		if (wildcardAtEnd) {
+			expectedContentStr = expectedContentStr
+					.substring(0, expectedContentStr.length() - FILE_CONTENT_ASSERTION_WILDCARD.length())
+					.trim();
+		}
+		if (expectedContentStr.contains(FILE_CONTENT_ASSERTION_WILDCARD)) {
+			throw new IllegalArgumentException(
+					"wildcard string \" + FILE_CONTENT_ASSERTION_WILDCARD + \" may only appear at start or end of expectation");
+		}
+		// check expectation
+		final boolean success;
+		if (wildcardAtStart && !wildcardAtEnd) {
+			success = actualContentStr.endsWith(expectedContentStr);
+		} else if (!wildcardAtStart && wildcardAtEnd) {
+			success = actualContentStr.startsWith(expectedContentStr);
+		} else if (wildcardAtStart && wildcardAtEnd) {
+			success = actualContentStr.contains(expectedContentStr);
+		} else {
+			success = actualContentStr.equals(expectedContentStr);
+		}
+		if (!success) {
+			Assert.fail("unexpected file content\n"
+					+ "EXPECTED:\n"
+					+ expectedContentStrBeforeRemovingWildcards + "\n"
+					+ "ACTUAL:\n"
+					+ actualContentStr);
 		}
 	}
 
@@ -380,16 +677,26 @@ abstract public class AbstractIdeTest {
 	 */
 	protected void assertIssues(
 			@SuppressWarnings("unchecked") Pair<String, List<String>>... moduleNameToExpectedIssues) {
+
 		assertIssues(convertModuleNamePairsToIdMap(moduleNameToExpectedIssues));
 	}
 
 	/**
-	 * Same as {@link #assertIssuesInModules(Map)}, but in addition to checking the modules denoted by the given map's
-	 * keys, this method will also assert that the remaining modules in the workspace do not contain any issues.
+	 * Same as {@link #assertIssues(Map, boolean)}, but with <code>withIgnoredIssues</code> always set to
+	 * <code>false</code>.
 	 */
 	protected void assertIssues(Map<FileURI, List<String>> moduleIdToExpectedIssues) {
+		assertIssues(moduleIdToExpectedIssues, false);
+	}
+
+	/**
+	 * Same as {@link #assertIssuesInModules(Map, boolean)}, but in addition to checking the modules denoted by the
+	 * given map's keys, this method will also assert that the remaining modules in the workspace do not contain any
+	 * issues. Flag <code>withIgnoredIssues</code> applies to those issues accordingly.
+	 */
+	protected void assertIssues(Map<FileURI, List<String>> moduleIdToExpectedIssues, boolean withIgnoredIssues) {
 		// check given expectations
-		assertIssuesInModules(moduleIdToExpectedIssues);
+		assertIssuesInModules(moduleIdToExpectedIssues, withIgnoredIssues);
 		Set<FileURI> checkedModules = moduleIdToExpectedIssues.keySet();
 
 		// check that there are no other issues in the workspace
@@ -399,20 +706,22 @@ abstract public class AbstractIdeTest {
 		uncheckedModulesWithIssues.removeAll(checkedModules);
 		if (!uncheckedModulesWithIssues.isEmpty()) {
 			String msg = moduleIdToExpectedIssues.size() == 0
-					? "expected no issues in workspace but found " + allIssues.size() + " issue(s):"
+					? "expected no issues in workspace but found one or more issues:"
 					: "found one or more unexpected issues in workspace:";
 			StringBuilder sb = new StringBuilder();
 			for (FileURI currModuleURI : uncheckedModulesWithIssues) {
-				String currModuleRelPath = getRelativePathFromModuleUri(currModuleURI);
-				sb.append(currModuleRelPath);
-				sb.append(":\n");
-				List<String> currModuleIssuesAsList = allIssues.get(currModuleURI).stream()
-						.map(issue -> languageClient.getIssueString(issue))
-						.collect(Collectors.toList());
-				String currModuleIssuesAsString = issuesToSortedString(currModuleIssuesAsList, "    ");
-				sb.append(currModuleIssuesAsString);
+				List<String> currModuleIssuesAsList = getIssuesInFile(currModuleURI, withIgnoredIssues);
+				if (!currModuleIssuesAsList.isEmpty()) { // empty if all issues in current module are ignored
+					String currModuleRelPath = getRelativePathFromModuleUri(currModuleURI);
+					sb.append(currModuleRelPath);
+					sb.append(":\n");
+					String currModuleIssuesAsString = issuesToSortedString(currModuleIssuesAsList, "    ");
+					sb.append(currModuleIssuesAsString);
+				}
 			}
-			Assert.fail(msg + "\n" + sb.toString());
+			if (sb.length() > 0) { // empty if all remaining issues are ignored
+				Assert.fail(msg + "\n" + sb.toString());
+			}
 		}
 	}
 
@@ -422,23 +731,36 @@ abstract public class AbstractIdeTest {
 	 */
 	protected void assertIssuesInModules(
 			@SuppressWarnings("unchecked") Pair<String, List<String>>... moduleNameToExpectedIssues) {
+
 		assertIssuesInModules(convertModuleNamePairsToIdMap(moduleNameToExpectedIssues));
 	}
 
 	/**
+	 * Same as {@link #assertIssuesInModules(Map, boolean)}, but with <code>withIgnoredIssues</code> always set to
+	 * <code>false</code>.
+	 */
+	protected void assertIssuesInModules(Map<FileURI, List<String>> moduleIdToExpectedIssues) {
+		assertIssuesInModules(moduleIdToExpectedIssues, false);
+	}
+
+	/**
 	 * Asserts issues in the modules denoted by the given map's keys. Modules for which the given map does not contain
-	 * any IDs are *not* checked to be free of issues! If this is desired use method {@link #assertIssues(Map)} instead.
+	 * any IDs are *not* checked to be free of issues! If this is desired use method {@link #assertIssues(Map, boolean)}
+	 * instead.
 	 *
 	 * @param moduleIdToExpectedIssues
 	 *            a map from module IDs to the list of expected issues in each case.
+	 * @param withIgnoredIssues
+	 *            iff <code>true</code>, even issues with an issue code that is among those returned by method
+	 *            {@link #getIgnoredIssueCodes()} will be taken into consideration.
 	 */
-	protected void assertIssuesInModules(Map<FileURI, List<String>> moduleIdToExpectedIssues) {
+	protected void assertIssuesInModules(Map<FileURI, List<String>> moduleIdToExpectedIssues,
+			boolean withIgnoredIssues) {
 		for (Entry<FileURI, List<String>> pair : moduleIdToExpectedIssues.entrySet()) {
 			FileURI moduleURI = pair.getKey();
 			List<String> expectedIssues = pair.getValue();
 
-			Iterable<String> actualIssues = Iterables.concat(languageClient.getErrors(moduleURI),
-					languageClient.getWarnings(moduleURI));
+			List<String> actualIssues = getIssuesInFile(moduleURI, withIgnoredIssues);
 			Set<String> actualIssuesAsSet = IterableExtensions.toSet(
 					Iterables.transform(actualIssues, String::trim));
 			Set<String> expectedIssuesAsSet = IterableExtensions.toSet(
@@ -456,6 +778,19 @@ abstract public class AbstractIdeTest {
 		}
 	}
 
+	/**
+	 * Returns the issues in the file denoted by the given URI. If <code>withIgnoredIssues</code> is set to
+	 * <code>true</code>, even issues with an issue code returned by method {@link #getIgnoredIssueCodes()} will be
+	 * included in the returned list.
+	 */
+	protected List<String> getIssuesInFile(FileURI fileURI, boolean withIgnoredIssues) {
+		Stream<Diagnostic> issuesInFile = languageClient.getIssues().get(fileURI).stream();
+		if (!withIgnoredIssues) {
+			issuesInFile = issuesInFile.filter(issue -> !getIgnoredIssueCodes().contains(issue.getCode()));
+		}
+		return issuesInFile.map(issue -> languageClient.getIssueString(issue)).collect(Collectors.toList());
+	}
+
 	private String issuesToSortedString(Iterable<String> issues, String indent) {
 		if (Iterables.isEmpty(issues)) {
 			return indent + "<none>";
@@ -467,11 +802,13 @@ abstract public class AbstractIdeTest {
 
 	private List<TextDocumentContentChangeEvent> replacementsToChangeEvents(String content,
 			@SuppressWarnings("unchecked") Pair<String, String>... replacements) {
+
 		return replacementsToChangeEvents(new XDocument(0, content), replacements);
 	}
 
 	private List<TextDocumentContentChangeEvent> replacementsToChangeEvents(XDocument document,
 			@SuppressWarnings("unchecked") Pair<String, String>... replacements) {
+
 		List<TextDocumentContentChangeEvent> result = new ArrayList<>(replacements.length);
 		for (Pair<String, String> replacement : replacements) {
 			int offset = document.getContents().indexOf(replacement.getKey());
@@ -488,16 +825,60 @@ abstract public class AbstractIdeTest {
 
 	private <T> Map<FileURI, T> convertModuleNamePairsToIdMap(
 			@SuppressWarnings("unchecked") Pair<String, T>... moduleNameToExpectedIssues) {
+
 		return Stream.of(moduleNameToExpectedIssues).collect(Collectors.toMap(
-				p -> getFileURIFromModuleName(p.getKey()),
-				Pair::getValue));
+				p -> getFileURIFromModuleName(p.getKey()), Pair::getValue));
 	}
 
 	/** Translates a given module name to a file URI used in LSP call data. */
 	protected FileURI getFileURIFromModuleName(String moduleName) {
-		moduleName = getModuleNameOrDefault(moduleName) + "." + FILE_EXTENSION;
-		Path completeFilePath = Path.of(getRoot().toString(), PROJECT_NAME, SRC_FOLDER, moduleName);
-		return new FileURI(completeFilePath.toFile());
+		String extension = getN4JSNameAndExtension(moduleName).extension == null ? "." + DEFAULT_EXTENSION : "";
+		String moduleNameWithExtension = getModuleNameOrDefault(moduleName) + extension;
+		try {
+			List<Path> allMatches = Files
+					.find(getRoot().toPath(), 99, (path, options) -> path.endsWith(moduleNameWithExtension))
+					.collect(Collectors.toList());
+
+			if (allMatches.isEmpty()) {
+				throw new IllegalStateException("Module not found with name " + moduleNameWithExtension);
+			}
+			if (allMatches.size() > 1) {
+				throw new IllegalStateException("Multiple modules found with name " + moduleNameWithExtension);
+			}
+
+			return new FileURI(allMatches.get(0).toFile());
+
+		} catch (IOException e) {
+			throw new IllegalStateException("Error when searching for module " + moduleNameWithExtension, e);
+		}
+	}
+
+	private static class NameAndExtension {
+		final String name;
+		final String extension;
+
+		NameAndExtension(String name, String extension) {
+			this.name = name;
+			this.extension = extension;
+		}
+	}
+
+	private NameAndExtension getN4JSNameAndExtension(String fileName) {
+		String name = fileName;
+		String extension = null;
+		if (fileName != null && fileName.contains(".")) {
+			String[] split = fileName.split("\\.");
+			extension = split[split.length - 1];
+			if (N4JSGlobals.ALL_N4_FILE_EXTENSIONS.contains(extension)) {
+				name = fileName.substring(0, fileName.length() - extension.length() - 1);
+			}
+		}
+		return new NameAndExtension(name, extension);
+	}
+
+	/** Converts an URI string as received by the LSP server to a {@link FileURI}. */
+	protected FileURI getFileURIFromURIString(String uriString) {
+		return new FileURI(URI.createURI(uriString));
 	}
 
 	/**
@@ -509,10 +890,10 @@ abstract public class AbstractIdeTest {
 		return relativeUri.toFileString();
 	}
 
-	/** @return the given name if non-<code>null</code> and non-empty; otherwise {@link #MODULE_NAME}. */
+	/** @return the given name if non-<code>null</code> and non-empty; otherwise {@link #DEFAULT_MODULE_NAME}. */
 	protected String getModuleNameOrDefault(String moduleName) {
 		if (Strings.isNullOrEmpty(moduleName)) {
-			return MODULE_NAME;
+			return DEFAULT_MODULE_NAME;
 		}
 		return moduleName;
 	}
@@ -538,10 +919,23 @@ abstract public class AbstractIdeTest {
 
 	private static String applyReplacements(CharSequence oldContent,
 			@SuppressWarnings("unchecked") Pair<String, String>... replacements) {
-		String newContent = oldContent.toString();
+
+		StringBuilder newContent = new StringBuilder(oldContent);
 		for (Pair<String, String> replacement : replacements) {
-			newContent = newContent.replaceFirst(Pattern.quote(replacement.getKey()), replacement.getValue());
+			int offset = newContent.indexOf(replacement.getKey());
+			if (offset < 0) {
+				throw new IllegalArgumentException(
+						"string \"" + replacement.getKey() + "\" not found in content of document");
+			}
+			int len = replacement.getKey().length();
+			newContent.replace(offset, offset + len, replacement.getValue());
 		}
-		return newContent;
+		return newContent.toString();
+	}
+
+	private static String applyTextEdits(CharSequence oldContent, Iterable<? extends TextEdit> textEdits) {
+		XDocument oldDocument = new XDocument(0, oldContent.toString(), true, true);
+		XDocument newDocument = oldDocument.applyChanges(textEdits);
+		return newDocument.getContents();
 	}
 }

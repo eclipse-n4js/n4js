@@ -67,14 +67,12 @@ public class CommandRebuildTest extends AbstractStructuredIdeTest<Void> {
 	}
 
 	@Override
-	protected void performTest(Project project, Void nothing) throws Exception {
+	protected void performTest(Project project, String moduleName, Void nothing) throws Exception {
 		// check pre-state
 		assertNoIssues();
 
-		String moduleName = project.getSourceFolders().get(0).getModules().get(0).getName();
-		Path prjPath = getRoot().toPath().resolve(PROJECT_NAME).toAbsolutePath();
-		prjStatePath = prjPath.resolve(PROJECT_STATE_NAME);
-		genFileStatePath = prjPath.resolve(project.getOutputFolder()).resolve(moduleName + ".js");
+		prjStatePath = getFileURIFromModuleName(DEFAULT_PROJECT_NAME + "/" + PROJECT_STATE_NAME).toFileSystemPath();
+		genFileStatePath = getFileURIFromModuleName(moduleName + ".js").toFileSystemPath();
 
 		setFileCreationDate(prjStatePath);
 		setFileCreationDate(genFileStatePath);

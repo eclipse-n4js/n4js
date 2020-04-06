@@ -12,13 +12,13 @@ package org.eclipse.n4js.transpiler.es.transform
 
 import org.eclipse.n4js.n4JS.FormalParameter
 import org.eclipse.n4js.n4JS.FunctionDefinition
+import org.eclipse.n4js.transpiler.AbstractTranspiler
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.TransformationDependency.Optional
 import org.eclipse.n4js.transpiler.TransformationDependency.RequiresBefore
 import org.eclipse.xtext.EcoreUtil2
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
-import org.eclipse.n4js.transpiler.AbstractTranspiler
 
 /**
  * Transforms ES2015 rest parameters to an ES5 equivalent.
@@ -79,7 +79,7 @@ class RestParameterTransformation extends Transformation {
 			varDeclsOrBindings += _VariableDeclaration(lastFpar.name) => [
 				it.expression = _CallExpr(
 					// Array.prototype.slice.call(arguments, 2);
-					_PropertyAccessExpr(steFor_Array, steFor_prototype, steFor_slice, steFor_call),
+					_PropertyAccessExpr(steFor_Array, steFor_prototype, steFor_Array_slice, steFor_Function_call),
 					_IdentRef(steFor_arguments),
 					_IntLiteral(lastFparIdx)
 				);

@@ -23,7 +23,7 @@ e instanceof CustomError_008: true
 e instanceof SubCustomError_008: true
 e instanceof SubSubCustomError_008: true
 e has stack trace: true
-e.stack starts with 'Error: some message': true
+e.stack starts with 'SubSubCustomError_008: some message': true
 stderr:
 ==>
 --- */
@@ -62,4 +62,4 @@ console.log('e instanceof SubSubCustomError_008:', e instanceof SubSubCustomErro
 // XPECT warnings --> "Unnecessary cast from SubSubCustomError_008 to Object" at "e as Object"
 var stack = (e as Object)['stack'];
 console.log('e has stack trace:', undefined !== stack);
-console.log('e.stack starts with \'Error: some message\':', 0 === (stack as String).indexOf('Error: some message'));
+console.log('e.stack starts with \'SubSubCustomError_008: some message\':', 0 === (stack as String).indexOf('SubSubCustomError_008: some message'));

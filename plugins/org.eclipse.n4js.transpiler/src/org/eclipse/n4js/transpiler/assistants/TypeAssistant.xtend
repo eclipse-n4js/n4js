@@ -11,6 +11,7 @@
 package org.eclipse.n4js.transpiler.assistants
 
 import com.google.inject.Inject
+import java.util.List
 import org.eclipse.n4js.n4JS.AnnotationList
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
@@ -18,29 +19,31 @@ import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.TypeDefiningElement
+import org.eclipse.n4js.transpiler.AbstractTranspiler
 import org.eclipse.n4js.transpiler.TransformationAssistant
 import org.eclipse.n4js.transpiler.im.ParameterizedPropertyAccessExpression_IM
 import org.eclipse.n4js.transpiler.im.ParameterizedTypeRef_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
 import org.eclipse.n4js.transpiler.utils.ConcreteMembersOrderedForTranspiler
-import org.eclipse.n4js.utils.ContainerTypesHelper
-import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TObjectPrototype
-import java.util.List
+import org.eclipse.n4js.ts.types.Type
+import org.eclipse.n4js.utils.ContainerTypesHelper
+import org.eclipse.n4js.utils.N4JSLanguageUtils
+import org.eclipse.n4js.validation.JavaScriptVariantHelper
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.transpiler.AbstractTranspiler
 
 /**
  */
 class TypeAssistant extends TransformationAssistant {
 
 	@Inject private ContainerTypesHelper containerTypesHelper;
+	@Inject private JavaScriptVariantHelper jsVariantHelper;
 
 	/**
 	 * Some assertions related to {@link N4ClassifierDeclaration}s that apply to several transformations and are
@@ -108,6 +111,16 @@ class TypeAssistant extends TransformationAssistant {
 			parent = parent.eContainer;
 		}
 		return parent instanceof Script;
+	}
+
+	/**
+	 * Tells if the given type is defined in an N4JSD file.
+	 * <p>
+	 * WARNING: for interfaces it is not enough to check {@link TInterface#isExternal()}, for this purpose,
+	 * because structural interfaces in N4JSD files need not be declared external!
+	 */
+	def public boolean inN4JSD(Type type) {
+		return jsVariantHelper.isExternalMode(type);
 	}
 
 	/**

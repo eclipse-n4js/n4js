@@ -15,6 +15,7 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.valueOf;
 import static java.util.Collections.unmodifiableCollection;
+import static java.util.Collections.unmodifiableSet;
 
 import java.util.Collection;
 import java.util.Map;
@@ -56,7 +57,7 @@ public abstract class N4JSLanguageConstants {
 	 * You can use {@code N4JSInjectorProviderWithFilteredValidator} to configure JUnit tests
 	 * or {@code SuppressIssuesSetup} to configure Xpect tests for issue suppression.
 	 */
-	public static final Collection<String> DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS = unmodifiableCollection(newHashSet(
+	public static final Set<String> DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS = unmodifiableSet(newHashSet(
 			IssueCodes.CFG_LOCAL_VAR_UNUSED,
 			IssueCodes.DFG_NULL_DEREFERENCE
 	));
@@ -126,11 +127,8 @@ public abstract class N4JSLanguageConstants {
 	/** Name of the built-in ES2015 property '__proto__'. */
 	public static final String PROPERTY__PROTO__NAME = "__proto__";
 
-	/**
-	 * Suffix used in method compilation for the local function name as reported in error stack traces. Value:
-	 * {@code "___n4"}
-	 */
-	public static final String METHOD_STACKTRACE_SUFFIX = "___n4";
+	/** Name of the getter in N4JS classes, interfaces, and enums use to obtain reflection information. */
+	public static final String N4TYPE_NAME = "n4type";
 
 	/**
 	 * Key of the symbol used for storing N4JS dependency injection information in class constructors. The actual

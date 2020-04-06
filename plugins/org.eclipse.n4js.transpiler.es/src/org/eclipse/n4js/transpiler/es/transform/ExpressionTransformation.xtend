@@ -11,6 +11,7 @@
 package org.eclipse.n4js.transpiler.es.transform
 
 import com.google.inject.Inject
+import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.n4JS.AwaitExpression
 import org.eclipse.n4js.n4JS.CastExpression
 import org.eclipse.n4js.n4JS.CoalesceExpression
@@ -22,7 +23,6 @@ import org.eclipse.n4js.n4JS.PromisifyExpression
 import org.eclipse.n4js.n4JS.UnaryExpression
 import org.eclipse.n4js.n4JS.UnaryOperator
 import org.eclipse.n4js.transpiler.Transformation
-import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesBefore
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
 import org.eclipse.n4js.transpiler.im.ParameterizedPropertyAccessExpression_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
@@ -42,15 +42,7 @@ import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensi
 
 /**
  * Some expressions need special handling, this is done in this transformation.
- * <p>
- * Dependencies:
- * <ul>
- * <li>ExcludesBefore: AsyncAwaitTransformation<br>
- *     otherwise the 'await' expressions have already be converted to 'yield', but we need to find them in order to
- *     support auto-promisify after 'await'; see method {@link #transformExpression(AwaitExpression)}
- * </ul>
  */
-@ExcludesBefore(AsyncAwaitTransformation)
 class ExpressionTransformation extends Transformation {
 
 	/**
@@ -75,7 +67,7 @@ class ExpressionTransformation extends Transformation {
 	}
 
 	override analyze() {
-		n4Object_n4type = state.G.n4ObjectType.findOwnedMember("n4type", false, true) as TGetter;
+		n4Object_n4type = state.G.n4ObjectType.findOwnedMember(N4JSLanguageConstants.N4TYPE_NAME, false, true) as TGetter;
 		n4NamedElement_name = state.G.n4NamedElementType.findOwnedMember("name", false, false) as TGetter;
 		n4Element_origin = state.G.n4ElementType.findOwnedMember("origin", false, false) as TGetter;
 		n4Type_fqn = state.G.n4TypeType.findOwnedMember("fqn", false, false) as TGetter;

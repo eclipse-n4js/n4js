@@ -33,7 +33,7 @@ abstract public class AbstractHoverTest extends AbstractStructuredIdeTest<HoverT
 	}
 
 	@Override
-	protected void performTest(Project project, HoverTestConfiguration htc)
+	protected void performTest(Project project, String moduleName, HoverTestConfiguration htc)
 			throws InterruptedException, ExecutionException {
 
 		TextDocumentPositionParams textDocumentPositionParams = new TextDocumentPositionParams();

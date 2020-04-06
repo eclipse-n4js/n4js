@@ -89,6 +89,9 @@ class SymbolTableManagement {
 		if(elementInIM===null) {
 			throw new IllegalArgumentException("element in intermediate model may not be null");
 		}
+		if(elementInIM.name===null) {
+			throw new IllegalArgumentException("element in intermediate model may not be unnamed when creating a symbol table entry for it");
+		}
 		val newEntry = ImFactory.eINSTANCE.createSymbolTableEntryIMOnly;
 		newEntry.name = elementInIM.name;
 		newEntry.elementsOfThisName += elementInIM;

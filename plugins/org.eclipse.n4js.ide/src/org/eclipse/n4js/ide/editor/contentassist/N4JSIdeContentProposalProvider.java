@@ -49,10 +49,12 @@ public class N4JSIdeContentProposalProvider extends IdeContentProposalProvider {
 			QualifiedName qualifiedName = candidate.getQualifiedName();
 			final IEObjectDescription eObjectDescription = candidate;
 			// Don't propose any erroneous descriptions.
-			return !IEObjectDescriptionWithError.isErrorDescription(eObjectDescription)
-					&& !N4TSQualifiedNameProvider.GLOBAL_NAMESPACE_SEGMENT.equals(qualifiedName.getFirstSegment())
-					&& !N4TSQualifiedNameProvider.isModulePolyfill(qualifiedName)
-					&& !N4TSQualifiedNameProvider.isPolyfill(qualifiedName);
+			boolean valid = true;
+			valid &= !(IEObjectDescriptionWithError.isErrorDescription(eObjectDescription));
+			valid &= !N4TSQualifiedNameProvider.GLOBAL_NAMESPACE_SEGMENT.equals(qualifiedName.getFirstSegment());
+			valid &= !N4TSQualifiedNameProvider.isModulePolyfill(qualifiedName);
+			valid &= !N4TSQualifiedNameProvider.isPolyfill(qualifiedName);
+			return valid;
 		}
 	}
 
@@ -76,8 +78,7 @@ public class N4JSIdeContentProposalProvider extends IdeContentProposalProvider {
 		if (containingParserRule != n4jsGrammarAccess.getTypeReferenceRule()) {
 			String featureName = GrammarUtil.containingAssignment(crossReference).getFeature();
 			if (featureName.equals(TypeRefsPackage.eINSTANCE.getParameterizedTypeRef_DeclaredType().getName())) {
-				lookupCrossReference(crossReference,
-						TypeRefsPackage.eINSTANCE.getParameterizedTypeRef_DeclaredType(),
+				lookupCrossReference(TypeRefsPackage.eINSTANCE.getParameterizedTypeRef_DeclaredType(),
 						context, acceptor, new N4JSCandidateFilter());
 			}
 		}
@@ -100,16 +101,15 @@ public class N4JSIdeContentProposalProvider extends IdeContentProposalProvider {
 				}
 			}
 			if (ref != null) {
-				lookupCrossReference(crossReference, ref, context, acceptor, new N4JSCandidateFilter());
+				lookupCrossReference(ref, context, acceptor, new N4JSCandidateFilter());
 			}
 		}
-
-		// super._createProposals(crossReference, context, acceptor);
 	}
 
 	@Override
 	protected void _createProposals(Keyword keyword, ContentAssistContext context,
 			IIdeContentProposalAcceptor acceptor) {
+
 		EObject currentModel = context.getCurrentModel();
 		EObject previousModel = context.getPreviousModel();
 		if (currentModel instanceof ParameterizedPropertyAccessExpression ||
@@ -127,6 +127,7 @@ public class N4JSIdeContentProposalProvider extends IdeContentProposalProvider {
 	@Override
 	protected void _createProposals(Assignment assignment, ContentAssistContext context,
 			IIdeContentProposalAcceptor acceptor) {
+
 		AbstractElement terminal = assignment.getTerminal();
 		if (terminal instanceof CrossReference) {
 			createProposals(terminal, context, acceptor);
@@ -136,35 +137,15 @@ public class N4JSIdeContentProposalProvider extends IdeContentProposalProvider {
 	/**
 	 * For type proposals, use a dedicated proposal creator that will query the scope, filter it and apply the proposal
 	 * factory to all applicable {@link IEObjectDescription descriptions}.
-	 *
-	 * @param crossReference
-	 *            unused for now
 	 */
-	protected void lookupCrossReference(CrossReference crossReference, EReference reference,
-			ContentAssistContext context, IIdeContentProposalAcceptor acceptor, Predicate<IEObjectDescription> filter) {
+	protected void lookupCrossReference(EReference reference, ContentAssistContext context,
+			IIdeContentProposalAcceptor acceptor, Predicate<IEObjectDescription> filter) {
 
-		// if (haveScannedScopeFor(context.getCurrentModel(), reference)) {
-		// return; // avoid scanning the same scope twice
-		// }
+		if (reference.getEReferenceType().isSuperTypeOf(TypesPackage.Literals.TYPE)
+				|| TypesPackage.Literals.TYPE.isSuperTypeOf(reference.getEReferenceType())) {
 
-		if (reference.getEReferenceType().isSuperTypeOf(TypesPackage.Literals.TYPE) ||
-				TypesPackage.Literals.TYPE.isSuperTypeOf(reference.getEReferenceType())) {
-
-			// if we complete a reference to something that is aware of imports, enable automatic import insertion by
-			// using the
-			// importAwareReferenceProposalCreator
-			// String ruleName = null;
-			// if (crossReference.getTerminal() instanceof RuleCall) {
-			// ruleName = ((RuleCall) crossReference.getTerminal()).getRule().getName();
-			// }
-
-			importsAwareReferenceProposalCreator.lookupCrossReference(
-					context.getCurrentModel(),
-					reference,
-					context,
-					acceptor,
-					filter,
-					super.getProposalCreator());
+			EObject model = context.getCurrentModel();
+			importsAwareReferenceProposalCreator.lookupCrossReference(model, reference, context, acceptor, filter);
 		}
 	}
 

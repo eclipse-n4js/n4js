@@ -28,6 +28,7 @@ import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.Type
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
+import org.eclipse.n4js.N4JSLanguageConstants
 
 /**
  * A sub-transpiler which transforms {@link SwitchCondition}s to IM elements 
@@ -71,7 +72,7 @@ class TypeSwitchTranspiler extends TransformationAssistant {
 	
 	private dispatch def List<Expression> doTransform(TypeTypeCondition typeTypeCondition, Expression lhs) {
 		// simply check whether the value has the "n4type" property
-		#[_PropertyAccessExpr(lhs, getSymbolTableEntryInternal("n4type", true))];
+		#[_PropertyAccessExpr(lhs, getSymbolTableEntryInternal(N4JSLanguageConstants.N4TYPE_NAME, true))];
 	}
 	
 	private dispatch def List<Expression> doTransform(TypeSwitchCondition typeCondition, Expression lhs) {

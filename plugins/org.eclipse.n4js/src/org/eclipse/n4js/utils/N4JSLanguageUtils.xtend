@@ -932,7 +932,7 @@ public class N4JSLanguageUtils {
 			&& !AnnotationDefinition.N4JS.hasAnnotation(typeDecl as N4InterfaceDeclaration);
 		val isStringBasedEnum = typeDecl instanceof N4EnumDeclaration
 			&& AnnotationDefinition.STRING_BASED.hasAnnotation(typeDecl as N4EnumDeclaration);
-		return !isNonN4JSInterfaceInN4JSD && !isStringBasedEnum;
+		return typeDecl !== null && !isNonN4JSInterfaceInN4JSD && !isStringBasedEnum;
 	}
 
 	/**
@@ -947,7 +947,7 @@ public class N4JSLanguageUtils {
 			&& javaScriptVariantHelper.isExternalMode(element) && !AnnotationDefinition.N4JS.hasAnnotation(element as TInterface);
 		val isStringBasedEnum = element instanceof TEnum
 			&& AnnotationDefinition.STRING_BASED.hasAnnotation(element as TEnum);
-		return !isNonN4JSInterfaceInN4JSD && !isStringBasedEnum;
+		return element !== null && !isNonN4JSInterfaceInN4JSD && !isStringBasedEnum;
 	}
 
 	/**

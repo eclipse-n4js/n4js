@@ -59,7 +59,7 @@ public interface N4ClassifierDefinition extends N4TypeDefinition {
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * *
-	 * Returns a view on ownedMembersRaw filtering out non-methods.
+	 * Returns a view on ownedMembersRaw filtering out non-members and callable constructors.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated

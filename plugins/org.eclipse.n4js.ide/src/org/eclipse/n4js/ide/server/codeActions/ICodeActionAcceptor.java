@@ -12,10 +12,11 @@ package org.eclipse.n4js.ide.server.codeActions;
 
 import java.util.List;
 
+import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.TextEdit;
 
 /**
- * Minimal API for quickfixes to be send to the client as code actions.
+ * Minimal API for quickfixes and source actions to be sent to the client as code actions.
  */
 public interface ICodeActionAcceptor {
 
@@ -29,4 +30,20 @@ public interface ICodeActionAcceptor {
 	 */
 	void acceptQuickfixCommand(QuickfixContext context, String title, String commandID, Object... arguments);
 
+	/**
+	 * Same as {@link #acceptSourceAction(String, String, String, Object...)}, using {@link CodeActionKind#Source} as
+	 * the default code action kind for source actions.
+	 */
+	default void acceptSourceAction(String title, String commandId, Object... arguments) {
+		acceptSourceAction(title, CodeActionKind.Source, commandId, arguments);
+	}
+
+	/**
+	 * Create a source action with the given code action kind.
+	 *
+	 * @param kind
+	 *            must be a source action kind, i.e. either the base kind {@link CodeActionKind#Source} or a
+	 *            specialization thereof, e.g. {@link CodeActionKind#SourceOrganizeImports}.
+	 */
+	void acceptSourceAction(String title, String kind, String commandId, Object... arguments);
 }

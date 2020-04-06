@@ -61,14 +61,10 @@ class GeneratorOptionTest extends AbstractTranspilerTest {
 			
 			let b = 'b';
 			("a" + b + "c");
-			function foo(p1, p2, p3) {
-				return $spawn(function *() {
-					(yield bar());
-				}.apply(this, arguments));
+			async function foo(p1, p2, p3) {
+				await bar();
 			}
-			function bar() {
-				return $spawn(function *() {}.apply(this, arguments));
-			}
+			async function bar() {}
 			let arrow1 = (function() {}).bind(this);
 			let arrow2 = (function() {
 				return 42;

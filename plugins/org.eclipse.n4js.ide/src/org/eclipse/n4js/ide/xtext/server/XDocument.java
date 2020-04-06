@@ -7,12 +7,16 @@
  *******************************************************************************/
 package org.eclipse.n4js.ide.xtext.server;
 
+import java.util.Comparator;
+import java.util.List;
+
 import org.eclipse.lsp4j.DidChangeTextDocumentParams;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.xtext.ide.server.Document;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 /**
  * @author Sven Efftinge - Initial contribution and API
@@ -23,6 +27,15 @@ public class XDocument extends Document {
 	private final String contents;
 	private final boolean printSourceOnError;
 	private final boolean isDirty;
+
+	/**
+	 * Sorts {@link TextEdit}s based on their affected region in descending order, i.e. edits with higher offsets come
+	 * first.
+	 */
+	private final static Comparator<TextEdit> textEditComparator = Comparator
+			.<TextEdit, Integer> comparing(edit -> edit.getRange().getStart().getLine())
+			.thenComparing(edit -> edit.getRange().getStart().getCharacter())
+			.reversed();
 
 	/** Constructor */
 	public XDocument(int version, String contents) {
@@ -173,8 +186,9 @@ public class XDocument extends Document {
 	 */
 	@Override
 	public XDocument applyChanges(Iterable<? extends TextEdit> changes) {
+		List<? extends TextEdit> changesSorted = IterableExtensions.sortWith(changes, textEditComparator);
 		String newContent = contents;
-		for (TextEdit change : changes) {
+		for (TextEdit change : changesSorted) {
 			if (change.getRange() == null) {
 				newContent = change.getNewText();
 			} else {

@@ -70,8 +70,31 @@ public interface N4MemberDeclaration extends AnnotableElement, ModifiableElement
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
+	 * * Returns true iff this member is declared abstract.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isDeclaredAbstract();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
 	 * *
-	 * Returns true if the member is declared as static.
+	 * Tells if this member is abstract. Fields are never abstract; other members are abstract
+	 * iff they are declared abstract or contained in an interface without having a body.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isAbstract();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * * Returns true if the member is declared as static.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated
@@ -90,8 +113,7 @@ public interface N4MemberDeclaration extends AnnotableElement, ModifiableElement
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * *
-	 * Returns true if the member is declared as static.
+	 * * Returns true if the member is declared as static.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated

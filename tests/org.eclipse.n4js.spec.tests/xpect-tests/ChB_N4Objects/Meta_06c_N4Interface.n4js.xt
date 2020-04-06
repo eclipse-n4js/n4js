@@ -29,25 +29,25 @@ stdout:
  = inspect test as N4Classifier
   - test.test.constructor is a function N4Interface
   - test.allImplementedInterfaces is empty
-  - test.dataFields is a function dataFields___n4
-  - test.dataFieldsWithAnnotation is a function dataFieldsWithAnnotation___n4
-  - test.members is a function members___n4
-  - test.membersWithAnnotation is a function membersWithAnnotation___n4
-  - test.methods is a function methods___n4
-  - test.methodsWithAnnotation is a function methodsWithAnnotation___n4
+  - test.dataFields is a function dataFields
+  - test.dataFieldsWithAnnotation is a function dataFieldsWithAnnotation
+  - test.members is a function members
+  - test.membersWithAnnotation is a function membersWithAnnotation
+  - test.methods is a function methods
+  - test.methodsWithAnnotation is a function methodsWithAnnotation
   - test.n4superType is undefined
   - test.ownedMembers is empty
   - test.consumedMembers is empty
  = inspect test as N4Type
   - test.fqn is a string ChB_N4Objects/Meta_06c_N4Interface/TestN4Interface
-  - test.of is a function of___n4
+  - test.of is a function of
  = inspect test as N4NamedElement
   - test.name is a string TestN4Interface
  = inspect test as N4Element
   - test.origin is a string org.eclipse.n4js.spec.tests
   - test.annotations is empty
-  - test.allAnnotations is a function allAnnotations___n4
-  - test.anyAnnotation is a function allAnnotations___n4
+  - test.allAnnotations is a function allAnnotations
+  - test.anyAnnotation is a function allAnnotations
  = inspect test as Object
   - test.prototype is not an object undefined
   - test.hasOwnProperty  is native function
