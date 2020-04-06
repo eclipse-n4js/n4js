@@ -19,7 +19,7 @@ import org.junit.Test
 public class CompletionWithImportsTest extends AbstractCompletionTest {
 
 	/** Some default modules that export a number of classes for all tests. */
-	override final List<Pair<String, String>> getDefaultTestModules() {
+	override final List<Pair<String, String>> getDefaultTestProject() {
 		return #[
 			"MA"  -> '''
 						export class A1 {}

@@ -22,7 +22,7 @@ import static org.eclipse.n4js.ide.tests.server.TestWorkspaceCreator.*
 public class CompletionWithImportsWorkspaceTest extends AbstractCompletionTest {
 
 	/** Some default modules that export a number of classes for all tests. */
-	override final List<Pair<String, List<Pair<String, String>>>> getDefaultTestYarnWorkspace() {
+	override final List<Pair<String, List<Pair<String, String>>>> getDefaultTestWorkspace() {
 		return #[
 			"P1*" -> #[
 				DEPENDENCIES -> '''

@@ -81,9 +81,9 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 	 * NPM setup of a single project. A n4js-runtime project will be added automatically into the local node_modules
 	 * folder.
 	 * <p>
-	 * see {@link Documentation#DEFAULT_PROJECT}
+	 * see {@link Documentation#DEFAULT_TEST_PROJECT}
 	 */
-	protected List<Pair<String, String>> getDefaultTestModules() {
+	protected List<Pair<String, String>> getDefaultTestProject() {
 		return Lists.newArrayList();
 	}
 
@@ -95,27 +95,27 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 	 * <li>selected project where the test specific module will be put into
 	 * </ul>
 	 * <p>
-	 * see {@link Documentation#DEFAULT_WORKSPACE}
+	 * see {@link Documentation#DEFAULT_TEST_WORKSPACE}
 	 */
-	protected List<Pair<String, List<Pair<String, String>>>> getDefaultTestYarnWorkspace() {
+	protected List<Pair<String, List<Pair<String, String>>>> getDefaultTestWorkspace() {
 		return Lists.newArrayList();
 	}
 
 	/**
-	 * Executes the test with the given default setup. Depending on whether {@link #getDefaultTestYarnWorkspace()}
+	 * Executes the test with the given default setup. Depending on whether {@link #getDefaultTestWorkspace()}
 	 * returns a non-empty result, {@link #testWS(List, Object)} will be triggered. Otherwise
-	 * {@link #test(List, Object)} will be used and uses the default setup of {@link #getDefaultTestModules()}.
+	 * {@link #test(List, Object)} will be used and uses the default setup of {@link #getDefaultTestProject()}.
 	 * <p>
-	 * For further details mind the {@link Documentation documentation} of {@link #getDefaultTestYarnWorkspace()} or
-	 * {@link #getDefaultTestModules()} respectively.
+	 * For further details mind the {@link Documentation documentation} of {@link #getDefaultTestWorkspace()} or
+	 * {@link #getDefaultTestProject()} respectively.
 	 */
 	protected void testInDefaultWorkspace(String content, T t) {
 		String nameWithSelector = DEFAULT_MODULE_NAME + MODULE_SELECTOR;
 		Pair<String, String> moduleContents = Pair.of(nameWithSelector, content);
 
 		boolean moduleAdded = false;
-		if (!getDefaultTestYarnWorkspace().isEmpty()) {
-			List<Pair<String, List<Pair<String, String>>>> workspace = getDefaultTestYarnWorkspace();
+		if (!getDefaultTestWorkspace().isEmpty()) {
+			List<Pair<String, List<Pair<String, String>>>> workspace = getDefaultTestWorkspace();
 			for (Pair<String, List<Pair<String, String>>> project : workspace) {
 				String projectName = project.getKey();
 				if (projectName.endsWith(MODULE_SELECTOR)) {
@@ -141,7 +141,7 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 
 		} else {
 			ArrayList<Pair<String, String>> allModules = Lists.newArrayList(moduleContents);
-			allModules.addAll(getDefaultTestModules());
+			allModules.addAll(getDefaultTestProject());
 			test(allModules, t);
 		}
 	}

@@ -30,10 +30,13 @@ import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
 import org.eclipse.n4js.ide.tests.server.AbstractOrganizeImportsTest.TestOrganizeImportsConfiguration;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.tests.codegen.Project;
+import org.eclipse.n4js.utils.Strings;
 import org.eclipse.n4js.validation.IssueCodes;
+import org.eclipse.xtext.xbase.lib.Pair;
 import org.junit.Assert;
 
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 /**
@@ -73,13 +76,39 @@ public abstract class AbstractOrganizeImportsTest extends AbstractStructuredIdeT
 		return IGNORED_ISSUE_CODES;
 	}
 
+	@Override
+	protected List<Pair<String, String>> getDefaultTestProject() {
+		return Lists.newArrayList(
+				Pair.of("A", Strings.fromLines(
+						"export class A01 {}",
+						"export class A02 {}",
+						"export class A03 {}",
+						"export class A04 {}")),
+				Pair.of("B", Strings.fromLines(
+						"export class B01 {}",
+						"export class B02 {}",
+						"export class B03 {}",
+						"export class B04 {}")),
+				Pair.of("C", Strings.fromLines(
+						"export class C01 {}",
+						"export class C02 {}",
+						"export class C03 {}",
+						"export class C04 {}")),
+				Pair.of("Def", Strings.fromLines(
+						"export class Def01 {}",
+						"export class Def02 {}",
+						"export class Def03 {}",
+						"export class Def04 {}",
+						"export default class DefCls {}")));
+	}
+
 	/** Same as {@link #test(CharSequence, List, CharSequence)}, but without expected issues. */
 	protected void test(CharSequence code, CharSequence expectedCode) {
 		test(code, Collections.emptyList(), expectedCode);
 	}
 
 	/**
-	 * Test method for organize imports tests using the {@link #getDefaultTestModules()}.
+	 * Test method for organize imports tests using the {@link #getDefaultTestProject()}.
 	 *
 	 * @param code
 	 *            source code before organize imports is performed.
