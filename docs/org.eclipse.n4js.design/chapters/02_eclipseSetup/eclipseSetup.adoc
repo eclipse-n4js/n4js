@@ -46,7 +46,7 @@ The build will show a lot of errors while still working. Eventually the whole pr
 
 The setup scripts is stored at
 
-`n4js/releng/org.eclipse.n4js.targetplatform/N4JS.setup` 
+`n4js/releng/org.eclipse.n4js.targetplatform/N4JS.setup`
 
 Details about Oomph-Setup scripts can be found at
 
@@ -63,7 +63,7 @@ It is almost impossible to use another IDE to develop Eclipse plugins. The list 
 
 - Xtext/Xtend 2.18.0
 - Xcore 1.9.0
-- Xpect 0.2.0.201906240918 from https://ci.eclipse.org/xpect/job/Xpect-Integration-Release/20/artifact/org.eclipse.xpect.releng/p2-repository/target/repository/
+- Xpect 0.2.0.202004061200 from https://ci.eclipse.org/xpect/job/Xpect-Integration-Release/22/artifact/org.eclipse.xpect.releng/p2-repository/target/repository/
 
 It is important to use the latest version of Xtext and the corresponding service release of Xcore. You will find the latest version numbers and plugins used in the target platform definition at
 https://github.com/eclipse/n4js/blob/master/releng/org.eclipse.n4js.targetplatform/org.eclipse.n4js.targetplatform.target
