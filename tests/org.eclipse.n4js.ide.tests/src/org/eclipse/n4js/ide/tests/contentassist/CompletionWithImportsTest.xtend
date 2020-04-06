@@ -19,7 +19,7 @@ import org.junit.Test
 public class CompletionWithImportsTest extends AbstractCompletionTest {
 
 	/** Some default modules that export a number of classes for all tests. */
-	override final List<Pair<String, String>> getDefaultTestModules() {
+	override final List<Pair<String, String>> getDefaultTestProject() {
 		return #[
 			"MA"  -> '''
 						export class A1 {}
@@ -31,7 +31,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 
 	@Test
 	def void test01() {
-		test('''
+		testAtCursor('''
 			let x = new A1<|>
 		''', ''' 
 			(A1, Class, MA, , , 00000, , , , ([0:12 - 0:14], A1), [([0:0 - 0:0], import {A1} from "MA";
@@ -41,7 +41,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 
 	@Test
 	def void test02() {
-		test('''
+		testAtCursor('''
 			let x = new A2<|>
 		''', ''' 
 			(A2, Class, MA, , , 00000, , , , ([0:12 - 0:14], A2), [([0:0 - 0:0], import {A2} from "MA";
@@ -53,7 +53,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 
 	@Test
 	def void testAliasExists1() {
-		test('''
+		testAtCursor('''
 			import {A1 as Alias1} from "MA";
 			let x = new A1<|>
 		''', ''' 
@@ -63,7 +63,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 
 	@Test
 	def void testAliasExists2() {
-		test('''
+		testAtCursor('''
 			import {A1 as Alias1} from "MA";
 			let x = new Alias1<|>
 		''', ''' 
@@ -73,7 +73,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 
 	@Test
 	def void testAliasExists3() {
-		test('''
+		testAtCursor('''
 			import {A1 as B1} from "MA";
 			B1<|>
 		''', ''' 
@@ -87,7 +87,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 
 	@Test
 	def void testAliasExists4() {
-		test('''
+		testAtCursor('''
 			import {A2 as AliasA} from "MA";
 			AliasA<|>;
 		''', ''' 
@@ -97,7 +97,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 
 	@Test
 	def void testAliasExists5() {
-		test('''
+		testAtCursor('''
 			import {A2 as AliasA} from "MA";
 			Ali<|>;
 		''', ''' 
@@ -107,7 +107,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 
 	@Test
 	def void testAliasExists6() {
-		test('''
+		testAtCursor('''
 			import {A2 as Alias1} from "MA";
 			import {A2 as Alias2} from "MBA";
 			A2<|>;
@@ -119,7 +119,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 
 	@Test
 	def void testAliasExists7() {
-		test('''
+		testAtCursor('''
 			import {A2 as Alias1} from "MA";
 			import {A2 as Alias2} from "MBA";
 			Ali<|>;
@@ -131,7 +131,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 
 	@Test
 	def void testAliasExists8() {
-		test('''
+		testAtCursor('''
 			import {A2 as A2_Alias} from "MA";
 			A2<|>;
 		''', ''' 
@@ -143,7 +143,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 
 	@Test
 	def void testAliasExists9() {
-		test('''
+		testAtCursor('''
 			import {A2} from "MA";
 			import {A2 as A2_Alias} from "MBA";
 			A2<|>;
@@ -155,7 +155,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 
 	@Test
 	def void testAliasExists10() {
-		test('''
+		testAtCursor('''
 			import {A1 as A2} from "MA";
 			A2<|>;
 		''', ''' 
@@ -173,7 +173,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 
 	@Test
 	def void testAliasNecessary1() {
-		test('''
+		testAtCursor('''
 			import {A2} from "MA";
 			let x = new A2<|>
 		''', ''' 
@@ -187,7 +187,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 
 	@Test
 	def void testNamespaceExists1() {
-		test('''
+		testAtCursor('''
 			import * as NSMA from "MA";
 			let x = new A1<|>
 		''', ''' 
@@ -197,7 +197,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 
 	@Test
 	def void testNamespaceExists2() {
-		test('''
+		testAtCursor('''
 			import * as NSMA from "MA";
 			let x = new NSMA.A1<|>
 		''', ''' 
@@ -207,7 +207,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 
 	@Test
 	def void testNamespaceExists3() {
-		test('''
+		testAtCursor('''
 			import * as NSMA from "MA";
 			A2<|>
 		''', ''' 
@@ -219,7 +219,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 
 	@Test
 	def void testNamespaceExists4() {
-		test('''
+		testAtCursor('''
 			import * as A2 from "MA";
 			A2<|>
 		''', ''' 
@@ -234,7 +234,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 
 	@Test
 	def void testBuiltinType1() {
-		test('''
+		testAtCursor('''
 			Obj<|>
 		''', ''' 
 			(Object, Text, Object, , , 00000, , , , ([0:0 - 0:3], Object), [], [], , )
@@ -243,7 +243,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 
 	@Test
 	def void testBuiltinType2() {
-		test('''
+		testAtCursor('''
 			N4En<|>
 		''', ''' 
 			(N4Enum, Text, N4Enum, , , 00000, , , , ([0:0 - 0:4], N4Enum), [], [], , )
@@ -253,10 +253,47 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 
 	@Test
 	def void testGlobal1() {
-		test('''
+		testAtCursor('''
 			isNaN<|>
 		''', ''' 
 			(isNaN, Text, isNaN, , , 00000, , , , ([0:0 - 0:5], isNaN), [], [], , )
 		''');
 	}
+
+	@Test
+	def void testInsideImportStatement1() {
+		testAtCursor('''
+			import {A<|>
+		''', ''' 
+			(A1, Class, MA, , , 00000, , , , ([0:8 - 0:9], A1), [], [], , )
+			(A2, Class, MA, , , 00001, , , , ([0:8 - 0:9], A2), [], [], , )
+			(A2, Class, MBA, , , 00002, , , , ([0:8 - 0:9], A2), [], [], , )
+			(any, Text, any, , , 00003, , , , ([0:8 - 0:9], any), [], [], , )
+			(Array, Text, Array, , , 00004, , , , ([0:8 - 0:9], Array), [], [], , )
+		''');
+	}
+
+	@Test
+	def void testInsideImportStatement2() {
+		testAtCursor('''
+			import {A<|> from "MA";
+		''', ''' 
+			(A1, Class, MA, , , 00000, , , , ([0:8 - 0:9], A1), [], [], , )
+			(A2, Class, MA, , , 00001, , , , ([0:8 - 0:9], A2), [], [], , )
+			(A2, Class, MBA, , , 00002, , , , ([0:8 - 0:9], A2), [], [], , )
+			(any, Text, any, , , 00003, , , , ([0:8 - 0:9], any), [], [], , )
+			(Array, Text, Array, , , 00004, , , , ([0:8 - 0:9], Array), [], [], , )
+		''');
+	}
+
+	@Test
+	def void testInsideImportStatement3() {
+		testAtCursor('''
+			import {A<|>} from "MA";
+		''', ''' 
+			(A1, Class, MA, , , 00000, , , , ([0:8 - 0:9], A1), [], [], , )
+			(A2, Class, MA, , , 00001, , , , ([0:8 - 0:9], A2), [], [], , )
+		''');
+	}
+
 }
