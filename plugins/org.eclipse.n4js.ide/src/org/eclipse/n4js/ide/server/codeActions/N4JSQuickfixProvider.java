@@ -13,6 +13,7 @@ package org.eclipse.n4js.ide.server.codeActions;
 import static org.eclipse.n4js.ide.server.codeActions.util.ChangeProvider.replace;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
@@ -22,13 +23,15 @@ import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.n4js.ide.editor.contentassist.ImportsAwareReferenceProposalCreator;
+import org.eclipse.n4js.ide.imports.ImportDescriptor;
+import org.eclipse.n4js.ide.imports.ImportHelper;
 import org.eclipse.n4js.ide.imports.ReferenceResolution;
-import org.eclipse.n4js.ide.imports.ReferenceResolutionHelper;
 import org.eclipse.n4js.ide.server.codeActions.util.ChangeProvider;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4MethodDeclaration;
 import org.eclipse.n4js.n4JS.PropertyNameOwner;
+import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.types.TField;
 import org.eclipse.n4js.ts.types.TypesPackage;
@@ -57,38 +60,38 @@ import com.google.inject.Singleton;
 public class N4JSQuickfixProvider {
 
 	@Inject
-	private EObjectAtOffsetHelper eObjectAtOffsetHelper;
+	private ImportHelper importHelper;
 
 	@Inject
-	private ReferenceResolutionHelper referenceResolutionHelper;
+	private EObjectAtOffsetHelper eObjectAtOffsetHelper;
 
 	/**
 	 * Resolves missing import statements by re-using content assist and {@link ImportsAwareReferenceProposalCreator}
 	 */
 	@Fix(value = org.eclipse.xtext.diagnostics.Diagnostic.LINKING_DIAGNOSTIC, multiFix = false)
 	public void addImportForUnresolvedReference(QuickfixContext context, ICodeActionAcceptor acceptor) {
+		Script script = context.resource.getScriptResolved();
 		Document doc = context.options.getDocument();
 		Diagnostic diagnostic = context.getDiagnostic();
-		if (diagnostic == null) {
+		if (script == null || doc == null || diagnostic == null) {
 			return;
 		}
-
 		EObject model = getEObject(context);
-		List<ReferenceResolution> resolutions = referenceResolutionHelper
-				.findResolutionsForUnresolvedReference(model, false, context.options.getCancelIndicator());
+		List<ReferenceResolution> resolutions = importHelper.findResolutionsForUnresolvedReference(model,
+				context.options.getCancelIndicator());
 
 		for (ReferenceResolution resolution : resolutions) {
-			List<ReplaceRegion> replacements = resolution.textReplacements;
-			if (replacements != null && !replacements.isEmpty()) {
+			ImportDescriptor importToBeAdded = resolution.importToBeAdded;
+			if (importToBeAdded == null) {
+				continue;
+			}
+
+			ReplaceRegion replacement = importHelper.getReplacementForImport(script, importToBeAdded);
+			if (replacement != null) {
 				String description = resolution.description;
-
-				List<TextEdit> textEdits = new ArrayList<>();
-				for (ReplaceRegion replaceRegion : replacements) {
-					TextEdit textEdit = ChangeProvider.replace(doc, replaceRegion);
-					textEdits.add(textEdit);
-				}
-
-				acceptor.acceptQuickfixCodeAction(context, "Add import from module " + description, textEdits);
+				TextEdit textEdit = ChangeProvider.replace(doc, replacement);
+				acceptor.acceptQuickfixCodeAction(context, "Add import from module " + description,
+						Collections.singletonList(textEdit));
 			}
 		}
 	}

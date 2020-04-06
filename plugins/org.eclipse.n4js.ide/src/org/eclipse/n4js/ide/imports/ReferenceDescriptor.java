@@ -26,31 +26,31 @@ public class ReferenceDescriptor {
 	 * The text of the reference as given in the source code. Could be the complete name of the element being referenced
 	 * or just a prefix.
 	 */
-	public final String prefix;
+	public final String text;
 	/**
 	 * The context AST node of this reference. In case of content assist in a file with syntax errors, this may be a
 	 * best effort approximation only.
 	 */
-	public final EObject model;
+	public final EObject astNode;
 	/**
 	 * The corresponding EMF reference in the AST. In case of content assist in a file with syntax errors, this may be a
 	 * best effort approximation only.
 	 */
 	public final EReference eReference;
 	/**
-	 * The parse tree node corresponding to {@link #model}.
+	 * The parse tree node corresponding to {@link #astNode}.
 	 */
-	public final INode node;
+	public final INode parseTreeNode;
 
 	/** Creates a new {@link ReferenceDescriptor}. */
-	public ReferenceDescriptor(String prefix, EObject model, EReference eReference, INode node) {
-		Objects.requireNonNull(prefix);
+	public ReferenceDescriptor(String text, EObject model, EReference eReference, INode parseTreeNode) {
+		Objects.requireNonNull(text);
 		Objects.requireNonNull(model);
 		Objects.requireNonNull(eReference);
-		Objects.requireNonNull(node);
-		this.prefix = prefix;
-		this.model = model;
+		Objects.requireNonNull(parseTreeNode);
+		this.text = text;
+		this.astNode = model;
 		this.eReference = eReference;
-		this.node = node;
+		this.parseTreeNode = parseTreeNode;
 	}
 }

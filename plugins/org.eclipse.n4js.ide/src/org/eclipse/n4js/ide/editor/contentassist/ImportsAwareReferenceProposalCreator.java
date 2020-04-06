@@ -13,12 +13,15 @@ package org.eclipse.n4js.ide.editor.contentassist;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.ide.editor.contentassist.N4JSIdeContentProposalProvider.N4JSCandidateFilter;
+import org.eclipse.n4js.ide.imports.ImportHelper;
 import org.eclipse.n4js.ide.imports.ReferenceDescriptor;
 import org.eclipse.n4js.ide.imports.ReferenceResolution;
 import org.eclipse.n4js.ide.imports.ReferenceResolutionFinder;
 import org.eclipse.n4js.ide.imports.ReferenceResolutionFinder.IResolutionAcceptor;
 import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.xtext.ide.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ide.editor.contentassist.ContentAssistEntry;
@@ -26,6 +29,7 @@ import org.eclipse.xtext.ide.editor.contentassist.IIdeContentProposalAcceptor;
 import org.eclipse.xtext.ide.editor.contentassist.IProposalConflictHelper;
 import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalPriorities;
 import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.util.ReplaceRegion;
 
 import com.google.common.base.Predicate;
 import com.google.inject.Inject;
@@ -34,6 +38,9 @@ import com.google.inject.Inject;
  * Creates proposals for content assist and also adds imports of the proposed element if necessary.
  */
 public class ImportsAwareReferenceProposalCreator {
+
+	@Inject
+	private ImportHelper importHelper;
 
 	@Inject
 	private ReferenceResolutionFinder referenceResolutionFinder;
@@ -62,6 +69,11 @@ public class ImportsAwareReferenceProposalCreator {
 		if (model == null) {
 			return;
 		}
+		Resource resource = model.eResource();
+		if (!(resource instanceof N4JSResource)) {
+			return;
+		}
+		N4JSResource resourceCasted = (N4JSResource) resource;
 
 		ReferenceDescriptor referenceDesc = new ReferenceDescriptor(context.getPrefix(), model, reference,
 				context.getCurrentNode());
@@ -69,24 +81,26 @@ public class ImportsAwareReferenceProposalCreator {
 				context);
 
 		referenceResolutionFinder.findResolutions(referenceDesc, false, false, conflictChecker, filter,
-				new ResolutionToContentProposalAcceptor(acceptor, context));
+				new ResolutionToContentProposalAcceptor(resourceCasted, context, acceptor));
 	}
 
 	/** An {@link IResolutionAcceptor} that forwards to a given {@link IIdeContentProposalAcceptor}. */
 	private class ResolutionToContentProposalAcceptor implements IResolutionAcceptor {
 
-		private final IIdeContentProposalAcceptor contentProposalAcceptor;
+		private final N4JSResource resource;
 		private final ContentAssistContext context;
+		private final IIdeContentProposalAcceptor contentProposalAcceptor;
 
-		ResolutionToContentProposalAcceptor(IIdeContentProposalAcceptor contentProposalAcceptor,
-				ContentAssistContext context) {
-			this.contentProposalAcceptor = contentProposalAcceptor;
+		ResolutionToContentProposalAcceptor(N4JSResource resource, ContentAssistContext context,
+				IIdeContentProposalAcceptor contentProposalAcceptor) {
+			this.resource = resource;
 			this.context = context;
+			this.contentProposalAcceptor = contentProposalAcceptor;
 		}
 
 		@Override
 		public void accept(ReferenceResolution resolution) {
-			ContentAssistEntry entry = convertResolutionToContentAssistEntry(resolution, context);
+			ContentAssistEntry entry = convertResolutionToContentAssistEntry(resolution, resource, context);
 			int priority = proposalPriorities.getCrossRefPriority(resolution.referencedElement, entry);
 			contentProposalAcceptor.accept(entry, priority);
 		}
@@ -97,14 +111,18 @@ public class ImportsAwareReferenceProposalCreator {
 		}
 	}
 
-	private static ContentAssistEntry convertResolutionToContentAssistEntry(ReferenceResolution resolution,
-			ContentAssistContext context) {
+	private ContentAssistEntry convertResolutionToContentAssistEntry(ReferenceResolution resolution,
+			N4JSResource resource, ContentAssistContext context) {
 		ContentAssistEntry cae = new ContentAssistEntry();
 		cae.setPrefix(context.getPrefix());
 		cae.setProposal(resolution.proposal);
 		cae.setLabel(resolution.label);
 		cae.setDescription(resolution.description);
-		cae.getTextReplacements().addAll(resolution.textReplacements);
+		if (resolution.importToBeAdded != null) {
+			ReplaceRegion textReplacement = importHelper.getReplacementForImport(resource.getScript(),
+					resolution.importToBeAdded);
+			cae.getTextReplacements().add(textReplacement);
+		}
 		cae.setSource(resolution.referencedElement);
 		cae.setKind(getKind(resolution));
 		return cae;

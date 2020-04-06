@@ -22,18 +22,13 @@ import org.eclipse.n4js.formatting2.FormattingUserPreferenceHelper;
 import org.eclipse.n4js.ide.server.codeActions.util.ChangeProvider;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
-import org.eclipse.n4js.n4JS.NamedImportSpecifier;
-import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.organize.imports.ImportSpecifiersUtil;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
-import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.utils.nodemodel.NodeModelUtilsN4;
 import org.eclipse.xtext.conversion.IValueConverterService;
 import org.eclipse.xtext.ide.server.Document;
-import org.eclipse.xtext.naming.IQualifiedNameConverter;
-import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -49,10 +44,10 @@ import com.google.inject.Singleton;
 public class ImportOrganizer {
 
 	@Inject
-	private ImportRegionHelper importRegionHelper;
+	private ImportHelper importHelper;
 
 	@Inject
-	private IQualifiedNameConverter qualifiedNameConverter;
+	private ImportRegionHelper importRegionHelper;
 
 	@Inject
 	private IValueConverterService valueConverterService;
@@ -126,7 +121,7 @@ public class ImportOrganizer {
 				if (ImportSpecifiersUtil.isBrokenImport(importDecl)) {
 					continue;
 				}
-				ImportDescriptor importDesc = createFromAST(importDecl, null, idx++);
+				ImportDescriptor importDesc = importHelper.createImportDescriptorFromAST(importDecl, null, idx++);
 				result.add(importDesc);
 			} else {
 				for (ImportSpecifier importSpec : importDecl.getImportSpecifiers()) {
@@ -136,57 +131,12 @@ public class ImportOrganizer {
 					if (ImportSpecifiersUtil.isBrokenImport(importSpec)) {
 						continue;
 					}
-					ImportDescriptor importDesc = createFromAST(importDecl, importSpec, idx++);
+					ImportDescriptor importDesc = importHelper.createImportDescriptorFromAST(importDecl, importSpec,
+							idx++);
 					result.add(importDesc);
 				}
 			}
 		}
 		return result;
-	}
-
-	private ImportDescriptor createFromAST(ImportDeclaration importDecl, ImportSpecifier importSpec,
-			int originalIndex) {
-		if (importSpec != null && !importSpec.isFlaggedUsedInCode()) {
-			throw new IllegalArgumentException("must not create an ImportDescriptor for unused imports");
-		}
-		if ((importSpec == null && ImportSpecifiersUtil.isBrokenImport(importDecl))
-				|| (importSpec != null && ImportSpecifiersUtil.isBrokenImport(importSpec))) {
-			throw new IllegalArgumentException("must not create an ImportDescriptor for broken imports");
-		}
-
-		TModule module = importDecl.getModule();
-		String targetProjectName = module.getProjectName();
-		QualifiedName targetModule = qualifiedNameConverter.toQualifiedName(module.getQualifiedName());
-
-		String moduleSpecifier = importDecl.getModuleSpecifierAsText();
-		if (importDecl.isBare()) {
-			return ImportDescriptor.createBareImport(moduleSpecifier, targetProjectName, targetModule, originalIndex);
-		} else {
-			if (importSpec instanceof NamedImportSpecifier) {
-				NamedImportSpecifier importSpecCasted = (NamedImportSpecifier) importSpec;
-				if (importSpecCasted.isDefaultImport()) {
-					String localName = importSpecCasted.getAlias();
-					return ImportDescriptor.createDefaultImport(localName, moduleSpecifier, targetProjectName,
-							targetModule,
-							originalIndex);
-				} else {
-					String elementName = importSpecCasted.getImportedElementAsText();
-					String alias = importSpecCasted.getAlias();
-					return ImportDescriptor.createNamedImport(elementName, alias, moduleSpecifier, targetProjectName,
-							targetModule,
-							originalIndex);
-				}
-			} else if (importSpec instanceof NamespaceImportSpecifier) {
-				String localNamespaceName = ((NamespaceImportSpecifier) importSpec).getAlias();
-				return ImportDescriptor.createNamespaceImport(localNamespaceName, moduleSpecifier, targetProjectName,
-						targetModule,
-						originalIndex);
-			} else if (importSpec != null) {
-				throw new IllegalArgumentException(
-						"unknown subclass of ImportSpecifier: " + importSpec.getClass().getSimpleName());
-			} else {
-				throw new IllegalArgumentException("importSpec may be null only if importDecl is a bare import");
-			}
-		}
 	}
 }

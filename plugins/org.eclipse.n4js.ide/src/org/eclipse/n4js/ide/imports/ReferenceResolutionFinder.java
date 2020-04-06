@@ -12,35 +12,27 @@ package org.eclipse.n4js.ide.imports;
 
 import static org.eclipse.n4js.utils.N4JSLanguageUtils.lastSegmentOrDefaultHost;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.n4js.formatting2.FormattingUserPreferenceHelper;
 import org.eclipse.n4js.n4JS.ImportCallExpression;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
-import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4idl.N4IDLGlobals;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
-import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.scoping.IContentAssistScopeProvider;
 import org.eclipse.n4js.scoping.imports.PlainAccessOfAliasedImportDescription;
 import org.eclipse.n4js.scoping.imports.PlainAccessOfNamespacedImportDescription;
-import org.eclipse.n4js.services.N4JSGrammarAccess;
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.UtilN4;
-import org.eclipse.xtext.conversion.IValueConverterService;
 import org.eclipse.xtext.conversion.ValueConverterException;
 import org.eclipse.xtext.ide.editor.contentassist.IPrefixMatcher;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
@@ -51,15 +43,13 @@ import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.impl.AliasedEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.IScopeProvider;
-import org.eclipse.xtext.util.ITextRegion;
-import org.eclipse.xtext.util.ReplaceRegion;
-import org.eclipse.xtext.util.TextRegion;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * For a {@link ReferenceDescriptor reference in the N4JS source code} (which may be resolved or unresolved), this class
@@ -80,6 +70,7 @@ import com.google.inject.Inject;
  * <li>organize imports (to compute new imports to be added for all unresolved references in the file).
  * </ul>
  */
+@Singleton
 public class ReferenceResolutionFinder {
 
 	@Inject
@@ -95,19 +86,7 @@ public class ReferenceResolutionFinder {
 	private IQualifiedNameProvider qualifiedNameProvider;
 
 	@Inject
-	private IValueConverterService valueConverters;
-
-	@Inject
-	private N4JSGrammarAccess grammarAccess;
-
-	@Inject
 	private IPrefixMatcher prefixMatcher;
-
-	@Inject
-	private ImportRegionHelper importRegionHelper;
-
-	@Inject
-	private FormattingUserPreferenceHelper formattingUserPreferenceHelper;
 
 	/**
 	 * An acceptor receiving valid {@link ReferenceResolution}s for a given {@link ReferenceDescriptor reference}. See
@@ -125,14 +104,14 @@ public class ReferenceResolutionFinder {
 
 	/**
 	 * Searches all valid resolutions of the given reference. Note: two higher-level convenience methods are available
-	 * in {@link ReferenceResolutionHelper}.
+	 * in {@link ImportHelper}.
 	 *
 	 * @param reference
 	 *            the reference to resolve.
 	 * @param requireFullMatch
 	 *            if <code>true</code>, a candidate's name must be <em>equal</em> to the given <code>reference</code>'s
-	 *            {@link ReferenceDescriptor#prefix prefix}; otherwise it is sufficient if the name <em>starts with</em>
-	 *            the prefix.
+	 *            {@link ReferenceDescriptor#text text}; otherwise it is sufficient if the name <em>starts with</em> the
+	 *            text.
 	 * @param isUnresolvedReference
 	 *            if true, the given <code>reference</code> is assumed to be an unresolved reference (which means
 	 *            certain collision checks can be omitted); otherwise nothing will be assumed, i.e. the reference may be
@@ -155,9 +134,9 @@ public class ReferenceResolutionFinder {
 			Predicate<IEObjectDescription> filter,
 			IResolutionAcceptor acceptor) {
 
-		final Resource resource = reference.model.eResource();
 		final IContentAssistScopeProvider contentAssistScopeProvider = (IContentAssistScopeProvider) scopeProvider;
-		final IScope scope = contentAssistScopeProvider.getScopeForContentAssist(reference.model, reference.eReference);
+		final IScope scope = contentAssistScopeProvider.getScopeForContentAssist(reference.astNode,
+				reference.eReference);
 		// iterate over candidates, filter them, and create ICompletionProposals for them
 		final Iterable<IEObjectDescription> candidates = scope.getAllElements();
 		final Set<URI> candidateURIs = new HashSet<>(); // note: shadowing for #getAllElements does not work
@@ -172,7 +151,7 @@ public class ReferenceResolutionFinder {
 
 			final Optional<IScope> scopeForCollisionCheck = isUnresolvedReference ? Optional.absent()
 					: Optional.of(scope);
-			final ReferenceResolution resolution = getResolution(resource, reference.prefix, reference.node,
+			final ReferenceResolution resolution = getResolution(reference.text, reference.parseTreeNode,
 					requireFullMatch, candidate, scopeForCollisionCheck, conflictChecker);
 			if (resolution != null && candidateURIs.add(candidate.getEObjectURI())) {
 				acceptor.accept(resolution);
@@ -181,8 +160,8 @@ public class ReferenceResolutionFinder {
 	}
 
 	/**
-	 * Returns a resolution if the given candidate is a valid target element for the given prefix; otherwise
-	 * <code>null</code> is returned.
+	 * Returns a resolution if the given candidate is a valid target element for the given reference text (full name or
+	 * just prefix, depending on <code>requireFullMatch</code>); otherwise <code>null</code> is returned.
 	 *
 	 * @param candidate
 	 *            the {@link IEObjectDescription} representing the potential target element of the resolution.
@@ -192,12 +171,11 @@ public class ReferenceResolutionFinder {
 	 *            collision check can safely be omitted.
 	 * @return the resolution of <code>null</code> if the candidate is not a valid match for the reference.
 	 */
-	private ReferenceResolution getResolution(Resource resource, String prefix, INode currentNode,
-			boolean requireFullMatch, IEObjectDescription candidate, Optional<IScope> scopeForCollisionCheck,
-			Predicate<String> conflictChecker) {
+	private ReferenceResolution getResolution(String text, INode parseTreeNode, boolean requireFullMatch,
+			IEObjectDescription candidate, Optional<IScope> scopeForCollisionCheck, Predicate<String> conflictChecker) {
 
-		ReferenceResolutionCandidate rrc = new ReferenceResolutionCandidate(candidate, scopeForCollisionCheck, prefix,
-				requireFullMatch, currentNode, conflictChecker);
+		ReferenceResolutionCandidate rrc = new ReferenceResolutionCandidate(candidate, scopeForCollisionCheck, text,
+				requireFullMatch, parseTreeNode, conflictChecker);
 
 		if (!rrc.isValid) {
 			return null;
@@ -210,9 +188,8 @@ public class ReferenceResolutionFinder {
 			String label = getLabel(rrc, version);
 			String description = getDescription(rrc);
 			ImportDescriptor importToBeAdded = getImportToBeAdded(rrc);
-			Collection<ReplaceRegion> textReplacements = getTextReplacements(resource, importToBeAdded);
 
-			return new ReferenceResolution(candidate, proposal, label, description, importToBeAdded, textReplacements);
+			return new ReferenceResolution(candidate, proposal, label, description, importToBeAdded);
 
 		} catch (ValueConverterException e) {
 			// text does not match the concrete syntax
@@ -299,29 +276,6 @@ public class ReferenceResolutionFinder {
 		return importDesc;
 	}
 
-	private List<ReplaceRegion> getTextReplacements(Resource resource, ImportDescriptor importToBeAdded) {
-		if (importToBeAdded == null) {
-			return Collections.emptyList();
-		}
-
-		Script script = N4JSResource.getScript(resource);
-		if (script == null) {
-			return null;
-		}
-
-		int insertionOffset = importRegionHelper.findInsertionOffset(script);
-		String spacing = formattingUserPreferenceHelper.getSpacingPreference(resource);
-		String lineDelimiter = "\n";
-
-		String insertedCode = (insertionOffset != 0 ? lineDelimiter : "")
-				+ importToBeAdded.toCode(spacing, valueConverters, grammarAccess)
-				+ (insertionOffset != 0 ? "" : lineDelimiter);
-		ITextRegion region = new TextRegion(insertionOffset, 0);
-		XReplaceRegion textReplacement = new XReplaceRegion(region, insertedCode);
-
-		return Collections.singletonList(textReplacement);
-	}
-
 	private static enum CandidateAccessType {
 		direct, alias, namespace
 	}
@@ -343,7 +297,7 @@ public class ReferenceResolutionFinder {
 		final NameAndAlias addedImportNameAndAlias;
 
 		ReferenceResolutionCandidate(IEObjectDescription candidate, Optional<IScope> scopeForCollisionCheck,
-				String prefix, boolean requireFullMatch, INode currentNode, Predicate<String> conflictChecker) {
+				String text, boolean requireFullMatch, INode parseTreeNode, Predicate<String> conflictChecker) {
 			if (!requireFullMatch && !scopeForCollisionCheck.isPresent()) {
 				throw new IllegalArgumentException(
 						"collision check should only be omitted if a full match is required");
@@ -352,7 +306,7 @@ public class ReferenceResolutionFinder {
 			this.candidateProject = n4jsCore.findProject(candidate.getEObjectURI()).orNull();
 			this.shortName = getShortName();
 			this.qualifiedName = getQualifiedName();
-			this.parentImportElement = getParentImportElement(currentNode);
+			this.parentImportElement = getParentImportElement(parseTreeNode);
 			this.parentImportModuleName = getParentImportModuleName();
 			this.candidateViaScopeShortName = getCorrectCandidateViaScope(scopeForCollisionCheck);
 			this.isScopedCandidateEqual = isEqualCandidateName(candidateViaScopeShortName, qualifiedName);
@@ -361,7 +315,7 @@ public class ReferenceResolutionFinder {
 			this.aliasName = getAliasName();
 			this.namespaceName = getNamespaceName();
 			this.addedImportNameAndAlias = getImportChanges();
-			this.isValid = isValid(prefix, requireFullMatch, conflictChecker);
+			this.isValid = isValid(text, requireFullMatch, conflictChecker);
 		}
 
 		private String getShortName() {
@@ -370,12 +324,12 @@ public class ReferenceResolutionFinder {
 		}
 
 		/** @return true iff this candidate is valid and should be shown as a proposal */
-		private boolean isValid(String prefix, boolean requireFullMatch, Predicate<String> conflictChecker) {
+		private boolean isValid(String text, boolean requireFullMatch, Predicate<String> conflictChecker) {
 			boolean validName = false;
-			validName |= isMatch(shortName, prefix, requireFullMatch);
-			validName |= isAlias() && isMatch(aliasName, prefix, requireFullMatch);
+			validName |= isMatch(shortName, text, requireFullMatch);
+			validName |= isAlias() && isMatch(aliasName, text, requireFullMatch);
 			validName |= isNamespace()
-					&& prefixMatcher.isCandidateMatchingPrefix(namespaceName.getLastSegment(), prefix);
+					&& prefixMatcher.isCandidateMatchingPrefix(namespaceName.getLastSegment(), text);
 
 			boolean valid = validName;
 			valid &= !Strings.isNullOrEmpty(shortName);
@@ -385,11 +339,11 @@ public class ReferenceResolutionFinder {
 			return valid;
 		}
 
-		private boolean isMatch(String name, String prefix, boolean requireFullMatch) {
+		private boolean isMatch(String name, String text, boolean requireFullMatch) {
 			if (requireFullMatch) {
-				return prefix.equals(name);
+				return text.equals(name);
 			}
-			return prefixMatcher.isCandidateMatchingPrefix(name, prefix);
+			return prefixMatcher.isCandidateMatchingPrefix(name, text);
 		}
 
 		private QualifiedName getQualifiedName() {
@@ -556,15 +510,15 @@ public class ReferenceResolutionFinder {
 			return null;
 		}
 
-		private EObject getParentImportElement(INode currentNode) {
-			while (currentNode != null) {
-				EObject semanticElement = currentNode.getSemanticElement();
+		private EObject getParentImportElement(INode parseTreeNode) {
+			while (parseTreeNode != null) {
+				EObject semanticElement = parseTreeNode.getSemanticElement();
 				if (semanticElement instanceof ImportCallExpression
 						|| semanticElement instanceof ImportDeclaration) {
 
 					return semanticElement;
 				}
-				currentNode = currentNode.getParent();
+				parseTreeNode = parseTreeNode.getParent();
 			}
 			return null;
 		}

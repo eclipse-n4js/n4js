@@ -43,9 +43,9 @@ import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.n4js.external.LibraryChange;
 import org.eclipse.n4js.external.NpmCLI;
 import org.eclipse.n4js.ide.imports.ImportDescriptor;
+import org.eclipse.n4js.ide.imports.ImportHelper;
 import org.eclipse.n4js.ide.imports.ImportOrganizer;
 import org.eclipse.n4js.ide.imports.ReferenceResolution;
-import org.eclipse.n4js.ide.imports.ReferenceResolutionHelper;
 import org.eclipse.n4js.ide.server.codeActions.ICodeActionAcceptor;
 import org.eclipse.n4js.ide.server.codeActions.N4JSCodeActionService;
 import org.eclipse.n4js.ide.server.codeActions.N4JSSourceActionProvider;
@@ -123,7 +123,7 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 	private SemverHelper semverHelper;
 
 	@Inject
-	private ReferenceResolutionHelper referenceResolutionHelper;
+	private ImportHelper importHelper;
 
 	@Inject
 	private ImportOrganizer importOrganizer;
@@ -319,7 +319,7 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 
 		// compute imports to be added for unresolved references
 		List<ImportDescriptor> importsToBeAdded = new ArrayList<>();
-		List<ReferenceResolution> resolutions = referenceResolutionHelper
+		List<ReferenceResolution> resolutions = importHelper
 				.findResolutionsForAllUnresolvedReferences(script, cancelIndicator);
 		for (ReferenceResolution resolution : resolutions) {
 			if (resolution.importToBeAdded != null) {
