@@ -17,8 +17,8 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.xtext.nodemodel.INode;
 
 /**
- * Describes a reference to an identifiable element given in the N4JS source code. The reference may be resolved or
- * unresolved.
+ * Describes a reference given in the N4JS source code pointing to some identifiable element. The reference may be
+ * resolved or unresolved.
  */
 public class ReferenceDescriptor {
 
