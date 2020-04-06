@@ -55,8 +55,8 @@
       <repository location="http://download.eclipse.org/modeling/emf/emf/builds/release/2.18"/>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-      <unit id="org.eclipse.xpect.xtext.lib" version="0.2.0.201906240918"/>
-      <repository location="https://ci.eclipse.org/xpect/job/Xpect-Integration-Release/20/artifact/org.eclipse.xpect.releng/p2-repository/target/repository/"/>
+      <unit id="org.eclipse.xpect.xtext.lib" version="0.2.0.202004061200"/>
+      <repository location="https://ci.eclipse.org/xpect/job/Xpect-Integration-Release/22/artifact/org.eclipse.xpect.releng/p2-repository/target/repository/"/>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.userstorage.feature.group" version="1.2.0.v20190308-0433"/>
