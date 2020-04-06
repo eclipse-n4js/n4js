@@ -111,39 +111,44 @@ public class ChangeProvider {
 	}
 
 	/**
-	 * Determine the current Line delimiter at the given offset.
+	 * Determine the current line delimiter at the given offset.
 	 *
 	 * @param doc
-	 *            the document to query for the newline sequence.
+	 *            the document to query for the line separator sequence.
 	 * @param offset
 	 *            absolute character position
-	 * @return the new line sequence used in the line containing offset
+	 * @return the line separator sequence used in the line containing offset or <code>"\n"</code> if the document
+	 *         contains only a single line.
 	 */
 	public static String lineDelimiter(Document doc, int offset) {
-		if (doc.getLineCount() < 2) {
-			return "\n";
+		String content = doc.getContents();
+		int lineCount = doc.getLineCount();
+		if (lineCount < 2) {
+			return "\n"; // a document with a single line does not have any line separators
 		}
 
 		Position offsetPos = doc.getPosition(offset);
-		int lineN0 = offsetPos.getLine();
-		if (offsetPos.getLine() > 0) {
-			lineN0--;
-		}
-		int lineN1 = lineN0 + 1;
-		int offsetAtStart = doc.getOffSet(new Position(lineN1, 0));
+		int line = offsetPos.getLine();
 
-		Position posStart = doc.getPosition(offsetAtStart - 2);
-		Position posEnd = doc.getPosition(offsetAtStart);
-		Range range = new Range(posStart, posEnd);
-		String lineBreakString = doc.getSubstring(range);
-		switch (lineBreakString) {
-		case "\r\n":
-			return "\r\n";
-		case "\n":
-			return "\n";
-		default:
-			return "\n";
+		if (line > 0) { // no use looking for leading line separator in first line
+			int offsetOfLine = doc.getOffSet(new Position(line, 0));
+			String sequence = content.substring(Math.max(offsetOfLine - 2, 0), offsetOfLine);
+			if (sequence.equals("\r\n")) {
+				return "\r\n";
+			} else if (sequence.endsWith("\n")) {
+				return "\n";
+			}
 		}
+		if (line + 1 < lineCount) { // no use looking for trailing line separator in last line
+			int offsetOfFollowingLine = doc.getOffSet(new Position(line + 1, 0));
+			String sequence = content.substring(Math.max(offsetOfFollowingLine - 2, 0), offsetOfFollowingLine);
+			if (sequence.equals("\r\n")) {
+				return "\r\n";
+			} else if (sequence.endsWith("\n")) {
+				return "\n";
+			}
+		}
+		return "\n";
 	}
 
 	/**

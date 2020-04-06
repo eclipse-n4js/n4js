@@ -240,6 +240,9 @@ public class ImportHelper {
 		} else {
 			return null; // unsupported kind of AST node
 		}
+		if (eReference == null || prefix == null) {
+			return null; // broken AST
+		}
 
 		Object targetObj = astNode.eGet(eReference, false);
 		if (!(targetObj instanceof EObject)) {
@@ -250,6 +253,9 @@ public class ImportHelper {
 		}
 
 		INode currentNode = NodeModelUtils.findActualNodeFor(astNode);
+		if (currentNode == null) {
+			return null; // broken AST
+		}
 
 		return new ReferenceDescriptor(prefix, astNode, eReference, currentNode);
 	}
