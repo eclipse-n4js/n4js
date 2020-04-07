@@ -23,6 +23,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -41,10 +42,13 @@ import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.n4js.external.LibraryChange;
 import org.eclipse.n4js.external.NpmCLI;
+import org.eclipse.n4js.ide.imports.ImportDescriptor;
+import org.eclipse.n4js.ide.imports.ImportHelper;
+import org.eclipse.n4js.ide.imports.ImportOrganizer;
+import org.eclipse.n4js.ide.imports.ReferenceResolution;
 import org.eclipse.n4js.ide.server.codeActions.ICodeActionAcceptor;
 import org.eclipse.n4js.ide.server.codeActions.N4JSCodeActionService;
 import org.eclipse.n4js.ide.server.codeActions.N4JSSourceActionProvider;
-import org.eclipse.n4js.ide.server.imports.ImportOrganizer;
 import org.eclipse.n4js.ide.xtext.server.ExecuteCommandParamsDescriber;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
@@ -117,6 +121,12 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 
 	@Inject
 	private SemverHelper semverHelper;
+
+	@Inject
+	private ImportHelper importHelper;
+
+	@Inject
+	private ImportOrganizer importOrganizer;
 
 	/**
 	 * Methods annotated as {@link ExecutableCommandHandler} will be registered as handlers for ExecuteCommand requests.
@@ -293,8 +303,8 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 	}
 
 	/**
-	 * Command for {@link ImportOrganizer#organizeImports(Document, Script, CancelIndicator) organizing imports} in a
-	 * single file. Triggered via the corresponding source action
+	 * Command for {@link ImportOrganizer#organizeImports(Document, Script, Collection, CancelIndicator) organizing
+	 * imports} in a single file. Triggered via the corresponding source action
 	 * {@link N4JSSourceActionProvider#organizeImports(CodeActionParams, ICodeActionAcceptor) organizeImports}.
 	 */
 	@ExecutableCommandHandler(N4JS_ORGANIZE_IMPORTS)
@@ -306,7 +316,19 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 		}
 		Script script = ((N4JSResource) resource).getScript();
 		XDocument document = workspaceManager.getDocument(resource);
-		List<TextEdit> edits = ImportOrganizer.organizeImports(document, script, cancelIndicator);
+
+		// compute imports to be added for unresolved references
+		List<ImportDescriptor> importsToBeAdded = new ArrayList<>();
+		List<ReferenceResolution> resolutions = importHelper
+				.findResolutionsForAllUnresolvedReferences(script, cancelIndicator);
+		for (ReferenceResolution resolution : resolutions) {
+			if (resolution.importToBeAdded != null) {
+				importsToBeAdded.add(resolution.importToBeAdded);
+			}
+		}
+
+		// organize all imports (existing and new ones)
+		List<TextEdit> edits = importOrganizer.organizeImports(document, script, importsToBeAdded, cancelIndicator);
 
 		WorkspaceEdit workspaceEdit = new WorkspaceEdit(Collections.singletonMap(uriString, edits));
 		ApplyWorkspaceEditParams params = new ApplyWorkspaceEditParams(workspaceEdit, "Organize Imports");

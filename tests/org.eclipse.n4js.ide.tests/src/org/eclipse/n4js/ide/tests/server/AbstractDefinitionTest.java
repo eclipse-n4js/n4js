@@ -32,13 +32,22 @@ import org.eclipse.xtext.testing.DefinitionTestConfiguration;
 abstract public class AbstractDefinitionTest extends AbstractStructuredIdeTest<DefinitionTestConfiguration> {
 
 	/** Call this method in a test */
-	protected void test(DefinitionTestConfiguration dtc) throws Exception {
-		test(dtc.getFilePath(), dtc.getModel(), dtc);
+	protected void testAtCursor(String content, String expectation) throws Exception {
+		ContentAndPosition contentAndPosition = getContentAndPosition(content);
+
+		DefinitionTestConfiguration config = new DefinitionTestConfiguration();
+		config.setModel(contentAndPosition.content);
+		config.setLine(contentAndPosition.line);
+		config.setColumn(contentAndPosition.column);
+		config.setExpectedDefinitions(expectation);
+
+		test(config.getFilePath(), config.getModel(), config);
 	}
 
 	@Override
 	protected void performTest(Project project, String moduleName, DefinitionTestConfiguration dtc)
 			throws InterruptedException, ExecutionException, URISyntaxException {
+
 		TextDocumentPositionParams textDocumentPositionParams = new TextDocumentPositionParams();
 		String completeFileUri = getFileURIFromModuleName(dtc.getFilePath()).toString();
 		textDocumentPositionParams.setTextDocument(new TextDocumentIdentifier(completeFileUri));

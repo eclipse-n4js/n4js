@@ -34,8 +34,10 @@ import org.eclipse.n4js.ide.xtext.server.DiagnosticIssueConverter;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 import org.eclipse.n4js.ide.xtext.server.XProjectManager;
 import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
+import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.ide.server.codeActions.ICodeActionService2;
+import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.validation.Issue;
 
@@ -105,7 +107,12 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 		}
 
 		void compute(String code, Options options, ICodeActionAcceptor acceptor) {
-			QuickfixContext context = new QuickfixContext(code, options);
+			XtextResource resource = options.getResource();
+			if (!(resource instanceof N4JSResource)) {
+				return;
+			}
+
+			QuickfixContext context = new QuickfixContext((N4JSResource) resource, code, options);
 
 			try {
 				method.invoke(instance, context, acceptor);

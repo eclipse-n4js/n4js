@@ -9,9 +9,11 @@
  */
 package org.eclipse.n4js.ide.tests.contentassist;
 
+import java.util.List
 import org.eclipse.n4js.ide.tests.server.AbstractCompletionTest
 import org.junit.Test
-import java.util.List
+
+import static org.eclipse.n4js.ide.tests.server.TestWorkspaceCreator.*
 
 /**
  * Code completion tests for scenarios that also might add an import statement
@@ -20,11 +22,11 @@ import java.util.List
 public class CompletionWithImportsWorkspaceTest extends AbstractCompletionTest {
 
 	/** Some default modules that export a number of classes for all tests. */
-	override final List<Pair<String, List<Pair<String, String>>>> getDefaultTestYarnWorkspace() {
+	override final List<Pair<String, List<Pair<String, String>>>> getDefaultTestWorkspace() {
 		return #[
 			"P1*" -> #[
 				DEPENDENCIES -> '''
-					«N4JS_RUNTIME_NAME»,
+					«N4JS_RUNTIME»,
 					P2,
 					SomeNPM,
 					@n4jsd/SomeNPM
@@ -34,7 +36,7 @@ public class CompletionWithImportsWorkspaceTest extends AbstractCompletionTest {
 					export public class XY {}
 				'''],
 				
-			NODE_MODULES + N4JS_RUNTIME_NAME -> null,
+			NODE_MODULES + N4JS_RUNTIME -> null,
 			NODE_MODULES + "SomeNPM" -> #[
 				"index"  -> '''//some npm js code'''],
 			NODE_MODULES + "@n4jsd/SomeNPM" -> #[
@@ -60,7 +62,7 @@ public class CompletionWithImportsWorkspaceTest extends AbstractCompletionTest {
 
 	@Test
 	def void testRedirectionForDefinitionProjects() {
-		test('''
+		testAtCursor('''
 			let x = new A1<|>
 		''', ''' 
 			(A1, Class, index, , , 00000, , , , ([0:12 - 0:14], A1), [([0:0 - 0:0], import {A1} from "someNPM";
@@ -70,7 +72,7 @@ public class CompletionWithImportsWorkspaceTest extends AbstractCompletionTest {
 
 	@Test
 	def void testNoRedirectionForNormalProjects() {
-		test('''
+		testAtCursor('''
 			let x = new XY<|>
 		''', ''' 
 			(XY, Class, LibXY, , , 00000, , , , ([0:12 - 0:14], XY), [([0:0 - 0:0], import {XY} from "LibXY";
