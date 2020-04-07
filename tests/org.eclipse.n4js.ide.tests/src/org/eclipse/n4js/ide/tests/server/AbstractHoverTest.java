@@ -27,8 +27,16 @@ import org.eclipse.xtext.testing.HoverTestConfiguration;
  */
 abstract public class AbstractHoverTest extends AbstractStructuredIdeTest<HoverTestConfiguration> {
 
+
 	/** Call this method in a test */
-	protected void test(HoverTestConfiguration htc) throws Exception {
+	protected void testAtCursor(String content, String expectation) throws Exception {
+		ContentAndPosition contentAndPosition = getContentAndPosition(content);
+		HoverTestConfiguration htc = new HoverTestConfiguration();
+		htc.setModel(contentAndPosition.content);
+		htc.setLine(contentAndPosition.line);
+		htc.setColumn(contentAndPosition.column);
+		htc.setExpectedHover(expectation);
+
 		test(htc.getFilePath(), htc.getModel(), htc);
 	}
 

@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.editor.contentassist.imports;
+package org.eclipse.n4js.ide.imports;
 
 import java.util.Objects;
 
