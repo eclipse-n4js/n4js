@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ide.tests.server;
 
+import static org.eclipse.n4js.ide.tests.server.TestWorkspaceCreator.DEFAULT_PROJECT_NAME;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
@@ -71,9 +72,8 @@ public class CommandRebuildTest extends AbstractStructuredIdeTest<Void> {
 		// check pre-state
 		assertNoIssues();
 
-		Path prjPath = getRoot().toPath().resolve(PROJECT_NAME).toAbsolutePath();
-		prjStatePath = prjPath.resolve(PROJECT_STATE_NAME);
-		genFileStatePath = prjPath.resolve(project.getOutputFolder()).resolve(moduleName + ".js");
+		prjStatePath = getFileURIFromModuleName(DEFAULT_PROJECT_NAME + "/" + PROJECT_STATE_NAME).toFileSystemPath();
+		genFileStatePath = getFileURIFromModuleName(moduleName + ".js").toFileSystemPath();
 
 		setFileCreationDate(prjStatePath);
 		setFileCreationDate(genFileStatePath);

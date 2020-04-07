@@ -6423,7 +6423,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getN4MemberDeclaration__IsDeclaredStatic() {
+	public EOperation getN4MemberDeclaration__IsDeclaredAbstract() {
 		return n4MemberDeclarationEClass.getEOperations().get(1);
 	}
 
@@ -6433,7 +6433,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getN4MemberDeclaration__IsStatic() {
+	public EOperation getN4MemberDeclaration__IsAbstract() {
 		return n4MemberDeclarationEClass.getEOperations().get(2);
 	}
 
@@ -6443,7 +6443,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getN4MemberDeclaration__IsDeclaredFinal() {
+	public EOperation getN4MemberDeclaration__IsDeclaredStatic() {
 		return n4MemberDeclarationEClass.getEOperations().get(3);
 	}
 
@@ -6453,7 +6453,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getN4MemberDeclaration__IsFinal() {
+	public EOperation getN4MemberDeclaration__IsStatic() {
 		return n4MemberDeclarationEClass.getEOperations().get(4);
 	}
 
@@ -6463,7 +6463,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getN4MemberDeclaration__IsConstructor() {
+	public EOperation getN4MemberDeclaration__IsDeclaredFinal() {
 		return n4MemberDeclarationEClass.getEOperations().get(5);
 	}
 
@@ -6473,8 +6473,28 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getN4MemberDeclaration__IsCallableConstructor() {
+	public EOperation getN4MemberDeclaration__IsFinal() {
 		return n4MemberDeclarationEClass.getEOperations().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getN4MemberDeclaration__IsConstructor() {
+		return n4MemberDeclarationEClass.getEOperations().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getN4MemberDeclaration__IsCallableConstructor() {
+		return n4MemberDeclarationEClass.getEOperations().get(8);
 	}
 
 	/**
@@ -8072,6 +8092,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		n4MemberDeclarationEClass = createEClass(N4_MEMBER_DECLARATION);
 		createEReference(n4MemberDeclarationEClass, N4_MEMBER_DECLARATION__OWNER);
 		createEOperation(n4MemberDeclarationEClass, N4_MEMBER_DECLARATION___GET_DEFINED_TYPE_ELEMENT);
+		createEOperation(n4MemberDeclarationEClass, N4_MEMBER_DECLARATION___IS_DECLARED_ABSTRACT);
+		createEOperation(n4MemberDeclarationEClass, N4_MEMBER_DECLARATION___IS_ABSTRACT);
 		createEOperation(n4MemberDeclarationEClass, N4_MEMBER_DECLARATION___IS_DECLARED_STATIC);
 		createEOperation(n4MemberDeclarationEClass, N4_MEMBER_DECLARATION___IS_STATIC);
 		createEOperation(n4MemberDeclarationEClass, N4_MEMBER_DECLARATION___IS_DECLARED_FINAL);
@@ -9259,6 +9281,10 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEReference(getN4MemberDeclaration_Owner(), this.getN4ClassifierDefinition(), this.getN4ClassifierDefinition_OwnedMembersRaw(), "owner", null, 0, 1, N4MemberDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getN4MemberDeclaration__GetDefinedTypeElement(), theTypesPackage.getTMember(), "getDefinedTypeElement", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getN4MemberDeclaration__IsDeclaredAbstract(), theEcorePackage.getEBoolean(), "isDeclaredAbstract", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getN4MemberDeclaration__IsAbstract(), theEcorePackage.getEBoolean(), "isAbstract", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getN4MemberDeclaration__IsDeclaredStatic(), theEcorePackage.getEBoolean(), "isDeclaredStatic", 0, 1, !IS_UNIQUE, IS_ORDERED);
 

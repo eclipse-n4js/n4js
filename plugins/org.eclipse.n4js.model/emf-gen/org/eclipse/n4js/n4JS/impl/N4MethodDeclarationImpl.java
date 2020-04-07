@@ -693,7 +693,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 					String _name = it.getName();
 					return Boolean.valueOf(Objects.equal(_name, "ProvidesDefaultImplementation"));
 				}
-			}))) || this.getDeclaredModifiers().contains(N4Modifier.ABSTRACT));
+			}))) || this.isDeclaredAbstract());
 	}
 
 	/**
@@ -1313,6 +1313,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 		if (baseClass == N4MemberDeclaration.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.N4_MEMBER_DECLARATION___GET_DEFINED_TYPE_ELEMENT: return N4JSPackage.N4_METHOD_DECLARATION___GET_DEFINED_TYPE_ELEMENT;
+				case N4JSPackage.N4_MEMBER_DECLARATION___IS_ABSTRACT: return N4JSPackage.N4_METHOD_DECLARATION___IS_ABSTRACT;
 				case N4JSPackage.N4_MEMBER_DECLARATION___IS_STATIC: return N4JSPackage.N4_METHOD_DECLARATION___IS_STATIC;
 				case N4JSPackage.N4_MEMBER_DECLARATION___IS_CONSTRUCTOR: return N4JSPackage.N4_METHOD_DECLARATION___IS_CONSTRUCTOR;
 				case N4JSPackage.N4_MEMBER_DECLARATION___IS_CALLABLE_CONSTRUCTOR: return N4JSPackage.N4_METHOD_DECLARATION___IS_CALLABLE_CONSTRUCTOR;

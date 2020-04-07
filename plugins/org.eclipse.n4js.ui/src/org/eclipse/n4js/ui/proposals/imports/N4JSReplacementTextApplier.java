@@ -267,9 +267,9 @@ public class N4JSReplacementTextApplier extends ReplacementTextApplier {
 
 		// element is already imported via namespace
 		if (descriptionFullQN instanceof PlainAccessOfNamespacedImportDescription) {
-			simpleApply(document,
-					((PlainAccessOfNamespacedImportDescription) descriptionFullQN).getNamespacedName(),
-					proposal);
+			QualifiedName namespaceQN = ((PlainAccessOfNamespacedImportDescription) descriptionFullQN)
+					.getNamespacedName();
+			simpleApply(document, namespaceQN.toString(), proposal);
 			return;
 		}
 		// element is already imported via an alias

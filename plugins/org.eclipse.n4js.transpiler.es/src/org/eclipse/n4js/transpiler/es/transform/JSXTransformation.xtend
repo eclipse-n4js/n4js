@@ -234,7 +234,7 @@ class JSXTransformation extends Transformation {
 				}
 			}
 
-			return _CallExpr(_PropertyAccessExpr(steFor_Object,steFor_assign), parameters);
+			return _CallExpr(_PropertyAccessExpr(steFor_Object, steFor_Object_assign), parameters);
 		}
 	}
 

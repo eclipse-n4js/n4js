@@ -71,7 +71,7 @@ class X13 extends N4Annotation {}
 // the following types aren't related to reflection, but should not be instantiated/extended either:
 
 // XPECT errors --> "The constructor of N4Enum is not visible." at "N4Enum"
-console.log(new N4Enum())
+console.log(new N4Enum("MyLiteral"))
 // XPECT errors --> "The constructor of N4StringBasedEnum is not visible." at "N4StringBasedEnum"
 console.log(new N4StringBasedEnum())
 // XPECT errors --> "Cannot extend classifier N4Enum because its constructor is not accessible." at "N4Enum"

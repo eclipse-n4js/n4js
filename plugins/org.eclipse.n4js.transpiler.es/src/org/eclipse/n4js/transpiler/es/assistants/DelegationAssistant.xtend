@@ -10,9 +10,11 @@
  */
 package org.eclipse.n4js.transpiler.es.assistants
 
+import com.google.common.collect.Lists
 import com.google.inject.Inject
+import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.Expression
-import org.eclipse.n4js.n4JS.N4ClassDeclaration
+import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4GetterDeclaration
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
@@ -21,11 +23,12 @@ import org.eclipse.n4js.n4JS.N4Modifier
 import org.eclipse.n4js.n4JS.N4SetterDeclaration
 import org.eclipse.n4js.transpiler.TransformationAssistant
 import org.eclipse.n4js.transpiler.assistants.TypeAssistant
+import org.eclipse.n4js.transpiler.im.DelegatingGetterDeclaration
 import org.eclipse.n4js.transpiler.im.DelegatingMember
+import org.eclipse.n4js.transpiler.im.DelegatingMethodDeclaration
+import org.eclipse.n4js.transpiler.im.DelegatingSetterDeclaration
 import org.eclipse.n4js.transpiler.im.ImFactory
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
-import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
-import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
@@ -36,6 +39,7 @@ import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.util.SuperInterfacesIterable
+import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.RecursionGuard
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
@@ -122,136 +126,66 @@ class DelegationAssistant extends TransformationAssistant {
 		return result;
 	}
 
-
 	/**
-	 * Creates code to establish the actual member delegation for the given delegating member. It returns an expression
-	 * that evaluates to the delegation target from within the context of the delegation origin (here, "target" and
-	 * "origin" refers to the two arguments of method {@link #createDelegatingMember(TClassifier, TMember)}). The code
-	 * returned by this method is intended to be used in the member definitions passed to the <code>$makeClass</code>
-	 * and <code>$makeInterface</code> calls.
+	 * Convenience method for replacing each delegating member in the given declaration by an ordinary member
+	 * created with method {@link #createOrdinaryMemberForDelegatingMember(DelegatingMember)}. Will modify the
+	 * given classifier declaration.
 	 */
-	def public Expression createDelegationCode(DelegatingMember delegator) {
+	def public void replaceDelegatingMembersByOrdinaryMembers(N4ClassifierDeclaration classifierDecl) {
+		for (currMember : Lists.newArrayList(classifierDecl.ownedMembersRaw)) {
+			if (currMember instanceof DelegatingMember) {
+				val resolvedDelegatingMember = createOrdinaryMemberForDelegatingMember(currMember);
+				replace(currMember, resolvedDelegatingMember);
+			}
+		}
+	}
+
+	def public N4MemberDeclaration createOrdinaryMemberForDelegatingMember(DelegatingMember delegator) {
+		val targetNameStr = delegator.delegationTarget.name;
+		val targetName = if (targetNameStr!==null && targetNameStr.startsWith(N4JSLanguageUtils.SYMBOL_IDENTIFIER_PREFIX)) {
+			_LiteralOrComputedPropertyName(typeAssistant.getMemberNameAsSymbol(targetNameStr), targetNameStr)
+		} else {
+			_LiteralOrComputedPropertyName(targetNameStr)
+		};
+
+		val body = createBodyForDelegatingMember(delegator);
+
+		return switch(delegator) {
+			DelegatingGetterDeclaration:
+				_N4GetterDecl(targetName, body)
+			DelegatingSetterDeclaration:
+				_N4SetterDecl(targetName, _Fpar("value"), body)
+			DelegatingMethodDeclaration:
+				_N4MethodDecl(targetName, body)
+		};
+	}
+
+	def private Block createBodyForDelegatingMember(DelegatingMember delegator) {
 		val baseSTE = delegator.delegationBaseType;
 		val baseIsInterface = baseSTE?.originalTarget instanceof TInterface;
 
-		if(baseIsInterface) {
-			// if target is non-static:
-			//     I.$methods.t.value
-			//
-			// if target is static:
-			//     I.t
-			//
-			// if target is a symbol, for example built-in symbol "iterator":
-			//     I.$methods[Symbol.iterator].value
-			//     I[Symbol.iterator]
-			//
-
-			val targetName = delegator.delegationTarget.name;
-			val targetIsSymbol = targetName!==null && targetName.startsWith(N4JSLanguageUtils.SYMBOL_IDENTIFIER_PREFIX);
-			val targetSTE = delegator.delegationTarget;
-
-			return if(!delegator.static) {
-				val $methodsSTE =  steFor_$methods;
-				val valueSTE = getPropertyDescriptorValueProperty(delegator);
-// ---------
-// original code:
-//				if(!targetIsSymbol) {
-//					// I.$methods.t.value
-//					__NSSafe_PropertyAccessExpr(baseSTE, $methodsSTE, targetSTE, valueSTE)
-//				} else {
-//					// I.$methods[Symbol.iterator].value
-//					_PropertyAccessExpr(
-//						_IndexAccessExpr(
-//							__NSSafe_PropertyAccessExpr(baseSTE, $methodsSTE),
-//							typeAssistant.getMemberNameAsSymbol(targetName) // something like: Symbol.iterator
-//						),
-//						valueSTE
-//					)
-//				}
-// ---------
-// The following is a temporary work-around for member consumption across files with cyclic dependencies
-// (see test /org.eclipse.n4js.transpiler.es5.tests/testdata/circularDependency/consumedMembers/Main.n4js.xt)
-// This problem can only be solved properly by a redesign of $makeClass, but the following is a temporary, partial fix:
-				if(!targetIsSymbol) {
-					// I.$methods.t.value
-					_ConditionalExpr(
-						_AND(__NSSafe_IdentRef(baseSTE), __NSSafe_PropertyAccessExpr(baseSTE, $methodsSTE)),
-						__NSSafe_PropertyAccessExpr(baseSTE, $methodsSTE, targetSTE, valueSTE),
-						_FunExpr(false, #[
-							_ReturnStmnt(_CallExpr(
-								__NSSafe_PropertyAccessExpr(
-									baseSTE, $methodsSTE, targetSTE, valueSTE,
-									getSymbolTableEntryForMember(state.G.functionType, "apply", false, false, true)
-								),
-								_ThisLiteral,
-								_IdentRef(steFor_arguments)
-							))
-						])
-					)
-				} else {
-					// I.$methods[Symbol.iterator].value
-					_ConditionalExpr(
-						_AND(__NSSafe_IdentRef(baseSTE), __NSSafe_PropertyAccessExpr(baseSTE, $methodsSTE)),
-						_PropertyAccessExpr(
-							_IndexAccessExpr(
-								__NSSafe_PropertyAccessExpr(baseSTE, $methodsSTE),
-								typeAssistant.getMemberNameAsSymbol(targetName) // something like: Symbol.iterator
-							),
-							valueSTE
-						),
-						_FunExpr(false, #[
-							_ReturnStmnt(_CallExpr(
-								_PropertyAccessExpr(
-									_IndexAccessExpr(
-										__NSSafe_PropertyAccessExpr(baseSTE, $methodsSTE),
-										typeAssistant.getMemberNameAsSymbol(targetName) // something like: Symbol.iterator
-									),
-									valueSTE,
-									getSymbolTableEntryForMember(state.G.functionType, "apply", false, false, true)
-								),
-								_ThisLiteral,
-								_IdentRef(steFor_arguments)
-							))
-						])
-					)
-				}
-// ---------
-			} else {
-				if(!targetIsSymbol) {
-					// I.t
-					__NSSafe_PropertyAccessExpr(baseSTE, targetSTE)
-				} else {
-					// I[Symbol.iterator]
-					_IndexAccessExpr(__NSSafe_IdentRef(baseSTE), typeAssistant.getMemberNameAsSymbol(targetName))
-				}
-			};
+		val targetAccess = if(baseIsInterface) {
+			val targetIsStatic = delegator.static;
+			val objOfInterfaceOfTargetExpr = createAccessToInterfaceObject(baseSTE, targetIsStatic);
+			createAccessToMemberFunction(objOfInterfaceOfTargetExpr, !targetIsStatic, delegator);
 		} else {
-			// (A) case DelegatingMember#delegationSuperClassSteps === 0:
-			//
-			// if target is non-static:
-			//     Object.getOwnPropertyDescriptor(C.prototype, 'acc').get
-			//
-			// if target is static:
-			//     Object.getOwnPropertyDescriptor(C, 'acc').get
-			//
-			// (B) same examples with a DelegatingMember#delegationSuperClassSteps of 2 instead of 0:
-			//
-			//     Object.getOwnPropertyDescriptor(Object.getPrototypeOf(Object.getPrototypeOf(C)).prototype, 'acc').get
-			//     Object.getOwnPropertyDescriptor(Object.getPrototypeOf(Object.getPrototypeOf(C)), 'acc').get
-			//
-			// support for symbols is easier this time: simply replace the string literal 'acc' by targetSymbol
-			//
-
-			// create an expression that will evaluate to the constructor of the containing class of
-			// the delegation target:
 			val ctorOfClassOfTarget = createAccessToClassConstructor(baseSTE, delegator.delegationSuperClassSteps);
 
 			// based on that constructor expression, now create an expression that evaluates to the member function of
 			// the target member:
-			val result = createAccessToMemberFunction(ctorOfClassOfTarget, false, delegator);
+			createAccessToMemberFunction(ctorOfClassOfTarget, false, delegator)
+		};
 
-			return result;
-		}
+		return _Block(
+			_ReturnStmnt(_CallExpr(
+				_PropertyAccessExpr(
+					targetAccess,
+					getSymbolTableEntryForMember(state.G.functionType, "apply", false, false, true)
+				),
+				_ThisLiteral,
+				_IdentRef(steFor_arguments)
+			))
+		);
 	}
 
 	/**
@@ -265,7 +199,7 @@ class DelegationAssistant extends TransformationAssistant {
 	 * <tr><td><code>Object.getPrototypeOf(Object.getPrototypeOf(C))</code></td><td>for <code>superClassSteps</code> == 2</td></tr>
 	 * </table>
 	 */
-	def public Expression createAccessToClassConstructor(SymbolTableEntry classSTE, int superClassSteps) {
+	def private Expression createAccessToClassConstructor(SymbolTableEntry classSTE, int superClassSteps) {
 		val objectType = state.G.objectType;
 		val objectSTE = getSymbolTableEntryOriginal(objectType, true);
 		var Expression result = __NSSafe_IdentRef(classSTE); // this is the "C" in the above examples
@@ -282,18 +216,38 @@ class DelegationAssistant extends TransformationAssistant {
 		return result;
 	}
 
+	def private Expression createAccessToInterfaceObject(SymbolTableEntry ifcSTE, boolean targetIsStatic) {
+		var Expression result = __NSSafe_IdentRef(ifcSTE);
+		if (!targetIsStatic) {
+			result = _PropertyAccessExpr(result, steFor_$defaultMembers);
+		}
+		return result;
+	}
+
 	/**
-	 * Same as {@link #createAccessToMemberDefinition(Expression, boolean, N4MemberDeclaration) createAccessToMemberDefinition()},
+	 * Same as {@link #createAccessToMemberDefinition(Expression, boolean, N4MemberDeclaration)},
 	 * but will add a property access to the Javascript function representing the member, which is stored in the member
 	 * definition (by appending ".get", ".set", or ".value" depending on the type of member).
 	 * <p>
 	 * Since fields do not have such a function this will throw an exception if given member is a field.
 	 */
-	def public Expression createAccessToMemberFunction(Expression protoOrCtorExpr, boolean exprIsProto, N4MemberDeclaration member) {
+	def private Expression createAccessToMemberFunction(Expression protoOrCtorExpr, boolean exprIsProto, N4MemberDeclaration member) {
 		if(member instanceof N4FieldDeclaration) {
 			throw new IllegalArgumentException("no member function available for fields");
 		}
-		val accessToMemberDefinition = createAccessToMemberDefinition(protoOrCtorExpr, exprIsProto, member);
+		if(member instanceof N4MethodDeclaration) {
+			// for methods we can use a simple property access instead of Object.getOwnPropertyDescriptor()
+			val memberName = member.name;
+			val memberIsSymbol = memberName!==null && memberName.startsWith(N4JSLanguageUtils.SYMBOL_IDENTIFIER_PREFIX);
+			val memberSTE = findSymbolTableEntryForElement(member, true);
+			return if(!memberIsSymbol) {
+				_PropertyAccessExpr(protoOrCtorExpr, memberSTE)
+			} else {
+				_IndexAccessExpr(protoOrCtorExpr, typeAssistant.getMemberNameAsSymbol(memberName))
+			};
+		}
+		// for other members (i.e. getters and setters) we need to retrieve the property descriptor:
+		val accessToMemberDefinition = createAccessToMemberDescriptor(protoOrCtorExpr, exprIsProto, member);
 		// append ".get", ".set", or ".value" depending on member type
 		val result = _PropertyAccessExpr(accessToMemberDefinition, getPropertyDescriptorValueProperty(member));
 		return result;
@@ -301,7 +255,7 @@ class DelegationAssistant extends TransformationAssistant {
 
 	/**
 	 * Given an expression that will evaluate to a prototype or constructor, this method returns an expression that
-	 * will evaluate to the member definition of a particular member.
+	 * will evaluate to the property descriptor of a particular member.
 	 *
 	 * @param protoOrCtorExpr
 	 *         an expression that is expected to evaluate to a prototype or a constructor.
@@ -311,7 +265,7 @@ class DelegationAssistant extends TransformationAssistant {
 	 * @param member
 	 *         the member.
 	 */
-	def public Expression createAccessToMemberDefinition(Expression protoOrCtorExpr, boolean exprIsProto, N4MemberDeclaration member) {
+	def private Expression createAccessToMemberDescriptor(Expression protoOrCtorExpr, boolean exprIsProto, N4MemberDeclaration member) {
 		val memberName = member.name;
 		val memberIsSymbol = memberName!==null && memberName.startsWith(N4JSLanguageUtils.SYMBOL_IDENTIFIER_PREFIX);
 		val memberSTE = findSymbolTableEntryForElement(member, true);
@@ -339,48 +293,6 @@ class DelegationAssistant extends TransformationAssistant {
 		// create #getOwnPropertyDescriptor() call
 		val result = _CallExpr(_PropertyAccessExpr(objectSTE, getOwnPropertyDescriptorSTE), arg0, arg1);
 		return result;
-	}
-
-	// TODO the next two methods could be aligned more closely with previous methods OR previous methods should be used instead!
-	/**
-	 * Creates a property access to the immediate super class of the given <code>baseClassDecl</code>, i.e. in the
-	 * non-static case:
-	 * <pre>
-	 * S.prototype
-	 * </pre>
-	 * and in the static case:
-	 * <pre>
-	 * S
-	 * </pre>
-	 * (with S being the direct super class).
-	 */
-	def public Expression createAccessToSuperClass(N4ClassDeclaration baseClassDecl, boolean isStatic) {
-		val superClassSTE = typeAssistant.getSuperClassSTE(baseClassDecl);
-		val prototypeSTE = getSymbolTableEntryForMember(state.G.objectType, "prototype", false, true, true);
-		return if(!isStatic) {
-			__NSSafe_PropertyAccessExpr(superClassSTE, prototypeSTE) // S.prototype
-		} else {
-			__NSSafe_IdentRef(superClassSTE) // S
-		};
-	}
-	/**
-	 * Like {@link DelegationAssistant#createAccessToSuperClass(N4ClassDeclaration,boolean)}, but follows the property
-	 * chain until the correct class for the given member is reached (either the containing class or, if the member is
-	 * consumed from an interface, the first super class that consumed the member).
-	 */
-	def public Expression createAccessToSuperClassBequestingMember(N4ClassDeclaration baseClassDecl, boolean isStatic, SymbolTableEntryOriginal memberSTE) {
-		val tClassBase = state.info.getOriginalDefinedType(baseClassDecl);
-		val member = memberSTE.originalTarget as TMember;
-		val tClassTarget = getAncestorClassBequestingMember(tClassBase, member);
-		val dist = DelegationAssistant.getDistanceToAncestorClass(tClassBase, tClassTarget);
-		val __proto__STE =  steFor___proto__;
-		// start with immediate super class
-		var superAccess = createAccessToSuperClass(baseClassDecl, isStatic);
-		// continue along the prototype chain until correct target class is reached
-		for(i : 1..<dist) {
-			superAccess = _PropertyAccessExpr(superAccess, __proto__STE);
-		}
-		return superAccess;
 	}
 
 	/**

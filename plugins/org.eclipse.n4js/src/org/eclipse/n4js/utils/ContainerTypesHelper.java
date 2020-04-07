@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.utils;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.util.Collections.emptyList;
 import static org.eclipse.n4js.scoping.members.TMemberEntry.MemberSource.INHERITED;
 import static org.eclipse.n4js.scoping.members.TMemberEntry.MemberSource.MIXEDIN;
@@ -40,9 +41,11 @@ import org.eclipse.n4js.scoping.members.TMemberEntry.MemberSource;
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.types.ContainerType;
+import org.eclipse.n4js.ts.types.FieldAccessor;
 import org.eclipse.n4js.ts.types.NameAndAccess;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TClassifier;
+import org.eclipse.n4js.ts.types.TField;
 import org.eclipse.n4js.ts.types.TInterface;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
@@ -623,6 +626,37 @@ public class ContainerTypesHelper {
 								}
 							});
 			return ownedAndMixedInConcreteMembers;
+		}
+
+		/**
+		 * Returns all data fields in the given class that override a getter and/or setter.
+		 *
+		 * @param trustOverrideAnnotation
+		 *            if <code>true</code>, then only fields annotated with <code>@Override</code> will be checked.
+		 */
+		public MemberList<TField> computeOwnedFieldsOverridingAnAccessor(TClass type, boolean trustOverrideAnnotation) {
+			// Implementation note: we could create a MemberCube and then look for members with both
+			// MemberMatrix#hasOwned() and MemberMatrix#hasInherited() returning true; however, since we only have to
+			// check fields and member look up via #findMember() is cached, we use the following approach:
+			MemberList<TField> result = new MemberList<>();
+			TClassifier superType = explicitOrImplicitSuperType(type);
+			for (TMember member : type.getOwnedMembers()) {
+				if (trustOverrideAnnotation && !member.isDeclaredOverride()) {
+					continue;
+				}
+				if (isNullOrEmpty(member.getName()) || !(member instanceof TField)) {
+					continue;
+				}
+				TField field = (TField) member;
+				TMember overriddenMember = findMember(superType, field.getName(), false, field.isStatic());
+				if (overriddenMember == null) {
+					overriddenMember = findMember(superType, field.getName(), true, field.isStatic());
+				}
+				if (overriddenMember instanceof FieldAccessor) {
+					result.add(field);
+				}
+			}
+			return result;
 		}
 
 		private List<ParameterizedTypeRef> implicitSuperTypes(Type type) {

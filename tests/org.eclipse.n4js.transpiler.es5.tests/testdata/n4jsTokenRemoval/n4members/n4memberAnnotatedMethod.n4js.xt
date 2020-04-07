@@ -15,7 +15,7 @@
 /* XPECT output ~~~
 <==
 stdout:
-[Function: mLen___n4] 123
+[Function: mLen] 123
 stderr:
 ==>
 ~~~ */

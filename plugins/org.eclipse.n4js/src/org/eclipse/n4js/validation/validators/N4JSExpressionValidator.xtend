@@ -17,10 +17,8 @@ import java.util.Comparator
 import java.util.List
 import java.util.Set
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.AnnotationDefinition
-import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.compileTime.CompileTimeEvaluationError
 import org.eclipse.n4js.compileTime.CompileTimeEvaluator.UnresolvedPropertyAccessError
 import org.eclipse.n4js.compileTime.CompileTimeValue
@@ -49,7 +47,6 @@ import org.eclipse.n4js.n4JS.MultiplicativeExpression
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
-import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.NewExpression
 import org.eclipse.n4js.n4JS.NumericLiteral
 import org.eclipse.n4js.n4JS.ObjectLiteral
@@ -65,6 +62,7 @@ import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.ShiftExpression
 import org.eclipse.n4js.n4JS.StringLiteral
 import org.eclipse.n4js.n4JS.SuperLiteral
+import org.eclipse.n4js.n4JS.TaggedTemplateString
 import org.eclipse.n4js.n4JS.ThisArgProvider
 import org.eclipse.n4js.n4JS.ThisLiteral
 import org.eclipse.n4js.n4JS.UnaryExpression
@@ -138,7 +136,6 @@ import org.eclipse.xtext.validation.EValidatorRegistrar
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.n4JS.TaggedTemplateString
 
 /**
  */
@@ -402,19 +399,6 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 
 			// check Calling async functions with missing await
 			internalCheckCallingAsyncFunWithoutAwaitingForIt(typeRef, callExpression)
-
-			// Constraints 51 (Name restriction in method-bodies):
-			val trgt = callExpression.target
-			switch (trgt) {
-				IdentifierRef: {
-					internalCheckNameRestrictionInMethodBodies(
-						trgt,
-						[ String message, EObject source, EStructuralFeature feature, String issueCode |
-							addIssue(message, source, feature, issueCode)
-						]
-					)
-				}
-			}
 		}
 	}
 
@@ -528,30 +512,6 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			}
 		}
 		return false
-	}
-
-	/**
-	 * Constraints 51 (Name restriction in method-bodies):
-	 *
-	 * checks, that in case the trgt refers to a plain function (not a method) and ends with "___n4",
-	 * it will not be contained in Method.
-	 */
-	def static void internalCheckNameRestrictionInMethodBodies(IdentifierRef trgt,
-		(String, EObject, EStructuralFeature, String)=>void g) {
-		if (trgt.id instanceof TFunction && !(trgt.id instanceof TMethod)) {
-			if (trgt.id.name.endsWith(N4JSLanguageConstants.METHOD_STACKTRACE_SUFFIX)) {
-				// Find container:
-				val containingMethod = EcoreUtil2.getContainerOfType(trgt, N4MethodDeclaration)
-				if (containingMethod !== null) {
-					// add issue:
-					val msg = IssueCodes.messageForCLF_METHOD_BODY_FORBIDDEN_REFERENCE_NAME
-					// wrapped in g:
-					// addIssue(msg, trgt, N4JSPackage.eINSTANCE.identifierRef_Id, IssueCodes.CLF_METHOD_BODY_FORBIDDEN_REFERENCE_NAME )
-					g.apply(msg, trgt, N4JSPackage.eINSTANCE.identifierRef_Id,
-						IssueCodes.CLF_METHOD_BODY_FORBIDDEN_REFERENCE_NAME)
-				}
-			}
-		}
 	}
 
 	@Check
@@ -1577,23 +1537,6 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		val lhs = assExpr.lhs;
 		// GHOLD-119 imported elements
 		holdsWritableIdentifier(lhs) && holdsLefthandsideNotConst(lhs);
-
-		val rhs = assExpr.rhs
-		if (rhs instanceof IdentifierRef) {
-			val id = rhs.id;
-			switch (id) {
-				TMethod: { /* nop */
-				}
-				TFunction: {
-					internalCheckNameRestrictionInMethodBodies(
-						rhs,
-						[ String message, EObject source, EStructuralFeature feature, String issueCode |
-							addIssue(message, source, feature, issueCode)
-						]
-					)
-				}
-			}
-		}
 	}
 
 	/** @return true if nothing was issued  */

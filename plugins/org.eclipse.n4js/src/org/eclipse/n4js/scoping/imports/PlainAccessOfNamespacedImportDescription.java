@@ -12,6 +12,7 @@ package org.eclipse.n4js.scoping.imports;
 
 import org.eclipse.n4js.scoping.utils.AbstractDescriptionWithError;
 import org.eclipse.n4js.validation.IssueCodes;
+import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
 
 /**
@@ -20,12 +21,12 @@ import org.eclipse.xtext.resource.IEObjectDescription;
  */
 public class PlainAccessOfNamespacedImportDescription extends AbstractDescriptionWithError {
 
-	private final String namespacedName;
+	private final QualifiedName namespacedName;
 
 	/**
 	 * Creates a new instance that decorates the given delegate.
 	 */
-	protected PlainAccessOfNamespacedImportDescription(IEObjectDescription delegate, String namespacedName) {
+	public PlainAccessOfNamespacedImportDescription(IEObjectDescription delegate, QualifiedName namespacedName) {
 		super(delegate);
 		this.namespacedName = namespacedName;
 	}
@@ -43,7 +44,7 @@ public class PlainAccessOfNamespacedImportDescription extends AbstractDescriptio
 	/**
 	 * @return return namespaced version of the wrapped object name
 	 */
-	public String getNamespacedName() {
+	public QualifiedName getNamespacedName() {
 		return this.namespacedName;
 	}
 

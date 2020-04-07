@@ -63,9 +63,6 @@ import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.locations.FileURI;
-import org.eclipse.n4js.tests.codegen.Module;
-import org.eclipse.n4js.tests.codegen.Project;
-import org.eclipse.n4js.tests.codegen.Project.SourceFolder;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.xtext.LanguageInfo;
 import org.eclipse.xtext.ide.server.UriExtensions;
@@ -77,10 +74,8 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 
-import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
-import com.google.common.collect.Streams;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
@@ -90,16 +85,10 @@ import com.google.inject.Injector;
 @SuppressWarnings("deprecation")
 abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener {
 
-	static final String WORKSPACE_FOLDER = "/test-data";
-	static final String PROJECT_NAME = "test-project";
-	static final String MODULE_NAME = "MyModule";
-	static final String SRC_FOLDER = "src";
-	static final String FILE_EXTENSION = "n4js";
+	/** Wildcard string that may be used at the start or end of a file content expectation. */
+	static final protected String FILE_CONTENT_ASSERTION_WILDCARD = "[...]";
 
 	static final SystemOutRedirecter SYSTEM_OUT_REDIRECTER = new SystemOutRedirecter();
-
-	/** Wildcard string that may be used at the start or end of a file content expectation. */
-	public static final String FILE_CONTENT_ASSERTION_WILDCARD = "[...]";
 
 	/** Catch outputs on console to an internal buffer */
 	@BeforeClass
@@ -132,6 +121,9 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	@Inject
 	protected LanguageInfo languageInfo;
 
+	/** Utility to create the test workspace on disk */
+	protected final TestWorkspaceCreator workspaceCreator = new TestWorkspaceCreator(getProjectType());
+
 	/** Deletes the test project in case it exists. */
 	@After
 	final public void deleteTestProject() {
@@ -142,6 +134,11 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		languageClient.clear();
 	}
 
+	/** @return the workspace root folder as a {@link File}. */
+	public File getRoot() {
+		return workspaceCreator.getRoot();
+	}
+
 	/** Overwrite this method to change the project type */
 	protected ProjectType getProjectType() {
 		return ProjectType.VALIDATION;
@@ -150,12 +147,6 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	/** Overwrite this method to ignore certain issues in {@link #assertIssues(Map)}. */
 	protected Set<String> getIgnoredIssueCodes() {
 		return N4JSLanguageConstants.DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS;
-	}
-
-	/** @return the workspace root folder as a {@link File}. */
-	protected File getRoot() {
-		File root = new File(new File("").getAbsoluteFile(), WORKSPACE_FOLDER);
-		return root;
 	}
 
 	/** @return instance of {@link StringLSP4J}. */
@@ -190,7 +181,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		capabilities.setWorkspace(wcc);
 		InitializeParams initParams = new InitializeParams();
 		initParams.setCapabilities(capabilities);
-		initParams.setRootUri(new FileURI(new File(root, PROJECT_NAME)).toString());
+		initParams.setRootUri(new FileURI(root).toString());
 
 		languageClient.addListener(this);
 
@@ -219,77 +210,22 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		languageServer.reinitWorkspace();
 	}
 
-	/**
-	 * Same as {@link #createTestProjectOnDisk(Map)}, but name and content of the modules can be provided as one or more
-	 * {@link Pair}s.
-	 */
-	protected Project createTestProjectOnDisk(
-			@SuppressWarnings("unchecked") Pair<String, String>... moduleNameToContents) {
-		Map<String, String> moduleNameToContentsAsMap = Stream.of(moduleNameToContents)
-				.collect(Collectors.toMap(Pair::getKey, Pair::getValue));
-		return createTestProjectOnDisk(moduleNameToContentsAsMap);
-	}
-
-	/**
-	 * Same as {@link #createTestProjectOnDisk(Map)}, but name and content of the modules can be provided as an iterable
-	 * of {@link Pair}s.
-	 */
-	protected Project createTestProjectOnDisk(Iterable<? extends Pair<String, String>> moduleNameToContents) {
-		Map<String, String> moduleNameToContentsAsMap = Streams.stream(moduleNameToContents)
-				.collect(Collectors.toMap(Pair::getKey, Pair::getValue));
-		return createTestProjectOnDisk(moduleNameToContentsAsMap);
-	}
-
-	/** Creates the default project on file system. */
-	protected Project createTestProjectOnDisk(Map<String, String> moduleNameToContents) {
-		List<Module> modules = new ArrayList<>();
-
-		for (Map.Entry<String, String> src : moduleNameToContents.entrySet()) {
-			String fileName = src.getKey();
-			String contents = src.getValue();
-			modules.add(new Module(fileName).setContents(contents));
-		}
-
-		return createClientProject(getRoot().toPath(), PROJECT_NAME, SRC_FOLDER, modules);
-	}
-
-	private Project createClientProject(Path destination, String projectName, String srcFolderName,
-			List<Module> clientModules) {
-
-		String vendorId = "VENDOR";
-		Project clientProject = new Project(projectName, vendorId, vendorId + "_name", getProjectType());
-		Project n4jsRuntimeFake = new Project("n4js-runtime", vendorId, vendorId + "_name",
-				ProjectType.RUNTIME_ENVIRONMENT);
-		n4jsRuntimeFake.createSourceFolder(srcFolderName);
-
-		clientProject.addProjectDependency(n4jsRuntimeFake);
-		SourceFolder sourceFolder = clientProject.createSourceFolder(srcFolderName);
-		for (Module clientModule : clientModules) {
-			sourceFolder.addModule(clientModule);
-		}
-
-		destination.toFile().mkdirs();
-		clientProject.create(destination);
-
-		Path nodeModules = destination.resolve(projectName).resolve("node_modules");
-		nodeModules.toFile().mkdir();
-		n4jsRuntimeFake.create(nodeModules);
-
-		return clientProject;
-	}
-
 	/** Same as {@link #openFile(String, String)}, but content is read from disk. */
-	protected void openFile(String moduleName) throws IOException {
+	protected void openFile(String moduleName) {
 		FileURI fileURI = getFileURIFromModuleName(moduleName);
 		Path filePath = fileURI.toJavaIoFile().toPath();
-		String content = Files.readString(filePath);
+		String content;
+		try {
+			content = Files.readString(filePath);
+		} catch (IOException e) {
+			throw new AssertionError("exception while reading file contents from disk", e);
+		}
 		openFile(moduleName, content);
 	}
 
 	/** Same as {@link #openFile(FileURI, String)}, but accepts a module name instead of file URI. */
 	protected void openFile(String moduleName, String contents) {
 		openFile(getFileURIFromModuleName(moduleName), contents);
-
 	}
 
 	/** Opens the given file in the LSP server and waits for the triggered build to finish. */
@@ -363,6 +299,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 */
 	protected void changeOpenedFile(String moduleName,
 			@SuppressWarnings("unchecked") Pair<String, String>... replacements) {
+
 		FileURI fileURI = getFileURIFromModuleName(moduleName);
 		// 1) change on disk
 		Pair<String, String> oldToNewContent = changeFileOnDiskWithoutNotification(fileURI, replacements);
@@ -419,6 +356,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	/** Same as {@link #changeFileOnDiskWithoutNotification(FileURI, Function)}, but accepts {@link TextEdit}s. */
 	protected Pair<String, String> changeFileOnDiskWithoutNotification(FileURI fileURI,
 			Iterable<? extends TextEdit> textEdits) {
+
 		return changeFileOnDiskWithoutNotification(fileURI, content -> applyTextEdits(content, textEdits));
 	}
 
@@ -428,6 +366,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 */
 	protected void changeFileOnDiskWithoutNotification(String moduleName,
 			@SuppressWarnings("unchecked") Pair<String, String>... replacements) {
+
 		FileURI fileURI = getFileURIFromModuleName(moduleName);
 		changeFileOnDiskWithoutNotification(fileURI, replacements);
 	}
@@ -445,6 +384,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 */
 	protected Pair<String, String> changeFileOnDiskWithoutNotification(FileURI fileURI,
 			@SuppressWarnings("unchecked") Pair<String, String>... replacements) {
+
 		return changeFileOnDiskWithoutNotification(fileURI, content -> applyReplacements(content, replacements));
 	}
 
@@ -459,6 +399,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 */
 	protected Pair<String, String> changeFileOnDiskWithoutNotification(FileURI fileURI,
 			Function<String, String> modification) {
+
 		try {
 			Path filePath = fileURI.toJavaIoFile().toPath();
 			String oldContent = Files.readString(filePath);
@@ -552,6 +493,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 */
 	protected void assertIssues(
 			@SuppressWarnings("unchecked") Pair<String, List<String>>... moduleNameToExpectedIssues) {
+
 		assertIssues(convertModuleNamePairsToIdMap(moduleNameToExpectedIssues));
 	}
 
@@ -605,6 +547,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 */
 	protected void assertIssuesInModules(
 			@SuppressWarnings("unchecked") Pair<String, List<String>>... moduleNameToExpectedIssues) {
+
 		assertIssuesInModules(convertModuleNamePairsToIdMap(moduleNameToExpectedIssues));
 	}
 
@@ -661,8 +604,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		if (!withIgnoredIssues) {
 			issuesInFile = issuesInFile.filter(issue -> !getIgnoredIssueCodes().contains(issue.getCode()));
 		}
-		return issuesInFile.map(issue -> languageClient.getIssueString(issue))
-				.collect(Collectors.toList());
+		return issuesInFile.map(issue -> languageClient.getIssueString(issue)).collect(Collectors.toList());
 	}
 
 	private String issuesToSortedString(Iterable<String> issues, String indent) {
@@ -676,11 +618,13 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	private List<TextDocumentContentChangeEvent> replacementsToChangeEvents(String content,
 			@SuppressWarnings("unchecked") Pair<String, String>... replacements) {
+
 		return replacementsToChangeEvents(new XDocument(0, content), replacements);
 	}
 
 	private List<TextDocumentContentChangeEvent> replacementsToChangeEvents(XDocument document,
 			@SuppressWarnings("unchecked") Pair<String, String>... replacements) {
+
 		List<TextDocumentContentChangeEvent> result = new ArrayList<>(replacements.length);
 		for (Pair<String, String> replacement : replacements) {
 			int offset = document.getContents().indexOf(replacement.getKey());
@@ -697,16 +641,14 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	private <T> Map<FileURI, T> convertModuleNamePairsToIdMap(
 			@SuppressWarnings("unchecked") Pair<String, T>... moduleNameToExpectedIssues) {
+
 		return Stream.of(moduleNameToExpectedIssues).collect(Collectors.toMap(
-				p -> getFileURIFromModuleName(p.getKey()),
-				Pair::getValue));
+				p -> getFileURIFromModuleName(p.getKey()), Pair::getValue));
 	}
 
 	/** Translates a given module name to a file URI used in LSP call data. */
 	protected FileURI getFileURIFromModuleName(String moduleName) {
-		moduleName = getModuleNameOrDefault(moduleName) + "." + FILE_EXTENSION;
-		Path completeFilePath = Path.of(getRoot().toString(), PROJECT_NAME, SRC_FOLDER, moduleName);
-		return new FileURI(completeFilePath.toFile());
+		return workspaceCreator.getFileURIFromModuleName(moduleName);
 	}
 
 	/** Converts an URI string as received by the LSP server to a {@link FileURI}. */
@@ -721,14 +663,6 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	protected String getRelativePathFromModuleUri(FileURI moduleURI) {
 		URI relativeUri = workspaceManager.makeWorkspaceRelative(moduleURI.toURI());
 		return relativeUri.toFileString();
-	}
-
-	/** @return the given name if non-<code>null</code> and non-empty; otherwise {@link #MODULE_NAME}. */
-	protected String getModuleNameOrDefault(String moduleName) {
-		if (Strings.isNullOrEmpty(moduleName)) {
-			return MODULE_NAME;
-		}
-		return moduleName;
 	}
 
 	/** Waits until the LSP server idles. */
@@ -752,6 +686,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	private static String applyReplacements(CharSequence oldContent,
 			@SuppressWarnings("unchecked") Pair<String, String>... replacements) {
+
 		StringBuilder newContent = new StringBuilder(oldContent);
 		for (Pair<String, String> replacement : replacements) {
 			int offset = newContent.indexOf(replacement.getKey());

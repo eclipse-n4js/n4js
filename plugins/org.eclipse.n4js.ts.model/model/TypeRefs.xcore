@@ -481,6 +481,7 @@ class BoundThisTypeRef extends ThisTypeRef, StructuralTypeRef {
  */
 class ParameterizedTypeRef extends BaseTypeRef {
 	refers Type declaredType
+	transient String declaredTypeAsText
 	contains TypeArgument[] typeArgs
 	boolean arrayTypeExpression = "false"
 	boolean iterableTypeExpression = "false"

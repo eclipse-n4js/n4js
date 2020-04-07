@@ -127,11 +127,8 @@ public abstract class N4JSLanguageConstants {
 	/** Name of the built-in ES2015 property '__proto__'. */
 	public static final String PROPERTY__PROTO__NAME = "__proto__";
 
-	/**
-	 * Suffix used in method compilation for the local function name as reported in error stack traces. Value:
-	 * {@code "___n4"}
-	 */
-	public static final String METHOD_STACKTRACE_SUFFIX = "___n4";
+	/** Name of the getter in N4JS classes, interfaces, and enums use to obtain reflection information. */
+	public static final String N4TYPE_NAME = "n4type";
 
 	/**
 	 * Key of the symbol used for storing N4JS dependency injection information in class constructors. The actual

@@ -103,7 +103,9 @@ console.log(c_other.g);
 c_other.s = 'hello setter!';
 console.log('========================================');
 var i : any+ = I;
-console.log(A.prototype.hasOwnProperty('m') && a.m === i.$methods.m.value);
+// NOTE: second condition in next line was deactivated, because consumed methods are always implemented via delegation,
+// since the introduction of ES6 classes in output code:
+console.log(A.prototype.hasOwnProperty('m') /* && a.m === i.$defaultMembers.m */);
 console.log(A.prototype.hasOwnProperty('g'));
 console.log(A.prototype.hasOwnProperty('s'));
 console.log(!B.prototype.hasOwnProperty('m'));

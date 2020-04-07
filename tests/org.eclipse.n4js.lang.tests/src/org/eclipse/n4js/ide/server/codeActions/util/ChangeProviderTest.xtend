@@ -22,6 +22,30 @@ import org.junit.Test
 class ChangeProviderTest extends AbstractN4JSTest {
 
 	@Test
+	def void testLineDelimiter_emptyDoc() {
+		assertEquals("\n", ChangeProvider.lineDelimiter("".toDocument, 0));
+	}
+
+	@Test
+	def void testLineDelimiter_singleLineDoc() {
+		assertEquals("\n", ChangeProvider.lineDelimiter("// some content but without a line break".toDocument, 10));
+	}
+
+	@Test
+	def void testLineDelimiter_docWithTwoLines() {
+		assertEquals("\n", ChangeProvider.lineDelimiter("\n".toDocument, 0));
+		assertEquals("\n", ChangeProvider.lineDelimiter("\n".toDocument, 1));
+		assertEquals("\r\n", ChangeProvider.lineDelimiter("\r\n".toDocument, 0));
+		assertEquals("\r\n", ChangeProvider.lineDelimiter("\r\n".toDocument, 2));
+	}
+
+	@Test
+	def void testLineDelimiter_docWithDifferentSequences() {
+		val code = "___\n___\r\n__X__\r\n___\n___";
+		assertEquals("\r\n", ChangeProvider.lineDelimiter(code.toDocument, code.indexOf('X')));
+	}
+
+	@Test
 	def void testInsertLinesAbove_intoEmptyDocument() {
 		val code = "";
 

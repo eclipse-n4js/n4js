@@ -25,7 +25,6 @@ import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.ide.tests.server.AbstractDefinitionTest;
 import org.eclipse.n4js.ide.tests.server.StringLSP4J;
-import org.eclipse.xtext.testing.DefinitionTestConfiguration;
 import org.junit.Test;
 
 /**
@@ -36,40 +35,31 @@ public class DefinitionTest extends AbstractDefinitionTest {
 	/***/
 	@Test
 	public void testDefinition_01() throws Exception {
-		DefinitionTestConfiguration config = new DefinitionTestConfiguration();
-		config.setModel("var s: string = ''; s.length;");
-		config.setLine(0);
-		config.setColumn(7);
-		config.setExpectedDefinitions("(n4scheme:/primitives_js.n4ts, [33:10 - 33:16])");
-		test(config);
+		testAtCursor(
+				"var s: s<|>tring = ''; s.length;",
+				"(n4scheme:/primitives_js.n4ts, [33:10 - 33:16])");
 	}
 
 	/***/
 	@Test
 	public void testDefinition_02() throws Exception {
-		DefinitionTestConfiguration config = new DefinitionTestConfiguration();
-		config.setModel("var s: string = ''; s.length;");
-		config.setLine(0);
-		config.setColumn(20);
-		config.setExpectedDefinitions("(test-project/src/MyModule.n4js, [0:4 - 0:5])");
-		test(config);
+		testAtCursor(
+				"var s: string = ''; s<|>.length;",
+				"(test-project/src/MyModule.n4js, [0:4 - 0:5])");
 	}
 
 	/***/
 	@Test
 	public void testDefinition_03() throws Exception {
-		DefinitionTestConfiguration config = new DefinitionTestConfiguration();
-		config.setModel("var s: string = ''; s.length;");
-		config.setLine(0);
-		config.setColumn(23);
-		config.setExpectedDefinitions("(n4scheme:/builtin_js.n4ts, [838:15 - 838:21])");
-		test(config);
+		testAtCursor(
+				"var s: string = ''; s.le<|>ngth;",
+				"(n4scheme:/builtin_js.n4ts, [838:15 - 838:21])");
 	}
 
 	/***/
 	@Test
 	public void testDefinition_04() throws Exception {
-		createTestProjectOnDisk(Collections.emptyMap());
+		workspaceCreator.createTestProjectOnDisk(Collections.emptyMap());
 		startAndWaitForLspServer();
 
 		TextDocumentPositionParams textDocumentPositionParams = new TextDocumentPositionParams();
