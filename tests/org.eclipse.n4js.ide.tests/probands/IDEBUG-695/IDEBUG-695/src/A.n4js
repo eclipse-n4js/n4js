@@ -10,10 +10,11 @@
  */
 
 @@StaticPolyfillAware
-export public class A extends Foo {
-    @Final a : number;
-}
 
 class Foo {
     constructor(@Spec spec : ~i~this ) {}
+}
+
+export public class A extends Foo {
+    @Final a : number;
 }

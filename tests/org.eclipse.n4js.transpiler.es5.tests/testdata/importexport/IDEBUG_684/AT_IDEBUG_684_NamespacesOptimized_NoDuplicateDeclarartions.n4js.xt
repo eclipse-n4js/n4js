@@ -29,10 +29,11 @@ console.log(N.Error);
 console.log(N.Error);
 var x = N;
 console.log(x);
-function ASD() {
-	N.Error.prototype.constructor.call(this);
+class ASD extends N.Error {
+	static get n4type() {
+		return $getReflectionForClass(ASD, '["ASD","importexport/IDEBUG_684/AT_IDEBUG_684_NamespacesOptimized_NoDuplicateDeclarartions","org.eclipse.n4js.transpiler.es5.tests"]');
+	}
 }
-$makeClass(ASD, N.Error, [], {}, {}, '["ASD","importexport/IDEBUG_684/AT_IDEBUG_684_NamespacesOptimized_NoDuplicateDeclarartions","org.eclipse.n4js.transpiler.es5.tests"]');
 --- */
 
 import * as N from "importexport/IDEBUG_684/Err"

@@ -928,6 +928,15 @@ public interface ImPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_IM__DECLARED_TYPE = TypeRefsPackage.PARAMETERIZED_TYPE_REF__DECLARED_TYPE;
 
 	/**
+	 * The feature id for the '<em><b>Declared Type As Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_IM__DECLARED_TYPE_AS_TEXT = TypeRefsPackage.PARAMETERIZED_TYPE_REF__DECLARED_TYPE_AS_TEXT;
+
+	/**
 	 * The feature id for the '<em><b>Type Args</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1305,6 +1314,15 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__DECLARED_TYPE = PARAMETERIZED_TYPE_REF_IM__DECLARED_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>Declared Type As Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__DECLARED_TYPE_AS_TEXT = PARAMETERIZED_TYPE_REF_IM__DECLARED_TYPE_AS_TEXT;
 
 	/**
 	 * The feature id for the '<em><b>Type Args</b></em>' containment reference list.
@@ -1867,6 +1885,24 @@ public interface ImPackage extends EPackage {
 	int DELEGATING_MEMBER___GET_DEFINED_TYPE_ELEMENT = N4JSPackage.N4_MEMBER_DECLARATION___GET_DEFINED_TYPE_ELEMENT;
 
 	/**
+	 * The operation id for the '<em>Is Declared Abstract</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELEGATING_MEMBER___IS_DECLARED_ABSTRACT = N4JSPackage.N4_MEMBER_DECLARATION___IS_DECLARED_ABSTRACT;
+
+	/**
+	 * The operation id for the '<em>Is Abstract</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELEGATING_MEMBER___IS_ABSTRACT = N4JSPackage.N4_MEMBER_DECLARATION___IS_ABSTRACT;
+
+	/**
 	 * The operation id for the '<em>Is Declared Static</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2172,6 +2208,15 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int DELEGATING_GETTER_DECLARATION___GET_DEFINED_ACCESSOR = N4JSPackage.N4_GETTER_DECLARATION___GET_DEFINED_ACCESSOR;
+
+	/**
+	 * The operation id for the '<em>Is Declared Abstract</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELEGATING_GETTER_DECLARATION___IS_DECLARED_ABSTRACT = N4JSPackage.N4_GETTER_DECLARATION___IS_DECLARED_ABSTRACT;
 
 	/**
 	 * The operation id for the '<em>Is Declared Static</em>' operation.
@@ -2508,6 +2553,15 @@ public interface ImPackage extends EPackage {
 	int DELEGATING_SETTER_DECLARATION___GET_DECLARED_TYPE_REF = N4JSPackage.N4_SETTER_DECLARATION___GET_DECLARED_TYPE_REF;
 
 	/**
+	 * The operation id for the '<em>Is Declared Abstract</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELEGATING_SETTER_DECLARATION___IS_DECLARED_ABSTRACT = N4JSPackage.N4_SETTER_DECLARATION___IS_DECLARED_ABSTRACT;
+
+	/**
 	 * The operation id for the '<em>Is Declared Static</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2813,6 +2867,15 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int DELEGATING_METHOD_DECLARATION___GET_DECLARED_TYPE_REF = N4JSPackage.N4_METHOD_DECLARATION___GET_DECLARED_TYPE_REF;
+
+	/**
+	 * The operation id for the '<em>Is Declared Abstract</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELEGATING_METHOD_DECLARATION___IS_DECLARED_ABSTRACT = N4JSPackage.N4_METHOD_DECLARATION___IS_DECLARED_ABSTRACT;
 
 	/**
 	 * The operation id for the '<em>Is Declared Static</em>' operation.
@@ -3130,6 +3193,15 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int VERSIONED_PARAMETERIZED_TYPE_REF_IM__DECLARED_TYPE = PARAMETERIZED_TYPE_REF_IM__DECLARED_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>Declared Type As Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM__DECLARED_TYPE_AS_TEXT = PARAMETERIZED_TYPE_REF_IM__DECLARED_TYPE_AS_TEXT;
 
 	/**
 	 * The feature id for the '<em><b>Type Args</b></em>' containment reference list.
@@ -3536,6 +3608,15 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__DECLARED_TYPE = PARAMETERIZED_TYPE_REF_IM__DECLARED_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>Declared Type As Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__DECLARED_TYPE_AS_TEXT = PARAMETERIZED_TYPE_REF_IM__DECLARED_TYPE_AS_TEXT;
 
 	/**
 	 * The feature id for the '<em><b>Type Args</b></em>' containment reference list.

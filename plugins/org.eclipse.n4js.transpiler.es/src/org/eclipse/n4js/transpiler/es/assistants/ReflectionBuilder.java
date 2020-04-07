@@ -189,13 +189,18 @@ public class ReflectionBuilder {
 	private List<JsonElement> createAllMembers(Iterable<N4MemberDeclaration> allMembers, boolean isInterface) {
 		List<JsonElement> memberStrings = new ArrayList<>();
 		for (N4MemberDeclaration member : allMembers) {
+			if (state.info.isHiddenFromReflection(member)) {
+				continue;
+			}
 			// create only consumed member strings, since others are detected from constructor and prototype
+@SuppressWarnings("unused")
 			boolean serialize = isInterface;
 			serialize |= state.info.isConsumedFromInterface(member);
 			serialize |= member.getName().startsWith(N4JSLanguageUtils.SYMBOL_IDENTIFIER_PREFIX);
-			if (serialize) {
+// TODO GH-1693
+//			if (serialize) {
 				memberStrings.add(primitive(createMemberString(member)));
-			}
+//			}
 		}
 		return memberStrings;
 	}

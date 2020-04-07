@@ -33,6 +33,7 @@ import org.eclipse.n4js.transpiler.im.ParameterizedPropertyAccessExpression_IM;
 import org.eclipse.n4js.transpiler.im.Script_IM;
 import org.eclipse.n4js.transpiler.im.Snippet;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry;
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TypeVariable;
@@ -194,6 +195,100 @@ import org.eclipse.xtext.EcoreUtil2;
 	public Boolean caseNamespaceImportSpecifier(NamespaceImportSpecifier original) {
 		write("* as ");
 		write(original.getAlias());
+		return DONE;
+	}
+
+	@Override
+	public Boolean caseN4ClassDeclaration(N4ClassDeclaration original) {
+		write("class ");
+		write(original.getName());
+		write(' ');
+		final ParameterizedTypeRef superClassRef = original.getSuperClassRef();
+		final Expression superClassExpression = original.getSuperClassExpression();
+		if (superClassRef != null) {
+			// We cannot support this, because we cannot look up the symbol table entry for the TypeRef returned by
+			// #getSuperClassRef() from within the PrettyPrinterSwitch and we do not want to introduce a new entity
+			// N4ClassDeclaration_IM in IM.xcore only for this purpose. However, there is a simple work-around: the
+			// transpiler can simply create a superClassExpression with an IdentifierRef_IM pointing to the desired
+			// symbol table entry of the super class.
+			throw new IllegalStateException("property superClassRef in N4ClassDeclaration is not supported in "
+					+ PrettyPrinterSwitch.class.getSimpleName());
+		} else if (superClassExpression != null) {
+			write("extends ");
+			process(superClassExpression);
+			write(' ');
+		}
+		processBlockLike(original.getOwnedMembersRaw(), '{', null, null, '}');
+		return DONE;
+	}
+
+	// NOTE: no case method for N4FieldDeclaration, because field declarations are not natively supported by ES6 classes
+
+	@Override
+	public Boolean caseN4GetterDeclaration(N4GetterDeclaration original) {
+		processAnnotations(original.getAnnotations());
+		// note: parser does not allow field accessors to be declared "async", so we ignore original.isAsync() here.
+		if (original.isStatic()) {
+			write("static ");
+		}
+		write("get ");
+		processPropertyName(original);
+		write("() ");
+		if (original.getDeclaredTypeRef() != null) {
+			processReturnTypeRef(original.getDeclaredTypeRef());
+			write(' ');
+		}
+		process(original.getBody());
+		return DONE;
+	}
+
+	@Override
+	public Boolean caseN4SetterDeclaration(N4SetterDeclaration original) {
+		processAnnotations(original.getAnnotations());
+		// note: parser does not allow field accessors to be declared "async", so we ignore original.isAsync() here.
+		if (original.isStatic()) {
+			write("static ");
+		}
+		write("set ");
+		processPropertyName(original);
+		write('(');
+		process(original.getFpar());
+		write(") ");
+		process(original.getBody());
+		return DONE;
+	}
+
+	@Override
+	public Boolean caseN4MethodDeclaration(N4MethodDeclaration original) {
+		processAnnotations(original.getAnnotations());
+		if (original.isStatic()) {
+			write("static ");
+		}
+		if (original.isAsync()) {
+			write("async ");
+		}
+		if (!original.getTypeVars().isEmpty()) {
+			processTypeParams(original.getTypeVars());
+			write(' ');
+		}
+		if (original.isGenerator()) {
+			write("* ");
+		}
+		processPropertyName(original);
+		write('(');
+		process(original.getFpars(), ", ");
+		write(") ");
+		if (original.getReturnTypeRef() != null) {
+			processReturnTypeRef(original.getReturnTypeRef());
+			write(' ');
+		}
+		process(original.getBody());
+		return DONE;
+	}
+
+	@Override
+	public Boolean caseLiteralOrComputedPropertyName(LiteralOrComputedPropertyName original) {
+		processPropertyName(original);
 		return DONE;
 	}
 
@@ -700,6 +795,9 @@ import org.eclipse.xtext.EcoreUtil2;
 
 	@Override
 	public Boolean casePropertyMethodDeclaration(PropertyMethodDeclaration original) {
+		if (original.isAsync()) {
+			write("async ");
+		}
 		if (original.isGenerator()) {
 			write("* ");
 		}
@@ -754,7 +852,7 @@ import org.eclipse.xtext.EcoreUtil2;
 	@Override
 	public Boolean caseArgument(Argument original) {
 		if (original.isSpread()) {
-			write("... ");
+			write("...");
 		}
 		process(original.getExpression());
 		return DONE;
@@ -1178,6 +1276,10 @@ import org.eclipse.xtext.EcoreUtil2;
 
 	private void processPropertyName(PropertyNameOwner owner) {
 		final LiteralOrComputedPropertyName name = owner.getDeclaredName();
+		processPropertyName(name);
+	}
+
+	private void processPropertyName(LiteralOrComputedPropertyName name) {
 		final PropertyNameKind kind = name.getKind();
 		if (kind == PropertyNameKind.COMPUTED) {
 			// computed property names:

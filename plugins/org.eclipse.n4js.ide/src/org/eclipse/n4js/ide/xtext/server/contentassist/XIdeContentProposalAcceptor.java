@@ -22,19 +22,11 @@ public class XIdeContentProposalAcceptor
 
 	private static final int DEFAULT_PROPOSALS_LIMIT = 1000;
 
-	private final Comparator<Pair<Integer, ContentAssistEntry>> comparator = Comparator
-			.comparingInt(Pair<Integer, ContentAssistEntry>::getKey).reversed().thenComparing(p -> {
-				ContentAssistEntry entry = p.getValue();
-				String string = entry.getLabel();
-				if (string == null) {
-					string = entry.getProposal();
-				}
-				return string;
-			}, String.CASE_INSENSITIVE_ORDER);
-
-	private final Map<String, Pair<Integer, ContentAssistEntry>> entries = new HashMap<>();
-
 	private final CancelIndicator cancelIndicator;
+	private final Map<String, Pair<Integer, ContentAssistEntry>> entries = new HashMap<>();
+	private final Comparator<Pair<Integer, ContentAssistEntry>> comparator = Comparator
+			.comparingInt(Pair<Integer, ContentAssistEntry>::getKey)
+			.thenComparing(p -> p.getValue().toString(), String.CASE_INSENSITIVE_ORDER);
 
 	XIdeContentProposalAcceptor(CancelIndicator cancelIndicator) {
 		this.cancelIndicator = cancelIndicator;
@@ -46,10 +38,12 @@ public class XIdeContentProposalAcceptor
 			if (entry.getProposal() == null) {
 				throw new IllegalArgumentException("proposal must not be null.");
 			}
-			Pair<Integer, ContentAssistEntry> prev = entries.put(entry.getProposal(), Pair.of(priority, entry));
-			if (prev != null && prev.getKey() > priority) {
-				entries.put(entry.getProposal(), prev);
+			String entryString = entry.toString();
+			if (entries.containsKey(entryString)) {
+				Pair<Integer, ContentAssistEntry> existingProposal = entries.get(entryString);
+				priority = existingProposal.getKey();
 			}
+			entries.put(entryString, Pair.of(priority, entry));
 		}
 	}
 

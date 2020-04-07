@@ -15,21 +15,21 @@
 <==
 stdout:
 instance method renamed
-[Function: delete___n4]
+[Function: delete]
 instance method not renamed
-[Function: delete____n4]
+[Function: delete_]
 static method renamed
-[Function: delete___n4]
+[Function: delete]
 static method not renamed
-[Function: delete____n4]
+[Function: delete_]
 default instance method renamed
-[Function: delete___n4]
+[Function: delete]
 default static method renamed
-[Function: delete___n4]
+[Function: delete]
 super instance method renamed
-[Function: delete___n4]
+[Function: delete]
 super static method renamed
-[Function: delete___n4]
+[Function: delete]
 logging setter-getter 1
 logging setter-getter 2
 stderr:

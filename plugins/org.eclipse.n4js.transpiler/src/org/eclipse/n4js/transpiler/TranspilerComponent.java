@@ -155,13 +155,8 @@ public abstract class TranspilerComponent {
 	}
 
 	@SuppressWarnings("javadoc")
-	protected void replace(N4EnumDeclaration enumDecl, VariableDeclaration varDecl) {
-		TranspilerStateOperations.replace(state, enumDecl, varDecl);
-	}
-
-	@SuppressWarnings("javadoc")
-	protected void replace(N4EnumDeclaration enumDecl, FunctionDeclaration funDecl) {
-		TranspilerStateOperations.replace(state, enumDecl, funDecl);
+	protected void replace(N4EnumDeclaration enumDecl, N4ClassDeclaration classDecl) {
+		TranspilerStateOperations.replace(state, enumDecl, classDecl);
 	}
 
 	@SuppressWarnings("javadoc")
@@ -401,308 +396,125 @@ public abstract class TranspilerComponent {
 	}
 
 	// ################################################################################################################
-	// ################################################################################################################
 	// Constant Values
 
-	//// arguments
-
-	/** "arguments" - retrieve the internal symbol table entry for the symbol "arguments" */
+	/** Returns the internal symbol table entry for the symbol "arguments". */
 	public SymbolTableEntryInternal steFor_arguments() {
-
 		return getSymbolTableEntryInternal("arguments", true);
 	}
 
-	//// N4ApiNotImplementedError
-
-	/**
-	 * "N4ApiNotImplementedError" - retrieve the internal symbol table entry for the symbol "N4ApiNotImplementedError"
-	 */
+	/** Returns the internal symbol table entry for the symbol "N4ApiNotImplementedError". */
 	public SymbolTableEntryInternal steFor_N4ApiNotImplementedError() {
-
 		return getSymbolTableEntryInternal("N4ApiNotImplementedError", true);
 	}
 
-	//// $makeClass
-
-	/** "$makeClass" - retrieve the internal symbol table entry for the symbol "$makeClass" */
-	public SymbolTableEntryInternal steFor_$makeClass() {
-
-		return getSymbolTableEntryInternal("$makeClass", true);
+	/** Returns the internal symbol table entry for the symbol "$fieldInits". */
+	public SymbolTableEntryInternal steFor_$fieldInits() {
+		return getSymbolTableEntryInternal("$fieldInits", true);
 	}
 
-	//// $methods
-
-	/** "$methods" - retrieve the internal symbol table entry for the symbol "$methods" */
-	public SymbolTableEntryInternal steFor_$methods() {
-
-		return getSymbolTableEntryInternal("$methods", true);
+	/** Returns the internal symbol table entry for the symbol "$defaultMembers". */
+	public SymbolTableEntryInternal steFor_$defaultMembers() {
+		return getSymbolTableEntryInternal("$defaultMembers", true);
 	}
 
-	//// $makeInterface
-
-	/** "$makeInterface" - retrieve the internal symbol table entry for the symbol "$makeInterface" */
-	public SymbolTableEntryInternal steFor_$makeInterface() {
-
-		return getSymbolTableEntryInternal("$makeInterface", true);
+	/** Returns the internal symbol table entry for the symbol "$getReflectionForClass". */
+	public SymbolTableEntryInternal steFor_$getReflectionForClass() {
+		return getSymbolTableEntryInternal("$getReflectionForClass", true);
 	}
 
-	//// $makeEnum
-
-	/** "$makeEnum" - retrieve the internal symbol table entry for the symbol "$makeEnum" */
-	public SymbolTableEntryInternal steFor_$makeEnum() {
-
-		return getSymbolTableEntryInternal("$makeEnum", true);
+	/** Returns the internal symbol table entry for the symbol "$getReflectionForInterface". */
+	public SymbolTableEntryInternal steFor_$getReflectionForInterface() {
+		return getSymbolTableEntryInternal("$getReflectionForInterface", true);
 	}
 
-	//// N4Class
-
-	/** "N4Class" - retrieve the internal symbol table entry for the symbol "N4Class" */
-	public SymbolTableEntryInternal steFor_N4Class() {
-
-		return getSymbolTableEntryInternal("N4Class", true);
+	/** Returns the internal symbol table entry for the symbol "$getReflectionForEnum". */
+	public SymbolTableEntryInternal steFor_$getReflectionForEnum() {
+		return getSymbolTableEntryInternal("$getReflectionForEnum", true);
 	}
 
-	//// N4Interface
-
-	/** "N4Interface" - retrieve the internal symbol table entry for the symbol "N4Interface" */
-	public SymbolTableEntryInternal steFor_N4Interface() {
-
-		return getSymbolTableEntryInternal("N4Interface", true);
+	/** Returns the internal symbol table entry for the symbol "$defineFields". */
+	public SymbolTableEntryInternal steFor_$defineFields() {
+		return getSymbolTableEntryInternal("$defineFields", true);
 	}
 
-	//// N4EnumType
-
-	/** "N4EnumType" - retrieve the internal symbol table entry for the symbol "N4EnumType" */
-	public SymbolTableEntryInternal steFor_N4EnumType() {
-
-		return getSymbolTableEntryInternal("N4EnumType", true);
-	}
-
-	//// N4Method
-
-	/** "N4Method" - retrieve the internal symbol table entry for the symbol "N4Method" */
-	public SymbolTableEntryInternal steFor_N4Method() {
-
-		return getSymbolTableEntryInternal("N4Method", true);
-	}
-
-	//// N4Accessor
-
-	/** "N4Accessor" - retrieve the internal symbol table entry for the symbol "N4Accessor" */
-	public SymbolTableEntryInternal steFor_N4Accessor() {
-
-		return getSymbolTableEntryInternal("N4Accessor", true);
-	}
-
-	//// N4DataField
-
-	/** "N4DataField" - retrieve the internal symbol table entry for the symbol "N4DataField" */
-	public SymbolTableEntryInternal steFor_N4DataField() {
-
-		return getSymbolTableEntryInternal("N4DataField", true);
-	}
-
-	//// N4Member
-
-	/** "N4Member" - retrieve the internal symbol table entry for the symbol "N4Member" */
-	public SymbolTableEntryInternal steFor_N4Member() {
-
-		return getSymbolTableEntryInternal("N4Member", true);
-	}
-
-	//// N4Annotation
-
-	/** "N4Annotation" - retrieve the internal symbol table entry for the symbol "N4Annotation" */
-	public SymbolTableEntryInternal steFor_N4Annotation() {
-
-		return getSymbolTableEntryInternal("N4Annotation", true);
-	}
-
-	//// $initFieldsFromInterfaces
-
-	/**
-	 * "$initFieldsFromInterfaces" - retrieve the internal symbol table entry for the symbol "$initFieldsFromInterfaces"
-	 */
+	/** Returns the internal symbol table entry for the symbol "$initFieldsFromInterfaces". */
 	public SymbolTableEntryInternal steFor_$initFieldsFromInterfaces() {
-
 		return getSymbolTableEntryInternal("$initFieldsFromInterfaces", true);
 	}
 
-	//// $fieldDefaults
-
-	/** "$fieldDefaults" - retrieve the internal symbol table entry for the symbol "$fieldDefaults" */
-	public SymbolTableEntryInternal steFor_$fieldDefaults() {
-
-		return getSymbolTableEntryInternal("$fieldDefaults", true);
-	}
-
-	//// __proto__
-
-	/** "__proto__" - retrieve the internal symbol table entry for the symbol "__proto__" */
-	public SymbolTableEntryInternal steFor___proto__() {
-
-		return getSymbolTableEntryInternal("__proto__", true);
-	}
-
-	//// get
-
-	/** "get" - retrieve the internal symbol table entry for the symbol "get" */
-	public SymbolTableEntryInternal steFor_get() {
-
-		return getSymbolTableEntryInternal("get", true);
-	}
-
-	//// set
-
-	/** "set" - retrieve the internal symbol table entry for the symbol "set" */
-	public SymbolTableEntryInternal steFor_set() {
-
-		return getSymbolTableEntryInternal("set", true);
-	}
-
-	//// value
-
-	/** "value" - retrieve the internal symbol table entry for the symbol "value" */
-	public SymbolTableEntryInternal steFor_value() {
-
-		return getSymbolTableEntryInternal("value", true);
-	}
-
-	//// $sliceToArrayForDestruct
-
-	/**
-	 * "$sliceToArrayForDestruct" - retrieve the internal symbol table entry for the symbol "$sliceToArrayForDestruct"
-	 */
-	public SymbolTableEntryInternal steFor_$sliceToArrayForDestruct() {
-
-		return getSymbolTableEntryInternal("$sliceToArrayForDestruct", true);
-	}
-
-	//// Array
-
-	/** "Array" - retrieve the internal symbol table entry for the symbol "Array" */
-	public SymbolTableEntryInternal steFor_Array() {
-
-		return getSymbolTableEntryInternal("Array", true);
-	}
-
-	//// prototype
-
-	/** "prototype" - retrieve the internal symbol table entry for the symbol "prototype" */
+	/** Returns the internal symbol table entry for the symbol "prototype". */
 	public SymbolTableEntryInternal steFor_prototype() {
-
 		return getSymbolTableEntryInternal("prototype", true);
 	}
 
-	//// slice
-
-	/** "slice" - retrieve the internal symbol table entry for the symbol "slice" */
-	public SymbolTableEntryInternal steFor_slice() {
-
-		return getSymbolTableEntryInternal("slice", true);
+	/** Returns the internal symbol table entry for the symbol "get". */
+	public SymbolTableEntryInternal steFor_get() {
+		return getSymbolTableEntryInternal("get", true);
 	}
 
-	//// call
-
-	/** "call" - retrieve the internal symbol table entry for the symbol "call" */
-	public SymbolTableEntryInternal steFor_call() {
-
-		return getSymbolTableEntryInternal("call", true);
+	/** Returns the internal symbol table entry for the symbol "set". */
+	public SymbolTableEntryInternal steFor_set() {
+		return getSymbolTableEntryInternal("set", true);
 	}
 
-	//// System
-
-	/** "System" - retrieve the internal symbol table entry for the symbol "System" */
-	public SymbolTableEntryInternal steFor_System() {
-
-		return getSymbolTableEntryInternal("System", true);
+	/** Returns the internal symbol table entry for the symbol "value". */
+	public SymbolTableEntryInternal steFor_value() {
+		return getSymbolTableEntryInternal("value", true);
 	}
 
-	//// register
-
-	/** "register" - retrieve the internal symbol table entry for the symbol "register" */
-	public SymbolTableEntryInternal steFor_register() {
-
-		return getSymbolTableEntryInternal("register", true);
+	/** Returns the internal symbol table entry for the symbol "$sliceToArrayForDestruct". */
+	public SymbolTableEntryInternal steFor_$sliceToArrayForDestruct() {
+		return getSymbolTableEntryInternal("$sliceToArrayForDestruct", true);
 	}
 
-	//// $n4Export
-
-	/** "$n4Export" - retrieve the internal symbol table entry for the symbol "$n4Export" */
-	public SymbolTableEntryInternal steFor_$n4Export() {
-
-		return getSymbolTableEntryInternal("$n4Export", true);
-	}
-
-	//// $spawn
-
-	/** "$spawn" - retrieve the internal symbol table entry for the symbol "$spawn" */
-	public SymbolTableEntryInternal steFor_$spawn() {
-
-		return getSymbolTableEntryInternal("$spawn", true);
-	}
-
-	//// $n4promisifyFunction
-
-	/** "$n4promisifyFunction" - retrieve the internal symbol table entry for the symbol "$n4promisifyFunction" */
+	/** Returns the internal symbol table entry for the symbol "$n4promisifyFunction". */
 	public SymbolTableEntryInternal steFor_$n4promisifyFunction() {
-
 		return getSymbolTableEntryInternal("$n4promisifyFunction", true);
 	}
 
-	//// $n4promisifyMethod
-
-	/** "$n4promisifyMethod" - retrieve the internal symbol table entry for the symbol "$n4promisifyMethod" */
+	/** Returns the internal symbol table entry for the symbol "$n4promisifyMethod". */
 	public SymbolTableEntryInternal steFor_$n4promisifyMethod() {
-
 		return getSymbolTableEntryInternal("$n4promisifyMethod", true);
 	}
 
-	/** "global" - retrieve the internal symbol table entry for the symbol "global" */
-	public SymbolTableEntryInternal steFor_global() {
-
-		return getSymbolTableEntryInternal("global", true);
+	/** Returns the symbol table entry for built-in type "Object". */
+	public SymbolTableEntryOriginal steFor_Object() {
+		return getSymbolTableEntryOriginal(RuleEnvironmentExtensions.objectType(state.G), true);
 	}
 
-	/** "self" - retrieve the internal symbol table entry for the symbol "self" */
-	public SymbolTableEntryInternal steFor_self() {
-
-		return getSymbolTableEntryInternal("self", true);
-	}
-
-	/** "module" - retrieve the internal symbol table entry for the symbol "module" */
-	public SymbolTableEntryInternal steFor_module() {
-
-		return getSymbolTableEntryInternal("module", true);
-	}
-
-	/** "exports" - retrieve the internal symbol table entry for the symbol "exports" */
-	public SymbolTableEntryInternal steFor_exports() {
-
-		return getSymbolTableEntryInternal("exports", true);
-	}
-
-	/** "Object" - retrieve the internal symbol table entry for the symbol "Object" */
-	public SymbolTableEntryInternal steFor_Object() {
-
-		return getSymbolTableEntryInternal("Object", true);
-	}
-
-	/** "undefined" - retrieve the internal symbol table entry for the symbol "undefined" */
-	public SymbolTableEntryInternal steFor_undefined() {
-
-		return getSymbolTableEntryInternal("undefined", true);
-	}
-
-	/** "require" - retrieve the internal symbol table entry for the symbol "require" */
-	public SymbolTableEntryInternal steFor_require() {
-
-		return getSymbolTableEntryInternal("require", true);
-	}
-
-	/** "assign" - retrieve the internal symbol table entry for the symbol "assign" */
-	public SymbolTableEntryInternal steFor_assign() {
-
+	/** Returns the symbol table entry for member "assign" in "Object". */
+	public SymbolTableEntry steFor_Object_assign() {
+		// note: Object#assign() is ES6 and thus not defined in our built-in type "Object", so
+		// we cannot use #getSymbolTableEntryForMember() here!
 		return getSymbolTableEntryInternal("assign", true);
+	}
+
+	/** Returns the symbol table entry for member "defineProperty" in "Object". */
+	public SymbolTableEntryOriginal steFor_Object_defineProperty() {
+		return getSymbolTableEntryForMember(RuleEnvironmentExtensions.objectType(state.G),
+				"defineProperty", false, true, true);
+	}
+
+	/** Returns the symbol table entry for built-in type "Array". */
+	public SymbolTableEntryOriginal steFor_Array() {
+		return getSymbolTableEntryOriginal(RuleEnvironmentExtensions.arrayType(state.G), true);
+	}
+
+	/** Returns the symbol table entry for member "slice" in "Array". */
+	public SymbolTableEntryOriginal steFor_Array_slice() {
+		return getSymbolTableEntryForMember(RuleEnvironmentExtensions.arrayType(state.G),
+				"slice", false, false, true);
+	}
+
+	/** Returns the symbol table entry for built-in type "Function". */
+	public SymbolTableEntryOriginal steFor_Function() {
+		return getSymbolTableEntryOriginal(RuleEnvironmentExtensions.functionType(state.G), true);
+	}
+
+	/** Returns the symbol table entry for member "call" in "Function". */
+	public SymbolTableEntryOriginal steFor_Function_call() {
+		return getSymbolTableEntryForMember(RuleEnvironmentExtensions.functionType(state.G),
+				"call", false, false, true);
 	}
 }

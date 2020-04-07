@@ -13,28 +13,30 @@ package org.eclipse.n4js.ide.server.codeActions;
 import static org.eclipse.n4js.ide.server.codeActions.util.ChangeProvider.replace;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.lsp4j.CodeActionKind;
+import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextEdit;
-import org.eclipse.n4js.ide.editor.contentassist.imports.ImportUtil;
-import org.eclipse.n4js.ide.editor.contentassist.imports.ImportsAwareReferenceProposalCreator;
+import org.eclipse.n4js.ide.editor.contentassist.ImportsAwareReferenceProposalCreator;
+import org.eclipse.n4js.ide.imports.ImportDescriptor;
+import org.eclipse.n4js.ide.imports.ImportHelper;
+import org.eclipse.n4js.ide.imports.ReferenceResolution;
 import org.eclipse.n4js.ide.server.codeActions.util.ChangeProvider;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4MethodDeclaration;
 import org.eclipse.n4js.n4JS.PropertyNameOwner;
+import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.types.TField;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.nodemodel.NodeModelUtilsN4;
 import org.eclipse.n4js.validation.IssueCodes;
-import org.eclipse.xtext.diagnostics.Diagnostic;
-import org.eclipse.xtext.ide.editor.contentassist.ContentAssistEntry;
 import org.eclipse.xtext.ide.server.Document;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.ILeafNode;
@@ -58,7 +60,7 @@ import com.google.inject.Singleton;
 public class N4JSQuickfixProvider {
 
 	@Inject
-	private ImportUtil importUtil;
+	private ImportHelper importHelper;
 
 	@Inject
 	private EObjectAtOffsetHelper eObjectAtOffsetHelper;
@@ -66,23 +68,30 @@ public class N4JSQuickfixProvider {
 	/**
 	 * Resolves missing import statements by re-using content assist and {@link ImportsAwareReferenceProposalCreator}
 	 */
-	@Fix(value = Diagnostic.LINKING_DIAGNOSTIC, multiFix = false)
+	@Fix(value = org.eclipse.xtext.diagnostics.Diagnostic.LINKING_DIAGNOSTIC, multiFix = false)
 	public void addImportForUnresolvedReference(QuickfixContext context, ICodeActionAcceptor acceptor) {
+		Script script = context.resource.getScriptResolved();
 		Document doc = context.options.getDocument();
-		Set<ContentAssistEntry> caEntries = importUtil.findImportCandidates(context.options);
+		Diagnostic diagnostic = context.getDiagnostic();
+		if (script == null || doc == null || diagnostic == null) {
+			return;
+		}
+		EObject model = getEObject(context);
+		List<ReferenceResolution> resolutions = importHelper.findResolutionsForUnresolvedReference(model,
+				context.options.getCancelIndicator());
 
-		for (ContentAssistEntry cae : caEntries) {
-			ArrayList<ReplaceRegion> replacements = cae.getTextReplacements();
-			if (replacements != null && !replacements.isEmpty()) {
-				String description = cae.getDescription();
+		for (ReferenceResolution resolution : resolutions) {
+			ImportDescriptor importToBeAdded = resolution.importToBeAdded;
+			if (importToBeAdded == null) {
+				continue;
+			}
 
-				List<TextEdit> textEdits = new ArrayList<>();
-				for (ReplaceRegion replaceRegion : replacements) {
-					TextEdit textEdit = ChangeProvider.replace(doc, replaceRegion);
-					textEdits.add(textEdit);
-				}
-
-				acceptor.acceptQuickfixCodeAction(context, "Add import from module " + description, textEdits);
+			ReplaceRegion replacement = importHelper.getReplacementForImport(script, importToBeAdded);
+			if (replacement != null) {
+				String description = resolution.description;
+				TextEdit textEdit = ChangeProvider.replace(doc, replacement);
+				acceptor.acceptQuickfixCodeAction(context, "Add import from module " + description,
+						Collections.singletonList(textEdit));
 			}
 		}
 	}

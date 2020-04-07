@@ -127,7 +127,6 @@ class StaticPolyfillTransformation extends Transformation {
 		} else {
 			classFilled.ownedMembersRaw += copy;
 		}
-		state.info.markAsStaticlyPolyfilled(copy);
 		state.info.setOriginalDefinedMember(copy, memberToBeInserted.definedTypeElement);
 	}
 

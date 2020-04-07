@@ -34,9 +34,24 @@ import org.junit.Assert;
  */
 abstract public class AbstractCompletionTest extends AbstractStructuredIdeTest<TestCompletionConfiguration> {
 
-	/** Call this method in a test */
-	protected void test(TestCompletionConfiguration tcc) throws Exception {
-		test(tcc.getFilePath(), tcc.getModel(), tcc);
+	/** Executes the given module contents using the default workspace. */
+	protected void testAtCursor(String codeWithCursor, String expectedProposals) {
+		ContentAndPosition contentAndPosition = getContentAndPosition(codeWithCursor);
+		TestCompletionConfiguration tcc = createTestCompletionConfiguration(contentAndPosition, expectedProposals);
+		super.testInDefaultWorkspace(contentAndPosition.content, tcc);
+	}
+
+	/** @return {@link TestCompletionConfiguration} for a given code with cursor symbol */
+	protected TestCompletionConfiguration createTestCompletionConfiguration(ContentAndPosition contentAndPosition,
+			String expectedProposals) {
+
+		TestCompletionConfiguration tcc = new TestCompletionConfiguration();
+		tcc.setModel(contentAndPosition.content);
+		tcc.setLine(contentAndPosition.line);
+		tcc.setColumn(contentAndPosition.column);
+		tcc.setExpectedCompletionItems(expectedProposals);
+
+		return tcc;
 	}
 
 	@Override
@@ -47,11 +62,7 @@ abstract public class AbstractCompletionTest extends AbstractStructuredIdeTest<T
 		Position pos = new Position(tcc.getLine(), tcc.getColumn());
 		completionParams.setPosition(pos);
 
-		// CompletionContext context = new CompletionContext();
 		FileURI uri = getFileURIFromModuleName(tcc.getFilePath());
-		// context.set(Lists.newArrayList(getDiagnostics(uri)));
-		// completionParams.setContext(context);
-
 		TextDocumentIdentifier textDocument = new TextDocumentIdentifier();
 		textDocument.setUri(uri.toString());
 		completionParams.setTextDocument(textDocument);
@@ -69,7 +80,7 @@ abstract public class AbstractCompletionTest extends AbstractStructuredIdeTest<T
 		if (tcc.getAssertCompletionList() != null) {
 			tcc.getAssertCompletionList().apply(result.getRight());
 		} else {
-			String resultStr = Strings.toString(getStringLSP4J()::toString, items);
+			String resultStr = Strings.join("\n", getStringLSP4J()::toString, items);
 			assertEquals(tcc.getExpectedCompletionItems().trim(), resultStr.trim());
 		}
 	}

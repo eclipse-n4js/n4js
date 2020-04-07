@@ -13,9 +13,8 @@ package org.eclipse.n4js.ide.tests.server
 import org.eclipse.lsp4j.CodeAction
 import org.eclipse.n4js.ide.xtext.server.XDocument
 import org.junit.Test
-import org.eclipse.xtext.testing.AbstractLanguageServerTest.TestCodeActionConfiguration
-import static org.junit.Assert.assertEquals;
 
+import static org.junit.Assert.assertEquals
 
 /**
  * Test for code actions in n4js
@@ -24,7 +23,7 @@ class CodeActionTest extends AbstractCodeActionTest {
 
 	@Test
 	def void test_01() throws Exception {
-		test(new TestCodeActionConfiguration => [
+		test(new N4JSTestCodeActionConfiguration => [
 			model = 'class X { int m() { return 1 } }';
 			column = 10;
 			expectedCodeActions = '''
@@ -43,7 +42,7 @@ class CodeActionTest extends AbstractCodeActionTest {
 	
 	@Test
 	def void test_02() throws Exception {
-		test(new TestCodeActionConfiguration => [
+		test(new N4JSTestCodeActionConfiguration => [
 			model = 'class X { i: int?; }';
 			column = 13;
 			expectedCodeActions = '''
@@ -62,7 +61,7 @@ class CodeActionTest extends AbstractCodeActionTest {
 	
 	@Test
 	def void test_03() throws Exception {
-		test(new TestCodeActionConfiguration => [
+		test(new N4JSTestCodeActionConfiguration => [
 			model = 'class X { i?: int?; }';
 			column = 14;
 			expectedCodeActions = '''
@@ -81,7 +80,7 @@ class CodeActionTest extends AbstractCodeActionTest {
 	
 	@Test
 	def void test_04() throws Exception {
-		test(new TestCodeActionConfiguration => [
+		test(new N4JSTestCodeActionConfiguration => [
 			model = 'class X { i?: int ? ; }';
 			column = 14;
 			expectedCodeActions = '''

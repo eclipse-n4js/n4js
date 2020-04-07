@@ -11,4 +11,4 @@
 
 @@ProvidedByRuntime @@Global
 
-export external public function $makeClass()
+export external public class Map {}
