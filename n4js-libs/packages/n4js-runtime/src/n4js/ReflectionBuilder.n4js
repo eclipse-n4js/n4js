@@ -9,6 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
+ // import reflection types to access their constructors and data fields
 import {N4Type, N4Classifier, N4Class, N4Interface, N4EnumType, N4Annotation, N4DataField, N4Accessor, N4Method, N4Member} from 'N4BuiltInTypes';
 
 
@@ -20,19 +21,19 @@ const CLASS_IMPLEMENTS = "$implements";
 const PROPERTY_N4TYPE = "n4type";
 
 
-export function $interfaceFieldInits(obj: any+) : Object {
+export function interfaceFieldInits(obj: any+) : Object {
     return (obj[INTERFACE_FIELD_INITS] || {}) as Object;
 }
 
-export function $interfaceDefaultMembers(obj: any+) : Object {
+export function interfaceDefaultMembers(obj: any+) : Object {
     return (obj[INTERFACE_DEFAULT_MEMBERS] || {}) as Object;
 }
 
-export function $interfaceExtends(obj: any+) : type{N4Interface}[] {
+export function interfaceExtends(obj: any+) : type{N4Interface}[] {
     return obj[INTERFACE_EXTENDS] as type{N4Interface}[];
 }
 
-export function $classImplements(obj: any+) : type{N4Interface}[] {
+export function classImplements(obj: any+) : type{N4Interface}[] {
     return obj[CLASS_IMPLEMENTS] as type{N4Interface}[];
 }
 
@@ -44,7 +45,9 @@ export function makeReflectionsForClass(staticProto: constructor{?}, reflectionS
     reflectionValues.mergeWithDetectedAllImplementedInterfaces(detectedAllImplementedInterfaces);
     const instanceProto = staticProto.prototype;
     const superclassBI = (staticProto.__proto__ as type{N4Object}).n4type;
-    const superclass = (superclassBI as Object) as N4Class; // cast from N4Class to N4Class
+    // the type of type{N4Object}.n4type is N4Class from global object
+    // which needs to be casted to the imported N4Class.
+    const superclass = (superclassBI as Object) as N4Class;
     const n4Class = new N4Class();
     setN4TypeProperties(n4Class, reflectionValues);
     setN4ClassifierProperties(n4Class, superclass, instanceProto, staticProto, reflectionValues);
@@ -71,7 +74,7 @@ export function makeReflectionsForEnum(staticProto: constructor{?}, reflectionSt
 }
 
 export function detectedAllImplementedInterfacesFromClass(staticProto: constructor{?}): Map<string, type{N4Interface}> {
-    const implementedInterfaces = $classImplements(staticProto) || [];
+    const implementedInterfaces = classImplements(staticProto) || [];
     const allImplementedInterfaces = staticProto.__proto__
         ? detectedAllImplementedInterfacesFromClass(staticProto.__proto__ as constructor{?})
         : new Map<string, type{N4Interface}>();
@@ -85,7 +88,7 @@ export function detectedAllImplementedInterfacesFromClass(staticProto: construct
 }
 
 export function detectedAllImplementedInterfacesFromInterface(interfaceObject: Object): Map<string, type{N4Interface}> {
-    const extendedInterfaces = $interfaceExtends(interfaceObject) || [];
+    const extendedInterfaces = interfaceExtends(interfaceObject) || [];
     const allImplementedInterfaces = new Map<string, type{N4Interface}>();
     for (const superInterface of extendedInterfaces) {
         const fqn = superInterface.n4type.fqn;
@@ -223,7 +226,7 @@ function createMember(instanceProto: any+, staticProto: any+, memberInfo: Member
 }
 
 function getAllInterfacesRek(interfaceObject: Object, implementedInterfaces : Map<string, type{N4Interface}>): void {
-    const superInterfaces = $interfaceExtends(interfaceObject) || [];
+    const superInterfaces = interfaceExtends(interfaceObject) || [];
     for (const superInterface of superInterfaces) {
         // FIXME: N4Object#n4type() should not be always N4Class?
         const fqn = superInterface.n4type.fqn;
@@ -326,8 +329,8 @@ class MemberDetectorForInterface extends MemberDetector {
 
     constructor(interfaceObject: Object) {
         this.interfaceObject = interfaceObject;
-        this.defaultFields = $interfaceFieldInits(this.interfaceObject);
-        this.defaultMethods = $interfaceDefaultMembers(this.interfaceObject);
+        this.defaultFields = interfaceFieldInits(this.interfaceObject);
+        this.defaultMethods = interfaceDefaultMembers(this.interfaceObject);
     }
 
     @Override

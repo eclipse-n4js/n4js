@@ -95,7 +95,7 @@ class ClassDeclarationTransformation extends Transformation {
 		delegationAssistant.replaceDelegatingMembersByOrdinaryMembers(classDecl);
 		removeTypeInformation(classDecl);
 
-		val implementedInterfaces = createDirectlyImplementedInterfacesArgument(classDecl);
+		val implementedInterfaces = createDirectlyImplementedInterfaces(classDecl);
 		val $implements = steFor_$implementsInterfaces.name;
 		if (!implementedInterfaces.elements.empty) {
 			classDecl.ownedMembersRaw += _N4GetterDecl(
@@ -146,7 +146,7 @@ class ClassDeclarationTransformation extends Transformation {
 		return #[]; // no additional statements by default
 	}
 
-	def public ArrayLiteral createDirectlyImplementedInterfacesArgument(N4ClassDeclaration classDecl) {
+	def public ArrayLiteral createDirectlyImplementedInterfaces(N4ClassDeclaration classDecl) {
 		val interfaces = typeAssistant.getSuperInterfacesSTEs(classDecl);
 
 		// the return value of this method is intended for default method patching; for this purpose, we have to

@@ -18,7 +18,8 @@
 // builtin_n4.n4ts and builtin_n4idl.n4ts declare the below types as built-in types.
 //
 // This has the following consequences:
-// 1) neither "@@Global" nor "export" must be used in this file,
+// 1) neither "@@Global" nor "export" with an accessibility higher than "project" must be used in this file
+//   (to ensure only the implementations, not the types declared below, are available to ordinary N4JS code),
 // 2) no API documentation should be included in this file (instead, it should be
 //    placed in files builtin_n4.n4ts / builtin_n4idl.n4ts),
 // 3) at the end of this file, all global types need to be explicitly added to the
