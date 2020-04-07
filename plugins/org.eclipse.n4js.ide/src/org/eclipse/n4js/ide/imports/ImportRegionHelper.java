@@ -8,8 +8,10 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.editor.contentassist.imports;
+package org.eclipse.n4js.ide.imports;
 
+import static org.eclipse.n4js.parser.InternalSemicolonInjectingParser.SEMICOLON_INSERTED;
+import static org.eclipse.n4js.utils.UtilN4.isIgnoredSyntaxErrorNode;
 import static org.eclipse.xtext.nodemodel.util.NodeModelUtils.findActualNodeFor;
 import static org.eclipse.xtext.nodemodel.util.NodeModelUtils.findNodesForFeature;
 
@@ -34,8 +36,9 @@ import org.eclipse.xtext.nodemodel.ILeafNode;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.impl.HiddenLeafNode;
 import org.eclipse.xtext.nodemodel.impl.LeafNode;
+import org.eclipse.xtext.nodemodel.impl.LeafNodeWithSyntaxError;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
-import org.eclipse.xtext.resource.XtextResource;
+import org.eclipse.xtext.util.TextRegion;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
@@ -43,7 +46,7 @@ import com.google.inject.Inject;
 /**
  * Helper used to calculate imports region in the resource.
  */
-public class ImportsRegionHelper {
+public class ImportRegionHelper {
 	@Inject
 	private N4JSDocumentationProvider documentationProvider;
 
@@ -51,30 +54,56 @@ public class ImportsRegionHelper {
 	private TypeExpressionsGrammarAccess typeExpressionGrammmarAccess;
 
 	/**
-	 * Calculates import offset by analyzing the provided resource.
-	 *
-	 * @See {@link #getImportRegion(Script)}
-	 */
-	public int getImportOffset(XtextResource resource) {
-		return getImportRegion(resource).offset;
-	}
-
-	/**
 	 * Calculates import offset by analyzing the provided script.
 	 *
 	 * @See {@link #getImportRegion(Script)}
 	 */
-	public int getImportOffset(Script script) {
+	public int findInsertionOffset(Script script) {
+		int result = 0;
+		List<ScriptElement> scriptElements = script.getScriptElements();
+		for (int i = 0, size = scriptElements.size(); i < size; i++) {
+			ScriptElement element = scriptElements.get(i);
+			if (element instanceof ImportDeclaration) {
+				// Instead of getting the total offset for the first non-import-declaration, we try to get the
+				// total end offset for the most recent import declaration which is followed by any other script
+				// element
+				// this is required for the linebreak handling for automatic semicolon insertion.
+				ICompositeNode importNode = NodeModelUtils.findActualNodeFor(element);
+				if (null != importNode) {
+					result = importNode.getTotalOffset() + getLengthWithoutAutomaticSemicolon(importNode);
+				}
+			} else {
+				// We assume that all import declarations are to be found in one place, thus
+				// at this point we must have seen all of them.
+				break;
+			}
+		}
+		// If previously, an existing import declaration could be found, use it as offset.
+		if (result != 0) {
+			return result;
+		}
+		// Otherwise, we assume there is no import declarations yet. Use {@link ImportsRegionHelper}
+		// to obtain an offset for the insertion of a new import declaration.
 		return getImportRegion(script).offset;
 	}
 
 	/**
-	 * Calculates import region by analyzing the provided resource.
-	 *
-	 * @See {@link #getImportRegion(Script)}
+	 * Returns with the length of the node including all hidden leaf nodes but the {@link LeafNodeWithSyntaxError} one,
+	 * that was created for the automatic semicolon insertion.
 	 */
-	InsertionPoint getImportRegion(XtextResource xtextResource) {
-		return getImportRegion(XtextResourceUtils.getScript(xtextResource));
+	private static int getLengthWithoutAutomaticSemicolon(final INode node) {
+		if (node instanceof ILeafNode) {
+			return node.getLength();
+		}
+
+		int length = 0;
+		for (INode leafNode : ((ICompositeNode) node).getLeafNodes()) {
+			if (!isIgnoredSyntaxErrorNode(leafNode, SEMICOLON_INSERTED)) {
+				length += leafNode.getLength();
+			}
+		}
+
+		return length;
 	}
 
 	/**
@@ -120,7 +149,7 @@ public class ImportsRegionHelper {
 	 *            n4js resource
 	 * @return region for import statements, length 0
 	 */
-	InsertionPoint getImportRegion(Script script) {
+	private InsertionPoint getImportRegion(Script script) {
 		// In N4js imports can appear anywhere in the Script as top-level elements. So even as a last
 		// statement and more importantly scattered around.
 		InsertionPoint insertionPoint = new InsertionPoint();
@@ -327,5 +356,37 @@ public class ImportsRegionHelper {
 		}
 		// should never be reached.
 		throw new IllegalStateException("Iteration over-stepped the passed in node.");
+	}
+
+	/**
+	 * Extended information about where to insert new text. It holds a general total offset in the document - similar to
+	 * a {@link TextRegion} instance, but contrary to that has no length as it describes the point after that insertion
+	 * should happen.
+	 *
+	 * It also carries information if the insertion has to be recomputed. The properties {@link #notBeforeTotalOffset}
+	 * and {@link #notAfterTotalOffset} mark the domain of valid recomputed insertion points.
+	 *
+	 * The property {@linkp #isBeforeJsdocDocumentation} marks insertion points associated with active jsdoc-style
+	 * ML-comments.
+	 */
+	private static class InsertionPoint {
+
+		/** Insertion point, a value of {@code -1} means not set. Zero-based total offset. */
+		int offset = -1;
+
+		/**
+		 * Flag, if set indicates that the textRegion is just in Front of an active jsdoc region for the first statement
+		 */
+		@SuppressWarnings("unused")
+		boolean isBeforeJsdocDocumentation = false;
+
+		/**
+		 * Lowest offset for possible insertion. Usually marked by existing ScriptAnnotation(s) or directives in prolog
+		 */
+		int notBeforeTotalOffset = 0;
+
+		/** Highest possible insertion point in the document. */
+		@SuppressWarnings("unused")
+		int notAfterTotalOffset = Integer.MAX_VALUE;
 	}
 }

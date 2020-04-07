@@ -14,7 +14,7 @@
  * <ul>
  * <li>adding missing imports during code completion / content assist,
  * <li>adding missing imports by way of quick fixes,
- * <li>organizing imports (see {@link org.eclipse.n4js.ide.server.imports.ImportOrganizer ImportOrganizer}).
+ * <li>organizing imports (see {@link org.eclipse.n4js.ide.imports.ImportOrganizer ImportOrganizer}).
  * </ul>
  */
-package org.eclipse.n4js.ide.server.imports;
+package org.eclipse.n4js.ide.imports;

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.8"?>
-<target name="Generated target-platform N4JS:N4JS_2019_09" sequenceNumber="158">
+<target name="Generated target-platform N4JS:N4JS_2019_09" sequenceNumber="159">
   <locations>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.wst.common.project.facet.ui" version="1.4.601.v201903222010"/>
@@ -55,10 +55,6 @@
       <repository location="http://download.eclipse.org/modeling/emf/emf/builds/release/2.18"/>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-      <unit id="org.eclipse.xpect.xtext.lib" version="0.2.0.201906240918"/>
-      <repository location="https://ci.eclipse.org/xpect/job/Xpect-Integration-Release/20/artifact/org.eclipse.xpect.releng/p2-repository/target/repository/"/>
-    </location>
-    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.userstorage.feature.group" version="1.2.0.v20190308-0433"/>
       <repository location="http://download.eclipse.org/usssdk/drops/release/1.2.0"/>
     </location>
@@ -88,6 +84,10 @@
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.epp.mpc.feature.group" version="1.8.0.v20190725-1807"/>
       <repository location="http://download.eclipse.org/mpc/releases/1.8.0"/>
+    </location>
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+      <unit id="org.eclipse.xpect.xtext.lib" version="0.2.0.202004061200"/>
+      <repository location="https://ci.eclipse.org/xpect/job/Xpect-Integration-Release/22/artifact/org.eclipse.xpect.releng/p2-repository/target/repository/"/>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.lsp4j" version="0.8.0.v20190822-0801"/>

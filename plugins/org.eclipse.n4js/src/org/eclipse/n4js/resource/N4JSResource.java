@@ -1464,6 +1464,14 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	}
 
 	/**
+	 * Iff the given resource is an {@link N4JSResource}, returns its script without resolving it (see
+	 * {@link #getScript()}); otherwise returns <code>null</code>.
+	 */
+	public static Script getScript(Resource resource) {
+		return resource instanceof N4JSResource ? ((N4JSResource) resource).getScript() : null;
+	}
+
+	/**
 	 * Retrieves the TModule contained in a resource and tries to avoid resolution of AST if possible.
 	 *
 	 * @return the TModule contained in the resource, or null if no TModule has been found.

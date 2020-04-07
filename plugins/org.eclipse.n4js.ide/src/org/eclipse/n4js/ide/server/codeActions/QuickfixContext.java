@@ -13,6 +13,7 @@ package org.eclipse.n4js.ide.server.codeActions;
 import org.eclipse.lsp4j.CodeActionContext;
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.util.Ranges;
+import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.xtext.ide.server.codeActions.ICodeActionService2.Options;
 
 /**
@@ -20,6 +21,10 @@ import org.eclipse.xtext.ide.server.codeActions.ICodeActionService2.Options;
  */
 @SuppressWarnings("restriction")
 public class QuickfixContext {
+	/**
+	 * The containing resource.
+	 */
+	public final N4JSResource resource;
 	/**
 	 * The issue code that is about the be resolved.
 	 */
@@ -32,7 +37,8 @@ public class QuickfixContext {
 	/**
 	 * Standard constructor.
 	 */
-	public QuickfixContext(String issueCode, Options options) {
+	public QuickfixContext(N4JSResource resource, String issueCode, Options options) {
+		this.resource = resource;
 		this.issueCode = issueCode;
 		this.options = options;
 	}
