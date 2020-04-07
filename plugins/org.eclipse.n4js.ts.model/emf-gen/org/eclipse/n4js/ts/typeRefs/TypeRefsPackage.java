@@ -3043,13 +3043,22 @@ public interface TypeRefsPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF__DECLARED_TYPE = BASE_TYPE_REF_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>Declared Type As Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF__DECLARED_TYPE_AS_TEXT = BASE_TYPE_REF_FEATURE_COUNT + 1;
+
+	/**
 	 * The feature id for the '<em><b>Type Args</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF__TYPE_ARGS = BASE_TYPE_REF_FEATURE_COUNT + 1;
+	int PARAMETERIZED_TYPE_REF__TYPE_ARGS = BASE_TYPE_REF_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Array Type Expression</b></em>' attribute.
@@ -3058,7 +3067,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF__ARRAY_TYPE_EXPRESSION = BASE_TYPE_REF_FEATURE_COUNT + 2;
+	int PARAMETERIZED_TYPE_REF__ARRAY_TYPE_EXPRESSION = BASE_TYPE_REF_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Iterable Type Expression</b></em>' attribute.
@@ -3067,7 +3076,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF__ITERABLE_TYPE_EXPRESSION = BASE_TYPE_REF_FEATURE_COUNT + 3;
+	int PARAMETERIZED_TYPE_REF__ITERABLE_TYPE_EXPRESSION = BASE_TYPE_REF_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Ast Namespace</b></em>' reference.
@@ -3076,7 +3085,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF__AST_NAMESPACE = BASE_TYPE_REF_FEATURE_COUNT + 4;
+	int PARAMETERIZED_TYPE_REF__AST_NAMESPACE = BASE_TYPE_REF_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
@@ -3085,7 +3094,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY = BASE_TYPE_REF_FEATURE_COUNT + 5;
+	int PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY = BASE_TYPE_REF_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Defined Typing Strategy</b></em>' attribute.
@@ -3094,7 +3103,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF__DEFINED_TYPING_STRATEGY = BASE_TYPE_REF_FEATURE_COUNT + 6;
+	int PARAMETERIZED_TYPE_REF__DEFINED_TYPING_STRATEGY = BASE_TYPE_REF_FEATURE_COUNT + 7;
 
 	/**
 	 * The number of structural features of the '<em>Parameterized Type Ref</em>' class.
@@ -3103,7 +3112,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_FEATURE_COUNT = BASE_TYPE_REF_FEATURE_COUNT + 7;
+	int PARAMETERIZED_TYPE_REF_FEATURE_COUNT = BASE_TYPE_REF_FEATURE_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type</em>' operation.
@@ -3475,6 +3484,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL__DECLARED_TYPE = PARAMETERIZED_TYPE_REF__DECLARED_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>Declared Type As Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL__DECLARED_TYPE_AS_TEXT = PARAMETERIZED_TYPE_REF__DECLARED_TYPE_AS_TEXT;
 
 	/**
 	 * The feature id for the '<em><b>Type Args</b></em>' containment reference list.
@@ -5148,6 +5166,15 @@ public interface TypeRefsPackage extends EPackage {
 	int FUNCTION_TYPE_REF__DECLARED_TYPE = PARAMETERIZED_TYPE_REF__DECLARED_TYPE;
 
 	/**
+	 * The feature id for the '<em><b>Declared Type As Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_REF__DECLARED_TYPE_AS_TEXT = PARAMETERIZED_TYPE_REF__DECLARED_TYPE_AS_TEXT;
+
+	/**
 	 * The feature id for the '<em><b>Type Args</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6332,6 +6359,15 @@ public interface TypeRefsPackage extends EPackage {
 	int VERSIONED_PARAMETERIZED_TYPE_REF__DECLARED_TYPE = PARAMETERIZED_TYPE_REF__DECLARED_TYPE;
 
 	/**
+	 * The feature id for the '<em><b>Declared Type As Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF__DECLARED_TYPE_AS_TEXT = PARAMETERIZED_TYPE_REF__DECLARED_TYPE_AS_TEXT;
+
+	/**
 	 * The feature id for the '<em><b>Type Args</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6691,6 +6727,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int VERSIONED_FUNCTION_TYPE_REF__DECLARED_TYPE = VERSIONED_PARAMETERIZED_TYPE_REF__DECLARED_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>Declared Type As Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_FUNCTION_TYPE_REF__DECLARED_TYPE_AS_TEXT = VERSIONED_PARAMETERIZED_TYPE_REF__DECLARED_TYPE_AS_TEXT;
 
 	/**
 	 * The feature id for the '<em><b>Type Args</b></em>' containment reference list.
@@ -7124,6 +7169,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL__DECLARED_TYPE = VERSIONED_PARAMETERIZED_TYPE_REF__DECLARED_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>Declared Type As Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL__DECLARED_TYPE_AS_TEXT = VERSIONED_PARAMETERIZED_TYPE_REF__DECLARED_TYPE_AS_TEXT;
 
 	/**
 	 * The feature id for the '<em><b>Type Args</b></em>' containment reference list.
@@ -8170,6 +8224,17 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getParameterizedTypeRef_DeclaredType();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getDeclaredTypeAsText <em>Declared Type As Text</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Declared Type As Text</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getDeclaredTypeAsText()
+	 * @see #getParameterizedTypeRef()
+	 * @generated
+	 */
+	EAttribute getParameterizedTypeRef_DeclaredTypeAsText();
 
 	/**
 	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getTypeArgs <em>Type Args</em>}'.
@@ -9780,6 +9845,14 @@ public interface TypeRefsPackage extends EPackage {
 		 * @generated
 		 */
 		EReference PARAMETERIZED_TYPE_REF__DECLARED_TYPE = eINSTANCE.getParameterizedTypeRef_DeclaredType();
+
+		/**
+		 * The meta object literal for the '<em><b>Declared Type As Text</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PARAMETERIZED_TYPE_REF__DECLARED_TYPE_AS_TEXT = eINSTANCE.getParameterizedTypeRef_DeclaredTypeAsText();
 
 		/**
 		 * The meta object literal for the '<em><b>Type Args</b></em>' containment reference list feature.

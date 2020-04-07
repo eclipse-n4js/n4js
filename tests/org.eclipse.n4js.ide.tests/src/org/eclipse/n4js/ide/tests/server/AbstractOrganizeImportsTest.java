@@ -83,12 +83,15 @@ public abstract class AbstractOrganizeImportsTest extends AbstractStructuredIdeT
 						"export class A01 {}",
 						"export class A02 {}",
 						"export class A03 {}",
-						"export class A04 {}")),
+						"export class A04 {}",
+						"export class ClassWithALongName {}",
+						"export class Duplicate {}")),
 				Pair.of("B", Strings.fromLines(
 						"export class B01 {}",
 						"export class B02 {}",
 						"export class B03 {}",
-						"export class B04 {}")),
+						"export class B04 {}",
+						"export class Duplicate {}")),
 				Pair.of("C", Strings.fromLines(
 						"export class C01 {}",
 						"export class C02 {}",

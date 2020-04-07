@@ -35,6 +35,7 @@ import org.eclipse.n4js.ts.types.TypingStrategy;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getDeclaredType <em>Declared Type</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getDeclaredTypeAsText <em>Declared Type As Text</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getTypeArgs <em>Type Args</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isArrayTypeExpression <em>Array Type Expression</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isIterableTypeExpression <em>Iterable Type Expression</em>}</li>
@@ -69,6 +70,28 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	 * @generated
 	 */
 	void setDeclaredType(Type value);
+
+	/**
+	 * Returns the value of the '<em><b>Declared Type As Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Declared Type As Text</em>' attribute.
+	 * @see #setDeclaredTypeAsText(String)
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getParameterizedTypeRef_DeclaredTypeAsText()
+	 * @model unique="false" transient="true"
+	 * @generated
+	 */
+	String getDeclaredTypeAsText();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getDeclaredTypeAsText <em>Declared Type As Text</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Declared Type As Text</em>' attribute.
+	 * @see #getDeclaredTypeAsText()
+	 * @generated
+	 */
+	void setDeclaredTypeAsText(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Type Args</b></em>' containment reference list.

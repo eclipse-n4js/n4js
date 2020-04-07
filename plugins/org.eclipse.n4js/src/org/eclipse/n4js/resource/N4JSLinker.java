@@ -30,6 +30,7 @@ import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.scoping.members.ComposedMemberScope;
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.validation.ASTStructureValidator;
 import org.eclipse.xtext.AbstractElement;
 import org.eclipse.xtext.AbstractRule;
@@ -270,6 +271,8 @@ public class N4JSLinker extends LazyLinker {
 			Object value = valueConverterService.toValue(tokenText, rule.getName(), node);
 			if (obj instanceof IdentifierRef && value instanceof String) {
 				((IdentifierRef) obj).setIdAsText((String) value);
+			} else if (obj instanceof ParameterizedTypeRef && value instanceof String) {
+				((ParameterizedTypeRef) obj).setDeclaredTypeAsText((String) value);
 			} else if (obj instanceof LabelRef && value instanceof String) {
 				((LabelRef) obj).setLabelAsText((String) value);
 			} else if (obj instanceof ParameterizedPropertyAccessExpression && value instanceof String) {
@@ -329,6 +332,8 @@ public class N4JSLinker extends LazyLinker {
 			((LabelRef) obj).setLabelAsText(null);
 		} else if (obj instanceof ParameterizedPropertyAccessExpression) {
 			((ParameterizedPropertyAccessExpression) obj).setPropertyAsText(null);
+		} else if (obj instanceof ParameterizedTypeRef) {
+			((ParameterizedTypeRef) obj).setDeclaredTypeAsText(null);
 		}
 	}
 

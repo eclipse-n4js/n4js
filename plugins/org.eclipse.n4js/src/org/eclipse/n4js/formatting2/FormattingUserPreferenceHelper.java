@@ -8,15 +8,12 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.editor.contentassist.imports;
+package org.eclipse.n4js.formatting2;
 
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.preferences.IPreferenceValues;
 
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.formatting2.N4JSFormatterPreferenceKeys;
-import org.eclipse.n4js.formatting2.N4JSSimpleFormattingPreferenceProvider;
 
 /**
  * Helper for computing user preference regarding space between import specifiers and curly brace.
@@ -24,7 +21,7 @@ import org.eclipse.n4js.formatting2.N4JSSimpleFormattingPreferenceProvider;
  * Extracted to separate module to contain access restriction warning.
  */
 @SuppressWarnings("restriction")
-public class ImportSpacerUserPreferenceHelper {
+public class FormattingUserPreferenceHelper {
 	@Inject
 	private N4JSSimpleFormattingPreferenceProvider formattingPreferenceProvider;
 

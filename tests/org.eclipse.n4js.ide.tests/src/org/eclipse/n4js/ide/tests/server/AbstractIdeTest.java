@@ -211,10 +211,15 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	}
 
 	/** Same as {@link #openFile(String, String)}, but content is read from disk. */
-	protected void openFile(String moduleName) throws IOException {
+	protected void openFile(String moduleName) {
 		FileURI fileURI = getFileURIFromModuleName(moduleName);
 		Path filePath = fileURI.toJavaIoFile().toPath();
-		String content = Files.readString(filePath);
+		String content;
+		try {
+			content = Files.readString(filePath);
+		} catch (IOException e) {
+			throw new AssertionError("exception while reading file contents from disk", e);
+		}
 		openFile(moduleName, content);
 	}
 

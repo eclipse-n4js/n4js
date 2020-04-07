@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2016 NumberFour AG.
+ * Copyright (c) 2020 NumberFour AG.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,25 +8,18 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.editor.contentassist.imports;
+package org.eclipse.n4js.ide.imports;
 
 import static org.eclipse.n4js.utils.N4JSLanguageUtils.lastSegmentOrDefaultHost;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.n4js.ide.editor.contentassist.N4JSIdeContentProposalProvider.N4JSCandidateFilter;
-import org.eclipse.n4js.ide.editor.contentassist.imports.ImportRewriter.ImportChanges;
 import org.eclipse.n4js.n4JS.ImportCallExpression;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
-import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4idl.N4IDLGlobals;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
@@ -38,15 +31,10 @@ import org.eclipse.n4js.scoping.imports.PlainAccessOfNamespacedImportDescription
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
 import org.eclipse.n4js.ts.types.TModule;
-import org.eclipse.n4js.ts.types.TypesPackage;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.xtext.conversion.ValueConverterException;
-import org.eclipse.xtext.ide.editor.contentassist.ContentAssistContext;
-import org.eclipse.xtext.ide.editor.contentassist.ContentAssistEntry;
-import org.eclipse.xtext.ide.editor.contentassist.IIdeContentProposalAcceptor;
 import org.eclipse.xtext.ide.editor.contentassist.IPrefixMatcher;
-import org.eclipse.xtext.ide.editor.contentassist.IProposalConflictHelper;
-import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalPriorities;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -55,17 +43,35 @@ import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.impl.AliasedEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.IScopeProvider;
-import org.eclipse.xtext.util.ReplaceRegion;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
- * Creates proposals for content assist and also adds imports of the proposed element if necessary.
+ * For a {@link ReferenceDescriptor reference in the N4JS source code} (which may be resolved or unresolved), this class
+ * provides helper functionality to search all possible {@link ReferenceResolution resolutions}, i.e. all possible
+ * target elements the reference may refer to.
+ * <p>
+ * Do not confuse this with "find references" functionality:
+ * <ul>
+ * <li>"find references" searches all valid, resolved references in the code base that point to a given identifiable
+ * element.
+ * <li>this class searches all identifiable elements in the code base that may serve as a valid target for a given,
+ * resolved or unresolved, reference.
+ * </ul>
+ * This functionality is used by
+ * <ul>
+ * <li>content assist (to compute all content assist proposals),
+ * <li>quick fix "add missing import" (to compute the new import to be added),
+ * <li>organize imports (to compute new imports to be added for all unresolved references in the file).
+ * </ul>
  */
-public class ImportsAwareReferenceProposalCreator {
+@Singleton
+public class ReferenceResolutionFinder {
 
 	@Inject
 	private IScopeProvider scopeProvider;
@@ -74,96 +80,116 @@ public class ImportsAwareReferenceProposalCreator {
 	private IN4JSCore n4jsCore;
 
 	@Inject
-	private ImportRewriter importRewriter;
-
-	@Inject
 	private IQualifiedNameConverter qualifiedNameConverter;
 
 	@Inject
 	private IQualifiedNameProvider qualifiedNameProvider;
 
 	@Inject
-	private IdeContentProposalPriorities proposalPriorities;
-
-	@Inject
 	private IPrefixMatcher prefixMatcher;
 
-	@Inject
-	private IProposalConflictHelper conflictHelper;
+	/**
+	 * An acceptor receiving valid {@link ReferenceResolution}s for a given {@link ReferenceDescriptor reference}. See
+	 * {@link ReferenceResolutionFinder#findResolutions(ReferenceDescriptor, boolean, boolean, Predicate, Predicate, IResolutionAcceptor)
+	 * #searchResolutions()} for details.
+	 */
+	public interface IResolutionAcceptor {
+
+		/** Invoked when a valid {@link ReferenceResolution} is found. */
+		void accept(ReferenceResolution resolution);
+
+		/** Tells if this acceptor is able and willing to accept more {@link ReferenceResolution}s. */
+		boolean canAcceptMoreProposals();
+	}
 
 	/**
-	 * Retrieves possible reference targets from scope, including erroneous solutions (e.g., not visible targets). This
-	 * list is further filtered here. This is a general pattern: Do not change or modify scoping for special content
-	 * assist requirements, instead filter here.
+	 * Searches all valid resolutions of the given reference. Note: two higher-level convenience methods are available
+	 * in {@link ImportHelper}.
 	 *
+	 * @param reference
+	 *            the reference to resolve.
+	 * @param requireFullMatch
+	 *            if <code>true</code>, a candidate's name must be <em>equal</em> to the given <code>reference</code>'s
+	 *            {@link ReferenceDescriptor#text text}; otherwise it is sufficient if the name <em>starts with</em> the
+	 *            text.
+	 * @param isUnresolvedReference
+	 *            if true, the given <code>reference</code> is assumed to be an unresolved reference (which means
+	 *            certain collision checks can be omitted); otherwise nothing will be assumed, i.e. the reference may be
+	 *            resolved or unresolved.
+	 * @param conflictChecker
+	 *            allows for additional checks to be performed on a potential resolution's
+	 *            {@link ReferenceResolutionCandidate#shortName shortName}, before it is deemed valid and sent to the
+	 *            acceptor.
 	 * @param filter
-	 *            by default an instance of {@link N4JSCandidateFilter} will be provided here.
+	 *            a filter to decide with candidate {@link IEObjectDescription}s to include in the search. Should return
+	 *            <code>true</code> to include the given candidate in the search.
+	 * @param acceptor
+	 *            an {@link IResolutionAcceptor} that will be invoked with all valid resolutions.
 	 */
-	public void lookupCrossReference(
-			EObject model,
-			EReference reference,
-			ContentAssistContext context,
-			IIdeContentProposalAcceptor acceptor,
-			Predicate<IEObjectDescription> filter) {
-
-		if (model == null) {
-			return;
-		}
+	public void findResolutions(
+			ReferenceDescriptor reference,
+			boolean requireFullMatch,
+			boolean isUnresolvedReference,
+			Predicate<String> conflictChecker,
+			Predicate<IEObjectDescription> filter,
+			IResolutionAcceptor acceptor) {
 
 		final IContentAssistScopeProvider contentAssistScopeProvider = (IContentAssistScopeProvider) scopeProvider;
-		final IScope scope = contentAssistScopeProvider.getScopeForContentAssist(model, reference);
+		final IScope scope = contentAssistScopeProvider.getScopeForContentAssist(reference.astNode,
+				reference.eReference);
 		// iterate over candidates, filter them, and create ICompletionProposals for them
 		final Iterable<IEObjectDescription> candidates = scope.getAllElements();
 		final Set<URI> candidateURIs = new HashSet<>(); // note: shadowing for #getAllElements does not work
 
 		for (IEObjectDescription candidate : candidates) {
-			if (!acceptor.canAcceptMoreProposals() || !filter.apply(candidate)) {
+			if (!acceptor.canAcceptMoreProposals()) {
 				return;
 			}
+			if (!filter.apply(candidate)) {
+				continue;
+			}
 
-			final ContentAssistEntry proposal = getProposal(candidate, model, scope, context);
-			if (proposal != null && candidateURIs.add(candidate.getEObjectURI())) {
-				int prio = proposalPriorities.getCrossRefPriority(candidate, proposal);
-				acceptor.accept(proposal, prio);
+			final Optional<IScope> scopeForCollisionCheck = isUnresolvedReference ? Optional.absent()
+					: Optional.of(scope);
+			final ReferenceResolution resolution = getResolution(reference.text, reference.parseTreeNode,
+					requireFullMatch, candidate, scopeForCollisionCheck, conflictChecker);
+			if (resolution != null && candidateURIs.add(candidate.getEObjectURI())) {
+				acceptor.accept(resolution);
 			}
 		}
 	}
 
 	/**
-	 * Creates proposal that can contain an N4JS import.
+	 * Returns a resolution if the given candidate is a valid target element for the given reference text (full name or
+	 * just prefix, depending on <code>requireFullMatch</code>); otherwise <code>null</code> is returned.
 	 *
 	 * @param candidate
-	 *            for which proposal is created
-	 * @return code completion proposal
+	 *            the {@link IEObjectDescription} representing the potential target element of the resolution.
+	 * @param scopeForCollisionCheck
+	 *            a scope that will be used for a collision check. If the reference being resolved is known to be an
+	 *            unresolved reference and <code>requireFullMatch</code> is set to <code>true</code>, then this
+	 *            collision check can safely be omitted.
+	 * @return the resolution of <code>null</code> if the candidate is not a valid match for the reference.
 	 */
-	private ContentAssistEntry getProposal(IEObjectDescription candidate, EObject model, IScope scope,
-			ContentAssistContext context) {
+	private ReferenceResolution getResolution(String text, INode parseTreeNode, boolean requireFullMatch,
+			IEObjectDescription candidate, Optional<IScope> scopeForCollisionCheck, Predicate<String> conflictChecker) {
 
-		CAECandidate caec = new CAECandidate(candidate, scope, context);
+		ReferenceResolutionCandidate rrc = new ReferenceResolutionCandidate(candidate, scopeForCollisionCheck, text,
+				requireFullMatch, parseTreeNode, conflictChecker);
 
-		if (!caec.isValid) {
+		if (!rrc.isValid) {
 			return null;
 		}
 
 		try {
-			ContentAssistEntry cae = new ContentAssistEntry();
 			int version = N4JSResourceDescriptionStrategy.getVersion(candidate);
 
-			String proposal = getProposal(caec);
-			String label = getLabel(caec, version);
-			String description = getDescription(caec);
-			String kind = getKind(caec);
+			String proposal = getProposal(rrc);
+			String label = getLabel(rrc, version);
+			String description = getDescription(rrc);
+			ImportDescriptor importToBeAdded = getImportToBeAdded(rrc);
 
-			cae.setProposal(proposal);
-			cae.setPrefix(context.getPrefix());
-			cae.setLabel(label);
-			cae.setDescription(description);
-			cae.setKind(kind);
-			cae.setSource(candidate.getEObjectURI());
-
-			addImportIfNecessary(caec, model, cae);
-
-			return cae;
+			return new ReferenceResolution(candidate, proposal, label, description, importToBeAdded);
 
 		} catch (ValueConverterException e) {
 			// text does not match the concrete syntax
@@ -172,105 +198,92 @@ public class ImportsAwareReferenceProposalCreator {
 		return null;
 	}
 
-	private String getProposal(CAECandidate caec) {
-		switch (caec.accessType) {
+	private String getProposal(ReferenceResolutionCandidate rrc) {
+		switch (rrc.accessType) {
 		case alias:
-			return caec.aliasName;
+			return rrc.aliasName;
 		case namespace:
-			return caec.namespaceName.toString();
+			return rrc.namespaceName.toString();
 		default:
 			// noop
 		}
-		if (caec.newImportHasAlias()) {
-			return caec.addedImportNameAndAlias.alias;
+		if (rrc.newImportHasAlias()) {
+			return rrc.addedImportNameAndAlias.alias;
 		}
-		return caec.shortName;
+		return rrc.shortName;
 	}
 
-	private String getLabel(CAECandidate caec, int version) {
+	private String getLabel(ReferenceResolutionCandidate rrc, int version) {
 		String typeVersion = (version == 0) ? "" : N4IDLGlobals.VERSION_SEPARATOR + String.valueOf(version);
-		if (caec.isAlias()) {
-			return caec.aliasName + typeVersion;
+		if (rrc.isAlias()) {
+			return rrc.aliasName + typeVersion;
 		}
-		if (caec.isNamespace()) {
-			return caec.namespaceName + typeVersion;
+		if (rrc.isNamespace()) {
+			return rrc.namespaceName + typeVersion;
 		}
-		if (caec.newImportHasAlias()) {
-			return caec.shortName + typeVersion;
+		if (rrc.newImportHasAlias()) {
+			return rrc.shortName + typeVersion;
 		}
 
-		return caec.shortName + typeVersion;
+		return rrc.shortName + typeVersion;
 	}
 
-	private String getDescription(CAECandidate caec) {
-		if (caec.isAlias()) {
-			return "alias for " + qualifiedNameConverter.toString(caec.qualifiedName);
+	private String getDescription(ReferenceResolutionCandidate rrc) {
+		if (rrc.isAlias()) {
+			return "alias for " + qualifiedNameConverter.toString(rrc.qualifiedName);
 		}
-		if (caec.isNamespace()) {
-			return qualifiedNameConverter.toString(caec.qualifiedName);
+		if (rrc.isNamespace()) {
+			return qualifiedNameConverter.toString(rrc.qualifiedName);
 		}
-		if (caec.newImportHasAlias()) {
-			String descr = "via new alias " + caec.addedImportNameAndAlias.alias;
-			descr += " for " + qualifiedNameConverter.toString(caec.qualifiedName);
+		if (rrc.newImportHasAlias()) {
+			String descr = "via new alias " + rrc.addedImportNameAndAlias.alias;
+			descr += " for " + qualifiedNameConverter.toString(rrc.qualifiedName);
 			descr += "\n\n";
-			descr += "Introduces the new alias '" + caec.addedImportNameAndAlias.alias;
-			descr += "' for element " + qualifiedNameConverter.toString(caec.qualifiedName);
+			descr += "Introduces the new alias '" + rrc.addedImportNameAndAlias.alias;
+			descr += "' for element " + qualifiedNameConverter.toString(rrc.qualifiedName);
 			return descr;
 		}
 
-		QualifiedName caecQN = caec.qualifiedName;
-		QualifiedName descrQN = (caecQN.getSegmentCount() > 1) ? caecQN.skipLast(1) : caecQN;
+		QualifiedName rrcQN = rrc.qualifiedName;
+		QualifiedName descrQN = (rrcQN.getSegmentCount() > 1) ? rrcQN.skipLast(1) : rrcQN;
 		return qualifiedNameConverter.toString(descrQN);
 	}
 
-	private String getKind(CAECandidate caec) {
-		EClass eClass = caec.candidate.getEClass();
-		if (TypesPackage.eINSTANCE.getTClass() == eClass) {
-			return ContentAssistEntry.KIND_CLASS;
+	private ImportDescriptor getImportToBeAdded(ReferenceResolutionCandidate rrc) {
+		NameAndAlias requestedImport = rrc.addedImportNameAndAlias;
+		if (requestedImport == null) {
+			return null;
 		}
-		if (TypesPackage.eINSTANCE.getTInterface() == eClass) {
-			return ContentAssistEntry.KIND_INTERFACE;
-		}
-		if (TypesPackage.eINSTANCE.getTField() == eClass) {
-			return ContentAssistEntry.KIND_FIELD;
-		}
-		if (TypesPackage.eINSTANCE.getTEnum() == eClass) {
-			return ContentAssistEntry.KIND_ENUM;
-		}
-		if (TypesPackage.eINSTANCE.getTFunction() == eClass) {
-			return ContentAssistEntry.KIND_FUNCTION;
-		}
-		if (TypesPackage.eINSTANCE.getTVariable() == eClass) {
-			return ContentAssistEntry.KIND_VARIABLE;
-		}
-		if (N4JSPackage.eINSTANCE.getVariableDeclaration() == eClass) {
-			return ContentAssistEntry.KIND_VARIABLE;
-		}
-		if (TypesPackage.eINSTANCE.getModuleNamespaceVirtualType() == eClass) {
-			return ContentAssistEntry.KIND_COLOR;
-		}
-		return ContentAssistEntry.KIND_TEXT;
-	}
 
-	private void addImportIfNecessary(CAECandidate caec, EObject model, ContentAssistEntry proposal) {
-		if (caec.addedImportNameAndAlias != null) {
-			Resource resource = model.eResource();
-			ImportChanges importChanges = importRewriter.create("\n", resource);
-			importChanges.addImport(caec.addedImportNameAndAlias);
-			Collection<ReplaceRegion> regions = importChanges.toReplaceRegions();
-			if (regions != null && !regions.isEmpty()) {
-				proposal.getTextReplacements().addAll(regions);
-			}
+		QualifiedName qualifiedName = requestedImport.name;
+		String optionalAlias = requestedImport.alias;
+
+		String projectName = rrc.candidateProject.getProjectName().getRawName();
+		QualifiedName moduleName = qualifiedName.skipLast(1);
+		String moduleSpecifier = qualifiedNameConverter.toString(moduleName);
+
+		ImportDescriptor importDesc;
+		if (N4JSLanguageUtils.isDefaultExport(qualifiedName)) {
+			String localName = optionalAlias != null ? optionalAlias
+					: N4JSLanguageUtils.lastSegmentOrDefaultHost(qualifiedName);
+			importDesc = ImportDescriptor.createDefaultImport(localName, moduleSpecifier, projectName, moduleName,
+					Integer.MAX_VALUE);
+		} else {
+			importDesc = ImportDescriptor.createNamedImport(qualifiedName.getLastSegment(), optionalAlias,
+					moduleSpecifier, projectName, moduleName, Integer.MAX_VALUE);
 		}
+
+		return importDesc;
 	}
 
 	private static enum CandidateAccessType {
 		direct, alias, namespace
 	}
 
-	private class CAECandidate {
+	private class ReferenceResolutionCandidate {
 		final IEObjectDescription candidate;
 		final IEObjectDescription candidateViaScopeShortName;
+		final IN4JSProject candidateProject;
 		final boolean isScopedCandidateEqual;
 		final boolean isScopedCandidateCollisioning;
 		final boolean isValid;
@@ -283,20 +296,26 @@ public class ImportsAwareReferenceProposalCreator {
 		final CandidateAccessType accessType;
 		final NameAndAlias addedImportNameAndAlias;
 
-		CAECandidate(IEObjectDescription candidate, IScope scope, ContentAssistContext context) {
+		ReferenceResolutionCandidate(IEObjectDescription candidate, Optional<IScope> scopeForCollisionCheck,
+				String text, boolean requireFullMatch, INode parseTreeNode, Predicate<String> conflictChecker) {
+			if (!requireFullMatch && !scopeForCollisionCheck.isPresent()) {
+				throw new IllegalArgumentException(
+						"collision check should only be omitted if a full match is required");
+			}
 			this.candidate = candidate;
+			this.candidateProject = n4jsCore.findProject(candidate.getEObjectURI()).orNull();
 			this.shortName = getShortName();
 			this.qualifiedName = getQualifiedName();
-			this.parentImportElement = getParentImportElement(context);
+			this.parentImportElement = getParentImportElement(parseTreeNode);
 			this.parentImportModuleName = getParentImportModuleName();
-			this.candidateViaScopeShortName = getCorrectCandidateViaScope(scope);
+			this.candidateViaScopeShortName = getCorrectCandidateViaScope(scopeForCollisionCheck);
 			this.isScopedCandidateEqual = isEqualCandidateName(candidateViaScopeShortName, qualifiedName);
 			this.isScopedCandidateCollisioning = isScopedCandidateCollisioning();
 			this.accessType = getAccessType();
 			this.aliasName = getAliasName();
 			this.namespaceName = getNamespaceName();
 			this.addedImportNameAndAlias = getImportChanges();
-			this.isValid = isValid(context);
+			this.isValid = isValid(text, requireFullMatch, conflictChecker);
 		}
 
 		private String getShortName() {
@@ -305,21 +324,26 @@ public class ImportsAwareReferenceProposalCreator {
 		}
 
 		/** @return true iff this candidate is valid and should be shown as a proposal */
-		private boolean isValid(ContentAssistContext context) {
-			String prefix = context.getPrefix();
-
+		private boolean isValid(String text, boolean requireFullMatch, Predicate<String> conflictChecker) {
 			boolean validName = false;
-			validName |= prefixMatcher.isCandidateMatchingPrefix(shortName, prefix);
-			validName |= isAlias() && prefixMatcher.isCandidateMatchingPrefix(aliasName, prefix);
+			validName |= isMatch(shortName, text, requireFullMatch);
+			validName |= isAlias() && isMatch(aliasName, text, requireFullMatch);
 			validName |= isNamespace()
-					&& prefixMatcher.isCandidateMatchingPrefix(namespaceName.getLastSegment(), prefix);
+					&& prefixMatcher.isCandidateMatchingPrefix(namespaceName.getLastSegment(), text);
 
 			boolean valid = validName;
 			valid &= !Strings.isNullOrEmpty(shortName);
-			valid &= !conflictHelper.existsConflict(shortName, context);
+			valid &= !conflictChecker.apply(shortName);
 			valid &= parentImportModuleName == null || qualifiedName.toString("/").startsWith(parentImportModuleName);
 
 			return valid;
+		}
+
+		private boolean isMatch(String name, String text, boolean requireFullMatch) {
+			if (requireFullMatch) {
+				return text.equals(name);
+			}
+			return prefixMatcher.isCandidateMatchingPrefix(name, text);
 		}
 
 		private QualifiedName getQualifiedName() {
@@ -335,10 +359,14 @@ public class ImportsAwareReferenceProposalCreator {
 			return qName;
 		}
 
-		private IEObjectDescription getCorrectCandidateViaScope(IScope scope) {
-			IEObjectDescription candidateViaScope = getCandidateViaScope(scope);
-			candidateViaScope = specialcaseNamespaceShadowsOwnElement(scope, candidateViaScope);
-			return candidateViaScope;
+		private IEObjectDescription getCorrectCandidateViaScope(Optional<IScope> scopeForCollisionCheck) {
+			if (scopeForCollisionCheck.isPresent()) {
+				IScope scope = scopeForCollisionCheck.get();
+				IEObjectDescription candidateViaScope = getCandidateViaScope(scope);
+				candidateViaScope = specialcaseNamespaceShadowsOwnElement(scope, candidateViaScope);
+				return candidateViaScope;
+			}
+			return null;
 		}
 
 		private IEObjectDescription getCandidateViaScope(IScope scope) {
@@ -482,16 +510,15 @@ public class ImportsAwareReferenceProposalCreator {
 			return null;
 		}
 
-		private EObject getParentImportElement(ContentAssistContext context) {
-			INode currentNode = context.getCurrentNode();
-			while (currentNode != null) {
-				EObject semanticElement = currentNode.getSemanticElement();
+		private EObject getParentImportElement(INode parseTreeNode) {
+			while (parseTreeNode != null) {
+				EObject semanticElement = parseTreeNode.getSemanticElement();
 				if (semanticElement instanceof ImportCallExpression
 						|| semanticElement instanceof ImportDeclaration) {
 
 					return semanticElement;
 				}
-				currentNode = currentNode.getParent();
+				parseTreeNode = parseTreeNode.getParent();
 			}
 			return null;
 		}
@@ -561,10 +588,9 @@ public class ImportsAwareReferenceProposalCreator {
 			String tmodule = (qfnSegmentCount >= 2) ? qfn.getSegment(qfnSegmentCount - 2) : null;
 
 			QualifiedName candidateName;
-			IN4JSProject project = n4jsCore.findProject(candidate.getEObjectURI()).orNull();
-			if (project != null && tmodule != null && tmodule.equals(project.getMainModule())) {
-				N4JSProjectName projectName = project.getProjectName();
-				N4JSProjectName definesPackage = project.getDefinesPackageName();
+			if (candidateProject != null && tmodule != null && tmodule.equals(candidateProject.getMainModule())) {
+				N4JSProjectName projectName = candidateProject.getProjectName();
+				N4JSProjectName definesPackage = candidateProject.getDefinesPackageName();
 				if (definesPackage != null) {
 					projectName = definesPackage;
 				}
@@ -590,6 +616,16 @@ public class ImportsAwareReferenceProposalCreator {
 
 		public boolean isNamespace() {
 			return accessType == CandidateAccessType.namespace;
+		}
+	}
+
+	private static class NameAndAlias {
+		private final QualifiedName name;
+		private final String alias;
+
+		public NameAndAlias(QualifiedName qualifiedName, String alias) {
+			this.name = qualifiedName;
+			this.alias = alias;
 		}
 	}
 }
