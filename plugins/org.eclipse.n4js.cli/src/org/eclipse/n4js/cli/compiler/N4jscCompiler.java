@@ -104,7 +104,9 @@ public class N4jscCompiler {
 
 	private void performClean() {
 		Stopwatch compilationTime = Stopwatch.createStarted();
-		languageServer.clean().join();
+		try (Measurement m = N4JSDataCollectors.dcCliClean.getMeasurement()) {
+			languageServer.clean().join();
+		}
 		printCleanResults(compilationTime.stop());
 	}
 

@@ -27,12 +27,12 @@ import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.resource.N4JSCache
 import org.eclipse.n4js.resource.N4JSResource
-import org.eclipse.n4js.smith.N4JSDataCollectors
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.utils.ResourceNameComputer
 import org.eclipse.n4js.utils.StaticPolyfillHelper
 import org.eclipse.n4js.utils.URIUtils
+import org.eclipse.n4js.validation.N4JSValidator
 import org.eclipse.n4js.validation.helper.FolderContainmentHelper
 import org.eclipse.xtend.lib.annotations.Accessors
 import org.eclipse.xtext.generator.AbstractFileSystemAccess
@@ -211,14 +211,7 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 	 * If validation was canceled before finishing, don't assume absence of errors.
 	 */
 	private def boolean hasNoErrors(Resource input, CancelIndicator monitor) {
-		val inputURI = input.getURI();
-		val dc = if (inputURI !== null && N4JSGlobals.PACKAGE_JSON.equals(inputURI.lastSegment())) {
-			N4JSDataCollectors.dcValidationsPackageJson
-		} else {
-			N4JSDataCollectors.dcValidations
-		};
-
-		val m = dc.getMeasurement();
+		val m = N4JSValidator.getDataCollectorForValidation(input).getMeasurement();
 		var issues = null as List<Issue>;
 		try {
 			issues = resVal.validate(input, CheckMode.ALL, monitor);

@@ -17,8 +17,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.internal.RaceDetectionHelper;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
-import org.eclipse.n4js.smith.Measurement;
-import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
 import org.eclipse.n4js.validation.N4JSResourceValidator;
 import org.eclipse.xtext.service.OperationCanceledManager;
@@ -47,16 +45,13 @@ public class SourceContainerAwareResourceValidator extends N4JSResourceValidator
 
 	@Override
 	public List<Issue> validate(Resource resource, CheckMode mode, CancelIndicator cancelIndicator) {
-		try (Measurement m = N4JSDataCollectors.dcManifestAwareResourceValidator.getMeasurement()) {
-
-			operationCanceledManager.checkCanceled(cancelIndicator);
-			if (!isInSourceFolder(resource)) {
-				return Collections.emptyList();
-			}
-			RaceDetectionHelper.log("Validating: %s", resource.getURI());
-			List<Issue> res = super.validate(resource, mode, cancelIndicator);
-			return res;
+		operationCanceledManager.checkCanceled(cancelIndicator);
+		if (!isInSourceFolder(resource)) {
+			return Collections.emptyList();
 		}
+		RaceDetectionHelper.log("Validating: %s", resource.getURI());
+		List<Issue> res = super.validate(resource, mode, cancelIndicator);
+		return res;
 	}
 
 	private boolean isInSourceFolder(Resource resource) {

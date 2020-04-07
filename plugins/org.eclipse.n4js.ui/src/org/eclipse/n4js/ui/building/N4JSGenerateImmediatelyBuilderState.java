@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ui.building;
 
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Set;
 
@@ -31,7 +32,6 @@ import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.names.EclipseProjectName;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
-import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.ts.types.TModule;
@@ -40,6 +40,7 @@ import org.eclipse.n4js.ui.building.BuilderStateLogger.BuilderState;
 import org.eclipse.n4js.ui.building.instructions.IBuildParticipantInstruction;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.utils.collections.Arrays2;
+import org.eclipse.n4js.validation.N4JSValidator;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant.BuildType;
 import org.eclipse.xtext.builder.clustering.ClusteringBuilderState;
@@ -175,7 +176,8 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 		monitor.subTask("Building " + buildData.getProjectName());
 		logBuildData(buildData, " of before #doUpdate");
 
-		try (Measurement m = N4JSDataCollectors.dcBuild.getMeasurement()) {
+		// TODO check if it has effect in Eclipse
+		try (Measurement m = N4JSDataCollectors.dcBuild.getMeasurement("build " + Instant.now());) {
 			try {
 				IBuildParticipantInstruction instruction = IBuildParticipantInstruction.NOOP;
 
@@ -224,10 +226,7 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 	protected void updateMarkers(Delta delta, ResourceSet resourceSet, IProgressMonitor monitor) {
 		SubMonitor subMonitor = SubMonitor.convert(monitor, 2);
 		URI uri = delta.getUri();
-		DataCollector dc = uri != null && N4JSGlobals.PACKAGE_JSON.equals(uri.lastSegment())
-				? N4JSDataCollectors.dcValidationsPackageJson
-				: N4JSDataCollectors.dcValidations;
-		try (Measurement m = dc.getMeasurement()) {
+		try (Measurement m = N4JSValidator.getDataCollectorForValidation(uri).getMeasurement()) {
 			super.updateMarkers(delta, resourceSet, monitor);
 		}
 

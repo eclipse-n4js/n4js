@@ -23,12 +23,10 @@ import java.util.concurrent.CancellationException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.URIConverter;
-import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
-import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.Measurement;
-import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.utils.URIUtils;
+import org.eclipse.n4js.validation.N4JSValidator;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.generator.GeneratorContext;
 import org.eclipse.xtext.generator.GeneratorDelegate;
@@ -184,10 +182,7 @@ public class XStatefulIncrementalBuilder {
 
 		if (request.isValidatorEnabled()) {
 			List<Issue> issues;
-			DataCollector dc = source != null && N4JSGlobals.PACKAGE_JSON.equals(source.lastSegment())
-					? N4JSDataCollectors.dcValidationsPackageJson
-					: N4JSDataCollectors.dcValidations;
-			try (Measurement m = dc.getMeasurement()) {
+			try (Measurement m = N4JSValidator.getDataCollectorForValidation(source).getMeasurement()) {
 				issues = resourceValidator.validate(resource, CheckMode.ALL, request.getCancelIndicator());
 			}
 			operationCanceledManager.checkCanceled(request.getCancelIndicator());

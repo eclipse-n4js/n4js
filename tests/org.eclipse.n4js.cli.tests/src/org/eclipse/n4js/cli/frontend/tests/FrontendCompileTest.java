@@ -91,7 +91,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 		String args[] = { "compile", "--performanceReport", REPORT_FILE_NAME };
 		CliCompileResult result = n4jsc(args, 10);
 		assertEquals(result.toString(),
-				"ERROR-10 (Invalid command line string):  option \"--performanceReport (-pR)\" requires the option(s) [--performanceKey]",
+				"ERROR-10 (Invalid command line string):  option \"--performanceReport (-pr)\" requires the option(s) [--performanceKey]",
 				result.getStdOut());
 	}
 
@@ -106,9 +106,9 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 				N4JSDataCollectors.dcBuild.getId() };
 
 		CliCompileResult result = n4jsc(args, 0);
-		assertEquals(result.toString(),
-				"Performance Data Collection is enabled.\nWriting performance report: .../report.csv",
-				result.getStdOut());
+		String stdout = result.getStdOut();
+		assertTrue(result.toString(), stdout.startsWith(
+				"Performance Data Collection is enabled.\nWriting performance report: .../report"));
 	}
 
 	/**  */
@@ -131,7 +131,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 		String args[] = { "compile", "--performanceReport", " " };
 		CliCompileResult result = n4jsc(args, 10);
 		assertEquals(result.toString(),
-				"ERROR-10 (Invalid command line string):  option \"--performanceReport (-pR)\" requires the option(s) [--performanceKey]",
+				"ERROR-10 (Invalid command line string):  option \"--performanceReport (-pr)\" requires the option(s) [--performanceKey]",
 				result.getStdOut());
 	}
 
@@ -145,8 +145,20 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 
 		String args[] = { "compile", ".", "--performanceKey", N4JSDataCollectors.dcBuild.getId() };
 		CliCompileResult result = n4jsc(args, 0);
+		String stdout = result.getStdOut();
+		assertTrue(result.toString(), stdout.startsWith(
+				"Performance Data Collection is enabled.\nWriting performance report: .../performance-report"));
+	}
+
+	/**  */
+	@Test
+	public void checkPerformanceKeyIncompatible() {
+		String args[] = { "compile", ".",
+				"--performanceReport", "someFile.csv",
+				"--performanceKey", "*" };
+		CliCompileResult result = n4jsc(args, 13);
 		assertEquals(result.toString(),
-				"Performance Data Collection is enabled.\nWriting performance report: .../performance-report.csv",
+				"ERROR-13 (Invalid option):  Asterisk as performance key not supported when exporting to CSV format.",
 				result.getStdOut());
 	}
 

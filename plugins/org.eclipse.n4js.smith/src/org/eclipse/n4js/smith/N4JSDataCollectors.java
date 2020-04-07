@@ -57,7 +57,7 @@ public final class N4JSDataCollectors {
 	public static final DataCollector dcBackwardAnalyses = create("Backward", dcPerformAnalyses);
 	public static final DataCollector dcFlowGraphPostprocessing = create("PostProcessing", dcFlowGraphs);
 
-	public static final DataCollector dcManifestAwareResourceValidator = create("ManifestAwareResourceValidator");
+	public static final DataCollector dcCliClean = create("n4jsc clean");
 
 	public static DataCollector createDataCollectorForCheckMethod(String methodName) {
 		final DataCollector parent;
