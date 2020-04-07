@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.ui.building;
 
-import java.time.Instant;
 import java.util.Collection;
 import java.util.Set;
 
@@ -176,8 +175,7 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 		monitor.subTask("Building " + buildData.getProjectName());
 		logBuildData(buildData, " of before #doUpdate");
 
-		// TODO check if it has effect in Eclipse
-		try (Measurement m = N4JSDataCollectors.dcBuild.getMeasurement("build " + Instant.now());) {
+		try (Measurement m = N4JSDataCollectors.dcBuild.getMeasurement()) {
 			try {
 				IBuildParticipantInstruction instruction = IBuildParticipantInstruction.NOOP;
 
