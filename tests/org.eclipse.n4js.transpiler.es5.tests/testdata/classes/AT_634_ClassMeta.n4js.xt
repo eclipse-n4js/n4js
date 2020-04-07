@@ -15,7 +15,7 @@
 <==
 stdout:
 a.constructor.n4type:
-<ref *1> N4Class {
+N4Class {
   origin: 'org.eclipse.n4js.transpiler.es5.tests',
   annotations: [],
   name: 'A',
@@ -36,21 +36,21 @@ a.constructor.n4type:
       origin: undefined,
       annotations: [Array],
       name: 'field1',
-      owner: [Circular *1],
+      owner: [Circular],
       isStatic: false
     },
     N4DataField {
       origin: undefined,
       annotations: [Array],
       name: 'field2',
-      owner: [Circular *1],
+      owner: [Circular],
       isStatic: false
     },
     N4DataField {
       origin: undefined,
       annotations: [],
       name: 'field3',
-      owner: [Circular *1],
+      owner: [Circular],
       isStatic: false
     }
   ],
@@ -59,7 +59,7 @@ a.constructor.n4type:
 
 
 A.n4type:
-<ref *1> N4Class {
+N4Class {
   origin: 'org.eclipse.n4js.transpiler.es5.tests',
   annotations: [],
   name: 'A',
@@ -80,21 +80,21 @@ A.n4type:
       origin: undefined,
       annotations: [Array],
       name: 'field1',
-      owner: [Circular *1],
+      owner: [Circular],
       isStatic: false
     },
     N4DataField {
       origin: undefined,
       annotations: [Array],
       name: 'field2',
-      owner: [Circular *1],
+      owner: [Circular],
       isStatic: false
     },
     N4DataField {
       origin: undefined,
       annotations: [],
       name: 'field3',
-      owner: [Circular *1],
+      owner: [Circular],
       isStatic: false
     }
   ],

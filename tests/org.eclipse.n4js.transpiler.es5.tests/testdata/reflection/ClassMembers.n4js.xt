@@ -45,7 +45,7 @@ console.log(C.n4type);
 <==
 stdout:
 members of C: field, fieldD, getterD, setterD, fooD, sGetterD, sSetterD, sFooD, sField, sFieldD
-<ref *1> N4Class {
+N4Class {
   origin: 'org.eclipse.n4js.transpiler.es5.tests',
   annotations: [],
   name: 'C',
@@ -66,21 +66,21 @@ members of C: field, fieldD, getterD, setterD, fooD, sGetterD, sSetterD, sFooD, 
       origin: undefined,
       annotations: [],
       name: 'field',
-      owner: [Circular *1],
+      owner: [Circular],
       isStatic: false
     },
     N4DataField {
       origin: undefined,
       annotations: [],
       name: 'fieldD',
-      owner: [Circular *1],
+      owner: [Circular],
       isStatic: false
     },
     N4Accessor {
       origin: undefined,
       annotations: [],
       name: 'getterD',
-      owner: [Circular *1],
+      owner: [Circular],
       isStatic: false,
       getter: true
     },
@@ -88,7 +88,7 @@ members of C: field, fieldD, getterD, setterD, fooD, sGetterD, sSetterD, sFooD, 
       origin: undefined,
       annotations: [],
       name: 'setterD',
-      owner: [Circular *1],
+      owner: [Circular],
       isStatic: false,
       getter: false
     },
@@ -96,7 +96,7 @@ members of C: field, fieldD, getterD, setterD, fooD, sGetterD, sSetterD, sFooD, 
       origin: undefined,
       annotations: [],
       name: 'fooD',
-      owner: [Circular *1],
+      owner: [Circular],
       isStatic: false,
       jsFunction: [Function: fooD]
     },
@@ -104,7 +104,7 @@ members of C: field, fieldD, getterD, setterD, fooD, sGetterD, sSetterD, sFooD, 
       origin: undefined,
       annotations: [],
       name: 'sGetterD',
-      owner: [Circular *1],
+      owner: [Circular],
       isStatic: true,
       getter: true
     },
@@ -112,7 +112,7 @@ members of C: field, fieldD, getterD, setterD, fooD, sGetterD, sSetterD, sFooD, 
       origin: undefined,
       annotations: [],
       name: 'sSetterD',
-      owner: [Circular *1],
+      owner: [Circular],
       isStatic: true,
       getter: false
     },
@@ -120,7 +120,7 @@ members of C: field, fieldD, getterD, setterD, fooD, sGetterD, sSetterD, sFooD, 
       origin: undefined,
       annotations: [],
       name: 'sFooD',
-      owner: [Circular *1],
+      owner: [Circular],
       isStatic: true,
       jsFunction: [Function: sFooD]
     },
@@ -128,14 +128,14 @@ members of C: field, fieldD, getterD, setterD, fooD, sGetterD, sSetterD, sFooD, 
       origin: undefined,
       annotations: [],
       name: 'sField',
-      owner: [Circular *1],
+      owner: [Circular],
       isStatic: true
     },
     N4DataField {
       origin: undefined,
       annotations: [],
       name: 'sFieldD',
-      owner: [Circular *1],
+      owner: [Circular],
       isStatic: true
     }
   ],

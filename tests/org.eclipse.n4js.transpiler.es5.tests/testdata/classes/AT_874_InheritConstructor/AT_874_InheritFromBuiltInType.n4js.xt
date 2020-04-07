@@ -15,7 +15,7 @@
 <==
 stdout:
 B { prop1: 'test' }
-<ref *1> N4Class {
+N4Class {
   origin: 'org.eclipse.n4js.transpiler.es5.tests',
   annotations: [],
   name: 'B',
@@ -36,7 +36,7 @@ B { prop1: 'test' }
       origin: undefined,
       annotations: [],
       name: 'prop1',
-      owner: [Circular *1],
+      owner: [Circular],
       isStatic: false
     }
   ],

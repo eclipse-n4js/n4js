@@ -27,12 +27,12 @@ class annotations
 # has annotation Group true
 # has annotation Observable false
 # any annotations with name Observable null
-# any annotations with name Group <ref *1> N4Annotation {
+# any annotations with name Group N4Annotation {
   name: 'Group',
   details: [ 'IT' ],
   target: N4Class {
     origin: 'org.eclipse.n4js.spec.tests',
-    annotations: [ [N4Annotation], [N4Annotation], [Circular *1] ],
+    annotations: [ [N4Annotation], [N4Annotation], [Circular] ],
     name: 'ClassWithAnnotations',
     fqn: 'Ch07_04_Reflection_Meta_Information/AnnotationsInfo/ClassWithAnnotations',
     n4superType: N4Class {
@@ -51,12 +51,12 @@ class annotations
   }
 }
 # all annotations with name Ignore
-<ref *1> N4Annotation {
+N4Annotation {
   name: 'Ignore',
   details: [ 'because of reasons' ],
   target: N4Class {
     origin: 'org.eclipse.n4js.spec.tests',
-    annotations: [ [Circular *1], [N4Annotation], [N4Annotation] ],
+    annotations: [ [Circular], [N4Annotation], [N4Annotation] ],
     name: 'ClassWithAnnotations',
     fqn: 'Ch07_04_Reflection_Meta_Information/AnnotationsInfo/ClassWithAnnotations',
     n4superType: N4Class {
@@ -75,12 +75,12 @@ class annotations
   }
 }
 # all annotations with name Group
-<ref *1> N4Annotation {
+N4Annotation {
   name: 'Group',
   details: [ 'UT' ],
   target: N4Class {
     origin: 'org.eclipse.n4js.spec.tests',
-    annotations: [ [N4Annotation], [Circular *1], [N4Annotation] ],
+    annotations: [ [N4Annotation], [Circular], [N4Annotation] ],
     name: 'ClassWithAnnotations',
     fqn: 'Ch07_04_Reflection_Meta_Information/AnnotationsInfo/ClassWithAnnotations',
     n4superType: N4Class {
@@ -98,12 +98,12 @@ class annotations
     consumedMembers: []
   }
 }
-<ref *1> N4Annotation {
+N4Annotation {
   name: 'Group',
   details: [ 'IT' ],
   target: N4Class {
     origin: 'org.eclipse.n4js.spec.tests',
-    annotations: [ [N4Annotation], [N4Annotation], [Circular *1] ],
+    annotations: [ [N4Annotation], [N4Annotation], [Circular] ],
     name: 'ClassWithAnnotations',
     fqn: 'Ch07_04_Reflection_Meta_Information/AnnotationsInfo/ClassWithAnnotations',
     n4superType: N4Class {
@@ -124,13 +124,13 @@ class annotations
 # all annotations with name Observable []
 
  member annotations
-m <ref *1> [
+m [
   N4Annotation {
     name: 'Test',
     details: [],
     target: N4Method {
       origin: undefined,
-      annotations: [Circular *1],
+      annotations: [Circular],
       name: 'm',
       owner: [N4Class],
       isStatic: false,
@@ -138,13 +138,13 @@ m <ref *1> [
     }
   }
 ]
-fAnn <ref *1> [
+fAnn [
   N4Annotation {
     name: 'Nfon',
     details: [ 'a', 'b' ],
     target: N4DataField {
       origin: undefined,
-      annotations: [Circular *1],
+      annotations: [Circular],
       name: 'fAnn',
       owner: [N4Class],
       isStatic: false

@@ -46,39 +46,39 @@ console.log(C.n4type.methods(false,false,true)[1].annotations);
 stdout:
 true
 true
-<ref *1> [
+[
   N4Annotation {
     name: 'Parameter',
     details: [],
     target: N4DataField {
       origin: undefined,
-      annotations: [Circular *1],
+      annotations: [Circular],
       name: 'f1',
       owner: [N4Class],
       isStatic: false
     }
   }
 ]
-<ref *1> [
+[
   N4Annotation {
     name: 'Parameter',
     details: [ '42' ],
     target: N4DataField {
       origin: undefined,
-      annotations: [Circular *1],
+      annotations: [Circular],
       name: 'f2',
       owner: [N4Class],
       isStatic: false
     }
   }
 ]
-<ref *1> [
+[
   N4Annotation {
     name: 'Parameter',
     details: [ '43' ],
     target: N4Accessor {
       origin: undefined,
-      annotations: [Circular *1],
+      annotations: [Circular],
       name: 's',
       owner: [N4Class],
       isStatic: false,
@@ -86,13 +86,13 @@ true
     }
   }
 ]
-<ref *1> [
+[
   N4Annotation {
     name: 'Parameters',
     details: [],
     target: N4Method {
       origin: undefined,
-      annotations: [Circular *1],
+      annotations: [Circular],
       name: 'm1',
       owner: [N4Class],
       isStatic: true,
@@ -100,13 +100,13 @@ true
     }
   }
 ]
-<ref *1> [
+[
   N4Annotation {
     name: 'Parameters',
     details: [ 'woot!' ],
     target: N4Method {
       origin: undefined,
-      annotations: [Circular *1],
+      annotations: [Circular],
       name: 'm2',
       owner: [N4Class],
       isStatic: true,

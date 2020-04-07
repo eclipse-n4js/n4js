@@ -28,7 +28,7 @@ B.f()
 Before bHereClassInstance call
 B.f()
 interfaceElement meta:
-<ref *1> N4Interface {
+N4Interface {
   origin: 'org.eclipse.n4js.transpiler.es5.tests',
   annotations: [],
   name: 'I',
@@ -40,7 +40,7 @@ interfaceElement meta:
       origin: undefined,
       annotations: [],
       name: 'fI',
-      owner: [Circular *1],
+      owner: [Circular],
       isStatic: false,
       jsFunction: undefined
     }
@@ -48,7 +48,7 @@ interfaceElement meta:
   consumedMembers: []
 }
 roleElement meta:
-<ref *1> N4Interface {
+N4Interface {
   origin: 'org.eclipse.n4js.transpiler.es5.tests',
   annotations: [],
   name: 'R',
@@ -60,7 +60,7 @@ roleElement meta:
       origin: undefined,
       annotations: [],
       name: 'fR',
-      owner: [Circular *1],
+      owner: [Circular],
       isStatic: false,
       jsFunction: undefined
     }

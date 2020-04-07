@@ -45,7 +45,7 @@ console.log(I.n4type);
 <==
 stdout:
 members of I: getter, setter, foo, field, fieldD, getterD, setterD, fooD, sGetterD, sSetterD, sFooD, sField, sFieldD
-<ref *1> N4Interface {
+N4Interface {
   origin: 'org.eclipse.n4js.transpiler.es5.tests',
   annotations: [],
   name: 'I',
@@ -57,7 +57,7 @@ members of I: getter, setter, foo, field, fieldD, getterD, setterD, fooD, sGette
       origin: undefined,
       annotations: [],
       name: 'getter',
-      owner: [Circular *1],
+      owner: [Circular],
       isStatic: false,
       getter: true
     },
@@ -65,7 +65,7 @@ members of I: getter, setter, foo, field, fieldD, getterD, setterD, fooD, sGette
       origin: undefined,
       annotations: [],
       name: 'setter',
-      owner: [Circular *1],
+      owner: [Circular],
       isStatic: false,
       getter: false
     },
@@ -73,7 +73,7 @@ members of I: getter, setter, foo, field, fieldD, getterD, setterD, fooD, sGette
       origin: undefined,
       annotations: [],
       name: 'foo',
-      owner: [Circular *1],
+      owner: [Circular],
       isStatic: false,
       jsFunction: undefined
     },
@@ -81,21 +81,21 @@ members of I: getter, setter, foo, field, fieldD, getterD, setterD, fooD, sGette
       origin: undefined,
       annotations: [],
       name: 'field',
-      owner: [Circular *1],
+      owner: [Circular],
       isStatic: false
     },
     N4DataField {
       origin: undefined,
       annotations: [],
       name: 'fieldD',
-      owner: [Circular *1],
+      owner: [Circular],
       isStatic: false
     },
     N4Accessor {
       origin: undefined,
       annotations: [],
       name: 'getterD',
-      owner: [Circular *1],
+      owner: [Circular],
       isStatic: false,
       getter: true
     },
@@ -103,7 +103,7 @@ members of I: getter, setter, foo, field, fieldD, getterD, setterD, fooD, sGette
       origin: undefined,
       annotations: [],
       name: 'setterD',
-      owner: [Circular *1],
+      owner: [Circular],
       isStatic: false,
       getter: false
     },
@@ -111,7 +111,7 @@ members of I: getter, setter, foo, field, fieldD, getterD, setterD, fooD, sGette
       origin: undefined,
       annotations: [],
       name: 'fooD',
-      owner: [Circular *1],
+      owner: [Circular],
       isStatic: false,
       jsFunction: undefined
     },
@@ -119,7 +119,7 @@ members of I: getter, setter, foo, field, fieldD, getterD, setterD, fooD, sGette
       origin: undefined,
       annotations: [],
       name: 'sGetterD',
-      owner: [Circular *1],
+      owner: [Circular],
       isStatic: true,
       getter: true
     },
@@ -127,7 +127,7 @@ members of I: getter, setter, foo, field, fieldD, getterD, setterD, fooD, sGette
       origin: undefined,
       annotations: [],
       name: 'sSetterD',
-      owner: [Circular *1],
+      owner: [Circular],
       isStatic: true,
       getter: false
     },
@@ -135,7 +135,7 @@ members of I: getter, setter, foo, field, fieldD, getterD, setterD, fooD, sGette
       origin: undefined,
       annotations: [],
       name: 'sFooD',
-      owner: [Circular *1],
+      owner: [Circular],
       isStatic: true,
       jsFunction: undefined
     },
@@ -143,14 +143,14 @@ members of I: getter, setter, foo, field, fieldD, getterD, setterD, fooD, sGette
       origin: undefined,
       annotations: [],
       name: 'sField',
-      owner: [Circular *1],
+      owner: [Circular],
       isStatic: true
     },
     N4DataField {
       origin: undefined,
       annotations: [],
       name: 'sFieldD',
-      owner: [Circular *1],
+      owner: [Circular],
       isStatic: true
     }
   ],
