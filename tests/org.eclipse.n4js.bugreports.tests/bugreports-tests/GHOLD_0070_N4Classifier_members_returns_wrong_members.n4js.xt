@@ -72,11 +72,11 @@ stdout:
 ====
 only non-static: fi, mi
 only non-static: fi, mi
-also static    : fi, fiStatic, mi, miStatic
+also static    : fi, mi, miStatic, fiStatic
 ====
 only non-static: fc, mc
 only non-static: fc, mc
-also static    : fc, fcStatic, mc, mcStatic
+also static    : fc, mc, mcStatic, fcStatic
 ====
 without consumed/inherited: 
 without consumed/inherited: 
@@ -85,7 +85,7 @@ with inherited            : fc, mc
 with consumed & inherited : mi, fi, fc, mc
 ====
 with consumed & inherited, only non-static: mi, fi, fc, mc
-with consumed & inherited, also static    : mi, fi, fc, fcStatic, mc, mcStatic
+with consumed & inherited, also static    : mi, fi, fc, mc, mcStatic, fcStatic
 ====
 only fields : fi, fc, fcStatic
 only methods: mi, mc, mcStatic

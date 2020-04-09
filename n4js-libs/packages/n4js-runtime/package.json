@@ -14,14 +14,15 @@
   "engines": {
     "node": ">= 8.0.0"
   },
-  "main": "./src-gen/rt.js",
+  "main": "./src-gen/index.js",
   "files": [
     "src",
     "src-gen"
   ],
   "dependencies": {
     "esm": "3.2.25",
-    "n4js-runtime-es2015": "^0.1.0"
+    "n4js-runtime-es2015": "^0.1.0",
+    "n4js-runtime-esnext": "^0.1.0"
   },
   "keywords": [
     "n4js",
@@ -46,7 +47,8 @@
       ]
     },
     "requiredRuntimeLibraries": [
-      "n4js-runtime-es2015"
+      "n4js-runtime-es2015",
+      "n4js-runtime-esnext"
     ]
   }
 }
