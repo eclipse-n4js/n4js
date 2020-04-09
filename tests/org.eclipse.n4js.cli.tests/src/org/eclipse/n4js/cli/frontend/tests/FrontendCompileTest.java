@@ -22,7 +22,9 @@ import org.junit.Test;
 /** Front end tests for the CLI interface */
 public class FrontendCompileTest extends AbstractCliFrontendTest {
 	private static final String FILE_TC = "file.tc";
-	private static final String REPORT_FILE_NAME = "report.csv";
+	private static final String REPORT_FILE_NAME_WITHOUT_EXTENSTION = "report";
+	private static final String REPORT_FILE_NAME_EXTENSTION = ".csv";
+	private static final String REPORT_FILE_NAME = REPORT_FILE_NAME_WITHOUT_EXTENSTION + REPORT_FILE_NAME_EXTENSTION;
 	private static final File REPORT_FILE = new File(REPORT_FILE_NAME);
 
 	/**  */
@@ -88,11 +90,12 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 			REPORT_FILE.delete();
 		}
 
-		String args[] = { "compile", "--performanceReport", REPORT_FILE_NAME };
-		CliCompileResult result = n4jsc(args, 10);
-		assertEquals(result.toString(),
-				"ERROR-10 (Invalid command line string):  option \"--performanceReport (-pr)\" requires the option(s) [--performanceKey]",
-				result.getStdOut());
+		String args[] = { "compile", ".", "--performanceReport", REPORT_FILE_NAME };
+		CliCompileResult result = n4jsc(args, 0);
+		String stdout = result.getStdOut();
+		assertTrue(result.toString(), stdout.startsWith(
+				"Performance Data Collection is enabled.\nWriting performance report: .../"
+						+ REPORT_FILE_NAME_WITHOUT_EXTENSTION));
 	}
 
 	/**  */
@@ -108,7 +111,8 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 		CliCompileResult result = n4jsc(args, 0);
 		String stdout = result.getStdOut();
 		assertTrue(result.toString(), stdout.startsWith(
-				"Performance Data Collection is enabled.\nWriting performance report: .../report"));
+				"Performance Data Collection is enabled.\nWriting performance report: .../"
+						+ REPORT_FILE_NAME_WITHOUT_EXTENSTION));
 	}
 
 	/**  */
@@ -122,16 +126,6 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 		CliCompileResult result = n4jsc(args, 13);
 		assertEquals(result.toString(),
 				"ERROR-13 (Invalid option):  Missing performance key.",
-				result.getStdOut());
-	}
-
-	/**  */
-	@Test
-	public void checkPerformanceReportMissing() {
-		String args[] = { "compile", "--performanceReport", " " };
-		CliCompileResult result = n4jsc(args, 10);
-		assertEquals(result.toString(),
-				"ERROR-10 (Invalid command line string):  option \"--performanceReport (-pr)\" requires the option(s) [--performanceKey]",
 				result.getStdOut());
 	}
 

@@ -37,7 +37,12 @@ import com.google.common.io.CharStreams;
 public class PerformanceReportN4jscJarTest extends AbstractCliJarTest {
 	static final Path WORKSPACE = Path.of(TARGET, WORKSPACE_FOLDER);
 	static final File PROJECT = WORKSPACE.resolve("performance-report").toAbsolutePath().toFile();
-	static final File PERFORMANCE_REPORT_FILE = WORKSPACE.resolve("report.csv").toAbsolutePath().toFile();
+	static final String PERFORMANCE_REPORT_FILE_NAME_WITHOUT_EXTENSION = "report";
+	static final String PERFORMANCE_REPORT_FILE_EXTENSION = ".csv";
+	static final String PERFORMANCE_REPORT_FILE_NAME = PERFORMANCE_REPORT_FILE_NAME_WITHOUT_EXTENSION
+			+ PERFORMANCE_REPORT_FILE_EXTENSION;
+	static final File PERFORMANCE_REPORT_FILE = WORKSPACE.resolve(PERFORMANCE_REPORT_FILE_NAME).toAbsolutePath()
+			.toFile();
 
 	/** Initializes test workspace data. */
 	public PerformanceReportN4jscJarTest() {
@@ -88,7 +93,8 @@ public class PerformanceReportN4jscJarTest extends AbstractCliJarTest {
 
 		// find the actual report file (i.e. the one with the time stamp added to its name)
 		File folder = PERFORMANCE_REPORT_FILE.getParentFile();
-		File[] matches = folder.listFiles((dir, name) -> name.startsWith("report") && name.endsWith(".csv"));
+		File[] matches = folder.listFiles((dir, name) -> name.startsWith(PERFORMANCE_REPORT_FILE_NAME_WITHOUT_EXTENSION)
+				&& name.endsWith(PERFORMANCE_REPORT_FILE_EXTENSION));
 		assertTrue("Report file is missing", matches.length > 0);
 		assertEquals("expected exactly 1 matching file but got: " + matches.length, 1, matches.length);
 		File actualReportFile = matches[0];
