@@ -55,15 +55,15 @@ J
 ]
 CR
 [
-  'reflection/ClassImplementsInterfacesWithSuperclass/I',
-  'reflection/ClassImplementsInterfacesWithSuperclass/R'
+  'reflection/ClassImplementsInterfacesWithSuperclass/R',
+  'reflection/ClassImplementsInterfacesWithSuperclass/I'
 ]
 CS
 [
-  'reflection/ClassImplementsInterfacesWithSuperclass/J',
-  'reflection/ClassImplementsInterfacesWithSuperclass/I',
   'reflection/ClassImplementsInterfacesWithSuperclass/S',
-  'reflection/ClassImplementsInterfacesWithSuperclass/R'
+  'reflection/ClassImplementsInterfacesWithSuperclass/R',
+  'reflection/ClassImplementsInterfacesWithSuperclass/J',
+  'reflection/ClassImplementsInterfacesWithSuperclass/I'
 ]
 stderr:
 ==>
