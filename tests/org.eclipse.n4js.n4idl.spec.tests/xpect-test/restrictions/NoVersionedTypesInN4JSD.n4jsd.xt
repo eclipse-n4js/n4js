@@ -15,8 +15,10 @@
 
 /* XPECT_SETUP org.eclipse.n4js.n4idl.spec.tests.N4IDLSpecTest END_SETUP */
 
-// Declaration of versioned types XPECT errors -->"Versioned types are not supported in N4JSD External Definitions Language (n4jsd) files." at "external class T#1 {}"
-external class T#1 {}
+// Declaration of versioned types XPECT errors -->"Versioned types are not supported in N4JSD External Definitions Language (n4jsd) files." at "@N4JS external class T#1 { static staticField; }"
+@N4JS external class T#1 {
+	static staticField;
+}
 
 //// Use of versioned types in type references
 
@@ -38,8 +40,10 @@ external class User {
 
 //// Use of versioned types in identifiers
 
+// Use for reflection access XPECT errors -->"Versioned types are not supported in N4JSD External Definitions Language (n4jsd) files." at "T#2"
+let t3a = (T#2).n4type
 // Use for static field access XPECT errors -->"Versioned types are not supported in N4JSD External Definitions Language (n4jsd) files." at "T#2"
-let t3 = (T#2).n4type
+let t3b = (T#2).staticField
 
 external function c(p : constructor{N4Object}) {}
 

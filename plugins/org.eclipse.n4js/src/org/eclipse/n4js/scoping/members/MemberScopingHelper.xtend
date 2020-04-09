@@ -36,9 +36,7 @@ import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef
 import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.PrimitiveType
-import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TEnum
-import org.eclipse.n4js.ts.types.TN4Classifier
 import org.eclipse.n4js.ts.types.TObjectPrototype
 import org.eclipse.n4js.ts.types.TStructuralType
 import org.eclipse.n4js.ts.types.Type
@@ -333,39 +331,26 @@ class MemberScopingHelper {
 	 * Creates member scope with parent containing members of implicit super types.
 	 */
 	private def dispatch IScope membersOfType(ContainerType<?> type, MemberScopeRequest request) {
-		val builtInTypeScope = BuiltInTypeScope.get(getResourceSet(type, request.context));
-		var ContainerType<?> implicitSuperType = builtInTypeScope.objectType
-		if (type instanceof TN4Classifier) {
-			if (type.typingStrategy !== TypingStrategy.DEFAULT) {
-				implicitSuperType = builtInTypeScope.objectType
-			} else if (type instanceof TClass) {
-				if (type.superClassRef === null || type.superClassRef.declaredType != builtInTypeScope.objectType) {
-					implicitSuperType = builtInTypeScope.n4ObjectType;
-				}
-			} else { // TInterface
-				implicitSuperType = builtInTypeScope.n4ObjectType;
-			}
-		} else if (type instanceof TObjectPrototype) {
+		var parentScope = if (jsVariantHelper.activateDynamicPseudoScope(request.context)) { // cf. sec. 13.1
+			new DynamicPseudoScope()
+		} else {
+			IScope.NULLSCOPE
+		};
+
+		if (!request.staticAccess && type instanceof TObjectPrototype) {
 			// TObjectPrototypes defined in builtin_js.n4ts and builtin_n4.n4ts are allowed to extend primitive
 			// types, and the following is required to support auto-boxing in such a case:
-			val rootSuperType = getRootSuperType(type);
+			val rootSuperType = getRootSuperType(type as TObjectPrototype);
 			if (rootSuperType instanceof PrimitiveType) {
 				val boxedType = rootSuperType.autoboxedType;
-				if(boxedType!==null && !request.staticAccess) {
-					implicitSuperType = boxedType;
-				} else {
-					implicitSuperType = rootSuperType;
+				if(boxedType!==null) {
+					parentScope = memberScopeFactory.create(parentScope, boxedType, request.context,
+						request.staticAccess, request.structFieldInitMode, request.isDynamicType);
 				}
 			}
 		}
-		val implicitSuperTypeMemberScope = if (jsVariantHelper.activateDynamicPseudoScope(request.context)) { // cf. sec. 13.1
-				memberScopeFactory.create(new DynamicPseudoScope(), implicitSuperType, request.context,
-					request.staticAccess, request.structFieldInitMode, request.isDynamicType);
-			} else {
-				memberScopeFactory.create(implicitSuperType, request.context, request.staticAccess,
-					request.structFieldInitMode, request.isDynamicType);
-			}
-		return memberScopeFactory.create(implicitSuperTypeMemberScope, type, request.context, request.staticAccess,
+
+		return memberScopeFactory.create(parentScope, type, request.context, request.staticAccess,
 			request.structFieldInitMode, request.isDynamicType);
 	}
 
