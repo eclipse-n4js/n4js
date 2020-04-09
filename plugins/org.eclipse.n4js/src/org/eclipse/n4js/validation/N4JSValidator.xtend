@@ -14,10 +14,6 @@ import com.google.inject.Inject
 import java.lang.reflect.Method
 import org.eclipse.emf.common.util.BasicDiagnostic
 import org.eclipse.emf.common.util.Diagnostic
-import org.eclipse.emf.common.util.URI
-import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.n4js.N4JSGlobals
-import org.eclipse.n4js.smith.DataCollector
 import org.eclipse.n4js.smith.N4JSDataCollectors
 import org.eclipse.n4js.ts.validation.TypesValidator
 import org.eclipse.n4js.utils.Log
@@ -166,23 +162,5 @@ class N4JSValidator extends AbstractMessageAdjustingN4JSValidator {
 				mesVM.close();
 			}
 		}
-	}
-
-	/** As {@link #getDataCollectorForValidation(URI)}, but accepts an EMF resource. */
-	def public static DataCollector getDataCollectorForValidation(Resource resource) {
-		return getDataCollectorForValidation(resource?.getURI());
-	}
-
-	/**
-	 * Returns the appropriate data collector to measure the validation of the resource with the given URI,
-	 * i.e. returns either {@link N4JSDataCollectors#dcValidations} or {@link N4JSDataCollectors#dcValidationsPackageJson}.
-	 */
-	def public static DataCollector getDataCollectorForValidation(URI uriOfContainingResource) {
-		val dc = if (N4JSGlobals.PACKAGE_JSON.equals(uriOfContainingResource?.lastSegment())) {
-			N4JSDataCollectors.dcValidationsPackageJson
-		} else {
-			N4JSDataCollectors.dcValidations
-		};
-		return dc;
 	}
 }

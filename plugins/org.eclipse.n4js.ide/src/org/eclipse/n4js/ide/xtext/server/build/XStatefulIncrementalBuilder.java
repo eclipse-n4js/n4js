@@ -24,9 +24,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
-import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.utils.URIUtils;
-import org.eclipse.n4js.validation.N4JSValidator;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.generator.GeneratorContext;
 import org.eclipse.xtext.generator.GeneratorDelegate;
@@ -181,10 +179,7 @@ public class XStatefulIncrementalBuilder {
 		operationCanceledManager.checkCanceled(cancelIndicator);
 
 		if (request.isValidatorEnabled()) {
-			List<Issue> issues;
-			try (Measurement m = N4JSValidator.getDataCollectorForValidation(source).getMeasurement()) {
-				issues = resourceValidator.validate(resource, CheckMode.ALL, request.getCancelIndicator());
-			}
+			List<Issue> issues = resourceValidator.validate(resource, CheckMode.ALL, request.getCancelIndicator());
 			operationCanceledManager.checkCanceled(request.getCancelIndicator());
 			request.setResultIssues(source, issues);
 			boolean proceedGenerate = !request.containsValidationErrors(source);

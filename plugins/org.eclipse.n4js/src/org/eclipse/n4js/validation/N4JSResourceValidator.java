@@ -23,6 +23,8 @@ import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.N4JSCache;
 import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.smith.Measurement;
+import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.utils.ResourceType;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -53,6 +55,12 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 	private N4JSCache n4jsCache;
 
 	private List<Issue> doValidate(Resource resource, CheckMode mode, CancelIndicator cancelIndicator) {
+		try (Measurement m = N4JSDataCollectors.dcValidations.getMeasurement()) {
+			return doValidateWithMeasurement(resource, mode, cancelIndicator);
+		}
+	}
+
+	private List<Issue> doValidateWithMeasurement(Resource resource, CheckMode mode, CancelIndicator cancelIndicator) {
 		// QUICK EXIT #1: in case of invalid file type (e.g. js file in a project with project type definition)
 		final IN4JSProject project = n4jsCore.findProject(resource.getURI()).orNull();
 		if (project != null && !isValidFileTypeForProjectType(resource, project)) {

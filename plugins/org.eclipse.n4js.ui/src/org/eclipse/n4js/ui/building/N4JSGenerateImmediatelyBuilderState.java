@@ -23,7 +23,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.N4JSGlobals;
@@ -39,7 +38,6 @@ import org.eclipse.n4js.ui.building.BuilderStateLogger.BuilderState;
 import org.eclipse.n4js.ui.building.instructions.IBuildParticipantInstruction;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.utils.collections.Arrays2;
-import org.eclipse.n4js.validation.N4JSValidator;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant.BuildType;
 import org.eclipse.xtext.builder.clustering.ClusteringBuilderState;
@@ -223,10 +221,7 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 	@Override
 	protected void updateMarkers(Delta delta, ResourceSet resourceSet, IProgressMonitor monitor) {
 		SubMonitor subMonitor = SubMonitor.convert(monitor, 2);
-		URI uri = delta.getUri();
-		try (Measurement m = N4JSValidator.getDataCollectorForValidation(uri).getMeasurement()) {
-			super.updateMarkers(delta, resourceSet, monitor);
-		}
+		super.updateMarkers(delta, resourceSet, monitor);
 
 		if (resourceSet != null) { // resourceSet is null during clean build
 

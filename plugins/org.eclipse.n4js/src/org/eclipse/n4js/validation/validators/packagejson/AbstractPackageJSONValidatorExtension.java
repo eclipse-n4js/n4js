@@ -78,6 +78,12 @@ public abstract class AbstractPackageJSONValidatorExtension extends AbstractDecl
 
 	@Override
 	public final void validateJSON(JSONDocument document, DiagnosticChain diagnosticChain) {
+		try (Measurement m = N4JSDataCollectors.dcValidationsPackageJson.getMeasurement()) {
+			doValidateJSON(document, diagnosticChain);
+		}
+	}
+
+	private final void doValidateJSON(JSONDocument document, DiagnosticChain diagnosticChain) {
 		// use a new empty context for validator extension
 		Map<Object, Object> context = new HashMap<>();
 
