@@ -89,8 +89,8 @@ public class LspServer {
 				.configureGson(gsonBuilder -> {
 					gsonBuilder.registerTypeAdapterFactory(new ExecuteCommandParamsTypeAdapter.Factory(languageServer));
 				})
+		// .traceMessages(new PrintWriter(System.out))
 		// .wrapMessages(a -> a)
-		// .traceMessages(trace)
 		;
 
 		if (options.isStdio()) {

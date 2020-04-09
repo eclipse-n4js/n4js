@@ -928,6 +928,15 @@ public interface ImPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_IM__DECLARED_TYPE = TypeRefsPackage.PARAMETERIZED_TYPE_REF__DECLARED_TYPE;
 
 	/**
+	 * The feature id for the '<em><b>Declared Type As Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_IM__DECLARED_TYPE_AS_TEXT = TypeRefsPackage.PARAMETERIZED_TYPE_REF__DECLARED_TYPE_AS_TEXT;
+
+	/**
 	 * The feature id for the '<em><b>Type Args</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1305,6 +1314,15 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__DECLARED_TYPE = PARAMETERIZED_TYPE_REF_IM__DECLARED_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>Declared Type As Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__DECLARED_TYPE_AS_TEXT = PARAMETERIZED_TYPE_REF_IM__DECLARED_TYPE_AS_TEXT;
 
 	/**
 	 * The feature id for the '<em><b>Type Args</b></em>' containment reference list.
@@ -3177,6 +3195,15 @@ public interface ImPackage extends EPackage {
 	int VERSIONED_PARAMETERIZED_TYPE_REF_IM__DECLARED_TYPE = PARAMETERIZED_TYPE_REF_IM__DECLARED_TYPE;
 
 	/**
+	 * The feature id for the '<em><b>Declared Type As Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM__DECLARED_TYPE_AS_TEXT = PARAMETERIZED_TYPE_REF_IM__DECLARED_TYPE_AS_TEXT;
+
+	/**
 	 * The feature id for the '<em><b>Type Args</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3581,6 +3608,15 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__DECLARED_TYPE = PARAMETERIZED_TYPE_REF_IM__DECLARED_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>Declared Type As Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__DECLARED_TYPE_AS_TEXT = PARAMETERIZED_TYPE_REF_IM__DECLARED_TYPE_AS_TEXT;
 
 	/**
 	 * The feature id for the '<em><b>Type Args</b></em>' containment reference list.

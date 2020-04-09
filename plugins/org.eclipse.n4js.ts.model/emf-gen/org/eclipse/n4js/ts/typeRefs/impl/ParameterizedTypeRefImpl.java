@@ -55,6 +55,7 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#getDeclaredType <em>Declared Type</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#getDeclaredTypeAsText <em>Declared Type As Text</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#getTypeArgs <em>Type Args</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#isArrayTypeExpression <em>Array Type Expression</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#isIterableTypeExpression <em>Iterable Type Expression</em>}</li>
@@ -75,6 +76,26 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	 * @ordered
 	 */
 	protected Type declaredType;
+
+	/**
+	 * The default value of the '{@link #getDeclaredTypeAsText() <em>Declared Type As Text</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDeclaredTypeAsText()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String DECLARED_TYPE_AS_TEXT_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getDeclaredTypeAsText() <em>Declared Type As Text</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDeclaredTypeAsText()
+	 * @generated
+	 * @ordered
+	 */
+	protected String declaredTypeAsText = DECLARED_TYPE_AS_TEXT_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getTypeArgs() <em>Type Args</em>}' containment reference list.
@@ -233,6 +254,29 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 		declaredType = newDeclaredType;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, TypeRefsPackage.PARAMETERIZED_TYPE_REF__DECLARED_TYPE, oldDeclaredType, declaredType));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getDeclaredTypeAsText() {
+		return declaredTypeAsText;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setDeclaredTypeAsText(String newDeclaredTypeAsText) {
+		String oldDeclaredTypeAsText = declaredTypeAsText;
+		declaredTypeAsText = newDeclaredTypeAsText;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypeRefsPackage.PARAMETERIZED_TYPE_REF__DECLARED_TYPE_AS_TEXT, oldDeclaredTypeAsText, declaredTypeAsText));
 	}
 
 	/**
@@ -558,6 +602,8 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__DECLARED_TYPE:
 				if (resolve) return getDeclaredType();
 				return basicGetDeclaredType();
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__DECLARED_TYPE_AS_TEXT:
+				return getDeclaredTypeAsText();
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__TYPE_ARGS:
 				return getTypeArgs();
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__ARRAY_TYPE_EXPRESSION:
@@ -586,6 +632,9 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 		switch (featureID) {
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__DECLARED_TYPE:
 				setDeclaredType((Type)newValue);
+				return;
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__DECLARED_TYPE_AS_TEXT:
+				setDeclaredTypeAsText((String)newValue);
 				return;
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__TYPE_ARGS:
 				getTypeArgs().clear();
@@ -621,6 +670,9 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__DECLARED_TYPE:
 				setDeclaredType((Type)null);
 				return;
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__DECLARED_TYPE_AS_TEXT:
+				setDeclaredTypeAsText(DECLARED_TYPE_AS_TEXT_EDEFAULT);
+				return;
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__TYPE_ARGS:
 				getTypeArgs().clear();
 				return;
@@ -653,6 +705,8 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 		switch (featureID) {
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__DECLARED_TYPE:
 				return declaredType != null;
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__DECLARED_TYPE_AS_TEXT:
+				return DECLARED_TYPE_AS_TEXT_EDEFAULT == null ? declaredTypeAsText != null : !DECLARED_TYPE_AS_TEXT_EDEFAULT.equals(declaredTypeAsText);
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__TYPE_ARGS:
 				return typeArgs != null && !typeArgs.isEmpty();
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__ARRAY_TYPE_EXPRESSION:
@@ -739,7 +793,9 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (arrayTypeExpression: ");
+		result.append(" (declaredTypeAsText: ");
+		result.append(declaredTypeAsText);
+		result.append(", arrayTypeExpression: ");
 		result.append(arrayTypeExpression);
 		result.append(", iterableTypeExpression: ");
 		result.append(iterableTypeExpression);
