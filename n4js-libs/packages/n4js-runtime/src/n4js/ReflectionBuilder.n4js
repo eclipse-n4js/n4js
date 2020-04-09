@@ -41,8 +41,8 @@ export function makeReflectionsForClass(staticProto: constructor{?}, reflectionS
     const reflectionValues = ReflectionValues.createForClassOrEnum(staticProto, reflectionString);
     const detectedMemberStrings = new MemberDetectorForClass(staticProto).detectMembers();
     reflectionValues.mergeWithDetectedMembers(detectedMemberStrings);
-    const detectedAllImplementedInterfaces = getAllImplementedInterfacesFromClass(staticProto);
-    reflectionValues.mergeWithDetectedAllImplementedInterfaces(detectedAllImplementedInterfaces);
+    const allImplementedInterfaces = getAllImplementedInterfacesFromClassAndSuperclasses(staticProto);
+    reflectionValues.mergeWithDetectedAllImplementedInterfaces(allImplementedInterfaces);
     const instanceProto = staticProto.prototype;
     const superclassBI = (staticProto.__proto__ as type{N4Object}).n4type;
     // the type of type{N4Object}.n4type is N4Class from global object
