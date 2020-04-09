@@ -12,7 +12,7 @@
 
 import _globalThis from "_globalThis";
 import {makeReflectionsForClass, makeReflectionsForInterface, makeReflectionsForEnum} from "ReflectionBuilder"
-import {interfaceFieldInits, detectedAllImplementedInterfacesFromClass} from "ReflectionBuilder"
+import {interfaceFieldInits, getAllImplementedInterfacesFromClass} from "ReflectionBuilder"
 
 
 /**
@@ -84,7 +84,7 @@ function $defineFields(target: Object, ...names: string) {
  * @param mixinExclusion - An object with properties that must not be overridden in the target object.
  */
 function $initFieldsFromInterfaces(target: Object+, clazz: constructor{?}, spec: Object, mixinExclusion: Object) {
-    const interfaces = detectedAllImplementedInterfacesFromClass(clazz);
+    const interfaces = getAllImplementedInterfacesFromClass(clazz);
     for (const ifc of interfaces.values()) {
         const defs: Object = interfaceFieldInits(ifc) || {};
         for (const fieldName of Object.getOwnPropertyNames(defs)) {
