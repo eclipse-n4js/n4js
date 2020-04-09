@@ -27,8 +27,6 @@ import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.resource.N4JSResource;
-import org.eclipse.n4js.smith.Measurement;
-import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.builder.MonitorBasedCancelIndicator;
 import org.eclipse.xtext.builder.builderState.BuilderStateUtil;
@@ -215,9 +213,7 @@ class DoUpdateImplementation {
 			try {
 				reportProgress();
 				// Resolve links here!
-				try (Measurement m = N4JSDataCollectors.dcAstPostprocess.getMeasurement("AstPostprocess")) {
-					EcoreUtil2.resolveLazyCrossReferences(resource, cancelMonitor);
-				}
+				EcoreUtil2.resolveLazyCrossReferences(resource, cancelMonitor);
 
 				final IResourceDescription description = manager.getResourceDescription(resource);
 				final IResourceDescription copiedDescription = BuilderStateUtil.create(description);

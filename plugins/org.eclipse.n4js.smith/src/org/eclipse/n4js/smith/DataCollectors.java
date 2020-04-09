@@ -72,7 +72,7 @@ public enum DataCollectors {
 			if (collector == null) {
 				collector = new TimedDataCollector(key);
 				collector.setPaused(this.pauseAllCollectors.get());
-				parent.addChild(key, collector);
+				parent.addChild(collector);
 			}
 		}
 

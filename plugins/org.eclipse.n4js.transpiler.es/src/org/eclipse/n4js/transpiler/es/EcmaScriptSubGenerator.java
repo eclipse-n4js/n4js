@@ -26,8 +26,6 @@ import org.eclipse.n4js.internal.RaceDetectionHelper;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.N4JSResource;
-import org.eclipse.n4js.smith.Measurement;
-import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.transpiler.AbstractTranspiler;
 import org.eclipse.n4js.transpiler.AbstractTranspiler.SourceMapInfo;
 import org.eclipse.xtext.generator.IFileSystemAccess;
@@ -103,7 +101,6 @@ public class EcmaScriptSubGenerator extends AbstractSubGenerator {
 			return; // do not transpile static polyfill modules (i.e. the fillers)
 		}
 
-		Measurement measurement = N4JSDataCollectors.dcTranspiler.getMeasurement(resource.getURI().toString());
 		/*
 		 * In addition to here, check for cancellation is done also on file-emit boundaries, see fsa.generateFile().
 		 */
@@ -166,7 +163,6 @@ public class EcmaScriptSubGenerator extends AbstractSubGenerator {
 				}
 			}
 		}
-		measurement.close();
 	}
 
 	// note: following method is only used for testing

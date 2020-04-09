@@ -149,21 +149,23 @@ public class N4jscOptions {
 		@GoalRequirements(goals = { N4jscGoal.compile, N4jscGoal.lsp })
 		boolean noPersist = false;
 
-		@Option(name = "--performanceReport", aliases = "-pR", //
+		@Option(name = "--performanceReport", aliases = "-pr", //
 				hidden = true, //
-				depends = "--performanceKey", //
-				usage = "[compile] enables performance data collection and specifies the location of the performance report.", //
+				usage = "[compile] enables performance data collection and specifies the path and name of the performance report. "
+						+ "A date/time stamp will appended to the file name. If the file name ends in \".csv\", CSV file format will "
+						+ "be emitted; otherwise a human-readable format is used.", //
 				handler = N4JSCmdLineParser.N4JSFileOptionHandler.class)
 		@GoalRequirements(goals = N4jscGoal.compile)
-		File performanceReport = new File("performance-report.csv");
+		File performanceReport = new File("performance-report.txt");
 
-		@Option(name = "--performanceKey", aliases = "-pK", //
+		@Option(name = "--performanceKey", aliases = "-pk", //
 				hidden = true, //
-				usage = "[compile] specifies the data collector key of the collector whose performance data is saved in the "
-						+ "performance report.", //
+				usage = "[compile] enables performance data collection and specifies the key of the data collector whose performance data "
+						+ "will be saved in the performance report. An asterisk may be used to emit data of all root data collectors (not "
+						+ "supported for CSV output).", //
 				handler = N4JSCmdLineParser.N4JSStringOptionHandler.class)
 		@GoalRequirements(goals = N4jscGoal.compile)
-		String performanceKey = N4JSDataCollectors.HEADLESS_N4JS_COMPILER_COLLECTOR_NAME;
+		String performanceKey = N4JSDataCollectors.dcBuild.getId();
 
 		// OPTIONS for goal LSP
 

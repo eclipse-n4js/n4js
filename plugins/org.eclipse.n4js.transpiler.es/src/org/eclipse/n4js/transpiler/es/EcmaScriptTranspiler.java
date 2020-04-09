@@ -16,6 +16,8 @@ import java.io.Writer;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.generator.GeneratorOption;
 import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.smith.Measurement;
+import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.transpiler.AbstractTranspiler;
 import org.eclipse.n4js.transpiler.Transformation;
 import org.eclipse.n4js.transpiler.TranspilerState;
@@ -140,7 +142,9 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 		if (!requiresTranspilation(resource)) {
 			copyWithoutTranspilation(resource, outCode);
 		} else {
-			super.transpile(resource, options, outCode, optSourceMapInfo);
+			try (Measurement m = N4JSDataCollectors.dcTranspilation.getMeasurement()) {
+				super.transpile(resource, options, outCode, optSourceMapInfo);
+			}
 		}
 	}
 

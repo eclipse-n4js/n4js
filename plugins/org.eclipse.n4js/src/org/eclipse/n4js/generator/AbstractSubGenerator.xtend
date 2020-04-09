@@ -30,6 +30,7 @@ import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.utils.ResourceNameComputer
 import org.eclipse.n4js.utils.StaticPolyfillHelper
+import org.eclipse.n4js.utils.URIUtils
 import org.eclipse.n4js.validation.helper.FolderContainmentHelper
 import org.eclipse.xtend.lib.annotations.Accessors
 import org.eclipse.xtext.generator.AbstractFileSystemAccess
@@ -40,12 +41,11 @@ import org.eclipse.xtext.generator.IGeneratorContext
 import org.eclipse.xtext.service.OperationCanceledManager
 import org.eclipse.xtext.util.CancelIndicator
 import org.eclipse.xtext.util.UriExtensions
+import org.eclipse.xtext.validation.CheckMode
 import org.eclipse.xtext.validation.IResourceValidator
 import org.eclipse.xtext.validation.Issue
 
 import static org.eclipse.xtext.diagnostics.Severity.*
-import org.eclipse.xtext.validation.CheckMode
-import org.eclipse.n4js.utils.URIUtils
 
 /**
  * All sub generators should extend this class. It provides basic blocks of the logic, and
