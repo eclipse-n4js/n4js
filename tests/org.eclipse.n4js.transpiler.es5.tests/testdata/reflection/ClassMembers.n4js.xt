@@ -1,0 +1,145 @@
+/*
+ * Copyright (c) 2020 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP  */
+
+
+
+
+
+function show(label: string, members: Array<? extends N4Member>) {
+    console.log(label, members.map((m)=>m.name).join(', '));
+}
+
+class C {
+    field;
+    fieldD = 1;
+    static sField;
+    static sFieldD = 2;
+    static get sGetterD() {return null;}
+    static set sSetterD(a) { }
+    get getterD() {return null;}
+    set setterD(a) { }
+    fooD() {}
+    static sFooD() {}
+}
+
+
+
+
+show("members of C:", C.n4type.members(true,true,true));
+
+console.log(C.n4type);
+
+
+/* XPECT output ---
+<==
+stdout:
+members of C: field, fieldD, getterD, setterD, fooD, sGetterD, sSetterD, sFooD, sField, sFieldD
+N4Class {
+  origin: 'org.eclipse.n4js.transpiler.es5.tests',
+  annotations: [],
+  name: 'C',
+  fqn: 'reflection/ClassMembers/C',
+  n4superType: N4Class {
+    origin: 'n4js-runtime',
+    annotations: [],
+    name: 'N4Object',
+    fqn: 'N4BuiltInTypes/N4Object',
+    n4superType: undefined,
+    allImplementedInterfaces: [],
+    ownedMembers: [],
+    consumedMembers: []
+  },
+  allImplementedInterfaces: [],
+  ownedMembers: [
+    N4DataField {
+      origin: undefined,
+      annotations: [],
+      name: 'field',
+      owner: [Circular],
+      isStatic: false
+    },
+    N4DataField {
+      origin: undefined,
+      annotations: [],
+      name: 'fieldD',
+      owner: [Circular],
+      isStatic: false
+    },
+    N4Accessor {
+      origin: undefined,
+      annotations: [],
+      name: 'getterD',
+      owner: [Circular],
+      isStatic: false,
+      getter: true
+    },
+    N4Accessor {
+      origin: undefined,
+      annotations: [],
+      name: 'setterD',
+      owner: [Circular],
+      isStatic: false,
+      getter: false
+    },
+    N4Method {
+      origin: undefined,
+      annotations: [],
+      name: 'fooD',
+      owner: [Circular],
+      isStatic: false,
+      jsFunction: [Function: fooD]
+    },
+    N4Accessor {
+      origin: undefined,
+      annotations: [],
+      name: 'sGetterD',
+      owner: [Circular],
+      isStatic: true,
+      getter: true
+    },
+    N4Accessor {
+      origin: undefined,
+      annotations: [],
+      name: 'sSetterD',
+      owner: [Circular],
+      isStatic: true,
+      getter: false
+    },
+    N4Method {
+      origin: undefined,
+      annotations: [],
+      name: 'sFooD',
+      owner: [Circular],
+      isStatic: true,
+      jsFunction: [Function: sFooD]
+    },
+    N4DataField {
+      origin: undefined,
+      annotations: [],
+      name: 'sField',
+      owner: [Circular],
+      isStatic: true
+    },
+    N4DataField {
+      origin: undefined,
+      annotations: [],
+      name: 'sFieldD',
+      owner: [Circular],
+      isStatic: true
+    }
+  ],
+  consumedMembers: []
+}
+stderr:
+==>
+--- */

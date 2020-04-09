@@ -66,7 +66,16 @@ class TimedDataCollector extends DataCollector {
 	}
 
 	@Override
-	synchronized public Measurement getMeasurement(String name) {
+	public Measurement getMeasurementIfInactive(String name) {
+		return getMeasurement(name, true);
+	}
+
+	@Override
+	public Measurement getMeasurement(String name) {
+		return getMeasurement(name, false);
+	}
+
+	synchronized private Measurement getMeasurement(String name, boolean allowReentrantInvocation) {
 		if (name == null || name.isEmpty())
 			throw new RuntimeException(TimedMeasurement.class.getName() + " needs non empty name.");
 
@@ -74,7 +83,9 @@ class TimedDataCollector extends DataCollector {
 			return NULL_MEASURMENT;
 
 		if (activeMeasurement != null) {
-			DataCollectors.INSTANCE.warn("reentrant invocation of #getMeasurement() in data collector " + id);
+			if (!allowReentrantInvocation) {
+				DataCollectors.INSTANCE.warn("reentrant invocation of #getMeasurement() in data collector " + id);
+			}
 			return NULL_MEASURMENT;
 		}
 		activeMeasurement = new TimedMeasurement(name, this::consume);
@@ -119,14 +130,15 @@ class TimedDataCollector extends DataCollector {
 	}
 
 	@Override
-	public DataCollector getChild(String key) {
-		return this.children.get(key);
+	public DataCollector getChild(String childId) {
+		return this.children.get(childId);
 	}
 
 	@Override
-	public void addChild(String key, DataCollector child) {
-		if (this.children.containsKey(key)) {
-			throw new RuntimeException("Already contains key " + key + " with child " + this.children.get(key));
+	public void addChild(DataCollector child) {
+		String childId = child.getId();
+		if (this.children.containsKey(childId)) {
+			throw new RuntimeException("Already contains key " + childId + " with child " + this.children.get(childId));
 		}
 
 		if (this.children.containsValue(child)) {
@@ -138,7 +150,7 @@ class TimedDataCollector extends DataCollector {
 			throw new RuntimeException("Already contains child " + child + " with keys " + keys);
 		}
 
-		this.children.put(key, child);
+		this.children.put(childId, child);
 	}
 
 	@Override

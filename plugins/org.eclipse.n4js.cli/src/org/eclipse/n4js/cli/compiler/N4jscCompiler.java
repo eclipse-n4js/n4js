@@ -58,9 +58,7 @@ public class N4jscCompiler {
 	/** Starts the compiler for goal COMPILE or CLEAN in a blocking fashion */
 	static public void start(N4jscOptions options) throws Exception {
 		N4jscCompiler compiler = new N4jscCompiler(options);
-		try (Measurement m = N4JSDataCollectors.dcCliCompile.getMeasurement(options.toString())) {
-			compiler.start();
-		}
+		compiler.start();
 	}
 
 	private N4jscCompiler(N4jscOptions options) {
@@ -106,7 +104,9 @@ public class N4jscCompiler {
 
 	private void performClean() {
 		Stopwatch compilationTime = Stopwatch.createStarted();
-		languageServer.clean().join();
+		try (Measurement m = N4JSDataCollectors.dcCliClean.getMeasurement()) {
+			languageServer.clean().join();
+		}
 		printCleanResults(compilationTime.stop());
 	}
 
@@ -116,8 +116,10 @@ public class N4jscCompiler {
 			callback.resetCounters();
 		}
 		Stopwatch compilationTime = Stopwatch.createStarted();
-		languageServer.initialized(new InitializedParams());
-		languageServer.joinServerRequests();
+		try (Measurement m = N4JSDataCollectors.dcBuild.getMeasurement()) {
+			languageServer.initialized(new InitializedParams());
+			languageServer.joinServerRequests();
+		}
 		printCompileResults(compilationTime.stop());
 	}
 

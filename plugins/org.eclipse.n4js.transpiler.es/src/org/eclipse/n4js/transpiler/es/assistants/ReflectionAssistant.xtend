@@ -62,7 +62,7 @@ class ReflectionAssistant extends TransformationAssistant {
 		}
 
 		val typeSTE = findSymbolTableEntryForElement(typeDecl, true);
-		val reflectionBuilder = new ReflectionBuilder(state, resourceNameComputer);
+		val reflectionBuilder = new ReflectionBuilder(this, state, resourceNameComputer);
 		val reflectInfo = reflectionBuilder.createReflectionInfo(typeDecl, typeSTE);
 		val gson = new GsonBuilder().disableHtmlEscaping().create();
 		val origJsonString = gson.toJson(reflectInfo);
@@ -80,7 +80,7 @@ class ReflectionAssistant extends TransformationAssistant {
 				_ReturnStmnt(
 					_CallExpr(
 						_IdentRef(methodName),
-						_IdentRef(typeSTE),
+						_ThisLiteral,
 						_StringLiteral(quotedJsonString, quotedJsonString)
 					)
 				)

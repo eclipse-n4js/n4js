@@ -67,6 +67,6 @@ class N6_1_15_RelationalExpressionTypesystemTest extends AbstractOperatorExpress
 	def void testExpectedType_In() {
 		assertBinaryOperatorExpectedType(unrestricted, "any", "Object", '''n1 in n2''');
 		assertBinaryOperatorExpectedType(strict, "any", "Object", '''n1 in n2''');
-		assertBinaryOperatorExpectedType(n4js, "union{number,string}", "Object", '''n1 in n2''');
+		assertBinaryOperatorExpectedType(n4js, "union{number,string,symbol}", "Object", '''n1 in n2''');
 	}
 }

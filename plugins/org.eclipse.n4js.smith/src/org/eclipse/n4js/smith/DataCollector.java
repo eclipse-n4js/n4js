@@ -47,6 +47,23 @@ public abstract class DataCollector {
 	}
 
 	/**
+	 * Convenience method. Same as {@link #getMeasurementIfInactive(String)}, using this collector's {@link #getId() id}
+	 * as <code>name</code>.
+	 * <p>
+	 * Use of this method should be avoided as far as possible, because it will bypass some consistency checks.
+	 */
+	public Measurement getMeasurementIfInactive() {
+		return getMeasurementIfInactive(getId());
+	}
+
+	/**
+	 * Same as {@link #getMeasurement(String)}, but does not warn about reentrant invocations.
+	 * <p>
+	 * Use of this method should be avoided as far as possible, because it will bypass some consistency checks.
+	 */
+	public abstract Measurement getMeasurementIfInactive(String name);
+
+	/**
 	 * Returns new instance of the {@link Measurement}. When user invokes {@link Measurement#close()} this collector
 	 * will collect its data.
 	 */
@@ -62,11 +79,11 @@ public abstract class DataCollector {
 	public abstract void purgeData();
 
 	// package
-	/** Return immediate child with the provided key. */
-	abstract DataCollector getChild(String key);
+	/** Return immediate child with the provided ID. */
+	abstract DataCollector getChild(String id);
 
-	/** Add given collector as child under given key. */
-	abstract void addChild(String key, DataCollector child);
+	/** Add given collector as child. */
+	abstract void addChild(DataCollector child);
 
 	/** Get keys for all immediate children. */
 	abstract Collection<String> childrenKeys();

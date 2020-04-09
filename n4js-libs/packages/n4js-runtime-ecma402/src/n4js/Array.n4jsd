@@ -12,7 +12,7 @@
 
 @Polyfill export external public class Array<T> extends Array<T> {
     /**
-	 * The parameters are spcedified in ECMA-402 superseding the default definition.
+	 * The parameters are specified in ECMA-402 superseding the default definition.
 	 *
 	 * @param locales: IETF BCP 47 language tag(s)
 	 * @param options: object literal with formatting options

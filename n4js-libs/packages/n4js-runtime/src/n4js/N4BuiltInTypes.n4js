@@ -18,7 +18,8 @@
 // builtin_n4.n4ts and builtin_n4idl.n4ts declare the below types as built-in types.
 //
 // This has the following consequences:
-// 1) neither "@@Global" nor "export" must be used in this file,
+// 1) neither "@@Global" nor "export" with an accessibility higher than "project" must be used in this file
+//   (to ensure only the implementations, not the types declared below, are available to ordinary N4JS code),
 // 2) no API documentation should be included in this file (instead, it should be
 //    placed in files builtin_n4.n4ts / builtin_n4idl.n4ts),
 // 3) at the end of this file, all global types need to be explicitly added to the
@@ -38,7 +39,7 @@ abstract class N4Element extends Object {
 	public setAnnotations(annotations: Array<N4Annotation>): void {
 		this.annotations = annotations;
 		for (const annotation of this.annotations) {
-			Object.defineProperty(annotation, "target", { value: this, enumerable: false });
+			annotation.target = this;
 		}
 	}
 
@@ -70,7 +71,7 @@ abstract class N4NamedElement extends N4Element {
 	public name: string;
 }
 
-abstract class N4Type extends N4NamedElement {
+export project abstract class N4Type extends N4NamedElement {
 
 	public fqn: string;
 
@@ -91,7 +92,7 @@ abstract class N4Type extends N4NamedElement {
 	}
 }
 
-abstract class N4Classifier extends N4Type {
+export project abstract class N4Classifier extends N4Type {
 
 	public n4superType: N4Class;
 
@@ -105,7 +106,7 @@ abstract class N4Classifier extends N4Type {
 	public setOwnedMembers(ownedMembers: Array<N4Member>): void {
 		this.ownedMembers = ownedMembers;
 		for (const ownedMember of this.ownedMembers) {
-			Object.defineProperty(ownedMember, 'owner', { value: this, enumerable: false });
+			ownedMember.owner = this;
 		}
 	}
 
@@ -159,7 +160,8 @@ abstract class N4Classifier extends N4Type {
 	}
 }
 
-@Final class N4Class extends N4Classifier {
+@Final
+export project class N4Class extends N4Classifier {
 
 	@Override
 	public get isClass(): boolean {
@@ -167,7 +169,8 @@ abstract class N4Classifier extends N4Type {
 	}
 }
 
-@Final class N4Interface extends N4Classifier {
+@Final
+export project class N4Interface extends N4Classifier {
 
 	@Override
 	public get isInterface(): boolean {
@@ -175,19 +178,22 @@ abstract class N4Classifier extends N4Type {
 	}
 }
 
-abstract class N4Member extends N4NamedElement {
+export project abstract class N4Member extends N4NamedElement {
 	public owner: N4Classifier;
 	public isStatic: boolean;
 }
 
-@Final class N4Method extends N4Member {
+@Final
+export project class N4Method extends N4Member {
 	public jsFunction: Function;
 }
 
-@Final class N4DataField extends N4Member {
+@Final
+export project class N4DataField extends N4Member {
 }
 
-@Final class N4Accessor extends N4Member {
+@Final
+export project class N4Accessor extends N4Member {
 
 	public getter: boolean;
 
@@ -200,7 +206,8 @@ abstract class N4Member extends N4NamedElement {
 	}
 }
 
-@Final class N4EnumType extends N4Type {
+@Final
+export project class N4EnumType extends N4Type {
 
 	@Override public get isEnum(): boolean {
 		return true;
@@ -256,7 +263,8 @@ abstract class N4StringBasedEnum extends Object { // NOTE: cannot subclass 'stri
 	}
 }
 
-@Final class N4Annotation extends Object {
+@Final
+export project class N4Annotation extends Object {
 	public name: string;
 	public details: Array<string> = [];
 	public target: N4Element;

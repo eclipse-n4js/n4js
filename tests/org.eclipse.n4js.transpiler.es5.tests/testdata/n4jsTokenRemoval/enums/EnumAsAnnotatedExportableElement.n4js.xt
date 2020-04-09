@@ -18,7 +18,16 @@ stdout:
 PubEnumEA { name: 'v', value: 'v' }
 PubEnumEA { name: 's', value: 'string' }
 annotations : 
- -  N4Annotation { name: 'Observable', details: [] }
+ -  N4Annotation {
+  name: 'Observable',
+  details: [],
+  target: N4EnumType {
+    origin: 'org.eclipse.n4js.transpiler.es5.tests',
+    annotations: [ [Circular] ],
+    name: 'PubEnumEA',
+    fqn: 'n4jsTokenRemoval/enums/EnumAsAnnotatedExportableElement/PubEnumEA'
+  }
+}
 stderr:
 ==>
 ~~~ */

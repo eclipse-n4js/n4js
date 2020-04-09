@@ -87,8 +87,8 @@ public class N4jscOptionsValidater {
 			validateTestCatalogFile(options);
 		}
 
-		if (options.getPerformanceKey() != null || options.getPerformanceReport() != null) {
-			validatePerformanceReport(options);
+		if (options.isDefinedPerformanceOption()) {
+			validatePerformanceOptions(options);
 		}
 	}
 
@@ -174,9 +174,17 @@ public class N4jscOptionsValidater {
 		}
 	}
 
-	private static void validatePerformanceReport(N4jscOptions options) throws N4jscException {
-		if (options.getPerformanceReport() != null && Strings.isNullOrEmpty(options.getPerformanceKey())) {
+	private static void validatePerformanceOptions(N4jscOptions options) throws N4jscException {
+		if (options.getPerformanceReport() == null) {
+			String msg = "Missing performance report.";
+			throw new N4jscException(N4jscExitCode.OPTION_INVALID, msg);
+		}
+		if (Strings.isNullOrEmpty(options.getPerformanceKey())) {
 			String msg = "Missing performance key.";
+			throw new N4jscException(N4jscExitCode.OPTION_INVALID, msg);
+		}
+		if ("*".equals(options.getPerformanceKey()) && options.getPerformanceReport().getName().endsWith(".csv")) {
+			String msg = "Asterisk as performance key not supported when exporting to CSV format.";
 			throw new N4jscException(N4jscExitCode.OPTION_INVALID, msg);
 		}
 	}

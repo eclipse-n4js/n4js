@@ -332,7 +332,11 @@ class DestructureHelper {
 			}
 		}
 
+
 		var retTypeRef = if (elementMembers.size > 0) {
+			if (elementTypes.size > 0) {
+				 throw new IllegalStateException("elementTypes and elementMembers can not both contain elements at the same time.")
+			}
 			TypeUtils.createParameterizedTypeRefStructural(G.objectType, TypingStrategy.STRUCTURAL, elementMembers)
 		} else if (elementTypes.size > 0) {
 			if (elemCount == 1) {
@@ -343,7 +347,7 @@ class DestructureHelper {
 				null
 			}
 		} else {
-			throw new IllegalStateException("elementTypes and elementMembers can not both contain elements at the same time.")
+			null
 		}
 		// Wrap the expected type in an Iterable type in case of ForStatement
 		// Note that we wrap the type into an Iterable type so that when a constraint G<out IV> <: Iterable<...> is created,

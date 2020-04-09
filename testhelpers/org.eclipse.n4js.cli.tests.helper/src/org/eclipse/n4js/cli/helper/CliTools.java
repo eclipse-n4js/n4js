@@ -16,10 +16,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscMain;
 import org.eclipse.n4js.cli.N4jscOptions;
+import org.eclipse.xtext.testing.GlobalRegistries;
+import org.eclipse.xtext.testing.GlobalRegistries.GlobalStateMemento;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
@@ -100,7 +103,8 @@ public class CliTools {
 	public void callN4jscExprocess(N4jscOptions options, boolean removeUsage, CliCompileProcessResult cliResult) {
 		List<File> srcFiles = options.getDirs();
 		File fileArg = srcFiles.isEmpty() ? new File("").getAbsoluteFile() : srcFiles.get(0);
-		ProcessResult n4jscResult = getExProcessExecuter().n4jscRun(fileArg.toPath(), environment, options);
+		ProcessResult n4jscResult = withoutCorruptingGlobalState(
+				() -> getExProcessExecuter().n4jscRun(fileArg.toPath(), environment, options));
 
 		cliResult.workingDir = n4jscResult.getWorkingDir();
 		cliResult.command = n4jscResult.getCommand();
@@ -167,7 +171,9 @@ public class CliTools {
 
 	/** see {@link TestProcessExecuter#runNodejs(Path, Map, Path, String[])} */
 	public ProcessResult runNodejs(Path workingDir, Path runFile, String... options) {
-		return getExProcessExecuter().runNodejs(workingDir, environment, runFile, options);
+		return withoutCorruptingGlobalState(() -> {
+			return getExProcessExecuter().runNodejs(workingDir, environment, runFile, options);
+		});
 	}
 
 	/** see {@link TestProcessExecuter#npmRun(Path, Map, String[])} */
@@ -184,7 +190,9 @@ public class CliTools {
 
 	/** see {@link TestProcessExecuter#npmRun(Path, Map, String[])} */
 	public ProcessResult runNpm(Path workingDir, String... options) {
-		return getExProcessExecuter().npmRun(workingDir, environment, options);
+		return withoutCorruptingGlobalState(() -> {
+			return getExProcessExecuter().npmRun(workingDir, environment, options);
+		});
 	}
 
 	/** see {@link TestProcessExecuter#yarnRun(Path, Map, String[])} */
@@ -195,12 +203,16 @@ public class CliTools {
 
 	/** see {@link TestProcessExecuter#yarnRun(Path, Map, String[])} */
 	public ProcessResult runYarn(Path workingDir, String... options) {
-		return getExProcessExecuter().yarnRun(workingDir, environment, options);
+		return withoutCorruptingGlobalState(() -> {
+			return getExProcessExecuter().yarnRun(workingDir, environment, options);
+		});
 	}
 
 	/** see {@link TestProcessExecuter#run(Path, Map, Path, String...)} */
 	public ProcessResult run(Path workingDir, Path executable, String... options) {
-		return getExProcessExecuter().run(workingDir, environment, executable, options);
+		return withoutCorruptingGlobalState(() -> {
+			return getExProcessExecuter().run(workingDir, environment, executable, options);
+		});
 	}
 
 	private TestProcessExecuter getExProcessExecuter() {
@@ -208,6 +220,15 @@ public class CliTools {
 		TestProcessExecuter tpExecuter = new TestProcessExecuter(injector, inheritIO, ignoreFailure,
 				timeout, timeoutUnit);
 		return tpExecuter;
+	}
+
+	private <T> T withoutCorruptingGlobalState(Supplier<T> operation) {
+		GlobalStateMemento originalGlobalState = GlobalRegistries.makeCopyOfGlobalState();
+		try {
+			return operation.get();
+		} finally {
+			originalGlobalState.restoreGlobalState();
+		}
 	}
 
 	static void trimOutputs(ProcessResult result, boolean removeUsage) {

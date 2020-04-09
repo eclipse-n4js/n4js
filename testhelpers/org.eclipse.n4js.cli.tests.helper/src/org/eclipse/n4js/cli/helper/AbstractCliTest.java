@@ -34,18 +34,18 @@ abstract public class AbstractCliTest<ArgType> {
 	}
 
 	/** Convenience version of {@link #n4jsc(Object, int, boolean)} with removeUsage == true. */
-	protected CliCompileResult n4jsc(ArgType args, int exitCode) {
-		return n4jsc(args, exitCode, true);
+	protected CliCompileResult n4jsc(ArgType args, int expectedExitCode) {
+		return n4jsc(args, expectedExitCode, true);
 	}
 
 	/**
 	 * Calls main entry point of N4jsc with the given args. Checks that the actual exit code of the invocation the given
 	 * exit code, but no other assertions are performed. Removes {@link N4jscOptions#USAGE} text if desired.
 	 */
-	protected CliCompileResult n4jsc(ArgType args, int exitCode, boolean removeUsage) {
+	protected CliCompileResult n4jsc(ArgType args, int expectedExitCode, boolean removeUsage) {
 		CliCompileResult cliResult = createResult();
 		doN4jsc(args, true, removeUsage, cliResult);
-		assertEquals(cliResult.toString(), exitCode, cliResult.getExitCode());
+		assertEquals(cliResult.toString(), expectedExitCode, cliResult.getExitCode());
 		return cliResult;
 	}
 

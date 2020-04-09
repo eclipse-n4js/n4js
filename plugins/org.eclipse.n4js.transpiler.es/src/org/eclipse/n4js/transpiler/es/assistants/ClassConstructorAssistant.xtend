@@ -376,18 +376,20 @@ class ClassConstructorAssistant extends TransformationAssistant {
 		if (implementedIfcSTEs.empty) {
 			return #[];
 		}
+		
 
 		val LinkedHashSet<String> ownedInstanceDataFieldsSupressMixin = newLinkedHashSet
 		ownedInstanceDataFieldsSupressMixin.addAll(classDecl.ownedGetters.filter[!isConsumedFromInterface].map[name])
 		ownedInstanceDataFieldsSupressMixin.addAll(classDecl.ownedSetters.filter[!isConsumedFromInterface].map[name])
 
+		val classSTE = findSymbolTableEntryForElement(classDecl, false);
 		val $initFieldsFromInterfacesSTE = steFor_$initFieldsFromInterfaces;
 
 		return #[ _ExprStmnt(
 			_CallExpr(
 				_IdentRef($initFieldsFromInterfacesSTE),
 				_ThisLiteral,
-				_ArrLit(implementedIfcSTEs.map[_IdentRef(it)]),
+				_IdentRef(classSTE),
 				if (specObjSTE !== null) {
 					_IdentRef(specObjSTE)
 				} else {

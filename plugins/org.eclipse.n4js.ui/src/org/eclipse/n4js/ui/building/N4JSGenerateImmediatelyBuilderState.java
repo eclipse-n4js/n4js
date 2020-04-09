@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.ui.building;
 
-import java.time.Instant;
 import java.util.Collection;
 import java.util.Set;
 
@@ -24,7 +23,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.N4JSGlobals;
@@ -32,7 +30,6 @@ import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.names.EclipseProjectName;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
-import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.ts.types.TModule;
@@ -176,7 +173,7 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 		monitor.subTask("Building " + buildData.getProjectName());
 		logBuildData(buildData, " of before #doUpdate");
 
-		try (Measurement m = N4JSDataCollectors.dcBuild.getMeasurement("build " + Instant.now());) {
+		try (Measurement m = N4JSDataCollectors.dcBuild.getMeasurement()) {
 			try {
 				IBuildParticipantInstruction instruction = IBuildParticipantInstruction.NOOP;
 
@@ -224,13 +221,7 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 	@Override
 	protected void updateMarkers(Delta delta, ResourceSet resourceSet, IProgressMonitor monitor) {
 		SubMonitor subMonitor = SubMonitor.convert(monitor, 2);
-		URI uri = delta.getUri();
-		DataCollector dc = uri != null && N4JSGlobals.PACKAGE_JSON.equals(uri.lastSegment())
-				? N4JSDataCollectors.dcValidationsPackageJson
-				: N4JSDataCollectors.dcValidations;
-		try (Measurement m = dc.getMeasurement("validation");) {
-			super.updateMarkers(delta, resourceSet, monitor);
-		}
+		super.updateMarkers(delta, resourceSet, monitor);
 
 		if (resourceSet != null) { // resourceSet is null during clean build
 
@@ -239,7 +230,7 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 			if (instruction == null) {
 				throw new IllegalStateException();
 			}
-			try (Measurement m = N4JSDataCollectors.dcTranspilation.getMeasurement("transpilation");) {
+			try {
 				instruction.process(delta, resourceSet, subMonitor.split(1));
 
 			} catch (CoreException e) {

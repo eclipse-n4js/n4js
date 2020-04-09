@@ -148,7 +148,7 @@ class ArrowFunctionTest extends AbstractTranspilerTest {
 				}
 				notifyListeners() {}
 				static get n4type() {
-					return $getReflectionForClass(C, '["C","A","test",["f._data","f.argsTotal","g.data","s.data","m.notifyListeners"]]');
+					return $getReflectionForClass(this,'["A","test",["f._data","f.argsTotal"]]');
 				}
 			}
 		''';

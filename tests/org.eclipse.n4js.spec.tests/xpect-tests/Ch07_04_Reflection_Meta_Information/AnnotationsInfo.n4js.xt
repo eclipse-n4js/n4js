@@ -27,17 +27,130 @@ class annotations
 # has annotation Group true
 # has annotation Observable false
 # any annotations with name Observable null
-# any annotations with name Group N4Annotation { name: 'Group', details: [ 'IT' ] }
+# any annotations with name Group N4Annotation {
+  name: 'Group',
+  details: [ 'IT' ],
+  target: N4Class {
+    origin: 'org.eclipse.n4js.spec.tests',
+    annotations: [ [N4Annotation], [N4Annotation], [Circular] ],
+    name: 'ClassWithAnnotations',
+    fqn: 'Ch07_04_Reflection_Meta_Information/AnnotationsInfo/ClassWithAnnotations',
+    n4superType: N4Class {
+      origin: 'n4js-runtime',
+      annotations: [],
+      name: 'N4Object',
+      fqn: 'N4BuiltInTypes/N4Object',
+      n4superType: undefined,
+      allImplementedInterfaces: [],
+      ownedMembers: [],
+      consumedMembers: []
+    },
+    allImplementedInterfaces: [],
+    ownedMembers: [ [N4DataField], [N4Method] ],
+    consumedMembers: []
+  }
+}
 # all annotations with name Ignore
-N4Annotation { name: 'Ignore', details: [ 'because of reasons' ] }
+N4Annotation {
+  name: 'Ignore',
+  details: [ 'because of reasons' ],
+  target: N4Class {
+    origin: 'org.eclipse.n4js.spec.tests',
+    annotations: [ [Circular], [N4Annotation], [N4Annotation] ],
+    name: 'ClassWithAnnotations',
+    fqn: 'Ch07_04_Reflection_Meta_Information/AnnotationsInfo/ClassWithAnnotations',
+    n4superType: N4Class {
+      origin: 'n4js-runtime',
+      annotations: [],
+      name: 'N4Object',
+      fqn: 'N4BuiltInTypes/N4Object',
+      n4superType: undefined,
+      allImplementedInterfaces: [],
+      ownedMembers: [],
+      consumedMembers: []
+    },
+    allImplementedInterfaces: [],
+    ownedMembers: [ [N4DataField], [N4Method] ],
+    consumedMembers: []
+  }
+}
 # all annotations with name Group
-N4Annotation { name: 'Group', details: [ 'UT' ] }
-N4Annotation { name: 'Group', details: [ 'IT' ] }
+N4Annotation {
+  name: 'Group',
+  details: [ 'UT' ],
+  target: N4Class {
+    origin: 'org.eclipse.n4js.spec.tests',
+    annotations: [ [N4Annotation], [Circular], [N4Annotation] ],
+    name: 'ClassWithAnnotations',
+    fqn: 'Ch07_04_Reflection_Meta_Information/AnnotationsInfo/ClassWithAnnotations',
+    n4superType: N4Class {
+      origin: 'n4js-runtime',
+      annotations: [],
+      name: 'N4Object',
+      fqn: 'N4BuiltInTypes/N4Object',
+      n4superType: undefined,
+      allImplementedInterfaces: [],
+      ownedMembers: [],
+      consumedMembers: []
+    },
+    allImplementedInterfaces: [],
+    ownedMembers: [ [N4DataField], [N4Method] ],
+    consumedMembers: []
+  }
+}
+N4Annotation {
+  name: 'Group',
+  details: [ 'IT' ],
+  target: N4Class {
+    origin: 'org.eclipse.n4js.spec.tests',
+    annotations: [ [N4Annotation], [N4Annotation], [Circular] ],
+    name: 'ClassWithAnnotations',
+    fqn: 'Ch07_04_Reflection_Meta_Information/AnnotationsInfo/ClassWithAnnotations',
+    n4superType: N4Class {
+      origin: 'n4js-runtime',
+      annotations: [],
+      name: 'N4Object',
+      fqn: 'N4BuiltInTypes/N4Object',
+      n4superType: undefined,
+      allImplementedInterfaces: [],
+      ownedMembers: [],
+      consumedMembers: []
+    },
+    allImplementedInterfaces: [],
+    ownedMembers: [ [N4DataField], [N4Method] ],
+    consumedMembers: []
+  }
+}
 # all annotations with name Observable []
 
  member annotations
-m [ N4Annotation { name: 'Test', details: [] } ]
-fAnn [ N4Annotation { name: 'Nfon', details: [ 'a', 'b' ] } ]
+m [
+  N4Annotation {
+    name: 'Test',
+    details: [],
+    target: N4Method {
+      origin: undefined,
+      annotations: [Circular],
+      name: 'm',
+      owner: [N4Class],
+      isStatic: false,
+      jsFunction: [Function: m]
+    }
+  }
+]
+fAnn [
+  N4Annotation {
+    name: 'Nfon',
+    details: [ 'a', 'b' ],
+    target: N4DataField {
+      origin: undefined,
+      annotations: [Circular],
+      name: 'fAnn',
+      owner: [N4Class],
+      isStatic: false
+    }
+  }
+]
 stderr:
 ==>
 --- */

@@ -11,7 +11,6 @@
 package org.eclipse.n4js.ide.tests.jar;
 
 import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
-import static org.eclipse.n4js.smith.N4JSDataCollectors.N4JS_CLI_COLLECTOR_NAME;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
@@ -26,6 +25,7 @@ import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.cli.N4jscTestOptions;
 import org.eclipse.n4js.cli.helper.AbstractCliJarTest;
 import org.eclipse.n4js.cli.helper.CliCompileResult;
+import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.junit.After;
 import org.junit.Test;
 
@@ -37,7 +37,12 @@ import com.google.common.io.CharStreams;
 public class PerformanceReportN4jscJarTest extends AbstractCliJarTest {
 	static final Path WORKSPACE = Path.of(TARGET, WORKSPACE_FOLDER);
 	static final File PROJECT = WORKSPACE.resolve("performance-report").toAbsolutePath().toFile();
-	static final File PERFORMANCE_REPORT_FILE = WORKSPACE.resolve("report.csv").toAbsolutePath().toFile();
+	static final String PERFORMANCE_REPORT_FILE_NAME_WITHOUT_EXTENSION = "report";
+	static final String PERFORMANCE_REPORT_FILE_EXTENSION = ".csv";
+	static final String PERFORMANCE_REPORT_FILE_NAME = PERFORMANCE_REPORT_FILE_NAME_WITHOUT_EXTENSION
+			+ PERFORMANCE_REPORT_FILE_EXTENSION;
+	static final File PERFORMANCE_REPORT_FILE = WORKSPACE.resolve(PERFORMANCE_REPORT_FILE_NAME).toAbsolutePath()
+			.toFile();
 
 	/** Initializes test workspace data. */
 	public PerformanceReportN4jscJarTest() {
@@ -60,7 +65,7 @@ public class PerformanceReportN4jscJarTest extends AbstractCliJarTest {
 	public void testPerformanceReportViaParameter() throws IOException {
 		N4jscTestOptions options = COMPILE(PROJECT)
 				.performanceReport(PERFORMANCE_REPORT_FILE)
-				.performanceKey(N4JS_CLI_COLLECTOR_NAME);
+				.performanceKey(N4JSDataCollectors.dcN4JSResource.getId()); // must use other than the default dcBuild!
 
 		CliCompileResult cliResult = n4jsc(options);
 		assertEquals(cliResult.toString(), 0, cliResult.getExitCode());
@@ -76,7 +81,8 @@ public class PerformanceReportN4jscJarTest extends AbstractCliJarTest {
 		// setup system environment variables
 		setEnvironmentVariable(N4jscOptions.N4JSC_PERFORMANCE_REPORT_ENV, PERFORMANCE_REPORT_FILE.toString());
 
-		N4jscTestOptions options = COMPILE(PROJECT).performanceKey(N4JS_CLI_COLLECTOR_NAME);
+		N4jscTestOptions options = COMPILE(PROJECT)
+				.performanceKey(N4JSDataCollectors.dcN4JSResource.getId()); // must use other than the default dcBuild!
 		CliCompileResult cliResult = n4jsc(options);
 		assertEquals(cliResult.toString(), 0, cliResult.getExitCode());
 		makeAssertions(cliResult);
@@ -85,10 +91,16 @@ public class PerformanceReportN4jscJarTest extends AbstractCliJarTest {
 	private void makeAssertions(CliCompileResult cliResult) throws IOException {
 		assertEquals(cliResult.toString(), 1, cliResult.getTranspiledFilesCount());
 
-		// check performance report
-		assertTrue("Report file is missing", PERFORMANCE_REPORT_FILE.exists());
+		// find the actual report file (i.e. the one with the time stamp added to its name)
+		File folder = PERFORMANCE_REPORT_FILE.getParentFile();
+		File[] matches = folder.listFiles((dir, name) -> name.startsWith(PERFORMANCE_REPORT_FILE_NAME_WITHOUT_EXTENSION)
+				&& name.endsWith(PERFORMANCE_REPORT_FILE_EXTENSION));
+		assertTrue("Report file is missing", matches.length > 0);
+		assertEquals("expected exactly 1 matching file but got: " + matches.length, 1, matches.length);
+		File actualReportFile = matches[0];
 
-		try (FileReader reader = new FileReader(PERFORMANCE_REPORT_FILE)) {
+		// check performance report
+		try (FileReader reader = new FileReader(actualReportFile)) {
 			final List<String> rows = CharStreams.readLines(reader);
 			assertEquals("Performance report contains 2 rows", 2, rows.size());
 			String substring = rows.get(1).substring(0, 1);

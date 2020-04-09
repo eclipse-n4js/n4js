@@ -201,7 +201,7 @@ public abstract class AbstractTranspiler {
 			// step 1: ask transformation manager for transformations to execute
 			Transformation[] transformationsPreFiler = null;
 			Transformation[] transformations = null;
-			try (Measurement m = N4JSDataCollectors.dcTranspilationStep1.getMeasurement("T1")) {
+			try (Measurement m = N4JSDataCollectors.dcTranspilationStep1.getMeasurement()) {
 				transformationsPreFiler = computeTransformationsToBeExecuted(state);
 				transformations = TransformationDependency
 						.filterByTranspilerOptions(transformationsPreFiler, state.options);
@@ -209,7 +209,7 @@ public abstract class AbstractTranspiler {
 			}
 
 			// step 2: give each transformation a chance to perform early analysis on the initial (unchanged!) state
-			try (Measurement m = N4JSDataCollectors.dcTranspilationStep2.getMeasurement("T2")) {
+			try (Measurement m = N4JSDataCollectors.dcTranspilationStep2.getMeasurement()) {
 				for (Transformation currT : transformations) {
 					String name = "T2_" + currT.getClass().getSimpleName();
 					DataCollector dcT2_ct = DataCollectors.INSTANCE
@@ -222,7 +222,7 @@ public abstract class AbstractTranspiler {
 			}
 
 			// step 3: actually perform the transformations (in the order defined by transformation manager)
-			try (Measurement m = N4JSDataCollectors.dcTranspilationStep3.getMeasurement("T3")) {
+			try (Measurement m = N4JSDataCollectors.dcTranspilationStep3.getMeasurement()) {
 				for (Transformation currT : transformations) {
 					String name = "T3_" + currT.getClass().getSimpleName();
 					DataCollector dcT3_ct = DataCollectors.INSTANCE
