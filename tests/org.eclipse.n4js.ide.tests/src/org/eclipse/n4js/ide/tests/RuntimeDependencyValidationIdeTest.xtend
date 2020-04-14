@@ -101,7 +101,6 @@ class RuntimeDependencyValidationIdeTest extends AbstractIdeTest {
 			'// bottom of file' -> 'new C();'
 		);
 		joinServerRequests();
-cleanBuildAndWait(); // TODO GH-1675 remove this line
 
 		assertNoIssues();
 
@@ -111,7 +110,6 @@ cleanBuildAndWait(); // TODO GH-1675 remove this line
 			'new C();' -> ''
 		);
 		joinServerRequests();
-cleanBuildAndWait(); // TODO GH-1675 remove this line
 
 		assertIssues(defaultExpectedIssues);
 	}
@@ -129,7 +127,6 @@ cleanBuildAndWait(); // TODO GH-1675 remove this line
 			'// top of file' -> 'import "C";'
 		);
 		joinServerRequests();
-cleanBuildAndWait(); // TODO GH-1675 remove this line
 
 		assertNoIssues();
 
@@ -138,7 +135,6 @@ cleanBuildAndWait(); // TODO GH-1675 remove this line
 			'import "C";' -> ''
 		);
 		joinServerRequests();
-cleanBuildAndWait(); // TODO GH-1675 remove this line
 
 		assertIssues(defaultExpectedIssues);
 	}
@@ -157,7 +153,6 @@ cleanBuildAndWait(); // TODO GH-1675 remove this line
 			'// top of file' -> 'import {C} from "C";'
 		);
 		joinServerRequests();
-cleanBuildAndWait(); // TODO GH-1675 remove this line
 
 		assertIssues(
 			"MainBad" -> #[
@@ -184,7 +179,6 @@ cleanBuildAndWait(); // TODO GH-1675 remove this line
 			'// bottom of file' -> 'export function foo(p: C) {}'
 		);
 		joinServerRequests();
-cleanBuildAndWait(); // TODO GH-1675 remove this line
 
 		assertIssues(defaultExpectedIssues); // issue must *not* be gone
 	}
@@ -204,7 +198,6 @@ cleanBuildAndWait(); // TODO GH-1675 remove this line
 			'// bottom of file' -> 'console.log(EnumInC.L1);'
 		);
 		joinServerRequests();
-cleanBuildAndWait(); // TODO GH-1675 remove this line
 
 		assertIssues(defaultExpectedIssues); // issue must *not* be gone
 	}
@@ -223,7 +216,6 @@ cleanBuildAndWait(); // TODO GH-1675 remove this line
 			'// bottom of file' -> 'class X extends B {}'
 		);
 		joinServerRequests();
-cleanBuildAndWait(); // TODO GH-1675 remove this line
 
 		assertIssuesInModules(#[
 			"X" -> #[
@@ -256,7 +248,6 @@ cleanBuildAndWait(); // TODO GH-1675 remove this line
 			'class X extends B {}' -> ''
 		);
 		joinServerRequests();
-cleanBuildAndWait(); // TODO GH-1675 remove this line
 
 		assertIssuesInModules(#[
 			"X" -> #[],
@@ -368,14 +359,12 @@ cleanBuildAndWait(); // TODO GH-1675 remove this line
 		// comment out the runtime dependency X -> C
 		changeNonOpenedFile("X", 'import "C";' -> '// import "C";');
 		joinServerRequests();
-cleanBuildAndWait(); // TODO GH-1675 remove this line
 
 		assertNoIssues();
 
 		// re-enable the runtime dependency X -> C
 		changeNonOpenedFile("X", '// import "C";' -> 'import "C";');
 		joinServerRequests();
-cleanBuildAndWait(); // TODO GH-1675 remove this line
 		
 		assertIssues(expectedIssuesWithIllegalLoadtimeReferences);
 	}
@@ -391,14 +380,12 @@ cleanBuildAndWait(); // TODO GH-1675 remove this line
 		// comment out the runtime dependency X -> C
 		changeNonOpenedFile("X", 'import "C";' -> '// import "C";');
 		joinServerRequests();
-cleanBuildAndWait(); // TODO GH-1675 remove this line
 
 		assertNoIssues();
 
 		// re-enable the runtime dependency X -> C
 		changeNonOpenedFile("X", '// import "C";' -> 'import "C";');
 		joinServerRequests();
-cleanBuildAndWait(); // TODO GH-1675 remove this line
 		
 		assertIssues(defaultExpectedIssues);
 	}
@@ -413,7 +400,6 @@ cleanBuildAndWait(); // TODO GH-1675 remove this line
 
 		changeNonOpenedFile("B", "extends A" -> "");
 		joinServerRequests();
-cleanBuildAndWait(); // TODO GH-1675 remove this line
 
 		assertIssues(
 			"MainBad" -> #[], // original issue should be gone
@@ -424,7 +410,6 @@ cleanBuildAndWait(); // TODO GH-1675 remove this line
 
 		changeNonOpenedFile("B", "class B " -> "class B extends A ");
 		joinServerRequests();
-cleanBuildAndWait(); // TODO GH-1675 remove this line
 
 		assertIssues(defaultExpectedIssues); // original issue should have come back
 	}
