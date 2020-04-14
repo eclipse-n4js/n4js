@@ -102,9 +102,9 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 	}
 
 	/**
-	 * Executes the test with the given default setup. Depending on whether {@link #getDefaultTestWorkspace()}
-	 * returns a non-empty result, {@link #testWS(List, Object)} will be triggered. Otherwise
-	 * {@link #test(List, Object)} will be used and uses the default setup of {@link #getDefaultTestProject()}.
+	 * Executes the test with the given default setup. Depending on whether {@link #getDefaultTestWorkspace()} returns a
+	 * non-empty result, {@link #testWS(List, Object)} will be triggered. Otherwise {@link #test(List, Object)} will be
+	 * used and uses the default setup of {@link #getDefaultTestProject()}.
 	 * <p>
 	 * For further details mind the {@link Documentation documentation} of {@link #getDefaultTestWorkspace()} or
 	 * {@link #getDefaultTestProject()} respectively.
@@ -266,8 +266,7 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 
 		Project project = workspaceCreator.createTestOnDisk(projectsModulesContents);
 		startAndWaitForLspServer();
-		String moduleContent = projectsModulesContents.get(projectPath).get(moduleName);
-		openFile(moduleName, moduleContent);
+		openFile(moduleName);
 		try {
 			performTest(project, moduleName, t);
 		} catch (AssertionError ae) {
