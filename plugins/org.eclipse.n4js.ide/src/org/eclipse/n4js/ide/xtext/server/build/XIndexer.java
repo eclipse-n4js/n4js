@@ -190,9 +190,10 @@ public class XIndexer {
 	private OperationCanceledManager operationCanceledManager;
 
 	/**
-	 * Compute an updated index.
+	 * Compute deltas for the build's initial resource deletions and changes as recorded in the given build request, and
+	 * register them in the request's index.
 	 */
-	public XIndexer.XIndexResult computeAndIndexAffected(XBuildRequest request,
+	public XIndexer.XIndexResult computeAndIndexDeletedAndChanged(XBuildRequest request,
 			@Extension XBuildContext context) {
 		ResourceDescriptionsData previousIndex = context.getOldState().getResourceDescriptions();
 		ResourceDescriptionsData newIndex = request.getState().getResourceDescriptions();
@@ -202,28 +203,38 @@ public class XIndexer {
 		for (IResourceDescription.Delta delta : deltas) {
 			newIndex.register(delta);
 		}
-		// HashSet<IResourceDescription.Delta> allDeltas = new HashSet<>(deltas);
-		// allDeltas.addAll(request.getExternalDeltas());
-		// Set<URI> remainingURIs = IterableExtensions.toSet(
-		// IterableExtensions.map(previousIndex.getAllResourceDescriptions(), IResourceDescription::getURI));
-		// remainingURIs.removeAll(ListExtensions.map(deltas, Delta::getUri));
-		// List<Delta> allAffected = computeAffectedResources(remainingURIs, context, previousIndex, newIndex,
-		// allDeltas,
-		// allDeltas);
-		// deltas.addAll(allAffected);
 		return new XIndexer.XIndexResult(deltas, newIndex);
 	}
 
-	public List<Delta> computeAffectedResources(Set<URI> remainingURIs, XBuildContext context,
-			ResourceDescriptionsData previousIndex, ResourceDescriptionsData newIndex,
-			Collection<Delta> newDeltas, Collection<Delta> allDeltas) {
+	/**
+	 * Compute deltas for resources affected by the given <code>newDeltas</code> and register them in the given
+	 * <code>newIndex</code>.
+	 *
+	 * @param index
+	 *            the current index; will be changed by this method.
+	 * @param remainingURIs
+	 *            set of URIs that were not processed yet.
+	 * @param newDeltas
+	 *            deltas representing the resources processed during the most recent build iteration.
+	 * @param allDeltas
+	 *            deltas representing all resources processed so far.
+	 * @param context
+	 *            the build context.
+	 * @return list of deltas representing the affected resources.
+	 */
+	public List<Delta> computeAndIndexAffected(ResourceDescriptionsData index, Set<URI> remainingURIs,
+			Collection<Delta> newDeltas, Collection<Delta> allDeltas, XBuildContext context) {
+		ResourceDescriptionsData originalIndex = context.getOldState().getResourceDescriptions();
 		List<URI> affectedURIs = IterableExtensions.toList(IterableExtensions.filter(remainingURIs, it -> {
 			IResourceDescription.Manager manager = context.getResourceServiceProvider(it)
 					.getResourceDescriptionManager();
-			IResourceDescription resourceDescription = previousIndex.getResourceDescription(it);
-			return isAffected(resourceDescription, manager, newDeltas, allDeltas, newIndex);
+			IResourceDescription resourceDescription = originalIndex.getResourceDescription(it);
+			return isAffected(resourceDescription, manager, newDeltas, allDeltas, index);
 		}));
-		List<Delta> affectedDeltas = getDeltasForChangedResources(affectedURIs, previousIndex, context);
+		List<Delta> affectedDeltas = getDeltasForChangedResources(affectedURIs, originalIndex, context);
+		for (IResourceDescription.Delta delta : affectedDeltas) {
+			index.register(delta);
+		}
 		return affectedDeltas;
 	}
 
@@ -251,12 +262,12 @@ public class XIndexer {
 	/**
 	 * Process the changed resources.
 	 */
-	protected List<IResourceDescription.Delta> getDeltasForChangedResources(Iterable<URI> affectedUris,
+	protected List<IResourceDescription.Delta> getDeltasForChangedResources(Iterable<URI> changedURIs,
 			ResourceDescriptionsData oldIndex, XBuildContext context) {
 		try {
 			this.compilerPhases.setIndexing(context.getResourceSet(), true);
 			List<IResourceDescription.Delta> result = new ArrayList<>();
-			for (IResourceDescription.Delta delta : context.executeClustered(affectedUris,
+			for (IResourceDescription.Delta delta : context.executeClustered(changedURIs,
 					it -> addToIndex(it, true, oldIndex, context))) {
 				if (delta != null) {
 					result.add(delta);

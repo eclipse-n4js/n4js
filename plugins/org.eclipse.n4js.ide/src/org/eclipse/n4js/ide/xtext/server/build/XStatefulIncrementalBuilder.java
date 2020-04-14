@@ -15,6 +15,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -49,10 +50,7 @@ import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.Exceptions;
-import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
@@ -83,7 +81,7 @@ public class XStatefulIncrementalBuilder {
 
 	/** Run the build. */
 	public XBuildResult launch() {
-		List<IResourceDescription.Delta> resolvedDeltas = new ArrayList<>();
+		List<IResourceDescription.Delta> allProcessedDeltas = new ArrayList<>();
 
 		try {
 			XSource2GeneratedMapping newSource2GeneratedMapping = this.request.getState().getFileMappings();
@@ -105,48 +103,48 @@ public class XStatefulIncrementalBuilder {
 				removeGeneratedFiles(source, newSource2GeneratedMapping);
 			}
 
-			XIndexer.XIndexResult result = indexer.computeAndIndexAffected(request, context);
+			ResourceDescriptionsData oldIndex = context.getOldState().getResourceDescriptions();
+			Set<URI> remainingURIs = new LinkedHashSet<>(oldIndex.getAllURIs()); // note: creating a copy!
+
+			XIndexer.XIndexResult result = indexer.computeAndIndexDeletedAndChanged(request, context);
 			operationCanceledManager.checkCanceled(request.getCancelIndicator());
 
-			Set<URI> remainingURIs = IterableExtensions.toSet(
-					IterableExtensions.map(context.getOldState().getResourceDescriptions().getAllResourceDescriptions(),
-							IResourceDescription::getURI));
+			ResourceDescriptionsData newIndex = result.getNewIndex();
 			List<Delta> deltasToBeProcessed = result.getResourceDeltas();
 
 			while (!deltasToBeProcessed.isEmpty()) {
 
+				List<Delta> deltasProcessed = new ArrayList<>();
+				List<URI> urisToBeBuilt = new ArrayList<>();
 				for (IResourceDescription.Delta delta : deltasToBeProcessed) {
 					URI uri = delta.getUri();
 					if (delta.getOld() != null && unloaded.add(uri)) {
 						unloadResource(uri);
 					}
 					if (delta.getNew() == null) {
-						resolvedDeltas.add(delta);
+						// deleted resources are not being built
+						deltasProcessed.add(delta);
+					} else {
+						urisToBeBuilt.add(uri);
 					}
 					remainingURIs.remove(uri);
 				}
 
-				Iterable<URI> uris = FluentIterable
-						.from(deltasToBeProcessed)
-						.filter(delta -> delta.getNew() != null)
-						.transform(Delta::getUri);
-
-				Iterable<IResourceDescription.Delta> deltas = context.executeClustered(uris,
+				List<IResourceDescription.Delta> deltasBuilt = context.executeClustered(urisToBeBuilt,
 						(resource) -> buildClustured(resource, newSource2GeneratedMapping, result));
+				deltasProcessed.addAll(deltasBuilt);
 
-				Iterables.addAll(resolvedDeltas, deltas);
+				allProcessedDeltas.addAll(deltasProcessed);
 
-				ResourceDescriptionsData previousIndex = context.getOldState().getResourceDescriptions();
-				ResourceDescriptionsData newIndex = request.getState().getResourceDescriptions();
-				deltasToBeProcessed = indexer.computeAffectedResources(remainingURIs, context, previousIndex, newIndex,
-						IterableExtensions.toList(deltas), resolvedDeltas);
+				deltasToBeProcessed = indexer.computeAndIndexAffected(newIndex, remainingURIs, deltasProcessed,
+						allProcessedDeltas, context);
 			}
 
 		} catch (CancellationException e) {
 			// catch CancellationException here and proceed normally to save already resolved deltas
 		}
 
-		return new XBuildResult(this.request.getState(), resolvedDeltas);
+		return new XBuildResult(this.request.getState(), allProcessedDeltas);
 	}
 
 	private void removeGeneratedFiles(URI source, XSource2GeneratedMapping source2GeneratedMapping) {
