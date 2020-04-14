@@ -28,18 +28,25 @@ VERDACCIO_IMAGE=verdaccio/verdaccio@sha256:e64056b6aa104197dbac07e77a1fbcf8f5c67
 
 # PARAMETER 1: version.
 if [ -z "$1" ]; then
+    echo "The package name must be specified as the first parameter."
+    exit -1
+else
+    PACKAGE_NAME=$1
+fi
+
+# PARAMETER 2: version.
+if [ -z "$2" ]; then
     echo "The version must be specified as the first parameter."
     exit -1
 else
-    VERSION=$1
+    VERSION=$2
 fi
 
-
-# PARAMETER 2: (Optional) npm dist-tag
-if [ -z "$2" ]; then
+# PARAMETER 3: (Optional) npm dist-tag
+if [ -z "$3" ]; then
     DIST_TAG="latest"
 else
-    DIST_TAG=$2
+    DIST_TAG=$3
 fi
 
 
@@ -53,16 +60,16 @@ set -e
 if [ $RESULT -eq 0 ]; then
   echo "ERROR: Port 4873 is occupied"
   
-  echo "Kill running docker"
-  docker rm -f n4js-test-verdaccio || true
-  #exit -1
+  #echo "Kill running docker" # used locally for debugging
+  #docker rm -f n4js-test-verdaccio || true
+  exit -1
 else
   echo "Port 4873 is free"
 fi
 
 
 
-echo "==== STEP ?/?: Start Verdaccio"
+echo "==== STEP 1/8: Start Verdaccio"
 echo ${VERDACCIO_CONFIG_DIR}
 docker run -d -it --rm --name n4js-test-verdaccio -p 4873:4873 -v ${VERDACCIO_CONFIG_DIR}/config.yaml:/verdaccio/conf/config.yaml ${VERDACCIO_IMAGE}
 
@@ -75,7 +82,7 @@ sleep 1s
 
 
 
-echo "==== STEP ?/?: Check Verdaccio"
+echo "==== STEP 2/8: Check Verdaccio"
 RESULT=$(curl -f http://localhost:4873 | grep title)
 
 echo $RESULT
@@ -88,33 +95,39 @@ fi
 
 
 
-echo "==== STEP ?/?: Publish libs to local verdaccio registry"
+echo "==== STEP 3/8: Publish libs to local verdaccio registry: calling script 'publish-n4js-libs.sh'"
+echo "==="
+echo "=="
+echo "="
 ./publish-n4js-libs.sh local ${VERSION}
+echo "="
+echo "=="
+echo "==="
 
 
 
 pushd ${EXTENSION_DIR}
-	echo "==== STEP ?/?: Update versions inside package.json of extension"
+	echo "==== STEP 4/8: Update versions inside package.json of extension"
 	npx json -I -f package.json -e "this.version=\"$VERSION\""
 	npx json -I -f package.json -e "this.dependencies['n4js-cli']=\"$VERSION\""
 	npx json -I -f package.json -e "this.dependencies['n4js-runtime']=\"$VERSION\""
 	npx json -I -f package.json -e "this.dependencies['n4js-runtime-node']=\"$VERSION\""
 	npx json -I -f package.json -e "this.dependencies['n4js-runtime-es2015']=\"$VERSION\""
 
-	echo "==== STEP ?/?: Call npm install (use local verdaccio registry)"
+	echo "==== STEP 5/8: Call npm install (use local verdaccio registry)"
 	npm install --registry http://localhost:4873
 	
 	
-	echo "==== STEP ?/?: Pack extension"
-	vsce package
+	echo "==== STEP 6/8: Pack extension"
+	vsce package --out ${PACKAGE_NAME}
 	
 	
-	echo "==== STEP ?/?: Copy extension"
-	cp n4js-vscode-extension-${VERSION}.vsix ${TARGET_DIR}/
+	echo "==== STEP 7/8: Copy extension"
+	cp ${PACKAGE_NAME} ${TARGET_DIR}/
 popd
 
 
-echo "==== STEP ?/?: Killing Verdaccio"
+echo "==== STEP 8/8: Killing Verdaccio"
 docker rm -f n4js-test-verdaccio || true
 
 
