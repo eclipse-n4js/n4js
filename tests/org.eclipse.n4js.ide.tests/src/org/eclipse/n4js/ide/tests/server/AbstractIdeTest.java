@@ -160,6 +160,16 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		return workspaceCreator.getRoot();
 	}
 
+	/** Returns the root folder of the project with the given name. */
+	public File getProjectRoot(String projectName) {
+		return workspaceCreator.getProjectRoot(projectName);
+	}
+
+	/** Tells whether the test workspace located at {@link #getRoot()} is a yarn workspace. */
+	public boolean isYarnWorkspace() {
+		return workspaceCreator.isYarnWorkspace();
+	}
+
 	/** Overwrite this method to change the project type */
 	protected ProjectType getProjectType() {
 		return ProjectType.VALIDATION;

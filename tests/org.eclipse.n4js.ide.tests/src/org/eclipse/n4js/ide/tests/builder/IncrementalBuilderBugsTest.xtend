@@ -8,18 +8,17 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.tests.compiler
+package org.eclipse.n4js.ide.tests.builder
 
-import org.eclipse.n4js.ide.tests.server.AbstractIdeTest
 import org.junit.Test
 
 /**
- * Tests for incremental building in the LSP server.
+ * Tests covering fixed bugs in the incremental builder.
  */
-class IncrementalBuilderTest extends AbstractIdeTest {
+class IncrementalBuilderBugsTest extends AbstractIncrementalBuilderTest {
 
 	@Test
-	def testIndirectDependencyThroughInheritance() {
+	def void testIndirectDependencyThroughInheritance() {
 		workspaceCreator.createTestProjectOnDisk(
 			"A" -> '''
 				export public class A {
@@ -69,7 +68,7 @@ class IncrementalBuilderTest extends AbstractIdeTest {
 	}
 
 	@Test
-	def testIndirectDependencyThroughInferredTypeOfExportedVariable_Part1() {
+	def void testIndirectDependencyThroughInferredTypeOfExportedVariable_Part1() {
 		workspaceCreator.createTestProjectOnDisk(
 			"A" -> '''
 				export public var a: string;
@@ -100,7 +99,7 @@ class IncrementalBuilderTest extends AbstractIdeTest {
 	}
 
 	@Test
-	def testIndirectDependencyThroughInferredTypeOfExportedVariable_Part2() {
+	def void testIndirectDependencyThroughInferredTypeOfExportedVariable_Part2() {
 		workspaceCreator.createTestProjectOnDisk(
 			"A" -> '''
 				export public var a: string;

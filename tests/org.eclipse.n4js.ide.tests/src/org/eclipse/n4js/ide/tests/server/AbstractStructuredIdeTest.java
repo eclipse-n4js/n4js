@@ -17,7 +17,6 @@ import static org.eclipse.n4js.ide.tests.server.TestWorkspaceCreator.N4JS_RUNTIM
 import static org.eclipse.n4js.ide.tests.server.TestWorkspaceCreator.NODE_MODULES;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +31,6 @@ import com.google.common.collect.Lists;
  * Base class for {@link AbstractIdeTest IDE tests} in which every test case has a uniform structure and behavior.
  */
 public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
-	static final String MODULE_SELECTOR = "*";
 	static final String CURSOR_SYMBOL = "<|>";
 
 	/** Data class for file content and position of a cursor symbol */
@@ -110,7 +108,7 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 	 * {@link #getDefaultTestProject()} respectively.
 	 */
 	protected void testInDefaultWorkspace(String content, T t) {
-		String nameWithSelector = DEFAULT_MODULE_NAME + MODULE_SELECTOR;
+		String nameWithSelector = DEFAULT_MODULE_NAME + TestWorkspaceCreator.MODULE_SELECTOR;
 		Pair<String, String> moduleContents = Pair.of(nameWithSelector, content);
 
 		boolean moduleAdded = false;
@@ -118,7 +116,7 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 			List<Pair<String, List<Pair<String, String>>>> workspace = getDefaultTestWorkspace();
 			for (Pair<String, List<Pair<String, String>>> project : workspace) {
 				String projectName = project.getKey();
-				if (projectName.endsWith(MODULE_SELECTOR)) {
+				if (projectName.endsWith(TestWorkspaceCreator.MODULE_SELECTOR)) {
 					List<Pair<String, String>> modulesPlusMyModule = new ArrayList<>(project.getValue());
 					modulesPlusMyModule.add(moduleContents);
 					try {
@@ -133,7 +131,7 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 			}
 
 			if (!moduleAdded) {
-				throw new IllegalStateException("No project selected. Use " + MODULE_SELECTOR);
+				throw new IllegalStateException("No project selected. Use " + TestWorkspaceCreator.MODULE_SELECTOR);
 			}
 
 			testWS(workspace, t);
@@ -183,7 +181,7 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 	 */
 	protected Project test(String moduleName, String contents, T t) {
 		moduleName = workspaceCreator.getModuleNameOrDefault(moduleName);
-		String nameWithSelector = moduleName + MODULE_SELECTOR;
+		String nameWithSelector = moduleName + TestWorkspaceCreator.MODULE_SELECTOR;
 		ArrayList<Pair<String, String>> srcFileNameToContents = Lists.newArrayList(Pair.of(nameWithSelector, contents));
 		return test(srcFileNameToContents, t);
 	}
@@ -192,7 +190,7 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 	 * Same as {@link #testWS(List, Object)}, but creates a default project with name {@link #DEFAULT_PROJECT_NAME}.
 	 * Also creates project {@link #N4JS_RUNTIME} and a dependency from default project to n4js-runtime.
 	 * <p>
-	 * One module has to be selected using {@link #MODULE_SELECTOR}
+	 * One module has to be selected using {@link TestWorkspaceCreator#MODULE_SELECTOR}
 	 *
 	 * @param modulesContents
 	 *            pairs that map module names to their contents
@@ -214,36 +212,15 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 	 * Same as {@link #test(LinkedHashMap, String, String, Object)}, but name and content of the modules can be provided
 	 * as {@link Pair pairs}.
 	 * <p>
-	 * Finds the selected project and module using the {@link #MODULE_SELECTOR} and removes the selector.
+	 * Finds the selected project and module using the {@link TestWorkspaceCreator#MODULE_SELECTOR} and removes the
+	 * selector.
 	 */
 	protected Project testWS(List<Pair<String, List<Pair<String, String>>>> projectsModulesContents, T t) {
-		String selectedProject = null;
-		String selectedModule = null;
 		LinkedHashMap<String, Map<String, String>> projectsModulesContentsAsMap = new LinkedHashMap<>();
-		for (Pair<String, List<Pair<String, String>>> project : projectsModulesContents) {
-			String projectPath = project.getKey();
-			Iterable<? extends Pair<String, String>> modules = project.getValue();
-			Map<String, String> modulesMap = null;
-			if (modules != null) {
-				modulesMap = new HashMap<>();
-				for (Pair<String, String> moduleContent : modules) {
-					String moduleName = moduleContent.getKey();
-					if (moduleName.endsWith(MODULE_SELECTOR)) {
-						moduleName = moduleName.substring(0, moduleName.length() - 1);
-						selectedProject = projectPath;
-						selectedModule = moduleName;
-					}
-					modulesMap.put(moduleName, moduleContent.getValue());
-				}
-			}
-			projectsModulesContentsAsMap.put(projectPath, modulesMap);
-		}
-
-		if (selectedModule == null) {
-			throw new IllegalArgumentException(
-					"No module selected. Fix by appending '" + MODULE_SELECTOR + "' to one of the project modules.");
-		}
-
+		Pair<String, String> selection = TestWorkspaceCreator
+				.convertProjectsModulesContentsToMap(projectsModulesContents, projectsModulesContentsAsMap, true);
+		String selectedProject = selection.getKey();
+		String selectedModule = selection.getValue();
 		return test(projectsModulesContentsAsMap, selectedProject, selectedModule, t);
 	}
 

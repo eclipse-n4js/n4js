@@ -22,6 +22,10 @@ import org.eclipse.n4js.utils.io.FileDeleter
  * Generates the code for a yarn workspace project.
  */
 public class YarnWorkspaceProject extends Project {
+
+	/** Name of the 'packages' folder, i.e. the folder containing the actual projects. */
+	public static final String PACKAGES = "packages";
+
 	final Map<String, Project> projects = newHashMap();
 	final String workspacesFolderName;
 
@@ -30,7 +34,7 @@ public class YarnWorkspaceProject extends Project {
 	 * a default project type of {@link ProjectType#LIBRARY LIBRARY}.
 	 */
 	public new(String projectName, String vendorId, String vendorName) {
-		this(projectName, vendorId, vendorName, "packages");
+		this(projectName, vendorId, vendorName, PACKAGES);
 	}
 	
 	/**

@@ -91,8 +91,8 @@ abstract class Documentation {
 	 * </pre>
 	 *
 	 * It is necessary to select one of the project as the selected project. This is done by appending the
-	 * {@link org.eclipse.n4js.ide.tests.server.AbstractStructuredIdeTest#MODULE_SELECTOR MODULE_SELECTOR} at the end of
-	 * a project name. The result is, that the implicit test module is added to the selected project. Similar to the
+	 * {@link org.eclipse.n4js.ide.tests.server.TestWorkspaceCreator#MODULE_SELECTOR MODULE_SELECTOR} at the end of a
+	 * project name. The result is, that the implicit test module is added to the selected project. Similar to the
 	 * default test project, the implicit module will be the selected module and be opened during execution of the test.
 	 */
 	static int DEFAULT_TEST_WORKSPACE;
