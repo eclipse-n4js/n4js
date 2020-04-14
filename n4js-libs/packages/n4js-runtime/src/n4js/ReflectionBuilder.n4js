@@ -29,12 +29,12 @@ export function interfaceDefaultMembers(obj: any+) : Object {
     return (obj[INTERFACE_DEFAULT_MEMBERS] || {}) as Object;
 }
 
-export function interfaceExtends(obj: any+) : type{N4Interface}[] {
-    return obj[INTERFACE_EXTENDS] as type{N4Interface}[];
+export function interfaceExtends(obj: any+) : type{N4Object}[] {
+    return obj[INTERFACE_EXTENDS] as type{N4Object}[];
 }
 
-export function classImplements(obj: any+) : type{N4Interface}[] {
-    return obj[CLASS_IMPLEMENTS] as type{N4Interface}[];
+export function classImplements(obj: any+) : type{N4Object}[] {
+    return obj[CLASS_IMPLEMENTS] as type{N4Object}[];
 }
 
 export function makeReflectionsForClass(staticProto: constructor{?}, reflectionString: string): N4Class {
@@ -73,9 +73,9 @@ export function makeReflectionsForEnum(staticProto: constructor{?}, reflectionSt
     return n4enumType;
 }
 
-export function getAllImplementedInterfacesFromClass(staticProto: constructor{?}): Map<string, type{N4Interface}> {
+export function getAllImplementedInterfacesFromClass(staticProto: constructor{?}): Map<string, type{N4Object}> {
     const directImplementedInterfaces = classImplements(staticProto) || [];
-    const allImplementedInterfaces = new Map<string, type{N4Interface}>();
+    const allImplementedInterfaces = new Map<string, type{N4Object}>();
     for (const implementedInterface of directImplementedInterfaces) {
         const fqn = implementedInterface.n4type.fqn;
         allImplementedInterfaces.set(fqn, implementedInterface);
@@ -84,17 +84,17 @@ export function getAllImplementedInterfacesFromClass(staticProto: constructor{?}
     return allImplementedInterfaces;
 }
 
-export function getAllImplementedInterfacesFromClassAndSuperclasses(staticProto: constructor{?}): Map<string, type{N4Interface}> {
+export function getAllImplementedInterfacesFromClassAndSuperclasses(staticProto: constructor{?}): Map<string, type{N4Object}> {
     const interfacesOfClass = getAllImplementedInterfacesFromClass(staticProto);
     const interfacesOfSuperclass = staticProto.__proto__
         ? getAllImplementedInterfacesFromClassAndSuperclasses(staticProto.__proto__ as constructor{?})
-        : new Map<string, type{N4Interface}>();
-    return new Map<string, type{N4Interface}>([...interfacesOfClass, ...interfacesOfSuperclass]);
+        : new Map<string, type{N4Object}>();
+    return new Map<string, type{N4Object}>([...interfacesOfClass, ...interfacesOfSuperclass]);
 }
 
-export function getAllImplementedInterfacesFromInterface(interfaceObject: Object): Map<string, type{N4Interface}> {
+export function getAllImplementedInterfacesFromInterface(interfaceObject: Object): Map<string, type{N4Object}> {
     const extendedInterfaces = interfaceExtends(interfaceObject) || [];
-    const allImplementedInterfaces = new Map<string, type{N4Interface}>();
+    const allImplementedInterfaces = new Map<string, type{N4Object}>();
     for (const superInterface of extendedInterfaces) {
         const fqn = superInterface.n4type.fqn;
         allImplementedInterfaces.set(fqn, superInterface);
@@ -230,7 +230,7 @@ function createMember(instanceProto: any+, staticProto: any+, memberInfo: Member
     return member;
 }
 
-function getAllInterfacesRek(interfaceObject: Object, implementedInterfaces : Map<string, type{N4Interface}>): void {
+function getAllInterfacesRek(interfaceObject: Object, implementedInterfaces : Map<string, type{N4Object}>): void {
     const superInterfaces = interfaceExtends(interfaceObject) || [];
     for (const superInterface of superInterfaces) {
         const fqn = superInterface.n4type.fqn;
@@ -418,7 +418,7 @@ class ReflectionValues {
         }
     }
 
-    mergeWithDetectedAllImplementedInterfaces(allImplementedInterfaces: Map<string, type{N4Interface}>) {
+    mergeWithDetectedAllImplementedInterfaces(allImplementedInterfaces: Map<string, type{N4Object}>) {
         for (const fqn of allImplementedInterfaces.keys()) {
             this.allImplementedInterfaces.push(fqn);
         }
