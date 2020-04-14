@@ -9,7 +9,6 @@ package org.eclipse.n4js.ide.xtext.server.build;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -36,7 +35,6 @@ import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.Extension;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
-import org.eclipse.xtext.xbase.lib.ListExtensions;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 import com.google.common.collect.ImmutableList;
@@ -204,19 +202,29 @@ public class XIndexer {
 		for (IResourceDescription.Delta delta : deltas) {
 			newIndex.register(delta);
 		}
-		HashSet<IResourceDescription.Delta> allDeltas = new HashSet<>(deltas);
-		allDeltas.addAll(request.getExternalDeltas());
-		Set<URI> remainingURIs = IterableExtensions.toSet(
-				IterableExtensions.map(previousIndex.getAllResourceDescriptions(), IResourceDescription::getURI));
-		remainingURIs.removeAll(ListExtensions.map(deltas, Delta::getUri));
-		List<URI> allAffected = IterableExtensions.toList(IterableExtensions.filter(remainingURIs, it -> {
+		// HashSet<IResourceDescription.Delta> allDeltas = new HashSet<>(deltas);
+		// allDeltas.addAll(request.getExternalDeltas());
+		// Set<URI> remainingURIs = IterableExtensions.toSet(
+		// IterableExtensions.map(previousIndex.getAllResourceDescriptions(), IResourceDescription::getURI));
+		// remainingURIs.removeAll(ListExtensions.map(deltas, Delta::getUri));
+		// List<Delta> allAffected = computeAffectedResources(remainingURIs, context, previousIndex, newIndex,
+		// allDeltas,
+		// allDeltas);
+		// deltas.addAll(allAffected);
+		return new XIndexer.XIndexResult(deltas, newIndex);
+	}
+
+	public List<Delta> computeAffectedResources(Set<URI> remainingURIs, XBuildContext context,
+			ResourceDescriptionsData previousIndex, ResourceDescriptionsData newIndex,
+			Collection<Delta> newDeltas, Collection<Delta> allDeltas) {
+		List<URI> affectedURIs = IterableExtensions.toList(IterableExtensions.filter(remainingURIs, it -> {
 			IResourceDescription.Manager manager = context.getResourceServiceProvider(it)
 					.getResourceDescriptionManager();
 			IResourceDescription resourceDescription = previousIndex.getResourceDescription(it);
-			return isAffected(resourceDescription, manager, allDeltas, allDeltas, newIndex);
+			return isAffected(resourceDescription, manager, newDeltas, allDeltas, newIndex);
 		}));
-		deltas.addAll(this.getDeltasForChangedResources(allAffected, previousIndex, context));
-		return new XIndexer.XIndexResult(deltas, newIndex);
+		List<Delta> affectedDeltas = getDeltasForChangedResources(affectedURIs, previousIndex, context);
+		return affectedDeltas;
 	}
 
 	/**

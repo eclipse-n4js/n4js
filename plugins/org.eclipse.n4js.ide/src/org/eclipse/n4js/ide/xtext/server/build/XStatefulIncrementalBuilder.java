@@ -37,6 +37,7 @@ import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
+import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.resource.persistence.IResourceStorageFacade;
 import org.eclipse.xtext.resource.persistence.SerializableResourceDescription;
 import org.eclipse.xtext.resource.persistence.StorageAwareResource;
@@ -48,6 +49,7 @@ import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.Exceptions;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
@@ -106,25 +108,39 @@ public class XStatefulIncrementalBuilder {
 			XIndexer.XIndexResult result = indexer.computeAndIndexAffected(request, context);
 			operationCanceledManager.checkCanceled(request.getCancelIndicator());
 
-			for (IResourceDescription.Delta delta : result.getResourceDeltas()) {
-				URI uri = delta.getUri();
-				if (delta.getOld() != null && unloaded.add(uri)) {
-					unloadResource(uri);
+			Set<URI> remainingURIs = IterableExtensions.toSet(
+					IterableExtensions.map(context.getOldState().getResourceDescriptions().getAllResourceDescriptions(),
+							IResourceDescription::getURI));
+			List<Delta> deltasToBeProcessed = result.getResourceDeltas();
+
+			while (!deltasToBeProcessed.isEmpty()) {
+
+				for (IResourceDescription.Delta delta : deltasToBeProcessed) {
+					URI uri = delta.getUri();
+					if (delta.getOld() != null && unloaded.add(uri)) {
+						unloadResource(uri);
+					}
+					if (delta.getNew() == null) {
+						resolvedDeltas.add(delta);
+					}
+					remainingURIs.remove(uri);
 				}
-				if (delta.getNew() == null) {
-					resolvedDeltas.add(delta);
-				}
+
+				Iterable<URI> uris = FluentIterable
+						.from(deltasToBeProcessed)
+						.filter(delta -> delta.getNew() != null)
+						.transform(Delta::getUri);
+
+				Iterable<IResourceDescription.Delta> deltas = context.executeClustered(uris,
+						(resource) -> buildClustured(resource, newSource2GeneratedMapping, result));
+
+				Iterables.addAll(resolvedDeltas, deltas);
+
+				ResourceDescriptionsData previousIndex = context.getOldState().getResourceDescriptions();
+				ResourceDescriptionsData newIndex = request.getState().getResourceDescriptions();
+				deltasToBeProcessed = indexer.computeAffectedResources(remainingURIs, context, previousIndex, newIndex,
+						IterableExtensions.toList(deltas), resolvedDeltas);
 			}
-
-			Iterable<URI> uris = FluentIterable
-					.from(result.getResourceDeltas())
-					.filter(delta -> delta.getNew() != null)
-					.transform(Delta::getUri);
-
-			Iterable<IResourceDescription.Delta> deltas = context.executeClustered(uris,
-					(resource) -> buildClustured(resource, newSource2GeneratedMapping, result));
-
-			Iterables.addAll(resolvedDeltas, deltas);
 
 		} catch (CancellationException e) {
 			// catch CancellationException here and proceed normally to save already resolved deltas
