@@ -95,10 +95,11 @@ echo "==== STEP ?/?: Publish libs to local verdaccio registry"
 
 pushd ${EXTENSION_DIR}
 	echo "==== STEP ?/?: Update versions inside package.json of extension"
-	npx json -I -f package.json -e 'this.version="${VERSION}"'
-	npx json -I -f package.json -e 'this.dependencies["n4js-cli"]="${VERSION}"'
-	npx json -I -f package.json -e 'this.dependencies["n4js-runtime"]="${VERSION}"'
-	npx json -I -f package.json -e 'this.dependencies["n4js-runtime-node"]="${VERSION}"'
+	npx json -I -f package.json -e "this.version=\"$VERSION\""
+	npx json -I -f package.json -e "this.dependencies['n4js-cli']=\"$VERSION\""
+	npx json -I -f package.json -e "this.dependencies['n4js-runtime']=\"$VERSION\""
+	npx json -I -f package.json -e "this.dependencies['n4js-runtime-node']=\"$VERSION\""
+	npx json -I -f package.json -e "this.dependencies['n4js-runtime-es2015']=\"$VERSION\""
 
 	echo "==== STEP ?/?: Call npm install (use local verdaccio registry)"
 	npm install --registry http://localhost:4873
