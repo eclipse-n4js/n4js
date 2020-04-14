@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.ide.tests.server;
 
+import static java.util.Collections.singletonList;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -18,12 +20,14 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -36,6 +40,7 @@ import org.eclipse.lsp4j.DidChangeTextDocumentParams;
 import org.eclipse.lsp4j.DidChangeWatchedFilesParams;
 import org.eclipse.lsp4j.DidCloseTextDocumentParams;
 import org.eclipse.lsp4j.DidOpenTextDocumentParams;
+import org.eclipse.lsp4j.DidSaveTextDocumentParams;
 import org.eclipse.lsp4j.ExecuteCommandCapabilities;
 import org.eclipse.lsp4j.FileChangeType;
 import org.eclipse.lsp4j.FileEvent;
@@ -124,6 +129,21 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	/** Utility to create the test workspace on disk */
 	protected final TestWorkspaceCreator workspaceCreator = new TestWorkspaceCreator(getProjectType());
 
+	/** Tracks open files, their version and their, possibly unsaved, content. */
+	private final Map<FileURI, OpenFileInfo> openFiles = new HashMap<>();
+
+	private static final class OpenFileInfo {
+		/** Current version of the open file. */
+		int version;
+		/** In-memory content of the open file. Might be unsaved. */
+		String content;
+
+		OpenFileInfo(String content) {
+			this.version = 1;
+			this.content = content;
+		}
+	}
+
 	/** Deletes the test project in case it exists. */
 	@After
 	final public void deleteTestProject() {
@@ -132,6 +152,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 			FileUtils.deleteFileOrFolder(root);
 		}
 		languageClient.clear();
+		openFiles.clear();
 	}
 
 	/** @return the workspace root folder as a {@link File}. */
@@ -210,9 +231,29 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		languageServer.reinitWorkspace();
 	}
 
-	/** Same as {@link #openFile(String, String)}, but content is read from disk. */
+	/** Same as {@link #isOpen(FileURI)}, but accepts a module name. */
+	protected boolean isOpen(String moduleName) {
+		FileURI fileURI = getFileURIFromModuleName(moduleName);
+		return isOpen(fileURI);
+	}
+
+	/** Tells whether the file with the given URI is currently {@link #openFile(String) open}. */
+	protected boolean isOpen(FileURI fileURI) {
+		return openFiles.containsKey(fileURI);
+	}
+
+	/** Same as {@link #openFile(FileURI)}, accepting a module name instead of a file URI. */
 	protected void openFile(String moduleName) {
 		FileURI fileURI = getFileURIFromModuleName(moduleName);
+		openFile(fileURI);
+	}
+
+	/** Opens the given file in the LSP server and waits for the triggered build to finish. */
+	protected void openFile(FileURI fileURI) {
+		if (isOpen(fileURI)) {
+			Assert.fail("trying to open a file that is already open: " + fileURI);
+		}
+
 		Path filePath = fileURI.toJavaIoFile().toPath();
 		String content;
 		try {
@@ -220,47 +261,42 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		} catch (IOException e) {
 			throw new AssertionError("exception while reading file contents from disk", e);
 		}
-		openFile(moduleName, content);
-	}
-
-	/** Same as {@link #openFile(FileURI, String)}, but accepts a module name instead of file URI. */
-	protected void openFile(String moduleName, String contents) {
-		openFile(getFileURIFromModuleName(moduleName), contents);
-	}
-
-	/** Opens the given file in the LSP server and waits for the triggered build to finish. */
-	protected void openFile(FileURI fileURI, String contents) {
-		Assert.assertNotNull(contents);
 
 		TextDocumentItem textDocument = new TextDocumentItem();
 		textDocument.setLanguageId(languageInfo.getLanguageName());
 		textDocument.setUri(fileURI.toString());
 		textDocument.setVersion(1);
-		textDocument.setText(toUnixLineSeparator(contents));
+		textDocument.setText(toUnixLineSeparator(content));
 
 		DidOpenTextDocumentParams dotdp = new DidOpenTextDocumentParams();
 		dotdp.setTextDocument(textDocument);
 
 		languageServer.didOpen(dotdp);
+		openFiles.put(fileURI, new OpenFileInfo(content));
+
 		joinServerRequests();
 	}
 
-	/** Same as {@link #closeFile(FileURI)}, but accepts a module name instead of file URI. */
+	/** Same as {@link #closeFile(FileURI)}, but accepts a module name instead of a file URI. */
 	protected void closeFile(String moduleName) {
 		closeFile(getFileURIFromModuleName(moduleName));
 	}
 
 	/** Closes the given file in the LSP server and waits for the server to idle. */
 	protected void closeFile(FileURI fileURI) {
+		if (!isOpen(fileURI)) {
+			Assert.fail("trying to close a file that is not open: " + fileURI);
+		}
+		openFiles.remove(fileURI);
 		languageServer.didClose(new DidCloseTextDocumentParams(new TextDocumentIdentifier(fileURI.toString())));
 		joinServerRequests();
 	}
 
 	/**
-	 * Change a non-opened file on disk and notify the LSP server.
+	 * Change a non-opened file <u>on disk</u> and notify the LSP server.
 	 * <p>
 	 * Use method {@link #changeOpenedFile(String, Pair...)} instead if the file was previously opened with one of the
-	 * {@link #openFile(String, String) #openFile()} methods.
+	 * {@link #openFile(FileURI) #openFile()} methods.
 	 *
 	 * @param replacements
 	 *            for each pair P, the first (and only the first!) occurrence of P's key in the content of the file
@@ -272,16 +308,19 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	}
 
 	/**
-	 * Change a non-opened file on disk and notify the LSP server.
+	 * Change a non-opened file <u>on disk</u> and notify the LSP server.
 	 * <p>
 	 * Use method {@link #changeOpenedFile(String, Pair...)} instead if the file was previously opened with one of the
-	 * {@link #openFile(String, String) #openFile()} methods.
+	 * {@link #openFile(FileURI) #openFile()} methods.
 	 *
 	 * @param modification
 	 *            a function returning the desired new content when given the file's current content on disk.
 	 */
 	protected void changeNonOpenedFile(String moduleName, Function<String, String> modification) {
 		FileURI fileURI = getFileURIFromModuleName(moduleName);
+		if (isOpen(fileURI)) {
+			Assert.fail("file is open: " + fileURI);
+		}
 		// 1) change on disk
 		changeFileOnDiskWithoutNotification(fileURI, modification);
 		// 2) notify LSP server
@@ -292,23 +331,84 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	}
 
 	/**
-	 * Change an opened file on disk and notify the LSP server.
+	 * Same as {@link #changeOpenedFile(String, Function)}, but the desired new content is given as argument instead of
+	 * a modification function.
+	 */
+	protected void changeOpenedFile(String moduleName, String newContent) {
+		changeOpenedFile(moduleName, oldContent -> newContent);
+	}
+
+	/**
+	 * Similar to {@link #changeOpenedFile(String, Pair...)}, but the file's entire content is replaced in a single
+	 * {@link TextDocumentContentChangeEvent} by the string returned from the given modification function.
+	 * <p>
+	 * NOTE: this method replaces the file's entire content in a single step; if a test wants to simulate manual edits
+	 * more closely, then method {@link #changeOpenedFile(String, Pair...)} should be used instead!
+	 *
+	 * @param modification
+	 *            will be invoked with the file's old content as argument and is expected to return the desired new
+	 *            content.
+	 */
+	protected void changeOpenedFile(String moduleName, Function<String, String> modification) {
+		changeOpenedFile(moduleName,
+				modification,
+				(oldContent, newContent) -> singletonList(new TextDocumentContentChangeEvent(newContent)));
+	}
+
+	/**
+	 * Change an opened file <u>in memory only</u> and notify the LSP server.
 	 * <p>
 	 * Use method {@link #changeNonOpenedFile(String, Pair...)} instead if the file was *not* previously opened with one
-	 * of the {@link #openFile(String, String) #openFile()} methods.
+	 * of the {@link #openFile(FileURI) #openFile()} methods.
 	 */
 	protected void changeOpenedFile(String moduleName,
 			@SuppressWarnings("unchecked") Pair<String, String>... replacements) {
 
+		changeOpenedFile(moduleName,
+				oldContent -> applyReplacements(oldContent, replacements),
+				(oldContent, newContent) -> replacementsToChangeEvents(oldContent, replacements));
+	}
+
+	private void changeOpenedFile(String moduleName, Function<String, String> modification,
+			BiFunction<String, String, List<TextDocumentContentChangeEvent>> changeComputer) {
 		FileURI fileURI = getFileURIFromModuleName(moduleName);
-		// 1) change on disk
-		Pair<String, String> oldToNewContent = changeFileOnDiskWithoutNotification(fileURI, replacements);
-		String oldContent = oldToNewContent.getKey();
+		if (!isOpen(fileURI)) {
+			Assert.fail("file is not open: " + fileURI);
+		}
+		// 1) change in memory (i.e. in map 'openFiles')
+		OpenFileInfo info = openFiles.get(fileURI);
+		int oldVersion = info.version;
+		String oldContent = info.content;
+		int newVersion = oldVersion + 1;
+		String newContent = modification.apply(oldContent);
+		Assert.assertNotNull(newContent);
+		info.version = newVersion;
+		info.content = newContent;
 		// 2) notify LSP server
-		VersionedTextDocumentIdentifier docId = new VersionedTextDocumentIdentifier(fileURI.toString(), 1);
-		List<TextDocumentContentChangeEvent> changes = replacementsToChangeEvents(oldContent, replacements);
+		VersionedTextDocumentIdentifier docId = new VersionedTextDocumentIdentifier(fileURI.toString(), newVersion);
+		List<TextDocumentContentChangeEvent> changes = changeComputer.apply(oldContent, newContent);
 		DidChangeTextDocumentParams params = new DidChangeTextDocumentParams(docId, changes);
 		languageServer.didChange(params);
+	}
+
+	/** Same as {@link #saveOpenedFile(FileURI)}, accepting a module name instead of a file URI. */
+	protected void saveOpenedFile(String moduleName) {
+		FileURI fileURI = getFileURIFromModuleName(moduleName);
+		saveOpenedFile(fileURI);
+	}
+
+	/** Save the given, open file's in-memory content to disk. */
+	protected void saveOpenedFile(FileURI fileURI) {
+		if (!isOpen(fileURI)) {
+			Assert.fail("file is not open: " + fileURI);
+		}
+		// 1) save current content to disk
+		OpenFileInfo info = openFiles.get(fileURI);
+		changeFileOnDiskWithoutNotification(fileURI, info.content);
+		// 2) notify LSP server
+		VersionedTextDocumentIdentifier docId = new VersionedTextDocumentIdentifier(fileURI.toString(), info.version);
+		DidSaveTextDocumentParams params = new DidSaveTextDocumentParams(docId);
+		languageServer.didSave(params);
 	}
 
 	/**
@@ -386,6 +486,19 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 			@SuppressWarnings("unchecked") Pair<String, String>... replacements) {
 
 		return changeFileOnDiskWithoutNotification(fileURI, content -> applyReplacements(content, replacements));
+	}
+
+	/**
+	 * Changes a file on disk to the given new content without notifying the LSP server.
+	 *
+	 * @param fileURI
+	 *            URI of the file to change.
+	 * @param newContent
+	 *            the new content to write to the file.
+	 * @return a pair with the file's old content as key and its new content as value.
+	 */
+	protected Pair<String, String> changeFileOnDiskWithoutNotification(FileURI fileURI, String newContent) {
+		return changeFileOnDiskWithoutNotification(fileURI, oldContent -> newContent);
 	}
 
 	/**
