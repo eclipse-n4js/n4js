@@ -169,8 +169,9 @@ public class LibraryManager {
 
 		// Calculate the folder in which npm/yarn should be executed, either local project folder
 		// or yarn root folder
-		File folderInWhichToExecute = nodeModulesDiscoveryHelper
-				.getNodeModulesFolder(projectFolder.toPath()).nodeModulesFolder.getParentFile();
+		NodeModulesFolder nmf = nodeModulesDiscoveryHelper.getNodeModulesFolder(projectFolder.toPath());
+		File nmfFile = nmf.isYarnWorkspace() ? nmf.yarnNodeModulesFolder : nmf.npmNodeModulesFolder;
+		File folderInWhichToExecute = nmfFile.getParentFile();
 
 		npmCli.runNpmYarnInstall(folderInWhichToExecute);
 
@@ -198,8 +199,8 @@ public class LibraryManager {
 			}
 			Path projectPath = project.getLocation().toFileSystemPath();
 			NodeModulesFolder nodeModulesFolder = nodeModulesDiscoveryHelper.getNodeModulesFolder(projectPath);
-			if (nodeModulesFolder.isYarnWorkspace) {
-				yarnWorkspaceRoots.add(nodeModulesFolder.nodeModulesFolder.getParentFile());
+			if (nodeModulesFolder.isYarnWorkspace()) {
+				yarnWorkspaceRoots.add(nodeModulesFolder.yarnNodeModulesFolder.getParentFile());
 			} else {
 				projectsOutsideAnyYarnWorkspace.add(project);
 			}
