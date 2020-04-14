@@ -117,7 +117,11 @@ class InterfaceDeclarationTransformation extends Transformation {
 		val props = <PropertyAssignment>newArrayList;
 		val extendedInterfaces = createDirectlyImplementedOrExtendedInterfacesArgument(ifcDecl);
 		if (!extendedInterfaces.elements.empty) {
-			props += _PropertyNameValuePair("$extends", _ArrowFunc(false, #[], extendedInterfaces));
+			val $extends = steFor_$extendsInterfaces.name;
+			props += _PropertyGetterDecl(
+						$extends,
+						_ReturnStmnt(extendedInterfaces)
+					);
 		}
 		props += createInstanceFieldDefaultsProperty(ifcDecl, ifcSTE);
 		props += createInstanceMemberPropertiesExceptFields(ifcDecl, ifcSTE);

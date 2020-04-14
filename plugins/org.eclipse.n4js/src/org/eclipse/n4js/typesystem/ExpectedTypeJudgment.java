@@ -26,6 +26,7 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.number
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.objectTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.stringType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.stringTypeRef;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.symbolTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.topTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.voidTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.wrap;
@@ -423,7 +424,8 @@ import com.google.inject.Inject;
 					return objectTypeRef(G);
 				} else {
 					if (javaScriptVariantHelper.isTypeAware(e)) {
-						return TypeUtils.createNonSimplifiedUnionType(numberTypeRef(G), stringTypeRef(G));
+						return TypeUtils.createNonSimplifiedUnionType(numberTypeRef(G), stringTypeRef(G),
+								symbolTypeRef(G));
 					} else {
 						return anyTypeRef(G);
 					}

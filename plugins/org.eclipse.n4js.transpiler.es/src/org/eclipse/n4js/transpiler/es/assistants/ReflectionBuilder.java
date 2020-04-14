@@ -20,7 +20,10 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.AnnotationDefinition.RetentionPolicy;
 import org.eclipse.n4js.n4JS.AnnotableElement;
+import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration;
+import org.eclipse.n4js.n4JS.N4EnumDeclaration;
+import org.eclipse.n4js.n4JS.N4FieldAccessor;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
 import org.eclipse.n4js.n4JS.N4GetterDeclaration;
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
@@ -29,17 +32,13 @@ import org.eclipse.n4js.n4JS.N4MethodDeclaration;
 import org.eclipse.n4js.n4JS.N4SetterDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeDeclaration;
 import org.eclipse.n4js.n4JS.TypeDefiningElement;
+import org.eclipse.n4js.transpiler.TranspilerComponent;
 import org.eclipse.n4js.transpiler.TranspilerState;
 import org.eclipse.n4js.transpiler.im.DelegatingMember;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry;
 import org.eclipse.n4js.ts.types.TAnnotableElement;
 import org.eclipse.n4js.ts.types.TAnnotation;
-import org.eclipse.n4js.ts.types.TClassifier;
-import org.eclipse.n4js.ts.types.TInterface;
-import org.eclipse.n4js.ts.types.TN4Classifier;
 import org.eclipse.n4js.ts.types.Type;
-import org.eclipse.n4js.ts.types.TypingStrategy;
-import org.eclipse.n4js.ts.types.util.SuperInterfacesIterable;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.ResourceNameComputer;
 import org.eclipse.xtext.xbase.lib.Pair;
@@ -53,10 +52,14 @@ import com.google.gson.JsonPrimitive;
  *
  */
 public class ReflectionBuilder {
+	final TranspilerComponent transpilerComponent;
 	final TranspilerState state;
 	final ResourceNameComputer resourceNameComputer;
 
-	ReflectionBuilder(TranspilerState state, ResourceNameComputer resourceNameComputer) {
+	ReflectionBuilder(TranspilerComponent transpilerComponent, TranspilerState state,
+			ResourceNameComputer resourceNameComputer) {
+
+		this.transpilerComponent = transpilerComponent;
 		this.state = state;
 		this.resourceNameComputer = resourceNameComputer;
 	}
@@ -91,6 +94,9 @@ public class ReflectionBuilder {
 
 		Type type = state.info.getOriginalDefinedType(typeDecl);
 
+		// the name is written to reflection output only for interfaces
+		boolean isInterface = (typeDecl instanceof N4InterfaceDeclaration);
+
 		Iterable<N4MemberDeclaration> allMembers = (typeDecl instanceof N4ClassifierDeclaration)
 				? ((N4ClassifierDeclaration) typeDecl).getOwnedMembers()
 				: Collections.emptyList();
@@ -99,19 +105,15 @@ public class ReflectionBuilder {
 		String fqn = resourceNameComputer.getFullyQualifiedTypeName(type);
 		String modulePath = fqn.substring(0, fqn.length() - typeSTE.getName().length() - 1);
 
-		List<JsonElement> members = createAllMembers(allMembers, (typeDecl instanceof N4InterfaceDeclaration));
+		List<JsonElement> members = createAllMembers(typeDecl, allMembers);
 		List<Pair<String, JsonElement>> memberAnnotations = createMemberAnnotations(allMembers);
 		List<JsonElement> annotations = createRuntimeAnnotations(typeDecl);
-		List<JsonElement> allImplInterfaces = getImplementedInterfaces(type);
 
 		// reverse order to respect semantics of default parameters
 		JsonElement optAnnotations = (annotations == null || annotations.isEmpty())
 				? null
 				: array(annotations);
-		JsonElement optAllImplInterfaces = (optAnnotations == null && allImplInterfaces.isEmpty())
-				? null
-				: array(allImplInterfaces);
-		JsonElement optMemberAnnotations = (optAllImplInterfaces == null && memberAnnotations.isEmpty())
+		JsonElement optMemberAnnotations = (optAnnotations == null && memberAnnotations.isEmpty())
 				? null
 				: object(memberAnnotations);
 		JsonElement optMembers = (optMemberAnnotations == null && members.isEmpty())
@@ -119,30 +121,14 @@ public class ReflectionBuilder {
 				: array(members);
 
 		JsonElement reflectInfo = array(
-				primitive(typeSTE.getName()),
+				isInterface ? primitive(typeSTE.getName()) : null,
 				primitive(modulePath),
 				primitive(origin),
 				optMembers,
 				optMemberAnnotations,
-				optAllImplInterfaces,
 				optAnnotations);
 
 		return reflectInfo;
-	}
-
-	private List<JsonElement> getImplementedInterfaces(Type type) {
-		List<JsonElement> allImplInterfaces = new ArrayList<>();
-		if (type instanceof TClassifier) {
-			SuperInterfacesIterable superInterfaces = SuperInterfacesIterable.of((TClassifier) type);
-
-			for (TInterface interf : superInterfaces) {
-				if (!isStructurallyTyped(interf)) {
-					String fqnInterf = resourceNameComputer.getFullyQualifiedTypeName(interf);
-					allImplInterfaces.add(primitive(fqnInterf));
-				}
-			}
-		}
-		return allImplInterfaces;
 	}
 
 	private JsonArray array(JsonElement... elements) {
@@ -181,28 +167,64 @@ public class ReflectionBuilder {
 		return new JsonPrimitive(value);
 	}
 
-	private boolean isStructurallyTyped(TN4Classifier n4Classifier) {
-		TypingStrategy ts = n4Classifier.getTypingStrategy();
-		return ts == TypingStrategy.STRUCTURAL || ts == TypingStrategy.STRUCTURAL_FIELDS;
+	private List<JsonElement> createAllMembers(N4TypeDeclaration typeDecl, Iterable<N4MemberDeclaration> allMembers) {
+		if (typeDecl instanceof N4ClassDeclaration) {
+			return createClassMembers(allMembers);
+		}
+		if (typeDecl instanceof N4InterfaceDeclaration) {
+			return createInterfaceMembers(allMembers);
+		}
+		if (typeDecl instanceof N4EnumDeclaration) {
+			return Collections.emptyList();
+		}
+		throw new RuntimeException("Unknown type to create members");
 	}
 
-	private List<JsonElement> createAllMembers(Iterable<N4MemberDeclaration> allMembers, boolean isInterface) {
+	private List<JsonElement> createClassMembers(Iterable<N4MemberDeclaration> allMembers) {
 		List<JsonElement> memberStrings = new ArrayList<>();
 		for (N4MemberDeclaration member : allMembers) {
 			if (state.info.isHiddenFromReflection(member)) {
 				continue;
 			}
-			// create only consumed member strings, since others are detected from constructor and prototype
-@SuppressWarnings("unused")
-			boolean serialize = isInterface;
+			// create only some member strings, since others are detected from constructor and prototype
+			boolean serialize = false;
+			serialize |= !member.isStatic() && member instanceof N4FieldDeclaration;
 			serialize |= state.info.isConsumedFromInterface(member);
 			serialize |= member.getName().startsWith(N4JSLanguageUtils.SYMBOL_IDENTIFIER_PREFIX);
-// TODO GH-1693
-//			if (serialize) {
+			if (serialize) {
 				memberStrings.add(primitive(createMemberString(member)));
-//			}
+			}
 		}
 		return memberStrings;
+	}
+
+	private List<JsonElement> createInterfaceMembers(Iterable<N4MemberDeclaration> allMembers) {
+		List<JsonElement> memberStrings = new ArrayList<>();
+		for (N4MemberDeclaration member : allMembers) {
+			// do not datafields, default members, and #hasInstance
+			boolean serialize = true;
+			serialize &= !hasDefault(member);
+			serialize &= !member.getName().equals(N4JSLanguageUtils.SYMBOL_IDENTIFIER_PREFIX + "hasInstance");
+			serialize &= !(member instanceof N4FieldDeclaration);
+
+			if (serialize) {
+				memberStrings.add(primitive(createMemberString(member)));
+			}
+		}
+		return memberStrings;
+	}
+
+	private boolean hasDefault(N4MemberDeclaration member) {
+		if (member instanceof N4FieldDeclaration) {
+			return ((N4FieldDeclaration) member).getExpression() != null;
+		}
+		if (member instanceof N4MethodDeclaration) {
+			return ((N4MethodDeclaration) member).getBody() != null;
+		}
+		if (member instanceof N4FieldAccessor) {
+			return ((N4FieldAccessor) member).getBody() != null;
+		}
+		return false;
 	}
 
 	private List<Pair<String, JsonElement>> createMemberAnnotations(Iterable<N4MemberDeclaration> allMembers) {
