@@ -1166,17 +1166,21 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 				return;
 			}
 
+			var Path currNPM = null;
 			for (File nodeModulesFolder : allNodeModuleFolders.get(currentProjectName)) {
-				val currNPM = nodeModulesFolder.toPath.resolve(id.rawName);
-				if (currNPM !== null && !currNPM.toFile.exists) {
-					val packageVersion = if (ref.npmVersion === null) "" else ref.npmVersion.toString;
-					if (project.external) {
-						val msg = getMessageForNON_EXISTING_PROJECT(id);
-						addIssue(msg, ref.astRepresentation, null, NON_EXISTING_PROJECT, id.rawName, packageVersion);
-					} else {
-						val msg = getMessageForMISSING_YARN_WORKSPACE(id);
-						addIssue(msg, ref.astRepresentation, null, MISSING_YARN_WORKSPACE, id.rawName, packageVersion);
-					}
+				if (currNPM === null || !currNPM.toFile.exists) {
+					currNPM = nodeModulesFolder.toPath.resolve(id.rawName);
+				}
+			}
+			
+			if (currNPM !== null && !currNPM.toFile.exists) {
+				val packageVersion = if (ref.npmVersion === null) "" else ref.npmVersion.toString;
+				if (project.external) {
+					val msg = getMessageForNON_EXISTING_PROJECT(id);
+					addIssue(msg, ref.astRepresentation, null, NON_EXISTING_PROJECT, id.rawName, packageVersion);
+				} else {
+					val msg = getMessageForMISSING_YARN_WORKSPACE(id);
+					addIssue(msg, ref.astRepresentation, null, MISSING_YARN_WORKSPACE, id.rawName, packageVersion);
 				}
 			}
 		}
