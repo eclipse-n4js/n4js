@@ -17,10 +17,6 @@ set -eo pipefail
 
 SCRIPT_DIR_REL=$(dirname "$0")
 pushd ${SCRIPT_DIR_REL}
-echo "pwd"
-pwd
-ls -ll
-echo $(cd ../../.. && pwd)
 SCRIPT_DIR=$(pwd)
 N4JS_DIR=$(cd ../../.. && pwd)
 popd
@@ -72,22 +68,7 @@ else
   echo "Port 4873 is free"
 fi
 
-echo "0 $0"
-echo "dirname"
-echo $(dirname "$0")
-echo "SCRIPT_DIR: ${SCRIPT_DIR}"
-echo "N4JS_DIR: ${N4JS_DIR}"
-echo "pwd"
-pwd
-echo "ls -ll"
-ls -ll
-echo "ls -ll N4JS_DIR"
-ls -ll ${N4JS_DIR}
 
-cat ${N4JS_DIR}/releng
-cat ${N4JS_DIR}/releng/org.eclipse.n4js.libs.build
-cat ${N4JS_DIR}/releng/org.eclipse.n4js.libs.build/verdaccioConfig
-cat ${VERDACCIO_CONFIG_DIR}/config.yaml
 
 echo "==== STEP 1/8: Start Verdaccio"
 echo ${VERDACCIO_CONFIG_DIR}
