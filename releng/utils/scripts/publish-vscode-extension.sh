@@ -107,8 +107,8 @@ echo "==="
 
 
 
+echo "==== STEP 4/8: Update versions inside package.json of extension"
 pushd ${EXTENSION_DIR}
-	echo "==== STEP 4/8: Update versions inside package.json of extension"
 	npx json -I -f package.json -e "this.version=\"$VERSION\""
 	npx json -I -f package.json -e "this.dependencies['n4js-cli']=\"$VERSION\""
 	npx json -I -f package.json -e "this.dependencies['n4js-runtime']=\"$VERSION\""
@@ -120,7 +120,7 @@ pushd ${EXTENSION_DIR}
 	
 	
 	echo "==== STEP 6/8: Pack extension"
-	vsce package --out ${PACKAGE_NAME}
+	npx vsce package --out ${PACKAGE_NAME}
 	
 	
 	echo "==== STEP 7/8: Copy extension"
