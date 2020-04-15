@@ -37,6 +37,7 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.ide.validation.N4JSIssue;
 import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
 import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
@@ -105,7 +106,7 @@ public class ProjectStatePersister {
 	private static final int CURRENT_VERSION = VERSION_1;
 
 	/** The simple name of the file with the project state. */
-	public static final String FILENAME = ".n4js.projectstate";
+	public static final String FILENAME = N4JSGlobals.N4JS_PROJECT_STATE;
 
 	/**
 	 * Write the index state and a hash of the project state to disk in order to allow loading it again.

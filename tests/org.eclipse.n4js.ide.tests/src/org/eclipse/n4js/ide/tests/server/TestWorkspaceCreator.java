@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectDescription.ProjectType;
@@ -136,18 +137,46 @@ public class TestWorkspaceCreator {
 		return root;
 	}
 
+	/** Same as {@link #getProjectRoot(String)}, but for the {@link #DEFAULT_PROJECT_NAME default project}. */
+	public File getProjectRoot() {
+		return getProjectRoot(DEFAULT_PROJECT_NAME);
+	}
+
 	/** Returns the root folder of the project with the given name. */
 	public File getProjectRoot(String projectName) {
-		Path projectFolder = getRoot().toPath();
+		File folderContainingProjects = getRoot();
 		if (isYarnWorkspace()) {
-			projectFolder = projectFolder.resolve(YARN_TEST_PROJECT).resolve(YarnWorkspaceProject.PACKAGES);
+			folderContainingProjects = folderContainingProjects.toPath().resolve(YARN_TEST_PROJECT)
+					.resolve(YarnWorkspaceProject.PACKAGES).toFile();
 		}
-		projectFolder = projectFolder.resolve(projectName);
+		File projectFolder = new File(folderContainingProjects, projectName);
+		if (!projectFolder.isDirectory()) {
+			// search in all node_modules folders in workspace:
+			for (File nodeModulesFolder : getNodeModulesFolders()) {
+				projectFolder = new File(nodeModulesFolder, projectName);
+				if (projectFolder.isDirectory()) {
+					break;
+				}
+			}
+		}
 		// for consistency with #getFileURIFromModuleName() we require the folder to exist:
-		if (!Files.isDirectory(projectFolder)) {
+		if (!projectFolder.isDirectory()) {
 			throw new IllegalStateException("cannot find project folder for project name: " + projectName);
 		}
-		return projectFolder.toFile();
+		return projectFolder;
+	}
+
+	/** Returns all <code>node_modules</code> folders in the workspace. */
+	public List<File> getNodeModulesFolders() {
+		try (Stream<Path> paths = Files.walk(getRoot().toPath())) {
+			return paths
+					.map(Path::toFile)
+					.filter(File::isDirectory)
+					.filter(f -> N4JSGlobals.NODE_MODULES.equals(f.getName()))
+					.collect(Collectors.toList());
+		} catch (IOException e) {
+			throw new RuntimeException("error while searching node_modules folders", e);
+		}
 	}
 
 	/** Tells whether the test workspace located at {@link #getRoot()} is a yarn workspace. */
@@ -353,6 +382,9 @@ public class TestWorkspaceCreator {
 				Project dependency = yarnProject.getProject(projectDependency);
 				if (dependency == null) {
 					dependency = yarnProject.getNodeModuleProject(projectDependency);
+					if (dependency == null) {
+						throw new IllegalArgumentException("project not found: " + projectDependency);
+					}
 				}
 				project.addProjectDependency(dependency);
 			}

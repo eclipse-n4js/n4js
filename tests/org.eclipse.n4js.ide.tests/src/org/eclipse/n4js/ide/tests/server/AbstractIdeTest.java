@@ -160,6 +160,14 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		return workspaceCreator.getRoot();
 	}
 
+	/**
+	 * Same as {@link #getProjectRoot(String)}, but for the {@link TestWorkspaceCreator#DEFAULT_PROJECT_NAME default
+	 * project}.
+	 */
+	public File getProjectRoot() {
+		return workspaceCreator.getProjectRoot();
+	}
+
 	/** Returns the root folder of the project with the given name. */
 	public File getProjectRoot(String projectName) {
 		return workspaceCreator.getProjectRoot(projectName);
@@ -340,29 +348,45 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		languageServer.didChangeWatchedFiles(params);
 	}
 
-	/**
-	 * Same as {@link #changeOpenedFile(String, Function)}, but the desired new content is given as argument instead of
-	 * a modification function.
-	 */
+	/** Same as {@link #changeOpenedFile(FileURI, String)}, but accepts a module name. */
 	protected void changeOpenedFile(String moduleName, String newContent) {
-		changeOpenedFile(moduleName, oldContent -> newContent);
+		changeOpenedFile(getFileURIFromModuleName(moduleName), newContent);
 	}
 
 	/**
-	 * Similar to {@link #changeOpenedFile(String, Pair...)}, but the file's entire content is replaced in a single
+	 * Same as {@link #changeOpenedFile(FileURI, Function)}, but the desired new content is given as argument instead of
+	 * a modification function.
+	 */
+	protected void changeOpenedFile(FileURI fileURI, String newContent) {
+		changeOpenedFile(fileURI, oldContent -> newContent);
+	}
+
+	/** Same as {@link #changeFileOnDiskWithoutNotification(FileURI, Function)}, but accepts a module name. */
+	protected void changeOpenedFile(String moduleName, Function<String, String> modification) {
+		changeOpenedFile(getFileURIFromModuleName(moduleName), modification);
+	}
+
+	/**
+	 * Similar to {@link #changeOpenedFile(FileURI, Pair...)}, but the file's entire content is replaced in a single
 	 * {@link TextDocumentContentChangeEvent} by the string returned from the given modification function.
 	 * <p>
 	 * NOTE: this method replaces the file's entire content in a single step; if a test wants to simulate manual edits
-	 * more closely, then method {@link #changeOpenedFile(String, Pair...)} should be used instead!
+	 * more closely, then method {@link #changeOpenedFile(FileURI, Pair...)} should be used instead!
 	 *
 	 * @param modification
 	 *            will be invoked with the file's old content as argument and is expected to return the desired new
 	 *            content.
 	 */
-	protected void changeOpenedFile(String moduleName, Function<String, String> modification) {
-		changeOpenedFile(moduleName,
+	protected void changeOpenedFile(FileURI fileURI, Function<String, String> modification) {
+		changeOpenedFile(fileURI,
 				modification,
 				(oldContent, newContent) -> singletonList(new TextDocumentContentChangeEvent(newContent)));
+	}
+
+	/** Same as {@link #changeOpenedFile(FileURI, Pair...)}, but accepts a module name. */
+	protected void changeOpenedFile(String moduleName,
+			@SuppressWarnings("unchecked") Pair<String, String>... replacements) {
+		changeOpenedFile(getFileURIFromModuleName(moduleName), replacements);
 	}
 
 	/**
@@ -371,17 +395,16 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * Use method {@link #changeNonOpenedFile(String, Pair...)} instead if the file was *not* previously opened with one
 	 * of the {@link #openFile(FileURI) #openFile()} methods.
 	 */
-	protected void changeOpenedFile(String moduleName,
+	protected void changeOpenedFile(FileURI fileURI,
 			@SuppressWarnings("unchecked") Pair<String, String>... replacements) {
 
-		changeOpenedFile(moduleName,
+		changeOpenedFile(fileURI,
 				oldContent -> applyReplacements(oldContent, replacements),
 				(oldContent, newContent) -> replacementsToChangeEvents(oldContent, replacements));
 	}
 
-	private void changeOpenedFile(String moduleName, Function<String, String> modification,
+	private void changeOpenedFile(FileURI fileURI, Function<String, String> modification,
 			BiFunction<String, String, List<TextDocumentContentChangeEvent>> changeComputer) {
-		FileURI fileURI = getFileURIFromModuleName(moduleName);
 		if (!isOpen(fileURI)) {
 			Assert.fail("file is not open: " + fileURI);
 		}

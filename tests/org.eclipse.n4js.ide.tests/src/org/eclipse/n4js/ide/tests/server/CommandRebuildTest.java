@@ -24,6 +24,8 @@ import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
 
 import org.eclipse.lsp4j.ExecuteCommandParams;
+import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.tests.codegen.Project;
@@ -37,7 +39,7 @@ import com.google.inject.Injector;
  */
 public class CommandRebuildTest extends AbstractStructuredIdeTest<Void> {
 	static final String PROBANDS_NAME = "probands";
-	static final String PROJECT_STATE_NAME = ".n4js.projectstate";
+	static final String PROJECT_STATE_NAME = N4JSGlobals.N4JS_PROJECT_STATE;
 
 	static final long FILE_TIME_MILLISECONDS = 8472000;
 
@@ -87,7 +89,8 @@ public class CommandRebuildTest extends AbstractStructuredIdeTest<Void> {
 		test("class A { foo(a: A) { } } class Main { main(a: A) { a.foo(null); } }");
 
 		// send command under test
-		ExecuteCommandParams cmdCleanParams = new ExecuteCommandParams("n4js.rebuild", Collections.emptyList());
+		ExecuteCommandParams cmdCleanParams = new ExecuteCommandParams(N4JSCommandService.N4JS_REBUILD,
+				Collections.emptyList());
 		CompletableFuture<Object> future = languageServer.executeCommand(cmdCleanParams);
 		future.join();
 
