@@ -19,6 +19,7 @@ BASE_DIR=$(pwd $(dirname "$0"))
 pushd ${BASE_DIR}
 echo "pwd"
 pwd
+ls -ll
 echo $(cd ../../.. && pwd)
 N4JS_DIR=$(cd ../../.. && pwd)
 popd
