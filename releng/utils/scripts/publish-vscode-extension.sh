@@ -68,9 +68,13 @@ else
 fi
 
 
-echo $(PWD)
-echo $(ls -ll)
-echo $(ls -ll ${N4JS_DIR})
+echo "pwd"
+pwd
+echo "ls -ll"
+ls -ll
+echo "ls -ll N4JS_DIR"
+ls -ll ${N4JS_DIR}
+
 cat ${N4JS_DIR}/releng
 cat ${N4JS_DIR}/releng/org.eclipse.n4js.libs.build
 cat ${N4JS_DIR}/releng/org.eclipse.n4js.libs.build/verdaccioConfig
