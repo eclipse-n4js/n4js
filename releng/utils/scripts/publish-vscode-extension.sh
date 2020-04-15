@@ -15,12 +15,13 @@ set -eo pipefail
 
 
 
-BASE_DIR=$(pwd $(dirname "$0"))
-pushd ${BASE_DIR}
+SCRIPT_DIR_REL=$(dirname "$0")
+pushd ${SCRIPT_DIR_REL}
 echo "pwd"
 pwd
 ls -ll
 echo $(cd ../../.. && pwd)
+SCRIPT_DIR=$(pwd)
 N4JS_DIR=$(cd ../../.. && pwd)
 popd
 TARGET_DIR=${N4JS_DIR}/target
@@ -74,7 +75,7 @@ fi
 echo "0 $0"
 echo "dirname"
 echo $(dirname "$0")
-echo "BASE_DIR: ${BASE_DIR}"
+echo "SCRIPT_DIR: ${SCRIPT_DIR}"
 echo "N4JS_DIR: ${N4JS_DIR}"
 echo "pwd"
 pwd
