@@ -319,7 +319,7 @@ public class ProjectDiscoveryHelper {
 	private void addDependency(Path depLocation, Map<Path, ProjectDescription> pdCache, Set<Path> workList,
 			Set<Path> dependencies) {
 
-		if (dependencies.contains(depLocation)) {
+		if (depLocation == null || dependencies.contains(depLocation)) {
 			return;
 		}
 
