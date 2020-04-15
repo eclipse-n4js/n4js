@@ -17,6 +17,9 @@ set -eo pipefail
 
 BASE_DIR=$(pwd $(dirname "$0"))
 pushd ${BASE_DIR}
+echo "pwd"
+pwd
+echo $(cd ../../.. && pwd)
 N4JS_DIR=$(cd ../../.. && pwd)
 popd
 TARGET_DIR=${N4JS_DIR}/target
