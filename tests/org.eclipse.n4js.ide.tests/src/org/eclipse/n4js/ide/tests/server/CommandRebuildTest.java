@@ -27,7 +27,6 @@ import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.tests.codegen.Project;
-import org.eclipse.xtext.xbase.lib.Pair;
 import org.junit.After;
 import org.junit.Test;
 
@@ -101,14 +100,6 @@ public class CommandRebuildTest extends AbstractStructuredIdeTest<Void> {
 		FileTime genFileTime = Files.readAttributes(genFileStatePath, BasicFileAttributes.class).lastModifiedTime();
 		assertNotEquals(FILE_TIME_MILLISECONDS, prjStateTime.toMillis());
 		assertNotEquals(FILE_TIME_MILLISECONDS, genFileTime.toMillis());
-	}
-
-	@Test
-	public void testTEMP() {
-		workspaceCreator.createTestProjectOnDisk(
-				Pair.of("A", "class A { foo(a: A) { } } class Main { main(a: A) { a.foo(null); } }"));
-		startAndWaitForLspServer();
-		System.out.println("!!!");
 	}
 
 	/** Expectation is that files '.n4js.projectstate' and 'src-gen/Module.js' are NOT changed. */

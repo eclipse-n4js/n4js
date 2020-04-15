@@ -13,9 +13,9 @@ package org.eclipse.n4js.ide.tests.builder
 import org.junit.Test
 
 /**
- * Tests covering fixed bugs in the incremental builder.
+ * Tests indirect dependencies between files.
  */
-class IncrementalBuilderBugsTest extends AbstractIncrementalBuilderTest {
+class IncrementalBuilderIndirectDependencyTest extends AbstractIncrementalBuilderTest {
 
 	@Test
 	def void testIndirectDependencyThroughInheritance() {
