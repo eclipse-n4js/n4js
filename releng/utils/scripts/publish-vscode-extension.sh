@@ -67,7 +67,8 @@ else
   echo "Port 4873 is free"
 fi
 
-
+echo "BASE_DIR: ${BASE_DIR}"
+echo "N4JS_DIR: ${N4JS_DIR}"
 echo "pwd"
 pwd
 echo "ls -ll"
