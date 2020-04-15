@@ -4,6 +4,10 @@
 		"lerna": "3.20.2",
 		"semver": "7.1.1"
 	},
+	"resolutions": {
+		"minimist": "~1.2.2",
+		"kind-of": "~6.0.3"
+	},
 	"scripts": {
 		"test": "lerna run --stream test"
 	},
