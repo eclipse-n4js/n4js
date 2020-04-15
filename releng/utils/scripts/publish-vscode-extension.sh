@@ -68,6 +68,10 @@ else
 fi
 
 
+cat ${N4JS_DIR}
+cat ${N4JS_DIR}/releng
+cat ${N4JS_DIR}/releng/org.eclipse.n4js.libs.build
+cat ${N4JS_DIR}/releng/org.eclipse.n4js.libs.build/verdaccioConfig
 cat ${VERDACCIO_CONFIG_DIR}/config.yaml
 
 echo "==== STEP 1/8: Start Verdaccio"
