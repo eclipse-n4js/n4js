@@ -67,6 +67,9 @@ else
   echo "Port 4873 is free"
 fi
 
+echo "0 $0"
+echo "dirname"
+echo $(dirname "$0")
 echo "BASE_DIR: ${BASE_DIR}"
 echo "N4JS_DIR: ${N4JS_DIR}"
 echo "pwd"
