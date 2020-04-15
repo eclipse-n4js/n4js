@@ -68,6 +68,7 @@ else
 fi
 
 
+cat $PWD/conf/nginx.conf
 
 echo "==== STEP 1/8: Start Verdaccio"
 echo ${VERDACCIO_CONFIG_DIR}
