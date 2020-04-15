@@ -68,7 +68,7 @@ else
 fi
 
 
-cat ${N4JS_DIR}
+#cat ${N4JS_DIR}
 cat ${N4JS_DIR}/releng
 cat ${N4JS_DIR}/releng/org.eclipse.n4js.libs.build
 cat ${N4JS_DIR}/releng/org.eclipse.n4js.libs.build/verdaccioConfig
