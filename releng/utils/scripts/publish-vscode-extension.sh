@@ -62,7 +62,7 @@ if [ $RESULT -eq 0 ]; then
   echo "ERROR: Port 4873 is occupied"
   
   #echo "Kill running docker" # used locally for debugging
-  #docker rm -f n4js-test-verdaccio || true
+  #docker rm -f extension-publish-verdaccio || true
   exit -1
 else
   echo "Port 4873 is free"
@@ -71,8 +71,9 @@ fi
 
 
 echo "==== STEP 1/8: Start Verdaccio"
-echo ${VERDACCIO_CONFIG_DIR}
-docker run -d -it --rm --name n4js-test-verdaccio -p 4873:4873 -v ${VERDACCIO_CONFIG_DIR}/config.yaml:/verdaccio/conf/config.yaml ${VERDACCIO_IMAGE}
+docker rm -f extension-publish-verdaccio || true # kill already running instance
+docker rm -f n4js-test-verdaccio || true # kill already running instance
+docker run -d -it --rm --name extension-publish-verdaccio -p 4873:4873 -v ${VERDACCIO_CONFIG_DIR}/config.yaml:/verdaccio/conf/config.yaml ${VERDACCIO_IMAGE}
 
 echo "Wait 1s"
 sleep 1s
@@ -129,7 +130,7 @@ popd
 
 
 echo "==== STEP 8/8: Killing Verdaccio"
-docker rm -f n4js-test-verdaccio || true
+docker rm -f extension-publish-verdaccio || true
 
 
 echo "==== PUBLISH N4JS-LIBS - DONE"
