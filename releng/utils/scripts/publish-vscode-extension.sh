@@ -100,7 +100,7 @@ echo "==== STEP 3/8: Publish libs to local verdaccio registry: calling script 'p
 echo "==="
 echo "=="
 echo "="
-./publish-n4js-libs.sh local ${VERSION}
+${SCRIPT_DIR}/publish-n4js-libs.sh local ${VERSION}
 echo "="
 echo "=="
 echo "==="
