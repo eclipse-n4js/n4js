@@ -1194,7 +1194,7 @@ abstract class PropertyNameOwner extends NamedElement {
 class LiteralOrComputedPropertyName {
 	/* This is set by the IAstFactory while parsing a property assignment. */
 	transient PropertyNameKind kind
-	/* The literal name given in the source code or <code>null</code> if this is a computed property name. */
+	/* The literal name given in the source code or <code>null</code> iff this is a computed property name. */
 	String literalName
 	/*
 	 * Iff this is a computed property name and the expression is one of the special cases that can be evaluated at
