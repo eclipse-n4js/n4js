@@ -1168,9 +1168,12 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 
 			// search for the dependency in all node_modules folders (respecting shadowing order)
 			var Path currNPM = null;
-			for (File nodeModulesFolder : allNodeModuleFolders.get(currentProjectName).nodeModulesFolders) {
-				if (currNPM === null || !currNPM.toFile.exists) {
-					currNPM = nodeModulesFolder.toPath.resolve(id.rawName);
+			val nmFolders = allNodeModuleFolders.get(currentProjectName);
+			if (nmFolders !== null) {
+				for (File nodeModulesFolder : nmFolders.nodeModulesFolders) {
+					if (currNPM === null || !currNPM.toFile.exists) {
+						currNPM = nodeModulesFolder.toPath.resolve(id.rawName);
+					}
 				}
 			}
 
