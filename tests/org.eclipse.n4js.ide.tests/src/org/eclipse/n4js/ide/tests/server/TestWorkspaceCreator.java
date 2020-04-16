@@ -221,7 +221,8 @@ public class TestWorkspaceCreator {
 	 * Same as {@link #createTestProjectOnDisk(Map)}, but name and content of the modules can be provided as one or more
 	 * {@link Pair}s.
 	 */
-	public Project createTestProjectOnDisk(@SuppressWarnings("unchecked") Pair<String, String>... modulesContents) {
+	@SafeVarargs
+	public final Project createTestProjectOnDisk(Pair<String, String>... modulesContents) {
 		return createTestProjectOnDisk(Arrays.asList(modulesContents));
 	}
 
@@ -252,13 +253,11 @@ public class TestWorkspaceCreator {
 	}
 
 	/** Same as {@link #createTestOnDisk(Map)}, but accepts pairs instead of a map. */
-	public Project createTestOnDisk(
-			@SuppressWarnings("unchecked") Pair<String, List<Pair<String, String>>>... projectsModulesContents) {
-
+	@SafeVarargs
+	public final Project createTestOnDisk(Pair<String, List<Pair<String, String>>>... projectsModulesContents) {
 		Map<String, Map<String, String>> projectsModulesContentsAsMap = new LinkedHashMap<>();
 		convertProjectsModulesContentsToMap(Arrays.asList(projectsModulesContents), projectsModulesContentsAsMap,
 				false);
-
 		return createTestOnDisk(projectsModulesContentsAsMap);
 	}
 

@@ -29,9 +29,11 @@ import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.tests.codegen.Project;
+import org.eclipse.xtext.xbase.lib.Pair;
 import org.junit.After;
 import org.junit.Test;
 
+import com.google.common.collect.Lists;
 import com.google.inject.Injector;
 
 /**
@@ -121,6 +123,36 @@ public class CommandRebuildTest extends AbstractStructuredIdeTest<Void> {
 
 		assertEquals(FILE_TIME_MILLISECONDS, prjStateTime.toMillis());
 		assertEquals(FILE_TIME_MILLISECONDS, genFileTime.toMillis());
+	}
+
+	/**
+	 * The build triggered by the rebuild command must send 'publishDiagnostics' events even for those resources that do
+	 * not contain any issues, to ensure that any obsolete issues for those resources that might exist on client side
+	 * are removed. Normally such obsolete issues should not exist (not at start up time, because LSP clients do not
+	 * serialize issues; and not when rebuild is triggered manually, because an incremental build should have removed
+	 * those issues); however, in case of bugs in the incremental builder or other special circumstances this may
+	 * happen.
+	 */
+	@Test
+	public void testPublishDiagnosticsSentForModuleWithoutIssues() {
+		workspaceCreator.createTestProjectOnDisk(Pair.of("Main", "let x: string = 42; x;"));
+		startAndWaitForLspServer();
+
+		assertIssues(Pair.of("Main", Lists.newArrayList(
+				"(Error, [0:16 - 0:18], int is not a subtype of string.)")));
+
+		// fix the error on disk, but don't let the LSP server know (to avoid incremental build)
+		changeFileOnDiskWithoutNotification("Main", Pair.of("string", "number"));
+
+		// send command under test
+		ExecuteCommandParams params = new ExecuteCommandParams(N4JSCommandService.N4JS_REBUILD,
+				Collections.emptyList());
+		languageServer.executeCommand(params).join();
+
+		// wait for previous command to finish
+		joinServerRequests();
+
+		assertNoIssues();
 	}
 
 	private void setFileCreationDate(Path filePath) throws IOException {

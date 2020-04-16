@@ -322,8 +322,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 *            for each pair P, the first (and only the first!) occurrence of P's key in the content of the file
 	 *            denoted by <code>fileURI</code> will be replaced by P's value.
 	 */
-	protected void changeNonOpenedFile(String moduleName,
-			@SuppressWarnings("unchecked") Pair<String, String>... replacements) {
+	@SafeVarargs
+	protected final void changeNonOpenedFile(String moduleName, Pair<String, String>... replacements) {
 		changeNonOpenedFile(moduleName, content -> applyReplacements(content, replacements));
 	}
 
@@ -386,8 +386,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	}
 
 	/** Same as {@link #changeOpenedFile(FileURI, Pair...)}, but accepts a module name. */
-	protected void changeOpenedFile(String moduleName,
-			@SuppressWarnings("unchecked") Pair<String, String>... replacements) {
+	@SafeVarargs
+	protected final void changeOpenedFile(String moduleName, Pair<String, String>... replacements) {
 		changeOpenedFile(getFileURIFromModuleName(moduleName), replacements);
 	}
 
@@ -397,9 +397,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * Use method {@link #changeNonOpenedFile(String, Pair...)} instead if the file was *not* previously opened with one
 	 * of the {@link #openFile(FileURI) #openFile()} methods.
 	 */
-	protected void changeOpenedFile(FileURI fileURI,
-			@SuppressWarnings("unchecked") Pair<String, String>... replacements) {
-
+	@SafeVarargs
+	protected final void changeOpenedFile(FileURI fileURI, Pair<String, String>... replacements) {
 		changeOpenedFile(fileURI,
 				oldContent -> applyReplacements(oldContent, replacements),
 				(oldContent, newContent) -> replacementsToChangeEvents(oldContent, replacements));
@@ -437,8 +436,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		if (!isOpen(fileURI)) {
 			Assert.fail("file is not open: " + fileURI);
 		}
+		OpenFileInfo info = openFiles.remove(fileURI);
 		// 1) save current content to disk
-		OpenFileInfo info = openFiles.get(fileURI);
 		changeFileOnDiskWithoutNotification(fileURI, info.content);
 		// 2) notify LSP server
 		VersionedTextDocumentIdentifier docId = new VersionedTextDocumentIdentifier(fileURI.toString(), info.version);
@@ -499,9 +498,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * Same as {@link #changeFileOnDiskWithoutNotification(FileURI, Pair...)}, accepting a module name instead of a file
 	 * URI.
 	 */
-	protected void changeFileOnDiskWithoutNotification(String moduleName,
-			@SuppressWarnings("unchecked") Pair<String, String>... replacements) {
-
+	@SafeVarargs
+	protected final void changeFileOnDiskWithoutNotification(String moduleName, Pair<String, String>... replacements) {
 		FileURI fileURI = getFileURIFromModuleName(moduleName);
 		changeFileOnDiskWithoutNotification(fileURI, replacements);
 	}
@@ -517,9 +515,9 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 *            denoted by <code>fileURI</code> will be replaced by P's value.
 	 * @return a pair with the file's old content as key and its new content as value.
 	 */
-	protected Pair<String, String> changeFileOnDiskWithoutNotification(FileURI fileURI,
-			@SuppressWarnings("unchecked") Pair<String, String>... replacements) {
-
+	@SafeVarargs
+	protected final Pair<String, String> changeFileOnDiskWithoutNotification(FileURI fileURI,
+			Pair<String, String>... replacements) {
 		return changeFileOnDiskWithoutNotification(fileURI, content -> applyReplacements(content, replacements));
 	}
 
@@ -639,9 +637,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * Same as {@link #assertIssues(Map)}, accepting pairs from module name to issue list instead of a map from module
 	 * ID to issue list.
 	 */
-	protected void assertIssues(
-			@SuppressWarnings("unchecked") Pair<String, List<String>>... moduleNameToExpectedIssues) {
-
+	@SafeVarargs
+	protected final void assertIssues(Pair<String, List<String>>... moduleNameToExpectedIssues) {
 		assertIssues(convertModuleNamePairsToIdMap(moduleNameToExpectedIssues));
 	}
 
@@ -693,9 +690,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * Same as {@link #assertIssuesInModules(Map)}, accepting pairs from module name to issue list instead of a map from
 	 * module ID to issue list.
 	 */
-	protected void assertIssuesInModules(
-			@SuppressWarnings("unchecked") Pair<String, List<String>>... moduleNameToExpectedIssues) {
-
+	@SafeVarargs
+	protected final void assertIssuesInModules(Pair<String, List<String>>... moduleNameToExpectedIssues) {
 		assertIssuesInModules(convertModuleNamePairsToIdMap(moduleNameToExpectedIssues));
 	}
 
@@ -764,14 +760,16 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 				.collect(Collectors.joining("\n" + indent));
 	}
 
+	@SafeVarargs
 	private List<TextDocumentContentChangeEvent> replacementsToChangeEvents(String content,
-			@SuppressWarnings("unchecked") Pair<String, String>... replacements) {
+			Pair<String, String>... replacements) {
 
 		return replacementsToChangeEvents(new XDocument(0, content), replacements);
 	}
 
+	@SafeVarargs
 	private List<TextDocumentContentChangeEvent> replacementsToChangeEvents(XDocument document,
-			@SuppressWarnings("unchecked") Pair<String, String>... replacements) {
+			Pair<String, String>... replacements) {
 
 		List<TextDocumentContentChangeEvent> result = new ArrayList<>(replacements.length);
 		for (Pair<String, String> replacement : replacements) {
@@ -787,9 +785,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		return result;
 	}
 
-	private <T> Map<FileURI, T> convertModuleNamePairsToIdMap(
-			@SuppressWarnings("unchecked") Pair<String, T>... moduleNameToExpectedIssues) {
-
+	@SafeVarargs
+	private <T> Map<FileURI, T> convertModuleNamePairsToIdMap(Pair<String, T>... moduleNameToExpectedIssues) {
 		return Stream.of(moduleNameToExpectedIssues).collect(Collectors.toMap(
 				p -> getFileURIFromModuleName(p.getKey()), Pair::getValue));
 	}
@@ -832,9 +829,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		return cs.toString().replaceAll("\r?\n", "\n");
 	}
 
-	private static String applyReplacements(CharSequence oldContent,
-			@SuppressWarnings("unchecked") Pair<String, String>... replacements) {
-
+	@SafeVarargs
+	private static String applyReplacements(CharSequence oldContent, Pair<String, String>... replacements) {
 		StringBuilder newContent = new StringBuilder(oldContent);
 		for (Pair<String, String> replacement : replacements) {
 			int offset = newContent.indexOf(replacement.getKey());
