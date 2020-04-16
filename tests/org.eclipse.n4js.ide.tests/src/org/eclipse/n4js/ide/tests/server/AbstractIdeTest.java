@@ -42,6 +42,7 @@ import org.eclipse.lsp4j.DidCloseTextDocumentParams;
 import org.eclipse.lsp4j.DidOpenTextDocumentParams;
 import org.eclipse.lsp4j.DidSaveTextDocumentParams;
 import org.eclipse.lsp4j.ExecuteCommandCapabilities;
+import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.FileChangeType;
 import org.eclipse.lsp4j.FileEvent;
 import org.eclipse.lsp4j.InitializeParams;
@@ -61,6 +62,7 @@ import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscTestFactory;
 import org.eclipse.n4js.cli.helper.SystemOutRedirecter;
+import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
 import org.eclipse.n4js.ide.tests.client.IdeTestLanguageClient;
 import org.eclipse.n4js.ide.tests.client.IdeTestLanguageClient.IIdeTestLanguageClientListener;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
@@ -242,12 +244,11 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		joinServerRequests();
 	}
 
-	/** Cleans entire workspace without waiting for LSP server to finish. */
+	/** Cleans and rebuilds entire workspace without waiting for LSP server to finish. */
 	protected void cleanBuildWithoutWait() {
-		// NOTE: do not invoke languageClient.clearIssues() here!
-		// See API doc of IdeTestLanguageClient#clearIssues() for details.
-		languageServer.clean();
-		languageServer.reinitWorkspace();
+		ExecuteCommandParams params = new ExecuteCommandParams(N4JSCommandService.N4JS_REBUILD,
+				Collections.emptyList());
+		languageServer.executeCommand(params);
 	}
 
 	/** Same as {@link #isOpen(FileURI)}, but accepts a module name. */
