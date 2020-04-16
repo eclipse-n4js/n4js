@@ -10,19 +10,16 @@
  */
 package org.eclipse.n4js.transpiler.es.tests
 
-import com.google.inject.Inject
+import java.util.regex.Pattern
+import org.eclipse.emf.common.util.URI
 import org.eclipse.n4js.N4JSInjectorProviderWithMockProject
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.emf.common.util.URI
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
-import org.eclipse.xtext.testing.util.ParseHelper
 import org.junit.FixMethodOrder
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.MethodSorters
-
-import java.util.regex.Pattern
 
 /**
  */
@@ -30,8 +27,6 @@ import java.util.regex.Pattern
 @InjectWith(N4JSInjectorProviderWithMockProject)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class AT_IDE_2004_YieldTest extends AbstractTranspilerTest {
-
-	@Inject extension ParseHelper<Script>
 
 	/**
 	 * This test checks extra parenthesis around the yield expression. c.f. IDE-2004

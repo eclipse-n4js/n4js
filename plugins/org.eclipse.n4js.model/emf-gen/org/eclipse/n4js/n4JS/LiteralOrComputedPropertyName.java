@@ -65,7 +65,7 @@ public interface LiteralOrComputedPropertyName extends EObject {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 *  The literal name given in the source code or <code>null</code> if this is a computed property name.
+	 *  The literal name given in the source code or <code>null</code> iff this is a computed property name.
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Literal Name</em>' attribute.
 	 * @see #setLiteralName(String)

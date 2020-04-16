@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet
 import org.eclipse.n4js.JSActivationUtil
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.N4JSParseHelper
+import org.eclipse.n4js.N4JSTestHelper
 import org.eclipse.n4js.generator.GeneratorOption
 import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.ImportSpecifier
@@ -57,9 +58,10 @@ abstract class AbstractTranspilerTest {
 
 	protected static final GeneratorOption[] GENERATOR_OPTIONS = #[ GeneratorOption.ES5plus ];
 
-	@Inject private extension ResourceHelper;
-	@Inject private extension N4JSParseHelper;
-	@Inject private extension ValidationTestHelper;
+	@Inject protected extension ResourceHelper;
+	@Inject protected extension N4JSTestHelper;
+	@Inject protected extension N4JSParseHelper;
+	@Inject protected extension ValidationTestHelper;
 
 	@Inject private Provider<XtextResourceSet> resourceSetProvider;
 	@Inject private PreparationStep preparationStep;
