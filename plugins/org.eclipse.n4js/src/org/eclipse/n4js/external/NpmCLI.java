@@ -260,7 +260,7 @@ public class NpmCLI {
 					// -> retry loading from node_modules folder located in yarn workspace root folder
 					NodeModulesFolder nmf = nodeModulesDiscoveryHelper.getNodeModulesFolder(installPath);
 					if (nmf.isYarnWorkspace()) {
-						Path nodeModulesFolderInYarnWorkspaceRoot = nmf.yarnNodeModulesFolder.toPath();
+						Path nodeModulesFolderInYarnWorkspaceRoot = nmf.workspaceNodeModulesFolder.toPath();
 						completePath = nodeModulesFolderInYarnWorkspaceRoot.resolve(reqChg.name.getRawName());
 						actualVersion = getActualVersion(completePath);
 					}

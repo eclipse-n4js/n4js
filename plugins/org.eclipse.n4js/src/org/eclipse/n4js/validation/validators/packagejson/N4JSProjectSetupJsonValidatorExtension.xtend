@@ -15,6 +15,7 @@ import com.google.common.base.Predicate
 import com.google.common.base.Predicates
 import com.google.common.collect.HashMultimap
 import com.google.common.collect.Iterables
+import com.google.common.collect.LinkedHashMultimap
 import com.google.common.collect.LinkedListMultimap
 import com.google.common.collect.Multimap
 import com.google.inject.Inject
@@ -1166,13 +1167,15 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 				return;
 			}
 
+			// search for the dependency in all node_modules folders (respecting shadowing order)
 			var Path currNPM = null;
 			for (File nodeModulesFolder : allNodeModuleFolders.get(currentProjectName)) {
 				if (currNPM === null || !currNPM.toFile.exists) {
 					currNPM = nodeModulesFolder.toPath.resolve(id.rawName);
 				}
 			}
-			
+
+			// check if dependency was found
 			if (currNPM !== null && !currNPM.toFile.exists) {
 				val packageVersion = if (ref.npmVersion === null) "" else ref.npmVersion.toString;
 				if (project.external) {
@@ -1399,7 +1402,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 	 */
 	private def Multimap<N4JSProjectName, File> getAllNodeModulesFolders() {
 		return contextMemoize(NODE_MODULES_LOCATION_CACHE) [
-			val Multimap<N4JSProjectName, File> res = HashMultimap.create();
+			val Multimap<N4JSProjectName, File> res = LinkedHashMultimap.create();
 
 			if (Platform.isRunning) { // necessary for xpect tests (non-ui)
 				val IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();

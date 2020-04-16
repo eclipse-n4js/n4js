@@ -117,7 +117,7 @@ public class ProjectDiscoveryHelper {
 				if (nodeModulesFolder.isYarnWorkspace()) {
 					// Is Yarn project
 					// use projects referenced in packages
-					Path yarnProjectDir = nodeModulesFolder.yarnNodeModulesFolder.getParentFile().toPath();
+					Path yarnProjectDir = nodeModulesFolder.workspaceNodeModulesFolder.getParentFile().toPath();
 					collectYarnWorkspaceProjects(yarnProjectDir, pdCache, allProjectDirs);
 				} else {
 					// Is NPM project
@@ -340,14 +340,14 @@ public class ProjectDiscoveryHelper {
 		if (nodeModulesFolder == null) {
 			return prjNodeModules.resolve(depName);
 		}
-		if (nodeModulesFolder.npmNodeModulesFolder != null) {
-			File depLocation = new File(nodeModulesFolder.npmNodeModulesFolder, depName);
+		if (nodeModulesFolder.localNodeModulesFolder != null) {
+			File depLocation = new File(nodeModulesFolder.localNodeModulesFolder, depName);
 			if (depLocation.exists()) {
 				return depLocation.toPath();
 			}
 		}
-		if (nodeModulesFolder.yarnNodeModulesFolder != null) {
-			File depLocation = new File(nodeModulesFolder.yarnNodeModulesFolder, depName);
+		if (nodeModulesFolder.workspaceNodeModulesFolder != null) {
+			File depLocation = new File(nodeModulesFolder.workspaceNodeModulesFolder, depName);
 			if (depLocation.exists()) {
 				return depLocation.toPath();
 			}

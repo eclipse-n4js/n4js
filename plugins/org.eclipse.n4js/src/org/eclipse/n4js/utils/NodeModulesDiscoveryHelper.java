@@ -41,28 +41,29 @@ public class NodeModulesDiscoveryHelper {
 	@Inject
 	private ProjectDescriptionLoader projectDescriptionLoader;
 
-	/** Defines whether a node_modules folder is a child of an NPM project or a YARN workspace project */
+	/** Holds information for a given project that is either a plain npm or a yarn related project */
 	public static class NodeModulesFolder {
-		/** Location of a node_modules folder */
-		final public File npmNodeModulesFolder;
-		/** Location of a node_modules folder */
-		final public File yarnNodeModulesFolder;
+		/** node_modules folder of the given project. Is null iff the given project is a yarn workspace project */
+		final public File localNodeModulesFolder;
+		/** node_modules folder of the related yarn workspace project */
+		final public File workspaceNodeModulesFolder;
 
 		/** Constructor */
-		public NodeModulesFolder(File npmNodeModulesFolder, File yarnNodeModulesFolder) {
-			this.npmNodeModulesFolder = npmNodeModulesFolder;
-			this.yarnNodeModulesFolder = yarnNodeModulesFolder;
+		public NodeModulesFolder(File localNodeModulesFolder, File workspaceNodeModulesFolder) {
+			this.localNodeModulesFolder = localNodeModulesFolder;
+			this.workspaceNodeModulesFolder = workspaceNodeModulesFolder;
 		}
 
+		/** @return {@link #localNodeModulesFolder} and {@link #workspaceNodeModulesFolder} iff not null */
 		public List<File> getNodeModulesFolders() {
-			ArrayList<File> nmfList = Lists.newArrayList(this.yarnNodeModulesFolder, this.npmNodeModulesFolder);
+			ArrayList<File> nmfList = Lists.newArrayList(this.workspaceNodeModulesFolder, this.localNodeModulesFolder);
 			nmfList.removeAll(Collections.singleton(null));
 			return Collections.unmodifiableList(nmfList);
 		}
 
-		/** True iff the {@link #yarnNodeModulesFolder} is not null */
+		/** True iff the {@link #workspaceNodeModulesFolder} is not null */
 		public boolean isYarnWorkspace() {
-			return this.yarnNodeModulesFolder != null;
+			return this.workspaceNodeModulesFolder != null;
 		}
 	}
 
@@ -77,16 +78,16 @@ public class NodeModulesDiscoveryHelper {
 		File projectLocationAsFile = projectLocation.toFile();
 
 		if (isYarnWorkspaceRoot(projectLocationAsFile, Optional.absent(), pdCache)) {
-			File yarnNMF = new File(projectLocationAsFile, N4JSGlobals.NODE_MODULES);
-			return new NodeModulesFolder(null, yarnNMF);
+			File workspaceNMF = new File(projectLocationAsFile, N4JSGlobals.NODE_MODULES);
+			return new NodeModulesFolder(null, workspaceNMF);
 		}
 
 		final Optional<File> workspaceRoot = getYarnWorkspaceRoot(projectLocationAsFile, pdCache);
 		if (workspaceRoot.isPresent()) {
-			File yarnNMF = new File(workspaceRoot.get(), N4JSGlobals.NODE_MODULES);
-			File npmNMF = new File(projectLocationAsFile, N4JSGlobals.NODE_MODULES);
-			npmNMF = npmNMF.exists() ? npmNMF : null;
-			return new NodeModulesFolder(npmNMF, yarnNMF);
+			File workspaceNMF = new File(workspaceRoot.get(), N4JSGlobals.NODE_MODULES);
+			File localNMF = new File(projectLocationAsFile, N4JSGlobals.NODE_MODULES);
+			localNMF = localNMF.exists() ? localNMF : null;
+			return new NodeModulesFolder(localNMF, workspaceNMF);
 		}
 
 		final Path packgeJsonPath = projectLocation.resolve(N4JSGlobals.PACKAGE_JSON);
