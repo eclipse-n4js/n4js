@@ -96,7 +96,7 @@ class SimplifyTransformationTest extends AbstractTranspilerTest {
 				method3() {}
 				enumLiteralIdentifier() {}
 				static get n4type() {
-					return $getReflectionForClass(this, '["__synthetic0","test"]');
+					return $getReflectionForClass(this, '["Fully","__synthetic0","test"]');
 				}
 			}
 			class Partially extends N4Object {
@@ -104,7 +104,7 @@ class SimplifyTransformationTest extends AbstractTranspilerTest {
 				'not an identifier2'() {}
 				'enumLiteral Not An Identifier'() {}
 				static get n4type() {
-					return $getReflectionForClass(this, '["__synthetic0","test"]');
+					return $getReflectionForClass(this, '["Partially","__synthetic0","test"]');
 				}
 			}
 			class NotAtAll extends N4Object {
@@ -112,7 +112,7 @@ class SimplifyTransformationTest extends AbstractTranspilerTest {
 				[21 * 2]() {}
 				[Symbol.iterator]() {}
 				static get n4type() {
-					return $getReflectionForClass(this, '["__synthetic0","test",["m.#iterator"]]');
+					return $getReflectionForClass(this, '["NotAtAll","__synthetic0","test",["m.#iterator"]]');
 				}
 			}
 		''');

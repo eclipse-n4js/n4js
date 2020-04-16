@@ -64,6 +64,7 @@ class SimplifyTransformation extends Transformation {
 			name.computedName = null;
 			remove(name.expression);
 		}
+
 		// simplify { "name": ... } to { name: ... } (iff 'name' is a valid identifier)
 		if (name.kind === PropertyNameKind.STRING
 			&& name.literalName !== null
