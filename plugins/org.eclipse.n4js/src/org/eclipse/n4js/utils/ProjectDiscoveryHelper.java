@@ -114,10 +114,10 @@ public class ProjectDiscoveryHelper {
 				// Is neither NPM nor Yarn project
 				collectProjects(wsRoot, false, pdCache, allProjectDirs);
 			} else {
-				if (nodeModulesFolder.isYarnWorkspace) {
+				if (nodeModulesFolder.isYarnWorkspace()) {
 					// Is Yarn project
 					// use projects referenced in packages
-					Path yarnProjectDir = nodeModulesFolder.nodeModulesFolder.getParentFile().toPath();
+					Path yarnProjectDir = nodeModulesFolder.workspaceNodeModulesFolder.getParentFile().toPath();
 					collectYarnWorkspaceProjects(yarnProjectDir, pdCache, allProjectDirs);
 				} else {
 					// Is NPM project
@@ -286,10 +286,6 @@ public class ProjectDiscoveryHelper {
 			LinkedHashSet<Path> dependencies) {
 
 		NodeModulesFolder nodeModulesFolder = nodeModulesDiscoveryHelper.getNodeModulesFolder(projectDir, pdCache);
-		Path topNodeModules = (nodeModulesFolder != null)
-				? nodeModulesFolder.nodeModulesFolder.toPath()
-				: null;
-
 		LinkedHashSet<Path> workList = new LinkedHashSet<>();
 		workList.add(projectDir);
 		while (!workList.isEmpty()) {
@@ -297,15 +293,14 @@ public class ProjectDiscoveryHelper {
 			Path nextProject = iterator.next();
 			iterator.remove();
 
-			findDependencies(nextProject, topNodeModules, pdCache, workList, dependencies);
+			findDependencies(nextProject, nodeModulesFolder, pdCache, workList, dependencies);
 		}
 	}
 
-	private void findDependencies(Path prjDir, Path topNodeModules, Map<Path, ProjectDescription> pdCache,
-			Set<Path> workList, Set<Path> dependencies) {
+	private void findDependencies(Path prjDir, NodeModulesFolder nodeModulesFolder,
+			Map<Path, ProjectDescription> pdCache, Set<Path> workList, Set<Path> dependencies) {
 
 		Path prjNodeModules = prjDir.resolve(N4JSGlobals.NODE_MODULES);
-
 		ProjectDescription prjDescr = getCachedProjectDescription(prjDir, pdCache);
 		if (prjDescr == null) {
 			return;
@@ -314,12 +309,7 @@ public class ProjectDiscoveryHelper {
 		for (ProjectDependency dependency : prjDescr.getProjectDependencies()) {
 			String depName = dependency.getProjectName();
 
-			// Always use dependency of yarn workspace node_modules folder if it is available
-			// TODO GH-1314, remove shadow logic here
-			Path depLocation = (topNodeModules == null)
-					? prjNodeModules.resolve(depName)
-					: topNodeModules.resolve(depName);
-
+			Path depLocation = findDependencyLocation(nodeModulesFolder, prjNodeModules, depName);
 			if (!prjDir.equals(depLocation)) {
 				addDependency(depLocation, pdCache, workList, dependencies);
 			}
@@ -329,7 +319,7 @@ public class ProjectDiscoveryHelper {
 	private void addDependency(Path depLocation, Map<Path, ProjectDescription> pdCache, Set<Path> workList,
 			Set<Path> dependencies) {
 
-		if (dependencies.contains(depLocation)) {
+		if (depLocation == null || dependencies.contains(depLocation)) {
 			return;
 		}
 
@@ -342,5 +332,27 @@ public class ProjectDiscoveryHelper {
 				workList.add(depLocation);
 			}
 		}
+	}
+
+	// Always use dependency of yarn workspace node_modules folder if it is available
+	// TODO GH-1314, remove shadow logic here
+	private Path findDependencyLocation(NodeModulesFolder nodeModulesFolder, Path prjNodeModules, String depName) {
+		if (nodeModulesFolder == null) {
+			return prjNodeModules.resolve(depName);
+		}
+		if (nodeModulesFolder.localNodeModulesFolder != null) {
+			File depLocation = new File(nodeModulesFolder.localNodeModulesFolder, depName);
+			if (depLocation.exists()) {
+				return depLocation.toPath();
+			}
+		}
+		if (nodeModulesFolder.workspaceNodeModulesFolder != null) {
+			File depLocation = new File(nodeModulesFolder.workspaceNodeModulesFolder, depName);
+			if (depLocation.exists()) {
+				return depLocation.toPath();
+			}
+		}
+
+		return null;
 	}
 }

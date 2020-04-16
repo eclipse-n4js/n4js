@@ -1,0 +1,19 @@
+# Project Discovery Test
+# working dir marked with '*'
+
+
+FOLDERS
+- someFolder
+--*P1 [PROJECT workspaces=["packages/*"]]
+--- packages
+---- D1 [PROJECT dependencies={"Q1":"*", "Q2":"*"}]
+----- node_modules
+------ Q1 [PROJECT]
+--- node_modules
+---- Q2 [PROJECT]
+
+EXPECT
+- someFolder/P1
+- someFolder/P1/packages/D1
+- someFolder/P1/packages/D1/node_modules/Q1
+- someFolder/P1/node_modules/Q2
