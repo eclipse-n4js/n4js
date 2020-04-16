@@ -74,8 +74,15 @@ public class IdeTestLanguageClient extends AbstractN4JSLanguageClient {
 		listeners.remove(listener);
 	}
 
-	/** Clear all issues tracked by this client. */
-	public void clear() {
+	/**
+	 * Clear all issues tracked by this client.
+	 * <p>
+	 * IMPORTANT: usually, tests should not invoke this method! LSP clients such as VS Code won't clear issues when
+	 * triggering a rebuild but instead rely on the server to delete obsolete issues by sending appropriate
+	 * <code>publishDiagnostics</code> events to the client. So, to simulate this as closely as possible, the IDE tests
+	 * must not clear issues by themselves.
+	 */
+	public void clearIssues() {
 		issues.clear();
 		errors.clear();
 		warnings.clear();

@@ -151,7 +151,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		if (root.exists()) {
 			FileUtils.deleteFileOrFolder(root);
 		}
-		languageClient.clear();
+		languageClient.clearIssues();
 		openFiles.clear();
 	}
 
@@ -244,7 +244,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	/** Cleans entire workspace without waiting for LSP server to finish. */
 	protected void cleanBuildWithoutWait() {
-		languageClient.clear();
+		// NOTE: do not invoke languageClient.clearIssues() here!
+		// See API doc of IdeTestLanguageClient#clearIssues() for details.
 		languageServer.clean();
 		languageServer.reinitWorkspace();
 	}

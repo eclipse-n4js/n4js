@@ -320,7 +320,6 @@ cleanBuildAndWait(); // FIXME remove!
 		assertTrue(projectStateInNodeModules.exists);
 		assertTrue(projectStateInOrdinaryProject.exists);
 
-		languageClient.clear();
 		languageServer.clean();
 		joinServerRequests();
 

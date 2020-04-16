@@ -14,11 +14,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
 import org.eclipse.n4js.ide.xtext.server.build.XIncrementalBuilder;
@@ -29,6 +31,7 @@ import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.generator.OutputConfiguration;
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
+import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 import org.eclipse.xtext.resource.IExternalContentSupport;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.XtextResourceSet;
@@ -128,17 +131,35 @@ public class XProjectManager {
 		this.resourceSet = createNewResourceSet(new XIndexState().getResourceDescriptions());
 	}
 
-	/** Initial build reads the project state and resolves changes. Generate output files. */
+	/**
+	 * Initial build reads the project state and resolves changes. Generate output files.
+	 * <p>
+	 * NOTE: this is not only invoked shortly after server startup but also at various other occasions, for example
+	 * <ul>
+	 * <li>when the client executes the {@link N4JSCommandService#rebuild(ILanguageServerAccess, CancelIndicator)
+	 * rebuild command},
+	 * <li>when the workspace folder is changed in VS Code.
+	 * </ul>
+	 */
 	public XBuildResult doInitialBuild(CancelIndicator cancelIndicator) {
 		ResourceChangeSet changeSet = projectStateHolder.readProjectState(projectConfig);
 		XBuildResult result = doBuild(
 				changeSet.getModified(), changeSet.getDeleted(), Collections.emptyList(), false, true, cancelIndicator);
 
+		// send issues to client
 		Map<URI, Collection<Issue>> validationIssues = projectStateHolder.getValidationIssues();
+		Set<URI> urisWithoutIssues = result.getAffectedResources().stream()
+				.map(IResourceDescription.Delta::getUri)
+				.collect(Collectors.toSet());
 		for (Map.Entry<URI, Collection<Issue>> locationToIssues : validationIssues.entrySet()) {
 			URI location = locationToIssues.getKey();
+			urisWithoutIssues.remove(location);
 			Collection<Issue> issues = locationToIssues.getValue();
 			issueAcceptor.publishDiagnostics(location, issues);
+		}
+		// send 'publishDiagnostics' for resources without issues (to remove potential obsolete issues)
+		for (URI uri : urisWithoutIssues) {
+			issueAcceptor.publishDiagnostics(uri, Collections.emptyList());
 		}
 
 		// clear the resource set to release memory
@@ -278,7 +299,7 @@ public class XProjectManager {
 		result.setGeneratorEnabled(doGenerate);
 
 		if (!propagateIssues) {
-			// during initial build, we do not want to notify about any issues sind it is
+			// during initial build, we do not want to notify about any issues because it is
 			// done at the end of the project for the deserialized issues and the new issues
 			// altogether.
 			result.setAfterValidateListener(null);
