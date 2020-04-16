@@ -15,7 +15,6 @@ import com.google.common.base.Predicate
 import com.google.common.base.Predicates
 import com.google.common.collect.HashMultimap
 import com.google.common.collect.Iterables
-import com.google.common.collect.LinkedHashMultimap
 import com.google.common.collect.LinkedListMultimap
 import com.google.common.collect.Multimap
 import com.google.inject.Inject
@@ -1129,7 +1128,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 	}
 
 	private def void checkReference(ValidationProjectReference ref, Map<N4JSProjectName, IN4JSProject> allProjects,
-		Multimap<N4JSProjectName, File> allNodeModuleFolders, ProjectDescription description, IN4JSProject currentProject,
+		Map<N4JSProjectName, NodeModulesFolder> allNodeModuleFolders, ProjectDescription description, IN4JSProject currentProject,
 		Set<N4JSProjectName> allReferencedProjectNames, HashMultimap<N4JSProjectName, ValidationProjectReference> existentIds,
 		boolean allowReflexive, Predicate<IN4JSProject> projectPredicate, String sectionLabel
 	) {
@@ -1169,7 +1168,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 
 			// search for the dependency in all node_modules folders (respecting shadowing order)
 			var Path currNPM = null;
-			for (File nodeModulesFolder : allNodeModuleFolders.get(currentProjectName)) {
+			for (File nodeModulesFolder : allNodeModuleFolders.get(currentProjectName).nodeModulesFolders) {
 				if (currNPM === null || !currNPM.toFile.exists) {
 					currNPM = nodeModulesFolder.toPath.resolve(id.rawName);
 				}
@@ -1400,9 +1399,9 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 	 *
 	 * The result of this method is cached in the validation context.
 	 */
-	private def Multimap<N4JSProjectName, File> getAllNodeModulesFolders() {
+	private def Map<N4JSProjectName, NodeModulesFolder> getAllNodeModulesFolders() {
 		return contextMemoize(NODE_MODULES_LOCATION_CACHE) [
-			val Multimap<N4JSProjectName, File> res = LinkedHashMultimap.create();
+			val Map<N4JSProjectName, NodeModulesFolder> res = new HashMap();
 
 			if (Platform.isRunning) { // necessary for xpect tests (non-ui)
 				val IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
@@ -1413,7 +1412,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 						val NodeModulesFolder nmFolder = nodeModulesDiscoveryHelper.getNodeModulesFolder(projectPath);
 						if (nmFolder !== null) {
 							val projectName = new EclipseProjectName(project.name).toN4JSProjectName
-							res.putAll(projectName, nmFolder.nodeModulesFolders);
+							res.put(projectName, nmFolder);
 						}
 					}
 				}
