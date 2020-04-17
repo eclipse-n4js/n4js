@@ -259,8 +259,8 @@ public class NpmCLI {
 					// unable to load version from package.json:
 					// -> retry loading from node_modules folder located in yarn workspace root folder
 					NodeModulesFolder nmf = nodeModulesDiscoveryHelper.getNodeModulesFolder(installPath);
-					if (nmf.isYarnWorkspace) {
-						Path nodeModulesFolderInYarnWorkspaceRoot = nmf.nodeModulesFolder.toPath();
+					if (nmf.isYarnWorkspace()) {
+						Path nodeModulesFolderInYarnWorkspaceRoot = nmf.workspaceNodeModulesFolder.toPath();
 						completePath = nodeModulesFolderInYarnWorkspaceRoot.resolve(reqChg.name.getRawName());
 						actualVersion = getActualVersion(completePath);
 					}

@@ -210,7 +210,7 @@ public class NodeYarnProcessBuilder {
 	 */
 	private boolean isYarnRequired(Path projectFolder) {
 		NodeModulesFolder nodeModulesFolder = nodeModulesDiscoveryHelper.getNodeModulesFolder(projectFolder);
-		return nodeModulesFolder != null && nodeModulesFolder.isYarnWorkspace;
+		return nodeModulesFolder != null && nodeModulesFolder.isYarnWorkspace();
 	}
 
 	/**
