@@ -27,7 +27,7 @@ VERDACCIO_IMAGE=verdaccio/verdaccio@sha256:e64056b6aa104197dbac07e77a1fbcf8f5c67
 
 
 
-# PARAMETER 1: version.
+# PARAMETER 1: package name.
 if [ -z "$1" ]; then
     echo "The package name must be specified as the first parameter."
     exit -1
@@ -43,12 +43,6 @@ else
     VERSION=$2
 fi
 
-# PARAMETER 3: (Optional) npm dist-tag
-if [ -z "$3" ]; then
-    DIST_TAG="latest"
-else
-    DIST_TAG=$3
-fi
 
 
 
@@ -58,11 +52,11 @@ RESULT=$(npm view n4js-runtime@${VERSION} | grep n4js-runtime)
 set -e
 
 if [[ $RESULT == *"n4js-runtime"* ]]; then
-  echo "Version ${VERSION} already published. Skipping build of N4JS VSCode extension."
-  exit 0
+    echo "Version ${VERSION} already published. Skipping build of N4JS VSCode extension."
+    exit 0
 
 else
-  echo "Version ${VERSION} not yet in use. Continue build of N4JS VSCode extension."
+    echo "Version ${VERSION} not yet in use. Continue build of N4JS VSCode extension."
 fi
 
 
@@ -73,19 +67,18 @@ lsof -n -i :4873
 RESULT=$?
 set -e
 if [ $RESULT -eq 0 ]; then
-  echo "ERROR: Port 4873 is occupied"
-  
-  #echo "Kill running docker" # used locally for debugging
-  #docker rm -f extension-publish-verdaccio || true
-  exit -1
+    echo "ERROR: Port 4873 is occupied"
+
+    echo "Kill running docker with: 'docker rm -f extension-publish-verdaccio || true'"
+    #docker rm -f extension-publish-verdaccio || true
+    exit -1
 else
-  echo "Port 4873 is free"
+    echo "Port 4873 is free"
 fi
 
 
 
 echo "==== STEP 1/8: Start Verdaccio"
-docker rm -f extension-publish-verdaccio || true # kill already running instance
 docker run -d -it --rm --name extension-publish-verdaccio -p 4873:4873 -v ${VERDACCIO_CONFIG_DIR}/config.yaml:/verdaccio/conf/config.yaml ${VERDACCIO_IMAGE}
 
 echo "Wait 1s"
@@ -102,10 +95,10 @@ RESULT=$(curl -f http://localhost:4873 | grep title)
 
 #echo $RESULT
 if [[ $RESULT == *"Verdaccio"* ]]; then
-  echo "Verdaccio successfully started"
+    echo "Verdaccio successfully started"
 else
-  echo "ERROR: Verdaccio could not be started"
-  exit -1
+    echo "ERROR: Verdaccio could not be started"
+    exit -1
 fi
 
 
@@ -127,22 +120,24 @@ echo "==="
 
 echo "==== STEP 4/8: Update versions inside package.json of extension"
 pushd ${EXTENSION_DIR}
-	npx json -I -f package.json -e "this.version=\"$VERSION\""
-	npx json -I -f package.json -e "this.dependencies['n4js-cli']=\"$VERSION\""
-	npx json -I -f package.json -e "this.dependencies['n4js-runtime']=\"$VERSION\""
-	npx json -I -f package.json -e "this.dependencies['n4js-runtime-node']=\"$VERSION\""
-	npx json -I -f package.json -e "this.dependencies['n4js-runtime-es2015']=\"$VERSION\""
+    npx json -I -f package.json -e "
+        this.version=\"$VERSION\"
+        this.dependencies['n4js-cli']=\"$VERSION\"
+        this.dependencies['n4js-runtime']=\"$VERSION\"
+        this.dependencies['n4js-runtime-node']=\"$VERSION\"
+        this.dependencies['n4js-runtime-es2015']=\"$VERSION\"
+    "
 
-	echo "==== STEP 5/8: Call npm install (use local verdaccio registry)"
-	npm install --registry http://localhost:4873
-	
-	
-	echo "==== STEP 6/8: Pack extension"
-	npx vsce package --out ${PACKAGE_NAME}
-	
-	
-	echo "==== STEP 7/8: Copy extension"
-	cp ${PACKAGE_NAME} ${TARGET_DIR}/
+    echo "==== STEP 5/8: Call npm install (use local verdaccio registry)"
+    npm install --registry http://localhost:4873
+
+
+    echo "==== STEP 6/8: Pack extension"
+    npx vsce package --out ${PACKAGE_NAME}
+
+
+    echo "==== STEP 7/8: Copy extension"
+    cp ${PACKAGE_NAME} ${TARGET_DIR}/
 popd
 
 
