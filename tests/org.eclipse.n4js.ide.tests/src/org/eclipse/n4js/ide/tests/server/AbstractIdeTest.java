@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -240,15 +241,16 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	/** Like {@link #cleanBuildWithoutWait()}, but {@link #joinServerRequests() waits} for LSP server to finish. */
 	protected void cleanBuildAndWait() {
-		cleanBuildWithoutWait();
+		// NOTE: the #join() in the next line is required; the #joinServerRequests() below is not sufficient!
+		cleanBuildWithoutWait().join();
 		joinServerRequests();
 	}
 
 	/** Cleans and rebuilds entire workspace without waiting for LSP server to finish. */
-	protected void cleanBuildWithoutWait() {
+	protected CompletableFuture<Object> cleanBuildWithoutWait() {
 		ExecuteCommandParams params = new ExecuteCommandParams(N4JSCommandService.N4JS_REBUILD,
 				Collections.emptyList());
-		languageServer.executeCommand(params);
+		return languageServer.executeCommand(params);
 	}
 
 	/** Same as {@link #isOpen(FileURI)}, but accepts a module name. */
