@@ -392,6 +392,7 @@ public class RegularExpressionSemanticSequencer extends AbstractDelegatingSemant
 	 *         characters='=' | 
 	 *         characters=':' | 
 	 *         characters='!' | 
+	 *         characters='_' | 
 	 *         characters='-' | 
 	 *         characters='^' | 
 	 *         characters='$' | 

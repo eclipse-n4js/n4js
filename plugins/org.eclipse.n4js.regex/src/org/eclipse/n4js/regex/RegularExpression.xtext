@@ -135,7 +135,7 @@ CharacterClassElement:
 CharacterClassAtom:
 	EscapedCharacterClassAtom |
 	characters=(
-		',' | '=' | ':' | '!' |
+		',' | '=' | ':' | '!' | '_' |
 		'-' | '^' |'$' | '.' | '*' | '+' | '?' | '(' | ')' | '[' | '{' | '}' | '|' | '/' | '<' | '>' | '(?' | '(?<' | '(?=' | '(?!' | '(?<!' | '(?<=' |
 		PATTERN_CHARACTER_NO_DASH |
 		UNICODE_LETTER |

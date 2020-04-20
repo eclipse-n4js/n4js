@@ -1460,9 +1460,9 @@ ruleCharacterClassAtom returns [EObject current=null]
 						setWithLastConsumed($current, "characters", lv_characters_1_4, null);
 					}
 					    |
-					lv_characters_1_5=HyphenMinus
+					lv_characters_1_5=KW__
 					{
-						newLeafNode(lv_characters_1_5, grammarAccess.getCharacterClassAtomAccess().getCharactersHyphenMinusKeyword_1_0_4());
+						newLeafNode(lv_characters_1_5, grammarAccess.getCharacterClassAtomAccess().getCharacters_Keyword_1_0_4());
 					}
 					{
 						if ($current==null) {
@@ -1471,9 +1471,9 @@ ruleCharacterClassAtom returns [EObject current=null]
 						setWithLastConsumed($current, "characters", lv_characters_1_5, null);
 					}
 					    |
-					lv_characters_1_6=CircumflexAccent
+					lv_characters_1_6=HyphenMinus
 					{
-						newLeafNode(lv_characters_1_6, grammarAccess.getCharacterClassAtomAccess().getCharactersCircumflexAccentKeyword_1_0_5());
+						newLeafNode(lv_characters_1_6, grammarAccess.getCharacterClassAtomAccess().getCharactersHyphenMinusKeyword_1_0_5());
 					}
 					{
 						if ($current==null) {
@@ -1482,9 +1482,9 @@ ruleCharacterClassAtom returns [EObject current=null]
 						setWithLastConsumed($current, "characters", lv_characters_1_6, null);
 					}
 					    |
-					lv_characters_1_7=DollarSign
+					lv_characters_1_7=CircumflexAccent
 					{
-						newLeafNode(lv_characters_1_7, grammarAccess.getCharacterClassAtomAccess().getCharactersDollarSignKeyword_1_0_6());
+						newLeafNode(lv_characters_1_7, grammarAccess.getCharacterClassAtomAccess().getCharactersCircumflexAccentKeyword_1_0_6());
 					}
 					{
 						if ($current==null) {
@@ -1493,9 +1493,9 @@ ruleCharacterClassAtom returns [EObject current=null]
 						setWithLastConsumed($current, "characters", lv_characters_1_7, null);
 					}
 					    |
-					lv_characters_1_8=FullStop
+					lv_characters_1_8=DollarSign
 					{
-						newLeafNode(lv_characters_1_8, grammarAccess.getCharacterClassAtomAccess().getCharactersFullStopKeyword_1_0_7());
+						newLeafNode(lv_characters_1_8, grammarAccess.getCharacterClassAtomAccess().getCharactersDollarSignKeyword_1_0_7());
 					}
 					{
 						if ($current==null) {
@@ -1504,9 +1504,9 @@ ruleCharacterClassAtom returns [EObject current=null]
 						setWithLastConsumed($current, "characters", lv_characters_1_8, null);
 					}
 					    |
-					lv_characters_1_9=Asterisk
+					lv_characters_1_9=FullStop
 					{
-						newLeafNode(lv_characters_1_9, grammarAccess.getCharacterClassAtomAccess().getCharactersAsteriskKeyword_1_0_8());
+						newLeafNode(lv_characters_1_9, grammarAccess.getCharacterClassAtomAccess().getCharactersFullStopKeyword_1_0_8());
 					}
 					{
 						if ($current==null) {
@@ -1515,9 +1515,9 @@ ruleCharacterClassAtom returns [EObject current=null]
 						setWithLastConsumed($current, "characters", lv_characters_1_9, null);
 					}
 					    |
-					lv_characters_1_10=PlusSign
+					lv_characters_1_10=Asterisk
 					{
-						newLeafNode(lv_characters_1_10, grammarAccess.getCharacterClassAtomAccess().getCharactersPlusSignKeyword_1_0_9());
+						newLeafNode(lv_characters_1_10, grammarAccess.getCharacterClassAtomAccess().getCharactersAsteriskKeyword_1_0_9());
 					}
 					{
 						if ($current==null) {
@@ -1526,9 +1526,9 @@ ruleCharacterClassAtom returns [EObject current=null]
 						setWithLastConsumed($current, "characters", lv_characters_1_10, null);
 					}
 					    |
-					lv_characters_1_11=QuestionMark
+					lv_characters_1_11=PlusSign
 					{
-						newLeafNode(lv_characters_1_11, grammarAccess.getCharacterClassAtomAccess().getCharactersQuestionMarkKeyword_1_0_10());
+						newLeafNode(lv_characters_1_11, grammarAccess.getCharacterClassAtomAccess().getCharactersPlusSignKeyword_1_0_10());
 					}
 					{
 						if ($current==null) {
@@ -1537,9 +1537,9 @@ ruleCharacterClassAtom returns [EObject current=null]
 						setWithLastConsumed($current, "characters", lv_characters_1_11, null);
 					}
 					    |
-					lv_characters_1_12=LeftParenthesis
+					lv_characters_1_12=QuestionMark
 					{
-						newLeafNode(lv_characters_1_12, grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisKeyword_1_0_11());
+						newLeafNode(lv_characters_1_12, grammarAccess.getCharacterClassAtomAccess().getCharactersQuestionMarkKeyword_1_0_11());
 					}
 					{
 						if ($current==null) {
@@ -1548,9 +1548,9 @@ ruleCharacterClassAtom returns [EObject current=null]
 						setWithLastConsumed($current, "characters", lv_characters_1_12, null);
 					}
 					    |
-					lv_characters_1_13=RightParenthesis
+					lv_characters_1_13=LeftParenthesis
 					{
-						newLeafNode(lv_characters_1_13, grammarAccess.getCharacterClassAtomAccess().getCharactersRightParenthesisKeyword_1_0_12());
+						newLeafNode(lv_characters_1_13, grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisKeyword_1_0_12());
 					}
 					{
 						if ($current==null) {
@@ -1559,9 +1559,9 @@ ruleCharacterClassAtom returns [EObject current=null]
 						setWithLastConsumed($current, "characters", lv_characters_1_13, null);
 					}
 					    |
-					lv_characters_1_14=LeftSquareBracket
+					lv_characters_1_14=RightParenthesis
 					{
-						newLeafNode(lv_characters_1_14, grammarAccess.getCharacterClassAtomAccess().getCharactersLeftSquareBracketKeyword_1_0_13());
+						newLeafNode(lv_characters_1_14, grammarAccess.getCharacterClassAtomAccess().getCharactersRightParenthesisKeyword_1_0_13());
 					}
 					{
 						if ($current==null) {
@@ -1570,9 +1570,9 @@ ruleCharacterClassAtom returns [EObject current=null]
 						setWithLastConsumed($current, "characters", lv_characters_1_14, null);
 					}
 					    |
-					lv_characters_1_15=LeftCurlyBracket
+					lv_characters_1_15=LeftSquareBracket
 					{
-						newLeafNode(lv_characters_1_15, grammarAccess.getCharacterClassAtomAccess().getCharactersLeftCurlyBracketKeyword_1_0_14());
+						newLeafNode(lv_characters_1_15, grammarAccess.getCharacterClassAtomAccess().getCharactersLeftSquareBracketKeyword_1_0_14());
 					}
 					{
 						if ($current==null) {
@@ -1581,9 +1581,9 @@ ruleCharacterClassAtom returns [EObject current=null]
 						setWithLastConsumed($current, "characters", lv_characters_1_15, null);
 					}
 					    |
-					lv_characters_1_16=RightCurlyBracket
+					lv_characters_1_16=LeftCurlyBracket
 					{
-						newLeafNode(lv_characters_1_16, grammarAccess.getCharacterClassAtomAccess().getCharactersRightCurlyBracketKeyword_1_0_15());
+						newLeafNode(lv_characters_1_16, grammarAccess.getCharacterClassAtomAccess().getCharactersLeftCurlyBracketKeyword_1_0_15());
 					}
 					{
 						if ($current==null) {
@@ -1592,9 +1592,9 @@ ruleCharacterClassAtom returns [EObject current=null]
 						setWithLastConsumed($current, "characters", lv_characters_1_16, null);
 					}
 					    |
-					lv_characters_1_17=VerticalLine
+					lv_characters_1_17=RightCurlyBracket
 					{
-						newLeafNode(lv_characters_1_17, grammarAccess.getCharacterClassAtomAccess().getCharactersVerticalLineKeyword_1_0_16());
+						newLeafNode(lv_characters_1_17, grammarAccess.getCharacterClassAtomAccess().getCharactersRightCurlyBracketKeyword_1_0_16());
 					}
 					{
 						if ($current==null) {
@@ -1603,9 +1603,9 @@ ruleCharacterClassAtom returns [EObject current=null]
 						setWithLastConsumed($current, "characters", lv_characters_1_17, null);
 					}
 					    |
-					lv_characters_1_18=Solidus
+					lv_characters_1_18=VerticalLine
 					{
-						newLeafNode(lv_characters_1_18, grammarAccess.getCharacterClassAtomAccess().getCharactersSolidusKeyword_1_0_17());
+						newLeafNode(lv_characters_1_18, grammarAccess.getCharacterClassAtomAccess().getCharactersVerticalLineKeyword_1_0_17());
 					}
 					{
 						if ($current==null) {
@@ -1614,9 +1614,9 @@ ruleCharacterClassAtom returns [EObject current=null]
 						setWithLastConsumed($current, "characters", lv_characters_1_18, null);
 					}
 					    |
-					lv_characters_1_19=LessThanSign
+					lv_characters_1_19=Solidus
 					{
-						newLeafNode(lv_characters_1_19, grammarAccess.getCharacterClassAtomAccess().getCharactersLessThanSignKeyword_1_0_18());
+						newLeafNode(lv_characters_1_19, grammarAccess.getCharacterClassAtomAccess().getCharactersSolidusKeyword_1_0_18());
 					}
 					{
 						if ($current==null) {
@@ -1625,9 +1625,9 @@ ruleCharacterClassAtom returns [EObject current=null]
 						setWithLastConsumed($current, "characters", lv_characters_1_19, null);
 					}
 					    |
-					lv_characters_1_20=GreaterThanSign
+					lv_characters_1_20=LessThanSign
 					{
-						newLeafNode(lv_characters_1_20, grammarAccess.getCharacterClassAtomAccess().getCharactersGreaterThanSignKeyword_1_0_19());
+						newLeafNode(lv_characters_1_20, grammarAccess.getCharacterClassAtomAccess().getCharactersLessThanSignKeyword_1_0_19());
 					}
 					{
 						if ($current==null) {
@@ -1636,9 +1636,9 @@ ruleCharacterClassAtom returns [EObject current=null]
 						setWithLastConsumed($current, "characters", lv_characters_1_20, null);
 					}
 					    |
-					lv_characters_1_21=LeftParenthesisQuestionMark
+					lv_characters_1_21=GreaterThanSign
 					{
-						newLeafNode(lv_characters_1_21, grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkKeyword_1_0_20());
+						newLeafNode(lv_characters_1_21, grammarAccess.getCharacterClassAtomAccess().getCharactersGreaterThanSignKeyword_1_0_20());
 					}
 					{
 						if ($current==null) {
@@ -1647,9 +1647,9 @@ ruleCharacterClassAtom returns [EObject current=null]
 						setWithLastConsumed($current, "characters", lv_characters_1_21, null);
 					}
 					    |
-					lv_characters_1_22=LeftParenthesisQuestionMarkLessThanSign
+					lv_characters_1_22=LeftParenthesisQuestionMark
 					{
-						newLeafNode(lv_characters_1_22, grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkLessThanSignKeyword_1_0_21());
+						newLeafNode(lv_characters_1_22, grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkKeyword_1_0_21());
 					}
 					{
 						if ($current==null) {
@@ -1658,9 +1658,9 @@ ruleCharacterClassAtom returns [EObject current=null]
 						setWithLastConsumed($current, "characters", lv_characters_1_22, null);
 					}
 					    |
-					lv_characters_1_23=LeftParenthesisQuestionMarkEqualsSign
+					lv_characters_1_23=LeftParenthesisQuestionMarkLessThanSign
 					{
-						newLeafNode(lv_characters_1_23, grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkEqualsSignKeyword_1_0_22());
+						newLeafNode(lv_characters_1_23, grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkLessThanSignKeyword_1_0_22());
 					}
 					{
 						if ($current==null) {
@@ -1669,9 +1669,9 @@ ruleCharacterClassAtom returns [EObject current=null]
 						setWithLastConsumed($current, "characters", lv_characters_1_23, null);
 					}
 					    |
-					lv_characters_1_24=LeftParenthesisQuestionMarkExclamationMark
+					lv_characters_1_24=LeftParenthesisQuestionMarkEqualsSign
 					{
-						newLeafNode(lv_characters_1_24, grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkExclamationMarkKeyword_1_0_23());
+						newLeafNode(lv_characters_1_24, grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkEqualsSignKeyword_1_0_23());
 					}
 					{
 						if ($current==null) {
@@ -1680,9 +1680,9 @@ ruleCharacterClassAtom returns [EObject current=null]
 						setWithLastConsumed($current, "characters", lv_characters_1_24, null);
 					}
 					    |
-					lv_characters_1_25=LeftParenthesisQuestionMarkLessThanSignExclamationMark
+					lv_characters_1_25=LeftParenthesisQuestionMarkExclamationMark
 					{
-						newLeafNode(lv_characters_1_25, grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkLessThanSignExclamationMarkKeyword_1_0_24());
+						newLeafNode(lv_characters_1_25, grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkExclamationMarkKeyword_1_0_24());
 					}
 					{
 						if ($current==null) {
@@ -1691,9 +1691,9 @@ ruleCharacterClassAtom returns [EObject current=null]
 						setWithLastConsumed($current, "characters", lv_characters_1_25, null);
 					}
 					    |
-					lv_characters_1_26=LeftParenthesisQuestionMarkLessThanSignEqualsSign
+					lv_characters_1_26=LeftParenthesisQuestionMarkLessThanSignExclamationMark
 					{
-						newLeafNode(lv_characters_1_26, grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkLessThanSignEqualsSignKeyword_1_0_25());
+						newLeafNode(lv_characters_1_26, grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkLessThanSignExclamationMarkKeyword_1_0_25());
 					}
 					{
 						if ($current==null) {
@@ -1702,24 +1702,20 @@ ruleCharacterClassAtom returns [EObject current=null]
 						setWithLastConsumed($current, "characters", lv_characters_1_26, null);
 					}
 					    |
-					lv_characters_1_27=RULE_PATTERN_CHARACTER_NO_DASH
+					lv_characters_1_27=LeftParenthesisQuestionMarkLessThanSignEqualsSign
 					{
-						newLeafNode(lv_characters_1_27, grammarAccess.getCharacterClassAtomAccess().getCharactersPATTERN_CHARACTER_NO_DASHTerminalRuleCall_1_0_26());
+						newLeafNode(lv_characters_1_27, grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkLessThanSignEqualsSignKeyword_1_0_26());
 					}
 					{
 						if ($current==null) {
 							$current = createModelElement(grammarAccess.getCharacterClassAtomRule());
 						}
-						setWithLastConsumed(
-							$current,
-							"characters",
-							lv_characters_1_27,
-							"org.eclipse.n4js.regex.RegularExpression.PATTERN_CHARACTER_NO_DASH");
+						setWithLastConsumed($current, "characters", lv_characters_1_27, null);
 					}
 					    |
-					lv_characters_1_28=RULE_UNICODE_LETTER
+					lv_characters_1_28=RULE_PATTERN_CHARACTER_NO_DASH
 					{
-						newLeafNode(lv_characters_1_28, grammarAccess.getCharacterClassAtomAccess().getCharactersUNICODE_LETTERTerminalRuleCall_1_0_27());
+						newLeafNode(lv_characters_1_28, grammarAccess.getCharacterClassAtomAccess().getCharactersPATTERN_CHARACTER_NO_DASHTerminalRuleCall_1_0_27());
 					}
 					{
 						if ($current==null) {
@@ -1729,12 +1725,12 @@ ruleCharacterClassAtom returns [EObject current=null]
 							$current,
 							"characters",
 							lv_characters_1_28,
-							"org.eclipse.n4js.regex.RegularExpression.UNICODE_LETTER");
+							"org.eclipse.n4js.regex.RegularExpression.PATTERN_CHARACTER_NO_DASH");
 					}
 					    |
-					lv_characters_1_29=RULE_UNICODE_DIGIT
+					lv_characters_1_29=RULE_UNICODE_LETTER
 					{
-						newLeafNode(lv_characters_1_29, grammarAccess.getCharacterClassAtomAccess().getCharactersUNICODE_DIGITTerminalRuleCall_1_0_28());
+						newLeafNode(lv_characters_1_29, grammarAccess.getCharacterClassAtomAccess().getCharactersUNICODE_LETTERTerminalRuleCall_1_0_28());
 					}
 					{
 						if ($current==null) {
@@ -1744,6 +1740,21 @@ ruleCharacterClassAtom returns [EObject current=null]
 							$current,
 							"characters",
 							lv_characters_1_29,
+							"org.eclipse.n4js.regex.RegularExpression.UNICODE_LETTER");
+					}
+					    |
+					lv_characters_1_30=RULE_UNICODE_DIGIT
+					{
+						newLeafNode(lv_characters_1_30, grammarAccess.getCharacterClassAtomAccess().getCharactersUNICODE_DIGITTerminalRuleCall_1_0_29());
+					}
+					{
+						if ($current==null) {
+							$current = createModelElement(grammarAccess.getCharacterClassAtomRule());
+						}
+						setWithLastConsumed(
+							$current,
+							"characters",
+							lv_characters_1_30,
 							"org.eclipse.n4js.regex.RegularExpression.UNICODE_DIGIT");
 					}
 				)
