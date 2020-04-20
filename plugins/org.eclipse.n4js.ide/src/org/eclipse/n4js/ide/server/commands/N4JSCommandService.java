@@ -62,6 +62,8 @@ import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.SemverUtils;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.semver.model.SemverSerializer;
+import org.eclipse.n4js.smith.CollectedDataAccess;
+import org.eclipse.n4js.smith.DataCollectorUtils;
 import org.eclipse.xtext.ide.server.Document;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 import org.eclipse.xtext.ide.server.UriExtensions;
@@ -103,6 +105,26 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 	 * Should not appear on the UI of the client.
 	 */
 	public static final String COMPOSITE_FIX_PROJECT = "n4js.composite.fix.project";
+
+	/**
+	 * The command to enable the performance data collectors.
+	 */
+	public static final String ENABLE_PERFORMANCE_COLLECTOR = "n4js.performance.collector.enable";
+
+	/**
+	 * The command to disable the performance data collectors.
+	 */
+	public static final String DISABLE_PERFORMANCE_COLLECTOR = "n4js.performance.collector.disable";
+
+	/**
+	 * The command to dump the collected performance data.
+	 */
+	public static final String SHOW_PERFORMANCE_DATA = "n4js.performance.collector.show";
+
+	/**
+	 * The command to dump the collected performance data.
+	 */
+	public static final String RESET_PERFORMANCE_DATA = "n4js.performance.collector.reset";
 
 	@Inject
 	private XLanguageServerImpl lspServer;
@@ -211,6 +233,71 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 	public Void rebuild(ILanguageServerAccess access, CancelIndicator cancelIndicator) {
 		lspServer.clean();
 		lspServer.reinitWorkspace();
+		return null;
+	}
+
+	/**
+	 * Enable the performance data collector.
+	 *
+	 * @param access
+	 *            the language server access.
+	 * @param cancelIndicator
+	 *            the cancel indicator.
+	 */
+	@ExecutableCommandHandler(ENABLE_PERFORMANCE_COLLECTOR)
+	public Void enablePerformanceDataCollector(ILanguageServerAccess access, CancelIndicator cancelIndicator) {
+		CollectedDataAccess.setPaused(false);
+		access.getLanguageClient()
+				.logMessage(new MessageParams(MessageType.Log, "Enabled performance data collectors"));
+		return null;
+	}
+
+	/**
+	 * Disable the performance data collector.
+	 *
+	 * @param access
+	 *            the language server access.
+	 * @param cancelIndicator
+	 *            the cancel indicator.
+	 */
+	@ExecutableCommandHandler(DISABLE_PERFORMANCE_COLLECTOR)
+	public Void disablePerformanceDataCollector(ILanguageServerAccess access, CancelIndicator cancelIndicator) {
+		CollectedDataAccess.setPaused(true);
+		access.getLanguageClient()
+				.logMessage(new MessageParams(MessageType.Log, "Disabled performance data collectors"));
+		return null;
+	}
+
+	/**
+	 * Visualize the collected performance data on the client.
+	 *
+	 * @param access
+	 *            the language server access.
+	 * @param cancelIndicator
+	 *            the cancel indicator.
+	 */
+	@ExecutableCommandHandler(SHOW_PERFORMANCE_DATA)
+	public Void showPerformanceDataCollector(ILanguageServerAccess access, CancelIndicator cancelIndicator) {
+		access.getLanguageClient()
+				.logMessage(new MessageParams(MessageType.Log, DataCollectorUtils.allDataToString("  ")));
+		return null;
+	}
+
+	/**
+	 * Visualize the collected performance data on the client.
+	 *
+	 * @param access
+	 *            the language server access.
+	 * @param cancelIndicator
+	 *            the cancel indicator.
+	 */
+	@ExecutableCommandHandler(RESET_PERFORMANCE_DATA)
+	public Void resetPerformanceDataCollector(ILanguageServerAccess access, CancelIndicator cancelIndicator) {
+		access.getLanguageClient()
+				.logMessage(new MessageParams(MessageType.Log, DataCollectorUtils.allDataToString("  ")));
+		access.getLanguageClient()
+				.logMessage(new MessageParams(MessageType.Log, "Reset collected performance data"));
+		CollectedDataAccess.purgeAllData();
 		return null;
 	}
 
