@@ -52,6 +52,20 @@ fi
 
 
 
+# PRECONDITION: version not published already
+set +e
+RESULT=$(npm view n4js-runtime@${VERSION} | grep n4js-runtime)
+set -e
+
+if [[ $RESULT == *"n4js-runtime"* ]]; then
+  echo "Version ${VERSION} already published. Skipping build of N4JS VSCode extension."
+  exit 0
+
+else
+  echo "Version ${VERSION} not yet in use. Continue build of N4JS VSCode extension."
+fi
+
+
 # PRECONDITION: port is free
 echo "Check port 4873"
 set +e
@@ -86,7 +100,7 @@ sleep 1s
 echo "==== STEP 2/8: Check Verdaccio"
 RESULT=$(curl -f http://localhost:4873 | grep title)
 
-echo $RESULT
+#echo $RESULT
 if [[ $RESULT == *"Verdaccio"* ]]; then
   echo "Verdaccio successfully started"
 else
