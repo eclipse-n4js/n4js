@@ -10,11 +10,7 @@
  */
 package org.eclipse.n4js.transpiler.es.tests
 
-import com.google.inject.Inject
 import org.eclipse.n4js.N4JSInjectorProviderWithMockProject
-import org.eclipse.n4js.N4JSParseHelper
-import org.eclipse.n4js.N4JSTestHelper
-import org.eclipse.n4js.N4JSValidationTestHelper
 import org.eclipse.n4js.generator.GeneratorOption
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
@@ -30,10 +26,6 @@ import org.junit.runner.RunWith
 @RunWith(XtextRunner)
 @InjectWith(N4JSInjectorProviderWithMockProject)
 class GeneratorOptionTest extends AbstractTranspilerTest {
-
-	@Inject protected extension N4JSTestHelper;
-	@Inject protected extension N4JSParseHelper;
-	@Inject protected extension N4JSValidationTestHelper;
 
 	val snippet = '''
 		let b = 'b';

@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.transpiler.es.tests
 
-import com.google.inject.Inject
 import java.math.BigDecimal
 import org.eclipse.emf.common.util.URI
 import org.eclipse.n4js.N4JSInjectorProviderWithMockProject
@@ -25,7 +24,6 @@ import org.eclipse.n4js.transpiler.im.ParameterizedPropertyAccessExpression_IM
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
-import org.eclipse.xtext.testing.util.ParseHelper
 import org.junit.FixMethodOrder
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -39,8 +37,6 @@ import static extension org.junit.Assert.*
 @InjectWith(N4JSInjectorProviderWithMockProject)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class ArrowFunctionTest extends AbstractTranspilerTest {
-
-	@Inject extension ParseHelper<Script>
 
 	@Test
 	def void testWrapImplicitReturn() {
@@ -148,7 +144,7 @@ class ArrowFunctionTest extends AbstractTranspilerTest {
 				}
 				notifyListeners() {}
 				static get n4type() {
-					return $getReflectionForClass(this,'["A","test",["f._data","f.argsTotal"]]');
+					return $getReflectionForClass(this,'["C","A","test",["f._data","f.argsTotal"]]');
 				}
 			}
 		''';

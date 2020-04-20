@@ -10,13 +10,11 @@
  */
 package org.eclipse.n4js.transpiler.es.tests
 
-import com.google.inject.Inject
 import org.eclipse.emf.common.util.URI
 import org.eclipse.n4js.N4JSInjectorProviderMockProjectSuppressedValidator
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
-import org.eclipse.xtext.testing.util.ParseHelper
 import org.junit.FixMethodOrder
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -28,8 +26,6 @@ import org.junit.runners.MethodSorters
 @InjectWith(N4JSInjectorProviderMockProjectSuppressedValidator)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class BlockTransformationTest extends AbstractTranspilerTest {
-
-	@Inject extension ParseHelper<Script>
 
 	@Test
 	def void testReplace_Arguments_CompileResult() throws Throwable{

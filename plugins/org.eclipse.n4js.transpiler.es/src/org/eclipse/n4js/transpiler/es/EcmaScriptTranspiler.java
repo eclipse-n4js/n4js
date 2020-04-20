@@ -37,6 +37,7 @@ import org.eclipse.n4js.transpiler.es.transform.MemberPatchingTransformation;
 import org.eclipse.n4js.transpiler.es.transform.ModuleWrappingTransformation;
 import org.eclipse.n4js.transpiler.es.transform.RestParameterTransformation;
 import org.eclipse.n4js.transpiler.es.transform.SanitizeImportsTransformation;
+import org.eclipse.n4js.transpiler.es.transform.SimplifyTransformation;
 import org.eclipse.n4js.transpiler.es.transform.StaticPolyfillTransformation;
 import org.eclipse.n4js.transpiler.es.transform.TemplateStringTransformation;
 import org.eclipse.n4js.transpiler.es.transform.TrimTransformation;
@@ -77,6 +78,8 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 	private Provider<InterfaceDeclarationTransformation> interfaceDeclarationTransformationProvider;
 	@Inject
 	private Provider<EnumDeclarationTransformation> enumDeclarationTransformationProvider;
+	@Inject
+	private Provider<SimplifyTransformation> simplifyTransformation;
 	@Inject
 	private Provider<TrimTransformation> trimTransformation;
 	@Inject
@@ -127,6 +130,7 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 				blockTransformationProvider.get(),
 				restParameterTransformationProvider.get(),
 				arrowFunction_Part2_TransformationProvider.get(),
+				simplifyTransformation.get(),
 				trimTransformation.get(),
 				sanitizeImportsTransformationProvider.get(),
 				moduleWrappingTransformationProvider.get()

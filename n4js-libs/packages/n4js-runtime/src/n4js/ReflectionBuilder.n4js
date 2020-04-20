@@ -38,7 +38,7 @@ export function classImplements(obj: any+) : type{N4Object}[] {
 }
 
 export function makeReflectionsForClass(staticProto: constructor{?}, reflectionString: string): N4Class {
-    const reflectionValues = ReflectionValues.createForClassOrEnum(staticProto, reflectionString);
+    const reflectionValues = ReflectionValues.createReflectionValues(reflectionString);
     const detectedMemberStrings = new MemberDetectorForClass(staticProto).detectMembers();
     reflectionValues.mergeWithDetectedMembers(detectedMemberStrings);
     const allImplementedInterfaces = getAllImplementedInterfacesFromClassAndSuperclasses(staticProto);
@@ -56,7 +56,7 @@ export function makeReflectionsForClass(staticProto: constructor{?}, reflectionS
 
 export function makeReflectionsForInterface(interfaceObject: Object, reflectionString: string): N4Interface {
     const detectedMemberStrings = new MemberDetectorForInterface(interfaceObject).detectMembers();
-    const reflectionValues = ReflectionValues.createForInterface(reflectionString);
+    const reflectionValues = ReflectionValues.createReflectionValues(reflectionString);
     reflectionValues.mergeWithDetectedMembers(detectedMemberStrings);
     const detectedAllImplementedInterfaces = getAllImplementedInterfacesFromInterface(interfaceObject);
     reflectionValues.mergeWithDetectedAllImplementedInterfaces(detectedAllImplementedInterfaces);
@@ -67,7 +67,7 @@ export function makeReflectionsForInterface(interfaceObject: Object, reflectionS
 }
 
 export function makeReflectionsForEnum(staticProto: constructor{?}, reflectionString: string): N4EnumType {
-    const reflectionValues = ReflectionValues.createForClassOrEnum(staticProto, reflectionString);
+    const reflectionValues = ReflectionValues.createReflectionValues(reflectionString);
     const n4enumType = new N4EnumType();
     setN4TypeProperties(n4enumType, reflectionValues);
     return n4enumType;
@@ -381,21 +381,7 @@ class ReflectionValues {
     annotations: Array<string|Array<string>>;
 
 
-    static createForClassOrEnum(staticProto: constructor{?}, reflectionString: string) : ReflectionValues {
-        const rv = new ReflectionValues();
-        const reflectionValues = JSON.parse(reflectionString) as [];
-        const [modulePath, origin, members, memberAnnotations, annotations] = reflectionValues;
-        rv.name = staticProto.name;
-        rv.modulePath = modulePath as string;
-        rv.origin = origin as string;
-        rv.members = members as string[] || [];
-        rv.memberAnnotations = memberAnnotations as Object;
-        rv.allImplementedInterfaces = [];
-        rv.annotations = annotations as Array<string|Array<string>>;
-        return rv;
-    }
-
-    static createForInterface(reflectionString: string) : ReflectionValues {
+    static createReflectionValues(reflectionString: string) : ReflectionValues {
         const rv = new ReflectionValues();
         const reflectionValues = JSON.parse(reflectionString) as [];
         const [name, modulePath, origin, members, memberAnnotations, annotations] = reflectionValues;
