@@ -43,7 +43,7 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 	];
 
 	@Test
-	def void testChangeInNonOpenedFile() {
+	def void testChangeInNonOpenedFile_whileWorkspaceIsInCleanState() {
 		workspaceCreator.createTestProjectOnDisk(
 			"C" -> '''export public class C {}'''
 		);
@@ -53,11 +53,48 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 		val outputFileSnapshot = createSnapshotForOutputFile("C");
 		val projectStateSnapshot = createSnapshotForProjectStateFile();
 
+		// the event under test:
 		changeNonOpenedFile("C", ' C ' -> ' C1 ');
 		joinServerRequests();
-cleanBuildAndWait(); // FIXME remove!
+cleanBuildAndWait(); // FIXME GH-1728 remove!
 
-		outputFileSnapshot.assertChanged();
+		outputFileSnapshot.assertChanged(); // change on disk occurred while workspace was in clean state, so re-generated immediately!
+		projectStateSnapshot.assertChanged();
+	}
+
+	@Test
+	def void testChangeInNonOpenedFile_whileWorkspaceIsInDirtyState() {
+		workspaceCreator.createTestProjectOnDisk(
+			"C" -> '''export public class C {}''',
+			"D" -> '''export public class D {}'''
+		);
+		startAndWaitForLspServer();
+		assertNoIssues();
+
+		val outputFileSnapshot = createSnapshotForOutputFile("C");
+		val projectStateSnapshot = createSnapshotForProjectStateFile();
+
+		// put workspace into dirty state
+		openFile("D");
+		changeOpenedFile("D", ' D ' -> ' D1 ');
+		joinServerRequests();
+
+		outputFileSnapshot.assertUnchanged();
+		projectStateSnapshot.assertUnchanged();
+
+		// the event under test:
+		changeNonOpenedFile("C", ' C ' -> ' C1 ');
+		joinServerRequests();
+
+		outputFileSnapshot.assertUnchanged(); // still in dirty state, so nothing re-generated yet!
+		projectStateSnapshot.assertUnchanged();
+
+		// transition workspace into clean state
+		saveOpenedFile("D");
+		joinServerRequests();
+cleanBuildAndWait(); // FIXME GH-1728 remove!
+
+		outputFileSnapshot.assertChanged(); // now C must be regenerated, because workspace went back to clean state
 		projectStateSnapshot.assertChanged();
 	}
 
@@ -77,13 +114,13 @@ cleanBuildAndWait(); // FIXME remove!
 		changeOpenedFile("C", ' C ' -> ' C1 ');
 		joinServerRequests();
 
-		outputFileSnapshot.assertUnchanged();
+		outputFileSnapshot.assertUnchanged(); // still in dirty state, so nothing re-generated yet!
 		projectStateSnapshot.assertUnchanged();
 
 		saveOpenedFile("C");
 		joinServerRequests();
 
-		outputFileSnapshot.assertChanged();
+		outputFileSnapshot.assertChanged(); // now C must be regenerated, because workspace went back to clean state
 		projectStateSnapshot.assertChanged();
 	}
 
@@ -127,7 +164,7 @@ cleanBuildAndWait(); // FIXME remove!
 		joinServerRequests();
 
 		assertNoIssues();
-// FIXME activate this assertion!
+// FIXME GH-1728 activate this assertion!
 //		cOutputFileSnapshot.assertChanged();
 		dOutputFileSnapshot.assertChanged();
 		projectStateSnapshot.assertChanged();
@@ -218,7 +255,7 @@ cleanBuildAndWait(); // FIXME remove!
 		joinServerRequests();
 
 		assertNoIssues();
-// FIXME activate this assertion!
+// FIXME GH-1728 activate this assertion!
 //		otherOutputFileSnapshot.assertChanged();
 		mainOutputFileSnapshot.assertChanged();
 		projectStateSnapshot.assertChanged();
