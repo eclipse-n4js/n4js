@@ -52,7 +52,7 @@ fi
 
 
 
-# PRECONDITION: version not published already
+# PRECONDITION: version not published already (GH-1723)
 set +e
 RESULT=$(npm view n4js-runtime@${VERSION} | grep n4js-runtime)
 set -e
