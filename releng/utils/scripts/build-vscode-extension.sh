@@ -87,6 +87,10 @@ echo "Wait 2s"
 sleep 1s
 echo "Wait 3s"
 sleep 1s
+echo "Wait 4s"
+sleep 1s
+echo "Wait 5s"
+sleep 1s
 
 
 
