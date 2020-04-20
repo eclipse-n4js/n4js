@@ -2,7 +2,7 @@
   "name": "n4js-vscode-extension",
   "displayName": "N4JS VSCode extension",
   "description": "Language support for N4JS",
-  "version": "0.21.0",
+  "version": "0.1.0",
   "publisher": "n4js",
   "license": "EPL-1.0",
   "repository": {
@@ -115,10 +115,10 @@
     "vsce": "1.71.0"
   },
   "dependencies": {
-    "n4js-cli": "latest",
-    "n4js-runtime": "latest",
-    "n4js-runtime-node": "latest",
-    "n4js-runtime-es2015": "latest",
+    "n4js-cli": "^0.1.0",
+    "n4js-runtime": "^0.1.0",
+    "n4js-runtime-node": "^0.1.0",
+    "n4js-runtime-es2015": "^0.1.0",
     "npmlog": "4.1.2",
     "vscode-languageclient": "6.1.0"
   },
