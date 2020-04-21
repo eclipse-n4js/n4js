@@ -103,6 +103,8 @@ public class XStatefulIncrementalBuilder {
 				removeGeneratedFiles(source, newSource2GeneratedMapping);
 			}
 
+			List<Delta> allProcessedAndExternalDeltas = new ArrayList<>(request.getExternalDeltas());
+
 			ResourceDescriptionsData oldIndex = context.getOldState().getResourceDescriptions();
 			Set<URI> remainingURIs = new LinkedHashSet<>(oldIndex.getAllURIs()); // note: creating a copy!
 
@@ -114,7 +116,7 @@ public class XStatefulIncrementalBuilder {
 
 			while (!deltasToBeProcessed.isEmpty()) {
 
-				List<Delta> deltasProcessed = new ArrayList<>();
+				List<Delta> newDeltas = new ArrayList<>();
 				List<URI> urisToBeBuilt = new ArrayList<>();
 				for (IResourceDescription.Delta delta : deltasToBeProcessed) {
 					URI uri = delta.getUri();
@@ -122,22 +124,24 @@ public class XStatefulIncrementalBuilder {
 						unloadResource(uri);
 					}
 					if (delta.getNew() == null) {
-						// deleted resources are not being built
-						deltasProcessed.add(delta);
+						// deleted resources are not being built, thus add immediately to 'newDeltas'
+						newDeltas.add(delta);
 					} else {
 						urisToBeBuilt.add(uri);
 					}
 					remainingURIs.remove(uri);
 				}
 
+				// actually build the resources
 				List<IResourceDescription.Delta> deltasBuilt = context.executeClustered(urisToBeBuilt,
 						(resource) -> buildClustured(resource, newSource2GeneratedMapping, result));
-				deltasProcessed.addAll(deltasBuilt);
+				newDeltas.addAll(deltasBuilt);
 
-				allProcessedDeltas.addAll(deltasProcessed);
+				allProcessedDeltas.addAll(newDeltas);
+				allProcessedAndExternalDeltas.addAll(newDeltas);
 
-				deltasToBeProcessed = indexer.computeAndIndexAffected(newIndex, remainingURIs, deltasProcessed,
-						allProcessedDeltas, context);
+				deltasToBeProcessed = indexer.computeAndIndexAffected(newIndex, remainingURIs, newDeltas,
+						allProcessedAndExternalDeltas, context);
 			}
 
 		} catch (CancellationException e) {

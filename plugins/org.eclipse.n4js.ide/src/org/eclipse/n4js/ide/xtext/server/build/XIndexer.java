@@ -217,7 +217,8 @@ public class XIndexer {
 	 * @param newDeltas
 	 *            deltas representing the resources processed during the most recent build iteration.
 	 * @param allDeltas
-	 *            deltas representing all resources processed so far.
+	 *            deltas representing all resources processed so far, including {@link XBuildRequest#getExternalDeltas()
+	 *            external deltas}.
 	 * @param context
 	 *            the build context.
 	 * @return list of deltas representing the affected resources.
