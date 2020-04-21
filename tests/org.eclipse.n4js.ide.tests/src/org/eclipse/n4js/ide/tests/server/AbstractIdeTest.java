@@ -433,12 +433,12 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		saveOpenedFile(fileURI);
 	}
 
-	/** Save the given, open file's in-memory content to disk. */
+	/** Save the given, open file's in-memory content to disk. Does *not* close the file. */
 	protected void saveOpenedFile(FileURI fileURI) {
 		if (!isOpen(fileURI)) {
 			Assert.fail("file is not open: " + fileURI);
 		}
-		OpenFileInfo info = openFiles.remove(fileURI);
+		OpenFileInfo info = openFiles.get(fileURI);
 		// 1) save current content to disk
 		changeFileOnDiskWithoutNotification(fileURI, info.content);
 		// 2) notify LSP server
