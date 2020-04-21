@@ -100,6 +100,10 @@ public class N4jscCompiler {
 		languageServer.exit();
 
 		writeTestCatalog();
+
+		if (callback.getErrorsCount() > 0) {
+			throw new N4jscException(N4jscExitCode.VALIDATION_ERRORS, Long.toString(callback.getErrorsCount()));
+		}
 	}
 
 	private void performClean() {
