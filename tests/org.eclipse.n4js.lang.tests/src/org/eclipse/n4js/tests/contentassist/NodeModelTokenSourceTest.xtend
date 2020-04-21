@@ -11,30 +11,30 @@
 package org.eclipse.n4js.tests.contentassist
 
 import com.google.inject.Inject
+import java.io.StringReader
+import java.util.List
+import org.antlr.runtime.CharStream
+import org.antlr.runtime.Token
 import org.eclipse.n4js.N4JSInjectorProvider
+import org.eclipse.n4js.ide.editor.contentassist.TokenSourceFactory
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.parser.N4JSSemicolonInjectingParser
 import org.eclipse.n4js.parser.RegExLiteralAwareLexer
 import org.eclipse.n4js.parser.antlr.internal.InternalN4JSParser
 import org.eclipse.n4js.services.N4JSGrammarAccess
-import org.eclipse.n4js.ui.contentassist.TokenSourceFactory
-import java.io.StringReader
-import java.util.List
-import org.antlr.runtime.CharStream
-import org.antlr.runtime.Token
+import org.eclipse.xtext.GrammarUtil
+import org.eclipse.xtext.TerminalRule
+import org.eclipse.xtext.grammaranalysis.impl.GrammarElementTitleSwitch
+import org.eclipse.xtext.nodemodel.impl.InvariantChecker
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.util.ParseHelper
-import org.eclipse.xtext.nodemodel.impl.InvariantChecker
-import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.eclipse.xtext.GrammarUtil
-import org.eclipse.xtext.TerminalRule
-import org.eclipse.xtext.grammaranalysis.impl.GrammarElementTitleSwitch
 
 /**
  */
