@@ -28,6 +28,7 @@ import org.eclipse.lsp4j.InitializedParams;
 import org.eclipse.n4js.cli.N4jscConsole;
 import org.eclipse.n4js.cli.N4jscException;
 import org.eclipse.n4js.cli.N4jscExitCode;
+import org.eclipse.n4js.cli.N4jscExitState;
 import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.ide.xtext.server.DefaultBuildRequestFactory;
@@ -56,9 +57,9 @@ public class N4jscCompiler {
 	private final XWorkspaceManager workspaceManager;
 
 	/** Starts the compiler for goal COMPILE or CLEAN in a blocking fashion */
-	static public void start(N4jscOptions options) throws Exception {
+	static public N4jscExitState start(N4jscOptions options) throws Exception {
 		N4jscCompiler compiler = new N4jscCompiler(options);
-		compiler.start();
+		return compiler.start();
 	}
 
 	private N4jscCompiler(N4jscOptions options) {
@@ -73,7 +74,7 @@ public class N4jscCompiler {
 	}
 
 	/** Starts the compiler in a blocking fashion */
-	public void start() throws Exception {
+	public N4jscExitState start() throws Exception {
 		InitializeParams params = new InitializeParams();
 		File baseDir = options.getDir();
 		if (baseDir == null) {
@@ -101,9 +102,7 @@ public class N4jscCompiler {
 
 		writeTestCatalog();
 
-		if (callback.getErrorsCount() > 0) {
-			throw new N4jscException(N4jscExitCode.VALIDATION_ERRORS, Long.toString(callback.getErrorsCount()));
-		}
+		return determineExitState();
 	}
 
 	private void performClean() {
@@ -220,6 +219,14 @@ public class N4jscCompiler {
 
 			N4jscConsole.println("Test catalog written to " + testCatalogFile.toPath());
 		}
+	}
+
+	private N4jscExitState determineExitState() {
+		if (callback.getErrorsCount() > 0) {
+			return new N4jscExitState(N4jscExitCode.VALIDATION_ERRORS, Long.toString(callback.getErrorsCount()));
+		}
+
+		return N4jscExitState.SUCCESS;
 	}
 
 }

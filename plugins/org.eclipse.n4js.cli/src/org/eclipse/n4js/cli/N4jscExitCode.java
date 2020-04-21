@@ -23,6 +23,7 @@ import com.google.common.base.Strings;
  * {@link N4jscExitCode#getExitCodeValue()} for int comparisons.
  */
 public enum N4jscExitCode {
+
 	/** Success */
 	SUCCESS(0, ""),
 
@@ -32,6 +33,7 @@ public enum N4jscExitCode {
 	ERROR_UNEXPECTED(1, "Unexpected error"),
 	/** Feature is not implemented */
 	NOT_IMPLEMENTED(2, "Feature is not implemented"),
+
 	/** Errors during validation */
 	VALIDATION_ERRORS(3, "Errors during validation"),
 
@@ -62,12 +64,23 @@ public enum N4jscExitCode {
 			lookup.put(ec.getExitCodeValue(), ec);
 	}
 
+	private final boolean gracefulTermination;
 	private final String explanation;
 	private final int code;
 
-	private N4jscExitCode(int code, String explanation) {
+	private N4jscExitCode(boolean gracefulTermination, int code, String explanation) {
+		this.gracefulTermination = gracefulTermination;
 		this.code = code;
 		this.explanation = explanation;
+	}
+
+	private N4jscExitCode(int code, String explanation) {
+		this(false, code, explanation);
+	}
+
+	/** @return true iff this exit code won't cause abrupt but instead graceful termination */
+	public boolean isGracefulTermination() {
+		return this.gracefulTermination;
 	}
 
 	/** Get user readable explanation of the message. */

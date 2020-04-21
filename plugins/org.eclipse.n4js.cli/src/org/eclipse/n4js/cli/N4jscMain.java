@@ -53,8 +53,9 @@ public class N4jscMain {
 		}
 
 		try {
+			N4jscExitState exitState;
 			try {
-				performGoal(options);
+				exitState = performGoal(options);
 			} catch (N4jscException e) {
 				throw e;
 			} catch (Exception e) {
@@ -62,7 +63,11 @@ public class N4jscMain {
 			}
 
 			writePerformanceReportIfRequested(options);
-			System.exit(N4jscExitCode.SUCCESS.getExitCodeValue());
+
+			if (exitState != N4jscExitState.SUCCESS) {
+				N4jscConsole.println(exitState.toUserString());
+			}
+			System.exit(exitState.exitCode.getExitCodeValue());
 
 		} catch (N4jscException e) {
 			N4jscConsole.println(e.toUserString());
@@ -99,37 +104,36 @@ public class N4jscMain {
 		return null; // never happens
 	}
 
-	private static void performGoal(N4jscOptions options) throws Exception {
+	/** @return a {@link N4jscExitCode} that is returned after gracefully terminating n4jsc */
+	private static N4jscExitState performGoal(N4jscOptions options) throws Exception {
 		N4jscBackend backend = N4jscFactory.createBackend();
 
 		switch (options.getGoal()) {
 		case help:
 			options.printUsage(N4jscConsole.getPrintStream());
-			return;
+			return N4jscExitState.SUCCESS;
 
 		case version:
 			N4jscConsole.println(N4JSLanguageUtils.getLanguageVersion());
-			return;
+			return N4jscExitState.SUCCESS;
 
 		case lsp:
-			backend.goalLsp(options);
-			return;
+			return backend.goalLsp(options);
 
 		case clean:
-			backend.goalClean(options);
-			return;
+			return backend.goalClean(options);
 
 		case compile:
-			backend.goalCompile(options);
-			return;
+			return backend.goalCompile(options);
 
 		case api:
-			backend.goalApi(options);
-			return;
+			return backend.goalApi(options);
 
 		case watch:
-			backend.goalWatch(options);
-			return;
+			return backend.goalWatch(options);
+
+		default:
+			throw new N4jscException(N4jscExitCode.ARGUMENT_GOAL_INVALID);
 		}
 	}
 
