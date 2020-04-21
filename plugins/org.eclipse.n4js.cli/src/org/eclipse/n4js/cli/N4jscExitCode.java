@@ -64,23 +64,12 @@ public enum N4jscExitCode {
 			lookup.put(ec.getExitCodeValue(), ec);
 	}
 
-	private final boolean gracefulTermination;
 	private final String explanation;
 	private final int code;
 
-	private N4jscExitCode(boolean gracefulTermination, int code, String explanation) {
-		this.gracefulTermination = gracefulTermination;
+	private N4jscExitCode(int code, String explanation) {
 		this.code = code;
 		this.explanation = explanation;
-	}
-
-	private N4jscExitCode(int code, String explanation) {
-		this(false, code, explanation);
-	}
-
-	/** @return true iff this exit code won't cause abrupt but instead graceful termination */
-	public boolean isGracefulTermination() {
-		return this.gracefulTermination;
 	}
 
 	/** Get user readable explanation of the message. */
