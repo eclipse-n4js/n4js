@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.ui.contentassist;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collection;
@@ -37,7 +36,6 @@ import org.eclipse.xtext.ide.editor.contentassist.antlr.internal.AbstractInterna
 import org.eclipse.xtext.ide.editor.contentassist.antlr.internal.InfiniteRecursion;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.parser.antlr.IUnorderedGroupHelper;
-import org.eclipse.xtext.xbase.lib.util.ReflectExtensions;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -326,33 +324,19 @@ public class CustomN4JSParser extends N4JSParser {
 		this.postfixGroup = grammarAccess.getPostfixExpressionAccess().getGroup_1();
 	}
 
-	// TODO remove the code below with Xtext 2.13
-	@Inject
-	private final ReflectExtensions reflector = new ReflectExtensions();
-
-	@SuppressWarnings("unchecked")
-	private <T> T reflective(String methodName, Object... args) {
-		try {
-			return (T) reflector.invoke(this, methodName, args);
-		} catch (SecurityException | IllegalArgumentException | IllegalAccessException | InvocationTargetException
-				| NoSuchMethodException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
 	@SuppressWarnings("hiding")
 	@Override
 	public Collection<FollowElement> getFollowElements(FollowElement element) {
 		if (element.getLookAhead() <= 1)
 			throw new IllegalArgumentException("lookahead may not be less than or equal to 1");
 		Collection<FollowElement> result = new ArrayList<>();
-		Collection<AbstractElement> elementsToParse = this.reflective("getElementsToParse", element);
+		Collection<AbstractElement> elementsToParse = getElementsToParse(element);
 		for (AbstractElement elementToParse : elementsToParse) {
 			// fix is here
 			elementToParse = unwrapSingleElementGroups(elementToParse);
 			// done
 			String ruleName = getRuleName(elementToParse);
-			String[][] allRuleNames = reflective("getRequiredRuleNames", ruleName, element.getParamStack(),
+			String[][] allRuleNames = getRequiredRuleNames(ruleName, element.getParamStack(),
 					elementToParse);
 			for (String[] ruleNames : allRuleNames) {
 				for (int i = 0; i < ruleNames.length; i++) {
@@ -440,7 +424,7 @@ public class CustomN4JSParser extends N4JSParser {
 
 						});
 					}
-					Collection<FollowElement> elements = reflective("getFollowElements", parser, elementToParse,
+					Collection<FollowElement> elements = getFollowElements(parser, elementToParse,
 							ruleNames, i);
 					result.addAll(elements);
 				}
