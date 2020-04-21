@@ -20,7 +20,6 @@ import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.ide.tests.server.AbstractIdeTest
 import org.eclipse.n4js.ide.tests.server.TestWorkspaceCreator
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig
-import org.eclipse.n4js.projectDescription.ProjectType
 import org.junit.Assert
 
 /**
@@ -28,12 +27,6 @@ import org.junit.Assert
  */
 abstract class AbstractIncrementalBuilderTest extends AbstractIdeTest {
 
-	// FIXME reconsider the default in AbstractIdeTest
-	override ProjectType getProjectType() {
-		return ProjectType.LIBRARY;
-	}
-
-	// FIXME reconsider the defaults in ProjectStatePersisterConfig
 	override protected Injector createInjector() {
 		val injector = super.createInjector();
 		val persisterConfig = injector.getInstance(ProjectStatePersisterConfig);

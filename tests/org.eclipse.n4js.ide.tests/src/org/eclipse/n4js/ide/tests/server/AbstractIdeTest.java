@@ -183,7 +183,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	/** Overwrite this method to change the project type */
 	protected ProjectType getProjectType() {
-		return ProjectType.VALIDATION;
+		return ProjectType.LIBRARY;
 	}
 
 	/** Overwrite this method to ignore certain issues in {@link #assertIssues(Map)}. */

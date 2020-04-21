@@ -27,7 +27,6 @@ import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
-import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.tests.codegen.Project;
 import org.eclipse.xtext.xbase.lib.Pair;
 import org.junit.After;
@@ -47,11 +46,6 @@ public class CommandRebuildTest extends AbstractStructuredIdeTest<Void> {
 
 	Path prjStatePath;
 	Path genFileStatePath;
-
-	@Override
-	protected ProjectType getProjectType() {
-		return ProjectType.LIBRARY;
-	}
 
 	/** remove generated files */
 	@After
