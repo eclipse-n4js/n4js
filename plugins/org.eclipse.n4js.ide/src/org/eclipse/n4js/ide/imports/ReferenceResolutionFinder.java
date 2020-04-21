@@ -18,6 +18,7 @@ import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.ide.editor.contentassist.ContentAssistDataCollectors;
 import org.eclipse.n4js.n4JS.ImportCallExpression;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4idl.N4IDLGlobals;
@@ -28,6 +29,7 @@ import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.scoping.IContentAssistScopeProvider;
 import org.eclipse.n4js.scoping.imports.PlainAccessOfAliasedImportDescription;
 import org.eclipse.n4js.scoping.imports.PlainAccessOfNamespacedImportDescription;
+import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
 import org.eclipse.n4js.ts.types.TModule;
@@ -88,6 +90,9 @@ public class ReferenceResolutionFinder {
 	@Inject
 	private IPrefixMatcher prefixMatcher;
 
+	@Inject
+	private ContentAssistDataCollectors contentAssistDataCollectors;
+
 	/**
 	 * An acceptor receiving valid {@link ReferenceResolution}s for a given {@link ReferenceDescriptor reference}. See
 	 * {@link ReferenceResolutionFinder#findResolutions(ReferenceDescriptor, boolean, boolean, Predicate, Predicate, IResolutionAcceptor)
@@ -134,28 +139,42 @@ public class ReferenceResolutionFinder {
 			Predicate<IEObjectDescription> filter,
 			IResolutionAcceptor acceptor) {
 
-		final IContentAssistScopeProvider contentAssistScopeProvider = (IContentAssistScopeProvider) scopeProvider;
-		final IScope scope = contentAssistScopeProvider.getScopeForContentAssist(reference.astNode,
-				reference.eReference);
+		IScope scope = getScopeForContentAssist(reference);
 		// iterate over candidates, filter them, and create ICompletionProposals for them
-		final Iterable<IEObjectDescription> candidates = scope.getAllElements();
-		final Set<URI> candidateURIs = new HashSet<>(); // note: shadowing for #getAllElements does not work
 
-		for (IEObjectDescription candidate : candidates) {
-			if (!acceptor.canAcceptMoreProposals()) {
-				return;
-			}
-			if (!filter.apply(candidate)) {
-				continue;
-			}
+		Iterable<IEObjectDescription> candidates = getAllElements(scope);
+		try (Measurement m = contentAssistDataCollectors.dcIterateAllElements().getMeasurement()) {
+			Set<URI> candidateURIs = new HashSet<>(); // note: shadowing for #getAllElements does not work
+			for (IEObjectDescription candidate : candidates) {
+				if (!acceptor.canAcceptMoreProposals()) {
+					return;
+				}
+				if (!filter.apply(candidate)) {
+					continue;
+				}
 
-			final Optional<IScope> scopeForCollisionCheck = isUnresolvedReference ? Optional.absent()
-					: Optional.of(scope);
-			final ReferenceResolution resolution = getResolution(reference.text, reference.parseTreeNode,
-					requireFullMatch, candidate, scopeForCollisionCheck, conflictChecker);
-			if (resolution != null && candidateURIs.add(candidate.getEObjectURI())) {
-				acceptor.accept(resolution);
+				final Optional<IScope> scopeForCollisionCheck = isUnresolvedReference ? Optional.absent()
+						: Optional.of(scope);
+				final ReferenceResolution resolution = getResolution(reference.text, reference.parseTreeNode,
+						requireFullMatch, candidate, scopeForCollisionCheck, conflictChecker);
+				if (resolution != null && candidateURIs.add(candidate.getEObjectURI())) {
+					acceptor.accept(resolution);
+				}
 			}
+		}
+	}
+
+	private Iterable<IEObjectDescription> getAllElements(IScope scope) {
+		try (Measurement m = contentAssistDataCollectors.dcGetAllElements().getMeasurement()) {
+			return scope.getAllElements();
+		}
+	}
+
+	private IScope getScopeForContentAssist(ReferenceDescriptor reference) {
+		try (Measurement m = contentAssistDataCollectors.dcGetScope().getMeasurement()) {
+			IContentAssistScopeProvider contentAssistScopeProvider = (IContentAssistScopeProvider) scopeProvider;
+			return contentAssistScopeProvider.getScopeForContentAssist(reference.astNode,
+					reference.eReference);
 		}
 	}
 
@@ -174,28 +193,30 @@ public class ReferenceResolutionFinder {
 	private ReferenceResolution getResolution(String text, INode parseTreeNode, boolean requireFullMatch,
 			IEObjectDescription candidate, Optional<IScope> scopeForCollisionCheck, Predicate<String> conflictChecker) {
 
-		ReferenceResolutionCandidate rrc = new ReferenceResolutionCandidate(candidate, scopeForCollisionCheck, text,
-				requireFullMatch, parseTreeNode, conflictChecker);
+		try (Measurement m = contentAssistDataCollectors.dcGetResolution().getMeasurement()) {
+			ReferenceResolutionCandidate rrc = new ReferenceResolutionCandidate(candidate, scopeForCollisionCheck, text,
+					requireFullMatch, parseTreeNode, conflictChecker);
 
-		if (!rrc.isValid) {
+			if (!rrc.isValid) {
+				return null;
+			}
+
+			try {
+				int version = N4JSResourceDescriptionStrategy.getVersion(candidate);
+
+				String proposal = getProposal(rrc);
+				String label = getLabel(rrc, version);
+				String description = getDescription(rrc);
+				ImportDescriptor importToBeAdded = getImportToBeAdded(rrc);
+
+				return new ReferenceResolution(candidate, proposal, label, description, importToBeAdded);
+
+			} catch (ValueConverterException e) {
+				// text does not match the concrete syntax
+			}
+
 			return null;
 		}
-
-		try {
-			int version = N4JSResourceDescriptionStrategy.getVersion(candidate);
-
-			String proposal = getProposal(rrc);
-			String label = getLabel(rrc, version);
-			String description = getDescription(rrc);
-			ImportDescriptor importToBeAdded = getImportToBeAdded(rrc);
-
-			return new ReferenceResolution(candidate, proposal, label, description, importToBeAdded);
-
-		} catch (ValueConverterException e) {
-			// text does not match the concrete syntax
-		}
-
-		return null;
 	}
 
 	private String getProposal(ReferenceResolutionCandidate rrc) {
