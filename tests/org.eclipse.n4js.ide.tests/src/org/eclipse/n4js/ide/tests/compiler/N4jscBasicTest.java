@@ -28,10 +28,8 @@ import org.eclipse.n4js.cli.helper.CliCompileResult;
 import org.eclipse.n4js.cli.helper.N4CliHelper;
 import org.eclipse.n4js.cli.helper.ProcessResult;
 import org.eclipse.n4js.utils.io.FileDeleter;
-import org.eclipse.xtext.testing.RepeatedTest;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 
 import com.google.common.base.Joiner;
@@ -39,14 +37,9 @@ import com.google.common.base.Joiner;
 /**
  * Basic tests for N4jsc, testing various situations in which compiler exits with errors.
  */
-@RepeatedTest(times = 25)
 public class N4jscBasicTest extends AbstractCliCompileTest {
 
 	static final boolean DONT_CLEAN = false;
-
-	/** Run test in a loop to find synchronization issues */
-	@Rule
-	public RepeatedTest.Rule rule = new RepeatedTest.Rule(false);
 
 	File workspace;
 	File proot;
