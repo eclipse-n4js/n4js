@@ -22,7 +22,7 @@ import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.tests.typesbuilder.extensions.N4JSResourceExtensions
 import org.eclipse.n4js.tests.typesbuilder.extensions.ResourceAssertionsExtensions
 import org.eclipse.n4js.tests.typesbuilder.extensions.TypesAssertionsExtensions
-import org.eclipse.n4js.tests.typesbuilder.extensions.UserDataAssertionsExtension
+import org.eclipse.n4js.tests.typesbuilder.extensions.UserDataAssertions
 import org.eclipse.xtext.resource.IResourceDescription
 import org.eclipse.xtext.resource.XtextResourceSet
 import org.eclipse.xtext.testing.InjectWith
@@ -46,7 +46,7 @@ public abstract class AbstractTypesBuilderTest {
 	protected extension N4JSResourceExtensions;
 
 	@Inject
-	private extension UserDataAssertionsExtension;
+	private extension UserDataAssertions;
 
 	@Inject protected Provider<XtextResourceSet> resourceSetProvider;
 

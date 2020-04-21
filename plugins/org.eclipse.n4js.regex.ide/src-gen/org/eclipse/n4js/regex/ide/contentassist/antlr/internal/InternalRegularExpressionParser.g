@@ -1357,153 +1357,159 @@ rule__CharacterClassAtom__CharactersAlternatives_1_0
 	)
 	|
 	(
-		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersHyphenMinusKeyword_1_0_4()); }
+		{ before(grammarAccess.getCharacterClassAtomAccess().getCharacters_Keyword_1_0_4()); }
+		KW__
+		{ after(grammarAccess.getCharacterClassAtomAccess().getCharacters_Keyword_1_0_4()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersHyphenMinusKeyword_1_0_5()); }
 		HyphenMinus
-		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersHyphenMinusKeyword_1_0_4()); }
+		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersHyphenMinusKeyword_1_0_5()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersCircumflexAccentKeyword_1_0_5()); }
+		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersCircumflexAccentKeyword_1_0_6()); }
 		CircumflexAccent
-		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersCircumflexAccentKeyword_1_0_5()); }
+		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersCircumflexAccentKeyword_1_0_6()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersDollarSignKeyword_1_0_6()); }
+		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersDollarSignKeyword_1_0_7()); }
 		DollarSign
-		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersDollarSignKeyword_1_0_6()); }
+		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersDollarSignKeyword_1_0_7()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersFullStopKeyword_1_0_7()); }
+		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersFullStopKeyword_1_0_8()); }
 		FullStop
-		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersFullStopKeyword_1_0_7()); }
+		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersFullStopKeyword_1_0_8()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersAsteriskKeyword_1_0_8()); }
+		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersAsteriskKeyword_1_0_9()); }
 		Asterisk
-		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersAsteriskKeyword_1_0_8()); }
+		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersAsteriskKeyword_1_0_9()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersPlusSignKeyword_1_0_9()); }
+		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersPlusSignKeyword_1_0_10()); }
 		PlusSign
-		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersPlusSignKeyword_1_0_9()); }
+		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersPlusSignKeyword_1_0_10()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersQuestionMarkKeyword_1_0_10()); }
+		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersQuestionMarkKeyword_1_0_11()); }
 		QuestionMark
-		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersQuestionMarkKeyword_1_0_10()); }
+		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersQuestionMarkKeyword_1_0_11()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisKeyword_1_0_11()); }
+		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisKeyword_1_0_12()); }
 		LeftParenthesis
-		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisKeyword_1_0_11()); }
+		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisKeyword_1_0_12()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersRightParenthesisKeyword_1_0_12()); }
+		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersRightParenthesisKeyword_1_0_13()); }
 		RightParenthesis
-		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersRightParenthesisKeyword_1_0_12()); }
+		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersRightParenthesisKeyword_1_0_13()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftSquareBracketKeyword_1_0_13()); }
+		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftSquareBracketKeyword_1_0_14()); }
 		LeftSquareBracket
-		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftSquareBracketKeyword_1_0_13()); }
+		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftSquareBracketKeyword_1_0_14()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftCurlyBracketKeyword_1_0_14()); }
+		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftCurlyBracketKeyword_1_0_15()); }
 		LeftCurlyBracket
-		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftCurlyBracketKeyword_1_0_14()); }
+		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftCurlyBracketKeyword_1_0_15()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersRightCurlyBracketKeyword_1_0_15()); }
+		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersRightCurlyBracketKeyword_1_0_16()); }
 		RightCurlyBracket
-		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersRightCurlyBracketKeyword_1_0_15()); }
+		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersRightCurlyBracketKeyword_1_0_16()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersVerticalLineKeyword_1_0_16()); }
+		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersVerticalLineKeyword_1_0_17()); }
 		VerticalLine
-		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersVerticalLineKeyword_1_0_16()); }
+		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersVerticalLineKeyword_1_0_17()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersSolidusKeyword_1_0_17()); }
+		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersSolidusKeyword_1_0_18()); }
 		Solidus
-		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersSolidusKeyword_1_0_17()); }
+		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersSolidusKeyword_1_0_18()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersLessThanSignKeyword_1_0_18()); }
+		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersLessThanSignKeyword_1_0_19()); }
 		LessThanSign
-		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersLessThanSignKeyword_1_0_18()); }
+		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersLessThanSignKeyword_1_0_19()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersGreaterThanSignKeyword_1_0_19()); }
+		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersGreaterThanSignKeyword_1_0_20()); }
 		GreaterThanSign
-		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersGreaterThanSignKeyword_1_0_19()); }
+		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersGreaterThanSignKeyword_1_0_20()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkKeyword_1_0_20()); }
+		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkKeyword_1_0_21()); }
 		LeftParenthesisQuestionMark
-		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkKeyword_1_0_20()); }
+		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkKeyword_1_0_21()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkLessThanSignKeyword_1_0_21()); }
+		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkLessThanSignKeyword_1_0_22()); }
 		LeftParenthesisQuestionMarkLessThanSign
-		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkLessThanSignKeyword_1_0_21()); }
+		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkLessThanSignKeyword_1_0_22()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkEqualsSignKeyword_1_0_22()); }
+		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkEqualsSignKeyword_1_0_23()); }
 		LeftParenthesisQuestionMarkEqualsSign
-		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkEqualsSignKeyword_1_0_22()); }
+		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkEqualsSignKeyword_1_0_23()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkExclamationMarkKeyword_1_0_23()); }
+		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkExclamationMarkKeyword_1_0_24()); }
 		LeftParenthesisQuestionMarkExclamationMark
-		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkExclamationMarkKeyword_1_0_23()); }
+		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkExclamationMarkKeyword_1_0_24()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkLessThanSignExclamationMarkKeyword_1_0_24()); }
+		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkLessThanSignExclamationMarkKeyword_1_0_25()); }
 		LeftParenthesisQuestionMarkLessThanSignExclamationMark
-		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkLessThanSignExclamationMarkKeyword_1_0_24()); }
+		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkLessThanSignExclamationMarkKeyword_1_0_25()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkLessThanSignEqualsSignKeyword_1_0_25()); }
+		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkLessThanSignEqualsSignKeyword_1_0_26()); }
 		LeftParenthesisQuestionMarkLessThanSignEqualsSign
-		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkLessThanSignEqualsSignKeyword_1_0_25()); }
+		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkLessThanSignEqualsSignKeyword_1_0_26()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersPATTERN_CHARACTER_NO_DASHTerminalRuleCall_1_0_26()); }
+		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersPATTERN_CHARACTER_NO_DASHTerminalRuleCall_1_0_27()); }
 		RULE_PATTERN_CHARACTER_NO_DASH
-		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersPATTERN_CHARACTER_NO_DASHTerminalRuleCall_1_0_26()); }
+		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersPATTERN_CHARACTER_NO_DASHTerminalRuleCall_1_0_27()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersUNICODE_LETTERTerminalRuleCall_1_0_27()); }
+		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersUNICODE_LETTERTerminalRuleCall_1_0_28()); }
 		RULE_UNICODE_LETTER
-		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersUNICODE_LETTERTerminalRuleCall_1_0_27()); }
+		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersUNICODE_LETTERTerminalRuleCall_1_0_28()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersUNICODE_DIGITTerminalRuleCall_1_0_28()); }
+		{ before(grammarAccess.getCharacterClassAtomAccess().getCharactersUNICODE_DIGITTerminalRuleCall_1_0_29()); }
 		RULE_UNICODE_DIGIT
-		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersUNICODE_DIGITTerminalRuleCall_1_0_28()); }
+		{ after(grammarAccess.getCharacterClassAtomAccess().getCharactersUNICODE_DIGITTerminalRuleCall_1_0_29()); }
 	)
 ;
 finally {

@@ -742,53 +742,54 @@ public class RegularExpressionGrammarAccess extends AbstractGrammarElementFinder
 		private final Keyword cCharactersEqualsSignKeyword_1_0_1 = (Keyword)cCharactersAlternatives_1_0.eContents().get(1);
 		private final Keyword cCharactersColonKeyword_1_0_2 = (Keyword)cCharactersAlternatives_1_0.eContents().get(2);
 		private final Keyword cCharactersExclamationMarkKeyword_1_0_3 = (Keyword)cCharactersAlternatives_1_0.eContents().get(3);
-		private final Keyword cCharactersHyphenMinusKeyword_1_0_4 = (Keyword)cCharactersAlternatives_1_0.eContents().get(4);
-		private final Keyword cCharactersCircumflexAccentKeyword_1_0_5 = (Keyword)cCharactersAlternatives_1_0.eContents().get(5);
-		private final Keyword cCharactersDollarSignKeyword_1_0_6 = (Keyword)cCharactersAlternatives_1_0.eContents().get(6);
-		private final Keyword cCharactersFullStopKeyword_1_0_7 = (Keyword)cCharactersAlternatives_1_0.eContents().get(7);
-		private final Keyword cCharactersAsteriskKeyword_1_0_8 = (Keyword)cCharactersAlternatives_1_0.eContents().get(8);
-		private final Keyword cCharactersPlusSignKeyword_1_0_9 = (Keyword)cCharactersAlternatives_1_0.eContents().get(9);
-		private final Keyword cCharactersQuestionMarkKeyword_1_0_10 = (Keyword)cCharactersAlternatives_1_0.eContents().get(10);
-		private final Keyword cCharactersLeftParenthesisKeyword_1_0_11 = (Keyword)cCharactersAlternatives_1_0.eContents().get(11);
-		private final Keyword cCharactersRightParenthesisKeyword_1_0_12 = (Keyword)cCharactersAlternatives_1_0.eContents().get(12);
-		private final Keyword cCharactersLeftSquareBracketKeyword_1_0_13 = (Keyword)cCharactersAlternatives_1_0.eContents().get(13);
-		private final Keyword cCharactersLeftCurlyBracketKeyword_1_0_14 = (Keyword)cCharactersAlternatives_1_0.eContents().get(14);
-		private final Keyword cCharactersRightCurlyBracketKeyword_1_0_15 = (Keyword)cCharactersAlternatives_1_0.eContents().get(15);
-		private final Keyword cCharactersVerticalLineKeyword_1_0_16 = (Keyword)cCharactersAlternatives_1_0.eContents().get(16);
-		private final Keyword cCharactersSolidusKeyword_1_0_17 = (Keyword)cCharactersAlternatives_1_0.eContents().get(17);
-		private final Keyword cCharactersLessThanSignKeyword_1_0_18 = (Keyword)cCharactersAlternatives_1_0.eContents().get(18);
-		private final Keyword cCharactersGreaterThanSignKeyword_1_0_19 = (Keyword)cCharactersAlternatives_1_0.eContents().get(19);
-		private final Keyword cCharactersLeftParenthesisQuestionMarkKeyword_1_0_20 = (Keyword)cCharactersAlternatives_1_0.eContents().get(20);
-		private final Keyword cCharactersLeftParenthesisQuestionMarkLessThanSignKeyword_1_0_21 = (Keyword)cCharactersAlternatives_1_0.eContents().get(21);
-		private final Keyword cCharactersLeftParenthesisQuestionMarkEqualsSignKeyword_1_0_22 = (Keyword)cCharactersAlternatives_1_0.eContents().get(22);
-		private final Keyword cCharactersLeftParenthesisQuestionMarkExclamationMarkKeyword_1_0_23 = (Keyword)cCharactersAlternatives_1_0.eContents().get(23);
-		private final Keyword cCharactersLeftParenthesisQuestionMarkLessThanSignExclamationMarkKeyword_1_0_24 = (Keyword)cCharactersAlternatives_1_0.eContents().get(24);
-		private final Keyword cCharactersLeftParenthesisQuestionMarkLessThanSignEqualsSignKeyword_1_0_25 = (Keyword)cCharactersAlternatives_1_0.eContents().get(25);
-		private final RuleCall cCharactersPATTERN_CHARACTER_NO_DASHTerminalRuleCall_1_0_26 = (RuleCall)cCharactersAlternatives_1_0.eContents().get(26);
-		private final RuleCall cCharactersUNICODE_LETTERTerminalRuleCall_1_0_27 = (RuleCall)cCharactersAlternatives_1_0.eContents().get(27);
-		private final RuleCall cCharactersUNICODE_DIGITTerminalRuleCall_1_0_28 = (RuleCall)cCharactersAlternatives_1_0.eContents().get(28);
+		private final Keyword cCharacters_Keyword_1_0_4 = (Keyword)cCharactersAlternatives_1_0.eContents().get(4);
+		private final Keyword cCharactersHyphenMinusKeyword_1_0_5 = (Keyword)cCharactersAlternatives_1_0.eContents().get(5);
+		private final Keyword cCharactersCircumflexAccentKeyword_1_0_6 = (Keyword)cCharactersAlternatives_1_0.eContents().get(6);
+		private final Keyword cCharactersDollarSignKeyword_1_0_7 = (Keyword)cCharactersAlternatives_1_0.eContents().get(7);
+		private final Keyword cCharactersFullStopKeyword_1_0_8 = (Keyword)cCharactersAlternatives_1_0.eContents().get(8);
+		private final Keyword cCharactersAsteriskKeyword_1_0_9 = (Keyword)cCharactersAlternatives_1_0.eContents().get(9);
+		private final Keyword cCharactersPlusSignKeyword_1_0_10 = (Keyword)cCharactersAlternatives_1_0.eContents().get(10);
+		private final Keyword cCharactersQuestionMarkKeyword_1_0_11 = (Keyword)cCharactersAlternatives_1_0.eContents().get(11);
+		private final Keyword cCharactersLeftParenthesisKeyword_1_0_12 = (Keyword)cCharactersAlternatives_1_0.eContents().get(12);
+		private final Keyword cCharactersRightParenthesisKeyword_1_0_13 = (Keyword)cCharactersAlternatives_1_0.eContents().get(13);
+		private final Keyword cCharactersLeftSquareBracketKeyword_1_0_14 = (Keyword)cCharactersAlternatives_1_0.eContents().get(14);
+		private final Keyword cCharactersLeftCurlyBracketKeyword_1_0_15 = (Keyword)cCharactersAlternatives_1_0.eContents().get(15);
+		private final Keyword cCharactersRightCurlyBracketKeyword_1_0_16 = (Keyword)cCharactersAlternatives_1_0.eContents().get(16);
+		private final Keyword cCharactersVerticalLineKeyword_1_0_17 = (Keyword)cCharactersAlternatives_1_0.eContents().get(17);
+		private final Keyword cCharactersSolidusKeyword_1_0_18 = (Keyword)cCharactersAlternatives_1_0.eContents().get(18);
+		private final Keyword cCharactersLessThanSignKeyword_1_0_19 = (Keyword)cCharactersAlternatives_1_0.eContents().get(19);
+		private final Keyword cCharactersGreaterThanSignKeyword_1_0_20 = (Keyword)cCharactersAlternatives_1_0.eContents().get(20);
+		private final Keyword cCharactersLeftParenthesisQuestionMarkKeyword_1_0_21 = (Keyword)cCharactersAlternatives_1_0.eContents().get(21);
+		private final Keyword cCharactersLeftParenthesisQuestionMarkLessThanSignKeyword_1_0_22 = (Keyword)cCharactersAlternatives_1_0.eContents().get(22);
+		private final Keyword cCharactersLeftParenthesisQuestionMarkEqualsSignKeyword_1_0_23 = (Keyword)cCharactersAlternatives_1_0.eContents().get(23);
+		private final Keyword cCharactersLeftParenthesisQuestionMarkExclamationMarkKeyword_1_0_24 = (Keyword)cCharactersAlternatives_1_0.eContents().get(24);
+		private final Keyword cCharactersLeftParenthesisQuestionMarkLessThanSignExclamationMarkKeyword_1_0_25 = (Keyword)cCharactersAlternatives_1_0.eContents().get(25);
+		private final Keyword cCharactersLeftParenthesisQuestionMarkLessThanSignEqualsSignKeyword_1_0_26 = (Keyword)cCharactersAlternatives_1_0.eContents().get(26);
+		private final RuleCall cCharactersPATTERN_CHARACTER_NO_DASHTerminalRuleCall_1_0_27 = (RuleCall)cCharactersAlternatives_1_0.eContents().get(27);
+		private final RuleCall cCharactersUNICODE_LETTERTerminalRuleCall_1_0_28 = (RuleCall)cCharactersAlternatives_1_0.eContents().get(28);
+		private final RuleCall cCharactersUNICODE_DIGITTerminalRuleCall_1_0_29 = (RuleCall)cCharactersAlternatives_1_0.eContents().get(29);
 		
 		//CharacterClassAtom:
-		//	EscapedCharacterClassAtom | characters=(',' | '=' | ':' | '!' |
+		//	EscapedCharacterClassAtom | characters=(',' | '=' | ':' | '!' | '_' |
 		//	'-' | '^' | '$' | '.' | '*' | '+' | '?' | '(' | ')' | '[' | '{' | '}' | '|' | '/' | '<' | '>' | '(?' | '(?<' | '(?=' |
 		//	'(?!' | '(?<!' | '(?<=' | PATTERN_CHARACTER_NO_DASH | UNICODE_LETTER | UNICODE_DIGIT);
 		@Override public ParserRule getRule() { return rule; }
 		
-		//EscapedCharacterClassAtom | characters=(',' | '=' | ':' | '!' | '-' | '^' | '$' | '.' | '*' | '+' | '?' | '(' | ')' |
-		//'[' | '{' | '}' | '|' | '/' | '<' | '>' | '(?' | '(?<' | '(?=' | '(?!' | '(?<!' | '(?<=' | PATTERN_CHARACTER_NO_DASH |
-		//UNICODE_LETTER | UNICODE_DIGIT)
+		//EscapedCharacterClassAtom | characters=(',' | '=' | ':' | '!' | '_' | '-' | '^' | '$' | '.' | '*' | '+' | '?' | '(' |
+		//')' | '[' | '{' | '}' | '|' | '/' | '<' | '>' | '(?' | '(?<' | '(?=' | '(?!' | '(?<!' | '(?<=' |
+		//PATTERN_CHARACTER_NO_DASH | UNICODE_LETTER | UNICODE_DIGIT)
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//EscapedCharacterClassAtom
 		public RuleCall getEscapedCharacterClassAtomParserRuleCall_0() { return cEscapedCharacterClassAtomParserRuleCall_0; }
 		
-		//characters=(',' | '=' | ':' | '!' | '-' | '^' | '$' | '.' | '*' | '+' | '?' | '(' | ')' | '[' | '{' | '}' | '|' | '/' |
-		//'<' | '>' | '(?' | '(?<' | '(?=' | '(?!' | '(?<!' | '(?<=' | PATTERN_CHARACTER_NO_DASH | UNICODE_LETTER |
+		//characters=(',' | '=' | ':' | '!' | '_' | '-' | '^' | '$' | '.' | '*' | '+' | '?' | '(' | ')' | '[' | '{' | '}' | '|' |
+		//'/' | '<' | '>' | '(?' | '(?<' | '(?=' | '(?!' | '(?<!' | '(?<=' | PATTERN_CHARACTER_NO_DASH | UNICODE_LETTER |
 		//UNICODE_DIGIT)
 		public Assignment getCharactersAssignment_1() { return cCharactersAssignment_1; }
 		
-		//(',' | '=' | ':' | '!' | '-' | '^' | '$' | '.' | '*' | '+' | '?' | '(' | ')' | '[' | '{' | '}' | '|' | '/' | '<' | '>' |
-		//'(?' | '(?<' | '(?=' | '(?!' | '(?<!' | '(?<=' | PATTERN_CHARACTER_NO_DASH | UNICODE_LETTER | UNICODE_DIGIT)
+		//(',' | '=' | ':' | '!' | '_' | '-' | '^' | '$' | '.' | '*' | '+' | '?' | '(' | ')' | '[' | '{' | '}' | '|' | '/' | '<' |
+		//'>' | '(?' | '(?<' | '(?=' | '(?!' | '(?<!' | '(?<=' | PATTERN_CHARACTER_NO_DASH | UNICODE_LETTER | UNICODE_DIGIT)
 		public Alternatives getCharactersAlternatives_1_0() { return cCharactersAlternatives_1_0; }
 		
 		//','
@@ -803,80 +804,83 @@ public class RegularExpressionGrammarAccess extends AbstractGrammarElementFinder
 		//'!'
 		public Keyword getCharactersExclamationMarkKeyword_1_0_3() { return cCharactersExclamationMarkKeyword_1_0_3; }
 		
+		//'_'
+		public Keyword getCharacters_Keyword_1_0_4() { return cCharacters_Keyword_1_0_4; }
+		
 		//'-'
-		public Keyword getCharactersHyphenMinusKeyword_1_0_4() { return cCharactersHyphenMinusKeyword_1_0_4; }
+		public Keyword getCharactersHyphenMinusKeyword_1_0_5() { return cCharactersHyphenMinusKeyword_1_0_5; }
 		
 		//'^'
-		public Keyword getCharactersCircumflexAccentKeyword_1_0_5() { return cCharactersCircumflexAccentKeyword_1_0_5; }
+		public Keyword getCharactersCircumflexAccentKeyword_1_0_6() { return cCharactersCircumflexAccentKeyword_1_0_6; }
 		
 		//'$'
-		public Keyword getCharactersDollarSignKeyword_1_0_6() { return cCharactersDollarSignKeyword_1_0_6; }
+		public Keyword getCharactersDollarSignKeyword_1_0_7() { return cCharactersDollarSignKeyword_1_0_7; }
 		
 		//'.'
-		public Keyword getCharactersFullStopKeyword_1_0_7() { return cCharactersFullStopKeyword_1_0_7; }
+		public Keyword getCharactersFullStopKeyword_1_0_8() { return cCharactersFullStopKeyword_1_0_8; }
 		
 		//'*'
-		public Keyword getCharactersAsteriskKeyword_1_0_8() { return cCharactersAsteriskKeyword_1_0_8; }
+		public Keyword getCharactersAsteriskKeyword_1_0_9() { return cCharactersAsteriskKeyword_1_0_9; }
 		
 		//'+'
-		public Keyword getCharactersPlusSignKeyword_1_0_9() { return cCharactersPlusSignKeyword_1_0_9; }
+		public Keyword getCharactersPlusSignKeyword_1_0_10() { return cCharactersPlusSignKeyword_1_0_10; }
 		
 		//'?'
-		public Keyword getCharactersQuestionMarkKeyword_1_0_10() { return cCharactersQuestionMarkKeyword_1_0_10; }
+		public Keyword getCharactersQuestionMarkKeyword_1_0_11() { return cCharactersQuestionMarkKeyword_1_0_11; }
 		
 		//'('
-		public Keyword getCharactersLeftParenthesisKeyword_1_0_11() { return cCharactersLeftParenthesisKeyword_1_0_11; }
+		public Keyword getCharactersLeftParenthesisKeyword_1_0_12() { return cCharactersLeftParenthesisKeyword_1_0_12; }
 		
 		//')'
-		public Keyword getCharactersRightParenthesisKeyword_1_0_12() { return cCharactersRightParenthesisKeyword_1_0_12; }
+		public Keyword getCharactersRightParenthesisKeyword_1_0_13() { return cCharactersRightParenthesisKeyword_1_0_13; }
 		
 		//'['
-		public Keyword getCharactersLeftSquareBracketKeyword_1_0_13() { return cCharactersLeftSquareBracketKeyword_1_0_13; }
+		public Keyword getCharactersLeftSquareBracketKeyword_1_0_14() { return cCharactersLeftSquareBracketKeyword_1_0_14; }
 		
 		//'{'
-		public Keyword getCharactersLeftCurlyBracketKeyword_1_0_14() { return cCharactersLeftCurlyBracketKeyword_1_0_14; }
+		public Keyword getCharactersLeftCurlyBracketKeyword_1_0_15() { return cCharactersLeftCurlyBracketKeyword_1_0_15; }
 		
 		//'}'
-		public Keyword getCharactersRightCurlyBracketKeyword_1_0_15() { return cCharactersRightCurlyBracketKeyword_1_0_15; }
+		public Keyword getCharactersRightCurlyBracketKeyword_1_0_16() { return cCharactersRightCurlyBracketKeyword_1_0_16; }
 		
 		//'|'
-		public Keyword getCharactersVerticalLineKeyword_1_0_16() { return cCharactersVerticalLineKeyword_1_0_16; }
+		public Keyword getCharactersVerticalLineKeyword_1_0_17() { return cCharactersVerticalLineKeyword_1_0_17; }
 		
 		//'/'
-		public Keyword getCharactersSolidusKeyword_1_0_17() { return cCharactersSolidusKeyword_1_0_17; }
+		public Keyword getCharactersSolidusKeyword_1_0_18() { return cCharactersSolidusKeyword_1_0_18; }
 		
 		//'<'
-		public Keyword getCharactersLessThanSignKeyword_1_0_18() { return cCharactersLessThanSignKeyword_1_0_18; }
+		public Keyword getCharactersLessThanSignKeyword_1_0_19() { return cCharactersLessThanSignKeyword_1_0_19; }
 		
 		//'>'
-		public Keyword getCharactersGreaterThanSignKeyword_1_0_19() { return cCharactersGreaterThanSignKeyword_1_0_19; }
+		public Keyword getCharactersGreaterThanSignKeyword_1_0_20() { return cCharactersGreaterThanSignKeyword_1_0_20; }
 		
 		//'(?'
-		public Keyword getCharactersLeftParenthesisQuestionMarkKeyword_1_0_20() { return cCharactersLeftParenthesisQuestionMarkKeyword_1_0_20; }
+		public Keyword getCharactersLeftParenthesisQuestionMarkKeyword_1_0_21() { return cCharactersLeftParenthesisQuestionMarkKeyword_1_0_21; }
 		
 		//'(?<'
-		public Keyword getCharactersLeftParenthesisQuestionMarkLessThanSignKeyword_1_0_21() { return cCharactersLeftParenthesisQuestionMarkLessThanSignKeyword_1_0_21; }
+		public Keyword getCharactersLeftParenthesisQuestionMarkLessThanSignKeyword_1_0_22() { return cCharactersLeftParenthesisQuestionMarkLessThanSignKeyword_1_0_22; }
 		
 		//'(?='
-		public Keyword getCharactersLeftParenthesisQuestionMarkEqualsSignKeyword_1_0_22() { return cCharactersLeftParenthesisQuestionMarkEqualsSignKeyword_1_0_22; }
+		public Keyword getCharactersLeftParenthesisQuestionMarkEqualsSignKeyword_1_0_23() { return cCharactersLeftParenthesisQuestionMarkEqualsSignKeyword_1_0_23; }
 		
 		//'(?!'
-		public Keyword getCharactersLeftParenthesisQuestionMarkExclamationMarkKeyword_1_0_23() { return cCharactersLeftParenthesisQuestionMarkExclamationMarkKeyword_1_0_23; }
+		public Keyword getCharactersLeftParenthesisQuestionMarkExclamationMarkKeyword_1_0_24() { return cCharactersLeftParenthesisQuestionMarkExclamationMarkKeyword_1_0_24; }
 		
 		//'(?<!'
-		public Keyword getCharactersLeftParenthesisQuestionMarkLessThanSignExclamationMarkKeyword_1_0_24() { return cCharactersLeftParenthesisQuestionMarkLessThanSignExclamationMarkKeyword_1_0_24; }
+		public Keyword getCharactersLeftParenthesisQuestionMarkLessThanSignExclamationMarkKeyword_1_0_25() { return cCharactersLeftParenthesisQuestionMarkLessThanSignExclamationMarkKeyword_1_0_25; }
 		
 		//'(?<='
-		public Keyword getCharactersLeftParenthesisQuestionMarkLessThanSignEqualsSignKeyword_1_0_25() { return cCharactersLeftParenthesisQuestionMarkLessThanSignEqualsSignKeyword_1_0_25; }
+		public Keyword getCharactersLeftParenthesisQuestionMarkLessThanSignEqualsSignKeyword_1_0_26() { return cCharactersLeftParenthesisQuestionMarkLessThanSignEqualsSignKeyword_1_0_26; }
 		
 		//PATTERN_CHARACTER_NO_DASH
-		public RuleCall getCharactersPATTERN_CHARACTER_NO_DASHTerminalRuleCall_1_0_26() { return cCharactersPATTERN_CHARACTER_NO_DASHTerminalRuleCall_1_0_26; }
+		public RuleCall getCharactersPATTERN_CHARACTER_NO_DASHTerminalRuleCall_1_0_27() { return cCharactersPATTERN_CHARACTER_NO_DASHTerminalRuleCall_1_0_27; }
 		
 		//UNICODE_LETTER
-		public RuleCall getCharactersUNICODE_LETTERTerminalRuleCall_1_0_27() { return cCharactersUNICODE_LETTERTerminalRuleCall_1_0_27; }
+		public RuleCall getCharactersUNICODE_LETTERTerminalRuleCall_1_0_28() { return cCharactersUNICODE_LETTERTerminalRuleCall_1_0_28; }
 		
 		//UNICODE_DIGIT
-		public RuleCall getCharactersUNICODE_DIGITTerminalRuleCall_1_0_28() { return cCharactersUNICODE_DIGITTerminalRuleCall_1_0_28; }
+		public RuleCall getCharactersUNICODE_DIGITTerminalRuleCall_1_0_29() { return cCharactersUNICODE_DIGITTerminalRuleCall_1_0_29; }
 	}
 	public class EscapedCharacterClassAtomElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.regex.RegularExpression.EscapedCharacterClassAtom");
@@ -1634,7 +1638,7 @@ public class RegularExpressionGrammarAccess extends AbstractGrammarElementFinder
 	}
 	
 	//CharacterClassAtom:
-	//	EscapedCharacterClassAtom | characters=(',' | '=' | ':' | '!' |
+	//	EscapedCharacterClassAtom | characters=(',' | '=' | ':' | '!' | '_' |
 	//	'-' | '^' | '$' | '.' | '*' | '+' | '?' | '(' | ')' | '[' | '{' | '}' | '|' | '/' | '<' | '>' | '(?' | '(?<' | '(?=' |
 	//	'(?!' | '(?<!' | '(?<=' | PATTERN_CHARACTER_NO_DASH | UNICODE_LETTER | UNICODE_DIGIT);
 	public CharacterClassAtomElements getCharacterClassAtomAccess() {
