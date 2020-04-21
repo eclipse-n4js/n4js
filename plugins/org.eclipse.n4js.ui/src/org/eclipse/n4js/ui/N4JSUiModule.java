@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ui;
 
+import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.rules.IPartitionTokenScanner;
 import org.eclipse.jface.text.rules.ITokenScanner;
@@ -26,6 +27,7 @@ import org.eclipse.n4js.findReferences.ConcreteSyntaxAwareReferenceFinder;
 import org.eclipse.n4js.generator.ICompositeGenerator;
 import org.eclipse.n4js.generator.IGeneratorMarkerSupport;
 import org.eclipse.n4js.generator.N4JSCompositeGenerator;
+import org.eclipse.n4js.ide.editor.contentassist.ContentAssistDataCollectors;
 import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.internal.MultiCleartriggerCache;
@@ -37,6 +39,7 @@ import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.resource.N4JSResourceDescriptionManager;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
 import org.eclipse.n4js.semver.SemverHelper;
+import org.eclipse.n4js.smith.DataCollectors;
 import org.eclipse.n4js.ts.findReferences.TargetURIKey;
 import org.eclipse.n4js.ts.scoping.builtin.BasicResourceSetProvider;
 import org.eclipse.n4js.ts.ui.navigation.URIBasedStorageEditorInputFactory;
@@ -49,6 +52,7 @@ import org.eclipse.n4js.ui.containers.N4JSProjectsStateHelper;
 import org.eclipse.n4js.ui.contentassist.ContentAssistContextFactory;
 import org.eclipse.n4js.ui.contentassist.ContentAssistantFactory;
 import org.eclipse.n4js.ui.contentassist.CustomN4JSParser;
+import org.eclipse.n4js.ui.contentassist.N4JSContentAssistProcessor;
 import org.eclipse.n4js.ui.contentassist.N4JSContentProposalPriorities;
 import org.eclipse.n4js.ui.contentassist.N4JSFollowElementCalculator;
 import org.eclipse.n4js.ui.contentassist.SimpleLastSegmentFinder;
@@ -908,5 +912,17 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	/** Optimized N4JSResourceDescriptionManager */
 	public Class<? extends N4JSResourceDescriptionManager> bindN4JSResourceDescriptionManager() {
 		return N4JSEclipseResourceDescriptionManager.class;
+	}
+
+	/**
+	 * Eclipse specific ContentAssistDataCollectors. Yeah JavaDoc.
+	 */
+	public ContentAssistDataCollectors bindContentAssistDataCollectors() {
+		return new ContentAssistDataCollectors(DataCollectors.INSTANCE.getOrCreateDataCollector("Content Assist"));
+	}
+
+	@Override
+	public Class<? extends IContentAssistProcessor> bindIContentAssistProcessor() {
+		return N4JSContentAssistProcessor.class;
 	}
 }
