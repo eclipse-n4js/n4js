@@ -17,7 +17,7 @@ import org.eclipse.xtext.ide.editor.contentassist.antlr.ContentAssistContextFact
 import com.google.inject.Inject;
 
 /**
- *
+ * {@link ContentAssistContextFactory} with data collection.
  */
 public class N4JSContentAssistContextFactory extends ContentAssistContextFactory {
 

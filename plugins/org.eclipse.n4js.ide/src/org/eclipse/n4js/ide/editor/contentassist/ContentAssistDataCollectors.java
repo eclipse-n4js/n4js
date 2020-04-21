@@ -12,6 +12,8 @@ package org.eclipse.n4js.ide.editor.contentassist;
 
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
+import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.scoping.IScope;
 
 /**
  * Data collectors to be used in the content assist implementation.
@@ -28,19 +30,21 @@ public final class ContentAssistDataCollectors {
 	private final DataCollector getAllElements;
 	private final DataCollector forEachElement;
 	private final DataCollector getResolution;
+	private final DataCollector checkConflict;
 
 	/**
 	 * Constructor
 	 */
-	public ContentAssistDataCollectors(DataCollector parent) {
-		this.root = create("createCompletions", parent);
+	public ContentAssistDataCollectors(DataCollector root) {
+		this.root = root;
 		this.createProposals = create("createProposals", root);
 		this.createContexts = create("createContexts", createProposals);
 		this.createProposalsInner = create("inner createProposals", createProposals);
 		this.getScope = create("getScopeForContentAssist", createProposalsInner);
-		this.getAllElements = create("getAllElements", dcCreateProposalsInner());
-		this.forEachElement = create("forEachElement", dcCreateProposalsInner());
+		this.getAllElements = create("scope.getAllElements", dcCreateProposalsInner());
+		this.forEachElement = create("for(description in scope.allElements)", dcCreateProposalsInner());
 		this.getResolution = create("getResolution", forEachElement);
+		this.checkConflict = create("checkConflict", getResolution);
 	}
 
 	/**
@@ -72,31 +76,38 @@ public final class ContentAssistDataCollectors {
 	}
 
 	/**
-	 * The data collector for the computation of the internal proposals
+	 * The data collector for the computation of the scope for content assist.
 	 */
 	public DataCollector dcGetScope() {
 		return getScope;
 	}
 
 	/**
-	 * The data collector for the computation of the internal proposals
+	 * The data collector for calling {@link IScope#getAllElements()}.
 	 */
 	public DataCollector dcGetAllElements() {
 		return getAllElements;
 	}
 
 	/**
-	 * The data collector for the computation of the internal proposals
+	 * The data collector for the traversal of the {@link IEObjectDescription scope contents}.
 	 */
 	public DataCollector dcIterateAllElements() {
 		return forEachElement;
 	}
 
 	/**
-	 * The data collector for the computation of the internal proposals
+	 * The data collector for the computation of the resolutions.
 	 */
 	public DataCollector dcGetResolution() {
 		return getResolution;
+	}
+
+	/**
+	 * The data collector for the detection of conflicting proposals.
+	 */
+	public DataCollector dcDetectProposalConflicts() {
+		return checkConflict;
 	}
 
 	private static DataCollector create(String key, DataCollector parent) {

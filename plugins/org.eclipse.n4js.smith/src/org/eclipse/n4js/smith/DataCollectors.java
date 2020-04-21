@@ -70,7 +70,7 @@ public enum DataCollectors {
 		} else {
 			collector = parent.getChild(key);
 			if (collector == null) {
-				collector = new TimedDataCollector(key);
+				collector = new TimedDataCollector(key, parent);
 				collector.setPaused(this.pauseAllCollectors.get());
 				parent.addChild(collector);
 			}
@@ -89,6 +89,12 @@ public enum DataCollectors {
 	synchronized void setPaused(boolean paused) {
 		this.pauseAllCollectors.set(paused);
 		collectors.values().forEach(collector -> collector.setPaused(paused));
+	}
+
+	/** Stops all data collectors but allows ongoing measurements to complete normally. */
+	synchronized void stop() {
+		this.pauseAllCollectors.set(true);
+		collectors.values().forEach(collector -> collector.stop());
 	}
 
 	/**
