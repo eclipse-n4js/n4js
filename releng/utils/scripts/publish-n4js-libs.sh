@@ -67,7 +67,7 @@ cd n4js-libs
 echo "Repository root directory: ${REPO_ROOT_DIR}"
 echo "Current working directory: $PWD"
 
-echo "==== STEP 1/8: check preconditions"
+echo "==== STEP 1/7: check preconditions"
 if [ "$DESTINATION" != "local" ]; then
     # check NPM_TOKEN
     if [ -z "$NPM_TOKEN" ]; then
@@ -92,7 +92,7 @@ if [ "$DESTINATION" != "local" ]; then
     echo "Dist-tag and pre-release segment are consistent."
 fi
 
-echo "==== STEP 2/8: clean up (clean yarn cache, etc.)"
+echo "==== STEP 2/7: clean up (clean yarn cache, etc.)"
 yarn cache clean
 rm -rf $(find . -type d -name "node_modules")
 # Since we include the commit ID in the published artifacts, we should
@@ -109,11 +109,11 @@ if [ "$DESTINATION" != "local" ]; then
     echo '//localhost:4874/:_authToken=${NPM_TOKEN}' >> .npmrc
 fi
 
-echo "==== STEP 3/8: install dependencies and prepare npm task scripts"
+echo "==== STEP 3/7: install dependencies and prepare npm task scripts"
 yarn install
 export PATH=`pwd`/node_modules/.bin:${PATH}
 
-echo "==== STEP 4/8: run 'lerna run build/test' on n4js-libs"
+echo "==== STEP 4/7: run 'lerna run build/test' on n4js-libs"
 export N4_N4JSC_JAR="${REPO_ROOT_DIR}/target/n4jsc.jar"
 lerna run build
 lerna run test
@@ -122,25 +122,22 @@ export NPM_CONFIG_GLOBALCONFIG="$REPO_ROOT_DIR/n4js-libs"
 echo "Publishing using .npmrc configuration to ${NPM_REGISTRY}";
 
 # update repository meta-info in package.json of all n4js-libs to point to the commit ID of n4js-libs folder
+# and to enforce consistent repository meta-info in package.json
 # NOTE: we use our own property 'gitHeadN4jsLibs' instead of the official 'gitHead' property because:
 # 1) yarn isn't updating 'gitHead' at all at the moment (see https://github.com/yarnpkg/yarn/issues/2978 ) and
 # 2) behavior of lerna w.r.t. property 'gitHead' has recently changed and we want to avoid surprises in the future.
-echo "==== STEP 5/8: Updating property 'gitHeadN4jsLibs' in package.json of all n4js-libs to new local commit ID ..."
-lerna exec -- cp package.json package.json_TEMP
-lerna exec -- 'jq -r ".gitHeadN4jsLibs |= \"'$N4JS_LIBS_COMMIT_ID_LOCAL'\"" package.json_TEMP > package.json'
-lerna exec -- rm package.json_TEMP
+echo "==== STEP 5/7: Updating property 'gitHeadN4jsLibs' in package.json of all n4js-libs to new local commit ID ..."
 
-echo "==== STEP 6/8: Appending version information to README.md files ..."
+SCRIPT="this.gitHeadN4jsLibs = \"$N4JS_LIBS_COMMIT_ID_LOCAL\"
+        this.repository = {type: \"git\", url: \"https://github.com/eclipse/n4js/tree/master/n4js-libs/packages/$LERNA_PACKAGE_NAME\"}"
+
+lerna exec -- npx json -I -f package.json -e '$SCRIPT'
+
+echo "==== STEP 6/7: Appending version information to README.md files ..."
 export VERSION_INFO="\n\n## Version\n\nVersion ${PUBLISH_VERSION} of \${LERNA_PACKAGE_NAME} was built from commit [${N4JS_LIBS_COMMIT_ID_LOCAL}](https://github.com/eclipse/n4js/tree/${N4JS_LIBS_COMMIT_ID_LOCAL}/n4js-libs/packages/\${LERNA_PACKAGE_NAME}).\n\n"
 lerna exec -- 'printf "'${VERSION_INFO}'" >> README.md'
 
-# enforce consistent repository meta-info in package.json of all n4js-libs
-echo "==== STEP 7/8: Setting property 'repository' in package.json of all n4js-libs (for consistency) ..."
-lerna exec -- cp package.json package.json_TEMP
-lerna exec -- 'jq -r ".repository |= {type: \"git\", url: \"https://github.com/eclipse/n4js/tree/master/n4js-libs/packages/$LERNA_PACKAGE_NAME\"}" package.json_TEMP > package.json'
-lerna exec -- rm package.json_TEMP
-
-echo "==== STEP 8/8: Now publishing with version '${PUBLISH_VERSION}' and dist-tag '${DIST_TAG}' to registry ${NPM_REGISTRY}"
+echo "==== STEP 7/7: Now publishing with version '${PUBLISH_VERSION}' and dist-tag '${DIST_TAG}' to registry ${NPM_REGISTRY}"
 lerna publish --loglevel warn --no-git-tag-version --no-push --registry="${NPM_REGISTRY}" --exact --yes --dist-tag="${DIST_TAG}" "${PUBLISH_VERSION}"
 
 echo "==== PUBLISH N4JS-LIBS - DONE"
