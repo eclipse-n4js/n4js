@@ -10,35 +10,23 @@
  */
 package org.eclipse.n4js.ide.editor.contentassist;
 
-import org.eclipse.lsp4j.CompletionList;
-import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.n4js.ide.xtext.server.contentassist.XContentAssistService;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.xtext.ide.editor.contentassist.IIdeContentProposalAcceptor;
-import org.eclipse.xtext.ide.server.Document;
 import org.eclipse.xtext.resource.XtextResource;
-import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.TextRegion;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- *
+ * {@link XContentAssistService} with data collection.
  */
 @Singleton
 public class N4JSContentAssistService extends XContentAssistService {
 
 	@Inject
 	private ContentAssistDataCollectors dataCollectors;
-
-	@Override
-	public CompletionList createCompletionList(Document document, XtextResource resource,
-			TextDocumentPositionParams params, CancelIndicator cancelIndicator) {
-		try (Measurement m = dataCollectors.dcCreateCompletionsRoot().getMeasurement()) {
-			return super.createCompletionList(document, resource, params, cancelIndicator);
-		}
-	}
 
 	@Override
 	protected void createProposals(String document, TextRegion selection, int caretOffset, XtextResource resource,

@@ -122,7 +122,7 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 	public static final String SHOW_PERFORMANCE_DATA = "n4js.performance.collector.show";
 
 	/**
-	 * The command to dump the collected performance data.
+	 * The command to reset the collected performance data.
 	 */
 	public static final String RESET_PERFORMANCE_DATA = "n4js.performance.collector.reset";
 
@@ -262,7 +262,7 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 	 */
 	@ExecutableCommandHandler(DISABLE_PERFORMANCE_COLLECTOR)
 	public Void disablePerformanceDataCollector(ILanguageServerAccess access, CancelIndicator cancelIndicator) {
-		CollectedDataAccess.setPaused(true);
+		CollectedDataAccess.stop();
 		access.getLanguageClient()
 				.logMessage(new MessageParams(MessageType.Log, "Disabled performance data collectors"));
 		return null;
@@ -284,7 +284,7 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 	}
 
 	/**
-	 * Visualize the collected performance data on the client.
+	 * Visualize the collected performance data on the client and reset the data back to its initial state.
 	 *
 	 * @param access
 	 *            the language server access.
@@ -297,7 +297,7 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 				.logMessage(new MessageParams(MessageType.Log, DataCollectorUtils.allDataToString("  ")));
 		access.getLanguageClient()
 				.logMessage(new MessageParams(MessageType.Log, "Reset collected performance data"));
-		CollectedDataAccess.purgeAllData();
+		CollectedDataAccess.resetAllData();
 		return null;
 	}
 

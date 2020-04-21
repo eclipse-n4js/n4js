@@ -166,9 +166,27 @@ class TimedDataCollector extends DataCollector {
 	}
 
 	@Override
+	public void stop() {
+		synchronized (this) {
+			this.paused = true;
+		}
+		this.children.values().forEach(child -> child.stop());
+	}
+
+	@Override
+	public void resetData() {
+		synchronized (this) {
+			this.data.clear();
+		}
+		this.children.values().forEach(c -> c.resetData());
+	}
+
+	@Override
 	public void purgeData() {
 		this.activeMeasurement = null;
-		this.data.clear();
+		synchronized (this) {
+			this.data.clear();
+		}
 		this.children.values().forEach(c -> c.purgeData());
 	}
 
