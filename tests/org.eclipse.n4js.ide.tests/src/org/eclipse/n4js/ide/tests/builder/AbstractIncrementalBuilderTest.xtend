@@ -99,11 +99,7 @@ abstract class AbstractIncrementalBuilderTest extends AbstractIdeTest {
 		}
 
 		def public void update() {
-			try {
-				content = Files.readAllBytes(file.toPath)
-			} catch (IOException e) {
-				throw new AssertionError("error reading from file " + file, e)
-			};
+			content = getFileContent(file);
 		}
 
 		def public void assertExists() {

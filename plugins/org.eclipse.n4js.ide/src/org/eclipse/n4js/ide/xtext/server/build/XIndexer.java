@@ -193,8 +193,7 @@ public class XIndexer {
 	 * Compute deltas for the build's initial resource deletions and changes as recorded in the given build request, and
 	 * register them in the request's index.
 	 */
-	public XIndexer.XIndexResult computeAndIndexDeletedAndChanged(XBuildRequest request,
-			@Extension XBuildContext context) {
+	public XIndexer.XIndexResult computeAndIndexDeletedAndChanged(XBuildRequest request, XBuildContext context) {
 		ResourceDescriptionsData previousIndex = context.getOldState().getResourceDescriptions();
 		ResourceDescriptionsData newIndex = request.getState().getResourceDescriptions();
 		List<IResourceDescription.Delta> deltas = new ArrayList<>();
