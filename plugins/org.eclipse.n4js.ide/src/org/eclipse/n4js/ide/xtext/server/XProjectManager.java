@@ -157,7 +157,8 @@ public class XProjectManager {
 			Collection<Issue> issues = locationToIssues.getValue();
 			issueAcceptor.publishDiagnostics(location, issues);
 		}
-		// send 'publishDiagnostics' for resources without issues (to remove potential obsolete issues)
+		// send empty 'publishDiagnostics' for resources without issues, even deleted ones
+		// (to remove potential obsolete issues)
 		for (URI uri : urisWithoutIssues) {
 			issueAcceptor.publishDiagnostics(uri, Collections.emptyList());
 		}
