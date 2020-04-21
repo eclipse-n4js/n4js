@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ide.tests.compiler;
 
+import static org.eclipse.n4js.cli.N4jscExitCode.VALIDATION_ERRORS;
 import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -67,7 +68,7 @@ public class N4jscBasicTest extends AbstractCliCompileTest {
 	/** Basic compile test. */
 	@Test
 	public void testMainArgsCompileAllKeepCompiling() {
-		CliCompileResult cliResult = n4jsc(COMPILE(workspace));
+		CliCompileResult cliResult = n4jsc(COMPILE(workspace), VALIDATION_ERRORS);
 		assertEquals(cliResult.toString(), 16, cliResult.getTranspiledFilesCount());
 	}
 
@@ -78,7 +79,7 @@ public class N4jscBasicTest extends AbstractCliCompileTest {
 		N4CliHelper.copyN4jsLibsToLocation(workspace.toPath().resolve(N4JSGlobals.NODE_MODULES),
 				N4JSGlobals.N4JS_RUNTIME);
 
-		CliCompileResult cliResult = n4jsc(COMPILE(workspace));
+		CliCompileResult cliResult = n4jsc(COMPILE(workspace), VALIDATION_ERRORS);
 		assertEquals(cliResult.toString(), 16, cliResult.getTranspiledFilesCount());
 
 		Path fileA = proot.toPath().resolve("P1/src-gen/A.js");
@@ -95,12 +96,12 @@ public class N4jscBasicTest extends AbstractCliCompileTest {
 
 		N4jscTestOptions compileOptions = COMPILE(DONT_CLEAN, workspace);
 
-		CliCompileResult firstRun = n4jsc(compileOptions);
+		CliCompileResult firstRun = n4jsc(compileOptions, VALIDATION_ERRORS);
 		assertEquals(firstRun.toString(), 16, firstRun.getTranspiledFilesCount());
 		Path fileA = proot.toPath().resolve("P1/.n4js.projectstate");
 		assertTrue(fileA.toFile().getAbsolutePath(), fileA.toFile().exists());
 
-		CliCompileResult secondRun = n4jsc(compileOptions);
+		CliCompileResult secondRun = n4jsc(compileOptions, VALIDATION_ERRORS);
 		assertEquals(secondRun.toString(), 0, secondRun.getTranspiledFilesCount());
 
 		assertOutputEqual(firstRun, secondRun);
@@ -114,7 +115,7 @@ public class N4jscBasicTest extends AbstractCliCompileTest {
 
 		N4jscTestOptions compileOptions = COMPILE(DONT_CLEAN, workspace);
 
-		CliCompileResult firstRun = n4jsc(compileOptions);
+		CliCompileResult firstRun = n4jsc(compileOptions, VALIDATION_ERRORS);
 		assertEquals(firstRun.toString(), 16, firstRun.getTranspiledFilesCount());
 
 		File fileAn4js = proot.toPath().resolve("P1/src/A.n4js").toFile();
@@ -128,7 +129,7 @@ public class N4jscBasicTest extends AbstractCliCompileTest {
 		File fileAmap = proot.toPath().resolve("P1/src-gen/A.map").toFile();
 		assertTrue(fileAmap.exists());
 
-		CliCompileResult secondRun = n4jsc(compileOptions);
+		CliCompileResult secondRun = n4jsc(compileOptions, VALIDATION_ERRORS);
 		assertEquals(secondRun.toString(), 0, secondRun.getTranspiledFilesCount());
 		assertEquals(secondRun.toString(), 2, secondRun.getDeletedFilesCount());
 
@@ -144,7 +145,7 @@ public class N4jscBasicTest extends AbstractCliCompileTest {
 
 		N4jscTestOptions compileOptions = COMPILE(DONT_CLEAN, workspace);
 
-		CliCompileResult firstRun = n4jsc(compileOptions);
+		CliCompileResult firstRun = n4jsc(compileOptions, VALIDATION_ERRORS);
 		assertEquals(firstRun.toString(), 16, firstRun.getTranspiledFilesCount());
 
 		File fileAjs = proot.toPath().resolve("P1/src-gen/A.js").toFile();
@@ -153,7 +154,7 @@ public class N4jscBasicTest extends AbstractCliCompileTest {
 		assertTrue(fileAjs.getAbsolutePath(), fileAjs.delete());
 		assertFalse(fileAjs.getAbsolutePath(), fileAjs.exists());
 
-		CliCompileResult secondRun = n4jsc(compileOptions);
+		CliCompileResult secondRun = n4jsc(compileOptions, VALIDATION_ERRORS);
 		assertEquals(secondRun.toString(), 1, secondRun.getTranspiledFilesCount());
 		assertEquals(secondRun.toString(), 0, secondRun.getDeletedFilesCount());
 
@@ -172,7 +173,7 @@ public class N4jscBasicTest extends AbstractCliCompileTest {
 
 		N4jscTestOptions compileOptions = COMPILE(DONT_CLEAN, workspace);
 
-		CliCompileResult firstRun = n4jsc(compileOptions);
+		CliCompileResult firstRun = n4jsc(compileOptions, VALIDATION_ERRORS);
 		assertEquals(firstRun.toString(), 16, firstRun.getTranspiledFilesCount());
 
 		File fileAmap = proot.toPath().resolve("P1/src-gen/A.map").toFile();
@@ -181,7 +182,7 @@ public class N4jscBasicTest extends AbstractCliCompileTest {
 		assertTrue(fileAmap.getAbsolutePath(), fileAmap.delete());
 		assertFalse(fileAmap.getAbsolutePath(), fileAmap.exists());
 
-		CliCompileResult secondRun = n4jsc(compileOptions);
+		CliCompileResult secondRun = n4jsc(compileOptions, VALIDATION_ERRORS);
 		assertEquals(secondRun.toString(), 1, secondRun.getTranspiledFilesCount());
 		assertEquals(secondRun.toString(), 0, secondRun.getDeletedFilesCount());
 
@@ -200,7 +201,7 @@ public class N4jscBasicTest extends AbstractCliCompileTest {
 
 		N4jscTestOptions compileOptions = COMPILE(DONT_CLEAN, workspace);
 
-		CliCompileResult firstRun = n4jsc(compileOptions);
+		CliCompileResult firstRun = n4jsc(compileOptions, VALIDATION_ERRORS);
 		assertEquals(firstRun.toString(), 16, firstRun.getTranspiledFilesCount());
 
 		File fileCn4js = proot.toPath().resolve("P1/src/c/C.n4js").toFile();
@@ -209,7 +210,7 @@ public class N4jscBasicTest extends AbstractCliCompileTest {
 		assertTrue(fileCn4js.getAbsolutePath(), fileCn4js.delete());
 		assertFalse(fileCn4js.getAbsolutePath(), fileCn4js.exists());
 
-		CliCompileResult secondRun = n4jsc(compileOptions);
+		CliCompileResult secondRun = n4jsc(compileOptions, VALIDATION_ERRORS);
 		assertEquals(secondRun.toString(), 0, secondRun.getTranspiledFilesCount());
 		// C and Y are affected (js and map)
 		assertEquals(secondRun.toString(), 4, secondRun.getDeletedFilesCount());
@@ -227,14 +228,14 @@ public class N4jscBasicTest extends AbstractCliCompileTest {
 
 		N4jscTestOptions compileOptions = COMPILE(DONT_CLEAN, workspace);
 
-		CliCompileResult firstRun = n4jsc(compileOptions);
+		CliCompileResult firstRun = n4jsc(compileOptions, VALIDATION_ERRORS);
 		assertEquals(firstRun.toString(), 16, firstRun.getTranspiledFilesCount());
 
 		Path fileCn4js = proot.toPath().resolve("P1/src/c/C.n4js");
 		byte[] bytesC = Files.readAllBytes(fileCn4js);
 		Files.delete(fileCn4js);
 
-		n4jsc(compileOptions);
+		n4jsc(compileOptions, VALIDATION_ERRORS);
 
 		// Y.n4js depends on C.n4js
 		File fileCjs = proot.toPath().resolve("P1/src-gen/c/C.js").toFile();
@@ -244,7 +245,7 @@ public class N4jscBasicTest extends AbstractCliCompileTest {
 
 		Files.write(fileCn4js, bytesC);
 
-		CliCompileResult thirdRun = n4jsc(compileOptions);
+		CliCompileResult thirdRun = n4jsc(compileOptions, VALIDATION_ERRORS);
 
 		assertTrue(fileCjs.exists());
 		assertTrue(fileYjs.exists());

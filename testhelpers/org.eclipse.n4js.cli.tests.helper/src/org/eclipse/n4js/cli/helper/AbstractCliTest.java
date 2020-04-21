@@ -12,6 +12,7 @@ package org.eclipse.n4js.cli.helper;
 
 import static org.junit.Assert.assertEquals;
 
+import org.eclipse.n4js.cli.N4jscExitCode;
 import org.eclipse.n4js.cli.N4jscOptions;
 
 /**
@@ -31,6 +32,11 @@ abstract public class AbstractCliTest<ArgType> {
 	/** Convenience version of {@link #n4jsc(Object, int)} with exit code == 0. */
 	protected CliCompileResult n4jsc(ArgType args) {
 		return n4jsc(args, 0);
+	}
+
+	/** Convenience version of {@link #n4jsc(Object, int, boolean)} with removeUsage == true. */
+	protected CliCompileResult n4jsc(ArgType args, N4jscExitCode expectedExitCode) {
+		return n4jsc(args, expectedExitCode.getExitCodeValue());
 	}
 
 	/** Convenience version of {@link #n4jsc(Object, int, boolean)} with removeUsage == true. */
