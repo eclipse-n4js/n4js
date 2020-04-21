@@ -1,6 +1,7 @@
 {
 	"private": true,
 	"devDependencies": {
+		"json": "9.0.6",
 		"lerna": "3.20.2",
 		"semver": "7.1.1"
 	},

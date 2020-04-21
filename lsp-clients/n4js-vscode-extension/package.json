@@ -1,139 +1,139 @@
 {
-	"name": "n4js-vscode-extension",
-	"displayName": "N4JS VSCode extension",
-	"description": "Language support for N4JS",
-	"version": "0.21.0",
-	"publisher": "n4js",
-	"license": "EPL-1.0",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/Eclipse/n4js"
-	},
-	"bugs": {
-		"url": "https://github.com/Eclipse/n4js/issues"
-	},
-	"icon": "images/n4js_logo.png",
-	"engines": {
-		"vscode": "^1.41.1"
-	},
-	"categories": [
-		"Programming Languages"
-	],
-	"activationEvents": [
-		"onLanguage:n4js"
-	],
-	"main": "./extension",
-	"contributes": {
-		"languages": [
-			{
-				"id": "n4js",
-				"extensions": [
-					".n4js",
-					".n4jsd",
-					".n4jsx",
-					".n4idl",
-					".n4ts"
-				],
-				"configuration": "./n4js.configuration.json"
-			},
-			{
-				"id": "n4js.json",
-				"extensions": [
-					"package.json"
-				],
-				"configuration": "./n4js.configuration.json"
-			}
-		],
-		"grammars": [
-			{
-				"language": "n4js",
-				"scopeName": "source.n4js",
-				"path": "./syntaxes/n4js.tmLanguage.json"
-			},
-			{
-				"language": "n4js.json",
-				"scopeName": "source.n4js.json",
-				"path": "./syntaxes/n4js.json.tmLanguage.json"
-			}
-		],
-		"commands": [
-			{
-				"command": "n4js.rebuild",
-				"title": "N4JS: Rebuild"
-			}
-		],
-		"activationEvents": [
-			"onCommand:n4js.rebuild"
-		],
-		"menus": {
-			"commandPalette": [
-				{
-					"command": "n4js.rebuild"
-				}
-			]
-		},
-		"configuration": {
-			"title": "N4JS",
-			"properties": {
-				"n4js.traceOutput": {
-					"type": "string",
-					"default": "off",
-					"enum": [
-						"off",
-						"verbose"
-					],
-					"enumDescriptions": [
-						"No tracing data is displayed.",
-						"Tracing data is displayed in the channel 'N4JS language server' of the VSCode Output View"
-					],
-					"description": "Enables tracing of messages sent to the N4JS server. This trace can be used to diagnose N4JS Server issues. The trace may contain file paths, source code, and other potentially sensitive information from your project."
-				},
-				"n4js.jreVmXmx": {
-					"type": "string",
-					"default": "n4jsc default",
-					"enum": [
-						"n4jsc default",
-						"jre default",
-						"1G",
-						"2G",
-						"3G",
-						"4G",
-						"8G",
-						"16G"
-					],
-					"enumDescriptions": [
-						"Default maximum heap space setting of N4JSC.",
-						"Default maximum heap space setting of JRE."
-					],
-					"description": "Sets the Java VM argument '-Xmx' to the selected memory size."
-				}
-			}
-		}
-	},
-	"devDependencies": {
-		"@types/vscode": "^1.41.0",
-		"vsce": "1.71.0"
-	},
-	"dependencies": {
-		"n4js-cli": "latest",
-		"n4js-runtime": "latest",
-		"n4js-runtime-node": "latest",
-		"n4js-runtime-es2015": "latest",
-		"npmlog": "4.1.2",
-		"vscode-languageclient": "6.1.0"
-	},
-	"scripts": {},
-	"n4js": {
-		"projectType": "library",
-		"sources": {
-			"source": [
-				"src"
-			]
-		},
-		"output": "src-gen",
-		"requiredRuntimeLibraries": [
-			"n4js-runtime-node",
-			"n4js-runtime-es2015"
-		]
-	}
+  "name": "n4js-vscode-extension",
+  "displayName": "N4JS VSCode extension",
+  "description": "Language support for N4JS",
+  "version": "0.1.0",
+  "publisher": "n4js",
+  "license": "EPL-1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Eclipse/n4js"
+  },
+  "bugs": {
+    "url": "https://github.com/Eclipse/n4js/issues"
+  },
+  "icon": "images/n4js_logo.png",
+  "engines": {
+    "vscode": "^1.41.1"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "activationEvents": [
+    "onLanguage:n4js"
+  ],
+  "main": "./extension",
+  "contributes": {
+    "languages": [
+      {
+        "id": "n4js",
+        "extensions": [
+          ".n4js",
+          ".n4jsd",
+          ".n4jsx",
+          ".n4idl",
+          ".n4ts"
+        ],
+        "configuration": "./n4js.configuration.json"
+      },
+      {
+        "id": "n4js.json",
+        "extensions": [
+          "package.json"
+        ],
+        "configuration": "./n4js.configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "n4js",
+        "scopeName": "source.n4js",
+        "path": "./syntaxes/n4js.tmLanguage.json"
+      },
+      {
+        "language": "n4js.json",
+        "scopeName": "source.n4js.json",
+        "path": "./syntaxes/n4js.json.tmLanguage.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "n4js.rebuild",
+        "title": "N4JS: Rebuild"
+      }
+    ],
+    "activationEvents": [
+      "onCommand:n4js.rebuild"
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "n4js.rebuild"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "N4JS",
+      "properties": {
+        "n4js.traceOutput": {
+          "type": "string",
+          "default": "off",
+          "enum": [
+            "off",
+            "verbose"
+          ],
+          "enumDescriptions": [
+            "No tracing data is displayed.",
+            "Tracing data is displayed in the channel 'N4JS language server' of the VSCode Output View"
+          ],
+          "description": "Enables tracing of messages sent to the N4JS server. This trace can be used to diagnose N4JS Server issues. The trace may contain file paths, source code, and other potentially sensitive information from your project."
+        },
+        "n4js.jreVmXmx": {
+          "type": "string",
+          "default": "n4jsc default",
+          "enum": [
+            "n4jsc default",
+            "jre default",
+            "1G",
+            "2G",
+            "3G",
+            "4G",
+            "8G",
+            "16G"
+          ],
+          "enumDescriptions": [
+            "Default maximum heap space setting of N4JSC.",
+            "Default maximum heap space setting of JRE."
+          ],
+          "description": "Sets the Java VM argument '-Xmx' to the selected memory size."
+        }
+      }
+    }
+  },
+  "devDependencies": {
+    "json": "9.0.6",
+    "vsce": "1.71.0"
+  },
+  "dependencies": {
+    "n4js-cli": "^0.1.0",
+    "n4js-runtime": "^0.1.0",
+    "n4js-runtime-node": "^0.1.0",
+    "n4js-runtime-es2015": "^0.1.0",
+    "npmlog": "4.1.2",
+    "vscode-languageclient": "6.1.0"
+  },
+  "scripts": {},
+  "n4js": {
+    "projectType": "library",
+    "sources": {
+      "source": [
+        "src"
+      ]
+    },
+    "output": "src-gen",
+    "requiredRuntimeLibraries": [
+      "n4js-runtime-node",
+      "n4js-runtime-es2015"
+    ]
+  }
 }
