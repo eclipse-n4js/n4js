@@ -138,8 +138,8 @@ Workflow {
 			}
 
 			fragment = org.eclipse.n4js.antlr.compressor.ParserCompressorFragment2 auto-inject {
-				// enable this flag if you need to debug the content assist parser
-				joinLinesEagerly = false
+				// Enabled to produce shorter Java code and ease debugging at the expense of a little uglier (because more dense) code
+				joinLinesEagerly = true
 				grammarFile = "${runtimeProjectPath}.ui/src-gen/org/eclipse/n4js/ui/editor/syntaxcoloring/InternalN4JSParser.java"
 				grammarFile = "${runtimeProjectPath}.ide/src-gen/org/eclipse/n4js/ide/contentassist/antlr/internal/InternalN4JSParser.java"
 				grammarFile = "${runtimeProjectPath}/src-gen/org/eclipse/n4js/parser/antlr/internal/InternalN4JSParser.java"

@@ -31,6 +31,110 @@ import org.eclipse.xtext.parser.antlr.XtextTokenStream;
  */
 public class LazyTokenStream extends XtextTokenStream {
 
+	// the lookAhead marks a position relative to the inherited position
+	// of the token list. the lookahead is sensitive to hidden tokens
+	// e.g. a lookahead of 1 may point 10 tokens into the future if there are 9 hidden tokens inbetween.
+	private int myLookAhead;
+
+	// the maximum position p that was consumed during a prediction phase
+	private int indexOfLookAhead;
+
+	// myFirstMarker is a position in the token list
+	// that is not sensitive to hidden tokens
+	// see inherited field p
+	// if the marker is not set to -1, we are in prediction mode, e.g. consuming
+	private int markerCount = 0;
+
+	@Override
+	public void consume() {
+		if (markerCount > 0) { // predicting
+			basicConsume();
+		} else { // producing
+			basicConsume();
+			myLookAhead--;
+		}
+	}
+
+	void basicConsume() {
+		if (p < tokens.size()) {
+			p++;
+			p = skipOffTokenChannels(p); // leave p on valid token
+		}
+	}
+
+	@Override
+	public int LA(int i) {
+		Token lookaheadToken = LT(i);
+		if (markerCount > 0) { // predicting with a marker
+			if (Token.EOF_TOKEN == lookaheadToken) { // predicated past EOF
+				if (indexOfLookAhead != size()) {
+					indexOfLookAhead = size();
+					myLookAhead++;
+				}
+			} else {
+				int laTokenIndex = lookaheadToken.getTokenIndex();
+				if (indexOfLookAhead < laTokenIndex) {
+					indexOfLookAhead = laTokenIndex;
+					myLookAhead++;
+				}
+			}
+		} else {
+			myLookAhead = Math.max(i, myLookAhead);
+		}
+		// return super.LA(i); // inlined
+		return lookaheadToken.getType();
+	}
+
+	@Override
+	public int mark() {
+		int result = basicMark();
+		if (markerCount == 0) {
+			if (indexOfLookAhead < p) {
+				indexOfLookAhead = p;
+			}
+		}
+		markerCount++;
+		return result;
+	}
+
+	int basicMark() {
+		if (p == -1) {
+			fillBuffer();
+		}
+		lastMarker = index();
+		return lastMarker;
+	}
+
+	@Override
+	public void seek(int index) {
+		basicSeek(index);
+	}
+
+	@Override
+	public void rewind(int marker) {
+		markerCount--;
+		basicSeek(marker);
+	}
+
+	void basicSeek(int index) {
+		p = index;
+	}
+
+	@Override
+	protected int getFirstMarker() {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public int getCurrentLookAhead() {
+		return myLookAhead;
+	}
+
+	@Override
+	public void initCurrentLookAhead(int currentLookAhead) {
+		this.myLookAhead = currentLookAhead;
+	}
+
 	/**
 	 * Create a new stream with the given source.
 	 */
