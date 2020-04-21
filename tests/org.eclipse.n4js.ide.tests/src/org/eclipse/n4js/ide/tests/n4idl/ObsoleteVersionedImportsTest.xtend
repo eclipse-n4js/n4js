@@ -18,6 +18,7 @@ import org.eclipse.n4js.cli.helper.AbstractCliCompileTest
 import org.eclipse.n4js.utils.io.FileDeleter
 import org.junit.After
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 
 import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE
@@ -43,12 +44,12 @@ public class ObsoleteVersionedImportsTest extends AbstractCliCompileTest {
 		FileDeleter.delete(workspace.toPath(), true);
 	}
 
-	// FIXME: GH-1392
 	/**
 	 * Compiles and runs the test project.
 	 *
 	 * Asserts the output to be equal to 'ObsoleteVersionedImports/expectations.log'.
 	 */
+	@Ignore("GH-1392") // TODO: GH-1392
 	@Test
 	public def void testNoObsoleteVersionsImported() throws IOException {
 		val cliResult = n4jsc(COMPILE(workspace));

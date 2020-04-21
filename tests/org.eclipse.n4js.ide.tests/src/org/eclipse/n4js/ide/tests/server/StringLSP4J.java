@@ -16,6 +16,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.Command;
@@ -241,10 +242,13 @@ public class StringLSP4J {
 		if (command == null) {
 			return "";
 		}
+		List<Object> argumentsRelativized = command.getArguments().stream()
+				.map(this::relativizeIfURIString)
+				.collect(Collectors.toList());
 		String str = Strings.join(", ",
 				command.getTitle(),
 				command.getCommand(),
-				Strings.toString(command.getArguments()));
+				Strings.toString(argumentsRelativized));
 
 		return "(" + str + ")";
 	}
@@ -411,11 +415,22 @@ public class StringLSP4J {
 	}
 
 	private String relativize(String uri) {
+		return relativize(uri, true);
+	}
+
+	private Object relativizeIfURIString(Object obj) {
+		return obj instanceof String ? relativize((String) obj, false) : obj;
+	}
+
+	private String relativize(String uri, boolean failFast) {
 		try {
 			URI uriuri = new URI(uri);
 			return root.toPath().relativize(Path.of(uriuri)).toString();
 		} catch (URISyntaxException e) {
-			return "ERROR: " + e.getMessage();
+			if (failFast) {
+				throw new IllegalStateException("cannot relativize a string that is not an URI: " + uri, e);
+			}
+			return uri;
 		}
 	}
 }

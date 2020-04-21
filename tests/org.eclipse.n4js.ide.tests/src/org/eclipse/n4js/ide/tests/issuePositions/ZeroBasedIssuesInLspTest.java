@@ -33,7 +33,7 @@ public class ZeroBasedIssuesInLspTest extends AbstractStructuredIdeTest<Void> {
 	@Override
 	protected void performTest(Project project, String moduleName, Void t) throws Exception {
 		Collection<Diagnostic> allDiagnostics = getIssues().values();
-		assertEquals(1, allDiagnostics.size());
+		assertEquals("expected a single diagnostic, but got: " + allDiagnostics.toString(), 1, allDiagnostics.size());
 		Diagnostic diag = allDiagnostics.iterator().next();
 		assertEquals("Couldn't resolve reference to IdentifiableElement 'x'.", diag.getMessage());
 		assertEquals("[0:0 - 0:1]", getStringLSP4J().toString(diag.getRange()));
