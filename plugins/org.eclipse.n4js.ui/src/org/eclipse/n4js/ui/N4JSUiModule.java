@@ -28,6 +28,9 @@ import org.eclipse.n4js.generator.ICompositeGenerator;
 import org.eclipse.n4js.generator.IGeneratorMarkerSupport;
 import org.eclipse.n4js.generator.N4JSCompositeGenerator;
 import org.eclipse.n4js.ide.editor.contentassist.ContentAssistDataCollectors;
+import org.eclipse.n4js.ide.editor.contentassist.CustomN4JSParser;
+import org.eclipse.n4js.ide.editor.contentassist.N4JSContentAssistContextFactory;
+import org.eclipse.n4js.ide.editor.contentassist.N4JSFollowElementCalculator;
 import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.internal.MultiCleartriggerCache;
@@ -49,12 +52,9 @@ import org.eclipse.n4js.ui.building.FileSystemAccessWithoutTraceFileSupport;
 import org.eclipse.n4js.ui.building.N4JSBuilderParticipant;
 import org.eclipse.n4js.ui.containers.N4JSAllContainersStateProvider;
 import org.eclipse.n4js.ui.containers.N4JSProjectsStateHelper;
-import org.eclipse.n4js.ui.contentassist.ContentAssistContextFactory;
 import org.eclipse.n4js.ui.contentassist.ContentAssistantFactory;
-import org.eclipse.n4js.ui.contentassist.CustomN4JSParser;
 import org.eclipse.n4js.ui.contentassist.N4JSContentAssistProcessor;
 import org.eclipse.n4js.ui.contentassist.N4JSContentProposalPriorities;
-import org.eclipse.n4js.ui.contentassist.N4JSFollowElementCalculator;
 import org.eclipse.n4js.ui.contentassist.SimpleLastSegmentFinder;
 import org.eclipse.n4js.ui.editor.AlwaysAddNatureCallback;
 import org.eclipse.n4js.ui.editor.EditorAwareCanLoadFromDescriptionHelper;
@@ -543,7 +543,7 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	 * Bind the customized content assist parser infrastructure.
 	 */
 	public Class<? extends org.eclipse.xtext.ide.editor.contentassist.antlr.ContentAssistContextFactory> bindContentAssistContextFactory() {
-		return ContentAssistContextFactory.class;
+		return N4JSContentAssistContextFactory.class;
 	}
 
 	/**
