@@ -32,10 +32,9 @@ public class N4JSRequestManager extends XRequestManager {
 	public synchronized <V> CompletableFuture<V> runRead(String description,
 			Function1<? super CancelIndicator, ? extends V> cancellable) {
 		return super.runRead(description, (ci) -> {
-			try (Measurement parent = N4JSIdeDataCollectors.dcN4JSRequest.getMeasurement()) {
-				try (Measurement measurement = N4JSIdeDataCollectors.request(description).getMeasurement()) {
-					return cancellable.apply(ci);
-				}
+			try (Measurement parent = N4JSIdeDataCollectors.dcN4JSRequest.getMeasurement();
+					Measurement measurement = N4JSIdeDataCollectors.request(description).getMeasurement()) {
+				return cancellable.apply(ci);
 			}
 		});
 	}

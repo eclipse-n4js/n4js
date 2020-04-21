@@ -381,13 +381,15 @@ public class ReferenceResolutionFinder {
 		}
 
 		private IEObjectDescription getCorrectCandidateViaScope(Optional<IScope> scopeForCollisionCheck) {
-			if (scopeForCollisionCheck.isPresent()) {
-				IScope scope = scopeForCollisionCheck.get();
-				IEObjectDescription candidateViaScope = getCandidateViaScope(scope);
-				candidateViaScope = specialcaseNamespaceShadowsOwnElement(scope, candidateViaScope);
-				return candidateViaScope;
+			try (Measurement m = contentAssistDataCollectors.dcDetectProposalConflicts().getMeasurement()) {
+				if (scopeForCollisionCheck.isPresent()) {
+					IScope scope = scopeForCollisionCheck.get();
+					IEObjectDescription candidateViaScope = getCandidateViaScope(scope);
+					candidateViaScope = specialcaseNamespaceShadowsOwnElement(scope, candidateViaScope);
+					return candidateViaScope;
+				}
+				return null;
 			}
-			return null;
 		}
 
 		private IEObjectDescription getCandidateViaScope(IScope scope) {

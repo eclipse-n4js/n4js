@@ -22,11 +22,23 @@ public class CollectedDataAccess {
 		getCollectors().setPaused(paused);
 	}
 
+	/** Stops all collectors but allows ongoing measurements to complete normally. */
+	public static void stop() {
+		getCollectors().stop();
+	}
+
 	/**
 	 * Deletes data from all collectors.
 	 */
 	public static void purgeAllData() {
 		getCollectors().getRootCollectors().values().forEach(c -> c.purgeData());
+	}
+
+	/**
+	 * Deletes data from all collectors but allows ongoing measurements to complete normally.
+	 */
+	public static void resetAllData() {
+		getCollectors().getRootCollectors().values().forEach(c -> c.resetData());
 	}
 
 	/** returns keys for all top level collectors. */
