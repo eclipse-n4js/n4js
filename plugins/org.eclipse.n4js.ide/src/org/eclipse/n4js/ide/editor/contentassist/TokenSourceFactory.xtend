@@ -25,15 +25,15 @@ class TokenSourceFactory {
 	@Inject ContentAssistTokenTypeMapper tokenTypeMapper
 	@Inject N4JSGrammarAccess grammarAccess
 
-	def TokenSource toTokenSource(INode node) {
-		return new NodeModelTokenSource(node, tokenTypeMapper, grammarAccess)
+	def TokenSource toTokenSource(INode node, boolean filter) {
+		return new NodeModelTokenSource(node, tokenTypeMapper, grammarAccess, filter)
 	}
 
-	def TokenSource toTokenSource(INode node, int endOffset) {
-		return new NodeModelTokenSource(node, 0, endOffset, tokenTypeMapper, grammarAccess)
+	def TokenSource toTokenSource(INode node, int endOffset, boolean filter) {
+		return new NodeModelTokenSource(node, 0, endOffset, tokenTypeMapper, grammarAccess, filter)
 	}
 
-	def TokenSource toTokenSource(INode node, int startOffset, int endOffset) {
-		return new NodeModelTokenSource(node, startOffset, endOffset, tokenTypeMapper, grammarAccess)
+	def TokenSource toTokenSource(INode node, int startOffset, int endOffset, boolean filter) {
+		return new NodeModelTokenSource(node, startOffset, endOffset, tokenTypeMapper, grammarAccess, filter)
 	}
 }

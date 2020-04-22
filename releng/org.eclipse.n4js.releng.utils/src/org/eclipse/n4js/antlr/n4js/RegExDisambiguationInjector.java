@@ -30,9 +30,9 @@ public class RegExDisambiguationInjector implements CodeIntoGrammarInjector {
 	@Override
 	public String processParserGrammar(String grammarContent) {
 		String result = replace(grammarContent,
-				"protected boolean forcedRewind(int marker, boolean advance) {",
+				"protected boolean forcedRewind(int position) {",
 				"protected void setInRegularExpression() {}\n" +
-				"protected boolean forcedRewind(int marker, boolean advance) {");
+						"protected boolean forcedRewind(int position) {");
 		result = replace(result,
 				"ruleREGEX_LITERAL returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]\n" +
 						"@init {\n" +

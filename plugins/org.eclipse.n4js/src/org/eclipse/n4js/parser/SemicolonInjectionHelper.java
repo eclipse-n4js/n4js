@@ -19,7 +19,6 @@ import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.RecognizerSharedState;
 import org.antlr.runtime.Token;
 import org.antlr.runtime.TokenStream;
-
 import org.eclipse.n4js.parser.antlr.internal.InternalN4JSParser;
 
 /**
@@ -278,6 +277,9 @@ public class SemicolonInjectionHelper {
 		Token prev = input.LT(-1);
 		Token next = input.LT(1);
 		int la = next.getType();
+		if (la == InternalN4JSParser.Semicolon) {
+			return;
+		}
 
 		// Promoting an EOL means switching it from off channel to on channel.
 		// A ML_COMMENT gets promoted when it contains an EOL.

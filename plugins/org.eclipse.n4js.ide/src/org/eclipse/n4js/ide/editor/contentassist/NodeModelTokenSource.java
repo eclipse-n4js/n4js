@@ -50,13 +50,24 @@ public class NodeModelTokenSource implements TokenSource {
 	 * The end of the requested region (exclusive).
 	 */
 	private final int endOffset;
+	/**
+	 * If set to true, use semantically equivalent replacements for regions, that are not relevant for the given offset
+	 * to reduce the number of tokens.
+	 */
+	/*
+	 * TODO implement this with the semantics of
+	 * org.eclipse.xtext.ide.editor.contentassist.antlr.BaseContentAssistParser.getReplacement(ICompositeNode) but based
+	 * on nodes rather then strings.
+	 */
+	private final boolean filter;
 
-	NodeModelTokenSource(INode node, ContentAssistTokenTypeMapper tokenTypeMapper, N4JSGrammarAccess grammarAccess) {
-		this(node, 0, Integer.MAX_VALUE, tokenTypeMapper, grammarAccess);
+	NodeModelTokenSource(INode node, ContentAssistTokenTypeMapper tokenTypeMapper, N4JSGrammarAccess grammarAccess,
+			boolean filter) {
+		this(node, 0, Integer.MAX_VALUE, tokenTypeMapper, grammarAccess, filter);
 	}
 
 	NodeModelTokenSource(INode node, int startOffset, int endOffset, ContentAssistTokenTypeMapper tokenTypeMapper,
-			N4JSGrammarAccess grammarAccess) {
+			N4JSGrammarAccess grammarAccess, boolean filter) {
 		this.startOffset = startOffset;
 		this.endOffset = endOffset;
 		this.tokenTypeMapper = tokenTypeMapper;
@@ -64,6 +75,7 @@ public class NodeModelTokenSource implements TokenSource {
 		this.rightCurlyInBlock = grammarAccess.getBlockAccess().getRightCurlyBracketKeyword_2();
 		this.rightCurlyInArrowExpression = grammarAccess.getArrowExpressionAccess().getRightCurlyBracketKeyword_1_0_2();
 		this.semicolon = grammarAccess.getSemiAccess().getSemicolonKeyword();
+		this.filter = filter;
 	}
 
 	/**

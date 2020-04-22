@@ -146,13 +146,9 @@ public class InternalHighlightingParser extends InternalN4JSParser implements Se
 	 * </p>
 	 */
 	@Override
-	protected boolean forcedRewind(int marker, boolean advance) {
-		if (advance) {
-			((LazyTokenStream) input).rewindAndKeepIndex(marker);
-		} else {
-			input.rewind(marker);
-			addASIMessage();
-		}
+	protected boolean forcedRewind(int position) {
+		input.seek(position);
+		addASIMessage();
 		return true;
 	}
 

@@ -37,7 +37,7 @@ import org.eclipse.n4js.services.N4JSGrammarAccess;
 // injected by AutomaticSemicolonInjector
 protected void setInRegularExpression() {}
 protected void setInTemplateSegment() {}
-protected boolean forcedRewind(int marker, boolean advance) { return true; } // overridden in subtype
+protected boolean forcedRewind(int position) { return true; } // overridden in subtype
 protected void promoteEOL() {} // overridden in subtype
 protected void addASIMessage() {} // overridden in subtype
 protected boolean hasDisallowedEOL() { return false; } // overridden in subtype
@@ -27255,30 +27255,30 @@ entryRuleSemi returns [String current=null]:
 ruleSemi returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] 
     @init { enterRule();
 		// injected by AutomaticSemicolonInjector
-		int marker = input.mark();
+		int position = input.index();
 		// Promote EOL if appropriate	
 		promoteEOL();    }
-    @after { leaveRule(); }:
+    @after { 
+		leaveRule(); 
+    }:
 
 	kw=Semicolon
     {
-    	forcedRewind(marker, true);
         $current.merge(kw);
         newLeafNode(kw, grammarAccess.getSemiAccess().getSemicolonKeyword()); 
     }
 	|
 	kw=(
-		  EOF
+		  EOF 
 		| RULE_EOL
 		| RULE_ML_COMMENT
-   )
+	)
     {
         addASIMessage();
-        forcedRewind(marker, true);
         $current.merge(kw);
         newLeafNode(kw, grammarAccess.getSemiAccess().getSemicolonKeyword()); 
     }
-    | RightCurlyBracket { forcedRewind(marker, false) }?
+    | RightCurlyBracket { forcedRewind(position) }?
     ;
 // REPLACEMENT ruleSemi.g.replacement END
 

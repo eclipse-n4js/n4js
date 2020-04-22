@@ -30,9 +30,9 @@ public class TemplateLiteralDisambiguationInjector implements CodeIntoGrammarInj
 	@Override
 	public String processParserGrammar(String grammarContent) {
 		String result = replace(grammarContent,
-				"protected boolean forcedRewind(int marker, boolean advance) {",
+				"protected boolean forcedRewind(int position) {",
 				"protected void setInTemplateSegment() {}\n" +
-						"protected boolean forcedRewind(int marker, boolean advance) {");
+						"protected boolean forcedRewind(int position) {");
 		result = replace(result,
 				"ruleTemplateExpressionEnd returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]\n" +
 						"@init {\n" +
