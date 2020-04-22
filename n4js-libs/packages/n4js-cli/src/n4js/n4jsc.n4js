@@ -31,7 +31,11 @@ export public async function runN4jscSync(log: {function(string)} = npmlog.info)
         let exitCode : int = await runN4jsc(args, log);
         process.exit(exitCode);
     } catch (error) {
-        process.exit(error as int);
+        if (typeof error == 'number') {
+            process.exit(error as number);
+        } else {
+            process.exit(1);
+        }
     }
 }
 
