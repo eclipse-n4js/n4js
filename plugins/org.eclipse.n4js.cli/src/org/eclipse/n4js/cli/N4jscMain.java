@@ -64,7 +64,7 @@ public class N4jscMain {
 
 			writePerformanceReportIfRequested(options);
 
-			if (exitState != N4jscExitState.SUCCESS) {
+			if (options.isVerbose() || !exitState.isSuppressUserMessage()) {
 				N4jscConsole.println(exitState.toUserString());
 			}
 			System.exit(exitState.exitCode.getExitCodeValue());

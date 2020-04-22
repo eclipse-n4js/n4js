@@ -17,15 +17,22 @@ package org.eclipse.n4js.cli;
  */
 public class N4jscExitState {
 	/** Singleton for plain success state without message for the user. */
-	final static public N4jscExitState SUCCESS = new N4jscExitState(N4jscExitCode.SUCCESS);
+	final static public N4jscExitState SUCCESS = new N4jscExitState(N4jscExitCode.SUCCESS, true, null);
 
 	final N4jscExitCode exitCode;
+	final boolean suppressUserMessage;
 	final String message;
 
 	/** Constructor */
-	public N4jscExitState(N4jscExitCode exitCode, String message) {
+	public N4jscExitState(N4jscExitCode exitCode, boolean suppressUserMessage, String message) {
 		this.exitCode = exitCode;
+		this.suppressUserMessage = suppressUserMessage;
 		this.message = message;
+	}
+
+	/** Constructor */
+	public N4jscExitState(N4jscExitCode exitCode, String message) {
+		this(exitCode, false, message);
 	}
 
 	/** Constructor. Message is null. */
@@ -36,6 +43,13 @@ public class N4jscExitState {
 	/** @return a message string for user output */
 	public String getMessage() {
 		return this.message;
+	}
+
+	/**
+	 * @return true iff no message (neither from {@link N4jscExitCode} nor from {@link #message}) is shown to the user.
+	 */
+	public boolean isSuppressUserMessage() {
+		return this.suppressUserMessage;
 	}
 
 	/** @return true iff a message is set. */

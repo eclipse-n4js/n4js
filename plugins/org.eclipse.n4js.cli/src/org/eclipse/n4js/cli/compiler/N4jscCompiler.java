@@ -223,7 +223,7 @@ public class N4jscCompiler {
 
 	private N4jscExitState determineExitState() {
 		if (callback.getErrorsCount() > 0) {
-			return new N4jscExitState(N4jscExitCode.VALIDATION_ERRORS, Long.toString(callback.getErrorsCount()));
+			return new N4jscExitState(N4jscExitCode.VALIDATION_ERRORS, true, Long.toString(callback.getErrorsCount()));
 		}
 
 		return N4jscExitState.SUCCESS;
