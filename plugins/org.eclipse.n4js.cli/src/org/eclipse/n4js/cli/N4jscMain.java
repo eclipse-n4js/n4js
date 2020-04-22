@@ -104,7 +104,7 @@ public class N4jscMain {
 		return null; // never happens
 	}
 
-	/** @return a {@link N4jscExitCode} that is returned after gracefully terminating n4jsc */
+	/** @return a {@link N4jscExitState} for graceful termination of n4jsc */
 	private static N4jscExitState performGoal(N4jscOptions options) throws Exception {
 		N4jscBackend backend = N4jscFactory.createBackend();
 

@@ -11,9 +11,9 @@
 package org.eclipse.n4js.cli;
 
 /**
- * Exit state hold exit code and message information. An exit state will not terminate the n4jsc process abruptly, but
- * instead gracefully. In case the {@link N4jscExitState} is other than {@link #SUCCESS}, the message its message is
- * printed out and the process terminates with its exit code (can be other than zero).
+ * Exit state holds exit code and message information. An exit state will not terminate the n4jsc process abruptly, but
+ * instead gracefully. In case the {@link N4jscExitState} is other than {@link #SUCCESS}, its message is printed out and
+ * the process terminates with its exit code (can be other than zero).
  */
 public class N4jscExitState {
 	/** Singleton for plain success state without message for the user. */
@@ -38,7 +38,7 @@ public class N4jscExitState {
 		return this.message;
 	}
 
-	/** @return if a message is set. */
+	/** @return true iff a message is set. */
 	public boolean hasMessage() {
 		return getMessage() != null && getMessage().length() > 0;
 	}
