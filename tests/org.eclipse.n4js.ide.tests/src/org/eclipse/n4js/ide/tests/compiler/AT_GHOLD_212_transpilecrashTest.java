@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ide.tests.compiler;
 
+import static org.eclipse.n4js.cli.N4jscExitCode.VALIDATION_ERRORS;
 import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
 import static org.junit.Assert.assertEquals;
 
@@ -54,7 +55,7 @@ public class AT_GHOLD_212_transpilecrashTest extends AbstractCliCompileTest {
 
 		N4jscOptions options = COMPILE(proot);
 
-		CliCompileResult cliResult = n4jsc(options);
+		CliCompileResult cliResult = n4jsc(options, VALIDATION_ERRORS);
 
 		// Make sure, we get here and have exactly one file compiled:
 		assertEquals(cliResult.toString(), 1, cliResult.getTranspiledFilesCount());

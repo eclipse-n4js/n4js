@@ -27,10 +27,15 @@ import {getJavaCommand} from "JreProvider";
  */
 export public async function runN4jscSync(log: {function(string)} = npmlog.info) {
     const args = getArgsFromProcess();
-
-    let exitCode : int = await runN4jsc(args, log);
-    if (exitCode !== 0) {
+    try {
+        let exitCode : int = await runN4jsc(args, log);
         process.exit(exitCode);
+    } catch (error) {
+        if (typeof error == 'number') {
+            process.exit(error as number);
+        } else {
+            process.exit(1);
+        }
     }
 }
 

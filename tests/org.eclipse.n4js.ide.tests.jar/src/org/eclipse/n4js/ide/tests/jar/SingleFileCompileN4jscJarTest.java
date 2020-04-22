@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ide.tests.jar;
 
+import static org.eclipse.n4js.cli.N4jscExitCode.VALIDATION_ERRORS;
 import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
 import static org.eclipse.n4js.cli.N4jscTestOptions.HELP;
 import static org.junit.Assert.assertEquals;
@@ -48,8 +49,7 @@ public class SingleFileCompileN4jscJarTest extends AbstractCliJarTest {
 	public void testSingleFileCompile() {
 		File project = Path.of(TARGET, WORKSPACE_FOLDER, N4CliHelper.PACKAGES, "PSingle").toAbsolutePath().toFile();
 
-		CliCompileResult cliResult = n4jsc(COMPILE(project));
-		assertEquals(cliResult.toString(), 0, cliResult.getExitCode());
+		n4jsc(COMPILE(project), VALIDATION_ERRORS);
 	}
 
 	/** Compile & Run whole project. */
@@ -61,7 +61,7 @@ public class SingleFileCompileN4jscJarTest extends AbstractCliJarTest {
 
 		N4CliHelper.copyN4jsLibsToLocation(nodeModulesPath, N4JSGlobals.N4JS_RUNTIME);
 
-		CliCompileResult cliResult = n4jsc(COMPILE(project.toFile()));
+		CliCompileResult cliResult = n4jsc(COMPILE(project.toFile()), VALIDATION_ERRORS);
 		assertEquals(cliResult.toString(), 4, cliResult.getTranspiledFilesCount());
 
 		Path fileA = project.resolve("src-gen/A.js");

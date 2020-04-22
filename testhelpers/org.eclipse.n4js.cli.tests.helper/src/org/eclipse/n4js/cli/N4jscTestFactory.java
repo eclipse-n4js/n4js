@@ -53,28 +53,33 @@ public class N4jscTestFactory extends N4jscFactory {
 	/** Thrown when the backend is called. */
 	static class NoopBackend extends N4jscBackend {
 		@Override
-		public void goalApi(N4jscOptions options) {
+		public N4jscExitState goalApi(N4jscOptions options) {
 			// do nothing
+			return N4jscExitState.SUCCESS;
 		}
 
 		@Override
-		public void goalClean(N4jscOptions options) {
+		public N4jscExitState goalClean(N4jscOptions options) {
 			// do nothing
+			return N4jscExitState.SUCCESS;
 		}
 
 		@Override
-		public void goalCompile(N4jscOptions options) {
+		public N4jscExitState goalCompile(N4jscOptions options) {
 			// do nothing
+			return N4jscExitState.SUCCESS;
 		}
 
 		@Override
-		public void goalLsp(N4jscOptions options) {
+		public N4jscExitState goalLsp(N4jscOptions options) {
 			// do nothing
+			return N4jscExitState.SUCCESS;
 		}
 
 		@Override
-		public void goalWatch(N4jscOptions options) {
+		public N4jscExitState goalWatch(N4jscOptions options) {
 			// do nothing
+			return N4jscExitState.SUCCESS;
 		}
 	}
 

@@ -22,6 +22,7 @@ import org.junit.Test
 
 import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE
 import static org.junit.Assert.assertEquals
+import static org.eclipse.n4js.cli.N4jscExitCode.VALIDATION_ERRORS
 
 /**
  * Compiles and runs a basic N4IDL project.
@@ -51,7 +52,7 @@ public class ObsoleteVersionedImportsTest extends AbstractCliCompileTest {
 	 */
 	@Test
 	public def void testNoObsoleteVersionsImported() throws IOException {
-		val cliResult = n4jsc(COMPILE(workspace));
+		val cliResult = n4jsc(COMPILE(workspace), VALIDATION_ERRORS);
 		assertEquals(cliResult.toString(), 0, cliResult.getExitCode());
 		assertEquals(cliResult.toString(), 3, cliResult.getTranspiledFilesCount());
 		

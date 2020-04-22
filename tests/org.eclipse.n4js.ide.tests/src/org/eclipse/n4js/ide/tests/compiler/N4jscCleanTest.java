@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ide.tests.compiler;
 
+import static org.eclipse.n4js.cli.N4jscExitCode.VALIDATION_ERRORS;
 import static org.eclipse.n4js.cli.N4jscTestOptions.CLEAN;
 import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
 import static org.junit.Assert.assertEquals;
@@ -47,14 +48,14 @@ public class N4jscCleanTest extends AbstractCliCompileTest {
 	/** Basic compile test. */
 	@Test
 	public void testCompile() {
-		CliCompileResult cliResult = n4jsc(COMPILE(workspace));
+		CliCompileResult cliResult = n4jsc(COMPILE(workspace), VALIDATION_ERRORS);
 		assertEquals(cliResult.toString(), 4, cliResult.getTranspiledFilesCount());
 	}
 
 	/** Basic compile test. */
 	@Test
 	public void testCompileThenClean() {
-		CliCompileResult compileResult = n4jsc(COMPILE(workspace));
+		CliCompileResult compileResult = n4jsc(COMPILE(workspace), VALIDATION_ERRORS);
 		assertEquals(compileResult.toString(), 4, compileResult.getTranspiledFilesCount());
 
 		CliCompileResult cleanResult = n4jsc(CLEAN(workspace));
@@ -64,10 +65,10 @@ public class N4jscCleanTest extends AbstractCliCompileTest {
 	/** Basic compile test. */
 	@Test
 	public void testCleanCompile() {
-		CliCompileResult compileResult = n4jsc(COMPILE(workspace));
+		CliCompileResult compileResult = n4jsc(COMPILE(workspace), VALIDATION_ERRORS);
 		assertEquals(compileResult.toString(), 4, compileResult.getTranspiledFilesCount());
 
-		CliCompileResult cleanResult = n4jsc(COMPILE(workspace).clean());
+		CliCompileResult cleanResult = n4jsc(COMPILE(workspace).clean(), VALIDATION_ERRORS);
 		assertEquals(cleanResult.toString(), 8, cleanResult.getDeletedFilesCount());
 	}
 

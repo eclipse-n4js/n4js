@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ide.tests.compiler;
 
+import static org.eclipse.n4js.cli.N4jscExitCode.VALIDATION_ERRORS;
 import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
 import static org.junit.Assert.assertEquals;
 
@@ -81,7 +82,7 @@ public class InstallCompileRunN4jscExternalShadowNestedNodeModulesTest extends A
 		final Path fileToRun = project.resolve("src-gen").resolve("Main.js");
 
 		N4jscOptions options = COMPILE(workspace);
-		CliCompileResult cliResult = n4jsc(options);
+		CliCompileResult cliResult = n4jsc(options, VALIDATION_ERRORS);
 		assertEquals(cliResult.toString(), 1, cliResult.getTranspiledFilesCount());
 
 		String expectedString = "Main.n4js in P\n";

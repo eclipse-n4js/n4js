@@ -10,9 +10,8 @@
  */
 
 
-import {JAVA_VM_XMX, JAVA_VM_XMX_DEFAULT, N4JSC_JAR} from "Globals";
+import {JAVA_VM_XMX_DEFAULT, N4JSC_JAR} from "Globals";
 import {runN4jsc, createN4JSProcess} from "n4jsc";
-import {resolve as pathResolve} from "path";
 import debug from "debug";
 import * as childProcess from "child_process";
 

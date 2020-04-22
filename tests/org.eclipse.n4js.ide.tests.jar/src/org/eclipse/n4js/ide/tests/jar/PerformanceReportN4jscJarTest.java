@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ide.tests.jar;
 
+import static org.eclipse.n4js.cli.N4jscExitCode.VALIDATION_ERRORS;
 import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -67,8 +68,7 @@ public class PerformanceReportN4jscJarTest extends AbstractCliJarTest {
 				.performanceReport(PERFORMANCE_REPORT_FILE)
 				.performanceKey(N4JSDataCollectors.dcN4JSResource.getId()); // must use other than the default dcBuild!
 
-		CliCompileResult cliResult = n4jsc(options);
-		assertEquals(cliResult.toString(), 0, cliResult.getExitCode());
+		CliCompileResult cliResult = n4jsc(options, VALIDATION_ERRORS);
 		makeAssertions(cliResult);
 	}
 
@@ -83,8 +83,7 @@ public class PerformanceReportN4jscJarTest extends AbstractCliJarTest {
 
 		N4jscTestOptions options = COMPILE(PROJECT)
 				.performanceKey(N4JSDataCollectors.dcN4JSResource.getId()); // must use other than the default dcBuild!
-		CliCompileResult cliResult = n4jsc(options);
-		assertEquals(cliResult.toString(), 0, cliResult.getExitCode());
+		CliCompileResult cliResult = n4jsc(options, VALIDATION_ERRORS);
 		makeAssertions(cliResult);
 	}
 

@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ide.tests.compiler;
 
+import static org.eclipse.n4js.cli.N4jscExitCode.VALIDATION_ERRORS;
 import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
 import static org.junit.Assert.assertEquals;
 
@@ -52,7 +53,7 @@ public class N4jscTypeDefinitionsModuleShadowingTest extends AbstractCliCompileT
 	 */
 	@Test
 	public void testSimpleTypeDefsShadowing() {
-		CliCompileResult cliResult = n4jsc(COMPILE(workspace));
+		CliCompileResult cliResult = n4jsc(COMPILE(workspace), VALIDATION_ERRORS);
 
 		Collection<String> fileNames = cliResult.getTranspiledFileNames();
 

@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ide.tests.compiler;
 
+import static org.eclipse.n4js.cli.N4jscExitCode.VALIDATION_ERRORS;
 import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
 import static org.junit.Assert.assertEquals;
 
@@ -57,7 +58,7 @@ public class AT_IDEBUG_654_MissingPolyfillImportsTest extends AbstractCliCompile
 		Path fileToRun = projectDir.resolve("src-gen/Main.js");
 
 		N4jscOptions options = COMPILE(workspace);
-		CliCompileResult cliResult = n4jsc(options);
+		CliCompileResult cliResult = n4jsc(options, VALIDATION_ERRORS);
 		assertEquals(cliResult.toString(), 5, cliResult.getTranspiledFilesCount());
 
 		ProcessResult nodejsResult = runNodejs(projectDir, fileToRun);
