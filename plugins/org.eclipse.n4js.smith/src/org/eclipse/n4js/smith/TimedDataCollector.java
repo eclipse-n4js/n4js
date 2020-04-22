@@ -190,6 +190,10 @@ class TimedDataCollector extends DataCollector {
 		this.children.values().forEach(c -> c.purgeData());
 	}
 
+	void clearChildren() {
+		this.children.clear();
+	}
+
 	/** NOOP consumer. */
 	private static void noop(@SuppressWarnings("unused") Measurement measurement) {
 		// NOOP

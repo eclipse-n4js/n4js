@@ -21,6 +21,7 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.scoping.IContentAssistScopeProvider;
+import org.eclipse.n4js.scoping.smith.MeasurableScope;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
@@ -110,8 +111,8 @@ public class ImportsAwareReferenceProposalCreator {
 		if (model != null) {
 			final IScope scope = getScopeForContentAssist(model, reference);
 
-			final Iterable<IEObjectDescription> candidates = getAllElements(scope);
-			try (Measurement m = contentAssistDataCollectors.dcIterateAllElements().getMeasurement()) {
+			try (Measurement m = contentAssistDataCollectors.dcUseScope().getMeasurement()) {
+				final Iterable<IEObjectDescription> candidates = scope.getAllElements();
 				for (IEObjectDescription candidate : candidates) {
 					if (!acceptor.canAcceptMoreProposals())
 						return;
@@ -148,16 +149,11 @@ public class ImportsAwareReferenceProposalCreator {
 		}
 	}
 
-	private Iterable<IEObjectDescription> getAllElements(final IScope scope) {
-		try (Measurement m = contentAssistDataCollectors.dcGetAllElements().getMeasurement()) {
-			return scope.getAllElements();
-		}
-	}
-
 	private IScope getScopeForContentAssist(EObject model, EReference reference) {
 		try (Measurement m = contentAssistDataCollectors.dcGetScope().getMeasurement()) {
 			IContentAssistScopeProvider contentAssistScopeProvider = (IContentAssistScopeProvider) scopeProvider;
-			return contentAssistScopeProvider.getScopeForContentAssist(model, reference);
+			IScope result = contentAssistScopeProvider.getScopeForContentAssist(model, reference);
+			return MeasurableScope.decorate(result, contentAssistDataCollectors.dcUseScope());
 		}
 	}
 
@@ -196,7 +192,7 @@ public class ImportsAwareReferenceProposalCreator {
 			Predicate<IEObjectDescription> filter,
 			Function<IEObjectDescription, ICompletionProposal> delegateProposalFactory) {
 
-		try (Measurement m = contentAssistDataCollectors.dcGetResolution().getMeasurement()) {
+		try (Measurement m = MeasurableScope.getMeasurement(scope, "getResolution")) {
 			final IEObjectDescription inputToUse = getAliasedDescription(candidate, reference, context);
 			final ICompletionProposal result = delegateProposalFactory.apply(inputToUse);
 

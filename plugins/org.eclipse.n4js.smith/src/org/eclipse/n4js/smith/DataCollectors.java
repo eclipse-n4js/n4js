@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 
 /**
@@ -41,7 +42,7 @@ public enum DataCollectors {
 			throw new RuntimeException("DataCollector key cannot be null or empty");
 		}
 
-		return get(key, null);
+		return get(key, null, false);
 	}
 
 	/**
@@ -54,13 +55,27 @@ public enum DataCollectors {
 			throw new RuntimeException("DataCollector key cannot be null or empty");
 		}
 
-		return get(key, parent);
+		return get(key, parent, false);
 	}
 
-	private synchronized DataCollector get(String key, DataCollector parent) {
+	/**
+	 * returns collector for a given key, that is child of the provided parent collector. If no keys are provided
+	 * returns behaves as {@link #getOrCreateDataCollector(String)}
+	 */
+	public DataCollector getOrCreateDataCollectorWithTransientChildren(String key, DataCollector parent) {
+
+		if (Strings.isNullOrEmpty(key)) {
+			throw new RuntimeException("DataCollector key cannot be null or empty");
+		}
+
+		return get(key, parent, true);
+	}
+
+	private synchronized DataCollector get(String key, DataCollector parent, boolean transientChildren) {
 		DataCollector collector = null;
 
 		if (parent == null) {
+			Preconditions.checkArgument(!transientChildren);
 			collector = collectors.get(key);
 			if (collector == null) {
 				collector = new TimedDataCollector(key);
@@ -70,7 +85,11 @@ public enum DataCollectors {
 		} else {
 			collector = parent.getChild(key);
 			if (collector == null) {
-				collector = new TimedDataCollector(key, parent);
+				if (transientChildren) {
+					collector = new DataCollectorWithTransientChildren(key, parent);
+				} else {
+					collector = new TimedDataCollector(key, parent);
+				}
 				collector.setPaused(this.pauseAllCollectors.get());
 				parent.addChild(collector);
 			}

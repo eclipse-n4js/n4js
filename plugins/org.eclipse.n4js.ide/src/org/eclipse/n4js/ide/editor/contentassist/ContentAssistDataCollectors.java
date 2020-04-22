@@ -12,8 +12,6 @@ package org.eclipse.n4js.ide.editor.contentassist;
 
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
-import org.eclipse.xtext.resource.IEObjectDescription;
-import org.eclipse.xtext.scoping.IScope;
 
 /**
  * Data collectors to be used in the content assist implementation.
@@ -27,10 +25,7 @@ public final class ContentAssistDataCollectors {
 	private final DataCollector createContexts;
 	private final DataCollector createProposalsInner;
 	private final DataCollector getScope;
-	private final DataCollector getAllElements;
-	private final DataCollector forEachElement;
-	private final DataCollector getResolution;
-	private final DataCollector checkConflict;
+	private final DataCollector useScope;
 
 	/**
 	 * Constructor
@@ -41,10 +36,8 @@ public final class ContentAssistDataCollectors {
 		this.createContexts = create("createContexts", createProposals);
 		this.createProposalsInner = create("inner createProposals", createProposals);
 		this.getScope = create("getScopeForContentAssist", createProposalsInner);
-		this.getAllElements = create("scope.getAllElements", dcCreateProposalsInner());
-		this.forEachElement = create("for(description in scope.allElements)", dcCreateProposalsInner());
-		this.getResolution = create("getResolution", forEachElement);
-		this.checkConflict = create("checkConflict", getResolution);
+		this.useScope = DataCollectors.INSTANCE.getOrCreateDataCollectorWithTransientChildren("useScope",
+				createProposalsInner);
 	}
 
 	/**
@@ -83,31 +76,10 @@ public final class ContentAssistDataCollectors {
 	}
 
 	/**
-	 * The data collector for calling {@link IScope#getAllElements()}.
+	 * The data collector for using the scope during content assist.
 	 */
-	public DataCollector dcGetAllElements() {
-		return getAllElements;
-	}
-
-	/**
-	 * The data collector for the traversal of the {@link IEObjectDescription scope contents}.
-	 */
-	public DataCollector dcIterateAllElements() {
-		return forEachElement;
-	}
-
-	/**
-	 * The data collector for the computation of the resolutions.
-	 */
-	public DataCollector dcGetResolution() {
-		return getResolution;
-	}
-
-	/**
-	 * The data collector for the detection of conflicting proposals.
-	 */
-	public DataCollector dcDetectProposalConflicts() {
-		return checkConflict;
+	public DataCollector dcUseScope() {
+		return useScope;
 	}
 
 	private static DataCollector create(String key, DataCollector parent) {

@@ -15,7 +15,9 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.scoping.smith.MeasurableScope;
 import org.eclipse.n4js.scoping.utils.RestrictedUsageDescription;
+import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.NameAndAccess;
 import org.eclipse.n4js.ts.types.TMember;
@@ -106,11 +108,8 @@ public class MemberScope extends AbstractMemberScope {
 			List<? extends TMember> members, EObject context,
 			boolean staticAccess, boolean structFieldInitMode, boolean isDynamicType,
 			JavaScriptVariantHelper jsVariantHelper) {
-
-		super(parent, context, staticAccess, structFieldInitMode, isDynamicType, jsVariantHelper);
-		this.containerTypesHelper = containerTypesHelper;
-		this.type = null;
-		this.members = new ArrayList<>(members);
+		this(parent, context, staticAccess, structFieldInitMode, isDynamicType, jsVariantHelper,
+				containerTypesHelper, null, new ArrayList<>(members));
 	}
 
 	/**
@@ -120,11 +119,8 @@ public class MemberScope extends AbstractMemberScope {
 			EObject context,
 			boolean staticAccess, boolean structFieldInitMode, boolean isDynamicType,
 			JavaScriptVariantHelper jsVariantHelper) {
-
-		super(parent, context, staticAccess, structFieldInitMode, isDynamicType, jsVariantHelper);
-		this.containerTypesHelper = containerTypesHelper;
-		this.type = type;
-		this.members = null;
+		this(parent, context, staticAccess, structFieldInitMode, isDynamicType, jsVariantHelper,
+				containerTypesHelper, type, null);
 	}
 
 	/**
@@ -134,11 +130,30 @@ public class MemberScope extends AbstractMemberScope {
 			EObject context,
 			boolean staticAccess, boolean structFieldInitMode, boolean isDynamicType,
 			JavaScriptVariantHelper jsVariantHelper) {
+		this(IScope.NULLSCOPE, context, staticAccess, structFieldInitMode, isDynamicType, jsVariantHelper,
+				containerTypesHelper, type, null);
+	}
 
-		super(IScope.NULLSCOPE, context, staticAccess, structFieldInitMode, isDynamicType, jsVariantHelper);
+	private MemberScope(IScope parent,
+			EObject context,
+			boolean staticAccess,
+			boolean structFieldInitMode,
+			boolean isDynamicType,
+			JavaScriptVariantHelper jsVariantHelper,
+			ContainerTypesHelper containerTypesHelper,
+			ContainerType<?> type,
+			List<TMember> members) {
+		super(parent, context, staticAccess, structFieldInitMode, isDynamicType, jsVariantHelper);
 		this.containerTypesHelper = containerTypesHelper;
 		this.type = type;
-		this.members = null;
+		this.members = members;
+	}
+
+	@Override
+	public IScope decorate(DataCollector dataCollector) {
+		return new MemberScope(MeasurableScope.decorate(getParent(), dataCollector),
+				context, staticAccess, structFieldInitMode, isDynamicType, jsVariantHelper,
+				containerTypesHelper, type, members);
 	}
 
 	/**

@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.scoping.smith.MeasurableScope;
+import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -30,7 +32,7 @@ import com.google.common.collect.Iterables;
  * Usually, scopes should *not* be composed with this class, instead nesting should be used (one scope being a parent of
  * the other). This class is intended only for some tweaks related to content assist.
  */
-public class CompositeScope implements IScope {
+public final class CompositeScope implements MeasurableScope {
 
 	/**
 	 * The child scopes that together constitute this scope.
@@ -44,6 +46,9 @@ public class CompositeScope implements IScope {
 		if (scopes.length == 0) {
 			return IScope.NULLSCOPE;
 		}
+		if (scopes.length == 1) {
+			return scopes[0];
+		}
 		return new CompositeScope(scopes);
 	}
 
@@ -53,6 +58,9 @@ public class CompositeScope implements IScope {
 	public static final IScope create(List<IScope> scopes) {
 		if (scopes == null || scopes.isEmpty()) {
 			return IScope.NULLSCOPE;
+		}
+		if (scopes.size() == 1) {
+			return scopes.get(0);
 		}
 		IScope[] arrayScopes = new IScope[scopes.size()];
 		scopes.toArray(arrayScopes);
@@ -64,6 +72,15 @@ public class CompositeScope implements IScope {
 	 */
 	protected CompositeScope(IScope... scopes) {
 		childScopes = scopes;
+	}
+
+	@Override
+	public IScope decorate(DataCollector dataCollector) {
+		IScope[] scopes = new IScope[childScopes.length];
+		for (int i = 0; i < scopes.length; i++) {
+			scopes[i] = MeasurableScope.decorate(childScopes[i], dataCollector);
+		}
+		return new CompositeScope(scopes);
 	}
 
 	@Override

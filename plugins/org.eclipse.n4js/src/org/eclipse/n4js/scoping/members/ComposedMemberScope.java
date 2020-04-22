@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.n4JS.MemberAccess;
 import org.eclipse.n4js.n4JS.extensions.ExpressionExtensions;
 import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.scoping.smith.MeasurableScope;
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
@@ -36,9 +37,9 @@ import org.eclipse.n4js.ts.types.TypingStrategy;
 import org.eclipse.n4js.ts.utils.TypeCompareUtils;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.utils.EcoreUtilN4;
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
-import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.EObjectDescription;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -59,7 +60,7 @@ import com.google.common.collect.Iterators;
  * See Chapter 8.8. Scoping for Members of Composed Type (Union/Intersection) Example of the N4JS Design Document to
  * understand the implementation with an example.
  */
-public abstract class ComposedMemberScope extends AbstractScope {
+public abstract class ComposedMemberScope extends AbstractScope implements MeasurableScope {
 
 	final ComposedTypeRef composedTypeRef;
 	final IScope[] subScopes;
@@ -87,7 +88,7 @@ public abstract class ComposedMemberScope extends AbstractScope {
 	 * Creates union type scope, passed subScopes are expected to be fully configured (i.e., including required filters
 	 * etc.)
 	 */
-	public ComposedMemberScope(ComposedTypeRef composedTypeRef, MemberScopeRequest request, List<IScope> subScopes,
+	protected ComposedMemberScope(ComposedTypeRef composedTypeRef, MemberScopeRequest request, List<IScope> subScopes,
 			N4JSTypeSystem ts) {
 
 		super(IScope.NULLSCOPE, false);

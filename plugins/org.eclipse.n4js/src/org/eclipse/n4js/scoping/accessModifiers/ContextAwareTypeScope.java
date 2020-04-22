@@ -15,7 +15,9 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.n4js.n4JS.GetterDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.scoping.smith.MeasurableScope;
 import org.eclipse.n4js.scoping.utils.AbstractDescriptionWithError;
+import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.validation.IssueCodes;
@@ -28,7 +30,7 @@ import org.eclipse.xtext.scoping.IScope;
  * Handles types that are allowed only in certain areas of the AST. Accessibility is handled by
  * {@link VisibilityAwareTypeScope}.
  */
-public class ContextAwareTypeScope extends FilterWithErrorMarkerScope {
+public class ContextAwareTypeScope extends FilterWithErrorMarkerScope implements MeasurableScope {
 
 	private final boolean isValidLocationForNull;
 	private final boolean isValidLocationForVoid;
@@ -57,6 +59,22 @@ public class ContextAwareTypeScope extends FilterWithErrorMarkerScope {
 				// function types are not truly allowed within TypeTypeRefs (i.e. inside 'type{...}'), but there's a
 				// separate validation for that; so treat this case as legal here:
 				|| eRef == TypeRefsPackage.eINSTANCE.getTypeTypeRef_TypeArg();
+	}
+
+	private ContextAwareTypeScope(IScope parent,
+			boolean isValidLocationForNull,
+			boolean isValidLocationForVoid,
+			boolean isValidLocationForFunctionType) {
+		super(parent);
+		this.isValidLocationForNull = isValidLocationForNull;
+		this.isValidLocationForVoid = isValidLocationForVoid;
+		this.isValidLocationForFunctionType = isValidLocationForFunctionType;
+	}
+
+	@Override
+	public IScope decorate(DataCollector dataCollector) {
+		return new ContextAwareTypeScope(MeasurableScope.decorate(parent, dataCollector), isValidLocationForNull,
+				isValidLocationForVoid, isValidLocationForFunctionType);
 	}
 
 	@Override

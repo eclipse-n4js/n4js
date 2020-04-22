@@ -12,17 +12,17 @@ package org.eclipse.n4js.scoping.utils
 
 import com.google.common.base.Function
 import com.google.common.collect.Iterables
+import com.google.inject.Inject
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.n4js.scoping.smith.MeasurableMapBasedScope
+import org.eclipse.n4js.scoping.smith.MeasurableMultimapBasedScope
+import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.scoping.Scopes
 import org.eclipse.xtext.scoping.impl.SimpleScope
 import org.eclipse.xtext.util.SimpleAttributeResolver
-import com.google.inject.Inject
-import org.eclipse.n4js.validation.JavaScriptVariantHelper
-import org.eclipse.xtext.scoping.impl.MapBasedScope
-import org.eclipse.xtext.scoping.impl.MultimapBasedScope
 
 /**
  * Some utility methods, similar to xtext's {@link Scopes}.
@@ -51,9 +51,9 @@ public class ScopesHelper {
 	 */
 	def public IScope mapBasedScopeFor(EObject context, IScope parent, Iterable<IEObjectDescription> descriptions) {
 		if (javaScriptVariantHelper.isMultiQNScope(context)) {
-			return MultimapBasedScope.createScope(parent, descriptions, false);
+			return MeasurableMultimapBasedScope.createScope(parent, descriptions, false);
 		} else {
-			return MapBasedScope.createScope(parent, descriptions);
+			return MeasurableMapBasedScope.createScope(parent, descriptions);
 		}
 	}
 

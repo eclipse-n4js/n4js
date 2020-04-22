@@ -29,6 +29,7 @@ import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.scoping.IContentAssistScopeProvider;
 import org.eclipse.n4js.scoping.imports.PlainAccessOfAliasedImportDescription;
 import org.eclipse.n4js.scoping.imports.PlainAccessOfNamespacedImportDescription;
+import org.eclipse.n4js.scoping.smith.MeasurableScope;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
@@ -142,8 +143,8 @@ public class ReferenceResolutionFinder {
 		IScope scope = getScopeForContentAssist(reference);
 		// iterate over candidates, filter them, and create ICompletionProposals for them
 
-		Iterable<IEObjectDescription> candidates = getAllElements(scope);
-		try (Measurement m = contentAssistDataCollectors.dcIterateAllElements().getMeasurement()) {
+		try (Measurement m = contentAssistDataCollectors.dcUseScope().getMeasurement()) {
+			Iterable<IEObjectDescription> candidates = scope.getAllElements();
 			Set<URI> candidateURIs = new HashSet<>(); // note: shadowing for #getAllElements does not work
 			for (IEObjectDescription candidate : candidates) {
 				if (!acceptor.canAcceptMoreProposals()) {
@@ -164,17 +165,12 @@ public class ReferenceResolutionFinder {
 		}
 	}
 
-	private Iterable<IEObjectDescription> getAllElements(IScope scope) {
-		try (Measurement m = contentAssistDataCollectors.dcGetAllElements().getMeasurement()) {
-			return scope.getAllElements();
-		}
-	}
-
 	private IScope getScopeForContentAssist(ReferenceDescriptor reference) {
 		try (Measurement m = contentAssistDataCollectors.dcGetScope().getMeasurement()) {
 			IContentAssistScopeProvider contentAssistScopeProvider = (IContentAssistScopeProvider) scopeProvider;
-			return contentAssistScopeProvider.getScopeForContentAssist(reference.astNode,
+			IScope result = contentAssistScopeProvider.getScopeForContentAssist(reference.astNode,
 					reference.eReference);
+			return MeasurableScope.decorate(result, contentAssistDataCollectors.dcUseScope());
 		}
 	}
 
@@ -193,7 +189,7 @@ public class ReferenceResolutionFinder {
 	private ReferenceResolution getResolution(String text, INode parseTreeNode, boolean requireFullMatch,
 			IEObjectDescription candidate, Optional<IScope> scopeForCollisionCheck, Predicate<String> conflictChecker) {
 
-		try (Measurement m = contentAssistDataCollectors.dcGetResolution().getMeasurement()) {
+		try (Measurement m = MeasurableScope.getMeasurement(scopeForCollisionCheck.orNull(), "getResolution")) {
 			ReferenceResolutionCandidate rrc = new ReferenceResolutionCandidate(candidate, scopeForCollisionCheck, text,
 					requireFullMatch, parseTreeNode, conflictChecker);
 
@@ -381,15 +377,13 @@ public class ReferenceResolutionFinder {
 		}
 
 		private IEObjectDescription getCorrectCandidateViaScope(Optional<IScope> scopeForCollisionCheck) {
-			try (Measurement m = contentAssistDataCollectors.dcDetectProposalConflicts().getMeasurement()) {
-				if (scopeForCollisionCheck.isPresent()) {
-					IScope scope = scopeForCollisionCheck.get();
-					IEObjectDescription candidateViaScope = getCandidateViaScope(scope);
-					candidateViaScope = specialcaseNamespaceShadowsOwnElement(scope, candidateViaScope);
-					return candidateViaScope;
-				}
-				return null;
+			if (scopeForCollisionCheck.isPresent()) {
+				IScope scope = scopeForCollisionCheck.get();
+				IEObjectDescription candidateViaScope = getCandidateViaScope(scope);
+				candidateViaScope = specialcaseNamespaceShadowsOwnElement(scope, candidateViaScope);
+				return candidateViaScope;
 			}
+			return null;
 		}
 
 		private IEObjectDescription getCandidateViaScope(IScope scope) {

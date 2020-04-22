@@ -17,6 +17,8 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.scoping.UsageAwareObjectDescription;
+import org.eclipse.n4js.scoping.smith.MeasurableScope;
+import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -35,9 +37,9 @@ import com.google.common.collect.Iterables;
  *
  * All other Methods just delegate.
  */
-public class OriginAwareScope implements IScope {
+public class OriginAwareScope implements MeasurableScope {
 
-	private final IScope delegatee;
+	private final IScope delegate;
 
 	private final HashMap<IEObjectDescription, ImportSpecifier> origins;
 
@@ -49,8 +51,13 @@ public class OriginAwareScope implements IScope {
 	 *            Map of {@link ImportSpecifier}-origins for {@link IEObjectDescription}'s
 	 */
 	OriginAwareScope(IScope scope, HashMap<IEObjectDescription, ImportSpecifier> map) {
-		this.delegatee = scope;
+		this.delegate = scope;
 		this.origins = map;
+	}
+
+	@Override
+	public IScope decorate(DataCollector dataCollector) {
+		return new OriginAwareScope(MeasurableScope.decorate(delegate, dataCollector), origins);
 	}
 
 	/**
@@ -60,7 +67,7 @@ public class OriginAwareScope implements IScope {
 	 */
 	@Override
 	public IEObjectDescription getSingleElement(QualifiedName name) {
-		IEObjectDescription ret = delegatee.getSingleElement(name);
+		IEObjectDescription ret = delegate.getSingleElement(name);
 		if (ret == null)
 			return null;
 
@@ -79,22 +86,22 @@ public class OriginAwareScope implements IScope {
 
 	@Override
 	public Iterable<IEObjectDescription> getElements(QualifiedName name) {
-		return Iterables.transform(delegatee.getElements(name), this::getUsageAwareDescription);
+		return Iterables.transform(delegate.getElements(name), this::getUsageAwareDescription);
 	}
 
 	@Override
 	public IEObjectDescription getSingleElement(EObject object) {
-		return delegatee.getSingleElement(object);
+		return delegate.getSingleElement(object);
 	}
 
 	@Override
 	public Iterable<IEObjectDescription> getElements(EObject object) {
-		return delegatee.getElements(object);
+		return delegate.getElements(object);
 	}
 
 	@Override
 	public Iterable<IEObjectDescription> getAllElements() {
-		return delegatee.getAllElements();
+		return delegate.getAllElements();
 	}
 
 	private IEObjectDescription getUsageAwareDescription(IEObjectDescription original) {
@@ -226,7 +233,7 @@ public class OriginAwareScope implements IScope {
 
 	@Override
 	public String toString() {
-		return "OriginAwareScope -> " + delegatee.toString();
+		return "OriginAwareScope -> " + delegate.toString();
 	}
 
 }

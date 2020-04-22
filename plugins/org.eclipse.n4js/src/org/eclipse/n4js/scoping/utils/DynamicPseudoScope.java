@@ -13,6 +13,10 @@ package org.eclipse.n4js.scoping.utils;
 import java.util.Collections;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.scoping.smith.MeasurableScope;
+import org.eclipse.n4js.smith.DataCollector;
+import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.xtext.scoping.EmptyScope;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.EObjectDescription;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -20,14 +24,11 @@ import org.eclipse.xtext.scoping.IScope;
 
 import com.google.common.collect.Iterables;
 
-import org.eclipse.n4js.ts.types.IdentifiableElement;
-import org.eclipse.n4js.xtext.scoping.EmptyScope;
-
 /**
  * Pseudo member scope used for dynamic types or in case of plain JavaScript files (in which everything is dynamic
  * implicity)
  */
-public class DynamicPseudoScope extends EmptyScope {
+public class DynamicPseudoScope extends EmptyScope implements MeasurableScope {
 
 	/**
 	 * @param parent
@@ -42,6 +43,11 @@ public class DynamicPseudoScope extends EmptyScope {
 	 */
 	public DynamicPseudoScope() {
 		this(IScope.NULLSCOPE);
+	}
+
+	@Override
+	public IScope decorate(DataCollector dataCollector) {
+		return new DynamicPseudoScope(MeasurableScope.decorate(parent, dataCollector));
 	}
 
 	@Override

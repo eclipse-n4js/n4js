@@ -16,6 +16,8 @@ import static java.util.Collections.emptyList;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.n4js.scoping.smith.MeasurableScope;
+import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.ISelectable;
@@ -25,7 +27,7 @@ import org.eclipse.xtext.scoping.impl.ImportNormalizer;
 import org.eclipse.xtext.scoping.impl.ImportScope;
 
 /** Custom import scope that does not trigger resolving imported elements. */
-class NonResolvingImportScope extends ImportScope {
+class NonResolvingImportScope extends ImportScope implements MeasurableScope {
 
 	private List<ImportNormalizer> myNormalizers;
 	private final EClass myType;
@@ -34,6 +36,12 @@ class NonResolvingImportScope extends ImportScope {
 			EClass type, boolean ignoreCase) {
 		super(namespaceResolvers, parent, importFrom, type, ignoreCase);
 		this.myType = type;
+	}
+
+	@Override
+	public IScope decorate(DataCollector dataCollector) {
+		return new NonResolvingImportScope(myNormalizers, MeasurableScope.decorate(getParent(), dataCollector),
+				getImportFrom(), myType, isIgnoreCase());
 	}
 
 	@Override

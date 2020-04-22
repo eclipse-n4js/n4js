@@ -18,6 +18,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.extensions.ExpressionExtensions;
+import org.eclipse.n4js.scoping.smith.MeasurableScope;
 import org.eclipse.n4js.scoping.utils.UnsatisfiedRWAccessDescription;
 import org.eclipse.n4js.scoping.utils.WrongStaticAccessDescription;
 import org.eclipse.n4js.scoping.utils.WrongWriteAccessDescription;
@@ -41,7 +42,7 @@ import com.google.common.collect.Iterables;
  * Base class for real {@link MemberScope}. It allows access to members of a container type, taking static access and
  * read- or write-access into account.
  */
-public abstract class AbstractMemberScope extends AbstractScope {
+public abstract class AbstractMemberScope extends AbstractScope implements MeasurableScope {
 
 	/**
 	 * The context, usually a property access expression

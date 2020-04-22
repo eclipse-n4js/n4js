@@ -58,5 +58,4 @@ public class EmptyScope implements IScope {
 	public Iterable<IEObjectDescription> getAllElements() {
 		return parent.getAllElements();
 	}
-
 }

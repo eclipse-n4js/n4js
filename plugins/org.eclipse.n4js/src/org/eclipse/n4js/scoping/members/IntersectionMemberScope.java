@@ -10,8 +10,11 @@
  */
 package org.eclipse.n4js.scoping.members;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.n4js.scoping.smith.MeasurableScope;
+import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
@@ -32,6 +35,15 @@ public class IntersectionMemberScope extends ComposedMemberScope {
 	public IntersectionMemberScope(ComposedTypeRef composedTypeRef, MemberScopeRequest request, List<IScope> subScopes,
 			N4JSTypeSystem ts) {
 		super(composedTypeRef, request, subScopes, ts);
+	}
+
+	@Override
+	public IScope decorate(DataCollector dataCollector) {
+		List<IScope> sub = new ArrayList<>();
+		for (IScope s : subScopes) {
+			sub.add(MeasurableScope.decorate(s, dataCollector));
+		}
+		return new IntersectionMemberScope(composedTypeRef, request, sub, ts);
 	}
 
 	@Override
