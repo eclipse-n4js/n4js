@@ -19,9 +19,9 @@ public class N4jscExitState {
 	/** Singleton for plain success state without message for the user. */
 	final static public N4jscExitState SUCCESS = new N4jscExitState(N4jscExitCode.SUCCESS, true, null);
 
-	final N4jscExitCode exitCode;
-	final boolean suppressUserMessage;
-	final String message;
+	final private N4jscExitCode exitCode;
+	final private boolean suppressUserMessage;
+	final private String message;
 
 	/** Constructor */
 	public N4jscExitState(N4jscExitCode exitCode, boolean suppressUserMessage, String message) {
@@ -38,6 +38,11 @@ public class N4jscExitState {
 	/** Constructor. Message is null. */
 	public N4jscExitState(N4jscExitCode exitCode) {
 		this(exitCode, null);
+	}
+
+	/** @return the {@link N4jscExitCode} */
+	public N4jscExitCode getExitCode() {
+		return this.exitCode;
 	}
 
 	/** @return a message string for user output */

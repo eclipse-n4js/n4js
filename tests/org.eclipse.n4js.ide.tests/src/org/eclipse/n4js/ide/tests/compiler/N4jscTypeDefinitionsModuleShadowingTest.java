@@ -53,7 +53,7 @@ public class N4jscTypeDefinitionsModuleShadowingTest extends AbstractCliCompileT
 	 */
 	@Test
 	public void testSimpleTypeDefsShadowing() {
-		CliCompileResult cliResult = n4jsc(COMPILE(workspace), VALIDATION_ERRORS.getExitCodeValue());
+		CliCompileResult cliResult = n4jsc(COMPILE(workspace), VALIDATION_ERRORS);
 
 		Collection<String> fileNames = cliResult.getTranspiledFileNames();
 

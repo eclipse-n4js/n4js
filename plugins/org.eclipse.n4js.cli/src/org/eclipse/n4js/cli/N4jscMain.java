@@ -67,7 +67,7 @@ public class N4jscMain {
 			if (options.isVerbose() || !exitState.isSuppressUserMessage()) {
 				N4jscConsole.println(exitState.toUserString());
 			}
-			System.exit(exitState.exitCode.getExitCodeValue());
+			System.exit(exitState.getExitCode().getExitCodeValue());
 
 		} catch (N4jscException e) {
 			N4jscConsole.println(e.toUserString());
