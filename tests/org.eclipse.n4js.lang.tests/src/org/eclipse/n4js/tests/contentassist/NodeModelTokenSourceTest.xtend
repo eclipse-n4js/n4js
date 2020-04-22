@@ -338,9 +338,9 @@ class NodeModelTokenSourceTest implements Procedures.Procedure1<Integer> {
 		}
 		val mappingSource = {
 			if (cursor == -1) {
-				node.toTokenSource
+				node.toTokenSource(false)
 			} else {
-				node.toTokenSource(cursor)
+				node.toTokenSource(cursor, false)
 			}
 		}
 		val actual = newArrayList

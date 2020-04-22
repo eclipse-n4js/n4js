@@ -207,7 +207,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
     public String getGrammarFileName() { return "InternalN4JSParser.g"; }
     protected void setInRegularExpression() {}
     protected void setInTemplateSegment() {}
-    protected boolean forcedRewind(int marker, boolean advance) { return true; } // overridden in subtype
+    protected boolean forcedRewind(int position) { return true; } // overridden in subtype
     protected void promoteEOL() {} // overridden in subtype
     protected void addASIMessage() {} // overridden in subtype
     protected boolean hasDisallowedEOL() { return false; } // overridden in subtype
@@ -38375,7 +38375,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
         Token kw=null;
          enterRule();
-        		int marker = input.mark();
+        		int position = input.index();
         		promoteEOL();    
         try {
             int alt427=3;
@@ -38408,7 +38408,6 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     {
                     kw=(Token)match(input,Semicolon,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
-                          	forcedRewind(marker, true);
                               current.merge(kw);
                               newLeafNode(kw, grammarAccess.getSemiAccess().getSemicolonKeyword()); 
                     }
@@ -38428,7 +38427,6 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     }
                     if ( state.backtracking==0 ) {
                               addASIMessage();
-                              forcedRewind(marker, true);
                               current.merge(kw);
                               newLeafNode(kw, grammarAccess.getSemiAccess().getSemicolonKeyword()); 
                     }
@@ -38437,15 +38435,15 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 case 3 :
                     {
                     match(input,RightCurlyBracket,FOLLOW_2); if (state.failed) return current;
-                    if ( !(( forcedRewind(marker, false) )) ) {
+                    if ( !(( forcedRewind(position) )) ) {
                         if (state.backtracking>0) {state.failed=true; return current;}
-                        throw new FailedPredicateException(input, "ruleSemi", " forcedRewind(marker, false) ");
+                        throw new FailedPredicateException(input, "ruleSemi", " forcedRewind(position) ");
                     }
                     }
                     break;
             }
             if ( state.backtracking==0 ) {
-               leaveRule(); 
+              		leaveRule(); 
             }
         }
             catch (RecognitionException re) {

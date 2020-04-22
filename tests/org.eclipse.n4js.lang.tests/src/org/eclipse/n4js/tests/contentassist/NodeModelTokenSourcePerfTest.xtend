@@ -65,7 +65,7 @@ class NodeModelTokenSourcePerfTest {
 	@Test
 	def void test_nodes_1000() {
 		(1..1000).forEach [
-			val source = node.toTokenSource
+			val source = node.toTokenSource(false)
 			while(Token.EOF_TOKEN !== source.nextToken) {}
 		]
 	}

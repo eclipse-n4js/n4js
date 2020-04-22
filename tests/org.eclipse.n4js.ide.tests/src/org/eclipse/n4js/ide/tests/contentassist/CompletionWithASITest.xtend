@@ -12,7 +12,6 @@ package org.eclipse.n4js.ide.tests.contentassist;
 import java.util.List
 import org.eclipse.n4js.ide.tests.server.AbstractCompletionTest
 import org.junit.Test
-import org.junit.Ignore
 
 /**
  * Code completion tests to ensure the correct behavior in the presence and absence of 
@@ -135,19 +134,47 @@ public class CompletionWithASITest extends AbstractCompletionTest {
 		''');
 	}
 	
-	@Ignore("Error recovery from ContentAssist must be improved")
 	@Test
 	def void test08() {
 		testAtCursor('''
 			import * as N from "ImportMe";
 			N.A01
-			N. // syntax error on purpose
+			N.
+			A<|>
+		''', ''' 
+			(A01, Class, ImportMe, , , 00000, , , , ([3:0 - 3:1], A01), [], [], , )
+			(A02, Class, ImportMe, , , 00001, , , , ([3:0 - 3:1], A02), [], [], , )
+			(A03, Class, ImportMe, , , 00002, , , , ([3:0 - 3:1], A03), [], [], , )
+			(A04, Class, ImportMe, , , 00003, , , , ([3:0 - 3:1], A04), [], [], , )
+		''');
+	}
+	
+	@Test
+	def void test09() {
+		testAtCursor('''
+			import * as N from "ImportMe";
+			N.A01
+			N
+			.A<|>
+		''', ''' 
+			(A01, Class, ImportMe, , , 00000, , , , ([3:1 - 3:2], A01), [], [], , )
+			(A02, Class, ImportMe, , , 00001, , , , ([3:1 - 3:2], A02), [], [], , )
+			(A03, Class, ImportMe, , , 00002, , , , ([3:1 - 3:2], A03), [], [], , )
+			(A04, Class, ImportMe, , , 00003, , , , ([3:1 - 3:2], A04), [], [], , )
+		''');
+	}
+	
+	@Test
+	def void test10() {
+		testAtCursor('''
+			import * as N from "ImportMe";
+			N.A01 /* syntax errors on purpose */ garbage
 			N.A<|>
 		''', ''' 
-			(A01, Class, ImportMe, , , 00000, , , , ([3:2 - 3:3], A01), [], [], , )
-			(A02, Class, ImportMe, , , 00001, , , , ([3:2 - 3:3], A02), [], [], , )
-			(A03, Class, ImportMe, , , 00002, , , , ([3:2 - 3:3], A03), [], [], , )
-			(A04, Class, ImportMe, , , 00003, , , , ([3:2 - 3:3], A04), [], [], , )
+			(A01, Class, ImportMe, , , 00000, , , , ([2:2 - 2:3], A01), [], [], , )
+			(A02, Class, ImportMe, , , 00001, , , , ([2:2 - 2:3], A02), [], [], , )
+			(A03, Class, ImportMe, , , 00002, , , , ([2:2 - 2:3], A03), [], [], , )
+			(A04, Class, ImportMe, , , 00003, , , , ([2:2 - 2:3], A04), [], [], , )
 		''');
 	}
 

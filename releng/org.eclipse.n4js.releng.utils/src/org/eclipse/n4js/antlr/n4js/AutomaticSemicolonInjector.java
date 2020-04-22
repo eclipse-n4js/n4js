@@ -62,7 +62,7 @@ public class AutomaticSemicolonInjector implements CodeIntoGrammarInjector {
 		return replace(grammarContent, "@members {",
 				"@members {\n\n" +
 						"// injected by AutomaticSemicolonInjector\n" +
-						"protected boolean forcedRewind(int marker, boolean advance) { return true; } // overridden in subtype\n" +
+						"protected boolean forcedRewind(int position) { return true; } // overridden in subtype\n" +
 						"protected void promoteEOL() {} // overridden in subtype\n" +
 						"protected void addASIMessage() {} // overridden in subtype\n" +
 						"protected boolean hasDisallowedEOL() { return false; } // overridden in subtype\n" +

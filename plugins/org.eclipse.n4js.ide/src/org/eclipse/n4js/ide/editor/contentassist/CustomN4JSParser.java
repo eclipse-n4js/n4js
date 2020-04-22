@@ -146,12 +146,12 @@ public class CustomN4JSParser extends N4JSParser implements IPartialContentAssis
 		return getFollowElements(parseResult.getRootNode(), startOffset, endOffset, strict);
 	}
 
+	/* This is run in parallel thus it cannot be easily tracked with a data collector */
 	@Override
 	public Collection<FollowElement> getFollowElements(IParseResult parseResult, int offset, boolean strict) {
 		try (Measurement m = dataCollectors.dcParseContexts().getMeasurement()) {
-
 			Set<FollowElement> result = Sets.newLinkedHashSet();
-			TokenSource tokenSource = tokenSourceFactory.toTokenSource(parseResult.getRootNode(), 0, offset);
+			TokenSource tokenSource = tokenSourceFactory.toTokenSource(parseResult.getRootNode(), 0, offset, true);
 			CustomInternalN4JSParser parser = collectFollowElements(tokenSource, strict, result);
 			adjustASIAndCollectFollowElements(parser, strict, result);
 
@@ -183,7 +183,8 @@ public class CustomN4JSParser extends N4JSParser implements IPartialContentAssis
 	 * direction, e.g if it does not end with an ASI but the prev token suggests that there may have been a semicolon,
 	 * it is inserted.
 	 */
-	private void adjustASIAndCollectFollowElements(CustomInternalN4JSParser previousParser, boolean strict,
+	private void adjustASIAndCollectFollowElements(CustomInternalN4JSParser previousParser,
+			boolean strict,
 			Set<FollowElement> result) {
 		ObservableXtextTokenStream tokens = (ObservableXtextTokenStream) previousParser.getTokenStream();
 		int lastTokenIndex = tokens.size() - 1;
@@ -272,7 +273,8 @@ public class CustomN4JSParser extends N4JSParser implements IPartialContentAssis
 	/**
 	 * Create a fresh parser instance and process the tokens for a second pass.
 	 */
-	private Collection<FollowElement> resetAndGetFollowElements(ObservableXtextTokenStream tokens, boolean strict) {
+	private Collection<FollowElement> resetAndGetFollowElements(ObservableXtextTokenStream tokens,
+			boolean strict) {
 		CustomInternalN4JSParser parser = createParser();
 		parser.setStrict(strict);
 		tokens.reset();
@@ -283,7 +285,9 @@ public class CustomN4JSParser extends N4JSParser implements IPartialContentAssis
 	 * First pass. Use the tokens that have been computed from the production parser's result and collect the follow
 	 * elements from those.
 	 */
-	private CustomInternalN4JSParser collectFollowElements(TokenSource tokens, boolean strict,
+	private CustomInternalN4JSParser collectFollowElements(
+			TokenSource tokens,
+			boolean strict,
 			Set<FollowElement> result) {
 		CustomInternalN4JSParser parser = createParser();
 		parser.setStrict(strict);
@@ -302,7 +306,8 @@ public class CustomN4JSParser extends N4JSParser implements IPartialContentAssis
 	/**
 	 * Initialize the parser properly with the given tokens and process it.
 	 */
-	private Collection<FollowElement> doGetFollowElements(AbstractInternalContentAssistParser parser,
+	private Collection<FollowElement> doGetFollowElements(
+			AbstractInternalContentAssistParser parser,
 			ObservableXtextTokenStream tokens) {
 		tokens.setInitialHiddenTokens(getInitialHiddenTokens());
 		parser.setTokenStream(tokens);
