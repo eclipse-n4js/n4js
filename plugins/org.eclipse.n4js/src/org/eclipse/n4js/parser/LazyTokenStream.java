@@ -94,6 +94,15 @@ public class LazyTokenStream extends XtextTokenStream {
 	}
 
 	/**
+	 * Drop the given marker but keep the current pointer where it is.
+	 */
+	public void rewindAndKeepIndex(int marker) {
+		int current = this.p;
+		rewind(marker);
+		this.p = current;
+	}
+
+	/**
 	 * Continue filling the buffer.
 	 */
 	public void fillBuffer(int lookAhead) {

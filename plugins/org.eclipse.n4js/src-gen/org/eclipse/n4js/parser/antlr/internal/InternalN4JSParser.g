@@ -37,7 +37,7 @@ import org.eclipse.n4js.services.N4JSGrammarAccess;
 // injected by AutomaticSemicolonInjector
 protected void setInRegularExpression() {}
 protected void setInTemplateSegment() {}
-protected boolean forcedRewind(int marker) { return true; } // overridden in subtype
+protected boolean forcedRewind(int marker, boolean advance) { return true; } // overridden in subtype
 protected void promoteEOL() {} // overridden in subtype
 protected void addASIMessage() {} // overridden in subtype
 protected boolean hasDisallowedEOL() { return false; } // overridden in subtype
@@ -27262,6 +27262,7 @@ ruleSemi returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
 
 	kw=Semicolon
     {
+    	forcedRewind(marker, true);
         $current.merge(kw);
         newLeafNode(kw, grammarAccess.getSemiAccess().getSemicolonKeyword()); 
     }
@@ -27273,10 +27274,11 @@ ruleSemi returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
    )
     {
         addASIMessage();
+        forcedRewind(marker, true);
         $current.merge(kw);
         newLeafNode(kw, grammarAccess.getSemiAccess().getSemicolonKeyword()); 
     }
-    | RightCurlyBracket { forcedRewind(marker) }?
+    | RightCurlyBracket { forcedRewind(marker, false) }?
     ;
 // REPLACEMENT ruleSemi.g.replacement END
 

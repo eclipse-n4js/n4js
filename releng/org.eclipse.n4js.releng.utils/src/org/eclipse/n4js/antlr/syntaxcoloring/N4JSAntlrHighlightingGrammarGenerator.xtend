@@ -99,7 +99,7 @@ class N4JSAntlrHighlightingGrammarGenerator extends AbstractAntlrGrammarWithActi
 		        this.grammarAccess = grammarAccess;
 		    }
 
-			protected boolean forcedRewind(int marker) { return true; } // overridden in subtype
+			protected boolean forcedRewind(int marker, boolean advance) { return true; } // overridden in subtype
 			protected void promoteEOL() {} // overridden in subtype
 			protected boolean hasDisallowedEOL() { return false; } // overridden in subtype
 			protected boolean isTypeRefNoTrailingLineBreak() { return true; } // overridden in subtype
@@ -238,10 +238,10 @@ class N4JSAntlrHighlightingGrammarGenerator extends AbstractAntlrGrammarWithActi
 			 IF supportActions» {
 				announce($«originalElement.gaElementIdentifier», grammarAccess.«originalElement.gaRuleElementAccessor()»);
 			}«ENDIF»
-			| EOF
-			| RULE_EOL
-			| RULE_ML_COMMENT
-			| RightCurlyBracket { forcedRewind(marker) }?
+			| EOF { forcedRewind(marker, true) }?
+			| RULE_EOL { forcedRewind(marker, true) }?
+			| RULE_ML_COMMENT { forcedRewind(marker, true) }?
+			| RightCurlyBracket { forcedRewind(marker, false) }?
 		«ELSE»
 			«IF supportActions»«originalElement.gaElementIdentifier»=«ENDIF»«
 			 keywordHelper.getRuleName(value)»«

@@ -25,6 +25,7 @@ ruleSemi returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
 
 	kw=Semicolon
     {
+    	forcedRewind(marker, true);
         $current.merge(kw);
         newLeafNode(kw, grammarAccess.getSemiAccess().getSemicolonKeyword()); 
     }
@@ -36,9 +37,10 @@ ruleSemi returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
    )
     {
         addASIMessage();
+        forcedRewind(marker, true);
         $current.merge(kw);
         newLeafNode(kw, grammarAccess.getSemiAccess().getSemicolonKeyword()); 
     }
-    | RightCurlyBracket { forcedRewind(marker) }?
+    | RightCurlyBracket { forcedRewind(marker, false) }?
     ;
 // REPLACEMENT ruleSemi.g.replacement END
