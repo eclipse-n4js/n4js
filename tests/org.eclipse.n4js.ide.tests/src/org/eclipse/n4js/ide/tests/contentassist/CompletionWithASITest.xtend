@@ -15,7 +15,8 @@ import org.junit.Test
 import org.junit.Ignore
 
 /**
- * Code completion tests for scenarios that also might add an import statement 
+ * Code completion tests to ensure the correct behavior in the presence and absence of 
+ * automatically inserted semicolons (ASI). 
  */
 public class CompletionWithASITest extends AbstractCompletionTest {
 
