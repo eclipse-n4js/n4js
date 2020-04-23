@@ -19,7 +19,7 @@ class IncrementalBuilderIndirectDependencyTest extends AbstractIncrementalBuilde
 
 	@Test
 	def void testIndirectDependencyThroughInheritance() {
-		workspaceCreator.createTestProjectOnDisk(
+		testWorkspaceManager.createTestProjectOnDisk(
 			"A" -> '''
 				export public class A {
 				    public m() {}
@@ -69,7 +69,7 @@ class IncrementalBuilderIndirectDependencyTest extends AbstractIncrementalBuilde
 
 	@Test
 	def void testIndirectDependencyThroughInferredTypeOfExportedVariable_Part1() {
-		workspaceCreator.createTestProjectOnDisk(
+		testWorkspaceManager.createTestProjectOnDisk(
 			"A" -> '''
 				export public var a: string;
 			''',
@@ -100,7 +100,7 @@ class IncrementalBuilderIndirectDependencyTest extends AbstractIncrementalBuilde
 
 	@Test
 	def void testIndirectDependencyThroughInferredTypeOfExportedVariable_Part2() {
-		workspaceCreator.createTestProjectOnDisk(
+		testWorkspaceManager.createTestProjectOnDisk(
 			"A" -> '''
 				export public var a: string;
 			''',

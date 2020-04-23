@@ -18,7 +18,7 @@ import java.util.Arrays
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.ide.tests.server.AbstractIdeTest
-import org.eclipse.n4js.ide.tests.server.TestWorkspaceCreator
+import org.eclipse.n4js.ide.tests.server.TestWorkspaceManager
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig
 import org.junit.Assert
 
@@ -36,7 +36,7 @@ abstract class AbstractIncrementalBuilderTest extends AbstractIdeTest {
 	}
 
 	def protected File getOutputFile(String moduleName) {
-		return getOutputFile(TestWorkspaceCreator.DEFAULT_PROJECT_NAME, moduleName);
+		return getOutputFile(TestWorkspaceManager.DEFAULT_PROJECT_NAME, moduleName);
 	}
 
 	def protected File getOutputFile(String projectName, String moduleName) {
@@ -44,7 +44,7 @@ abstract class AbstractIncrementalBuilderTest extends AbstractIdeTest {
 	}
 
 	def protected File getProjectStateFile() {
-		return getProjectStateFile(TestWorkspaceCreator.DEFAULT_PROJECT_NAME);
+		return getProjectStateFile(TestWorkspaceManager.DEFAULT_PROJECT_NAME);
 	}
 
 	def protected File getProjectStateFile(String projectName) {
@@ -52,7 +52,7 @@ abstract class AbstractIncrementalBuilderTest extends AbstractIdeTest {
 	}
 
 	def protected void assertOutputFileExists(String moduleName) {
-		assertOutputFileExists(TestWorkspaceCreator.DEFAULT_PROJECT_NAME, moduleName);
+		assertOutputFileExists(TestWorkspaceManager.DEFAULT_PROJECT_NAME, moduleName);
 	}
 
 	def protected void assertOutputFileExists(String projectName, String moduleName) {
@@ -61,7 +61,7 @@ abstract class AbstractIncrementalBuilderTest extends AbstractIdeTest {
 	}
 
 	def protected FileSnapshot createSnapshotForOutputFile(String moduleName) {
-		return createSnapshotForOutputFile(TestWorkspaceCreator.DEFAULT_PROJECT_NAME, moduleName);
+		return createSnapshotForOutputFile(TestWorkspaceManager.DEFAULT_PROJECT_NAME, moduleName);
 	}
 
 	def protected FileSnapshot createSnapshotForOutputFile(String projectName, String moduleName) {
@@ -69,7 +69,7 @@ abstract class AbstractIncrementalBuilderTest extends AbstractIdeTest {
 	}
 
 	def protected FileSnapshot createSnapshotForProjectStateFile() {
-		return createSnapshotForProjectStateFile(TestWorkspaceCreator.DEFAULT_PROJECT_NAME);
+		return createSnapshotForProjectStateFile(TestWorkspaceManager.DEFAULT_PROJECT_NAME);
 	}
 
 	def protected FileSnapshot createSnapshotForProjectStateFile(String projectName) {

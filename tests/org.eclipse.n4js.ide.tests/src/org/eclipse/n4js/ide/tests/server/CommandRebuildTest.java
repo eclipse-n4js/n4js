@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.ide.tests.server;
 
-import static org.eclipse.n4js.ide.tests.server.TestWorkspaceCreator.DEFAULT_PROJECT_NAME;
+import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.DEFAULT_PROJECT_NAME;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
@@ -129,7 +129,7 @@ public class CommandRebuildTest extends AbstractStructuredIdeTest<Void> {
 	 */
 	@Test
 	public void testPublishDiagnosticsSentForModuleWithoutIssues() {
-		workspaceCreator.createTestProjectOnDisk(Pair.of("Main", "let x: string = 42; x;"));
+		testWorkspaceManager.createTestProjectOnDisk(Pair.of("Main", "let x: string = 42; x;"));
 		startAndWaitForLspServer();
 
 		assertIssues(Pair.of("Main", Lists.newArrayList(

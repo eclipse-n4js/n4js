@@ -10,11 +10,11 @@
  */
 package org.eclipse.n4js.ide.tests.server;
 
-import static org.eclipse.n4js.ide.tests.server.TestWorkspaceCreator.DEFAULT_MODULE_NAME;
-import static org.eclipse.n4js.ide.tests.server.TestWorkspaceCreator.DEFAULT_PROJECT_NAME;
-import static org.eclipse.n4js.ide.tests.server.TestWorkspaceCreator.DEPENDENCIES;
-import static org.eclipse.n4js.ide.tests.server.TestWorkspaceCreator.N4JS_RUNTIME;
-import static org.eclipse.n4js.ide.tests.server.TestWorkspaceCreator.NODE_MODULES;
+import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.DEFAULT_MODULE_NAME;
+import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.DEFAULT_PROJECT_NAME;
+import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.DEPENDENCIES;
+import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.N4JS_RUNTIME;
+import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.NODE_MODULES;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -108,7 +108,7 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 	 * {@link #getDefaultTestProject()} respectively.
 	 */
 	protected void testInDefaultWorkspace(String content, T t) {
-		String nameWithSelector = DEFAULT_MODULE_NAME + TestWorkspaceCreator.MODULE_SELECTOR;
+		String nameWithSelector = DEFAULT_MODULE_NAME + TestWorkspaceManager.MODULE_SELECTOR;
 		Pair<String, String> moduleContents = Pair.of(nameWithSelector, content);
 
 		boolean moduleAdded = false;
@@ -116,7 +116,7 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 			List<Pair<String, List<Pair<String, String>>>> workspace = getDefaultTestWorkspace();
 			for (Pair<String, List<Pair<String, String>>> project : workspace) {
 				String projectName = project.getKey();
-				if (projectName.endsWith(TestWorkspaceCreator.MODULE_SELECTOR)) {
+				if (projectName.endsWith(TestWorkspaceManager.MODULE_SELECTOR)) {
 					List<Pair<String, String>> modulesPlusMyModule = new ArrayList<>(project.getValue());
 					modulesPlusMyModule.add(moduleContents);
 					try {
@@ -131,7 +131,7 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 			}
 
 			if (!moduleAdded) {
-				throw new IllegalStateException("No project selected. Use " + TestWorkspaceCreator.MODULE_SELECTOR);
+				throw new IllegalStateException("No project selected. Use " + TestWorkspaceManager.MODULE_SELECTOR);
 			}
 
 			testWS(workspace, t);
@@ -180,8 +180,8 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 	 *            will be passed to {@link #performTest(Project, String, Object)}.
 	 */
 	protected Project test(String moduleName, String contents, T t) {
-		moduleName = workspaceCreator.getModuleNameOrDefault(moduleName);
-		String nameWithSelector = moduleName + TestWorkspaceCreator.MODULE_SELECTOR;
+		moduleName = testWorkspaceManager.getModuleNameOrDefault(moduleName);
+		String nameWithSelector = moduleName + TestWorkspaceManager.MODULE_SELECTOR;
 		ArrayList<Pair<String, String>> srcFileNameToContents = Lists.newArrayList(Pair.of(nameWithSelector, contents));
 		return test(srcFileNameToContents, t);
 	}
@@ -190,7 +190,7 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 	 * Same as {@link #testWS(List, Object)}, but creates a default project with name {@link #DEFAULT_PROJECT_NAME}.
 	 * Also creates project {@link #N4JS_RUNTIME} and a dependency from default project to n4js-runtime.
 	 * <p>
-	 * One module has to be selected using {@link TestWorkspaceCreator#MODULE_SELECTOR}
+	 * One module has to be selected using {@link TestWorkspaceManager#MODULE_SELECTOR}
 	 *
 	 * @param modulesContents
 	 *            pairs that map module names to their contents
@@ -212,12 +212,12 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 	 * Same as {@link #test(LinkedHashMap, String, String, Object)}, but name and content of the modules can be provided
 	 * as {@link Pair pairs}.
 	 * <p>
-	 * Finds the selected project and module using the {@link TestWorkspaceCreator#MODULE_SELECTOR} and removes the
+	 * Finds the selected project and module using the {@link TestWorkspaceManager#MODULE_SELECTOR} and removes the
 	 * selector.
 	 */
 	protected Project testWS(List<Pair<String, List<Pair<String, String>>>> projectsModulesContents, T t) {
 		LinkedHashMap<String, Map<String, String>> projectsModulesContentsAsMap = new LinkedHashMap<>();
-		Pair<String, String> selection = TestWorkspaceCreator
+		Pair<String, String> selection = TestWorkspaceManager
 				.convertProjectsModulesContentsToMap(projectsModulesContents, projectsModulesContentsAsMap, true);
 		String selectedProject = selection.getKey();
 		String selectedModule = selection.getValue();
@@ -241,7 +241,7 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 	protected Project test(LinkedHashMap<String, Map<String, String>> projectsModulesContents, String projectPath,
 			String moduleName, T t) {
 
-		Project project = workspaceCreator.createTestOnDisk(projectsModulesContents);
+		Project project = testWorkspaceManager.createTestOnDisk(projectsModulesContents);
 		startAndWaitForLspServer();
 		openFile(moduleName);
 		try {

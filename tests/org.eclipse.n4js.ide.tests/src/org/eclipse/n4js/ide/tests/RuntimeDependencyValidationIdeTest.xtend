@@ -81,7 +81,7 @@ class RuntimeDependencyValidationIdeTest extends AbstractIdeTest {
 	@Test
 	def void testIllegalImportOfLoadtimeTarget() {
 
-		workspaceCreator.createTestProjectOnDisk(defaultTestCode);
+		testWorkspaceManager.createTestProjectOnDisk(defaultTestCode);
 		startAndWaitForLspServer();
 
 		assertIssues(defaultExpectedIssues);
@@ -90,7 +90,7 @@ class RuntimeDependencyValidationIdeTest extends AbstractIdeTest {
 	@Test
 	def void testHealingThroughPreceedingImports_nonBareImport() {
 		
-		workspaceCreator.createTestProjectOnDisk(defaultTestCode);
+		testWorkspaceManager.createTestProjectOnDisk(defaultTestCode);
 		startAndWaitForLspServer();
 
 		assertIssues(defaultExpectedIssues);
@@ -117,7 +117,7 @@ class RuntimeDependencyValidationIdeTest extends AbstractIdeTest {
 	@Test
 	def void testHealingThroughPreceedingImports_bareImport() {
 		
-		workspaceCreator.createTestProjectOnDisk(defaultTestCode);
+		testWorkspaceManager.createTestProjectOnDisk(defaultTestCode);
 		startAndWaitForLspServer();
 
 		assertIssues(defaultExpectedIssues);
@@ -143,7 +143,7 @@ class RuntimeDependencyValidationIdeTest extends AbstractIdeTest {
 	@Test
 	def void testHealingThroughPreceedingImports_unusedImport() {
 		
-		workspaceCreator.createTestProjectOnDisk(defaultTestCode);
+		testWorkspaceManager.createTestProjectOnDisk(defaultTestCode);
 		startAndWaitForLspServer();
 
 		assertIssues(defaultExpectedIssues);
@@ -168,7 +168,7 @@ class RuntimeDependencyValidationIdeTest extends AbstractIdeTest {
 	@Test
 	def void testHealingThroughPreceedingImports_nonRetainedImport01() {
 		
-		workspaceCreator.createTestProjectOnDisk(defaultTestCode);
+		testWorkspaceManager.createTestProjectOnDisk(defaultTestCode);
 		startAndWaitForLspServer();
 
 		assertIssues(defaultExpectedIssues);
@@ -187,7 +187,7 @@ class RuntimeDependencyValidationIdeTest extends AbstractIdeTest {
 	@Test
 	def void testHealingThroughPreceedingImports_nonRetainedImport02() {
 		
-		workspaceCreator.createTestProjectOnDisk(defaultTestCode);
+		testWorkspaceManager.createTestProjectOnDisk(defaultTestCode);
 		startAndWaitForLspServer();
 
 		assertIssues(defaultExpectedIssues);
@@ -205,7 +205,7 @@ class RuntimeDependencyValidationIdeTest extends AbstractIdeTest {
 	@Test
 	def void testLoadtimeDependencyConflict() {
 
-		workspaceCreator.createTestProjectOnDisk(defaultTestCode);
+		testWorkspaceManager.createTestProjectOnDisk(defaultTestCode);
 		startAndWaitForLspServer();
 
 		assertIssues(defaultExpectedIssues);
@@ -271,7 +271,7 @@ class RuntimeDependencyValidationIdeTest extends AbstractIdeTest {
 			}
 		];
 
-		workspaceCreator.createTestProjectOnDisk(testCodeWithLoadtimeCycle);
+		testWorkspaceManager.createTestProjectOnDisk(testCodeWithLoadtimeCycle);
 		startAndWaitForLspServer();
 
 		assertIssues(
@@ -330,7 +330,7 @@ class RuntimeDependencyValidationIdeTest extends AbstractIdeTest {
 			}
 		];
 
-		workspaceCreator.createTestProjectOnDisk(testCodeWithIllegalLoadtimeReferences);
+		testWorkspaceManager.createTestProjectOnDisk(testCodeWithIllegalLoadtimeReferences);
 		startAndWaitForLspServer();
 
 		val expectedIssuesWithIllegalLoadtimeReferences = defaultExpectedIssues + #[
@@ -372,7 +372,7 @@ class RuntimeDependencyValidationIdeTest extends AbstractIdeTest {
 	@Test
 	def void testIncrementalBuild01_openCloseRuntimeCycle() {
 
-		workspaceCreator.createTestProjectOnDisk(defaultTestCode);
+		testWorkspaceManager.createTestProjectOnDisk(defaultTestCode);
 		startAndWaitForLspServer();
 
 		assertIssues(defaultExpectedIssues);
@@ -393,7 +393,7 @@ class RuntimeDependencyValidationIdeTest extends AbstractIdeTest {
 	@Test
 	def void testIncrementalBuild02_addRemoveLoadtimeDependency() {
 
-		workspaceCreator.createTestProjectOnDisk(defaultTestCode);
+		testWorkspaceManager.createTestProjectOnDisk(defaultTestCode);
 		startAndWaitForLspServer();
 
 		assertIssues(defaultExpectedIssues);

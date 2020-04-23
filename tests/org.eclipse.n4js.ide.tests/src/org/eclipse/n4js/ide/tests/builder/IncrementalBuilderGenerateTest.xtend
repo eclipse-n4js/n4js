@@ -12,7 +12,7 @@ package org.eclipse.n4js.ide.tests.builder
 
 import org.junit.Test
 
-import static org.eclipse.n4js.ide.tests.server.TestWorkspaceCreator.*
+import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.*
 import static org.junit.Assert.*
 
 /**
@@ -44,7 +44,7 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 
 	@Test
 	def void testChangeInNonOpenedFile_whileWorkspaceIsInCleanState() {
-		workspaceCreator.createTestProjectOnDisk(
+		testWorkspaceManager.createTestProjectOnDisk(
 			"C" -> '''export public class C {}'''
 		);
 		startAndWaitForLspServer();
@@ -64,7 +64,7 @@ cleanBuildAndWait(); // FIXME GH-1728 remove!
 
 	@Test
 	def void testChangeInNonOpenedFile_whileWorkspaceIsInDirtyState() {
-		workspaceCreator.createTestProjectOnDisk(
+		testWorkspaceManager.createTestProjectOnDisk(
 			"C" -> '''export public class C {}''',
 			"D" -> '''export public class D {}'''
 		);
@@ -100,7 +100,7 @@ cleanBuildAndWait(); // FIXME GH-1728 remove!
 
 	@Test
 	def void testChangeInOpenedFile() {
-		workspaceCreator.createTestProjectOnDisk(
+		testWorkspaceManager.createTestProjectOnDisk(
 			"C" -> '''export public class C {}'''
 		);
 		startAndWaitForLspServer();
@@ -126,7 +126,7 @@ cleanBuildAndWait(); // FIXME GH-1728 remove!
 
 	@Test
 	def void testChangesInSeveralOpenedFiles_withoutDependency() {
-		workspaceCreator.createTestProjectOnDisk(
+		testWorkspaceManager.createTestProjectOnDisk(
 			"C" -> '''export public class C {}''',
 			"D" -> '''export public class D {}'''
 		);
@@ -172,7 +172,7 @@ cleanBuildAndWait(); // FIXME GH-1728 remove!
 
 	@Test
 	def void testChangesInSeveralOpenedFiles_withDependency() {
-		workspaceCreator.createTestProjectOnDisk(testDataWithDependency);
+		testWorkspaceManager.createTestProjectOnDisk(testDataWithDependency);
 		startAndWaitForLspServer();
 		assertNoIssues();
 
@@ -217,7 +217,7 @@ cleanBuildAndWait(); // FIXME GH-1728 remove!
 
 	@Test
 	def void testChangesInSeveralOpenedFiles_withDependency_reverseSaveOrder() {
-		workspaceCreator.createTestProjectOnDisk(testDataWithDependency);
+		testWorkspaceManager.createTestProjectOnDisk(testDataWithDependency);
 		startAndWaitForLspServer();
 		assertNoIssues();
 
@@ -263,7 +263,7 @@ cleanBuildAndWait(); // FIXME GH-1728 remove!
 
 	@Test
 	def void testInNodeModules_noValidation() {
-		workspaceCreator.createTestProjectOnDisk(testDataWithNodeModules);
+		testWorkspaceManager.createTestProjectOnDisk(testDataWithNodeModules);
 		startAndWaitForLspServer();
 		assertNoIssues();
 
@@ -276,7 +276,7 @@ cleanBuildAndWait(); // FIXME GH-1728 remove!
 
 	@Test
 	def void testInNodeModules_changeInNonOpenedFile() {
-		workspaceCreator.createTestProjectOnDisk(testDataWithNodeModules);
+		testWorkspaceManager.createTestProjectOnDisk(testDataWithNodeModules);
 		startAndWaitForLspServer();
 		assertNoIssues();
 
@@ -309,7 +309,7 @@ cleanBuildAndWait(); // FIXME GH-1728 remove!
 
 	@Test
 	def void testInNodeModules_changeInOpenedFile() {
-		workspaceCreator.createTestProjectOnDisk(testDataWithNodeModules);
+		testWorkspaceManager.createTestProjectOnDisk(testDataWithNodeModules);
 		startAndWaitForLspServer();
 		assertNoIssues();
 
@@ -343,7 +343,7 @@ cleanBuildAndWait(); // FIXME GH-1728 remove!
 
 	@Test
 	def void testCleanAndRebuild() {
-		workspaceCreator.createTestProjectOnDisk(testDataWithNodeModules);
+		testWorkspaceManager.createTestProjectOnDisk(testDataWithNodeModules);
 		startAndWaitForLspServer();
 		assertNoIssues();
 

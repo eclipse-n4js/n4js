@@ -56,7 +56,7 @@ class IncrementalBuilderChangesTest extends AbstractIncrementalBuilderTest {
 
 	@Test
 	def void testChangeInNonOpenedFile() {
-		workspaceCreator.createTestProjectOnDisk(testDataSingleFile);
+		testWorkspaceManager.createTestProjectOnDisk(testDataSingleFile);
 		startAndWaitForLspServer();
 		assertNoIssues();
 
@@ -73,7 +73,7 @@ class IncrementalBuilderChangesTest extends AbstractIncrementalBuilderTest {
 
 	@Test
 	def void testChangeInNonOpenedFile_acrossFiles() {
-		workspaceCreator.createTestProjectOnDisk(testDataAcrossFiles);
+		testWorkspaceManager.createTestProjectOnDisk(testDataAcrossFiles);
 		startAndWaitForLspServer();
 		assertNoIssues();
 
@@ -90,7 +90,7 @@ class IncrementalBuilderChangesTest extends AbstractIncrementalBuilderTest {
 
 	@Test
 	def void testChangeInNonOpenedFile_acrossProjects() {
-		workspaceCreator.createTestOnDisk(testDataAcrossProjects);
+		testWorkspaceManager.createTestOnDisk(testDataAcrossProjects);
 		startAndWaitForLspServer();
 		assertNoIssues();
 
@@ -109,7 +109,7 @@ cleanBuildAndWait(); // FIXME GH-1727 remove!
 
 	@Test
 	def void testChangeInOpenedFile() {
-		workspaceCreator.createTestProjectOnDisk(testDataSingleFile);
+		testWorkspaceManager.createTestProjectOnDisk(testDataSingleFile);
 		startAndWaitForLspServer();
 		assertNoIssues();
 
@@ -130,7 +130,7 @@ cleanBuildAndWait(); // FIXME GH-1727 remove!
 
 	@Test
 	def void testChangeInOpenedFile_acrossFiles() {
-		workspaceCreator.createTestProjectOnDisk(testDataAcrossFiles);
+		testWorkspaceManager.createTestProjectOnDisk(testDataAcrossFiles);
 		startAndWaitForLspServer();
 		assertNoIssues();
 
@@ -148,7 +148,7 @@ cleanBuildAndWait(); // FIXME GH-1727 remove!
 
 	@Test
 	def void testChangeInOpenedFile_acrossProjects() {
-		workspaceCreator.createTestOnDisk(testDataAcrossProjects);
+		testWorkspaceManager.createTestOnDisk(testDataAcrossProjects);
 		startAndWaitForLspServer();
 		assertNoIssues();
 

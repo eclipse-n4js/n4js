@@ -13,7 +13,7 @@ import java.util.List
 import org.eclipse.n4js.ide.tests.server.AbstractCompletionTest
 import org.junit.Test
 
-import static org.eclipse.n4js.ide.tests.server.TestWorkspaceCreator.*
+import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.*
 
 /**
  * Code completion tests for scenarios that also might add an import statement

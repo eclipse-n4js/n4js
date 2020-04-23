@@ -24,7 +24,7 @@ class IncrementalBuilderPackageJsonTest extends AbstractIncrementalBuilderTest {
 
 	@Test
 	def void testChangeInPackageJson() throws IOException {
-		workspaceCreator.createTestProjectOnDisk(
+		testWorkspaceManager.createTestProjectOnDisk(
 			"Main" -> '''
 				console.log("hello");
 			'''

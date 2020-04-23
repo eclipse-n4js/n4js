@@ -128,8 +128,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	@Inject
 	protected LanguageInfo languageInfo;
 
-	/** Utility to create the test workspace on disk */
-	protected final TestWorkspaceCreator workspaceCreator = new TestWorkspaceCreator(getProjectType());
+	/** Utility to create/delete the test workspace on disk */
+	protected final TestWorkspaceManager testWorkspaceManager = new TestWorkspaceManager(getProjectType());
 
 	/** Tracks open files, their version and their, possibly unsaved, content. */
 	private final Map<FileURI, OpenFileInfo> openFiles = new HashMap<>();
@@ -149,27 +149,27 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	/** Deletes the test project in case it exists. */
 	@After
 	final public void deleteTestProject() {
-		workspaceCreator.deleteTestFromDiskIfCreated();
+		testWorkspaceManager.deleteTestFromDiskIfCreated();
 		languageClient.clearIssues();
 		openFiles.clear();
 	}
 
 	/** @return the workspace root folder as a {@link File}. */
 	public File getRoot() {
-		return workspaceCreator.getRoot();
+		return testWorkspaceManager.getRoot();
 	}
 
 	/**
-	 * Same as {@link #getProjectRoot(String)}, but for the {@link TestWorkspaceCreator#DEFAULT_PROJECT_NAME default
+	 * Same as {@link #getProjectRoot(String)}, but for the {@link TestWorkspaceManager#DEFAULT_PROJECT_NAME default
 	 * project}.
 	 */
 	public File getProjectRoot() {
-		return workspaceCreator.getProjectRoot();
+		return testWorkspaceManager.getProjectRoot();
 	}
 
 	/** Returns the root folder of the project with the given name. */
 	public File getProjectRoot(String projectName) {
-		return workspaceCreator.getProjectRoot(projectName);
+		return testWorkspaceManager.getProjectRoot(projectName);
 	}
 
 	/** Overwrite this method to change the project type */
@@ -786,7 +786,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	/** Translates a given module name to a file URI used in LSP call data. */
 	protected FileURI getFileURIFromModuleName(String moduleName) {
-		return workspaceCreator.getFileURIFromModuleName(moduleName);
+		return testWorkspaceManager.getFileURIFromModuleName(moduleName);
 	}
 
 	/** Converts an URI string as received by the LSP server to a {@link FileURI}. */

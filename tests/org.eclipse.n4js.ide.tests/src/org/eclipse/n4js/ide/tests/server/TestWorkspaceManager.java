@@ -44,7 +44,7 @@ import com.google.common.collect.Streams;
  * <p>
  * Note the {@link Documentation}.
  */
-public class TestWorkspaceCreator {
+public class TestWorkspaceManager {
 
 	/** Special suffix to denote a "selected" module (to be appended to the module name). */
 	static final public String MODULE_SELECTOR = "*";
@@ -100,7 +100,7 @@ public class TestWorkspaceCreator {
 	/** @see #getCreatedProject() */
 	private Project createdProject;
 
-	TestWorkspaceCreator(ProjectType projectType) {
+	TestWorkspaceManager(ProjectType projectType) {
 		this.projectType = projectType;
 	}
 
