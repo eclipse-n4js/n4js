@@ -34,6 +34,6 @@ class TokenSourceFactory {
 	}
 
 	def TokenSource toTokenSource(INode node, int startOffset, int endOffset, boolean filter) {
-		return new NodeModelTokenSource(node, startOffset, endOffset, tokenTypeMapper, grammarAccess, filter)
+		return new NodeModelTokenSource(node, startOffset, endOffset, tokenTypeMapper, grammarAccess, true)
 	}
 }

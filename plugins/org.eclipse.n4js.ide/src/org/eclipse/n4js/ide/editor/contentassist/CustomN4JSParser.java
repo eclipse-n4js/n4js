@@ -13,6 +13,7 @@ package org.eclipse.n4js.ide.editor.contentassist;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -23,12 +24,21 @@ import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.RecognizerSharedState;
 import org.antlr.runtime.Token;
 import org.antlr.runtime.TokenSource;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.ide.contentassist.antlr.N4JSParser;
 import org.eclipse.n4js.ide.contentassist.antlr.internal.InternalN4JSParser;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.xtext.AbstractElement;
+import org.eclipse.xtext.AbstractRule;
+import org.eclipse.xtext.Action;
+import org.eclipse.xtext.Condition;
+import org.eclipse.xtext.GrammarUtil;
 import org.eclipse.xtext.Group;
+import org.eclipse.xtext.NamedArgument;
+import org.eclipse.xtext.Parameter;
+import org.eclipse.xtext.ParserRule;
+import org.eclipse.xtext.RuleCall;
 import org.eclipse.xtext.UnorderedGroup;
 import org.eclipse.xtext.ide.editor.contentassist.antlr.FollowElement;
 import org.eclipse.xtext.ide.editor.contentassist.antlr.IPartialContentAssistParser;
@@ -41,9 +51,12 @@ import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.parser.ParseResult;
 import org.eclipse.xtext.parser.antlr.IUnorderedGroupHelper;
+import org.eclipse.xtext.xtext.ConditionEvaluator;
+import org.eclipse.xtext.xtext.ParameterConfigHelper;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.google.common.primitives.Ints;
 import com.google.inject.Inject;
 
 /**
@@ -53,6 +66,7 @@ import com.google.inject.Inject;
  * that functionality so it doesn't need to recompute all that stuff. This allows to stick to default generated content
  * assist parser.
  */
+@SuppressWarnings("restriction")
 public class CustomN4JSParser extends N4JSParser implements IPartialContentAssistParser {
 
 	/**
@@ -109,6 +123,9 @@ public class CustomN4JSParser extends N4JSParser implements IPartialContentAssis
 	@Inject
 	private ContentAssistDataCollectors dataCollectors;
 
+	@Inject
+	private ParamAwareEntryPointFinder entryPointFinder;
+
 	/**
 	 * Token types that would require a mandatory semicolon if followed by a NL.
 	 */
@@ -151,14 +168,98 @@ public class CustomN4JSParser extends N4JSParser implements IPartialContentAssis
 	public Collection<FollowElement> getFollowElements(IParseResult parseResult, int offset, boolean strict) {
 		try (Measurement m = dataCollectors.dcParseContexts().getMeasurement()) {
 			Set<FollowElement> result = Sets.newLinkedHashSet();
-			TokenSource tokenSource = tokenSourceFactory.toTokenSource(parseResult.getRootNode(), 0, offset, true);
-			CustomInternalN4JSParser parser = collectFollowElements(tokenSource, strict, result);
-			adjustASIAndCollectFollowElements(parser, strict, result);
+			ICompositeNode entryPoint = entryPointFinder.findEntryPoint(parseResult, offset);
+			String ruleName;
+			if (entryPoint == null) {
+				entryPoint = parseResult.getRootNode();
+				ruleName = getRuleNames().getAntlrRuleName(getEntryRule());
+			} else {
+				ruleName = getRuleName(entryPoint);
+			}
+			TokenSource tokenSource = tokenSourceFactory.toTokenSource(entryPoint, entryPoint.getOffset(), offset,
+					true);
+			CustomInternalN4JSParser parser = collectFollowElements(tokenSource, ruleName, strict, result);
+			adjustASIAndCollectFollowElements(parser, ruleName, strict, result);
 
 			/*
 			 * Lists are easier to debug
 			 */
 			return Lists.newArrayList(result);
+		}
+	}
+
+	String getRuleName(ICompositeNode entryPoint) {
+		EObject grammarElement = entryPoint.getGrammarElement();
+		if (grammarElement instanceof RuleCall) {
+			RuleCall rc = (RuleCall) grammarElement;
+			AbstractRule rule = rc.getRule();
+			if (rule instanceof ParserRule) {
+				if (!GrammarUtil.isMultipleCardinality(rule.getAlternatives())) {
+					grammarElement = rule.getAlternatives();
+					String[][] names = getRequiredRuleNames(getRuleName((AbstractElement) grammarElement),
+							Ints.asList(getParamConfig(entryPoint)),
+							(AbstractElement) grammarElement);
+					return names[0][0];
+				}
+			}
+		}
+		if (grammarElement instanceof ParserRule) {
+			return getRuleName(((ParserRule) grammarElement).getAlternatives());
+		}
+		AbstractElement result = (AbstractElement) grammarElement;
+		if (result instanceof Action) {
+			return getRuleName((ICompositeNode) entryPoint.getFirstChild());
+		}
+		return getRuleName(result);
+	}
+
+	int getParamConfig(ICompositeNode node) {
+		List<RuleCall> callStack = new ArrayList<>();
+		recreateCallStack(node, callStack);
+		Set<Parameter> params = getParamConfig(callStack);
+		int result = ParameterConfigHelper.getParameterConfig(params);
+		return result;
+	}
+
+	private Set<Parameter> getParamConfig(List<RuleCall> callStack) {
+		Set<Parameter> assignedParams = new HashSet<>();
+		for (int i = callStack.size() - 1; i >= 0; i--) {
+			RuleCall rc = callStack.get(i);
+			ConditionEvaluator evaluator = new ConditionEvaluator(assignedParams);
+			assignedParams = new HashSet<>();
+			for (NamedArgument arg : rc.getArguments()) {
+				Condition value = arg.getValue();
+				if (evaluator.evaluate(value)) {
+					assignedParams.add(arg.getParameter());
+				}
+			}
+		}
+		return assignedParams;
+	}
+
+	void recreateCallStack(ICompositeNode node, List<RuleCall> stack) {
+		EObject element = node.getGrammarElement();
+		if (element instanceof RuleCall) {
+			RuleCall rc = (RuleCall) element;
+			if (rc.getArguments().isEmpty()) {
+				return;
+			}
+			stack.add(rc);
+			recreateCallStack(node.getParent(), stack);
+		} else if (element instanceof Action) {
+			INode firstChild = node.getFirstChild();
+			while (firstChild.getGrammarElement() instanceof Action) {
+				firstChild = ((ICompositeNode) firstChild).getFirstChild();
+			}
+			element = firstChild.getGrammarElement();
+			if (element instanceof RuleCall) {
+				RuleCall rc = (RuleCall) element;
+				if (rc.getArguments().isEmpty()) {
+					return;
+				}
+				stack.add(rc);
+				recreateCallStack(node.getParent(), stack);
+			}
 		}
 	}
 
@@ -184,6 +285,7 @@ public class CustomN4JSParser extends N4JSParser implements IPartialContentAssis
 	 * it is inserted.
 	 */
 	private void adjustASIAndCollectFollowElements(CustomInternalN4JSParser previousParser,
+			String ruleName,
 			boolean strict,
 			Set<FollowElement> result) {
 		ObservableXtextTokenStream tokens = (ObservableXtextTokenStream) previousParser.getTokenStream();
@@ -201,7 +303,7 @@ public class CustomN4JSParser extends N4JSParser implements IPartialContentAssis
 				// and the returned expression, there may not be an ASI. Filter these locations.
 				if (maySkipASI(lastToken, tokens)) {
 					tokenList.remove(lastTokenIndex);
-					result.addAll(resetAndGetFollowElements(tokens, strict));
+					result.addAll(resetAndGetFollowElements(tokens, ruleName, strict));
 					// If a postfix operator sneaked into the result, remove it since
 					// we'd have produce an ASI before that
 					removePostfixOperator(result);
@@ -209,7 +311,7 @@ public class CustomN4JSParser extends N4JSParser implements IPartialContentAssis
 			} else if (shouldAddSyntheticSemicolon(previousParser, lastTokenIndex, lastToken)) {
 				CommonToken token = new CommonToken(semi);
 				tokenList.add(token);
-				result.addAll(resetAndGetFollowElements(tokens, strict));
+				result.addAll(resetAndGetFollowElements(tokens, ruleName, strict));
 				// Same here, if we had added an ASI, the postfix operator would be rendered
 				// invalid, remove it.
 				removePostfixOperator(result);
@@ -274,11 +376,11 @@ public class CustomN4JSParser extends N4JSParser implements IPartialContentAssis
 	 * Create a fresh parser instance and process the tokens for a second pass.
 	 */
 	private Collection<FollowElement> resetAndGetFollowElements(ObservableXtextTokenStream tokens,
-			boolean strict) {
+			String ruleName, boolean strict) {
 		CustomInternalN4JSParser parser = createParser();
 		parser.setStrict(strict);
 		tokens.reset();
-		return doGetFollowElements(parser, tokens);
+		return doGetFollowElements(parser, tokens, ruleName);
 	}
 
 	/**
@@ -287,13 +389,14 @@ public class CustomN4JSParser extends N4JSParser implements IPartialContentAssis
 	 */
 	private CustomInternalN4JSParser collectFollowElements(
 			TokenSource tokens,
+			String ruleName,
 			boolean strict,
 			Set<FollowElement> result) {
 		CustomInternalN4JSParser parser = createParser();
 		parser.setStrict(strict);
 		try {
 			ObservableXtextTokenStream tokenStream = new ObservableXtextTokenStream(tokens, parser);
-			result.addAll(doGetFollowElements(parser, tokenStream));
+			result.addAll(doGetFollowElements(parser, tokenStream, ruleName));
 		} catch (InfiniteRecursion infinite) {
 			// this guards against erroneous infinite recovery loops in Antlr.
 			// Grammar dependent and not expected something that is expected for N4JS
@@ -308,14 +411,15 @@ public class CustomN4JSParser extends N4JSParser implements IPartialContentAssis
 	 */
 	private Collection<FollowElement> doGetFollowElements(
 			AbstractInternalContentAssistParser parser,
-			ObservableXtextTokenStream tokens) {
+			ObservableXtextTokenStream tokens,
+			String ruleName) {
 		tokens.setInitialHiddenTokens(getInitialHiddenTokens());
 		parser.setTokenStream(tokens);
 		IUnorderedGroupHelper helper = getUnorderedGroupHelper().get();
 		parser.setUnorderedGroupHelper(helper);
 		helper.initializeWith(parser);
 		tokens.setListener(parser);
-		Collection<FollowElement> followElements = getFollowElements(parser);
+		Collection<FollowElement> followElements = getFollowElements(parser, ruleName);
 		return followElements;
 	}
 
@@ -354,6 +458,20 @@ public class CustomN4JSParser extends N4JSParser implements IPartialContentAssis
 	 */
 	public ContentAssistDataCollectors getDataCollectors() {
 		return dataCollectors;
+	}
+
+	/**
+	 * Public setter to allow easier testing.
+	 */
+	public void setEntryPointFinder(ParamAwareEntryPointFinder entryPointFinder) {
+		this.entryPointFinder = entryPointFinder;
+	}
+
+	/**
+	 * Public getter to be symmetric to the setter.
+	 */
+	public ParamAwareEntryPointFinder getEntryPointFinder() {
+		return entryPointFinder;
 	}
 
 	/**

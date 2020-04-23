@@ -16,6 +16,7 @@ import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.ide.editor.contentassist.ContentAssistDataCollectors
 import org.eclipse.n4js.ide.editor.contentassist.ContentAssistTokenTypeMapper
 import org.eclipse.n4js.ide.editor.contentassist.CustomN4JSParser
+import org.eclipse.n4js.ide.editor.contentassist.ParamAwareEntryPointFinder
 import org.eclipse.n4js.ide.editor.contentassist.TokenSourceFactory
 import org.eclipse.xtext.ide.editor.contentassist.antlr.FollowElement
 import org.eclipse.xtext.ide.editor.contentassist.antlr.RequiredRuleNameComputer
@@ -35,6 +36,7 @@ class CustomParserTest extends AbstractContentAssistParserTest implements Provid
 
 	@Inject IUnorderedGroupHelper unorderedGroupHelper
 	@Inject TokenSourceFactory tokenSourceFactory
+	@Inject ParamAwareEntryPointFinder entryPointFinder
 	@Inject ContentAssistTokenTypeMapper tokenMapper
 	@Inject RequiredRuleNameComputer ruleNameComputer
 	@Inject RuleNames ruleNames
@@ -47,6 +49,7 @@ class CustomParserTest extends AbstractContentAssistParserTest implements Provid
 			it.nameMappings = nameMappings;
 			it.tokenSourceFactory = tokenSourceFactory
 			it.dataCollectors = new ContentAssistDataCollectors(null)
+			it.entryPointFinder = entryPointFinder
 			it.unorderedGroupHelper = this
 			it.initializeTokenTypes(tokenMapper, grammarAccess)
 			it.set('requiredRuleNameComputer', ruleNameComputer)

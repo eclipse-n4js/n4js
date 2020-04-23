@@ -27,7 +27,6 @@ import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.util.ParseHelper
 import org.junit.After
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -42,7 +41,7 @@ class NodeModelTokenSourcePerfTest {
 	@Inject extension ParseHelper<Script>
 
 	@Inject extension TokenSourceFactory
-
+	
 	var String testData
 	var Script parsed
 	var ICompositeNode node
@@ -69,7 +68,15 @@ class NodeModelTokenSourcePerfTest {
 			while(Token.EOF_TOKEN !== source.nextToken) {}
 		]
 	}
-
+	
+	@Test
+	def void test_nodes_1000_filtered() {
+		(1..1000).forEach [
+			val source = node.toTokenSource(testData.length, true)
+			while(Token.EOF_TOKEN !== source.nextToken) {}
+		]
+	}
+	
 	@Test
 	def void test_lexer_1000() {
 		(1..1000).forEach [
@@ -78,16 +85,30 @@ class NodeModelTokenSourcePerfTest {
 			while(Token.EOF_TOKEN !== lexer.nextToken) {}
 		]
 	}
-
-	@Ignore
+	
 	@Test
-	def void test_nodes_1000_Again() {
-		test_nodes_1000
+	def void test_nodes_allOffsets() {
+		for(endOffset: 0..testData.length) {
+			val source = node.toTokenSource(endOffset, false)
+			while(Token.EOF_TOKEN !== source.nextToken) {}
+		}
 	}
 
-	@Ignore
 	@Test
-	def void test_lexer_1000_Again() {
-		test_lexer_1000
+	def void test_nodes_allOffsets_filter() {
+		for(endOffset: 0..testData.length) {
+			val source = node.toTokenSource(endOffset, true)
+			while(Token.EOF_TOKEN !== source.nextToken) {}
+		}
 	}
+	
+	@Test
+	def void test_lexer_allOffsets() {
+		for(endOffset: 0..testData.length) {
+			val stream = new AntlrStreamWithToString(new StringReader(testData.substring(0, endOffset)))
+			val lexer = new InternalN4JSLexer(stream)
+			while(Token.EOF_TOKEN !== lexer.nextToken) {}
+		}
+	}
+
 }
