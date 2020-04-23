@@ -28,9 +28,7 @@ import static org.junit.Assert.*
 
 /**
  * NOTE: this entire test class is redundant to class {@code RuntimeDependencyValidationIdeTest} and only provided
- * because incremental building cannot be tested in that other class yet!
- * 
- * TODO GH-1675 delete this entire file!
+ * because a different builder implementation is used in the Eclipse UI case.
  */
 class RuntimeDependencyValidationPluginTest extends AbstractBuilderParticipantTest {
 

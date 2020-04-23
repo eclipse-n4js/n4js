@@ -159,6 +159,11 @@ public final class N4JSGlobals {
 	public static final String PACKAGE_JSON = UtilN4.PACKAGE_JSON;
 
 	/**
+	 * The name of the files storing each N4JS project's meta-information (serialized TModules, etc.).
+	 */
+	public static final String N4JS_PROJECT_STATE = ".n4js.projectstate";
+
+	/**
 	 * String used to separate segments in the string representation of a {@link QualifiedName qualified name}.
 	 *
 	 * @see N4JSQualifiedNameConverter#DELIMITER

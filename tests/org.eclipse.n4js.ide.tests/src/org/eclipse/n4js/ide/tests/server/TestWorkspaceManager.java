@@ -30,7 +30,9 @@ import org.eclipse.n4js.tests.codegen.Module;
 import org.eclipse.n4js.tests.codegen.Project;
 import org.eclipse.n4js.tests.codegen.Project.SourceFolder;
 import org.eclipse.n4js.tests.codegen.YarnWorkspaceProject;
+import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.xtext.xbase.lib.Pair;
+import org.junit.Assert;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.HashMultimap;
@@ -42,7 +44,10 @@ import com.google.common.collect.Streams;
  * <p>
  * Note the {@link Documentation}.
  */
-public class TestWorkspaceCreator {
+public class TestWorkspaceManager {
+
+	/** Special suffix to denote a "selected" module (to be appended to the module name). */
+	static final public String MODULE_SELECTOR = "*";
 
 	/** Folder where test data is created */
 	static final public String TEST_DATA_FOLDER = "/test-workspace";
@@ -54,6 +59,8 @@ public class TestWorkspaceCreator {
 	static final public String DEFAULT_EXTENSION = "n4js";
 	/** Default name of the created test project */
 	static final public String DEFAULT_PROJECT_NAME = "test-project";
+	/** Name of the yarn workspace project created iff a test uses more than one test project. */
+	static final public String YARN_TEST_PROJECT = "yarn-test-project";
 	/** Default name of the created test module */
 	static final public String DEFAULT_MODULE_NAME = "MyModule";
 	/**
@@ -77,7 +84,7 @@ public class TestWorkspaceCreator {
 	 */
 	static final public String SRC = "#SRC:";
 	/** Name of n4js library 'n4js-runtime' */
-	static final public String N4JS_RUNTIME = "n4js-runtime";
+	static final public String N4JS_RUNTIME = N4JSGlobals.N4JS_RUNTIME.getRawName();
 	/** Default project object for 'n4js-runtime' */
 	static final public Project N4JS_RUNTIME_FAKE = new Project(N4JS_RUNTIME, VENDOR, VENDOR + "_name",
 			ProjectType.RUNTIME_ENVIRONMENT);
@@ -90,7 +97,10 @@ public class TestWorkspaceCreator {
 	 */
 	private final ProjectType projectType;
 
-	TestWorkspaceCreator(ProjectType projectType) {
+	/** @see #getCreatedProject() */
+	private Project createdProject;
+
+	TestWorkspaceManager(ProjectType projectType) {
 		this.projectType = projectType;
 	}
 
@@ -131,6 +141,72 @@ public class TestWorkspaceCreator {
 		return root;
 	}
 
+	/** Same as {@link #getProjectRoot(String)}, but for the {@link #DEFAULT_PROJECT_NAME default project}. */
+	public File getProjectRoot() {
+		return getProjectRoot(DEFAULT_PROJECT_NAME);
+	}
+
+	/** Returns the root folder of the project with the given name. */
+	public File getProjectRoot(String projectName) {
+		assertCreated();
+		File projectFolder = getProjectRootFailSafe(projectName);
+		// for consistency with #getFileURIFromModuleName() we require the folder to exist:
+		if (projectFolder == null) {
+			throw new IllegalStateException("cannot find project for project name: " + projectName);
+		}
+		if (!projectFolder.isDirectory()) {
+			throw new IllegalStateException(
+					"project folder of project \"" + projectName + "\" does not exist: " + projectFolder);
+		}
+		return projectFolder;
+	}
+
+	private File getProjectRootFailSafe(String projectName) {
+		if (!isCreated()) {
+			return null;
+		}
+
+		Path projectNamePath = projectNameToRelativePath(projectName);
+		Path createdProjectNamePath = projectNameToRelativePath(createdProject.getProjectName());
+
+		Path createdProjectPath = getRoot().toPath().resolve(createdProjectNamePath);
+
+		if (projectName.equals(createdProject.getProjectName())) {
+			return createdProjectPath.toFile();
+		}
+
+		if (createdProject instanceof YarnWorkspaceProject) {
+			Project containedProject = ((YarnWorkspaceProject) createdProject).getProject(projectName);
+			if (containedProject != null) {
+				return createdProjectPath.resolve(YarnWorkspaceProject.PACKAGES).resolve(projectNamePath).toFile();
+			}
+		}
+
+		Project nodeModuleProject = createdProject.getNodeModuleProject(projectName);
+		if (nodeModuleProject != null) {
+			return createdProjectPath.resolve(N4JSGlobals.NODE_MODULES).resolve(projectNamePath).toFile();
+		}
+
+		if (createdProject instanceof YarnWorkspaceProject) {
+			for (Project containedProject : ((YarnWorkspaceProject) createdProject).getProjects()) {
+				Project containedNodeModuleProject = createdProject.getNodeModuleProject(projectName);
+				if (containedNodeModuleProject != null) {
+					Path containedProjectNamePath = projectNameToRelativePath(containedProject.getProjectName());
+					return createdProjectPath
+							.resolve(YarnWorkspaceProject.PACKAGES).resolve(containedProjectNamePath)
+							.resolve(N4JSGlobals.NODE_MODULES).resolve(projectNamePath).toFile();
+				}
+			}
+		}
+
+		return null;
+	}
+
+	private Path projectNameToRelativePath(String projectName) {
+		String namePathStr = "/".equals(File.separator) ? projectName : projectName.replace("/", File.separator);
+		return Path.of(namePathStr);
+	}
+
 	/** @return the given name if non-<code>null</code> and non-empty; otherwise {@link #DEFAULT_MODULE_NAME}. */
 	public String getModuleNameOrDefault(String moduleName) {
 		if (Strings.isNullOrEmpty(moduleName)) {
@@ -162,11 +238,31 @@ public class TestWorkspaceCreator {
 		}
 	}
 
+	/** Tells whether the test workspace has already been created. */
+	public boolean isCreated() {
+		return createdProject != null;
+	}
+
+	/** Throws an exception iff the test workspace has not yet been created. */
+	public void assertCreated() {
+		Assert.assertTrue("no test project(s) created yet", isCreated());
+	}
+
+	/**
+	 * Returns the project created with one of the <code>create*</code>-methods or <code>null</code> if none was created
+	 * yet. In case of yarn workspaces, this method returns the root project and it will be of type
+	 * {@link YarnWorkspaceProject}.
+	 */
+	public Project getCreatedProject() {
+		return createdProject;
+	}
+
 	/**
 	 * Same as {@link #createTestProjectOnDisk(Map)}, but name and content of the modules can be provided as one or more
 	 * {@link Pair}s.
 	 */
-	public Project createTestProjectOnDisk(@SuppressWarnings("unchecked") Pair<String, String>... modulesContents) {
+	@SafeVarargs
+	public final Project createTestProjectOnDisk(Pair<String, String>... modulesContents) {
 		return createTestProjectOnDisk(Arrays.asList(modulesContents));
 	}
 
@@ -196,28 +292,44 @@ public class TestWorkspaceCreator {
 		return createTestOnDisk(destination, projectsModulesContents);
 	}
 
-	/** Creates the default project on file system. */
-	public Project createTestOnDisk(LinkedHashMap<String, Map<String, String>> projectsModulesContents) {
+	/** Same as {@link #createTestOnDisk(Map)}, but accepts pairs instead of a map. */
+	@SafeVarargs
+	public final Project createTestOnDisk(Pair<String, List<Pair<String, String>>>... projectsModulesContents) {
+		Map<String, Map<String, String>> projectsModulesContentsAsMap = new LinkedHashMap<>();
+		convertProjectsModulesContentsToMap(Arrays.asList(projectsModulesContents), projectsModulesContentsAsMap,
+				false);
+		return createTestOnDisk(projectsModulesContentsAsMap);
+	}
+
+	/**
+	 * Creates the given projects and modules on the file system. If several projects are specified, a containing yarn
+	 * workspace will be created.
+	 *
+	 * @return the single project created or, if several projects are created, the containing yarn workspace project.
+	 */
+	public Project createTestOnDisk(Map<String, Map<String, String>> projectsModulesContents) {
 		return createTestOnDisk(getRoot().toPath(), projectsModulesContents);
 	}
 
-	private Project createTestOnDisk(Path destination,
-			LinkedHashMap<String, Map<String, String>> projectsModulesContents) {
+	private Project createTestOnDisk(Path destination, Map<String, Map<String, String>> projectsModulesContents) {
 
-		Project project = null;
+		if (createdProject != null) {
+			throw new IllegalStateException("test was already created on disk");
+		}
+
 		if (projectsModulesContents.size() == 1) {
 			Entry<String, Map<String, String>> singleProject = projectsModulesContents.entrySet().iterator().next();
 			String projectName = singleProject.getKey();
 			Map<String, String> moduleContents = singleProject.getValue();
-			project = createSimpleProject(projectName, moduleContents, HashMultimap.create());
+			createdProject = createSimpleProject(projectName, moduleContents, HashMultimap.create());
 		} else {
-			project = createYarnProject(projectsModulesContents);
+			createdProject = createYarnProject(projectsModulesContents);
 		}
 
 		destination.toFile().mkdirs();
-		project.create(destination);
+		createdProject.create(destination);
 
-		return project;
+		return createdProject;
 	}
 
 	private Project createSimpleProject(String projectName, Map<String, String> modulesContents,
@@ -281,8 +393,8 @@ public class TestWorkspaceCreator {
 		nmSourceFolder.addModule(module);
 	}
 
-	private Project createYarnProject(LinkedHashMap<String, Map<String, String>> projectsModulesContents) {
-		YarnWorkspaceProject yarnProject = new YarnWorkspaceProject("yarn-test-project", VENDOR, VENDOR + "_name");
+	private Project createYarnProject(Map<String, Map<String, String>> projectsModulesContents) {
+		YarnWorkspaceProject yarnProject = new YarnWorkspaceProject(YARN_TEST_PROJECT, VENDOR, VENDOR + "_name");
 		Multimap<String, String> dependencies = HashMultimap.create();
 		for (String projectNameWithSelector : projectsModulesContents.keySet()) {
 			Map<String, String> moduleContents = projectsModulesContents.get(projectNameWithSelector);
@@ -312,9 +424,73 @@ public class TestWorkspaceCreator {
 				Project dependency = yarnProject.getProject(projectDependency);
 				if (dependency == null) {
 					dependency = yarnProject.getNodeModuleProject(projectDependency);
+					if (dependency == null) {
+						throw new IllegalArgumentException("project not found: " + projectDependency);
+					}
 				}
 				project.addProjectDependency(dependency);
 			}
 		}
+	}
+
+	/** Deletes the test workspace. Throws exception if it has not yet been created. */
+	public void deleteTestFromDisk() {
+		if (createdProject == null) {
+			throw new IllegalStateException("trying to delete test from disk without first creating it");
+		}
+		deleteTestFromDiskIfCreated();
+	}
+
+	/** Same as {@link #deleteTestFromDisk()}, but does nothing if no test workspace has been created yet. */
+	public void deleteTestFromDiskIfCreated() {
+		if (createdProject != null) {
+			File root = getRoot();
+			FileUtils.deleteFileOrFolder(root);
+
+			createdProject = null;
+		}
+	}
+
+	/**
+	 * Converts from pairs to a corresponding map. This method has two return values:
+	 * <ol>
+	 * <li>the resulting map, which is returned by changing the given argument <code>addHere</code>, and
+	 * <li>iff a module in the given pairs is marked as selected module (see {@link #MODULE_SELECTOR}), then this method
+	 * returns a pair "selected project path" -&gt; "selected module"; otherwise it returns <code>null</code>.
+	 * </ol>
+	 */
+	/* package */ static Pair<String, String> convertProjectsModulesContentsToMap(
+			Iterable<Pair<String, List<Pair<String, String>>>> projectsModulesContentsAsPairs,
+			Map<String, Map<String, String>> addHere,
+			boolean requireSelectedModule) {
+
+		String selectedProjectPath = null;
+		String selectedModule = null;
+		addHere.clear();
+		for (Pair<String, ? extends Iterable<Pair<String, String>>> project : projectsModulesContentsAsPairs) {
+			String projectPath = project.getKey();
+			Iterable<? extends Pair<String, String>> modules = project.getValue();
+			Map<String, String> modulesMap = null;
+			if (modules != null) {
+				modulesMap = new HashMap<>();
+				for (Pair<String, String> moduleContent : modules) {
+					String moduleName = moduleContent.getKey();
+					if (moduleName.endsWith(MODULE_SELECTOR)) {
+						moduleName = moduleName.substring(0, moduleName.length() - 1);
+						selectedProjectPath = projectPath;
+						selectedModule = moduleName;
+					}
+					modulesMap.put(moduleName, moduleContent.getValue());
+				}
+			}
+			addHere.put(projectPath, modulesMap);
+		}
+
+		if (requireSelectedModule && selectedModule == null) {
+			throw new IllegalArgumentException(
+					"No module selected. Fix by appending '" + MODULE_SELECTOR + "' to one of the project modules.");
+		}
+
+		return selectedModule != null ? Pair.of(selectedProjectPath, selectedModule) : null;
 	}
 }

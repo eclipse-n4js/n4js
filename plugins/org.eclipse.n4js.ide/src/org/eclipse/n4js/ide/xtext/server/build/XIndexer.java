@@ -9,7 +9,6 @@ package org.eclipse.n4js.ide.xtext.server.build;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -36,7 +35,6 @@ import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.Extension;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
-import org.eclipse.xtext.xbase.lib.ListExtensions;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 import com.google.common.collect.ImmutableList;
@@ -192,10 +190,10 @@ public class XIndexer {
 	private OperationCanceledManager operationCanceledManager;
 
 	/**
-	 * Compute an updated index.
+	 * Compute deltas for the build's initial resource deletions and changes as recorded in the given build request, and
+	 * register them in the request's index.
 	 */
-	public XIndexer.XIndexResult computeAndIndexAffected(XBuildRequest request,
-			@Extension XBuildContext context) {
+	public XIndexer.XIndexResult computeAndIndexDeletedAndChanged(XBuildRequest request, XBuildContext context) {
 		ResourceDescriptionsData previousIndex = context.getOldState().getResourceDescriptions();
 		ResourceDescriptionsData newIndex = request.getState().getResourceDescriptions();
 		List<IResourceDescription.Delta> deltas = new ArrayList<>();
@@ -204,19 +202,40 @@ public class XIndexer {
 		for (IResourceDescription.Delta delta : deltas) {
 			newIndex.register(delta);
 		}
-		HashSet<IResourceDescription.Delta> allDeltas = new HashSet<>(deltas);
-		allDeltas.addAll(request.getExternalDeltas());
-		Set<URI> remainingURIs = IterableExtensions.toSet(
-				IterableExtensions.map(previousIndex.getAllResourceDescriptions(), IResourceDescription::getURI));
-		remainingURIs.removeAll(ListExtensions.map(deltas, Delta::getUri));
-		List<URI> allAffected = IterableExtensions.toList(IterableExtensions.filter(remainingURIs, it -> {
+		return new XIndexer.XIndexResult(deltas, newIndex);
+	}
+
+	/**
+	 * Compute deltas for resources affected by the given <code>newDeltas</code> and register them in the given
+	 * <code>newIndex</code>.
+	 *
+	 * @param index
+	 *            the current index; will be changed by this method.
+	 * @param remainingURIs
+	 *            set of URIs that were not processed yet.
+	 * @param newDeltas
+	 *            deltas representing the resources processed during the most recent build iteration.
+	 * @param allDeltas
+	 *            deltas representing all resources processed so far, including {@link XBuildRequest#getExternalDeltas()
+	 *            external deltas}.
+	 * @param context
+	 *            the build context.
+	 * @return list of deltas representing the affected resources.
+	 */
+	public List<Delta> computeAndIndexAffected(ResourceDescriptionsData index, Set<URI> remainingURIs,
+			Collection<Delta> newDeltas, Collection<Delta> allDeltas, XBuildContext context) {
+		ResourceDescriptionsData originalIndex = context.getOldState().getResourceDescriptions();
+		List<URI> affectedURIs = IterableExtensions.toList(IterableExtensions.filter(remainingURIs, it -> {
 			IResourceDescription.Manager manager = context.getResourceServiceProvider(it)
 					.getResourceDescriptionManager();
-			IResourceDescription resourceDescription = previousIndex.getResourceDescription(it);
-			return isAffected(resourceDescription, manager, allDeltas, allDeltas, newIndex);
+			IResourceDescription resourceDescription = originalIndex.getResourceDescription(it);
+			return isAffected(resourceDescription, manager, newDeltas, allDeltas, index);
 		}));
-		deltas.addAll(this.getDeltasForChangedResources(allAffected, previousIndex, context));
-		return new XIndexer.XIndexResult(deltas, newIndex);
+		List<Delta> affectedDeltas = getDeltasForChangedResources(affectedURIs, originalIndex, context);
+		for (IResourceDescription.Delta delta : affectedDeltas) {
+			index.register(delta);
+		}
+		return affectedDeltas;
 	}
 
 	/**
@@ -243,12 +262,12 @@ public class XIndexer {
 	/**
 	 * Process the changed resources.
 	 */
-	protected List<IResourceDescription.Delta> getDeltasForChangedResources(Iterable<URI> affectedUris,
+	protected List<IResourceDescription.Delta> getDeltasForChangedResources(Iterable<URI> changedURIs,
 			ResourceDescriptionsData oldIndex, XBuildContext context) {
 		try {
 			this.compilerPhases.setIndexing(context.getResourceSet(), true);
 			List<IResourceDescription.Delta> result = new ArrayList<>();
-			for (IResourceDescription.Delta delta : context.executeClustered(affectedUris,
+			for (IResourceDescription.Delta delta : context.executeClustered(changedURIs,
 					it -> addToIndex(it, true, oldIndex, context))) {
 				if (delta != null) {
 					result.add(delta);

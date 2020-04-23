@@ -40,7 +40,7 @@ class AddMissingImportQuickfixTest extends AbstractCodeActionTest {
 		-----
 		title      : N4JS: Organize Imports
 		kind       : source.organizeImports
-		command    : (N4JS: Organize Imports, n4js.organizeImports, [file:///Users/mark-oliver.reiser/Home/Prog/Java/n4js-main/git-repo/n4js/tests/org.eclipse.n4js.ide.tests/test-workspace/test-project/src/Main.n4js])
+		command    : (N4JS: Organize Imports, n4js.organizeImports, [test-project/src/Main.n4js])
 		diagnostics: 
 		edit       : 
 	''';

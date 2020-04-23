@@ -19,6 +19,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
 import org.eclipse.n4js.ide.xtext.server.build.XIncrementalBuilder;
@@ -29,6 +30,7 @@ import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.generator.OutputConfiguration;
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
+import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 import org.eclipse.xtext.resource.IExternalContentSupport;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.XtextResourceSet;
@@ -40,6 +42,7 @@ import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.workspace.IProjectConfig;
+import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.workspace.ProjectConfigAdapter;
 
 import com.google.common.collect.ImmutableList;
@@ -128,12 +131,28 @@ public class XProjectManager {
 		this.resourceSet = createNewResourceSet(new XIndexState().getResourceDescriptions());
 	}
 
-	/** Initial build reads the project state and resolves changes. Generate output files. */
+	/**
+	 * Initial build reads the project state and resolves changes. Generate output files.
+	 * <p>
+	 * This method assumes that it is only invoked in situations when the client does not have any diagnostics stored,
+	 * e.g. directly after invoking {@link #doClean(CancelIndicator)}, and that therefore no 'publishDiagnostics' events
+	 * with an empty list of diagnostics need to be sent to the client in order to remove obsolete diagnostics.
+	 * <p>
+	 * NOTE: this is not only invoked shortly after server startup but also at various other occasions, for example
+	 * <ul>
+	 * <li>when the client executes the {@link N4JSCommandService#rebuild(ILanguageServerAccess, CancelIndicator)
+	 * rebuild command},
+	 * <li>when the workspace folder is changed in VS Code.
+	 * </ul>
+	 */
 	public XBuildResult doInitialBuild(CancelIndicator cancelIndicator) {
 		ResourceChangeSet changeSet = projectStateHolder.readProjectState(projectConfig);
 		XBuildResult result = doBuild(
 				changeSet.getModified(), changeSet.getDeleted(), Collections.emptyList(), false, true, cancelIndicator);
 
+		// send issues to client
+		// (below code won't send empty 'publishDiagnostics' events for resources without validation issues, see API doc
+		// of this method for details)
 		Map<URI, Collection<Issue>> validationIssues = projectStateHolder.getValidationIssues();
 		for (Map.Entry<URI, Collection<Issue>> locationToIssues : validationIssues.entrySet()) {
 			URI location = locationToIssues.getKey();
@@ -201,14 +220,22 @@ public class XProjectManager {
 
 		XBuildRequest request = buildRequestFactory.getBuildRequest();
 		for (File outputDirectory : getOutputDirectories()) {
-			File[] childFildes = outputDirectory.listFiles();
-			if (childFildes != null) {
-				for (int i = 0; i < childFildes.length; i++) {
-					deleteFileOrFolder(request, childFildes[i]);
+			File[] childFiles = outputDirectory.listFiles();
+			if (childFiles != null) {
+				for (int i = 0; i < childFiles.length; i++) {
+					operationCanceledManager.checkCanceled(cancelIndicator);
+					deleteFileOrFolder(request, childFiles[i]);
 				}
 			}
+		}
 
+		for (ISourceFolder sourceFolder : projectConfig.getSourceFolders()) {
 			operationCanceledManager.checkCanceled(cancelIndicator);
+			List<URI> allURIs = sourceFolder.getAllResources(fileSystemScanner);
+			for (URI uri : allURIs) {
+				operationCanceledManager.checkCanceled(cancelIndicator);
+				issueAcceptor.publishDiagnostics(uri, Collections.emptyList());
+			}
 		}
 	}
 
@@ -278,7 +305,7 @@ public class XProjectManager {
 		result.setGeneratorEnabled(doGenerate);
 
 		if (!propagateIssues) {
-			// during initial build, we do not want to notify about any issues sind it is
+			// during initial build, we do not want to notify about any issues because it is
 			// done at the end of the project for the deserialized issues and the new issues
 			// altogether.
 			result.setAfterValidateListener(null);

@@ -59,7 +59,7 @@ public class DefinitionTest extends AbstractDefinitionTest {
 	/***/
 	@Test
 	public void testDefinition_04() throws Exception {
-		workspaceCreator.createTestProjectOnDisk(Collections.emptyMap());
+		testWorkspaceManager.createTestProjectOnDisk(Collections.emptyMap());
 		startAndWaitForLspServer();
 
 		TextDocumentPositionParams textDocumentPositionParams = new TextDocumentPositionParams();

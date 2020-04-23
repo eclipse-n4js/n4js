@@ -2,7 +2,7 @@
 /**
  * Documentation defining default test projects and workspaces in
  * {@link org.eclipse.n4js.ide.tests.server.AbstractStructuredIdeTest AbstractStructuredIdeTest}s and for their creation
- * in {@link org.eclipse.n4js.ide.tests.server.TestWorkspaceCreator TestWorkspaceCreator}.
+ * in {@link org.eclipse.n4js.ide.tests.server.TestWorkspaceManager TestWorkspaceManager}.
  * <p>
  * <h3>Contents</h3>
  * <ul>
@@ -91,8 +91,8 @@ abstract class Documentation {
 	 * </pre>
 	 *
 	 * It is necessary to select one of the project as the selected project. This is done by appending the
-	 * {@link org.eclipse.n4js.ide.tests.server.AbstractStructuredIdeTest#MODULE_SELECTOR MODULE_SELECTOR} at the end of
-	 * a project name. The result is, that the implicit test module is added to the selected project. Similar to the
+	 * {@link org.eclipse.n4js.ide.tests.server.TestWorkspaceManager#MODULE_SELECTOR MODULE_SELECTOR} at the end of a
+	 * project name. The result is, that the implicit test module is added to the selected project. Similar to the
 	 * default test project, the implicit module will be the selected module and be opened during execution of the test.
 	 */
 	static int DEFAULT_TEST_WORKSPACE;
@@ -105,14 +105,14 @@ abstract class Documentation {
 	 * In case the module name is {@code package.json}, see {@link #PACKAGE_JSON}.
 	 * <p>
 	 * In case the string starts with the reserved string
-	 * {@link org.eclipse.n4js.ide.tests.server.TestWorkspaceCreator#NODE_MODULES NODE_MODULES}, see
+	 * {@link org.eclipse.n4js.ide.tests.server.TestWorkspaceManager#NODE_MODULES NODE_MODULES}, see
 	 * {@link #PROJECT_NODE_MODULES} or {@link #WORKSPACE_NODE_MODULES}.
 	 */
 	static int MODULE_NAMES;
 
 	/**
 	 * {@code package.json} files are created automatically. In case this should be overridden by a custom file, use
-	 * {@link org.eclipse.n4js.ide.tests.server.TestWorkspaceCreator#PACKAGE_JSON PACKAGE_JSON} as a module name and
+	 * {@link org.eclipse.n4js.ide.tests.server.TestWorkspaceManager#PACKAGE_JSON PACKAGE_JSON} as a module name and
 	 * define its contents.
 	 *
 	 * <p>
@@ -145,14 +145,14 @@ abstract class Documentation {
 	 * The example above shows how a default project that only defines one project inside the node_modules folder. Since
 	 * this project is of project type {@code definition}, its package.json file is defined explicitly and overrides the
 	 * one that would have been generated. Note that the reserved string
-	 * {@link org.eclipse.n4js.ide.tests.server.TestWorkspaceCreator#SRC SRC} is misleading here: the package.json file
+	 * {@link org.eclipse.n4js.ide.tests.server.TestWorkspaceManager#SRC SRC} is misleading here: the package.json file
 	 * will be located in the base directory of the project.
 	 */
 	static int PACKAGE_JSON;
 
 	/**
 	 * Instead of a module name, also the reserved string
-	 * {@link org.eclipse.n4js.ide.tests.server.TestWorkspaceCreator#DEPENDENCIES DEPENDENCIES} can be given. As the
+	 * {@link org.eclipse.n4js.ide.tests.server.TestWorkspaceManager#DEPENDENCIES DEPENDENCIES} can be given. As the
 	 * contents of this entry, a comma separated list of project names is expected. These dependencies will be added to
 	 * the current project.
 	 * <p>
@@ -178,7 +178,7 @@ abstract class Documentation {
 	/**
 	 * Each project (both default projects and projects in default workspaces) can have a nested node_modules folder
 	 * that contains other projects. This structure is defined using the reserved string
-	 * {@link org.eclipse.n4js.ide.tests.server.TestWorkspaceCreator#NODE_MODULES NODE_MODULES}.
+	 * {@link org.eclipse.n4js.ide.tests.server.TestWorkspaceManager#NODE_MODULES NODE_MODULES}.
 	 * <p>
 	 * <b>Simple example for default project</b>
 	 *
@@ -198,8 +198,8 @@ abstract class Documentation {
 	 * project n4js-runtime and its dependency is added implicitly (see {@link #DEFAULT_TEST_PROJECT}).
 	 * <p>
 	 * The modules inside node_module projects are defined using two registered strings.
-	 * {@link org.eclipse.n4js.ide.tests.server.TestWorkspaceCreator#NODE_MODULES NODE_MODULES} and
-	 * {@link org.eclipse.n4js.ide.tests.server.TestWorkspaceCreator#SRC SRC} separated the name of the project and one
+	 * {@link org.eclipse.n4js.ide.tests.server.TestWorkspaceManager#NODE_MODULES NODE_MODULES} and
+	 * {@link org.eclipse.n4js.ide.tests.server.TestWorkspaceManager#SRC SRC} separated the name of the project and one
 	 * of its modules. It is possible to define several modules of a single node_modules projects.
 	 */
 	static int PROJECT_NODE_MODULES;
@@ -207,7 +207,7 @@ abstract class Documentation {
 	/**
 	 * {@code node_modules} folders of a workspace are located in the base directory of the yarn workspace project. To
 	 * define projects at this location, use the registered string
-	 * {@link org.eclipse.n4js.ide.tests.server.TestWorkspaceCreator#NODE_MODULES NODE_MODULES} followed by a project
+	 * {@link org.eclipse.n4js.ide.tests.server.TestWorkspaceManager#NODE_MODULES NODE_MODULES} followed by a project
 	 * name.
 	 * <p>
 	 * <b>Simple example for default project</b>

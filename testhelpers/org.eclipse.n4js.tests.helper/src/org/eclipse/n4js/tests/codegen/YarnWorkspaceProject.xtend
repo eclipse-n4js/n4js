@@ -12,6 +12,7 @@ package org.eclipse.n4js.tests.codegen
 
 import java.io.File
 import java.nio.file.Path
+import java.util.Collection
 import java.util.Map
 import java.util.Objects
 import org.eclipse.n4js.projectDescription.ProjectType
@@ -22,6 +23,10 @@ import org.eclipse.n4js.utils.io.FileDeleter
  * Generates the code for a yarn workspace project.
  */
 public class YarnWorkspaceProject extends Project {
+
+	/** Name of the 'packages' folder, i.e. the folder containing the actual projects. */
+	public static final String PACKAGES = "packages";
+
 	final Map<String, Project> projects = newHashMap();
 	final String workspacesFolderName;
 
@@ -30,7 +35,7 @@ public class YarnWorkspaceProject extends Project {
 	 * a default project type of {@link ProjectType#LIBRARY LIBRARY}.
 	 */
 	public new(String projectName, String vendorId, String vendorName) {
-		this(projectName, vendorId, vendorName, "packages");
+		this(projectName, vendorId, vendorName, PACKAGES);
 	}
 	
 	/**
@@ -45,7 +50,11 @@ public class YarnWorkspaceProject extends Project {
 	public def void addProject(Project project) {
 		this.projects.put(project.projectName, project);
 	}
-	
+
+	public def Collection<Project> getProjects() {
+		return this.projects.values();
+	}
+
 	public def Project getProject(String projectName) {
 		return this.projects.get(projectName);
 	}

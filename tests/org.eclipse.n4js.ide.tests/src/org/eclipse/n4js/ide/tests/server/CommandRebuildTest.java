@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.ide.tests.server;
 
-import static org.eclipse.n4js.ide.tests.server.TestWorkspaceCreator.DEFAULT_PROJECT_NAME;
+import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.DEFAULT_PROJECT_NAME;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
@@ -24,12 +24,15 @@ import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
 
 import org.eclipse.lsp4j.ExecuteCommandParams;
+import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
-import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.tests.codegen.Project;
+import org.eclipse.xtext.xbase.lib.Pair;
 import org.junit.After;
 import org.junit.Test;
 
+import com.google.common.collect.Lists;
 import com.google.inject.Injector;
 
 /**
@@ -37,17 +40,12 @@ import com.google.inject.Injector;
  */
 public class CommandRebuildTest extends AbstractStructuredIdeTest<Void> {
 	static final String PROBANDS_NAME = "probands";
-	static final String PROJECT_STATE_NAME = ".n4js.projectstate";
+	static final String PROJECT_STATE_NAME = N4JSGlobals.N4JS_PROJECT_STATE;
 
 	static final long FILE_TIME_MILLISECONDS = 8472000;
 
 	Path prjStatePath;
 	Path genFileStatePath;
-
-	@Override
-	protected ProjectType getProjectType() {
-		return ProjectType.LIBRARY;
-	}
 
 	/** remove generated files */
 	@After
@@ -77,8 +75,6 @@ public class CommandRebuildTest extends AbstractStructuredIdeTest<Void> {
 
 		setFileCreationDate(prjStatePath);
 		setFileCreationDate(genFileStatePath);
-
-		languageClient.clear();
 	}
 
 	/** Expectation is that files '.n4js.projectstate' and 'src-gen/Module.js' are changed due to rebuild action. */
@@ -87,7 +83,8 @@ public class CommandRebuildTest extends AbstractStructuredIdeTest<Void> {
 		test("class A { foo(a: A) { } } class Main { main(a: A) { a.foo(null); } }");
 
 		// send command under test
-		ExecuteCommandParams cmdCleanParams = new ExecuteCommandParams("n4js.rebuild", Collections.emptyList());
+		ExecuteCommandParams cmdCleanParams = new ExecuteCommandParams(N4JSCommandService.N4JS_REBUILD,
+				Collections.emptyList());
 		CompletableFuture<Object> future = languageServer.executeCommand(cmdCleanParams);
 		future.join();
 
@@ -120,6 +117,36 @@ public class CommandRebuildTest extends AbstractStructuredIdeTest<Void> {
 
 		assertEquals(FILE_TIME_MILLISECONDS, prjStateTime.toMillis());
 		assertEquals(FILE_TIME_MILLISECONDS, genFileTime.toMillis());
+	}
+
+	/**
+	 * The build triggered by the rebuild command must send 'publishDiagnostics' events even for those resources that do
+	 * not contain any issues, to ensure that any obsolete issues for those resources that might exist on client side
+	 * are removed. Normally such obsolete issues should not exist (not at start up time, because LSP clients do not
+	 * serialize issues; and not when rebuild is triggered manually, because an incremental build should have removed
+	 * those issues); however, in case of bugs in the incremental builder or other special circumstances this may
+	 * happen.
+	 */
+	@Test
+	public void testPublishDiagnosticsSentForModuleWithoutIssues() {
+		testWorkspaceManager.createTestProjectOnDisk(Pair.of("Main", "let x: string = 42; x;"));
+		startAndWaitForLspServer();
+
+		assertIssues(Pair.of("Main", Lists.newArrayList(
+				"(Error, [0:16 - 0:18], int is not a subtype of string.)")));
+
+		// fix the error on disk, but don't let the LSP server know (to avoid incremental build)
+		changeFileOnDiskWithoutNotification("Main", Pair.of("string", "number"));
+
+		// send command under test
+		ExecuteCommandParams params = new ExecuteCommandParams(N4JSCommandService.N4JS_REBUILD,
+				Collections.emptyList());
+		languageServer.executeCommand(params).join();
+
+		// wait for previous command to finish
+		joinServerRequests();
+
+		assertNoIssues();
 	}
 
 	private void setFileCreationDate(Path filePath) throws IOException {
