@@ -71,7 +71,6 @@ import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.locations.FileURI;
-import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.xtext.LanguageInfo;
 import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
@@ -150,10 +149,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	/** Deletes the test project in case it exists. */
 	@After
 	final public void deleteTestProject() {
-		File root = getRoot();
-		if (root.exists()) {
-			FileUtils.deleteFileOrFolder(root);
-		}
+		workspaceCreator.deleteTestFromDiskIfCreated();
 		languageClient.clearIssues();
 		openFiles.clear();
 	}
@@ -174,11 +170,6 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	/** Returns the root folder of the project with the given name. */
 	public File getProjectRoot(String projectName) {
 		return workspaceCreator.getProjectRoot(projectName);
-	}
-
-	/** Tells whether the test workspace located at {@link #getRoot()} is a yarn workspace. */
-	public boolean isYarnWorkspace() {
-		return workspaceCreator.isYarnWorkspace();
 	}
 
 	/** Overwrite this method to change the project type */

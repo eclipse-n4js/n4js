@@ -14,7 +14,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -43,6 +42,7 @@ import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.workspace.IProjectConfig;
+import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.workspace.ProjectConfigAdapter;
 
 import com.google.common.collect.ImmutableList;
@@ -134,6 +134,10 @@ public class XProjectManager {
 	/**
 	 * Initial build reads the project state and resolves changes. Generate output files.
 	 * <p>
+	 * This method assumes that it is only invoked in situations when the client does not have any diagnostics stored,
+	 * e.g. directly after invoking {@link #doClean(CancelIndicator)}, and that therefore no 'publishDiagnostics' events
+	 * with an empty list of diagnostics need to be sent to the client in order to remove obsolete diagnostics.
+	 * <p>
 	 * NOTE: this is not only invoked shortly after server startup but also at various other occasions, for example
 	 * <ul>
 	 * <li>when the client executes the {@link N4JSCommandService#rebuild(ILanguageServerAccess, CancelIndicator)
@@ -147,20 +151,13 @@ public class XProjectManager {
 				changeSet.getModified(), changeSet.getDeleted(), Collections.emptyList(), false, true, cancelIndicator);
 
 		// send issues to client
+		// (below code won't send empty 'publishDiagnostics' events for resources without validation issues, see API doc
+		// of this method for details)
 		Map<URI, Collection<Issue>> validationIssues = projectStateHolder.getValidationIssues();
-		Set<URI> urisWithoutIssues = result.getAffectedResources().stream()
-				.map(IResourceDescription.Delta::getUri)
-				.collect(Collectors.toSet());
 		for (Map.Entry<URI, Collection<Issue>> locationToIssues : validationIssues.entrySet()) {
 			URI location = locationToIssues.getKey();
-			urisWithoutIssues.remove(location);
 			Collection<Issue> issues = locationToIssues.getValue();
 			issueAcceptor.publishDiagnostics(location, issues);
-		}
-		// send empty 'publishDiagnostics' for resources without issues, even deleted ones
-		// (to remove potential obsolete issues)
-		for (URI uri : urisWithoutIssues) {
-			issueAcceptor.publishDiagnostics(uri, Collections.emptyList());
 		}
 
 		// clear the resource set to release memory
@@ -223,14 +220,22 @@ public class XProjectManager {
 
 		XBuildRequest request = buildRequestFactory.getBuildRequest();
 		for (File outputDirectory : getOutputDirectories()) {
-			File[] childFildes = outputDirectory.listFiles();
-			if (childFildes != null) {
-				for (int i = 0; i < childFildes.length; i++) {
-					deleteFileOrFolder(request, childFildes[i]);
+			File[] childFiles = outputDirectory.listFiles();
+			if (childFiles != null) {
+				for (int i = 0; i < childFiles.length; i++) {
+					operationCanceledManager.checkCanceled(cancelIndicator);
+					deleteFileOrFolder(request, childFiles[i]);
 				}
 			}
+		}
 
+		for (ISourceFolder sourceFolder : projectConfig.getSourceFolders()) {
 			operationCanceledManager.checkCanceled(cancelIndicator);
+			List<URI> allURIs = sourceFolder.getAllResources(fileSystemScanner);
+			for (URI uri : allURIs) {
+				operationCanceledManager.checkCanceled(cancelIndicator);
+				issueAcceptor.publishDiagnostics(uri, Collections.emptyList());
+			}
 		}
 	}
 

@@ -15,12 +15,12 @@ import java.io.FileWriter
 import java.io.IOException
 import java.nio.file.Path
 import java.util.List
+import java.util.Map
 import java.util.Objects
+import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.utils.io.FileDeleter
-import org.eclipse.n4js.N4JSGlobals
-import java.util.Map
 
 /**
  * Generates the code for a project.

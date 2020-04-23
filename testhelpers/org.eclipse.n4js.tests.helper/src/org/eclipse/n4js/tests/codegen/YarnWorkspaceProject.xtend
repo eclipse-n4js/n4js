@@ -12,6 +12,7 @@ package org.eclipse.n4js.tests.codegen
 
 import java.io.File
 import java.nio.file.Path
+import java.util.Collection
 import java.util.Map
 import java.util.Objects
 import org.eclipse.n4js.projectDescription.ProjectType
@@ -49,7 +50,11 @@ public class YarnWorkspaceProject extends Project {
 	public def void addProject(Project project) {
 		this.projects.put(project.projectName, project);
 	}
-	
+
+	public def Collection<Project> getProjects() {
+		return this.projects.values();
+	}
+
 	public def Project getProject(String projectName) {
 		return this.projects.get(projectName);
 	}

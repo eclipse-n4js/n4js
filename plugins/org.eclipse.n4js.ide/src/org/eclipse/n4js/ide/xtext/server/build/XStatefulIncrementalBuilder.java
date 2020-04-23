@@ -114,8 +114,11 @@ public class XStatefulIncrementalBuilder {
 			ResourceDescriptionsData newIndex = result.getNewIndex();
 			List<Delta> deltasToBeProcessed = result.getResourceDeltas();
 
+			// continue as long as there are more deltas to be processed (either the deltas representing the initial
+			// deletions/changes or in later iterations the deltas representing affected resources)
 			while (!deltasToBeProcessed.isEmpty()) {
 
+				// process the deltas
 				List<Delta> newDeltas = new ArrayList<>();
 				List<URI> urisToBeBuilt = new ArrayList<>();
 				for (IResourceDescription.Delta delta : deltasToBeProcessed) {
@@ -132,7 +135,6 @@ public class XStatefulIncrementalBuilder {
 					remainingURIs.remove(uri);
 				}
 
-				// actually build the resources
 				List<IResourceDescription.Delta> deltasBuilt = context.executeClustered(urisToBeBuilt,
 						(resource) -> buildClustured(resource, newSource2GeneratedMapping, result));
 				newDeltas.addAll(deltasBuilt);
@@ -140,6 +142,7 @@ public class XStatefulIncrementalBuilder {
 				allProcessedDeltas.addAll(newDeltas);
 				allProcessedAndExternalDeltas.addAll(newDeltas);
 
+				// find more deltas to be processed (for affected resources)
 				deltasToBeProcessed = indexer.computeAndIndexAffected(newIndex, remainingURIs, newDeltas,
 						allProcessedAndExternalDeltas, context);
 			}

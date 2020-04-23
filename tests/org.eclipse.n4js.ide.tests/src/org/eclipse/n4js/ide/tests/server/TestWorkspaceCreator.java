@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectDescription.ProjectType;
@@ -31,7 +30,9 @@ import org.eclipse.n4js.tests.codegen.Module;
 import org.eclipse.n4js.tests.codegen.Project;
 import org.eclipse.n4js.tests.codegen.Project.SourceFolder;
 import org.eclipse.n4js.tests.codegen.YarnWorkspaceProject;
+import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.xtext.xbase.lib.Pair;
+import org.junit.Assert;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.HashMultimap;
@@ -96,6 +97,9 @@ public class TestWorkspaceCreator {
 	 */
 	private final ProjectType projectType;
 
+	/** @see #getCreatedProject() */
+	private Project createdProject;
+
 	TestWorkspaceCreator(ProjectType projectType) {
 		this.projectType = projectType;
 	}
@@ -144,46 +148,63 @@ public class TestWorkspaceCreator {
 
 	/** Returns the root folder of the project with the given name. */
 	public File getProjectRoot(String projectName) {
-		File folderContainingProjects = getRoot();
-		if (isYarnWorkspace()) {
-			folderContainingProjects = folderContainingProjects.toPath().resolve(YARN_TEST_PROJECT)
-					.resolve(YarnWorkspaceProject.PACKAGES).toFile();
-		}
-		File projectFolder = new File(folderContainingProjects, projectName);
-		if (!projectFolder.isDirectory()) {
-			// search in all node_modules folders in workspace:
-			for (File nodeModulesFolder : getNodeModulesFolders()) {
-				projectFolder = new File(nodeModulesFolder, projectName);
-				if (projectFolder.isDirectory()) {
-					break;
-				}
-			}
-		}
+		assertCreated();
+		File projectFolder = getProjectRootFailSafe(projectName);
 		// for consistency with #getFileURIFromModuleName() we require the folder to exist:
+		if (projectFolder == null) {
+			throw new IllegalStateException("cannot find project for project name: " + projectName);
+		}
 		if (!projectFolder.isDirectory()) {
-			throw new IllegalStateException("cannot find project folder for project name: " + projectName);
+			throw new IllegalStateException(
+					"project folder of project \"" + projectName + "\" does not exist: " + projectFolder);
 		}
 		return projectFolder;
 	}
 
-	/** Returns all <code>node_modules</code> folders in the workspace. */
-	public List<File> getNodeModulesFolders() {
-		try (Stream<Path> paths = Files.walk(getRoot().toPath())) {
-			return paths
-					.map(Path::toFile)
-					.filter(File::isDirectory)
-					.filter(f -> N4JSGlobals.NODE_MODULES.equals(f.getName()))
-					.collect(Collectors.toList());
-		} catch (IOException e) {
-			throw new RuntimeException("error while searching node_modules folders", e);
+	private File getProjectRootFailSafe(String projectName) {
+		if (!isCreated()) {
+			return null;
 		}
+
+		Path projectNamePath = projectNameToRelativePath(projectName);
+		Path createdProjectNamePath = projectNameToRelativePath(createdProject.getProjectName());
+
+		Path createdProjectPath = getRoot().toPath().resolve(createdProjectNamePath);
+
+		if (projectName.equals(createdProject.getProjectName())) {
+			return createdProjectPath.toFile();
+		}
+
+		if (createdProject instanceof YarnWorkspaceProject) {
+			Project containedProject = ((YarnWorkspaceProject) createdProject).getProject(projectName);
+			if (containedProject != null) {
+				return createdProjectPath.resolve(YarnWorkspaceProject.PACKAGES).resolve(projectNamePath).toFile();
+			}
+		}
+
+		Project nodeModuleProject = createdProject.getNodeModuleProject(projectName);
+		if (nodeModuleProject != null) {
+			return createdProjectPath.resolve(N4JSGlobals.NODE_MODULES).resolve(projectNamePath).toFile();
+		}
+
+		if (createdProject instanceof YarnWorkspaceProject) {
+			for (Project containedProject : ((YarnWorkspaceProject) createdProject).getProjects()) {
+				Project containedNodeModuleProject = createdProject.getNodeModuleProject(projectName);
+				if (containedNodeModuleProject != null) {
+					Path containedProjectNamePath = projectNameToRelativePath(containedProject.getProjectName());
+					return createdProjectPath
+							.resolve(YarnWorkspaceProject.PACKAGES).resolve(containedProjectNamePath)
+							.resolve(N4JSGlobals.NODE_MODULES).resolve(projectNamePath).toFile();
+				}
+			}
+		}
+
+		return null;
 	}
 
-	/** Tells whether the test workspace located at {@link #getRoot()} is a yarn workspace. */
-	public boolean isYarnWorkspace() {
-		File workspaceProject = new File(getRoot(), YARN_TEST_PROJECT);
-		File packagesFolder = new File(workspaceProject, YarnWorkspaceProject.PACKAGES);
-		return workspaceProject.isDirectory() && packagesFolder.isDirectory();
+	private Path projectNameToRelativePath(String projectName) {
+		String namePathStr = "/".equals(File.separator) ? projectName : projectName.replace("/", File.separator);
+		return Path.of(namePathStr);
 	}
 
 	/** @return the given name if non-<code>null</code> and non-empty; otherwise {@link #DEFAULT_MODULE_NAME}. */
@@ -215,6 +236,25 @@ public class TestWorkspaceCreator {
 		} catch (IOException e) {
 			throw new IllegalStateException("Error when searching for module " + moduleNameWithExtension, e);
 		}
+	}
+
+	/** Tells whether the test workspace has already been created. */
+	public boolean isCreated() {
+		return createdProject != null;
+	}
+
+	/** Throws an exception iff the test workspace has not yet been created. */
+	public void assertCreated() {
+		Assert.assertTrue("no test project(s) created yet", isCreated());
+	}
+
+	/**
+	 * Returns the project created with one of the <code>create*</code>-methods or <code>null</code> if none was created
+	 * yet. In case of yarn workspaces, this method returns the root project and it will be of type
+	 * {@link YarnWorkspaceProject}.
+	 */
+	public Project getCreatedProject() {
+		return createdProject;
 	}
 
 	/**
@@ -273,20 +313,23 @@ public class TestWorkspaceCreator {
 
 	private Project createTestOnDisk(Path destination, Map<String, Map<String, String>> projectsModulesContents) {
 
-		Project project = null;
+		if (createdProject != null) {
+			throw new IllegalStateException("test was already created on disk");
+		}
+
 		if (projectsModulesContents.size() == 1) {
 			Entry<String, Map<String, String>> singleProject = projectsModulesContents.entrySet().iterator().next();
 			String projectName = singleProject.getKey();
 			Map<String, String> moduleContents = singleProject.getValue();
-			project = createSimpleProject(projectName, moduleContents, HashMultimap.create());
+			createdProject = createSimpleProject(projectName, moduleContents, HashMultimap.create());
 		} else {
-			project = createYarnProject(projectsModulesContents);
+			createdProject = createYarnProject(projectsModulesContents);
 		}
 
 		destination.toFile().mkdirs();
-		project.create(destination);
+		createdProject.create(destination);
 
-		return project;
+		return createdProject;
 	}
 
 	private Project createSimpleProject(String projectName, Map<String, String> modulesContents,
@@ -390,6 +433,32 @@ public class TestWorkspaceCreator {
 		}
 	}
 
+	/** Deletes the test workspace. Throws exception if it has not yet been created. */
+	public void deleteTestFromDisk() {
+		if (createdProject == null) {
+			throw new IllegalStateException("trying to delete test from disk without first creating it");
+		}
+		deleteTestFromDiskIfCreated();
+	}
+
+	/** Same as {@link #deleteTestFromDisk()}, but does nothing if no test workspace has been created yet. */
+	public void deleteTestFromDiskIfCreated() {
+		if (createdProject != null) {
+			File root = getRoot();
+			FileUtils.deleteFileOrFolder(root);
+
+			createdProject = null;
+		}
+	}
+
+	/**
+	 * Converts from pairs to a corresponding map. This method has two return values:
+	 * <ol>
+	 * <li>the resulting map, which is returned by changing the given argument <code>addHere</code>, and
+	 * <li>iff a module in the given pairs is marked as selected module (see {@link #MODULE_SELECTOR}), then this method
+	 * returns a pair "selected project path" -&gt; "selected module"; otherwise it returns <code>null</code>.
+	 * </ol>
+	 */
 	/* package */ static Pair<String, String> convertProjectsModulesContentsToMap(
 			Iterable<Pair<String, List<Pair<String, String>>>> projectsModulesContentsAsPairs,
 			Map<String, Map<String, String>> addHere,
@@ -397,6 +466,7 @@ public class TestWorkspaceCreator {
 
 		String selectedProjectPath = null;
 		String selectedModule = null;
+		addHere.clear();
 		for (Pair<String, ? extends Iterable<Pair<String, String>>> project : projectsModulesContentsAsPairs) {
 			String projectPath = project.getKey();
 			Iterable<? extends Pair<String, String>> modules = project.getValue();
