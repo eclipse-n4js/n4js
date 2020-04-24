@@ -32,14 +32,19 @@ import org.junit.Before
 import org.junit.Test
 
 import static org.junit.Assert.*
+import org.eclipse.xtext.testing.RepeatedTest
+import org.junit.Rule
 
 /**
  * Ported from Xtext
  */
+@RepeatedTest(times=50)
 class XRequestManagerTest {
 
 	@Inject
 	XRequestManager requestManager
+	
+	@Rule public val repeater = new RepeatedTest.Rule(false)
 
 	AtomicInteger sharedState
 
@@ -184,15 +189,43 @@ class XRequestManagerTest {
 	}
 
 	@Test(timeout = 1000)
-	def void testRunWriteAfterRead() {
-		requestManager.runRead("test") [
+	def void testRunWriteAfterReadStarted() {
+		val readStarted = new CountDownLatch(1)
+		requestManager.runRead("read") [
+			readStarted.countDown
 			sharedState.incrementAndGet
 		]
-		requestManager.runWrite("test", [], [
+		Uninterruptibles.awaitUninterruptibly(readStarted)
+		requestManager.runWrite("write", [], [
 			assertEquals (1, sharedState.get)
 			sharedState.incrementAndGet
 		]).join
 		assertEquals(2, sharedState.get)
+	}
+	
+	@Test(timeout = 1000)
+	def void testRunWriteBeforeReadStarted() {
+		val writeSubmitted = new CountDownLatch(1)
+		val firstWriteDone = new AtomicBoolean
+		requestManager.runWrite("write", [
+			Uninterruptibles.awaitUninterruptibly(writeSubmitted)
+			firstWriteDone.set(true)
+			null
+		], [
+			sharedState.incrementAndGet
+		])
+		requestManager.runRead("read") [
+			sharedState.incrementAndGet
+		]
+		val joinMe = requestManager.runWrite("write-again", [], [
+			assertEquals (0, sharedState.get)
+			assertTrue(firstWriteDone.get)
+			sharedState.incrementAndGet
+		])
+		writeSubmitted.countDown
+		joinMe.join
+		assertTrue(firstWriteDone.get)
+		assertEquals(1, sharedState.get)
 	}
 
 	@Test(timeout = 1000)
