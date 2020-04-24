@@ -44,6 +44,7 @@ import org.eclipse.xtext.validation.EValidatorRegistrar;
 import org.eclipse.xtext.validation.IssueSeverities;
 import org.eclipse.xtext.xbase.lib.Pair;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.LinkedHashMultimap;
@@ -107,7 +108,8 @@ public abstract class AbstractPackageJSONValidatorExtension extends AbstractDecl
 
 	@Override
 	public MethodWrapper createMethodWrapper(AbstractDeclarativeValidator instanceToUse, Method method) {
-		boolean isCheckMethodInsideThisClass = method.getDeclaringClass() == AbstractPackageJSONValidatorExtension.class;
+		boolean isCheckMethodInsideThisClass = method
+				.getDeclaringClass() == AbstractPackageJSONValidatorExtension.class;
 		if (isCheckMethodInsideThisClass) {
 			// Must not do performance measuring for the @Check method inside this class, because it will invoke (and
 			// measure) the more fine-grained @CheckProperty methods. Without this, we would count those validations
@@ -284,7 +286,11 @@ public abstract class AbstractPackageJSONValidatorExtension extends AbstractDecl
 		if (!fileName.equals(IN4JSProject.PACKAGE_JSON)) {
 			return false;
 		}
-		IN4JSProject project = n4jsCore.findProject(pckjsonUri).get();
+		Optional<? extends IN4JSProject> optProject = n4jsCore.findProject(pckjsonUri);
+		if (!optProject.isPresent()) {
+			return false;
+		}
+		IN4JSProject project = optProject.get();
 		URI expectedLocation = project.getLocation().appendSegment(IN4JSProject.PACKAGE_JSON).toURI();
 
 		// In test Xpect scenarios (see bundle packagejson.xpect.tests) package.json files can be named package.json.xt
