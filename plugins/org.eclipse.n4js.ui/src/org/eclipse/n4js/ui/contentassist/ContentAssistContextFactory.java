@@ -15,6 +15,7 @@ import java.util.Collection;
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.Token;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.ide.editor.contentassist.N4JSContentAssistContextFactory;
 import org.eclipse.xtext.ide.editor.contentassist.antlr.FollowElement;
 import org.eclipse.xtext.nodemodel.ILeafNode;
 import org.eclipse.xtext.nodemodel.INode;
@@ -30,7 +31,7 @@ import org.eclipse.xtext.util.Strings;
  * @see CustomN4JSParser#getFollowElements(INode, int, int, boolean)
  */
 public class ContentAssistContextFactory
-		extends org.eclipse.xtext.ide.editor.contentassist.antlr.ContentAssistContextFactory {
+		extends N4JSContentAssistContextFactory {
 
 	@Override
 	public CustomN4JSParser getParser() {

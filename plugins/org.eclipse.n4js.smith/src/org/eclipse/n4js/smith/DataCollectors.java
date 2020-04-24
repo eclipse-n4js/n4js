@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 
 /**
@@ -33,49 +34,70 @@ public enum DataCollectors {
 	private final AtomicBoolean pauseAllCollectors = new AtomicBoolean(true);
 
 	/**
-	 * returns existing collector for the provided key. If there is no collector corresponding to the key creates new
-	 * one and returns it. Any further call with the same key will return previously created instance.
+	 * returns a new or an existing collector for the provided key. If there is no collector corresponding to the key
+	 * creates new one and returns it. Any further call with the same key will return previously created instance.
 	 */
 	public DataCollector getOrCreateDataCollector(String key) {
-		if (Strings.isNullOrEmpty(key)) {
-			throw new RuntimeException("DataCollector key cannot be null or empty");
-		}
-
-		return get(key, null);
+		return getOrCreateDataCollector(key, null);
 	}
 
 	/**
-	 * returns collector for a given key, that is child of the provided parent collector. If no keys are provided
-	 * returns behaves as {@link #getOrCreateDataCollector(String)}
+	 * returns a new or an existing sequentializing collector for the provided key. If there is no collector
+	 * corresponding to the key creates new one and returns it. Any further call with the same key will return
+	 * previously created instance.
 	 */
-	public DataCollector getOrCreateDataCollector(String key, DataCollector parent) {
-
-		if (Strings.isNullOrEmpty(key)) {
-			throw new RuntimeException("DataCollector key cannot be null or empty");
-		}
-
-		return get(key, parent);
+	public DataCollector getOrCreateSerialDataCollector(String key) {
+		return getOrCreateSerialDataCollector(key, null);
 	}
 
-	private synchronized DataCollector get(String key, DataCollector parent) {
+	/**
+	 * returns a new or an existing collector for a given key, that is child of the provided parent collector. If no
+	 * parent is provided behaves as {@link #getOrCreateDataCollector(String)}
+	 */
+	public DataCollector getOrCreateDataCollector(String key, DataCollector parent) {
+		return get(key, parent, false);
+	}
+
+	/**
+	 * returns a new or an existing sequentializing collector for a given key, that is child of the provided parent
+	 * collector. If no parent is provided behaves as {@link #getOrCreateDataCollector(String)}
+	 */
+	public DataCollector getOrCreateSerialDataCollector(String key, DataCollector parent) {
+		DataCollector result = get(key, parent, true);
+		Preconditions.checkState(result instanceof SerializingDataCollector);
+		return result;
+	}
+
+	private synchronized DataCollector get(String key, DataCollector parent, boolean serial) {
+		if (Strings.isNullOrEmpty(key)) {
+			throw new IllegalArgumentException("DataCollector key cannot be null or empty");
+		}
+
 		DataCollector collector = null;
 
 		if (parent == null) {
 			collector = collectors.get(key);
 			if (collector == null) {
-				collector = new TimedDataCollector(key);
-				collector.setPaused(this.pauseAllCollectors.get());
+				collector = createCollector(key, serial);
 				collectors.put(key, collector);
 			}
 		} else {
 			collector = parent.getChild(key);
 			if (collector == null) {
-				collector = new TimedDataCollector(key, parent);
-				collector.setPaused(this.pauseAllCollectors.get());
+				collector = createCollector(key, serial);
 				parent.addChild(collector);
 			}
 		}
 
+		return collector;
+	}
+
+	private DataCollector createCollector(String key, boolean serial) {
+		DataCollector collector = new TimedDataCollector(key);
+		if (serial) {
+			collector = new SerializingDataCollector(collector);
+		}
+		collector.setPaused(this.pauseAllCollectors.get());
 		return collector;
 	}
 
