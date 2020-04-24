@@ -25,7 +25,9 @@ import org.antlr.runtime.Token;
 import org.antlr.runtime.TokenSource;
 import org.eclipse.n4js.ide.contentassist.antlr.N4JSParser;
 import org.eclipse.n4js.ide.contentassist.antlr.internal.InternalN4JSParser;
+import org.eclipse.n4js.ide.editor.contentassist.ContentAssistDataCollectors;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
+import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.xtext.AbstractElement;
 import org.eclipse.xtext.Group;
 import org.eclipse.xtext.UnorderedGroup;
@@ -101,6 +103,9 @@ public class CustomN4JSParser extends N4JSParser {
 	@Inject
 	private TokenSourceFactory tokenSourceFactory;
 
+	@Inject
+	private ContentAssistDataCollectors dataCollectors;
+
 	/**
 	 * Token types that would require a mandatory semicolon if followed by a NL.
 	 */
@@ -134,16 +139,18 @@ public class CustomN4JSParser extends N4JSParser {
 	 * @return a collection of follow elements.
 	 */
 	public Collection<FollowElement> getFollowElements(INode node, int startOffset, int endOffset, boolean strict) {
-		Set<FollowElement> result = Sets.newLinkedHashSet();
+		try (Measurement m = dataCollectors.dcParseContexts().getMeasurement()) {
+			Set<FollowElement> result = Sets.newLinkedHashSet();
 
-		TokenSource tokenSource = tokenSourceFactory.toTokenSource(node, startOffset, endOffset);
-		CustomInternalN4JSParser parser = collectFollowElements(tokenSource, strict, result);
-		adjustASIAndCollectFollowElements(parser, strict, result);
+			TokenSource tokenSource = tokenSourceFactory.toTokenSource(node, startOffset, endOffset);
+			CustomInternalN4JSParser parser = collectFollowElements(tokenSource, strict, result);
+			adjustASIAndCollectFollowElements(parser, strict, result);
 
-		/*
-		 * Lists are easier to debug
-		 */
-		return Lists.newArrayList(result);
+			/*
+			 * Lists are easier to debug
+			 */
+			return Lists.newArrayList(result);
+		}
 	}
 
 	/**
@@ -307,6 +314,20 @@ public class CustomN4JSParser extends N4JSParser {
 	}
 
 	/**
+	 * Public setter to allow easier testing.
+	 */
+	public void setDataCollectors(ContentAssistDataCollectors dataCollectors) {
+		this.dataCollectors = dataCollectors;
+	}
+
+	/**
+	 * Public getter to be symmetric to the setter.
+	 */
+	public ContentAssistDataCollectors getDataCollectors() {
+		return dataCollectors;
+	}
+
+	/**
 	 * Initializes some local fields from the given grammarAcess and the given mapper.
 	 *
 	 * Public for testing purpose.
@@ -327,109 +348,111 @@ public class CustomN4JSParser extends N4JSParser {
 	@SuppressWarnings("hiding")
 	@Override
 	public Collection<FollowElement> getFollowElements(FollowElement element) {
-		if (element.getLookAhead() <= 1)
-			throw new IllegalArgumentException("lookahead may not be less than or equal to 1");
-		Collection<FollowElement> result = new ArrayList<>();
-		Collection<AbstractElement> elementsToParse = getElementsToParse(element);
-		for (AbstractElement elementToParse : elementsToParse) {
-			// fix is here
-			elementToParse = unwrapSingleElementGroups(elementToParse);
-			// done
-			String ruleName = getRuleName(elementToParse);
-			String[][] allRuleNames = getRequiredRuleNames(ruleName, element.getParamStack(),
-					elementToParse);
-			for (String[] ruleNames : allRuleNames) {
-				for (int i = 0; i < ruleNames.length; i++) {
-					AbstractInternalContentAssistParser parser = createParser();
-					parser.setUnorderedGroupHelper(getUnorderedGroupHelper().get());
-					parser.getUnorderedGroupHelper().initializeWith(parser);
-					final Iterator<LookAheadTerminal> iter = element.getLookAheadTerminals().iterator();
-					ObservableXtextTokenStream tokens = new ObservableXtextTokenStream(new TokenSource() {
-						@Override
-						public Token nextToken() {
-							if (iter.hasNext()) {
-								LookAheadTerminal lookAhead = iter.next();
-								return lookAhead.getToken();
-							}
-							return Token.EOF_TOKEN;
-						}
-
-						@Override
-						public String getSourceName() {
-							return "LookAheadTerminalTokenSource";
-						}
-					}, parser);
-					parser.setTokenStream(tokens);
-					tokens.setListener(parser);
-					parser.getGrammarElements().addAll(element.getTrace());
-					parser.getGrammarElements().add(elementToParse);
-					parser.getLocalTrace().addAll(element.getLocalTrace());
-					parser.getLocalTrace().add(elementToParse);
-					parser.getParamStack().addAll(element.getParamStack());
-					if (elementToParse instanceof UnorderedGroup && element.getGrammarElement() == elementToParse) {
-						UnorderedGroup group = (UnorderedGroup) elementToParse;
-						final IUnorderedGroupHelper helper = parser.getUnorderedGroupHelper();
-						helper.enter(group);
-						for (AbstractElement consumed : element.getHandledUnorderedGroupElements()) {
-							parser.before(consumed);
-							helper.select(group, group.getElements().indexOf(consumed));
-							helper.returnFromSelection(group);
-							parser.after(consumed);
-						}
-						parser.setUnorderedGroupHelper(new IUnorderedGroupHelper() {
-
-							boolean first = true;
-
+		try (Measurement m = dataCollectors.dcParseFollowElements().getMeasurement()) {
+			if (element.getLookAhead() <= 1)
+				throw new IllegalArgumentException("lookahead may not be less than or equal to 1");
+			Collection<FollowElement> result = new ArrayList<>();
+			Collection<AbstractElement> elementsToParse = getElementsToParse(element);
+			for (AbstractElement elementToParse : elementsToParse) {
+				// fix is here
+				elementToParse = unwrapSingleElementGroups(elementToParse);
+				// done
+				String ruleName = getRuleName(elementToParse);
+				String[][] allRuleNames = getRequiredRuleNames(ruleName, element.getParamStack(),
+						elementToParse);
+				for (String[] ruleNames : allRuleNames) {
+					for (int i = 0; i < ruleNames.length; i++) {
+						AbstractInternalContentAssistParser parser = createParser();
+						parser.setUnorderedGroupHelper(getUnorderedGroupHelper().get());
+						parser.getUnorderedGroupHelper().initializeWith(parser);
+						final Iterator<LookAheadTerminal> iter = element.getLookAheadTerminals().iterator();
+						ObservableXtextTokenStream tokens = new ObservableXtextTokenStream(new TokenSource() {
 							@Override
-							public void initializeWith(BaseRecognizer recognizer) {
-								helper.initializeWith(recognizer);
+							public Token nextToken() {
+								if (iter.hasNext()) {
+									LookAheadTerminal lookAhead = iter.next();
+									return lookAhead.getToken();
+								}
+								return Token.EOF_TOKEN;
 							}
 
 							@Override
-							public void enter(UnorderedGroup group) {
-								if (!first)
-									helper.enter(group);
-								first = false;
+							public String getSourceName() {
+								return "LookAheadTerminalTokenSource";
 							}
-
-							@Override
-							public void leave(UnorderedGroup group) {
-								helper.leave(group);
-							}
-
-							@Override
-							public boolean canSelect(UnorderedGroup group, int index) {
-								return helper.canSelect(group, index);
-							}
-
-							@Override
-							public void select(UnorderedGroup group, int index) {
-								helper.select(group, index);
-							}
-
-							@Override
-							public void returnFromSelection(UnorderedGroup group) {
+						}, parser);
+						parser.setTokenStream(tokens);
+						tokens.setListener(parser);
+						parser.getGrammarElements().addAll(element.getTrace());
+						parser.getGrammarElements().add(elementToParse);
+						parser.getLocalTrace().addAll(element.getLocalTrace());
+						parser.getLocalTrace().add(elementToParse);
+						parser.getParamStack().addAll(element.getParamStack());
+						if (elementToParse instanceof UnorderedGroup && element.getGrammarElement() == elementToParse) {
+							UnorderedGroup group = (UnorderedGroup) elementToParse;
+							final IUnorderedGroupHelper helper = parser.getUnorderedGroupHelper();
+							helper.enter(group);
+							for (AbstractElement consumed : element.getHandledUnorderedGroupElements()) {
+								parser.before(consumed);
+								helper.select(group, group.getElements().indexOf(consumed));
 								helper.returnFromSelection(group);
+								parser.after(consumed);
 							}
+							parser.setUnorderedGroupHelper(new IUnorderedGroupHelper() {
 
-							@Override
-							public boolean canLeave(UnorderedGroup group) {
-								return helper.canLeave(group);
-							}
+								boolean first = true;
 
-							@Override
-							public UnorderedGroupState snapShot(UnorderedGroup... groups) {
-								return helper.snapShot(groups);
-							}
+								@Override
+								public void initializeWith(BaseRecognizer recognizer) {
+									helper.initializeWith(recognizer);
+								}
 
-						});
+								@Override
+								public void enter(UnorderedGroup group) {
+									if (!first)
+										helper.enter(group);
+									first = false;
+								}
+
+								@Override
+								public void leave(UnorderedGroup group) {
+									helper.leave(group);
+								}
+
+								@Override
+								public boolean canSelect(UnorderedGroup group, int index) {
+									return helper.canSelect(group, index);
+								}
+
+								@Override
+								public void select(UnorderedGroup group, int index) {
+									helper.select(group, index);
+								}
+
+								@Override
+								public void returnFromSelection(UnorderedGroup group) {
+									helper.returnFromSelection(group);
+								}
+
+								@Override
+								public boolean canLeave(UnorderedGroup group) {
+									return helper.canLeave(group);
+								}
+
+								@Override
+								public UnorderedGroupState snapShot(UnorderedGroup... groups) {
+									return helper.snapShot(groups);
+								}
+
+							});
+						}
+						Collection<FollowElement> elements = getFollowElements(parser, elementToParse,
+								ruleNames, i);
+						result.addAll(elements);
 					}
-					Collection<FollowElement> elements = getFollowElements(parser, elementToParse,
-							ruleNames, i);
-					result.addAll(elements);
 				}
 			}
+			return result;
 		}
-		return result;
 	}
 }

@@ -10,8 +10,9 @@
  */
 package org.eclipse.n4js.ide.editor.contentassist;
 
+import static org.eclipse.n4js.smith.DataCollectors.INSTANCE;
+
 import org.eclipse.n4js.smith.DataCollector;
-import org.eclipse.n4js.smith.DataCollectors;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
 
@@ -25,6 +26,8 @@ public final class ContentAssistDataCollectors {
 	private final DataCollector root;
 	private final DataCollector createProposals;
 	private final DataCollector createContexts;
+	private final DataCollector parseContexts;
+	private final DataCollector parseFollowElements;
 	private final DataCollector createProposalsInner;
 	private final DataCollector getScope;
 	private final DataCollector getAllElements;
@@ -37,14 +40,16 @@ public final class ContentAssistDataCollectors {
 	 */
 	public ContentAssistDataCollectors(DataCollector root) {
 		this.root = root;
-		this.createProposals = create("createProposals", root);
-		this.createContexts = create("createContexts", createProposals);
-		this.createProposalsInner = create("inner createProposals", createProposals);
-		this.getScope = create("getScopeForContentAssist", createProposalsInner);
-		this.getAllElements = create("scope.getAllElements", dcCreateProposalsInner());
-		this.forEachElement = create("for(description in scope.allElements)", dcCreateProposalsInner());
-		this.getResolution = create("getResolution", forEachElement);
-		this.checkConflict = create("checkConflict", getResolution);
+		this.createProposals = create(root, "createProposals");
+		this.createContexts = create(createProposals, "createContexts");
+		this.parseContexts = createSerial(createContexts, "parseContext");
+		this.parseFollowElements = createSerial(createContexts, "parseFollowElements");
+		this.createProposalsInner = create(createProposals, "inner createProposals");
+		this.getScope = create(createProposalsInner, "getScopeForContentAssist");
+		this.getAllElements = create(dcCreateProposalsInner(), "scope.getAllElements");
+		this.forEachElement = create(dcCreateProposalsInner(), "for(description in scope.allElements)");
+		this.getResolution = create(forEachElement, "getResolution");
+		this.checkConflict = create(getResolution, "checkConflict");
 	}
 
 	/**
@@ -66,6 +71,20 @@ public final class ContentAssistDataCollectors {
 	 */
 	public DataCollector dcCreateContexts() {
 		return createContexts;
+	}
+
+	/**
+	 * The data collector for the computation of the content assist context from the resource information.
+	 */
+	public DataCollector dcParseContexts() {
+		return parseContexts;
+	}
+
+	/**
+	 * The data collector for the computation of the content assist context from the resource information.
+	 */
+	public DataCollector dcParseFollowElements() {
+		return parseFollowElements;
 	}
 
 	/**
@@ -110,7 +129,11 @@ public final class ContentAssistDataCollectors {
 		return checkConflict;
 	}
 
-	private static DataCollector create(String key, DataCollector parent) {
-		return DataCollectors.INSTANCE.getOrCreateDataCollector(key, parent);
+	private static DataCollector create(DataCollector parent, String key) {
+		return INSTANCE.getOrCreateDataCollector(key, parent);
+	}
+
+	private static DataCollector createSerial(DataCollector parent, String key) {
+		return INSTANCE.getOrCreateSerialDataCollector(key, parent);
 	}
 }
