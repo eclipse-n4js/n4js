@@ -32,20 +32,15 @@ import org.junit.Before
 import org.junit.Test
 
 import static org.junit.Assert.*
-import org.eclipse.xtext.testing.RepeatedTest
-import org.junit.Rule
 
 /**
  * Ported from Xtext
  */
-@RepeatedTest(times=50)
 class XRequestManagerTest {
 
 	@Inject
 	XRequestManager requestManager
 	
-	@Rule public val repeater = new RepeatedTest.Rule(false)
-
 	AtomicInteger sharedState
 
 	@Before
