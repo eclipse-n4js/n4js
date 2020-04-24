@@ -25,6 +25,7 @@ import org.eclipse.xtext.xbase.lib.util.ReflectExtensions
 import org.eclipse.xtext.xtext.RuleNames
 import org.junit.runner.RunWith
 import org.eclipse.xtext.ide.editor.contentassist.antlr.RequiredRuleNameComputer
+import org.eclipse.n4js.ide.editor.contentassist.ContentAssistDataCollectors
 
 /**
  */
@@ -45,6 +46,7 @@ class CustomParserTest extends AbstractContentAssistParserTest implements Provid
 			it.grammarAccess = grammarAccess
 			it.nameMappings = nameMappings;
 			it.tokenSourceFactory = tokenSourceFactory
+			it.dataCollectors = new ContentAssistDataCollectors(null)
 			it.unorderedGroupHelper = this
 			it.initializeTokenTypes(tokenMapper, grammarAccess)
 			it.set('requiredRuleNameComputer', ruleNameComputer)
