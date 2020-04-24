@@ -183,7 +183,8 @@ public class CustomN4JSParser extends N4JSParser implements IPartialContentAssis
 			}
 			TokenSource tokenSource = tokenSourceFactory.toTokenSource(entryPoint, entryPoint.getOffset(), offset,
 					true);
-			CustomInternalN4JSParser parser = collectFollowElements(tokenSource, ruleName, strict, result);
+			CustomInternalN4JSParser parser = collectFollowElements(tokenSource, getEntryGrammarElement(entryPoint),
+					ruleName, strict, result);
 			adjustASIAndCollectFollowElements(parser, ruleName, strict, result);
 
 			/*
@@ -398,12 +399,15 @@ public class CustomN4JSParser extends N4JSParser implements IPartialContentAssis
 	 */
 	private CustomInternalN4JSParser collectFollowElements(
 			TokenSource tokens,
+			AbstractElement grammarElement,
 			String ruleName,
 			boolean strict,
 			Set<FollowElement> result) {
 		CustomInternalN4JSParser parser = createParser();
 		parser.setStrict(strict);
 		try {
+			if (grammarElement != null)
+				parser.getGrammarElements().add(grammarElement);
 			ObservableXtextTokenStream tokenStream = new ObservableXtextTokenStream(tokens, parser);
 			result.addAll(doGetFollowElements(parser, tokenStream, ruleName));
 		} catch (InfiniteRecursion infinite) {
