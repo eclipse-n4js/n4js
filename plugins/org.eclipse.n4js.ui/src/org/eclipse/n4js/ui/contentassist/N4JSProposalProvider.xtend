@@ -150,8 +150,9 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 			importAwareReferenceProposalCreator.lookupCrossReference(context.currentModel, reference, context, acceptor,
 				filter, proposalFactory);
 
-		} 
-		super.lookupCrossReference(crossReference, reference, context, acceptor, filter)
+		} else {
+			super.lookupCrossReference(crossReference, reference, context, acceptor, filter)
+		}
 	}
 
 	/**

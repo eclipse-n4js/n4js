@@ -176,6 +176,11 @@ public class CustomN4JSParser extends N4JSParser implements IPartialContentAssis
 			} else {
 				ruleName = getRuleName(entryPoint);
 			}
+			// Yeah Xpect fallback, Lord this is annoying.
+			if (ruleName == null) {
+				entryPoint = parseResult.getRootNode();
+				ruleName = "ruleScript";
+			}
 			TokenSource tokenSource = tokenSourceFactory.toTokenSource(entryPoint, entryPoint.getOffset(), offset,
 					true);
 			CustomInternalN4JSParser parser = collectFollowElements(tokenSource, ruleName, strict, result);
@@ -189,6 +194,8 @@ public class CustomN4JSParser extends N4JSParser implements IPartialContentAssis
 	}
 
 	String getRuleName(ICompositeNode entryPoint) {
+		// This does not work well from Xpect since Xpect messes with the injectors and
+		// thereby causes trouble with object identities of the grammar access.
 		EObject grammarElement = entryPoint.getGrammarElement();
 		if (grammarElement instanceof RuleCall) {
 			RuleCall rc = (RuleCall) grammarElement;
@@ -199,7 +206,9 @@ public class CustomN4JSParser extends N4JSParser implements IPartialContentAssis
 					String[][] names = getRequiredRuleNames(getRuleName((AbstractElement) grammarElement),
 							Ints.asList(getParamConfig(entryPoint)),
 							(AbstractElement) grammarElement);
-					return names[0][0];
+					if (names.length > 0) {
+						return names[0][0];
+					}
 				}
 			}
 		}
