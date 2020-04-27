@@ -30,6 +30,7 @@ import java.util.Map;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.n4js.N4JSLanguageConstants;
+import org.eclipse.n4js.cli.N4jscExitCode;
 import org.eclipse.n4js.cli.helper.CliCompileResult;
 import org.eclipse.n4js.cli.helper.CliTools;
 import org.eclipse.n4js.csv.CSVData;
@@ -642,8 +643,12 @@ public class AccessControlTest {
 			fail("exception during compilation: " + compileResult);
 		}
 		if (compileResult.getExitCode() != 0) {
-			fail("non-zero exit code from compilation: " + compileResult.getExitCode() + System.lineSeparator()
-					+ compileResult);
+			if (compileResult.getExitCode() == N4jscExitCode.VALIDATION_ERRORS.getExitCodeValue()
+					&& compileResult.getErrMsgs().isEmpty()) {
+
+				fail("non-zero exit code from compilation: " + compileResult.getExitCode() + System.lineSeparator()
+						+ compileResult);
+			}
 		}
 
 		DiagnosticIssueConverter converter = new DiagnosticIssueConverter();
