@@ -107,11 +107,15 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 		private final Set<URI> changedFiles = new LinkedHashSet<>();
 		private final Set<URI> deletedFiles = new LinkedHashSet<>();
 
-		public synchronized Pair<List<URI>, List<URI>> getAndClear() {
-			ArrayList<URI> changed = new ArrayList<>(changedFiles);
-			ArrayList<URI> deleted = new ArrayList<>(deletedFiles);
+		public synchronized void clear() {
 			changedFiles.clear();
 			deletedFiles.clear();
+		}
+
+		public synchronized Pair<List<URI>, List<URI>> getAndClear() {
+			List<URI> changed = ImmutableList.copyOf(changedFiles);
+			List<URI> deleted = ImmutableList.copyOf(deletedFiles);
+			clear();
 			return Pair.of(changed, deleted);
 		}
 
@@ -167,6 +171,19 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	};
 
 	/**
+	 * Tells whether the workspace is in dirty state. The workspace is said to be in dirty state iff at least one file
+	 * is open AND is dirty, i.e. has unsaved changes.
+	 */
+	public boolean isDirty() {
+		for (XDocument doc : openDocuments.values()) {
+			if (doc.isDirty()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Initialize a workspace at the given location.
 	 *
 	 * @param baseDir
@@ -180,6 +197,7 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 
 	/** Refresh the workspace. */
 	public void refreshWorkspaceConfig() {
+		filesAwaitingGeneration.clear();
 		setWorkspaceConfig(workspaceConfigFactory.getWorkspaceConfig(baseDir));
 		Set<String> projectNames = projectName2ProjectManager.keySet();
 		Set<String> remainingProjectNames = new HashSet<>(projectNames);
@@ -291,19 +309,6 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 		} else {
 			return getIncrementalGenerateBuildable(dirtyFiles, deletedFiles);
 		}
-	}
-
-	/**
-	 * Tells whether the workspace is in dirty state. The workspace is said to be in dirty state iff at least one file
-	 * is open AND is dirty, i.e. has unsaved changes.
-	 */
-	public boolean isDirty() {
-		for (XDocument doc : openDocuments.values()) {
-			if (doc.isDirty()) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	/**
@@ -447,6 +452,8 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 
 	/** Cleans all projects in the workspace */
 	public void clean(CancelIndicator cancelIndicator) {
+		// FIXME reconsider
+		filesAwaitingGeneration.clear();
 		buildManager.doClean(cancelIndicator);
 	}
 
