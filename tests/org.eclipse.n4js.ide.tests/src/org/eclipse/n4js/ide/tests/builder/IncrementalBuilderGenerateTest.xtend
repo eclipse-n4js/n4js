@@ -56,7 +56,6 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 		// the event under test:
 		changeNonOpenedFile("C", ' C ' -> ' C1 ');
 		joinServerRequests();
-cleanBuildAndWait(); // FIXME GH-1728 remove!
 
 		outputFileSnapshot.assertChanged(); // change on disk occurred while workspace was in clean state, so re-generated immediately!
 		projectStateSnapshot.assertChanged();
@@ -92,7 +91,6 @@ cleanBuildAndWait(); // FIXME GH-1728 remove!
 		// transition workspace into clean state
 		saveOpenedFile("D");
 		joinServerRequests();
-cleanBuildAndWait(); // FIXME GH-1728 remove!
 
 		outputFileSnapshot.assertChanged(); // now C must be regenerated, because workspace went back to clean state
 		projectStateSnapshot.assertChanged();
@@ -164,8 +162,7 @@ cleanBuildAndWait(); // FIXME GH-1728 remove!
 		joinServerRequests();
 
 		assertNoIssues();
-// FIXME GH-1728 activate this assertion!
-//		cOutputFileSnapshot.assertChanged();
+		cOutputFileSnapshot.assertChanged();
 		dOutputFileSnapshot.assertChanged();
 		projectStateSnapshot.assertChanged();
 	}
@@ -255,8 +252,7 @@ cleanBuildAndWait(); // FIXME GH-1728 remove!
 		joinServerRequests();
 
 		assertNoIssues();
-// FIXME GH-1728 activate this assertion!
-//		otherOutputFileSnapshot.assertChanged();
+		otherOutputFileSnapshot.assertChanged();
 		mainOutputFileSnapshot.assertChanged();
 		projectStateSnapshot.assertChanged();
 	}
