@@ -76,16 +76,21 @@ class G7<T>
 // ------------------------------------------------------------------------
 // case 1.d
 
+class XYZ {
+  // XPECT warnings --> "Type variable T2 not used in parameters or return type." at "T2"
+  static <T1, T2 extends T1> foo() {}	
+}
+	
+// XPECT noerrors -->
+XYZ.<A,B>foo();
+// XPECT errors --> "X is not a subtype of A." at "X"
+XYZ.<A,X>foo();
+
+// ------------------------------------------------------------------------
+// case 1.e
+
 // XPECT warnings --> "Type variable T2 not used in parameters or return type." at "T2"
 function <T1, T2 extends T1> foo() {}
-
-// XPECT noerrors -->
-<A,B>foo();
-// XPECT errors --> "X is not a subtype of A." at "X"
-<A,X>foo();
-
-
-
 
 // get rid of "unused variable" warnings ...
 console.log(v01);

@@ -125,7 +125,7 @@ class N4_04_12_5_GenericsTest extends AbstractParserTest{
 		val script = '''
 			function <T> foo(t: T): void {}
 			var a: A;
-			<A>foo(a);
+			this.<A>foo(a);
 			bar();
 		'''.parse
 
