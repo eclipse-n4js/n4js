@@ -263,7 +263,7 @@ class N4_06_04_01_AsynchronousFunctions extends AbstractParserTest {
 	@Test
 	def void test_SomeVarName_WithLineBreak() {
 		val script = '''
-			somveVar
+			someVar
 			function foo(): void {}
 		'''.parse
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)

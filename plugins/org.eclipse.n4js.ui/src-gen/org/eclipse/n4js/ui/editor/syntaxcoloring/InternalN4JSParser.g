@@ -6643,7 +6643,7 @@ rulePrimaryExpression
 	    |
 	SuperLiteralParserRuleCall_1=ruleSuperLiteral{ announce($SuperLiteralParserRuleCall_1.start, $SuperLiteralParserRuleCall_1.stop, grammarAccess.getPrimaryExpressionAccess().getSuperLiteralParserRuleCall_1()); }
 	    |
-	ParameterizedCallExpressionParserRuleCall_2=ruleParameterizedCallExpression{ announce($ParameterizedCallExpressionParserRuleCall_2.start, $ParameterizedCallExpressionParserRuleCall_2.stop, grammarAccess.getPrimaryExpressionAccess().getParameterizedCallExpressionParserRuleCall_2()); }
+	IdentifierRefParserRuleCall_2=ruleIdentifierRef{ announce($IdentifierRefParserRuleCall_2.start, $IdentifierRefParserRuleCall_2.stop, grammarAccess.getPrimaryExpressionAccess().getIdentifierRefParserRuleCall_2()); }
 	    |
 	JSXFragmentParserRuleCall_3=ruleJSXFragment{ announce($JSXFragmentParserRuleCall_3.start, $JSXFragmentParserRuleCall_3.stop, grammarAccess.getPrimaryExpressionAccess().getJSXFragmentParserRuleCall_3()); }
 	    |
@@ -6693,7 +6693,7 @@ norm1_PrimaryExpression
 	    |
 	SuperLiteralParserRuleCall_1=ruleSuperLiteral{ announce($SuperLiteralParserRuleCall_1.start, $SuperLiteralParserRuleCall_1.stop, grammarAccess.getPrimaryExpressionAccess().getSuperLiteralParserRuleCall_1()); }
 	    |
-	ParameterizedCallExpressionParserRuleCall_2=norm1_ParameterizedCallExpression{ announce($ParameterizedCallExpressionParserRuleCall_2.start, $ParameterizedCallExpressionParserRuleCall_2.stop, grammarAccess.getPrimaryExpressionAccess().getParameterizedCallExpressionParserRuleCall_2()); }
+	IdentifierRefParserRuleCall_2=norm1_IdentifierRef{ announce($IdentifierRefParserRuleCall_2.start, $IdentifierRefParserRuleCall_2.stop, grammarAccess.getPrimaryExpressionAccess().getIdentifierRefParserRuleCall_2()); }
 	    |
 	JSXFragmentParserRuleCall_3=ruleJSXFragment{ announce($JSXFragmentParserRuleCall_3.start, $JSXFragmentParserRuleCall_3.stop, grammarAccess.getPrimaryExpressionAccess().getJSXFragmentParserRuleCall_3()); }
 	    |
@@ -9699,87 +9699,6 @@ norm1_PropertySpread
 			}
 		)
 	)
-)
-;
-
-// Entry rule entryRuleParameterizedCallExpression
-entryRuleParameterizedCallExpression
-	:
-	ruleParameterizedCallExpression
-	EOF;
-
-// Rule ParameterizedCallExpression
-ruleParameterizedCallExpression
-@init {
-}:
-(
-	IdentifierRefParserRuleCall_0=ruleIdentifierRef{ announce($IdentifierRefParserRuleCall_0.start, $IdentifierRefParserRuleCall_0.stop, grammarAccess.getParameterizedCallExpressionAccess().getIdentifierRefParserRuleCall_0()); }
-	(
-		((
-			(
-				(
-					QuestionMarkFullStop
-				)
-			)?
-			ruleConcreteTypeArguments
-			LeftParenthesis
-		)
-		)=>
-		(
-			(
-				(
-					OptionalChainingQuestionMarkFullStopKeyword_1_0_1_0=QuestionMarkFullStop
-					 {
-						announce($OptionalChainingQuestionMarkFullStopKeyword_1_0_1_0, grammarAccess.getParameterizedCallExpressionAccess().getOptionalChainingQuestionMarkFullStopKeyword_1_0_1_0());
-					}
-				)
-			)?
-			ConcreteTypeArgumentsParserRuleCall_1_0_2=ruleConcreteTypeArguments{ announce($ConcreteTypeArgumentsParserRuleCall_1_0_2.start, $ConcreteTypeArgumentsParserRuleCall_1_0_2.stop, grammarAccess.getParameterizedCallExpressionAccess().getConcreteTypeArgumentsParserRuleCall_1_0_2()); }
-			(
-				(LeftParenthesis
-				)=>
-				ArgumentsWithParenthesesParserRuleCall_1_0_3=ruleArgumentsWithParentheses{ announce($ArgumentsWithParenthesesParserRuleCall_1_0_3.start, $ArgumentsWithParenthesesParserRuleCall_1_0_3.stop, grammarAccess.getParameterizedCallExpressionAccess().getArgumentsWithParenthesesParserRuleCall_1_0_3()); }
-			)
-		)
-	)?
-)
-;
-
-
-// Rule ParameterizedCallExpression
-norm1_ParameterizedCallExpression
-@init {
-}:
-(
-	IdentifierRefParserRuleCall_0=norm1_IdentifierRef{ announce($IdentifierRefParserRuleCall_0.start, $IdentifierRefParserRuleCall_0.stop, grammarAccess.getParameterizedCallExpressionAccess().getIdentifierRefParserRuleCall_0()); }
-	(
-		((
-			(
-				(
-					QuestionMarkFullStop
-				)
-			)?
-			ruleConcreteTypeArguments
-			LeftParenthesis
-		)
-		)=>
-		(
-			(
-				(
-					OptionalChainingQuestionMarkFullStopKeyword_1_0_1_0=QuestionMarkFullStop
-					 {
-						announce($OptionalChainingQuestionMarkFullStopKeyword_1_0_1_0, grammarAccess.getParameterizedCallExpressionAccess().getOptionalChainingQuestionMarkFullStopKeyword_1_0_1_0());
-					}
-				)
-			)?
-			ConcreteTypeArgumentsParserRuleCall_1_0_2=ruleConcreteTypeArguments{ announce($ConcreteTypeArgumentsParserRuleCall_1_0_2.start, $ConcreteTypeArgumentsParserRuleCall_1_0_2.stop, grammarAccess.getParameterizedCallExpressionAccess().getConcreteTypeArgumentsParserRuleCall_1_0_2()); }
-			(
-				(LeftParenthesis
-				)=>
-				ArgumentsWithParenthesesParserRuleCall_1_0_3=norm1_ArgumentsWithParentheses{ announce($ArgumentsWithParenthesesParserRuleCall_1_0_3.start, $ArgumentsWithParenthesesParserRuleCall_1_0_3.stop, grammarAccess.getParameterizedCallExpressionAccess().getArgumentsWithParenthesesParserRuleCall_1_0_3()); }
-			)
-		)
-	)?
 )
 ;
 

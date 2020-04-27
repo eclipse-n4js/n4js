@@ -515,8 +515,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 			case N4JSPackage.IDENTIFIER_REF:
 				if (rule == grammarAccess.getPrimaryExpressionRule()
 						|| rule == grammarAccess.getIdentifierRefRule()
-						|| rule == grammarAccess.getParameterizedCallExpressionRule()
-						|| action == grammarAccess.getParameterizedCallExpressionAccess().getParameterizedCallExpressionTargetAction_1_0_0()
 						|| rule == grammarAccess.getLeftHandSideExpressionRule()
 						|| action == grammarAccess.getLeftHandSideExpressionAccess().getParameterizedCallExpressionTargetAction_1_0()
 						|| rule == grammarAccess.getMemberExpressionRule()
@@ -653,55 +651,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				sequence_IntLiteral(context, (IntLiteral) semanticObject); 
 				return; 
 			case N4JSPackage.JSX_ELEMENT:
-				if (rule == grammarAccess.getPrimaryExpressionRule()
-						|| rule == grammarAccess.getLeftHandSideExpressionRule()
-						|| action == grammarAccess.getLeftHandSideExpressionAccess().getParameterizedCallExpressionTargetAction_1_0()
-						|| rule == grammarAccess.getMemberExpressionRule()
-						|| action == grammarAccess.getMemberExpressionAccess().getIndexedAccessExpressionTargetAction_2_1_0_0()
-						|| action == grammarAccess.getMemberExpressionAccess().getParameterizedPropertyAccessExpressionTargetAction_2_1_1_0()
-						|| action == grammarAccess.getMemberExpressionAccess().getTaggedTemplateStringTargetAction_2_1_2_0()
-						|| rule == grammarAccess.getPostfixExpressionRule()
-						|| action == grammarAccess.getPostfixExpressionAccess().getPostfixExpressionExpressionAction_1_0_0()
-						|| rule == grammarAccess.getCastExpressionRule()
-						|| action == grammarAccess.getCastExpressionAccess().getCastExpressionExpressionAction_1_0_0_0()
-						|| rule == grammarAccess.getUnaryExpressionRule()
-						|| rule == grammarAccess.getMultiplicativeExpressionRule()
-						|| action == grammarAccess.getMultiplicativeExpressionAccess().getMultiplicativeExpressionLhsAction_1_0_0_0()
-						|| rule == grammarAccess.getAdditiveExpressionRule()
-						|| action == grammarAccess.getAdditiveExpressionAccess().getAdditiveExpressionLhsAction_1_0_0_0()
-						|| rule == grammarAccess.getShiftExpressionRule()
-						|| action == grammarAccess.getShiftExpressionAccess().getShiftExpressionLhsAction_1_0_0()
-						|| rule == grammarAccess.getRelationalExpressionRule()
-						|| action == grammarAccess.getRelationalExpressionAccess().getRelationalExpressionLhsAction_1_0_0()
-						|| rule == grammarAccess.getEqualityExpressionRule()
-						|| action == grammarAccess.getEqualityExpressionAccess().getEqualityExpressionLhsAction_1_0_0_0()
-						|| rule == grammarAccess.getBitwiseANDExpressionRule()
-						|| action == grammarAccess.getBitwiseANDExpressionAccess().getBinaryBitwiseExpressionLhsAction_1_0_0_0()
-						|| rule == grammarAccess.getBitwiseXORExpressionRule()
-						|| action == grammarAccess.getBitwiseXORExpressionAccess().getBinaryBitwiseExpressionLhsAction_1_0_0_0()
-						|| rule == grammarAccess.getBitwiseORExpressionRule()
-						|| action == grammarAccess.getBitwiseORExpressionAccess().getBinaryBitwiseExpressionLhsAction_1_0_0_0()
-						|| rule == grammarAccess.getLogicalANDExpressionRule()
-						|| action == grammarAccess.getLogicalANDExpressionAccess().getBinaryLogicalExpressionLhsAction_1_0_0_0()
-						|| rule == grammarAccess.getLogicalORExpressionRule()
-						|| action == grammarAccess.getLogicalORExpressionAccess().getBinaryLogicalExpressionLhsAction_1_0_0_0()
-						|| rule == grammarAccess.getCoalesceExpressionRule()
-						|| action == grammarAccess.getCoalesceExpressionAccess().getCoalesceExpressionExpressionAction_1_0_0_0()
-						|| rule == grammarAccess.getConditionalExpressionRule()
-						|| action == grammarAccess.getConditionalExpressionAccess().getConditionalExpressionExpressionAction_1_0_0_0()
-						|| rule == grammarAccess.getAssignmentExpressionRule()
-						|| action == grammarAccess.getAssignmentExpressionAccess().getAssignmentExpressionLhsAction_4_1_0_0_0()
-						|| rule == grammarAccess.getExpressionRule()
-						|| action == grammarAccess.getExpressionAccess().getCommaExpressionExprsAction_1_0()
-						|| rule == grammarAccess.getJSXChildRule()) {
-					sequence_JSXChildren_JSXElement(context, (JSXElement) semanticObject); 
-					return; 
-				}
-				else if (rule == grammarAccess.getJSXElementRule()) {
-					sequence_JSXChildren_JSXElement(context, (JSXElement) semanticObject); 
-					return; 
-				}
-				else break;
+				sequence_JSXChildren_JSXElement(context, (JSXElement) semanticObject); 
+				return; 
 			case N4JSPackage.JSX_ELEMENT_NAME:
 				sequence_JSXElementName(context, (JSXElementName) semanticObject); 
 				return; 
@@ -989,61 +940,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				sequence_OctalIntLiteral(context, (OctalIntLiteral) semanticObject); 
 				return; 
 			case N4JSPackage.PARAMETERIZED_CALL_EXPRESSION:
-				if (rule == grammarAccess.getLeftHandSideExpressionRule()
-						|| rule == grammarAccess.getPostfixExpressionRule()
-						|| action == grammarAccess.getPostfixExpressionAccess().getPostfixExpressionExpressionAction_1_0_0()
-						|| rule == grammarAccess.getCastExpressionRule()
-						|| action == grammarAccess.getCastExpressionAccess().getCastExpressionExpressionAction_1_0_0_0()
-						|| rule == grammarAccess.getUnaryExpressionRule()
-						|| rule == grammarAccess.getMultiplicativeExpressionRule()
-						|| action == grammarAccess.getMultiplicativeExpressionAccess().getMultiplicativeExpressionLhsAction_1_0_0_0()
-						|| rule == grammarAccess.getAdditiveExpressionRule()
-						|| action == grammarAccess.getAdditiveExpressionAccess().getAdditiveExpressionLhsAction_1_0_0_0()
-						|| rule == grammarAccess.getShiftExpressionRule()
-						|| action == grammarAccess.getShiftExpressionAccess().getShiftExpressionLhsAction_1_0_0()
-						|| rule == grammarAccess.getRelationalExpressionRule()
-						|| action == grammarAccess.getRelationalExpressionAccess().getRelationalExpressionLhsAction_1_0_0()
-						|| rule == grammarAccess.getEqualityExpressionRule()
-						|| action == grammarAccess.getEqualityExpressionAccess().getEqualityExpressionLhsAction_1_0_0_0()
-						|| rule == grammarAccess.getBitwiseANDExpressionRule()
-						|| action == grammarAccess.getBitwiseANDExpressionAccess().getBinaryBitwiseExpressionLhsAction_1_0_0_0()
-						|| rule == grammarAccess.getBitwiseXORExpressionRule()
-						|| action == grammarAccess.getBitwiseXORExpressionAccess().getBinaryBitwiseExpressionLhsAction_1_0_0_0()
-						|| rule == grammarAccess.getBitwiseORExpressionRule()
-						|| action == grammarAccess.getBitwiseORExpressionAccess().getBinaryBitwiseExpressionLhsAction_1_0_0_0()
-						|| rule == grammarAccess.getLogicalANDExpressionRule()
-						|| action == grammarAccess.getLogicalANDExpressionAccess().getBinaryLogicalExpressionLhsAction_1_0_0_0()
-						|| rule == grammarAccess.getLogicalORExpressionRule()
-						|| action == grammarAccess.getLogicalORExpressionAccess().getBinaryLogicalExpressionLhsAction_1_0_0_0()
-						|| rule == grammarAccess.getCoalesceExpressionRule()
-						|| action == grammarAccess.getCoalesceExpressionAccess().getCoalesceExpressionExpressionAction_1_0_0_0()
-						|| rule == grammarAccess.getConditionalExpressionRule()
-						|| action == grammarAccess.getConditionalExpressionAccess().getConditionalExpressionExpressionAction_1_0_0_0()
-						|| rule == grammarAccess.getAssignmentExpressionRule()
-						|| action == grammarAccess.getAssignmentExpressionAccess().getAssignmentExpressionLhsAction_4_1_0_0_0()
-						|| rule == grammarAccess.getExpressionRule()
-						|| action == grammarAccess.getExpressionAccess().getCommaExpressionExprsAction_1_0()) {
-					sequence_Arguments_ConcreteTypeArguments_LeftHandSideExpression_ParameterizedCallExpression(context, (ParameterizedCallExpression) semanticObject); 
-					return; 
-				}
-				else if (rule == grammarAccess.getPrimaryExpressionRule()
-						|| rule == grammarAccess.getParameterizedCallExpressionRule()
-						|| action == grammarAccess.getLeftHandSideExpressionAccess().getParameterizedCallExpressionTargetAction_1_0()
-						|| rule == grammarAccess.getMemberExpressionRule()
-						|| action == grammarAccess.getMemberExpressionAccess().getIndexedAccessExpressionTargetAction_2_1_0_0()
-						|| action == grammarAccess.getMemberExpressionAccess().getParameterizedPropertyAccessExpressionTargetAction_2_1_1_0()
-						|| action == grammarAccess.getMemberExpressionAccess().getTaggedTemplateStringTargetAction_2_1_2_0()) {
-					sequence_Arguments_ConcreteTypeArguments_ParameterizedCallExpression(context, (ParameterizedCallExpression) semanticObject); 
-					return; 
-				}
-				else if (action == grammarAccess.getLeftHandSideExpressionAccess().getParameterizedCallExpressionTargetAction_1_3_0_0()
-						|| action == grammarAccess.getLeftHandSideExpressionAccess().getIndexedAccessExpressionTargetAction_1_3_1_0()
-						|| action == grammarAccess.getLeftHandSideExpressionAccess().getParameterizedPropertyAccessExpressionTargetAction_1_3_2_0()
-						|| action == grammarAccess.getLeftHandSideExpressionAccess().getTaggedTemplateStringTargetAction_1_3_3_0_0()) {
-					sequence_Arguments_LeftHandSideExpression_IndexedAccessExpression_1_3_1_0_ParameterizedCallExpression_1_3_0_0_ParameterizedPropertyAccessExpression_1_3_2_0_TaggedTemplateString_1_3_3_0_0(context, (ParameterizedCallExpression) semanticObject); 
-					return; 
-				}
-				else break;
+				sequence_Arguments_LeftHandSideExpression(context, (ParameterizedCallExpression) semanticObject); 
+				return; 
 			case N4JSPackage.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION:
 				if (rule == grammarAccess.getJSXElementNameExpressionRule()
 						|| action == grammarAccess.getJSXElementNameExpressionAccess().getParameterizedPropertyAccessExpressionTargetAction_1_0()) {
@@ -4503,478 +4401,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
-	 *     LeftHandSideExpression<Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression returns ParameterizedCallExpression
-	 *     PostfixExpression<Yield> returns ParameterizedCallExpression
-	 *     PostfixExpression returns ParameterizedCallExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<Yield> returns ParameterizedCallExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<CastExpression.Yield> returns ParameterizedCallExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<UnaryExpression.Yield> returns ParameterizedCallExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<MultiplicativeExpression.Yield> returns ParameterizedCallExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<AdditiveExpression.Yield> returns ParameterizedCallExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<ShiftExpression.Yield> returns ParameterizedCallExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<RelationalExpression.In> returns ParameterizedCallExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<RelationalExpression.Yield> returns ParameterizedCallExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedCallExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<EqualityExpression.In> returns ParameterizedCallExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<EqualityExpression.Yield> returns ParameterizedCallExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedCallExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseANDExpression.In> returns ParameterizedCallExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseANDExpression.Yield> returns ParameterizedCallExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedCallExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseXORExpression.In> returns ParameterizedCallExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseXORExpression.Yield> returns ParameterizedCallExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedCallExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseORExpression.In> returns ParameterizedCallExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalANDExpression.In> returns ParameterizedCallExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In> returns ParameterizedCallExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<AssignmentExpression.In> returns ParameterizedCallExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<Expression.In> returns ParameterizedCallExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<Expression.Yield> returns ParameterizedCallExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0 returns ParameterizedCallExpression
-	 *     CastExpression<Yield> returns ParameterizedCallExpression
-	 *     CastExpression returns ParameterizedCallExpression
-	 *     CastExpression.CastExpression_1_0_0_0<Yield> returns ParameterizedCallExpression
-	 *     CastExpression.CastExpression_1_0_0_0<UnaryExpression.Yield> returns ParameterizedCallExpression
-	 *     CastExpression.CastExpression_1_0_0_0<MultiplicativeExpression.Yield> returns ParameterizedCallExpression
-	 *     CastExpression.CastExpression_1_0_0_0<AdditiveExpression.Yield> returns ParameterizedCallExpression
-	 *     CastExpression.CastExpression_1_0_0_0<ShiftExpression.Yield> returns ParameterizedCallExpression
-	 *     CastExpression.CastExpression_1_0_0_0<RelationalExpression.In> returns ParameterizedCallExpression
-	 *     CastExpression.CastExpression_1_0_0_0<RelationalExpression.Yield> returns ParameterizedCallExpression
-	 *     CastExpression.CastExpression_1_0_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedCallExpression
-	 *     CastExpression.CastExpression_1_0_0_0<EqualityExpression.In> returns ParameterizedCallExpression
-	 *     CastExpression.CastExpression_1_0_0_0<EqualityExpression.Yield> returns ParameterizedCallExpression
-	 *     CastExpression.CastExpression_1_0_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedCallExpression
-	 *     CastExpression.CastExpression_1_0_0_0<BitwiseANDExpression.In> returns ParameterizedCallExpression
-	 *     CastExpression.CastExpression_1_0_0_0<BitwiseANDExpression.Yield> returns ParameterizedCallExpression
-	 *     CastExpression.CastExpression_1_0_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedCallExpression
-	 *     CastExpression.CastExpression_1_0_0_0<BitwiseXORExpression.In> returns ParameterizedCallExpression
-	 *     CastExpression.CastExpression_1_0_0_0<BitwiseXORExpression.Yield> returns ParameterizedCallExpression
-	 *     CastExpression.CastExpression_1_0_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedCallExpression
-	 *     CastExpression.CastExpression_1_0_0_0<BitwiseORExpression.In> returns ParameterizedCallExpression
-	 *     CastExpression.CastExpression_1_0_0_0<BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	 *     CastExpression.CastExpression_1_0_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	 *     CastExpression.CastExpression_1_0_0_0<LogicalANDExpression.In> returns ParameterizedCallExpression
-	 *     CastExpression.CastExpression_1_0_0_0<LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     CastExpression.CastExpression_1_0_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
-	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In> returns ParameterizedCallExpression
-	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
-	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
-	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
-	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     CastExpression.CastExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedCallExpression
-	 *     CastExpression.CastExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     CastExpression.CastExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     CastExpression.CastExpression_1_0_0_0<Expression.In> returns ParameterizedCallExpression
-	 *     CastExpression.CastExpression_1_0_0_0<Expression.Yield> returns ParameterizedCallExpression
-	 *     CastExpression.CastExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
-	 *     CastExpression.CastExpression_1_0_0_0 returns ParameterizedCallExpression
-	 *     UnaryExpression<Yield> returns ParameterizedCallExpression
-	 *     UnaryExpression returns ParameterizedCallExpression
-	 *     MultiplicativeExpression<Yield> returns ParameterizedCallExpression
-	 *     MultiplicativeExpression returns ParameterizedCallExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<Yield> returns ParameterizedCallExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<AdditiveExpression.Yield> returns ParameterizedCallExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ShiftExpression.Yield> returns ParameterizedCallExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<RelationalExpression.In> returns ParameterizedCallExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<RelationalExpression.Yield> returns ParameterizedCallExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedCallExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<EqualityExpression.In> returns ParameterizedCallExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<EqualityExpression.Yield> returns ParameterizedCallExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedCallExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseANDExpression.In> returns ParameterizedCallExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseANDExpression.Yield> returns ParameterizedCallExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedCallExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseXORExpression.In> returns ParameterizedCallExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseXORExpression.Yield> returns ParameterizedCallExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedCallExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseORExpression.In> returns ParameterizedCallExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalANDExpression.In> returns ParameterizedCallExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In> returns ParameterizedCallExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedCallExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<Expression.In> returns ParameterizedCallExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<Expression.Yield> returns ParameterizedCallExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0 returns ParameterizedCallExpression
-	 *     AdditiveExpression<Yield> returns ParameterizedCallExpression
-	 *     AdditiveExpression returns ParameterizedCallExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<Yield> returns ParameterizedCallExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ShiftExpression.Yield> returns ParameterizedCallExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<RelationalExpression.In> returns ParameterizedCallExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<RelationalExpression.Yield> returns ParameterizedCallExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedCallExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<EqualityExpression.In> returns ParameterizedCallExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<EqualityExpression.Yield> returns ParameterizedCallExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedCallExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseANDExpression.In> returns ParameterizedCallExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseANDExpression.Yield> returns ParameterizedCallExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedCallExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseXORExpression.In> returns ParameterizedCallExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseXORExpression.Yield> returns ParameterizedCallExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedCallExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseORExpression.In> returns ParameterizedCallExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalANDExpression.In> returns ParameterizedCallExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In> returns ParameterizedCallExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedCallExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<Expression.In> returns ParameterizedCallExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<Expression.Yield> returns ParameterizedCallExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0 returns ParameterizedCallExpression
-	 *     ShiftExpression<Yield> returns ParameterizedCallExpression
-	 *     ShiftExpression returns ParameterizedCallExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<Yield> returns ParameterizedCallExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<RelationalExpression.In> returns ParameterizedCallExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<RelationalExpression.Yield> returns ParameterizedCallExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedCallExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<EqualityExpression.In> returns ParameterizedCallExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<EqualityExpression.Yield> returns ParameterizedCallExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedCallExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseANDExpression.In> returns ParameterizedCallExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseANDExpression.Yield> returns ParameterizedCallExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedCallExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseXORExpression.In> returns ParameterizedCallExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseXORExpression.Yield> returns ParameterizedCallExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedCallExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseORExpression.In> returns ParameterizedCallExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalANDExpression.In> returns ParameterizedCallExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In> returns ParameterizedCallExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<AssignmentExpression.In> returns ParameterizedCallExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<Expression.In> returns ParameterizedCallExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<Expression.Yield> returns ParameterizedCallExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0 returns ParameterizedCallExpression
-	 *     RelationalExpression<In,Yield> returns ParameterizedCallExpression
-	 *     RelationalExpression<In> returns ParameterizedCallExpression
-	 *     RelationalExpression<Yield> returns ParameterizedCallExpression
-	 *     RelationalExpression returns ParameterizedCallExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<In,Yield> returns ParameterizedCallExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<In> returns ParameterizedCallExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<Yield> returns ParameterizedCallExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<EqualityExpression.In> returns ParameterizedCallExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<EqualityExpression.Yield> returns ParameterizedCallExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedCallExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseANDExpression.In> returns ParameterizedCallExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseANDExpression.Yield> returns ParameterizedCallExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedCallExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseXORExpression.In> returns ParameterizedCallExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseXORExpression.Yield> returns ParameterizedCallExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedCallExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseORExpression.In> returns ParameterizedCallExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalANDExpression.In> returns ParameterizedCallExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In> returns ParameterizedCallExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<AssignmentExpression.In> returns ParameterizedCallExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<Expression.In> returns ParameterizedCallExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<Expression.Yield> returns ParameterizedCallExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0 returns ParameterizedCallExpression
-	 *     EqualityExpression<In,Yield> returns ParameterizedCallExpression
-	 *     EqualityExpression<In> returns ParameterizedCallExpression
-	 *     EqualityExpression<Yield> returns ParameterizedCallExpression
-	 *     EqualityExpression returns ParameterizedCallExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<In,Yield> returns ParameterizedCallExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<In> returns ParameterizedCallExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<Yield> returns ParameterizedCallExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseANDExpression.In> returns ParameterizedCallExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseANDExpression.Yield> returns ParameterizedCallExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedCallExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseXORExpression.In> returns ParameterizedCallExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseXORExpression.Yield> returns ParameterizedCallExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedCallExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseORExpression.In> returns ParameterizedCallExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalANDExpression.In> returns ParameterizedCallExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In> returns ParameterizedCallExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedCallExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<Expression.In> returns ParameterizedCallExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<Expression.Yield> returns ParameterizedCallExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0 returns ParameterizedCallExpression
-	 *     BitwiseANDExpression<In,Yield> returns ParameterizedCallExpression
-	 *     BitwiseANDExpression<In> returns ParameterizedCallExpression
-	 *     BitwiseANDExpression<Yield> returns ParameterizedCallExpression
-	 *     BitwiseANDExpression returns ParameterizedCallExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<In,Yield> returns ParameterizedCallExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<In> returns ParameterizedCallExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<Yield> returns ParameterizedCallExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseXORExpression.In> returns ParameterizedCallExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseXORExpression.Yield> returns ParameterizedCallExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedCallExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseORExpression.In> returns ParameterizedCallExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.In> returns ParameterizedCallExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns ParameterizedCallExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedCallExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<Expression.In> returns ParameterizedCallExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<Expression.Yield> returns ParameterizedCallExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0 returns ParameterizedCallExpression
-	 *     BitwiseXORExpression<In,Yield> returns ParameterizedCallExpression
-	 *     BitwiseXORExpression<In> returns ParameterizedCallExpression
-	 *     BitwiseXORExpression<Yield> returns ParameterizedCallExpression
-	 *     BitwiseXORExpression returns ParameterizedCallExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<In,Yield> returns ParameterizedCallExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<In> returns ParameterizedCallExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<Yield> returns ParameterizedCallExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseORExpression.In> returns ParameterizedCallExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.In> returns ParameterizedCallExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns ParameterizedCallExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedCallExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<Expression.In> returns ParameterizedCallExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<Expression.Yield> returns ParameterizedCallExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0 returns ParameterizedCallExpression
-	 *     BitwiseORExpression<In,Yield> returns ParameterizedCallExpression
-	 *     BitwiseORExpression<In> returns ParameterizedCallExpression
-	 *     BitwiseORExpression<Yield> returns ParameterizedCallExpression
-	 *     BitwiseORExpression returns ParameterizedCallExpression
-	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<In,Yield> returns ParameterizedCallExpression
-	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<In> returns ParameterizedCallExpression
-	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<Yield> returns ParameterizedCallExpression
-	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.In> returns ParameterizedCallExpression
-	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
-	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns ParameterizedCallExpression
-	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
-	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
-	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
-	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedCallExpression
-	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<Expression.In> returns ParameterizedCallExpression
-	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<Expression.Yield> returns ParameterizedCallExpression
-	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
-	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0 returns ParameterizedCallExpression
-	 *     LogicalANDExpression<In,Yield> returns ParameterizedCallExpression
-	 *     LogicalANDExpression<In> returns ParameterizedCallExpression
-	 *     LogicalANDExpression<Yield> returns ParameterizedCallExpression
-	 *     LogicalANDExpression returns ParameterizedCallExpression
-	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns ParameterizedCallExpression
-	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<In> returns ParameterizedCallExpression
-	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns ParameterizedCallExpression
-	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
-	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns ParameterizedCallExpression
-	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
-	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
-	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
-	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedCallExpression
-	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<Expression.In> returns ParameterizedCallExpression
-	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns ParameterizedCallExpression
-	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
-	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0 returns ParameterizedCallExpression
-	 *     LogicalORExpression<In,Yield> returns ParameterizedCallExpression
-	 *     LogicalORExpression<In> returns ParameterizedCallExpression
-	 *     LogicalORExpression<Yield> returns ParameterizedCallExpression
-	 *     LogicalORExpression returns ParameterizedCallExpression
-	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns ParameterizedCallExpression
-	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns ParameterizedCallExpression
-	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns ParameterizedCallExpression
-	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns ParameterizedCallExpression
-	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
-	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
-	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
-	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedCallExpression
-	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In> returns ParameterizedCallExpression
-	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns ParameterizedCallExpression
-	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
-	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns ParameterizedCallExpression
-	 *     CoalesceExpression<In,Yield> returns ParameterizedCallExpression
-	 *     CoalesceExpression<In> returns ParameterizedCallExpression
-	 *     CoalesceExpression<Yield> returns ParameterizedCallExpression
-	 *     CoalesceExpression returns ParameterizedCallExpression
-	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns ParameterizedCallExpression
-	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns ParameterizedCallExpression
-	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns ParameterizedCallExpression
-	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
-	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedCallExpression
-	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns ParameterizedCallExpression
-	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns ParameterizedCallExpression
-	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
-	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns ParameterizedCallExpression
-	 *     ConditionalExpression<In,Yield> returns ParameterizedCallExpression
-	 *     ConditionalExpression<In> returns ParameterizedCallExpression
-	 *     ConditionalExpression<Yield> returns ParameterizedCallExpression
-	 *     ConditionalExpression returns ParameterizedCallExpression
-	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<In,Yield> returns ParameterizedCallExpression
-	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<In> returns ParameterizedCallExpression
-	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<Yield> returns ParameterizedCallExpression
-	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedCallExpression
-	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<Expression.In> returns ParameterizedCallExpression
-	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<Expression.Yield> returns ParameterizedCallExpression
-	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
-	 *     ConditionalExpression.ConditionalExpression_1_0_0_0 returns ParameterizedCallExpression
-	 *     AssignmentExpression<In,Yield> returns ParameterizedCallExpression
-	 *     AssignmentExpression<In> returns ParameterizedCallExpression
-	 *     AssignmentExpression<Yield> returns ParameterizedCallExpression
-	 *     AssignmentExpression returns ParameterizedCallExpression
-	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0<In,Yield> returns ParameterizedCallExpression
-	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0<In> returns ParameterizedCallExpression
-	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0<Yield> returns ParameterizedCallExpression
-	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0<Expression.In> returns ParameterizedCallExpression
-	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0<Expression.Yield> returns ParameterizedCallExpression
-	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
-	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0 returns ParameterizedCallExpression
-	 *     Expression<In,Yield> returns ParameterizedCallExpression
-	 *     Expression<In> returns ParameterizedCallExpression
-	 *     Expression<Yield> returns ParameterizedCallExpression
-	 *     Expression returns ParameterizedCallExpression
-	 *     Expression.CommaExpression_1_0<In,Yield> returns ParameterizedCallExpression
-	 *     Expression.CommaExpression_1_0<In> returns ParameterizedCallExpression
-	 *     Expression.CommaExpression_1_0<Yield> returns ParameterizedCallExpression
-	 *     Expression.CommaExpression_1_0 returns ParameterizedCallExpression
-	 *
-	 * Constraint:
-	 *     (
-	 *         (
-	 *             (target=ParameterizedCallExpression_ParameterizedCallExpression_1_0_0 optionalChaining?='?.'? typeArgs+=TypeRef typeArgs+=TypeRef*) | 
-	 *             (target=LeftHandSideExpression_ParameterizedCallExpression_1_0 optionalChaining?='?.'?) | 
-	 *             (target=LeftHandSideExpression_ParameterizedCallExpression_1_3_0_0 optionalChaining?='?.'?)
-	 *         ) 
-	 *         (arguments+=Argument arguments+=Argument*)?
-	 *     )
-	 */
-	protected void sequence_Arguments_ConcreteTypeArguments_LeftHandSideExpression_ParameterizedCallExpression(ISerializationContext context, ParameterizedCallExpression semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
 	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<Yield> returns NewExpression
 	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<LeftHandSideExpression.Yield> returns NewExpression
 	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<PostfixExpression.Yield> returns NewExpression
@@ -5620,196 +5046,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
-	 *     PrimaryExpression<Yield> returns ParameterizedCallExpression
-	 *     PrimaryExpression returns ParameterizedCallExpression
-	 *     ParameterizedCallExpression<Yield> returns ParameterizedCallExpression
-	 *     ParameterizedCallExpression returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<PostfixExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CastExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<UnaryExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<MultiplicativeExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<AdditiveExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ShiftExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<RelationalExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<RelationalExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<EqualityExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<EqualityExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseANDExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseANDExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseXORExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseXORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseORExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalANDExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<AssignmentExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<Expression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<Expression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0 returns ParameterizedCallExpression
-	 *     MemberExpression<Yield> returns ParameterizedCallExpression
-	 *     MemberExpression returns ParameterizedCallExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LeftHandSideExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<PostfixExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CastExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<UnaryExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<MultiplicativeExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<AdditiveExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ShiftExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<RelationalExpression.In> returns ParameterizedCallExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<RelationalExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<EqualityExpression.In> returns ParameterizedCallExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<EqualityExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseANDExpression.In> returns ParameterizedCallExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseANDExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseXORExpression.In> returns ParameterizedCallExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseXORExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseORExpression.In> returns ParameterizedCallExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalANDExpression.In> returns ParameterizedCallExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In> returns ParameterizedCallExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<AssignmentExpression.In> returns ParameterizedCallExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<Expression.In> returns ParameterizedCallExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<Expression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0 returns ParameterizedCallExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LeftHandSideExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<PostfixExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CastExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<UnaryExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<MultiplicativeExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<AdditiveExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ShiftExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<RelationalExpression.In> returns ParameterizedCallExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<RelationalExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<EqualityExpression.In> returns ParameterizedCallExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<EqualityExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseANDExpression.In> returns ParameterizedCallExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseANDExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseXORExpression.In> returns ParameterizedCallExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseXORExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseORExpression.In> returns ParameterizedCallExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalANDExpression.In> returns ParameterizedCallExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In> returns ParameterizedCallExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In> returns ParameterizedCallExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In> returns ParameterizedCallExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<AssignmentExpression.In> returns ParameterizedCallExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<Expression.In> returns ParameterizedCallExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<Expression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0 returns ParameterizedCallExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LeftHandSideExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<PostfixExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CastExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<UnaryExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<MultiplicativeExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<AdditiveExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ShiftExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<RelationalExpression.In> returns ParameterizedCallExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<RelationalExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<EqualityExpression.In> returns ParameterizedCallExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<EqualityExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseANDExpression.In> returns ParameterizedCallExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseANDExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseXORExpression.In> returns ParameterizedCallExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseXORExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseORExpression.In> returns ParameterizedCallExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalANDExpression.In> returns ParameterizedCallExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In> returns ParameterizedCallExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In> returns ParameterizedCallExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In> returns ParameterizedCallExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<AssignmentExpression.In> returns ParameterizedCallExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<Expression.In> returns ParameterizedCallExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<Expression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0 returns ParameterizedCallExpression
-	 *
-	 * Constraint:
-	 *     (
-	 *         target=ParameterizedCallExpression_ParameterizedCallExpression_1_0_0 
-	 *         optionalChaining?='?.'? 
-	 *         typeArgs+=TypeRef 
-	 *         typeArgs+=TypeRef* 
-	 *         (arguments+=Argument arguments+=Argument*)?
-	 *     )
-	 */
-	protected void sequence_Arguments_ConcreteTypeArguments_ParameterizedCallExpression(ISerializationContext context, ParameterizedCallExpression semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
 	 *     PrimaryExpression<Yield> returns ImportCallExpression
 	 *     PrimaryExpression returns ImportCallExpression
 	 *     ImportCallExpression<Yield> returns ImportCallExpression
@@ -6448,6 +5684,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
+	 *     LeftHandSideExpression<Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression returns ParameterizedCallExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<Yield> returns ParameterizedCallExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<PostfixExpression.Yield> returns ParameterizedCallExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<CastExpression.Yield> returns ParameterizedCallExpression
@@ -6612,6 +5850,458 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<Expression.Yield> returns ParameterizedCallExpression
 	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
 	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0 returns ParameterizedCallExpression
+	 *     PostfixExpression<Yield> returns ParameterizedCallExpression
+	 *     PostfixExpression returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<Yield> returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<CastExpression.Yield> returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<UnaryExpression.Yield> returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<MultiplicativeExpression.Yield> returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<AdditiveExpression.Yield> returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<ShiftExpression.Yield> returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<RelationalExpression.In> returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<RelationalExpression.Yield> returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<EqualityExpression.In> returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<EqualityExpression.Yield> returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseANDExpression.In> returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseANDExpression.Yield> returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseXORExpression.In> returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseXORExpression.Yield> returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseORExpression.In> returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseORExpression.Yield> returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalANDExpression.In> returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalANDExpression.Yield> returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In> returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<AssignmentExpression.In> returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<Expression.In> returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<Expression.Yield> returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0 returns ParameterizedCallExpression
+	 *     CastExpression<Yield> returns ParameterizedCallExpression
+	 *     CastExpression returns ParameterizedCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<Yield> returns ParameterizedCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<UnaryExpression.Yield> returns ParameterizedCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<MultiplicativeExpression.Yield> returns ParameterizedCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<AdditiveExpression.Yield> returns ParameterizedCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<ShiftExpression.Yield> returns ParameterizedCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<RelationalExpression.In> returns ParameterizedCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<RelationalExpression.Yield> returns ParameterizedCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<EqualityExpression.In> returns ParameterizedCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<EqualityExpression.Yield> returns ParameterizedCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<BitwiseANDExpression.In> returns ParameterizedCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<BitwiseANDExpression.Yield> returns ParameterizedCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<BitwiseXORExpression.In> returns ParameterizedCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<BitwiseXORExpression.Yield> returns ParameterizedCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<BitwiseORExpression.In> returns ParameterizedCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<BitwiseORExpression.Yield> returns ParameterizedCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<LogicalANDExpression.In> returns ParameterizedCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<LogicalANDExpression.Yield> returns ParameterizedCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In> returns ParameterizedCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<Expression.In> returns ParameterizedCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<Expression.Yield> returns ParameterizedCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0 returns ParameterizedCallExpression
+	 *     UnaryExpression<Yield> returns ParameterizedCallExpression
+	 *     UnaryExpression returns ParameterizedCallExpression
+	 *     MultiplicativeExpression<Yield> returns ParameterizedCallExpression
+	 *     MultiplicativeExpression returns ParameterizedCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<Yield> returns ParameterizedCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<AdditiveExpression.Yield> returns ParameterizedCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ShiftExpression.Yield> returns ParameterizedCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<RelationalExpression.In> returns ParameterizedCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<RelationalExpression.Yield> returns ParameterizedCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<EqualityExpression.In> returns ParameterizedCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<EqualityExpression.Yield> returns ParameterizedCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseANDExpression.In> returns ParameterizedCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseANDExpression.Yield> returns ParameterizedCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseXORExpression.In> returns ParameterizedCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseXORExpression.Yield> returns ParameterizedCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseORExpression.In> returns ParameterizedCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseORExpression.Yield> returns ParameterizedCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalANDExpression.In> returns ParameterizedCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalANDExpression.Yield> returns ParameterizedCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In> returns ParameterizedCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<Expression.In> returns ParameterizedCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<Expression.Yield> returns ParameterizedCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0 returns ParameterizedCallExpression
+	 *     AdditiveExpression<Yield> returns ParameterizedCallExpression
+	 *     AdditiveExpression returns ParameterizedCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<Yield> returns ParameterizedCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ShiftExpression.Yield> returns ParameterizedCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<RelationalExpression.In> returns ParameterizedCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<RelationalExpression.Yield> returns ParameterizedCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<EqualityExpression.In> returns ParameterizedCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<EqualityExpression.Yield> returns ParameterizedCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseANDExpression.In> returns ParameterizedCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseANDExpression.Yield> returns ParameterizedCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseXORExpression.In> returns ParameterizedCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseXORExpression.Yield> returns ParameterizedCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseORExpression.In> returns ParameterizedCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseORExpression.Yield> returns ParameterizedCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalANDExpression.In> returns ParameterizedCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalANDExpression.Yield> returns ParameterizedCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In> returns ParameterizedCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<Expression.In> returns ParameterizedCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<Expression.Yield> returns ParameterizedCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0 returns ParameterizedCallExpression
+	 *     ShiftExpression<Yield> returns ParameterizedCallExpression
+	 *     ShiftExpression returns ParameterizedCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<Yield> returns ParameterizedCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<RelationalExpression.In> returns ParameterizedCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<RelationalExpression.Yield> returns ParameterizedCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<EqualityExpression.In> returns ParameterizedCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<EqualityExpression.Yield> returns ParameterizedCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseANDExpression.In> returns ParameterizedCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseANDExpression.Yield> returns ParameterizedCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseXORExpression.In> returns ParameterizedCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseXORExpression.Yield> returns ParameterizedCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseORExpression.In> returns ParameterizedCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseORExpression.Yield> returns ParameterizedCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalANDExpression.In> returns ParameterizedCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalANDExpression.Yield> returns ParameterizedCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In> returns ParameterizedCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<AssignmentExpression.In> returns ParameterizedCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<Expression.In> returns ParameterizedCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<Expression.Yield> returns ParameterizedCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0 returns ParameterizedCallExpression
+	 *     RelationalExpression<In,Yield> returns ParameterizedCallExpression
+	 *     RelationalExpression<In> returns ParameterizedCallExpression
+	 *     RelationalExpression<Yield> returns ParameterizedCallExpression
+	 *     RelationalExpression returns ParameterizedCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<In,Yield> returns ParameterizedCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<In> returns ParameterizedCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<Yield> returns ParameterizedCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<EqualityExpression.In> returns ParameterizedCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<EqualityExpression.Yield> returns ParameterizedCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseANDExpression.In> returns ParameterizedCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseANDExpression.Yield> returns ParameterizedCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseXORExpression.In> returns ParameterizedCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseXORExpression.Yield> returns ParameterizedCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseORExpression.In> returns ParameterizedCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseORExpression.Yield> returns ParameterizedCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalANDExpression.In> returns ParameterizedCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalANDExpression.Yield> returns ParameterizedCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In> returns ParameterizedCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<AssignmentExpression.In> returns ParameterizedCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<Expression.In> returns ParameterizedCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<Expression.Yield> returns ParameterizedCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0 returns ParameterizedCallExpression
+	 *     EqualityExpression<In,Yield> returns ParameterizedCallExpression
+	 *     EqualityExpression<In> returns ParameterizedCallExpression
+	 *     EqualityExpression<Yield> returns ParameterizedCallExpression
+	 *     EqualityExpression returns ParameterizedCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<In,Yield> returns ParameterizedCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<In> returns ParameterizedCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<Yield> returns ParameterizedCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseANDExpression.In> returns ParameterizedCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseANDExpression.Yield> returns ParameterizedCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseXORExpression.In> returns ParameterizedCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseXORExpression.Yield> returns ParameterizedCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseORExpression.In> returns ParameterizedCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseORExpression.Yield> returns ParameterizedCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalANDExpression.In> returns ParameterizedCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalANDExpression.Yield> returns ParameterizedCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In> returns ParameterizedCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<Expression.In> returns ParameterizedCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<Expression.Yield> returns ParameterizedCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0 returns ParameterizedCallExpression
+	 *     BitwiseANDExpression<In,Yield> returns ParameterizedCallExpression
+	 *     BitwiseANDExpression<In> returns ParameterizedCallExpression
+	 *     BitwiseANDExpression<Yield> returns ParameterizedCallExpression
+	 *     BitwiseANDExpression returns ParameterizedCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<In,Yield> returns ParameterizedCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<In> returns ParameterizedCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<Yield> returns ParameterizedCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseXORExpression.In> returns ParameterizedCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseXORExpression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseORExpression.In> returns ParameterizedCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseORExpression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.In> returns ParameterizedCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns ParameterizedCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<Expression.In> returns ParameterizedCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<Expression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0 returns ParameterizedCallExpression
+	 *     BitwiseXORExpression<In,Yield> returns ParameterizedCallExpression
+	 *     BitwiseXORExpression<In> returns ParameterizedCallExpression
+	 *     BitwiseXORExpression<Yield> returns ParameterizedCallExpression
+	 *     BitwiseXORExpression returns ParameterizedCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<In,Yield> returns ParameterizedCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<In> returns ParameterizedCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<Yield> returns ParameterizedCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseORExpression.In> returns ParameterizedCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseORExpression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.In> returns ParameterizedCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns ParameterizedCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<Expression.In> returns ParameterizedCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<Expression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0 returns ParameterizedCallExpression
+	 *     BitwiseORExpression<In,Yield> returns ParameterizedCallExpression
+	 *     BitwiseORExpression<In> returns ParameterizedCallExpression
+	 *     BitwiseORExpression<Yield> returns ParameterizedCallExpression
+	 *     BitwiseORExpression returns ParameterizedCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<In,Yield> returns ParameterizedCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<In> returns ParameterizedCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<Yield> returns ParameterizedCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.In> returns ParameterizedCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns ParameterizedCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<Expression.In> returns ParameterizedCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<Expression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0 returns ParameterizedCallExpression
+	 *     LogicalANDExpression<In,Yield> returns ParameterizedCallExpression
+	 *     LogicalANDExpression<In> returns ParameterizedCallExpression
+	 *     LogicalANDExpression<Yield> returns ParameterizedCallExpression
+	 *     LogicalANDExpression returns ParameterizedCallExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns ParameterizedCallExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<In> returns ParameterizedCallExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns ParameterizedCallExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns ParameterizedCallExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedCallExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<Expression.In> returns ParameterizedCallExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns ParameterizedCallExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0 returns ParameterizedCallExpression
+	 *     LogicalORExpression<In,Yield> returns ParameterizedCallExpression
+	 *     LogicalORExpression<In> returns ParameterizedCallExpression
+	 *     LogicalORExpression<Yield> returns ParameterizedCallExpression
+	 *     LogicalORExpression returns ParameterizedCallExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns ParameterizedCallExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns ParameterizedCallExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns ParameterizedCallExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns ParameterizedCallExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedCallExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In> returns ParameterizedCallExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns ParameterizedCallExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns ParameterizedCallExpression
+	 *     CoalesceExpression<In,Yield> returns ParameterizedCallExpression
+	 *     CoalesceExpression<In> returns ParameterizedCallExpression
+	 *     CoalesceExpression<Yield> returns ParameterizedCallExpression
+	 *     CoalesceExpression returns ParameterizedCallExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns ParameterizedCallExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns ParameterizedCallExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns ParameterizedCallExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedCallExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns ParameterizedCallExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns ParameterizedCallExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns ParameterizedCallExpression
+	 *     ConditionalExpression<In,Yield> returns ParameterizedCallExpression
+	 *     ConditionalExpression<In> returns ParameterizedCallExpression
+	 *     ConditionalExpression<Yield> returns ParameterizedCallExpression
+	 *     ConditionalExpression returns ParameterizedCallExpression
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<In,Yield> returns ParameterizedCallExpression
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<In> returns ParameterizedCallExpression
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<Yield> returns ParameterizedCallExpression
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedCallExpression
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<Expression.In> returns ParameterizedCallExpression
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<Expression.Yield> returns ParameterizedCallExpression
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0 returns ParameterizedCallExpression
+	 *     AssignmentExpression<In,Yield> returns ParameterizedCallExpression
+	 *     AssignmentExpression<In> returns ParameterizedCallExpression
+	 *     AssignmentExpression<Yield> returns ParameterizedCallExpression
+	 *     AssignmentExpression returns ParameterizedCallExpression
+	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0<In,Yield> returns ParameterizedCallExpression
+	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0<In> returns ParameterizedCallExpression
+	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0<Yield> returns ParameterizedCallExpression
+	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0<Expression.In> returns ParameterizedCallExpression
+	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0<Expression.Yield> returns ParameterizedCallExpression
+	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
+	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0 returns ParameterizedCallExpression
+	 *     Expression<In,Yield> returns ParameterizedCallExpression
+	 *     Expression<In> returns ParameterizedCallExpression
+	 *     Expression<Yield> returns ParameterizedCallExpression
+	 *     Expression returns ParameterizedCallExpression
+	 *     Expression.CommaExpression_1_0<In,Yield> returns ParameterizedCallExpression
+	 *     Expression.CommaExpression_1_0<In> returns ParameterizedCallExpression
+	 *     Expression.CommaExpression_1_0<Yield> returns ParameterizedCallExpression
+	 *     Expression.CommaExpression_1_0 returns ParameterizedCallExpression
 	 *
 	 * Constraint:
 	 *     (
@@ -6622,7 +6312,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         (arguments+=Argument arguments+=Argument*)?
 	 *     )
 	 */
-	protected void sequence_Arguments_LeftHandSideExpression_IndexedAccessExpression_1_3_1_0_ParameterizedCallExpression_1_3_0_0_ParameterizedPropertyAccessExpression_1_3_2_0_TaggedTemplateString_1_3_3_0_0(ISerializationContext context, ParameterizedCallExpression semanticObject) {
+	protected void sequence_Arguments_LeftHandSideExpression(ISerializationContext context, ParameterizedCallExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -12883,52 +12573,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     PrimaryExpression returns IdentifierRef
 	 *     IdentifierRef<Yield> returns IdentifierRef
 	 *     IdentifierRef returns IdentifierRef
-	 *     ParameterizedCallExpression<Yield> returns IdentifierRef
-	 *     ParameterizedCallExpression returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<Yield> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<PrimaryExpression.Yield> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<LeftHandSideExpression.Yield> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<MemberExpression.Yield> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<PostfixExpression.Yield> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<CastExpression.Yield> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<UnaryExpression.Yield> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<MultiplicativeExpression.Yield> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<AdditiveExpression.Yield> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<ShiftExpression.Yield> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<RelationalExpression.In> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<RelationalExpression.Yield> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<RelationalExpression.In,RelationalExpression.Yield> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<EqualityExpression.In> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<EqualityExpression.Yield> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<EqualityExpression.In,EqualityExpression.Yield> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<BitwiseANDExpression.In> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<BitwiseANDExpression.Yield> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<BitwiseXORExpression.In> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<BitwiseXORExpression.Yield> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<BitwiseORExpression.In> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<BitwiseORExpression.Yield> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<LogicalANDExpression.In> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<LogicalANDExpression.Yield> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<LogicalORExpression.In> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<LogicalORExpression.Yield> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<CoalesceExpression.In> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<CoalesceExpression.Yield> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<ConditionalExpression.In> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<ConditionalExpression.Yield> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<AssignmentExpression.In> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<AssignmentExpression.Yield> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<Expression.In> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<Expression.Yield> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<Expression.In,Expression.Yield> returns IdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0 returns IdentifierRef
 	 *     LeftHandSideExpression<Yield> returns IdentifierRef
 	 *     LeftHandSideExpression returns IdentifierRef
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<Yield> returns IdentifierRef
@@ -13575,52 +13219,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     PrimaryExpression returns VersionedIdentifierRef
 	 *     IdentifierRef<Yield> returns VersionedIdentifierRef
 	 *     IdentifierRef returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression<Yield> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<Yield> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<PrimaryExpression.Yield> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<LeftHandSideExpression.Yield> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<MemberExpression.Yield> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<PostfixExpression.Yield> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<CastExpression.Yield> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<UnaryExpression.Yield> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<MultiplicativeExpression.Yield> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<AdditiveExpression.Yield> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<ShiftExpression.Yield> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<RelationalExpression.In> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<RelationalExpression.Yield> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<RelationalExpression.In,RelationalExpression.Yield> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<EqualityExpression.In> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<EqualityExpression.Yield> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<EqualityExpression.In,EqualityExpression.Yield> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<BitwiseANDExpression.In> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<BitwiseANDExpression.Yield> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<BitwiseXORExpression.In> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<BitwiseXORExpression.Yield> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<BitwiseORExpression.In> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<BitwiseORExpression.Yield> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<LogicalANDExpression.In> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<LogicalANDExpression.Yield> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<LogicalORExpression.In> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<LogicalORExpression.Yield> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<CoalesceExpression.In> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<CoalesceExpression.Yield> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<ConditionalExpression.In> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<ConditionalExpression.Yield> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<AssignmentExpression.In> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<AssignmentExpression.Yield> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<Expression.In> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<Expression.Yield> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0<Expression.In,Expression.Yield> returns VersionedIdentifierRef
-	 *     ParameterizedCallExpression.ParameterizedCallExpression_1_0_0 returns VersionedIdentifierRef
 	 *     LeftHandSideExpression<Yield> returns VersionedIdentifierRef
 	 *     LeftHandSideExpression returns VersionedIdentifierRef
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<Yield> returns VersionedIdentifierRef
@@ -16593,27 +16191,16 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     Expression.CommaExpression_1_0<In> returns JSXElement
 	 *     Expression.CommaExpression_1_0<Yield> returns JSXElement
 	 *     Expression.CommaExpression_1_0 returns JSXElement
+	 *     JSXElement returns JSXElement
 	 *     JSXChild returns JSXElement
 	 *
 	 * Constraint:
-	 *     (jsxElementName=JSXElementName jsxAttributes+=JSXAttribute* (jsxChildren+=JSXChild? jsxClosingName=JSXElementName)?)
+	 *     (jsxElementName=JSXElementName jsxAttributes+=JSXAttribute* (jsxChildren+=JSXChild* jsxClosingName=JSXElementName)?)
 	 */
 	protected void sequence_JSXChildren_JSXElement(ISerializationContext context, JSXElement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
-	
-	// This method is commented out because it has the same signature as another method in this class.
-	// This is probably a bug in Xtext's serializer, please report it here: 
-	// https://bugs.eclipse.org/bugs/enter_bug.cgi?product=TMF
-	//
-	// Contexts:
-	//     JSXElement returns JSXElement
-	//
-	// Constraint:
-	//     (jsxElementName=JSXElementName jsxAttributes+=JSXAttribute* (jsxChildren+=JSXChild* jsxClosingName=JSXElementName)?)
-	//
-	// protected void sequence_JSXChildren_JSXElement(ISerializationContext context, JSXElement semanticObject) { }
 	
 	/**
 	 * Contexts:

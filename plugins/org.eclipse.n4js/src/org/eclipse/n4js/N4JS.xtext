@@ -573,7 +573,7 @@ DebuggerStatement:
 PrimaryExpression <Yield> returns Expression:
 	  ThisLiteral
 	| SuperLiteral
-	| ParameterizedCallExpression<Yield>
+	| IdentifierRef<Yield>
 	| JSXFragment /* see JSX  */
 	| JSXElement /* see JSX  */
 	| ImportCallExpression<Yield>
@@ -731,16 +731,6 @@ PropertySpread <Yield>:
 	'...' expression=AssignmentExpression<In=true,Yield>
 ;
 
-/* Left-hand-side expressions (11.2) [ECM11]
- * Heavily refactored to make them LL(*) compliant.
- */
-ParameterizedCallExpression <Yield> returns Expression:
-	IdentifierRef<Yield> =>({ParameterizedCallExpression.target=current}
-		optionalChaining?='?.'?
-		ConcreteTypeArguments
-		->ArgumentsWithParentheses<Yield>
-	)?
-;
 
 fragment ConcreteTypeArguments*:
 	'<' typeArgs+=TypeRef (',' typeArgs+=TypeRef)* '>'
@@ -750,6 +740,9 @@ ImportCallExpression<Yield>:
 	'import' ArgumentsWithParentheses<Yield> // import calls must have exactly one argument (allowing more flexibility here for better error messages)
 ;
 
+/* Left-hand-side expressions (11.2) [ECM11]
+ * Heavily refactored to make them LL(*) compliant.
+ */
 LeftHandSideExpression <Yield> returns Expression:
 	MemberExpression<Yield> (
 		{ParameterizedCallExpression.target=current} optionalChaining?='?.'? ArgumentsWithParentheses<Yield>

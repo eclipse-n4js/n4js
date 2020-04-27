@@ -3932,7 +3932,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
 		private final RuleCall cThisLiteralParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
 		private final RuleCall cSuperLiteralParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
-		private final RuleCall cParameterizedCallExpressionParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
+		private final RuleCall cIdentifierRefParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
 		private final RuleCall cJSXFragmentParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
 		private final RuleCall cJSXElementParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
 		private final RuleCall cImportCallExpressionParserRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
@@ -3953,7 +3953,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//PrimaryExpression <Yield Expression:
 		//	ThisLiteral
 		//	| SuperLiteral
-		//	| ParameterizedCallExpression<Yield> | JSXFragment /* see JSX  */
+		//	| IdentifierRef<Yield> | JSXFragment /* see JSX  */
 		//	| JSXElement /* see JSX  */
 		//	| ImportCallExpression<Yield> | Literal
 		//	| ArrayLiteral<Yield> | ObjectLiteral<Yield> | ParenExpression<Yield> | AnnotatedExpression<Yield> |
@@ -3962,8 +3962,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//	| N4ClassExpression<Yield> | TemplateLiteral<Yield>;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//ThisLiteral | SuperLiteral | ParameterizedCallExpression<Yield> | JSXFragment /* see JSX  */ | JSXElement /* see JSX  */
-		//| ImportCallExpression<Yield> | Literal | ArrayLiteral<Yield> | ObjectLiteral<Yield> | ParenExpression<Yield> |
+		//ThisLiteral | SuperLiteral | IdentifierRef<Yield> | JSXFragment /* see JSX  */ | JSXElement /* see JSX  */ |
+		//ImportCallExpression<Yield> | Literal | ArrayLiteral<Yield> | ObjectLiteral<Yield> | ParenExpression<Yield> |
 		//AnnotatedExpression<Yield> | FunctionExpression | AsyncFunctionExpression | N4ClassExpression<Yield> |
 		//TemplateLiteral<Yield>
 		public Alternatives getAlternatives() { return cAlternatives; }
@@ -3974,8 +3974,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//SuperLiteral
 		public RuleCall getSuperLiteralParserRuleCall_1() { return cSuperLiteralParserRuleCall_1; }
 		
-		//ParameterizedCallExpression<Yield>
-		public RuleCall getParameterizedCallExpressionParserRuleCall_2() { return cParameterizedCallExpressionParserRuleCall_2; }
+		//IdentifierRef<Yield>
+		public RuleCall getIdentifierRefParserRuleCall_2() { return cIdentifierRefParserRuleCall_2; }
 		
 		//JSXFragment
 		public RuleCall getJSXFragmentParserRuleCall_3() { return cJSXFragmentParserRuleCall_3; }
@@ -5059,56 +5059,6 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//AssignmentExpression<In=true,Yield>
 		public RuleCall getExpressionAssignmentExpressionParserRuleCall_1_0() { return cExpressionAssignmentExpressionParserRuleCall_1_0; }
 	}
-	public class ParameterizedCallExpressionElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.ParameterizedCallExpression");
-		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final RuleCall cIdentifierRefParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
-		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
-		private final Group cGroup_1_0 = (Group)cGroup_1.eContents().get(0);
-		private final Action cParameterizedCallExpressionTargetAction_1_0_0 = (Action)cGroup_1_0.eContents().get(0);
-		private final Assignment cOptionalChainingAssignment_1_0_1 = (Assignment)cGroup_1_0.eContents().get(1);
-		private final Keyword cOptionalChainingQuestionMarkFullStopKeyword_1_0_1_0 = (Keyword)cOptionalChainingAssignment_1_0_1.eContents().get(0);
-		private final RuleCall cConcreteTypeArgumentsParserRuleCall_1_0_2 = (RuleCall)cGroup_1_0.eContents().get(2);
-		private final RuleCall cArgumentsWithParenthesesParserRuleCall_1_0_3 = (RuleCall)cGroup_1_0.eContents().get(3);
-		
-		///* Left-hand-side expressions (11.2) [ECM11]
-		// * Heavily refactored to make them LL(*) compliant.
-		// */ ParameterizedCallExpression <Yield Expression:
-		//	IdentifierRef<Yield> => ({ParameterizedCallExpression.target=current} optionalChaining?='?.'?
-		//	ConcreteTypeArguments
-		//	-> ArgumentsWithParentheses <Yield>)?;
-		@Override public ParserRule getRule() { return rule; }
-		
-		//IdentifierRef<Yield> => ({ParameterizedCallExpression.target=current} optionalChaining?='?.'? ConcreteTypeArguments ->
-		//ArgumentsWithParentheses <Yield>)?
-		public Group getGroup() { return cGroup; }
-		
-		//IdentifierRef<Yield>
-		public RuleCall getIdentifierRefParserRuleCall_0() { return cIdentifierRefParserRuleCall_0; }
-		
-		//=> ({ParameterizedCallExpression.target=current} optionalChaining?='?.'? ConcreteTypeArguments ->
-		//ArgumentsWithParentheses <Yield>)?
-		public Group getGroup_1() { return cGroup_1; }
-		
-		//({ParameterizedCallExpression.target=current} optionalChaining?='?.'? ConcreteTypeArguments -> ArgumentsWithParentheses
-		//<Yield>)
-		public Group getGroup_1_0() { return cGroup_1_0; }
-		
-		//{ParameterizedCallExpression.target=current}
-		public Action getParameterizedCallExpressionTargetAction_1_0_0() { return cParameterizedCallExpressionTargetAction_1_0_0; }
-		
-		//optionalChaining?='?.'?
-		public Assignment getOptionalChainingAssignment_1_0_1() { return cOptionalChainingAssignment_1_0_1; }
-		
-		//'?.'
-		public Keyword getOptionalChainingQuestionMarkFullStopKeyword_1_0_1_0() { return cOptionalChainingQuestionMarkFullStopKeyword_1_0_1_0; }
-		
-		//ConcreteTypeArguments
-		public RuleCall getConcreteTypeArgumentsParserRuleCall_1_0_2() { return cConcreteTypeArgumentsParserRuleCall_1_0_2; }
-		
-		//-> ArgumentsWithParentheses <Yield>
-		public RuleCall getArgumentsWithParenthesesParserRuleCall_1_0_3() { return cArgumentsWithParenthesesParserRuleCall_1_0_3; }
-	}
 	public class ConcreteTypeArgumentsElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.ConcreteTypeArguments");
 		private final Group cGroup = (Group)rule.eContents().get(0);
@@ -5200,7 +5150,9 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cTemplateAssignment_1_3_3_0_2 = (Assignment)cGroup_1_3_3_0.eContents().get(2);
 		private final RuleCall cTemplateTemplateLiteralParserRuleCall_1_3_3_0_2_0 = (RuleCall)cTemplateAssignment_1_3_3_0_2.eContents().get(0);
 		
-		//LeftHandSideExpression <Yield Expression:
+		///* Left-hand-side expressions (11.2) [ECM11]
+		// * Heavily refactored to make them LL(*) compliant.
+		// */ LeftHandSideExpression <Yield Expression:
 		//	MemberExpression<Yield> ({ParameterizedCallExpression.target=current} optionalChaining?='?.'?
 		//	ArgumentsWithParentheses<Yield> ({ParameterizedCallExpression.target=current} optionalChaining?='?.'?
 		//	ArgumentsWithParentheses<Yield> | {IndexedAccessExpression.target=current} IndexedAccessExpressionTail<Yield> |
@@ -10412,7 +10364,6 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	private final PropertyGetterDeclarationElements pPropertyGetterDeclaration;
 	private final PropertySetterDeclarationElements pPropertySetterDeclaration;
 	private final PropertySpreadElements pPropertySpread;
-	private final ParameterizedCallExpressionElements pParameterizedCallExpression;
 	private final ConcreteTypeArgumentsElements pConcreteTypeArguments;
 	private final ImportCallExpressionElements pImportCallExpression;
 	private final LeftHandSideExpressionElements pLeftHandSideExpression;
@@ -10672,7 +10623,6 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		this.pPropertyGetterDeclaration = new PropertyGetterDeclarationElements();
 		this.pPropertySetterDeclaration = new PropertySetterDeclarationElements();
 		this.pPropertySpread = new PropertySpreadElements();
-		this.pParameterizedCallExpression = new ParameterizedCallExpressionElements();
 		this.pConcreteTypeArguments = new ConcreteTypeArgumentsElements();
 		this.pImportCallExpression = new ImportCallExpressionElements();
 		this.pLeftHandSideExpression = new LeftHandSideExpressionElements();
@@ -11767,7 +11717,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	//PrimaryExpression <Yield Expression:
 	//	ThisLiteral
 	//	| SuperLiteral
-	//	| ParameterizedCallExpression<Yield> | JSXFragment /* see JSX  */
+	//	| IdentifierRef<Yield> | JSXFragment /* see JSX  */
 	//	| JSXElement /* see JSX  */
 	//	| ImportCallExpression<Yield> | Literal
 	//	| ArrayLiteral<Yield> | ObjectLiteral<Yield> | ParenExpression<Yield> | AnnotatedExpression<Yield> |
@@ -11995,20 +11945,6 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		return getPropertySpreadAccess().getRule();
 	}
 	
-	///* Left-hand-side expressions (11.2) [ECM11]
-	// * Heavily refactored to make them LL(*) compliant.
-	// */ ParameterizedCallExpression <Yield Expression:
-	//	IdentifierRef<Yield> => ({ParameterizedCallExpression.target=current} optionalChaining?='?.'?
-	//	ConcreteTypeArguments
-	//	-> ArgumentsWithParentheses <Yield>)?;
-	public ParameterizedCallExpressionElements getParameterizedCallExpressionAccess() {
-		return pParameterizedCallExpression;
-	}
-	
-	public ParserRule getParameterizedCallExpressionRule() {
-		return getParameterizedCallExpressionAccess().getRule();
-	}
-	
 	//fragment ConcreteTypeArguments *:
 	//	'<' typeArgs+=TypeRef (',' typeArgs+=TypeRef)* '>';
 	public ConcreteTypeArgumentsElements getConcreteTypeArgumentsAccess() {
@@ -12029,7 +11965,9 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		return getImportCallExpressionAccess().getRule();
 	}
 	
-	//LeftHandSideExpression <Yield Expression:
+	///* Left-hand-side expressions (11.2) [ECM11]
+	// * Heavily refactored to make them LL(*) compliant.
+	// */ LeftHandSideExpression <Yield Expression:
 	//	MemberExpression<Yield> ({ParameterizedCallExpression.target=current} optionalChaining?='?.'?
 	//	ArgumentsWithParentheses<Yield> ({ParameterizedCallExpression.target=current} optionalChaining?='?.'?
 	//	ArgumentsWithParentheses<Yield> | {IndexedAccessExpression.target=current} IndexedAccessExpressionTail<Yield> |

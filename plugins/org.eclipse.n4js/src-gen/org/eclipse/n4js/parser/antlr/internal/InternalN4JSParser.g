@@ -12829,11 +12829,11 @@ rulePrimaryExpression returns [EObject current=null]
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getPrimaryExpressionAccess().getParameterizedCallExpressionParserRuleCall_2());
+			newCompositeNode(grammarAccess.getPrimaryExpressionAccess().getIdentifierRefParserRuleCall_2());
 		}
-		this_ParameterizedCallExpression_2=ruleParameterizedCallExpression
+		this_IdentifierRef_2=ruleIdentifierRef
 		{
-			$current = $this_ParameterizedCallExpression_2.current;
+			$current = $this_IdentifierRef_2.current;
 			afterParserOrEnumRuleCall();
 		}
 		    |
@@ -12988,11 +12988,11 @@ norm1_PrimaryExpression returns [EObject current=null]
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getPrimaryExpressionAccess().getParameterizedCallExpressionParserRuleCall_2());
+			newCompositeNode(grammarAccess.getPrimaryExpressionAccess().getIdentifierRefParserRuleCall_2());
 		}
-		this_ParameterizedCallExpression_2=norm1_ParameterizedCallExpression
+		this_IdentifierRef_2=norm1_IdentifierRef
 		{
-			$current = $this_ParameterizedCallExpression_2.current;
+			$current = $this_IdentifierRef_2.current;
 			afterParserOrEnumRuleCall();
 		}
 		    |
@@ -17537,178 +17537,6 @@ norm1_PropertySpread returns [EObject current=null]
 				}
 			)
 		)
-	)
-;
-
-// Entry rule entryRuleParameterizedCallExpression
-entryRuleParameterizedCallExpression returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getParameterizedCallExpressionRule()); }
-	iv_ruleParameterizedCallExpression=ruleParameterizedCallExpression
-	{ $current=$iv_ruleParameterizedCallExpression.current; }
-	EOF;
-
-// Rule ParameterizedCallExpression
-ruleParameterizedCallExpression returns [EObject current=null]
-@init {
-	enterRule();
-}
-@after {
-	leaveRule();
-}:
-	(
-		{
-			newCompositeNode(grammarAccess.getParameterizedCallExpressionAccess().getIdentifierRefParserRuleCall_0());
-		}
-		this_IdentifierRef_0=ruleIdentifierRef
-		{
-			$current = $this_IdentifierRef_0.current;
-			afterParserOrEnumRuleCall();
-		}
-		(
-			((
-				(
-				)
-				(
-					(
-						QuestionMarkFullStop
-					)
-				)?
-				ruleConcreteTypeArguments[null]
-				LeftParenthesis
-			)
-			)=>
-			(
-				(
-					{
-						$current = forceCreateModelElementAndSet(
-							grammarAccess.getParameterizedCallExpressionAccess().getParameterizedCallExpressionTargetAction_1_0_0(),
-							$current);
-					}
-				)
-				(
-					(
-						lv_optionalChaining_2_0=QuestionMarkFullStop
-						{
-							newLeafNode(lv_optionalChaining_2_0, grammarAccess.getParameterizedCallExpressionAccess().getOptionalChainingQuestionMarkFullStopKeyword_1_0_1_0());
-						}
-						{
-							if ($current==null) {
-								$current = createModelElement(grammarAccess.getParameterizedCallExpressionRule());
-							}
-							setWithLastConsumed($current, "optionalChaining", true, "?.");
-						}
-					)
-				)?
-				{
-					if ($current==null) {
-						$current = createModelElement(grammarAccess.getParameterizedCallExpressionRule());
-					}
-					newCompositeNode(grammarAccess.getParameterizedCallExpressionAccess().getConcreteTypeArgumentsParserRuleCall_1_0_2());
-				}
-				this_ConcreteTypeArguments_3=ruleConcreteTypeArguments[$current]
-				{
-					$current = $this_ConcreteTypeArguments_3.current;
-					afterParserOrEnumRuleCall();
-				}
-				(
-					(LeftParenthesis)=>
-					{
-						if ($current==null) {
-							$current = createModelElement(grammarAccess.getParameterizedCallExpressionRule());
-						}
-						newCompositeNode(grammarAccess.getParameterizedCallExpressionAccess().getArgumentsWithParenthesesParserRuleCall_1_0_3());
-					}
-					this_ArgumentsWithParentheses_4=ruleArgumentsWithParentheses[$current]
-					{
-						$current = $this_ArgumentsWithParentheses_4.current;
-						afterParserOrEnumRuleCall();
-					}
-				)
-			)
-		)?
-	)
-;
-
-
-// Rule ParameterizedCallExpression
-norm1_ParameterizedCallExpression returns [EObject current=null]
-@init {
-	enterRule();
-}
-@after {
-	leaveRule();
-}:
-	(
-		{
-			newCompositeNode(grammarAccess.getParameterizedCallExpressionAccess().getIdentifierRefParserRuleCall_0());
-		}
-		this_IdentifierRef_0=norm1_IdentifierRef
-		{
-			$current = $this_IdentifierRef_0.current;
-			afterParserOrEnumRuleCall();
-		}
-		(
-			((
-				(
-				)
-				(
-					(
-						QuestionMarkFullStop
-					)
-				)?
-				ruleConcreteTypeArguments[null]
-				LeftParenthesis
-			)
-			)=>
-			(
-				(
-					{
-						$current = forceCreateModelElementAndSet(
-							grammarAccess.getParameterizedCallExpressionAccess().getParameterizedCallExpressionTargetAction_1_0_0(),
-							$current);
-					}
-				)
-				(
-					(
-						lv_optionalChaining_2_0=QuestionMarkFullStop
-						{
-							newLeafNode(lv_optionalChaining_2_0, grammarAccess.getParameterizedCallExpressionAccess().getOptionalChainingQuestionMarkFullStopKeyword_1_0_1_0());
-						}
-						{
-							if ($current==null) {
-								$current = createModelElement(grammarAccess.getParameterizedCallExpressionRule());
-							}
-							setWithLastConsumed($current, "optionalChaining", true, "?.");
-						}
-					)
-				)?
-				{
-					if ($current==null) {
-						$current = createModelElement(grammarAccess.getParameterizedCallExpressionRule());
-					}
-					newCompositeNode(grammarAccess.getParameterizedCallExpressionAccess().getConcreteTypeArgumentsParserRuleCall_1_0_2());
-				}
-				this_ConcreteTypeArguments_3=ruleConcreteTypeArguments[$current]
-				{
-					$current = $this_ConcreteTypeArguments_3.current;
-					afterParserOrEnumRuleCall();
-				}
-				(
-					(LeftParenthesis)=>
-					{
-						if ($current==null) {
-							$current = createModelElement(grammarAccess.getParameterizedCallExpressionRule());
-						}
-						newCompositeNode(grammarAccess.getParameterizedCallExpressionAccess().getArgumentsWithParenthesesParserRuleCall_1_0_3());
-					}
-					this_ArgumentsWithParentheses_4=norm1_ArgumentsWithParentheses[$current]
-					{
-						$current = $this_ArgumentsWithParentheses_4.current;
-						afterParserOrEnumRuleCall();
-					}
-				)
-			)
-		)?
 	)
 ;
 

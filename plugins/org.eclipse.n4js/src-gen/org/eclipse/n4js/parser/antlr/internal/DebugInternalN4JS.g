@@ -2582,7 +2582,7 @@ rulePrimaryExpression:
 		    |
 		ruleSuperLiteral
 		    |
-		ruleParameterizedCallExpression
+		ruleIdentifierRef
 		    |
 		ruleJSXFragment
 		    |
@@ -2623,7 +2623,7 @@ norm1_PrimaryExpression:
 		    |
 		ruleSuperLiteral
 		    |
-		norm1_ParameterizedCallExpression
+		norm1_IdentifierRef
 		    |
 		ruleJSXFragment
 		    |
@@ -4144,44 +4144,6 @@ rulePropertySpread:
 norm1_PropertySpread:
 	'...'
 	norm3_AssignmentExpression
-;
-
-// Rule ParameterizedCallExpression
-ruleParameterizedCallExpression:
-	ruleIdentifierRef
-	(
-		('?.'
-		?
-		ruleConcreteTypeArguments
-		'('
-		)=>
-		'?.'
-		?
-		ruleConcreteTypeArguments
-		(
-			('(')=>
-			ruleArgumentsWithParentheses
-		)
-	)?
-;
-
-// Rule ParameterizedCallExpression
-norm1_ParameterizedCallExpression:
-	norm1_IdentifierRef
-	(
-		('?.'
-		?
-		ruleConcreteTypeArguments
-		'('
-		)=>
-		'?.'
-		?
-		ruleConcreteTypeArguments
-		(
-			('(')=>
-			norm1_ArgumentsWithParentheses
-		)
-	)?
 ;
 
 // Rule ConcreteTypeArguments
