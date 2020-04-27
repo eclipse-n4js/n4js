@@ -29,6 +29,10 @@ public class HighlightingConfiguration extends DefaultHighlightingConfiguration 
 	 */
 	public static final String TEMPLATE_ID = "TEMPLATE_ID";
 	/**
+	 * Style ident for template text.
+	 */
+	public static final String JSX_TEXT_ID = "JSX_TEXT_ID";
+	/**
 	 * Style ident for template delimiter, e.g. ${ and }
 	 */
 	public static final String TEMPLATE_DELIMITER_ID = "TEMPLATE_DELIMITER_ID";
@@ -92,6 +96,7 @@ public class HighlightingConfiguration extends DefaultHighlightingConfiguration 
 		acceptor.acceptDefaultHighlighting(DEFAULT_ID, "Default", defaultTextStyle());
 		acceptor.acceptDefaultHighlighting(INVALID_TOKEN_ID, "Invalid Symbol", errorTextStyle());
 		acceptor.acceptDefaultHighlighting(REGEX_ID, "Regular Expression", regExTextStyle());
+		acceptor.acceptDefaultHighlighting(JSX_TEXT_ID, "JSX Text", literalTextStyle());
 		acceptor.acceptDefaultHighlighting(TEMPLATE_ID, "Template Text", literalTextStyle());
 		acceptor.acceptDefaultHighlighting(TEMPLATE_DELIMITER_ID, "Template Delimiter", templateDelimiterTextStyle());
 		acceptor.acceptDefaultHighlighting(ANNOTATION_ID, "Annotation", annotationTextStyle());

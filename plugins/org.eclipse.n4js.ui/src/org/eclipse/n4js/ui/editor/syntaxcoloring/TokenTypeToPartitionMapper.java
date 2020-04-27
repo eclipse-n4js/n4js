@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ui.editor.syntaxcoloring;
 
+import static org.eclipse.n4js.ui.editor.syntaxcoloring.InternalN4JSParser.RULE_JSX_TEXT;
 import static org.eclipse.n4js.ui.editor.syntaxcoloring.InternalN4JSParser.RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL;
 import static org.eclipse.n4js.ui.editor.syntaxcoloring.InternalN4JSParser.RULE_REGEX_START;
 import static org.eclipse.n4js.ui.editor.syntaxcoloring.InternalN4JSParser.RULE_REGEX_TAIL;
@@ -43,18 +44,23 @@ public class TokenTypeToPartitionMapper extends TerminalsTokenTypeToPartitionMap
 	 * The partition type for the literal part of template literals.
 	 */
 	public final static String TEMPLATE_LITERAL_PARTITION = "__template";
+	/**
+	 * The partition type for the literal part of template literals.
+	 */
+	public final static String JSX_TEXT_PARTITION = "__jsxtext";
 
 	/**
 	 * All supported partition types.
 	 */
 	public static final String[] SUPPORTED_PARTITION_TYPES = new String[] {
-		COMMENT_PARTITION,
-		JS_DOC_PARTITION,
-		SL_COMMENT_PARTITION,
-		REG_EX_PARTITION,
-		STRING_LITERAL_PARTITION,
-		TEMPLATE_LITERAL_PARTITION,
-		IDocument.DEFAULT_CONTENT_TYPE
+			COMMENT_PARTITION,
+			JS_DOC_PARTITION,
+			SL_COMMENT_PARTITION,
+			REG_EX_PARTITION,
+			STRING_LITERAL_PARTITION,
+			TEMPLATE_LITERAL_PARTITION,
+			JSX_TEXT_PARTITION,
+			IDocument.DEFAULT_CONTENT_TYPE
 	};
 
 	/**
@@ -84,6 +90,8 @@ public class TokenTypeToPartitionMapper extends TerminalsTokenTypeToPartitionMap
 		case RULE_REGEX_START:
 		case RULE_REGEX_TAIL:
 			return REG_EX_PARTITION;
+		case RULE_JSX_TEXT:
+			return JSX_TEXT_PARTITION;
 		}
 		return super.calculateId(tokenName, tokenType);
 	}

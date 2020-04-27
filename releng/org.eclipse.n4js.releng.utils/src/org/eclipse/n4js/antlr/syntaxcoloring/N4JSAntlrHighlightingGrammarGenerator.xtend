@@ -105,6 +105,7 @@ class N4JSAntlrHighlightingGrammarGenerator extends AbstractAntlrGrammarWithActi
 			protected boolean isTypeRefNoTrailingLineBreak() { return true; } // overridden in subtype
 			protected void setInRegularExpression() {} // overridden in subtype
 			protected void setInTemplateSegment() {} // overridden in subtype
+			protected boolean setInJsxChildren() { return false; } // overridden in subtype
 			protected void announce(Token token, AbstractElement element) {} // overridden in subtype
 			protected void announce(Token start, Token stop, AbstractElement element) {} // overridden in subtype
 		}
@@ -171,6 +172,15 @@ class N4JSAntlrHighlightingGrammarGenerator extends AbstractAntlrGrammarWithActi
 							«compileInitUnorderedGroups(options)»
 						«ENDIF»
 					}'''
+			default: ''
+		}
+	}
+	
+	override protected compileFinally(AbstractRule it, AntlrOptions options) {
+		switch it {
+			ParserRule case "JSXChild" == originalElement.name: '''
+				finally { setInJsxChildren(); }
+			'''
 			default: ''
 		}
 	}
@@ -359,6 +369,14 @@ class N4JSAntlrHighlightingGrammarGenerator extends AbstractAntlrGrammarWithActi
 				announce($«originalElement.gaElementIdentifier».start, $«originalElement.gaElementIdentifier».stop, grammarAccess.«originalElement.gaRuleElementAccessor()»);
 			}
 			«ENDIF»
+		«ELSEIF "JSXChildren" == rule.originalElement.name»
+			{ setInJsxChildren() }?=>(«IF supportActions»«originalElement.gaElementIdentifier»=«ENDIF»«
+						 rule.ruleName()»«
+						 IF supportActions && TerminalRule.isInstance(rule)»
+							{ announce($«originalElement.gaElementIdentifier», grammarAccess.«originalElement.gaRuleElementAccessor()»); }
+						«ELSEIF supportActions && ParserRule.isInstance(rule)»
+							{ announce($«originalElement.gaElementIdentifier».start, $«originalElement.gaElementIdentifier».stop, grammarAccess.«originalElement.gaRuleElementAccessor()»); }
+						«ENDIF»)
 		«ELSE»
 			«IF supportActions»«originalElement.gaElementIdentifier»=«ENDIF»«
 			 rule.ruleName()»«

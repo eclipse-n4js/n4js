@@ -573,11 +573,10 @@ DebuggerStatement:
 PrimaryExpression <Yield> returns Expression:
 	  ThisLiteral
 	| SuperLiteral
-	| IdentifierRef<Yield>
+	| ParameterizedCallExpression<Yield>
 	| JSXFragment /* see JSX  */
 	| JSXElement /* see JSX  */
 	| ImportCallExpression<Yield>
-	| ParameterizedCallExpression<Yield>
 	| Literal
 	| ArrayLiteral<Yield>
 	| ObjectLiteral<Yield>
@@ -735,12 +734,12 @@ PropertySpread <Yield>:
 /* Left-hand-side expressions (11.2) [ECM11]
  * Heavily refactored to make them LL(*) compliant.
  */
-
-ParameterizedCallExpression <Yield>:
-	ConcreteTypeArguments
-	target=IdentifierRef<Yield>
-	optionalChaining?='?.'?
-	ArgumentsWithParentheses<Yield>
+ParameterizedCallExpression <Yield> returns Expression:
+	IdentifierRef<Yield> =>({ParameterizedCallExpression.target=current}
+		optionalChaining?='?.'?
+		ConcreteTypeArguments
+		->ArgumentsWithParentheses<Yield>
+	)?
 ;
 
 fragment ConcreteTypeArguments*:
@@ -1506,21 +1505,36 @@ LiteralOrComputedPropertyName <Yield>:
 JSXElement:
 	'<' jsxElementName=JSXElementName jsxAttributes+=JSXAttribute*
 	(
-		  '>' jsxChildren+=JSXChild* '<' '/' jsxClosingName=JSXElementName '>'
+		  '>' JSXChildren '<' '/' jsxClosingName=JSXElementName '>'
 		| '/' '>'
 	);
 
+fragment JSXChildren*:
+	jsxChildren+=JSXChild*
+;
+
 JSXFragment:
-	{JSXFragment} '<' '>' jsxChildren+=JSXChild* '<' '/' '>';
+	{JSXFragment} '<' '>' JSXChildren '<' '/' '>';
 
 JSXChild:
 	  JSXElement
 	| JSXFragment
 	| JSXExpression
-//	| JSXText -- not supported yet, cf. IDE-2414
+	| JSXText
 ;
 
-// terminal JSX_TEXT: !('{'|'<'|'>'|'}'); needs to be refactored similar to template text, cf. IDE-2414
+JSXText:
+	value=JSX_TEXT
+;
+
+/** Rewritten in post-processing. */  
+terminal JSX_TEXT:
+	'//6'
+;
+
+terminal fragment JSX_TEXT_FRAGMENT:
+	!('{' | '<' | '>' | '}')+
+;
 
 JSXExpression: '{' expression=AssignmentExpression<false,false> '}';
 

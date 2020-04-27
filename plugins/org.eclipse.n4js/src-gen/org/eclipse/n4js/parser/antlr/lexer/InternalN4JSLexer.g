@@ -19,6 +19,8 @@ import org.eclipse.xtext.parser.antlr.Lexer;
 }
 @members {
 
+protected boolean inJsxChildren = false;
+
 protected boolean inTemplateSegment = false;
 
 protected boolean inRegularExpression = false;
@@ -633,6 +635,10 @@ RULE_TEMPLATE_END : { false }?=> '//3';
 fragment RULE_TEMPLATE_CONTINUATION : '//4';
 
 RULE_NO_LINE_TERMINATOR : { false }?=> '//5';
+
+RULE_JSX_TEXT : { false }?=> '//6';
+
+fragment RULE_JSX_TEXT_FRAGMENT : ~(('{'|'<'|'>'|'}'))+;
 
 RULE_STRUCTMODSUFFIX : ('r'|'i'|'w'|'\u2205') '~';
 

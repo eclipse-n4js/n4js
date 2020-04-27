@@ -100,6 +100,15 @@ public class InternalHighlightingParser extends InternalN4JSParser implements Se
 		}
 	}
 
+	@Override
+	protected boolean setInJsxChildren() {
+		if (!hasBufferedTokens()) {
+			RegExLiteralAwareLexer lexer = (RegExLiteralAwareLexer) this.input.getTokenSource();
+			lexer.setInJsxChildren();
+		}
+		return true;
+	}
+
 	private boolean hasBufferedTokens() {
 		return input.index() < input.size() - 1;
 	}

@@ -13,6 +13,7 @@ package org.eclipse.n4js.ui.editor.syntaxcoloring;
 import static org.eclipse.n4js.ui.editor.syntaxcoloring.InternalN4JSParser.CommercialAt;
 import static org.eclipse.n4js.ui.editor.syntaxcoloring.InternalN4JSParser.CommercialAtCommercialAt;
 import static org.eclipse.n4js.ui.editor.syntaxcoloring.InternalN4JSParser.RULE_IDENTIFIER;
+import static org.eclipse.n4js.ui.editor.syntaxcoloring.InternalN4JSParser.RULE_JSX_TEXT;
 import static org.eclipse.n4js.ui.editor.syntaxcoloring.InternalN4JSParser.RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL;
 import static org.eclipse.n4js.ui.editor.syntaxcoloring.InternalN4JSParser.RULE_REGEX_START;
 import static org.eclipse.n4js.ui.editor.syntaxcoloring.InternalN4JSParser.RULE_REGEX_TAIL;
@@ -40,6 +41,8 @@ public class TokenToAttributeIdMapper extends DefaultAntlrTokenToAttributeIdMapp
 			return HighlightingConfiguration.TEMPLATE_ID;
 		case RULE_TEMPLATE_CONTINUATION:
 			return HighlightingConfiguration.TEMPLATE_DELIMITER_ID;
+		case RULE_JSX_TEXT:
+			return HighlightingConfiguration.JSX_TEXT_ID;
 		case RULE_REGEX_START:
 		case RULE_REGEX_TAIL:
 			return HighlightingConfiguration.REGEX_ID;

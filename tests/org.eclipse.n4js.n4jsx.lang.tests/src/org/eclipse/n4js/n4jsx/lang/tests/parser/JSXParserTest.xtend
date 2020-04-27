@@ -20,8 +20,75 @@ import org.eclipse.n4js.n4JS.StringLiteral
 import org.eclipse.n4js.n4JS.TemplateLiteral
 import org.eclipse.n4js.n4JS.TemplateSegment
 import org.junit.Test
+import org.eclipse.n4js.n4JS.JSXText
 
 class JSXParserTest extends AbstractN4JSXParserTest {
+
+	@Test
+	def void testJSXText_01() {
+		val script = '''
+			<div>some   text</div>
+		'''.parseSuccessfully
+		assertEquals(1, script.scriptElements.size)
+		val JSXElement jsxElement = (script.scriptElements.get(0) as ExpressionStatement).expression as JSXElement;
+		assertTagName("div", jsxElement);
+		val child = jsxElement.jsxChildren.head as JSXText
+		assertEquals("some   text", child.value)
+	}
+	
+	@Test
+	def void testJSXText_02() {
+		val script = '''
+			<div>/*comment*/some<nested/>text/*comment*/</div>
+		'''.parseSuccessfully
+		assertEquals(1, script.scriptElements.size)
+		val JSXElement jsxElement = (script.scriptElements.get(0) as ExpressionStatement).expression as JSXElement;
+		assertTagName("div", jsxElement);
+		assertEquals("/*comment*/some", (jsxElement.jsxChildren.head as JSXText).value)
+		assertEquals("text/*comment*/", (jsxElement.jsxChildren.last as JSXText).value)
+	}
+	
+	@Test
+	def void testJSXText_03() {
+		val script = '''
+			<div>/*comment*/some{1+1}text/*comment*/</div>
+		'''.parseSuccessfully
+		assertEquals(1, script.scriptElements.size)
+		val JSXElement jsxElement = (script.scriptElements.get(0) as ExpressionStatement).expression as JSXElement;
+		assertTagName("div", jsxElement);
+		assertEquals("/*comment*/some", (jsxElement.jsxChildren.head as JSXText).value)
+		assertEquals("text/*comment*/", (jsxElement.jsxChildren.last as JSXText).value)
+	}
+	
+	@Test
+	def void testJSXText_04() {
+		val script = '''
+			<div>/not a regex/{1+1}not an automatic
+			semicolon
+			// not a comment
+			</div>
+		'''.parseSuccessfully
+		assertEquals(1, script.scriptElements.size)
+		val JSXElement jsxElement = (script.scriptElements.get(0) as ExpressionStatement).expression as JSXElement;
+		assertTagName("div", jsxElement);
+		assertEquals("/not a regex/", (jsxElement.jsxChildren.head as JSXText).value)
+		assertEquals('''
+			not an automatic
+			semicolon
+			// not a comment
+		'''.toString(), (jsxElement.jsxChildren.last as JSXText).value)
+	}
+	
+	@Test
+	def void testJSXText_05() {
+		val script = '''
+			<div>// not a comment</div>
+		'''.parseSuccessfully
+		assertEquals(1, script.scriptElements.size)
+		val JSXElement jsxElement = (script.scriptElements.get(0) as ExpressionStatement).expression as JSXElement;
+		assertTagName("div", jsxElement);
+		assertEquals("// not a comment", (jsxElement.jsxChildren.head as JSXText).value)
+	}
 
 	@Test
 	def void testSelfClosingTag() {

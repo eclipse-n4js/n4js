@@ -7023,6 +7023,16 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
+	public EAttribute getJSXText_Value() {
+		return (EAttribute)jsxTextEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getJSXExpression() {
 		return jsxExpressionEClass;
 	}
@@ -8168,6 +8178,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEReference(jsxElementNameEClass, JSX_ELEMENT_NAME__EXPRESSION);
 
 		jsxTextEClass = createEClass(JSX_TEXT);
+		createEAttribute(jsxTextEClass, JSX_TEXT__VALUE);
 
 		jsxExpressionEClass = createEClass(JSX_EXPRESSION);
 		createEReference(jsxExpressionEClass, JSX_EXPRESSION__EXPRESSION);
@@ -9389,6 +9400,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEReference(getJSXElementName_Expression(), this.getExpression(), null, "expression", null, 0, 1, JSXElementName.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(jsxTextEClass, JSXText.class, "JSXText", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getJSXText_Value(), theEcorePackage.getEString(), "value", null, 0, 1, JSXText.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(jsxExpressionEClass, JSXExpression.class, "JSXExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getJSXExpression_Expression(), this.getExpression(), null, "expression", null, 0, 1, JSXExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

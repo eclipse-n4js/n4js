@@ -2582,15 +2582,13 @@ rulePrimaryExpression:
 		    |
 		ruleSuperLiteral
 		    |
-		ruleIdentifierRef
+		ruleParameterizedCallExpression
 		    |
 		ruleJSXFragment
 		    |
 		ruleJSXElement
 		    |
 		ruleImportCallExpression
-		    |
-		ruleParameterizedCallExpression
 		    |
 		ruleLiteral
 		    |
@@ -2625,15 +2623,13 @@ norm1_PrimaryExpression:
 		    |
 		ruleSuperLiteral
 		    |
-		norm1_IdentifierRef
+		norm1_ParameterizedCallExpression
 		    |
 		ruleJSXFragment
 		    |
 		ruleJSXElement
 		    |
 		norm1_ImportCallExpression
-		    |
-		norm1_ParameterizedCallExpression
 		    |
 		ruleLiteral
 		    |
@@ -4152,20 +4148,40 @@ norm1_PropertySpread:
 
 // Rule ParameterizedCallExpression
 ruleParameterizedCallExpression:
-	ruleConcreteTypeArguments
 	ruleIdentifierRef
-	'?.'
-	?
-	ruleArgumentsWithParentheses
+	(
+		('?.'
+		?
+		ruleConcreteTypeArguments
+		'('
+		)=>
+		'?.'
+		?
+		ruleConcreteTypeArguments
+		(
+			('(')=>
+			ruleArgumentsWithParentheses
+		)
+	)?
 ;
 
 // Rule ParameterizedCallExpression
 norm1_ParameterizedCallExpression:
-	ruleConcreteTypeArguments
 	norm1_IdentifierRef
-	'?.'
-	?
-	norm1_ArgumentsWithParentheses
+	(
+		('?.'
+		?
+		ruleConcreteTypeArguments
+		'('
+		)=>
+		'?.'
+		?
+		ruleConcreteTypeArguments
+		(
+			('(')=>
+			norm1_ArgumentsWithParentheses
+		)
+	)?
 ;
 
 // Rule ConcreteTypeArguments
@@ -8481,8 +8497,7 @@ ruleJSXElement:
 	*
 	(
 		'>'
-		ruleJSXChild
-		*
+		ruleJSXChildren
 		'<'
 		'/'
 		ruleJSXElementName
@@ -8493,12 +8508,17 @@ ruleJSXElement:
 	)
 ;
 
+// Rule JSXChildren
+ruleJSXChildren:
+	ruleJSXChild
+	*
+;
+
 // Rule JSXFragment
 ruleJSXFragment:
 	'<'
 	'>'
-	ruleJSXChild
-	*
+	ruleJSXChildren
 	'<'
 	'/'
 	'>'
@@ -8512,7 +8532,14 @@ ruleJSXChild:
 		ruleJSXFragment
 		    |
 		ruleJSXExpression
+		    |
+		ruleJSXText
 	)
+;
+
+// Rule JSXText
+ruleJSXText:
+	RULE_JSX_TEXT
 ;
 
 // Rule JSXExpression
@@ -9485,6 +9512,10 @@ RULE_TEMPLATE_END : '//3';
 fragment RULE_TEMPLATE_CONTINUATION : '//4';
 
 RULE_NO_LINE_TERMINATOR : '//5';
+
+RULE_JSX_TEXT : '//6';
+
+fragment RULE_JSX_TEXT_FRAGMENT : ~(('{'|'<'|'>'|'}'))+;
 
 RULE_STRUCTMODSUFFIX : ('r'|'i'|'w'|'\u2205') '~';
 

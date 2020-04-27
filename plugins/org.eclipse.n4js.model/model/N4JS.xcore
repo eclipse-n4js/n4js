@@ -2387,7 +2387,9 @@ class JSXElementName {
 	contains Expression expression
 }
 
-class JSXText extends JSXChild {}
+class JSXText extends JSXChild {
+	String value
+}
 
 class JSXExpression extends JSXChild {
 	contains Expression expression

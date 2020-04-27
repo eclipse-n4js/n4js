@@ -26,6 +26,7 @@ import org.eclipse.xtext.Grammar
 import org.eclipse.xtext.xtext.generator.model.IXtextGeneratorFileSystemAccess
 import org.eclipse.xtext.xtext.generator.parser.antlr.AntlrGrammarGenerator
 import org.eclipse.xtext.xtext.generator.parser.antlr.AntlrOptions
+import org.eclipse.n4js.antlr.n4js.JSXTextInjector
 
 /**
  * Customized production ANTLR grammar generator.
@@ -43,6 +44,9 @@ class N4JSAntlrGrammarGenerator extends AntlrGrammarGenerator {
 
 	@Inject
 	NoLineTerminatorHandlingInjector noLineTerminatorHandlingInjector
+	
+	@Inject
+	JSXTextInjector jsxTextInjector
 
 	List<CodeIntoGrammarInjector> steps
 
@@ -52,7 +56,8 @@ class N4JSAntlrGrammarGenerator extends AntlrGrammarGenerator {
 			semicolonInjector,
 			regExDisambiguationInjector,
 			templateLiteralDisambiguationInjector,
-			noLineTerminatorHandlingInjector
+			noLineTerminatorHandlingInjector,
+			jsxTextInjector
 		]
 	}
 

@@ -45,24 +45,28 @@ public class RegExLiteralAwareLexer extends InternalN4JSLexer {
 		super.reset();
 		inRegularExpression = false;
 		inTemplateSegment = false;
+		inJsxChildren = false;
 	}
 
 	/**
-	 * <p>
 	 * Announce the next token to be expected as a regular expression tail.
-	 * </p>
 	 */
 	public void setInRegularExpression() {
 		inRegularExpression = true;
 	}
 
 	/**
-	 * <p>
 	 * Announce the next token to be expected as a part of a template literal
-	 * </p>
 	 */
 	public void setInTemplateSegment() {
 		inTemplateSegment = true;
+	}
+
+	/**
+	 * Announce the next token to be a JSX_TEXT token.
+	 */
+	public void setInJsxChildren() {
+		inJsxChildren = true;
 	}
 
 	/**
@@ -126,6 +130,33 @@ public class RegExLiteralAwareLexer extends InternalN4JSLexer {
 				// this is basically impossible since the regex tail consumes any char except for line breaks
 				throw new RuntimeException("Unexpected recognition problem for\n" + input, re);
 			}
+		} else if (inJsxChildren) {
+			clearAndResetTokenState();
+			switch (input.LA(1)) {
+			case '<':
+			case '>':
+			case '{':
+			case '}':
+				inJsxChildren = false;
+				return super.nextToken();
+			case CharStream.EOF:
+				inJsxChildren = false;
+				return Token.EOF_TOKEN;
+			default:
+				try {
+					mRULE_JSX_TEXT_FRAGMENT();
+					if (this.state.token == null) {
+						emit();
+						this.state.token.setType(RULE_JSX_TEXT);
+						inJsxChildren = false;
+					}
+					return this.state.token;
+				} catch (RecognitionException re) {
+					// this is basically impossible since the regex tail consumes any char except for line breaks
+					throw new RuntimeException("Unexpected recognition problem for\n" + input, re);
+				}
+			}
+
 		} else {
 			// check for a sequence `?.[digit]` which must not yield `?.`. `[digit]` but `?` `.[digit]`
 			if (input.LA(1) == '?' && input.LA(2) == '.') {

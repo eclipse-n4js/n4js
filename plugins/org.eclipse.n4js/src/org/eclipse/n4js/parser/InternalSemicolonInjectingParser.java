@@ -116,6 +116,14 @@ public class InternalSemicolonInjectingParser extends InternalN4JSParser impleme
 		}
 	}
 
+	@Override
+	protected void setInJsxChildren() {
+		if (!hasBufferedTokens()) {
+			RegExLiteralAwareLexer lexer = (RegExLiteralAwareLexer) this.input.getTokenSource();
+			lexer.setInJsxChildren();
+		}
+	}
+
 	private boolean hasBufferedTokens() {
 		return input.index() < input.size() - 1;
 	}

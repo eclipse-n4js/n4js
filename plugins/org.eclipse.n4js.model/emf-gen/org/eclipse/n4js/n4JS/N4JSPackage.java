@@ -15539,13 +15539,22 @@ public interface N4JSPackage extends EPackage {
 	int JSX_TEXT = 167;
 
 	/**
+	 * The feature id for the '<em><b>Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JSX_TEXT__VALUE = JSX_CHILD_FEATURE_COUNT + 0;
+
+	/**
 	 * The number of structural features of the '<em>JSX Text</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int JSX_TEXT_FEATURE_COUNT = JSX_CHILD_FEATURE_COUNT + 0;
+	int JSX_TEXT_FEATURE_COUNT = JSX_CHILD_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of operations of the '<em>JSX Text</em>' class.
@@ -21875,6 +21884,17 @@ public interface N4JSPackage extends EPackage {
 	EClass getJSXText();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4JS.JSXText#getValue <em>Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Value</em>'.
+	 * @see org.eclipse.n4js.n4JS.JSXText#getValue()
+	 * @see #getJSXText()
+	 * @generated
+	 */
+	EAttribute getJSXText_Value();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.JSXExpression <em>JSX Expression</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -26946,6 +26966,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EClass JSX_TEXT = eINSTANCE.getJSXText();
+
+		/**
+		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute JSX_TEXT__VALUE = eINSTANCE.getJSXText_Value();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.JSXExpressionImpl <em>JSX Expression</em>}' class.

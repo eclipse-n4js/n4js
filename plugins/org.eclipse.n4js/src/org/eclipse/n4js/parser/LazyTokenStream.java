@@ -162,10 +162,11 @@ public class LazyTokenStream extends XtextTokenStream {
 		int index = tokens.size();
 		Token t = tokenSource.nextToken();
 		while (t != null && t.getType() != CharStream.EOF) {
-			// stop on div, div-equal and right curly brace tokens.
+			// stop on div, div-equal, right curly brace tokens or greater than
 			int type = t.getType();
 			if (type == InternalN4JSLexer.Solidus || type == InternalN4JSLexer.SolidusEqualsSign
-					|| type == InternalN4JSLexer.RightCurlyBracket) {
+					|| type == InternalN4JSLexer.RightCurlyBracket
+					|| type == InternalN4JSLexer.GreaterThanSign) {
 				t.setTokenIndex(index);
 				tokens.add(t);
 				index++;
