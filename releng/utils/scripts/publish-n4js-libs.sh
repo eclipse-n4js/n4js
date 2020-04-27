@@ -128,10 +128,12 @@ echo "Publishing using .npmrc configuration to ${NPM_REGISTRY}";
 # 2) behavior of lerna w.r.t. property 'gitHead' has recently changed and we want to avoid surprises in the future.
 echo "==== STEP 5/7: Updating property 'gitHeadN4jsLibs' in package.json of all n4js-libs to new local commit ID ..."
 
-SCRIPT="this.gitHeadN4jsLibs = \"$N4JS_LIBS_COMMIT_ID_LOCAL\"
-        this.repository = {type: \"git\", url: \"https://github.com/eclipse/n4js/tree/master/n4js-libs/packages/$LERNA_PACKAGE_NAME\"}"
+SCRIPT="\"
+	this.gitHeadN4jsLibs = \\\"${N4JS_LIBS_COMMIT_ID_LOCAL}\\\";
+	this.repository = {type: \\\"git\\\", url: \\\"https://github.com/eclipse/n4js/tree/master/n4js-libs/packages/\${LERNA_PACKAGE_NAME}\\\"};
+\""
+lerna exec -- json -I -f package.json -e $SCRIPT
 
-lerna exec -- npx json -I -f package.json -e '$SCRIPT'
 
 echo "==== STEP 6/7: Appending version information to README.md files ..."
 export VERSION_INFO="\n\n## Version\n\nVersion ${PUBLISH_VERSION} of \${LERNA_PACKAGE_NAME} was built from commit [${N4JS_LIBS_COMMIT_ID_LOCAL}](https://github.com/eclipse/n4js/tree/${N4JS_LIBS_COMMIT_ID_LOCAL}/n4js-libs/packages/\${LERNA_PACKAGE_NAME}).\n\n"
