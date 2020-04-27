@@ -288,18 +288,18 @@ cleanBuildAndWait(); // FIXME GH-1728 remove!
 		changeNonOpenedFile("Other", ': number {' -> ': any {');
 		joinServerRequests();
 
-		assertFalse(outputFile.exists());
-		projectStateSnapshot.assertUnchanged();
-		assertNoIssues(); // note: the issue in Main does not show up
+		assertFalse(outputFile.exists()); // never generate output files in node_modules folders
+		projectStateSnapshot.assertChanged();
+		assertNoIssues(); // error in Main.n4js should show up TODO GH-1727
 
 		projectStateSnapshot.file.delete();
 
 		changeNonOpenedFile("Other", ': any {' -> ': string {');
 		joinServerRequests();
 
-		assertFalse(outputFile.exists());
-		projectStateSnapshot.assertNotExists();
-		assertNoIssues(); // note: the issue in Main does not show up
+		assertFalse(outputFile.exists()); // never generate output files in node_modules folders
+		projectStateSnapshot.assertExists(); // recreated
+		assertNoIssues(); // error in Main.n4js should show up TODO GH-1727
 		
 		cleanBuildAndWait();
 		assertFalse(outputFile.exists());
@@ -322,19 +322,33 @@ cleanBuildAndWait(); // FIXME GH-1728 remove!
 		changeOpenedFile("Other", ': number {' -> ': any {');
 		joinServerRequests();
 
-		assertFalse(outputFile.exists());
-		projectStateSnapshot.assertUnchanged();
-		assertNoIssues(); // note: the issue in Main does not show up
+		assertFalse(outputFile.exists()); // never generate output files in node_modules folders
+		projectStateSnapshot.assertUnchanged(); // not updated, because Other.n4js not saved yet
+		assertNoIssues(); // error in Main.n4js should show up TODO GH-1727
+
+		saveOpenedFile("Other");
+		joinServerRequests();
+
+		assertFalse(outputFile.exists()); // never generate output files in node_modules folders
+		projectStateSnapshot.assertChanged();
+		assertNoIssues(); // error in Main.n4js should show up TODO GH-1727
 
 		projectStateSnapshot.file.delete();
 
 		changeOpenedFile("Other", ': any {' -> ': string {');
 		joinServerRequests();
 
-		assertFalse(outputFile.exists());
-		projectStateSnapshot.assertNotExists();
-		assertNoIssues(); // note: the issue in Main does not show up
-		
+		assertFalse(outputFile.exists()); // never generate output files in node_modules folders
+		projectStateSnapshot.assertNotExists(); // not recreated, because Other.n4js not saved yet
+		assertNoIssues(); // error in Main.n4js should show up TODO GH-1727
+
+		saveOpenedFile("Other");
+		joinServerRequests();
+
+		assertFalse(outputFile.exists()); // never generate output files in node_modules folders
+		projectStateSnapshot.assertExists(); // recreated
+		assertNoIssues(); // error in Main.n4js should show up TODO GH-1727
+
 		cleanBuildAndWait();
 		assertFalse(outputFile.exists());
 		projectStateSnapshot.assertExists();
