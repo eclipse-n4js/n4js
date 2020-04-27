@@ -255,6 +255,17 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		return openFiles.containsKey(fileURI);
 	}
 
+	/** Returns <code>true</code> iff the given with the given URI is open AND has unsaved changes in memory. */
+	protected boolean isDirty(FileURI fileURI) {
+		OpenFileInfo info = openFiles.get(fileURI);
+		if (info == null) {
+			return false;
+		}
+		String contentInMemory = info.content;
+		String contentOnDisk = getContentOfFileOnDisk(fileURI);
+		return !contentOnDisk.equals(contentInMemory);
+	}
+
 	/** Same as {@link #openFile(FileURI)}, accepting a module name instead of a file URI. */
 	protected void openFile(String moduleName) {
 		FileURI fileURI = getFileURIFromModuleName(moduleName);
@@ -295,12 +306,48 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		closeFile(getFileURIFromModuleName(moduleName));
 	}
 
-	/** Closes the given file in the LSP server and waits for the server to idle. */
+	/**
+	 * Closes the given file in the LSP server and waits for the server to idle. Throws an exception if the file has
+	 * unsaved changes.
+	 */
 	protected void closeFile(FileURI fileURI) {
+		closeFile(fileURI, false);
+	}
+
+	/** Same as {@link #closeFileDiscardingChanges(FileURI)}, but accepts a module name instead of a file URI. */
+	protected void closeFileDiscardingChanges(String moduleName) {
+		closeFileDiscardingChanges(getFileURIFromModuleName(moduleName));
+	}
+
+	/**
+	 * Closes the given file in the LSP server and waits for the server to idle, discarding unsaved in-memory changes.
+	 * Throws an exception if the file does not have unsaved changes.
+	 */
+	protected void closeFileDiscardingChanges(FileURI fileURI) {
+		closeFile(fileURI, true);
+	}
+
+	private void closeFile(FileURI fileURI, boolean discardChanges) {
 		if (!isOpen(fileURI)) {
 			Assert.fail("trying to close a file that is not open: " + fileURI);
 		}
-		openFiles.remove(fileURI);
+		boolean dirty = isDirty(fileURI);
+		if (dirty && !discardChanges) {
+			Assert.fail("trying to close a file with unsaved changes: " + fileURI);
+		} else if (!dirty && discardChanges) {
+			Assert.fail("no unsaved changes to discard in file: " + fileURI);
+		}
+
+		OpenFileInfo info = openFiles.remove(fileURI);
+		if (dirty) {
+			// when closing a file with unsaved changes, LSP clients send a 'textDocument/didChange' to bring its
+			// content back to the content on disk
+			String contentOnDisk = getContentOfFileOnDisk(fileURI);
+			DidChangeTextDocumentParams params = new DidChangeTextDocumentParams(
+					new VersionedTextDocumentIdentifier(fileURI.toString(), info.version + 1),
+					Collections.singletonList(new TextDocumentContentChangeEvent(contentOnDisk)));
+			languageServer.didChange(params);
+		}
 		languageServer.didClose(new DidCloseTextDocumentParams(new TextDocumentIdentifier(fileURI.toString())));
 		joinServerRequests();
 	}
@@ -559,7 +606,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 			return content;
 		} catch (IOException e) {
 			// wrap in AssertionError to avoid need for test code to declare IOExceptions
-			throw new AssertionError("IOException while changing file on disk", e);
+			throw new AssertionError("IOException while reading file contents from disk", e);
 		}
 	}
 

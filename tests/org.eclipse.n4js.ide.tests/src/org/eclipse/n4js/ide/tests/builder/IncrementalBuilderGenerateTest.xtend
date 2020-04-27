@@ -168,6 +168,53 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 	}
 
 	@Test
+	def void testChangesInSeveralOpenedFiles_withoutDependency_closeChangedFile() {
+		testWorkspaceManager.createTestProjectOnDisk(
+			"C" -> '''export public class C {}''',
+			"D" -> '''export public class D {}'''
+		);
+		startAndWaitForLspServer();
+		assertNoIssues();
+
+		val cOutputFileSnapshot = createSnapshotForOutputFile("C");
+		val dOutputFileSnapshot = createSnapshotForOutputFile("D");
+		val projectStateSnapshot = createSnapshotForProjectStateFile();
+
+		openFile("C");
+		openFile("D");
+		joinServerRequests();
+
+		changeOpenedFile("C", 'C' -> 'C1');
+		changeOpenedFile("D", 'D' -> 'D1');
+		joinServerRequests();
+
+		assertNoIssues();
+		cOutputFileSnapshot.assertUnchanged();
+		dOutputFileSnapshot.assertUnchanged();
+		projectStateSnapshot.assertUnchanged();
+
+		saveOpenedFile("C");
+		joinServerRequests();
+
+		// as long as only one of the two changed files is saved,
+		// output artifacts should not be re-generated:
+		assertNoIssues();
+		cOutputFileSnapshot.assertUnchanged();
+		dOutputFileSnapshot.assertUnchanged();
+		projectStateSnapshot.assertUnchanged();
+
+		// transition into workspace clean state not by saving "D", but
+		// by closing "D" (discarding its unsaved changes)
+		closeFileDiscardingChanges("D");
+		joinServerRequests();
+
+		assertNoIssues();
+		cOutputFileSnapshot.assertChanged();
+		dOutputFileSnapshot.assertUnchanged();
+		projectStateSnapshot.assertChanged();
+	}
+
+	@Test
 	def void testChangesInSeveralOpenedFiles_withDependency() {
 		testWorkspaceManager.createTestProjectOnDisk(testDataWithDependency);
 		startAndWaitForLspServer();
