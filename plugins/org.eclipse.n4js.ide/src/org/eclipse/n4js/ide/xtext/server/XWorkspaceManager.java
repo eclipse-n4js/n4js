@@ -95,7 +95,7 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	// GH-1552: concurrent map
 	private final Map<String, ResourceDescriptionsData> fullIndex = new ConcurrentHashMap<>();
 
-	private final Map<URI, XDocument> openDocuments = new HashMap<>();
+	private final Map<URI, XDocument> openDocuments = new ConcurrentHashMap<>();
 
 	/**
 	 * Add the listener to this workspace.
@@ -308,13 +308,15 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 
 	/** Mark the given document as saved. */
 	public XBuildManager.XBuildable didSave(URI uri) {
-		XDocument document = openDocuments.get(uri);
+		XDocument document = openDocuments.computeIfPresent(uri, (any, doc) -> {
+			if (doc.isDirty()) {
+				return doc.save();
+			}
+			return doc;
+		});
 		if (document == null) {
 			LOG.error("The document " + uri + " has not been opened.");
 			return XBuildable.NO_BUILD;
-		}
-		if (document.isDirty()) {
-			openDocuments.put(uri, document.save());
 		}
 		return tryIncrementalGenerateBuildable(ImmutableList.of(uri), Collections.emptyList());
 	}
@@ -328,7 +330,7 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 		return tryIncrementalGenerateBuildable(Collections.emptyList(), ImmutableList.of(uri));
 	}
 
-	/** Mark the given document as closed. */
+	/** Mark all documents as closed. */
 	public XBuildManager.XBuildable closeAll() {
 		ImmutableList<URI> closed = ImmutableList.copyOf(openDocuments.keySet());
 		openDocuments.clear();
