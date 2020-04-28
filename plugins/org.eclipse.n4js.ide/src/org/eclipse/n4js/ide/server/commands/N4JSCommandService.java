@@ -209,6 +209,12 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 	 */
 	@ExecutableCommandHandler(N4JS_REBUILD)
 	public Void rebuild(ILanguageServerAccess access, CancelIndicator cancelIndicator) {
+		if (workspaceManager.isDirty()) {
+			MessageParams params = new MessageParams(MessageType.Error,
+					"Cannot rebuild while there are unsaved changes in open files.");
+			lspServer.getLanguageClient().showMessage(params);
+			return null;
+		}
 		lspServer.clean();
 		lspServer.reinitWorkspace();
 		return null;

@@ -452,7 +452,6 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 
 	/** Cleans all projects in the workspace */
 	public void clean(CancelIndicator cancelIndicator) {
-		// FIXME reconsider
 		filesAwaitingGeneration.clear();
 		buildManager.doClean(cancelIndicator);
 	}
