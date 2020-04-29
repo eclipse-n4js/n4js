@@ -23,8 +23,8 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ide.xtext.server.ParallelBuildManager.ParallelJob;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
-import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.resource.IResourceDescription;
+import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionDelta;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -41,6 +41,7 @@ import com.google.inject.Inject;
  */
 @SuppressWarnings("hiding")
 public class XBuildManager {
+	private static final Logger LOG = LogManager.getLogger(XBuildManager.class);
 
 	/**
 	 * The resources that are about to be build.
@@ -115,8 +116,6 @@ public class XBuildManager {
 		List<IResourceDescription.Delta> build(CancelIndicator cancelIndicator);
 	}
 
-	private static final Logger LOG = LogManager.getLogger(XBuildManager.class);
-
 	/** Issue key for cyclic dependencies */
 	public static final String CYCLIC_PROJECT_DEPENDENCIES = XBuildManager.class.getName()
 			+ ".cyclicProjectDependencies";
@@ -125,13 +124,14 @@ public class XBuildManager {
 	private XWorkspaceManager workspaceManager;
 
 	@Inject
-	private XTopologicalSorter topoSorter;
+	private OrderInfo.Provider projectBuildOrderProvider;
 
 	private final LinkedHashSet<URI> dirtyFiles = new LinkedHashSet<>();
 
 	private final LinkedHashSet<URI> deletedFiles = new LinkedHashSet<>();
 
-	private List<IResourceDescription.Delta> unreportedDeltas = new ArrayList<>();
+	/** Holds all deltas that */
+	private List<IResourceDescription.Delta> allBuildDeltas = new ArrayList<>();
 
 	/**
 	 * Run a full build on the workspace
@@ -141,10 +141,12 @@ public class XBuildManager {
 	public List<IResourceDescription.Delta> doInitialBuild(List<ProjectDescription> projects,
 			CancelIndicator indicator) {
 
-		List<ProjectDescription> sortedDescriptions = sortByDependencies(projects);
+		IOrderInfo<ProjectDescription> orderInfo = projectBuildOrderProvider.get(projects);
+		printBuildOrder(orderInfo);
+
 		List<IResourceDescription.Delta> result = new ArrayList<>();
 
-		for (ProjectDescription description : sortedDescriptions) {
+		for (ProjectDescription description : orderInfo) {
 			String projectName = description.getName();
 			XProjectManager projectManager = workspaceManager.getProjectManager(projectName);
 			XBuildResult partialresult = projectManager.doInitialBuild(indicator);
@@ -160,6 +162,7 @@ public class XBuildManager {
 	 * @return the delta.
 	 */
 	@Deprecated // GH-1552: Experimental parallelization
+	// TODO: use ProjectBuildOrderProvider
 	public List<IResourceDescription.Delta> doInitialBuild2(List<ProjectDescription> projects,
 			CancelIndicator indicator) {
 
@@ -243,28 +246,32 @@ public class XBuildManager {
 
 			Map<ProjectDescription, Set<URI>> project2dirty = computeProjectToUriMap(this.dirtyFiles);
 			Map<ProjectDescription, Set<URI>> project2deleted = computeProjectToUriMap(this.deletedFiles);
+			SetView<ProjectDescription> allPDs = Sets.union(project2dirty.keySet(), project2deleted.keySet());
+			IOrderInfo<ProjectDescription> orderInfo = projectBuildOrderProvider.get(allPDs);
 
-			SetView<ProjectDescription> allDescriptions = Sets.union(project2dirty.keySet(), project2deleted.keySet());
-			List<ProjectDescription> sortedDescriptions = sortByDependencies(allDescriptions);
-
-			for (ProjectDescription descr : sortedDescriptions) {
+			for (ProjectDescription descr : orderInfo) {
 				XProjectManager projectManager = workspaceManager.getProjectManager(descr.getName());
 				Set<URI> projectDirty = project2dirty.getOrDefault(descr, Collections.emptySet());
 				Set<URI> projectDeleted = project2deleted.getOrDefault(descr, Collections.emptySet());
 
-				XBuildResult partialResult = projectManager.doIncrementalBuild(projectDirty, projectDeleted,
-						unreportedDeltas, doGenerate, cancelIndicator);
+				// the projectResult might contain partial information in case the build was cancelled
+				XBuildResult projectResult = projectManager.doIncrementalBuild(projectDirty, projectDeleted,
+						allBuildDeltas, doGenerate, cancelIndicator);
+				List<Delta> projectBuildDeltas = projectResult.getAffectedResources();
 
 				this.dirtyFiles.removeAll(projectDirty);
 				this.deletedFiles.removeAll(projectDeleted);
-				mergeWithUnreportedDeltas(partialResult.getAffectedResources());
+				mergeWithUnreportedDeltas(projectBuildDeltas);
 
 				if (doGenerate) {
 					projectManager.persistProjectState();
 				}
+
+				orderInfo.visitAffected(projectBuildDeltas);
 			}
-			List<IResourceDescription.Delta> result = unreportedDeltas;
-			unreportedDeltas = new ArrayList<>();
+
+			List<IResourceDescription.Delta> result = allBuildDeltas;
+			allBuildDeltas = new ArrayList<>();
 			return result;
 
 		} catch (CancellationException ce) {
@@ -299,43 +306,24 @@ public class XBuildManager {
 
 	/** @since 2.18 */
 	protected void mergeWithUnreportedDeltas(List<IResourceDescription.Delta> newDeltas) {
-		if (this.unreportedDeltas.isEmpty()) {
-			unreportedDeltas.addAll(newDeltas);
+		if (this.allBuildDeltas.isEmpty()) {
+			allBuildDeltas.addAll(newDeltas);
 		} else {
 			Map<URI, IResourceDescription.Delta> unreportedByUri = IterableExtensions.toMap(
-					unreportedDeltas, IResourceDescription.Delta::getUri);
+					allBuildDeltas, IResourceDescription.Delta::getUri);
 
 			for (IResourceDescription.Delta newDelta : newDeltas) {
 				IResourceDescription.Delta unreportedDelta = unreportedByUri.get(newDelta.getUri());
 				if (unreportedDelta == null) {
-					unreportedDeltas.add(newDelta);
+					allBuildDeltas.add(newDelta);
 				} else {
-					unreportedDeltas.remove(unreportedDelta);
+					allBuildDeltas.remove(unreportedDelta);
 					IResourceDescription _old = unreportedDelta.getOld();
 					IResourceDescription _new = newDelta.getNew();
-					unreportedDeltas.add(new DefaultResourceDescriptionDelta(_old, _new));
+					allBuildDeltas.add(new DefaultResourceDescriptionDelta(_old, _new));
 				}
 			}
 		}
-	}
-
-	/** Get a sorted list of projects to be build. */
-	protected List<ProjectDescription> sortByDependencies(Iterable<ProjectDescription> projectDescriptions) {
-		List<ProjectDescription> sortedProjectDescriptions = topoSorter.sortByDependencies(projectDescriptions,
-				this::reportDependencyCycle);
-
-		String output = "Project build order:\n  ";
-		output += String.join("\n  ", IterableExtensions.map(sortedProjectDescriptions, pd -> pd.getName()));
-		LOG.info(output);
-
-		return sortedProjectDescriptions;
-	}
-
-	/** Report cycle. */
-	protected void reportDependencyCycle(ProjectDescription prjDescription) {
-		XProjectManager projectManager = workspaceManager.getProjectManager(prjDescription.getName());
-		String msg = "Project has cyclic dependencies";
-		projectManager.reportProjectIssue(msg, XBuildManager.CYCLIC_PROJECT_DEPENDENCIES, Severity.ERROR);
 	}
 
 	/** Persists the project state of all projects */
@@ -346,5 +334,12 @@ public class XBuildManager {
 				return;
 			}
 		}
+	}
+
+	/** Prints build order */
+	protected void printBuildOrder(IOrderInfo<ProjectDescription> orderInfo) {
+		String output = "Project build order:\n  "
+				+ String.join("\n  ", IterableExtensions.map(orderInfo, ProjectDescription::getName));
+		LOG.info(output);
 	}
 }
