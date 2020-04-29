@@ -120,7 +120,6 @@ public class OrderInfo implements IOrderInfo<ProjectDescription> {
 	protected Set<ProjectDescription> getAffectedProjects(List<IResourceDescription.Delta> changes) {
 		Set<String> changedProjectsNames = new HashSet<>();
 		for (IResourceDescription.Delta change : changes) {
-			change.getUri();
 			XProjectManager projectManager = workspaceManager.getProjectManager(change.getUri());
 			ProjectDescription pd = projectManager.getProjectDescription();
 			changedProjectsNames.add(pd.getName());

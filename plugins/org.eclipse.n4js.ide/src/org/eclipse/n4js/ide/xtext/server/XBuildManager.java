@@ -250,8 +250,8 @@ public class XBuildManager {
 		try {
 			Map<ProjectDescription, Set<URI>> project2dirty = computeProjectToUriMap(this.dirtyFiles);
 			Map<ProjectDescription, Set<URI>> project2deleted = computeProjectToUriMap(this.deletedFiles);
-			SetView<ProjectDescription> allPDs = Sets.union(project2dirty.keySet(), project2deleted.keySet());
-			IOrderInfo<ProjectDescription> orderInfo = projectBuildOrderProvider.get(allPDs);
+			SetView<ProjectDescription> changedPDs = Sets.union(project2dirty.keySet(), project2deleted.keySet());
+			IOrderInfo<ProjectDescription> orderInfo = projectBuildOrderProvider.get(changedPDs);
 
 			for (ProjectDescription descr : orderInfo) {
 				XProjectManager projectManager = workspaceManager.getProjectManager(descr.getName());
