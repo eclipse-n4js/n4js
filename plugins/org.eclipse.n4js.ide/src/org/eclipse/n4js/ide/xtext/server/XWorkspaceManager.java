@@ -99,6 +99,7 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 
 	private final Map<URI, XDocument> openDocuments = new ConcurrentHashMap<>();
 
+	/** See {@link #addFilesAwaitingGeneration(Collection, Collection)}. */
 	private final FileChangeTracker filesAwaitingGeneration = new FileChangeTracker();
 
 	/** Thread-safe tracking of file changes and/or deletions over time. */
@@ -181,6 +182,30 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 			}
 		}
 		return false;
+	}
+
+	/** Same as {@link #addFilesAwaitingGeneration(Collection, Collection)}, but accepts deltas instead of URIs. */
+	/* package */ void addFilesAwaitingGeneration(Collection<IResourceDescription.Delta> deltas) {
+		List<URI> changed = new ArrayList<>();
+		List<URI> deleted = new ArrayList<>();
+		for (IResourceDescription.Delta delta : deltas) {
+			URI uri = delta.getUri();
+			if (delta.getNew() != null) {
+				changed.add(uri);
+			} else {
+				deleted.add(uri);
+			}
+		}
+		addFilesAwaitingGeneration(changed, deleted);
+	}
+
+	/**
+	 * Mark the resources with the given URIs as requiring (re-)generation as soon as the workspace transitions from
+	 * dirty to clean state. This is usually necessary when resources are being built during dirty state, because output
+	 * file generation is suppressed as long as dirty state remains in effect.
+	 */
+	protected void addFilesAwaitingGeneration(Collection<URI> changed, Collection<URI> deleted) {
+		filesAwaitingGeneration.add(changed, deleted);
 	}
 
 	/**
@@ -304,7 +329,7 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	 */
 	protected XBuildable tryIncrementalGenerateBuildable(List<URI> dirtyFiles, List<URI> deletedFiles) {
 		if (isDirty()) {
-			filesAwaitingGeneration.add(dirtyFiles, deletedFiles);
+			addFilesAwaitingGeneration(dirtyFiles, deletedFiles);
 			return getIncrementalDirtyBuildable(dirtyFiles, deletedFiles);
 		} else {
 			return getIncrementalGenerateBuildable(dirtyFiles, deletedFiles);
@@ -316,7 +341,7 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	 * {@link #filesAwaitingGeneration files awaiting generation} will be built.
 	 */
 	protected XBuildable getIncrementalGenerateBuildable(List<URI> dirtyFiles, List<URI> deletedFiles) {
-		filesAwaitingGeneration.add(dirtyFiles, deletedFiles);
+		addFilesAwaitingGeneration(dirtyFiles, deletedFiles);
 
 		Pair<List<URI>, List<URI>> changedAndDeleted = filesAwaitingGeneration.getAndClear();
 		List<URI> dirtyFilesToGenerate = changedAndDeleted.getKey();

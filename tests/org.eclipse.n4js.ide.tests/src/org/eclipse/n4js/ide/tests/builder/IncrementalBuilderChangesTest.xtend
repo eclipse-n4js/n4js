@@ -155,6 +155,7 @@ cleanBuildAndWait(); // FIXME GH-1727 remove!
 		openFile("A");
 		changeOpenedFile("A", '42' -> '"hello"');
 		joinServerRequests();
+saveOpenedFile("A"); // FIXME GH-1727 remove!
 cleanBuildAndWait(); // FIXME GH-1727 remove!
 		assertIssues("B" -> #[
 			"(Error, [1:18 - 1:19], string is not a subtype of number.)"
@@ -162,6 +163,7 @@ cleanBuildAndWait(); // FIXME GH-1727 remove!
 
 		changeOpenedFile("A", '"hello"' -> '42');
 		joinServerRequests();
+saveOpenedFile("A"); // FIXME GH-1727 remove!
 cleanBuildAndWait(); // FIXME GH-1727 remove!
 		assertNoIssues();
 	}
