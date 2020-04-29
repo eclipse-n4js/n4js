@@ -22,6 +22,8 @@ public interface IOrderInfo<T> extends Iterable<T> {
 
 	public void visitAffected(List<IResourceDescription.Delta> changes);
 
-	public void alsoVisit(Collection<T> projectDescriptions);
+	public void visit(Collection<T> projectDescriptions);
+
+	public void visitAll();
 
 }

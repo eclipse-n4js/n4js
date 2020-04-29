@@ -46,7 +46,7 @@ public class OrderInfo implements IOrderInfo<ProjectDescription> {
 
 		public IOrderInfo<ProjectDescription> get(Collection<ProjectDescription> projectDescriptions) {
 			IOrderInfo<ProjectDescription> orderInfo = get();
-			orderInfo.alsoVisit(projectDescriptions);
+			orderInfo.visit(projectDescriptions);
 			return orderInfo;
 		}
 	}
@@ -64,53 +64,56 @@ public class OrderInfo implements IOrderInfo<ProjectDescription> {
 	}
 
 	@Override
-	public void visitAffected(List<IResourceDescription.Delta> changes) {
-		alsoVisit(getAffectedProjects(changes));
-	}
-
-	@Override
-	public void alsoVisit(Collection<ProjectDescription> projectDescriptions) {
+	public void visit(Collection<ProjectDescription> projectDescriptions) {
 		for (ProjectDescription prj : projectDescriptions) {
 			visitProjectNames.add(prj.getName());
 		}
 	}
 
+	@Override
+	public void visitAffected(List<IResourceDescription.Delta> changes) {
+		visit(getAffectedProjects(changes));
+	}
+
+	@Override
+	public void visitAll() {
+		visit(sortedProjects);
+	}
+
 	@Inject
 	protected void init() {
+		LinkedHashSet<String> orderedProjectNames = new LinkedHashSet<>();
 		for (XProjectManager pm : workspaceManager.getProjectManagers()) {
 			ProjectDescription pd = pm.getProjectDescription();
 			for (String dependencyName : pd.getDependencies()) {
 				inversedDependencies.put(dependencyName, pd);
 			}
+			computeOrder(pd, orderedProjectNames, new LinkedHashSet<>());
 		}
 
-		LinkedHashSet<ProjectDescription> orderedProjects = new LinkedHashSet<>();
-		for (String projectName : inversedDependencies.keySet()) {
-			ProjectDescription pd = workspaceManager.getProjectManager(projectName).getProjectDescription();
-			computeOrder(pd, orderedProjects, new LinkedHashSet<>());
-		}
-
-		sortedProjects.addAll(orderedProjects);
-		for (ProjectDescription prj : orderedProjects) {
-			visitProjectNames.add(prj.getName());
+		for (String projectName : orderedProjectNames) {
+			sortedProjects.add(workspaceManager.getProjectManager(projectName).getProjectDescription());
 		}
 	}
 
-	protected void computeOrder(ProjectDescription pd, LinkedHashSet<ProjectDescription> orderedProjects,
-			LinkedHashSet<ProjectDescription> projectStack) {
+	protected void computeOrder(ProjectDescription pd, LinkedHashSet<String> orderedProjects,
+			LinkedHashSet<String> projectStack) {
 
-		if (orderedProjects.add(pd)) {
-			projectStack.add(pd);
-			for (ProjectDescription affectedPD : inversedDependencies.get(pd.getName())) {
-				computeOrder(affectedPD, orderedProjects, projectStack);
+		String pdName = pd.getName();
+		if (projectStack.contains(pdName)) {
+			for (String cyclicPD : projectStack) {
+				reportDependencyCycle(cyclicPD);
 			}
-			projectStack.remove(pd);
 		} else {
-			if (projectStack.contains(pd)) {
-				for (ProjectDescription cyclicPD : projectStack) {
-					reportDependencyCycle(cyclicPD);
-				}
+			projectStack.add(pdName);
+
+			for (String depName : pd.getDependencies()) {
+				ProjectDescription depPd = workspaceManager.getProjectManager(depName).getProjectDescription();
+				computeOrder(depPd, orderedProjects, projectStack);
 			}
+
+			orderedProjects.add(pdName);
+			projectStack.remove(pdName);
 		}
 	}
 
@@ -132,8 +135,8 @@ public class OrderInfo implements IOrderInfo<ProjectDescription> {
 	}
 
 	/** Report cycle. */
-	protected void reportDependencyCycle(ProjectDescription prjDescription) {
-		XProjectManager projectManager = workspaceManager.getProjectManager(prjDescription.getName());
+	protected void reportDependencyCycle(String projectName) {
+		XProjectManager projectManager = workspaceManager.getProjectManager(projectName);
 		String msg = "Project has cyclic dependencies";
 		projectManager.reportProjectIssue(msg, XBuildManager.CYCLIC_PROJECT_DEPENDENCIES, Severity.ERROR);
 	}
