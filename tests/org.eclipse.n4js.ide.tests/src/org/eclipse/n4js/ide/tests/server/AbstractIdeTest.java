@@ -259,7 +259,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		return openFiles.containsKey(fileURI);
 	}
 
-	/** Returns <code>true</code> iff the given with the given URI is open AND has unsaved changes in memory. */
+	/** Returns <code>true</code> iff the file with the given URI is open AND has unsaved changes in memory. */
 	protected boolean isDirty(FileURI fileURI) {
 		OpenFileInfo info = openFiles.get(fileURI);
 		if (info == null) {
