@@ -99,8 +99,8 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 
 	private final Map<URI, XDocument> openDocuments = new ConcurrentHashMap<>();
 
-	/** See {@link #addFilesAwaitingGeneration(Collection, Collection)}. */
-	private final FileChangeTracker filesAwaitingGeneration = new FileChangeTracker();
+	/** See {@link #addResourcesAwaitingGeneration(Collection, Collection)}. */
+	private final FileChangeTracker resourcesAwaitingGeneration = new FileChangeTracker();
 
 	/** Thread-safe tracking of file changes and/or deletions over time. */
 	private static class FileChangeTracker {
@@ -184,8 +184,8 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 		return false;
 	}
 
-	/** Same as {@link #addFilesAwaitingGeneration(Collection, Collection)}, but accepts deltas instead of URIs. */
-	protected void addFilesAwaitingGeneration(Collection<IResourceDescription.Delta> deltas) {
+	/** Same as {@link #addResourcesAwaitingGeneration(Collection, Collection)}, but accepts deltas instead of URIs. */
+	protected void addResourcesAwaitingGeneration(Collection<IResourceDescription.Delta> deltas) {
 		List<URI> changed = new ArrayList<>();
 		List<URI> deleted = new ArrayList<>();
 		for (IResourceDescription.Delta delta : deltas) {
@@ -196,7 +196,7 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 				deleted.add(uri);
 			}
 		}
-		addFilesAwaitingGeneration(changed, deleted);
+		addResourcesAwaitingGeneration(changed, deleted);
 	}
 
 	/**
@@ -204,8 +204,8 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	 * dirty to clean state. This is usually necessary when resources are being built during dirty state, because output
 	 * file generation is suppressed as long as dirty state remains in effect.
 	 */
-	protected void addFilesAwaitingGeneration(Collection<URI> changed, Collection<URI> deleted) {
-		filesAwaitingGeneration.add(changed, deleted);
+	protected void addResourcesAwaitingGeneration(Collection<URI> changed, Collection<URI> deleted) {
+		resourcesAwaitingGeneration.add(changed, deleted);
 	}
 
 	/**
@@ -222,7 +222,7 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 
 	/** Refresh the workspace. */
 	public void refreshWorkspaceConfig() {
-		filesAwaitingGeneration.clear();
+		resourcesAwaitingGeneration.clear();
 		setWorkspaceConfig(workspaceConfigFactory.getWorkspaceConfig(baseDir));
 		Set<String> projectNames = projectName2ProjectManager.keySet();
 		Set<String> remainingProjectNames = new HashSet<>(projectNames);
@@ -319,7 +319,7 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 		XBuildManager.XBuildable buildable = buildManager.getIncrementalDirtyBuildable(dirtyFiles, deletedFiles);
 		return (cancelIndicator) -> {
 			List<IResourceDescription.Delta> deltas = buildable.build(cancelIndicator);
-			addFilesAwaitingGeneration(deltas);
+			addResourcesAwaitingGeneration(deltas);
 			afterBuild(deltas);
 			return deltas;
 		};
@@ -330,7 +330,7 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	 */
 	protected XBuildable tryIncrementalGenerateBuildable(List<URI> dirtyFiles, List<URI> deletedFiles) {
 		if (isDirty()) {
-			addFilesAwaitingGeneration(dirtyFiles, deletedFiles);
+			addResourcesAwaitingGeneration(dirtyFiles, deletedFiles);
 			return getIncrementalDirtyBuildable(dirtyFiles, deletedFiles);
 		} else {
 			return getIncrementalGenerateBuildable(dirtyFiles, deletedFiles);
@@ -339,12 +339,12 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 
 	/**
 	 * Triggers an incremental build, and will generate output files. In addition to the given files, also all
-	 * {@link #filesAwaitingGeneration files awaiting generation} will be built.
+	 * {@link #resourcesAwaitingGeneration files awaiting generation} will be built.
 	 */
 	protected XBuildable getIncrementalGenerateBuildable(List<URI> dirtyFiles, List<URI> deletedFiles) {
-		addFilesAwaitingGeneration(dirtyFiles, deletedFiles);
+		addResourcesAwaitingGeneration(dirtyFiles, deletedFiles);
 
-		Pair<List<URI>, List<URI>> changedAndDeleted = filesAwaitingGeneration.getAndClear();
+		Pair<List<URI>, List<URI>> changedAndDeleted = resourcesAwaitingGeneration.getAndClear();
 		List<URI> dirtyFilesToGenerate = changedAndDeleted.getKey();
 		List<URI> deletedFilesToGenerate = changedAndDeleted.getValue();
 
@@ -480,7 +480,7 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 
 	/** Cleans all projects in the workspace */
 	public void clean(CancelIndicator cancelIndicator) {
-		filesAwaitingGeneration.clear();
+		resourcesAwaitingGeneration.clear();
 		buildManager.doClean(cancelIndicator);
 	}
 
