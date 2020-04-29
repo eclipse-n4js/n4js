@@ -113,8 +113,7 @@ public class ProjectStatePersister {
 	private static final int VERSION_1 = 1;
 
 	/**
-	 * After the version, the stream contains a zipped, data stream with the following shape: Otherwise the same as
-	 * {@link #VERSION_1}.
+	 * After the version, the stream contains a zipped, data stream with same shape as described for {@link #VERSION_1}.
 	 */
 	private static final int VERSION_2 = 2;
 
@@ -369,8 +368,8 @@ public class ProjectStatePersister {
 		}
 
 		try (BufferedInputStream buffy = new BufferedInputStream(new GZIPInputStream(stream, 8192));
-				InputStream dataOrObjectInputStream = version == VERSION_1 ? new ObjectInputStream(stream)
-						: new DataInputStream(stream)) {
+				InputStream dataOrObjectInputStream = version == VERSION_1 ? new ObjectInputStream(buffy)
+						: new DataInputStream(buffy)) {
 			DataInput input = (DataInput) dataOrObjectInputStream;
 
 			String languageVersion = input.readUTF();
