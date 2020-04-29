@@ -195,7 +195,7 @@ public class XProjectManager {
 		XBuildResult result = incrementalBuilder.build(request);
 
 		projectStateHolder.updateProjectState(request, result);
-		if (doGenerate && result.getAffectedResources().isEmpty()) {
+		if (doGenerate && !result.getAffectedResources().isEmpty()) {
 			projectStateHolder.writeProjectState(projectConfig);
 		}
 		ResourceDescriptionsData resourceDescriptions = projectStateHolder.getIndexState().getResourceDescriptions();
