@@ -435,7 +435,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		LOG.info("Start shutdown");
 
 		disconnect();
-		runBuildable("shutdown", () -> {
+		return runBuildable("shutdown", () -> {
 			XBuildable buildable = workspaceManager.closeAll();
 			return (cancelIndicator) -> {
 				List<Delta> result = buildable.build(cancelIndicator);
@@ -445,8 +445,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 				LOG.info("Shutdown done");
 				return result;
 			};
-		});
-		return CompletableFuture.completedFuture(null);
+		}).thenApply((any) -> new Object());
 	}
 
 	@Override
@@ -1349,7 +1348,8 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	/** Blocks until all requests of the language server finished */
 	public void joinServerRequests() {
-		getRequestManager().runRead("Wait", (ci) -> null).join();
+		CompletableFuture<Void> future = getRequestManager().allRequests();
+		future.join();
 	}
 
 }
