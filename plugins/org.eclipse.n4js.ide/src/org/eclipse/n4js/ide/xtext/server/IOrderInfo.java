@@ -20,8 +20,11 @@ import org.eclipse.xtext.resource.IResourceDescription;
  * combined. The combination might be reasonable since both of these computations might rely on similar data which would
  * be cached for performance reasons.
  *
- * Implementations of this interfaces are sorted {@link Iterable}s. The idea is to iterate over a sorted set of elements
+ * Implementations of this interface are sorted {@link Iterable}s. The idea is to iterate over a sorted set of elements
  * where each element in the set can be enabled to be iterated over. As a default, all elements are disabled.
+ *
+ * Mind that the sort order of all elements is fixed and must not change by calls to this {@link Iterable} (esp. to
+ * {@link #visitAffected(List)}).
  */
 public interface IOrderInfo<T> extends Iterable<T> {
 
