@@ -16,12 +16,14 @@ import java.util.concurrent.CompletableFuture;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
+import org.eclipse.n4js.ide.xtext.server.ProjectStatePersister;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.util.CancelIndicator;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
@@ -29,6 +31,17 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class N4JSLanguageServer extends XLanguageServerImpl implements N4JSProtocolExtensions {
+
+	@Inject
+	private ProjectStatePersister persister;
+
+	@Override
+	public CompletableFuture<Object> shutdown() {
+		return super.shutdown().thenApply(object -> {
+			persister.close();
+			return object;
+		});
+	}
 
 	@Override
 	protected Optional<List<String>> getSupportedCodeActionKinds() {

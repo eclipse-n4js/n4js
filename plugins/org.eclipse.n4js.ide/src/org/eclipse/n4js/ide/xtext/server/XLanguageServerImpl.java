@@ -445,7 +445,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 				LOG.info("Shutdown done");
 				return result;
 			};
-		}).thenApply((any) -> new Object());
+		}).thenApply(any -> new Object());
 	}
 
 	@Override

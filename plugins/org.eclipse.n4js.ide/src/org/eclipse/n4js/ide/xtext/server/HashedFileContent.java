@@ -10,12 +10,12 @@
  */
 package org.eclipse.n4js.ide.xtext.server;
 
+import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 
 import org.eclipse.emf.common.util.URI;
 
@@ -58,12 +58,12 @@ public class HashedFileContent {
 		this.hash = hash;
 	}
 
-	HashedFileContent(ObjectInput input) throws IOException {
+	HashedFileContent(DataInput input) throws IOException {
 		this.uri = URI.createURI(input.readUTF());
 		this.hash = input.readLong();
 	}
 
-	void write(ObjectOutput out) throws IOException {
+	void write(DataOutput out) throws IOException {
 		out.writeUTF(uri.toString());
 		out.writeLong(hash);
 	}
