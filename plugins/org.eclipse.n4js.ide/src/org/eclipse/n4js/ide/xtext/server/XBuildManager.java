@@ -216,31 +216,35 @@ public class XBuildManager {
 	}
 
 	/**
-	 * Enqueue the given file collections.
+	 * Enqueue a build for the given file changes.
 	 *
 	 * @return a buildable.
 	 */
 	public XBuildable getIncrementalDirtyBuildable(List<URI> dirtyFiles, List<URI> deletedFiles) {
-		return (cancelIndicator) -> doIncrementalBuild(dirtyFiles, deletedFiles, false, cancelIndicator);
+		return doGetIncrementalBuildable(dirtyFiles, deletedFiles, false);
 	}
 
 	/**
-	 * Enqueue the given file collections.
+	 * Enqueue a build for the given file changes.
 	 *
 	 * @return a buildable.
 	 */
 	public XBuildable getIncrementalGenerateBuildable(List<URI> dirtyFiles, List<URI> deletedFiles) {
-		return (cancelIndicator) -> doIncrementalBuild(dirtyFiles, deletedFiles, true, cancelIndicator);
+		return doGetIncrementalBuildable(dirtyFiles, deletedFiles, true);
+	}
+
+	/**
+	 * Enqueue the dirty and deleted files now and return a handle to an incremental build.
+	 */
+	private XBuildable doGetIncrementalBuildable(List<URI> dirtyFiles, List<URI> deletedFiles, boolean doGenerate) {
+		queue(this.dirtyFiles, deletedFiles, dirtyFiles);
+		queue(this.deletedFiles, dirtyFiles, deletedFiles);
+		return (cancelIndicator) -> doIncrementalBuild(doGenerate, cancelIndicator);
 	}
 
 	/** Run the build on the workspace */
-	protected List<IResourceDescription.Delta> doIncrementalBuild(List<URI> dirtyFiles,
-			List<URI> deletedFiles, boolean doGenerate, CancelIndicator cancelIndicator) {
-
+	protected List<IResourceDescription.Delta> doIncrementalBuild(boolean doGenerate, CancelIndicator cancelIndicator) {
 		try {
-			queue(this.dirtyFiles, deletedFiles, dirtyFiles);
-			queue(this.deletedFiles, dirtyFiles, deletedFiles);
-
 			Map<ProjectDescription, Set<URI>> project2dirty = computeProjectToUriMap(this.dirtyFiles);
 			Map<ProjectDescription, Set<URI>> project2deleted = computeProjectToUriMap(this.deletedFiles);
 
@@ -258,7 +262,6 @@ public class XBuildManager {
 				this.dirtyFiles.removeAll(projectDirty);
 				this.deletedFiles.removeAll(projectDeleted);
 				mergeWithUnreportedDeltas(partialResult.getAffectedResources());
-
 				if (doGenerate) {
 					projectManager.persistProjectState();
 				}
@@ -271,7 +274,7 @@ public class XBuildManager {
 			throw ce;
 
 		} catch (Exception e) {
-			// recover
+			// recover and also discard the build queue - state is undefined afterwards.
 			this.dirtyFiles.clear();
 			this.deletedFiles.clear();
 			throw e;

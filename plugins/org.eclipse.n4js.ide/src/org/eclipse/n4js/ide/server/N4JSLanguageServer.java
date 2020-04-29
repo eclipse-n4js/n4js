@@ -22,10 +22,12 @@ import org.eclipse.xtext.util.CancelIndicator;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
+import com.google.inject.Singleton;
 
 /**
  * Language server for N4JS.
  */
+@Singleton
 public class N4JSLanguageServer extends XLanguageServerImpl implements N4JSProtocolExtensions {
 
 	@Override
