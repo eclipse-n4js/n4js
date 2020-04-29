@@ -81,14 +81,11 @@ public class XRequestManager {
 	 */
 	synchronized public CompletableFuture<Void> allRequests() {
 		CompletableFuture<?>[] cfs;
-		synchronized (this) {
-			List<XAbstractRequest<?>> localRequests = requests;
-			cfs = new CompletableFuture<?>[localRequests.size()];
-			for (int i = 0, max = localRequests.size(); i < max; i++) {
-				XAbstractRequest<?> request = localRequests.get(i);
-				cfs[i] = request.get();
-			}
-
+		List<XAbstractRequest<?>> localRequests = requests;
+		cfs = new CompletableFuture<?>[localRequests.size()];
+		for (int i = 0, max = localRequests.size(); i < max; i++) {
+			XAbstractRequest<?> request = localRequests.get(i);
+			cfs[i] = request.get();
 		}
 		return CompletableFuture.allOf(cfs);
 	}

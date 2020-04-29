@@ -288,6 +288,7 @@ public abstract class AbstractPackageJSONValidatorExtension extends AbstractDecl
 		}
 		Optional<? extends IN4JSProject> optProject = n4jsCore.findProject(pckjsonUri);
 		if (!optProject.isPresent()) {
+			LOGGER.error("no containing project found for package.json URI:" + pckjsonUri);
 			return false;
 		}
 		IN4JSProject project = optProject.get();
