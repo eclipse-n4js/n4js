@@ -197,10 +197,6 @@ public class XProjectManager {
 
 		XBuildResult result = incrementalBuilder.build(request);
 
-		if (!request.isGeneratorEnabled()) {
-			workspaceManager.addFilesAwaitingGeneration(result.getAffectedResources());
-		}
-
 		projectStateHolder.updateProjectState(request, result);
 		ResourceDescriptionsData resourceDescriptions = projectStateHolder.getIndexState().getResourceDescriptions();
 

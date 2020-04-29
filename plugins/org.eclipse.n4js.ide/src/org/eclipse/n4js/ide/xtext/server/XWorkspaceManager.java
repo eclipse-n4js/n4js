@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
@@ -98,7 +97,7 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	// GH-1552: concurrent map
 	private final Map<String, ResourceDescriptionsData> fullIndex = new ConcurrentHashMap<>();
 
-	private final ConcurrentMap<URI, XDocument> openDocuments = new ConcurrentHashMap<>();
+	private final Map<URI, XDocument> openDocuments = new ConcurrentHashMap<>();
 
 	/** See {@link #addFilesAwaitingGeneration(Collection, Collection)}. */
 	private final FileChangeTracker filesAwaitingGeneration = new FileChangeTracker();
@@ -186,7 +185,7 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	}
 
 	/** Same as {@link #addFilesAwaitingGeneration(Collection, Collection)}, but accepts deltas instead of URIs. */
-	/* package */ void addFilesAwaitingGeneration(Collection<IResourceDescription.Delta> deltas) {
+	protected void addFilesAwaitingGeneration(Collection<IResourceDescription.Delta> deltas) {
 		List<URI> changed = new ArrayList<>();
 		List<URI> deleted = new ArrayList<>();
 		for (IResourceDescription.Delta delta : deltas) {
@@ -320,6 +319,7 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 		XBuildManager.XBuildable buildable = buildManager.getIncrementalDirtyBuildable(dirtyFiles, deletedFiles);
 		return (cancelIndicator) -> {
 			List<IResourceDescription.Delta> deltas = buildable.build(cancelIndicator);
+			addFilesAwaitingGeneration(deltas);
 			afterBuild(deltas);
 			return deltas;
 		};
