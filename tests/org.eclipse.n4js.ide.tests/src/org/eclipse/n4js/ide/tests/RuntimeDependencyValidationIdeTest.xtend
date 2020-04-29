@@ -12,10 +12,12 @@ package org.eclipse.n4js.ide.tests
 
 import org.eclipse.n4js.ide.tests.server.AbstractIdeTest
 import org.junit.Test
+import org.junit.Ignore
 
 /**
  * IDE test for validations related to runtime dependency analysis.
  */
+@Ignore("GH-1734")
 class RuntimeDependencyValidationIdeTest extends AbstractIdeTest {
 
 	// runtime dependency cycle: C -> B -> A -> Y -> X -> C
