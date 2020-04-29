@@ -109,10 +109,13 @@ public class XStatefulIncrementalBuilder {
 			Set<URI> remainingURIs = new LinkedHashSet<>(oldIndex.getAllURIs()); // note: creating a copy!
 
 			XIndexer.XIndexResult result = indexer.computeAndIndexDeletedAndChanged(request, context);
-			operationCanceledManager.checkCanceled(request.getCancelIndicator());
-
 			ResourceDescriptionsData newIndex = result.getNewIndex();
 			List<Delta> deltasToBeProcessed = result.getResourceDeltas();
+			List<Delta> deltasFromExternal = indexer.computeAndIndexAffected(newIndex, remainingURIs,
+					request.getExternalDeltas(), allProcessedAndExternalDeltas, context);
+			deltasToBeProcessed.addAll(deltasFromExternal);
+
+			operationCanceledManager.checkCanceled(request.getCancelIndicator());
 
 			// continue as long as there are more deltas to be processed (either the deltas representing the initial
 			// deletions/changes or in later iterations the deltas representing affected resources)
