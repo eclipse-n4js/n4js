@@ -102,7 +102,10 @@ public class ProjectOrderInfo implements IOrderInfo<ProjectDescription> {
 		}
 
 		for (String projectName : orderedProjectNames) {
-			sortedProjects.add(workspaceManager.getProjectManager(projectName).getProjectDescription());
+			XProjectManager pm = workspaceManager.getProjectManager(projectName);
+			if (pm != null) { // can be null if project not on disk
+				sortedProjects.add(pm.getProjectDescription());
+			}
 		}
 	}
 
@@ -119,8 +122,11 @@ public class ProjectOrderInfo implements IOrderInfo<ProjectDescription> {
 			projectStack.add(pdName);
 
 			for (String depName : pd.getDependencies()) {
-				ProjectDescription depPd = workspaceManager.getProjectManager(depName).getProjectDescription();
-				computeOrder(depPd, orderedProjects, projectStack);
+				XProjectManager pm = workspaceManager.getProjectManager(depName);
+				if (pm != null) { // can be null if project not on disk
+					ProjectDescription depPd = pm.getProjectDescription();
+					computeOrder(depPd, orderedProjects, projectStack);
+				}
 			}
 
 			orderedProjects.add(pdName);
@@ -147,8 +153,10 @@ public class ProjectOrderInfo implements IOrderInfo<ProjectDescription> {
 
 	/** Report cycle. */
 	protected void reportDependencyCycle(String projectName) {
-		XProjectManager projectManager = workspaceManager.getProjectManager(projectName);
-		String msg = "Project has cyclic dependencies";
-		projectManager.reportProjectIssue(msg, XBuildManager.CYCLIC_PROJECT_DEPENDENCIES, Severity.ERROR);
+		XProjectManager pm = workspaceManager.getProjectManager(projectName);
+		if (pm != null) { // can be null if project not on disk
+			String msg = "Project has cyclic dependencies";
+			pm.reportProjectIssue(msg, XBuildManager.CYCLIC_PROJECT_DEPENDENCIES, Severity.ERROR);
+		}
 	}
 }
