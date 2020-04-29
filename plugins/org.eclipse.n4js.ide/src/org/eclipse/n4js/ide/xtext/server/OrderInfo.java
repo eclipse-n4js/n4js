@@ -29,21 +29,23 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 
 /**
- *
+ * Implementation for sorted projects according to their build order.
  */
 public class OrderInfo implements IOrderInfo<ProjectDescription> {
 
 	/** A provider for {@link OrderInfo} instances. */
 	public static class Provider implements com.google.inject.Provider<IOrderInfo<ProjectDescription>> {
+		/** Injector to be used for creating instances of {@link #OrderInfo()} */
 		@Inject
 		protected Injector injector;
 
-		/** Returns a new instanceof of {@link OrderInfo} */
+		/** Returns a new instanceof of {@link OrderInfo}. No projects will be visited. */
 		@Override
 		public IOrderInfo<ProjectDescription> get() {
 			return injector.getInstance(OrderInfo.class);
 		}
 
+		/** Creates a new instance of {@link #OrderInfo()}. The given set of projects will be visited only. */
 		public IOrderInfo<ProjectDescription> get(Collection<ProjectDescription> projectDescriptions) {
 			IOrderInfo<ProjectDescription> orderInfo = get();
 			orderInfo.visit(projectDescriptions);
@@ -51,11 +53,18 @@ public class OrderInfo implements IOrderInfo<ProjectDescription> {
 		}
 	}
 
+	/** Workspace manager */
 	@Inject
 	protected XWorkspaceManager workspaceManager;
 
+	/** Inversed set of project dependency information */
 	final protected Multimap<String, ProjectDescription> inversedDependencies = HashMultimap.create();
+	/** Build order of projects */
 	final protected List<ProjectDescription> sortedProjects = new ArrayList<>();
+	/**
+	 * Subset of {@link #sortedProjects}: when {@link #OrderInfo()} is used as an iterator, only those projects are
+	 * iterated over that are contained in this set
+	 */
 	final protected Set<String> visitProjectNames = new HashSet<>();
 
 	@Override
@@ -80,6 +89,7 @@ public class OrderInfo implements IOrderInfo<ProjectDescription> {
 		visit(sortedProjects);
 	}
 
+	/** Populates {@link #sortedProjects} and {@link #inversedDependencies} */
 	@Inject
 	protected void init() {
 		LinkedHashSet<String> orderedProjectNames = new LinkedHashSet<>();
@@ -96,6 +106,7 @@ public class OrderInfo implements IOrderInfo<ProjectDescription> {
 		}
 	}
 
+	/** Computes the build order of all projects in the workspace */
 	protected void computeOrder(ProjectDescription pd, LinkedHashSet<String> orderedProjects,
 			LinkedHashSet<String> projectStack) {
 
@@ -117,6 +128,7 @@ public class OrderInfo implements IOrderInfo<ProjectDescription> {
 		}
 	}
 
+	/** @return the set of projects that may contain resources that need to be rebuild given the list of changes */
 	protected Set<ProjectDescription> getAffectedProjects(List<IResourceDescription.Delta> changes) {
 		Set<String> changedProjectsNames = new HashSet<>();
 		for (IResourceDescription.Delta change : changes) {

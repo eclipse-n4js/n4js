@@ -16,14 +16,22 @@ import java.util.List;
 import org.eclipse.xtext.resource.IResourceDescription;
 
 /**
+ * This interface is intended for use cases where sorting elements and computing an "is affected" information are
+ * combined. The combination might be reasonable since both of these computations might rely on similar data which would
+ * be cached for performance reasons.
  *
+ * Implementations of this interfaces are sorted {@link Iterable}s. The idea is to iterate over a sorted set of elements
+ * where each element in the set can be enabled to be iterated over. As a default, all elements are disabled.
  */
 public interface IOrderInfo<T> extends Iterable<T> {
 
+	/** Set all affected elements of the underlying collection to be visited by this iterator. */
 	public void visitAffected(List<IResourceDescription.Delta> changes);
 
+	/** Set the given elements of the underlying collection to be visited by this iterator. */
 	public void visit(Collection<T> projectDescriptions);
 
+	/** Sets all elements of the underlying collection to be visited by this iterator. */
 	public void visitAll();
 
 }
