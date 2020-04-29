@@ -124,7 +124,7 @@ public class XBuildManager {
 	private XWorkspaceManager workspaceManager;
 
 	@Inject
-	private OrderInfo.Provider projectBuildOrderProvider;
+	private ProjectOrderInfo.Provider projectBuildOrderProvider;
 
 	private final LinkedHashSet<URI> dirtyFiles = new LinkedHashSet<>();
 

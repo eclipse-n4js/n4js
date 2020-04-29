@@ -12,7 +12,7 @@ package org.eclipse.n4js.ide.tests.buildorder
 
 import org.junit.Test
 import org.eclipse.xtext.resource.impl.ProjectDescription
-import org.eclipse.n4js.ide.xtext.server.OrderInfo
+import org.eclipse.n4js.ide.xtext.server.ProjectOrderInfo
 import com.google.inject.Injector
 import org.eclipse.n4js.utils.Strings
 import java.util.List
@@ -25,11 +25,11 @@ import static org.junit.Assert.assertEquals
  */
 class BuildOrderTest extends AbstractIdeTest {
 
-	private OrderInfo.Provider projectBuildOrderProvider;
+	private ProjectOrderInfo.Provider projectBuildOrderProvider;
 
 	override Injector createInjector() {
 		val Injector injector = super.createInjector();
-		projectBuildOrderProvider = injector.getInstance(OrderInfo.Provider);
+		projectBuildOrderProvider = injector.getInstance(ProjectOrderInfo.Provider);
 		return injector;
 	}
 

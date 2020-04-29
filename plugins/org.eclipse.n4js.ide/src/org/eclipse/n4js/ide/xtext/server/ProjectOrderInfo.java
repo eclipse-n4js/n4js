@@ -31,21 +31,21 @@ import com.google.inject.Injector;
 /**
  * Implementation for sorted projects according to their build order.
  */
-public class OrderInfo implements IOrderInfo<ProjectDescription> {
+public class ProjectOrderInfo implements IOrderInfo<ProjectDescription> {
 
-	/** A provider for {@link OrderInfo} instances. */
+	/** A provider for {@link ProjectOrderInfo} instances. */
 	public static class Provider implements com.google.inject.Provider<IOrderInfo<ProjectDescription>> {
-		/** Injector to be used for creating instances of {@link #OrderInfo()} */
+		/** Injector to be used for creating instances of {@link #ProjectOrderInfo()} */
 		@Inject
 		protected Injector injector;
 
-		/** Returns a new instanceof of {@link OrderInfo}. No projects will be visited. */
+		/** Returns a new instanceof of {@link ProjectOrderInfo}. No projects will be visited. */
 		@Override
 		public IOrderInfo<ProjectDescription> get() {
-			return injector.getInstance(OrderInfo.class);
+			return injector.getInstance(ProjectOrderInfo.class);
 		}
 
-		/** Creates a new instance of {@link #OrderInfo()}. The given set of projects will be visited only. */
+		/** Creates a new instance of {@link #ProjectOrderInfo()}. The given set of projects will be visited only. */
 		public IOrderInfo<ProjectDescription> get(Collection<ProjectDescription> projectDescriptions) {
 			IOrderInfo<ProjectDescription> orderInfo = get();
 			orderInfo.visit(projectDescriptions);
@@ -62,8 +62,8 @@ public class OrderInfo implements IOrderInfo<ProjectDescription> {
 	/** Build order of projects */
 	final protected List<ProjectDescription> sortedProjects = new ArrayList<>();
 	/**
-	 * Subset of {@link #sortedProjects}: when {@link #OrderInfo()} is used as an iterator, only those projects are
-	 * iterated over that are contained in this set
+	 * Subset of {@link #sortedProjects}: when {@link #ProjectOrderInfo()} is used as an iterator, only those projects
+	 * are iterated over that are contained in this set
 	 */
 	final protected Set<String> visitProjectNames = new HashSet<>();
 
