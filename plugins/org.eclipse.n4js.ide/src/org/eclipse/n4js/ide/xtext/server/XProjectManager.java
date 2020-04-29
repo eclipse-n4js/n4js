@@ -115,8 +115,6 @@ public class XProjectManager {
 
 	private IProjectConfig projectConfig;
 
-	private boolean persistedProjectStateOutdated = false;
-
 	/** Initialize this project. */
 	@SuppressWarnings("hiding")
 	public void initialize(ProjectDescription description, IProjectConfig projectConfig,
@@ -169,7 +167,6 @@ public class XProjectManager {
 			resourceSet.eSetDeliver(wasDeliver);
 		}
 
-		persistProjectState();
 		LOG.info("Project built: " + this.baseDir);
 		return result;
 	}
@@ -198,11 +195,13 @@ public class XProjectManager {
 		XBuildResult result = incrementalBuilder.build(request);
 
 		projectStateHolder.updateProjectState(request, result);
+		if (doGenerate && result.getAffectedResources().isEmpty()) {
+			projectStateHolder.writeProjectState(projectConfig);
+		}
 		ResourceDescriptionsData resourceDescriptions = projectStateHolder.getIndexState().getResourceDescriptions();
 
 		Map<String, ResourceDescriptionsData> concurrentMap = indexProvider.get();
 		concurrentMap.put(projectDescription.getName(), resourceDescriptions);
-		persistedProjectStateOutdated |= !result.getAffectedResources().isEmpty();
 		return result;
 	}
 
@@ -278,14 +277,6 @@ public class XProjectManager {
 		result.setSeverity(severity);
 		result.setUriToProblem(baseDir);
 		issueAcceptor.publishDiagnostics(baseDir, ImmutableList.of(result));
-	}
-
-	/** Writes the current index, file hashes and validation issues to disk */
-	public void persistProjectState() {
-		if (persistedProjectStateOutdated) {
-			projectStateHolder.writeProjectState(projectConfig);
-			persistedProjectStateOutdated = false;
-		}
 	}
 
 	/** Creates a new build request for this project. */

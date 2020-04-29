@@ -266,9 +266,6 @@ public class XBuildManager {
 				this.dirtyFiles.removeAll(projectDirty);
 				this.deletedFiles.removeAll(projectDeleted);
 				mergeWithUnreportedDeltas(projectBuildDeltas);
-				if (doGenerate) {
-					projectManager.persistProjectState();
-				}
 
 				orderInfo.visitAffected(projectBuildDeltas);
 			}
@@ -325,16 +322,6 @@ public class XBuildManager {
 					IResourceDescription _new = newDelta.getNew();
 					allBuildDeltas.add(new DefaultResourceDescriptionDelta(_old, _new));
 				}
-			}
-		}
-	}
-
-	/** Persists the project state of all projects */
-	public void persistProjectState(CancelIndicator indicator) {
-		for (XProjectManager prjManager : workspaceManager.getProjectManagers()) {
-			prjManager.persistProjectState();
-			if (indicator.isCanceled()) {
-				return;
 			}
 		}
 	}
