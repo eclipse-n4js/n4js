@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ide.tests.builder
 
+import org.eclipse.n4js.projectModel.locations.FileURI
 import org.junit.Test
 
 import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.*
@@ -120,6 +121,67 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 
 		outputFileSnapshot.assertChanged(); // now C must be regenerated, because workspace went back to clean state
 		projectStateSnapshot.assertChanged();
+	}
+
+	/**
+	 * Given two modules Main, Other with a dependency from Main to Other, this test asserts that a change in Other
+	 * that has an effect on Main's output code will appear in Main's output file the moment Other is saved (assuming
+	 * Other is the only file being open).
+	 */
+	@Test
+	def void testChangeInOpenedFile_propagatesToOutputFileOfDependantModuleWhenSaved() {
+		testWorkspaceManager.createTestProjectOnDisk(
+			"Other" -> '''
+				// @StringBased
+				export public enum Color { RED, BLUE }
+			''',
+			"Main" -> '''
+				import {Color} from "Other";
+				let c = Color.RED;
+			'''
+		);
+		startAndWaitForLspServer();
+		assertNoIssues();
+
+		val mainOutputFileURI = new FileURI(getOutputFile("Main"));
+
+		val otherOutputFileSnapshot = createSnapshotForOutputFile("Other");
+		val mainOutputFileSnapshot = createSnapshotForOutputFile("Main");
+		val projectStateSnapshot = createSnapshotForProjectStateFile();
+
+		assertContentOfFileOnDisk(mainOutputFileURI, '''
+			[...]
+			let c = Color.RED;
+			[...]
+		''');
+
+		openFile("Other");
+		joinServerRequests();
+
+		changeOpenedFile("Other", '// @StringBased' -> '@StringBased');
+		joinServerRequests();
+
+		assertNoIssues();
+		otherOutputFileSnapshot.assertUnchanged();
+		mainOutputFileSnapshot.assertUnchanged();
+		projectStateSnapshot.assertUnchanged();
+
+		saveOpenedFile("Other");
+		joinServerRequests();
+
+		// due to Color now being a string-based enum, the output file of Main
+		// should have changed the moment Other was saved:
+		assertNoIssues();
+		otherOutputFileSnapshot.assertChanged();
+		mainOutputFileSnapshot.assertChanged();
+		projectStateSnapshot.assertChanged();
+
+		// ... and the enum literal should be represented as a plain string literal:
+		assertContentOfFileOnDisk(mainOutputFileURI, '''
+			[...]
+			let c = 'RED';
+			[...]
+		''');
 	}
 
 	@Test
@@ -255,8 +317,7 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 
 		assertNoIssues();
 		otherOutputFileSnapshot.assertChanged();
-// FIXME GH-1728 activate this assertion!
-//		mainOutputFileSnapshot.assertChanged();
+		mainOutputFileSnapshot.assertChanged();
 		projectStateSnapshot.assertChanged();
 	}
 
