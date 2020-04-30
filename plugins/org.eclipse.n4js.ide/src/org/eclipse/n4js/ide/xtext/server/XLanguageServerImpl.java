@@ -1347,8 +1347,8 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	/** Blocks until all requests of the language server finished */
 	public void joinServerRequests() {
-		CompletableFuture<Void> future = CompletableFuture.allOf(getRequestManager().allRequests(),
-				persister.pendingWrites());
+		CompletableFuture<Void> future = getRequestManager().allRequests()
+				.thenComposeAsync(any -> persister.pendingWrites());
 		future.join();
 	}
 
