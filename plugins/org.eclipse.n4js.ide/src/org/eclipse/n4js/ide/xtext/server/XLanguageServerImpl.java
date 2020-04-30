@@ -184,6 +184,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	@Inject
 	private IssueAcceptor issueAcceptor;
 
+	@Inject
+	private ProjectStatePersister persister;
+
 	private XWorkspaceManager workspaceManager;
 
 	private InitializeParams initializeParams;
@@ -445,7 +448,10 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 				LOG.info("Shutdown done");
 				return result;
 			};
-		}).thenApply(any -> new Object());
+		}).thenApply(any -> {
+			persister.close();
+			return new Object();
+		});
 	}
 
 	@Override
@@ -1348,16 +1354,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	/** Blocks until all requests of the language server finished */
 	public void joinServerRequests() {
-		CompletableFuture<Void> future = getPendingRequests();
+		CompletableFuture<Void> future = CompletableFuture.allOf(getRequestManager().allRequests(),
+				persister.pendingWrites());
 		future.join();
-	}
-
-	/**
-	 * Returns an awaitable future that is completed when the server completd all background work and client requests.
-	 */
-	protected CompletableFuture<Void> getPendingRequests() {
-		CompletableFuture<Void> future = getRequestManager().allRequests();
-		return future;
 	}
 
 }
