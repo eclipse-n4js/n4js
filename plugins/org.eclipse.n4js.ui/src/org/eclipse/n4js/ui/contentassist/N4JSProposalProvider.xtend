@@ -55,6 +55,7 @@ import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor
 
 import static extension org.eclipse.n4js.ui.utils.ConfigurableCompletionProposalExtensions.*
+import org.eclipse.n4js.ide.editor.contentassist.ContentAssistDataCollectors
 
 /**
  * see http://www.eclipse.org/Xtext/documentation.html#contentAssist on how to customize content assistant
@@ -62,6 +63,9 @@ import static extension org.eclipse.n4js.ui.utils.ConfigurableCompletionProposal
 class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 
 	private static final String KEY_SCANNED_SCOPES = N4JSProposalProvider.name + "_scannedScopes";
+
+	@Inject
+	private ContentAssistDataCollectors dataCollectors;
 
 	@Inject
 	private ImportsAwareReferenceProposalCreator importAwareReferenceProposalCreator
@@ -77,6 +81,16 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 
 	@Inject
 	private N4JSLabelProvider labelProvider;
+	
+	override createProposals(ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		// Unused local var detection does not play well with try-with-resource
+		val m = dataCollectors.dcCreateProposalsInner.measurement
+		try {
+			super.createProposals(context, acceptor)
+		} finally {
+			m.close
+		}
+	}
 
 	override completeRuleCall(RuleCall ruleCall, ContentAssistContext contentAssistContext,
 		ICompletionProposalAcceptor acceptor) {

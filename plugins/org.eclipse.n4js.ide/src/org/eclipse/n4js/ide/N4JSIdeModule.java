@@ -12,11 +12,15 @@ package org.eclipse.n4js.ide;
 
 import org.eclipse.n4js.generator.N4JSCompositeGenerator;
 import org.eclipse.n4js.ide.editor.contentassist.CamelCasePrefixMatcher;
+import org.eclipse.n4js.ide.editor.contentassist.ContentAssistDataCollectors;
+import org.eclipse.n4js.ide.editor.contentassist.N4JSContentAssistContextFactory;
+import org.eclipse.n4js.ide.editor.contentassist.N4JSContentAssistService;
 import org.eclipse.n4js.ide.editor.contentassist.N4JSIdeContentProposalProvider;
 import org.eclipse.n4js.ide.server.FileBasedWorkspaceInitializer;
 import org.eclipse.n4js.ide.server.N4JSLanguageServer;
 import org.eclipse.n4js.ide.server.N4JSOutputConfigurationProvider;
 import org.eclipse.n4js.ide.server.N4JSProjectDescriptionFactory;
+import org.eclipse.n4js.ide.server.N4JSRequestManager;
 import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
 import org.eclipse.n4js.ide.server.codeActions.N4JSCodeActionService;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
@@ -37,6 +41,8 @@ import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 import org.eclipse.n4js.ide.xtext.server.XProjectManager;
 import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
 import org.eclipse.n4js.ide.xtext.server.build.XStatefulIncrementalBuilder;
+import org.eclipse.n4js.ide.xtext.server.concurrent.XRequestManager;
+import org.eclipse.n4js.ide.xtext.server.contentassist.XContentAssistService;
 import org.eclipse.n4js.internal.lsp.FileSystemScanner;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
 import org.eclipse.xtext.generator.IGenerator;
@@ -45,6 +51,7 @@ import org.eclipse.xtext.ide.editor.contentassist.FQNPrefixMatcher;
 import org.eclipse.xtext.ide.editor.contentassist.IPrefixMatcher;
 import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalAcceptor;
 import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalProvider;
+import org.eclipse.xtext.ide.editor.contentassist.antlr.ContentAssistContextFactory;
 import org.eclipse.xtext.ide.server.ILanguageServerShutdownAndExitHandler;
 import org.eclipse.xtext.ide.server.codeActions.ICodeActionService2;
 import org.eclipse.xtext.ide.server.commands.ExecutableCommandRegistry;
@@ -160,6 +167,22 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public Class<? extends XLanguageServerImpl> bindXLanguageServerImpl() {
 		return N4JSLanguageServer.class;
+	}
+
+	public Class<? extends XRequestManager> bindXRequestManager() {
+		return N4JSRequestManager.class;
+	}
+
+	public ContentAssistDataCollectors bindContentAssistDataCollectors() {
+		return new ContentAssistDataCollectors(N4JSIdeDataCollectors.request("completion"));
+	}
+
+	public Class<? extends ContentAssistContextFactory> bindContentAssistContextFactory() {
+		return N4JSContentAssistContextFactory.class;
+	}
+
+	public Class<? extends XContentAssistService> bindContentAssistService() {
+		return N4JSContentAssistService.class;
 	}
 
 }

@@ -28,7 +28,6 @@ class TimedDataCollector extends DataCollector {
 	public static final boolean AVOID_EXCESSIVE_DATA_COLLECTION = true;
 
 	private final String id;
-	private final DataCollector parent;
 	// maintains insertion order
 	private final Map<String, DataCollector> children = new LinkedHashMap<>();
 
@@ -39,15 +38,9 @@ class TimedDataCollector extends DataCollector {
 
 	private final List<DataPoint> data = new LinkedList<>();
 
-	/** Convenience constructors, delegates to {@link #TimedDataCollector(String, DataCollector)} with null argument. */
+	/** Creates instance of the collector. */
 	public TimedDataCollector(String id) {
-		this(id, null);
-	}
-
-	/** Creates instance of the collector. Provided parent can be {@code null}. */
-	public TimedDataCollector(String id, DataCollector parent) {
 		this.id = id;
-		this.parent = parent;
 	}
 
 	@Override
@@ -120,11 +113,6 @@ class TimedDataCollector extends DataCollector {
 	}
 
 	@Override
-	public DataCollector getParent() {
-		return parent;
-	}
-
-	@Override
 	public Collection<DataCollector> getChildren() {
 		return children.values();
 	}
@@ -160,15 +148,29 @@ class TimedDataCollector extends DataCollector {
 
 	@Override
 	public void setPaused(boolean paused) {
-		this.activeMeasurement = null;
-		this.paused = paused;
+		synchronized (this) {
+			if (!paused && this.paused != paused) {
+				this.activeMeasurement = null;
+				this.paused = paused;
+			}
+		}
 		this.children.values().forEach(child -> child.setPaused(paused));
+	}
+
+	@Override
+	public void resetData() {
+		synchronized (this) {
+			this.data.clear();
+		}
+		this.children.values().forEach(c -> c.resetData());
 	}
 
 	@Override
 	public void purgeData() {
 		this.activeMeasurement = null;
-		this.data.clear();
+		synchronized (this) {
+			this.data.clear();
+		}
 		this.children.values().forEach(c -> c.purgeData());
 	}
 

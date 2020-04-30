@@ -60,6 +60,22 @@
       {
         "command": "n4js.rebuild",
         "title": "N4JS: Rebuild"
+      },
+      {
+        "command": "n4js.performance.collector.enable",
+        "title": "N4JS: Enable performance collector"
+      },
+      {
+        "command": "n4js.performance.collector.disable",
+        "title": "N4JS: Disable performance collector"
+      },
+      {
+        "command": "n4js.performance.collector.show",
+        "title": "N4JS: Show collected performance data"
+      },
+      {
+        "command": "n4js.performance.collector.reset",
+        "title": "N4JS: Reset collected performance data"
       }
     ],
     "activationEvents": [
