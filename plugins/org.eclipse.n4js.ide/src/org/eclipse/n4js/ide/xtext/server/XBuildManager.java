@@ -133,6 +133,8 @@ public class XBuildManager {
 
 	private List<IResourceDescription.Delta> unreportedDeltas = new ArrayList<>();
 
+	private List<IResourceDescription.Delta> ungeneratedDeltas = new ArrayList<>();
+
 	/**
 	 * Run a full build on the workspace
 	 *
@@ -210,6 +212,7 @@ public class XBuildManager {
 
 	/** Performs a clean operation in all projects */
 	public void doClean(CancelIndicator cancelIndicator) {
+		ungeneratedDeltas.clear();
 		for (XProjectManager projectManager : workspaceManager.getProjectManagers()) {
 			projectManager.doClean(cancelIndicator);
 		}
@@ -245,8 +248,23 @@ public class XBuildManager {
 	/** Run the build on the workspace */
 	protected List<IResourceDescription.Delta> doIncrementalBuild(boolean doGenerate, CancelIndicator cancelIndicator) {
 		try {
-			Map<ProjectDescription, Set<URI>> project2dirty = computeProjectToUriMap(this.dirtyFiles);
-			Map<ProjectDescription, Set<URI>> project2deleted = computeProjectToUriMap(this.deletedFiles);
+			Set<URI> dirtyFilesToBuild = new LinkedHashSet<>(this.dirtyFiles);
+			Set<URI> deletedFilesToBuild = new LinkedHashSet<>(this.deletedFiles);
+
+			if (doGenerate) {
+				// also generate files from 'ungeneratedDeltas' which are awaiting generation
+				for (IResourceDescription.Delta delta : this.ungeneratedDeltas) {
+					URI uri = delta.getUri();
+					if (delta.getNew() != null) {
+						dirtyFilesToBuild.add(uri);
+					} else {
+						deletedFilesToBuild.add(uri);
+					}
+				}
+			}
+
+			Map<ProjectDescription, Set<URI>> project2dirty = computeProjectToUriMap(dirtyFilesToBuild);
+			Map<ProjectDescription, Set<URI>> project2deleted = computeProjectToUriMap(deletedFilesToBuild);
 
 			SetView<ProjectDescription> allDescriptions = Sets.union(project2dirty.keySet(), project2deleted.keySet());
 			List<ProjectDescription> sortedDescriptions = sortByDependencies(allDescriptions);
@@ -262,12 +280,18 @@ public class XBuildManager {
 				this.dirtyFiles.removeAll(projectDirty);
 				this.deletedFiles.removeAll(projectDeleted);
 				mergeWithUnreportedDeltas(partialResult.getAffectedResources());
+
 				if (doGenerate) {
 					projectManager.persistProjectState();
+				} else {
+					mergeWithUngeneratedDeltas(partialResult.getAffectedResources());
 				}
 			}
 			List<IResourceDescription.Delta> result = unreportedDeltas;
 			unreportedDeltas = new ArrayList<>();
+			if (doGenerate) {
+				ungeneratedDeltas = new ArrayList<>();
+			}
 			return result;
 
 		} catch (CancellationException ce) {
@@ -302,21 +326,30 @@ public class XBuildManager {
 
 	/** @since 2.18 */
 	protected void mergeWithUnreportedDeltas(List<IResourceDescription.Delta> newDeltas) {
-		if (this.unreportedDeltas.isEmpty()) {
-			unreportedDeltas.addAll(newDeltas);
+		mergeWithDeltaList(this.unreportedDeltas, newDeltas);
+	}
+
+	protected void mergeWithUngeneratedDeltas(List<IResourceDescription.Delta> newDeltas) {
+		mergeWithDeltaList(this.ungeneratedDeltas, newDeltas);
+	}
+
+	protected void mergeWithDeltaList(List<IResourceDescription.Delta> target,
+			List<IResourceDescription.Delta> newDeltas) {
+		if (target.isEmpty()) {
+			target.addAll(newDeltas);
 		} else {
 			Map<URI, IResourceDescription.Delta> unreportedByUri = IterableExtensions.toMap(
-					unreportedDeltas, IResourceDescription.Delta::getUri);
+					target, IResourceDescription.Delta::getUri);
 
 			for (IResourceDescription.Delta newDelta : newDeltas) {
 				IResourceDescription.Delta unreportedDelta = unreportedByUri.get(newDelta.getUri());
 				if (unreportedDelta == null) {
-					unreportedDeltas.add(newDelta);
+					target.add(newDelta);
 				} else {
-					unreportedDeltas.remove(unreportedDelta);
+					target.remove(unreportedDelta);
 					IResourceDescription _old = unreportedDelta.getOld();
 					IResourceDescription _new = newDelta.getNew();
-					unreportedDeltas.add(new DefaultResourceDescriptionDelta(_old, _new));
+					target.add(new DefaultResourceDescriptionDelta(_old, _new));
 				}
 			}
 		}
