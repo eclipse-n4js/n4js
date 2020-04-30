@@ -19,7 +19,6 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -95,7 +94,7 @@ public class ProjectStatePersister {
 	}
 
 	/**
-	 * After the version, the stream contains a zipped, binary object stream with the following shape:
+	 * After the version, the stream contains a zipped, data stream of the following shape:
 	 *
 	 * <pre>
 	 * - Language version as per {@link N4JSLanguageUtils#getLanguageVersion() N4JSLanguageUtils.getLanguageVersion}
@@ -110,11 +109,6 @@ public class ProjectStatePersister {
 	 * 	- Number #vi of issues of source
 	 * 	- #vi times a validation issue as per {@link N4JSIssue#writeExternal(DataOutput) N4JSIssue.writeExternal}
 	 * </pre>
-	 */
-	private static final int VERSION_1 = 1;
-
-	/**
-	 * After the version, the stream contains a zipped, data stream with same shape as described for {@link #VERSION_1}.
 	 */
 	private static final int VERSION_2 = 2;
 
@@ -376,15 +370,11 @@ public class ProjectStatePersister {
 			throws IOException, ClassNotFoundException {
 
 		int version = stream.read();
-		if (version != CURRENT_VERSION && version != VERSION_1) {
+		if (version != CURRENT_VERSION) {
 			return null;
 		}
 
-		try (BufferedInputStream buffy = new BufferedInputStream(new GZIPInputStream(stream, 8192));
-				InputStream dataOrObjectInputStream = version == VERSION_1 ? new ObjectInputStream(buffy)
-						: new DataInputStream(buffy)) {
-			DataInput input = (DataInput) dataOrObjectInputStream;
-
+		try (DataInputStream input = new DataInputStream(new BufferedInputStream(new GZIPInputStream(stream, 8192)))) {
 			String languageVersion = input.readUTF();
 			if (!expectedLanguageVersion.equals(languageVersion)) {
 				return null;
