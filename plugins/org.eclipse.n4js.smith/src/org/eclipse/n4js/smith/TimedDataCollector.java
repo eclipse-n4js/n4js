@@ -148,17 +148,13 @@ class TimedDataCollector extends DataCollector {
 
 	@Override
 	public void setPaused(boolean paused) {
-		this.activeMeasurement = null;
-		this.paused = paused;
-		this.children.values().forEach(child -> child.setPaused(paused));
-	}
-
-	@Override
-	public void stop() {
 		synchronized (this) {
-			this.paused = true;
+			if (!paused && this.paused != paused) {
+				this.activeMeasurement = null;
+				this.paused = paused;
+			}
 		}
-		this.children.values().forEach(child -> child.stop());
+		this.children.values().forEach(child -> child.setPaused(paused));
 	}
 
 	@Override

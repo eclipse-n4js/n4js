@@ -72,9 +72,6 @@ public abstract class DataCollector {
 	/** Pauses set paused state according to the provided flag. */
 	public abstract void setPaused(boolean paused);
 
-	/** Stop this data collector and all children but continue normally with ongoing measurements */
-	public abstract void stop();
-
 	/** Clear all data collected so far but continue normally with ongoing measurements */
 	public abstract void resetData();
 

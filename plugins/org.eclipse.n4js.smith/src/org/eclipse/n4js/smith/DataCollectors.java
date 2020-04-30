@@ -113,12 +113,6 @@ public enum DataCollectors {
 		collectors.values().forEach(collector -> collector.setPaused(paused));
 	}
 
-	/** Stops all data collectors but allows ongoing measurements to complete normally. */
-	synchronized void stop() {
-		this.pauseAllCollectors.set(true);
-		collectors.values().forEach(collector -> collector.stop());
-	}
-
 	/**
 	 * Shows a warning on {@link System#err standard error}, but only if data collection is active, i.e. *not* paused.
 	 */

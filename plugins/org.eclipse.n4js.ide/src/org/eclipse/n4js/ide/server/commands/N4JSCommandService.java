@@ -262,7 +262,7 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 	 */
 	@ExecutableCommandHandler(DISABLE_PERFORMANCE_COLLECTOR)
 	public Void disablePerformanceDataCollector(ILanguageServerAccess access, CancelIndicator cancelIndicator) {
-		CollectedDataAccess.stop();
+		CollectedDataAccess.setPaused(true);
 		access.getLanguageClient()
 				.logMessage(new MessageParams(MessageType.Log, "Disabled performance data collectors"));
 		return null;

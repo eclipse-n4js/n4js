@@ -133,11 +133,6 @@ class SerializingDataCollector extends DataCollector {
 	}
 
 	@Override
-	public void stop() {
-		delegate.stop();
-	}
-
-	@Override
 	DataCollector getChild(String id) {
 		return delegate.getChild(id);
 	}

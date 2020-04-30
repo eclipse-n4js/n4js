@@ -22,11 +22,6 @@ public class CollectedDataAccess {
 		getCollectors().setPaused(paused);
 	}
 
-	/** Stops all collectors but allows ongoing measurements to complete normally. */
-	public static void stop() {
-		getCollectors().stop();
-	}
-
 	/**
 	 * Deletes data from all collectors.
 	 */
