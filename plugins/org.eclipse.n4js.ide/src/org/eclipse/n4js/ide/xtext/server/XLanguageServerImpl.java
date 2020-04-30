@@ -429,7 +429,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	@Override
 	public void exit() {
 		LOG.info("Received exit notification");
-		joinJobs();
+		joinServerRequests();
 		shutdownAndExitHandler.exit();
 	}
 
@@ -581,13 +581,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 			Supplier<? extends XBuildable> newBuildable) {
 		return requestManager.runWrite(description, newBuildable::get,
 				(cancelIndicator, buildable) -> buildable.build(cancelIndicator));
-	}
-
-	private void joinJobs() {
-		// wait for all jobs to finish
-		runBuildable("joinJobs", () -> {
-			return (cancelIndicator) -> Collections.emptyList();
-		});
 	}
 
 	/**

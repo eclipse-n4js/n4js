@@ -137,6 +137,9 @@ public class ProjectStatePersister {
 	 * Return a future that is completed as soon as the currently pending writes are done.
 	 */
 	public CompletableFuture<Void> pendingWrites() {
+		if (writer.isTerminated()) {
+			return CompletableFuture.completedFuture(null);
+		}
 		return CompletableFuture.runAsync(() -> {
 			// nothing to do, just wait
 		}, writer).exceptionally(any -> null);
