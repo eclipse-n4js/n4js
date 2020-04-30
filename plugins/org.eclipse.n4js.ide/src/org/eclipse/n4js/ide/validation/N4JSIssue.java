@@ -10,10 +10,10 @@
  */
 package org.eclipse.n4js.ide.validation;
 
+import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.Externalizable;
 import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.util.Objects;
 
 import org.eclipse.emf.common.util.URI;
@@ -29,7 +29,7 @@ import com.google.common.base.Strings;
  *
  * All line and column numbers are one-based. Offset is zero-based.
  */
-public class N4JSIssue extends IssueImpl implements Externalizable {
+public class N4JSIssue extends IssueImpl {
 	private static final String NULL = "";
 	private int lineNumberEnd;
 	private int columnEnd;
@@ -96,8 +96,10 @@ public class N4JSIssue extends IssueImpl implements Externalizable {
 		this.columnEnd = columnEnd;
 	}
 
-	@Override
-	public void writeExternal(ObjectOutput out) throws IOException {
+	/**
+	 * @see Externalizable#writeExternal(java.io.ObjectOutput)
+	 */
+	public void writeExternal(DataOutput out) throws IOException {
 		out.writeInt(this.getOffset());
 		out.writeInt(this.getLength());
 		out.writeInt(this.getColumn());
@@ -130,8 +132,10 @@ public class N4JSIssue extends IssueImpl implements Externalizable {
 		}
 	}
 
-	@Override
-	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+	/**
+	 * @see Externalizable#readExternal(java.io.ObjectInput)
+	 */
+	public void readExternal(DataInput in) throws IOException {
 		this.setOffset(in.readInt());
 		this.setLength(in.readInt());
 		this.setColumn(in.readInt());

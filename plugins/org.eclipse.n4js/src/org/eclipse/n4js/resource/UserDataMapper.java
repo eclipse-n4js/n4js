@@ -178,7 +178,9 @@ public final class UserDataMapper {
 			ret.put(USER_DATA_KEY_AST_MD5, astMD5);
 		}
 
-		ret.put(N4JSResourceDescriptionStrategy.MAIN_MODULE_KEY, Boolean.toString(exportedModule.isMainModule()));
+		if (exportedModule.isMainModule()) {
+			ret.put(N4JSResourceDescriptionStrategy.MAIN_MODULE_KEY, Boolean.toString(exportedModule.isMainModule()));
+		}
 
 		// in case of filling file store fingerprint to keep filled type updated by the incremental builder.
 		// required to trigger rebuilds even if only minor changes happened to the content.

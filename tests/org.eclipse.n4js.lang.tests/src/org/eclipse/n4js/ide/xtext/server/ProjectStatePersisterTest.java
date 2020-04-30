@@ -13,7 +13,6 @@ package org.eclipse.n4js.ide.xtext.server;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.StreamCorruptedException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -23,11 +22,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.zip.ZipException;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ide.validation.N4JSIssue;
-import org.eclipse.n4js.ide.xtext.server.HashedFileContent;
-import org.eclipse.n4js.ide.xtext.server.ProjectStatePersister;
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersister.PersistedState;
 import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
@@ -64,7 +62,7 @@ public class ProjectStatePersisterTest {
 	}
 
 	/** */
-	@Test(expected = StreamCorruptedException.class)
+	@Test(expected = ZipException.class)
 	public void testWriteAndReadCorruptedStream() throws IOException, ClassNotFoundException {
 		ProjectStatePersister testMe = new ProjectStatePersister();
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -73,8 +71,7 @@ public class ProjectStatePersisterTest {
 				Collections.emptyMap());
 		byte[] bytes = output.toByteArray();
 		bytes[12]++;
-		PersistedState pState = testMe.readProjectState(new ByteArrayInputStream(bytes), languageVersion);
-		Assert.assertTrue(pState.fileHashs.isEmpty());
+		testMe.readProjectState(new ByteArrayInputStream(bytes), languageVersion);
 	}
 
 	/** */

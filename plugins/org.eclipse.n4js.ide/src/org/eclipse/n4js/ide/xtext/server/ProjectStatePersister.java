@@ -12,12 +12,13 @@ package org.eclipse.n4js.ide.xtext.server;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.DataInput;
+import java.io.DataInputStream;
+import java.io.DataOutput;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -27,6 +28,10 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -55,7 +60,11 @@ import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.io.Files;
+import com.google.common.util.concurrent.MoreExecutors;
+import com.google.inject.Singleton;
 
 /**
  * Allows to read / write the state of a compiled project to disk to sport incremental builds after a restart of the
@@ -63,6 +72,7 @@ import com.google.common.io.Files;
  * documented per version.
  */
 @SuppressWarnings("restriction")
+@Singleton
 public class ProjectStatePersister {
 
 	/** Data holder class of project state */
@@ -84,29 +94,50 @@ public class ProjectStatePersister {
 	}
 
 	/**
-	 * After the version, the stream contains a zipped, binary object stream with the following shape:
+	 * After the version, the stream contains a zipped, data stream of the following shape:
 	 *
 	 * <pre>
 	 * - Language version as per {@link N4JSLanguageUtils#getLanguageVersion() N4JSLanguageUtils.getLanguageVersion}
 	 * - Number #r of resource descriptions
-	 * - #r times a serializable resource description as per {@link SerializableResourceDescription#writeExternal(java.io.ObjectOutput) SerializableResourceDescription.writeExternal}
+	 * - #r times a serializable resource description as per {@link #writeResourceDescription(SerializableResourceDescription, DataOutput)}
 	 * - A mapping of generated URIs as per {@link Source2GeneratedMapping#writeExternal(java.io.ObjectOutput) Source2GeneratedMapping.writeExternal}
 	 * - Number #f of fingerprints per URI
-	 * - #f times a fingerprint as per {@link HashedFileContent#write(java.io.ObjectOutput) HashedFileContent.write}
+	 * - #f times a fingerprint as per {@link HashedFileContent#write(DataOutput) HashedFileContent.write}
 	 * - Number #vs of source files that have issues
 	 * - #vs times:
 	 * 	- source URI
 	 * 	- Number #vi of issues of source
-	 * 	- #vi times a validation issue as per {@link N4JSIssue#writeExternal(ObjectOutput) N4JSIssue.writeExternal}
+	 * 	- #vi times a validation issue as per {@link N4JSIssue#writeExternal(DataOutput) N4JSIssue.writeExternal}
 	 * </pre>
 	 */
-	private static final int VERSION_1 = 1;
+	private static final int VERSION_2 = 2;
 
 	/** The current version of the persistence format. Increment to support backwards compatible deserialization. */
-	private static final int CURRENT_VERSION = VERSION_1;
+	private static final int CURRENT_VERSION = VERSION_2;
 
 	/** The simple name of the file with the project state. */
 	public static final String FILENAME = N4JSGlobals.N4JS_PROJECT_STATE;
+
+	private final ExecutorService writer = Executors.newSingleThreadExecutor();
+
+	/**
+	 * Close this persister and wait for pending write operations to complete.
+	 */
+	public void close() {
+		MoreExecutors.shutdownAndAwaitTermination(writer, 5, TimeUnit.SECONDS);
+	}
+
+	/**
+	 * Return a future that is completed as soon as the currently pending writes are done.
+	 */
+	public CompletableFuture<Void> pendingWrites() {
+		if (writer.isTerminated()) {
+			return CompletableFuture.completedFuture(null);
+		}
+		return CompletableFuture.runAsync(() -> {
+			// nothing to do, just wait
+		}, writer).exceptionally(any -> null);
+	}
 
 	/**
 	 * Write the index state and a hash of the project state to disk in order to allow loading it again.
@@ -120,17 +151,27 @@ public class ProjectStatePersister {
 	 */
 	public void writeProjectState(IProjectConfig project, XIndexState state,
 			Collection<? extends HashedFileContent> files, Map<URI, ? extends Collection<Issue>> validationIssues) {
+		ImmutableListMultimap.Builder<URI, Issue> builder = ImmutableListMultimap.builder();
+		validationIssues.forEach(builder::putAll);
+		asyncWriteProjectState(project,
+				new XIndexState(state.getResourceDescriptions().copy(), state.getFileMappings().copy()),
+				ImmutableList.copyOf(files),
+				builder.build().asMap());
+	}
 
-		File file = getDataFile(project);
-		try (OutputStream nativeOut = Files.asByteSink(file).openBufferedStream()) {
-			writeProjectState(nativeOut, N4JSLanguageUtils.getLanguageVersion(), state, files, validationIssues);
-
-		} catch (IOException e) {
-			e.printStackTrace();
-			if (file.isFile()) {
-				file.delete();
+	private void asyncWriteProjectState(IProjectConfig project, XIndexState state,
+			Collection<? extends HashedFileContent> files, Map<URI, ? extends Collection<Issue>> validationIssues) {
+		writer.submit(() -> {
+			File file = getDataFile(project);
+			try (OutputStream nativeOut = Files.asByteSink(file).openBufferedStream()) {
+				writeProjectState(nativeOut, N4JSLanguageUtils.getLanguageVersion(), state, files, validationIssues);
+			} catch (IOException e) {
+				e.printStackTrace();
+				if (file.isFile()) {
+					file.delete();
+				}
 			}
-		}
+		});
 	}
 
 	/**
@@ -150,7 +191,7 @@ public class ProjectStatePersister {
 			throws IOException {
 
 		stream.write(CURRENT_VERSION);
-		try (ObjectOutputStream output = new ObjectOutputStream(
+		try (DataOutputStream output = new DataOutputStream(
 				new BufferedOutputStream(new GZIPOutputStream(stream, 8192)))) {
 
 			output.writeUTF(languageVersion);
@@ -165,7 +206,7 @@ public class ProjectStatePersister {
 		}
 	}
 
-	private void writeResourceDescriptions(XIndexState state, ObjectOutputStream output) throws IOException {
+	private void writeResourceDescriptions(XIndexState state, DataOutput output) throws IOException {
 		ResourceDescriptionsData resourceDescriptionData = state.getResourceDescriptions();
 		output.writeInt(resourceDescriptionData.getAllURIs().size());
 		for (IResourceDescription description : resourceDescriptionData.getAllResourceDescriptions()) {
@@ -177,7 +218,7 @@ public class ProjectStatePersister {
 		}
 	}
 
-	private void writeResourceDescription(SerializableResourceDescription description, ObjectOutputStream output)
+	private void writeResourceDescription(SerializableResourceDescription description, DataOutput output)
 			throws IOException {
 		// description.writeExternal(output);
 		// relies on writeObject which is very slow
@@ -188,7 +229,7 @@ public class ProjectStatePersister {
 		writeImportedNames(description, output);
 	}
 
-	private void writeImportedNames(SerializableResourceDescription resourceDescription, ObjectOutputStream output)
+	private void writeImportedNames(SerializableResourceDescription resourceDescription, DataOutput output)
 			throws IOException {
 		List<QualifiedName> importedNames = IterableExtensions.toList(resourceDescription.getImportedNames());
 		output.writeInt(importedNames.size());
@@ -198,7 +239,7 @@ public class ProjectStatePersister {
 	}
 
 	private void writeReferenceDescriptions(SerializableResourceDescription resourceDescription,
-			ObjectOutputStream output) throws IOException {
+			DataOutput output) throws IOException {
 		List<SerializableReferenceDescription> references = resourceDescription.getReferences();
 		output.writeInt(references.size());
 		for (SerializableReferenceDescription reference : references) {
@@ -211,7 +252,7 @@ public class ProjectStatePersister {
 	}
 
 	private void writeEObjectDescriptions(SerializableResourceDescription resourceDescription,
-			ObjectOutputStream output) throws IOException {
+			DataOutput output) throws IOException {
 		List<SerializableEObjectDescription> objects = resourceDescription.getDescriptions();
 		output.writeInt(objects.size());
 		for (SerializableEObjectDescription object : objects) {
@@ -232,7 +273,7 @@ public class ProjectStatePersister {
 		}
 	}
 
-	private void writeUserDataValue(String value, ObjectOutputStream output) throws IOException {
+	private void writeUserDataValue(String value, DataOutput output) throws IOException {
 		// User data tends to be very long but the value in output.writeUTF is written as a short
 		// therefore we need to do it manually for this string
 		byte[] bytes = value.getBytes(StandardCharsets.UTF_8);
@@ -240,18 +281,18 @@ public class ProjectStatePersister {
 		output.write(bytes);
 	}
 
-	private void writeQualifiedName(QualifiedName qualifiedName, ObjectOutputStream output) throws IOException {
+	private void writeQualifiedName(QualifiedName qualifiedName, DataOutput output) throws IOException {
 		output.writeInt(qualifiedName.getSegmentCount());
 		for (int i = 0, max = qualifiedName.getSegmentCount(); i < max; i++) {
 			output.writeUTF(qualifiedName.getSegment(i));
 		}
 	}
 
-	private void writeFileMappings(XIndexState state, ObjectOutputStream output) throws IOException {
+	private void writeFileMappings(XIndexState state, DataOutputStream output) throws IOException {
 		state.getFileMappings().writeExternal(output);
 	}
 
-	private void writeFingerprints(Collection<? extends HashedFileContent> files, ObjectOutputStream output)
+	private void writeFingerprints(Collection<? extends HashedFileContent> files, DataOutput output)
 			throws IOException {
 
 		output.writeInt(files.size());
@@ -260,7 +301,7 @@ public class ProjectStatePersister {
 		}
 	}
 
-	private void writeValidationIssues(Map<URI, ? extends Collection<Issue>> validationIssues, ObjectOutput output)
+	private void writeValidationIssues(Map<URI, ? extends Collection<Issue>> validationIssues, DataOutput output)
 			throws IOException {
 
 		int numberSources = validationIssues.size();
@@ -333,9 +374,7 @@ public class ProjectStatePersister {
 			return null;
 		}
 
-		try (ObjectInputStream input = new ObjectInputStream(
-				new BufferedInputStream(new GZIPInputStream(stream, 8192)))) {
-
+		try (DataInputStream input = new DataInputStream(new BufferedInputStream(new GZIPInputStream(stream, 8192)))) {
 			String languageVersion = input.readUTF();
 			if (!expectedLanguageVersion.equals(languageVersion)) {
 				return null;
@@ -353,7 +392,7 @@ public class ProjectStatePersister {
 		}
 	}
 
-	private ResourceDescriptionsData readResourceDescriptions(ObjectInputStream input)
+	private ResourceDescriptionsData readResourceDescriptions(DataInput input)
 			throws IOException {
 		List<IResourceDescription> descriptions = new ArrayList<>();
 		int size = input.readInt();
@@ -364,7 +403,7 @@ public class ProjectStatePersister {
 		return new ResourceDescriptionsData(descriptions);
 	}
 
-	private ENamedElement readEcoreElement(ObjectInputStream input) throws IOException {
+	private ENamedElement readEcoreElement(DataInput input) throws IOException {
 		URI uri = URI.createURI(input.readUTF());
 		EPackage ePackage = EPackage.Registry.INSTANCE.getEPackage(uri.trimFragment().toString());
 		if (ePackage != null) {
@@ -374,7 +413,7 @@ public class ProjectStatePersister {
 		return null;
 	}
 
-	private SerializableResourceDescription readResourceDescription(ObjectInputStream input)
+	private SerializableResourceDescription readResourceDescription(DataInput input)
 			throws IOException {
 		SerializableResourceDescription result = new SerializableResourceDescription();
 		result.setURI(URI.createURI(input.readUTF()));
@@ -384,7 +423,7 @@ public class ProjectStatePersister {
 		return result;
 	}
 
-	private List<QualifiedName> readImportedNames(ObjectInputStream input) throws IOException {
+	private List<QualifiedName> readImportedNames(DataInput input) throws IOException {
 		int size = input.readInt();
 		if (size == 0) {
 			return Collections.emptyList();
@@ -397,7 +436,7 @@ public class ProjectStatePersister {
 		return result;
 	}
 
-	private List<SerializableReferenceDescription> readReferenceDescriptions(ObjectInputStream input)
+	private List<SerializableReferenceDescription> readReferenceDescriptions(DataInput input)
 			throws IOException {
 		int size = input.readInt();
 		if (size == 0) {
@@ -417,7 +456,7 @@ public class ProjectStatePersister {
 		return result;
 	}
 
-	private List<SerializableEObjectDescription> readEObjectDescriptions(ObjectInputStream input) throws IOException {
+	private List<SerializableEObjectDescription> readEObjectDescriptions(DataInput input) throws IOException {
 		int size = input.readInt();
 		if (size == 0) {
 			return Collections.emptyList();
@@ -442,13 +481,13 @@ public class ProjectStatePersister {
 		return result;
 	}
 
-	private String readUserDataValue(ObjectInputStream input) throws IOException {
+	private String readUserDataValue(DataInput input) throws IOException {
 		byte[] value = new byte[input.readInt()];
 		input.readFully(value);
 		return new String(value, StandardCharsets.UTF_8);
 	}
 
-	private QualifiedName readQualifiedName(ObjectInputStream input) throws IOException {
+	private QualifiedName readQualifiedName(DataInput input) throws IOException {
 		int size = input.readInt();
 		QualifiedName.Builder builder = new QualifiedName.Builder(size);
 		while (size > 0) {
@@ -458,14 +497,14 @@ public class ProjectStatePersister {
 		return builder.build();
 	}
 
-	private XSource2GeneratedMapping readFileMappings(ObjectInputStream input)
-			throws IOException, ClassNotFoundException {
+	private XSource2GeneratedMapping readFileMappings(DataInput input)
+			throws IOException {
 		XSource2GeneratedMapping fileMappings = new XSource2GeneratedMapping();
 		fileMappings.readExternal(input);
 		return fileMappings;
 	}
 
-	private Map<URI, HashedFileContent> readFingerprints(ObjectInputStream input) throws IOException {
+	private Map<URI, HashedFileContent> readFingerprints(DataInput input) throws IOException {
 		int size = input.readInt();
 		Map<URI, HashedFileContent> fingerprints = new HashMap<>(size);
 		while (size > 0) {
@@ -476,8 +515,8 @@ public class ProjectStatePersister {
 		return fingerprints;
 	}
 
-	private Map<URI, Collection<Issue>> readValidationIssues(ObjectInputStream input)
-			throws IOException, ClassNotFoundException {
+	private Map<URI, Collection<Issue>> readValidationIssues(DataInput input)
+			throws IOException {
 
 		int numberOfSources = input.readInt();
 		Map<URI, Collection<Issue>> validationIssues = new LinkedHashMap<>(numberOfSources);
