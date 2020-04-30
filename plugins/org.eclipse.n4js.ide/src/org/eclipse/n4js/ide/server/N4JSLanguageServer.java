@@ -69,4 +69,9 @@ public class N4JSLanguageServer extends XLanguageServerImpl implements N4JSProto
 		return getWorkspaceManager().getDocument(resource).getContents();
 	}
 
+	@Override
+	protected CompletableFuture<Void> getPendingRequests() {
+		return CompletableFuture.allOf(super.getPendingRequests(), persister.pendingWrites());
+	}
+
 }

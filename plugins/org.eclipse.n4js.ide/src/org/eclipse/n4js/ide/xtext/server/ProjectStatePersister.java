@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -130,6 +131,15 @@ public class ProjectStatePersister {
 	 */
 	public void close() {
 		MoreExecutors.shutdownAndAwaitTermination(writer, 5, TimeUnit.SECONDS);
+	}
+
+	/**
+	 * Return a future that is completed as soon as the currently pending writes are done.
+	 */
+	public CompletableFuture<Void> pendingWrites() {
+		return CompletableFuture.runAsync(() -> {
+			// nothing to do, just wait
+		}, writer).exceptionally(any -> null);
 	}
 
 	/**
