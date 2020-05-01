@@ -13,8 +13,10 @@ package org.eclipse.n4js.ide;
 import org.eclipse.n4js.generator.N4JSCompositeGenerator;
 import org.eclipse.n4js.ide.editor.contentassist.CamelCasePrefixMatcher;
 import org.eclipse.n4js.ide.editor.contentassist.ContentAssistDataCollectors;
+import org.eclipse.n4js.ide.editor.contentassist.CustomN4JSParser;
 import org.eclipse.n4js.ide.editor.contentassist.N4JSContentAssistContextFactory;
 import org.eclipse.n4js.ide.editor.contentassist.N4JSContentAssistService;
+import org.eclipse.n4js.ide.editor.contentassist.N4JSFollowElementCalculator;
 import org.eclipse.n4js.ide.editor.contentassist.N4JSIdeContentProposalProvider;
 import org.eclipse.n4js.ide.server.FileBasedWorkspaceInitializer;
 import org.eclipse.n4js.ide.server.N4JSLanguageServer;
@@ -52,6 +54,7 @@ import org.eclipse.xtext.ide.editor.contentassist.IPrefixMatcher;
 import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalAcceptor;
 import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalProvider;
 import org.eclipse.xtext.ide.editor.contentassist.antlr.ContentAssistContextFactory;
+import org.eclipse.xtext.ide.editor.contentassist.antlr.IContentAssistParser;
 import org.eclipse.xtext.ide.server.ILanguageServerShutdownAndExitHandler;
 import org.eclipse.xtext.ide.server.codeActions.ICodeActionService2;
 import org.eclipse.xtext.ide.server.commands.ExecutableCommandRegistry;
@@ -185,4 +188,12 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 		return N4JSContentAssistService.class;
 	}
 
+	public Class<? extends org.eclipse.xtext.ide.editor.contentassist.antlr.FollowElementCalculator> bindFollowElementCalculator() {
+		return N4JSFollowElementCalculator.class;
+	}
+
+	@Override
+	public Class<? extends IContentAssistParser> bindIContentAssistParser() {
+		return CustomN4JSParser.class;
+	}
 }

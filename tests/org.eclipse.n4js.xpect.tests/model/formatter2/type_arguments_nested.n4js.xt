@@ -31,7 +31,6 @@ class A <
 
 /* XPECT formattedLines 18 ---
 var b: A<Annos, A<A<Annos, boolean>, Boolean>>;
-;
 --- */
 var b : A
 <

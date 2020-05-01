@@ -442,7 +442,8 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 			XBuildable buildable = workspaceManager.closeAll();
 			return (cancelIndicator) -> {
 				List<Delta> result = buildable.build(cancelIndicator);
-				workspaceManager.persistProjectState(CancelIndicator.NullImpl);
+				workspaceManager.persistProjectState();
+				persister.pendingWrites().join();
 				shutdownAndExitHandler.shutdown();
 
 				LOG.info("Shutdown done");
@@ -1347,8 +1348,8 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	/** Blocks until all requests of the language server finished */
 	public void joinServerRequests() {
-		CompletableFuture<Void> future = CompletableFuture.allOf(getRequestManager().allRequests(),
-				persister.pendingWrites());
+		CompletableFuture<Void> future = getRequestManager().allRequests()
+				.thenCompose(any -> persister.pendingWrites());
 		future.join();
 	}
 

@@ -342,12 +342,9 @@ public class XBuildManager {
 	}
 
 	/** Persists the project state of all projects */
-	public void persistProjectState(CancelIndicator indicator) {
+	public void persistProjectState() {
 		for (XProjectManager prjManager : workspaceManager.getProjectManagers()) {
 			prjManager.persistProjectState();
-			if (indicator.isCanceled()) {
-				return;
-			}
 		}
 	}
 }

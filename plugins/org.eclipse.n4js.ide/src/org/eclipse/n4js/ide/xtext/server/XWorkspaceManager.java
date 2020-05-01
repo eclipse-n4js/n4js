@@ -406,9 +406,9 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 		buildManager.doClean(cancelIndicator);
 	}
 
-	/** @see XBuildManager#persistProjectState(CancelIndicator) */
-	public void persistProjectState(CancelIndicator indicator) {
-		buildManager.persistProjectState(indicator);
+	/** @see XBuildManager#persistProjectState() */
+	public void persistProjectState() {
+		buildManager.persistProjectState();
 	}
 
 	/** Returns the current index. */
