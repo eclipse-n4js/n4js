@@ -130,13 +130,13 @@ public class XBuildManager {
 	private ProjectBuildOrderInfo.Provider projectBuildOrderInfoProvider;
 
 	private final LinkedHashSet<URI> dirtyFiles = new LinkedHashSet<>();
-
 	private final LinkedHashSet<URI> deletedFiles = new LinkedHashSet<>();
 
-	/** Holds all deltas of all projects. In case of cancelled build, this set is not empty at start of next build. */
-	private List<IResourceDescription.Delta> allBuildDeltas = new ArrayList<>();
+	private final LinkedHashSet<URI> dirtyFilesAwaitingGeneration = new LinkedHashSet<>();
+	private final LinkedHashSet<URI> deletedFilesAwaitingGeneration = new LinkedHashSet<>();
 
-	private List<IResourceDescription.Delta> ungeneratedDeltas = new ArrayList<>();
+	/** Holds all deltas of all projects. In case of a cancelled build, this set is not empty at start of next build. */
+	private List<IResourceDescription.Delta> allBuildDeltas = new ArrayList<>();
 
 	/**
 	 * Run a full build on the workspace
@@ -220,7 +220,8 @@ public class XBuildManager {
 
 	/** Performs a clean operation in all projects */
 	public void doClean(CancelIndicator cancelIndicator) {
-		ungeneratedDeltas.clear();
+		dirtyFilesAwaitingGeneration.clear();
+		deletedFilesAwaitingGeneration.clear();
 		for (XProjectManager projectManager : workspaceManager.getProjectManagers()) {
 			projectManager.doClean(cancelIndicator);
 		}
@@ -258,17 +259,9 @@ public class XBuildManager {
 		try {
 			Set<URI> dirtyFilesToBuild = new LinkedHashSet<>(this.dirtyFiles);
 			Set<URI> deletedFilesToBuild = new LinkedHashSet<>(this.deletedFiles);
-
 			if (doGenerate) {
-				// also generate files from 'ungeneratedDeltas' which are awaiting generation
-				for (IResourceDescription.Delta delta : this.ungeneratedDeltas) {
-					URI uri = delta.getUri();
-					if (delta.getNew() != null) {
-						dirtyFilesToBuild.add(uri);
-					} else {
-						deletedFilesToBuild.add(uri);
-					}
-				}
+				dirtyFilesToBuild.addAll(this.dirtyFilesAwaitingGeneration);
+				deletedFilesToBuild.addAll(this.deletedFilesAwaitingGeneration);
 			}
 
 			Map<ProjectDescription, Set<URI>> project2dirty = computeProjectToUriMap(dirtyFilesToBuild);
@@ -296,9 +289,6 @@ public class XBuildManager {
 
 			List<IResourceDescription.Delta> result = allBuildDeltas;
 			allBuildDeltas = new ArrayList<>();
-			if (doGenerate) {
-				ungeneratedDeltas = new ArrayList<>();
-			}
 			return result;
 
 		} catch (CancellationException | OperationCanceledException ce) {
@@ -335,40 +325,41 @@ public class XBuildManager {
 			URI uri = delta.getUri();
 			this.dirtyFiles.remove(uri);
 			this.deletedFiles.remove(uri);
+			if (didGenerate) {
+				this.dirtyFilesAwaitingGeneration.remove(uri);
+				this.deletedFilesAwaitingGeneration.remove(uri);
+			} else {
+				// a resource was built while doGenerate==false, so mark it as awaiting generation
+				if (delta.getNew() != null) {
+					this.deletedFilesAwaitingGeneration.remove(uri);
+					this.dirtyFilesAwaitingGeneration.add(uri);
+				} else {
+					this.dirtyFilesAwaitingGeneration.remove(uri);
+					this.deletedFilesAwaitingGeneration.add(uri);
+				}
+			}
 		}
 
 		mergeWithUnreportedDeltas(newlyBuiltDeltas);
-		if (!didGenerate) {
-			mergeWithUngeneratedDeltas(newlyBuiltDeltas);
-		}
 	}
 
 	/** @since 2.18 */
 	protected void mergeWithUnreportedDeltas(List<IResourceDescription.Delta> newDeltas) {
-		mergeWithDeltaList(this.allBuildDeltas, newDeltas);
-	}
-
-	protected void mergeWithUngeneratedDeltas(List<IResourceDescription.Delta> newDeltas) {
-		mergeWithDeltaList(this.ungeneratedDeltas, newDeltas);
-	}
-
-	protected void mergeWithDeltaList(List<IResourceDescription.Delta> targetList,
-			List<IResourceDescription.Delta> newDeltas) {
-		if (targetList.isEmpty()) {
-			targetList.addAll(newDeltas);
+		if (allBuildDeltas.isEmpty()) {
+			allBuildDeltas.addAll(newDeltas);
 		} else {
 			Map<URI, IResourceDescription.Delta> unreportedByUri = IterableExtensions.toMap(
-					targetList, IResourceDescription.Delta::getUri);
+					allBuildDeltas, IResourceDescription.Delta::getUri);
 
 			for (IResourceDescription.Delta newDelta : newDeltas) {
 				IResourceDescription.Delta unreportedDelta = unreportedByUri.get(newDelta.getUri());
 				if (unreportedDelta == null) {
-					targetList.add(newDelta);
+					allBuildDeltas.add(newDelta);
 				} else {
-					targetList.remove(unreportedDelta);
+					allBuildDeltas.remove(unreportedDelta);
 					IResourceDescription _old = unreportedDelta.getOld();
 					IResourceDescription _new = newDelta.getNew();
-					targetList.add(new DefaultResourceDescriptionDelta(_old, _new));
+					allBuildDeltas.add(new DefaultResourceDescriptionDelta(_old, _new));
 				}
 			}
 		}
