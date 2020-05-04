@@ -21,6 +21,8 @@ import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.UriUtil;
 import org.eclipse.xtext.validation.Issue;
 
+import com.google.common.collect.Multimap;
+
 /**
  * @author Jan Koehnlein - Initial contribution and API
  * @since 2.9
@@ -49,6 +51,7 @@ public class XBuildRequest {
 
 	private CancelIndicator cancelIndicator = CancelIndicator.NullImpl;
 
+	/** Note that {@link Multimap} is not used here since we need to store empty lists, too. */
 	private final Map<URI, Collection<Issue>> resultIssues = new LinkedHashMap<>();
 
 	private final Collection<URI> resultDeletedFiles = new ArrayList<>();

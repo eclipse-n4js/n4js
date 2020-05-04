@@ -160,18 +160,18 @@ public class ProjectStateHolder {
 				}
 				case CHANGED: {
 					result.getModified().add(previouslyExistingFile);
-					persistedState.validationIssues.remove(previouslyExistingFile);
+					persistedState.validationIssues.removeAll(previouslyExistingFile);
 					break;
 				}
 				case DELETED: {
 					result.getDeleted().add(previouslyExistingFile);
-					persistedState.validationIssues.remove(previouslyExistingFile);
+					persistedState.validationIssues.removeAll(previouslyExistingFile);
 					break;
 				}
 				}
 			}
 			setIndexState(persistedState.indexState);
-			mergeValidationIssues(persistedState.validationIssues);
+			mergeValidationIssues(persistedState.validationIssues.asMap());
 		}
 
 		Set<URI> allIndexedUris = indexState.getResourceDescriptions().getAllURIs();

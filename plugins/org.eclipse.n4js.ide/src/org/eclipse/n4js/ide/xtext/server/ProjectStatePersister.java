@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -62,6 +61,7 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
+import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.io.Files;
 import com.google.common.util.concurrent.MoreExecutors;
@@ -83,10 +83,10 @@ public class ProjectStatePersister {
 		/** Hashes to indicate file changes */
 		final public Map<URI, HashedFileContent> fileHashs;
 		/** Hashes to indicate file changes */
-		final public Map<URI, Collection<Issue>> validationIssues;
+		final public Multimap<URI, Issue> validationIssues;
 
 		PersistedState(XIndexState indexState, Map<URI, HashedFileContent> fileHashs,
-				Map<URI, Collection<Issue>> validationIssues) {
+				Multimap<URI, Issue> validationIssues) {
 
 			this.indexState = indexState;
 			this.fileHashs = fileHashs;
@@ -389,7 +389,7 @@ public class ProjectStatePersister {
 
 			Map<URI, HashedFileContent> fingerprints = readFingerprints(input);
 
-			Map<URI, Collection<Issue>> validationIssues = readValidationIssues(input);
+			Multimap<URI, Issue> validationIssues = readValidationIssues(input);
 
 			XIndexState indexState = new XIndexState(resourceDescriptionsData, fileMappings);
 			return new PersistedState(indexState, fingerprints, validationIssues);
@@ -515,19 +515,18 @@ public class ProjectStatePersister {
 		return fingerprints;
 	}
 
-	private Map<URI, Collection<Issue>> readValidationIssues(DataInput input) throws IOException {
+	private Multimap<URI, Issue> readValidationIssues(DataInput input) throws IOException {
 		int numberOfSources = input.readInt();
-		Map<URI, Collection<Issue>> validationIssues = new LinkedHashMap<>(numberOfSources);
+		Multimap<URI, Issue> validationIssues = LinkedHashMultimap.create();
 		while (numberOfSources > 0) {
 			numberOfSources--;
 			URI source = URI.createURI(input.readUTF());
 			int numberOfIssues = input.readInt();
-			validationIssues.put(source, new ArrayList<>(numberOfIssues));
 			while (numberOfIssues > 0) {
 				numberOfIssues--;
 				N4JSIssue issue = new N4JSIssue();
 				issue.readExternal(input);
-				validationIssues.get(source).add(issue);
+				validationIssues.put(source, issue);
 			}
 		}
 		return validationIssues;
