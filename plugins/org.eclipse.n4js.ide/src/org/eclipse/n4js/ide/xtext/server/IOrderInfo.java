@@ -14,7 +14,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo.ProjectBuildOrderIterator;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 
@@ -39,7 +38,7 @@ public interface IOrderInfo<T> {
 		public IOrderIterator<T> visitAffected(List<IResourceDescription.Delta> changes);
 
 		/** Set the given elements of the underlying collection to be visited by this iterator. */
-		public IOrderIterator<T> visit(Collection<T> projectDescriptions);
+		public IOrderIterator<T> visit(Collection<T> elements);
 
 		/** Sets all elements of the underlying collection to be visited by this iterator. */
 		public IOrderIterator<T> visitAll();
@@ -47,12 +46,12 @@ public interface IOrderInfo<T> {
 	}
 
 	/**
-	 * Creates a new instance of {@link ProjectBuildOrderIterator}. Assumes a succeeding call to
-	 * {@link ProjectBuildOrderIterator#visit(Collection)} method.
+	 * Creates a new instance of {@link IOrderIterator}. Assumes a succeeding call to
+	 * {@link IOrderIterator#visit(Collection)} method.
 	 */
 	public IOrderIterator<T> getIterator();
 
-	/** Creates a new instance of {@link ProjectBuildOrderIterator}. The given set of projects will be visited only. */
-	public IOrderIterator<T> getIterator(Collection<ProjectDescription> projectDescriptions);
+	/** Creates a new instance of {@link IOrderIterator}. The given set of projects will be visited only. */
+	public IOrderIterator<T> getIterator(Collection<ProjectDescription> elements);
 
 }
