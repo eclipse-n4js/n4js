@@ -129,7 +129,7 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 	 * Other is the only file being open).
 	 */
 	@Test
-	def void testChangeInOpenedFile_propagatesToOutputFileOfDependantModuleWhenSaved() {
+	def void testChangeInOpenedFile_propagatesToOutputFileOfDependentModuleWhenSaved() {
 		testWorkspaceManager.createTestProjectOnDisk(
 			"Other" -> '''
 				// @StringBased

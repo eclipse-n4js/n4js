@@ -320,6 +320,7 @@ public class XBuildManager {
 		return project2uris;
 	}
 
+	/** Update this build manager's state after the resources represented by the given deltas have been built. */
 	protected void recordBuildProgress(List<IResourceDescription.Delta> newlyBuiltDeltas, boolean didGenerate) {
 		for (Delta delta : newlyBuiltDeltas) {
 			URI uri = delta.getUri();
