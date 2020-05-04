@@ -287,16 +287,11 @@ public class XBuildManager {
 				// the projectResult might contain partial information in case the build was cancelled
 				XBuildResult projectResult = projectManager.doIncrementalBuild(projectDirty, projectDeleted,
 						allBuildDeltas, doGenerate, cancelIndicator);
-				List<Delta> projectBuildDeltas = projectResult.getAffectedResources();
 
-				this.dirtyFiles.removeAll(projectDirty);
-				this.deletedFiles.removeAll(projectDeleted);
-				mergeWithUnreportedDeltas(projectBuildDeltas);
-				if (!doGenerate) {
-					mergeWithUngeneratedDeltas(projectBuildDeltas);
-				}
+				List<Delta> newlyBuiltDeltas = projectResult.getAffectedResources();
+				recordBuildProgress(newlyBuiltDeltas, doGenerate);
 
-				pboIterator.visitAffected(projectBuildDeltas);
+				pboIterator.visitAffected(newlyBuiltDeltas);
 			}
 
 			List<IResourceDescription.Delta> result = allBuildDeltas;
@@ -333,6 +328,19 @@ public class XBuildManager {
 			project2uris.get(projectDescription).add(uri);
 		}
 		return project2uris;
+	}
+
+	protected void recordBuildProgress(List<IResourceDescription.Delta> newlyBuiltDeltas, boolean didGenerate) {
+		for (Delta delta : newlyBuiltDeltas) {
+			URI uri = delta.getUri();
+			this.dirtyFiles.remove(uri);
+			this.deletedFiles.remove(uri);
+		}
+
+		mergeWithUnreportedDeltas(newlyBuiltDeltas);
+		if (!didGenerate) {
+			mergeWithUngeneratedDeltas(newlyBuiltDeltas);
+		}
 	}
 
 	/** @since 2.18 */
