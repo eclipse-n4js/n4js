@@ -20,6 +20,7 @@ import java.util.concurrent.CancellationException;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ide.xtext.server.ParallelBuildManager.ParallelJob;
 import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo.ProjectBuildOrderIterator;
@@ -281,9 +282,8 @@ public class XBuildManager {
 			allBuildDeltas = new ArrayList<>();
 			return result;
 
-		} catch (CancellationException ce) {
+		} catch (CancellationException | OperationCanceledException ce) {
 			throw ce;
-
 		} catch (Exception e) {
 			// recover and also discard the build queue - state is undefined afterwards.
 			this.dirtyFiles.clear();

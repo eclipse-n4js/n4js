@@ -10,16 +10,16 @@
  */
 package org.eclipse.n4js.tests.contentassist
 
+import com.google.inject.Inject
 import org.eclipse.n4js.N4JSInjectorProvider
+import org.eclipse.n4js.ide.contentassist.antlr.internal.InternalN4JSParser
+import org.eclipse.n4js.ide.editor.contentassist.ContentAssistTokenTypeMapper
+import org.eclipse.n4js.services.N4JSGrammarAccess
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
-import org.junit.runner.RunWith
-import org.eclipse.n4js.ui.contentassist.ContentAssistTokenTypeMapper
-import com.google.inject.Inject
-import org.eclipse.n4js.services.N4JSGrammarAccess
-import org.junit.Test
-import org.eclipse.n4js.ide.contentassist.antlr.internal.InternalN4JSParser
 import org.junit.Assert
+import org.junit.Test
+import org.junit.runner.RunWith
 
 /**
  */

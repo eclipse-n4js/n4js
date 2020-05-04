@@ -184,6 +184,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	@Inject
 	private IssueAcceptor issueAcceptor;
 
+	@Inject
+	private ProjectStatePersister persister;
+
 	private XWorkspaceManager workspaceManager;
 
 	private InitializeParams initializeParams;
@@ -426,7 +429,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	@Override
 	public void exit() {
 		LOG.info("Received exit notification");
-		joinJobs();
+		joinServerRequests();
 		shutdownAndExitHandler.exit();
 	}
 
@@ -439,12 +442,16 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 			XBuildable buildable = workspaceManager.closeAll();
 			return (cancelIndicator) -> {
 				List<Delta> result = buildable.build(cancelIndicator);
+				persister.pendingWrites().join();
 				shutdownAndExitHandler.shutdown();
 
 				LOG.info("Shutdown done");
 				return result;
 			};
-		}).thenApply((any) -> new Object());
+		}).thenApply(any -> {
+			persister.close();
+			return new Object();
+		});
 	}
 
 	@Override
@@ -574,13 +581,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 			Supplier<? extends XBuildable> newBuildable) {
 		return requestManager.runWrite(description, newBuildable::get,
 				(cancelIndicator, buildable) -> buildable.build(cancelIndicator));
-	}
-
-	private void joinJobs() {
-		// wait for all jobs to finish
-		runBuildable("joinJobs", () -> {
-			return (cancelIndicator) -> Collections.emptyList();
-		});
 	}
 
 	/**
@@ -1347,7 +1347,8 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	/** Blocks until all requests of the language server finished */
 	public void joinServerRequests() {
-		CompletableFuture<Void> future = getRequestManager().allRequests();
+		CompletableFuture<Void> future = getRequestManager().allRequests()
+				.thenCompose(any -> persister.pendingWrites());
 		future.join();
 	}
 

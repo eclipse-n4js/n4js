@@ -15,8 +15,8 @@ import java.util.List;
 
 /**
  * Container for collecting {@link DataPoint}s based on {@link Measurement}s. Can be used stand alone to gather stand
- * alone data. Can have {@link #getParent()} and / or {@link #getChildren()} which allows to express nested or more
- * elaborated data relations.
+ * alone data. Can have {@link #getChildren() children} which allows to express nested or more elaborated data
+ * relations.
  * <p>
  * Collector has internal states: {@code paused} and {@code not paused}. In {@code paused} state data is not collected
  * by the collector. Default state is {@code paused}.
@@ -25,9 +25,6 @@ public abstract class DataCollector {
 
 	/** Returns this collector's unique identifier. */
 	public abstract String getId();
-
-	/** Returns parent collector or {@code null}. */
-	public abstract DataCollector getParent();
 
 	/** Returns collection of child collector, can be empty list (never {@code null}). */
 	public abstract Collection<DataCollector> getChildren();
@@ -74,6 +71,9 @@ public abstract class DataCollector {
 
 	/** Pauses set paused state according to the provided flag. */
 	public abstract void setPaused(boolean paused);
+
+	/** Clear all data collected so far but continue normally with ongoing measurements */
+	public abstract void resetData();
 
 	/** Clear all data collected so far. */
 	public abstract void purgeData();

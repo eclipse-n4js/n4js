@@ -35,7 +35,7 @@ import org.eclipse.n4js.ui.editor.syntaxcoloring.AbstractInternalHighlightingAnt
         this.grammarAccess = grammarAccess;
     }
 
-	protected boolean forcedRewind(int marker) { return true; } // overridden in subtype
+	protected boolean forcedRewind(int position) { return true; } // overridden in subtype
 	protected void promoteEOL() {} // overridden in subtype
 	protected boolean hasDisallowedEOL() { return false; } // overridden in subtype
 	protected boolean isTypeRefNoTrailingLineBreak() { return true; } // overridden in subtype
@@ -15314,7 +15314,7 @@ entryRuleSemi
 // Rule Semi
 ruleSemi
 @init {
-	int marker = input.mark();
+	int position = input.index();
 	// Promote EOL if appropriate
 	promoteEOL();
 }
@@ -15325,7 +15325,7 @@ SemicolonKeyword=Semicolon {
 | EOF
 | RULE_EOL
 | RULE_ML_COMMENT
-| RightCurlyBracket { forcedRewind(marker) }?
+| RightCurlyBracket { forcedRewind(position) }?
 ;
 
 

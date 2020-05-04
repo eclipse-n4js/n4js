@@ -27,10 +27,12 @@ import org.eclipse.xtext.testing.util.ParseHelper
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.junit.FixMethodOrder
 
 /**
  */
 @RunWith(XtextRunner)
+@FixMethodOrder(NAME_ASCENDING)
 @InjectWith(N4JSInjectorProvider)
 abstract class AbstractContentAssistParserTest extends Assert {
 
@@ -290,7 +292,6 @@ abstract class AbstractContentAssistParserTest extends Assert {
 		assertEquals(grammarElements.prettyPrint, 3, grammarElements.size)
 		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getFunctionBodyAccess().getBodyAssignment_1_0))
 		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getRootStatementAccess().getAlternatives))
-		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getScriptAccess().alternatives_1))
 	}
 	
 	@Test
@@ -333,6 +334,7 @@ abstract class AbstractContentAssistParserTest extends Assert {
 		val grammarElements = followElements.map [ grammarElement ].toSet
 		assertEquals(grammarElements.prettyPrint, 3, grammarElements.size)
 		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getFunctionBodyAccess().getBodyAssignment_1_0))
+		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getRootStatementAccess().getAlternatives))
 		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getScriptAccess().alternatives_1))
 	}
 
@@ -416,12 +418,12 @@ abstract class AbstractContentAssistParserTest extends Assert {
 			function* foo(req: A) { 
 			  yield 5; // removing 5 fixes the problem
 			  req.'''.toNode
-		val followElement = getFollowElements(node, false).filter[grammarElement == grammarAccess.scriptAccess.alternatives_1].head
+		val followElement = getFollowElements(node, false).filter[grammarElement == grammarAccess.rootStatementAccess.alternatives].head
 		assertNotNull(followElement)
 		val followElements = getFollowElements(followElement);
 		
 		val grammarElements = followElements.map [ grammarElement ].toSet
-		assertEquals(grammarElements.prettyPrint, 0, grammarElements.size)
+		assertEquals(grammarElements.prettyPrint, 2, grammarElements.size)
 	}
 
 	@Test

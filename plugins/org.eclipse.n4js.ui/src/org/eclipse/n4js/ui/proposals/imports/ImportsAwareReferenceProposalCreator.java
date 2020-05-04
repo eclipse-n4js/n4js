@@ -14,6 +14,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.n4js.N4JSLanguageConstants;
+import org.eclipse.n4js.ide.editor.contentassist.ContentAssistDataCollectors;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
@@ -21,6 +22,7 @@ import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.scoping.IContentAssistScopeProvider;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
+import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.TExportableElement;
@@ -67,6 +69,9 @@ public class ImportsAwareReferenceProposalCreator {
 	@Inject
 	private IN4JSCore n4jsCore;
 
+	@Inject
+	private ContentAssistDataCollectors contentAssistDataCollectors;
+
 	private static final EReference[] referencesSupportingImportedElements = {
 			N4JSPackage.Literals.IDENTIFIER_REF__ID,
 			TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE
@@ -103,42 +108,56 @@ public class ImportsAwareReferenceProposalCreator {
 			Function<IEObjectDescription, ICompletionProposal> proposalFactory) {
 
 		if (model != null) {
-			final IContentAssistScopeProvider contentAssistScopeProvider = (IContentAssistScopeProvider) scopeProvider;
-			final IScope scope = contentAssistScopeProvider.getScopeForContentAssist(model, reference);
-			// iterate over candidates, filter them, and create ICompletionProposals for them
-			final Iterable<IEObjectDescription> candidates = scope.getAllElements();
+			final IScope scope = getScopeForContentAssist(model, reference);
 
-			// don't use candidates.forEach since we want an early exit
-			for (IEObjectDescription candidate : candidates) {
-				if (!acceptor.canAcceptMoreProposals())
-					return;
+			final Iterable<IEObjectDescription> candidates = getAllElements(scope);
+			try (Measurement m = contentAssistDataCollectors.dcIterateAllElements().getMeasurement()) {
+				for (IEObjectDescription candidate : candidates) {
+					if (!acceptor.canAcceptMoreProposals())
+						return;
 
-				if (filter.apply(candidate)) {
-					final QualifiedName qfn = candidate.getQualifiedName();
-					final int qfnSegmentCount = qfn.getSegmentCount();
-					final String tmodule = (qfnSegmentCount >= 2) ? qfn.getSegment(qfnSegmentCount - 2) : null;
+					if (filter.apply(candidate)) {
+						final QualifiedName qfn = candidate.getQualifiedName();
+						final int qfnSegmentCount = qfn.getSegmentCount();
+						final String tmodule = (qfnSegmentCount >= 2) ? qfn.getSegment(qfnSegmentCount - 2) : null;
 
-					final ICompletionProposal proposal = getProposal(candidate,
-							model,
-							scope,
-							reference,
-							context,
-							filter,
-							proposalFactory);
+						final ICompletionProposal proposal = getProposal(candidate,
+								model,
+								scope,
+								reference,
+								context,
+								filter,
+								proposalFactory);
 
-					if (proposal instanceof ConfigurableCompletionProposal
-							&& candidate.getName().getSegmentCount() > 1) {
+						if (proposal instanceof ConfigurableCompletionProposal
+								&& candidate.getName().getSegmentCount() > 1) {
 
-						QualifiedName candidateName = getCandidateName(candidate, tmodule);
-						ConfigurableCompletionProposal castedProposal = (ConfigurableCompletionProposal) proposal;
-						castedProposal.setAdditionalData(N4JSReplacementTextApplier.KEY_QUALIFIED_NAME, candidateName);
+							QualifiedName candidateName = getCandidateName(candidate, tmodule);
+							ConfigurableCompletionProposal castedProposal = (ConfigurableCompletionProposal) proposal;
+							castedProposal.setAdditionalData(N4JSReplacementTextApplier.KEY_QUALIFIED_NAME,
+									candidateName);
 
-						// Original qualified name is the qualified name before adjustment
-						castedProposal.setAdditionalData(N4JSReplacementTextApplier.KEY_ORIGINAL_QUALIFIED_NAME, qfn);
+							// Original qualified name is the qualified name before adjustment
+							castedProposal.setAdditionalData(N4JSReplacementTextApplier.KEY_ORIGINAL_QUALIFIED_NAME,
+									qfn);
+						}
+						acceptor.accept(proposal);
 					}
-					acceptor.accept(proposal);
 				}
 			}
+		}
+	}
+
+	private Iterable<IEObjectDescription> getAllElements(final IScope scope) {
+		try (Measurement m = contentAssistDataCollectors.dcGetAllElements().getMeasurement()) {
+			return scope.getAllElements();
+		}
+	}
+
+	private IScope getScopeForContentAssist(EObject model, EReference reference) {
+		try (Measurement m = contentAssistDataCollectors.dcGetScope().getMeasurement()) {
+			IContentAssistScopeProvider contentAssistScopeProvider = (IContentAssistScopeProvider) scopeProvider;
+			return contentAssistScopeProvider.getScopeForContentAssist(model, reference);
 		}
 	}
 
@@ -177,20 +196,22 @@ public class ImportsAwareReferenceProposalCreator {
 			Predicate<IEObjectDescription> filter,
 			Function<IEObjectDescription, ICompletionProposal> delegateProposalFactory) {
 
-		final IEObjectDescription inputToUse = getAliasedDescription(candidate, reference, context);
-		final ICompletionProposal result = delegateProposalFactory.apply(inputToUse);
+		try (Measurement m = contentAssistDataCollectors.dcGetResolution().getMeasurement()) {
+			final IEObjectDescription inputToUse = getAliasedDescription(candidate, reference, context);
+			final ICompletionProposal result = delegateProposalFactory.apply(inputToUse);
 
-		if (result instanceof ConfigurableCompletionProposal) {
-			final N4JSReplacementTextApplier applier = applierFactory.create(
-					model.eResource(),
-					scope,
-					valueConverter,
-					filter,
-					context.getViewer());
+			if (result instanceof ConfigurableCompletionProposal) {
+				final N4JSReplacementTextApplier applier = applierFactory.create(
+						model.eResource(),
+						scope,
+						valueConverter,
+						filter,
+						context.getViewer());
 
-			((ConfigurableCompletionProposal) result).setTextApplier(applier);
+				((ConfigurableCompletionProposal) result).setTextApplier(applier);
+			}
+			return result;
 		}
-		return result;
 	}
 
 	/**
