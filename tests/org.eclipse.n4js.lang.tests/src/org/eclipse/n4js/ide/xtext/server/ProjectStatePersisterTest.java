@@ -13,13 +13,10 @@ package org.eclipse.n4js.ide.xtext.server;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.ZipException;
@@ -39,6 +36,9 @@ import org.eclipse.xtext.validation.Issue;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+
 /** */
 @SuppressWarnings("restriction")
 public class ProjectStatePersisterTest {
@@ -50,7 +50,7 @@ public class ProjectStatePersisterTest {
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		String languageVersion = N4JSLanguageUtils.getLanguageVersion();
 		testMe.writeProjectState(output, languageVersion, new XIndexState(), Collections.emptyList(),
-				Collections.emptyMap());
+				HashMultimap.create());
 		AtomicBoolean didCall = new AtomicBoolean();
 		PersistedState pState = testMe.readProjectState(new ByteArrayInputStream(output.toByteArray()),
 				languageVersion);
@@ -68,7 +68,7 @@ public class ProjectStatePersisterTest {
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		String languageVersion = N4JSLanguageUtils.getLanguageVersion();
 		testMe.writeProjectState(output, languageVersion, new XIndexState(), Collections.emptyList(),
-				Collections.emptyMap());
+				HashMultimap.create());
 		byte[] bytes = output.toByteArray();
 		bytes[12]++;
 		testMe.readProjectState(new ByteArrayInputStream(bytes), languageVersion);
@@ -81,7 +81,7 @@ public class ProjectStatePersisterTest {
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		String languageVersion = N4JSLanguageUtils.getLanguageVersion();
 		testMe.writeProjectState(output, languageVersion, new XIndexState(), Collections.emptyList(),
-				Collections.emptyMap());
+				HashMultimap.create());
 		byte[] bytes = output.toByteArray();
 		bytes[0]++;
 		PersistedState pState = testMe.readProjectState(new ByteArrayInputStream(bytes), languageVersion);
@@ -95,7 +95,7 @@ public class ProjectStatePersisterTest {
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		String languageVersion = N4JSLanguageUtils.getLanguageVersion();
 		testMe.writeProjectState(output, languageVersion, new XIndexState(), Collections.emptyList(),
-				Collections.emptyMap());
+				HashMultimap.create());
 		languageVersion += "XXX";
 		PersistedState pState = testMe.readProjectState(new ByteArrayInputStream(output.toByteArray()),
 				languageVersion);
@@ -127,7 +127,7 @@ public class ProjectStatePersisterTest {
 		Set<HashedFileContent> fingerprints = Collections
 				.singleton(new HashedFileContent(URI.createURI("some:/hash"), 123));
 
-		testMe.writeProjectState(output, languageVersion, index, fingerprints, Collections.emptyMap());
+		testMe.writeProjectState(output, languageVersion, index, fingerprints, HashMultimap.create());
 		ByteArrayInputStream outputStream = new ByteArrayInputStream(output.toByteArray());
 		PersistedState pState = testMe.readProjectState(outputStream, languageVersion);
 		XIndexState indexState = pState.indexState;
@@ -154,20 +154,14 @@ public class ProjectStatePersisterTest {
 		URI source1 = URI.createURI("some:/source1");
 		URI source2 = URI.createURI("some:/source2");
 
-		List<Issue> scr1Issues = new ArrayList<>();
-		List<Issue> scr2Issues = new ArrayList<>();
-
-		Map<URI, List<Issue>> issueMap = new LinkedHashMap<>();
-		issueMap.put(source1, scr1Issues);
-		issueMap.put(source2, scr2Issues);
-
 		N4JSIssue src1Issue1 = new N4JSIssue();
-		scr1Issues.add(src1Issue1);
-
 		N4JSIssue src2Issue1 = new N4JSIssue();
 		N4JSIssue src2Issue2 = new N4JSIssue();
-		scr2Issues.add(src2Issue1);
-		scr2Issues.add(src2Issue2);
+
+		Multimap<URI, Issue> issueMap = HashMultimap.create();
+		issueMap.put(source1, src1Issue1);
+		issueMap.put(source2, src2Issue1);
+		issueMap.put(source2, src2Issue2);
 
 		setValues(src1Issue1, "src1Issue1", 1, 1, Severity.ERROR);
 		setValues(src2Issue1, "src2Issue1", 2, 1, Severity.WARNING);

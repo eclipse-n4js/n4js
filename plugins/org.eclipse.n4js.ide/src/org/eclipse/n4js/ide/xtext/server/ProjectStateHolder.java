@@ -132,8 +132,8 @@ public class ProjectStateHolder {
 	/**
 	 * Return the validation issues as an unmodifiable map.
 	 */
-	public Map<URI, Collection<Issue>> getValidationIssues() {
-		return Multimaps.unmodifiableMultimap(validationIssues).asMap();
+	public Multimap<URI, Issue> getValidationIssues() {
+		return Multimaps.unmodifiableMultimap(validationIssues);
 	}
 
 	/**

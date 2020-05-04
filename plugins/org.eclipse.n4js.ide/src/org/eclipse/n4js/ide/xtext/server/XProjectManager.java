@@ -46,6 +46,7 @@ import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.workspace.ProjectConfigAdapter;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -151,10 +152,9 @@ public class XProjectManager {
 		// send issues to client
 		// (below code won't send empty 'publishDiagnostics' events for resources without validation issues, see API doc
 		// of this method for details)
-		Map<URI, Collection<Issue>> validationIssues = projectStateHolder.getValidationIssues();
-		for (Map.Entry<URI, Collection<Issue>> locationToIssues : validationIssues.entrySet()) {
-			URI location = locationToIssues.getKey();
-			Collection<Issue> issues = locationToIssues.getValue();
+		Multimap<URI, Issue> validationIssues = projectStateHolder.getValidationIssues();
+		for (URI location : validationIssues.keys()) {
+			Collection<Issue> issues = validationIssues.get(location);
 			issueAcceptor.publishDiagnostics(location, issues);
 		}
 
