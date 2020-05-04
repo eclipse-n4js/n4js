@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -62,6 +61,8 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
 import com.google.common.io.Files;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.inject.Singleton;
@@ -82,10 +83,10 @@ public class ProjectStatePersister {
 		/** Hashes to indicate file changes */
 		final public Map<URI, HashedFileContent> fileHashs;
 		/** Hashes to indicate file changes */
-		final public Map<URI, Collection<Issue>> validationIssues;
+		final public Multimap<URI, Issue> validationIssues;
 
 		PersistedState(XIndexState indexState, Map<URI, HashedFileContent> fileHashs,
-				Map<URI, Collection<Issue>> validationIssues) {
+				Multimap<URI, Issue> validationIssues) {
 
 			this.indexState = indexState;
 			this.fileHashs = fileHashs;
@@ -150,17 +151,19 @@ public class ProjectStatePersister {
 	 *            map of source files to issues
 	 */
 	public void writeProjectState(IProjectConfig project, XIndexState state,
-			Collection<? extends HashedFileContent> files, Map<URI, ? extends Collection<Issue>> validationIssues) {
-		ImmutableListMultimap.Builder<URI, Issue> builder = ImmutableListMultimap.builder();
-		validationIssues.forEach(builder::putAll);
+			Collection<? extends HashedFileContent> files, Multimap<URI, Issue> validationIssues) {
+
+		XIndexState indexCopy = new XIndexState(state.getResourceDescriptions().copy(), state.getFileMappings().copy());
+
 		asyncWriteProjectState(project,
-				new XIndexState(state.getResourceDescriptions().copy(), state.getFileMappings().copy()),
+				indexCopy,
 				ImmutableList.copyOf(files),
-				builder.build().asMap());
+				ImmutableListMultimap.copyOf(validationIssues));
 	}
 
 	private void asyncWriteProjectState(IProjectConfig project, XIndexState state,
-			Collection<? extends HashedFileContent> files, Map<URI, ? extends Collection<Issue>> validationIssues) {
+			Collection<? extends HashedFileContent> files, Multimap<URI, Issue> validationIssues) {
+
 		writer.submit(() -> {
 			File file = getDataFile(project);
 			try (OutputStream nativeOut = Files.asByteSink(file).openBufferedStream()) {
@@ -187,7 +190,7 @@ public class ProjectStatePersister {
 	 *             if things go bananas.
 	 */
 	public void writeProjectState(OutputStream stream, String languageVersion, XIndexState state,
-			Collection<? extends HashedFileContent> files, Map<URI, ? extends Collection<Issue>> validationIssues)
+			Collection<? extends HashedFileContent> files, Multimap<URI, Issue> validationIssues)
 			throws IOException {
 
 		stream.write(CURRENT_VERSION);
@@ -220,6 +223,7 @@ public class ProjectStatePersister {
 
 	private void writeResourceDescription(SerializableResourceDescription description, DataOutput output)
 			throws IOException {
+
 		// description.writeExternal(output);
 		// relies on writeObject which is very slow
 
@@ -231,6 +235,7 @@ public class ProjectStatePersister {
 
 	private void writeImportedNames(SerializableResourceDescription resourceDescription, DataOutput output)
 			throws IOException {
+
 		List<QualifiedName> importedNames = IterableExtensions.toList(resourceDescription.getImportedNames());
 		output.writeInt(importedNames.size());
 		for (QualifiedName importedName : importedNames) {
@@ -238,8 +243,9 @@ public class ProjectStatePersister {
 		}
 	}
 
-	private void writeReferenceDescriptions(SerializableResourceDescription resourceDescription,
-			DataOutput output) throws IOException {
+	private void writeReferenceDescriptions(SerializableResourceDescription resourceDescription, DataOutput output)
+			throws IOException {
+
 		List<SerializableReferenceDescription> references = resourceDescription.getReferences();
 		output.writeInt(references.size());
 		for (SerializableReferenceDescription reference : references) {
@@ -251,8 +257,9 @@ public class ProjectStatePersister {
 		}
 	}
 
-	private void writeEObjectDescriptions(SerializableResourceDescription resourceDescription,
-			DataOutput output) throws IOException {
+	private void writeEObjectDescriptions(SerializableResourceDescription resourceDescription, DataOutput output)
+			throws IOException {
+
 		List<SerializableEObjectDescription> objects = resourceDescription.getDescriptions();
 		output.writeInt(objects.size());
 		for (SerializableEObjectDescription object : objects) {
@@ -301,14 +308,11 @@ public class ProjectStatePersister {
 		}
 	}
 
-	private void writeValidationIssues(Map<URI, ? extends Collection<Issue>> validationIssues, DataOutput output)
-			throws IOException {
-
+	private void writeValidationIssues(Multimap<URI, Issue> validationIssues, DataOutput output) throws IOException {
 		int numberSources = validationIssues.size();
 		output.writeInt(numberSources);
-		for (Map.Entry<URI, ? extends Collection<Issue>> srcIssues : validationIssues.entrySet()) {
-			URI source = srcIssues.getKey();
-			Collection<Issue> issues = srcIssues.getValue();
+		for (URI source : validationIssues.keys()) {
+			Collection<Issue> issues = validationIssues.get(source);
 
 			output.writeUTF(source.toString());
 
@@ -385,15 +389,14 @@ public class ProjectStatePersister {
 
 			Map<URI, HashedFileContent> fingerprints = readFingerprints(input);
 
-			Map<URI, Collection<Issue>> validationIssues = readValidationIssues(input);
+			Multimap<URI, Issue> validationIssues = readValidationIssues(input);
 
 			XIndexState indexState = new XIndexState(resourceDescriptionsData, fileMappings);
 			return new PersistedState(indexState, fingerprints, validationIssues);
 		}
 	}
 
-	private ResourceDescriptionsData readResourceDescriptions(DataInput input)
-			throws IOException {
+	private ResourceDescriptionsData readResourceDescriptions(DataInput input) throws IOException {
 		List<IResourceDescription> descriptions = new ArrayList<>();
 		int size = input.readInt();
 		while (size > 0) {
@@ -413,8 +416,7 @@ public class ProjectStatePersister {
 		return null;
 	}
 
-	private SerializableResourceDescription readResourceDescription(DataInput input)
-			throws IOException {
+	private SerializableResourceDescription readResourceDescription(DataInput input) throws IOException {
 		SerializableResourceDescription result = new SerializableResourceDescription();
 		result.setURI(URI.createURI(input.readUTF()));
 		result.setDescriptions(readEObjectDescriptions(input));
@@ -436,8 +438,7 @@ public class ProjectStatePersister {
 		return result;
 	}
 
-	private List<SerializableReferenceDescription> readReferenceDescriptions(DataInput input)
-			throws IOException {
+	private List<SerializableReferenceDescription> readReferenceDescriptions(DataInput input) throws IOException {
 		int size = input.readInt();
 		if (size == 0) {
 			return Collections.emptyList();
@@ -497,8 +498,7 @@ public class ProjectStatePersister {
 		return builder.build();
 	}
 
-	private XSource2GeneratedMapping readFileMappings(DataInput input)
-			throws IOException {
+	private XSource2GeneratedMapping readFileMappings(DataInput input) throws IOException {
 		XSource2GeneratedMapping fileMappings = new XSource2GeneratedMapping();
 		fileMappings.readExternal(input);
 		return fileMappings;
@@ -515,21 +515,18 @@ public class ProjectStatePersister {
 		return fingerprints;
 	}
 
-	private Map<URI, Collection<Issue>> readValidationIssues(DataInput input)
-			throws IOException {
-
+	private Multimap<URI, Issue> readValidationIssues(DataInput input) throws IOException {
 		int numberOfSources = input.readInt();
-		Map<URI, Collection<Issue>> validationIssues = new LinkedHashMap<>(numberOfSources);
+		Multimap<URI, Issue> validationIssues = LinkedHashMultimap.create();
 		while (numberOfSources > 0) {
 			numberOfSources--;
 			URI source = URI.createURI(input.readUTF());
 			int numberOfIssues = input.readInt();
-			validationIssues.put(source, new ArrayList<>(numberOfIssues));
 			while (numberOfIssues > 0) {
 				numberOfIssues--;
 				N4JSIssue issue = new N4JSIssue();
 				issue.readExternal(input);
-				validationIssues.get(source).add(issue);
+				validationIssues.put(source, issue);
 			}
 		}
 		return validationIssues;

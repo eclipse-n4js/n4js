@@ -109,10 +109,13 @@ public class XStatefulIncrementalBuilder {
 			Set<URI> remainingURIs = new LinkedHashSet<>(oldIndex.getAllURIs()); // note: creating a copy!
 
 			XIndexer.XIndexResult result = indexer.computeAndIndexDeletedAndChanged(request, context);
-			operationCanceledManager.checkCanceled(request.getCancelIndicator());
-
 			ResourceDescriptionsData newIndex = result.getNewIndex();
 			List<Delta> deltasToBeProcessed = result.getResourceDeltas();
+			List<Delta> deltasFromExternal = indexer.computeAndIndexAffected(newIndex, remainingURIs,
+					request.getExternalDeltas(), allProcessedAndExternalDeltas, context);
+			deltasToBeProcessed.addAll(deltasFromExternal);
+
+			operationCanceledManager.checkCanceled(request.getCancelIndicator());
 
 			// continue as long as there are more deltas to be processed (either the deltas representing the initial
 			// deletions/changes or in later iterations the deltas representing affected resources)
@@ -199,7 +202,7 @@ public class XStatefulIncrementalBuilder {
 		result.getNewIndex().addDescription(source, copiedDescription);
 		operationCanceledManager.checkCanceled(cancelIndicator);
 
-		if (request.isValidatorEnabled()) {
+		if (request.canValidate()) {
 			List<Issue> issues = resourceValidator.validate(resource, CheckMode.ALL, request.getCancelIndicator());
 			operationCanceledManager.checkCanceled(request.getCancelIndicator());
 			request.setResultIssues(source, issues);
@@ -258,7 +261,7 @@ public class XStatefulIncrementalBuilder {
 				resourceStorageFacade.saveResource((StorageAwareResource) resource, fileSystemAccess);
 			}
 		}
-		if (request.isGeneratorEnabled()) {
+		if (request.canGenerate()) {
 			GeneratorContext generatorContext = new GeneratorContext();
 			generatorContext.setCancelIndicator(request.getCancelIndicator());
 			generator.generate(resource, fileSystemAccess, generatorContext);

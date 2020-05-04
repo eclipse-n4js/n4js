@@ -23,13 +23,15 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ide.xtext.server.ParallelBuildManager.ParallelJob;
+import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo.ProjectBuildOrderIterator;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
-import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.resource.IResourceDescription;
+import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionDelta;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
+import org.eclipse.xtext.xbase.lib.IteratorExtensions;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 import com.google.common.collect.Sets;
@@ -42,6 +44,7 @@ import com.google.inject.Inject;
  */
 @SuppressWarnings("hiding")
 public class XBuildManager {
+	private static final Logger LOG = LogManager.getLogger(XBuildManager.class);
 
 	/**
 	 * The resources that are about to be build.
@@ -116,8 +119,6 @@ public class XBuildManager {
 		List<IResourceDescription.Delta> build(CancelIndicator cancelIndicator);
 	}
 
-	private static final Logger LOG = LogManager.getLogger(XBuildManager.class);
-
 	/** Issue key for cyclic dependencies */
 	public static final String CYCLIC_PROJECT_DEPENDENCIES = XBuildManager.class.getName()
 			+ ".cyclicProjectDependencies";
@@ -126,13 +127,14 @@ public class XBuildManager {
 	private XWorkspaceManager workspaceManager;
 
 	@Inject
-	private XTopologicalSorter topoSorter;
+	private ProjectBuildOrderInfo.Provider projectBuildOrderInfoProvider;
 
 	private final LinkedHashSet<URI> dirtyFiles = new LinkedHashSet<>();
 
 	private final LinkedHashSet<URI> deletedFiles = new LinkedHashSet<>();
 
-	private List<IResourceDescription.Delta> unreportedDeltas = new ArrayList<>();
+	/** Holds all deltas of all projects. In case of cancelled build, this set is not empty at start of next build. */
+	private List<IResourceDescription.Delta> allBuildDeltas = new ArrayList<>();
 
 	/**
 	 * Run a full build on the workspace
@@ -142,10 +144,14 @@ public class XBuildManager {
 	public List<IResourceDescription.Delta> doInitialBuild(List<ProjectDescription> projects,
 			CancelIndicator indicator) {
 
-		List<ProjectDescription> sortedDescriptions = sortByDependencies(projects);
+		ProjectBuildOrderInfo projectBuildOrderInfo = projectBuildOrderInfoProvider.get();
+		ProjectBuildOrderIterator pboIterator = projectBuildOrderInfo.getIterator(projects);
+		printBuildOrder();
+
 		List<IResourceDescription.Delta> result = new ArrayList<>();
 
-		for (ProjectDescription description : sortedDescriptions) {
+		while (pboIterator.hasNext()) {
+			ProjectDescription description = pboIterator.next();
 			String projectName = description.getName();
 			XProjectManager projectManager = workspaceManager.getProjectManager(projectName);
 			XBuildResult partialresult = projectManager.doInitialBuild(indicator);
@@ -161,6 +167,7 @@ public class XBuildManager {
 	 * @return the delta.
 	 */
 	@Deprecated // GH-1552: Experimental parallelization
+	// TODO: use ProjectBuildOrderProvider
 	public List<IResourceDescription.Delta> doInitialBuild2(List<ProjectDescription> projects,
 			CancelIndicator indicator) {
 
@@ -248,27 +255,31 @@ public class XBuildManager {
 		try {
 			Map<ProjectDescription, Set<URI>> project2dirty = computeProjectToUriMap(this.dirtyFiles);
 			Map<ProjectDescription, Set<URI>> project2deleted = computeProjectToUriMap(this.deletedFiles);
+			SetView<ProjectDescription> changedPDs = Sets.union(project2dirty.keySet(), project2deleted.keySet());
 
-			SetView<ProjectDescription> allDescriptions = Sets.union(project2dirty.keySet(), project2deleted.keySet());
-			List<ProjectDescription> sortedDescriptions = sortByDependencies(allDescriptions);
+			ProjectBuildOrderInfo projectBuildOrderInfo = projectBuildOrderInfoProvider.get();
+			ProjectBuildOrderIterator pboIterator = projectBuildOrderInfo.getIterator(changedPDs);
 
-			for (ProjectDescription descr : sortedDescriptions) {
+			while (pboIterator.hasNext()) {
+				ProjectDescription descr = pboIterator.next();
 				XProjectManager projectManager = workspaceManager.getProjectManager(descr.getName());
 				Set<URI> projectDirty = project2dirty.getOrDefault(descr, Collections.emptySet());
 				Set<URI> projectDeleted = project2deleted.getOrDefault(descr, Collections.emptySet());
 
-				XBuildResult partialResult = projectManager.doIncrementalBuild(projectDirty, projectDeleted,
-						unreportedDeltas, doGenerate, cancelIndicator);
+				// the projectResult might contain partial information in case the build was cancelled
+				XBuildResult projectResult = projectManager.doIncrementalBuild(projectDirty, projectDeleted,
+						allBuildDeltas, doGenerate, cancelIndicator);
+				List<Delta> projectBuildDeltas = projectResult.getAffectedResources();
 
 				this.dirtyFiles.removeAll(projectDirty);
 				this.deletedFiles.removeAll(projectDeleted);
-				mergeWithUnreportedDeltas(partialResult.getAffectedResources());
-				if (doGenerate) {
-					projectManager.persistProjectState();
-				}
+				mergeWithUnreportedDeltas(projectBuildDeltas);
+
+				pboIterator.visitAffected(projectBuildDeltas);
 			}
-			List<IResourceDescription.Delta> result = unreportedDeltas;
-			unreportedDeltas = new ArrayList<>();
+
+			List<IResourceDescription.Delta> result = allBuildDeltas;
+			allBuildDeltas = new ArrayList<>();
 			return result;
 
 		} catch (CancellationException | OperationCanceledException ce) {
@@ -302,49 +313,34 @@ public class XBuildManager {
 
 	/** @since 2.18 */
 	protected void mergeWithUnreportedDeltas(List<IResourceDescription.Delta> newDeltas) {
-		if (this.unreportedDeltas.isEmpty()) {
-			unreportedDeltas.addAll(newDeltas);
+		if (this.allBuildDeltas.isEmpty()) {
+			allBuildDeltas.addAll(newDeltas);
 		} else {
 			Map<URI, IResourceDescription.Delta> unreportedByUri = IterableExtensions.toMap(
-					unreportedDeltas, IResourceDescription.Delta::getUri);
+					allBuildDeltas, IResourceDescription.Delta::getUri);
 
 			for (IResourceDescription.Delta newDelta : newDeltas) {
 				IResourceDescription.Delta unreportedDelta = unreportedByUri.get(newDelta.getUri());
 				if (unreportedDelta == null) {
-					unreportedDeltas.add(newDelta);
+					allBuildDeltas.add(newDelta);
 				} else {
-					unreportedDeltas.remove(unreportedDelta);
+					allBuildDeltas.remove(unreportedDelta);
 					IResourceDescription _old = unreportedDelta.getOld();
 					IResourceDescription _new = newDelta.getNew();
-					unreportedDeltas.add(new DefaultResourceDescriptionDelta(_old, _new));
+					allBuildDeltas.add(new DefaultResourceDescriptionDelta(_old, _new));
 				}
 			}
 		}
 	}
 
-	/** Get a sorted list of projects to be build. */
-	protected List<ProjectDescription> sortByDependencies(Iterable<ProjectDescription> projectDescriptions) {
-		List<ProjectDescription> sortedProjectDescriptions = topoSorter.sortByDependencies(projectDescriptions,
-				this::reportDependencyCycle);
-
-		String output = "Project build order:\n  ";
-		output += String.join("\n  ", IterableExtensions.map(sortedProjectDescriptions, pd -> pd.getName()));
-		LOG.info(output);
-
-		return sortedProjectDescriptions;
-	}
-
-	/** Report cycle. */
-	protected void reportDependencyCycle(ProjectDescription prjDescription) {
-		XProjectManager projectManager = workspaceManager.getProjectManager(prjDescription.getName());
-		String msg = "Project has cyclic dependencies";
-		projectManager.reportProjectIssue(msg, XBuildManager.CYCLIC_PROJECT_DEPENDENCIES, Severity.ERROR);
-	}
-
-	/** Persists the project state of all projects */
-	public void persistProjectState() {
-		for (XProjectManager prjManager : workspaceManager.getProjectManagers()) {
-			prjManager.persistProjectState();
+	/** Prints build order */
+	protected void printBuildOrder() {
+		if (LOG.isInfoEnabled()) {
+			ProjectBuildOrderInfo projectBuildOrderInfo = projectBuildOrderInfoProvider.get();
+			ProjectBuildOrderIterator visitAll = projectBuildOrderInfo.getIterator().visitAll();
+			String output = "Project build order:\n  "
+					+ IteratorExtensions.join(visitAll, "\n  ", ProjectDescription::getName);
+			LOG.info(output);
 		}
 	}
 }

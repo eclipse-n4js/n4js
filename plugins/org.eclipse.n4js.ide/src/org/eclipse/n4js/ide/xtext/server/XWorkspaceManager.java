@@ -406,11 +406,6 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 		buildManager.doClean(cancelIndicator);
 	}
 
-	/** @see XBuildManager#persistProjectState() */
-	public void persistProjectState() {
-		buildManager.persistProjectState();
-	}
-
 	/** Returns the current index. */
 	public IResourceDescriptions getIndex() {
 		return new ChunkedResourceDescriptions(fullIndex);

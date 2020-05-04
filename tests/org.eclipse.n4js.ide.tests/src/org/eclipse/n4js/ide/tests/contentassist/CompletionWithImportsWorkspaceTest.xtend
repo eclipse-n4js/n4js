@@ -49,7 +49,7 @@ public class CompletionWithImportsWorkspaceTest extends AbstractCompletionTest {
 								"version": "0.0.1",
 								"n4js": {
 									"projectType": "definition",
-									"definesPackage": "someNPM",
+									"definesPackage": "SomeNPM",
 									"sources": {
 										"source": [
 											"src"
@@ -65,7 +65,7 @@ public class CompletionWithImportsWorkspaceTest extends AbstractCompletionTest {
 		testAtCursor('''
 			let x = new A1<|>
 		''', ''' 
-			(A1, Class, index, , , 00000, , , , ([0:12 - 0:14], A1), [([0:0 - 0:0], import {A1} from "someNPM";
+			(A1, Class, index, , , 00000, , , , ([0:12 - 0:14], A1), [([0:0 - 0:0], import {A1} from "SomeNPM";
 			)], [], , )
 		''');
 	}

@@ -442,7 +442,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 			XBuildable buildable = workspaceManager.closeAll();
 			return (cancelIndicator) -> {
 				List<Delta> result = buildable.build(cancelIndicator);
-				workspaceManager.persistProjectState();
 				persister.pendingWrites().join();
 				shutdownAndExitHandler.shutdown();
 
