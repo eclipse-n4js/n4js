@@ -157,15 +157,15 @@ public class ProjectStatePersisterTest {
 		N4JSIssue src1Issue1 = new N4JSIssue();
 		N4JSIssue src2Issue1 = new N4JSIssue();
 		N4JSIssue src2Issue2 = new N4JSIssue();
+		setValues(src1Issue1, "src1Issue1", 1, 1, Severity.ERROR);
+		setValues(src2Issue1, "src2Issue1", 2, 1, Severity.WARNING);
+		setValues(src2Issue2, "src2Issue2", 2, 2, Severity.INFO);
 
+		// first set values of issues; then add issues to hash map
 		Multimap<URI, Issue> issueMap = HashMultimap.create();
 		issueMap.put(source1, src1Issue1);
 		issueMap.put(source2, src2Issue1);
 		issueMap.put(source2, src2Issue2);
-
-		setValues(src1Issue1, "src1Issue1", 1, 1, Severity.ERROR);
-		setValues(src2Issue1, "src2Issue1", 2, 1, Severity.WARNING);
-		setValues(src2Issue2, "src2Issue2", 2, 2, Severity.INFO);
 
 		testMe.writeProjectState(output, languageVersion, new XIndexState(), Collections.emptyList(), issueMap);
 		byte[] bytes = output.toByteArray();
@@ -185,7 +185,7 @@ public class ProjectStatePersisterTest {
 		issue.setMessage(varName + ".message");
 		issue.setOffset(prefix++);
 		issue.setSeverity(severity);
-		issue.setSyntaxError(true);
+		issue.setSyntaxError(false);
 		issue.setUriToProblem(URI.createURI("some:/" + varName + "/uriToProblem"));
 	}
 }
