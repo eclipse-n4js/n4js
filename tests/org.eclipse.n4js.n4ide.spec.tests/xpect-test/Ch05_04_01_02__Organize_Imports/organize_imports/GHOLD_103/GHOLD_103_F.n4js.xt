@@ -25,14 +25,12 @@
 
 /* XPECT organizeImports ---
 (...)
-   *\/
-  /\** first comment *\/
-  "directive"
-+ import {A} from "a/a2/A";
   /\** second comment *\/
   ;
   /\* third comment *\/
-(...)
++ import {A} from "a/a2/A";
+  var placeholder:string;
+  var a : A = new A();
 --- */
 
 

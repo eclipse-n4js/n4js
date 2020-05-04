@@ -46,6 +46,7 @@ import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.workspace.ProjectConfigAdapter;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -115,8 +116,6 @@ public class XProjectManager {
 
 	private IProjectConfig projectConfig;
 
-	private boolean persistedProjectStateOutdated = false;
-
 	/** Initialize this project. */
 	@SuppressWarnings("hiding")
 	public void initialize(ProjectDescription description, IProjectConfig projectConfig,
@@ -153,10 +152,9 @@ public class XProjectManager {
 		// send issues to client
 		// (below code won't send empty 'publishDiagnostics' events for resources without validation issues, see API doc
 		// of this method for details)
-		Map<URI, Collection<Issue>> validationIssues = projectStateHolder.getValidationIssues();
-		for (Map.Entry<URI, Collection<Issue>> locationToIssues : validationIssues.entrySet()) {
-			URI location = locationToIssues.getKey();
-			Collection<Issue> issues = locationToIssues.getValue();
+		Multimap<URI, Issue> validationIssues = projectStateHolder.getValidationIssues();
+		for (URI location : validationIssues.keys()) {
+			Collection<Issue> issues = validationIssues.get(location);
 			issueAcceptor.publishDiagnostics(location, issues);
 		}
 
@@ -169,7 +167,6 @@ public class XProjectManager {
 			resourceSet.eSetDeliver(wasDeliver);
 		}
 
-		persistProjectState();
 		LOG.info("Project built: " + this.baseDir);
 		return result;
 	}
@@ -192,17 +189,16 @@ public class XProjectManager {
 
 		XBuildRequest request = newBuildRequest(dirtyFiles, deletedFiles, externalDeltas, propagateIssues, doGenerate,
 				cancelIndicator);
-
 		resourceSet = request.getResourceSet(); // resourceSet is already used during the build via #getResource(URI)
 
 		XBuildResult result = incrementalBuilder.build(request);
 
-		projectStateHolder.updateProjectState(request, result);
+		projectStateHolder.updateProjectState(request, result, projectConfig);
+
 		ResourceDescriptionsData resourceDescriptions = projectStateHolder.getIndexState().getResourceDescriptions();
 
 		Map<String, ResourceDescriptionsData> concurrentMap = indexProvider.get();
 		concurrentMap.put(projectDescription.getName(), resourceDescriptions);
-		persistedProjectStateOutdated |= !result.getAffectedResources().isEmpty();
 		return result;
 	}
 
@@ -278,14 +274,6 @@ public class XProjectManager {
 		result.setSeverity(severity);
 		result.setUriToProblem(baseDir);
 		issueAcceptor.publishDiagnostics(baseDir, ImmutableList.of(result));
-	}
-
-	/** Writes the current index, file hashes and validation issues to disk */
-	public void persistProjectState() {
-		if (persistedProjectStateOutdated) {
-			projectStateHolder.writeProjectState(projectConfig);
-			persistedProjectStateOutdated = false;
-		}
 	}
 
 	/** Creates a new build request for this project. */

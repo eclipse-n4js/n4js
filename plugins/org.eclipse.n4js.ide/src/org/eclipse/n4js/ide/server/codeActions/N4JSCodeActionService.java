@@ -317,12 +317,11 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 		}
 		TextEditCollector collector = new TextEditCollector();
 		XProjectManager projectManager = getCurrentProject(options);
-		Map<URI, Collection<Issue>> validationIssues = projectManager.getProjectStateHolder().getValidationIssues();
+		Multimap<URI, Issue> validationIssues = projectManager.getProjectStateHolder().getValidationIssues();
 
-		for (Map.Entry<URI, Collection<Issue>> entry : validationIssues.entrySet()) {
-			URI uri = entry.getKey();
-			Collection<Issue> issues = entry.getValue();
-			TextDocumentIdentifier docIdentifier = new TextDocumentIdentifier(uriExtensions.toUriString(uri));
+		for (URI location : validationIssues.keys()) {
+			Collection<Issue> issues = validationIssues.get(location);
+			TextDocumentIdentifier docIdentifier = new TextDocumentIdentifier(uriExtensions.toUriString(location));
 			for (Issue issue : issues) {
 				if (code.equals(issue.getCode())) {
 					Options newOptions = copyOptions(options, docIdentifier, issue);

@@ -10,11 +10,14 @@
  */
 package org.eclipse.n4js.ide.editor.contentassist;
 
+import java.util.Collection;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.n4js.n4JS.JSXElement;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
+import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.TypesPackage;
@@ -62,6 +65,16 @@ public class N4JSIdeContentProposalProvider extends IdeContentProposalProvider {
 
 	@Inject
 	private ImportsAwareReferenceProposalCreator importsAwareReferenceProposalCreator;
+
+	@Inject
+	private ContentAssistDataCollectors dataCollectors;
+
+	@Override
+	public void createProposals(Collection<ContentAssistContext> contexts, IIdeContentProposalAcceptor acceptor) {
+		try (Measurement m = dataCollectors.dcCreateProposalsInner().getMeasurement()) {
+			super.createProposals(contexts, acceptor);
+		}
+	}
 
 	@Override
 	protected void _createProposals(CrossReference crossReference, ContentAssistContext context,

@@ -123,7 +123,7 @@ public class ProjectStateHolder {
 
 	/** Persists the project state to disk */
 	public void writeProjectState(IProjectConfig projectConfig) {
-		if (persistConfig.isWriteToDisk(projectConfig) && !uriToHashedFileContents.isEmpty()) {
+		if (persistConfig.isWriteToDisk(projectConfig)) {
 			Collection<HashedFileContent> hashFileContents = uriToHashedFileContents.values();
 			projectStatePersister.writeProjectState(projectConfig, indexState, hashFileContents, getValidationIssues());
 		}
@@ -132,8 +132,8 @@ public class ProjectStateHolder {
 	/**
 	 * Return the validation issues as an unmodifiable map.
 	 */
-	public Map<URI, Collection<Issue>> getValidationIssues() {
-		return Multimaps.unmodifiableMultimap(validationIssues).asMap();
+	public Multimap<URI, Issue> getValidationIssues() {
+		return Multimaps.unmodifiableMultimap(validationIssues);
 	}
 
 	/**
@@ -160,18 +160,18 @@ public class ProjectStateHolder {
 				}
 				case CHANGED: {
 					result.getModified().add(previouslyExistingFile);
-					persistedState.validationIssues.remove(previouslyExistingFile);
+					persistedState.validationIssues.removeAll(previouslyExistingFile);
 					break;
 				}
 				case DELETED: {
 					result.getDeleted().add(previouslyExistingFile);
-					persistedState.validationIssues.remove(previouslyExistingFile);
+					persistedState.validationIssues.removeAll(previouslyExistingFile);
 					break;
 				}
 				}
 			}
 			setIndexState(persistedState.indexState);
-			mergeValidationIssues(persistedState.validationIssues);
+			mergeValidationIssues(persistedState.validationIssues.asMap());
 		}
 
 		Set<URI> allIndexedUris = indexState.getResourceDescriptions().getAllURIs();
@@ -190,7 +190,7 @@ public class ProjectStateHolder {
 	}
 
 	/** Updates the index state, file hashes and validation issues */
-	public void updateProjectState(XBuildRequest request, XBuildResult result) {
+	public void updateProjectState(XBuildRequest request, XBuildResult result, IProjectConfig projectConfig) {
 		HashMap<URI, HashedFileContent> newFileContents = new HashMap<>(uriToHashedFileContents);
 		for (Delta delta : result.getAffectedResources()) {
 			URI uri = delta.getUri();
@@ -203,6 +203,10 @@ public class ProjectStateHolder {
 		setIndexState(result.getIndexState());
 		mergeValidationIssues(request.getResultIssues());
 		uriToHashedFileContents = newFileContents;
+
+		if (request.isGeneratorEnabled() && !result.getAffectedResources().isEmpty()) {
+			writeProjectState(projectConfig);
+		}
 	}
 
 	enum SourceChangeKind {

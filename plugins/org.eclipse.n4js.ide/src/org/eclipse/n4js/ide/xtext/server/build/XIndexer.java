@@ -25,6 +25,7 @@ import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IReferenceDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
+import org.eclipse.xtext.resource.IResourceDescription.Manager.AllChangeAware;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.impl.AbstractResourceDescription;
@@ -224,13 +225,18 @@ public class XIndexer {
 	 */
 	public List<Delta> computeAndIndexAffected(ResourceDescriptionsData index, Set<URI> remainingURIs,
 			Collection<Delta> newDeltas, Collection<Delta> allDeltas, XBuildContext context) {
+
 		ResourceDescriptionsData originalIndex = context.getOldState().getResourceDescriptions();
-		List<URI> affectedURIs = IterableExtensions.toList(IterableExtensions.filter(remainingURIs, it -> {
-			IResourceDescription.Manager manager = context.getResourceServiceProvider(it)
-					.getResourceDescriptionManager();
-			IResourceDescription resourceDescription = originalIndex.getResourceDescription(it);
-			return isAffected(resourceDescription, manager, newDeltas, allDeltas, index);
-		}));
+		List<URI> affectedURIs = new ArrayList<>();
+		for (URI uri : remainingURIs) {
+			IResourceServiceProvider resourceServiceProvider = context.getResourceServiceProvider(uri);
+			IResourceDescription.Manager manager = resourceServiceProvider.getResourceDescriptionManager();
+			IResourceDescription resourceDescription = originalIndex.getResourceDescription(uri);
+			if (isAffected(resourceDescription, manager, newDeltas, allDeltas, index)) {
+				affectedURIs.add(uri);
+			}
+		}
+
 		List<Delta> affectedDeltas = getDeltasForChangedResources(affectedURIs, originalIndex, context);
 		for (IResourceDescription.Delta delta : affectedDeltas) {
 			index.register(delta);
@@ -243,6 +249,7 @@ public class XIndexer {
 	 */
 	protected List<IResourceDescription.Delta> getDeltasForDeletedResources(XBuildRequest request,
 			ResourceDescriptionsData oldIndex, XBuildContext context) {
+
 		List<IResourceDescription.Delta> deltas = new ArrayList<>();
 		for (URI deleted : request.getDeletedFiles()) {
 			IResourceServiceProvider resourceServiceProvider = context.getResourceServiceProvider(deleted);
@@ -250,7 +257,7 @@ public class XIndexer {
 				this.operationCanceledManager.checkCanceled(context.getCancelIndicator());
 				IResourceDescription oldDescription = oldIndex != null ? oldIndex.getResourceDescription(deleted)
 						: null;
-				if ((oldDescription != null)) {
+				if (oldDescription != null) {
 					DefaultResourceDescriptionDelta delta = new DefaultResourceDescriptionDelta(oldDescription, null);
 					deltas.add(delta);
 				}
@@ -267,8 +274,8 @@ public class XIndexer {
 		try {
 			this.compilerPhases.setIndexing(context.getResourceSet(), true);
 			List<IResourceDescription.Delta> result = new ArrayList<>();
-			for (IResourceDescription.Delta delta : context.executeClustered(changedURIs,
-					it -> addToIndex(it, true, oldIndex, context))) {
+			List<Delta> deltas = context.executeClustered(changedURIs, it -> addToIndex(it, true, oldIndex, context));
+			for (IResourceDescription.Delta delta : deltas) {
 				if (delta != null) {
 					result.add(delta);
 				}
@@ -308,9 +315,10 @@ public class XIndexer {
 	protected boolean isAffected(IResourceDescription affectionCandidate,
 			IResourceDescription.Manager manager, Collection<IResourceDescription.Delta> newDeltas,
 			Collection<IResourceDescription.Delta> allDeltas, IResourceDescriptions resourceDescriptions) {
-		if ((manager instanceof IResourceDescription.Manager.AllChangeAware)) {
-			return ((IResourceDescription.Manager.AllChangeAware) manager).isAffectedByAny(allDeltas,
-					affectionCandidate, resourceDescriptions);
+
+		if (manager instanceof IResourceDescription.Manager.AllChangeAware) {
+			AllChangeAware allChangeAwareManager = (IResourceDescription.Manager.AllChangeAware) manager;
+			return allChangeAwareManager.isAffectedByAny(allDeltas, affectionCandidate, resourceDescriptions);
 		} else {
 			if (newDeltas.isEmpty()) {
 				return false;

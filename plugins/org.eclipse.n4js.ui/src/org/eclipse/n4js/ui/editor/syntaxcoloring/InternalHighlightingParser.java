@@ -146,8 +146,8 @@ public class InternalHighlightingParser extends InternalN4JSParser implements Se
 	 * </p>
 	 */
 	@Override
-	protected boolean forcedRewind(int marker) {
-		input.rewind(marker);
+	protected boolean forcedRewind(int position) {
+		input.seek(position);
 		return true;
 	}
 

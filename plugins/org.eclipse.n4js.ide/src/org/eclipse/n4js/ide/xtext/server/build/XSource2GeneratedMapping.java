@@ -7,10 +7,10 @@
  */
 package org.eclipse.n4js.ide.xtext.server.build;
 
+import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.Externalizable;
 import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -28,7 +28,7 @@ import com.google.common.collect.Multimap;
 /**
  * @author Jan Koehnlein - Initial contribution and API
  */
-public class XSource2GeneratedMapping implements Externalizable {
+public class XSource2GeneratedMapping {
 	private final Multimap<URI, URI> source2generated;
 
 	private final Multimap<URI, URI> generated2source;
@@ -158,8 +158,10 @@ public class XSource2GeneratedMapping implements Externalizable {
 		return new ArrayList<>(this.generated2source.keySet());
 	}
 
-	@Override
-	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+	/**
+	 * @see Externalizable#readExternal(java.io.ObjectInput)
+	 */
+	public void readExternal(DataInput in) throws IOException {
 		int numEntries = in.readInt();
 		while (numEntries > 0) {
 			numEntries--;
@@ -174,8 +176,10 @@ public class XSource2GeneratedMapping implements Externalizable {
 		}
 	}
 
-	@Override
-	public void writeExternal(ObjectOutput out) throws IOException {
+	/**
+	 * @see Externalizable#writeExternal(java.io.ObjectOutput)
+	 */
+	public void writeExternal(DataOutput out) throws IOException {
 		Set<Map.Entry<URI, Collection<URI>>> entries = this.source2generated.asMap().entrySet();
 		out.writeInt(entries.size());
 		for (Map.Entry<URI, Collection<URI>> it : entries) {

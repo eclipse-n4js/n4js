@@ -96,14 +96,12 @@ class IncrementalBuilderChangesTest extends AbstractIncrementalBuilderTest {
 
 		changeNonOpenedFile("A", '42' -> '"hello"');
 		joinServerRequests();
-cleanBuildAndWait(); // FIXME GH-1727 remove!
 		assertIssues("B" -> #[
 			"(Error, [1:18 - 1:19], string is not a subtype of number.)"
 		]);
 
 		changeNonOpenedFile("A", '"hello"' -> '42');
 		joinServerRequests();
-cleanBuildAndWait(); // FIXME GH-1727 remove!
 		assertNoIssues();
 	}
 

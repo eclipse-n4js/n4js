@@ -100,7 +100,8 @@ public class TestWorkspaceManager {
 	/** @see #getCreatedProject() */
 	private Project createdProject;
 
-	TestWorkspaceManager(ProjectType projectType) {
+	/** Constructor */
+	public TestWorkspaceManager(ProjectType projectType) {
 		this.projectType = projectType;
 	}
 

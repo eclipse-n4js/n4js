@@ -99,7 +99,7 @@ class N4JSAntlrHighlightingGrammarGenerator extends AbstractAntlrGrammarWithActi
 		        this.grammarAccess = grammarAccess;
 		    }
 
-			protected boolean forcedRewind(int marker) { return true; } // overridden in subtype
+			protected boolean forcedRewind(int position) { return true; } // overridden in subtype
 			protected void promoteEOL() {} // overridden in subtype
 			protected boolean hasDisallowedEOL() { return false; } // overridden in subtype
 			protected boolean isTypeRefNoTrailingLineBreak() { return true; } // overridden in subtype
@@ -184,7 +184,7 @@ class N4JSAntlrHighlightingGrammarGenerator extends AbstractAntlrGrammarWithActi
 				setInTemplateSegment();
 			«ENDIF»
 			«IF "Semi" == originalElement.name»
-				int marker = input.mark();
+				int position = input.index();
 				// Promote EOL if appropriate
 				promoteEOL();
 			«ENDIF»
@@ -241,7 +241,7 @@ class N4JSAntlrHighlightingGrammarGenerator extends AbstractAntlrGrammarWithActi
 			| EOF
 			| RULE_EOL
 			| RULE_ML_COMMENT
-			| RightCurlyBracket { forcedRewind(marker) }?
+			| RightCurlyBracket { forcedRewind(position) }?
 		«ELSE»
 			«IF supportActions»«originalElement.gaElementIdentifier»=«ENDIF»«
 			 keywordHelper.getRuleName(value)»«

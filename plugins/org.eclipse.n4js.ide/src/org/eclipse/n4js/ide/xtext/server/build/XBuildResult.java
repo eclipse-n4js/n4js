@@ -35,7 +35,7 @@ public class XBuildResult {
 		return this.indexState;
 	}
 
-	/** Getter. */
+	/** @return all deltas of resources that have been built. */
 	public List<IResourceDescription.Delta> getAffectedResources() {
 		return this.affectedResources;
 	}

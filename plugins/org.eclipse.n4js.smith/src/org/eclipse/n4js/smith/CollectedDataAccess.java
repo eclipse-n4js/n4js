@@ -29,6 +29,13 @@ public class CollectedDataAccess {
 		getCollectors().getRootCollectors().values().forEach(c -> c.purgeData());
 	}
 
+	/**
+	 * Deletes data from all collectors but allows ongoing measurements to complete normally.
+	 */
+	public static void resetAllData() {
+		getCollectors().getRootCollectors().values().forEach(c -> c.resetData());
+	}
+
 	/** returns keys for all top level collectors. */
 	public static Set<String> getCollectorsKeys() {
 		return getCollectors().getRootCollectors().keySet();
