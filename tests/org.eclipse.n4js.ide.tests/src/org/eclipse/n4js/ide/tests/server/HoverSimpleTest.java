@@ -10,8 +10,8 @@
  */
 package org.eclipse.n4js.ide.tests.server;
 
-import org.junit.Test;
 import org.junit.Ignore;
+import org.junit.Test;
 
 /**	
  * Hover test class for N4JS elements	

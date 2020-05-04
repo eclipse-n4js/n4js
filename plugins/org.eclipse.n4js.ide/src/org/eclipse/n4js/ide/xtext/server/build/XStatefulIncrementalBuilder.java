@@ -202,7 +202,7 @@ public class XStatefulIncrementalBuilder {
 		result.getNewIndex().addDescription(source, copiedDescription);
 		operationCanceledManager.checkCanceled(cancelIndicator);
 
-		if (request.isValidatorEnabled()) {
+		if (request.canValidate()) {
 			List<Issue> issues = resourceValidator.validate(resource, CheckMode.ALL, request.getCancelIndicator());
 			operationCanceledManager.checkCanceled(request.getCancelIndicator());
 			request.setResultIssues(source, issues);
@@ -261,7 +261,7 @@ public class XStatefulIncrementalBuilder {
 				resourceStorageFacade.saveResource((StorageAwareResource) resource, fileSystemAccess);
 			}
 		}
-		if (request.isGeneratorEnabled()) {
+		if (request.canGenerate()) {
 			GeneratorContext generatorContext = new GeneratorContext();
 			generatorContext.setCancelIndicator(request.getCancelIndicator());
 			generator.generate(resource, fileSystemAccess, generatorContext);

@@ -31,25 +31,85 @@ import com.google.inject.Injector;
 /**
  * Implementation for sorted projects according to their build order.
  */
-public class ProjectOrderInfo implements IOrderInfo<ProjectDescription> {
+public class ProjectBuildOrderInfo implements IOrderInfo<ProjectDescription> {
 
-	/** A provider for {@link ProjectOrderInfo} instances. */
+	/**
+	 * A provider for {@link ProjectBuildOrderInfo} instances.
+	 */
 	public static class Provider implements com.google.inject.Provider<IOrderInfo<ProjectDescription>> {
-		/** Injector to be used for creating instances of {@link #ProjectOrderInfo()} */
+		/** Injector to be used for creating instances of {@link #ProjectBuildOrderInfo()} */
 		@Inject
 		protected Injector injector;
 
-		/** Returns a new instanceof of {@link ProjectOrderInfo}. No projects will be visited. */
+		/** Returns a new instanceof of {@link ProjectBuildOrderInfo}. No projects will be visited. */
 		@Override
-		public IOrderInfo<ProjectDescription> get() {
-			return injector.getInstance(ProjectOrderInfo.class);
+		public ProjectBuildOrderInfo get() {
+			return injector.getInstance(ProjectBuildOrderInfo.class);
+		}
+	}
+
+	/**
+	 * {@link Iterator} that iterates over {@link ProjectBuildOrderInfo#sortedProjects}.
+	 */
+	public class ProjectBuildOrderIterator implements IOrderIterator<ProjectDescription> {
+		/**
+		 * Subset of {@link #sortedProjects}: when {@link #ProjectBuildOrderInfo()} is used as an iterator, only those
+		 * projects are iterated over that are contained in this set
+		 */
+		final protected Set<String> visitProjectNames = new HashSet<>();
+		/** Iterator delegate */
+		final protected Iterator<ProjectDescription> iteratorDelegate;
+
+		ProjectBuildOrderIterator() {
+			this.iteratorDelegate = Iterables
+					.filter(sortedProjects, input -> visitProjectNames.contains(input.getName())).iterator();
 		}
 
-		/** Creates a new instance of {@link #ProjectOrderInfo()}. The given set of projects will be visited only. */
-		public IOrderInfo<ProjectDescription> get(Collection<ProjectDescription> projectDescriptions) {
-			IOrderInfo<ProjectDescription> orderInfo = get();
-			orderInfo.visit(projectDescriptions);
-			return orderInfo;
+		@Override
+		public ProjectBuildOrderIterator visit(Collection<ProjectDescription> projectDescriptions) {
+			for (ProjectDescription prj : projectDescriptions) {
+				visitProjectNames.add(prj.getName());
+			}
+			return this;
+		}
+
+		@Override
+		public ProjectBuildOrderIterator visitAffected(List<IResourceDescription.Delta> changes) {
+			visit(getAffectedProjects(changes));
+			return this;
+		}
+
+		@Override
+		public ProjectBuildOrderIterator visitAll() {
+			visit(sortedProjects);
+			return this;
+		}
+
+		/** @return the set of projects that may contain resources that need to be rebuild given the list of changes */
+		protected Set<ProjectDescription> getAffectedProjects(List<IResourceDescription.Delta> changes) {
+			Set<String> changedProjectsNames = new HashSet<>();
+			for (IResourceDescription.Delta change : changes) {
+				XProjectManager projectManager = workspaceManager.getProjectManager(change.getUri());
+				ProjectDescription pd = projectManager.getProjectDescription();
+				changedProjectsNames.add(pd.getName());
+			}
+
+			Set<ProjectDescription> affectedProjects = new HashSet<>();
+			for (String changedProjectName : changedProjectsNames) {
+				affectedProjects.addAll(inversedDependencies.get(changedProjectName));
+			}
+
+			return affectedProjects;
+		}
+
+		@Override
+		public boolean hasNext() {
+			return iteratorDelegate.hasNext();
+		}
+
+		@Override
+		public ProjectDescription next() {
+			return iteratorDelegate.next();
 		}
 	}
 
@@ -61,32 +121,22 @@ public class ProjectOrderInfo implements IOrderInfo<ProjectDescription> {
 	final protected Multimap<String, ProjectDescription> inversedDependencies = HashMultimap.create();
 	/** Build order of projects */
 	final protected List<ProjectDescription> sortedProjects = new ArrayList<>();
+
 	/**
-	 * Subset of {@link #sortedProjects}: when {@link #ProjectOrderInfo()} is used as an iterator, only those projects
-	 * are iterated over that are contained in this set
+	 * Creates a new instance of {@link ProjectBuildOrderIterator}. Assumes a succeeding call to
+	 * {@link ProjectBuildOrderIterator#visit(Collection)} method.
 	 */
-	final protected Set<String> visitProjectNames = new HashSet<>();
-
 	@Override
-	public Iterator<ProjectDescription> iterator() {
-		return Iterables.filter(sortedProjects, input -> visitProjectNames.contains(input.getName())).iterator();
+	public ProjectBuildOrderIterator getIterator() {
+		return new ProjectBuildOrderIterator();
 	}
 
+	/** Creates a new instance of {@link ProjectBuildOrderIterator}. The given set of projects will be visited only. */
 	@Override
-	public void visit(Collection<ProjectDescription> projectDescriptions) {
-		for (ProjectDescription prj : projectDescriptions) {
-			visitProjectNames.add(prj.getName());
-		}
-	}
-
-	@Override
-	public void visitAffected(List<IResourceDescription.Delta> changes) {
-		visit(getAffectedProjects(changes));
-	}
-
-	@Override
-	public void visitAll() {
-		visit(sortedProjects);
+	public ProjectBuildOrderIterator getIterator(Collection<ProjectDescription> projectDescriptions) {
+		ProjectBuildOrderIterator iterator = getIterator();
+		iterator.visit(projectDescriptions);
+		return iterator;
 	}
 
 	/** Populates {@link #sortedProjects} and {@link #inversedDependencies} */
@@ -132,23 +182,6 @@ public class ProjectOrderInfo implements IOrderInfo<ProjectDescription> {
 			orderedProjects.add(pdName);
 			projectStack.remove(pdName);
 		}
-	}
-
-	/** @return the set of projects that may contain resources that need to be rebuild given the list of changes */
-	protected Set<ProjectDescription> getAffectedProjects(List<IResourceDescription.Delta> changes) {
-		Set<String> changedProjectsNames = new HashSet<>();
-		for (IResourceDescription.Delta change : changes) {
-			XProjectManager projectManager = workspaceManager.getProjectManager(change.getUri());
-			ProjectDescription pd = projectManager.getProjectDescription();
-			changedProjectsNames.add(pd.getName());
-		}
-
-		Set<ProjectDescription> affectedProjects = new HashSet<>();
-		for (String changedProjectName : changedProjectsNames) {
-			affectedProjects.addAll(inversedDependencies.get(changedProjectName));
-		}
-
-		return affectedProjects;
 	}
 
 	/** Report cycle. */

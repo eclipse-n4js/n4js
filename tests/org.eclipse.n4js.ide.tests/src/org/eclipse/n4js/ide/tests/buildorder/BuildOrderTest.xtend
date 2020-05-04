@@ -10,14 +10,12 @@
  */
 package org.eclipse.n4js.ide.tests.buildorder
 
-import org.junit.Test
-import org.eclipse.xtext.resource.impl.ProjectDescription
-import org.eclipse.n4js.ide.xtext.server.ProjectOrderInfo
 import com.google.inject.Injector
-import org.eclipse.n4js.utils.Strings
 import java.util.List
 import org.eclipse.n4js.ide.tests.server.AbstractIdeTest
-import org.eclipse.n4js.ide.xtext.server.IOrderInfo
+import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo
+import org.junit.Test
+
 import static org.junit.Assert.assertEquals
 
 /**
@@ -25,11 +23,11 @@ import static org.junit.Assert.assertEquals
  */
 class BuildOrderTest extends AbstractIdeTest {
 
-	private ProjectOrderInfo.Provider projectBuildOrderProvider;
+	private ProjectBuildOrderInfo.Provider projectBuildOrderInfoProvider;
 
 	override Injector createInjector() {
 		val Injector injector = super.createInjector();
-		projectBuildOrderProvider = injector.getInstance(ProjectOrderInfo.Provider);
+		projectBuildOrderInfoProvider = injector.getInstance(ProjectBuildOrderInfo.Provider);
 		return injector;
 	}
 
@@ -44,10 +42,10 @@ class BuildOrderTest extends AbstractIdeTest {
 		testWorkspaceManager.createTestOnDisk(projectsModulesContents);
 		startAndWaitForLspServer();
 
-		val IOrderInfo<ProjectDescription> orderInfo = projectBuildOrderProvider.get();
-		orderInfo.visitAll();
+		val projectBuildOrderInfo = projectBuildOrderInfoProvider.get();
+		val boIterator = projectBuildOrderInfo.getIterator().visitAll();
 		try {
-			val String names = Strings.toString([getName()], orderInfo)
+			val String names = IteratorExtensions.join(boIterator, ", ", [it.name]);
 			assertEquals(expectation, names);
 		} catch (Exception exc) {
 			throw new RuntimeException("Never happens since toString never throws an exception. Bogus xtext warning", exc)
@@ -57,7 +55,7 @@ class BuildOrderTest extends AbstractIdeTest {
 	
 	@Test
 	def void testSingleDependency1() {
-		test("[yarn-test-project, n4js-runtime, P1]", 
+		test("yarn-test-project, n4js-runtime, P1", 
 			"#NODE_MODULES:n4js-runtime" -> null,
 			"P1" -> #[
 				"#DEPENDENCY" -> '''
@@ -69,7 +67,7 @@ class BuildOrderTest extends AbstractIdeTest {
 	
 	@Test
 	def void testTwoDependencies1() {
-		test("[yarn-test-project, n4js-runtime, P1, P2]", 
+		test("yarn-test-project, n4js-runtime, P1, P2", 
 			"#NODE_MODULES:n4js-runtime" -> null,
 			"P1" -> #[
 				"#DEPENDENCY" -> '''
@@ -86,7 +84,7 @@ class BuildOrderTest extends AbstractIdeTest {
 	
 	@Test
 	def void testTwoDependencies2() {
-		test("[yarn-test-project, n4js-runtime, P1, P2]", 
+		test("yarn-test-project, n4js-runtime, P1, P2", 
 			"#NODE_MODULES:n4js-runtime" -> null,
 			"P1" -> #[
 				"#DEPENDENCY" -> '''
@@ -104,7 +102,7 @@ class BuildOrderTest extends AbstractIdeTest {
 	
 	@Test
 	def void testTwoDependencies3() {
-		test("[yarn-test-project, n4js-runtime, P2, P1]", 
+		test("yarn-test-project, n4js-runtime, P2, P1", 
 			"#NODE_MODULES:n4js-runtime" -> null,
 			"P1" -> #[
 				"#DEPENDENCY" -> '''
@@ -119,5 +117,5 @@ class BuildOrderTest extends AbstractIdeTest {
 			]
 		);
 	}
-	 
+	
 }

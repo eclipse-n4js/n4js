@@ -22,6 +22,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ide.xtext.server.ParallelBuildManager.ParallelJob;
+import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo.ProjectBuildOrderIterator;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
@@ -29,6 +30,7 @@ import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionDelta;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
+import org.eclipse.xtext.xbase.lib.IteratorExtensions;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 import com.google.common.collect.Sets;
@@ -124,13 +126,13 @@ public class XBuildManager {
 	private XWorkspaceManager workspaceManager;
 
 	@Inject
-	private ProjectOrderInfo.Provider projectBuildOrderProvider;
+	private ProjectBuildOrderInfo.Provider projectBuildOrderInfoProvider;
 
 	private final LinkedHashSet<URI> dirtyFiles = new LinkedHashSet<>();
 
 	private final LinkedHashSet<URI> deletedFiles = new LinkedHashSet<>();
 
-	/** Holds all deltas that */
+	/** Holds all deltas of all projects. In case of cancelled build, this set is not empty at start of next build. */
 	private List<IResourceDescription.Delta> allBuildDeltas = new ArrayList<>();
 
 	/**
@@ -141,12 +143,14 @@ public class XBuildManager {
 	public List<IResourceDescription.Delta> doInitialBuild(List<ProjectDescription> projects,
 			CancelIndicator indicator) {
 
-		IOrderInfo<ProjectDescription> orderInfo = projectBuildOrderProvider.get(projects);
-		printBuildOrder(orderInfo);
+		ProjectBuildOrderInfo projectBuildOrderInfo = projectBuildOrderInfoProvider.get();
+		ProjectBuildOrderIterator pboIterator = projectBuildOrderInfo.getIterator(projects);
+		printBuildOrder();
 
 		List<IResourceDescription.Delta> result = new ArrayList<>();
 
-		for (ProjectDescription description : orderInfo) {
+		while (pboIterator.hasNext()) {
+			ProjectDescription description = pboIterator.next();
 			String projectName = description.getName();
 			XProjectManager projectManager = workspaceManager.getProjectManager(projectName);
 			XBuildResult partialresult = projectManager.doInitialBuild(indicator);
@@ -251,9 +255,12 @@ public class XBuildManager {
 			Map<ProjectDescription, Set<URI>> project2dirty = computeProjectToUriMap(this.dirtyFiles);
 			Map<ProjectDescription, Set<URI>> project2deleted = computeProjectToUriMap(this.deletedFiles);
 			SetView<ProjectDescription> changedPDs = Sets.union(project2dirty.keySet(), project2deleted.keySet());
-			IOrderInfo<ProjectDescription> orderInfo = projectBuildOrderProvider.get(changedPDs);
 
-			for (ProjectDescription descr : orderInfo) {
+			ProjectBuildOrderInfo projectBuildOrderInfo = projectBuildOrderInfoProvider.get();
+			ProjectBuildOrderIterator pboIterator = projectBuildOrderInfo.getIterator(changedPDs);
+
+			while (pboIterator.hasNext()) {
+				ProjectDescription descr = pboIterator.next();
 				XProjectManager projectManager = workspaceManager.getProjectManager(descr.getName());
 				Set<URI> projectDirty = project2dirty.getOrDefault(descr, Collections.emptySet());
 				Set<URI> projectDeleted = project2deleted.getOrDefault(descr, Collections.emptySet());
@@ -267,7 +274,7 @@ public class XBuildManager {
 				this.deletedFiles.removeAll(projectDeleted);
 				mergeWithUnreportedDeltas(projectBuildDeltas);
 
-				orderInfo.visitAffected(projectBuildDeltas);
+				pboIterator.visitAffected(projectBuildDeltas);
 			}
 
 			List<IResourceDescription.Delta> result = allBuildDeltas;
@@ -327,9 +334,13 @@ public class XBuildManager {
 	}
 
 	/** Prints build order */
-	protected void printBuildOrder(IOrderInfo<ProjectDescription> orderInfo) {
-		String output = "Project build order:\n  "
-				+ String.join("\n  ", IterableExtensions.map(orderInfo, ProjectDescription::getName));
-		LOG.info(output);
+	protected void printBuildOrder() {
+		if (LOG.isInfoEnabled()) {
+			ProjectBuildOrderInfo projectBuildOrderInfo = projectBuildOrderInfoProvider.get();
+			ProjectBuildOrderIterator visitAll = projectBuildOrderInfo.getIterator().visitAll();
+			String output = "Project build order:\n  "
+					+ IteratorExtensions.join(visitAll, "\n  ", ProjectDescription::getName);
+			LOG.info(output);
+		}
 	}
 }

@@ -79,16 +79,12 @@ public class XBuildRequest {
 
 	private AfterDeleteListener afterDeleteListener;
 
-	/**
-	 * Setter for the base directory.
-	 */
+	/** Setter for the base directory. */
 	public void setBaseDir(URI baseDir) {
 		this.baseDir = baseDir;
 	}
 
-	/**
-	 * Return the base dir.
-	 */
+	/** Return the base dir. */
 	public URI getBaseDir() {
 		if ((this.baseDir == null)) {
 			String userDir = System.getProperty("user.dir");
@@ -97,58 +93,42 @@ public class XBuildRequest {
 		return this.baseDir;
 	}
 
-	/**
-	 * Getter.
-	 */
+	/** Getter. */
 	public Collection<URI> getDirtyFiles() {
 		return this.dirtyFiles;
 	}
 
-	/**
-	 * Setter.
-	 */
+	/** Setter. */
 	public void setDirtyFiles(Collection<URI> dirtyFiles) {
 		this.dirtyFiles = dirtyFiles;
 	}
 
-	/**
-	 * Getter.
-	 */
+	/** Getter. */
 	public Collection<URI> getDeletedFiles() {
 		return this.deletedFiles;
 	}
 
-	/**
-	 * Setter.
-	 */
+	/** Setter. */
 	public void setDeletedFiles(Collection<URI> deletedFiles) {
 		this.deletedFiles = deletedFiles;
 	}
 
-	/**
-	 * Getter.
-	 */
+	/** Getter. */
 	public Collection<IResourceDescription.Delta> getExternalDeltas() {
 		return this.externalDeltas;
 	}
 
-	/**
-	 * Setter.
-	 */
+	/** Setter. */
 	public void setExternalDeltas(Collection<IResourceDescription.Delta> externalDeltas) {
 		this.externalDeltas = externalDeltas;
 	}
 
-	/**
-	 * Getter.
-	 */
+	/** Getter. */
 	public Map<URI, Collection<Issue>> getResultIssues() {
 		return this.resultIssues;
 	}
 
-	/**
-	 * Setter.
-	 */
+	/** Setter. */
 	public void setResultIssues(URI source, Collection<Issue> issues) {
 		this.resultIssues.put(source, issues);
 		this.afterValidate(source, issues);
@@ -166,16 +146,12 @@ public class XBuildRequest {
 		}
 	}
 
-	/**
-	 * Getter.
-	 */
+	/** Getter. */
 	public Map<URI, URI> getResultGeneratedFiles() {
 		return this.resultGeneratedFiles;
 	}
 
-	/**
-	 * Setter.
-	 */
+	/** Setter. */
 	public void setResultGeneratedFile(URI source, URI generated) {
 		this.resultGeneratedFiles.put(source, generated);
 		afterGenerate(source, generated);
@@ -193,16 +169,12 @@ public class XBuildRequest {
 		}
 	}
 
-	/**
-	 * Getter.
-	 */
+	/** Getter. */
 	public Collection<URI> getResultDeleteFiles() {
 		return this.resultDeletedFiles;
 	}
 
-	/**
-	 * Setter.
-	 */
+	/** Setter. */
 	public void setResultDeleteFile(URI file) {
 		this.resultDeletedFiles.add(file);
 		afterDelete(file);
@@ -220,100 +192,82 @@ public class XBuildRequest {
 		}
 	}
 
-	/**
-	 * Getter.
-	 */
+	/** Getter. */
 	public XIndexState getState() {
 		return this.state;
 	}
 
-	/**
-	 * Setter.
-	 */
+	/** Setter. */
 	public void setState(XIndexState state) {
 		this.state = state;
 	}
 
-	/**
-	 * Getter.
-	 */
-	public boolean isValidatorEnabled() {
-		return this.doValidate && !isIndexOnly();
+	/** Combines {@link #isValidatorEnabled()} and {@link #isIndexOnly()}. */
+	public boolean canValidate() {
+		return isValidatorEnabled() && !isIndexOnly();
 	}
 
-	/**
-	 * Setter.
-	 */
+	/** Getter. */
+	public boolean isValidatorEnabled() {
+		return this.doValidate;
+	}
+
+	/** Setter. */
 	public void setValidatorEnabled(boolean doValidate) {
 		this.doValidate = doValidate;
 	}
 
-	/**
-	 * Getter.
-	 */
-	public boolean isGeneratorEnabled() {
-		return this.doGenerate && isValidatorEnabled() && !isIndexOnly();
+	/** Combines {@link #isGeneratorEnabled()},{@link #isValidatorEnabled()} and {@link #isIndexOnly()}. */
+	public boolean canGenerate() {
+		return isGeneratorEnabled() && isValidatorEnabled() && !isIndexOnly();
 	}
 
-	/**
-	 * Setter.
-	 */
+	/** Getter. */
+	public boolean isGeneratorEnabled() {
+		return this.doGenerate;
+	}
+
+	/** Setter. */
 	public void setGeneratorEnabled(boolean doGenerate) {
 		this.doGenerate = doGenerate;
 	}
 
-	/**
-	 * Getter.
-	 */
+	/** Getter. */
 	public boolean isWriteStorageResources() {
 		return this.writeStorageResources;
 	}
 
-	/**
-	 * Setter.
-	 */
+	/** Setter. */
 	public void setWriteStorageResources(boolean writeStorageResources) {
 		this.writeStorageResources = writeStorageResources;
 	}
 
-	/**
-	 * Getter.
-	 */
+	/** Getter. */
 	public boolean isIndexOnly() {
 		return this.indexOnly;
 	}
 
-	/**
-	 * Setter.
-	 */
+	/** Setter. */
 	public void setIndexOnly(boolean indexOnly) {
 		this.indexOnly = indexOnly;
 	}
 
-	/**
-	 * Getter.
-	 */
+	/** Getter. */
 	public XtextResourceSet getResourceSet() {
 		return this.resourceSet;
 	}
 
-	/**
-	 * Setter.
-	 */
+	/** Setter. */
 	public void setResourceSet(XtextResourceSet resourceSet) {
 		this.resourceSet = resourceSet;
 	}
 
-	/**
-	 * Getter.
-	 */
+	/** Getter. */
 	public CancelIndicator getCancelIndicator() {
 		return this.cancelIndicator;
 	}
 
-	/**
-	 * Setter.
-	 */
+	/** Setter. */
 	public void setCancelIndicator(CancelIndicator cancelIndicator) {
 		this.cancelIndicator = cancelIndicator;
 	}

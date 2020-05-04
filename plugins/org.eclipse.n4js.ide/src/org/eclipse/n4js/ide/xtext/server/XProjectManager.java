@@ -189,15 +189,12 @@ public class XProjectManager {
 
 		XBuildRequest request = newBuildRequest(dirtyFiles, deletedFiles, externalDeltas, propagateIssues, doGenerate,
 				cancelIndicator);
-
 		resourceSet = request.getResourceSet(); // resourceSet is already used during the build via #getResource(URI)
 
 		XBuildResult result = incrementalBuilder.build(request);
 
-		projectStateHolder.updateProjectState(request, result);
-		if (doGenerate && !result.getAffectedResources().isEmpty()) {
-			projectStateHolder.writeProjectState(projectConfig);
-		}
+		projectStateHolder.updateProjectState(request, result, projectConfig);
+
 		ResourceDescriptionsData resourceDescriptions = projectStateHolder.getIndexState().getResourceDescriptions();
 
 		Map<String, ResourceDescriptionsData> concurrentMap = indexProvider.get();
