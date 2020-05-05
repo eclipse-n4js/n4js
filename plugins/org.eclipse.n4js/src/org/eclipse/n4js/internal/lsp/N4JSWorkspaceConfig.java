@@ -17,21 +17,21 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
+import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
 import org.eclipse.xtext.workspace.IProjectConfig;
-import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
 /**
  * Wrapper around {@link IN4JSCore}.
  */
 @SuppressWarnings("restriction")
-public class N4JSWorkspaceConfig implements IWorkspaceConfig {
+public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 
+	private final URI baseDirectory;
 	private final IN4JSCore delegate;
 
-	/**
-	 * Constructor
-	 */
-	public N4JSWorkspaceConfig(IN4JSCore delegate) {
+	/** Constructor */
+	public N4JSWorkspaceConfig(URI baseDirectory, IN4JSCore delegate) {
+		this.baseDirectory = baseDirectory;
 		this.delegate = delegate;
 	}
 
@@ -60,6 +60,19 @@ public class N4JSWorkspaceConfig implements IWorkspaceConfig {
 			pConfigs.add(new N4JSProjectConfig(this, project));
 		}
 		return pConfigs;
+	}
+
+	@Override
+	public URI getPath() {
+		return baseDirectory;
+	}
+
+	@Override
+	public UpdateChanges update(URI changedResource) {
+		IProjectConfig project = this.findProjectContaining(changedResource);
+		UpdateChanges update = ((N4JSProjectConfig) project).update(changedResource);
+
+		return update;
 	}
 
 }

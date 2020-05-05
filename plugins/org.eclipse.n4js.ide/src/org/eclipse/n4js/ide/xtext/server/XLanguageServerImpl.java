@@ -252,7 +252,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		Stopwatch sw = Stopwatch.createStarted();
 		LOG.info("Start server initialization in workspace directory " + baseDir);
 		workspaceManager.initialize(baseDir);
-		workspaceManager.refreshWorkspaceConfig();
 		LOG.info("Server initialization done after " + sw);
 
 		initializeResult = new InitializeResult();
@@ -588,7 +587,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	 */
 	public CompletableFuture<Void> reinitWorkspace() {
 		return requestManager.runWrite("didChangeConfiguration", () -> {
-			workspaceManager.refreshWorkspaceConfig();
+			workspaceManager.reinitialize();
 			workspaceManager.doInitialBuild(CancelIndicator.NullImpl);
 			return null;
 		}, (a, b) -> null);

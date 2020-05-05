@@ -11,10 +11,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
@@ -26,6 +24,8 @@ import org.eclipse.lsp4j.jsonrpc.ResponseErrorException;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseError;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
 import org.eclipse.n4js.ide.xtext.server.XBuildManager.XBuildable;
+import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
+import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig.UpdateChanges;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.resource.IExternalContentSupport;
@@ -38,10 +38,14 @@ import org.eclipse.xtext.resource.impl.ChunkedResourceDescriptions;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.util.CancelIndicator;
+import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.workspace.IProjectConfig;
+import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -70,10 +74,10 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	private static final Logger LOG = Logger.getLogger(XWorkspaceManager.class);
 
 	@Inject
-	private Provider<XProjectManager> projectManagerProvider;
+	private XIWorkspaceConfigFactory workspaceConfigFactory;
 
 	@Inject
-	private XIWorkspaceConfigFactory workspaceConfigFactory;
+	private Provider<XProjectManager> projectManagerProvider;
 
 	@Inject
 	private XIProjectDescriptionFactory projectDescriptionFactory;
@@ -84,9 +88,10 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	@Inject
 	private XBuildManager buildManager;
 
-	private final Map<String, XProjectManager> projectName2ProjectManager = new HashMap<>();
+	@Inject
+	private IFileSystemScanner scanner;
 
-	private URI baseDir;
+	private final Map<String, XProjectManager> projectName2ProjectManager = new HashMap<>();
 
 	private IWorkspaceConfig workspaceConfig;
 
@@ -137,37 +142,30 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 		}
 	};
 
+	/** Reinitialize a workspace at the current location. */
+	public void reinitialize() {
+		initialize(getBaseDir());
+	}
+
 	/**
 	 * Initialize a workspace at the given location.
 	 *
-	 * @param baseDir
+	 * @param newBaseDir
 	 *            the location
 	 */
-	@SuppressWarnings("hiding")
-	public void initialize(URI baseDir) {
-		this.baseDir = baseDir;
-		setWorkspaceConfig(workspaceConfigFactory.getWorkspaceConfig(baseDir));
+	public void initialize(URI newBaseDir) {
+		refreshWorkspaceConfig(newBaseDir);
 	}
 
 	/** Refresh the workspace. */
-	public void refreshWorkspaceConfig() {
-		setWorkspaceConfig(workspaceConfigFactory.getWorkspaceConfig(baseDir));
-		Set<String> projectNames = projectName2ProjectManager.keySet();
-		Set<String> remainingProjectNames = new HashSet<>(projectNames);
+	public void refreshWorkspaceConfig(URI newBaseDir) {
+		setWorkspaceConfig(workspaceConfigFactory.createWorkspaceConfig(newBaseDir));
 		for (IProjectConfig projectConfig : getWorkspaceConfig().getProjects()) {
-			if (projectName2ProjectManager.containsKey(projectConfig.getName())) {
-				remainingProjectNames.remove(projectConfig.getName());
-			} else {
-				XProjectManager projectManager = projectManagerProvider.get();
-				ProjectDescription projectDescription = projectDescriptionFactory.getProjectDescription(projectConfig);
-				projectManager.initialize(projectDescription, projectConfig, openedDocumentsContentProvider,
-						() -> fullIndex);
-				projectName2ProjectManager.put(projectDescription.getName(), projectManager);
-			}
-		}
-		for (String deletedProject : remainingProjectNames) {
-			projectName2ProjectManager.remove(deletedProject);
-			fullIndex.remove(deletedProject);
+			XProjectManager projectManager = projectManagerProvider.get();
+			ProjectDescription projectDescription = projectDescriptionFactory.getProjectDescription(projectConfig);
+			projectManager.initialize(projectDescription, projectConfig, openedDocumentsContentProvider,
+					() -> fullIndex);
+			projectName2ProjectManager.put(projectDescription.getName(), projectManager);
 		}
 	}
 
@@ -176,7 +174,14 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	 *            the new workspace configuration.
 	 */
 	protected void setWorkspaceConfig(IWorkspaceConfig workspaceConfig) {
+		if (this.workspaceConfig != null && workspaceConfig != null &&
+				((XIWorkspaceConfig) this.workspaceConfig).getPath()
+						.equals(((XIWorkspaceConfig) workspaceConfig).getPath())) {
+			return;
+		}
 		this.workspaceConfig = workspaceConfig;
+		projectName2ProjectManager.clear();
+		fullIndex.clear();
 	}
 
 	/**
@@ -195,7 +200,10 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 
 	/** @return the current base directory {@link URI} */
 	public URI getBaseDir() {
-		return this.baseDir;
+		if (this.workspaceConfig == null) {
+			return null;
+		}
+		return ((XIWorkspaceConfig) this.workspaceConfig).getPath();
 	}
 
 	/** Callback after a build was performed */
@@ -318,7 +326,18 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 			LOG.error("The document " + uri + " has not been opened.");
 			return XBuildable.NO_BUILD;
 		}
-		return tryIncrementalGenerateBuildable(ImmutableList.of(uri), Collections.emptyList());
+
+		UpdateChanges update = ((XIWorkspaceConfig) getWorkspaceConfig()).update(uri);
+		List<URI> changedURIs = Lists
+				.newArrayList(Iterables.concat(update.getChangedURIs(scanner), ImmutableList.of(uri)));
+		List<URI> deleted = new ArrayList<>(update.getRemovedURIs());
+		for (ISourceFolder sourceFolder : update.getRemovedSourceFolders()) {
+			deleted.addAll(findResourcesStartingWithPrefix(sourceFolder.getPath()));
+		}
+
+		return tryIncrementalGenerateBuildable(
+				Collections.unmodifiableList(changedURIs),
+				Collections.unmodifiableList(deleted));
 	}
 
 	/** Mark the given document as closed. */
@@ -421,6 +440,12 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 			}
 		}
 		return false;
+	}
+
+	public List<URI> findResourcesStartingWithPrefix(URI prefix) {
+		IProjectConfig projectConfig = workspaceConfig.findProjectContaining(prefix);
+		XProjectManager projectManager = this.projectName2ProjectManager.get(projectConfig.getName());
+		return projectManager.findResourcesStartingWithPrefix(prefix);
 	}
 
 	@Override

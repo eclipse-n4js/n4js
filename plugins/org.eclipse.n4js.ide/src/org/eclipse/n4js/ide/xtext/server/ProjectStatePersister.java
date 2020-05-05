@@ -43,6 +43,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.ide.validation.N4JSIssue;
+import org.eclipse.n4js.ide.xtext.resource.XResourceDescriptionsData;
 import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
 import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
 import org.eclipse.n4js.projectModel.locations.FileURI;
@@ -403,7 +404,7 @@ public class ProjectStatePersister {
 			size--;
 			descriptions.add(readResourceDescription(input));
 		}
-		return new ResourceDescriptionsData(descriptions);
+		return new XResourceDescriptionsData(descriptions);
 	}
 
 	private ENamedElement readEcoreElement(DataInput input) throws IOException {

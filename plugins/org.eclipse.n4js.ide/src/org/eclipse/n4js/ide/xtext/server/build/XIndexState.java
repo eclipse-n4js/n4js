@@ -7,6 +7,7 @@
  */
 package org.eclipse.n4js.ide.xtext.server.build;
 
+import org.eclipse.n4js.ide.xtext.resource.XResourceDescriptionsData;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
@@ -23,7 +24,7 @@ public class XIndexState {
 	 * Constructor
 	 */
 	public XIndexState() {
-		this(new ResourceDescriptionsData(CollectionLiterals.<IResourceDescription> emptySet()),
+		this(new XResourceDescriptionsData(CollectionLiterals.<IResourceDescription> emptySet()),
 				new XSource2GeneratedMapping());
 	}
 

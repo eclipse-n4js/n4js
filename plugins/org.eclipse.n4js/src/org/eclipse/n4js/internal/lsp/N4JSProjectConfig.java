@@ -20,6 +20,7 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.projectModel.lsp.IN4JSSourceFolder;
+import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
 import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
@@ -153,6 +154,12 @@ public class N4JSProjectConfig implements IProjectConfig {
 	/** @return true iff the output folder of this project can be cleaned */
 	public boolean canClean() {
 		return !indexOnly();
+	}
+
+	/**  */
+	public XIWorkspaceConfig.UpdateChanges update(URI changedResource) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
