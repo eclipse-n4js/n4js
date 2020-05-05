@@ -22,6 +22,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.ide.server.LspLogger;
 import org.eclipse.n4js.ide.xtext.server.ParallelBuildManager.ParallelJob;
 import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo.ProjectBuildOrderIterator;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
@@ -128,6 +129,9 @@ public class XBuildManager {
 
 	@Inject
 	private ProjectBuildOrderInfo.Provider projectBuildOrderInfoProvider;
+
+	@Inject
+	private LspLogger lspLogger;
 
 	private final LinkedHashSet<URI> dirtyFiles = new LinkedHashSet<>();
 
@@ -252,6 +256,7 @@ public class XBuildManager {
 
 	/** Run the build on the workspace */
 	protected List<IResourceDescription.Delta> doIncrementalBuild(boolean doGenerate, CancelIndicator cancelIndicator) {
+		lspLogger.log("Building ...");
 		try {
 			Map<ProjectDescription, Set<URI>> project2dirty = computeProjectToUriMap(this.dirtyFiles);
 			Map<ProjectDescription, Set<URI>> project2deleted = computeProjectToUriMap(this.deletedFiles);
@@ -280,11 +285,17 @@ public class XBuildManager {
 
 			List<IResourceDescription.Delta> result = allBuildDeltas;
 			allBuildDeltas = new ArrayList<>();
+
+			lspLogger.log("... build done.");
+
 			return result;
 
 		} catch (CancellationException | OperationCanceledException ce) {
+			lspLogger.log("... build canceled.");
 			throw ce;
 		} catch (Exception e) {
+			String eStr = e.getMessage() + " (" + e.getClass().getSimpleName() + ")";
+			lspLogger.log("... build ABORTED due to exception: " + eStr);
 			// recover and also discard the build queue - state is undefined afterwards.
 			this.dirtyFiles.clear();
 			this.deletedFiles.clear();
