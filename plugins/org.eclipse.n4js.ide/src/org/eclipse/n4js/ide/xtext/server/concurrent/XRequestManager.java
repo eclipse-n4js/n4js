@@ -34,8 +34,11 @@ public class XRequestManager {
 
 	private static final Logger LOG = Logger.getLogger(XRequestManager.class);
 
-	@Inject
-	private ExecutorService parallel;
+	// TODO re-enable concurrent execution of read-requests
+	// @Inject
+	// private ExecutorService parallel;
+	private final ExecutorService parallel = Executors.newSingleThreadExecutor(
+			new ThreadFactoryBuilder().setDaemon(true).setNameFormat("XRequestManager-Parallel-%d").build());
 
 	@Inject
 	private OperationCanceledManager operationCanceledManager;
