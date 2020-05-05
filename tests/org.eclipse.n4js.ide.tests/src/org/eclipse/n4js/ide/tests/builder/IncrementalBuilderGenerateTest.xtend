@@ -395,7 +395,7 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 
 		assertFalse(outputFile.exists()); // never generate output files in node_modules folders
 		projectStateSnapshot.assertChanged();
-		assertNoIssues(); // error in Main.n4js should show up TODO GH-1727
+		assertIssues("Main" -> #[ "(Error, [1:16 - 1:31], any is not a subtype of number.)" ]);
 
 		projectStateSnapshot.file.delete();
 
@@ -404,7 +404,7 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 
 		assertFalse(outputFile.exists()); // never generate output files in node_modules folders
 		projectStateSnapshot.assertExists(); // recreated
-		assertNoIssues(); // error in Main.n4js should show up TODO GH-1727
+		assertIssues("Main" -> #[ "(Error, [1:16 - 1:31], string is not a subtype of number.)" ]);
 		
 		cleanBuildAndWait();
 		assertFalse(outputFile.exists());
@@ -429,14 +429,14 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 
 		assertFalse(outputFile.exists()); // never generate output files in node_modules folders
 		projectStateSnapshot.assertUnchanged(); // not updated, because Other.n4js not saved yet
-		assertNoIssues(); // error in Main.n4js should show up TODO GH-1727
+		assertIssues("Main" -> #[ "(Error, [1:16 - 1:31], any is not a subtype of number.)" ]);
 
 		saveOpenedFile("Other");
 		joinServerRequests();
 
 		assertFalse(outputFile.exists()); // never generate output files in node_modules folders
 		projectStateSnapshot.assertChanged();
-		assertNoIssues(); // error in Main.n4js should show up TODO GH-1727
+		assertIssues("Main" -> #[ "(Error, [1:16 - 1:31], any is not a subtype of number.)" ]);
 
 		projectStateSnapshot.file.delete();
 
@@ -445,18 +445,13 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 
 		assertFalse(outputFile.exists()); // never generate output files in node_modules folders
 		projectStateSnapshot.assertNotExists(); // not recreated, because Other.n4js not saved yet
-		assertNoIssues(); // error in Main.n4js should show up TODO GH-1727
+		assertIssues("Main" -> #[ "(Error, [1:16 - 1:31], string is not a subtype of number.)" ]);
 
 		saveOpenedFile("Other");
 		joinServerRequests();
 
 		assertFalse(outputFile.exists()); // never generate output files in node_modules folders
 		projectStateSnapshot.assertExists(); // recreated
-		assertNoIssues(); // error in Main.n4js should show up TODO GH-1727
-
-		cleanBuildAndWait();
-		assertFalse(outputFile.exists());
-		projectStateSnapshot.assertExists();
 		assertIssues("Main" -> #[ "(Error, [1:16 - 1:31], string is not a subtype of number.)" ]);
 	}
 
