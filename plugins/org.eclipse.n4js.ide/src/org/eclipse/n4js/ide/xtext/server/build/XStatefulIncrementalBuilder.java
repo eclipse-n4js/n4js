@@ -79,7 +79,11 @@ public class XStatefulIncrementalBuilder {
 		}
 	}
 
-	/** Run the build. */
+	/**
+	 * Run the build.
+	 * <p>
+	 * Cancellation behavior: does not throw exception but returns with a partial result.
+	 */
 	public XBuildResult launch() {
 		List<IResourceDescription.Delta> allProcessedDeltas = new ArrayList<>();
 

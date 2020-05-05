@@ -12,7 +12,6 @@ import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.resource.clustering.DisabledClusteringPolicy;
 import org.eclipse.xtext.resource.clustering.IResourceClusteringPolicy;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
-import org.eclipse.xtext.service.OperationCanceledManager;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -31,15 +30,20 @@ public class XIncrementalBuilder {
 	@Inject
 	private Provider<XStatefulIncrementalBuilder> provider;
 
-	@Inject
-	private OperationCanceledManager operationCanceledManager;
-
-	/** Run the build without clustering. */
+	/**
+	 * Run the build without clustering.
+	 * <p>
+	 * Cancellation behavior: does not throw exception but returns with a partial result.
+	 */
 	public XBuildResult build(XBuildRequest request) {
 		return build(request, new DisabledClusteringPolicy());
 	}
 
-	/** Run the build. */
+	/**
+	 * Run the build.
+	 * <p>
+	 * Cancellation behavior: does not throw exception but returns with a partial result.
+	 */
 	public XBuildResult build(XBuildRequest request, IResourceClusteringPolicy clusteringPolicy) {
 
 		ResourceDescriptionsData resDescrsCopy = request.getState().getResourceDescriptions().copy();
@@ -54,11 +58,6 @@ public class XIncrementalBuilder {
 		builder.setContext(context);
 		builder.setRequest(request);
 
-		try {
-			return builder.launch();
-		} catch (Throwable t) {
-			this.operationCanceledManager.propagateIfCancelException(t);
-			throw t;
-		}
+		return builder.launch();
 	}
 }

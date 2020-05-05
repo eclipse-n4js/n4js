@@ -13,10 +13,12 @@ package org.eclipse.n4js.ui.resource;
 import java.util.Collection;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.N4JSResourceDescriptionManager;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.IResourceDescriptions;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.inject.Singleton;
 
@@ -35,4 +37,12 @@ public class N4JSEclipseResourceDescriptionManager extends N4JSResourceDescripti
 		return super.isAffected(deltas, candidate, context);
 	}
 
+	@Override
+	protected Iterable<? extends IN4JSProject> getDependenciesForIsAffected(IN4JSProject project) {
+		return IterableExtensions.filter(super.getDependenciesForIsAffected(project),
+				// filter out dependencies that cross the border between main workspace and external library workspace
+				// (required to avoid triggering a build of the main workspace while building the external library
+				// workspace and vice versa)
+				projectDependency -> projectDependency.isExternal() == project.isExternal());
+	}
 }
