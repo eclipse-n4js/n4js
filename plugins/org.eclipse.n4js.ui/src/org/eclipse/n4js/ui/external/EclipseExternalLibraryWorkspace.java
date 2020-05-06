@@ -402,4 +402,8 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace
 		return getRootLocationForResource(projectProvider.getAllRootLocations(), nestedLocation);
 	}
 
+	@Override
+	public void invalidateProject(IN4JSProject project) {
+		throw new IllegalStateException("Not supported for EclipseExternalLibraryWorkspace");
+	}
 }

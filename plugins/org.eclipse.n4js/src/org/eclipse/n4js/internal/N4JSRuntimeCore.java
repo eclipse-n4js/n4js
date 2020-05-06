@@ -34,6 +34,7 @@ import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.resource.OrderedResourceDescriptionsData;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
+import org.eclipse.n4js.utils.ProjectDiscoveryHelper;
 import org.eclipse.n4js.utils.ResourceType;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
@@ -62,6 +63,9 @@ public class N4JSRuntimeCore extends AbstractN4JSCore implements IN4JSRuntimeCor
 
 	@Inject
 	private ResourceDescriptionsProvider resourceDescriptionsProvider;
+
+	@Inject
+	private ProjectDiscoveryHelper projectDiscoveryHelper;
 
 	@Inject
 	private IResourceServiceProvider.Registry resourceServiceProviderRegistry;
@@ -135,6 +139,21 @@ public class N4JSRuntimeCore extends AbstractN4JSCore implements IN4JSRuntimeCor
 		}
 	}
 
+	/** @return true iff the project at the given location was registered before */
+	public boolean isRegistered(FileURI location) {
+		return workspace.isRegistered(location);
+	}
+
+	/** Deregisters the project at the given location */
+	public void deregister(FileURI location) {
+		workspace.deregister(location);
+	}
+
+	/** Deregisters all projects */
+	public void deregisterAll() {
+		workspace.deregisterAll();
+	}
+
 	@Override
 	public ResourceSet createResourceSet(Optional<IN4JSProject> contextProject) {
 		final ResourceSet resourceSet = resourceSetProvider.get();
@@ -147,6 +166,11 @@ public class N4JSRuntimeCore extends AbstractN4JSCore implements IN4JSRuntimeCor
 	@Override
 	public IResourceDescriptions getXtextIndex(ResourceSet resourceSet) {
 		return resourceDescriptionsProvider.getResourceDescriptions(resourceSet);
+	}
+
+	/** @return instance of {@link ProjectDiscoveryHelper} */
+	public ProjectDiscoveryHelper getProjectDiscoveryHelper() {
+		return projectDiscoveryHelper;
 	}
 
 	private void createAllResourcesWorkspace(ResourceSet resourceSet) {

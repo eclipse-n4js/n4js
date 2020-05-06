@@ -11,7 +11,6 @@
 package org.eclipse.n4js.internal.lsp;
 
 import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -179,8 +178,7 @@ public class N4JSProjectConfig implements IProjectConfig {
 		SafeURI<?> pckjsonSafeUri = delegate.getProjectDescriptionLocation();
 		if (pckjsonSafeUri == null || !delegate.exists()) {
 			// project was deleted
-			return new WorkspaceUpdateChanges(false, emptyList(), emptyList(), emptyList(), emptyList(),
-					singletonList(this), emptyList());
+			return WorkspaceUpdateChanges.createProjectRemoved(this);
 		}
 
 		URI pckjson = pckjsonSafeUri.toURI();
@@ -192,17 +190,10 @@ public class N4JSProjectConfig implements IProjectConfig {
 		// package.json was modified
 
 		Set<? extends IN4JSSourceFolder> oldSourceFolders = getSourceFolders();
-		List<String> oldWorkspaces = ((N4JSProject) delegate).getWorkspaces();
 		ImmutableList<? extends IN4JSProject> oldDeps = ((N4JSProject) delegate).getDependenciesAndImplementedApis();
 		((N4JSProject) delegate).invalidate();
 		Set<? extends IN4JSSourceFolder> newSourceFolders = getSourceFolders();
-		List<String> newWorkspaces = ((N4JSProject) delegate).getWorkspaces();
 		ImmutableList<? extends IN4JSProject> newDeps = ((N4JSProject) delegate).getDependenciesAndImplementedApis();
-
-		// detect changes in dependencies
-		// note that a change of the name attribute is not relevant since the folder name is used
-		boolean dependencyChanged = !Objects.equals(oldWorkspaces, newWorkspaces);
-		dependencyChanged |= !Objects.equals(oldDeps, newDeps);
 
 		// detect added/removed source folders
 		Map<URI, IN4JSSourceFolder> oldSFs = new HashMap<>();
@@ -227,8 +218,22 @@ public class N4JSProjectConfig implements IProjectConfig {
 			}
 		}
 
+		// detect changes in dependencies
+		// note that a change of the name attribute is not relevant since the folder name is used
+		boolean dependencyChanged = !Objects.equals(oldDeps, newDeps);
+
 		return new WorkspaceUpdateChanges(dependencyChanged, emptyList(), emptyList(), removedSourceFolders,
 				addedSourceFolders, emptyList(), emptyList());
+	}
+
+	/** @see N4JSProject#getWorkspaces() */
+	public List<String> getWorkspaces() {
+		return ((N4JSProject) delegate).getWorkspaces();
+	}
+
+	/** @see N4JSProject#isWorkspacesProject() */
+	public boolean isWorkspacesProject() {
+		return ((N4JSProject) delegate).isWorkspacesProject();
 	}
 
 }

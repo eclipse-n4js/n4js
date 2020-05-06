@@ -22,6 +22,7 @@ import org.eclipse.n4js.internal.MultiCleartriggerCache;
 import org.eclipse.n4js.internal.MultiCleartriggerCache.CleartriggerSupplier;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectReference;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.locations.PlatformResourceURI;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
@@ -154,6 +155,11 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace<PlatformRes
 			return result;
 		}
 		return null;
+	}
+
+	@Override
+	public void invalidateProject(IN4JSProject project) {
+		throw new IllegalStateException("Not supported for EclipseBasedN4JSWorkspace");
 	}
 
 	void setProjectDescriptionLoadListener(ProjectDescriptionLoadListener listener) {

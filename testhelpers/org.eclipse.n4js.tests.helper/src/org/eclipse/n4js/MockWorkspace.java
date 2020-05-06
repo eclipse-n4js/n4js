@@ -21,6 +21,7 @@ import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectDescriptionFactory;
 import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.projectDescription.ProjectType;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.semver.SemverUtils;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
@@ -90,4 +91,8 @@ public class MockWorkspace extends InternalN4JSWorkspace<MockURIWrapper> {
 		return emptyList();
 	}
 
+	@Override
+	public void invalidateProject(IN4JSProject project) {
+		throw new IllegalStateException("Not supported for MockWorkspace");
+	}
 }

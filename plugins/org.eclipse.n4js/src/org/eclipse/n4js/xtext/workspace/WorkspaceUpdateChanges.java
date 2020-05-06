@@ -10,7 +10,10 @@
  */
 package org.eclipse.n4js.xtext.workspace;
 
+import static com.google.common.collect.Iterables.concat;
+import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,15 +46,34 @@ import org.eclipse.xtext.workspace.IWorkspaceConfig;
  */
 @SuppressWarnings("restriction")
 public class WorkspaceUpdateChanges {
-	static final public WorkspaceUpdateChanges NO_CHANGES = new WorkspaceUpdateChanges();
+	/** Singleton instance containing empty change sets only */
+	public static final WorkspaceUpdateChanges NO_CHANGES = new WorkspaceUpdateChanges();
+
+	/** @return a new instance of {@link WorkspaceUpdateChanges} contains the given project as removed */
+	public static WorkspaceUpdateChanges createProjectRemoved(IProjectConfig project) {
+		return new WorkspaceUpdateChanges(false, emptyList(), emptyList(), emptyList(), emptyList(),
+				singletonList(project), emptyList());
+	}
+
+	/** @return a new instance of {@link WorkspaceUpdateChanges} contains the given project as added */
+	public static WorkspaceUpdateChanges createProjectAdded(IProjectConfig project) {
+		return new WorkspaceUpdateChanges(false, emptyList(), emptyList(), emptyList(), emptyList(),
+				emptyList(), singletonList(project));
+	}
 
 	/** true iff a name or a dependency of a (still existing) project have been modified */
 	protected boolean namesOrDependenciesChanged;
+	/** removed uris (excluding those from {@link #removedSourceFolders} and {@link #removedProjects}) */
 	protected List<URI> removedURIs;
+	/** added uris (excluding those from {@link #addedSourceFolders} and {@link #addedProjects}) */
 	protected List<URI> addedURIs;
+	/** removed source folders (excluding those from {@link #removedProjects}) */
 	protected List<ISourceFolder> removedSourceFolders;
+	/** added source folders (excluding those from {@link #addedProjects}) */
 	protected List<ISourceFolder> addedSourceFolders;
+	/** removed projects */
 	protected List<IProjectConfig> removedProjects;
+	/** added projects */
 	protected List<IProjectConfig> addedProjects;
 
 	/** Constructor */
@@ -73,34 +95,48 @@ public class WorkspaceUpdateChanges {
 		this.addedProjects = addedProjects;
 	}
 
+	/** @return true iff a name or dependencies of a still existing project changed */
 	public boolean isNamesOrDependenciesChanged() {
 		return namesOrDependenciesChanged;
 	}
 
+	/**
+	 * @return all uris that have been removed (excluding those from {@link #removedSourceFolders} and
+	 *         {@link #removedProjects})
+	 */
 	public List<URI> getRemovedURIs() {
 		return removedURIs;
 	}
 
+	/**
+	 * @return all uris that have been added (excluding those from {@link #addedSourceFolders} and
+	 *         {@link #addedProjects})
+	 */
 	public List<URI> getAddedURIs() {
 		return addedURIs;
 	}
 
+	/** @return all source folders that have been removed (excluding those from {@link #removedProjects}) */
 	public List<ISourceFolder> getRemovedSourceFolders() {
 		return removedSourceFolders;
 	}
 
+	/** @return all source folders that have been added (excluding those from {@link #addedProjects}) */
 	public List<ISourceFolder> getAddedSourceFolders() {
 		return addedSourceFolders;
 	}
 
+	/** @return all projects that have been removed */
 	public List<IProjectConfig> getRemovedProjects() {
 		return removedProjects;
 	}
 
+	/** @return all projects that have been added */
 	public List<IProjectConfig> getAddedProjects() {
 		return addedProjects;
 	}
 
+	/** @return a list of all added source folders including those inside {@link #addedProjects} */
 	public List<ISourceFolder> getAllAddedSourceFolders() {
 		List<ISourceFolder> sourceFolders = new ArrayList<>(addedSourceFolders);
 		for (IProjectConfig project : addedProjects) {
@@ -109,6 +145,7 @@ public class WorkspaceUpdateChanges {
 		return sourceFolders;
 	}
 
+	/** @return a list of all {@link URI}s that have been changed */
 	public List<URI> getChangedURIs(IFileSystemScanner scanner) {
 		List<URI> uris = new ArrayList<>(addedURIs);
 		for (ISourceFolder sourceFolder : getAllAddedSourceFolders()) {
@@ -117,8 +154,20 @@ public class WorkspaceUpdateChanges {
 		return uris;
 	}
 
+	/** @return true iff this instance implies a change of the build order */
 	public boolean isBuildOrderAffected() {
 		return namesOrDependenciesChanged || !addedProjects.isEmpty() || !removedProjects.isEmpty();
+	}
+
+	/** Merges the given changes into this instance */
+	public void merge(WorkspaceUpdateChanges changes) {
+		this.namesOrDependenciesChanged |= changes.namesOrDependenciesChanged;
+		this.removedURIs = newArrayList(concat(this.removedURIs, changes.removedURIs));
+		this.addedURIs = newArrayList(concat(this.addedURIs, changes.addedURIs));
+		this.removedSourceFolders = newArrayList(concat(this.removedSourceFolders, changes.removedSourceFolders));
+		this.addedSourceFolders = newArrayList(concat(this.addedSourceFolders, changes.addedSourceFolders));
+		this.removedProjects = newArrayList(concat(this.removedProjects, changes.removedProjects));
+		this.addedProjects = newArrayList(concat(this.addedProjects, changes.addedProjects));
 	}
 
 }

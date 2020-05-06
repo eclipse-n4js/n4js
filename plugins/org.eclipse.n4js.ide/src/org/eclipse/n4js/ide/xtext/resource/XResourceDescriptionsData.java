@@ -47,6 +47,7 @@ public class XResourceDescriptionsData extends ResourceDescriptionsData {
 				copyLookupMap());
 	}
 
+	// or use ResourceDescriptionsData#getAllURIs()?
 	public List<URI> findUrisStartingWith(URI prefix) {
 		List<URI> uris = new ArrayList<>();
 		Map<URI, IResourceDescription> resourceDescriptionMap = getResourceDescriptionMap();

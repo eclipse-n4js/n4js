@@ -252,7 +252,7 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 
 	/** Triggers an incremental build, but will not generate output files */
 	protected XBuildable getIncrementalDirtyBuildable(List<URI> dirtyFiles, List<URI> deletedFiles) {
-		XBuildManager.XBuildable buildable = buildManager.getIncrementalDirtyBuildable(dirtyFiles, deletedFiles);
+		XBuildManager.XBuildable buildable = buildManager.getIncrementalDirtyBuildable(false, dirtyFiles, deletedFiles);
 		return (cancelIndicator) -> {
 			List<IResourceDescription.Delta> deltas = buildable.build(cancelIndicator);
 			afterBuild(deltas);
@@ -263,7 +263,9 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	/**
 	 * Generation of output files is only triggered if no source files contain unsaved changes (so-called dirty files).
 	 */
-	protected XBuildable tryIncrementalGenerateBuildable(List<URI> dirtyFiles, List<URI> deletedFiles) {
+	protected XBuildable tryIncrementalGenerateBuildable(boolean buildOrderChanged, List<URI> dirtyFiles,
+			List<URI> deletedFiles) {
+
 		boolean hasSomeDirtyFiles = false;
 		for (XDocument doc : openDocuments.values()) {
 			if (doc.isDirty()) {
@@ -274,13 +276,17 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 		if (hasSomeDirtyFiles) {
 			return getIncrementalDirtyBuildable(dirtyFiles, deletedFiles);
 		} else {
-			return getIncrementalGenerateBuildable(dirtyFiles, deletedFiles);
+			return getIncrementalGenerateBuildable(buildOrderChanged, dirtyFiles, deletedFiles);
 		}
 	}
 
 	/** Triggers an incremental build, and will generate output files. */
-	protected XBuildable getIncrementalGenerateBuildable(List<URI> dirtyFiles, List<URI> deletedFiles) {
-		XBuildManager.XBuildable buildable = buildManager.getIncrementalGenerateBuildable(dirtyFiles, deletedFiles);
+	protected XBuildable getIncrementalGenerateBuildable(boolean buildOrderChanged, List<URI> dirtyFiles,
+			List<URI> deletedFiles) {
+
+		XBuildManager.XBuildable buildable = buildManager.getIncrementalGenerateBuildable(buildOrderChanged, dirtyFiles,
+				deletedFiles);
+
 		return (cancelIndicator) -> {
 			List<IResourceDescription.Delta> deltas = buildable.build(cancelIndicator);
 			afterBuild(deltas);
@@ -335,11 +341,7 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 			deleted.addAll(findResourcesStartingWithPrefix(sourceFolder.getPath()));
 		}
 
-		if (update.isBuildOrderAffected()) {
-			buildManager.invalidateBuildOrder();
-		}
-
-		return tryIncrementalGenerateBuildable(
+		return tryIncrementalGenerateBuildable(update.isBuildOrderAffected(),
 				Collections.unmodifiableList(changedURIs),
 				Collections.unmodifiableList(deleted));
 	}
@@ -348,16 +350,16 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	public XBuildManager.XBuildable didClose(URI uri) {
 		openDocuments.remove(uri);
 		if (exists(uri)) {
-			return tryIncrementalGenerateBuildable(ImmutableList.of(uri), Collections.emptyList());
+			return tryIncrementalGenerateBuildable(false, ImmutableList.of(uri), Collections.emptyList());
 		}
-		return tryIncrementalGenerateBuildable(Collections.emptyList(), ImmutableList.of(uri));
+		return tryIncrementalGenerateBuildable(false, Collections.emptyList(), ImmutableList.of(uri));
 	}
 
 	/** Mark all documents as closed. */
 	public XBuildManager.XBuildable closeAll() {
 		ImmutableList<URI> closed = ImmutableList.copyOf(openDocuments.keySet());
 		openDocuments.clear();
-		return tryIncrementalGenerateBuildable(closed, Collections.emptyList());
+		return tryIncrementalGenerateBuildable(false, closed, Collections.emptyList());
 	}
 
 	/**
@@ -446,6 +448,7 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 		return false;
 	}
 
+	/** @return all resource descriptions that start with the given prefix */
 	public List<URI> findResourcesStartingWithPrefix(URI prefix) {
 		IProjectConfig projectConfig = workspaceConfig.findProjectContaining(prefix);
 		XProjectManager projectManager = this.projectName2ProjectManager.get(projectConfig.getName());

@@ -228,8 +228,10 @@ public class XBuildManager {
 	 *
 	 * @return a buildable.
 	 */
-	public XBuildable getIncrementalDirtyBuildable(List<URI> dirtyFiles, List<URI> deletedFiles) {
-		return doGetIncrementalBuildable(dirtyFiles, deletedFiles, false);
+	public XBuildable getIncrementalDirtyBuildable(boolean buildOrderChanged, List<URI> dirtyFiles,
+			List<URI> deletedFiles) {
+
+		return doGetIncrementalBuildable(buildOrderChanged, dirtyFiles, deletedFiles, false);
 	}
 
 	/**
@@ -237,21 +239,27 @@ public class XBuildManager {
 	 *
 	 * @return a buildable.
 	 */
-	public XBuildable getIncrementalGenerateBuildable(List<URI> dirtyFiles, List<URI> deletedFiles) {
-		return doGetIncrementalBuildable(dirtyFiles, deletedFiles, true);
+	public XBuildable getIncrementalGenerateBuildable(boolean buildOrderChanged, List<URI> dirtyFiles,
+			List<URI> deletedFiles) {
+
+		return doGetIncrementalBuildable(buildOrderChanged, dirtyFiles, deletedFiles, true);
 	}
 
 	/**
 	 * Enqueue the dirty and deleted files now and return a handle to an incremental build.
 	 */
-	private XBuildable doGetIncrementalBuildable(List<URI> dirtyFiles, List<URI> deletedFiles, boolean doGenerate) {
+	private XBuildable doGetIncrementalBuildable(boolean buildOrderChanged, List<URI> dirtyFiles,
+			List<URI> deletedFiles, boolean doGenerate) {
+
 		queue(this.dirtyFiles, deletedFiles, dirtyFiles);
 		queue(this.deletedFiles, dirtyFiles, deletedFiles);
-		return (cancelIndicator) -> doIncrementalBuild(doGenerate, cancelIndicator);
+		return (cancelIndicator) -> doIncrementalBuild(buildOrderChanged, doGenerate, cancelIndicator);
 	}
 
 	/** Run the build on the workspace */
-	protected List<IResourceDescription.Delta> doIncrementalBuild(boolean doGenerate, CancelIndicator cancelIndicator) {
+	protected List<IResourceDescription.Delta> doIncrementalBuild(boolean buildOrderChanged, boolean doGenerate,
+			CancelIndicator cancelIndicator) {
+
 		try {
 			Map<ProjectDescription, Set<URI>> project2dirty = computeProjectToUriMap(this.dirtyFiles);
 			Map<ProjectDescription, Set<URI>> project2deleted = computeProjectToUriMap(this.deletedFiles);
@@ -331,11 +339,6 @@ public class XBuildManager {
 				}
 			}
 		}
-	}
-
-	/** Invalidates the cached build order */
-	public void invalidateBuildOrder() {
-		// in case projectBuildOrderInfoProvider does caching: do something here
 	}
 
 	/** Prints build order */

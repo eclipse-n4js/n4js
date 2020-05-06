@@ -10,16 +10,30 @@
  */
 package org.eclipse.n4js.internal.lsp;
 
+import static java.util.Collections.emptyList;
+
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.internal.N4JSProject;
+import org.eclipse.n4js.internal.N4JSRuntimeCore;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
+import org.eclipse.n4js.utils.ProjectDiscoveryHelper;
 import org.eclipse.n4js.xtext.workspace.WorkspaceUpdateChanges;
 import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
 import org.eclipse.xtext.workspace.IProjectConfig;
+
+import com.google.common.collect.Sets;
 
 /**
  * Wrapper around {@link IN4JSCore}.
@@ -71,8 +85,79 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	@Override
 	public WorkspaceUpdateChanges update(URI changedResource) {
 		IProjectConfig project = this.findProjectContaining(changedResource);
-		WorkspaceUpdateChanges update = ((N4JSProjectConfig) project).update(changedResource);
+
+		if (project == null) {
+			// project was deleted
+			// note: currently this should never happen; but
+			// if so: TODO: return other than WorkspaceUpdateChanges.NO_CHANGES
+			return WorkspaceUpdateChanges.NO_CHANGES;
+		}
+
+		// get old projects here before it gets invalidated by N4JSProjectConfig#update()
+		Set<? extends IProjectConfig> oldProjects = getProjects();
+
+		WorkspaceUpdateChanges update = new WorkspaceUpdateChanges();
+
+		boolean wasExistingInWorkspace = ((N4JSRuntimeCore) delegate).isRegistered(new FileURI(project.getPath()));
+		if (!wasExistingInWorkspace) {
+			// a new project was created
+			update.merge(WorkspaceUpdateChanges.createProjectAdded(project));
+		} else {
+			// an existing project was modified
+			update.merge(((N4JSProjectConfig) project).update(changedResource));
+		}
+
+		if (isWorkspaceRootProject(project)) {
+			update.merge(detectWorkspacesChanges(project, oldProjects));
+		}
+
 		return update;
 	}
 
+	private WorkspaceUpdateChanges detectWorkspacesChanges(IProjectConfig project,
+			Set<? extends IProjectConfig> oldProjects) {
+
+		// update all projects
+		((N4JSProject) project).invalidate();
+		((N4JSRuntimeCore) delegate).deregisterAll();
+
+		ProjectDiscoveryHelper projectDiscoveryHelper = ((N4JSRuntimeCore) delegate).getProjectDiscoveryHelper();
+		Path baseDir = new FileURI(getPath()).toFile().toPath();
+		LinkedHashSet<Path> newProjectPaths = projectDiscoveryHelper.collectAllProjectDirs(baseDir);
+		for (Path newProjectPath : newProjectPaths) {
+			((N4JSRuntimeCore) delegate).registerProject(newProjectPath.toFile());
+		}
+
+		// detect changes
+		Map<URI, IProjectConfig> oldProjectsMap = getProjectsMap(oldProjects);
+		Map<URI, IProjectConfig> newProjectsMap = getProjectsMap(getProjects());
+		List<IProjectConfig> addedProjects = new ArrayList<>();
+		List<IProjectConfig> removedProjects = new ArrayList<>();
+		for (URI uri : Sets.union(oldProjectsMap.keySet(), newProjectsMap.keySet())) {
+			boolean isOld = oldProjectsMap.containsKey(uri);
+			boolean isNew = newProjectsMap.containsKey(uri);
+			if (isOld && !isNew) {
+				removedProjects.add(oldProjectsMap.get(uri));
+			} else if (!isOld && isNew) {
+				addedProjects.add(newProjectsMap.get(uri));
+			}
+		}
+
+		boolean dependenciesChanged = !addedProjects.isEmpty() || !removedProjects.isEmpty();
+		return new WorkspaceUpdateChanges(dependenciesChanged, emptyList(), emptyList(), emptyList(),
+				emptyList(), addedProjects, removedProjects);
+	}
+
+	private Map<URI, IProjectConfig> getProjectsMap(Set<? extends IProjectConfig> projects) {
+		Map<URI, IProjectConfig> projectsMap = new HashMap<>();
+		for (IProjectConfig projectConfig : projects) {
+			projectsMap.put(projectConfig.getPath(), projectConfig);
+		}
+		return projectsMap;
+	}
+
+	/** @return true iff the base dir of the workspace is a workspaces (yarn) project */
+	public boolean isWorkspaceRootProject(IProjectConfig project) {
+		return getPath().equals(project.getPath()) && ((N4JSProjectConfig) project).isWorkspacesProject();
+	}
 }

@@ -234,6 +234,13 @@ public class N4JSProject implements IN4JSProject {
 		return FileUtils.normalizeToDotWhenEmpty(pd.getOutputPath());
 	}
 
+	/** @return true iff {@link #getWorkspaces()} returns a non-empty result */
+	public boolean isWorkspacesProject() {
+		List<String> workspaces = getWorkspaces();
+		return workspaces != null && !workspaces.isEmpty();
+	}
+
+	/** @see ProjectDescription#getWorkspaces() */
 	public List<String> getWorkspaces() {
 		if (!exists())
 			return null;
