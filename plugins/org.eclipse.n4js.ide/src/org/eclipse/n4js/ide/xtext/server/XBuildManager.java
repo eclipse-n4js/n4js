@@ -20,7 +20,6 @@ import java.util.concurrent.CancellationException;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ide.xtext.server.ParallelBuildManager.ParallelJob;
 import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo.ProjectBuildOrderIterator;
@@ -29,6 +28,7 @@ import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionDelta;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
+import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.IteratorExtensions;
@@ -128,6 +128,9 @@ public class XBuildManager {
 
 	@Inject
 	private ProjectBuildOrderInfo.Provider projectBuildOrderInfoProvider;
+
+	@Inject
+	private OperationCanceledManager operationCanceledManager;
 
 	private final LinkedHashSet<URI> dirtyFiles = new LinkedHashSet<>();
 	private final LinkedHashSet<URI> deletedFiles = new LinkedHashSet<>();
@@ -291,13 +294,17 @@ public class XBuildManager {
 			allBuildDeltas = new ArrayList<>();
 			return result;
 
-		} catch (CancellationException | OperationCanceledException ce) {
+		} catch (CancellationException ce) {
 			throw ce;
-		} catch (Exception e) {
+		} catch (Throwable th) {
+			operationCanceledManager.propagateIfCancelException(th);
+			// unknown exception or error (and not a cancellation case):
 			// recover and also discard the build queue - state is undefined afterwards.
 			this.dirtyFiles.clear();
 			this.deletedFiles.clear();
-			throw e;
+			this.dirtyFilesAwaitingGeneration.clear();
+			this.deletedFilesAwaitingGeneration.clear();
+			throw th;
 		}
 	}
 
