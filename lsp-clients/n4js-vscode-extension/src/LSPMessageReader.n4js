@@ -1,0 +1,123 @@
+/*
+ * Copyright (c) 2020 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+import {IReadableStream} from 'stream';
+
+
+export default public class LSPMessageReader {
+
+    @Final
+    private errorChannel: any+;
+    @Final
+    private msgHandlers: ((Object,Map<string,string>)=>void)[];
+
+    private corrupt = false;
+    private buff = Buffer.from([]);
+
+
+    public constructor(stream: IReadableStream, errorChannel: any+, ...messageHandlers: (Object,Map<string,string>)=>void) {
+        this.errorChannel = errorChannel;
+        this.msgHandlers = [...messageHandlers];
+
+        stream.on('data', (data:any+) => {
+            try {
+                this.onDataReceivedFromServer(data);
+            } catch(err) {
+                this.logError('' + err);
+            }
+        });
+    }
+
+    public isCorrupt(): boolean {
+        return this.corrupt;
+    }
+
+    private onDataReceivedFromServer(data: any+) {
+        if (this.corrupt || !(data instanceof Buffer)) {
+            return;
+        }
+        this.buff = Buffer.concat([this.buff, data]);
+        const [msgLen, contentJSON, headerFields] = tryParseMessage(this.buff);
+        if (msgLen === -2) {
+            // unrecoverable error in message stream
+            this.logError('input stream got corrupted');
+            this.corrupt = true;
+            this.buff = undefined;
+            return;
+        }
+        if (msgLen === -1) {
+            // incomplete message
+            return;
+        }
+        // consume the current message from buffer
+        this.buff = this.buff.slice(msgLen);
+        if (!(contentJSON instanceof Object)) {
+            return; // content is not a JSON object, ignore this message
+        }
+        // notify message handlers
+        for (const msgHandler of this.msgHandlers) {
+            msgHandler(contentJSON, headerFields);
+        }
+    }
+
+    private logError(msg: string) {
+        this.errorChannel.appendLine('ERROR in LSPMessageReader: ' + msg);
+    }
+}
+
+
+function tryParseMessage(buff: Buffer): [int, any, Map<string,string>] {
+    const [headerLen, headerFields] = tryParseHeader(buff);
+    if (headerLen < 0) {
+        return [-1, null, null]; // incomplete message
+    }
+    const contentLenAsStr = headerFields.get('Content-Length');
+    if (!(typeof contentLenAsStr === 'string')) {
+        return [-2, null, null]; // currupt message
+    }
+    const contentLen = parseInt(contentLenAsStr);
+    if (contentLen === NaN) {
+        return [-2, null, null]; // currupt message
+    }
+    const msgLen = headerLen + contentLen;
+    if (buff.length < msgLen) {
+    	return [-1, null, null]; // incomplete message
+    }
+    const contentStr = buff.slice(headerLen, msgLen).toString('utf-8');
+    const contentJSON = JSON.parse(contentStr);
+    return [msgLen, contentJSON, headerFields];
+}
+
+// returns header field name/value pairs and size of header in bytes
+function tryParseHeader(buff: Buffer): [int, Map<string,string>] {
+    const buffStr = buff.toString('ascii');
+    
+    let idx = 0;
+    const headerFields: Map<string,string> = new Map<string,string>();
+
+    while(true) {
+        const idxFieldEnd = buffStr.indexOf('\r\n', idx);
+        if (idxFieldEnd < 0) {
+            break; // incomplete header
+        } else if (idxFieldEnd === idx) {
+            return [idx + 2, headerFields]; // empty header field denotes end of header
+        }
+        const field = buffStr.substring(idx, idxFieldEnd);
+        const idxNameEnd = field.indexOf(': ');
+        if (idxNameEnd>=0) {
+            const fieldName = field.substring(0, idxNameEnd);
+            const fieldValue = field.substring(idxNameEnd + 2);
+            headerFields.set(fieldName, fieldValue);
+        }
+        idx = idxFieldEnd + 2;
+    }
+    return [-1, null];
+}

@@ -9,10 +9,12 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-import * as n4jscli from 'n4js-cli';
+import LSPMessageReader from 'LSPMessageReader';
+import {IReadableStream} from 'stream';
 import * as jreProvider from 'n4js-cli/JreProvider';
-import * as net from 'net';
 import * as childProcess from 'child_process';
+import * as n4jscli from 'n4js-cli';
+import * as net from 'net';
 
 /** This message is sent from the LSP server. */
 const LSP_SYNC_MESSAGE = 'Listening for LSP clients';
@@ -22,6 +24,7 @@ const TIMEOUT = 1000;
 
 let n4jscProcess: childProcess.ChildProcess;
 let outputAppender: (text:string)=>void;
+let lspMessageReader: LSPMessageReader;
 
 
 
@@ -50,8 +53,8 @@ export function getActivate(vscode: any+, vscodeLC: any+): any {
             //vscode.window.showErrorMessage('my error');
 
 
-            let writer: Object;
-            let reader: Object;
+            let writer: Object+;
+            let reader: IReadableStream;
             const socket = await connectToRunningN4jsLspServer(PORT, outputChannel);
             if (socket) {
                 writer = socket;
@@ -62,6 +65,13 @@ export function getActivate(vscode: any+, vscodeLC: any+): any {
                 writer = n4jscProcess.stdin;
                 reader = n4jscProcess.stdout;
             }
+
+            lspMessageReader = new LSPMessageReader(reader, outputChannel, (contentJSON: Object) => {
+                const method = contentJSON['method'];
+                if (typeof method === 'string' && (method as string).startsWith('n4js/')) {
+                    onMessageReceivedFromServer(method, contentJSON, outputChannel);
+                }
+            });
 
             let result = {
                 writer: writer,
@@ -209,7 +219,7 @@ async function connectToRunningN4jsLspServer(port: number, outputChannel: any+):
 
             let clientSocket = net.createConnection({port: port});
             clientSocket.on('connect', () => {
-                    outputChannel.appendLine('Connected to a already running LSP server (port=' + PORT + ')');
+                    outputChannel.appendLine('Connected to an already running LSP server (port=' + PORT + ')');
                     clearTimeout(timer);
                     resolve(clientSocket);
                 })
@@ -231,6 +241,10 @@ async function connectToRunningN4jsLspServer(port: number, outputChannel: any+):
     return result;
 };
 
+
+function onMessageReceivedFromServer(method: string, contentJSON: Object, outputChannel: any+) {
+    outputChannel.append(JSON.stringify(contentJSON));
+}
 
 
 
