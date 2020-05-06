@@ -157,7 +157,9 @@ public class XStatefulIncrementalBuilder {
 		} catch (CancellationException e) {
 			// catch CancellationException here and proceed normally to save already resolved deltas
 		} catch (Throwable th) {
-			if (!operationCanceledManager.isOperationCanceledException(th)) {
+			if (operationCanceledManager.isOperationCanceledException(th)) {
+				// catch OperationCanceledException, etc. here and proceed normally to save already resolved deltas
+			} else {
 				throw th;
 			}
 		}

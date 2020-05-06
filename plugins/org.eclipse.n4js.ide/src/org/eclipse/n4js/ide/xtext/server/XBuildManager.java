@@ -296,13 +296,15 @@ public class XBuildManager {
 
 		} catch (CancellationException ce) {
 			throw ce;
-		} catch (Exception e) {
-			operationCanceledManager.propagateIfCancelException(e);
-			// unknown exception (and not a cancellation case):
+		} catch (Throwable th) {
+			operationCanceledManager.propagateIfCancelException(th);
+			// unknown exception or error (and not a cancellation case):
 			// recover and also discard the build queue - state is undefined afterwards.
 			this.dirtyFiles.clear();
 			this.deletedFiles.clear();
-			throw e;
+			this.dirtyFilesAwaitingGeneration.clear();
+			this.deletedFilesAwaitingGeneration.clear();
+			throw th;
 		}
 	}
 

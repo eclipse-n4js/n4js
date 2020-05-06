@@ -155,8 +155,8 @@ class XRequestManagerTest {
 		assertEquals(2, sharedState.get)
 	}
 
-	// TODO when re-enabling concurrent execution of read-requests:
-	// delete the following test case and re-enable test #testRunReadConcurrent():
+	// when re-enabling concurrent execution of read-requests:
+	// TODO GH-1753 delete the following test case and re-enable #testRunReadConcurrent()
 	@Test(timeout = 2000)
 	def void testRunReadNotConcurrent() {
 		// as above in method #testRunReadConcurrent():
