@@ -136,6 +136,15 @@ public class WorkspaceUpdateChanges {
 		return addedProjects;
 	}
 
+	/** @return a list of all removed source folders including those inside {@link #removedProjects} */
+	public List<ISourceFolder> getAllRemovedSourceFolders() {
+		List<ISourceFolder> sourceFolders = new ArrayList<>(removedSourceFolders);
+		for (IProjectConfig project : removedProjects) {
+			sourceFolders.addAll(project.getSourceFolders());
+		}
+		return sourceFolders;
+	}
+
 	/** @return a list of all added source folders including those inside {@link #addedProjects} */
 	public List<ISourceFolder> getAllAddedSourceFolders() {
 		List<ISourceFolder> sourceFolders = new ArrayList<>(addedSourceFolders);
@@ -145,8 +154,23 @@ public class WorkspaceUpdateChanges {
 		return sourceFolders;
 	}
 
-	/** @return a list of all {@link URI}s that have been changed */
-	public List<URI> getChangedURIs(IFileSystemScanner scanner) {
+	/**
+	 * @return a list of all {@link URI}s that have been removed including those inside
+	 *         {@link #getAllRemovedSourceFolders()}
+	 */
+	public List<URI> getAllRemovedURIs(IFileSystemScanner scanner) {
+		List<URI> uris = new ArrayList<>(removedURIs);
+		for (ISourceFolder sourceFolder : getAllRemovedSourceFolders()) {
+			uris.addAll(sourceFolder.getAllResources(scanner));
+		}
+		return uris;
+	}
+
+	/**
+	 * @return a list of all {@link URI}s that have been changed including those inside
+	 *         {@link #getAllAddedSourceFolders()}
+	 */
+	public List<URI> getAllAddedURIs(IFileSystemScanner scanner) {
 		List<URI> uris = new ArrayList<>(addedURIs);
 		for (ISourceFolder sourceFolder : getAllAddedSourceFolders()) {
 			uris.addAll(sourceFolder.getAllResources(scanner));

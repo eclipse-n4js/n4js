@@ -335,9 +335,9 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 
 		WorkspaceUpdateChanges update = ((XIWorkspaceConfig) getWorkspaceConfig()).update(uri);
 		List<URI> changedURIs = Lists.newArrayList(
-				Iterables.concat(update.getChangedURIs(scanner), ImmutableList.of(uri)));
+				Iterables.concat(update.getAllAddedURIs(scanner), ImmutableList.of(uri)));
 		List<URI> deleted = new ArrayList<>(update.getRemovedURIs());
-		for (ISourceFolder sourceFolder : update.getRemovedSourceFolders()) {
+		for (ISourceFolder sourceFolder : update.getAllRemovedSourceFolders()) {
 			deleted.addAll(findResourcesStartingWithPrefix(sourceFolder.getPath()));
 		}
 
