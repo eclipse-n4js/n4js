@@ -185,17 +185,28 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 				return true;
 			}
 
-			for (IN4JSProject fromProjectDependency : fromProject.getDependenciesAndImplementedApis()) {
-
-				// Never mark a resource as effected when trying to resolve its dependency from an external to a
-				// workspace one and/or vice versa.
-				if (fromProjectDependency.isExternal() == fromProject.isExternal()
-						&& Objects.equals(fromProjectDependency, toProject)) {
+			Iterable<? extends IN4JSProject> fromProjectDependencies = getDependenciesForIsAffected(fromProject);
+			for (IN4JSProject fromProjectDependency : fromProjectDependencies) {
+				if (Objects.equals(fromProjectDependency, toProject)) {
 					return true;
 				}
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Returns project dependencies of the given project that should be considered when computing the
+	 * {@link #isAffected(Collection, IResourceDescription, IResourceDescriptions) isAffected()} relation.
+	 * <p>
+	 * Normally this method should return {@link IN4JSProject#getDependenciesAndImplementedApis()}, but subclasses may
+	 * choose to filter out certain dependencies. In effect, filtering out certain dependencies will mean that
+	 * incremental builds won't propagate along those dependencies.
+	 * <p>
+	 * NOTE: only required for external library workspace in Eclipse.
+	 */
+	protected Iterable<? extends IN4JSProject> getDependenciesForIsAffected(IN4JSProject fromProject) {
+		return fromProject.getDependenciesAndImplementedApis();
 	}
 
 	private boolean hasDirectLoadtimeDependencyTo(IResourceDescription from, String toURIString) {
