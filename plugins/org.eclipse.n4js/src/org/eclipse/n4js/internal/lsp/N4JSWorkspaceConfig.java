@@ -17,6 +17,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
+import org.eclipse.n4js.xtext.workspace.WorkspaceUpdateChanges;
 import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
 import org.eclipse.xtext.workspace.IProjectConfig;
 
@@ -68,10 +69,9 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	}
 
 	@Override
-	public UpdateChanges update(URI changedResource) {
+	public WorkspaceUpdateChanges update(URI changedResource) {
 		IProjectConfig project = this.findProjectContaining(changedResource);
-		UpdateChanges update = ((N4JSProjectConfig) project).update(changedResource);
-
+		WorkspaceUpdateChanges update = ((N4JSProjectConfig) project).update(changedResource);
 		return update;
 	}
 

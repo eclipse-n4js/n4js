@@ -27,6 +27,7 @@ import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectReference;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
@@ -124,6 +125,11 @@ public class HlcExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 			projectDescriptionMap.put(location, projectDescription);
 		}
 		return projectDescriptionMap.get(location);
+	}
+
+	@Override
+	public void invalidateProject(IN4JSProject project) {
+		projectDescriptionMap.remove(project.getProjectDescriptionLocation());
 	}
 
 	@Override

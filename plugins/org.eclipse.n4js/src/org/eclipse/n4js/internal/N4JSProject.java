@@ -43,8 +43,7 @@ public class N4JSProject implements IN4JSProject {
 	private final boolean external;
 	private Boolean exists;
 
-	protected N4JSProject(SafeURI<?> location, boolean external,
-			N4JSModel<? extends SafeURI<?>> model) {
+	protected N4JSProject(SafeURI<?> location, boolean external, N4JSModel<? extends SafeURI<?>> model) {
 		this.location = location;
 		this.model = model;
 		this.external = isInNodeModulesFolderOrDefault(location, external);
@@ -327,6 +326,11 @@ public class N4JSProject implements IN4JSProject {
 			}
 		}
 		return null;
+	}
+
+	/** Invalidates caches related to the project description of this project */
+	public void invalidate() {
+		model.invalidateProject(this);
 	}
 
 	@Override

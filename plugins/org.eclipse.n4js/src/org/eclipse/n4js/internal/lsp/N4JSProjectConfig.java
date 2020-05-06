@@ -10,6 +10,9 @@
  */
 package org.eclipse.n4js.internal.lsp;
 
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
+
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -17,10 +20,12 @@ import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.projectModel.lsp.IN4JSSourceFolder;
-import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
+import org.eclipse.n4js.xtext.workspace.WorkspaceUpdateChanges;
 import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
@@ -157,8 +162,24 @@ public class N4JSProjectConfig implements IProjectConfig {
 	}
 
 	/**  */
-	public XIWorkspaceConfig.UpdateChanges update(URI changedResource) {
-		// TODO Auto-generated method stub
+	public WorkspaceUpdateChanges update(URI changedResource) {
+		SafeURI<?> pckjsonSafeUri = delegate.getProjectDescriptionLocation();
+		if (pckjsonSafeUri == null || !delegate.exists()) {
+			// project was deleted
+			return new WorkspaceUpdateChanges(emptyList(), emptyList(), emptyList(), emptyList(),
+					singletonList(this), emptyList());
+		}
+
+		URI pckjson = pckjsonSafeUri.toURI();
+		if (!pckjson.equals(changedResource)) {
+			// different file was saved/modified (not package.json)
+			return WorkspaceUpdateChanges.NO_CHANGES;
+		}
+
+		Set<? extends IN4JSSourceFolder> oldSourceFolders = getSourceFolders();
+		((N4JSProject) delegate).invalidate();
+		Set<? extends IN4JSSourceFolder> newSourceFolders = getSourceFolders();
+
 		return null;
 	}
 

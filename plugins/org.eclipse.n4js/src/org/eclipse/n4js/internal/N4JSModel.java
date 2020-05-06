@@ -254,6 +254,10 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 		return new N4JSProjectSourceContainer(project, type, relativeLocation);
 	}
 
+	public void invalidateProject(IN4JSProject project) {
+		workspace.invalidateProject(project);
+	}
+
 	public ImmutableList<? extends IN4JSProject> getDependencies(N4JSProject project,
 			boolean includeAbsentProjects) {
 		return getDependencies(project, false, includeAbsentProjects);

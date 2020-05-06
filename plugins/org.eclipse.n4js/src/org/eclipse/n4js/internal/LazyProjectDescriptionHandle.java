@@ -55,4 +55,11 @@ public class LazyProjectDescriptionHandle {
 	FileURI getLocation() {
 		return projectLocation;
 	}
+
+	/**
+	 * Clears cached project description.
+	 */
+	public void invalidate() {
+		resolved = null;
+	}
 }
