@@ -234,6 +234,16 @@ public class N4JSProject implements IN4JSProject {
 		return FileUtils.normalizeToDotWhenEmpty(pd.getOutputPath());
 	}
 
+	public List<String> getWorkspaces() {
+		if (!exists())
+			return null;
+		ProjectDescription pd = model.getProjectDescription(this);
+		if (pd == null) {
+			return null;
+		}
+		return pd.getWorkspaces();
+	}
+
 	@Override
 	public ModuleFilter getModuleValidationFilter() {
 		return getModuleFilterByType(ModuleFilterType.NO_VALIDATE);
@@ -352,4 +362,5 @@ public class N4JSProject implements IN4JSProject {
 		}
 		return new N4JSProjectName(raw);
 	}
+
 }

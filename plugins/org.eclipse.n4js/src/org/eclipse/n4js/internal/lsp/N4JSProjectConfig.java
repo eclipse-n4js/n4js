@@ -13,9 +13,13 @@ package org.eclipse.n4js.internal.lsp;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
@@ -28,7 +32,10 @@ import org.eclipse.n4js.projectModel.lsp.IN4JSSourceFolder;
 import org.eclipse.n4js.xtext.workspace.WorkspaceUpdateChanges;
 import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.workspace.IProjectConfig;
+import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * Wrapper around {@link IN4JSProject}.
@@ -161,12 +168,18 @@ public class N4JSProjectConfig implements IProjectConfig {
 		return !indexOnly();
 	}
 
-	/**  */
+	/**
+	 * This methods handles changes from
+	 * <ul>
+	 * <li>existing -> existing (w/o project modifications) and from
+	 * <li>existing -> non-existing (project deletion)
+	 * </ul>
+	 */
 	public WorkspaceUpdateChanges update(URI changedResource) {
 		SafeURI<?> pckjsonSafeUri = delegate.getProjectDescriptionLocation();
 		if (pckjsonSafeUri == null || !delegate.exists()) {
 			// project was deleted
-			return new WorkspaceUpdateChanges(emptyList(), emptyList(), emptyList(), emptyList(),
+			return new WorkspaceUpdateChanges(false, emptyList(), emptyList(), emptyList(), emptyList(),
 					singletonList(this), emptyList());
 		}
 
@@ -176,11 +189,46 @@ public class N4JSProjectConfig implements IProjectConfig {
 			return WorkspaceUpdateChanges.NO_CHANGES;
 		}
 
+		// package.json was modified
+
 		Set<? extends IN4JSSourceFolder> oldSourceFolders = getSourceFolders();
+		List<String> oldWorkspaces = ((N4JSProject) delegate).getWorkspaces();
+		ImmutableList<? extends IN4JSProject> oldDeps = ((N4JSProject) delegate).getDependenciesAndImplementedApis();
 		((N4JSProject) delegate).invalidate();
 		Set<? extends IN4JSSourceFolder> newSourceFolders = getSourceFolders();
+		List<String> newWorkspaces = ((N4JSProject) delegate).getWorkspaces();
+		ImmutableList<? extends IN4JSProject> newDeps = ((N4JSProject) delegate).getDependenciesAndImplementedApis();
 
-		return null;
+		// detect changes in dependencies
+		// note that a change of the name attribute is not relevant since the folder name is used
+		boolean dependencyChanged = !Objects.equals(oldWorkspaces, newWorkspaces);
+		dependencyChanged |= !Objects.equals(oldDeps, newDeps);
+
+		// detect added/removed source folders
+		Map<URI, IN4JSSourceFolder> oldSFs = new HashMap<>();
+		Map<URI, IN4JSSourceFolder> newSFs = new HashMap<>();
+		for (IN4JSSourceFolder sourceFolder : oldSourceFolders) {
+			oldSFs.put(sourceFolder.getPath(), sourceFolder);
+		}
+		for (IN4JSSourceFolder sourceFolder : newSourceFolders) {
+			newSFs.put(sourceFolder.getPath(), sourceFolder);
+		}
+		List<ISourceFolder> addedSourceFolders = new ArrayList<>();
+		List<ISourceFolder> removedSourceFolders = new ArrayList<>();
+		for (URI sfUri : newSFs.keySet()) {
+			boolean isOld = oldSFs.containsKey(sfUri);
+			boolean isNew = newSFs.containsKey(sfUri);
+			if (isOld && isNew) {
+				// unchanged
+			} else if (isOld && !isNew) {
+				removedSourceFolders.add(oldSFs.get(sfUri));
+			} else if (!isOld && isNew) {
+				addedSourceFolders.add(newSFs.get(sfUri));
+			}
+		}
+
+		return new WorkspaceUpdateChanges(dependencyChanged, emptyList(), emptyList(), removedSourceFolders,
+				addedSourceFolders, emptyList(), emptyList());
 	}
 
 }

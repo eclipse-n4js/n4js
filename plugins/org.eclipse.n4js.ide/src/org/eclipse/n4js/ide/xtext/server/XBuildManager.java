@@ -333,6 +333,11 @@ public class XBuildManager {
 		}
 	}
 
+	/** Invalidates the cached build order */
+	public void invalidateBuildOrder() {
+		// in case projectBuildOrderInfoProvider does caching: do something here
+	}
+
 	/** Prints build order */
 	protected void printBuildOrder() {
 		if (LOG.isInfoEnabled()) {
@@ -343,4 +348,5 @@ public class XBuildManager {
 			LOG.info(output);
 		}
 	}
+
 }

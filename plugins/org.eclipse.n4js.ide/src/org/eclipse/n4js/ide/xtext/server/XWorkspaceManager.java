@@ -328,11 +328,15 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 		}
 
 		WorkspaceUpdateChanges update = ((XIWorkspaceConfig) getWorkspaceConfig()).update(uri);
-		List<URI> changedURIs = Lists
-				.newArrayList(Iterables.concat(update.getChangedURIs(scanner), ImmutableList.of(uri)));
+		List<URI> changedURIs = Lists.newArrayList(
+				Iterables.concat(update.getChangedURIs(scanner), ImmutableList.of(uri)));
 		List<URI> deleted = new ArrayList<>(update.getRemovedURIs());
 		for (ISourceFolder sourceFolder : update.getRemovedSourceFolders()) {
 			deleted.addAll(findResourcesStartingWithPrefix(sourceFolder.getPath()));
+		}
+
+		if (update.isBuildOrderAffected()) {
+			buildManager.invalidateBuildOrder();
 		}
 
 		return tryIncrementalGenerateBuildable(

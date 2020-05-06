@@ -29,8 +29,9 @@ import org.eclipse.xtext.workspace.IWorkspaceConfig;
  * {@link IProjectConfig}, e.g. a project will be added/removed or one of its properties (name, dependency, source
  * folder) will be modified.
  * <p>
- * Instances of {@link WorkspaceUpdateChanges} will only focus on deleted/changed {@link URI}s that need to be respected
- * by the builder due to caching of the builder. Other changes (e.g. name) will not be reflected here.
+ * Instances of {@link WorkspaceUpdateChanges} will mainly focus on deleted/changed {@link URI}s that need to be
+ * respected by the builder due to caching of the builder. Other changes that affect the build order (e.g. name,
+ * dependencies) are only reflected by {@link #namesOrDependenciesChanged}.
  * <p>
  * All data fields of {@link WorkspaceUpdateChanges} (e.g. {@link #removedURIs}) are mutually exclusive, i.e. that
  * {@link URI}s mentioned in {@link #removedURIs} are neither listed in {@link #removedSourceFolders} nor in one of the
@@ -44,6 +45,8 @@ import org.eclipse.xtext.workspace.IWorkspaceConfig;
 public class WorkspaceUpdateChanges {
 	static final public WorkspaceUpdateChanges NO_CHANGES = new WorkspaceUpdateChanges();
 
+	/** true iff a name or a dependency of a (still existing) project have been modified */
+	protected boolean namesOrDependenciesChanged;
 	protected List<URI> removedURIs;
 	protected List<URI> addedURIs;
 	protected List<ISourceFolder> removedSourceFolders;
@@ -53,20 +56,25 @@ public class WorkspaceUpdateChanges {
 
 	/** Constructor */
 	public WorkspaceUpdateChanges() {
-		this(emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList());
+		this(false, emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList());
 	}
 
 	/** Constructor */
-	public WorkspaceUpdateChanges(List<URI> removedURIs, List<URI> addedURIs, List<ISourceFolder> removedSourceFolders,
-			List<ISourceFolder> addedSourceFolders, List<IProjectConfig> removedProjects,
-			List<IProjectConfig> addedProjects) {
+	public WorkspaceUpdateChanges(boolean namesOrDependenciesChanged, List<URI> removedURIs, List<URI> addedURIs,
+			List<ISourceFolder> removedSourceFolders, List<ISourceFolder> addedSourceFolders,
+			List<IProjectConfig> removedProjects, List<IProjectConfig> addedProjects) {
 
+		this.namesOrDependenciesChanged = namesOrDependenciesChanged;
 		this.removedURIs = removedURIs;
 		this.addedURIs = addedURIs;
 		this.removedSourceFolders = removedSourceFolders;
 		this.addedSourceFolders = addedSourceFolders;
 		this.removedProjects = removedProjects;
 		this.addedProjects = addedProjects;
+	}
+
+	public boolean isNamesOrDependenciesChanged() {
+		return namesOrDependenciesChanged;
 	}
 
 	public List<URI> getRemovedURIs() {
@@ -107,6 +115,10 @@ public class WorkspaceUpdateChanges {
 			uris.addAll(sourceFolder.getAllResources(scanner));
 		}
 		return uris;
+	}
+
+	public boolean isBuildOrderAffected() {
+		return namesOrDependenciesChanged || !addedProjects.isEmpty() || !removedProjects.isEmpty();
 	}
 
 }
