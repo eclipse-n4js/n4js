@@ -21,6 +21,7 @@ import java.util.concurrent.CancellationException;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.ide.server.LspLogger;
 import org.eclipse.n4js.ide.xtext.server.ParallelBuildManager.ParallelJob;
 import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo.ProjectBuildOrderIterator;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
@@ -128,6 +129,9 @@ public class XBuildManager {
 
 	@Inject
 	private ProjectBuildOrderInfo.Provider projectBuildOrderInfoProvider;
+
+	@Inject
+	private LspLogger lspLogger;
 
 	@Inject
 	private OperationCanceledManager operationCanceledManager;
@@ -259,6 +263,7 @@ public class XBuildManager {
 
 	/** Run the build on the workspace */
 	protected List<IResourceDescription.Delta> doIncrementalBuild(boolean doGenerate, CancelIndicator cancelIndicator) {
+		lspLogger.log("Building ...");
 		try {
 			Set<URI> dirtyFilesToBuild = new LinkedHashSet<>(this.dirtyFiles);
 			Set<URI> deletedFilesToBuild = new LinkedHashSet<>(this.deletedFiles);
@@ -292,9 +297,13 @@ public class XBuildManager {
 
 			List<IResourceDescription.Delta> result = allBuildDeltas;
 			allBuildDeltas = new ArrayList<>();
+
+			lspLogger.log("... build done.");
+
 			return result;
 
 		} catch (CancellationException ce) {
+			lspLogger.log("... build canceled.");
 			throw ce;
 		} catch (Throwable th) {
 			operationCanceledManager.propagateIfCancelException(th);
@@ -304,6 +313,8 @@ public class XBuildManager {
 			this.deletedFiles.clear();
 			this.dirtyFilesAwaitingGeneration.clear();
 			this.deletedFilesAwaitingGeneration.clear();
+			String eStr = th.getMessage() + " (" + th.getClass().getSimpleName() + ")";
+			lspLogger.log("... build ABORTED due to exception: " + eStr);
 			throw th;
 		}
 	}
