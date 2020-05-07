@@ -12,20 +12,24 @@
 import {IReadableStream} from 'stream';
 
 
+/** Reads LSP / JSON-RPC messages from a IReadableStream. */
 export default public class LSPMessageReader {
 
     @Final
     private errorChannel: any+;
     @Final
-    private msgHandlers: ((Object,Map<string,string>)=>void)[];
+    private messageHandlers: ((Object,Map<string,string>)=>void)[];
 
-    private corrupt = false;
-    private buff = Buffer.from([]);
+    private buff = Buffer.from([]); // will be set to null when corrupted
 
-
-    public constructor(stream: IReadableStream, errorChannel: any+, ...messageHandlers: (Object,Map<string,string>)=>void) {
+    /**
+     * Creates a new instance, attaching it to the given readable stream.
+     * The lspMessageHandlers will be invoked whenever a complete LSP message
+     * has been received.
+     */
+    public constructor(stream: IReadableStream, errorChannel: any+, ...lspMessageHandlers: (Object,Map<string,string>)=>void) {
         this.errorChannel = errorChannel;
-        this.msgHandlers = [...messageHandlers];
+        this.messageHandlers = [...lspMessageHandlers];
 
         stream.on('data', (data:any+) => {
             try {
@@ -37,33 +41,33 @@ export default public class LSPMessageReader {
     }
 
     public isCorrupt(): boolean {
-        return this.corrupt;
+        return this.buff === null;
     }
 
     private onDataReceivedFromServer(data: any+) {
-        if (this.corrupt || !(data instanceof Buffer)) {
+        if (this.isCorrupt() || !(data instanceof Buffer)) {
             return;
         }
         this.buff = Buffer.concat([this.buff, data]);
-        const [msgLen, contentJSON, headerFields] = tryParseMessage(this.buff);
+        // parse the message at the beginning of the buffer (if any)
+        const [msgLen, headerFields, contentJSON] = tryParseMessage(this.buff);
         if (msgLen === -2) {
             // unrecoverable error in message stream
             this.logError('input stream got corrupted');
-            this.corrupt = true;
-            this.buff = undefined;
+            this.buff = null;
             return;
         }
         if (msgLen === -1) {
-            // incomplete message
+            // incomplete message, try again after receiving more data
             return;
         }
-        // consume the current message from buffer
+        // consume the message from the buffer
         this.buff = this.buff.slice(msgLen);
+        // notify message handlers
         if (!(contentJSON instanceof Object)) {
             return; // content is not a JSON object, ignore this message
         }
-        // notify message handlers
-        for (const msgHandler of this.msgHandlers) {
+        for (const msgHandler of this.messageHandlers) {
             msgHandler(contentJSON, headerFields);
         }
     }
@@ -74,7 +78,12 @@ export default public class LSPMessageReader {
 }
 
 
-function tryParseMessage(buff: Buffer): [int, any, Map<string,string>] {
+/**
+ * Returns message length in bytes, header fields (as map), and content (as JSON value).
+ * Length of -1 means buffer does not contain a complete LSP message.
+ * Length of -2 means buffer is corrupted and cannot be recovered.
+ */
+function tryParseMessage(buff: Buffer): [int, Map<string,string>, any] {
     const [headerLen, headerFields] = tryParseHeader(buff);
     if (headerLen < 0) {
         return [-1, null, null]; // incomplete message
@@ -89,34 +98,41 @@ function tryParseMessage(buff: Buffer): [int, any, Map<string,string>] {
     }
     const msgLen = headerLen + contentLen;
     if (buff.length < msgLen) {
-    	return [-1, null, null]; // incomplete message
+        return [-1, null, null]; // incomplete message
     }
+    // shortcut: ignore 'Content-Type' header field and just assume UTF8
     const contentStr = buff.slice(headerLen, msgLen).toString('utf-8');
     const contentJSON = JSON.parse(contentStr);
-    return [msgLen, contentJSON, headerFields];
+    return [msgLen, headerFields, contentJSON];
 }
 
-// returns header field name/value pairs and size of header in bytes
+/**
+ * Returns header length in bytes and header fields as a map from name to value.
+ * Length of -1 means buffer does not contain a complete header.
+ */
 function tryParseHeader(buff: Buffer): [int, Map<string,string>] {
     const buffStr = buff.toString('ascii');
-    
+
     let idx = 0;
     const headerFields: Map<string,string> = new Map<string,string>();
 
     while(true) {
+        // parse next field
         const idxFieldEnd = buffStr.indexOf('\r\n', idx);
         if (idxFieldEnd < 0) {
             break; // incomplete header
         } else if (idxFieldEnd === idx) {
-            return [idx + 2, headerFields]; // empty header field denotes end of header
+            // empty field denotes end of header
+            return [idx + 2, headerFields];
         }
-        const field = buffStr.substring(idx, idxFieldEnd);
-        const idxNameEnd = field.indexOf(': ');
+        const fieldStr = buffStr.substring(idx, idxFieldEnd);
+        const idxNameEnd = fieldStr.indexOf(': ');
         if (idxNameEnd>=0) {
-            const fieldName = field.substring(0, idxNameEnd);
-            const fieldValue = field.substring(idxNameEnd + 2);
+            const fieldName = fieldStr.substring(0, idxNameEnd);
+            const fieldValue = fieldStr.substring(idxNameEnd + 2);
             headerFields.set(fieldName, fieldValue);
         }
+        // consume field (including its '\r\n' delimiter)
         idx = idxFieldEnd + 2;
     }
     return [-1, null];

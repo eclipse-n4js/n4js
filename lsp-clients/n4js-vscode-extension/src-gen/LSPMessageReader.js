@@ -3,15 +3,14 @@
 import 'n4js-runtime'
 
 export default class LSPMessageReader extends N4Object {
-	constructor(stream, errorChannel, ...messageHandlers) {
+	constructor(stream, errorChannel, ...lspMessageHandlers) {
 		super();
 		this.errorChannel = undefined;
-		this.msgHandlers = undefined;
-		this.corrupt = false;
+		this.messageHandlers = undefined;
 		this.buff = Buffer.from([]);
 		this.errorChannel = errorChannel;
-		this.msgHandlers = [
-			...messageHandlers
+		this.messageHandlers = [
+			...lspMessageHandlers
 		];
 		stream.on('data', (data)=>{
 			try {
@@ -22,10 +21,10 @@ export default class LSPMessageReader extends N4Object {
 		});
 	}
 	isCorrupt() {
-		return this.corrupt;
+		return this.buff === null;
 	}
 	onDataReceivedFromServer(data) {
-		if (this.corrupt || !(data instanceof Buffer)) {
+		if (this.isCorrupt() || !(data instanceof Buffer)) {
 			return;
 		}
 		this.buff = Buffer.concat([
@@ -34,13 +33,12 @@ export default class LSPMessageReader extends N4Object {
 		]);
 		const [
 			msgLen,
-			contentJSON,
-			headerFields
+			headerFields,
+			contentJSON
 		] = tryParseMessage(this.buff);
 		if (msgLen === -2) {
 			this.logError('input stream got corrupted');
-			this.corrupt = true;
-			this.buff = undefined;
+			this.buff = null;
 			return;
 		}
 		if (msgLen === -1) {
@@ -50,7 +48,7 @@ export default class LSPMessageReader extends N4Object {
 		if (!(contentJSON instanceof Object)) {
 			return;
 		}
-		for(const msgHandler of this.msgHandlers) {
+		for(const msgHandler of this.messageHandlers) {
 			msgHandler(contentJSON, headerFields);
 		}
 	}
@@ -58,7 +56,7 @@ export default class LSPMessageReader extends N4Object {
 		this.errorChannel.appendLine('ERROR in LSPMessageReader: ' + msg);
 	}
 	static get n4type() {
-		return $getReflectionForClass(this, '["LSPMessageReader","LSPMessageReader","n4js-vscode-extension",["f.errorChannel","f.msgHandlers","f.corrupt","f.buff"],{"f.errorChannel":["Final"],"f.msgHandlers":["Final"]}]');
+		return $getReflectionForClass(this, '["LSPMessageReader","LSPMessageReader","n4js-vscode-extension",["f.errorChannel","f.messageHandlers","f.buff"],{"f.errorChannel":["Final"],"f.messageHandlers":["Final"]}]');
 	}
 }
 function tryParseMessage(buff) {
@@ -101,8 +99,8 @@ function tryParseMessage(buff) {
 	const contentJSON = JSON.parse(contentStr);
 	return [
 		msgLen,
-		contentJSON,
-		headerFields
+		headerFields,
+		contentJSON
 	];
 }
 function tryParseHeader(buff) {
@@ -119,11 +117,11 @@ function tryParseHeader(buff) {
 				headerFields
 			];
 		}
-		const field = buffStr.substring(idx, idxFieldEnd);
-		const idxNameEnd = field.indexOf(': ');
+		const fieldStr = buffStr.substring(idx, idxFieldEnd);
+		const idxNameEnd = fieldStr.indexOf(': ');
 		if (idxNameEnd >= 0) {
-			const fieldName = field.substring(0, idxNameEnd);
-			const fieldValue = field.substring(idxNameEnd + 2);
+			const fieldName = fieldStr.substring(0, idxNameEnd);
+			const fieldValue = fieldStr.substring(idxNameEnd + 2);
 			headerFields.set(fieldName, fieldValue);
 		}
 		idx = idxFieldEnd + 2;

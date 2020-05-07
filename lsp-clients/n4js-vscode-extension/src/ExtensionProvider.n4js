@@ -258,7 +258,7 @@ function onLSPMessageReceivedFromServer(contentJSON: Object) {
 function logBuildProgress(params: Object) {
     const message = params['message'];
     if (typeof message === 'string') {
-   	    buildProgressOutputChannel.append(message);
+        buildProgressOutputChannel.append(message);
     }
 }
 
