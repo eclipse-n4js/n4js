@@ -240,6 +240,8 @@ async function connectToRunningN4jsLspServer(port: number): net.Socket {
 
 
 
+// NOTE: use this only for internal smith functionality
+// (for details see API doc of N4JSLanguageClient in Java)
 function onLSPMessageReceivedFromServer(contentJSON: Object) {
     const method = contentJSON['method'];
     const params = contentJSON['params'];
