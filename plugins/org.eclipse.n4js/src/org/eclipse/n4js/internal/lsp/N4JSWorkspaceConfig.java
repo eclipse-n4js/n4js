@@ -99,12 +99,12 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 		WorkspaceUpdateChanges update = new WorkspaceUpdateChanges();
 
 		boolean wasExistingInWorkspace = ((N4JSRuntimeCore) delegate).isRegistered(new FileURI(project.getPath()));
-		if (!wasExistingInWorkspace) {
-			// a new project was created
-			update.merge(WorkspaceUpdateChanges.createProjectAdded(project));
-		} else {
+		if (wasExistingInWorkspace) {
 			// an existing project was modified
 			update.merge(((N4JSProjectConfig) project).update(changedResource));
+		} else {
+			// a new project was created
+			update.merge(WorkspaceUpdateChanges.createProjectAdded(project));
 		}
 
 		if (isWorkspaceRootProject(project)) {

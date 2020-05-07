@@ -18,7 +18,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectReference;
-import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
@@ -88,5 +87,5 @@ public abstract class InternalN4JSWorkspace<Loc extends SafeURI<Loc>> {
 	/**
 	 * Clears caches related to given project.
 	 */
-	public abstract void invalidateProject(IN4JSProject project);
+	public abstract void invalidateProject(Loc folder);
 }

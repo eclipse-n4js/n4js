@@ -403,7 +403,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace
 	}
 
 	@Override
-	public void invalidateProject(IN4JSProject project) {
+	public void invalidateProject(FileURI location) {
 		throw new IllegalStateException("Not supported for EclipseExternalLibraryWorkspace");
 	}
 }

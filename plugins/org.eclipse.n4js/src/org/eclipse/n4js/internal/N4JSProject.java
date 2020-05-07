@@ -144,6 +144,13 @@ public class N4JSProject implements IN4JSProject {
 		return model.getDependenciesAndImplementedApis(this, false);
 	}
 
+	public ImmutableList<? extends IN4JSProject> getAllDependenciesAndImplementedApis() {
+		if (!exists()) {
+			return ImmutableList.of();
+		}
+		return model.getDependenciesAndImplementedApis(this, true);
+	}
+
 	@Override
 	public Optional<N4JSProjectName> getImplementationId() {
 		if (!exists()) {
@@ -347,7 +354,7 @@ public class N4JSProject implements IN4JSProject {
 
 	/** Invalidates caches related to the project description of this project */
 	public void invalidate() {
-		model.invalidateProject(this);
+		model.invalidateProject(getLocation());
 	}
 
 	@Override

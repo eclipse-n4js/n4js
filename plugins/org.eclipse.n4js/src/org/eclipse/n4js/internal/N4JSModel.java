@@ -254,8 +254,9 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 		return new N4JSProjectSourceContainer(project, type, relativeLocation);
 	}
 
-	public void invalidateProject(IN4JSProject project) {
-		workspace.invalidateProject(project);
+	@SuppressWarnings("unchecked")
+	public void invalidateProject(SafeURI<?> location) {
+		workspace.invalidateProject((Loc) location);
 	}
 
 	public ImmutableList<? extends IN4JSProject> getDependencies(N4JSProject project,

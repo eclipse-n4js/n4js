@@ -190,10 +190,10 @@ public class N4JSProjectConfig implements IProjectConfig {
 		// package.json was modified
 
 		Set<? extends IN4JSSourceFolder> oldSourceFolders = getSourceFolders();
-		ImmutableList<? extends IN4JSProject> oldDeps = ((N4JSProject) delegate).getDependenciesAndImplementedApis();
+		ImmutableList<? extends IN4JSProject> oldDeps = ((N4JSProject) delegate).getAllDependenciesAndImplementedApis();
 		((N4JSProject) delegate).invalidate();
 		Set<? extends IN4JSSourceFolder> newSourceFolders = getSourceFolders();
-		ImmutableList<? extends IN4JSProject> newDeps = ((N4JSProject) delegate).getDependenciesAndImplementedApis();
+		ImmutableList<? extends IN4JSProject> newDeps = ((N4JSProject) delegate).getAllDependenciesAndImplementedApis();
 
 		// detect added/removed source folders
 		Map<URI, IN4JSSourceFolder> oldSFs = new HashMap<>();

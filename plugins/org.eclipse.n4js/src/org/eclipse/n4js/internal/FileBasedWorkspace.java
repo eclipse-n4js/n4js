@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectReference;
-import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
@@ -116,7 +115,7 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace<FileURI> {
 	}
 
 	protected LazyProjectDescriptionHandle createDescriptionHandle(FileURI location, ProjectDescription description) {
-		return new LazyProjectDescriptionHandle(location, description);
+		return new LazyProjectDescriptionHandle(location, projectDescriptionLoader, description);
 	}
 
 	@Override
@@ -148,9 +147,11 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace<FileURI> {
 	}
 
 	@Override
-	public void invalidateProject(IN4JSProject project) {
-		LazyProjectDescriptionHandle handle = projectElementHandles.get(project.getProjectDescriptionLocation());
-		handle.invalidate();
+	public void invalidateProject(FileURI location) {
+		if (isRegistered(location)) {
+			LazyProjectDescriptionHandle handle = projectElementHandles.get(location);
+			handle.invalidate();
+		}
 	}
 
 	public Iterator<FileURI> getAllProjectLocationsIterator() {

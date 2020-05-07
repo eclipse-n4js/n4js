@@ -25,17 +25,16 @@ public class LazyProjectDescriptionHandle {
 	private ProjectDescription resolved;
 
 	/** */
-	protected LazyProjectDescriptionHandle(FileURI location,
-			ProjectDescriptionLoader descriptionLoader) {
-		this.projectLocation = location;
-		this.descriptionLoader = descriptionLoader;
+	protected LazyProjectDescriptionHandle(FileURI location, ProjectDescriptionLoader descriptionLoader) {
+		this(location, descriptionLoader, null);
 	}
 
 	/** */
-	protected LazyProjectDescriptionHandle(FileURI location,
+	protected LazyProjectDescriptionHandle(FileURI location, ProjectDescriptionLoader descriptionLoader,
 			ProjectDescription description) {
+
 		this.projectLocation = location;
-		this.descriptionLoader = null;
+		this.descriptionLoader = descriptionLoader;
 		this.resolved = description;
 	}
 
