@@ -45,8 +45,9 @@ public final class FileURI extends SafeURI<FileURI> {
 
 	private static URI toFileURI(File file) {
 		String absolutePath = file.getAbsolutePath();
-		// folders always end with an empty segment
-		absolutePath += (file.isDirectory() ? File.separator : "");
+		// folders end with an empty segment?
+		// absolutePath += (file.isDirectory() ? File.separator : "");
+
 		URI fileURI = URI.createFileURI(absolutePath);
 		if (fileURI.authority() == null) {
 			fileURI = URI.createHierarchicalURI(fileURI.scheme(), "", fileURI.device(), fileURI.segments(),

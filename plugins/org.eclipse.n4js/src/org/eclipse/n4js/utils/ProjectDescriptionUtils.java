@@ -246,8 +246,8 @@ public class ProjectDescriptionUtils {
 			return null;
 		}
 		if (uri.lastSegment().isEmpty()) {
-			// folders end with an empty segment
-			uri = uri.trimSegments(1);
+			// folders end with an empty segment?
+			// uri = uri.trimSegments(1);
 		}
 		int segCount = uri.segmentCount();
 		String last = segCount > 0 ? uri.segment(segCount - 1) : null;
@@ -433,8 +433,8 @@ public class ProjectDescriptionUtils {
 		public static ProjectNameInfo of(URI projectUri) {
 			if (projectUri.isFile()) {
 				if (projectUri.lastSegment().isEmpty()) {
-					// folders end with an empty segment
-					projectUri = projectUri.trimSegments(1);
+					// folders end with an empty segment?
+					// projectUri = projectUri.trimSegments(1);
 				}
 				// a file URI actually represents the file system hierarchy -> no need to look up names on disk
 				return new ProjectNameInfo(

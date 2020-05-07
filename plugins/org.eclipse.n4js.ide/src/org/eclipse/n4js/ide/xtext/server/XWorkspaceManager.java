@@ -169,8 +169,7 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	 */
 	protected void setWorkspaceConfig(IWorkspaceConfig workspaceConfig) {
 		if (this.workspaceConfig != null && workspaceConfig != null &&
-				((XIWorkspaceConfig) this.workspaceConfig).getPath()
-						.equals(((XIWorkspaceConfig) workspaceConfig).getPath())) {
+				this.workspaceConfig == workspaceConfig) {
 			return;
 		}
 		this.workspaceConfig = workspaceConfig;
