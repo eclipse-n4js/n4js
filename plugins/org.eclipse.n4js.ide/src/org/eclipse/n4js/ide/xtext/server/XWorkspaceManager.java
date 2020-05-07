@@ -159,14 +159,8 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 
 	/** Refresh the workspace. */
 	public void refreshWorkspaceConfig(URI newBaseDir) {
-		setWorkspaceConfig(workspaceConfigFactory.createWorkspaceConfig(newBaseDir));
-		for (IProjectConfig projectConfig : getWorkspaceConfig().getProjects()) {
-			XProjectManager projectManager = projectManagerProvider.get();
-			ProjectDescription projectDescription = projectDescriptionFactory.getProjectDescription(projectConfig);
-			projectManager.initialize(projectDescription, projectConfig, openedDocumentsContentProvider,
-					() -> fullIndex);
-			projectName2ProjectManager.put(projectDescription.getName(), projectManager);
-		}
+		XIWorkspaceConfig newWorkspaceConfig = workspaceConfigFactory.createWorkspaceConfig(newBaseDir);
+		setWorkspaceConfig(newWorkspaceConfig);
 	}
 
 	/**
@@ -182,6 +176,13 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 		this.workspaceConfig = workspaceConfig;
 		projectName2ProjectManager.clear();
 		fullIndex.clear();
+		for (IProjectConfig projectConfig : getWorkspaceConfig().getProjects()) {
+			XProjectManager projectManager = projectManagerProvider.get();
+			ProjectDescription projectDescription = projectDescriptionFactory.getProjectDescription(projectConfig);
+			projectManager.initialize(projectDescription, projectConfig, openedDocumentsContentProvider,
+					() -> fullIndex);
+			projectName2ProjectManager.put(projectDescription.getName(), projectManager);
+		}
 	}
 
 	/**
