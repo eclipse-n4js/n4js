@@ -45,4 +45,9 @@ public abstract class AbstractN4JSLanguageClient
 	public void afterDelete(URI file) {
 		// ignored by default
 	}
+
+	@Override
+	public void logBuildProgress(LogBuildProgressParams params) {
+		// ignored by default
+	}
 }
