@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.eclipse.n4js.cli.compiler.N4jscCompiler;
@@ -46,7 +47,7 @@ public class N4jscMain {
 		}
 
 		if (!options.isVerbose()) {
-			// Logger.getRootLogger().setLevel(Level.ERROR);
+			Logger.getRootLogger().setLevel(Level.ERROR);
 
 			// Reconfigure Logging to be quiet:
 			// Logger.getRootLogger().removeAllAppenders();
