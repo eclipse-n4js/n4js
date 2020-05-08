@@ -25,11 +25,14 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ide.xtext.server.ParallelBuildManager.ParallelJob;
 import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo.ProjectBuildOrderIterator;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
+import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionDelta;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.util.CancelIndicator;
+import org.eclipse.xtext.util.IFileSystemScanner;
+import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.IteratorExtensions;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
@@ -42,7 +45,7 @@ import com.google.inject.Inject;
  * @author Jan Koehnlein - Initial contribution and API
  * @since 2.11
  */
-@SuppressWarnings("hiding")
+@SuppressWarnings({ "hiding", "restriction" })
 public class XBuildManager {
 	private static final Logger LOG = LogManager.getLogger(XBuildManager.class);
 
@@ -129,6 +132,9 @@ public class XBuildManager {
 	@Inject
 	private ProjectBuildOrderInfo.Provider projectBuildOrderInfoProvider;
 
+	@Inject
+	private IFileSystemScanner scanner;
+
 	private final LinkedHashSet<URI> dirtyFiles = new LinkedHashSet<>();
 
 	private final LinkedHashSet<URI> deletedFiles = new LinkedHashSet<>();
@@ -188,7 +194,6 @@ public class XBuildManager {
 				}
 			}
 
-			@SuppressWarnings("restriction")
 			@Override
 			public String getID() {
 				return projectManager.getProjectConfig().getName();
@@ -228,10 +233,8 @@ public class XBuildManager {
 	 *
 	 * @return a buildable.
 	 */
-	public XBuildable getIncrementalDirtyBuildable(boolean buildOrderChanged, List<URI> dirtyFiles,
-			List<URI> deletedFiles) {
-
-		return doGetIncrementalBuildable(buildOrderChanged, dirtyFiles, deletedFiles, false);
+	public XBuildable getIncrementalDirtyBuildable(WorkspaceChanges workspaceChanges) {
+		return doGetIncrementalBuildable(workspaceChanges, false);
 	}
 
 	/**
@@ -239,27 +242,38 @@ public class XBuildManager {
 	 *
 	 * @return a buildable.
 	 */
-	public XBuildable getIncrementalGenerateBuildable(boolean buildOrderChanged, List<URI> dirtyFiles,
-			List<URI> deletedFiles) {
-
-		return doGetIncrementalBuildable(buildOrderChanged, dirtyFiles, deletedFiles, true);
+	public XBuildable getIncrementalGenerateBuildable(WorkspaceChanges workspaceChanges) {
+		return doGetIncrementalBuildable(workspaceChanges, true);
 	}
 
 	/**
 	 * Enqueue the dirty and deleted files now and return a handle to an incremental build.
 	 */
-	private XBuildable doGetIncrementalBuildable(boolean buildOrderChanged, List<URI> dirtyFiles,
-			List<URI> deletedFiles, boolean doGenerate) {
-
+	private XBuildable doGetIncrementalBuildable(WorkspaceChanges workspaceChanges, boolean doGenerate) {
+		List<URI> dirtyFiles = workspaceChanges.scanAllAddedAndChangedURIs(scanner);
+		List<URI> deletedFiles = getAllRemovedURIs(workspaceChanges);
 		queue(this.dirtyFiles, deletedFiles, dirtyFiles);
 		queue(this.deletedFiles, dirtyFiles, deletedFiles);
-		return (cancelIndicator) -> doIncrementalBuild(buildOrderChanged, doGenerate, cancelIndicator);
+		return (cancelIndicator) -> doIncrementalBuild(doGenerate, cancelIndicator);
+	}
+
+	/** @return list of all {@link URI} that have been removed by the given changes */
+	protected List<URI> getAllRemovedURIs(WorkspaceChanges workspaceChanges) {
+		List<URI> deleted = new ArrayList<>(workspaceChanges.getRemovedURIs());
+		for (ISourceFolder sourceFolder : workspaceChanges.getAllRemovedSourceFolders()) {
+			deleted.addAll(findResourcesStartingWithPrefix(sourceFolder.getPath()));
+		}
+		return deleted;
+	}
+
+	/** @return all resource descriptions that start with the given prefix */
+	protected List<URI> findResourcesStartingWithPrefix(URI prefix) {
+		XProjectManager projectManager = workspaceManager.getProjectManager(prefix);
+		return projectManager.findResourcesStartingWithPrefix(prefix);
 	}
 
 	/** Run the build on the workspace */
-	protected List<IResourceDescription.Delta> doIncrementalBuild(boolean buildOrderChanged, boolean doGenerate,
-			CancelIndicator cancelIndicator) {
-
+	protected List<IResourceDescription.Delta> doIncrementalBuild(boolean doGenerate, CancelIndicator cancelIndicator) {
 		try {
 			Map<ProjectDescription, Set<URI>> project2dirty = computeProjectToUriMap(this.dirtyFiles);
 			Map<ProjectDescription, Set<URI>> project2deleted = computeProjectToUriMap(this.deletedFiles);

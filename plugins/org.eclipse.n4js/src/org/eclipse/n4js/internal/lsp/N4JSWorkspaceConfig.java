@@ -147,7 +147,7 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 		}
 
 		boolean dependenciesChanged = !addedProjects.isEmpty() || !removedProjects.isEmpty();
-		return new WorkspaceChanges(dependenciesChanged, emptyList(), emptyList(), emptyList(),
+		return new WorkspaceChanges(dependenciesChanged, emptyList(), emptyList(), emptyList(), emptyList(),
 				emptyList(), addedProjects, removedProjects);
 	}
 

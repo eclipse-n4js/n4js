@@ -24,15 +24,17 @@ import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+
 /**
  * This data class contains information about all changes that happened to the workspace setup, which boils down to (1)
- * all deleted and all changed {@link URI}s. Triggers for changes are (usually) not modifications of source code
- * {@link URI}s. Instead the assumption is that the triggers are modifications in some kind of manifest files that
- * describes the project or workspace setup. These modifications will result in changes to {@link IWorkspaceConfig} and
- * {@link IProjectConfig}, e.g. a project will be added/removed or one of its properties (name, dependency, source
- * folder) will be modified.
+ * all removed and all added/changed {@link URI}s. Triggers for changes are (usually) modifications of source code
+ * {@link URI}s. Other triggers are modifications in some kind of manifest files that describes the project or workspace
+ * setup. These modifications will result in changes to {@link IWorkspaceConfig} and {@link IProjectConfig}, e.g. a
+ * project will be added/removed or one of its properties (name, dependency, source folder) will be modified.
  * <p>
- * Instances of {@link WorkspaceChanges} will mainly focus on deleted/changed {@link URI}s that need to be
+ * Instances of {@link WorkspaceChanges} will mainly focus on removed/added/changed {@link URI}s that need to be
  * respected by the builder due to caching of the builder. Other changes that affect the build order (e.g. name,
  * dependencies) are only reflected by {@link #namesOrDependenciesChanged}.
  * <p>
@@ -42,7 +44,9 @@ import org.eclipse.xtext.workspace.IWorkspaceConfig;
  * <p>
  * At a first glance it seems redundant to provide added/removed data fields on different levels (plain, source folders,
  * projects). However, mind that returning the highest level is always desired (i.e. projects prior to source folders
- * prior to plain uris), but that this might not be possible in all languages/cases.
+ * prior to plain uris), but that this might not be possible in all languages/cases. Note that the term <i>removed</i>
+ * is used in favor of <i>deleted</i> since being removed from the workspace is necessary to know which can not only
+ * happen due to deletion but also due to changes to source folders.
  */
 @SuppressWarnings("restriction")
 public class WorkspaceChanges {
@@ -51,14 +55,32 @@ public class WorkspaceChanges {
 
 	/** @return a new instance of {@link WorkspaceChanges} contains the given project as removed */
 	public static WorkspaceChanges createProjectRemoved(IProjectConfig project) {
-		return new WorkspaceChanges(false, emptyList(), emptyList(), emptyList(), emptyList(),
+		return new WorkspaceChanges(false, emptyList(), emptyList(), emptyList(), emptyList(), emptyList(),
 				singletonList(project), emptyList());
 	}
 
 	/** @return a new instance of {@link WorkspaceChanges} contains the given project as added */
 	public static WorkspaceChanges createProjectAdded(IProjectConfig project) {
-		return new WorkspaceChanges(false, emptyList(), emptyList(), emptyList(), emptyList(),
+		return new WorkspaceChanges(false, emptyList(), emptyList(), emptyList(), emptyList(), emptyList(),
 				emptyList(), singletonList(project));
+	}
+
+	/** @return a new instance of {@link WorkspaceChanges} contains the given uris as changed */
+	public static WorkspaceChanges createUrisChanged(List<URI> changedURIs) {
+		return new WorkspaceChanges(false, emptyList(), emptyList(), changedURIs, emptyList(), emptyList(),
+				emptyList(), emptyList());
+	}
+
+	/** @return a new instance of {@link WorkspaceChanges} contains the given uris as removed */
+	public static WorkspaceChanges createUrisRemoved(List<URI> removedURIs) {
+		return new WorkspaceChanges(false, removedURIs, emptyList(), emptyList(), emptyList(), emptyList(),
+				emptyList(), emptyList());
+	}
+
+	/** @return a new instance of {@link WorkspaceChanges} contains the given uris as removed / changed */
+	public static WorkspaceChanges createUrisRemovedAndChanged(List<URI> removedURIs, List<URI> changedURIs) {
+		return new WorkspaceChanges(false, removedURIs, changedURIs, emptyList(), emptyList(), emptyList(),
+				emptyList(), emptyList());
 	}
 
 	/** true iff a name or a dependency of a (still existing) project have been modified */
@@ -67,6 +89,8 @@ public class WorkspaceChanges {
 	protected List<URI> removedURIs;
 	/** added uris (excluding those from {@link #addedSourceFolders} and {@link #addedProjects}) */
 	protected List<URI> addedURIs;
+	/** changed uris */
+	protected List<URI> changedURIs;
 	/** removed source folders (excluding those from {@link #removedProjects}) */
 	protected List<ISourceFolder> removedSourceFolders;
 	/** added source folders (excluding those from {@link #addedProjects}) */
@@ -78,17 +102,19 @@ public class WorkspaceChanges {
 
 	/** Constructor */
 	public WorkspaceChanges() {
-		this(false, emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList());
+		this(false, emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList());
 	}
 
 	/** Constructor */
-	public WorkspaceChanges(boolean namesOrDependenciesChanged, List<URI> removedURIs, List<URI> addedURIs,
+	public WorkspaceChanges(boolean namesOrDependenciesChanged,
+			List<URI> removedURIs, List<URI> addedURIs, List<URI> changedURIs,
 			List<ISourceFolder> removedSourceFolders, List<ISourceFolder> addedSourceFolders,
 			List<IProjectConfig> removedProjects, List<IProjectConfig> addedProjects) {
 
 		this.namesOrDependenciesChanged = namesOrDependenciesChanged;
 		this.removedURIs = removedURIs;
 		this.addedURIs = addedURIs;
+		this.changedURIs = changedURIs;
 		this.removedSourceFolders = removedSourceFolders;
 		this.addedSourceFolders = addedSourceFolders;
 		this.removedProjects = removedProjects;
@@ -114,6 +140,11 @@ public class WorkspaceChanges {
 	 */
 	public List<URI> getAddedURIs() {
 		return addedURIs;
+	}
+
+	/** @return all uris that have been changed */
+	public List<URI> getChangedURIs() {
+		return changedURIs;
 	}
 
 	/** @return all source folders that have been removed (excluding those from {@link #removedProjects}) */
@@ -155,10 +186,13 @@ public class WorkspaceChanges {
 	}
 
 	/**
+	 * Note that scanning in source folders of {@link #getAllRemovedSourceFolders()} might retrieve non-reliable results
+	 * in case the underlying resources have been actually already deleted.
+	 *
 	 * @return a list of all {@link URI}s that have been removed including those inside
 	 *         {@link #getAllRemovedSourceFolders()}
 	 */
-	public List<URI> getAllRemovedURIs(IFileSystemScanner scanner) {
+	public List<URI> scanAllRemovedURIs(IFileSystemScanner scanner) {
 		List<URI> uris = new ArrayList<>(removedURIs);
 		for (ISourceFolder sourceFolder : getAllRemovedSourceFolders()) {
 			uris.addAll(sourceFolder.getAllResources(scanner));
@@ -167,15 +201,24 @@ public class WorkspaceChanges {
 	}
 
 	/**
-	 * @return a list of all {@link URI}s that have been changed including those inside
+	 * @return a list of all {@link URI}s that have been added including those inside
 	 *         {@link #getAllAddedSourceFolders()}
 	 */
-	public List<URI> getAllAddedURIs(IFileSystemScanner scanner) {
+	public List<URI> scanAllAddedURIs(IFileSystemScanner scanner) {
 		List<URI> uris = new ArrayList<>(addedURIs);
 		for (ISourceFolder sourceFolder : getAllAddedSourceFolders()) {
 			uris.addAll(sourceFolder.getAllResources(scanner));
 		}
 		return uris;
+	}
+
+	/**
+	 * @return a list of all {@link URI}s that have been changed / added including those of
+	 *         {@link #scanAllAddedURIs(IFileSystemScanner)}
+	 */
+	public List<URI> scanAllAddedAndChangedURIs(IFileSystemScanner scanner) {
+		List<URI> allChangedURIs = Lists.newArrayList(Iterables.concat(scanAllAddedURIs(scanner), getChangedURIs()));
+		return allChangedURIs;
 	}
 
 	/** @return true iff this instance implies a change of the build order */
@@ -188,6 +231,7 @@ public class WorkspaceChanges {
 		this.namesOrDependenciesChanged |= changes.namesOrDependenciesChanged;
 		this.removedURIs = newArrayList(concat(this.removedURIs, changes.removedURIs));
 		this.addedURIs = newArrayList(concat(this.addedURIs, changes.addedURIs));
+		this.changedURIs = newArrayList(concat(this.changedURIs, changes.changedURIs));
 		this.removedSourceFolders = newArrayList(concat(this.removedSourceFolders, changes.removedSourceFolders));
 		this.addedSourceFolders = newArrayList(concat(this.addedSourceFolders, changes.addedSourceFolders));
 		this.removedProjects = newArrayList(concat(this.removedProjects, changes.removedProjects));

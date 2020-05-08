@@ -38,14 +38,10 @@ import org.eclipse.xtext.resource.impl.ChunkedResourceDescriptions;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.util.CancelIndicator;
-import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.workspace.IProjectConfig;
-import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -87,9 +83,6 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 
 	@Inject
 	private XBuildManager buildManager;
-
-	@Inject
-	private IFileSystemScanner scanner;
 
 	private final Map<String, XProjectManager> projectName2ProjectManager = new HashMap<>();
 
@@ -232,7 +225,8 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 		openDocuments.put(uri, new XDocument(version, contents));
 
 		// return getIncrementalDirtyBuildable(ImmutableList.of(uri), Collections.emptyList()); // necessary at all?
-		return getIncrementalDirtyBuildable(Collections.emptyList(), Collections.emptyList());
+		WorkspaceChanges workspaceChanges = WorkspaceChanges.NO_CHANGES;
+		return getIncrementalDirtyBuildable(workspaceChanges);
 	}
 
 	/**
@@ -245,7 +239,8 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	 * @return a build command that can be triggered
 	 */
 	public XBuildable didChangeFiles(List<URI> dirtyFiles, List<URI> deletedFiles) {
-		return getIncrementalDirtyBuildable(dirtyFiles, deletedFiles);
+		WorkspaceChanges workspaceChanges = WorkspaceChanges.createUrisRemovedAndChanged(deletedFiles, dirtyFiles);
+		return getIncrementalDirtyBuildable(workspaceChanges);
 	}
 
 	/**
@@ -264,22 +259,10 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 		afterBuild(deltas);
 	}
 
-	/** Triggers an incremental build, but will not generate output files */
-	protected XBuildable getIncrementalDirtyBuildable(List<URI> dirtyFiles, List<URI> deletedFiles) {
-		XBuildManager.XBuildable buildable = buildManager.getIncrementalDirtyBuildable(false, dirtyFiles, deletedFiles);
-		return (cancelIndicator) -> {
-			List<IResourceDescription.Delta> deltas = buildable.build(cancelIndicator);
-			afterBuild(deltas);
-			return deltas;
-		};
-	}
-
 	/**
 	 * Generation of output files is only triggered if no source files contain unsaved changes (so-called dirty files).
 	 */
-	protected XBuildable tryIncrementalGenerateBuildable(boolean buildOrderChanged, List<URI> dirtyFiles,
-			List<URI> deletedFiles) {
-
+	protected XBuildable tryIncrementalGenerateBuildable(WorkspaceChanges workspaceChanges) {
 		boolean hasSomeDirtyFiles = false;
 		for (XDocument doc : openDocuments.values()) {
 			if (doc.isDirty()) {
@@ -288,18 +271,25 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 			}
 		}
 		if (hasSomeDirtyFiles) {
-			return getIncrementalDirtyBuildable(dirtyFiles, deletedFiles);
+			return getIncrementalDirtyBuildable(workspaceChanges);
 		} else {
-			return getIncrementalGenerateBuildable(buildOrderChanged, dirtyFiles, deletedFiles);
+			return getIncrementalGenerateBuildable(workspaceChanges);
 		}
 	}
 
-	/** Triggers an incremental build, and will generate output files. */
-	protected XBuildable getIncrementalGenerateBuildable(boolean buildOrderChanged, List<URI> dirtyFiles,
-			List<URI> deletedFiles) {
+	/** Triggers an incremental build, but will not generate output files */
+	protected XBuildable getIncrementalDirtyBuildable(WorkspaceChanges workspaceChanges) {
+		XBuildManager.XBuildable buildable = buildManager.getIncrementalDirtyBuildable(workspaceChanges);
+		return (cancelIndicator) -> {
+			List<IResourceDescription.Delta> deltas = buildable.build(cancelIndicator);
+			afterBuild(deltas);
+			return deltas;
+		};
+	}
 
-		XBuildManager.XBuildable buildable = buildManager.getIncrementalGenerateBuildable(buildOrderChanged, dirtyFiles,
-				deletedFiles);
+	/** Triggers an incremental build, and will generate output files. */
+	protected XBuildable getIncrementalGenerateBuildable(WorkspaceChanges workspaceChanges) {
+		XBuildManager.XBuildable buildable = buildManager.getIncrementalGenerateBuildable(workspaceChanges);
 
 		return (cancelIndicator) -> {
 			List<IResourceDescription.Delta> deltas = buildable.build(cancelIndicator);
@@ -331,7 +321,8 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 			return XBuildable.NO_BUILD;
 		}
 		openDocuments.put(uri, contents.applyTextDocumentChanges(changes));
-		return getIncrementalDirtyBuildable(ImmutableList.of(uri), Collections.emptyList());
+		WorkspaceChanges workspaceChanges = WorkspaceChanges.createUrisChanged(ImmutableList.of(uri));
+		return getIncrementalDirtyBuildable(workspaceChanges);
 	}
 
 	/** Mark the given document as saved. */
@@ -347,33 +338,31 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 			return XBuildable.NO_BUILD;
 		}
 
-		WorkspaceChanges update = ((XIWorkspaceConfig) getWorkspaceConfig()).update(uri);
-		List<URI> changedURIs = Lists.newArrayList(
-				Iterables.concat(update.getAllAddedURIs(scanner), ImmutableList.of(uri)));
-		List<URI> deleted = new ArrayList<>(update.getRemovedURIs());
-		for (ISourceFolder sourceFolder : update.getAllRemovedSourceFolders()) {
-			deleted.addAll(findResourcesStartingWithPrefix(sourceFolder.getPath()));
-		}
+		WorkspaceChanges notifiedChanges = WorkspaceChanges.createUrisChanged(ImmutableList.of(uri));
+		WorkspaceChanges workspaceChanges = ((XIWorkspaceConfig) getWorkspaceConfig()).update(uri);
+		workspaceChanges.merge(notifiedChanges);
 
-		return tryIncrementalGenerateBuildable(update.isBuildOrderAffected(),
-				Collections.unmodifiableList(changedURIs),
-				Collections.unmodifiableList(deleted));
+		return tryIncrementalGenerateBuildable(workspaceChanges);
 	}
 
 	/** Mark the given document as closed. */
 	public XBuildManager.XBuildable didClose(URI uri) {
 		openDocuments.remove(uri);
 		if (exists(uri)) {
-			return tryIncrementalGenerateBuildable(false, ImmutableList.of(uri), Collections.emptyList());
+			WorkspaceChanges workspaceChanges = WorkspaceChanges.createUrisChanged(ImmutableList.of(uri));
+			return tryIncrementalGenerateBuildable(workspaceChanges);
+		} else {
+			WorkspaceChanges workspaceChanges = WorkspaceChanges.createUrisRemoved(ImmutableList.of(uri));
+			return tryIncrementalGenerateBuildable(workspaceChanges);
 		}
-		return tryIncrementalGenerateBuildable(false, Collections.emptyList(), ImmutableList.of(uri));
 	}
 
 	/** Mark all documents as closed. */
 	public XBuildManager.XBuildable closeAll() {
 		ImmutableList<URI> closed = ImmutableList.copyOf(openDocuments.keySet());
 		openDocuments.clear();
-		return tryIncrementalGenerateBuildable(false, closed, Collections.emptyList());
+		WorkspaceChanges workspaceChanges = WorkspaceChanges.createUrisChanged(closed);
+		return tryIncrementalGenerateBuildable(workspaceChanges);
 	}
 
 	/**
@@ -460,13 +449,6 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 			}
 		}
 		return false;
-	}
-
-	/** @return all resource descriptions that start with the given prefix */
-	public List<URI> findResourcesStartingWithPrefix(URI prefix) {
-		IProjectConfig projectConfig = workspaceConfig.findProjectContaining(prefix);
-		XProjectManager projectManager = this.projectName2ProjectManager.get(projectConfig.getName());
-		return projectManager.findResourcesStartingWithPrefix(prefix);
 	}
 
 	@Override

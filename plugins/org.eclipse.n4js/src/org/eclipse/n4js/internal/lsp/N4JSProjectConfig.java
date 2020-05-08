@@ -223,7 +223,7 @@ public class N4JSProjectConfig implements IProjectConfig {
 		// note that a change of the name attribute is not relevant since the folder name is used
 		boolean dependencyChanged = !Objects.equals(oldDeps, newDeps);
 
-		return new WorkspaceChanges(dependencyChanged, emptyList(), emptyList(), removedSourceFolders,
+		return new WorkspaceChanges(dependencyChanged, emptyList(), emptyList(), emptyList(), removedSourceFolders,
 				addedSourceFolders, emptyList(), emptyList());
 	}
 
