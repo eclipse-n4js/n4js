@@ -55,12 +55,12 @@ class IncrementalBuilderPackageJsonTest extends AbstractIncrementalBuilderTest {
 		saveOpenedFile(packageJsonFileURI);
 		joinServerRequests();
 
-assertNoIssues(); // FIXME GH-1729 remove this and comment-in next line!
-//		assertIssues("Other" -> #[ "(Error, [0:16 - 0:21], string is not a subtype of number.)" ]); // now the error shows up
+		assertIssues("Other" -> #[ "(Error, [0:16 - 0:21], string is not a subtype of number.)" ]); // now the error shows up
 
 		changeOpenedFile(packageJsonFileURI,
 			'"src", "src2"' -> '"src"'
 		);
+		saveOpenedFile(packageJsonFileURI);
 		joinServerRequests();
 
 		assertNoIssues();

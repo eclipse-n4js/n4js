@@ -12,6 +12,7 @@ package org.eclipse.n4js.internal.lsp;
 
 import static java.util.Collections.emptyList;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -98,7 +99,9 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 
 		WorkspaceUpdateChanges update = new WorkspaceUpdateChanges();
 
-		boolean wasExistingInWorkspace = ((N4JSRuntimeCore) delegate).isRegistered(new FileURI(project.getPath()));
+		// project location do not end with an empty segment
+		FileURI projectUri = new FileURI(new File(project.getPath().toFileString()));
+		boolean wasExistingInWorkspace = ((N4JSRuntimeCore) delegate).isRegistered(projectUri);
 		if (wasExistingInWorkspace) {
 			// an existing project was modified
 			update.merge(((N4JSProjectConfig) project).update(changedResource));

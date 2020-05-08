@@ -138,6 +138,7 @@ public class XStatefulIncrementalBuilder {
 					remainingURIs.remove(uri);
 				}
 
+				// continue here: during Rebuild: OtherProject/src/Other.n4js is not in urisToBeBuilt
 				List<IResourceDescription.Delta> deltasBuilt = context.executeClustered(urisToBeBuilt,
 						(resource) -> buildClustured(resource, newSource2GeneratedMapping, result));
 				newDeltas.addAll(deltasBuilt);

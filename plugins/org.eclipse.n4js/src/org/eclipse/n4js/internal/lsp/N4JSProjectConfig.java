@@ -35,6 +35,7 @@ import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 
 /**
  * Wrapper around {@link IN4JSProject}.
@@ -206,7 +207,7 @@ public class N4JSProjectConfig implements IProjectConfig {
 		}
 		List<ISourceFolder> addedSourceFolders = new ArrayList<>();
 		List<ISourceFolder> removedSourceFolders = new ArrayList<>();
-		for (URI sfUri : newSFs.keySet()) {
+		for (URI sfUri : Iterables.concat(oldSFs.keySet(), newSFs.keySet())) {
 			boolean isOld = oldSFs.containsKey(sfUri);
 			boolean isNew = newSFs.containsKey(sfUri);
 			if (isOld && isNew) {

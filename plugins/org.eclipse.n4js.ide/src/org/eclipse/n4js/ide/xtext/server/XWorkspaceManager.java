@@ -172,6 +172,20 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 				this.workspaceConfig == workspaceConfig) {
 			return;
 		}
+
+		// clean up old projects
+		for (XProjectManager projectManager : getProjectManagers()) {
+			XtextResourceSet resourceSet = projectManager.getResourceSet();
+			boolean wasDeliver = resourceSet.eDeliver();
+			try {
+				resourceSet.eSetDeliver(false);
+				resourceSet.getResources().clear();
+			} finally {
+				resourceSet.eSetDeliver(wasDeliver);
+			}
+		}
+
+		// init projects
 		this.workspaceConfig = workspaceConfig;
 		projectName2ProjectManager.clear();
 		fullIndex.clear();
