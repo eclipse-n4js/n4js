@@ -160,35 +160,55 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	 * @param workspaceConfig
 	 *            the new workspace configuration.
 	 */
-	protected void setWorkspaceConfig(IWorkspaceConfig workspaceConfig) {
+	synchronized protected void setWorkspaceConfig(IWorkspaceConfig workspaceConfig) {
 		if (this.workspaceConfig != null && workspaceConfig != null &&
 				this.workspaceConfig == workspaceConfig) {
 			return;
 		}
 
 		// clean up old projects
-		for (XProjectManager projectManager : getProjectManagers()) {
-			XtextResourceSet resourceSet = projectManager.getResourceSet();
-			boolean wasDeliver = resourceSet.eDeliver();
-			try {
-				resourceSet.eSetDeliver(false);
-				resourceSet.getResources().clear();
-			} finally {
-				resourceSet.eSetDeliver(wasDeliver);
-			}
+		Collection<XProjectManager> pmCopy = new ArrayList<>(getProjectManagers());
+		for (XProjectManager projectManager : pmCopy) {
+			removeProject(projectManager);
 		}
+		projectName2ProjectManager.clear();
+		fullIndex.clear();
 
 		// init projects
 		this.workspaceConfig = workspaceConfig;
-		projectName2ProjectManager.clear();
-		fullIndex.clear();
 		for (IProjectConfig projectConfig : getWorkspaceConfig().getProjects()) {
-			XProjectManager projectManager = projectManagerProvider.get();
-			ProjectDescription projectDescription = projectDescriptionFactory.getProjectDescription(projectConfig);
-			projectManager.initialize(projectDescription, projectConfig, openedDocumentsContentProvider,
-					() -> fullIndex);
-			projectName2ProjectManager.put(projectDescription.getName(), projectManager);
+			addProject(projectConfig);
 		}
+	}
+
+	/** Adds a project to the workspace */
+	synchronized public void addProject(IProjectConfig projectConfig) {
+		XProjectManager projectManager = projectManagerProvider.get();
+		ProjectDescription projectDescription = projectDescriptionFactory.getProjectDescription(projectConfig);
+		projectManager.initialize(projectDescription, projectConfig, openedDocumentsContentProvider,
+				() -> fullIndex);
+		projectName2ProjectManager.put(projectDescription.getName(), projectManager);
+	}
+
+	/** Removes a project from the workspace */
+	synchronized protected void removeProject(XProjectManager projectManager) {
+		removeProject(projectManager.getProjectConfig());
+	}
+
+	/** Removes a project from the workspace */
+	synchronized public void removeProject(IProjectConfig projectConfig) {
+		String projectName = projectConfig.getName();
+		XProjectManager projectManager = getProjectManager(projectName);
+		XtextResourceSet resourceSet = projectManager.getResourceSet();
+		boolean wasDeliver = resourceSet.eDeliver();
+		try {
+			resourceSet.eSetDeliver(false);
+			resourceSet.getResources().clear();
+		} finally {
+			resourceSet.eSetDeliver(wasDeliver);
+		}
+		projectName2ProjectManager.remove(projectName);
+		fullIndex.remove(projectName);
 	}
 
 	/**

@@ -32,6 +32,7 @@ import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionDelta;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IFileSystemScanner;
+import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.IteratorExtensions;
@@ -254,6 +255,18 @@ public class XBuildManager {
 		List<URI> deletedFiles = getAllRemovedURIs(workspaceChanges);
 		queue(this.dirtyFiles, deletedFiles, dirtyFiles);
 		queue(this.deletedFiles, dirtyFiles, deletedFiles);
+
+		// TODO: When introducing a "Builder Component" (i.e. a Thread that cares only about building and get notified
+		// when workspace changes occur):
+		// think about encapsulating WorkspaceManager#projectName2ProjectManager and WorkspaceManager#fullIndex to
+		// simplify control flow
+		for (IProjectConfig prjConfig : workspaceChanges.getRemovedProjects()) {
+			workspaceManager.removeProject(prjConfig);
+		}
+		for (IProjectConfig prjConfig : workspaceChanges.getAddedProjects()) {
+			workspaceManager.addProject(prjConfig);
+		}
+
 		return (cancelIndicator) -> doIncrementalBuild(doGenerate, cancelIndicator);
 	}
 
