@@ -30,7 +30,7 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.ProjectDiscoveryHelper;
-import org.eclipse.n4js.xtext.workspace.WorkspaceUpdateChanges;
+import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
 import org.eclipse.xtext.workspace.IProjectConfig;
 
@@ -84,20 +84,20 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	}
 
 	@Override
-	public WorkspaceUpdateChanges update(URI changedResource) {
+	public WorkspaceChanges update(URI changedResource) {
 		IProjectConfig project = this.findProjectContaining(changedResource);
 
 		if (project == null) {
 			// project was deleted
 			// note: currently this should never happen; but
 			// if so: TODO: return other than WorkspaceUpdateChanges.NO_CHANGES
-			return WorkspaceUpdateChanges.NO_CHANGES;
+			return WorkspaceChanges.NO_CHANGES;
 		}
 
 		// get old projects here before it gets invalidated by N4JSProjectConfig#update()
 		Set<? extends IProjectConfig> oldProjects = getProjects();
 
-		WorkspaceUpdateChanges update = new WorkspaceUpdateChanges();
+		WorkspaceChanges update = new WorkspaceChanges();
 
 		// project location do not end with an empty segment
 		FileURI projectUri = new FileURI(new File(project.getPath().toFileString()));
@@ -107,7 +107,7 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 			update.merge(((N4JSProjectConfig) project).update(changedResource));
 		} else {
 			// a new project was created
-			update.merge(WorkspaceUpdateChanges.createProjectAdded(project));
+			update.merge(WorkspaceChanges.createProjectAdded(project));
 		}
 
 		if (isWorkspaceRootProject(project)) {
@@ -117,7 +117,7 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 		return update;
 	}
 
-	private WorkspaceUpdateChanges detectWorkspacesChanges(IProjectConfig project,
+	private WorkspaceChanges detectWorkspacesChanges(IProjectConfig project,
 			Set<? extends IProjectConfig> oldProjects) {
 
 		// update all projects
@@ -147,7 +147,7 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 		}
 
 		boolean dependenciesChanged = !addedProjects.isEmpty() || !removedProjects.isEmpty();
-		return new WorkspaceUpdateChanges(dependenciesChanged, emptyList(), emptyList(), emptyList(),
+		return new WorkspaceChanges(dependenciesChanged, emptyList(), emptyList(), emptyList(),
 				emptyList(), addedProjects, removedProjects);
 	}
 

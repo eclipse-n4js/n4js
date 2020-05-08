@@ -24,7 +24,7 @@ import org.eclipse.lsp4j.jsonrpc.ResponseErrorException;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseError;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
 import org.eclipse.n4js.ide.xtext.server.XBuildManager.XBuildable;
-import org.eclipse.n4js.xtext.workspace.WorkspaceUpdateChanges;
+import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 import org.eclipse.xtext.ide.server.UriExtensions;
@@ -347,7 +347,7 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 			return XBuildable.NO_BUILD;
 		}
 
-		WorkspaceUpdateChanges update = ((XIWorkspaceConfig) getWorkspaceConfig()).update(uri);
+		WorkspaceChanges update = ((XIWorkspaceConfig) getWorkspaceConfig()).update(uri);
 		List<URI> changedURIs = Lists.newArrayList(
 				Iterables.concat(update.getAllAddedURIs(scanner), ImmutableList.of(uri)));
 		List<URI> deleted = new ArrayList<>(update.getRemovedURIs());

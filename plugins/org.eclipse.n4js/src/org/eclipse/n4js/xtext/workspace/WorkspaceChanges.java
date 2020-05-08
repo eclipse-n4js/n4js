@@ -32,11 +32,11 @@ import org.eclipse.xtext.workspace.IWorkspaceConfig;
  * {@link IProjectConfig}, e.g. a project will be added/removed or one of its properties (name, dependency, source
  * folder) will be modified.
  * <p>
- * Instances of {@link WorkspaceUpdateChanges} will mainly focus on deleted/changed {@link URI}s that need to be
+ * Instances of {@link WorkspaceChanges} will mainly focus on deleted/changed {@link URI}s that need to be
  * respected by the builder due to caching of the builder. Other changes that affect the build order (e.g. name,
  * dependencies) are only reflected by {@link #namesOrDependenciesChanged}.
  * <p>
- * All data fields of {@link WorkspaceUpdateChanges} (e.g. {@link #removedURIs}) are mutually exclusive, i.e. that
+ * All data fields of {@link WorkspaceChanges} (e.g. {@link #removedURIs}) are mutually exclusive, i.e. that
  * {@link URI}s mentioned in {@link #removedURIs} are neither listed in {@link #removedSourceFolders} nor in one of the
  * source folders of #{@link #removedProjects}.
  * <p>
@@ -45,19 +45,19 @@ import org.eclipse.xtext.workspace.IWorkspaceConfig;
  * prior to plain uris), but that this might not be possible in all languages/cases.
  */
 @SuppressWarnings("restriction")
-public class WorkspaceUpdateChanges {
+public class WorkspaceChanges {
 	/** Singleton instance containing empty change sets only */
-	public static final WorkspaceUpdateChanges NO_CHANGES = new WorkspaceUpdateChanges();
+	public static final WorkspaceChanges NO_CHANGES = new WorkspaceChanges();
 
-	/** @return a new instance of {@link WorkspaceUpdateChanges} contains the given project as removed */
-	public static WorkspaceUpdateChanges createProjectRemoved(IProjectConfig project) {
-		return new WorkspaceUpdateChanges(false, emptyList(), emptyList(), emptyList(), emptyList(),
+	/** @return a new instance of {@link WorkspaceChanges} contains the given project as removed */
+	public static WorkspaceChanges createProjectRemoved(IProjectConfig project) {
+		return new WorkspaceChanges(false, emptyList(), emptyList(), emptyList(), emptyList(),
 				singletonList(project), emptyList());
 	}
 
-	/** @return a new instance of {@link WorkspaceUpdateChanges} contains the given project as added */
-	public static WorkspaceUpdateChanges createProjectAdded(IProjectConfig project) {
-		return new WorkspaceUpdateChanges(false, emptyList(), emptyList(), emptyList(), emptyList(),
+	/** @return a new instance of {@link WorkspaceChanges} contains the given project as added */
+	public static WorkspaceChanges createProjectAdded(IProjectConfig project) {
+		return new WorkspaceChanges(false, emptyList(), emptyList(), emptyList(), emptyList(),
 				emptyList(), singletonList(project));
 	}
 
@@ -77,12 +77,12 @@ public class WorkspaceUpdateChanges {
 	protected List<IProjectConfig> addedProjects;
 
 	/** Constructor */
-	public WorkspaceUpdateChanges() {
+	public WorkspaceChanges() {
 		this(false, emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList());
 	}
 
 	/** Constructor */
-	public WorkspaceUpdateChanges(boolean namesOrDependenciesChanged, List<URI> removedURIs, List<URI> addedURIs,
+	public WorkspaceChanges(boolean namesOrDependenciesChanged, List<URI> removedURIs, List<URI> addedURIs,
 			List<ISourceFolder> removedSourceFolders, List<ISourceFolder> addedSourceFolders,
 			List<IProjectConfig> removedProjects, List<IProjectConfig> addedProjects) {
 
@@ -184,7 +184,7 @@ public class WorkspaceUpdateChanges {
 	}
 
 	/** Merges the given changes into this instance */
-	public void merge(WorkspaceUpdateChanges changes) {
+	public void merge(WorkspaceChanges changes) {
 		this.namesOrDependenciesChanged |= changes.namesOrDependenciesChanged;
 		this.removedURIs = newArrayList(concat(this.removedURIs, changes.removedURIs));
 		this.addedURIs = newArrayList(concat(this.addedURIs, changes.addedURIs));

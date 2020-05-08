@@ -28,7 +28,7 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.projectModel.lsp.IN4JSSourceFolder;
-import org.eclipse.n4js.xtext.workspace.WorkspaceUpdateChanges;
+import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.workspace.ISourceFolder;
@@ -175,17 +175,17 @@ public class N4JSProjectConfig implements IProjectConfig {
 	 * <li>existing -> non-existing (project deletion)
 	 * </ul>
 	 */
-	public WorkspaceUpdateChanges update(URI changedResource) {
+	public WorkspaceChanges update(URI changedResource) {
 		SafeURI<?> pckjsonSafeUri = delegate.getProjectDescriptionLocation();
 		if (pckjsonSafeUri == null || !delegate.exists()) {
 			// project was deleted
-			return WorkspaceUpdateChanges.createProjectRemoved(this);
+			return WorkspaceChanges.createProjectRemoved(this);
 		}
 
 		URI pckjson = pckjsonSafeUri.toURI();
 		if (!pckjson.equals(changedResource)) {
 			// different file was saved/modified (not package.json)
-			return WorkspaceUpdateChanges.NO_CHANGES;
+			return WorkspaceChanges.NO_CHANGES;
 		}
 
 		// package.json was modified
@@ -223,7 +223,7 @@ public class N4JSProjectConfig implements IProjectConfig {
 		// note that a change of the name attribute is not relevant since the folder name is used
 		boolean dependencyChanged = !Objects.equals(oldDeps, newDeps);
 
-		return new WorkspaceUpdateChanges(dependencyChanged, emptyList(), emptyList(), removedSourceFolders,
+		return new WorkspaceChanges(dependencyChanged, emptyList(), emptyList(), removedSourceFolders,
 				addedSourceFolders, emptyList(), emptyList());
 	}
 

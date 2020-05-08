@@ -23,6 +23,6 @@ public interface XIWorkspaceConfig extends IWorkspaceConfig {
 	URI getPath();
 
 	/** Updates internal data based on changes of the given resource */
-	WorkspaceUpdateChanges update(URI changedResource);
+	WorkspaceChanges update(URI changedResource);
 
 }
