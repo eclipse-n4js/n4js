@@ -261,15 +261,12 @@ public class XBuildManager {
 	protected List<URI> getAllRemovedURIs(WorkspaceChanges workspaceChanges) {
 		List<URI> deleted = new ArrayList<>(workspaceChanges.getRemovedURIs());
 		for (ISourceFolder sourceFolder : workspaceChanges.getAllRemovedSourceFolders()) {
-			deleted.addAll(findResourcesStartingWithPrefix(sourceFolder.getPath()));
+			URI prefix = sourceFolder.getPath();
+			XProjectManager projectManager = workspaceManager.getProjectManager(prefix);
+			List<URI> matchedURIs = projectManager.findResourcesStartingWithPrefix(prefix);
+			deleted.addAll(matchedURIs);
 		}
 		return deleted;
-	}
-
-	/** @return all resource descriptions that start with the given prefix */
-	protected List<URI> findResourcesStartingWithPrefix(URI prefix) {
-		XProjectManager projectManager = workspaceManager.getProjectManager(prefix);
-		return projectManager.findResourcesStartingWithPrefix(prefix);
 	}
 
 	/** Run the build on the workspace */

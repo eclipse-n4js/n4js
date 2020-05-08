@@ -20,7 +20,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
-import org.eclipse.n4js.ide.xtext.resource.XResourceDescriptionsData;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
 import org.eclipse.n4js.ide.xtext.server.build.XIncrementalBuilder;
@@ -41,6 +40,7 @@ import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IFileSystemScanner;
+import org.eclipse.xtext.util.UriUtil;
 import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.workspace.ISourceFolder;
@@ -350,7 +350,14 @@ public class XProjectManager {
 	public List<URI> findResourcesStartingWithPrefix(URI prefix) {
 		Map<String, ResourceDescriptionsData> concurrentMap = indexProvider.get();
 		ResourceDescriptionsData resourceDescriptionsData = concurrentMap.get(projectDescription.getName());
-		List<URI> uris = ((XResourceDescriptionsData) resourceDescriptionsData).findUrisStartingWith(prefix);
+
+		// TODO: Moving this into ResourceDescriptionsData and using a sorted Map could increase performance
+		List<URI> uris = new ArrayList<>();
+		for (URI uri : resourceDescriptionsData.getAllURIs()) {
+			if (UriUtil.isPrefixOf(prefix, uri)) {
+				uris.add(uri);
+			}
+		}
 		return uris;
 	}
 
