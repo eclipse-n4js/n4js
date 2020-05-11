@@ -93,7 +93,6 @@ pipeline {
                     sh """\
                         mv      n4js-ide_macos.zip          unsigned_n4js-ide_macos.zip
                         curl -o n4js-ide_macos.zip -F file=@unsigned_n4js-ide_macos.zip http://build.eclipse.org:31338/macsign.php
-                        rm unsigned_n4js-ide_macos.zip
                     """
 
                     // bundle macOS product into a signed .dmg image
@@ -110,18 +109,18 @@ pipeline {
                     // append language version to file names of products
                     sh """
                         cd n4js/target
-                        mv n4jsc.jar                n4jsc_${LANGUAGE_VERSION}.jar
+                        mv n4jsc.jar                    n4jsc_${LANGUAGE_VERSION}.jar
                         cd products
-                        mv n4js-ide_win.zip         n4js-ide_win_${LANGUAGE_VERSION}.zip
-                        mv n4js-ide_macos.zip       n4js-ide_macos_${LANGUAGE_VERSION}.zip
-                        mv n4js-ide_macos.dmg       n4js-ide_macos_${LANGUAGE_VERSION}.dmg
-                        mv n4js-ide_linux-gtk.zip   n4js-ide_linux-gtk_${LANGUAGE_VERSION}.zip
+                        mv unsigned_n4js-ide_macos.zip  unsigned_n4js-ide_macos_${LANGUAGE_VERSION}.zip
+                        mv n4js-ide_macos.zip           n4js-ide_macos_${LANGUAGE_VERSION}.zip
+                        mv n4js-ide_macos.dmg           n4js-ide_macos_${LANGUAGE_VERSION}.dmg
                     """
 
                     sh """\
                         mkdir -p /home/data/httpd/archive.eclipse.org/n4js/TEMP_GH1512
-                        cp  n4js/target/products/n4js-ide_macos_${LANGUAGE_VERSION}.zip  /home/data/httpd/archive.eclipse.org/n4js/TEMP_GH1512
-                        cp  n4js/target/products/n4js-ide_macos_${LANGUAGE_VERSION}.dmg  /home/data/httpd/archive.eclipse.org/n4js/TEMP_GH1512
+                        cp  n4js/target/products/unsigned_n4js-ide_macos_${LANGUAGE_VERSION}.zip  /home/data/httpd/archive.eclipse.org/n4js/TEMP_GH1512
+                        cp  n4js/target/products/n4js-ide_macos_${LANGUAGE_VERSION}.zip           /home/data/httpd/archive.eclipse.org/n4js/TEMP_GH1512
+                        cp  n4js/target/products/n4js-ide_macos_${LANGUAGE_VERSION}.dmg           /home/data/httpd/archive.eclipse.org/n4js/TEMP_GH1512
                     """
 
                     // show a summary
