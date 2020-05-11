@@ -17,6 +17,7 @@ import com.google.inject.Guice
 import com.google.inject.Inject
 import java.util.concurrent.CancellationException
 import java.util.concurrent.CountDownLatch
+import java.util.concurrent.ExecutionException
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 import java.util.concurrent.atomic.AtomicBoolean
@@ -29,6 +30,7 @@ import org.eclipse.xtext.testing.logging.LoggingTester
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 
 import static org.junit.Assert.*
@@ -137,6 +139,7 @@ class XRequestManagerTest {
 		assertEquals('Foo', Futures.getUnchecked(future))
 	}
 
+	@Ignore
 	@Test(timeout = 1000)
 	def void testRunReadConcurrent() {
 		val future = requestManager.runRead("test") [
@@ -150,6 +153,33 @@ class XRequestManagerTest {
 		]
 		future.join
 		assertEquals(2, sharedState.get)
+	}
+
+	// when re-enabling concurrent execution of read-requests:
+	// TODO GH-1753 delete the following test case and re-enable #testRunReadConcurrent()
+	@Test(timeout = 2000)
+	def void testRunReadNotConcurrent() {
+		// as above in method #testRunReadConcurrent():
+		val future = requestManager.runRead("test") [
+			while (sharedState.get == 0) {
+				Uninterruptibles.sleepUninterruptibly(10, TimeUnit.MILLISECONDS)
+			}
+			sharedState.incrementAndGet
+		]
+		requestManager.runRead("test") [
+			sharedState.incrementAndGet
+		]
+		// but now we expect a timeout:
+		try {
+			Uninterruptibles.getUninterruptibly(future, 1000, TimeUnit.MILLISECONDS)
+			fail("expected timeout")
+		} catch (ExecutionException exc) {
+			fail("incorrect exception")
+		} catch(TimeoutException e) {
+			assertEquals(0, sharedState.get)
+			sharedState.incrementAndGet
+			requestManager.allRequests.join
+		}
 	}
 
 	@Test(timeout = 1000)

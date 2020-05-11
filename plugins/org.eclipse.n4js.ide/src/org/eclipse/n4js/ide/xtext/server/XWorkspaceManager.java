@@ -141,6 +141,19 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	}
 
 	/**
+	 * Tells whether the workspace is in dirty state. The workspace is said to be in dirty state iff at least one file
+	 * is open AND is dirty, i.e. has unsaved changes.
+	 */
+	public boolean isDirty() {
+		for (XDocument doc : openDocuments.values()) {
+			if (doc.isDirty()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Initialize a workspace at the given location.
 	 *
 	 * @param newBaseDir
@@ -260,7 +273,7 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	 */
 	public XBuildable didChangeFiles(List<URI> dirtyFiles, List<URI> deletedFiles) {
 		WorkspaceChanges workspaceChanges = WorkspaceChanges.createUrisRemovedAndChanged(deletedFiles, dirtyFiles);
-		return getIncrementalDirtyBuildable(workspaceChanges);
+		return tryIncrementalGenerateBuildable(workspaceChanges);
 	}
 
 	/**
@@ -283,14 +296,7 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	 * Generation of output files is only triggered if no source files contain unsaved changes (so-called dirty files).
 	 */
 	protected XBuildable tryIncrementalGenerateBuildable(WorkspaceChanges workspaceChanges) {
-		boolean hasSomeDirtyFiles = false;
-		for (XDocument doc : openDocuments.values()) {
-			if (doc.isDirty()) {
-				hasSomeDirtyFiles = true;
-				break;
-			}
-		}
-		if (hasSomeDirtyFiles) {
+		if (isDirty()) {
 			return getIncrementalDirtyBuildable(workspaceChanges);
 		} else {
 			return getIncrementalGenerateBuildable(workspaceChanges);

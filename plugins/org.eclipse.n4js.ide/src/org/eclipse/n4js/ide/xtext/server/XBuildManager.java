@@ -20,8 +20,8 @@ import java.util.concurrent.CancellationException;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.ide.server.LspLogger;
 import org.eclipse.n4js.ide.xtext.server.ParallelBuildManager.ParallelJob;
 import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo.ProjectBuildOrderIterator;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
@@ -30,6 +30,7 @@ import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionDelta;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
+import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.workspace.IProjectConfig;
@@ -134,13 +135,21 @@ public class XBuildManager {
 	private ProjectBuildOrderInfo.Provider projectBuildOrderInfoProvider;
 
 	@Inject
+	private LspLogger lspLogger;
+
+	@Inject
 	private IFileSystemScanner scanner;
 
-	private final LinkedHashSet<URI> dirtyFiles = new LinkedHashSet<>();
+	@Inject
+	private OperationCanceledManager operationCanceledManager;
 
+	private final LinkedHashSet<URI> dirtyFiles = new LinkedHashSet<>();
 	private final LinkedHashSet<URI> deletedFiles = new LinkedHashSet<>();
 
-	/** Holds all deltas of all projects. In case of cancelled build, this set is not empty at start of next build. */
+	private final LinkedHashSet<URI> dirtyFilesAwaitingGeneration = new LinkedHashSet<>();
+	private final LinkedHashSet<URI> deletedFilesAwaitingGeneration = new LinkedHashSet<>();
+
+	/** Holds all deltas of all projects. In case of a cancelled build, this set is not empty at start of next build. */
 	private List<IResourceDescription.Delta> allBuildDeltas = new ArrayList<>();
 
 	/**
@@ -224,6 +233,8 @@ public class XBuildManager {
 
 	/** Performs a clean operation in all projects */
 	public void doClean(CancelIndicator cancelIndicator) {
+		dirtyFilesAwaitingGeneration.clear();
+		deletedFilesAwaitingGeneration.clear();
 		for (XProjectManager projectManager : workspaceManager.getProjectManagers()) {
 			projectManager.doClean(cancelIndicator);
 		}
@@ -284,9 +295,17 @@ public class XBuildManager {
 
 	/** Run the build on the workspace */
 	protected List<IResourceDescription.Delta> doIncrementalBuild(boolean doGenerate, CancelIndicator cancelIndicator) {
+		lspLogger.logBuildProgress("Building ... ");
 		try {
-			Map<ProjectDescription, Set<URI>> project2dirty = computeProjectToUriMap(this.dirtyFiles);
-			Map<ProjectDescription, Set<URI>> project2deleted = computeProjectToUriMap(this.deletedFiles);
+			Set<URI> dirtyFilesToBuild = new LinkedHashSet<>(this.dirtyFiles);
+			Set<URI> deletedFilesToBuild = new LinkedHashSet<>(this.deletedFiles);
+			if (doGenerate) {
+				dirtyFilesToBuild.addAll(this.dirtyFilesAwaitingGeneration);
+				deletedFilesToBuild.addAll(this.deletedFilesAwaitingGeneration);
+			}
+
+			Map<ProjectDescription, Set<URI>> project2dirty = computeProjectToUriMap(dirtyFilesToBuild);
+			Map<ProjectDescription, Set<URI>> project2deleted = computeProjectToUriMap(deletedFilesToBuild);
 			SetView<ProjectDescription> changedPDs = Sets.union(project2dirty.keySet(), project2deleted.keySet());
 
 			ProjectBuildOrderInfo projectBuildOrderInfo = projectBuildOrderInfoProvider.get();
@@ -301,26 +320,34 @@ public class XBuildManager {
 				// the projectResult might contain partial information in case the build was cancelled
 				XBuildResult projectResult = projectManager.doIncrementalBuild(projectDirty, projectDeleted,
 						allBuildDeltas, doGenerate, cancelIndicator);
-				List<Delta> projectBuildDeltas = projectResult.getAffectedResources();
 
-				this.dirtyFiles.removeAll(projectDirty);
-				this.deletedFiles.removeAll(projectDeleted);
-				mergeWithUnreportedDeltas(projectBuildDeltas);
+				List<Delta> newlyBuiltDeltas = projectResult.getAffectedResources();
+				recordBuildProgress(newlyBuiltDeltas, doGenerate);
 
-				pboIterator.visitAffected(projectBuildDeltas);
+				pboIterator.visitAffected(newlyBuiltDeltas);
 			}
 
 			List<IResourceDescription.Delta> result = allBuildDeltas;
 			allBuildDeltas = new ArrayList<>();
+
+			lspLogger.logBuildProgress("done.\n");
+
 			return result;
 
-		} catch (CancellationException | OperationCanceledException ce) {
+		} catch (CancellationException ce) {
+			lspLogger.logBuildProgress("canceled.\n");
 			throw ce;
-		} catch (Exception e) {
+		} catch (Throwable th) {
+			operationCanceledManager.propagateIfCancelException(th);
+			// unknown exception or error (and not a cancellation case):
 			// recover and also discard the build queue - state is undefined afterwards.
 			this.dirtyFiles.clear();
 			this.deletedFiles.clear();
-			throw e;
+			this.dirtyFilesAwaitingGeneration.clear();
+			this.deletedFilesAwaitingGeneration.clear();
+			String eStr = th.getMessage() + " (" + th.getClass().getSimpleName() + ")";
+			lspLogger.logBuildProgress("ABORTED due to exception: " + eStr + "\n");
+			throw th;
 		}
 	}
 
@@ -343,9 +370,33 @@ public class XBuildManager {
 		return project2uris;
 	}
 
+	/** Update this build manager's state after the resources represented by the given deltas have been built. */
+	protected void recordBuildProgress(List<IResourceDescription.Delta> newlyBuiltDeltas, boolean didGenerate) {
+		for (Delta delta : newlyBuiltDeltas) {
+			URI uri = delta.getUri();
+			this.dirtyFiles.remove(uri);
+			this.deletedFiles.remove(uri);
+			if (didGenerate) {
+				this.dirtyFilesAwaitingGeneration.remove(uri);
+				this.deletedFilesAwaitingGeneration.remove(uri);
+			} else {
+				// a resource was built while doGenerate==false, so mark it as awaiting generation
+				if (delta.getNew() != null) {
+					this.deletedFilesAwaitingGeneration.remove(uri);
+					this.dirtyFilesAwaitingGeneration.add(uri);
+				} else {
+					this.dirtyFilesAwaitingGeneration.remove(uri);
+					this.deletedFilesAwaitingGeneration.add(uri);
+				}
+			}
+		}
+
+		mergeWithUnreportedDeltas(newlyBuiltDeltas);
+	}
+
 	/** @since 2.18 */
 	protected void mergeWithUnreportedDeltas(List<IResourceDescription.Delta> newDeltas) {
-		if (this.allBuildDeltas.isEmpty()) {
+		if (allBuildDeltas.isEmpty()) {
 			allBuildDeltas.addAll(newDeltas);
 		} else {
 			Map<URI, IResourceDescription.Delta> unreportedByUri = IterableExtensions.toMap(

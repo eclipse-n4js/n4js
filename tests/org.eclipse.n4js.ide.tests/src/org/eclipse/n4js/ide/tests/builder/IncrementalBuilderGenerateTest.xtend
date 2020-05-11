@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ide.tests.builder
 
+import org.eclipse.n4js.projectModel.locations.FileURI
 import org.junit.Test
 
 import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.*
@@ -56,7 +57,6 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 		// the event under test:
 		changeNonOpenedFile("C", ' C ' -> ' C1 ');
 		joinServerRequests();
-cleanBuildAndWait(); // FIXME GH-1728 remove!
 
 		outputFileSnapshot.assertChanged(); // change on disk occurred while workspace was in clean state, so re-generated immediately!
 		projectStateSnapshot.assertChanged();
@@ -92,7 +92,6 @@ cleanBuildAndWait(); // FIXME GH-1728 remove!
 		// transition workspace into clean state
 		saveOpenedFile("D");
 		joinServerRequests();
-cleanBuildAndWait(); // FIXME GH-1728 remove!
 
 		outputFileSnapshot.assertChanged(); // now C must be regenerated, because workspace went back to clean state
 		projectStateSnapshot.assertChanged();
@@ -122,6 +121,67 @@ cleanBuildAndWait(); // FIXME GH-1728 remove!
 
 		outputFileSnapshot.assertChanged(); // now C must be regenerated, because workspace went back to clean state
 		projectStateSnapshot.assertChanged();
+	}
+
+	/**
+	 * Given two modules Main, Other with a dependency from Main to Other, this test asserts that a change in Other
+	 * that has an effect on Main's output code will appear in Main's output file the moment Other is saved (assuming
+	 * Other is the only file being open).
+	 */
+	@Test
+	def void testChangeInOpenedFile_propagatesToOutputFileOfDependentModuleWhenSaved() {
+		testWorkspaceManager.createTestProjectOnDisk(
+			"Other" -> '''
+				// @StringBased
+				export public enum Color { RED, BLUE }
+			''',
+			"Main" -> '''
+				import {Color} from "Other";
+				let c = Color.RED;
+			'''
+		);
+		startAndWaitForLspServer();
+		assertNoIssues();
+
+		val mainOutputFileURI = new FileURI(getOutputFile("Main"));
+
+		val otherOutputFileSnapshot = createSnapshotForOutputFile("Other");
+		val mainOutputFileSnapshot = createSnapshotForOutputFile("Main");
+		val projectStateSnapshot = createSnapshotForProjectStateFile();
+
+		assertContentOfFileOnDisk(mainOutputFileURI, '''
+			[...]
+			let c = Color.RED;
+			[...]
+		''');
+
+		openFile("Other");
+		joinServerRequests();
+
+		changeOpenedFile("Other", '// @StringBased' -> '@StringBased');
+		joinServerRequests();
+
+		assertNoIssues();
+		otherOutputFileSnapshot.assertUnchanged();
+		mainOutputFileSnapshot.assertUnchanged();
+		projectStateSnapshot.assertUnchanged();
+
+		saveOpenedFile("Other");
+		joinServerRequests();
+
+		// due to Color now being a string-based enum, the output file of Main
+		// should have changed the moment Other was saved:
+		assertNoIssues();
+		otherOutputFileSnapshot.assertChanged();
+		mainOutputFileSnapshot.assertChanged();
+		projectStateSnapshot.assertChanged();
+
+		// ... and the enum literal should be represented as a plain string literal:
+		assertContentOfFileOnDisk(mainOutputFileURI, '''
+			[...]
+			let c = 'RED';
+			[...]
+		''');
 	}
 
 	@Test
@@ -164,9 +224,55 @@ cleanBuildAndWait(); // FIXME GH-1728 remove!
 		joinServerRequests();
 
 		assertNoIssues();
-// FIXME GH-1728 activate this assertion!
-//		cOutputFileSnapshot.assertChanged();
+		cOutputFileSnapshot.assertChanged();
 		dOutputFileSnapshot.assertChanged();
+		projectStateSnapshot.assertChanged();
+	}
+
+	@Test
+	def void testChangesInSeveralOpenedFiles_withoutDependency_closeChangedFile() {
+		testWorkspaceManager.createTestProjectOnDisk(
+			"C" -> '''export public class C {}''',
+			"D" -> '''export public class D {}'''
+		);
+		startAndWaitForLspServer();
+		assertNoIssues();
+
+		val cOutputFileSnapshot = createSnapshotForOutputFile("C");
+		val dOutputFileSnapshot = createSnapshotForOutputFile("D");
+		val projectStateSnapshot = createSnapshotForProjectStateFile();
+
+		openFile("C");
+		openFile("D");
+		joinServerRequests();
+
+		changeOpenedFile("C", 'C' -> 'C1');
+		changeOpenedFile("D", 'D' -> 'D1');
+		joinServerRequests();
+
+		assertNoIssues();
+		cOutputFileSnapshot.assertUnchanged();
+		dOutputFileSnapshot.assertUnchanged();
+		projectStateSnapshot.assertUnchanged();
+
+		saveOpenedFile("C");
+		joinServerRequests();
+
+		// as long as only one of the two changed files is saved,
+		// output artifacts should not be re-generated:
+		assertNoIssues();
+		cOutputFileSnapshot.assertUnchanged();
+		dOutputFileSnapshot.assertUnchanged();
+		projectStateSnapshot.assertUnchanged();
+
+		// transition into workspace clean state not by saving "D", but
+		// by closing "D" (discarding its unsaved changes)
+		closeFileDiscardingChanges("D");
+		joinServerRequests();
+
+		assertNoIssues();
+		cOutputFileSnapshot.assertChanged();
+		dOutputFileSnapshot.assertUnchanged();
 		projectStateSnapshot.assertChanged();
 	}
 
@@ -211,8 +317,7 @@ cleanBuildAndWait(); // FIXME GH-1728 remove!
 
 		assertNoIssues();
 		otherOutputFileSnapshot.assertChanged();
-// FIXME GH-1728 activate this assertion!
-//		mainOutputFileSnapshot.assertChanged();
+		mainOutputFileSnapshot.assertChanged();
 		projectStateSnapshot.assertChanged();
 	}
 
@@ -256,8 +361,7 @@ cleanBuildAndWait(); // FIXME GH-1728 remove!
 		joinServerRequests();
 
 		assertNoIssues();
-// FIXME GH-1728 activate this assertion!
-//		otherOutputFileSnapshot.assertChanged();
+		otherOutputFileSnapshot.assertChanged();
 		mainOutputFileSnapshot.assertChanged();
 		projectStateSnapshot.assertChanged();
 	}
@@ -289,18 +393,18 @@ cleanBuildAndWait(); // FIXME GH-1728 remove!
 		changeNonOpenedFile("Other", ': number {' -> ': any {');
 		joinServerRequests();
 
-		assertFalse(outputFile.exists());
-		projectStateSnapshot.assertUnchanged();
-		assertNoIssues(); // note: the issue in Main does not show up
+		assertFalse(outputFile.exists()); // never generate output files in node_modules folders
+		projectStateSnapshot.assertChanged();
+		assertIssues("Main" -> #[ "(Error, [1:16 - 1:31], any is not a subtype of number.)" ]);
 
 		projectStateSnapshot.file.delete();
 
 		changeNonOpenedFile("Other", ': any {' -> ': string {');
 		joinServerRequests();
 
-		assertFalse(outputFile.exists());
-		projectStateSnapshot.assertNotExists();
-		assertNoIssues(); // note: the issue in Main does not show up
+		assertFalse(outputFile.exists()); // never generate output files in node_modules folders
+		projectStateSnapshot.assertExists(); // recreated
+		assertIssues("Main" -> #[ "(Error, [1:16 - 1:31], string is not a subtype of number.)" ]);
 		
 		cleanBuildAndWait();
 		assertFalse(outputFile.exists());
@@ -323,22 +427,31 @@ cleanBuildAndWait(); // FIXME GH-1728 remove!
 		changeOpenedFile("Other", ': number {' -> ': any {');
 		joinServerRequests();
 
-		assertFalse(outputFile.exists());
-		projectStateSnapshot.assertUnchanged();
-		assertNoIssues(); // note: the issue in Main does not show up
+		assertFalse(outputFile.exists()); // never generate output files in node_modules folders
+		projectStateSnapshot.assertUnchanged(); // not updated, because Other.n4js not saved yet
+		assertIssues("Main" -> #[ "(Error, [1:16 - 1:31], any is not a subtype of number.)" ]);
+
+		saveOpenedFile("Other");
+		joinServerRequests();
+
+		assertFalse(outputFile.exists()); // never generate output files in node_modules folders
+		projectStateSnapshot.assertChanged();
+		assertIssues("Main" -> #[ "(Error, [1:16 - 1:31], any is not a subtype of number.)" ]);
 
 		projectStateSnapshot.file.delete();
 
 		changeOpenedFile("Other", ': any {' -> ': string {');
 		joinServerRequests();
 
-		assertFalse(outputFile.exists());
-		projectStateSnapshot.assertNotExists();
-		assertNoIssues(); // note: the issue in Main does not show up
-		
-		cleanBuildAndWait();
-		assertFalse(outputFile.exists());
-		projectStateSnapshot.assertExists();
+		assertFalse(outputFile.exists()); // never generate output files in node_modules folders
+		projectStateSnapshot.assertNotExists(); // not recreated, because Other.n4js not saved yet
+		assertIssues("Main" -> #[ "(Error, [1:16 - 1:31], string is not a subtype of number.)" ]);
+
+		saveOpenedFile("Other");
+		joinServerRequests();
+
+		assertFalse(outputFile.exists()); // never generate output files in node_modules folders
+		projectStateSnapshot.assertExists(); // recreated
 		assertIssues("Main" -> #[ "(Error, [1:16 - 1:31], string is not a subtype of number.)" ]);
 	}
 

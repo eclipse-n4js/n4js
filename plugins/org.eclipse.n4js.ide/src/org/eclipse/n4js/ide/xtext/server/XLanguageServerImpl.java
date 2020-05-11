@@ -95,6 +95,7 @@ import org.eclipse.lsp4j.services.LanguageServer;
 import org.eclipse.lsp4j.services.TextDocumentService;
 import org.eclipse.lsp4j.services.WorkspaceService;
 import org.eclipse.n4js.ide.server.HeadlessExtensionRegistrationHelper;
+import org.eclipse.n4js.ide.server.LspLogger;
 import org.eclipse.n4js.ide.xtext.server.XBuildManager.XBuildable;
 import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
 import org.eclipse.n4js.ide.xtext.server.concurrent.XRequestManager;
@@ -183,6 +184,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Inject
 	private IssueAcceptor issueAcceptor;
+
+	@Inject
+	private LspLogger lspLogger;
 
 	@Inject
 	private ProjectStatePersister persister;
@@ -415,12 +419,14 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	public void connect(LanguageClient client) {
 		this.client = client;
 		issueAcceptor.connect(client);
+		lspLogger.connect(client);
 	}
 
 	/**
 	 * Discard all references to the language client.
 	 */
 	public void disconnect() {
+		lspLogger.disconnect();
 		issueAcceptor.disconnect();
 		this.client = null;
 	}

@@ -79,7 +79,11 @@ public class XStatefulIncrementalBuilder {
 		}
 	}
 
-	/** Run the build. */
+	/**
+	 * Run the build.
+	 * <p>
+	 * Cancellation behavior: does not throw exception but returns with a partial result.
+	 */
 	public XBuildResult launch() {
 		List<IResourceDescription.Delta> allProcessedDeltas = new ArrayList<>();
 
@@ -153,6 +157,12 @@ public class XStatefulIncrementalBuilder {
 
 		} catch (CancellationException e) {
 			// catch CancellationException here and proceed normally to save already resolved deltas
+		} catch (Throwable th) {
+			if (operationCanceledManager.isOperationCanceledException(th)) {
+				// catch OperationCanceledException, etc. here and proceed normally to save already resolved deltas
+			} else {
+				throw th;
+			}
 		}
 
 		return new XBuildResult(this.request.getState(), allProcessedDeltas);
