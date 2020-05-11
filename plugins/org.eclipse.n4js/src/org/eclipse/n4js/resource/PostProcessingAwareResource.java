@@ -276,12 +276,18 @@ public class PostProcessingAwareResource extends DerivedStateAwareResource {
 					// finalization of post-processing
 					PostProcessingAwareResource other;
 					Set<PostProcessingAwareResource> done = new HashSet<>();
-					while ((other = otherResourcesAwaitingFinalization.poll()) != null) {
-						if (done.add(other)) {
-							other.doFinalizePostProcessing(cancelIndicator);
+					do {
+						while ((other = otherResourcesAwaitingFinalization.poll()) != null) {
+							if (done.add(other)) {
+								other.doFinalizePostProcessing(cancelIndicator);
+							}
 						}
-					}
-					doFinalizePostProcessing(cancelIndicator);
+						if (done.add(this)) {
+							this.doFinalizePostProcessing(cancelIndicator);
+						}
+						// The following condition will be true iff the above call 'this.doFinalizePostProcessing()' has
+						// triggered the processing of additional resources (that's why we need the outer loop):
+					} while (!otherResourcesAwaitingFinalization.isEmpty());
 
 				} catch (Throwable th) {
 
