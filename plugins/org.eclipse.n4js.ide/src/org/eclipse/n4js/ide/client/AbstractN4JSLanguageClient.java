@@ -22,7 +22,8 @@ import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterGenerateListen
 /**
  * Abstract base class for N4JS language clients, i.e. implementations of {@link LanguageClient}.
  */
-public abstract class AbstractN4JSLanguageClient implements LanguageClient, AfterGenerateListener, AfterDeleteListener {
+public abstract class AbstractN4JSLanguageClient
+		implements N4JSLanguageClient, AfterGenerateListener, AfterDeleteListener {
 
 	@Override
 	public void telemetryEvent(Object object) {
@@ -42,6 +43,11 @@ public abstract class AbstractN4JSLanguageClient implements LanguageClient, Afte
 
 	@Override
 	public void afterDelete(URI file) {
+		// ignored by default
+	}
+
+	@Override
+	public void logBuildProgress(LogBuildProgressParams params) {
 		// ignored by default
 	}
 }
