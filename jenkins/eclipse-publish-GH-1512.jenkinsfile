@@ -111,6 +111,17 @@ pipeline {
                     sh """\
                         curl -o n4js-ide_macos.dmg -F sign=true -F source=@n4js-ide_macos.zip http://build.eclipse.org:31338/dmg-packager
                     """
+
+                    // fix macOS zip (the signing service returns a broken zip archive that can be unzipped with 'unzip' on the command line, but not by double-clicking it in Finder on macOS)
+                    sh """\
+                        mkdir temp_fix_zip
+                        cd temp_fix_zip
+                        unzip ../n4js-ide_macos.zip
+                        rm ../n4js-ide_macos.zip
+                        zip -r ../n4js-ide_macos.zip *
+                        cd ..
+                        rm -rf temp_fix_zip
+                    """
                 }
             }
         }
