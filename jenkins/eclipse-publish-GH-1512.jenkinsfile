@@ -96,9 +96,15 @@ pipeline {
 //                    sh """\
 //                        curl -o n4js-ide_macos.zip -F file=@unsigned_n4js-ide_macos.zip http://build.eclipse.org:31338/macsign.php
 //                    """
+
+//                    sh """\
+//                        curl -O https://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/releng/org.eclipse.oomph.releng/hudson/installer.entitlements
+//                        curl -o n4js-ide_macos.zip -F file=@unsigned_n4js-ide_macos.zip -F entitlements=@installer.entitlements http://172.30.206.146:8282/macosx-signing-service/1.0.1-SNAPSHOT
+//                    """
+
                     sh """\
                         curl -O https://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/releng/org.eclipse.oomph.releng/hudson/installer.entitlements
-                        curl -o n4js-ide_macos.zip -F file=@unsigned_n4js-ide_macos.zip -F entitlements=@installer.entitlements http://172.30.206.146:8282/macosx-signing-service/1.0.1-SNAPSHOT
+                        curl -o n4js-ide_macos.zip -F file=@unsigned_n4js-ide_macos.zip -F entitlements=@installer.entitlements http://build.eclipse.org:31338/macsign.php
                     """
 
                     // bundle macOS product into a signed .dmg image
