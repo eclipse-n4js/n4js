@@ -39,7 +39,7 @@ pipeline {
         timestamps()
     }
 
-	// For how to request updates of below tools on Eclipse infrastructure, see file 'eclipse-nightly.jenkinsfile'.
+    // For how to request updates of below tools on Eclipse infrastructure, see file 'eclipse-nightly.jenkinsfile'.
     environment {
         NODEJS_PATH= '/shared/common/node-v12.13.1-linux-x64/bin'
         YARN_PATH  = '/shared/common/yarn/1.19.2/bin'
@@ -91,14 +91,30 @@ pipeline {
 
                     // sign the macOS product
                     sh """\
+                        cp ../../builds/org.eclipse.n4js.product.build/signing-entitlements.xml .
                         mv      n4js-ide_macos.zip          unsigned_n4js-ide_macos.zip
-                        curl -o n4js-ide_macos.zip -F file=@unsigned_n4js-ide_macos.zip http://build.eclipse.org:31338/macsign.php
-                        rm unsigned_n4js-ide_macos.zip
+                        curl -o n4js-ide_macos.zip -F file=@unsigned_n4js-ide_macos.zip -F entitlements=@signing-entitlements.xml http://build.eclipse.org:31338/macsign.php
                     """
 
                     // bundle macOS product into a signed .dmg image
                     sh """\
                         curl -o n4js-ide_macos.dmg -F sign=true -F source=@n4js-ide_macos.zip http://build.eclipse.org:31338/dmg-packager
+                    """
+
+                    // fix macOS zip
+                    // (the signing service returns a "broken" zip archive that will produce an invalid app bundle
+                    // when extracted on macOS by double-clicking it in Finder (wrong file permission flags); using
+                    // 'unzip' on command line works fine both here and on macOS, though, so we can fix this problem
+                    // by extracting and re-zipping the signed archive here)
+                    // https://bugs.eclipse.org/bugs/show_bug.cgi?id=563080
+                    sh """\
+                        mkdir temp_fix_zip
+                        cd temp_fix_zip
+                        unzip ../n4js-ide_macos.zip > /dev/null
+                        rm ../n4js-ide_macos.zip
+                        zip -r ../n4js-ide_macos.zip * > /dev/null
+                        cd ..
+                        rm -rf temp_fix_zip
                     """
                 }
             }
