@@ -96,14 +96,14 @@ pipeline {
                         curl -o n4js-ide_macos.zip -F file=@unsigned_n4js-ide_macos.zip -F entitlements=@signing-entitlements.xml http://build.eclipse.org:31338/macsign.php
                     """
 
-                    // notarize the macOS product
-                    sh """\
-                        ../../releng/utils/scripts/notarize.sh n4js-ide_macos.zip
-                    """
-
                     // bundle macOS product into a signed .dmg image
                     sh """\
                         curl -o n4js-ide_macos.dmg -F sign=true -F source=@n4js-ide_macos.zip http://build.eclipse.org:31338/dmg-packager
+                    """
+
+                    // notarize the macOS product
+                    sh """\
+                        ../../releng/utils/scripts/notarize.sh n4js-ide_macos.dmg
                     """
 
                     // fix macOS zip
