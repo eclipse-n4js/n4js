@@ -103,7 +103,8 @@ pipeline {
 
                     // notarize the macOS product
                     sh """\
-                        ../../releng/utils/scripts/notarize.sh n4js-ide_macos.dmg
+                        mv      n4js-ide_macos.dmg             unnotarized_n4js-ide_macos.dmg
+                        ../../releng/utils/scripts/notarize.sh unnotarized_n4js-ide_macos.dmg n4js-ide_macos.dmg
                     """
 
                     // fix macOS zip
@@ -120,6 +121,12 @@ pipeline {
                         zip -r ../n4js-ide_macos.zip * > /dev/null
                         cd ..
                         rm -rf temp_fix_zip
+                    """
+
+                    // notarize the macOS product (the zip)
+                    sh """\
+                        mv      n4js-ide_macos.zip             unnotarized_n4js-ide_macos.zip
+                        ../../releng/utils/scripts/notarize_TEMP_zip.sh unnotarized_n4js-ide_macos.zip n4js-ide_macos.zip
                     """
                 }
             }

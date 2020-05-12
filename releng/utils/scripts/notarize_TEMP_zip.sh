@@ -21,7 +21,7 @@ OUTPUT_FILE=$2
 RESPONSE=\
 $(curl -X POST \
   -F "file=@$INPUT_FILE" \
-  -F 'options={"primaryBundleId": "app-bundle", "staple": true};type=application/json' \
+  -F 'options={"primaryBundleId": "app-bundle", "staple": false};type=application/json' \
   http://172.30.206.146:8383/macos-notarization-service/notarize)
 
 UUID=$(echo $RESPONSE | grep -Po '"uuid"\s*:\s*"\K[^"]+')
