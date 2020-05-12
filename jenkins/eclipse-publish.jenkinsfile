@@ -106,6 +106,7 @@ pipeline {
                     // when extracted on macOS by double-clicking it in Finder (wrong file permission flags); using
                     // 'unzip' on command line works fine both here and on macOS, though, so we can fix this problem
                     // by extracting and re-zipping the signed archive here)
+                    // https://bugs.eclipse.org/bugs/show_bug.cgi?id=563080
                     sh """\
                         mkdir temp_fix_zip
                         cd temp_fix_zip
