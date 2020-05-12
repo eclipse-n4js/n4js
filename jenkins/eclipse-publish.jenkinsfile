@@ -39,7 +39,7 @@ pipeline {
         timestamps()
     }
 
-	// For how to request updates of below tools on Eclipse infrastructure, see file 'eclipse-nightly.jenkinsfile'.
+    // For how to request updates of below tools on Eclipse infrastructure, see file 'eclipse-nightly.jenkinsfile'.
     environment {
         NODEJS_PATH= '/shared/common/node-v12.13.1-linux-x64/bin'
         YARN_PATH  = '/shared/common/yarn/1.19.2/bin'
@@ -109,9 +109,9 @@ pipeline {
                     sh """\
                         mkdir temp_fix_zip
                         cd temp_fix_zip
-                        unzip ../n4js-ide_macos.zip
+                        unzip ../n4js-ide_macos.zip > /dev/null
                         rm ../n4js-ide_macos.zip
-                        zip -r ../n4js-ide_macos.zip *
+                        zip -r ../n4js-ide_macos.zip * > /dev/null
                         cd ..
                         rm -rf temp_fix_zip
                     """

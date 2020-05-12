@@ -109,9 +109,9 @@ pipeline {
                     sh """\
                         mkdir temp_fix_zip
                         cd temp_fix_zip
-                        unzip ../n4js-ide_macos.zip
+                        unzip ../n4js-ide_macos.zip > /dev/null
                         rm ../n4js-ide_macos.zip
-                        zip -r ../n4js-ide_macos.zip *
+                        zip -r ../n4js-ide_macos.zip * > /dev/null
                         cd ..
                         rm -rf temp_fix_zip
                     """
