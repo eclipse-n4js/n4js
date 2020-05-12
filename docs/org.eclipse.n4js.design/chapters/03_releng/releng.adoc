@@ -266,6 +266,8 @@ For updating the N4JS IDE to a new version of Eclipse, EMF, Xtext, etc. follow t
 .. In the new Eclipse workspace created by Ooomph, the target platform file should have uncommitted changes:
 ... carefully review these changes, to be sure they make sense, and then
 ... commit & push those changes to your branch.
+. Make sure file `builds/org.eclipse.n4js.product.build/signing-entitlements.xml` is still up-to-date with its
+  source file (see link to source file at top of `signing-entitlements.xml`).
 . Thoroughly test the new versions, including some manual(!) tests:
 .. Run Jenkins builds.
 .. Ooomph another N4JS development environment with Eclipse Installer.
@@ -281,9 +283,10 @@ For updating the N4JS IDE to a new version of Eclipse, EMF, Xtext, etc. follow t
    provided in the n4js repository.
 .. After launching the N4JS IDE product, refresh the workspace and review/commit any changes in file `N4JS__IDE.launch`. 
 .. Download a product created in a Jenkins CI build and test it manually.
-.. After merging to master: download a product created in a nightly build and test it manually.
-   Ensure signing and JRE bundling are still working properly. 
-
+.. After merging to master: download the products created in an Eclipse nightly build and test them manually.
+... Ensure signing and JRE bundling are still working properly.
+... Ensure that both the .zip- and .dmg-archives can be extracted and produce working executables / app-bundles.
+    On macOS, extracting the .zip by double-clicking it in Finder must work!
 
 All the above steps need to be performed in the `n4js-extended` repository, accordingly (e.g. file `N4JS-Extended.setup`).
 

@@ -91,20 +91,9 @@ pipeline {
 
                     // sign the macOS product
                     sh """\
+                        cp ../../builds/org.eclipse.n4js.product.build/signing-entitlements.xml .
                         mv      n4js-ide_macos.zip          unsigned_n4js-ide_macos.zip
-                    """
-//                    sh """\
-//                        curl -o n4js-ide_macos.zip -F file=@unsigned_n4js-ide_macos.zip http://build.eclipse.org:31338/macsign.php
-//                    """
-
-//                    sh """\
-//                        curl -O https://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/releng/org.eclipse.oomph.releng/hudson/installer.entitlements
-//                        curl -o n4js-ide_macos.zip -F file=@unsigned_n4js-ide_macos.zip -F entitlements=@installer.entitlements http://172.30.206.146:8282/macosx-signing-service/1.0.1-SNAPSHOT
-//                    """
-
-                    sh """\
-                        curl -O https://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/releng/org.eclipse.oomph.releng/hudson/installer.entitlements
-                        curl -o n4js-ide_macos.zip -F file=@unsigned_n4js-ide_macos.zip -F entitlements=@installer.entitlements http://build.eclipse.org:31338/macsign.php
+                        curl -o n4js-ide_macos.zip -F file=@unsigned_n4js-ide_macos.zip -F entitlements=@signing-entitlements.xml http://build.eclipse.org:31338/macsign.php
                     """
 
                     // bundle macOS product into a signed .dmg image
@@ -112,7 +101,11 @@ pipeline {
                         curl -o n4js-ide_macos.dmg -F sign=true -F source=@n4js-ide_macos.zip http://build.eclipse.org:31338/dmg-packager
                     """
 
-                    // fix macOS zip (the signing service returns a broken zip archive that can be unzipped with 'unzip' on the command line, but not by double-clicking it in Finder on macOS)
+                    // fix macOS zip
+                    // (the signing service returns a "broken" zip archive that will produce an invalid app bundle
+                    // when extracted on macOS by double-clicking it in Finder (wrong file permission flags); using
+                    // 'unzip' on command line works fine both here and on macOS, though, so we can fix this problem
+                    // by extracting and re-zipping the signed archive here)
                     sh """\
                         mkdir temp_fix_zip
                         cd temp_fix_zip
