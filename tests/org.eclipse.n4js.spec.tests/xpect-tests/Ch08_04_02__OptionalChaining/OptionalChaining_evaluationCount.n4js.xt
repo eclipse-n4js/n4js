@@ -13,21 +13,65 @@
 
 
 class G {
-	g(v: string, g: G): G {
-		console.log(v); return g;
+
+	@Final public g: ()=>G;
+	@Final public x: ()=>G;
+	@Final public u: ()=>G;
+
+	constructor(id: string, nextG: G) {
+		const correctThis = this;
+
+		this.g = function() {
+			console.log(id);
+			if (this !== correctThis) console.log("FAILURE: incorrect call context!");
+			return nextG;
+		};
+
+		this.x = function() {
+			console.log(id);
+			if (this !== correctThis) console.log("FAILURE: incorrect call context!");
+			return null;
+		};
+
+		this.u = undefined;
 	}
 }
-let g = new G();
+
+let g = new G("t0", new G("t1", new G("t2", new G("t3", null))));
 
 
-g.g("t0", g).g("t1", g)?.g("t2", g).g("t3", null);
+g.g().g()?.g().g();
 console.log("======");
-g.g("t0", g).g("t1", null)?.g("t2", g).g("t3", null);
+g.g().x()?.g().g();
+console.log("======");
+g.g().g().g?.().g();
+console.log("======");
+g.g().g().u?.().g();
+console.log("======");
+g?.g?.()?.g?.()?.g?.()?.g?.();
+console.log("======");
+g?.g?.()?.g?.()?.u?.()?.g?.();
 
 
 /* XPECT output ---
 <==
 stdout:
+t0
+t1
+t2
+t3
+======
+t0
+t1
+======
+t0
+t1
+t2
+t3
+======
+t0
+t1
+======
 t0
 t1
 t2

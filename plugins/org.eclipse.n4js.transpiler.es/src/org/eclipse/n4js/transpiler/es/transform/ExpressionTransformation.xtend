@@ -81,7 +81,9 @@ class ExpressionTransformation extends Transformation {
 	}
 
 	override transform() {
-		collectNodes(state.im, Expression, true).forEach[transformExpression];
+		collectNodes(state.im, Expression, true)
+			.reverse // transforming expressions in bottom-up order (it's more natural and simplifies some nesting cases)
+			.forEach[transformExpression];
 	}
 
 	def private dispatch void transformExpression(Expression expr) {
@@ -355,10 +357,10 @@ class ExpressionTransformation extends Transformation {
 		// to
 		// $opt = ($optR = foo.bar1.bar2.bar3).bar4
 		val receiver = target.target;
-		if (receiver instanceof IdentifierRef_IM) {
+		if (receiver instanceof IdentifierRef_IM && !isIdentifierRefToChainingTempVar(receiver)) {
 			// special case: receiver is a plain IdentifierRef, which can be evaluated more than once without side effects
 			// -> no need for introducing a second temporary variable
-			callContextExpr = _IdentRef(receiver.id_IM);
+			callContextExpr = _IdentRef((receiver as IdentifierRef_IM).id_IM);
 		} else {
 			val tempVarReceiverSTE = addOrGetTemporaryVariable(CHAINING_COALESCING_TEMP_VAR_NAME + "R", exprWithTarget);
 			val receiverAssignment = _AssignmentExpr(
@@ -379,5 +381,13 @@ class ExpressionTransformation extends Transformation {
 			steFor_Function_call
 		);
 		exprWithTarget.arguments.add(0, _Argument(callContextExpr));
+	}
+
+	def private boolean isIdentifierRefToChainingTempVar(Expression expr) {
+		if (expr instanceof IdentifierRef_IM) {
+			val name = expr.id_IM?.name;
+			return name !== null && name.startsWith(CHAINING_COALESCING_TEMP_VAR_NAME);
+		}
+		return false;
 	}
 }
