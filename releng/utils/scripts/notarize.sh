@@ -11,17 +11,32 @@
 # https://developer.apple.com/documentation/xcode/notarizing_macos_software_before_distribution
 
 if [ -z "$2" ]; then
-    echo "Usage: notarize.sh INPUT_FILE OUTPUT_FILE"
+    echo 'Usage: notarize.sh <INPUT_FILE> <OUTPUT_FILE> [<STAPLE>]'
+    echo ''
+    echo 'Argument STAPLE tells whether "stapling" should be activated, i.e. whether the notarization ticket'
+    echo 'should be attached to the output file (not supported for zip archives). Must be either "true" or'
+    echo '"false"; default is "true".'
     exit -1
 fi
 
 INPUT_FILE=$1
 OUTPUT_FILE=$2
+if [ -z "$3" ]; then
+    STAPLE='true'
+else
+    STAPLE=$3
+fi
+
+if [[ $STAPLE != 'true' && $STAPLE != 'false' ]]; then
+    echo "Value for argument STAPLE should be 'true' or 'false', but was: $STAPLE"
+    exit -1
+fi
+
 
 RESPONSE=\
 $(curl -X POST \
   -F "file=@$INPUT_FILE" \
-  -F 'options={"primaryBundleId": "app-bundle", "staple": true};type=application/json' \
+  -F 'options={"primaryBundleId": "app-bundle", "staple": '"$STAPLE"'};type=application/json' \
   http://172.30.206.146:8383/macos-notarization-service/notarize)
 
 UUID=$(echo $RESPONSE | grep -Po '"uuid"\s*:\s*"\K[^"]+')
@@ -29,14 +44,14 @@ UUID=$(echo $RESPONSE | grep -Po '"uuid"\s*:\s*"\K[^"]+')
 STATUS=$(echo $RESPONSE | grep -Po '"status"\s*:\s*"\K[^"]+')
 
 while [[ $STATUS == 'IN_PROGRESS' ]]; do
-  sleep 1m
-  RESPONSE=$(curl -s http://172.30.206.146:8383/macos-notarization-service/$UUID/status)
-  STATUS=$(echo $RESPONSE | grep -Po '"status"\s*:\s*"\K[^"]+')
+    sleep 1m
+    RESPONSE=$(curl -s http://172.30.206.146:8383/macos-notarization-service/$UUID/status)
+    STATUS=$(echo $RESPONSE | grep -Po '"status"\s*:\s*"\K[^"]+')
 done
 
 if [[ $STATUS != 'COMPLETE' ]]; then
-  echo "Upload failed: $RESPONSE"
-  exit 1
+    echo "Upload failed: $RESPONSE"
+    exit 1
 fi
 
 curl -J -o "$OUTPUT_FILE" http://172.30.206.146:8383/macos-notarization-service/$UUID/download
