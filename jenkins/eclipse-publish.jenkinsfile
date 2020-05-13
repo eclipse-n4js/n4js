@@ -101,12 +101,18 @@ pipeline {
                         curl -o n4js-ide_macos.dmg -F sign=true -F source=@n4js-ide_macos.zip http://build.eclipse.org:31338/dmg-packager
                     """
 
-                    // fix macOS zip
-                    // (the signing service returns a "broken" zip archive that will produce an invalid app bundle
-                    // when extracted on macOS by double-clicking it in Finder (wrong file permission flags); using
-                    // 'unzip' on command line works fine both here and on macOS, though, so we can fix this problem
-                    // by extracting and re-zipping the signed archive here)
-                    // https://bugs.eclipse.org/bugs/show_bug.cgi?id=563080
+                    // notarize the .dmg image (with stapling)
+                    sh """\
+                        mv      n4js-ide_macos.dmg             unnotarized_n4js-ide_macos.dmg
+                        ../../releng/utils/scripts/notarize.sh unnotarized_n4js-ide_macos.dmg n4js-ide_macos.dmg
+                    """
+
+                    // fix zip-archive for macOS up to Mojave
+                    // (the signing service returns a zip archive that will produce an invalid app bundle when extracted
+                    // on macOS Mojave and earlier by double-clicking the file in Finder (wrong file permission flags);
+                    // using 'unzip' on command line works fine both here on CBI and on macOS, though; we fix this problem
+                    // by extracting and re-zipping the signed archive here, which will produce a zip-archive that does
+                    // not show this problem on macOS Mojave; for macOS Catalina this would not be required)
                     sh """\
                         mkdir temp_fix_zip
                         cd temp_fix_zip
@@ -115,6 +121,12 @@ pipeline {
                         zip -r ../n4js-ide_macos.zip * > /dev/null
                         cd ..
                         rm -rf temp_fix_zip
+                    """
+
+                    // notarize the zip archive (without stapling)
+                    sh """\
+                        mv      n4js-ide_macos.zip             unnotarized_n4js-ide_macos.zip
+                        ../../releng/utils/scripts/notarize.sh unnotarized_n4js-ide_macos.zip n4js-ide_macos.zip false
                     """
                 }
             }
