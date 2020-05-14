@@ -678,8 +678,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	}
 
 	/**
-	 * Same as {@link #assertIssues(Map)}, accepting pairs from module name to issue list instead of a map from module
-	 * ID to issue list.
+	 * Same as {@link #assertIssues(Map)}, accepting pairs from module name to issue list instead of a map from file URI
+	 * to issue list.
 	 */
 	@SafeVarargs
 	protected final void assertIssues(Pair<String, List<String>>... moduleNameToExpectedIssues) {
@@ -695,14 +695,14 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	}
 
 	/**
-	 * Same as {@link #assertIssuesInModules(Map, boolean)}, but in addition to checking the modules denoted by the
-	 * given map's keys, this method will also assert that the remaining modules in the workspace do not contain any
-	 * issues. Flag <code>withIgnoredIssues</code> applies to those issues accordingly.
+	 * Same as {@link #assertIssuesInFiles(Map, boolean)}, but in addition to checking the files denoted by the given
+	 * map's keys, this method will also assert that the remaining files in the workspace do not contain any issues.
+	 * Flag <code>withIgnoredIssues</code> applies to those issues accordingly.
 	 */
-	protected void assertIssues(Map<FileURI, List<String>> moduleIdToExpectedIssues, boolean withIgnoredIssues) {
+	protected void assertIssues(Map<FileURI, List<String>> fileUriToExpectedIssues, boolean withIgnoredIssues) {
 		// check given expectations
-		assertIssuesInModules(moduleIdToExpectedIssues, withIgnoredIssues);
-		Set<FileURI> checkedModules = moduleIdToExpectedIssues.keySet();
+		assertIssuesInFiles(fileUriToExpectedIssues, withIgnoredIssues);
+		Set<FileURI> checkedModules = fileUriToExpectedIssues.keySet();
 
 		// check that there are no other issues in the workspace
 		Multimap<FileURI, Diagnostic> allIssues = languageClient.getIssues();
@@ -710,14 +710,14 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		Set<FileURI> uncheckedModulesWithIssues = new LinkedHashSet<>(modulesWithIssues);
 		uncheckedModulesWithIssues.removeAll(checkedModules);
 		if (!uncheckedModulesWithIssues.isEmpty()) {
-			String msg = moduleIdToExpectedIssues.size() == 0
+			String msg = fileUriToExpectedIssues.size() == 0
 					? "expected no issues in workspace but found one or more issues:"
 					: "found one or more unexpected issues in workspace:";
 			StringBuilder sb = new StringBuilder();
 			for (FileURI currModuleURI : uncheckedModulesWithIssues) {
 				List<String> currModuleIssuesAsList = getIssuesInFile(currModuleURI, withIgnoredIssues);
 				if (!currModuleIssuesAsList.isEmpty()) { // empty if all issues in current module are ignored
-					String currModuleRelPath = getRelativePathFromModuleUri(currModuleURI);
+					String currModuleRelPath = getRelativePathFromFileUri(currModuleURI);
 					sb.append(currModuleRelPath);
 					sb.append(":\n");
 					String currModuleIssuesAsString = issuesToSortedString(currModuleIssuesAsList, "    ");
@@ -731,40 +731,39 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	}
 
 	/**
-	 * Same as {@link #assertIssuesInModules(Map)}, accepting pairs from module name to issue list instead of a map from
-	 * module ID to issue list.
+	 * Same as {@link #assertIssuesInFiles(Map)}, accepting pairs from module name to issue list instead of a map from
+	 * file URI to issue list.
 	 */
 	@SafeVarargs
 	protected final void assertIssuesInModules(Pair<String, List<String>>... moduleNameToExpectedIssues) {
-		assertIssuesInModules(convertModuleNamePairsToIdMap(moduleNameToExpectedIssues));
+		assertIssuesInFiles(convertModuleNamePairsToIdMap(moduleNameToExpectedIssues));
 	}
 
 	/**
-	 * Same as {@link #assertIssuesInModules(Map, boolean)}, but with <code>withIgnoredIssues</code> always set to
+	 * Same as {@link #assertIssuesInFiles(Map, boolean)}, but with <code>withIgnoredIssues</code> always set to
 	 * <code>false</code>.
 	 */
-	protected void assertIssuesInModules(Map<FileURI, List<String>> moduleIdToExpectedIssues) {
-		assertIssuesInModules(moduleIdToExpectedIssues, false);
+	protected void assertIssuesInFiles(Map<FileURI, List<String>> moduleIdToExpectedIssues) {
+		assertIssuesInFiles(moduleIdToExpectedIssues, false);
 	}
 
 	/**
-	 * Asserts issues in the modules denoted by the given map's keys. Modules for which the given map does not contain
-	 * any IDs are *not* checked to be free of issues! If this is desired use method {@link #assertIssues(Map, boolean)}
+	 * Asserts issues in the files denoted by the given map's keys. Files for which the given map does not contain any
+	 * IDs are *not* checked to be free of issues! If this is desired use method {@link #assertIssues(Map, boolean)}
 	 * instead.
 	 *
-	 * @param moduleIdToExpectedIssues
+	 * @param fileURIToExpectedIssues
 	 *            a map from module IDs to the list of expected issues in each case.
 	 * @param withIgnoredIssues
 	 *            iff <code>true</code>, even issues with an issue code that is among those returned by method
 	 *            {@link #getIgnoredIssueCodes()} will be taken into consideration.
 	 */
-	protected void assertIssuesInModules(Map<FileURI, List<String>> moduleIdToExpectedIssues,
-			boolean withIgnoredIssues) {
-		for (Entry<FileURI, List<String>> pair : moduleIdToExpectedIssues.entrySet()) {
-			FileURI moduleURI = pair.getKey();
+	protected void assertIssuesInFiles(Map<FileURI, List<String>> fileURIToExpectedIssues, boolean withIgnoredIssues) {
+		for (Entry<FileURI, List<String>> pair : fileURIToExpectedIssues.entrySet()) {
+			FileURI fileURI = pair.getKey();
 			List<String> expectedIssues = pair.getValue();
 
-			List<String> actualIssues = getIssuesInFile(moduleURI, withIgnoredIssues);
+			List<String> actualIssues = getIssuesInFile(fileURI, withIgnoredIssues);
 			Set<String> actualIssuesAsSet = IterableExtensions.toSet(
 					Iterables.transform(actualIssues, String::trim));
 			Set<String> expectedIssuesAsSet = IterableExtensions.toSet(
@@ -772,8 +771,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 			if (!Objects.equals(expectedIssuesAsSet, actualIssuesAsSet)) {
 				String indent = "    ";
-				String moduleRelPath = getRelativePathFromModuleUri(moduleURI);
-				Assert.fail("issues in module " + moduleRelPath + " do not meet expectation\n"
+				String fileRelPath = getRelativePathFromFileUri(fileURI);
+				Assert.fail("issues in file " + fileRelPath + " do not meet expectation\n"
 						+ "EXPECTED:\n"
 						+ issuesToSortedString(expectedIssuesAsSet, indent) + "\n"
 						+ "ACTUAL:\n"
@@ -846,11 +845,11 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	}
 
 	/**
-	 * Returns the module's path and name relative to the test workspace's {@link #getRoot() root folder}. Intended for
+	 * Returns the files's path and name relative to the test workspace's {@link #getRoot() root folder}. Intended for
 	 * use in output presented to the user (e.g. messages of assertion errors).
 	 */
-	protected String getRelativePathFromModuleUri(FileURI moduleURI) {
-		URI relativeUri = workspaceManager.makeWorkspaceRelative(moduleURI.toURI());
+	protected String getRelativePathFromFileUri(FileURI fileURI) {
+		URI relativeUri = workspaceManager.makeWorkspaceRelative(fileURI.toURI());
 		return relativeUri.toFileString();
 	}
 
@@ -869,8 +868,14 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		return languageClient.getIssues(uri);
 	}
 
-	static String toUnixLineSeparator(CharSequence cs) {
+	/** */
+	protected static String toUnixLineSeparator(CharSequence cs) {
 		return cs.toString().replaceAll("\r?\n", "\n");
+	}
+
+	/** */
+	protected static FileURI toFileURI(File file) {
+		return new FileURI(file);
 	}
 
 	@SafeVarargs
