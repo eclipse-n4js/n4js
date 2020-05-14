@@ -365,7 +365,8 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 		}
 
 		WorkspaceChanges notifiedChanges = WorkspaceChanges.createUrisChanged(ImmutableList.of(uri));
-		WorkspaceChanges workspaceChanges = ((XIWorkspaceConfig) getWorkspaceConfig()).update(uri);
+		WorkspaceChanges workspaceChanges = ((XIWorkspaceConfig) getWorkspaceConfig()).update(uri,
+				projectName -> projectName2ProjectManager.get(projectName).getProjectDescription());
 		workspaceChanges.merge(notifiedChanges);
 
 		return tryIncrementalGenerateBuildable(workspaceChanges);

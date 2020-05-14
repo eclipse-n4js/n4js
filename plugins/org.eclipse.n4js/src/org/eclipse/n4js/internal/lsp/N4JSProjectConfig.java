@@ -29,6 +29,7 @@ import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.projectModel.lsp.IN4JSSourceFolder;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
+import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.workspace.ISourceFolder;
@@ -169,13 +170,16 @@ public class N4JSProjectConfig implements IProjectConfig {
 	}
 
 	/**
+	 * Updates this project configuration's internal state. In addition, the given {@link ProjectDescription} is also
+	 * updated accordingly.
+	 * <p>
 	 * This methods handles changes from
 	 * <ul>
 	 * <li>existing -> existing (w/o project modifications) and from
 	 * <li>existing -> non-existing (project deletion)
 	 * </ul>
 	 */
-	public WorkspaceChanges update(URI changedResource) {
+	public WorkspaceChanges update(URI changedResource, ProjectDescription projectDescriptionToUpdate) {
 		SafeURI<?> pckjsonSafeUri = delegate.getProjectDescriptionLocation();
 		if (pckjsonSafeUri == null || !delegate.exists()) {
 			// project was deleted
@@ -222,6 +226,9 @@ public class N4JSProjectConfig implements IProjectConfig {
 		// detect changes in dependencies
 		// note that a change of the name attribute is not relevant since the folder name is used
 		boolean dependencyChanged = !Objects.equals(oldDeps, newDeps);
+		if (dependencyChanged && projectDescriptionToUpdate != null) {
+			projectDescriptionToUpdate.setDependencies(newDeps);
+		}
 
 		return new WorkspaceChanges(dependencyChanged, emptyList(), emptyList(), emptyList(), removedSourceFolders,
 				addedSourceFolders, emptyList(), emptyList());

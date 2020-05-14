@@ -21,6 +21,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.N4JSProject;
@@ -32,6 +33,7 @@ import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.ProjectDiscoveryHelper;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
+import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.workspace.IProjectConfig;
 
 import com.google.common.collect.Sets;
@@ -84,7 +86,7 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	}
 
 	@Override
-	public WorkspaceChanges update(URI changedResource) {
+	public WorkspaceChanges update(URI changedResource, Function<String, ProjectDescription> pdProvider) {
 		IProjectConfig project = this.findProjectContaining(changedResource);
 
 		if (project == null) {
@@ -104,7 +106,8 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 		boolean wasExistingInWorkspace = ((N4JSRuntimeCore) delegate).isRegistered(projectUri);
 		if (wasExistingInWorkspace) {
 			// an existing project was modified
-			update.merge(((N4JSProjectConfig) project).update(changedResource));
+			ProjectDescription pd = pdProvider.apply(project.getName());
+			update.merge(((N4JSProjectConfig) project).update(changedResource, pd));
 		} else {
 			// a new project was created
 			update.merge(WorkspaceChanges.createProjectAdded(project));
