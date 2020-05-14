@@ -104,29 +104,21 @@ pipeline {
                     // notarize the .dmg image (with stapling)
                     sh """\
                         mv      n4js-ide_macos.dmg             unnotarized_n4js-ide_macos.dmg
-                        ../../releng/utils/scripts/notarize.sh unnotarized_n4js-ide_macos.dmg n4js-ide_macos.dmg
+                        ../../releng/utils/scripts/notarize.sh unnotarized_n4js-ide_macos.dmg n4js-ide_macos.dmg true
                     """
 
-                    // fix zip-archive for macOS up to Mojave
-                    // (the signing service returns a zip archive that will produce an invalid app bundle when extracted
-                    // on macOS Mojave and earlier by double-clicking the file in Finder (wrong file permission flags);
-                    // using 'unzip' on command line works fine both here on CBI and on macOS, though; we fix this problem
-                    // by extracting and re-zipping the signed archive here, which will produce a zip-archive that does
-                    // not show this problem on macOS Mojave; for macOS Catalina this would not be required)
+                    // delete macOS .zip archive
+                    // NOTE: if we ever want to ship the .zip archive again in the future, we'd have to do two things here ...
+                    // 1) unzip and re-zip 'n4js-ide_macos.zip' in order to fix a problem on macOS Mojave (not Catalina) when
+                    //    double-clicking a zip archive in Finder (for the zip archive obtained from the signing service
+                    //    Finder would create an app bundle containing files with incorrect file permissions):
+                    //        unzip n4js-ide_macos.zip
+                    //        zip -r n4js-ide_macos.zip n4jsIDE.app
+                    // 2) notarize 'n4js-ide_macos.zip' using the script notarize.sh as for the dmg image above, but this time
+                    //    without stapling (not supported for zip archives):
+                    //        notarize.sh unnotarized_n4js-ide_macos.zip n4js-ide_macos.zip false
                     sh """\
-                        mkdir temp_fix_zip
-                        cd temp_fix_zip
-                        unzip ../n4js-ide_macos.zip > /dev/null
-                        rm ../n4js-ide_macos.zip
-                        zip -r ../n4js-ide_macos.zip * > /dev/null
-                        cd ..
-                        rm -rf temp_fix_zip
-                    """
-
-                    // notarize the zip archive (without stapling)
-                    sh """\
-                        mv      n4js-ide_macos.zip             unnotarized_n4js-ide_macos.zip
-                        ../../releng/utils/scripts/notarize.sh unnotarized_n4js-ide_macos.zip n4js-ide_macos.zip false
+                        rm n4js-ide_macos.zip
                     """
                 }
             }
@@ -135,13 +127,19 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
+                    // delete artifacts we do not want to ship
+                    sh """
+                        cd n4js/products
+                        rm unsigned_*
+                        rm unnotarized_*
+                    """
+
                     // append language version to file names of products
                     sh """
                         cd n4js/target
                         mv n4jsc.jar                n4jsc_${LANGUAGE_VERSION}.jar
                         cd products
                         mv n4js-ide_win.zip         n4js-ide_win_${LANGUAGE_VERSION}.zip
-                        mv n4js-ide_macos.zip       n4js-ide_macos_${LANGUAGE_VERSION}.zip
                         mv n4js-ide_macos.dmg       n4js-ide_macos_${LANGUAGE_VERSION}.dmg
                         mv n4js-ide_linux-gtk.zip   n4js-ide_linux-gtk_${LANGUAGE_VERSION}.zip
                     """
@@ -188,7 +186,6 @@ pipeline {
                         sh """\
                             cp ${pathProductsLatest}/n4jsc_${LANGUAGE_VERSION}.jar               ${pathProductsLatest}/n4jsc.jar
                             cp ${pathProductsLatest}/n4js-ide_win_${LANGUAGE_VERSION}.zip        ${pathProductsLatest}/n4js-ide_win.zip
-                            cp ${pathProductsLatest}/n4js-ide_macos_${LANGUAGE_VERSION}.zip      ${pathProductsLatest}/n4js-ide_macos.zip
                             cp ${pathProductsLatest}/n4js-ide_macos_${LANGUAGE_VERSION}.dmg      ${pathProductsLatest}/n4js-ide_macos.dmg
                             cp ${pathProductsLatest}/n4js-ide_linux-gtk_${LANGUAGE_VERSION}.zip  ${pathProductsLatest}/n4js-ide_linux-gtk.zip
                         """
