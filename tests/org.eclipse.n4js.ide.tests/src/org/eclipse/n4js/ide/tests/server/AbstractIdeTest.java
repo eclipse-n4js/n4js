@@ -718,9 +718,12 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 			for (FileURI currModuleURI : uncheckedModulesWithIssues) {
 				List<String> currModuleIssuesAsList = getIssuesInFile(currModuleURI, withIgnoredIssues);
 				if (!currModuleIssuesAsList.isEmpty()) { // empty if all issues in current module are ignored
+					if (sb.length() > 0) {
+						sb.append('\n');
+					}
 					String currModuleRelPath = getRelativePathFromFileUri(currModuleURI);
 					sb.append(currModuleRelPath);
-					sb.append(":\n");
+					sb.append(":\n    ");
 					String currModuleIssuesAsString = issuesToSortedString(currModuleIssuesAsList, "    ");
 					sb.append(currModuleIssuesAsString);
 				}
