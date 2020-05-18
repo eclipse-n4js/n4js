@@ -81,6 +81,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
@@ -759,6 +760,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 *            {@link #getIgnoredIssueCodes()} will be taken into consideration.
 	 */
 	protected void assertIssuesInFiles(Map<FileURI, List<String>> fileURIToExpectedIssues, boolean withIgnoredIssues) {
+		List<String> failureMessages = new ArrayList<>();
 		for (Entry<FileURI, List<String>> pair : fileURIToExpectedIssues.entrySet()) {
 			FileURI fileURI = pair.getKey();
 			List<String> expectedIssues = pair.getValue();
@@ -772,12 +774,19 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 			if (!Objects.equals(expectedIssuesAsSet, actualIssuesAsSet)) {
 				String indent = "    ";
 				String fileRelPath = getRelativePathFromFileUri(fileURI);
-				Assert.fail("issues in file " + fileRelPath + " do not meet expectation\n"
+				failureMessages.add("issues in file " + fileRelPath + " do not meet expectation\n"
 						+ "EXPECTED:\n"
 						+ issuesToSortedString(expectedIssuesAsSet, indent) + "\n"
 						+ "ACTUAL:\n"
 						+ issuesToSortedString(actualIssuesAsSet, indent));
 			}
+		}
+		if (failureMessages.size() == 1) {
+			Assert.fail(failureMessages.get(0));
+		} else if (failureMessages.size() > 1) {
+			Collections.sort(failureMessages);
+			Assert.fail("issues in several files do not meet the expectation:\n"
+					+ Joiner.on("\n").join(failureMessages));
 		}
 	}
 
