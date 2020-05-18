@@ -14,6 +14,7 @@ import java.io.File
 import java.io.IOException
 import java.nio.file.Files
 import java.util.Map
+import org.eclipse.n4js.projectModel.locations.FileURI
 import org.eclipse.n4js.utils.io.FileCopier
 import org.eclipse.n4js.utils.io.FileDeleter
 import org.junit.Test
@@ -22,12 +23,121 @@ import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.DEPENDENCIE
 import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.N4JS_RUNTIME
 import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.NODE_MODULES
 import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.YARN_TEST_PROJECT
+import static org.junit.Assert.assertTrue
+import static org.junit.Assert.assertFalse
 
 /**
  * Tests incremental builds triggered by changes that lead to a different overall workspace configuration,
  * e.g. projects being added or removed, source folders being added or removed.
  */
 class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderTest {
+
+	@Test
+	def void testCreateProject() throws IOException {
+		testWorkspaceManager.createTestProjectOnDisk(
+			"Main" -> '''
+				console.log('hello');
+			'''
+		);
+
+		val packageJsonFile = getPackageJsonFile();
+		val packageJsonFileURI = new FileURI(packageJsonFile);
+		val packageJsonContent = Files.readString(packageJsonFile.toPath);
+		val outputFile = getOutputFile("Main");
+
+		// before starting the LSP server, delete the package.json file
+		assertTrue(packageJsonFile.delete());
+
+		startAndWaitForLspServer();
+
+		assertFalse("output file of module 'Main' should not exist", outputFile.exists());
+		assertNoIssues();
+
+		// recreate the package.json file
+		packageJsonFile.createNewFile();
+		openFile(packageJsonFileURI);
+		joinServerRequests();
+
+		changeOpenedFile(packageJsonFileURI, packageJsonContent);
+		joinServerRequests();
+
+		assertFalse("output file of module 'Main' should not exist", outputFile.exists()); // package.json not saved yet
+		assertNoIssues();
+
+		saveOpenedFile(packageJsonFileURI);
+		joinServerRequests();
+
+		assertTrue("output file of module 'Main' should exist", outputFile.exists()); // output file has appeared
+		assertNoIssues();
+	}
+
+	@Test
+	def void testCreateProject_inYarnWorkspace() throws IOException {
+		testWorkspaceManager.createTestOnDisk(
+			NODE_MODULES + N4JS_RUNTIME -> null,
+			"MainProject" -> #[
+				"Main" -> '''
+					import {OtherClass} from "Other";
+					new OtherClass().m();
+				''',
+				DEPENDENCIES -> '''
+					«N4JS_RUNTIME»,
+					OtherProject
+				'''
+			],
+			"OtherProject" -> #[
+				"Other" -> '''
+					export public class OtherClass {
+						public m() {}
+					}
+				''',
+				DEPENDENCIES -> N4JS_RUNTIME
+			]
+		);
+
+		val packageJsonFile = getPackageJsonFile("OtherProject");
+		val packageJsonFileURI = new FileURI(packageJsonFile);
+		val packageJsonContent = Files.readString(packageJsonFile.toPath);
+		val outputFile = getOutputFile("OtherProject", "Other");
+
+		// before starting the LSP server, delete the package.json file of OtherProject
+		assertTrue(packageJsonFile.delete());
+
+		startAndWaitForLspServer();
+
+		assertFalse("output file of module 'Other' should not exist", outputFile.exists());
+
+		val originalErrors = Map.of(
+			getFileURIFromModuleName("Main"), #[
+				"(Error, [0:8 - 0:18], Couldn't resolve reference to TExportableElement 'OtherClass'.)",
+				"(Error, [0:8 - 0:18], Import of OtherClass cannot be resolved.)",
+				"(Error, [0:25 - 0:32], Cannot resolve import target :: resolving simple module import : found no matching modules)",
+				"(Error, [1:4 - 1:14], Couldn't resolve reference to IdentifiableElement 'OtherClass'.)"
+			],
+			getPackageJsonFile("MainProject").toFileURI, #[
+				"(Error, [16:3 - 16:22], Project does not exist with project ID: OtherProject.)"
+			]
+		);
+		assertIssues(originalErrors);
+
+		// recreate the package.json file
+		packageJsonFile.createNewFile();
+		openFile(packageJsonFileURI);
+		joinServerRequests();
+
+		changeOpenedFile(packageJsonFileURI, packageJsonContent);
+		joinServerRequests();
+
+		assertFalse("output file of module 'Other' should not exist", outputFile.exists()); // package.json not saved yet
+		assertIssues(originalErrors); // package.json not saved yet, so still the original errors
+
+		saveOpenedFile(packageJsonFileURI);
+		joinServerRequests();
+
+		assertTrue("output file of module 'Other' should exist", outputFile.exists()); // output file has appeared
+// TODO GH-1729 update of dependent package.json does not work yet
+//		assertNoIssues(); // now the original errors have gone away
+	}
 
 	@Test
 	def void testChangePackageJson_addRemoveDependency() throws IOException {

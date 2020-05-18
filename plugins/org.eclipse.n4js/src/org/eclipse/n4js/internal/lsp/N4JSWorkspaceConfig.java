@@ -24,7 +24,6 @@ import java.util.Set;
 import java.util.function.Function;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.internal.N4JSRuntimeCore;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
@@ -89,32 +88,25 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	public WorkspaceChanges update(URI changedResource, Function<String, ProjectDescription> pdProvider) {
 		IProjectConfig project = this.findProjectContaining(changedResource);
 
-		if (project == null) {
-			// project was deleted
-			// note: currently this should never happen; but
-			// if so: TODO: return other than WorkspaceUpdateChanges.NO_CHANGES
-			return WorkspaceChanges.NO_CHANGES;
-		}
-
 		// get old projects here before it gets invalidated by N4JSProjectConfig#update()
 		Set<? extends IProjectConfig> oldProjects = getProjects();
 
 		WorkspaceChanges update = new WorkspaceChanges();
 
 		// project location do not end with an empty segment
-		FileURI projectUri = new FileURI(new File(project.getPath().toFileString()));
-		boolean wasExistingInWorkspace = ((N4JSRuntimeCore) delegate).isRegistered(projectUri);
-		if (wasExistingInWorkspace) {
+		FileURI projectUri = project != null ? new FileURI(new File(project.getPath().toFileString())) : null;
+		boolean wasExistingInWorkspace = projectUri != null && ((N4JSRuntimeCore) delegate).isRegistered(projectUri);
+		if (project != null && wasExistingInWorkspace) {
 			// an existing project was modified
 			ProjectDescription pd = pdProvider.apply(project.getName());
 			update.merge(((N4JSProjectConfig) project).update(changedResource, pd));
+
+			if (((N4JSProjectConfig) project).isWorkspacesProject()) {
+				update.merge(detectAddedRemovedProjects(oldProjects));
+			}
 		} else {
 			// a new project was created
-			update.merge(WorkspaceChanges.createProjectAdded(project));
-		}
-
-		if (((N4JSProjectConfig) project).isWorkspacesProject()) {
-			update.merge(detectWorkspacesChanges(project, oldProjects));
+			update.merge(detectAddedRemovedProjects(oldProjects));
 		}
 
 		if (!update.getAddedProjects().isEmpty() || !update.getRemovedProjects().isEmpty()) {
@@ -132,13 +124,9 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 		return update;
 	}
 
-	private WorkspaceChanges detectWorkspacesChanges(IProjectConfig project,
-			Set<? extends IProjectConfig> oldProjects) {
-
-		IN4JSProject n4jsProject = ((N4JSProjectConfig) project).toProject();
+	private WorkspaceChanges detectAddedRemovedProjects(Set<? extends IProjectConfig> oldProjects) {
 
 		// update all projects
-		((N4JSProject) n4jsProject).invalidate();
 		((N4JSRuntimeCore) delegate).deregisterAll();
 
 		ProjectDiscoveryHelper projectDiscoveryHelper = ((N4JSRuntimeCore) delegate).getProjectDiscoveryHelper();
