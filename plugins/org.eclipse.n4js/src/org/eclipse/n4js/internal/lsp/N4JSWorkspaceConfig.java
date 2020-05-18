@@ -117,6 +117,18 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 			update.merge(detectWorkspacesChanges(project, oldProjects));
 		}
 
+		if (!update.getAddedProjects().isEmpty() || !update.getRemovedProjects().isEmpty()) {
+			// since the list of dependencies cached in class ProjectDescription does not contain names of projects that
+			// do not exist (in case of unresolved dependencies), we have to recompute all those lists of dependencies
+			// whenever a project is being added or removed:
+			for (IProjectConfig pc : oldProjects) {
+				ProjectDescription pd = pdProvider.apply(pc.getName());
+				if (pd != null) {
+					((N4JSProjectConfig) pc).updateProjectDescription(pd);
+				}
+			}
+		}
+
 		return update;
 	}
 

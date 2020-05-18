@@ -226,12 +226,21 @@ public class N4JSProjectConfig implements IProjectConfig {
 		// detect changes in dependencies
 		// note that a change of the name attribute is not relevant since the folder name is used
 		boolean dependencyChanged = !Objects.equals(oldDeps, newDeps);
+
 		if (dependencyChanged && projectDescriptionToUpdate != null) {
-			projectDescriptionToUpdate.setDependencies(newDeps);
+			updateProjectDescription(projectDescriptionToUpdate);
 		}
 
 		return new WorkspaceChanges(dependencyChanged, emptyList(), emptyList(), emptyList(), removedSourceFolders,
 				addedSourceFolders, emptyList(), emptyList());
+	}
+
+	/** Bring the given project description up-to-date with the receiving project configuration's internal state. */
+	public void updateProjectDescription(ProjectDescription projectDescriptionToUpdate) {
+		String currName = ((N4JSProject) delegate).getProjectName().getRawName();
+		List<String> currDeps = ((N4JSProject) delegate).getAllDependenciesAndImplementedApiNames();
+		projectDescriptionToUpdate.setName(currName);
+		projectDescriptionToUpdate.setDependencies(currDeps);
 	}
 
 	/** @see N4JSProject#getWorkspaces() */
