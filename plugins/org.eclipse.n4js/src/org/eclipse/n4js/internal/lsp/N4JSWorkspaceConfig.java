@@ -113,7 +113,7 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 			update.merge(WorkspaceChanges.createProjectAdded(project));
 		}
 
-		if (isWorkspaceRootProject(project)) {
+		if (((N4JSProjectConfig) project).isWorkspacesProject()) {
 			update.merge(detectWorkspacesChanges(project, oldProjects));
 		}
 
@@ -123,8 +123,10 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	private WorkspaceChanges detectWorkspacesChanges(IProjectConfig project,
 			Set<? extends IProjectConfig> oldProjects) {
 
+		IN4JSProject n4jsProject = ((N4JSProjectConfig) project).toProject();
+
 		// update all projects
-		((N4JSProject) project).invalidate();
+		((N4JSProject) n4jsProject).invalidate();
 		((N4JSRuntimeCore) delegate).deregisterAll();
 
 		ProjectDiscoveryHelper projectDiscoveryHelper = ((N4JSRuntimeCore) delegate).getProjectDiscoveryHelper();
@@ -151,7 +153,7 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 
 		boolean dependenciesChanged = !addedProjects.isEmpty() || !removedProjects.isEmpty();
 		return new WorkspaceChanges(dependenciesChanged, emptyList(), emptyList(), emptyList(), emptyList(),
-				emptyList(), addedProjects, removedProjects);
+				emptyList(), removedProjects, addedProjects);
 	}
 
 	private Map<URI, IProjectConfig> getProjectsMap(Set<? extends IProjectConfig> projects) {
@@ -160,10 +162,5 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 			projectsMap.put(projectConfig.getPath(), projectConfig);
 		}
 		return projectsMap;
-	}
-
-	/** @return true iff the base dir of the workspace is a workspaces (yarn) project */
-	public boolean isWorkspaceRootProject(IProjectConfig project) {
-		return getPath().equals(project.getPath()) && ((N4JSProjectConfig) project).isWorkspacesProject();
 	}
 }
