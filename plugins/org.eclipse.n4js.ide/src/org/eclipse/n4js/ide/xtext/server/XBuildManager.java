@@ -361,6 +361,9 @@ public class XBuildManager {
 		Map<ProjectDescription, Set<URI>> project2uris = new HashMap<>();
 		for (URI uri : uris) {
 			XProjectManager projectManager = workspaceManager.getProjectManager(uri);
+			if (projectManager == null) {
+				continue; // happens when editing a package.json file in a newly created project
+			}
 			ProjectDescription projectDescription = projectManager.getProjectDescription();
 			if (!project2uris.containsKey(projectDescription)) {
 				project2uris.put(projectDescription, new HashSet<>());

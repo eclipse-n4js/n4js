@@ -47,6 +47,14 @@ abstract class AbstractIncrementalBuilderTest extends AbstractIdeTest {
 				N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT + File.separator + moduleName + ".js");
 	}
 
+	protected File getPackageJsonFile() {
+		return getPackageJsonFile(TestWorkspaceManager.DEFAULT_PROJECT_NAME);
+	}
+
+	protected File getPackageJsonFile(String projectName) {
+		return new File(getProjectRoot(projectName), N4JSGlobals.PACKAGE_JSON);
+	}
+
 	protected File getProjectStateFile() {
 		return getProjectStateFile(TestWorkspaceManager.DEFAULT_PROJECT_NAME);
 	}

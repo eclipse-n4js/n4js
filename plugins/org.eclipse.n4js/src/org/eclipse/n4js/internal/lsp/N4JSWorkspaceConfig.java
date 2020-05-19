@@ -21,9 +21,9 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.internal.N4JSRuntimeCore;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
@@ -32,6 +32,7 @@ import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.ProjectDiscoveryHelper;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
+import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.workspace.IProjectConfig;
 
 import com.google.common.collect.Sets;
@@ -84,15 +85,8 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	}
 
 	@Override
-	public WorkspaceChanges update(URI changedResource) {
+	public WorkspaceChanges update(URI changedResource, Function<String, ProjectDescription> pdProvider) {
 		IProjectConfig project = this.findProjectContaining(changedResource);
-
-		if (project == null) {
-			// project was deleted
-			// note: currently this should never happen; but
-			// if so: TODO: return other than WorkspaceUpdateChanges.NO_CHANGES
-			return WorkspaceChanges.NO_CHANGES;
-		}
 
 		// get old projects here before it gets invalidated by N4JSProjectConfig#update()
 		Set<? extends IProjectConfig> oldProjects = getProjects();
@@ -100,28 +94,39 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 		WorkspaceChanges update = new WorkspaceChanges();
 
 		// project location do not end with an empty segment
-		FileURI projectUri = new FileURI(new File(project.getPath().toFileString()));
-		boolean wasExistingInWorkspace = ((N4JSRuntimeCore) delegate).isRegistered(projectUri);
-		if (wasExistingInWorkspace) {
+		FileURI projectUri = project != null ? new FileURI(new File(project.getPath().toFileString())) : null;
+		boolean wasExistingInWorkspace = projectUri != null && ((N4JSRuntimeCore) delegate).isRegistered(projectUri);
+		if (project != null && wasExistingInWorkspace) {
 			// an existing project was modified
-			update.merge(((N4JSProjectConfig) project).update(changedResource));
+			ProjectDescription pd = pdProvider.apply(project.getName());
+			update.merge(((N4JSProjectConfig) project).update(changedResource, pd));
+
+			if (((N4JSProjectConfig) project).isWorkspacesProject()) {
+				update.merge(detectAddedRemovedProjects(oldProjects));
+			}
 		} else {
 			// a new project was created
-			update.merge(WorkspaceChanges.createProjectAdded(project));
+			update.merge(detectAddedRemovedProjects(oldProjects));
 		}
 
-		if (isWorkspaceRootProject(project)) {
-			update.merge(detectWorkspacesChanges(project, oldProjects));
+		if (!update.getAddedProjects().isEmpty() || !update.getRemovedProjects().isEmpty()) {
+			// since the list of dependencies cached in class ProjectDescription does not contain names of projects that
+			// do not exist (in case of unresolved dependencies), we have to recompute all those lists of dependencies
+			// whenever a project is being added or removed:
+			for (IProjectConfig pc : oldProjects) {
+				ProjectDescription pd = pdProvider.apply(pc.getName());
+				if (pd != null) {
+					((N4JSProjectConfig) pc).updateProjectDescription(pd);
+				}
+			}
 		}
 
 		return update;
 	}
 
-	private WorkspaceChanges detectWorkspacesChanges(IProjectConfig project,
-			Set<? extends IProjectConfig> oldProjects) {
+	private WorkspaceChanges detectAddedRemovedProjects(Set<? extends IProjectConfig> oldProjects) {
 
 		// update all projects
-		((N4JSProject) project).invalidate();
 		((N4JSRuntimeCore) delegate).deregisterAll();
 
 		ProjectDiscoveryHelper projectDiscoveryHelper = ((N4JSRuntimeCore) delegate).getProjectDiscoveryHelper();
@@ -148,7 +153,7 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 
 		boolean dependenciesChanged = !addedProjects.isEmpty() || !removedProjects.isEmpty();
 		return new WorkspaceChanges(dependenciesChanged, emptyList(), emptyList(), emptyList(), emptyList(),
-				emptyList(), addedProjects, removedProjects);
+				emptyList(), removedProjects, addedProjects);
 	}
 
 	private Map<URI, IProjectConfig> getProjectsMap(Set<? extends IProjectConfig> projects) {
@@ -157,10 +162,5 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 			projectsMap.put(projectConfig.getPath(), projectConfig);
 		}
 		return projectsMap;
-	}
-
-	/** @return true iff the base dir of the workspace is a workspaces (yarn) project */
-	public boolean isWorkspaceRootProject(IProjectConfig project) {
-		return getPath().equals(project.getPath()) && ((N4JSProjectConfig) project).isWorkspacesProject();
 	}
 }

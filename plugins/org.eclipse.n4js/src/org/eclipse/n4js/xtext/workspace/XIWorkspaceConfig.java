@@ -10,7 +10,10 @@
  */
 package org.eclipse.n4js.xtext.workspace;
 
+import java.util.function.Function;
+
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
 /**
@@ -23,6 +26,6 @@ public interface XIWorkspaceConfig extends IWorkspaceConfig {
 	URI getPath();
 
 	/** Updates internal data based on changes of the given resource */
-	WorkspaceChanges update(URI changedResource);
+	WorkspaceChanges update(URI changedResource, Function<String, ProjectDescription> pdProvider);
 
 }

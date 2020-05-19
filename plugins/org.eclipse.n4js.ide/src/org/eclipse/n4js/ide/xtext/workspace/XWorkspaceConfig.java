@@ -10,9 +10,12 @@
  */
 package org.eclipse.n4js.ide.xtext.workspace;
 
+import java.util.function.Function;
+
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
+import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.workspace.WorkspaceConfig;
 
 /**
@@ -22,7 +25,7 @@ import org.eclipse.xtext.workspace.WorkspaceConfig;
 public class XWorkspaceConfig extends WorkspaceConfig implements XIWorkspaceConfig {
 
 	@Override
-	public WorkspaceChanges update(URI changedResource) {
+	public WorkspaceChanges update(URI changedResource, Function<String, ProjectDescription> pdProvider) {
 		// TODO Auto-generated method stub
 		return null;
 	}
