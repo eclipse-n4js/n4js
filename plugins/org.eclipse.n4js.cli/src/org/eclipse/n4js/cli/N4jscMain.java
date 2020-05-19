@@ -48,10 +48,6 @@ public class N4jscMain {
 
 		if (!options.isVerbose()) {
 			Logger.getRootLogger().setLevel(Level.ERROR);
-
-			// Reconfigure Logging to be quiet:
-			// Logger.getRootLogger().removeAllAppenders();
-			// Logger.getRootLogger().addAppender(new NullAppender());
 		}
 
 		try {
