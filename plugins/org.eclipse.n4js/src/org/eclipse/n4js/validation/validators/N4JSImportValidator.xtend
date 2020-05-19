@@ -402,7 +402,7 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 	private def addIssueUnresolved(ImportSpecifier specifier, Map<EObject, String> eObjectToIssueCode) {
 		var String issueCode = IssueCodes.IMP_UNRESOLVED
 		if (eObjectToIssueCode.get(specifier) === null) {
-			if (!isParentImportDeclUnresolved(specifier)) { // avoid redundant follow-up error messages
+			if (!isChildOfUnresolvedImportDecl(specifier)) { // avoid redundant follow-up error messages
 				val message = IssueCodes.getMessageForIMP_UNRESOLVED(computeUnusedOrUnresolvedMessage(specifier))
 				addIssue(message, specifier, issueCode)
 			}
@@ -435,10 +435,13 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 		}
 	}
 
-	private def boolean isParentImportDeclUnresolved(ImportSpecifier importSpec) {
+	private def boolean isChildOfUnresolvedImportDecl(ImportSpecifier importSpec) {
 		val parent = importSpec.eContainer();
 		if (parent instanceof ImportDeclaration) {
-			return parent.module.eIsProxy;
+			val module = parent.module;
+			if (module !== null) {
+				return module.eIsProxy;
+			}
 		}
 		return false;
 	}
