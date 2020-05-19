@@ -36,8 +36,6 @@ catch(e) { console.log((e as Object).toString()); }
 console.log("not extended: " + JSON.stringify(empty3));
 
 /* XPECT output ---
-<==
-stdout:
 extensible = true
 extended: {"a":5}
 not extensible = true
@@ -45,6 +43,4 @@ not extended: {}
 not extensible = true
 TypeError: Cannot add property b, object is not extensible
 not extended: {}
-stderr:
-==>
 --- */

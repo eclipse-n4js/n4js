@@ -41,11 +41,7 @@ console.log(JSON.stringify(o, function (key : string, value) {
 }));
 
 /* XPECT output ---
-<==
-stdout:
 {"x":1,"z":3}
 {"xx":"XX","yy":"YY","zz":"ZZ"}
 {"x":1,"y":2,"z":3}
-stderr:
-==>
 --- */

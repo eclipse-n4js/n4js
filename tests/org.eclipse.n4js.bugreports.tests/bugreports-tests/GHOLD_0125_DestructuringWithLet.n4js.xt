@@ -34,10 +34,6 @@ bar();
 
 
 /* XPECT output ---
-<==
-stdout:
 1 2 1 2
 1 2 3 4
-stderr:
-==>
 --- */

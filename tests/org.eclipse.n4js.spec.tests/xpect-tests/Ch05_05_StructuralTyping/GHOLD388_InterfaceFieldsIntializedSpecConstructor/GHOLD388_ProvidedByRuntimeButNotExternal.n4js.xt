@@ -32,10 +32,6 @@ let c:C = new C({m: "Hello"});
 console.log(c.m)
 
 /* XPECT output --- 
-<==
-stdout:
 undefined
-stderr:
-==>
 --- */
 

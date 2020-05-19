@@ -25,11 +25,7 @@ console.log(utcDate.toUTCString())
 console.log(utcDate.toUTCString()==localDate.toUTCString());
 
 /* XPECT output ---
-<==
-stdout:
 Fri, 15 Nov 1996 10:30:50 GMT
 Fri, 15 Nov 1996 10:30:50 GMT
 true
-stderr:
-==>
 --- */

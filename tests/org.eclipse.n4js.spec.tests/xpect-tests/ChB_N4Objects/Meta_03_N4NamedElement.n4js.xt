@@ -21,8 +21,6 @@
 
 
 /* XPECT output ---
-<==
-stdout:
 # inspect N4NamedElement
  = inspect test as N4NamedElement
   - test.name is a string N4NamedElement
@@ -39,8 +37,6 @@ stdout:
   - test.toLocaleString  is native function
   - test.toString  is native function
   - test.valueOf  is native function
-stderr:
-==>
 --- */
 
 

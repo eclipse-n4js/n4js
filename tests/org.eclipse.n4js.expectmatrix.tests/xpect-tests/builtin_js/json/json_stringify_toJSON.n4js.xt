@@ -27,10 +27,6 @@ console.log(JSON.stringify(obj));      // '"bar"'
 console.log(JSON.stringify({x: obj})); // '{"x":"bar"}'
 
 /* XPECT output ---
-<==
-stdout:
 "bar"
 {"x":"bar"}
-stderr:
-==>
 --- */

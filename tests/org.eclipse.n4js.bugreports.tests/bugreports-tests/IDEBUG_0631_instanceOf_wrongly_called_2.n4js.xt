@@ -11,11 +11,7 @@
 
 /* XPECT_SETUP org.eclipse.n4js.bugreports.tests.N4JSBugreportTest END_SETUP  */
 /* XPECT output ---
-<==
-stdout:
 false
-stderr:
-==>
 ---*/
 
 

@@ -35,13 +35,9 @@ console.log(JSON.parse('[1, 5, "false"]')); // [1, 5, "false"]
 console.log(JSON.parse('null'));            // null
 
 /* XPECT output ---
-<==
-stdout:
 {}
 true
 foo
 [ 1, 5, 'false' ]
 null
-stderr:
-==>
 --- */

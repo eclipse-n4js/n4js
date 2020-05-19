@@ -23,12 +23,8 @@ console.log(delete undefObj?.prop); // should return 'true'
 
 
 /* XPECT output ---
-<==
-stdout:
 has property 'prop': true
 true
 has property 'prop': false
 true
-stderr:
-==>
 --- */

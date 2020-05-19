@@ -37,14 +37,10 @@ theBigDay.setSeconds(123);
 console.log(toDateTimeString(theBigDay));
 
 /* XPECT output ---
-<==
-stdout:
 Tue Dec 02 2003 0:0:30.0
 Tue Dec 02 2003 0:0:34.14
 Tue Dec 02 2003 0:2:3.14
 Tue Dec 02 2003 0:4:3.14
-stderr:
-==>
 --- */
 
 function toDateTimeString(date: Date) {

@@ -21,12 +21,8 @@ console.log(Math.cos(Math.PI));     // -1
 console.log(Math.cos(2 * Math.PI)); // 1
 
 /* XPECT output ---
-<==
-stdout:
 1
 0.5403023058
 -1
 1
-stderr:
-==>
 --- */

@@ -20,8 +20,6 @@
  */
 
 /* XPECT output ---
-<==
-stdout:
 B.staticF()
 Before classes.AT_953_alias.other.dep.B bInstance call
 B.f()
@@ -76,8 +74,6 @@ typeof: function
 fun
 localVariable: 5
 localConstant: 7
-stderr:
-==>
 --- */
 import {
 	B as BHere,

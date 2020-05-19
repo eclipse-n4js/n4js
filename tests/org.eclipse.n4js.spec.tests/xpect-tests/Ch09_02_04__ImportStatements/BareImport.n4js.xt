@@ -27,10 +27,6 @@ console.log('importing module');
 
 
 /* XPECT output ---
-<==
-stdout:
 some side effect
 importing module
-stderr:
-==>
 --- */

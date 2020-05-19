@@ -12,11 +12,7 @@
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
 
 /* XPECT output ---
-<==
-stdout:
 true
-stderr:
-==>
 --- */
 
 // An ArrowFunction does not define local bindings for arguments, super, this, or new.target.

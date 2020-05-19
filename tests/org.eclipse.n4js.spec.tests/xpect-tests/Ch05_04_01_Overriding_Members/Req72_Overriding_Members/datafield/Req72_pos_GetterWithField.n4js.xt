@@ -25,12 +25,8 @@ class B extends A {
 
 
 /* XPECT output ---
-<==
-stdout:
 getter A.f
 field B.f
-stderr:
-==>
 --- */
 
 

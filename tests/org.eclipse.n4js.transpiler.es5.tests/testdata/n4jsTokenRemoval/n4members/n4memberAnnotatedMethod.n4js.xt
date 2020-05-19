@@ -13,11 +13,7 @@
 
 
 /* XPECT output ~~~
-<==
-stdout:
 [Function: mLen] 123
-stderr:
-==>
 ~~~ */
 
 class C {

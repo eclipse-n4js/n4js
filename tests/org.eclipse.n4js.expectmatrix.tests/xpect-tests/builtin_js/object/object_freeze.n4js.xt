@@ -67,8 +67,6 @@ fail();
 attemptChanges();
 
 /* XPECT output ---
-<==
-stdout:
 returned: {"foo":"baz","lumpy":"woof"}
 frozen = true
 TypeError: Cannot assign to read only property 'foo' of object '#<Object>'
@@ -78,6 +76,4 @@ TypeError: Cannot assign to read only property 'foo' of object '#<Object>'
 TypeError: Cannot add property sparky, object is not extensible
 TypeError: Cannot define property ohai, object is not extensible
 TypeError: Cannot redefine property: foo
-stderr:
-==>
 --- */

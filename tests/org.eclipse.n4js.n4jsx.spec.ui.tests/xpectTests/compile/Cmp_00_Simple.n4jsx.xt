@@ -30,8 +30,6 @@
  */
 
 /* XPECT output ---
-<==
-stdout:
 simple self-closing
 {
     "type": "div",
@@ -83,8 +81,6 @@ spead operator
     },
     "children": []
 }
-stderr:
-==>
 --- */
 
 import * as React from "react"

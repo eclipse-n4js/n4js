@@ -60,13 +60,9 @@ console.log(iA.next());
 console.log(iA.next());
 
 /* XPECT output ---
-<==
-stdout:
 { done: false, value: 'a 4' }
 { done: false, value: 'b 4' }
 { done: false, value: 'c 4' }
 { done: false, value: 'd 4' }
 { done: true }
-stderr:
-==>
 --- */

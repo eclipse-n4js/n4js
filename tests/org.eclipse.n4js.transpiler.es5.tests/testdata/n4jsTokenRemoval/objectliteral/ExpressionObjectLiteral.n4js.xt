@@ -13,8 +13,6 @@
 
 
 /* XPECT output ~~~
-<==
-stdout:
 {
   foo: 'foo',
   bar: 3,
@@ -23,8 +21,6 @@ stdout:
   fng: [Getter],
   fns: [Setter]
 }
-stderr:
-==>
 ~~~ */
 
 

@@ -13,11 +13,7 @@
 
 
 /* TODO IDE-1763 re-enable this test once class expression support is done XPECT ! output ~~~
-<==
-stdout:
 [Function: C2]
-stderr:
-==>
 ~~~ */
 
 

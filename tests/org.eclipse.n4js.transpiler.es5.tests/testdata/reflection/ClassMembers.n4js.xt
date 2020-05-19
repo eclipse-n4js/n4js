@@ -41,8 +41,6 @@ console.log(C.n4type);
 
 
 /* XPECT output ---
-<==
-stdout:
 members of C: field, fieldD, getterD, setterD, fooD, sGetterD, sSetterD, sFooD, sField, sFieldD
 N4Class {
   origin: 'org.eclipse.n4js.transpiler.es5.tests',
@@ -140,6 +138,4 @@ N4Class {
   ],
   consumedMembers: []
 }
-stderr:
-==>
 --- */

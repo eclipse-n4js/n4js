@@ -12,13 +12,9 @@
 /* XPECT_SETUP org.eclipse.n4js.spec.examples.xpect.tests.SpecExamplesTest END_SETUP */
 
  /* XPECT output ~~~
-<==
-stdout:
 p?s f
 { f: [Function: f], b: [Function: b], o: { nested: 'Hello' } }
 Hello
-stderr:
-==>
 ~~~ */
 
 var p = {

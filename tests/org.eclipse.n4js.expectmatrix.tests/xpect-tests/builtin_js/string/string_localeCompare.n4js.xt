@@ -37,8 +37,6 @@ console.log('ä'.localeCompare('a', 'sv', {sensitivity: "base"})); // a positive
 // (2) this test did is not testing N4JS but instead v8
 // (for more info see: https://code.google.com/p/v8/issues/detail?id=459 )
 /* XPECT ! output ---
-<==
-stdout:
 -2
 2
 0
@@ -46,6 +44,4 @@ stdout:
 106
 131
 131
-stderr:
-==>
 --- */

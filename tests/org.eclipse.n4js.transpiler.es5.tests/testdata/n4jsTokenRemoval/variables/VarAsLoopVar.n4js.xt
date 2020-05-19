@@ -13,15 +13,11 @@
 
 
 /* XPECT output ~~~
-<==
-stdout:
 0
 1
 2
 a
 b
-stderr:
-==>
 ~~~ */
 
 

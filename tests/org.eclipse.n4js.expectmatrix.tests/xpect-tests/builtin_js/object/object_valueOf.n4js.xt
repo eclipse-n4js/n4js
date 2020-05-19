@@ -18,9 +18,5 @@ var o = new Object();
 console.log("[object Object] = " + o.valueOf());
 
 /* XPECT output ---
-<==
-stdout:
 [object Object] = [object Object]
-stderr:
-==>
 --- */

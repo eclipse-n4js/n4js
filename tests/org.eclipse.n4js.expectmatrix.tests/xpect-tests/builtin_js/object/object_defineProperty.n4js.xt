@@ -47,11 +47,7 @@ fail();
 // throws a TypeError: value appears only in data descriptors, get appears only in accessor descriptors
 
 /* XPECT output ---
-<==
-stdout:
 {"a":37}
 38 = 38
 TypeError: Invalid property descriptor. Cannot both specify accessors and a value or writable attribute, #<Object>
-stderr:
-==>
 --- */

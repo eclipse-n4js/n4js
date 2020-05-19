@@ -107,8 +107,6 @@ logException(() => def.def?.def.def.def?.undef.prop);
 
 
 /* XPECT output ---
-<==
-stdout:
 ======== Base Cases
 property value
 undefined
@@ -142,6 +140,4 @@ EXCEPTION: Cannot read property 'def' of undefined
 EXCEPTION: Cannot read property 'def' of undefined
 EXCEPTION: Cannot read property 'def' of undefined
 EXCEPTION: Cannot read property 'prop' of undefined
-stderr:
-==>
 --- */

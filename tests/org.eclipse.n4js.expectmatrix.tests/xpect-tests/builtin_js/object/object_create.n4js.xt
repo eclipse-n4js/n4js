@@ -30,9 +30,5 @@ var o : Object+ = Object.create({}, {
 console.log(JSON.stringify(o));
 
 /* XPECT output ---
-<==
-stdout:
 {"foo":"hello","bar":10}
-stderr:
-==>
 --- */

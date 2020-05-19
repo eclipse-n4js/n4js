@@ -21,9 +21,5 @@ var adder = new Function("a", "b", "return a + b");
 console.log(adder(2, 6));
 
 /* XPECT output ---
-<==
-stdout:
 8
-stderr:
-==>
 --- */

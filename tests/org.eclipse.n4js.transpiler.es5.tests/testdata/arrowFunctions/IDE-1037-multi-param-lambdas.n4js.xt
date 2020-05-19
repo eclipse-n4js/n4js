@@ -12,14 +12,10 @@
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
 
 /* XPECT output ---
-<==
-stdout:
 [ [ 1, 'a' ], [ 2, 'b' ], [ 3, 'c' ] ]
 [ [ 1, 'a' ], [ 2, 'b' ], [ 3, 'c' ] ]
 [ [ 1, 'a' ], [ 2, 'b' ], [ 3, 'c' ] ]
 [ [ 1, 'a' ], [ 2, 'b' ], [ 3, 'c' ] ]
-stderr:
-==>
 --- */
 
 var a = [1, 2, 3]

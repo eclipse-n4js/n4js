@@ -21,8 +21,6 @@
 
 
 /* XPECT output ---
-<==
-stdout:
 # inspect N4Element
  = inspect test as N4Element
   - test.origin is a string n4js-runtime
@@ -37,8 +35,6 @@ stdout:
   - test.toLocaleString  is native function
   - test.toString  is native function
   - test.valueOf  is native function
-stderr:
-==>
 --- */
 
 

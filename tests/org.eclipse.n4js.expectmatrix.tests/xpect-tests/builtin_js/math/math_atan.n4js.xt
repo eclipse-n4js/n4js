@@ -18,10 +18,6 @@ console.log(Math.atan(1));  // 0.7853981633974483
 console.log(Math.atan(0));  // 0
 
 /* XPECT output ---
-<==
-stdout:
 0.7853981633974483
 0
-stderr:
-==>
 --- */

@@ -12,8 +12,6 @@
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest  END_SETUP */
 
 /* XPECT output ---
-<==
-stdout:
 R1C1 initializes R1C1.f with fR1C1
 C1 :: f : fR1C1
 C2 initializes C2.f with fC2
@@ -30,8 +28,6 @@ R1C5 initializes R1C5.f with fR1C5
 C5 :: f : fR1C5
 R1C5b initializes R1C5b.f with undefined
 C5b :: f : undefined
-stderr:
-==>
 --- */
 function verboseInit(target, prop, val){console.log(target, "initializes" , target +"."+ prop, "with", val); return val;}
 function valCheck(instance, prop, val, expected){console.log(instance, "::", prop, ":", val); if(val != expected){console.error("expected instance of",instance, "to have property", prop, "equal", expected, "but it was", val)};}

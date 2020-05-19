@@ -12,8 +12,6 @@
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
 
 /* XPECT output --- 
-<==
-stdout:
 when needed DI data is there
 {
 	"fieldsInjectedTypes": [
@@ -42,8 +40,6 @@ fTypeVal N4Class {
   ownedMembers: [],
   consumedMembers: []
 }
-stderr:
-==>
 --- */
 
 class Foo{}

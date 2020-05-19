@@ -12,8 +12,6 @@
 /* XPECT_SETUP org.eclipse.n4js.spec.examples.xpect.tests.SpecExamplesTest END_SETUP */
 
  /* XPECT  output ~~~
-<==
-stdout:
 [object Object]
 [object Object]1
 MyB
@@ -22,8 +20,6 @@ MyB
 11
 20
 21
-stderr:
-==>
 ~~~ */
 
 /* XPECT ! compileResult ---

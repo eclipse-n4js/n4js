@@ -12,11 +12,7 @@
 /* XPECT_SETUP org.eclipse.n4js.spec.examples.xpect.tests.SpecExamplesTest END_SETUP */
 
  /* XPECT  output ~~~
-<==
-stdout:
 B { s: 'x', t: undefined, n: 4 }
-stderr:
-==>
 ~~~ */
 
 /* XPECT ! compileResult ---

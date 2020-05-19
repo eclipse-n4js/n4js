@@ -29,11 +29,7 @@ theBigDay.setFullYear(2005,5,17);
 console.log(theBigDay.toDateString());
 
 /* XPECT output ---
-<==
-stdout:
 Tue Dec 02 1997
 Wed Apr 02 2003
 Fri Jun 17 2005
-stderr:
-==>
 --- */

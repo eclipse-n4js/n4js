@@ -54,8 +54,6 @@ c2.m();
 
 
 /* XPECT output ---
-<==
-stdout:
 running in Cls1.n4js:
 hello from method A.m!
 hello from method B.m!
@@ -72,6 +70,4 @@ hello from method C.m!
 hello from method A.m!
 hello from method B.m!
 hello from method C.m!
-stderr:
-==>
 --- */

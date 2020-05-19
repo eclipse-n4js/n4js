@@ -13,11 +13,7 @@
 
 
 /* XPECT output ~~~
-<==
-stdout:
 [Function: len] 123
-stderr:
-==>
 ~~~ */
 
 @This(any)

@@ -13,8 +13,6 @@
 
 
 /* XPECT output ---
-<==
-stdout:
 C1 initializes C1._f with _f_C1
 C1 :: field : _f_C1
 C0 initializes C0.field with fC0
@@ -23,8 +21,6 @@ C2 :: f : _f_C2
 SC0 initializes SC0._sf with _sf_SC0
 SC1 initializes SC1._f with _f_SC1
 SC1 :: field : _f_SC1
-stderr:
-==>
 --- */
 
 function verboseInit(target, prop, val){console.log(target, "initializes" , target +"."+ prop, "with", val); return val;}

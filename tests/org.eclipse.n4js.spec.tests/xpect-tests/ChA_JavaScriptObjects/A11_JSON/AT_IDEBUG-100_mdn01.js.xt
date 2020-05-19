@@ -41,8 +41,6 @@ var parsed2 = JSON.parse('{"1": 1, "2": 2,"3": {"4": 4, "5": {"6": 6}}}', functi
 console.log(parsed2)
 
 /* XPECT output ---
-<==
-stdout:
 { p: 10 }
 1
 2
@@ -52,6 +50,4 @@ stdout:
 3
 
 { '1': 1, '2': 2, '3': { '4': 4, '5': { '6': 6 } } }
-stderr:
-==>
 --- */

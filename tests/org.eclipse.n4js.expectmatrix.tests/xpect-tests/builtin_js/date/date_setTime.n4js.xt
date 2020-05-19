@@ -24,9 +24,5 @@ theBigDay.setTime(theSmallDay.getTime());
 console.log(theBigDay.toUTCString());
 
 /* XPECT output ---
-<==
-stdout:
 Sun, 16 Nov 2003 21:09:26 GMT
-stderr:
-==>
 --- */

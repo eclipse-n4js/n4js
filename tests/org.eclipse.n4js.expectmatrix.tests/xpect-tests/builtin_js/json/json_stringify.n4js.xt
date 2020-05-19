@@ -23,8 +23,6 @@ console.log(JSON.stringify({x: 5, y: 6}));
 console.log(JSON.stringify([new Number(1), new String("false"), new Boolean(false)]));
 
 /* XPECT output ---
-<==
-stdout:
 {}
 true
 "foo"
@@ -32,6 +30,4 @@ true
 {"x":5}
 {"x":5,"y":6}
 [1,"false",false]
-stderr:
-==>
 --- */

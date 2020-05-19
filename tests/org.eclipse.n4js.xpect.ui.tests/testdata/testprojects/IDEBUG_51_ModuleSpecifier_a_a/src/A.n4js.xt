@@ -38,12 +38,8 @@
  */
 
 /* XPECT output ---
-<==
-stdout:
 b
 a
-stderr:
-==>
 --- */
 import { B } from "pack/subpack/B"
 

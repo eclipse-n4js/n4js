@@ -12,14 +12,10 @@
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP  */
 
 /* XPECT output ---
-<==
-stdout:
 foo() undefined
 foo2() baz
 afoo() : ok :: undefined
 afoo2() : ok :: baz
-stderr:
-==>
 --- */
 
 var o = {bar: "baz"};

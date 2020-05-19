@@ -12,8 +12,6 @@
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
 
 /* XPECT output ---
-<==
-stdout:
 f( x , undefined , [] )
 f( x , 42 , [] )
 f( x , 42 , [ 1 ] )
@@ -24,8 +22,6 @@ a.f( x 42 [] )
 a.f( x 42 [ 1 ] )
 a.f( x 42 [ 1, 2 ] )
 a.f( x 42 [ 1, 2, 3, 4, 5 ] )
-stderr:
-==>
 --- */
 
 function f(s : string, n : number=undefined, ... args : number) {

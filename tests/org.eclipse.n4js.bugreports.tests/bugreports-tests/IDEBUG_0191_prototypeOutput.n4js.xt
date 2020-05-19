@@ -12,8 +12,6 @@
 /* XPECT_SETUP org.eclipse.n4js.bugreports.tests.N4JSBugreportTest END_SETUP  */
 
 /* XPECT output ---
-<==
-stdout:
 {}
 object
 [String: '']
@@ -23,8 +21,6 @@ object
 0
 [Function]
 function
-stderr:
-==>
 --- */
 
 

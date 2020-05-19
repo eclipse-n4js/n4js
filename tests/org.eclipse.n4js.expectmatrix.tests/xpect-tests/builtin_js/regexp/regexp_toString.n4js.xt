@@ -21,10 +21,6 @@ var foo = new RegExp("bar", "g");
 console.log(foo.toString());      // logs "/bar/g"
 
 /* XPECT output ---
-<==
-stdout:
 /a+b+c/
 /bar/g
-stderr:
-==>
 --- */

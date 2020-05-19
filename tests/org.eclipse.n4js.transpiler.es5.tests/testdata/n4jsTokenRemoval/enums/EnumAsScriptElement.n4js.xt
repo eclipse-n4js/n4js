@@ -13,12 +13,8 @@
 
 
 /* XPECT output ~~~
-<==
-stdout:
 Enum { name: 'v', value: 'v' }
 Enum { name: 's', value: 'string' }
-stderr:
-==>
 ~~~ */
 
 

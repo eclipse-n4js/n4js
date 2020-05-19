@@ -12,11 +12,7 @@
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
 
 /* XPECT output ---
-<==
-stdout:
 when not needed DI data is undefined
-stderr:
-==>
 --- */
 
 class Foo{}

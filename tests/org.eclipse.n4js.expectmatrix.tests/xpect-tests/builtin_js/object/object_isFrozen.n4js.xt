@@ -82,8 +82,6 @@ console.log("13 not frozen = " + (Object.isExtensible(frozen) === false));
 console.log("14 frozen = " + (Object.isSealed(frozen) === true));
 
 /* XPECT output ---
-<==
-stdout:
 0 not frozen = true
 1 frozen = true
 2 not frozen = true
@@ -99,6 +97,4 @@ stdout:
 12 frozen = true
 13 not frozen = true
 14 frozen = true
-stderr:
-==>
 --- */

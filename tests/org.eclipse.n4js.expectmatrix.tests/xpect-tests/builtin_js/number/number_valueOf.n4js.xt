@@ -21,10 +21,6 @@ var y = new Number(34);
 console.log( y.valueOf() );
 
 /* XPECT output ---
-<==
-stdout:
 0
 34
-stderr:
-==>
 --- */

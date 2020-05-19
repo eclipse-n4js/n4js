@@ -25,12 +25,8 @@ class B extends A {
 
 
 /* XPECT output ---
-<==
-stdout:
 A.f()
 B.f()
-stderr:
-==>
 --- */
 
 

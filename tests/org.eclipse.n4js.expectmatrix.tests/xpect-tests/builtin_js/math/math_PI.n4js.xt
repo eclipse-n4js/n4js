@@ -21,9 +21,5 @@ function getPi() {
 console.log(getPi()); // 3.141592653589793
 
 /* XPECT output ---
-<==
-stdout:
 3.141592653589793
-stderr:
-==>
 --- */
