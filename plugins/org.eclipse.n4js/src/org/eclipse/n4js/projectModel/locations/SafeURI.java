@@ -248,13 +248,6 @@ public abstract class SafeURI<U extends SafeURI<U>> {
 		if (uri.segmentCount() <= 0) {
 			return null;
 		}
-		if (uri.lastSegment().isEmpty()) {
-			// folders always end with an empty segment?
-			// uri = uri.trimSegments(1);
-		}
-		if (uri.segmentCount() <= 0) {
-			return null;
-		}
 		return createFrom(uri.trimSegments(1));
 	}
 

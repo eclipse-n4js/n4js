@@ -245,10 +245,6 @@ public class ProjectDescriptionUtils {
 		if (uri == null) {
 			return null;
 		}
-		if (uri.lastSegment().isEmpty()) {
-			// folders end with an empty segment?
-			// uri = uri.trimSegments(1);
-		}
 		int segCount = uri.segmentCount();
 		String last = segCount > 0 ? uri.segment(segCount - 1) : null;
 		if (uri.isPlatform()) {
