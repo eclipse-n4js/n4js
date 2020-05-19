@@ -40,6 +40,7 @@ import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IFileSystemScanner;
+import org.eclipse.xtext.util.UriUtil;
 import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.workspace.ISourceFolder;
@@ -104,8 +105,6 @@ public class XProjectManager {
 	@Inject
 	protected XWorkspaceManager workspaceManager;
 
-	private URI baseDir;
-
 	private Provider<Map<String, ResourceDescriptionsData>> indexProvider;
 
 	private IExternalContentSupport.IExternalContentProvider openedDocumentsContentProvider;
@@ -124,7 +123,6 @@ public class XProjectManager {
 
 		this.projectDescription = description;
 		this.projectConfig = projectConfig;
-		this.baseDir = projectConfig.getPath();
 		this.openedDocumentsContentProvider = openedDocumentsContentProvider;
 		this.indexProvider = indexProvider;
 		this.resourceSet = createNewResourceSet(new XIndexState().getResourceDescriptions());
@@ -167,7 +165,7 @@ public class XProjectManager {
 			resourceSet.eSetDeliver(wasDeliver);
 		}
 
-		LOG.info("Project built: " + this.baseDir);
+		LOG.info("Project built: " + this.projectConfig.getName());
 		return result;
 	}
 
@@ -272,8 +270,8 @@ public class XProjectManager {
 		result.setMessage(message);
 		result.setCode(code);
 		result.setSeverity(severity);
-		result.setUriToProblem(baseDir);
-		issueAcceptor.publishDiagnostics(baseDir, ImmutableList.of(result));
+		result.setUriToProblem(getBaseDir());
+		issueAcceptor.publishDiagnostics(getBaseDir(), ImmutableList.of(result));
 	}
 
 	/** Creates a new build request for this project. */
@@ -289,7 +287,7 @@ public class XProjectManager {
 		result.setState(new XIndexState(resourceDescriptionsCopy, fileMappingsCopy));
 		result.setResourceSet(createFreshResourceSet(result.getState().getResourceDescriptions()));
 		result.setCancelIndicator(cancelIndicator);
-		result.setBaseDir(baseDir);
+		result.setBaseDir(getBaseDir());
 		result.setGeneratorEnabled(doGenerate);
 
 		if (!propagateIssues) {
@@ -348,9 +346,24 @@ public class XProjectManager {
 		return resource;
 	}
 
+	/** @return all resource descriptions that start with the given prefix */
+	public List<URI> findResourcesStartingWithPrefix(URI prefix) {
+		Map<String, ResourceDescriptionsData> concurrentMap = indexProvider.get();
+		ResourceDescriptionsData resourceDescriptionsData = concurrentMap.get(projectDescription.getName());
+
+		// TODO: Moving this into ResourceDescriptionsData and using a sorted Map could increase performance
+		List<URI> uris = new ArrayList<>();
+		for (URI uri : resourceDescriptionsData.getAllURIs()) {
+			if (UriUtil.isPrefixOf(prefix, uri)) {
+				uris.add(uri);
+			}
+		}
+		return uris;
+	}
+
 	/** Getter */
 	public URI getBaseDir() {
-		return baseDir;
+		return getProjectConfig().getPath();
 	}
 
 	/** Getter */

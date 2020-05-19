@@ -13,6 +13,7 @@ package org.eclipse.n4js.internal;
 import static com.google.common.base.Optional.fromNullable;
 import static java.util.Collections.emptyList;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -20,7 +21,9 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectDescription.ModuleFilter;
 import org.eclipse.n4js.projectDescription.ModuleFilterType;
+import org.eclipse.n4js.projectDescription.ProjectDependency;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
@@ -43,8 +46,7 @@ public class N4JSProject implements IN4JSProject {
 	private final boolean external;
 	private Boolean exists;
 
-	protected N4JSProject(SafeURI<?> location, boolean external,
-			N4JSModel<? extends SafeURI<?>> model) {
+	protected N4JSProject(SafeURI<?> location, boolean external, N4JSModel<? extends SafeURI<?>> model) {
 		this.location = location;
 		this.model = model;
 		this.external = isInNodeModulesFolderOrDefault(location, external);
@@ -174,6 +176,24 @@ public class N4JSProject implements IN4JSProject {
 		return getDependencies();
 	}
 
+	public ImmutableList<String> getAllDependenciesAndImplementedApiNames() {
+		if (!exists()) {
+			return ImmutableList.of();
+		}
+		final ProjectDescription pd = model.getProjectDescription(this);
+		if (pd == null) {
+			return ImmutableList.of();
+		}
+		List<String> allDependencyNames = new ArrayList<>();
+		for (ProjectDependency prjDep : pd.getProjectDependencies()) {
+			allDependencyNames.add(prjDep.getProjectName());
+		}
+		for (ProjectReference prjRef : pd.getImplementedProjects()) {
+			allDependencyNames.add(prjRef.getProjectName());
+		}
+		return ImmutableList.copyOf(allDependencyNames);
+	}
+
 	@Override
 	public ImmutableList<? extends IN4JSProject> getProvidedRuntimeLibraries() {
 		if (!exists()) {
@@ -233,6 +253,23 @@ public class N4JSProject implements IN4JSProject {
 			return null;
 		}
 		return FileUtils.normalizeToDotWhenEmpty(pd.getOutputPath());
+	}
+
+	/** @return true iff {@link #getWorkspaces()} returns a non-empty result */
+	public boolean isWorkspacesProject() {
+		List<String> workspaces = getWorkspaces();
+		return workspaces != null && !workspaces.isEmpty();
+	}
+
+	/** @see ProjectDescription#getWorkspaces() */
+	public List<String> getWorkspaces() {
+		if (!exists())
+			return null;
+		ProjectDescription pd = model.getProjectDescription(this);
+		if (pd == null) {
+			return null;
+		}
+		return pd.getWorkspaces();
 	}
 
 	@Override
@@ -329,6 +366,11 @@ public class N4JSProject implements IN4JSProject {
 		return null;
 	}
 
+	/** Invalidates caches related to the project description of this project */
+	public void invalidate() {
+		model.invalidateProject(getLocation());
+	}
+
 	@Override
 	public boolean hasN4JSNature() {
 		if (!exists())
@@ -348,4 +390,5 @@ public class N4JSProject implements IN4JSProject {
 		}
 		return new N4JSProjectName(raw);
 	}
+
 }

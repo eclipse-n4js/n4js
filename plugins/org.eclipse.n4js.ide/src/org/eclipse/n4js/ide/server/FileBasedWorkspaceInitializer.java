@@ -32,7 +32,7 @@ import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.ProjectDiscoveryHelper;
 import org.eclipse.n4js.utils.URIUtils;
-import org.eclipse.xtext.workspace.IWorkspaceConfig;
+import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -41,7 +41,6 @@ import com.google.inject.Singleton;
  *
  */
 @Singleton
-@SuppressWarnings("restriction")
 public class FileBasedWorkspaceInitializer implements XIWorkspaceConfigFactory {
 	private static Logger LOG = Logger.getLogger(XLanguageServerImpl.class);
 
@@ -65,10 +64,10 @@ public class FileBasedWorkspaceInitializer implements XIWorkspaceConfigFactory {
 	}
 
 	@Override
-	public IWorkspaceConfig getWorkspaceConfig(URI workspaceBaseURI) {
+	public XIWorkspaceConfig createWorkspaceConfig(URI workspaceBaseURI) {
 		try {
 			if (workspaceBaseURI.equals(knownWorkspaceBaseURI)) {
-				return new N4JSWorkspaceConfig(n4jsCore);
+				return new N4JSWorkspaceConfig(workspaceBaseURI, n4jsCore);
 			}
 
 			// TODO is this correct if we have multiple workspace URIs?
@@ -85,7 +84,7 @@ public class FileBasedWorkspaceInitializer implements XIWorkspaceConfigFactory {
 
 			registerProjectsToFileBasedWorkspace(allProjectURIs);
 
-			return new N4JSWorkspaceConfig(n4jsCore);
+			return new N4JSWorkspaceConfig(workspaceBaseURI, n4jsCore);
 
 		} finally {
 			this.knownWorkspaceBaseURI = workspaceBaseURI;
@@ -176,4 +175,5 @@ public class FileBasedWorkspaceInitializer implements XIWorkspaceConfigFactory {
 		// Return true here causes shadowing of projects with the same name. Will be removed with GH-1314
 		return true;
 	}
+
 }

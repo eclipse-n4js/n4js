@@ -245,6 +245,10 @@ public class ProjectDescriptionUtils {
 		if (uri == null) {
 			return null;
 		}
+		if (uri.lastSegment().isEmpty()) {
+			// folders end with an empty segment?
+			// uri = uri.trimSegments(1);
+		}
 		int segCount = uri.segmentCount();
 		String last = segCount > 0 ? uri.segment(segCount - 1) : null;
 		if (uri.isPlatform()) {
@@ -428,6 +432,10 @@ public class ProjectDescriptionUtils {
 		/** Creates a new instance. Given URI should point to an N4JS project, not a file within an N4JS project. */
 		public static ProjectNameInfo of(URI projectUri) {
 			if (projectUri.isFile()) {
+				if (projectUri.lastSegment().isEmpty()) {
+					// folders end with an empty segment?
+					// projectUri = projectUri.trimSegments(1);
+				}
 				// a file URI actually represents the file system hierarchy -> no need to look up names on disk
 				return new ProjectNameInfo(
 						projectUri.lastSegment(),

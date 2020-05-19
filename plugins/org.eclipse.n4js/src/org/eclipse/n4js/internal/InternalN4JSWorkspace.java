@@ -83,4 +83,9 @@ public abstract class InternalN4JSWorkspace<Loc extends SafeURI<Loc>> {
 	 * @see ProjectDescriptionUtils#convertN4JSProjectNameToEclipseProjectName(String)
 	 */
 	public abstract Loc getProjectLocation(N4JSProjectName name);
+
+	/**
+	 * Clears caches related to given project.
+	 */
+	public abstract void invalidateProject(Loc folder);
 }

@@ -90,4 +90,8 @@ public class MockWorkspace extends InternalN4JSWorkspace<MockURIWrapper> {
 		return emptyList();
 	}
 
+	@Override
+	public void invalidateProject(MockURIWrapper location) {
+		throw new IllegalStateException("Not supported for MockWorkspace");
+	}
 }

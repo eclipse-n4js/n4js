@@ -11,20 +11,20 @@
 package org.eclipse.n4js.ide.xtext.server;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.xtext.workspace.IWorkspaceConfig;
+import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
 
 /**
  * @author Jan Koehnlein - Initial contribution and API
  * @since 2.11
  */
-@SuppressWarnings("restriction")
 public interface XIWorkspaceConfigFactory {
 	/**
 	 * Create a workspace config at the given location.
-	 * 
+	 *
 	 * @param workspaceBaseURI
 	 *            the location
 	 * @return the workspace configuration.
 	 */
-	IWorkspaceConfig getWorkspaceConfig(URI workspaceBaseURI);
+	XIWorkspaceConfig createWorkspaceConfig(URI workspaceBaseURI);
+
 }

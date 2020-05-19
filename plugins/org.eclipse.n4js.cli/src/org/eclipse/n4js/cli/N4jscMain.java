@@ -14,9 +14,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.apache.log4j.varia.NullAppender;
 import org.eclipse.n4js.cli.compiler.N4jscCompiler;
 import org.eclipse.n4js.smith.CollectedDataAccess;
 import org.eclipse.n4js.smith.DataCollectorCSVExporter;
@@ -47,9 +47,11 @@ public class N4jscMain {
 		}
 
 		if (!options.isVerbose()) {
+			Logger.getRootLogger().setLevel(Level.ERROR);
+
 			// Reconfigure Logging to be quiet:
-			Logger.getRootLogger().removeAllAppenders();
-			Logger.getRootLogger().addAppender(new NullAppender());
+			// Logger.getRootLogger().removeAllAppenders();
+			// Logger.getRootLogger().addAppender(new NullAppender());
 		}
 
 		try {

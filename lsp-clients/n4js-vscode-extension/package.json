@@ -20,7 +20,9 @@
     "Programming Languages"
   ],
   "activationEvents": [
-    "onLanguage:n4js"
+    "onLanguage:n4js",
+    "onLanguage:javascriptreact",
+    "onLanguage:typescriptreact"
   ],
   "main": "./extension",
   "contributes": {
@@ -131,10 +133,10 @@
     "vsce": "1.71.0"
   },
   "dependencies": {
-    "n4js-cli": "^0.1.0",
-    "n4js-runtime": "^0.1.0",
-    "n4js-runtime-node": "^0.1.0",
-    "n4js-runtime-es2015": "^0.1.0",
+    "n4js-cli": "latest",
+    "n4js-runtime": "latest",
+    "n4js-runtime-node": "latest",
+    "n4js-runtime-es2015": "latest",
     "npmlog": "4.1.2",
     "vscode-languageclient": "6.1.0"
   },

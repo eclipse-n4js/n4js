@@ -97,7 +97,7 @@ public class XRequestManager {
 	 * Submit the given request.
 	 */
 	synchronized protected <V> CompletableFuture<V> submit(XAbstractRequest<V> request) {
-		LOG.warn("submit: " + request);
+		LOG.info("submit: " + request);
 		requests.add(request);
 		queue.submit(request);
 		return request.get();
@@ -108,7 +108,7 @@ public class XRequestManager {
 	 */
 	synchronized protected CompletableFuture<Void> cancel() {
 		List<XAbstractRequest<?>> localRequests = requests;
-		LOG.warn("cancel: " + localRequests);
+		LOG.info("cancel: " + localRequests);
 		requests = new ArrayList<>();
 		CompletableFuture<?>[] cfs = new CompletableFuture<?>[localRequests.size()];
 		for (int i = 0, max = localRequests.size(); i < max; i++) {
