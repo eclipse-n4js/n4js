@@ -129,7 +129,7 @@ pipeline {
                 script {
                     // delete artifacts we do not want to ship
                     sh """
-                        cd n4js/products
+                        cd n4js/target/products
                         rm unsigned_*
                         rm unnotarized_*
                     """
