@@ -44,7 +44,8 @@ public final class FileURI extends SafeURI<FileURI> {
 	}
 
 	private static URI toFileURI(File file) {
-		URI fileURI = URI.createFileURI(file.getAbsolutePath());
+		String absolutePath = file.getAbsolutePath();
+		URI fileURI = URI.createFileURI(absolutePath);
 		if (fileURI.authority() == null) {
 			fileURI = URI.createHierarchicalURI(fileURI.scheme(), "", fileURI.device(), fileURI.segments(),
 					fileURI.query(), fileURI.fragment());

@@ -25,12 +25,16 @@ import org.eclipse.n4js.ide.server.LspLogger;
 import org.eclipse.n4js.ide.xtext.server.ParallelBuildManager.ParallelJob;
 import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo.ProjectBuildOrderIterator;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
+import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionDelta;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
+import org.eclipse.xtext.util.IFileSystemScanner;
+import org.eclipse.xtext.workspace.IProjectConfig;
+import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.IteratorExtensions;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
@@ -43,7 +47,7 @@ import com.google.inject.Inject;
  * @author Jan Koehnlein - Initial contribution and API
  * @since 2.11
  */
-@SuppressWarnings("hiding")
+@SuppressWarnings({ "hiding", "restriction" })
 public class XBuildManager {
 	private static final Logger LOG = LogManager.getLogger(XBuildManager.class);
 
@@ -134,6 +138,9 @@ public class XBuildManager {
 	private LspLogger lspLogger;
 
 	@Inject
+	private IFileSystemScanner scanner;
+
+	@Inject
 	private OperationCanceledManager operationCanceledManager;
 
 	private final LinkedHashSet<URI> dirtyFiles = new LinkedHashSet<>();
@@ -197,7 +204,6 @@ public class XBuildManager {
 				}
 			}
 
-			@SuppressWarnings("restriction")
 			@Override
 			public String getID() {
 				return projectManager.getProjectConfig().getName();
@@ -239,8 +245,8 @@ public class XBuildManager {
 	 *
 	 * @return a buildable.
 	 */
-	public XBuildable getIncrementalDirtyBuildable(List<URI> dirtyFiles, List<URI> deletedFiles) {
-		return doGetIncrementalBuildable(dirtyFiles, deletedFiles, false);
+	public XBuildable getIncrementalDirtyBuildable(WorkspaceChanges workspaceChanges) {
+		return doGetIncrementalBuildable(workspaceChanges, false);
 	}
 
 	/**
@@ -248,17 +254,43 @@ public class XBuildManager {
 	 *
 	 * @return a buildable.
 	 */
-	public XBuildable getIncrementalGenerateBuildable(List<URI> dirtyFiles, List<URI> deletedFiles) {
-		return doGetIncrementalBuildable(dirtyFiles, deletedFiles, true);
+	public XBuildable getIncrementalGenerateBuildable(WorkspaceChanges workspaceChanges) {
+		return doGetIncrementalBuildable(workspaceChanges, true);
 	}
 
 	/**
 	 * Enqueue the dirty and deleted files now and return a handle to an incremental build.
 	 */
-	private XBuildable doGetIncrementalBuildable(List<URI> dirtyFiles, List<URI> deletedFiles, boolean doGenerate) {
+	private XBuildable doGetIncrementalBuildable(WorkspaceChanges workspaceChanges, boolean doGenerate) {
+		List<URI> dirtyFiles = workspaceChanges.scanAllAddedAndChangedURIs(scanner);
+		List<URI> deletedFiles = getAllRemovedURIs(workspaceChanges);
 		queue(this.dirtyFiles, deletedFiles, dirtyFiles);
 		queue(this.deletedFiles, dirtyFiles, deletedFiles);
+
+		// TODO: When introducing a "Builder Component" (i.e. a Thread that cares only about building and get notified
+		// when workspace changes occur):
+		// think about encapsulating WorkspaceManager#projectName2ProjectManager and WorkspaceManager#fullIndex to
+		// simplify control flow
+		for (IProjectConfig prjConfig : workspaceChanges.getRemovedProjects()) {
+			workspaceManager.removeProject(prjConfig);
+		}
+		for (IProjectConfig prjConfig : workspaceChanges.getAddedProjects()) {
+			workspaceManager.addProject(prjConfig);
+		}
+
 		return (cancelIndicator) -> doIncrementalBuild(doGenerate, cancelIndicator);
+	}
+
+	/** @return list of all {@link URI} that have been removed by the given changes */
+	protected List<URI> getAllRemovedURIs(WorkspaceChanges workspaceChanges) {
+		List<URI> deleted = new ArrayList<>(workspaceChanges.getRemovedURIs());
+		for (ISourceFolder sourceFolder : workspaceChanges.getAllRemovedSourceFolders()) {
+			URI prefix = sourceFolder.getPath();
+			XProjectManager projectManager = workspaceManager.getProjectManager(prefix);
+			List<URI> matchedURIs = projectManager.findResourcesStartingWithPrefix(prefix);
+			deleted.addAll(matchedURIs);
+		}
+		return deleted;
 	}
 
 	/** Run the build on the workspace */
@@ -329,6 +361,9 @@ public class XBuildManager {
 		Map<ProjectDescription, Set<URI>> project2uris = new HashMap<>();
 		for (URI uri : uris) {
 			XProjectManager projectManager = workspaceManager.getProjectManager(uri);
+			if (projectManager == null) {
+				continue; // happens when editing a package.json file in a newly created project
+			}
 			ProjectDescription projectDescription = projectManager.getProjectDescription();
 			if (!project2uris.containsKey(projectDescription)) {
 				project2uris.put(projectDescription, new HashSet<>());
@@ -394,4 +429,5 @@ public class XBuildManager {
 			LOG.info(output);
 		}
 	}
+
 }

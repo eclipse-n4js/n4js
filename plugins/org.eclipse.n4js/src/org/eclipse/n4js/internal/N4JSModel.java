@@ -161,6 +161,7 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 		if (project != null) {
 			for (IN4JSSourceContainer n4jsSourceContainer : project.getSourceContainers()) {
 				if (isLocationInNestedInContainer(nestedLocation, n4jsSourceContainer)) {
+					// support for nested source folders
 					int segmentCount = n4jsSourceContainer.getLocation().toURI().segmentCount();
 					if (segmentCount > matchingSegmentCount) {
 						matchingContainer = n4jsSourceContainer;
@@ -176,7 +177,8 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 		URI containerLocation = container.getLocation().toURI();
 		if (containerLocation == null || nestedLocation == null)
 			return false;
-		int maxSegments = containerLocation.segmentCount();
+
+		int maxSegments = containerLocation.segmentCount(); // directories have no empty last segment?
 		if (nestedLocation.segmentCount() >= maxSegments) {
 			for (int i = 0; i < maxSegments; i++) {
 				if (!nestedLocation.segment(i).equals(containerLocation.segment(i))) {
@@ -252,6 +254,11 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 	protected IN4JSSourceContainer createProjectN4JSSourceContainer(N4JSProject project, SourceContainerType type,
 			String relativeLocation) {
 		return new N4JSProjectSourceContainer(project, type, relativeLocation);
+	}
+
+	@SuppressWarnings("unchecked")
+	public void invalidateProject(SafeURI<?> location) {
+		workspace.invalidateProject((Loc) location);
 	}
 
 	public ImmutableList<? extends IN4JSProject> getDependencies(N4JSProject project,

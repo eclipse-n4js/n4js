@@ -11,9 +11,10 @@
 package org.eclipse.n4js.ide.xtext.server;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.ide.xtext.workspace.XWorkspaceConfig;
+import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
 import org.eclipse.xtext.workspace.FileProjectConfig;
-import org.eclipse.xtext.workspace.IWorkspaceConfig;
-import org.eclipse.xtext.workspace.WorkspaceConfig;
+import org.eclipse.xtext.workspace.IProjectConfig;
 
 /**
  * The workspace itself is a single project
@@ -23,21 +24,25 @@ import org.eclipse.xtext.workspace.WorkspaceConfig;
  */
 @SuppressWarnings("restriction")
 public class XProjectWorkspaceConfigFactory implements XIWorkspaceConfigFactory {
+
 	@Override
-	public IWorkspaceConfig getWorkspaceConfig(URI workspaceBaseURI) {
-		WorkspaceConfig workspaceConfig = new WorkspaceConfig();
-		findProjects(workspaceConfig, workspaceBaseURI);
+	public XIWorkspaceConfig createWorkspaceConfig(URI workspaceBaseURI) {
+		XWorkspaceConfig workspaceConfig = new XWorkspaceConfig();
+		createProjectConfig(workspaceConfig, workspaceBaseURI);
 		return workspaceConfig;
 	}
 
 	/**
 	 * Find all projects at the given location. By default, only the a single project at the workspace root is created.
 	 */
-	protected void findProjects(WorkspaceConfig workspaceConfig, URI location) {
+	protected IProjectConfig createProjectConfig(XWorkspaceConfig workspaceConfig, URI location) {
 		if (location != null) {
 			FileProjectConfig project = new FileProjectConfig(location, workspaceConfig);
 			project.addSourceFolder(".");
 			workspaceConfig.addProject(project);
+			return project;
 		}
+		return null;
 	}
+
 }

@@ -1,0 +1,84 @@
+/*
+ * Copyright (c) 2019 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+class G {
+
+	@Final public g: ()=>G;
+	@Final public x: ()=>G;
+	@Final public u: ()=>G;
+
+	constructor(id: string, nextG: G) {
+		const correctThis = this;
+
+		this.g = function() {
+			console.log(id);
+			if (this !== correctThis) console.log("FAILURE: incorrect call context!");
+			return nextG;
+		};
+
+		this.x = function() {
+			console.log(id);
+			if (this !== correctThis) console.log("FAILURE: incorrect call context!");
+			return null;
+		};
+
+		this.u = undefined;
+	}
+}
+
+let g = new G("t0", new G("t1", new G("t2", new G("t3", null))));
+
+
+g.g().g()?.g().g();
+console.log("======");
+g.g().x()?.g().g();
+console.log("======");
+g.g().g().g?.().g();
+console.log("======");
+g.g().g().u?.().g();
+console.log("======");
+g?.g?.()?.g?.()?.g?.()?.g?.();
+console.log("======");
+g?.g?.()?.g?.()?.u?.()?.g?.();
+
+
+/* XPECT output ---
+<==
+stdout:
+t0
+t1
+t2
+t3
+======
+t0
+t1
+======
+t0
+t1
+t2
+t3
+======
+t0
+t1
+======
+t0
+t1
+t2
+t3
+======
+t0
+t1
+stderr:
+==>
+--- */

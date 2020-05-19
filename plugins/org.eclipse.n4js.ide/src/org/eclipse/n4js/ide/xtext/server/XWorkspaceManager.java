@@ -11,10 +11,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
@@ -26,6 +24,8 @@ import org.eclipse.lsp4j.jsonrpc.ResponseErrorException;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseError;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
 import org.eclipse.n4js.ide.xtext.server.XBuildManager.XBuildable;
+import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
+import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.resource.IExternalContentSupport;
@@ -70,10 +70,10 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	private static final Logger LOG = Logger.getLogger(XWorkspaceManager.class);
 
 	@Inject
-	private Provider<XProjectManager> projectManagerProvider;
+	private XIWorkspaceConfigFactory workspaceConfigFactory;
 
 	@Inject
-	private XIWorkspaceConfigFactory workspaceConfigFactory;
+	private Provider<XProjectManager> projectManagerProvider;
 
 	@Inject
 	private XIProjectDescriptionFactory projectDescriptionFactory;
@@ -85,8 +85,6 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	private XBuildManager buildManager;
 
 	private final Map<String, XProjectManager> projectName2ProjectManager = new HashMap<>();
-
-	private URI baseDir;
 
 	private IWorkspaceConfig workspaceConfig;
 
@@ -137,6 +135,11 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 		}
 	};
 
+	/** Reinitialize a workspace at the current location. */
+	public void reinitialize() {
+		initialize(getBaseDir());
+	}
+
 	/**
 	 * Tells whether the workspace is in dirty state. The workspace is said to be in dirty state iff at least one file
 	 * is open AND is dirty, i.e. has unsaved changes.
@@ -153,43 +156,72 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	/**
 	 * Initialize a workspace at the given location.
 	 *
-	 * @param baseDir
+	 * @param newBaseDir
 	 *            the location
 	 */
-	@SuppressWarnings("hiding")
-	public void initialize(URI baseDir) {
-		this.baseDir = baseDir;
-		setWorkspaceConfig(workspaceConfigFactory.getWorkspaceConfig(baseDir));
+	public void initialize(URI newBaseDir) {
+		refreshWorkspaceConfig(newBaseDir);
 	}
 
 	/** Refresh the workspace. */
-	public void refreshWorkspaceConfig() {
-		setWorkspaceConfig(workspaceConfigFactory.getWorkspaceConfig(baseDir));
-		Set<String> projectNames = projectName2ProjectManager.keySet();
-		Set<String> remainingProjectNames = new HashSet<>(projectNames);
-		for (IProjectConfig projectConfig : getWorkspaceConfig().getProjects()) {
-			if (projectName2ProjectManager.containsKey(projectConfig.getName())) {
-				remainingProjectNames.remove(projectConfig.getName());
-			} else {
-				XProjectManager projectManager = projectManagerProvider.get();
-				ProjectDescription projectDescription = projectDescriptionFactory.getProjectDescription(projectConfig);
-				projectManager.initialize(projectDescription, projectConfig, openedDocumentsContentProvider,
-						() -> fullIndex);
-				projectName2ProjectManager.put(projectDescription.getName(), projectManager);
-			}
-		}
-		for (String deletedProject : remainingProjectNames) {
-			projectName2ProjectManager.remove(deletedProject);
-			fullIndex.remove(deletedProject);
-		}
+	public void refreshWorkspaceConfig(URI newBaseDir) {
+		XIWorkspaceConfig newWorkspaceConfig = workspaceConfigFactory.createWorkspaceConfig(newBaseDir);
+		setWorkspaceConfig(newWorkspaceConfig);
 	}
 
 	/**
 	 * @param workspaceConfig
 	 *            the new workspace configuration.
 	 */
-	protected void setWorkspaceConfig(IWorkspaceConfig workspaceConfig) {
+	synchronized protected void setWorkspaceConfig(IWorkspaceConfig workspaceConfig) {
+		if (this.workspaceConfig != null && workspaceConfig != null &&
+				this.workspaceConfig == workspaceConfig) {
+			return;
+		}
+
+		// clean up old projects
+		Collection<XProjectManager> pmCopy = new ArrayList<>(getProjectManagers());
+		for (XProjectManager projectManager : pmCopy) {
+			removeProject(projectManager);
+		}
+		projectName2ProjectManager.clear();
+		fullIndex.clear();
+
+		// init projects
 		this.workspaceConfig = workspaceConfig;
+		for (IProjectConfig projectConfig : getWorkspaceConfig().getProjects()) {
+			addProject(projectConfig);
+		}
+	}
+
+	/** Adds a project to the workspace */
+	synchronized public void addProject(IProjectConfig projectConfig) {
+		XProjectManager projectManager = projectManagerProvider.get();
+		ProjectDescription projectDescription = projectDescriptionFactory.getProjectDescription(projectConfig);
+		projectManager.initialize(projectDescription, projectConfig, openedDocumentsContentProvider,
+				() -> fullIndex);
+		projectName2ProjectManager.put(projectDescription.getName(), projectManager);
+	}
+
+	/** Removes a project from the workspace */
+	synchronized protected void removeProject(XProjectManager projectManager) {
+		removeProject(projectManager.getProjectConfig());
+	}
+
+	/** Removes a project from the workspace */
+	synchronized public void removeProject(IProjectConfig projectConfig) {
+		String projectName = projectConfig.getName();
+		XProjectManager projectManager = getProjectManager(projectName);
+		XtextResourceSet resourceSet = projectManager.getResourceSet();
+		boolean wasDeliver = resourceSet.eDeliver();
+		try {
+			resourceSet.eSetDeliver(false);
+			resourceSet.getResources().clear();
+		} finally {
+			resourceSet.eSetDeliver(wasDeliver);
+		}
+		projectName2ProjectManager.remove(projectName);
+		fullIndex.remove(projectName);
 	}
 
 	/**
@@ -208,7 +240,10 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 
 	/** @return the current base directory {@link URI} */
 	public URI getBaseDir() {
-		return this.baseDir;
+		if (this.workspaceConfig == null) {
+			return null;
+		}
+		return ((XIWorkspaceConfig) this.workspaceConfig).getPath();
 	}
 
 	/** Callback after a build was performed */
@@ -223,7 +258,8 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 		openDocuments.put(uri, new XDocument(version, contents));
 
 		// return getIncrementalDirtyBuildable(ImmutableList.of(uri), Collections.emptyList()); // necessary at all?
-		return getIncrementalDirtyBuildable(Collections.emptyList(), Collections.emptyList());
+		WorkspaceChanges workspaceChanges = WorkspaceChanges.NO_CHANGES;
+		return getIncrementalDirtyBuildable(workspaceChanges);
 	}
 
 	/**
@@ -236,7 +272,8 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	 * @return a build command that can be triggered
 	 */
 	public XBuildable didChangeFiles(List<URI> dirtyFiles, List<URI> deletedFiles) {
-		return tryIncrementalGenerateBuildable(dirtyFiles, deletedFiles);
+		WorkspaceChanges workspaceChanges = WorkspaceChanges.createUrisRemovedAndChanged(deletedFiles, dirtyFiles);
+		return tryIncrementalGenerateBuildable(workspaceChanges);
 	}
 
 	/**
@@ -255,9 +292,20 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 		afterBuild(deltas);
 	}
 
+	/**
+	 * Generation of output files is only triggered if no source files contain unsaved changes (so-called dirty files).
+	 */
+	protected XBuildable tryIncrementalGenerateBuildable(WorkspaceChanges workspaceChanges) {
+		if (isDirty()) {
+			return getIncrementalDirtyBuildable(workspaceChanges);
+		} else {
+			return getIncrementalGenerateBuildable(workspaceChanges);
+		}
+	}
+
 	/** Triggers an incremental build, but will not generate output files */
-	protected XBuildable getIncrementalDirtyBuildable(List<URI> dirtyFiles, List<URI> deletedFiles) {
-		XBuildManager.XBuildable buildable = buildManager.getIncrementalDirtyBuildable(dirtyFiles, deletedFiles);
+	protected XBuildable getIncrementalDirtyBuildable(WorkspaceChanges workspaceChanges) {
+		XBuildManager.XBuildable buildable = buildManager.getIncrementalDirtyBuildable(workspaceChanges);
 		return (cancelIndicator) -> {
 			List<IResourceDescription.Delta> deltas = buildable.build(cancelIndicator);
 			afterBuild(deltas);
@@ -265,20 +313,10 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 		};
 	}
 
-	/**
-	 * Generation of output files is only triggered if no source files contain unsaved changes (so-called dirty files).
-	 */
-	protected XBuildable tryIncrementalGenerateBuildable(List<URI> dirtyFiles, List<URI> deletedFiles) {
-		if (isDirty()) {
-			return getIncrementalDirtyBuildable(dirtyFiles, deletedFiles);
-		} else {
-			return getIncrementalGenerateBuildable(dirtyFiles, deletedFiles);
-		}
-	}
-
 	/** Triggers an incremental build, and will generate output files. */
-	protected XBuildable getIncrementalGenerateBuildable(List<URI> dirtyFiles, List<URI> deletedFiles) {
-		XBuildManager.XBuildable buildable = buildManager.getIncrementalGenerateBuildable(dirtyFiles, deletedFiles);
+	protected XBuildable getIncrementalGenerateBuildable(WorkspaceChanges workspaceChanges) {
+		XBuildManager.XBuildable buildable = buildManager.getIncrementalGenerateBuildable(workspaceChanges);
+
 		return (cancelIndicator) -> {
 			List<IResourceDescription.Delta> deltas = buildable.build(cancelIndicator);
 			afterBuild(deltas);
@@ -309,7 +347,8 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 			return XBuildable.NO_BUILD;
 		}
 		openDocuments.put(uri, contents.applyTextDocumentChanges(changes));
-		return getIncrementalDirtyBuildable(ImmutableList.of(uri), Collections.emptyList());
+		WorkspaceChanges workspaceChanges = WorkspaceChanges.createUrisChanged(ImmutableList.of(uri));
+		return getIncrementalDirtyBuildable(workspaceChanges);
 	}
 
 	/** Mark the given document as saved. */
@@ -324,23 +363,33 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 			LOG.error("The document " + uri + " has not been opened.");
 			return XBuildable.NO_BUILD;
 		}
-		return tryIncrementalGenerateBuildable(ImmutableList.of(uri), Collections.emptyList());
+
+		WorkspaceChanges notifiedChanges = WorkspaceChanges.createUrisChanged(ImmutableList.of(uri));
+		WorkspaceChanges workspaceChanges = ((XIWorkspaceConfig) getWorkspaceConfig()).update(uri,
+				projectName -> projectName2ProjectManager.get(projectName).getProjectDescription());
+		workspaceChanges.merge(notifiedChanges);
+
+		return tryIncrementalGenerateBuildable(workspaceChanges);
 	}
 
 	/** Mark the given document as closed. */
 	public XBuildManager.XBuildable didClose(URI uri) {
 		openDocuments.remove(uri);
 		if (exists(uri)) {
-			return tryIncrementalGenerateBuildable(ImmutableList.of(uri), Collections.emptyList());
+			WorkspaceChanges workspaceChanges = WorkspaceChanges.createUrisChanged(ImmutableList.of(uri));
+			return tryIncrementalGenerateBuildable(workspaceChanges);
+		} else {
+			WorkspaceChanges workspaceChanges = WorkspaceChanges.createUrisRemoved(ImmutableList.of(uri));
+			return tryIncrementalGenerateBuildable(workspaceChanges);
 		}
-		return tryIncrementalGenerateBuildable(Collections.emptyList(), ImmutableList.of(uri));
 	}
 
 	/** Mark all documents as closed. */
 	public XBuildManager.XBuildable closeAll() {
 		ImmutableList<URI> closed = ImmutableList.copyOf(openDocuments.keySet());
 		openDocuments.clear();
-		return tryIncrementalGenerateBuildable(closed, Collections.emptyList());
+		WorkspaceChanges workspaceChanges = WorkspaceChanges.createUrisChanged(closed);
+		return tryIncrementalGenerateBuildable(workspaceChanges);
 	}
 
 	/**

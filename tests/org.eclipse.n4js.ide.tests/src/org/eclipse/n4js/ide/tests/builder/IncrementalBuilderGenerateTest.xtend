@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.ide.tests.builder
 
-import org.eclipse.n4js.projectModel.locations.FileURI
 import org.junit.Test
 
 import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.*
@@ -143,7 +142,7 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 		startAndWaitForLspServer();
 		assertNoIssues();
 
-		val mainOutputFileURI = new FileURI(getOutputFile("Main"));
+		val mainOutputFileURI = getOutputFile("Main").toFileURI;
 
 		val otherOutputFileSnapshot = createSnapshotForOutputFile("Other");
 		val mainOutputFileSnapshot = createSnapshotForOutputFile("Main");

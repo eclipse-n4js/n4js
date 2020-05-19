@@ -156,6 +156,11 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace<PlatformRes
 		return null;
 	}
 
+	@Override
+	public void invalidateProject(PlatformResourceURI location) {
+		throw new IllegalStateException("Not supported for EclipseBasedN4JSWorkspace");
+	}
+
 	void setProjectDescriptionLoadListener(ProjectDescriptionLoadListener listener) {
 		this.listener = listener;
 	}

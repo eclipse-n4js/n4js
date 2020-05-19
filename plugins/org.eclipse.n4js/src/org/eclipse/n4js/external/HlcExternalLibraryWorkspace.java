@@ -127,6 +127,11 @@ public class HlcExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	}
 
 	@Override
+	public void invalidateProject(FileURI location) {
+		projectDescriptionMap.remove(location);
+	}
+
+	@Override
 	public FileURI getLocation(ProjectReference reference) {
 		return null;
 	}

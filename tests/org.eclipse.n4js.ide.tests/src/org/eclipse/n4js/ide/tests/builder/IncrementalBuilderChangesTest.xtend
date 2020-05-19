@@ -13,7 +13,7 @@ package org.eclipse.n4js.ide.tests.builder
 import org.junit.Test
 
 /**
- * Tests incremental builds triggered by changes in files.
+ * Tests incremental builds triggered by changes in source files.
  */
 class IncrementalBuilderChangesTest extends AbstractIncrementalBuilderTest {
 

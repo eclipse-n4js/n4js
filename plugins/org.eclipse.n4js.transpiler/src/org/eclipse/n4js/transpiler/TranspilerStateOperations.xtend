@@ -53,7 +53,6 @@ import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypesFactory
-import org.eclipse.xtext.EcoreUtil2
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
@@ -193,16 +192,8 @@ class TranspilerStateOperations {
 	 * an outer variable environment (i.e. an outer function/accessor or on top level if inside a function/accessor).
 	 */
 	def public static SymbolTableEntryIMOnly addOrGetTemporaryVariable(TranspilerState state, String name, EObject nodeInIM) {
-		val containingFunction = if (nodeInIM instanceof FunctionOrFieldAccessor) {
-			nodeInIM
-		} else {
-			EcoreUtil2.getContainerOfType(nodeInIM, FunctionOrFieldAccessor)
-		};
-		val context = if (containingFunction !== null) {
-			containingFunction
-		} else {
-			state.im
-		};
+		val contextFunctionOrAccessor = getContextFunctionOrAccessor(nodeInIM);
+		val context = contextFunctionOrAccessor ?: state.im;
 		val tempVarSTE = state.temporaryVariables.get(context -> name);
 		if (tempVarSTE !== null) {
 			return tempVarSTE;
@@ -214,6 +205,26 @@ class TranspilerStateOperations {
 		val tempVarSTENew = state.findSymbolTableEntryForElement(tempVarDecl, true) as SymbolTableEntryIMOnly;
 		state.temporaryVariables.put(context -> name, tempVarSTENew);
 		return tempVarSTENew;
+	}
+
+	def private static FunctionOrFieldAccessor getContextFunctionOrAccessor(EObject nodeInIM) {
+		if (nodeInIM === null) {
+			return null;
+		}
+		if (nodeInIM instanceof FunctionOrFieldAccessor) {
+			return nodeInIM;
+		}
+		val parent = nodeInIM.eContainer();
+		if (parent instanceof FormalParameter
+			&& parent.eContainer() instanceof FunctionOrFieldAccessor
+			&& (parent as FormalParameter).initializer === nodeInIM) {
+			// special case: since the expression of a default parameter cannot access a function's local variables,
+			// the directly containing function of a default parameter is not a valid context function for temporary
+			// variables used in the default parameter's initializer expression.
+			val parentOfContainingFunctionOrAccessor = parent.eContainer().eContainer();
+			return getContextFunctionOrAccessor(parentOfContainingFunctionOrAccessor);
+		}
+		return getContextFunctionOrAccessor(parent);
 	}
 
 	/** If context is absent, then the temporary variable statement will be created on the top level. */

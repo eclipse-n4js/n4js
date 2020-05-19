@@ -30,13 +30,34 @@ class MyClass {
 	public prop = "property value";
 
 	public def: MyClass;
+	public defWithMethod: MyClassWithMethod;
 	public undef: MyClass;
+	public undefWithMethod: MyClassWithMethod;
 	public undefTag: (...any)=>string = undefined;
 }
 
+class MyClassWithMethod {
+
+	@Final public method: (...args: string)=>string;
+	@Final public undefMethod: (...args: string)=>string;
+
+	constructor() {
+		const correctThis = this;
+		this.method = function(...args: string) {
+			const ctx = this === correctThis ? "correct" : "!!INVALID!!";
+			return `method invoked (call context: ${ctx}, args: [${args.join(", ")}])`;
+		};
+		this.undefMethod = undefined;
+	}
+}
+
 let def: MyClass = new MyClass();
-let undef: MyClass = undefined;
+let defWithMethod: MyClassWithMethod = new MyClassWithMethod();
 def.def = def;
+def.defWithMethod = defWithMethod;
+
+let undef: MyClass = undefined;
+let undefWithMethod: MyClassWithMethod = undefined;
 
 let defFn: (...any)=>string = ()=>"return value of defFn";
 let undefFn: (...any)=>string = undefined;
@@ -61,6 +82,11 @@ log(undef?.['prop']);
 log(defFn?.());
 log(undefFn?.());
 
+log(defWithMethod.method?.("arg1", "arg2"));
+log(def.def.def.defWithMethod.method?.("arg1", "arg2"));
+log(defWithMethod.undefMethod?.(mustNotBeEvaluated()));
+logException(() => undefWithMethod.method?.());
+
 log(defTag?.`value ${'o' + 'f'} template`);
 log(undefTag?.`value ${'o' + 'f'} template`);
 
@@ -71,6 +97,7 @@ function mustNotBeEvaluated(): string { throw new Error("ERROR: this should not 
 
 log(undefObj?.[mustNotBeEvaluated()]);
 log(undefFn?.(mustNotBeEvaluated()));
+log(defWithMethod.undefMethod?.(mustNotBeEvaluated()));
 log(undefTag?.`${mustNotBeEvaluated()}`);
 
 
@@ -83,7 +110,9 @@ log(undef?.undef.undef.undefTag`${mustNotBeEvaluated()}`);
 log(def.def?.def.def.def.prop);
 log(def.undef?.def.def.def.prop);
 log(def.undef?.def.def.undef.prop); // must not throw exception (thanks to long short-circuiting) (*1*)
-logException(() => def.def?.def.def.undef.prop); // should throw "Cannot read property 'prop' of undefined"
+logException(() =>
+	def.def?.def.def.undef.prop // should throw "Cannot read property 'prop' of undefined"
+);
 
 
 console.log('======== Grouping');
@@ -94,16 +123,33 @@ logException(() => (def.undef?.def.def.undef).prop); // should throw "Cannot rea
 
 console.log('======== Stacking');
 
-log(def.def?.def.def.def?.def.prop);
-log(def.undef?.def.def.def?.def.prop);
-log(def.undef?.def.def.def?.def.prop);
-log(def.def?.def.def.undef?.def.prop);
+log(def.def  ?.def.def.def  ?.def.prop);
+log(def.undef?.def.def.def  ?.def.prop);
+log(def.def  ?.def.def.undef?.def.prop);
 log(def.undef?.def.def.undef?.def.prop);
 
-logException(() => undef.def?.def.def.def?.def.prop);
-logException(() => def.def?.undef.def.def?.def.prop);
-logException(() => def.def?.def.undef.def?.def.prop);
-logException(() => def.def?.def.def.def?.undef.prop);
+logException(() => undef.def?.def  .def  .def?.def  .prop);
+logException(() => def  .def?.undef.def  .def?.def  .prop);
+logException(() => def  .def?.def  .undef.def?.def  .prop);
+logException(() => def  .def?.def  .def  .def?.undef.prop);
+
+
+console.log('======== Stacking with Call Context');
+
+log(defWithMethod  ?.method     ?.("arg1", "arg2"));
+log(undefWithMethod?.method     ?.(mustNotBeEvaluated()));
+log(defWithMethod  ?.undefMethod?.(mustNotBeEvaluated()));
+log(undefWithMethod?.undefMethod?.(mustNotBeEvaluated()));
+
+log(def.def  ?.def.def.defWithMethod.method     ?.("arg1", "arg2"));
+log(def.undef?.def.def.defWithMethod.method     ?.(mustNotBeEvaluated()));
+log(def.def  ?.def.def.defWithMethod.undefMethod?.(mustNotBeEvaluated()));
+log(def.undef?.def.def.defWithMethod.undefMethod?.(mustNotBeEvaluated()));
+
+log(def.def  ?.def.def.defWithMethod  ?.method("arg1", "arg2"));
+log(def.undef?.def.def.defWithMethod  ?.method(mustNotBeEvaluated()));
+log(def.def  ?.def.def.undefWithMethod?.method(mustNotBeEvaluated()));
+log(def.undef?.def.def.undefWithMethod?.method(mustNotBeEvaluated()));
 
 
 /* XPECT output ---
@@ -114,9 +160,14 @@ property value
 undefined
 return value of defFn
 undefined
+method invoked (call context: correct, args: [arg1, arg2])
+method invoked (call context: correct, args: [arg1, arg2])
+undefined
+EXCEPTION: Cannot read property 'method' of undefined
 [["value "," template"],"of"]
 undefined
 ======== Short-Circuiting
+undefined
 undefined
 undefined
 undefined
@@ -135,9 +186,21 @@ property value
 undefined
 undefined
 undefined
-undefined
 EXCEPTION: Cannot read property 'def' of undefined
 EXCEPTION: Cannot read property 'def' of undefined
 EXCEPTION: Cannot read property 'def' of undefined
 EXCEPTION: Cannot read property 'prop' of undefined
+======== Stacking with Call Context
+method invoked (call context: correct, args: [arg1, arg2])
+undefined
+undefined
+undefined
+method invoked (call context: correct, args: [arg1, arg2])
+undefined
+undefined
+undefined
+method invoked (call context: correct, args: [arg1, arg2])
+undefined
+undefined
+undefined
 --- */

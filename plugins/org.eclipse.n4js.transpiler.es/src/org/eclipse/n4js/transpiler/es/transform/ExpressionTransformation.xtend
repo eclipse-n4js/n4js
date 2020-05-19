@@ -19,6 +19,7 @@ import org.eclipse.n4js.n4JS.EqualityOperator
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ExpressionWithTarget
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
+import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.PromisifyExpression
 import org.eclipse.n4js.n4JS.UnaryExpression
 import org.eclipse.n4js.n4JS.UnaryOperator
@@ -80,7 +81,9 @@ class ExpressionTransformation extends Transformation {
 	}
 
 	override transform() {
-		collectNodes(state.im, Expression, true).forEach[transformExpression];
+		collectNodes(state.im, Expression, true)
+			.reverse // transforming expressions in bottom-up order (it's more natural and simplifies some nesting cases)
+			.forEach[transformExpression];
 	}
 
 	def private dispatch void transformExpression(Expression expr) {
@@ -279,9 +282,11 @@ class ExpressionTransformation extends Transformation {
 		if (!exprWithTarget.optionalChaining) {
 			return false;
 		}
+		exprWithTarget.optionalChaining = false;
 
 		val target = exprWithTarget.target;
 		val tempVarSTE = addOrGetTemporaryVariable(CHAINING_COALESCING_TEMP_VAR_NAME, exprWithTarget);
+
 		replace(target, _IdentRef(tempVarSTE));
 
 		val toBeReplaced = getLongShortCircuitingDesitnation(exprWithTarget);
@@ -304,8 +309,16 @@ class ExpressionTransformation extends Transformation {
 		} else {
 			replace(toBeReplaced, replacement);
 		}
-		exprWithTarget.optionalChaining = false;
 		replacement.falseExpression = toBeReplaced;
+
+		if (exprWithTarget instanceof ParameterizedCallExpression
+			&& target instanceof ParameterizedPropertyAccessExpression) {
+
+			preserveCallContext(
+				exprWithTarget as ParameterizedCallExpression,
+				target as ParameterizedPropertyAccessExpression);
+		}
+
 		return true;
 	}
 
@@ -324,5 +337,57 @@ class ExpressionTransformation extends Transformation {
 			}
 		}
 		return dest;
+	}
+
+	/**
+	 * When method {@link #transformOptionalChaining(ExpressionWithTarget)} is invoked with something like
+	 * <pre>foo.bar1.bar2.bar3.bar4?.(5)</pre>
+	 * it will convert that to
+	 * <pre>($opt = foo.bar1.bar2.bar3.bar4) == null ? void 0 : $opt(5)</pre>
+	 * However, that code would lose the call context of the original code.
+	 * <p>
+	 * Therefore, {@link #transformOptionalChaining(ExpressionWithTarget)} will call this method to further convert to:
+	 * <pre>($opt = ($optR = foo.bar1.bar2.bar3).bar4) == null ? void 0 : $opt.call($optR, 5)</pre>
+	 */
+	def private void preserveCallContext(ParameterizedCallExpression exprWithTarget, ParameterizedPropertyAccessExpression target) {
+		var Expression callContextExpr;
+
+		// step 1: convert
+		// $opt = foo.bar1.bar2.bar3.bar4
+		// to
+		// $opt = ($optR = foo.bar1.bar2.bar3).bar4
+		val receiver = target.target;
+		if (receiver instanceof IdentifierRef_IM && !isIdentifierRefToChainingTempVar(receiver)) {
+			// special case: receiver is a plain IdentifierRef, which can be evaluated more than once without side effects
+			// -> no need for introducing a second temporary variable
+			callContextExpr = _IdentRef((receiver as IdentifierRef_IM).id_IM);
+		} else {
+			val tempVarReceiverSTE = addOrGetTemporaryVariable(CHAINING_COALESCING_TEMP_VAR_NAME + "R", exprWithTarget);
+			val receiverAssignment = _AssignmentExpr(
+				_IdentRef(tempVarReceiverSTE),
+				null // will be set below
+			);
+			replace(receiver, _Parenthesis(receiverAssignment));
+			receiverAssignment.rhs = receiver;
+			callContextExpr = _IdentRef(tempVarReceiverSTE);
+		}
+
+		// step 2: convert
+		// $opt(5)
+		// to
+		// $opt.call($optR, 5)
+		exprWithTarget.target = _PropertyAccessExpr(
+			exprWithTarget.target,
+			steFor_Function_call
+		);
+		exprWithTarget.arguments.add(0, _Argument(callContextExpr));
+	}
+
+	def private boolean isIdentifierRefToChainingTempVar(Expression expr) {
+		if (expr instanceof IdentifierRef_IM) {
+			val name = expr.id_IM?.name;
+			return name !== null && name.startsWith(CHAINING_COALESCING_TEMP_VAR_NAME);
+		}
+		return false;
 	}
 }

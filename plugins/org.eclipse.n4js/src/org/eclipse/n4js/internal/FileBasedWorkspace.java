@@ -21,6 +21,7 @@ import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.xtext.util.UriExtensions;
 
 import com.google.common.collect.Iterators;
@@ -66,7 +67,7 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace<FileURI> {
 	 */
 	public void registerProject(FileURI location) {
 		// URI location = URIUtils.normalize(unsafeLocation);
-		if (!projectElementHandles.containsKey(location)) {
+		if (!isRegistered(location)) {
 			LazyProjectDescriptionHandle lazyDescriptionHandle = createLazyDescriptionHandle(location);
 			projectElementHandles.put(location, lazyDescriptionHandle);
 		}
@@ -74,7 +75,7 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace<FileURI> {
 	}
 
 	public void registerProject(FileURI location, ProjectDescription resolvedDescription) {
-		if (!projectElementHandles.containsKey(location)) {
+		if (!isRegistered(location)) {
 			LazyProjectDescriptionHandle lazyDescriptionHandle = createDescriptionHandle(location, resolvedDescription);
 			projectElementHandles.put(location, lazyDescriptionHandle);
 		}
@@ -86,11 +87,27 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace<FileURI> {
 		return nameToLocation.get(name);
 	}
 
-	/**
-	 * Remove all entries from this workspace.
-	 */
+	/** Remove all entries from this workspace. */
 	public void clear() {
 		projectElementHandles.clear();
+	}
+
+	/** @return true iff the project at the given location was registered before */
+	public boolean isRegistered(FileURI location) {
+		return projectElementHandles.containsKey(location);
+	}
+
+	/** Deregisters the project at the given location */
+	public void deregister(FileURI location) {
+		projectElementHandles.remove(location);
+		String prjName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location);
+		nameToLocation.remove(new N4JSProjectName(prjName));
+	}
+
+	/** Deregisters all projects */
+	public void deregisterAll() {
+		projectElementHandles.clear();
+		nameToLocation.clear();
 	}
 
 	protected LazyProjectDescriptionHandle createLazyDescriptionHandle(FileURI location) {
@@ -98,7 +115,7 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace<FileURI> {
 	}
 
 	protected LazyProjectDescriptionHandle createDescriptionHandle(FileURI location, ProjectDescription description) {
-		return new LazyProjectDescriptionHandle(location, description);
+		return new LazyProjectDescriptionHandle(location, projectDescriptionLoader, description);
 	}
 
 	@Override
@@ -127,6 +144,14 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace<FileURI> {
 
 		ProjectDescription description = handle.resolve();
 		return description;
+	}
+
+	@Override
+	public void invalidateProject(FileURI location) {
+		if (isRegistered(location)) {
+			LazyProjectDescriptionHandle handle = projectElementHandles.get(location);
+			handle.invalidate();
+		}
 	}
 
 	public Iterator<FileURI> getAllProjectLocationsIterator() {
@@ -193,4 +218,5 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace<FileURI> {
 	public static String handleFrom(URI uri) {
 		return N4FBPRJ + uri.toString();
 	}
+
 }

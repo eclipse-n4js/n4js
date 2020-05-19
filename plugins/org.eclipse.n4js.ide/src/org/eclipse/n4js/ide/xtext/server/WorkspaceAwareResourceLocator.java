@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.ResourceLocator;
 public class WorkspaceAwareResourceLocator extends ResourceLocator {
 
 	private static final Logger LOG = Logger.getLogger(WorkspaceAwareResourceLocator.class);
-	
+
 	private final XWorkspaceManager workspaceManager;
 
 	/**
@@ -40,7 +40,7 @@ public class WorkspaceAwareResourceLocator extends ResourceLocator {
 			// TODO check if candidate is not loaded but we want to load on demand
 			if (loadOnDemand && !candidate.isLoaded()) {
 				// demandLoadHelper(candidate);
-				LOG.error("Returning a resource that is not loaded even though loadOnDemand was set to true: "
+				LOG.warn("Returning a resource that is not loaded even though loadOnDemand was set to true: "
 						+ candidate.getURI());
 			}
 			return candidate;

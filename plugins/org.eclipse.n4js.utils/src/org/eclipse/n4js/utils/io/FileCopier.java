@@ -14,6 +14,7 @@ import static com.google.common.base.Predicates.alwaysTrue;
 import static java.nio.file.FileVisitResult.CONTINUE;
 import static java.nio.file.FileVisitResult.SKIP_SUBTREE;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.CopyOption;
 import java.nio.file.FileAlreadyExistsException;
@@ -49,8 +50,23 @@ public class FileCopier implements FileVisitor<Path> {
 		this.logToStdErr = logToStdErr;
 	}
 
+	/** Same as {@link #copy(Path, Path)}, accepting {@link File}s instead of {@link Path}s. */
+	public static void copy(File from, File to) throws IOException {
+		copy(from.toPath(), to.toPath(), false);
+	}
+
+	/** Same as {@link #copy(Path, Path, boolean)}, accepting {@link File}s instead of {@link Path}s. */
+	public static void copy(File from, File to, boolean logToStdErr) throws IOException {
+		copy(from.toPath(), to.toPath(), logToStdErr);
+	}
+
+	/** Same as {@link #copy(Path, Path, Predicate)}, accepting {@link File}s instead of {@link Path}s. */
+	public static void copy(File from, File to, Predicate<Path> shouldCopyFile) throws IOException {
+		copy(from.toPath(), to.toPath(), shouldCopyFile);
+	}
+
 	/**
-	 * Copies a single file or a recursively a whole folder with its content to the given destination.
+	 * Copies a single file or recursively a whole folder with its content to the given destination.
 	 *
 	 * @param from
 	 *            path to the source to copy.
