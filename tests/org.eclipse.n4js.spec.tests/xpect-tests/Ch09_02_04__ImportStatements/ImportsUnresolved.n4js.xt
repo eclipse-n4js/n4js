@@ -1,0 +1,35 @@
+/*
+ * Copyright (c) 2020 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+
+	ResourceSet {
+		File "Empty1.n4js" { from="ImportsUnresolved_Empty1.n4js" }
+		File "Empty2.n4js" { from="ImportsUnresolved_Empty2.n4js" }
+		ThisFile {}
+	}
+
+   END_SETUP
+*/
+
+// XPECT errors --> "Cannot resolve import target :: resolving simple module import : found no matching modules" at ""Ch09_02_04__ImportStatements/Bad1""
+import {X,Y} from "Ch09_02_04__ImportStatements/Bad1"
+
+// XPECT errors --> "Cannot resolve import target :: resolving simple module import : found no matching modules" at ""Ch09_02_04__ImportStatements/Bad2""
+import * as N1 from "Ch09_02_04__ImportStatements/Bad2"
+
+// XPECT errors --> "Import of DoesNotExist cannot be resolved." at "DoesNotExist"
+import {DoesNotExist} from "Ch09_02_04__ImportStatements/Empty1"
+
+// XPECT noerrors -->
+import * as N2 from "Ch09_02_04__ImportStatements/Empty2"
+
+N2; // avoid unused import warning
