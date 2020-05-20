@@ -28,7 +28,7 @@ import * as N from "a/a1/A"
 // XPECT errors --> "Name N is already used as namespace name for a/a1/A." at "* as N"
 import * as N from "a/a2/A"
 
-// XPECT errors --> "Cannot resolve import target :: resolving simple module import : found no matching modules" at ""b/b1/A""
+// XPECT errors --> "Cannot resolve plain module specifier (without project name as first segment): no matching module found." at ""b/b1/A""
 import { A } from "b/b1/A"
 
 

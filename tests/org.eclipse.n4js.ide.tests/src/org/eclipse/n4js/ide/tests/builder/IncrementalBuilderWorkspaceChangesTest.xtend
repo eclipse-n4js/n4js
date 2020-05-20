@@ -109,7 +109,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 
 		val originalErrors = Map.of(
 			getFileURIFromModuleName("Main"), #[
-				"(Error, [0:25 - 0:32], Cannot resolve import target :: resolving simple module import : found no matching modules)",
+				"(Error, [0:25 - 0:32], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
 				"(Error, [1:4 - 1:14], Couldn't resolve reference to IdentifiableElement 'OtherClass'.)"
 			],
 			getPackageJsonFile("MainProject").toFileURI, #[
@@ -160,7 +160,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 		startAndWaitForLspServer();
 
 		val originalErrors = #[
-			"(Error, [0:25 - 0:32], Cannot resolve import target :: resolving simple module import : found no matching modules)",
+			"(Error, [0:25 - 0:32], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
 			"(Error, [1:4 - 1:14], Couldn't resolve reference to IdentifiableElement 'OtherClass'.)"
 		];
 		assertIssues("Main" -> originalErrors);
@@ -200,7 +200,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 		startAndWaitForLspServer();
 
 		val originalErrors = #[
-			"(Error, [0:25 - 0:32], Cannot resolve import target :: resolving simple module import : found no matching modules)",
+			"(Error, [0:25 - 0:32], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
 			"(Error, [1:4 - 1:14], Couldn't resolve reference to IdentifiableElement 'OtherClass'.)"
 		];
 		assertIssues("Main" -> originalErrors);
@@ -280,7 +280,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 
 		val originalErrors = Map.of(
 			getFileURIFromModuleName("Main"), #[
-				"(Error, [0:25 - 0:32], Cannot resolve import target :: resolving simple module import : found no matching modules)",
+				"(Error, [0:25 - 0:32], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
 				"(Error, [1:4 - 1:14], Couldn't resolve reference to IdentifiableElement 'OtherClass'.)"
 			],
 			getPackageJsonFile("MainProject").toFileURI, #[

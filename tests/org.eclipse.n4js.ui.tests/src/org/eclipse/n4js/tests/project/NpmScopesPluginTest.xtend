@@ -111,7 +111,7 @@ class NpmScopesPluginTest extends AbstractBuilderParticipantTest {
 			import {A} from "Lib/A"              // <-- must *not* work (because module A not contained in non-scoped project "Lib")
 		''');
 		assertIssues(
-			"line 1: Cannot resolve import target :: resolving full module import : found no matching modules"
+			"line 1: Cannot resolve complete module specifier (with project name as first segment): no matching module found."
 		);
 	}
 
@@ -130,7 +130,7 @@ class NpmScopesPluginTest extends AbstractBuilderParticipantTest {
 			import {B} from "@myScope/Lib/B"     // <-- must *not* work (because module B not contained in scoped project "@myScope/Lib")
 		''')
 		assertIssues(
-			"line 1: Cannot resolve import target :: resolving full module import : found no matching modules"
+			"line 1: Cannot resolve complete module specifier (with project name as first segment): no matching module found."
 		);
 
 		setContentsOfClientModule('''

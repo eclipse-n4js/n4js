@@ -114,7 +114,7 @@ class SingleProjectPluginTest extends AbstractBuilderParticipantTest {
 		);
 
 		assertIssues("file should have two errors", c,
-			"line 1: Cannot resolve import target :: resolving simple module import : found no matching modules",
+			"line 1: Cannot resolve plain module specifier (without project name as first segment): no matching module found.",
 			"line 2: Couldn't resolve reference to Type 'D'."
 		);
 		createTestFile(src, "D", "export class D {}");
@@ -133,13 +133,13 @@ class SingleProjectPluginTest extends AbstractBuilderParticipantTest {
 		);
 
 		assertIssues("file should have two errors", c,
-			"line 1: Cannot resolve import target :: resolving simple module import : found no matching modules",
+			"line 1: Cannot resolve plain module specifier (without project name as first segment): no matching module found.",
 			"line 2: Couldn't resolve reference to Type 'D'."
 		);
 		createTestFile(src2, "D", "export class D {}");
 		// Same as above, src2 folder is not set as source folder yet.
 		assertIssues("file should have two errors", c,
-			"line 1: Cannot resolve import target :: resolving simple module import : found no matching modules",
+			"line 1: Cannot resolve plain module specifier (without project name as first segment): no matching module found.",
 			"line 2: Couldn't resolve reference to Type 'D'."
 		);
 		addSrc2ToSources
@@ -203,7 +203,7 @@ class SingleProjectPluginTest extends AbstractBuilderParticipantTest {
 		removeSrc2FromSource
 
 		assertIssues("file should have two errors", c,
-			"line 1: Cannot resolve import target :: resolving simple module import : found no matching modules",
+			"line 1: Cannot resolve plain module specifier (without project name as first segment): no matching module found.",
 			"line 2: Couldn't resolve reference to Type 'D'."
 		);
 	}
@@ -222,7 +222,7 @@ class SingleProjectPluginTest extends AbstractBuilderParticipantTest {
 		createTestFile(src2, "D", "export class D {}");
 
 		assertIssues("file should have two errors", c,
-			"line 1: Cannot resolve import target :: resolving simple module import : found no matching modules",
+			"line 1: Cannot resolve plain module specifier (without project name as first segment): no matching module found.",
 			"line 2: Couldn't resolve reference to Type 'D'."
 		);
 		src2.rename("src3")
@@ -253,7 +253,7 @@ class SingleProjectPluginTest extends AbstractBuilderParticipantTest {
 		d = mainSrc.findMember("a/d/c/" + d.name) as IFile
 
 		assertIssues("file should have one error", d,
-			"line 1: Cannot resolve import target :: resolving simple module import : found no matching modules"
+			"line 1: Cannot resolve plain module specifier (without project name as first segment): no matching module found."
 		);
 	}
 
@@ -274,7 +274,7 @@ class SingleProjectPluginTest extends AbstractBuilderParticipantTest {
 		assertMarkers("file should have no errors", c, 0);
 
 		assertIssues("file should have one error", d,
-			"line 1: Cannot resolve import target :: resolving simple module import : found no matching modules"
+			"line 1: Cannot resolve plain module specifier (without project name as first segment): no matching module found."
 		);
 	}
 

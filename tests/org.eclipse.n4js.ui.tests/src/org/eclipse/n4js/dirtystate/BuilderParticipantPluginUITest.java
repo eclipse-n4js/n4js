@@ -158,7 +158,7 @@ public class BuilderParticipantPluginUITest extends AbstractBuilderParticipantTe
 		// unknown type
 		assertEquals("Content of editor 1 should be broken, because now linking to missing resource",
 				Sets.newHashSet(
-						"line 4: Cannot resolve import target :: resolving simple module import : found no matching modules",
+						"line 4: Cannot resolve plain module specifier (without project name as first segment): no matching module found.",
 						"line 7: Couldn't resolve reference to Type 'Class1'."),
 				toSetOfStrings(errors));
 
@@ -224,7 +224,7 @@ public class BuilderParticipantPluginUITest extends AbstractBuilderParticipantTe
 		errors = getEditorErrors(childFileXtextEditor);
 		assertEquals("Editor of child should have got error markers",
 				Sets.newHashSet(
-						"line 1: Cannot resolve import target :: resolving simple module import : found no matching modules",
+						"line 1: Cannot resolve plain module specifier (without project name as first segment): no matching module found.",
 						"line 2: Couldn't resolve reference to Type 'ParentObjectLiteral'."),
 				toSetOfStrings(errors));
 
@@ -284,7 +284,7 @@ public class BuilderParticipantPluginUITest extends AbstractBuilderParticipantTe
 		errors = getEditorErrors(childFileXtextEditor);
 		assertEquals("Editor of child should have error markers",
 				Sets.newHashSet(
-						"line 1: Cannot resolve import target :: resolving simple module import : found no matching modules",
+						"line 1: Cannot resolve plain module specifier (without project name as first segment): no matching module found.",
 						"line 2: Couldn't resolve reference to Type 'ParentObjectLiteral'."),
 				toSetOfStrings(errors));
 

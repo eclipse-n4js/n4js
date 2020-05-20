@@ -88,13 +88,13 @@ class TransitiveDependencyPluginTest extends AbstractBuilderParticipantTest {
 			'''
 		);
 		assertIssues("file should have errors", c,
-			"line 1: Cannot resolve import target :: resolving simple module import : found no matching modules",
+			"line 1: Cannot resolve plain module specifier (without project name as first segment): no matching module found.",
 			"line 2: Couldn't resolve reference to Type 'B'.",
 			"line 4: Couldn't resolve reference to IdentifiableElement 'n'."
 		);
 
 		assertIssues("file should have errors", b,
-			"line 1: Cannot resolve import target :: resolving simple module import : found no matching modules",
+			"line 1: Cannot resolve plain module specifier (without project name as first segment): no matching module found.",
 			"line 2: Couldn't resolve reference to Type 'A'.",
 			"line 4: Couldn't resolve reference to IdentifiableElement 'm'."
 		);
@@ -133,13 +133,13 @@ class TransitiveDependencyPluginTest extends AbstractBuilderParticipantTest {
 			'''
 		);
 		assertIssues("file should have errors", c,
-			"line 1: Cannot resolve import target :: resolving simple module import : found no matching modules",
+			"line 1: Cannot resolve plain module specifier (without project name as first segment): no matching module found.",
 			"line 2: Couldn't resolve reference to Type 'B'.",
 			"line 4: Couldn't resolve reference to IdentifiableElement 'm'."
 		);
 
 		assertIssues("file should have errors", b,
-			"line 1: Cannot resolve import target :: resolving simple module import : found no matching modules",
+			"line 1: Cannot resolve plain module specifier (without project name as first segment): no matching module found.",
 			"line 2: Couldn't resolve reference to Type 'A'."
 		);
 		assertMarkers("file should have no errors", a, 0);
@@ -177,13 +177,13 @@ class TransitiveDependencyPluginTest extends AbstractBuilderParticipantTest {
 			'''
 		);
 		assertIssues("file should have errors", c,
-			"line 1: Cannot resolve import target :: resolving simple module import : found no matching modules",
+			"line 1: Cannot resolve plain module specifier (without project name as first segment): no matching module found.",
 			"line 2: Couldn't resolve reference to Type 'B'.",
 			"line 4: Couldn't resolve reference to IdentifiableElement 'm'."
 		);
 
 		assertIssues("file should have errors", b,
-			"line 1: Cannot resolve import target :: resolving simple module import : found no matching modules",
+			"line 1: Cannot resolve plain module specifier (without project name as first segment): no matching module found.",
 			"line 2: Couldn't resolve reference to Type 'A'."
 		);
 		assertMarkers("file should have no errors", a, 0);

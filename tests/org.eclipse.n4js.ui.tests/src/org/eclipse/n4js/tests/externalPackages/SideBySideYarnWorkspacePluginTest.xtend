@@ -120,7 +120,7 @@ class SideBySideYarnWorkspacePluginTest extends AbstractBuilderParticipantTest {
 		scopedProject.close(null);
 		testedWorkspace.fullBuild;
 		assertIssues(
-			"line 2: Cannot resolve import target :: resolving simple module import : found no matching modules",
+			"line 2: Cannot resolve plain module specifier (without project name as first segment): no matching module found.",
 			"line 5: Couldn't resolve reference to IdentifiableElement 'C2'.",
 			"line 6: Project does not exist with project ID: @myScope/Lib.");
 

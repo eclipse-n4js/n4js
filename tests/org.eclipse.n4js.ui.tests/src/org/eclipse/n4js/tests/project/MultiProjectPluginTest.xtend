@@ -149,12 +149,12 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 			'''
 		);
 		assertIssues("file should have errors", c,
-			"line 1: Cannot resolve import target :: resolving simple module import : found no matching modules",
+			"line 1: Cannot resolve plain module specifier (without project name as first segment): no matching module found.",
 			"line 2: Couldn't resolve reference to Type 'D'.");
 		createTestFile(src2, "D", "export public class D {}");
 		// Same as above, errors are not resolved by just exporting class, it should be added as a dependency.
 		assertIssues("file should have errors", c,
-			"line 1: Cannot resolve import target :: resolving simple module import : found no matching modules",
+			"line 1: Cannot resolve plain module specifier (without project name as first segment): no matching module found.",
 			"line 2: Couldn't resolve reference to Type 'D'.");
 		addSecondProjectToDependencies
 		assertMarkers("file should have no errors", c, 0, errorMarkerPredicate);
@@ -181,7 +181,7 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 		assertMarkers("file should have no errors", c, 0, errorMarkerPredicate);
 		removeDependency
 		assertIssues("file should have four errors", c,
-			"line 1: Cannot resolve import target :: resolving simple module import : found no matching modules",
+			"line 1: Cannot resolve plain module specifier (without project name as first segment): no matching module found.",
 			"line 2: Couldn't resolve reference to Type 'D'.");
 	}
 	
@@ -225,7 +225,7 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 		waitForAutoBuild
 
 		assertIssues("file should have errors", file,
-			"line 1: Cannot resolve import target :: resolving simple module import : found no matching modules",
+			"line 1: Cannot resolve plain module specifier (without project name as first segment): no matching module found.",
 			"line 2: Couldn't resolve reference to Type 'D'.");
 		addSecondProjectToDependencies
 		assertMarkers("file should have no errors", file, 0, errorMarkerPredicate);
