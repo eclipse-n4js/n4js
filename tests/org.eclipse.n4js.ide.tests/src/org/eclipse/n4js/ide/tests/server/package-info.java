@@ -176,6 +176,27 @@ abstract class Documentation {
 	static int DEPENDENCIES;
 
 	/**
+	 * Instead of a module name, also the reserved string
+	 * {@link org.eclipse.n4js.ide.tests.server.TestWorkspaceManager#MAIN_MODULE MAIN_MODULE} can be given. This will
+	 * set the package.json property {@link org.eclipse.n4js.packagejson.PackageJsonProperties#MAIN_MODULE "mainModule"}
+	 * to the value given as argument.
+	 * <p>
+	 * <b>Simple example</b>
+	 *
+	 * <pre>
+	 * override final List<Pair<String, String>> getDefaultTestModules() {
+	 * 	return #[
+	 * 		"MA"  -> '''
+	 * 			export public class A1 {}
+	 * 		''',
+	 * 		MAIN_MODULE -> "MA"
+	 * 	];
+	 * }
+	 * </pre>
+	 */
+	static int MAIN_MODULE;
+
+	/**
 	 * Each project (both default projects and projects in default workspaces) can have a nested node_modules folder
 	 * that contains other projects. This structure is defined using the reserved string
 	 * {@link org.eclipse.n4js.ide.tests.server.TestWorkspaceManager#NODE_MODULES NODE_MODULES}.

@@ -20,10 +20,15 @@
    END_SETUP
 */
 
-// XPECT errors --> "Cannot resolve import target :: resolving simple module import : found no matching modules" at ""Ch09_02_04__ImportStatements/Bad1""
+//
+// NOTE: several other cases that require multiple projects are tested
+//       in org.eclipse.n4js.ide.tests.spec.ImportsUnresolvedTest!
+//
+
+// XPECT errors --> "Cannot resolve plain module specifier (without project name as first segment): no matching module found." at ""Ch09_02_04__ImportStatements/Bad1""
 import {X,Y} from "Ch09_02_04__ImportStatements/Bad1"
 
-// XPECT errors --> "Cannot resolve import target :: resolving simple module import : found no matching modules" at ""Ch09_02_04__ImportStatements/Bad2""
+// XPECT errors --> "Cannot resolve plain module specifier (without project name as first segment): no matching module found." at ""Ch09_02_04__ImportStatements/Bad2""
 import * as N1 from "Ch09_02_04__ImportStatements/Bad2"
 
 // XPECT errors --> "Import of DoesNotExist cannot be resolved." at "DoesNotExist"

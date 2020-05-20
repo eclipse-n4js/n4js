@@ -44,7 +44,7 @@ Accessibility is defined by modifiers on types and members, e.g `public`, `prote
 Extensibility is defined by the `@Final` annotation respectively.
 
 [.language-n4js]
-== Accessibility of Types, Top-Level Variables and Function Declarations
+=== Accessibility of Types, Top-Level Variables and Function Declarations
 
 
 We define types (classes, interfaces, enums) whereby each type has members (fields and methods, depending on the kind of type).
@@ -477,7 +477,9 @@ class Client {
 
 ====
 
-=== Valid Names
+
+
+== Valid Names
 
 For identifier and property names, the same constraints as in ECMAScript
 cite:[ECMA11a(S7.6)]
@@ -523,7 +525,7 @@ In N4JS mode, warnings are generated in the following cases:
 
 --
 
-=== Qualified Names
+== Qualified Names
 
 In N4JS source code, types can only be referenced using their simple name.
 There is no such thing as a fully-qualified type name in N4JS or ECMAScript.
@@ -558,7 +560,7 @@ specifier, the last(!) period must be used when splitting the module name `M` fr
 
 
 
-=== Name Duplicates
+== Name Duplicates
 
 There might be cases where two (or more) scopes created by different entities with the same (simple) name overlap.
 Those situations can be referred to as shadowing, hiding, or obscuring.
@@ -566,7 +568,7 @@ While they are not the same, many of those cases are not allowed in N4JS.
 For simplicity we refer to them all as shadowing or duplication (see below).
 Rule of thumb is that N4JS allows everything that is allowed in JavaScript StrictMode.
 
-==== Lexical Environment
+=== Lexical Environment
 
 N4JS handles scopes similar to ECMAScript, so that function scope is applied to variables declared with `var` (and parameters), and block scope for variables is declared with `let` or `const`.
 In general, ECMAScript defines _Lexical Environments_ as a specification type used to define the association of Identifiers to specific variables and functions based upon the lexical nesting structure of ECMAScript code cite:[ECMA11a(10.2)].
@@ -590,7 +592,7 @@ NOTE: In case of names introduced by ``ImportDeclaration``s only ``NamedImportSp
 ``WildcardImportSpecifiers``s are not taken into account.
 Potential optimizations by compiler or user annotation are also not currently taken into account during analysis.
 
-==== Duplicates and Shadowing
+=== Duplicates and Shadowing
 
 .Shadowing Overriding Duplicates
 [def]

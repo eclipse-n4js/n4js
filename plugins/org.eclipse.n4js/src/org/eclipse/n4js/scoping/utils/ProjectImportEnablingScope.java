@@ -161,35 +161,38 @@ public class ProjectImportEnablingScope implements IScope {
 		}
 
 		// handle error cases to help user fix the issue
-		StringBuilder sbErrrorMessage = new StringBuilder("Cannot resolve import target ::");
+		StringBuilder sbErrrorMessage = new StringBuilder("Cannot resolve ");
 
 		ModuleSpecifierForm importType = computeImportType(name, this.contextProject);
 		switch (importType) {
 		case PROJECT:
-			sbErrrorMessage.append(" resolving project import :");
+			sbErrrorMessage.append("project import");
 			break;
 		case COMPLETE:
-			sbErrrorMessage.append(" resolving full module import :");
+			sbErrrorMessage.append("complete module specifier (with project name as first segment)");
 			break;
 		case PLAIN:
-			sbErrrorMessage.append(" resolving simple module import :");
+			sbErrrorMessage.append("plain module specifier (without project name as first segment)");
 			break;
 		case PROJECT_NO_MAIN:
-			sbErrrorMessage.append(" no main module in target project");
+			sbErrrorMessage.append("project import: target project does not define a main module");
 			break;
 		default:
-			sbErrrorMessage.append(" unrecognized import structure :");
+			sbErrrorMessage.append("module specifier");
 			break;
 		}
 
 		if (!importType.equals(ModuleSpecifierForm.PROJECT_NO_MAIN)) {
+			sbErrrorMessage.append(": ");
 			if (size == 0) {
-				sbErrrorMessage.append(" found no matching modules");
+				sbErrrorMessage.append("no matching module found");
 			} else {
-				sbErrrorMessage.append(" found multiple matching modules ");
+				sbErrrorMessage.append("multiple matching modules found: ");
 				sbErrrorMessage.append(IterableExtensions.join(result, ","));
 			}
 		}
+
+		sbErrrorMessage.append('.');
 
 		final EObject originalProxy = (EObject) this.importDeclaration.get()
 				.eGet(N4JSPackage.eINSTANCE.getImportDeclaration_Module(), false);

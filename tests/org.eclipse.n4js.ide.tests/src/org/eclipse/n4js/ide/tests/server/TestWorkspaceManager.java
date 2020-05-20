@@ -69,6 +69,11 @@ public class TestWorkspaceManager {
 	 */
 	static final public String DEPENDENCIES = "#DEPENDENCY";
 	/**
+	 * Reserved string to define the main module property "main" in the package.json.<br>
+	 * see {@link Documentation#MAIN_MODULE}
+	 */
+	static final public String MAIN_MODULE = "#MAIN_MODULE";
+	/**
 	 * Reserved string to identify the directory 'node_modules'<br>
 	 * see {@link Documentation#PROJECT_NODE_MODULES} and {@link Documentation#WORKSPACE_NODE_MODULES}
 	 */
@@ -206,6 +211,16 @@ public class TestWorkspaceManager {
 	private Path projectNameToRelativePath(String projectName) {
 		String namePathStr = "/".equals(File.separator) ? projectName : projectName.replace("/", File.separator);
 		return Path.of(namePathStr);
+	}
+
+	/** Returns the package.json file of the {@link #DEFAULT_PROJECT_NAME default project}. */
+	protected File getPackageJsonFile() {
+		return getPackageJsonFile(TestWorkspaceManager.DEFAULT_PROJECT_NAME);
+	}
+
+	/** Returns the package.json file of the project with the given name. */
+	protected File getPackageJsonFile(String projectName) {
+		return new File(getProjectRoot(projectName), N4JSGlobals.PACKAGE_JSON);
 	}
 
 	/** @return the given name if non-<code>null</code> and non-empty; otherwise {@link #DEFAULT_MODULE_NAME}. */
@@ -354,6 +369,9 @@ public class TestWorkspaceManager {
 				for (String dependency : allDeps) {
 					dependencies.put(projectName, dependency.trim());
 				}
+
+			} else if (moduleName.equals(MAIN_MODULE)) {
+				project.setMainModule(contents);
 
 			} else if (moduleName.equals(PACKAGE_JSON)) {
 				project.setProjectDescriptionContent(contents);

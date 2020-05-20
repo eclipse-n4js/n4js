@@ -177,6 +177,19 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		return testWorkspaceManager.getProjectRoot(projectName);
 	}
 
+	/**
+	 * Same as {@link #getPackageJsonFile(String)}, but for the {@link TestWorkspaceManager#DEFAULT_PROJECT_NAME default
+	 * project}.
+	 */
+	protected File getPackageJsonFile() {
+		return testWorkspaceManager.getPackageJsonFile();
+	}
+
+	/** Returns the package.json file of the project with the given name. */
+	protected File getPackageJsonFile(String projectName) {
+		return testWorkspaceManager.getPackageJsonFile(projectName);
+	}
+
 	/** Overwrite this method to change the project type */
 	protected ProjectType getProjectType() {
 		return ProjectType.LIBRARY;
