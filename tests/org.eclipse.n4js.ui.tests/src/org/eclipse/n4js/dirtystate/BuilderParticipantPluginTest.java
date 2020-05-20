@@ -74,11 +74,8 @@ public class BuilderParticipantPluginTest extends AbstractBuilderParticipantTest
 		IFile file1 = createTestFile(pr0_0pa0, "Class0", TestFiles.class0());
 		waitForAutoBuild();
 		// Cannot resolve import target :: resolving simple module import : found no matching modules
-		// Couldn't resolve reference to IdentifiableElement 'Class1'.
-		// Couldn't resolve reference to TModule 'pr0_0pa0.Class1'.
 		// Couldn't resolve reference to Type 'Class1'.
-		// Import of Class1 cannot be resolved.
-		assertMarkers("File1 should have 4 markers", file1, 4);
+		assertMarkers("File1 should have 2 markers", file1, 2);
 
 		IFile file2 = createTestFile(pr0_0pa0, "Class1", TestFiles.class1());
 		waitForAutoBuild();

@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.Path
 import org.eclipse.emf.common.util.URI
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore
+import org.eclipse.n4js.projectModel.names.N4JSProjectName
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
 import org.eclipse.n4js.tests.util.ProjectTestsHelper
 import org.eclipse.n4js.tests.util.ProjectTestsUtils
@@ -34,7 +35,6 @@ import org.junit.Test
 
 import static org.eclipse.emf.common.util.URI.createPlatformResourceURI
 import static org.junit.Assert.*
-import org.eclipse.n4js.projectModel.names.N4JSProjectName
 
 /**
  * Testing the use of npm scopes as part of N4JS project names, i.e. project names of
@@ -111,9 +111,7 @@ class NpmScopesPluginTest extends AbstractBuilderParticipantTest {
 			import {A} from "Lib/A"              // <-- must *not* work (because module A not contained in non-scoped project "Lib")
 		''');
 		assertIssues(
-			"line 1: Cannot resolve import target :: resolving full module import : found no matching modules",
-			"line 1: Couldn't resolve reference to TExportableElement 'A'.",
-			"line 1: Import of A cannot be resolved."
+			"line 1: Cannot resolve import target :: resolving full module import : found no matching modules"
 		);
 	}
 
@@ -132,9 +130,7 @@ class NpmScopesPluginTest extends AbstractBuilderParticipantTest {
 			import {B} from "@myScope/Lib/B"     // <-- must *not* work (because module B not contained in scoped project "@myScope/Lib")
 		''')
 		assertIssues(
-			"line 1: Cannot resolve import target :: resolving full module import : found no matching modules",
-			"line 1: Couldn't resolve reference to TExportableElement 'B'.",
-			"line 1: Import of B cannot be resolved."
+			"line 1: Cannot resolve import target :: resolving full module import : found no matching modules"
 		);
 
 		setContentsOfClientModule('''

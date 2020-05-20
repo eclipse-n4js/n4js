@@ -28,11 +28,7 @@ import * as N from "a/a1/A"
 // XPECT errors --> "Name N is already used as namespace name for a/a1/A." at "* as N"
 import * as N from "a/a2/A"
 
-/* XPECT issues ---
-"Cannot resolve import target :: resolving simple module import : found no matching modules" at ""b/b1/A""
-"Couldn't resolve reference to TExportableElement 'A'." at "A"
-"Import of A cannot be resolved." at "A"
---- */
+// XPECT errors --> "Cannot resolve import target :: resolving simple module import : found no matching modules" at ""b/b1/A""
 import { A } from "b/b1/A"
 
 

@@ -25,6 +25,8 @@ import org.eclipse.n4js.json.JSON.JSONObject
 import org.eclipse.n4js.json.model.utils.JSONModelUtils
 import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectDescription.SourceContainerType
+import org.eclipse.n4js.projectModel.names.EclipseProjectName
+import org.eclipse.n4js.projectModel.names.N4JSProjectName
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
 import org.eclipse.n4js.tests.util.PackageJSONTestUtils
 import org.eclipse.n4js.tests.util.ProjectTestsUtils
@@ -33,8 +35,6 @@ import org.junit.Test
 
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.DEPENDENCIES
 import static org.junit.Assert.assertTrue
-import org.eclipse.n4js.projectModel.names.N4JSProjectName
-import org.eclipse.n4js.projectModel.names.EclipseProjectName
 
 /**
  */
@@ -148,14 +148,14 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 				class C extends D {}
 			'''
 		);
-		// Cannot resolve import target :: resolving simple module import : found no matching modules
-		// Couldn't resolve reference to IdentifiableElement 'D'.
-		// Couldn't resolve reference to Type 'D'.
-		// Import of D cannot be resolved.
-		assertMarkers("file should have four errors", c, 4);
+		assertIssues("file should have errors", c,
+			"line 1: Cannot resolve import target :: resolving simple module import : found no matching modules",
+			"line 2: Couldn't resolve reference to Type 'D'.");
 		createTestFile(src2, "D", "export public class D {}");
 		// Same as above, errors are not resolved by just exporting class, it should be added as a dependency.
-		assertMarkers("file should have four errors", c, 4);
+		assertIssues("file should have errors", c,
+			"line 1: Cannot resolve import target :: resolving simple module import : found no matching modules",
+			"line 2: Couldn't resolve reference to Type 'D'.");
 		addSecondProjectToDependencies
 		assertMarkers("file should have no errors", c, 0, errorMarkerPredicate);
 	}
@@ -182,9 +182,7 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 		removeDependency
 		assertIssues("file should have four errors", c,
 			"line 1: Cannot resolve import target :: resolving simple module import : found no matching modules",
-			"line 1: Couldn't resolve reference to TExportableElement 'D'.",
-			"line 2: Couldn't resolve reference to Type 'D'.",
-			"line 1: Import of D cannot be resolved.");
+			"line 2: Couldn't resolve reference to Type 'D'.");
 	}
 	
 	@Test
@@ -226,11 +224,9 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 		ProjectTestsUtils.createProjectDescriptionFile(firstProjectUnderTest)
 		waitForAutoBuild
 
-		// Couldn't resolve reference to IdentifiableElement 'D'.
-		// Couldn't resolve reference to TModule 'D'.
-		// Couldn't resolve reference to Type 'D'.
-		// Import of D cannot be resolved.
-		assertMarkers("file should have four errors", file, 4);
+		assertIssues("file should have errors", file,
+			"line 1: Cannot resolve import target :: resolving simple module import : found no matching modules",
+			"line 2: Couldn't resolve reference to Type 'D'.");
 		addSecondProjectToDependencies
 		assertMarkers("file should have no errors", file, 0, errorMarkerPredicate);
 	}

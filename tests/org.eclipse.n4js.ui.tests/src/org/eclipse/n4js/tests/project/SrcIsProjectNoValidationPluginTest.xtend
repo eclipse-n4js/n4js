@@ -57,11 +57,11 @@ class SrcIsProjectNoValidationPluginTest extends AbstractBuilderParticipantTest 
 		val fileE = createTestFile(src_P_Q, "E", fileContentsE);
 		val fileF = createTestFile(src_P_Q, "F", fileContentsF);
 		assertMarkers("file A should have 5 markers", fileA, 5);
-		assertMarkers("file B should have 7 markers", fileB, 7);
+		assertMarkers("file B should have 5 markers", fileB, 5);
 		assertMarkers("file C should have 2 markers", fileC, 2);
 		assertMarkers("file D should have 2 markers", fileD, 2);
-		assertMarkers("file E should have 7 markers", fileE, 7);
-		assertMarkers("file F should have 7 markers", fileF, 7);
+		assertMarkers("file E should have 5 markers", fileE, 5);
+		assertMarkers("file F should have 5 markers", fileF, 5);
 		assertMarkers("project description file (package.json) should have 0 marker", projectDescriptionFile, 0);
 
 		addPathsToNoValidate("P/D", "P/Q/*")

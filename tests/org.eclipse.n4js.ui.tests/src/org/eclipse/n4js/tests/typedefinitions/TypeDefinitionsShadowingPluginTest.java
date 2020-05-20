@@ -82,11 +82,10 @@ public class TypeDefinitionsShadowingPluginTest extends AbstractBuilderParticipa
 
 		IResource clientModule = clientProject.findMember("src/Client.n4js");
 
-		// line 2: Couldn't resolve reference to TExportableElement 'A'.
-		// line 6: Couldn't resolve reference to IdentifiableElement 'A'.
-		// line 2: The import of <A>(proxy) is unused.
-		assertMarkers("Client module should have compilation issues, as type definitions cannot be resolved",
-				clientModule, 3);
+		assertIssues("Client module should have compilation issues, as type definitions cannot be resolved",
+				clientModule,
+				"line 2: Import of A cannot be resolved.",
+				"line 6: Couldn't resolve reference to IdentifiableElement 'A'.");
 
 		assertMarkers("Definition project should not have any markers (no compilation issues)", definitionProject, 0);
 		assertMarkers("Implementation project should not have any markers (no compilation issues)", implProject, 0);

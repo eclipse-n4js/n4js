@@ -112,7 +112,7 @@ class AT_084_Test {
 
 		script.assertNoError(IssueCodes.IMP_AMBIGUOUS)
 		//Since A.dup cannot be linked, import is unused, but also marked with linking error
-		script.assertWarning(N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IssueCodes.IMP_UNUSED_IMPORT, "The import of <dup>(proxy) is unused.")
+		script.assertError(N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IssueCodes.IMP_UNRESOLVED, "Import of dup cannot be resolved.")
 	}
 
 	@Test
@@ -131,10 +131,12 @@ class AT_084_Test {
 		'''.parse(URI.createURI("C.n4js"), rs)
 
 		script.assertNoError(IssueCodes.IMP_AMBIGUOUS)
-		//Since A.dup cannot be linked, import is unused, but also marked with linking error
-		script.assertWarning(N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IssueCodes.IMP_UNUSED_IMPORT, "The import of <dup>(proxy) is unused.")
+		script.assertNoIssue(N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IssueCodes.IMP_UNUSED_IMPORT)
+		//Since A.dup cannot be linked, an error is shown
+		script.assertError(N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IssueCodes.IMP_UNRESOLVED, "Import of dup cannot be resolved.")
 		//Local name used in second import of unresolved element conflicts with the previous one
-		script.assertError(N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IssueCodes.IMP_LOCAL_NAME_CONFLICT, "Name <dup>(proxy) is already used as name for named import null from A.")
+		//but this error is not shown to avoid redundant error messages
+		script.assertNoError(IssueCodes.IMP_LOCAL_NAME_CONFLICT)
 	}
 
 	@Test
