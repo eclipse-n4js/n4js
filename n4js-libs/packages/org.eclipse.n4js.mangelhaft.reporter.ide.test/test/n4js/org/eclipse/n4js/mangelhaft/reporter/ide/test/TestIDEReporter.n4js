@@ -61,7 +61,7 @@
 //                                        "start"].join("/"), "requestURL should match");
 //        Assert.deepEqual(this.fetchInit,
 //            {
-//               Method method: Method.POST,
+//               method: Method.POST,
 //               union{Headers,string[][],Object} headers: { "Content-Type": "application/vnd.n4js.start_session_req.tm+json"
 //                            , "Accept": "application/json"
 //                        },
@@ -87,7 +87,7 @@
 //
 //        Assert.deepEqual(this.fetchInit,
 //            {
-//               Method method: Method.POST
+//               method: Method.POST
 //               ,union{Headers,string[][],Object} headers: { "Content-Type": "application/vnd.n4js.start_test_req.tm+json"
 //                            , "Accept": "application/json"
 //                        }
@@ -126,7 +126,7 @@
 //
 //        Assert.deepEqual(this.fetchInit,
 //            {
-//               Method method: Method.POST
+//               method: Method.POST
 //               ,union{Headers,string[][],Object} headers: { "Content-Type": "application/vnd.n4js.end_test_req.tm+json"
 //                            , "Accept": "application/json"
 //                        }
@@ -158,7 +158,7 @@
 //
 //        Assert.deepEqual(this.fetchInit,
 //            {
-//               Method method: Method.POST
+//               method: Method.POST
 //               ,union{Headers,string[][],Object} headers: { "Content-Type": "application/vnd.n4js.end_session_req.tm+json"
 //                            , "Accept": "application/json"
 //                        }

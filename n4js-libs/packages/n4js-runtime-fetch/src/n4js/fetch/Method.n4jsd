@@ -16,6 +16,7 @@ export @StringBased external public enum Method {
     HEAD,
     POST,
     PUT,
+    PATCH,
     DELETE,
     TRACE,
     CONNECT

@@ -10,7 +10,6 @@
  */
 @@Global @@ProvidedByRuntime
 
-import {Method} from "fetch/Method";
 import {ReferrerPolicy} from "fetch/ReferrerPolicy";
 import {RequestCache} from "fetch/RequestCache";
 import {RequestContext} from "fetch/RequestContext";
@@ -21,7 +20,7 @@ import {RequestRedirect} from "fetch/RequestRedirect";
 export external public class Request extends Body {
     public constructor(input: union{Request, string}, init: RequestInit=);
 
-    public get method(): Method;
+    public get method(): string;
     public get url(): string;
     public get headers(): Headers;
 
