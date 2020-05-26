@@ -159,6 +159,11 @@ import com.google.inject.Singleton;
 public class XLanguageServerImpl implements LanguageServer, WorkspaceService, TextDocumentService, LanguageClientAware,
 		Endpoint, JsonRpcMethodProvider, IBuildListener {
 
+	@Inject
+	private XOpenFileManager openFileManager;
+
+	public static boolean useNew = true;
+
 	private static final Logger LOG = Logger.getLogger(XLanguageServerImpl.class);
 
 	@Inject
@@ -381,6 +386,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	}
 
 	private Void initialBuild() {
+		// if (useNew) {
+		// return null;
+		// }
 		Stopwatch sw = Stopwatch.createStarted();
 		try {
 			LOG.info("Start initial build ...");
@@ -471,7 +479,17 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public void didOpen(DidOpenTextDocumentParams params) {
-		runBuildable("didOpen", () -> toBuildable(params));
+		if (useNew) {
+			requestManager.runWrite("+didOpen()", () -> {
+				TextDocumentItem textDocument = params.getTextDocument();
+				openFileManager.openFile(getURI(textDocument), textDocument.getVersion(), textDocument.getText());
+				return null;
+			}, (x, ci) -> {
+				return null;
+			});
+		} else {
+			runBuildable("didOpen", () -> toBuildable(params));
+		}
 	}
 
 	/**
@@ -485,8 +503,19 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public void didChange(DidChangeTextDocumentParams params) {
-		if (isSourceFileOrOpen(uriExtensions.toUri(params.getTextDocument().getUri()))) {
-			runBuildable("didChange", () -> toBuildable(params));
+		if (useNew) {
+			requestManager.runWrite("+didOpen()", () -> {
+				return null;
+			}, (ci, x) -> {
+				VersionedTextDocumentIdentifier textDocument = params.getTextDocument();
+				openFileManager.changeFile(getURI(textDocument), textDocument.getVersion(), params.getContentChanges(),
+						ci);
+				return null;
+			});
+		} else {
+			if (isSourceFileOrOpen(uriExtensions.toUri(params.getTextDocument().getUri()))) {
+				runBuildable("didChange", () -> toBuildable(params));
+			}
 		}
 	}
 
@@ -519,7 +548,11 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public void didClose(DidCloseTextDocumentParams params) {
-		runBuildable("didClose", () -> toBuildable(params));
+		if (useNew) {
+			openFileManager.closeFile(getURI(params.getTextDocument()));
+		} else {
+			runBuildable("didClose", () -> toBuildable(params));
+		}
 	}
 
 	/**
@@ -531,6 +564,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public void didSave(DidSaveTextDocumentParams params) {
+		// if (useNew) {
+		// return;
+		// }
 		runBuildable("didSave", () -> toBuildable(params));
 	}
 
@@ -543,6 +579,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public void didChangeWatchedFiles(DidChangeWatchedFilesParams params) {
+		// if (useNew) {
+		// return;
+		// }
 		// TODO: Set watched files to client. Note: Client may have performance issues with lots of folders to watch.
 		final List<URI> dirtyFiles = new ArrayList<>();
 		final List<URI> deletedFiles = new ArrayList<>();
@@ -570,6 +609,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	/** Deletes all generated files and clears the type index. */
 	public CompletableFuture<Void> clean() {
 		return requestManager.runWrite("clean", () -> {
+			// if (useNew) {
+			// return null;
+			// }
 			workspaceManager.clean(CancelIndicator.NullImpl);
 			return null;
 		}, (a, b) -> null);
@@ -593,6 +635,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	 */
 	public CompletableFuture<Void> reinitWorkspace() {
 		return requestManager.runWrite("didChangeConfiguration", () -> {
+			// if (useNew) {
+			// return null;
+			// }
 			workspaceManager.reinitialize();
 			workspaceManager.doInitialBuild(CancelIndicator.NullImpl);
 			return null;
@@ -614,6 +659,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	 */
 	protected Either<List<CompletionItem>, CompletionList> completion(CancelIndicator originalCancelIndicator,
 			CompletionParams params) {
+		if (useNew) {
+			return Either.forRight(new CompletionList());
+		}
 		URI uri = getURI(params);
 		XContentAssistService contentAssistService = getService(uri, XContentAssistService.class);
 		if (contentAssistService == null) {
@@ -667,6 +715,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	 */
 	protected List<? extends Location> definition(CancelIndicator cancelIndicator,
 			TextDocumentPositionParams params) {
+		if (useNew) {
+			return Collections.emptyList();
+		}
 		URI uri = getURI(params);
 		DocumentSymbolService documentSymbolService = getService(uri, DocumentSymbolService.class);
 		if (documentSymbolService == null) {
@@ -708,6 +759,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	 */
 	protected List<Either<SymbolInformation, DocumentSymbol>> documentSymbol(DocumentSymbolParams params,
 			CancelIndicator cancelIndicator) {
+		if (useNew) {
+			return Collections.emptyList();
+		}
 		URI uri = getURI(params.getTextDocument());
 		IDocumentSymbolService documentSymbolService = getIDocumentSymbolService(getResourceServiceProvider(uri));
 		if ((documentSymbolService == null)) {
@@ -762,6 +816,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	 * Compute the symbol information. Executed in a read request.
 	 */
 	protected List<? extends SymbolInformation> symbol(WorkspaceSymbolParams params, CancelIndicator cancelIndicator) {
+		if (useNew) {
+			return Collections.emptyList();
+		}
 		return workspaceSymbolService.getSymbols(params.getQuery(),
 				resourceAccess, workspaceManager.getIndex(),
 				cancelIndicator);
@@ -776,6 +833,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	 * Compute the hover. Executed in a read request.
 	 */
 	protected Hover hover(TextDocumentPositionParams params, CancelIndicator cancelIndicator) {
+		if (useNew) {
+			return IHoverService.EMPTY_HOVER;
+		}
 		URI uri = getURI(params);
 		IHoverService hoverService = getService(uri, IHoverService.class);
 		if (hoverService == null) {
@@ -800,6 +860,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	 * Compute the signature help. Executed in a read request.
 	 */
 	protected SignatureHelp signatureHelp(TextDocumentPositionParams params, CancelIndicator cancelIndicator) {
+		if (useNew) {
+			return ISignatureHelpService.EMPTY;
+		}
 		URI uri = getURI(params);
 		ISignatureHelpService helper = getService(uri, ISignatureHelpService.class);
 		if (helper == null) {
@@ -822,6 +885,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	 */
 	protected List<? extends DocumentHighlight> documentHighlight(TextDocumentPositionParams params,
 			CancelIndicator cancelIndicator) {
+		if (useNew) {
+			return Collections.emptyList();
+		}
 		URI uri = getURI(params);
 		IDocumentHighlightService service = getService(uri, IDocumentHighlightService.class);
 		if (service == null) {
@@ -841,6 +907,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	 * Compute the code action commands. Executed in a read request.
 	 */
 	protected List<Either<Command, CodeAction>> codeAction(CodeActionParams params, CancelIndicator cancelIndicator) {
+		if (useNew) {
+			return Collections.emptyList();
+		}
 		URI uri = getURI(params.getTextDocument());
 		IResourceServiceProvider serviceProvider = getResourceServiceProvider(uri);
 		ICodeActionService service = getService(serviceProvider, ICodeActionService.class);

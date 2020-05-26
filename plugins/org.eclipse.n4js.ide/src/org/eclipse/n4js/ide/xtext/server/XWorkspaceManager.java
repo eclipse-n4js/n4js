@@ -93,6 +93,10 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	// GH-1552: concurrent map
 	private final Map<String, ResourceDescriptionsData> fullIndex = new ConcurrentHashMap<>();
 
+	/* package */ Map<String, ResourceDescriptionsData> getFullIndex() {
+		return fullIndex;
+	}
+
 	private final Map<URI, XDocument> openDocuments = new ConcurrentHashMap<>();
 
 	/**
@@ -353,16 +357,16 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 
 	/** Mark the given document as saved. */
 	public XBuildManager.XBuildable didSave(URI uri) {
-		XDocument document = openDocuments.computeIfPresent(uri, (any, doc) -> {
-			if (doc.isDirty()) {
-				return doc.save();
-			}
-			return doc;
-		});
-		if (document == null) {
-			LOG.error("The document " + uri + " has not been opened.");
-			return XBuildable.NO_BUILD;
-		}
+		// XDocument document = openDocuments.computeIfPresent(uri, (any, doc) -> {
+		// if (doc.isDirty()) {
+		// return doc.save();
+		// }
+		// return doc;
+		// });
+		// if (document == null) {
+		// LOG.error("The document " + uri + " has not been opened.");
+		// return XBuildable.NO_BUILD;
+		// }
 
 		WorkspaceChanges notifiedChanges = WorkspaceChanges.createUrisChanged(ImmutableList.of(uri));
 		WorkspaceChanges workspaceChanges = ((XIWorkspaceConfig) getWorkspaceConfig()).update(uri,

@@ -153,6 +153,8 @@ public class XProjectManager {
 		Multimap<URI, Issue> validationIssues = projectStateHolder.getValidationIssues();
 		for (URI location : validationIssues.keys()) {
 			Collection<Issue> issues = validationIssues.get(location);
+			if (XLanguageServerImpl.useNew)
+				continue;
 			issueAcceptor.publishDiagnostics(location, issues);
 		}
 

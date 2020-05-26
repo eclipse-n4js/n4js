@@ -28,8 +28,15 @@ public class WorkspaceAwareCanLoadFromDescriptionHelper extends CanLoadFromDescr
 	@Inject
 	private XWorkspaceManager workspaceManager;
 
+	@Inject
+	private XOpenFileManager openFileManager;
+
 	@Override
 	public Resource createResource(ResourceSet resourceSet, URI resourceURI) {
+		if (openFileManager.isResourceSetOfOpenFile(resourceSet)) {
+			// for resource sets used for open files we use the default behavior:
+			return super.createResource(resourceSet, resourceURI);
+		}
 		XtextResourceSet projectResourceSet = workspaceManager.getProjectManager(resourceURI).getResourceSet();
 		return super.createResource(projectResourceSet, resourceURI);
 	}
