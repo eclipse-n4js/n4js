@@ -33,7 +33,8 @@ public class WorkspaceAwareCanLoadFromDescriptionHelper extends CanLoadFromDescr
 
 	@Override
 	public Resource createResource(ResourceSet resourceSet, URI resourceURI) {
-		if (openFileManager.isResourceSetOfOpenFile(resourceSet)) {
+		ResourceSet openFileResourceSet = openFileManager.getOrCreateResourceSetForURI(resourceSet, resourceURI);
+		if (openFileResourceSet != null) {
 			// for resource sets used for open files we use the default behavior:
 			return super.createResource(resourceSet, resourceURI);
 		}
