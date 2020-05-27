@@ -38,6 +38,7 @@ import org.eclipse.xtext.util.LazyStringInputStream;
 import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue;
+import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.inject.Inject;
@@ -103,10 +104,10 @@ public class XOpenFileManager {
 			}
 			ResourceSet resourceSetForURI = getResourceSetForURI(info, uri, loadOnDemand);
 			if (resourceSetForURI != null) {
-				if (resourceSetForURI != this.resourceSet) {
-					return resourceSetForURI.getResource(uri, loadOnDemand);
+				if (resourceSetForURI == this.resourceSet) { // avoid infinite loop
+					return basicGetResource(uri, loadOnDemand);
 				}
-				return basicGetResource(uri, loadOnDemand);
+				return resourceSetForURI.getResource(uri, loadOnDemand);
 			}
 			return null;
 		}
@@ -169,7 +170,14 @@ public class XOpenFileManager {
 
 	protected ResourceSet getResourceSetForURI(OpenFileInfo info, URI uri, boolean createOnDemand) {
 		@SuppressWarnings("restriction")
-		String containerHandle = workspaceManager.getProjectConfig(uri).getName();
+		IProjectConfig projectConfig = workspaceManager.getProjectConfig(uri);
+		if (projectConfig == null) {
+			// happens for built-in types, etc. -> put it into the resource set of the main resource
+			// FIXME reconsider (could also be put into its own resource set; check how main builder is doing it)
+			return info.containerHandle2ResourceSet.get(info.projectName);
+		}
+		@SuppressWarnings("restriction")
+		String containerHandle = projectConfig.getName();
 		ResourceSet result = info.containerHandle2ResourceSet.get(containerHandle);
 		if (result == null && createOnDemand) {
 			result = createNewResourceSet(containerHandle);
@@ -181,9 +189,7 @@ public class XOpenFileManager {
 	protected ResourceSet createNewResourceSet(String projectName) {
 		XtextResourceSet result = resourceSetProvider.get();
 
-		// result.setURIResourceMap(uriResourceMap);
-		// new WorkspaceAwareResourceLocator(result, workspaceManager);
-		// new OpenFileResourceLocator(result);
+		OpenFileResourceLocator resourceLocator = new OpenFileResourceLocator(result);
 		ProjectDescription projectDescription = new ProjectDescription();
 		projectDescription.setName(projectName);
 		projectDescription.attachToEmfObject(result); // required by ChunkedResourceDescriptions
