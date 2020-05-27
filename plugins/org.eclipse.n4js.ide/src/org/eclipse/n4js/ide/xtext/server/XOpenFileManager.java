@@ -18,8 +18,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -33,7 +31,6 @@ import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
-import org.eclipse.xtext.resource.impl.ChunkedResourceDescriptions;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -115,54 +112,6 @@ public class XOpenFileManager {
 		}
 	}
 
-	public static class MyChunkedResourceDescriptions extends ChunkedResourceDescriptions {
-
-		private final ResourceDescriptionsData openFilesIndex;
-
-		public MyChunkedResourceDescriptions(ConcurrentHashMap<String, ResourceDescriptionsData> initialData,
-				ResourceSet resourceSet, ResourceDescriptionsData openFilesIndex) {
-			super(initialData, resourceSet);
-			this.openFilesIndex = openFilesIndex;
-			this.chunk2resourceDescriptions = initialData; // avoid creation of a copy!
-		}
-
-		@Override
-		public IResourceDescription getResourceDescription(URI uri) {
-			IResourceDescription shadowingDesc = openFilesIndex.getResourceDescription(uri);
-			if (shadowingDesc != null) {
-				return shadowingDesc;
-			}
-			return super.getResourceDescription(uri);
-		}
-
-		@Override
-		public ResourceDescriptionsData getContainer(String containerHandle) {
-			// FIXME the following is super slow!
-			ResourceDescriptionsData data = super.getContainer(containerHandle);
-			List<IResourceDescription> descs = StreamSupport
-					.stream(data.getAllResourceDescriptions().spliterator(), false)
-					.map(desc -> {
-						IResourceDescription shadowingDesc = openFilesIndex.getResourceDescription(desc.getURI());
-						return shadowingDesc != null ? shadowingDesc : desc;
-					})
-					.collect(Collectors.toList());
-			return new ResourceDescriptionsData(descs);
-		}
-	}
-
-	// public static class MyDummyResourceDescriptions extends ResourceDescriptionsData {
-	//
-	// public MyDummyResourceDescriptions(Iterable<IResourceDescription> descriptions) {
-	// super(descriptions);
-	// }
-	//
-	// @Override
-	// public IResourceDescription getResourceDescription(URI uri) {
-	// System.out.println("!!!");
-	// return super.getResourceDescription(uri);
-	// }
-	// }
-
 	protected OpenFileInfo findInfo(ResourceSet resourceSet) {
 		return openFiles.values().stream()
 				.filter(ofi -> ofi.containerHandle2ResourceSet.containsValue(resourceSet))
@@ -240,7 +189,8 @@ public class XOpenFileManager {
 		projectDescription.attachToEmfObject(result); // required by ChunkedResourceDescriptions
 		ConcurrentHashMap<String, ResourceDescriptionsData> concurrentMap = (ConcurrentHashMap<String, ResourceDescriptionsData>) workspaceManager
 				.getFullIndex();
-		MyChunkedResourceDescriptions index = new MyChunkedResourceDescriptions(concurrentMap, result, openFilesIndex);
+		DirtyStateAwareChunkedResourceDescriptions index = new DirtyStateAwareChunkedResourceDescriptions(concurrentMap,
+				result, openFilesIndex);
 		// ResourceDescriptionsData newIndex = new XIndexState().getResourceDescriptions();
 		// index.setContainer("Test", newIndex);
 		// externalContentSupport.configureResourceSet(result, workspaceManager.getOpenedDocumentsContentProvider());
