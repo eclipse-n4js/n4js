@@ -171,7 +171,7 @@ public class XOpenFileManager {
 		@SuppressWarnings("restriction")
 		String containerHandle = workspaceManager.getProjectConfig(uri).getName();
 		ResourceSet result = info.containerHandle2ResourceSet.get(containerHandle);
-		if (result == null) {
+		if (result == null && createOnDemand) {
 			result = createNewResourceSet(containerHandle);
 			info.containerHandle2ResourceSet.put(containerHandle, result);
 		}
