@@ -101,6 +101,7 @@ import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
 import org.eclipse.n4js.ide.xtext.server.concurrent.XRequestManager;
 import org.eclipse.n4js.ide.xtext.server.contentassist.XContentAssistService;
 import org.eclipse.n4js.ide.xtext.server.findReferences.XWorkspaceResourceAccess;
+import org.eclipse.n4js.ide.xtext.server.openfiles.OpenFilesManager;
 import org.eclipse.n4js.ide.xtext.server.rename.XIRenameService;
 import org.eclipse.xtext.findReferences.IReferenceFinder;
 import org.eclipse.xtext.ide.server.Document;
@@ -160,7 +161,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		Endpoint, JsonRpcMethodProvider, IBuildListener {
 
 	@Inject
-	private XOpenFileManager openFileManager;
+	private OpenFilesManager openFileManager;
 
 	public static boolean useNew = true;
 

@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.xtext.server;
+package org.eclipse.n4js.ide.xtext.server.openfiles;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,6 +26,10 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.ResourceLocator;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
+import org.eclipse.n4js.ide.xtext.server.IssueAcceptor;
+import org.eclipse.n4js.ide.xtext.server.XDocument;
+import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
+import org.eclipse.n4js.ide.xtext.server.util.DirtyStateAwareChunkedResourceDescriptions;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
@@ -47,7 +51,7 @@ import com.google.inject.Singleton;
 
 @SuppressWarnings("javadoc")
 @Singleton
-public class XOpenFileManager {
+public class OpenFilesManager {
 
 	@Inject
 	private IssueAcceptor issueAcceptor;
@@ -65,22 +69,22 @@ public class XOpenFileManager {
 	private XWorkspaceManager workspaceManager;
 
 	protected final Map<URI, OpenFileInfo> openFiles = new HashMap<>();
-	protected final ResourceDescriptionsData openFilesIndex = new ResourceDescriptionsData(Collections.emptyList());
+	protected final ResourceDescriptionsData sharedDirtyState = new ResourceDescriptionsData(Collections.emptyList());
 
 	protected static class OpenFileInfo {
 
 		/** URI of the open file (i.e. URI of the main resource). */
-		final URI uri;
+		protected final URI uri;
 		/** Name of project containing the open file. */
-		final String projectName;
+		protected final String projectName;
 		/** The EMF resource representing the open file. */
-		final XtextResource resource;
+		protected final XtextResource resource;
 		/** The current textual content of the open file. */
-		XDocument document;
+		protected XDocument document;
 
-		final Map<String, ResourceSet> containerHandle2ResourceSet = new HashMap<>();
+		protected final Map<String, ResourceSet> containerHandle2ResourceSet = new HashMap<>();
 
-		public OpenFileInfo(URI uri, String projectName, ResourceSet resourceSet, XtextResource resource) {
+		protected OpenFileInfo(URI uri, String projectName, ResourceSet resourceSet, XtextResource resource) {
 			this.uri = uri;
 			this.projectName = projectName;
 			this.resource = resource;
@@ -123,7 +127,7 @@ public class XOpenFileManager {
 		if (openFiles.containsKey(uri)) {
 			return; // FIXME content gets lost in this case!
 		}
-		OpenFileInfo info = createNewOpenFileInfo(uri);
+		OpenFileInfo info = createOpenFileInfo(uri);
 		openFiles.put(uri, info);
 
 		initOpenFile(info, version, content, CancelIndicator.NullImpl); // FIXME use proper indicator!
@@ -140,15 +144,15 @@ public class XOpenFileManager {
 
 	public void closeFile(URI uri) {
 		openFiles.remove(uri);
-		openFilesIndex.removeDescription(uri);
+		sharedDirtyState.removeDescription(uri);
 		// TODO closing a file may lead to a change in other open files
 		// TODO what about publishing diagnostics, here?
 	}
 
-	protected OpenFileInfo createNewOpenFileInfo(URI uri) {
+	protected OpenFileInfo createOpenFileInfo(URI uri) {
 		@SuppressWarnings("restriction")
 		String projectName = workspaceManager.getProjectConfig(uri).getName();
-		ResourceSet resourceSet = createNewResourceSet(projectName);
+		ResourceSet resourceSet = createResourceSet(projectName);
 		XtextResource resource = (XtextResource) resourceSet.createResource(uri);
 		OpenFileInfo info = new OpenFileInfo(uri, projectName, resourceSet, resource);
 		return info;
@@ -180,13 +184,13 @@ public class XOpenFileManager {
 		String containerHandle = projectConfig.getName();
 		ResourceSet result = info.containerHandle2ResourceSet.get(containerHandle);
 		if (result == null && createOnDemand) {
-			result = createNewResourceSet(containerHandle);
+			result = createResourceSet(containerHandle);
 			info.containerHandle2ResourceSet.put(containerHandle, result);
 		}
 		return result;
 	}
 
-	protected ResourceSet createNewResourceSet(String projectName) {
+	protected ResourceSet createResourceSet(String projectName) {
 		XtextResourceSet result = resourceSetProvider.get();
 
 		OpenFileResourceLocator resourceLocator = new OpenFileResourceLocator(result);
@@ -196,7 +200,7 @@ public class XOpenFileManager {
 		ConcurrentHashMap<String, ResourceDescriptionsData> concurrentMap = (ConcurrentHashMap<String, ResourceDescriptionsData>) workspaceManager
 				.getFullIndex();
 		DirtyStateAwareChunkedResourceDescriptions index = new DirtyStateAwareChunkedResourceDescriptions(concurrentMap,
-				result, openFilesIndex);
+				result, sharedDirtyState);
 		// ResourceDescriptionsData newIndex = new XIndexState().getResourceDescriptions();
 		// index.setContainer("Test", newIndex);
 		// externalContentSupport.configureResourceSet(result, workspaceManager.getOpenedDocumentsContentProvider());
@@ -272,10 +276,10 @@ public class XOpenFileManager {
 		List<Issue> issues = resourceValidator.validate(info.resource, CheckMode.ALL, cancelIndicator);
 		issueAcceptor.publishDiagnostics(info.uri, issues);
 		// update index of open files
-		IResourceDescription oldDesc = openFilesIndex.getResourceDescription(info.uri);
+		IResourceDescription oldDesc = sharedDirtyState.getResourceDescription(info.uri);
 		IResourceDescription newDesc = createResourceDescription(info);
 		IResourceDescription.Delta delta = resourceDescriptionManager.createDelta(oldDesc, newDesc);
-		openFilesIndex.register(delta);
+		sharedDirtyState.register(delta);
 		// notify
 		onResourceChanged(delta, cancelIndicator);
 	}
@@ -300,7 +304,7 @@ public class XOpenFileManager {
 			if (candidateInfo.uri.equals(changedURI)) {
 				continue;
 			}
-			IResourceDescription candidateDesc = openFilesIndex.getResourceDescription(candidateInfo.uri);
+			IResourceDescription candidateDesc = sharedDirtyState.getResourceDescription(candidateInfo.uri);
 			if (resourceDescriptionManager.isAffected(delta, candidateDesc)) {
 				affectedInfos.add(candidateInfo);
 			}

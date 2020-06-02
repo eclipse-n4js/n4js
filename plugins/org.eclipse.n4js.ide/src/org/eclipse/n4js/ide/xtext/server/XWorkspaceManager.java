@@ -93,7 +93,7 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	// GH-1552: concurrent map
 	private final Map<String, ResourceDescriptionsData> fullIndex = new ConcurrentHashMap<>();
 
-	/* package */ Map<String, ResourceDescriptionsData> getFullIndex() {
+	public Map<String, ResourceDescriptionsData> getFullIndex() {
 		return fullIndex;
 	}
 
