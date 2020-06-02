@@ -10,40 +10,19 @@
  */
 package org.eclipse.n4js.ide.xtext.server.openfiles;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.ResourceLocator;
-import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
-import org.eclipse.n4js.ide.xtext.server.IssueAcceptor;
-import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
-import org.eclipse.n4js.ide.xtext.server.util.DirtyStateAwareChunkedResourceDescriptions;
-import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.resource.IResourceDescription;
-import org.eclipse.xtext.resource.IResourceServiceProvider;
-import org.eclipse.xtext.resource.XtextResource;
-import org.eclipse.xtext.resource.XtextResourceSet;
-import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.util.CancelIndicator;
-import org.eclipse.xtext.util.LazyStringInputStream;
-import org.eclipse.xtext.validation.CheckMode;
-import org.eclipse.xtext.validation.IResourceValidator;
-import org.eclipse.xtext.validation.Issue;
-import org.eclipse.xtext.workspace.IProjectConfig;
-import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -54,92 +33,34 @@ import com.google.inject.Singleton;
 public class OpenFilesManager {
 
 	@Inject
-	private IssueAcceptor issueAcceptor;
+	private XWorkspaceManager workspaceManager;
 
 	@Inject
-	private Provider<XtextResourceSet> resourceSetProvider;
+	private Provider<OpenFileManager> openFileManagerProvider;
 
 	@Inject
 	private IResourceDescription.Manager resourceDescriptionManager;
 
-	@Inject
-	private IResourceServiceProvider.Registry languagesRegistry;
-
-	@Inject
-	private XWorkspaceManager workspaceManager;
-
-	protected final Map<URI, OpenFileInfo> openFiles = new HashMap<>();
+	protected final Map<URI, OpenFileManager> openFiles = new HashMap<>();
 	protected final ResourceDescriptionsData sharedDirtyState = new ResourceDescriptionsData(Collections.emptyList());
-
-	protected static class OpenFileInfo {
-
-		/** URI of the open file (i.e. URI of the main resource). */
-		protected final URI uri;
-		/** Name of project containing the open file. */
-		protected final String projectName;
-		/** The EMF resource representing the open file. */
-		protected final XtextResource resource;
-		/** The current textual content of the open file. */
-		protected XDocument document;
-
-		protected final Map<String, ResourceSet> containerHandle2ResourceSet = new HashMap<>();
-
-		protected OpenFileInfo(URI uri, String projectName, ResourceSet resourceSet, XtextResource resource) {
-			this.uri = uri;
-			this.projectName = projectName;
-			this.resource = resource;
-			this.document = null;
-			containerHandle2ResourceSet.put(projectName, resourceSet);
-		}
-	}
-
-	public class OpenFileResourceLocator extends ResourceLocator {
-
-		private OpenFileInfo info;
-
-		public OpenFileResourceLocator(ResourceSetImpl resourceSet) {
-			super(resourceSet);
-		}
-
-		@Override
-		public Resource getResource(URI uri, boolean loadOnDemand) {
-			if (info == null) {
-				info = findInfo(resourceSet);
-			}
-			ResourceSet resourceSetForURI = getResourceSetForURI(info, uri, loadOnDemand);
-			if (resourceSetForURI != null) {
-				if (resourceSetForURI == this.resourceSet) { // avoid infinite loop
-					return basicGetResource(uri, loadOnDemand);
-				}
-				return resourceSetForURI.getResource(uri, loadOnDemand);
-			}
-			return null;
-		}
-	}
-
-	protected OpenFileInfo findInfo(ResourceSet resourceSet) {
-		return openFiles.values().stream()
-				.filter(ofi -> ofi.containerHandle2ResourceSet.containsValue(resourceSet))
-				.findAny().orElse(null);
-	}
 
 	public void openFile(URI uri, int version, String content) {
 		if (openFiles.containsKey(uri)) {
 			return; // FIXME content gets lost in this case!
 		}
-		OpenFileInfo info = createOpenFileInfo(uri);
-		openFiles.put(uri, info);
-
-		initOpenFile(info, version, content, CancelIndicator.NullImpl); // FIXME use proper indicator!
+		OpenFileManager ofm = createOpenFileManager(uri);
+		openFiles.put(uri, ofm);
+		ofm.initOpenFile(version, content, CancelIndicator.NullImpl); // FIXME use proper indicator!
 	}
 
 	public void changeFile(URI uri, int version, Iterable<? extends TextDocumentContentChangeEvent> changes,
 			CancelIndicator cancelIndicator) {
-		OpenFileInfo info = openFiles.get(uri);
-		if (info == null) {
+
+		OpenFileManager ofm = openFiles.get(uri);
+		if (ofm == null) {
 			return;
 		}
-		refreshOpenFile(info, changes, cancelIndicator);
+		ofm.refreshOpenFile(changes, cancelIndicator);
 	}
 
 	public void closeFile(URI uri) {
@@ -149,13 +70,12 @@ public class OpenFilesManager {
 		// TODO what about publishing diagnostics, here?
 	}
 
-	protected OpenFileInfo createOpenFileInfo(URI uri) {
+	protected OpenFileManager createOpenFileManager(URI uri) {
 		@SuppressWarnings("restriction")
 		String projectName = workspaceManager.getProjectConfig(uri).getName();
-		ResourceSet resourceSet = createResourceSet(projectName);
-		XtextResource resource = (XtextResource) resourceSet.createResource(uri);
-		OpenFileInfo info = new OpenFileInfo(uri, projectName, resourceSet, resource);
-		return info;
+		OpenFileManager ofm = openFileManagerProvider.get();
+		ofm.init(uri, projectName);
+		return ofm;
 	}
 
 	/**
@@ -165,157 +85,44 @@ public class OpenFilesManager {
 	 */
 	// FIXME find better solution for this:
 	public ResourceSet getOrCreateResourceSetForURI(ResourceSet origin, URI uri) {
-		OpenFileInfo info = findInfo(origin);
-		if (info == null) {
+		OpenFileManager ofm = findOpenFileManager(origin);
+		if (ofm == null) {
 			return null; // origin is not a resource set related to an open file
 		}
-		return getResourceSetForURI(info, uri, true);
+		return ofm.getResourceSetForURI(uri, true);
 	}
 
-	protected ResourceSet getResourceSetForURI(OpenFileInfo info, URI uri, boolean createOnDemand) {
-		@SuppressWarnings("restriction")
-		IProjectConfig projectConfig = workspaceManager.getProjectConfig(uri);
-		if (projectConfig == null) {
-			// happens for built-in types, etc. -> put it into the resource set of the main resource
-			// FIXME reconsider (could also be put into its own resource set; check how main builder is doing it)
-			return info.containerHandle2ResourceSet.get(info.projectName);
-		}
-		@SuppressWarnings("restriction")
-		String containerHandle = projectConfig.getName();
-		ResourceSet result = info.containerHandle2ResourceSet.get(containerHandle);
-		if (result == null && createOnDemand) {
-			result = createResourceSet(containerHandle);
-			info.containerHandle2ResourceSet.put(containerHandle, result);
-		}
-		return result;
+	protected OpenFileManager findOpenFileManager(ResourceSet resourceSet) {
+		return openFiles.values().stream()
+				.filter(ofi -> ofi.containerHandle2ResourceSet.containsValue(resourceSet))
+				.findAny().orElse(null);
 	}
 
-	protected ResourceSet createResourceSet(String projectName) {
-		XtextResourceSet result = resourceSetProvider.get();
-
-		OpenFileResourceLocator resourceLocator = new OpenFileResourceLocator(result);
-		ProjectDescription projectDescription = new ProjectDescription();
-		projectDescription.setName(projectName);
-		projectDescription.attachToEmfObject(result); // required by ChunkedResourceDescriptions
-		ConcurrentHashMap<String, ResourceDescriptionsData> concurrentMap = (ConcurrentHashMap<String, ResourceDescriptionsData>) workspaceManager
-				.getFullIndex();
-		DirtyStateAwareChunkedResourceDescriptions index = new DirtyStateAwareChunkedResourceDescriptions(concurrentMap,
-				result, sharedDirtyState);
-		// ResourceDescriptionsData newIndex = new XIndexState().getResourceDescriptions();
-		// index.setContainer("Test", newIndex);
-		// externalContentSupport.configureResourceSet(result, workspaceManager.getOpenedDocumentsContentProvider());
-
-		// ConcurrentHashMap<String, ResourceDescriptionsData> concurrentMap = (ConcurrentHashMap<String,
-		// ResourceDescriptionsData>) workspaceManager
-		// .getFullIndex();
-		// ResourceDescriptionsData index = new MyDummyResourceDescriptions(Collections.emptyList());
-		// ResourceDescriptionsData.ResourceSetAdapter.installResourceDescriptionsData(result, index);
-
-		return result;
-	}
-
-	protected void initOpenFile(OpenFileInfo info, int version, String content, CancelIndicator cancelIndicator) {
-		if (info.resource.isLoaded()) {
-			throw new IllegalStateException("trying to initialize an already loaded resource: " + info.uri);
-		}
-
-		info.document = new XDocument(version, content);
-
-		try (InputStream in = new LazyStringInputStream(info.document.getContents(), info.resource.getEncoding())) {
-			info.resource.load(in, null);
-		} catch (IOException e) {
-			throw new RuntimeException("IOException while reading from string input stream", e);
-		}
-
-		resolveAndValidateOpenFile(info, cancelIndicator);
-	}
-
-	protected void refreshOpenFile(OpenFileInfo info, CancelIndicator cancelIndicator) {
-		// FIXME find better solution for updating unchanged open files!
-		TextDocumentContentChangeEvent dummyChange = new TextDocumentContentChangeEvent(info.document.getContents());
-		refreshOpenFile(info, Collections.singletonList(dummyChange), cancelIndicator);
-	}
-
-	protected void refreshOpenFile(OpenFileInfo info, Iterable<? extends TextDocumentContentChangeEvent> changes,
-			CancelIndicator cancelIndicator) {
-		if (!info.resource.isLoaded()) {
-			throw new IllegalStateException("trying to refresh a resource that is not loaded: " + info.uri);
-		}
-
-		// TODO the following is only necessary for changed files:
-		for (ResourceSet resSet : info.containerHandle2ResourceSet.values()) {
-			for (Resource res : new ArrayList<>(resSet.getResources())) {
-				if (res != info.resource) {
-					res.unload();
-					resSet.getResources().remove(res);
-				}
-			}
-		}
-
-		for (TextDocumentContentChangeEvent change : changes) {
-			Range range = change.getRange();
-			int start = range != null ? info.document.getOffSet(range.getStart()) : 0;
-			int end = range != null ? info.document.getOffSet(range.getEnd()) : info.document.getContents().length();
-			String replacement = change.getText();
-
-			info.document = info.document.applyTextDocumentChanges(Collections.singletonList(change));
-
-			info.resource.update(start, end - start, replacement);
-		}
-
-		resolveAndValidateOpenFile(info, cancelIndicator);
-	}
-
-	protected void resolveAndValidateOpenFile(OpenFileInfo info, CancelIndicator cancelIndicator) {
-		// resolve
-		EcoreUtil2.resolveLazyCrossReferences(info.resource, cancelIndicator);
-		// validate
-		IResourceServiceProvider resourceServiceProvider = languagesRegistry.getResourceServiceProvider(info.uri);
-		IResourceValidator resourceValidator = resourceServiceProvider.getResourceValidator();
-		// notify client
-		List<Issue> issues = resourceValidator.validate(info.resource, CheckMode.ALL, cancelIndicator);
-		issueAcceptor.publishDiagnostics(info.uri, issues);
-		// update index of open files
-		IResourceDescription oldDesc = sharedDirtyState.getResourceDescription(info.uri);
-		IResourceDescription newDesc = createResourceDescription(info);
-		IResourceDescription.Delta delta = resourceDescriptionManager.createDelta(oldDesc, newDesc);
-		sharedDirtyState.register(delta);
-		// notify
-		onResourceChanged(delta, cancelIndicator);
-	}
-
-	protected IResourceDescription createResourceDescription(OpenFileInfo info) {
-		IResourceDescription newDesc = resourceDescriptionManager.getResourceDescription(info.resource);
-		// trigger lazy serialization of TModule
-		// FIXME why is this required?
-		IterableExtensions.forEach(newDesc.getExportedObjects(), eobjDesc -> eobjDesc.getUserDataKeys());
-		return newDesc;
-	}
-
-	private boolean refreshingAffectedFiles = false;
+	private boolean refreshingAffectedOpenFiles = false; // FIXME thread safety!
 
 	protected void onResourceChanged(IResourceDescription.Delta delta, CancelIndicator cancelIndicator) {
-		if (refreshingAffectedFiles) {
+		if (refreshingAffectedOpenFiles) {
 			return;
 		}
 		URI changedURI = delta.getUri();
-		List<OpenFileInfo> affectedInfos = new ArrayList<>();
-		for (OpenFileInfo candidateInfo : openFiles.values()) {
-			if (candidateInfo.uri.equals(changedURI)) {
+		List<OpenFileManager> affectedOFMs = new ArrayList<>();
+		for (OpenFileManager candidateOFM : openFiles.values()) {
+			URI candidateURI = candidateOFM.getURI();
+			if (candidateURI.equals(changedURI)) {
 				continue;
 			}
-			IResourceDescription candidateDesc = sharedDirtyState.getResourceDescription(candidateInfo.uri);
+			IResourceDescription candidateDesc = sharedDirtyState.getResourceDescription(candidateURI);
 			if (resourceDescriptionManager.isAffected(delta, candidateDesc)) {
-				affectedInfos.add(candidateInfo);
+				affectedOFMs.add(candidateOFM);
 			}
 		}
 		try {
-			refreshingAffectedFiles = true;
-			for (OpenFileInfo affectedInfo : affectedInfos) {
-				refreshOpenFile(affectedInfo, cancelIndicator);
+			refreshingAffectedOpenFiles = true;
+			for (OpenFileManager affectedOFM : affectedOFMs) {
+				affectedOFM.refreshOpenFile(cancelIndicator);
 			}
 		} finally {
-			refreshingAffectedFiles = false;
+			refreshingAffectedOpenFiles = false;
 		}
 	}
 }
