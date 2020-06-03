@@ -31,30 +31,30 @@ import com.google.common.collect.Iterables;
  */
 public class DirtyStateAwareChunkedResourceDescriptions extends ChunkedResourceDescriptions {
 
-	protected final ResourceDescriptionsData sharedDirtyState; // FIXME thread safety!
+	protected final ResourceDescriptionsData dirtyState;
 
 	public DirtyStateAwareChunkedResourceDescriptions(ConcurrentHashMap<String, ResourceDescriptionsData> initialData,
-			ResourceSet resourceSet, ResourceDescriptionsData sharedDirtyState) {
+			ResourceSet resourceSet, ResourceDescriptionsData dirtyState) {
 		super(initialData, resourceSet);
 		this.chunk2resourceDescriptions = initialData; // avoid creation of a copy!
-		this.sharedDirtyState = sharedDirtyState;
+		this.dirtyState = dirtyState;
 	}
 
 	@Override
 	@SuppressWarnings("hiding")
 	public ChunkedResourceDescriptions createShallowCopyWith(ResourceSet resourceSet) {
 		return new DirtyStateAwareChunkedResourceDescriptions(chunk2resourceDescriptions, resourceSet,
-				sharedDirtyState);
+				dirtyState);
 	}
 
 	@Override
 	public boolean isEmpty() {
-		return sharedDirtyState.isEmpty() && super.isEmpty();
+		return dirtyState.isEmpty() && super.isEmpty();
 	}
 
 	@Override
 	public IResourceDescription getResourceDescription(URI uri) {
-		IResourceDescription shadowingDesc = sharedDirtyState.getResourceDescription(uri);
+		IResourceDescription shadowingDesc = dirtyState.getResourceDescription(uri);
 		if (shadowingDesc == null) {
 			shadowingDesc = super.getResourceDescription(uri);
 		}
@@ -64,21 +64,21 @@ public class DirtyStateAwareChunkedResourceDescriptions extends ChunkedResourceD
 	@Override
 	public Iterable<IResourceDescription> getAllResourceDescriptions() {
 		return ShadowingResourceDescriptionsData.concatResourceDescriptionsWithShadowing(
-				sharedDirtyState.getAllURIs(),
-				sharedDirtyState.getAllResourceDescriptions(),
+				dirtyState.getAllURIs(),
+				dirtyState.getAllResourceDescriptions(),
 				super.getAllResourceDescriptions());
 	}
 
 	@Override
 	public ResourceDescriptionsData getContainer(String containerHandle) {
 		ResourceDescriptionsData data = super.getContainer(containerHandle);
-		return new ShadowingResourceDescriptionsData(sharedDirtyState, data);
+		return new ShadowingResourceDescriptionsData(dirtyState, data);
 	}
 
 	@Override
 	public ResourceDescriptionsData getContainer(URI uri) {
 		ResourceDescriptionsData data = super.getContainer(uri);
-		return new ShadowingResourceDescriptionsData(sharedDirtyState, data);
+		return new ShadowingResourceDescriptionsData(dirtyState, data);
 	}
 
 	/**

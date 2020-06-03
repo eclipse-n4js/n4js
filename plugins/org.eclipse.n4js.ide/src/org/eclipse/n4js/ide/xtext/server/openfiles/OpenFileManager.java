@@ -58,9 +58,6 @@ public class OpenFileManager {
 	protected XWorkspaceManager workspaceManager; // FIXME try to get rid of this
 
 	@Inject
-	private OpenFilesManager allOpenFilesManager;
-
-	@Inject
 	private IssueAcceptor issueAcceptor;
 
 	@Inject
@@ -72,10 +69,18 @@ public class OpenFileManager {
 	@Inject
 	private IResourceServiceProvider.Registry languagesRegistry;
 
+	/** The {@link OpenFilesManager} that created this instance. */
+	protected OpenFilesManager parent;
 	/** URI of the open file represented by this {@link OpenFileManager} (i.e. URI of the main resource). */
 	protected URI mainURI;
 	/** Name of project containing the open file. */
 	protected String mainProjectName;
+
+	/**
+	 * Dirty state index of all open files. This instance is not shared across {@link OpenFileManager}s of different
+	 * open files, but is used across all resource sets in this manager's {@link #containerHandle2ResourceSet}.
+	 */
+	protected ResourceDescriptionsData dirtyState;
 	/** The EMF resource representing the open file. */
 	protected XtextResource mainResource;
 	/** The current textual content of the open file. */
@@ -87,9 +92,13 @@ public class OpenFileManager {
 		return mainURI;
 	}
 
-	public void init(URI uri, String projectName) {
+	public void initialize(OpenFilesManager parent, URI uri, String projectName,
+			ResourceDescriptionsData sharedDirtyState) {
+		this.parent = parent;
 		this.mainURI = uri;
 		this.mainProjectName = projectName;
+
+		this.dirtyState = sharedDirtyState.copy();
 
 		ResourceSet resourceSet = createResourceSet(projectName);
 		this.mainResource = (XtextResource) resourceSet.createResource(uri);
@@ -124,7 +133,7 @@ public class OpenFileManager {
 		ConcurrentHashMap<String, ResourceDescriptionsData> concurrentMap = (ConcurrentHashMap<String, ResourceDescriptionsData>) workspaceManager
 				.getFullIndex();
 		DirtyStateAwareChunkedResourceDescriptions index = new DirtyStateAwareChunkedResourceDescriptions(concurrentMap,
-				result, allOpenFilesManager.getSharedDirtyState()); // FIXME improve access to sharedDirtyState!
+				result, dirtyState);
 		// ResourceDescriptionsData newIndex = new XIndexState().getResourceDescriptions();
 		// index.setContainer("Test", newIndex);
 		// externalContentSupport.configureResourceSet(result, workspaceManager.getOpenedDocumentsContentProvider());
@@ -166,7 +175,7 @@ public class OpenFileManager {
 			throw new IllegalStateException("trying to refresh a resource that is not loaded: " + mainURI);
 		}
 
-		// TODO the following is only necessary for changed files:
+		// TODO the following is only necessary for changed files (could be moved to #updateDirtyState())
 		for (ResourceSet resSet : containerHandle2ResourceSet.values()) {
 			for (Resource res : new ArrayList<>(resSet.getResources())) {
 				if (res != mainResource) {
@@ -196,12 +205,25 @@ public class OpenFileManager {
 		// validate
 		IResourceServiceProvider resourceServiceProvider = languagesRegistry.getResourceServiceProvider(mainURI);
 		IResourceValidator resourceValidator = resourceServiceProvider.getResourceValidator();
-		// notify client
+		// notify LSP client
 		List<Issue> issues = resourceValidator.validate(mainResource, CheckMode.ALL, cancelIndicator);
 		issueAcceptor.publishDiagnostics(mainURI, issues);
-		// update index of open files
+		// update dirty state index (mine and those of all other open files)
 		IResourceDescription newDesc = createResourceDescription();
-		allOpenFilesManager.updateSharedDirtyState(mainURI, newDesc, cancelIndicator);
+		dirtyState.addDescription(mainURI, newDesc);
+		parent.updateSharedDirtyState(mainURI, newDesc, cancelIndicator);
+	}
+
+	/**
+	 * Invoked by {@link #parent} when a change happened in another open file (not the one managed by this
+	 * {@link OpenFileManager}).
+	 */
+	protected void onDirtyStateChanged(IResourceDescription.Delta delta, CancelIndicator cancelIndicator) {
+		dirtyState.register(delta);
+		IResourceDescription candidateDesc = dirtyState.getResourceDescription(mainURI);
+		if (resourceDescriptionManager.isAffected(delta, candidateDesc)) {
+			refreshOpenFile(cancelIndicator);
+		}
 	}
 
 	protected IResourceDescription createResourceDescription() {

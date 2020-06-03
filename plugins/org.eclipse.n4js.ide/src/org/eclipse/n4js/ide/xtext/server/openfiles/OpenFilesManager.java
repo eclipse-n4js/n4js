@@ -10,10 +10,8 @@
  */
 package org.eclipse.n4js.ide.xtext.server.openfiles;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -73,7 +71,13 @@ public class OpenFilesManager {
 	}
 
 	public synchronized void closeFile(URI uri) {
-		runInOpenFileContext(uri, ofm -> null, true);
+		// To allow running/pending tasks in the context of the given URI's file to complete normally, we put the call
+		// to #discardOpenFileInfo() on the queue (note: this does apply to tasks being submitted after this method
+		// returns and before #discardOpenFileInfo() is invoked).
+		// TODO reconsider sequence when closing files
+		runInOpenFileContext(uri, ofm -> {
+			discardOpenFileInfo(uri);
+		});
 	}
 
 	public synchronized CompletableFuture<Void> runInOpenFileContext(URI uri, Consumer<OpenFileManager> task) {
@@ -84,11 +88,6 @@ public class OpenFilesManager {
 	}
 
 	public synchronized <T> CompletableFuture<T> runInOpenFileContext(URI uri, Function<OpenFileManager, T> task) {
-		return runInOpenFileContext(uri, task, false);
-	}
-
-	protected synchronized <T> CompletableFuture<T> runInOpenFileContext(URI uri, Function<OpenFileManager, T> task,
-			boolean discardInfoWhenDone) {
 
 		OpenFileManager ofm = openFiles.get(uri);
 		if (ofm == null) {
@@ -97,16 +96,7 @@ public class OpenFilesManager {
 
 		Object queueId = getQueueIdForOpenFileContext(uri);
 		return lspExecutorService.submit(queueId, () -> {
-			try {
-				return task.apply(ofm);
-			} finally {
-				if (discardInfoWhenDone) {
-					// FIXME not working yet! might have gotten more tasks for this open file while running!
-					// consider (a) adding a filesBeingClosed set or (b) just say when closing files they disappear
-					// immediately (even for currently running/pending tasks in those files' contexts)
-					discardOpenFileInfo(uri);
-				}
-			}
+			return task.apply(ofm);
 		});
 	}
 
@@ -118,7 +108,7 @@ public class OpenFilesManager {
 		@SuppressWarnings("restriction")
 		String projectName = workspaceManager.getProjectConfig(uri).getName();
 		OpenFileManager ofm = openFileManagerProvider.get();
-		ofm.init(uri, projectName);
+		ofm.initialize(this, uri, projectName, sharedDirtyState);
 		return ofm;
 	}
 
@@ -137,7 +127,7 @@ public class OpenFilesManager {
 	 * resource set responsible for containing a resource with the given uri; otherwise <code>null</code> is returned.
 	 * Might return the origin resource set itself or might return a newly created resource set.
 	 */
-	// FIXME find better solution for this:
+	// FIXME find better solution for this (it's dirty to leak a manager's resource sets to the outside)
 	public synchronized ResourceSet getOrCreateResourceSetForURI(ResourceSet origin, URI uri) {
 		OpenFileManager ofm = findOpenFileManager(origin);
 		if (ofm == null) {
@@ -152,44 +142,20 @@ public class OpenFilesManager {
 				.findAny().orElse(null);
 	}
 
-	public ResourceDescriptionsData getSharedDirtyState() {
-		return sharedDirtyState; // FIXME consider making return value immutable (just create a copy?)
-	}
-
-	public synchronized void updateSharedDirtyState(URI uri, IResourceDescription newDesc,
+	protected synchronized void updateSharedDirtyState(URI uri, IResourceDescription newDesc,
 			CancelIndicator cancelIndicator) {
+		// update my dirty state instance
 		IResourceDescription oldDesc = sharedDirtyState.getResourceDescription(uri);
 		IResourceDescription.Delta delta = resourceDescriptionManager.createDelta(oldDesc, newDesc);
 		sharedDirtyState.register(delta);
-		// notify
-		onResourceChanged(delta, cancelIndicator);
-	}
-
-	private boolean refreshingAffectedOpenFiles = false; // FIXME does not work once actual refresh happens in tasks
-
-	protected synchronized void onResourceChanged(IResourceDescription.Delta delta, CancelIndicator cancelIndicator) {
-		if (refreshingAffectedOpenFiles) {
-			return;
-		}
-		URI changedURI = delta.getUri();
-		List<OpenFileManager> affectedOFMs = new ArrayList<>();
-		for (OpenFileManager candidateOFM : openFiles.values()) {
-			URI candidateURI = candidateOFM.getURI();
-			if (candidateURI.equals(changedURI)) {
+		// update dirty state instances in the manager of each open file (except the one that caused the change)
+		for (URI currURI : openFiles.keySet()) {
+			if (currURI.equals(uri)) {
 				continue;
 			}
-			IResourceDescription candidateDesc = sharedDirtyState.getResourceDescription(candidateURI);
-			if (resourceDescriptionManager.isAffected(delta, candidateDesc)) {
-				affectedOFMs.add(candidateOFM);
-			}
-		}
-		try {
-			refreshingAffectedOpenFiles = true;
-			for (OpenFileManager affectedOFM : affectedOFMs) {
-				affectedOFM.refreshOpenFile(cancelIndicator);
-			}
-		} finally {
-			refreshingAffectedOpenFiles = false;
+			runInOpenFileContext(currURI, ofm -> {
+				ofm.onDirtyStateChanged(delta, cancelIndicator);
+			});
 		}
 	}
 }
