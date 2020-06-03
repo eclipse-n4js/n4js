@@ -51,6 +51,7 @@ import com.google.inject.Provider;
 /**
  * Manages a single open file, including EMF resources and resource sets for files required by the open file.
  */
+@SuppressWarnings("javadoc")
 public class OpenFileManager {
 
 	@Inject
@@ -123,7 +124,7 @@ public class OpenFileManager {
 		ConcurrentHashMap<String, ResourceDescriptionsData> concurrentMap = (ConcurrentHashMap<String, ResourceDescriptionsData>) workspaceManager
 				.getFullIndex();
 		DirtyStateAwareChunkedResourceDescriptions index = new DirtyStateAwareChunkedResourceDescriptions(concurrentMap,
-				result, allOpenFilesManager.sharedDirtyState);
+				result, allOpenFilesManager.getSharedDirtyState()); // FIXME improve access to sharedDirtyState!
 		// ResourceDescriptionsData newIndex = new XIndexState().getResourceDescriptions();
 		// index.setContainer("Test", newIndex);
 		// externalContentSupport.configureResourceSet(result, workspaceManager.getOpenedDocumentsContentProvider());
@@ -156,10 +157,10 @@ public class OpenFileManager {
 	protected void refreshOpenFile(CancelIndicator cancelIndicator) {
 		// FIXME find better solution for updating unchanged open files!
 		TextDocumentContentChangeEvent dummyChange = new TextDocumentContentChangeEvent(document.getContents());
-		refreshOpenFile(Collections.singletonList(dummyChange), cancelIndicator);
+		refreshOpenFile(document.getVersion(), Collections.singletonList(dummyChange), cancelIndicator);
 	}
 
-	protected void refreshOpenFile(Iterable<? extends TextDocumentContentChangeEvent> changes,
+	protected void refreshOpenFile(int version, Iterable<? extends TextDocumentContentChangeEvent> changes,
 			CancelIndicator cancelIndicator) {
 		if (!mainResource.isLoaded()) {
 			throw new IllegalStateException("trying to refresh a resource that is not loaded: " + mainURI);
@@ -199,13 +200,8 @@ public class OpenFileManager {
 		List<Issue> issues = resourceValidator.validate(mainResource, CheckMode.ALL, cancelIndicator);
 		issueAcceptor.publishDiagnostics(mainURI, issues);
 		// update index of open files
-		// FIXME improve access to sharedDirtyState! (also above)
-		IResourceDescription oldDesc = allOpenFilesManager.sharedDirtyState.getResourceDescription(mainURI);
 		IResourceDescription newDesc = createResourceDescription();
-		IResourceDescription.Delta delta = resourceDescriptionManager.createDelta(oldDesc, newDesc);
-		allOpenFilesManager.sharedDirtyState.register(delta);
-		// notify
-		allOpenFilesManager.onResourceChanged(delta, cancelIndicator);
+		allOpenFilesManager.updateSharedDirtyState(mainURI, newDesc, cancelIndicator);
 	}
 
 	protected IResourceDescription createResourceDescription() {
