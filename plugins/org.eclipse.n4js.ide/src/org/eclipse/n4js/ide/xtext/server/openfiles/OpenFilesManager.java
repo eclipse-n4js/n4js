@@ -10,9 +10,14 @@
  */
 package org.eclipse.n4js.ide.xtext.server.openfiles;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -28,6 +33,7 @@ import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.xbase.lib.Pair;
 
+import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -44,9 +50,6 @@ public class OpenFilesManager {
 
 	@Inject
 	private LSPExecutorService lspExecutorService;
-
-	@Inject
-	private IResourceDescription.Manager resourceDescriptionManager;
 
 	protected final Map<URI, OpenFileManager> openFiles = new HashMap<>();
 
@@ -110,8 +113,8 @@ public class OpenFilesManager {
 
 	protected OpenFileManager createOpenFileManager(URI uri) {
 		if (persistedState.isEmpty()) {
-			// FIXME clean up
-			workspaceManager.getFullIndex().forEach(persistedState::setContainer);
+			// FIXME clean up when there's a top-level aggregator class for OpenFilesManager and the LSP builder
+			updatePersistedState(workspaceManager.getFullIndex(), Collections.emptySet(), CancelIndicator.NullImpl);
 		}
 		@SuppressWarnings("restriction")
 		String projectName = workspaceManager.getProjectConfig(uri).getName();
@@ -150,19 +153,57 @@ public class OpenFilesManager {
 				.findAny().orElse(null);
 	}
 
-	protected synchronized void updateSharedDirtyState(URI uri, IResourceDescription newDesc,
-			CancelIndicator cancelIndicator) {
+	public synchronized void updatePersistedState(Map<String, ResourceDescriptionsData> changedContainers,
+			Set<String> removedContainerHandles, CancelIndicator cancelIndicator) {
+		// compute modification info
+		List<IResourceDescription> changed = new ArrayList<>();
+		Set<URI> removed = new HashSet<>();
+		for (Entry<String, ResourceDescriptionsData> entry : changedContainers.entrySet()) {
+			String containerHandle = entry.getKey();
+			ResourceDescriptionsData newData = entry.getValue();
+
+			ResourceDescriptionsData oldContainer = persistedState.getContainer(containerHandle);
+			if (oldContainer != null) {
+				removed.addAll(oldContainer.getAllURIs());
+			}
+			for (IResourceDescription desc : newData.getAllResourceDescriptions()) {
+				if (!openFiles.containsKey(desc.getURI())) {
+					changed.add(desc);
+				}
+			}
+			removed.removeAll(newData.getAllURIs());
+		}
+		// update my persisted state instance
+		for (Entry<String, ResourceDescriptionsData> entry : changedContainers.entrySet()) {
+			String containerHandle = entry.getKey();
+			ResourceDescriptionsData newData = entry.getValue();
+			persistedState.setContainer(containerHandle, newData.copy());
+		}
+		for (String removedContainerHandle : removedContainerHandles) {
+			persistedState.removeContainer(removedContainerHandle);
+		}
+		// update persisted state instances in the manager of each open file
+		if (Iterables.isEmpty(changed) && removed.isEmpty()) {
+			return;
+		}
+		for (URI currURI : openFiles.keySet()) {
+			runInOpenFileContext(currURI, ofm -> {
+				ofm.onPersistedStateChanged(changed, removed, cancelIndicator);
+			});
+		}
+	}
+
+	protected synchronized void updateSharedDirtyState(IResourceDescription newDesc, CancelIndicator cancelIndicator) {
 		// update my dirty state instance
-		IResourceDescription oldDesc = sharedDirtyState.getResourceDescription(uri);
-		IResourceDescription.Delta delta = resourceDescriptionManager.createDelta(oldDesc, newDesc);
-		sharedDirtyState.register(delta);
+		URI newDescURI = newDesc.getURI();
+		sharedDirtyState.addDescription(newDescURI, newDesc);
 		// update dirty state instances in the manager of each open file (except the one that caused the change)
 		for (URI currURI : openFiles.keySet()) {
-			if (currURI.equals(uri)) {
+			if (currURI.equals(newDescURI)) {
 				continue;
 			}
 			runInOpenFileContext(currURI, ofm -> {
-				ofm.onDirtyStateChanged(delta, cancelIndicator);
+				ofm.onDirtyStateChanged(newDesc, cancelIndicator);
 			});
 		}
 	}

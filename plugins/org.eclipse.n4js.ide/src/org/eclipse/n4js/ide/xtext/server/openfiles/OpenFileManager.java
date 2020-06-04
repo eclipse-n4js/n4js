@@ -13,9 +13,11 @@ package org.eclipse.n4js.ide.xtext.server.openfiles;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -26,6 +28,8 @@ import org.eclipse.n4js.ide.xtext.server.IssueAcceptor;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.resource.IResourceDescription;
+import org.eclipse.xtext.resource.IResourceDescription.Delta;
+import org.eclipse.xtext.resource.IResourceDescription.Manager.AllChangeAware;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResource;
@@ -191,27 +195,75 @@ public class OpenFileManager {
 		// update dirty state
 		IResourceDescription newDesc = createResourceDescription();
 		index.addDescription(mainURI, newDesc);
-		parent.updateSharedDirtyState(mainURI, newDesc, cancelIndicator);
-	}
-
-	protected void onPersistedStateChanged(Iterable<? extends IResourceDescription> changed, Set<URI> removed,
-			CancelIndicator cancelIndicator) {
-		// FIXME implement support for this
+		parent.updateSharedDirtyState(newDesc, cancelIndicator);
 	}
 
 	/**
 	 * Invoked by {@link #parent} when a change happened in another open file (not the one managed by this
 	 * {@link OpenFileManager}).
 	 */
-	protected void onDirtyStateChanged(IResourceDescription.Delta delta, CancelIndicator cancelIndicator) {
-		index.register(delta);
+	protected void onDirtyStateChanged(IResourceDescription changedDesc, CancelIndicator cancelIndicator) {
+		updateIndex(Collections.singletonList(changedDesc), Collections.emptySet(), cancelIndicator);
+	}
+
+	/**
+	 * Invoked by {@link #parent} when a change happened in a non-opened file.
+	 */
+	protected void onPersistedStateChanged(Collection<? extends IResourceDescription> changedDescs,
+			Set<URI> removedURIs, CancelIndicator cancelIndicator) {
+		updateIndex(changedDescs, removedURIs, cancelIndicator);
+	}
+
+	protected void updateIndex(Collection<? extends IResourceDescription> changedDescs, Set<URI> removedURIs,
+			CancelIndicator cancelIndicator) {
+
+		List<IResourceDescription.Delta> allDeltas = createDeltas(changedDescs, removedURIs);
+		List<IResourceDescription.Delta> changedDeltas = allDeltas.stream()
+				.filter(d -> d.haveEObjectDescriptionsChanged())
+				.collect(Collectors.toList());
+
+		changedDeltas.forEach(index::register);
+
+		IResourceDescription.Manager rdm = getResourceDescriptionManager(mainURI);
+		if (rdm == null) {
+			return;
+		}
 		IResourceDescription candidateDesc = index.getResourceDescription(mainURI);
-		IResourceDescription.Manager resourceDescriptionManager = getResourceDescriptionManager(mainURI);
-		if (resourceDescriptionManager != null) {
-			if (resourceDescriptionManager.isAffected(delta, candidateDesc)) {
-				refreshOpenFile(cancelIndicator);
+		boolean isAffected = rdm instanceof AllChangeAware
+				? ((AllChangeAware) rdm).isAffectedByAny(allDeltas, candidateDesc, index)
+				: rdm.isAffected(changedDeltas, candidateDesc, index);
+		if (isAffected) {
+			refreshOpenFile(cancelIndicator);
+		}
+	}
+
+	protected List<IResourceDescription.Delta> createDeltas(Collection<? extends IResourceDescription> changedDescs,
+			Set<URI> removedURIs) {
+
+		List<IResourceDescription.Delta> deltas = new ArrayList<>(changedDescs.size() + removedURIs.size());
+
+		for (IResourceDescription changedDesc : changedDescs) {
+			URI changedURI = changedDesc.getURI();
+			IResourceDescription oldDesc = index.getResourceDescription(changedURI);
+			IResourceDescription.Manager rdm = getResourceDescriptionManager(changedURI);
+			if (rdm != null) {
+				Delta delta = rdm.createDelta(oldDesc, changedDesc);
+				deltas.add(delta);
 			}
 		}
+
+		for (URI removedURI : removedURIs) {
+			IResourceDescription removedDesc = index.getResourceDescription(removedURI);
+			if (removedDesc != null) {
+				IResourceDescription.Manager rdm = getResourceDescriptionManager(removedURI);
+				if (rdm != null) {
+					Delta delta = rdm.createDelta(removedDesc, null);
+					deltas.add(delta);
+				}
+			}
+		}
+
+		return deltas;
 	}
 
 	protected IResourceDescription createResourceDescription() {
