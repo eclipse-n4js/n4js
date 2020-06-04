@@ -14,35 +14,28 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.ResourceLocator;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.n4js.ide.xtext.server.IssueAcceptor;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
-import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
-import org.eclipse.n4js.ide.xtext.server.util.DirtyStateAwareChunkedResourceDescriptions;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.resource.IResourceDescription;
+import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
-import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.LazyStringInputStream;
 import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue;
-import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.inject.Inject;
@@ -55,16 +48,13 @@ import com.google.inject.Provider;
 public class OpenFileManager {
 
 	@Inject
-	protected XWorkspaceManager workspaceManager; // FIXME try to get rid of this
-
-	@Inject
 	private IssueAcceptor issueAcceptor;
 
 	@Inject
 	private Provider<XtextResourceSet> resourceSetProvider;
 
 	@Inject
-	private IResourceDescription.Manager resourceDescriptionManager;
+	private IResourceServiceProvider.Registry resourceServiceProviderRegistry;
 
 	@Inject
 	private IResourceServiceProvider.Registry languagesRegistry;
@@ -77,72 +67,63 @@ public class OpenFileManager {
 	protected String mainProjectName;
 
 	/**
-	 * Dirty state index of all open files. This instance is not shared across {@link OpenFileManager}s of different
-	 * open files, but is used across all resource sets in this manager's {@link #containerHandle2ResourceSet}.
+	 * Contains the state of all files in the workspace. For open files managed by {@link #parent} (including the open
+	 * file of this manager) this state will represent the dirty state and for all other files it will represent the
+	 * persisted state (as provided by the LSP builder).
 	 */
-	protected ResourceDescriptionsData dirtyState;
+	protected ResourceDescriptionsData index;
+
 	/** The EMF resource representing the open file. */
 	protected XtextResource mainResource;
 	/** The current textual content of the open file. */
 	protected XDocument document = null;
 
-	protected final Map<String, ResourceSet> containerHandle2ResourceSet = new HashMap<>();
-
 	public URI getURI() {
 		return mainURI;
 	}
 
-	public void initialize(OpenFilesManager parent, URI uri, String projectName,
+	public XtextResourceSet getResourceSet() {
+		return (XtextResourceSet) mainResource.getResourceSet();
+	}
+
+	public void initialize(OpenFilesManager parent, URI uri, String projectName, IResourceDescriptions persistedState,
 			ResourceDescriptionsData sharedDirtyState) {
 		this.parent = parent;
 		this.mainURI = uri;
 		this.mainProjectName = projectName;
 
-		this.dirtyState = sharedDirtyState.copy();
+		this.index = createIndex(persistedState, sharedDirtyState);
 
-		ResourceSet resourceSet = createResourceSet(projectName);
+		XtextResourceSet resourceSet = createResourceSet(projectName);
 		this.mainResource = (XtextResource) resourceSet.createResource(uri);
-		containerHandle2ResourceSet.put(projectName, resourceSet);
 	}
 
-	protected ResourceSet getResourceSetForURI(URI uri, boolean createOnDemand) {
-		@SuppressWarnings("restriction")
-		IProjectConfig projectConfig = workspaceManager.getProjectConfig(uri);
-		if (projectConfig == null) {
-			// happens for built-in types, etc. -> put it into the resource set of the main resource
-			// FIXME reconsider (could also be put into its own resource set; check how main builder is doing it)
-			return containerHandle2ResourceSet.get(mainProjectName);
-		}
-		@SuppressWarnings("restriction")
-		String containerHandle = projectConfig.getName();
-		ResourceSet result = containerHandle2ResourceSet.get(containerHandle);
-		if (result == null && createOnDemand) {
-			result = createResourceSet(containerHandle);
-			containerHandle2ResourceSet.put(containerHandle, result);
-		}
+	protected ResourceDescriptionsData createIndex(IResourceDescriptions persistedState,
+			ResourceDescriptionsData sharedDirtyState) {
+		ResourceDescriptionsData result = new ResourceDescriptionsData(Collections.emptyList());
+		persistedState.getAllResourceDescriptions()
+				.forEach(desc -> result.addDescription(desc.getURI(), desc));
+		sharedDirtyState.getAllResourceDescriptions()
+				.forEach(desc -> result.addDescription(desc.getURI(), desc));
 		return result;
 	}
 
-	protected ResourceSet createResourceSet(String projectName) {
+	protected XtextResourceSet createResourceSet(String projectName) {
 		XtextResourceSet result = resourceSetProvider.get();
 
-		OpenFileResourceLocator resourceLocator = new OpenFileResourceLocator(result);
-		ProjectDescription projectDescription = new ProjectDescription();
-		projectDescription.setName(projectName);
-		projectDescription.attachToEmfObject(result); // required by ChunkedResourceDescriptions
-		ConcurrentHashMap<String, ResourceDescriptionsData> concurrentMap = (ConcurrentHashMap<String, ResourceDescriptionsData>) workspaceManager
-				.getFullIndex();
-		DirtyStateAwareChunkedResourceDescriptions index = new DirtyStateAwareChunkedResourceDescriptions(concurrentMap,
-				result, dirtyState);
-		// ResourceDescriptionsData newIndex = new XIndexState().getResourceDescriptions();
-		// index.setContainer("Test", newIndex);
+		ResourceDescriptionsData.ResourceSetAdapter.installResourceDescriptionsData(result, index);
+
+		// TODO support external content:
 		// externalContentSupport.configureResourceSet(result, workspaceManager.getOpenedDocumentsContentProvider());
 
+		// OpenFileResourceLocator resourceLocator = new OpenFileResourceLocator(result);
+		// ProjectDescription projectDescription = new ProjectDescription();
+		// projectDescription.setName(projectName);
+		// projectDescription.attachToEmfObject(result); // required by ChunkedResourceDescriptions
 		// ConcurrentHashMap<String, ResourceDescriptionsData> concurrentMap = (ConcurrentHashMap<String,
-		// ResourceDescriptionsData>) workspaceManager
-		// .getFullIndex();
-		// ResourceDescriptionsData index = new MyDummyResourceDescriptions(Collections.emptyList());
-		// ResourceDescriptionsData.ResourceSetAdapter.installResourceDescriptionsData(result, index);
+		// ResourceDescriptionsData>) workspaceManager.getFullIndex();
+		// DirtyStateAwareChunkedResourceDescriptions index = new
+		// DirtyStateAwareChunkedResourceDescriptions(concurrentMap, result, dirtyState);
 
 		return result;
 	}
@@ -176,12 +157,11 @@ public class OpenFileManager {
 		}
 
 		// TODO the following is only necessary for changed files (could be moved to #updateDirtyState())
-		for (ResourceSet resSet : containerHandle2ResourceSet.values()) {
-			for (Resource res : new ArrayList<>(resSet.getResources())) {
-				if (res != mainResource) {
-					res.unload();
-					resSet.getResources().remove(res);
-				}
+		ResourceSet resSet = getResourceSet();
+		for (Resource res : new ArrayList<>(resSet.getResources())) {
+			if (res != mainResource) {
+				res.unload();
+				resSet.getResources().remove(res);
 			}
 		}
 
@@ -208,10 +188,15 @@ public class OpenFileManager {
 		// notify LSP client
 		List<Issue> issues = resourceValidator.validate(mainResource, CheckMode.ALL, cancelIndicator);
 		issueAcceptor.publishDiagnostics(mainURI, issues);
-		// update dirty state index (mine and those of all other open files)
+		// update dirty state
 		IResourceDescription newDesc = createResourceDescription();
-		dirtyState.addDescription(mainURI, newDesc);
+		index.addDescription(mainURI, newDesc);
 		parent.updateSharedDirtyState(mainURI, newDesc, cancelIndicator);
+	}
+
+	protected void onPersistedStateChanged(Iterable<? extends IResourceDescription> changed, Set<URI> removed,
+			CancelIndicator cancelIndicator) {
+		// FIXME implement support for this
 	}
 
 	/**
@@ -219,14 +204,18 @@ public class OpenFileManager {
 	 * {@link OpenFileManager}).
 	 */
 	protected void onDirtyStateChanged(IResourceDescription.Delta delta, CancelIndicator cancelIndicator) {
-		dirtyState.register(delta);
-		IResourceDescription candidateDesc = dirtyState.getResourceDescription(mainURI);
-		if (resourceDescriptionManager.isAffected(delta, candidateDesc)) {
-			refreshOpenFile(cancelIndicator);
+		index.register(delta);
+		IResourceDescription candidateDesc = index.getResourceDescription(mainURI);
+		IResourceDescription.Manager resourceDescriptionManager = getResourceDescriptionManager(mainURI);
+		if (resourceDescriptionManager != null) {
+			if (resourceDescriptionManager.isAffected(delta, candidateDesc)) {
+				refreshOpenFile(cancelIndicator);
+			}
 		}
 	}
 
 	protected IResourceDescription createResourceDescription() {
+		IResourceDescription.Manager resourceDescriptionManager = getResourceDescriptionManager(mainURI);
 		IResourceDescription newDesc = resourceDescriptionManager.getResourceDescription(mainResource);
 		// trigger lazy serialization of TModule
 		// FIXME why is this required?
@@ -234,22 +223,12 @@ public class OpenFileManager {
 		return newDesc;
 	}
 
-	public class OpenFileResourceLocator extends ResourceLocator {
-
-		public OpenFileResourceLocator(ResourceSetImpl resourceSet) {
-			super(resourceSet);
-		}
-
-		@Override
-		public Resource getResource(URI uri, boolean loadOnDemand) {
-			ResourceSet resourceSetForURI = getResourceSetForURI(uri, loadOnDemand);
-			if (resourceSetForURI != null) {
-				if (resourceSetForURI == this.resourceSet) { // avoid infinite loop
-					return basicGetResource(uri, loadOnDemand);
-				}
-				return resourceSetForURI.getResource(uri, loadOnDemand);
-			}
+	protected IResourceDescription.Manager getResourceDescriptionManager(URI uri) {
+		IResourceServiceProvider resourceServiceProvider = resourceServiceProviderRegistry
+				.getResourceServiceProvider(uri);
+		if (resourceServiceProvider == null) {
 			return null;
 		}
+		return resourceServiceProvider.getResourceDescriptionManager();
 	}
 }

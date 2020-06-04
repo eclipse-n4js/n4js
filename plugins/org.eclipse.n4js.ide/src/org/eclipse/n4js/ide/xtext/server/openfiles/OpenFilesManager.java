@@ -23,6 +23,7 @@ import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
 import org.eclipse.n4js.ide.xtext.server.concurrent.LSPExecutorService;
 import org.eclipse.xtext.resource.IResourceDescription;
+import org.eclipse.xtext.resource.impl.ChunkedResourceDescriptions;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.xbase.lib.Pair;
@@ -48,6 +49,9 @@ public class OpenFilesManager {
 	private IResourceDescription.Manager resourceDescriptionManager;
 
 	protected final Map<URI, OpenFileManager> openFiles = new HashMap<>();
+
+	protected final ChunkedResourceDescriptions persistedState = new ChunkedResourceDescriptions();
+
 	protected final ResourceDescriptionsData sharedDirtyState = new ResourceDescriptionsData(Collections.emptyList());
 
 	public synchronized void openFile(URI uri, int version, String content) {
@@ -105,10 +109,14 @@ public class OpenFilesManager {
 	}
 
 	protected OpenFileManager createOpenFileManager(URI uri) {
+		if (persistedState.isEmpty()) {
+			// FIXME clean up
+			workspaceManager.getFullIndex().forEach(persistedState::setContainer);
+		}
 		@SuppressWarnings("restriction")
 		String projectName = workspaceManager.getProjectConfig(uri).getName();
 		OpenFileManager ofm = openFileManagerProvider.get();
-		ofm.initialize(this, uri, projectName, sharedDirtyState);
+		ofm.initialize(this, uri, projectName, persistedState, sharedDirtyState);
 		return ofm;
 	}
 
@@ -133,12 +141,12 @@ public class OpenFilesManager {
 		if (ofm == null) {
 			return null; // origin is not a resource set related to an open file
 		}
-		return ofm.getResourceSetForURI(uri, true);
+		return ofm.getResourceSet();
 	}
 
 	protected synchronized OpenFileManager findOpenFileManager(ResourceSet resourceSet) {
 		return openFiles.values().stream()
-				.filter(ofm -> ofm.containerHandle2ResourceSet.containsValue(resourceSet))
+				.filter(ofm -> ofm.getResourceSet() == resourceSet)
 				.findAny().orElse(null);
 	}
 
