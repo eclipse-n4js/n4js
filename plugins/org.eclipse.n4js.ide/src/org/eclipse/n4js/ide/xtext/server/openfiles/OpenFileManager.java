@@ -84,8 +84,16 @@ public class OpenFileManager {
 		return mainURI;
 	}
 
+	public XtextResource getResource() {
+		return mainResource;
+	}
+
 	public XtextResourceSet getResourceSet() {
 		return (XtextResourceSet) mainResource.getResourceSet();
+	}
+
+	public XDocument getDocument() {
+		return document;
 	}
 
 	public void initialize(OpenFilesManager parent, URI uri, IResourceDescriptions persistedState,

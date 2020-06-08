@@ -48,7 +48,7 @@ public class DefaultBuildRequestFactory implements IBuildRequestFactory {
 	class DefaultAfterValidateListener implements AfterValidateListener {
 		@Override
 		public void afterValidate(URI source, Collection<Issue> issues) {
-			if (XLanguageServerImpl.useNew && openFilesManager.isOpen(source)) {
+			if (openFilesManager.isOpen(source)) {
 				return;
 			}
 			issueAcceptor.publishDiagnostics(source, issues);
