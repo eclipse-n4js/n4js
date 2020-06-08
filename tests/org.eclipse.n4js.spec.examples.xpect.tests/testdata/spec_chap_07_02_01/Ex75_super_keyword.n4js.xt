@@ -12,8 +12,12 @@
 /* XPECT_SETUP org.eclipse.n4js.spec.examples.xpect.tests.SpecExamplesTest END_SETUP */
 
  /* XPECT  output ~~~
+<==
+stdout:
 called-A.ctor()
 m()-of_A
+stderr:
+==>
 ~~~ */
 
 class A { constructor () { console.log("called-A.ctor()")} m() : void { console.log("m()-of_A")} }

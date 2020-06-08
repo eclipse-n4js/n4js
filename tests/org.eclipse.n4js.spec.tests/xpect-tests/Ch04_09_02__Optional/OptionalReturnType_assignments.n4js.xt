@@ -13,8 +13,12 @@
 
 
 /*  XPECT output  ---
+<==
+stdout:
 1
 undefined
+stderr:
+==>
 --- */
 
 

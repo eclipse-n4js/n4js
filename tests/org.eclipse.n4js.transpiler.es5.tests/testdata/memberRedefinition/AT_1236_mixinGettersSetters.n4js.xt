@@ -12,12 +12,16 @@
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP  */
 
 /* XPECT output ---
+<==
+stdout:
 data: testPair
 accessor: testPair
 data: testSetter
 accessor: testSetter
 data: testGetter
 accessor: testGetter
+stderr:
+==>
 --- */
 
 // pair

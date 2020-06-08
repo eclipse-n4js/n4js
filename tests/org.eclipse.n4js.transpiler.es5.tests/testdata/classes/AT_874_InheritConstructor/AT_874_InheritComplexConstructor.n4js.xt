@@ -12,8 +12,12 @@
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
 
 /* XPECT output ---
+<==
+stdout:
 world
 hello
+stderr:
+==>
 --- */
 class A {
     public stuff : string;

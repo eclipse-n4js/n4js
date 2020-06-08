@@ -14,6 +14,8 @@
 // IDE-1805  transpiler changes for computed-names of string-literal form in member declarations
 
 /* XPECT output ---
+<==
+stdout:
 C1 {
   'm@12@': '1',
   '@abc': '3',
@@ -21,6 +23,8 @@ C1 {
   '@abc2': '5',
   '@abc3': '6'
 }
+stderr:
+==>
 --- */
 
 class C1 {

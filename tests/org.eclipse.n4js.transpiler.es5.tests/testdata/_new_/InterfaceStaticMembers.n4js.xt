@@ -13,6 +13,8 @@
 
 
 /* XPECT output ---
+<==
+stdout:
 ========================================
 hello from static getter!
 hello from static setter; msg: hello setter!
@@ -25,6 +27,8 @@ field == 43
 accField == 43
 accField == 44
 ========================================
+stderr:
+==>
 --- */
 
 

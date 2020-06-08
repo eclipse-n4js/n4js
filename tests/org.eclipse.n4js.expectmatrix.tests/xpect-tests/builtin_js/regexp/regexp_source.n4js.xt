@@ -19,5 +19,9 @@ var regex = new RegExp("fooBar", "g")
 console.log(regex.source) // "fooBar"
 
 /* XPECT output ---
+<==
+stdout:
 fooBar
+stderr:
+==>
 --- */

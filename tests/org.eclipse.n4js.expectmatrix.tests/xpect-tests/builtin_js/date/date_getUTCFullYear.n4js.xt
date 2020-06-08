@@ -20,5 +20,9 @@ var day = date.getUTCFullYear();
 console.log(day);
 
 /* XPECT output ---
+<==
+stdout:
 1994
+stderr:
+==>
 --- */

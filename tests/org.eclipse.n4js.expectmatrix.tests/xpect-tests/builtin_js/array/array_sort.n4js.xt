@@ -32,7 +32,11 @@ console.log(items.sort(function (a, b) : number {
 }));
 
 /* XPECT output ---
+<==
+stdout:
 [ 'Cherries', 'apples', 'bananas' ]
 [ '1 Word', '2 Words', 'Word', 'word' ]
 [ 'adieu', 'café', 'cliché', 'communiqué', 'premier', 'réservé' ]
+stderr:
+==>
 --- */

@@ -40,8 +40,12 @@ var o2 = copy(o1); // o2 looks like o1 now
 console.log(o2);
 
 /* XPECT output ---
+<==
+stdout:
 a[0] = 2
 a[1] = 5
 a[3] = 9
 { a: 1, b: 2 }
+stderr:
+==>
 --- */

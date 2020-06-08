@@ -31,5 +31,9 @@ let c:C = new C({l: "Hi"});
 console.log(c.l)
 
 /* XPECT output --- 
+<==
+stdout:
 undefined
+stderr:
+==>
 --- */

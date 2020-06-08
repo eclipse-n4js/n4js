@@ -43,5 +43,9 @@ console.log("project import is correct :", bazProjectImport.myVar === "my var va
 
 
 /* XPECT output ---
+<==
+stdout:
 project import is correct : true
+stderr:
+==>
 --- */

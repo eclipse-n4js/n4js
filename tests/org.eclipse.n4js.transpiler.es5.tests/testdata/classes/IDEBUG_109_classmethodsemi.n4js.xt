@@ -12,6 +12,8 @@
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
 
 /* XPECT output ---
+<==
+stdout:
 constructor
 bar
 bar2
@@ -21,6 +23,8 @@ get me
 me2, too
 get me2
 me2, too
+stderr:
+==>
 --- */
 
 class Foo {

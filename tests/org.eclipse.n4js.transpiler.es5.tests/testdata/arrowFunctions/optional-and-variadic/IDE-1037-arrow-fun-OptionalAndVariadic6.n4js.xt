@@ -12,6 +12,8 @@
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
 
 /* XPECT output ---
+<==
+stdout:
 Variadic length: 0
 Variadic length: 1
 Variadic: s1
@@ -19,6 +21,8 @@ Variadic length: 3
 Variadic: s1
 Variadic: s2
 Variadic: s3
+stderr:
+==>
 --- */
 	var f = (... s : string) => {
 		console.log("Variadic length: " + s.length)

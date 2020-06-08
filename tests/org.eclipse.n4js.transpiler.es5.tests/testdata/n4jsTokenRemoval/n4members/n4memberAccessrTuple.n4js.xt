@@ -13,9 +13,13 @@
 
 
 /* XPECT output ~~~
+<==
+stdout:
 1
 true
 false
+stderr:
+==>
 ~~~ */
 
 

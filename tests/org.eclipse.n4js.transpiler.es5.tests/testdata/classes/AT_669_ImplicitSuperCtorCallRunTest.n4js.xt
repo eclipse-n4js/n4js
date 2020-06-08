@@ -12,9 +12,13 @@
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
 
 /* XPECT output ---
+<==
+stdout:
 C0
 C1
 C2
+stderr:
+==>
 --- */
 class C0 {
 	constructor() {

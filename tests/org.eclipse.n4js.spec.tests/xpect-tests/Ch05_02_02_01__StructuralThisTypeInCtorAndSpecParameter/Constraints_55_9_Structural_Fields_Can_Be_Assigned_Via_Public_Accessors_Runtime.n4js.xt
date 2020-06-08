@@ -12,7 +12,11 @@
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
 
 /* XPECT output ---
+<==
+stdout:
 hello
+stderr:
+==>
 --- */
 
 class A {

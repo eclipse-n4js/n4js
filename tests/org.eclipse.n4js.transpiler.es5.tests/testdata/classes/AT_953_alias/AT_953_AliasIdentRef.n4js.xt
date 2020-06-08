@@ -20,11 +20,15 @@
  */
 
 /* XPECT output ---
+<==
+stdout:
 Before BHere b call
 B.f()
 c.field == b: true
 c.method == b: true
 c.bHere == b2: true
+stderr:
+==>
 --- */
 import {
 	B as BHere

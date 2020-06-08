@@ -20,5 +20,9 @@ var ms = Xmas95.getMilliseconds();
 console.log(ms);
 
 /* XPECT output ---
+<==
+stdout:
 0
+stderr:
+==>
 --- */

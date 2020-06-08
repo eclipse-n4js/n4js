@@ -12,6 +12,8 @@
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
 
 /* XPECT output ---
+<==
+stdout:
 classNoConstructor has ctor di meta undefiend true
 classNotInjectedConstructor has meta undefiend true
 classInjectedConstructorNoParams has ctor di meta not undefiend true
@@ -19,6 +21,8 @@ classInjectedConstructorNoParams has ctor di meta of length 0 true
 classInjectedConstructorWith2Params has ctor di meta not undefiend true
 classInjectedConstructorWith2Params has ctor di meta of length 2 true
 classInheritedInejctedCtor has di meta true
+stderr:
+==>
 --- */
 
 class A{}

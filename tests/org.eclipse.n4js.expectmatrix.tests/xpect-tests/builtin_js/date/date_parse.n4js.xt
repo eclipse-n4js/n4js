@@ -20,8 +20,12 @@ console.log(Date.parse("Thu, 01 Jan 1970 00:00:00 GMT"));
 console.log(Date.parse("Thu, 01 Jan 1970 00:00:00 GMT-0400"));
 
 /* XPECT output ---
+<==
+stdout:
 807926400000
 807926400000
 0
 14400000
+stderr:
+==>
 --- */

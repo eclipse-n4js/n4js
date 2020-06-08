@@ -20,5 +20,9 @@ var hours = Xmas95.getHours();
 console.log(hours); // 23
 
 /* XPECT output ---
+<==
+stdout:
 23
+stderr:
+==>
 --- */

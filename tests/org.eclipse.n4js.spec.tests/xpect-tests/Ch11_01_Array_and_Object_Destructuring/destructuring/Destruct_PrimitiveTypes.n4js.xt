@@ -53,6 +53,8 @@ for(var ivar1 of iStrNum) {
 
 
 /* XPECT output ---
+<==
+stdout:
 h e
 h e
 #####################
@@ -65,4 +67,6 @@ c
 #####################
 one
 2
+stderr:
+==>
 --- */

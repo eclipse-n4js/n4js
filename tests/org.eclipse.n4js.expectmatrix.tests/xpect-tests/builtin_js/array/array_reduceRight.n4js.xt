@@ -41,7 +41,11 @@ console.log(flattened2);
 */
 
 /* X----PECT output ---
+<==
+stdout:
 6
 [ 4, 5, 2, 3, 0, 1 ]
 [ 4, 5, 2, 3, 0, 1 ]
+stderr:
+==>
 --- */

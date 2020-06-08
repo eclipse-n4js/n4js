@@ -13,9 +13,13 @@
 
 
 /* XPECT ! output ~~~
+<==
+stdout:
 b1
 c1_1
 c1_2
+stderr:
+==>
 ~~~ */
 
 

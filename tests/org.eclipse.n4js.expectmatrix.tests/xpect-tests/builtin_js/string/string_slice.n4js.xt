@@ -27,8 +27,12 @@ console.log(str.slice(-3, -1));
 console.log(str.slice(0, -1));
 
 /* XPECT output ---
+<==
+stdout:
 morning is upon u
 us.
 us
 The morning is upon us
+stderr:
+==>
 --- */

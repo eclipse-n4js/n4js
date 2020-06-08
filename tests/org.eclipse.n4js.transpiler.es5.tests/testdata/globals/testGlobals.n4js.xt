@@ -24,8 +24,12 @@
 
 
 /* XPECT output ---
+<==
+stdout:
 globalExportedVar_VAL
 [Function: Map]
+stderr:
+==>
 --- */
 
 

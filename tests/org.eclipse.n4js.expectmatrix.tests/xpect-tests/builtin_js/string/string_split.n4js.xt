@@ -45,6 +45,8 @@ var splits = myString.split(" ", 3);
 console.log(splits);
 
 /* XPECT output ---
+<==
+stdout:
 [
   'Oh',   'brave',
   'new',  'world',
@@ -82,4 +84,6 @@ Oct /
 Nov / 
 Dec / 
 [ 'Hello', 'World.', 'How' ]
+stderr:
+==>
 --- */

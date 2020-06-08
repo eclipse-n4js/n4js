@@ -31,10 +31,14 @@ console.log(E.n4type);
 
 
 /* XPECT output ---
+<==
+stdout:
 N4EnumType {
   origin: 'org.eclipse.n4js.transpiler.es5.tests',
   annotations: [],
   name: 'E',
   fqn: 'reflection/EnumMembers/E'
 }
+stderr:
+==>
 --- */

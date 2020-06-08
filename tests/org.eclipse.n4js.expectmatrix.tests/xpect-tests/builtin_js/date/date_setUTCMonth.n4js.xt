@@ -26,7 +26,11 @@ theBigDay.setUTCMonth(3,14);
 console.log(theBigDay.toUTCString());
 
 /* XPECT output ---
+<==
+stdout:
 Tue, 02 Dec 2003 00:00:00 GMT
 Wed, 02 Jul 2003 00:00:00 GMT
 Mon, 14 Apr 2003 00:00:00 GMT
+stderr:
+==>
 --- */

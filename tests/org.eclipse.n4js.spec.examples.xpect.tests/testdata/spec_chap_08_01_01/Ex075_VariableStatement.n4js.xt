@@ -12,10 +12,14 @@
 /* XPECT_SETUP org.eclipse.n4js.spec.examples.xpect.tests.SpecExamplesTest END_SETUP */
 
 /* XPECT output ~~~
+<==
+stdout:
 undefined
 null
 Hi
 Hello World
+stderr:
+==>
 ~~~ */
 
 var any : any;

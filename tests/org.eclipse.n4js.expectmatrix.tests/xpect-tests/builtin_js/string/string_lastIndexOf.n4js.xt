@@ -21,7 +21,11 @@ console.log("The index of 'new' from the end is " + anyString.lastIndexOf("new")
 console.log("The index of 'o' from position 17 is " + anyString.lastIndexOf("o",17));
 
 /* XPECT output ---
+<==
+stdout:
 The index of the first w from the end is 10
 The index of 'new' from the end is 6
 The index of 'o' from position 17 is 11
+stderr:
+==>
 --- */

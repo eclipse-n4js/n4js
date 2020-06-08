@@ -41,8 +41,12 @@ var boundGetY = wrapper.getY.bind(extern);
 console.log(boundGetY()); // 19
 
 /* XPECT output ---
+<==
+stdout:
 81
 9
 7
 19
+stderr:
+==>
 --- */

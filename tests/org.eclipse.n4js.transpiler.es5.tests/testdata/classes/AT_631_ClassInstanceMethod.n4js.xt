@@ -12,6 +12,8 @@
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
 
 /* XPECT output ---
+<==
+stdout:
 hi
 hi
 hi
@@ -22,6 +24,8 @@ hi
 hi
 hi
 hi
+stderr:
+==>
 --- */
 class A{
 	/** private say*/

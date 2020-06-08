@@ -21,6 +21,10 @@ e.name = "ParseError";
 console.log(e.toString());
 
 /* XPECT output ---
+<==
+stdout:
 Error: Malformed input
 ParseError: Malformed input
+stderr:
+==>
 --- */

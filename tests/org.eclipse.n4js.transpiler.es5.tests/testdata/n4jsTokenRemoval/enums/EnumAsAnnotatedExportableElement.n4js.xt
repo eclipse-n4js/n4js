@@ -13,6 +13,8 @@
 
 
 /* XPECT output ~~~
+<==
+stdout:
 PubEnumEA { name: 'v', value: 'v' }
 PubEnumEA { name: 's', value: 'string' }
 annotations : 
@@ -26,6 +28,8 @@ annotations :
     fqn: 'n4jsTokenRemoval/enums/EnumAsAnnotatedExportableElement/PubEnumEA'
   }
 }
+stderr:
+==>
 ~~~ */
 
 

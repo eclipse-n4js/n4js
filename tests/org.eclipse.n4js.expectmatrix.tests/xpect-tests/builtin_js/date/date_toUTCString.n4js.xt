@@ -19,5 +19,9 @@ const UTCstring = today.toUTCString();
 console.log(UTCstring);
 
 /* XPECT output ---
+<==
+stdout:
 Wed, 12 Dec 2012 03:00:00 GMT
+stderr:
+==>
 --- */

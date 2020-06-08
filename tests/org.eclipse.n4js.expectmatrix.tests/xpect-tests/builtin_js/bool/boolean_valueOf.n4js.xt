@@ -20,5 +20,9 @@ var myVar = x.valueOf()      // assigns false to myVar
 console.log("false = " + myVar);
 
 /* XPECT output ---
+<==
+stdout:
 false = false
+stderr:
+==>
 --- */

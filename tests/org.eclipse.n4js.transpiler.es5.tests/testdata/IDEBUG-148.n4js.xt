@@ -17,6 +17,10 @@
 // // hint
 // console.log("1")
 /* XPECT output ---
+<==
+stdout:
 2
+stderr:
+==>
 --- */
 console.log("2")

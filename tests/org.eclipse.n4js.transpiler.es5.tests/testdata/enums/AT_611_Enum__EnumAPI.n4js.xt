@@ -12,6 +12,8 @@
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
 
 /* XPECT output ---
+<==
+stdout:
 RED
 RED
 enums/AT_611_Enum__EnumAPI/Color
@@ -23,6 +25,8 @@ enums/AT_611_Enum__EnumAPI/Country
 2
 --
 true
+stderr:
+==>
 --- */
 enum Color {
 	RED, GREEN, BLUE

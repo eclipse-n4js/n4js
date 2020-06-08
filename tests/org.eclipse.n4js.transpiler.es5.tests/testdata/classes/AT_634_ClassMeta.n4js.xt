@@ -12,6 +12,8 @@
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
 
 /* XPECT output ---
+<==
+stdout:
 a.constructor.n4type:
 N4Class {
   origin: 'org.eclipse.n4js.transpiler.es5.tests',
@@ -98,6 +100,8 @@ N4Class {
   ],
   consumedMembers: []
 }
+stderr:
+==>
 --- */
 class A {
 	@Nfon('read')

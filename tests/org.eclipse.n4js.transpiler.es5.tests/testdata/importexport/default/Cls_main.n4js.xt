@@ -30,8 +30,12 @@ c.m();
 
 
 /* XPECT output ---
+<==
+stdout:
 running in Cls.n4js:
 hello from method C.m!
 running in Cls_main.n4js:
 hello from method C.m!
+stderr:
+==>
 --- */

@@ -27,5 +27,9 @@ console.log(ts.indexOf("39")>=0);
 
 
 /* XPECT output ---
+<==
+stdout:
 true
+stderr:
+==>
 --- */

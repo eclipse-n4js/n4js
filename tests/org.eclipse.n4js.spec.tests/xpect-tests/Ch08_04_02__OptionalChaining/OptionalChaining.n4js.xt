@@ -153,6 +153,8 @@ log(def.undef?.def.def.undefWithMethod?.method(mustNotBeEvaluated()));
 
 
 /* XPECT output ---
+<==
+stdout:
 ======== Base Cases
 property value
 undefined
@@ -203,4 +205,6 @@ method invoked (call context: correct, args: [arg1, arg2])
 undefined
 undefined
 undefined
+stderr:
+==>
 --- */

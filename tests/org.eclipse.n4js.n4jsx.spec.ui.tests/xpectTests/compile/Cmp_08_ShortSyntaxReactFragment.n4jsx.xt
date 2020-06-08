@@ -30,6 +30,8 @@
  */
 
 /* XPECT output ---
+<==
+stdout:
 empty React fragment
 {
     "children": []
@@ -57,6 +59,8 @@ nested
         }
     ]
 }
+stderr:
+==>
 --- */
 
 import * as React from "react";

@@ -41,9 +41,13 @@ function countX (str : string) {
 console.log(countX("hello x i am x of 123 x"));
 
 /* XPECT output ---
+<==
+stdout:
 The index of the first w from the beginning is 8
 The index of 'new' from the beginning is 6
 myString.indexOf("cheddar") is 19
 myCapString.indexOf("cheddar") is -1
 3
+stderr:
+==>
 --- */

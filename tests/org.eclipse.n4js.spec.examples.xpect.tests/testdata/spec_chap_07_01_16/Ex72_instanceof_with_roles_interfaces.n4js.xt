@@ -12,12 +12,16 @@
 /* XPECT_SETUP org.eclipse.n4js.spec.examples.xpect.tests.SpecExamplesTest END_SETUP */
 
  /* Wait for IDEBUG-76 XPECT ! output ~~~
+<==
+stdout:
 A is instance of I
 B is instance of I
 D is instance of R
 E is instance of R
 F is instance of I
 F is instance of R
+stderr:
+==>
 ~~~ */
 
 /* Wait for IDEBUG-76 XPECT ! compileResult ---

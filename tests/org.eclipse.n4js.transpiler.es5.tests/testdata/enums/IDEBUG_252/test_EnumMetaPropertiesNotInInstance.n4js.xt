@@ -20,8 +20,12 @@
 
 
 /* XPECT output ---
+<==
+stdout:
 E1 { name: 'A', value: 'aa' }
 E1 { name: 'B', value: 'bb' }
+stderr:
+==>
 --- */
 
 

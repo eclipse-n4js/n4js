@@ -27,6 +27,10 @@ changeO();
 console.log("false = " + o.hasOwnProperty('prop'));   // returns false
 
 /* XPECT output ---
+<==
+stdout:
 true = true
 false = false
+stderr:
+==>
 --- */

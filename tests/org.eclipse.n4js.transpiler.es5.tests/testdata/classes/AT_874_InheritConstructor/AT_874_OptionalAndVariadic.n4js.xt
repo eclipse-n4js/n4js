@@ -12,6 +12,8 @@
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
 
 /* XPECT output ---
+<==
+stdout:
 - A: fixed, optional, variadic -
 Fixed: s1
 Optional: undefined
@@ -34,6 +36,8 @@ Fixed: s1
 Optional: s2
 Variadic length: 1
 Variadic: s3
+stderr:
+==>
 --- */
 class A {
 	constructor(fixed : string, start : string=undefined, ... s : string) {

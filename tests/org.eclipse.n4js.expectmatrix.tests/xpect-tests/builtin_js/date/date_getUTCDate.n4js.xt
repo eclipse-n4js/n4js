@@ -20,5 +20,9 @@ var day = date.getUTCDate();
 console.log(day);
 
 /* XPECT output ---
+<==
+stdout:
 13
+stderr:
+==>
 --- */

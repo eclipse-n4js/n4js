@@ -20,5 +20,9 @@ var day = date.getUTCMinutes();
 console.log(day);
 
 /* XPECT output ---
+<==
+stdout:
 56
+stderr:
+==>
 --- */

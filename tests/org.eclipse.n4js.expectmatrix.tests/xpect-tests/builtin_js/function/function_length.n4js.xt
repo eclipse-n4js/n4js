@@ -20,8 +20,12 @@ console.log( (function (a, b)    {}).length ); /* 2 etc. */
 console.log( (function (...args : number) {}).length ); // 0, rest parameter is not counted
 
 /* XPECT output ---
+<==
+stdout:
 0
 1
 2
 0
+stderr:
+==>
 --- */

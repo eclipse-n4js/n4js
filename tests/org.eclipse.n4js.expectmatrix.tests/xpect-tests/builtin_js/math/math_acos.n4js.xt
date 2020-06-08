@@ -22,10 +22,14 @@ console.log(Math.acos(1));   // 0
 console.log(Math.acos(2));   // NaN
 
 /* XPECT output ---
+<==
+stdout:
 NaN
 3.1415926535
 1.5707963267
 1.0471975511
 0
 NaN
+stderr:
+==>
 --- */

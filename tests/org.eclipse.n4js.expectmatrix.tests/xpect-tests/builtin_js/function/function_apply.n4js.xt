@@ -50,9 +50,13 @@ wrapper.setY.apply(extern, [1]);
 console.log(extern.y); // 20
 
 /* XPECT output ---
+<==
+stdout:
 7
 2
 84
 30
 20
+stderr:
+==>
 --- */

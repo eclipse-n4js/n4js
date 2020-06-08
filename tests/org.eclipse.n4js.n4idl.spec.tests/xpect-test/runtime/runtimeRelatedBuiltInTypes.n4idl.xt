@@ -65,10 +65,14 @@ function f() {
 }
 
 /* MigrationController and MigrationContext are defined at runtime XPECT output ---
+   <==
+   stdout:
    object
    object
    N4Type.of(MigrationContext) instanceof N4Interface: true
    N4Type.of(MigrationController) instanceof N4Interface: true
+   stderr:
+   ==>
    ---
  */
 eval("f()");

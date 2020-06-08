@@ -24,5 +24,9 @@ copy.setTime(birthday.getTime());
 console.log(copy.toUTCString());
 
 /* XPECT output ---
+<==
+stdout:
 Sun, 17 Dec 1995 03:24:00 GMT
+stderr:
+==>
 --- */

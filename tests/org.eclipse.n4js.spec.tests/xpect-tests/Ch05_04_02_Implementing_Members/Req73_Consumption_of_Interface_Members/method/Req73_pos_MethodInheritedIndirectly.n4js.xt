@@ -23,7 +23,11 @@ interface J extends I {
 class C implements J {}
 
 /* XPECT output ---
+<==
+stdout:
 I.foo()
+stderr:
+==>
 --- */
 
 // XPECT binding --> I.foo

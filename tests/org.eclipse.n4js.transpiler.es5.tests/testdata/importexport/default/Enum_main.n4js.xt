@@ -30,8 +30,12 @@ console.log(e.value);
 
 
 /* XPECT output ---
+<==
+stdout:
 running in Enum.n4js:
 hello from literal E.L2!
 running in Enum_main.n4js:
 hello from literal E.L2!
+stderr:
+==>
 --- */

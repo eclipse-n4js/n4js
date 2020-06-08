@@ -66,6 +66,8 @@ console.log(iA.next());
 console.log(iA.next());
 
 /* XPECT output ---
+<==
+stdout:
 { done: false, value: 4 }
 { done: false, value: 3 }
 { done: false, value: 2 }
@@ -78,4 +80,6 @@ console.log(iA.next());
 { done: false, value: 1 }
 { done: true }
 { done: true }
+stderr:
+==>
 --- */

@@ -30,7 +30,11 @@ var withDefault =   new Date(1995,11,17).toUTCString();
 console.log(withGivenTime==withDefault);
 
 /* XPECT output ---
+<==
+stdout:
 Sun, 17 Dec 1995 03:24:00 GMT
 Sun, 17 Dec 1995 03:24:00 GMT
 true
+stderr:
+==>
 --- */

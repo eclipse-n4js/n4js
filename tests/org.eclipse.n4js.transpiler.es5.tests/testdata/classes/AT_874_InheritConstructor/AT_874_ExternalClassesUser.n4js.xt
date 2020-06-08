@@ -20,7 +20,11 @@
  */
 
 /* XPECT output ---
+<==
+stdout:
 {"stuff":"stuff","myField":2}
+stderr:
+==>
 --- */
 import { MyExternalClass } from "classes/AT_874_InheritConstructor/AT_874_ExternalClasses"
 

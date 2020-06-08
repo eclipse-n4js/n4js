@@ -42,6 +42,8 @@ console.log(C.n4type.methods(false,false,true)[1].annotations);
 
 
 /* XPECT output ---
+<==
+stdout:
 true
 true
 [
@@ -112,4 +114,6 @@ true
     }
   }
 ]
+stderr:
+==>
 --- */

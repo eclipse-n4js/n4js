@@ -12,6 +12,8 @@
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
 
 /* XPECT output ---
+<==
+stdout:
 when needed DI data is there
 {
 	"parent": "DIC",
@@ -66,6 +68,8 @@ when needed DI data is there
 		}
 	]
 }
+stderr:
+==>
 --- */
 
 //=============================================================================

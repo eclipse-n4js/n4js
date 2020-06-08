@@ -12,12 +12,16 @@
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
 
 /* XPECT output ---
+<==
+stdout:
 Fixed: s1
 Variadic length: 0
 Fixed: s1
 Variadic length: 2
 Variadic: s2
 Variadic: s3
+stderr:
+==>
 --- */
 	var f = (fixed : string, ... s : string) => {
 		console.log("Fixed: " + fixed)

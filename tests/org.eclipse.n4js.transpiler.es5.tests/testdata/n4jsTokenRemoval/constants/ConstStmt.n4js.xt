@@ -13,7 +13,11 @@
 
 
 /* XPECT output ~~~
+<==
+stdout:
 a3
+stderr:
+==>
 ~~~ */
 
 

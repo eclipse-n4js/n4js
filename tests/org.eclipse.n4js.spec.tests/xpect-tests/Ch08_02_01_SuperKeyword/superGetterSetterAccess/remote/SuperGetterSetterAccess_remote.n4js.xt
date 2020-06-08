@@ -42,6 +42,8 @@ new C3().test();
 
 
 /* XPECT output ---
+<==
+stdout:
 * testing access with "this"
 called C1#g
 called C1#s
@@ -56,4 +58,6 @@ called C1#m
 called I1#gI
 called I1#sI
 called I1#mI
+stderr:
+==>
 --- */

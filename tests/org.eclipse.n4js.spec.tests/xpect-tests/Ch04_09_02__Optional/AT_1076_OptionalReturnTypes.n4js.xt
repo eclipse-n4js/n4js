@@ -13,8 +13,12 @@
 
 
 /*  XPECT output  ---
+<==
+stdout:
 using: default defined in f()
 using: string returned by h2()
+stderr:
+==>
 --- */
 
 

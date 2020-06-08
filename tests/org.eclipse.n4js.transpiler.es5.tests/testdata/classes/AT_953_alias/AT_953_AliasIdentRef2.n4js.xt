@@ -20,10 +20,14 @@
  */
 
 /* XPECT output ---
+<==
+stdout:
 f(b2) == b2: true
 objectLiteral.bHere == b: true
 objectLiteral.other == b2: true
 objectLiteral.bHere == b2: true
+stderr:
+==>
 --- */
 import {
 	B as BHere

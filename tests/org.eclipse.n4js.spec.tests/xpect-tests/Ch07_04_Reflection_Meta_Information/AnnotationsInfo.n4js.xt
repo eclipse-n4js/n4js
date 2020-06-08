@@ -13,6 +13,8 @@
 // IDE-561
 
 /* XPECT output ---
+<==
+stdout:
 class annotations
 # extract of all annotations
  =annotations : 
@@ -149,6 +151,8 @@ fAnn [
     }
   }
 ]
+stderr:
+==>
 --- */
 
 

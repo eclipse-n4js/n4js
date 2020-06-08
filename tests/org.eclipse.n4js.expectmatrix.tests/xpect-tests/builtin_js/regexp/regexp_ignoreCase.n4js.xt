@@ -29,8 +29,12 @@ while ((o = regex.exec(str)) !== null)
 }
 
 /* XPECT output ---
+<==
+stdout:
 true
 Found Foo.  Next match starts at 3
 Found foo.  Next match starts at 7
 Found FOO.  Next match starts at 14
+stderr:
+==>
 --- */

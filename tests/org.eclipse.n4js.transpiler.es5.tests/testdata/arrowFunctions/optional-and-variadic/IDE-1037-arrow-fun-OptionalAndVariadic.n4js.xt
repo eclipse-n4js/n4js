@@ -12,6 +12,8 @@
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
 
 /* XPECT output ---
+<==
+stdout:
 Fixed: s1
 Optional: undefined
 Variadic length: 0
@@ -22,6 +24,8 @@ Fixed: s1
 Optional: s2
 Variadic length: 1
 Variadic: s3
+stderr:
+==>
 --- */
 
 	var f = (fixed : string, start : string=undefined, ... s : string) => {

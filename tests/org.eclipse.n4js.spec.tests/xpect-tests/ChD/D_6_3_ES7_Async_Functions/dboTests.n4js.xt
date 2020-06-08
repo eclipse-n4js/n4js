@@ -12,6 +12,8 @@
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP  */
 
 /* XPECT output ---
+<==
+stdout:
 
 
 # run T1 :: basics
@@ -92,6 +94,8 @@
  -  return from inner nested chain
  - inner passed with expected result
 # T9 PASSed with : true
+stderr:
+==>
 --- */
 
 //deps

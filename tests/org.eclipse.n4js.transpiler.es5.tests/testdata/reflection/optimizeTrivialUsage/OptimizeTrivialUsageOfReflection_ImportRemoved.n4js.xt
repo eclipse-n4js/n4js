@@ -31,7 +31,11 @@ console.log(C.n4type.fqn);
 
 
 /* XPECT output ---
+<==
+stdout:
 C
 org.eclipse.n4js.transpiler.es5.tests
 reflection/optimizeTrivialUsage/Other/C
+stderr:
+==>
 --- */

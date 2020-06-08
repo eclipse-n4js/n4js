@@ -11,9 +11,13 @@
 
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
 /* XPECT output ---
+<==
+stdout:
 classes/IDEBUG344/N4ElementOrigin/A :: org.eclipse.n4js.transpiler.es5.tests
 classes/IDEBUG344/N4ElementOrigin/I :: org.eclipse.n4js.transpiler.es5.tests
 classes/IDEBUG344/N4ElementOrigin/E :: org.eclipse.n4js.transpiler.es5.tests
+stderr:
+==>
 --- */
 class A {}
 console.log(A.n4type.fqn, "::", A.n4type.origin)

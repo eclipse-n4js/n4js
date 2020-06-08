@@ -13,6 +13,8 @@
 
 
 /* XPECT output ---
+<==
+stdout:
 C initializes C.s with sC
 C initializes C.s2 with s2C
 D initializes D.sp2 with sp2D
@@ -38,6 +40,8 @@ d :: sp2 : undefined
 d :: sp3 : sp3D
 d :: sp4 : undefined
 d :: sp4 : sp5R2
+stderr:
+==>
 --- */
 function verboseInit(target, prop, val){console.log(target, "initializes" , target +"."+ prop, "with", val); return val;}
 function valCheck(instance, prop, val, expected){console.log(instance, "::", prop, ":", val); if(val != expected){console.error("expected instance of",instance, "to have property", prop, "equal", expected, "but it was", val)};}

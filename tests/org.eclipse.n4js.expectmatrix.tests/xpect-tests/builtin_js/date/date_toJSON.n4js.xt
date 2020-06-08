@@ -20,5 +20,9 @@ var backToDate = new Date(String(jsonDate));
 console.log("Serialized date object: " + jsonDate);
 
 /* XPECT output ---
+<==
+stdout:
 Serialized date object: 2011-10-05T14:48:00.000Z
+stderr:
+==>
 --- */

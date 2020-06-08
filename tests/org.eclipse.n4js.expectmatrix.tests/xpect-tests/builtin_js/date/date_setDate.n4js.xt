@@ -30,7 +30,11 @@ theBigDay.setDate(32);
 console.log(theBigDay.toDateString());
 
 /* XPECT output ---
+<==
+stdout:
 Sun Dec 17 1995
 Sun Dec 24 1995
 Mon Jan 01 1996
+stderr:
+==>
 --- */

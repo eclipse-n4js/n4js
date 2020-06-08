@@ -26,5 +26,9 @@ let c:C = new C({});
 console.log(c.get())
 
 /* XPECT output ---
+<==
+stdout:
 hello
+stderr:
+==>
 --- */

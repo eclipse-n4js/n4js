@@ -20,9 +20,13 @@
  */
 
 /* XPECT output ---
+<==
+stdout:
 x.method(null, b2) == b2: true
 R.fR()
 Y.fI()
+stderr:
+==>
 --- */
 import {
 	B as BHere,

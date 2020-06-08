@@ -12,6 +12,8 @@
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
 
 /* XPECT output ~~~
+<==
+stdout:
 0 [ E { name: 'A', value: 'aa' }, E { name: 'B', value: 'bb' } ]
 1 E { name: 'A', value: 'aa' }
 2 E { name: 'A', value: 'aa' }
@@ -22,6 +24,8 @@
 7 undefined
 8 false
 9 true
+stderr:
+==>
 ~~~ */
 
 

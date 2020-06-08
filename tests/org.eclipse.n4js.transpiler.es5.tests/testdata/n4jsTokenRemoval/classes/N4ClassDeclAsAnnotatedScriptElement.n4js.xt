@@ -13,7 +13,11 @@
 
 
 /* XPECT output ~~~
+<==
+stdout:
 [Function: C2]
+stderr:
+==>
 ~~~ */
 
 interface I0{}

@@ -19,5 +19,9 @@ var z = Math.min(x, y);
 console.log(z);
 
 /* XPECT output ---
+<==
+stdout:
 -20
+stderr:
+==>
 --- */

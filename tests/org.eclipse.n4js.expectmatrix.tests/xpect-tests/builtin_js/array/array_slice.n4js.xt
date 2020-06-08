@@ -23,6 +23,10 @@ var lastTwo = fruits.slice(3);
 console.log(lastTwo);
 
 /* XPECT output ---
+<==
+stdout:
 [ 'Orange', 'Lemon' ]
 [ 'Apple', 'Mango' ]
+stderr:
+==>
 --- */

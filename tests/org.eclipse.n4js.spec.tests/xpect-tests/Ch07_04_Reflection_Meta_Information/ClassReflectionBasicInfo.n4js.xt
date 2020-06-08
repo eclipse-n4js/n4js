@@ -13,6 +13,8 @@
 // IDE-561
 
 /* XPECT output ---
+<==
+stdout:
 name ClassWithStuff
 fqn Ch07_04_Reflection_Meta_Information/ClassReflectionBasicInfo/ClassWithStuff
 annotations : 
@@ -24,6 +26,8 @@ super chain
  - S
  - SS
  - N4Object
+stderr:
+==>
 --- */
 
 

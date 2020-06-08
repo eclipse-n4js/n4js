@@ -34,6 +34,10 @@ var cheese2 = food.call({}, 'feta', 20);
 console.log(cheese2);
 
 /* XPECT output ---
+<==
+stdout:
 { name: 'feta', price: 20, category: 'food' }
 { category: 'food', name: 'feta', price: 20 }
+stderr:
+==>
 --- */

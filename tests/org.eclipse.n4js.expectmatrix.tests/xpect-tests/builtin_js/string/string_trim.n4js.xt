@@ -18,5 +18,9 @@ var orig = "   foo  ";
 console.log("'" + orig.trim() + "'");
 
 /* XPECT output ---
+<==
+stdout:
 'foo'
+stderr:
+==>
 --- */

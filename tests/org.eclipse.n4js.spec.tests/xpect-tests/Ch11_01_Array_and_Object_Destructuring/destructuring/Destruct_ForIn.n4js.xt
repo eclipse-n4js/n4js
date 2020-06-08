@@ -43,6 +43,8 @@ for({length} in obj) {
 
 
 /* XPECT output ---
+<==
+stdout:
 o n
 t w
 o n
@@ -52,4 +54,6 @@ t w
 3
 3
 3
+stderr:
+==>
 --- */

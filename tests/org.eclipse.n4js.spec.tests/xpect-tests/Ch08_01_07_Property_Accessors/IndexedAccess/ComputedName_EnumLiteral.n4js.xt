@@ -52,6 +52,8 @@ console.log(obj.A);
 
 
 /* XPECT output ---
+<==
+stdout:
 value 1
 value 1
 value 1
@@ -66,4 +68,6 @@ value 3
 value 3
 value 3
 value 3
+stderr:
+==>
 --- */

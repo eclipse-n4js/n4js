@@ -48,6 +48,8 @@ console.log( N4Type.of(String)    === undefined );
 
 
 /* XPECT output ---
+<==
+stdout:
 true
 true
 true
@@ -64,4 +66,6 @@ true
 true
 true
 true
+stderr:
+==>
 --- */

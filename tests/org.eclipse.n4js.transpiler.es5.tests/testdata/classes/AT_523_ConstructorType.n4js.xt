@@ -16,7 +16,11 @@
  */
 
 /* XPECT output ---
+<==
+stdout:
 C.f
+stderr:
+==>
 --- */
 class C {
 	f() { console.log("C.f")}

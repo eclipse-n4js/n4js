@@ -13,6 +13,8 @@
 
 
 /* XPECT output ~~~
+<==
+stdout:
 N4Interface {
   origin: 'org.eclipse.n4js.transpiler.es5.tests',
   annotations: [],
@@ -46,6 +48,8 @@ N4Interface {
   ownedMembers: [],
   consumedMembers: []
 }
+stderr:
+==>
 ~~~ */
 
 

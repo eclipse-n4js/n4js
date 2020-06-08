@@ -27,9 +27,13 @@ console.log(getBaseLog(10, 1000));
 
 
 /* XPECT output ---
+<==
+stdout:
 NaN
 -Infinity
 0
 2.302585092994046
 2.9999999999999996
+stderr:
+==>
 --- */

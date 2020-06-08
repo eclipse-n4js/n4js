@@ -39,6 +39,8 @@ var ue = new URIError("Something broken in URI");
 console.log(ue.toString());
 
 /* XPECT output ---
+<==
+stdout:
 Error: Whoops!
 Error
 EvalError: Eval error is bad
@@ -47,4 +49,6 @@ ReferenceError: Wrong reference
 SyntaxError: Syntax apples grow on syntax trees
 TypeError: wrong type
 URIError: Something broken in URI
+stderr:
+==>
 --- */

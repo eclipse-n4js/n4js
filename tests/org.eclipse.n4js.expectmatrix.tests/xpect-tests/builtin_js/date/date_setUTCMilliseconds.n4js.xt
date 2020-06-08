@@ -19,5 +19,9 @@ theBigDay.setUTCMilliseconds(100);
 console.log(theBigDay.getUTCMilliseconds());
 
 /* XPECT output ---
+<==
+stdout:
 100
+stderr:
+==>
 --- */

@@ -55,7 +55,11 @@ var bOK = new Box(1,2)
 
 
 /* XPECT output ---
+<==
+stdout:
 we want to see 11*12 = 132 :
 132
+stderr:
+==>
    ---
 */

@@ -13,7 +13,11 @@
 
 
 /* XPECT output ~~~
+<==
+stdout:
 [Function: len]
+stderr:
+==>
 ~~~ */
 
 console.log(

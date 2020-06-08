@@ -21,6 +21,10 @@ console.log(sports); // ["soccer", "baseball", "football", "swimming"]
 console.log(total);  // 4
 
 /* XPECT output ---
+<==
+stdout:
 [ 'soccer', 'baseball', 'football', 'swimming' ]
 4
+stderr:
+==>
 --- */

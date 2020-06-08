@@ -53,6 +53,10 @@ console.log(v2.next().value);
 
 
 /* XPECT output ---
+<==
+stdout:
 hello from IImpl
 hello from C
+stderr:
+==>
 --- */

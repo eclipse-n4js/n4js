@@ -60,6 +60,8 @@ var obj_missingA_v2 = {number a:undefined,b:43};
 
 
 /* XPECT output ---
+<==
+stdout:
 expecting: 42
 42
 expecting: 42
@@ -72,4 +74,6 @@ expecting: 99
 99
 expecting: 99
 99
+stderr:
+==>
 --- */

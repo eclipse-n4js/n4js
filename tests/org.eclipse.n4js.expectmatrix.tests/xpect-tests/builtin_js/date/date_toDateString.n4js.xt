@@ -29,7 +29,11 @@ console.log(s.indexOf("28")>=0);
 
 
 /* XPECT output ---
+<==
+stdout:
 true
 true
 true
+stderr:
+==>
 --- */

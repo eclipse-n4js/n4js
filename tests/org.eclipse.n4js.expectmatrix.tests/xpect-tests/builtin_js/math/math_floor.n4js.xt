@@ -18,6 +18,10 @@ console.log(Math.floor( 45.95)); //  45
 console.log(Math.floor(-45.95)); // -46
 
 /* XPECT output ---
+<==
+stdout:
 45
 -46
+stderr:
+==>
 --- */

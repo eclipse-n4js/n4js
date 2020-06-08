@@ -12,9 +12,13 @@
 /* XPECT_SETUP org.eclipse.n4js.spec.examples.xpect.tests.SpecExamplesTest END_SETUP */
 
  /* XPECT output ~~~
+<==
+stdout:
 { s: 'hello', n: 42 }
 hello
 42
+stderr:
+==>
 ~~~ */
 
 var ol = {

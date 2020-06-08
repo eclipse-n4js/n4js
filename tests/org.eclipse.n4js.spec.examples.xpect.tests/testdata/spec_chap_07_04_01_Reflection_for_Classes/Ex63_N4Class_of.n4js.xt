@@ -14,6 +14,8 @@
 // IDEBUG-195
 
  /* XPECT  output ~~~
+<==
+stdout:
 spec_chap_07_04_01_Reflection_for_Classes/Ex63_N4Class_of/C
 spec_chap_07_04_01_Reflection_for_Classes/Ex63_N4Class_of/C
 spec_chap_07_04_01_Reflection_for_Classes/Ex63_N4Class_of/I
@@ -22,6 +24,8 @@ spec_chap_07_04_01_Reflection_for_Classes/Ex63_N4Class_of/R
 spec_chap_07_04_01_Reflection_for_Classes/Ex63_N4Class_of/RCons
 spec_chap_07_04_01_Reflection_for_Classes/Ex63_N4Class_of/E
 spec_chap_07_04_01_Reflection_for_Classes/Ex63_N4Class_of/E
+stderr:
+==>
 ~~~ */
 
 

@@ -132,6 +132,8 @@ B.sfield6 = "";
 
 
 /* XPECT output ---
+<==
+stdout:
 START
 undefined
 should show up (field2)
@@ -149,4 +151,6 @@ undefined
 should show up (sfield6)
 true true true true true true
 END
+stderr:
+==>
 --- */

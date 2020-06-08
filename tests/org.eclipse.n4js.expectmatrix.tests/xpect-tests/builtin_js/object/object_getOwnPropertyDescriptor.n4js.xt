@@ -28,6 +28,8 @@ d = Object.getOwnPropertyDescriptor(o, "baz");
 console.log(d);
 
 /* XPECT output ---
+<==
+stdout:
 {
   get: [Function: get foo],
   set: undefined,
@@ -41,4 +43,6 @@ console.log(d);
   enumerable: false,
   configurable: false
 }
+stderr:
+==>
 --- */

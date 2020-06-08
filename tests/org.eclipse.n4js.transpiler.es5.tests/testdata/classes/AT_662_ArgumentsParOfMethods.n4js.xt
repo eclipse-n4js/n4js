@@ -12,10 +12,14 @@
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
 
 /* XPECT output ---
+<==
+stdout:
 foo.arguments.length: 1
 first arg: 1
 f.arguments.length: 2
 bar.arguments.length: 2
+stderr:
+==>
 --- */
 
 

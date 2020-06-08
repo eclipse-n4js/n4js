@@ -44,5 +44,9 @@ console.log(foo());
 
 
 /* XPECT output ---
+<==
+stdout:
 Kind regards sent to you by function 'foo' in module 'Other'!
+stderr:
+==>
 --- */

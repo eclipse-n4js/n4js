@@ -19,7 +19,11 @@ console.log(Math.ceil(4)); // 4
 console.log(Math.ceil(7.004)); // 8
 
 /* XPECT output ---
+<==
+stdout:
 1
 4
 8
+stderr:
+==>
 --- */

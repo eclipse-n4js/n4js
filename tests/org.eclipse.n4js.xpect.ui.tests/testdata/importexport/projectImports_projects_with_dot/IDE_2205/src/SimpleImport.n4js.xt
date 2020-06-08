@@ -43,5 +43,9 @@ console.log("simple import is correct :", bazSimpleImport.myVar === "my var val"
 
 
 /* XPECT output ---
+<==
+stdout:
 simple import is correct : true
+stderr:
+==>
 --- */

@@ -13,7 +13,11 @@
 
 
 /* XPECT output ~~~
+<==
+stdout:
 [Function: len] 123
+stderr:
+==>
 ~~~ */
 // we need an annotation for the export-declaration, so using @Internal as dummy here:
 @Internal

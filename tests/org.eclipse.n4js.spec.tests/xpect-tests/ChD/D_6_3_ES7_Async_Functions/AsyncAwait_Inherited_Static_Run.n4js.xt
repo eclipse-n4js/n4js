@@ -13,8 +13,12 @@
 
 
 /* XPECT output ---
+<==
+stdout:
 C.async1() : ok :: sub class async1
 C.async2() : ok :: super async2
+stderr:
+==>
 --- */
 
 class SC{

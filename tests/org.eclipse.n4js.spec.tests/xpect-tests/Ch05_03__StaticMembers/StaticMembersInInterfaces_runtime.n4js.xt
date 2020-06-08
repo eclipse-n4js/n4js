@@ -52,10 +52,14 @@ I.m();
 
 
 /* XPECT output ---
+<==
+stdout:
 41
 42
 43
 returned from static getter
 sent to static setter: some value
 hello from the static method!
+stderr:
+==>
 --- */

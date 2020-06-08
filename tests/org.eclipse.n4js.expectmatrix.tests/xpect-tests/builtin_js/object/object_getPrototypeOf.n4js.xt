@@ -19,5 +19,9 @@ var obj= Object.create(proto);
 console.log("true = " + (Object.getPrototypeOf(obj) === proto));
 
 /* XPECT output ---
+<==
+stdout:
 true = true
+stderr:
+==>
 --- */

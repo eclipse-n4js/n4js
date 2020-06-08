@@ -78,6 +78,8 @@ for({a4,b4,c4} = obj4 ; cnt>0 ; cnt--)
 
 
 /* XPECT output ---
+<==
+stdout:
 ### array binding pattern
 1 2 3
 ### array binding pattern (for..of loop, single expression)
@@ -106,4 +108,6 @@ for({a4,b4,c4} = obj4 ; cnt>0 ; cnt--)
 1 2 3
 1 2 3
 1 2 3
+stderr:
+==>
 --- */

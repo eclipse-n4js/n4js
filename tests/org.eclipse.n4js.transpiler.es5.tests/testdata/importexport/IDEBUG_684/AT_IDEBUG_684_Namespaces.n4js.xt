@@ -20,10 +20,14 @@
  */
 
  /* XPECT output ---
+<==
+stdout:
 true
 true
 false
 false
+stderr:
+==>
 --- */
 
 import * as N from "importexport/IDEBUG_684/Err"

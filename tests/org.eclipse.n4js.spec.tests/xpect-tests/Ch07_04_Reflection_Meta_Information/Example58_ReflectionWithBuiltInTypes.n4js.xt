@@ -13,6 +13,8 @@
 // IDE-561
 
 /* XPECT output ---
+<==
+stdout:
 N4Object.n4type.name:        N4Object
 N4Object.n4type.origin:      n4js-runtime
 N4Object.n4type.fqn:         N4BuiltInTypes/N4Object
@@ -37,6 +39,8 @@ D.n4type.fqn:                Ch07_04_Reflection_Meta_Information/Example58_Refle
 D.n4type.n4superType.name:   A
 D.n4type.n4superType.origin: org.eclipse.n4js.spec.tests
 D.n4type.n4superType.fqn:    Ch07_04_Reflection_Meta_Information/Example58_ReflectionWithBuiltInTypes/A
+stderr:
+==>
 --- */
 
 console.log('N4Object.n4type.name:        ' + N4Object.n4type.name)

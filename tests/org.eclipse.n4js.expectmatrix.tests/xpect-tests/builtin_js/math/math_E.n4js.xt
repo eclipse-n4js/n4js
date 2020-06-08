@@ -21,5 +21,9 @@ function getNapier() {
 console.log(getNapier()); // 2.718281828459045
 
 /* XPECT output ---
+<==
+stdout:
 2.718281828459045
+stderr:
+==>
 --- */

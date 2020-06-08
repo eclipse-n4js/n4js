@@ -18,5 +18,9 @@ var hello = "Hello, ";
 console.log(hello.concat("Kevin", " have a nice day."));
 
 /* XPECT output ---
+<==
+stdout:
 Hello, Kevin have a nice day.
+stderr:
+==>
 --- */

@@ -12,12 +12,16 @@
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
 
 /* Fails on some machines, as throw seems to get evaluated first XPECT ! output ---
+<==
+stdout:
 hello world
-=== stderr ===
+stderr:
+
 [eval]:32
 throw 'world error'
 ^
 world error
+==>
 --- */
 console.log('hello world');
 throw 'world error';

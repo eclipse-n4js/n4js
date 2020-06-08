@@ -38,5 +38,9 @@ console.log(c.fieldX)
 
 
 /* consumed data fields must be initialized by spec constructor XPECT output ---
+<==
+stdout:
 5
+stderr:
+==>
 --- */

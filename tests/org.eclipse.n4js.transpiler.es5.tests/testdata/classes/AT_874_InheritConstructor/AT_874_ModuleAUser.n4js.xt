@@ -20,8 +20,12 @@
  */
 
 /* XPECT output ---
+<==
+stdout:
 world
 hello
+stderr:
+==>
 --- */
 import { A } from "classes/AT_874_InheritConstructor/AT_874_ModuleA"
 class B extends A {

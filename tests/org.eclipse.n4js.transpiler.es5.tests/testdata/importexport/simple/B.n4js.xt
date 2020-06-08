@@ -20,8 +20,12 @@
  */
 
 /* XPECT output ---
+<==
+stdout:
 module A A.foo
 module A f
+stderr:
+==>
 --- */
 import {A, f} from "importexport/simple/A"
 

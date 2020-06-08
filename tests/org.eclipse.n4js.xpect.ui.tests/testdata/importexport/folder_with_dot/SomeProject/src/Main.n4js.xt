@@ -60,8 +60,12 @@ ci.mi_withoutDots();
 
 
 /* XPECT output ---
+<==
+stdout:
 message from C located in folder WITH dots
 message from C located in folder WITHOUT dots
 message from I located in folder WITH dots
 message from I located in folder WITHOUT dots
+stderr:
+==>
 --- */

@@ -43,5 +43,9 @@ console.log("complete import is correct :", bazCompleteImport.myVar === "my var 
 
 
 /* XPECT output ---
+<==
+stdout:
 complete import is correct : true
+stderr:
+==>
 --- */

@@ -39,7 +39,11 @@ console.log(err.message);
 
 
 /* XPECT output ---
+<==
+stdout:
 true
 true
 my failure message
+stderr:
+==>
 --- */

@@ -39,6 +39,8 @@ console.log(a4,b4,c4);
 
 
 /* XPECT output ---
+<==
+stdout:
 expecting: undefined undefined undefined
 undefined undefined undefined
 expecting: undefined undefined undefined
@@ -47,4 +49,6 @@ expecting: 1 2 undefined
 1 2 undefined
 expecting: 1 2 undefined
 1 2 undefined
+stderr:
+==>
 --- */

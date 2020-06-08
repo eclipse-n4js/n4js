@@ -12,11 +12,15 @@
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
 
 /* XPECT output ---
+<==
+stdout:
 1
 36
 36
 1
 36
+stderr:
+==>
 --- */
 
 interface I1 {

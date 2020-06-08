@@ -41,6 +41,10 @@ let instance = new MyClass(obj);
 console.log(instance);
 
 /* XPECT output ---
+<==
+stdout:
 barker
 MyClass { first: true, second: true }
+stderr:
+==>
 --- */

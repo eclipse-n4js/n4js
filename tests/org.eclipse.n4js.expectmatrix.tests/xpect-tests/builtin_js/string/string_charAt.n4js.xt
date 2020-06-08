@@ -24,10 +24,14 @@ console.log("The character at index 4   is '" + anyString.charAt(4)   + "'");
 console.log("The character at index 999 is '" + anyString.charAt(999) + "'");
 
 /* XPECT output ---
+<==
+stdout:
 The character at index 0   is 'B'
 The character at index 1   is 'r'
 The character at index 2   is 'a'
 The character at index 3   is 'v'
 The character at index 4   is 'e'
 The character at index 999 is ''
+stderr:
+==>
 --- */

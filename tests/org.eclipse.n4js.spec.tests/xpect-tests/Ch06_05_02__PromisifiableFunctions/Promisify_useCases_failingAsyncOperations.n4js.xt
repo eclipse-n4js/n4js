@@ -152,6 +152,8 @@ testWithFooOne(async function() {
 
 
 /* XPECT output ---
+<==
+stdout:
 starting ...
 
 ****** function funOne:
@@ -185,4 +187,6 @@ use case #4: pass in a callback (don't use promisify at all)
 -> got expected error err24: Error: this is an expected error
 
 ... done!
+stderr:
+==>
 --- */

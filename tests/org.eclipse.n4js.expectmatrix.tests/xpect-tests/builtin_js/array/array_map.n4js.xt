@@ -52,9 +52,13 @@ var a = ["H", "e", "l", "l"].<number,Object>map(charCoding3);
 console.log(a);
 
 /* XPECT output ---
+<==
+stdout:
 [ 1, 4, 9 ]
 [ 1, 2, 3 ]
 [ 1, 4, 9 ]
 [ 2, 8, 18 ]
 [ 72, 101, 108, 108 ]
+stderr:
+==>
 --- */

@@ -20,12 +20,16 @@
 
 
 /* XPECT output ---
+<==
+stdout:
 y one
 Y2
 [ 'y one', 'Y2', 'y three' ]
 [ 'y one', 'Y2', 'y three' ]
 y three
 [ 'y one', 'Y2', 'y three' ]
+stderr:
+==>
 --- */
 
 import * as N from "enums/Defs";

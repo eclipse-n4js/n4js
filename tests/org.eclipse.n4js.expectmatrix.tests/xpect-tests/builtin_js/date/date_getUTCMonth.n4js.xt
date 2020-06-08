@@ -20,5 +20,9 @@ var day = date.getUTCMonth();
 console.log(day);
 
 /* XPECT output ---
+<==
+stdout:
 10
+stderr:
+==>
 --- */

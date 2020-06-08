@@ -21,6 +21,10 @@ console.log("Mozilla is " + x.length + " code units long");
 console.log("The empty string has a length of " + empty.length);
 
 /* XPECT output ---
+<==
+stdout:
 Mozilla is 7 code units long
 The empty string has a length of 0
+stderr:
+==>
 --- */

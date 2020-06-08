@@ -30,5 +30,9 @@ var str = 'Foo foobar FOO';
 testinput(re, str);
 
 /* XPECT output ---
+<==
+stdout:
 Foo foobar FOO contains foo
+stderr:
+==>
 --- */

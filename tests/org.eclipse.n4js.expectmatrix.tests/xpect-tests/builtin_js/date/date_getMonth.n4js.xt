@@ -20,5 +20,9 @@ var month = Xmas95.getMonth();
 console.log(month);
 
 /* XPECT output ---
+<==
+stdout:
 11
+stderr:
+==>
 --- */

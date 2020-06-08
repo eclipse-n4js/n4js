@@ -17,5 +17,9 @@
 console.log(Number.NaN);
 
 /* XPECT output ---
+<==
+stdout:
 NaN
+stderr:
+==>
 --- */

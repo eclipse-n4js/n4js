@@ -46,10 +46,14 @@ for(var idx=0;idx<lits.length;idx++) {
 // methods 'findLiteralByName' and 'findLiteralByValue' return 'undefined'
 // ==> they should be properly supported OR removed from built-in type N4StringBasedEnum
 /* XPECT output ---
+<==
+stdout:
 LITERAL: RED
 LITERAL: GREEN
 LITERAL: BLUE
 LITERAL: 
+stderr:
+==>
 --- */
 
 // findLiteralByName is not defined anymore

@@ -66,6 +66,8 @@ ol.method();
 
 
 /* XPECT output ---
+<==
+stdout:
 ####### class/interface
 hello from public field
 hello from private field
@@ -76,4 +78,6 @@ hello from public property
 hello from private property
 hello from private property (new value!)
 hello from method
+stderr:
+==>
 --- */

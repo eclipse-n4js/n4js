@@ -12,9 +12,13 @@
 /* XPECT_SETUP org.eclipse.n4js.spec.examples.xpect.tests.SpecExamplesTest END_SETUP */
 
  /* XPECT output ~~~
+<==
+stdout:
 { Kant: 'Imperative', Hegel: 'Dialectic', Spinoza: 'Am I?' }
 Imperative
 Am I?
+stderr:
+==>
 ~~~ */
 
 var map : Object = new Object();

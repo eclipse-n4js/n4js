@@ -27,6 +27,8 @@ console.log(Number.NEGATIVE_INFINITY/Number.NEGATIVE_INFINITY);
 console.log(5/Number.NEGATIVE_INFINITY);
 
 /* XPECT output ---
+<==
+stdout:
 -Infinity
 -Infinity
 Infinity
@@ -38,4 +40,6 @@ Infinity
 NaN
 NaN
 -0
+stderr:
+==>
 --- */

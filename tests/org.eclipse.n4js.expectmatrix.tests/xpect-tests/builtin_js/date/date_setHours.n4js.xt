@@ -30,9 +30,13 @@ theBigDay.setHours(25);
 console.log(toDateTimeString(theBigDay));
 
 /* XPECT output ---
+<==
+stdout:
 Sun Dec 17 1995 3:24:0.0
 Sun Dec 17 1995 4:24:0.0
 Mon Dec 18 1995 1:24:0.0
+stderr:
+==>
 --- */
 
 function toDateTimeString(date: Date) {

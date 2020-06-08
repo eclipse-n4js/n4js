@@ -22,9 +22,13 @@ console.log(Math.sqrt(0));  // 0
 console.log(Math.sqrt(-1)); // NaN
 
 /* XPECT output ---
+<==
+stdout:
 3
 1.4142135623730951
 1
 0
 NaN
+stderr:
+==>
 --- */

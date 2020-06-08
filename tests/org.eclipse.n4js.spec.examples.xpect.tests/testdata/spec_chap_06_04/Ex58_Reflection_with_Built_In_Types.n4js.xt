@@ -12,10 +12,14 @@
 /* XPECT_SETUP org.eclipse.n4js.spec.examples.xpect.tests.SpecExamplesTest END_SETUP */
 
  /* XPECT  output ~~~
+<==
+stdout:
 N4Object.n4type.fqn:      N4BuiltInTypes/N4Object
 N4Class.n4type.fqn:       N4BuiltInTypes/N4Class
 A.n4type.fqn:             spec_chap_06_04/Ex58_Reflection_with_Built_In_Types/A
 A.n4type.n4superType.fqn: N4BuiltInTypes/N4Object
+stderr:
+==>
 ~~~ */
 
 console.log('N4Object.n4type.fqn:      ' + N4Object.n4type.fqn)

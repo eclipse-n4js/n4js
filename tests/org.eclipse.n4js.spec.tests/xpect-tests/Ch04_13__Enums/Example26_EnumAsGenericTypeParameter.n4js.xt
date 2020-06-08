@@ -11,7 +11,11 @@
 
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
 /* XPECT output ~~~
+<==
+stdout:
 Color { name: 'R', value: 'R' }
+stderr:
+==>
 ~~~ */
 
 enum Color { R, G, B}

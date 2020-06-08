@@ -30,6 +30,10 @@ console.log(a1.s);
 
 
 /* XPECT output ---
+<==
+stdout:
 old f called
 set by ctor
+stderr:
+==>
 --- */

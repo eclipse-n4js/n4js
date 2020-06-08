@@ -19,5 +19,9 @@ var yr = Xmas95.getFullYear();
 console.log(yr);
 
 /* XPECT output ---
+<==
+stdout:
 1995
+stderr:
+==>
 --- */

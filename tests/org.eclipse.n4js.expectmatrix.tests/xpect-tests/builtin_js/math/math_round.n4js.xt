@@ -21,9 +21,13 @@ console.log(Math.round(-20.51));
 console.log(Math.round(1.005*100)/100);
 
 /* XPECT output ---
+<==
+stdout:
 20
 21
 -20
 -21
 1
+stderr:
+==>
 --- */

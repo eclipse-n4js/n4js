@@ -21,6 +21,8 @@
 
 
 /* XPECT output ---
+<==
+stdout:
 # inspect N4Provider
  = inspect test as N4Interface
   - test is a class :: false
@@ -54,6 +56,8 @@
   - test.toLocaleString  is native function
   - test.toString  is native function
   - test.valueOf  is native function
+stderr:
+==>
 --- */
 
 

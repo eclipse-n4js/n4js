@@ -26,5 +26,9 @@ let c = new C({a : "a", b: "b"});
 console.log(c)
 
 /* XPECT output ---
+<==
+stdout:
 C { b: 'b', a: 'a' }
+stderr:
+==>
 --- */

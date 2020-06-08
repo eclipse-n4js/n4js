@@ -38,9 +38,13 @@ console.log(oNumber.toLocaleString());
 console.log(oDate.toLocaleString().indexOf("1995")>=0);
 
 /* XPECT output ---
+<==
+stdout:
 [object Object]
 [object Object]
 1,2,3
 10
 true
+stderr:
+==>
 --- */

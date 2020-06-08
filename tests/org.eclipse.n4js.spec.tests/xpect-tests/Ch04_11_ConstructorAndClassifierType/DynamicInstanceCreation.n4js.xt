@@ -12,6 +12,8 @@
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
 
 /* XPECT output ---
+<==
+stdout:
 static
 A.ctor
 A.f
@@ -26,6 +28,8 @@ dynamic
 A.ctor
 B.ctor
 B.f
+stderr:
+==>
 --- */
 
 class A {

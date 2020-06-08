@@ -14,7 +14,11 @@
 
 // found during IDE-1852: XPECT FIXME noerrors
 /* TODO IDE-1763 re-enable this test once class expression support is done XPECT ! outputRegex ~~~
+<==
+stdout:
 \[Function: __Anonymous_[0-9]+\]
+stderr:
+==>
 ~~~ */
 
 

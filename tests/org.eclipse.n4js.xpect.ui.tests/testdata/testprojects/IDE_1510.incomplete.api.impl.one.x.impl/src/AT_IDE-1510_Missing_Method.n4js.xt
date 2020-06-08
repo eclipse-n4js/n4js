@@ -33,11 +33,15 @@
 */
 
 /* XPECT output ---
+<==
+stdout:
 Hello from Implementation one.x.impl::p.A.n4js !
 Step 2
 Step 3
 N4ApiNotImplementedError: API for method A.missing_n not implemented yet.
 N4ApiNotImplementedError: API for method A.missing_someIA not implemented yet.
+stderr:
+==>
 --- */
 
 import { A } from "p/A"

@@ -15,8 +15,12 @@
 // See 192980b3133a5a7fce70630c70d577a8fd410002, c74c82650408278a26d1d3433b780122e7a63ce5, 9732be951c73ac638d7a12c5d6767fb5e5d4f7cd, cd24fa1498702f9a6fd731916b3caa413f0fabc6.
 
 /* XPECT output ---
+<==
+stdout:
 A.x
 newValue
+stderr:
+==>
 --- */
 
 interface I {

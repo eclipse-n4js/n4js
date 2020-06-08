@@ -54,6 +54,8 @@ Object.seal(s3);
 console.log("8 frozen = " + (Object.isFrozen(s3) === true)); // only configurability matters for accessor properties
 
 /* XPECT output ---
+<==
+stdout:
 0 not sealed = true
 1 sealed = true
 2 not sealed = true
@@ -63,4 +65,6 @@ console.log("8 frozen = " + (Object.isFrozen(s3) === true)); // only configurabi
 6 frozen = true
 7 not frozen = true
 8 frozen = true
+stderr:
+==>
 --- */

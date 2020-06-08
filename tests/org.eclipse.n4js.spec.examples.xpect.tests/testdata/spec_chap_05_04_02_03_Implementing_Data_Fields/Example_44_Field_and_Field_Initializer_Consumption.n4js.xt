@@ -12,7 +12,11 @@
 /* XPECT_SETUP org.eclipse.n4js.spec.examples.xpect.tests.SpecExamplesTest END_SETUP */
 
  /* XPECT  output ~~~
+<==
+stdout:
 s: C , t: D ,u: I1 ,v: I2
+stderr:
+==>
 ~~~ */
 
 interface I0 {

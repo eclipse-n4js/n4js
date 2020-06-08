@@ -43,10 +43,14 @@ console.log("res:", res);
 
 
 /* XPECT output ---
+<==
+stdout:
 false = false
 true = true
 element: 5
 element: 2
 element: 16
 res: false
+stderr:
+==>
 --- */

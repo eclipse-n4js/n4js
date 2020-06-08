@@ -25,5 +25,9 @@ class C implements I {}
 new C().m0();
 
 /* XPECT output ---
+<==
+stdout:
 hello from I#m1
+stderr:
+==>
 --- */

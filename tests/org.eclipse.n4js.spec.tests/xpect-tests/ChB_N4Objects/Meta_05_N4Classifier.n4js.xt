@@ -21,6 +21,8 @@
 
 
 /* XPECT output ---
+<==
+stdout:
 # inspect N4Classifier
  = inspect test as N4Classifier
   - test.test.constructor is a function N4Class
@@ -63,6 +65,8 @@
   - test.toLocaleString  is native function
   - test.toString  is native function
   - test.valueOf  is native function
+stderr:
+==>
 --- */
 
 

@@ -23,8 +23,12 @@ g("t1", null) ?? g("t2", null);
 
 
 /* XPECT output ---
+<==
+stdout:
 t1
 ======
 t1
 t2
+stderr:
+==>
 --- */

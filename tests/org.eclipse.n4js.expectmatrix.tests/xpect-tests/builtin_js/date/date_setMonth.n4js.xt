@@ -33,7 +33,11 @@ theBigDay.setMonth(15);
 console.log(theBigDay.toDateString());
 
 /* XPECT output ---
+<==
+stdout:
 Wed Jul 02 2003
 Mon Apr 14 2003
 Wed Apr 14 2004
+stderr:
+==>
 --- */

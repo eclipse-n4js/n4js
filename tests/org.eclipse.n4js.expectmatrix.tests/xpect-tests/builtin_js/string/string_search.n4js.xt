@@ -32,6 +32,10 @@ testinput(re, str1);
 testinput(re, str2);
 
 /* XPECT output ---
+<==
+stdout:
 For more information, see Chapter 3.4.5.1 contains /(chapter \d+(\.\d)*)/i
 For more information, see another book does not contain /(chapter \d+(\.\d)*)/i
+stderr:
+==>
 --- */

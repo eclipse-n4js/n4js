@@ -21,6 +21,10 @@ class A {
 let x = new A({ a: 5 }); // value has to be initialized
 
 /* XPECT output ---
+<==
+stdout:
 undefined
+stderr:
+==>
 --- */
 console.log(x.a);

@@ -24,7 +24,11 @@ var n2 = Number("hello");
 console.log(n2);
 
 /* XPECT output ---
+<==
+stdout:
 9658675
 0
 NaN
+stderr:
+==>
 --- */

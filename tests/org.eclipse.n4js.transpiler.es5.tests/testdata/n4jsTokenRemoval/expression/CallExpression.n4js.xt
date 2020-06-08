@@ -13,7 +13,11 @@
 
 
 /* XPECT output ~~~
+<==
+stdout:
 compiler works as expected
+stderr:
+==>
 ~~~ */
 
 class Promise<S, F> {

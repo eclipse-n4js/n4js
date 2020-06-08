@@ -26,6 +26,10 @@ f(675, 7826);
 f(1.79E+308, 4);
 
 /* XPECT output ---
+<==
+stdout:
 5282550
 Number too big
+stderr:
+==>
 --- */

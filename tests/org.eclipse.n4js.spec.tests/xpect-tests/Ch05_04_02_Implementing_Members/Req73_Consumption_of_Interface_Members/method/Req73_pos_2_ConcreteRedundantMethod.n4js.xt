@@ -26,7 +26,11 @@ class A implements I,J {}
 
 
 /* XPECT output ---
+<==
+stdout:
 J.f()
+stderr:
+==>
 --- */
 
 // XPECT binding --> J.f

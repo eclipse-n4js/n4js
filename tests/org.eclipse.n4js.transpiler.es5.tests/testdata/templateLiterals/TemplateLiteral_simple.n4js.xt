@@ -58,6 +58,8 @@ console.log('===================');
 
 
 /* XPECT output ---
+<==
+stdout:
 ===================
 ""
 ===================
@@ -77,4 +79,6 @@ and hello again 42 times ! and hello again 7 times !
 
 "
 ===================
+stderr:
+==>
 --- */

@@ -96,6 +96,8 @@ logExpectedActual(99,a17);
 
 
 /* XPECT output ---
+<==
+stdout:
 #### case 1: default value for simple value in array destructuring pattern
 expected: 2 actual: 2
 expected: 99 actual: 99
@@ -114,4 +116,6 @@ expected: 99 actual: 99
 expected: 2 actual: 2
 expected: 99 actual: 99
 expected: 99 actual: 99
+stderr:
+==>
 --- */

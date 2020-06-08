@@ -25,6 +25,10 @@ console.log(n.indexOf("2001")>=0);
 console.log(n.indexOf("14")>=0);
 
 /* XPECT output ---
+<==
+stdout:
 true
 true
+stderr:
+==>
 --- */

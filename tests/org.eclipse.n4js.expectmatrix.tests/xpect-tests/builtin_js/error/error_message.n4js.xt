@@ -21,6 +21,10 @@ e.message = "Whatever."
 console.log(e.toString());
 
 /* XPECT output ---
+<==
+stdout:
 Error: Could not parse input
 Error: Whatever.
+stderr:
+==>
 --- */

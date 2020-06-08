@@ -21,6 +21,8 @@
 
 // found during IDE-1852: XPECT FIXME nowarnings
 /* XPECT output ---
+<==
+stdout:
 
 e.f: test
 e.field: test
@@ -33,6 +35,8 @@ f.field: test
 f.field2: 5
 f.localField: undefined
 f.localField2: 7
+stderr:
+==>
 --- */
 
 import { A as C, R as S} from "classes/AT_953_alias/A"

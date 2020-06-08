@@ -13,8 +13,12 @@
 
 
 /* XPECT output ---
+<==
+stdout:
 [ 'blzit' ]
 [ 'blzit' ]
+stderr:
+==>
 --- */
 
 

@@ -32,6 +32,10 @@ console.log(f("hello", " cruel ", "world"));
 console.log(f());
 
 /* XPECT output ---
+<==
+stdout:
 hello cruel world
 
+stderr:
+==>
 --- */

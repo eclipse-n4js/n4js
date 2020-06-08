@@ -18,10 +18,14 @@
  */
 
  /* XPECT output ~~~
+<==
+stdout:
 { name: 'Walter', age: 72, address: Address {} }
 Walter
 72
 Address {}
+stderr:
+==>
 ~~~ */
 
 // IDEBUG-73

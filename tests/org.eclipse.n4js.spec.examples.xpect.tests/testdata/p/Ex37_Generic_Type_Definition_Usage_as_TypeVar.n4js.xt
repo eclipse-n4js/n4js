@@ -18,7 +18,11 @@
  */
 
  /* XPECT  output ~~~
+<==
+stdout:
 Hello
+stderr:
+==>
 ~~~ */
 
 /* XPECT ! compileResult ---

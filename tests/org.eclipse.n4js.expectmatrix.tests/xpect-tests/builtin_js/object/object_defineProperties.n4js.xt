@@ -32,5 +32,9 @@ Object.defineProperties(obj, {
 console.log(JSON.stringify(obj));
 
 /* XPECT output ---
+<==
+stdout:
 {"property1":true,"property2":"Hello"}
+stderr:
+==>
 --- */

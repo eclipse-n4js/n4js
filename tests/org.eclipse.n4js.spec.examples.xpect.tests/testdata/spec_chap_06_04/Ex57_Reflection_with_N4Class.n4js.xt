@@ -12,11 +12,15 @@
 /* XPECT_SETUP org.eclipse.n4js.spec.examples.xpect.tests.SpecExamplesTest END_SETUP */
 
  /* XPECT  output ~~~
+<==
+stdout:
 spec_chap_06_04/Ex57_Reflection_with_N4Class/B
 spec_chap_06_04/Ex57_Reflection_with_N4Class/B
 spec_chap_06_04/Ex57_Reflection_with_N4Class/A
 spec_chap_06_04/Ex57_Reflection_with_N4Class/B
 N4BuiltInTypes/N4Class
+stderr:
+==>
 ~~~ */
 
 class A {}

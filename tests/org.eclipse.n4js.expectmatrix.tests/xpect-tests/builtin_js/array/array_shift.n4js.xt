@@ -24,7 +24,11 @@ console.log("myFish after: " + myFish);
 console.log("Removed this element: " + shifted);
 
 /* XPECT output ---
+<==
+stdout:
 myFish before: angel,clown,mandarin,surgeon
 myFish after: clown,mandarin,surgeon
 Removed this element: angel
+stderr:
+==>
 --- */

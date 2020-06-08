@@ -11,12 +11,16 @@
 
 /* XPECT_SETUP org.eclipse.n4js.bugreports.tests.N4JSBugreportTest END_SETUP  */
 /* XPECT output ---
+<==
+stdout:
 RED
 RED
 IDEBUG_0014_EnumAPI/Color
 US
 840
 IDEBUG_0014_EnumAPI/Country
+stderr:
+==>
 --- */
 
 // assume this file to be contained in a package "IDEBUG_14" -- do be adapted to actual package

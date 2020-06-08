@@ -13,11 +13,15 @@
 
 
 /* XPECT output ---
+<==
+stdout:
 setter in B: 42
 setter in A: 84
 result: b._a == 84
 result: b.a  == 74
 done
+stderr:
+==>
 --- */
 
 

@@ -13,6 +13,8 @@
 // IDE-561
 
 /* XPECT output ---
+<==
+stdout:
 # all direct
  - N4Accessor :: getterPrivateString
  - N4Accessor :: setterPrivateString
@@ -27,6 +29,8 @@
  - N4DataField :: datafieldPrivateString
  - N4Method :: methodPrivateStaticVoid
  - N4Method :: methodPrivateVoid
+stderr:
+==>
 --- */
 
 

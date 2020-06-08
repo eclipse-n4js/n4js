@@ -20,5 +20,9 @@ var reversed = myArray.reverse();
 console.log(reversed) // ["three", "two", "one"]
 
 /* XPECT output ---
+<==
+stdout:
 [ 'three', 'two', 'one' ]
+stderr:
+==>
 --- */

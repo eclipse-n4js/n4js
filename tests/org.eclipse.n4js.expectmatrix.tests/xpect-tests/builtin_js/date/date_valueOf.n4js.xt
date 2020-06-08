@@ -19,5 +19,9 @@ var myVar = x.valueOf();
 console.log(myVar);
 
 /* XPECT output ---
+<==
+stdout:
 -424699200000
+stderr:
+==>
 --- */

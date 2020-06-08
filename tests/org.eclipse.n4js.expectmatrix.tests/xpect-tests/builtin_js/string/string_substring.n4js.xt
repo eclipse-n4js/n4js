@@ -38,6 +38,8 @@ console.log(anyString.substring(0));
 console.log("'" + anyString.substring(3,3) + "'");
 
 /* XPECT output ---
+<==
+stdout:
 Moz
 Moz
 lla
@@ -49,4 +51,6 @@ Mozilla
 Mozilla
 Mozilla
 ''
+stderr:
+==>
 --- */

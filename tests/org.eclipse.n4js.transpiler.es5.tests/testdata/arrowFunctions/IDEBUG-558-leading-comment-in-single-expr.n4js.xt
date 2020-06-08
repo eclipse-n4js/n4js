@@ -12,11 +12,15 @@
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
 
 /* XPECT output ---
+<==
+stdout:
 [ 1, 2, 3 ]
 [ 1, 2, 3 ]
 [ 1, 2, 3 ]
 [ 1, 2, 3 ]
 [ 1, 2, 3 ]
+stderr:
+==>
 --- */
 
 // IDEBUG-558 wrong transpilation of single-expr arrow-fun with leading comment.

@@ -12,6 +12,8 @@
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
 
 /* XPECT output ---
+<==
+stdout:
 R.m get
 S.m get
 R.m set
@@ -20,6 +22,8 @@ R.m meth
 S.m meth
 R.m fld
 S.m fld
+stderr:
+==>
 --- */
 
 

@@ -29,9 +29,13 @@ theBigDay.setMilliseconds(60300);
 console.log(toDateTimeString(theBigDay));
 
 /* XPECT output ---
+<==
+stdout:
 Tue Dec 02 2003 0:0:0.100
 Tue Dec 02 2003 0:0:1.200
 Tue Dec 02 2003 0:1:1.300
+stderr:
+==>
 --- */
 
 function toDateTimeString(date: Date) {

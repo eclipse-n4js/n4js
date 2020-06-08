@@ -25,9 +25,13 @@ class B extends A {
 
 
 /* XPECT output ---
+<==
+stdout:
 setter A.f
 -
 set field B.f
+stderr:
+==>
 --- */
 
 

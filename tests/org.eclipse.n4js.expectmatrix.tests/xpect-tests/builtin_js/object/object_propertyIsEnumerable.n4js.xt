@@ -22,6 +22,10 @@ console.log("true = " + o.propertyIsEnumerable('prop'));
 console.log("true = " + a.propertyIsEnumerable("0"));		// in Source: argument is a number
 
 /* XPECT output ---
+<==
+stdout:
 true = true
 true = true
+stderr:
+==>
 --- */

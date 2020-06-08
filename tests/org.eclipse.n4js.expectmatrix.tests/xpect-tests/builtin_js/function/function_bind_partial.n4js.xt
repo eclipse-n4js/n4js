@@ -33,7 +33,11 @@ console.log(list2);
 console.log(list3);
 
 /* XPECT output ---
+<==
+stdout:
 [ 1, 2, 3 ]
 [ 37 ]
 [ 37, 1, 2, 3 ]
+stderr:
+==>
 --- */

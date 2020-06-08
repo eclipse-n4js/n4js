@@ -27,7 +27,11 @@ console.log(a2);
 console.log(a3);
 
 /* XPECT output ---
+<==
+stdout:
 [ 'a', 'b', 'c', 'd', 'e' ]
 [ 'a', 'b', 'c', 'd', 'e' ]
 [ <5 empty items> ]
+stderr:
+==>
 --- */

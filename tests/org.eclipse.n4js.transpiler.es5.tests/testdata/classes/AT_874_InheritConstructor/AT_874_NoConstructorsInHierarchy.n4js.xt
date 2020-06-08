@@ -12,6 +12,8 @@
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
 
 /* XPECT output ---
+<==
+stdout:
 a: a
 stuff: undefined
 a: a
@@ -19,6 +21,8 @@ stuff: undefined
 b: b
 aFromA: a
 otherStuff: undefined
+stderr:
+==>
 --- */
 class A {
     public a : string = "a";

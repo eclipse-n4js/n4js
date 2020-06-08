@@ -12,6 +12,8 @@
 /* XPECT_SETUP org.eclipse.n4js.bugreports.tests.N4JSBugreportTest END_SETUP  */
 
 /* XPECT output ---
+<==
+stdout:
 e.message === some message: true
 e.notMsg === custom message: true
 e.n === 36: true
@@ -22,6 +24,8 @@ e instanceof SubCustomError_008: true
 e instanceof SubSubCustomError_008: true
 e has stack trace: true
 e.stack starts with 'SubSubCustomError_008: some message': true
+stderr:
+==>
 --- */
 
 class CustomError_008 extends Error {

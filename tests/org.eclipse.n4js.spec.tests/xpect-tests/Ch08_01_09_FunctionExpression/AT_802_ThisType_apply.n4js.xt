@@ -40,7 +40,11 @@ console.log( "we want to see 4+1+1")
 console.log( ol2.n )
 
 /* XPECT output ---
+<==
+stdout:
 we want to see 4+1+1
 6
+stderr:
+==>
    ---
  */

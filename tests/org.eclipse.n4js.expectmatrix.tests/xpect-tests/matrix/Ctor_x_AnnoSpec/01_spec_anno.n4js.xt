@@ -64,7 +64,11 @@ console.log(b);
 console.log(c);
 
 /* XPECT output ---
+<==
+stdout:
 A { x: 1 }
 B { x: 1, y: 2 }
 C { x: 1, y: 2, z: 's' }
+stderr:
+==>
 --- */

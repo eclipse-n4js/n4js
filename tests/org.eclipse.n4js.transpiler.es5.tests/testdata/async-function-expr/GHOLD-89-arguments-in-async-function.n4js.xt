@@ -13,7 +13,11 @@
 
 
 /* XPECT output ---
+<==
+stdout:
 first argument is 42
+stderr:
+==>
 --- */
 
 
