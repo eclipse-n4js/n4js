@@ -67,8 +67,6 @@ public class OpenFileManager {
 	protected OpenFilesManager parent;
 	/** URI of the open file represented by this {@link OpenFileManager} (i.e. URI of the main resource). */
 	protected URI mainURI;
-	/** Name of project containing the open file. */
-	protected String mainProjectName;
 
 	/**
 	 * Contains the state of all files in the workspace. For open files managed by {@link #parent} (including the open
@@ -90,15 +88,14 @@ public class OpenFileManager {
 		return (XtextResourceSet) mainResource.getResourceSet();
 	}
 
-	public void initialize(OpenFilesManager parent, URI uri, String projectName, IResourceDescriptions persistedState,
+	public void initialize(OpenFilesManager parent, URI uri, IResourceDescriptions persistedState,
 			ResourceDescriptionsData sharedDirtyState) {
 		this.parent = parent;
 		this.mainURI = uri;
-		this.mainProjectName = projectName;
 
 		this.index = createIndex(persistedState, sharedDirtyState);
 
-		XtextResourceSet resourceSet = createResourceSet(projectName);
+		XtextResourceSet resourceSet = createResourceSet();
 		this.mainResource = (XtextResource) resourceSet.createResource(uri);
 	}
 
@@ -112,7 +109,7 @@ public class OpenFileManager {
 		return result;
 	}
 
-	protected XtextResourceSet createResourceSet(String projectName) {
+	protected XtextResourceSet createResourceSet() {
 		XtextResourceSet result = resourceSetProvider.get();
 
 		ResourceDescriptionsData.ResourceSetAdapter.installResourceDescriptionsData(result, index);
@@ -245,6 +242,9 @@ public class OpenFileManager {
 		for (IResourceDescription changedDesc : changedDescs) {
 			URI changedURI = changedDesc.getURI();
 			IResourceDescription oldDesc = index.getResourceDescription(changedURI);
+			if (oldDesc == changedDesc) {
+				continue;
+			}
 			IResourceDescription.Manager rdm = getResourceDescriptionManager(changedURI);
 			if (rdm != null) {
 				Delta delta = rdm.createDelta(oldDesc, changedDesc);

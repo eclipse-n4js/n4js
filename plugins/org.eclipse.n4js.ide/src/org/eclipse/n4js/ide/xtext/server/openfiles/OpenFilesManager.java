@@ -57,6 +57,10 @@ public class OpenFilesManager {
 
 	protected final ResourceDescriptionsData sharedDirtyState = new ResourceDescriptionsData(Collections.emptyList());
 
+	public synchronized boolean isOpen(URI uri) {
+		return openFiles.containsKey(uri);
+	}
+
 	public synchronized void openFile(URI uri, int version, String content) {
 		if (openFiles.containsKey(uri)) {
 			return; // FIXME content gets lost in this case!
@@ -116,10 +120,8 @@ public class OpenFilesManager {
 			// FIXME clean up when there's a top-level aggregator class for OpenFilesManager and the LSP builder
 			updatePersistedState(workspaceManager.getFullIndex(), Collections.emptySet(), CancelIndicator.NullImpl);
 		}
-		@SuppressWarnings("restriction")
-		String projectName = workspaceManager.getProjectConfig(uri).getName();
 		OpenFileManager ofm = openFileManagerProvider.get();
-		ofm.initialize(this, uri, projectName, persistedState, sharedDirtyState);
+		ofm.initialize(this, uri, persistedState, sharedDirtyState);
 		return ofm;
 	}
 

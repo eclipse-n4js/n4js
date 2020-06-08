@@ -19,6 +19,7 @@ import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterDeleteListener;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterGenerateListener;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterValidateListener;
+import org.eclipse.n4js.ide.xtext.server.openfiles.OpenFilesManager;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.validation.Issue;
 
@@ -41,10 +42,13 @@ public class DefaultBuildRequestFactory implements IBuildRequestFactory {
 	@Inject(optional = true)
 	private AfterDeleteListener afterDeleteListener;
 
+	@Inject
+	private OpenFilesManager openFilesManager;
+
 	class DefaultAfterValidateListener implements AfterValidateListener {
 		@Override
 		public void afterValidate(URI source, Collection<Issue> issues) {
-			if (XLanguageServerImpl.useNew) {
+			if (XLanguageServerImpl.useNew && openFilesManager.isOpen(source)) {
 				return;
 			}
 			issueAcceptor.publishDiagnostics(source, issues);

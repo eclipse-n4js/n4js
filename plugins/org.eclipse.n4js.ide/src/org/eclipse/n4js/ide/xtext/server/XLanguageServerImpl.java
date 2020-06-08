@@ -98,6 +98,7 @@ import org.eclipse.n4js.ide.server.HeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.ide.server.LspLogger;
 import org.eclipse.n4js.ide.xtext.server.XBuildManager.XBuildable;
 import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
+import org.eclipse.n4js.ide.xtext.server.concurrent.LSPExecutorService;
 import org.eclipse.n4js.ide.xtext.server.concurrent.XRequestManager;
 import org.eclipse.n4js.ide.xtext.server.contentassist.XContentAssistService;
 import org.eclipse.n4js.ide.xtext.server.findReferences.XWorkspaceResourceAccess;
@@ -162,6 +163,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Inject
 	private OpenFilesManager openFileManager;
+	
+	@Inject
+	private LSPExecutorService lspExecutorService;
 
 	public static boolean useNew = true;
 
@@ -481,13 +485,8 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	@Override
 	public void didOpen(DidOpenTextDocumentParams params) {
 		if (useNew) {
-			requestManager.runWrite("+didOpen()", () -> {
-				TextDocumentItem textDocument = params.getTextDocument();
-				openFileManager.openFile(getURI(textDocument), textDocument.getVersion(), textDocument.getText());
-				return null;
-			}, (x, ci) -> {
-				return null;
-			});
+			TextDocumentItem textDocument = params.getTextDocument();
+			openFileManager.openFile(getURI(textDocument), textDocument.getVersion(), textDocument.getText());
 		} else {
 			runBuildable("didOpen", () -> toBuildable(params));
 		}
@@ -505,14 +504,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	@Override
 	public void didChange(DidChangeTextDocumentParams params) {
 		if (useNew) {
-			requestManager.runWrite("+didOpen()", () -> {
-				return null;
-			}, (ci, x) -> {
-				VersionedTextDocumentIdentifier textDocument = params.getTextDocument();
-				openFileManager.changeFile(getURI(textDocument), textDocument.getVersion(), params.getContentChanges(),
-						ci);
-				return null;
-			});
+			VersionedTextDocumentIdentifier textDocument = params.getTextDocument();
+			openFileManager.changeFile(getURI(textDocument), textDocument.getVersion(), params.getContentChanges(),
+					CancelIndicator.NullImpl); // FIXME GH-1768 use proper indicator!
 		} else {
 			if (isSourceFileOrOpen(uriExtensions.toUri(params.getTextDocument().getUri()))) {
 				runBuildable("didChange", () -> toBuildable(params));
@@ -1425,6 +1419,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		CompletableFuture<Void> future = getRequestManager().allRequests()
 				.thenCompose(any -> persister.pendingWrites());
 		future.join();
+		lspExecutorService.join();
 	}
 
 }

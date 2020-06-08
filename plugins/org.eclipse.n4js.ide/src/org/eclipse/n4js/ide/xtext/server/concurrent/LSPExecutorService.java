@@ -54,7 +54,7 @@ public class LSPExecutorService {
 			try {
 				T actualResult = callable.call();
 				result.complete(actualResult);
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				result.completeExceptionally(e);
 			} finally {
 				onDone(this);
@@ -84,16 +84,18 @@ public class LSPExecutorService {
 	public synchronized <T> CompletableFuture<T> submit(Object queueId, Callable<T> task) {
 		QueuedTask<T> callable = new QueuedTask<>(queueId, task);
 		pendingTasks.add(callable);
-		submitNext();
+		doSubmitPending();
 		return callable.result;
 	}
 
-	protected synchronized void submitNext() {
-		QueuedTask<?> next = pollNext();
-		submit(next);
+	protected synchronized void doSubmitPending() {
+		QueuedTask<?> next;
+		while ((next = pollNext()) != null) {
+			doSubmit(next);
+		}
 	}
 
-	protected synchronized void submit(QueuedTask<?> task) {
+	protected synchronized void doSubmit(QueuedTask<?> task) {
 		if (runningTasks.putIfAbsent(task.queueId, task) != null) {
 			throw new IllegalStateException("executor inconsistency: queue ID already in progress: " + task.queueId);
 		}
@@ -104,7 +106,7 @@ public class LSPExecutorService {
 		if (runningTasks.remove(task.queueId) == null) {
 			throw new IllegalStateException("executor inconsistency: queue ID not in progress: " + task.queueId);
 		}
-		submitNext();
+		doSubmitPending();
 	}
 
 	protected synchronized QueuedTask<?> pollNext() {

@@ -127,12 +127,16 @@ class IncrementalBuilderChangesTest extends AbstractIncrementalBuilderTest {
 	}
 
 	@Test
-	def void testChangeInOpenedFile_acrossFiles() {
+	def void testChangeInOpenedFile_acrossFiles01() {
 		testWorkspaceManager.createTestProjectOnDisk(testDataAcrossFiles);
 		startAndWaitForLspServer();
 		assertNoIssues();
 
 		openFile("A");
+		openFile("B");
+		joinServerRequests();
+		assertNoIssues();
+
 		changeOpenedFile("A", '42' -> '"hello"');
 		joinServerRequests();
 		assertIssues("B" -> #[
@@ -145,12 +149,34 @@ class IncrementalBuilderChangesTest extends AbstractIncrementalBuilderTest {
 	}
 
 	@Test
-	def void testChangeInOpenedFile_acrossProjects() {
+	def void testChangeInOpenedFile_acrossFiles02() {
+		testWorkspaceManager.createTestProjectOnDisk(testDataAcrossFiles);
+		startAndWaitForLspServer();
+		assertNoIssues();
+
+		openFile("A");
+		changeOpenedFile("A", '42' -> '"hello"');
+		joinServerRequests();
+		assertNoIssues(); // error in "B" not showing up, because A not saved and B not opened
+		
+		saveOpenedFile("A");
+		joinServerRequests();
+		assertIssues("B" -> #[
+			"(Error, [1:18 - 1:19], string is not a subtype of number.)"
+		]);
+	}
+
+	@Test
+	def void testChangeInOpenedFile_acrossProjects01() {
 		testWorkspaceManager.createTestOnDisk(testDataAcrossProjects);
 		startAndWaitForLspServer();
 		assertNoIssues();
 
 		openFile("A");
+		openFile("B");
+		joinServerRequests();
+		assertNoIssues();
+
 		changeOpenedFile("A", '42' -> '"hello"');
 		joinServerRequests();
 		assertIssues("B" -> #[
@@ -160,5 +186,23 @@ class IncrementalBuilderChangesTest extends AbstractIncrementalBuilderTest {
 		changeOpenedFile("A", '"hello"' -> '42');
 		joinServerRequests();
 		assertNoIssues();
+	}
+
+	@Test
+	def void testChangeInOpenedFile_acrossProjects02() {
+		testWorkspaceManager.createTestOnDisk(testDataAcrossProjects);
+		startAndWaitForLspServer();
+		assertNoIssues();
+
+		openFile("A");
+		changeOpenedFile("A", '42' -> '"hello"');
+		joinServerRequests();
+		assertNoIssues(); // error in "B" not showing up, because A not saved and B not opened
+
+		saveOpenedFile("A");
+		joinServerRequests();
+		assertIssues("B" -> #[
+			"(Error, [1:18 - 1:19], string is not a subtype of number.)"
+		]);
 	}
 }
