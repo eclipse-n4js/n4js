@@ -12,17 +12,14 @@
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest  END_SETUP */
 
 /* XPECT output ---
-<==
-stdout:
 factors(1): 1
 factors(10): 1,2,5,10
 factors(100): 1,2,4,5,10,20,25,50,100
-stderr:
+=== stderr ===
 error when running logFactors(-100) : RangeError: illegal input, should be > 0, but was -100
 error when running logFactors(-10) : RangeError: illegal input, should be > 0, but was -10
 error when running logFactors(-1) : RangeError: illegal input, should be > 0, but was -1
 error when running logFactors(0) : RangeError: illegal input, should be > 0, but was 0
-==>
 --- */
 
 function factors(num : number):Array<number>{

@@ -96,8 +96,6 @@ for(var x of NodeJsWorkAround.build(c)) {
 }
 
 /* XPECT output ---
-<==
-stdout:
 The function for obtaining the iterator: 
 function
 returning an iterator for MyContainer ...
@@ -111,6 +109,4 @@ second
 returning next element (current index: 2) ...
 third
 returning done==true (current index: 3)
-stderr:
-==>
 --- */

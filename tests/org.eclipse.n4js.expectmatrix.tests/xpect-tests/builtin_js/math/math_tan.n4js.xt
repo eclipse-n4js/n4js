@@ -21,9 +21,5 @@ function getTan(x : number) {
 console.log(getTan(45));
 
 /* XPECT output ---
-<==
-stdout:
 1.6197751905438615
-stderr:
-==>
 --- */

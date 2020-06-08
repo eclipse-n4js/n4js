@@ -31,11 +31,7 @@ console.log("c2 :"+c2)
 console.log("c3 :"+c3)
 
 /* XPECT output ---
-<==
-stdout:
 c  :R
 c2 :G
 c3 :undefined
-stderr:
-==>
 --- */

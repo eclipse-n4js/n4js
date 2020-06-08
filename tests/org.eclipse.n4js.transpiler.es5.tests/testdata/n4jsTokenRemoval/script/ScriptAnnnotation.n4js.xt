@@ -14,11 +14,7 @@
 
 // found during IDE-1852: XPECT FIXME noerrors
 /* XPECT output ~~~
-<==
-stdout:
 Yay!
-stderr:
-==>
 ~~~ */
 
 

@@ -13,8 +13,6 @@
 // IDE-561
 
 /* XPECT output ---
-<==
-stdout:
 # all direct + inherited
  - N4Accessor :: getterPrivateString
  - N4Accessor :: getterPublicStringClassS
@@ -53,8 +51,6 @@ stdout:
  - N4Method :: methodPublicStaticVoidClassSS
  - N4Method :: methodPublicVoidClassS
  - N4Method :: methodPublicVoidClassSS
-stderr:
-==>
 --- */
 
 

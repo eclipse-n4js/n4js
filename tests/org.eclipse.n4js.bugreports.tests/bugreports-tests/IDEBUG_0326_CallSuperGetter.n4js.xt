@@ -13,13 +13,9 @@
 
 
 /* XPECT output ---
-<==
-stdout:
 result: b._a == hello
 result: b.a  == helloAB
 done
-stderr:
-==>
 --- */
 
 

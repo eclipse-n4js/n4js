@@ -13,14 +13,10 @@
 
 
 /* XPECT output ~~~
-<==
-stdout:
 ProjEnum { name: 'v', value: 'v' }
 ProjEnum { name: 's', value: 'string' }
 PubEnumE { name: 'v', value: 'v' }
 PubEnumE { name: 's', value: 'string' }
-stderr:
-==>
 ~~~ */
 
 

@@ -12,8 +12,6 @@
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
 
 /* XPECT output ---
-<==
-stdout:
 - D: fixed, fixed, optional -
 Fixed1: s1
 Fixed2: s2
@@ -28,8 +26,6 @@ Optional: undefined
 Fixed1: s1
 Fixed2: s2
 Optional: s3
-stderr:
-==>
 --- */
 class D {
 	constructor(fixed1 : string, fixed2 : string, start : string=undefined) {

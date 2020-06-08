@@ -33,14 +33,10 @@ while (idx != -1) {
 console.log(indices);
 
 /* XPECT output ---
-<==
-stdout:
 0
 -1
 2
 -1
 0
 [ 0, 2, 4 ]
-stderr:
-==>
 --- */

@@ -26,13 +26,9 @@ console.log("[object Undefined] = " + toString.call(undefined));
 console.log("[object Null] = " + toString.call(null));
 
 /* XPECT output ---
-<==
-stdout:
 [object Date] = [object Date]
 [object String] = [object String]
 [object Math] = [object Math]
 [object Undefined] = [object Undefined]
 [object Null] = [object Null]
-stderr:
-==>
 --- */

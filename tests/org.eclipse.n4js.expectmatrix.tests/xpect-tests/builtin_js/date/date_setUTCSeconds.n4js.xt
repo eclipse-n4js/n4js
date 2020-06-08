@@ -28,11 +28,7 @@ console.log(theBigDay.toUTCString());
 console.log(theBigDay.getUTCMilliseconds());
 
 /* XPECT output ---
-<==
-stdout:
 Sun, 02 Nov 2003 00:00:30 GMT
 Sun, 02 Nov 2003 00:00:34 GMT
 15
-stderr:
-==>
 --- */

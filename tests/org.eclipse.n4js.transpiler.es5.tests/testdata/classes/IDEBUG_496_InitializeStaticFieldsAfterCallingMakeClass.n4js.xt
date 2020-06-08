@@ -32,10 +32,6 @@ C.S.foo() // <-- crashes, since it doesn't have the correct prototype at the tim
 
 
 /* XPECT output ---
-<==
-stdout:
 creating a C ...
 hello from static initializer!!
-stderr:
-==>
 --- */

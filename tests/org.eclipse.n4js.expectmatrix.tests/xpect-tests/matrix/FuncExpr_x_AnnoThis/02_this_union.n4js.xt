@@ -38,11 +38,7 @@ logger.call(c);
 
 // IDE-1010, IDE-2313
 /* XPECT output ---
-<==
-stdout:
 ~A was logged~
 ~B was logged~
 ~C was logged~
-stderr:
-==>
 --- */

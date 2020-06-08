@@ -40,11 +40,7 @@ a.logMe.call(new A("second A"));
 a.logMe.call(new B());
 
 /* XPECT output ---
-<==
-stdout:
 logging first A
 logging second A
 logging B
-stderr:
-==>
 --- */

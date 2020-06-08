@@ -24,11 +24,7 @@ console.log(myVar2);
 console.log(myVar3);
 
 /* XPECT output ---
-<==
-stdout:
 Wind,Rain,Fire
 Wind, Rain, Fire
 Wind + Rain + Fire
-stderr:
-==>
 --- */

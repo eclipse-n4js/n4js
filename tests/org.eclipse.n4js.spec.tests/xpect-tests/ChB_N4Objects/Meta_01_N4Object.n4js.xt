@@ -21,8 +21,6 @@
 
 
 /* XPECT output ---
-<==
-stdout:
 # inspect N4Object meta
  = test is not instance of N4Object
  = inspect test as Object
@@ -33,8 +31,6 @@ stdout:
   - test.toLocaleString  is native function
   - test.toString  is native function
   - test.valueOf  is native function
-stderr:
-==>
 --- */
 
 

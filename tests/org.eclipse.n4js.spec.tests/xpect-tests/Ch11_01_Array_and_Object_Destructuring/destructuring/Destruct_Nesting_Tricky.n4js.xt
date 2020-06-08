@@ -46,12 +46,8 @@ console.log(b,c);
 
 
 /* XPECT output ---
-<==
-stdout:
 expecting: [ 6, 7, 8 ]
 [ 6, 7, 8 ]
 expecting: 2 3
 2 3
-stderr:
-==>
 --- */

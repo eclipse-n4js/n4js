@@ -30,8 +30,6 @@
  */
 
 /* XPECT output ---
-<==
-stdout:
 Pure function element
  {
     "type": "PureFnComponent",
@@ -40,8 +38,6 @@ Pure function element
     },
     "children": []
 }
-stderr:
-==>
 --- */
 
 import * as React from "react"

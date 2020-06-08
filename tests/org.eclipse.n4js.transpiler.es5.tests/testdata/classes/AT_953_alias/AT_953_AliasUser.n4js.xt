@@ -20,11 +20,7 @@
  */
 
 /* XPECT output ---
-<==
-stdout:
 B.f()
-stderr:
-==>
 --- */
 import {B as C} from "classes/AT_953_alias/imported/dep"
 var c = new C();

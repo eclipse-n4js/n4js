@@ -29,12 +29,8 @@ console.log(myV);
 
 
 /* XPECT output ---
-<==
-stdout:
 running in Var.n4js:
 hello from variable v!
 running in Var_main.n4js:
 hello from variable v!
-stderr:
-==>
 --- */

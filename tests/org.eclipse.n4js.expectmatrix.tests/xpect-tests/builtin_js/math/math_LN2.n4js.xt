@@ -21,9 +21,5 @@ function getNatLog2() {
 console.log(getNatLog2()); // 0.6931471805599453
 
 /* XPECT output ---
-<==
-stdout:
 0.6931471805599453
-stderr:
-==>
 --- */

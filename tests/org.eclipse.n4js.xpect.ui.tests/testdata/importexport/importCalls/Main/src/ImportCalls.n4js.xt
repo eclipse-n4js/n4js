@@ -67,8 +67,6 @@ async function testImportCalls() {
 }
 
 /* XPECT output ---
-<==
-stdout:
 ******** With ordinary imports:
 a in Other in project Main
 b in Other in project Main
@@ -83,6 +81,4 @@ a in Other1 in project Other
 b in Other1 in project Other
 a in Other2 in project Other
 b in Other2 in project Other
-stderr:
-==>
 --- */

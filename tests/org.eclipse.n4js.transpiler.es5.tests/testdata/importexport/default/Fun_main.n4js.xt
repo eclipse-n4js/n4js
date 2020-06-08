@@ -29,12 +29,8 @@ myF();
 
 
 /* XPECT output ---
-<==
-stdout:
 running in Fun.n4js:
 hello from function f!
 running in Fun_main.n4js:
 hello from function f!
-stderr:
-==>
 --- */

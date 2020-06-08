@@ -18,10 +18,6 @@ console.log( "ALPHABET".toLowerCase() );
 console.log( "AlPhABeT".toLowerCase() );
 
 /* XPECT output ---
-<==
-stdout:
 alphabet
 alphabet
-stderr:
-==>
 --- */

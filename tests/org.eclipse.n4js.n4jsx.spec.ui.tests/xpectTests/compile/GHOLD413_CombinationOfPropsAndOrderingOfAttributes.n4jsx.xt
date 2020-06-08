@@ -39,8 +39,6 @@ zzzz;
 const baz = { baz: "MyBaz" }
 
 /* XPECT output ---
-<==
-stdout:
 Zero attribute:
 {
     "type": "div",
@@ -96,8 +94,6 @@ Spread as last attribute:
     },
     "children": []
 }
-stderr:
-==>
 --- */
 
 // Zero attribute

@@ -13,12 +13,8 @@
 
 
 /* XPECT output ---
-<==
-stdout:
 A.x
 newValue
-stderr:
-==>
 --- */
 
 interface R {

@@ -28,10 +28,6 @@ console.log(diff1>0);
 console.log(diff2>0);
 
 /* XPECT output ---
-<==
-stdout:
 true
 true
-stderr:
-==>
 --- */

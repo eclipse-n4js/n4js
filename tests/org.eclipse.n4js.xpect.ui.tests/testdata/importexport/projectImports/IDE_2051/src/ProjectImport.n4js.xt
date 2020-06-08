@@ -77,10 +77,6 @@ o.greet();
 
 
 /* XPECT output ---
-<==
-stdout:
 Hello from C#greet() in def.n4js!
 Hello from Other#greet() in Other.n4js in project IDE_2051_b!
-stderr:
-==>
 --- */

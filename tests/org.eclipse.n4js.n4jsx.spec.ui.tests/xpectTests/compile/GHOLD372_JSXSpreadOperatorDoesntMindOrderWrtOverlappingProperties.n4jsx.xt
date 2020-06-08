@@ -31,15 +31,11 @@
 */
 
 /* XPECT output ---
-<==
-stdout:
 r1.props[foo] == 1
 r2.props[foo] == 2
 i2[foo] == 0
 o3.props[foo] == 3
 d3[foo] == 0
-stderr:
-==>
 --- */
 
 import * as React from "react"

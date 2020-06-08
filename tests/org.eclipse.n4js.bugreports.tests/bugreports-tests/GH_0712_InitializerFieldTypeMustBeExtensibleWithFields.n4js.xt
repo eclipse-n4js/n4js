@@ -37,10 +37,6 @@ console.log(d.getter);
 
 
 /* XPECT output ---
-<==
-stdout:
 ok
 correct
-stderr:
-==>
 --- */

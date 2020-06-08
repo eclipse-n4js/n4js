@@ -27,10 +27,6 @@ console.log( c['field' + C.num2] );
 
 
 /* XPECT output ---
-<==
-stdout:
 hello field1
 hello field2
-stderr:
-==>
 --- */

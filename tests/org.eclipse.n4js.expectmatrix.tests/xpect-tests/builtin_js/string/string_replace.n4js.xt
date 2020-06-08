@@ -44,12 +44,8 @@ console.log(styleHyphenFormat('borderTop'));
 
 
 /* XPECT output ---
-<==
-stdout:
 oranges are round, and oranges are juicy.
 Twas the night before Christmas...
 Smith, John
 border-top
-stderr:
-==>
 --- */

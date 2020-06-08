@@ -27,14 +27,10 @@ console.log( (-10).toString(2) );  // displays "-1010"
 console.log( (-0xff).toString(2) );// displays "-11111111"
 
 /* XPECT output ---
-<==
-stdout:
 10
 17
 110
 fe
 -1010
 -11111111
-stderr:
-==>
 --- */

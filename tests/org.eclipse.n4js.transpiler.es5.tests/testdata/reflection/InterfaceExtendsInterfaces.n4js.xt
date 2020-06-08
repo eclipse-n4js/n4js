@@ -38,8 +38,6 @@ console.log(S.n4type.allImplementedInterfaces);
 
 
 /* XPECT output ---
-<==
-stdout:
 I
 []
 J
@@ -55,6 +53,4 @@ S
   'reflection/InterfaceExtendsInterfaces/J',
   'reflection/InterfaceExtendsInterfaces/R'
 ]
-stderr:
-==>
 --- */

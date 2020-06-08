@@ -12,8 +12,6 @@
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
 
 /* XPECT output ---
-<==
-stdout:
 error when running logFactors(-100) : ReferenceError: logFactors is not defined
 error when running logFactors(-10) : ReferenceError: logFactors is not defined
 error when running logFactors(-1) : ReferenceError: logFactors is not defined
@@ -21,8 +19,6 @@ error when running logFactors(0) : ReferenceError: logFactors is not defined
 error when running logFactors(1) : ReferenceError: logFactors is not defined
 error when running logFactors(10) : ReferenceError: logFactors is not defined
 error when running logFactors(100) : ReferenceError: logFactors is not defined
-stderr:
-==>
 --- */
 
 function safeEval(dyn){

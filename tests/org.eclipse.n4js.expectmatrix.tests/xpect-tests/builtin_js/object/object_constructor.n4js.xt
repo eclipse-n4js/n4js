@@ -35,8 +35,6 @@ console.log("Hippo: " + oString);
 console.log("a 3 false: " + JSON.stringify(oObject));
 
 /* XPECT output ---
-<==
-stdout:
 Empty: {}
 Undefined: {}
 Null: {}
@@ -44,6 +42,4 @@ True: true
 3: 3
 Hippo: hippopotamus
 a 3 false: {"a":"a","b":3,"c":false}
-stderr:
-==>
 --- */

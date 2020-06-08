@@ -24,13 +24,9 @@ console.log(numObj.toPrecision(1)); // logs 5
 console.log((1234.5).toPrecision(2)); // "1.2e+3"
 
 /* XPECT output ---
-<==
-stdout:
 5.123456
 5.1235
 5.1
 5
 1.2e+3
-stderr:
-==>
 --- */

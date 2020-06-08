@@ -19,10 +19,6 @@
  */
 
 /* XPECT output ---
-<==
-stdout:
-stderr:
-==>
 --- */
 
 // XPECT noerrors --> "this test probably fails if not executed with Node.js" at "process"

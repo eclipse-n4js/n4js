@@ -21,10 +21,6 @@ Object.preventExtensions(empty);
 console.log(Object.isExtensible(empty) === false);
 
 /* XPECT output ---
-<==
-stdout:
 true
 true
-stderr:
-==>
 --- */

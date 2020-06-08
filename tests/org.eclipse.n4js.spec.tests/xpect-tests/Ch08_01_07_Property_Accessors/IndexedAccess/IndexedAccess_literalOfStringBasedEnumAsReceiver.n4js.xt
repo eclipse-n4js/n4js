@@ -33,10 +33,6 @@ console.log(v02);
 
 
 /* XPECT output ---
-<==
-stdout:
 R
 D
-stderr:
-==>
 --- */

@@ -13,8 +13,6 @@
 // IDE-561
 
 /* XPECT output ---
-<==
-stdout:
 # allMembers (direct + consumed + inherited + static) && annotated with @Nfon
  - N4DataField :: datafieldPublicStaticStringClassA
  - N4DataField :: datafieldPublicStaticStringClassS
@@ -51,8 +49,6 @@ stdout:
  - N4Method :: methodPublicVoidClassSS
  - N4Method :: methodPublicVoidRoleR
  - N4Method :: methodPublicVoidRoleRR
-stderr:
-==>
 --- */
 
 

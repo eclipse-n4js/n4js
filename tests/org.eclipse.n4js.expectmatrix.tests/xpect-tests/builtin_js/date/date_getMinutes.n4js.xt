@@ -20,9 +20,5 @@ var ms = Xmas95.getMinutes();
 console.log(ms);
 
 /* XPECT output ---
-<==
-stdout:
 15
-stderr:
-==>
 --- */

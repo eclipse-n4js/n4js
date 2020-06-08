@@ -48,8 +48,6 @@ log(function() { return undef2 ?? "default value" });
 
 
 /* XPECT output ---
-<==
-stdout:
 some value
 default value
 default value
@@ -65,6 +63,4 @@ default value
 some value
 default value
 default value
-stderr:
-==>
 --- */

@@ -14,12 +14,8 @@
 // IDE-1805  transpiler changes for computed-names of string-literal form in member declarations
 
 /* XPECT output ---
-<==
-stdout:
 1
 3
-stderr:
-==>
 --- */
 
 

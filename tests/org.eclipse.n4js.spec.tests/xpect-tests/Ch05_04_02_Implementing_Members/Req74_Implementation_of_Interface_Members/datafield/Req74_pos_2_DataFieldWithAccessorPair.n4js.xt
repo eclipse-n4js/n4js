@@ -25,14 +25,10 @@ class A implements I {
 }
 
 /* XPECT output ---
-<==
-stdout:
 A.set s
 A.get s
 A.set s
 A.get s
-stderr:
-==>
 --- */
 
 

@@ -25,8 +25,6 @@ console.log(2.34.toFixed(1));          // Returns "2.3"
 console.log((-2.34).toFixed(1));       // Returns "-2.3" (...unless you use parentheses)
 
 /* XPECT output ---
-<==
-stdout:
 12346
 12345.7
 12345.678900
@@ -34,6 +32,4 @@ stdout:
 0.00
 2.3
 -2.3
-stderr:
-==>
 --- */

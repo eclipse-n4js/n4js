@@ -19,11 +19,7 @@ console.log(Math.sin(1).toString().substring(0,12));           // 0.8414709848
 console.log(Math.sin(Math.PI / 2)); // 1
 
 /* XPECT output ---
-<==
-stdout:
 0
 0.8414709848
 1
-stderr:
-==>
 --- */

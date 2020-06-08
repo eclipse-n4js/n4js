@@ -19,9 +19,5 @@ var weekday = Xmas95.getDay();
 console.log(weekday); // 1
 
 /* XPECT output ---
-<==
-stdout:
 1
-stderr:
-==>
 --- */

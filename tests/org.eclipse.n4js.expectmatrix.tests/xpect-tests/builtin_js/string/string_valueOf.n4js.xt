@@ -18,9 +18,5 @@ var x = new String("Hello world");
 console.log(x.valueOf());
 
 /* XPECT output ---
-<==
-stdout:
 Hello world
-stderr:
-==>
 --- */

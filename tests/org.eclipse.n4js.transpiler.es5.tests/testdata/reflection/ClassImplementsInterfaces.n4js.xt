@@ -45,8 +45,6 @@ console.log(CS.n4type.allImplementedInterfaces);
 
 
 /* XPECT output ---
-<==
-stdout:
 CI
 [ 'reflection/ClassImplementsInterfaces/I' ]
 J
@@ -67,6 +65,4 @@ CS
   'reflection/ClassImplementsInterfaces/J',
   'reflection/ClassImplementsInterfaces/R'
 ]
-stderr:
-==>
 --- */

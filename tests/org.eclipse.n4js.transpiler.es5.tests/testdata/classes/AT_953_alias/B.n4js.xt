@@ -21,8 +21,6 @@
 
 // found during IDE-1852: XPECT FIXME nowarnings
 /* XPECT output ---
-<==
-stdout:
 
 a.foo()
 B.A.foo
@@ -37,8 +35,6 @@ A.A.foo
 d.foo()
 D.Super call --> A (B.A)
 B.A.foo
-stderr:
-==>
 --- */
 
 import { A as C, R as S} from "classes/AT_953_alias/A"

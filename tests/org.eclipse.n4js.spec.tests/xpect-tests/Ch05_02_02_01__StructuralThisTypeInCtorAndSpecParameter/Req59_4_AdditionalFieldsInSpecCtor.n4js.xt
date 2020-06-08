@@ -14,14 +14,10 @@
 // IDEBUG-134
 
 /* XPECT output ---
-<==
-stdout:
 greet= Hello , n= 0
 greet= Hello , n= 0
 greet= Hello , n= 42
 greet= Hello , n= 42
-stderr:
-==>
 --- */
 class A {
 	public greet : string = 'hi';

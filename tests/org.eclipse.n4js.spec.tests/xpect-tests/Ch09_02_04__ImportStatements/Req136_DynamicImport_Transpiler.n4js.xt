@@ -44,9 +44,5 @@ b;
 
 console.log("Invoke transpiler to trigger UnresolvedProxyInSubGeneratorException generation");
 /*  XPECT output  ---
-<==
-stdout:
 Invoke transpiler to trigger UnresolvedProxyInSubGeneratorException generation
-stderr:
-==>
 --- */

@@ -13,16 +13,12 @@
 // IDE-980
 
 /* XPECT output ---
-<==
-stdout:
 Ch07_04_Reflection_Meta_Information/ReflectionEnum/E
 Ch07_04_Reflection_Meta_Information/ReflectionEnum/E
 true
 L1 l1
 L2 L2
 L3 L3
-stderr:
-==>
 --- */
 
 enum E {

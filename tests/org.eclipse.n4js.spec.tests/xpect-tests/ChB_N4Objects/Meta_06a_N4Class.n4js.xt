@@ -21,8 +21,6 @@
 
 
 /* XPECT output ---
-<==
-stdout:
 # inspect N4Class
  = inspect test as N4Class
   - test is a class :: true
@@ -57,8 +55,6 @@ stdout:
   - test.toLocaleString  is native function
   - test.toString  is native function
   - test.valueOf  is native function
-stderr:
-==>
 --- */
 
 

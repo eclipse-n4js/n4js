@@ -23,9 +23,5 @@ for (var i = 0; i < numbers.length; i++) {
 console.log(numbers);
 
 /* XPECT output ---
-<==
-stdout:
 [ 2, 4, 6, 8, 10 ]
-stderr:
-==>
 --- */

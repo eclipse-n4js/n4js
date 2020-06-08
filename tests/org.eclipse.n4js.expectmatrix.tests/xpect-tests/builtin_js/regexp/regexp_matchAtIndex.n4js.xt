@@ -22,10 +22,6 @@ var str2 = str.replace(re, "$3+$1");
 console.log(str2);
 
 /* XPECT output ---
-<==
-stdout:
 abcdefabbch
 c+adefc+ah
-stderr:
-==>
 --- */

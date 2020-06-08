@@ -12,8 +12,6 @@
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
 
 /* XPECT  output ~~~
-<==
-stdout:
 C.m
 S.m
 R.m
@@ -21,8 +19,6 @@ S.m
 C.m
 C.m
 C.m
-stderr:
-==>
 ~~~ */
 
 class S { m() { console.log("S.m");} }

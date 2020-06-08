@@ -61,13 +61,9 @@ console.log(a.f("hello", " cruel ", "world"));
 console.log(a.f());
 
 /* XPECT output ---
-<==
-stdout:
 A { x: undefined, y: undefined, z: undefined, w: undefined }
 A { x: 1, y: 2, z: undefined, w: undefined }
 A { x: 1, y: 2, z: 3, w: 4 }
 hello cruel world
 
-stderr:
-==>
 --- */

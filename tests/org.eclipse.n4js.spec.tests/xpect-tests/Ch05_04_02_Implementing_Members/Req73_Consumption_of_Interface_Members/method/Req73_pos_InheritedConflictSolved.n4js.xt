@@ -34,11 +34,7 @@ class B extends A implements I {
 
 
 /* XPECT output ---
-<==
-stdout:
 B.m()
-stderr:
-==>
 --- */
 
 // XPECT binding --> B.m

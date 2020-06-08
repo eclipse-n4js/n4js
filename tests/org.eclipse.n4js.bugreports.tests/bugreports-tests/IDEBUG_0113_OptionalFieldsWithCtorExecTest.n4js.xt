@@ -12,16 +12,12 @@
 /* XPECT_SETUP org.eclipse.n4js.bugreports.tests.N4JSBugreportTest END_SETUP  */
 
 /* XPECT output ---
-<==
-stdout:
 Hello
 42
 Hello
 1
 Hello
 42
-stderr:
-==>
 --- */
 
 class C {
