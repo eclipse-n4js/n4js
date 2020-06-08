@@ -76,8 +76,6 @@ for([a4,b4,c4] = arr ; cnt>0 ; cnt--)
 
 
 /* XPECT output ---
-<==
-stdout:
 ### array binding pattern
 1 2 3
 ### array binding pattern (for..of loop, single expression)
@@ -106,6 +104,4 @@ stdout:
 1 2 3
 1 2 3
 1 2 3
-stderr:
-==>
 --- */

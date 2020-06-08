@@ -24,11 +24,7 @@ console.log("myFish after: " + myFish);
 console.log("Removed this element: " + popped);
 
 /* XPECT output ---
-<==
-stdout:
 myFish before: angel,clown,mandarin,surgeon
 myFish after: angel,clown,mandarin
 Removed this element: surgeon
-stderr:
-==>
 --- */

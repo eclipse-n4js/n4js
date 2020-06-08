@@ -32,12 +32,8 @@ class B extends A {
 }
 
 /* XPECT output ---
-<==
-stdout:
 A.X x
 B.X x2
-stderr:
-==>
 --- */
 
 console.log("A.X",A.X);

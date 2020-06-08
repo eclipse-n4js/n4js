@@ -30,8 +30,6 @@
  */
 
 /* XPECT output ---
-<==
-stdout:
 {
     "type": "function",
     "props": {
@@ -41,8 +39,6 @@ stdout:
     },
     "children": []
 }
-stderr:
-==>
 --- */
 
 import * as React from "react"

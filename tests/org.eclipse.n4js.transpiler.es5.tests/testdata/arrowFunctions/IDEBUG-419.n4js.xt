@@ -12,16 +12,12 @@
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
 
 /* XPECT output ---
-<==
-stdout:
 args total 0
 data 1
 args total 1
 data 2
 args total 2
 data 3
-stderr:
-==>
 --- */
 
 

@@ -13,10 +13,6 @@
 // waiting for IDE-802
 
  /* XPECT ! output ~~~
-<==
-stdout:
-stderr:
-==>
 ~~~ */
 
 /* XPECT ! compileResult ---

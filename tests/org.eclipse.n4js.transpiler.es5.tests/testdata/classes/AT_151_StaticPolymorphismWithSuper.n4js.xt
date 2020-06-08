@@ -13,12 +13,8 @@
 // see N4JS spec: Example 64 (Super Call in Static Methods)
 
 /* XPECT output ---
-<==
-stdout:
 A
 B
-stderr:
-==>
 --- */
 class A {
 	static foo() : void { console.log('A') }

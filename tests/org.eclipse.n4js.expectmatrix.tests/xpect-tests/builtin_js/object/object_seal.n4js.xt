@@ -82,8 +82,6 @@ console.log(obj.foo);
 
 
 /* XPECT output ---
-<==
-stdout:
 true = true
 true = true
 { foo: 'quux', lumpy: 'woof' }
@@ -95,6 +93,4 @@ TypeError: Cannot delete property 'foo' of #<Object>
 TypeError: Cannot add property sparky, object is not extensible
 TypeError: Cannot define property ohai, object is not extensible
 eit
-stderr:
-==>
 --- */

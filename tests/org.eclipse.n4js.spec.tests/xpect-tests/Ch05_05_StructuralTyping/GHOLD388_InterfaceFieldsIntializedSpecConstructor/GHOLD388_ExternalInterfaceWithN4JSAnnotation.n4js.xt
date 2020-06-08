@@ -33,9 +33,5 @@ console.log(c.n)
 // This test is intentionally disabled because it is difficult to test the case with @N4JS annotation.  
 // Interface J is annotated with @N4JS means that its implementation is provided by runtime.
 /* X_PECT output --- 
-<==
-stdout:
 Hi
-stderr:
-==>
 --- */

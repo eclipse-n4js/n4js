@@ -32,12 +32,8 @@ my_obj.foo = 4;
 console.log(Object.keys(my_obj)); // console: ["foo"]
 
 /* XPECT output ---
-<==
-stdout:
 [ '0', '1', '2' ]
 [ '0', '1', '2' ]
 [ '2', '7', '100' ]
 [ 'foo' ]
-stderr:
-==>
 --- */

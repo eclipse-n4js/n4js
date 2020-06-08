@@ -13,11 +13,7 @@
 
 
 /* XPECT output ---
-<==
-stdout:
 Hello
-stderr:
-==>
 --- */
 function <T> f(t : T): T { return t;}
 console.log(<string>f('Hello'));

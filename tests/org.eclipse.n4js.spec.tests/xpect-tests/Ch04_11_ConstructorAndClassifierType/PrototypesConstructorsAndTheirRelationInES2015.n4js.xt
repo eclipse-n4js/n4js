@@ -112,8 +112,6 @@ console.log(objectCtor.prototype.constructor === objectCtor);
 console.log(functionCtor.prototype.constructor === functionCtor);
 
 /* XPECT output ---
-<==
-stdout:
 true
 true
 true
@@ -132,6 +130,4 @@ true
 true
 true
 true
-stderr:
-==>
 --- */

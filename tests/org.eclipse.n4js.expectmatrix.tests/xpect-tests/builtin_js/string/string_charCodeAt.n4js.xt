@@ -43,10 +43,6 @@ console.log(fixedCharCodeAt ('\uD800\uDC00', 1)); // false
 
 
 /* XPECT output ---
-<==
-stdout:
 65536
 false
-stderr:
-==>
 --- */

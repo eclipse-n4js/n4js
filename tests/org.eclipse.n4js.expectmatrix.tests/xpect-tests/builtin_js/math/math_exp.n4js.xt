@@ -20,11 +20,7 @@ console.log(Math.exp(0));  // 1
 console.log(Math.exp(1));  // 2.718281828459045
 
 /* XPECT output ---
-<==
-stdout:
 0.36787944117144
 1
 2.718281828459045
-stderr:
-==>
 --- */

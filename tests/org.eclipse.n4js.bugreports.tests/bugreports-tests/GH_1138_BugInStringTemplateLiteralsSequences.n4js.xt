@@ -17,10 +17,6 @@ console.log(`a\`b`);
 
 
 /* XPECT output ---
-<==
-stdout:
 a\b
 a`b
-stderr:
-==>
 --- */

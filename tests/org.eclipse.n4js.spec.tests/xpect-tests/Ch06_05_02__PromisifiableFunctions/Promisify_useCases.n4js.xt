@@ -223,8 +223,6 @@ testWithFunction(async function() {
 
 
 /* XPECT output ---
-<==
-stdout:
 starting ...
 
 ****************** using promisifiable function:
@@ -297,6 +295,4 @@ use case #4: pass in a callback (don't use promisify at all)
 -> callback got res94: hello from C#mStatic! (value of fieldStatic: valueOfFieldStatic)
 
 ... done!
-stderr:
-==>
 --- */

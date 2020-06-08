@@ -18,12 +18,8 @@
  */
 
  /* XPECT output ---
-<==
-stdout:
 Address {}
 C {}
-stderr:
-==>
 --- */
 
 

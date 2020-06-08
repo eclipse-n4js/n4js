@@ -13,15 +13,11 @@
 
 
 /* XPECT output ---
-<==
-stdout:
 C1.x get
 C1._x
 C1.x set: newvalue
 C1.x get
 newvalue
-stderr:
-==>
 --- */
 
 interface R1 {

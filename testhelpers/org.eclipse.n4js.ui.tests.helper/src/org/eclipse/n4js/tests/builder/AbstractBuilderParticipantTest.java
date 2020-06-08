@@ -368,11 +368,6 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 	}
 
 	/***/
-	protected IMarker[] assertMarkers(String assertMessage, final IProject project, int count) throws CoreException {
-		return ProjectTestsUtils.assertMarkers(assertMessage, project, count, ignoreSomeWarnings);
-	}
-
-	/***/
 	protected IMarker[] assertMarkers(String assertMessage, final IResource resource, int count) throws CoreException {
 		return ProjectTestsUtils.assertMarkers(assertMessage, resource, count, ignoreSomeWarnings);
 	}
@@ -382,13 +377,6 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 			final Predicate<IMarker> markerPredicate) throws CoreException {
 
 		return ProjectTestsUtils.assertMarkers(assertMessage, resource, count, markerPredicate, ignoreSomeWarnings);
-	}
-
-	/***/
-	protected IMarker[] assertMarkers(String assertMessage, final IProject project, String markerType, int count)
-			throws CoreException {
-
-		return ProjectTestsUtils.assertMarkers(assertMessage, project, markerType, count, ignoreSomeWarnings);
 	}
 
 	/***/

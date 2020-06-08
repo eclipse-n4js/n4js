@@ -12,8 +12,6 @@
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
 
 /* XPECT output ---
-<==
-stdout:
 c=[object Object]
 this in C.topOfTheWorld = [object Object]
 this in C.topOfTheWorld => lambda1 = [object Object]
@@ -25,8 +23,6 @@ undefined
 this in C.topOfTheWorld => FE second() = undefined
 this in C.topOfTheWorld => FE second() => lambda4 = undefined
 c
-stderr:
-==>
 --- */
 
 

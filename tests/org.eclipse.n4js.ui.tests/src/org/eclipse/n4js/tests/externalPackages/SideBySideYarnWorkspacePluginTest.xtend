@@ -73,7 +73,7 @@ class SideBySideYarnWorkspacePluginTest extends AbstractBuilderParticipantTest {
 		assertNoIssues;
 		assertCorrectOutput(expectedOutput);
 	}
-	
+
 	/**
 	 * Test the case that only some of the projects contained in a yarn workspace are imported into
 	 * the Eclipse workspace. Sub case: a non-scoped project is missing.
@@ -120,12 +120,10 @@ class SideBySideYarnWorkspacePluginTest extends AbstractBuilderParticipantTest {
 		scopedProject.close(null);
 		testedWorkspace.fullBuild;
 		assertIssues(
-			"line 6: Project does not exist with project ID: @myScope/Lib.",
-			"line 2: Import of C as C2 cannot be resolved.",
-			"line 2: Couldn't resolve reference to TExportableElement 'C'.",
+			"line 2: Cannot resolve plain module specifier (without project name as first segment): no matching module found.",
 			"line 5: Couldn't resolve reference to IdentifiableElement 'C2'.",
-			"line 2: Cannot resolve import target :: resolving simple module import : found no matching modules");
-		
+			"line 6: Project does not exist with project ID: @myScope/Lib.");
+
 		scopedProject.open(null);
 		testedWorkspace.fullBuild;
 		assertNoIssues;
@@ -161,7 +159,7 @@ class SideBySideYarnWorkspacePluginTest extends AbstractBuilderParticipantTest {
 		val expectedOutputTrimmed = expectedOutput.toString.trim;
 		assertEquals("incorrect output when running " + clientModule.name, expectedOutputTrimmed, actualOutput);
 	}
-	
+
 	private def toProjectName(String name) {
 		return new N4JSProjectName(name)
 	}

@@ -20,15 +20,11 @@
  */
 
 /* XPECT output ---
-<==
-stdout:
 v1 =  2
 v2 =  1
 After do_increment:
 v1 =  3
 v2 =  2
-stderr:
-==>
 --- */
 
 import {v1,v2, do_post_increment_v1_and_assign_old_value_to_v2} from "importexport/export_update/A3_arrayliteral"

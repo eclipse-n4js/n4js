@@ -18,11 +18,7 @@
  */
 
  /* XPECT output ---
-<==
-stdout:
 street.number
-stderr:
-==>
 --- */
 
 class Address {

@@ -71,15 +71,22 @@ import com.google.inject.Inject;
 public class CustomN4JSParser extends N4JSParser implements IPartialContentAssistParser {
 
 	/**
-	 * Overridden to make protected member accessible from within the {@link CustomN4JSParser}.
+	 * Overridden to make protected member accessible from within the {@link CustomN4JSParser} and to fix GH-1756
 	 */
 	protected static class CustomInternalN4JSParser extends InternalN4JSParser {
+
+		/**
+		 * The parameter stack as it was seen at a given look-ahead position. Cleared whenever the parser consumes a
+		 * token. The same apporach is used for the inherited {@link #getLocalTrace()}.
+		 */
+		protected final List<Integer> localParamStack;
 
 		/**
 		 * Default constructor.
 		 */
 		public CustomInternalN4JSParser() {
 			super(null);
+			this.localParamStack = new ArrayList<>();
 		}
 
 		/**
@@ -87,6 +94,39 @@ public class CustomN4JSParser extends N4JSParser implements IPartialContentAssis
 		 */
 		public RecognizerSharedState getState() {
 			return state;
+		}
+
+		@Override
+		public void announceConsume() {
+			if (marked <= 0) {
+				localParamStack.clear();
+			}
+			super.announceConsume();
+		}
+
+		/*
+		 * This is here to provoke a compile error against a version of Xtext that has an equivalent fix for GH-1756.
+		 */
+		private List<Integer> getLocalParamStack() {
+			return localParamStack;
+		}
+
+		@Override
+		public void before(EObject grammarElement, int paramConfig) {
+			super.before(grammarElement, paramConfig);
+			localParamStack.add(paramConfig);
+		}
+
+		@Override
+		protected DefaultFollowElementFactory newFollowElementFactory() {
+			return new DefaultFollowElementFactory() {
+				@Override
+				public FollowElement createFollowElement(AbstractElement current, int lookAhead) {
+					FollowElement result = super.createFollowElement(current, lookAhead);
+					result.getParamStack().addAll(getLocalParamStack());
+					return result;
+				}
+			};
 		}
 
 	}

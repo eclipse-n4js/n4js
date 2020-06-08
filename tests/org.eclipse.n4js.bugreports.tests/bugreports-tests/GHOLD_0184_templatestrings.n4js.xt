@@ -19,12 +19,8 @@ var foo2 = `"${bar}"`
 var bar2 = '"\n party"';
 
 /* XPECT output ---
-<==
-stdout:
 true
 true
-stderr:
-==>
 --- */
 console.log(foo === bar); //should be true but is false
 console.log(foo2 === bar2); //should be true

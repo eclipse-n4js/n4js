@@ -21,9 +21,5 @@ function getLog2e() {
 console.log(getLog2e()); // 1.4426950408889634
 
 /* XPECT output ---
-<==
-stdout:
 1.4426950408889634
-stderr:
-==>
 --- */

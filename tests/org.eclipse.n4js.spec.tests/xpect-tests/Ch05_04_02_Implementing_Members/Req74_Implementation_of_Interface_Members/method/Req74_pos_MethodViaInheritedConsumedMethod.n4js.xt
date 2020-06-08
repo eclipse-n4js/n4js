@@ -24,12 +24,8 @@ class B extends A implements I{
 
 
 /* XPECT output ---
-<==
-stdout:
 I.f
 I.f
-stderr:
-==>
 --- */
 
 

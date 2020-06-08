@@ -12,8 +12,6 @@
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
 
 /* XPECT output ~~~
-<==
-stdout:
 B { prop1: 'test' }
 N4Class {
   origin: 'org.eclipse.n4js.transpiler.es5.tests',
@@ -42,8 +40,6 @@ N4Class {
   ],
   consumedMembers: []
 }
-stderr:
-==>
 ~~~ */
 
 class B {

@@ -17,9 +17,5 @@
 console.log( "alphabet".toLocaleUpperCase() ); // "ALPHABET"
 
 /* XPECT output ---
-<==
-stdout:
 ALPHABET
-stderr:
-==>
 --- */

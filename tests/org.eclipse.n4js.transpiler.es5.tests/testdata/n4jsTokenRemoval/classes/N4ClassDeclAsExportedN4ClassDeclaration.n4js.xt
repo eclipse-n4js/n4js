@@ -13,12 +13,8 @@
 
 
 /* XPECT output ~~~
-<==
-stdout:
 [Function: C3]
 [Function: C4]
-stderr:
-==>
 ~~~ */
 
 interface I0{}

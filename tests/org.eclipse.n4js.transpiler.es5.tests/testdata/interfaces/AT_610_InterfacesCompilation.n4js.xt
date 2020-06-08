@@ -12,8 +12,6 @@
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest  END_SETUP */
 
  /* XPECT output ---
-<==
-stdout:
 name within interface S called from C: Jim
 count within interface S called from C: 1
 name within interface R called from C.S: Jim
@@ -43,8 +41,6 @@ name2 within class F: Jules
 count within class F: 1
 name within interface R called from F: Jim
 name2 within interface R called from F: Jules
-stderr:
-==>
 --- */
 
 interface R {

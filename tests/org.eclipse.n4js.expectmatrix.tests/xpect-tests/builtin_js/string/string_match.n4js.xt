@@ -28,8 +28,6 @@ var matches_array = str2.match(regexp);
 console.log(matches_array);
 
 /* XPECT output ---
-<==
-stdout:
 [
   'Chapter 3.4.5.1',
   'Chapter 3.4.5.1',
@@ -43,6 +41,4 @@ stdout:
   'E', 'a', 'b', 'c',
   'd', 'e'
 ]
-stderr:
-==>
 --- */

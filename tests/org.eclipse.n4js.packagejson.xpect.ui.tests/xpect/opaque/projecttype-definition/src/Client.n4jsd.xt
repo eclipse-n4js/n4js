@@ -15,8 +15,7 @@
     END_SETUP
 */
 
-// XPECT warnings --> "The import of <Lib>(proxy) is unused." at "Lib"
-// XPECT errors --> "Couldn't resolve reference to TExportableElement 'Lib'." at "Lib"
+// XPECT errors --> "Import of Lib cannot be resolved." at "Lib"
 import {Lib} from "Lib";
 
 export external public class SomeClass {

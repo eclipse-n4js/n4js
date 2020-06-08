@@ -22,14 +22,10 @@ console.log(Math.asin(1).toString().substring(0,12));   // 1.5707963267 (pi/2)
 console.log(Math.asin(2));   // NaN
 
 /* XPECT output ---
-<==
-stdout:
 NaN
 -1.570796326
 0
 0.5235987755
 1.5707963267
 NaN
-stderr:
-==>
 --- */

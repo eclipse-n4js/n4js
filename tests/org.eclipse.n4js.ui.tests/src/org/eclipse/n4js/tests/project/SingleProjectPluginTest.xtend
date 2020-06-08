@@ -113,11 +113,10 @@ class SingleProjectPluginTest extends AbstractBuilderParticipantTest {
 			'''
 		);
 
-		// Cannot resolve import target :: resolving simple module import : found no matching modules
-		// Couldn't resolve reference to IdentifiableElement 'D'.
-		// Couldn't resolve reference to Type 'D'.
-		// Import of D cannot be resolved.
-		assertMarkers("file should have four errors", c, 4);
+		assertIssues("file should have two errors", c,
+			"line 1: Cannot resolve plain module specifier (without project name as first segment): no matching module found.",
+			"line 2: Couldn't resolve reference to Type 'D'."
+		);
 		createTestFile(src, "D", "export class D {}");
 		assertMarkers("file should have no errors", c, 0);
 	}
@@ -133,14 +132,16 @@ class SingleProjectPluginTest extends AbstractBuilderParticipantTest {
 			'''
 		);
 
-		// Cannot resolve import target :: resolving simple module import : found no matching modules
-		// Couldn't resolve reference to IdentifiableElement 'D'.
-		// Couldn't resolve reference to Type 'D'.
-		// Import of D cannot be resolved.
-		assertMarkers("file should have four errors", c, 4);
+		assertIssues("file should have two errors", c,
+			"line 1: Cannot resolve plain module specifier (without project name as first segment): no matching module found.",
+			"line 2: Couldn't resolve reference to Type 'D'."
+		);
 		createTestFile(src2, "D", "export class D {}");
 		// Same as above, src2 folder is not set as source folder yet.
-		assertMarkers("file should have four errors", c, 4);
+		assertIssues("file should have two errors", c,
+			"line 1: Cannot resolve plain module specifier (without project name as first segment): no matching module found.",
+			"line 2: Couldn't resolve reference to Type 'D'."
+		);
 		addSrc2ToSources
 		assertMarkers("file should have no errors", c, 0);
 	}
@@ -201,11 +202,10 @@ class SingleProjectPluginTest extends AbstractBuilderParticipantTest {
 		assertMarkers("file should have no errors", c, 0);
 		removeSrc2FromSource
 
-		// Cannot resolve import target :: resolving simple module import : found no matching modules
-		// Couldn't resolve reference to IdentifiableElement 'D'.
-		// Couldn't resolve reference to Type 'D'.
-		// Import of  D cannot be resolved.
-		assertMarkers("file should have four errors", c, 4);
+		assertIssues("file should have two errors", c,
+			"line 1: Cannot resolve plain module specifier (without project name as first segment): no matching module found.",
+			"line 2: Couldn't resolve reference to Type 'D'."
+		);
 	}
 
 	@Test
@@ -221,11 +221,10 @@ class SingleProjectPluginTest extends AbstractBuilderParticipantTest {
 		);
 		createTestFile(src2, "D", "export class D {}");
 
-		// Cannot resolve import target :: resolving simple module import : found no matching modules
-		// Couldn't resolve reference to IdentifiableElement 'D'.
-		// Couldn't resolve reference to Type 'D'.
-		// Import of  D cannot be resolved.
-		assertMarkers("file should have four errors", c, 4);
+		assertIssues("file should have two errors", c,
+			"line 1: Cannot resolve plain module specifier (without project name as first segment): no matching module found.",
+			"line 2: Couldn't resolve reference to Type 'D'."
+		);
 		src2.rename("src3")
 		assertMarkers("file should have no errors", c, 0);
 	}
@@ -253,9 +252,9 @@ class SingleProjectPluginTest extends AbstractBuilderParticipantTest {
 		waitForAutoBuild
 		d = mainSrc.findMember("a/d/c/" + d.name) as IFile
 
-		// Cannot resolve import target :: resolving simple module import : found no matching modules
-		// Import of * as C from module was a proxy cannot be resolved.
-		assertMarkers("file should have two errors", d, 2);
+		assertIssues("file should have one error", d,
+			"line 1: Cannot resolve plain module specifier (without project name as first segment): no matching module found."
+		);
 	}
 
 	@Test
@@ -274,10 +273,9 @@ class SingleProjectPluginTest extends AbstractBuilderParticipantTest {
 		d = mainSrcX.findMember("a/b/c/" + d.name) as IFile
 		assertMarkers("file should have no errors", c, 0);
 
-		// Cannot resolve import target :: resolving simple module import : found no matching modules
-		// Couldn't resolve reference to IdentifiableElement 'C'.
-		// Import of C cannot be resolved.
-		assertMarkers("file should have three errors", d, 3);
+		assertIssues("file should have one error", d,
+			"line 1: Cannot resolve plain module specifier (without project name as first segment): no matching module found."
+		);
 	}
 
 	@Test

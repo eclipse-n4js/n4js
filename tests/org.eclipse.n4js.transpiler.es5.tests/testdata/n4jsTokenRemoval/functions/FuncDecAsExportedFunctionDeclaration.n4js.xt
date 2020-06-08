@@ -14,11 +14,7 @@
 
 // found during IDE-1852: XPECT FIXME nowarnings
 /* XPECT output ~~~
-<==
-stdout:
 [Function: len] 123
-stderr:
-==>
 ~~~ */
 
 export project function <S extends string, T, P> len(s : S, t : T, p : P, a, n : number=undefined, ... vas : string) : number {

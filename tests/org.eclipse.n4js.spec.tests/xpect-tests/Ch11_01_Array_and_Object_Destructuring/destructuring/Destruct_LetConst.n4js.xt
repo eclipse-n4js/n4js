@@ -60,8 +60,6 @@ f04();
 
 
 /* XPECT output ---
-<==
-stdout:
 ### with let
 foo 42
 ### with const
@@ -72,6 +70,4 @@ bar 43
 ### for..of with const
 foo 42
 bar 43
-stderr:
-==>
 --- */

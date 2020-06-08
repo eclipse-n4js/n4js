@@ -22,9 +22,5 @@ async function bar() {
 bar();
 
 /* XPECT output ---
-<==
-stdout:
 42
-stderr:
-==>
 --- */

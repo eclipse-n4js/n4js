@@ -18,9 +18,5 @@ var regex = new RegExp("foo", "m")
 console.log(regex.multiline) // true
 
 /* XPECT output ---
-<==
-stdout:
 true
-stderr:
-==>
 --- */

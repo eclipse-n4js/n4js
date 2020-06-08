@@ -35,13 +35,9 @@
    END_SETUP
 */
 
-//XPECT errors --> "The type VMPrivateClass is not visible." at "VMPrivateClass"
+// XPECT errors --> "The type VMPrivateClass is not visible." at "VMPrivateClass"
 import {VMPublicClass, VMInternalPublicClass, VMProjectClass, VMPrivateClass} from "VisibleModule"
-/*XPECT errors ---
-"Cannot resolve import target :: resolving simple module import : found no matching modules" at ""NotVisibleModule""
-"Couldn't resolve reference to TExportableElement 'NVMPublicClass'." at "NVMPublicClass"
-"Import of NVMPublicClass cannot be resolved." at "NVMPublicClass"
---- */
+// XPECT errors --> "Cannot resolve plain module specifier (without project name as first segment): no matching module found." at ""NotVisibleModule""
 import { NVMPublicClass } from "NotVisibleModule"
 
 

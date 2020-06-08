@@ -11,8 +11,6 @@
 
 /* XPECT_SETUP org.eclipse.n4js.bugreports.tests.N4JSBugreportTest END_SETUP  */
 /* XPECT output ---
-<==
-stdout:
  typeof C =  function
  typeof D =  function
  typeof E =  function
@@ -54,8 +52,6 @@ e instanceof E  true
  {} instanceof Number =  false
 ++++++
 
-stderr:
-==>
 --- */
 
 function instanceOf(obj : Object, t : type{N4Object}) {

@@ -15,6 +15,7 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.N4JSPackage
+import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.ParenExpression
 import org.eclipse.n4js.n4JS.RelationalExpression
@@ -35,6 +36,9 @@ import org.eclipse.xtext.nodemodel.INode
  */
 class N4JSScopingDiagnostician {
 
+	/** Special value to denote that no diagnostic message should be shown. */
+	public static final DiagnosticMessage NO_MESSAGE = new DiagnosticMessage(N4JSScopingDiagnostician.simpleName + ".NO_MESSAGE", null, null);
+
 	@Inject
 	N4JSScopingConsumableMethodsDiagnosis consumableMethodsDiagnosis;
 
@@ -49,9 +53,12 @@ class N4JSScopingDiagnostician {
 
 
 	/**
-	 * Returns a custom {@link DiagnosticMessage} for the given unresolvable reference.
-	 * May return {@code null} if no supported special case is applicable.
-	 *
+	 * Returns a custom {@link DiagnosticMessage} for the given unresolvable reference or {@code null} if no
+	 * supported special case is applicable and the default message should be shown.
+	 * <p>
+	 * May return special value {@link #NO_MESSAGE} to not show an error at all for the given unresolved reference
+	 * (e.g. to avoid duplicate error messages) .
+	 * <p>
 	 * Note that this methods already assumes, that the given reference actually isn't resolvable.
 	 */
 	public def DiagnosticMessage getMessageFor(EObject context, EReference reference, INode node) {
@@ -63,6 +70,12 @@ class N4JSScopingDiagnostician {
 			return diagnose(qualifiedName, context, reference);
 		}
 		return null;
+	}
+
+	// Handle {@link NamedImportSpecifier}
+	private def dispatch DiagnosticMessage diagnose(QualifiedName name, NamedImportSpecifier context, EReference reference) {
+		// avoid duplicate error messages in case of unresolved imports
+		return NO_MESSAGE;
 	}
 
 	// Handle {@link ParameterizedPropertyAccessExpressions}

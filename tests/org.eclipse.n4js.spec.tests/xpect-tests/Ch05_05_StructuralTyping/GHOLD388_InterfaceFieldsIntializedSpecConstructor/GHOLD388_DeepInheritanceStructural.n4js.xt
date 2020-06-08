@@ -29,9 +29,5 @@ let c = new C({first: "1st", second: "2nd", third: "3rd" });
 console.log(c);
 
 /* XPECT output ---
-<==
-stdout:
 C { third: '3rd', second: '2nd', first: '1st' }
-stderr:
-==>
 --- */

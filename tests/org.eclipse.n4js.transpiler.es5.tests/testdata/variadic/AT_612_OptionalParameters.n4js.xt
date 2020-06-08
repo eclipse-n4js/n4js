@@ -12,12 +12,8 @@
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
 
 /* XPECT output ---
-<==
-stdout:
 The passed strings have a length of 4
 The passed strings have a length of 1
-stderr:
-==>
 --- */
 function fun1(string1 : string=undefined, ... strings : string) {
 	var length = strings.length;

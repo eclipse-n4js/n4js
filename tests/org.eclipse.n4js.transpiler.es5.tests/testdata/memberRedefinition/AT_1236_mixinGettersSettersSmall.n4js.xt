@@ -12,12 +12,8 @@
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP  */
 
 /* XPECT output ---
-<==
-stdout:
 via getter: testValue
 via data: testValue
-stderr:
-==>
 --- */
 
 // setter in interface, getter in class

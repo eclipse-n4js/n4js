@@ -21,9 +21,5 @@ function getLog10e() {
 console.log(getLog10e()); // 0.4342944819032518
 
 /* XPECT output ---
-<==
-stdout:
 0.4342944819032518
-stderr:
-==>
 --- */

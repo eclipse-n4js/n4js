@@ -21,9 +21,5 @@ function getRoot2() {
 console.log(getRoot2()); // 1.4142135623730951
 
 /* XPECT output ---
-<==
-stdout:
 1.4142135623730951
-stderr:
-==>
 --- */

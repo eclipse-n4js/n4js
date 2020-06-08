@@ -14,11 +14,7 @@
 // IDE-1824 wrong transpilation for member declaration, computed-name-style, giving identifier as name
 
 /* XPECT output ---
-<==
-stdout:
 { m1: '1', m2: '2' }
-stderr:
-==>
 --- */
 
 var c = {

@@ -12,8 +12,6 @@
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
 
 /* XPECT output ---
-<==
-stdout:
 function declaration foo: 1, 2
 function declaration foo: 1, undefined
 annotated function declaration foo2: 1, 2
@@ -30,8 +28,6 @@ interface method foo: 1, 2
 interface method foo: 1, undefined
 object literal function foo: 1, 2
 object literal function foo: 1, undefined
-stderr:
-==>
 --- */
 
 class C{}

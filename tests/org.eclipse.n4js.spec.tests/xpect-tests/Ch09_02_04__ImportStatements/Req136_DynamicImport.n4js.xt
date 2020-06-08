@@ -24,11 +24,11 @@
 END_SETUP */
 
 /* XPECT errors ---
-"Cannot resolve import target :: resolving simple module import : found no matching modules" at ""Ch09_02_04__ImportStatements/Unknown1""
+"Cannot resolve plain module specifier (without project name as first segment): no matching module found." at ""Ch09_02_04__ImportStatements/Unknown1""
 --- */
 import * as UnknownStatic from "Ch09_02_04__ImportStatements/Unknown1"
 /* XPECT errors ---
-"Cannot resolve import target :: resolving simple module import : found no matching modules" at ""Ch09_02_04__ImportStatements/Unknown1""
+"Cannot resolve plain module specifier (without project name as first segment): no matching module found." at ""Ch09_02_04__ImportStatements/Unknown1""
 --- */
 import * as UnknownDynamic+ from "Ch09_02_04__ImportStatements/Unknown1"
 

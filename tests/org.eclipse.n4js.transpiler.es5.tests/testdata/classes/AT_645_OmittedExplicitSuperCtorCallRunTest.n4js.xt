@@ -12,13 +12,9 @@
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
 
 /* XPECT output ---
-<==
-stdout:
 A#ctor
 A#ctor
 B#ctor
-stderr:
-==>
 --- */
 
 class A {

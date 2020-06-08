@@ -44,11 +44,7 @@ var y3: constructor{?};
 
 // note that now we have: y1 === y2
 /* XPECT output ---
-<==
-stdout:
 true
-stderr:
-==>
 --- */
 console.log(y1 === y2);
 

@@ -27,10 +27,6 @@ f(5e-324, 5);
 
 
 /* XPECT output ---
-<==
-stdout:
 3
 Number too small
-stderr:
-==>
 --- */

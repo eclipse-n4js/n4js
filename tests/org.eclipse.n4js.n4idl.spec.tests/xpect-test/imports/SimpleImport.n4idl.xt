@@ -41,10 +41,6 @@ eval("foo()");
 
 
 /* XPECT output ---
-<==
-stdout:
 Greetings from P#1!
 Greetings from P#2!
-stderr:
-==>
 --- */

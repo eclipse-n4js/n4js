@@ -13,8 +13,6 @@
 
 
 /* XPECT output ---
-<==
-stdout:
 ========================================
 #### constructor
 S#ctor msg: hello up there!
@@ -26,8 +24,6 @@ A#m()
 S#ms() msg: hello up there!
 A#ms()
 ========================================
-stderr:
-==>
 --- */
 
 

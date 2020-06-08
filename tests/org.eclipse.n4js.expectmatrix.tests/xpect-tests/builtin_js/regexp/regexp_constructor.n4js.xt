@@ -21,10 +21,6 @@ console.log(re1);
 console.log(re2);
 
 /* XPECT output ---
-<==
-stdout:
 /\w+/
 /\w+/gi
-stderr:
-==>
 --- */

@@ -12,14 +12,10 @@
 /* XPECT_SETUP org.eclipse.n4js.spec.examples.xpect.tests.SpecExamplesTest END_SETUP */
 
  /* XPECT output ---
-<==
-stdout:
 John
 Hello John
 John
 undefined
-stderr:
-==>
 --- */
 
 

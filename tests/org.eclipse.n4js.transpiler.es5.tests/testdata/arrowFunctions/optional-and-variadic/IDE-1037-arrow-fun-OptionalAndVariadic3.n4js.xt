@@ -12,16 +12,12 @@
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
 
 /* XPECT output ---
-<==
-stdout:
 Fixed1: s1
 Fixed2: s2
 Optional: undefined
 Fixed1: s1
 Fixed2: s2
 Optional: s3
-stderr:
-==>
 --- */
 	var f = (fixed1 : string, fixed2 : string, start : string=undefined) => {
 		console.log("Fixed1: " + fixed1)

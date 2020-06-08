@@ -34,12 +34,8 @@ console.log(S);
 
 
  /* XPECT output with CommonJS ---
-<==
-stdout:
 [Function: Error]
 [Module] { C1: [Function: C1] }
-stderr:
-==>
 --- */
 
 import * as N from "importexport/IDEBUG_684/Err"

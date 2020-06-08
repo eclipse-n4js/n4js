@@ -15,7 +15,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
@@ -23,6 +26,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.dirtystate.testdata.CaseSensitiveTestFiles;
 import org.eclipse.n4js.dirtystate.testdata.EnumTestFiles;
@@ -37,6 +41,8 @@ import org.eclipse.n4js.tests.util.EclipseUIUtils;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.junit.Test;
+
+import com.google.common.collect.Sets;
 
 /**
  * tests if the dirty state manager creates and removes error markers at affected resources when another resource breaks
@@ -135,7 +141,7 @@ public class BuilderParticipantPluginUITest extends AbstractBuilderParticipantTe
 		// open editors of test files
 		IWorkbenchPage page = EclipseUIUtils.getActivePage();
 		XtextEditor file1XtextEditor = openAndGetXtextEditor(file1, page);
-		List<?> errors = getEditorErrors(file1XtextEditor);
+		List<Resource.Diagnostic> errors = getEditorErrors(file1XtextEditor);
 		assertEquals("Editor of Class0 should have no errors", 0, errors.size());
 		XtextEditor file2XtextEditor = openAndGetXtextEditor(file2, page);
 		errors = getEditorErrors(file2XtextEditor);
@@ -150,7 +156,11 @@ public class BuilderParticipantPluginUITest extends AbstractBuilderParticipantTe
 		errors = getEditorErrors(file1XtextEditor);
 		// Consequential errors are omitted, so there is no error reported for unknown field, as the receiver is of
 		// unknown type
-		assertEquals("Content of editor 1 should be broken, because now linking to missing resource", 3, errors.size());
+		assertEquals("Content of editor 1 should be broken, because now linking to missing resource",
+				Sets.newHashSet(
+						"line 4: Cannot resolve plain module specifier (without project name as first segment): no matching module found.",
+						"line 7: Couldn't resolve reference to Type 'Class1'."),
+				toSetOfStrings(errors));
 
 		file2 = createTestFile(folder, "Class1", TestFiles.class1());
 		assertMarkers("File2 should have no errors", file2, 0);
@@ -193,7 +203,7 @@ public class BuilderParticipantPluginUITest extends AbstractBuilderParticipantTe
 		// open editors of test files
 		IWorkbenchPage page = EclipseUIUtils.getActivePage();
 		XtextEditor parentFileXtextEditor = openAndGetXtextEditor(parentFile, page);
-		List<?> errors = getEditorErrors(parentFileXtextEditor);
+		List<Resource.Diagnostic> errors = getEditorErrors(parentFileXtextEditor);
 		assertEquals("Editor of parent should have no errors", 0, errors.size());
 		XtextEditor childFileXtextEditor = openAndGetXtextEditor(childFile, page);
 		errors = getEditorErrors(childFileXtextEditor);
@@ -212,7 +222,11 @@ public class BuilderParticipantPluginUITest extends AbstractBuilderParticipantTe
 		assertTrue("Parent2.n4js does exist", movedParentFile.exists());
 
 		errors = getEditorErrors(childFileXtextEditor);
-		assertEquals("Editor of child should have got error markers", 3, errors.size());
+		assertEquals("Editor of child should have got error markers",
+				Sets.newHashSet(
+						"line 1: Cannot resolve plain module specifier (without project name as first segment): no matching module found.",
+						"line 2: Couldn't resolve reference to Type 'ParentObjectLiteral'."),
+				toSetOfStrings(errors));
 
 		movedParentFile.move(new Path("Parent" + "." + N4JSGlobals.N4JS_FILE_EXTENSION), true, true, monitor());
 		moduleFolder.refreshLocal(IResource.DEPTH_INFINITE, monitor());
@@ -253,7 +267,7 @@ public class BuilderParticipantPluginUITest extends AbstractBuilderParticipantTe
 		// open editors of test files
 		IWorkbenchPage page = EclipseUIUtils.getActivePage();
 		XtextEditor parentFileXtextEditor = openAndGetXtextEditor(parentFile, page);
-		List<?> errors = getEditorErrors(parentFileXtextEditor);
+		List<Resource.Diagnostic> errors = getEditorErrors(parentFileXtextEditor);
 		assertEquals("Editor of parent should have no errors", 0, errors.size());
 		XtextEditor childFileXtextEditor = openAndGetXtextEditor(childFile, page);
 		errors = getEditorErrors(childFileXtextEditor);
@@ -268,7 +282,11 @@ public class BuilderParticipantPluginUITest extends AbstractBuilderParticipantTe
 		assertFalse("Parent.n4js doesn't exist anymore",
 				moduleFolder.getFile(new Path("Parent" + "." + N4JSGlobals.N4JS_FILE_EXTENSION)).exists());
 		errors = getEditorErrors(childFileXtextEditor);
-		assertEquals("Editor of child should have error markers", 3, errors.size());
+		assertEquals("Editor of child should have error markers",
+				Sets.newHashSet(
+						"line 1: Cannot resolve plain module specifier (without project name as first segment): no matching module found.",
+						"line 2: Couldn't resolve reference to Type 'ParentObjectLiteral'."),
+				toSetOfStrings(errors));
 
 		IFile recreatedParentFile = createTestFile(moduleFolder, "Parent", InheritanceTestFiles.Parent());
 		assertMarkers("File1 should have no errors", recreatedParentFile, 0);
@@ -657,5 +675,11 @@ public class BuilderParticipantPluginUITest extends AbstractBuilderParticipantTe
 		errors = getEditorErrors(fileMyEnumUserXtextEditor);
 		assertEquals("Editor of MyEnumUser should have no error markers because of literal is again available", 0,
 				errors.size());
+	}
+
+	private Set<String> toSetOfStrings(Collection<? extends Resource.Diagnostic> diagnostics) {
+		return diagnostics.stream()
+				.map(d -> "line " + d.getLine() + ": " + d.getMessage())
+				.collect(Collectors.toSet());
 	}
 }
