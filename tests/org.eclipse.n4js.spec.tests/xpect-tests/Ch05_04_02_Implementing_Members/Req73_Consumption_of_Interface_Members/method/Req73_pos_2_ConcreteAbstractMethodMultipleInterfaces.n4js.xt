@@ -27,12 +27,8 @@ class B implements J,I {}
 
 
 /* XPECT output ---
-<==
-stdout:
 J.f()
 J.f()
-stderr:
-==>
 --- */
 
 // XPECT binding --> J.f

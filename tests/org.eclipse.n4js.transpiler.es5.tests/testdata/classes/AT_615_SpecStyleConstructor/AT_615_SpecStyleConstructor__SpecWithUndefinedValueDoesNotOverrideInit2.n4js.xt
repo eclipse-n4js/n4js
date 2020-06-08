@@ -12,13 +12,9 @@
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
 
 /* waiting for FIX of IDEBUG-119 XPECT ! output ---
-<==
-stdout:
 undefined
 undefined
 hi3
-stderr:
-==>
 --- */
 
 class Base {

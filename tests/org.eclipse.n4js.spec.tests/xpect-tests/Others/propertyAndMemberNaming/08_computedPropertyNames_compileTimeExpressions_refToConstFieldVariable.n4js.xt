@@ -107,8 +107,6 @@ console.log(ol.propConstExportedFromOtherFile);
 
 
 /* X--PECT output ---
-<==
-stdout:
 ####### interface
 hello1
 hello2
@@ -127,12 +125,8 @@ hello2
 hello3
 hello4
 hello5
-stderr:
-==>
 --- */
 /* XPECT output ---
-<==
-stdout:
 ####### interface
 hello1
 hello2
@@ -145,6 +139,4 @@ hello4
 hello1
 hello2
 hello4
-stderr:
-==>
 --- */

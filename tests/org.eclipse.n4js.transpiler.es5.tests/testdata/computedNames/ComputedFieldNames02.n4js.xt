@@ -14,15 +14,11 @@
 // IDE-1824 wrong transpilation for member declaration, computed-name-style, giving identifier as name
 
 /* XPECT output ---
-<==
-stdout:
 0
 1
 2
 3
 4
-stderr:
-==>
 --- */
 
 

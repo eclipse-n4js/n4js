@@ -21,8 +21,6 @@
 
 
 /* XPECT output ---
-<==
-stdout:
 # inspect N4Type
  = inspect test as N4Type
   - test.fqn is a string N4BuiltInTypes/N4Type
@@ -42,8 +40,6 @@ stdout:
   - test.toLocaleString  is native function
   - test.toString  is native function
   - test.valueOf  is native function
-stderr:
-==>
 --- */
 
 

@@ -39,11 +39,7 @@ console.log(Color.literals);
 
 
 /* XPECT output ---
-<==
-stdout:
 _ROT_
 GREEN
 [ '_ROT_', 'GREEN' ]
-stderr:
-==>
 --- */

@@ -29,12 +29,8 @@ f(2);
 */
 
 /* XPECT ! output ---
-<==
-stdout:
 before: 1
 before: 0
 after: 0
 after: 1
-stderr:
-==>
 --- */

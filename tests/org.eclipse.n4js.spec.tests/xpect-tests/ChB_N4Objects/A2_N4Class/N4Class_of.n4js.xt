@@ -13,11 +13,7 @@
 // IDE-977
 
 /* XPECT output ---
-<==
-stdout:
 ChB_N4Objects/A2_N4Class/N4Class_of/C
-stderr:
-==>
 --- */
 
 interface R {

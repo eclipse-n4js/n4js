@@ -23,11 +23,7 @@ var s = new Boolean(myString);      // initial value of true
 console.log("true = " + s);
 
 /* XPECT output ---
-<==
-stdout:
 false = false
 true = true
 true = true
-stderr:
-==>
 --- */

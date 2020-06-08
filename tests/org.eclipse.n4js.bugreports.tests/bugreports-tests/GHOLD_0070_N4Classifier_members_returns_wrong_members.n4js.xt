@@ -67,8 +67,6 @@ show("only methods with annotation @Test:", Cls.n4type.methodsWithAnnotation("Te
 
 
 /* XPECT output ---
-<==
-stdout:
 ====
 only non-static: fi, mi
 only non-static: fi, mi
@@ -91,6 +89,4 @@ only fields : fi, fc, fcStatic
 only methods: mi, mc, mcStatic
 only members with annotation @Test: mi, mc, mcStatic
 only methods with annotation @Test: mi, mc, mcStatic
-stderr:
-==>
 --- */

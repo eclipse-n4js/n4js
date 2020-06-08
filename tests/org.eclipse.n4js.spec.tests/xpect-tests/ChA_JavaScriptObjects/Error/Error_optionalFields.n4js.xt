@@ -13,12 +13,8 @@
 // IDE-212
 
 /* XPECT output ---
-<==
-stdout:
 Name Error
 Msg 
-stderr:
-==>
 --- */
 
 var e = new Error();

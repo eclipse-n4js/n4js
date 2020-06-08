@@ -30,8 +30,6 @@
  */
 
 /* XPECT output ---
-<==
-stdout:
 Lower component
  {
     "type": "LowerComponent",
@@ -48,8 +46,6 @@ My component
     },
     "children": []
 }
-stderr:
-==>
 --- */
 
 import * as React from "react"

@@ -22,14 +22,10 @@
  */
 
 /* XPECT output ---
-<==
-stdout:
 module A A.foo
 module B B.foo
 module C C.foo
 D.foo
-stderr:
-==>
 --- */
 
 

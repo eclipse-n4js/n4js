@@ -33,14 +33,10 @@ my_obj.foo = 1;
 console.log(Object.getOwnPropertyNames(my_obj));
 
 /* XPECT output ---
-<==
-stdout:
 [ '0', '1', '2', 'length' ]
 [ '0', '1', '2' ]
 0 -> a
 1 -> b
 2 -> c
 [ 'getFoo', 'foo' ]
-stderr:
-==>
 --- */

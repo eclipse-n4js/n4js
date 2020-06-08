@@ -12,8 +12,6 @@
 /* XPECT_SETUP org.eclipse.n4js.bugreports.tests.N4JSBugreportTest END_SETUP  */
 
 /* XPECT output ---
-<==
-stdout:
 A: message for ctor A
 
 B: message for ctor B
@@ -30,8 +28,6 @@ after D<init> n: 36
 after D<init> message: message for ctor D
 D: message for ctor D
 
-stderr:
-==>
 --- */
 
 class A extends Error {

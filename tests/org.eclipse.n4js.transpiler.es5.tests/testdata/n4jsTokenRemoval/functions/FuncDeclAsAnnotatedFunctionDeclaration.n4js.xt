@@ -13,11 +13,7 @@
 
 // found during IDE-1852: XPECT FIXME nowarnings
 /* XPECT output ~~~
-<==
-stdout:
 [Function: len] 123
-stderr:
-==>
 ~~~ */
 
 // TODO: see also IDEBUG-121 and restore the original version, when it's been fixed

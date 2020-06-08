@@ -13,8 +13,6 @@
 
 
 /* XPECT output ---
-<==
-stdout:
 01: I1 = I1
 01a: I1 = I1
 01b: I1 = I1
@@ -28,8 +26,6 @@ stdout:
 03b: C1 = C1
 04: C1 = C1
 04Sub: C1 = C1
-stderr:
-==>
 --- */
 interface I1 { x() : string { return "I1" } }
 

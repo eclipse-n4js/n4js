@@ -14,13 +14,9 @@
 // IDE-1804 support computed-names of string-literal form in indexed-accesses
 
 /* XPECT output ---
-<==
-stdout:
 1
 2
 3
-stderr:
-==>
 --- */
 
 

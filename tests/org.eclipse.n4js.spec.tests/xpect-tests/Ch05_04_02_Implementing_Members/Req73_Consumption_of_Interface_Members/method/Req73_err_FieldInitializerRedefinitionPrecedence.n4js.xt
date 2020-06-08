@@ -12,15 +12,11 @@
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
 
 /* XPECT  output ~~~
-<==
-stdout:
 C.x
 S.x
 R.x
 S.x
 C.x
-stderr:
-==>
 ~~~ */
 
 class S { x : string = "S.x"; }

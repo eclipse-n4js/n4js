@@ -118,8 +118,6 @@ Test3.run();
 
 
 /* XPECT output ---
-<==
-stdout:
 ===================================================
 * Test1 (intermediate super class is empty)
 * testing access with this
@@ -156,6 +154,4 @@ called B_withGetters#g
 called A#s
 called B_withGetters#p (getter)
 called A#p (setter)
-stderr:
-==>
 --- */

@@ -42,8 +42,6 @@ console.log(myFish);
 console.log(removed);
 
 /* XPECT output ---
-<==
-stdout:
 [ 'angel', 'clown', 'drum', 'mandarin', 'surgeon' ]
 []
 [ 'angel', 'clown', 'drum', 'surgeon' ]
@@ -54,6 +52,4 @@ stdout:
 [ 'angel', 'clown' ]
 [ 'parrot', 'anemone', 'blue' ]
 [ 'trumpet', 'surgeon' ]
-stderr:
-==>
 --- */

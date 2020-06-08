@@ -30,10 +30,6 @@ for (var i = 0; i < animals.length; i++) {
 }
 
 /* XPECT output ---
-<==
-stdout:
 0	King is a Lion
 1	Fail is a Whale
-stderr:
-==>
 --- */

@@ -31,13 +31,9 @@ e.name = "hello";
 console.log(e.toString()); // "hello"
 
 /* XPECT output ---
-<==
-stdout:
 Error: fatal error
 Error: fatal error
 fatal error
 Error
 hello
-stderr:
-==>
 --- */

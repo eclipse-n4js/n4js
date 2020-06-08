@@ -41,8 +41,6 @@ console.log(I.n4type);
 
 
 /* XPECT output ---
-<==
-stdout:
 members of I: getter, setter, foo, field, fieldD, getterD, setterD, fooD, sGetterD, sSetterD, sFooD, sField, sFieldD
 N4Interface {
   origin: 'org.eclipse.n4js.transpiler.es5.tests',
@@ -155,6 +153,4 @@ N4Interface {
   ],
   consumedMembers: []
 }
-stderr:
-==>
 --- */

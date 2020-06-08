@@ -14,11 +14,7 @@
 // cf. https://github.com/NumberFour/n4js/issues/347
 
  /* XPECT output ---
-<==
-stdout:
 5
-stderr:
-==>
 --- */
 
 interface I {

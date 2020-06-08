@@ -24,12 +24,8 @@
  */
 
 /* XPECT output ---
-<==
-stdout:
 modules A A.foo
 modules A f
-stderr:
-==>
 --- */
 import {A, f} from "A"
 

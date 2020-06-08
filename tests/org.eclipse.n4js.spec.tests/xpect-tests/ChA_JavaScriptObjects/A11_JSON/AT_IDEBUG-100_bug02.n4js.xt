@@ -36,11 +36,7 @@ console.log(parsed3) // 11
 
 
 /* XPECT output ---
-<==
-stdout:
 5
 undefined
 11
-stderr:
-==>
 --- */

@@ -31,8 +31,6 @@ var matches = /(hello \S+)/.exec('This is a hello world!');
 console.log(matches);
 
 /* XPECT output ---
-<==
-stdout:
 Found abb.  Next match starts at 3
 Found ab.  Next match starts at 9
 [
@@ -42,6 +40,4 @@ Found ab.  Next match starts at 9
   input: 'This is a hello world!',
   groups: undefined
 ]
-stderr:
-==>
 --- */

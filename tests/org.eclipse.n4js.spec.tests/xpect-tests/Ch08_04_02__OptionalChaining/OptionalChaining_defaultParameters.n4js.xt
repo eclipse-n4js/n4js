@@ -25,11 +25,7 @@ foo(null, "two");
 
 
 /* XPECT output ---
-<==
-stdout:
 none
 one
 two
-stderr:
-==>
 --- */

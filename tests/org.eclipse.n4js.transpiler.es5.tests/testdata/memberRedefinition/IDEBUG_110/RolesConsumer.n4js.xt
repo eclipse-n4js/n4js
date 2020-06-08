@@ -20,11 +20,7 @@
  */
 
 /* XPECT output ---
-<==
-stdout:
 fR1
-stderr:
-==>
 --- */
 
 import { r2 } from 'memberRedefinition/IDEBUG_110/Roles'

@@ -11,8 +11,6 @@
 
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
 /* XPECT output ---
-<==
-stdout:
 42
 A
 42
@@ -29,8 +27,6 @@ A
 36
 static foo
 B
-stderr:
-==>
 --- */
 
 class A {

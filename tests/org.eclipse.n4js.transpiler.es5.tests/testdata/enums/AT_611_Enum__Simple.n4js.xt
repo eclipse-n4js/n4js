@@ -12,13 +12,9 @@
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
 
 /* XPECT output ---
-<==
-stdout:
 Recognized the blue color!
 Recognized the green color!
 Switched to GREEN!
-stderr:
-==>
 --- */
 enum Color {
 	RED, GREEN: 'thisIsGreen!', BLUE

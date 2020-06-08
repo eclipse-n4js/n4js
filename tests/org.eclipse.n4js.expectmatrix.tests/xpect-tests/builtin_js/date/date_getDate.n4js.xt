@@ -20,9 +20,5 @@ var day = Xmas95.getDate();
 console.log(day);
 
 /* XPECT output ---
-<==
-stdout:
 25
-stderr:
-==>
 --- */

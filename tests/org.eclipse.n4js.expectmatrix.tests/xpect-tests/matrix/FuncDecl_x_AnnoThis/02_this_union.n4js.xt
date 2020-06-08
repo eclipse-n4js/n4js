@@ -38,11 +38,7 @@ logger.call(b);
 logger.call(c);
 
 /* XPECT output ---
-<==
-stdout:
 ~A was logged~
 ~B was logged~
 ~C was logged~
-stderr:
-==>
 --- */

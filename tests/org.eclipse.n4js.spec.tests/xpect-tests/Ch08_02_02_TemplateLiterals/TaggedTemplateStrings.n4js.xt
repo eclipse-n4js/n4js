@@ -59,8 +59,6 @@ console.log('======')
 
 
 /* XPECT output ---
-<==
-stdout:
 ======
 foo called with [ [ '' ] ]
 ======
@@ -93,6 +91,4 @@ foo called with [ [ 'xxx', 'yyy' ], 222 ]
 foo called with [ [ 'aaa', 'bbb', 'ccc' ], 'xxx|yyy||111', 'xxx|yyy||222' ]
 aaa|bbb|ccc||xxx|yyy||111|xxx|yyy||222
 ======
-stderr:
-==>
 --- */

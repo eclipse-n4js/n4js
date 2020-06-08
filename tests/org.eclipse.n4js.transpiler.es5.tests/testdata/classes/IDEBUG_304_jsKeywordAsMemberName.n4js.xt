@@ -12,8 +12,6 @@
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
 
 /* XPECT output ---
-<==
-stdout:
 instance method renamed
 [Function: delete]
 instance method not renamed
@@ -32,8 +30,6 @@ super static method renamed
 [Function: delete]
 logging setter-getter 1
 logging setter-getter 2
-stderr:
-==>
 --- */
 
 //instance

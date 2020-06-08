@@ -23,8 +23,6 @@ function NL() { console.log('')}
 
 
 /* Ensure JS-like eval of Object in 'if(...)' XPECT output ---
-<==
-stdout:
 vb:  else
 vBo: true
 vBoPlus: true
@@ -39,8 +37,6 @@ vNoPlus: true
 
 undefined:  else
 null:  else
-stderr:
-==>
 --- */
 
 var vb : boolean = false;

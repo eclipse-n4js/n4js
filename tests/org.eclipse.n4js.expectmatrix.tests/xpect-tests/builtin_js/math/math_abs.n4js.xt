@@ -19,11 +19,7 @@ console.log(Math.abs(null));
 console.log(Math.abs(4));
 
 /* XPECT output ---
-<==
-stdout:
 4
 0
 4
-stderr:
-==>
 --- */
