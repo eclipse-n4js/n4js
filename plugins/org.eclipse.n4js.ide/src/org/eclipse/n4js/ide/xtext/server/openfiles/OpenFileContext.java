@@ -46,10 +46,10 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 /**
- * Manages a single open file, including EMF resources and resource sets for files required by the open file.
+ * Represents a single open file, including EMF resources for files required by the open file.
  */
 @SuppressWarnings("javadoc")
-public class OpenFileManager {
+public class OpenFileContext {
 
 	@Inject
 	private IssueAcceptor issueAcceptor;
@@ -65,12 +65,12 @@ public class OpenFileManager {
 
 	/** The {@link OpenFilesManager} that created this instance. */
 	protected OpenFilesManager parent;
-	/** URI of the open file represented by this {@link OpenFileManager} (i.e. URI of the main resource). */
+	/** URI of the open file represented by this {@link OpenFileContext} (i.e. URI of the main resource). */
 	protected URI mainURI;
 
 	/**
 	 * Contains the state of all files in the workspace. For open files managed by {@link #parent} (including the open
-	 * file of this manager) this state will represent the dirty state and for all other files it will represent the
+	 * file of this context) this state will represent the dirty state and for all other files it will represent the
 	 * persisted state (as provided by the LSP builder).
 	 */
 	protected ResourceDescriptionsData index;
@@ -204,8 +204,8 @@ public class OpenFileManager {
 	}
 
 	/**
-	 * Invoked by {@link #parent} when a change happened in another open file (not the one managed by this
-	 * {@link OpenFileManager}).
+	 * Invoked by {@link #parent} when a change happened in another open file (not the one represented by this
+	 * {@link OpenFileContext}).
 	 */
 	protected void onDirtyStateChanged(IResourceDescription changedDesc, CancelIndicator cancelIndicator) {
 		updateIndex(Collections.singletonList(changedDesc), Collections.emptySet(), cancelIndicator);

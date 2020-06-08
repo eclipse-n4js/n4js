@@ -46,12 +46,12 @@ public class OpenFilesManager {
 	private XWorkspaceManager workspaceManager;
 
 	@Inject
-	private Provider<OpenFileManager> openFileManagerProvider;
+	private Provider<OpenFileContext> openFileContextProvider;
 
 	@Inject
 	private LSPExecutorService lspExecutorService;
 
-	protected final Map<URI, OpenFileManager> openFiles = new HashMap<>();
+	protected final Map<URI, OpenFileContext> openFiles = new HashMap<>();
 
 	protected final ChunkedResourceDescriptions persistedState = new ChunkedResourceDescriptions();
 
@@ -65,19 +65,19 @@ public class OpenFilesManager {
 		if (openFiles.containsKey(uri)) {
 			return; // FIXME content gets lost in this case!
 		}
-		OpenFileManager newOFM = createOpenFileManager(uri);
-		openFiles.put(uri, newOFM);
+		OpenFileContext newOFC = createOpenFileContext(uri);
+		openFiles.put(uri, newOFC);
 
-		runInOpenFileContext(uri, ofm -> {
-			ofm.initOpenFile(version, content, CancelIndicator.NullImpl); // FIXME use proper indicator!
+		runInOpenFileContext(uri, ofc -> {
+			ofc.initOpenFile(version, content, CancelIndicator.NullImpl); // FIXME use proper indicator!
 		});
 	}
 
 	public synchronized void changeFile(URI uri, int version,
 			Iterable<? extends TextDocumentContentChangeEvent> changes, CancelIndicator cancelIndicator) {
 
-		runInOpenFileContext(uri, ofm -> {
-			ofm.refreshOpenFile(version, changes, cancelIndicator);
+		runInOpenFileContext(uri, ofc -> {
+			ofc.refreshOpenFile(version, changes, cancelIndicator);
 		});
 	}
 
@@ -86,28 +86,28 @@ public class OpenFilesManager {
 		// to #discardOpenFileInfo() on the queue (note: this does apply to tasks being submitted after this method
 		// returns and before #discardOpenFileInfo() is invoked).
 		// TODO reconsider sequence when closing files
-		runInOpenFileContext(uri, ofm -> {
+		runInOpenFileContext(uri, ofc -> {
 			discardOpenFileInfo(uri);
 		});
 	}
 
-	public synchronized CompletableFuture<Void> runInOpenFileContext(URI uri, Consumer<OpenFileManager> task) {
-		return runInOpenFileContext(uri, ofm -> {
-			task.accept(ofm);
+	public synchronized CompletableFuture<Void> runInOpenFileContext(URI uri, Consumer<OpenFileContext> task) {
+		return runInOpenFileContext(uri, ofc -> {
+			task.accept(ofc);
 			return null;
 		});
 	}
 
-	public synchronized <T> CompletableFuture<T> runInOpenFileContext(URI uri, Function<OpenFileManager, T> task) {
+	public synchronized <T> CompletableFuture<T> runInOpenFileContext(URI uri, Function<OpenFileContext, T> task) {
 
-		OpenFileManager ofm = openFiles.get(uri);
-		if (ofm == null) {
+		OpenFileContext ofc = openFiles.get(uri);
+		if (ofc == null) {
 			throw new IllegalArgumentException("no open file found for given URI: " + uri);
 		}
 
 		Object queueId = getQueueIdForOpenFileContext(uri);
 		return lspExecutorService.submit(queueId, () -> {
-			return task.apply(ofm);
+			return task.apply(ofc);
 		});
 	}
 
@@ -115,14 +115,14 @@ public class OpenFilesManager {
 		return Pair.of(OpenFilesManager.class, uri);
 	}
 
-	protected OpenFileManager createOpenFileManager(URI uri) {
+	protected OpenFileContext createOpenFileContext(URI uri) {
 		if (persistedState.isEmpty()) {
 			// FIXME clean up when there's a top-level aggregator class for OpenFilesManager and the LSP builder
 			updatePersistedState(workspaceManager.getFullIndex(), Collections.emptySet(), CancelIndicator.NullImpl);
 		}
-		OpenFileManager ofm = openFileManagerProvider.get();
-		ofm.initialize(this, uri, persistedState, sharedDirtyState);
-		return ofm;
+		OpenFileContext ofc = openFileContextProvider.get();
+		ofc.initialize(this, uri, persistedState, sharedDirtyState);
+		return ofc;
 	}
 
 	protected synchronized void discardOpenFileInfo(URI uri) {
@@ -140,18 +140,18 @@ public class OpenFilesManager {
 	 * resource set responsible for containing a resource with the given uri; otherwise <code>null</code> is returned.
 	 * Might return the origin resource set itself or might return a newly created resource set.
 	 */
-	// FIXME find better solution for this (it's dirty to leak a manager's resource sets to the outside)
+	// FIXME find better solution for this (it's dirty to leak a context's resource set to the outside)
 	public synchronized ResourceSet getOrCreateResourceSetForURI(ResourceSet origin, URI uri) {
-		OpenFileManager ofm = findOpenFileManager(origin);
-		if (ofm == null) {
+		OpenFileContext ofc = findOpenFileContext(origin);
+		if (ofc == null) {
 			return null; // origin is not a resource set related to an open file
 		}
-		return ofm.getResourceSet();
+		return ofc.getResourceSet();
 	}
 
-	protected synchronized OpenFileManager findOpenFileManager(ResourceSet resourceSet) {
+	protected synchronized OpenFileContext findOpenFileContext(ResourceSet resourceSet) {
 		return openFiles.values().stream()
-				.filter(ofm -> ofm.getResourceSet() == resourceSet)
+				.filter(ofc -> ofc.getResourceSet() == resourceSet)
 				.findAny().orElse(null);
 	}
 
@@ -184,13 +184,13 @@ public class OpenFilesManager {
 		for (String removedContainerHandle : removedContainerHandles) {
 			persistedState.removeContainer(removedContainerHandle);
 		}
-		// update persisted state instances in the manager of each open file
+		// update persisted state instances in the context of each open file
 		if (Iterables.isEmpty(changed) && removed.isEmpty()) {
 			return;
 		}
 		for (URI currURI : openFiles.keySet()) {
-			runInOpenFileContext(currURI, ofm -> {
-				ofm.onPersistedStateChanged(changed, removed, cancelIndicator);
+			runInOpenFileContext(currURI, ofc -> {
+				ofc.onPersistedStateChanged(changed, removed, cancelIndicator);
 			});
 		}
 	}
@@ -199,13 +199,13 @@ public class OpenFilesManager {
 		// update my dirty state instance
 		URI newDescURI = newDesc.getURI();
 		sharedDirtyState.addDescription(newDescURI, newDesc);
-		// update dirty state instances in the manager of each open file (except the one that caused the change)
+		// update dirty state instances in the context of each open file (except the one that caused the change)
 		for (URI currURI : openFiles.keySet()) {
 			if (currURI.equals(newDescURI)) {
 				continue;
 			}
-			runInOpenFileContext(currURI, ofm -> {
-				ofm.onDirtyStateChanged(newDesc, cancelIndicator);
+			runInOpenFileContext(currURI, ofc -> {
+				ofc.onDirtyStateChanged(newDesc, cancelIndicator);
 			});
 		}
 	}

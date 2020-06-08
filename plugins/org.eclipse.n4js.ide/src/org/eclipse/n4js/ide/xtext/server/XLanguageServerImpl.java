@@ -102,7 +102,7 @@ import org.eclipse.n4js.ide.xtext.server.concurrent.LSPExecutorService;
 import org.eclipse.n4js.ide.xtext.server.concurrent.XRequestManager;
 import org.eclipse.n4js.ide.xtext.server.contentassist.XContentAssistService;
 import org.eclipse.n4js.ide.xtext.server.findReferences.XWorkspaceResourceAccess;
-import org.eclipse.n4js.ide.xtext.server.openfiles.OpenFileManager;
+import org.eclipse.n4js.ide.xtext.server.openfiles.OpenFileContext;
 import org.eclipse.n4js.ide.xtext.server.openfiles.OpenFilesManager;
 import org.eclipse.n4js.ide.xtext.server.rename.XIRenameService;
 import org.eclipse.xtext.findReferences.IReferenceFinder;
@@ -648,7 +648,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	/**
 	 * Compute the completion items.
 	 */
-	protected Either<List<CompletionItem>, CompletionList> completion(OpenFileManager ofc, CompletionParams params,
+	protected Either<List<CompletionItem>, CompletionList> completion(OpenFileContext ofc, CompletionParams params,
 			CancelIndicator originalCancelIndicator) {
 		URI uri = ofc.getURI();
 		XContentAssistService contentAssistService = getService(uri, XContentAssistService.class);
@@ -696,7 +696,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	/**
 	 * Compute the definition. Executed in a read request.
 	 */
-	protected Either<List<? extends Location>, List<? extends LocationLink>> definition(OpenFileManager ofc,
+	protected Either<List<? extends Location>, List<? extends LocationLink>> definition(OpenFileContext ofc,
 			TextDocumentPositionParams params, CancelIndicator cancelIndicator) {
 		URI uri = ofc.getURI();
 		DocumentSymbolService documentSymbolService = getService(uri, DocumentSymbolService.class);
@@ -719,7 +719,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	/**
 	 * Compute the references. Executed in read request.
 	 */
-	protected List<? extends Location> references(OpenFileManager ofc, ReferenceParams params,
+	protected List<? extends Location> references(OpenFileContext ofc, ReferenceParams params,
 			CancelIndicator cancelIndicator) {
 		URI uri = ofc.getURI();
 		DocumentSymbolService documentSymbolService = getService(uri, DocumentSymbolService.class);
@@ -744,7 +744,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	/**
 	 * Compute the symbol information. Executed in a read request.
 	 */
-	protected List<Either<SymbolInformation, DocumentSymbol>> documentSymbol(OpenFileManager ofc,
+	protected List<Either<SymbolInformation, DocumentSymbol>> documentSymbol(OpenFileContext ofc,
 			DocumentSymbolParams params, CancelIndicator cancelIndicator) {
 		URI uri = ofc.getURI();
 		IDocumentSymbolService documentSymbolService = getIDocumentSymbolService(getResourceServiceProvider(uri));
@@ -816,7 +816,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	/**
 	 * Compute the hover. Executed in a read request.
 	 */
-	protected Hover hover(OpenFileManager ofc, TextDocumentPositionParams params,
+	protected Hover hover(OpenFileContext ofc, TextDocumentPositionParams params,
 			CancelIndicator cancelIndicator) {
 		URI uri = ofc.getURI();
 		IHoverService hoverService = getService(uri, IHoverService.class);
@@ -844,7 +844,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	/**
 	 * Compute the signature help. Executed in a read request.
 	 */
-	protected SignatureHelp signatureHelp(OpenFileManager ofc, TextDocumentPositionParams params,
+	protected SignatureHelp signatureHelp(OpenFileContext ofc, TextDocumentPositionParams params,
 			CancelIndicator cancelIndicator) {
 		URI uri = ofc.getURI();
 		ISignatureHelpService helper = getService(uri, ISignatureHelpService.class);
@@ -868,7 +868,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	/**
 	 * Compute the document highlights. Executed in a read request.
 	 */
-	protected List<? extends DocumentHighlight> documentHighlight(OpenFileManager ofc,
+	protected List<? extends DocumentHighlight> documentHighlight(OpenFileContext ofc,
 			TextDocumentPositionParams params, CancelIndicator cancelIndicator) {
 		URI uri = ofc.getURI();
 		IDocumentHighlightService service = getService(uri, IDocumentHighlightService.class);
@@ -891,7 +891,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	/**
 	 * Compute the code action commands. Executed in a read request.
 	 */
-	protected List<Either<Command, CodeAction>> codeAction(OpenFileManager ofc, CodeActionParams params,
+	protected List<Either<Command, CodeAction>> codeAction(OpenFileContext ofc, CodeActionParams params,
 			CancelIndicator cancelIndicator) {
 		URI uri = ofc.getURI();
 		IResourceServiceProvider serviceProvider = getResourceServiceProvider(uri);
@@ -990,7 +990,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	/**
 	 * Compute the code lenses. Executed in a read request.
 	 */
-	protected List<? extends CodeLens> codeLens(OpenFileManager ofc, CodeLensParams params,
+	protected List<? extends CodeLens> codeLens(OpenFileContext ofc, CodeLensParams params,
 			CancelIndicator cancelIndicator) {
 		URI uri = ofc.getURI();
 		ICodeLensService codeLensService = getService(uri, ICodeLensService.class);
@@ -1038,7 +1038,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	/**
 	 * Create the text edits for the formatter. Executed in a read request.
 	 */
-	protected List<? extends TextEdit> formatting(OpenFileManager ofc, DocumentFormattingParams params,
+	protected List<? extends TextEdit> formatting(OpenFileContext ofc, DocumentFormattingParams params,
 			CancelIndicator cancelIndicator) {
 		URI uri = ofc.getURI();
 		FormattingService formatterService = getService(uri, FormattingService.class);
@@ -1061,7 +1061,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	/**
 	 * Create the text edits for the formatter. Executed in a read request.
 	 */
-	protected List<? extends TextEdit> rangeFormatting(OpenFileManager ofc, DocumentRangeFormattingParams params,
+	protected List<? extends TextEdit> rangeFormatting(OpenFileContext ofc, DocumentRangeFormattingParams params,
 			CancelIndicator cancelIndicator) {
 		URI uri = ofc.getURI();
 		FormattingService formatterService = getService(uri, FormattingService.class);
@@ -1128,7 +1128,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	/**
 	 * Compute the rename edits. Executed in a read request.
 	 */
-	protected WorkspaceEdit rename(OpenFileManager ofc, RenameParams renameParams, CancelIndicator cancelIndicator) {
+	protected WorkspaceEdit rename(OpenFileContext ofc, RenameParams renameParams, CancelIndicator cancelIndicator) {
 		URI uri = ofc.getURI();
 
 		IResourceServiceProvider resourceServiceProvider = getResourceServiceProvider(uri);
@@ -1171,7 +1171,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	/**
 	 * Prepare the rename operation. Executed in a read request.
 	 */
-	protected Either<Range, PrepareRenameResult> prepareRename(OpenFileManager ofc, TextDocumentPositionParams params,
+	protected Either<Range, PrepareRenameResult> prepareRename(OpenFileContext ofc, TextDocumentPositionParams params,
 			CancelIndicator cancelIndicator) {
 		URI uri = ofc.getURI();
 		IRenameService2 renameService = getService(uri, IRenameService2.class);
