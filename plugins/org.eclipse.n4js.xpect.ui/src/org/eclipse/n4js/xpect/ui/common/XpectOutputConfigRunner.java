@@ -38,7 +38,8 @@ public class XpectOutputConfigRunner {
 
 	/**
 	 * Executes provided configuration, that is assumed to come from XpectOutput test setup. Code is executed with
-	 * {@code RunnerFrontEnd} facility. On demand, captured output is decorated with XpectOutput tokens.
+	 * {@code RunnerFrontEnd} facility. On demand, captured output is decorated with XpectOutput tokens to separate
+	 * stdout from stderr.
 	 */
 	public String executeWithConfig(final RunConfiguration runConfig, boolean decorateStdStreams) {
 		String executionResult;
@@ -47,17 +48,12 @@ public class XpectOutputConfigRunner {
 			Process process = runnerFrontEnd.run(runConfig, executor());
 			EngineOutput eo = captureOutput(process);
 
-			if (decorateStdStreams) {
-				combinedOutput.add("<==");
-				combinedOutput.add("stdout:");
-			}
 			combinedOutput.addAll(eo.getStdOut());
-			if (decorateStdStreams) {
-				combinedOutput.add("stderr:");
-			}
-			combinedOutput.addAll(eo.getErrOut());
-			if (decorateStdStreams) {
-				combinedOutput.add("==>");
+			if (!eo.getErrOut().isEmpty()) {
+				if (decorateStdStreams) {
+					combinedOutput.add("=== stderr ===");
+				}
+				combinedOutput.addAll(eo.getErrOut());
 			}
 
 			executionResult = Joiner.on(NL).join(combinedOutput);
@@ -93,7 +89,6 @@ public class XpectOutputConfigRunner {
 			bre = new BufferedReader(new InputStreamReader(process.getErrorStream()));
 			while ((errLine = bre.readLine()) != null) {
 				err.add(errLine);
-				System.err.println(errLine);
 			}
 		} catch (Exception e) {
 			System.err.println("Exception in Engine.captureOutput: " + e.getMessage());

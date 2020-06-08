@@ -1509,6 +1509,9 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 				triple.getThird());
 		// if so, use more specific diagnostic message
 		if (null != scopingDiagnostic) {
+			if (scopingDiagnostic == N4JSScopingDiagnostician.NO_MESSAGE) {
+				return; // don't show an error message for this unresolved reference
+			}
 			List<Diagnostic> list = getDiagnosticList(scopingDiagnostic);
 			Diagnostic diagnostic = createDiagnostic(triple, scopingDiagnostic);
 			if (!list.contains(diagnostic)) {

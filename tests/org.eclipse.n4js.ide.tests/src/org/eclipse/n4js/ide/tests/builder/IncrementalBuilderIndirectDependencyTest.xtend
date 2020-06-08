@@ -48,9 +48,8 @@ class IncrementalBuilderIndirectDependencyTest extends AbstractIncrementalBuilde
 		assertIssuesInModules(
 			"A" -> #[],
 			"B" -> #[
-				"(Error, [0:8 - 0:9], Couldn't resolve reference to TExportableElement 'A'.)",
-				"(Error, [1:30 - 1:31], Couldn't resolve reference to Type 'A'.)",
-				"(Warning, [0:8 - 0:9], The import of <A>(proxy) is unused.)"
+				"(Error, [0:8 - 0:9], Import of A cannot be resolved.)",
+				"(Error, [1:30 - 1:31], Couldn't resolve reference to Type 'A'.)"
 			],
 			"Main" -> #[
 				"(Error, [1:8 - 1:9], Couldn't resolve reference to IdentifiableElement 'm'.)"

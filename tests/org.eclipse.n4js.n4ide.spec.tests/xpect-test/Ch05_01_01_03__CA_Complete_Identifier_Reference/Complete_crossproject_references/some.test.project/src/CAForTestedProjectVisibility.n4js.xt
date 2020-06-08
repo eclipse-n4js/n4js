@@ -37,7 +37,7 @@
 
 import * as NVM from "VisibleModule"
 /* XPECT errors ---
-"Cannot resolve import target :: resolving simple module import : found no matching modules" at ""NotVisibleModule""
+"Cannot resolve plain module specifier (without project name as first segment): no matching module found." at ""NotVisibleModule""
  --- */
 import * as NNVM from "NotVisibleModule"
 

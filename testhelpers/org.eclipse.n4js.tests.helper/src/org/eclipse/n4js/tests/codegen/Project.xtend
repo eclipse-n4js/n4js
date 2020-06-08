@@ -97,6 +97,7 @@ public class Project {
 	final Map<String, Project> nodeModuleProjects = newHashMap();
 	ProjectType projectType;
 	String projectVersion = "1.0.0";
+	String mainModule = null;
 	String outputFolder = "src-gen";
 	String projectDescriptionContent = null;
 
@@ -162,6 +163,34 @@ public class Project {
 	}
 
 	/**
+	 * Gets the project's main module.
+	 *
+	 * @return main module of the project.
+	 */
+	public def String getMainModule() {
+		return this.mainModule;
+	}
+
+	/**
+	 * Sets the project's main module.
+	 *
+	 * @param mainModule the main module.
+	 */
+	public def Project setMainModule(String mainModule) {
+		this.mainModule = mainModule;
+		return this;
+	}
+
+	/**
+	 * Returns the output folder.
+	 * 
+	 * @return the output folder.
+	 */
+	public def String getOutputFolder() {
+		return outputFolder;
+	}
+
+	/**
 	 * Sets the output folder.
 	 *
 	 * @param outputFolder the output folder to set
@@ -188,15 +217,6 @@ public class Project {
 	 */
 	public def String getProjectDescriptionContent() {
 		return projectDescriptionContent;
-	}
-
-	/**
-	 * Returns the output folder.
-	 * 
-	 * @return the output folder.
-	 */
-	public def String getOutputFolder() {
-		return outputFolder;
 	}
 
 	/**
@@ -274,9 +294,12 @@ public class Project {
 			"n4js": {
 				"vendorId": "«vendorId»",
 				"vendorName": "«vendorName»",
-				"projectType": "«projectType.projectTypeToString»",
+				"projectType": "«projectType.projectTypeToString»"
+				«IF mainModule !== null
+					»,"mainModule": "«mainModule»"
+				«ENDIF»
 				«IF !outputFolder.nullOrEmpty
-					»"output": "«outputFolder»"
+					»,"output": "«outputFolder»"
 				«ENDIF»
 				«IF !sourceFolders.nullOrEmpty
 				»,"sources": {

@@ -99,7 +99,7 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 		assertTrue(projectDescriptionFile + " client module is not accessible.", projectDescriptionFile.isAccessible());
 
 		assertIssues(clientModule,
-				"line 12: Cannot resolve import target :: resolving simple module import : found no matching modules",
+				"line 12: Cannot resolve plain module specifier (without project name as first segment): no matching module found.",
 				"line 14: Cannot resolve JSX implementation.",
 				"line 15: Couldn't resolve reference to IdentifiableElement 'Component'.");
 		assertIssues(projectDescriptionFile,

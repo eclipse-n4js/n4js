@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.tests.util;
 
-import static com.google.common.base.Predicates.alwaysTrue;
 import static com.google.common.collect.FluentIterable.from;
 import static org.eclipse.core.runtime.jobs.Job.getJobManager;
 import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.addNature;
@@ -715,30 +714,11 @@ public class ProjectTestsUtils {
 	}
 
 	/***/
-	public static IMarker[] assertMarkers(String assertMessage, final IProject project, int count)
-			throws CoreException {
-
-		return assertMarkers(assertMessage, project, MarkerTypes.ANY_VALIDATION, count);
-	}
-
-	/***/
-	public static IMarker[] assertMarkers(String assertMessage, final IResource resource, int count)
-			throws CoreException {
-		return assertMarkers(assertMessage, resource, MarkerTypes.ANY_VALIDATION, count);
-	}
-
-	/***/
 	@SafeVarargs
 	public static IMarker[] assertMarkers(String assertMessage, final IResource resource, int count,
 			final Predicate<IMarker>... markerPredicates) throws CoreException {
 
 		return assertMarkers(assertMessage, resource, MarkerTypes.ANY_VALIDATION, count, markerPredicates);
-	}
-
-	/***/
-	public static IMarker[] assertMarkers(String assertMessage, final IResource resource, String markerType, int count)
-			throws CoreException {
-		return assertMarkers(assertMessage, resource, markerType, count, alwaysTrue());
 	}
 
 	/***/
@@ -831,7 +811,15 @@ public class ProjectTestsUtils {
 		}
 		Set<String> actual = new TreeSet<>(Arrays.asList(actualMessages));
 		Set<String> expected = new TreeSet<>(Arrays.asList(expectedMessages));
-		Assert.assertEquals(Joiner.on('\n').join(expected), Joiner.on('\n').join(actual));
+
+		if (!actual.equals(expected)) {
+			StringBuilder message = new StringBuilder(msg != null ? msg : "");
+			message.append("\nexpected:\n");
+			message.append(expectedMessages.length > 0 ? Joiner.on('\n').join(expectedMessages) : "<none>");
+			message.append("\nactual:\n");
+			message.append(actualMessages.length > 0 ? Joiner.on('\n').join(actualMessages) : "<none>");
+			Assert.fail(message.toString());
+		}
 	}
 
 	/***/

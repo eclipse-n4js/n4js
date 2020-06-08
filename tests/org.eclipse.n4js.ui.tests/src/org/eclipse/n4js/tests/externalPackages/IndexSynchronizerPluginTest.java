@@ -142,7 +142,7 @@ public class IndexSynchronizerPluginTest extends AbstractBuilderParticipantTest 
 
 		assertIssues(packagejson, "line 6: Project does not exist with project ID: snafu.");
 		assertIssues(abc,
-				"line 12: Cannot resolve import target :: resolving simple module import : found no matching modules");
+				"line 12: Cannot resolve plain module specifier (without project name as first segment): no matching module found.");
 
 		assertFalse(indexSynchronizer.findNpmsInIndex().containsKey(NPM_SNAFU));
 		libraryManager.installNPM(NPM_SNAFU, new PlatformResourceURI(project).toFileURI(), new NullProgressMonitor());
@@ -169,12 +169,12 @@ public class IndexSynchronizerPluginTest extends AbstractBuilderParticipantTest 
 
 		assertIssues(packagejson, "line 6: Project does not exist with project ID: snafu.");
 		assertIssues(abc,
-				"line 12: Cannot resolve import target :: resolving simple module import : found no matching modules");
+				"line 12: Cannot resolve plain module specifier (without project name as first segment): no matching module found.");
 
 		build.accept(project);
 		assertIssues(packagejson, "line 6: Project does not exist with project ID: snafu.");
 		assertIssues(abc,
-				"line 12: Cannot resolve import target :: resolving simple module import : found no matching modules");
+				"line 12: Cannot resolve plain module specifier (without project name as first segment): no matching module found.");
 
 		Files.move(oldCopy.toPath(), file.toPath());
 		assertTrue(file.exists());
@@ -182,7 +182,7 @@ public class IndexSynchronizerPluginTest extends AbstractBuilderParticipantTest 
 
 		assertIssues(packagejson, "line 6: Project snafu is not registered.");
 		assertIssues(abc,
-				"line 12: Cannot resolve import target :: resolving project import : found no matching modules");
+				"line 12: Cannot resolve project import: no matching module found.");
 
 		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
 		build.accept(project);

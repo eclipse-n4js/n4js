@@ -88,10 +88,7 @@ class OrganizeImportsTest extends AbstractOrganizeImportsTest {
 			import {X2} from "B";
 			import {A01} from "A";
 			A01,C01;
-		''', #[
-			"(Error, [2:8 - 2:10], Couldn't resolve reference to TExportableElement 'X1'.)",
-			"(Error, [3:8 - 3:10], Couldn't resolve reference to TExportableElement 'X2'.)"
-		], '''
+		''', '''
 			import {A01} from "A";
 			import {C01} from "C";
 			A01,C01;
@@ -106,7 +103,6 @@ class OrganizeImportsTest extends AbstractOrganizeImportsTest {
 			import {A01} from "A";
 			A01,C01;
 		''', #[
-			"(Error, [1:8 - 1:10], Couldn't resolve reference to TExportableElement 'X3'.)",
 			"(Error, [1:17 - 1:19], Couldn't resolve reference to TModule ''.)"
 		], '''
 			import {A01} from "A";

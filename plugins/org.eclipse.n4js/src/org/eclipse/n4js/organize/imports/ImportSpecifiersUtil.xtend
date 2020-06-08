@@ -140,8 +140,10 @@ class ImportSpecifiersUtil {
 			val imported = nis.importedElement
 			if (imported === null)
 				return true
-			if (!imported.eIsProxy)
-				return imported.exportedName.isNullOrEmpty
+			if (imported.eIsProxy)
+				return true
+			if (imported.exportedName.isNullOrEmpty)
+				return true
 		}
 
 		return false
