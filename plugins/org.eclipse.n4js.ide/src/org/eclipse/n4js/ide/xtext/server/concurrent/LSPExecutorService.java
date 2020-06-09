@@ -16,73 +16,123 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.Callable;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import org.apache.log4j.Logger;
+import org.eclipse.xtext.service.OperationCanceledManager;
+import org.eclipse.xtext.util.CancelIndicator;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+@SuppressWarnings("javadoc")
 @Singleton // ensures queue IDs are "global" within a single injector
 public class LSPExecutorService {
 
-	// FIXME support cancellation via the futures returned by #submit()!!!
+	private static final Logger LOG = Logger.getLogger(LSPExecutorService.class);
 
 	@Inject
 	protected ExecutorService executorService;
+
+	@Inject
+	protected OperationCanceledManager operationCanceledManager;
 
 	/** Global queue of all pending task across all queue IDs. */
 	protected final List<QueuedTask<?>> pendingTasks = new ArrayList<>();
 	/** Queue IDs with currently running tasks. */
 	protected final Map<Object, QueuedTask<?>> runningTasks = new LinkedHashMap<>();
 
-	protected final class QueuedTask<T> implements Runnable {
-		final Object queueId;
-		final Callable<T> callable;
-		final CompletableFuture<T> result;
+	protected final class QueuedTask<T> implements Runnable, XCancellable {
+		protected final Object queueId;
+		protected final Function<CancelIndicator, T> operation;
+		protected final QueuedTaskFuture<T> result;
+		protected boolean cancelled = false;
 
-		public QueuedTask(Object queueId, Callable<T> callable) {
+		protected QueuedTask(Object queueId, Function<CancelIndicator, T> operation) {
 			this.queueId = Objects.requireNonNull(queueId);
-			this.callable = Objects.requireNonNull(callable);
-			this.result = new CompletableFuture<>();
+			this.operation = Objects.requireNonNull(operation);
+			this.result = new QueuedTaskFuture<>(this);
 		}
 
 		@Override
 		public void run() {
 			try {
-				T actualResult = callable.call();
+				T actualResult = operation.apply(new CancelIndicator() {
+					@Override
+					public boolean isCanceled() {
+						return cancelled;
+					}
+				});
 				result.complete(actualResult);
-			} catch (Throwable e) {
-				result.completeExceptionally(e);
+			} catch (Throwable th) {
+				if (isCancellation(th)) {
+					result.doCancel();
+				} else {
+					result.completeExceptionally(th);
+					LOG.error("error during queued task: ", th);
+				}
 			} finally {
 				onDone(this);
 			}
 		}
+
+		@Override
+		public void cancel() {
+			cancelled = true;
+		}
 	}
 
-	public synchronized CompletableFuture<Void> submit(Runnable task) {
-		return submit(new Object(), task);
+	public static class QueuedTaskFuture<T> extends CompletableFuture<T> {
+
+		protected final QueuedTask<T> task;
+
+		public QueuedTaskFuture(QueuedTask<T> task) {
+			this.task = task;
+		}
+
+		/**
+		 * Does not immediately cancel this future! Instead, only the corresponding queued task's cancel indicator is
+		 * marked as cancelled, but it lies in the discretion of the task's implementation how to react to that. This
+		 * future might even still complete normally if the task implementation chooses to ignore the cancellation
+		 * status of the cancel indicator.
+		 */
+		@Override
+		public boolean cancel(boolean mayInterruptIfRunning) {
+			task.cancel();
+			return isCancelled();
+		}
+
+		/** Actually cancels this future. Should only be invoked by {@link QueuedTask#run()}. */
+		protected void doCancel() {
+			super.cancel(false);
+		}
 	}
 
-	public synchronized <T> CompletableFuture<T> submit(Callable<T> task) {
-		return submit(new Object(), task);
+	public synchronized <T> QueuedTaskFuture<T> submit(Function<CancelIndicator, T> task) {
+		return submit(new Object(), task, false);
 	}
 
-	public synchronized CompletableFuture<Void> submit(Object queueId, Runnable task) {
-		return submit(queueId, task, null);
+	public synchronized <T> QueuedTaskFuture<T> submit(Object queueId, Function<CancelIndicator, T> task) {
+		return submit(queueId, task, false);
 	}
 
-	public synchronized <T> CompletableFuture<T> submit(Object queueId, Runnable task, T result) {
-		return submit(queueId, () -> {
-			task.run();
-			return result;
-		});
+	public synchronized <T> QueuedTaskFuture<T> submitAndCancelPrevious(Object queueId,
+			Function<CancelIndicator, T> task) {
+		return submit(queueId, task, true);
 	}
 
-	public synchronized <T> CompletableFuture<T> submit(Object queueId, Callable<T> task) {
-		QueuedTask<T> callable = new QueuedTask<>(queueId, task);
+	protected synchronized <T> QueuedTaskFuture<T> submit(Object queueId, Function<CancelIndicator, T> task,
+			boolean cancelPrevious) {
+
+		if (cancelPrevious) {
+			cancelAll(queueId);
+		}
+		QueuedTask<T> callable = createQueuedTask(queueId, task);
 		pendingTasks.add(callable);
 		doSubmitPending();
 		return callable.result;
@@ -122,6 +172,17 @@ public class LSPExecutorService {
 		return null;
 	}
 
+	public synchronized void cancelAll() {
+		Stream.concat(runningTasks.values().stream(), pendingTasks.stream())
+				.forEach(t -> t.cancel());
+	}
+
+	public synchronized void cancelAll(Object queueId) {
+		Stream.concat(runningTasks.values().stream(), pendingTasks.stream())
+				.filter(t -> queueId.equals(t.queueId))
+				.forEach(t -> t.cancel());
+	}
+
 	/**
 	 * Blocks until all tasks complete that are running or pending at the time of invocation of this method OR are being
 	 * submitted by other threads while this method is waiting. Thus, this method waits for this executor to idle.
@@ -152,5 +213,17 @@ public class LSPExecutorService {
 				.collect(Collectors.toList())
 				.toArray(CompletableFuture[]::new);
 		return CompletableFuture.allOf(allTasks);
+	}
+
+	/** May be invoked from arbitrary threads. */
+	protected /* NOT synchronized */ <T> QueuedTask<T> createQueuedTask(Object queueId,
+			Function<CancelIndicator, T> task) {
+
+		return new QueuedTask<>(queueId, task);
+	}
+
+	/** May be invoked from arbitrary threads. */
+	protected /* NOT synchronized */ boolean isCancellation(Throwable th) {
+		return th instanceof CancellationException || operationCanceledManager.isOperationCanceledException(th);
 	}
 }

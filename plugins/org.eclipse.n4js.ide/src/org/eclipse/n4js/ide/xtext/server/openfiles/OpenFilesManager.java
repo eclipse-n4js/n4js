@@ -19,8 +19,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
-import java.util.function.Function;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -68,16 +68,16 @@ public class OpenFilesManager {
 		OpenFileContext newOFC = createOpenFileContext(uri);
 		openFiles.put(uri, newOFC);
 
-		runInOpenFileContext(uri, ofc -> {
-			ofc.initOpenFile(version, content, CancelIndicator.NullImpl); // FIXME use proper indicator!
+		runInOpenFileContext(uri, (ofc, ci) -> {
+			ofc.initOpenFile(version, content, ci);
 		});
 	}
 
 	public synchronized void changeFile(URI uri, int version,
-			Iterable<? extends TextDocumentContentChangeEvent> changes, CancelIndicator cancelIndicator) {
+			Iterable<? extends TextDocumentContentChangeEvent> changes) {
 
-		runInOpenFileContext(uri, ofc -> {
-			ofc.refreshOpenFile(version, changes, cancelIndicator);
+		runInOpenFileContext(uri, (ofc, ci) -> {
+			ofc.refreshOpenFile(version, changes, ci);
 		});
 	}
 
@@ -86,19 +86,22 @@ public class OpenFilesManager {
 		// to #discardOpenFileInfo() on the queue (note: this does apply to tasks being submitted after this method
 		// returns and before #discardOpenFileInfo() is invoked).
 		// TODO reconsider sequence when closing files
-		runInOpenFileContext(uri, ofc -> {
+		runInOpenFileContext(uri, (ofc, ci) -> {
 			discardOpenFileInfo(uri);
 		});
 	}
 
-	public synchronized CompletableFuture<Void> runInOpenFileContext(URI uri, Consumer<OpenFileContext> task) {
-		return runInOpenFileContext(uri, ofc -> {
-			task.accept(ofc);
+	public synchronized CompletableFuture<Void> runInOpenFileContext(URI uri,
+			BiConsumer<OpenFileContext, CancelIndicator> task) {
+
+		return runInOpenFileContext(uri, (ofc, ci) -> {
+			task.accept(ofc, ci);
 			return null;
 		});
 	}
 
-	public synchronized <T> CompletableFuture<T> runInOpenFileContext(URI uri, Function<OpenFileContext, T> task) {
+	public synchronized <T> CompletableFuture<T> runInOpenFileContext(URI uri,
+			BiFunction<OpenFileContext, CancelIndicator, T> task) {
 
 		OpenFileContext ofc = openFiles.get(uri);
 		if (ofc == null) {
@@ -106,8 +109,8 @@ public class OpenFilesManager {
 		}
 
 		Object queueId = getQueueIdForOpenFileContext(uri);
-		return lspExecutorService.submit(queueId, () -> {
-			return task.apply(ofc);
+		return lspExecutorService.submit(queueId, ci -> {
+			return task.apply(ofc, ci);
 		});
 	}
 
@@ -189,8 +192,8 @@ public class OpenFilesManager {
 			return;
 		}
 		for (URI currURI : openFiles.keySet()) {
-			runInOpenFileContext(currURI, ofc -> {
-				ofc.onPersistedStateChanged(changed, removed, cancelIndicator);
+			runInOpenFileContext(currURI, (ofc, ci) -> {
+				ofc.onPersistedStateChanged(changed, removed, ci);
 			});
 		}
 	}
@@ -204,8 +207,8 @@ public class OpenFilesManager {
 			if (currURI.equals(newDescURI)) {
 				continue;
 			}
-			runInOpenFileContext(currURI, ofc -> {
-				ofc.onDirtyStateChanged(newDesc, cancelIndicator);
+			runInOpenFileContext(currURI, (ofc, ci) -> {
+				ofc.onDirtyStateChanged(newDesc, ci);
 			});
 		}
 	}
