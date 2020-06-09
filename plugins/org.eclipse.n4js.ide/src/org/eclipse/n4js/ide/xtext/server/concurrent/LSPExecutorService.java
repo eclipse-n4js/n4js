@@ -19,6 +19,7 @@ import java.util.Objects;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -27,6 +28,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 
+import com.google.common.util.concurrent.MoreExecutors;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -49,12 +51,14 @@ public class LSPExecutorService {
 
 	protected final class QueuedTask<T> implements Runnable, XCancellable {
 		protected final Object queueId;
+		protected final String description;
 		protected final Function<CancelIndicator, T> operation;
 		protected final QueuedTaskFuture<T> result;
 		protected boolean cancelled = false;
 
-		protected QueuedTask(Object queueId, Function<CancelIndicator, T> operation) {
+		protected QueuedTask(Object queueId, String description, Function<CancelIndicator, T> operation) {
 			this.queueId = Objects.requireNonNull(queueId);
+			this.description = Objects.requireNonNull(description);
 			this.operation = Objects.requireNonNull(operation);
 			this.result = new QueuedTaskFuture<>(this);
 		}
@@ -113,26 +117,28 @@ public class LSPExecutorService {
 		}
 	}
 
-	public synchronized <T> QueuedTaskFuture<T> submit(Function<CancelIndicator, T> task) {
-		return submit(new Object(), task, false);
-	}
-
-	public synchronized <T> QueuedTaskFuture<T> submit(Object queueId, Function<CancelIndicator, T> task) {
-		return submit(queueId, task, false);
-	}
-
-	public synchronized <T> QueuedTaskFuture<T> submitAndCancelPrevious(Object queueId,
+	public synchronized <T> QueuedTaskFuture<T> submit(String description,
 			Function<CancelIndicator, T> task) {
-		return submit(queueId, task, true);
+		return submit(new Object(), description, task, false);
 	}
 
-	protected synchronized <T> QueuedTaskFuture<T> submit(Object queueId, Function<CancelIndicator, T> task,
-			boolean cancelPrevious) {
+	public synchronized <T> QueuedTaskFuture<T> submit(Object queueId, String description,
+			Function<CancelIndicator, T> task) {
+		return submit(queueId, description, task, false);
+	}
+
+	public synchronized <T> QueuedTaskFuture<T> submitAndCancelPrevious(Object queueId, String description,
+			Function<CancelIndicator, T> task) {
+		return submit(queueId, description, task, true);
+	}
+
+	protected synchronized <T> QueuedTaskFuture<T> submit(Object queueId, String description,
+			Function<CancelIndicator, T> task, boolean cancelPrevious) {
 
 		if (cancelPrevious) {
 			cancelAll(queueId);
 		}
-		QueuedTask<T> callable = createQueuedTask(queueId, task);
+		QueuedTask<T> callable = createQueuedTask(queueId, description, task);
 		pendingTasks.add(callable);
 		doSubmitPending();
 		return callable.result;
@@ -215,11 +221,16 @@ public class LSPExecutorService {
 		return CompletableFuture.allOf(allTasks);
 	}
 
+	public synchronized void shutdown() {
+		MoreExecutors.shutdownAndAwaitTermination(executorService, 2500, TimeUnit.MILLISECONDS);
+		cancelAll();
+	}
+
 	/** May be invoked from arbitrary threads. */
-	protected /* NOT synchronized */ <T> QueuedTask<T> createQueuedTask(Object queueId,
+	protected /* NOT synchronized */ <T> QueuedTask<T> createQueuedTask(Object queueId, String description,
 			Function<CancelIndicator, T> task) {
 
-		return new QueuedTask<>(queueId, task);
+		return new QueuedTask<>(queueId, description, task);
 	}
 
 	/** May be invoked from arbitrary threads. */

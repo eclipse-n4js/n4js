@@ -68,7 +68,7 @@ public class OpenFilesManager {
 		OpenFileContext newOFC = createOpenFileContext(uri);
 		openFiles.put(uri, newOFC);
 
-		runInOpenFileContext(uri, (ofc, ci) -> {
+		runInOpenFileContext(uri, "openFile", (ofc, ci) -> {
 			ofc.initOpenFile(version, content, ci);
 		});
 	}
@@ -76,7 +76,7 @@ public class OpenFilesManager {
 	public synchronized void changeFile(URI uri, int version,
 			Iterable<? extends TextDocumentContentChangeEvent> changes) {
 
-		runInOpenFileContext(uri, (ofc, ci) -> {
+		runInOpenFileContext(uri, "changeFile", (ofc, ci) -> {
 			ofc.refreshOpenFile(version, changes, ci);
 		});
 	}
@@ -86,21 +86,21 @@ public class OpenFilesManager {
 		// to #discardOpenFileInfo() on the queue (note: this does apply to tasks being submitted after this method
 		// returns and before #discardOpenFileInfo() is invoked).
 		// TODO reconsider sequence when closing files
-		runInOpenFileContext(uri, (ofc, ci) -> {
+		runInOpenFileContext(uri, "closeFile", (ofc, ci) -> {
 			discardOpenFileInfo(uri);
 		});
 	}
 
-	public synchronized CompletableFuture<Void> runInOpenFileContext(URI uri,
+	public synchronized CompletableFuture<Void> runInOpenFileContext(URI uri, String description,
 			BiConsumer<OpenFileContext, CancelIndicator> task) {
 
-		return runInOpenFileContext(uri, (ofc, ci) -> {
+		return runInOpenFileContext(uri, description, (ofc, ci) -> {
 			task.accept(ofc, ci);
 			return null;
 		});
 	}
 
-	public synchronized <T> CompletableFuture<T> runInOpenFileContext(URI uri,
+	public synchronized <T> CompletableFuture<T> runInOpenFileContext(URI uri, String description,
 			BiFunction<OpenFileContext, CancelIndicator, T> task) {
 
 		OpenFileContext ofc = openFiles.get(uri);
@@ -109,7 +109,8 @@ public class OpenFilesManager {
 		}
 
 		Object queueId = getQueueIdForOpenFileContext(uri);
-		return lspExecutorService.submit(queueId, ci -> {
+		String descriptionWithContext = description + " [" + uri.lastSegment() + "]";
+		return lspExecutorService.submit(queueId, descriptionWithContext, ci -> {
 			return task.apply(ofc, ci);
 		});
 	}
@@ -192,7 +193,7 @@ public class OpenFilesManager {
 			return;
 		}
 		for (URI currURI : openFiles.keySet()) {
-			runInOpenFileContext(currURI, (ofc, ci) -> {
+			runInOpenFileContext(currURI, "updatePersistedState in open file", (ofc, ci) -> {
 				ofc.onPersistedStateChanged(changed, removed, ci);
 			});
 		}
@@ -207,7 +208,7 @@ public class OpenFilesManager {
 			if (currURI.equals(newDescURI)) {
 				continue;
 			}
-			runInOpenFileContext(currURI, (ofc, ci) -> {
+			runInOpenFileContext(currURI, "updateSharedDirtyState in open file", (ofc, ci) -> {
 				ofc.onDirtyStateChanged(newDesc, ci);
 			});
 		}

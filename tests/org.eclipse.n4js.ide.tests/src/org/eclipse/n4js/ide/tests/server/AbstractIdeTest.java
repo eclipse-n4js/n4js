@@ -152,7 +152,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	final public void deleteTestProject() {
 		// clear thread pools
 		languageServer.shutdown().join();
-		languageServer.getRequestManager().shutdown();
+		languageServer.getLSPExecutorService().shutdown();
 		// clear the state related to the test
 		testWorkspaceManager.deleteTestFromDiskIfCreated();
 		languageClient.clearIssues();

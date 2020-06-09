@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.ide.server.commands;
 
-import static org.eclipse.n4js.external.LibraryChange.LibraryChangeType.Install;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.annotation.ElementType;
@@ -41,6 +39,7 @@ import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.n4js.external.LibraryChange;
+import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
 import org.eclipse.n4js.external.NpmCLI;
 import org.eclipse.n4js.ide.imports.ImportDescriptor;
 import org.eclipse.n4js.ide.imports.ImportHelper;
@@ -50,6 +49,7 @@ import org.eclipse.n4js.ide.server.codeActions.ICodeActionAcceptor;
 import org.eclipse.n4js.ide.server.codeActions.N4JSCodeActionService;
 import org.eclipse.n4js.ide.server.codeActions.N4JSSourceActionProvider;
 import org.eclipse.n4js.ide.xtext.server.ExecuteCommandParamsDescriber;
+import org.eclipse.n4js.ide.xtext.server.XBuildManager;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
@@ -347,7 +347,7 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 			ILanguageServerAccess access,
 			CancelIndicator cancelIndicator) {
 
-		lspServer.getRequestManager().runWrite("InstallNpm", () -> {
+		lspServer.getLSPExecutorService().submitAndCancelPrevious(XBuildManager.class, "InstallNpm", (ci) -> {
 			// FIXME: Use CliTools in favor of npmCli
 			NPMVersionRequirement versionRequirement = semverHelper.parse(version);
 			if (versionRequirement == null) {
@@ -356,16 +356,13 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 			String normalizedVersion = SemverSerializer.serialize(versionRequirement);
 
 			N4JSProjectName projectName = new N4JSProjectName(packageName);
-			LibraryChange change = new LibraryChange(Install, null, projectName, normalizedVersion);
+			LibraryChange change = new LibraryChange(LibraryChangeType.Install, null, projectName, normalizedVersion);
 			MultiStatus multiStatus = new MultiStatus("json", 1, null, null);
 			FileURI targetProject = new FileURI(URI.createURI(fileUri)).getParent();
 			npmCli.batchInstall(new NullProgressMonitor(), multiStatus, Arrays.asList(change), targetProject);
 
-			return multiStatus;
-
-		}, (ci, ms) -> {
 			MessageParams messageParams = new MessageParams();
-			switch (ms.getSeverity()) {
+			switch (multiStatus.getSeverity()) {
 			case IStatus.INFO:
 				messageParams.setType(MessageType.Info);
 				break;
@@ -381,8 +378,8 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 
 			StringWriter sw = new StringWriter();
 			PrintWriter printWriter = new PrintWriter(sw);
-			for (IStatus child : ms.getChildren()) {
-				if (child.getSeverity() == ms.getSeverity()) {
+			for (IStatus child : multiStatus.getChildren()) {
+				if (child.getSeverity() == multiStatus.getSeverity()) {
 					printWriter.println(child.getMessage());
 				}
 			}

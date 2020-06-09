@@ -99,7 +99,6 @@ import org.eclipse.n4js.ide.server.LspLogger;
 import org.eclipse.n4js.ide.xtext.server.XBuildManager.XBuildable;
 import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
 import org.eclipse.n4js.ide.xtext.server.concurrent.LSPExecutorService;
-import org.eclipse.n4js.ide.xtext.server.concurrent.XRequestManager;
 import org.eclipse.n4js.ide.xtext.server.contentassist.XContentAssistService;
 import org.eclipse.n4js.ide.xtext.server.findReferences.XWorkspaceResourceAccess;
 import org.eclipse.n4js.ide.xtext.server.openfiles.OpenFileContext;
@@ -162,16 +161,13 @@ import com.google.inject.Singleton;
 public class XLanguageServerImpl implements LanguageServer, WorkspaceService, TextDocumentService, LanguageClientAware,
 		Endpoint, JsonRpcMethodProvider, IBuildListener {
 
-	@Inject
-	private OpenFilesManager openFileManager;
-
-	@Inject
-	private LSPExecutorService lspExecutorService;
-
 	private static final Logger LOG = Logger.getLogger(XLanguageServerImpl.class);
 
 	@Inject
-	private XRequestManager requestManager;
+	protected OpenFilesManager openFilesManager;
+
+	@Inject
+	private LSPExecutorService lspExecutorService;
 
 	@Inject
 	private WorkspaceSymbolService workspaceSymbolService;
@@ -384,15 +380,13 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public void initialized(InitializedParams params) {
-		requestManager.runWrite("initialized", () -> initialBuild(), (cancelIndicator, it) -> it);
+		lspExecutorService.submitAndCancelPrevious(XBuildManager.class, "initialized",
+				cancelIndicator -> initialBuild());
 
 		clientInitialized.complete(params);
 	}
 
 	private Void initialBuild() {
-		// if (useNew) {
-		// return null;
-		// }
 		Stopwatch sw = Stopwatch.createStarted();
 		try {
 			LOG.info("Start initial build ...");
@@ -484,7 +478,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	@Override
 	public void didOpen(DidOpenTextDocumentParams params) {
 		TextDocumentItem textDocument = params.getTextDocument();
-		openFileManager.openFile(getURI(textDocument), textDocument.getVersion(), textDocument.getText());
+		openFilesManager.openFile(getURI(textDocument), textDocument.getVersion(), textDocument.getText());
 	}
 
 	/**
@@ -502,12 +496,12 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		VersionedTextDocumentIdentifier textDocument = params.getTextDocument();
 		URI uri = getURI(textDocument);
 		if (isSourceFileOrOpen(uri)) {
-			openFileManager.changeFile(uri, textDocument.getVersion(), params.getContentChanges());
+			openFilesManager.changeFile(uri, textDocument.getVersion(), params.getContentChanges());
 		}
 	}
 
 	private boolean isSourceFileOrOpen(URI uri) {
-		if (openFileManager.isOpen(uri)) {
+		if (openFilesManager.isOpen(uri)) {
 			return true;
 		}
 		return isSourceFile(uri);
@@ -536,7 +530,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public void didClose(DidCloseTextDocumentParams params) {
-		openFileManager.closeFile(getURI(params.getTextDocument()));
+		openFilesManager.closeFile(getURI(params.getTextDocument()));
 	}
 
 	/**
@@ -549,9 +543,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public void didSave(DidSaveTextDocumentParams params) {
-		// if (useNew) {
-		// return;
-		// }
 		runBuildable("didSave", () -> toBuildable(params));
 	}
 
@@ -564,9 +555,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public void didChangeWatchedFiles(DidChangeWatchedFilesParams params) {
-		// if (useNew) {
-		// return;
-		// }
 		// TODO: Set watched files to client. Note: Client may have performance issues with lots of folders to watch.
 		final List<URI> dirtyFiles = new ArrayList<>();
 		final List<URI> deletedFiles = new ArrayList<>();
@@ -593,13 +581,10 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	/** Deletes all generated files and clears the type index. */
 	public CompletableFuture<Void> clean() {
-		return requestManager.runWrite("clean", () -> {
-			// if (useNew) {
-			// return null;
-			// }
+		return lspExecutorService.submitAndCancelPrevious(XBuildManager.class, "clean", cancelIndicator -> {
 			workspaceManager.clean(CancelIndicator.NullImpl);
 			return null;
-		}, (a, b) -> null);
+		});
 	}
 
 	/**
@@ -611,22 +596,22 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	 */
 	protected CompletableFuture<List<Delta>> runBuildable(String description,
 			Supplier<? extends XBuildable> newBuildable) {
-		return requestManager.runWrite(description, newBuildable::get,
-				(cancelIndicator, buildable) -> buildable.build(cancelIndicator));
+		return lspExecutorService.submitAndCancelPrevious(XBuildManager.class, description, cancelIndicator -> {
+			XBuildable buildable = newBuildable.get();
+			return buildable.build(cancelIndicator);
+		});
 	}
 
 	/**
 	 * Triggers rebuild of the whole workspace
 	 */
 	public CompletableFuture<Void> reinitWorkspace() {
-		return requestManager.runWrite("didChangeConfiguration", () -> {
-			// if (useNew) {
-			// return null;
-			// }
-			workspaceManager.reinitialize();
-			workspaceManager.doInitialBuild(CancelIndicator.NullImpl);
-			return null;
-		}, (a, b) -> null);
+		return lspExecutorService.submitAndCancelPrevious(XBuildManager.class, "didChangeConfiguration",
+				cancelIndicator -> {
+					workspaceManager.reinitialize();
+					workspaceManager.doInitialBuild(CancelIndicator.NullImpl);
+					return null;
+				});
 	}
 
 	@Override
@@ -637,7 +622,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	@Override
 	public CompletableFuture<Either<List<CompletionItem>, CompletionList>> completion(CompletionParams params) {
 		URI uri = getURI(params);
-		return openFileManager.runInOpenFileContext(uri, (ofc, ci) -> {
+		return openFilesManager.runInOpenFileContext(uri, "completion", (ofc, ci) -> {
 			return completion(ofc, params, ci);
 		});
 	}
@@ -685,7 +670,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	public CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> definition(
 			TextDocumentPositionParams params) {
 		URI uri = getURI(params);
-		return openFileManager.runInOpenFileContext(uri, (ofc, ci) -> {
+		return openFilesManager.runInOpenFileContext(uri, "definition", (ofc, ci) -> {
 			return definition(ofc, params, ci);
 		});
 	}
@@ -708,7 +693,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	@Override
 	public CompletableFuture<List<? extends Location>> references(ReferenceParams params) {
 		URI uri = getURI(params);
-		return openFileManager.runInOpenFileContext(uri, (ofc, ci) -> {
+		return openFilesManager.runInOpenFileContext(uri, "references", (ofc, ci) -> {
 			return references(ofc, params, ci);
 		});
 	}
@@ -733,7 +718,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	public CompletableFuture<List<Either<SymbolInformation, DocumentSymbol>>> documentSymbol(
 			DocumentSymbolParams params) {
 		URI uri = getURI(params.getTextDocument());
-		return openFileManager.runInOpenFileContext(uri, (ofc, ci) -> {
+		return openFilesManager.runInOpenFileContext(uri, "documentSymbol", (ofc, ci) -> {
 			return documentSymbol(ofc, params, ci);
 		});
 	}
@@ -790,7 +775,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public CompletableFuture<List<? extends SymbolInformation>> symbol(WorkspaceSymbolParams params) {
-		return requestManager.runRead("symbol", cancelIndicator -> symbol(params, cancelIndicator));
+		// FIXME GH-1768 double-check that the workspaceSymbolService may run parallel to the builder
+		return lspExecutorService.submitAndCancelPrevious(WorkspaceSymbolParams.class, "symbol",
+				cancelIndicator -> symbol(params, cancelIndicator));
 	}
 
 	/**
@@ -805,7 +792,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	@Override
 	public CompletableFuture<Hover> hover(TextDocumentPositionParams params) {
 		URI uri = getURI(params);
-		return openFileManager.runInOpenFileContext(uri, (ofc, ci) -> {
+		return openFilesManager.runInOpenFileContext(uri, "hover", (ofc, ci) -> {
 			return hover(ofc, params, ci);
 		});
 	}
@@ -833,7 +820,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	@Override
 	public CompletableFuture<SignatureHelp> signatureHelp(TextDocumentPositionParams params) {
 		URI uri = getURI(params);
-		return openFileManager.runInOpenFileContext(uri, (ofc, ci) -> {
+		return openFilesManager.runInOpenFileContext(uri, "signatureHelp", (ofc, ci) -> {
 			return signatureHelp(ofc, params, ci);
 		});
 	}
@@ -857,7 +844,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	public CompletableFuture<List<? extends DocumentHighlight>> documentHighlight(
 			TextDocumentPositionParams params) {
 		URI uri = getURI(params);
-		return openFileManager.runInOpenFileContext(uri, (ofc, ci) -> {
+		return openFilesManager.runInOpenFileContext(uri, "documentHighlight", (ofc, ci) -> {
 			return documentHighlight(ofc, params, ci);
 		});
 	}
@@ -880,7 +867,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	@Override
 	public CompletableFuture<List<Either<Command, CodeAction>>> codeAction(CodeActionParams params) {
 		URI uri = getURI(params.getTextDocument());
-		return openFileManager.runInOpenFileContext(uri, (ofc, ci) -> {
+		return openFilesManager.runInOpenFileContext(uri, "codeAction", (ofc, ci) -> {
 			return codeAction(ofc, params, ci);
 		});
 	}
@@ -979,13 +966,13 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	@Override
 	public CompletableFuture<List<? extends CodeLens>> codeLens(CodeLensParams params) {
 		URI uri = getURI(params.getTextDocument());
-		return openFileManager.runInOpenFileContext(uri, (ofc, ci) -> {
+		return openFilesManager.runInOpenFileContext(uri, "codeLens", (ofc, ci) -> {
 			return codeLens(ofc, params, ci);
 		});
 	}
 
 	/**
-	 * Compute the code lenses. Executed in a read request.
+	 * Compute the code lenses.
 	 */
 	protected List<? extends CodeLens> codeLens(OpenFileContext ofc, CodeLensParams params,
 			CancelIndicator cancelIndicator) {
@@ -1007,12 +994,14 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		if ((uri == null)) {
 			return CompletableFuture.completedFuture(unresolved);
 		}
-		return requestManager.runRead("resolveCodeLens",
-				cancelIndicator -> resolveCodeLens(uri, unresolved, cancelIndicator));
+		// FIXME GH-1768 make sure it's ok to run resolveCodeLens in open file context!
+		return openFilesManager.runInOpenFileContext(uri, "resolveCodeLens", (ofc, ci) -> {
+			return resolveCodeLens(uri, unresolved, ci);
+		});
 	}
 
 	/**
-	 * Resolve the given code lens. Executed in a read request.
+	 * Resolve the given code lens.
 	 */
 	protected CodeLens resolveCodeLens(URI uri, CodeLens unresolved, CancelIndicator cancelIndicator) {
 		ICodeLensResolver resolver = getService(uri, ICodeLensResolver.class);
@@ -1027,7 +1016,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	@Override
 	public CompletableFuture<List<? extends TextEdit>> formatting(DocumentFormattingParams params) {
 		URI uri = getURI(params.getTextDocument());
-		return openFileManager.runInOpenFileContext(uri, (ofc, ci) -> {
+		return openFilesManager.runInOpenFileContext(uri, "formatting", (ofc, ci) -> {
 			return formatting(ofc, params, ci);
 		});
 	}
@@ -1050,7 +1039,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	@Override
 	public CompletableFuture<List<? extends TextEdit>> rangeFormatting(DocumentRangeFormattingParams params) {
 		URI uri = getURI(params.getTextDocument());
-		return openFileManager.runInOpenFileContext(uri, (ofc, ci) -> {
+		return openFilesManager.runInOpenFileContext(uri, "rangeFormatting", (ofc, ci) -> {
 			return rangeFormatting(ofc, params, ci);
 		});
 	}
@@ -1099,7 +1088,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public CompletableFuture<Object> executeCommand(ExecuteCommandParams params) {
-		return requestManager.runRead("executeCommand", cancelIndicator -> executeCommand(params, cancelIndicator));
+		return lspExecutorService.submit("executeCommand", cancelIndicator -> executeCommand(params, cancelIndicator));
 	}
 
 	/**
@@ -1117,7 +1106,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	@Override
 	public CompletableFuture<WorkspaceEdit> rename(RenameParams renameParams) {
 		URI uri = getURI(renameParams.getTextDocument());
-		return openFileManager.runInOpenFileContext(uri, (ofc, ci) -> {
+		return openFilesManager.runInOpenFileContext(uri, "rename", (ofc, ci) -> {
 			return rename(ofc, renameParams, ci);
 		});
 	}
@@ -1160,7 +1149,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	public CompletableFuture<Either<Range, PrepareRenameResult>> prepareRename(
 			TextDocumentPositionParams params) {
 		URI uri = getURI(params);
-		return openFileManager.runInOpenFileContext(uri, (ofc, ci) -> {
+		return openFilesManager.runInOpenFileContext(uri, "prepareRename", (ofc, ci) -> {
 			return prepareRename(ofc, params, ci);
 		});
 	}
@@ -1259,7 +1248,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		@Override
 		public <T> CompletableFuture<T> doRead(String uriStr, Function<ILanguageServerAccess.Context, T> function) {
 			URI uri = uriExtensions.toUri(uriStr);
-			return openFileManager.runInOpenFileContext(uri, (ofc, ci) -> {
+			return openFilesManager.runInOpenFileContext(uri, "doRead", (ofc, ci) -> {
 				XtextResource res = workspaceManager.getResource(uri);
 				XDocument doc = workspaceManager.getDocument(res);
 				return function.apply(
@@ -1294,7 +1283,8 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		@Override
 		public <T> CompletableFuture<T> doReadIndex(
 				Function<? super ILanguageServerAccess.IndexContext, ? extends T> function) {
-			return requestManager.runRead("doReadIndex",
+			// FIXME GH-1768 reconsider this!
+			return lspExecutorService.submit("doReadIndex",
 					cancelIndicator -> function.apply(
 							new ILanguageServerAccess.IndexContext(workspaceManager.getIndex(), cancelIndicator)));
 		}
@@ -1406,8 +1396,8 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	/**
 	 * Getter
 	 */
-	public XRequestManager getRequestManager() {
-		return requestManager;
+	public LSPExecutorService getLSPExecutorService() {
+		return lspExecutorService;
 
 	}
 
@@ -1418,7 +1408,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	/** Blocks until all requests of the language server finished */
 	public void joinServerRequests() {
-		CompletableFuture<Void> future = getRequestManager().allRequests()
+		CompletableFuture<Void> future = lspExecutorService.allTasks()
 				.thenCompose(any -> persister.pendingWrites());
 		future.join();
 		lspExecutorService.join();
