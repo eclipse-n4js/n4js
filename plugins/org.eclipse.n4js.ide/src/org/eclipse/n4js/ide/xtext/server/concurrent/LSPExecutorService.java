@@ -32,23 +32,50 @@ import com.google.common.util.concurrent.MoreExecutors;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-@SuppressWarnings("javadoc")
+/**
+ * Similar to an ordinary {@link ExecutorService}, but with two differences:
+ * <ol>
+ * <li>when submitting a task, a queue ID may be provided and this executor will then guarantee that
+ * <ol type="a">
+ * <li>two tasks with {@link Object#equals(Object) equal} queue ID are never running at the same time, and
+ * <li>tasks with equal queue ID will be executed in the order they were submitted.
+ * </ol>
+ * If no queue ID is provided, the usual behavior of ordinary {@link ExecutorService executor services} applies, i.e.
+ * the task might run concurrently to any other task and ordering depends on the {@link #delegate delegate executor
+ * service}.
+ * <li>each task is provided with an Xtext {@link CancelIndicator} and cancellation via a task's
+ * {@link CompletableFuture future}, as returned by the submit methods, is converted into a cancellation request via
+ * that cancel indicator. This leads to a slight change how cancellation works compared to ordinary futures, see
+ * {@link QueuedTaskFuture#cancel(boolean) #cancel(boolean)} for details.
+ * </ol>
+ *
+ * <h2>Cancellation Handling</h2>
+ *
+ * Cancellation is handled entirely through Xtext's {@link CancelIndicator}s and a task's implementation can decide how
+ * to react to that (as usual with cancel indicators). Tasks will always be invoked, even if they were marked as
+ * cancelled while waiting on the queue, so implementors of a task may choose to implement a "non-cancellable" operation
+ * at the beginning of a task before reacting to the cancel indicator.
+ */
+// FIXME remove @Singleton?
 @Singleton // ensures queue IDs are "global" within a single injector
 public class LSPExecutorService {
 
 	private static final Logger LOG = Logger.getLogger(LSPExecutorService.class);
 
+	/** The underlying executor service that is used to actually execute the tasks. */
 	@Inject
-	protected ExecutorService executorService;
+	protected ExecutorService delegate;
 
+	/***/
 	@Inject
 	protected OperationCanceledManager operationCanceledManager;
 
-	/** Global queue of all pending task across all queue IDs. */
+	/** Global queue of all pending tasks across all queue IDs. */
 	protected final List<QueuedTask<?>> pendingTasks = new ArrayList<>();
 	/** Queue IDs with currently running tasks. */
 	protected final Map<Object, QueuedTask<?>> runningTasks = new LinkedHashMap<>();
 
+	@SuppressWarnings("javadoc")
 	protected final class QueuedTask<T> implements Runnable, XCancellable {
 		protected final Object queueId;
 		protected final String description;
@@ -60,7 +87,11 @@ public class LSPExecutorService {
 			this.queueId = Objects.requireNonNull(queueId);
 			this.description = Objects.requireNonNull(description);
 			this.operation = Objects.requireNonNull(operation);
-			this.result = new QueuedTaskFuture<>(this);
+			this.result = createResult();
+		}
+
+		protected QueuedTaskFuture<T> createResult() {
+			return new QueuedTaskFuture<>(this);
 		}
 
 		@Override
@@ -91,12 +122,13 @@ public class LSPExecutorService {
 		}
 	}
 
+	@SuppressWarnings("javadoc")
 	public static class QueuedTaskFuture<T> extends CompletableFuture<T> {
 
 		protected final QueuedTask<T> task;
 
-		public QueuedTaskFuture(QueuedTask<T> task) {
-			this.task = task;
+		protected QueuedTaskFuture(QueuedTask<T> task) {
+			this.task = Objects.requireNonNull(task);
 		}
 
 		/**
@@ -111,61 +143,49 @@ public class LSPExecutorService {
 			return isCancelled();
 		}
 
+		/** Tells whether this future's queued task was marked as cancelled. */
+		public boolean isCancellationRequested() {
+			return task.cancelled;
+		}
+
 		/** Actually cancels this future. Should only be invoked by {@link QueuedTask#run()}. */
 		protected void doCancel() {
 			super.cancel(false);
 		}
 	}
 
+	/** Submits the given task without a queue ID. See {@link LSPExecutorService} for details. */
 	public synchronized <T> QueuedTaskFuture<T> submit(String description,
 			Function<CancelIndicator, T> task) {
-		return submit(new Object(), description, task, false);
+		return submit(new Object(), description, task);
 	}
 
-	public synchronized <T> QueuedTaskFuture<T> submit(Object queueId, String description,
-			Function<CancelIndicator, T> task) {
-		return submit(queueId, description, task, false);
-	}
-
+	/**
+	 * Same as {@link #submit(Object, String, Function)}, but first cancels all running and pending tasks for the given
+	 * queue ID.
+	 */
 	public synchronized <T> QueuedTaskFuture<T> submitAndCancelPrevious(Object queueId, String description,
 			Function<CancelIndicator, T> task) {
-		return submit(queueId, description, task, true);
+		cancelAll(queueId);
+		return submit(queueId, description, task);
 	}
 
-	protected synchronized <T> QueuedTaskFuture<T> submit(Object queueId, String description,
-			Function<CancelIndicator, T> task, boolean cancelPrevious) {
-
-		if (cancelPrevious) {
-			cancelAll(queueId);
-		}
-		QueuedTask<T> callable = createQueuedTask(queueId, description, task);
-		pendingTasks.add(callable);
-		doSubmitPending();
-		return callable.result;
+	/** Submits the given task under the given queue ID. See {@link LSPExecutorService} for details. */
+	public synchronized <T> QueuedTaskFuture<T> submit(Object queueId, String description,
+			Function<CancelIndicator, T> task) {
+		QueuedTask<T> queuedTask = createQueuedTask(queueId, description, task);
+		enqueue(queuedTask);
+		doSubmitAllPending();
+		return queuedTask.result;
 	}
 
-	protected synchronized void doSubmitPending() {
-		QueuedTask<?> next;
-		while ((next = pollNext()) != null) {
-			doSubmit(next);
-		}
+	/** Put the given task on the queue of pending tasks. */
+	protected synchronized void enqueue(QueuedTask<?> task) {
+		pendingTasks.add(task);
 	}
 
-	protected synchronized void doSubmit(QueuedTask<?> task) {
-		if (runningTasks.putIfAbsent(task.queueId, task) != null) {
-			throw new IllegalStateException("executor inconsistency: queue ID already in progress: " + task.queueId);
-		}
-		executorService.submit(task); // will eventually invoke #onDone()
-	}
-
-	protected synchronized void onDone(QueuedTask<?> task) {
-		if (runningTasks.remove(task.queueId) == null) {
-			throw new IllegalStateException("executor inconsistency: queue ID not in progress: " + task.queueId);
-		}
-		doSubmitPending();
-	}
-
-	protected synchronized QueuedTask<?> pollNext() {
+	/** Remove and return the next pending, non-blocked task from the queue of pending tasks. */
+	protected synchronized QueuedTask<?> pollNextPending() {
 		Iterator<QueuedTask<?>> iter = pendingTasks.iterator();
 		while (iter.hasNext()) {
 			QueuedTask<?> curr = iter.next();
@@ -178,11 +198,41 @@ public class LSPExecutorService {
 		return null;
 	}
 
+	/** Like {@link #doSubmit(QueuedTask)}, but will submit all currently pending, non-blocked tasks. */
+	protected synchronized void doSubmitAllPending() {
+		QueuedTask<?> next;
+		while ((next = pollNextPending()) != null) {
+			doSubmit(next);
+		}
+	}
+
+	/** Submit the given task to the delegate executor service. */
+	protected synchronized void doSubmit(QueuedTask<?> task) {
+		if (runningTasks.putIfAbsent(task.queueId, task) != null) {
+			throw new IllegalStateException("executor inconsistency: queue ID already in progress: " + task.queueId);
+		}
+		delegate.submit(task); // will eventually invoke #onDone()
+	}
+
+	/** Invoked by each running task upon completion, see {@link QueuedTask#run()}. */
+	protected synchronized void onDone(QueuedTask<?> task) {
+		if (runningTasks.remove(task.queueId) == null) {
+			throw new IllegalStateException("executor inconsistency: queue ID not in progress: " + task.queueId);
+		}
+		doSubmitAllPending();
+	}
+
+	/**
+	 * Marks all running and pending tasks as cancelled, i.e. their cancel indicator will return <code>true</code> from
+	 * {@link CancelIndicator#isCanceled() #isCanceled()}. Does not mark the tasks' result futures as cancelled, see
+	 * {@link LSPExecutorService} for details.
+	 */
 	public synchronized void cancelAll() {
 		Stream.concat(runningTasks.values().stream(), pendingTasks.stream())
 				.forEach(t -> t.cancel());
 	}
 
+	/** Same as {@link #cancelAll()}, but only affects tasks with a queue ID equal to the given ID. */
 	public synchronized void cancelAll(Object queueId) {
 		Stream.concat(runningTasks.values().stream(), pendingTasks.stream())
 				.filter(t -> queueId.equals(t.queueId))
@@ -221,8 +271,9 @@ public class LSPExecutorService {
 		return CompletableFuture.allOf(allTasks);
 	}
 
+	/** An orderly shutdown of this executor service. */
 	public synchronized void shutdown() {
-		MoreExecutors.shutdownAndAwaitTermination(executorService, 2500, TimeUnit.MILLISECONDS);
+		MoreExecutors.shutdownAndAwaitTermination(delegate, 2500, TimeUnit.MILLISECONDS);
 		cancelAll();
 	}
 
