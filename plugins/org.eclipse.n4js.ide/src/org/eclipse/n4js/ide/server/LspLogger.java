@@ -13,8 +13,6 @@ package org.eclipse.n4js.ide.server;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.services.LanguageClient;
-import org.eclipse.n4js.ide.client.N4JSLanguageClient;
-import org.eclipse.n4js.ide.client.N4JSLanguageClient.LogBuildProgressParams;
 
 import com.google.inject.Singleton;
 
@@ -69,21 +67,4 @@ public class LspLogger {
 		lc.logMessage(message);
 	}
 
-	/**
-	 * <b>SMITH FUNCTIONALITY - only supported in N4JS extension for VS Code</b>
-	 * <p>
-	 * Will log a message indicating build progress to a special output channel in VS code.
-	 *
-	 * @param message
-	 *            message to log. Use <code>'\n'</code> for line breaks. No implicit line break will be added after
-	 *            printing the given string.
-	 */
-	public void logBuildProgress(String message) {
-		final LanguageClient lc = this.languageClient;
-		if (!(lc instanceof N4JSLanguageClient)) {
-			return;
-		}
-		LogBuildProgressParams params = new LogBuildProgressParams(message);
-		((N4JSLanguageClient) lc).logBuildProgress(params);
-	}
 }

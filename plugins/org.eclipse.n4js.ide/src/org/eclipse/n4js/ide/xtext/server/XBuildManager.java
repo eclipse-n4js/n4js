@@ -295,7 +295,7 @@ public class XBuildManager {
 
 	/** Run the build on the workspace */
 	protected List<IResourceDescription.Delta> doIncrementalBuild(boolean doGenerate, CancelIndicator cancelIndicator) {
-		lspLogger.logBuildProgress("Building ... ");
+		lspLogger.log("Building ...");
 		try {
 			Set<URI> dirtyFilesToBuild = new LinkedHashSet<>(this.dirtyFiles);
 			Set<URI> deletedFilesToBuild = new LinkedHashSet<>(this.deletedFiles);
@@ -330,12 +330,12 @@ public class XBuildManager {
 			List<IResourceDescription.Delta> result = allBuildDeltas;
 			allBuildDeltas = new ArrayList<>();
 
-			lspLogger.logBuildProgress("done.\n");
+			lspLogger.log("... build done.");
 
 			return result;
 
 		} catch (CancellationException ce) {
-			lspLogger.logBuildProgress("canceled.\n");
+			lspLogger.log("... build canceled.");
 			throw ce;
 		} catch (Throwable th) {
 			operationCanceledManager.propagateIfCancelException(th);
@@ -346,7 +346,7 @@ public class XBuildManager {
 			this.dirtyFilesAwaitingGeneration.clear();
 			this.deletedFilesAwaitingGeneration.clear();
 			String eStr = th.getMessage() + " (" + th.getClass().getSimpleName() + ")";
-			lspLogger.logBuildProgress("ABORTED due to exception: " + eStr + "\n");
+			lspLogger.log("... build ABORTED due to exception: " + eStr);
 			throw th;
 		}
 	}
