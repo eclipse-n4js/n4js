@@ -160,6 +160,8 @@ public class XBuildManager {
 	public List<IResourceDescription.Delta> doInitialBuild(List<ProjectDescription> projects,
 			CancelIndicator indicator) {
 
+		lspLogger.log("Initial build ...");
+
 		ProjectBuildOrderInfo projectBuildOrderInfo = projectBuildOrderInfoProvider.get();
 		ProjectBuildOrderIterator pboIterator = projectBuildOrderInfo.getIterator(projects);
 		printBuildOrder();
@@ -173,6 +175,8 @@ public class XBuildManager {
 			XBuildResult partialresult = projectManager.doInitialBuild(indicator);
 			result.addAll(partialresult.getAffectedResources());
 		}
+
+		lspLogger.log("... initial build done.");
 
 		return result;
 	}
@@ -338,7 +342,10 @@ public class XBuildManager {
 			lspLogger.log("... build canceled.");
 			throw ce;
 		} catch (Throwable th) {
-			operationCanceledManager.propagateIfCancelException(th);
+			if (operationCanceledManager.isOperationCanceledException(th)) {
+				lspLogger.log("... build canceled.");
+				operationCanceledManager.propagateIfCancelException(th);
+			}
 			// unknown exception or error (and not a cancellation case):
 			// recover and also discard the build queue - state is undefined afterwards.
 			this.dirtyFiles.clear();
