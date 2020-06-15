@@ -678,7 +678,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	public CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> definition(
 			TextDocumentPositionParams params) {
 		URI uri = getURI(params);
-		return openFilesManager.runInOpenFileContext(uri, "definition", (ofc, ci) -> {
+		return openFilesManager.runInOpenOrTemporaryFileContext(uri, "definition", (ofc, ci) -> {
 			return definition(ofc, params, ci);
 		});
 	}

@@ -87,6 +87,16 @@ public class OpenFilesManager {
 		});
 	}
 
+	/** Tries to run the given task in the context of an open file, falling back to a temporary file if necessary. */
+	public synchronized <T> CompletableFuture<T> runInOpenOrTemporaryFileContext(URI uri, String description,
+			BiFunction<OpenFileContext, CancelIndicator, T> task) {
+		if (isOpen(uri)) {
+			return runInOpenFileContext(uri, description, task);
+		} else {
+			return runInTemporaryFileContext(uri, description, task);
+		}
+	}
+
 	public synchronized CompletableFuture<Void> runInOpenFileContext(URI uri, String description,
 			BiConsumer<OpenFileContext, CancelIndicator> task) {
 

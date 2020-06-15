@@ -28,6 +28,7 @@ import org.eclipse.n4js.ide.tests.server.AbstractIdeTest;
 import org.eclipse.n4js.ide.tests.server.StringLSP4J;
 import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
 import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.common.collect.HashMultimap;
@@ -108,7 +109,15 @@ public class IdeTestLanguageClient extends AbstractN4JSLanguageClient {
 
 	@Override
 	public void publishDiagnostics(PublishDiagnosticsParams diagnostics) {
-		FileURI uri = new FileURI(URI.createURI(diagnostics.getUri()));
+		URI uriRaw = URI.createURI(diagnostics.getUri());
+		if (N4Scheme.isN4Scheme(uriRaw)) {
+			return;
+		}
+		if (!uriRaw.isFile()) {
+			throw new IllegalArgumentException("not a file URI: " + uriRaw);
+		}
+
+		FileURI uri = new FileURI(uriRaw);
 
 		issues.removeAll(uri);
 		errors.removeAll(uri);
