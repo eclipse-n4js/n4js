@@ -144,7 +144,9 @@ class Module {
 		if (!parentDirectory.directory)
 			throw new IOException("'" + parentDirectory + "' is not a directory");
 
-		val File filePath = new File(parentDirectory, this.name + "." + fExtension);
+		val File filePath = new File(parentDirectory, this.name.replace('/', File.separatorChar) + "." + fExtension);
+		filePath.parentFile.mkdirs();
+
 		var FileWriter out = null;
 		try {
 			out = new FileWriter(filePath);

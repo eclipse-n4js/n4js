@@ -9,12 +9,10 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-import LSPMessageReader from 'LSPMessageReader';
-import {IReadableStream} from 'stream';
-import * as jreProvider from 'n4js-cli/JreProvider';
-import * as childProcess from 'child_process';
 import * as n4jscli from 'n4js-cli';
+import * as jreProvider from 'n4js-cli/JreProvider';
 import * as net from 'net';
+import * as childProcess from 'child_process';
 
 /** This message is sent from the LSP server. */
 const LSP_SYNC_MESSAGE = 'Listening for LSP clients';
@@ -22,11 +20,8 @@ const CHANNEL_NAME = 'N4JS Language Server';
 const PORT = 5007;
 const TIMEOUT = 1000;
 
-let outputChannel: any+;
-let buildProgressOutputChannel: any+;
 let n4jscProcess: childProcess.ChildProcess;
 let outputAppender: (text:string)=>void;
-let lspMessageReader: LSPMessageReader;
 
 
 
@@ -37,31 +32,36 @@ enum TraceOutputValue {
 }
 
 
+function getOutputAppender(outputChannel: any+): (text:string)=>void {
+    if (!outputAppender) {
+        outputAppender = (text: string) => outputChannel.append(text.toString());
+    }
+    return outputAppender;
+}
+
+
 
 export function getActivate(vscode: any+, vscodeLC: any+): any {
     return (context: any+ /*VSCode.ExtensionContext*/) => {
-        outputChannel = vscode.window.createOutputChannel(CHANNEL_NAME);
-        buildProgressOutputChannel = vscode.window.createOutputChannel('N4JS Build Progress');
+        let outputChannel = vscode.window.createOutputChannel(CHANNEL_NAME);
 
         let serverOptions = async () => {
             outputChannel.appendLine('Start LSP extension');
             //vscode.window.showErrorMessage('my error');
 
 
-            let writer: Object+;
-            let reader: IReadableStream;
-            const socket = await connectToRunningN4jsLspServer(PORT);
+            let writer: Object;
+            let reader: Object;
+            const socket = await connectToRunningN4jsLspServer(PORT, outputChannel);
             if (socket) {
                 writer = socket;
                 reader = socket;
             } else {
                 outputChannel.appendLine('Start new N4JS LSP server.');
-                await startN4jsLspServerAndConnect(PORT, vscode); // will set n4jscProcess
+                await startN4jsLspServerAndConnect(PORT, vscode, outputChannel); // will set n4jscProcess
                 writer = n4jscProcess.stdin;
                 reader = n4jscProcess.stdout;
             }
-
-            lspMessageReader = new LSPMessageReader(reader, outputChannel, onLSPMessageReceivedFromServer);
 
             let result = {
                 writer: writer,
@@ -109,7 +109,7 @@ export function getActivate(vscode: any+, vscodeLC: any+): any {
         // Add listener to configuration changes
         context.subscriptions.push(vscode.workspace.onDidChangeConfiguration((e: any+) => {
             if (e.affectsConfiguration('n4js.traceOutput', { languageId: 'n4js' })) {
-                setOutputAppenders(vscode);
+                setOutputAppenders(vscode, outputChannel);
             }
         }));
         
@@ -135,8 +135,8 @@ export function getDeactivate(vscode: any+, vscodeLC: any+): {function() : Promi
     };
 }
 
-function setOutputAppenders(vscode: any+): void {
-    const outputAppender = getOutputAppender();
+function setOutputAppenders(vscode: any+, outputChannel: any+): void {
+    const outputAppender = getOutputAppender(outputChannel);
     const traceOutput = vscode.workspace.getConfiguration('').get('n4js.traceOutput') as TraceOutputValue;
     switch (traceOutput) {
         case TraceOutputValue.off:
@@ -148,13 +148,6 @@ function setOutputAppenders(vscode: any+): void {
             n4jscProcess.stderr.on('data', outputAppender);
             break;
     }
-}
-
-function getOutputAppender(): (text:string)=>void {
-    if (!outputAppender) {
-        outputAppender = (text: string) => outputChannel.append(text.toString());
-    }
-    return outputAppender;
 }
 
 function getJavaVMXmxSetting(vscode: any+): string {
@@ -170,7 +163,7 @@ function getJavaVMXmxSetting(vscode: any+): string {
 }
 
 
-async function startN4jsLspServerAndConnect(port: number, vscode: any+): void {
+async function startN4jsLspServerAndConnect(port: number, vscode: any+, outputChannel: any+): void {
     let logFn = (text: string) => outputChannel.appendLine(text) as {function(string)};
     await jreProvider.ensureJRE(logFn);
 
@@ -188,7 +181,7 @@ async function startN4jsLspServerAndConnect(port: number, vscode: any+): void {
 	n4jscProcess.on('exit', (code) => outputChannel.appendLine('exit ' + code));
 	n4jscProcess.on('close', (code) => outputChannel.appendLine('close ' + code));
 	n4jscProcess.on('disconnect', () => outputChannel.appendLine('disconnected'));
-    setOutputAppenders(vscode);
+    setOutputAppenders(vscode, outputChannel);
 
     let serverReady = new Promise<any, any>((resolve, reject) => {
         let waitForListenMsg = (data:any+) => {
@@ -205,7 +198,7 @@ async function startN4jsLspServerAndConnect(port: number, vscode: any+): void {
     outputChannel.appendLine('Connected to LSP server');
 }
 
-async function connectToRunningN4jsLspServer(port: number): net.Socket {
+async function connectToRunningN4jsLspServer(port: number, outputChannel: any+): net.Socket {
 
     let connectionPromise = new Promise<net.Socket, any>((resolve, reject) => {
         try {
@@ -216,7 +209,7 @@ async function connectToRunningN4jsLspServer(port: number): net.Socket {
 
             let clientSocket = net.createConnection({port: port});
             clientSocket.on('connect', () => {
-                    outputChannel.appendLine('Connected to an already running LSP server (port=' + PORT + ')');
+                    outputChannel.appendLine('Connected to a already running LSP server (port=' + PORT + ')');
                     clearTimeout(timer);
                     resolve(clientSocket);
                 })
@@ -238,31 +231,6 @@ async function connectToRunningN4jsLspServer(port: number): net.Socket {
     return result;
 };
 
-
-
-// NOTE: use this only for internal smith functionality
-// (for details see API doc of N4JSLanguageClient in Java)
-function onLSPMessageReceivedFromServer(contentJSON: Object) {
-    const method = contentJSON['method'];
-    const params = contentJSON['params'];
-    if (!(typeof method === 'string') || !(typeof params === 'object')) {
-        return;
-    }
-    switch (method) {
-        case 'n4js/logBuildProgress':
-            logBuildProgress(params);
-            break;
-        default:
-            // ignore
-    }
-}
-
-function logBuildProgress(params: Object) {
-    const message = params['message'];
-    if (typeof message === 'string') {
-        buildProgressOutputChannel.append(message);
-    }
-}
 
 
 

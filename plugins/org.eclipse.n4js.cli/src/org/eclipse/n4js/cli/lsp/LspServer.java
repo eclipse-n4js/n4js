@@ -24,10 +24,10 @@ import java.util.concurrent.Future;
 
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.jsonrpc.Launcher.Builder;
+import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.n4js.cli.N4jscConsole;
 import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscOptions;
-import org.eclipse.n4js.ide.client.N4JSLanguageClient;
 import org.eclipse.n4js.ide.xtext.server.ExecuteCommandParamsTypeAdapter;
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
@@ -82,9 +82,9 @@ public class LspServer {
 	private void setupAndRun(ExecutorService threadPool, XLanguageServerImpl languageServer)
 			throws InterruptedException, ExecutionException, IOException {
 
-		Builder<N4JSLanguageClient> lsBuilder = new PatchedLauncherBuilder<N4JSLanguageClient>()
+		Builder<LanguageClient> lsBuilder = new PatchedLauncherBuilder<LanguageClient>()
 				.setLocalService(languageServer)
-				.setRemoteInterface(N4JSLanguageClient.class)
+				.setRemoteInterface(LanguageClient.class)
 				.setExecutorService(threadPool)
 				.configureGson(gsonBuilder -> {
 					gsonBuilder.registerTypeAdapterFactory(new ExecuteCommandParamsTypeAdapter.Factory(languageServer));
@@ -100,7 +100,7 @@ public class LspServer {
 		}
 	}
 
-	private void setupAndRunWithSocket(XLanguageServerImpl languageServer, Builder<N4JSLanguageClient> lsBuilder)
+	private void setupAndRunWithSocket(XLanguageServerImpl languageServer, Builder<LanguageClient> lsBuilder)
 			throws InterruptedException, ExecutionException, IOException {
 
 		InetSocketAddress address = new InetSocketAddress("localhost", options.getPort());
@@ -120,16 +120,16 @@ public class LspServer {
 		}
 	}
 
-	private void setupAndRunWithSystemIO(XLanguageServerImpl languageServer, Builder<N4JSLanguageClient> lsBuilder) {
+	private void setupAndRunWithSystemIO(XLanguageServerImpl languageServer, Builder<LanguageClient> lsBuilder) {
 		N4jscConsole.println(LSP_SYNC_MESSAGE + " on stdio");
 		N4jscConsole.setSuppress(true);
 		run(languageServer, lsBuilder, System.in, System.out);
 	}
 
-	private void run(XLanguageServerImpl languageServer, Builder<N4JSLanguageClient> lsBuilder, InputStream in,
+	private void run(XLanguageServerImpl languageServer, Builder<LanguageClient> lsBuilder, InputStream in,
 			OutputStream out) {
 
-		Launcher<N4JSLanguageClient> launcher = lsBuilder
+		Launcher<LanguageClient> launcher = lsBuilder
 				.setInput(in)
 				.setOutput(out)
 				.create();
