@@ -132,17 +132,12 @@ public class OpenFilesManager {
 	}
 
 	/**
-	 * If the given origin resource set is one that is used to process an open file, then this method will return the
-	 * resource set responsible for containing a resource with the given uri; otherwise <code>null</code> is returned.
-	 * Might return the origin resource set itself or might return a newly created resource set.
+	 * Tells whether the given resource set is one that is used to process an open file managed by this
+	 * {@link OpenFilesManager}.
 	 */
-	// FIXME find better solution for this (it's dirty to leak a context's resource set to the outside)
-	public synchronized ResourceSet getOrCreateResourceSetForURI(ResourceSet origin, URI uri) {
+	public synchronized boolean isOpenFileResourceSet(ResourceSet origin) {
 		OpenFileContext ofc = findOpenFileContext(origin);
-		if (ofc == null) {
-			return null; // origin is not a resource set related to an open file
-		}
-		return ofc.getResourceSet();
+		return ofc != null;
 	}
 
 	protected synchronized OpenFileContext findOpenFileContext(ResourceSet resourceSet) {
@@ -191,7 +186,7 @@ public class OpenFilesManager {
 		}
 	}
 
-	protected synchronized void updateSharedDirtyState(IResourceDescription newDesc, CancelIndicator cancelIndicator) {
+	protected synchronized void updateSharedDirtyState(IResourceDescription newDesc) {
 		// update my dirty state instance
 		URI newDescURI = newDesc.getURI();
 		sharedDirtyState.addDescription(newDescURI, newDesc);

@@ -96,8 +96,8 @@ public class OpenFileContext {
 		return document;
 	}
 
-	public void initialize(OpenFilesManager parent, URI uri, IResourceDescriptions persistedState,
-			ResourceDescriptionsData sharedDirtyState) {
+	public void initialize(@SuppressWarnings("hiding") OpenFilesManager parent, URI uri,
+			IResourceDescriptions persistedState, ResourceDescriptionsData sharedDirtyState) {
 		this.parent = parent;
 		this.mainURI = uri;
 
@@ -159,8 +159,9 @@ public class OpenFileContext {
 		refreshOpenFile(document.getVersion(), Collections.singletonList(dummyChange), cancelIndicator);
 	}
 
-	protected void refreshOpenFile(int version, Iterable<? extends TextDocumentContentChangeEvent> changes,
-			CancelIndicator cancelIndicator) {
+	protected void refreshOpenFile(@SuppressWarnings("unused") int version, // TODO add check using the version
+			Iterable<? extends TextDocumentContentChangeEvent> changes, CancelIndicator cancelIndicator) {
+
 		if (!mainResource.isLoaded()) {
 			throw new IllegalStateException("trying to refresh a resource that is not loaded: " + mainURI);
 		}
@@ -200,7 +201,7 @@ public class OpenFileContext {
 		// update dirty state
 		IResourceDescription newDesc = createResourceDescription();
 		index.addDescription(mainURI, newDesc);
-		parent.updateSharedDirtyState(newDesc, cancelIndicator);
+		parent.updateSharedDirtyState(newDesc);
 	}
 
 	/**
