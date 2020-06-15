@@ -138,9 +138,9 @@ class ModuleWrappingTransformation extends Transformation {
 
 	def private String createRelativeModuleSpecifier(TModule targetModule) {
 		val targetModuleSpecifier = resourceNameComputer.getCompleteModuleSpecifier(targetModule);
-		val targetSegments = targetModuleSpecifier.split("/", -1);
-		val targetModuleName = targetSegments.last();
-		val targetModulePath = Arrays.copyOf(targetSegments, targetSegments.length - 1);
+		val targetModuleSpecifierSegments = targetModuleSpecifier.split("/", -1);
+		val targetModuleName = targetModuleSpecifierSegments.last();
+		val targetModulePath = Arrays.copyOf(targetModuleSpecifierSegments, targetModuleSpecifierSegments.length - 1);
 		val l = Math.min(targetModulePath.length, localModulePath.length);
 		var i = 0;
 		while (i < l && Objects.equals(targetModulePath.get(i), localModulePath.get(i))) {
