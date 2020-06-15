@@ -44,7 +44,7 @@ public class N4JSLanguageServer extends XLanguageServerImpl implements N4JSProto
 	@Override
 	public CompletableFuture<String> documentContents(TextDocumentIdentifier param) {
 		URI uri = getURI(param);
-		return getOpenFilesManager().runInOpenFileContext(uri, "documentContents", (ofc, cancelIndicator) -> {
+		return getOpenFilesManager().runInTemporaryFileContext(uri, "documentContents", (ofc, cancelIndicator) -> {
 			return documentContents(ofc, cancelIndicator);
 		});
 	}

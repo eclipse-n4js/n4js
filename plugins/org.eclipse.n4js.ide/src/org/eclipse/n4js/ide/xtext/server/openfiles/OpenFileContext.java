@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.ResourceLocator;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.n4js.ide.xtext.server.IssueAcceptor;
@@ -67,6 +68,8 @@ public class OpenFileContext {
 	protected OpenFilesManager parent;
 	/** URI of the open file represented by this {@link OpenFileContext} (i.e. URI of the main resource). */
 	protected URI mainURI;
+	/** Tells whether this open file should publish its state to the {@link #parent}'s dirty state index. */
+	protected boolean contributeDirtyState;
 
 	/**
 	 * Contains the state of all files in the workspace. For open files managed by {@link #parent} (including the open
@@ -75,8 +78,10 @@ public class OpenFileContext {
 	 */
 	protected ResourceDescriptionsData index;
 
+	/** The resource set used for the open file's resource and any other resources required for resolution. */
+	protected XtextResourceSet mainResourceSet;
 	/** The EMF resource representing the open file. */
-	protected XtextResource mainResource;
+	protected XtextResource mainResource = null;
 	/** The current textual content of the open file. */
 	protected XDocument document = null;
 
@@ -84,12 +89,12 @@ public class OpenFileContext {
 		return mainURI;
 	}
 
-	public XtextResource getResource() {
-		return mainResource;
-	}
-
 	public XtextResourceSet getResourceSet() {
 		return (XtextResourceSet) mainResource.getResourceSet();
+	}
+
+	public XtextResource getResource() {
+		return mainResource;
 	}
 
 	public XDocument getDocument() {
@@ -97,14 +102,15 @@ public class OpenFileContext {
 	}
 
 	public void initialize(@SuppressWarnings("hiding") OpenFilesManager parent, URI uri,
+			@SuppressWarnings("hiding") boolean contributeDirtyState,
 			IResourceDescriptions persistedState, ResourceDescriptionsData sharedDirtyState) {
 		this.parent = parent;
 		this.mainURI = uri;
+		this.contributeDirtyState = contributeDirtyState;
 
 		this.index = createIndex(persistedState, sharedDirtyState);
 
-		XtextResourceSet resourceSet = createResourceSet();
-		this.mainResource = (XtextResource) resourceSet.createResource(uri);
+		this.mainResourceSet = createResourceSet();
 	}
 
 	protected ResourceDescriptionsData createIndex(IResourceDescriptions persistedState,
@@ -137,11 +143,13 @@ public class OpenFileContext {
 		return result;
 	}
 
+	/** Initialize the open file with the given content. */
 	protected void initOpenFile(int version, String content, CancelIndicator cancelIndicator) {
-		if (mainResource.isLoaded()) {
-			throw new IllegalStateException("trying to initialize an already loaded resource: " + mainURI);
+		if (mainResource != null) {
+			throw new IllegalStateException("trying to initialize an already initialized resource: " + mainURI);
 		}
 
+		mainResource = (XtextResource) mainResourceSet.createResource(mainURI);
 		document = new XDocument(version, content);
 
 		try (InputStream in = new LazyStringInputStream(document.getContents(), mainResource.getEncoding())) {
@@ -149,6 +157,18 @@ public class OpenFileContext {
 		} catch (IOException e) {
 			throw new RuntimeException("IOException while reading from string input stream", e);
 		}
+
+		resolveAndValidateOpenFile(cancelIndicator);
+	}
+
+	/** Initialize the open file based only on its URI, retrieving its content via EMF's {@link ResourceLocator}. */
+	protected void initOpenFile(CancelIndicator cancelIndicator) {
+		if (mainResource != null) {
+			throw new IllegalStateException("trying to initialize an already initialized resource: " + mainURI);
+		}
+
+		mainResource = (XtextResource) mainResourceSet.getResource(mainURI, true); // uses the EMF ResourceLocator
+		document = new XDocument(0, mainResource.getParseResult().getRootNode().getText());
 
 		resolveAndValidateOpenFile(cancelIndicator);
 	}
@@ -162,8 +182,11 @@ public class OpenFileContext {
 	protected void refreshOpenFile(@SuppressWarnings("unused") int version, // TODO add check using the version
 			Iterable<? extends TextDocumentContentChangeEvent> changes, CancelIndicator cancelIndicator) {
 
+		if (mainResource == null) {
+			throw new IllegalStateException("trying to refresh a resource that was not yet initialized: " + mainURI);
+		}
 		if (!mainResource.isLoaded()) {
-			throw new IllegalStateException("trying to refresh a resource that is not loaded: " + mainURI);
+			throw new IllegalStateException("trying to refresh a resource that is not yet loaded: " + mainURI);
 		}
 
 		// TODO the following is only necessary for changed files (could be moved to #updateDirtyState())
@@ -199,6 +222,13 @@ public class OpenFileContext {
 		List<Issue> issues = resourceValidator.validate(mainResource, CheckMode.ALL, cancelIndicator);
 		issueAcceptor.publishDiagnostics(mainURI, issues);
 		// update dirty state
+		updateSharedDirtyState();
+	}
+
+	protected void updateSharedDirtyState() {
+		if (!contributeDirtyState) {
+			return; // this open file does not contribute to the parent's shared dirty state index
+		}
 		IResourceDescription newDesc = createResourceDescription();
 		index.addDescription(mainURI, newDesc);
 		parent.updateSharedDirtyState(newDesc);

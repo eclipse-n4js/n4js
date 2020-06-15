@@ -61,7 +61,7 @@ public class OpenFilesManager {
 		if (openFiles.containsKey(uri)) {
 			return; // FIXME content gets lost in this case!
 		}
-		OpenFileContext newOFC = createOpenFileContext(uri);
+		OpenFileContext newOFC = createOpenFileContext(uri, true, true);
 		openFiles.put(uri, newOFC);
 
 		runInOpenFileContext(uri, "openFile", (ofc, ci) -> {
@@ -111,13 +111,27 @@ public class OpenFilesManager {
 		});
 	}
 
+	public synchronized <T> CompletableFuture<T> runInTemporaryFileContext(URI uri, String description,
+			BiFunction<OpenFileContext, CancelIndicator, T> task) {
+
+		OpenFileContext tempOFC = createOpenFileContext(uri, false, false);
+
+		Object queueId = Pair.of(getQueueIdForOpenFileContext(uri), "temporary");
+		String descriptionWithContext = description + " (temporary) [" + uri.lastSegment() + "]";
+		return lspExecutorService.submit(queueId, descriptionWithContext, ci -> {
+			tempOFC.initOpenFile(ci);
+			return task.apply(tempOFC, ci);
+		});
+	}
+
 	protected Object getQueueIdForOpenFileContext(URI uri) {
 		return Pair.of(OpenFilesManager.class, uri);
 	}
 
-	protected OpenFileContext createOpenFileContext(URI uri) {
+	protected OpenFileContext createOpenFileContext(URI uri, boolean consumeDirtyState, boolean contributeDirtyState) {
 		OpenFileContext ofc = openFileContextProvider.get();
-		ofc.initialize(this, uri, persistedState, sharedDirtyState);
+		ofc.initialize(this, uri, contributeDirtyState, persistedState,
+				consumeDirtyState ? sharedDirtyState : new ResourceDescriptionsData(Collections.emptyList()));
 		return ofc;
 	}
 
