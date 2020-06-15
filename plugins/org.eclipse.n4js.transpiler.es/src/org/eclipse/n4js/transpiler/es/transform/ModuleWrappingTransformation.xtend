@@ -25,12 +25,12 @@ import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.IN4JSProject
+import org.eclipse.n4js.projectModel.names.N4JSProjectName
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.utils.ResourceNameComputer
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
-import org.eclipse.n4js.projectModel.names.N4JSProjectName
 
 /**
  * This transformation will prepare the output code for module loading. Since dropping support for commonjs and SystemJS
@@ -44,7 +44,7 @@ class ModuleWrappingTransformation extends Transformation {
 	@Inject
 	private ResourceNameComputer resourceNameComputer;
 
-	private String[] localModuleSpecifierSegments = null; // will be set in #analyze()
+	private String[] localModulePath = null; // will be set in #analyze()
 
 	override assertPreConditions() {
 		// true
@@ -57,7 +57,8 @@ class ModuleWrappingTransformation extends Transformation {
 	override analyze() {
 		val localModule = state.resource.module;
 		val localModuleSpecifier = resourceNameComputer.getCompleteModuleSpecifier(localModule);
-		localModuleSpecifierSegments = localModuleSpecifier.split("/", -1);
+		val localModuleSpecifierSegments = localModuleSpecifier.split("/", -1);
+		localModulePath = Arrays.copyOf(localModuleSpecifierSegments, localModuleSpecifierSegments.length - 1);
 	}
 
 	override transform() {
@@ -138,14 +139,17 @@ class ModuleWrappingTransformation extends Transformation {
 	def private String createRelativeModuleSpecifier(TModule targetModule) {
 		val targetModuleSpecifier = resourceNameComputer.getCompleteModuleSpecifier(targetModule);
 		val targetSegments = targetModuleSpecifier.split("/", -1);
-		val l = Math.min(targetSegments.length, localModuleSpecifierSegments.length);
+		val targetModuleName = targetSegments.last();
+		val targetModulePath = Arrays.copyOf(targetSegments, targetSegments.length - 1);
+		val l = Math.min(targetModulePath.length, localModulePath.length);
 		var i = 0;
-		while (i < l && Objects.equals(targetSegments.get(i), localModuleSpecifierSegments.get(i))) {
+		while (i < l && Objects.equals(targetModulePath.get(i), localModulePath.get(i))) {
 			i++;
 		}
-		val differingSegments = Arrays.copyOfRange(targetSegments, i, targetSegments.length);
-		val goUpCount = localModuleSpecifierSegments.length - 1 - i;
-		val result = (if (goUpCount > 0) "../".repeat(goUpCount) else "./") + Joiner.on("/").join(differingSegments);
+		val differingSegments = Arrays.copyOfRange(targetModulePath, i, targetModulePath.length);
+		val goUpCount = localModulePath.length - i;
+		val result = (if (goUpCount > 0) "../".repeat(goUpCount) else "./")
+			+ Joiner.on("/").join(differingSegments + #[targetModuleName]);
 		return result;
 	}
 
