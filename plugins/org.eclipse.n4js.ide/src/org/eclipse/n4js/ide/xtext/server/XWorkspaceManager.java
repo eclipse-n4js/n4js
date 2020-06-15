@@ -24,7 +24,7 @@ import org.eclipse.lsp4j.jsonrpc.ResponseErrorException;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseError;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
 import org.eclipse.n4js.ide.xtext.server.XBuildManager.XBuildable;
-import org.eclipse.n4js.ide.xtext.server.openfiles.OpenFilesManager;
+import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentChunkedIndex;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
@@ -35,14 +35,11 @@ import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
-import org.eclipse.xtext.resource.impl.ChunkedResourceDescriptions;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
-import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
-import com.google.common.collect.ForwardingMap;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -92,12 +89,7 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 
 	private final List<ILanguageServerAccess.IBuildListener> buildListeners = new ArrayList<>();
 
-	// GH-1552: concurrent map
-	private final Map<String, ResourceDescriptionsData> fullIndex = new ConcurrentHashMap<>();
-
-	public Map<String, ResourceDescriptionsData> getFullIndex() {
-		return fullIndex;
-	}
+	private final ConcurrentChunkedIndex fullIndex = new ConcurrentChunkedIndex();
 
 	private final Map<URI, XDocument> openDocuments = new ConcurrentHashMap<>();
 
@@ -204,21 +196,7 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	synchronized public void addProject(IProjectConfig projectConfig) {
 		XProjectManager projectManager = projectManagerProvider.get();
 		ProjectDescription projectDescription = projectDescriptionFactory.getProjectDescription(projectConfig);
-		projectManager.initialize(projectDescription, projectConfig, openedDocumentsContentProvider,
-				// FIXME GH-1768 clean up handling of index updates!
-				() -> new ForwardingMap<>() {
-					@Override
-					protected Map<String, ResourceDescriptionsData> delegate() {
-						return fullIndex;
-					}
-
-					@Override
-					public ResourceDescriptionsData put(String key, ResourceDescriptionsData value) {
-						ResourceDescriptionsData result = super.put(key, value);
-						onIndexChanged(key, value);
-						return result;
-					}
-				});
+		projectManager.initialize(projectDescription, projectConfig, openedDocumentsContentProvider, fullIndex);
 		projectName2ProjectManager.put(projectDescription.getName(), projectManager);
 	}
 
@@ -240,7 +218,7 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 			resourceSet.eSetDeliver(wasDeliver);
 		}
 		projectName2ProjectManager.remove(projectName);
-		fullIndex.remove(projectName);
+		fullIndex.removeContainer(projectName);
 	}
 
 	/**
@@ -480,9 +458,14 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 		buildManager.doClean(cancelIndicator);
 	}
 
-	/** Returns the current index. */
+	/** Returns a snapshot of the current index. */
 	public IResourceDescriptions getIndex() {
-		return new ChunkedResourceDescriptions(fullIndex);
+		return fullIndex.toDescriptions();
+	}
+
+	/** Returns the index. */
+	public ConcurrentChunkedIndex getIndexRaw() {
+		return fullIndex;
 	}
 
 	/** Return true if the given resource still exists. */
@@ -539,13 +522,5 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 		URI withEmptyAuthority = uriExtensions.withEmptyAuthority(uri);
 		URI relativeUri = withEmptyAuthority.deresolve(getBaseDir());
 		return relativeUri;
-	}
-
-	@Inject
-	private OpenFilesManager openFilesManager;
-
-	/* package */ void onIndexChanged(String containerHandle, ResourceDescriptionsData data) {
-		openFilesManager.updatePersistedState(Collections.singletonMap(containerHandle, data), Collections.emptySet(),
-				CancelIndicator.NullImpl);
 	}
 }

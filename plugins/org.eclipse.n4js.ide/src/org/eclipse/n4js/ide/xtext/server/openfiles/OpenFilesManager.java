@@ -25,7 +25,6 @@ import java.util.function.BiFunction;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
-import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
 import org.eclipse.n4js.ide.xtext.server.concurrent.LSPExecutorService;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.impl.ChunkedResourceDescriptions;
@@ -41,9 +40,6 @@ import com.google.inject.Singleton;
 @SuppressWarnings("javadoc")
 @Singleton
 public class OpenFilesManager {
-
-	@Inject
-	private XWorkspaceManager workspaceManager;
 
 	@Inject
 	private Provider<OpenFileContext> openFileContextProvider;
@@ -120,10 +116,6 @@ public class OpenFilesManager {
 	}
 
 	protected OpenFileContext createOpenFileContext(URI uri) {
-		if (persistedState.isEmpty()) {
-			// FIXME clean up when there's a top-level aggregator class for OpenFilesManager and the LSP builder
-			updatePersistedState(workspaceManager.getFullIndex(), Collections.emptySet(), CancelIndicator.NullImpl);
-		}
 		OpenFileContext ofc = openFileContextProvider.get();
 		ofc.initialize(this, uri, persistedState, sharedDirtyState);
 		return ofc;
@@ -160,7 +152,7 @@ public class OpenFilesManager {
 	}
 
 	public synchronized void updatePersistedState(Map<String, ResourceDescriptionsData> changedContainers,
-			Set<String> removedContainerHandles, CancelIndicator cancelIndicator) {
+			Set<String> removedContainerHandles) {
 		// compute modification info
 		List<IResourceDescription> changed = new ArrayList<>();
 		Set<URI> removed = new HashSet<>();

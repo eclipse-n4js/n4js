@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.log4j.LogManager;
@@ -25,6 +25,7 @@ import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
 import org.eclipse.n4js.ide.xtext.server.build.XIncrementalBuilder;
 import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
 import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
+import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentChunkedIndex;
 import org.eclipse.n4js.internal.lsp.N4JSProjectConfig;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.diagnostics.Severity;
@@ -105,7 +106,7 @@ public class XProjectManager {
 	@Inject
 	protected XWorkspaceManager workspaceManager;
 
-	private Provider<Map<String, ResourceDescriptionsData>> indexProvider;
+	private ConcurrentChunkedIndex fullIndex;
 
 	private IExternalContentSupport.IExternalContentProvider openedDocumentsContentProvider;
 
@@ -119,12 +120,12 @@ public class XProjectManager {
 	@SuppressWarnings("hiding")
 	public void initialize(ProjectDescription description, IProjectConfig projectConfig,
 			IExternalContentSupport.IExternalContentProvider openedDocumentsContentProvider,
-			Provider<Map<String, ResourceDescriptionsData>> indexProvider) {
+			ConcurrentChunkedIndex fullIndex) {
 
 		this.projectDescription = description;
 		this.projectConfig = projectConfig;
 		this.openedDocumentsContentProvider = openedDocumentsContentProvider;
-		this.indexProvider = indexProvider;
+		this.fullIndex = fullIndex;
 		this.resourceSet = createNewResourceSet(new XIndexState().getResourceDescriptions());
 	}
 
@@ -195,8 +196,7 @@ public class XProjectManager {
 
 		ResourceDescriptionsData resourceDescriptions = projectStateHolder.getIndexState().getResourceDescriptions();
 
-		Map<String, ResourceDescriptionsData> concurrentMap = indexProvider.get();
-		concurrentMap.put(projectDescription.getName(), resourceDescriptions);
+		fullIndex.setContainer(projectDescription.getName(), resourceDescriptions);
 		return result;
 	}
 
@@ -313,8 +313,9 @@ public class XProjectManager {
 		} else {
 			ChunkedResourceDescriptions resDescs = ChunkedResourceDescriptions.findInEmfObject(resourceSet);
 
-			Map<String, ResourceDescriptionsData> concurrentMap = indexProvider.get();
-			concurrentMap.forEach(resDescs::setContainer);
+			for (Entry<String, ResourceDescriptionsData> entry : fullIndex.entries()) {
+				resDescs.setContainer(entry.getKey(), entry.getValue());
+			}
 			resDescs.setContainer(projectDescription.getName(), newIndex);
 		}
 		return resourceSet;
@@ -328,8 +329,7 @@ public class XProjectManager {
 		ProjectConfigAdapter.install(result, projectConfig);
 		attachWorkspaceResourceLocator(result);
 
-		Map<String, ResourceDescriptionsData> concurrentMap = indexProvider.get();
-		ChunkedResourceDescriptions index = new ChunkedResourceDescriptions(concurrentMap, result);
+		ChunkedResourceDescriptions index = fullIndex.toDescriptions(result);
 		index.setContainer(projectDescription.getName(), newIndex);
 		externalContentSupport.configureResourceSet(result, openedDocumentsContentProvider);
 		return result;
@@ -348,8 +348,7 @@ public class XProjectManager {
 
 	/** @return all resource descriptions that start with the given prefix */
 	public List<URI> findResourcesStartingWithPrefix(URI prefix) {
-		Map<String, ResourceDescriptionsData> concurrentMap = indexProvider.get();
-		ResourceDescriptionsData resourceDescriptionsData = concurrentMap.get(projectDescription.getName());
+		ResourceDescriptionsData resourceDescriptionsData = fullIndex.getContainer(projectDescription.getName());
 
 		// TODO: Moving this into ResourceDescriptionsData and using a sorted Map could increase performance
 		List<URI> uris = new ArrayList<>();
@@ -364,11 +363,6 @@ public class XProjectManager {
 	/** Getter */
 	public URI getBaseDir() {
 		return getProjectConfig().getPath();
-	}
-
-	/** Getter */
-	protected Provider<Map<String, ResourceDescriptionsData>> getIndexProvider() {
-		return indexProvider;
 	}
 
 	/** Getter */

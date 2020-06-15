@@ -98,6 +98,7 @@ import org.eclipse.n4js.ide.server.HeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.ide.server.LspLogger;
 import org.eclipse.n4js.ide.xtext.server.XBuildManager.XBuildable;
 import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
+import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentChunkedIndex.IChunkedIndexListener;
 import org.eclipse.n4js.ide.xtext.server.concurrent.LSPExecutorService;
 import org.eclipse.n4js.ide.xtext.server.contentassist.XContentAssistService;
 import org.eclipse.n4js.ide.xtext.server.findReferences.XWorkspaceResourceAccess;
@@ -134,6 +135,7 @@ import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
+import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.workspace.IProjectConfig;
@@ -159,12 +161,12 @@ import com.google.inject.Singleton;
 @SuppressWarnings({ "restriction", "deprecation" })
 @Singleton
 public class XLanguageServerImpl implements LanguageServer, WorkspaceService, TextDocumentService, LanguageClientAware,
-		Endpoint, JsonRpcMethodProvider, IBuildListener {
+		Endpoint, JsonRpcMethodProvider, IBuildListener, IChunkedIndexListener {
 
 	private static final Logger LOG = Logger.getLogger(XLanguageServerImpl.class);
 
 	@Inject
-	protected OpenFilesManager openFilesManager;
+	private OpenFilesManager openFilesManager;
 
 	@Inject
 	private LSPExecutorService lspExecutorService;
@@ -256,6 +258,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		}
 		this.initializeParams = params;
 
+		workspaceManager.getIndexRaw().addListener(this);
 		access.addBuildListener(this);
 
 		Stopwatch sw = Stopwatch.createStarted();
@@ -267,6 +270,11 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		initializeResult.setCapabilities(createServerCapabilities(params));
 
 		return CompletableFuture.completedFuture(initializeResult);
+	}
+
+	@Override
+	public void onIndexChanged(Map<String, ResourceDescriptionsData> changedContainers, Set<String> removedContainers) {
+		openFilesManager.updatePersistedState(changedContainers, removedContainers);
 	}
 
 	/**
@@ -1377,6 +1385,13 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	 */
 	protected IReferenceFinder.IResourceAccess getWorkspaceResourceAccess() {
 		return resourceAccess;
+	}
+
+	/**
+	 * TODO add <code>@since</code> tag
+	 */
+	protected OpenFilesManager getOpenFilesManager() {
+		return openFilesManager;
 	}
 
 	/**
