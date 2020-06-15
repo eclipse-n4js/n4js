@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
@@ -246,7 +247,11 @@ public class LSPExecutorService {
 	public /* NOT synchronized */ void join() {
 		CompletableFuture<Void> allTasks;
 		while ((allTasks = allTasksOrNull()) != null) {
-			allTasks.join();
+			try {
+				allTasks.join();
+			} catch (CompletionException | CancellationException e) {
+				// ignore cancellations
+			}
 		}
 	}
 

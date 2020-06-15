@@ -1423,10 +1423,8 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	/** Blocks until all requests of the language server finished */
 	public void joinServerRequests() {
-		CompletableFuture<Void> future = lspExecutorService.allTasks()
-				.thenCompose(any -> persister.pendingWrites());
-		future.join();
 		lspExecutorService.join();
+		persister.pendingWrites().join();
 	}
 
 }
