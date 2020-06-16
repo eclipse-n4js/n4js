@@ -458,14 +458,13 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 		disconnect();
 		return runBuildable("shutdown", () -> {
-			XBuildable buildable = workspaceManager.closeAll();
 			return (cancelIndicator) -> {
-				List<Delta> result = buildable.build(cancelIndicator);
+				openFilesManager.closeAll().join();
 				persister.pendingWrites().join();
 				shutdownAndExitHandler.shutdown();
 
 				LOG.info("Shutdown done");
-				return result;
+				return Collections.emptyList();
 			};
 		}).thenApply(any -> {
 			persister.close();
@@ -570,7 +569,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 			URI uri = uriExtensions.toUri(fileEvent.getUri());
 
 			String fileName = uri.lastSegment();
-			boolean skipFile = fileName.equals(ProjectStatePersister.FILENAME) || workspaceManager.isDocumentOpen(uri);
+			boolean skipFile = fileName.equals(ProjectStatePersister.FILENAME) || openFilesManager.isOpen(uri);
 
 			if (!skipFile && isSourceFile(uri)) {
 				FileChangeType changeType = fileEvent.getType();
@@ -1260,7 +1259,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 				XtextResource res = workspaceManager.getResource(uri);
 				XDocument doc = workspaceManager.getDocument(res);
 				return function.apply(
-						new ILanguageServerAccess.Context(res, doc, workspaceManager.isDocumentOpen(res.getURI()), ci));
+						new ILanguageServerAccess.Context(res, doc, openFilesManager.isOpen(res.getURI()), ci));
 			});
 		}
 
@@ -1306,7 +1305,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	@Override
 	public void afterBuild(List<IResourceDescription.Delta> deltas) {
 		for (IResourceDescription.Delta delta : deltas) {
-			if (delta.getNew() != null && workspaceManager.isDocumentOpen(delta.getUri())) {
+			if (delta.getNew() != null && openFilesManager.isOpen(delta.getUri())) {
 				String uriStr = delta.getUri().toString();
 
 				access.doRead(uriStr, ctx -> {

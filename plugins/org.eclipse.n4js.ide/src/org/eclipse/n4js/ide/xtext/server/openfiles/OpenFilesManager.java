@@ -77,12 +77,20 @@ public class OpenFilesManager {
 		});
 	}
 
-	public synchronized void closeFile(URI uri) {
+	public synchronized CompletableFuture<Void> closeAll() {
+		List<CompletableFuture<Void>> cfs = new ArrayList<>(openFiles.size());
+		for (URI uri : new ArrayList<>(openFiles.keySet())) {
+			cfs.add(closeFile(uri));
+		}
+		return CompletableFuture.allOf(cfs.toArray(new CompletableFuture<?>[cfs.size()]));
+	}
+
+	public synchronized CompletableFuture<Void> closeFile(URI uri) {
 		// To allow running/pending tasks in the context of the given URI's file to complete normally, we put the call
 		// to #discardOpenFileInfo() on the queue (note: this does apply to tasks being submitted after this method
 		// returns and before #discardOpenFileInfo() is invoked).
 		// TODO reconsider sequence when closing files
-		runInOpenFileContext(uri, "closeFile", (ofc, ci) -> {
+		return runInOpenFileContext(uri, "closeFile", (ofc, ci) -> {
 			discardOpenFileInfo(uri);
 		});
 	}

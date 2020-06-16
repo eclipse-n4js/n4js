@@ -20,6 +20,7 @@ import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.services.LanguageClient;
+import org.eclipse.n4js.ide.xtext.server.openfiles.OpenFilesManager;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.validation.Issue;
@@ -39,6 +40,9 @@ import com.google.inject.Singleton;
 public class IssueAcceptor {
 	@Inject
 	private UriExtensions uriExtensions;
+
+	@Inject
+	private OpenFilesManager openFilesManager;
 
 	@Inject
 	private XWorkspaceManager workspaceManager;
@@ -76,7 +80,7 @@ public class IssueAcceptor {
 	 * currently opened in the editor. Does not return any issue with severity {@link Severity#IGNORE ignore}.
 	 */
 	protected List<Diagnostic> toDiagnostics(URI uri, Iterable<? extends Issue> issues) {
-		if (!workspaceManager.isDocumentOpen(uri)) {
+		if (!openFilesManager.isOpen(uri)) {
 			// Closed documents need to exist in the current workspace
 			IProjectConfig projectConfig = workspaceManager.getWorkspaceConfig().findProjectContaining(uri);
 			if (projectConfig == null) {
