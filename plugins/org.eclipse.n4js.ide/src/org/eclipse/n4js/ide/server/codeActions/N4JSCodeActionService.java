@@ -295,6 +295,7 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 		XProjectManager projectManager = getCurrentProject(options);
 		String uriString = options.getCodeActionParams().getTextDocument().getUri();
 		URI uri = uriExtensions.toUri(uriString);
+		// FIXME GH-1774 avoid using XWorkspaceManager/XProjectManager to obtain issues?
 		Collection<Issue> issues = projectManager.getProjectStateHolder().getValidationIssues().get(uri);
 		for (Issue issue : issues) {
 			if (code.equals(issue.getCode())) {

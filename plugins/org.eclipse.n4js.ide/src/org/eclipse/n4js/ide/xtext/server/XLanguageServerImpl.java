@@ -1227,11 +1227,12 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		@Override
 		public <T> CompletableFuture<T> doRead(String uriStr, Function<ILanguageServerAccess.Context, T> function) {
 			URI uri = uriExtensions.toUri(uriStr);
-			return openFilesManager.runInOpenFileContext(uri, "doRead", (ofc, ci) -> {
-				XtextResource res = workspaceManager.getResource(uri);
-				XDocument doc = workspaceManager.getDocument(res);
+			return openFilesManager.runInOpenOrTemporaryFileContext(uri, "doRead", (ofc, ci) -> {
+				XtextResource res = ofc.getResource();
+				XDocument doc = ofc.getDocument();
+				boolean isOpen = !ofc.isTemporary();
 				return function.apply(
-						new ILanguageServerAccess.Context(res, doc, openFilesManager.isOpen(res.getURI()), ci));
+						new ILanguageServerAccess.Context(res, doc, isOpen, ci));
 			});
 		}
 

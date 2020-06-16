@@ -68,8 +68,8 @@ public class OpenFileContext {
 	protected OpenFilesManager parent;
 	/** URI of the open file represented by this {@link OpenFileContext} (i.e. URI of the main resource). */
 	protected URI mainURI;
-	/** Tells whether this open file should publish its state to the {@link #parent}'s dirty state index. */
-	protected boolean contributeDirtyState;
+	/** Tells whether this context represents a temporarily opened file, see {@link #isTemporary()}. */
+	protected boolean temporary;
 
 	/**
 	 * Contains the state of all files in the workspace. For open files managed by {@link #parent} (including the open
@@ -89,6 +89,23 @@ public class OpenFileContext {
 		return mainURI;
 	}
 
+	/**
+	 * Tells whether this {@link OpenFileContext} represents a temporarily opened file. Such contexts do not actually
+	 * represent an open editor in the LSP client but were created to perform editing-related computations in files not
+	 * actually opened in the LSP client. For example, when API documentation needs to be retrieved from a file not
+	 * currently opened in an editor in the LSP client, such a temporary {@code OpenFileContext} will be created.
+	 * <p>
+	 * Some special characteristics of temporary open file contexts:
+	 * <ul>
+	 * <li>temporary contexts will not publish their state to the {@link #parent}'s dirty state index.
+	 * <li>temporary contexts may be created even for files that actually have an open editor in the LSP client. This
+	 * might be useful if some computation needs to be performed that should not influence the open editor's state.
+	 * </ul>
+	 */
+	public boolean isTemporary() {
+		return temporary;
+	}
+
 	public XtextResourceSet getResourceSet() {
 		return (XtextResourceSet) mainResource.getResourceSet();
 	}
@@ -101,12 +118,11 @@ public class OpenFileContext {
 		return document;
 	}
 
-	public void initialize(@SuppressWarnings("hiding") OpenFilesManager parent, URI uri,
-			@SuppressWarnings("hiding") boolean contributeDirtyState,
+	public void initialize(@SuppressWarnings("hiding") OpenFilesManager parent, URI uri, boolean isTemporary,
 			IResourceDescriptions persistedState, ResourceDescriptionsData sharedDirtyState) {
 		this.parent = parent;
 		this.mainURI = uri;
-		this.contributeDirtyState = contributeDirtyState;
+		this.temporary = isTemporary;
 
 		this.index = createIndex(persistedState, sharedDirtyState);
 
@@ -226,8 +242,8 @@ public class OpenFileContext {
 	}
 
 	protected void updateSharedDirtyState() {
-		if (!contributeDirtyState) {
-			return; // this open file does not contribute to the parent's shared dirty state index
+		if (isTemporary()) {
+			return; // temporarily opened files do not contribute to the parent's shared dirty state index
 		}
 		IResourceDescription newDesc = createResourceDescription();
 		index.addDescription(mainURI, newDesc);
@@ -236,7 +252,7 @@ public class OpenFileContext {
 
 	/**
 	 * Invoked by {@link #parent} when a change happened in another open file (not the one represented by this
-	 * {@link OpenFileContext}).
+	 * {@link OpenFileContext}). Will never be invoked for {@link #isTemporary() temporary} open file contexts.
 	 */
 	protected void onDirtyStateChanged(IResourceDescription changedDesc, CancelIndicator cancelIndicator) {
 		updateIndex(Collections.singletonList(changedDesc), Collections.emptySet(), cancelIndicator);

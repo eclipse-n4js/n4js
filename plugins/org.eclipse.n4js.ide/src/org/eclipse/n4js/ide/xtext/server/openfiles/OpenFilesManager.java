@@ -61,7 +61,7 @@ public class OpenFilesManager {
 		if (openFiles.containsKey(uri)) {
 			return; // FIXME content gets lost in this case!
 		}
-		OpenFileContext newOFC = createOpenFileContext(uri, true, true);
+		OpenFileContext newOFC = createOpenFileContext(uri, false);
 		openFiles.put(uri, newOFC);
 
 		runInOpenFileContext(uri, "openFile", (ofc, ci) -> {
@@ -132,7 +132,7 @@ public class OpenFilesManager {
 	public synchronized <T> CompletableFuture<T> runInTemporaryFileContext(URI uri, String description,
 			BiFunction<OpenFileContext, CancelIndicator, T> task) {
 
-		OpenFileContext tempOFC = createOpenFileContext(uri, false, false);
+		OpenFileContext tempOFC = createOpenFileContext(uri, true);
 
 		Object queueId = Pair.of(getQueueIdForOpenFileContext(uri), "temporary");
 		String descriptionWithContext = description + " (temporary) [" + uri.lastSegment() + "]";
@@ -146,10 +146,10 @@ public class OpenFilesManager {
 		return Pair.of(OpenFilesManager.class, uri);
 	}
 
-	protected OpenFileContext createOpenFileContext(URI uri, boolean consumeDirtyState, boolean contributeDirtyState) {
+	protected OpenFileContext createOpenFileContext(URI uri, boolean isTemporary) {
 		OpenFileContext ofc = openFileContextProvider.get();
-		ofc.initialize(this, uri, contributeDirtyState, persistedState,
-				consumeDirtyState ? sharedDirtyState : new ResourceDescriptionsData(Collections.emptyList()));
+		ofc.initialize(this, uri, isTemporary, persistedState,
+				!isTemporary ? sharedDirtyState : new ResourceDescriptionsData(Collections.emptyList()));
 		return ofc;
 	}
 

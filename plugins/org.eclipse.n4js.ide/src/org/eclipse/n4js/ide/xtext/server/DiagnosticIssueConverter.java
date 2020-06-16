@@ -30,6 +30,7 @@ import com.google.common.base.Strings;
 public class DiagnosticIssueConverter {
 
 	/** Convert the given issue to a diagnostic. */
+	// FIXME GH-1774 avoid using XWorkspaceManager for converting offset to/from line/column?
 	public Diagnostic toDiagnostic(Issue issue, DocumentResourceProvider documentProvider) {
 		Diagnostic result = new Diagnostic();
 

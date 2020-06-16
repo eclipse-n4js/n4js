@@ -31,6 +31,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
 import org.eclipse.lsp4j.CodeActionParams;
 import org.eclipse.lsp4j.ExecuteCommandParams;
@@ -38,6 +39,7 @@ import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
+import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.n4js.external.LibraryChange;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
 import org.eclipse.n4js.external.NpmCLI;
@@ -50,9 +52,7 @@ import org.eclipse.n4js.ide.server.codeActions.N4JSCodeActionService;
 import org.eclipse.n4js.ide.server.codeActions.N4JSSourceActionProvider;
 import org.eclipse.n4js.ide.xtext.server.ExecuteCommandParamsDescriber;
 import org.eclipse.n4js.ide.xtext.server.XBuildManager;
-import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
-import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
 import org.eclipse.n4js.json.ide.codeActions.JSONCodeActionService;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.projectModel.locations.FileURI;
@@ -66,10 +66,8 @@ import org.eclipse.n4js.smith.CollectedDataAccess;
 import org.eclipse.n4js.smith.DataCollectorUtils;
 import org.eclipse.xtext.ide.server.Document;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
-import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.ide.server.codeActions.ICodeActionService2.Options;
 import org.eclipse.xtext.ide.server.commands.IExecutableCommandService;
-import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.util.CancelIndicator;
 
 import com.google.common.base.Preconditions;
@@ -128,12 +126,6 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 
 	@Inject
 	private XLanguageServerImpl lspServer;
-
-	@Inject
-	private XWorkspaceManager workspaceManager;
-
-	@Inject
-	private UriExtensions uriExtensions;
 
 	@Inject
 	private N4JSCodeActionService codeActionService;
@@ -393,13 +385,20 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 	 */
 	@ExecutableCommandHandler(N4JS_ORGANIZE_IMPORTS)
 	public Void organizeImports(String uriString, ILanguageServerAccess access, CancelIndicator cancelIndicator) {
-		URI uri = uriExtensions.toUri(uriString);
-		XtextResource resource = workspaceManager.getResource(uri);
+		return access.doRead(uriString, context -> {
+			return doOrganizeImports(uriString, context, access.getLanguageClient(), cancelIndicator);
+		}).join();
+	}
+
+	private Void doOrganizeImports(String uriString, ILanguageServerAccess.Context context,
+			LanguageClient languageClient, CancelIndicator cancelIndicator) {
+
+		Resource resource = context.getResource();
 		if (!(resource instanceof N4JSResource)) {
 			return null;
 		}
 		Script script = ((N4JSResource) resource).getScript();
-		XDocument document = workspaceManager.getDocument(resource);
+		Document document = context.getDocument();
 
 		// compute imports to be added for unresolved references
 		List<ImportDescriptor> importsToBeAdded = new ArrayList<>();
@@ -416,7 +415,7 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 
 		WorkspaceEdit workspaceEdit = new WorkspaceEdit(Collections.singletonMap(uriString, edits));
 		ApplyWorkspaceEditParams params = new ApplyWorkspaceEditParams(workspaceEdit, "Organize Imports");
-		access.getLanguageClient().applyEdit(params);
+		languageClient.applyEdit(params);
 		return null;
 	}
 }
