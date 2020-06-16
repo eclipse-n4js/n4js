@@ -973,22 +973,22 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		if ((uri == null)) {
 			return CompletableFuture.completedFuture(unresolved);
 		}
-		// FIXME GH-1774 make sure it's ok to run resolveCodeLens in open file context!
-		return openFilesManager.runInOpenFileContext(uri, "resolveCodeLens", (ofc, ci) -> {
-			return resolveCodeLens(uri, unresolved, ci);
+		return openFilesManager.runInOpenOrTemporaryFileContext(uri, "resolveCodeLens", (ofc, ci) -> {
+			return resolveCodeLens(ofc, unresolved, ci);
 		});
 	}
 
 	/**
 	 * Resolve the given code lens.
 	 */
-	protected CodeLens resolveCodeLens(URI uri, CodeLens unresolved, CancelIndicator cancelIndicator) {
+	protected CodeLens resolveCodeLens(OpenFileContext ofc, CodeLens unresolved, CancelIndicator cancelIndicator) {
+		URI uri = ofc.getURI();
 		ICodeLensResolver resolver = getService(uri, ICodeLensResolver.class);
 		if (resolver == null) {
 			return unresolved;
 		}
-		XtextResource res = workspaceManager.getResource(uri);
-		XDocument doc = workspaceManager.getDocument(res);
+		XtextResource res = ofc.getResource();
+		XDocument doc = ofc.getDocument();
 		return resolver.resolveCodeLens(doc, res, unresolved, cancelIndicator);
 	}
 
