@@ -85,7 +85,7 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 		changeNonOpenedFile("C", ' C ' -> ' C1 ');
 		joinServerRequests();
 
-// FIXME GH-1768
+// FIXME GH-1774
 //		outputFileSnapshot.assertUnchanged(); // still in dirty state, so nothing re-generated yet!
 //		projectStateSnapshot.assertUnchanged();
 
@@ -216,7 +216,7 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 		// as long as only one of the two changed files is saved,
 		// output artifacts should not be re-generated:
 		assertNoIssues();
-// FIXME GH-1768
+// FIXME GH-1774
 //		cOutputFileSnapshot.assertUnchanged();
 //		dOutputFileSnapshot.assertUnchanged();
 //		projectStateSnapshot.assertUnchanged();
@@ -262,7 +262,7 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 		// as long as only one of the two changed files is saved,
 		// output artifacts should not be re-generated:
 		assertNoIssues();
-// FIXME GH-1768
+// FIXME GH-1774
 //		cOutputFileSnapshot.assertUnchanged();
 //		dOutputFileSnapshot.assertUnchanged();
 //		projectStateSnapshot.assertUnchanged();
@@ -310,7 +310,7 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 		// as long as only one of the two changed files is saved,
 		// output artifacts should not be re-generated:
 		assertNoIssues();
-// FIXME GH-1768
+// FIXME GH-1774
 //		otherOutputFileSnapshot.assertUnchanged();
 //		mainOutputFileSnapshot.assertUnchanged();
 //		projectStateSnapshot.assertUnchanged();
@@ -356,7 +356,7 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 		// as long as only one of the two changed files is saved,
 		// output artifacts should not be re-generated:
 		assertNoIssues();
-// FIXME GH-1768
+// FIXME GH-1774
 //		otherOutputFileSnapshot.assertUnchanged();
 //		mainOutputFileSnapshot.assertUnchanged();
 //		projectStateSnapshot.assertUnchanged();
@@ -432,7 +432,7 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 		joinServerRequests();
 
 		assertFalse(outputFile.exists()); // never generate output files in node_modules folders
-// FIXME GH-1768
+// FIXME GH-1774
 //		projectStateSnapshot.assertUnchanged(); // not updated, because Other.n4js not saved yet
 //		assertIssues("Main" -> #[ "(Error, [1:16 - 1:31], any is not a subtype of number.)" ]);
 
@@ -449,7 +449,7 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 		joinServerRequests();
 
 		assertFalse(outputFile.exists()); // never generate output files in node_modules folders
-// FIXME GH-1768
+// FIXME GH-1774
 //		projectStateSnapshot.assertNotExists(); // not recreated, because Other.n4js not saved yet
 //		assertIssues("Main" -> #[ "(Error, [1:16 - 1:31], string is not a subtype of number.)" ]);
 

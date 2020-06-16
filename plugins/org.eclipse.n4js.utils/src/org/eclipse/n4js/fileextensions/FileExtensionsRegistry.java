@@ -101,7 +101,7 @@ public class FileExtensionsRegistry {
 	 * Return registered file extensions.
 	 */
 	public Collection<String> getFileExtensions(FileExtensionType extensionType) {
-		if (!isInitialized) { // FIXME GH-1768 thread safety
+		if (!isInitialized) { // FIXME GH-1774 thread safety
 			initialize();
 		}
 		switch (extensionType) {

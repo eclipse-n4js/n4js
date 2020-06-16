@@ -193,7 +193,7 @@ public class OpenFileContext {
 		ResourceSet resSet = getResourceSet();
 		for (Resource res : new ArrayList<>(resSet.getResources())) {
 			if (res != mainResource) {
-				res.unload();
+				res.unload(); // FIXME better way to do this? (unload is expensive due to re-proxyfication)
 				resSet.getResources().remove(res);
 			}
 		}

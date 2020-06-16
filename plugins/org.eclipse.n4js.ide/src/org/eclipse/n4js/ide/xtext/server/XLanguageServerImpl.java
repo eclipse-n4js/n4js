@@ -754,7 +754,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public CompletableFuture<List<? extends SymbolInformation>> symbol(WorkspaceSymbolParams params) {
-		// FIXME GH-1768 double-check that the workspaceSymbolService may run parallel to the builder
+		// FIXME GH-1774 double-check that the workspaceSymbolService may run parallel to the builder
 		return lspExecutorService.submitAndCancelPrevious(WorkspaceSymbolParams.class, "symbol",
 				cancelIndicator -> symbol(params, cancelIndicator));
 	}
@@ -973,7 +973,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		if ((uri == null)) {
 			return CompletableFuture.completedFuture(unresolved);
 		}
-		// FIXME GH-1768 make sure it's ok to run resolveCodeLens in open file context!
+		// FIXME GH-1774 make sure it's ok to run resolveCodeLens in open file context!
 		return openFilesManager.runInOpenFileContext(uri, "resolveCodeLens", (ofc, ci) -> {
 			return resolveCodeLens(uri, unresolved, ci);
 		});
@@ -1262,7 +1262,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		@Override
 		public <T> CompletableFuture<T> doReadIndex(
 				Function<? super ILanguageServerAccess.IndexContext, ? extends T> function) {
-			// FIXME GH-1768 reconsider this!
+			// FIXME GH-1774 reconsider this!
 			return lspExecutorService.submit("doReadIndex",
 					cancelIndicator -> function.apply(
 							new ILanguageServerAccess.IndexContext(workspaceManager.getIndex(), cancelIndicator)));
