@@ -488,16 +488,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		openFilesManager.openFile(getURI(textDocument), textDocument.getVersion(), textDocument.getText());
 	}
 
-	/**
-	 * Evaluate the params and deduce the respective build command.
-	 */
-	// FIXME GH-1768 remove
-	protected XBuildable toBuildable(DidOpenTextDocumentParams params) {
-		TextDocumentItem textDocument = params.getTextDocument();
-		return workspaceManager.didOpen(getURI(textDocument),
-				textDocument.getVersion(), textDocument.getText());
-	}
-
 	@Override
 	public void didChange(DidChangeTextDocumentParams params) {
 		VersionedTextDocumentIdentifier textDocument = params.getTextDocument();
@@ -525,27 +515,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		return false;
 	}
 
-	/**
-	 * Evaluate the params and deduce the respective build command.
-	 */
-	// FIXME GH-1768 remove
-	protected XBuildable toBuildable(DidChangeTextDocumentParams params) {
-		VersionedTextDocumentIdentifier textDocument = params.getTextDocument();
-		return workspaceManager.didChangeTextDocumentContent(getURI(textDocument),
-				textDocument.getVersion(), params.getContentChanges());
-	}
-
 	@Override
 	public void didClose(DidCloseTextDocumentParams params) {
 		openFilesManager.closeFile(getURI(params.getTextDocument()));
-	}
-
-	/**
-	 * Evaluate the params and deduce the respective build command.
-	 */
-	// FIXME GH-1768 remove
-	protected XBuildable toBuildable(DidCloseTextDocumentParams params) {
-		return workspaceManager.didClose(getURI(params.getTextDocument()));
 	}
 
 	@Override

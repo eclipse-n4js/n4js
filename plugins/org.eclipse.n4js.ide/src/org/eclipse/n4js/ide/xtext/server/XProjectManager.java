@@ -108,8 +108,6 @@ public class XProjectManager {
 
 	private ConcurrentChunkedIndex fullIndex;
 
-	private IExternalContentSupport.IExternalContentProvider openedDocumentsContentProvider;
-
 	private XtextResourceSet resourceSet;
 
 	private ProjectDescription projectDescription;
@@ -119,12 +117,10 @@ public class XProjectManager {
 	/** Initialize this project. */
 	@SuppressWarnings("hiding")
 	public void initialize(ProjectDescription description, IProjectConfig projectConfig,
-			IExternalContentSupport.IExternalContentProvider openedDocumentsContentProvider,
 			ConcurrentChunkedIndex fullIndex) {
 
 		this.projectDescription = description;
 		this.projectConfig = projectConfig;
-		this.openedDocumentsContentProvider = openedDocumentsContentProvider;
 		this.fullIndex = fullIndex;
 		this.resourceSet = createNewResourceSet(new XIndexState().getResourceDescriptions());
 	}
@@ -331,7 +327,6 @@ public class XProjectManager {
 
 		ChunkedResourceDescriptions index = fullIndex.toDescriptions(result);
 		index.setContainer(projectDescription.getName(), newIndex);
-		externalContentSupport.configureResourceSet(result, openedDocumentsContentProvider);
 		return result;
 	}
 
@@ -363,11 +358,6 @@ public class XProjectManager {
 	/** Getter */
 	public URI getBaseDir() {
 		return getProjectConfig().getPath();
-	}
-
-	/** Getter */
-	protected IExternalContentSupport.IExternalContentProvider getOpenedDocumentsContentProvider() {
-		return openedDocumentsContentProvider;
 	}
 
 	/** Getter */
