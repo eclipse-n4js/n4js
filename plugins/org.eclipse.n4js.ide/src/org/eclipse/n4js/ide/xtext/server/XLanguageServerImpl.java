@@ -18,7 +18,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
@@ -54,8 +53,6 @@ import org.eclipse.lsp4j.DocumentSymbolParams;
 import org.eclipse.lsp4j.ExecuteCommandCapabilities;
 import org.eclipse.lsp4j.ExecuteCommandOptions;
 import org.eclipse.lsp4j.ExecuteCommandParams;
-import org.eclipse.lsp4j.FileChangeType;
-import org.eclipse.lsp4j.FileEvent;
 import org.eclipse.lsp4j.Hover;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializeResult;
@@ -96,7 +93,6 @@ import org.eclipse.lsp4j.services.TextDocumentService;
 import org.eclipse.lsp4j.services.WorkspaceService;
 import org.eclipse.n4js.ide.server.HeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.ide.server.LspLogger;
-import org.eclipse.n4js.ide.xtext.server.XBuildManager.XBuildable;
 import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentChunkedIndex.IChunkedIndexListener;
 import org.eclipse.n4js.ide.xtext.server.concurrent.LSPExecutorService;
@@ -105,7 +101,6 @@ import org.eclipse.n4js.ide.xtext.server.findReferences.XWorkspaceResourceAccess
 import org.eclipse.n4js.ide.xtext.server.openfiles.OpenFileContext;
 import org.eclipse.n4js.ide.xtext.server.openfiles.OpenFilesManager;
 import org.eclipse.n4js.ide.xtext.server.rename.XIRenameService;
-import org.eclipse.xtext.findReferences.IReferenceFinder;
 import org.eclipse.xtext.ide.server.Document;
 import org.eclipse.xtext.ide.server.ICapabilitiesContributor;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
@@ -131,15 +126,12 @@ import org.eclipse.xtext.ide.server.symbol.HierarchicalDocumentSymbolService;
 import org.eclipse.xtext.ide.server.symbol.IDocumentSymbolService;
 import org.eclipse.xtext.ide.server.symbol.WorkspaceSymbolService;
 import org.eclipse.xtext.resource.IResourceDescription;
-import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 import org.eclipse.xtext.util.CancelIndicator;
-import org.eclipse.xtext.workspace.IProjectConfig;
-import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.base.Objects;
@@ -169,6 +161,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	private OpenFilesManager openFilesManager;
 
 	@Inject
+	private LSPBuilder lspBuilder;
+
+	@Inject
 	private LSPExecutorService lspExecutorService;
 
 	@Inject
@@ -195,18 +190,11 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	@Inject
 	private LspLogger lspLogger;
 
-	@Inject
-	private ProjectStatePersister persister;
-
-	private XWorkspaceManager workspaceManager;
-
 	private InitializeParams initializeParams;
 
 	private InitializeResult initializeResult;
 
 	private final CompletableFuture<InitializedParams> clientInitialized = new CompletableFuture<>();
-
-	private XWorkspaceResourceAccess resourceAccess;
 
 	private LanguageClient client;
 
@@ -226,15 +214,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	public void registerExtensions(HeadlessExtensionRegistrationHelper helper) {
 		helper.unregisterExtensions();
 		helper.registerExtensions();
-	}
-
-	/**
-	 * Setter
-	 */
-	@Inject
-	public void setWorkspaceManager(XWorkspaceManager manager) {
-		workspaceManager = manager;
-		resourceAccess = new XWorkspaceResourceAccess(workspaceManager);
 	}
 
 	private Set<? extends IResourceServiceProvider> getAllLanguages() {
@@ -258,12 +237,12 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		}
 		this.initializeParams = params;
 
-		workspaceManager.getIndexRaw().addListener(this);
+		lspBuilder.getIndexRaw().addListener(this);
 		access.addBuildListener(this);
 
 		Stopwatch sw = Stopwatch.createStarted();
 		LOG.info("Start server initialization in workspace directory " + baseDir);
-		workspaceManager.initialize(baseDir);
+		lspBuilder.initialize(baseDir);
 		LOG.info("Server initialization done after " + sw);
 
 		initializeResult = new InitializeResult();
@@ -388,24 +367,8 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public void initialized(InitializedParams params) {
-		lspExecutorService.submitAndCancelPrevious(XBuildManager.class, "initialized",
-				cancelIndicator -> initialBuild());
-
+		lspBuilder.initialBuild();
 		clientInitialized.complete(params);
-	}
-
-	private Void initialBuild() {
-		Stopwatch sw = Stopwatch.createStarted();
-		try {
-			LOG.info("Start initial build ...");
-			workspaceManager.doInitialBuild(CancelIndicator.NullImpl);
-		} catch (Throwable t) {
-			LOG.error(t.getMessage(), t);
-			throw t;
-		} finally {
-			LOG.info("Initial build done after " + sw);
-		}
-		return null;
 	}
 
 	@Deprecated
@@ -457,19 +420,14 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		LOG.info("Start shutdown");
 
 		disconnect();
-		return runBuildable("shutdown", () -> {
-			return (cancelIndicator) -> {
-				openFilesManager.closeAll().join();
-				persister.pendingWrites().join();
-				shutdownAndExitHandler.shutdown();
+		return openFilesManager.closeAll()
+				.thenCompose(none -> lspBuilder.shutdown())
+				.thenApply(any -> {
+					shutdownAndExitHandler.shutdown();
 
-				LOG.info("Shutdown done");
-				return Collections.emptyList();
-			};
-		}).thenApply(any -> {
-			persister.close();
-			return new Object();
-		});
+					LOG.info("Shutdown done");
+					return new Object();
+				});
 	}
 
 	@Override
@@ -492,27 +450,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	public void didChange(DidChangeTextDocumentParams params) {
 		VersionedTextDocumentIdentifier textDocument = params.getTextDocument();
 		URI uri = getURI(textDocument);
-		if (isSourceFileOrOpen(uri)) {
+		if (openFilesManager.isOpen(uri)) { // FIXME GH-1774 reconsider
 			openFilesManager.changeFile(uri, textDocument.getVersion(), params.getContentChanges());
 		}
-	}
-
-	private boolean isSourceFileOrOpen(URI uri) {
-		if (openFilesManager.isOpen(uri)) {
-			return true;
-		}
-		return isSourceFile(uri);
-	}
-
-	private boolean isSourceFile(URI uri) {
-		IProjectConfig projectConfig = workspaceManager.getWorkspaceConfig().findProjectContaining(uri);
-		if (projectConfig != null) {
-			ISourceFolder sourceFolder = projectConfig.findSourceFolderContaining(uri);
-			if (sourceFolder != null) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	@Override
@@ -522,75 +462,24 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public void didSave(DidSaveTextDocumentParams params) {
-		runBuildable("didSave", () -> toBuildable(params));
-	}
-
-	/**
-	 * Evaluate the params and deduce the respective build command.
-	 */
-	protected XBuildable toBuildable(DidSaveTextDocumentParams params) {
-		return workspaceManager.didSave(getURI(params.getTextDocument()));
+		lspBuilder.didSave(params);
 	}
 
 	@Override
 	public void didChangeWatchedFiles(DidChangeWatchedFilesParams params) {
-		// TODO: Set watched files to client. Note: Client may have performance issues with lots of folders to watch.
-		final List<URI> dirtyFiles = new ArrayList<>();
-		final List<URI> deletedFiles = new ArrayList<>();
-		for (FileEvent fileEvent : params.getChanges()) {
-			URI uri = uriExtensions.toUri(fileEvent.getUri());
-
-			String fileName = uri.lastSegment();
-			boolean skipFile = fileName.equals(ProjectStatePersister.FILENAME) || openFilesManager.isOpen(uri);
-
-			if (!skipFile && isSourceFile(uri)) {
-				FileChangeType changeType = fileEvent.getType();
-
-				if (changeType == FileChangeType.Deleted) {
-					deletedFiles.add(uri);
-				} else {
-					dirtyFiles.add(uri);
-				}
-			}
-		}
-		if (!dirtyFiles.isEmpty() || !deletedFiles.isEmpty()) {
-			runBuildable("didChangeWatchedFiles", () -> workspaceManager.didChangeFiles(dirtyFiles, deletedFiles));
-		}
+		lspBuilder.didChangeWatchedFiles(params);
 	}
 
 	/** Deletes all generated files and clears the type index. */
 	public CompletableFuture<Void> clean() {
-		return lspExecutorService.submitAndCancelPrevious(XBuildManager.class, "clean", cancelIndicator -> {
-			workspaceManager.clean(CancelIndicator.NullImpl);
-			return null;
-		});
-	}
-
-	/**
-	 * Compute a buildable and run the build in a write action
-	 *
-	 * @param newBuildable
-	 *            the factory for the buildable.
-	 * @return the result.
-	 */
-	protected CompletableFuture<List<Delta>> runBuildable(String description,
-			Supplier<? extends XBuildable> newBuildable) {
-		return lspExecutorService.submitAndCancelPrevious(XBuildManager.class, description, cancelIndicator -> {
-			XBuildable buildable = newBuildable.get();
-			return buildable.build(cancelIndicator);
-		});
+		return lspBuilder.clean();
 	}
 
 	/**
 	 * Triggers rebuild of the whole workspace
 	 */
 	public CompletableFuture<Void> reinitWorkspace() {
-		return lspExecutorService.submitAndCancelPrevious(XBuildManager.class, "didChangeConfiguration",
-				cancelIndicator -> {
-					workspaceManager.reinitialize();
-					workspaceManager.doInitialBuild(CancelIndicator.NullImpl);
-					return null;
-				});
+		return lspBuilder.reinitWorkspace();
 	}
 
 	@Override
@@ -666,6 +555,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		}
 		XtextResource res = ofc.getResource();
 		XDocument doc = ofc.getDocument();
+		XWorkspaceResourceAccess resourceAccess = lspBuilder.getResourceAccess();
 		return Either.forLeft(documentSymbolService.getDefinitions(doc, res, params, resourceAccess, cancelIndicator));
 	}
 
@@ -689,7 +579,8 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		}
 		XtextResource res = ofc.getResource();
 		XDocument doc = ofc.getDocument();
-		return documentSymbolService.getReferences(doc, res, params, resourceAccess, workspaceManager.getIndex(),
+		XWorkspaceResourceAccess resourceAccess = lspBuilder.getResourceAccess();
+		return documentSymbolService.getReferences(doc, res, params, resourceAccess, lspBuilder.getIndex(),
 				cancelIndicator);
 	}
 
@@ -763,8 +654,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	 * Compute the symbol information. Executed in a read request.
 	 */
 	protected List<? extends SymbolInformation> symbol(WorkspaceSymbolParams params, CancelIndicator cancelIndicator) {
+		XWorkspaceResourceAccess resourceAccess = lspBuilder.getResourceAccess();
 		return workspaceSymbolService.getSymbols(params.getQuery(),
-				resourceAccess, workspaceManager.getIndex(),
+				resourceAccess, lspBuilder.getIndex(),
 				cancelIndicator);
 	}
 
@@ -889,8 +781,8 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	 */
 	public ICodeActionService2.Options toOptions(CodeActionParams params, CancelIndicator cancelIndicator) {
 		URI uri = getURI(params.getTextDocument());
-		XtextResource res = workspaceManager.getResource(uri);
-		XDocument doc = workspaceManager.getDocument(res);
+		XtextResource res = lspBuilder.getWorkspaceManager().getResource(uri);
+		XDocument doc = lspBuilder.getWorkspaceManager().getDocument(res);
 		return toOptions(params, doc, res, cancelIndicator);
 	}
 
@@ -1099,7 +991,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		IResourceServiceProvider resourceServiceProvider = getResourceServiceProvider(uri);
 		XIRenameService renameServiceOld = getService(resourceServiceProvider, XIRenameService.class);
 		if (renameServiceOld != null) {
-			return renameServiceOld.rename(workspaceManager, renameParams, cancelIndicator);
+			return renameServiceOld.rename(lspBuilder.getWorkspaceManager(), renameParams, cancelIndicator);
 		}
 		IRenameService2 renameService2 = getService(resourceServiceProvider, IRenameService2.class);
 		if ((renameService2 != null)) {
@@ -1238,7 +1130,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 		@Override
 		public void addBuildListener(ILanguageServerAccess.IBuildListener listener) {
-			workspaceManager.addBuildListener(listener);
+			lspBuilder.addBuildListener(listener);
 		}
 
 		@Override
@@ -1248,7 +1140,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 		@Override
 		public ResourceSet newLiveScopeResourceSet(URI uri) {
-			XProjectManager projectManager = workspaceManager.getProjectManager(uri);
+			XProjectManager projectManager = lspBuilder.getWorkspaceManager().getProjectManager(uri);
 			XIndexState indexState = projectManager.getProjectStateHolder().getIndexState();
 			XtextResourceSet resourceSet = projectManager.createNewResourceSet(indexState.getResourceDescriptions());
 			resourceSet.getLoadOptions().put(ResourceDescriptionsProvider.LIVE_SCOPE, true);
@@ -1266,7 +1158,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 			// FIXME GH-1774 reconsider this!
 			return lspExecutorService.submit("doReadIndex",
 					cancelIndicator -> function.apply(
-							new ILanguageServerAccess.IndexContext(workspaceManager.getIndex(), cancelIndicator)));
+							new ILanguageServerAccess.IndexContext(lspBuilder.getIndex(), cancelIndicator)));
 		}
 
 		@Override
@@ -1353,13 +1245,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	}
 
 	/**
-	 * @since 2.16
-	 */
-	protected IReferenceFinder.IResourceAccess getWorkspaceResourceAccess() {
-		return resourceAccess;
-	}
-
-	/**
 	 * TODO add <code>@since</code> tag
 	 */
 	protected OpenFilesManager getOpenFilesManager() {
@@ -1367,10 +1252,10 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	}
 
 	/**
-	 * @since 2.16
+	 * TODO add <code>@since</code> tag
 	 */
-	protected XWorkspaceManager getWorkspaceManager() {
-		return workspaceManager;
+	protected LSPBuilder getBuilder() {
+		return lspBuilder;
 	}
 
 	/**
@@ -1396,7 +1281,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	/** Blocks until all requests of the language server finished */
 	public void joinServerRequests() {
 		lspExecutorService.join();
-		persister.pendingWrites().join();
+		lspBuilder.joinPersister();
 	}
 
 }
