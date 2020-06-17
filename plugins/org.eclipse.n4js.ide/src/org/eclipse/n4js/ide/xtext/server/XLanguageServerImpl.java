@@ -786,16 +786,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	/**
 	 * Convert the given params to an enriched instance of options.
 	 */
-	public ICodeActionService2.Options toOptions(CodeActionParams params, CancelIndicator cancelIndicator) {
-		URI uri = getURI(params.getTextDocument());
-		XtextResource res = lspBuilder.getWorkspaceManager().getResource(uri);
-		XDocument doc = lspBuilder.getWorkspaceManager().getDocument(res);
-		return toOptions(params, doc, res, cancelIndicator);
-	}
-
-	/**
-	 * Convert the given params to an enriched instance of options.
-	 */
 	public ICodeActionService2.Options toOptions(CodeActionParams params, XDocument doc, XtextResource res,
 			CancelIndicator cancelIndicator) {
 

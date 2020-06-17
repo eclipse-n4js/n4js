@@ -66,7 +66,7 @@ import org.eclipse.n4js.smith.CollectedDataAccess;
 import org.eclipse.n4js.smith.DataCollectorUtils;
 import org.eclipse.xtext.ide.server.Document;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
-import org.eclipse.xtext.ide.server.codeActions.ICodeActionService2.Options;
+import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.ide.server.commands.IExecutableCommandService;
 import org.eclipse.xtext.util.CancelIndicator;
 
@@ -77,7 +77,6 @@ import com.google.inject.Inject;
 /**
  * Provides commands for LSP clients
  */
-@SuppressWarnings("restriction")
 public class N4JSCommandService implements IExecutableCommandService, ExecuteCommandParamsDescriber {
 	/**
 	 * The rebuild command.
@@ -141,6 +140,9 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 
 	@Inject
 	private ImportOrganizer importOrganizer;
+
+	@Inject
+	private UriExtensions uriExtensions;
 
 	/**
 	 * Methods annotated as {@link ExecutableCommandHandler} will be registered as handlers for ExecuteCommand requests.
@@ -300,8 +302,10 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 	public Void fixAllInFile(String title, String code, String fixId, CodeActionParams codeActionParams,
 			ILanguageServerAccess access, CancelIndicator cancelIndicator) {
 
-		Options options = lspServer.toOptions(codeActionParams, cancelIndicator);
-		WorkspaceEdit edit = codeActionService.applyToFile(code, fixId, options);
+		String uriString = codeActionParams.getTextDocument().getUri();
+		URI uri = uriExtensions.toUri(uriString);
+
+		WorkspaceEdit edit = codeActionService.applyToFile(uri, code, fixId, cancelIndicator);
 		access.getLanguageClient().applyEdit(new ApplyWorkspaceEditParams(edit, title));
 		return null;
 	}
@@ -313,8 +317,10 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 	public Void fixAllInProject(String title, String code, String fixId, CodeActionParams codeActionParams,
 			ILanguageServerAccess access, CancelIndicator cancelIndicator) {
 
-		Options options = lspServer.toOptions(codeActionParams, cancelIndicator);
-		WorkspaceEdit edit = codeActionService.applyToProject(code, fixId, options);
+		String uriString = codeActionParams.getTextDocument().getUri();
+		URI uri = uriExtensions.toUri(uriString);
+
+		WorkspaceEdit edit = codeActionService.applyToProject(uri, code, fixId, cancelIndicator);
 		access.getLanguageClient().applyEdit(new ApplyWorkspaceEditParams(edit, title));
 		return null;
 	}

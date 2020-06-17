@@ -29,7 +29,6 @@ import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.IResourceDescriptions;
-import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -352,35 +351,6 @@ public class XWorkspaceManager {
 			}
 		}
 		return false;
-	}
-
-	// FIXME GH-1774 remove this method!
-	public XtextResource getResource(URI uri) {
-		URI resourceURI = uri.trimFragment();
-		XProjectManager projectMnr = getProjectManager(resourceURI);
-		if (projectMnr != null) {
-			XtextResource resource = (XtextResource) projectMnr.getResource(resourceURI);
-			return resource;
-		}
-		return null;
-	}
-
-	// FIXME GH-1774 remove this method!
-	public XDocument getDocument(URI uri) {
-		XtextResource resource = getResource(uri);
-		if (resource == null) {
-			return null;
-		}
-		return getDocument(resource);
-	}
-
-	// FIXME GH-1774 remove this method!
-	public XDocument getDocument(XtextResource resource) {
-		if (resource == null) {
-			return null;
-		}
-		String text = resource.getParseResult().getRootNode().getText();
-		return new XDocument(Integer.valueOf(1), text);
 	}
 
 	/** @return a workspace relative URI for a given URI */
