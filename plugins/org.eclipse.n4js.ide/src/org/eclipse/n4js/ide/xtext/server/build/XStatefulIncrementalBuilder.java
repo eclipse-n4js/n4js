@@ -24,7 +24,7 @@ import java.util.concurrent.CancellationException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.URIConverter;
-import org.eclipse.n4js.ide.validation.N4JSIssue;
+import org.eclipse.n4js.ide.xtext.server.LSPIssue;
 import org.eclipse.n4js.ide.xtext.server.LSPIssueConverter;
 import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
 import org.eclipse.n4js.utils.URIUtils;
@@ -214,7 +214,7 @@ public class XStatefulIncrementalBuilder {
 
 		if (request.canValidate()) {
 			List<Issue> issues = resourceValidator.validate(resource, CheckMode.ALL, cancelIndicator);
-			List<N4JSIssue> lspIssues = lspIssueConverter.convertToLSPIssues(resource, issues, cancelIndicator);
+			List<LSPIssue> lspIssues = lspIssueConverter.convertToLSPIssues(resource, issues, cancelIndicator);
 			operationCanceledManager.checkCanceled(cancelIndicator);
 			request.setResultIssues(source, lspIssues);
 			boolean proceedGenerate = !request.containsValidationErrors(source);

@@ -25,8 +25,8 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.ResourceLocator;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
-import org.eclipse.n4js.ide.validation.N4JSIssue;
 import org.eclipse.n4js.ide.xtext.server.IssueAcceptor;
+import org.eclipse.n4js.ide.xtext.server.LSPIssue;
 import org.eclipse.n4js.ide.xtext.server.LSPIssueConverter;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.xtext.EcoreUtil2;
@@ -241,7 +241,7 @@ public class OpenFileContext {
 		IResourceValidator resourceValidator = resourceServiceProvider.getResourceValidator();
 		// notify LSP client
 		List<Issue> issues = resourceValidator.validate(mainResource, CheckMode.ALL, cancelIndicator);
-		List<N4JSIssue> lspIssues = lspIssueConverter.convertToLSPIssues(mainResource, issues, cancelIndicator);
+		List<LSPIssue> lspIssues = lspIssueConverter.convertToLSPIssues(mainResource, issues, cancelIndicator);
 		issueAcceptor.publishDiagnostics(mainURI, lspIssues);
 		// update dirty state
 		updateSharedDirtyState();

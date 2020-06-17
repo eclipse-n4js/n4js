@@ -20,7 +20,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
-import org.eclipse.n4js.ide.validation.N4JSIssue;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
 import org.eclipse.n4js.ide.xtext.server.build.XIncrementalBuilder;
@@ -147,9 +146,9 @@ public class XProjectManager {
 		// send issues to client
 		// (below code won't send empty 'publishDiagnostics' events for resources without validation issues, see API doc
 		// of this method for details)
-		Multimap<URI, N4JSIssue> validationIssues = projectStateHolder.getValidationIssues();
+		Multimap<URI, LSPIssue> validationIssues = projectStateHolder.getValidationIssues();
 		for (URI location : validationIssues.keys()) {
-			Collection<N4JSIssue> issues = validationIssues.get(location);
+			Collection<LSPIssue> issues = validationIssues.get(location);
 			issueAcceptor.publishDiagnostics(location, issues);
 		}
 
@@ -262,7 +261,7 @@ public class XProjectManager {
 
 	/** Report an issue. */
 	public void reportProjectIssue(String message, String code, Severity severity) {
-		N4JSIssue result = new N4JSIssue();
+		LSPIssue result = new LSPIssue();
 		result.setMessage(message);
 		result.setCode(code);
 		result.setSeverity(severity);

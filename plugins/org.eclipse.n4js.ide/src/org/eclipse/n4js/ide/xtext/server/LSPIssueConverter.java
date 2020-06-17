@@ -16,7 +16,6 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.lsp4j.Position;
-import org.eclipse.n4js.ide.validation.N4JSIssue;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -25,7 +24,7 @@ import org.eclipse.xtext.validation.Issue;
 import com.google.inject.Inject;
 
 /**
- * Converts from plain {@link Issue}s to {@link N4JSIssue}s.
+ * Converts from plain {@link Issue}s to {@link LSPIssue}s.
  */
 @SuppressWarnings("javadoc")
 public class LSPIssueConverter {
@@ -33,16 +32,16 @@ public class LSPIssueConverter {
 	@Inject
 	private OperationCanceledManager operationCanceledManager;
 
-	public List<N4JSIssue> convertToLSPIssues(Resource resource, Collection<? extends Issue> issues,
+	public List<LSPIssue> convertToLSPIssues(Resource resource, Collection<? extends Issue> issues,
 			CancelIndicator cancelIndicator) {
 
-		List<N4JSIssue> result = new ArrayList<>(issues.size());
+		List<LSPIssue> result = new ArrayList<>(issues.size());
 		XDocument document = null; // create only if necessary
 		for (Issue issue : issues) {
 			operationCanceledManager.checkCanceled(cancelIndicator);
-			N4JSIssue lspIssue;
-			if (issue instanceof N4JSIssue) {
-				lspIssue = (N4JSIssue) issue;
+			LSPIssue lspIssue;
+			if (issue instanceof LSPIssue) {
+				lspIssue = (LSPIssue) issue;
 			} else {
 				if (!(resource instanceof XtextResource)) {
 					// FIXME GH-1774 find better solution!
@@ -56,14 +55,14 @@ public class LSPIssueConverter {
 		return result;
 	}
 
-	public N4JSIssue convertToLSPIssue(Issue issue, XDocument document) {
-		if (issue instanceof N4JSIssue) {
-			return (N4JSIssue) issue;
+	public LSPIssue convertToLSPIssue(Issue issue, XDocument document) {
+		if (issue instanceof LSPIssue) {
+			return (LSPIssue) issue;
 		}
 		if (document == null) {
 			throw new IllegalArgumentException("a document is required if the given issue is not already an LSPIssue");
 		}
-		N4JSIssue result = new N4JSIssue(issue);
+		LSPIssue result = new LSPIssue(issue);
 		Position end = document.getPosition(issue.getOffset() + issue.getLength());
 		if (end == null) {
 			Position start = new Position(toZeroBasedInt(issue.getLineNumber()), toZeroBasedInt(issue.getColumn()));

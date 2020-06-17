@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.ide.server.ReflectionUtils;
 import org.eclipse.n4js.ide.xtext.server.IssueAcceptor;
+import org.eclipse.n4js.ide.xtext.server.LSPIssue;
 import org.eclipse.xtext.diagnostics.AbstractDiagnostic;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.nodemodel.INode;
@@ -57,7 +58,7 @@ public class N4JSDiagnosticConverter extends DiagnosticConverterImpl {
 	@Override
 	public void convertResourceDiagnostic(Diagnostic diagnostic, Severity severity, IAcceptor<Issue> acceptor) {
 		// START: Following copied from super method
-		N4JSIssue issue = new N4JSIssue(); // Changed
+		LSPIssue issue = new LSPIssue(); // Changed
 		issue.setSyntaxError(diagnostic instanceof XtextSyntaxDiagnostic);
 		issue.setSeverity(severity);
 		issue.setLineNumber(diagnostic.getLine());
@@ -93,7 +94,7 @@ public class N4JSDiagnosticConverter extends DiagnosticConverterImpl {
 			IAcceptor<Issue> acceptor) {
 
 		// START: Following copied from super method
-		N4JSIssue issue = new N4JSIssue(); // Changed
+		LSPIssue issue = new LSPIssue(); // Changed
 		Severity severity = getSeverity(diagnostic);
 		if (severity == null)
 			return;

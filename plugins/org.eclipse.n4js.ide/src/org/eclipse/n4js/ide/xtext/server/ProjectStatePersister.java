@@ -42,7 +42,6 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.ide.validation.N4JSIssue;
 import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
 import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
 import org.eclipse.n4js.projectModel.locations.FileURI;
@@ -82,10 +81,10 @@ public class ProjectStatePersister {
 		/** Hashes to indicate file changes */
 		final public Map<URI, HashedFileContent> fileHashs;
 		/** Hashes to indicate file changes */
-		final public Multimap<URI, N4JSIssue> validationIssues;
+		final public Multimap<URI, LSPIssue> validationIssues;
 
 		PersistedState(XIndexState indexState, Map<URI, HashedFileContent> fileHashs,
-				Multimap<URI, N4JSIssue> validationIssues) {
+				Multimap<URI, LSPIssue> validationIssues) {
 
 			this.indexState = indexState;
 			this.fileHashs = fileHashs;
@@ -107,7 +106,7 @@ public class ProjectStatePersister {
 	 * - #vs times:
 	 * 	- source URI
 	 * 	- Number #vi of issues of source
-	 * 	- #vi times a validation issue as per {@link N4JSIssue#writeExternal(DataOutput) N4JSIssue.writeExternal}
+	 * 	- #vi times a validation issue as per {@link LSPIssue#writeExternal(DataOutput) N4JSIssue.writeExternal}
 	 * </pre>
 	 */
 	private static final int VERSION_2 = 2;
@@ -150,7 +149,7 @@ public class ProjectStatePersister {
 	 *            map of source files to issues
 	 */
 	public void writeProjectState(IProjectConfig project, XIndexState state,
-			Collection<? extends HashedFileContent> files, Multimap<URI, N4JSIssue> validationIssues) {
+			Collection<? extends HashedFileContent> files, Multimap<URI, LSPIssue> validationIssues) {
 
 		XIndexState indexCopy = new XIndexState(state.getResourceDescriptions().copy(), state.getFileMappings().copy());
 
@@ -161,7 +160,7 @@ public class ProjectStatePersister {
 	}
 
 	private void asyncWriteProjectState(IProjectConfig project, XIndexState state,
-			Collection<? extends HashedFileContent> files, Multimap<URI, N4JSIssue> validationIssues) {
+			Collection<? extends HashedFileContent> files, Multimap<URI, LSPIssue> validationIssues) {
 
 		writer.submit(() -> {
 			File file = getDataFile(project);
@@ -189,7 +188,7 @@ public class ProjectStatePersister {
 	 *             if things go bananas.
 	 */
 	public void writeProjectState(OutputStream stream, String languageVersion, XIndexState state,
-			Collection<? extends HashedFileContent> files, Multimap<URI, N4JSIssue> validationIssues)
+			Collection<? extends HashedFileContent> files, Multimap<URI, LSPIssue> validationIssues)
 			throws IOException {
 
 		stream.write(CURRENT_VERSION);
@@ -307,18 +306,18 @@ public class ProjectStatePersister {
 		}
 	}
 
-	private void writeValidationIssues(Multimap<URI, N4JSIssue> validationIssues, DataOutput output)
+	private void writeValidationIssues(Multimap<URI, LSPIssue> validationIssues, DataOutput output)
 			throws IOException {
 		int numberSources = validationIssues.size();
 		output.writeInt(numberSources);
 		for (URI source : validationIssues.keys()) {
-			Collection<N4JSIssue> issues = validationIssues.get(source);
+			Collection<LSPIssue> issues = validationIssues.get(source);
 
 			output.writeUTF(source.toString());
 
 			int numberIssues = issues.size();
 			output.writeInt(numberIssues);
-			for (N4JSIssue issue : issues) {
+			for (LSPIssue issue : issues) {
 				issue.writeExternal(output);
 			}
 		}
@@ -380,7 +379,7 @@ public class ProjectStatePersister {
 
 			Map<URI, HashedFileContent> fingerprints = readFingerprints(input);
 
-			Multimap<URI, N4JSIssue> validationIssues = readValidationIssues(input);
+			Multimap<URI, LSPIssue> validationIssues = readValidationIssues(input);
 
 			XIndexState indexState = new XIndexState(resourceDescriptionsData, fileMappings);
 			return new PersistedState(indexState, fingerprints, validationIssues);
@@ -506,16 +505,16 @@ public class ProjectStatePersister {
 		return fingerprints;
 	}
 
-	private Multimap<URI, N4JSIssue> readValidationIssues(DataInput input) throws IOException {
+	private Multimap<URI, LSPIssue> readValidationIssues(DataInput input) throws IOException {
 		int numberOfSources = input.readInt();
-		Multimap<URI, N4JSIssue> validationIssues = LinkedHashMultimap.create();
+		Multimap<URI, LSPIssue> validationIssues = LinkedHashMultimap.create();
 		while (numberOfSources > 0) {
 			numberOfSources--;
 			URI source = URI.createURI(input.readUTF());
 			int numberOfIssues = input.readInt();
 			while (numberOfIssues > 0) {
 				numberOfIssues--;
-				N4JSIssue issue = new N4JSIssue();
+				LSPIssue issue = new LSPIssue();
 				issue.readExternal(input);
 				validationIssues.put(source, issue);
 			}

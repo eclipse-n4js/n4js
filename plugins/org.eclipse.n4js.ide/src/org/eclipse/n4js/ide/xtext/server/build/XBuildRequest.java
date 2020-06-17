@@ -14,7 +14,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.ide.validation.N4JSIssue;
+import org.eclipse.n4js.ide.xtext.server.LSPIssue;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.XtextResourceSet;
@@ -52,7 +52,7 @@ public class XBuildRequest {
 	private CancelIndicator cancelIndicator = CancelIndicator.NullImpl;
 
 	/** Note that {@link Multimap} is not used here since we need to store empty lists, too. */
-	private final Map<URI, Collection<N4JSIssue>> resultIssues = new LinkedHashMap<>();
+	private final Map<URI, Collection<LSPIssue>> resultIssues = new LinkedHashMap<>();
 
 	private final Collection<URI> resultDeletedFiles = new ArrayList<>();
 
@@ -61,7 +61,7 @@ public class XBuildRequest {
 	/** Listener for validation events */
 	public static interface AfterValidateListener {
 		/** Called after a source file was validated with the given issues */
-		void afterValidate(URI source, Collection<? extends N4JSIssue> issues);
+		void afterValidate(URI source, Collection<? extends LSPIssue> issues);
 	}
 
 	/** Listener for generation events */
@@ -127,12 +127,12 @@ public class XBuildRequest {
 	}
 
 	/** Getter. */
-	public Map<URI, Collection<N4JSIssue>> getResultIssues() {
+	public Map<URI, Collection<LSPIssue>> getResultIssues() {
 		return this.resultIssues;
 	}
 
 	/** Setter. */
-	public void setResultIssues(URI source, Collection<N4JSIssue> issues) {
+	public void setResultIssues(URI source, Collection<LSPIssue> issues) {
 		this.resultIssues.put(source, issues);
 		this.afterValidate(source, issues);
 	}
@@ -143,7 +143,7 @@ public class XBuildRequest {
 	}
 
 	/** Called each time a new set of issues was added for a validated source file */
-	public void afterValidate(URI source, Collection<N4JSIssue> issues) {
+	public void afterValidate(URI source, Collection<LSPIssue> issues) {
 		if (afterValidateListener != null) {
 			afterValidateListener.afterValidate(source, issues);
 		}
@@ -277,8 +277,8 @@ public class XBuildRequest {
 
 	/** @return true iff the given source has issues of severity ERROR */
 	public boolean containsValidationErrors(URI source) {
-		Collection<? extends N4JSIssue> issues = this.resultIssues.get(source);
-		for (N4JSIssue issue : issues) {
+		Collection<? extends LSPIssue> issues = this.resultIssues.get(source);
+		for (LSPIssue issue : issues) {
 			Severity severity = issue.getSeverity();
 			if (severity != null) {
 				switch (severity) {

@@ -15,7 +15,6 @@ import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.DiagnosticSeverity;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
-import org.eclipse.n4js.ide.validation.N4JSIssue;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.ide.server.Document;
 import org.eclipse.xtext.validation.CheckType;
@@ -31,7 +30,7 @@ import com.google.common.base.Strings;
 public class DiagnosticIssueConverter {
 
 	/** Convert the given issue to a diagnostic. */
-	public Diagnostic toDiagnostic(N4JSIssue issue) {
+	public Diagnostic toDiagnostic(LSPIssue issue) {
 		Diagnostic result = new Diagnostic();
 
 		result.setCode(issue.getCode());

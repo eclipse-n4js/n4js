@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.ide.validation.N4JSIssue;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterDeleteListener;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterGenerateListener;
@@ -47,7 +46,7 @@ public class DefaultBuildRequestFactory implements IBuildRequestFactory {
 
 	class DefaultAfterValidateListener implements AfterValidateListener {
 		@Override
-		public void afterValidate(URI source, Collection<? extends N4JSIssue> issues) {
+		public void afterValidate(URI source, Collection<? extends LSPIssue> issues) {
 			if (openFilesManager.isOpen(source)) {
 				return;
 			}

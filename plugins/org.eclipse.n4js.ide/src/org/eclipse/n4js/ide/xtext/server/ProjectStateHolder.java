@@ -22,7 +22,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.ide.validation.N4JSIssue;
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersister.PersistedState;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
@@ -78,7 +77,7 @@ public class ProjectStateHolder {
 	 *
 	 * The sort order will look like this: /a/b, /a/b/c, /a/b/d, /a/c, /aa
 	 */
-	private final Multimap<URI, N4JSIssue> validationIssues = TreeMultimap.create(Comparator.comparing(URI::toString),
+	private final Multimap<URI, LSPIssue> validationIssues = TreeMultimap.create(Comparator.comparing(URI::toString),
 			issueComparator);
 
 	private static final Comparator<Issue> issueComparator = Comparator.comparing(ProjectStateHolder::getOffset)
@@ -133,7 +132,7 @@ public class ProjectStateHolder {
 	/**
 	 * Return the validation issues as an unmodifiable map.
 	 */
-	public Multimap<URI, N4JSIssue> getValidationIssues() {
+	public Multimap<URI, LSPIssue> getValidationIssues() {
 		return Multimaps.unmodifiableMultimap(validationIssues);
 	}
 
@@ -275,9 +274,9 @@ public class ProjectStateHolder {
 	}
 
 	/** Merges the given map of source files to issues to the current state */
-	protected void mergeValidationIssues(Map<URI, Collection<N4JSIssue>> issueMap) {
-		for (Iterator<Entry<URI, Collection<N4JSIssue>>> iter = issueMap.entrySet().iterator(); iter.hasNext();) {
-			Entry<URI, Collection<N4JSIssue>> entry = iter.next();
+	protected void mergeValidationIssues(Map<URI, Collection<LSPIssue>> issueMap) {
+		for (Iterator<Entry<URI, Collection<LSPIssue>>> iter = issueMap.entrySet().iterator(); iter.hasNext();) {
+			Entry<URI, Collection<LSPIssue>> entry = iter.next();
 			URI source = entry.getKey();
 			validationIssues.replaceValues(source, entry.getValue());
 		}
