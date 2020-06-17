@@ -29,6 +29,7 @@ import org.eclipse.n4js.ide.xtext.server.IssueAcceptor;
 import org.eclipse.n4js.ide.xtext.server.LSPIssue;
 import org.eclipse.n4js.ide.xtext.server.LSPIssueConverter;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
+import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
@@ -242,6 +243,10 @@ public class OpenFileContext {
 		// notify LSP client
 		List<Issue> issues = resourceValidator.validate(mainResource, CheckMode.ALL, cancelIndicator);
 		List<LSPIssue> lspIssues = lspIssueConverter.convertToLSPIssues(mainResource, issues, cancelIndicator);
+		ConcurrentIssueRegistry issueRegistry = parent.getIssueRegistry();
+		if (issueRegistry != null) {
+			issueRegistry.setIssuesOfDirtyState(mainURI, lspIssues);
+		}
 		issueAcceptor.publishDiagnostics(mainURI, lspIssues);
 		// update dirty state
 		updateSharedDirtyState();

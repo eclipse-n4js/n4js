@@ -24,6 +24,7 @@ import org.eclipse.lsp4j.FileEvent;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.n4js.ide.xtext.server.XBuildManager.XBuildable;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentChunkedIndex;
+import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
 import org.eclipse.n4js.ide.xtext.server.concurrent.LSPExecutorService;
 import org.eclipse.n4js.ide.xtext.server.findReferences.XWorkspaceResourceAccess;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
@@ -57,6 +58,7 @@ public class LSPBuilder {
 	@Inject
 	private ProjectStatePersister persister;
 
+	private ConcurrentIssueRegistry issueRegistry;
 	private XWorkspaceManager workspaceManager;
 	private XWorkspaceResourceAccess resourceAccess;
 
@@ -92,8 +94,13 @@ public class LSPBuilder {
 	 * @param newBaseDir
 	 *            the location
 	 */
-	public void initialize(URI newBaseDir) {
-		workspaceManager.initialize(newBaseDir);
+	@SuppressWarnings("hiding")
+	public void initialize(URI newBaseDir, ConcurrentIssueRegistry issueRegistry) {
+		if (this.issueRegistry != null && issueRegistry != this.issueRegistry) {
+			throw new IllegalArgumentException("the issue registry must not be changed");
+		}
+		this.issueRegistry = issueRegistry;
+		workspaceManager.initialize(newBaseDir, issueRegistry);
 	}
 
 	public void initialBuild() {

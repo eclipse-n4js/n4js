@@ -64,6 +64,7 @@ public class IssueAcceptor {
 	}
 
 	/** Converts given issues to {@link Diagnostic}s and sends them to LSP client */
+	// FIXME GH-1774 consider handling publication of issues via a listener on ConcurrentIssueRegistry
 	public void publishDiagnostics(URI uri, Iterable<? extends LSPIssue> issues) {
 		if (client != null) {
 			PublishDiagnosticsParams publishDiagnosticsParams = new PublishDiagnosticsParams();

@@ -27,13 +27,11 @@ import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
 import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
 import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
+import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
 import org.eclipse.n4js.utils.URIUtils;
-import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.util.IFileSystemScanner;
-import org.eclipse.xtext.util.Strings;
-import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.workspace.ISourceFolder;
 
@@ -68,6 +66,7 @@ public class ProjectStateHolder {
 
 	private Map<URI, HashedFileContent> uriToHashedFileContents = new HashMap<>();
 
+	// FIXME GH-1774 avoid storing issues twice (in ProjectStateHolder and ConcurrentIssueRegistry)
 	/*
 	 * Implementation note: We use a sorted map to report the issues in a stable order. The values of the the map are
 	 * sorted by offset and severity and message.
@@ -78,32 +77,7 @@ public class ProjectStateHolder {
 	 * The sort order will look like this: /a/b, /a/b/c, /a/b/d, /a/c, /aa
 	 */
 	private final Multimap<URI, LSPIssue> validationIssues = TreeMultimap.create(Comparator.comparing(URI::toString),
-			issueComparator);
-
-	private static final Comparator<Issue> issueComparator = Comparator.comparing(ProjectStateHolder::getOffset)
-			.thenComparing(ProjectStateHolder::getSeverity).thenComparing(ProjectStateHolder::getMessage)
-			.thenComparing(Issue::hashCode);
-
-	private static int getOffset(Issue issue) {
-		Integer result = issue.getOffset();
-		if (result == null) {
-			return -1;
-		}
-		return result;
-	}
-
-	private static Severity getSeverity(Issue issue) {
-		Severity result = issue.getSeverity();
-		if (result == null) {
-			return Severity.ERROR;
-		}
-		return result;
-	}
-
-	private static String getMessage(Issue issue) {
-		String result = issue.getMessage();
-		return Strings.emptyIfNull(result);
-	}
+			ConcurrentIssueRegistry.defaultIssueComparator);
 
 	/** Clears type index of this project. */
 	public void doClear() {

@@ -14,6 +14,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.ide.xtext.server.IBuildRequestFactory;
 import org.eclipse.n4js.ide.xtext.server.LSPIssue;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -28,6 +29,8 @@ import com.google.common.collect.Multimap;
  * @since 2.9
  */
 public class XBuildRequest {
+
+	private final String projectName;
 
 	private URI baseDir;
 
@@ -61,7 +64,7 @@ public class XBuildRequest {
 	/** Listener for validation events */
 	public static interface AfterValidateListener {
 		/** Called after a source file was validated with the given issues */
-		void afterValidate(URI source, Collection<? extends LSPIssue> issues);
+		void afterValidate(String projectName, URI source, Collection<? extends LSPIssue> issues);
 	}
 
 	/** Listener for generation events */
@@ -81,6 +84,16 @@ public class XBuildRequest {
 	private AfterGenerateListener afterGenerateListener;
 
 	private AfterDeleteListener afterDeleteListener;
+
+	/** Create a new instance. Use {@link IBuildRequestFactory} instead! */
+	public XBuildRequest(String projectName) {
+		this.projectName = projectName;
+	}
+
+	/** Returns the project name. */
+	public String getProjectName() {
+		return projectName;
+	}
 
 	/** Setter for the base directory. */
 	public void setBaseDir(URI baseDir) {
@@ -132,9 +145,9 @@ public class XBuildRequest {
 	}
 
 	/** Setter. */
-	public void setResultIssues(URI source, Collection<LSPIssue> issues) {
+	public void setResultIssues(String projectName, URI source, Collection<LSPIssue> issues) {
 		this.resultIssues.put(source, issues);
-		this.afterValidate(source, issues);
+		this.afterValidate(projectName, source, issues);
 	}
 
 	/** Setter. */
@@ -143,9 +156,10 @@ public class XBuildRequest {
 	}
 
 	/** Called each time a new set of issues was added for a validated source file */
-	public void afterValidate(URI source, Collection<LSPIssue> issues) {
+	@SuppressWarnings("hiding")
+	public void afterValidate(String projectName, URI source, Collection<LSPIssue> issues) {
 		if (afterValidateListener != null) {
-			afterValidateListener.afterValidate(source, issues);
+			afterValidateListener.afterValidate(projectName, source, issues);
 		}
 	}
 

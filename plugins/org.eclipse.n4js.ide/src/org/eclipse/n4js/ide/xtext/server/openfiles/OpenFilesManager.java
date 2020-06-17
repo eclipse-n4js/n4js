@@ -25,6 +25,7 @@ import java.util.function.BiFunction;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
+import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
 import org.eclipse.n4js.ide.xtext.server.concurrent.LSPExecutorService;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.impl.ChunkedResourceDescriptions;
@@ -52,6 +53,17 @@ public class OpenFilesManager {
 	protected final ChunkedResourceDescriptions persistedState = new ChunkedResourceDescriptions();
 
 	protected final ResourceDescriptionsData sharedDirtyState = new ResourceDescriptionsData(Collections.emptyList());
+
+	protected ConcurrentIssueRegistry issueRegistry = null;
+
+	public ConcurrentIssueRegistry getIssueRegistry() {
+		return issueRegistry; // no need for synchronization
+	}
+
+	/** Iff set to a non-<code>null</code> registry, open files will register their issues with that registry. */
+	public synchronized void setIssueRegistry(ConcurrentIssueRegistry issueRegistry) {
+		this.issueRegistry = issueRegistry;
+	}
 
 	public synchronized boolean isOpen(URI uri) {
 		return openFiles.containsKey(uri);
@@ -156,6 +168,9 @@ public class OpenFilesManager {
 	protected synchronized void discardOpenFileInfo(URI uri) {
 		openFiles.remove(uri);
 		sharedDirtyState.removeDescription(uri);
+		if (issueRegistry != null) {
+			issueRegistry.clearIssuesOfDirtyState(uri);
+		}
 		// TODO what if a task for the file being closed is currently in progress? (partially solved, see above)
 		// TODO closing a file may lead to a change in other open files (because they will switch from using dirty state
 		// to using persisted state for the file being closed)

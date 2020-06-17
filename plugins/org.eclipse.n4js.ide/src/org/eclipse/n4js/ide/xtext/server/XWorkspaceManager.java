@@ -21,6 +21,7 @@ import org.eclipse.lsp4j.jsonrpc.messages.ResponseError;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
 import org.eclipse.n4js.ide.xtext.server.XBuildManager.XBuildable;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentChunkedIndex;
+import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
@@ -85,6 +86,7 @@ public class XWorkspaceManager {
 	private final List<ILanguageServerAccess.IBuildListener> buildListeners = new ArrayList<>();
 
 	private final ConcurrentChunkedIndex fullIndex = new ConcurrentChunkedIndex();
+	private ConcurrentIssueRegistry issueRegistry;
 
 	/**
 	 * Add the listener to this workspace.
@@ -107,7 +109,7 @@ public class XWorkspaceManager {
 
 	/** Reinitialize a workspace at the current location. */
 	public void reinitialize() {
-		initialize(getBaseDir());
+		initialize(getBaseDir(), getIssueRegistry());
 	}
 
 	/**
@@ -116,7 +118,12 @@ public class XWorkspaceManager {
 	 * @param newBaseDir
 	 *            the location
 	 */
-	public void initialize(URI newBaseDir) {
+	@SuppressWarnings("hiding")
+	public void initialize(URI newBaseDir, ConcurrentIssueRegistry issueRegistry) {
+		if (this.issueRegistry != null && issueRegistry != this.issueRegistry) {
+			throw new IllegalArgumentException("the issue registry must not be changed");
+		}
+		this.issueRegistry = issueRegistry;
 		refreshWorkspaceConfig(newBaseDir);
 	}
 
@@ -155,7 +162,7 @@ public class XWorkspaceManager {
 	synchronized public void addProject(IProjectConfig projectConfig) {
 		XProjectManager projectManager = projectManagerProvider.get();
 		ProjectDescription projectDescription = projectDescriptionFactory.getProjectDescription(projectConfig);
-		projectManager.initialize(projectDescription, projectConfig, fullIndex);
+		projectManager.initialize(projectDescription, projectConfig, fullIndex, issueRegistry);
 		projectName2ProjectManager.put(projectDescription.getName(), projectManager);
 	}
 
@@ -328,6 +335,11 @@ public class XWorkspaceManager {
 	/** Returns the index. */
 	public ConcurrentChunkedIndex getIndexRaw() {
 		return fullIndex;
+	}
+
+	/** Returns the issue registry used by this workspace manager. */
+	public ConcurrentIssueRegistry getIssueRegistry() {
+		return issueRegistry;
 	}
 
 	/** Return true if the given resource still exists. */

@@ -46,7 +46,7 @@ public class DefaultBuildRequestFactory implements IBuildRequestFactory {
 
 	class DefaultAfterValidateListener implements AfterValidateListener {
 		@Override
-		public void afterValidate(URI source, Collection<? extends LSPIssue> issues) {
+		public void afterValidate(String projectName, URI source, Collection<? extends LSPIssue> issues) {
 			if (openFilesManager.isOpen(source)) {
 				return;
 			}
@@ -55,8 +55,8 @@ public class DefaultBuildRequestFactory implements IBuildRequestFactory {
 	}
 
 	/** Create the build request. */
-	public XBuildRequest getBuildRequest() {
-		XBuildRequest result = new XBuildRequest();
+	public XBuildRequest getBuildRequest(String projectName) {
+		XBuildRequest result = new XBuildRequest(projectName);
 		result.setAfterDeleteListener(afterDeleteListener);
 		result.setAfterValidateListener(afterValidateListener);
 		result.setAfterGenerateListener(afterGenerateListener);
@@ -64,8 +64,9 @@ public class DefaultBuildRequestFactory implements IBuildRequestFactory {
 	}
 
 	@Override
-	public XBuildRequest getBuildRequest(Set<URI> changedFiles, Set<URI> deletedFiles, List<Delta> externalDeltas) {
-		XBuildRequest result = getBuildRequest();
+	public XBuildRequest getBuildRequest(String projectName, Set<URI> changedFiles, Set<URI> deletedFiles,
+			List<Delta> externalDeltas) {
+		XBuildRequest result = getBuildRequest(projectName);
 		result.setDirtyFiles(changedFiles);
 		result.setDeletedFiles(deletedFiles);
 		result.setExternalDeltas(externalDeltas);

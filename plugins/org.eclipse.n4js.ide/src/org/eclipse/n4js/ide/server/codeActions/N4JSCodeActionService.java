@@ -33,8 +33,7 @@ import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
 import org.eclipse.n4js.ide.xtext.server.DiagnosticIssueConverter;
 import org.eclipse.n4js.ide.xtext.server.LSPIssue;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
-import org.eclipse.n4js.ide.xtext.server.XProjectManager;
-import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
+import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.ide.server.codeActions.ICodeActionService2;
@@ -43,6 +42,8 @@ import org.eclipse.xtext.service.OperationCanceledManager;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -183,9 +184,6 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 	private XLanguageServerImpl languageServer;
 
 	@Inject
-	private XWorkspaceManager workspaceManager;
-
-	@Inject
 	private DiagnosticIssueConverter diagnosticIssueConverter;
 
 	@Inject
@@ -292,11 +290,10 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 			return result;
 		}
 		TextEditCollector collector = new TextEditCollector();
-		XProjectManager projectManager = getCurrentProject(options);
 		String uriString = options.getCodeActionParams().getTextDocument().getUri();
 		URI uri = uriExtensions.toUri(uriString);
-		// FIXME GH-1774 avoid using XWorkspaceManager/XProjectManager to obtain issues?
-		Collection<LSPIssue> issues = projectManager.getProjectStateHolder().getValidationIssues().get(uri);
+		ConcurrentIssueRegistry issueRegistry = languageServer.getIssueRegistry();
+		Collection<LSPIssue> issues = issueRegistry.getIssues(uri);
 		for (LSPIssue issue : issues) {
 			if (code.equals(issue.getCode())) {
 				Options newOptions = copyOptions(options, options.getCodeActionParams().getTextDocument(), issue);
@@ -317,13 +314,21 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 			return result;
 		}
 		TextEditCollector collector = new TextEditCollector();
-		XProjectManager projectManager = getCurrentProject(options);
-		Multimap<URI, LSPIssue> validationIssues = projectManager.getProjectStateHolder().getValidationIssues();
+		String projectName = "";
 
-		for (URI location : validationIssues.keys()) {
-			Collection<LSPIssue> issues = validationIssues.get(location);
-			TextDocumentIdentifier docIdentifier = new TextDocumentIdentifier(uriExtensions.toUriString(location));
-			for (LSPIssue issue : issues) {
+		ConcurrentIssueRegistry issueRegistry = languageServer.getIssueRegistry();
+		ImmutableMap<URI, ImmutableSortedSet<LSPIssue>> issuesPersisted = issueRegistry
+				.getIssuesOfPersistedState(projectName);
+
+		// FIXME GH-1774 will only process open files for which a persisted state exists
+		// (consider obtaining URIs of all open files and filtering them by project)
+		for (URI currURI : issuesPersisted.keySet()) {
+			Collection<LSPIssue> currIssues = issueRegistry.getIssuesOfDirtyState(currURI);
+			if (currIssues == null) {
+				currIssues = issuesPersisted.get(currURI); // use persisted state
+			}
+			TextDocumentIdentifier docIdentifier = new TextDocumentIdentifier(uriExtensions.toUriString(currURI));
+			for (LSPIssue issue : currIssues) {
 				if (code.equals(issue.getCode())) {
 					Options newOptions = copyOptions(options, docIdentifier, issue);
 					quickfix.compute(code, newOptions, collector);
@@ -340,13 +345,6 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 		CodeActionParams codeActionParams = new CodeActionParams(docIdentifier, diagnostic.getRange(), context);
 		Options newOptions = languageServer.toOptions(codeActionParams, options.getCancelIndicator());
 		return newOptions;
-	}
-
-	private XProjectManager getCurrentProject(Options options) {
-		String uriString = options.getCodeActionParams().getTextDocument().getUri();
-		URI uri = uriExtensions.toUri(uriString);
-		XProjectManager projectManager = workspaceManager.getProjectManager(uri);
-		return projectManager;
 	}
 
 	private QuickFixImplementation findOriginatingQuickfix(String code, String id) {

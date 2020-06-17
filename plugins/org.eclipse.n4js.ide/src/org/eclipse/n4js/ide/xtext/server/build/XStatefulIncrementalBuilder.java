@@ -108,7 +108,7 @@ public class XStatefulIncrementalBuilder {
 			}
 
 			for (URI source : request.getDeletedFiles()) {
-				request.setResultIssues(source, Collections.emptyList());
+				request.setResultIssues(request.getProjectName(), source, Collections.emptyList());
 				removeGeneratedFiles(source, newSource2GeneratedMapping);
 			}
 
@@ -216,7 +216,7 @@ public class XStatefulIncrementalBuilder {
 			List<Issue> issues = resourceValidator.validate(resource, CheckMode.ALL, cancelIndicator);
 			List<LSPIssue> lspIssues = lspIssueConverter.convertToLSPIssues(resource, issues, cancelIndicator);
 			operationCanceledManager.checkCanceled(cancelIndicator);
-			request.setResultIssues(source, lspIssues);
+			request.setResultIssues(request.getProjectName(), source, lspIssues);
 			boolean proceedGenerate = !request.containsValidationErrors(source);
 
 			if (proceedGenerate) {

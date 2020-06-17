@@ -26,6 +26,7 @@ import org.eclipse.n4js.ide.xtext.server.build.XIncrementalBuilder;
 import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
 import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentChunkedIndex;
+import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
 import org.eclipse.n4js.internal.lsp.N4JSProjectConfig;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.diagnostics.Severity;
@@ -107,6 +108,8 @@ public class XProjectManager {
 
 	private ConcurrentChunkedIndex fullIndex;
 
+	private ConcurrentIssueRegistry issueRegistry;
+
 	private XtextResourceSet resourceSet;
 
 	private ProjectDescription projectDescription;
@@ -116,11 +119,12 @@ public class XProjectManager {
 	/** Initialize this project. */
 	@SuppressWarnings("hiding")
 	public void initialize(ProjectDescription description, IProjectConfig projectConfig,
-			ConcurrentChunkedIndex fullIndex) {
+			ConcurrentChunkedIndex fullIndex, ConcurrentIssueRegistry issueRegistry) {
 
 		this.projectDescription = description;
 		this.projectConfig = projectConfig;
 		this.fullIndex = fullIndex;
+		this.issueRegistry = issueRegistry;
 		this.resourceSet = createNewResourceSet(new XIndexState().getResourceDescriptions());
 	}
 
@@ -129,7 +133,8 @@ public class XProjectManager {
 	 * <p>
 	 * This method assumes that it is only invoked in situations when the client does not have any diagnostics stored,
 	 * e.g. directly after invoking {@link #doClean(CancelIndicator)}, and that therefore no 'publishDiagnostics' events
-	 * with an empty list of diagnostics need to be sent to the client in order to remove obsolete diagnostics.
+	 * with an empty list of diagnostics need to be sent to the client in order to remove obsolete diagnostics. The same
+	 * applies to updates of {@link #issueRegistry}, accordingly.
 	 * <p>
 	 * NOTE: this is not only invoked shortly after server startup but also at various other occasions, for example
 	 * <ul>
@@ -149,6 +154,7 @@ public class XProjectManager {
 		Multimap<URI, LSPIssue> validationIssues = projectStateHolder.getValidationIssues();
 		for (URI location : validationIssues.keys()) {
 			Collection<LSPIssue> issues = validationIssues.get(location);
+			issueRegistry.setIssuesOfPersistedState(projectConfig.getName(), location, issues);
 			issueAcceptor.publishDiagnostics(location, issues);
 		}
 
@@ -207,7 +213,7 @@ public class XProjectManager {
 			}
 		}
 
-		XBuildRequest request = buildRequestFactory.getBuildRequest();
+		XBuildRequest request = buildRequestFactory.getBuildRequest(projectConfig.getName());
 		for (File outputDirectory : getOutputDirectories()) {
 			File[] childFiles = outputDirectory.listFiles();
 			if (childFiles != null) {
@@ -217,6 +223,8 @@ public class XProjectManager {
 				}
 			}
 		}
+
+		issueRegistry.clearIssuesOfPersistedState(projectConfig.getName());
 
 		for (ISourceFolder sourceFolder : projectConfig.getSourceFolders()) {
 			operationCanceledManager.checkCanceled(cancelIndicator);
@@ -266,6 +274,7 @@ public class XProjectManager {
 		result.setCode(code);
 		result.setSeverity(severity);
 		result.setUriToProblem(getBaseDir());
+		issueRegistry.addIssueOfPersistedState(projectConfig.getName(), getBaseDir(), result);
 		issueAcceptor.publishDiagnostics(getBaseDir(), ImmutableList.of(result));
 	}
 
@@ -274,7 +283,8 @@ public class XProjectManager {
 			List<IResourceDescription.Delta> externalDeltas, boolean propagateIssues, boolean doGenerate,
 			CancelIndicator cancelIndicator) {
 
-		XBuildRequest result = buildRequestFactory.getBuildRequest(changedFiles, deletedFiles, externalDeltas);
+		XBuildRequest result = buildRequestFactory.getBuildRequest(projectConfig.getName(), changedFiles, deletedFiles,
+				externalDeltas);
 
 		XIndexState indexState = projectStateHolder.getIndexState();
 		ResourceDescriptionsData resourceDescriptionsCopy = indexState.getResourceDescriptions().copy();

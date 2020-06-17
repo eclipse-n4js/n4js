@@ -95,6 +95,7 @@ import org.eclipse.n4js.ide.server.HeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.ide.server.LspLogger;
 import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentChunkedIndex.IChunkedIndexListener;
+import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
 import org.eclipse.n4js.ide.xtext.server.concurrent.LSPExecutorService;
 import org.eclipse.n4js.ide.xtext.server.contentassist.XContentAssistService;
 import org.eclipse.n4js.ide.xtext.server.findReferences.XWorkspaceResourceAccess;
@@ -198,6 +199,8 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	private LanguageClient client;
 
+	private ConcurrentIssueRegistry issueRegistry = null;
+
 	private Map<String, JsonRpcMethod> supportedMethods = null;
 
 	private final Multimap<String, Endpoint> extensionProviders = LinkedListMultimap.<String, Endpoint> create();
@@ -237,12 +240,15 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		}
 		this.initializeParams = params;
 
+		issueRegistry = new ConcurrentIssueRegistry();
+
+		openFilesManager.setIssueRegistry(issueRegistry);
 		lspBuilder.getIndexRaw().addListener(this);
 		access.addBuildListener(this);
 
 		Stopwatch sw = Stopwatch.createStarted();
 		LOG.info("Start server initialization in workspace directory " + baseDir);
-		lspBuilder.initialize(baseDir);
+		lspBuilder.initialize(baseDir, issueRegistry);
 		LOG.info("Server initialization done after " + sw);
 
 		initializeResult = new InitializeResult();
@@ -423,6 +429,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		return openFilesManager.closeAll()
 				.thenCompose(none -> lspBuilder.shutdown())
 				.thenApply(any -> {
+					issueRegistry.clear();
 					shutdownAndExitHandler.shutdown();
 
 					LOG.info("Shutdown done");
@@ -1247,15 +1254,22 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	/**
 	 * TODO add <code>@since</code> tag
 	 */
-	protected OpenFilesManager getOpenFilesManager() {
+	public OpenFilesManager getOpenFilesManager() {
 		return openFilesManager;
 	}
 
 	/**
 	 * TODO add <code>@since</code> tag
 	 */
-	protected LSPBuilder getBuilder() {
+	public LSPBuilder getBuilder() {
 		return lspBuilder;
+	}
+
+	/**
+	 * TODO add <code>@since</code> tag
+	 */
+	public ConcurrentIssueRegistry getIssueRegistry() {
+		return issueRegistry;
 	}
 
 	/**
