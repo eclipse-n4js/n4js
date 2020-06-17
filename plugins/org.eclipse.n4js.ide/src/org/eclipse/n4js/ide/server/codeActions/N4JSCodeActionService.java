@@ -341,7 +341,7 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 		TextEditCollector collector = new TextEditCollector();
 		TextDocumentIdentifier textDocId = new TextDocumentIdentifier(uriExtensions.toUriString(uri));
 		ConcurrentIssueRegistry issueRegistry = languageServer.getIssueRegistry();
-		ImmutableSortedSet<LSPIssue> issues = issueRegistry.getIssues(uri);
+		ImmutableSortedSet<LSPIssue> issues = issueRegistry.getIssuesOfDirtyOrPersistedState(uri);
 
 		openFilesManager.<Void> runInOpenOrTemporaryFileContext(uri, "applyToFile", (ofc, ci) -> {
 			XtextResource res = ofc.getResource();

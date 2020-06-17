@@ -36,12 +36,8 @@ public class ConcurrentIssueRegistry {
 	protected final Comparator<LSPIssue> issueComparator;
 
 	protected final Map<URI, ImmutableSortedSet<LSPIssue>> dirtyIssues = new HashMap<>();
-	protected final Map<String, Map<URI, ImmutableSortedSet<LSPIssue>>> persistedIssues = new HashMap<>();
-
-	public interface IChunkedIssueRegistryListener {
-		public void onPersistedIssuesCleared(String containerHandle, URI uri);
-
-	}
+	protected final Map<URI, ImmutableSortedSet<LSPIssue>> persistedIssues = new HashMap<>();
+	protected final Map<String, Map<URI, ImmutableSortedSet<LSPIssue>>> container2persistedIssues = new HashMap<>();
 
 	public ConcurrentIssueRegistry() {
 		this(defaultIssueComparator);
@@ -51,22 +47,20 @@ public class ConcurrentIssueRegistry {
 		this.issueComparator = issueComparator;
 	}
 
-	public synchronized ImmutableSortedSet<LSPIssue> getIssues(URI uri) {
-		ImmutableSortedSet<LSPIssue> result = dirtyIssues.get(uri);
+	public synchronized ImmutableSortedSet<LSPIssue> getIssuesOfDirtyOrPersistedState(URI uri) {
+		ImmutableSortedSet<LSPIssue> result = getIssuesOfDirtyState(uri);
 		if (result != null) {
 			return result;
 		}
-		for (Map<URI, ImmutableSortedSet<LSPIssue>> containerIssues : persistedIssues.values()) {
-			result = containerIssues.get(uri);
-			if (result != null) {
-				return result;
-			}
-		}
-		return null;
+		return getIssuesOfPersistedState(uri);
 	}
 
 	public synchronized ImmutableSortedSet<LSPIssue> getIssuesOfDirtyState(URI uri) {
 		return dirtyIssues.get(uri);
+	}
+
+	public synchronized ImmutableSortedSet<LSPIssue> getIssuesOfPersistedState(URI uri) {
+		return persistedIssues.get(uri);
 	}
 
 	public synchronized ImmutableMap<URI, ImmutableSortedSet<LSPIssue>> getIssuesOfPersistedState(
@@ -95,15 +89,26 @@ public class ConcurrentIssueRegistry {
 
 	public synchronized void clearIssuesOfPersistedState() {
 		persistedIssues.clear();
+		container2persistedIssues.clear();
 	}
 
 	public synchronized boolean clearIssuesOfPersistedState(String containerHandle) {
-		return persistedIssues.remove(containerHandle) != null;
+		Map<URI, ImmutableSortedSet<LSPIssue>> containerIssues = getContainerIssues(containerHandle, false);
+		if (containerIssues == null) {
+			return false;
+		}
+		containerIssues.keySet().forEach(persistedIssues::remove);
+		container2persistedIssues.remove(containerHandle);
+		return true;
 	}
 
 	public synchronized boolean clearIssuesOfPersistedState(String containerHandle, URI uri) {
 		Map<URI, ImmutableSortedSet<LSPIssue>> containerIssues = getContainerIssues(containerHandle, false);
-		return containerIssues != null ? containerIssues.remove(uri) != null : false;
+		if (containerIssues == null) {
+			return false;
+		}
+		persistedIssues.remove(uri);
+		return containerIssues.remove(uri) != null;
 	}
 
 	public synchronized void setIssuesOfDirtyState(URI uri, Iterable<? extends LSPIssue> issues) {
@@ -115,25 +120,28 @@ public class ConcurrentIssueRegistry {
 			Iterable<? extends LSPIssue> issues) {
 		ImmutableSortedSet<LSPIssue> issuesSorted = ImmutableSortedSet.copyOf(issueComparator, issues);
 		Map<URI, ImmutableSortedSet<LSPIssue>> containerIssues = getContainerIssues(containerHandle, true);
+		persistedIssues.put(uri, issuesSorted);
 		containerIssues.put(uri, issuesSorted);
 	}
 
 	public synchronized void addIssueOfPersistedState(String containerHandle, URI uri, LSPIssue issue) {
+
 		Map<URI, ImmutableSortedSet<LSPIssue>> containerIssues = getContainerIssues(containerHandle, true);
-		ImmutableSortedSet<LSPIssue> issues = containerIssues.get(uri);
+		ImmutableSortedSet<LSPIssue> issuesOld = containerIssues.get(uri);
 		ImmutableSortedSet<LSPIssue> issuesNew = ImmutableSortedSet.orderedBy(issueComparator)
-				.addAll(issues != null ? issues : Collections.emptyList())
+				.addAll(issuesOld != null ? issuesOld : Collections.emptyList())
 				.add(issue).build();
+		persistedIssues.put(uri, issuesNew);
 		containerIssues.put(uri, issuesNew);
 	}
 
 	protected synchronized Map<URI, ImmutableSortedSet<LSPIssue>> getContainerIssues(String containerHandle,
 			boolean createIfNecessary) {
 
-		Map<URI, ImmutableSortedSet<LSPIssue>> containerIssues = persistedIssues.get(containerHandle);
+		Map<URI, ImmutableSortedSet<LSPIssue>> containerIssues = container2persistedIssues.get(containerHandle);
 		if (containerIssues == null && createIfNecessary) {
 			containerIssues = new HashMap<>();
-			persistedIssues.put(containerHandle, containerIssues);
+			container2persistedIssues.put(containerHandle, containerIssues);
 		}
 		return containerIssues;
 	}
