@@ -55,7 +55,6 @@ import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.resource.persistence.SerializableEObjectDescription;
 import org.eclipse.xtext.resource.persistence.SerializableReferenceDescription;
 import org.eclipse.xtext.resource.persistence.SerializableResourceDescription;
-import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
@@ -83,10 +82,10 @@ public class ProjectStatePersister {
 		/** Hashes to indicate file changes */
 		final public Map<URI, HashedFileContent> fileHashs;
 		/** Hashes to indicate file changes */
-		final public Multimap<URI, Issue> validationIssues;
+		final public Multimap<URI, N4JSIssue> validationIssues;
 
 		PersistedState(XIndexState indexState, Map<URI, HashedFileContent> fileHashs,
-				Multimap<URI, Issue> validationIssues) {
+				Multimap<URI, N4JSIssue> validationIssues) {
 
 			this.indexState = indexState;
 			this.fileHashs = fileHashs;
@@ -151,7 +150,7 @@ public class ProjectStatePersister {
 	 *            map of source files to issues
 	 */
 	public void writeProjectState(IProjectConfig project, XIndexState state,
-			Collection<? extends HashedFileContent> files, Multimap<URI, Issue> validationIssues) {
+			Collection<? extends HashedFileContent> files, Multimap<URI, N4JSIssue> validationIssues) {
 
 		XIndexState indexCopy = new XIndexState(state.getResourceDescriptions().copy(), state.getFileMappings().copy());
 
@@ -162,7 +161,7 @@ public class ProjectStatePersister {
 	}
 
 	private void asyncWriteProjectState(IProjectConfig project, XIndexState state,
-			Collection<? extends HashedFileContent> files, Multimap<URI, Issue> validationIssues) {
+			Collection<? extends HashedFileContent> files, Multimap<URI, N4JSIssue> validationIssues) {
 
 		writer.submit(() -> {
 			File file = getDataFile(project);
@@ -190,7 +189,7 @@ public class ProjectStatePersister {
 	 *             if things go bananas.
 	 */
 	public void writeProjectState(OutputStream stream, String languageVersion, XIndexState state,
-			Collection<? extends HashedFileContent> files, Multimap<URI, Issue> validationIssues)
+			Collection<? extends HashedFileContent> files, Multimap<URI, N4JSIssue> validationIssues)
 			throws IOException {
 
 		stream.write(CURRENT_VERSION);
@@ -308,26 +307,18 @@ public class ProjectStatePersister {
 		}
 	}
 
-	private void writeValidationIssues(Multimap<URI, Issue> validationIssues, DataOutput output) throws IOException {
+	private void writeValidationIssues(Multimap<URI, N4JSIssue> validationIssues, DataOutput output)
+			throws IOException {
 		int numberSources = validationIssues.size();
 		output.writeInt(numberSources);
 		for (URI source : validationIssues.keys()) {
-			Collection<Issue> issues = validationIssues.get(source);
+			Collection<N4JSIssue> issues = validationIssues.get(source);
 
 			output.writeUTF(source.toString());
 
-			Collection<N4JSIssue> n4Issues = new ArrayList<>();
-			for (Issue issue : issues) {
-				if (issue instanceof N4JSIssue) {
-					n4Issues.add((N4JSIssue) issue);
-				} else {
-					n4Issues.add(new N4JSIssue(issue));
-				}
-			}
-
-			int numberIssues = n4Issues.size();
+			int numberIssues = issues.size();
 			output.writeInt(numberIssues);
-			for (N4JSIssue issue : n4Issues) {
+			for (N4JSIssue issue : issues) {
 				issue.writeExternal(output);
 			}
 		}
@@ -389,7 +380,7 @@ public class ProjectStatePersister {
 
 			Map<URI, HashedFileContent> fingerprints = readFingerprints(input);
 
-			Multimap<URI, Issue> validationIssues = readValidationIssues(input);
+			Multimap<URI, N4JSIssue> validationIssues = readValidationIssues(input);
 
 			XIndexState indexState = new XIndexState(resourceDescriptionsData, fileMappings);
 			return new PersistedState(indexState, fingerprints, validationIssues);
@@ -515,9 +506,9 @@ public class ProjectStatePersister {
 		return fingerprints;
 	}
 
-	private Multimap<URI, Issue> readValidationIssues(DataInput input) throws IOException {
+	private Multimap<URI, N4JSIssue> readValidationIssues(DataInput input) throws IOException {
 		int numberOfSources = input.readInt();
-		Multimap<URI, Issue> validationIssues = LinkedHashMultimap.create();
+		Multimap<URI, N4JSIssue> validationIssues = LinkedHashMultimap.create();
 		while (numberOfSources > 0) {
 			numberOfSources--;
 			URI source = URI.createURI(input.readUTF());

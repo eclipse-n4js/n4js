@@ -20,10 +20,10 @@ import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.services.LanguageClient;
+import org.eclipse.n4js.ide.validation.N4JSIssue;
 import org.eclipse.n4js.ide.xtext.server.openfiles.OpenFilesManager;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.ide.server.UriExtensions;
-import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
@@ -65,7 +65,7 @@ public class IssueAcceptor {
 	}
 
 	/** Converts given issues to {@link Diagnostic}s and sends them to LSP client */
-	public void publishDiagnostics(URI uri, Iterable<? extends Issue> issues) {
+	public void publishDiagnostics(URI uri, Iterable<? extends N4JSIssue> issues) {
 		if (client != null) {
 			PublishDiagnosticsParams publishDiagnosticsParams = new PublishDiagnosticsParams();
 			publishDiagnosticsParams.setUri(uriExtensions.toUriString(uri));
@@ -79,7 +79,7 @@ public class IssueAcceptor {
 	 * Convert the given issues to diagnostics. Does not return issues in files that are neither in the workspace nor
 	 * currently opened in the editor. Does not return any issue with severity {@link Severity#IGNORE ignore}.
 	 */
-	protected List<Diagnostic> toDiagnostics(URI uri, Iterable<? extends Issue> issues) {
+	protected List<Diagnostic> toDiagnostics(URI uri, Iterable<? extends N4JSIssue> issues) {
 		if (!openFilesManager.isOpen(uri)) {
 			// Closed documents need to exist in the current workspace
 			IProjectConfig projectConfig = workspaceManager.getWorkspaceConfig().findProjectContaining(uri);
@@ -96,9 +96,9 @@ public class IssueAcceptor {
 		}
 
 		List<Diagnostic> sortedDiags = new ArrayList<>();
-		for (Issue issue : issues) {
+		for (N4JSIssue issue : issues) {
 			if (issue.getSeverity() != Severity.IGNORE) {
-				sortedDiags.add(diagnosticIssueConverter.toDiagnostic(issue, workspaceManager));
+				sortedDiags.add(diagnosticIssueConverter.toDiagnostic(issue));
 			}
 		}
 

@@ -32,7 +32,6 @@ import org.eclipse.xtext.builder.builderState.impl.ResourceDescriptionImpl;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.persistence.SerializableResourceDescription;
-import org.eclipse.xtext.validation.Issue;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -162,7 +161,7 @@ public class ProjectStatePersisterTest {
 		setValues(src2Issue2, "src2Issue2", 2, 2, Severity.INFO);
 
 		// first set values of issues; then add issues to hash map
-		Multimap<URI, Issue> issueMap = HashMultimap.create();
+		Multimap<URI, N4JSIssue> issueMap = HashMultimap.create();
 		issueMap.put(source1, src1Issue1);
 		issueMap.put(source2, src2Issue1);
 		issueMap.put(source2, src2Issue2);

@@ -49,6 +49,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Optional;
 
 // @formatter:off
 /**
@@ -656,7 +657,7 @@ public class AccessControlTest {
 		for (Map.Entry<String, Diagnostic> uriDiagnostic : compileResult.getIssues().entries()) {
 			URI uri = URI.createURI(uriDiagnostic.getKey());
 			Diagnostic diagnostic = uriDiagnostic.getValue();
-			issues.add(converter.toIssue(uri, diagnostic, null));
+			issues.add(converter.toIssue(uri, diagnostic, Optional.absent()));
 		}
 
 		return issues;

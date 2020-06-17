@@ -60,7 +60,7 @@ import com.google.inject.Singleton;
  */
 @SuppressWarnings("restriction")
 @Singleton
-public class XWorkspaceManager implements DocumentResourceProvider {
+public class XWorkspaceManager {
 	private static final Logger LOG = Logger.getLogger(XWorkspaceManager.class);
 
 	@Inject
@@ -342,7 +342,7 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 		return false;
 	}
 
-	@Override
+	// FIXME GH-1774 remove this method!
 	public XtextResource getResource(URI uri) {
 		URI resourceURI = uri.trimFragment();
 		XProjectManager projectMnr = getProjectManager(resourceURI);
@@ -353,7 +353,7 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 		return null;
 	}
 
-	@Override
+	// FIXME GH-1774 remove this method!
 	public XDocument getDocument(URI uri) {
 		XtextResource resource = getResource(uri);
 		if (resource == null) {
@@ -362,7 +362,7 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 		return getDocument(resource);
 	}
 
-	@Override
+	// FIXME GH-1774 remove this method!
 	public XDocument getDocument(XtextResource resource) {
 		if (resource == null) {
 			return null;

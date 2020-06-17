@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
+import org.eclipse.n4js.ide.validation.N4JSIssue;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
 import org.eclipse.n4js.ide.xtext.server.build.XIncrementalBuilder;
@@ -42,7 +43,6 @@ import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.util.UriUtil;
-import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.workspace.ProjectConfigAdapter;
@@ -147,9 +147,9 @@ public class XProjectManager {
 		// send issues to client
 		// (below code won't send empty 'publishDiagnostics' events for resources without validation issues, see API doc
 		// of this method for details)
-		Multimap<URI, Issue> validationIssues = projectStateHolder.getValidationIssues();
+		Multimap<URI, N4JSIssue> validationIssues = projectStateHolder.getValidationIssues();
 		for (URI location : validationIssues.keys()) {
-			Collection<Issue> issues = validationIssues.get(location);
+			Collection<N4JSIssue> issues = validationIssues.get(location);
 			issueAcceptor.publishDiagnostics(location, issues);
 		}
 
@@ -262,7 +262,7 @@ public class XProjectManager {
 
 	/** Report an issue. */
 	public void reportProjectIssue(String message, String code, Severity severity) {
-		Issue.IssueImpl result = new Issue.IssueImpl();
+		N4JSIssue result = new N4JSIssue();
 		result.setMessage(message);
 		result.setCode(code);
 		result.setSeverity(severity);

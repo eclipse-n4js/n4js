@@ -30,6 +30,7 @@ import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
+import org.eclipse.n4js.ide.validation.N4JSIssue;
 import org.eclipse.n4js.ide.xtext.server.DiagnosticIssueConverter;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 import org.eclipse.n4js.ide.xtext.server.XProjectManager;
@@ -39,7 +40,6 @@ import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.ide.server.codeActions.ICodeActionService2;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.service.OperationCanceledManager;
-import org.eclipse.xtext.validation.Issue;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.HashMultimap;
@@ -296,8 +296,8 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 		String uriString = options.getCodeActionParams().getTextDocument().getUri();
 		URI uri = uriExtensions.toUri(uriString);
 		// FIXME GH-1774 avoid using XWorkspaceManager/XProjectManager to obtain issues?
-		Collection<Issue> issues = projectManager.getProjectStateHolder().getValidationIssues().get(uri);
-		for (Issue issue : issues) {
+		Collection<N4JSIssue> issues = projectManager.getProjectStateHolder().getValidationIssues().get(uri);
+		for (N4JSIssue issue : issues) {
 			if (code.equals(issue.getCode())) {
 				Options newOptions = copyOptions(options, options.getCodeActionParams().getTextDocument(), issue);
 				quickfix.compute(code, newOptions, collector);
@@ -318,12 +318,12 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 		}
 		TextEditCollector collector = new TextEditCollector();
 		XProjectManager projectManager = getCurrentProject(options);
-		Multimap<URI, Issue> validationIssues = projectManager.getProjectStateHolder().getValidationIssues();
+		Multimap<URI, N4JSIssue> validationIssues = projectManager.getProjectStateHolder().getValidationIssues();
 
 		for (URI location : validationIssues.keys()) {
-			Collection<Issue> issues = validationIssues.get(location);
+			Collection<N4JSIssue> issues = validationIssues.get(location);
 			TextDocumentIdentifier docIdentifier = new TextDocumentIdentifier(uriExtensions.toUriString(location));
-			for (Issue issue : issues) {
+			for (N4JSIssue issue : issues) {
 				if (code.equals(issue.getCode())) {
 					Options newOptions = copyOptions(options, docIdentifier, issue);
 					quickfix.compute(code, newOptions, collector);
@@ -334,8 +334,8 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 		return result;
 	}
 
-	private Options copyOptions(Options options, TextDocumentIdentifier docIdentifier, Issue issue) {
-		Diagnostic diagnostic = diagnosticIssueConverter.toDiagnostic(issue, workspaceManager);
+	private Options copyOptions(Options options, TextDocumentIdentifier docIdentifier, N4JSIssue issue) {
+		Diagnostic diagnostic = diagnosticIssueConverter.toDiagnostic(issue);
 		CodeActionContext context = new CodeActionContext(Collections.singletonList(diagnostic));
 		CodeActionParams codeActionParams = new CodeActionParams(docIdentifier, diagnostic.getRange(), context);
 		Options newOptions = languageServer.toOptions(codeActionParams, options.getCancelIndicator());
