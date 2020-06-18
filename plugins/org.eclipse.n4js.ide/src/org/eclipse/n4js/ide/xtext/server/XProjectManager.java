@@ -21,6 +21,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest;
+import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterValidateListener;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
 import org.eclipse.n4js.ide.xtext.server.build.XIncrementalBuilder;
 import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
@@ -44,10 +45,8 @@ import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.util.UriUtil;
 import org.eclipse.xtext.workspace.IProjectConfig;
-import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.workspace.ProjectConfigAdapter;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -80,10 +79,6 @@ public class XProjectManager {
 	@Inject
 	protected DefaultBuildRequestFactory buildRequestFactory;
 
-	/** Publishes issues to lsp client */
-	@Inject
-	protected IssueAcceptor issueAcceptor;
-
 	/** Holds index, hashes and issue information */
 	@Inject
 	protected ProjectStateHolder projectStateHolder;
@@ -115,6 +110,13 @@ public class XProjectManager {
 	private ProjectDescription projectDescription;
 
 	private IProjectConfig projectConfig;
+
+	private final AfterValidateListener afterValidateListener = new AfterValidateListener() {
+		@Override
+		public void afterValidate(String projectName, URI source, Collection<? extends LSPIssue> issues) {
+			issueRegistry.setIssuesOfPersistedState(projectConfig.getName(), source, issues);
+		}
+	};
 
 	/** Initialize this project. */
 	@SuppressWarnings("hiding")
@@ -155,7 +157,6 @@ public class XProjectManager {
 		for (URI location : validationIssues.keys()) {
 			Collection<LSPIssue> issues = validationIssues.get(location);
 			issueRegistry.setIssuesOfPersistedState(projectConfig.getName(), location, issues);
-			issueAcceptor.publishDiagnostics(location, issues);
 		}
 
 		// clear the resource set to release memory
@@ -225,15 +226,6 @@ public class XProjectManager {
 		}
 
 		issueRegistry.clearIssuesOfPersistedState(projectConfig.getName());
-
-		for (ISourceFolder sourceFolder : projectConfig.getSourceFolders()) {
-			operationCanceledManager.checkCanceled(cancelIndicator);
-			List<URI> allURIs = sourceFolder.getAllResources(fileSystemScanner);
-			for (URI uri : allURIs) {
-				operationCanceledManager.checkCanceled(cancelIndicator);
-				issueAcceptor.publishDiagnostics(uri, Collections.emptyList());
-			}
-		}
 	}
 
 	/** @return list of output directories of this project */
@@ -275,7 +267,6 @@ public class XProjectManager {
 		result.setSeverity(severity);
 		result.setUriToProblem(getBaseDir());
 		issueRegistry.addIssueOfPersistedState(projectConfig.getName(), getBaseDir(), result);
-		issueAcceptor.publishDiagnostics(getBaseDir(), ImmutableList.of(result));
 	}
 
 	/** Creates a new build request for this project. */
@@ -295,7 +286,9 @@ public class XProjectManager {
 		result.setBaseDir(getBaseDir());
 		result.setGeneratorEnabled(doGenerate);
 
-		if (!propagateIssues) {
+		if (propagateIssues) {
+			result.setAfterValidateListener(afterValidateListener);
+		} else {
 			// during initial build, we do not want to notify about any issues because it is
 			// done at the end of the project for the deserialized issues and the new issues
 			// altogether.

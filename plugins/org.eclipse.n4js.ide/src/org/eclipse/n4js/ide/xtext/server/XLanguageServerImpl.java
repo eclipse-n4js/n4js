@@ -96,6 +96,8 @@ import org.eclipse.n4js.ide.server.LspLogger;
 import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentChunkedIndex.IChunkedIndexListener;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
+import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry.IIssueRegistryListener;
+import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry.IssueRegistryChangeEvent;
 import org.eclipse.n4js.ide.xtext.server.concurrent.LSPExecutorService;
 import org.eclipse.n4js.ide.xtext.server.contentassist.XContentAssistService;
 import org.eclipse.n4js.ide.xtext.server.findReferences.XWorkspaceResourceAccess;
@@ -155,7 +157,7 @@ import com.google.inject.Singleton;
 @SuppressWarnings({ "restriction", "deprecation" })
 @Singleton
 public class XLanguageServerImpl implements LanguageServer, WorkspaceService, TextDocumentService, LanguageClientAware,
-		Endpoint, JsonRpcMethodProvider, IBuildListener, IChunkedIndexListener {
+		Endpoint, JsonRpcMethodProvider, IBuildListener, IChunkedIndexListener, IIssueRegistryListener {
 
 	private static final Logger LOG = Logger.getLogger(XLanguageServerImpl.class);
 
@@ -205,6 +207,11 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	private final Multimap<String, Endpoint> extensionProviders = LinkedListMultimap.<String, Endpoint> create();
 
 	private final ConcurrentIssueRegistry issueRegistry = new ConcurrentIssueRegistry();
+
+	/***/
+	public XLanguageServerImpl() {
+		issueRegistry.addListener(this);
+	}
 
 	// TODO we should probably use the DisposableRegistry here
 	/**
@@ -1283,6 +1290,17 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	public void joinServerRequests() {
 		lspExecutorService.join();
 		lspBuilder.joinPersister();
+	}
+
+	@Override
+	public void onIssuesChanged(ImmutableList<IssueRegistryChangeEvent> events) {
+		for (IssueRegistryChangeEvent event : events) {
+			if (event.persistedState && openFilesManager.isOpen(event.uri)) {
+				continue; // for open files we ignore issue changes sent by builder
+			}
+			Iterable<LSPIssue> issues = event.issuesNew != null ? event.issuesNew : Collections.emptyList();
+			issueAcceptor.publishDiagnostics(event.uri, issues);
+		}
 	}
 
 }

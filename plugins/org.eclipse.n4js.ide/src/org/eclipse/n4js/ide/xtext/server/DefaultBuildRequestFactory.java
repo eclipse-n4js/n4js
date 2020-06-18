@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.ide.xtext.server;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -19,7 +18,6 @@ import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterDeleteListener;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterGenerateListener;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterValidateListener;
-import org.eclipse.n4js.ide.xtext.server.openfiles.OpenFilesManager;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 
 import com.google.inject.Inject;
@@ -31,28 +29,12 @@ import com.google.inject.Singleton;
 @Singleton
 public class DefaultBuildRequestFactory implements IBuildRequestFactory {
 
-	@Inject
-	private IssueAcceptor issueAcceptor;
-
-	@Inject(optional = true) // DefaultAfterValidateListener will be overwritten if defined in a module
-	private AfterValidateListener afterValidateListener = new DefaultAfterValidateListener();
+	@Inject(optional = true)
+	private AfterValidateListener afterValidateListener;
 	@Inject(optional = true)
 	private AfterGenerateListener afterGenerateListener;
 	@Inject(optional = true)
 	private AfterDeleteListener afterDeleteListener;
-
-	@Inject
-	private OpenFilesManager openFilesManager;
-
-	class DefaultAfterValidateListener implements AfterValidateListener {
-		@Override
-		public void afterValidate(String projectName, URI source, Collection<? extends LSPIssue> issues) {
-			if (openFilesManager.isOpen(source)) {
-				return;
-			}
-			issueAcceptor.publishDiagnostics(source, issues);
-		}
-	}
 
 	/** Create the build request. */
 	public XBuildRequest getBuildRequest(String projectName) {

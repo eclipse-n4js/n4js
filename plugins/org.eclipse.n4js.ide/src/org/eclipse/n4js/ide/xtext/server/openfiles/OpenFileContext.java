@@ -25,7 +25,6 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.ResourceLocator;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
-import org.eclipse.n4js.ide.xtext.server.IssueAcceptor;
 import org.eclipse.n4js.ide.xtext.server.LSPIssue;
 import org.eclipse.n4js.ide.xtext.server.LSPIssueConverter;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
@@ -54,9 +53,6 @@ import com.google.inject.Provider;
  */
 @SuppressWarnings("javadoc")
 public class OpenFileContext {
-
-	@Inject
-	private IssueAcceptor issueAcceptor;
 
 	@Inject
 	private LSPIssueConverter lspIssueConverter;
@@ -247,7 +243,6 @@ public class OpenFileContext {
 		if (issueRegistry != null) {
 			issueRegistry.setIssuesOfDirtyState(mainURI, lspIssues);
 		}
-		issueAcceptor.publishDiagnostics(mainURI, lspIssues);
 		// update dirty state
 		updateSharedDirtyState();
 	}
