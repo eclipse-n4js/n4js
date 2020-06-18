@@ -26,6 +26,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
+import org.eclipse.n4js.ide.xtext.server.concurrent.FutureUtil;
 import org.eclipse.n4js.ide.xtext.server.concurrent.LSPExecutorService;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.impl.ChunkedResourceDescriptions;
@@ -49,6 +50,8 @@ public class OpenFilesManager {
 	private LSPExecutorService lspExecutorService;
 
 	protected final Map<URI, OpenFileContext> openFiles = new HashMap<>();
+
+	protected final Map<Thread, OpenFileContext> runningThreads = new HashMap<>();
 
 	protected final ChunkedResourceDescriptions persistedState = new ChunkedResourceDescriptions();
 
@@ -76,7 +79,7 @@ public class OpenFilesManager {
 		OpenFileContext newOFC = createOpenFileContext(uri, false);
 		openFiles.put(uri, newOFC);
 
-		runInOpenFileContext(uri, "openFile", (ofc, ci) -> {
+		runInOpenFileContextVoid(uri, "openFile", (ofc, ci) -> {
 			ofc.initOpenFile(version, content, ci);
 		});
 	}
@@ -84,7 +87,7 @@ public class OpenFilesManager {
 	public synchronized void changeFile(URI uri, int version,
 			Iterable<? extends TextDocumentContentChangeEvent> changes) {
 
-		runInOpenFileContext(uri, "changeFile", (ofc, ci) -> {
+		runInOpenFileContextVoid(uri, "changeFile", (ofc, ci) -> {
 			ofc.refreshOpenFile(version, changes, ci);
 		});
 	}
@@ -102,14 +105,23 @@ public class OpenFilesManager {
 		// to #discardOpenFileInfo() on the queue (note: this does apply to tasks being submitted after this method
 		// returns and before #discardOpenFileInfo() is invoked).
 		// TODO reconsider sequence when closing files
-		return runInOpenFileContext(uri, "closeFile", (ofc, ci) -> {
+		return runInOpenFileContextVoid(uri, "closeFile", (ofc, ci) -> {
 			discardOpenFileInfo(uri);
 		});
 	}
 
 	/** Tries to run the given task in the context of an open file, falling back to a temporary file if necessary. */
+	public /* NOT synchronized! */ <T> T runInOpenOrTemporaryFileContextSync(URI uri, String description,
+			BiFunction<OpenFileContext, CancelIndicator, T> task) {
+
+		CompletableFuture<T> future = runInOpenOrTemporaryFileContext(uri, description, task);
+		return FutureUtil.getCancellableResult(future);
+	}
+
+	/** Tries to run the given task in the context of an open file, falling back to a temporary file if necessary. */
 	public synchronized <T> CompletableFuture<T> runInOpenOrTemporaryFileContext(URI uri, String description,
 			BiFunction<OpenFileContext, CancelIndicator, T> task) {
+
 		if (isOpen(uri)) {
 			return runInOpenFileContext(uri, description, task);
 		} else {
@@ -117,7 +129,7 @@ public class OpenFilesManager {
 		}
 	}
 
-	public synchronized CompletableFuture<Void> runInOpenFileContext(URI uri, String description,
+	public synchronized CompletableFuture<Void> runInOpenFileContextVoid(URI uri, String description,
 			BiConsumer<OpenFileContext, CancelIndicator> task) {
 
 		return runInOpenFileContext(uri, description, (ofc, ci) -> {
@@ -126,19 +138,34 @@ public class OpenFilesManager {
 		});
 	}
 
-	public synchronized <T> CompletableFuture<T> runInOpenFileContext(URI uri, String description,
+	public /* NOT synchronized! */ <T> T runInOpenFileContextSync(URI uri, String description,
 			BiFunction<OpenFileContext, CancelIndicator, T> task) {
 
-		OpenFileContext ofc = openFiles.get(uri);
-		if (ofc == null) {
-			throw new IllegalArgumentException("no open file found for given URI: " + uri);
+		CompletableFuture<T> future = runInOpenFileContext(uri, description, task);
+		return FutureUtil.getCancellableResult(future);
+	}
+
+	public <T> CompletableFuture<T> runInOpenFileContext(URI uri, String description,
+			BiFunction<OpenFileContext, CancelIndicator, T> task) {
+
+		OpenFileContext currOFC;
+
+		synchronized (this) {
+			OpenFileContext ofc = openFiles.get(uri);
+			if (ofc == null) {
+				throw new IllegalArgumentException("no open file found for given URI: " + uri);
+			}
+
+			currOFC = currentContext();
+			if (ofc != currOFC) {
+				String descriptionWithContext = description + " [" + uri.lastSegment() + "]";
+				return doSubmitTask(uri, ofc, descriptionWithContext, task);
+			}
 		}
 
-		Object queueId = getQueueIdForOpenFileContext(uri);
-		String descriptionWithContext = description + " [" + uri.lastSegment() + "]";
-		return lspExecutorService.submit(queueId, descriptionWithContext, ci -> {
-			return task.apply(ofc, ci);
-		});
+		// already running in the correct context, so perform the task synchronously:
+		T result = task.apply(currOFC, CancelIndicator.NullImpl); // FIXME cancel indicator
+		return CompletableFuture.completedFuture(result);
 	}
 
 	public synchronized <T> CompletableFuture<T> runInTemporaryFileContext(URI uri, String description,
@@ -146,11 +173,24 @@ public class OpenFilesManager {
 
 		OpenFileContext tempOFC = createOpenFileContext(uri, true);
 
-		Object queueId = Pair.of(getQueueIdForOpenFileContext(uri), "temporary");
 		String descriptionWithContext = description + " (temporary) [" + uri.lastSegment() + "]";
-		return lspExecutorService.submit(queueId, descriptionWithContext, ci -> {
-			tempOFC.initOpenFile(ci);
-			return task.apply(tempOFC, ci);
+		return doSubmitTask(uri, tempOFC, descriptionWithContext, (_tempOFC, ci) -> {
+			_tempOFC.initOpenFile(ci);
+			return task.apply(_tempOFC, ci);
+		});
+	}
+
+	protected <T> CompletableFuture<T> doSubmitTask(URI uri, OpenFileContext ofc, String description,
+			BiFunction<OpenFileContext, CancelIndicator, T> task) {
+
+		Object queueId = getQueueIdForOpenFileContext(uri);
+		return lspExecutorService.submit(queueId, description, ci -> {
+			try {
+				registerRunningThread(ofc);
+				return task.apply(ofc, ci);
+			} finally {
+				unregisterRunningThread();
+			}
 		});
 	}
 
@@ -193,6 +233,30 @@ public class OpenFilesManager {
 				.findAny().orElse(null);
 	}
 
+	protected void registerRunningThread(OpenFileContext ofc) {
+		synchronized (runningThreads) {
+			runningThreads.put(Thread.currentThread(), ofc);
+		}
+	}
+
+	protected void unregisterRunningThread() {
+		synchronized (runningThreads) {
+			runningThreads.remove(Thread.currentThread());
+		}
+	}
+
+	/**
+	 * If the thread invoking this method {@link #runInOpenFileContext(URI, String, BiFunction) runs in an open file
+	 * context}, that context is returned. Otherwise returns <code>null</code>.
+	 * <p>
+	 * Corresponds to {@link Thread#currentThread()}.
+	 */
+	public OpenFileContext currentContext() {
+		synchronized (runningThreads) {
+			return runningThreads.get(Thread.currentThread());
+		}
+	}
+
 	public synchronized void updatePersistedState(Map<String, ResourceDescriptionsData> changedContainers,
 			Set<String> removedContainerHandles) {
 		// compute modification info
@@ -227,7 +291,7 @@ public class OpenFilesManager {
 			return;
 		}
 		for (URI currURI : openFiles.keySet()) {
-			runInOpenFileContext(currURI, "updatePersistedState in open file", (ofc, ci) -> {
+			runInOpenFileContextVoid(currURI, "updatePersistedState in open file", (ofc, ci) -> {
 				ofc.onPersistedStateChanged(changed, removed, ci);
 			});
 		}
@@ -242,7 +306,7 @@ public class OpenFilesManager {
 			if (currURI.equals(newDescURI)) {
 				continue;
 			}
-			runInOpenFileContext(currURI, "updateSharedDirtyState in open file", (ofc, ci) -> {
+			runInOpenFileContextVoid(currURI, "updateSharedDirtyState in open file", (ofc, ci) -> {
 				ofc.onDirtyStateChanged(newDesc, ci);
 			});
 		}

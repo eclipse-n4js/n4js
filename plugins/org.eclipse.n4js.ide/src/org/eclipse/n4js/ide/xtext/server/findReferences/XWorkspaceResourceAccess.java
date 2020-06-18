@@ -12,8 +12,8 @@ package org.eclipse.n4js.ide.xtext.server.findReferences;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.n4js.ide.xtext.server.XProjectManager;
-import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
+import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
+import org.eclipse.n4js.ide.xtext.server.openfiles.OpenFilesManager;
 import org.eclipse.xtext.findReferences.IReferenceFinder;
 import org.eclipse.xtext.util.Exceptions;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
@@ -25,27 +25,37 @@ import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 @SuppressWarnings("restriction")
 public class XWorkspaceResourceAccess implements IReferenceFinder.IResourceAccess {
 
-	private final XWorkspaceManager workspaceManager;
+	private final XLanguageServerImpl languageServer;
 
 	/**
-	 * @param workspaceManager
-	 *            the workspace manager
+	 * @param languageServer
+	 *            the language server
 	 */
-	public XWorkspaceResourceAccess(XWorkspaceManager workspaceManager) {
-		this.workspaceManager = workspaceManager;
+	public XWorkspaceResourceAccess(XLanguageServerImpl languageServer) {
+		this.languageServer = languageServer;
 	}
 
 	@Override
 	public <R> R readOnly(URI targetURI, IUnitOfWork<R, ResourceSet> work) {
-		XProjectManager projectManager = workspaceManager.getProjectManager(targetURI);
-		if (projectManager == null) {
+		OpenFilesManager openFilesManager = languageServer.getOpenFilesManager();
+		if (openFilesManager == null) {
 			return null;
 		}
+		// FIXME GH-1774 consider re-using the resource set of the current open file context for other files:
+		// OpenFileContext currOFC = openFilesManager.currentContext();
+		// if (currOFC != null) {
+		// return doWork(currOFC.getResourceSet(), work);
+		// }
+		return openFilesManager.runInOpenOrTemporaryFileContextSync(targetURI, "XWorkspaceResourceAccess",
+				(ofc, ci) -> doWork(ofc.getResourceSet(), work));
+	}
+
+	/** Actually do the work in the context of the given resource set. */
+	protected <R> R doWork(ResourceSet resourceSet, IUnitOfWork<R, ResourceSet> work) {
 		try {
-			return work.exec(projectManager.getResourceSet());
+			return work.exec(resourceSet);
 		} catch (Exception e) {
 			return Exceptions.throwUncheckedException(e);
 		}
 	}
-
 }

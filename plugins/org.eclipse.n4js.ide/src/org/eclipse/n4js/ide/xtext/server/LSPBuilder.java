@@ -26,7 +26,6 @@ import org.eclipse.n4js.ide.xtext.server.XBuildManager.XBuildable;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentChunkedIndex;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
 import org.eclipse.n4js.ide.xtext.server.concurrent.LSPExecutorService;
-import org.eclipse.n4js.ide.xtext.server.findReferences.XWorkspaceResourceAccess;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
@@ -58,24 +57,14 @@ public class LSPBuilder {
 	@Inject
 	private ProjectStatePersister persister;
 
-	private ConcurrentIssueRegistry issueRegistry;
-	private XWorkspaceManager workspaceManager;
-	private XWorkspaceResourceAccess resourceAccess;
-
 	@Inject
-	public void setWorkspaceManager(XWorkspaceManager manager) {
-		workspaceManager = manager;
-		resourceAccess = new XWorkspaceResourceAccess(workspaceManager);
-	}
+	private XWorkspaceManager workspaceManager;
+
+	private ConcurrentIssueRegistry issueRegistry;
 
 	// FIXME GH-1774 remove this method and refactor all clients to not use resources of the builder!
 	public XWorkspaceManager getWorkspaceManager() {
 		return workspaceManager;
-	}
-
-	// FIXME GH-1774 remove this method and refactor all clients to not use resources of the builder!
-	public XWorkspaceResourceAccess getResourceAccess() {
-		return resourceAccess;
 	}
 
 	/** Returns a snapshot of the current index. */

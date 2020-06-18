@@ -102,6 +102,7 @@ import org.eclipse.n4js.ide.xtext.server.findReferences.XWorkspaceResourceAccess
 import org.eclipse.n4js.ide.xtext.server.openfiles.OpenFileContext;
 import org.eclipse.n4js.ide.xtext.server.openfiles.OpenFilesManager;
 import org.eclipse.n4js.ide.xtext.server.rename.XIRenameService;
+import org.eclipse.xtext.findReferences.IReferenceFinder.IResourceAccess;
 import org.eclipse.xtext.ide.server.Document;
 import org.eclipse.xtext.ide.server.ICapabilitiesContributor;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
@@ -562,7 +563,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		}
 		XtextResource res = ofc.getResource();
 		XDocument doc = ofc.getDocument();
-		XWorkspaceResourceAccess resourceAccess = lspBuilder.getResourceAccess();
 		return Either.forLeft(documentSymbolService.getDefinitions(doc, res, params, resourceAccess, cancelIndicator));
 	}
 
@@ -586,7 +586,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		}
 		XtextResource res = ofc.getResource();
 		XDocument doc = ofc.getDocument();
-		XWorkspaceResourceAccess resourceAccess = lspBuilder.getResourceAccess();
 		return documentSymbolService.getReferences(doc, res, params, resourceAccess, lspBuilder.getIndex(),
 				cancelIndicator);
 	}
@@ -661,9 +660,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	 * Compute the symbol information. Executed in a read request.
 	 */
 	protected List<? extends SymbolInformation> symbol(WorkspaceSymbolParams params, CancelIndicator cancelIndicator) {
-		XWorkspaceResourceAccess resourceAccess = lspBuilder.getResourceAccess();
-		return workspaceSymbolService.getSymbols(params.getQuery(),
-				resourceAccess, lspBuilder.getIndex(),
+		return workspaceSymbolService.getSymbols(params.getQuery(), resourceAccess, lspBuilder.getIndex(),
 				cancelIndicator);
 	}
 
@@ -1111,6 +1108,8 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 			return supportedMethods;
 		}
 	}
+
+	private final IResourceAccess resourceAccess = new XWorkspaceResourceAccess(this);
 
 	private final ILanguageServerAccess access = new ILanguageServerAccess() {
 		@Override
