@@ -56,9 +56,12 @@ public class ConcurrentChunkedIndex {
 	}
 
 	/** Removes all containers of this index. */
-	public synchronized void clear() {
-		ImmutableSet<String> removedContainers = ImmutableSet.copyOf(containerHandle2Data.keySet());
-		containerHandle2Data.clear();
+	public void clear() {
+		ImmutableSet<String> removedContainers;
+		synchronized (this) {
+			removedContainers = ImmutableSet.copyOf(containerHandle2Data.keySet());
+			containerHandle2Data.clear();
+		}
 		notifyListeners(ImmutableMap.of(), removedContainers);
 	}
 
@@ -69,19 +72,24 @@ public class ConcurrentChunkedIndex {
 	}
 
 	/** Sets the data for this container. */
-	public synchronized ResourceDescriptionsData setContainer(String containerHandle,
-			ResourceDescriptionsData newData) {
+	public ResourceDescriptionsData setContainer(String containerHandle, ResourceDescriptionsData newData) {
 		Objects.requireNonNull(containerHandle);
 		Objects.requireNonNull(newData);
-		ResourceDescriptionsData oldData = containerHandle2Data.put(containerHandle, newData);
+		ResourceDescriptionsData oldData;
+		synchronized (this) {
+			oldData = containerHandle2Data.put(containerHandle, newData);
+		}
 		notifyListeners(ImmutableMap.of(containerHandle, newData), ImmutableSet.of());
 		return oldData;
 	}
 
 	/** Removes the container with the given handle from the index. */
-	public synchronized ResourceDescriptionsData removeContainer(String containerHandle) {
+	public ResourceDescriptionsData removeContainer(String containerHandle) {
 		Objects.requireNonNull(containerHandle);
-		ResourceDescriptionsData oldData = containerHandle2Data.remove(containerHandle);
+		ResourceDescriptionsData oldData;
+		synchronized (this) {
+			oldData = containerHandle2Data.remove(containerHandle);
+		}
 		if (oldData != null) {
 			notifyListeners(ImmutableMap.of(), ImmutableSet.of(containerHandle));
 		}
@@ -113,8 +121,8 @@ public class ConcurrentChunkedIndex {
 	}
 
 	/** Notify all {@link #listeners listeners}. */
-	protected synchronized void notifyListeners(ImmutableMap<String, ResourceDescriptionsData> changedContainers,
-			ImmutableSet<String> removedContainers) {
+	protected /* NOT synchronized */ void notifyListeners(
+			ImmutableMap<String, ResourceDescriptionsData> changedContainers, ImmutableSet<String> removedContainers) {
 		for (IChunkedIndexListener l : listeners) {
 			l.onIndexChanged(changedContainers, removedContainers);
 		}
