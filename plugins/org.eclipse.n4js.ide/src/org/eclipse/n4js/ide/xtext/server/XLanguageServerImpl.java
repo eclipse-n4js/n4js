@@ -200,11 +200,11 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	private LanguageClient client;
 
-	private ConcurrentIssueRegistry issueRegistry = null;
-
 	private Map<String, JsonRpcMethod> supportedMethods = null;
 
 	private final Multimap<String, Endpoint> extensionProviders = LinkedListMultimap.<String, Endpoint> create();
+
+	private final ConcurrentIssueRegistry issueRegistry = new ConcurrentIssueRegistry();
 
 	// TODO we should probably use the DisposableRegistry here
 	/**
@@ -240,8 +240,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 					"No Xtext languages have been registered. Please make sure you have added the languages\'s setup class in \'/META-INF/services/org.eclipse.xtext.ISetup\'");
 		}
 		this.initializeParams = params;
-
-		issueRegistry = new ConcurrentIssueRegistry();
 
 		openFilesManager.setIssueRegistry(issueRegistry);
 		lspBuilder.getIndexRaw().addListener(this);
