@@ -25,7 +25,6 @@ import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
-import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.IResourceDescriptions;
@@ -71,9 +70,6 @@ public class XWorkspaceManager {
 
 	@Inject
 	private XIProjectDescriptionFactory projectDescriptionFactory;
-
-	@Inject
-	private UriExtensions uriExtensions;
 
 	@Inject
 	private XBuildManager buildManager;
@@ -351,12 +347,5 @@ public class XWorkspaceManager {
 			}
 		}
 		return false;
-	}
-
-	/** @return a workspace relative URI for a given URI */
-	public URI makeWorkspaceRelative(URI uri) {
-		URI withEmptyAuthority = uriExtensions.withEmptyAuthority(uri);
-		URI relativeUri = withEmptyAuthority.deresolve(getBaseDir());
-		return relativeUri;
 	}
 }

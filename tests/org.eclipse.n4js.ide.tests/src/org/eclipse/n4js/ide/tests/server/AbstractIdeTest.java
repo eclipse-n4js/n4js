@@ -66,9 +66,9 @@ import org.eclipse.n4js.cli.helper.SystemOutRedirecter;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
 import org.eclipse.n4js.ide.tests.client.IdeTestLanguageClient;
 import org.eclipse.n4js.ide.tests.client.IdeTestLanguageClient.IIdeTestLanguageClientListener;
+import org.eclipse.n4js.ide.xtext.server.LSPBuilder;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
-import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.xtext.LanguageInfo;
@@ -112,7 +112,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	/** */
 	@Inject
-	protected XWorkspaceManager workspaceManager;
+	protected LSPBuilder lspBuilder;
 	/** */
 	@Inject
 	protected IResourceServiceProvider.Registry resourceServerProviderRegistry;
@@ -874,7 +874,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * use in output presented to the user (e.g. messages of assertion errors).
 	 */
 	protected String getRelativePathFromFileUri(FileURI fileURI) {
-		URI relativeUri = workspaceManager.makeWorkspaceRelative(fileURI.toURI());
+		URI relativeUri = lspBuilder.makeWorkspaceRelative(fileURI.toURI());
 		return relativeUri.toFileString();
 	}
 

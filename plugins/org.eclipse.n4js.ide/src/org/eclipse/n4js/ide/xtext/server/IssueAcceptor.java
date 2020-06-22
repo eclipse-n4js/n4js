@@ -81,6 +81,7 @@ public class IssueAcceptor {
 	protected List<Diagnostic> toDiagnostics(URI uri, Iterable<? extends LSPIssue> issues) {
 		if (!openFilesManager.isOpen(uri)) {
 			// Closed documents need to exist in the current workspace
+			// FIXME GH-1774 why is this required? Get rid of this XWorkspaceManager usage
 			IProjectConfig projectConfig = workspaceManager.getWorkspaceConfig().findProjectContaining(uri);
 			if (projectConfig == null) {
 				return Collections.emptyList();
