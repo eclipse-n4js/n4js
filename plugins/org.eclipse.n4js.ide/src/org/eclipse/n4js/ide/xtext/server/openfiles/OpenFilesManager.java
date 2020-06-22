@@ -200,8 +200,8 @@ public class OpenFilesManager {
 
 	protected OpenFileContext createOpenFileContext(URI uri, boolean isTemporary) {
 		OpenFileContext ofc = openFileContextProvider.get();
-		ofc.initialize(this, uri, isTemporary, persistedState,
-				!isTemporary ? sharedDirtyState : new ResourceDescriptionsData(Collections.emptyList()));
+		ResourceDescriptionsData index = isTemporary ? createPersistedStateIndex() : createLiveScopeIndex();
+		ofc.initialize(this, uri, isTemporary, index);
 		return ofc;
 	}
 
@@ -255,6 +255,19 @@ public class OpenFilesManager {
 		synchronized (runningThreads) {
 			return runningThreads.get(Thread.currentThread());
 		}
+	}
+
+	protected synchronized ResourceDescriptionsData createPersistedStateIndex() {
+		// FIXME GH-1774 performance?
+		return new ResourceDescriptionsData(persistedState.getAllResourceDescriptions());
+	}
+
+	/** Creates an index containing the persisted state shadowed by the dirty state of all open files. */
+	public synchronized ResourceDescriptionsData createLiveScopeIndex() {
+		ResourceDescriptionsData result = createPersistedStateIndex();
+		sharedDirtyState.getAllResourceDescriptions()
+				.forEach(desc -> result.addDescription(desc.getURI(), desc));
+		return result;
 	}
 
 	public synchronized void updatePersistedState(Map<String, ResourceDescriptionsData> changedContainers,

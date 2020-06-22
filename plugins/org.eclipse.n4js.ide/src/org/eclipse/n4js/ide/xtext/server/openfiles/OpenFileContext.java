@@ -33,7 +33,6 @@ import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.IResourceDescription.Manager.AllChangeAware;
-import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
@@ -120,25 +119,14 @@ public class OpenFileContext {
 		return document;
 	}
 
-	public void initialize(@SuppressWarnings("hiding") OpenFilesManager parent, URI uri, boolean isTemporary,
-			IResourceDescriptions persistedState, ResourceDescriptionsData sharedDirtyState) {
+	@SuppressWarnings("hiding")
+	public void initialize(OpenFilesManager parent, URI uri, boolean isTemporary, ResourceDescriptionsData index) {
 		this.parent = parent;
 		this.mainURI = uri;
 		this.temporary = isTemporary;
-
-		this.index = createIndex(persistedState, sharedDirtyState);
+		this.index = index;
 
 		this.mainResourceSet = createResourceSet();
-	}
-
-	protected ResourceDescriptionsData createIndex(IResourceDescriptions persistedState,
-			ResourceDescriptionsData sharedDirtyState) {
-		ResourceDescriptionsData result = new ResourceDescriptionsData(Collections.emptyList());
-		persistedState.getAllResourceDescriptions()
-				.forEach(desc -> result.addDescription(desc.getURI(), desc));
-		sharedDirtyState.getAllResourceDescriptions()
-				.forEach(desc -> result.addDescription(desc.getURI(), desc));
-		return result;
 	}
 
 	protected XtextResourceSet createResourceSet() {

@@ -62,11 +62,6 @@ public class LSPBuilder {
 
 	private ConcurrentIssueRegistry issueRegistry;
 
-	// FIXME GH-1774 remove this method and refactor all clients to not use resources of the builder!
-	public XWorkspaceManager getWorkspaceManager() {
-		return workspaceManager;
-	}
-
 	/** Returns a snapshot of the current index. */
 	public IResourceDescriptions getIndex() {
 		return workspaceManager.getIndex();

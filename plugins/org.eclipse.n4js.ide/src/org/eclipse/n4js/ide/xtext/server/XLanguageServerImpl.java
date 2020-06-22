@@ -93,7 +93,6 @@ import org.eclipse.lsp4j.services.TextDocumentService;
 import org.eclipse.lsp4j.services.WorkspaceService;
 import org.eclipse.n4js.ide.server.HeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.ide.server.LspLogger;
-import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentChunkedIndex.IChunkedIndexListener;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry.IIssueRegistryListener;
@@ -134,7 +133,6 @@ import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
-import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
@@ -148,6 +146,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
@@ -193,6 +192,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Inject
 	private LspLogger lspLogger;
+
+	@Inject
+	private Provider<XtextResourceSet> resourceSetProvider;
 
 	private InitializeParams initializeParams;
 
@@ -990,7 +992,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		IResourceServiceProvider resourceServiceProvider = getResourceServiceProvider(uri);
 		XIRenameService renameServiceOld = getService(resourceServiceProvider, XIRenameService.class);
 		if (renameServiceOld != null) {
-			return renameServiceOld.rename(lspBuilder.getWorkspaceManager(), renameParams, cancelIndicator);
+			// The deprecated version 1 of IRenameService is no longer supported, because it requires an
+			// XWorkspaceManager which we do no longer allow to access outside the builder:
+			throw new UnsupportedOperationException(XIRenameService.class.getSimpleName() + " is no longer supported");
 		}
 		IRenameService2 renameService2 = getService(resourceServiceProvider, IRenameService2.class);
 		if ((renameService2 != null)) {
@@ -1141,10 +1145,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 		@Override
 		public ResourceSet newLiveScopeResourceSet(URI uri) {
-			XProjectManager projectManager = lspBuilder.getWorkspaceManager().getProjectManager(uri);
-			XIndexState indexState = projectManager.getProjectStateHolder().getIndexState();
-			XtextResourceSet resourceSet = projectManager.createNewResourceSet(indexState.getResourceDescriptions());
-			resourceSet.getLoadOptions().put(ResourceDescriptionsProvider.LIVE_SCOPE, true);
+			XtextResourceSet resourceSet = resourceSetProvider.get();
+			ResourceDescriptionsData index = openFilesManager.createLiveScopeIndex();
+			ResourceDescriptionsData.ResourceSetAdapter.installResourceDescriptionsData(resourceSet, index);
 			return resourceSet;
 		}
 
