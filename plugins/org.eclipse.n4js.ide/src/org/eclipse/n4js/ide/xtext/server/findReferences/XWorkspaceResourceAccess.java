@@ -41,9 +41,6 @@ public class XWorkspaceResourceAccess implements IReferenceFinder.IResourceAcces
 	@Override
 	public <R> R readOnly(URI targetURI, IUnitOfWork<R, ResourceSet> work) {
 		OpenFilesManager openFilesManager = languageServer.getOpenFilesManager();
-		if (openFilesManager == null) {
-			return null;
-		}
 		// FIXME GH-1774 consider re-using the resource set of the current open file context for other files:
 		// OpenFileContext currOFC = openFilesManager.currentContext();
 		// if (currOFC != null) {

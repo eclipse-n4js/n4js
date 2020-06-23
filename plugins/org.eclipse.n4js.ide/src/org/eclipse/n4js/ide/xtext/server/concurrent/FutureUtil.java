@@ -14,6 +14,7 @@ import java.util.concurrent.CancellationException;
 import java.util.concurrent.Future;
 
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.xtext.service.OperationCanceledError;
 import org.eclipse.xtext.util.Exceptions;
 
 /**
@@ -29,9 +30,11 @@ public class FutureUtil {
 	public static <T> T getCancellableResult(Future<T> future) {
 		try {
 			return future.get();
-		} catch (Exception e) {
-			Exception cancellation = getCancellation(e);
-			if (cancellation instanceof OperationCanceledException) {
+		} catch (Throwable e) {
+			Throwable cancellation = getCancellation(e);
+			if (cancellation instanceof OperationCanceledError) {
+				throw (OperationCanceledError) cancellation;
+			} else if (cancellation instanceof OperationCanceledException) {
 				throw (OperationCanceledException) cancellation;
 			} else if (cancellation instanceof CancellationException) {
 				String msg = e.getMessage();
@@ -44,11 +47,12 @@ public class FutureUtil {
 		}
 	}
 
-	private static Exception getCancellation(Throwable e) {
+	private static Throwable getCancellation(Throwable e) {
 		while (e != null) {
-			if (e instanceof OperationCanceledException
+			if (e instanceof OperationCanceledError
+					|| e instanceof OperationCanceledException
 					|| e instanceof CancellationException) {
-				return (Exception) e;
+				return e;
 			}
 			e = e.getCause();
 		}

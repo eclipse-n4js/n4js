@@ -187,7 +187,7 @@ public class LSPBuilder {
 	public CompletableFuture<Void> shutdown() {
 		return runBuildable("shutdown", () -> {
 			return (cancelIndicator) -> {
-				persister.pendingWrites().join();
+				joinPersister();
 				return null;
 			};
 		}).thenApply(any -> {

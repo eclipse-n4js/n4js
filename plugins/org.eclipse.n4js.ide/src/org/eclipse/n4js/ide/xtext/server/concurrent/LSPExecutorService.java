@@ -82,7 +82,7 @@ public class LSPExecutorService {
 		protected final String description;
 		protected final Function<CancelIndicator, T> operation;
 		protected final QueuedTaskFuture<T> result;
-		protected boolean cancelled = false;
+		protected volatile boolean cancelled = false;
 
 		protected QueuedTask(Object queueId, String description, Function<CancelIndicator, T> operation) {
 			this.queueId = Objects.requireNonNull(queueId);
@@ -242,7 +242,15 @@ public class LSPExecutorService {
 
 	/**
 	 * Blocks until all tasks complete that are running or pending at the time of invocation of this method OR are being
-	 * submitted by other threads while this method is waiting. Thus, this method waits for this executor to idle.
+	 * submitted by other threads while this method is waiting. Thus, this method waits for the executor to idle.
+	 * <p>
+	 * More precisely, this method waits for a point in time when this executor is idle but <u>does not guarantee</u>
+	 * the <em>first</em> such point in time will be detected and does not guarantee the executor is <em>still</em> idle
+	 * when this method returns (however, the latter may only be untrue if there exist threads submitting issues other
+	 * than those of the tasks running or pending when this method is invoked).
+	 * <p>
+	 * This method should not usually be invoked from ordinary code; it is mainly intended for server shutdown and
+	 * during testing.
 	 */
 	public /* NOT synchronized */ void join() {
 		CompletableFuture<Void> allTasks;
