@@ -31,7 +31,7 @@ import com.google.inject.Singleton;
  * that specific implementation. When working against interface you also need to be sure you get instance you want
  * (especially when you work with injected instances, you might get different implementation at runtime than you expect
  * at compile time).
- *
+ * <p>
  * This class provides a way to get extensions with certain characteristics (defined by the {@link FileExtensionType}
  * across all supported languages (in practice all supported languages that have registered themselves to this
  * registry). Main use case it to allow caller ask about file extensions from a given language, without directly
@@ -39,11 +39,11 @@ import com.google.inject.Singleton;
  * (defined by the {@link FileExtensionType} it is up to the caller to interpret this information at use site. When
  * meanings get blurred it may be required to introduce more fined grained {@link FileExtensionType file extension
  * types} and re-examine all use sites.
- *
- *
+ * <p>
  * Note that is different from {@code FileExtensionInfoRegistry} in Xpect. That registry is used to setup different
  * languages for Xpect tests.
- *
+ * <p>
+ * This class is thread safe, i.e. its public methods may be invoked from an arbitrary thread.
  */
 // TODO IDE-2509 how does this relate to org.eclipse.xpect.registry.FileExtensionInfoRegistry
 @Singleton
@@ -74,7 +74,7 @@ public class FileExtensionsRegistry {
 	 * @param fileExtension
 	 *            without the leading dot e.g. {@code txt} (not {@code .txt})
 	 */
-	public void register(String fileExtension, FileExtensionType extensionType) {
+	public synchronized void register(String fileExtension, FileExtensionType extensionType) {
 		switch (extensionType) {
 		case TRANSPILABLE_FILE_EXTENSION:
 			transpilableFileExtensions.add(fileExtension);
@@ -100,8 +100,8 @@ public class FileExtensionsRegistry {
 	/**
 	 * Return registered file extensions.
 	 */
-	public Collection<String> getFileExtensions(FileExtensionType extensionType) {
-		if (!isInitialized) { // FIXME GH-1774 thread safety
+	public synchronized Collection<String> getFileExtensions(FileExtensionType extensionType) {
+		if (!isInitialized) {
 			initialize();
 		}
 		switch (extensionType) {
@@ -124,7 +124,7 @@ public class FileExtensionsRegistry {
 	/**
 	 * Read information from extensions defined in plugin.xml files
 	 */
-	private void initialize() {
+	protected synchronized void initialize() {
 		if (isInitialized) {
 			throw new IllegalStateException("may invoke method initialize() only once");
 		}
@@ -167,7 +167,7 @@ public class FileExtensionsRegistry {
 	/**
 	 * Reset the lists of file extensions to empty
 	 */
-	public void reset() {
+	public synchronized void reset() {
 		isInitialized = false;
 		transpilableFileExtensions.clear();
 		testFileExtensions.clear();
