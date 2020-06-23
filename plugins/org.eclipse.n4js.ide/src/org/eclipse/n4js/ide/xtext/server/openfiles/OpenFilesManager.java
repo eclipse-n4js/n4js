@@ -156,7 +156,7 @@ public class OpenFilesManager {
 		}
 
 		String descriptionWithContext = description + " [" + uri.lastSegment() + "]";
-		return doSubmitTask(uri, ofc, descriptionWithContext, task);
+		return doSubmitTask(ofc, descriptionWithContext, task);
 	}
 
 	public synchronized <T> CompletableFuture<T> runInTemporaryFileContext(URI uri, String description,
@@ -165,16 +165,16 @@ public class OpenFilesManager {
 		OpenFileContext tempOFC = createOpenFileContext(uri, true);
 
 		String descriptionWithContext = description + " (temporary) [" + uri.lastSegment() + "]";
-		return doSubmitTask(uri, tempOFC, descriptionWithContext, (_tempOFC, ci) -> {
+		return doSubmitTask(tempOFC, descriptionWithContext, (_tempOFC, ci) -> {
 			_tempOFC.initOpenFile(ci);
 			return task.apply(_tempOFC, ci);
 		});
 	}
 
-	protected <T> CompletableFuture<T> doSubmitTask(URI uri, OpenFileContext ofc, String description,
+	protected <T> CompletableFuture<T> doSubmitTask(OpenFileContext ofc, String description,
 			BiFunction<OpenFileContext, CancelIndicator, T> task) {
 
-		Object queueId = getQueueIdForOpenFileContext(uri);
+		Object queueId = getQueueIdForOpenFileContext(ofc);
 		return lspExecutorService.submit(queueId, description, ci -> {
 			try {
 				registerRunningThread(ofc);
@@ -185,8 +185,14 @@ public class OpenFilesManager {
 		});
 	}
 
-	protected Object getQueueIdForOpenFileContext(URI uri) {
-		return Pair.of(OpenFilesManager.class, uri);
+	protected Object getQueueIdForOpenFileContext(OpenFileContext ofc) {
+		if (ofc.isTemporary()) {
+			// for every temporary open file only a single task is being submitted that is supposed to be independent of
+			// all other tasks (in particular, we can have several temporary open files for the same URI that should all
+			// be independent of one another), so we use "new Object()" as the actual ID here:
+			return Pair.of(OpenFilesManager.class, new Object());
+		}
+		return Pair.of(OpenFilesManager.class, ofc.getURI());
 	}
 
 	protected OpenFileContext createOpenFileContext(URI uri, boolean isTemporary) {
