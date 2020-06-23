@@ -26,10 +26,8 @@ import org.eclipse.n4js.ide.xtext.server.XBuildManager.XBuildable;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentChunkedIndex;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
 import org.eclipse.n4js.ide.xtext.server.concurrent.LSPExecutorService;
-import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
-import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.workspace.ISourceFolder;
@@ -73,11 +71,6 @@ public class LSPBuilder {
 		URI withEmptyAuthority = uriExtensions.withEmptyAuthority(uri);
 		URI relativeUri = withEmptyAuthority.deresolve(getBaseDir());
 		return relativeUri;
-	}
-
-	/** Returns a snapshot of the current index. */
-	public IResourceDescriptions getIndex() {
-		return workspaceManager.getIndex();
 	}
 
 	/** Returns the index. */
@@ -189,11 +182,6 @@ public class LSPBuilder {
 			XBuildable buildable = newBuildable.get();
 			return buildable.build(cancelIndicator);
 		});
-	}
-
-	// FIXME GH-1774 thread safety!
-	public void addBuildListener(ILanguageServerAccess.IBuildListener listener) {
-		workspaceManager.addBuildListener(listener);
 	}
 
 	public CompletableFuture<Void> shutdown() {

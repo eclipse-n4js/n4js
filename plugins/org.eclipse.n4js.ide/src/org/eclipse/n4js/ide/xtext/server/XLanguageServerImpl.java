@@ -102,12 +102,11 @@ import org.eclipse.n4js.ide.xtext.server.contentassist.XContentAssistService;
 import org.eclipse.n4js.ide.xtext.server.findReferences.XWorkspaceResourceAccess;
 import org.eclipse.n4js.ide.xtext.server.openfiles.OpenFileContext;
 import org.eclipse.n4js.ide.xtext.server.openfiles.OpenFilesManager;
+import org.eclipse.n4js.ide.xtext.server.openfiles.OpenFilesManager.IOpenFilesListener;
 import org.eclipse.n4js.ide.xtext.server.rename.XIRenameService;
 import org.eclipse.xtext.findReferences.IReferenceFinder.IResourceAccess;
-import org.eclipse.xtext.ide.server.Document;
 import org.eclipse.xtext.ide.server.ICapabilitiesContributor;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
-import org.eclipse.xtext.ide.server.ILanguageServerAccess.IBuildListener;
 import org.eclipse.xtext.ide.server.ILanguageServerExtension;
 import org.eclipse.xtext.ide.server.ILanguageServerShutdownAndExitHandler;
 import org.eclipse.xtext.ide.server.UriExtensions;
@@ -128,7 +127,6 @@ import org.eclipse.xtext.ide.server.symbol.DocumentSymbolService;
 import org.eclipse.xtext.ide.server.symbol.HierarchicalDocumentSymbolService;
 import org.eclipse.xtext.ide.server.symbol.IDocumentSymbolService;
 import org.eclipse.xtext.ide.server.symbol.WorkspaceSymbolService;
-import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
@@ -156,7 +154,7 @@ import com.google.inject.Singleton;
 @SuppressWarnings({ "restriction", "deprecation" })
 @Singleton
 public class XLanguageServerImpl implements LanguageServer, WorkspaceService, TextDocumentService, LanguageClientAware,
-		Endpoint, JsonRpcMethodProvider, IBuildListener, IChunkedIndexListener, IIssueRegistryListener {
+		Endpoint, JsonRpcMethodProvider, IChunkedIndexListener, IIssueRegistryListener, IOpenFilesListener {
 
 	private static final Logger LOG = Logger.getLogger(XLanguageServerImpl.class);
 
@@ -251,8 +249,8 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		this.initializeParams = params;
 
 		openFilesManager.setIssueRegistry(issueRegistry);
+		openFilesManager.addListener(this);
 		lspBuilder.getIndexRaw().addListener(this);
-		access.addBuildListener(this);
 
 		Stopwatch sw = Stopwatch.createStarted();
 		LOG.info("Start server initialization in workspace directory " + baseDir);
@@ -553,6 +551,8 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	public CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> definition(
 			TextDocumentPositionParams params) {
 		URI uri = getURI(params);
+		// LSP clients will usually use this request for open files only, but that is not strictly required by the LSP
+		// specification, so we use "runInOpenOrTemporary..." here:
 		return openFilesManager.runInOpenOrTemporaryFileContext(uri, "definition", (ofc, ci) -> {
 			return definition(ofc, params, ci);
 		});
@@ -593,8 +593,8 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		}
 		XtextResource res = ofc.getResource();
 		XDocument doc = ofc.getDocument();
-		return documentSymbolService.getReferences(doc, res, params, resourceAccess, lspBuilder.getIndex(),
-				cancelIndicator);
+		return documentSymbolService.getReferences(doc, res, params, resourceAccess,
+				openFilesManager.createLiveScopeIndex(), cancelIndicator);
 	}
 
 	@Override
@@ -667,8 +667,8 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	 * Compute the symbol information. Executed in a read request.
 	 */
 	protected List<? extends SymbolInformation> symbol(WorkspaceSymbolParams params, CancelIndicator cancelIndicator) {
-		return workspaceSymbolService.getSymbols(params.getQuery(), resourceAccess, lspBuilder.getIndex(),
-				cancelIndicator);
+		return workspaceSymbolService.getSymbols(params.getQuery(), resourceAccess,
+				openFilesManager.createLiveScopeIndex(), cancelIndicator);
 	}
 
 	@Override
@@ -1124,6 +1124,20 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		@Override
 		public <T> CompletableFuture<T> doRead(String uriStr, Function<ILanguageServerAccess.Context, T> function) {
 			URI uri = uriExtensions.toUri(uriStr);
+			// FIXME GH-1774 consider re-using the resource set of the current open file context for other files:
+			// OpenFileContext currOFC = openFilesManager.currentContext();
+			// if (currOFC != null) {
+			// ResourceSet resSet = currOFC.getResourceSet();
+			// Resource res = resSet.getResource(uri, true);
+			// if (res instanceof XtextResource) {
+			// String content = ((XtextResource) res).getParseResult().getRootNode().getText();
+			// XDocument doc = new XDocument(1, content);
+			// boolean isOpen = openFilesManager.isOpen(uri);
+			// T result = function.apply(
+			// new ILanguageServerAccess.Context(res, doc, isOpen, CancelIndicator.NullImpl));
+			// return CompletableFuture.completedFuture(result);
+			// }
+			// }
 			return openFilesManager.runInOpenOrTemporaryFileContext(uri, "doRead", (ofc, ci) -> {
 				XtextResource res = ofc.getResource();
 				XDocument doc = ofc.getDocument();
@@ -1135,7 +1149,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 		@Override
 		public void addBuildListener(ILanguageServerAccess.IBuildListener listener) {
-			lspBuilder.addBuildListener(listener);
+			throw new UnsupportedOperationException();
 		}
 
 		@Override
@@ -1159,10 +1173,11 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		@Override
 		public <T> CompletableFuture<T> doReadIndex(
 				Function<? super ILanguageServerAccess.IndexContext, ? extends T> function) {
-			// FIXME GH-1774 reconsider this!
-			return lspExecutorService.submit("doReadIndex",
-					cancelIndicator -> function.apply(
-							new ILanguageServerAccess.IndexContext(lspBuilder.getIndex(), cancelIndicator)));
+			// because access to the index is thread-safe anyway, we do not need to run anything asynchronously, here:
+			ILanguageServerAccess.IndexContext indexContext = new ILanguageServerAccess.IndexContext(
+					openFilesManager.createLiveScopeIndex(), CancelIndicator.NullImpl);
+			T result = function.apply(indexContext);
+			return CompletableFuture.completedFuture(result);
 		}
 
 		@Override
@@ -1172,37 +1187,29 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	};
 
 	@Override
-	public void afterBuild(List<IResourceDescription.Delta> deltas) {
-		for (IResourceDescription.Delta delta : deltas) {
-			if (delta.getNew() != null && openFilesManager.isOpen(delta.getUri())) {
-				String uriStr = delta.getUri().toString();
+	public void didRefreshOpenFile(OpenFileContext ofc, CancelIndicator ci) {
+		if (client instanceof LanguageClientExtensions) {
 
-				access.doRead(uriStr, ctx -> {
-					if (ctx.isDocumentOpen() && (ctx.getResource() instanceof XtextResource)
-							&& client instanceof LanguageClientExtensions) {
+			LanguageClientExtensions clientExtensions = (LanguageClientExtensions) client;
+			XtextResource resource = ofc.getResource();
+			IResourceServiceProvider resourceServiceProvider = resource.getResourceServiceProvider();
+			IColoringService coloringService = resourceServiceProvider.get(IColoringService.class);
 
-						LanguageClientExtensions clientExtensions = (LanguageClientExtensions) client;
-						XtextResource resource = ((XtextResource) ctx.getResource());
-						IResourceServiceProvider resourceServiceProvider = resource.getResourceServiceProvider();
-						IColoringService coloringService = resourceServiceProvider.get(IColoringService.class);
+			if (coloringService != null) {
+				XDocument doc = ofc.getDocument();
+				List<? extends ColoringInformation> colInfos = coloringService.getColoring(resource, doc);
 
-						if (coloringService != null) {
-							Document doc = ctx.getDocument();
-							List<? extends ColoringInformation> colInfos = coloringService.getColoring(resource, doc);
-
-							if (!IterableExtensions.isNullOrEmpty(colInfos)) {
-								String uri = resource.getURI().toString();
-								ColoringParams colParams = new ColoringParams(uri, colInfos);
-								clientExtensions.updateColoring(colParams);
-							}
-						}
-					}
-
-					semanticHighlightingRegistry.update(ctx);
-					return null;
-				});
+				if (!IterableExtensions.isNullOrEmpty(colInfos)) {
+					String uri = resource.getURI().toString();
+					ColoringParams colParams = new ColoringParams(uri, colInfos);
+					clientExtensions.updateColoring(colParams);
+				}
 			}
 		}
+
+		ILanguageServerAccess.Context ctx = new ILanguageServerAccess.Context(ofc.getResource(), ofc.getDocument(),
+				true, ci);
+		semanticHighlightingRegistry.update(ctx);
 	}
 
 	/**

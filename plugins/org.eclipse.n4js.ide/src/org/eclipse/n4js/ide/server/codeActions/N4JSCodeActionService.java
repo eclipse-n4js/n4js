@@ -343,7 +343,7 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 		ConcurrentIssueRegistry issueRegistry = languageServer.getIssueRegistry();
 		ImmutableSortedSet<LSPIssue> issues = issueRegistry.getIssuesOfDirtyOrPersistedState(uri);
 
-		openFilesManager.<Void> runInOpenOrTemporaryFileContext(uri, "applyToFile", (ofc, ci) -> {
+		openFilesManager.<Void> runInTemporaryFileContext(uri, "applyToFile", (ofc, ci) -> {
 			XtextResource res = ofc.getResource();
 			XDocument doc = ofc.getDocument();
 			for (LSPIssue issue : issues) {

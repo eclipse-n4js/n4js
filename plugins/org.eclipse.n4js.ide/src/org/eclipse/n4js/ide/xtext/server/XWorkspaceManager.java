@@ -89,6 +89,7 @@ public class XWorkspaceManager {
 	 * @param listener
 	 *            the new listener.
 	 */
+	// TODO GH-1774 build listeners in XWorkspaceManager are no longer used; consider removing them
 	public void addBuildListener(ILanguageServerAccess.IBuildListener listener) {
 		buildListeners.add(listener);
 	}

@@ -25,8 +25,8 @@ import java.util.function.BiFunction;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
+import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
-import org.eclipse.n4js.ide.xtext.server.concurrent.FutureUtil;
 import org.eclipse.n4js.ide.xtext.server.concurrent.LSPExecutorService;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.impl.ChunkedResourceDescriptions;
@@ -57,7 +57,14 @@ public class OpenFilesManager {
 
 	protected final ResourceDescriptionsData sharedDirtyState = new ResourceDescriptionsData(Collections.emptyList());
 
+	protected final List<IOpenFilesListener> listeners = new ArrayList<>();
+
 	protected ConcurrentIssueRegistry issueRegistry = null;
+
+	public interface IOpenFilesListener {
+		/** Invoked whenever an open file was resolved, validated, etc. Invoked in the given open file context. */
+		public void didRefreshOpenFile(OpenFileContext ofc, CancelIndicator ci);
+	}
 
 	public ConcurrentIssueRegistry getIssueRegistry() {
 		return issueRegistry; // no need for synchronization
@@ -70,6 +77,16 @@ public class OpenFilesManager {
 
 	public synchronized boolean isOpen(URI uri) {
 		return openFiles.containsKey(uri);
+	}
+
+	public synchronized XDocument getOpenDocument(URI uri) {
+		OpenFileContext ofc = openFiles.get(uri);
+		if (ofc != null) {
+			// note: since we only obtain an object reference to an immutable data structure (XDocument) we do not need
+			// to execute the following in the open file context:
+			return ofc.getDocument();
+		}
+		return null;
 	}
 
 	public synchronized void openFile(URI uri, int version, String content) {
@@ -111,14 +128,6 @@ public class OpenFilesManager {
 	}
 
 	/** Tries to run the given task in the context of an open file, falling back to a temporary file if necessary. */
-	public /* NOT synchronized! */ <T> T runInOpenOrTemporaryFileContextSync(URI uri, String description,
-			BiFunction<OpenFileContext, CancelIndicator, T> task) {
-
-		CompletableFuture<T> future = runInOpenOrTemporaryFileContext(uri, description, task);
-		return FutureUtil.getCancellableResult(future);
-	}
-
-	/** Tries to run the given task in the context of an open file, falling back to a temporary file if necessary. */
 	public synchronized <T> CompletableFuture<T> runInOpenOrTemporaryFileContext(URI uri, String description,
 			BiFunction<OpenFileContext, CancelIndicator, T> task) {
 
@@ -138,34 +147,16 @@ public class OpenFilesManager {
 		});
 	}
 
-	public /* NOT synchronized! */ <T> T runInOpenFileContextSync(URI uri, String description,
+	public synchronized <T> CompletableFuture<T> runInOpenFileContext(URI uri, String description,
 			BiFunction<OpenFileContext, CancelIndicator, T> task) {
 
-		CompletableFuture<T> future = runInOpenFileContext(uri, description, task);
-		return FutureUtil.getCancellableResult(future);
-	}
-
-	public <T> CompletableFuture<T> runInOpenFileContext(URI uri, String description,
-			BiFunction<OpenFileContext, CancelIndicator, T> task) {
-
-		OpenFileContext currOFC;
-
-		synchronized (this) {
-			OpenFileContext ofc = openFiles.get(uri);
-			if (ofc == null) {
-				throw new IllegalArgumentException("no open file found for given URI: " + uri);
-			}
-
-			currOFC = currentContext();
-			if (ofc != currOFC) {
-				String descriptionWithContext = description + " [" + uri.lastSegment() + "]";
-				return doSubmitTask(uri, ofc, descriptionWithContext, task);
-			}
+		OpenFileContext ofc = openFiles.get(uri);
+		if (ofc == null) {
+			throw new IllegalArgumentException("no open file found for given URI: " + uri);
 		}
 
-		// already running in the correct context, so perform the task synchronously:
-		T result = task.apply(currOFC, CancelIndicator.NullImpl); // FIXME cancel indicator
-		return CompletableFuture.completedFuture(result);
+		String descriptionWithContext = description + " [" + uri.lastSegment() + "]";
+		return doSubmitTask(uri, ofc, descriptionWithContext, task);
 	}
 
 	public synchronized <T> CompletableFuture<T> runInTemporaryFileContext(URI uri, String description,
@@ -258,7 +249,7 @@ public class OpenFilesManager {
 	}
 
 	protected synchronized ResourceDescriptionsData createPersistedStateIndex() {
-		// FIXME GH-1774 performance?
+		// FIXME GH-1774 performance? (consider maintaining a ResourceDescriptionsData in addition to persistedState)
 		return new ResourceDescriptionsData(persistedState.getAllResourceDescriptions());
 	}
 
@@ -322,6 +313,28 @@ public class OpenFilesManager {
 			runInOpenFileContextVoid(currURI, "updateSharedDirtyState in open file", (ofc, ci) -> {
 				ofc.onDirtyStateChanged(newDesc, ci);
 			});
+		}
+	}
+
+	public synchronized void addListener(IOpenFilesListener l) {
+		listeners.add(l);
+	}
+
+	public synchronized void removeListener(IOpenFilesListener l) {
+		listeners.remove(l);
+	}
+
+	protected /* NOT synchronized */ void onDidRefreshOpenFile(OpenFileContext ofc, CancelIndicator ci) {
+		notifyOpenFileListeners(ofc, ci);
+	}
+
+	protected /* NOT synchronized */ void notifyOpenFileListeners(OpenFileContext ofc, CancelIndicator ci) {
+		List<IOpenFilesListener> ls;
+		synchronized (this) {
+			ls = new ArrayList<>(listeners);
+		}
+		for (IOpenFilesListener l : ls) {
+			l.didRefreshOpenFile(ofc, ci);
 		}
 	}
 }

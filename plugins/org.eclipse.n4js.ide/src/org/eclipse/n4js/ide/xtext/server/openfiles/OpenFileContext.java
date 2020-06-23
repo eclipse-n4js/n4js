@@ -30,6 +30,8 @@ import org.eclipse.n4js.ide.xtext.server.LSPIssueConverter;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
 import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.resource.IExternalContentSupport;
+import org.eclipse.xtext.resource.IExternalContentSupport.IExternalContentProvider;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.IResourceDescription.Manager.AllChangeAware;
@@ -60,6 +62,9 @@ public class OpenFileContext {
 	private Provider<XtextResourceSet> resourceSetProvider;
 
 	@Inject
+	private IExternalContentSupport externalContentSupport;
+
+	@Inject
 	private IResourceServiceProvider.Registry resourceServiceProviderRegistry;
 
 	@Inject
@@ -84,7 +89,25 @@ public class OpenFileContext {
 	/** The EMF resource representing the open file. */
 	protected XtextResource mainResource = null;
 	/** The current textual content of the open file. */
-	protected XDocument document = null;
+	protected volatile XDocument document = null;
+
+	protected class OpenFileContentProvider implements IExternalContentProvider {
+		@Override
+		public String getContent(URI uri) {
+			XDocument doc = parent.getOpenDocument(uri);
+			return doc != null ? doc.getContents() : null;
+		}
+
+		@Override
+		public boolean hasContent(URI uri) {
+			return parent.getOpenDocument(uri) != null;
+		}
+
+		@Override
+		public IExternalContentProvider getActualContentProvider() {
+			return this;
+		}
+	}
 
 	public URI getURI() {
 		return mainURI;
@@ -115,8 +138,12 @@ public class OpenFileContext {
 		return mainResource;
 	}
 
+	/**
+	 * May return <code>null</code> if not fully initialized yet. In contrast to most other methods of this class, this
+	 * method is thread safe, i.e. may be invoked from any thread.
+	 */
 	public XDocument getDocument() {
-		return document;
+		return document; // no need to synchronize
 	}
 
 	@SuppressWarnings("hiding")
@@ -131,21 +158,8 @@ public class OpenFileContext {
 
 	protected XtextResourceSet createResourceSet() {
 		XtextResourceSet result = resourceSetProvider.get();
-
 		ResourceDescriptionsData.ResourceSetAdapter.installResourceDescriptionsData(result, index);
-
-		// TODO support external content:
-		// externalContentSupport.configureResourceSet(result, workspaceManager.getOpenedDocumentsContentProvider());
-
-		// OpenFileResourceLocator resourceLocator = new OpenFileResourceLocator(result);
-		// ProjectDescription projectDescription = new ProjectDescription();
-		// projectDescription.setName(projectName);
-		// projectDescription.attachToEmfObject(result); // required by ChunkedResourceDescriptions
-		// ConcurrentHashMap<String, ResourceDescriptionsData> concurrentMap = (ConcurrentHashMap<String,
-		// ResourceDescriptionsData>) workspaceManager.getFullIndex();
-		// DirtyStateAwareChunkedResourceDescriptions index = new
-		// DirtyStateAwareChunkedResourceDescriptions(concurrentMap, result, dirtyState);
-
+		externalContentSupport.configureResourceSet(result, new OpenFileContentProvider());
 		return result;
 	}
 
@@ -233,6 +247,8 @@ public class OpenFileContext {
 		}
 		// update dirty state
 		updateSharedDirtyState();
+		// notify open file listeners
+		parent.onDidRefreshOpenFile(this, cancelIndicator);
 	}
 
 	protected void updateSharedDirtyState() {

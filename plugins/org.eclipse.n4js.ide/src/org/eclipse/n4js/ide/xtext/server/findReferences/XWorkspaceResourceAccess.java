@@ -10,9 +10,12 @@
  */
 package org.eclipse.n4js.ide.xtext.server.findReferences;
 
+import java.util.concurrent.CompletableFuture;
+
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
+import org.eclipse.n4js.ide.xtext.server.concurrent.FutureUtil;
 import org.eclipse.n4js.ide.xtext.server.openfiles.OpenFilesManager;
 import org.eclipse.xtext.findReferences.IReferenceFinder;
 import org.eclipse.xtext.util.Exceptions;
@@ -46,8 +49,9 @@ public class XWorkspaceResourceAccess implements IReferenceFinder.IResourceAcces
 		// if (currOFC != null) {
 		// return doWork(currOFC.getResourceSet(), work);
 		// }
-		return openFilesManager.runInOpenOrTemporaryFileContextSync(targetURI, "XWorkspaceResourceAccess",
+		CompletableFuture<R> future = openFilesManager.runInTemporaryFileContext(targetURI, "XWorkspaceResourceAccess",
 				(ofc, ci) -> doWork(ofc.getResourceSet(), work));
+		return FutureUtil.getCancellableResult(future);
 	}
 
 	/** Actually do the work in the context of the given resource set. */
