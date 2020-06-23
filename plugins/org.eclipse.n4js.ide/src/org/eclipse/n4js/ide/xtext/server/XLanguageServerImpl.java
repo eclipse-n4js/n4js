@@ -658,7 +658,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public CompletableFuture<List<? extends SymbolInformation>> symbol(WorkspaceSymbolParams params) {
-		// FIXME GH-1774 double-check that the workspaceSymbolService may run parallel to the builder
+		// FIXME GH-1774 double-check that the workspaceSymbolService may run in parallel to the builder
 		return lspExecutorService.submitAndCancelPrevious(WorkspaceSymbolParams.class, "symbol",
 				cancelIndicator -> symbol(params, cancelIndicator));
 	}

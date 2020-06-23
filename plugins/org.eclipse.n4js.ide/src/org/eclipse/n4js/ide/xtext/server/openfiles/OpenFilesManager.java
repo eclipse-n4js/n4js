@@ -92,7 +92,7 @@ public class OpenFilesManager {
 
 	public synchronized void openFile(URI uri, int version, String content) {
 		if (openFiles.containsKey(uri)) {
-			return; // FIXME content gets lost in this case!
+			return;
 		}
 		OpenFileContext newOFC = createOpenFileContext(uri, false);
 		openFiles.put(uri, newOFC);
@@ -122,7 +122,7 @@ public class OpenFilesManager {
 		// To allow running/pending tasks in the context of the given URI's file to complete normally, we put the call
 		// to #discardOpenFileInfo() on the queue (note: this does apply to tasks being submitted after this method
 		// returns and before #discardOpenFileInfo() is invoked).
-		// TODO reconsider sequence when closing files
+		// FIXME GH-1774 reconsider sequence when closing files
 		return runInOpenFileContextVoid(uri, "closeFile", (ofc, ci) -> {
 			discardOpenFileInfo(uri);
 		});
@@ -235,11 +235,10 @@ public class OpenFilesManager {
 		if (issueRegistry != null) {
 			issueRegistry.clearIssuesOfDirtyState(uri);
 		}
-		// TODO what if a task for the file being closed is currently in progress? (partially solved, see above)
-		// TODO closing a file may lead to a change in other open files (because they will switch from using dirty state
-		// to using persisted state for the file being closed)
-		// TODO what about publishing diagnostics, here? (not required for VSCode because it sends a content change
-		// event, back to original content, before closing a file with unsaved changes)
+		// TODO GH-1774 closing a file may lead to a change in other open files (because they will switch from using
+		// dirty state to using persisted state for the file being closed)
+		// TODO GH-1774 what about publishing diagnostics, here? (not required for VSCode because it sends a content
+		// change event, back to original content, before closing a file with unsaved changes)
 	}
 
 	/**
@@ -282,7 +281,7 @@ public class OpenFilesManager {
 	}
 
 	protected synchronized ResourceDescriptionsData createPersistedStateIndex() {
-		// FIXME GH-1774 performance? (consider maintaining a ResourceDescriptionsData in addition to persistedState)
+		// TODO GH-1774 performance? (consider maintaining a ResourceDescriptionsData in addition to persistedState)
 		return new ResourceDescriptionsData(persistedState.getAllResourceDescriptions());
 	}
 

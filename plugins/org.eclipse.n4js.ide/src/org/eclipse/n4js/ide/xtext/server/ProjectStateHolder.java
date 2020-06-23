@@ -66,7 +66,7 @@ public class ProjectStateHolder {
 
 	private Map<URI, HashedFileContent> uriToHashedFileContents = new HashMap<>();
 
-	// FIXME GH-1774 avoid storing issues twice (in ProjectStateHolder and ConcurrentIssueRegistry)
+	// TODO GH-1774 avoid storing issues twice (in ProjectStateHolder and ConcurrentIssueRegistry)
 	/*
 	 * Implementation note: We use a sorted map to report the issues in a stable order. The values of the the map are
 	 * sorted by offset and severity and message.

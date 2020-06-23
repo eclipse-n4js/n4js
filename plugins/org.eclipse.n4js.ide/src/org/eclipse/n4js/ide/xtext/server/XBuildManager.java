@@ -249,7 +249,7 @@ public class XBuildManager {
 	 *
 	 * @return a buildable.
 	 */
-	@Deprecated // FIXME GH-1774 remove infrastructure for doGenerate == false (should now be unused)
+	@Deprecated // TODO GH-1774 remove infrastructure for doGenerate == false (should now be unused)
 	public XBuildable getIncrementalDirtyBuildable(WorkspaceChanges workspaceChanges) {
 		return doGetIncrementalBuildable(workspaceChanges, false);
 	}
