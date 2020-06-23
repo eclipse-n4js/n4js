@@ -28,6 +28,7 @@ import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
 import org.eclipse.n4js.ide.xtext.server.concurrent.LSPExecutorService;
+import org.eclipse.n4js.ide.xtext.server.util.CancelIndicatorUtil;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.impl.ChunkedResourceDescriptions;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
@@ -159,15 +160,41 @@ public class OpenFilesManager {
 		return doSubmitTask(ofc, descriptionWithContext, task);
 	}
 
+	/**
+	 * Creates a temporary open file context for the file with the given URI, initializes it, and executes the given
+	 * task, <em>without</em> interfering with a possibly existing ordinary open file context for 'uri' or with other
+	 * possibly existing temporary open file contexts for 'uri'.
+	 * <p>
+	 * The temporary open file context is not retained over a longer period of time; the given task will be the only
+	 * task that will ever be executed in this temporary context.
+	 * <p>
+	 * Note that instead of using this method, the caller might simply create a new resource set from scratch, configure
+	 * it with a {@link #createLiveScopeIndex() live scope index}, and synchronously perform any desired computation
+	 * there. The intention of this method is to provide means to easily perform such computations in temporary contexts
+	 * with a consistent setup/configuration and with a similar API as compared to computations in the context of
+	 * actually opened files.
+	 */
 	public synchronized <T> CompletableFuture<T> runInTemporaryFileContext(URI uri, String description,
 			BiFunction<OpenFileContext, CancelIndicator, T> task) {
+		return runInTemporaryFileContext(uri, description, CancelIndicator.NullImpl, task);
+	}
+
+	/**
+	 * Same as {@link #runInTemporaryFileContext(URI, String, BiFunction)}, but accepts an outer cancel indicator as
+	 * argument as an additional source of cancellation. The implementation of the given function 'task' should only use
+	 * the cancel indicator passed into 'task' (it is a {@link CancelIndicatorUtil#combine(List) combination} of the
+	 * given outer cancel indicator and other sources of cancellation).
+	 */
+	public synchronized <T> CompletableFuture<T> runInTemporaryFileContext(URI uri, String description,
+			CancelIndicator outerCancelIndicator, BiFunction<OpenFileContext, CancelIndicator, T> task) {
 
 		OpenFileContext tempOFC = createOpenFileContext(uri, true);
 
 		String descriptionWithContext = description + " (temporary) [" + uri.lastSegment() + "]";
-		return doSubmitTask(tempOFC, descriptionWithContext, (_tempOFC, ci) -> {
-			_tempOFC.initOpenFile(ci);
-			return task.apply(_tempOFC, ci);
+		return doSubmitTask(tempOFC, descriptionWithContext, (_tempOFC, ciFromExecutor) -> {
+			CancelIndicator ciCombined = CancelIndicatorUtil.combine(outerCancelIndicator, ciFromExecutor);
+			_tempOFC.initOpenFile(ciCombined);
+			return task.apply(_tempOFC, ciCombined);
 		});
 	}
 

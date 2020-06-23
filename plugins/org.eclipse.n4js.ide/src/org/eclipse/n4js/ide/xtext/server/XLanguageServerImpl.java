@@ -723,8 +723,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	}
 
 	@Override
-	public CompletableFuture<List<? extends DocumentHighlight>> documentHighlight(
-			TextDocumentPositionParams params) {
+	public CompletableFuture<List<? extends DocumentHighlight>> documentHighlight(TextDocumentPositionParams params) {
 		URI uri = getURI(params);
 		return openFilesManager.runInOpenFileContext(uri, "documentHighlight", (ofc, ci) -> {
 			return documentHighlight(ofc, params, ci);
@@ -1020,8 +1019,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	 * @since 2.18
 	 */
 	@Override
-	public CompletableFuture<Either<Range, PrepareRenameResult>> prepareRename(
-			TextDocumentPositionParams params) {
+	public CompletableFuture<Either<Range, PrepareRenameResult>> prepareRename(TextDocumentPositionParams params) {
 		URI uri = getURI(params);
 		return openFilesManager.runInOpenFileContext(uri, "prepareRename", (ofc, ci) -> {
 			return prepareRename(ofc, params, ci);

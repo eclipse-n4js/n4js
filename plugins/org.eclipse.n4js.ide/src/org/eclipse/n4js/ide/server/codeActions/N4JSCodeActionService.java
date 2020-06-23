@@ -303,7 +303,7 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 			return result;
 		}
 
-		Map<String, List<TextEdit>> edits = doApplyToFile(uri, issueCode, quickfix);
+		Map<String, List<TextEdit>> edits = doApplyToFile(uri, issueCode, quickfix, cancelIndicator);
 		result.setChanges(edits);
 		return result;
 	}
@@ -328,7 +328,7 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 
 		Map<String, List<TextEdit>> allEdits = new HashMap<>();
 		for (URI currURI : urisInProject) {
-			Map<String, List<TextEdit>> edits = doApplyToFile(currURI, issueCode, quickfix);
+			Map<String, List<TextEdit>> edits = doApplyToFile(currURI, issueCode, quickfix, cancelIndicator);
 			allEdits.putAll(edits);
 		}
 		result.setChanges(allEdits);
@@ -336,14 +336,15 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 	}
 
 	/** Applies given quick fix to file with given URI and waits for and returns the resulting edits. */
-	protected Map<String, List<TextEdit>> doApplyToFile(URI uri, String issueCode, QuickFixImplementation quickfix) {
+	protected Map<String, List<TextEdit>> doApplyToFile(URI uri, String issueCode, QuickFixImplementation quickfix,
+			CancelIndicator cancelIndicator) {
 
 		TextEditCollector collector = new TextEditCollector();
 		TextDocumentIdentifier textDocId = new TextDocumentIdentifier(uriExtensions.toUriString(uri));
 		ConcurrentIssueRegistry issueRegistry = languageServer.getIssueRegistry();
 		ImmutableSortedSet<LSPIssue> issues = issueRegistry.getIssuesOfDirtyOrPersistedState(uri);
 
-		openFilesManager.<Void> runInTemporaryFileContext(uri, "applyToFile", (ofc, ci) -> {
+		openFilesManager.<Void> runInTemporaryFileContext(uri, "applyToFile", cancelIndicator, (ofc, ci) -> {
 			XtextResource res = ofc.getResource();
 			XDocument doc = ofc.getDocument();
 			for (LSPIssue issue : issues) {
