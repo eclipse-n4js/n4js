@@ -39,6 +39,7 @@ import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
+import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.LazyStringInputStream;
 import org.eclipse.xtext.validation.CheckMode;
@@ -69,6 +70,9 @@ public class OpenFileContext {
 
 	@Inject
 	private IResourceServiceProvider.Registry languagesRegistry;
+
+	@Inject
+	private OperationCanceledManager operationCanceledManager;
 
 	/** The {@link OpenFilesManager} that created this instance. */
 	protected OpenFilesManager parent;
@@ -240,6 +244,7 @@ public class OpenFileContext {
 		IResourceValidator resourceValidator = resourceServiceProvider.getResourceValidator();
 		// notify LSP client
 		List<Issue> issues = resourceValidator.validate(mainResource, CheckMode.ALL, cancelIndicator);
+		operationCanceledManager.checkCanceled(cancelIndicator); // #validate() sometimes returns null when canceled!
 		publishIssues(issues, cancelIndicator);
 		// update dirty state
 		updateSharedDirtyState();
