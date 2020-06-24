@@ -21,6 +21,7 @@ import java.util.function.Function;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.lsp4j.ClientCapabilities;
 import org.eclipse.lsp4j.CodeAction;
@@ -1122,20 +1123,19 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		@Override
 		public <T> CompletableFuture<T> doRead(String uriStr, Function<ILanguageServerAccess.Context, T> function) {
 			URI uri = uriExtensions.toUri(uriStr);
-			// FIXME GH-1774 consider re-using the resource set of the current open file context for other files:
-			// OpenFileContext currOFC = openFilesManager.currentContext();
-			// if (currOFC != null) {
-			// ResourceSet resSet = currOFC.getResourceSet();
-			// Resource res = resSet.getResource(uri, true);
-			// if (res instanceof XtextResource) {
-			// String content = ((XtextResource) res).getParseResult().getRootNode().getText();
-			// XDocument doc = new XDocument(1, content);
-			// boolean isOpen = openFilesManager.isOpen(uri);
-			// T result = function.apply(
-			// new ILanguageServerAccess.Context(res, doc, isOpen, CancelIndicator.NullImpl));
-			// return CompletableFuture.completedFuture(result);
-			// }
-			// }
+			OpenFileContext currOFC = openFilesManager.currentContext();
+			if (currOFC != null) {
+				ResourceSet resSet = currOFC.getResourceSet();
+				Resource res = resSet.getResource(uri, true);
+				if (res instanceof XtextResource) {
+					String content = ((XtextResource) res).getParseResult().getRootNode().getText();
+					XDocument doc = new XDocument(1, content);
+					boolean isOpen = openFilesManager.isOpen(uri);
+					T result = function.apply(
+							new ILanguageServerAccess.Context(res, doc, isOpen, CancelIndicator.NullImpl));
+					return CompletableFuture.completedFuture(result);
+				}
+			}
 			return openFilesManager.runInOpenOrTemporaryFileContext(uri, "doRead", (ofc, ci) -> {
 				XtextResource res = ofc.getResource();
 				XDocument doc = ofc.getDocument();

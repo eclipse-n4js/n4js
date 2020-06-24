@@ -16,6 +16,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 import org.eclipse.n4js.ide.xtext.server.concurrent.FutureUtil;
+import org.eclipse.n4js.ide.xtext.server.openfiles.OpenFileContext;
 import org.eclipse.n4js.ide.xtext.server.openfiles.OpenFilesManager;
 import org.eclipse.xtext.findReferences.IReferenceFinder;
 import org.eclipse.xtext.util.Exceptions;
@@ -42,11 +43,11 @@ public class XWorkspaceResourceAccess implements IReferenceFinder.IResourceAcces
 	public <R> R readOnly(URI targetURI, IUnitOfWork<R, ResourceSet> work) {
 		URI uri = targetURI.trimFragment(); // note: targetURI may point to an EObject inside an EMF resource!
 		OpenFilesManager openFilesManager = languageServer.getOpenFilesManager();
-		// FIXME GH-1774 consider re-using the resource set of the current open file context for other files:
-		// OpenFileContext currOFC = openFilesManager.currentContext();
-		// if (currOFC != null) {
-		// return doWork(currOFC.getResourceSet(), work);
-		// }
+		OpenFileContext currOFC = openFilesManager.currentContext();
+		if (currOFC != null) {
+			return doWork(currOFC.getResourceSet(), work);
+		}
+		// FIXME GH-1774 consider making a current context mandatory by removing the following:
 		CompletableFuture<R> future = openFilesManager.runInTemporaryFileContext(uri, "XWorkspaceResourceAccess",
 				(ofc, ci) -> doWork(ofc.getResourceSet(), work));
 		return FutureUtil.getCancellableResult(future);
