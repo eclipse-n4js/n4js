@@ -105,6 +105,11 @@ public class OpenFilesManager {
 	public synchronized void changeFile(URI uri, int version,
 			Iterable<? extends TextDocumentContentChangeEvent> changes) {
 
+		// cancel current tasks for this open file context (they are now out-dated, anyway)
+		Object queueId = getQueueIdForOpenFileContext(uri, false);
+		lspExecutorService.cancelAll(queueId);
+
+		// refresh the open file context
 		runInOpenFileContextVoid(uri, "changeFile", (ofc, ci) -> {
 			ofc.refreshOpenFile(version, changes, ci);
 		});
@@ -201,7 +206,7 @@ public class OpenFilesManager {
 	protected <T> CompletableFuture<T> doSubmitTask(OpenFileContext ofc, String description,
 			BiFunction<OpenFileContext, CancelIndicator, T> task) {
 
-		Object queueId = getQueueIdForOpenFileContext(ofc);
+		Object queueId = getQueueIdForOpenFileContext(ofc.getURI(), ofc.isTemporary());
 		return lspExecutorService.submit(queueId, description, ci -> {
 			try {
 				registerRunningThread(ofc);
@@ -212,14 +217,14 @@ public class OpenFilesManager {
 		});
 	}
 
-	protected Object getQueueIdForOpenFileContext(OpenFileContext ofc) {
-		if (ofc.isTemporary()) {
+	protected Object getQueueIdForOpenFileContext(URI uri, boolean isTemporary) {
+		if (isTemporary) {
 			// for every temporary open file only a single task is being submitted that is supposed to be independent of
 			// all other tasks (in particular, we can have several temporary open files for the same URI that should all
 			// be independent of one another), so we use "new Object()" as the actual ID here:
 			return Pair.of(OpenFilesManager.class, new Object());
 		}
-		return Pair.of(OpenFilesManager.class, ofc.getURI());
+		return Pair.of(OpenFilesManager.class, uri);
 	}
 
 	protected OpenFileContext createOpenFileContext(URI uri, boolean isTemporary) {
