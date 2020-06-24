@@ -240,15 +240,22 @@ public class OpenFileContext {
 		IResourceValidator resourceValidator = resourceServiceProvider.getResourceValidator();
 		// notify LSP client
 		List<Issue> issues = resourceValidator.validate(mainResource, CheckMode.ALL, cancelIndicator);
+		publishIssues(issues, cancelIndicator);
+		// update dirty state
+		updateSharedDirtyState();
+		// notify open file listeners
+		parent.onDidRefreshOpenFile(this, cancelIndicator);
+	}
+
+	protected void publishIssues(List<Issue> issues, CancelIndicator cancelIndicator) {
+		if (isTemporary()) {
+			return; // temporarily opened files do not contribute to the global issue registry
+		}
 		List<LSPIssue> lspIssues = lspIssueConverter.convertToLSPIssues(mainResource, issues, cancelIndicator);
 		ConcurrentIssueRegistry issueRegistry = parent.getIssueRegistry();
 		if (issueRegistry != null) {
 			issueRegistry.setIssuesOfDirtyState(mainURI, lspIssues);
 		}
-		// update dirty state
-		updateSharedDirtyState();
-		// notify open file listeners
-		parent.onDidRefreshOpenFile(this, cancelIndicator);
 	}
 
 	protected void updateSharedDirtyState() {

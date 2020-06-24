@@ -357,6 +357,9 @@ public class OpenFilesManager {
 	}
 
 	protected /* NOT synchronized */ void onDidRefreshOpenFile(OpenFileContext ofc, CancelIndicator ci) {
+		if (ofc.isTemporary()) {
+			return; // temporarily opened files do not send out events to open file listeners
+		}
 		notifyOpenFileListeners(ofc, ci);
 	}
 

@@ -40,13 +40,14 @@ public class XWorkspaceResourceAccess implements IReferenceFinder.IResourceAcces
 
 	@Override
 	public <R> R readOnly(URI targetURI, IUnitOfWork<R, ResourceSet> work) {
+		URI uri = targetURI.trimFragment(); // note: targetURI may point to an EObject inside an EMF resource!
 		OpenFilesManager openFilesManager = languageServer.getOpenFilesManager();
 		// FIXME GH-1774 consider re-using the resource set of the current open file context for other files:
 		// OpenFileContext currOFC = openFilesManager.currentContext();
 		// if (currOFC != null) {
 		// return doWork(currOFC.getResourceSet(), work);
 		// }
-		CompletableFuture<R> future = openFilesManager.runInTemporaryFileContext(targetURI, "XWorkspaceResourceAccess",
+		CompletableFuture<R> future = openFilesManager.runInTemporaryFileContext(uri, "XWorkspaceResourceAccess",
 				(ofc, ci) -> doWork(ofc.getResourceSet(), work));
 		return FutureUtil.getCancellableResult(future);
 	}
