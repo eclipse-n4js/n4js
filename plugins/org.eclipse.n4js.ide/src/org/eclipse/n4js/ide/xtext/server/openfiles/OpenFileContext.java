@@ -39,13 +39,13 @@ import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
+import org.eclipse.xtext.resource.persistence.SerializableResourceDescription;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.LazyStringInputStream;
 import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue;
-import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -53,7 +53,7 @@ import com.google.inject.Provider;
 /**
  * Represents a single open file, including EMF resources for files required by the open file.
  */
-@SuppressWarnings("javadoc")
+@SuppressWarnings({ "javadoc", "restriction" })
 public class OpenFileContext {
 
 	@Inject
@@ -352,10 +352,15 @@ public class OpenFileContext {
 	protected IResourceDescription createResourceDescription() {
 		IResourceDescription.Manager resourceDescriptionManager = getResourceDescriptionManager(mainURI);
 		IResourceDescription newDesc = resourceDescriptionManager.getResourceDescription(mainResource);
-		// trigger lazy serialization of TModule
-		// FIXME why is this required?
-		IterableExtensions.forEach(newDesc.getExportedObjects(), eobjDesc -> eobjDesc.getUserDataKeys());
-		return newDesc;
+		// sanitize resource description
+		// NOTE: it seems that resource descriptions created by the resource description manager may contain mutable
+		// state (e.g. user data implemented as a ForwardingMap with lazily initialized content) and hold references to
+		// the resource they were created from (i.e. 'mainResource' in this case); this means they are (1) not thread
+		// safe and (2) may leak EObjects from one open file context into another or to the outside. The following line
+		// seems to fix that, but requires access to restricted Xtext API:
+		// FIXME GH-1774 ask @szarnekow about proper way of doing that
+		SerializableResourceDescription newDesc2 = SerializableResourceDescription.createCopy(newDesc);
+		return newDesc2;
 	}
 
 	protected IResourceDescription.Manager getResourceDescriptionManager(URI uri) {
