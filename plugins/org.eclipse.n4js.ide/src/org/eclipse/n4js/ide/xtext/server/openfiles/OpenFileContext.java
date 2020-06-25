@@ -135,7 +135,7 @@ public class OpenFileContext {
 	}
 
 	public XtextResourceSet getResourceSet() {
-		return (XtextResourceSet) mainResource.getResourceSet();
+		return mainResourceSet;
 	}
 
 	public XtextResource getResource() {
@@ -319,28 +319,34 @@ public class OpenFileContext {
 		for (IResourceDescription changedDesc : changedDescs) {
 			URI changedURI = changedDesc.getURI();
 			IResourceDescription oldDesc = index.getResourceDescription(changedURI);
-			if (oldDesc == changedDesc) {
-				continue;
-			}
-			IResourceDescription.Manager rdm = getResourceDescriptionManager(changedURI);
-			if (rdm != null) {
-				Delta delta = rdm.createDelta(oldDesc, changedDesc);
+			IResourceDescription.Delta delta = createDelta(changedURI, oldDesc, changedDesc);
+			if (delta != null) {
 				deltas.add(delta);
 			}
 		}
 
 		for (URI removedURI : removedURIs) {
 			IResourceDescription removedDesc = index.getResourceDescription(removedURI);
-			if (removedDesc != null) {
-				IResourceDescription.Manager rdm = getResourceDescriptionManager(removedURI);
-				if (rdm != null) {
-					Delta delta = rdm.createDelta(removedDesc, null);
-					deltas.add(delta);
-				}
+			IResourceDescription.Delta delta = createDelta(removedURI, removedDesc, null);
+			if (delta != null) {
+				deltas.add(delta);
 			}
 		}
 
 		return deltas;
+	}
+
+	protected IResourceDescription.Delta createDelta(URI uri, IResourceDescription oldDesc,
+			IResourceDescription newDesc) {
+
+		if (oldDesc != newDesc) {
+			IResourceDescription.Manager rdm = getResourceDescriptionManager(uri);
+			if (rdm != null) {
+				Delta delta = rdm.createDelta(oldDesc, newDesc);
+				return delta;
+			}
+		}
+		return null;
 	}
 
 	protected IResourceDescription createResourceDescription() {
