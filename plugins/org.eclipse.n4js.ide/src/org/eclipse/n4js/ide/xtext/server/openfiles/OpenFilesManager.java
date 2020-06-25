@@ -307,14 +307,20 @@ public class OpenFilesManager {
 
 			ResourceDescriptionsData oldContainer = persistedState.getContainer(containerHandle);
 			if (oldContainer != null) {
-				removed.addAll(oldContainer.getAllURIs());
-			}
-			for (IResourceDescription desc : newData.getAllResourceDescriptions()) {
-				if (!openFiles.containsKey(desc.getURI())) {
-					changed.add(desc);
+				for (IResourceDescription desc : oldContainer.getAllResourceDescriptions()) {
+					URI descURI = desc.getURI();
+					if (!openFiles.containsKey(descURI)) {
+						removed.add(descURI);
+					}
 				}
 			}
-			removed.removeAll(newData.getAllURIs());
+			for (IResourceDescription desc : newData.getAllResourceDescriptions()) {
+				URI descURI = desc.getURI();
+				if (!openFiles.containsKey(descURI)) {
+					changed.add(desc);
+					removed.remove(descURI);
+				}
+			}
 		}
 		// update my persisted state instance
 		for (Entry<String, ResourceDescriptionsData> entry : changedContainers.entrySet()) {

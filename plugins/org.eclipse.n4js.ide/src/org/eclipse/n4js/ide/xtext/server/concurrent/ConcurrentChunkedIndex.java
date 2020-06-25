@@ -11,6 +11,7 @@
 package org.eclipse.n4js.ide.xtext.server.concurrent;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,8 +56,8 @@ public class ConcurrentChunkedIndex {
 				Set<String> removedContainers);
 	}
 
-	/** Removes all containers of this index. */
-	public void clear() {
+	/** Removes all containers from this index. */
+	public void removeAllContainers() {
 		ImmutableSet<String> removedContainers;
 		synchronized (this) {
 			removedContainers = ImmutableSet.copyOf(containerHandle2Data.keySet());
@@ -71,7 +72,7 @@ public class ConcurrentChunkedIndex {
 		return containerHandle2Data.get(containerHandle);
 	}
 
-	/** Sets the data for this container. */
+	/** Sets the data for the container with the given handle. */
 	public ResourceDescriptionsData setContainer(String containerHandle, ResourceDescriptionsData newData) {
 		Objects.requireNonNull(containerHandle);
 		Objects.requireNonNull(newData);
@@ -81,6 +82,11 @@ public class ConcurrentChunkedIndex {
 		}
 		notifyListeners(ImmutableMap.of(containerHandle, newData), ImmutableSet.of());
 		return oldData;
+	}
+
+	/** Sets the contents of the container with the given handle to the empty set, but does not remove the container. */
+	public ResourceDescriptionsData clearContainer(String containerHandle) {
+		return setContainer(containerHandle, new ResourceDescriptionsData(Collections.emptyList()));
 	}
 
 	/** Removes the container with the given handle from the index. */

@@ -145,7 +145,7 @@ public class XWorkspaceManager {
 			removeProject(projectManager);
 		}
 		projectName2ProjectManager.clear();
-		fullIndex.clear();
+		fullIndex.removeAllContainers();
 
 		// init projects
 		this.workspaceConfig = workspaceConfig;

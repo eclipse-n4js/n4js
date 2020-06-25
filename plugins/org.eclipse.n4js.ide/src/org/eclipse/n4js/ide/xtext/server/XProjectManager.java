@@ -225,6 +225,7 @@ public class XProjectManager {
 			}
 		}
 
+		fullIndex.clearContainer(projectConfig.getName());
 		issueRegistry.clearIssuesOfPersistedState(projectConfig.getName());
 	}
 
