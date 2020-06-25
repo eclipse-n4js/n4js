@@ -242,8 +242,6 @@ public class OpenFilesManager {
 		}
 		// TODO GH-1774 closing a file may lead to a change in other open files (because they will switch from using
 		// dirty state to using persisted state for the file being closed)
-		// TODO GH-1774 what about publishing diagnostics, here? (not required for VSCode because it sends a content
-		// change event, back to original content, before closing a file with unsaved changes)
 	}
 
 	/**

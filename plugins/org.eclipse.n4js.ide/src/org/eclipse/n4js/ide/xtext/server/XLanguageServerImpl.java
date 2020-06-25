@@ -1304,10 +1304,15 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	public void onIssuesChanged(ImmutableList<IssueRegistryChangeEvent> events) {
 		for (IssueRegistryChangeEvent event : events) {
 			if (event.persistedState && openFilesManager.isOpen(event.uri)) {
-				continue; // for open files we ignore issue changes sent by builder
+				// for open files we ignore issue changes sent by builder
+				continue;
 			}
-			Iterable<LSPIssue> issues = event.issuesNew != null ? event.issuesNew : Collections.emptyList();
-			issueAcceptor.publishDiagnostics(event.uri, issues);
+			Iterable<LSPIssue> issuesToSend = event.issuesNew;
+			if (event.dirtyState && issuesToSend == null) {
+				// dirty state for a resource was entirely removed, so send its persisted state (if any)
+				issuesToSend = issueRegistry.getIssuesOfPersistedState(event.uri);
+			}
+			issueAcceptor.publishDiagnostics(event.uri, issuesToSend != null ? issuesToSend : Collections.emptyList());
 		}
 	}
 
