@@ -38,6 +38,8 @@ import org.eclipse.xtext.resource.IResourceDescription.Manager.AllChangeAware;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
+import org.eclipse.xtext.resource.containers.DelegatingIAllContainerAdapter;
+import org.eclipse.xtext.resource.containers.IAllContainersState;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.resource.persistence.SerializableResourceDescription;
 import org.eclipse.xtext.service.OperationCanceledManager;
@@ -87,6 +89,8 @@ public class OpenFileContext {
 	 * persisted state (as provided by the LSP builder).
 	 */
 	protected ResourceDescriptionsData index;
+
+	protected ContainerStructureSnapshot containerStructure = new ContainerStructureSnapshot();
 
 	/** The resource set used for the open file's resource and any other resources required for resolution. */
 	protected XtextResourceSet mainResourceSet;
@@ -151,11 +155,13 @@ public class OpenFileContext {
 	}
 
 	@SuppressWarnings("hiding")
-	public void initialize(OpenFilesManager parent, URI uri, boolean isTemporary, ResourceDescriptionsData index) {
+	public void initialize(OpenFilesManager parent, URI uri, boolean isTemporary, ResourceDescriptionsData index,
+			ContainerStructureSnapshot containerStructure) {
 		this.parent = parent;
 		this.mainURI = uri;
 		this.temporary = isTemporary;
 		this.index = index;
+		this.containerStructure = containerStructure;
 
 		this.mainResourceSet = createResourceSet();
 	}
@@ -164,6 +170,10 @@ public class OpenFileContext {
 		XtextResourceSet result = resourceSetProvider.get();
 		ResourceDescriptionsData.ResourceSetAdapter.installResourceDescriptionsData(result, index);
 		externalContentSupport.configureResourceSet(result, new OpenFileContentProvider());
+
+		IAllContainersState allContainersState = new OpenFileAllContainersState(this);
+		result.eAdapters().add(new DelegatingIAllContainerAdapter(allContainersState));
+
 		return result;
 	}
 
@@ -277,19 +287,22 @@ public class OpenFileContext {
 	 * {@link OpenFileContext}). Will never be invoked for {@link #isTemporary() temporary} open file contexts.
 	 */
 	protected void onDirtyStateChanged(IResourceDescription changedDesc, CancelIndicator cancelIndicator) {
-		updateIndex(Collections.singletonList(changedDesc), Collections.emptySet(), cancelIndicator);
+		updateIndex(Collections.singletonList(changedDesc), Collections.emptySet(), containerStructure,
+				cancelIndicator);
 	}
 
 	/**
 	 * Invoked by {@link #parent} when a change happened in a non-opened file.
 	 */
 	protected void onPersistedStateChanged(Collection<? extends IResourceDescription> changedDescs,
-			Set<URI> removedURIs, CancelIndicator cancelIndicator) {
-		updateIndex(changedDescs, removedURIs, cancelIndicator);
+			Set<URI> removedURIs, ContainerStructureSnapshot newContainerStructure, CancelIndicator cancelIndicator) {
+		updateIndex(changedDescs, removedURIs, newContainerStructure, cancelIndicator);
 	}
 
 	protected void updateIndex(Collection<? extends IResourceDescription> changedDescs, Set<URI> removedURIs,
-			CancelIndicator cancelIndicator) {
+			ContainerStructureSnapshot newContainerStructure, CancelIndicator cancelIndicator) {
+
+		// update my cached state
 
 		List<IResourceDescription.Delta> allDeltas = createDeltas(changedDescs, removedURIs);
 		List<IResourceDescription.Delta> changedDeltas = allDeltas.stream()
@@ -298,14 +311,24 @@ public class OpenFileContext {
 
 		changedDeltas.forEach(index::register);
 
-		IResourceDescription.Manager rdm = getResourceDescriptionManager(mainURI);
-		if (rdm == null) {
-			return;
+		ContainerStructureSnapshot oldContainerStructure = containerStructure;
+		containerStructure = newContainerStructure;
+
+		// refresh if affected by the changes
+
+		boolean isAffected = !containerStructure.equals(oldContainerStructure);
+
+		if (!isAffected) {
+			IResourceDescription.Manager rdm = getResourceDescriptionManager(mainURI);
+			if (rdm == null) {
+				return;
+			}
+			IResourceDescription candidateDesc = index.getResourceDescription(mainURI);
+			isAffected = rdm instanceof AllChangeAware
+					? ((AllChangeAware) rdm).isAffectedByAny(allDeltas, candidateDesc, index)
+					: rdm.isAffected(changedDeltas, candidateDesc, index);
 		}
-		IResourceDescription candidateDesc = index.getResourceDescription(mainURI);
-		boolean isAffected = rdm instanceof AllChangeAware
-				? ((AllChangeAware) rdm).isAffectedByAny(allDeltas, candidateDesc, index)
-				: rdm.isAffected(changedDeltas, candidateDesc, index);
+
 		if (isAffected) {
 			refreshOpenFile(cancelIndicator);
 		}

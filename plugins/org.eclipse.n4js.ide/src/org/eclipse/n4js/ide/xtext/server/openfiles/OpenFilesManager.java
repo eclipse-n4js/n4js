@@ -30,11 +30,12 @@ import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
 import org.eclipse.n4js.ide.xtext.server.concurrent.LSPExecutorService;
 import org.eclipse.n4js.ide.xtext.server.util.CancelIndicatorUtil;
 import org.eclipse.xtext.resource.IResourceDescription;
-import org.eclipse.xtext.resource.impl.ChunkedResourceDescriptions;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.util.CancelIndicator;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -54,7 +55,9 @@ public class OpenFilesManager {
 
 	protected final Map<Thread, OpenFileContext> runningThreads = new HashMap<>();
 
-	protected final ChunkedResourceDescriptions persistedState = new ChunkedResourceDescriptions();
+	protected final Map<String, ResourceDescriptionsData> persistedStateDescriptions = new HashMap<>();
+	protected final Map<String, ImmutableSet<String>> persistedStateVisibleContainers = new HashMap<>();
+	protected ContainerStructureSnapshot persistedStateContainerStructure = new ContainerStructureSnapshot();
 
 	protected final ResourceDescriptionsData sharedDirtyState = new ResourceDescriptionsData(Collections.emptyList());
 
@@ -230,7 +233,7 @@ public class OpenFilesManager {
 	protected OpenFileContext createOpenFileContext(URI uri, boolean isTemporary) {
 		OpenFileContext ofc = openFileContextProvider.get();
 		ResourceDescriptionsData index = isTemporary ? createPersistedStateIndex() : createLiveScopeIndex();
-		ofc.initialize(this, uri, isTemporary, index);
+		ofc.initialize(this, uri, isTemporary, index, persistedStateContainerStructure);
 		return ofc;
 	}
 
@@ -285,7 +288,8 @@ public class OpenFilesManager {
 
 	protected synchronized ResourceDescriptionsData createPersistedStateIndex() {
 		// TODO GH-1774 performance? (consider maintaining a ResourceDescriptionsData in addition to persistedState)
-		return new ResourceDescriptionsData(persistedState.getAllResourceDescriptions());
+		return new ResourceDescriptionsData(IterableExtensions.flatMap(persistedStateDescriptions.values(),
+				ResourceDescriptionsData::getAllResourceDescriptions));
 	}
 
 	/** Creates an index containing the persisted state shadowed by the dirty state of all open files. */
@@ -296,16 +300,21 @@ public class OpenFilesManager {
 		return result;
 	}
 
-	public synchronized void updatePersistedState(Map<String, ResourceDescriptionsData> changedContainers,
+	public synchronized void updatePersistedState(
+			Map<String, ResourceDescriptionsData> changedDescriptions,
+			Map<String, ImmutableSet<String>> changedVisibleContainers,
 			Set<String> removedContainerHandles) {
+
+		ContainerStructureSnapshot oldCS = persistedStateContainerStructure;
+
 		// compute modification info
 		List<IResourceDescription> changed = new ArrayList<>();
 		Set<URI> removed = new HashSet<>();
-		for (Entry<String, ResourceDescriptionsData> entry : changedContainers.entrySet()) {
+		for (Entry<String, ResourceDescriptionsData> entry : changedDescriptions.entrySet()) {
 			String containerHandle = entry.getKey();
 			ResourceDescriptionsData newData = entry.getValue();
 
-			ResourceDescriptionsData oldContainer = persistedState.getContainer(containerHandle);
+			ResourceDescriptionsData oldContainer = persistedStateDescriptions.get(containerHandle);
 			if (oldContainer != null) {
 				for (IResourceDescription desc : oldContainer.getAllResourceDescriptions()) {
 					URI descURI = desc.getURI();
@@ -322,22 +331,33 @@ public class OpenFilesManager {
 				}
 			}
 		}
+
 		// update my persisted state instance
-		for (Entry<String, ResourceDescriptionsData> entry : changedContainers.entrySet()) {
+		for (Entry<String, ResourceDescriptionsData> entry : changedDescriptions.entrySet()) {
 			String containerHandle = entry.getKey();
 			ResourceDescriptionsData newData = entry.getValue();
-			persistedState.setContainer(containerHandle, newData.copy());
+			persistedStateDescriptions.put(containerHandle, newData.copy());
+		}
+		for (Entry<String, ImmutableSet<String>> entry : changedVisibleContainers.entrySet()) {
+			String containerHandle = entry.getKey();
+			ImmutableSet<String> newVisibleContainers = entry.getValue();
+			persistedStateVisibleContainers.put(containerHandle, newVisibleContainers);
 		}
 		for (String removedContainerHandle : removedContainerHandles) {
-			persistedState.removeContainer(removedContainerHandle);
+			persistedStateDescriptions.remove(removedContainerHandle);
+			persistedStateVisibleContainers.remove(removedContainerHandle);
 		}
+		persistedStateContainerStructure = ContainerStructureSnapshot.create(persistedStateDescriptions,
+				persistedStateVisibleContainers);
+
 		// update persisted state instances in the context of each open file
-		if (Iterables.isEmpty(changed) && removed.isEmpty()) {
+		if (Iterables.isEmpty(changed) && removed.isEmpty()
+				&& persistedStateContainerStructure.equals(oldCS)) {
 			return;
 		}
 		for (URI currURI : openFiles.keySet()) {
 			runInOpenFileContextVoid(currURI, "updatePersistedState in open file", (ofc, ci) -> {
-				ofc.onPersistedStateChanged(changed, removed, ci);
+				ofc.onPersistedStateChanged(changed, removed, persistedStateContainerStructure, ci);
 			});
 		}
 	}

@@ -17,12 +17,14 @@ import static java.util.Collections.singletonList;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -56,31 +58,31 @@ public class WorkspaceChanges {
 	/** @return a new instance of {@link WorkspaceChanges} contains the given project as removed */
 	public static WorkspaceChanges createProjectRemoved(IProjectConfig project) {
 		return new WorkspaceChanges(false, emptyList(), emptyList(), emptyList(), emptyList(), emptyList(),
-				singletonList(project), emptyList());
+				singletonList(project), emptyList(), emptyList());
 	}
 
 	/** @return a new instance of {@link WorkspaceChanges} contains the given project as added */
 	public static WorkspaceChanges createProjectAdded(IProjectConfig project) {
 		return new WorkspaceChanges(false, emptyList(), emptyList(), emptyList(), emptyList(), emptyList(),
-				emptyList(), singletonList(project));
+				emptyList(), singletonList(project), emptyList());
 	}
 
 	/** @return a new instance of {@link WorkspaceChanges} contains the given uris as changed */
 	public static WorkspaceChanges createUrisChanged(List<URI> changedURIs) {
 		return new WorkspaceChanges(false, emptyList(), emptyList(), changedURIs, emptyList(), emptyList(),
-				emptyList(), emptyList());
+				emptyList(), emptyList(), emptyList());
 	}
 
 	/** @return a new instance of {@link WorkspaceChanges} contains the given uris as removed */
 	public static WorkspaceChanges createUrisRemoved(List<URI> removedURIs) {
 		return new WorkspaceChanges(false, removedURIs, emptyList(), emptyList(), emptyList(), emptyList(),
-				emptyList(), emptyList());
+				emptyList(), emptyList(), emptyList());
 	}
 
 	/** @return a new instance of {@link WorkspaceChanges} contains the given uris as removed / changed */
 	public static WorkspaceChanges createUrisRemovedAndChanged(List<URI> removedURIs, List<URI> changedURIs) {
 		return new WorkspaceChanges(false, removedURIs, changedURIs, emptyList(), emptyList(), emptyList(),
-				emptyList(), emptyList());
+				emptyList(), emptyList(), emptyList());
 	}
 
 	/** true iff a name or a dependency of a (still existing) project have been modified */
@@ -99,17 +101,21 @@ public class WorkspaceChanges {
 	protected List<IProjectConfig> removedProjects;
 	/** added projects */
 	protected List<IProjectConfig> addedProjects;
+	/** projects that were neither added nor removed but had their dependencies changed */
+	protected List<IProjectConfig> projectsWithChangedDependencies;
 
 	/** Constructor */
 	public WorkspaceChanges() {
-		this(false, emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList());
+		this(false, emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(),
+				emptyList());
 	}
 
 	/** Constructor */
 	public WorkspaceChanges(boolean namesOrDependenciesChanged,
 			List<URI> removedURIs, List<URI> addedURIs, List<URI> changedURIs,
 			List<ISourceFolder> removedSourceFolders, List<ISourceFolder> addedSourceFolders,
-			List<IProjectConfig> removedProjects, List<IProjectConfig> addedProjects) {
+			List<IProjectConfig> removedProjects, List<IProjectConfig> addedProjects,
+			List<IProjectConfig> projectsWithChangedDependencies) {
 
 		this.namesOrDependenciesChanged = namesOrDependenciesChanged;
 		this.removedURIs = removedURIs;
@@ -119,6 +125,7 @@ public class WorkspaceChanges {
 		this.addedSourceFolders = addedSourceFolders;
 		this.removedProjects = removedProjects;
 		this.addedProjects = addedProjects;
+		this.projectsWithChangedDependencies = projectsWithChangedDependencies;
 	}
 
 	/** @return true iff a name or dependencies of a still existing project changed */
@@ -165,6 +172,11 @@ public class WorkspaceChanges {
 	/** @return all projects that have been added */
 	public List<IProjectConfig> getAddedProjects() {
 		return addedProjects;
+	}
+
+	/** @return that were neither added nor removed but had their dependencies changed */
+	public List<IProjectConfig> getProjectsWithChangedDependencies() {
+		return projectsWithChangedDependencies;
 	}
 
 	/** @return a list of all removed source folders including those inside {@link #removedProjects} */
@@ -236,6 +248,13 @@ public class WorkspaceChanges {
 		this.addedSourceFolders = newArrayList(concat(this.addedSourceFolders, changes.addedSourceFolders));
 		this.removedProjects = newArrayList(concat(this.removedProjects, changes.removedProjects));
 		this.addedProjects = newArrayList(concat(this.addedProjects, changes.addedProjects));
+		this.projectsWithChangedDependencies = newArrayList(concat(this.projectsWithChangedDependencies,
+				changes.projectsWithChangedDependencies));
+
+		// ensure consistency of 'projectsWithChangedDependencies'
+		Set<String> addedRemovedProjects = IterableExtensions
+				.toSet(Iterables.transform(concat(this.removedProjects, this.addedProjects), IProjectConfig::getName));
+		this.projectsWithChangedDependencies.removeIf(pc -> addedRemovedProjects.contains(pc.getName()));
 	}
 
 }

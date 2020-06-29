@@ -35,6 +35,7 @@ import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -160,6 +161,7 @@ public class XWorkspaceManager {
 		ProjectDescription projectDescription = projectDescriptionFactory.getProjectDescription(projectConfig);
 		projectManager.initialize(projectDescription, projectConfig, fullIndex, issueRegistry);
 		projectName2ProjectManager.put(projectDescription.getName(), projectManager);
+		fullIndex.setVisibleContainers(projectDescription.getName(), projectDescription.getDependencies());
 	}
 
 	/** Removes a project from the workspace */
@@ -259,8 +261,20 @@ public class XWorkspaceManager {
 		WorkspaceChanges notifiedChanges = WorkspaceChanges.createUrisChanged(ImmutableList.of(uri));
 		WorkspaceChanges workspaceChanges = ((XIWorkspaceConfig) getWorkspaceConfig()).update(uri,
 				projectName -> projectName2ProjectManager.get(projectName).getProjectDescription());
-		workspaceChanges.merge(notifiedChanges);
 
+		Map<String, ImmutableSet<String>> dependencyChanges = new HashMap<>();
+		for (IProjectConfig pc : workspaceChanges.getProjectsWithChangedDependencies()) {
+			XProjectManager pm = projectName2ProjectManager.get(pc.getName());
+			ProjectDescription pd = pm != null ? pm.getProjectDescription() : null;
+			if (pd != null) {
+				dependencyChanges.put(pd.getName(), ImmutableSet.copyOf(pd.getDependencies()));
+			}
+		}
+		if (!dependencyChanges.isEmpty()) {
+			fullIndex.setVisibleContainers(dependencyChanges);
+		}
+
+		workspaceChanges.merge(notifiedChanges);
 		return getIncrementalGenerateBuildable(workspaceChanges);
 	}
 

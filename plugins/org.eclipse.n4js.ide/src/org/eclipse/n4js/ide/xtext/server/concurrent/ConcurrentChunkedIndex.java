@@ -32,7 +32,8 @@ import com.google.common.collect.Maps;
 
 /**
  * A concurrent map of container handles to {@link ResourceDescriptionsData}, similar to using a {@link ConcurrentMap}
- * but with some added functionality such as support for {@link IChunkedIndexListener listeners}.
+ * but with some added functionality such as tracking visible containers and support for {@link IChunkedIndexListener
+ * listeners}.
  * <p>
  * IMPORTANT: just as {@link ConcurrentMap}, this class does not ensure the thread-safety of the values (i.e. the
  * {@link ResourceDescriptionsData} instances) being passed in. Thus, client code must either
@@ -44,15 +45,19 @@ import com.google.common.collect.Maps;
  */
 public class ConcurrentChunkedIndex {
 
-	/** Map of all containers. */
+	/** Map of all resource descriptions per container. */
 	protected final Map<String, ResourceDescriptionsData> containerHandle2Data = new HashMap<>();
+	/** Map of all visible containers per container. */
+	protected final Map<String, ImmutableSet<String>> containerHandle2VisibleContainers = new HashMap<>();
 	/** Registered listeners. */
 	protected final List<IChunkedIndexListener> listeners = new ArrayList<>();
 
 	/** Listens for changes in a {@link ConcurrentChunkedIndex}. */
 	public interface IChunkedIndexListener {
 		/** Invoked when the index has changed. */
-		public void onIndexChanged(Map<String, ResourceDescriptionsData> changedContainers,
+		public void onIndexChanged(
+				Map<String, ResourceDescriptionsData> changedDescriptions,
+				Map<String, ImmutableSet<String>> changedVisibleContainers,
 				Set<String> removedContainers);
 	}
 
@@ -62,8 +67,9 @@ public class ConcurrentChunkedIndex {
 		synchronized (this) {
 			removedContainers = ImmutableSet.copyOf(containerHandle2Data.keySet());
 			containerHandle2Data.clear();
+			containerHandle2VisibleContainers.clear();
 		}
-		notifyListeners(ImmutableMap.of(), removedContainers);
+		notifyListeners(ImmutableMap.of(), ImmutableMap.of(), removedContainers);
 	}
 
 	/** Returns the data for the container with the given handle or <code>null</code> if no such container. */
@@ -72,7 +78,13 @@ public class ConcurrentChunkedIndex {
 		return containerHandle2Data.get(containerHandle);
 	}
 
-	/** Sets the data for the container with the given handle. */
+	/** Returns the set of handles of those containers that are visible from the container with the given handle. */
+	public synchronized Set<String> getVisibleContainers(String containerHandle) {
+		Objects.requireNonNull(containerHandle);
+		return containerHandle2VisibleContainers.get(containerHandle);
+	}
+
+	/** Sets the resource descriptions for the container with the given handle. */
 	public ResourceDescriptionsData setContainer(String containerHandle, ResourceDescriptionsData newData) {
 		Objects.requireNonNull(containerHandle);
 		Objects.requireNonNull(newData);
@@ -80,8 +92,27 @@ public class ConcurrentChunkedIndex {
 		synchronized (this) {
 			oldData = containerHandle2Data.put(containerHandle, newData);
 		}
-		notifyListeners(ImmutableMap.of(containerHandle, newData), ImmutableSet.of());
+		notifyListeners(ImmutableMap.of(containerHandle, newData), ImmutableMap.of(), ImmutableSet.of());
 		return oldData;
+	}
+
+	/** Sets the containers visible from the container with the given handle. */
+	public void setVisibleContainers(String containerHandle, Iterable<String> visibleContainers) {
+		setVisibleContainers(ImmutableMap.of(containerHandle, visibleContainers));
+	}
+
+	/** Sets the containers visible from the container with the given handle. */
+	public void setVisibleContainers(Map<String, ? extends Iterable<String>> containerHandle2VisibleContainerHandles) {
+		Objects.requireNonNull(containerHandle2VisibleContainerHandles);
+		ImmutableMap.Builder<String, ImmutableSet<String>> builder = ImmutableMap.builder();
+		for (Entry<String, ? extends Iterable<String>> entry : containerHandle2VisibleContainerHandles.entrySet()) {
+			builder.put(entry.getKey(), ImmutableSet.copyOf(entry.getValue()));
+		}
+		ImmutableMap<String, ImmutableSet<String>> changedVisibleContainers = builder.build();
+		synchronized (this) {
+			containerHandle2VisibleContainers.putAll(changedVisibleContainers);
+		}
+		notifyListeners(ImmutableMap.of(), changedVisibleContainers, ImmutableSet.of());
 	}
 
 	/** Sets the contents of the container with the given handle to the empty set, but does not remove the container. */
@@ -95,9 +126,10 @@ public class ConcurrentChunkedIndex {
 		ResourceDescriptionsData oldData;
 		synchronized (this) {
 			oldData = containerHandle2Data.remove(containerHandle);
+			containerHandle2VisibleContainers.remove(containerHandle);
 		}
 		if (oldData != null) {
-			notifyListeners(ImmutableMap.of(), ImmutableSet.of(containerHandle));
+			notifyListeners(ImmutableMap.of(), ImmutableMap.of(), ImmutableSet.of(containerHandle));
 		}
 		return oldData;
 	}
@@ -126,11 +158,13 @@ public class ConcurrentChunkedIndex {
 		listeners.remove(listener);
 	}
 
-	/** Notify all {@link #listeners listeners}. */
+	/** Notify all {@link #listeners listeners} about a change of resource descriptions. */
 	protected /* NOT synchronized */ void notifyListeners(
-			ImmutableMap<String, ResourceDescriptionsData> changedContainers, ImmutableSet<String> removedContainers) {
+			ImmutableMap<String, ResourceDescriptionsData> changedDescriptions,
+			ImmutableMap<String, ImmutableSet<String>> changedVisibleContainers,
+			ImmutableSet<String> removedContainers) {
 		for (IChunkedIndexListener l : listeners) {
-			l.onIndexChanged(changedContainers, removedContainers);
+			l.onIndexChanged(changedDescriptions, changedVisibleContainers, removedContainers);
 		}
 	}
 

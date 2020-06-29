@@ -197,8 +197,8 @@ public class XProjectManager {
 		projectStateHolder.updateProjectState(request, result, projectConfig);
 
 		ResourceDescriptionsData resourceDescriptions = projectStateHolder.getIndexState().getResourceDescriptions();
-
 		fullIndex.setContainer(projectDescription.getName(), resourceDescriptions);
+
 		return result;
 	}
 

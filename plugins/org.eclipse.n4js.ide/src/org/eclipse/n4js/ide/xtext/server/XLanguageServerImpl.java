@@ -264,11 +264,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		return CompletableFuture.completedFuture(initializeResult);
 	}
 
-	@Override
-	public void onIndexChanged(Map<String, ResourceDescriptionsData> changedContainers, Set<String> removedContainers) {
-		openFilesManager.updatePersistedState(changedContainers, removedContainers);
-	}
-
 	/**
 	 * Configure the server capabilities for this instance.
 	 *
@@ -1298,6 +1293,12 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	public void joinServerRequests() {
 		lspExecutorService.join();
 		lspBuilder.joinPersister();
+	}
+
+	@Override
+	public void onIndexChanged(Map<String, ResourceDescriptionsData> changedDescriptions,
+			Map<String, ImmutableSet<String>> changedVisibleContainers, Set<String> removedContainers) {
+		openFilesManager.updatePersistedState(changedDescriptions, changedVisibleContainers, removedContainers);
 	}
 
 	@Override
