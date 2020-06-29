@@ -30,6 +30,8 @@ import org.eclipse.n4js.ide.xtext.server.LSPIssueConverter;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
 import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.nodemodel.ICompositeNode;
+import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.resource.IExternalContentSupport;
 import org.eclipse.xtext.resource.IExternalContentSupport.IExternalContentProvider;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -117,7 +119,7 @@ public class OpenFileContext {
 		}
 	}
 
-	public URI getURI() {
+	public synchronized URI getURI() {
 		return mainURI;
 	}
 
@@ -134,15 +136,15 @@ public class OpenFileContext {
 	 * might be useful if some computation needs to be performed that should not influence the open editor's state.
 	 * </ul>
 	 */
-	public boolean isTemporary() {
+	public synchronized boolean isTemporary() {
 		return temporary;
 	}
 
-	public XtextResourceSet getResourceSet() {
+	public synchronized XtextResourceSet getResourceSet() {
 		return mainResourceSet;
 	}
 
-	public XtextResource getResource() {
+	public synchronized XtextResource getResource() {
 		return mainResource;
 	}
 
@@ -150,13 +152,13 @@ public class OpenFileContext {
 	 * May return <code>null</code> if not fully initialized yet. In contrast to most other methods of this class, this
 	 * method is thread safe, i.e. may be invoked from any thread.
 	 */
-	public XDocument getDocument() {
-		return document; // no need to synchronize
+	public synchronized XDocument getDocument() {
+		return document;
 	}
 
 	@SuppressWarnings("hiding")
-	public void initialize(OpenFilesManager parent, URI uri, boolean isTemporary, ResourceDescriptionsData index,
-			ContainerStructureSnapshot containerStructure) {
+	public synchronized void initialize(OpenFilesManager parent, URI uri, boolean isTemporary,
+			ResourceDescriptionsData index, ContainerStructureSnapshot containerStructure) {
 		this.parent = parent;
 		this.mainURI = uri;
 		this.temporary = isTemporary;
@@ -196,24 +198,28 @@ public class OpenFileContext {
 	}
 
 	/** Initialize the open file based only on its URI, retrieving its content via EMF's {@link ResourceLocator}. */
-	protected void initOpenFile(CancelIndicator cancelIndicator) {
+	protected void initOpenFile(boolean resolveAndValidate, CancelIndicator cancelIndicator) {
 		if (mainResource != null) {
 			throw new IllegalStateException("trying to initialize an already initialized resource: " + mainURI);
 		}
 
 		mainResource = (XtextResource) mainResourceSet.getResource(mainURI, true); // uses the EMF ResourceLocator
-		document = new XDocument(0, mainResource.getParseResult().getRootNode().getText());
+		IParseResult parseResult = mainResource != null ? mainResource.getParseResult() : null;
+		ICompositeNode rootNode = parseResult != null ? parseResult.getRootNode() : null;
+		document = new XDocument(0, rootNode != null ? rootNode.getText() : "");
 
-		resolveAndValidateOpenFile(cancelIndicator);
+		if (resolveAndValidate) {
+			resolveAndValidateOpenFile(cancelIndicator);
+		}
 	}
 
-	protected void refreshOpenFile(CancelIndicator cancelIndicator) {
+	public void refreshOpenFile(CancelIndicator cancelIndicator) {
 		// FIXME find better solution for updating unchanged open files!
 		TextDocumentContentChangeEvent dummyChange = new TextDocumentContentChangeEvent(document.getContents());
 		refreshOpenFile(document.getVersion(), Collections.singletonList(dummyChange), cancelIndicator);
 	}
 
-	protected void refreshOpenFile(@SuppressWarnings("unused") int version, // TODO add check using the version
+	public void refreshOpenFile(@SuppressWarnings("unused") int version, // TODO add check using the version
 			Iterable<? extends TextDocumentContentChangeEvent> changes, CancelIndicator cancelIndicator) {
 
 		if (mainResource == null) {
@@ -246,20 +252,29 @@ public class OpenFileContext {
 		resolveAndValidateOpenFile(cancelIndicator);
 	}
 
-	protected void resolveAndValidateOpenFile(CancelIndicator cancelIndicator) {
+	public List<Issue> resolveAndValidateOpenFile(CancelIndicator cancelIndicator) {
+		resolveOpenFile(cancelIndicator);
+		return validateOpenFile(cancelIndicator);
+	}
+
+	public void resolveOpenFile(CancelIndicator cancelIndicator) {
 		// resolve
 		EcoreUtil2.resolveLazyCrossReferences(mainResource, cancelIndicator);
-		// validate
-		IResourceServiceProvider resourceServiceProvider = languagesRegistry.getResourceServiceProvider(mainURI);
-		IResourceValidator resourceValidator = resourceServiceProvider.getResourceValidator();
-		// notify LSP client
-		List<Issue> issues = resourceValidator.validate(mainResource, CheckMode.ALL, cancelIndicator);
-		operationCanceledManager.checkCanceled(cancelIndicator); // #validate() sometimes returns null when canceled!
-		publishIssues(issues, cancelIndicator);
 		// update dirty state
 		updateSharedDirtyState();
 		// notify open file listeners
 		parent.onDidRefreshOpenFile(this, cancelIndicator);
+	}
+
+	public List<Issue> validateOpenFile(CancelIndicator cancelIndicator) {
+		// validate
+		IResourceServiceProvider resourceServiceProvider = languagesRegistry.getResourceServiceProvider(mainURI);
+		IResourceValidator resourceValidator = resourceServiceProvider.getResourceValidator();
+		List<Issue> issues = resourceValidator.validate(mainResource, CheckMode.ALL, cancelIndicator);
+		operationCanceledManager.checkCanceled(cancelIndicator); // #validate() sometimes returns null when canceled!
+		// notify LSP client
+		publishIssues(issues, cancelIndicator);
+		return issues;
 	}
 
 	protected void publishIssues(List<Issue> issues, CancelIndicator cancelIndicator) {
@@ -305,16 +320,13 @@ public class OpenFileContext {
 		// update my cached state
 
 		List<IResourceDescription.Delta> allDeltas = createDeltas(changedDescs, removedURIs);
-		List<IResourceDescription.Delta> changedDeltas = allDeltas.stream()
-				.filter(d -> d.haveEObjectDescriptionsChanged())
-				.collect(Collectors.toList());
 
-		changedDeltas.forEach(index::register);
+		allDeltas.forEach(index::register);
 
 		ContainerStructureSnapshot oldContainerStructure = containerStructure;
 		containerStructure = newContainerStructure;
 
-		// refresh if affected by the changes
+		// refresh if I am affected by the changes
 
 		boolean isAffected = !containerStructure.equals(oldContainerStructure);
 
@@ -324,9 +336,14 @@ public class OpenFileContext {
 				return;
 			}
 			IResourceDescription candidateDesc = index.getResourceDescription(mainURI);
-			isAffected = rdm instanceof AllChangeAware
-					? ((AllChangeAware) rdm).isAffectedByAny(allDeltas, candidateDesc, index)
-					: rdm.isAffected(changedDeltas, candidateDesc, index);
+			if (rdm instanceof AllChangeAware) {
+				isAffected = ((AllChangeAware) rdm).isAffectedByAny(allDeltas, candidateDesc, index);
+			} else {
+				List<IResourceDescription.Delta> changedDeltas = allDeltas.stream()
+						.filter(d -> d.haveEObjectDescriptionsChanged())
+						.collect(Collectors.toList());
+				isAffected = rdm.isAffected(changedDeltas, candidateDesc, index);
+			}
 		}
 
 		if (isAffected) {
@@ -381,7 +398,6 @@ public class OpenFileContext {
 		// the resource they were created from (i.e. 'mainResource' in this case); this means they are (1) not thread
 		// safe and (2) may leak EObjects from one open file context into another or to the outside. The following line
 		// seems to fix that, but requires access to restricted Xtext API:
-		// FIXME GH-1774 ask @szarnekow about proper way of doing that
 		SerializableResourceDescription newDesc2 = SerializableResourceDescription.createCopy(newDesc);
 		return newDesc2;
 	}

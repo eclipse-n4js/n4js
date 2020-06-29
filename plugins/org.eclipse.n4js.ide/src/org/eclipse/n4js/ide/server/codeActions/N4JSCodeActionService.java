@@ -31,9 +31,9 @@ import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
 import org.eclipse.n4js.ide.xtext.server.DiagnosticIssueConverter;
 import org.eclipse.n4js.ide.xtext.server.LSPIssue;
+import org.eclipse.n4js.ide.xtext.server.LSPIssueConverter;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
-import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
 import org.eclipse.n4js.ide.xtext.server.openfiles.OpenFilesManager;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
@@ -43,12 +43,12 @@ import org.eclipse.xtext.ide.server.codeActions.ICodeActionService2;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
+import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 import com.google.common.collect.HashMultimap;
-import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
@@ -196,6 +196,9 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 	private DiagnosticIssueConverter diagnosticIssueConverter;
 
 	@Inject
+	private LSPIssueConverter lspIssueConverter;
+
+	@Inject
 	private IN4JSCore n4jsCore;
 
 	@Inject
@@ -341,13 +344,14 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 
 		TextEditCollector collector = new TextEditCollector();
 		TextDocumentIdentifier textDocId = new TextDocumentIdentifier(uriExtensions.toUriString(uri));
-		ConcurrentIssueRegistry issueRegistry = languageServer.getIssueRegistry();
-		ImmutableSortedSet<LSPIssue> issues = issueRegistry.getIssuesOfDirtyOrPersistedState(uri);
 
-		openFilesManager.<Void> runInTemporaryFileContext(uri, "applyToFile", cancelIndicator, (ofc, ci) -> {
+		openFilesManager.<Void> runInTemporaryFileContext(uri, "doApplyToFile", false, cancelIndicator, (ofc, ci) -> {
 			XtextResource res = ofc.getResource();
+			List<Issue> issues = ofc.resolveAndValidateOpenFile(ci);
+			List<LSPIssue> lspIssues = lspIssueConverter.convertToLSPIssues(res, issues, ci);
+
 			XDocument doc = ofc.getDocument();
-			for (LSPIssue issue : issues) {
+			for (LSPIssue issue : lspIssues) {
 				if (issueCode.equals(issue.getCode())) {
 					Options newOptions = createOptions(res, doc, textDocId, issue, ci);
 					quickfix.compute(issueCode, newOptions, collector);

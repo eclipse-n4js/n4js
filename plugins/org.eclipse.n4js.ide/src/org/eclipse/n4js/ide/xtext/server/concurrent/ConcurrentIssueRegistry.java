@@ -16,6 +16,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
@@ -43,7 +44,7 @@ public class ConcurrentIssueRegistry {
 	protected final Map<URI, ImmutableSortedSet<LSPIssue>> persistedIssues = new HashMap<>();
 	protected final Map<String, Map<URI, ImmutableSortedSet<LSPIssue>>> container2persistedIssues = new HashMap<>();
 
-	protected final List<IIssueRegistryListener> listeners = new ArrayList<>();
+	protected final List<IIssueRegistryListener> listeners = new CopyOnWriteArrayList<>();
 
 	public interface IIssueRegistryListener {
 		public void onIssuesChanged(ImmutableList<IssueRegistryChangeEvent> event);
@@ -252,11 +253,11 @@ public class ConcurrentIssueRegistry {
 		return containerIssues;
 	}
 
-	public synchronized void addListener(IIssueRegistryListener l) {
+	public void addListener(IIssueRegistryListener l) {
 		listeners.add(l);
 	}
 
-	public synchronized void removeListener(IIssueRegistryListener l) {
+	public void removeListener(IIssueRegistryListener l) {
 		listeners.remove(l);
 	}
 
@@ -265,12 +266,8 @@ public class ConcurrentIssueRegistry {
 	}
 
 	protected void notifyListeners(List<IssueRegistryChangeEvent> events) {
-		List<IIssueRegistryListener> _listeners;
-		synchronized (this) {
-			_listeners = new ArrayList<>(listeners);
-		}
 		ImmutableList<IssueRegistryChangeEvent> _events = ImmutableList.copyOf(events);
-		for (IIssueRegistryListener l : _listeners) {
+		for (IIssueRegistryListener l : listeners) {
 			l.onIssuesChanged(_events);
 		}
 	}

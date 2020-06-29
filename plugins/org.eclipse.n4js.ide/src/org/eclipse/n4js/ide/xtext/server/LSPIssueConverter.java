@@ -44,7 +44,7 @@ public class LSPIssueConverter {
 				lspIssue = (LSPIssue) issue;
 			} else {
 				if (!(resource instanceof XtextResource)) {
-					// FIXME GH-1774 find better solution!
+					// FIXME GH-1774 find better solution?
 					continue;
 				}
 				document = createDocument((XtextResource) resource);
@@ -55,6 +55,7 @@ public class LSPIssueConverter {
 		return result;
 	}
 
+	// TODO GH-1774 consider avoiding the need for an XDocument here (use NodeModelUtils#getLineAndColumn())
 	public LSPIssue convertToLSPIssue(Issue issue, XDocument document) {
 		if (issue instanceof LSPIssue) {
 			return (LSPIssue) issue;

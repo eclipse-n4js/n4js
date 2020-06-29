@@ -196,7 +196,7 @@ public class LSPIssue extends IssueImpl {
 		}
 		LSPIssue n4Issue = (LSPIssue) obj;
 		boolean equals = true;
-		equals &= Objects.equals(n4Issue.getCode(), getCode());
+		equals &= Objects.equals(n4Issue.getOffset(), getOffset());
 		equals &= Objects.equals(n4Issue.getLength(), getLength());
 		equals &= Objects.equals(n4Issue.getColumn(), getColumn());
 		equals &= n4Issue.getColumnEnd() == getColumnEnd();
@@ -212,7 +212,7 @@ public class LSPIssue extends IssueImpl {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(getCode(), getLength(), getColumn(), getColumnEnd(), getLineNumber(), getLineNumberEnd(),
+		return Objects.hash(getOffset(), getLength(), getColumn(), getColumnEnd(), getLineNumber(), getLineNumberEnd(),
 				getCode(), getMessage(), getUriToProblem(), getSeverity(), getType());
 	}
 }

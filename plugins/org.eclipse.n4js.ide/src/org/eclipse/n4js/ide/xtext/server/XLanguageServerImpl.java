@@ -1112,6 +1112,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		}
 	}
 
+	// TODO GH-1774 clean up XWorkspaceResourceAccess and ILanguageServerAccess
+	// In particular, they seem partially redundant and there should probably be two modes now: one for accessing the
+	// workspace (persisted) files, and one for the dirty files.
 	private final IResourceAccess resourceAccess = new XWorkspaceResourceAccess(this);
 
 	private final ILanguageServerAccess access = new ILanguageServerAccess() {

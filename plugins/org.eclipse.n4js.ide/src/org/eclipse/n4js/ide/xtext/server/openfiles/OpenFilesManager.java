@@ -23,7 +23,6 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
@@ -53,7 +52,7 @@ public class OpenFilesManager {
 
 	protected final Map<URI, OpenFileContext> openFiles = new HashMap<>();
 
-	protected final Map<Thread, OpenFileContext> runningThreads = new HashMap<>();
+	protected final ThreadLocal<OpenFileContext> currentContext = new ThreadLocal<>();
 
 	protected final Map<String, ResourceDescriptionsData> persistedStateDescriptions = new HashMap<>();
 	protected final Map<String, ImmutableSet<String>> persistedStateVisibleContainers = new HashMap<>();
@@ -143,7 +142,7 @@ public class OpenFilesManager {
 		if (isOpen(uri)) {
 			return runInOpenFileContext(uri, description, task);
 		} else {
-			return runInTemporaryFileContext(uri, description, task);
+			return runInTemporaryFileContext(uri, description, true, task);
 		}
 	}
 
@@ -183,8 +182,8 @@ public class OpenFilesManager {
 	 * actually opened files.
 	 */
 	public synchronized <T> CompletableFuture<T> runInTemporaryFileContext(URI uri, String description,
-			BiFunction<OpenFileContext, CancelIndicator, T> task) {
-		return runInTemporaryFileContext(uri, description, CancelIndicator.NullImpl, task);
+			boolean resolveAndValidate, BiFunction<OpenFileContext, CancelIndicator, T> task) {
+		return runInTemporaryFileContext(uri, description, resolveAndValidate, CancelIndicator.NullImpl, task);
 	}
 
 	/**
@@ -194,14 +193,15 @@ public class OpenFilesManager {
 	 * given outer cancel indicator and other sources of cancellation).
 	 */
 	public synchronized <T> CompletableFuture<T> runInTemporaryFileContext(URI uri, String description,
-			CancelIndicator outerCancelIndicator, BiFunction<OpenFileContext, CancelIndicator, T> task) {
+			boolean resolveAndValidate, CancelIndicator outerCancelIndicator,
+			BiFunction<OpenFileContext, CancelIndicator, T> task) {
 
 		OpenFileContext tempOFC = createOpenFileContext(uri, true);
 
 		String descriptionWithContext = description + " (temporary) [" + uri.lastSegment() + "]";
 		return doSubmitTask(tempOFC, descriptionWithContext, (_tempOFC, ciFromExecutor) -> {
 			CancelIndicator ciCombined = CancelIndicatorUtil.combine(outerCancelIndicator, ciFromExecutor);
-			_tempOFC.initOpenFile(ciCombined);
+			_tempOFC.initOpenFile(resolveAndValidate, ciCombined);
 			return task.apply(_tempOFC, ciCombined);
 		});
 	}
@@ -212,10 +212,10 @@ public class OpenFilesManager {
 		Object queueId = getQueueIdForOpenFileContext(ofc.getURI(), ofc.isTemporary());
 		return lspExecutorService.submit(queueId, description, ci -> {
 			try {
-				registerRunningThread(ofc);
+				currentContext.set(ofc);
 				return task.apply(ofc, ci);
 			} finally {
-				unregisterRunningThread();
+				currentContext.set(null);
 			}
 		});
 	}
@@ -248,42 +248,13 @@ public class OpenFilesManager {
 	}
 
 	/**
-	 * Tells whether the given resource set is one that is used to process an open file managed by this
-	 * {@link OpenFilesManager}.
-	 */
-	public synchronized boolean isOpenFileResourceSet(ResourceSet origin) {
-		OpenFileContext ofc = findOpenFileContext(origin);
-		return ofc != null;
-	}
-
-	protected synchronized OpenFileContext findOpenFileContext(ResourceSet resourceSet) {
-		return openFiles.values().stream()
-				.filter(ofc -> ofc.getResourceSet() == resourceSet)
-				.findAny().orElse(null);
-	}
-
-	protected void registerRunningThread(OpenFileContext ofc) {
-		synchronized (runningThreads) {
-			runningThreads.put(Thread.currentThread(), ofc);
-		}
-	}
-
-	protected void unregisterRunningThread() {
-		synchronized (runningThreads) {
-			runningThreads.remove(Thread.currentThread());
-		}
-	}
-
-	/**
-	 * If the thread invoking this method {@link #runInOpenFileContext(URI, String, BiFunction) runs in an open file
-	 * context}, that context is returned. Otherwise returns <code>null</code>.
+	 * If the thread invoking this method {@link #runInOpenFileContext(URI, String, BiFunction) currently runs in an
+	 * open file context}, that context is returned. Otherwise returns <code>null</code>.
 	 * <p>
 	 * Corresponds to {@link Thread#currentThread()}.
 	 */
 	public OpenFileContext currentContext() {
-		synchronized (runningThreads) {
-			return runningThreads.get(Thread.currentThread());
-		}
+		return currentContext.get();
 	}
 
 	protected synchronized ResourceDescriptionsData createPersistedStateIndex() {

@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.ide.xtext.server.concurrent;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +18,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.xtext.resource.impl.ChunkedResourceDescriptions;
@@ -50,7 +50,7 @@ public class ConcurrentChunkedIndex {
 	/** Map of all visible containers per container. */
 	protected final Map<String, ImmutableSet<String>> containerHandle2VisibleContainers = new HashMap<>();
 	/** Registered listeners. */
-	protected final List<IChunkedIndexListener> listeners = new ArrayList<>();
+	protected final List<IChunkedIndexListener> listeners = new CopyOnWriteArrayList<>();
 
 	/** Listens for changes in a {@link ConcurrentChunkedIndex}. */
 	public interface IChunkedIndexListener {
@@ -149,12 +149,12 @@ public class ConcurrentChunkedIndex {
 	}
 
 	/** Adds the given listener. */
-	public synchronized void addListener(IChunkedIndexListener listener) {
+	public void addListener(IChunkedIndexListener listener) {
 		listeners.add(listener);
 	}
 
 	/** Removes the given listener. */
-	public synchronized void removeListener(IChunkedIndexListener listener) {
+	public void removeListener(IChunkedIndexListener listener) {
 		listeners.remove(listener);
 	}
 
