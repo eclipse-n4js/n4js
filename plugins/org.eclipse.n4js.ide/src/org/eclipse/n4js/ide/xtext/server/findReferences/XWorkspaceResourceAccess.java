@@ -47,7 +47,7 @@ public class XWorkspaceResourceAccess implements IReferenceFinder.IResourceAcces
 		if (currOFC != null) {
 			return doWork(currOFC.getResourceSet(), work);
 		}
-		// FIXME GH-1774 consider making a current context mandatory by removing the following:
+		// TODO GH-1774 consider making a current context mandatory by removing the following:
 		CompletableFuture<R> future = openFilesManager.runInTemporaryFileContext(uri, "XWorkspaceResourceAccess", true,
 				(ofc, ci) -> doWork(ofc.getResourceSet(), work));
 		return FutureUtil.getCancellableResult(future);

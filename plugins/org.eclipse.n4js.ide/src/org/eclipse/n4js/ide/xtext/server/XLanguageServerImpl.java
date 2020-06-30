@@ -459,9 +459,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	public void didChange(DidChangeTextDocumentParams params) {
 		VersionedTextDocumentIdentifier textDocument = params.getTextDocument();
 		URI uri = getURI(textDocument);
-		if (openFilesManager.isOpen(uri)) { // FIXME GH-1774 reconsider
-			openFilesManager.changeFile(uri, textDocument.getVersion(), params.getContentChanges());
-		}
+		openFilesManager.changeFile(uri, textDocument.getVersion(), params.getContentChanges());
 	}
 
 	@Override
@@ -654,7 +652,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public CompletableFuture<List<? extends SymbolInformation>> symbol(WorkspaceSymbolParams params) {
-		// FIXME GH-1774 double-check that the workspaceSymbolService may run in parallel to the builder
 		return lspExecutorService.submitAndCancelPrevious(WorkspaceSymbolParams.class, "symbol",
 				cancelIndicator -> symbol(params, cancelIndicator));
 	}
@@ -1112,7 +1109,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		}
 	}
 
-	// TODO GH-1774 clean up XWorkspaceResourceAccess and ILanguageServerAccess
+	// TODO GH-1774 refactor / clean up XWorkspaceResourceAccess and ILanguageServerAccess
 	// In particular, they seem partially redundant and there should probably be two modes now: one for accessing the
 	// workspace (persisted) files, and one for the dirty files.
 	private final IResourceAccess resourceAccess = new XWorkspaceResourceAccess(this);
@@ -1134,6 +1131,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 					return CompletableFuture.completedFuture(result);
 				}
 			}
+			// TODO GH-1774 consider making a current context mandatory by removing the following:
 			return openFilesManager.runInOpenOrTemporaryFileContext(uri, "doRead", (ofc, ci) -> {
 				XtextResource res = ofc.getResource();
 				XDocument doc = ofc.getDocument();

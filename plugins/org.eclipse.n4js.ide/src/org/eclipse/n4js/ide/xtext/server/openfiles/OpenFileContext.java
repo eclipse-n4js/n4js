@@ -214,12 +214,12 @@ public class OpenFileContext {
 	}
 
 	public void refreshOpenFile(CancelIndicator cancelIndicator) {
-		// FIXME find better solution for updating unchanged open files!
+		// TODO GH-1774 find better solution for updating unchanged open files!
 		TextDocumentContentChangeEvent dummyChange = new TextDocumentContentChangeEvent(document.getContents());
 		refreshOpenFile(document.getVersion(), Collections.singletonList(dummyChange), cancelIndicator);
 	}
 
-	public void refreshOpenFile(@SuppressWarnings("unused") int version, // TODO add check using the version
+	public void refreshOpenFile(@SuppressWarnings("unused") int version,
 			Iterable<? extends TextDocumentContentChangeEvent> changes, CancelIndicator cancelIndicator) {
 
 		if (mainResource == null) {
@@ -229,11 +229,11 @@ public class OpenFileContext {
 			throw new IllegalStateException("trying to refresh a resource that is not yet loaded: " + mainURI);
 		}
 
-		// TODO the following is only necessary for changed files (could be moved to #updateDirtyState())
+		// TODO GH-1774 the following is only necessary for changed files (could be moved to #updateDirtyState())
 		ResourceSet resSet = getResourceSet();
 		for (Resource res : new ArrayList<>(resSet.getResources())) {
 			if (res != mainResource) {
-				res.unload(); // FIXME better way to do this? (unload is expensive due to re-proxyfication)
+				res.unload(); // TODO GH-1774 better way to do this? (unload is expensive due to re-proxyfication)
 				resSet.getResources().remove(res);
 			}
 		}

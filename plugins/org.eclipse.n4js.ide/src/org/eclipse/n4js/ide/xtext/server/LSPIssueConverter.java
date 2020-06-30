@@ -44,7 +44,6 @@ public class LSPIssueConverter {
 				lspIssue = (LSPIssue) issue;
 			} else {
 				if (!(resource instanceof XtextResource)) {
-					// FIXME GH-1774 find better solution?
 					continue;
 				}
 				document = createDocument((XtextResource) resource);

@@ -128,9 +128,8 @@ public class OpenFilesManager {
 
 	public synchronized CompletableFuture<Void> closeFile(URI uri) {
 		// To allow running/pending tasks in the context of the given URI's file to complete normally, we put the call
-		// to #discardOpenFileInfo() on the queue (note: this does apply to tasks being submitted after this method
+		// to #discardOpenFileInfo() on the queue (note: this does not apply to tasks being submitted after this method
 		// returns and before #discardOpenFileInfo() is invoked).
-		// FIXME GH-1774 reconsider sequence when closing files
 		return runInOpenFileContextVoid(uri, "closeFile", (ofc, ci) -> {
 			discardOpenFileInfo(uri);
 		});
