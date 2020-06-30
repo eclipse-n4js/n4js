@@ -227,7 +227,7 @@ public class ConcurrentIssueRegistry {
 		notifyListeners(eventPersisted(containerHandle, uri, issuesOld, issuesNew));
 	}
 
-	public synchronized void addIssueOfPersistedState(String containerHandle, URI uri, LSPIssue issue) {
+	public void addIssueOfPersistedState(String containerHandle, URI uri, LSPIssue issue) {
 		ImmutableSortedSet<LSPIssue> issuesOld;
 		ImmutableSortedSet<LSPIssue> issuesNew;
 		synchronized (this) {

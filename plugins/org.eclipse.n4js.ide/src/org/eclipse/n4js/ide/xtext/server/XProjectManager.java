@@ -28,6 +28,7 @@ import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
 import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentChunkedIndex;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
+import org.eclipse.n4js.ide.xtext.server.openfiles.OpenFilesManager;
 import org.eclipse.n4js.internal.lsp.N4JSProjectConfig;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.diagnostics.Severity;
@@ -47,6 +48,7 @@ import org.eclipse.xtext.util.UriUtil;
 import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.workspace.ProjectConfigAdapter;
 
+import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -114,7 +116,7 @@ public class XProjectManager {
 	private final AfterValidateListener afterValidateListener = new AfterValidateListener() {
 		@Override
 		public void afterValidate(String projectName, URI source, Collection<? extends LSPIssue> issues) {
-			issueRegistry.setIssuesOfPersistedState(projectConfig.getName(), source, issues);
+			publishIssues(source, issues);
 		}
 	};
 
@@ -156,7 +158,7 @@ public class XProjectManager {
 		Multimap<URI, LSPIssue> validationIssues = projectStateHolder.getValidationIssues();
 		for (URI location : validationIssues.keys()) {
 			Collection<LSPIssue> issues = validationIssues.get(location);
-			issueRegistry.setIssuesOfPersistedState(projectConfig.getName(), location, issues);
+			publishIssues(location, issues);
 		}
 
 		// clear the resource set to release memory
@@ -342,6 +344,37 @@ public class XProjectManager {
 		Resource resource = resourceSet.getResource(uri, true);
 		resource.getContents();
 		return resource;
+	}
+
+	/** Publish issues for the resource with the given URI to the {@link #issueRegistry}. */
+	protected void publishIssues(URI uri, Iterable<? extends LSPIssue> issues) {
+		String projectName = projectConfig.getName();
+		if (isResourceWithHiddenIssues(uri)) {
+			// nothing to publish, BUT because the result value of #isResourceWithHiddenIssues() can change over time
+			// for the same URI (e.g. source folders being added/removed in an existing project), we need to ensure to
+			// remove issues that might have been published earlier:
+			ImmutableSortedSet<LSPIssue> oldIssues = issueRegistry.getIssuesOfPersistedState(projectName, uri);
+			if (oldIssues != null && !oldIssues.isEmpty()) {
+				issueRegistry.clearIssuesOfPersistedState(projectName, uri);
+			}
+			return;
+		}
+		issueRegistry.setIssuesOfPersistedState(projectConfig.getName(), uri, issues);
+	}
+
+	/**
+	 * Tells whether issues of the resource with the given URI should be hidden, i.e. not be sent to the LSP client.
+	 * This is intended for things like "external libraries" which might be located inside the workspace but are not
+	 * actively being developed (e.g. contents of "node_modules" folders in a Javascript/npm workspace).
+	 * <p>
+	 * By default, this method returns <code>true</code> for all resources that are not contained in one of
+	 * {@link IProjectConfig#getSourceFolders() the project's source folders}.
+	 * <p>
+	 * Note that this affects the builder and therefore closed files only; once a file is being opened and handled by
+	 * {@link OpenFilesManager} issues will always become visible.
+	 */
+	protected boolean isResourceWithHiddenIssues(URI uri) {
+		return projectConfig.findSourceFolderContaining(uri) == null;
 	}
 
 	/** @return all resource descriptions that start with the given prefix */

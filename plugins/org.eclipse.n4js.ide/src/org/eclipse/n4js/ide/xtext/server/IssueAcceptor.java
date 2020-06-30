@@ -20,11 +20,8 @@ import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.services.LanguageClient;
-import org.eclipse.n4js.ide.xtext.server.openfiles.OpenFilesManager;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.ide.server.UriExtensions;
-import org.eclipse.xtext.workspace.IProjectConfig;
-import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.collect.ComparisonChain;
@@ -34,17 +31,11 @@ import com.google.inject.Singleton;
 /**
  *
  */
-@SuppressWarnings("restriction")
 @Singleton
 public class IssueAcceptor {
+
 	@Inject
 	private UriExtensions uriExtensions;
-
-	@Inject
-	private OpenFilesManager openFilesManager;
-
-	@Inject
-	private XWorkspaceManager workspaceManager;
 
 	@Inject
 	private DiagnosticIssueConverter diagnosticIssueConverter;
@@ -68,7 +59,7 @@ public class IssueAcceptor {
 		if (client != null) {
 			PublishDiagnosticsParams publishDiagnosticsParams = new PublishDiagnosticsParams();
 			publishDiagnosticsParams.setUri(uriExtensions.toUriString(uri));
-			List<Diagnostic> diags = toDiagnostics(uri, issues);
+			List<Diagnostic> diags = toDiagnostics(issues);
 			publishDiagnosticsParams.setDiagnostics(diags);
 			client.publishDiagnostics(publishDiagnosticsParams);
 		}
@@ -78,19 +69,7 @@ public class IssueAcceptor {
 	 * Convert the given issues to diagnostics. Does not return issues in files that are neither in the workspace nor
 	 * currently opened in the editor. Does not return any issue with severity {@link Severity#IGNORE ignore}.
 	 */
-	protected List<Diagnostic> toDiagnostics(URI uri, Iterable<? extends LSPIssue> issues) {
-		if (!openFilesManager.isOpen(uri)) {
-			// Closed documents need to exist in the current workspace
-			// FIXME GH-1774 why is this required? Get rid of this XWorkspaceManager usage
-			IProjectConfig projectConfig = workspaceManager.getWorkspaceConfig().findProjectContaining(uri);
-			if (projectConfig == null) {
-				return Collections.emptyList();
-			}
-			ISourceFolder sourceFolder = projectConfig.findSourceFolderContaining(uri);
-			if (sourceFolder == null) {
-				return Collections.emptyList();
-			}
-		}
+	protected List<Diagnostic> toDiagnostics(Iterable<? extends LSPIssue> issues) {
 		if (IterableExtensions.isEmpty(issues)) {
 			return Collections.emptyList();
 		}
