@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
@@ -60,7 +61,7 @@ public class OpenFilesManager {
 
 	protected final ResourceDescriptionsData sharedDirtyState = new ResourceDescriptionsData(Collections.emptyList());
 
-	protected final List<IOpenFilesListener> listeners = new ArrayList<>();
+	protected final List<IOpenFilesListener> listeners = new CopyOnWriteArrayList<>();
 
 	protected ConcurrentIssueRegistry issueRegistry = null;
 
@@ -348,11 +349,11 @@ public class OpenFilesManager {
 		}
 	}
 
-	public synchronized void addListener(IOpenFilesListener l) {
+	public void addListener(IOpenFilesListener l) {
 		listeners.add(l);
 	}
 
-	public synchronized void removeListener(IOpenFilesListener l) {
+	public void removeListener(IOpenFilesListener l) {
 		listeners.remove(l);
 	}
 
@@ -364,11 +365,7 @@ public class OpenFilesManager {
 	}
 
 	protected /* NOT synchronized */ void notifyOpenFileListeners(OpenFileContext ofc, CancelIndicator ci) {
-		List<IOpenFilesListener> ls;
-		synchronized (this) {
-			ls = new ArrayList<>(listeners);
-		}
-		for (IOpenFilesListener l : ls) {
+		for (IOpenFilesListener l : listeners) {
 			l.didRefreshOpenFile(ofc, ci);
 		}
 	}
