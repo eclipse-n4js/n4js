@@ -27,13 +27,11 @@ import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
 import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
 import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
+import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
 import org.eclipse.n4js.utils.URIUtils;
-import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.util.IFileSystemScanner;
-import org.eclipse.xtext.util.Strings;
-import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.workspace.ISourceFolder;
 
@@ -68,42 +66,18 @@ public class ProjectStateHolder {
 
 	private Map<URI, HashedFileContent> uriToHashedFileContents = new HashMap<>();
 
+	// TODO GH-1774 avoid storing issues twice (in ProjectStateHolder and ConcurrentIssueRegistry)
 	/*
 	 * Implementation note: We use a sorted map to report the issues in a stable order. The values of the the map are
 	 * sorted by offset and severity and message.
 	 *
 	 * URI (keys in the multimap) are sorted according to their location in the file system. Turns out that the string
-	 * represenation yields the same result as a comparion per path segment.
+	 * representation yields the same result as a comparison per path segment.
 	 *
 	 * The sort order will look like this: /a/b, /a/b/c, /a/b/d, /a/c, /aa
 	 */
-	private final Multimap<URI, Issue> validationIssues = TreeMultimap.create(Comparator.comparing(URI::toString),
-			issueComparator);
-
-	private static final Comparator<Issue> issueComparator = Comparator.comparing(ProjectStateHolder::getOffset)
-			.thenComparing(ProjectStateHolder::getSeverity).thenComparing(ProjectStateHolder::getMessage)
-			.thenComparing(Issue::hashCode);
-
-	private static int getOffset(Issue issue) {
-		Integer result = issue.getOffset();
-		if (result == null) {
-			return -1;
-		}
-		return result;
-	}
-
-	private static Severity getSeverity(Issue issue) {
-		Severity result = issue.getSeverity();
-		if (result == null) {
-			return Severity.ERROR;
-		}
-		return result;
-	}
-
-	private static String getMessage(Issue issue) {
-		String result = issue.getMessage();
-		return Strings.emptyIfNull(result);
-	}
+	private final Multimap<URI, LSPIssue> validationIssues = TreeMultimap.create(Comparator.comparing(URI::toString),
+			ConcurrentIssueRegistry.defaultIssueComparator);
 
 	/** Clears type index of this project. */
 	public void doClear() {
@@ -132,7 +106,7 @@ public class ProjectStateHolder {
 	/**
 	 * Return the validation issues as an unmodifiable map.
 	 */
-	public Multimap<URI, Issue> getValidationIssues() {
+	public Multimap<URI, LSPIssue> getValidationIssues() {
 		return Multimaps.unmodifiableMultimap(validationIssues);
 	}
 
@@ -274,9 +248,9 @@ public class ProjectStateHolder {
 	}
 
 	/** Merges the given map of source files to issues to the current state */
-	protected void mergeValidationIssues(Map<URI, Collection<Issue>> issueMap) {
-		for (Iterator<Entry<URI, Collection<Issue>>> iter = issueMap.entrySet().iterator(); iter.hasNext();) {
-			Entry<URI, Collection<Issue>> entry = iter.next();
+	protected void mergeValidationIssues(Map<URI, Collection<LSPIssue>> issueMap) {
+		for (Iterator<Entry<URI, Collection<LSPIssue>>> iter = issueMap.entrySet().iterator(); iter.hasNext();) {
+			Entry<URI, Collection<LSPIssue>> entry = iter.next();
 			URI source = entry.getKey();
 			validationIssues.replaceValues(source, entry.getValue());
 		}

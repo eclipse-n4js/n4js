@@ -22,7 +22,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.ZipException;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.ide.validation.N4JSIssue;
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersister.PersistedState;
 import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
@@ -32,7 +31,6 @@ import org.eclipse.xtext.builder.builderState.impl.ResourceDescriptionImpl;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.persistence.SerializableResourceDescription;
-import org.eclipse.xtext.validation.Issue;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -154,15 +152,15 @@ public class ProjectStatePersisterTest {
 		URI source1 = URI.createURI("some:/source1");
 		URI source2 = URI.createURI("some:/source2");
 
-		N4JSIssue src1Issue1 = new N4JSIssue();
-		N4JSIssue src2Issue1 = new N4JSIssue();
-		N4JSIssue src2Issue2 = new N4JSIssue();
+		LSPIssue src1Issue1 = new LSPIssue();
+		LSPIssue src2Issue1 = new LSPIssue();
+		LSPIssue src2Issue2 = new LSPIssue();
 		setValues(src1Issue1, "src1Issue1", 1, 1, Severity.ERROR);
 		setValues(src2Issue1, "src2Issue1", 2, 1, Severity.WARNING);
 		setValues(src2Issue2, "src2Issue2", 2, 2, Severity.INFO);
 
 		// first set values of issues; then add issues to hash map
-		Multimap<URI, Issue> issueMap = HashMultimap.create();
+		Multimap<URI, LSPIssue> issueMap = HashMultimap.create();
 		issueMap.put(source1, src1Issue1);
 		issueMap.put(source2, src2Issue1);
 		issueMap.put(source2, src2Issue2);
@@ -174,7 +172,7 @@ public class ProjectStatePersisterTest {
 		Assert.assertEquals(issueMap, pState.validationIssues);
 	}
 
-	private void setValues(N4JSIssue issue, String varName, int srcNo, int issueNo, Severity severity) {
+	private void setValues(LSPIssue issue, String varName, int srcNo, int issueNo, Severity severity) {
 		int prefix = srcNo * 100 + issueNo * 10;
 		issue.setCode(varName + ".code");
 		issue.setColumn(prefix++);

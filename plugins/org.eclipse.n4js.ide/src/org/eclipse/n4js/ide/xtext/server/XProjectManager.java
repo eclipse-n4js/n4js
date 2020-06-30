@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.log4j.LogManager;
@@ -21,10 +21,14 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest;
+import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterValidateListener;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
 import org.eclipse.n4js.ide.xtext.server.build.XIncrementalBuilder;
 import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
 import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
+import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentChunkedIndex;
+import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
+import org.eclipse.n4js.ide.xtext.server.openfiles.OpenFilesManager;
 import org.eclipse.n4js.internal.lsp.N4JSProjectConfig;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.diagnostics.Severity;
@@ -41,12 +45,10 @@ import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.util.UriUtil;
-import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.workspace.IProjectConfig;
-import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.workspace.ProjectConfigAdapter;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -79,10 +81,6 @@ public class XProjectManager {
 	@Inject
 	protected DefaultBuildRequestFactory buildRequestFactory;
 
-	/** Publishes issues to lsp client */
-	@Inject
-	protected IssueAcceptor issueAcceptor;
-
 	/** Holds index, hashes and issue information */
 	@Inject
 	protected ProjectStateHolder projectStateHolder;
@@ -105,9 +103,9 @@ public class XProjectManager {
 	@Inject
 	protected XWorkspaceManager workspaceManager;
 
-	private Provider<Map<String, ResourceDescriptionsData>> indexProvider;
+	private ConcurrentChunkedIndex fullIndex;
 
-	private IExternalContentSupport.IExternalContentProvider openedDocumentsContentProvider;
+	private ConcurrentIssueRegistry issueRegistry;
 
 	private XtextResourceSet resourceSet;
 
@@ -115,16 +113,22 @@ public class XProjectManager {
 
 	private IProjectConfig projectConfig;
 
+	private final AfterValidateListener afterValidateListener = new AfterValidateListener() {
+		@Override
+		public void afterValidate(String projectName, URI source, Collection<? extends LSPIssue> issues) {
+			publishIssues(source, issues);
+		}
+	};
+
 	/** Initialize this project. */
 	@SuppressWarnings("hiding")
 	public void initialize(ProjectDescription description, IProjectConfig projectConfig,
-			IExternalContentSupport.IExternalContentProvider openedDocumentsContentProvider,
-			Provider<Map<String, ResourceDescriptionsData>> indexProvider) {
+			ConcurrentChunkedIndex fullIndex, ConcurrentIssueRegistry issueRegistry) {
 
 		this.projectDescription = description;
 		this.projectConfig = projectConfig;
-		this.openedDocumentsContentProvider = openedDocumentsContentProvider;
-		this.indexProvider = indexProvider;
+		this.fullIndex = fullIndex;
+		this.issueRegistry = issueRegistry;
 		this.resourceSet = createNewResourceSet(new XIndexState().getResourceDescriptions());
 	}
 
@@ -133,7 +137,8 @@ public class XProjectManager {
 	 * <p>
 	 * This method assumes that it is only invoked in situations when the client does not have any diagnostics stored,
 	 * e.g. directly after invoking {@link #doClean(CancelIndicator)}, and that therefore no 'publishDiagnostics' events
-	 * with an empty list of diagnostics need to be sent to the client in order to remove obsolete diagnostics.
+	 * with an empty list of diagnostics need to be sent to the client in order to remove obsolete diagnostics. The same
+	 * applies to updates of {@link #issueRegistry}, accordingly.
 	 * <p>
 	 * NOTE: this is not only invoked shortly after server startup but also at various other occasions, for example
 	 * <ul>
@@ -150,10 +155,10 @@ public class XProjectManager {
 		// send issues to client
 		// (below code won't send empty 'publishDiagnostics' events for resources without validation issues, see API doc
 		// of this method for details)
-		Multimap<URI, Issue> validationIssues = projectStateHolder.getValidationIssues();
+		Multimap<URI, LSPIssue> validationIssues = projectStateHolder.getValidationIssues();
 		for (URI location : validationIssues.keys()) {
-			Collection<Issue> issues = validationIssues.get(location);
-			issueAcceptor.publishDiagnostics(location, issues);
+			Collection<LSPIssue> issues = validationIssues.get(location);
+			publishIssues(location, issues);
 		}
 
 		// clear the resource set to release memory
@@ -194,9 +199,8 @@ public class XProjectManager {
 		projectStateHolder.updateProjectState(request, result, projectConfig);
 
 		ResourceDescriptionsData resourceDescriptions = projectStateHolder.getIndexState().getResourceDescriptions();
+		fullIndex.setContainer(projectDescription.getName(), resourceDescriptions);
 
-		Map<String, ResourceDescriptionsData> concurrentMap = indexProvider.get();
-		concurrentMap.put(projectDescription.getName(), resourceDescriptions);
 		return result;
 	}
 
@@ -212,7 +216,7 @@ public class XProjectManager {
 			}
 		}
 
-		XBuildRequest request = buildRequestFactory.getBuildRequest();
+		XBuildRequest request = buildRequestFactory.getBuildRequest(projectConfig.getName());
 		for (File outputDirectory : getOutputDirectories()) {
 			File[] childFiles = outputDirectory.listFiles();
 			if (childFiles != null) {
@@ -223,14 +227,8 @@ public class XProjectManager {
 			}
 		}
 
-		for (ISourceFolder sourceFolder : projectConfig.getSourceFolders()) {
-			operationCanceledManager.checkCanceled(cancelIndicator);
-			List<URI> allURIs = sourceFolder.getAllResources(fileSystemScanner);
-			for (URI uri : allURIs) {
-				operationCanceledManager.checkCanceled(cancelIndicator);
-				issueAcceptor.publishDiagnostics(uri, Collections.emptyList());
-			}
-		}
+		fullIndex.clearContainer(projectConfig.getName());
+		issueRegistry.clearIssuesOfPersistedState(projectConfig.getName());
 	}
 
 	/** @return list of output directories of this project */
@@ -266,12 +264,12 @@ public class XProjectManager {
 
 	/** Report an issue. */
 	public void reportProjectIssue(String message, String code, Severity severity) {
-		Issue.IssueImpl result = new Issue.IssueImpl();
+		LSPIssue result = new LSPIssue();
 		result.setMessage(message);
 		result.setCode(code);
 		result.setSeverity(severity);
 		result.setUriToProblem(getBaseDir());
-		issueAcceptor.publishDiagnostics(getBaseDir(), ImmutableList.of(result));
+		issueRegistry.addIssueOfPersistedState(projectConfig.getName(), getBaseDir(), result);
 	}
 
 	/** Creates a new build request for this project. */
@@ -279,7 +277,8 @@ public class XProjectManager {
 			List<IResourceDescription.Delta> externalDeltas, boolean propagateIssues, boolean doGenerate,
 			CancelIndicator cancelIndicator) {
 
-		XBuildRequest result = buildRequestFactory.getBuildRequest(changedFiles, deletedFiles, externalDeltas);
+		XBuildRequest result = buildRequestFactory.getBuildRequest(projectConfig.getName(), changedFiles, deletedFiles,
+				externalDeltas);
 
 		XIndexState indexState = projectStateHolder.getIndexState();
 		ResourceDescriptionsData resourceDescriptionsCopy = indexState.getResourceDescriptions().copy();
@@ -290,7 +289,9 @@ public class XProjectManager {
 		result.setBaseDir(getBaseDir());
 		result.setGeneratorEnabled(doGenerate);
 
-		if (!propagateIssues) {
+		if (propagateIssues) {
+			result.setAfterValidateListener(afterValidateListener);
+		} else {
 			// during initial build, we do not want to notify about any issues because it is
 			// done at the end of the project for the deserialized issues and the new issues
 			// altogether.
@@ -313,8 +314,9 @@ public class XProjectManager {
 		} else {
 			ChunkedResourceDescriptions resDescs = ChunkedResourceDescriptions.findInEmfObject(resourceSet);
 
-			Map<String, ResourceDescriptionsData> concurrentMap = indexProvider.get();
-			concurrentMap.forEach(resDescs::setContainer);
+			for (Entry<String, ResourceDescriptionsData> entry : fullIndex.entries()) {
+				resDescs.setContainer(entry.getKey(), entry.getValue());
+			}
 			resDescs.setContainer(projectDescription.getName(), newIndex);
 		}
 		return resourceSet;
@@ -328,10 +330,8 @@ public class XProjectManager {
 		ProjectConfigAdapter.install(result, projectConfig);
 		attachWorkspaceResourceLocator(result);
 
-		Map<String, ResourceDescriptionsData> concurrentMap = indexProvider.get();
-		ChunkedResourceDescriptions index = new ChunkedResourceDescriptions(concurrentMap, result);
+		ChunkedResourceDescriptions index = fullIndex.toDescriptions(result);
 		index.setContainer(projectDescription.getName(), newIndex);
-		externalContentSupport.configureResourceSet(result, openedDocumentsContentProvider);
 		return result;
 	}
 
@@ -346,10 +346,40 @@ public class XProjectManager {
 		return resource;
 	}
 
+	/** Publish issues for the resource with the given URI to the {@link #issueRegistry}. */
+	protected void publishIssues(URI uri, Iterable<? extends LSPIssue> issues) {
+		String projectName = projectConfig.getName();
+		if (isResourceWithHiddenIssues(uri)) {
+			// nothing to publish, BUT because the result value of #isResourceWithHiddenIssues() can change over time
+			// for the same URI (e.g. source folders being added/removed in an existing project), we need to ensure to
+			// remove issues that might have been published earlier:
+			ImmutableSortedSet<LSPIssue> oldIssues = issueRegistry.getIssuesOfPersistedState(projectName, uri);
+			if (oldIssues != null && !oldIssues.isEmpty()) {
+				issueRegistry.clearIssuesOfPersistedState(projectName, uri);
+			}
+			return;
+		}
+		issueRegistry.setIssuesOfPersistedState(projectConfig.getName(), uri, issues);
+	}
+
+	/**
+	 * Tells whether issues of the resource with the given URI should be hidden, i.e. not be sent to the LSP client.
+	 * This is intended for things like "external libraries" which might be located inside the workspace but are not
+	 * actively being developed (e.g. contents of "node_modules" folders in a Javascript/npm workspace).
+	 * <p>
+	 * By default, this method returns <code>true</code> for all resources that are not contained in one of
+	 * {@link IProjectConfig#getSourceFolders() the project's source folders}.
+	 * <p>
+	 * Note that this affects the builder and therefore closed files only; once a file is being opened and handled by
+	 * {@link OpenFilesManager} issues will always become visible.
+	 */
+	protected boolean isResourceWithHiddenIssues(URI uri) {
+		return projectConfig.findSourceFolderContaining(uri) == null;
+	}
+
 	/** @return all resource descriptions that start with the given prefix */
 	public List<URI> findResourcesStartingWithPrefix(URI prefix) {
-		Map<String, ResourceDescriptionsData> concurrentMap = indexProvider.get();
-		ResourceDescriptionsData resourceDescriptionsData = concurrentMap.get(projectDescription.getName());
+		ResourceDescriptionsData resourceDescriptionsData = fullIndex.getContainer(projectDescription.getName());
 
 		// TODO: Moving this into ResourceDescriptionsData and using a sorted Map could increase performance
 		List<URI> uris = new ArrayList<>();
@@ -364,16 +394,6 @@ public class XProjectManager {
 	/** Getter */
 	public URI getBaseDir() {
 		return getProjectConfig().getPath();
-	}
-
-	/** Getter */
-	protected Provider<Map<String, ResourceDescriptionsData>> getIndexProvider() {
-		return indexProvider;
-	}
-
-	/** Getter */
-	protected IExternalContentSupport.IExternalContentProvider getOpenedDocumentsContentProvider() {
-		return openedDocumentsContentProvider;
 	}
 
 	/** Getter */

@@ -85,8 +85,8 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 		changeNonOpenedFile("C", ' C ' -> ' C1 ');
 		joinServerRequests();
 
-		outputFileSnapshot.assertUnchanged(); // still in dirty state, so nothing re-generated yet!
-		projectStateSnapshot.assertUnchanged();
+		outputFileSnapshot.assertChanged(); // even though workspace is in dirty state, C must already be regenerated
+		projectStateSnapshot.assertChanged();
 
 		// transition workspace into clean state
 		saveOpenedFile("D");
@@ -212,12 +212,12 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 		saveOpenedFile("C");
 		joinServerRequests();
 
-		// as long as only one of the two changed files is saved,
-		// output artifacts should not be re-generated:
+		// even though only one of the two changed files is saved,
+		// output artifacts should already be re-generated:
 		assertNoIssues();
-		cOutputFileSnapshot.assertUnchanged();
+		cOutputFileSnapshot.assertChanged();
 		dOutputFileSnapshot.assertUnchanged();
-		projectStateSnapshot.assertUnchanged();
+		projectStateSnapshot.assertChanged();
 
 		saveOpenedFile("D");
 		joinServerRequests();
@@ -257,12 +257,12 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 		saveOpenedFile("C");
 		joinServerRequests();
 
-		// as long as only one of the two changed files is saved,
-		// output artifacts should not be re-generated:
+		// even though only one of the two changed files is saved,
+		// output artifacts should already be re-generated:
 		assertNoIssues();
-		cOutputFileSnapshot.assertUnchanged();
+		cOutputFileSnapshot.assertChanged();
 		dOutputFileSnapshot.assertUnchanged();
-		projectStateSnapshot.assertUnchanged();
+		projectStateSnapshot.assertChanged();
 
 		// transition into workspace clean state not by saving "D", but
 		// by closing "D" (discarding its unsaved changes)
@@ -304,12 +304,12 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 		saveOpenedFile("Main");
 		joinServerRequests();
 
-		// as long as only one of the two changed files is saved,
-		// output artifacts should not be re-generated:
-		assertNoIssues();
+		// even though only one of the two changed files is saved,
+		// output artifacts should already be re-generated:
+		assertNoIssues(); // Main has an error on disk, but it is hidden by the open editor for Main using Other's dirty state!
 		otherOutputFileSnapshot.assertUnchanged();
-		mainOutputFileSnapshot.assertUnchanged();
-		projectStateSnapshot.assertUnchanged();
+		mainOutputFileSnapshot.assertNotExists(); // deleted, because it now has an error on disk
+		projectStateSnapshot.assertChanged();
 
 		saveOpenedFile("Other");
 		joinServerRequests();
@@ -349,12 +349,12 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 		saveOpenedFile("Other");
 		joinServerRequests();
 
-		// as long as only one of the two changed files is saved,
-		// output artifacts should not be re-generated:
-		assertNoIssues();
-		otherOutputFileSnapshot.assertUnchanged();
-		mainOutputFileSnapshot.assertUnchanged();
-		projectStateSnapshot.assertUnchanged();
+		// even though only one of the two changed files is saved,
+		// output artifacts should already be re-generated:
+		assertNoIssues(); // Main has an error on disk, but it is hidden by the open editor for Main using Other's dirty state!
+		otherOutputFileSnapshot.assertChanged();
+		mainOutputFileSnapshot.assertNotExists(); // deleted, because it now has an error on disk
+		projectStateSnapshot.assertChanged();
 
 		saveOpenedFile("Main");
 		joinServerRequests();
@@ -404,7 +404,7 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 		assertFalse(outputFile.exists()); // never generate output files in node_modules folders
 		projectStateSnapshot.assertExists(); // recreated
 		assertIssues("Main" -> #[ "(Error, [1:16 - 1:31], string is not a subtype of number.)" ]);
-		
+
 		cleanBuildAndWait();
 		assertFalse(outputFile.exists());
 		projectStateSnapshot.assertExists();
@@ -428,7 +428,7 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 
 		assertFalse(outputFile.exists()); // never generate output files in node_modules folders
 		projectStateSnapshot.assertUnchanged(); // not updated, because Other.n4js not saved yet
-		assertIssues("Main" -> #[ "(Error, [1:16 - 1:31], any is not a subtype of number.)" ]);
+		assertIssues("Main" -> #[]); // not updated, because Other.n4js not saved yet
 
 		saveOpenedFile("Other");
 		joinServerRequests();
@@ -444,14 +444,14 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 
 		assertFalse(outputFile.exists()); // never generate output files in node_modules folders
 		projectStateSnapshot.assertNotExists(); // not recreated, because Other.n4js not saved yet
-		assertIssues("Main" -> #[ "(Error, [1:16 - 1:31], string is not a subtype of number.)" ]);
+		assertIssues("Main" -> #[ "(Error, [1:16 - 1:31], any is not a subtype of number.)" ]); // not updated, because Other.n4js not saved yet
 
 		saveOpenedFile("Other");
 		joinServerRequests();
 
 		assertFalse(outputFile.exists()); // never generate output files in node_modules folders
 		projectStateSnapshot.assertExists(); // recreated
-		assertIssues("Main" -> #[ "(Error, [1:16 - 1:31], string is not a subtype of number.)" ]);
+		assertIssues("Main" -> #[ "(Error, [1:16 - 1:31], string is not a subtype of number.)" ]); // updated
 	}
 
 	@Test

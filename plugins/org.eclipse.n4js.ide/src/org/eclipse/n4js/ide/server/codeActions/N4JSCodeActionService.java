@@ -13,7 +13,6 @@ package org.eclipse.n4js.ide.server.codeActions;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -31,18 +30,26 @@ import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
 import org.eclipse.n4js.ide.xtext.server.DiagnosticIssueConverter;
+import org.eclipse.n4js.ide.xtext.server.LSPIssue;
+import org.eclipse.n4js.ide.xtext.server.LSPIssueConverter;
+import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
-import org.eclipse.n4js.ide.xtext.server.XProjectManager;
-import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
+import org.eclipse.n4js.ide.xtext.server.openfiles.OpenFilesManager;
+import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.ide.server.codeActions.ICodeActionService2;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.service.OperationCanceledManager;
+import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.validation.Issue;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -183,10 +190,16 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 	private XLanguageServerImpl languageServer;
 
 	@Inject
-	private XWorkspaceManager workspaceManager;
+	private OpenFilesManager openFilesManager;
 
 	@Inject
 	private DiagnosticIssueConverter diagnosticIssueConverter;
+
+	@Inject
+	private LSPIssueConverter lspIssueConverter;
+
+	@Inject
+	private IN4JSCore n4jsCore;
 
 	@Inject
 	private UriExtensions uriExtensions;
@@ -283,74 +296,85 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 	}
 
 	/**
-	 * Applies all fixes of the same kind to the current file.
+	 * Applies all fixes of the same kind to the file with the given URI.
 	 */
-	public WorkspaceEdit applyToFile(String code, String id, Options options) {
+	public WorkspaceEdit applyToFile(URI uri, String issueCode, String fixId, CancelIndicator cancelIndicator) {
+
 		WorkspaceEdit result = new WorkspaceEdit();
-		QuickFixImplementation quickfix = findOriginatingQuickfix(code, id);
+		QuickFixImplementation quickfix = findOriginatingQuickfix(issueCode, fixId);
 		if (quickfix == null) {
 			return result;
 		}
-		TextEditCollector collector = new TextEditCollector();
-		XProjectManager projectManager = getCurrentProject(options);
-		String uriString = options.getCodeActionParams().getTextDocument().getUri();
-		URI uri = uriExtensions.toUri(uriString);
-		Collection<Issue> issues = projectManager.getProjectStateHolder().getValidationIssues().get(uri);
-		for (Issue issue : issues) {
-			if (code.equals(issue.getCode())) {
-				Options newOptions = copyOptions(options, options.getCodeActionParams().getTextDocument(), issue);
-				quickfix.compute(code, newOptions, collector);
-			}
-		}
-		result.setChanges(collector.allEdits);
+
+		Map<String, List<TextEdit>> edits = doApplyToFile(uri, issueCode, quickfix, cancelIndicator);
+		result.setChanges(edits);
 		return result;
 	}
 
 	/**
-	 * Applies all fixes of the same kind to the current project.
+	 * Applies all fixes of the same kind to the project containing the given URI.
 	 */
-	public WorkspaceEdit applyToProject(String code, String id, Options options) {
+	public WorkspaceEdit applyToProject(URI uri, String issueCode, String fixId, CancelIndicator cancelIndicator) {
+
 		WorkspaceEdit result = new WorkspaceEdit();
-		QuickFixImplementation quickfix = findOriginatingQuickfix(code, id);
+		QuickFixImplementation quickfix = findOriginatingQuickfix(issueCode, fixId);
 		if (quickfix == null) {
 			return result;
 		}
-		TextEditCollector collector = new TextEditCollector();
-		XProjectManager projectManager = getCurrentProject(options);
-		Multimap<URI, Issue> validationIssues = projectManager.getProjectStateHolder().getValidationIssues();
 
-		for (URI location : validationIssues.keys()) {
-			Collection<Issue> issues = validationIssues.get(location);
-			TextDocumentIdentifier docIdentifier = new TextDocumentIdentifier(uriExtensions.toUriString(location));
-			for (Issue issue : issues) {
-				if (code.equals(issue.getCode())) {
-					Options newOptions = copyOptions(options, docIdentifier, issue);
-					quickfix.compute(code, newOptions, collector);
-				}
-			}
+		Optional<? extends IN4JSProject> project = n4jsCore.findProject(uri);
+		if (!project.isPresent()) {
+			return result;
 		}
-		result.setChanges(collector.allEdits);
+		List<URI> urisInProject = Lists.newArrayList(
+				IterableExtensions.flatMap(project.get().getSourceContainers(), sc -> sc));
+
+		Map<String, List<TextEdit>> allEdits = new HashMap<>();
+		for (URI currURI : urisInProject) {
+			Map<String, List<TextEdit>> edits = doApplyToFile(currURI, issueCode, quickfix, cancelIndicator);
+			allEdits.putAll(edits);
+		}
+		result.setChanges(allEdits);
 		return result;
 	}
 
-	private Options copyOptions(Options options, TextDocumentIdentifier docIdentifier, Issue issue) {
-		Diagnostic diagnostic = diagnosticIssueConverter.toDiagnostic(issue, workspaceManager);
+	/** Applies given quick fix to file with given URI and waits for and returns the resulting edits. */
+	protected Map<String, List<TextEdit>> doApplyToFile(URI uri, String issueCode, QuickFixImplementation quickfix,
+			CancelIndicator cancelIndicator) {
+
+		TextEditCollector collector = new TextEditCollector();
+		TextDocumentIdentifier textDocId = new TextDocumentIdentifier(uriExtensions.toUriString(uri));
+
+		openFilesManager.<Void> runInTemporaryFileContext(uri, "doApplyToFile", false, cancelIndicator, (ofc, ci) -> {
+			XtextResource res = ofc.getResource();
+			List<Issue> issues = ofc.resolveAndValidateOpenFile(ci);
+			List<LSPIssue> lspIssues = lspIssueConverter.convertToLSPIssues(res, issues, ci);
+
+			XDocument doc = ofc.getDocument();
+			for (LSPIssue issue : lspIssues) {
+				if (issueCode.equals(issue.getCode())) {
+					Options newOptions = createOptions(res, doc, textDocId, issue, ci);
+					quickfix.compute(issueCode, newOptions, collector);
+				}
+			}
+			return null;
+		}).join();
+
+		return collector.allEdits;
+	}
+
+	private Options createOptions(XtextResource res, XDocument doc, TextDocumentIdentifier docIdentifier,
+			LSPIssue issue, CancelIndicator cancelIndicator) {
+		Diagnostic diagnostic = diagnosticIssueConverter.toDiagnostic(issue);
 		CodeActionContext context = new CodeActionContext(Collections.singletonList(diagnostic));
 		CodeActionParams codeActionParams = new CodeActionParams(docIdentifier, diagnostic.getRange(), context);
-		Options newOptions = languageServer.toOptions(codeActionParams, options.getCancelIndicator());
+		Options newOptions = languageServer.toOptions(codeActionParams, doc, res, cancelIndicator);
 		return newOptions;
 	}
 
-	private XProjectManager getCurrentProject(Options options) {
-		String uriString = options.getCodeActionParams().getTextDocument().getUri();
-		URI uri = uriExtensions.toUri(uriString);
-		XProjectManager projectManager = workspaceManager.getProjectManager(uri);
-		return projectManager;
-	}
-
-	private QuickFixImplementation findOriginatingQuickfix(String code, String id) {
-		for (QuickFixImplementation quickfix : quickfixMap.get(code)) {
-			if (quickfix.id.equals(id)) {
+	private QuickFixImplementation findOriginatingQuickfix(String issueCode, String fixId) {
+		for (QuickFixImplementation quickfix : quickfixMap.get(issueCode)) {
+			if (quickfix.id.equals(fixId)) {
 				return quickfix;
 			}
 		}

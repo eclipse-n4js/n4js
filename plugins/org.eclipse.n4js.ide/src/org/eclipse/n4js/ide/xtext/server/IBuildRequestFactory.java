@@ -25,6 +25,8 @@ public interface IBuildRequestFactory {
 	/**
 	 * Create the build request for the given sets of files and deltas.
 	 *
+	 * @param projectName
+	 *            name of the containing project.
 	 * @param changedFiles
 	 *            set of changed files
 	 * @param deletedFiles
@@ -33,7 +35,7 @@ public interface IBuildRequestFactory {
 	 *            set of external deltas
 	 * @return the build request used during the build process.
 	 */
-	XBuildRequest getBuildRequest(Set<URI> changedFiles, Set<URI> deletedFiles,
+	XBuildRequest getBuildRequest(String projectName, Set<URI> changedFiles, Set<URI> deletedFiles,
 			List<IResourceDescription.Delta> externalDeltas);
 
 }

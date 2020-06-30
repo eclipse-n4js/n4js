@@ -13,7 +13,7 @@ package org.eclipse.n4js.cli.compiler;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.DiagnosticSeverity;
-import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
+import org.eclipse.n4js.ide.xtext.server.LSPBuilder;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -25,7 +25,7 @@ import com.google.inject.Singleton;
 public class N4jscIssueSerializer {
 
 	@Inject
-	XWorkspaceManager workspaceManager;
+	private LSPBuilder lspBuilder;
 
 	/** @return user string for an issue */
 	public String diagnostics(Diagnostic diagnostic) {
@@ -57,7 +57,7 @@ public class N4jscIssueSerializer {
 
 	/** @return user string for a file in the workspace */
 	public String uri(String uri) {
-		URI relativeUri = workspaceManager.makeWorkspaceRelative(URI.createURI(uri));
+		URI relativeUri = lspBuilder.makeWorkspaceRelative(URI.createURI(uri));
 		return relativeUri.toFileString();
 	}
 

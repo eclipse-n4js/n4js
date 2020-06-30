@@ -26,8 +26,9 @@ import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.n4js.ide.client.AbstractN4JSLanguageClient;
 import org.eclipse.n4js.ide.tests.server.AbstractIdeTest;
 import org.eclipse.n4js.ide.tests.server.StringLSP4J;
-import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
+import org.eclipse.n4js.ide.xtext.server.LSPBuilder;
 import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.common.collect.HashMultimap;
@@ -41,7 +42,7 @@ import com.google.inject.Inject;
 public class IdeTestLanguageClient extends AbstractN4JSLanguageClient {
 
 	@Inject
-	private XWorkspaceManager workspaceManager;
+	private LSPBuilder lspBuilder;
 
 	private final List<IIdeTestLanguageClientListener> listeners = Collections.synchronizedList(new LinkedList<>());
 
@@ -91,7 +92,7 @@ public class IdeTestLanguageClient extends AbstractN4JSLanguageClient {
 
 	private StringLSP4J getStringLSP4J() {
 		if (stringLSP4J == null) {
-			stringLSP4J = new StringLSP4J(URIUtils.toFile(workspaceManager.getBaseDir()));
+			stringLSP4J = new StringLSP4J(URIUtils.toFile(lspBuilder.getBaseDir()));
 		}
 		return stringLSP4J;
 	}
@@ -108,7 +109,15 @@ public class IdeTestLanguageClient extends AbstractN4JSLanguageClient {
 
 	@Override
 	public void publishDiagnostics(PublishDiagnosticsParams diagnostics) {
-		FileURI uri = new FileURI(URI.createURI(diagnostics.getUri()));
+		URI uriRaw = URI.createURI(diagnostics.getUri());
+		if (N4Scheme.isN4Scheme(uriRaw)) {
+			return;
+		}
+		if (!uriRaw.isFile()) {
+			throw new IllegalArgumentException("not a file URI: " + uriRaw);
+		}
+
+		FileURI uri = new FileURI(uriRaw);
 
 		issues.removeAll(uri);
 		errors.removeAll(uri);

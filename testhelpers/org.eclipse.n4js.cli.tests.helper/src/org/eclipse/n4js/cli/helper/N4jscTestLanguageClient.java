@@ -24,7 +24,7 @@ import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.cli.compiler.N4jscLanguageClient;
-import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
+import org.eclipse.n4js.ide.xtext.server.LSPBuilder;
 import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.common.collect.HashMultimap;
@@ -38,8 +38,9 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class N4jscTestLanguageClient extends N4jscLanguageClient {
+
 	@Inject
-	XWorkspaceManager workspaceManager;
+	LSPBuilder lspBuilder;
 
 	Multimap<String, Diagnostic> issues = Multimaps.synchronizedMultimap(HashMultimap.create());
 	Multimap<String, String> errors = Multimaps.synchronizedMultimap(HashMultimap.create());
@@ -98,7 +99,7 @@ public class N4jscTestLanguageClient extends N4jscLanguageClient {
 		}
 
 		Path folder = URIUtils.toPath(generated.trimSegments(1));
-		URI relGenerated = workspaceManager.makeWorkspaceRelative(generated);
+		URI relGenerated = lspBuilder.makeWorkspaceRelative(generated);
 		File relFile = URIUtils.toFile(relGenerated);
 		transpiledFiles.computeIfAbsent(folder, f -> Collections.synchronizedSet(new HashSet<File>())).add(relFile);
 		if (!transpiledFiles.containsKey(folder)) {

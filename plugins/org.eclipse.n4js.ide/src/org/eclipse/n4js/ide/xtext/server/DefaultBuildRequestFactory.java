@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.ide.xtext.server;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -20,7 +19,6 @@ import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterDeleteListener
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterGenerateListener;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterValidateListener;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
-import org.eclipse.xtext.validation.Issue;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -31,26 +29,16 @@ import com.google.inject.Singleton;
 @Singleton
 public class DefaultBuildRequestFactory implements IBuildRequestFactory {
 
-	@Inject
-	private IssueAcceptor issueAcceptor;
-
-	@Inject(optional = true) // DefaultAfterValidateListener will be overwritten if defined in a module
-	private AfterValidateListener afterValidateListener = new DefaultAfterValidateListener();
+	@Inject(optional = true)
+	private AfterValidateListener afterValidateListener;
 	@Inject(optional = true)
 	private AfterGenerateListener afterGenerateListener;
 	@Inject(optional = true)
 	private AfterDeleteListener afterDeleteListener;
 
-	class DefaultAfterValidateListener implements AfterValidateListener {
-		@Override
-		public void afterValidate(URI source, Collection<Issue> issues) {
-			issueAcceptor.publishDiagnostics(source, issues);
-		}
-	}
-
 	/** Create the build request. */
-	public XBuildRequest getBuildRequest() {
-		XBuildRequest result = new XBuildRequest();
+	public XBuildRequest getBuildRequest(String projectName) {
+		XBuildRequest result = new XBuildRequest(projectName);
 		result.setAfterDeleteListener(afterDeleteListener);
 		result.setAfterValidateListener(afterValidateListener);
 		result.setAfterGenerateListener(afterGenerateListener);
@@ -58,8 +46,9 @@ public class DefaultBuildRequestFactory implements IBuildRequestFactory {
 	}
 
 	@Override
-	public XBuildRequest getBuildRequest(Set<URI> changedFiles, Set<URI> deletedFiles, List<Delta> externalDeltas) {
-		XBuildRequest result = getBuildRequest();
+	public XBuildRequest getBuildRequest(String projectName, Set<URI> changedFiles, Set<URI> deletedFiles,
+			List<Delta> externalDeltas) {
+		XBuildRequest result = getBuildRequest(projectName);
 		result.setDirtyFiles(changedFiles);
 		result.setDeletedFiles(deletedFiles);
 		result.setExternalDeltas(externalDeltas);

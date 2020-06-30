@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.validation;
+package org.eclipse.n4js.ide.xtext.server;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -29,13 +29,13 @@ import com.google.common.base.Strings;
  *
  * All line and column numbers are one-based. Offset is zero-based.
  */
-public class N4JSIssue extends IssueImpl {
+public class LSPIssue extends IssueImpl {
 	private static final String NULL = "";
 	private int lineNumberEnd;
 	private int columnEnd;
 
 	/** Constructor with initializers to avoid NPEs on Integers */
-	public N4JSIssue() {
+	public LSPIssue() {
 		this.setOffset(0);
 		this.setLength(0);
 		this.setColumn(0);
@@ -52,7 +52,7 @@ public class N4JSIssue extends IssueImpl {
 	/**
 	 * Copy constructor
 	 */
-	public N4JSIssue(Issue copyFrom) {
+	public LSPIssue(Issue copyFrom) {
 		this();
 		if (copyFrom.getOffset() != null)
 			this.setOffset(copyFrom.getOffset());
@@ -191,12 +191,12 @@ public class N4JSIssue extends IssueImpl {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof N4JSIssue)) {
+		if (!(obj instanceof LSPIssue)) {
 			return false;
 		}
-		N4JSIssue n4Issue = (N4JSIssue) obj;
+		LSPIssue n4Issue = (LSPIssue) obj;
 		boolean equals = true;
-		equals &= Objects.equals(n4Issue.getCode(), getCode());
+		equals &= Objects.equals(n4Issue.getOffset(), getOffset());
 		equals &= Objects.equals(n4Issue.getLength(), getLength());
 		equals &= Objects.equals(n4Issue.getColumn(), getColumn());
 		equals &= n4Issue.getColumnEnd() == getColumnEnd();
@@ -212,7 +212,7 @@ public class N4JSIssue extends IssueImpl {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(getCode(), getLength(), getColumn(), getColumnEnd(), getLineNumber(), getLineNumberEnd(),
+		return Objects.hash(getOffset(), getLength(), getColumn(), getColumnEnd(), getLineNumber(), getLineNumberEnd(),
 				getCode(), getMessage(), getUriToProblem(), getSeverity(), getType());
 	}
 }

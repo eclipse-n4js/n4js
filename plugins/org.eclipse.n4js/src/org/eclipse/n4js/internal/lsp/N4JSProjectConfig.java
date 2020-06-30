@@ -11,6 +11,7 @@
 package org.eclipse.n4js.internal.lsp;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -232,7 +233,7 @@ public class N4JSProjectConfig implements IProjectConfig {
 		}
 
 		return new WorkspaceChanges(dependencyChanged, emptyList(), emptyList(), emptyList(), removedSourceFolders,
-				addedSourceFolders, emptyList(), emptyList());
+				addedSourceFolders, emptyList(), emptyList(), dependencyChanged ? singletonList(this) : emptyList());
 	}
 
 	/** Bring the given project description up-to-date with the receiving project configuration's internal state. */

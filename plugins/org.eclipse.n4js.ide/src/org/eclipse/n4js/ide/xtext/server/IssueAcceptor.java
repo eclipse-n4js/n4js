@@ -22,9 +22,6 @@ import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.ide.server.UriExtensions;
-import org.eclipse.xtext.validation.Issue;
-import org.eclipse.xtext.workspace.IProjectConfig;
-import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.collect.ComparisonChain;
@@ -34,14 +31,11 @@ import com.google.inject.Singleton;
 /**
  *
  */
-@SuppressWarnings("restriction")
 @Singleton
 public class IssueAcceptor {
-	@Inject
-	private UriExtensions uriExtensions;
 
 	@Inject
-	private XWorkspaceManager workspaceManager;
+	private UriExtensions uriExtensions;
 
 	@Inject
 	private DiagnosticIssueConverter diagnosticIssueConverter;
@@ -61,11 +55,11 @@ public class IssueAcceptor {
 	}
 
 	/** Converts given issues to {@link Diagnostic}s and sends them to LSP client */
-	public void publishDiagnostics(URI uri, Iterable<? extends Issue> issues) {
+	public void publishDiagnostics(URI uri, Iterable<? extends LSPIssue> issues) {
 		if (client != null) {
 			PublishDiagnosticsParams publishDiagnosticsParams = new PublishDiagnosticsParams();
 			publishDiagnosticsParams.setUri(uriExtensions.toUriString(uri));
-			List<Diagnostic> diags = toDiagnostics(uri, issues);
+			List<Diagnostic> diags = toDiagnostics(issues);
 			publishDiagnosticsParams.setDiagnostics(diags);
 			client.publishDiagnostics(publishDiagnosticsParams);
 		}
@@ -75,26 +69,15 @@ public class IssueAcceptor {
 	 * Convert the given issues to diagnostics. Does not return issues in files that are neither in the workspace nor
 	 * currently opened in the editor. Does not return any issue with severity {@link Severity#IGNORE ignore}.
 	 */
-	protected List<Diagnostic> toDiagnostics(URI uri, Iterable<? extends Issue> issues) {
-		if (!workspaceManager.isDocumentOpen(uri)) {
-			// Closed documents need to exist in the current workspace
-			IProjectConfig projectConfig = workspaceManager.getWorkspaceConfig().findProjectContaining(uri);
-			if (projectConfig == null) {
-				return Collections.emptyList();
-			}
-			ISourceFolder sourceFolder = projectConfig.findSourceFolderContaining(uri);
-			if (sourceFolder == null) {
-				return Collections.emptyList();
-			}
-		}
+	protected List<Diagnostic> toDiagnostics(Iterable<? extends LSPIssue> issues) {
 		if (IterableExtensions.isEmpty(issues)) {
 			return Collections.emptyList();
 		}
 
 		List<Diagnostic> sortedDiags = new ArrayList<>();
-		for (Issue issue : issues) {
+		for (LSPIssue issue : issues) {
 			if (issue.getSeverity() != Severity.IGNORE) {
-				sortedDiags.add(diagnosticIssueConverter.toDiagnostic(issue, workspaceManager));
+				sortedDiags.add(diagnosticIssueConverter.toDiagnostic(issue));
 			}
 		}
 

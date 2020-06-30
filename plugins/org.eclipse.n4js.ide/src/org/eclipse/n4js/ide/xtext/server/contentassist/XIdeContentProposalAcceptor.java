@@ -49,12 +49,10 @@ public class XIdeContentProposalAcceptor
 
 	@Override
 	public boolean canAcceptMoreProposals() {
-		boolean result = !cancelIndicator.isCanceled();
-		if (!result) {
-			System.err.println("Cancelled");
+		if (cancelIndicator.isCanceled()) {
+			return true;
 		}
-		// return true;
-		return result && entries.size() < DEFAULT_PROPOSALS_LIMIT;
+		return entries.size() < DEFAULT_PROPOSALS_LIMIT;
 	}
 
 	/**

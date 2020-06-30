@@ -24,6 +24,8 @@ import java.util.concurrent.CancellationException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.URIConverter;
+import org.eclipse.n4js.ide.xtext.server.LSPIssue;
+import org.eclipse.n4js.ide.xtext.server.LSPIssueConverter;
 import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.EcoreUtil2;
@@ -66,6 +68,9 @@ public class XStatefulIncrementalBuilder {
 	private XIndexer indexer;
 
 	@Inject
+	private LSPIssueConverter lspIssueConverter;
+
+	@Inject
 	private OperationCanceledManager operationCanceledManager;
 
 	/** Unload a resource with the given URI. */
@@ -103,7 +108,7 @@ public class XStatefulIncrementalBuilder {
 			}
 
 			for (URI source : request.getDeletedFiles()) {
-				request.setResultIssues(source, Collections.emptyList());
+				request.setResultIssues(request.getProjectName(), source, Collections.emptyList());
 				removeGeneratedFiles(source, newSource2GeneratedMapping);
 			}
 
@@ -208,9 +213,10 @@ public class XStatefulIncrementalBuilder {
 		operationCanceledManager.checkCanceled(cancelIndicator);
 
 		if (request.canValidate()) {
-			List<Issue> issues = resourceValidator.validate(resource, CheckMode.ALL, request.getCancelIndicator());
-			operationCanceledManager.checkCanceled(request.getCancelIndicator());
-			request.setResultIssues(source, issues);
+			List<Issue> issues = resourceValidator.validate(resource, CheckMode.ALL, cancelIndicator);
+			List<LSPIssue> lspIssues = lspIssueConverter.convertToLSPIssues(resource, issues, cancelIndicator);
+			operationCanceledManager.checkCanceled(cancelIndicator);
+			request.setResultIssues(request.getProjectName(), source, lspIssues);
 			boolean proceedGenerate = !request.containsValidationErrors(source);
 
 			if (proceedGenerate) {

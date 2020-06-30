@@ -14,12 +14,13 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.ide.xtext.server.IBuildRequestFactory;
+import org.eclipse.n4js.ide.xtext.server.LSPIssue;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.UriUtil;
-import org.eclipse.xtext.validation.Issue;
 
 import com.google.common.collect.Multimap;
 
@@ -28,6 +29,8 @@ import com.google.common.collect.Multimap;
  * @since 2.9
  */
 public class XBuildRequest {
+
+	private final String projectName;
 
 	private URI baseDir;
 
@@ -52,7 +55,7 @@ public class XBuildRequest {
 	private CancelIndicator cancelIndicator = CancelIndicator.NullImpl;
 
 	/** Note that {@link Multimap} is not used here since we need to store empty lists, too. */
-	private final Map<URI, Collection<Issue>> resultIssues = new LinkedHashMap<>();
+	private final Map<URI, Collection<LSPIssue>> resultIssues = new LinkedHashMap<>();
 
 	private final Collection<URI> resultDeletedFiles = new ArrayList<>();
 
@@ -61,7 +64,7 @@ public class XBuildRequest {
 	/** Listener for validation events */
 	public static interface AfterValidateListener {
 		/** Called after a source file was validated with the given issues */
-		void afterValidate(URI source, Collection<Issue> issues);
+		void afterValidate(String projectName, URI source, Collection<? extends LSPIssue> issues);
 	}
 
 	/** Listener for generation events */
@@ -81,6 +84,16 @@ public class XBuildRequest {
 	private AfterGenerateListener afterGenerateListener;
 
 	private AfterDeleteListener afterDeleteListener;
+
+	/** Create a new instance. Use {@link IBuildRequestFactory} instead! */
+	public XBuildRequest(String projectName) {
+		this.projectName = projectName;
+	}
+
+	/** Returns the project name. */
+	public String getProjectName() {
+		return projectName;
+	}
 
 	/** Setter for the base directory. */
 	public void setBaseDir(URI baseDir) {
@@ -127,14 +140,14 @@ public class XBuildRequest {
 	}
 
 	/** Getter. */
-	public Map<URI, Collection<Issue>> getResultIssues() {
+	public Map<URI, Collection<LSPIssue>> getResultIssues() {
 		return this.resultIssues;
 	}
 
 	/** Setter. */
-	public void setResultIssues(URI source, Collection<Issue> issues) {
+	public void setResultIssues(String projectName, URI source, Collection<LSPIssue> issues) {
 		this.resultIssues.put(source, issues);
-		this.afterValidate(source, issues);
+		this.afterValidate(projectName, source, issues);
 	}
 
 	/** Setter. */
@@ -143,9 +156,10 @@ public class XBuildRequest {
 	}
 
 	/** Called each time a new set of issues was added for a validated source file */
-	public void afterValidate(URI source, Collection<Issue> issues) {
+	@SuppressWarnings("hiding")
+	public void afterValidate(String projectName, URI source, Collection<LSPIssue> issues) {
 		if (afterValidateListener != null) {
-			afterValidateListener.afterValidate(source, issues);
+			afterValidateListener.afterValidate(projectName, source, issues);
 		}
 	}
 
@@ -277,8 +291,8 @@ public class XBuildRequest {
 
 	/** @return true iff the given source has issues of severity ERROR */
 	public boolean containsValidationErrors(URI source) {
-		Collection<Issue> issues = this.resultIssues.get(source);
-		for (Issue issue : issues) {
+		Collection<? extends LSPIssue> issues = this.resultIssues.get(source);
+		for (LSPIssue issue : issues) {
 			Severity severity = issue.getSeverity();
 			if (severity != null) {
 				switch (severity) {

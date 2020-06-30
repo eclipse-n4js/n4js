@@ -22,7 +22,6 @@ import org.eclipse.n4js.ide.server.FileBasedWorkspaceInitializer;
 import org.eclipse.n4js.ide.server.N4JSLanguageServer;
 import org.eclipse.n4js.ide.server.N4JSOutputConfigurationProvider;
 import org.eclipse.n4js.ide.server.N4JSProjectDescriptionFactory;
-import org.eclipse.n4js.ide.server.N4JSRequestManager;
 import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
 import org.eclipse.n4js.ide.server.codeActions.N4JSCodeActionService;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
@@ -43,7 +42,6 @@ import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 import org.eclipse.n4js.ide.xtext.server.XProjectManager;
 import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
 import org.eclipse.n4js.ide.xtext.server.build.XStatefulIncrementalBuilder;
-import org.eclipse.n4js.ide.xtext.server.concurrent.XRequestManager;
 import org.eclipse.n4js.ide.xtext.server.contentassist.XContentAssistService;
 import org.eclipse.n4js.internal.lsp.FileSystemScanner;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
@@ -170,10 +168,6 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public Class<? extends XLanguageServerImpl> bindXLanguageServerImpl() {
 		return N4JSLanguageServer.class;
-	}
-
-	public Class<? extends XRequestManager> bindXRequestManager() {
-		return N4JSRequestManager.class;
 	}
 
 	public ContentAssistDataCollectors bindContentAssistDataCollectors() {
