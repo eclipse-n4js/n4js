@@ -43,13 +43,20 @@ public class NodeModulesDiscoveryHelper {
 
 	/** Holds information for a given project that is either a plain npm or a yarn related project */
 	public static class NodeModulesFolder {
-		/** node_modules folder of the given project. Is null iff the given project is a yarn workspace project */
+		/** <code>true</code> iff the given project is the root project of a yarn workspace */
+		final public boolean isYarnWorkspaceRoot;
+		/** <code>true</code> iff the given project is contained in a yarn workspace but isn't the root */
+		final public boolean isYarnWorkspaceMember;
+		/** node_modules folder of the given project or <code>null</code> if it doesn't have one */
 		final public File localNodeModulesFolder;
 		/** node_modules folder of the related yarn workspace project */
 		final public File workspaceNodeModulesFolder;
 
 		/** Constructor */
-		public NodeModulesFolder(File localNodeModulesFolder, File workspaceNodeModulesFolder) {
+		public NodeModulesFolder(boolean isYarnWorkspaceRoot, boolean isYarnWorkspaceMember,
+				File localNodeModulesFolder, File workspaceNodeModulesFolder) {
+			this.isYarnWorkspaceRoot = isYarnWorkspaceRoot;
+			this.isYarnWorkspaceMember = isYarnWorkspaceMember;
 			this.localNodeModulesFolder = localNodeModulesFolder;
 			this.workspaceNodeModulesFolder = workspaceNodeModulesFolder;
 		}
@@ -79,7 +86,7 @@ public class NodeModulesDiscoveryHelper {
 
 		if (isYarnWorkspaceRoot(projectLocationAsFile, Optional.absent(), pdCache)) {
 			File workspaceNMF = new File(projectLocationAsFile, N4JSGlobals.NODE_MODULES);
-			return new NodeModulesFolder(null, workspaceNMF);
+			return new NodeModulesFolder(true, false, null, workspaceNMF);
 		}
 
 		final Optional<File> workspaceRoot = getYarnWorkspaceRoot(projectLocationAsFile, pdCache);
@@ -87,13 +94,13 @@ public class NodeModulesDiscoveryHelper {
 			File workspaceNMF = new File(workspaceRoot.get(), N4JSGlobals.NODE_MODULES);
 			File localNMF = new File(projectLocationAsFile, N4JSGlobals.NODE_MODULES);
 			localNMF = localNMF.exists() ? localNMF : null;
-			return new NodeModulesFolder(localNMF, workspaceNMF);
+			return new NodeModulesFolder(false, true, localNMF, workspaceNMF);
 		}
 
 		final Path packgeJsonPath = projectLocation.resolve(N4JSGlobals.PACKAGE_JSON);
 		if (packgeJsonPath.toFile().isFile()) {
 			final Path nodeModulesPath = projectLocation.resolve(N4JSGlobals.NODE_MODULES);
-			return new NodeModulesFolder(nodeModulesPath.toFile(), null);
+			return new NodeModulesFolder(false, false, nodeModulesPath.toFile(), null);
 		}
 
 		return null;

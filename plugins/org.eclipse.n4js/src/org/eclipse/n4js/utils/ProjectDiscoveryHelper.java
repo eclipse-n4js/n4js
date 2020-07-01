@@ -89,7 +89,7 @@ public class ProjectDiscoveryHelper {
 	protected ProjectDescriptionLoader projectDescriptionLoader;
 
 	/**
-	 * Collections all projects and uses the approach described above with each of the given workspace root folders.
+	 * Collects all projects and uses the approach described above with each of the given workspace root folders.
 	 * <p>
 	 * Note that the dependencies (i.e. projects in {@code node_modules} folders) are listed after all workspace
 	 * projects.
@@ -112,9 +112,9 @@ public class ProjectDiscoveryHelper {
 
 			if (nodeModulesFolder == null) {
 				// Is neither NPM nor Yarn project
-				collectProjects(wsRoot, false, pdCache, allProjectDirs);
+				collectProjects(wsRoot, true, pdCache, allProjectDirs);
 			} else {
-				if (nodeModulesFolder.isYarnWorkspace()) {
+				if (nodeModulesFolder.isYarnWorkspaceRoot) {
 					// Is Yarn project
 					// use projects referenced in packages
 					Path yarnProjectDir = nodeModulesFolder.workspaceNodeModulesFolder.getParentFile().toPath();
