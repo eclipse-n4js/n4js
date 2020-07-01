@@ -563,4 +563,10 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 		];
 	}
 
+	@Check
+	def checkTEMP(N4FieldDeclaration fieldDecl) {
+		if (fieldDecl.name == "throwNPE") {
+			throw new NullPointerException();
+		}
+	}
 }
