@@ -33,24 +33,25 @@ public final class EclipseProjectName {
 	}
 
 	/**
-	 * Returns the raw name of the project as it is in Eclipse.
+	 * Returns the raw name of this project as it is in Eclipse, i.e. including scope prefix (if any) and using the
+	 * {@link ProjectDescriptionUtils#NPM_SCOPE_SEPARATOR_ECLIPSE Eclipse separator}.
 	 */
 	public String getRawName() {
 		return name;
 	}
 
 	/**
-	 * Returns the simple name of the project (eg. without the scope prefix).
+	 * Returns the plain project name of the project, i.e. without scope prefix.
 	 */
-	public String getName() {
-		return toN4JSProjectName().getName();
+	public String getPlainName() {
+		return toN4JSProjectName().getPlainName();
 	}
 
 	/**
-	 * Returns the scope of this project name.
+	 * Returns the scope name of the project or <code>null</code> if this project name does not include a scope prefix.
 	 */
-	public String getScope() {
-		return toN4JSProjectName().getScope();
+	public String getScopeName() {
+		return toN4JSProjectName().getScopeName();
 	}
 
 	/**

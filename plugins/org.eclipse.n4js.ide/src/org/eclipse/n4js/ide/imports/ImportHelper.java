@@ -31,6 +31,7 @@ import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.organize.imports.ImportSpecifiersUtil;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
@@ -110,7 +111,7 @@ public class ImportHelper {
 		}
 
 		TModule module = importDecl.getModule();
-		String targetProjectName = module.getProjectName();
+		N4JSProjectName targetProjectName = new N4JSProjectName(module.getProjectName());
 		QualifiedName targetModule = qualifiedNameConverter.toQualifiedName(module.getQualifiedName());
 
 		String moduleSpecifier = importDecl.getModuleSpecifierAsText();

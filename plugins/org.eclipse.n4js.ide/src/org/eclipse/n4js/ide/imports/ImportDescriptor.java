@@ -13,6 +13,7 @@ package org.eclipse.n4js.ide.imports;
 import java.util.Objects;
 
 import org.eclipse.n4js.N4JSLanguageConstants;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
 import org.eclipse.xtext.conversion.IValueConverterService;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -58,7 +59,7 @@ public class ImportDescriptor implements Comparable<ImportDescriptor> {
 	}
 
 	/** Create a bare import. */
-	public static ImportDescriptor createBareImport(String moduleSpecifier, String targetProjectName,
+	public static ImportDescriptor createBareImport(String moduleSpecifier, N4JSProjectName targetProjectName,
 			QualifiedName targetModule, int originalIndex) {
 
 		boolean isNamed = false;
@@ -74,7 +75,7 @@ public class ImportDescriptor implements Comparable<ImportDescriptor> {
 
 	/** Create a named import. */
 	public static ImportDescriptor createNamedImport(String elementName, String alias, String moduleSpecifier,
-			String targetProjectName, QualifiedName targetModule, int originalIndex) {
+			N4JSProjectName targetProjectName, QualifiedName targetModule, int originalIndex) {
 
 		boolean isNamed = true;
 		boolean isNamespace = false;
@@ -87,8 +88,7 @@ public class ImportDescriptor implements Comparable<ImportDescriptor> {
 
 	/** Create a default import. */
 	public static ImportDescriptor createDefaultImport(String localName, String moduleSpecifier,
-			String targetProjectName,
-			QualifiedName targetModule, int originalIndex) {
+			N4JSProjectName targetProjectName, QualifiedName targetModule, int originalIndex) {
 
 		boolean isNamed = true;
 		boolean isNamespace = false;
@@ -103,7 +103,7 @@ public class ImportDescriptor implements Comparable<ImportDescriptor> {
 
 	/** Create a namespace import. */
 	public static ImportDescriptor createNamespaceImport(String localNamespaceName, String moduleSpecifier,
-			String targetProjectName, QualifiedName targetModule, int originalIndex) {
+			N4JSProjectName targetProjectName, QualifiedName targetModule, int originalIndex) {
 
 		boolean isNamed = false;
 		boolean isNamespace = true;
@@ -116,8 +116,8 @@ public class ImportDescriptor implements Comparable<ImportDescriptor> {
 				originalIndex);
 	}
 
-	private static QualifiedName getFQN(String projectName, QualifiedName moduleName) {
-		return QualifiedName.create(projectName).append(moduleName);
+	private static QualifiedName getFQN(N4JSProjectName projectName, QualifiedName moduleName) {
+		return projectName.toQualifiedName().append(moduleName);
 	}
 
 	/** Tells if this import is a bare import. */
