@@ -31,6 +31,9 @@ public class N4JSContentAssistService extends XContentAssistService {
 	@Override
 	protected void createProposals(String document, TextRegion selection, int caretOffset, XtextResource resource,
 			IIdeContentProposalAcceptor acceptor) {
+		if (document != null && document.startsWith("// throwNPE")) {
+			throw new NullPointerException();
+		}
 		try (Measurement m = dataCollectors.dcCreateProposals().getMeasurement()) {
 			super.createProposals(document, selection, caretOffset, resource, acceptor);
 		}
