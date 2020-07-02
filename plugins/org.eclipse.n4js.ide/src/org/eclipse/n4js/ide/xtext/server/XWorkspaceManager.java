@@ -21,6 +21,7 @@ import org.eclipse.lsp4j.jsonrpc.messages.ResponseError;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
 import org.eclipse.n4js.ide.xtext.server.XBuildManager.XBuildable;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentChunkedIndex;
+import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentChunkedIndex.VisibleContainerInfo;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
@@ -161,7 +162,8 @@ public class XWorkspaceManager {
 		ProjectDescription projectDescription = projectDescriptionFactory.getProjectDescription(projectConfig);
 		projectManager.initialize(projectDescription, projectConfig, fullIndex, issueRegistry);
 		projectName2ProjectManager.put(projectDescription.getName(), projectManager);
-		fullIndex.setVisibleContainers(projectDescription.getName(), projectDescription.getDependencies());
+		fullIndex.setVisibleContainers(projectDescription.getName(), projectConfig.getPath(),
+				projectDescription.getDependencies());
 	}
 
 	/** Removes a project from the workspace */
@@ -262,12 +264,14 @@ public class XWorkspaceManager {
 		WorkspaceChanges workspaceChanges = ((XIWorkspaceConfig) getWorkspaceConfig()).update(uri,
 				projectName -> projectName2ProjectManager.get(projectName).getProjectDescription());
 
-		Map<String, ImmutableSet<String>> dependencyChanges = new HashMap<>();
+		Map<String, VisibleContainerInfo> dependencyChanges = new HashMap<>();
 		for (IProjectConfig pc : workspaceChanges.getProjectsWithChangedDependencies()) {
 			XProjectManager pm = projectName2ProjectManager.get(pc.getName());
 			ProjectDescription pd = pm != null ? pm.getProjectDescription() : null;
 			if (pd != null) {
-				dependencyChanges.put(pd.getName(), ImmutableSet.copyOf(pd.getDependencies()));
+				VisibleContainerInfo info = new VisibleContainerInfo(pd.getName(), pc.getPath(),
+						ImmutableSet.copyOf(pd.getDependencies()));
+				dependencyChanges.put(pd.getName(), info);
 			}
 		}
 		if (!dependencyChanges.isEmpty()) {

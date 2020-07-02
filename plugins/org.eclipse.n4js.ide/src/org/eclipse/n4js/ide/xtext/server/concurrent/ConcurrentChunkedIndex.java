@@ -20,6 +20,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.xtext.resource.impl.ChunkedResourceDescriptions;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
@@ -48,7 +49,7 @@ public class ConcurrentChunkedIndex {
 	/** Map of all resource descriptions per container. */
 	protected final Map<String, ResourceDescriptionsData> containerHandle2Data = new HashMap<>();
 	/** Map of all visible containers per container. */
-	protected final Map<String, ImmutableSet<String>> containerHandle2VisibleContainers = new HashMap<>();
+	protected final Map<String, VisibleContainerInfo> containerHandle2VisibleContainers = new HashMap<>();
 	/** Registered listeners. */
 	protected final List<IChunkedIndexListener> listeners = new CopyOnWriteArrayList<>();
 
@@ -57,8 +58,47 @@ public class ConcurrentChunkedIndex {
 		/** Invoked when the index has changed. */
 		public void onIndexChanged(
 				Map<String, ResourceDescriptionsData> changedDescriptions,
-				Map<String, ImmutableSet<String>> changedVisibleContainers,
+				Map<String, VisibleContainerInfo> changedVisibleContainers,
 				Set<String> removedContainers);
+	}
+
+	/** Information about what other containers are visible from a certain outgoing container. */
+	public static class VisibleContainerInfo {
+		/** Handle of the outgoing container. */
+		public final String containerHandle;
+		/** URI of the outgoing container. */
+		public final URI containerURI;
+		/** Handles of containers visible from the {@link #containerHandle outgoing container}. */
+		public final ImmutableSet<String> visibleContainers;
+
+		/** See {@link VisibleContainerInfo}. */
+		public VisibleContainerInfo(String containerHandle, URI containerURI, ImmutableSet<String> visibleContainers) {
+			Objects.requireNonNull(containerHandle);
+			Objects.requireNonNull(containerURI);
+			Objects.requireNonNull(visibleContainers);
+			this.containerHandle = containerHandle;
+			this.containerURI = containerURI;
+			this.visibleContainers = visibleContainers;
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(containerHandle, containerURI, visibleContainers);
+		}
+
+		@Override
+		public boolean equals(Object other) {
+			if (other == this) {
+				return true;
+			}
+			if (!(other instanceof VisibleContainerInfo)) {
+				return false;
+			}
+			VisibleContainerInfo otherCasted = (VisibleContainerInfo) other;
+			return this.containerHandle.equals(otherCasted.containerHandle)
+					&& this.containerURI.equals(otherCasted.containerURI)
+					&& this.visibleContainers.equals(otherCasted.visibleContainers);
+		}
 	}
 
 	/** Removes all containers from this index. */
@@ -79,7 +119,7 @@ public class ConcurrentChunkedIndex {
 	}
 
 	/** Returns the set of handles of those containers that are visible from the container with the given handle. */
-	public synchronized Set<String> getVisibleContainers(String containerHandle) {
+	public synchronized VisibleContainerInfo getVisibleContainers(String containerHandle) {
 		Objects.requireNonNull(containerHandle);
 		return containerHandle2VisibleContainers.get(containerHandle);
 	}
@@ -97,18 +137,16 @@ public class ConcurrentChunkedIndex {
 	}
 
 	/** Sets the containers visible from the container with the given handle. */
-	public void setVisibleContainers(String containerHandle, Iterable<String> visibleContainers) {
-		setVisibleContainers(ImmutableMap.of(containerHandle, visibleContainers));
+	public void setVisibleContainers(String containerHandle, URI containerURI, Iterable<String> visibleContainers) {
+		setVisibleContainers(ImmutableMap.of(containerHandle,
+				new VisibleContainerInfo(containerHandle, containerURI, ImmutableSet.copyOf(visibleContainers))));
 	}
 
 	/** Sets the containers visible from the container with the given handle. */
-	public void setVisibleContainers(Map<String, ? extends Iterable<String>> containerHandle2VisibleContainerHandles) {
-		Objects.requireNonNull(containerHandle2VisibleContainerHandles);
-		ImmutableMap.Builder<String, ImmutableSet<String>> builder = ImmutableMap.builder();
-		for (Entry<String, ? extends Iterable<String>> entry : containerHandle2VisibleContainerHandles.entrySet()) {
-			builder.put(entry.getKey(), ImmutableSet.copyOf(entry.getValue()));
-		}
-		ImmutableMap<String, ImmutableSet<String>> changedVisibleContainers = builder.build();
+	public void setVisibleContainers(Map<String, VisibleContainerInfo> containerHandle2VisibleContainerInfo) {
+		Objects.requireNonNull(containerHandle2VisibleContainerInfo);
+		ImmutableMap<String, VisibleContainerInfo> changedVisibleContainers = ImmutableMap
+				.copyOf(containerHandle2VisibleContainerInfo);
 		synchronized (this) {
 			containerHandle2VisibleContainers.putAll(changedVisibleContainers);
 		}
@@ -161,7 +199,7 @@ public class ConcurrentChunkedIndex {
 	/** Notify all {@link #listeners listeners} about a change of resource descriptions. */
 	protected /* NOT synchronized */ void notifyListeners(
 			ImmutableMap<String, ResourceDescriptionsData> changedDescriptions,
-			ImmutableMap<String, ImmutableSet<String>> changedVisibleContainers,
+			ImmutableMap<String, VisibleContainerInfo> changedVisibleContainers,
 			ImmutableSet<String> removedContainers) {
 		for (IChunkedIndexListener l : listeners) {
 			l.onIndexChanged(changedDescriptions, changedVisibleContainers, removedContainers);

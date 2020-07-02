@@ -15,6 +15,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentChunkedIndex.VisibleContainerInfo;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 
@@ -31,7 +32,7 @@ public class ContainerStructureSnapshot {
 	/** Map from container handle to all contained URIs. */
 	public final ImmutableMap<String, ImmutableSet<URI>> containerHandle2URIs;
 	/** Map from container handle to the handles of visible containers. */
-	public final ImmutableMap<String, ImmutableSet<String>> containerHandle2VisibleContainers;
+	public final ImmutableMap<String, VisibleContainerInfo> containerHandle2VisibleContainers;
 
 	/** See {@link ContainerStructureSnapshot}. */
 	public ContainerStructureSnapshot() {
@@ -40,14 +41,14 @@ public class ContainerStructureSnapshot {
 
 	/** See {@link ContainerStructureSnapshot}. */
 	public ContainerStructureSnapshot(ImmutableMap<String, ImmutableSet<URI>> containerHandle2URIs,
-			ImmutableMap<String, ImmutableSet<String>> containerHandle2VisibleContainers) {
+			ImmutableMap<String, VisibleContainerInfo> containerHandle2VisibleContainers) {
 		this.containerHandle2URIs = containerHandle2URIs;
 		this.containerHandle2VisibleContainers = containerHandle2VisibleContainers;
 	}
 
 	/** See {@link ContainerStructureSnapshot}. */
 	public static ContainerStructureSnapshot create(Map<String, ResourceDescriptionsData> descriptions,
-			Map<String, ImmutableSet<String>> visibleContainers) {
+			Map<String, VisibleContainerInfo> visibleContainers) {
 
 		ImmutableMap.Builder<String, ImmutableSet<URI>> containerHandle2URIs = ImmutableMap.builder();
 		for (Entry<String, ResourceDescriptionsData> entry : descriptions.entrySet()) {

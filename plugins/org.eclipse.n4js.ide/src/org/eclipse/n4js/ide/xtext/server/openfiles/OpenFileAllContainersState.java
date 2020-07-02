@@ -14,14 +14,14 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentChunkedIndex.VisibleContainerInfo;
 import org.eclipse.xtext.resource.containers.IAllContainersState;
+import org.eclipse.xtext.util.UriUtil;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 
 /**
  * Provides visibility information across projects within the resource set of an open file context.
@@ -44,10 +44,12 @@ public class OpenFileAllContainersState implements IAllContainersState {
 
 	@Override
 	public List<String> getVisibleContainerHandles(String containerHandle) {
-		Set<String> visible = openFileContext.containerStructure.containerHandle2VisibleContainers.get(containerHandle);
-		if (visible == null) {
+		VisibleContainerInfo info = openFileContext.containerStructure.containerHandle2VisibleContainers
+				.get(containerHandle);
+		if (info == null) {
 			return Collections.singletonList(containerHandle);
 		}
+		Set<String> visible = info.visibleContainers;
 		Set<String> visibleAndSelf = new HashSet<>(visible);
 		visibleAndSelf.add(containerHandle);
 		return ImmutableList.copyOf(visibleAndSelf);
@@ -61,10 +63,10 @@ public class OpenFileAllContainersState implements IAllContainersState {
 
 	@Override
 	public String getContainerHandle(URI uri) {
-		for (Entry<String, ImmutableSet<URI>> entry : openFileContext.containerStructure.containerHandle2URIs
-				.entrySet()) {
-			if (entry.getValue().contains(uri)) {
-				return entry.getKey();
+		for (VisibleContainerInfo info : openFileContext.containerStructure.containerHandle2VisibleContainers
+				.values()) {
+			if (UriUtil.isPrefixOf(UriUtil.toFolderURI(info.containerURI), uri)) {
+				return info.containerHandle;
 			}
 		}
 		return null;
