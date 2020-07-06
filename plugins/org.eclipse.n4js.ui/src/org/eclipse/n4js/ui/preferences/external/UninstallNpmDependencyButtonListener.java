@@ -61,7 +61,7 @@ public class UninstallNpmDependencyButtonListener extends SelectionAdapter {
 	public void widgetSelected(final SelectionEvent e) {
 
 		final InputDialog dialog = new InputDialog(UIUtils.getShell(), "npm Uninstall",
-				"Specify an npm package name to uninstall:", getSelectedNpm.get().getProjectName().getName(),
+				"Specify an npm package name to uninstall:", getSelectedNpm.get().getProjectName().getRawName(),
 				validatorHelper.getPackageNameToUninstallValidator());
 
 		dialog.open();

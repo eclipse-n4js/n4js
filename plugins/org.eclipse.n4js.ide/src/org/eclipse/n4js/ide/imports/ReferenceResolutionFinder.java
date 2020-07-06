@@ -279,7 +279,11 @@ public class ReferenceResolutionFinder {
 		QualifiedName qualifiedName = requestedImport.name;
 		String optionalAlias = requestedImport.alias;
 
-		String projectName = rrc.candidateProject.getProjectName().getRawName();
+		N4JSProjectName projectName = rrc.candidateProject != null ? rrc.candidateProject.getProjectName() : null;
+		if (projectName == null) {
+			return null;
+		}
+
 		QualifiedName moduleName = qualifiedName.skipLast(1);
 		String moduleSpecifier = qualifiedNameConverter.toString(moduleName);
 
