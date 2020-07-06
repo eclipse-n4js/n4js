@@ -60,39 +60,15 @@ class IncrementalBuilderCancellationTest extends AbstractIncrementalBuilderTest 
 
 	@Test
 	def void testTEMP() {
+		val sourceOfImportingFile = '''
+			import {Cls} from "Main";
+			new Cls().meth();
+		''';
 		testWorkspaceManager.createTestProjectOnDisk(
-			"A01" -> '''
-				import {Cls} from "Main";
-				new Cls().meth();
-			''',
-			"A02" -> '''
-				import {Cls} from "Main";
-				new Cls().meth();
-			''',
-			"A03" -> '''
-				import {Cls} from "Main";
-				new Cls().meth();
-			''',
-			"A04" -> '''
-				import {Cls} from "Main";
-				new Cls().meth();
-			''',
-			"A05" -> '''
-				import {Cls} from "Main";
-				new Cls().meth();
-			''',
-			"A06" -> '''
-				import {Cls} from "Main";
-				new Cls().meth();
-			''',
-			"A07" -> '''
-				import {Cls} from "Main";
-				new Cls().meth();
-			''',
-			"A08" -> '''
-				import {Cls} from "Main";
-				new Cls().meth();
-			''',
+			"A01" -> sourceOfImportingFile,
+			"A02" -> sourceOfImportingFile,
+			"A03" -> sourceOfImportingFile,
+			"A04" -> sourceOfImportingFile,
 			"Main" -> '''
 				export public class Cls {
 					public meth() {}
@@ -107,13 +83,17 @@ class IncrementalBuilderCancellationTest extends AbstractIncrementalBuilderTest 
 		joinServerRequests();
 		assertNoIssues();
 
-		cancelCounter.set(5);
+		cancelCounter.set(4);
 		saveOpenedFile("Main");
 		joinServerRequests();
 		assertEquals(0, cancelCounter.get());
 
+		// With a cancelCounter of 4 we expect a cancellation to occur in the fourth file being built.
+		// Since "Main" is built first and counted as well, we expect the cancellation to occur in the
+		// third "A0n" file being built. Since the file in which the cancellation occurs does not report
+		// any issues (cancellation happens before that), we expect the error to show up in two "A0n" files:
 		val issues = getIssues().values();
-		assertEquals(3, issues.size);
+		assertEquals(2, issues.size);
 		issues.map[getStringLSP4J().toStringShort(it)].forEach[
 			assertEquals("(Error, [1:10 - 1:14], Couldn't resolve reference to IdentifiableElement 'meth'.)", it);
 		];
@@ -122,6 +102,6 @@ class IncrementalBuilderCancellationTest extends AbstractIncrementalBuilderTest 
 		saveOpenedFile("Main");
 		joinServerRequests();
 
-		assertNoIssues();
+		assertNoIssues(); // note: before the bug fix, the above two errors were not removed
 	}
 }
