@@ -147,9 +147,18 @@ public class XStatefulIncrementalBuilder {
 					remainingURIs.remove(uri);
 				}
 
-				List<IResourceDescription.Delta> deltasBuilt = context.executeClustered(urisToBeBuilt,
-						(resource) -> buildClustured(resource, newSource2GeneratedMapping, result));
-				newDeltas.addAll(deltasBuilt);
+				try {
+
+					List<IResourceDescription.Delta> deltasBuilt = context.executeClustered(urisToBeBuilt,
+							(resource) -> buildClustured(resource, newSource2GeneratedMapping, result));
+					newDeltas.addAll(deltasBuilt);
+
+				} catch (Throwable th) {
+					if (operationCanceledManager.isOperationCanceledException(th)) {
+						throw new BuildCanceledException(urisToBeBuilt, th);
+					}
+					throw th;
+				}
 
 				allProcessedDeltas.addAll(newDeltas);
 				allProcessedAndExternalDeltas.addAll(newDeltas);
