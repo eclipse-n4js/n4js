@@ -14,7 +14,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
@@ -23,7 +22,6 @@ import org.eclipse.xtext.resource.containers.IAllContainersState;
 import org.eclipse.xtext.util.UriUtil;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 
 /**
  * Provides visibility information across projects within the resource set of an open file context.
@@ -40,8 +38,7 @@ public class OpenFileAllContainersState implements IAllContainersState {
 
 	@Override
 	public boolean isEmpty(String containerHandle) {
-		Set<URI> uris = openFileContext.containerStructure.containerHandle2URIs.get(containerHandle);
-		return uris != null ? uris.isEmpty() : true;
+		return openFileContext.containerStructure.containerHandle2URIs.get(containerHandle).isEmpty();
 	}
 
 	@Override
@@ -59,21 +56,17 @@ public class OpenFileAllContainersState implements IAllContainersState {
 
 	@Override
 	public Collection<URI> getContainedURIs(String containerHandle) {
-		Set<URI> uris = openFileContext.containerStructure.containerHandle2URIs.get(containerHandle);
-		return uris != null ? uris : Collections.emptyList();
+		return openFileContext.containerStructure.containerHandle2URIs.get(containerHandle);
 	}
 
 	@Override
 	public String getContainerHandle(URI uri) {
 		// standard case: URI already exists in the index
-		for (Entry<String, ImmutableSet<URI>> entry : openFileContext.containerStructure.containerHandle2URIs
-				.entrySet()) {
-			if (entry.getValue().contains(uri)) {
-				return entry.getKey();
-			}
+		String matchingHandle = openFileContext.containerStructure.uri2ContainerHandle.get(uri);
+		if (matchingHandle != null) {
+			return matchingHandle;
 		}
 		// special case: URI does not exist in the index (e.g. a newly created, not yet saved file)
-		String matchingHandle = null;
 		int matchingSegments = 0;
 		for (VisibleContainerInfo info : openFileContext.containerStructure.containerHandle2VisibleContainers
 				.values()) {

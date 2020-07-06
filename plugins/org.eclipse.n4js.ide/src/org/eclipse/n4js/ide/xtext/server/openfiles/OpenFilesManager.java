@@ -56,7 +56,6 @@ public class OpenFilesManager {
 	protected final ThreadLocal<OpenFileContext> currentContext = new ThreadLocal<>();
 
 	protected final Map<String, ResourceDescriptionsData> persistedStateDescriptions = new HashMap<>();
-	protected final Map<String, VisibleContainerInfo> persistedStateVisibleContainers = new HashMap<>();
 	protected ContainerStructureSnapshot persistedStateContainerStructure = new ContainerStructureSnapshot();
 
 	protected final ResourceDescriptionsData sharedDirtyState = new ResourceDescriptionsData(Collections.emptyList());
@@ -309,17 +308,11 @@ public class OpenFilesManager {
 			ResourceDescriptionsData newData = entry.getValue();
 			persistedStateDescriptions.put(containerHandle, newData.copy());
 		}
-		for (Entry<String, VisibleContainerInfo> entry : changedVisibleContainers.entrySet()) {
-			String containerHandle = entry.getKey();
-			VisibleContainerInfo newVisibleContainers = entry.getValue();
-			persistedStateVisibleContainers.put(containerHandle, newVisibleContainers);
-		}
 		for (String removedContainerHandle : removedContainerHandles) {
 			persistedStateDescriptions.remove(removedContainerHandle);
-			persistedStateVisibleContainers.remove(removedContainerHandle);
 		}
-		persistedStateContainerStructure = ContainerStructureSnapshot.create(persistedStateDescriptions,
-				persistedStateVisibleContainers);
+		persistedStateContainerStructure = persistedStateContainerStructure.update(changedDescriptions,
+				changedVisibleContainers, removedContainerHandles);
 
 		// update persisted state instances in the context of each open file
 		if (Iterables.isEmpty(changed) && removed.isEmpty()
