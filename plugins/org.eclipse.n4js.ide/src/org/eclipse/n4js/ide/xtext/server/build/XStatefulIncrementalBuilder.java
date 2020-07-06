@@ -199,7 +199,8 @@ public class XStatefulIncrementalBuilder {
 		}
 	}
 
-	private Delta buildClustured(Resource resource,
+	/** Build the given resource. */
+	protected Delta buildClustured(Resource resource,
 			XSource2GeneratedMapping newSource2GeneratedMapping,
 			XIndexer.XIndexResult result) {
 

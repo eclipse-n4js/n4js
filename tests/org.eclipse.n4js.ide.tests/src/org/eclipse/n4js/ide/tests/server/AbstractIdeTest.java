@@ -82,10 +82,12 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.google.inject.Module;
 
 /**
  * Abstract base class for LSP-based IDE tests.
@@ -218,10 +220,15 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	/** Creates injector for N4JS */
 	protected Injector createInjector() {
-		N4jscTestFactory.set(true);
+		N4jscTestFactory.set(true, getOverridingModule());
 		Injector injector = N4jscFactory.getOrCreateInjector();
 		injector.injectMembers(this);
 		return injector;
+	}
+
+	/** Returns an optional module overriding default injection bindings for testing purposes. */
+	protected Optional<Class<? extends Module>> getOverridingModule() {
+		return Optional.absent();
 	}
 
 	/** Connects, initializes and waits for the initial build of the test project. */
