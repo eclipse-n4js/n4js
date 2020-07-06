@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
@@ -22,6 +23,7 @@ import org.eclipse.xtext.resource.containers.IAllContainersState;
 import org.eclipse.xtext.util.UriUtil;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * Provides visibility information across projects within the resource set of an open file context.
@@ -63,12 +65,26 @@ public class OpenFileAllContainersState implements IAllContainersState {
 
 	@Override
 	public String getContainerHandle(URI uri) {
-		for (VisibleContainerInfo info : openFileContext.containerStructure.containerHandle2VisibleContainers
-				.values()) {
-			if (UriUtil.isPrefixOf(UriUtil.toFolderURI(info.containerURI), uri)) {
-				return info.containerHandle;
+		// standard case: URI already exists in the index
+		for (Entry<String, ImmutableSet<URI>> entry : openFileContext.containerStructure.containerHandle2URIs
+				.entrySet()) {
+			if (entry.getValue().contains(uri)) {
+				return entry.getKey();
 			}
 		}
-		return null;
+		// special case: URI does not exist in the index (e.g. a newly created, not yet saved file)
+		String matchingHandle = null;
+		int matchingSegments = 0;
+		for (VisibleContainerInfo info : openFileContext.containerStructure.containerHandle2VisibleContainers
+				.values()) {
+			if (UriUtil.isPrefixOf(info.containerURI, uri)) {
+				int segments = info.containerURI.segmentCount();
+				if (segments > matchingSegments) {
+					matchingHandle = info.containerHandle;
+					matchingSegments = segments;
+				}
+			}
+		}
+		return matchingHandle;
 	}
 }

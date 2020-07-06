@@ -24,6 +24,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.xtext.resource.impl.ChunkedResourceDescriptions;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
+import org.eclipse.xtext.util.UriUtil;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -66,19 +67,19 @@ public class ConcurrentChunkedIndex {
 	public static class VisibleContainerInfo {
 		/** Handle of the outgoing container. */
 		public final String containerHandle;
-		/** URI of the outgoing container. */
+		/** URI of the outgoing container. Guaranteed to end in a trailing path separator. */
 		public final URI containerURI;
 		/** Handles of containers visible from the {@link #containerHandle outgoing container}. */
 		public final ImmutableSet<String> visibleContainers;
 
 		/** See {@link VisibleContainerInfo}. */
-		public VisibleContainerInfo(String containerHandle, URI containerURI, ImmutableSet<String> visibleContainers) {
+		public VisibleContainerInfo(String containerHandle, URI containerURI, Iterable<String> visibleContainers) {
 			Objects.requireNonNull(containerHandle);
 			Objects.requireNonNull(containerURI);
 			Objects.requireNonNull(visibleContainers);
 			this.containerHandle = containerHandle;
-			this.containerURI = containerURI;
-			this.visibleContainers = visibleContainers;
+			this.containerURI = UriUtil.toFolderURI(containerURI);
+			this.visibleContainers = ImmutableSet.copyOf(visibleContainers);
 		}
 
 		@Override
@@ -139,7 +140,7 @@ public class ConcurrentChunkedIndex {
 	/** Sets the containers visible from the container with the given handle. */
 	public void setVisibleContainers(String containerHandle, URI containerURI, Iterable<String> visibleContainers) {
 		setVisibleContainers(ImmutableMap.of(containerHandle,
-				new VisibleContainerInfo(containerHandle, containerURI, ImmutableSet.copyOf(visibleContainers))));
+				new VisibleContainerInfo(containerHandle, containerURI, visibleContainers)));
 	}
 
 	/** Sets the containers visible from the container with the given handle. */

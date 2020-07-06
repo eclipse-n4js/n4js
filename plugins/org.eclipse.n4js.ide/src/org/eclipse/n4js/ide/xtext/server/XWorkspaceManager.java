@@ -36,7 +36,6 @@ import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -269,8 +268,7 @@ public class XWorkspaceManager {
 			XProjectManager pm = projectName2ProjectManager.get(pc.getName());
 			ProjectDescription pd = pm != null ? pm.getProjectDescription() : null;
 			if (pd != null) {
-				VisibleContainerInfo info = new VisibleContainerInfo(pd.getName(), pc.getPath(),
-						ImmutableSet.copyOf(pd.getDependencies()));
+				VisibleContainerInfo info = new VisibleContainerInfo(pd.getName(), pc.getPath(), pd.getDependencies());
 				dependencyChanges.put(pd.getName(), info);
 			}
 		}
