@@ -99,7 +99,7 @@ public class OpenFileContext {
 	/** The EMF resource representing the open file. */
 	protected XtextResource mainResource = null;
 	/** The current textual content of the open file. */
-	protected volatile XDocument document = null;
+	protected XDocument document = null;
 
 	protected class OpenFileContentProvider implements IExternalContentProvider {
 		@Override

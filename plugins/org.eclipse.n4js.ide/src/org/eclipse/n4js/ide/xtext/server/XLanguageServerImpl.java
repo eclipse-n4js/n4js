@@ -95,6 +95,7 @@ import org.eclipse.lsp4j.services.WorkspaceService;
 import org.eclipse.n4js.ide.server.HeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.ide.server.LspLogger;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentChunkedIndex.IChunkedIndexListener;
+import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentChunkedIndex.VisibleContainerInfo;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry.IIssueRegistryListener;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry.IssueRegistryChangeEvent;
@@ -452,7 +453,8 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	@Override
 	public void didOpen(DidOpenTextDocumentParams params) {
 		TextDocumentItem textDocument = params.getTextDocument();
-		openFilesManager.openFile(getURI(textDocument), textDocument.getVersion(), textDocument.getText());
+		URI uri = getURI(textDocument);
+		openFilesManager.openFile(uri, textDocument.getVersion(), textDocument.getText());
 	}
 
 	@Override
@@ -464,7 +466,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public void didClose(DidCloseTextDocumentParams params) {
-		openFilesManager.closeFile(getURI(params.getTextDocument()));
+		TextDocumentIdentifier textDocument = params.getTextDocument();
+		URI uri = getURI(textDocument);
+		openFilesManager.closeFile(uri);
 	}
 
 	@Override
@@ -1298,7 +1302,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public void onIndexChanged(Map<String, ResourceDescriptionsData> changedDescriptions,
-			Map<String, ImmutableSet<String>> changedVisibleContainers, Set<String> removedContainers) {
+			Map<String, VisibleContainerInfo> changedVisibleContainers, Set<String> removedContainers) {
 		openFilesManager.updatePersistedState(changedDescriptions, changedVisibleContainers, removedContainers);
 	}
 
