@@ -10,6 +10,9 @@
  */
 package org.eclipse.n4js.ide.server;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.services.LanguageClient;
@@ -53,6 +56,14 @@ public class LspLogger {
 	/** */
 	public void error(String messageString) {
 		log(messageString, MessageType.Error);
+	}
+
+	/** */
+	public void error(String messageString, Throwable cause) {
+		StringWriter w = new StringWriter();
+		cause.printStackTrace(new PrintWriter(w));
+		String msg = messageString + System.lineSeparator() + w.toString();
+		log(msg, MessageType.Error);
 	}
 
 	/** */

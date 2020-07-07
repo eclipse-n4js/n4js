@@ -353,8 +353,7 @@ public class XBuildManager {
 			this.deletedFiles.clear();
 			this.dirtyFilesAwaitingGeneration.clear();
 			this.deletedFilesAwaitingGeneration.clear();
-			String eStr = th.getMessage() + " (" + th.getClass().getSimpleName() + ")";
-			lspLogger.log("... build ABORTED due to exception: " + eStr);
+			lspLogger.error("... build ABORTED due to exception:", th);
 			throw th;
 		}
 	}
