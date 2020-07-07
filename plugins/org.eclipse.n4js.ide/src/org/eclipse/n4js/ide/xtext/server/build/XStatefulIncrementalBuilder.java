@@ -154,6 +154,8 @@ public class XStatefulIncrementalBuilder {
 					newDeltas.addAll(deltasBuilt);
 
 				} catch (Throwable th) {
+					// TODO GH-1793 remove this temporary solution
+					// instead, a partial XBuildResult should be returned
 					if (operationCanceledManager.isOperationCanceledException(th)) {
 						throw new BuildCanceledException(urisToBeBuilt, th);
 					}

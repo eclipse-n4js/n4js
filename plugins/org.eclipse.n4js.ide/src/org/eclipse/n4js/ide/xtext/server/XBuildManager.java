@@ -329,6 +329,7 @@ public class XBuildManager {
 					projectResult = projectManager.doIncrementalBuild(projectDirty, projectDeleted,
 							allBuildDeltas, doGenerate, cancelIndicator);
 				} catch (BuildCanceledException e) {
+					// TODO GH-1793 remove this temporary solution
 					dirtyFiles.addAll(e.incompletelyBuiltFiles);
 					e.rethrowOriginalCancellation();
 					throw new IllegalStateException("should never get here");

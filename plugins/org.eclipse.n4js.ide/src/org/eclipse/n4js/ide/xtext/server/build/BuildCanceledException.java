@@ -17,8 +17,10 @@ import org.eclipse.xtext.util.CancelIndicator;
 import com.google.common.collect.ImmutableList;
 
 /**
- * Temporary exception to report incompletely built files from {@link XStatefulIncrementalBuilder#launch()} to the
+ * Wrapper exception to report incompletely built files from {@link XStatefulIncrementalBuilder#launch()} to the
  * outside, i.e. to {@link XBuildManager#doIncrementalBuild(boolean, CancelIndicator)}.
+ * <p>
+ * Temporary solution, see GH-1793.
  */
 @SuppressWarnings("javadoc")
 public class BuildCanceledException extends RuntimeException {
