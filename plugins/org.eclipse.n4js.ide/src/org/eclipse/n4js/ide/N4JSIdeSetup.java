@@ -10,6 +10,9 @@
  */
 package org.eclipse.n4js.ide;
 
+import java.lang.reflect.InvocationTargetException;
+
+import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.n4js.N4JSRuntimeModule;
 import org.eclipse.n4js.N4JSStandaloneSetup;
 import org.eclipse.n4js.json.ide.JSONIdeSetup;
@@ -21,8 +24,11 @@ import org.eclipse.n4js.ts.ide.TypesIdeSetup;
 import org.eclipse.xtext.ide.server.ServerModule;
 import org.eclipse.xtext.util.Modules2;
 
+import com.google.common.base.Optional;
+import com.google.common.collect.ObjectArrays;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Module;
 
 /**
  * Initialization support for running Xtext languages as language servers.
@@ -31,8 +37,28 @@ public class N4JSIdeSetup extends N4JSStandaloneSetup {
 
 	@Override
 	public Injector createInjector() {
+		Module[] modules = {
+				new ServerModule(), new N4JSRuntimeModule(), new N4JSIdeModule(), new TesterModule()
+		};
+
+		Optional<Class<? extends Module>> overridingModuleCls = getOverridingModule();
+		if (overridingModuleCls.isPresent()) {
+			try {
+				Module overridingModule = overridingModuleCls.get().getDeclaredConstructor().newInstance();
+				modules = ObjectArrays.concat(modules, overridingModule);
+			} catch (NoSuchMethodException | IllegalAccessException | InstantiationException
+					| InvocationTargetException e) {
+				throw new WrappedException(e);
+			}
+		}
+
 		return Guice.createInjector(
-				Modules2.mixin(new ServerModule(), new N4JSRuntimeModule(), new N4JSIdeModule(), new TesterModule()));
+				Modules2.mixin(modules));
+	}
+
+	/** If present, the returned module will override default bindings in the injector. */
+	protected Optional<Class<? extends Module>> getOverridingModule() {
+		return Optional.absent();
 	}
 
 	@Override

@@ -147,9 +147,20 @@ public class XStatefulIncrementalBuilder {
 					remainingURIs.remove(uri);
 				}
 
-				List<IResourceDescription.Delta> deltasBuilt = context.executeClustered(urisToBeBuilt,
-						(resource) -> buildClustured(resource, newSource2GeneratedMapping, result));
-				newDeltas.addAll(deltasBuilt);
+				try {
+
+					List<IResourceDescription.Delta> deltasBuilt = context.executeClustered(urisToBeBuilt,
+							(resource) -> buildClustured(resource, newSource2GeneratedMapping, result));
+					newDeltas.addAll(deltasBuilt);
+
+				} catch (Throwable th) {
+					// TODO GH-1793 remove this temporary solution
+					// instead, a partial XBuildResult should be returned
+					if (operationCanceledManager.isOperationCanceledException(th)) {
+						throw new BuildCanceledException(urisToBeBuilt, th);
+					}
+					throw th;
+				}
 
 				allProcessedDeltas.addAll(newDeltas);
 				allProcessedAndExternalDeltas.addAll(newDeltas);
@@ -190,7 +201,8 @@ public class XStatefulIncrementalBuilder {
 		}
 	}
 
-	private Delta buildClustured(Resource resource,
+	/** Build the given resource. */
+	protected Delta buildClustured(Resource resource,
 			XSource2GeneratedMapping newSource2GeneratedMapping,
 			XIndexer.XIndexResult result) {
 

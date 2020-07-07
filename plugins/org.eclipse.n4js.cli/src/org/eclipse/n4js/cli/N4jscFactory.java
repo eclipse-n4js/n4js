@@ -15,7 +15,9 @@ import org.eclipse.n4js.ide.N4JSIdeSetup;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
 
+import com.google.common.base.Optional;
 import com.google.inject.Injector;
+import com.google.inject.Module;
 
 /**
  * Factory to create the injector, language server and other singletons for CLI use cases
@@ -62,9 +64,18 @@ public class N4jscFactory {
 
 	Injector internalGetOrCreateInjector() {
 		if (injector == null) {
-			injector = new N4JSIdeSetup().createInjectorAndDoEMFRegistration();
+			injector = new N4JSIdeSetup() {
+				@Override
+				protected Optional<Class<? extends Module>> getOverridingModule() {
+					return internalGetOverridingModule();
+				}
+			}.createInjectorAndDoEMFRegistration();
 		}
 		return injector;
+	}
+
+	Optional<Class<? extends Module>> internalGetOverridingModule() {
+		return Optional.absent();
 	}
 
 	XLanguageServerImpl internalGetLanguageServer() {

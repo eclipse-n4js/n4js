@@ -28,6 +28,7 @@ import org.eclipse.xtext.testing.GlobalRegistries;
 import org.eclipse.xtext.testing.GlobalRegistries.GlobalStateMemento;
 import org.eclipse.xtext.workspace.IProjectConfig;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Stopwatch;
 import com.google.inject.Injector;
 
@@ -111,7 +112,7 @@ public class InProcessExecuter {
 	void setRedirections() {
 		originalGlobalState = GlobalRegistries.makeCopyOfGlobalState();
 
-		N4jscTestFactory.set(isEnabledBackend);
+		N4jscTestFactory.set(isEnabledBackend, Optional.absent());
 		systemOutRedirecter.set(isMirrorSystemOut);
 		systemExitRedirecter.set();
 	}

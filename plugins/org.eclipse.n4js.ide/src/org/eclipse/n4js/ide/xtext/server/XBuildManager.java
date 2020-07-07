@@ -24,6 +24,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ide.server.LspLogger;
 import org.eclipse.n4js.ide.xtext.server.ParallelBuildManager.ParallelJob;
 import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo.ProjectBuildOrderIterator;
+import org.eclipse.n4js.ide.xtext.server.build.BuildCanceledException;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -323,8 +324,16 @@ public class XBuildManager {
 				Set<URI> projectDeleted = project2deleted.getOrDefault(descr, Collections.emptySet());
 
 				// the projectResult might contain partial information in case the build was cancelled
-				XBuildResult projectResult = projectManager.doIncrementalBuild(projectDirty, projectDeleted,
-						allBuildDeltas, doGenerate, cancelIndicator);
+				XBuildResult projectResult;
+				try {
+					projectResult = projectManager.doIncrementalBuild(projectDirty, projectDeleted,
+							allBuildDeltas, doGenerate, cancelIndicator);
+				} catch (BuildCanceledException e) {
+					// TODO GH-1793 remove this temporary solution
+					dirtyFiles.addAll(e.incompletelyBuiltFiles);
+					e.rethrowOriginalCancellation();
+					throw new IllegalStateException("should never get here");
+				}
 
 				List<Delta> newlyBuiltDeltas = projectResult.getAffectedResources();
 				recordBuildProgress(newlyBuiltDeltas, doGenerate);

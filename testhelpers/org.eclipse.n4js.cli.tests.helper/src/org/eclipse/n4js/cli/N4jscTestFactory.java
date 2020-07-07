@@ -14,15 +14,18 @@ import org.eclipse.n4js.cli.compiler.N4jscLanguageClient;
 import org.eclipse.n4js.cli.helper.N4jscTestLanguageClient;
 import org.eclipse.xtext.testing.GlobalRegistries;
 
+import com.google.common.base.Optional;
+import com.google.inject.Module;
+
 /**
  * Overwrites some bindings of N4jscFactory
  */
 public class N4jscTestFactory extends N4jscFactory {
 
 	/** Enable overwriting bindings */
-	static public void set(boolean isEnabledBackend) {
+	static public void set(boolean isEnabledBackend, Optional<Class<? extends Module>> overridingModule) {
 		resetInjector();
-		N4jscFactory.INSTANCE = new N4jscTestFactory(isEnabledBackend);
+		N4jscFactory.INSTANCE = new N4jscTestFactory(isEnabledBackend, overridingModule);
 	}
 
 	/** Disable overwriting bindings */
@@ -45,9 +48,11 @@ public class N4jscTestFactory extends N4jscFactory {
 	}
 
 	final private boolean isEnabledBackend;
+	final private Optional<Class<? extends Module>> overridingModule;
 
-	N4jscTestFactory(boolean isEnabledBackend) {
+	N4jscTestFactory(boolean isEnabledBackend, Optional<Class<? extends Module>> overridingModule) {
 		this.isEnabledBackend = isEnabledBackend;
+		this.overridingModule = overridingModule;
 	}
 
 	/** Thrown when the backend is called. */
@@ -90,6 +95,11 @@ public class N4jscTestFactory extends N4jscFactory {
 		} else {
 			return new NoopBackend();
 		}
+	}
+
+	@Override
+	Optional<Class<? extends Module>> internalGetOverridingModule() {
+		return overridingModule;
 	}
 
 	@Override
