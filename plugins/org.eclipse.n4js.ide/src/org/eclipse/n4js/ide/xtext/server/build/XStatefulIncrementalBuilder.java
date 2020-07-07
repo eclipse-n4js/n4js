@@ -226,6 +226,8 @@ public class XStatefulIncrementalBuilder {
 
 		if (request.canValidate()) {
 			List<Issue> issues = resourceValidator.validate(resource, CheckMode.ALL, cancelIndicator);
+			// next line required, because #validate() sometimes returns null when canceled:
+			operationCanceledManager.checkCanceled(cancelIndicator);
 			List<LSPIssue> lspIssues = lspIssueConverter.convertToLSPIssues(resource, issues, cancelIndicator);
 			operationCanceledManager.checkCanceled(cancelIndicator);
 			request.setResultIssues(request.getProjectName(), source, lspIssues);
