@@ -15,9 +15,11 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.n4js.ide.xtext.server.build.XClusteringStorageAwareResourceLoader.LoadResult;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.CompilerPhases;
 import org.eclipse.xtext.resource.EObjectDescription;
@@ -38,6 +40,7 @@ import org.eclipse.xtext.xbase.lib.Extension;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
+import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
@@ -274,7 +277,8 @@ public class XIndexer {
 		try {
 			this.compilerPhases.setIndexing(context.getResourceSet(), true);
 			List<IResourceDescription.Delta> result = new ArrayList<>();
-			List<Delta> deltas = context.executeClustered(changedURIs, it -> addToIndex(it, true, oldIndex, context));
+			List<Delta> deltas = context.executeClustered(changedURIs,
+					loadResult -> addToIndex(loadResult, true, oldIndex, context));
 			for (IResourceDescription.Delta delta : deltas) {
 				if (delta != null) {
 					result.add(delta);
@@ -292,16 +296,33 @@ public class XIndexer {
 	 * @param isPreIndexing
 	 *            can be evaluated to produce different index entries depending on the phase
 	 */
-	protected IResourceDescription.Delta addToIndex(Resource resource, boolean isPreIndexing,
+	protected IResourceDescription.Delta addToIndex(LoadResult loadResult, boolean isPreIndexing,
 			ResourceDescriptionsData oldIndex, XBuildContext context) {
+
 		this.operationCanceledManager.checkCanceled(context.getCancelIndicator());
+
+		URI uri = loadResult.uri;
+		IResourceServiceProvider serviceProvider = context.getResourceServiceProvider(uri);
+		IResourceDescription.Manager manager = serviceProvider.getResourceDescriptionManager();
+
+		Resource resource = loadResult.resource;
+		if (resource == null) {
+			// loading of resource failed
+			if (loadResult.isFileNotFound()) {
+				// a source file was renamed/deleted and we did not get a 'didChangeWatchedFiles' notification
+				// OR the rename/delete happened while the build was in progress
+				IResourceDescription oldDesc = oldIndex != null ? oldIndex.getResourceDescription(uri) : null;
+				return oldDesc != null ? manager.createDelta(oldDesc, null) : null;
+			}
+			Throwables.throwIfUnchecked(loadResult.throwable);
+			throw new WrappedException((Exception) loadResult.throwable);
+		}
+
 		if (context.getResourceSet() != resource.getResourceSet()) {
 			// we are seeing an out-of-sequence resource - don't index it
 			return null;
 		}
-		URI uri = resource.getURI();
-		IResourceServiceProvider serviceProvider = context.getResourceServiceProvider(uri);
-		IResourceDescription.Manager manager = serviceProvider.getResourceDescriptionManager();
+
 		IResourceDescription newDescription = manager.getResourceDescription(resource);
 		IResourceDescription toBeAdded = new XIndexer.XResolvedResourceDescription(newDescription);
 		IResourceDescription.Delta delta = manager

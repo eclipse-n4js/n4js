@@ -22,11 +22,13 @@ import java.util.Set;
 import java.util.concurrent.CancellationException;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.n4js.ide.xtext.server.LSPIssue;
 import org.eclipse.n4js.ide.xtext.server.LSPIssueConverter;
 import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
+import org.eclipse.n4js.ide.xtext.server.build.XClusteringStorageAwareResourceLoader.LoadResult;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.generator.GeneratorContext;
@@ -53,6 +55,7 @@ import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 
+import com.google.common.base.Throwables;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
@@ -150,7 +153,7 @@ public class XStatefulIncrementalBuilder {
 				try {
 
 					List<IResourceDescription.Delta> deltasBuilt = context.executeClustered(urisToBeBuilt,
-							(resource) -> buildClustured(resource, newSource2GeneratedMapping, result));
+							(loadResult) -> buildClustured(loadResult, newSource2GeneratedMapping, result));
 					newDeltas.addAll(deltasBuilt);
 
 				} catch (Throwable th) {
@@ -202,22 +205,37 @@ public class XStatefulIncrementalBuilder {
 	}
 
 	/** Build the given resource. */
-	protected Delta buildClustured(Resource resource,
+	protected Delta buildClustured(LoadResult loadResult,
 			XSource2GeneratedMapping newSource2GeneratedMapping,
 			XIndexer.XIndexResult result) {
 
 		CancelIndicator cancelIndicator = request.getCancelIndicator();
 		operationCanceledManager.checkCanceled(cancelIndicator);
 
+		URI source = loadResult.uri;
+		IResourceServiceProvider serviceProvider = getResourceServiceProvider(loadResult);
+		IResourceDescription.Manager manager = serviceProvider.getResourceDescriptionManager();
+		IResourceValidator resourceValidator = serviceProvider.getResourceValidator();
+
+		Resource resource = loadResult.resource;
+
+		if (resource == null) {
+			// loading of resource failed
+			if (loadResult.isFileNotFound()) {
+				// a source file was renamed/deleted and we did not get a 'didChangeWatchedFiles' notification
+				// OR the rename/delete happened while the build was in progress
+				IResourceDescription old = context.getOldState().getResourceDescriptions()
+						.getResourceDescription(loadResult.uri);
+				return manager.createDelta(old, null);
+			}
+			Throwables.throwIfUnchecked(loadResult.throwable);
+			throw new WrappedException((Exception) loadResult.throwable);
+		}
+
 		// trigger init
 		resource.getContents();
 		EcoreUtil2.resolveLazyCrossReferences(resource, CancelIndicator.NullImpl);
 		operationCanceledManager.checkCanceled(cancelIndicator);
-
-		URI source = resource.getURI();
-		IResourceServiceProvider serviceProvider = getResourceServiceProvider(resource);
-		IResourceDescription.Manager manager = serviceProvider.getResourceDescriptionManager();
-		IResourceValidator resourceValidator = serviceProvider.getResourceValidator();
 
 		IResourceDescription description = manager.getResourceDescription(resource);
 		SerializableResourceDescription copiedDescription = SerializableResourceDescription.createCopy(description);
@@ -243,11 +261,11 @@ public class XStatefulIncrementalBuilder {
 		return manager.createDelta(old, copiedDescription);
 	}
 
-	private IResourceServiceProvider getResourceServiceProvider(Resource resource) {
-		if ((resource instanceof XtextResource)) {
-			return ((XtextResource) resource).getResourceServiceProvider();
+	private IResourceServiceProvider getResourceServiceProvider(LoadResult loadResult) {
+		if ((loadResult.resource instanceof XtextResource)) {
+			return ((XtextResource) loadResult.resource).getResourceServiceProvider();
 		}
-		return context.getResourceServiceProvider(resource.getURI());
+		return context.getResourceServiceProvider(loadResult.uri);
 	}
 
 	/** Generate code for the given resource */
