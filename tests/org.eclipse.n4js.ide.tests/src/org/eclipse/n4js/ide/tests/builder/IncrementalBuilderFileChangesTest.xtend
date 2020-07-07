@@ -10,7 +10,10 @@
  */
 package org.eclipse.n4js.ide.tests.builder
 
+import org.eclipse.lsp4j.MessageType
 import org.junit.Test
+
+import static org.junit.Assert.*
 
 /**
  * Tests incremental builds triggered by changes not inside source files but to the files themselves,
@@ -20,11 +23,11 @@ class IncrementalBuilderFileChangesTest extends AbstractIncrementalBuilderTest {
 
 	@Test
 	def void testOpenNewlyCreatedFile() {
-		testWorkspaceManager.createTestProjectOnDisk(#[
+		testWorkspaceManager.createTestProjectOnDisk(
 			"Main" -> '''
 				export public class Cls {}
 			'''
-		]);
+		);
 		startAndWaitForLspServer();
 		assertNoIssues();
 
@@ -42,7 +45,7 @@ class IncrementalBuilderFileChangesTest extends AbstractIncrementalBuilderTest {
 
 	@Test
 	def void testOpenRenamedFile() {
-		testWorkspaceManager.createTestProjectOnDisk(#[
+		testWorkspaceManager.createTestProjectOnDisk(
 			"A" -> '''
 				import {Cls} from "Main"
 				new Cls();
@@ -50,7 +53,7 @@ class IncrementalBuilderFileChangesTest extends AbstractIncrementalBuilderTest {
 			"Main" -> '''
 				export public class Cls {}
 			'''
-		]);
+		);
 		startAndWaitForLspServer();
 		assertNoIssues();
 
@@ -61,5 +64,37 @@ class IncrementalBuilderFileChangesTest extends AbstractIncrementalBuilderTest {
 		// import in renamed file must be resolvable, even though the LSP builder was not
 		// triggered yet through a didSave or didChangeWatchedFiles notification:
 		assertNoIssues();
+	}
+
+	@Test
+	def void testBuildDeletedFile() {
+		testWorkspaceManager.createTestProjectOnDisk(
+			"A" -> '''
+				import {Cls} from "Main"
+				new Cls().meth();
+			''',
+			"Main" -> '''
+				export public class Cls {
+					public meth() {}
+				}
+			'''
+		);
+		startAndWaitForLspServer();
+		assertNoIssues();
+
+		openFile("Main");
+		changeOpenedFile("Main", "meth(" -> "methx(");
+		joinServerRequests();
+		assertNoIssues();
+
+		deleteFileOnDiskWithoutNotification("A");
+
+		clearLogMessages();
+		saveOpenedFile("Main");
+		joinServerRequests();
+		val logMsgs = getLogMessages();
+		val logMsgsStr = getLogMessagesAsString();
+		assertFalse(logMsgsStr, logMsgs.exists[type === MessageType.Error || type === MessageType.Warning]);
+		assertFalse(logMsgsStr, logMsgs.exists[message.contains("FileNotFoundException")]);
 	}
 }

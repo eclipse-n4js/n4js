@@ -47,6 +47,7 @@ import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.FileChangeType;
 import org.eclipse.lsp4j.FileEvent;
 import org.eclipse.lsp4j.InitializeParams;
+import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.ResourceChange;
 import org.eclipse.lsp4j.ResourceOperation;
@@ -157,6 +158,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		languageServer.getLSPExecutorService().shutdown();
 		// clear the state related to the test
 		testWorkspaceManager.deleteTestFromDiskIfCreated();
+		languageClient.clearLogMessages();
 		languageClient.clearIssues();
 		openFiles.clear();
 	}
@@ -267,6 +269,37 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		ExecuteCommandParams params = new ExecuteCommandParams(N4JSCommandService.N4JS_REBUILD,
 				Collections.emptyList());
 		return languageServer.executeCommand(params);
+	}
+
+	/** Clear the log messages received from the server via LSP notification 'logMessage'. */
+	protected void clearLogMessages() {
+		languageClient.clearLogMessages();
+	}
+
+	/** Returns the log messages received from the server since the last call to {@link #clearLogMessages()}. */
+	protected List<MessageParams> getLogMessages() {
+		return languageClient.getLogMessages();
+	}
+
+	/** Like {@link #getLogMessages()}, but returns the messages as a string. */
+	protected String getLogMessagesAsString() {
+		return getLogMessages().stream()
+				.map(m -> getMessagePrefix(m) + m.getMessage())
+				.collect(Collectors.joining(System.lineSeparator()));
+	}
+
+	private String getMessagePrefix(MessageParams message) {
+		switch (message.getType()) {
+		case Info:
+			return "INFO: ";
+		case Warning:
+			return "WARNING: ";
+		case Error:
+			return "ERROR: ";
+		case Log:
+			return ""; // no prefix
+		}
+		throw new AssertionError("should never reach this point");
 	}
 
 	/** Same as {@link #isOpen(FileURI)}, but accepts a module name. */
@@ -528,6 +561,22 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 			Files.writeString(filePath, content, StandardOpenOption.CREATE_NEW);
 		} catch (IOException e) {
 			throw new RuntimeException("exception while creating file on disk", e);
+		}
+	}
+
+	/** Same as {@link #deleteFileOnDiskWithoutNotification(FileURI)}, accepting a module name. */
+	protected void deleteFileOnDiskWithoutNotification(String moduleName) {
+		FileURI fileURI = getFileURIFromModuleName(moduleName);
+		deleteFileOnDiskWithoutNotification(fileURI);
+	}
+
+	/** Delete an existing file on disk without notifying the LSP server. */
+	protected void deleteFileOnDiskWithoutNotification(FileURI fileURI) {
+		Path filePath = fileURI.toJavaIoFile().toPath();
+		try {
+			Files.delete(filePath);
+		} catch (IOException e) {
+			throw new RuntimeException("exception while deleting file on disk", e);
 		}
 	}
 
