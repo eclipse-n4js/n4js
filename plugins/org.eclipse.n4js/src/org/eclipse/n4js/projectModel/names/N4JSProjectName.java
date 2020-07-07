@@ -10,7 +10,11 @@
  */
 package org.eclipse.n4js.projectModel.names;
 
+import static org.eclipse.n4js.utils.ProjectDescriptionUtils.NPM_SCOPE_SEPARATOR_ECLIPSE;
+
+import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
+import org.eclipse.xtext.naming.QualifiedName;
 
 import com.google.common.base.Preconditions;
 
@@ -26,25 +30,26 @@ public final class N4JSProjectName implements Comparable<N4JSProjectName> {
 	 */
 	public N4JSProjectName(String name) {
 		this.name = Preconditions.checkNotNull(name);
-		Preconditions.checkArgument(name.indexOf(':') < 0, name);
+		Preconditions.checkArgument(name.indexOf(NPM_SCOPE_SEPARATOR_ECLIPSE) < 0, name);
 	}
 
 	/**
-	 * Returns the simple name of this project name, e.g. without scope prefix.
+	 * Returns the plain project name of the project, i.e. without scope prefix.
 	 */
-	public String getName() {
+	public String getPlainName() {
 		return ProjectDescriptionUtils.getPlainProjectName(name);
 	}
 
 	/**
-	 * Returns the scope part of this project name.
+	 * Returns the scope name of the project or <code>null</code> if this project name does not include a scope prefix.
 	 */
-	public String getScope() {
+	public String getScopeName() {
 		return ProjectDescriptionUtils.getScopeName(name);
 	}
 
 	/**
-	 * Returns the raw name of this project.
+	 * Returns the raw name of this project, i.e. including scope prefix (if any) and using separator the
+	 * {@link ProjectDescriptionUtils#NPM_SCOPE_SEPARATOR ordinary separator}.
 	 */
 	public String getRawName() {
 		return name;
@@ -55,6 +60,18 @@ public final class N4JSProjectName implements Comparable<N4JSProjectName> {
 	 */
 	public EclipseProjectName toEclipseProjectName() {
 		return new EclipseProjectName(ProjectDescriptionUtils.convertN4JSProjectNameToEclipseProjectName(name));
+	}
+
+	/**
+	 * Convert this project name to an Xtext qualified name.
+	 * <p>
+	 * As explained {@link ProjectDescriptionUtils#isProjectNameWithScope(String) here}, a scope name, if present, and
+	 * the plain project name are expected to be represented as a <em>single</em> segment.
+	 * <p>
+	 * See also {@link N4JSQualifiedNameConverter#toQualifiedName(String)}.
+	 */
+	public QualifiedName toQualifiedName() {
+		return QualifiedName.create(name);
 	}
 
 	/**

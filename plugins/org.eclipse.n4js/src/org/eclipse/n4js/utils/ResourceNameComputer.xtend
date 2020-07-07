@@ -134,7 +134,7 @@ public final class ResourceNameComputer {
 	 */
 	def public String generateProjectDescriptor(URI n4jsSourceURI) {
 		if (N4Scheme.isN4Scheme(n4jsSourceURI)) {
-			return N4JSGlobals.N4JS_RUNTIME.name;
+			return N4JSGlobals.N4JS_RUNTIME.rawName;
 		}
 		val project = projectResolver.resolveProject(n4jsSourceURI)
 		val unitPath = ""

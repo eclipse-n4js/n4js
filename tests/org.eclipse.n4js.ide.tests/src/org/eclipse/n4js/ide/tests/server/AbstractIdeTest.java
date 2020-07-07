@@ -511,6 +511,44 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	}
 
 	/**
+	 * Same as {@link #createFileOnDiskWithoutNotification(FileURI, CharSequence)}, placing the new file next to an
+	 * existing module.
+	 */
+	protected void createFileOnDiskWithoutNotification(String existingModuleName, String newFileNameIncludingExtension,
+			CharSequence content) {
+		FileURI existingFileURI = getFileURIFromModuleName(existingModuleName);
+		FileURI newFileURI = existingFileURI.getParent().appendSegment(newFileNameIncludingExtension);
+		createFileOnDiskWithoutNotification(newFileURI, content);
+	}
+
+	/** Create a new file on disk without notifying the LSP server about it. */
+	protected void createFileOnDiskWithoutNotification(FileURI fileURI, CharSequence content) {
+		Path filePath = fileURI.toJavaIoFile().toPath();
+		try {
+			Files.writeString(filePath, content, StandardOpenOption.CREATE_NEW);
+		} catch (IOException e) {
+			throw new RuntimeException("exception while creating file on disk", e);
+		}
+	}
+
+	/** Same as {@link #renameFileOnDiskWithoutNotification(FileURI, String)}, accepting a module name. */
+	protected void renameFileOnDiskWithoutNotification(String moduleName, String newFileNameIncludingExtension) {
+		FileURI fileURI = getFileURIFromModuleName(moduleName);
+		renameFileOnDiskWithoutNotification(fileURI, newFileNameIncludingExtension);
+	}
+
+	/** Rename an existing file on disk without notifying the LSP server about it. */
+	protected void renameFileOnDiskWithoutNotification(FileURI fileURI, String newFileNameIncludingExtension) {
+		Path filePath = fileURI.toJavaIoFile().toPath();
+		Path filePathRenamed = filePath.getParent().resolve(newFileNameIncludingExtension);
+		try {
+			Files.move(filePath, filePathRenamed);
+		} catch (IOException e) {
+			throw new RuntimeException("exception while renaming file on disk", e);
+		}
+	}
+
+	/**
 	 * Same as {@link #changeFileOnDiskWithoutNotification(FileURI, Function)}, but changes one or more files at once,
 	 * as defined by the given {@link WorkspaceEdit}.
 	 */

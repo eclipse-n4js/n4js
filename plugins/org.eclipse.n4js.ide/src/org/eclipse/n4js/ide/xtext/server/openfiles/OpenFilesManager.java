@@ -26,6 +26,7 @@ import java.util.function.BiFunction;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
+import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentChunkedIndex.VisibleContainerInfo;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
 import org.eclipse.n4js.ide.xtext.server.concurrent.LSPExecutorService;
 import org.eclipse.n4js.ide.xtext.server.util.CancelIndicatorUtil;
@@ -35,7 +36,6 @@ import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -56,7 +56,6 @@ public class OpenFilesManager {
 	protected final ThreadLocal<OpenFileContext> currentContext = new ThreadLocal<>();
 
 	protected final Map<String, ResourceDescriptionsData> persistedStateDescriptions = new HashMap<>();
-	protected final Map<String, ImmutableSet<String>> persistedStateVisibleContainers = new HashMap<>();
 	protected ContainerStructureSnapshot persistedStateContainerStructure = new ContainerStructureSnapshot();
 
 	protected final ResourceDescriptionsData sharedDirtyState = new ResourceDescriptionsData(Collections.emptyList());
@@ -273,7 +272,7 @@ public class OpenFilesManager {
 
 	public synchronized void updatePersistedState(
 			Map<String, ResourceDescriptionsData> changedDescriptions,
-			Map<String, ImmutableSet<String>> changedVisibleContainers,
+			Map<String, VisibleContainerInfo> changedVisibleContainers,
 			Set<String> removedContainerHandles) {
 
 		ContainerStructureSnapshot oldCS = persistedStateContainerStructure;
@@ -309,17 +308,11 @@ public class OpenFilesManager {
 			ResourceDescriptionsData newData = entry.getValue();
 			persistedStateDescriptions.put(containerHandle, newData.copy());
 		}
-		for (Entry<String, ImmutableSet<String>> entry : changedVisibleContainers.entrySet()) {
-			String containerHandle = entry.getKey();
-			ImmutableSet<String> newVisibleContainers = entry.getValue();
-			persistedStateVisibleContainers.put(containerHandle, newVisibleContainers);
-		}
 		for (String removedContainerHandle : removedContainerHandles) {
 			persistedStateDescriptions.remove(removedContainerHandle);
-			persistedStateVisibleContainers.remove(removedContainerHandle);
 		}
-		persistedStateContainerStructure = ContainerStructureSnapshot.create(persistedStateDescriptions,
-				persistedStateVisibleContainers);
+		persistedStateContainerStructure = persistedStateContainerStructure.update(changedDescriptions,
+				changedVisibleContainers, removedContainerHandles);
 
 		// update persisted state instances in the context of each open file
 		if (Iterables.isEmpty(changed) && removed.isEmpty()

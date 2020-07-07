@@ -3,9 +3,9 @@
 
 
 FOLDERS
-- P1 [PROJECT workspaces=["packages/*"]]
--- packages
----*D1 [PROJECT]
+-*P1 [PROJECT workspaces=["packages/*"]]
+--*packages
+--- D1 [PROJECT]
 
 EXPECT
 - P1/packages/D1

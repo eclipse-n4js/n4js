@@ -29,6 +29,7 @@ import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.SourceContainerDescription;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.xtext.naming.QualifiedName;
 
@@ -144,8 +145,8 @@ public class ProjectDescriptionUtils {
 	 * <td>{@code "@myScope/myProject"/"f"/"M"}</td>
 	 * </tr>
 	 * </table>
-	 * These encoding rules are implemented in methods {@link #deriveN4JSProjectNameFromURI(SafeURI)} and
-	 * {@link N4JSQualifiedNameConverter#toQualifiedName(String)}.
+	 * These encoding rules are implemented in methods {@link #deriveN4JSProjectNameFromURI(SafeURI)},
+	 * {@link N4JSProjectName#toQualifiedName()}, and {@link N4JSQualifiedNameConverter#toQualifiedName(String)}.
 	 */
 	public static boolean isProjectNameWithScope(String projectName) {
 		return projectName != null

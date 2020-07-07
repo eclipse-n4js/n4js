@@ -24,15 +24,17 @@ export function getActivate(vscode, vscodeLC) {
 			outputChannel.appendLine('Start LSP extension');
 			let writer;
 			let reader;
-			const socket = await connectToRunningN4jsLspServer(PORT, outputChannel);
+			let socket = await connectToRunningN4jsLspServer(PORT, outputChannel);
 			if (socket) {
+				outputChannel.appendLine('Connected to an already running LSP server (port=' + PORT + ').');
 				writer = socket;
 				reader = socket;
 			} else {
-				outputChannel.appendLine('Start new N4JS LSP server.');
-				await startN4jsLspServerAndConnect(PORT, vscode, outputChannel);
-				writer = n4jscProcess.stdin;
-				reader = n4jscProcess.stdout;
+				outputChannel.appendLine('Starting new N4JS LSP server (port=' + PORT + ') ...');
+				socket = await startN4jsLspServerAndConnect(PORT, vscode, outputChannel);
+				outputChannel.appendLine('Connected to LSP server.');
+				writer = socket;
+				reader = socket;
 			}
 			let result = {
 				writer: writer,
@@ -139,7 +141,8 @@ async function startN4jsLspServerAndConnect(port, vscode, outputChannel) {
 		env: env
 	};
 	const n4jscOptions = {
-		stdio: true
+		port: port,
+		stdio: false
 	};
 	const vmOptions = {
 		xmx: getJavaVMXmxSetting(vscode)
@@ -163,7 +166,8 @@ async function startN4jsLspServerAndConnect(port, vscode, outputChannel) {
 		n4jscProcess.stdout.on('data', waitForListenMsg);
 	});
 	await serverReady;
-	outputChannel.appendLine('Connected to LSP server');
+	let result = await connectToRunningN4jsLspServer(port, outputChannel);
+	return result;
 }
 async function connectToRunningN4jsLspServer(port, outputChannel) {
 	let connectionPromise = new Promise((resolve, reject)=>{
@@ -176,7 +180,6 @@ async function connectToRunningN4jsLspServer(port, outputChannel) {
 				port: port
 			});
 			clientSocket.on('connect', ()=>{
-				outputChannel.appendLine('Connected to a already running LSP server (port=' + PORT + ')');
 				clearTimeout(timer);
 				resolve(clientSocket);
 			});

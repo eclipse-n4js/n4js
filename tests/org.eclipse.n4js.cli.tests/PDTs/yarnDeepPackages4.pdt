@@ -1,0 +1,14 @@
+# Project Discovery Test
+# working dir marked with '*'
+
+
+FOLDERS
+- P1 [PROJECT workspaces=["packages/**/*"]]
+-- packages
+--- folder1
+----*D1 [PROJECT]
+--- folder2
+---- D2 [PROJECT]
+
+EXPECT
+- P1/packages/folder1/D1
