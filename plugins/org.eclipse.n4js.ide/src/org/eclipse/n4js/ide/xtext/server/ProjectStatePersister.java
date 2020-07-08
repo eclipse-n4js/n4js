@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -308,9 +309,11 @@ public class ProjectStatePersister {
 
 	private void writeValidationIssues(Multimap<URI, LSPIssue> validationIssues, DataOutput output)
 			throws IOException {
-		int numberSources = validationIssues.size();
+
+		Set<URI> allSources = validationIssues.keySet();
+		int numberSources = allSources.size();
 		output.writeInt(numberSources);
-		for (URI source : validationIssues.keys()) {
+		for (URI source : allSources) {
 			Collection<LSPIssue> issues = validationIssues.get(source);
 
 			output.writeUTF(source.toString());
