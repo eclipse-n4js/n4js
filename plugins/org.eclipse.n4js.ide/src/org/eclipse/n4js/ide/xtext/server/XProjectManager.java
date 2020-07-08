@@ -156,7 +156,7 @@ public class XProjectManager {
 		// (below code won't send empty 'publishDiagnostics' events for resources without validation issues, see API doc
 		// of this method for details)
 		Multimap<URI, LSPIssue> validationIssues = projectStateHolder.getValidationIssues();
-		for (URI location : validationIssues.keys()) {
+		for (URI location : validationIssues.keySet()) {
 			Collection<LSPIssue> issues = validationIssues.get(location);
 			publishIssues(location, issues);
 		}
