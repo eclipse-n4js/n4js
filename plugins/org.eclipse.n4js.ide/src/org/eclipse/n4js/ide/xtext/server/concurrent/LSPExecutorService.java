@@ -57,8 +57,7 @@ import com.google.inject.Singleton;
  * cancelled while waiting on the queue, so implementors of a task may choose to implement a "non-cancellable" operation
  * at the beginning of a task before reacting to the cancel indicator.
  */
-// FIXME remove @Singleton?
-@Singleton // ensures queue IDs are "global" within a single injector
+@Singleton // not truly necessary, but ensures queue IDs are "global" within a single injector
 public class LSPExecutorService {
 
 	private static final Logger LOG = Logger.getLogger(LSPExecutorService.class);

@@ -190,9 +190,6 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 	private XLanguageServerImpl languageServer;
 
 	@Inject
-	private OpenFilesManager openFilesManager;
-
-	@Inject
 	private DiagnosticIssueConverter diagnosticIssueConverter;
 
 	@Inject
@@ -345,6 +342,7 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 		TextEditCollector collector = new TextEditCollector();
 		TextDocumentIdentifier textDocId = new TextDocumentIdentifier(uriExtensions.toUriString(uri));
 
+		OpenFilesManager openFilesManager = languageServer.getOpenFilesManager();
 		openFilesManager.<Void> runInTemporaryFileContext(uri, "doApplyToFile", false, cancelIndicator, (ofc, ci) -> {
 			XtextResource res = ofc.getResource();
 			List<Issue> issues = ofc.resolveAndValidateOpenFile(ci);
