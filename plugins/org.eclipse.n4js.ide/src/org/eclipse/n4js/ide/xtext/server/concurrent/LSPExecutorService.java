@@ -56,6 +56,18 @@ import com.google.inject.Singleton;
  * to react to that (as usual with cancel indicators). Tasks will always be invoked, even if they were marked as
  * cancelled while waiting on the queue, so implementors of a task may choose to implement a "non-cancellable" operation
  * at the beginning of a task before reacting to the cancel indicator.
+ *
+ * <h2>Memory Consistency Properties</h2>
+ *
+ * Given two tasks <code>T1</code> and <code>T2</code> submitted in this order and with equal queue IDs, this executor
+ * guarantees that the last action in T1 <em>happens-before</em> the first action in T2, in the sense of the
+ * <em>happens-before</em> relation defined in the Java Language Specification, Section 17.4.5.
+ *
+ * @see <a href=
+ *      "https://docs.oracle.com/en/java/javase/14/docs/api/java.base/java/util/concurrent/package-summary.html#MemoryVisibility">java.util.concurrent
+ *      - Memory Consistency Properties</a>
+ * @see <a href="https://docs.oracle.com/javase/specs/jls/se14/html/jls-17.html#jls-17.4.5">Java Language Specification
+ *      - Section 17.4.5 Happens-before Order</a>
  */
 @Singleton // not truly necessary, but ensures queue IDs are "global" within a single injector
 public class LSPExecutorService {
@@ -108,8 +120,9 @@ public class LSPExecutorService {
 				if (isCancellation(th)) {
 					result.doCancel();
 				} else {
-					result.completeExceptionally(th);
+					// log before completing (or LSPExecutorServiceTest#testSubmitLogException() would become flaky)
 					LOG.error("error during queued task: ", th);
+					result.completeExceptionally(th);
 				}
 			} finally {
 				onDone(this);
