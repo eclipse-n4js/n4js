@@ -110,11 +110,6 @@ public class XStatefulIncrementalBuilder {
 				}
 			}
 
-			for (URI source : request.getDeletedFiles()) {
-				request.setResultIssues(request.getProjectName(), source, Collections.emptyList());
-				removeGeneratedFiles(source, newSource2GeneratedMapping);
-			}
-
 			List<Delta> allProcessedAndExternalDeltas = new ArrayList<>(request.getExternalDeltas());
 
 			ResourceDescriptionsData oldIndex = context.getOldState().getResourceDescriptions();
@@ -143,6 +138,8 @@ public class XStatefulIncrementalBuilder {
 					}
 					if (delta.getNew() == null) {
 						// deleted resources are not being built, thus add immediately to 'newDeltas'
+						request.setResultIssues(request.getProjectName(), uri, Collections.emptyList());
+						removeGeneratedFiles(uri, newSource2GeneratedMapping);
 						newDeltas.add(delta);
 					} else {
 						urisToBeBuilt.add(uri);
@@ -224,6 +221,9 @@ public class XStatefulIncrementalBuilder {
 			if (loadResult.isFileNotFound()) {
 				// a source file was renamed/deleted and we did not get a 'didChangeWatchedFiles' notification
 				// OR the rename/delete happened while the build was in progress
+				result.getNewIndex().removeDescription(source);
+				request.setResultIssues(request.getProjectName(), source, Collections.emptyList());
+				removeGeneratedFiles(source, newSource2GeneratedMapping);
 				IResourceDescription old = context.getOldState().getResourceDescriptions()
 						.getResourceDescription(loadResult.uri);
 				return manager.createDelta(old, null);
