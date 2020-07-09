@@ -74,7 +74,9 @@ import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.xtext.LanguageInfo;
 import org.eclipse.xtext.ide.server.UriExtensions;
+import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
+import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
 import org.junit.After;
@@ -951,6 +953,17 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	private <T> Map<FileURI, T> convertModuleNamePairsToIdMap(Pair<String, T>... moduleNameToExpectedIssues) {
 		return Stream.of(moduleNameToExpectedIssues).collect(Collectors.toMap(
 				p -> getFileURIFromModuleName(p.getKey()), Pair::getValue));
+	}
+
+	/** Same as {@link #getResourceDescriptionFromIndex(String, FileURI)}, assuming file belongs to default project. */
+	protected IResourceDescription getResourceDescriptionFromIndex(FileURI fileURI) {
+		return getResourceDescriptionFromIndex(TestWorkspaceManager.DEFAULT_PROJECT_NAME, fileURI);
+	}
+
+	/** Reads the resource description of the source file with the given URI from the index. */
+	protected IResourceDescription getResourceDescriptionFromIndex(String projectName, FileURI fileURI) {
+		ResourceDescriptionsData index = languageServer.getBuilder().getIndexRaw().getContainer(projectName);
+		return index.getResourceDescription(fileURI.toURI());
 	}
 
 	/** Translates a given module name to a file URI used in LSP call data. */

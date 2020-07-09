@@ -81,20 +81,31 @@ class IncrementalBuilderFileChangesTest extends AbstractIncrementalBuilderTest {
 		);
 		startAndWaitForLspServer();
 		assertNoIssues();
+		val fileA = getFileURIFromModuleName("A");
+		assertNotNull("index should contain an entry for A.n4js", getResourceDescriptionFromIndex(fileA));
+		val outputFileA = createSnapshotForOutputFile("A");
 
 		openFile("Main");
 		changeOpenedFile("Main", "meth(" -> "methx(");
 		joinServerRequests();
 		assertNoIssues();
+		assertNotNull("index should contain an entry for A.n4js", getResourceDescriptionFromIndex(fileA));
+		outputFileA.assertUnchanged();
 
 		deleteFileOnDiskWithoutNotification("A");
+		assertNotNull("index should contain an entry for A.n4js", getResourceDescriptionFromIndex(fileA));
+		outputFileA.assertUnchanged();
 
 		clearLogMessages();
 		saveOpenedFile("Main");
 		joinServerRequests();
+
 		val logMsgs = getLogMessages();
 		val logMsgsStr = getLogMessagesAsString();
 		assertFalse(logMsgsStr, logMsgs.exists[type === MessageType.Error || type === MessageType.Warning]);
 		assertFalse(logMsgsStr, logMsgs.exists[message.contains("FileNotFoundException")]);
+
+		assertNull("index should no longer contain an entry for A.n4js", getResourceDescriptionFromIndex(fileA));
+		outputFileA.assertNotExists();
 	}
 }
