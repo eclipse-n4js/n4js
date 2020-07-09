@@ -74,8 +74,7 @@ public class XClusteringStorageAwareResourceLoader {
 	/**
 	 * Execute the given operation in a clustered fashion.
 	 */
-	public <T> List<T> executeClustered(Iterable<URI> uris,
-			Function1<? super LoadResult, ? extends T> operation) {
+	public <T> List<T> executeClustered(Iterable<URI> uris, Function1<? super LoadResult, ? extends T> operation) {
 		int loadedURIsCount = 0;
 		Set<URI> sourceLevelURIs = new HashSet<>();
 		List<LoadResult> resources = new ArrayList<>();
