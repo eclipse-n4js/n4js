@@ -13,7 +13,7 @@ package org.eclipse.n4js.ide.tests.builder
 import com.google.common.base.Optional
 import com.google.inject.Inject
 import java.util.concurrent.atomic.AtomicInteger
-import org.eclipse.emf.ecore.resource.Resource
+import org.eclipse.n4js.ide.xtext.server.build.XClusteringStorageAwareResourceLoader.LoadResult
 import org.eclipse.n4js.ide.xtext.server.build.XIndexer.XIndexResult
 import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping
 import org.eclipse.n4js.ide.xtext.server.build.XStatefulIncrementalBuilder
@@ -35,7 +35,7 @@ class IncrementalBuilderCancellationTest extends AbstractIncrementalBuilderTest 
 		@Inject
 		private OperationCanceledManager operationCanceledManager;
 
-		override protected buildClustured(Resource resource, XSource2GeneratedMapping newSource2GeneratedMapping, XIndexResult result) {
+		override protected buildClustured(LoadResult loadResult, XSource2GeneratedMapping newSource2GeneratedMapping, XIndexResult result) {
 			var isCancelRequested = false;
 			synchronized(cancelCounter) {
 				isCancelRequested = cancelCounter.get() > 0 && cancelCounter.decrementAndGet() == 0;
@@ -43,7 +43,7 @@ class IncrementalBuilderCancellationTest extends AbstractIncrementalBuilderTest 
 			if (isCancelRequested) {
 				operationCanceledManager.checkCanceled([true]);
 			}
-			super.buildClustured(resource, newSource2GeneratedMapping, result);
+			super.buildClustured(loadResult, newSource2GeneratedMapping, result);
 		}
 	}
 
