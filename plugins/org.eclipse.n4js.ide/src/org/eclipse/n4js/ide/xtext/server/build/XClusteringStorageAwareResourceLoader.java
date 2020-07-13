@@ -7,6 +7,7 @@
  */
 package org.eclipse.n4js.ide.xtext.server.build;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -15,6 +16,7 @@ import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.IResourceServiceProviderExtension;
 import org.eclipse.xtext.resource.XtextResourceSet;
@@ -23,12 +25,44 @@ import org.eclipse.xtext.resource.persistence.StorageAwareResource;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
 
+import com.google.common.base.Throwables;
+
 /**
  * @author Jan Koehnlein - Initial contribution and API
  */
 @SuppressWarnings("restriction")
 public class XClusteringStorageAwareResourceLoader {
 	private final XBuildContext context;
+
+	/** The result of loading an EMF resource. */
+	public static class LoadResult {
+
+		/** The URI of the resource that was loaded. */
+		public final URI uri;
+		/** The resource that was loaded or <code>null</code> iff loading failed. */
+		public final Resource resource;
+		/** The exception or error during loading or <code>null</code> iff loading succeeded. */
+		public final Throwable throwable;
+
+		/** Creates a load result in the success case. */
+		public LoadResult(Resource resource) {
+			this.uri = resource.getURI();
+			this.resource = resource;
+			this.throwable = null;
+		}
+
+		/** Creates a load result in the failure case. */
+		public LoadResult(URI uri, Throwable throwable) {
+			this.uri = uri;
+			this.resource = null;
+			this.throwable = throwable;
+		}
+
+		/** Tells whether loading failed with a {@link FileNotFoundException}. */
+		public boolean isFileNotFound() {
+			return throwable != null && Throwables.getRootCause(throwable) instanceof FileNotFoundException;
+		}
+	}
 
 	/**
 	 * Constructor
@@ -40,10 +74,10 @@ public class XClusteringStorageAwareResourceLoader {
 	/**
 	 * Execute the given operation in a clustered fashion.
 	 */
-	public <T> List<T> executeClustered(Iterable<URI> uris, Function1<? super Resource, ? extends T> operation) {
+	public <T> List<T> executeClustered(Iterable<URI> uris, Function1<? super LoadResult, ? extends T> operation) {
 		int loadedURIsCount = 0;
 		Set<URI> sourceLevelURIs = new HashSet<>();
-		List<Resource> resources = new ArrayList<>();
+		List<LoadResult> resources = new ArrayList<>();
 		List<T> result = new ArrayList<>();
 		Iterator<URI> iter = uris.iterator();
 		while (iter.hasNext()) {
@@ -66,10 +100,20 @@ public class XClusteringStorageAwareResourceLoader {
 				}
 				SourceLevelURIsAdapter.setSourceLevelUrisWithoutCopy(resourceSet, sourceLevelURIs);
 			}
-			resources.add(resourceSet.getResource(uri, true));
+			resources.add(loadResource(resourceSet, uri));
 		}
 		result.addAll(ListExtensions.map(resources, operation::apply));
 		return result;
+	}
+
+	/** Actually loads a resource. */
+	protected LoadResult loadResource(ResourceSet resourceSet, URI uri) {
+		try {
+			Resource resource = resourceSet.getResource(uri, true);
+			return new LoadResult(resource);
+		} catch (Throwable th) {
+			return new LoadResult(uri, th);
+		}
 	}
 
 	/**

@@ -10,7 +10,7 @@ package org.eclipse.n4js.ide.xtext.server.build;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.ide.xtext.server.build.XClusteringStorageAwareResourceLoader.LoadResult;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.resource.clustering.IResourceClusteringPolicy;
@@ -54,7 +54,7 @@ public class XBuildContext {
 	/**
 	 * Run the given logic on all uris with clustering enabled.
 	 */
-	public <T> List<T> executeClustered(Iterable<URI> uri, Function1<? super Resource, ? extends T> operation) {
+	public <T> List<T> executeClustered(Iterable<URI> uri, Function1<? super LoadResult, ? extends T> operation) {
 		if (this.loader == null) {
 			this.loader = new XClusteringStorageAwareResourceLoader(this);
 		}

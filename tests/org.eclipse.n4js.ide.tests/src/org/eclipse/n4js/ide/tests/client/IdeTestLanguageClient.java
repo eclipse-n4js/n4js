@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ide.tests.client;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -46,6 +47,8 @@ public class IdeTestLanguageClient extends AbstractN4JSLanguageClient {
 
 	private final List<IIdeTestLanguageClientListener> listeners = Collections.synchronizedList(new LinkedList<>());
 
+	private final List<MessageParams> logMessages = Collections.synchronizedList(new ArrayList<>());
+
 	private final Multimap<FileURI, Diagnostic> issues = Multimaps.synchronizedMultimap(HashMultimap.create());
 	private final Multimap<FileURI, String> errors = Multimaps.synchronizedMultimap(HashMultimap.create());
 	private final Multimap<FileURI, String> warnings = Multimaps.synchronizedMultimap(HashMultimap.create());
@@ -73,6 +76,11 @@ public class IdeTestLanguageClient extends AbstractN4JSLanguageClient {
 	/** Removes a listener. */
 	public void removeListener(IIdeTestLanguageClientListener listener) {
 		listeners.remove(listener);
+	}
+
+	/** Clear the log messages tracked by this client. */
+	public void clearLogMessages() {
+		logMessages.clear();
 	}
 
 	/**
@@ -104,7 +112,7 @@ public class IdeTestLanguageClient extends AbstractN4JSLanguageClient {
 
 	@Override
 	public void logMessage(MessageParams message) {
-		// not yet used in tests
+		logMessages.add(message);
 	}
 
 	@Override
@@ -155,6 +163,11 @@ public class IdeTestLanguageClient extends AbstractN4JSLanguageClient {
 			}
 		}
 		return CompletableFuture.completedFuture(new ApplyWorkspaceEditResponse(applied));
+	}
+
+	/** @return the log messages received up to this point in time. */
+	public List<MessageParams> getLogMessages() {
+		return new ArrayList<>(logMessages);
 	}
 
 	/** @return all issues in the workspace as a multi-map from file URI to {@link Diagnostic}s. */
