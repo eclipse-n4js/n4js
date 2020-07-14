@@ -150,7 +150,7 @@ public class XProjectManager {
 	public XBuildResult doInitialBuild(CancelIndicator cancelIndicator) {
 		ResourceChangeSet changeSet = projectStateHolder.readProjectState(projectConfig);
 		XBuildResult result = doBuild(
-				changeSet.getModified(), changeSet.getDeleted(), Collections.emptyList(), false, true, cancelIndicator);
+				changeSet.getModified(), changeSet.getDeleted(), Collections.emptyList(), false, cancelIndicator);
 
 		// send issues to client
 		// (below code won't send empty 'publishDiagnostics' events for resources without validation issues, see API doc
@@ -176,21 +176,20 @@ public class XProjectManager {
 
 	/** Build increments of this project. */
 	public XBuildResult doIncrementalBuild(Set<URI> dirtyFiles, Set<URI> deletedFiles,
-			List<IResourceDescription.Delta> externalDeltas, boolean doGenerate, CancelIndicator cancelIndicator) {
+			List<IResourceDescription.Delta> externalDeltas, CancelIndicator cancelIndicator) {
 
-		return doBuild(dirtyFiles, deletedFiles, externalDeltas, true, doGenerate, cancelIndicator);
+		return doBuild(dirtyFiles, deletedFiles, externalDeltas, true, cancelIndicator);
 	}
 
 	/** Build this project. */
 	protected XBuildResult doBuild(Set<URI> dirtyFiles, Set<URI> deletedFiles,
-			List<IResourceDescription.Delta> externalDeltas, boolean propagateIssues, boolean doGenerate,
-			CancelIndicator cancelIndicator) {
+			List<IResourceDescription.Delta> externalDeltas, boolean propagateIssues, CancelIndicator cancelIndicator) {
 
 		URI persistenceFile = projectStateHolder.getPersistenceFile(projectConfig);
 		dirtyFiles.remove(persistenceFile);
 		deletedFiles.remove(persistenceFile);
 
-		XBuildRequest request = newBuildRequest(dirtyFiles, deletedFiles, externalDeltas, propagateIssues, doGenerate,
+		XBuildRequest request = newBuildRequest(dirtyFiles, deletedFiles, externalDeltas, propagateIssues,
 				cancelIndicator);
 		resourceSet = request.getResourceSet(); // resourceSet is already used during the build via #getResource(URI)
 
@@ -274,8 +273,7 @@ public class XProjectManager {
 
 	/** Creates a new build request for this project. */
 	protected XBuildRequest newBuildRequest(Set<URI> changedFiles, Set<URI> deletedFiles,
-			List<IResourceDescription.Delta> externalDeltas, boolean propagateIssues, boolean doGenerate,
-			CancelIndicator cancelIndicator) {
+			List<IResourceDescription.Delta> externalDeltas, boolean propagateIssues, CancelIndicator cancelIndicator) {
 
 		XBuildRequest result = buildRequestFactory.getBuildRequest(projectConfig.getName(), changedFiles, deletedFiles,
 				externalDeltas);
@@ -287,7 +285,6 @@ public class XProjectManager {
 		result.setResourceSet(createFreshResourceSet(result.getState().getResourceDescriptions()));
 		result.setCancelIndicator(cancelIndicator);
 		result.setBaseDir(getBaseDir());
-		result.setGeneratorEnabled(doGenerate);
 
 		if (propagateIssues) {
 			result.setAfterValidateListener(afterValidateListener);

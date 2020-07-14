@@ -140,6 +140,14 @@ public class OpenFileContext {
 		return temporary;
 	}
 
+	/**
+	 * Tells whether this {@link OpenFileContext} represents an ordinary context for an open file, i.e. not a
+	 * {@link #isTemporary() temporary context}.
+	 */
+	public synchronized boolean isOpen() {
+		return !isTemporary();
+	}
+
 	public synchronized XtextResourceSet getResourceSet() {
 		return mainResourceSet;
 	}
@@ -214,7 +222,7 @@ public class OpenFileContext {
 	}
 
 	public void refreshOpenFile(CancelIndicator cancelIndicator) {
-		// TODO GH-1774 find better solution for updating unchanged open files!
+		// TODO IDE-3402 find better solution for updating unchanged open files!
 		TextDocumentContentChangeEvent dummyChange = new TextDocumentContentChangeEvent(document.getContents());
 		refreshOpenFile(document.getVersion(), Collections.singletonList(dummyChange), cancelIndicator);
 	}
@@ -229,11 +237,10 @@ public class OpenFileContext {
 			throw new IllegalStateException("trying to refresh a resource that is not yet loaded: " + mainURI);
 		}
 
-		// TODO GH-1774 the following is only necessary for changed files (could be moved to #updateDirtyState())
 		ResourceSet resSet = getResourceSet();
 		for (Resource res : new ArrayList<>(resSet.getResources())) {
 			if (res != mainResource) {
-				res.unload(); // TODO GH-1774 better way to do this? (unload is expensive due to re-proxyfication)
+				res.unload(); // TODO IDE-3402 better way to do this? (unload is expensive due to re-proxyfication)
 				resSet.getResources().remove(res);
 			}
 		}

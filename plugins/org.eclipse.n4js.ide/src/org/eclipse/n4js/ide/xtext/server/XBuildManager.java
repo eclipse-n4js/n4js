@@ -38,7 +38,6 @@ import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.IteratorExtensions;
-import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
@@ -51,70 +50,6 @@ import com.google.inject.Inject;
 @SuppressWarnings({ "hiding", "restriction" })
 public class XBuildManager {
 	private static final Logger LOG = LogManager.getLogger(XBuildManager.class);
-
-	/**
-	 * The resources that are about to be build.
-	 */
-	protected static class XProjectBuildData {
-		private final List<URI> dirtyFiles;
-
-		private final List<URI> deletedFiles;
-
-		/** Constructor */
-		public XProjectBuildData(List<URI> dirtyFiles, List<URI> deletedFiles) {
-			super();
-			this.dirtyFiles = dirtyFiles;
-			this.deletedFiles = deletedFiles;
-		}
-
-		@Override
-		public int hashCode() {
-			int prime = 31;
-			int result = 1;
-			result = prime * result + ((this.dirtyFiles == null) ? 0 : this.dirtyFiles.hashCode());
-			return prime * result + ((this.deletedFiles == null) ? 0 : this.deletedFiles.hashCode());
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			XBuildManager.XProjectBuildData other = (XBuildManager.XProjectBuildData) obj;
-			if (this.dirtyFiles == null) {
-				if (other.dirtyFiles != null)
-					return false;
-			} else if (!this.dirtyFiles.equals(other.dirtyFiles))
-				return false;
-			if (this.deletedFiles == null) {
-				if (other.deletedFiles != null)
-					return false;
-			} else if (!this.deletedFiles.equals(other.deletedFiles))
-				return false;
-			return true;
-		}
-
-		@Override
-		public String toString() {
-			ToStringBuilder b = new ToStringBuilder(this);
-			b.add("dirtyFiles", this.dirtyFiles);
-			b.add("deletedFiles", this.deletedFiles);
-			return b.toString();
-		}
-
-		/** The dirty files. */
-		public List<URI> getDirtyFiles() {
-			return this.dirtyFiles;
-		}
-
-		/** The deleted files. */
-		public List<URI> getDeletedFiles() {
-			return this.deletedFiles;
-		}
-	}
 
 	/** A handle that can be used to trigger a build. */
 	public interface XBuildable {
@@ -146,9 +81,6 @@ public class XBuildManager {
 
 	private final LinkedHashSet<URI> dirtyFiles = new LinkedHashSet<>();
 	private final LinkedHashSet<URI> deletedFiles = new LinkedHashSet<>();
-
-	private final LinkedHashSet<URI> dirtyFilesAwaitingGeneration = new LinkedHashSet<>();
-	private final LinkedHashSet<URI> deletedFilesAwaitingGeneration = new LinkedHashSet<>();
 
 	/** Holds all deltas of all projects. In case of a cancelled build, this set is not empty at start of next build. */
 	private List<IResourceDescription.Delta> allBuildDeltas = new ArrayList<>();
@@ -238,8 +170,6 @@ public class XBuildManager {
 
 	/** Performs a clean operation in all projects */
 	public void doClean(CancelIndicator cancelIndicator) {
-		dirtyFilesAwaitingGeneration.clear();
-		deletedFilesAwaitingGeneration.clear();
 		for (XProjectManager projectManager : workspaceManager.getProjectManagers()) {
 			projectManager.doClean(cancelIndicator);
 		}
@@ -250,24 +180,7 @@ public class XBuildManager {
 	 *
 	 * @return a buildable.
 	 */
-	@Deprecated // TODO GH-1774 remove infrastructure for doGenerate == false (should now be unused)
-	public XBuildable getIncrementalDirtyBuildable(WorkspaceChanges workspaceChanges) {
-		return doGetIncrementalBuildable(workspaceChanges, false);
-	}
-
-	/**
-	 * Enqueue a build for the given file changes.
-	 *
-	 * @return a buildable.
-	 */
-	public XBuildable getIncrementalGenerateBuildable(WorkspaceChanges workspaceChanges) {
-		return doGetIncrementalBuildable(workspaceChanges, true);
-	}
-
-	/**
-	 * Enqueue the dirty and deleted files now and return a handle to an incremental build.
-	 */
-	private XBuildable doGetIncrementalBuildable(WorkspaceChanges workspaceChanges, boolean doGenerate) {
+	public XBuildable getIncrementalBuildable(WorkspaceChanges workspaceChanges) {
 		List<URI> dirtyFiles = workspaceChanges.scanAllAddedAndChangedURIs(scanner);
 		List<URI> deletedFiles = getAllRemovedURIs(workspaceChanges);
 		queue(this.dirtyFiles, deletedFiles, dirtyFiles);
@@ -284,7 +197,7 @@ public class XBuildManager {
 			workspaceManager.addProject(prjConfig);
 		}
 
-		return (cancelIndicator) -> doIncrementalBuild(doGenerate, cancelIndicator);
+		return (cancelIndicator) -> doIncrementalBuild(cancelIndicator);
 	}
 
 	/** @return list of all {@link URI} that have been removed by the given changes */
@@ -300,15 +213,11 @@ public class XBuildManager {
 	}
 
 	/** Run the build on the workspace */
-	protected List<IResourceDescription.Delta> doIncrementalBuild(boolean doGenerate, CancelIndicator cancelIndicator) {
+	protected List<IResourceDescription.Delta> doIncrementalBuild(CancelIndicator cancelIndicator) {
 		lspLogger.log("Building ...");
 		try {
 			Set<URI> dirtyFilesToBuild = new LinkedHashSet<>(this.dirtyFiles);
 			Set<URI> deletedFilesToBuild = new LinkedHashSet<>(this.deletedFiles);
-			if (doGenerate) {
-				dirtyFilesToBuild.addAll(this.dirtyFilesAwaitingGeneration);
-				deletedFilesToBuild.addAll(this.deletedFilesAwaitingGeneration);
-			}
 
 			Map<ProjectDescription, Set<URI>> project2dirty = computeProjectToUriMap(dirtyFilesToBuild);
 			Map<ProjectDescription, Set<URI>> project2deleted = computeProjectToUriMap(deletedFilesToBuild);
@@ -327,7 +236,7 @@ public class XBuildManager {
 				XBuildResult projectResult;
 				try {
 					projectResult = projectManager.doIncrementalBuild(projectDirty, projectDeleted,
-							allBuildDeltas, doGenerate, cancelIndicator);
+							allBuildDeltas, cancelIndicator);
 				} catch (BuildCanceledException e) {
 					// TODO GH-1793 remove this temporary solution
 					dirtyFiles.addAll(e.incompletelyBuiltFiles);
@@ -336,7 +245,7 @@ public class XBuildManager {
 				}
 
 				List<Delta> newlyBuiltDeltas = projectResult.getAffectedResources();
-				recordBuildProgress(newlyBuiltDeltas, doGenerate);
+				recordBuildProgress(newlyBuiltDeltas);
 
 				pboIterator.visitAffected(newlyBuiltDeltas);
 			}
@@ -360,8 +269,6 @@ public class XBuildManager {
 			// recover and also discard the build queue - state is undefined afterwards.
 			this.dirtyFiles.clear();
 			this.deletedFiles.clear();
-			this.dirtyFilesAwaitingGeneration.clear();
-			this.deletedFilesAwaitingGeneration.clear();
 			lspLogger.error("... build ABORTED due to exception:", th);
 			throw th;
 		}
@@ -390,24 +297,11 @@ public class XBuildManager {
 	}
 
 	/** Update this build manager's state after the resources represented by the given deltas have been built. */
-	protected void recordBuildProgress(List<IResourceDescription.Delta> newlyBuiltDeltas, boolean didGenerate) {
+	protected void recordBuildProgress(List<IResourceDescription.Delta> newlyBuiltDeltas) {
 		for (Delta delta : newlyBuiltDeltas) {
 			URI uri = delta.getUri();
 			this.dirtyFiles.remove(uri);
 			this.deletedFiles.remove(uri);
-			if (didGenerate) {
-				this.dirtyFilesAwaitingGeneration.remove(uri);
-				this.deletedFilesAwaitingGeneration.remove(uri);
-			} else {
-				// a resource was built while doGenerate==false, so mark it as awaiting generation
-				if (delta.getNew() != null) {
-					this.deletedFilesAwaitingGeneration.remove(uri);
-					this.dirtyFilesAwaitingGeneration.add(uri);
-				} else {
-					this.dirtyFilesAwaitingGeneration.remove(uri);
-					this.deletedFilesAwaitingGeneration.add(uri);
-				}
-			}
 		}
 
 		mergeWithUnreportedDeltas(newlyBuiltDeltas);

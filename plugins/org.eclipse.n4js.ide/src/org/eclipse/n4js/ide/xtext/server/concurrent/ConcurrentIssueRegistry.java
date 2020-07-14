@@ -29,6 +29,7 @@ import org.eclipse.xtext.validation.Issue;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSortedSet;
+import com.google.inject.Singleton;
 
 /**
  * Simple registry for {@link LSPIssue issues} that can be shared across threads, distinguishing between persisted and
@@ -36,6 +37,7 @@ import com.google.common.collect.ImmutableSortedSet;
  * {@link ChunkedResourceDescriptions}'s containers).
  */
 @SuppressWarnings("javadoc")
+@Singleton
 public class ConcurrentIssueRegistry {
 
 	protected final Comparator<LSPIssue> issueComparator;
@@ -60,15 +62,26 @@ public class ConcurrentIssueRegistry {
 		 * Empty set means {@link #uri} was free of issues before; <code>null</code> means {@code #uri} did not exist
 		 * before.
 		 */
-		public final ImmutableSortedSet<LSPIssue> issuesOld;
+		public final ImmutableSortedSet<LSPIssue> dirtyIssuesOld;
 		/**
 		 * Empty set means issues for {@link #uri} were cleared; <code>null</code> means {@link #uri} was removed
 		 * entirely.
 		 */
-		public final ImmutableSortedSet<LSPIssue> issuesNew;
+		public final ImmutableSortedSet<LSPIssue> dirtyIssuesNew;
+		/**
+		 * Empty set means {@link #uri} was free of issues before; <code>null</code> means {@code #uri} did not exist
+		 * before.
+		 */
+		public final ImmutableSortedSet<LSPIssue> persistedIssuesOld;
+		/**
+		 * Empty set means issues for {@link #uri} were cleared; <code>null</code> means {@link #uri} was removed
+		 * entirely.
+		 */
+		public final ImmutableSortedSet<LSPIssue> persistedIssuesNew;
 
 		public IssueRegistryChangeEvent(boolean dirtyState, String containerHandle, URI uri,
-				ImmutableSortedSet<LSPIssue> issuesOld, ImmutableSortedSet<LSPIssue> issuesNew) {
+				ImmutableSortedSet<LSPIssue> dirtyIssuesOld, ImmutableSortedSet<LSPIssue> dirtyIssuesNew,
+				ImmutableSortedSet<LSPIssue> persistedIssuesOld, ImmutableSortedSet<LSPIssue> persistedIssuesNew) {
 			if (dirtyState && containerHandle != null) {
 				throw new IllegalArgumentException("dirty state event with non-null containerHandle");
 			} else if (!dirtyState && containerHandle == null) {
@@ -78,8 +91,10 @@ public class ConcurrentIssueRegistry {
 			this.persistedState = !dirtyState;
 			this.containerHandle = containerHandle;
 			this.uri = uri;
-			this.issuesOld = issuesOld;
-			this.issuesNew = issuesNew;
+			this.dirtyIssuesOld = dirtyIssuesOld;
+			this.dirtyIssuesNew = dirtyIssuesNew;
+			this.persistedIssuesOld = persistedIssuesOld;
+			this.persistedIssuesNew = persistedIssuesNew;
 		}
 	}
 
@@ -89,14 +104,6 @@ public class ConcurrentIssueRegistry {
 
 	public ConcurrentIssueRegistry(Comparator<LSPIssue> issueComparator) {
 		this.issueComparator = issueComparator;
-	}
-
-	public synchronized ImmutableSortedSet<LSPIssue> getIssuesOfDirtyOrPersistedState(URI uri) {
-		ImmutableSortedSet<LSPIssue> result = getIssuesOfDirtyState(uri);
-		if (result != null) {
-			return result;
-		}
-		return getIssuesOfPersistedState(uri);
 	}
 
 	public synchronized ImmutableSortedSet<LSPIssue> getIssuesOfDirtyState(URI uri) {
@@ -209,37 +216,39 @@ public class ConcurrentIssueRegistry {
 
 	public void setIssuesOfDirtyState(URI uri, Iterable<? extends LSPIssue> issues) {
 		ImmutableSortedSet<LSPIssue> issuesNew = ImmutableSortedSet.copyOf(issueComparator, issues);
-		ImmutableSortedSet<LSPIssue> issuesOld;
+		IssueRegistryChangeEvent event;
 		synchronized (this) {
-			issuesOld = dirtyIssues.put(uri, issuesNew);
+			ImmutableSortedSet<LSPIssue> issuesOld = dirtyIssues.put(uri, issuesNew);
+			event = eventDirty(uri, issuesOld, issuesNew);
 		}
-		notifyListeners(eventDirty(uri, issuesOld, issuesNew));
+		notifyListeners(event);
 	}
 
 	public void setIssuesOfPersistedState(String containerHandle, URI uri, Iterable<? extends LSPIssue> issues) {
 		ImmutableSortedSet<LSPIssue> issuesNew = ImmutableSortedSet.copyOf(issueComparator, issues);
-		ImmutableSortedSet<LSPIssue> issuesOld;
+		IssueRegistryChangeEvent event;
 		synchronized (this) {
 			Map<URI, ImmutableSortedSet<LSPIssue>> containerIssues = getContainerIssues(containerHandle, true);
 			persistedIssues.put(uri, issuesNew);
-			issuesOld = containerIssues.put(uri, issuesNew);
+			ImmutableSortedSet<LSPIssue> issuesOld = containerIssues.put(uri, issuesNew);
+			event = eventPersisted(containerHandle, uri, issuesOld, issuesNew);
 		}
-		notifyListeners(eventPersisted(containerHandle, uri, issuesOld, issuesNew));
+		notifyListeners(event);
 	}
 
 	public void addIssueOfPersistedState(String containerHandle, URI uri, LSPIssue issue) {
-		ImmutableSortedSet<LSPIssue> issuesOld;
-		ImmutableSortedSet<LSPIssue> issuesNew;
+		IssueRegistryChangeEvent event;
 		synchronized (this) {
 			Map<URI, ImmutableSortedSet<LSPIssue>> containerIssues = getContainerIssues(containerHandle, true);
-			issuesOld = containerIssues.get(uri);
-			issuesNew = ImmutableSortedSet.orderedBy(issueComparator)
+			ImmutableSortedSet<LSPIssue> issuesOld = containerIssues.get(uri);
+			ImmutableSortedSet<LSPIssue> issuesNew = ImmutableSortedSet.orderedBy(issueComparator)
 					.addAll(issuesOld != null ? issuesOld : Collections.emptyList())
 					.add(issue).build();
 			persistedIssues.put(uri, issuesNew);
 			containerIssues.put(uri, issuesNew);
+			event = eventPersisted(containerHandle, uri, issuesOld, issuesNew);
 		}
-		notifyListeners(eventPersisted(containerHandle, uri, issuesOld, issuesNew));
+		notifyListeners(event);
 	}
 
 	protected synchronized Map<URI, ImmutableSortedSet<LSPIssue>> getContainerIssues(String containerHandle,
@@ -272,14 +281,18 @@ public class ConcurrentIssueRegistry {
 		}
 	}
 
-	protected IssueRegistryChangeEvent eventDirty(URI uri, ImmutableSortedSet<LSPIssue> oldIssues,
-			ImmutableSortedSet<LSPIssue> newIssues) {
-		return new IssueRegistryChangeEvent(true, null, uri, oldIssues, newIssues);
+	protected synchronized IssueRegistryChangeEvent eventDirty(URI uri, ImmutableSortedSet<LSPIssue> dirtyIssuesOld,
+			ImmutableSortedSet<LSPIssue> dirtyIssuesNew) {
+		ImmutableSortedSet<LSPIssue> persistedIssuesCurr = persistedIssues.get(uri);
+		return new IssueRegistryChangeEvent(true, null, uri, dirtyIssuesOld, dirtyIssuesNew, persistedIssuesCurr,
+				persistedIssuesCurr);
 	}
 
-	protected IssueRegistryChangeEvent eventPersisted(String containerHandle, URI uri,
-			ImmutableSortedSet<LSPIssue> issuesOld, ImmutableSortedSet<LSPIssue> issuesNew) {
-		return new IssueRegistryChangeEvent(false, containerHandle, uri, issuesOld, issuesNew);
+	protected synchronized IssueRegistryChangeEvent eventPersisted(String containerHandle, URI uri,
+			ImmutableSortedSet<LSPIssue> persistedIssuesOld, ImmutableSortedSet<LSPIssue> persistedIssuesNew) {
+		ImmutableSortedSet<LSPIssue> dirtyIssuesCurr = dirtyIssues.get(uri);
+		return new IssueRegistryChangeEvent(false, containerHandle, uri, dirtyIssuesCurr, dirtyIssuesCurr,
+				persistedIssuesOld, persistedIssuesNew);
 	}
 
 	/*

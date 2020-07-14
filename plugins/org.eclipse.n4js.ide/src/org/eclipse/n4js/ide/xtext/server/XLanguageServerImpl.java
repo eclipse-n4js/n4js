@@ -167,6 +167,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	private LSPBuilder lspBuilder;
 
 	@Inject
+	private ConcurrentIssueRegistry issueRegistry;
+
+	@Inject
 	private LSPExecutorService lspExecutorService;
 
 	@Inject
@@ -208,11 +211,8 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	private final Multimap<String, Endpoint> extensionProviders = LinkedListMultimap.<String, Endpoint> create();
 
-	private final ConcurrentIssueRegistry issueRegistry = new ConcurrentIssueRegistry();
-
 	/***/
 	public XLanguageServerImpl() {
-		issueRegistry.addListener(this);
 	}
 
 	// TODO we should probably use the DisposableRegistry here
@@ -250,9 +250,10 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		}
 		this.initializeParams = params;
 
+		issueRegistry.addListener(this);
 		openFilesManager.setIssueRegistry(issueRegistry);
 		openFilesManager.addListener(this);
-		lspBuilder.getIndexRaw().addListener(this);
+		lspBuilder.getIndex().addListener(this);
 
 		Stopwatch sw = Stopwatch.createStarted();
 		LOG.info("Start server initialization in workspace directory " + baseDir);
@@ -1113,9 +1114,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		}
 	}
 
-	// TODO GH-1774 refactor / clean up XWorkspaceResourceAccess and ILanguageServerAccess
-	// In particular, they seem partially redundant and there should probably be two modes now: one for accessing the
-	// workspace (persisted) files, and one for the dirty files.
 	private final IResourceAccess resourceAccess = new XWorkspaceResourceAccess(this);
 
 	private final ILanguageServerAccess access = new ILanguageServerAccess() {
@@ -1135,11 +1133,11 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 					return CompletableFuture.completedFuture(result);
 				}
 			}
-			// TODO GH-1774 consider making a current context mandatory by removing the following:
+			// TODO consider making a current context mandatory by removing the following (see GH-1774):
 			return openFilesManager.runInOpenOrTemporaryFileContext(uri, "doRead", (ofc, ci) -> {
 				XtextResource res = ofc.getResource();
 				XDocument doc = ofc.getDocument();
-				boolean isOpen = !ofc.isTemporary();
+				boolean isOpen = ofc.isOpen();
 				return function.apply(
 						new ILanguageServerAccess.Context(res, doc, isOpen, ci));
 			});
@@ -1313,10 +1311,10 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 				// for open files we ignore issue changes sent by builder
 				continue;
 			}
-			Iterable<LSPIssue> issuesToSend = event.issuesNew;
+			Iterable<LSPIssue> issuesToSend = event.dirtyState ? event.dirtyIssuesNew : event.persistedIssuesNew;
 			if (event.dirtyState && issuesToSend == null) {
 				// dirty state for a resource was entirely removed, so send its persisted state (if any)
-				issuesToSend = issueRegistry.getIssuesOfPersistedState(event.uri);
+				issuesToSend = event.persistedIssuesNew;
 			}
 			issueAcceptor.publishDiagnostics(event.uri, issuesToSend != null ? issuesToSend : Collections.emptyList());
 		}

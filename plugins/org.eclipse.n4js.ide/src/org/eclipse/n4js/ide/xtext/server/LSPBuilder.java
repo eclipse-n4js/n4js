@@ -58,24 +58,20 @@ public class LSPBuilder {
 	@Inject
 	private XWorkspaceManager workspaceManager;
 
-	private URI baseDir;
-
 	private ConcurrentIssueRegistry issueRegistry;
 
 	public URI getBaseDir() {
-		return baseDir;
+		return workspaceManager.getBaseDir();
 	}
 
 	/** @return a workspace relative URI for a given URI */
 	public URI makeWorkspaceRelative(URI uri) {
-		URI withEmptyAuthority = uriExtensions.withEmptyAuthority(uri);
-		URI relativeUri = withEmptyAuthority.deresolve(getBaseDir());
-		return relativeUri;
+		return workspaceManager.makeWorkspaceRelative(uri);
 	}
 
 	/** Returns the index. */
-	public ConcurrentChunkedIndex getIndexRaw() {
-		return workspaceManager.getIndexRaw();
+	public ConcurrentChunkedIndex getIndex() {
+		return workspaceManager.getIndex();
 	}
 
 	/**
@@ -89,7 +85,6 @@ public class LSPBuilder {
 		if (this.issueRegistry != null && issueRegistry != this.issueRegistry) {
 			throw new IllegalArgumentException("the issue registry must not be changed");
 		}
-		this.baseDir = newBaseDir;
 		this.issueRegistry = issueRegistry;
 		workspaceManager.initialize(newBaseDir, issueRegistry);
 	}

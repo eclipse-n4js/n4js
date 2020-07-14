@@ -31,6 +31,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
+import com.google.inject.Singleton;
 
 /**
  * A concurrent map of container handles to {@link ResourceDescriptionsData}, similar to using a {@link ConcurrentMap}
@@ -45,6 +46,7 @@ import com.google.common.collect.Maps;
  * <li>must create a {@link ResourceDescriptionsData#copy() copy}.
  * </ul>
  */
+@Singleton
 public class ConcurrentChunkedIndex {
 
 	/** Map of all resource descriptions per container. */

@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.jsonrpc.ResponseErrorException;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseError;
@@ -25,10 +24,8 @@ import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentChunkedIndex.Visib
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
-import org.eclipse.xtext.ide.server.ILanguageServerAccess;
-import org.eclipse.xtext.resource.IResourceDescription;
+import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
-import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -61,7 +58,6 @@ import com.google.inject.Singleton;
 @SuppressWarnings("restriction")
 @Singleton
 public class XWorkspaceManager {
-	private static final Logger LOG = Logger.getLogger(XWorkspaceManager.class);
 
 	@Inject
 	private XIWorkspaceConfigFactory workspaceConfigFactory;
@@ -75,34 +71,17 @@ public class XWorkspaceManager {
 	@Inject
 	private XBuildManager buildManager;
 
+	@Inject
+	private UriExtensions uriExtensions;
+
+	@Inject
+	private ConcurrentChunkedIndex fullIndex;
+
 	private final Map<String, XProjectManager> projectName2ProjectManager = new HashMap<>();
 
 	private IWorkspaceConfig workspaceConfig;
 
-	private final List<ILanguageServerAccess.IBuildListener> buildListeners = new ArrayList<>();
-
-	private final ConcurrentChunkedIndex fullIndex = new ConcurrentChunkedIndex();
 	private ConcurrentIssueRegistry issueRegistry;
-
-	/**
-	 * Add the listener to this workspace.
-	 *
-	 * @param listener
-	 *            the new listener.
-	 */
-	// TODO GH-1774 build listeners in XWorkspaceManager are no longer used; consider removing them
-	public void addBuildListener(ILanguageServerAccess.IBuildListener listener) {
-		buildListeners.add(listener);
-	}
-
-	/**
-	 * Removes a build listener if it was previously registered
-	 *
-	 * @since 2.18
-	 */
-	public void removeBuildListener(ILanguageServerAccess.IBuildListener listener) {
-		buildListeners.remove(listener);
-	}
 
 	/** Reinitialize a workspace at the current location. */
 	public void reinitialize() {
@@ -208,13 +187,6 @@ public class XWorkspaceManager {
 		return ((XIWorkspaceConfig) this.workspaceConfig).getPath();
 	}
 
-	/** Callback after a build was performed */
-	protected void afterBuild(List<IResourceDescription.Delta> deltas) {
-		for (ILanguageServerAccess.IBuildListener listener : buildListeners) {
-			listener.afterBuild(deltas);
-		}
-	}
-
 	/**
 	 * Announce dirty and deleted files and provide means to start a build.
 	 *
@@ -235,26 +207,19 @@ public class XWorkspaceManager {
 	 * @param cancelIndicator
 	 *            cancellation support
 	 */
-	public void doInitialBuild(CancelIndicator cancelIndicator) {
+	public List<Delta> doInitialBuild(CancelIndicator cancelIndicator) {
 		List<ProjectDescription> newProjects = new ArrayList<>();
 		for (IProjectConfig projectConfig : getWorkspaceConfig().getProjects()) {
 			ProjectDescription projectDescription = projectDescriptionFactory.getProjectDescription(projectConfig);
 			newProjects.add(projectDescription);
 		}
 		List<Delta> deltas = buildManager.doInitialBuild(newProjects, cancelIndicator);
-		afterBuild(deltas);
+		return deltas;
 	}
 
 	/** Triggers an incremental build, and will generate output files. */
 	protected XBuildable getIncrementalGenerateBuildable(WorkspaceChanges workspaceChanges) {
-		XBuildManager.XBuildable buildable = buildManager.getIncrementalGenerateBuildable(workspaceChanges);
-
-		return (cancelIndicator) -> {
-			List<IResourceDescription.Delta> deltas = buildable.build(cancelIndicator);
-			afterBuild(deltas);
-			LOG.info("Output files generated.");
-			return deltas;
-		};
+		return buildManager.getIncrementalBuildable(workspaceChanges);
 	}
 
 	/** Mark the given document as saved. */
@@ -278,21 +243,6 @@ public class XWorkspaceManager {
 
 		workspaceChanges.merge(notifiedChanges);
 		return getIncrementalGenerateBuildable(workspaceChanges);
-	}
-
-	/**
-	 * Returns the project that contains the given URI.
-	 *
-	 * @param uri
-	 *            the contained uri
-	 * @return the project base uri.
-	 */
-	public URI getProjectBaseDir(URI uri) {
-		IProjectConfig projectConfig = getProjectConfig(uri);
-		if (projectConfig != null) {
-			return projectConfig.getPath();
-		}
-		return null;
 	}
 
 	/**
@@ -339,13 +289,8 @@ public class XWorkspaceManager {
 		buildManager.doClean(cancelIndicator);
 	}
 
-	/** Returns a snapshot of the current index. */
-	public IResourceDescriptions getIndex() {
-		return fullIndex.toDescriptions();
-	}
-
 	/** Returns the index. */
-	public ConcurrentChunkedIndex getIndexRaw() {
+	public ConcurrentChunkedIndex getIndex() {
 		return fullIndex;
 	}
 
@@ -364,5 +309,12 @@ public class XWorkspaceManager {
 			}
 		}
 		return false;
+	}
+
+	/** @return a workspace relative URI for a given URI */
+	public URI makeWorkspaceRelative(URI uri) {
+		URI withEmptyAuthority = uriExtensions.withEmptyAuthority(uri);
+		URI relativeUri = withEmptyAuthority.deresolve(getBaseDir());
+		return relativeUri;
 	}
 }
