@@ -58,6 +58,9 @@ public class LSPBuilder {
 	@Inject
 	private XWorkspaceManager workspaceManager;
 
+	@Inject
+	private XBuildManager buildManager;
+
 	private ConcurrentIssueRegistry issueRegistry;
 
 	public URI getBaseDir() {
@@ -71,7 +74,7 @@ public class LSPBuilder {
 
 	/** Returns the index. */
 	public ConcurrentChunkedIndex getIndex() {
-		return workspaceManager.getIndex();
+		return buildManager.getIndex();
 	}
 
 	/**
@@ -86,7 +89,7 @@ public class LSPBuilder {
 			throw new IllegalArgumentException("the issue registry must not be changed");
 		}
 		this.issueRegistry = issueRegistry;
-		workspaceManager.initialize(newBaseDir, issueRegistry);
+		workspaceManager.initialize(newBaseDir);
 	}
 
 	public void initialBuild() {
@@ -99,7 +102,7 @@ public class LSPBuilder {
 		Stopwatch sw = Stopwatch.createStarted();
 		try {
 			LOG.info("Start initial build ...");
-			workspaceManager.doInitialBuild(CancelIndicator.NullImpl);
+			buildManager.doInitialBuild(CancelIndicator.NullImpl);
 		} catch (Throwable t) {
 			LOG.error(t.getMessage(), t);
 			throw t;
@@ -111,7 +114,7 @@ public class LSPBuilder {
 
 	public CompletableFuture<Void> clean() {
 		return lspExecutorService.submitAndCancelPrevious(XBuildManager.class, "clean", cancelIndicator -> {
-			workspaceManager.clean(CancelIndicator.NullImpl);
+			buildManager.clean(CancelIndicator.NullImpl);
 			return null;
 		});
 	}
@@ -123,7 +126,7 @@ public class LSPBuilder {
 		return lspExecutorService.submitAndCancelPrevious(XBuildManager.class, "didChangeConfiguration",
 				cancelIndicator -> {
 					workspaceManager.reinitialize();
-					workspaceManager.doInitialBuild(CancelIndicator.NullImpl);
+					buildManager.doInitialBuild(CancelIndicator.NullImpl);
 					return null;
 				});
 	}
@@ -153,7 +156,7 @@ public class LSPBuilder {
 			}
 		}
 		if (!dirtyFiles.isEmpty() || !deletedFiles.isEmpty()) {
-			runBuildable("didChangeWatchedFiles", () -> workspaceManager.didChangeFiles(dirtyFiles, deletedFiles));
+			runBuildable("didChangeWatchedFiles", () -> buildManager.didChangeFiles(dirtyFiles, deletedFiles));
 		}
 	}
 
@@ -161,7 +164,7 @@ public class LSPBuilder {
 	 * Evaluate the params and deduce the respective build command.
 	 */
 	protected XBuildable toBuildable(DidSaveTextDocumentParams params) {
-		return workspaceManager.didSave(getURI(params.getTextDocument()));
+		return buildManager.didSave(getURI(params.getTextDocument()));
 	}
 
 	/**

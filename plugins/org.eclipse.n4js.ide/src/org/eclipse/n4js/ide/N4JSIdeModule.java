@@ -40,7 +40,7 @@ import org.eclipse.n4js.ide.xtext.server.XExecutableCommandRegistry;
 import org.eclipse.n4js.ide.xtext.server.XIProjectDescriptionFactory;
 import org.eclipse.n4js.ide.xtext.server.XIWorkspaceConfigFactory;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
-import org.eclipse.n4js.ide.xtext.server.XProjectManager;
+import org.eclipse.n4js.ide.xtext.server.ProjectBuilder;
 import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
 import org.eclipse.n4js.ide.xtext.server.build.XStatefulIncrementalBuilder;
 import org.eclipse.n4js.ide.xtext.server.concurrent.LSPExecutorService;
@@ -95,8 +95,8 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 		return WorkspaceAwareCanLoadFromDescriptionHelper.class;
 	}
 
-	public Class<? extends XProjectManager> bindXProjectManager() {
-		return XProjectManager.class;
+	public Class<? extends ProjectBuilder> bindXProjectManager() {
+		return ProjectBuilder.class;
 	}
 
 	public Class<? extends XIProjectDescriptionFactory> bindXIProjectDescriptionFactory() {

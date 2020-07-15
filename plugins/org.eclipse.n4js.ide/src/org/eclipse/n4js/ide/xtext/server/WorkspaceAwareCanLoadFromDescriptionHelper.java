@@ -39,7 +39,7 @@ public class WorkspaceAwareCanLoadFromDescriptionHelper extends CanLoadFromDescr
 			// within open file contexts we use the default behavior:
 			return super.createResource(resourceSet, resourceURI);
 		}
-		XtextResourceSet projectResourceSet = workspaceManager.getProjectManager(resourceURI).getResourceSet();
+		XtextResourceSet projectResourceSet = workspaceManager.getProjectBuilder(resourceURI).getResourceSet();
 		return super.createResource(projectResourceSet, resourceURI);
 	}
 

@@ -45,7 +45,7 @@ public class WorkspaceAwareResourceLocator extends ResourceLocator {
 			}
 			return candidate;
 		}
-		XProjectManager projectManager = this.workspaceManager.getProjectManager(uri);
+		ProjectBuilder projectManager = this.workspaceManager.getProjectBuilder(uri);
 		if (projectManager == null || projectManager.getResourceSet() == resourceSet) {
 			return basicGetResource(uri, loadOnDemand);
 		}

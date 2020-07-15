@@ -205,7 +205,7 @@ public class N4jscCompiler {
 			Injector injector = N4jscFactory.getOrCreateInjector();
 			TestCatalogSupplier testCatalogSupplier = injector.getInstance(TestCatalogSupplier.class);
 
-			String catalog = testCatalogSupplier.get((uri) -> workspaceManager.getProjectManager(uri).getResourceSet(),
+			String catalog = testCatalogSupplier.get((uri) -> workspaceManager.getProjectBuilder(uri).getResourceSet(),
 					true); // do not include "endpoint" property here
 
 			try (OutputStream os = new BufferedOutputStream(new FileOutputStream(testCatalogFile))) {

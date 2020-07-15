@@ -57,8 +57,8 @@ import com.google.inject.Provider;
  * @since 2.11
  */
 @SuppressWarnings("restriction")
-public class XProjectManager {
-	private static final Logger LOG = LogManager.getLogger(XProjectManager.class);
+public class ProjectBuilder {
+	private static final Logger LOG = LogManager.getLogger(ProjectBuilder.class);
 
 	/** The builder. */
 	@Inject
@@ -102,9 +102,11 @@ public class XProjectManager {
 	@Inject
 	protected XWorkspaceManager workspaceManager;
 
+	@Inject
 	private ConcurrentChunkedIndex fullIndex;
 
-	private ConcurrentIssueRegistry issueRegistry;
+	@Inject
+	private ConcurrentIssueRegistry issueRegistry; // FIXME: Check lifecycle
 
 	private XtextResourceSet resourceSet;
 
@@ -121,13 +123,9 @@ public class XProjectManager {
 
 	/** Initialize this project. */
 	@SuppressWarnings("hiding")
-	public void initialize(ProjectDescription description, XIProjectConfig projectConfig,
-			ConcurrentChunkedIndex fullIndex, ConcurrentIssueRegistry issueRegistry) {
-
+	public void initialize(ProjectDescription description, XIProjectConfig projectConfig) {
 		this.projectDescription = description;
 		this.projectConfig = projectConfig;
-		this.fullIndex = fullIndex;
-		this.issueRegistry = issueRegistry;
 		this.resourceSet = createNewResourceSet(new XIndexState().getResourceDescriptions());
 	}
 

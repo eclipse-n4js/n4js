@@ -26,6 +26,8 @@ import org.eclipse.n4js.ide.xtext.server.ParallelBuildManager.ParallelJob;
 import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo.ProjectBuildOrderIterator;
 import org.eclipse.n4js.ide.xtext.server.build.BuildCanceledException;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
+import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentChunkedIndex;
+import org.eclipse.n4js.xtext.workspace.IProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -39,6 +41,7 @@ import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.IteratorExtensions;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 import com.google.inject.Inject;
@@ -79,11 +82,65 @@ public class XBuildManager {
 	@Inject
 	private OperationCanceledManager operationCanceledManager;
 
+	@Inject
+	private ConcurrentChunkedIndex fullIndex;
+
 	private final LinkedHashSet<URI> dirtyFiles = new LinkedHashSet<>();
 	private final LinkedHashSet<URI> deletedFiles = new LinkedHashSet<>();
 
 	/** Holds all deltas of all projects. In case of a cancelled build, this set is not empty at start of next build. */
 	private List<IResourceDescription.Delta> allBuildDeltas = new ArrayList<>();
+
+	/**
+	 * Announce dirty and deleted files and provide means to start a build.
+	 *
+	 * @param dirtyFiles
+	 *            the dirty files
+	 * @param deletedFiles
+	 *            the deleted files
+	 * @return a build command that can be triggered
+	 */
+	public XBuildable didChangeFiles(List<URI> dirtyFiles, List<URI> deletedFiles) {
+		WorkspaceChanges workspaceChanges = WorkspaceChanges.createUrisRemovedAndChanged(deletedFiles, dirtyFiles);
+		return getIncrementalGenerateBuildable(workspaceChanges);
+	}
+
+	/**
+	 * Perform a build on all projects
+	 *
+	 * @param cancelIndicator
+	 *            cancellation support
+	 */
+	public List<Delta> doInitialBuild(CancelIndicator cancelIndicator) {
+		List<ProjectDescription> newProjects = workspaceManager.getProjectDescriptions();
+		List<Delta> deltas = doInitialBuild(newProjects, cancelIndicator);
+		return deltas;
+	}
+
+	/** Triggers an incremental build, and will generate output files. */
+	protected XBuildable getIncrementalGenerateBuildable(WorkspaceChanges workspaceChanges) {
+		return getIncrementalBuildable(workspaceChanges);
+	}
+
+	/** Mark the given document as saved. */
+	public XBuildManager.XBuildable didSave(URI uri) {
+		WorkspaceChanges notifiedChanges = WorkspaceChanges.createUrisChanged(ImmutableList.of(uri));
+		WorkspaceChanges workspaceChanges = workspaceManager.getWorkspaceConfig().update(uri,
+				projectName -> workspaceManager.getProjectBuilder(projectName).getProjectDescription());
+
+		Iterable<IProjectConfigSnapshot> projectsWithChangedDeps = IterableExtensions.map(
+				workspaceChanges.getProjectsWithChangedDependencies(),
+				XIProjectConfig::toSnapshot);
+		fullIndex.setProjectConfigSnapshots(projectsWithChangedDeps);
+
+		workspaceChanges.merge(notifiedChanges);
+		return getIncrementalGenerateBuildable(workspaceChanges);
+	}
+
+	/** Returns the index. */
+	public ConcurrentChunkedIndex getIndex() {
+		return fullIndex;
+	}
 
 	/**
 	 * Run a full build on the workspace
@@ -104,7 +161,7 @@ public class XBuildManager {
 		while (pboIterator.hasNext()) {
 			ProjectDescription description = pboIterator.next();
 			String projectName = description.getName();
-			XProjectManager projectManager = workspaceManager.getProjectManager(projectName);
+			ProjectBuilder projectManager = workspaceManager.getProjectBuilder(projectName);
 			XBuildResult partialresult = projectManager.doInitialBuild(indicator);
 			result.addAll(partialresult.getAffectedResources());
 		}
@@ -125,10 +182,10 @@ public class XBuildManager {
 			CancelIndicator indicator) {
 
 		class BuildInitialProjectJob extends ParallelJob<String> {
-			XProjectManager projectManager;
+			ProjectBuilder projectManager;
 			List<IResourceDescription.Delta> result;
 
-			BuildInitialProjectJob(XProjectManager projectManager, List<IResourceDescription.Delta> result) {
+			BuildInitialProjectJob(ProjectBuilder projectManager, List<IResourceDescription.Delta> result) {
 				this.projectManager = projectManager;
 				this.result = result;
 			}
@@ -157,7 +214,7 @@ public class XBuildManager {
 
 		for (ProjectDescription description : projects) {
 			String projectName = description.getName();
-			XProjectManager projectManager = workspaceManager.getProjectManager(projectName);
+			ProjectBuilder projectManager = workspaceManager.getProjectBuilder(projectName);
 			BuildInitialProjectJob bpj = new BuildInitialProjectJob(projectManager, result);
 			jobs.add(bpj);
 		}
@@ -168,10 +225,15 @@ public class XBuildManager {
 		return result;
 	}
 
+	/** Cleans all projects in the workspace */
+	public void clean(CancelIndicator cancelIndicator) {
+		doClean(cancelIndicator);
+	}
+
 	/** Performs a clean operation in all projects */
 	public void doClean(CancelIndicator cancelIndicator) {
-		for (XProjectManager projectManager : workspaceManager.getProjectManagers()) {
-			projectManager.doClean(cancelIndicator);
+		for (ProjectBuilder projectBuilder : workspaceManager.getProjectBuilders()) {
+			projectBuilder.doClean(cancelIndicator);
 		}
 	}
 
@@ -205,7 +267,7 @@ public class XBuildManager {
 		List<URI> deleted = new ArrayList<>(workspaceChanges.getRemovedURIs());
 		for (ISourceFolder sourceFolder : workspaceChanges.getAllRemovedSourceFolders()) {
 			URI prefix = sourceFolder.getPath();
-			XProjectManager projectManager = workspaceManager.getProjectManager(prefix);
+			ProjectBuilder projectManager = workspaceManager.getProjectBuilder(prefix);
 			List<URI> matchedURIs = projectManager.findResourcesStartingWithPrefix(prefix);
 			deleted.addAll(matchedURIs);
 		}
@@ -228,7 +290,7 @@ public class XBuildManager {
 
 			while (pboIterator.hasNext()) {
 				ProjectDescription descr = pboIterator.next();
-				XProjectManager projectManager = workspaceManager.getProjectManager(descr.getName());
+				ProjectBuilder projectManager = workspaceManager.getProjectBuilder(descr.getName());
 				Set<URI> projectDirty = project2dirty.getOrDefault(descr, Collections.emptySet());
 				Set<URI> projectDeleted = project2deleted.getOrDefault(descr, Collections.emptySet());
 
@@ -283,7 +345,7 @@ public class XBuildManager {
 	private Map<ProjectDescription, Set<URI>> computeProjectToUriMap(Collection<URI> uris) {
 		Map<ProjectDescription, Set<URI>> project2uris = new HashMap<>();
 		for (URI uri : uris) {
-			XProjectManager projectManager = workspaceManager.getProjectManager(uri);
+			ProjectBuilder projectManager = workspaceManager.getProjectBuilder(uri);
 			if (projectManager == null) {
 				continue; // happens when editing a package.json file in a newly created project
 			}
