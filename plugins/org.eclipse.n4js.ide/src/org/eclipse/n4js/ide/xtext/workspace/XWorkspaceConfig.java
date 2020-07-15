@@ -10,10 +10,13 @@
  */
 package org.eclipse.n4js.ide.xtext.workspace;
 
+import java.util.Set;
 import java.util.function.Function;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.xtext.workspace.IWorkspaceConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
+import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
 import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.workspace.WorkspaceConfig;
@@ -25,13 +28,37 @@ import org.eclipse.xtext.workspace.WorkspaceConfig;
 public class XWorkspaceConfig extends WorkspaceConfig implements XIWorkspaceConfig {
 
 	@Override
+	public URI getPath() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Set<? extends XIProjectConfig> getProjects() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public XIProjectConfig findProjectContaining(URI member) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public XIProjectConfig findProjectByName(String name) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
 	public WorkspaceChanges update(URI changedResource, Function<String, ProjectDescription> pdProvider) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public URI getPath() {
+	public IWorkspaceConfigSnapshot toSnapshot() {
 		// TODO Auto-generated method stub
 		return null;
 	}

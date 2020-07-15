@@ -16,6 +16,7 @@ import static java.util.Collections.singletonList;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +30,11 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.projectModel.lsp.IN4JSSourceFolder;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
+import org.eclipse.n4js.xtext.workspace.IProjectConfigSnapshot;
+import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
+import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.workspace.IProjectConfig;
@@ -43,7 +48,7 @@ import com.google.common.collect.Iterables;
  * Wrapper around {@link IN4JSProject}.
  */
 @SuppressWarnings("restriction")
-public class N4JSProjectConfig implements IProjectConfig {
+public class N4JSProjectConfig implements XIProjectConfig {
 
 	private final IWorkspaceConfig workspace;
 	private final IN4JSProject delegate;
@@ -69,6 +74,19 @@ public class N4JSProjectConfig implements IProjectConfig {
 	@Override
 	public URI getPath() {
 		return delegate.getLocation().withTrailingPathDelimiter().toURI();
+	}
+
+	@Override
+	public Set<String> getDependencies() {
+		Set<String> result = new HashSet<>();
+		for (IN4JSProject dependency : delegate.getDependencies()) {
+			N4JSProjectName projectName = dependency.getProjectName();
+			String name = projectName != null ? projectName.getRawName() : null;
+			if (name != null) {
+				result.add(name);
+			}
+		}
+		return result;
 	}
 
 	private class SourceContainerForPackageJson implements IN4JSSourceFolder {
@@ -254,4 +272,8 @@ public class N4JSProjectConfig implements IProjectConfig {
 		return ((N4JSProject) delegate).isWorkspacesProject();
 	}
 
+	@Override
+	public IProjectConfigSnapshot toSnapshot() {
+		return new ProjectConfigSnapshot(this);
+	}
 }

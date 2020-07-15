@@ -20,9 +20,10 @@ import org.eclipse.lsp4j.jsonrpc.messages.ResponseError;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
 import org.eclipse.n4js.ide.xtext.server.XBuildManager.XBuildable;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentChunkedIndex;
-import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentChunkedIndex.VisibleContainerInfo;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
+import org.eclipse.n4js.xtext.workspace.IProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
+import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
 import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
 import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
@@ -30,7 +31,7 @@ import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.workspace.IProjectConfig;
-import org.eclipse.xtext.workspace.IWorkspaceConfig;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
@@ -79,7 +80,7 @@ public class XWorkspaceManager {
 
 	private final Map<String, XProjectManager> projectName2ProjectManager = new HashMap<>();
 
-	private IWorkspaceConfig workspaceConfig;
+	private XIWorkspaceConfig workspaceConfig;
 
 	private ConcurrentIssueRegistry issueRegistry;
 
@@ -106,6 +107,7 @@ public class XWorkspaceManager {
 	/** Refresh the workspace. */
 	public void refreshWorkspaceConfig(URI newBaseDir) {
 		XIWorkspaceConfig newWorkspaceConfig = workspaceConfigFactory.createWorkspaceConfig(newBaseDir);
+		fullIndex.initialize(newWorkspaceConfig.toSnapshot());
 		setWorkspaceConfig(newWorkspaceConfig);
 	}
 
@@ -113,7 +115,7 @@ public class XWorkspaceManager {
 	 * @param workspaceConfig
 	 *            the new workspace configuration.
 	 */
-	synchronized protected void setWorkspaceConfig(IWorkspaceConfig workspaceConfig) {
+	synchronized protected void setWorkspaceConfig(XIWorkspaceConfig workspaceConfig) {
 		if (this.workspaceConfig != null && workspaceConfig != null &&
 				this.workspaceConfig == workspaceConfig) {
 			return;
@@ -129,19 +131,18 @@ public class XWorkspaceManager {
 
 		// init projects
 		this.workspaceConfig = workspaceConfig;
-		for (IProjectConfig projectConfig : getWorkspaceConfig().getProjects()) {
+		for (XIProjectConfig projectConfig : getWorkspaceConfig().getProjects()) {
 			addProject(projectConfig);
 		}
 	}
 
 	/** Adds a project to the workspace */
-	synchronized public void addProject(IProjectConfig projectConfig) {
+	synchronized public void addProject(XIProjectConfig projectConfig) {
 		XProjectManager projectManager = projectManagerProvider.get();
 		ProjectDescription projectDescription = projectDescriptionFactory.getProjectDescription(projectConfig);
 		projectManager.initialize(projectDescription, projectConfig, fullIndex, issueRegistry);
 		projectName2ProjectManager.put(projectDescription.getName(), projectManager);
-		fullIndex.setVisibleContainers(projectDescription.getName(), projectConfig.getPath(),
-				projectDescription.getDependencies());
+		fullIndex.setProjectConfigSnapshot(projectConfig.toSnapshot());
 	}
 
 	/** Removes a project from the workspace */
@@ -170,7 +171,7 @@ public class XWorkspaceManager {
 	 * @throws ResponseErrorException
 	 *             if the workspace is not yet initialized
 	 */
-	public IWorkspaceConfig getWorkspaceConfig() throws ResponseErrorException {
+	public XIWorkspaceConfig getWorkspaceConfig() throws ResponseErrorException {
 		if (workspaceConfig == null) {
 			ResponseError error = new ResponseError(ResponseErrorCode.serverNotInitialized,
 					"Workspace has not been initialized yet.", null);
@@ -184,7 +185,7 @@ public class XWorkspaceManager {
 		if (this.workspaceConfig == null) {
 			return null;
 		}
-		return ((XIWorkspaceConfig) this.workspaceConfig).getPath();
+		return this.workspaceConfig.getPath();
 	}
 
 	/**
@@ -225,21 +226,13 @@ public class XWorkspaceManager {
 	/** Mark the given document as saved. */
 	public XBuildManager.XBuildable didSave(URI uri) {
 		WorkspaceChanges notifiedChanges = WorkspaceChanges.createUrisChanged(ImmutableList.of(uri));
-		WorkspaceChanges workspaceChanges = ((XIWorkspaceConfig) getWorkspaceConfig()).update(uri,
+		WorkspaceChanges workspaceChanges = getWorkspaceConfig().update(uri,
 				projectName -> projectName2ProjectManager.get(projectName).getProjectDescription());
 
-		Map<String, VisibleContainerInfo> dependencyChanges = new HashMap<>();
-		for (IProjectConfig pc : workspaceChanges.getProjectsWithChangedDependencies()) {
-			XProjectManager pm = projectName2ProjectManager.get(pc.getName());
-			ProjectDescription pd = pm != null ? pm.getProjectDescription() : null;
-			if (pd != null) {
-				VisibleContainerInfo info = new VisibleContainerInfo(pd.getName(), pc.getPath(), pd.getDependencies());
-				dependencyChanges.put(pd.getName(), info);
-			}
-		}
-		if (!dependencyChanges.isEmpty()) {
-			fullIndex.setVisibleContainers(dependencyChanges);
-		}
+		Iterable<IProjectConfigSnapshot> projectsWithChangedDeps = IterableExtensions.map(
+				workspaceChanges.getProjectsWithChangedDependencies(),
+				XIProjectConfig::toSnapshot);
+		fullIndex.setProjectConfigSnapshots(projectsWithChangedDeps);
 
 		workspaceChanges.merge(notifiedChanges);
 		return getIncrementalGenerateBuildable(workspaceChanges);

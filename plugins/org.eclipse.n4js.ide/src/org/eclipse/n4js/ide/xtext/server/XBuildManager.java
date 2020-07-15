@@ -27,6 +27,7 @@ import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo.ProjectBuildOrder
 import org.eclipse.n4js.ide.xtext.server.build.BuildCanceledException;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
+import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionDelta;
@@ -34,7 +35,6 @@ import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IFileSystemScanner;
-import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.IteratorExtensions;
@@ -190,10 +190,10 @@ public class XBuildManager {
 		// when workspace changes occur):
 		// think about encapsulating WorkspaceManager#projectName2ProjectManager and WorkspaceManager#fullIndex to
 		// simplify control flow
-		for (IProjectConfig prjConfig : workspaceChanges.getRemovedProjects()) {
+		for (XIProjectConfig prjConfig : workspaceChanges.getRemovedProjects()) {
 			workspaceManager.removeProject(prjConfig);
 		}
-		for (IProjectConfig prjConfig : workspaceChanges.getAddedProjects()) {
+		for (XIProjectConfig prjConfig : workspaceChanges.getAddedProjects()) {
 			workspaceManager.addProject(prjConfig);
 		}
 

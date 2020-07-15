@@ -20,11 +20,11 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.n4js.xtext.workspace.IProjectConfigSnapshot;
+import org.eclipse.n4js.xtext.workspace.IWorkspaceConfigSnapshot;
 import org.eclipse.xtext.resource.impl.ChunkedResourceDescriptions;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
-import org.eclipse.xtext.util.UriUtil;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -51,8 +51,8 @@ public class ConcurrentChunkedIndex {
 
 	/** Map of all resource descriptions per container. */
 	protected final Map<String, ResourceDescriptionsData> containerHandle2Data = new HashMap<>();
-	/** Map of all visible containers per container. */
-	protected final Map<String, VisibleContainerInfo> containerHandle2VisibleContainers = new HashMap<>();
+	/** A snapshot of the current workspace configuration. */
+	protected IWorkspaceConfigSnapshot workspaceConfig = null;
 	/** Registered listeners. */
 	protected final List<IChunkedIndexListener> listeners = new CopyOnWriteArrayList<>();
 
@@ -60,59 +60,28 @@ public class ConcurrentChunkedIndex {
 	public interface IChunkedIndexListener {
 		/** Invoked when the index has changed. */
 		public void onIndexChanged(
-				Map<String, ResourceDescriptionsData> changedDescriptions,
-				Map<String, VisibleContainerInfo> changedVisibleContainers,
+				IWorkspaceConfigSnapshot newWorkspaceConfig,
+				Map<String, ? extends ResourceDescriptionsData> changedDescriptions,
+				List<? extends IProjectConfigSnapshot> changedProjectConfigs,
 				Set<String> removedContainers);
 	}
 
-	/** Information about what other containers are visible from a certain outgoing container. */
-	public static class VisibleContainerInfo {
-		/** Handle of the outgoing container. */
-		public final String containerHandle;
-		/** URI of the outgoing container. Guaranteed to end in a trailing path separator. */
-		public final URI containerURI;
-		/** Handles of containers visible from the {@link #containerHandle outgoing container}. */
-		public final ImmutableSet<String> visibleContainers;
-
-		/** See {@link VisibleContainerInfo}. */
-		public VisibleContainerInfo(String containerHandle, URI containerURI, Iterable<String> visibleContainers) {
-			Objects.requireNonNull(containerHandle);
-			Objects.requireNonNull(containerURI);
-			Objects.requireNonNull(visibleContainers);
-			this.containerHandle = containerHandle;
-			this.containerURI = UriUtil.toFolderURI(containerURI);
-			this.visibleContainers = ImmutableSet.copyOf(visibleContainers);
-		}
-
-		@Override
-		public int hashCode() {
-			return Objects.hash(containerHandle, containerURI, visibleContainers);
-		}
-
-		@Override
-		public boolean equals(Object other) {
-			if (other == this) {
-				return true;
-			}
-			if (!(other instanceof VisibleContainerInfo)) {
-				return false;
-			}
-			VisibleContainerInfo otherCasted = (VisibleContainerInfo) other;
-			return this.containerHandle.equals(otherCasted.containerHandle)
-					&& this.containerURI.equals(otherCasted.containerURI)
-					&& this.visibleContainers.equals(otherCasted.visibleContainers);
-		}
+	/** Set an initial workspace configuration. This method won't notify listeners. */
+	public synchronized void initialize(IWorkspaceConfigSnapshot initialWorkspaceConfig) {
+		workspaceConfig = initialWorkspaceConfig;
 	}
 
 	/** Removes all containers from this index. */
 	public void removeAllContainers() {
 		ImmutableSet<String> removedContainers;
+		IWorkspaceConfigSnapshot workspaceConfigNew;
 		synchronized (this) {
 			removedContainers = ImmutableSet.copyOf(containerHandle2Data.keySet());
 			containerHandle2Data.clear();
-			containerHandle2VisibleContainers.clear();
+			workspaceConfigNew = workspaceConfig.clear();
+			workspaceConfig = workspaceConfigNew;
 		}
-		notifyListeners(ImmutableMap.of(), ImmutableMap.of(), removedContainers);
+		notifyListeners(workspaceConfigNew, ImmutableMap.of(), ImmutableList.of(), removedContainers);
 	}
 
 	/** Returns the data for the container with the given handle or <code>null</code> if no such container. */
@@ -121,10 +90,10 @@ public class ConcurrentChunkedIndex {
 		return containerHandle2Data.get(containerHandle);
 	}
 
-	/** Returns the set of handles of those containers that are visible from the container with the given handle. */
-	public synchronized VisibleContainerInfo getVisibleContainers(String containerHandle) {
-		Objects.requireNonNull(containerHandle);
-		return containerHandle2VisibleContainers.get(containerHandle);
+	/** Returns the project configuration of the container with the given handle. */
+	public synchronized IProjectConfigSnapshot getProjectConfig(String projectName) {
+		Objects.requireNonNull(projectName);
+		return workspaceConfig.findProjectByName(projectName);
 	}
 
 	/** Sets the resource descriptions for the container with the given handle. */
@@ -132,28 +101,31 @@ public class ConcurrentChunkedIndex {
 		Objects.requireNonNull(containerHandle);
 		Objects.requireNonNull(newData);
 		ResourceDescriptionsData oldData;
+		IWorkspaceConfigSnapshot newWorkspaceConfig;
 		synchronized (this) {
 			oldData = containerHandle2Data.put(containerHandle, newData);
+			newWorkspaceConfig = workspaceConfig;
 		}
-		notifyListeners(ImmutableMap.of(containerHandle, newData), ImmutableMap.of(), ImmutableSet.of());
+		notifyListeners(newWorkspaceConfig, ImmutableMap.of(containerHandle, newData), ImmutableList.of(),
+				ImmutableSet.of());
 		return oldData;
 	}
 
-	/** Sets the containers visible from the container with the given handle. */
-	public void setVisibleContainers(String containerHandle, URI containerURI, Iterable<String> visibleContainers) {
-		setVisibleContainers(ImmutableMap.of(containerHandle,
-				new VisibleContainerInfo(containerHandle, containerURI, visibleContainers)));
+	/** Sets the given project configuration. */
+	public void setProjectConfigSnapshot(IProjectConfigSnapshot projectConfig) {
+		setProjectConfigSnapshots(Collections.singletonList(projectConfig));
 	}
 
-	/** Sets the containers visible from the container with the given handle. */
-	public void setVisibleContainers(Map<String, VisibleContainerInfo> containerHandle2VisibleContainerInfo) {
-		Objects.requireNonNull(containerHandle2VisibleContainerInfo);
-		ImmutableMap<String, VisibleContainerInfo> changedVisibleContainers = ImmutableMap
-				.copyOf(containerHandle2VisibleContainerInfo);
+	/** Sets the given project configurations. */
+	public void setProjectConfigSnapshots(Iterable<? extends IProjectConfigSnapshot> projectConfigs) {
+		Objects.requireNonNull(projectConfigs);
+		ImmutableList<? extends IProjectConfigSnapshot> changedProjectConfigs = ImmutableList.copyOf(projectConfigs);
+		IWorkspaceConfigSnapshot newWorkspaceConfig;
 		synchronized (this) {
-			containerHandle2VisibleContainers.putAll(changedVisibleContainers);
+			newWorkspaceConfig = workspaceConfig.update(changedProjectConfigs, Collections.emptyList());
+			workspaceConfig = newWorkspaceConfig;
 		}
-		notifyListeners(ImmutableMap.of(), changedVisibleContainers, ImmutableSet.of());
+		notifyListeners(newWorkspaceConfig, ImmutableMap.of(), changedProjectConfigs, ImmutableSet.of());
 	}
 
 	/** Sets the contents of the container with the given handle to the empty set, but does not remove the container. */
@@ -165,12 +137,16 @@ public class ConcurrentChunkedIndex {
 	public ResourceDescriptionsData removeContainer(String containerHandle) {
 		Objects.requireNonNull(containerHandle);
 		ResourceDescriptionsData oldData;
+		IWorkspaceConfigSnapshot newWorkspaceConfig;
 		synchronized (this) {
 			oldData = containerHandle2Data.remove(containerHandle);
-			containerHandle2VisibleContainers.remove(containerHandle);
+			newWorkspaceConfig = workspaceConfig.update(Collections.emptyList(),
+					Collections.singletonList(containerHandle));
+			workspaceConfig = newWorkspaceConfig;
 		}
 		if (oldData != null) {
-			notifyListeners(ImmutableMap.of(), ImmutableMap.of(), ImmutableSet.of(containerHandle));
+			notifyListeners(newWorkspaceConfig, ImmutableMap.of(), ImmutableList.of(),
+					ImmutableSet.of(containerHandle));
 		}
 		return oldData;
 	}
@@ -201,11 +177,12 @@ public class ConcurrentChunkedIndex {
 
 	/** Notify all {@link #listeners listeners} about a change of resource descriptions. */
 	protected /* NOT synchronized */ void notifyListeners(
-			ImmutableMap<String, ResourceDescriptionsData> changedDescriptions,
-			ImmutableMap<String, VisibleContainerInfo> changedVisibleContainers,
+			IWorkspaceConfigSnapshot newWorkspaceConfig,
+			ImmutableMap<String, ? extends ResourceDescriptionsData> changedDescriptions,
+			ImmutableList<? extends IProjectConfigSnapshot> changedVisibleContainers,
 			ImmutableSet<String> removedContainers) {
 		for (IChunkedIndexListener l : listeners) {
-			l.onIndexChanged(changedDescriptions, changedVisibleContainers, removedContainers);
+			l.onIndexChanged(newWorkspaceConfig, changedDescriptions, changedVisibleContainers, removedContainers);
 		}
 	}
 

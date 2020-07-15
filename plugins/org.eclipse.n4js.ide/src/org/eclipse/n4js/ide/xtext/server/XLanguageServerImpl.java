@@ -95,7 +95,6 @@ import org.eclipse.lsp4j.services.WorkspaceService;
 import org.eclipse.n4js.ide.server.HeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.ide.server.LspLogger;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentChunkedIndex.IChunkedIndexListener;
-import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentChunkedIndex.VisibleContainerInfo;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry.IIssueRegistryListener;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry.IssueRegistryChangeEvent;
@@ -106,6 +105,8 @@ import org.eclipse.n4js.ide.xtext.server.openfiles.OpenFileContext;
 import org.eclipse.n4js.ide.xtext.server.openfiles.OpenFilesManager;
 import org.eclipse.n4js.ide.xtext.server.openfiles.OpenFilesManager.IOpenFilesListener;
 import org.eclipse.n4js.ide.xtext.server.rename.XIRenameService;
+import org.eclipse.n4js.xtext.workspace.IProjectConfigSnapshot;
+import org.eclipse.n4js.xtext.workspace.IWorkspaceConfigSnapshot;
 import org.eclipse.xtext.findReferences.IReferenceFinder.IResourceAccess;
 import org.eclipse.xtext.ide.server.ICapabilitiesContributor;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
@@ -1299,9 +1300,12 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	}
 
 	@Override
-	public void onIndexChanged(Map<String, ResourceDescriptionsData> changedDescriptions,
-			Map<String, VisibleContainerInfo> changedVisibleContainers, Set<String> removedContainers) {
-		openFilesManager.updatePersistedState(changedDescriptions, changedVisibleContainers, removedContainers);
+	public void onIndexChanged(IWorkspaceConfigSnapshot newWorkspaceConfig,
+			Map<String, ? extends ResourceDescriptionsData> changedDescriptions,
+			List<? extends IProjectConfigSnapshot> changedProjects, Set<String> removedContainers) {
+
+		openFilesManager.updatePersistedState(newWorkspaceConfig, changedDescriptions, changedProjects,
+				removedContainers);
 	}
 
 	@Override

@@ -26,17 +26,21 @@ import java.util.function.BiFunction;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
-import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentChunkedIndex.VisibleContainerInfo;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
 import org.eclipse.n4js.ide.xtext.server.concurrent.LSPExecutorService;
 import org.eclipse.n4js.ide.xtext.server.util.CancelIndicatorUtil;
+import org.eclipse.n4js.xtext.workspace.IProjectConfigSnapshot;
+import org.eclipse.n4js.xtext.workspace.IWorkspaceConfigSnapshot;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableSetMultimap;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.SetMultimap;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -56,9 +60,10 @@ public class OpenFilesManager {
 	protected final ThreadLocal<OpenFileContext> currentContext = new ThreadLocal<>();
 
 	protected final Map<String, ResourceDescriptionsData> persistedStateDescriptions = new HashMap<>();
-	protected ContainerStructureSnapshot persistedStateContainerStructure = new ContainerStructureSnapshot();
-
 	protected final ResourceDescriptionsData sharedDirtyState = new ResourceDescriptionsData(Collections.emptyList());
+
+	protected ImmutableSetMultimap<String, URI> containerHandle2URIs = ImmutableSetMultimap.of();
+	protected IWorkspaceConfigSnapshot workspaceConfig = null;
 
 	protected final List<IOpenFilesListener> listeners = new CopyOnWriteArrayList<>();
 
@@ -232,7 +237,7 @@ public class OpenFilesManager {
 	protected OpenFileContext createOpenFileContext(URI uri, boolean isTemporary) {
 		OpenFileContext ofc = openFileContextProvider.get();
 		ResourceDescriptionsData index = isTemporary ? createPersistedStateIndex() : createLiveScopeIndex();
-		ofc.initialize(this, uri, isTemporary, index, persistedStateContainerStructure);
+		ofc.initialize(this, uri, isTemporary, index, containerHandle2URIs, workspaceConfig);
 		return ofc;
 	}
 
@@ -271,16 +276,17 @@ public class OpenFilesManager {
 	}
 
 	public synchronized void updatePersistedState(
-			Map<String, ResourceDescriptionsData> changedDescriptions,
-			Map<String, VisibleContainerInfo> changedVisibleContainers,
+			IWorkspaceConfigSnapshot newWorkspaceConfig,
+			Map<String, ? extends ResourceDescriptionsData> changedDescriptions,
+			@SuppressWarnings("unused") List<? extends IProjectConfigSnapshot> changedProjects,
 			Set<String> removedContainerHandles) {
 
-		ContainerStructureSnapshot oldCS = persistedStateContainerStructure;
+		IWorkspaceConfigSnapshot oldWC = workspaceConfig;
 
 		// compute modification info
 		List<IResourceDescription> changed = new ArrayList<>();
 		Set<URI> removed = new HashSet<>();
-		for (Entry<String, ResourceDescriptionsData> entry : changedDescriptions.entrySet()) {
+		for (Entry<String, ? extends ResourceDescriptionsData> entry : changedDescriptions.entrySet()) {
 			String containerHandle = entry.getKey();
 			ResourceDescriptionsData newData = entry.getValue();
 
@@ -303,25 +309,28 @@ public class OpenFilesManager {
 		}
 
 		// update my persisted state instance
-		for (Entry<String, ResourceDescriptionsData> entry : changedDescriptions.entrySet()) {
+		// FIXME GH-1774 simplify index handling
+		SetMultimap<String, URI> newContainerHandle2URIs = HashMultimap.create(containerHandle2URIs);
+		for (Entry<String, ? extends ResourceDescriptionsData> entry : changedDescriptions.entrySet()) {
 			String containerHandle = entry.getKey();
 			ResourceDescriptionsData newData = entry.getValue();
 			persistedStateDescriptions.put(containerHandle, newData.copy());
+			newContainerHandle2URIs.putAll(containerHandle, newData.getAllURIs());
 		}
 		for (String removedContainerHandle : removedContainerHandles) {
 			persistedStateDescriptions.remove(removedContainerHandle);
+			newContainerHandle2URIs.removeAll(removedContainerHandle);
 		}
-		persistedStateContainerStructure = persistedStateContainerStructure.update(changedDescriptions,
-				changedVisibleContainers, removedContainerHandles);
+		containerHandle2URIs = ImmutableSetMultimap.copyOf(containerHandle2URIs);
+		workspaceConfig = newWorkspaceConfig;
 
 		// update persisted state instances in the context of each open file
-		if (Iterables.isEmpty(changed) && removed.isEmpty()
-				&& persistedStateContainerStructure.equals(oldCS)) {
+		if (Iterables.isEmpty(changed) && removed.isEmpty() && workspaceConfig.equals(oldWC)) {
 			return;
 		}
 		for (URI currURI : openFiles.keySet()) {
 			runInOpenFileContextVoid(currURI, "updatePersistedState in open file", (ofc, ci) -> {
-				ofc.onPersistedStateChanged(changed, removed, persistedStateContainerStructure, ci);
+				ofc.onPersistedStateChanged(changed, removed, containerHandle2URIs, workspaceConfig, ci);
 			});
 		}
 	}

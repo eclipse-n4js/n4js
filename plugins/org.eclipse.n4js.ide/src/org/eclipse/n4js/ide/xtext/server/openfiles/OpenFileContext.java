@@ -29,6 +29,7 @@ import org.eclipse.n4js.ide.xtext.server.LSPIssue;
 import org.eclipse.n4js.ide.xtext.server.LSPIssueConverter;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
+import org.eclipse.n4js.xtext.workspace.IWorkspaceConfigSnapshot;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.parser.IParseResult;
@@ -51,6 +52,7 @@ import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue;
 
+import com.google.common.collect.ImmutableSetMultimap;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -92,7 +94,9 @@ public class OpenFileContext {
 	 */
 	protected ResourceDescriptionsData index;
 
-	protected ContainerStructureSnapshot containerStructure = new ContainerStructureSnapshot();
+	protected ImmutableSetMultimap<String, URI> containerHandle2URIs;
+
+	protected IWorkspaceConfigSnapshot workspaceConfig;
 
 	/** The resource set used for the open file's resource and any other resources required for resolution. */
 	protected XtextResourceSet mainResourceSet;
@@ -166,12 +170,14 @@ public class OpenFileContext {
 
 	@SuppressWarnings("hiding")
 	public synchronized void initialize(OpenFilesManager parent, URI uri, boolean isTemporary,
-			ResourceDescriptionsData index, ContainerStructureSnapshot containerStructure) {
+			ResourceDescriptionsData index, ImmutableSetMultimap<String, URI> containerHandle2URIs,
+			IWorkspaceConfigSnapshot workspaceConfig) {
 		this.parent = parent;
 		this.mainURI = uri;
 		this.temporary = isTemporary;
 		this.index = index;
-		this.containerStructure = containerStructure;
+		this.containerHandle2URIs = containerHandle2URIs;
+		this.workspaceConfig = workspaceConfig;
 
 		this.mainResourceSet = createResourceSet();
 	}
@@ -309,20 +315,22 @@ public class OpenFileContext {
 	 * {@link OpenFileContext}). Will never be invoked for {@link #isTemporary() temporary} open file contexts.
 	 */
 	protected void onDirtyStateChanged(IResourceDescription changedDesc, CancelIndicator cancelIndicator) {
-		updateIndex(Collections.singletonList(changedDesc), Collections.emptySet(), containerStructure,
-				cancelIndicator);
+		updateIndex(Collections.singletonList(changedDesc), Collections.emptySet(), containerHandle2URIs,
+				workspaceConfig, cancelIndicator);
 	}
 
 	/**
 	 * Invoked by {@link #parent} when a change happened in a non-opened file.
 	 */
 	protected void onPersistedStateChanged(Collection<? extends IResourceDescription> changedDescs,
-			Set<URI> removedURIs, ContainerStructureSnapshot newContainerStructure, CancelIndicator cancelIndicator) {
-		updateIndex(changedDescs, removedURIs, newContainerStructure, cancelIndicator);
+			Set<URI> removedURIs, ImmutableSetMultimap<String, URI> newContainerHandle2URIs,
+			IWorkspaceConfigSnapshot newWorkspaceConfig, CancelIndicator cancelIndicator) {
+		updateIndex(changedDescs, removedURIs, newContainerHandle2URIs, newWorkspaceConfig, cancelIndicator);
 	}
 
 	protected void updateIndex(Collection<? extends IResourceDescription> changedDescs, Set<URI> removedURIs,
-			ContainerStructureSnapshot newContainerStructure, CancelIndicator cancelIndicator) {
+			ImmutableSetMultimap<String, URI> newContainerHandle2URIs, IWorkspaceConfigSnapshot newWorkspaceConfig,
+			CancelIndicator cancelIndicator) {
 
 		// update my cached state
 
@@ -330,12 +338,14 @@ public class OpenFileContext {
 
 		allDeltas.forEach(index::register);
 
-		ContainerStructureSnapshot oldContainerStructure = containerStructure;
-		containerStructure = newContainerStructure;
+		containerHandle2URIs = newContainerHandle2URIs;
+
+		IWorkspaceConfigSnapshot oldWorkspaceConfig = workspaceConfig;
+		workspaceConfig = newWorkspaceConfig;
 
 		// refresh if I am affected by the changes
 
-		boolean isAffected = !containerStructure.equals(oldContainerStructure);
+		boolean isAffected = !workspaceConfig.equals(oldWorkspaceConfig);
 
 		if (!isAffected) {
 			IResourceDescription.Manager rdm = getResourceDescriptionManager(mainURI);

@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.xtext.workspace;
 
+import java.util.Set;
 import java.util.function.Function;
 
 import org.eclipse.emf.common.util.URI;
@@ -17,10 +18,19 @@ import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
 /**
- * Extension of {@link IWorkspaceConfig} to modify workspace during operation
+ * Extension of {@link IWorkspaceConfig} to modify workspace during operation and to support snapshots.
  */
 @SuppressWarnings("restriction")
 public interface XIWorkspaceConfig extends IWorkspaceConfig {
+
+	@Override
+	Set<? extends XIProjectConfig> getProjects();
+
+	@Override
+	XIProjectConfig findProjectContaining(URI member);
+
+	@Override
+	XIProjectConfig findProjectByName(String name);
 
 	/** @return base directory of workspace */
 	URI getPath();
@@ -28,4 +38,6 @@ public interface XIWorkspaceConfig extends IWorkspaceConfig {
 	/** Updates internal data based on changes of the given resource */
 	WorkspaceChanges update(URI changedResource, Function<String, ProjectDescription> pdProvider);
 
+	/** Returns a snapshot of the current state of the workspace represented by this {@link XIWorkspaceConfig}. */
+	IWorkspaceConfigSnapshot toSnapshot();
 }

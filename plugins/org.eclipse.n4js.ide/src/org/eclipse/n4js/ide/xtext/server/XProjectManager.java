@@ -28,9 +28,9 @@ import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
 import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentChunkedIndex;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
-import org.eclipse.n4js.ide.xtext.server.openfiles.OpenFilesManager;
 import org.eclipse.n4js.internal.lsp.N4JSProjectConfig;
 import org.eclipse.n4js.utils.URIUtils;
+import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.generator.OutputConfiguration;
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
@@ -45,7 +45,6 @@ import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.util.UriUtil;
-import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.workspace.ProjectConfigAdapter;
 
 import com.google.common.collect.ImmutableSortedSet;
@@ -111,7 +110,7 @@ public class XProjectManager {
 
 	private ProjectDescription projectDescription;
 
-	private IProjectConfig projectConfig;
+	private XIProjectConfig projectConfig;
 
 	private final AfterValidateListener afterValidateListener = new AfterValidateListener() {
 		@Override
@@ -122,7 +121,7 @@ public class XProjectManager {
 
 	/** Initialize this project. */
 	@SuppressWarnings("hiding")
-	public void initialize(ProjectDescription description, IProjectConfig projectConfig,
+	public void initialize(ProjectDescription description, XIProjectConfig projectConfig,
 			ConcurrentChunkedIndex fullIndex, ConcurrentIssueRegistry issueRegistry) {
 
 		this.projectDescription = description;
@@ -346,7 +345,7 @@ public class XProjectManager {
 	/** Publish issues for the resource with the given URI to the {@link #issueRegistry}. */
 	protected void publishIssues(URI uri, Iterable<? extends LSPIssue> issues) {
 		String projectName = projectConfig.getName();
-		if (isResourceWithHiddenIssues(uri)) {
+		if (projectConfig.isResourceWithHiddenIssues(uri)) {
 			// nothing to publish, BUT because the result value of #isResourceWithHiddenIssues() can change over time
 			// for the same URI (e.g. source folders being added/removed in an existing project), we need to ensure to
 			// remove issues that might have been published earlier:
@@ -357,21 +356,6 @@ public class XProjectManager {
 			return;
 		}
 		issueRegistry.setIssuesOfPersistedState(projectConfig.getName(), uri, issues);
-	}
-
-	/**
-	 * Tells whether issues of the resource with the given URI should be hidden, i.e. not be sent to the LSP client.
-	 * This is intended for things like "external libraries" which might be located inside the workspace but are not
-	 * actively being developed (e.g. contents of "node_modules" folders in a Javascript/npm workspace).
-	 * <p>
-	 * By default, this method returns <code>true</code> for all resources that are not contained in one of
-	 * {@link IProjectConfig#getSourceFolders() the project's source folders}.
-	 * <p>
-	 * Note that this affects the builder and therefore closed files only; once a file is being opened and handled by
-	 * {@link OpenFilesManager} issues will always become visible.
-	 */
-	protected boolean isResourceWithHiddenIssues(URI uri) {
-		return projectConfig.findSourceFolderContaining(uri) == null;
 	}
 
 	/** @return all resource descriptions that start with the given prefix */
@@ -409,7 +393,7 @@ public class XProjectManager {
 	}
 
 	/** Getter */
-	public IProjectConfig getProjectConfig() {
+	public XIProjectConfig getProjectConfig() {
 		return projectConfig;
 	}
 

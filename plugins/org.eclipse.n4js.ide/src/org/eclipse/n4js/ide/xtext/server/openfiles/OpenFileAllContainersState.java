@@ -17,9 +17,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentChunkedIndex.VisibleContainerInfo;
+import org.eclipse.n4js.xtext.workspace.IProjectConfigSnapshot;
 import org.eclipse.xtext.resource.containers.IAllContainersState;
-import org.eclipse.xtext.util.UriUtil;
 
 import com.google.common.collect.ImmutableList;
 
@@ -38,17 +37,16 @@ public class OpenFileAllContainersState implements IAllContainersState {
 
 	@Override
 	public boolean isEmpty(String containerHandle) {
-		return openFileContext.containerStructure.containerHandle2URIs.get(containerHandle).isEmpty();
+		return openFileContext.containerHandle2URIs.get(containerHandle).isEmpty();
 	}
 
 	@Override
 	public List<String> getVisibleContainerHandles(String containerHandle) {
-		VisibleContainerInfo info = openFileContext.containerStructure.containerHandle2VisibleContainers
-				.get(containerHandle);
-		if (info == null) {
+		IProjectConfigSnapshot project = openFileContext.workspaceConfig.findProjectByName(containerHandle);
+		if (project == null) {
 			return Collections.singletonList(containerHandle);
 		}
-		Set<String> visible = info.visibleContainers;
+		Set<String> visible = project.getDependencies();
 		Set<String> visibleAndSelf = new HashSet<>(visible);
 		visibleAndSelf.add(containerHandle);
 		return ImmutableList.copyOf(visibleAndSelf);
@@ -56,28 +54,12 @@ public class OpenFileAllContainersState implements IAllContainersState {
 
 	@Override
 	public Collection<URI> getContainedURIs(String containerHandle) {
-		return openFileContext.containerStructure.containerHandle2URIs.get(containerHandle);
+		return openFileContext.containerHandle2URIs.get(containerHandle);
 	}
 
 	@Override
 	public String getContainerHandle(URI uri) {
-		// standard case: URI already exists in the index
-		String matchingHandle = openFileContext.containerStructure.uri2ContainerHandle.get(uri);
-		if (matchingHandle != null) {
-			return matchingHandle;
-		}
-		// special case: URI does not exist in the index (e.g. a newly created, not yet saved file)
-		int matchingSegments = 0;
-		for (VisibleContainerInfo info : openFileContext.containerStructure.containerHandle2VisibleContainers
-				.values()) {
-			if (UriUtil.isPrefixOf(info.containerURI, uri)) {
-				int segments = info.containerURI.segmentCount();
-				if (segments > matchingSegments) {
-					matchingHandle = info.containerHandle;
-					matchingSegments = segments;
-				}
-			}
-		}
-		return matchingHandle;
+		IProjectConfigSnapshot project = openFileContext.workspaceConfig.findProjectContaining(uri);
+		return project != null ? project.getName() : null;
 	}
 }
