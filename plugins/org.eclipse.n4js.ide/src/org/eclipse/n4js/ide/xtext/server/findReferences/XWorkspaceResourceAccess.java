@@ -16,8 +16,8 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 import org.eclipse.n4js.ide.xtext.server.concurrent.FutureUtil;
-import org.eclipse.n4js.ide.xtext.server.openfiles.OpenFileContext;
-import org.eclipse.n4js.ide.xtext.server.openfiles.OpenFilesManager;
+import org.eclipse.n4js.ide.xtext.server.openfiles.ResourceTaskContext;
+import org.eclipse.n4js.ide.xtext.server.openfiles.ResourceTaskManager;
 import org.eclipse.xtext.findReferences.IReferenceFinder;
 import org.eclipse.xtext.util.Exceptions;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
@@ -42,8 +42,8 @@ public class XWorkspaceResourceAccess implements IReferenceFinder.IResourceAcces
 	@Override
 	public <R> R readOnly(URI targetURI, IUnitOfWork<R, ResourceSet> work) {
 		URI uri = targetURI.trimFragment(); // note: targetURI may point to an EObject inside an EMF resource!
-		OpenFilesManager openFilesManager = languageServer.getOpenFilesManager();
-		OpenFileContext currOFC = openFilesManager.currentContext();
+		ResourceTaskManager openFilesManager = languageServer.getOpenFilesManager();
+		ResourceTaskContext currOFC = openFilesManager.currentContext();
 		if (currOFC != null) {
 			return doWork(currOFC.getResourceSet(), work);
 		}

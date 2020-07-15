@@ -18,7 +18,7 @@ import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
-import org.eclipse.n4js.ide.xtext.server.openfiles.OpenFileContext;
+import org.eclipse.n4js.ide.xtext.server.openfiles.ResourceTaskContext;
 import org.eclipse.xtext.util.CancelIndicator;
 
 import com.google.common.base.Optional;
@@ -52,7 +52,7 @@ public class N4JSLanguageServer extends XLanguageServerImpl implements N4JSProto
 	 * @param cancelIndicator
 	 *            a cancel indicator
 	 */
-	private String documentContents(OpenFileContext ofc, CancelIndicator cancelIndicator) {
+	private String documentContents(ResourceTaskContext ofc, CancelIndicator cancelIndicator) {
 		XDocument doc = ofc.getDocument();
 		return doc.getContents();
 	}

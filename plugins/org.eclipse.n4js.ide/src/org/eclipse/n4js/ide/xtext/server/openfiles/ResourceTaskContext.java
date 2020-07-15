@@ -60,7 +60,7 @@ import com.google.inject.Provider;
  * Represents a single open file, including EMF resources for files required by the open file.
  */
 @SuppressWarnings({ "javadoc", "restriction" })
-public class OpenFileContext {
+public class ResourceTaskContext {
 
 	@Inject
 	private LSPIssueConverter lspIssueConverter;
@@ -80,9 +80,9 @@ public class OpenFileContext {
 	@Inject
 	private OperationCanceledManager operationCanceledManager;
 
-	/** The {@link OpenFilesManager} that created this instance. */
-	protected OpenFilesManager parent;
-	/** URI of the open file represented by this {@link OpenFileContext} (i.e. URI of the main resource). */
+	/** The {@link ResourceTaskManager} that created this instance. */
+	protected ResourceTaskManager parent;
+	/** URI of the open file represented by this {@link ResourceTaskContext} (i.e. URI of the main resource). */
 	protected URI mainURI;
 	/** Tells whether this context represents a temporarily opened file, see {@link #isTemporary()}. */
 	protected boolean temporary;
@@ -128,7 +128,7 @@ public class OpenFileContext {
 	}
 
 	/**
-	 * Tells whether this {@link OpenFileContext} represents a temporarily opened file. Such contexts do not actually
+	 * Tells whether this {@link ResourceTaskContext} represents a temporarily opened file. Such contexts do not actually
 	 * represent an open editor in the LSP client but were created to perform editing-related computations in files not
 	 * actually opened in the LSP client. For example, when API documentation needs to be retrieved from a file not
 	 * currently opened in an editor in the LSP client, such a temporary {@code OpenFileContext} will be created.
@@ -145,7 +145,7 @@ public class OpenFileContext {
 	}
 
 	/**
-	 * Tells whether this {@link OpenFileContext} represents an ordinary context for an open file, i.e. not a
+	 * Tells whether this {@link ResourceTaskContext} represents an ordinary context for an open file, i.e. not a
 	 * {@link #isTemporary() temporary context}.
 	 */
 	public synchronized boolean isOpen() {
@@ -169,7 +169,7 @@ public class OpenFileContext {
 	}
 
 	@SuppressWarnings("hiding")
-	public synchronized void initialize(OpenFilesManager parent, URI uri, boolean isTemporary,
+	public synchronized void initialize(ResourceTaskManager parent, URI uri, boolean isTemporary,
 			ResourceDescriptionsData index, ImmutableSetMultimap<String, URI> containerHandle2URIs,
 			IWorkspaceConfigSnapshot workspaceConfig) {
 		this.parent = parent;
@@ -187,7 +187,7 @@ public class OpenFileContext {
 		ResourceDescriptionsData.ResourceSetAdapter.installResourceDescriptionsData(result, index);
 		externalContentSupport.configureResourceSet(result, new OpenFileContentProvider());
 
-		IAllContainersState allContainersState = new OpenFileAllContainersState(this);
+		IAllContainersState allContainersState = new ResourceTaskContextAllContainerState(this);
 		result.eAdapters().add(new DelegatingIAllContainerAdapter(allContainersState));
 
 		return result;
@@ -312,7 +312,7 @@ public class OpenFileContext {
 
 	/**
 	 * Invoked by {@link #parent} when a change happened in another open file (not the one represented by this
-	 * {@link OpenFileContext}). Will never be invoked for {@link #isTemporary() temporary} open file contexts.
+	 * {@link ResourceTaskContext}). Will never be invoked for {@link #isTemporary() temporary} open file contexts.
 	 */
 	protected void onDirtyStateChanged(IResourceDescription changedDesc, CancelIndicator cancelIndicator) {
 		updateIndex(Collections.singletonList(changedDesc), Collections.emptySet(), containerHandle2URIs,

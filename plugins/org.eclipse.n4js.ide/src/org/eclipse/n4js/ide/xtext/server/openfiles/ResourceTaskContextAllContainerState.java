@@ -25,13 +25,13 @@ import com.google.common.collect.ImmutableList;
 /**
  * Provides visibility information across projects within the resource set of an open file context.
  */
-public class OpenFileAllContainersState implements IAllContainersState {
+public class ResourceTaskContextAllContainerState implements IAllContainersState {
 
 	/** The open file context this container state was created for. */
-	protected final OpenFileContext openFileContext;
+	protected final ResourceTaskContext openFileContext;
 
-	/** See {@link OpenFileAllContainersState}. */
-	public OpenFileAllContainersState(OpenFileContext openFileContext) {
+	/** See {@link ResourceTaskContextAllContainerState}. */
+	public ResourceTaskContextAllContainerState(ResourceTaskContext openFileContext) {
 		this.openFileContext = openFileContext;
 	}
 

@@ -47,17 +47,17 @@ import com.google.inject.Singleton;
 
 @SuppressWarnings("javadoc")
 @Singleton
-public class OpenFilesManager {
+public class ResourceTaskManager {
 
 	@Inject
-	private Provider<OpenFileContext> openFileContextProvider;
+	private Provider<ResourceTaskContext> openFileContextProvider;
 
 	@Inject
 	private LSPExecutorService lspExecutorService;
 
-	protected final Map<URI, OpenFileContext> openFiles = new HashMap<>();
+	protected final Map<URI, ResourceTaskContext> openFiles = new HashMap<>();
 
-	protected final ThreadLocal<OpenFileContext> currentContext = new ThreadLocal<>();
+	protected final ThreadLocal<ResourceTaskContext> currentContext = new ThreadLocal<>();
 
 	protected final Map<String, ResourceDescriptionsData> persistedStateDescriptions = new HashMap<>();
 	protected final ResourceDescriptionsData sharedDirtyState = new ResourceDescriptionsData(Collections.emptyList());
@@ -71,7 +71,7 @@ public class OpenFilesManager {
 
 	public interface IOpenFilesListener {
 		/** Invoked whenever an open file was resolved, validated, etc. Invoked in the given open file context. */
-		public void didRefreshOpenFile(OpenFileContext ofc, CancelIndicator ci);
+		public void didRefreshOpenFile(ResourceTaskContext ofc, CancelIndicator ci);
 	}
 
 	public ConcurrentIssueRegistry getIssueRegistry() {
@@ -88,7 +88,7 @@ public class OpenFilesManager {
 	}
 
 	public synchronized XDocument getOpenDocument(URI uri) {
-		OpenFileContext ofc = openFiles.get(uri);
+		ResourceTaskContext ofc = openFiles.get(uri);
 		if (ofc != null) {
 			// note: since we only obtain an object reference to an immutable data structure (XDocument) we do not need
 			// to execute the following in the open file context:
@@ -101,7 +101,7 @@ public class OpenFilesManager {
 		if (openFiles.containsKey(uri)) {
 			return;
 		}
-		OpenFileContext newOFC = createOpenFileContext(uri, false);
+		ResourceTaskContext newOFC = createOpenFileContext(uri, false);
 		openFiles.put(uri, newOFC);
 
 		runInOpenFileContextVoid(uri, "openFile", (ofc, ci) -> {
@@ -141,7 +141,7 @@ public class OpenFilesManager {
 
 	/** Tries to run the given task in the context of an open file, falling back to a temporary file if necessary. */
 	public synchronized <T> CompletableFuture<T> runInOpenOrTemporaryFileContext(URI uri, String description,
-			BiFunction<OpenFileContext, CancelIndicator, T> task) {
+			BiFunction<ResourceTaskContext, CancelIndicator, T> task) {
 
 		if (isOpen(uri)) {
 			return runInOpenFileContext(uri, description, task);
@@ -151,7 +151,7 @@ public class OpenFilesManager {
 	}
 
 	public synchronized CompletableFuture<Void> runInOpenFileContextVoid(URI uri, String description,
-			BiConsumer<OpenFileContext, CancelIndicator> task) {
+			BiConsumer<ResourceTaskContext, CancelIndicator> task) {
 
 		return runInOpenFileContext(uri, description, (ofc, ci) -> {
 			task.accept(ofc, ci);
@@ -160,9 +160,9 @@ public class OpenFilesManager {
 	}
 
 	public synchronized <T> CompletableFuture<T> runInOpenFileContext(URI uri, String description,
-			BiFunction<OpenFileContext, CancelIndicator, T> task) {
+			BiFunction<ResourceTaskContext, CancelIndicator, T> task) {
 
-		OpenFileContext ofc = openFiles.get(uri);
+		ResourceTaskContext ofc = openFiles.get(uri);
 		if (ofc == null) {
 			throw new IllegalArgumentException("no open file found for given URI: " + uri);
 		}
@@ -186,7 +186,7 @@ public class OpenFilesManager {
 	 * actually opened files.
 	 */
 	public synchronized <T> CompletableFuture<T> runInTemporaryFileContext(URI uri, String description,
-			boolean resolveAndValidate, BiFunction<OpenFileContext, CancelIndicator, T> task) {
+			boolean resolveAndValidate, BiFunction<ResourceTaskContext, CancelIndicator, T> task) {
 		return runInTemporaryFileContext(uri, description, resolveAndValidate, CancelIndicator.NullImpl, task);
 	}
 
@@ -198,9 +198,9 @@ public class OpenFilesManager {
 	 */
 	public synchronized <T> CompletableFuture<T> runInTemporaryFileContext(URI uri, String description,
 			boolean resolveAndValidate, CancelIndicator outerCancelIndicator,
-			BiFunction<OpenFileContext, CancelIndicator, T> task) {
+			BiFunction<ResourceTaskContext, CancelIndicator, T> task) {
 
-		OpenFileContext tempOFC = createOpenFileContext(uri, true);
+		ResourceTaskContext tempOFC = createOpenFileContext(uri, true);
 
 		String descriptionWithContext = description + " (temporary) [" + uri.lastSegment() + "]";
 		return doSubmitTask(tempOFC, descriptionWithContext, (_tempOFC, ciFromExecutor) -> {
@@ -210,8 +210,8 @@ public class OpenFilesManager {
 		});
 	}
 
-	protected <T> CompletableFuture<T> doSubmitTask(OpenFileContext ofc, String description,
-			BiFunction<OpenFileContext, CancelIndicator, T> task) {
+	protected <T> CompletableFuture<T> doSubmitTask(ResourceTaskContext ofc, String description,
+			BiFunction<ResourceTaskContext, CancelIndicator, T> task) {
 
 		Object queueId = getQueueIdForOpenFileContext(ofc.getURI(), ofc.isTemporary());
 		return lspExecutorService.submit(queueId, description, ci -> {
@@ -229,13 +229,13 @@ public class OpenFilesManager {
 			// for every temporary open file only a single task is being submitted that is supposed to be independent of
 			// all other tasks (in particular, we can have several temporary open files for the same URI that should all
 			// be independent of one another), so we use "new Object()" as the actual ID here:
-			return Pair.of(OpenFilesManager.class, new Object());
+			return Pair.of(ResourceTaskManager.class, new Object());
 		}
-		return Pair.of(OpenFilesManager.class, uri);
+		return Pair.of(ResourceTaskManager.class, uri);
 	}
 
-	protected OpenFileContext createOpenFileContext(URI uri, boolean isTemporary) {
-		OpenFileContext ofc = openFileContextProvider.get();
+	protected ResourceTaskContext createOpenFileContext(URI uri, boolean isTemporary) {
+		ResourceTaskContext ofc = openFileContextProvider.get();
 		ResourceDescriptionsData index = isTemporary ? createPersistedStateIndex() : createLiveScopeIndex();
 		ofc.initialize(this, uri, isTemporary, index, containerHandle2URIs, workspaceConfig);
 		return ofc;
@@ -257,7 +257,7 @@ public class OpenFilesManager {
 	 * <p>
 	 * Corresponds to {@link Thread#currentThread()}.
 	 */
-	public OpenFileContext currentContext() {
+	public ResourceTaskContext currentContext() {
 		return currentContext.get();
 	}
 
@@ -358,14 +358,14 @@ public class OpenFilesManager {
 		listeners.remove(l);
 	}
 
-	protected /* NOT synchronized */ void onDidRefreshOpenFile(OpenFileContext ofc, CancelIndicator ci) {
+	protected /* NOT synchronized */ void onDidRefreshOpenFile(ResourceTaskContext ofc, CancelIndicator ci) {
 		if (ofc.isTemporary()) {
 			return; // temporarily opened files do not send out events to open file listeners
 		}
 		notifyOpenFileListeners(ofc, ci);
 	}
 
-	protected /* NOT synchronized */ void notifyOpenFileListeners(OpenFileContext ofc, CancelIndicator ci) {
+	protected /* NOT synchronized */ void notifyOpenFileListeners(ResourceTaskContext ofc, CancelIndicator ci) {
 		for (IOpenFilesListener l : listeners) {
 			l.didRefreshOpenFile(ofc, ci);
 		}

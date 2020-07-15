@@ -34,7 +34,7 @@ import org.eclipse.n4js.ide.xtext.server.LSPIssue;
 import org.eclipse.n4js.ide.xtext.server.LSPIssueConverter;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
-import org.eclipse.n4js.ide.xtext.server.openfiles.OpenFilesManager;
+import org.eclipse.n4js.ide.xtext.server.openfiles.ResourceTaskManager;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.N4JSResource;
@@ -342,7 +342,7 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 		TextEditCollector collector = new TextEditCollector();
 		TextDocumentIdentifier textDocId = new TextDocumentIdentifier(uriExtensions.toUriString(uri));
 
-		OpenFilesManager openFilesManager = languageServer.getOpenFilesManager();
+		ResourceTaskManager openFilesManager = languageServer.getOpenFilesManager();
 		openFilesManager.<Void> runInTemporaryFileContext(uri, "doApplyToFile", false, cancelIndicator, (ofc, ci) -> {
 			XtextResource res = ofc.getResource();
 			List<Issue> issues = ofc.resolveAndValidateOpenFile(ci);
