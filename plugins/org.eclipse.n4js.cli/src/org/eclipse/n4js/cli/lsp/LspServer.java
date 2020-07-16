@@ -24,6 +24,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import org.apache.log4j.Appender;
 import org.apache.log4j.Logger;
 import org.apache.log4j.SimpleLayout;
 import org.apache.log4j.WriterAppender;
@@ -130,7 +131,7 @@ public class LspServer {
 		N4jscConsole.println(LSP_SYNC_MESSAGE + " on stdio ...");
 		N4jscConsole.setSuppress(true);
 		LspLogger lspLogger = languageServer.getLspLogger();
-		redirectLog4jToLspLogger(lspLogger);
+		Appender lspLoggerAppender = redirectLog4jToLspLogger(lspLogger);
 		PrintStream oldStdOut = System.out;
 		PrintStream oldStdErr = System.err;
 		try (PrintStream loggingStream = new LoggingPrintStream(lspLogger)) {
@@ -138,8 +139,9 @@ public class LspServer {
 			System.setErr(loggingStream);
 			run(languageServer, lsBuilder, System.in, oldStdOut);
 		} finally {
-			System.setOut(oldStdOut);
 			System.setErr(oldStdErr);
+			System.setOut(oldStdOut);
+			Logger.getRootLogger().removeAppender(lspLoggerAppender);
 		}
 	}
 
@@ -161,11 +163,11 @@ public class LspServer {
 		languageServer.getLSPExecutorService().shutdown();
 	}
 
-	private void redirectLog4jToLspLogger(LspLogger lspLogger) {
+	private Appender redirectLog4jToLspLogger(LspLogger lspLogger) {
 		// logging to stdout would corrupt client/server communication, so disable existing appenders:
 		Logger.getRootLogger().removeAllAppenders();
 		// add appender redirecting output to LspLogger:
-		Logger.getRootLogger().addAppender(new WriterAppender(new SimpleLayout(), new Writer() {
+		WriterAppender appender = new WriterAppender(new SimpleLayout(), new Writer() {
 
 			@Override
 			public void write(char[] cbuf, int off, int len) throws IOException {
@@ -190,6 +192,8 @@ public class LspServer {
 			public void close() throws IOException {
 				// ignore
 			}
-		}));
+		});
+		Logger.getRootLogger().addAppender(appender);
+		return appender;
 	}
 }
