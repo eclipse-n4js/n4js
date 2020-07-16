@@ -193,7 +193,7 @@ public class ProjectBuilder {
 		projectStateManager.updateProjectState(request, result);
 
 		ResourceDescriptionsData resourceDescriptions = projectStateManager.getIndex();
-		fullIndex.setContainer(projectDescription.getName(), resourceDescriptions);
+		fullIndex.setProjectIndex(projectDescription.getName(), resourceDescriptions);
 
 		return result;
 	}
@@ -221,7 +221,7 @@ public class ProjectBuilder {
 			}
 		}
 
-		fullIndex.clearContainer(projectConfig.getName());
+		fullIndex.clearProjectIndex(projectConfig.getName());
 		issueRegistry.clearIssuesOfPersistedState(projectConfig.getName());
 	}
 
@@ -356,7 +356,7 @@ public class ProjectBuilder {
 
 	/** @return all resource descriptions that start with the given prefix */
 	public List<URI> findResourcesStartingWithPrefix(URI prefix) {
-		ResourceDescriptionsData resourceDescriptionsData = fullIndex.getContainer(projectDescription.getName());
+		ResourceDescriptionsData resourceDescriptionsData = fullIndex.getProjectIndex(projectDescription.getName());
 
 		// TODO: Moving this into ResourceDescriptionsData and using a sorted Map could increase performance
 		List<URI> uris = new ArrayList<>();

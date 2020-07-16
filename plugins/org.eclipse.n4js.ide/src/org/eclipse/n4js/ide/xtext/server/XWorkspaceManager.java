@@ -109,7 +109,7 @@ public class XWorkspaceManager {
 			removeProject(projectBuilder);
 		}
 		projectName2ProjectBuilder.clear();
-		fullIndex.removeAllContainers();
+		fullIndex.removeAllProjectsIndices();
 
 		// init projects
 		this.workspaceConfig = workspaceConfig;
@@ -145,7 +145,7 @@ public class XWorkspaceManager {
 			resourceSet.eSetDeliver(wasDeliver);
 		}
 		projectName2ProjectBuilder.remove(projectName);
-		fullIndex.removeContainer(projectName);
+		fullIndex.removeProjectIndex(projectName);
 	}
 
 	/**

@@ -13,6 +13,7 @@ package org.eclipse.n4js.ide.xtext.server;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -235,9 +236,15 @@ public class ProjectStateManager {
 		return persistanceFile;
 	}
 
-	/** Return the validation issues as an unmodifiable map. */
+	/** @return the validation issues as an unmodifiable map. */
 	public ImmutableMap<URI, ImmutableSortedSet<LSPIssue>> getValidationIssues() {
-		return issueRegistry.getIssuesOfPersistedState(projectConfig.getName());
+		ImmutableMap<URI, ImmutableSortedSet<LSPIssue>> issues = issueRegistry
+				.getIssuesOfPersistedState(projectConfig.getName());
+
+		if (issues == null) {
+			return ImmutableMap.copyOf(Collections.emptyMap());
+		}
+		return issues;
 	}
 
 	/** Setter. */
@@ -249,12 +256,12 @@ public class ProjectStateManager {
 
 	/** Getter. */
 	public ResourceDescriptionsData getIndex() {
-		return index.getContainer(projectConfig.getName());
+		return index.getProjectIndex(projectConfig.getName());
 	}
 
 	/** Setter. */
 	public void setIndex(ResourceDescriptionsData index) {
-		this.index.setContainer(projectConfig.getName(), index);
+		this.index.setProjectIndex(projectConfig.getName(), index);
 	}
 
 	/** Getter. */

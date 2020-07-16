@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ide.xtext.server.LSPIssue;
 import org.eclipse.xtext.diagnostics.Severity;
-import org.eclipse.xtext.resource.impl.ChunkedResourceDescriptions;
 import org.eclipse.xtext.util.Strings;
 import org.eclipse.xtext.validation.Issue;
 
@@ -33,8 +32,7 @@ import com.google.inject.Singleton;
 
 /**
  * A registry for {@link LSPIssue issues} that can be shared across threads, distinguishing between persisted and dirty
- * state. In the former case, issues are recorded on a per-container basis ("container" in the sense of
- * {@link ChunkedResourceDescriptions}'s containers).
+ * state. In the former case, issues are recorded on a per-project basis.
  */
 @Singleton
 public class ConcurrentIssueRegistry {
@@ -43,7 +41,7 @@ public class ConcurrentIssueRegistry {
 
 	protected final Map<URI, ImmutableSortedSet<LSPIssue>> dirtyIssues = new HashMap<>();
 	protected final Map<URI, ImmutableSortedSet<LSPIssue>> persistedIssues = new HashMap<>();
-	protected final Map<String, Map<URI, ImmutableSortedSet<LSPIssue>>> container2persistedIssues = new HashMap<>();
+	protected final Map<String, Map<URI, ImmutableSortedSet<LSPIssue>>> project2persistedIssues = new HashMap<>();
 
 	protected final List<IIssueRegistryListener> listeners = new CopyOnWriteArrayList<>();
 
@@ -165,7 +163,7 @@ public class ConcurrentIssueRegistry {
 	}
 
 	public synchronized List<IssueRegistryChangeEvent> doClearIssuesOfPersistedState() {
-		List<IssueRegistryChangeEvent> events = container2persistedIssues.entrySet().stream()
+		List<IssueRegistryChangeEvent> events = project2persistedIssues.entrySet().stream()
 				.flatMap(containerHandle2IssueMap -> {
 					String containerHandle = containerHandle2IssueMap.getKey();
 					return containerHandle2IssueMap.getValue().entrySet().stream()
@@ -174,7 +172,7 @@ public class ConcurrentIssueRegistry {
 				})
 				.collect(Collectors.toList());
 		persistedIssues.clear();
-		container2persistedIssues.clear();
+		project2persistedIssues.clear();
 		return events;
 	}
 
@@ -189,7 +187,7 @@ public class ConcurrentIssueRegistry {
 					.map(e -> eventPersisted(containerHandle, e.getKey(), e.getValue(), null))
 					.collect(Collectors.toList());
 			containerIssues.keySet().forEach(persistedIssues::remove);
-			container2persistedIssues.remove(containerHandle);
+			project2persistedIssues.remove(containerHandle);
 		}
 		notifyListeners(events);
 		return true;
@@ -253,10 +251,10 @@ public class ConcurrentIssueRegistry {
 	protected synchronized Map<URI, ImmutableSortedSet<LSPIssue>> getContainerIssues(String containerHandle,
 			boolean createIfNecessary) {
 
-		Map<URI, ImmutableSortedSet<LSPIssue>> containerIssues = container2persistedIssues.get(containerHandle);
+		Map<URI, ImmutableSortedSet<LSPIssue>> containerIssues = project2persistedIssues.get(containerHandle);
 		if (containerIssues == null && createIfNecessary) {
 			containerIssues = new HashMap<>();
-			container2persistedIssues.put(containerHandle, containerIssues);
+			project2persistedIssues.put(containerHandle, containerIssues);
 		}
 		return containerIssues;
 	}

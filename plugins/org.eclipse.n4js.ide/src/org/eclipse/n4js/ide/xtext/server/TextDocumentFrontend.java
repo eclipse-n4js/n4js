@@ -676,11 +676,11 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 	public void onIndexChanged(
 			IWorkspaceConfigSnapshot newWorkspaceConfig,
 			Map<String, ? extends ResourceDescriptionsData> changedDescriptions,
-			List<? extends IProjectConfigSnapshot> changedProjectConfigs,
-			Set<String> removedContainers) {
+			List<? extends IProjectConfigSnapshot> changedProjects,
+			Set<String> removedProjects) {
 
-		resourceTaskManager.updatePersistedState(newWorkspaceConfig, changedDescriptions, changedProjectConfigs,
-				removedContainers);
+		resourceTaskManager.updatePersistedState(newWorkspaceConfig, changedDescriptions, changedProjects,
+				removedProjects);
 	}
 
 	@Override

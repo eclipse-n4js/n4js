@@ -962,7 +962,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	/** Reads the resource description of the source file with the given URI from the index. */
 	protected IResourceDescription getResourceDescriptionFromIndex(String projectName, FileURI fileURI) {
-		ResourceDescriptionsData index = languageServer.getBuilder().getIndex().getContainer(projectName);
+		ResourceDescriptionsData index = languageServer.getBuilder().getIndex().getProjectIndex(projectName);
 		return index.getResourceDescription(fileURI.toURI());
 	}
 
