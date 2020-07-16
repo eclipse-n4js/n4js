@@ -342,10 +342,10 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 		TextEditCollector collector = new TextEditCollector();
 		TextDocumentIdentifier textDocId = new TextDocumentIdentifier(uriExtensions.toUriString(uri));
 
-		ResourceTaskManager openFilesManager = languageServer.getOpenFilesManager();
-		openFilesManager.<Void> runInTemporaryFileContext(uri, "doApplyToFile", false, cancelIndicator, (ofc, ci) -> {
+		ResourceTaskManager resourceTaskManager = languageServer.getResourceTaskManager();
+		resourceTaskManager.<Void> runInTemporaryContext(uri, "doApplyToFile", false, cancelIndicator, (ofc, ci) -> {
 			XtextResource res = ofc.getResource();
-			List<Issue> issues = ofc.resolveAndValidateOpenFile(ci);
+			List<Issue> issues = ofc.resolveAndValidateResource(ci);
 			List<LSPIssue> lspIssues = lspIssueConverter.convertToLSPIssues(res, issues, ci);
 
 			XDocument doc = ofc.getDocument();

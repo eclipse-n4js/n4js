@@ -42,13 +42,13 @@ public class XWorkspaceResourceAccess implements IReferenceFinder.IResourceAcces
 	@Override
 	public <R> R readOnly(URI targetURI, IUnitOfWork<R, ResourceSet> work) {
 		URI uri = targetURI.trimFragment(); // note: targetURI may point to an EObject inside an EMF resource!
-		ResourceTaskManager openFilesManager = languageServer.getOpenFilesManager();
-		ResourceTaskContext currOFC = openFilesManager.currentContext();
-		if (currOFC != null) {
-			return doWork(currOFC.getResourceSet(), work);
+		ResourceTaskManager resourceTaskManager = languageServer.getResourceTaskManager();
+		ResourceTaskContext currRTC = resourceTaskManager.currentContext();
+		if (currRTC != null) {
+			return doWork(currRTC.getResourceSet(), work);
 		}
 		// TODO consider making a current context mandatory by removing the following (see GH-1774):
-		CompletableFuture<R> future = openFilesManager.runInTemporaryFileContext(uri, "XWorkspaceResourceAccess", true,
+		CompletableFuture<R> future = resourceTaskManager.runInTemporaryContext(uri, "XWorkspaceResourceAccess", true,
 				(ofc, ci) -> doWork(ofc.getResourceSet(), work));
 		return FutureUtil.getCancellableResult(future);
 	}

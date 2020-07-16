@@ -30,12 +30,12 @@ public class WorkspaceAwareCanLoadFromDescriptionHelper extends CanLoadFromDescr
 	private XWorkspaceManager workspaceManager;
 
 	@Inject
-	private ResourceTaskManager openFilesManager;
+	private ResourceTaskManager resourceTaskManager;
 
 	@Override
 	public Resource createResource(ResourceSet resourceSet, URI resourceURI) {
-		boolean inOpenFileContext = openFilesManager.currentContext() != null;
-		if (inOpenFileContext) {
+		boolean inContext = resourceTaskManager.currentContext() != null;
+		if (inContext) {
 			// within open file contexts we use the default behavior:
 			return super.createResource(resourceSet, resourceURI);
 		}

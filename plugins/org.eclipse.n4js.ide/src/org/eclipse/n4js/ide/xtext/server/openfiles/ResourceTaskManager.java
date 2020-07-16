@@ -45,7 +45,6 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
-@SuppressWarnings("javadoc")
 @Singleton
 public class ResourceTaskManager {
 
@@ -55,7 +54,10 @@ public class ResourceTaskManager {
 	@Inject
 	private LSPExecutorService lspExecutorService;
 
-	protected final Map<URI, ResourceTaskContext> openFiles = new HashMap<>();
+	@Inject
+	private ConcurrentIssueRegistry issueRegistry;
+
+	protected final Map<URI, ResourceTaskContext> uri2RTCs = new HashMap<>();
 
 	protected final ThreadLocal<ResourceTaskContext> currentContext = new ThreadLocal<>();
 
@@ -65,13 +67,11 @@ public class ResourceTaskManager {
 	protected ImmutableSetMultimap<String, URI> containerHandle2URIs = ImmutableSetMultimap.of();
 	protected IWorkspaceConfigSnapshot workspaceConfig = null;
 
-	protected final List<IOpenFilesListener> listeners = new CopyOnWriteArrayList<>();
+	protected final List<IResourceTaskListener> listeners = new CopyOnWriteArrayList<>();
 
-	protected ConcurrentIssueRegistry issueRegistry = null;
-
-	public interface IOpenFilesListener {
+	public interface IResourceTaskListener {
 		/** Invoked whenever an open file was resolved, validated, etc. Invoked in the given open file context. */
-		public void didRefreshOpenFile(ResourceTaskContext ofc, CancelIndicator ci);
+		public void didRefreshOpenFile(ResourceTaskContext rtc, CancelIndicator ci);
 	}
 
 	public ConcurrentIssueRegistry getIssueRegistry() {
@@ -84,100 +84,99 @@ public class ResourceTaskManager {
 	}
 
 	public synchronized boolean isOpen(URI uri) {
-		return openFiles.containsKey(uri);
+		return uri2RTCs.containsKey(uri);
 	}
 
 	public synchronized XDocument getOpenDocument(URI uri) {
-		ResourceTaskContext ofc = openFiles.get(uri);
-		if (ofc != null) {
+		ResourceTaskContext rtc = uri2RTCs.get(uri);
+		if (rtc != null) {
 			// note: since we only obtain an object reference to an immutable data structure (XDocument) we do not need
 			// to execute the following in the open file context:
-			return ofc.getDocument();
+			return rtc.getDocument();
 		}
 		return null;
 	}
 
-	public synchronized void openFile(URI uri, int version, String content) {
-		if (openFiles.containsKey(uri)) {
+	public synchronized void createContext(URI uri, int version, String content) {
+		if (uri2RTCs.containsKey(uri)) {
 			return;
 		}
-		ResourceTaskContext newOFC = createOpenFileContext(uri, false);
-		openFiles.put(uri, newOFC);
+		ResourceTaskContext newContext = createContext(uri, false);
+		uri2RTCs.put(uri, newContext);
 
-		runInOpenFileContextVoid(uri, "openFile", (ofc, ci) -> {
-			ofc.initOpenFile(version, content, ci);
+		runInExistingContextVoid(uri, "createContext", (rtc, ci) -> {
+			rtc.initContext(version, content, ci);
 		});
 	}
 
-	public synchronized void changeFile(URI uri, int version,
+	public synchronized void changeSourceTextOfExistingContext(URI uri, int version,
 			Iterable<? extends TextDocumentContentChangeEvent> changes) {
 
-		// cancel current tasks for this open file context (they are now out-dated, anyway)
-		Object queueId = getQueueIdForOpenFileContext(uri, false);
+		// cancel current tasks for this context (they are now out-dated, anyway)
+		Object queueId = getQueueIdForContext(uri, false);
 		lspExecutorService.cancelAll(queueId);
 
-		// refresh the open file context
-		runInOpenFileContextVoid(uri, "changeFile", (ofc, ci) -> {
-			ofc.refreshOpenFile(version, changes, ci);
+		// refresh the context
+		runInExistingContextVoid(uri, "changeSourceTextOfExistingContext", (rtc, ci) -> {
+			rtc.refreshContext(version, changes, ci);
 		});
 	}
 
 	public synchronized CompletableFuture<Void> closeAll() {
-		List<CompletableFuture<Void>> cfs = new ArrayList<>(openFiles.size());
-		for (URI uri : new ArrayList<>(openFiles.keySet())) {
-			cfs.add(closeFile(uri));
+		List<CompletableFuture<Void>> cfs = new ArrayList<>(uri2RTCs.size());
+		for (URI uri : new ArrayList<>(uri2RTCs.keySet())) {
+			cfs.add(closeContext(uri));
 		}
 		return CompletableFuture.allOf(cfs.toArray(new CompletableFuture<?>[cfs.size()]));
 	}
 
-	public synchronized CompletableFuture<Void> closeFile(URI uri) {
+	public synchronized CompletableFuture<Void> closeContext(URI uri) {
 		// To allow running/pending tasks in the context of the given URI's file to complete normally, we put the call
 		// to #discardOpenFileInfo() on the queue (note: this does not apply to tasks being submitted after this method
 		// returns and before #discardOpenFileInfo() is invoked).
-		return runInOpenFileContextVoid(uri, "closeFile", (ofc, ci) -> {
-			discardOpenFileInfo(uri);
+		return runInExistingContextVoid(uri, "closeContext", (rtc, ci) -> {
+			discardContextInfo(uri);
 		});
 	}
 
-	/** Tries to run the given task in the context of an open file, falling back to a temporary file if necessary. */
-	public synchronized <T> CompletableFuture<T> runInOpenOrTemporaryFileContext(URI uri, String description,
+	/** Tries to run the given task in an existing context, falling back to a temporary context if necessary. */
+	public synchronized <T> CompletableFuture<T> runInExistingOrTemporaryContext(URI uri, String description,
 			BiFunction<ResourceTaskContext, CancelIndicator, T> task) {
 
 		if (isOpen(uri)) {
-			return runInOpenFileContext(uri, description, task);
+			return runInExistingContext(uri, description, task);
 		} else {
-			return runInTemporaryFileContext(uri, description, true, task);
+			return runInTemporaryContext(uri, description, true, task);
 		}
 	}
 
-	public synchronized CompletableFuture<Void> runInOpenFileContextVoid(URI uri, String description,
+	public synchronized CompletableFuture<Void> runInExistingContextVoid(URI uri, String description,
 			BiConsumer<ResourceTaskContext, CancelIndicator> task) {
 
-		return runInOpenFileContext(uri, description, (ofc, ci) -> {
-			task.accept(ofc, ci);
+		return runInExistingContext(uri, description, (rtc, ci) -> {
+			task.accept(rtc, ci);
 			return null;
 		});
 	}
 
-	public synchronized <T> CompletableFuture<T> runInOpenFileContext(URI uri, String description,
+	public synchronized <T> CompletableFuture<T> runInExistingContext(URI uri, String description,
 			BiFunction<ResourceTaskContext, CancelIndicator, T> task) {
 
-		ResourceTaskContext ofc = openFiles.get(uri);
-		if (ofc == null) {
-			throw new IllegalArgumentException("no open file found for given URI: " + uri);
+		ResourceTaskContext rtc = uri2RTCs.get(uri);
+		if (rtc == null) {
+			throw new IllegalArgumentException("no existing context found for given URI: " + uri);
 		}
 
 		String descriptionWithContext = description + " [" + uri.lastSegment() + "]";
-		return doSubmitTask(ofc, descriptionWithContext, task);
+		return doSubmitTask(rtc, descriptionWithContext, task);
 	}
 
 	/**
-	 * Creates a temporary open file context for the file with the given URI, initializes it, and executes the given
-	 * task, <em>without</em> interfering with a possibly existing ordinary open file context for 'uri' or with other
-	 * possibly existing temporary open file contexts for 'uri'.
+	 * Creates a temporary context for the file with the given URI, initializes it, and executes the given task,
+	 * <em>without</em> interfering with other possibly existing or temporary contexts for that 'uri'.
 	 * <p>
-	 * The temporary open file context is not retained over a longer period of time; the given task will be the only
-	 * task that will ever be executed in this temporary context.
+	 * The temporary context is not retained over a longer period of time; the given task will be the only task that
+	 * will ever be executed in this temporary context.
 	 * <p>
 	 * Note that instead of using this method, the caller might simply create a new resource set from scratch, configure
 	 * it with a {@link #createLiveScopeIndex() live scope index}, and synchronously perform any desired computation
@@ -185,75 +184,75 @@ public class ResourceTaskManager {
 	 * with a consistent setup/configuration and with a similar API as compared to computations in the context of
 	 * actually opened files.
 	 */
-	public synchronized <T> CompletableFuture<T> runInTemporaryFileContext(URI uri, String description,
+	public synchronized <T> CompletableFuture<T> runInTemporaryContext(URI uri, String description,
 			boolean resolveAndValidate, BiFunction<ResourceTaskContext, CancelIndicator, T> task) {
-		return runInTemporaryFileContext(uri, description, resolveAndValidate, CancelIndicator.NullImpl, task);
+		return runInTemporaryContext(uri, description, resolveAndValidate, CancelIndicator.NullImpl, task);
 	}
 
 	/**
-	 * Same as {@link #runInTemporaryFileContext(URI, String, BiFunction)}, but accepts an outer cancel indicator as
-	 * argument as an additional source of cancellation. The implementation of the given function 'task' should only use
-	 * the cancel indicator passed into 'task' (it is a {@link CancelIndicatorUtil#combine(List) combination} of the
+	 * Same as {@link #runInTemporaryContext(URI, String, boolean, BiFunction)}, but accepts an outer cancel indicator
+	 * as argument as an additional source of cancellation. The implementation of the given function 'task' should only
+	 * use the cancel indicator passed into 'task' (it is a {@link CancelIndicatorUtil#combine(List) combination} of the
 	 * given outer cancel indicator and other sources of cancellation).
 	 */
-	public synchronized <T> CompletableFuture<T> runInTemporaryFileContext(URI uri, String description,
+	public synchronized <T> CompletableFuture<T> runInTemporaryContext(URI uri, String description,
 			boolean resolveAndValidate, CancelIndicator outerCancelIndicator,
 			BiFunction<ResourceTaskContext, CancelIndicator, T> task) {
 
-		ResourceTaskContext tempOFC = createOpenFileContext(uri, true);
+		ResourceTaskContext tempContext = createContext(uri, true);
 
 		String descriptionWithContext = description + " (temporary) [" + uri.lastSegment() + "]";
-		return doSubmitTask(tempOFC, descriptionWithContext, (_tempOFC, ciFromExecutor) -> {
+		return doSubmitTask(tempContext, descriptionWithContext, (_tempContext, ciFromExecutor) -> {
 			CancelIndicator ciCombined = CancelIndicatorUtil.combine(outerCancelIndicator, ciFromExecutor);
-			_tempOFC.initOpenFile(resolveAndValidate, ciCombined);
-			return task.apply(_tempOFC, ciCombined);
+			_tempContext.initContext(resolveAndValidate, ciCombined);
+			return task.apply(_tempContext, ciCombined);
 		});
 	}
 
-	protected <T> CompletableFuture<T> doSubmitTask(ResourceTaskContext ofc, String description,
+	protected <T> CompletableFuture<T> doSubmitTask(ResourceTaskContext rtc, String description,
 			BiFunction<ResourceTaskContext, CancelIndicator, T> task) {
 
-		Object queueId = getQueueIdForOpenFileContext(ofc.getURI(), ofc.isTemporary());
+		Object queueId = getQueueIdForContext(rtc.getURI(), rtc.isTemporary());
 		return lspExecutorService.submit(queueId, description, ci -> {
 			try {
-				currentContext.set(ofc);
-				return task.apply(ofc, ci);
+				currentContext.set(rtc);
+				return task.apply(rtc, ci);
 			} finally {
 				currentContext.set(null);
 			}
 		});
 	}
 
-	protected Object getQueueIdForOpenFileContext(URI uri, boolean isTemporary) {
+	protected Object getQueueIdForContext(URI uri, boolean isTemporary) {
 		if (isTemporary) {
-			// for every temporary open file only a single task is being submitted that is supposed to be independent of
-			// all other tasks (in particular, we can have several temporary open files for the same URI that should all
+			// for every temporary context only a single task is being submitted that is supposed to be independent of
+			// all other tasks (in particular, we can have several temporary contexts for the same URI that should all
 			// be independent of one another), so we use "new Object()" as the actual ID here:
 			return Pair.of(ResourceTaskManager.class, new Object());
 		}
 		return Pair.of(ResourceTaskManager.class, uri);
 	}
 
-	protected ResourceTaskContext createOpenFileContext(URI uri, boolean isTemporary) {
-		ResourceTaskContext ofc = openFileContextProvider.get();
+	protected ResourceTaskContext createContext(URI uri, boolean isTemporary) {
+		ResourceTaskContext rtc = openFileContextProvider.get();
 		ResourceDescriptionsData index = isTemporary ? createPersistedStateIndex() : createLiveScopeIndex();
-		ofc.initialize(this, uri, isTemporary, index, containerHandle2URIs, workspaceConfig);
-		return ofc;
+		rtc.initialize(this, uri, isTemporary, index, containerHandle2URIs, workspaceConfig);
+		return rtc;
 	}
 
-	protected synchronized void discardOpenFileInfo(URI uri) {
-		openFiles.remove(uri);
+	protected synchronized void discardContextInfo(URI uri) {
+		uri2RTCs.remove(uri);
 		sharedDirtyState.removeDescription(uri);
 		if (issueRegistry != null) {
 			issueRegistry.clearIssuesOfDirtyState(uri);
 		}
-		// TODO GH-1774 closing a file may lead to a change in other open files (because they will switch from using
+		// TODO GH-1774 closing a file may lead to a change in other contexts (because they will switch from using
 		// dirty state to using persisted state for the file being closed)
 	}
 
 	/**
-	 * If the thread invoking this method {@link #runInOpenFileContext(URI, String, BiFunction) currently runs in an
-	 * open file context}, that context is returned. Otherwise returns <code>null</code>.
+	 * If the thread invoking this method {@link #runInExistingContext(URI, String, BiFunction) currently runs in an
+	 * context}, that context is returned. Otherwise returns <code>null</code>.
 	 * <p>
 	 * Corresponds to {@link Thread#currentThread()}.
 	 */
@@ -267,11 +266,12 @@ public class ResourceTaskManager {
 				ResourceDescriptionsData::getAllResourceDescriptions));
 	}
 
-	/** Creates an index containing the persisted state shadowed by the dirty state of all open files. */
+	/** Creates an index containing the persisted state shadowed by the dirty state of all non-temporary contexts. */
 	public synchronized ResourceDescriptionsData createLiveScopeIndex() {
 		ResourceDescriptionsData result = createPersistedStateIndex();
-		sharedDirtyState.getAllResourceDescriptions()
-				.forEach(desc -> result.addDescription(desc.getURI(), desc));
+		for (IResourceDescription desc : sharedDirtyState.getAllResourceDescriptions()) {
+			result.addDescription(desc.getURI(), desc);
+		}
 		return result;
 	}
 
@@ -294,14 +294,14 @@ public class ResourceTaskManager {
 			if (oldContainer != null) {
 				for (IResourceDescription desc : oldContainer.getAllResourceDescriptions()) {
 					URI descURI = desc.getURI();
-					if (!openFiles.containsKey(descURI)) {
+					if (!uri2RTCs.containsKey(descURI)) {
 						removed.add(descURI);
 					}
 				}
 			}
 			for (IResourceDescription desc : newData.getAllResourceDescriptions()) {
 				URI descURI = desc.getURI();
-				if (!openFiles.containsKey(descURI)) {
+				if (!uri2RTCs.containsKey(descURI)) {
 					changed.add(desc);
 					removed.remove(descURI);
 				}
@@ -325,13 +325,13 @@ public class ResourceTaskManager {
 		containerHandle2URIs = ImmutableSetMultimap.copyOf(newContainerHandle2URIs);
 		workspaceConfig = newWorkspaceConfig;
 
-		// update persisted state instances in the context of each open file
+		// update persisted state instances in the context of each context
 		if (Iterables.isEmpty(changed) && removed.isEmpty() && workspaceConfig.equals(oldWC)) {
 			return;
 		}
-		for (URI currURI : openFiles.keySet()) {
-			runInOpenFileContextVoid(currURI, "updatePersistedState in open file", (ofc, ci) -> {
-				ofc.onPersistedStateChanged(changed, removed, containerHandle2URIs, workspaceConfig, ci);
+		for (URI currURI : uri2RTCs.keySet()) {
+			runInExistingContextVoid(currURI, "updatePersistedState of existing context", (rtc, ci) -> {
+				rtc.onPersistedStateChanged(changed, removed, containerHandle2URIs, workspaceConfig, ci);
 			});
 		}
 	}
@@ -341,34 +341,34 @@ public class ResourceTaskManager {
 		URI newDescURI = newDesc.getURI();
 		sharedDirtyState.addDescription(newDescURI, newDesc);
 		// update dirty state instances in the context of each open file (except the one that caused the change)
-		for (URI currURI : openFiles.keySet()) {
+		for (URI currURI : uri2RTCs.keySet()) {
 			if (currURI.equals(newDescURI)) {
 				continue;
 			}
-			runInOpenFileContextVoid(currURI, "updateSharedDirtyState in open file", (ofc, ci) -> {
-				ofc.onDirtyStateChanged(newDesc, ci);
+			runInExistingContextVoid(currURI, "updateSharedDirtyState of existing context", (rtc, ci) -> {
+				rtc.onDirtyStateChanged(newDesc, ci);
 			});
 		}
 	}
 
-	public void addListener(IOpenFilesListener l) {
+	public void addListener(IResourceTaskListener l) {
 		listeners.add(l);
 	}
 
-	public void removeListener(IOpenFilesListener l) {
+	public void removeListener(IResourceTaskListener l) {
 		listeners.remove(l);
 	}
 
-	protected /* NOT synchronized */ void onDidRefreshOpenFile(ResourceTaskContext ofc, CancelIndicator ci) {
-		if (ofc.isTemporary()) {
-			return; // temporarily opened files do not send out events to open file listeners
+	protected /* NOT synchronized */ void onDidRefreshContext(ResourceTaskContext rtc, CancelIndicator ci) {
+		if (rtc.isTemporary()) {
+			return; // temporarily opened files do not send out events to resource task listeners
 		}
-		notifyOpenFileListeners(ofc, ci);
+		notifyResourceTaskListeners(rtc, ci);
 	}
 
-	protected /* NOT synchronized */ void notifyOpenFileListeners(ResourceTaskContext ofc, CancelIndicator ci) {
-		for (IOpenFilesListener l : listeners) {
-			l.didRefreshOpenFile(ofc, ci);
+	protected /* NOT synchronized */ void notifyResourceTaskListeners(ResourceTaskContext rtc, CancelIndicator ci) {
+		for (IResourceTaskListener l : listeners) {
+			l.didRefreshOpenFile(rtc, ci);
 		}
 	}
 }

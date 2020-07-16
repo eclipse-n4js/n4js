@@ -23,26 +23,26 @@ import org.eclipse.xtext.resource.containers.IAllContainersState;
 import com.google.common.collect.ImmutableList;
 
 /**
- * Provides visibility information across projects within the resource set of an open file context.
+ * Provides visibility information across projects within the resource set of an resource task context.
  */
 public class ResourceTaskContextAllContainerState implements IAllContainersState {
 
 	/** The open file context this container state was created for. */
-	protected final ResourceTaskContext openFileContext;
+	protected final ResourceTaskContext resourceTaskContext;
 
 	/** See {@link ResourceTaskContextAllContainerState}. */
-	public ResourceTaskContextAllContainerState(ResourceTaskContext openFileContext) {
-		this.openFileContext = openFileContext;
+	public ResourceTaskContextAllContainerState(ResourceTaskContext resourceTaskContext) {
+		this.resourceTaskContext = resourceTaskContext;
 	}
 
 	@Override
 	public boolean isEmpty(String containerHandle) {
-		return openFileContext.containerHandle2URIs.get(containerHandle).isEmpty();
+		return resourceTaskContext.containerHandle2URIs.get(containerHandle).isEmpty();
 	}
 
 	@Override
 	public List<String> getVisibleContainerHandles(String containerHandle) {
-		IProjectConfigSnapshot project = openFileContext.workspaceConfig.findProjectByName(containerHandle);
+		IProjectConfigSnapshot project = resourceTaskContext.workspaceConfig.findProjectByName(containerHandle);
 		if (project == null) {
 			return Collections.singletonList(containerHandle);
 		}
@@ -54,12 +54,12 @@ public class ResourceTaskContextAllContainerState implements IAllContainersState
 
 	@Override
 	public Collection<URI> getContainedURIs(String containerHandle) {
-		return openFileContext.containerHandle2URIs.get(containerHandle);
+		return resourceTaskContext.containerHandle2URIs.get(containerHandle);
 	}
 
 	@Override
 	public String getContainerHandle(URI uri) {
-		IProjectConfigSnapshot project = openFileContext.workspaceConfig.findProjectContaining(uri);
+		IProjectConfigSnapshot project = resourceTaskContext.workspaceConfig.findProjectContaining(uri);
 		return project != null ? project.getName() : null;
 	}
 }
