@@ -33,11 +33,13 @@ import org.eclipse.xtext.ide.server.symbol.WorkspaceSymbolService;
 import org.eclipse.xtext.util.CancelIndicator;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  *
  */
 @SuppressWarnings("restriction")
+@Singleton
 public class WorkspaceFrontend implements WorkspaceService {
 
 	@Inject
@@ -60,15 +62,9 @@ public class WorkspaceFrontend implements WorkspaceService {
 	private ILanguageServerAccess access;
 
 	/** Sets non-injectable fields */
-	public void connect(IResourceAccess _resourceAccess, ILanguageServerAccess _access) {
+	public void initialize(IResourceAccess _resourceAccess, ILanguageServerAccess _access) {
 		this.resourceAccess = _resourceAccess;
 		this.access = _access;
-	}
-
-	/** Resets non-injectable fields */
-	public void disconnect() {
-		this.resourceAccess = null;
-		this.access = null;
 	}
 
 	@Override
@@ -95,12 +91,12 @@ public class WorkspaceFrontend implements WorkspaceService {
 
 	@Override
 	public void didChangeConfiguration(DidChangeConfigurationParams params) {
-		throw new UnsupportedOperationException();
+		// nothing to do
 	}
 
 	@Override
 	public void didChangeWatchedFiles(DidChangeWatchedFilesParams params) {
-		throw new UnsupportedOperationException();
+		// nothing to do
 	}
 
 	/** Obtain the URI from the given parameters. */

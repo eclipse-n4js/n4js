@@ -100,11 +100,13 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  *
  */
 @SuppressWarnings({ "restriction", "deprecation" })
+@Singleton
 public class TextDocumentFrontend implements TextDocumentService, IIndexListener, IIssueRegistryListener,
 		IResourceTaskListener {
 
@@ -137,12 +139,16 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 
 	private ILanguageServerAccess access;
 
+	/** Sets connection to client */
+	public void connect(LanguageClient _client) {
+		this.client = _client;
+	}
+
 	/** Sets non-injectable fields */
-	public void connect(InitializeParams _initializeParams, LanguageClient _client, IResourceAccess _resourceAccess,
+	public void initialize(InitializeParams _initializeParams, IResourceAccess _resourceAccess,
 			ILanguageServerAccess _access) {
 
 		this.initializeParams = _initializeParams;
-		this.client = _client;
 		this.resourceAccess = _resourceAccess;
 		this.access = _access;
 		index.addListener(this);

@@ -75,10 +75,12 @@ import org.eclipse.xtext.ide.server.UriExtensions;
 
 import com.google.common.annotations.Beta;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  *
  */
+@Singleton
 public class LanguageServerFrontend implements TextDocumentService, WorkspaceService {
 
 	@Inject

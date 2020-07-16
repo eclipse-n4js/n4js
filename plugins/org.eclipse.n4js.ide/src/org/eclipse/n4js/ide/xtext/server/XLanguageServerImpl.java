@@ -234,6 +234,8 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 		Stopwatch sw = Stopwatch.createStarted();
 		LOG.info("Start server initialization in workspace directory " + baseDir);
+		workspaceFrontend.initialize(resourceAccess, access);
+		textDocumentFrontend.initialize(initializeParams, resourceAccess, access);
 		builderFrontend.initialize(baseDir);
 		LOG.info("Server initialization done after " + sw);
 
@@ -384,8 +386,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		this.client = client;
 		issueAcceptor.connect(client);
 		lspLogger.connect(client);
-		textDocumentFrontend.connect(initializeParams, client, resourceAccess, access);
-		workspaceFrontend.connect(resourceAccess, access);
+		textDocumentFrontend.connect(client);
 	}
 
 	/**
@@ -394,6 +395,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	public void disconnect() {
 		lspLogger.disconnect();
 		issueAcceptor.disconnect();
+		textDocumentFrontend.disconnect();
 		this.client = null;
 	}
 
