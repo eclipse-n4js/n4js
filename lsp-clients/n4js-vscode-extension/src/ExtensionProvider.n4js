@@ -209,7 +209,7 @@ async function connectToRunningN4jsLspServer(port: number, outputChannel: any+):
 
             let clientSocket = net.createConnection({port: port});
             clientSocket.on('connect', () => {
-                    outputChannel.appendLine('Connected to a already running LSP server (port=' + PORT + ')');
+                    outputChannel.appendLine('Connected to an already running LSP server (port=' + PORT + ')');
                     clearTimeout(timer);
                     resolve(clientSocket);
                 })

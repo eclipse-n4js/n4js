@@ -176,7 +176,7 @@ async function connectToRunningN4jsLspServer(port, outputChannel) {
 				port: port
 			});
 			clientSocket.on('connect', ()=>{
-				outputChannel.appendLine('Connected to a already running LSP server (port=' + PORT + ')');
+				outputChannel.appendLine('Connected to an already running LSP server (port=' + PORT + ')');
 				clearTimeout(timer);
 				resolve(clientSocket);
 			});
