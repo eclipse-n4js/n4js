@@ -67,7 +67,7 @@ import org.eclipse.n4js.cli.helper.SystemOutRedirecter;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
 import org.eclipse.n4js.ide.tests.client.IdeTestLanguageClient;
 import org.eclipse.n4js.ide.tests.client.IdeTestLanguageClient.IIdeTestLanguageClientListener;
-import org.eclipse.n4js.ide.xtext.server.LSPBuilder;
+import org.eclipse.n4js.ide.xtext.server.BuilderFrontend;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 import org.eclipse.n4js.projectDescription.ProjectType;
@@ -117,7 +117,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	/** */
 	@Inject
-	protected LSPBuilder lspBuilder;
+	protected BuilderFrontend lspBuilder;
 	/** */
 	@Inject
 	protected IResourceServiceProvider.Registry resourceServerProviderRegistry;

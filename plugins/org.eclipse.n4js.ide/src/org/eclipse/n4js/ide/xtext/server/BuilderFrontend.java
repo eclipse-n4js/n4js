@@ -41,9 +41,9 @@ import com.google.inject.Singleton;
  */
 @SuppressWarnings({ "javadoc", "restriction" })
 @Singleton
-public class LSPBuilder {
+public class BuilderFrontend {
 
-	private static final Logger LOG = Logger.getLogger(LSPBuilder.class);
+	private static final Logger LOG = Logger.getLogger(BuilderFrontend.class);
 
 	@Inject
 	private QueuedExecutorService queuedExecutorService;

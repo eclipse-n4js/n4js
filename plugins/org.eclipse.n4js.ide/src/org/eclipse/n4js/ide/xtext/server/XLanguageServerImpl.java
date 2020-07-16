@@ -165,7 +165,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	private ResourceTaskManager resourceTaskManager;
 
 	@Inject
-	private LSPBuilder lspBuilder;
+	private BuilderFrontend lspBuilder;
 
 	@Inject
 	private ConcurrentIssueRegistry issueRegistry;
@@ -1264,7 +1264,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	/**
 	 * TODO add <code>@since</code> tag
 	 */
-	public LSPBuilder getBuilder() {
+	public BuilderFrontend getBuilder() {
 		return lspBuilder;
 	}
 
