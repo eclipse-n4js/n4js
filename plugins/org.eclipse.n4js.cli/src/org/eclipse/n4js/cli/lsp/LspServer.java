@@ -13,6 +13,8 @@ package org.eclipse.n4js.cli.lsp;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintStream;
+import java.io.Writer;
 import java.net.InetSocketAddress;
 import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;
@@ -22,12 +24,17 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import org.apache.log4j.Appender;
+import org.apache.log4j.Logger;
+import org.apache.log4j.SimpleLayout;
+import org.apache.log4j.WriterAppender;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.jsonrpc.Launcher.Builder;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.n4js.cli.N4jscConsole;
 import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscOptions;
+import org.eclipse.n4js.ide.server.LspLogger;
 import org.eclipse.n4js.ide.xtext.server.ExecuteCommandParamsTypeAdapter;
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
@@ -121,9 +128,21 @@ public class LspServer {
 	}
 
 	private void setupAndRunWithSystemIO(XLanguageServerImpl languageServer, Builder<LanguageClient> lsBuilder) {
-		N4jscConsole.println(LSP_SYNC_MESSAGE + " on stdio");
+		N4jscConsole.println(LSP_SYNC_MESSAGE + " on stdio ...");
 		N4jscConsole.setSuppress(true);
-		run(languageServer, lsBuilder, System.in, System.out);
+		LspLogger lspLogger = languageServer.getLspLogger();
+		Appender lspLoggerAppender = redirectLog4jToLspLogger(lspLogger);
+		PrintStream oldStdOut = System.out;
+		PrintStream oldStdErr = System.err;
+		try (PrintStream loggingStream = new LoggingPrintStream(lspLogger)) {
+			System.setOut(loggingStream);
+			System.setErr(loggingStream);
+			run(languageServer, lsBuilder, System.in, oldStdOut);
+		} finally {
+			System.setErr(oldStdErr);
+			System.setOut(oldStdOut);
+			Logger.getRootLogger().removeAppender(lspLoggerAppender);
+		}
 	}
 
 	private void run(XLanguageServerImpl languageServer, Builder<LanguageClient> lsBuilder, InputStream in,
@@ -144,4 +163,37 @@ public class LspServer {
 		languageServer.getLSPExecutorService().shutdown();
 	}
 
+	private Appender redirectLog4jToLspLogger(LspLogger lspLogger) {
+		// logging to stdout would corrupt client/server communication, so disable existing appenders:
+		Logger.getRootLogger().removeAllAppenders();
+		// add appender redirecting output to LspLogger:
+		WriterAppender appender = new WriterAppender(new SimpleLayout(), new Writer() {
+
+			@Override
+			public void write(char[] cbuf, int off, int len) throws IOException {
+				String str = String.valueOf(cbuf, off, len);
+				if (str.endsWith("\n")) {
+					str = str.substring(0, str.length() - 1);
+				}
+				if (str.endsWith("\r")) {
+					str = str.substring(0, str.length() - 1);
+				}
+				if (str.length() > 0) {
+					lspLogger.log(str);
+				}
+			}
+
+			@Override
+			public void flush() throws IOException {
+				// ignore
+			}
+
+			@Override
+			public void close() throws IOException {
+				// ignore
+			}
+		});
+		Logger.getRootLogger().addAppender(appender);
+		return appender;
+	}
 }

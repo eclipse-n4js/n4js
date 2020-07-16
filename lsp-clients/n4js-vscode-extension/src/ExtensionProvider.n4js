@@ -52,17 +52,15 @@ export function getActivate(vscode: any+, vscodeLC: any+): any {
 
             let writer: Object;
             let reader: Object;
-            let socket = await connectToRunningN4jsLspServer(PORT, outputChannel);
+            const socket = await connectToRunningN4jsLspServer(PORT, outputChannel);
             if (socket) {
-                outputChannel.appendLine('Connected to an already running LSP server (port=' + PORT + ').');
                 writer = socket;
                 reader = socket;
             } else {
-                outputChannel.appendLine('Starting new N4JS LSP server (port=' + PORT + ') ...');
-                socket = await startN4jsLspServerAndConnect(PORT, vscode, outputChannel); // will set n4jscProcess
-                outputChannel.appendLine('Connected to LSP server.');
-                writer = socket;
-                reader = socket;
+                outputChannel.appendLine('Start new N4JS LSP server.');
+                await startN4jsLspServerAndConnect(PORT, vscode, outputChannel); // will set n4jscProcess
+                writer = n4jscProcess.stdin;
+                reader = n4jscProcess.stdout;
             }
 
             let result = {
@@ -165,13 +163,13 @@ function getJavaVMXmxSetting(vscode: any+): string {
 }
 
 
-async function startN4jsLspServerAndConnect(port: number, vscode: any+, outputChannel: any+): net.Socket {
+async function startN4jsLspServerAndConnect(port: number, vscode: any+, outputChannel: any+): void {
     let logFn = (text: string) => outputChannel.appendLine(text) as {function(string)};
     await jreProvider.ensureJRE(logFn);
 
     const env = Object.assign({ NODEJS_PATH: process.argv[0] }, process.env);
     const spawnOptions: childProcess.SpawnOptions = { env: env };
-    const n4jscOptions: ~n4jscli.Options = { port: port, stdio: false };
+    const n4jscOptions: ~n4jscli.Options = { stdio: true };
     const vmOptions: ~n4jscli.VmOptions = { xmx: getJavaVMXmxSetting(vscode) };
 
     // The server is started as a separate process
@@ -197,9 +195,7 @@ async function startN4jsLspServerAndConnect(port: number, vscode: any+, outputCh
         n4jscProcess.stdout.on('data', waitForListenMsg);
     });
     await serverReady;
-
-    let result = await connectToRunningN4jsLspServer(port, outputChannel);
-    return result;
+    outputChannel.appendLine('Connected to LSP server');
 }
 
 async function connectToRunningN4jsLspServer(port: number, outputChannel: any+): net.Socket {
@@ -213,6 +209,7 @@ async function connectToRunningN4jsLspServer(port: number, outputChannel: any+):
 
             let clientSocket = net.createConnection({port: port});
             clientSocket.on('connect', () => {
+                    outputChannel.appendLine('Connected to an already running LSP server (port=' + PORT + ')');
                     clearTimeout(timer);
                     resolve(clientSocket);
                 })
