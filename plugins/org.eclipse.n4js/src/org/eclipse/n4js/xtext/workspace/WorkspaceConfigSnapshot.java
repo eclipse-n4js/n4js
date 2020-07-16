@@ -95,8 +95,8 @@ public class WorkspaceConfigSnapshot implements IWorkspaceConfigSnapshot {
 	public WorkspaceConfigSnapshot update(Iterable<? extends IProjectConfigSnapshot> changedProjects,
 			Iterable<String> removedProjects) {
 
-		Map<String, IProjectConfigSnapshot> lookupName2Project = new HashMap<>();
-		Map<URI, IProjectConfigSnapshot> lookupSourceFolderPath2Project = new HashMap<>();
+		Map<String, IProjectConfigSnapshot> lookupName2Project = new HashMap<>(name2Project);
+		Map<URI, IProjectConfigSnapshot> lookupSourceFolderPath2Project = new HashMap<>(sourceFolderPath2Project);
 		updateLookupMaps(lookupName2Project, lookupSourceFolderPath2Project, changedProjects, removedProjects);
 		return new WorkspaceConfigSnapshot(path, ImmutableMap.copyOf(lookupName2Project),
 				ImmutableMap.copyOf(lookupSourceFolderPath2Project));

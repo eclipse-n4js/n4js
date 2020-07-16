@@ -315,13 +315,14 @@ public class ResourceTaskManager {
 			String containerHandle = entry.getKey();
 			ResourceDescriptionsData newData = entry.getValue();
 			persistedStateDescriptions.put(containerHandle, newData.copy());
+			newContainerHandle2URIs.removeAll(containerHandle);
 			newContainerHandle2URIs.putAll(containerHandle, newData.getAllURIs());
 		}
 		for (String removedContainerHandle : removedContainerHandles) {
 			persistedStateDescriptions.remove(removedContainerHandle);
 			newContainerHandle2URIs.removeAll(removedContainerHandle);
 		}
-		containerHandle2URIs = ImmutableSetMultimap.copyOf(containerHandle2URIs);
+		containerHandle2URIs = ImmutableSetMultimap.copyOf(newContainerHandle2URIs);
 		workspaceConfig = newWorkspaceConfig;
 
 		// update persisted state instances in the context of each open file
