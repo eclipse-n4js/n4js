@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.xtext.server;
+package org.eclipse.n4js.ide.xtext.server.build;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,12 +20,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.ide.xtext.server.ProjectStatePersister.ProjectState;
-import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest;
-import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
-import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
-import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIndex;
-import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
+import org.eclipse.n4js.ide.xtext.server.LSPIssue;
+import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
+import org.eclipse.n4js.ide.xtext.server.ResourceChangeSet;
+import org.eclipse.n4js.ide.xtext.server.build.ProjectStatePersister.ProjectState;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
@@ -64,7 +62,7 @@ public class ProjectStateManager {
 
 	/** Index for all projects */
 	@Inject
-	protected ConcurrentIndex index;
+	protected ConcurrentIndex fullIndex;
 
 	/** Issues registry for all projects */
 	@Inject
@@ -256,12 +254,12 @@ public class ProjectStateManager {
 
 	/** Getter. */
 	public ResourceDescriptionsData getIndex() {
-		return index.getProjectIndex(projectConfig.getName());
+		return fullIndex.getProjectIndex(projectConfig.getName());
 	}
 
 	/** Setter. */
 	public void setIndex(ResourceDescriptionsData index) {
-		this.index.setProjectIndex(projectConfig.getName(), index);
+		this.fullIndex.setProjectIndex(projectConfig.getName(), index);
 	}
 
 	/** Getter. */

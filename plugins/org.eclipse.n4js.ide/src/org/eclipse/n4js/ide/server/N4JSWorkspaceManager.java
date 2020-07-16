@@ -13,8 +13,8 @@ package org.eclipse.n4js.ide.server;
 import java.util.Collection;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.ide.xtext.server.ProjectBuilder;
-import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
+import org.eclipse.n4js.ide.xtext.server.build.ProjectBuilder;
+import org.eclipse.n4js.ide.xtext.server.build.XWorkspaceManager;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 
 import com.google.inject.Singleton;

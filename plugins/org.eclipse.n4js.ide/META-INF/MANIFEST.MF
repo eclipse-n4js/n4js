@@ -39,7 +39,6 @@ Export-Package: org.eclipse.n4js.ide,
  org.eclipse.n4js.ide.server.commands,
  org.eclipse.n4js.ide.server.hover,
  org.eclipse.n4js.ide.xtext.server,
- org.eclipse.n4js.ide.xtext.server.build,
- org.eclipse.n4js.ide.xtext.server.concurrent
+ org.eclipse.n4js.ide.xtext.server.build
 Automatic-Module-Name: org.eclipse.n4js.ide
 Bundle-RequiredExecutionEnvironment: JavaSE-11

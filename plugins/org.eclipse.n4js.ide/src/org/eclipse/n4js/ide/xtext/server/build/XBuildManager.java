@@ -5,7 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  */
-package org.eclipse.n4js.ide.xtext.server;
+package org.eclipse.n4js.ide.xtext.server.build;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,11 +22,9 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ide.server.LspLogger;
-import org.eclipse.n4js.ide.xtext.server.ParallelBuildManager.ParallelJob;
+import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo;
 import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo.ProjectBuildOrderIterator;
-import org.eclipse.n4js.ide.xtext.server.build.BuildCanceledException;
-import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
-import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIndex;
+import org.eclipse.n4js.ide.xtext.server.build.ParallelBuildManager.ParallelJob;
 import org.eclipse.n4js.xtext.workspace.IProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
@@ -135,11 +133,6 @@ public class XBuildManager {
 
 		workspaceChanges.merge(notifiedChanges);
 		return getIncrementalGenerateBuildable(workspaceChanges);
-	}
-
-	/** Returns the index. */
-	public ConcurrentIndex getIndex() {
-		return fullIndex;
 	}
 
 	/**

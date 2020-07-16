@@ -25,8 +25,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.ZipException;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.ide.xtext.server.ProjectStatePersister.ProjectState;
+import org.eclipse.n4js.ide.xtext.server.build.HashedFileContent;
+import org.eclipse.n4js.ide.xtext.server.build.ProjectStatePersister;
 import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
+import org.eclipse.n4js.ide.xtext.server.build.ProjectStatePersister.ProjectState;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.xtext.builder.builderState.BuilderStateFactory;
 import org.eclipse.xtext.builder.builderState.impl.EObjectDescriptionImpl;

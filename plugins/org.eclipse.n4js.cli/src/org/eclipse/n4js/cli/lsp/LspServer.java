@@ -141,7 +141,7 @@ public class LspServer {
 		Futures.getUnchecked(future);
 
 		N4jscConsole.println("Shutdown connection to LSP client");
-		languageServer.getLSPExecutorService().shutdown();
+		languageServer.getQueuedExecutorService().shutdown();
 	}
 
 }

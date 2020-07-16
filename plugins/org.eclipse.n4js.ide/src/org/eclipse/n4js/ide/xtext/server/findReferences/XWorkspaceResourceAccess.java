@@ -14,10 +14,10 @@ import java.util.concurrent.CompletableFuture;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.n4js.ide.xtext.server.FutureUtil;
+import org.eclipse.n4js.ide.xtext.server.ResourceTaskContext;
+import org.eclipse.n4js.ide.xtext.server.ResourceTaskManager;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
-import org.eclipse.n4js.ide.xtext.server.concurrent.FutureUtil;
-import org.eclipse.n4js.ide.xtext.server.openfiles.ResourceTaskContext;
-import org.eclipse.n4js.ide.xtext.server.openfiles.ResourceTaskManager;
 import org.eclipse.xtext.findReferences.IReferenceFinder;
 import org.eclipse.xtext.util.Exceptions;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;

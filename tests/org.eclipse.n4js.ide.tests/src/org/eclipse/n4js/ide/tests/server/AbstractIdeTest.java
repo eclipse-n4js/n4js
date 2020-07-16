@@ -67,9 +67,9 @@ import org.eclipse.n4js.cli.helper.SystemOutRedirecter;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
 import org.eclipse.n4js.ide.tests.client.IdeTestLanguageClient;
 import org.eclipse.n4js.ide.tests.client.IdeTestLanguageClient.IIdeTestLanguageClientListener;
-import org.eclipse.n4js.ide.xtext.server.BuilderFrontend;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
+import org.eclipse.n4js.ide.xtext.server.build.BuilderFrontend;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.xtext.LanguageInfo;
@@ -157,7 +157,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	final public void deleteTestProject() {
 		// clear thread pools
 		languageServer.shutdown().join();
-		languageServer.getLSPExecutorService().shutdown();
+		languageServer.getQueuedExecutorService().shutdown();
 		// clear the state related to the test
 		testWorkspaceManager.deleteTestFromDiskIfCreated();
 		languageClient.clearLogMessages();
@@ -962,7 +962,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	/** Reads the resource description of the source file with the given URI from the index. */
 	protected IResourceDescription getResourceDescriptionFromIndex(String projectName, FileURI fileURI) {
-		ResourceDescriptionsData index = languageServer.getBuilder().getIndex().getProjectIndex(projectName);
+		ResourceDescriptionsData index = languageServer.getConcurrentIndex().getProjectIndex(projectName);
 		return index.getResourceDescription(fileURI.toURI());
 	}
 

@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.xtext.server.openfiles;
+package org.eclipse.n4js.ide.xtext.server;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,9 +25,7 @@ import java.util.function.BiFunction;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
-import org.eclipse.n4js.ide.xtext.server.XDocument;
-import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
-import org.eclipse.n4js.ide.xtext.server.concurrent.QueuedExecutorService;
+import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIssueRegistry;
 import org.eclipse.n4js.ide.xtext.server.util.CancelIndicatorUtil;
 import org.eclipse.n4js.xtext.workspace.IProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.IWorkspaceConfigSnapshot;

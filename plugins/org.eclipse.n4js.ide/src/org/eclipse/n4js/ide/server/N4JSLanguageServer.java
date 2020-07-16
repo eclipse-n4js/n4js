@@ -16,10 +16,10 @@ import java.util.concurrent.CompletableFuture;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
+import org.eclipse.n4js.ide.xtext.server.ResourceTaskContext;
 import org.eclipse.n4js.ide.xtext.server.TextDocumentFrontend;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
-import org.eclipse.n4js.ide.xtext.server.openfiles.ResourceTaskContext;
 import org.eclipse.xtext.util.CancelIndicator;
 
 import com.google.common.base.Optional;

@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.xtext.server;
+package org.eclipse.n4js.ide.xtext.server.build;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +22,8 @@ import org.eclipse.lsp4j.DidSaveTextDocumentParams;
 import org.eclipse.lsp4j.FileChangeType;
 import org.eclipse.lsp4j.FileEvent;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
-import org.eclipse.n4js.ide.xtext.server.XBuildManager.XBuildable;
-import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIndex;
-import org.eclipse.n4js.ide.xtext.server.concurrent.QueuedExecutorService;
+import org.eclipse.n4js.ide.xtext.server.QueuedExecutorService;
+import org.eclipse.n4js.ide.xtext.server.build.XBuildManager.XBuildable;
 import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -67,11 +66,6 @@ public class BuilderFrontend {
 	/** @return a workspace relative URI for a given URI */
 	public URI makeWorkspaceRelative(URI uri) {
 		return workspaceManager.makeWorkspaceRelative(uri);
-	}
-
-	/** Returns the index. */
-	public ConcurrentIndex getIndex() {
-		return buildManager.getIndex();
 	}
 
 	/**

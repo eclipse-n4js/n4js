@@ -51,8 +51,8 @@ import org.eclipse.n4js.ide.server.codeActions.ICodeActionAcceptor;
 import org.eclipse.n4js.ide.server.codeActions.N4JSCodeActionService;
 import org.eclipse.n4js.ide.server.codeActions.N4JSSourceActionProvider;
 import org.eclipse.n4js.ide.xtext.server.ExecuteCommandParamsDescriber;
-import org.eclipse.n4js.ide.xtext.server.XBuildManager;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
+import org.eclipse.n4js.ide.xtext.server.build.XBuildManager;
 import org.eclipse.n4js.json.ide.codeActions.JSONCodeActionService;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.projectModel.locations.FileURI;
@@ -339,7 +339,7 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 			ILanguageServerAccess access,
 			CancelIndicator cancelIndicator) {
 
-		lspServer.getLSPExecutorService().submitAndCancelPrevious(XBuildManager.class, "InstallNpm", (ci) -> {
+		lspServer.getQueuedExecutorService().submitAndCancelPrevious(XBuildManager.class, "InstallNpm", (ci) -> {
 			// FIXME: Use CliTools in favor of npmCli
 			NPMVersionRequirement versionRequirement = semverHelper.parse(version);
 			if (versionRequirement == null) {

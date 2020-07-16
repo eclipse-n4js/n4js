@@ -83,11 +83,10 @@ import org.eclipse.lsp4j.services.TextDocumentService;
 import org.eclipse.lsp4j.services.WorkspaceService;
 import org.eclipse.n4js.ide.server.HeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.ide.server.LspLogger;
-import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
-import org.eclipse.n4js.ide.xtext.server.concurrent.QueuedExecutorService;
+import org.eclipse.n4js.ide.xtext.server.build.BuilderFrontend;
+import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIndex;
+import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIssueRegistry;
 import org.eclipse.n4js.ide.xtext.server.findReferences.XWorkspaceResourceAccess;
-import org.eclipse.n4js.ide.xtext.server.openfiles.ResourceTaskContext;
-import org.eclipse.n4js.ide.xtext.server.openfiles.ResourceTaskManager;
 import org.eclipse.xtext.findReferences.IReferenceFinder.IResourceAccess;
 import org.eclipse.xtext.ide.server.ICapabilitiesContributor;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
@@ -149,7 +148,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	private WorkspaceFrontend workspaceFrontend;
 
 	@Inject
-	private QueuedExecutorService lspExecutorService;
+	private QueuedExecutorService queuedExecutorService;
 
 	@Inject
 	private WorkspaceSymbolService workspaceSymbolService;
@@ -168,6 +167,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Inject
 	private ILanguageServerShutdownAndExitHandler shutdownAndExitHandler;
+
+	@Inject
+	private ConcurrentIndex fullIndex;
 
 	@Inject
 	private ConcurrentIssueRegistry issueRegistry;
@@ -774,9 +776,15 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	/**
 	 * Getter
 	 */
-	public QueuedExecutorService getLSPExecutorService() {
-		return lspExecutorService;
+	public QueuedExecutorService getQueuedExecutorService() {
+		return queuedExecutorService;
+	}
 
+	/**
+	 * Getter
+	 */
+	public ConcurrentIndex getConcurrentIndex() {
+		return fullIndex;
 	}
 
 	/** Blocks until the lsp client sent the initialized message */
@@ -786,7 +794,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	/** Blocks until all requests of the language server finished */
 	public void joinServerRequests() {
-		lspExecutorService.join();
+		queuedExecutorService.join();
 		builderFrontend.joinPersister();
 	}
 

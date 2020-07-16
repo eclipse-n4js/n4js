@@ -70,7 +70,7 @@ import org.eclipse.lsp4j.WorkspaceSymbolParams;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.services.TextDocumentService;
 import org.eclipse.lsp4j.services.WorkspaceService;
-import org.eclipse.n4js.ide.xtext.server.concurrent.QueuedExecutorService;
+import org.eclipse.n4js.ide.xtext.server.build.BuilderFrontend;
 import org.eclipse.xtext.ide.server.UriExtensions;
 
 import com.google.common.annotations.Beta;

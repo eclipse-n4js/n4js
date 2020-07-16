@@ -19,6 +19,7 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 import org.apache.log4j.Level
+import org.eclipse.n4js.ide.xtext.server.QueuedExecutorService
 import org.eclipse.xtext.ide.server.ServerModule
 import org.eclipse.xtext.testing.logging.LoggingTester
 import org.junit.After
@@ -26,7 +27,6 @@ import org.junit.Before
 import org.junit.Test
 
 import static org.junit.Assert.*
-import org.eclipse.n4js.ide.xtext.server.concurrent.QueuedExecutorService
 
 /**
  * Ported from Xtext's RequestManager tests.
