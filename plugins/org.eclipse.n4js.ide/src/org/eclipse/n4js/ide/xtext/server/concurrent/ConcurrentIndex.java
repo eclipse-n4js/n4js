@@ -35,7 +35,7 @@ import com.google.inject.Singleton;
 
 /**
  * A concurrent map of container handles to {@link ResourceDescriptionsData}, similar to using a {@link ConcurrentMap}
- * but with some added functionality such as tracking visible containers and support for {@link IChunkedIndexListener
+ * but with some added functionality such as tracking visible containers and support for {@link IIndexListener
  * listeners}.
  * <p>
  * IMPORTANT: just as {@link ConcurrentMap}, this class does not ensure the thread-safety of the values (i.e. the
@@ -54,10 +54,10 @@ public class ConcurrentIndex {
 	/** A snapshot of the current workspace configuration. */
 	protected IWorkspaceConfigSnapshot workspaceConfig = null;
 	/** Registered listeners. */
-	protected final List<IChunkedIndexListener> listeners = new CopyOnWriteArrayList<>();
+	protected final List<IIndexListener> listeners = new CopyOnWriteArrayList<>();
 
 	/** Listens for changes in a {@link ConcurrentIndex}. */
-	public interface IChunkedIndexListener {
+	public interface IIndexListener {
 		/** Invoked when the index has changed. */
 		public void onIndexChanged(
 				IWorkspaceConfigSnapshot newWorkspaceConfig,
@@ -166,12 +166,12 @@ public class ConcurrentIndex {
 	}
 
 	/** Adds the given listener. */
-	public void addListener(IChunkedIndexListener listener) {
+	public void addListener(IIndexListener listener) {
 		listeners.add(listener);
 	}
 
 	/** Removes the given listener. */
-	public void removeListener(IChunkedIndexListener listener) {
+	public void removeListener(IIndexListener listener) {
 		listeners.remove(listener);
 	}
 
@@ -181,7 +181,7 @@ public class ConcurrentIndex {
 			ImmutableMap<String, ? extends ResourceDescriptionsData> changedDescriptions,
 			ImmutableList<? extends IProjectConfigSnapshot> changedVisibleContainers,
 			ImmutableSet<String> removedContainers) {
-		for (IChunkedIndexListener l : listeners) {
+		for (IIndexListener l : listeners) {
 			l.onIndexChanged(newWorkspaceConfig, changedDescriptions, changedVisibleContainers, removedContainers);
 		}
 	}

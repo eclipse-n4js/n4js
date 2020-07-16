@@ -32,6 +32,7 @@ import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
 import org.eclipse.n4js.ide.xtext.server.DiagnosticIssueConverter;
 import org.eclipse.n4js.ide.xtext.server.LSPIssue;
 import org.eclipse.n4js.ide.xtext.server.LSPIssueConverter;
+import org.eclipse.n4js.ide.xtext.server.TextDocumentFrontend;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 import org.eclipse.n4js.ide.xtext.server.openfiles.ResourceTaskManager;
@@ -188,6 +189,9 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 
 	@Inject
 	private XLanguageServerImpl languageServer;
+
+	@Inject
+	private TextDocumentFrontend textDocumentFrontend;
 
 	@Inject
 	private DiagnosticIssueConverter diagnosticIssueConverter;
@@ -366,7 +370,7 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 		Diagnostic diagnostic = diagnosticIssueConverter.toDiagnostic(issue);
 		CodeActionContext context = new CodeActionContext(Collections.singletonList(diagnostic));
 		CodeActionParams codeActionParams = new CodeActionParams(docIdentifier, diagnostic.getRange(), context);
-		Options newOptions = languageServer.toOptions(codeActionParams, doc, res, cancelIndicator);
+		Options newOptions = textDocumentFrontend.toOptions(codeActionParams, doc, res, cancelIndicator);
 		return newOptions;
 	}
 
