@@ -252,13 +252,12 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		this.initializeParams = params;
 
 		issueRegistry.addListener(this);
-		resourceTaskManager.setIssueRegistry(issueRegistry);
 		resourceTaskManager.addListener(this);
 		lspBuilder.getIndex().addListener(this);
 
 		Stopwatch sw = Stopwatch.createStarted();
 		LOG.info("Start server initialization in workspace directory " + baseDir);
-		lspBuilder.initialize(baseDir, issueRegistry);
+		lspBuilder.initialize(baseDir);
 		LOG.info("Server initialization done after " + sw);
 
 		initializeResult = new InitializeResult();
@@ -463,7 +462,8 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	public void didChange(DidChangeTextDocumentParams params) {
 		VersionedTextDocumentIdentifier textDocument = params.getTextDocument();
 		URI uri = getURI(textDocument);
-		resourceTaskManager.changeSourceTextOfExistingContext(uri, textDocument.getVersion(), params.getContentChanges());
+		resourceTaskManager.changeSourceTextOfExistingContext(uri, textDocument.getVersion(),
+				params.getContentChanges());
 	}
 
 	@Override
@@ -984,7 +984,8 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	/**
 	 * Compute the rename edits. Executed in a read request.
 	 */
-	protected WorkspaceEdit rename(ResourceTaskContext ofc, RenameParams renameParams, CancelIndicator cancelIndicator) {
+	protected WorkspaceEdit rename(ResourceTaskContext ofc, RenameParams renameParams,
+			CancelIndicator cancelIndicator) {
 		URI uri = ofc.getURI();
 
 		IResourceServiceProvider resourceServiceProvider = getResourceServiceProvider(uri);
@@ -1028,7 +1029,8 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	/**
 	 * Prepare the rename operation. Executed in a read request.
 	 */
-	protected Either<Range, PrepareRenameResult> prepareRename(ResourceTaskContext ofc, TextDocumentPositionParams params,
+	protected Either<Range, PrepareRenameResult> prepareRename(ResourceTaskContext ofc,
+			TextDocumentPositionParams params,
 			CancelIndicator cancelIndicator) {
 		URI uri = ofc.getURI();
 		IRenameService2 renameService = getService(uri, IRenameService2.class);

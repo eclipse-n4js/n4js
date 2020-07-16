@@ -74,15 +74,6 @@ public class ResourceTaskManager {
 		public void didRefreshOpenFile(ResourceTaskContext rtc, CancelIndicator ci);
 	}
 
-	public ConcurrentIssueRegistry getIssueRegistry() {
-		return issueRegistry; // no need for synchronization
-	}
-
-	/** Iff set to a non-<code>null</code> registry, open files will register their issues with that registry. */
-	public synchronized void setIssueRegistry(ConcurrentIssueRegistry issueRegistry) {
-		this.issueRegistry = issueRegistry;
-	}
-
 	public synchronized boolean isOpen(URI uri) {
 		return uri2RTCs.containsKey(uri);
 	}

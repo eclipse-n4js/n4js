@@ -106,7 +106,7 @@ public class ProjectBuilder {
 	private ConcurrentIndex fullIndex;
 
 	@Inject
-	private ConcurrentIssueRegistry issueRegistry; // FIXME: Check lifecycle
+	private ConcurrentIssueRegistry issueRegistry;
 
 	private XtextResourceSet resourceSet;
 

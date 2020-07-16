@@ -80,6 +80,9 @@ public class ResourceTaskContext {
 	@Inject
 	private OperationCanceledManager operationCanceledManager;
 
+	@Inject
+	private ConcurrentIssueRegistry issueRegistry;
+
 	/** The {@link ResourceTaskManager} that created this instance. */
 	protected ResourceTaskManager parent;
 	/** URI of the resource represented by this {@link ResourceTaskContext} (i.e. URI of the main resource). */
@@ -296,10 +299,7 @@ public class ResourceTaskContext {
 			return; // temporarily opened files do not contribute to the global issue registry
 		}
 		List<LSPIssue> lspIssues = lspIssueConverter.convertToLSPIssues(mainResource, issues, cancelIndicator);
-		ConcurrentIssueRegistry issueRegistry = parent.getIssueRegistry();
-		if (issueRegistry != null) {
-			issueRegistry.setIssuesOfDirtyState(mainURI, lspIssues);
-		}
+		issueRegistry.setIssuesOfDirtyState(mainURI, lspIssues);
 	}
 
 	protected void updateSharedDirtyState() {

@@ -24,7 +24,6 @@ import org.eclipse.lsp4j.FileEvent;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.n4js.ide.xtext.server.XBuildManager.XBuildable;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIndex;
-import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
 import org.eclipse.n4js.ide.xtext.server.concurrent.QueuedExecutorService;
 import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
@@ -61,8 +60,6 @@ public class LSPBuilder {
 	@Inject
 	private XBuildManager buildManager;
 
-	private ConcurrentIssueRegistry issueRegistry;
-
 	public URI getBaseDir() {
 		return workspaceManager.getBaseDir();
 	}
@@ -83,12 +80,7 @@ public class LSPBuilder {
 	 * @param newBaseDir
 	 *            the location
 	 */
-	@SuppressWarnings("hiding")
-	public void initialize(URI newBaseDir, ConcurrentIssueRegistry issueRegistry) {
-		if (this.issueRegistry != null && issueRegistry != this.issueRegistry) {
-			throw new IllegalArgumentException("the issue registry must not be changed");
-		}
-		this.issueRegistry = issueRegistry;
+	public void initialize(URI newBaseDir) {
 		workspaceManager.initialize(newBaseDir);
 	}
 
