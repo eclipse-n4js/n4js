@@ -141,6 +141,7 @@ public class ProjectStateManager {
 				}
 			}
 			setIndex(projectState.index);
+			setFileMappings(projectState.fileMappings);
 			setValidationIssues(projectState.validationIssues);
 		}
 
