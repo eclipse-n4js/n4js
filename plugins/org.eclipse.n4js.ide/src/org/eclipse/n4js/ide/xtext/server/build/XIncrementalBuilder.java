@@ -45,14 +45,10 @@ public class XIncrementalBuilder {
 	 * Cancellation behavior: does not throw exception but returns with a partial result.
 	 */
 	public XBuildResult build(XBuildRequest request, IResourceClusteringPolicy clusteringPolicy) {
-
-		ResourceDescriptionsData resDescrsCopy = request.getState().getResourceDescriptions().copy();
-		XSource2GeneratedMapping fileMappingsCopy = request.getState().getFileMappings().copy();
-		XIndexState oldState = new XIndexState(resDescrsCopy, fileMappingsCopy);
-
+		ResourceDescriptionsData indexCopy = request.getIndex().copy();
 		XtextResourceSet resourceSet = request.getResourceSet();
 		XBuildContext context = new XBuildContext(languagesRegistry::getResourceServiceProvider,
-				resourceSet, oldState, clusteringPolicy, request.getCancelIndicator());
+				resourceSet, indexCopy, clusteringPolicy, request.getCancelIndicator());
 
 		XStatefulIncrementalBuilder builder = provider.get();
 		builder.setContext(context);

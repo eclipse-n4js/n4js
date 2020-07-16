@@ -19,6 +19,7 @@ import org.eclipse.n4js.ide.xtext.server.LSPIssue;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.XtextResourceSet;
+import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.UriUtil;
 
@@ -40,7 +41,11 @@ public class XBuildRequest {
 
 	private Collection<IResourceDescription.Delta> externalDeltas = new ArrayList<>();
 
-	private XIndexState state = new XIndexState();
+	// private XIndexState state = new XIndexState();
+
+	private ResourceDescriptionsData index;
+
+	private XSource2GeneratedMapping fileMappings;
 
 	private boolean doGenerate = true;
 
@@ -210,13 +215,23 @@ public class XBuildRequest {
 	}
 
 	/** Getter. */
-	public XIndexState getState() {
-		return this.state;
+	public ResourceDescriptionsData getIndex() {
+		return index;
 	}
 
 	/** Setter. */
-	public void setState(XIndexState state) {
-		this.state = state;
+	public void setIndex(ResourceDescriptionsData index) {
+		this.index = index;
+	}
+
+	/** Getter. */
+	public XSource2GeneratedMapping getFileMappings() {
+		return fileMappings;
+	}
+
+	/** Setter. */
+	public void setFileMappings(XSource2GeneratedMapping fileMappings) {
+		this.fileMappings = fileMappings;
 	}
 
 	/** Combines {@link #isValidatorEnabled()} and {@link #isIndexOnly()}. */

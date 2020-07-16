@@ -13,26 +13,35 @@ package org.eclipse.n4js.ide.xtext.server.build;
 import java.util.List;
 
 import org.eclipse.xtext.resource.IResourceDescription;
+import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 /**
  * The result of the build. Encapsulates the new index state and the list of changes.
  */
 public class XBuildResult {
-	private final XIndexState indexState;
-
+	private final ResourceDescriptionsData index;
+	private final XSource2GeneratedMapping fileMappings;
 	private final List<IResourceDescription.Delta> affectedResources;
 
 	/** Constructor. */
-	public XBuildResult(XIndexState indexState, List<IResourceDescription.Delta> affectedResources) {
+	public XBuildResult(ResourceDescriptionsData index, XSource2GeneratedMapping fileMappings,
+			List<IResourceDescription.Delta> affectedResources) {
+
 		super();
-		this.indexState = indexState;
+		this.index = index;
+		this.fileMappings = fileMappings;
 		this.affectedResources = affectedResources;
 	}
 
 	/** Getter. */
-	public XIndexState getIndexState() {
-		return this.indexState;
+	public ResourceDescriptionsData getIndex() {
+		return this.index;
+	}
+
+	/** Getter. */
+	public XSource2GeneratedMapping getFileMappings() {
+		return this.fileMappings;
 	}
 
 	/** @return all deltas of resources that have been built. */
@@ -44,7 +53,8 @@ public class XBuildResult {
 	public int hashCode() {
 		int prime = 31;
 		int result = 1;
-		result = prime * result + ((this.indexState == null) ? 0 : this.indexState.hashCode());
+		result = prime * result + ((this.index == null) ? 0 : this.index.hashCode());
+		result = prime * result + ((this.fileMappings == null) ? 0 : this.fileMappings.hashCode());
 		return prime * result + ((this.affectedResources == null) ? 0 : this.affectedResources.hashCode());
 	}
 
@@ -57,10 +67,15 @@ public class XBuildResult {
 		if (getClass() != obj.getClass())
 			return false;
 		XBuildResult other = (XBuildResult) obj;
-		if (this.indexState == null) {
-			if (other.indexState != null)
+		if (this.index == null) {
+			if (other.index != null)
 				return false;
-		} else if (!this.indexState.equals(other.indexState))
+		} else if (!this.index.equals(other.index))
+			return false;
+		if (this.fileMappings == null) {
+			if (other.fileMappings != null)
+				return false;
+		} else if (!this.fileMappings.equals(other.fileMappings))
 			return false;
 		if (this.affectedResources == null) {
 			if (other.affectedResources != null)
@@ -73,7 +88,8 @@ public class XBuildResult {
 	@Override
 	public String toString() {
 		ToStringBuilder b = new ToStringBuilder(this);
-		b.add("indexState", this.indexState);
+		b.add("index", this.index);
+		b.add("fileMappings", this.fileMappings);
 		b.add("affectedResources", this.affectedResources);
 		return b.toString();
 	}

@@ -96,7 +96,7 @@ public class XStatefulIncrementalBuilder {
 		List<IResourceDescription.Delta> allProcessedDeltas = new ArrayList<>();
 
 		try {
-			XSource2GeneratedMapping newSource2GeneratedMapping = this.request.getState().getFileMappings();
+			XSource2GeneratedMapping newSource2GeneratedMapping = request.getFileMappings();
 
 			Set<URI> unloaded = new HashSet<>();
 			for (URI deleted : request.getDeletedFiles()) {
@@ -112,7 +112,7 @@ public class XStatefulIncrementalBuilder {
 
 			List<Delta> allProcessedAndExternalDeltas = new ArrayList<>(request.getExternalDeltas());
 
-			ResourceDescriptionsData oldIndex = context.getOldState().getResourceDescriptions();
+			ResourceDescriptionsData oldIndex = context.getOldIndex();
 			Set<URI> remainingURIs = new LinkedHashSet<>(oldIndex.getAllURIs()); // note: creating a copy!
 
 			XIndexer.XIndexResult result = indexer.computeAndIndexDeletedAndChanged(request, context);
@@ -175,7 +175,7 @@ public class XStatefulIncrementalBuilder {
 			// (note: do not handle OperationCanceledException this way; it would break the builder, see GH-1775)
 		}
 
-		return new XBuildResult(this.request.getState(), allProcessedDeltas);
+		return new XBuildResult(request.getIndex(), request.getFileMappings(), allProcessedDeltas);
 	}
 
 	private void removeGeneratedFiles(URI source, XSource2GeneratedMapping source2GeneratedMapping) {
@@ -224,8 +224,7 @@ public class XStatefulIncrementalBuilder {
 				result.getNewIndex().removeDescription(source);
 				request.setResultIssues(request.getProjectName(), source, Collections.emptyList());
 				removeGeneratedFiles(source, newSource2GeneratedMapping);
-				IResourceDescription old = context.getOldState().getResourceDescriptions()
-						.getResourceDescription(loadResult.uri);
+				IResourceDescription old = context.getOldIndex().getResourceDescription(loadResult.uri);
 				return manager.createDelta(old, null);
 			}
 			Throwables.throwIfUnchecked(loadResult.throwable);
@@ -259,7 +258,7 @@ public class XStatefulIncrementalBuilder {
 			}
 		}
 
-		IResourceDescription old = context.getOldState().getResourceDescriptions().getResourceDescription(source);
+		IResourceDescription old = context.getOldIndex().getResourceDescription(source);
 		return manager.createDelta(old, copiedDescription);
 	}
 

@@ -24,7 +24,6 @@ import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterValidateListener;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
 import org.eclipse.n4js.ide.xtext.server.build.XIncrementalBuilder;
-import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
 import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIndex;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
@@ -47,8 +46,8 @@ import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.util.UriUtil;
 import org.eclipse.xtext.workspace.ProjectConfigAdapter;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSortedSet;
-import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -92,9 +91,7 @@ public class ProjectBuilder {
 	@Inject
 	protected OperationCanceledManager operationCanceledManager;
 
-	/**
-	 * The map for this project's resource set.
-	 */
+	/** The map for this project's resource set. */
 	@Inject
 	protected ProjectUriResourceMap uriResourceMap;
 
@@ -126,7 +123,8 @@ public class ProjectBuilder {
 	public void initialize(ProjectDescription description, XIProjectConfig projectConfig) {
 		this.projectDescription = description;
 		this.projectConfig = projectConfig;
-		this.resourceSet = createNewResourceSet(new XIndexState().getResourceDescriptions());
+		this.projectStateManager.initialize(projectConfig);
+		this.resourceSet = createNewResourceSet(projectStateManager.getIndex());
 	}
 
 	/**
@@ -145,14 +143,14 @@ public class ProjectBuilder {
 	 * </ul>
 	 */
 	public XBuildResult doInitialBuild(CancelIndicator cancelIndicator) {
-		ResourceChangeSet changeSet = projectStateManager.readProjectState(projectConfig);
+		ResourceChangeSet changeSet = projectStateManager.readProjectState();
 		XBuildResult result = doBuild(
 				changeSet.getModified(), changeSet.getDeleted(), Collections.emptyList(), false, cancelIndicator);
 
 		// send issues to client
 		// (below code won't send empty 'publishDiagnostics' events for resources without validation issues, see API doc
 		// of this method for details)
-		Multimap<URI, LSPIssue> validationIssues = projectStateManager.getValidationIssues();
+		ImmutableMap<URI, ImmutableSortedSet<LSPIssue>> validationIssues = projectStateManager.getValidationIssues();
 		for (URI location : validationIssues.keySet()) {
 			Collection<LSPIssue> issues = validationIssues.get(location);
 			publishIssues(location, issues);
@@ -182,7 +180,7 @@ public class ProjectBuilder {
 	protected XBuildResult doBuild(Set<URI> dirtyFiles, Set<URI> deletedFiles,
 			List<IResourceDescription.Delta> externalDeltas, boolean propagateIssues, CancelIndicator cancelIndicator) {
 
-		URI persistenceFile = projectStateManager.getPersistenceFile(projectConfig);
+		URI persistenceFile = projectStateManager.getPersistenceFile();
 		dirtyFiles.remove(persistenceFile);
 		deletedFiles.remove(persistenceFile);
 
@@ -192,9 +190,9 @@ public class ProjectBuilder {
 
 		XBuildResult result = incrementalBuilder.build(request);
 
-		projectStateManager.updateProjectState(request, result, projectConfig);
+		projectStateManager.updateProjectState(request, result);
 
-		ResourceDescriptionsData resourceDescriptions = projectStateManager.getIndexState().getResourceDescriptions();
+		ResourceDescriptionsData resourceDescriptions = projectStateManager.getIndex();
 		fullIndex.setContainer(projectDescription.getName(), resourceDescriptions);
 
 		return result;
@@ -202,7 +200,7 @@ public class ProjectBuilder {
 
 	/** Deletes the contents of the output directory */
 	public void doClean(CancelIndicator cancelIndicator) {
-		projectStateManager.deletePersistenceFile(projectConfig);
+		projectStateManager.deletePersistenceFile();
 
 		if (projectConfig instanceof N4JSProjectConfig) {
 			// TODO: merge N4JSProjectConfig#canClean() to IProjectConfig
@@ -272,33 +270,33 @@ public class ProjectBuilder {
 	protected XBuildRequest newBuildRequest(Set<URI> changedFiles, Set<URI> deletedFiles,
 			List<IResourceDescription.Delta> externalDeltas, boolean propagateIssues, CancelIndicator cancelIndicator) {
 
-		XBuildRequest result = buildRequestFactory.getBuildRequest(projectConfig.getName(), changedFiles, deletedFiles,
+		XBuildRequest request = buildRequestFactory.getBuildRequest(projectConfig.getName(), changedFiles, deletedFiles,
 				externalDeltas);
 
-		XIndexState indexState = projectStateManager.getIndexState();
-		ResourceDescriptionsData resourceDescriptionsCopy = indexState.getResourceDescriptions().copy();
-		XSource2GeneratedMapping fileMappingsCopy = indexState.getFileMappings().copy();
-		result.setState(new XIndexState(resourceDescriptionsCopy, fileMappingsCopy));
-		result.setResourceSet(createFreshResourceSet(result.getState().getResourceDescriptions()));
-		result.setCancelIndicator(cancelIndicator);
-		result.setBaseDir(getBaseDir());
+		ResourceDescriptionsData indexCopy = projectStateManager.getIndex().copy();
+		XSource2GeneratedMapping fileMappingsCopy = projectStateManager.getFileMappings().copy();
+		request.setIndex(indexCopy);
+		request.setFileMappings(fileMappingsCopy);
+		request.setResourceSet(createFreshResourceSet(indexCopy));
+		request.setCancelIndicator(cancelIndicator);
+		request.setBaseDir(getBaseDir());
 
 		if (propagateIssues) {
-			result.setAfterValidateListener(afterValidateListener);
+			request.setAfterValidateListener(afterValidateListener);
 		} else {
 			// during initial build, we do not want to notify about any issues because it is
 			// done at the end of the project for the deserialized issues and the new issues
 			// altogether.
-			result.setAfterValidateListener(null);
+			request.setAfterValidateListener(null);
 		}
 
 		if (projectConfig instanceof N4JSProjectConfig) {
 			// TODO: merge N4JSProjectConfig#indexOnly() to IProjectConfig
 			N4JSProjectConfig n4pc = (N4JSProjectConfig) projectConfig;
-			result.setIndexOnly(n4pc.indexOnly());
+			request.setIndexOnly(n4pc.indexOnly());
 		}
 
-		return result;
+		return request;
 	}
 
 	/** Create an empty resource set. */

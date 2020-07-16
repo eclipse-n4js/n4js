@@ -198,8 +198,8 @@ public class XIndexer {
 	 * register them in the request's index.
 	 */
 	public XIndexer.XIndexResult computeAndIndexDeletedAndChanged(XBuildRequest request, XBuildContext context) {
-		ResourceDescriptionsData previousIndex = context.getOldState().getResourceDescriptions();
-		ResourceDescriptionsData newIndex = request.getState().getResourceDescriptions();
+		ResourceDescriptionsData previousIndex = context.getOldIndex();
+		ResourceDescriptionsData newIndex = request.getIndex();
 		List<IResourceDescription.Delta> deltas = new ArrayList<>();
 		deltas.addAll(getDeltasForDeletedResources(request, previousIndex, context));
 		deltas.addAll(getDeltasForChangedResources(request.getDirtyFiles(), previousIndex, context));
@@ -229,7 +229,7 @@ public class XIndexer {
 	public List<Delta> computeAndIndexAffected(ResourceDescriptionsData index, Set<URI> remainingURIs,
 			Collection<Delta> newDeltas, Collection<Delta> allDeltas, XBuildContext context) {
 
-		ResourceDescriptionsData originalIndex = context.getOldState().getResourceDescriptions();
+		ResourceDescriptionsData originalIndex = context.getOldIndex();
 		List<URI> affectedURIs = new ArrayList<>();
 		for (URI uri : remainingURIs) {
 			IResourceServiceProvider resourceServiceProvider = context.getResourceServiceProvider(uri);
