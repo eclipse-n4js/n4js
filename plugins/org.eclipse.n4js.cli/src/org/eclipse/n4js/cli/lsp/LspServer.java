@@ -13,6 +13,7 @@ package org.eclipse.n4js.cli.lsp;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintStream;
 import java.net.InetSocketAddress;
 import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;
@@ -121,9 +122,15 @@ public class LspServer {
 	}
 
 	private void setupAndRunWithSystemIO(XLanguageServerImpl languageServer, Builder<LanguageClient> lsBuilder) {
-		N4jscConsole.println(LSP_SYNC_MESSAGE + " on stdio");
+		N4jscConsole.println(LSP_SYNC_MESSAGE + " on stdio ...");
 		N4jscConsole.setSuppress(true);
-		run(languageServer, lsBuilder, System.in, System.out);
+		PrintStream oldStdOut = System.out;
+		try (PrintStream newStdOut = new LoggingPrintStream(languageServer.getLspLogger())) {
+			System.setOut(newStdOut);
+			run(languageServer, lsBuilder, System.in, oldStdOut);
+		} finally {
+			System.setOut(oldStdOut);
+		}
 	}
 
 	private void run(XLanguageServerImpl languageServer, Builder<LanguageClient> lsBuilder, InputStream in,

@@ -1289,6 +1289,13 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	}
 
+	/**
+	 * Getter
+	 */
+	public LspLogger getLspLogger() {
+		return lspLogger;
+	}
+
 	/** Blocks until the lsp client sent the initialized message */
 	public void joinClientInitialized() {
 		clientInitialized.join();
