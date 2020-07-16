@@ -19,7 +19,6 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 import org.apache.log4j.Level
-import org.eclipse.n4js.ide.xtext.server.concurrent.LSPExecutorService
 import org.eclipse.xtext.ide.server.ServerModule
 import org.eclipse.xtext.testing.logging.LoggingTester
 import org.junit.After
@@ -27,14 +26,15 @@ import org.junit.Before
 import org.junit.Test
 
 import static org.junit.Assert.*
+import org.eclipse.n4js.ide.xtext.server.concurrent.QueuedExecutorService
 
 /**
  * Ported from Xtext's RequestManager tests.
  */
-class LSPExecutorServiceTest {
+class QueuedExecutorServiceTest {
 
 	@Inject
-	private LSPExecutorService lspExecutorService;
+	private QueuedExecutorService queuedExecutorService;
 
 	private AtomicInteger sharedState
 
@@ -46,14 +46,14 @@ class LSPExecutorServiceTest {
 
 	@After
 	def void tearDown() {
-		lspExecutorService.shutdown();
+		queuedExecutorService.shutdown();
 		sharedState = null;
 	}
 
 	@Test(timeout = 1000)
 	def void testSubmitLogException() {
-		val logResult = LoggingTester.captureLogging(Level.ALL, LSPExecutorService, [
-			val future = lspExecutorService.submit("test", [
+		val logResult = LoggingTester.captureLogging(Level.ALL, QueuedExecutorService, [
+			val future = queuedExecutorService.submit("test", [
 				throw new RuntimeException();
 			]);
 			try {
@@ -65,8 +65,8 @@ class LSPExecutorServiceTest {
 
 	@Test(timeout = 1000, expected = UncheckedExecutionException)
 	def void testSubmitCatchException() {
-		LoggingTester.captureLogging(Level.ALL, LSPExecutorService, [
-			val future = lspExecutorService.submit("test", [
+		LoggingTester.captureLogging(Level.ALL, QueuedExecutorService, [
+			val future = queuedExecutorService.submit("test", [
 				throw new RuntimeException();
 			]);
 
@@ -78,7 +78,7 @@ class LSPExecutorServiceTest {
 
 	@Test(timeout = 1000)
 	def void testSubmit() {
-		val future = lspExecutorService.submit("test") [
+		val future = queuedExecutorService.submit("test") [
 			return 'Foo';
 		];
 		assertEquals('Foo', Futures.getUnchecked(future));
@@ -87,14 +87,14 @@ class LSPExecutorServiceTest {
 	@Test(timeout = 1000)
 	def void testSubmitConcurrent01() {
 		val firstStarted = new CountDownLatch(1)
-		val future = lspExecutorService.submit("id1", "first") [
+		val future = queuedExecutorService.submit("id1", "first") [
 			firstStarted.countDown
 			while (sharedState.get == 0) {
 				Uninterruptibles.sleepUninterruptibly(10, TimeUnit.MILLISECONDS)
 			}
 			sharedState.incrementAndGet
 		];
-		lspExecutorService.submit("id2", "second") [
+		queuedExecutorService.submit("id2", "second") [
 			Uninterruptibles.awaitUninterruptibly(firstStarted)
 			sharedState.incrementAndGet
 		]
@@ -105,14 +105,14 @@ class LSPExecutorServiceTest {
 	@Test(timeout = 1000)
 	def void testSubmitConcurrent02() {
 		val firstStarted = new CountDownLatch(1)
-		val future = lspExecutorService.submit("first") [
+		val future = queuedExecutorService.submit("first") [
 			firstStarted.countDown
 			while (sharedState.get == 0) {
 				Uninterruptibles.sleepUninterruptibly(10, TimeUnit.MILLISECONDS)
 			}
 			sharedState.incrementAndGet
 		];
-		lspExecutorService.submit("second") [
+		queuedExecutorService.submit("second") [
 			Uninterruptibles.awaitUninterruptibly(firstStarted)
 			sharedState.incrementAndGet
 		]
@@ -122,10 +122,10 @@ class LSPExecutorServiceTest {
 
 	@Test(timeout = 1000)
 	def void testSubmitSequential01() {
-		lspExecutorService.submit("id", "first") [
+		queuedExecutorService.submit("id", "first") [
 			sharedState.incrementAndGet
 		]
-		val future = lspExecutorService.submit("id", "second") [
+		val future = queuedExecutorService.submit("id", "second") [
 			sharedState.get
 		]
 		assertEquals(1, Futures.<Integer>getUnchecked(future))
@@ -134,44 +134,44 @@ class LSPExecutorServiceTest {
 	@Test(timeout = 1000)
 	def void testSubmitSequential02() {
 		val releaseFirst = new CountDownLatch(1)
-		val future = lspExecutorService.submit("id", "first") [
+		val future = queuedExecutorService.submit("id", "first") [
 			Uninterruptibles.awaitUninterruptibly(releaseFirst)
 			sharedState.get
 		]
-		lspExecutorService.submit("id", "second") [
+		queuedExecutorService.submit("id", "second") [
 			sharedState.incrementAndGet
 		]
 		Uninterruptibles.sleepUninterruptibly(500, TimeUnit.MILLISECONDS)
 		releaseFirst.countDown
 		assertEquals(0, Futures.<Integer>getUnchecked(future))
-		lspExecutorService.join
+		queuedExecutorService.join
 	}
 
 	@Test(timeout = 1000)
 	def void testSubmitSequential03() throws Exception {
 		val secondStarted = new CountDownLatch(1)
-		lspExecutorService.submit("id", "first") [
+		queuedExecutorService.submit("id", "first") [
 			Uninterruptibles.awaitUninterruptibly(secondStarted)
 			null
 		]
-		lspExecutorService.submit("id", "second") [
+		queuedExecutorService.submit("id", "second") [
 			secondStarted.countDown
 			null
 		]
 		assertFalse(secondStarted.await(500, TimeUnit.MILLISECONDS))
 		secondStarted.countDown
-		lspExecutorService.join
+		queuedExecutorService.join
 	}
 
 	@Test(timeout = 1000)
 	def void testCancel01() {
-		val future1 = lspExecutorService.submit("id", "first") [ ci |
+		val future1 = queuedExecutorService.submit("id", "first") [ ci |
 			while (!ci.isCanceled()) {
 				Uninterruptibles.sleepUninterruptibly(10, TimeUnit.MILLISECONDS)
 			}
 			null
 		]
-		val future2 = lspExecutorService.submit("id", "second") [
+		val future2 = queuedExecutorService.submit("id", "second") [
 			sharedState.incrementAndGet
 		]
 		future1.cancel(false)
@@ -181,30 +181,30 @@ class LSPExecutorServiceTest {
 
 	@Test(timeout = 1000)
 	def void testCancel02() {
-		lspExecutorService.submit("id", "first") [ ci |
+		queuedExecutorService.submit("id", "first") [ ci |
 			while (!ci.isCanceled()) {
 				Uninterruptibles.sleepUninterruptibly(10, TimeUnit.MILLISECONDS)
 			}
 			null
 		]
-		val future = lspExecutorService.submit("id", "second") [ ci |
+		val future = queuedExecutorService.submit("id", "second") [ ci |
 			assertTrue(ci.isCanceled());
 			sharedState.incrementAndGet
 		]
-		lspExecutorService.cancelAll("id");
+		queuedExecutorService.cancelAll("id");
 		future.join()
 		assertEquals(1, sharedState.get)
 	}
 
 	@Test(timeout = 1000)
 	def void testCancel03() {
-		lspExecutorService.submit("id", "first") [ ci |
+		queuedExecutorService.submit("id", "first") [ ci |
 			while (!ci.isCanceled()) {
 				Uninterruptibles.sleepUninterruptibly(10, TimeUnit.MILLISECONDS)
 			}
 			null
 		]
-		val future = lspExecutorService.submitAndCancelPrevious("id", "second") [
+		val future = queuedExecutorService.submitAndCancelPrevious("id", "second") [
 			sharedState.incrementAndGet
 		]
 		future.join()
@@ -217,7 +217,7 @@ class LSPExecutorServiceTest {
 		val firstCanceled = new CountDownLatch(1)
 		val secondStarted = new CountDownLatch(1)
 		val secondCanceled = new CountDownLatch(1)
-		lspExecutorService.submit("id1", "first") [ ci |
+		queuedExecutorService.submit("id1", "first") [ ci |
 			firstStarted.countDown
 			while (!ci.isCanceled()) {
 				Uninterruptibles.sleepUninterruptibly(10, TimeUnit.MILLISECONDS)
@@ -225,7 +225,7 @@ class LSPExecutorServiceTest {
 			firstCanceled.countDown
 			null
 		]
-		lspExecutorService.submit("id2", "second") [ ci |
+		queuedExecutorService.submit("id2", "second") [ ci |
 			secondStarted.countDown
 			while (!ci.isCanceled()) {
 				Uninterruptibles.sleepUninterruptibly(10, TimeUnit.MILLISECONDS)
@@ -237,7 +237,7 @@ class LSPExecutorServiceTest {
 		Uninterruptibles.awaitUninterruptibly(firstStarted)
 		Uninterruptibles.awaitUninterruptibly(secondStarted)
 
-		lspExecutorService.cancelAll("id1");
+		queuedExecutorService.cancelAll("id1");
 		// 1) assert that 'first' got the cancellation event
 		Uninterruptibles.awaitUninterruptibly(firstCanceled)
 		// 2) assert that 'second' did not get the cancellation event (i.e. that it is still incrementing sharedState)
@@ -246,7 +246,7 @@ class LSPExecutorServiceTest {
 			Uninterruptibles.sleepUninterruptibly(10, TimeUnit.MILLISECONDS)
 		}
 
-		lspExecutorService.cancelAll("id2");
+		queuedExecutorService.cancelAll("id2");
 		// assert that now 'second' also got the cancellation event
 		Uninterruptibles.awaitUninterruptibly(secondCanceled)
 	}

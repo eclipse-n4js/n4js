@@ -69,10 +69,10 @@ import com.google.inject.Singleton;
  * @see <a href="https://docs.oracle.com/javase/specs/jls/se14/html/jls-17.html#jls-17.4.5">Java Language Specification
  *      - Section 17.4.5 Happens-before Order</a>
  */
-@Singleton // not truly necessary, but ensures queue IDs are "global" within a single injector
-public class LSPExecutorService {
+@Singleton
+public class QueuedExecutorService {
 
-	private static final Logger LOG = Logger.getLogger(LSPExecutorService.class);
+	private static final Logger LOG = Logger.getLogger(QueuedExecutorService.class);
 
 	/** The underlying executor service that is used to actually execute the tasks. */
 	@Inject
@@ -167,7 +167,7 @@ public class LSPExecutorService {
 		}
 	}
 
-	/** Submits the given task without a queue ID. See {@link LSPExecutorService} for details. */
+	/** Submits the given task without a queue ID. See {@link QueuedExecutorService} for details. */
 	public synchronized <T> QueuedTaskFuture<T> submit(String description,
 			Function<CancelIndicator, T> task) {
 		return submit(new Object(), description, task);
@@ -183,7 +183,7 @@ public class LSPExecutorService {
 		return submit(queueId, description, task);
 	}
 
-	/** Submits the given task under the given queue ID. See {@link LSPExecutorService} for details. */
+	/** Submits the given task under the given queue ID. See {@link QueuedExecutorService} for details. */
 	public synchronized <T> QueuedTaskFuture<T> submit(Object queueId, String description,
 			Function<CancelIndicator, T> task) {
 		QueuedTask<T> queuedTask = createQueuedTask(queueId, description, task);
@@ -238,7 +238,7 @@ public class LSPExecutorService {
 	/**
 	 * Marks all running and pending tasks as cancelled, i.e. their cancel indicator will return <code>true</code> from
 	 * {@link CancelIndicator#isCanceled() #isCanceled()}. Does not mark the tasks' result futures as cancelled, see
-	 * {@link LSPExecutorService} for details.
+	 * {@link QueuedExecutorService} for details.
 	 */
 	public synchronized void cancelAll() {
 		Stream.concat(runningTasks.values().stream(), pendingTasks.stream())

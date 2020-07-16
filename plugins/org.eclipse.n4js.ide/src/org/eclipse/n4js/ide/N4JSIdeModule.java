@@ -25,7 +25,7 @@ import org.eclipse.n4js.ide.server.N4JSProjectDescriptionFactory;
 import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
 import org.eclipse.n4js.ide.server.codeActions.N4JSCodeActionService;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
-import org.eclipse.n4js.ide.server.concurrent.N4JSLSPExecutorService;
+import org.eclipse.n4js.ide.server.concurrent.N4JSQueuedExecutorService;
 import org.eclipse.n4js.ide.server.hover.N4JSHoverService;
 import org.eclipse.n4js.ide.server.symbol.N4JSDocumentSymbolMapper;
 import org.eclipse.n4js.ide.server.symbol.N4JSHierarchicalDocumentSymbolService;
@@ -43,7 +43,7 @@ import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 import org.eclipse.n4js.ide.xtext.server.ProjectBuilder;
 import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
 import org.eclipse.n4js.ide.xtext.server.build.XStatefulIncrementalBuilder;
-import org.eclipse.n4js.ide.xtext.server.concurrent.LSPExecutorService;
+import org.eclipse.n4js.ide.xtext.server.concurrent.QueuedExecutorService;
 import org.eclipse.n4js.ide.xtext.server.contentassist.XContentAssistService;
 import org.eclipse.n4js.internal.lsp.FileSystemScanner;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
@@ -172,8 +172,8 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 		return N4JSLanguageServer.class;
 	}
 
-	public Class<? extends LSPExecutorService> bindLSPExecutorService() {
-		return N4JSLSPExecutorService.class;
+	public Class<? extends QueuedExecutorService> bindLSPExecutorService() {
+		return N4JSQueuedExecutorService.class;
 	}
 
 	public ContentAssistDataCollectors bindContentAssistDataCollectors() {

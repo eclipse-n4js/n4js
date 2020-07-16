@@ -23,9 +23,9 @@ import org.eclipse.lsp4j.FileChangeType;
 import org.eclipse.lsp4j.FileEvent;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.n4js.ide.xtext.server.XBuildManager.XBuildable;
-import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentChunkedIndex;
+import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIndex;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
-import org.eclipse.n4js.ide.xtext.server.concurrent.LSPExecutorService;
+import org.eclipse.n4js.ide.xtext.server.concurrent.QueuedExecutorService;
 import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -47,7 +47,7 @@ public class LSPBuilder {
 	private static final Logger LOG = Logger.getLogger(LSPBuilder.class);
 
 	@Inject
-	private LSPExecutorService lspExecutorService;
+	private QueuedExecutorService queuedExecutorService;
 
 	@Inject
 	private UriExtensions uriExtensions;
@@ -73,7 +73,7 @@ public class LSPBuilder {
 	}
 
 	/** Returns the index. */
-	public ConcurrentChunkedIndex getIndex() {
+	public ConcurrentIndex getIndex() {
 		return buildManager.getIndex();
 	}
 
@@ -93,7 +93,7 @@ public class LSPBuilder {
 	}
 
 	public void initialBuild() {
-		lspExecutorService.submitAndCancelPrevious(XBuildManager.class, "initialized",
+		queuedExecutorService.submitAndCancelPrevious(XBuildManager.class, "initialized",
 				cancelIndicator -> doInitialBuild());
 
 	}
@@ -113,7 +113,7 @@ public class LSPBuilder {
 	}
 
 	public CompletableFuture<Void> clean() {
-		return lspExecutorService.submitAndCancelPrevious(XBuildManager.class, "clean", cancelIndicator -> {
+		return queuedExecutorService.submitAndCancelPrevious(XBuildManager.class, "clean", cancelIndicator -> {
 			buildManager.clean(CancelIndicator.NullImpl);
 			return null;
 		});
@@ -123,7 +123,7 @@ public class LSPBuilder {
 	 * Triggers rebuild of the whole workspace
 	 */
 	public CompletableFuture<Void> reinitWorkspace() {
-		return lspExecutorService.submitAndCancelPrevious(XBuildManager.class, "didChangeConfiguration",
+		return queuedExecutorService.submitAndCancelPrevious(XBuildManager.class, "didChangeConfiguration",
 				cancelIndicator -> {
 					workspaceManager.reinitialize();
 					buildManager.doInitialBuild(CancelIndicator.NullImpl);
@@ -176,7 +176,7 @@ public class LSPBuilder {
 	 */
 	protected CompletableFuture<List<Delta>> runBuildable(String description,
 			Supplier<? extends XBuildable> newBuildable) {
-		return lspExecutorService.submitAndCancelPrevious(XBuildManager.class, description, cancelIndicator -> {
+		return queuedExecutorService.submitAndCancelPrevious(XBuildManager.class, description, cancelIndicator -> {
 			XBuildable buildable = newBuildable.get();
 			return buildable.build(cancelIndicator);
 		});

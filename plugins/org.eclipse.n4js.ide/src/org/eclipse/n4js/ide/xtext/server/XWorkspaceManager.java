@@ -18,7 +18,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.jsonrpc.ResponseErrorException;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseError;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
-import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentChunkedIndex;
+import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIndex;
 import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
 import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
 import org.eclipse.xtext.ide.server.UriExtensions;
@@ -65,7 +65,7 @@ public class XWorkspaceManager {
 	private UriExtensions uriExtensions;
 
 	@Inject
-	private ConcurrentChunkedIndex fullIndex;
+	private ConcurrentIndex fullIndex;
 
 	private final Map<String, ProjectBuilder> projectName2ProjectBuilder = new HashMap<>();
 

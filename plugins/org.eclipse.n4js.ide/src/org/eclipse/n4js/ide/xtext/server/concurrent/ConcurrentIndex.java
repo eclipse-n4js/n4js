@@ -47,7 +47,7 @@ import com.google.inject.Singleton;
  * </ul>
  */
 @Singleton
-public class ConcurrentChunkedIndex {
+public class ConcurrentIndex {
 
 	/** Map of all resource descriptions per container. */
 	protected final Map<String, ResourceDescriptionsData> containerHandle2Data = new HashMap<>();
@@ -56,7 +56,7 @@ public class ConcurrentChunkedIndex {
 	/** Registered listeners. */
 	protected final List<IChunkedIndexListener> listeners = new CopyOnWriteArrayList<>();
 
-	/** Listens for changes in a {@link ConcurrentChunkedIndex}. */
+	/** Listens for changes in a {@link ConcurrentIndex}. */
 	public interface IChunkedIndexListener {
 		/** Invoked when the index has changed. */
 		public void onIndexChanged(
@@ -155,7 +155,7 @@ public class ConcurrentChunkedIndex {
 	 * Returns an immutable snapshot of entries in this index (not a view).
 	 * <p>
 	 * The caveat regarding the non-thread-safety of {@link ResourceDescriptionsData} still applies, see
-	 * {@link ConcurrentChunkedIndex} for details.
+	 * {@link ConcurrentIndex} for details.
 	 */
 	public synchronized ImmutableList<Entry<String, ResourceDescriptionsData>> entries() {
 		return ImmutableList.<Entry<String, ResourceDescriptionsData>> builder()

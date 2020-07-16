@@ -32,11 +32,10 @@ import com.google.common.collect.ImmutableSortedSet;
 import com.google.inject.Singleton;
 
 /**
- * Simple registry for {@link LSPIssue issues} that can be shared across threads, distinguishing between persisted and
- * dirty state. In the former case, issues are recorded on a per-container basis ("container" in the sense of
+ * A registry for {@link LSPIssue issues} that can be shared across threads, distinguishing between persisted and dirty
+ * state. In the former case, issues are recorded on a per-container basis ("container" in the sense of
  * {@link ChunkedResourceDescriptions}'s containers).
  */
-@SuppressWarnings("javadoc")
 @Singleton
 public class ConcurrentIssueRegistry {
 

@@ -27,7 +27,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
-import org.eclipse.n4js.ide.xtext.server.concurrent.LSPExecutorService;
+import org.eclipse.n4js.ide.xtext.server.concurrent.QueuedExecutorService;
 import org.eclipse.n4js.ide.xtext.server.util.CancelIndicatorUtil;
 import org.eclipse.n4js.xtext.workspace.IProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.IWorkspaceConfigSnapshot;
@@ -52,7 +52,7 @@ public class ResourceTaskManager {
 	private Provider<ResourceTaskContext> openFileContextProvider;
 
 	@Inject
-	private LSPExecutorService lspExecutorService;
+	private QueuedExecutorService queuedExecutorService;
 
 	@Inject
 	private ConcurrentIssueRegistry issueRegistry;
@@ -114,7 +114,7 @@ public class ResourceTaskManager {
 
 		// cancel current tasks for this context (they are now out-dated, anyway)
 		Object queueId = getQueueIdForContext(uri, false);
-		lspExecutorService.cancelAll(queueId);
+		queuedExecutorService.cancelAll(queueId);
 
 		// refresh the context
 		runInExistingContextVoid(uri, "changeSourceTextOfExistingContext", (rtc, ci) -> {
@@ -213,7 +213,7 @@ public class ResourceTaskManager {
 			BiFunction<ResourceTaskContext, CancelIndicator, T> task) {
 
 		Object queueId = getQueueIdForContext(rtc.getURI(), rtc.isTemporary());
-		return lspExecutorService.submit(queueId, description, ci -> {
+		return queuedExecutorService.submit(queueId, description, ci -> {
 			try {
 				currentContext.set(rtc);
 				return task.apply(rtc, ci);

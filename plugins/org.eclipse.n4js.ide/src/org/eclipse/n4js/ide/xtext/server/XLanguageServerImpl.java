@@ -94,11 +94,11 @@ import org.eclipse.lsp4j.services.TextDocumentService;
 import org.eclipse.lsp4j.services.WorkspaceService;
 import org.eclipse.n4js.ide.server.HeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.ide.server.LspLogger;
-import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentChunkedIndex.IChunkedIndexListener;
+import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIndex.IChunkedIndexListener;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry.IIssueRegistryListener;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry.IssueRegistryChangeEvent;
-import org.eclipse.n4js.ide.xtext.server.concurrent.LSPExecutorService;
+import org.eclipse.n4js.ide.xtext.server.concurrent.QueuedExecutorService;
 import org.eclipse.n4js.ide.xtext.server.contentassist.XContentAssistService;
 import org.eclipse.n4js.ide.xtext.server.findReferences.XWorkspaceResourceAccess;
 import org.eclipse.n4js.ide.xtext.server.openfiles.ResourceTaskContext;
@@ -171,7 +171,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	private ConcurrentIssueRegistry issueRegistry;
 
 	@Inject
-	private LSPExecutorService lspExecutorService;
+	private QueuedExecutorService lspExecutorService;
 
 	@Inject
 	private WorkspaceSymbolService workspaceSymbolService;
@@ -1283,7 +1283,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	/**
 	 * Getter
 	 */
-	public LSPExecutorService getLSPExecutorService() {
+	public QueuedExecutorService getLSPExecutorService() {
 		return lspExecutorService;
 
 	}

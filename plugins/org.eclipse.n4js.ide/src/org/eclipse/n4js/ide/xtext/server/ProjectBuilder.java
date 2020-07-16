@@ -26,7 +26,7 @@ import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
 import org.eclipse.n4js.ide.xtext.server.build.XIncrementalBuilder;
 import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
 import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
-import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentChunkedIndex;
+import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIndex;
 import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
 import org.eclipse.n4js.internal.lsp.N4JSProjectConfig;
 import org.eclipse.n4js.utils.URIUtils;
@@ -103,7 +103,7 @@ public class ProjectBuilder {
 	protected XWorkspaceManager workspaceManager;
 
 	@Inject
-	private ConcurrentChunkedIndex fullIndex;
+	private ConcurrentIndex fullIndex;
 
 	@Inject
 	private ConcurrentIssueRegistry issueRegistry; // FIXME: Check lifecycle

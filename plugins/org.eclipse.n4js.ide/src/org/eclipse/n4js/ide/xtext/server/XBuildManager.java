@@ -26,7 +26,7 @@ import org.eclipse.n4js.ide.xtext.server.ParallelBuildManager.ParallelJob;
 import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo.ProjectBuildOrderIterator;
 import org.eclipse.n4js.ide.xtext.server.build.BuildCanceledException;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
-import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentChunkedIndex;
+import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIndex;
 import org.eclipse.n4js.xtext.workspace.IProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
@@ -83,7 +83,7 @@ public class XBuildManager {
 	private OperationCanceledManager operationCanceledManager;
 
 	@Inject
-	private ConcurrentChunkedIndex fullIndex;
+	private ConcurrentIndex fullIndex;
 
 	private final LinkedHashSet<URI> dirtyFiles = new LinkedHashSet<>();
 	private final LinkedHashSet<URI> deletedFiles = new LinkedHashSet<>();
@@ -138,7 +138,7 @@ public class XBuildManager {
 	}
 
 	/** Returns the index. */
-	public ConcurrentChunkedIndex getIndex() {
+	public ConcurrentIndex getIndex() {
 		return fullIndex;
 	}
 
