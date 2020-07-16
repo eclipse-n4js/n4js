@@ -82,7 +82,7 @@ public class ProjectBuilder {
 
 	/** Holds index, hashes and issue information */
 	@Inject
-	protected ProjectStateHolder projectStateHolder;
+	protected ProjectStateManager projectStateManager;
 
 	/** Holds information about the output settings, e.g. the output directory */
 	@Inject
@@ -145,14 +145,14 @@ public class ProjectBuilder {
 	 * </ul>
 	 */
 	public XBuildResult doInitialBuild(CancelIndicator cancelIndicator) {
-		ResourceChangeSet changeSet = projectStateHolder.readProjectState(projectConfig);
+		ResourceChangeSet changeSet = projectStateManager.readProjectState(projectConfig);
 		XBuildResult result = doBuild(
 				changeSet.getModified(), changeSet.getDeleted(), Collections.emptyList(), false, cancelIndicator);
 
 		// send issues to client
 		// (below code won't send empty 'publishDiagnostics' events for resources without validation issues, see API doc
 		// of this method for details)
-		Multimap<URI, LSPIssue> validationIssues = projectStateHolder.getValidationIssues();
+		Multimap<URI, LSPIssue> validationIssues = projectStateManager.getValidationIssues();
 		for (URI location : validationIssues.keySet()) {
 			Collection<LSPIssue> issues = validationIssues.get(location);
 			publishIssues(location, issues);
@@ -182,7 +182,7 @@ public class ProjectBuilder {
 	protected XBuildResult doBuild(Set<URI> dirtyFiles, Set<URI> deletedFiles,
 			List<IResourceDescription.Delta> externalDeltas, boolean propagateIssues, CancelIndicator cancelIndicator) {
 
-		URI persistenceFile = projectStateHolder.getPersistenceFile(projectConfig);
+		URI persistenceFile = projectStateManager.getPersistenceFile(projectConfig);
 		dirtyFiles.remove(persistenceFile);
 		deletedFiles.remove(persistenceFile);
 
@@ -192,9 +192,9 @@ public class ProjectBuilder {
 
 		XBuildResult result = incrementalBuilder.build(request);
 
-		projectStateHolder.updateProjectState(request, result, projectConfig);
+		projectStateManager.updateProjectState(request, result, projectConfig);
 
-		ResourceDescriptionsData resourceDescriptions = projectStateHolder.getIndexState().getResourceDescriptions();
+		ResourceDescriptionsData resourceDescriptions = projectStateManager.getIndexState().getResourceDescriptions();
 		fullIndex.setContainer(projectDescription.getName(), resourceDescriptions);
 
 		return result;
@@ -202,7 +202,7 @@ public class ProjectBuilder {
 
 	/** Deletes the contents of the output directory */
 	public void doClean(CancelIndicator cancelIndicator) {
-		projectStateHolder.deletePersistenceFile(projectConfig);
+		projectStateManager.deletePersistenceFile(projectConfig);
 
 		if (projectConfig instanceof N4JSProjectConfig) {
 			// TODO: merge N4JSProjectConfig#canClean() to IProjectConfig
@@ -275,7 +275,7 @@ public class ProjectBuilder {
 		XBuildRequest result = buildRequestFactory.getBuildRequest(projectConfig.getName(), changedFiles, deletedFiles,
 				externalDeltas);
 
-		XIndexState indexState = projectStateHolder.getIndexState();
+		XIndexState indexState = projectStateManager.getIndexState();
 		ResourceDescriptionsData resourceDescriptionsCopy = indexState.getResourceDescriptions().copy();
 		XSource2GeneratedMapping fileMappingsCopy = indexState.getFileMappings().copy();
 		result.setState(new XIndexState(resourceDescriptionsCopy, fileMappingsCopy));
@@ -376,8 +376,8 @@ public class ProjectBuilder {
 	}
 
 	/** Getter */
-	public ProjectStateHolder getProjectStateHolder() {
-		return projectStateHolder;
+	public ProjectStateManager getProjectStateHolder() {
+		return projectStateManager;
 	}
 
 	/** Getter */

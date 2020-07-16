@@ -44,7 +44,7 @@ import com.google.inject.Inject;
  * Holds index, hashes and issue information
  */
 @SuppressWarnings("restriction")
-public class ProjectStateHolder {
+public class ProjectStateManager {
 
 	/** Reads and writes the type index from/to disk */
 	@Inject
