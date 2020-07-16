@@ -94,8 +94,10 @@ public class ResourceTaskContext {
 	 */
 	protected ResourceDescriptionsData indexSnapshot;
 
-	protected ImmutableSetMultimap<String, URI> containerHandle2URIs;
+	/** Maps project names to all its URIs of the last build */
+	protected ImmutableSetMultimap<String, URI> project2builtURIs;
 
+	/** Snapshot of the workspace */
 	protected IWorkspaceConfigSnapshot workspaceConfig;
 
 	/** The resource set used for the current resource and any other resources required for resolution. */
@@ -105,6 +107,9 @@ public class ResourceTaskContext {
 	/** The current textual content of the open file. */
 	protected XDocument document = null;
 
+	/**
+	 * Class to provide the text contents of the resource of this {@link ResourceTaskContext}
+	 */
 	protected class ResourceTaskContentProvider implements IExternalContentProvider {
 		@Override
 		public String getContent(URI uri) {
@@ -123,6 +128,7 @@ public class ResourceTaskContext {
 		}
 	}
 
+	/** Returns the {@link URI} of {@link #getResource()} */
 	public synchronized URI getURI() {
 		return mainURI;
 	}
@@ -153,10 +159,12 @@ public class ResourceTaskContext {
 		return !isTemporary();
 	}
 
+	/** Returns the resource set of this {@link ResourceTaskContext} */
 	public synchronized XtextResourceSet getResourceSet() {
 		return mainResourceSet;
 	}
 
+	/** Returns the resource of this {@link ResourceTaskContext} */
 	public synchronized XtextResource getResource() {
 		return mainResource;
 	}
@@ -169,20 +177,23 @@ public class ResourceTaskContext {
 		return document;
 	}
 
+	/** Sets all non-injectable fields */
 	@SuppressWarnings("hiding")
 	public synchronized void initialize(ResourceTaskManager parent, URI uri, boolean isTemporary,
-			ResourceDescriptionsData index, ImmutableSetMultimap<String, URI> containerHandle2URIs,
+			ResourceDescriptionsData index, ImmutableSetMultimap<String, URI> project2builtURIs,
 			IWorkspaceConfigSnapshot workspaceConfig) {
+
 		this.parent = parent;
 		this.mainURI = uri;
 		this.temporary = isTemporary;
 		this.indexSnapshot = index;
-		this.containerHandle2URIs = containerHandle2URIs;
+		this.project2builtURIs = project2builtURIs;
 		this.workspaceConfig = workspaceConfig;
 
 		this.mainResourceSet = createResourceSet();
 	}
 
+	/** Creates and configures a new resource set */
 	protected XtextResourceSet createResourceSet() {
 		XtextResourceSet result = resourceSetProvider.get();
 		ResourceDescriptionsData.ResourceSetAdapter.installResourceDescriptionsData(result, indexSnapshot);
@@ -313,7 +324,7 @@ public class ResourceTaskContext {
 	 * {@link ResourceTaskContext}). Will never be invoked for {@link #isTemporary() temporary} contexts.
 	 */
 	protected void onDirtyStateChanged(IResourceDescription changedDesc, CancelIndicator cancelIndicator) {
-		updateIndex(Collections.singletonList(changedDesc), Collections.emptySet(), containerHandle2URIs,
+		updateIndex(Collections.singletonList(changedDesc), Collections.emptySet(), project2builtURIs,
 				workspaceConfig, cancelIndicator);
 	}
 
@@ -321,13 +332,13 @@ public class ResourceTaskContext {
 	 * Invoked by {@link #parent} when a change happened in a non-opened file.
 	 */
 	protected void onPersistedStateChanged(Collection<? extends IResourceDescription> changedDescs,
-			Set<URI> removedURIs, ImmutableSetMultimap<String, URI> newContainerHandle2URIs,
+			Set<URI> removedURIs, ImmutableSetMultimap<String, URI> newProject2builtURIs,
 			IWorkspaceConfigSnapshot newWorkspaceConfig, CancelIndicator cancelIndicator) {
-		updateIndex(changedDescs, removedURIs, newContainerHandle2URIs, newWorkspaceConfig, cancelIndicator);
+		updateIndex(changedDescs, removedURIs, newProject2builtURIs, newWorkspaceConfig, cancelIndicator);
 	}
 
 	protected void updateIndex(Collection<? extends IResourceDescription> changedDescs, Set<URI> removedURIs,
-			ImmutableSetMultimap<String, URI> newContainerHandle2URIs, IWorkspaceConfigSnapshot newWorkspaceConfig,
+			ImmutableSetMultimap<String, URI> newProject2builtURIs, IWorkspaceConfigSnapshot newWorkspaceConfig,
 			CancelIndicator cancelIndicator) {
 
 		// update my cached state
@@ -337,7 +348,7 @@ public class ResourceTaskContext {
 			indexSnapshot.register(delta);
 		}
 
-		containerHandle2URIs = newContainerHandle2URIs;
+		project2builtURIs = newProject2builtURIs;
 
 		IWorkspaceConfigSnapshot oldWorkspaceConfig = workspaceConfig;
 		workspaceConfig = newWorkspaceConfig;

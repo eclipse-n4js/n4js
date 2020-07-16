@@ -698,7 +698,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 	}
 
 	@Override
-	public void didRefreshOpenFile(ResourceTaskContext rtc, CancelIndicator ci) {
+	public void didRefreshContext(ResourceTaskContext rtc, CancelIndicator ci) {
 		if (client instanceof LanguageClientExtensions) {
 
 			LanguageClientExtensions clientExtensions = (LanguageClientExtensions) client;

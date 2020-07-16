@@ -62,20 +62,22 @@ public class ResourceTaskManager {
 	protected final Map<String, ResourceDescriptionsData> persistedStateDescriptions = new HashMap<>();
 	protected final ResourceDescriptionsData sharedDirtyState = new ResourceDescriptionsData(Collections.emptyList());
 
-	protected ImmutableSetMultimap<String, URI> containerHandle2URIs = ImmutableSetMultimap.of();
+	protected ImmutableSetMultimap<String, URI> project2builtURIs = ImmutableSetMultimap.of();
 	protected IWorkspaceConfigSnapshot workspaceConfig = null;
 
 	protected final List<IResourceTaskListener> listeners = new CopyOnWriteArrayList<>();
 
 	public interface IResourceTaskListener {
 		/** Invoked whenever an open file was resolved, validated, etc. Invoked in the given open file context. */
-		public void didRefreshOpenFile(ResourceTaskContext rtc, CancelIndicator ci);
+		public void didRefreshContext(ResourceTaskContext rtc, CancelIndicator ci);
 	}
 
+	/** Returns true iff a non-temporary {@link ResourceTaskContext} exists for the given uri */
 	public synchronized boolean isOpen(URI uri) {
 		return uri2RTCs.containsKey(uri);
 	}
 
+	/** Returns the {@link XDocument} for the given uri iff #{@link #isOpen(URI)} holds for the given uri. */
 	public synchronized XDocument getOpenDocument(URI uri) {
 		ResourceTaskContext rtc = uri2RTCs.get(uri);
 		if (rtc != null) {
@@ -225,7 +227,7 @@ public class ResourceTaskManager {
 	protected ResourceTaskContext createContext(URI uri, boolean isTemporary) {
 		ResourceTaskContext rtc = openFileContextProvider.get();
 		ResourceDescriptionsData index = isTemporary ? createPersistedStateIndex() : createLiveScopeIndex();
-		rtc.initialize(this, uri, isTemporary, index, containerHandle2URIs, workspaceConfig);
+		rtc.initialize(this, uri, isTemporary, index, project2builtURIs, workspaceConfig);
 		return rtc;
 	}
 
@@ -268,7 +270,7 @@ public class ResourceTaskManager {
 			IWorkspaceConfigSnapshot newWorkspaceConfig,
 			Map<String, ? extends ResourceDescriptionsData> changedDescriptions,
 			@SuppressWarnings("unused") List<? extends IProjectConfigSnapshot> changedProjects,
-			Set<String> removedContainerHandles) {
+			Set<String> removedProjects) {
 
 		IWorkspaceConfigSnapshot oldWC = workspaceConfig;
 
@@ -276,12 +278,12 @@ public class ResourceTaskManager {
 		List<IResourceDescription> changed = new ArrayList<>();
 		Set<URI> removed = new HashSet<>();
 		for (Entry<String, ? extends ResourceDescriptionsData> entry : changedDescriptions.entrySet()) {
-			String containerHandle = entry.getKey();
+			String projectName = entry.getKey();
 			ResourceDescriptionsData newData = entry.getValue();
 
-			ResourceDescriptionsData oldContainer = persistedStateDescriptions.get(containerHandle);
-			if (oldContainer != null) {
-				for (IResourceDescription desc : oldContainer.getAllResourceDescriptions()) {
+			ResourceDescriptionsData oldProjectIndex = persistedStateDescriptions.get(projectName);
+			if (oldProjectIndex != null) {
+				for (IResourceDescription desc : oldProjectIndex.getAllResourceDescriptions()) {
 					URI descURI = desc.getURI();
 					if (!uri2RTCs.containsKey(descURI)) {
 						removed.add(descURI);
@@ -299,19 +301,19 @@ public class ResourceTaskManager {
 
 		// update my persisted state instance
 		// FIXME GH-1774 simplify index handling
-		SetMultimap<String, URI> newContainerHandle2URIs = HashMultimap.create(containerHandle2URIs);
+		SetMultimap<String, URI> newProject2builtURIs = HashMultimap.create(project2builtURIs);
 		for (Entry<String, ? extends ResourceDescriptionsData> entry : changedDescriptions.entrySet()) {
-			String containerHandle = entry.getKey();
+			String projectName = entry.getKey();
 			ResourceDescriptionsData newData = entry.getValue();
-			persistedStateDescriptions.put(containerHandle, newData.copy());
-			newContainerHandle2URIs.removeAll(containerHandle);
-			newContainerHandle2URIs.putAll(containerHandle, newData.getAllURIs());
+			persistedStateDescriptions.put(projectName, newData.copy());
+			newProject2builtURIs.removeAll(projectName);
+			newProject2builtURIs.putAll(projectName, newData.getAllURIs());
 		}
-		for (String removedContainerHandle : removedContainerHandles) {
-			persistedStateDescriptions.remove(removedContainerHandle);
-			newContainerHandle2URIs.removeAll(removedContainerHandle);
+		for (String removedProject : removedProjects) {
+			persistedStateDescriptions.remove(removedProject);
+			newProject2builtURIs.removeAll(removedProject);
 		}
-		containerHandle2URIs = ImmutableSetMultimap.copyOf(newContainerHandle2URIs);
+		project2builtURIs = ImmutableSetMultimap.copyOf(newProject2builtURIs);
 		workspaceConfig = newWorkspaceConfig;
 
 		// update persisted state instances in the context of each context
@@ -320,7 +322,7 @@ public class ResourceTaskManager {
 		}
 		for (URI currURI : uri2RTCs.keySet()) {
 			runInExistingContextVoid(currURI, "updatePersistedState of existing context", (rtc, ci) -> {
-				rtc.onPersistedStateChanged(changed, removed, containerHandle2URIs, workspaceConfig, ci);
+				rtc.onPersistedStateChanged(changed, removed, project2builtURIs, workspaceConfig, ci);
 			});
 		}
 	}
@@ -357,7 +359,7 @@ public class ResourceTaskManager {
 
 	protected /* NOT synchronized */ void notifyResourceTaskListeners(ResourceTaskContext rtc, CancelIndicator ci) {
 		for (IResourceTaskListener l : listeners) {
-			l.didRefreshOpenFile(rtc, ci);
+			l.didRefreshContext(rtc, ci);
 		}
 	}
 }

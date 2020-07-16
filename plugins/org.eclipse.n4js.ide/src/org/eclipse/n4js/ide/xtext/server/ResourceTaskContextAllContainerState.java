@@ -27,7 +27,7 @@ import com.google.common.collect.ImmutableList;
  */
 public class ResourceTaskContextAllContainerState implements IAllContainersState {
 
-	/** The open file context this container state was created for. */
+	/** The resource task context this container state was created for. */
 	protected final ResourceTaskContext resourceTaskContext;
 
 	/** See {@link ResourceTaskContextAllContainerState}. */
@@ -36,25 +36,25 @@ public class ResourceTaskContextAllContainerState implements IAllContainersState
 	}
 
 	@Override
-	public boolean isEmpty(String containerHandle) {
-		return resourceTaskContext.containerHandle2URIs.get(containerHandle).isEmpty();
+	public boolean isEmpty(String projectName) {
+		return resourceTaskContext.project2builtURIs.get(projectName).isEmpty();
 	}
 
 	@Override
-	public List<String> getVisibleContainerHandles(String containerHandle) {
-		IProjectConfigSnapshot project = resourceTaskContext.workspaceConfig.findProjectByName(containerHandle);
+	public List<String> getVisibleContainerHandles(String projectName) {
+		IProjectConfigSnapshot project = resourceTaskContext.workspaceConfig.findProjectByName(projectName);
 		if (project == null) {
-			return Collections.singletonList(containerHandle);
+			return Collections.singletonList(projectName);
 		}
 		Set<String> visible = project.getDependencies();
 		Set<String> visibleAndSelf = new HashSet<>(visible);
-		visibleAndSelf.add(containerHandle);
+		visibleAndSelf.add(projectName);
 		return ImmutableList.copyOf(visibleAndSelf);
 	}
 
 	@Override
-	public Collection<URI> getContainedURIs(String containerHandle) {
-		return resourceTaskContext.containerHandle2URIs.get(containerHandle);
+	public Collection<URI> getContainedURIs(String projectName) {
+		return resourceTaskContext.project2builtURIs.get(projectName);
 	}
 
 	@Override
