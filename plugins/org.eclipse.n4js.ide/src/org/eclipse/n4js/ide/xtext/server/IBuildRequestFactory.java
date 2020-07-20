@@ -22,6 +22,9 @@ import org.eclipse.xtext.resource.IResourceDescription;
  */
 public interface IBuildRequestFactory {
 
+	/*
+	 * Review feedback: This should be moved to server.build I suppose.
+	 */
 	/**
 	 * Create the build request for the given sets of files and deltas.
 	 *

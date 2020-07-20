@@ -73,6 +73,12 @@ import com.google.inject.Singleton;
 public class ProjectStatePersister {
 	private static final Logger LOG = LogManager.getLogger(ProjectStatePersister.class);
 
+	/*
+	 * Review feedback:
+	 *
+	 * Referenced from ProjectStatePersisterConfig which looks like a bogus dependency cycle.
+	 */
+
 	/** Data holder class of project state */
 	static public class ProjectState {
 		/** Type index */

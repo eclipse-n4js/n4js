@@ -31,7 +31,7 @@ import com.google.inject.Singleton;
 /** Creates an {@link IFileSystemAccess file system access} that is backed by a {@link URIConverter}. */
 @SuppressWarnings("restriction")
 @Singleton
-public class XURIBasedFileSystemAccessFactory {
+class XURIBasedFileSystemAccessFactory {
 	@Inject
 	private IContextualOutputConfigurationProvider outputConfigurationProvider;
 

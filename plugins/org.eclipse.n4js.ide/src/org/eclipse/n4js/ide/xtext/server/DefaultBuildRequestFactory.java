@@ -28,6 +28,11 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class DefaultBuildRequestFactory implements IBuildRequestFactory {
+	/*
+	 * Review feedback:
+	 *
+	 * Move to server.build.
+	 */
 
 	@Inject(optional = true)
 	private AfterValidateListener afterValidateListener;

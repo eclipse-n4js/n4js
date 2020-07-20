@@ -30,7 +30,11 @@ import com.google.common.collect.Multimap;
  * @since 2.9
  */
 public class XBuildRequest {
-
+	/*
+	 * Review feedback:
+	 * 
+	 * This is not strictly encapsulated in server.build since it's created by the IBuildRequestFactory.
+	 */
 	private final String projectName;
 
 	private URI baseDir;

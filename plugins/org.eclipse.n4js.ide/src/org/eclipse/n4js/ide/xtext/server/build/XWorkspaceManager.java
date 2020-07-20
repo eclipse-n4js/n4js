@@ -52,6 +52,11 @@ import com.google.inject.Singleton;
 @SuppressWarnings("restriction")
 @Singleton
 public class XWorkspaceManager {
+	/*
+	 * Review feedback:
+	 * 
+	 * This is being used from org.eclipse.n4js.cli.compiler.N4jscCompiler and not encapsulated by the BuilderFrontend.
+	 */
 
 	@Inject
 	private XIWorkspaceConfigFactory workspaceConfigFactory;

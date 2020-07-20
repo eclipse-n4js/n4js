@@ -50,6 +50,12 @@ import com.google.inject.Inject;
  */
 @SuppressWarnings({ "hiding", "restriction" })
 public class XBuildManager {
+	/*
+	 * Review feedback:
+	 *
+	 * Used from server.commands and issue key is used from ProjectBuildOrderInfo
+	 */
+
 	private static final Logger LOG = LogManager.getLogger(XBuildManager.class);
 
 	/** A handle that can be used to trigger a build. */
