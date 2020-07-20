@@ -13,19 +13,14 @@ package org.eclipse.n4js.ide.xtext.server;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.DidChangeConfigurationParams;
 import org.eclipse.lsp4j.DidChangeWatchedFilesParams;
 import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.SymbolInformation;
-import org.eclipse.lsp4j.TextDocumentIdentifier;
-import org.eclipse.lsp4j.TextDocumentItem;
-import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.lsp4j.WorkspaceSymbolParams;
 import org.eclipse.lsp4j.services.WorkspaceService;
 import org.eclipse.xtext.findReferences.IReferenceFinder.IResourceAccess;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
-import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.ide.server.commands.ExecutableCommandRegistry;
 import org.eclipse.xtext.ide.server.symbol.WorkspaceSymbolService;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -48,9 +43,6 @@ public class WorkspaceFrontend implements WorkspaceService {
 
 	@Inject
 	private WorkspaceSymbolService workspaceSymbolService;
-
-	@Inject
-	private UriExtensions uriExtensions;
 
 	@Inject
 	private ExecutableCommandRegistry commandRegistry;
@@ -95,21 +87,6 @@ public class WorkspaceFrontend implements WorkspaceService {
 	@Override
 	public void didChangeWatchedFiles(DidChangeWatchedFilesParams params) {
 		// nothing to do
-	}
-
-	/** Obtain the URI from the given parameters. */
-	protected URI getURI(TextDocumentPositionParams params) {
-		return getURI(params.getTextDocument());
-	}
-
-	/** Obtain the URI from the given identifier. */
-	protected URI getURI(TextDocumentIdentifier documentIdentifier) {
-		return uriExtensions.toUri(documentIdentifier.getUri());
-	}
-
-	/** Obtain the URI from the given document item. */
-	protected URI getURI(TextDocumentItem documentItem) {
-		return uriExtensions.toUri(documentItem.getUri());
 	}
 
 }
