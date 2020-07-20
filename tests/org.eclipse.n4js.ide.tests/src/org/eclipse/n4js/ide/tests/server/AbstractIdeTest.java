@@ -371,23 +371,30 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * unsaved changes.
 	 */
 	protected void closeFile(FileURI fileURI) {
-		closeFile(fileURI, false);
+		closeFile(fileURI, false, false);
 	}
 
-	/** Same as {@link #closeFileDiscardingChanges(FileURI)}, but accepts a module name instead of a file URI. */
-	protected void closeFileDiscardingChanges(String moduleName) {
-		closeFileDiscardingChanges(getFileURIFromModuleName(moduleName));
+	/**
+	 * Same as {@link #closeFileDiscardingChanges(FileURI,boolean)}, but accepts a module name instead of a file URI.
+	 *
+	 * @param suppressDidChangeNotification
+	 *            if <code>true</code>, the usual 'textDocument/didChange' notification sent by many LSP clients (esp.
+	 *            VSCode) before closing a dirty file is suppressed. This can be used for testing compatibility with
+	 *            such unusual clients.
+	 */
+	protected void closeFileDiscardingChanges(String moduleName, boolean suppressDidChangeNotification) {
+		closeFileDiscardingChanges(getFileURIFromModuleName(moduleName), suppressDidChangeNotification);
 	}
 
 	/**
 	 * Closes the given file in the LSP server and waits for the server to idle, discarding unsaved in-memory changes.
 	 * Throws an exception if the file does not have unsaved changes.
 	 */
-	protected void closeFileDiscardingChanges(FileURI fileURI) {
-		closeFile(fileURI, true);
+	protected void closeFileDiscardingChanges(FileURI fileURI, boolean suppressDidChangeNotification) {
+		closeFile(fileURI, true, suppressDidChangeNotification);
 	}
 
-	private void closeFile(FileURI fileURI, boolean discardChanges) {
+	private void closeFile(FileURI fileURI, boolean discardChanges, boolean suppressDidChangeNotification) {
 		if (!isOpen(fileURI)) {
 			Assert.fail("trying to close a file that is not open: " + fileURI);
 		}
@@ -399,7 +406,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		}
 
 		OpenFileInfo info = openFiles.remove(fileURI);
-		if (dirty) {
+		if (dirty && !suppressDidChangeNotification) {
 			// when closing a file with unsaved changes, LSP clients send a 'textDocument/didChange' to bring its
 			// content back to the content on disk
 			String contentOnDisk = getContentOfFileOnDisk(fileURI);

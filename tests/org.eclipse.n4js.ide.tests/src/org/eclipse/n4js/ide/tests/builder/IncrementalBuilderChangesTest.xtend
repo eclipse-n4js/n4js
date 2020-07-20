@@ -205,4 +205,24 @@ class IncrementalBuilderChangesTest extends AbstractIncrementalBuilderTest {
 			"(Error, [1:18 - 1:19], string is not a subtype of number.)"
 		]);
 	}
+
+	@Test
+	def void testChangeFileByClosingIt() {
+		testWorkspaceManager.createTestProjectOnDisk(testDataAcrossFiles);
+		startAndWaitForLspServer();
+		assertNoIssues();
+
+		openFile("A");
+		openFile("B");
+
+		changeOpenedFile("A", '42' -> '"hello"');
+		joinServerRequests();
+		assertIssues("B" -> #[
+			"(Error, [1:18 - 1:19], string is not a subtype of number.)"
+		]);
+
+		closeFileDiscardingChanges("A", true);
+		joinServerRequests();
+		assertNoIssues();
+	}
 }

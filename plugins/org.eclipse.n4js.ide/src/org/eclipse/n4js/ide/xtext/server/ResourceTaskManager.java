@@ -74,6 +74,8 @@ public class ResourceTaskManager {
 	protected final ResourceDescriptionsData dirtyIndex = new ResourceDescriptionsData(Collections.emptyList());
 	/** Tracks URIs per project. Derived from persisted state but applies equally to the dirty state. */
 	protected SetMultimap<String, URI> project2URIs = HashMultimap.create();
+	/** Immutable copy of {@link #project2URIs}. */
+	protected ImmutableSetMultimap<String, URI> project2URIsImmutable = ImmutableSetMultimap.copyOf(project2URIs);
 	/** Most recent workspace configuration. */
 	protected IWorkspaceConfigSnapshot workspaceConfig = null;
 
@@ -253,7 +255,6 @@ public class ResourceTaskManager {
 	protected ResourceTaskContext createContext(URI uri, boolean isTemporary) {
 		ResourceTaskContext rtc = openFileContextProvider.get();
 		ResourceDescriptionsData index = isTemporary ? createPersistedStateIndex() : createLiveScopeIndex();
-		ImmutableSetMultimap<String, URI> project2URIsImmutable = ImmutableSetMultimap.copyOf(project2URIs);
 		rtc.initialize(this, uri, isTemporary, index, project2URIsImmutable, workspaceConfig);
 		return rtc;
 	}
@@ -261,12 +262,10 @@ public class ResourceTaskManager {
 	/** Internal removal of all information related to a particular resource task context. */
 	protected synchronized void discardContextInfo(URI uri) {
 		uri2RTCs.remove(uri);
-		dirtyIndex.removeDescription(uri);
+		updateSharedDirtyState(uri, null);
 		if (issueRegistry != null) {
 			issueRegistry.clearIssuesOfDirtyState(uri);
 		}
-		// TODO GH-1774 closing a file may lead to a change in other contexts (because they will switch from using
-		// dirty state to using persisted state for the file being closed)
 	}
 
 	/**
@@ -338,13 +337,13 @@ public class ResourceTaskManager {
 		for (String removedProjectName : removedProjects) {
 			project2URIs.removeAll(removedProjectName);
 		}
+		project2URIsImmutable = ImmutableSetMultimap.copyOf(project2URIs);
 		workspaceConfig = newWorkspaceConfig;
 
 		// update internal state of all contexts
 		if (Iterables.isEmpty(changed) && removed.isEmpty() && workspaceConfig.equals(oldWC)) {
 			return;
 		}
-		ImmutableSetMultimap<String, URI> project2URIsImmutable = ImmutableSetMultimap.copyOf(project2URIs);
 		for (URI currURI : uri2RTCs.keySet()) {
 			runInExistingContextVoid(currURI, "updatePersistedState of existing context", (rtc, ci) -> {
 				rtc.onPersistedStateChanged(changed, removed, project2URIsImmutable, workspaceConfig, ci);
@@ -357,17 +356,31 @@ public class ResourceTaskManager {
 	 * index. Should only be invoked internally from {@link ResourceTaskContext} after
 	 * {@link ResourceTaskContext#refreshContext(int, Iterable, CancelIndicator) refreshing} its internal state.
 	 */
-	protected synchronized void updateSharedDirtyState(IResourceDescription newDesc) {
+	protected synchronized void updateSharedDirtyState(URI uri, IResourceDescription newDesc) {
 		// update my dirty state instance
-		URI newDescURI = newDesc.getURI();
-		dirtyIndex.addDescription(newDescURI, newDesc);
-		// update dirty state instances in the context of each open file (except the one that caused the change)
+		if (newDesc != null) {
+			dirtyIndex.addDescription(uri, newDesc);
+		} else {
+			dirtyIndex.removeDescription(uri);
+		}
+		// update dirty state instance in each resource task context (except the one that caused the change)
+		IResourceDescription replacementDesc = newDesc == null ? persistedIndex.getResourceDescription(uri) : null;
 		for (URI currURI : uri2RTCs.keySet()) {
-			if (currURI.equals(newDescURI)) {
+			if (currURI.equals(uri)) {
 				continue;
 			}
 			runInExistingContextVoid(currURI, "updateSharedDirtyState of existing context", (rtc, ci) -> {
-				rtc.onDirtyStateChanged(newDesc, ci);
+				if (newDesc != null) {
+					rtc.onDirtyStateChanged(newDesc, ci);
+				} else {
+					if (replacementDesc != null) {
+						rtc.onPersistedStateChanged(Collections.singleton(replacementDesc), Collections.emptySet(),
+								project2URIsImmutable, workspaceConfig, ci);
+					} else {
+						rtc.onPersistedStateChanged(Collections.emptyList(), Collections.singleton(uri),
+								project2URIsImmutable, workspaceConfig, ci);
+					}
+				}
 			});
 		}
 	}

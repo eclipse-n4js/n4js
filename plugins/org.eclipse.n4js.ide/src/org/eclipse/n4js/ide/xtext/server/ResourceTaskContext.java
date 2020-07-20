@@ -342,7 +342,7 @@ public class ResourceTaskContext {
 		}
 		IResourceDescription newDesc = createResourceDescription();
 		indexSnapshot.addDescription(mainURI, newDesc);
-		parent.updateSharedDirtyState(newDesc);
+		parent.updateSharedDirtyState(newDesc.getURI(), newDesc);
 	}
 
 	/**
@@ -355,7 +355,7 @@ public class ResourceTaskContext {
 	}
 
 	/**
-	 * Invoked by {@link #parent} when a change happened in a non-opened file.
+	 * Invoked by {@link #parent} when a change happened in a non-opened file OR after an open file was closed.
 	 */
 	protected void onPersistedStateChanged(Collection<? extends IResourceDescription> changedDescs,
 			Set<URI> removedURIs, ImmutableSetMultimap<String, URI> newProject2URIs,
