@@ -180,7 +180,12 @@ public class BuilderFrontend {
 		});
 	}
 
-	public void joinPersister() {
+	public void join() {
+		queuedExecutorService.join();
+		joinPersister();
+	}
+
+	private void joinPersister() {
 		persister.pendingWrites().join();
 	}
 

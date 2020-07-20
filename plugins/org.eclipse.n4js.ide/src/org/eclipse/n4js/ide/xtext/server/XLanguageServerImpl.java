@@ -815,8 +815,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	/** Blocks until all requests of the language server finished */
 	public void joinServerRequests() {
-		queuedExecutorService.join();
-		builderFrontend.joinPersister();
+		builderFrontend.join();
 	}
 
 }
