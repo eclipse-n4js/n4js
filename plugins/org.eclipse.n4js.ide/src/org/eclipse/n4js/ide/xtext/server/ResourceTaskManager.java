@@ -31,6 +31,7 @@ import org.eclipse.n4js.ide.xtext.server.util.CancelIndicatorUtil;
 import org.eclipse.n4js.xtext.workspace.IProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.IWorkspaceConfigSnapshot;
 import org.eclipse.xtext.resource.IResourceDescription;
+import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.xbase.lib.Pair;
@@ -40,7 +41,6 @@ import com.google.common.collect.ImmutableSetMultimap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.SetMultimap;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
@@ -51,13 +51,13 @@ import com.google.inject.Singleton;
 public class ResourceTaskManager {
 
 	@Inject
-	private Provider<ResourceTaskContext> openFileContextProvider;
-
-	@Inject
 	private QueuedExecutorService queuedExecutorService;
 
 	@Inject
 	private ConcurrentIssueRegistry issueRegistry;
+
+	@Inject
+	private IResourceServiceProvider.Registry resourceServiceProviderRegistry;
 
 	/***/
 	protected final Map<URI, ResourceTaskContext> uri2RTCs = new HashMap<>();
@@ -109,7 +109,7 @@ public class ResourceTaskManager {
 		if (uri2RTCs.containsKey(uri)) {
 			return;
 		}
-		ResourceTaskContext newContext = createContext(uri, false);
+		ResourceTaskContext newContext = doCreateContext(uri, false);
 		uri2RTCs.put(uri, newContext);
 
 		runInExistingContextVoid(uri, "createContext", (rtc, ci) -> {
@@ -215,7 +215,7 @@ public class ResourceTaskManager {
 			boolean resolveAndValidate, CancelIndicator outerCancelIndicator,
 			BiFunction<ResourceTaskContext, CancelIndicator, T> task) {
 
-		ResourceTaskContext tempContext = createContext(uri, true);
+		ResourceTaskContext tempContext = doCreateContext(uri, true);
 
 		String descriptionWithContext = description + " (temporary) [" + uri.lastSegment() + "]";
 		return doSubmitTask(tempContext, descriptionWithContext, (_tempContext, ciFromExecutor) -> {
@@ -251,9 +251,11 @@ public class ResourceTaskManager {
 		return Pair.of(ResourceTaskManager.class, uri);
 	}
 
-	/** Creates a new resource task context for the given URI. */
-	protected ResourceTaskContext createContext(URI uri, boolean isTemporary) {
-		ResourceTaskContext rtc = openFileContextProvider.get();
+	/** Actually creates a new resource task context for the given URI. */
+	protected ResourceTaskContext doCreateContext(URI uri, boolean isTemporary) {
+		IResourceServiceProvider resourceServiceProvider = resourceServiceProviderRegistry
+				.getResourceServiceProvider(uri);
+		ResourceTaskContext rtc = resourceServiceProvider.get(ResourceTaskContext.class);
 		ResourceDescriptionsData index = isTemporary ? createPersistedStateIndex() : createLiveScopeIndex();
 		rtc.initialize(this, uri, isTemporary, index, project2URIsImmutable, workspaceConfig);
 		return rtc;
