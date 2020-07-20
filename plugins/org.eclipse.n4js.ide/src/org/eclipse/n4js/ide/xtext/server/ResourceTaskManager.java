@@ -73,9 +73,10 @@ public class ResourceTaskManager {
 	/** The dirty state index. Contains an entry for each URI with an existing resource task context. */
 	protected final ResourceDescriptionsData dirtyIndex = new ResourceDescriptionsData(Collections.emptyList());
 	/** Tracks URIs per project. Derived from persisted state but applies equally to the dirty state. */
-	protected SetMultimap<String, URI> project2URIs = HashMultimap.create();
-	/** Immutable copy of {@link #project2URIs}. */
-	protected ImmutableSetMultimap<String, URI> project2URIsImmutable = ImmutableSetMultimap.copyOf(project2URIs);
+	protected SetMultimap<String, URI> project2BuiltURIs = HashMultimap.create();
+	/** Immutable copy of {@link #project2BuiltURIs}. */
+	protected ImmutableSetMultimap<String, URI> project2BuiltURIsImmutable = ImmutableSetMultimap
+			.copyOf(project2BuiltURIs);
 	/** Most recent workspace configuration. */
 	protected IWorkspaceConfigSnapshot workspaceConfig = null;
 
@@ -85,15 +86,15 @@ public class ResourceTaskManager {
 	/** Listener for events in resource task contexts. */
 	public interface IResourceTaskListener {
 		/** Invoked whenever an open file was resolved, validated, etc. Invoked in the given open file context. */
-		public void didRefreshOpenFile(ResourceTaskContext rtc, CancelIndicator ci);
+		public void didRefreshContext(ResourceTaskContext rtc, CancelIndicator ci);
 	}
 
-	/** Tells whether a resource task context exists for the given URI. */
+	/** Returns true iff a non-temporary {@link ResourceTaskContext} exists for the given URI. */
 	public synchronized boolean isOpen(URI uri) {
 		return uri2RTCs.containsKey(uri);
 	}
 
-	/** Returns the document of the resource task context for the given URI. */
+	/** Returns the {@link XDocument} for the given uri iff #{@link #isOpen(URI)} holds for the given uri. */
 	public synchronized XDocument getOpenDocument(URI uri) {
 		ResourceTaskContext rtc = uri2RTCs.get(uri);
 		if (rtc != null) {
@@ -259,7 +260,7 @@ public class ResourceTaskManager {
 	protected ResourceTaskContext doCreateContext(URI uri, boolean isTemporary) {
 		ResourceTaskContext rtc = resourceTaskContextProvider.get();
 		ResourceDescriptionsData index = isTemporary ? createPersistedStateIndex() : createLiveScopeIndex();
-		rtc.initialize(this, uri, isTemporary, index, project2URIsImmutable, workspaceConfig);
+		rtc.initialize(this, uri, isTemporary, index, project2BuiltURIsImmutable, workspaceConfig);
 		return rtc;
 	}
 
@@ -316,7 +317,7 @@ public class ResourceTaskManager {
 			String projectName = entry.getKey();
 			ResourceDescriptionsData newData = entry.getValue();
 
-			Set<URI> oldURIsOfProject = new HashSet<>(project2URIs.get(projectName));
+			Set<URI> oldURIsOfProject = new HashSet<>(project2BuiltURIs.get(projectName));
 			oldURIsOfProject.removeAll(uri2RTCs.keySet());
 			removed.addAll(oldURIsOfProject);
 
@@ -335,13 +336,13 @@ public class ResourceTaskManager {
 		for (Entry<String, ? extends ResourceDescriptionsData> entry : changedDescriptions.entrySet()) {
 			String projectName = entry.getKey();
 			ResourceDescriptionsData newData = entry.getValue();
-			project2URIs.removeAll(projectName);
-			project2URIs.putAll(projectName, newData.getAllURIs());
+			project2BuiltURIs.removeAll(projectName);
+			project2BuiltURIs.putAll(projectName, newData.getAllURIs());
 		}
 		for (String removedProjectName : removedProjects) {
-			project2URIs.removeAll(removedProjectName);
+			project2BuiltURIs.removeAll(removedProjectName);
 		}
-		project2URIsImmutable = ImmutableSetMultimap.copyOf(project2URIs);
+		project2BuiltURIsImmutable = ImmutableSetMultimap.copyOf(project2BuiltURIs);
 		workspaceConfig = newWorkspaceConfig;
 
 		// update internal state of all contexts
@@ -350,7 +351,7 @@ public class ResourceTaskManager {
 		}
 		for (URI currURI : uri2RTCs.keySet()) {
 			runInExistingContextVoid(currURI, "updatePersistedState of existing context", (rtc, ci) -> {
-				rtc.onPersistedStateChanged(changed, removed, project2URIsImmutable, workspaceConfig, ci);
+				rtc.onPersistedStateChanged(changed, removed, project2BuiltURIsImmutable, workspaceConfig, ci);
 			});
 		}
 	}
@@ -379,10 +380,10 @@ public class ResourceTaskManager {
 				} else {
 					if (replacementDesc != null) {
 						rtc.onPersistedStateChanged(Collections.singleton(replacementDesc), Collections.emptySet(),
-								project2URIsImmutable, workspaceConfig, ci);
+								project2BuiltURIsImmutable, workspaceConfig, ci);
 					} else {
 						rtc.onPersistedStateChanged(Collections.emptyList(), Collections.singleton(uri),
-								project2URIsImmutable, workspaceConfig, ci);
+								project2BuiltURIsImmutable, workspaceConfig, ci);
 					}
 				}
 			});
@@ -410,7 +411,7 @@ public class ResourceTaskManager {
 	/** Notify listeners that a resource task context has completed a refresh. */
 	protected /* NOT synchronized */ void notifyResourceTaskListeners(ResourceTaskContext rtc, CancelIndicator ci) {
 		for (IResourceTaskListener l : listeners) {
-			l.didRefreshOpenFile(rtc, ci);
+			l.didRefreshContext(rtc, ci);
 		}
 	}
 }

@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,8 +26,8 @@ import java.util.zip.ZipException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ide.xtext.server.build.HashedFileContent;
 import org.eclipse.n4js.ide.xtext.server.build.ProjectStatePersister;
-import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
 import org.eclipse.n4js.ide.xtext.server.build.ProjectStatePersister.ProjectState;
+import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.xtext.builder.builderState.BuilderStateFactory;
 import org.eclipse.xtext.builder.builderState.impl.EObjectDescriptionImpl;
@@ -47,7 +46,7 @@ import org.junit.Test;
 public class ProjectStatePersisterTest {
 
 	ProjectState createProjectState() {
-		return createProjectState();
+		return createProjectState(null, null, null, null);
 	}
 
 	ProjectState createProjectState(ResourceDescriptionsData index, XSource2GeneratedMapping fileMappings,
@@ -152,9 +151,8 @@ public class ProjectStatePersisterTest {
 		testMe.writeProjectState(output, languageVersion, state);
 		ByteArrayInputStream outputStream = new ByteArrayInputStream(output.toByteArray());
 		ProjectState pState = testMe.readProjectState(outputStream, languageVersion);
-		Collection<HashedFileContent> files = pState.fileHashs.values();
 
-		Assert.assertEquals(fingerprints, new HashSet<>(files));
+		Assert.assertEquals(fingerprints, pState.fileHashs);
 		List<URI> targets = pState.fileMappings.getGenerated(sourceURI);
 		Assert.assertEquals(1, targets.size());
 		Assert.assertEquals(targetURI, targets.get(0));

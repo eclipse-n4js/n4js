@@ -97,8 +97,8 @@ public class ResourceTaskContext {
 	 */
 	protected ResourceDescriptionsData indexSnapshot;
 
-	/** Maps project names to URIs of all resources contained in the project. */
-	protected ImmutableSetMultimap<String, URI> project2URIs;
+	/** Maps project names to URIs of all resources contained in the project (from the last build). */
+	protected ImmutableSetMultimap<String, URI> project2BuiltURIs;
 
 	/** Most recent workspace configuration. */
 	protected IWorkspaceConfigSnapshot workspaceConfig;
@@ -110,7 +110,7 @@ public class ResourceTaskContext {
 	/** The current textual content of the open file. */
 	protected XDocument document = null;
 
-	/** Within each resource task's context, this provides source text of all other task's main resource. */
+	/** Within each resource task context, this provides text contents of all other context's main resources. */
 	protected class ResourceTaskContentProvider implements IExternalContentProvider {
 		@Override
 		public String getContent(URI uri) {
@@ -160,7 +160,7 @@ public class ResourceTaskContext {
 		return !isTemporary();
 	}
 
-	/** Returns the context's resource set. Each resource task has exactly one resource set. */
+	/** Returns the context's resource set. Each resource task context has exactly one resource set. */
 	public synchronized XtextResourceSet getResourceSet() {
 		return mainResourceSet;
 	}
@@ -184,16 +184,17 @@ public class ResourceTaskContext {
 		return document;
 	}
 
-	/** Initialize this context's fields and resource set. Invoked once per context. */
+	/** Initialize this context's non-injectable fields and resource set. Invoked once per context. */
 	@SuppressWarnings("hiding")
 	public synchronized void initialize(ResourceTaskManager parent, URI uri, boolean isTemporary,
-			ResourceDescriptionsData index, ImmutableSetMultimap<String, URI> project2URIs,
+			ResourceDescriptionsData index, ImmutableSetMultimap<String, URI> project2builtURIs,
 			IWorkspaceConfigSnapshot workspaceConfig) {
+
 		this.parent = parent;
 		this.mainURI = uri;
 		this.temporary = isTemporary;
 		this.indexSnapshot = index;
-		this.project2URIs = project2URIs;
+		this.project2BuiltURIs = project2builtURIs;
 		this.workspaceConfig = workspaceConfig;
 
 		this.mainResourceSet = createResourceSet();
@@ -350,7 +351,7 @@ public class ResourceTaskContext {
 	 * {@link ResourceTaskContext}). Will never be invoked for {@link #isTemporary() temporary} contexts.
 	 */
 	protected void onDirtyStateChanged(IResourceDescription changedDesc, CancelIndicator cancelIndicator) {
-		updateIndex(Collections.singletonList(changedDesc), Collections.emptySet(), project2URIs,
+		updateIndex(Collections.singletonList(changedDesc), Collections.emptySet(), project2BuiltURIs,
 				workspaceConfig, cancelIndicator);
 	}
 
@@ -358,14 +359,14 @@ public class ResourceTaskContext {
 	 * Invoked by {@link #parent} when a change happened in a non-opened file OR after an open file was closed.
 	 */
 	protected void onPersistedStateChanged(Collection<? extends IResourceDescription> changedDescs,
-			Set<URI> removedURIs, ImmutableSetMultimap<String, URI> newProject2URIs,
+			Set<URI> removedURIs, ImmutableSetMultimap<String, URI> newProject2builtURIs,
 			IWorkspaceConfigSnapshot newWorkspaceConfig, CancelIndicator cancelIndicator) {
-		updateIndex(changedDescs, removedURIs, newProject2URIs, newWorkspaceConfig, cancelIndicator);
+		updateIndex(changedDescs, removedURIs, newProject2builtURIs, newWorkspaceConfig, cancelIndicator);
 	}
 
 	/** Update this context's internal index and trigger a refresh if required. */
 	protected void updateIndex(Collection<? extends IResourceDescription> changedDescs, Set<URI> removedURIs,
-			ImmutableSetMultimap<String, URI> newProject2URIs, IWorkspaceConfigSnapshot newWorkspaceConfig,
+			ImmutableSetMultimap<String, URI> newProject2builtURIs, IWorkspaceConfigSnapshot newWorkspaceConfig,
 			CancelIndicator cancelIndicator) {
 
 		// update my cached state
@@ -375,7 +376,7 @@ public class ResourceTaskContext {
 			indexSnapshot.register(delta);
 		}
 
-		project2URIs = newProject2URIs;
+		project2BuiltURIs = newProject2builtURIs;
 
 		IWorkspaceConfigSnapshot oldWorkspaceConfig = workspaceConfig;
 		workspaceConfig = newWorkspaceConfig;
