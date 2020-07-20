@@ -13,7 +13,6 @@ package org.eclipse.n4js.ide.xtext.server;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.CallHierarchyCall;
 import org.eclipse.lsp4j.CallHierarchyParams;
 import org.eclipse.lsp4j.CodeAction;
@@ -58,8 +57,6 @@ import org.eclipse.lsp4j.SelectionRange;
 import org.eclipse.lsp4j.SelectionRangeParams;
 import org.eclipse.lsp4j.SignatureHelp;
 import org.eclipse.lsp4j.SymbolInformation;
-import org.eclipse.lsp4j.TextDocumentIdentifier;
-import org.eclipse.lsp4j.TextDocumentItem;
 import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.TypeHierarchyItem;
@@ -71,7 +68,6 @@ import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.services.TextDocumentService;
 import org.eclipse.lsp4j.services.WorkspaceService;
 import org.eclipse.n4js.ide.xtext.server.build.BuilderFrontend;
-import org.eclipse.xtext.ide.server.UriExtensions;
 
 import com.google.common.annotations.Beta;
 import com.google.inject.Inject;
@@ -91,12 +87,6 @@ public class LanguageServerFrontend implements TextDocumentService, WorkspaceSer
 
 	@Inject
 	private WorkspaceFrontend workspaceFrontend;
-
-	@Inject
-	private QueuedExecutorService lspExecutorService;
-
-	@Inject
-	private UriExtensions uriExtensions;
 
 	@Override
 	public void didOpen(DidOpenTextDocumentParams params) {
@@ -312,21 +302,5 @@ public class LanguageServerFrontend implements TextDocumentService, WorkspaceSer
 	@Override
 	public CompletableFuture<List<? extends SymbolInformation>> symbol(WorkspaceSymbolParams params) {
 		return workspaceFrontend.symbol(params);
-	}
-
-	/** Obtain the URI from the given identifier. */
-	protected URI getURI(TextDocumentIdentifier documentIdentifier) {
-		return uriExtensions.toUri(documentIdentifier.getUri());
-	}
-
-	/** Obtain the URI from the given document item. */
-	protected URI getURI(TextDocumentItem documentItem) {
-		return uriExtensions.toUri(documentItem.getUri());
-	}
-
-	/** Blocks until all requests of the language server finished */
-	public void joinServerRequests() {
-		lspExecutorService.join();
-		builderFrontend.joinPersister();
 	}
 }
