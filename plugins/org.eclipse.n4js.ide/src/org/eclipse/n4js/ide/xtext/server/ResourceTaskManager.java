@@ -51,7 +51,7 @@ import com.google.inject.Singleton;
 public class ResourceTaskManager {
 
 	@Inject
-	private Provider<ResourceTaskContext> openFileContextProvider;
+	private Provider<ResourceTaskContext> resourceTaskContextProvider;
 
 	@Inject
 	private QueuedExecutorService queuedExecutorService;
@@ -109,7 +109,7 @@ public class ResourceTaskManager {
 		if (uri2RTCs.containsKey(uri)) {
 			return;
 		}
-		ResourceTaskContext newContext = createContext(uri, false);
+		ResourceTaskContext newContext = doCreateContext(uri, false);
 		uri2RTCs.put(uri, newContext);
 
 		runInExistingContextVoid(uri, "createContext", (rtc, ci) -> {
@@ -215,7 +215,7 @@ public class ResourceTaskManager {
 			boolean resolveAndValidate, CancelIndicator outerCancelIndicator,
 			BiFunction<ResourceTaskContext, CancelIndicator, T> task) {
 
-		ResourceTaskContext tempContext = createContext(uri, true);
+		ResourceTaskContext tempContext = doCreateContext(uri, true);
 
 		String descriptionWithContext = description + " (temporary) [" + uri.lastSegment() + "]";
 		return doSubmitTask(tempContext, descriptionWithContext, (_tempContext, ciFromExecutor) -> {
@@ -251,9 +251,13 @@ public class ResourceTaskManager {
 		return Pair.of(ResourceTaskManager.class, uri);
 	}
 
-	/** Creates a new resource task context for the given URI. */
-	protected ResourceTaskContext createContext(URI uri, boolean isTemporary) {
-		ResourceTaskContext rtc = openFileContextProvider.get();
+	/**
+	 * Actually creates a new resource task context for the given URI.
+	 * <p>
+	 * TODO add support for language-specific bindings of ResourceTaskContext
+	 */
+	protected ResourceTaskContext doCreateContext(URI uri, boolean isTemporary) {
+		ResourceTaskContext rtc = resourceTaskContextProvider.get();
 		ResourceDescriptionsData index = isTemporary ? createPersistedStateIndex() : createLiveScopeIndex();
 		rtc.initialize(this, uri, isTemporary, index, project2URIsImmutable, workspaceConfig);
 		return rtc;
