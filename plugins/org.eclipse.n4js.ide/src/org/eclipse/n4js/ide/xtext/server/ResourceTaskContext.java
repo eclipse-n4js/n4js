@@ -28,6 +28,7 @@ import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIssueRegistry;
 import org.eclipse.n4js.xtext.workspace.IWorkspaceConfigSnapshot;
 import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.resource.IExternalContentSupport;
@@ -54,7 +55,9 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 /**
- * Represents a single resource task context, including EMF resources for files required by the resource.
+ * Represents the context for tasks that operate on a certain EMF resource, called main resource, including all
+ * necessary information and data structures for performing such task. In particular, this includes EMF resources for
+ * files required by the main resource.
  */
 @SuppressWarnings({ "restriction" })
 public class ResourceTaskContext {
@@ -94,8 +97,10 @@ public class ResourceTaskContext {
 	 */
 	protected ResourceDescriptionsData indexSnapshot;
 
+	/** Maps project names to URIs of all resources contained in the project. */
 	protected ImmutableSetMultimap<String, URI> containerHandle2URIs;
 
+	/** Most recent workspace configuration. */
 	protected IWorkspaceConfigSnapshot workspaceConfig;
 
 	/** The resource set used for the current resource and any other resources required for resolution. */
@@ -105,6 +110,7 @@ public class ResourceTaskContext {
 	/** The current textual content of the open file. */
 	protected XDocument document = null;
 
+	/** Within each resource task's context, this provides source text of all other task's main resource. */
 	protected class ResourceTaskContentProvider implements IExternalContentProvider {
 		@Override
 		public String getContent(URI uri) {
@@ -123,12 +129,13 @@ public class ResourceTaskContext {
 		}
 	}
 
+	/** @return URI of main resource. */
 	public synchronized URI getURI() {
 		return mainURI;
 	}
 
 	/**
-	 * Tells whether this {@link ResourceTaskContext} represents a temporarily opened file. Such contexts do not
+	 * Tells whether this {@link ResourceTaskContext} represents a temporary resource task. Such contexts do not
 	 * actually represent an open editor in the LSP client but were created to perform editing-related computations in
 	 * files not actually opened in the LSP client. For example, when API documentation needs to be retrieved from a
 	 * file not currently opened in an editor in the LSP client, such a temporary {@code OpenFileContext} will be
@@ -153,10 +160,18 @@ public class ResourceTaskContext {
 		return !isTemporary();
 	}
 
+	/** Returns the context's resource set. Each resource task has exactly one resource set. */
 	public synchronized XtextResourceSet getResourceSet() {
 		return mainResourceSet;
 	}
 
+	/**
+	 * This resource task's main resource. Each resource task is associated with exactly one main resource.
+	 * <p>
+	 * Other resources that exist in a task's {@link #getResourceSet() resource set} were either demand-loaded during
+	 * {@link LazyLinkingResource#resolveLazyCrossReferences(CancelIndicator) resolution} of the main resource or were
+	 * explicitly loaded by some task running in the context (e.g. some editing functionality).
+	 */
 	public synchronized XtextResource getResource() {
 		return mainResource;
 	}
@@ -169,6 +184,7 @@ public class ResourceTaskContext {
 		return document;
 	}
 
+	/** Initialize this context's fields and resource set. Invoked once per context. */
 	@SuppressWarnings("hiding")
 	public synchronized void initialize(ResourceTaskManager parent, URI uri, boolean isTemporary,
 			ResourceDescriptionsData index, ImmutableSetMultimap<String, URI> containerHandle2URIs,
@@ -183,6 +199,7 @@ public class ResourceTaskContext {
 		this.mainResourceSet = createResourceSet();
 	}
 
+	/** Returns a newly created and fully configured resource set */
 	protected XtextResourceSet createResourceSet() {
 		XtextResourceSet result = resourceSetProvider.get();
 		ResourceDescriptionsData.ResourceSetAdapter.installResourceDescriptionsData(result, indexSnapshot);
@@ -194,7 +211,10 @@ public class ResourceTaskContext {
 		return result;
 	}
 
-	/** Initialize the current context with the given content. */
+	/**
+	 * Create & initialize this context's main resource with the given content. Invoked exactly once for
+	 * NON-{@link #isTemporary() temporary} contexts, not at all for temporary contexts.
+	 */
 	protected void initContext(int version, String content, CancelIndicator cancelIndicator) {
 		if (mainResource != null) {
 			throw new IllegalStateException("trying to initialize an already initialized resource: " + mainURI);
@@ -212,7 +232,11 @@ public class ResourceTaskContext {
 		resolveAndValidateResource(cancelIndicator);
 	}
 
-	/** Initialize the resource task based only on its URI, retrieving its content via EMF's {@link ResourceLocator}. */
+	/**
+	 * Create & initialize this context's main resource based only on its URI, retrieving its content via EMF's
+	 * {@link ResourceLocator}. Invoked exactly once for {@link #isTemporary() temporary} contexts, not at all for
+	 * non-temporary contexts.
+	 */
 	protected void initContext(boolean resolveAndValidate, CancelIndicator cancelIndicator) {
 		if (mainResource != null) {
 			throw new IllegalStateException("trying to initialize an already initialized resource: " + mainURI);
@@ -228,12 +252,17 @@ public class ResourceTaskContext {
 		}
 	}
 
+	/** Same as {@link #refreshContext(int, Iterable, CancelIndicator)}, but without changing the source text. */
 	public void refreshContext(CancelIndicator cancelIndicator) {
 		// TODO IDE-3402 find better solution for updating unchanged resource task contexts!
 		TextDocumentContentChangeEvent dummyChange = new TextDocumentContentChangeEvent(document.getContents());
 		refreshContext(document.getVersion(), Collections.singletonList(dummyChange), cancelIndicator);
 	}
 
+	/**
+	 * Refresh this context's main resource, i.e. change its source text and then parse, resolve, and validate it. Also
+	 * sends out dirty state index and issue updates (not for {@link #isTemporary() temporary} contexts).
+	 */
 	public void refreshContext(@SuppressWarnings("unused") int version,
 			Iterable<? extends TextDocumentContentChangeEvent> changes, CancelIndicator cancelIndicator) {
 
@@ -266,11 +295,16 @@ public class ResourceTaskContext {
 		resolveAndValidateResource(cancelIndicator);
 	}
 
+	/**
+	 * Triggers {@link #resolveResource(CancelIndicator) resolution} and {@link #validateResource(CancelIndicator)
+	 * validation} of this context's main resource.
+	 */
 	public List<Issue> resolveAndValidateResource(CancelIndicator cancelIndicator) {
 		resolveResource(cancelIndicator);
 		return validateResource(cancelIndicator);
 	}
 
+	/** Resolve this context's main resource and send a dirty state index update. */
 	public void resolveResource(CancelIndicator cancelIndicator) {
 		// resolve
 		EcoreUtil2.resolveLazyCrossReferences(mainResource, cancelIndicator);
@@ -280,6 +314,7 @@ public class ResourceTaskContext {
 		parent.onDidRefreshContext(this, cancelIndicator);
 	}
 
+	/** Validate this context's main resource and send an issue update. */
 	public List<Issue> validateResource(CancelIndicator cancelIndicator) {
 		// validate
 		IResourceServiceProvider resourceServiceProvider = languagesRegistry.getResourceServiceProvider(mainURI);
@@ -291,6 +326,7 @@ public class ResourceTaskContext {
 		return issues;
 	}
 
+	/** Send issue update to issue registry. Ignored for {@link #isTemporary()} contexts. */
 	protected void publishIssues(List<Issue> issues, CancelIndicator cancelIndicator) {
 		if (isTemporary()) {
 			return; // temporarily opened files do not contribute to the global issue registry
@@ -299,6 +335,7 @@ public class ResourceTaskContext {
 		issueRegistry.setIssuesOfDirtyState(mainURI, lspIssues);
 	}
 
+	/** Send dirty state index update to parent. Ignored for {@link #isTemporary() temporary} contexts. */
 	protected void updateSharedDirtyState() {
 		if (isTemporary()) {
 			return; // temporarily opened files do not contribute to the parent's shared dirty state index
@@ -326,6 +363,7 @@ public class ResourceTaskContext {
 		updateIndex(changedDescs, removedURIs, newContainerHandle2URIs, newWorkspaceConfig, cancelIndicator);
 	}
 
+	/** Update this context's internal index and trigger a refresh if required. */
 	protected void updateIndex(Collection<? extends IResourceDescription> changedDescs, Set<URI> removedURIs,
 			ImmutableSetMultimap<String, URI> newContainerHandle2URIs, IWorkspaceConfigSnapshot newWorkspaceConfig,
 			CancelIndicator cancelIndicator) {
@@ -367,6 +405,7 @@ public class ResourceTaskContext {
 		}
 	}
 
+	/** Create deltas for the given changes and removals. */
 	protected List<IResourceDescription.Delta> createDeltas(Collection<? extends IResourceDescription> changedDescs,
 			Set<URI> removedURIs) {
 
@@ -392,6 +431,7 @@ public class ResourceTaskContext {
 		return deltas;
 	}
 
+	/** Create a delta for the given change. 'oldDesc' and 'newDesc' may be <code>null</code>. */
 	protected IResourceDescription.Delta createDelta(URI uri, IResourceDescription oldDesc,
 			IResourceDescription newDesc) {
 
@@ -405,6 +445,7 @@ public class ResourceTaskContext {
 		return null;
 	}
 
+	/** Create a resource description representing the current state of this context's main resource. */
 	protected IResourceDescription createResourceDescription() {
 		IResourceDescription.Manager resourceDescriptionManager = getResourceDescriptionManager(mainURI);
 		IResourceDescription newDesc = resourceDescriptionManager.getResourceDescription(mainResource);
@@ -418,6 +459,7 @@ public class ResourceTaskContext {
 		return newDesc2;
 	}
 
+	/** Return the correct resource description manager for the resource with the given URI. */
 	protected IResourceDescription.Manager getResourceDescriptionManager(URI uri) {
 		IResourceServiceProvider resourceServiceProvider = resourceServiceProviderRegistry
 				.getResourceServiceProvider(uri);

@@ -25,6 +25,7 @@ import java.util.function.BiFunction;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
+import org.eclipse.n4js.ide.xtext.server.build.BuilderFrontend;
 import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIssueRegistry;
 import org.eclipse.n4js.ide.xtext.server.util.CancelIndicatorUtil;
 import org.eclipse.n4js.xtext.workspace.IProjectConfigSnapshot;
@@ -43,6 +44,10 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
+/**
+ * Manages a set of {@link ResourceTaskContext}s, including creation, disposal, and executing tasks within those
+ * contexts.
+ */
 @Singleton
 public class ResourceTaskManager {
 
@@ -55,27 +60,40 @@ public class ResourceTaskManager {
 	@Inject
 	private ConcurrentIssueRegistry issueRegistry;
 
+	/***/
 	protected final Map<URI, ResourceTaskContext> uri2RTCs = new HashMap<>();
 
+	/**
+	 * For each thread that is currently executing a resource-related task, this stores the corresponding
+	 * {@link ResourceTaskContext}.
+	 */
 	protected final ThreadLocal<ResourceTaskContext> currentContext = new ThreadLocal<>();
 
+	/***/
 	protected final Map<String, ResourceDescriptionsData> persistedStateDescriptions = new HashMap<>();
+	/***/
 	protected final ResourceDescriptionsData sharedDirtyState = new ResourceDescriptionsData(Collections.emptyList());
 
+	/***/
 	protected ImmutableSetMultimap<String, URI> containerHandle2URIs = ImmutableSetMultimap.of();
+	/***/
 	protected IWorkspaceConfigSnapshot workspaceConfig = null;
 
+	/***/
 	protected final List<IResourceTaskListener> listeners = new CopyOnWriteArrayList<>();
 
+	/** Listener for events in resource task contexts. */
 	public interface IResourceTaskListener {
 		/** Invoked whenever an open file was resolved, validated, etc. Invoked in the given open file context. */
 		public void didRefreshOpenFile(ResourceTaskContext rtc, CancelIndicator ci);
 	}
 
+	/** Tells whether a resource task context exists for the given URI. */
 	public synchronized boolean isOpen(URI uri) {
 		return uri2RTCs.containsKey(uri);
 	}
 
+	/** Returns the document of the resource task context for the given URI. */
 	public synchronized XDocument getOpenDocument(URI uri) {
 		ResourceTaskContext rtc = uri2RTCs.get(uri);
 		if (rtc != null) {
@@ -86,6 +104,7 @@ public class ResourceTaskManager {
 		return null;
 	}
 
+	/** Create a new resource task context for the resource with the given URI. */
 	public synchronized void createContext(URI uri, int version, String content) {
 		if (uri2RTCs.containsKey(uri)) {
 			return;
@@ -98,6 +117,7 @@ public class ResourceTaskManager {
 		});
 	}
 
+	/** Change the source text of the main resource of the resource task context for the given URI. */
 	public synchronized void changeSourceTextOfExistingContext(URI uri, int version,
 			Iterable<? extends TextDocumentContentChangeEvent> changes) {
 
@@ -111,6 +131,7 @@ public class ResourceTaskManager {
 		});
 	}
 
+	/** Dispose of all resource task contexts managed by this manager. */
 	public synchronized CompletableFuture<Void> closeAll() {
 		List<CompletableFuture<Void>> cfs = new ArrayList<>(uri2RTCs.size());
 		for (URI uri : new ArrayList<>(uri2RTCs.keySet())) {
@@ -119,6 +140,7 @@ public class ResourceTaskManager {
 		return CompletableFuture.allOf(cfs.toArray(new CompletableFuture<?>[cfs.size()]));
 	}
 
+	/** Dispose of the resource task context for the resource with the given URI. */
 	public synchronized CompletableFuture<Void> closeContext(URI uri) {
 		// To allow running/pending tasks in the context of the given URI's file to complete normally, we put the call
 		// to #discardOpenFileInfo() on the queue (note: this does not apply to tasks being submitted after this method
@@ -139,6 +161,7 @@ public class ResourceTaskManager {
 		}
 	}
 
+	/** Same as {@link #runInExistingContext(URI, String, BiFunction)}, but for tasks without a return value. */
 	public synchronized CompletableFuture<Void> runInExistingContextVoid(URI uri, String description,
 			BiConsumer<ResourceTaskContext, CancelIndicator> task) {
 
@@ -148,6 +171,10 @@ public class ResourceTaskManager {
 		});
 	}
 
+	/**
+	 * Run the given task within the resource task context for the given URI. Assumes that a context for the given URI
+	 * exists and throws an exception otherwise.
+	 */
 	public synchronized <T> CompletableFuture<T> runInExistingContext(URI uri, String description,
 			BiFunction<ResourceTaskContext, CancelIndicator, T> task) {
 
@@ -161,11 +188,11 @@ public class ResourceTaskManager {
 	}
 
 	/**
-	 * Creates a temporary context for the file with the given URI, initializes it, and executes the given task,
-	 * <em>without</em> interfering with other possibly existing or temporary contexts for that 'uri'.
+	 * Creates a temporary resource task context for the file with the given URI, initializes it, and executes the given
+	 * task, without interfering with other possibly existing or temporary contexts for that 'uri'.
 	 * <p>
-	 * The temporary context is not retained over a longer period of time; the given task will be the only task that
-	 * will ever be executed in this temporary context.
+	 * The temporary context is not retained over a longer period of time; the given task is the only task that will
+	 * ever be executed in this temporary context.
 	 * <p>
 	 * Note that instead of using this method, the caller might simply create a new resource set from scratch, configure
 	 * it with a {@link #createLiveScopeIndex() live scope index}, and synchronously perform any desired computation
@@ -198,6 +225,7 @@ public class ResourceTaskManager {
 		});
 	}
 
+	/** Submit a task for execution within a resource task context to the executor service. */
 	protected <T> CompletableFuture<T> doSubmitTask(ResourceTaskContext rtc, String description,
 			BiFunction<ResourceTaskContext, CancelIndicator, T> task) {
 
@@ -212,6 +240,7 @@ public class ResourceTaskManager {
 		});
 	}
 
+	/** Returns a queue ID for tasks supposed to run in the resource task context of the given URI. */
 	protected Object getQueueIdForContext(URI uri, boolean isTemporary) {
 		if (isTemporary) {
 			// for every temporary context only a single task is being submitted that is supposed to be independent of
@@ -222,6 +251,7 @@ public class ResourceTaskManager {
 		return Pair.of(ResourceTaskManager.class, uri);
 	}
 
+	/** Creates a new resource task context for the given URI. */
 	protected ResourceTaskContext createContext(URI uri, boolean isTemporary) {
 		ResourceTaskContext rtc = openFileContextProvider.get();
 		ResourceDescriptionsData index = isTemporary ? createPersistedStateIndex() : createLiveScopeIndex();
@@ -229,6 +259,7 @@ public class ResourceTaskManager {
 		return rtc;
 	}
 
+	/** Internal removal of all information related to a particular resource task context. */
 	protected synchronized void discardContextInfo(URI uri) {
 		uri2RTCs.remove(uri);
 		sharedDirtyState.removeDescription(uri);
@@ -249,6 +280,7 @@ public class ResourceTaskManager {
 		return currentContext.get();
 	}
 
+	/** Creates an index not containing any dirty state information. */
 	protected synchronized ResourceDescriptionsData createPersistedStateIndex() {
 		// TODO GH-1774 performance? (consider maintaining a ResourceDescriptionsData in addition to persistedState)
 		return new ResourceDescriptionsData(IterableExtensions.flatMap(persistedStateDescriptions.values(),
@@ -264,6 +296,11 @@ public class ResourceTaskManager {
 		return result;
 	}
 
+	/**
+	 * Updates this manager and all its {@link ResourceTaskContext}s with the given changes to the persisted state
+	 * index. Should be invoked from the outside whenever changes to the persisted state become available, e.g. because
+	 * the {@link BuilderFrontend builder} has rebuilt some files.
+	 */
 	public synchronized void updatePersistedState(
 			IWorkspaceConfigSnapshot newWorkspaceConfig,
 			Map<String, ? extends ResourceDescriptionsData> changedDescriptions,
@@ -325,6 +362,11 @@ public class ResourceTaskManager {
 		}
 	}
 
+	/**
+	 * Updates this manager and all its {@link ResourceTaskContext}s with the given changes to the persisted state
+	 * index. Should only be invoked internally from {@link ResourceTaskContext} after
+	 * {@link ResourceTaskContext#refreshContext(int, Iterable, CancelIndicator) refreshing} its internal state.
+	 */
 	protected synchronized void updateSharedDirtyState(IResourceDescription newDesc) {
 		// update my dirty state instance
 		URI newDescURI = newDesc.getURI();
@@ -340,14 +382,17 @@ public class ResourceTaskManager {
 		}
 	}
 
+	/** Adds a {@link IResourceTaskListener listener}. */
 	public void addListener(IResourceTaskListener l) {
 		listeners.add(l);
 	}
 
+	/** Removes a {@link IResourceTaskListener listener}. */
 	public void removeListener(IResourceTaskListener l) {
 		listeners.remove(l);
 	}
 
+	/** Invoked by {@link ResourceTaskContext} after completing a refresh. */
 	protected /* NOT synchronized */ void onDidRefreshContext(ResourceTaskContext rtc, CancelIndicator ci) {
 		if (rtc.isTemporary()) {
 			return; // temporarily opened files do not send out events to resource task listeners
@@ -355,6 +400,7 @@ public class ResourceTaskManager {
 		notifyResourceTaskListeners(rtc, ci);
 	}
 
+	/** Notify listeners that a resource task context has completed a refresh. */
 	protected /* NOT synchronized */ void notifyResourceTaskListeners(ResourceTaskContext rtc, CancelIndicator ci) {
 		for (IResourceTaskListener l : listeners) {
 			l.didRefreshOpenFile(rtc, ci);
