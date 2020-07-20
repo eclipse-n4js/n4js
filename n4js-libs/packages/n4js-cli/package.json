@@ -24,7 +24,7 @@
     "src"
   ],
   "devDependencies": {
-    "mocha": "^6.2.0"
+    "mocha": "^6.2.3"
   },
   "dependencies": {
     "@n4jsd/debug": "<=4.1.*",
