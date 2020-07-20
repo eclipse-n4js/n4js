@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -152,9 +151,8 @@ public class ProjectStatePersisterTest {
 		testMe.writeProjectState(output, languageVersion, state);
 		ByteArrayInputStream outputStream = new ByteArrayInputStream(output.toByteArray());
 		ProjectState pState = testMe.readProjectState(outputStream, languageVersion);
-		Collection<HashedFileContent> files = pState.fileHashs.values();
 
-		Assert.assertEquals(fingerprints, new HashSet<>(files));
+		Assert.assertEquals(fingerprints, pState.fileHashs);
 		List<URI> targets = pState.fileMappings.getGenerated(sourceURI);
 		Assert.assertEquals(1, targets.size());
 		Assert.assertEquals(targetURI, targets.get(0));
