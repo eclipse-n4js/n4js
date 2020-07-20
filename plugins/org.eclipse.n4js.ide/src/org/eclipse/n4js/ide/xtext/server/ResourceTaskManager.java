@@ -73,6 +73,11 @@ public class ResourceTaskManager {
 	 */
 	protected final ThreadLocal<ResourceTaskContext> currentContext = new ThreadLocal<>();
 
+	/*
+	 * Review feedback:
+	 *
+	 * This looks like being the same as the the ConcurrentIndex structure?
+	 */
 	/** The persisted state index, not taking into account dirty state from existing resource task contexts. */
 	protected final ResourceDescriptionsData persistedIndex = new ResourceDescriptionsData(Collections.emptyList());
 	/** The dirty state index. Contains an entry for each URI with an existing resource task context. */
@@ -88,6 +93,11 @@ public class ResourceTaskManager {
 	/***/
 	protected final List<IResourceTaskListener> listeners = new CopyOnWriteArrayList<>();
 
+	/*
+	 * Review feedback:
+	 *
+	 * Is this only ever used for the highlighting?
+	 */
 	/** Listener for events in resource task contexts. */
 	public interface IResourceTaskListener {
 		/** Invoked whenever an open file was resolved, validated, etc. Invoked in the given open file context. */
@@ -190,6 +200,10 @@ public class ResourceTaskManager {
 		}
 
 		String descriptionWithContext = description + " [" + uri.lastSegment() + "]";
+		/*
+		 * Review feedback: When the task is started, it may already be obsolete. Is this ok? Should it be immediately
+		 * cancelled?
+		 */
 		return doSubmitTask(rtc, descriptionWithContext, task);
 	}
 
@@ -288,6 +302,12 @@ public class ResourceTaskManager {
 		return currentContext.get();
 	}
 
+	/*
+	 * Review feedback:
+	 *
+	 * Copying the entire index should not be necessary since we do have implementations of IResourceDescriptions that
+	 * do apply sane shadowing semantics.
+	 */
 	/** Creates an index not containing any dirty state information. */
 	protected synchronized ResourceDescriptionsData createPersistedStateIndex() {
 		return persistedIndex.copy();
