@@ -101,7 +101,6 @@ import org.eclipse.xtext.ide.server.commands.ExecutableCommandRegistry;
 import org.eclipse.xtext.ide.server.rename.IRenameService;
 import org.eclipse.xtext.ide.server.rename.IRenameService2;
 import org.eclipse.xtext.ide.server.semanticHighlight.SemanticHighlightingRegistry;
-import org.eclipse.xtext.ide.server.symbol.WorkspaceSymbolService;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
@@ -132,26 +131,39 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	private static final Logger LOG = Logger.getLogger(XLanguageServerImpl.class);
 
+	/*
+	 * Review feedback: Only used by the inner impl of LanguageServerAccess. Should be moved into the
+	 * LanguageServerFrontend.
+	 */
 	@Inject
 	private ResourceTaskManager resourceTaskManager;
 
 	@Inject
 	private LanguageServerFrontend lsFrontend;
 
+	/*
+	 * Review feedback: The BuilderFrontend and the WorkspaceFrontend are both encapsulated by the
+	 * LanguageServerFrontend except for initialize and shutdown. These should both be moved into the
+	 * LanguageServerFrontend, if in doubt as package visible or protected methods.
+	 */
 	@Inject
 	private BuilderFrontend builderFrontend;
 
 	@Inject
 	private TextDocumentFrontend textDocumentFrontend;
 
+	/*
+	 * Review feedback: The WorkspaceFrontend is encapsulated by the LanguageServerFrontend except for initialize.
+	 */
 	@Inject
 	private WorkspaceFrontend workspaceFrontend;
 
+	/*
+	 * Review feedback: Only exposed via getter and only used in tests for shutdown - encapsulate and move into
+	 * LanguageServerFrontend via BuilderFrontend
+	 */
 	@Inject
 	private QueuedExecutorService queuedExecutorService;
-
-	@Inject
-	private WorkspaceSymbolService workspaceSymbolService;
 
 	@Inject
 	private UriExtensions uriExtensions;
@@ -168,9 +180,16 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	@Inject
 	private ILanguageServerShutdownAndExitHandler shutdownAndExitHandler;
 
+	/*
+	 * Review feedback: Only used from getter. Remove it.
+	 */
 	@Inject
 	private ConcurrentIndex fullIndex;
 
+	/*
+	 * Review feedback: Only used from shutdown. Define clear ownership. Why does it need to be cleared on shutdown at
+	 * all?
+	 */
 	@Inject
 	private ConcurrentIssueRegistry issueRegistry;
 
@@ -408,6 +427,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	@Override
 	public void exit() {
 		LOG.info("Received exit notification");
+		/*
+		 * Review feedback: Move into LanguageServerFrontend
+		 */
 		joinServerRequests();
 		shutdownAndExitHandler.exit();
 	}
@@ -774,26 +796,15 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	}
 
 	/**
-	 * TODO add <code>@since</code> tag
-	 */
-	public BuilderFrontend getBuilder() {
-		return builderFrontend;
-	}
-
-	/**
-	 * @since 2.16
-	 */
-	protected WorkspaceSymbolService getWorkspaceSymbolService() {
-		return workspaceSymbolService;
-	}
-
-	/**
 	 * Getter
 	 */
 	public QueuedExecutorService getQueuedExecutorService() {
 		return queuedExecutorService;
 	}
 
+	/*
+	 * Review feedback: Only used from a single test method. Get rid of this.
+	 */
 	/**
 	 * Getter
 	 */
@@ -812,6 +823,10 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	public void joinClientInitialized() {
 		clientInitialized.join();
 	}
+
+	/*
+	 * Review feedback: Move to language server frontend
+	 */
 
 	/** Blocks until all requests of the language server finished */
 	public void joinServerRequests() {
