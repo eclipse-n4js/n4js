@@ -33,7 +33,6 @@ import org.eclipse.n4js.xtext.workspace.IWorkspaceConfigSnapshot;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.util.CancelIndicator;
-import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.collect.HashMultimap;
@@ -69,14 +68,13 @@ public class ResourceTaskManager {
 	 */
 	protected final ThreadLocal<ResourceTaskContext> currentContext = new ThreadLocal<>();
 
-	/***/
-	protected final Map<String, ResourceDescriptionsData> persistedStateDescriptions = new HashMap<>();
-	/***/
-	protected final ResourceDescriptionsData sharedDirtyState = new ResourceDescriptionsData(Collections.emptyList());
-
-	/***/
-	protected ImmutableSetMultimap<String, URI> containerHandle2URIs = ImmutableSetMultimap.of();
-	/***/
+	/** The persisted state index, not taking into account dirty state from existing resource task contexts. */
+	protected final ResourceDescriptionsData persistedIndex = new ResourceDescriptionsData(Collections.emptyList());
+	/** Contains only entries for URIs with an existing resource task context. */
+	protected final ResourceDescriptionsData dirtyIndex = new ResourceDescriptionsData(Collections.emptyList());
+	/** Tracks URIs per project. Derived from persisted state but applies equally to the dirty state. */
+	protected SetMultimap<String, URI> containerHandle2URIs = HashMultimap.create();
+	/** Most recent workspace configuration. */
 	protected IWorkspaceConfigSnapshot workspaceConfig = null;
 
 	/***/
@@ -255,14 +253,15 @@ public class ResourceTaskManager {
 	protected ResourceTaskContext createContext(URI uri, boolean isTemporary) {
 		ResourceTaskContext rtc = openFileContextProvider.get();
 		ResourceDescriptionsData index = isTemporary ? createPersistedStateIndex() : createLiveScopeIndex();
-		rtc.initialize(this, uri, isTemporary, index, containerHandle2URIs, workspaceConfig);
+		ImmutableSetMultimap<String, URI> project2URIsImmutable = ImmutableSetMultimap.copyOf(containerHandle2URIs);
+		rtc.initialize(this, uri, isTemporary, index, project2URIsImmutable, workspaceConfig);
 		return rtc;
 	}
 
 	/** Internal removal of all information related to a particular resource task context. */
 	protected synchronized void discardContextInfo(URI uri) {
 		uri2RTCs.remove(uri);
-		sharedDirtyState.removeDescription(uri);
+		dirtyIndex.removeDescription(uri);
 		if (issueRegistry != null) {
 			issueRegistry.clearIssuesOfDirtyState(uri);
 		}
@@ -282,15 +281,13 @@ public class ResourceTaskManager {
 
 	/** Creates an index not containing any dirty state information. */
 	protected synchronized ResourceDescriptionsData createPersistedStateIndex() {
-		// TODO GH-1774 performance? (consider maintaining a ResourceDescriptionsData in addition to persistedState)
-		return new ResourceDescriptionsData(IterableExtensions.flatMap(persistedStateDescriptions.values(),
-				ResourceDescriptionsData::getAllResourceDescriptions));
+		return persistedIndex.copy();
 	}
 
 	/** Creates an index containing the persisted state shadowed by the dirty state of all non-temporary contexts. */
 	public synchronized ResourceDescriptionsData createLiveScopeIndex() {
 		ResourceDescriptionsData result = createPersistedStateIndex();
-		for (IResourceDescription desc : sharedDirtyState.getAllResourceDescriptions()) {
+		for (IResourceDescription desc : dirtyIndex.getAllResourceDescriptions()) {
 			result.addDescription(desc.getURI(), desc);
 		}
 		return result;
@@ -309,22 +306,17 @@ public class ResourceTaskManager {
 
 		IWorkspaceConfigSnapshot oldWC = workspaceConfig;
 
-		// compute modification info
+		// compute "flat" modification info (not per project but on a global URI->description basis)
 		List<IResourceDescription> changed = new ArrayList<>();
 		Set<URI> removed = new HashSet<>();
 		for (Entry<String, ? extends ResourceDescriptionsData> entry : changedDescriptions.entrySet()) {
 			String containerHandle = entry.getKey();
 			ResourceDescriptionsData newData = entry.getValue();
 
-			ResourceDescriptionsData oldContainer = persistedStateDescriptions.get(containerHandle);
-			if (oldContainer != null) {
-				for (IResourceDescription desc : oldContainer.getAllResourceDescriptions()) {
-					URI descURI = desc.getURI();
-					if (!uri2RTCs.containsKey(descURI)) {
-						removed.add(descURI);
-					}
-				}
-			}
+			Set<URI> oldURIsOfProject = new HashSet<>(containerHandle2URIs.get(containerHandle));
+			oldURIsOfProject.removeAll(uri2RTCs.keySet());
+			removed.addAll(oldURIsOfProject);
+
 			for (IResourceDescription desc : newData.getAllResourceDescriptions()) {
 				URI descURI = desc.getURI();
 				if (!uri2RTCs.containsKey(descURI)) {
@@ -334,30 +326,28 @@ public class ResourceTaskManager {
 			}
 		}
 
-		// update my persisted state instance
-		// FIXME GH-1774 simplify index handling
-		SetMultimap<String, URI> newContainerHandle2URIs = HashMultimap.create(containerHandle2URIs);
+		// update my internal state
+		changed.stream().forEachOrdered(desc -> persistedIndex.addDescription(desc.getURI(), desc));
+		removed.stream().forEachOrdered(persistedIndex::removeDescription);
 		for (Entry<String, ? extends ResourceDescriptionsData> entry : changedDescriptions.entrySet()) {
 			String containerHandle = entry.getKey();
 			ResourceDescriptionsData newData = entry.getValue();
-			persistedStateDescriptions.put(containerHandle, newData.copy());
-			newContainerHandle2URIs.removeAll(containerHandle);
-			newContainerHandle2URIs.putAll(containerHandle, newData.getAllURIs());
+			containerHandle2URIs.removeAll(containerHandle);
+			containerHandle2URIs.putAll(containerHandle, newData.getAllURIs());
 		}
 		for (String removedContainerHandle : removedContainerHandles) {
-			persistedStateDescriptions.remove(removedContainerHandle);
-			newContainerHandle2URIs.removeAll(removedContainerHandle);
+			containerHandle2URIs.removeAll(removedContainerHandle);
 		}
-		containerHandle2URIs = ImmutableSetMultimap.copyOf(newContainerHandle2URIs);
 		workspaceConfig = newWorkspaceConfig;
 
-		// update persisted state instances in the context of each context
+		// update internal state of all contexts
 		if (Iterables.isEmpty(changed) && removed.isEmpty() && workspaceConfig.equals(oldWC)) {
 			return;
 		}
+		ImmutableSetMultimap<String, URI> project2URIsImmutable = ImmutableSetMultimap.copyOf(containerHandle2URIs);
 		for (URI currURI : uri2RTCs.keySet()) {
 			runInExistingContextVoid(currURI, "updatePersistedState of existing context", (rtc, ci) -> {
-				rtc.onPersistedStateChanged(changed, removed, containerHandle2URIs, workspaceConfig, ci);
+				rtc.onPersistedStateChanged(changed, removed, project2URIsImmutable, workspaceConfig, ci);
 			});
 		}
 	}
@@ -370,7 +360,7 @@ public class ResourceTaskManager {
 	protected synchronized void updateSharedDirtyState(IResourceDescription newDesc) {
 		// update my dirty state instance
 		URI newDescURI = newDesc.getURI();
-		sharedDirtyState.addDescription(newDescURI, newDesc);
+		dirtyIndex.addDescription(newDescURI, newDesc);
 		// update dirty state instances in the context of each open file (except the one that caused the change)
 		for (URI currURI : uri2RTCs.keySet()) {
 			if (currURI.equals(newDescURI)) {
