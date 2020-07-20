@@ -23,7 +23,6 @@ import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
@@ -75,6 +74,21 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class QueuedExecutorService {
+	/*
+	 * Review feedback:
+	 *
+	 * - Since this is not an ExecutorService, we should try to find a more distinguishing name to avoid confusion. -
+	 * Replace QueuedTask and QueuedTaskFuture by standard implementations, e.g. FutureTask and a normal
+	 * CompletableFuture chain Advantage: Save propagation in a multithreaded environment, less code to maintain
+	 *
+	 * - The mechanics of the bookkeeping via pendingTasks and runningTasks depends on the delegate ExecutorService. It
+	 * is not save to assume that a task will ever be run so adding something to the runningTasks must be done in the
+	 * same try/finally as removing it again.
+	 *
+	 * - The QueuedExecutorService is used by the ResourceTaskManager, the BuilderFrontend, the WorkspaceFrontent and
+	 * the XLanguageServerImpl. Nevertheless it has a shutdown method. It is not clear, which component is the owner of
+	 * the QueuedExecutorService and responsible for the shutdown.
+	 */
 
 	private static final Logger LOG = Logger.getLogger(QueuedExecutorService.class);
 
@@ -88,6 +102,9 @@ public class QueuedExecutorService {
 
 	/** Global queue of all pending tasks across all queue IDs. */
 	protected final List<QueuedTask<?>> pendingTasks = new ArrayList<>();
+	/*
+	 * Review feedback: These are submitted tasks and not necessarily running tasks.
+	 */
 	/** Queue IDs with currently running tasks. */
 	protected final Map<Object, QueuedTask<?>> runningTasks = new LinkedHashMap<>();
 
@@ -95,11 +112,17 @@ public class QueuedExecutorService {
 	protected final class QueuedTask<T> implements Runnable, XCancellable {
 		protected final Object queueId;
 		protected final String description;
-		protected final Function<CancelIndicator, T> operation;
+		/*
+		 * Review feedback:
+		 *
+		 * It is not terribly obvious what the function should do if the cancelIndicator answers true.
+		 */
+		protected final Function<? super CancelIndicator, ? extends T> operation;
 		protected final QueuedTaskFuture<T> result;
 		protected volatile boolean cancelled = false;
 
-		protected QueuedTask(Object queueId, String description, Function<CancelIndicator, T> operation) {
+		protected QueuedTask(Object queueId, String description,
+				Function<? super CancelIndicator, ? extends T> operation) {
 			this.queueId = Objects.requireNonNull(queueId);
 			this.description = Objects.requireNonNull(description);
 			this.operation = Objects.requireNonNull(operation);
@@ -228,12 +251,19 @@ public class QueuedExecutorService {
 		if (runningTasks.putIfAbsent(task.queueId, task) != null) {
 			throw new IllegalStateException("executor inconsistency: queue ID already in progress: " + task.queueId);
 		}
+		/*
+		 * Review feedback: Depending on the implementation of the ExecutorService, the task may be cancelled before it
+		 * is started, e.g. #run is never invoked and therefore isDone is never invoked.
+		 *
+		 * Since we use injection to obtain the ExecutorService, we cannot control which impl / strategies are applied
+		 * by the provided ExecutorService.
+		 */
 		delegate.submit(task); // will eventually invoke #onDone()
 	}
 
 	/** Invoked by each running task upon completion, see {@link QueuedTask#run()}. */
 	protected synchronized void onDone(QueuedTask<?> task) {
-		if (runningTasks.remove(task.queueId) == null) {
+		if (runningTasks.remove(task.queueId) != task) {
 			throw new IllegalStateException("executor inconsistency: queue ID not in progress: " + task.queueId);
 		}
 		doSubmitAllPending();
@@ -280,7 +310,11 @@ public class QueuedExecutorService {
 	}
 
 	/** Same as {@link #allTasks()}, but returns <code>null</code> iff there are no running or pending tasks. */
-	public synchronized CompletableFuture<Void> allTasksOrNull() {
+	private synchronized CompletableFuture<Void> allTasksOrNull() {
+		/*
+		 * Review feedback: Returning null from an API with futures is not something that I'd expect, even if the method
+		 * name is very explicit. I see how it is used. Maybe make it private?
+		 */
 		if (runningTasks.isEmpty() && pendingTasks.isEmpty()) {
 			return null;
 		}
@@ -295,13 +329,15 @@ public class QueuedExecutorService {
 	public synchronized CompletableFuture<Void> allTasks() {
 		CompletableFuture<?>[] allTasks = Stream.concat(runningTasks.values().stream(), pendingTasks.stream())
 				.map(t -> t.result)
-				.collect(Collectors.toList())
 				.toArray(CompletableFuture[]::new);
 		return CompletableFuture.allOf(allTasks);
 	}
 
 	/** An orderly shutdown of this executor service. */
 	public synchronized void shutdown() {
+		/*
+		 * Review feedback: Should we cancel before we attempt to shutdown?
+		 */
 		MoreExecutors.shutdownAndAwaitTermination(delegate, 2500, TimeUnit.MILLISECONDS);
 		cancelAll();
 	}
