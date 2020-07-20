@@ -65,8 +65,8 @@ import org.eclipse.lsp4j.services.LanguageClientExtensions;
 import org.eclipse.lsp4j.services.TextDocumentService;
 import org.eclipse.n4js.ide.xtext.server.ResourceTaskManager.IResourceTaskListener;
 import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIndex;
-import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIssueRegistry;
 import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIndex.IIndexListener;
+import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIssueRegistry;
 import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIssueRegistry.IIssueRegistryListener;
 import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIssueRegistry.IssueRegistryChangeEvent;
 import org.eclipse.n4js.ide.xtext.server.contentassist.XContentAssistService;
@@ -120,17 +120,34 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 	@Inject
 	private IssueAcceptor issueAcceptor;
 
+	/*
+	 * Review feedback:
+	 *
+	 * We only inject the index here to allow to register a listener. Looks like we to shift that to some other piece of
+	 * code to decouple this further. Same for the issueRegistry.
+	 */
 	@Inject
 	private ConcurrentIndex index;
 
 	@Inject
 	private ConcurrentIssueRegistry issueRegistry;
 
+	/*
+	 * Review feedback:
+	 *
+	 * This and the usage of the client below: Both smell a little weird wrt to the encapsulation. I cannot put it into
+	 * a clear thought yet, though.
+	 */
 	@Inject
 	private SemanticHighlightingRegistry semanticHighlightingRegistry;
 
 	private LanguageClient client;
 
+	/*
+	 * Review feedback:
+	 *
+	 * Only used to figure if we support hierarchical symbols. Maybe store that boolean information instead?
+	 */
 	private InitializeParams initializeParams;
 
 	private IResourceAccess resourceAccess;
