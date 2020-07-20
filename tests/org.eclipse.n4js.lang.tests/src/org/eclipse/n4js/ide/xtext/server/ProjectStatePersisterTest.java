@@ -27,8 +27,8 @@ import java.util.zip.ZipException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ide.xtext.server.build.HashedFileContent;
 import org.eclipse.n4js.ide.xtext.server.build.ProjectStatePersister;
-import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
 import org.eclipse.n4js.ide.xtext.server.build.ProjectStatePersister.ProjectState;
+import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.xtext.builder.builderState.BuilderStateFactory;
 import org.eclipse.xtext.builder.builderState.impl.EObjectDescriptionImpl;
@@ -47,7 +47,7 @@ import org.junit.Test;
 public class ProjectStatePersisterTest {
 
 	ProjectState createProjectState() {
-		return createProjectState();
+		return createProjectState(null, null, null, null);
 	}
 
 	ProjectState createProjectState(ResourceDescriptionsData index, XSource2GeneratedMapping fileMappings,
