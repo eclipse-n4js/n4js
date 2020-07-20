@@ -29,6 +29,9 @@ import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 @SuppressWarnings("restriction")
 public class XWorkspaceResourceAccess implements IReferenceFinder.IResourceAccess {
 
+	/*
+	 * Review feedback: Accept the ResourceTaskManager instead in the constructor.
+	 */
 	private final XLanguageServerImpl languageServer;
 
 	/**

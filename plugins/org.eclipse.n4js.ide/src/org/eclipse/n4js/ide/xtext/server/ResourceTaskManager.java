@@ -49,6 +49,11 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class ResourceTaskManager {
+	/*
+	 * Review feedback:
+	 *
+	 * Should the task manager implement IResourceAccess ?
+	 */
 
 	@Inject
 	private Provider<ResourceTaskContext> resourceTaskContextProvider;
