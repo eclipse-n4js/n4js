@@ -70,10 +70,10 @@ public class ResourceTaskManager {
 
 	/** The persisted state index, not taking into account dirty state from existing resource task contexts. */
 	protected final ResourceDescriptionsData persistedIndex = new ResourceDescriptionsData(Collections.emptyList());
-	/** Contains only entries for URIs with an existing resource task context. */
+	/** The dirty state index. Contains an entry for each URI with an existing resource task context. */
 	protected final ResourceDescriptionsData dirtyIndex = new ResourceDescriptionsData(Collections.emptyList());
 	/** Tracks URIs per project. Derived from persisted state but applies equally to the dirty state. */
-	protected SetMultimap<String, URI> containerHandle2URIs = HashMultimap.create();
+	protected SetMultimap<String, URI> project2URIs = HashMultimap.create();
 	/** Most recent workspace configuration. */
 	protected IWorkspaceConfigSnapshot workspaceConfig = null;
 
@@ -253,7 +253,7 @@ public class ResourceTaskManager {
 	protected ResourceTaskContext createContext(URI uri, boolean isTemporary) {
 		ResourceTaskContext rtc = openFileContextProvider.get();
 		ResourceDescriptionsData index = isTemporary ? createPersistedStateIndex() : createLiveScopeIndex();
-		ImmutableSetMultimap<String, URI> project2URIsImmutable = ImmutableSetMultimap.copyOf(containerHandle2URIs);
+		ImmutableSetMultimap<String, URI> project2URIsImmutable = ImmutableSetMultimap.copyOf(project2URIs);
 		rtc.initialize(this, uri, isTemporary, index, project2URIsImmutable, workspaceConfig);
 		return rtc;
 	}
@@ -302,7 +302,7 @@ public class ResourceTaskManager {
 			IWorkspaceConfigSnapshot newWorkspaceConfig,
 			Map<String, ? extends ResourceDescriptionsData> changedDescriptions,
 			@SuppressWarnings("unused") List<? extends IProjectConfigSnapshot> changedProjects,
-			Set<String> removedContainerHandles) {
+			Set<String> removedProjects) {
 
 		IWorkspaceConfigSnapshot oldWC = workspaceConfig;
 
@@ -310,10 +310,10 @@ public class ResourceTaskManager {
 		List<IResourceDescription> changed = new ArrayList<>();
 		Set<URI> removed = new HashSet<>();
 		for (Entry<String, ? extends ResourceDescriptionsData> entry : changedDescriptions.entrySet()) {
-			String containerHandle = entry.getKey();
+			String projectName = entry.getKey();
 			ResourceDescriptionsData newData = entry.getValue();
 
-			Set<URI> oldURIsOfProject = new HashSet<>(containerHandle2URIs.get(containerHandle));
+			Set<URI> oldURIsOfProject = new HashSet<>(project2URIs.get(projectName));
 			oldURIsOfProject.removeAll(uri2RTCs.keySet());
 			removed.addAll(oldURIsOfProject);
 
@@ -330,13 +330,13 @@ public class ResourceTaskManager {
 		changed.stream().forEachOrdered(desc -> persistedIndex.addDescription(desc.getURI(), desc));
 		removed.stream().forEachOrdered(persistedIndex::removeDescription);
 		for (Entry<String, ? extends ResourceDescriptionsData> entry : changedDescriptions.entrySet()) {
-			String containerHandle = entry.getKey();
+			String projectName = entry.getKey();
 			ResourceDescriptionsData newData = entry.getValue();
-			containerHandle2URIs.removeAll(containerHandle);
-			containerHandle2URIs.putAll(containerHandle, newData.getAllURIs());
+			project2URIs.removeAll(projectName);
+			project2URIs.putAll(projectName, newData.getAllURIs());
 		}
-		for (String removedContainerHandle : removedContainerHandles) {
-			containerHandle2URIs.removeAll(removedContainerHandle);
+		for (String removedProjectName : removedProjects) {
+			project2URIs.removeAll(removedProjectName);
 		}
 		workspaceConfig = newWorkspaceConfig;
 
@@ -344,7 +344,7 @@ public class ResourceTaskManager {
 		if (Iterables.isEmpty(changed) && removed.isEmpty() && workspaceConfig.equals(oldWC)) {
 			return;
 		}
-		ImmutableSetMultimap<String, URI> project2URIsImmutable = ImmutableSetMultimap.copyOf(containerHandle2URIs);
+		ImmutableSetMultimap<String, URI> project2URIsImmutable = ImmutableSetMultimap.copyOf(project2URIs);
 		for (URI currURI : uri2RTCs.keySet()) {
 			runInExistingContextVoid(currURI, "updatePersistedState of existing context", (rtc, ci) -> {
 				rtc.onPersistedStateChanged(changed, removed, project2URIsImmutable, workspaceConfig, ci);

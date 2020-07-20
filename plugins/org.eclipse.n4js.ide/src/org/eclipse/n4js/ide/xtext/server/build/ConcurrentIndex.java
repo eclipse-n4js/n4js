@@ -71,7 +71,7 @@ public class ConcurrentIndex {
 		workspaceConfig = initialWorkspaceConfig;
 	}
 
-	/** Removes all containers from this index. */
+	/** Removes all projects from this index. */
 	public void removeAllProjectsIndices() {
 		ImmutableSet<String> removedProjectNames;
 		IWorkspaceConfigSnapshot workspaceConfigNew;
@@ -128,12 +128,12 @@ public class ConcurrentIndex {
 		notifyListeners(newWorkspaceConfig, ImmutableMap.of(), changedProjectConfigs, ImmutableSet.of());
 	}
 
-	/** Sets the contents of the container with the given handle to the empty set, but does not remove the container. */
+	/** Sets the contents of the project with the given name to the empty set, but does not remove the project. */
 	public ResourceDescriptionsData clearProjectIndex(String projectName) {
 		return setProjectIndex(projectName, new ResourceDescriptionsData(Collections.emptyList()));
 	}
 
-	/** Removes the container with the given handle from the index. */
+	/** Removes the project with the given name from the index. */
 	public ResourceDescriptionsData removeProjectIndex(String projectName) {
 		Objects.requireNonNull(projectName);
 		ResourceDescriptionsData oldProjectIndex;

@@ -98,7 +98,7 @@ public class ResourceTaskContext {
 	protected ResourceDescriptionsData indexSnapshot;
 
 	/** Maps project names to URIs of all resources contained in the project. */
-	protected ImmutableSetMultimap<String, URI> containerHandle2URIs;
+	protected ImmutableSetMultimap<String, URI> project2URIs;
 
 	/** Most recent workspace configuration. */
 	protected IWorkspaceConfigSnapshot workspaceConfig;
@@ -187,13 +187,13 @@ public class ResourceTaskContext {
 	/** Initialize this context's fields and resource set. Invoked once per context. */
 	@SuppressWarnings("hiding")
 	public synchronized void initialize(ResourceTaskManager parent, URI uri, boolean isTemporary,
-			ResourceDescriptionsData index, ImmutableSetMultimap<String, URI> containerHandle2URIs,
+			ResourceDescriptionsData index, ImmutableSetMultimap<String, URI> project2URIs,
 			IWorkspaceConfigSnapshot workspaceConfig) {
 		this.parent = parent;
 		this.mainURI = uri;
 		this.temporary = isTemporary;
 		this.indexSnapshot = index;
-		this.containerHandle2URIs = containerHandle2URIs;
+		this.project2URIs = project2URIs;
 		this.workspaceConfig = workspaceConfig;
 
 		this.mainResourceSet = createResourceSet();
@@ -350,7 +350,7 @@ public class ResourceTaskContext {
 	 * {@link ResourceTaskContext}). Will never be invoked for {@link #isTemporary() temporary} contexts.
 	 */
 	protected void onDirtyStateChanged(IResourceDescription changedDesc, CancelIndicator cancelIndicator) {
-		updateIndex(Collections.singletonList(changedDesc), Collections.emptySet(), containerHandle2URIs,
+		updateIndex(Collections.singletonList(changedDesc), Collections.emptySet(), project2URIs,
 				workspaceConfig, cancelIndicator);
 	}
 
@@ -358,14 +358,14 @@ public class ResourceTaskContext {
 	 * Invoked by {@link #parent} when a change happened in a non-opened file.
 	 */
 	protected void onPersistedStateChanged(Collection<? extends IResourceDescription> changedDescs,
-			Set<URI> removedURIs, ImmutableSetMultimap<String, URI> newContainerHandle2URIs,
+			Set<URI> removedURIs, ImmutableSetMultimap<String, URI> newProject2URIs,
 			IWorkspaceConfigSnapshot newWorkspaceConfig, CancelIndicator cancelIndicator) {
-		updateIndex(changedDescs, removedURIs, newContainerHandle2URIs, newWorkspaceConfig, cancelIndicator);
+		updateIndex(changedDescs, removedURIs, newProject2URIs, newWorkspaceConfig, cancelIndicator);
 	}
 
 	/** Update this context's internal index and trigger a refresh if required. */
 	protected void updateIndex(Collection<? extends IResourceDescription> changedDescs, Set<URI> removedURIs,
-			ImmutableSetMultimap<String, URI> newContainerHandle2URIs, IWorkspaceConfigSnapshot newWorkspaceConfig,
+			ImmutableSetMultimap<String, URI> newProject2URIs, IWorkspaceConfigSnapshot newWorkspaceConfig,
 			CancelIndicator cancelIndicator) {
 
 		// update my cached state
@@ -375,7 +375,7 @@ public class ResourceTaskContext {
 			indexSnapshot.register(delta);
 		}
 
-		containerHandle2URIs = newContainerHandle2URIs;
+		project2URIs = newProject2URIs;
 
 		IWorkspaceConfigSnapshot oldWorkspaceConfig = workspaceConfig;
 		workspaceConfig = newWorkspaceConfig;

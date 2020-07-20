@@ -37,7 +37,7 @@ public class ResourceTaskContextAllContainerState implements IAllContainersState
 
 	@Override
 	public boolean isEmpty(String containerHandle) {
-		return resourceTaskContext.containerHandle2URIs.get(containerHandle).isEmpty();
+		return resourceTaskContext.project2URIs.get(containerHandle).isEmpty();
 	}
 
 	@Override
@@ -54,7 +54,7 @@ public class ResourceTaskContextAllContainerState implements IAllContainersState
 
 	@Override
 	public Collection<URI> getContainedURIs(String containerHandle) {
-		return resourceTaskContext.containerHandle2URIs.get(containerHandle);
+		return resourceTaskContext.project2URIs.get(containerHandle);
 	}
 
 	@Override

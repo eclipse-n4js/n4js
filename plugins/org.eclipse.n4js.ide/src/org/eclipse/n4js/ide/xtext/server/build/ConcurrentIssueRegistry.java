@@ -66,7 +66,7 @@ public class ConcurrentIssueRegistry {
 		/** Iff <code>true</code>, this event is related to the persisted state and only to the persisted state. */
 		public final boolean persistedState;
 		/** Will be <code>null</code> iff {@link #dirtyState} is <code>true</code>. */
-		public final String containerHandle;
+		public final String projectName;
 		/** URI of the resource containing the changed issues. */
 		public final URI uri;
 		/**
@@ -91,17 +91,17 @@ public class ConcurrentIssueRegistry {
 		public final ImmutableSortedSet<LSPIssue> persistedIssuesNew;
 
 		/** Creates a new {@link IssueRegistryChangeEvent}. */
-		public IssueRegistryChangeEvent(boolean dirtyState, String containerHandle, URI uri,
+		public IssueRegistryChangeEvent(boolean dirtyState, String projectName, URI uri,
 				ImmutableSortedSet<LSPIssue> dirtyIssuesOld, ImmutableSortedSet<LSPIssue> dirtyIssuesNew,
 				ImmutableSortedSet<LSPIssue> persistedIssuesOld, ImmutableSortedSet<LSPIssue> persistedIssuesNew) {
-			if (dirtyState && containerHandle != null) {
-				throw new IllegalArgumentException("dirty state event with non-null containerHandle");
-			} else if (!dirtyState && containerHandle == null) {
-				throw new IllegalArgumentException("persisted state event with null containerHandle");
+			if (dirtyState && projectName != null) {
+				throw new IllegalArgumentException("dirty state event with non-null project name");
+			} else if (!dirtyState && projectName == null) {
+				throw new IllegalArgumentException("persisted state event with null project name");
 			}
 			this.dirtyState = dirtyState;
 			this.persistedState = !dirtyState;
-			this.containerHandle = containerHandle;
+			this.projectName = projectName;
 			this.uri = uri;
 			this.dirtyIssuesOld = dirtyIssuesOld;
 			this.dirtyIssuesNew = dirtyIssuesNew;
@@ -133,17 +133,17 @@ public class ConcurrentIssueRegistry {
 	/** Return issues contained in the project with the given name. */
 	public synchronized ImmutableMap<URI, ImmutableSortedSet<LSPIssue>> getIssuesOfPersistedState(
 			String projectName) {
-		Map<URI, ImmutableSortedSet<LSPIssue>> containerIssues = getProjectIssues(projectName, false);
-		return containerIssues != null ? ImmutableMap.copyOf(containerIssues) : null;
+		Map<URI, ImmutableSortedSet<LSPIssue>> projectIssues = getProjectIssues(projectName, false);
+		return projectIssues != null ? ImmutableMap.copyOf(projectIssues) : null;
 	}
 
 	/**
 	 * Return issues contained in the resource with the given URI, but only if it is contained in the project with the
 	 * given name.
 	 */
-	public synchronized ImmutableSortedSet<LSPIssue> getIssuesOfPersistedState(String containerHandle, URI uri) {
-		Map<URI, ImmutableSortedSet<LSPIssue>> containerIssues = getProjectIssues(containerHandle, false);
-		return containerIssues != null ? containerIssues.get(uri) : null;
+	public synchronized ImmutableSortedSet<LSPIssue> getIssuesOfPersistedState(String projectName, URI uri) {
+		Map<URI, ImmutableSortedSet<LSPIssue>> projectIssues = getProjectIssues(projectName, false);
+		return projectIssues != null ? projectIssues.get(uri) : null;
 	}
 
 	/** Remove all information from this registry. */
@@ -198,10 +198,10 @@ public class ConcurrentIssueRegistry {
 	/** Internal implementation of {@link #clearIssuesOfPersistedState()}. */
 	protected synchronized List<IssueRegistryChangeEvent> doClearIssuesOfPersistedState() {
 		List<IssueRegistryChangeEvent> events = project2persistedIssues.entrySet().stream()
-				.flatMap(containerHandle2IssueMap -> {
-					String containerHandle = containerHandle2IssueMap.getKey();
-					return containerHandle2IssueMap.getValue().entrySet().stream()
-							.map(uri2issues -> eventPersisted(containerHandle,
+				.flatMap(project2IssueMap -> {
+					String projectName = project2IssueMap.getKey();
+					return project2IssueMap.getValue().entrySet().stream()
+							.map(uri2issues -> eventPersisted(projectName,
 									uri2issues.getKey(), uri2issues.getValue(), null));
 				})
 				.collect(Collectors.toList());
@@ -275,14 +275,14 @@ public class ConcurrentIssueRegistry {
 	 * If instead the resource should be removed from the registry entirely, use method
 	 * {@link #clearIssuesOfPersistedState(String, URI)}.
 	 */
-	public void setIssuesOfPersistedState(String containerHandle, URI uri, Iterable<? extends LSPIssue> issues) {
+	public void setIssuesOfPersistedState(String projectName, URI uri, Iterable<? extends LSPIssue> issues) {
 		ImmutableSortedSet<LSPIssue> issuesNew = ImmutableSortedSet.copyOf(issueComparator, issues);
 		IssueRegistryChangeEvent event;
 		synchronized (this) {
-			Map<URI, ImmutableSortedSet<LSPIssue>> containerIssues = getProjectIssues(containerHandle, true);
+			Map<URI, ImmutableSortedSet<LSPIssue>> projectIssues = getProjectIssues(projectName, true);
 			persistedIssues.put(uri, issuesNew);
-			ImmutableSortedSet<LSPIssue> issuesOld = containerIssues.put(uri, issuesNew);
-			event = eventPersisted(containerHandle, uri, issuesOld, issuesNew);
+			ImmutableSortedSet<LSPIssue> issuesOld = projectIssues.put(uri, issuesNew);
+			event = eventPersisted(projectName, uri, issuesOld, issuesNew);
 		}
 		notifyListeners(event);
 	}
@@ -291,17 +291,17 @@ public class ConcurrentIssueRegistry {
 	 * For the persisted state, add the given issue to the currently registered issues of the resource with the given
 	 * URI. Safe to use even if nothing is registered for the given project name / URI yet.
 	 */
-	public void addIssueOfPersistedState(String containerHandle, URI uri, LSPIssue issue) {
+	public void addIssueOfPersistedState(String projectName, URI uri, LSPIssue issue) {
 		IssueRegistryChangeEvent event;
 		synchronized (this) {
-			Map<URI, ImmutableSortedSet<LSPIssue>> containerIssues = getProjectIssues(containerHandle, true);
-			ImmutableSortedSet<LSPIssue> issuesOld = containerIssues.get(uri);
+			Map<URI, ImmutableSortedSet<LSPIssue>> projectIssues = getProjectIssues(projectName, true);
+			ImmutableSortedSet<LSPIssue> issuesOld = projectIssues.get(uri);
 			ImmutableSortedSet<LSPIssue> issuesNew = ImmutableSortedSet.orderedBy(issueComparator)
 					.addAll(issuesOld != null ? issuesOld : Collections.emptyList())
 					.add(issue).build();
 			persistedIssues.put(uri, issuesNew);
-			containerIssues.put(uri, issuesNew);
-			event = eventPersisted(containerHandle, uri, issuesOld, issuesNew);
+			projectIssues.put(uri, issuesNew);
+			event = eventPersisted(projectName, uri, issuesOld, issuesNew);
 		}
 		notifyListeners(event);
 	}
@@ -353,10 +353,10 @@ public class ConcurrentIssueRegistry {
 	}
 
 	/** Create a {@link IssueRegistryChangeEvent} for changes to the persisted state. */
-	protected synchronized IssueRegistryChangeEvent eventPersisted(String containerHandle, URI uri,
+	protected synchronized IssueRegistryChangeEvent eventPersisted(String projectName, URI uri,
 			ImmutableSortedSet<LSPIssue> persistedIssuesOld, ImmutableSortedSet<LSPIssue> persistedIssuesNew) {
 		ImmutableSortedSet<LSPIssue> dirtyIssuesCurr = dirtyIssues.get(uri);
-		return new IssueRegistryChangeEvent(false, containerHandle, uri, dirtyIssuesCurr, dirtyIssuesCurr,
+		return new IssueRegistryChangeEvent(false, projectName, uri, dirtyIssuesCurr, dirtyIssuesCurr,
 				persistedIssuesOld, persistedIssuesNew);
 	}
 
