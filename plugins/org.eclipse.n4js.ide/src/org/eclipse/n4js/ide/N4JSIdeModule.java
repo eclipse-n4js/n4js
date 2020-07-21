@@ -18,6 +18,7 @@ import org.eclipse.n4js.ide.editor.contentassist.N4JSContentAssistContextFactory
 import org.eclipse.n4js.ide.editor.contentassist.N4JSContentAssistService;
 import org.eclipse.n4js.ide.editor.contentassist.N4JSFollowElementCalculator;
 import org.eclipse.n4js.ide.editor.contentassist.N4JSIdeContentProposalProvider;
+import org.eclipse.n4js.ide.server.DebugServiceImpl;
 import org.eclipse.n4js.ide.server.FileBasedWorkspaceInitializer;
 import org.eclipse.n4js.ide.server.N4JSLanguageServer;
 import org.eclipse.n4js.ide.server.N4JSOutputConfigurationProvider;
@@ -32,6 +33,7 @@ import org.eclipse.n4js.ide.server.symbol.N4JSHierarchicalDocumentSymbolService;
 import org.eclipse.n4js.ide.validation.N4JSDiagnosticConverter;
 import org.eclipse.n4js.ide.xtext.editor.contentassist.XIdeContentProposalAcceptor;
 import org.eclipse.n4js.ide.xtext.server.BuiltInAwareIncrementalBuilder;
+import org.eclipse.n4js.ide.xtext.server.DebugService;
 import org.eclipse.n4js.ide.xtext.server.DefaultBuildRequestFactory;
 import org.eclipse.n4js.ide.xtext.server.IBuildRequestFactory;
 import org.eclipse.n4js.ide.xtext.server.QueuedExecutorService;
@@ -195,5 +197,9 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 	@Override
 	public Class<? extends IContentAssistParser> bindIContentAssistParser() {
 		return CustomN4JSParser.class;
+	}
+
+	public Class<? extends DebugService> bindDebugService() {
+		return DebugServiceImpl.class;
 	}
 }

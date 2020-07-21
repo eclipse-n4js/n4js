@@ -16,7 +16,6 @@ import java.util.concurrent.CompletableFuture;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
-import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.n4js.ide.xtext.server.ResourceTaskContext;
 import org.eclipse.n4js.ide.xtext.server.TextDocumentFrontend;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
@@ -32,10 +31,7 @@ import com.google.inject.Singleton;
  * Language server for N4JS.
  */
 @Singleton
-public class N4JSLanguageServer extends XLanguageServerImpl implements N4JSProtocolExtensions, DebugService {
-
-	@Inject
-	DebugServiceImpl debugService;
+public class N4JSLanguageServer extends XLanguageServerImpl implements N4JSProtocolExtensions {
 
 	@Inject
 	private TextDocumentFrontend textDocumentFrontend;
@@ -48,12 +44,6 @@ public class N4JSLanguageServer extends XLanguageServerImpl implements N4JSProto
 				// the following specific kind must be listed for VSCode to work properly, even
 				// though the LSP specification says it is sufficient to only list base kinds:
 				CodeActionKind.SourceOrganizeImports));
-	}
-
-	@Override
-	public void connect(LanguageClient client) {
-		super.connect(client);
-		debugService.connect(client);
 	}
 
 	@Override
@@ -70,16 +60,6 @@ public class N4JSLanguageServer extends XLanguageServerImpl implements N4JSProto
 	private String documentContents(ResourceTaskContext ofc, CancelIndicator cancelIndicator) {
 		XDocument doc = ofc.getDocument();
 		return doc.getContents();
-	}
-
-	@Override
-	public CompletableFuture<Void> setVerboseLevel(String level) {
-		return debugService.setVerboseLevel(level);
-	}
-
-	@Override
-	public CompletableFuture<Void> printDebugInfo() {
-		return debugService.printDebugInfo();
 	}
 
 }

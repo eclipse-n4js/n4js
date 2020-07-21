@@ -25,27 +25,31 @@ import org.apache.log4j.Logger;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.services.LanguageClient;
+import org.eclipse.n4js.ide.xtext.server.DebugService;
 import org.eclipse.n4js.ide.xtext.server.QueuedExecutorService;
-import org.eclipse.n4js.ide.xtext.server.build.BuilderFrontend;
+import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIndex;
+import org.eclipse.n4js.utils.Strings;
+import org.eclipse.n4js.xtext.workspace.IWorkspaceConfigSnapshot;
 
 import com.google.inject.Inject;
 
 /**
- *
+ * Enables debug end-points
  */
 public class DebugServiceImpl implements DebugService {
 	private static final Logger LOG = LogManager.getLogger(DebugServiceImpl.class);
 
 	@Inject
-	private BuilderFrontend builder;
+	private QueuedExecutorService executerService;
 
 	@Inject
-	private QueuedExecutorService executerService;
+	private ConcurrentIndex fullIndex;
 
 	private LanguageClient client;
 
-	public void connect(LanguageClient client) {
-		this.client = client;
+	@Override
+	public void connect(LanguageClient _client) {
+		this.client = _client;
 	}
 
 	@Override
@@ -77,8 +81,7 @@ public class DebugServiceImpl implements DebugService {
 		info += "\n== -------------- ==\n";
 		info += executerService.stringify();
 		info += "\n== -------------- ==\n";
-		// continue here: print out project structure of workspace
-		// info += builder.getIndexRaw().getVisibleContainers(containerHandle);
+		info += dumpWorkspaceConfig();
 		info += "\n== DEBUG INFO END ==\n";
 		return info;
 	}
@@ -153,5 +156,12 @@ public class DebugServiceImpl implements DebugService {
 		for (StackTraceElement e : info.getStackTrace()) {
 			dump.append('\n').append("    ").append(e);
 		}
+	}
+
+	private String dumpWorkspaceConfig() {
+		IWorkspaceConfigSnapshot workspace = fullIndex.getWorkspaceConfig();
+		String dump = "Workspace Config:\n";
+		dump += Strings.join("\n + ", p -> p.getName(), workspace.getProjects());
+		return dump;
 	}
 }
