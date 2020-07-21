@@ -110,9 +110,9 @@ export function getActivate(vscode: any+, vscodeLC: any+): any {
             const setVerboseLevel2ErrorHandler = () => lc.sendRequest(setVerboseLevelRT,  "ERROR"  );
             context.subscriptions.push(vscode.commands.registerCommand(setVerboseLevel2ErrorCommand, setVerboseLevel2ErrorHandler));
 
-            const setVerboseLevel2VerboseCommand = 'n4js.debug.setVerboseLevel2Verbose';
-            const setVerboseLevel2VerboseHandler = () => lc.sendRequest(setVerboseLevelRT, "INFO" );
-            context.subscriptions.push(vscode.commands.registerCommand(setVerboseLevel2VerboseCommand, setVerboseLevel2VerboseHandler));
+            const setVerboseLevel2InfoCommand = 'n4js.debug.setVerboseLevel2Info';
+            const setVerboseLevel2InfoHandler = () => lc.sendRequest(setVerboseLevelRT, "INFO" );
+            context.subscriptions.push(vscode.commands.registerCommand(setVerboseLevel2InfoCommand, setVerboseLevel2InfoHandler));
 
             const printDebugInfoRT = new vscodeLC.RequestType('debug/printDebugInfo');
             const printDebugInfoCommand = 'n4js.debug.printDebugInfo';

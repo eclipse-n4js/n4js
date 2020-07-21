@@ -85,11 +85,11 @@
       },
       {
         "command": "n4js.debug.setVerboseLevel2Error",
-        "title": "N4JS: Verbose Level: Error"
+        "title": "N4JS: Log Level: Error"
       },
       {
-        "command": "n4js.debug.setVerboseLevel2Verbose",
-        "title": "N4JS: Verbose Level: Verbose"
+        "command": "n4js.debug.setVerboseLevel2Info",
+        "title": "N4JS: Log Level: Info"
       }
     ],
     "activationEvents": [
