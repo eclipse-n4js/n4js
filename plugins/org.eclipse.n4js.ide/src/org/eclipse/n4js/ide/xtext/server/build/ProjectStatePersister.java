@@ -154,19 +154,21 @@ public class ProjectStatePersister {
 	 *
 	 * @param project
 	 *            the project
+	 * @param languageVersion
+	 *            the language version
 	 * @param state
 	 *            the state to be written
 	 */
-	public void writeProjectState(IProjectConfig project, ProjectState state) {
+	public void writeProjectState(IProjectConfig project, String languageVersion, ProjectState state) {
 		ProjectState stateCopy = state.copy();
-		asyncWriteProjectState(project, stateCopy);
+		asyncWriteProjectState(project, languageVersion, stateCopy);
 	}
 
-	private void asyncWriteProjectState(IProjectConfig project, ProjectState state) {
+	private void asyncWriteProjectState(IProjectConfig project, String languageVersion, ProjectState state) {
 		writer.submit(() -> {
 			File file = getDataFile(project);
 			try (OutputStream nativeOut = Files.asByteSink(file).openBufferedStream()) {
-				writeProjectState(nativeOut, N4JSLanguageUtils.getLanguageVersion(), state);
+				writeProjectState(nativeOut, languageVersion, state);
 			} catch (IOException e) {
 				e.printStackTrace();
 				if (file.isFile()) {
@@ -325,12 +327,12 @@ public class ProjectStatePersister {
 	 * @param project
 	 *            the project
 	 */
-	public ProjectState readProjectState(IProjectConfig project) {
+	public ProjectState readProjectState(IProjectConfig project, String languageVersion) {
 		File file = getDataFile(project);
 		try {
 			if (file.isFile()) {
 				try (InputStream nativeIn = Files.asByteSource(file).openBufferedStream()) {
-					ProjectState result = readProjectState(nativeIn, N4JSLanguageUtils.getLanguageVersion());
+					ProjectState result = readProjectState(nativeIn, languageVersion);
 					if (result == null && file.isFile()) {
 						file.delete();
 					}

@@ -45,4 +45,9 @@ public class ProjectStatePersisterConfig {
 	public boolean isWriteToDisk(IProjectConfig projectConfig) {
 		return isWriteToDisk;
 	}
+
+	/** @return the version string to distinguish persisted files with different encoding */
+	public String getPersistedFileVersion() {
+		return "1";
+	}
 }
