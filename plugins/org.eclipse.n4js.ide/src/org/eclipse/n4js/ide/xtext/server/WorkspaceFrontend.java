@@ -34,7 +34,18 @@ import com.google.inject.Singleton;
 @SuppressWarnings("restriction")
 @Singleton
 public class WorkspaceFrontend implements WorkspaceService {
+	/*
+	 * Review feedback:
+	 *
+	 * Since this is not a complete / full implementation of the WorkspaceService and only used once, I'm not sure about
+	 * this abstraction.
+	 */
 
+	/*
+	 * Review feedback:
+	 *
+	 * Only used to create a liveScopeIndex - not sure about the encapsulation.
+	 */
 	@Inject
 	private ResourceTaskManager resourceTaskManager;
 
@@ -57,6 +68,12 @@ public class WorkspaceFrontend implements WorkspaceService {
 		this.access = _access;
 	}
 
+	/*
+	 * Review feedback:
+	 *
+	 * I'm not sure if it is correct to cancel a previous symbol request. There is no guarantee that a client will not
+	 * issue multiple symbol requests in parallel.
+	 */
 	@Override
 	public CompletableFuture<List<? extends SymbolInformation>> symbol(WorkspaceSymbolParams params) {
 		return lspExecutorService.submitAndCancelPrevious(WorkspaceSymbolParams.class, "symbol",

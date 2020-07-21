@@ -75,6 +75,11 @@ public class BuilderFrontend {
 	 *            the location
 	 */
 	public void initialize(URI newBaseDir) {
+		/*
+		 * Review feedback:
+		 *
+		 * We trigger a build after a #reinit but not on #init. There seems to be potential for more symmetry
+		 */
 		workspaceManager.initialize(newBaseDir);
 	}
 
@@ -147,7 +152,7 @@ public class BuilderFrontend {
 	}
 
 	/**
-	 * Evaluate the params and deduce the respective build command.
+	 * Evaluate the parameters and deduce the respective build command.
 	 */
 	protected XBuildable toBuildable(DidSaveTextDocumentParams params) {
 		return buildManager.didSave(getURI(params.getTextDocument()));
@@ -190,6 +195,11 @@ public class BuilderFrontend {
 	}
 
 	protected boolean isSourceFile(URI uri) {
+		/*
+		 * Review feedback:
+		 *
+		 * Shift this into the workspace manager such that we don't need access to the config from here.
+		 */
 		IProjectConfig projectConfig = workspaceManager.getWorkspaceConfig().findProjectContaining(uri);
 		if (projectConfig != null) {
 			ISourceFolder sourceFolder = projectConfig.findSourceFolderContaining(uri);

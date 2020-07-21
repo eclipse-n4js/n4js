@@ -680,6 +680,11 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 				if (res instanceof XtextResource) {
 					String content = ((XtextResource) res).getParseResult().getRootNode().getText();
 					XDocument doc = new XDocument(1, content);
+					/*
+					 * Review feedback:
+					 *
+					 * Why not org.eclipse.n4js.ide.xtext.server.ResourceTaskContext.getDocument() ?
+					 */
 					boolean isOpen = resourceTaskManager.isOpen(uri);
 					T result = function.apply(
 							new ILanguageServerAccess.Context(res, doc, isOpen, CancelIndicator.NullImpl));
