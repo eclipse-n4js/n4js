@@ -255,7 +255,7 @@ public class ResourceTaskManager {
 	/**
 	 * Actually creates a new resource task context for the given URI.
 	 * <p>
-	 * TODO add support for language-specific bindings of ResourceTaskContext
+	 * TODO IDE-3402 add support for language-specific bindings of ResourceTaskContext
 	 */
 	protected ResourceTaskContext doCreateContext(URI uri, boolean isTemporary) {
 		ResourceTaskContext rtc = resourceTaskContextProvider.get();
