@@ -68,10 +68,10 @@ export function getActivate(vscode, vscodeLC) {
 		};
 		let lc = new vscodeLC.LanguageClient(CHANNEL_NAME, serverOptions, clientOptions, true);
 		lc.onReady().then(()=>{
-			const requestType = new vscodeLC.RequestType('n4/documentContents');
+			const rtDocumentContents = new vscodeLC.RequestType('n4js/documentContents');
 			const textDocumentContentProvider = {
 				provideTextDocumentContent: (uri, token)=>{
-					return lc.sendRequest(requestType, {
+					return lc.sendRequest(rtDocumentContents, {
 						uri: uri.toString()
 					}, token).then((v)=>{
 						return v || '';
@@ -79,6 +79,17 @@ export function getActivate(vscode, vscodeLC) {
 				}
 			};
 			context.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider('n4scheme', textDocumentContentProvider));
+			const setVerboseLevelRT = new vscodeLC.RequestType('debug/setVerboseLevel');
+			const setVerboseLevel2ErrorCommand = 'n4js.debug.setVerboseLevel2Error';
+			const setVerboseLevel2ErrorHandler = ()=>lc.sendRequest(setVerboseLevelRT, "ERROR");
+			context.subscriptions.push(vscode.commands.registerCommand(setVerboseLevel2ErrorCommand, setVerboseLevel2ErrorHandler));
+			const setVerboseLevel2VerboseCommand = 'n4js.debug.setVerboseLevel2Verbose';
+			const setVerboseLevel2VerboseHandler = ()=>lc.sendRequest(setVerboseLevelRT, "INFO");
+			context.subscriptions.push(vscode.commands.registerCommand(setVerboseLevel2VerboseCommand, setVerboseLevel2VerboseHandler));
+			const printDebugInfoRT = new vscodeLC.RequestType('debug/printDebugInfo');
+			const printDebugInfoCommand = 'n4js.debug.printDebugInfo';
+			const printDebugInfoHandler = ()=>lc.sendRequest(printDebugInfoRT, {});
+			context.subscriptions.push(vscode.commands.registerCommand(printDebugInfoCommand, printDebugInfoHandler));
 		});
 		let disposableLangClient = lc.start();
 		context.subscriptions.push(vscode.workspace.onDidChangeConfiguration((e)=>{

@@ -78,6 +78,18 @@
       {
         "command": "n4js.performance.collector.reset",
         "title": "N4JS: Reset collected performance data"
+      },
+      {
+        "command": "n4js.debug.printDebugInfo",
+        "title": "N4JS: Print Debug Information"
+      },
+      {
+        "command": "n4js.debug.setVerboseLevel2Error",
+        "title": "N4JS: Verbose Level: Error"
+      },
+      {
+        "command": "n4js.debug.setVerboseLevel2Verbose",
+        "title": "N4JS: Verbose Level: Verbose"
       }
     ],
     "activationEvents": [

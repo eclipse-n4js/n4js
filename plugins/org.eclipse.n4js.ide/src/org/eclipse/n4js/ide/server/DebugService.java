@@ -12,20 +12,23 @@ package org.eclipse.n4js.ide.server;
 
 import java.util.concurrent.CompletableFuture;
 
-import org.eclipse.lsp4j.TextDocumentIdentifier;
+import org.apache.log4j.lf5.LogLevel;
 import org.eclipse.lsp4j.jsonrpc.services.JsonRequest;
 import org.eclipse.lsp4j.jsonrpc.services.JsonSegment;
 
 /**
- * A protocol extension to drive special requests for n4js.
+ * The {@link DebugService} uses a separate endpoint to avoid the infrastructure of other calls to ordinary LSP
+ * end-points and hence to increase robustness in case of errors in the source code.
  */
-@JsonSegment("n4js")
-public interface N4JSProtocolExtensions {
+@JsonSegment("debug")
+public interface DebugService {
 
-	/**
-	 * Return the content of a document with the given document URI.
-	 */
+	/** Sets the level of verbosity of Log4j. @see {@link LogLevel} */
 	@JsonRequest
-	CompletableFuture<String> documentContents(TextDocumentIdentifier documentUri);
+	CompletableFuture<Void> setVerboseLevel(String level);
+
+	/** Prints debug information on the output channel */
+	@JsonRequest
+	CompletableFuture<Void> printDebugInfo();
 
 }
