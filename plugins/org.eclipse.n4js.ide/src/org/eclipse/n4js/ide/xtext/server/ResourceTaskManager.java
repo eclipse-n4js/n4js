@@ -349,9 +349,12 @@ public class ResourceTaskManager {
 		if (Iterables.isEmpty(changed) && removed.isEmpty() && workspaceConfig.equals(oldWC)) {
 			return;
 		}
+		ImmutableSetMultimap<String, URI> capturedProject2BuiltURIsImmutable = project2BuiltURIsImmutable;
+		IWorkspaceConfigSnapshot capturedWorkspaceConfig = workspaceConfig;
 		for (URI currURI : uri2RTCs.keySet()) {
 			runInExistingContextVoid(currURI, "updatePersistedState of existing context", (rtc, ci) -> {
-				rtc.onPersistedStateChanged(changed, removed, project2BuiltURIsImmutable, workspaceConfig, ci);
+				rtc.onPersistedStateChanged(changed, removed,
+						capturedProject2BuiltURIsImmutable, capturedWorkspaceConfig, ci);
 			});
 		}
 	}
@@ -369,6 +372,8 @@ public class ResourceTaskManager {
 			dirtyIndex.removeDescription(uri);
 		}
 		// update dirty state instance in each resource task context (except the one that caused the change)
+		ImmutableSetMultimap<String, URI> capturedProject2BuiltURIsImmutable = project2BuiltURIsImmutable;
+		IWorkspaceConfigSnapshot capturedWorkspaceConfig = workspaceConfig;
 		IResourceDescription replacementDesc = newDesc == null ? persistedIndex.getResourceDescription(uri) : null;
 		for (URI currURI : uri2RTCs.keySet()) {
 			if (currURI.equals(uri)) {
@@ -380,10 +385,10 @@ public class ResourceTaskManager {
 				} else {
 					if (replacementDesc != null) {
 						rtc.onPersistedStateChanged(Collections.singleton(replacementDesc), Collections.emptySet(),
-								project2BuiltURIsImmutable, workspaceConfig, ci);
+								capturedProject2BuiltURIsImmutable, capturedWorkspaceConfig, ci);
 					} else {
 						rtc.onPersistedStateChanged(Collections.emptyList(), Collections.singleton(uri),
-								project2BuiltURIsImmutable, workspaceConfig, ci);
+								capturedProject2BuiltURIsImmutable, capturedWorkspaceConfig, ci);
 					}
 				}
 			});
