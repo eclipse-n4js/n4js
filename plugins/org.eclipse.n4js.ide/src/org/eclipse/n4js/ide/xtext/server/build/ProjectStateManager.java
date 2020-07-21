@@ -102,8 +102,7 @@ public class ProjectStateManager {
 		if (persistConfig.isWriteToDisk(projectConfig)) {
 			ProjectState currentState = new ProjectState(getIndex(), fileMappings, uriToHashedFileContents,
 					getValidationIssues());
-			projectStatePersister.writeProjectState(projectConfig, persistConfig.getPersistedFileVersion(),
-					currentState);
+			projectStatePersister.writeProjectState(projectConfig, currentState);
 		}
 	}
 
@@ -120,9 +119,7 @@ public class ProjectStateManager {
 		ResourceChangeSet result = new ResourceChangeSet();
 		doClear();
 
-		ProjectState projectState = projectStatePersister.readProjectState(projectConfig,
-				persistConfig.getPersistedFileVersion());
-
+		ProjectState projectState = projectStatePersister.readProjectState(projectConfig);
 		if (projectState != null) {
 			for (HashedFileContent hfc : projectState.fileHashs.values()) {
 				URI previouslyExistingFile = hfc.getUri();

@@ -129,7 +129,7 @@ public class BuilderFrontend {
 			URI uri = uriExtensions.toUri(fileEvent.getUri());
 
 			String fileName = uri.lastSegment();
-			boolean skipFile = fileName.equals(ProjectStatePersister.FILENAME);
+			boolean skipFile = fileName.equals(persister.getPersistedFileName());
 
 			if (!skipFile && isSourceFile(uri)) {
 				FileChangeType changeType = fileEvent.getType();

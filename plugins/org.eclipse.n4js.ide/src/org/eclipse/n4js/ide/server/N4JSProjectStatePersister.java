@@ -10,17 +10,22 @@
  */
 package org.eclipse.n4js.ide.server;
 
-import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.ide.xtext.server.build.ProjectStatePersister;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 
 /**
  * Setup {@link ProjectStatePersister}
  */
-public class N4JSProjectStatePersisterConfig extends ProjectStatePersisterConfig {
+public class N4JSProjectStatePersister extends ProjectStatePersister {
 
 	@Override
-	public String getPersistedFileVersion() {
+	public String getPersistedFileName() {
+		return N4JSGlobals.N4JS_PROJECT_STATE;
+	}
+
+	@Override
+	public String getLanguageVersion() {
 		return N4JSLanguageUtils.getLanguageVersion();
 	}
 

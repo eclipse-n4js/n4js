@@ -36,6 +36,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.ENamedElement;
@@ -43,10 +45,8 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.ide.xtext.server.LSPIssue;
 import org.eclipse.n4js.projectModel.locations.FileURI;
-import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.build.Source2GeneratedMapping;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -71,6 +71,7 @@ import com.google.inject.Singleton;
 @SuppressWarnings("restriction")
 @Singleton
 public class ProjectStatePersister {
+	private static final Logger LOG = LogManager.getLogger(ProjectStatePersister.class);
 
 	/** Data holder class of project state */
 	static public class ProjectState {
@@ -107,7 +108,7 @@ public class ProjectStatePersister {
 	 * After the version, the stream contains a zipped, data stream of the following shape:
 	 *
 	 * <pre>
-	 * - Language version as per {@link N4JSLanguageUtils#getLanguageVersion() N4JSLanguageUtils.getLanguageVersion}
+	 * - Persisted state file version as per {@link #getLanguageVersion() getLanguageVersion}
 	 * - Number #r of resource descriptions
 	 * - #r times a serializable resource description as per {@link #writeResourceDescription(SerializableResourceDescription, DataOutput)}
 	 * - A mapping of generated URIs as per {@link Source2GeneratedMapping#writeExternal(java.io.ObjectOutput) Source2GeneratedMapping.writeExternal}
@@ -125,21 +126,28 @@ public class ProjectStatePersister {
 	/** The current version of the persistence format. Increment to support backwards compatible deserialization. */
 	private static final int CURRENT_VERSION = VERSION_2;
 
-	/** The simple name of the file with the project state. */
-	public static final String FILENAME = N4JSGlobals.N4JS_PROJECT_STATE;
-
 	private final ExecutorService writer = Executors.newSingleThreadExecutor();
 
+	/** @return the simple name of the file with the project state. */
+	public String getPersistedFileName() {
+		return ".projectstate";
+	}
+
 	/**
-	 * Close this persister and wait for pending write operations to complete.
+	 * The language version changes iff any of the persisted languages changes the serialization of its persisted state.
+	 *
+	 * @return the version string to distinguish persisted files with different format
 	 */
+	public String getLanguageVersion() {
+		return "1";
+	}
+
+	/** Close this persister and wait for pending write operations to complete. */
 	public void close() {
 		MoreExecutors.shutdownAndAwaitTermination(writer, 5, TimeUnit.SECONDS);
 	}
 
-	/**
-	 * Return a future that is completed as soon as the currently pending writes are done.
-	 */
+	/** Return a future that is completed as soon as the currently pending writes are done. */
 	public CompletableFuture<Void> pendingWrites() {
 		if (writer.isTerminated()) {
 			return CompletableFuture.completedFuture(null);
@@ -154,21 +162,19 @@ public class ProjectStatePersister {
 	 *
 	 * @param project
 	 *            the project
-	 * @param languageVersion
-	 *            the language version
 	 * @param state
 	 *            the state to be written
 	 */
-	public void writeProjectState(IProjectConfig project, String languageVersion, ProjectState state) {
+	public void writeProjectState(IProjectConfig project, ProjectState state) {
 		ProjectState stateCopy = state.copy();
-		asyncWriteProjectState(project, languageVersion, stateCopy);
+		asyncWriteProjectState(project, stateCopy);
 	}
 
-	private void asyncWriteProjectState(IProjectConfig project, String languageVersion, ProjectState state) {
+	private void asyncWriteProjectState(IProjectConfig project, ProjectState state) {
 		writer.submit(() -> {
 			File file = getDataFile(project);
 			try (OutputStream nativeOut = Files.asByteSink(file).openBufferedStream()) {
-				writeProjectState(nativeOut, languageVersion, state);
+				writeProjectState(nativeOut, state);
 			} catch (IOException e) {
 				e.printStackTrace();
 				if (file.isFile()) {
@@ -181,21 +187,21 @@ public class ProjectStatePersister {
 	/**
 	 * @param stream
 	 *            the output stream. Will not be closed.
-	 * @param languageVersion
-	 *            the language version
 	 * @param state
 	 *            the state to be written
 	 * @throws IOException
 	 *             if things go bananas.
 	 */
-	public void writeProjectState(OutputStream stream, String languageVersion, ProjectState state)
+	public void writeProjectState(OutputStream stream, ProjectState state)
 			throws IOException {
 
+		String fileVersion = getLanguageVersion();
+		LOG.info("write project state (file version " + fileVersion + ")");
 		stream.write(CURRENT_VERSION);
 		try (DataOutputStream output = new DataOutputStream(
 				new BufferedOutputStream(new GZIPOutputStream(stream, 8192)))) {
 
-			output.writeUTF(languageVersion);
+			output.writeUTF(fileVersion);
 
 			writeResourceDescriptions(state, output);
 
@@ -327,12 +333,12 @@ public class ProjectStatePersister {
 	 * @param project
 	 *            the project
 	 */
-	public ProjectState readProjectState(IProjectConfig project, String languageVersion) {
+	public ProjectState readProjectState(IProjectConfig project) {
 		File file = getDataFile(project);
 		try {
 			if (file.isFile()) {
 				try (InputStream nativeIn = Files.asByteSource(file).openBufferedStream()) {
-					ProjectState result = readProjectState(nativeIn, languageVersion);
+					ProjectState result = readProjectState(nativeIn);
 					if (result == null && file.isFile()) {
 						file.delete();
 					}
@@ -351,14 +357,12 @@ public class ProjectStatePersister {
 	/**
 	 * @param stream
 	 *            the stream to read from.
-	 * @param expectedLanguageVersion
-	 *            the language version as it is expected to be present in the stream
 	 * @throws IOException
 	 *             if things go bananas.
 	 * @throws ClassNotFoundException
 	 *             if things go bananas.
 	 */
-	public ProjectState readProjectState(InputStream stream, String expectedLanguageVersion)
+	public ProjectState readProjectState(InputStream stream)
 			throws IOException, ClassNotFoundException {
 
 		int version = stream.read();
@@ -367,8 +371,8 @@ public class ProjectStatePersister {
 		}
 
 		try (DataInputStream input = new DataInputStream(new BufferedInputStream(new GZIPInputStream(stream, 8192)))) {
-			String languageVersion = input.readUTF();
-			if (!expectedLanguageVersion.equals(languageVersion)) {
+			String fileVersion = input.readUTF();
+			if (!getLanguageVersion().equals(fileVersion)) {
 				return null;
 			}
 			ResourceDescriptionsData resourceDescriptionsData = readResourceDescriptions(input);
@@ -528,7 +532,8 @@ public class ProjectStatePersister {
 
 	/** @return the file URI of the persisted index */
 	public URI getFileName(IProjectConfig project) {
+		String fileName = getPersistedFileName();
 		URI rootPath = project.getPath();
-		return new FileURI(rootPath).appendSegment(FILENAME).toURI();
+		return new FileURI(rootPath).appendSegment(fileName).toURI();
 	}
 }
