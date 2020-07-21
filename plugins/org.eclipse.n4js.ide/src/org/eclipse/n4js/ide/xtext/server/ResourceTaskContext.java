@@ -75,9 +75,6 @@ public class ResourceTaskContext {
 	private IResourceServiceProvider.Registry resourceServiceProviderRegistry;
 
 	@Inject
-	private IResourceServiceProvider.Registry languagesRegistry;
-
-	@Inject
 	private OperationCanceledManager operationCanceledManager;
 
 	@Inject
@@ -255,6 +252,12 @@ public class ResourceTaskContext {
 
 	/** Same as {@link #refreshContext(int, Iterable, CancelIndicator)}, but without changing the source text. */
 	public void refreshContext(CancelIndicator cancelIndicator) {
+		/*
+		 * Review feedback:
+		 *
+		 * XtextResource.relink is likely faster for cases, where the text didn't change.
+		 *
+		 */
 		// TODO IDE-3402 find better solution for updating unchanged resource task contexts!
 		TextDocumentContentChangeEvent dummyChange = new TextDocumentContentChangeEvent(document.getContents());
 		refreshContext(document.getVersion(), Collections.singletonList(dummyChange), cancelIndicator);
@@ -277,6 +280,14 @@ public class ResourceTaskContext {
 		ResourceSet resSet = getResourceSet();
 		for (Resource res : new ArrayList<>(resSet.getResources())) {
 			if (res != mainResource) {
+				/*
+				 * Review feedback:
+				 *
+				 * Better use XtextResource.relink since unload will install "normal" EMF proxies rather than lazy
+				 * linking proxies.
+				 *
+				 * Also this must follow the isAffected semantics - not all resources need to be proxified.
+				 */
 				res.unload(); // TODO IDE-3402 better way to do this? (unload is expensive due to re-proxyfication)
 				resSet.getResources().remove(res);
 			}
@@ -318,7 +329,8 @@ public class ResourceTaskContext {
 	/** Validate this context's main resource and send an issue update. */
 	public List<Issue> validateResource(CancelIndicator cancelIndicator) {
 		// validate
-		IResourceServiceProvider resourceServiceProvider = languagesRegistry.getResourceServiceProvider(mainURI);
+		IResourceServiceProvider resourceServiceProvider = resourceServiceProviderRegistry
+				.getResourceServiceProvider(mainURI);
 		IResourceValidator resourceValidator = resourceServiceProvider.getResourceValidator();
 		List<Issue> issues = resourceValidator.validate(mainResource, CheckMode.ALL, cancelIndicator);
 		operationCanceledManager.checkCanceled(cancelIndicator); // #validate() sometimes returns null when canceled!
