@@ -62,6 +62,20 @@ import com.google.inject.Provider;
 @SuppressWarnings({ "restriction" })
 public class ResourceTaskContext {
 
+	/*
+	 * Review feedback:
+	 *
+	 * It *appears* as if we are duplicating quite some logic in this class. The builder frontend is responsible for
+	 * updating resources after changes happened. We a implementing a different incremental build semantics in
+	 * refreshContext with fewer optimizations and therefore a performance drag.
+	 *
+	 * The logic, how a given resource set is updated after an incoming change is recorded, should certainly be
+	 * implemented exactly once.
+	 *
+	 * For xtext.ui, we made the mistake of duplicating this between the Eclipse builder and the reconciler, and this
+	 * was a constant PITA.
+	 */
+
 	@Inject
 	private LSPIssueConverter lspIssueConverter;
 
