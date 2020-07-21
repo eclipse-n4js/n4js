@@ -52,6 +52,18 @@ import com.google.common.collect.Lists;
  */
 @SuppressWarnings("restriction")
 public class WorkspaceChanges {
+	/*
+	 * Review feedback:
+	 *
+	 * The term 'data class' from the JavaDoc strongly suggests immutability which is not the case. Either make this a
+	 * data class (preferred) or update the comments.
+	 */
+
+	/*
+	 * Review feedback:
+	 *
+	 * This will break if I perform an accidental NO_CHANGES.merge(..)
+	 */
 	/** Singleton instance containing empty change sets only */
 	public static final WorkspaceChanges NO_CHANGES = new WorkspaceChanges();
 

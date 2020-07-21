@@ -20,6 +20,15 @@ import org.eclipse.xtext.workspace.IWorkspaceConfig;
  */
 @SuppressWarnings("restriction")
 public interface IWorkspaceConfigSnapshot {
+	/*
+	 * Review feedback:
+	 *
+	 * Since this is an interface, there is way to guarantee the promise made in the JavaDoc.
+	 *
+	 * Better make this a class that implements IWorkspaceConfig, e.g.
+	 *
+	 * class WorkspaceConfigSnapshot implements IWorkspaceConfig {}
+	 */
 
 	/** See {@link XIWorkspaceConfig#getPath()}. */
 	URI getPath();

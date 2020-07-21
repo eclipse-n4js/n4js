@@ -146,11 +146,11 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 
 	/**
 	 * Methods annotated as {@link ExecutableCommandHandler} will be registered as handlers for ExecuteCommand requests.
-	 * The methods are found reflectively in this class. They must define a parameter list with at least the two
+	 * The methods are found reflectively in this class. They must define a parameter list with at least these two
 	 * trailing parameters: {@code ILanguageServerAccess access, CancelIndicator cancelIndicator}. All the leading
-	 * parameters before the {@code ILanguageServerAccess} are passed by the framework. The parameter types are used to
-	 * deserialize the {@link ExecuteCommandParams#getArguments() arguments} of the execute commands in a strongly typed
-	 * way.
+	 * parameter values before the {@code ILanguageServerAccess} are provided by the framework. The parameter types are
+	 * used to deserialize the {@link ExecuteCommandParams#getArguments() arguments} of the execute commands in a
+	 * strongly typed way.
 	 */
 	@Target(ElementType.METHOD)
 	@Retention(RetentionPolicy.RUNTIME)

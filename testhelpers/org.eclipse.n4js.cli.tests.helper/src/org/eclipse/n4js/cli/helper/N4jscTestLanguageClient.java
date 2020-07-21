@@ -102,6 +102,11 @@ public class N4jscTestLanguageClient extends N4jscLanguageClient {
 		URI relGenerated = lspBuilder.makeWorkspaceRelative(generated);
 		File relFile = URIUtils.toFile(relGenerated);
 		transpiledFiles.computeIfAbsent(folder, f -> Collections.synchronizedSet(new HashSet<File>())).add(relFile);
+		/*
+		 * Review feedback:
+		 *
+		 * How is it possible that containsKey returns false here?
+		 */
 		if (!transpiledFiles.containsKey(folder)) {
 			transpiledFiles.put(folder, new HashSet<File>());
 		}

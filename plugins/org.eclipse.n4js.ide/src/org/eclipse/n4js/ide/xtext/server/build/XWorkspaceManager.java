@@ -54,7 +54,7 @@ import com.google.inject.Singleton;
 public class XWorkspaceManager {
 	/*
 	 * Review feedback:
-	 * 
+	 *
 	 * This is being used from org.eclipse.n4js.cli.compiler.N4jscCompiler and not encapsulated by the BuilderFrontend.
 	 */
 
@@ -161,6 +161,12 @@ public class XWorkspaceManager {
 	 */
 	public XIWorkspaceConfig getWorkspaceConfig() throws ResponseErrorException {
 		if (workspaceConfig == null) {
+			/*
+			 * Review feedback:
+			 *
+			 * The declared exception is specific to LSP4J and the only specificity in this class. We should try to
+			 * convert the result of this method at a different location to a ResponseErrorException.
+			 */
 			ResponseError error = new ResponseError(ResponseErrorCode.serverNotInitialized,
 					"Workspace has not been initialized yet.", null);
 			throw new ResponseErrorException(error);
@@ -168,8 +174,18 @@ public class XWorkspaceManager {
 		return workspaceConfig;
 	}
 
+	/*
+	 * Review feedback:
+	 *
+	 * Future versions won't have a single base directory. We ran out-of-sync with the Xtext default implementation.
+	 */
 	/** @return the current base directory {@link URI} */
 	public URI getBaseDir() {
+		/*
+		 * Review feedback:
+		 *
+		 * Why are we gracefully handling the case with workspaceConfig==null here but not accept that situation above?
+		 */
 		if (this.workspaceConfig == null) {
 			return null;
 		}

@@ -18,6 +18,11 @@ import org.eclipse.xtext.workspace.ISourceFolder;
  */
 @SuppressWarnings("restriction")
 public interface ISourceFolderSnapshot {
+	/*
+	 * Review feedback:
+	 *
+	 * Same as for IProjectConfigSnapshot: Make this a class instead.
+	 */
 
 	/** See {@link ISourceFolder#getName()}. */
 	String getName();

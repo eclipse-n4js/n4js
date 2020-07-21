@@ -22,6 +22,13 @@ import com.google.common.collect.ImmutableSet;
 @SuppressWarnings("restriction")
 public interface IProjectConfigSnapshot {
 
+	/*
+	 * Review feedback:
+	 *
+	 * Same feedback as for IWorkspaceConfigSnapshot: Make this a class to be able to guarantee the invariants and
+	 * concurrency contract.
+	 */
+
 	/** See {@link IProjectConfig#getName()}. */
 	String getName();
 
