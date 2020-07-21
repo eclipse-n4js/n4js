@@ -108,7 +108,7 @@ public class ProjectStatePersister {
 	 * After the version, the stream contains a zipped, data stream of the following shape:
 	 *
 	 * <pre>
-	 * - Persisted state file version as per {@link #getLanguageVersion() getLanguageVersion}
+	 * - Language version as per {@link #getLanguageVersion() getLanguageVersion}
 	 * - Number #r of resource descriptions
 	 * - #r times a serializable resource description as per {@link #writeResourceDescription(SerializableResourceDescription, DataOutput)}
 	 * - A mapping of generated URIs as per {@link Source2GeneratedMapping#writeExternal(java.io.ObjectOutput) Source2GeneratedMapping.writeExternal}
@@ -136,7 +136,7 @@ public class ProjectStatePersister {
 	/**
 	 * The language version changes iff any of the persisted languages changes the serialization of its persisted state.
 	 *
-	 * @return the version string to distinguish persisted files with different format
+	 * @return the version string to distinguish persisted files with different serialization
 	 */
 	public String getLanguageVersion() {
 		return "1";
@@ -195,13 +195,13 @@ public class ProjectStatePersister {
 	public void writeProjectState(OutputStream stream, ProjectState state)
 			throws IOException {
 
-		String fileVersion = getLanguageVersion();
-		LOG.info("write project state (file version " + fileVersion + ")");
+		String languageVersion = getLanguageVersion();
+		LOG.info("write project state (file version " + languageVersion + ")");
 		stream.write(CURRENT_VERSION);
 		try (DataOutputStream output = new DataOutputStream(
 				new BufferedOutputStream(new GZIPOutputStream(stream, 8192)))) {
 
-			output.writeUTF(fileVersion);
+			output.writeUTF(languageVersion);
 
 			writeResourceDescriptions(state, output);
 
@@ -371,8 +371,8 @@ public class ProjectStatePersister {
 		}
 
 		try (DataInputStream input = new DataInputStream(new BufferedInputStream(new GZIPInputStream(stream, 8192)))) {
-			String fileVersion = input.readUTF();
-			if (!getLanguageVersion().equals(fileVersion)) {
+			String languageVersion = input.readUTF();
+			if (!getLanguageVersion().equals(languageVersion)) {
 				return null;
 			}
 			ResourceDescriptionsData resourceDescriptionsData = readResourceDescriptions(input);
