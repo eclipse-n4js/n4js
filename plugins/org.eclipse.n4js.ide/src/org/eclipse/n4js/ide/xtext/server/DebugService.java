@@ -109,17 +109,14 @@ public interface DebugService {
 		}
 
 		private String getDebugInfo() {
-			MemoryMXBean memoryBean = ManagementFactory.getMemoryMXBean();
-			MemoryUsage memoryUsage = memoryBean.getHeapMemoryUsage();
-
 			String info = "==   DEBUG INFO   ==\n";
-			info += memoryUsage.toString();
-			info += "\n== -------------- ==\n";
 			info += getThreadDump();
-			info += "\n== -------------- ==\n";
-			info += executerService.stringify();
-			info += "\n== -------------- ==\n";
-			info += dumpWorkspaceConfig();
+			info += "\n--------------\n";
+			info += getExecuterServiceDump();
+			info += "\n--------------\n";
+			info += getMemoryDump();
+			info += "\n--------------\n";
+			info += getWorkspaceConfigDump();
 			info += "\n== DEBUG INFO END ==\n";
 			return info;
 		}
@@ -128,7 +125,7 @@ public interface DebugService {
 		private static String getThreadDump() {
 			long currentId = Thread.currentThread().getId();
 			ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
-			StringBuilder dump = new StringBuilder("Thread dump");
+			StringBuilder dump = new StringBuilder("Thread dump:\n");
 			dump.append("Current ThreadId: ").append(currentId);
 
 			ThreadInfo[] infos = threadMXBean.dumpAllThreads(threadMXBean.isObjectMonitorUsageSupported(),
@@ -196,9 +193,22 @@ public interface DebugService {
 			}
 		}
 
-		private String dumpWorkspaceConfig() {
+		private String getExecuterServiceDump() {
+			String dump = executerService.stringify();
+			return dump;
+		}
+
+		private String getMemoryDump() {
+			MemoryMXBean memoryBean = ManagementFactory.getMemoryMXBean();
+			MemoryUsage memoryUsage = memoryBean.getHeapMemoryUsage();
+			String dump = "Memory Usage:\n";
+			dump += memoryUsage.toString();
+			return dump;
+		}
+
+		private String getWorkspaceConfigDump() {
 			IWorkspaceConfigSnapshot workspace = fullIndex.getWorkspaceConfig();
-			String dump = "Workspace Config:\n";
+			String dump = "Workspace Config:\n + ";
 			dump += Strings.join("\n + ", p -> p.getName(), workspace.getProjects());
 			return dump;
 		}
