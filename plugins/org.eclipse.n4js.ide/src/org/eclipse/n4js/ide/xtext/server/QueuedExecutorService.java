@@ -349,6 +349,12 @@ public class QueuedExecutorService {
 		return new QueuedTask<>(queueId, description, task);
 	}
 
+	/*
+	 * Review feedback:
+	 *
+	 * There is a little bit of duplication of this logic. FutureUtil does something similar. More recent versions of
+	 * Xtext do have support for CancellationException in the OperationCanceledManager.
+	 */
 	/** May be invoked from arbitrary threads. */
 	protected /* NOT synchronized */ boolean isCancellation(Throwable th) {
 		return th instanceof CancellationException || operationCanceledManager.isOperationCanceledException(th);
