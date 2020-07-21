@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.xtext.server;
+package org.eclipse.n4js.ide.xtext.server.build;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -43,8 +44,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
-import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
+import org.eclipse.n4js.ide.xtext.server.LSPIssue;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.URIUtils;
@@ -58,10 +58,7 @@ import org.eclipse.xtext.resource.persistence.SerializableResourceDescription;
 import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableListMultimap;
-import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.io.Files;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.inject.Singleton;
@@ -76,20 +73,33 @@ import com.google.inject.Singleton;
 public class ProjectStatePersister {
 
 	/** Data holder class of project state */
-	static public class PersistedState {
+	static public class ProjectState {
 		/** Type index */
-		final public XIndexState indexState;
+		final public ResourceDescriptionsData index;
+		/** File Mappings */
+		final public XSource2GeneratedMapping fileMappings;
 		/** Hashes to indicate file changes */
 		final public Map<URI, HashedFileContent> fileHashs;
 		/** Hashes to indicate file changes */
-		final public Multimap<URI, LSPIssue> validationIssues;
+		final public Map<URI, ? extends Collection<LSPIssue>> validationIssues;
 
-		PersistedState(XIndexState indexState, Map<URI, HashedFileContent> fileHashs,
-				Multimap<URI, LSPIssue> validationIssues) {
+		/** Constructor */
+		public ProjectState(ResourceDescriptionsData index, XSource2GeneratedMapping fileMappings,
+				Map<URI, HashedFileContent> fileHashs, Map<URI, ? extends Collection<LSPIssue>> validationIssues) {
 
-			this.indexState = indexState;
+			this.index = index;
+			this.fileMappings = fileMappings;
 			this.fileHashs = fileHashs;
 			this.validationIssues = validationIssues;
+		}
+
+		/** @return a copied instance of this with copied field values */
+		public ProjectState copy() {
+			return new ProjectState(
+					index.copy(),
+					fileMappings.copy(),
+					ImmutableMap.copyOf(fileHashs),
+					ImmutableMap.copyOf(validationIssues));
 		}
 	}
 
@@ -146,27 +156,17 @@ public class ProjectStatePersister {
 	 *            the project
 	 * @param state
 	 *            the state to be written
-	 * @param validationIssues
-	 *            map of source files to issues
 	 */
-	public void writeProjectState(IProjectConfig project, XIndexState state,
-			Collection<? extends HashedFileContent> files, Multimap<URI, LSPIssue> validationIssues) {
-
-		XIndexState indexCopy = new XIndexState(state.getResourceDescriptions().copy(), state.getFileMappings().copy());
-
-		asyncWriteProjectState(project,
-				indexCopy,
-				ImmutableList.copyOf(files),
-				ImmutableListMultimap.copyOf(validationIssues));
+	public void writeProjectState(IProjectConfig project, ProjectState state) {
+		ProjectState stateCopy = state.copy();
+		asyncWriteProjectState(project, stateCopy);
 	}
 
-	private void asyncWriteProjectState(IProjectConfig project, XIndexState state,
-			Collection<? extends HashedFileContent> files, Multimap<URI, LSPIssue> validationIssues) {
-
+	private void asyncWriteProjectState(IProjectConfig project, ProjectState state) {
 		writer.submit(() -> {
 			File file = getDataFile(project);
 			try (OutputStream nativeOut = Files.asByteSink(file).openBufferedStream()) {
-				writeProjectState(nativeOut, N4JSLanguageUtils.getLanguageVersion(), state, files, validationIssues);
+				writeProjectState(nativeOut, N4JSLanguageUtils.getLanguageVersion(), state);
 			} catch (IOException e) {
 				e.printStackTrace();
 				if (file.isFile()) {
@@ -183,13 +183,10 @@ public class ProjectStatePersister {
 	 *            the language version
 	 * @param state
 	 *            the state to be written
-	 * @param files
-	 *            the hashed file contents.
 	 * @throws IOException
 	 *             if things go bananas.
 	 */
-	public void writeProjectState(OutputStream stream, String languageVersion, XIndexState state,
-			Collection<? extends HashedFileContent> files, Multimap<URI, LSPIssue> validationIssues)
+	public void writeProjectState(OutputStream stream, String languageVersion, ProjectState state)
 			throws IOException {
 
 		stream.write(CURRENT_VERSION);
@@ -202,16 +199,15 @@ public class ProjectStatePersister {
 
 			writeFileMappings(state, output);
 
-			writeFingerprints(files, output);
+			writeFingerprints(state, output);
 
-			writeValidationIssues(validationIssues, output);
+			writeValidationIssues(state, output);
 		}
 	}
 
-	private void writeResourceDescriptions(XIndexState state, DataOutput output) throws IOException {
-		ResourceDescriptionsData resourceDescriptionData = state.getResourceDescriptions();
-		output.writeInt(resourceDescriptionData.getAllURIs().size());
-		for (IResourceDescription description : resourceDescriptionData.getAllResourceDescriptions()) {
+	private void writeResourceDescriptions(ProjectState state, DataOutput output) throws IOException {
+		output.writeInt(state.index.getAllURIs().size());
+		for (IResourceDescription description : state.index.getAllResourceDescriptions()) {
 			if (description instanceof SerializableResourceDescription) {
 				writeResourceDescription((SerializableResourceDescription) description, output);
 			} else {
@@ -294,27 +290,24 @@ public class ProjectStatePersister {
 		}
 	}
 
-	private void writeFileMappings(XIndexState state, DataOutputStream output) throws IOException {
-		state.getFileMappings().writeExternal(output);
+	private void writeFileMappings(ProjectState state, DataOutputStream output) throws IOException {
+		state.fileMappings.writeExternal(output);
 	}
 
-	private void writeFingerprints(Collection<? extends HashedFileContent> files, DataOutput output)
-			throws IOException {
-
+	private void writeFingerprints(ProjectState state, DataOutput output) throws IOException {
+		Collection<HashedFileContent> files = state.fileHashs.values();
 		output.writeInt(files.size());
 		for (HashedFileContent fingerprint : files) {
 			fingerprint.write(output);
 		}
 	}
 
-	private void writeValidationIssues(Multimap<URI, LSPIssue> validationIssues, DataOutput output)
-			throws IOException {
-
-		Set<URI> allSources = validationIssues.keySet();
+	private void writeValidationIssues(ProjectState state, DataOutput output) throws IOException {
+		Set<URI> allSources = state.validationIssues.keySet();
 		int numberSources = allSources.size();
 		output.writeInt(numberSources);
 		for (URI source : allSources) {
-			Collection<LSPIssue> issues = validationIssues.get(source);
+			Collection<LSPIssue> issues = state.validationIssues.get(source);
 
 			output.writeUTF(source.toString());
 
@@ -332,12 +325,12 @@ public class ProjectStatePersister {
 	 * @param project
 	 *            the project
 	 */
-	public PersistedState readProjectState(IProjectConfig project) {
+	public ProjectState readProjectState(IProjectConfig project) {
 		File file = getDataFile(project);
 		try {
 			if (file.isFile()) {
 				try (InputStream nativeIn = Files.asByteSource(file).openBufferedStream()) {
-					PersistedState result = readProjectState(nativeIn, N4JSLanguageUtils.getLanguageVersion());
+					ProjectState result = readProjectState(nativeIn, N4JSLanguageUtils.getLanguageVersion());
 					if (result == null && file.isFile()) {
 						file.delete();
 					}
@@ -363,7 +356,7 @@ public class ProjectStatePersister {
 	 * @throws ClassNotFoundException
 	 *             if things go bananas.
 	 */
-	public PersistedState readProjectState(InputStream stream, String expectedLanguageVersion)
+	public ProjectState readProjectState(InputStream stream, String expectedLanguageVersion)
 			throws IOException, ClassNotFoundException {
 
 		int version = stream.read();
@@ -382,10 +375,9 @@ public class ProjectStatePersister {
 
 			Map<URI, HashedFileContent> fingerprints = readFingerprints(input);
 
-			Multimap<URI, LSPIssue> validationIssues = readValidationIssues(input);
+			Map<URI, ? extends Collection<LSPIssue>> validationIssues = readValidationIssues(input);
 
-			XIndexState indexState = new XIndexState(resourceDescriptionsData, fileMappings);
-			return new PersistedState(indexState, fingerprints, validationIssues);
+			return new ProjectState(resourceDescriptionsData, fileMappings, fingerprints, validationIssues);
 		}
 	}
 
@@ -508,9 +500,9 @@ public class ProjectStatePersister {
 		return fingerprints;
 	}
 
-	private Multimap<URI, LSPIssue> readValidationIssues(DataInput input) throws IOException {
+	private Map<URI, ? extends Collection<LSPIssue>> readValidationIssues(DataInput input) throws IOException {
 		int numberOfSources = input.readInt();
-		Multimap<URI, LSPIssue> validationIssues = LinkedHashMultimap.create();
+		Map<URI, ArrayList<LSPIssue>> validationIssues = new LinkedHashMap<>();
 		while (numberOfSources > 0) {
 			numberOfSources--;
 			URI source = URI.createURI(input.readUTF());
@@ -519,7 +511,8 @@ public class ProjectStatePersister {
 				numberOfIssues--;
 				LSPIssue issue = new LSPIssue();
 				issue.readExternal(input);
-				validationIssues.put(source, issue);
+				validationIssues.putIfAbsent(source, new ArrayList<LSPIssue>());
+				validationIssues.get(source).add(issue);
 			}
 		}
 		return validationIssues;

@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.xtext.server;
+package org.eclipse.n4js.ide.xtext.server.build;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,10 +22,8 @@ import org.eclipse.lsp4j.DidSaveTextDocumentParams;
 import org.eclipse.lsp4j.FileChangeType;
 import org.eclipse.lsp4j.FileEvent;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
-import org.eclipse.n4js.ide.xtext.server.XBuildManager.XBuildable;
-import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentChunkedIndex;
-import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
-import org.eclipse.n4js.ide.xtext.server.concurrent.LSPExecutorService;
+import org.eclipse.n4js.ide.xtext.server.QueuedExecutorService;
+import org.eclipse.n4js.ide.xtext.server.build.XBuildManager.XBuildable;
 import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -42,12 +40,12 @@ import com.google.inject.Singleton;
  */
 @SuppressWarnings({ "javadoc", "restriction" })
 @Singleton
-public class LSPBuilder {
+public class BuilderFrontend {
 
-	private static final Logger LOG = Logger.getLogger(LSPBuilder.class);
+	private static final Logger LOG = Logger.getLogger(BuilderFrontend.class);
 
 	@Inject
-	private LSPExecutorService lspExecutorService;
+	private QueuedExecutorService queuedExecutorService;
 
 	@Inject
 	private UriExtensions uriExtensions;
@@ -58,24 +56,16 @@ public class LSPBuilder {
 	@Inject
 	private XWorkspaceManager workspaceManager;
 
-	private URI baseDir;
-
-	private ConcurrentIssueRegistry issueRegistry;
+	@Inject
+	private XBuildManager buildManager;
 
 	public URI getBaseDir() {
-		return baseDir;
+		return workspaceManager.getBaseDir();
 	}
 
 	/** @return a workspace relative URI for a given URI */
 	public URI makeWorkspaceRelative(URI uri) {
-		URI withEmptyAuthority = uriExtensions.withEmptyAuthority(uri);
-		URI relativeUri = withEmptyAuthority.deresolve(getBaseDir());
-		return relativeUri;
-	}
-
-	/** Returns the index. */
-	public ConcurrentChunkedIndex getIndexRaw() {
-		return workspaceManager.getIndexRaw();
+		return workspaceManager.makeWorkspaceRelative(uri);
 	}
 
 	/**
@@ -84,18 +74,12 @@ public class LSPBuilder {
 	 * @param newBaseDir
 	 *            the location
 	 */
-	@SuppressWarnings("hiding")
-	public void initialize(URI newBaseDir, ConcurrentIssueRegistry issueRegistry) {
-		if (this.issueRegistry != null && issueRegistry != this.issueRegistry) {
-			throw new IllegalArgumentException("the issue registry must not be changed");
-		}
-		this.baseDir = newBaseDir;
-		this.issueRegistry = issueRegistry;
-		workspaceManager.initialize(newBaseDir, issueRegistry);
+	public void initialize(URI newBaseDir) {
+		workspaceManager.initialize(newBaseDir);
 	}
 
 	public void initialBuild() {
-		lspExecutorService.submitAndCancelPrevious(XBuildManager.class, "initialized",
+		queuedExecutorService.submitAndCancelPrevious(XBuildManager.class, "initialized",
 				cancelIndicator -> doInitialBuild());
 
 	}
@@ -104,7 +88,7 @@ public class LSPBuilder {
 		Stopwatch sw = Stopwatch.createStarted();
 		try {
 			LOG.info("Start initial build ...");
-			workspaceManager.doInitialBuild(CancelIndicator.NullImpl);
+			buildManager.doInitialBuild(CancelIndicator.NullImpl);
 		} catch (Throwable t) {
 			LOG.error(t.getMessage(), t);
 			throw t;
@@ -115,8 +99,8 @@ public class LSPBuilder {
 	}
 
 	public CompletableFuture<Void> clean() {
-		return lspExecutorService.submitAndCancelPrevious(XBuildManager.class, "clean", cancelIndicator -> {
-			workspaceManager.clean(CancelIndicator.NullImpl);
+		return queuedExecutorService.submitAndCancelPrevious(XBuildManager.class, "clean", cancelIndicator -> {
+			buildManager.clean(CancelIndicator.NullImpl);
 			return null;
 		});
 	}
@@ -125,10 +109,10 @@ public class LSPBuilder {
 	 * Triggers rebuild of the whole workspace
 	 */
 	public CompletableFuture<Void> reinitWorkspace() {
-		return lspExecutorService.submitAndCancelPrevious(XBuildManager.class, "didChangeConfiguration",
+		return queuedExecutorService.submitAndCancelPrevious(XBuildManager.class, "didChangeConfiguration",
 				cancelIndicator -> {
 					workspaceManager.reinitialize();
-					workspaceManager.doInitialBuild(CancelIndicator.NullImpl);
+					buildManager.doInitialBuild(CancelIndicator.NullImpl);
 					return null;
 				});
 	}
@@ -158,7 +142,7 @@ public class LSPBuilder {
 			}
 		}
 		if (!dirtyFiles.isEmpty() || !deletedFiles.isEmpty()) {
-			runBuildable("didChangeWatchedFiles", () -> workspaceManager.didChangeFiles(dirtyFiles, deletedFiles));
+			runBuildable("didChangeWatchedFiles", () -> buildManager.didChangeFiles(dirtyFiles, deletedFiles));
 		}
 	}
 
@@ -166,7 +150,7 @@ public class LSPBuilder {
 	 * Evaluate the params and deduce the respective build command.
 	 */
 	protected XBuildable toBuildable(DidSaveTextDocumentParams params) {
-		return workspaceManager.didSave(getURI(params.getTextDocument()));
+		return buildManager.didSave(getURI(params.getTextDocument()));
 	}
 
 	/**
@@ -178,7 +162,7 @@ public class LSPBuilder {
 	 */
 	protected CompletableFuture<List<Delta>> runBuildable(String description,
 			Supplier<? extends XBuildable> newBuildable) {
-		return lspExecutorService.submitAndCancelPrevious(XBuildManager.class, description, cancelIndicator -> {
+		return queuedExecutorService.submitAndCancelPrevious(XBuildManager.class, description, cancelIndicator -> {
 			XBuildable buildable = newBuildable.get();
 			return buildable.build(cancelIndicator);
 		});

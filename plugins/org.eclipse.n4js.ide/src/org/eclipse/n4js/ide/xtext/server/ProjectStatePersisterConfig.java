@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ide.xtext.server;
 
+import org.eclipse.n4js.ide.xtext.server.build.ProjectStatePersister;
 import org.eclipse.xtext.workspace.IProjectConfig;
 
 import com.google.inject.Singleton;

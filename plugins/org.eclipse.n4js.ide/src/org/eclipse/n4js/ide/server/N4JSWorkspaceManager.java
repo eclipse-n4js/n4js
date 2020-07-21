@@ -13,8 +13,8 @@ package org.eclipse.n4js.ide.server;
 import java.util.Collection;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.ide.xtext.server.XProjectManager;
-import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
+import org.eclipse.n4js.ide.xtext.server.build.ProjectBuilder;
+import org.eclipse.n4js.ide.xtext.server.build.XWorkspaceManager;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 
 import com.google.inject.Singleton;
@@ -31,18 +31,18 @@ public class N4JSWorkspaceManager extends XWorkspaceManager {
 	 * @return the project manager.
 	 */
 	@Override
-	public XProjectManager getProjectManager(URI uri) {
+	public ProjectBuilder getProjectBuilder(URI uri) {
 		if (N4Scheme.isN4Scheme(uri)) {
 			return anyProject();
 		}
-		return super.getProjectManager(uri);
+		return super.getProjectBuilder(uri);
 	}
 
-	private XProjectManager anyProject() {
-		Collection<XProjectManager> allProjectManagers = getProjectManagers();
-		if (!allProjectManagers.isEmpty()) {
-			XProjectManager anyProjectManager = allProjectManagers.iterator().next();
-			return anyProjectManager;
+	private ProjectBuilder anyProject() {
+		Collection<ProjectBuilder> allProjectBuilders = getProjectBuilders();
+		if (!allProjectBuilders.isEmpty()) {
+			ProjectBuilder anyProjectBuilder = allProjectBuilders.iterator().next();
+			return anyProjectBuilder;
 		}
 		return null;
 	}

@@ -27,7 +27,7 @@ import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.n4js.ide.client.AbstractN4JSLanguageClient;
 import org.eclipse.n4js.ide.tests.server.AbstractIdeTest;
 import org.eclipse.n4js.ide.tests.server.StringLSP4J;
-import org.eclipse.n4js.ide.xtext.server.LSPBuilder;
+import org.eclipse.n4js.ide.xtext.server.build.BuilderFrontend;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.utils.URIUtils;
@@ -43,7 +43,7 @@ import com.google.inject.Inject;
 public class IdeTestLanguageClient extends AbstractN4JSLanguageClient {
 
 	@Inject
-	private LSPBuilder lspBuilder;
+	private BuilderFrontend lspBuilder;
 
 	private final List<IIdeTestLanguageClientListener> listeners = Collections.synchronizedList(new LinkedList<>());
 

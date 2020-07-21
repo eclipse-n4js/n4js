@@ -18,6 +18,9 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.n4js.ide.xtext.server.build.ProjectBuilder;
+import org.eclipse.n4js.ide.xtext.server.build.XBuildManager;
+import org.eclipse.n4js.ide.xtext.server.build.XWorkspaceManager;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
@@ -89,7 +92,7 @@ public class ProjectBuildOrderInfo implements IOrderInfo<ProjectDescription> {
 		protected Set<ProjectDescription> getAffectedProjects(List<IResourceDescription.Delta> changes) {
 			Set<String> changedProjectsNames = new HashSet<>();
 			for (IResourceDescription.Delta change : changes) {
-				XProjectManager projectManager = workspaceManager.getProjectManager(change.getUri());
+				ProjectBuilder projectManager = workspaceManager.getProjectBuilder(change.getUri());
 				ProjectDescription pd = projectManager.getProjectDescription();
 				changedProjectsNames.add(pd.getName());
 			}
@@ -143,8 +146,8 @@ public class ProjectBuildOrderInfo implements IOrderInfo<ProjectDescription> {
 	@Inject
 	protected void init() {
 		LinkedHashSet<String> orderedProjectNames = new LinkedHashSet<>();
-		for (XProjectManager pm : workspaceManager.getProjectManagers()) {
-			ProjectDescription pd = pm.getProjectDescription();
+		for (ProjectBuilder pb : workspaceManager.getProjectBuilders()) {
+			ProjectDescription pd = pb.getProjectDescription();
 			for (String dependencyName : pd.getDependencies()) {
 				inversedDependencies.put(dependencyName, pd);
 			}
@@ -152,9 +155,9 @@ public class ProjectBuildOrderInfo implements IOrderInfo<ProjectDescription> {
 		}
 
 		for (String projectName : orderedProjectNames) {
-			XProjectManager pm = workspaceManager.getProjectManager(projectName);
-			if (pm != null) { // can be null if project not on disk
-				sortedProjects.add(pm.getProjectDescription());
+			ProjectBuilder pb = workspaceManager.getProjectBuilder(projectName);
+			if (pb != null) { // can be null if project not on disk
+				sortedProjects.add(pb.getProjectDescription());
 			}
 		}
 	}
@@ -172,7 +175,7 @@ public class ProjectBuildOrderInfo implements IOrderInfo<ProjectDescription> {
 			projectStack.add(pdName);
 
 			for (String depName : pd.getDependencies()) {
-				XProjectManager pm = workspaceManager.getProjectManager(depName);
+				ProjectBuilder pm = workspaceManager.getProjectBuilder(depName);
 				if (pm != null) { // can be null if project not on disk
 					ProjectDescription depPd = pm.getProjectDescription();
 					computeOrder(depPd, orderedProjects, projectStack);
@@ -186,7 +189,7 @@ public class ProjectBuildOrderInfo implements IOrderInfo<ProjectDescription> {
 
 	/** Report cycle. */
 	protected void reportDependencyCycle(String projectName) {
-		XProjectManager pm = workspaceManager.getProjectManager(projectName);
+		ProjectBuilder pm = workspaceManager.getProjectBuilder(projectName);
 		if (pm != null) { // can be null if project not on disk
 			String msg = "Project has cyclic dependencies";
 			pm.reportProjectIssue(msg, XBuildManager.CYCLIC_PROJECT_DEPENDENCIES, Severity.ERROR);

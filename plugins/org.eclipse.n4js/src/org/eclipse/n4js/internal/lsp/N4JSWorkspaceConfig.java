@@ -30,7 +30,10 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.ProjectDiscoveryHelper;
+import org.eclipse.n4js.xtext.workspace.IWorkspaceConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
+import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
+import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
 import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.workspace.IProjectConfig;
@@ -53,7 +56,7 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	}
 
 	@Override
-	public IProjectConfig findProjectByName(String name) {
+	public XIProjectConfig findProjectByName(String name) {
 		IN4JSProject project = delegate.findProject(new N4JSProjectName(name)).orNull();
 		if (project != null) {
 			return new N4JSProjectConfig(this, project);
@@ -62,7 +65,7 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	}
 
 	@Override
-	public IProjectConfig findProjectContaining(URI member) {
+	public XIProjectConfig findProjectContaining(URI member) {
 		IN4JSProject project = delegate.findProject(member).orNull();
 		if (project != null) {
 			return new N4JSProjectConfig(this, project);
@@ -71,8 +74,8 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	}
 
 	@Override
-	public Set<? extends IProjectConfig> getProjects() {
-		Set<IProjectConfig> pConfigs = new HashSet<>();
+	public Set<? extends XIProjectConfig> getProjects() {
+		Set<XIProjectConfig> pConfigs = new HashSet<>();
 		for (IN4JSProject project : delegate.findAllProjects()) {
 			pConfigs.add(new N4JSProjectConfig(this, project));
 		}
@@ -89,7 +92,7 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 		IProjectConfig project = this.findProjectContaining(changedResource);
 
 		// get old projects here before it gets invalidated by N4JSProjectConfig#update()
-		Set<? extends IProjectConfig> oldProjects = getProjects();
+		Set<? extends XIProjectConfig> oldProjects = getProjects();
 
 		WorkspaceChanges update = new WorkspaceChanges();
 
@@ -124,7 +127,7 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 		return update;
 	}
 
-	private WorkspaceChanges detectAddedRemovedProjects(Set<? extends IProjectConfig> oldProjects) {
+	private WorkspaceChanges detectAddedRemovedProjects(Set<? extends XIProjectConfig> oldProjects) {
 
 		// update all projects
 		((N4JSRuntimeCore) delegate).deregisterAll();
@@ -137,10 +140,10 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 		}
 
 		// detect changes
-		Map<URI, IProjectConfig> oldProjectsMap = getProjectsMap(oldProjects);
-		Map<URI, IProjectConfig> newProjectsMap = getProjectsMap(getProjects());
-		List<IProjectConfig> addedProjects = new ArrayList<>();
-		List<IProjectConfig> removedProjects = new ArrayList<>();
+		Map<URI, XIProjectConfig> oldProjectsMap = getProjectsMap(oldProjects);
+		Map<URI, XIProjectConfig> newProjectsMap = getProjectsMap(getProjects());
+		List<XIProjectConfig> addedProjects = new ArrayList<>();
+		List<XIProjectConfig> removedProjects = new ArrayList<>();
 		for (URI uri : Sets.union(oldProjectsMap.keySet(), newProjectsMap.keySet())) {
 			boolean isOld = oldProjectsMap.containsKey(uri);
 			boolean isNew = newProjectsMap.containsKey(uri);
@@ -156,11 +159,16 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 				emptyList(), removedProjects, addedProjects, emptyList());
 	}
 
-	private Map<URI, IProjectConfig> getProjectsMap(Set<? extends IProjectConfig> projects) {
-		Map<URI, IProjectConfig> projectsMap = new HashMap<>();
-		for (IProjectConfig projectConfig : projects) {
+	private Map<URI, XIProjectConfig> getProjectsMap(Set<? extends XIProjectConfig> projects) {
+		Map<URI, XIProjectConfig> projectsMap = new HashMap<>();
+		for (XIProjectConfig projectConfig : projects) {
 			projectsMap.put(projectConfig.getPath(), projectConfig);
 		}
 		return projectsMap;
+	}
+
+	@Override
+	public IWorkspaceConfigSnapshot toSnapshot() {
+		return new WorkspaceConfigSnapshot(this);
 	}
 }

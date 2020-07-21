@@ -266,7 +266,7 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 
 		// transition into workspace clean state not by saving "D", but
 		// by closing "D" (discarding its unsaved changes)
-		closeFileDiscardingChanges("D");
+		closeFileDiscardingChanges("D", false);
 		joinServerRequests();
 
 		assertNoIssues();

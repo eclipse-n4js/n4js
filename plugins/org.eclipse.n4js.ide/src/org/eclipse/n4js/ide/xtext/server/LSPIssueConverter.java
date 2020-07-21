@@ -54,7 +54,7 @@ public class LSPIssueConverter {
 		return result;
 	}
 
-	// TODO GH-1774 consider avoiding the need for an XDocument here (use NodeModelUtils#getLineAndColumn())
+	// TODO IDE-3402 consider avoiding the need for an XDocument here (use NodeModelUtils#getLineAndColumn())
 	public LSPIssue convertToLSPIssue(Issue issue, XDocument document) {
 		if (issue instanceof LSPIssue) {
 			return (LSPIssue) issue;

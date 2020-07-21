@@ -2,7 +2,7 @@ package org.eclipse.n4js.ide.xtext.server.rename;
 
 import org.eclipse.lsp4j.RenameParams;
 import org.eclipse.lsp4j.WorkspaceEdit;
-import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
+import org.eclipse.n4js.ide.xtext.server.build.XWorkspaceManager;
 import org.eclipse.xtext.util.CancelIndicator;
 
 /**

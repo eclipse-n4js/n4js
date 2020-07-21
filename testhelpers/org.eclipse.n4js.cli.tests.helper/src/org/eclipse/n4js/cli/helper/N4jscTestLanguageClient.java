@@ -24,7 +24,7 @@ import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.cli.compiler.N4jscLanguageClient;
-import org.eclipse.n4js.ide.xtext.server.LSPBuilder;
+import org.eclipse.n4js.ide.xtext.server.build.BuilderFrontend;
 import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.common.collect.HashMultimap;
@@ -40,7 +40,7 @@ import com.google.inject.Singleton;
 public class N4jscTestLanguageClient extends N4jscLanguageClient {
 
 	@Inject
-	LSPBuilder lspBuilder;
+	BuilderFrontend lspBuilder;
 
 	Multimap<String, Diagnostic> issues = Multimaps.synchronizedMultimap(HashMultimap.create());
 	Multimap<String, String> errors = Multimaps.synchronizedMultimap(HashMultimap.create());

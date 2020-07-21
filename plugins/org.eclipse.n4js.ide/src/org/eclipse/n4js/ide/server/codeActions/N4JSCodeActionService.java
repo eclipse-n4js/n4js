@@ -32,9 +32,10 @@ import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
 import org.eclipse.n4js.ide.xtext.server.DiagnosticIssueConverter;
 import org.eclipse.n4js.ide.xtext.server.LSPIssue;
 import org.eclipse.n4js.ide.xtext.server.LSPIssueConverter;
+import org.eclipse.n4js.ide.xtext.server.ResourceTaskManager;
+import org.eclipse.n4js.ide.xtext.server.TextDocumentFrontend;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
-import org.eclipse.n4js.ide.xtext.server.openfiles.OpenFilesManager;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.N4JSResource;
@@ -190,7 +191,7 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 	private XLanguageServerImpl languageServer;
 
 	@Inject
-	private OpenFilesManager openFilesManager;
+	private TextDocumentFrontend textDocumentFrontend;
 
 	@Inject
 	private DiagnosticIssueConverter diagnosticIssueConverter;
@@ -345,9 +346,10 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 		TextEditCollector collector = new TextEditCollector();
 		TextDocumentIdentifier textDocId = new TextDocumentIdentifier(uriExtensions.toUriString(uri));
 
-		openFilesManager.<Void> runInTemporaryFileContext(uri, "doApplyToFile", false, cancelIndicator, (ofc, ci) -> {
+		ResourceTaskManager resourceTaskManager = languageServer.getResourceTaskManager();
+		resourceTaskManager.<Void> runInTemporaryContext(uri, "doApplyToFile", false, cancelIndicator, (ofc, ci) -> {
 			XtextResource res = ofc.getResource();
-			List<Issue> issues = ofc.resolveAndValidateOpenFile(ci);
+			List<Issue> issues = ofc.resolveAndValidateResource(ci);
 			List<LSPIssue> lspIssues = lspIssueConverter.convertToLSPIssues(res, issues, ci);
 
 			XDocument doc = ofc.getDocument();
@@ -368,7 +370,7 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 		Diagnostic diagnostic = diagnosticIssueConverter.toDiagnostic(issue);
 		CodeActionContext context = new CodeActionContext(Collections.singletonList(diagnostic));
 		CodeActionParams codeActionParams = new CodeActionParams(docIdentifier, diagnostic.getRange(), context);
-		Options newOptions = languageServer.toOptions(codeActionParams, doc, res, cancelIndicator);
+		Options newOptions = textDocumentFrontend.toOptions(codeActionParams, doc, res, cancelIndicator);
 		return newOptions;
 	}
 

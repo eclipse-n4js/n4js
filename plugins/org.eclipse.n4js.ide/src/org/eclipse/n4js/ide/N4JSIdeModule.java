@@ -25,6 +25,7 @@ import org.eclipse.n4js.ide.server.N4JSProjectDescriptionFactory;
 import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
 import org.eclipse.n4js.ide.server.codeActions.N4JSCodeActionService;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
+import org.eclipse.n4js.ide.server.concurrent.N4JSQueuedExecutorService;
 import org.eclipse.n4js.ide.server.hover.N4JSHoverService;
 import org.eclipse.n4js.ide.server.symbol.N4JSDocumentSymbolMapper;
 import org.eclipse.n4js.ide.server.symbol.N4JSHierarchicalDocumentSymbolService;
@@ -33,15 +34,16 @@ import org.eclipse.n4js.ide.xtext.editor.contentassist.XIdeContentProposalAccept
 import org.eclipse.n4js.ide.xtext.server.BuiltInAwareIncrementalBuilder;
 import org.eclipse.n4js.ide.xtext.server.DefaultBuildRequestFactory;
 import org.eclipse.n4js.ide.xtext.server.IBuildRequestFactory;
+import org.eclipse.n4js.ide.xtext.server.QueuedExecutorService;
 import org.eclipse.n4js.ide.xtext.server.WorkspaceAwareCanLoadFromDescriptionHelper;
-import org.eclipse.n4js.ide.xtext.server.XBuildManager;
 import org.eclipse.n4js.ide.xtext.server.XExecutableCommandRegistry;
 import org.eclipse.n4js.ide.xtext.server.XIProjectDescriptionFactory;
 import org.eclipse.n4js.ide.xtext.server.XIWorkspaceConfigFactory;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
-import org.eclipse.n4js.ide.xtext.server.XProjectManager;
-import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
+import org.eclipse.n4js.ide.xtext.server.build.ProjectBuilder;
+import org.eclipse.n4js.ide.xtext.server.build.XBuildManager;
 import org.eclipse.n4js.ide.xtext.server.build.XStatefulIncrementalBuilder;
+import org.eclipse.n4js.ide.xtext.server.build.XWorkspaceManager;
 import org.eclipse.n4js.ide.xtext.server.contentassist.XContentAssistService;
 import org.eclipse.n4js.internal.lsp.FileSystemScanner;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
@@ -93,8 +95,8 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 		return WorkspaceAwareCanLoadFromDescriptionHelper.class;
 	}
 
-	public Class<? extends XProjectManager> bindXProjectManager() {
-		return XProjectManager.class;
+	public Class<? extends ProjectBuilder> bindXProjectManager() {
+		return ProjectBuilder.class;
 	}
 
 	public Class<? extends XIProjectDescriptionFactory> bindXIProjectDescriptionFactory() {
@@ -168,6 +170,10 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public Class<? extends XLanguageServerImpl> bindXLanguageServerImpl() {
 		return N4JSLanguageServer.class;
+	}
+
+	public Class<? extends QueuedExecutorService> bindLSPExecutorService() {
+		return N4JSQueuedExecutorService.class;
 	}
 
 	public ContentAssistDataCollectors bindContentAssistDataCollectors() {

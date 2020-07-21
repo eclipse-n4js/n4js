@@ -13,7 +13,7 @@ package org.eclipse.n4js.ide.xtext.server;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.n4js.ide.xtext.server.openfiles.OpenFilesManager;
+import org.eclipse.n4js.ide.xtext.server.build.XWorkspaceManager;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
 import org.eclipse.xtext.resource.XtextResourceSet;
 
@@ -30,16 +30,16 @@ public class WorkspaceAwareCanLoadFromDescriptionHelper extends CanLoadFromDescr
 	private XWorkspaceManager workspaceManager;
 
 	@Inject
-	private OpenFilesManager openFilesManager;
+	private ResourceTaskManager resourceTaskManager;
 
 	@Override
 	public Resource createResource(ResourceSet resourceSet, URI resourceURI) {
-		boolean inOpenFileContext = openFilesManager.currentContext() != null;
-		if (inOpenFileContext) {
+		boolean inContext = resourceTaskManager.currentContext() != null;
+		if (inContext) {
 			// within open file contexts we use the default behavior:
 			return super.createResource(resourceSet, resourceURI);
 		}
-		XtextResourceSet projectResourceSet = workspaceManager.getProjectManager(resourceURI).getResourceSet();
+		XtextResourceSet projectResourceSet = workspaceManager.getProjectBuilder(resourceURI).getResourceSet();
 		return super.createResource(projectResourceSet, resourceURI);
 	}
 

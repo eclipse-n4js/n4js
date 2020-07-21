@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.xtext.server.openfiles;
+package org.eclipse.n4js.ide.xtext.server;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,11 +25,10 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.ResourceLocator;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
-import org.eclipse.n4js.ide.xtext.server.LSPIssue;
-import org.eclipse.n4js.ide.xtext.server.LSPIssueConverter;
-import org.eclipse.n4js.ide.xtext.server.XDocument;
-import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
+import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIssueRegistry;
+import org.eclipse.n4js.xtext.workspace.IWorkspaceConfigSnapshot;
 import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.resource.IExternalContentSupport;
@@ -51,14 +50,17 @@ import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue;
 
+import com.google.common.collect.ImmutableSetMultimap;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 /**
- * Represents a single open file, including EMF resources for files required by the open file.
+ * Represents the context for tasks that operate on a certain EMF resource, called main resource, including all
+ * necessary information and data structures for performing such task. In particular, this includes EMF resources for
+ * files required by the main resource.
  */
-@SuppressWarnings({ "javadoc", "restriction" })
-public class OpenFileContext {
+@SuppressWarnings({ "restriction" })
+public class ResourceTaskContext {
 
 	@Inject
 	private LSPIssueConverter lspIssueConverter;
@@ -78,9 +80,12 @@ public class OpenFileContext {
 	@Inject
 	private OperationCanceledManager operationCanceledManager;
 
-	/** The {@link OpenFilesManager} that created this instance. */
-	protected OpenFilesManager parent;
-	/** URI of the open file represented by this {@link OpenFileContext} (i.e. URI of the main resource). */
+	@Inject
+	private ConcurrentIssueRegistry issueRegistry;
+
+	/** The {@link ResourceTaskManager} that created this instance. */
+	protected ResourceTaskManager parent;
+	/** URI of the resource represented by this {@link ResourceTaskContext} (i.e. URI of the main resource). */
 	protected URI mainURI;
 	/** Tells whether this context represents a temporarily opened file, see {@link #isTemporary()}. */
 	protected boolean temporary;
@@ -90,18 +95,23 @@ public class OpenFileContext {
 	 * file of this context) this state will represent the dirty state and for all other files it will represent the
 	 * persisted state (as provided by the LSP builder).
 	 */
-	protected ResourceDescriptionsData index;
+	protected ResourceDescriptionsData indexSnapshot;
 
-	protected ContainerStructureSnapshot containerStructure = new ContainerStructureSnapshot();
+	/** Maps project names to URIs of all resources contained in the project (from the last build). */
+	protected ImmutableSetMultimap<String, URI> project2BuiltURIs;
 
-	/** The resource set used for the open file's resource and any other resources required for resolution. */
+	/** Most recent workspace configuration. */
+	protected IWorkspaceConfigSnapshot workspaceConfig;
+
+	/** The resource set used for the current resource and any other resources required for resolution. */
 	protected XtextResourceSet mainResourceSet;
 	/** The EMF resource representing the open file. */
 	protected XtextResource mainResource = null;
 	/** The current textual content of the open file. */
 	protected XDocument document = null;
 
-	protected class OpenFileContentProvider implements IExternalContentProvider {
+	/** Within each resource task context, this provides text contents of all other context's main resources. */
+	protected class ResourceTaskContentProvider implements IExternalContentProvider {
 		@Override
 		public String getContent(URI uri) {
 			XDocument doc = parent.getOpenDocument(uri);
@@ -119,17 +129,19 @@ public class OpenFileContext {
 		}
 	}
 
+	/** @return URI of main resource. */
 	public synchronized URI getURI() {
 		return mainURI;
 	}
 
 	/**
-	 * Tells whether this {@link OpenFileContext} represents a temporarily opened file. Such contexts do not actually
-	 * represent an open editor in the LSP client but were created to perform editing-related computations in files not
-	 * actually opened in the LSP client. For example, when API documentation needs to be retrieved from a file not
-	 * currently opened in an editor in the LSP client, such a temporary {@code OpenFileContext} will be created.
+	 * Tells whether this {@link ResourceTaskContext} represents a temporary resource task. Such contexts do not
+	 * actually represent an open editor in the LSP client but were created to perform editing-related computations in
+	 * files not actually opened in the LSP client. For example, when API documentation needs to be retrieved from a
+	 * file not currently opened in an editor in the LSP client, such a temporary {@code OpenFileContext} will be
+	 * created.
 	 * <p>
-	 * Some special characteristics of temporary open file contexts:
+	 * Some special characteristics of temporary resource task contexts:
 	 * <ul>
 	 * <li>temporary contexts will not publish their state to the {@link #parent}'s dirty state index.
 	 * <li>temporary contexts may be created even for files that actually have an open editor in the LSP client. This
@@ -140,10 +152,26 @@ public class OpenFileContext {
 		return temporary;
 	}
 
+	/**
+	 * Tells whether this {@link ResourceTaskContext} represents a context for an open file, i.e. not a
+	 * {@link #isTemporary() temporary context}.
+	 */
+	public synchronized boolean isOpen() {
+		return !isTemporary();
+	}
+
+	/** Returns the context's resource set. Each resource task context has exactly one resource set. */
 	public synchronized XtextResourceSet getResourceSet() {
 		return mainResourceSet;
 	}
 
+	/**
+	 * This resource task's main resource. Each resource task is associated with exactly one main resource.
+	 * <p>
+	 * Other resources that exist in a task's {@link #getResourceSet() resource set} were either demand-loaded during
+	 * {@link LazyLinkingResource#resolveLazyCrossReferences(CancelIndicator) resolution} of the main resource or were
+	 * explicitly loaded by some task running in the context (e.g. some editing functionality).
+	 */
 	public synchronized XtextResource getResource() {
 		return mainResource;
 	}
@@ -156,31 +184,39 @@ public class OpenFileContext {
 		return document;
 	}
 
+	/** Initialize this context's non-injectable fields and resource set. Invoked once per context. */
 	@SuppressWarnings("hiding")
-	public synchronized void initialize(OpenFilesManager parent, URI uri, boolean isTemporary,
-			ResourceDescriptionsData index, ContainerStructureSnapshot containerStructure) {
+	public synchronized void initialize(ResourceTaskManager parent, URI uri, boolean isTemporary,
+			ResourceDescriptionsData index, ImmutableSetMultimap<String, URI> project2builtURIs,
+			IWorkspaceConfigSnapshot workspaceConfig) {
+
 		this.parent = parent;
 		this.mainURI = uri;
 		this.temporary = isTemporary;
-		this.index = index;
-		this.containerStructure = containerStructure;
+		this.indexSnapshot = index;
+		this.project2BuiltURIs = project2builtURIs;
+		this.workspaceConfig = workspaceConfig;
 
 		this.mainResourceSet = createResourceSet();
 	}
 
+	/** Returns a newly created and fully configured resource set */
 	protected XtextResourceSet createResourceSet() {
 		XtextResourceSet result = resourceSetProvider.get();
-		ResourceDescriptionsData.ResourceSetAdapter.installResourceDescriptionsData(result, index);
-		externalContentSupport.configureResourceSet(result, new OpenFileContentProvider());
+		ResourceDescriptionsData.ResourceSetAdapter.installResourceDescriptionsData(result, indexSnapshot);
+		externalContentSupport.configureResourceSet(result, new ResourceTaskContentProvider());
 
-		IAllContainersState allContainersState = new OpenFileAllContainersState(this);
+		IAllContainersState allContainersState = new ResourceTaskContextAllContainerState(this);
 		result.eAdapters().add(new DelegatingIAllContainerAdapter(allContainersState));
 
 		return result;
 	}
 
-	/** Initialize the open file with the given content. */
-	protected void initOpenFile(int version, String content, CancelIndicator cancelIndicator) {
+	/**
+	 * Create & initialize this context's main resource with the given content. Invoked exactly once for
+	 * NON-{@link #isTemporary() temporary} contexts, not at all for temporary contexts.
+	 */
+	protected void initContext(int version, String content, CancelIndicator cancelIndicator) {
 		if (mainResource != null) {
 			throw new IllegalStateException("trying to initialize an already initialized resource: " + mainURI);
 		}
@@ -194,11 +230,15 @@ public class OpenFileContext {
 			throw new RuntimeException("IOException while reading from string input stream", e);
 		}
 
-		resolveAndValidateOpenFile(cancelIndicator);
+		resolveAndValidateResource(cancelIndicator);
 	}
 
-	/** Initialize the open file based only on its URI, retrieving its content via EMF's {@link ResourceLocator}. */
-	protected void initOpenFile(boolean resolveAndValidate, CancelIndicator cancelIndicator) {
+	/**
+	 * Create & initialize this context's main resource based only on its URI, retrieving its content via EMF's
+	 * {@link ResourceLocator}. Invoked exactly once for {@link #isTemporary() temporary} contexts, not at all for
+	 * non-temporary contexts.
+	 */
+	protected void initContext(boolean resolveAndValidate, CancelIndicator cancelIndicator) {
 		if (mainResource != null) {
 			throw new IllegalStateException("trying to initialize an already initialized resource: " + mainURI);
 		}
@@ -209,17 +249,22 @@ public class OpenFileContext {
 		document = new XDocument(0, rootNode != null ? rootNode.getText() : "");
 
 		if (resolveAndValidate) {
-			resolveAndValidateOpenFile(cancelIndicator);
+			resolveAndValidateResource(cancelIndicator);
 		}
 	}
 
-	public void refreshOpenFile(CancelIndicator cancelIndicator) {
-		// TODO GH-1774 find better solution for updating unchanged open files!
+	/** Same as {@link #refreshContext(int, Iterable, CancelIndicator)}, but without changing the source text. */
+	public void refreshContext(CancelIndicator cancelIndicator) {
+		// TODO IDE-3402 find better solution for updating unchanged resource task contexts!
 		TextDocumentContentChangeEvent dummyChange = new TextDocumentContentChangeEvent(document.getContents());
-		refreshOpenFile(document.getVersion(), Collections.singletonList(dummyChange), cancelIndicator);
+		refreshContext(document.getVersion(), Collections.singletonList(dummyChange), cancelIndicator);
 	}
 
-	public void refreshOpenFile(@SuppressWarnings("unused") int version,
+	/**
+	 * Refresh this context's main resource, i.e. change its source text and then parse, resolve, and validate it. Also
+	 * sends out dirty state index and issue updates (not for {@link #isTemporary() temporary} contexts).
+	 */
+	public void refreshContext(@SuppressWarnings("unused") int version,
 			Iterable<? extends TextDocumentContentChangeEvent> changes, CancelIndicator cancelIndicator) {
 
 		if (mainResource == null) {
@@ -229,11 +274,10 @@ public class OpenFileContext {
 			throw new IllegalStateException("trying to refresh a resource that is not yet loaded: " + mainURI);
 		}
 
-		// TODO GH-1774 the following is only necessary for changed files (could be moved to #updateDirtyState())
 		ResourceSet resSet = getResourceSet();
 		for (Resource res : new ArrayList<>(resSet.getResources())) {
 			if (res != mainResource) {
-				res.unload(); // TODO GH-1774 better way to do this? (unload is expensive due to re-proxyfication)
+				res.unload(); // TODO IDE-3402 better way to do this? (unload is expensive due to re-proxyfication)
 				resSet.getResources().remove(res);
 			}
 		}
@@ -249,24 +293,30 @@ public class OpenFileContext {
 			mainResource.update(start, end - start, replacement);
 		}
 
-		resolveAndValidateOpenFile(cancelIndicator);
+		resolveAndValidateResource(cancelIndicator);
 	}
 
-	public List<Issue> resolveAndValidateOpenFile(CancelIndicator cancelIndicator) {
-		resolveOpenFile(cancelIndicator);
-		return validateOpenFile(cancelIndicator);
+	/**
+	 * Triggers {@link #resolveResource(CancelIndicator) resolution} and {@link #validateResource(CancelIndicator)
+	 * validation} of this context's main resource.
+	 */
+	public List<Issue> resolveAndValidateResource(CancelIndicator cancelIndicator) {
+		resolveResource(cancelIndicator);
+		return validateResource(cancelIndicator);
 	}
 
-	public void resolveOpenFile(CancelIndicator cancelIndicator) {
+	/** Resolve this context's main resource and send a dirty state index update. */
+	public void resolveResource(CancelIndicator cancelIndicator) {
 		// resolve
 		EcoreUtil2.resolveLazyCrossReferences(mainResource, cancelIndicator);
 		// update dirty state
 		updateSharedDirtyState();
-		// notify open file listeners
-		parent.onDidRefreshOpenFile(this, cancelIndicator);
+		// notify resource task listeners
+		parent.onDidRefreshContext(this, cancelIndicator);
 	}
 
-	public List<Issue> validateOpenFile(CancelIndicator cancelIndicator) {
+	/** Validate this context's main resource and send an issue update. */
+	public List<Issue> validateResource(CancelIndicator cancelIndicator) {
 		// validate
 		IResourceServiceProvider resourceServiceProvider = languagesRegistry.getResourceServiceProvider(mainURI);
 		IResourceValidator resourceValidator = resourceServiceProvider.getResourceValidator();
@@ -277,80 +327,86 @@ public class OpenFileContext {
 		return issues;
 	}
 
+	/** Send issue update to issue registry. Ignored for {@link #isTemporary()} contexts. */
 	protected void publishIssues(List<Issue> issues, CancelIndicator cancelIndicator) {
 		if (isTemporary()) {
 			return; // temporarily opened files do not contribute to the global issue registry
 		}
 		List<LSPIssue> lspIssues = lspIssueConverter.convertToLSPIssues(mainResource, issues, cancelIndicator);
-		ConcurrentIssueRegistry issueRegistry = parent.getIssueRegistry();
-		if (issueRegistry != null) {
-			issueRegistry.setIssuesOfDirtyState(mainURI, lspIssues);
-		}
+		issueRegistry.setIssuesOfDirtyState(mainURI, lspIssues);
 	}
 
+	/** Send dirty state index update to parent. Ignored for {@link #isTemporary() temporary} contexts. */
 	protected void updateSharedDirtyState() {
 		if (isTemporary()) {
 			return; // temporarily opened files do not contribute to the parent's shared dirty state index
 		}
 		IResourceDescription newDesc = createResourceDescription();
-		index.addDescription(mainURI, newDesc);
-		parent.updateSharedDirtyState(newDesc);
+		indexSnapshot.addDescription(mainURI, newDesc);
+		parent.updateSharedDirtyState(newDesc.getURI(), newDesc);
 	}
 
 	/**
 	 * Invoked by {@link #parent} when a change happened in another open file (not the one represented by this
-	 * {@link OpenFileContext}). Will never be invoked for {@link #isTemporary() temporary} open file contexts.
+	 * {@link ResourceTaskContext}). Will never be invoked for {@link #isTemporary() temporary} contexts.
 	 */
 	protected void onDirtyStateChanged(IResourceDescription changedDesc, CancelIndicator cancelIndicator) {
-		updateIndex(Collections.singletonList(changedDesc), Collections.emptySet(), containerStructure,
-				cancelIndicator);
+		updateIndex(Collections.singletonList(changedDesc), Collections.emptySet(), project2BuiltURIs,
+				workspaceConfig, cancelIndicator);
 	}
 
 	/**
-	 * Invoked by {@link #parent} when a change happened in a non-opened file.
+	 * Invoked by {@link #parent} when a change happened in a non-opened file OR after an open file was closed.
 	 */
 	protected void onPersistedStateChanged(Collection<? extends IResourceDescription> changedDescs,
-			Set<URI> removedURIs, ContainerStructureSnapshot newContainerStructure, CancelIndicator cancelIndicator) {
-		updateIndex(changedDescs, removedURIs, newContainerStructure, cancelIndicator);
+			Set<URI> removedURIs, ImmutableSetMultimap<String, URI> newProject2builtURIs,
+			IWorkspaceConfigSnapshot newWorkspaceConfig, CancelIndicator cancelIndicator) {
+		updateIndex(changedDescs, removedURIs, newProject2builtURIs, newWorkspaceConfig, cancelIndicator);
 	}
 
+	/** Update this context's internal index and trigger a refresh if required. */
 	protected void updateIndex(Collection<? extends IResourceDescription> changedDescs, Set<URI> removedURIs,
-			ContainerStructureSnapshot newContainerStructure, CancelIndicator cancelIndicator) {
+			ImmutableSetMultimap<String, URI> newProject2builtURIs, IWorkspaceConfigSnapshot newWorkspaceConfig,
+			CancelIndicator cancelIndicator) {
 
 		// update my cached state
 
 		List<IResourceDescription.Delta> allDeltas = createDeltas(changedDescs, removedURIs);
+		for (IResourceDescription.Delta delta : allDeltas) {
+			indexSnapshot.register(delta);
+		}
 
-		allDeltas.forEach(index::register);
+		project2BuiltURIs = newProject2builtURIs;
 
-		ContainerStructureSnapshot oldContainerStructure = containerStructure;
-		containerStructure = newContainerStructure;
+		IWorkspaceConfigSnapshot oldWorkspaceConfig = workspaceConfig;
+		workspaceConfig = newWorkspaceConfig;
 
 		// refresh if I am affected by the changes
 
-		boolean isAffected = !containerStructure.equals(oldContainerStructure);
+		boolean isAffected = !workspaceConfig.equals(oldWorkspaceConfig);
 
 		if (!isAffected) {
 			IResourceDescription.Manager rdm = getResourceDescriptionManager(mainURI);
 			if (rdm == null) {
 				return;
 			}
-			IResourceDescription candidateDesc = index.getResourceDescription(mainURI);
+			IResourceDescription candidateDesc = indexSnapshot.getResourceDescription(mainURI);
 			if (rdm instanceof AllChangeAware) {
-				isAffected = ((AllChangeAware) rdm).isAffectedByAny(allDeltas, candidateDesc, index);
+				isAffected = ((AllChangeAware) rdm).isAffectedByAny(allDeltas, candidateDesc, indexSnapshot);
 			} else {
 				List<IResourceDescription.Delta> changedDeltas = allDeltas.stream()
 						.filter(d -> d.haveEObjectDescriptionsChanged())
 						.collect(Collectors.toList());
-				isAffected = rdm.isAffected(changedDeltas, candidateDesc, index);
+				isAffected = rdm.isAffected(changedDeltas, candidateDesc, indexSnapshot);
 			}
 		}
 
 		if (isAffected) {
-			refreshOpenFile(cancelIndicator);
+			refreshContext(cancelIndicator);
 		}
 	}
 
+	/** Create deltas for the given changes and removals. */
 	protected List<IResourceDescription.Delta> createDeltas(Collection<? extends IResourceDescription> changedDescs,
 			Set<URI> removedURIs) {
 
@@ -358,7 +414,7 @@ public class OpenFileContext {
 
 		for (IResourceDescription changedDesc : changedDescs) {
 			URI changedURI = changedDesc.getURI();
-			IResourceDescription oldDesc = index.getResourceDescription(changedURI);
+			IResourceDescription oldDesc = indexSnapshot.getResourceDescription(changedURI);
 			IResourceDescription.Delta delta = createDelta(changedURI, oldDesc, changedDesc);
 			if (delta != null) {
 				deltas.add(delta);
@@ -366,7 +422,7 @@ public class OpenFileContext {
 		}
 
 		for (URI removedURI : removedURIs) {
-			IResourceDescription removedDesc = index.getResourceDescription(removedURI);
+			IResourceDescription removedDesc = indexSnapshot.getResourceDescription(removedURI);
 			IResourceDescription.Delta delta = createDelta(removedURI, removedDesc, null);
 			if (delta != null) {
 				deltas.add(delta);
@@ -376,6 +432,7 @@ public class OpenFileContext {
 		return deltas;
 	}
 
+	/** Create a delta for the given change. 'oldDesc' and 'newDesc' may be <code>null</code>. */
 	protected IResourceDescription.Delta createDelta(URI uri, IResourceDescription oldDesc,
 			IResourceDescription newDesc) {
 
@@ -389,6 +446,7 @@ public class OpenFileContext {
 		return null;
 	}
 
+	/** Create a resource description representing the current state of this context's main resource. */
 	protected IResourceDescription createResourceDescription() {
 		IResourceDescription.Manager resourceDescriptionManager = getResourceDescriptionManager(mainURI);
 		IResourceDescription newDesc = resourceDescriptionManager.getResourceDescription(mainResource);
@@ -396,12 +454,13 @@ public class OpenFileContext {
 		// NOTE: it seems that resource descriptions created by the resource description manager may contain mutable
 		// state (e.g. user data implemented as a ForwardingMap with lazily initialized content) and hold references to
 		// the resource they were created from (i.e. 'mainResource' in this case); this means they are (1) not thread
-		// safe and (2) may leak EObjects from one open file context into another or to the outside. The following line
+		// safe and (2) may leak EObjects from one file context into another or to the outside. The following line
 		// seems to fix that, but requires access to restricted Xtext API:
 		SerializableResourceDescription newDesc2 = SerializableResourceDescription.createCopy(newDesc);
 		return newDesc2;
 	}
 
+	/** Return the correct resource description manager for the resource with the given URI. */
 	protected IResourceDescription.Manager getResourceDescriptionManager(URI uri) {
 		IResourceServiceProvider resourceServiceProvider = resourceServiceProviderRegistry
 				.getResourceServiceProvider(uri);

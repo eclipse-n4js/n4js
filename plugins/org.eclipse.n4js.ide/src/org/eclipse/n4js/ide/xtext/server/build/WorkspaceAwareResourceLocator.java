@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.xtext.server;
+package org.eclipse.n4js.ide.xtext.server.build;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
@@ -45,7 +45,7 @@ public class WorkspaceAwareResourceLocator extends ResourceLocator {
 			}
 			return candidate;
 		}
-		XProjectManager projectManager = this.workspaceManager.getProjectManager(uri);
+		ProjectBuilder projectManager = this.workspaceManager.getProjectBuilder(uri);
 		if (projectManager == null || projectManager.getResourceSet() == resourceSet) {
 			return basicGetResource(uri, loadOnDemand);
 		}

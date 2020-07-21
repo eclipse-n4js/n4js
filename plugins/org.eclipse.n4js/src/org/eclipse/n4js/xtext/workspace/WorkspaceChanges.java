@@ -56,13 +56,13 @@ public class WorkspaceChanges {
 	public static final WorkspaceChanges NO_CHANGES = new WorkspaceChanges();
 
 	/** @return a new instance of {@link WorkspaceChanges} contains the given project as removed */
-	public static WorkspaceChanges createProjectRemoved(IProjectConfig project) {
+	public static WorkspaceChanges createProjectRemoved(XIProjectConfig project) {
 		return new WorkspaceChanges(false, emptyList(), emptyList(), emptyList(), emptyList(), emptyList(),
 				singletonList(project), emptyList(), emptyList());
 	}
 
 	/** @return a new instance of {@link WorkspaceChanges} contains the given project as added */
-	public static WorkspaceChanges createProjectAdded(IProjectConfig project) {
+	public static WorkspaceChanges createProjectAdded(XIProjectConfig project) {
 		return new WorkspaceChanges(false, emptyList(), emptyList(), emptyList(), emptyList(), emptyList(),
 				emptyList(), singletonList(project), emptyList());
 	}
@@ -98,11 +98,11 @@ public class WorkspaceChanges {
 	/** added source folders (excluding those from {@link #addedProjects}) */
 	protected List<ISourceFolder> addedSourceFolders;
 	/** removed projects */
-	protected List<IProjectConfig> removedProjects;
+	protected List<XIProjectConfig> removedProjects;
 	/** added projects */
-	protected List<IProjectConfig> addedProjects;
+	protected List<XIProjectConfig> addedProjects;
 	/** projects that were neither added nor removed but had their dependencies changed */
-	protected List<IProjectConfig> projectsWithChangedDependencies;
+	protected List<XIProjectConfig> projectsWithChangedDependencies;
 
 	/** Constructor */
 	public WorkspaceChanges() {
@@ -114,8 +114,8 @@ public class WorkspaceChanges {
 	public WorkspaceChanges(boolean namesOrDependenciesChanged,
 			List<URI> removedURIs, List<URI> addedURIs, List<URI> changedURIs,
 			List<ISourceFolder> removedSourceFolders, List<ISourceFolder> addedSourceFolders,
-			List<IProjectConfig> removedProjects, List<IProjectConfig> addedProjects,
-			List<IProjectConfig> projectsWithChangedDependencies) {
+			List<XIProjectConfig> removedProjects, List<XIProjectConfig> addedProjects,
+			List<XIProjectConfig> projectsWithChangedDependencies) {
 
 		this.namesOrDependenciesChanged = namesOrDependenciesChanged;
 		this.removedURIs = removedURIs;
@@ -165,17 +165,17 @@ public class WorkspaceChanges {
 	}
 
 	/** @return all projects that have been removed */
-	public List<IProjectConfig> getRemovedProjects() {
+	public List<XIProjectConfig> getRemovedProjects() {
 		return removedProjects;
 	}
 
 	/** @return all projects that have been added */
-	public List<IProjectConfig> getAddedProjects() {
+	public List<XIProjectConfig> getAddedProjects() {
 		return addedProjects;
 	}
 
 	/** @return that were neither added nor removed but had their dependencies changed */
-	public List<IProjectConfig> getProjectsWithChangedDependencies() {
+	public List<XIProjectConfig> getProjectsWithChangedDependencies() {
 		return projectsWithChangedDependencies;
 	}
 

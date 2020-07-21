@@ -5,7 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  */
-package org.eclipse.n4js.ide.xtext.server;
+package org.eclipse.n4js.ide.xtext.server.build;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -20,17 +20,13 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
-import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest;
+import org.eclipse.n4js.ide.xtext.server.DefaultBuildRequestFactory;
+import org.eclipse.n4js.ide.xtext.server.LSPIssue;
+import org.eclipse.n4js.ide.xtext.server.ResourceChangeSet;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterValidateListener;
-import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
-import org.eclipse.n4js.ide.xtext.server.build.XIncrementalBuilder;
-import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
-import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
-import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentChunkedIndex;
-import org.eclipse.n4js.ide.xtext.server.concurrent.ConcurrentIssueRegistry;
-import org.eclipse.n4js.ide.xtext.server.openfiles.OpenFilesManager;
 import org.eclipse.n4js.internal.lsp.N4JSProjectConfig;
 import org.eclipse.n4js.utils.URIUtils;
+import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.generator.OutputConfiguration;
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
@@ -45,11 +41,10 @@ import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.util.UriUtil;
-import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.workspace.ProjectConfigAdapter;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSortedSet;
-import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -58,8 +53,8 @@ import com.google.inject.Provider;
  * @since 2.11
  */
 @SuppressWarnings("restriction")
-public class XProjectManager {
-	private static final Logger LOG = LogManager.getLogger(XProjectManager.class);
+public class ProjectBuilder {
+	private static final Logger LOG = LogManager.getLogger(ProjectBuilder.class);
 
 	/** The builder. */
 	@Inject
@@ -83,7 +78,7 @@ public class XProjectManager {
 
 	/** Holds index, hashes and issue information */
 	@Inject
-	protected ProjectStateHolder projectStateHolder;
+	protected ProjectStateManager projectStateManager;
 
 	/** Holds information about the output settings, e.g. the output directory */
 	@Inject
@@ -93,9 +88,7 @@ public class XProjectManager {
 	@Inject
 	protected OperationCanceledManager operationCanceledManager;
 
-	/**
-	 * The map for this project's resource set.
-	 */
+	/** The map for this project's resource set. */
 	@Inject
 	protected ProjectUriResourceMap uriResourceMap;
 
@@ -103,15 +96,17 @@ public class XProjectManager {
 	@Inject
 	protected XWorkspaceManager workspaceManager;
 
-	private ConcurrentChunkedIndex fullIndex;
+	@Inject
+	private ConcurrentIndex fullIndex;
 
+	@Inject
 	private ConcurrentIssueRegistry issueRegistry;
 
 	private XtextResourceSet resourceSet;
 
 	private ProjectDescription projectDescription;
 
-	private IProjectConfig projectConfig;
+	private XIProjectConfig projectConfig;
 
 	private final AfterValidateListener afterValidateListener = new AfterValidateListener() {
 		@Override
@@ -122,14 +117,11 @@ public class XProjectManager {
 
 	/** Initialize this project. */
 	@SuppressWarnings("hiding")
-	public void initialize(ProjectDescription description, IProjectConfig projectConfig,
-			ConcurrentChunkedIndex fullIndex, ConcurrentIssueRegistry issueRegistry) {
-
+	public void initialize(ProjectDescription description, XIProjectConfig projectConfig) {
 		this.projectDescription = description;
 		this.projectConfig = projectConfig;
-		this.fullIndex = fullIndex;
-		this.issueRegistry = issueRegistry;
-		this.resourceSet = createNewResourceSet(new XIndexState().getResourceDescriptions());
+		this.projectStateManager.initialize(projectConfig);
+		this.resourceSet = createNewResourceSet(projectStateManager.getIndex());
 	}
 
 	/**
@@ -148,14 +140,14 @@ public class XProjectManager {
 	 * </ul>
 	 */
 	public XBuildResult doInitialBuild(CancelIndicator cancelIndicator) {
-		ResourceChangeSet changeSet = projectStateHolder.readProjectState(projectConfig);
+		ResourceChangeSet changeSet = projectStateManager.readProjectState();
 		XBuildResult result = doBuild(
-				changeSet.getModified(), changeSet.getDeleted(), Collections.emptyList(), false, true, cancelIndicator);
+				changeSet.getModified(), changeSet.getDeleted(), Collections.emptyList(), false, cancelIndicator);
 
 		// send issues to client
 		// (below code won't send empty 'publishDiagnostics' events for resources without validation issues, see API doc
 		// of this method for details)
-		Multimap<URI, LSPIssue> validationIssues = projectStateHolder.getValidationIssues();
+		ImmutableMap<URI, ImmutableSortedSet<LSPIssue>> validationIssues = projectStateManager.getValidationIssues();
 		for (URI location : validationIssues.keySet()) {
 			Collection<LSPIssue> issues = validationIssues.get(location);
 			publishIssues(location, issues);
@@ -176,37 +168,36 @@ public class XProjectManager {
 
 	/** Build increments of this project. */
 	public XBuildResult doIncrementalBuild(Set<URI> dirtyFiles, Set<URI> deletedFiles,
-			List<IResourceDescription.Delta> externalDeltas, boolean doGenerate, CancelIndicator cancelIndicator) {
+			List<IResourceDescription.Delta> externalDeltas, CancelIndicator cancelIndicator) {
 
-		return doBuild(dirtyFiles, deletedFiles, externalDeltas, true, doGenerate, cancelIndicator);
+		return doBuild(dirtyFiles, deletedFiles, externalDeltas, true, cancelIndicator);
 	}
 
 	/** Build this project. */
 	protected XBuildResult doBuild(Set<URI> dirtyFiles, Set<URI> deletedFiles,
-			List<IResourceDescription.Delta> externalDeltas, boolean propagateIssues, boolean doGenerate,
-			CancelIndicator cancelIndicator) {
+			List<IResourceDescription.Delta> externalDeltas, boolean propagateIssues, CancelIndicator cancelIndicator) {
 
-		URI persistenceFile = projectStateHolder.getPersistenceFile(projectConfig);
+		URI persistenceFile = projectStateManager.getPersistenceFile();
 		dirtyFiles.remove(persistenceFile);
 		deletedFiles.remove(persistenceFile);
 
-		XBuildRequest request = newBuildRequest(dirtyFiles, deletedFiles, externalDeltas, propagateIssues, doGenerate,
+		XBuildRequest request = newBuildRequest(dirtyFiles, deletedFiles, externalDeltas, propagateIssues,
 				cancelIndicator);
 		resourceSet = request.getResourceSet(); // resourceSet is already used during the build via #getResource(URI)
 
 		XBuildResult result = incrementalBuilder.build(request);
 
-		projectStateHolder.updateProjectState(request, result, projectConfig);
+		projectStateManager.updateProjectState(request, result);
 
-		ResourceDescriptionsData resourceDescriptions = projectStateHolder.getIndexState().getResourceDescriptions();
-		fullIndex.setContainer(projectDescription.getName(), resourceDescriptions);
+		ResourceDescriptionsData resourceDescriptions = projectStateManager.getIndex();
+		fullIndex.setProjectIndex(projectDescription.getName(), resourceDescriptions);
 
 		return result;
 	}
 
 	/** Deletes the contents of the output directory */
 	public void doClean(CancelIndicator cancelIndicator) {
-		projectStateHolder.deletePersistenceFile(projectConfig);
+		projectStateManager.deletePersistenceFile();
 
 		if (projectConfig instanceof N4JSProjectConfig) {
 			// TODO: merge N4JSProjectConfig#canClean() to IProjectConfig
@@ -227,7 +218,7 @@ public class XProjectManager {
 			}
 		}
 
-		fullIndex.clearContainer(projectConfig.getName());
+		fullIndex.clearProjectIndex(projectConfig.getName());
 		issueRegistry.clearIssuesOfPersistedState(projectConfig.getName());
 	}
 
@@ -274,37 +265,35 @@ public class XProjectManager {
 
 	/** Creates a new build request for this project. */
 	protected XBuildRequest newBuildRequest(Set<URI> changedFiles, Set<URI> deletedFiles,
-			List<IResourceDescription.Delta> externalDeltas, boolean propagateIssues, boolean doGenerate,
-			CancelIndicator cancelIndicator) {
+			List<IResourceDescription.Delta> externalDeltas, boolean propagateIssues, CancelIndicator cancelIndicator) {
 
-		XBuildRequest result = buildRequestFactory.getBuildRequest(projectConfig.getName(), changedFiles, deletedFiles,
+		XBuildRequest request = buildRequestFactory.getBuildRequest(projectConfig.getName(), changedFiles, deletedFiles,
 				externalDeltas);
 
-		XIndexState indexState = projectStateHolder.getIndexState();
-		ResourceDescriptionsData resourceDescriptionsCopy = indexState.getResourceDescriptions().copy();
-		XSource2GeneratedMapping fileMappingsCopy = indexState.getFileMappings().copy();
-		result.setState(new XIndexState(resourceDescriptionsCopy, fileMappingsCopy));
-		result.setResourceSet(createFreshResourceSet(result.getState().getResourceDescriptions()));
-		result.setCancelIndicator(cancelIndicator);
-		result.setBaseDir(getBaseDir());
-		result.setGeneratorEnabled(doGenerate);
+		ResourceDescriptionsData indexCopy = projectStateManager.getIndex().copy();
+		XSource2GeneratedMapping fileMappingsCopy = projectStateManager.getFileMappings().copy();
+		request.setIndex(indexCopy);
+		request.setFileMappings(fileMappingsCopy);
+		request.setResourceSet(createFreshResourceSet(indexCopy));
+		request.setCancelIndicator(cancelIndicator);
+		request.setBaseDir(getBaseDir());
 
 		if (propagateIssues) {
-			result.setAfterValidateListener(afterValidateListener);
+			request.setAfterValidateListener(afterValidateListener);
 		} else {
 			// during initial build, we do not want to notify about any issues because it is
 			// done at the end of the project for the deserialized issues and the new issues
 			// altogether.
-			result.setAfterValidateListener(null);
+			request.setAfterValidateListener(null);
 		}
 
 		if (projectConfig instanceof N4JSProjectConfig) {
 			// TODO: merge N4JSProjectConfig#indexOnly() to IProjectConfig
 			N4JSProjectConfig n4pc = (N4JSProjectConfig) projectConfig;
-			result.setIndexOnly(n4pc.indexOnly());
+			request.setIndexOnly(n4pc.indexOnly());
 		}
 
-		return result;
+		return request;
 	}
 
 	/** Create an empty resource set. */
@@ -349,7 +338,7 @@ public class XProjectManager {
 	/** Publish issues for the resource with the given URI to the {@link #issueRegistry}. */
 	protected void publishIssues(URI uri, Iterable<? extends LSPIssue> issues) {
 		String projectName = projectConfig.getName();
-		if (isResourceWithHiddenIssues(uri)) {
+		if (projectConfig.isResourceWithHiddenIssues(uri)) {
 			// nothing to publish, BUT because the result value of #isResourceWithHiddenIssues() can change over time
 			// for the same URI (e.g. source folders being added/removed in an existing project), we need to ensure to
 			// remove issues that might have been published earlier:
@@ -362,24 +351,9 @@ public class XProjectManager {
 		issueRegistry.setIssuesOfPersistedState(projectConfig.getName(), uri, issues);
 	}
 
-	/**
-	 * Tells whether issues of the resource with the given URI should be hidden, i.e. not be sent to the LSP client.
-	 * This is intended for things like "external libraries" which might be located inside the workspace but are not
-	 * actively being developed (e.g. contents of "node_modules" folders in a Javascript/npm workspace).
-	 * <p>
-	 * By default, this method returns <code>true</code> for all resources that are not contained in one of
-	 * {@link IProjectConfig#getSourceFolders() the project's source folders}.
-	 * <p>
-	 * Note that this affects the builder and therefore closed files only; once a file is being opened and handled by
-	 * {@link OpenFilesManager} issues will always become visible.
-	 */
-	protected boolean isResourceWithHiddenIssues(URI uri) {
-		return projectConfig.findSourceFolderContaining(uri) == null;
-	}
-
 	/** @return all resource descriptions that start with the given prefix */
 	public List<URI> findResourcesStartingWithPrefix(URI prefix) {
-		ResourceDescriptionsData resourceDescriptionsData = fullIndex.getContainer(projectDescription.getName());
+		ResourceDescriptionsData resourceDescriptionsData = fullIndex.getProjectIndex(projectDescription.getName());
 
 		// TODO: Moving this into ResourceDescriptionsData and using a sorted Map could increase performance
 		List<URI> uris = new ArrayList<>();
@@ -397,8 +371,8 @@ public class XProjectManager {
 	}
 
 	/** Getter */
-	public ProjectStateHolder getProjectStateHolder() {
-		return projectStateHolder;
+	public ProjectStateManager getProjectStateHolder() {
+		return projectStateManager;
 	}
 
 	/** Getter */
@@ -412,7 +386,7 @@ public class XProjectManager {
 	}
 
 	/** Getter */
-	public IProjectConfig getProjectConfig() {
+	public XIProjectConfig getProjectConfig() {
 		return projectConfig;
 	}
 

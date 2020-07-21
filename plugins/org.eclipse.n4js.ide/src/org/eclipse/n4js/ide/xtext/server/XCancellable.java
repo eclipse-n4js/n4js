@@ -1,4 +1,4 @@
-package org.eclipse.n4js.ide.xtext.server.concurrent;
+package org.eclipse.n4js.ide.xtext.server;
 
 /**
  * A functional interface that indicates something that can be cancelled.

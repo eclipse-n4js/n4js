@@ -16,13 +16,15 @@ import java.util.concurrent.CompletableFuture;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
+import org.eclipse.n4js.ide.xtext.server.ResourceTaskContext;
+import org.eclipse.n4js.ide.xtext.server.TextDocumentFrontend;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
-import org.eclipse.n4js.ide.xtext.server.openfiles.OpenFileContext;
 import org.eclipse.xtext.util.CancelIndicator;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
@@ -30,6 +32,9 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class N4JSLanguageServer extends XLanguageServerImpl implements N4JSProtocolExtensions {
+
+	@Inject
+	private TextDocumentFrontend textDocumentFrontend;
 
 	@Override
 	protected Optional<List<String>> getSupportedCodeActionKinds() {
@@ -43,8 +48,8 @@ public class N4JSLanguageServer extends XLanguageServerImpl implements N4JSProto
 
 	@Override
 	public CompletableFuture<String> documentContents(TextDocumentIdentifier param) {
-		URI uri = getURI(param);
-		return getOpenFilesManager().runInTemporaryFileContext(uri, "documentContents", false,
+		URI uri = textDocumentFrontend.getURI(param);
+		return getResourceTaskManager().runInTemporaryContext(uri, "documentContents", false,
 				(ofc, cancelIndicator) -> documentContents(ofc, cancelIndicator));
 	}
 
@@ -52,7 +57,7 @@ public class N4JSLanguageServer extends XLanguageServerImpl implements N4JSProto
 	 * @param cancelIndicator
 	 *            a cancel indicator
 	 */
-	private String documentContents(OpenFileContext ofc, CancelIndicator cancelIndicator) {
+	private String documentContents(ResourceTaskContext ofc, CancelIndicator cancelIndicator) {
 		XDocument doc = ofc.getDocument();
 		return doc.getContents();
 	}

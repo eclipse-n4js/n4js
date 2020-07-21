@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.xtext.server.concurrent;
+package org.eclipse.n4js.ide.xtext.server;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -56,12 +56,23 @@ import com.google.inject.Singleton;
  * to react to that (as usual with cancel indicators). Tasks will always be invoked, even if they were marked as
  * cancelled while waiting on the queue, so implementors of a task may choose to implement a "non-cancellable" operation
  * at the beginning of a task before reacting to the cancel indicator.
+ *
+ * <h2>Memory Consistency Properties</h2>
+ *
+ * Given two tasks <code>T1</code> and <code>T2</code> submitted in this order and with equal queue IDs, this executor
+ * guarantees that the last action in T1 <em>happens-before</em> the first action in T2, in the sense of the
+ * <em>happens-before</em> relation defined in the Java Language Specification, Section 17.4.5.
+ *
+ * @see <a href=
+ *      "https://docs.oracle.com/en/java/javase/14/docs/api/java.base/java/util/concurrent/package-summary.html#MemoryVisibility">java.util.concurrent
+ *      - Memory Consistency Properties</a>
+ * @see <a href="https://docs.oracle.com/javase/specs/jls/se14/html/jls-17.html#jls-17.4.5">Java Language Specification
+ *      - Section 17.4.5 Happens-before Order</a>
  */
-// FIXME remove @Singleton?
-@Singleton // ensures queue IDs are "global" within a single injector
-public class LSPExecutorService {
+@Singleton
+public class QueuedExecutorService {
 
-	private static final Logger LOG = Logger.getLogger(LSPExecutorService.class);
+	private static final Logger LOG = Logger.getLogger(QueuedExecutorService.class);
 
 	/** The underlying executor service that is used to actually execute the tasks. */
 	@Inject
@@ -109,8 +120,9 @@ public class LSPExecutorService {
 				if (isCancellation(th)) {
 					result.doCancel();
 				} else {
-					result.completeExceptionally(th);
+					// log before completing (or LSPExecutorServiceTest#testSubmitLogException() would become flaky)
 					LOG.error("error during queued task: ", th);
+					result.completeExceptionally(th);
 				}
 			} finally {
 				onDone(this);
@@ -155,7 +167,7 @@ public class LSPExecutorService {
 		}
 	}
 
-	/** Submits the given task without a queue ID. See {@link LSPExecutorService} for details. */
+	/** Submits the given task without a queue ID. See {@link QueuedExecutorService} for details. */
 	public synchronized <T> QueuedTaskFuture<T> submit(String description,
 			Function<CancelIndicator, T> task) {
 		return submit(new Object(), description, task);
@@ -171,7 +183,7 @@ public class LSPExecutorService {
 		return submit(queueId, description, task);
 	}
 
-	/** Submits the given task under the given queue ID. See {@link LSPExecutorService} for details. */
+	/** Submits the given task under the given queue ID. See {@link QueuedExecutorService} for details. */
 	public synchronized <T> QueuedTaskFuture<T> submit(Object queueId, String description,
 			Function<CancelIndicator, T> task) {
 		QueuedTask<T> queuedTask = createQueuedTask(queueId, description, task);
@@ -226,7 +238,7 @@ public class LSPExecutorService {
 	/**
 	 * Marks all running and pending tasks as cancelled, i.e. their cancel indicator will return <code>true</code> from
 	 * {@link CancelIndicator#isCanceled() #isCanceled()}. Does not mark the tasks' result futures as cancelled, see
-	 * {@link LSPExecutorService} for details.
+	 * {@link QueuedExecutorService} for details.
 	 */
 	public synchronized void cancelAll() {
 		Stream.concat(runningTasks.values().stream(), pendingTasks.stream())

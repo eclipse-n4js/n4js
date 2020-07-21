@@ -14,10 +14,10 @@ import java.util.concurrent.CompletableFuture;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.n4js.ide.xtext.server.FutureUtil;
+import org.eclipse.n4js.ide.xtext.server.ResourceTaskContext;
+import org.eclipse.n4js.ide.xtext.server.ResourceTaskManager;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
-import org.eclipse.n4js.ide.xtext.server.concurrent.FutureUtil;
-import org.eclipse.n4js.ide.xtext.server.openfiles.OpenFileContext;
-import org.eclipse.n4js.ide.xtext.server.openfiles.OpenFilesManager;
 import org.eclipse.xtext.findReferences.IReferenceFinder;
 import org.eclipse.xtext.util.Exceptions;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
@@ -42,13 +42,13 @@ public class XWorkspaceResourceAccess implements IReferenceFinder.IResourceAcces
 	@Override
 	public <R> R readOnly(URI targetURI, IUnitOfWork<R, ResourceSet> work) {
 		URI uri = targetURI.trimFragment(); // note: targetURI may point to an EObject inside an EMF resource!
-		OpenFilesManager openFilesManager = languageServer.getOpenFilesManager();
-		OpenFileContext currOFC = openFilesManager.currentContext();
-		if (currOFC != null) {
-			return doWork(currOFC.getResourceSet(), work);
+		ResourceTaskManager resourceTaskManager = languageServer.getResourceTaskManager();
+		ResourceTaskContext currRTC = resourceTaskManager.currentContext();
+		if (currRTC != null) {
+			return doWork(currRTC.getResourceSet(), work);
 		}
-		// TODO GH-1774 consider making a current context mandatory by removing the following:
-		CompletableFuture<R> future = openFilesManager.runInTemporaryFileContext(uri, "XWorkspaceResourceAccess", true,
+		// TODO consider making a current context mandatory by removing the following (see GH-1774):
+		CompletableFuture<R> future = resourceTaskManager.runInTemporaryContext(uri, "XWorkspaceResourceAccess", true,
 				(ofc, ci) -> doWork(ofc.getResourceSet(), work));
 		return FutureUtil.getCancellableResult(future);
 	}

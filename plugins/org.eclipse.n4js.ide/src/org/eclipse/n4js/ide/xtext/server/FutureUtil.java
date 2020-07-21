@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.xtext.server.concurrent;
+package org.eclipse.n4js.ide.xtext.server;
 
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.Future;

@@ -21,10 +21,12 @@ import org.eclipse.xtext.ide.server.commands.IExecutableCommandService;
 import org.eclipse.xtext.xbase.lib.util.ReflectExtensions;
 
 import com.google.common.collect.Multimap;
+import com.google.inject.Singleton;
 
 /**
  * Adds {@link #argumentTypes()} to {@link ExecutableCommandRegistry}
  */
+@Singleton
 public class XExecutableCommandRegistry extends ExecutableCommandRegistry implements ExecuteCommandParamsDescriber {
 
 	@Override

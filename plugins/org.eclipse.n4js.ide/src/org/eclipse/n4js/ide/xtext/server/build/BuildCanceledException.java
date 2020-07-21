@@ -11,7 +11,6 @@
 package org.eclipse.n4js.ide.xtext.server.build;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.ide.xtext.server.XBuildManager;
 import org.eclipse.xtext.util.CancelIndicator;
 
 import com.google.common.collect.ImmutableList;

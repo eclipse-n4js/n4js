@@ -34,7 +34,7 @@ import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.ide.xtext.server.DefaultBuildRequestFactory;
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
-import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
+import org.eclipse.n4js.ide.xtext.server.build.XWorkspaceManager;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.tester.TestCatalogSupplier;
@@ -205,7 +205,7 @@ public class N4jscCompiler {
 			Injector injector = N4jscFactory.getOrCreateInjector();
 			TestCatalogSupplier testCatalogSupplier = injector.getInstance(TestCatalogSupplier.class);
 
-			String catalog = testCatalogSupplier.get((uri) -> workspaceManager.getProjectManager(uri).getResourceSet(),
+			String catalog = testCatalogSupplier.get((uri) -> workspaceManager.getProjectBuilder(uri).getResourceSet(),
 					true); // do not include "endpoint" property here
 
 			try (OutputStream os = new BufferedOutputStream(new FileOutputStream(testCatalogFile))) {

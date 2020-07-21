@@ -13,7 +13,7 @@ package org.eclipse.n4js.cli.compiler;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.DiagnosticSeverity;
-import org.eclipse.n4js.ide.xtext.server.LSPBuilder;
+import org.eclipse.n4js.ide.xtext.server.build.BuilderFrontend;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -25,7 +25,7 @@ import com.google.inject.Singleton;
 public class N4jscIssueSerializer {
 
 	@Inject
-	private LSPBuilder lspBuilder;
+	private BuilderFrontend lspBuilder;
 
 	/** @return user string for an issue */
 	public String diagnostics(Diagnostic diagnostic) {
