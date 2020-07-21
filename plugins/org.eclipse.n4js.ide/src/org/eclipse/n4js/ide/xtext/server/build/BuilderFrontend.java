@@ -63,6 +63,17 @@ public class BuilderFrontend {
 		return workspaceManager.getBaseDir();
 	}
 
+	/*
+	 * Review feedback:
+	 *
+	 * More recent versions of the Xtext LSP integration support workspaces with multiple roots. This will break the
+	 * abstraction here.
+	 *
+	 * To me, it looks like the consumer of the issues (currently tests and the N4jscIssueSerializer) should make the
+	 * URIs relative according to their own specific semantics / working directory.
+	 *
+	 * This method should be removed here and from the workspaceManager
+	 */
 	/** @return a workspace relative URI for a given URI */
 	public URI makeWorkspaceRelative(URI uri) {
 		return workspaceManager.makeWorkspaceRelative(uri);
@@ -83,6 +94,11 @@ public class BuilderFrontend {
 		workspaceManager.initialize(newBaseDir);
 	}
 
+	/*
+	 * Review feedback:
+	 *
+	 * Why is the provided cancelIndicator ignored here and in the methods below?
+	 */
 	public void initialBuild() {
 		queuedExecutorService.submitAndCancelPrevious(XBuildManager.class, "initialized",
 				cancelIndicator -> doInitialBuild());
@@ -127,7 +143,16 @@ public class BuilderFrontend {
 	}
 
 	public void didChangeWatchedFiles(DidChangeWatchedFilesParams params) {
+		/*
+		 * Review feedback:
+		 *
+		 * I don't think the comment is correct anymore (it probably never was correct).
+		 *
+		 * If I understand it correctly, the we received a delta from the client and we are triggering a build for that
+		 * delta. Nothing to worry about wrt to watched folders and the like.
+		 */
 		// TODO: Set watched files to client. Note: Client may have performance issues with lots of folders to watch.
+
 		final List<URI> dirtyFiles = new ArrayList<>();
 		final List<URI> deletedFiles = new ArrayList<>();
 		for (FileEvent fileEvent : params.getChanges()) {
@@ -176,6 +201,11 @@ public class BuilderFrontend {
 	public CompletableFuture<Void> shutdown() {
 		return runBuildable("shutdown", () -> {
 			return (cancelIndicator) -> {
+				/*
+				 * Review feedback:
+				 *
+				 * Should we also wait for currently scheduled tasks? Should we cancel all scheduled tasks?
+				 */
 				joinPersister();
 				return null;
 			};
