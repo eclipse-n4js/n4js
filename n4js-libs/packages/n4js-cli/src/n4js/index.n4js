@@ -12,9 +12,12 @@
 
 import * as childProcess from "child_process";
 import * as npmlog+ from "npmlog";
+import * as path from "path";
+import * as fs from "fs";
+import * as url from "url";
 import debug from "debug";
-import {JAVA_VM_XMX, JAVA_VM_XMX_DEFAULT, N4JSC_JAR} from "Globals";
-import {getJavaCommand} from "JreProvider";
+import {JAVA_VM_XMX, JAVA_VM_XMX_DEFAULT, N4JSC_JAR, N4JS_CLI_CONFIG, BIN_DIR} from "Globals";
+import {getJavaCommand, downloadFile} from "JreProvider";
 
 
 const debugLog = debug("n4js-cli");
@@ -24,6 +27,7 @@ const logFn: {function(string)} = (text: string) => {debugLog(text);};
 @StringBased
 export public enum Goal {
     compile,
+    clean,
     lsp,
     api,
     watch
@@ -54,18 +58,7 @@ export public class VmOptions {
 
 
 /**
- * Calls n4jsc with the given set of arguments, e.g.
- *
- * "port": "1234"
- * "clean": true
- *
- * Any stdout/stderr will be logged as is.
- * 
- * Unless set per `JAVA_TOOL_OPTIONS` heap usage is defaulted to 4096m.
- *
- * Call `n4jsc -h` for more details.
- *
- * Returns a promise.
+ * Version of #runN4jsc() but with typed parameters.
  */
 export public function n4jsc(
         goal: Goal,
@@ -74,36 +67,9 @@ export public function n4jsc(
         vmOptions: ~VmOptions+ =,
         log: {function(string)} = logFn) : Promise<int, ?> {
 
-    const args = getArgs(goal, dir, options, vmOptions, log);
+    const args = getArgStrings(goal, dir, options, vmOptions, log);
     return runN4jsc(args, logFn);
 }
-
-/**
- * Calls n4jsc with the given set of arguments, e.g.
- *
- * "port": "1234"
- * "clean": true
- *
- * Any stdout/stderr will be logged as is.
- * 
- * Unless set per `JAVA_TOOL_OPTIONS` heap usage is defaulted to 4096m.
- *
- * Call `n4jsc -h` for more details.
- *
- * Returns a ChildProcess.
- */
-export public function n4jscProcess(
-        goal: Goal,
-        dir: string,
-        options: ~Options+,
-        vmOptions: ~VmOptions+,
-        spawnOptions: childProcess.SpawnOptions,
-        log: {function(string)}) : childProcess.ChildProcess {
-
-    const args = getArgs(goal, dir, options, vmOptions, log);
-    return createN4JSProcess(args, spawnOptions, log);
-}
-
 
 /**
  * Runs N4jsc in a blocking fashion by executing n4jsc.jar with Java.
@@ -111,6 +77,8 @@ export public function n4jscProcess(
  * the globally available Java will be used. Java XmX option will be
  * set to 4GB if not set already.
  * The arguments will be collected from process.argv
+ *
+ * Used from bin/n4jsc.js
  */
  export public async function runN4jscSync(log: {function(string)} = npmlog.info) {
     const args = getArgsFromProcess();
@@ -134,18 +102,37 @@ export public function n4jscProcess(
  */
 export public function runN4jsc(args: string[], log: {function(string)} = npmlog.info) : Promise<int, ?> {
     let spawnOptions: childProcess.SpawnOptions = { stdio: "inherit", env: Object.assign({ NODEJS_PATH: process.argv[0] }, process.env)};
-    let n4jscProcess = createN4JSProcess(args, spawnOptions, log);
+    let n4jscProcess: Promise<childProcess.ChildProcess,?> = createN4JSProcess(args, spawnOptions, log);
     let promise: Promise<int, ?> = new Promise<int, int>((resolve, reject) => {
-        n4jscProcess.on("close", (code: int) => {
-            if (code === 0) {
-                resolve(0);
-            } else {
-                reject(code);
-            }
+        n4jscProcess.then((childProcess) => {
+            childProcess.on("close", (code: int) => {
+                if (code === 0) {
+                    resolve(0);
+                } else {
+                    reject(code);
+                }
+            });
         });
     });
 
     return promise;
+}
+
+/**
+ * Version of #createN4JSProcess() but with typed parameters.
+ *
+ * Used from n4js-vscode-extension
+ */
+export public async function n4jscProcess(
+        goal: Goal,
+        dir: string,
+        options: ~Options+,
+        vmOptions: ~VmOptions+,
+        spawnOptions: childProcess.SpawnOptions,
+        log: {function(string)}) : childProcess.ChildProcess {
+
+    const args = getArgStrings(goal, dir, options, vmOptions, log);
+    return await createN4JSProcess(args, spawnOptions, log);
 }
 
 /**
@@ -154,38 +141,31 @@ export public function runN4jsc(args: string[], log: {function(string)} = npmlog
  * the globally available Java will be used. Java Xmx vm option will
  * overwritten iff defined in environment variable JAVA_TOOL_OPTIONS.
  */
-export public function createN4JSProcess(args: string[], spawnOptions: childProcess.SpawnOptions, log: {function(string)} = npmlog.info) : childProcess.ChildProcess {
-    const envJavaToolOptions = process.env.JAVA_TOOL_OPTIONS as string;
-    const match = envJavaToolOptions?.match(/-xmx(?<size>[\S]*)/);
-    const size = match?.groups?.size;
-    if (size) {
-        for (let i=0; i<args.length; i++) {
-            const arg = args[i];
-            if (arg.startsWith(JAVA_VM_XMX)) {
-                args[i] = JAVA_VM_XMX + size;
-            }
-        }
-    }
-
-    let java = getJavaCommand(log);
-    log("calling: " + java + " " + args.join(" "));
-    let spawnedProcess = childProcess.spawn(java, args, spawnOptions);
+export public async function createN4JSProcess(args: string[], spawnOptions: childProcess.SpawnOptions, log: {function(string)} = npmlog.info) : childProcess.ChildProcess {
+    const modifedArgs = await modifyArgs(args, log);
+    const java = getJavaCommand(log);
+    log("calling: " + java + " " + modifedArgs.join(" "));
+    const spawnedProcess = childProcess.spawn(java, modifedArgs, spawnOptions);
 
     return spawnedProcess;
 }
 
 
+
 /**
  * Returns arguments for the call to Java which where passed to this script.
- * If not set by environment variable, a default Java maximum memory value of 4GB will be set.
  */
 function getArgsFromProcess() : Array<string> {
-    const args = ["-jar", N4JSC_JAR].concat(process.argv.slice(2));
+    const processArgs = process.argv.slice(2);
+    const args = ["-jar", N4JSC_JAR].concat(processArgs);
     return args;
 }
 
 
-function getArgs(
+/**
+ * Converts given parameters to arguments for the call to Java.
+ */
+function getArgStrings(
         goal: Goal,
         dir: string,
         options: ~Options+,
@@ -233,6 +213,36 @@ function getVmArgs(vmOptions: ~VmOptions+, log: {function(string)}): string[] {
     return args;
 }
 
+
+async function modifyArgs(oldArgs: string[], log: {function(string)}): string[] {
+    const newArgs = oldArgs.slice();
+
+    // set java option -Xmx
+    const envJavaToolOptions = process.env.JAVA_TOOL_OPTIONS as string;
+    const match = envJavaToolOptions?.match(/-xmx(?<size>[\S]*)/);
+    const size = match?.groups?.size;
+    if (size) {
+        for (let i=0; i<newArgs.length; i++) {
+            const arg = newArgs[i];
+            if (arg.startsWith(JAVA_VM_XMX)) {
+                newArgs[i] = JAVA_VM_XMX + size;
+            }
+        }
+    }
+
+    // replace n4jsc.jar (and download if not available)
+    const n4jscjarConfigProperty = findN4jscJarConfigProperty(oldArgs, log);
+    if (n4jscjarConfigProperty) {
+        const n4jscjarName = await ensureCustomN4jscJar(n4jscjarConfigProperty, log);
+        if (n4jscjarName) {
+            log("using n4jsc.jar: " + n4jscjarName);
+            newArgs[1] = n4jscjarName;
+        }
+    }
+
+    return newArgs;
+}
+
 function getN4jscArgs(goal: Goal, dir: string, options: ~Options+, log: {function(string)}): string[] {
     const args: string[] = [];
     if (goal) {
@@ -270,3 +280,107 @@ function getN4jscArgs(goal: Goal, dir: string, options: ~Options+, log: {functio
 function capitalizeFirstLetter(str: string): string {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
+
+
+/**
+ * Returns either:
+ * - the value of the environment variable 'N4JSC_JAR',
+ * - the value of property 'n4jscjar' of the n4js-cli configuration file,
+ * - or null.
+ */
+function findN4jscJarConfigProperty(args: string[], log: {function(string)}) : string {
+    if (process.env.N4JSC_JAR) {
+        // custom n4jsc.jar given as environment variable
+        return process.env.N4JSC_JAR as string;
+    }
+    if (args && args.length > 1) {
+        let dirArg = args[2];
+        if (Goal.literals.indexOf(dirArg) >= 0) {
+            // goal is an optional argument: if present try next argument
+            if (args[3]) {
+                dirArg = args[3];
+            }
+        }
+        if (dirArg && fs.existsSync(dirArg)) {
+            // n4js-cli config file exists
+            const customN4jscName = getN4jscjarFromConfig(dirArg);
+            if (customN4jscName) {
+                // custom n4jsc.jar set in n4js-cli configuration file
+                return customN4jscName;
+            }
+        }
+    }
+    // use default/shipped jar
+    return null;
+}
+
+function getN4jscjarFromConfig(dirArg : string) : string {
+    let pathN4jscliConfig = findN4jscliConfig(dirArg);
+    if (pathN4jscliConfig) {
+        const data = fs.readFileSync(pathN4jscliConfig, {encoding : 'utf8'});
+        const n4jscliConfig : any+ = JSON.parse(data);
+        if (n4jscliConfig && n4jscliConfig["n4jsc.jar"]) {
+            return n4jscliConfig["n4jsc.jar"] as string;
+        }
+    }
+    return null;
+}
+
+function findN4jscliConfig(dirArg : string) : string {
+    let dir = path.resolve(dirArg);
+    while (true) {
+        if (dir.length < 2) {
+            return null;
+        }
+        const pathN4jscliConfig = path.resolve(dir, N4JS_CLI_CONFIG);
+        if (fs.existsSync(pathN4jscliConfig)) {
+            return pathN4jscliConfig;
+        }
+
+        dir = path.dirname(dir);
+    }
+
+    return null;
+}
+
+/**
+ * Returns the file name of the given custom n4jsc.jar property.
+ * Also ensures the presence of the given jar.
+ */
+async function ensureCustomN4jscJar(customN4jscName: string, log: {function(string)}) : string {
+    if (fs.existsSync(customN4jscName)) {
+        // a local file
+        return customN4jscName;
+    }
+
+    const fileName = path.basename(customN4jscName);
+    const jarInBinDir = path.resolve(BIN_DIR, fileName);
+    if (fs.existsSync(jarInBinDir)) {
+        // a local file inside bin directory
+        return jarInBinDir;
+    }
+    if (isValidUrl(customN4jscName, log)) {
+        // an URL not yet downloaded
+        await downloadFile(customN4jscName, jarInBinDir, log);
+        if (fs.existsSync(jarInBinDir)) {
+            // should be now inside bin directory
+            return jarInBinDir;
+        }
+    }
+
+    throw new Error(`n4jsc.jar could not be found: ${customN4jscName}. Check n4js-cli config file or environment variable.`);
+}
+
+
+
+function isValidUrl(urlStr: string, log: {function(string)}) {
+    try {
+        const nodeURL = url.parse(urlStr);
+        if (nodeURL.protocol && nodeURL.host && nodeURL.path) {
+            return true;
+        }
+    } catch (_) {
+    }
+    return false;  
+}
+
