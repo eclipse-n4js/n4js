@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.zip.ZipException;
 
 import org.eclipse.emf.common.util.URI;
@@ -28,7 +29,6 @@ import org.eclipse.n4js.ide.xtext.server.build.HashedFileContent;
 import org.eclipse.n4js.ide.xtext.server.build.ProjectStatePersister;
 import org.eclipse.n4js.ide.xtext.server.build.ProjectStatePersister.ProjectState;
 import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
-import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.xtext.builder.builderState.BuilderStateFactory;
 import org.eclipse.xtext.builder.builderState.impl.EObjectDescriptionImpl;
 import org.eclipse.xtext.builder.builderState.impl.ResourceDescriptionImpl;
@@ -65,12 +65,10 @@ public class ProjectStatePersisterTest {
 	public void testWriteAndReadNoData() throws IOException, ClassNotFoundException {
 		ProjectStatePersister testMe = new ProjectStatePersister();
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
-		String languageVersion = N4JSLanguageUtils.getLanguageVersion();
 		ProjectState state = createProjectState();
-		testMe.writeProjectState(output, languageVersion, state);
+		testMe.writeProjectState(output, state);
 		AtomicBoolean didCall = new AtomicBoolean();
-		ProjectState pState = testMe.readProjectState(new ByteArrayInputStream(output.toByteArray()),
-				languageVersion);
+		ProjectState pState = testMe.readProjectState(new ByteArrayInputStream(output.toByteArray()));
 		Assert.assertTrue(pState.fileMappings.getAllGenerated().isEmpty());
 		Assert.assertTrue(pState.index.isEmpty());
 		Assert.assertTrue(pState.fileHashs.isEmpty());
@@ -83,12 +81,11 @@ public class ProjectStatePersisterTest {
 	public void testWriteAndReadCorruptedStream() throws IOException, ClassNotFoundException {
 		ProjectStatePersister testMe = new ProjectStatePersister();
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
-		String languageVersion = N4JSLanguageUtils.getLanguageVersion();
 		ProjectState state = createProjectState();
-		testMe.writeProjectState(output, languageVersion, state);
+		testMe.writeProjectState(output, state);
 		byte[] bytes = output.toByteArray();
 		bytes[12]++;
-		testMe.readProjectState(new ByteArrayInputStream(bytes), languageVersion);
+		testMe.readProjectState(new ByteArrayInputStream(bytes));
 	}
 
 	/** */
@@ -96,26 +93,29 @@ public class ProjectStatePersisterTest {
 	public void testWriteAndReadFileVersionMismatch() throws IOException, ClassNotFoundException {
 		ProjectStatePersister testMe = new ProjectStatePersister();
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
-		String languageVersion = N4JSLanguageUtils.getLanguageVersion();
 		ProjectState state = createProjectState();
-		testMe.writeProjectState(output, languageVersion, state);
+		testMe.writeProjectState(output, state);
 		byte[] bytes = output.toByteArray();
 		bytes[0]++;
-		ProjectState pState = testMe.readProjectState(new ByteArrayInputStream(bytes), languageVersion);
+		ProjectState pState = testMe.readProjectState(new ByteArrayInputStream(bytes));
 		Assert.assertTrue(pState == null);
 	}
 
 	/** */
 	@Test
 	public void testWriteAndReadLangVersionMismatch() throws IOException, ClassNotFoundException {
-		ProjectStatePersister testMe = new ProjectStatePersister();
+		AtomicReference<String> languageVersion = new AtomicReference<>("1");
+		ProjectStatePersister testMe = new ProjectStatePersister() {
+			@Override
+			public String getLanguageVersion() {
+				return languageVersion.get();
+			}
+		};
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
-		String languageVersion = N4JSLanguageUtils.getLanguageVersion();
 		ProjectState state = createProjectState();
-		testMe.writeProjectState(output, languageVersion, state);
-		languageVersion += "XXX";
-		ProjectState pState = testMe.readProjectState(new ByteArrayInputStream(output.toByteArray()),
-				languageVersion);
+		testMe.writeProjectState(output, state);
+		languageVersion.set("2");
+		ProjectState pState = testMe.readProjectState(new ByteArrayInputStream(output.toByteArray()));
 		Assert.assertTrue(pState == null);
 	}
 
@@ -124,7 +124,6 @@ public class ProjectStatePersisterTest {
 	public void testWriteAndReadWithData() throws IOException, ClassNotFoundException {
 		ProjectStatePersister testMe = new ProjectStatePersister();
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
-		String languageVersion = N4JSLanguageUtils.getLanguageVersion();
 
 		ProjectState state = createProjectState();
 		ResourceDescriptionsData index = state.index;
@@ -148,9 +147,9 @@ public class ProjectStatePersisterTest {
 				new HashedFileContent(hashUri, 123));
 
 		state = createProjectState(index, fileMappings, fingerprints, null);
-		testMe.writeProjectState(output, languageVersion, state);
+		testMe.writeProjectState(output, state);
 		ByteArrayInputStream outputStream = new ByteArrayInputStream(output.toByteArray());
-		ProjectState pState = testMe.readProjectState(outputStream, languageVersion);
+		ProjectState pState = testMe.readProjectState(outputStream);
 
 		Assert.assertEquals(fingerprints, pState.fileHashs);
 		List<URI> targets = pState.fileMappings.getGenerated(sourceURI);
@@ -168,7 +167,6 @@ public class ProjectStatePersisterTest {
 	public void testWriteAndReadValidationIssues() throws IOException, ClassNotFoundException {
 		ProjectStatePersister testMe = new ProjectStatePersister();
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
-		String languageVersion = N4JSLanguageUtils.getLanguageVersion();
 
 		URI source1 = URI.createURI("some:/source1");
 		URI source2 = URI.createURI("some:/source2");
@@ -189,9 +187,9 @@ public class ProjectStatePersisterTest {
 		issueMap.get(source2).add(src2Issue2);
 
 		ProjectState state = createProjectState(null, null, null, issueMap);
-		testMe.writeProjectState(output, languageVersion, state);
+		testMe.writeProjectState(output, state);
 		byte[] bytes = output.toByteArray();
-		ProjectState pState = testMe.readProjectState(new ByteArrayInputStream(bytes), languageVersion);
+		ProjectState pState = testMe.readProjectState(new ByteArrayInputStream(bytes));
 		Assert.assertTrue(pState != null);
 		Assert.assertEquals(issueMap, pState.validationIssues);
 	}

@@ -19,7 +19,7 @@ import org.eclipse.lsp4j.jsonrpc.services.JsonSegment;
 /**
  * A protocol extension to drive special requests for n4js.
  */
-@JsonSegment("n4")
+@JsonSegment("n4js")
 public interface N4JSProtocolExtensions {
 
 	/**

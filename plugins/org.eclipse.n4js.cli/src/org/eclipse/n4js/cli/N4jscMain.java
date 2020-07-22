@@ -35,6 +35,11 @@ public class N4jscMain {
 
 		final N4jscOptions options = getOptions(args);
 
+		if (!options.isVerbose()) {
+			Logger.getRootLogger().setLevel(Level.ERROR);
+		}
+		LOG.info("Starting n4jsc (language version " + N4JSLanguageUtils.getLanguageVersion() + ")");
+
 		// inform user about data collection
 		if (options.isDefinedPerformanceOption()) {
 			N4jscConsole.println("Performance Data Collection is enabled.");
@@ -44,10 +49,6 @@ public class N4jscMain {
 		// debug before help, shortcut for check-settings without running
 		if (options.isShowSetup()) {
 			N4jscConsole.println(options.toSettingsString());
-		}
-
-		if (!options.isVerbose()) {
-			Logger.getRootLogger().setLevel(Level.ERROR);
 		}
 
 		try {

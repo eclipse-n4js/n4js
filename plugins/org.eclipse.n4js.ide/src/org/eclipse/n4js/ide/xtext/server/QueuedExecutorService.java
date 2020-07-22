@@ -11,6 +11,7 @@
 package org.eclipse.n4js.ide.xtext.server;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -26,9 +27,12 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
+import org.eclipse.n4js.utils.Strings;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -312,5 +316,36 @@ public class QueuedExecutorService {
 	/** May be invoked from arbitrary threads. */
 	protected /* NOT synchronized */ boolean isCancellation(Throwable th) {
 		return th instanceof CancellationException || operationCanceledManager.isOperationCanceledException(th);
+	}
+
+	/** Stringifies current state of the executer service. Indicates all currently running and pending tasks. */
+	public synchronized String stringify() {
+		StringBuilder sb = new StringBuilder();
+		Multimap<Object, QueuedTask<?>> activeQueue = HashMultimap.create();
+		Multimap<Object, QueuedTask<?>> inactiveQueue = HashMultimap.create();
+		for (Map.Entry<Object, QueuedTask<?>> entry : runningTasks.entrySet()) {
+			activeQueue.put(entry.getValue(), (QueuedTask<?>) entry.getKey());
+		}
+		for (QueuedTask<?> pendingTask : pendingTasks) {
+			if (activeQueue.containsKey(pendingTask)) {
+				activeQueue.put(pendingTask.queueId, pendingTask);
+			} else {
+				inactiveQueue.put(pendingTask.queueId, pendingTask);
+			}
+		}
+		sb.append(QueuedExecutorService.class.getSimpleName() + " showing all " + QueuedTask.class.getSimpleName());
+		sb.append("\nActive Tasks Queues (First task is running, succeeding tasks are waiting):\n");
+		for (Object taskId : activeQueue.keys()) {
+			Collection<QueuedTask<?>> tasks = activeQueue.get(taskId);
+			sb.append("[ID: " + taskId + "]\t");
+			sb.append(Strings.join(", ", tasks) + "\n");
+		}
+		sb.append("\nInactive Tasks Queues (No task is running):\n");
+		for (Object taskId : inactiveQueue.keys()) {
+			Collection<QueuedTask<?>> tasks = activeQueue.get(taskId);
+			sb.append("[ID: " + taskId + "]\t");
+			sb.append(Strings.join(", ", tasks) + "\n");
+		}
+		return sb.toString();
 	}
 }
