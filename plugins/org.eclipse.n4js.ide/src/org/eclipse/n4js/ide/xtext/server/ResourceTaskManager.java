@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.BiConsumer;
@@ -55,11 +56,6 @@ import com.google.inject.Singleton;
 @SuppressWarnings("restriction")
 @Singleton
 public class ResourceTaskManager implements IReferenceFinder.IResourceAccess {
-	/*
-	 * Review feedback:
-	 *
-	 * Should the task manager implement IResourceAccess ?
-	 */
 
 	@Inject
 	private Provider<ResourceTaskContext> resourceTaskContextProvider;
@@ -206,10 +202,6 @@ public class ResourceTaskManager implements IReferenceFinder.IResourceAccess {
 		}
 
 		String descriptionWithContext = description + " [" + uri.lastSegment() + "]";
-		/*
-		 * Review feedback: When the task is started, it may already be obsolete. Is this ok? Should it be immediately
-		 * cancelled?
-		 */
 		return doSubmitTask(rtc, descriptionWithContext, task);
 	}
 
@@ -258,6 +250,9 @@ public class ResourceTaskManager implements IReferenceFinder.IResourceAccess {
 		Object queueId = getQueueIdForContext(rtc.getURI(), rtc.isTemporary());
 		return queuedExecutorService.submit(queueId, description, ci -> {
 			try {
+				if (!rtc.isAlive()) {
+					throw new CancellationException();
+				}
 				currentContext.set(rtc);
 				return task.apply(rtc, ci);
 			} finally {
@@ -291,7 +286,10 @@ public class ResourceTaskManager implements IReferenceFinder.IResourceAccess {
 
 	/** Internal removal of all information related to a particular resource task context. */
 	protected synchronized void discardContextInfo(URI uri) {
-		uri2RTCs.remove(uri);
+		ResourceTaskContext result = uri2RTCs.remove(uri);
+		if (result != null) {
+			result.alive = false;
+		}
 		updateSharedDirtyState(uri, null);
 		if (issueRegistry != null) {
 			issueRegistry.clearIssuesOfDirtyState(uri);

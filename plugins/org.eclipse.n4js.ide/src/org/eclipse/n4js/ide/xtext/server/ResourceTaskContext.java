@@ -100,6 +100,8 @@ public class ResourceTaskContext {
 	protected URI mainURI;
 	/** Tells whether this context represents a temporarily opened file, see {@link #isTemporary()}. */
 	protected boolean temporary;
+	/** Tells whether this context is still managed by the ResourceTaskManager or was already removed */
+	protected boolean alive;
 
 	/**
 	 * Contains the state of all files in the workspace. For open files managed by {@link #parent} (including the open
@@ -164,6 +166,13 @@ public class ResourceTaskContext {
 	}
 
 	/**
+	 * Returns true if this context is still managed by the {@link ResourceTaskManager}.
+	 */
+	public synchronized boolean isAlive() {
+		return alive;
+	}
+
+	/**
 	 * Tells whether this {@link ResourceTaskContext} represents a context for an open file, i.e. not a
 	 * {@link #isTemporary() temporary context}.
 	 */
@@ -207,8 +216,8 @@ public class ResourceTaskContext {
 		this.indexSnapshot = index;
 		this.project2BuiltURIs = project2builtURIs;
 		this.workspaceConfig = workspaceConfig;
-
 		this.mainResourceSet = createResourceSet();
+		this.alive = true;
 	}
 
 	/** Returns a newly created and fully configured resource set */
