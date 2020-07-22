@@ -67,6 +67,7 @@ import org.eclipse.n4js.cli.helper.SystemOutRedirecter;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
 import org.eclipse.n4js.ide.tests.client.IdeTestLanguageClient;
 import org.eclipse.n4js.ide.tests.client.IdeTestLanguageClient.IIdeTestLanguageClientListener;
+import org.eclipse.n4js.ide.xtext.server.LanguageServerFrontend;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 import org.eclipse.n4js.ide.xtext.server.build.BuilderFrontend;
@@ -129,6 +130,9 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	protected XLanguageServerImpl languageServer;
 	/** */
 	@Inject
+	protected LanguageServerFrontend lsFrontend;
+	/** */
+	@Inject
 	protected IdeTestLanguageClient languageClient;
 	/** */
 	@Inject
@@ -157,7 +161,6 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	final public void deleteTestProject() {
 		// clear thread pools
 		languageServer.shutdown().join();
-		languageServer.getQueuedExecutorService().shutdown();
 		// clear the state related to the test
 		testWorkspaceManager.deleteTestFromDiskIfCreated();
 		languageClient.clearLogMessages();
@@ -420,7 +423,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	}
 
 	/**
-	 * Change a non-opened file <u>on disk</u> and notify the LSP server.
+	 * Change a non-opened file <em>on disk</em> and notify the LSP server.
 	 * <p>
 	 * Use method {@link #changeOpenedFile(String, Pair...)} instead if the file was previously opened with one of the
 	 * {@link #openFile(FileURI) #openFile()} methods.
@@ -435,7 +438,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	}
 
 	/**
-	 * Change a non-opened file <u>on disk</u> and notify the LSP server.
+	 * Change a non-opened file <em>on disk</em> and notify the LSP server.
 	 * <p>
 	 * Use method {@link #changeOpenedFile(String, Pair...)} instead if the file was previously opened with one of the
 	 * {@link #openFile(FileURI) #openFile()} methods.
@@ -499,7 +502,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	}
 
 	/**
-	 * Change an opened file <u>in memory only</u> and notify the LSP server.
+	 * Change an opened file <em>in memory only</em> and notify the LSP server.
 	 * <p>
 	 * Use method {@link #changeNonOpenedFile(String, Pair...)} instead if the file was *not* previously opened with one
 	 * of the {@link #openFile(FileURI) #openFile()} methods.

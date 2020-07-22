@@ -51,7 +51,8 @@ import org.eclipse.n4js.ide.server.codeActions.ICodeActionAcceptor;
 import org.eclipse.n4js.ide.server.codeActions.N4JSCodeActionService;
 import org.eclipse.n4js.ide.server.codeActions.N4JSSourceActionProvider;
 import org.eclipse.n4js.ide.xtext.server.ExecuteCommandParamsDescriber;
-import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
+import org.eclipse.n4js.ide.xtext.server.LanguageServerFrontend;
+import org.eclipse.n4js.ide.xtext.server.QueuedExecutorService;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildManager;
 import org.eclipse.n4js.json.ide.codeActions.JSONCodeActionService;
 import org.eclipse.n4js.n4JS.Script;
@@ -124,7 +125,10 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 	public static final String RESET_PERFORMANCE_DATA = "n4js.performance.collector.reset";
 
 	@Inject
-	private XLanguageServerImpl lspServer;
+	private LanguageServerFrontend lsFrontend;
+
+	@Inject
+	private QueuedExecutorService queuedExecutorService;
 
 	@Inject
 	private N4JSCodeActionService codeActionService;
@@ -194,7 +198,7 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 			ExecutableCommandHandler annotation = method.getAnnotation(ExecutableCommandHandler.class);
 			if (annotation != null) {
 				List<Type> parameterTypes = Arrays.asList(method.getGenericParameterTypes());
-				// -2 since the last params are the ILanguageServerAccess and the CancelIndicator
+				// -2 since the last arguments are the ILanguageServerAccess and the CancelIndicator
 				Type[] args = parameterTypes.subList(0, parameterTypes.size() - 2).toArray(Type[]::new);
 				localArgumentTypes.put(annotation.value(), args);
 				localHandlers.put(annotation.value(), new CommandHandler(method));
@@ -225,8 +229,8 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 	 */
 	@ExecutableCommandHandler(N4JS_REBUILD)
 	public Void rebuild(ILanguageServerAccess access, CancelIndicator cancelIndicator) {
-		lspServer.clean();
-		lspServer.reinitWorkspace();
+		lsFrontend.clean();
+		lsFrontend.reinitWorkspace();
 		return null;
 	}
 
@@ -339,7 +343,7 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 			ILanguageServerAccess access,
 			CancelIndicator cancelIndicator) {
 
-		lspServer.getQueuedExecutorService().submitAndCancelPrevious(XBuildManager.class, "InstallNpm", (ci) -> {
+		queuedExecutorService.submitAndCancelPrevious(XBuildManager.class, "InstallNpm", (ci) -> {
 			// FIXME: Use CliTools in favor of npmCli
 			NPMVersionRequirement versionRequirement = semverHelper.parse(version);
 			if (versionRequirement == null) {
@@ -379,7 +383,7 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 			messageParams.setMessage(sw.toString());
 			access.getLanguageClient().showMessage(messageParams);
 			return null;
-		}).whenComplete((a, b) -> lspServer.reinitWorkspace());
+		}).whenComplete((a, b) -> lsFrontend.reinitWorkspace());
 
 		return null;
 	}

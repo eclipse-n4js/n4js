@@ -70,6 +70,7 @@ import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIssueRegistry;
 import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIssueRegistry.IIssueRegistryListener;
 import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIssueRegistry.IssueRegistryChangeEvent;
 import org.eclipse.n4js.ide.xtext.server.contentassist.XContentAssistService;
+import org.eclipse.n4js.ide.xtext.server.findReferences.XWorkspaceResourceAccess;
 import org.eclipse.n4js.ide.xtext.server.rename.XIRenameService;
 import org.eclipse.n4js.xtext.workspace.IProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.IWorkspaceConfigSnapshot;
@@ -160,11 +161,10 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 	}
 
 	/** Sets non-injectable fields */
-	public void initialize(InitializeParams _initializeParams, IResourceAccess _resourceAccess,
-			ILanguageServerAccess _access) {
+	public void initialize(InitializeParams _initializeParams, ILanguageServerAccess _access) {
 
 		this.initializeParams = _initializeParams;
-		this.resourceAccess = _resourceAccess;
+		this.resourceAccess = new XWorkspaceResourceAccess(resourceTaskManager);
 		this.access = _access;
 		index.addListener(this);
 		issueRegistry.addListener(this);
@@ -645,7 +645,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 		return false;
 	}
 
-	/** Convert the given params to an enriched instance of options. */
+	/** Convert the given parameters to an enriched instance of options. */
 	public ICodeActionService2.Options toOptions(CodeActionParams params, XDocument doc, XtextResource res,
 			CancelIndicator cancelIndicator) {
 
@@ -670,7 +670,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 		}
 	}
 
-	/** Remove the document uri from the data of the given code lense. */
+	/** Remove the document uri from the data of the given code lens. */
 	protected URI uninstallURI(CodeLens lens) {
 		URI result = null;
 		Object data = lens.getData();

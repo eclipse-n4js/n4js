@@ -211,6 +211,7 @@ public class BuilderFrontend {
 			};
 		}).thenApply(any -> {
 			persister.close();
+			queuedExecutorService.shutdown();
 			return null;
 		});
 	}

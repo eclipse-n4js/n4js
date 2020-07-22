@@ -83,11 +83,8 @@ import org.eclipse.lsp4j.services.TextDocumentService;
 import org.eclipse.lsp4j.services.WorkspaceService;
 import org.eclipse.n4js.ide.server.HeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.ide.server.LspLogger;
-import org.eclipse.n4js.ide.xtext.server.build.BuilderFrontend;
 import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIndex;
 import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIssueRegistry;
-import org.eclipse.n4js.ide.xtext.server.findReferences.XWorkspaceResourceAccess;
-import org.eclipse.xtext.findReferences.IReferenceFinder.IResourceAccess;
 import org.eclipse.xtext.ide.server.ICapabilitiesContributor;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 import org.eclipse.xtext.ide.server.ILanguageServerExtension;
@@ -140,30 +137,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Inject
 	private LanguageServerFrontend lsFrontend;
-
-	/*
-	 * Review feedback: The BuilderFrontend and the WorkspaceFrontend are both encapsulated by the
-	 * LanguageServerFrontend except for initialize and shutdown. These should both be moved into the
-	 * LanguageServerFrontend, if in doubt as package visible or protected methods.
-	 */
-	@Inject
-	private BuilderFrontend builderFrontend;
-
-	@Inject
-	private TextDocumentFrontend textDocumentFrontend;
-
-	/*
-	 * Review feedback: The WorkspaceFrontend is encapsulated by the LanguageServerFrontend except for initialize.
-	 */
-	@Inject
-	private WorkspaceFrontend workspaceFrontend;
-
-	/*
-	 * Review feedback: Only exposed via getter and only used in tests for shutdown - encapsulate and move into
-	 * LanguageServerFrontend via BuilderFrontend
-	 */
-	@Inject
-	private QueuedExecutorService queuedExecutorService;
 
 	@Inject
 	private UriExtensions uriExtensions;
@@ -258,9 +231,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 		Stopwatch sw = Stopwatch.createStarted();
 		LOG.info("Start server initialization in workspace directory " + baseDir);
-		workspaceFrontend.initialize(resourceAccess, access);
-		textDocumentFrontend.initialize(initializeParams, resourceAccess, access);
-		builderFrontend.initialize(baseDir);
+		lsFrontend.initialize(initializeParams, baseDir, access);
 		LOG.info("Server initialization done after " + sw);
 
 		initializeResult = new InitializeResult();
@@ -380,7 +351,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public void initialized(InitializedParams params) {
-		builderFrontend.initialBuild();
+		lsFrontend.initialized();
 		clientInitialized.complete(params);
 	}
 
@@ -394,7 +365,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	}
 
 	/**
-	 * Compute the base dir.
+	 * Compute the base directory.
 	 */
 	protected URI getBaseDir(InitializeParams params) {
 		String rootUri = params.getRootUri();
@@ -411,7 +382,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		debugService.connect(client);
 		issueAcceptor.connect(client);
 		lspLogger.connect(client);
-		textDocumentFrontend.connect(client);
+		lsFrontend.connect(client);
 	}
 
 	/**
@@ -420,7 +391,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	public void disconnect() {
 		lspLogger.disconnect();
 		issueAcceptor.disconnect();
-		textDocumentFrontend.disconnect();
+		lsFrontend.disconnect();
 		this.client = null;
 	}
 
@@ -440,7 +411,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 		disconnect();
 		return resourceTaskManager.closeAll()
-				.thenCompose(none -> builderFrontend.shutdown())
+				.thenCompose(none -> lsFrontend.shutdown())
 				.thenApply(any -> {
 					issueRegistry.clear();
 					shutdownAndExitHandler.shutdown();
@@ -483,18 +454,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	@Override
 	public void didChangeWatchedFiles(DidChangeWatchedFilesParams params) {
 		lsFrontend.didChangeWatchedFiles(params);
-	}
-
-	/** Deletes all generated files and clears the type index. */
-	public CompletableFuture<Void> clean() {
-		return lsFrontend.clean();
-	}
-
-	/**
-	 * Triggers rebuild of the whole workspace
-	 */
-	public CompletableFuture<Void> reinitWorkspace() {
-		return lsFrontend.reinitWorkspace();
 	}
 
 	@Override
@@ -667,8 +626,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		}
 	}
 
-	private final IResourceAccess resourceAccess = new XWorkspaceResourceAccess(this);
-
 	private final ILanguageServerAccess access = new ILanguageServerAccess() {
 		@Override
 		public <T> CompletableFuture<T> doRead(String uriStr, Function<ILanguageServerAccess.Context, T> function) {
@@ -803,13 +760,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		return resourceTaskManager;
 	}
 
-	/**
-	 * Getter
-	 */
-	public QueuedExecutorService getQueuedExecutorService() {
-		return queuedExecutorService;
-	}
-
 	/*
 	 * Review feedback: Only used from a single test method. Get rid of this.
 	 */
@@ -833,12 +783,12 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	}
 
 	/*
-	 * Review feedback: Move to language server frontend
+	 * Review feedback: Move to language server front-end
 	 */
 
 	/** Blocks until all requests of the language server finished */
 	public void joinServerRequests() {
-		builderFrontend.join();
+		lsFrontend.join();
 	}
 
 }

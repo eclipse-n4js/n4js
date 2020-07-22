@@ -17,7 +17,6 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.ide.xtext.server.FutureUtil;
 import org.eclipse.n4js.ide.xtext.server.ResourceTaskContext;
 import org.eclipse.n4js.ide.xtext.server.ResourceTaskManager;
-import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 import org.eclipse.xtext.findReferences.IReferenceFinder;
 import org.eclipse.xtext.util.Exceptions;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
@@ -32,20 +31,19 @@ public class XWorkspaceResourceAccess implements IReferenceFinder.IResourceAcces
 	/*
 	 * Review feedback: Accept the ResourceTaskManager instead in the constructor.
 	 */
-	private final XLanguageServerImpl languageServer;
+	private final ResourceTaskManager resourceTaskManager;
 
 	/**
-	 * @param languageServer
-	 *            the language server
+	 * @param resourceTaskManager
+	 *            the task manager
 	 */
-	public XWorkspaceResourceAccess(XLanguageServerImpl languageServer) {
-		this.languageServer = languageServer;
+	public XWorkspaceResourceAccess(ResourceTaskManager resourceTaskManager) {
+		this.resourceTaskManager = resourceTaskManager;
 	}
 
 	@Override
 	public <R> R readOnly(URI targetURI, IUnitOfWork<R, ResourceSet> work) {
 		URI uri = targetURI.trimFragment(); // note: targetURI may point to an EObject inside an EMF resource!
-		ResourceTaskManager resourceTaskManager = languageServer.getResourceTaskManager();
 		ResourceTaskContext currRTC = resourceTaskManager.currentContext();
 		if (currRTC != null) {
 			return doWork(currRTC.getResourceSet(), work);

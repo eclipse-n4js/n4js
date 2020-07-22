@@ -19,6 +19,7 @@ import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.WorkspaceSymbolParams;
 import org.eclipse.lsp4j.services.WorkspaceService;
+import org.eclipse.n4js.ide.xtext.server.findReferences.XWorkspaceResourceAccess;
 import org.eclipse.xtext.findReferences.IReferenceFinder.IResourceAccess;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 import org.eclipse.xtext.ide.server.commands.ExecutableCommandRegistry;
@@ -63,8 +64,8 @@ public class WorkspaceFrontend implements WorkspaceService {
 	private ILanguageServerAccess access;
 
 	/** Sets non-injectable fields */
-	public void initialize(IResourceAccess _resourceAccess, ILanguageServerAccess _access) {
-		this.resourceAccess = _resourceAccess;
+	public void initialize(ILanguageServerAccess _access) {
+		this.resourceAccess = new XWorkspaceResourceAccess(resourceTaskManager);
 		this.access = _access;
 	}
 

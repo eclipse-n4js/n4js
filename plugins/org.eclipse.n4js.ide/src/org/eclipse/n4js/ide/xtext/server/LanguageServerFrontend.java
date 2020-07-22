@@ -13,6 +13,7 @@ package org.eclipse.n4js.ide.xtext.server;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.CallHierarchyCall;
 import org.eclipse.lsp4j.CallHierarchyParams;
 import org.eclipse.lsp4j.CodeAction;
@@ -46,6 +47,7 @@ import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.FoldingRange;
 import org.eclipse.lsp4j.FoldingRangeRequestParams;
 import org.eclipse.lsp4j.Hover;
+import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.LocationLink;
 import org.eclipse.lsp4j.PrepareRenameResult;
@@ -65,9 +67,11 @@ import org.eclipse.lsp4j.WillSaveTextDocumentParams;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.WorkspaceSymbolParams;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
+import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.TextDocumentService;
 import org.eclipse.lsp4j.services.WorkspaceService;
 import org.eclipse.n4js.ide.xtext.server.build.BuilderFrontend;
+import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 
 import com.google.common.annotations.Beta;
 import com.google.inject.Inject;
@@ -101,6 +105,46 @@ public class LanguageServerFrontend implements TextDocumentService, WorkspaceSer
 
 	@Inject
 	private WorkspaceFrontend workspaceFrontend;
+
+	/**
+	 * Initialize this front-end according to the given arguments.
+	 */
+	public void initialize(InitializeParams params, URI baseDir, ILanguageServerAccess access) {
+		workspaceFrontend.initialize(access);
+		textDocumentFrontend.initialize(params, access);
+		builderFrontend.initialize(baseDir);
+	}
+
+	/**
+	 * Notifies the front-end that the initialization was completed.
+	 */
+	public void initialized() {
+		builderFrontend.initialBuild();
+	}
+
+	/**
+	 * Blocks until all work is done.
+	 */
+	public void join() {
+		builderFrontend.join();
+	}
+
+	/**
+	 * Orderly shutdown of this front-end.
+	 */
+	public CompletableFuture<? extends Object> shutdown() {
+		return builderFrontend.shutdown();
+	}
+
+	/** Connect this front-end to the given client. */
+	public void connect(LanguageClient client) {
+		textDocumentFrontend.connect(client);
+	}
+
+	/** Disconnect this front-end from the currently connected. */
+	public void disconnect() {
+		textDocumentFrontend.disconnect();
+	}
 
 	@Override
 	public void didOpen(DidOpenTextDocumentParams params) {

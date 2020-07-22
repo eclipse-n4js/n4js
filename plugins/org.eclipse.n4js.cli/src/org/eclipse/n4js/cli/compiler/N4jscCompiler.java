@@ -31,6 +31,7 @@ import org.eclipse.n4js.cli.N4jscExitCode;
 import org.eclipse.n4js.cli.N4jscExitState;
 import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscOptions;
+import org.eclipse.n4js.ide.xtext.server.LanguageServerFrontend;
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 import org.eclipse.n4js.ide.xtext.server.build.DefaultBuildRequestFactory;
@@ -113,7 +114,9 @@ public class N4jscCompiler {
 	private void performClean() {
 		Stopwatch compilationTime = Stopwatch.createStarted();
 		try (Measurement m = N4JSDataCollectors.dcCliClean.getMeasurement()) {
-			languageServer.clean().join();
+			Injector injector = N4jscFactory.getOrCreateInjector();
+			LanguageServerFrontend lsFrontend = injector.getInstance(LanguageServerFrontend.class);
+			lsFrontend.clean().join();
 		}
 		printCleanResults(compilationTime.stop());
 	}
