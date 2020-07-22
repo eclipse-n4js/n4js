@@ -200,11 +200,6 @@ public class XWorkspaceManager {
 	 */
 	/** @return the current base directory {@link URI} */
 	public URI getBaseDir() {
-		/*
-		 * Review feedback:
-		 *
-		 * Why are we gracefully handling the case with workspaceConfig==null here but not accept that situation above?
-		 */
 		if (this.workspaceConfig == null) {
 			return null;
 		}
