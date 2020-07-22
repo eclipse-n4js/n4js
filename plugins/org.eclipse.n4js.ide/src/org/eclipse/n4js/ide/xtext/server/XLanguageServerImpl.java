@@ -774,6 +774,13 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		return lspLogger;
 	}
 
+	/**
+	 * Returns the front-end to this server instance.
+	 */
+	public LanguageServerFrontend getFrontend() {
+		return lsFrontend;
+	}
+
 	/** Blocks until all requests of the language server finished */
 	public void joinServerRequests() {
 		lsFrontend.join();

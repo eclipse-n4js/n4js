@@ -50,7 +50,7 @@ public class CommandRebuildTest extends AbstractStructuredIdeTest<Void> {
 	/** remove generated files */
 	@After
 	public void cleanup() {
-		lsFrontend.clean();
+		languageServer.getFrontend().clean();
 
 		// wait for previous command to finish
 		joinServerRequests();
@@ -105,7 +105,7 @@ public class CommandRebuildTest extends AbstractStructuredIdeTest<Void> {
 		test("class A { foo(a: A) { } } class Main { main(a: A) { a.foo(null); } }");
 
 		// send command under test
-		lsFrontend.reinitWorkspace();
+		languageServer.getFrontend().reinitWorkspace();
 
 		// wait for previous command to finish
 		joinServerRequests();
