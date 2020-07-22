@@ -119,35 +119,18 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 	@Inject
 	private IssueAcceptor issueAcceptor;
 
-	/*
-	 * Review feedback:
-	 *
-	 * We only inject the index here to allow to register a listener. Looks like we to shift that to some other piece of
-	 * code to decouple this further. Same for the issueRegistry.
-	 */
 	@Inject
 	private ConcurrentIndex index;
 
 	@Inject
 	private ConcurrentIssueRegistry issueRegistry;
 
-	/*
-	 * Review feedback:
-	 *
-	 * This and the usage of the client below: Both smell a little weird wrt to the encapsulation. I cannot put it into
-	 * a clear thought yet, though.
-	 */
 	@Inject
 	private SemanticHighlightingRegistry semanticHighlightingRegistry;
 
 	private LanguageClient client;
 
-	/*
-	 * Review feedback:
-	 *
-	 * Only used to figure if we support hierarchical symbols. Maybe store that boolean information instead?
-	 */
-	private InitializeParams initializeParams;
+	private boolean hierarchicalSymbols;
 
 	private ILanguageServerAccess access;
 
@@ -158,8 +141,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 
 	/** Sets non-injectable fields */
 	public void initialize(InitializeParams _initializeParams, ILanguageServerAccess _access) {
-
-		this.initializeParams = _initializeParams;
+		this.hierarchicalSymbols = isHierarchicalDocumentSymbolSupport(_initializeParams);
 		this.access = _access;
 		index.addListener(this);
 		issueRegistry.addListener(this);
@@ -167,7 +149,6 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 
 	/** Resets non-injectable fields */
 	public void disconnect() {
-		this.initializeParams = null;
 		this.client = null;
 		this.access = null;
 		index.removeListener(this);
@@ -612,7 +593,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 		if ((serviceProvider == null)) {
 			return null;
 		}
-		if (isHierarchicalDocumentSymbolSupport()) {
+		if (hierarchicalSymbols) {
 			return serviceProvider.get(HierarchicalDocumentSymbolService.class);
 		} else {
 			return serviceProvider.get(DocumentSymbolService.class);
@@ -623,7 +604,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 	 * {@code true} if the {@code TextDocumentClientCapabilities} explicitly declares the hierarchical document symbol
 	 * support at LS initialization time. Otherwise, false.
 	 */
-	protected boolean isHierarchicalDocumentSymbolSupport() {
+	protected boolean isHierarchicalDocumentSymbolSupport(InitializeParams initializeParams) {
 		ClientCapabilities capabilities = initializeParams.getCapabilities();
 		if (capabilities != null) {
 			TextDocumentClientCapabilities textDocument = capabilities.getTextDocument();
