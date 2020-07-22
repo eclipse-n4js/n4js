@@ -86,7 +86,7 @@ public class QueuedExecutorService {
 	 * same try/finally as removing it again.
 	 *
 	 * - The QueuedExecutorService is used by the ResourceTaskManager, the BuilderFrontend, the WorkspaceFrontent and
-	 * the XLanguageServerImpl. Nevertheless it has a shutdown method. It is not clear, which component is the owner of
+	 * the N4JSCommandService. Nevertheless it has a shutdown method. It is not clear, which component is the owner of
 	 * the QueuedExecutorService and responsible for the shutdown.
 	 */
 
@@ -144,7 +144,7 @@ public class QueuedExecutorService {
 				});
 				result.complete(actualResult);
 			} catch (Throwable th) {
-				if (isCancellation(th)) {
+				if (operationCanceledManager.isOperationCanceledException(th)) {
 					result.doCancel();
 				} else {
 					// log before completing (or LSPExecutorServiceTest#testSubmitLogException() would become flaky)
@@ -290,7 +290,7 @@ public class QueuedExecutorService {
 	 * Blocks until all tasks complete that are running or pending at the time of invocation of this method OR are being
 	 * submitted by other threads while this method is waiting. Thus, this method waits for the executor to idle.
 	 * <p>
-	 * More precisely, this method waits for a point in time when this executor is idle but <u>does not guarantee</u>
+	 * More precisely, this method waits for a point in time when this executor is idle but <em>does not guarantee</em>
 	 * the <em>first</em> such point in time will be detected and does not guarantee the executor is <em>still</em> idle
 	 * when this method returns (however, the latter may only be untrue if there exist threads submitting issues other
 	 * than those of the tasks running or pending when this method is invoked).
@@ -311,10 +311,6 @@ public class QueuedExecutorService {
 
 	/** Same as {@link #allTasks()}, but returns <code>null</code> iff there are no running or pending tasks. */
 	private synchronized CompletableFuture<Void> allTasksOrNull() {
-		/*
-		 * Review feedback: Returning null from an API with futures is not something that I'd expect, even if the method
-		 * name is very explicit. I see how it is used. Maybe make it private?
-		 */
 		if (runningTasks.isEmpty() && pendingTasks.isEmpty()) {
 			return null;
 		}
@@ -335,29 +331,14 @@ public class QueuedExecutorService {
 
 	/** An orderly shutdown of this executor service. */
 	public synchronized void shutdown() {
-		/*
-		 * Review feedback: Should we cancel before we attempt to shutdown?
-		 */
-		MoreExecutors.shutdownAndAwaitTermination(delegate, 2500, TimeUnit.MILLISECONDS);
 		cancelAll();
+		MoreExecutors.shutdownAndAwaitTermination(delegate, 2500, TimeUnit.MILLISECONDS);
 	}
 
 	/** May be invoked from arbitrary threads. */
 	protected /* NOT synchronized */ <T> QueuedTask<T> createQueuedTask(Object queueId, String description,
 			Function<CancelIndicator, T> task) {
-
 		return new QueuedTask<>(queueId, description, task);
-	}
-
-	/*
-	 * Review feedback:
-	 *
-	 * There is a little bit of duplication of this logic. FutureUtil does something similar. More recent versions of
-	 * Xtext do have support for CancellationException in the OperationCanceledManager.
-	 */
-	/** May be invoked from arbitrary threads. */
-	protected /* NOT synchronized */ boolean isCancellation(Throwable th) {
-		return th instanceof CancellationException || operationCanceledManager.isOperationCanceledException(th);
 	}
 
 	/** Stringifies current state of the executer service. Indicates all currently running and pending tasks. */

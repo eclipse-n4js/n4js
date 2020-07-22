@@ -16,7 +16,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.CancellationException;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -317,10 +316,6 @@ public class XBuildManager {
 			lspLogger.log("... build done.");
 
 			return result;
-
-		} catch (CancellationException ce) {
-			lspLogger.log("... build canceled.");
-			throw ce;
 		} catch (Throwable th) {
 			if (operationCanceledManager.isOperationCanceledException(th)) {
 				lspLogger.log("... build canceled.");
