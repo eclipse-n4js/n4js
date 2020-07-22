@@ -189,7 +189,7 @@ public class BuilderFrontend {
 	 *            the factory for the buildable.
 	 * @return the result.
 	 */
-	protected CompletableFuture<List<Delta>> runBuildable(String description,
+	public CompletableFuture<List<Delta>> runBuildable(String description,
 			Supplier<? extends XBuildable> newBuildable) {
 		return queuedExecutorService.submitAndCancelPrevious(XBuildManager.class, description, cancelIndicator -> {
 			XBuildable buildable = newBuildable.get();

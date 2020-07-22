@@ -52,7 +52,7 @@ public class XBuildManager {
 	/*
 	 * Review feedback:
 	 *
-	 * Used from server.commands and issue key is used from ProjectBuildOrderInfo
+	 * Used from server.commands
 	 */
 
 	private static final Logger LOG = LogManager.getLogger(XBuildManager.class);
@@ -65,10 +65,6 @@ public class XBuildManager {
 		/** Run the build */
 		List<IResourceDescription.Delta> build(CancelIndicator cancelIndicator);
 	}
-
-	/** Issue key for cyclic dependencies */
-	public static final String CYCLIC_PROJECT_DEPENDENCIES = XBuildManager.class.getName()
-			+ ".cyclicProjectDependencies";
 
 	@Inject
 	private XWorkspaceManager workspaceManager;

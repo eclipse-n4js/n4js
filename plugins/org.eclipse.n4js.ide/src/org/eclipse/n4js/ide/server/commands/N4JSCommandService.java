@@ -52,8 +52,7 @@ import org.eclipse.n4js.ide.server.codeActions.N4JSCodeActionService;
 import org.eclipse.n4js.ide.server.codeActions.N4JSSourceActionProvider;
 import org.eclipse.n4js.ide.xtext.server.ExecuteCommandParamsDescriber;
 import org.eclipse.n4js.ide.xtext.server.LanguageServerFrontend;
-import org.eclipse.n4js.ide.xtext.server.QueuedExecutorService;
-import org.eclipse.n4js.ide.xtext.server.build.XBuildManager;
+import org.eclipse.n4js.ide.xtext.server.build.BuilderFrontend;
 import org.eclipse.n4js.json.ide.codeActions.JSONCodeActionService;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.projectModel.locations.FileURI;
@@ -128,7 +127,7 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 	private LanguageServerFrontend lsFrontend;
 
 	@Inject
-	private QueuedExecutorService queuedExecutorService;
+	private BuilderFrontend builderFrontend;
 
 	@Inject
 	private N4JSCodeActionService codeActionService;
@@ -343,46 +342,49 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 			ILanguageServerAccess access,
 			CancelIndicator cancelIndicator) {
 
-		queuedExecutorService.submitAndCancelPrevious(XBuildManager.class, "InstallNpm", (ci) -> {
-			// FIXME: Use CliTools in favor of npmCli
-			NPMVersionRequirement versionRequirement = semverHelper.parse(version);
-			if (versionRequirement == null) {
-				versionRequirement = SemverUtils.createEmptyVersionRequirement();
-			}
-			String normalizedVersion = SemverSerializer.serialize(versionRequirement);
-
-			N4JSProjectName projectName = new N4JSProjectName(packageName);
-			LibraryChange change = new LibraryChange(LibraryChangeType.Install, null, projectName, normalizedVersion);
-			MultiStatus multiStatus = new MultiStatus("json", 1, null, null);
-			FileURI targetProject = new FileURI(URI.createURI(fileUri)).getParent();
-			npmCli.batchInstall(new NullProgressMonitor(), multiStatus, Arrays.asList(change), targetProject);
-
-			MessageParams messageParams = new MessageParams();
-			switch (multiStatus.getSeverity()) {
-			case IStatus.INFO:
-				messageParams.setType(MessageType.Info);
-				break;
-			case IStatus.WARNING:
-				messageParams.setType(MessageType.Warning);
-				break;
-			case IStatus.ERROR:
-				messageParams.setType(MessageType.Error);
-				break;
-			default:
-				return null;
-			}
-
-			StringWriter sw = new StringWriter();
-			PrintWriter printWriter = new PrintWriter(sw);
-			for (IStatus child : multiStatus.getChildren()) {
-				if (child.getSeverity() == multiStatus.getSeverity()) {
-					printWriter.println(child.getMessage());
+		builderFrontend.runBuildable("InstallNpm", () -> {
+			return (ci) -> {
+				// FIXME: Use CliTools in favor of npmCli
+				NPMVersionRequirement versionRequirement = semverHelper.parse(version);
+				if (versionRequirement == null) {
+					versionRequirement = SemverUtils.createEmptyVersionRequirement();
 				}
-			}
-			printWriter.flush();
-			messageParams.setMessage(sw.toString());
-			access.getLanguageClient().showMessage(messageParams);
-			return null;
+				String normalizedVersion = SemverSerializer.serialize(versionRequirement);
+
+				N4JSProjectName projectName = new N4JSProjectName(packageName);
+				LibraryChange change = new LibraryChange(LibraryChangeType.Install, null, projectName,
+						normalizedVersion);
+				MultiStatus multiStatus = new MultiStatus("json", 1, null, null);
+				FileURI targetProject = new FileURI(URI.createURI(fileUri)).getParent();
+				npmCli.batchInstall(new NullProgressMonitor(), multiStatus, Arrays.asList(change), targetProject);
+
+				MessageParams messageParams = new MessageParams();
+				switch (multiStatus.getSeverity()) {
+				case IStatus.INFO:
+					messageParams.setType(MessageType.Info);
+					break;
+				case IStatus.WARNING:
+					messageParams.setType(MessageType.Warning);
+					break;
+				case IStatus.ERROR:
+					messageParams.setType(MessageType.Error);
+					break;
+				default:
+					return null;
+				}
+
+				StringWriter sw = new StringWriter();
+				PrintWriter printWriter = new PrintWriter(sw);
+				for (IStatus child : multiStatus.getChildren()) {
+					if (child.getSeverity() == multiStatus.getSeverity()) {
+						printWriter.println(child.getMessage());
+					}
+				}
+				printWriter.flush();
+				messageParams.setMessage(sw.toString());
+				access.getLanguageClient().showMessage(messageParams);
+				return Collections.emptyList();
+			};
 		}).whenComplete((a, b) -> lsFrontend.reinitWorkspace());
 
 		return null;

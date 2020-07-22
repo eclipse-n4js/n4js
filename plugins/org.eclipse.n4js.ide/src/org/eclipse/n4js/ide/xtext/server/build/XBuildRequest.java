@@ -22,6 +22,7 @@ import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.UriUtil;
 
+import com.google.common.base.StandardSystemProperty;
 import com.google.common.collect.Multimap;
 
 /**
@@ -29,11 +30,7 @@ import com.google.common.collect.Multimap;
  * @since 2.9
  */
 public class XBuildRequest {
-	/*
-	 * Review feedback:
-	 * 
-	 * This is not strictly encapsulated in server.build since it's created by the IBuildRequestFactory.
-	 */
+
 	private final String projectName;
 
 	private URI baseDir;
@@ -43,8 +40,6 @@ public class XBuildRequest {
 	private Collection<URI> deletedFiles = new ArrayList<>();
 
 	private Collection<IResourceDescription.Delta> externalDeltas = new ArrayList<>();
-
-	// private XIndexState state = new XIndexState();
 
 	private ResourceDescriptionsData index;
 
@@ -108,10 +103,10 @@ public class XBuildRequest {
 		this.baseDir = baseDir;
 	}
 
-	/** Return the base dir. */
+	/** Return the base directory. */
 	public URI getBaseDir() {
-		if ((this.baseDir == null)) {
-			String userDir = System.getProperty("user.dir");
+		if (this.baseDir == null) {
+			String userDir = StandardSystemProperty.USER_DIR.value();
 			this.baseDir = UriUtil.createFolderURI(new File(userDir));
 		}
 		return this.baseDir;
