@@ -70,6 +70,7 @@ import org.eclipse.n4js.ide.tests.client.IdeTestLanguageClient.IIdeTestLanguageC
 import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 import org.eclipse.n4js.ide.xtext.server.build.BuilderFrontend;
+import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIndex;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.xtext.LanguageInfo;
@@ -127,6 +128,9 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	/** */
 	@Inject
 	protected XLanguageServerImpl languageServer;
+	/** */
+	@Inject
+	protected ConcurrentIndex concurrentIndex;
 	/** */
 	@Inject
 	protected IdeTestLanguageClient languageClient;
@@ -968,7 +972,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	/** Reads the resource description of the source file with the given URI from the index. */
 	protected IResourceDescription getResourceDescriptionFromIndex(String projectName, FileURI fileURI) {
-		ResourceDescriptionsData index = languageServer.getConcurrentIndex().getProjectIndex(projectName);
+		ResourceDescriptionsData index = concurrentIndex.getProjectIndex(projectName);
 		return index.getResourceDescription(fileURI.toURI());
 	}
 

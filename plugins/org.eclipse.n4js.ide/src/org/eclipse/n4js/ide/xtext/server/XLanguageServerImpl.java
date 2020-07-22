@@ -83,8 +83,6 @@ import org.eclipse.lsp4j.services.TextDocumentService;
 import org.eclipse.lsp4j.services.WorkspaceService;
 import org.eclipse.n4js.ide.server.HeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.ide.server.LspLogger;
-import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIndex;
-import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIssueRegistry;
 import org.eclipse.xtext.ide.server.ICapabilitiesContributor;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 import org.eclipse.xtext.ide.server.ILanguageServerExtension;
@@ -128,10 +126,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	private static final Logger LOG = Logger.getLogger(XLanguageServerImpl.class);
 
-	/*
-	 * Review feedback: Only used by the inner impl of LanguageServerAccess. Should be moved into the
-	 * LanguageServerFrontend.
-	 */
 	@Inject
 	private ResourceTaskManager resourceTaskManager;
 
@@ -152,19 +146,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Inject
 	private ILanguageServerShutdownAndExitHandler shutdownAndExitHandler;
-
-	/*
-	 * Review feedback: Only used from getter. Remove it.
-	 */
-	@Inject
-	private ConcurrentIndex fullIndex;
-
-	/*
-	 * Review feedback: Only used from shutdown. Define clear ownership. Why does it need to be cleared on shutdown at
-	 * all?
-	 */
-	@Inject
-	private ConcurrentIssueRegistry issueRegistry;
 
 	@Inject
 	private IssueAcceptor issueAcceptor;
@@ -395,9 +376,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	@Override
 	public void exit() {
 		LOG.info("Received exit notification");
-		/*
-		 * Review feedback: Move into LanguageServerFrontend
-		 */
 		joinServerRequests();
 		shutdownAndExitHandler.exit();
 	}
@@ -410,7 +388,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		return resourceTaskManager.closeAll()
 				.thenCompose(none -> lsFrontend.shutdown())
 				.thenApply(any -> {
-					issueRegistry.clear();
 					shutdownAndExitHandler.shutdown();
 
 					LOG.info("Shutdown done");
@@ -634,14 +611,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 				if (res instanceof XtextResource) {
 					String content = ((XtextResource) res).getParseResult().getRootNode().getText();
 					XDocument doc = new XDocument(1, content);
-					/*
-					 * Review feedback:
-					 *
-					 * Why not org.eclipse.n4js.ide.xtext.server.ResourceTaskContext.getDocument() ?
-					 *
-					 * It is possible that uri != currOFC.mainResource.URI -> for these cases, it is necessary to create
-					 * a new document.
-					 */
 					boolean isOpen = resourceTaskManager.isOpen(uri);
 					T result = function.apply(
 							new ILanguageServerAccess.Context(res, doc, isOpen, CancelIndicator.NullImpl));
@@ -755,16 +724,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	 */
 	public ResourceTaskManager getResourceTaskManager() {
 		return resourceTaskManager;
-	}
-
-	/*
-	 * Review feedback: Only used from a single test method. Get rid of this.
-	 */
-	/**
-	 * Getter
-	 */
-	public ConcurrentIndex getConcurrentIndex() {
-		return fullIndex;
 	}
 
 	/**
