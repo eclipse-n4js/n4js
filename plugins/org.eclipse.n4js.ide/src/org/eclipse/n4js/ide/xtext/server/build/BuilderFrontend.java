@@ -27,8 +27,6 @@ import org.eclipse.n4js.ide.xtext.server.build.XBuildManager.XBuildable;
 import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.util.CancelIndicator;
-import org.eclipse.xtext.workspace.IProjectConfig;
-import org.eclipse.xtext.workspace.ISourceFolder;
 
 import com.google.common.base.Stopwatch;
 import com.google.inject.Inject;
@@ -38,7 +36,6 @@ import com.google.inject.Singleton;
  * Facade for all builder-related functionality in the LSP server. From outside the builder-related classes, all use of
  * the LSP builder should go through this class.
  */
-@SuppressWarnings({ "javadoc", "restriction" })
 @Singleton
 public class BuilderFrontend {
 
@@ -59,6 +56,9 @@ public class BuilderFrontend {
 	@Inject
 	private XBuildManager buildManager;
 
+	/**
+	 * Returns the base directory of the workspace.
+	 */
 	public URI getBaseDir() {
 		return workspaceManager.getBaseDir();
 	}
@@ -86,26 +86,27 @@ public class BuilderFrontend {
 	 *            the location
 	 */
 	public void initialize(URI newBaseDir) {
-		/*
-		 * Review feedback:
-		 *
-		 * We trigger a build after a #reinit but not on #init. There seems to be potential for more symmetry
-		 */
 		workspaceManager.initialize(newBaseDir);
 	}
 
-	/*
-	 * Review feedback:
-	 *
-	 * Why is the provided cancelIndicator ignored here and in the methods below?
+	/**
+	 * Trigger an initial build in the background.
 	 */
 	public void initialBuild() {
 		queuedExecutorService.submitAndCancelPrevious(XBuildManager.class, "initialized",
-				cancelIndicator -> doInitialBuild());
-
+				cancelIndicator -> {
+					doInitialBuild(cancelIndicator);
+					return null;
+				});
 	}
 
-	protected Void doInitialBuild() {
+	/**
+	 * Perform the initial build.
+	 *
+	 * @param ci
+	 *            the cancel indicator.
+	 */
+	protected void doInitialBuild(CancelIndicator ci) {
 		Stopwatch sw = Stopwatch.createStarted();
 		try {
 			LOG.info("Start initial build ...");
@@ -116,9 +117,11 @@ public class BuilderFrontend {
 		} finally {
 			LOG.info("Initial build done after " + sw);
 		}
-		return null;
 	}
 
+	/**
+	 * Trigger a clean build in the background.
+	 */
 	public CompletableFuture<Void> clean() {
 		return queuedExecutorService.submitAndCancelPrevious(XBuildManager.class, "clean", cancelIndicator -> {
 			buildManager.clean(CancelIndicator.NullImpl);
@@ -138,23 +141,19 @@ public class BuilderFrontend {
 				});
 	}
 
+	/**
+	 * Trigger an incremental build in the background.
+	 */
 	public void didSave(DidSaveTextDocumentParams params) {
 		runBuildable("didSave", () -> toBuildable(params));
 	}
 
+	/**
+	 * Trigger an incremental build in the background.
+	 */
 	public void didChangeWatchedFiles(DidChangeWatchedFilesParams params) {
-		/*
-		 * Review feedback:
-		 *
-		 * I don't think the comment is correct anymore (it probably never was correct).
-		 *
-		 * If I understand it correctly, the we received a delta from the client and we are triggering a build for that
-		 * delta. Nothing to worry about wrt to watched folders and the like.
-		 */
-		// TODO: Set watched files to client. Note: Client may have performance issues with lots of folders to watch.
-
-		final List<URI> dirtyFiles = new ArrayList<>();
-		final List<URI> deletedFiles = new ArrayList<>();
+		List<URI> dirtyFiles = new ArrayList<>();
+		List<URI> deletedFiles = new ArrayList<>();
 		for (FileEvent fileEvent : params.getChanges()) {
 			URI uri = uriExtensions.toUri(fileEvent.getUri());
 
@@ -198,14 +197,12 @@ public class BuilderFrontend {
 		});
 	}
 
+	/**
+	 * Initiate an orderly shutdown.
+	 */
 	public CompletableFuture<Void> shutdown() {
 		return runBuildable("shutdown", () -> {
 			return (cancelIndicator) -> {
-				/*
-				 * Review feedback:
-				 *
-				 * Should we also wait for currently scheduled tasks? Should we cancel all scheduled tasks?
-				 */
 				joinPersister();
 				return null;
 			};
@@ -216,6 +213,9 @@ public class BuilderFrontend {
 		});
 	}
 
+	/**
+	 * Block until all submitted background work is done.
+	 */
 	public void join() {
 		queuedExecutorService.join();
 		joinPersister();
@@ -225,20 +225,11 @@ public class BuilderFrontend {
 		persister.pendingWrites().join();
 	}
 
+	/**
+	 * Answer true, if the uri is from a source folder in the current workspace.
+	 */
 	protected boolean isSourceFile(URI uri) {
-		/*
-		 * Review feedback:
-		 *
-		 * Shift this into the workspace manager such that we don't need access to the config from here.
-		 */
-		IProjectConfig projectConfig = workspaceManager.getWorkspaceConfig().findProjectContaining(uri);
-		if (projectConfig != null) {
-			ISourceFolder sourceFolder = projectConfig.findSourceFolderContaining(uri);
-			if (sourceFolder != null) {
-				return true;
-			}
-		}
-		return false;
+		return workspaceManager.isSourceFile(uri);
 	}
 
 	/**

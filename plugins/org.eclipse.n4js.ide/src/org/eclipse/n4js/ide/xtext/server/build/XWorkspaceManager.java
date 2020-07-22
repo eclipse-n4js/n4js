@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.jsonrpc.ResponseErrorException;
@@ -20,12 +21,14 @@ import org.eclipse.lsp4j.jsonrpc.messages.ResponseError;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
 import org.eclipse.n4js.ide.xtext.server.XIProjectDescriptionFactory;
 import org.eclipse.n4js.ide.xtext.server.XIWorkspaceConfigFactory;
+import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
 import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
 import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.workspace.IProjectConfig;
+import org.eclipse.xtext.workspace.ISourceFolder;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -119,9 +122,38 @@ public class XWorkspaceManager {
 
 		// init projects
 		this.workspaceConfig = workspaceConfig;
-		for (XIProjectConfig projectConfig : getWorkspaceConfig().getProjects()) {
+		for (XIProjectConfig projectConfig : getProjectConfigs()) {
 			addProject(projectConfig);
 		}
+	}
+
+	/**
+	 * Return the project configurations.
+	 */
+	public Set<? extends XIProjectConfig> getProjectConfigs() {
+		return getWorkspaceConfig().getProjects();
+	}
+
+	/**
+	 * Updates the workspace according the the updated information in the file with the given URI.
+	 */
+	public WorkspaceChanges update(URI changedFile) {
+		return getWorkspaceConfig().update(changedFile,
+				projectName -> getProjectBuilder(projectName).getProjectDescription());
+	}
+
+	/**
+	 * Answers true, if the uri is from a source folder.
+	 */
+	public boolean isSourceFile(URI uri) {
+		IProjectConfig projectConfig = getWorkspaceConfig().findProjectContaining(uri);
+		if (projectConfig != null) {
+			ISourceFolder sourceFolder = projectConfig.findSourceFolderContaining(uri);
+			if (sourceFolder != null) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/** Adds a project to the workspace */

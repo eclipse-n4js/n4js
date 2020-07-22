@@ -146,7 +146,7 @@ public class N4jscCompiler {
 	}
 
 	private void warnIfNoProjectsFound() {
-		Set<? extends IProjectConfig> projects = workspaceManager.getWorkspaceConfig().getProjects();
+		Set<? extends IProjectConfig> projects = workspaceManager.getProjectConfigs();
 		if (projects.isEmpty()) {
 			N4jscConsole.println("No projects found at the given location: " + options.getDirs().get(0));
 		}
@@ -154,7 +154,7 @@ public class N4jscCompiler {
 
 	private void verbosePrintAllProjects() {
 		if (options.isVerbose()) {
-			Set<? extends IProjectConfig> projects = workspaceManager.getWorkspaceConfig().getProjects();
+			Set<? extends IProjectConfig> projects = workspaceManager.getProjectConfigs();
 			int maxPrjNameLength = projects.stream()
 					.filter(p -> p.getName() != null)
 					.mapToInt(p -> p.getName().length())

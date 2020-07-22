@@ -128,8 +128,7 @@ public class XBuildManager {
 	/** Mark the given document as saved. */
 	public XBuildManager.XBuildable didSave(URI uri) {
 		WorkspaceChanges notifiedChanges = WorkspaceChanges.createUrisChanged(ImmutableList.of(uri));
-		WorkspaceChanges workspaceChanges = workspaceManager.getWorkspaceConfig().update(uri,
-				projectName -> workspaceManager.getProjectBuilder(projectName).getProjectDescription());
+		WorkspaceChanges workspaceChanges = workspaceManager.update(uri);
 
 		Iterable<IProjectConfigSnapshot> projectsWithChangedDeps = IterableExtensions.map(
 				workspaceChanges.getProjectsWithChangedDependencies(),
