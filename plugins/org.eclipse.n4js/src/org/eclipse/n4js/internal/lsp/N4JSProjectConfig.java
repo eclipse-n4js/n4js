@@ -10,9 +10,6 @@
  */
 package org.eclipse.n4js.internal.lsp;
 
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -249,8 +246,10 @@ public class N4JSProjectConfig implements XIProjectConfig {
 			updateProjectDescription(projectDescriptionToUpdate);
 		}
 
-		return new WorkspaceChanges(dependencyChanged, emptyList(), emptyList(), emptyList(), removedSourceFolders,
-				addedSourceFolders, emptyList(), emptyList(), dependencyChanged ? singletonList(this) : emptyList());
+		return new WorkspaceChanges(dependencyChanged, ImmutableList.of(), ImmutableList.of(), ImmutableList.of(),
+				ImmutableList.copyOf(removedSourceFolders),
+				ImmutableList.copyOf(addedSourceFolders), ImmutableList.of(), ImmutableList.of(),
+				dependencyChanged ? ImmutableList.of(this) : ImmutableList.of());
 	}
 
 	/** Bring the given project description up-to-date with the receiving project configuration's internal state. */

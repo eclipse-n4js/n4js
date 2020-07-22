@@ -131,8 +131,7 @@ public class XBuildManager {
 				XIProjectConfig::toSnapshot);
 		fullIndex.setProjectConfigSnapshots(projectsWithChangedDeps);
 
-		workspaceChanges.merge(notifiedChanges);
-		return getIncrementalGenerateBuildable(workspaceChanges);
+		return getIncrementalGenerateBuildable(workspaceChanges.merge(notifiedChanges));
 	}
 
 	/**
