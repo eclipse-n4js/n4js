@@ -20,10 +20,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.ResourceLocator;
-import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIssueRegistry;
 import org.eclipse.n4js.xtext.workspace.IWorkspaceConfigSnapshot;
@@ -65,8 +63,8 @@ public class ResourceTaskContext {
 	/*
 	 * Review feedback:
 	 *
-	 * It *appears* as if we are duplicating quite some logic in this class. The builder frontend is responsible for
-	 * updating resources after changes happened. We a implementing a different incremental build semantics in
+	 * It *appears* as if we are duplicating quite some logic in this class. The builder front-end is responsible for
+	 * updating resources after changes happened. We are implementing a different incremental build semantics in
 	 * refreshContext with fewer optimizations and therefore a performance drag.
 	 *
 	 * The logic, how a given resource set is updated after an incoming change is recorded, should certainly be
@@ -74,6 +72,8 @@ public class ResourceTaskContext {
 	 *
 	 * For xtext.ui, we made the mistake of duplicating this between the Eclipse builder and the reconciler, and this
 	 * was a constant PITA.
+	 *
+	 * #prepareRefresh is sort-of a brute force approach that has potential for optimizations.
 	 */
 
 	@Inject
@@ -266,15 +266,26 @@ public class ResourceTaskContext {
 
 	/** Same as {@link #refreshContext(int, Iterable, CancelIndicator)}, but without changing the source text. */
 	public void refreshContext(CancelIndicator cancelIndicator) {
-		/*
-		 * Review feedback:
-		 *
-		 * XtextResource.relink is likely faster for cases, where the text didn't change.
-		 *
-		 */
-		// TODO IDE-3402 find better solution for updating unchanged resource task contexts!
-		TextDocumentContentChangeEvent dummyChange = new TextDocumentContentChangeEvent(document.getContents());
-		refreshContext(document.getVersion(), Collections.singletonList(dummyChange), cancelIndicator);
+		prepareRefresh();
+
+		mainResource.relink();
+
+		resolveAndValidateResource(cancelIndicator);
+	}
+
+	/**
+	 * Removes all the other resources from the resource set.
+	 */
+	private void prepareRefresh() {
+		if (mainResource == null) {
+			throw new IllegalStateException("trying to refresh a resource that was not yet initialized: " + mainURI);
+		}
+		if (!mainResource.isLoaded()) {
+			throw new IllegalStateException("trying to refresh a resource that is not yet loaded: " + mainURI);
+		}
+
+		ResourceSet resSet = getResourceSet();
+		resSet.getResources().removeIf(res -> res != mainResource);
 	}
 
 	/**
@@ -284,38 +295,13 @@ public class ResourceTaskContext {
 	public void refreshContext(@SuppressWarnings("unused") int version,
 			Iterable<? extends TextDocumentContentChangeEvent> changes, CancelIndicator cancelIndicator) {
 
-		if (mainResource == null) {
-			throw new IllegalStateException("trying to refresh a resource that was not yet initialized: " + mainURI);
-		}
-		if (!mainResource.isLoaded()) {
-			throw new IllegalStateException("trying to refresh a resource that is not yet loaded: " + mainURI);
-		}
+		prepareRefresh();
 
-		ResourceSet resSet = getResourceSet();
-		for (Resource res : new ArrayList<>(resSet.getResources())) {
-			if (res != mainResource) {
-				/*
-				 * Review feedback:
-				 *
-				 * Better use XtextResource.relink since unload will install "normal" EMF proxies rather than lazy
-				 * linking proxies.
-				 *
-				 * Also this must follow the isAffected semantics - not all resources need to be proxified.
-				 */
-				res.unload(); // TODO IDE-3402 better way to do this? (unload is expensive due to re-proxyfication)
-				resSet.getResources().remove(res);
-			}
-		}
-
-		for (TextDocumentContentChangeEvent change : changes) {
-			Range range = change.getRange();
-			int start = range != null ? document.getOffSet(range.getStart()) : 0;
-			int end = range != null ? document.getOffSet(range.getEnd()) : document.getContents().length();
-			String replacement = change.getText();
-
-			document = document.applyTextDocumentChanges(Collections.singletonList(change));
-
-			mainResource.update(start, end - start, replacement);
+		document = document.applyTextDocumentChanges(changes);
+		try {
+			mainResource.reparse(document.getContents());
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
 
 		resolveAndValidateResource(cancelIndicator);
