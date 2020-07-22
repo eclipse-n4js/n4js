@@ -684,6 +684,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 					 * Review feedback:
 					 *
 					 * Why not org.eclipse.n4js.ide.xtext.server.ResourceTaskContext.getDocument() ?
+					 *
+					 * It is possible that uri != currOFC.mainResource.URI -> for these cases, it is necessary to create
+					 * a new document.
 					 */
 					boolean isOpen = resourceTaskManager.isOpen(uri);
 					T result = function.apply(

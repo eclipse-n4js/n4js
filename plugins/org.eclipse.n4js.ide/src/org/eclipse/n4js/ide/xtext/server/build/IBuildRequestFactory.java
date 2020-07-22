@@ -8,13 +8,12 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.xtext.server;
+package org.eclipse.n4js.ide.xtext.server.build;
 
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest;
 import org.eclipse.xtext.resource.IResourceDescription;
 
 /**
@@ -22,9 +21,6 @@ import org.eclipse.xtext.resource.IResourceDescription;
  */
 public interface IBuildRequestFactory {
 
-	/*
-	 * Review feedback: This should be moved to server.build I suppose.
-	 */
 	/**
 	 * Create the build request for the given sets of files and deltas.
 	 *
@@ -38,7 +34,10 @@ public interface IBuildRequestFactory {
 	 *            set of external deltas
 	 * @return the build request used during the build process.
 	 */
-	XBuildRequest getBuildRequest(String projectName, Set<URI> changedFiles, Set<URI> deletedFiles,
+	XBuildRequest getBuildRequest(
+			String projectName,
+			Set<URI> changedFiles,
+			Set<URI> deletedFiles,
 			List<IResourceDescription.Delta> externalDeltas);
 
 }
