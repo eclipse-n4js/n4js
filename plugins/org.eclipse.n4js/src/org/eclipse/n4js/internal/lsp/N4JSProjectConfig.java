@@ -31,7 +31,6 @@ import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.projectModel.lsp.IN4JSSourceFolder;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
-import org.eclipse.n4js.xtext.workspace.IProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
@@ -273,7 +272,7 @@ public class N4JSProjectConfig implements XIProjectConfig {
 	}
 
 	@Override
-	public IProjectConfigSnapshot toSnapshot() {
+	public ProjectConfigSnapshot toSnapshot() {
 		return new ProjectConfigSnapshot(this);
 	}
 }

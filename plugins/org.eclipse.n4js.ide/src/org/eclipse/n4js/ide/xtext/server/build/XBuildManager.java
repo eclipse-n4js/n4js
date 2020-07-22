@@ -24,7 +24,7 @@ import org.eclipse.n4js.ide.server.LspLogger;
 import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo;
 import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo.ProjectBuildOrderIterator;
 import org.eclipse.n4js.ide.xtext.server.build.ParallelBuildManager.ParallelJob;
-import org.eclipse.n4js.xtext.workspace.IProjectConfigSnapshot;
+import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -126,7 +126,7 @@ public class XBuildManager {
 		WorkspaceChanges notifiedChanges = WorkspaceChanges.createUrisChanged(ImmutableList.of(uri));
 		WorkspaceChanges workspaceChanges = workspaceManager.update(uri);
 
-		Iterable<IProjectConfigSnapshot> projectsWithChangedDeps = IterableExtensions.map(
+		Iterable<ProjectConfigSnapshot> projectsWithChangedDeps = IterableExtensions.map(
 				workspaceChanges.getProjectsWithChangedDependencies(),
 				XIProjectConfig::toSnapshot);
 		fullIndex.setProjectConfigSnapshots(projectsWithChangedDeps);

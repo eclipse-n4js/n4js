@@ -24,7 +24,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.ResourceLocator;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIssueRegistry;
-import org.eclipse.n4js.xtext.workspace.IWorkspaceConfigSnapshot;
+import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
@@ -114,7 +114,7 @@ public class ResourceTaskContext {
 	protected ImmutableSetMultimap<String, URI> project2BuiltURIs;
 
 	/** Most recent workspace configuration. */
-	protected IWorkspaceConfigSnapshot workspaceConfig;
+	protected WorkspaceConfigSnapshot workspaceConfig;
 
 	/** The resource set used for the current resource and any other resources required for resolution. */
 	protected XtextResourceSet mainResourceSet;
@@ -208,7 +208,7 @@ public class ResourceTaskContext {
 	@SuppressWarnings("hiding")
 	public synchronized void initialize(ResourceTaskManager parent, URI uri, boolean isTemporary,
 			ResourceDescriptionsData index, ImmutableSetMultimap<String, URI> project2builtURIs,
-			IWorkspaceConfigSnapshot workspaceConfig) {
+			WorkspaceConfigSnapshot workspaceConfig) {
 
 		this.parent = parent;
 		this.mainURI = uri;
@@ -381,13 +381,13 @@ public class ResourceTaskContext {
 	 */
 	protected void onPersistedStateChanged(Collection<? extends IResourceDescription> changedDescs,
 			Set<URI> removedURIs, ImmutableSetMultimap<String, URI> newProject2builtURIs,
-			IWorkspaceConfigSnapshot newWorkspaceConfig, CancelIndicator cancelIndicator) {
+			WorkspaceConfigSnapshot newWorkspaceConfig, CancelIndicator cancelIndicator) {
 		updateIndex(changedDescs, removedURIs, newProject2builtURIs, newWorkspaceConfig, cancelIndicator);
 	}
 
 	/** Update this context's internal index and trigger a refresh if required. */
 	protected void updateIndex(Collection<? extends IResourceDescription> changedDescs, Set<URI> removedURIs,
-			ImmutableSetMultimap<String, URI> newProject2builtURIs, IWorkspaceConfigSnapshot newWorkspaceConfig,
+			ImmutableSetMultimap<String, URI> newProject2builtURIs, WorkspaceConfigSnapshot newWorkspaceConfig,
 			CancelIndicator cancelIndicator) {
 
 		// update my cached state
@@ -399,7 +399,7 @@ public class ResourceTaskContext {
 
 		project2BuiltURIs = newProject2builtURIs;
 
-		IWorkspaceConfigSnapshot oldWorkspaceConfig = workspaceConfig;
+		WorkspaceConfigSnapshot oldWorkspaceConfig = workspaceConfig;
 		workspaceConfig = newWorkspaceConfig;
 
 		// refresh if I am affected by the changes

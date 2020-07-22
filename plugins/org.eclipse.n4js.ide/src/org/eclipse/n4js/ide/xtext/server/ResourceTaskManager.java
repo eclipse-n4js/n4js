@@ -30,8 +30,8 @@ import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.n4js.ide.xtext.server.build.BuilderFrontend;
 import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIssueRegistry;
 import org.eclipse.n4js.ide.xtext.server.util.CancelIndicatorUtil;
-import org.eclipse.n4js.xtext.workspace.IProjectConfigSnapshot;
-import org.eclipse.n4js.xtext.workspace.IWorkspaceConfigSnapshot;
+import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
+import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.findReferences.IReferenceFinder;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
@@ -90,7 +90,7 @@ public class ResourceTaskManager implements IReferenceFinder.IResourceAccess {
 	protected ImmutableSetMultimap<String, URI> project2BuiltURIsImmutable = ImmutableSetMultimap
 			.copyOf(project2BuiltURIs);
 	/** Most recent workspace configuration. */
-	protected IWorkspaceConfigSnapshot workspaceConfig = null;
+	protected WorkspaceConfigSnapshot workspaceConfig = null;
 
 	/***/
 	protected final List<IResourceTaskListener> listeners = new CopyOnWriteArrayList<>();
@@ -332,12 +332,12 @@ public class ResourceTaskManager implements IReferenceFinder.IResourceAccess {
 	 * the {@link BuilderFrontend builder} has rebuilt some files.
 	 */
 	public synchronized void updatePersistedState(
-			IWorkspaceConfigSnapshot newWorkspaceConfig,
+			WorkspaceConfigSnapshot newWorkspaceConfig,
 			Map<String, ? extends ResourceDescriptionsData> changedDescriptions,
-			@SuppressWarnings("unused") List<? extends IProjectConfigSnapshot> changedProjects,
+			@SuppressWarnings("unused") List<? extends ProjectConfigSnapshot> changedProjects,
 			Set<String> removedProjects) {
 
-		IWorkspaceConfigSnapshot oldWC = workspaceConfig;
+		WorkspaceConfigSnapshot oldWC = workspaceConfig;
 
 		// compute "flat" modification info (not per project but on a global URI->description basis)
 		List<IResourceDescription> changed = new ArrayList<>();
@@ -379,7 +379,7 @@ public class ResourceTaskManager implements IReferenceFinder.IResourceAccess {
 			return;
 		}
 		ImmutableSetMultimap<String, URI> capturedProject2BuiltURIsImmutable = project2BuiltURIsImmutable;
-		IWorkspaceConfigSnapshot capturedWorkspaceConfig = workspaceConfig;
+		WorkspaceConfigSnapshot capturedWorkspaceConfig = workspaceConfig;
 		for (URI currURI : uri2RTCs.keySet()) {
 			runInExistingContextVoid(currURI, "updatePersistedState of existing context", (rtc, ci) -> {
 				rtc.onPersistedStateChanged(changed, removed,
@@ -402,7 +402,7 @@ public class ResourceTaskManager implements IReferenceFinder.IResourceAccess {
 		}
 		// update dirty state instance in each resource task context (except the one that caused the change)
 		ImmutableSetMultimap<String, URI> capturedProject2BuiltURIsImmutable = project2BuiltURIsImmutable;
-		IWorkspaceConfigSnapshot capturedWorkspaceConfig = workspaceConfig;
+		WorkspaceConfigSnapshot capturedWorkspaceConfig = workspaceConfig;
 		IResourceDescription replacementDesc = newDesc == null ? persistedIndex.getResourceDescription(uri) : null;
 		for (URI currURI : uri2RTCs.keySet()) {
 			if (currURI.equals(uri)) {

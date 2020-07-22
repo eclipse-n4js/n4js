@@ -14,10 +14,10 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.xtext.workspace.ISourceFolder;
 
 /**
- * Default implementation of an {@link ISourceFolderSnapshot}.
+ * Immutable equivalent to an {@link ISourceFolder}.
  */
 @SuppressWarnings("restriction")
-public class SourceFolderSnapshot implements ISourceFolderSnapshot {
+public class SourceFolderSnapshot {
 
 	private final String name;
 	private final URI path;
@@ -33,12 +33,16 @@ public class SourceFolderSnapshot implements ISourceFolderSnapshot {
 		this.path = path;
 	}
 
-	@Override
+	/**
+	 * Return the name of the source folder.
+	 */
 	public String getName() {
 		return name;
 	}
 
-	@Override
+	/**
+	 * Return the path of the source folder.
+	 */
 	public URI getPath() {
 		return path;
 	}

@@ -71,8 +71,8 @@ import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIssueRegistry.IIssueReg
 import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIssueRegistry.IssueRegistryChangeEvent;
 import org.eclipse.n4js.ide.xtext.server.contentassist.XContentAssistService;
 import org.eclipse.n4js.ide.xtext.server.rename.XIRenameService;
-import org.eclipse.n4js.xtext.workspace.IProjectConfigSnapshot;
-import org.eclipse.n4js.xtext.workspace.IWorkspaceConfigSnapshot;
+import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
+import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.ide.server.codeActions.ICodeActionService;
@@ -222,7 +222,8 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 		}
 		XtextResource res = rtc.getResource();
 		XDocument doc = rtc.getDocument();
-		return Either.forLeft(documentSymbolService.getDefinitions(doc, res, params, resourceTaskManager, cancelIndicator));
+		return Either
+				.forLeft(documentSymbolService.getDefinitions(doc, res, params, resourceTaskManager, cancelIndicator));
 	}
 
 	@Override
@@ -664,9 +665,9 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 
 	@Override
 	public void onIndexChanged(
-			IWorkspaceConfigSnapshot newWorkspaceConfig,
+			WorkspaceConfigSnapshot newWorkspaceConfig,
 			Map<String, ? extends ResourceDescriptionsData> changedDescriptions,
-			List<? extends IProjectConfigSnapshot> changedProjects,
+			List<? extends ProjectConfigSnapshot> changedProjects,
 			Set<String> removedProjects) {
 
 		resourceTaskManager.updatePersistedState(newWorkspaceConfig, changedDescriptions, changedProjects,
