@@ -83,20 +83,6 @@ import com.google.inject.Singleton;
 @Singleton
 public class LanguageServerFrontend implements TextDocumentService, WorkspaceService {
 
-	/*
-	 * Review feedback:
-	 *
-	 * Some of the code from the XLanguageServerImpl should be moved into the LanguageServerFrontend. After having done
-	 * that, we'll likely see that:
-	 *
-	 * - The XLanguageServer will forward most of the requests 1:1 to the LanguageServerFrontend
-	 *
-	 * - The LanguageServerFrontend will forward most of the request 1:1 to the BuilderFrontend, the
-	 * TextDocumentFrontend or the WorkspaceFrontend.
-	 *
-	 * The question is warranted, why the LanguageServerFrontend was introduced in the first place.
-	 */
-
 	@Inject
 	private BuilderFrontend builderFrontend;
 

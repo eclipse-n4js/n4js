@@ -222,8 +222,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 		}
 		XtextResource res = rtc.getResource();
 		XDocument doc = rtc.getDocument();
-		return Either
-				.forLeft(documentSymbolService.getDefinitions(doc, res, params, resourceTaskManager, cancelIndicator));
+		return Either.forLeft(documentSymbolService.getDefinitions(doc, res, params, resourceTaskManager, cancelIndicator));
 	}
 
 	@Override
