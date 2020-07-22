@@ -156,7 +156,9 @@ public class XStatefulIncrementalBuilder {
 					// TODO GH-1793 remove this temporary solution
 					// instead, a partial XBuildResult should be returned
 					if (operationCanceledManager.isOperationCanceledException(th)) {
-						throw new BuildCanceledException(urisToBeBuilt, th);
+						if (th instanceof Error)
+							throw new BuildCanceledException(urisToBeBuilt, (Error) th);
+						throw new BuildCanceledException(urisToBeBuilt, (RuntimeException) th);
 					}
 					throw th;
 				}
