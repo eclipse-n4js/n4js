@@ -145,11 +145,6 @@ public class ProjectStateManager {
 			setValidationIssues(projectState.validationIssues);
 		}
 
-		/*
-		 * Review feedback:
-		 *
-		 * This should probably be handled by the builder itself? Should we return WorkspaceChanges instead?
-		 */
 		Set<URI> allIndexedUris = getIndex().getAllURIs();
 		for (ISourceFolder srcFolder : projectConfig.getSourceFolders()) {
 			List<URI> allSourceFolderUris = srcFolder.getAllResources(fileSystemScanner);
