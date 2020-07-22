@@ -57,11 +57,11 @@ public class ConcurrentIndex {
 	 */
 
 	/** Map of all project indices. */
-	protected final Map<String, ResourceDescriptionsData> project2Index = new HashMap<>();
+	private final Map<String, ResourceDescriptionsData> project2Index = new HashMap<>();
 	/** A snapshot of the current workspace configuration. */
-	protected IWorkspaceConfigSnapshot workspaceConfig = null;
+	private IWorkspaceConfigSnapshot workspaceConfig = null;
 	/** Registered listeners. */
-	protected final List<IIndexListener> listeners = new CopyOnWriteArrayList<>();
+	private final List<IIndexListener> listeners = new CopyOnWriteArrayList<>();
 
 	/** Listens for changes in a {@link ConcurrentIndex}. */
 	public interface IIndexListener {
