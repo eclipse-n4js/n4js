@@ -84,11 +84,11 @@
         "title": "N4JS: Print Debug Information"
       },
       {
-        "command": "n4js.debug.setVerboseLevel2Error",
+        "command": "n4js.debug.setLogLevel2Error",
         "title": "N4JS: Log Level: Error"
       },
       {
-        "command": "n4js.debug.setVerboseLevel2Info",
+        "command": "n4js.debug.setLogLevel2Info",
         "title": "N4JS: Log Level: Info"
       }
     ],

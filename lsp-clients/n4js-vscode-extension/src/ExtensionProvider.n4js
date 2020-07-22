@@ -105,14 +105,14 @@ export function getActivate(vscode: any+, vscodeLC: any+): any {
             };
             context.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider('n4scheme', textDocumentContentProvider));
             
-            const setVerboseLevelRT = new vscodeLC.RequestType('debug/setVerboseLevel');
-            const setVerboseLevel2ErrorCommand = 'n4js.debug.setVerboseLevel2Error';
-            const setVerboseLevel2ErrorHandler = () => lc.sendRequest(setVerboseLevelRT,  "ERROR"  );
-            context.subscriptions.push(vscode.commands.registerCommand(setVerboseLevel2ErrorCommand, setVerboseLevel2ErrorHandler));
+            const setLogLevelRT = new vscodeLC.RequestType('debug/setLogLevel');
+            const setLogLevel2ErrorCommand = 'n4js.debug.setLogLevel2Error';
+            const setLogLevel2ErrorHandler = () => lc.sendRequest(setLogLevelRT,  "ERROR"  );
+            context.subscriptions.push(vscode.commands.registerCommand(setLogLevel2ErrorCommand, setLogLevel2ErrorHandler));
 
-            const setVerboseLevel2InfoCommand = 'n4js.debug.setVerboseLevel2Info';
-            const setVerboseLevel2InfoHandler = () => lc.sendRequest(setVerboseLevelRT, "INFO" );
-            context.subscriptions.push(vscode.commands.registerCommand(setVerboseLevel2InfoCommand, setVerboseLevel2InfoHandler));
+            const setLogLevel2InfoCommand = 'n4js.debug.setLogLevel2Info';
+            const setLogLevel2InfoHandler = () => lc.sendRequest(setLogLevelRT, "INFO" );
+            context.subscriptions.push(vscode.commands.registerCommand(setLogLevel2InfoCommand, setLogLevel2InfoHandler));
 
             const printDebugInfoRT = new vscodeLC.RequestType('debug/printDebugInfo');
             const printDebugInfoCommand = 'n4js.debug.printDebugInfo';
