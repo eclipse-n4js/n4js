@@ -13,10 +13,8 @@ package org.eclipse.n4js.ide.tests.builder
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
-import java.nio.file.StandardOpenOption
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.ide.tests.server.TestWorkspaceManager
-import org.eclipse.n4js.utils.io.FileDeleter
 import org.junit.Test
 
 /**
@@ -51,15 +49,7 @@ class BuilderYarnWorkspaceTest extends AbstractIncrementalBuilderTest {
 			]
 		);
 
-		val rootFolder = getRoot().toPath;
-		val tempFolder = createTempDir();
-
-		val otherProjectFolderOld = getProjectRoot(otherProjectName).toPath;
-		val otherProjectFolderNew = tempFolder.resolve(otherProjectName);
-		Files.move(otherProjectFolderOld, otherProjectFolderNew);
-
-		val nodeModulesFolder = rootFolder.resolve(TestWorkspaceManager.YARN_TEST_PROJECT).resolve(N4JSGlobals.NODE_MODULES);
-		Files.createSymbolicLink(nodeModulesFolder.resolve(otherProjectName), otherProjectFolderNew);
+		moveProjectToTempDirAndLinkInNodeModules(otherProjectName);
 
 		startAndWaitForLspServer();
 		assertNoIssues();
@@ -72,11 +62,34 @@ class BuilderYarnWorkspaceTest extends AbstractIncrementalBuilderTest {
 		testWorkspaceManager.createTestOnDisk(
 			TestWorkspaceManager.NODE_MODULES + "n4js-runtime" -> null,
 			otherProjectName -> #[
-				TestWorkspaceManager.DEPENDENCIES -> "n4js-runtime"
+				"folder/Other" -> '''
+					export public class Other {
+						public m() {}
+					}
+				''',
+				TestWorkspaceManager.PACKAGE_JSON -> '''
+					{
+						"name": "«otherProjectName»",
+						"version": "0.0.1",
+						"dependencies": {
+							"n4js-runtime": "*"
+						},
+						"n4js": {
+							"projectType": "library",
+							"mainModule": "src/folder/Other",
+							"vendorId": "org.eclipse.n4js",
+							"sources": {
+								"source": [
+									"."
+								]
+							}
+						}
+					}
+				'''
 			],
 			"MainProject" -> #[
 				"Main1" -> '''
-					import {Other} from "folder/Other";
+					import {Other} from "src/folder/Other";
 					new Other().m();
 				''',
 				"Main2" -> '''
@@ -90,49 +103,22 @@ class BuilderYarnWorkspaceTest extends AbstractIncrementalBuilderTest {
 			]
 		);
 
-		val rootFolder = getRoot().toPath;
-		val tempFolder = createTempDir();
-
-		val otherProjectFolderOld = getProjectRoot(otherProjectName).toPath;
-		FileDeleter.delete(otherProjectFolderOld);
-
-		val otherProjectFolderNew = createProjectWithRootSourceFolder(tempFolder, otherProjectName);
-
-		val nodeModulesFolder = rootFolder.resolve(TestWorkspaceManager.YARN_TEST_PROJECT).resolve(N4JSGlobals.NODE_MODULES);
-		Files.createSymbolicLink(nodeModulesFolder.resolve(otherProjectName), otherProjectFolderNew);
+		moveProjectToTempDirAndLinkInNodeModules(otherProjectName);
 
 		startAndWaitForLspServer();
 		assertNoIssues();
 	}
 
-	def private static Path createProjectWithRootSourceFolder(Path location, String projectName) throws IOException {
-		val projectFolder = location.resolve(projectName);
-		Files.createDirectories(projectFolder.resolve("folder"));
-		Files.writeString(projectFolder.resolve("folder").resolve("Other.n4js"), '''
-			export public class Other {
-				public m() {}
-			}
-		''', StandardOpenOption.CREATE_NEW);
-		Files.writeString(projectFolder.resolve(N4JSGlobals.PACKAGE_JSON), '''
-			{
-				"name": "«projectName»",
-				"version": "0.0.1",
-				"dependencies": {
-					"n4js-runtime": "*"
-				},
-				"n4js": {
-					"projectType": "library",
-					"mainModule": "folder/Other",
-					"vendorId": "org.eclipse.n4js",
-					"sources": {
-						"source": [
-							"."
-						]
-					}
-				}
-			}
-		''', StandardOpenOption.CREATE_NEW);
-		return projectFolder;
+	def private void moveProjectToTempDirAndLinkInNodeModules(String projectName) throws IOException {
+		val rootFolder = getRoot().toPath;
+		val tempFolder = createTempDir();
+
+		val otherProjectFolderOld = getProjectRoot(projectName).toPath;
+		val otherProjectFolderNew = tempFolder.resolve(projectName);
+		Files.move(otherProjectFolderOld, otherProjectFolderNew);
+
+		val nodeModulesFolder = rootFolder.resolve(TestWorkspaceManager.YARN_TEST_PROJECT).resolve(N4JSGlobals.NODE_MODULES);
+		Files.createSymbolicLink(nodeModulesFolder.resolve(projectName), otherProjectFolderNew);
 	}
 
 	def private static Path createTempDir() throws IOException {
