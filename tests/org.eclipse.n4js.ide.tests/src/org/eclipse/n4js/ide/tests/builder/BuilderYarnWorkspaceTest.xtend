@@ -28,23 +28,23 @@ class BuilderYarnWorkspaceTest extends AbstractIncrementalBuilderTest {
 	@Test
 	def void testYarnLinkSimple() throws Exception {
 		val otherProjectName = "OtherProject";
-		
+
 		testWorkspaceManager.createTestOnDisk(
-			"#NODE_MODULES:n4js-runtime" -> null,
+			TestWorkspaceManager.NODE_MODULES + "n4js-runtime" -> null,
 			otherProjectName -> #[
 				"folder/Other" -> '''
 					export public class Other {
 						public m() {}
 					}
 				''',
-				"#DEPENDENCY" -> "n4js-runtime"
+				TestWorkspaceManager.DEPENDENCIES -> "n4js-runtime"
 			],
 			"MainProject" -> #[
 				"Main" -> '''
 					import {Other} from "folder/Other";
 					new Other().m();
 				''',
-				"#DEPENDENCY" -> '''
+				TestWorkspaceManager.DEPENDENCIES -> '''
 					n4js-runtime,
 					OtherProject
 				'''
@@ -68,11 +68,11 @@ class BuilderYarnWorkspaceTest extends AbstractIncrementalBuilderTest {
 	@Test
 	def void testYarnLinkWithRootSourceFolder() throws Exception {
 		val otherProjectName = "OtherProject";
-		
+
 		testWorkspaceManager.createTestOnDisk(
-			"#NODE_MODULES:n4js-runtime" -> null,
+			TestWorkspaceManager.NODE_MODULES + "n4js-runtime" -> null,
 			otherProjectName -> #[
-				"#DEPENDENCY" -> "n4js-runtime"
+				TestWorkspaceManager.DEPENDENCIES -> "n4js-runtime"
 			],
 			"MainProject" -> #[
 				"Main1" -> '''
@@ -83,7 +83,7 @@ class BuilderYarnWorkspaceTest extends AbstractIncrementalBuilderTest {
 					import {Other} from "OtherProject";
 					new Other().m();
 				''',
-				"#DEPENDENCY" -> '''
+				TestWorkspaceManager.DEPENDENCIES -> '''
 					n4js-runtime,
 					OtherProject
 				'''
