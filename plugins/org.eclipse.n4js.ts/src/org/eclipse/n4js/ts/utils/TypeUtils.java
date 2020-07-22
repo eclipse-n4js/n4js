@@ -63,6 +63,7 @@ import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.types.AnyType;
 import org.eclipse.n4js.ts.types.InferenceVariable;
 import org.eclipse.n4js.ts.types.MemberType;
+import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
 import org.eclipse.n4js.ts.types.NullType;
 import org.eclipse.n4js.ts.types.PrimitiveType;
 import org.eclipse.n4js.ts.types.TClass;
@@ -204,6 +205,9 @@ public class TypeUtils {
 		}
 		if (autoCreateTypeArgs) {
 			sanitizeRawTypeRef(ref);
+		}
+		if (declaredType instanceof ModuleNamespaceVirtualType) {
+			ref.setDynamic(((ModuleNamespaceVirtualType) declaredType).isDeclaredDynamic());
 		}
 		return ref;
 	}
