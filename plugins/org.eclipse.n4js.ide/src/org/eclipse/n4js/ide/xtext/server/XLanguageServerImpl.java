@@ -182,8 +182,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	private InitializeResult initializeResult;
 
-	private final CompletableFuture<InitializedParams> clientInitialized = new CompletableFuture<>();
-
 	private LanguageClient client;
 
 	private Map<String, JsonRpcMethod> supportedMethods = null;
@@ -352,7 +350,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	@Override
 	public void initialized(InitializedParams params) {
 		lsFrontend.initialized();
-		clientInitialized.complete(params);
 	}
 
 	@Deprecated
@@ -776,15 +773,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	public LspLogger getLspLogger() {
 		return lspLogger;
 	}
-
-	/** Blocks until the lsp client sent the initialized message */
-	public void joinClientInitialized() {
-		clientInitialized.join();
-	}
-
-	/*
-	 * Review feedback: Move to language server front-end
-	 */
 
 	/** Blocks until all requests of the language server finished */
 	public void joinServerRequests() {
