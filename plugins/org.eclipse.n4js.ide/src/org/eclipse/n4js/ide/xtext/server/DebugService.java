@@ -10,11 +10,9 @@
  */
 package org.eclipse.n4js.ide.xtext.server;
 
-import java.lang.management.LockInfo;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.lang.management.MemoryUsage;
-import java.lang.management.MonitorInfo;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
 import java.util.concurrent.CompletableFuture;
@@ -47,9 +45,9 @@ public interface DebugService {
 	/** Sets the client to communicate to */
 	void connect(LanguageClient client);
 
-	/** Sets the level of verbosity of Log4j. @see {@link LogLevel} */
+	/** Sets the log level of Log4j. @see {@link LogLevel} */
 	@JsonRequest
-	CompletableFuture<Void> setVerboseLevel(String level);
+	CompletableFuture<Void> setLogLevel(String level);
 
 	/** Prints debug information on the output channel */
 	@JsonRequest
@@ -63,7 +61,7 @@ public interface DebugService {
 		}
 
 		@Override
-		public CompletableFuture<Void> setVerboseLevel(String level) {
+		public CompletableFuture<Void> setLogLevel(String level) {
 			return CompletableFuture.failedFuture(new UnsupportedOperationException());
 		}
 
@@ -75,7 +73,7 @@ public interface DebugService {
 
 	/** Default implementation */
 	class DebugServiceDefaultImpl implements DebugService {
-		private static final Logger LOG = LogManager.getLogger(DebugServiceDefaultImpl.class);
+		private final Logger LOG = LogManager.getLogger(DebugServiceDefaultImpl.class);
 
 		@Inject
 		private QueuedExecutorService executerService;
@@ -91,7 +89,7 @@ public interface DebugService {
 		}
 
 		@Override
-		public CompletableFuture<Void> setVerboseLevel(String level) {
+		public CompletableFuture<Void> setLogLevel(String level) {
 			Level actualLevel = Level.toLevel(level.toUpperCase());
 			Logger.getRootLogger().setLevel(actualLevel);
 			LOG.info("log level set to " + Logger.getRootLogger().getLevel());
@@ -108,7 +106,7 @@ public interface DebugService {
 			return CompletableFuture.completedFuture(null);
 		}
 
-		private String getDebugInfo() {
+		protected String getDebugInfo() {
 			String info = "==   DEBUG INFO   ==\n";
 			info += getThreadDump();
 			info += "\n--------------\n";
@@ -121,84 +119,27 @@ public interface DebugService {
 			return info;
 		}
 
-		// copied and modified from org.eclipse.osgi.framework.util.ThreadInfoReport
-		private static String getThreadDump() {
+		protected String getThreadDump() {
 			long currentId = Thread.currentThread().getId();
 			ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
 			StringBuilder dump = new StringBuilder("Thread dump:\n");
-			dump.append("Current ThreadId: ").append(currentId);
+			dump.append("Current ThreadId: ").append(currentId).append("\n");
 
 			ThreadInfo[] infos = threadMXBean.dumpAllThreads(threadMXBean.isObjectMonitorUsageSupported(),
 					threadMXBean.isSynchronizerUsageSupported());
 
 			for (ThreadInfo info : infos) {
-				dumpThreadIDNameState(info, dump);
-				dumpLockInfo(info, dump);
-				dumpStackTrace(info, dump);
+				dump.append(info.toString());
 			}
 			return dump.toString();
 		}
 
-		// copied from org.eclipse.osgi.framework.util.ThreadInfoReport
-		private static void dumpThreadIDNameState(ThreadInfo info, StringBuilder dump) {
-			dump.append('\n').append('\n');
-			dump.append("ThreadId: ").append(info.getThreadId());
-			dump.append(" ThreadName: ").append(info.getThreadName());
-			dump.append(" ThreadState: ").append(info.getThreadState());
-		}
-
-		// copied and modified from org.eclipse.osgi.framework.util.ThreadInfoReport
-		private static void dumpLockInfo(ThreadInfo info, StringBuilder dump) {
-			dump.append('\n');
-			dump.append("  Blocked On: ");
-			LockInfo blockedOn = info.getLockInfo();
-			if (blockedOn == null) {
-				dump.append("none");
-			} else {
-				dump.append(blockedOn.toString());
-				dump.append(" LockOwnerId: ").append(info.getLockOwnerId());
-				dump.append(" LockOwnerName: ").append(info.getLockOwnerName());
-			}
-			dump.append('\n');
-
-			dump.append("  Synchronizers Locked: ");
-			LockInfo[] synchronizers = info.getLockedSynchronizers();
-			if (synchronizers.length == 0) {
-				dump.append("none");
-			} else {
-				for (LockInfo sync : synchronizers) {
-					dump.append('\n');
-					dump.append("    ").append(sync.toString());
-				}
-			}
-			dump.append('\n');
-
-			dump.append("  Monitors Locked: ");
-			MonitorInfo[] monitors = info.getLockedMonitors();
-			if (monitors.length == 0) {
-				dump.append("none");
-			}
-			for (MonitorInfo monitor : monitors) {
-				dump.append('\n');
-				dump.append("    ").append(monitor.toString());
-			}
-			dump.append('\n');
-		}
-
-		// copied from org.eclipse.osgi.framework.util.ThreadInfoReport
-		private static void dumpStackTrace(ThreadInfo info, StringBuilder dump) {
-			dump.append("  Stack Trace: ");
-			for (StackTraceElement e : info.getStackTrace()) {
-				dump.append('\n').append("    ").append(e);
-			}
-		}
-
-		private String getExecuterServiceDump() {
+		protected String getExecuterServiceDump() {
 			String dump = executerService.stringify();
 			return dump;
 		}
 
-		private String getMemoryDump() {
+		protected String getMemoryDump() {
 			MemoryMXBean memoryBean = ManagementFactory.getMemoryMXBean();
 			MemoryUsage memoryUsage = memoryBean.getHeapMemoryUsage();
 			String dump = "Memory Usage:\n";
@@ -206,10 +147,10 @@ public interface DebugService {
 			return dump;
 		}
 
-		private String getWorkspaceConfigDump() {
+		protected String getWorkspaceConfigDump() {
 			IWorkspaceConfigSnapshot workspace = fullIndex.getWorkspaceConfig();
 			String dump = "Workspace Config:\n + ";
-			dump += Strings.join("\n + ", p -> p.getName(), workspace.getProjects());
+			dump += Strings.join("\n + ", p -> p.getName() + " \tat " + p.getPath(), workspace.getProjects());
 			return dump;
 		}
 	}

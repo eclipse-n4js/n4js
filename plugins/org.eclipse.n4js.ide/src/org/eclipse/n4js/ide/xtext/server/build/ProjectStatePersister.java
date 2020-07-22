@@ -134,7 +134,8 @@ public class ProjectStatePersister {
 	}
 
 	/**
-	 * The language version changes iff any of the persisted languages changes the serialization of its persisted state.
+	 * The language version changes (i.e. must change) iff any of the persisted languages changes the serialization of
+	 * its persisted state.
 	 *
 	 * @return the version string to distinguish persisted files with different serialization
 	 */

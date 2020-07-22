@@ -714,8 +714,8 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	};
 
 	@Override
-	public CompletableFuture<Void> setVerboseLevel(String level) {
-		return debugService.setVerboseLevel(level);
+	public CompletableFuture<Void> setLogLevel(String level) {
+		return debugService.setLogLevel(level);
 	}
 
 	@Override
