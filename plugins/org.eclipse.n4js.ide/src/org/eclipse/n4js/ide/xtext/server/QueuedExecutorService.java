@@ -315,7 +315,7 @@ public class QueuedExecutorService {
 		StringBuilder sb = new StringBuilder();
 		Multimap<Object, QueuedTask<?>> activeQueue = HashMultimap.create();
 		Multimap<Object, QueuedTask<?>> inactiveQueue = HashMultimap.create();
-		for (Map.Entry<Object, QueuedTask<?>> entry : runningTasks.entrySet()) {
+		for (Map.Entry<Object, QueuedTask<?>> entry : submittedTasks.entrySet()) {
 			activeQueue.put(entry.getValue(), (QueuedTask<?>) entry.getKey());
 		}
 		for (QueuedTask<?> pendingTask : pendingTasks) {
@@ -326,7 +326,7 @@ public class QueuedExecutorService {
 			}
 		}
 		sb.append(QueuedExecutorService.class.getSimpleName() + " showing all " + QueuedTask.class.getSimpleName());
-		sb.append("\nActive Tasks Queues (First task is running, succeeding tasks are waiting):\n");
+		sb.append("\nActive Tasks Queues (First task is submitted, succeeding tasks are waiting):\n");
 		for (Object taskId : activeQueue.keys()) {
 			Collection<QueuedTask<?>> tasks = activeQueue.get(taskId);
 			sb.append("[ID: " + taskId + "]\t");

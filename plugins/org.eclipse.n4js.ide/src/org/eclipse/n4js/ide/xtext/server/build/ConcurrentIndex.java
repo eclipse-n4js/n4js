@@ -49,13 +49,6 @@ import com.google.inject.Singleton;
 @Singleton
 public class ConcurrentIndex {
 
-	/*
-	 * Review feedback:
-	 *
-	 * Fields should be private to ensure that no code is accessing them in an unsafe way from subclasses.
-	 *
-	 */
-
 	/** Map of all project indices. */
 	private final Map<String, ResourceDescriptionsData> project2Index = new HashMap<>();
 	/** A snapshot of the current workspace configuration. */
@@ -98,7 +91,7 @@ public class ConcurrentIndex {
 	}
 
 	/** Returns the workspace configuration */
-	public synchronized IWorkspaceConfigSnapshot getWorkspaceConfig() {
+	public synchronized WorkspaceConfigSnapshot getWorkspaceConfig() {
 		return workspaceConfig;
 	}
 
