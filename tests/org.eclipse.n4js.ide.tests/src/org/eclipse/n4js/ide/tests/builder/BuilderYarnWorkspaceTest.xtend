@@ -15,6 +15,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.ide.tests.server.TestWorkspaceManager
+import org.eclipse.n4js.utils.io.FileDeleter
 import org.junit.Test
 
 /**
@@ -49,10 +50,12 @@ class BuilderYarnWorkspaceTest extends AbstractIncrementalBuilderTest {
 			]
 		);
 
-		moveProjectToTempDirAndLinkInNodeModules(otherProjectName);
+		val tempFolder = moveProjectToTempDirAndLinkInNodeModules(otherProjectName);
 
 		startAndWaitForLspServer();
 		assertNoIssues();
+		
+		FileDeleter.delete(tempFolder);
 	}
 
 	@Test
@@ -103,15 +106,17 @@ class BuilderYarnWorkspaceTest extends AbstractIncrementalBuilderTest {
 			]
 		);
 
-		moveProjectToTempDirAndLinkInNodeModules(otherProjectName);
+		val tempFolder = moveProjectToTempDirAndLinkInNodeModules(otherProjectName);
 
 		startAndWaitForLspServer();
 		assertNoIssues();
+		
+		FileDeleter.delete(tempFolder);
 	}
 
-	def private void moveProjectToTempDirAndLinkInNodeModules(String projectName) throws IOException {
+	def private Path moveProjectToTempDirAndLinkInNodeModules(String projectName) throws IOException {
 		val rootFolder = getRoot().toPath;
-		val tempFolder = createTempDir();
+		val tempFolder = Files.createTempDirectory("_" + BuilderYarnWorkspaceTest.simpleName);
 
 		val otherProjectFolderOld = getProjectRoot(projectName).toPath;
 		val otherProjectFolderNew = tempFolder.resolve(projectName);
@@ -119,11 +124,7 @@ class BuilderYarnWorkspaceTest extends AbstractIncrementalBuilderTest {
 
 		val nodeModulesFolder = rootFolder.resolve(TestWorkspaceManager.YARN_TEST_PROJECT).resolve(N4JSGlobals.NODE_MODULES);
 		Files.createSymbolicLink(nodeModulesFolder.resolve(projectName), otherProjectFolderNew);
-	}
 
-	def private static Path createTempDir() throws IOException {
-		val result = Files.createTempDirectory("_" + BuilderYarnWorkspaceTest.simpleName);
-		result.toFile.deleteOnExit();
-		return result;
+		return tempFolder;
 	}
 }
