@@ -16,10 +16,13 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.n4js.N4JSGlobals;
 
 /**
@@ -35,9 +38,14 @@ public class CreateProjectStructureUtils {
 		final boolean isPlainJS;
 		final String yarnWorkspacesFolder;
 		final String dependencies;
+		/**
+		 * If non-<code>null</code> this instance represents not a folder itself but a symbolic link to the folder at
+		 * the given path. The path is relative to the root folder of the project structure being created.
+		 */
+		final Path symLinkTarget;
 
 		Folder(Folder parent, String folderName, boolean isWorkingDir, boolean isProject, boolean isPlainJS,
-				String yarnWorkspacesFolder, String dependencies) {
+				String yarnWorkspacesFolder, String dependencies, Path symLinkTarget) {
 
 			this.parent = parent;
 			this.folderName = folderName;
@@ -46,6 +54,7 @@ public class CreateProjectStructureUtils {
 			this.isPlainJS = isPlainJS;
 			this.yarnWorkspacesFolder = yarnWorkspacesFolder;
 			this.dependencies = dependencies;
+			this.symLinkTarget = symLinkTarget;
 		}
 
 		int getDepth() {
@@ -116,7 +125,7 @@ public class CreateProjectStructureUtils {
 			}
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new WrappedException("exception while reading PDT file: " + file, e);
 		}
 
 		if (expectedProjects == null || folders == null) {
@@ -189,6 +198,7 @@ public class CreateProjectStructureUtils {
 		boolean isPlainJS = false;
 		String yarnWorkspacesFolder = null;
 		String dependencies = null;
+		Path symLinkTarget = null;
 
 		if (restLine.startsWith("[") && restLine.endsWith("]")) {
 			restLine = restLine.substring(1, restLine.length() - 1).trim();
@@ -225,10 +235,20 @@ public class CreateProjectStructureUtils {
 						restLine = restLine.substring(endIndex + 1).trim();
 					}
 				}
+			} else if (restLine.startsWith("SYMLINK_TO_PATH")) {
+				restLine = restLine.substring("SYMLINK_TO_PATH".length()).trim();
+				symLinkTarget = Path.of(restLine.replace("/", File.separator));
+			} else {
+				throw new UnsupportedOperationException("unsupported bracket syntax: " + restLine);
+			}
+		} else {
+			if (!restLine.isEmpty()) {
+				throw new UnsupportedOperationException("unsupported syntax: " + restLine);
 			}
 		}
 
-		return new Folder(parent, folderName, isWorkingDir, isProject, isPlainJS, yarnWorkspacesFolder, dependencies);
+		return new Folder(parent, folderName, isWorkingDir, isProject, isPlainJS, yarnWorkspacesFolder, dependencies,
+				symLinkTarget);
 	}
 
 	/** Creates the folder structure specified by {@link ProjectDiscoveryTestData} in the given dir */
@@ -236,10 +256,26 @@ public class CreateProjectStructureUtils {
 		for (Folder folder : pdtd.folders) {
 			String folderPath = folder.getPath();
 			File folderFile = new File(dir, folderPath);
-			folderFile.mkdir();
-			if (folder.isProject) {
-				createPackageJson(folderFile, folder);
+			if (folder.symLinkTarget != null) {
+				createSymbolicLink(dir, folderFile, folder.symLinkTarget);
+			} else {
+				folderFile.mkdir();
+				if (folder.isProject) {
+					createPackageJson(folderFile, folder);
+				}
 			}
+		}
+	}
+
+	private static void createSymbolicLink(File root, File folderFile, Path symLinkTarget) {
+		Path target = root.toPath().resolve(symLinkTarget);
+		if (!Files.isDirectory(target)) {
+			throw new IllegalArgumentException("symbolic link target does not exist or is not a folder: " + target);
+		}
+		try {
+			Files.createSymbolicLink(folderFile.toPath(), target);
+		} catch (IOException e) {
+			throw new WrappedException("exception while creating a symbolic link", e);
 		}
 	}
 
@@ -265,7 +301,7 @@ public class CreateProjectStructureUtils {
 		try (PrintWriter printWriter = new PrintWriter(new FileWriter(packageJson))) {
 			printWriter.println(contents);
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new WrappedException("exception while creating a package.json file", e);
 		}
 	}
 }
