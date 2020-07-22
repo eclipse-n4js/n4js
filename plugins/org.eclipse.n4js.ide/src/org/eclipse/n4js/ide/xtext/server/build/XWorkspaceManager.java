@@ -16,9 +16,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.lsp4j.jsonrpc.ResponseErrorException;
-import org.eclipse.lsp4j.jsonrpc.messages.ResponseError;
-import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
 import org.eclipse.n4js.ide.xtext.server.XIProjectDescriptionFactory;
 import org.eclipse.n4js.ide.xtext.server.XIWorkspaceConfigFactory;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
@@ -55,11 +52,6 @@ import com.google.inject.Singleton;
 @SuppressWarnings("restriction")
 @Singleton
 public class XWorkspaceManager {
-	/*
-	 * Review feedback:
-	 *
-	 * This is being used from org.eclipse.n4js.cli.compiler.N4jscCompiler and not encapsulated by the BuilderFrontend.
-	 */
 
 	@Inject
 	private XIWorkspaceConfigFactory workspaceConfigFactory;
@@ -131,14 +123,22 @@ public class XWorkspaceManager {
 	 * Return the project configurations.
 	 */
 	public Set<? extends XIProjectConfig> getProjectConfigs() {
-		return getWorkspaceConfig().getProjects();
+		XIWorkspaceConfig config = getWorkspaceConfig();
+		if (config == null) {
+			return Collections.emptySet();
+		}
+		return config.getProjects();
 	}
 
 	/**
 	 * Updates the workspace according the the updated information in the file with the given URI.
 	 */
 	public WorkspaceChanges update(URI changedFile) {
-		return getWorkspaceConfig().update(changedFile,
+		XIWorkspaceConfig config = getWorkspaceConfig();
+		if (config == null) {
+			return WorkspaceChanges.NO_CHANGES;
+		}
+		return config.update(changedFile,
 				projectName -> getProjectBuilder(projectName).getProjectDescription());
 	}
 
@@ -188,21 +188,8 @@ public class XWorkspaceManager {
 
 	/**
 	 * @return the workspace configuration
-	 * @throws ResponseErrorException
-	 *             if the workspace is not yet initialized
 	 */
-	public XIWorkspaceConfig getWorkspaceConfig() throws ResponseErrorException {
-		if (workspaceConfig == null) {
-			/*
-			 * Review feedback:
-			 *
-			 * The declared exception is specific to LSP4J and the only specificity in this class. We should try to
-			 * convert the result of this method at a different location to a ResponseErrorException.
-			 */
-			ResponseError error = new ResponseError(ResponseErrorCode.serverNotInitialized,
-					"Workspace has not been initialized yet.", null);
-			throw new ResponseErrorException(error);
-		}
+	public synchronized XIWorkspaceConfig getWorkspaceConfig() {
 		return workspaceConfig;
 	}
 
@@ -240,7 +227,11 @@ public class XWorkspaceManager {
 
 	/** Find the project that contains the uri. */
 	public IProjectConfig getProjectConfig(URI uri) {
-		return getWorkspaceConfig().findProjectContaining(uri);
+		XIWorkspaceConfig config = getWorkspaceConfig();
+		if (config == null) {
+			return null;
+		}
+		return config.findProjectContaining(uri);
 	}
 
 	/**
@@ -266,7 +257,7 @@ public class XWorkspaceManager {
 	/** @return all project descriptions. */
 	public List<ProjectDescription> getProjectDescriptions() {
 		List<ProjectDescription> newProjects = new ArrayList<>();
-		for (IProjectConfig projectConfig : getWorkspaceConfig().getProjects()) {
+		for (IProjectConfig projectConfig : getProjectConfigs()) {
 			ProjectDescription projectDescription = projectDescriptionFactory.getProjectDescription(projectConfig);
 			newProjects.add(projectDescription);
 		}
