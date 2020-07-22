@@ -27,6 +27,7 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.n4js.utils.Strings;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -60,6 +61,9 @@ import com.google.inject.Singleton;
  * to react to that (as usual with cancel indicators). Tasks will always be invoked, even if they were marked as
  * cancelled while waiting on the queue, so implementors of a task may choose to implement a "non-cancellable" operation
  * at the beginning of a task before reacting to the cancel indicator.
+ *
+ * Tasks that consider cancellation requests should not finish normally when a cancellation is detected, but throw an
+ * {@link CancellationException} or an {@link OperationCanceledException} instead.
  *
  * <h2>Memory Consistency Properties</h2>
  *
@@ -152,6 +156,8 @@ public class QueuedExecutorService {
 		 * marked as cancelled, but it lies in the discretion of the task's implementation how to react to that. This
 		 * future might even still complete normally if the task implementation chooses to ignore the cancellation
 		 * status of the cancel indicator.
+		 *
+		 * It is discouraged to complete semi-normally if cancellation was detected.
 		 */
 		@Override
 		public boolean cancel(boolean mayInterruptIfRunning) {
