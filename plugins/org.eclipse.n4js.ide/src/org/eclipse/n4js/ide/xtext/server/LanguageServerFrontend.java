@@ -179,18 +179,16 @@ public class LanguageServerFrontend implements TextDocumentService, WorkspaceSer
 	@Override
 	public void didChangeConfiguration(DidChangeConfigurationParams params) {
 		reinitWorkspace();
-		workspaceFrontend.didChangeConfiguration(params);
 	}
 
 	@Override
 	public void didChangeWatchedFiles(DidChangeWatchedFilesParams params) {
 		builderFrontend.didChangeWatchedFiles(params);
-		workspaceFrontend.didChangeWatchedFiles(params);
 	}
 
 	@Override
 	public void didChangeWorkspaceFolders(DidChangeWorkspaceFoldersParams params) {
-		workspaceFrontend.didChangeWorkspaceFolders(params);
+		// ignore for now
 	}
 
 	/** Deletes all generated files and clears the type index. */
