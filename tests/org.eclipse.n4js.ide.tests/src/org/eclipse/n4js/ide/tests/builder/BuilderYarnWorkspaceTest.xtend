@@ -12,10 +12,11 @@ package org.eclipse.n4js.ide.tests.builder
 
 import java.io.IOException
 import java.nio.file.Files
-import java.nio.file.Path
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.ide.tests.server.TestWorkspaceManager
+import org.eclipse.n4js.utils.io.FileCopier
 import org.eclipse.n4js.utils.io.FileDeleter
+import org.eclipse.n4js.utils.io.FileUtils
 import org.junit.Test
 
 /**
@@ -50,12 +51,10 @@ class BuilderYarnWorkspaceTest extends AbstractIncrementalBuilderTest {
 			]
 		);
 
-		val tempFolder = moveProjectToTempDirAndLinkInNodeModules(otherProjectName);
+		moveProjectToTempDirAndLinkInNodeModules(otherProjectName);
 
 		startAndWaitForLspServer();
 		assertNoIssues();
-		
-		FileDeleter.delete(tempFolder);
 	}
 
 	@Test
@@ -106,25 +105,22 @@ class BuilderYarnWorkspaceTest extends AbstractIncrementalBuilderTest {
 			]
 		);
 
-		val tempFolder = moveProjectToTempDirAndLinkInNodeModules(otherProjectName);
+		moveProjectToTempDirAndLinkInNodeModules(otherProjectName);
 
 		startAndWaitForLspServer();
 		assertNoIssues();
-		
-		FileDeleter.delete(tempFolder);
 	}
 
-	def private Path moveProjectToTempDirAndLinkInNodeModules(String projectName) throws IOException {
+	def private void moveProjectToTempDirAndLinkInNodeModules(String projectName) throws IOException {
 		val rootFolder = getRoot().toPath;
-		val tempFolder = Files.createTempDirectory("_" + BuilderYarnWorkspaceTest.simpleName);
+		val tempFolder = FileUtils.createTempDirectory("_" + BuilderYarnWorkspaceTest.simpleName);
 
 		val otherProjectFolderOld = getProjectRoot(projectName).toPath;
 		val otherProjectFolderNew = tempFolder.resolve(projectName);
-		Files.move(otherProjectFolderOld, otherProjectFolderNew);
+		FileCopier.copy(otherProjectFolderOld, otherProjectFolderNew); // warning: java.nio.file.Files#move() will fail if temporary folder is located on a different FileStore!
+		FileDeleter.delete(otherProjectFolderOld);
 
 		val nodeModulesFolder = rootFolder.resolve(TestWorkspaceManager.YARN_TEST_PROJECT).resolve(N4JSGlobals.NODE_MODULES);
 		Files.createSymbolicLink(nodeModulesFolder.resolve(projectName), otherProjectFolderNew);
-
-		return tempFolder;
 	}
 }
