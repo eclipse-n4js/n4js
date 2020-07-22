@@ -21,6 +21,7 @@ import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -74,27 +75,10 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class QueuedExecutorService {
-	/*
-	 * Review feedback:
-	 *
-	 * - Since this is not an ExecutorService, we should try to find a more distinguishing name to avoid confusion. -
-	 * Replace QueuedTask and QueuedTaskFuture by standard implementations, e.g. FutureTask and a normal
-	 * CompletableFuture chain Advantage: Save propagation in a multithreaded environment, less code to maintain
-	 *
-	 * - The mechanics of the bookkeeping via pendingTasks and runningTasks depends on the delegate ExecutorService. It
-	 * is not save to assume that a task will ever be run so adding something to the runningTasks must be done in the
-	 * same try/finally as removing it again.
-	 *
-	 * - The QueuedExecutorService is used by the ResourceTaskManager, the BuilderFrontend, the WorkspaceFrontent and
-	 * the N4JSCommandService. Nevertheless it has a shutdown method. It is not clear, which component is the owner of
-	 * the QueuedExecutorService and responsible for the shutdown.
-	 */
-
 	private static final Logger LOG = Logger.getLogger(QueuedExecutorService.class);
 
 	/** The underlying executor service that is used to actually execute the tasks. */
-	@Inject
-	protected ExecutorService delegate;
+	protected ExecutorService delegate = Executors.newCachedThreadPool();
 
 	/***/
 	@Inject
@@ -109,11 +93,6 @@ public class QueuedExecutorService {
 	protected final class QueuedTask<T> implements Runnable, XCancellable {
 		protected final Object queueId;
 		protected final String description;
-		/*
-		 * Review feedback:
-		 *
-		 * It is not terribly obvious what the function should do if the cancelIndicator answers true.
-		 */
 		protected final Function<? super CancelIndicator, ? extends T> operation;
 		protected final QueuedTaskFuture<T> result;
 		protected volatile boolean cancelled = false;
@@ -140,13 +119,13 @@ public class QueuedExecutorService {
 					}
 				});
 				result.complete(actualResult);
-			} catch (Throwable th) {
-				if (operationCanceledManager.isOperationCanceledException(th)) {
+			} catch (Throwable t) {
+				if (operationCanceledManager.isOperationCanceledException(t)) {
 					result.doCancel();
 				} else {
 					// log before completing (or LSPExecutorServiceTest#testSubmitLogException() would become flaky)
-					LOG.error("error during queued task: ", th);
-					result.completeExceptionally(th);
+					LOG.error("error during queued task: ", t);
+					result.completeExceptionally(t);
 				}
 			} finally {
 				onDone(this);
@@ -248,13 +227,6 @@ public class QueuedExecutorService {
 		if (submittedTasks.putIfAbsent(task.queueId, task) != null) {
 			throw new IllegalStateException("executor inconsistency: queue ID already in progress: " + task.queueId);
 		}
-		/*
-		 * Review feedback: Depending on the implementation of the ExecutorService, the task may be cancelled before it
-		 * is started, e.g. #run is never invoked and therefore isDone is never invoked.
-		 *
-		 * Since we use injection to obtain the ExecutorService, we cannot control which impl / strategies are applied
-		 * by the provided ExecutorService.
-		 */
 		delegate.submit(task); // will eventually invoke #onDone()
 	}
 
