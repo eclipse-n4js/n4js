@@ -24,15 +24,20 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.n4js.ide.xtext.server.build.BuilderFrontend;
 import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIssueRegistry;
 import org.eclipse.n4js.ide.xtext.server.util.CancelIndicatorUtil;
 import org.eclipse.n4js.xtext.workspace.IProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.IWorkspaceConfigSnapshot;
+import org.eclipse.xtext.findReferences.IReferenceFinder;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.util.CancelIndicator;
+import org.eclipse.xtext.util.Exceptions;
+import org.eclipse.xtext.util.concurrent.CancelableUnitOfWork;
+import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.collect.HashMultimap;
@@ -47,8 +52,9 @@ import com.google.inject.Singleton;
  * Manages a set of {@link ResourceTaskContext}s, including creation, disposal, and executing tasks within those
  * contexts.
  */
+@SuppressWarnings("restriction")
 @Singleton
-public class ResourceTaskManager {
+public class ResourceTaskManager implements IReferenceFinder.IResourceAccess {
 	/*
 	 * Review feedback:
 	 *
@@ -417,6 +423,31 @@ public class ResourceTaskManager {
 					}
 				}
 			});
+		}
+	}
+
+	@Override
+	public <R> R readOnly(URI targetURI, IUnitOfWork<R, ResourceSet> work) {
+		URI uri = targetURI.trimFragment(); // note: targetURI may point to an EObject inside an EMF resource!
+		ResourceTaskContext currRTC = currentContext();
+		if (currRTC != null) {
+			return doWork(currRTC.getResourceSet(), work, CancelIndicator.NullImpl);
+		}
+		// TODO consider making a current context mandatory by removing the following (see GH-1774):
+		CompletableFuture<R> future = runInTemporaryContext(uri, "IResourceAccess.readOnly", true,
+				(ofc, ci) -> doWork(ofc.getResourceSet(), work, ci));
+		return FutureUtil.getCancellableResult(future);
+	}
+
+	/** Actually do the work in the context of the given resource set. */
+	protected <R> R doWork(ResourceSet resourceSet, IUnitOfWork<R, ResourceSet> work, CancelIndicator ci) {
+		try {
+			if (work instanceof CancelableUnitOfWork) {
+				((CancelableUnitOfWork<?, ?>) work).setCancelIndicator(ci);
+			}
+			return work.exec(resourceSet);
+		} catch (Exception e) {
+			return Exceptions.throwUncheckedException(e);
 		}
 	}
 
