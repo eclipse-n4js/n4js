@@ -102,11 +102,8 @@ public class QueuedExecutorService {
 
 	/** Global queue of all pending tasks across all queue IDs. */
 	protected final List<QueuedTask<?>> pendingTasks = new ArrayList<>();
-	/*
-	 * Review feedback: These are submitted tasks and not necessarily running tasks.
-	 */
 	/** Queue IDs with currently running tasks. */
-	protected final Map<Object, QueuedTask<?>> runningTasks = new LinkedHashMap<>();
+	protected final Map<Object, QueuedTask<?>> submittedTasks = new LinkedHashMap<>();
 
 	@SuppressWarnings("javadoc")
 	protected final class QueuedTask<T> implements Runnable, XCancellable {
@@ -229,7 +226,7 @@ public class QueuedExecutorService {
 		Iterator<QueuedTask<?>> iter = pendingTasks.iterator();
 		while (iter.hasNext()) {
 			QueuedTask<?> curr = iter.next();
-			boolean isBlocked = runningTasks.containsKey(curr.queueId);
+			boolean isBlocked = submittedTasks.containsKey(curr.queueId);
 			if (!isBlocked) {
 				iter.remove();
 				return curr;
@@ -248,7 +245,7 @@ public class QueuedExecutorService {
 
 	/** Submit the given task to the delegate executor service. */
 	protected synchronized void doSubmit(QueuedTask<?> task) {
-		if (runningTasks.putIfAbsent(task.queueId, task) != null) {
+		if (submittedTasks.putIfAbsent(task.queueId, task) != null) {
 			throw new IllegalStateException("executor inconsistency: queue ID already in progress: " + task.queueId);
 		}
 		/*
@@ -263,7 +260,7 @@ public class QueuedExecutorService {
 
 	/** Invoked by each running task upon completion, see {@link QueuedTask#run()}. */
 	protected synchronized void onDone(QueuedTask<?> task) {
-		if (runningTasks.remove(task.queueId) != task) {
+		if (submittedTasks.remove(task.queueId) != task) {
 			throw new IllegalStateException("executor inconsistency: queue ID not in progress: " + task.queueId);
 		}
 		doSubmitAllPending();
@@ -275,13 +272,13 @@ public class QueuedExecutorService {
 	 * {@link QueuedExecutorService} for details.
 	 */
 	public synchronized void cancelAll() {
-		Stream.concat(runningTasks.values().stream(), pendingTasks.stream())
+		Stream.concat(submittedTasks.values().stream(), pendingTasks.stream())
 				.forEach(t -> t.cancel());
 	}
 
 	/** Same as {@link #cancelAll()}, but only affects tasks with a queue ID equal to the given ID. */
 	public synchronized void cancelAll(Object queueId) {
-		Stream.concat(runningTasks.values().stream(), pendingTasks.stream())
+		Stream.concat(submittedTasks.values().stream(), pendingTasks.stream())
 				.filter(t -> queueId.equals(t.queueId))
 				.forEach(t -> t.cancel());
 	}
@@ -311,7 +308,7 @@ public class QueuedExecutorService {
 
 	/** Same as {@link #allTasks()}, but returns <code>null</code> iff there are no running or pending tasks. */
 	private synchronized CompletableFuture<Void> allTasksOrNull() {
-		if (runningTasks.isEmpty() && pendingTasks.isEmpty()) {
+		if (submittedTasks.isEmpty() && pendingTasks.isEmpty()) {
 			return null;
 		}
 		return allTasks();
@@ -323,7 +320,7 @@ public class QueuedExecutorService {
 	 * <code>null</code>.
 	 */
 	public synchronized CompletableFuture<Void> allTasks() {
-		CompletableFuture<?>[] allTasks = Stream.concat(runningTasks.values().stream(), pendingTasks.stream())
+		CompletableFuture<?>[] allTasks = Stream.concat(submittedTasks.values().stream(), pendingTasks.stream())
 				.map(t -> t.result)
 				.toArray(CompletableFuture[]::new);
 		return CompletableFuture.allOf(allTasks);
