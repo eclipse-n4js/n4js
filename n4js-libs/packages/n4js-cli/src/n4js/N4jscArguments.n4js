@@ -11,18 +11,18 @@
 
 
 import {JAVA_VM_XMX_DEFAULT, N4JSC_JAR} from "Globals";
-import {Goal, Options, VmOptions} from "index";
+import {Goal, Options, VmOptions} from "n4js-cli/index";
 
 
 
 
 export public class N4jscArguments {
     jar: string = "-jar";
-    vmArgs: string[];
+    vmArgs: string[] = [];
     n4jscjar: string = N4JSC_JAR;
     goal: string;
     dir: string;
-    n4jscOptions: string[];
+    n4jscOptions: string[] = [];
 
     static fromParameters(goal: Goal, dir: string, options: ~Options+, vmOptions: ~VmOptions+, log: {function(string)})
             : N4jscArguments {

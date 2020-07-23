@@ -145,7 +145,7 @@ async function startN4jsLspServerAndConnect(port, vscode, outputChannel) {
 	const vmOptions = {
 		xmx: getJavaVMXmxSetting(vscode)
 	};
-	n4jscProcess = await n4jscli.n4jscProcess('lsp', null, n4jscOptions, vmOptions, spawnOptions, logFn);
+	n4jscProcess = await n4jscli.n4jscProcess('lsp', workspaceDir, n4jscOptions, vmOptions, spawnOptions, logFn);
 	n4jscProcess.on('message', (data)=>outputChannel.appendLine(data.toString()));
 	n4jscProcess.on('error', (err)=>outputChannel.appendLine(err.toString()));
 	n4jscProcess.on('exit', (code)=>outputChannel.appendLine('exit ' + code));
