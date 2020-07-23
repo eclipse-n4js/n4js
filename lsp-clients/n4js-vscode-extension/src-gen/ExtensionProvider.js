@@ -11,6 +11,7 @@ const PORT = 5007;
 const TIMEOUT = 1000;
 let n4jscProcess;
 let outputAppender;
+let n4jscjarFile;
 function getOutputAppender(outputChannel) {
 	if (!outputAppender) {
 		outputAppender = (text)=>outputChannel.append(text.toString());
@@ -145,6 +146,8 @@ async function startN4jsLspServerAndConnect(port, vscode, outputChannel) {
 	const vmOptions = {
 		xmx: getJavaVMXmxSetting(vscode)
 	};
+	n4jscjarFile = n4jscli.findN4jscJarConfigProperty(workspaceDir, ()=>null);
+	logFn("will use " + n4jscjarFile);
 	n4jscProcess = await n4jscli.n4jscProcess('lsp', workspaceDir, n4jscOptions, vmOptions, spawnOptions, logFn);
 	n4jscProcess.on('message', (data)=>outputChannel.appendLine(data.toString()));
 	n4jscProcess.on('error', (err)=>outputChannel.appendLine(err.toString()));

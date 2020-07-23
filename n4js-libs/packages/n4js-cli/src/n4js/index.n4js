@@ -172,7 +172,7 @@ async function modifyArgs(args: N4jscArguments, log: {function(string)}): N4jscA
     }
 
     // replace n4jsc.jar (and download if not available)
-    const n4jscjarConfigProperty = findN4jscJarConfigProperty(args, log);
+    const n4jscjarConfigProperty = findN4jscJarConfigProperty(args.dir, log);
     if (n4jscjarConfigProperty) {
         const n4jscjarName = await ensureCustomN4jscJar(n4jscjarConfigProperty, log);
         if (n4jscjarName) {
@@ -201,20 +201,19 @@ async function modifyArgs(args: N4jscArguments, log: {function(string)}): N4jscA
  * - the value of property 'n4jscjar' of the n4js-cli configuration file,
  * - or null.
  */
-function findN4jscJarConfigProperty(args: N4jscArguments, log: {function(string)}) : string {
+export public function findN4jscJarConfigProperty(workspaceDir: string, log: {function(string)}) : string {
     if (process.env.N4JSC_JAR) {
         // custom n4jsc.jar given as environment variable
+        log("picked up environment variable N4JSC_JAR");
         return process.env.N4JSC_JAR as string;
     }
-    if (args.dir) {
-        const dirArg = args.dir;
-        if (dirArg && fs.existsSync(dirArg)) {
-            // n4js-cli config file exists
-            const customN4jscName = getN4jscjarFromConfig(dirArg);
-            if (customN4jscName) {
-                // custom n4jsc.jar set in n4js-cli configuration file
-                return customN4jscName;
-            }
+    if (workspaceDir && fs.existsSync(workspaceDir)) {
+        // n4js-cli config file exists
+        const customN4jscName = getN4jscjarFromConfig(workspaceDir);
+        if (customN4jscName) {
+            // custom n4jsc.jar set in n4js-cli configuration file
+            log("picked up property 'n4jsc.jar' in config file " + N4JS_CLI_CONFIG);
+            return customN4jscName;
         }
     }
     // use default/shipped jar
