@@ -90,6 +90,11 @@ public class ConcurrentIndex {
 		return project2Index.get(projectName);
 	}
 
+	/** Returns the workspace configuration */
+	public synchronized IWorkspaceConfigSnapshot getWorkspaceConfig() {
+		return workspaceConfig;
+	}
+
 	/** Returns the project configuration of the given project name. */
 	public synchronized IProjectConfigSnapshot getProjectConfig(String projectName) {
 		Objects.requireNonNull(projectName);

@@ -12,8 +12,10 @@ package org.eclipse.n4js.internal.lsp;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.projectModel.locations.FileURI;
@@ -40,9 +42,10 @@ public class FileSystemScanner implements IFileSystemScanner {
 			try {
 				Path rootPath = rootFile.toPath();
 				if (acceptor instanceof FileVisitingAcceptor) {
-					Files.walkFileTree(rootPath, (FileVisitingAcceptor) acceptor);
+					Files.walkFileTree(rootPath, Collections.singleton(FileVisitOption.FOLLOW_LINKS), Integer.MAX_VALUE,
+							(FileVisitingAcceptor) acceptor);
 				} else {
-					Files.walk(rootPath).forEach(p -> {
+					Files.walk(rootPath, FileVisitOption.FOLLOW_LINKS).forEach(p -> {
 						File file = p.toFile();
 						if (!file.isDirectory()) {
 							acceptor.accept(new FileURI(p.toFile()).toURI());

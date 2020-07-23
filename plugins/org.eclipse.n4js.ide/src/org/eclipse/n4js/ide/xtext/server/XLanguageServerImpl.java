@@ -128,7 +128,7 @@ import com.google.inject.Singleton;
 @SuppressWarnings({ "restriction", "deprecation" })
 @Singleton
 public class XLanguageServerImpl implements LanguageServer, WorkspaceService, TextDocumentService, LanguageClientAware,
-		Endpoint, JsonRpcMethodProvider {
+		Endpoint, JsonRpcMethodProvider, DebugService {
 
 	private static final Logger LOG = Logger.getLogger(XLanguageServerImpl.class);
 
@@ -182,6 +182,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Inject
 	private Provider<XtextResourceSet> resourceSetProvider;
+
+	@Inject
+	private DebugService debugService;
 
 	private InitializeParams initializeParams;
 
@@ -386,6 +389,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	@Override
 	public void connect(LanguageClient client) {
 		this.client = client;
+		debugService.connect(client);
 		issueAcceptor.connect(client);
 		lspLogger.connect(client);
 		textDocumentFrontend.connect(client);
@@ -708,6 +712,16 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 			return initializeResult;
 		}
 	};
+
+	@Override
+	public CompletableFuture<Void> setLogLevel(String level) {
+		return debugService.setLogLevel(level);
+	}
+
+	@Override
+	public CompletableFuture<Void> printDebugInfo() {
+		return debugService.printDebugInfo();
+	}
 
 	/**
 	 * @since 2.16

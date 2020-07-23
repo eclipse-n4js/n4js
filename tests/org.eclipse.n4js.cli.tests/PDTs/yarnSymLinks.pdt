@@ -1,0 +1,20 @@
+# Project Discovery Test
+# working dir marked with '*'
+
+
+FOLDERS
+- otherLocation
+-- PX [PROJECT]
+- mainLocation
+--*P1 [PROJECT workspaces=["packages/*"]]
+--- node_modules
+---- P2 [PROJECT]
+---- PX [SYMLINK_TO_PATH otherLocation/PX]
+--- packages
+---- P3 [PROJECT dependencies={"P2":"*", "PX":"*"}]
+
+EXPECT
+- mainLocation/P1
+- mainLocation/P1/node_modules/P2
+- mainLocation/P1/node_modules/PX
+- mainLocation/P1/packages/P3
