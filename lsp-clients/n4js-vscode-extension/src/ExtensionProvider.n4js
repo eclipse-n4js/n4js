@@ -168,12 +168,13 @@ async function startN4jsLspServerAndConnect(port: number, vscode: any+, outputCh
     await jreProvider.ensureJRE(logFn);
 
     const env = Object.assign({ NODEJS_PATH: process.argv[0] }, process.env);
-    const spawnOptions: childProcess.SpawnOptions = { env: env };
+    const workspaceDir = getWorkspaceDir(vscode);
     const n4jscOptions: ~n4jscli.Options = { stdio: true };
+    const spawnOptions: childProcess.SpawnOptions = { env: env };
     const vmOptions: ~n4jscli.VmOptions = { xmx: getJavaVMXmxSetting(vscode) };
 
     // The server is started as a separate process
-    n4jscProcess = n4jscli.n4jscProcess(n4jscli.Goal.lsp, undefined, n4jscOptions, vmOptions, spawnOptions, logFn);
+    n4jscProcess = await n4jscli.n4jscProcess(n4jscli.Goal.lsp, workspaceDir, n4jscOptions, vmOptions, spawnOptions, logFn);
 
     // Set output channels
     n4jscProcess.on('message', (data:any+) => outputChannel.appendLine(data.toString()));
@@ -196,6 +197,13 @@ async function startN4jsLspServerAndConnect(port: number, vscode: any+, outputCh
     });
     await serverReady;
     outputChannel.appendLine('Connected to LSP server');
+}
+
+function getWorkspaceDir(vscode: any+) : string {
+    for (let wFolder: any+ of vscode.workspace.workspaceFolders as Iterable<?>) {
+        return wFolder.uri.fsPath as string;
+    }
+    return null;
 }
 
 async function connectToRunningN4jsLspServer(port: number, outputChannel: any+): net.Socket {

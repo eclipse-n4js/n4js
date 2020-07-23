@@ -144,10 +144,7 @@ export public async function n4jscProcess(
 export public async function createN4JSProcess(args: string[], spawnOptions: childProcess.SpawnOptions, log: {function(string)} = npmlog.info) : childProcess.ChildProcess {
     const modifedArgs = await modifyArgs(args, log);
     const java = getJavaCommand(log);
-    log("calling: " + java + " " + modifedArgs.join(" "));
-    const spawnedProcess = childProcess.spawn(java, modifedArgs, spawnOptions);
-
-    return spawnedProcess;
+    return childProcess.spawn(java, modifedArgs, spawnOptions);
 }
 
 
@@ -231,12 +228,17 @@ async function modifyArgs(oldArgs: string[], log: {function(string)}): string[] 
     }
 
     // replace n4jsc.jar (and download if not available)
-    const n4jscjarConfigProperty = findN4jscJarConfigProperty(oldArgs, log);
+    const dirArgIndex = findDirArgIndex(oldArgs, log);
+    const n4jscjarConfigProperty = findN4jscJarConfigProperty(oldArgs, dirArgIndex, log);
     if (n4jscjarConfigProperty) {
         const n4jscjarName = await ensureCustomN4jscJar(n4jscjarConfigProperty, log);
         if (n4jscjarName) {
             log("using n4jsc.jar: " + n4jscjarName);
             newArgs[1] = n4jscjarName;
+            if (Goal.lsp == newArgs[2]) {
+                // lsp goal forbids dir argument
+                newArgs[dirArgIndex] = undefined;
+            }
         }
     }
 
@@ -288,19 +290,36 @@ function capitalizeFirstLetter(str: string): string {
  * - the value of property 'n4jscjar' of the n4js-cli configuration file,
  * - or null.
  */
-function findN4jscJarConfigProperty(args: string[], log: {function(string)}) : string {
-    if (process.env.N4JSC_JAR) {
-        // custom n4jsc.jar given as environment variable
-        return process.env.N4JSC_JAR as string;
-    }
+function findDirArgIndex(args: string[], log: {function(string)}) : int {
     if (args && args.length > 1) {
         let dirArg = args[2];
         if (Goal.literals.indexOf(dirArg) >= 0) {
             // goal is an optional argument: if present try next argument
             if (args[3]) {
-                dirArg = args[3];
+                return 3;
+            } else {
+                return undefined;
             }
         }
+        return 2;
+    }
+    // use default/shipped jar
+    return undefined;
+}
+
+/**
+ * Returns either:
+ * - the value of the environment variable 'N4JSC_JAR',
+ * - the value of property 'n4jscjar' of the n4js-cli configuration file,
+ * - or null.
+ */
+function findN4jscJarConfigProperty(args: string[], dirArgIndex: int, log: {function(string)}) : string {
+    if (process.env.N4JSC_JAR) {
+        // custom n4jsc.jar given as environment variable
+        return process.env.N4JSC_JAR as string;
+    }
+    if (dirArgIndex && args[dirArgIndex]) {
+        const dirArg = args[dirArgIndex];
         if (dirArg && fs.existsSync(dirArg)) {
             // n4js-cli config file exists
             const customN4jscName = getN4jscjarFromConfig(dirArg);
