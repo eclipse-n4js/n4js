@@ -1,0 +1,151 @@
+/*
+ * Copyright (c) 2019 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+
+import {JAVA_VM_XMX_DEFAULT, N4JSC_JAR} from "Globals";
+import {Goal, Options, VmOptions} from "index";
+
+
+
+
+export public class N4jscArguments {
+    jar: string = "-jar";
+    vmArgs: string[];
+    n4jscjar: string = N4JSC_JAR;
+    goal: string;
+    dir: string;
+    n4jscOptions: string[];
+
+    static fromParameters(goal: Goal, dir: string, options: ~Options+, vmOptions: ~VmOptions+, log: {function(string)})
+            : N4jscArguments {
+
+        const args = new N4jscArguments();
+        args.goal = goal.toString();
+        args.dir = dir;
+        args.n4jscOptions = N4jscArguments.getN4jscOptions(options, log);
+        args.vmArgs = N4jscArguments.getVmArgs(vmOptions, log);
+
+        args.print(log);
+        return args;
+    }
+
+
+
+    static getN4jscArgs(goal: Goal, dir: string, options: ~Options+, log: {function(string)}): string[] {
+        const args: string[] = [];
+        if (goal) {
+            args.push(goal);
+        }
+        if (dir) {
+            args.push(dir);
+        }
+    
+        if (options) {
+            const n4jscOptions = N4jscArguments.getN4jscOptions(options, log);
+            args.push.apply(args, n4jscOptions); // i.e. args.pushAll(n4jscOptions);
+        }
+    
+        return args;
+    }
+    
+    static getN4jscOptions(options: ~Options+, log: {function(string)}): string[] {
+        const args: string[] = [];
+        if (options) {
+            const optionsFieldNames = new Set<string>(Options.n4type.dataFields().map(f => f.name));
+            for (const [key, value] of Object.entries(options)) {
+                if (!optionsFieldNames.has(key)) {
+                    log("unknown option: key=" + key + " value=" + value);
+                    continue;
+                }
+                const isBool = typeof value === "boolean";
+                if (isBool && !value) {
+                    continue; // skip false boolean flags
+                }
+                args.push((key.length > 2 ? "--" : "-") + key);
+                if (!isBool) {
+                    args.push(String(value));
+                }
+            }
+        }
+        return args;
+    }
+    
+    static getVmArgs(vmOptions: ~VmOptions+, log: {function(string)}): string[] {
+        const args: string[] = [];
+    
+        if (!vmOptions) {
+            vmOptions = {};
+        }
+        if (vmOptions.xmx === undefined) {
+            // set vm Xmx option to default
+            vmOptions.xmx = JAVA_VM_XMX_DEFAULT;
+        }
+    
+        const vmOptionsFieldNames = new Set<string>(VmOptions.n4type.dataFields().map(f => f.name));
+        for (const [key, value] of Object.entries(vmOptions)) {
+            if (!vmOptionsFieldNames.has(key)) {
+                log("unknown vm option: key=" + key + " value=" + value);
+                continue;
+            }
+            const isBool = typeof value === "boolean";
+            if (isBool && !value) {
+                continue; // skip false boolean flags
+            }
+            if (value) {
+                const option = N4jscArguments.capitalizeFirstLetter(key) + (isBool? '': value);
+                args.push("-" + option);
+            }
+        }
+    
+        return args;
+    }
+    
+    static capitalizeFirstLetter(str: string): string {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    static fromProcess(log: {function(string)}) : N4jscArguments {
+        const allOptions = process.argv.slice(2);
+        const args = new N4jscArguments();
+        
+        let index = 0;
+        if (allOptions && allOptions[index]) {
+            // parse goal
+            if (Goal.literals.indexOf(allOptions[index]) >= 0) {
+                args.goal = allOptions[index];
+            }
+            // parse dir
+            if (!args.goal) {
+                args.goal = allOptions[index];
+            } else if (args.goal != Goal.lsp) {
+                index++;
+                if (allOptions[index]) {
+                    args.dir = allOptions[index];
+                }
+            }
+        }
+        args.n4jscOptions = allOptions.slice(index + 1);
+
+        args.print(log);
+        return args;
+    }
+
+    print(log: {function(string)}) {
+        const n4jscOptionsString = this.n4jscOptions ? this.n4jscOptions.join(" ") : "";
+        const vmOptionsString = this.vmArgs ? this.vmArgs.join(" ") : "";
+        log(`goal=${this.goal}; dir=${this.dir}; options=${n4jscOptionsString}; vmOptions=${vmOptionsString}`);
+    }
+
+    toArray() : string[] {
+        const args = [this.jar, ...this.vmArgs, this.n4jscjar, this.goal, this.dir, ...this.n4jscOptions];
+        return args.filter(n => typeof n == "string"); // remove undfined/null values
+    }
+}
