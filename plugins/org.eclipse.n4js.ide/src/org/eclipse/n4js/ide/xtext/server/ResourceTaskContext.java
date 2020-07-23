@@ -95,33 +95,33 @@ public class ResourceTaskContext {
 	private ConcurrentIssueRegistry issueRegistry;
 
 	/** The {@link ResourceTaskManager} that created this instance. */
-	protected ResourceTaskManager parent;
+	private ResourceTaskManager parent;
 	/** URI of the resource represented by this {@link ResourceTaskContext} (i.e. URI of the main resource). */
-	protected URI mainURI;
+	private URI mainURI;
 	/** Tells whether this context represents a temporarily opened file, see {@link #isTemporary()}. */
-	protected boolean temporary;
+	private boolean temporary;
 	/** Tells whether this context is still managed by the ResourceTaskManager or was already removed */
-	protected boolean alive;
+	private boolean alive;
 
 	/**
 	 * Contains the state of all files in the workspace. For open files managed by {@link #parent} (including the open
 	 * file of this context) this state will represent the dirty state and for all other files it will represent the
 	 * persisted state (as provided by the LSP builder).
 	 */
-	protected ResourceDescriptionsData indexSnapshot;
+	private ResourceDescriptionsData indexSnapshot;
 
 	/** Maps project names to URIs of all resources contained in the project (from the last build). */
-	protected ImmutableSetMultimap<String, URI> project2BuiltURIs;
+	ImmutableSetMultimap<String, URI> project2BuiltURIs;
 
 	/** Most recent workspace configuration. */
-	protected WorkspaceConfigSnapshot workspaceConfig;
+	WorkspaceConfigSnapshot workspaceConfig;
 
 	/** The resource set used for the current resource and any other resources required for resolution. */
-	protected XtextResourceSet mainResourceSet;
+	private XtextResourceSet mainResourceSet;
 	/** The EMF resource representing the open file. */
-	protected XtextResource mainResource = null;
+	private XtextResource mainResource = null;
 	/** The current textual content of the open file. */
-	protected XDocument document = null;
+	private XDocument document = null;
 
 	/** Within each resource task context, this provides text contents of all other context's main resources. */
 	protected class ResourceTaskContentProvider implements IExternalContentProvider {
@@ -170,6 +170,13 @@ public class ResourceTaskContext {
 	 */
 	public synchronized boolean isAlive() {
 		return alive;
+	}
+
+	/**
+	 * Mark this task context as no longer managed.
+	 */
+	public synchronized void close() {
+		this.alive = false;
 	}
 
 	/**
@@ -490,4 +497,5 @@ public class ResourceTaskContext {
 		}
 		return resourceServiceProvider.getResourceDescriptionManager();
 	}
+
 }

@@ -288,7 +288,7 @@ public class ResourceTaskManager implements IReferenceFinder.IResourceAccess {
 	protected synchronized void discardContextInfo(URI uri) {
 		ResourceTaskContext result = uri2RTCs.remove(uri);
 		if (result != null) {
-			result.alive = false;
+			result.close();
 		}
 		updateSharedDirtyState(uri, null);
 		if (issueRegistry != null) {
