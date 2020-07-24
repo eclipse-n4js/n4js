@@ -13,10 +13,7 @@ package org.eclipse.n4js.ide.xtext.server;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -29,6 +26,7 @@ import org.eclipse.n4js.ide.xtext.server.build.HashedFileContent;
 import org.eclipse.n4js.ide.xtext.server.build.ProjectStatePersister;
 import org.eclipse.n4js.ide.xtext.server.build.ProjectStatePersister.ProjectState;
 import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
+import org.eclipse.n4js.xtext.server.LSPIssue;
 import org.eclipse.xtext.builder.builderState.BuilderStateFactory;
 import org.eclipse.xtext.builder.builderState.impl.EObjectDescriptionImpl;
 import org.eclipse.xtext.builder.builderState.impl.ResourceDescriptionImpl;
@@ -41,8 +39,12 @@ import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ImmutableListMultimap;
+import com.google.common.collect.ListMultimap;
+
 /** */
-@SuppressWarnings("restriction")
+@SuppressWarnings({ "restriction", "deprecation" })
 public class ProjectStatePersisterTest {
 
 	ProjectState createProjectState() {
@@ -50,13 +52,13 @@ public class ProjectStatePersisterTest {
 	}
 
 	ProjectState createProjectState(ResourceDescriptionsData index, XSource2GeneratedMapping fileMappings,
-			Map<URI, HashedFileContent> fileHashs, Map<URI, ? extends Collection<LSPIssue>> validationIssues) {
+			Map<URI, HashedFileContent> fileHashs, ListMultimap<URI, LSPIssue> validationIssues) {
 
 		index = (index != null) ? index
 				: new ResourceDescriptionsData(CollectionLiterals.<IResourceDescription> emptySet());
 		fileMappings = (fileMappings != null) ? fileMappings : new XSource2GeneratedMapping();
 		fileHashs = (fileHashs != null) ? fileHashs : Collections.emptyMap();
-		validationIssues = (validationIssues != null) ? validationIssues : Collections.emptyMap();
+		validationIssues = (validationIssues != null) ? validationIssues : ImmutableListMultimap.of();
 		return new ProjectState(index, fileMappings, fileHashs, validationIssues);
 	}
 
@@ -179,12 +181,10 @@ public class ProjectStatePersisterTest {
 		setValues(src2Issue2, "src2Issue2", 2, 2, Severity.INFO);
 
 		// first set values of issues; then add issues to hash map
-		Map<URI, List<LSPIssue>> issueMap = new HashMap<>();
-		issueMap.put(source1, new ArrayList<>());
-		issueMap.put(source2, new ArrayList<>());
-		issueMap.get(source1).add(src1Issue1);
-		issueMap.get(source2).add(src2Issue1);
-		issueMap.get(source2).add(src2Issue2);
+		ListMultimap<URI, LSPIssue> issueMap = ArrayListMultimap.create();
+		issueMap.put(source1, src1Issue1);
+		issueMap.put(source2, src2Issue1);
+		issueMap.put(source2, src2Issue2);
 
 		ProjectState state = createProjectState(null, null, null, issueMap);
 		testMe.writeProjectState(output, state);

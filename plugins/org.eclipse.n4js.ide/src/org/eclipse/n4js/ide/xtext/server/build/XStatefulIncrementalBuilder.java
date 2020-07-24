@@ -25,11 +25,10 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.URIConverter;
-import org.eclipse.n4js.ide.xtext.server.LSPIssue;
-import org.eclipse.n4js.ide.xtext.server.LSPIssueConverter;
 import org.eclipse.n4js.ide.xtext.server.build.XClusteringStorageAwareResourceLoader.LoadResult;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.generator.GeneratorContext;
 import org.eclipse.xtext.generator.GeneratorDelegate;
 import org.eclipse.xtext.generator.IContextualOutputConfigurationProvider2;
@@ -68,9 +67,6 @@ public class XStatefulIncrementalBuilder {
 
 	@Inject
 	private XIndexer indexer;
-
-	@Inject
-	private LSPIssueConverter lspIssueConverter;
 
 	@Inject
 	private OperationCanceledManager operationCanceledManager;
@@ -137,7 +133,7 @@ public class XStatefulIncrementalBuilder {
 					}
 					if (delta.getNew() == null) {
 						// deleted resources are not being built, thus add immediately to 'newDeltas'
-						request.setResultIssues(request.getProjectName(), uri, Collections.emptyList());
+						request.afterValidate(uri, Collections.emptyList());
 						removeGeneratedFiles(uri, newSource2GeneratedMapping);
 						newDeltas.add(delta);
 					} else {
@@ -149,7 +145,7 @@ public class XStatefulIncrementalBuilder {
 				try {
 
 					List<IResourceDescription.Delta> deltasBuilt = context.executeClustered(urisToBeBuilt,
-							(loadResult) -> buildClustured(loadResult, newSource2GeneratedMapping, result));
+							(loadResult) -> buildClustered(loadResult, newSource2GeneratedMapping, result));
 					newDeltas.addAll(deltasBuilt);
 
 				} catch (Throwable th) {
@@ -194,7 +190,7 @@ public class XStatefulIncrementalBuilder {
 			if (config != null && config.isCleanUpDerivedResources()) {
 				try {
 					uriConverter.delete(generated, CollectionLiterals.emptyMap());
-					request.setResultDeleteFile(generated);
+					request.afterDelete(generated);
 				} catch (IOException e) {
 					Exceptions.sneakyThrow(e);
 				}
@@ -203,7 +199,7 @@ public class XStatefulIncrementalBuilder {
 	}
 
 	/** Build the given resource. */
-	protected Delta buildClustured(LoadResult loadResult,
+	protected Delta buildClustered(LoadResult loadResult,
 			XSource2GeneratedMapping newSource2GeneratedMapping,
 			XIndexer.XIndexResult result) {
 
@@ -223,7 +219,7 @@ public class XStatefulIncrementalBuilder {
 				// a source file was renamed/deleted and we did not get a 'didChangeWatchedFiles' notification
 				// OR the rename/delete happened while the build was in progress
 				result.getNewIndex().removeDescription(source);
-				request.setResultIssues(request.getProjectName(), source, Collections.emptyList());
+				request.afterValidate(source, Collections.emptyList());
 				removeGeneratedFiles(source, newSource2GeneratedMapping);
 				IResourceDescription old = context.getOldIndex().getResourceDescription(loadResult.uri);
 				return manager.createDelta(old, null);
@@ -246,10 +242,8 @@ public class XStatefulIncrementalBuilder {
 			List<Issue> issues = resourceValidator.validate(resource, CheckMode.ALL, cancelIndicator);
 			// next line required, because #validate() sometimes returns null when canceled:
 			operationCanceledManager.checkCanceled(cancelIndicator);
-			List<LSPIssue> lspIssues = lspIssueConverter.convertToLSPIssues(resource, issues, cancelIndicator);
-			operationCanceledManager.checkCanceled(cancelIndicator);
-			request.setResultIssues(request.getProjectName(), source, lspIssues);
-			boolean proceedGenerate = !request.containsValidationErrors(source);
+			request.afterValidate(source, issues);
+			boolean proceedGenerate = !containsValidationErrors(issues);
 
 			if (proceedGenerate) {
 				operationCanceledManager.checkCanceled(cancelIndicator);
@@ -261,6 +255,17 @@ public class XStatefulIncrementalBuilder {
 
 		IResourceDescription old = context.getOldIndex().getResourceDescription(source);
 		return manager.createDelta(old, copiedDescription);
+	}
+
+	/** @return true iff the given source has issues of severity ERROR */
+	private boolean containsValidationErrors(List<Issue> issues) {
+		for (Issue issue : issues) {
+			Severity severity = issue.getSeverity();
+			if (severity == Severity.ERROR) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private IResourceServiceProvider getResourceServiceProvider(LoadResult loadResult) {
@@ -288,12 +293,12 @@ public class XStatefulIncrementalBuilder {
 		fileSystemAccess.setBeforeWrite((uri, outputCfgName, contents) -> {
 			newMappings.addSource2Generated(source, uri, outputCfgName);
 			previous.remove(uri);
-			request.setResultGeneratedFile(source, uri);
+			request.afterGenerate(source, uri);
 			return contents;
 		});
 		fileSystemAccess.setBeforeDelete((uri) -> {
 			newMappings.deleteGenerated(uri);
-			request.setResultDeleteFile(uri);
+			request.afterDelete(uri);
 			return true;
 		});
 		fileSystemAccess.setContext(resource);
@@ -312,7 +317,7 @@ public class XStatefulIncrementalBuilder {
 			for (URI noLongerCreated : previous) {
 				try {
 					resourceSet.getURIConverter().delete(noLongerCreated, CollectionLiterals.emptyMap());
-					request.setResultDeleteFile(noLongerCreated);
+					request.afterDelete(noLongerCreated);
 				} catch (IOException e) {
 					Exceptions.sneakyThrow(e);
 				}

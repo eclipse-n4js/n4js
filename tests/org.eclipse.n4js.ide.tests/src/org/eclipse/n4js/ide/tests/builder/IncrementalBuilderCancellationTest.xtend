@@ -35,7 +35,7 @@ class IncrementalBuilderCancellationTest extends AbstractIncrementalBuilderTest 
 		@Inject
 		private OperationCanceledManager operationCanceledManager;
 
-		override protected buildClustured(LoadResult loadResult, XSource2GeneratedMapping newSource2GeneratedMapping, XIndexResult result) {
+		override protected buildClustered(LoadResult loadResult, XSource2GeneratedMapping newSource2GeneratedMapping, XIndexResult result) {
 			var isCancelRequested = false;
 			synchronized(cancelCounter) {
 				isCancelRequested = cancelCounter.get() > 0 && cancelCounter.decrementAndGet() == 0;
@@ -43,7 +43,7 @@ class IncrementalBuilderCancellationTest extends AbstractIncrementalBuilderTest 
 			if (isCancelRequested) {
 				operationCanceledManager.checkCanceled([true]);
 			}
-			super.buildClustured(loadResult, newSource2GeneratedMapping, result);
+			super.buildClustered(loadResult, newSource2GeneratedMapping, result);
 		}
 	}
 

@@ -448,6 +448,19 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 */
 	protected void changeNonOpenedFile(String moduleName, Function<String, String> modification) {
 		FileURI fileURI = getFileURIFromModuleName(moduleName);
+		changeNonOpenedFile(fileURI, modification);
+	}
+
+	/**
+	 * Change a non-opened file <em>on disk</em> and notify the LSP server.
+	 * <p>
+	 * Use method {@link #changeOpenedFile(String, Pair...)} instead if the file was previously opened with one of the
+	 * {@link #openFile(FileURI) #openFile()} methods.
+	 *
+	 * @param modification
+	 *            a function returning the desired new content when given the file's current content on disk.
+	 */
+	protected void changeNonOpenedFile(FileURI fileURI, Function<String, String> modification) {
 		if (isOpen(fileURI)) {
 			Assert.fail("file is open: " + fileURI);
 		}

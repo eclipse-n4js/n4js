@@ -18,6 +18,7 @@ import java.util.Set;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ide.xtext.server.XIProjectDescriptionFactory;
 import org.eclipse.n4js.ide.xtext.server.XIWorkspaceConfigFactory;
+import org.eclipse.n4js.xtext.server.LSPIssue;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
 import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
@@ -25,8 +26,8 @@ import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.workspace.IProjectConfig;
-import org.eclipse.xtext.workspace.ISourceFolder;
 
+import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -49,7 +50,7 @@ import com.google.inject.Singleton;
  * @author Sven Efftinge - Initial contribution and API
  * @since 2.11
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings({ "restriction", "deprecation" })
 @Singleton
 public class XWorkspaceManager {
 
@@ -88,28 +89,23 @@ public class XWorkspaceManager {
 	}
 
 	/** Refresh the workspace. */
-	public void refreshWorkspaceConfig(URI newBaseDir) {
-		XIWorkspaceConfig newWorkspaceConfig = workspaceConfigFactory.createWorkspaceConfig(newBaseDir);
-		fullIndex.initialize(newWorkspaceConfig.toSnapshot());
-		setWorkspaceConfig(newWorkspaceConfig);
+	private void refreshWorkspaceConfig(URI newBaseDir) {
+		setWorkspaceConfig(workspaceConfigFactory.createWorkspaceConfig(newBaseDir));
 	}
 
 	/**
 	 * @param workspaceConfig
 	 *            the new workspace configuration.
 	 */
-	synchronized protected void setWorkspaceConfig(XIWorkspaceConfig workspaceConfig) {
+	private void setWorkspaceConfig(XIWorkspaceConfig workspaceConfig) {
 		if (this.workspaceConfig != null && workspaceConfig != null &&
 				this.workspaceConfig == workspaceConfig) {
 			return;
 		}
 
-		// clean up old projects
-		Collection<ProjectBuilder> pbCopy = new ArrayList<>(getProjectBuilders());
-		for (ProjectBuilder projectBuilder : pbCopy) {
-			removeProject(projectBuilder);
-		}
+		projectName2ProjectBuilder.values().forEach(b -> b.doClear());
 		projectName2ProjectBuilder.clear();
+		fullIndex.initialize(workspaceConfig.toSnapshot());
 		fullIndex.removeAllProjectsIndices();
 
 		// init projects
@@ -146,16 +142,9 @@ public class XWorkspaceManager {
 	 * Answers true, if the uri is from a source folder.
 	 */
 	public boolean isSourceFile(URI uri) {
-		XIWorkspaceConfig config = getWorkspaceConfig();
-		if (config == null) {
-			return false;
-		}
-		IProjectConfig projectConfig = config.findProjectContaining(uri);
-		if (projectConfig != null) {
-			ISourceFolder sourceFolder = projectConfig.findSourceFolderContaining(uri);
-			if (sourceFolder != null) {
-				return true;
-			}
+		ProjectBuilder projectBuilder = getProjectBuilder(uri);
+		if (projectBuilder != null) {
+			return projectBuilder.isSourceFile(uri);
 		}
 		return false;
 	}
@@ -177,15 +166,6 @@ public class XWorkspaceManager {
 	/** Removes a project from the workspace */
 	synchronized public void removeProject(IProjectConfig projectConfig) {
 		String projectName = projectConfig.getName();
-		ProjectBuilder projectBuilder = getProjectBuilder(projectName);
-		XtextResourceSet resourceSet = projectBuilder.getResourceSet();
-		boolean wasDeliver = resourceSet.eDeliver();
-		try {
-			resourceSet.eSetDeliver(false);
-			resourceSet.getResources().clear();
-		} finally {
-			resourceSet.eSetDeliver(wasDeliver);
-		}
 		projectName2ProjectBuilder.remove(projectName);
 		fullIndex.removeProjectIndex(projectName);
 	}
@@ -280,5 +260,17 @@ public class XWorkspaceManager {
 		URI withEmptyAuthority = uriExtensions.withEmptyAuthority(uri);
 		URI relativeUri = withEmptyAuthority.deresolve(getBaseDir());
 		return relativeUri;
+	}
+
+	/**
+	 * Returns the workspace issues known for the given URI.
+	 */
+	public ImmutableList<? extends LSPIssue> getValidationIssues(URI uri) {
+		// TODO Auto-generated method stub
+		ProjectBuilder projectBuilder = getProjectBuilder(uri);
+		if (projectBuilder != null) {
+			return projectBuilder.getValidationIssues(uri);
+		}
+		return ImmutableList.of();
 	}
 }

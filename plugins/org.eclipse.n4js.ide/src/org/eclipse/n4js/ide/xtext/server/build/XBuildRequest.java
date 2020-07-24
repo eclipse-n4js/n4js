@@ -10,20 +10,17 @@ package org.eclipse.n4js.ide.xtext.server.build;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.ide.xtext.server.LSPIssue;
-import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.UriUtil;
+import org.eclipse.xtext.validation.Issue;
 
 import com.google.common.base.StandardSystemProperty;
-import com.google.common.collect.Multimap;
 
 /**
  * @author Jan Koehnlein - Initial contribution and API
@@ -57,17 +54,10 @@ public class XBuildRequest {
 
 	private CancelIndicator cancelIndicator = CancelIndicator.NullImpl;
 
-	/** Note that {@link Multimap} is not used here since we need to store empty lists, too. */
-	private final Map<URI, Collection<LSPIssue>> resultIssues = new LinkedHashMap<>();
-
-	private final Collection<URI> resultDeletedFiles = new ArrayList<>();
-
-	private final Map<URI, URI> resultGeneratedFiles = new LinkedHashMap<>();
-
 	/** Listener for validation events */
 	public static interface AfterValidateListener {
 		/** Called after a source file was validated with the given issues */
-		void afterValidate(String projectName, URI source, Collection<? extends LSPIssue> issues);
+		void afterValidate(URI source, List<? extends Issue> issues);
 	}
 
 	/** Listener for generation events */
@@ -82,11 +72,19 @@ public class XBuildRequest {
 		void afterDelete(URI file);
 	}
 
+	/** Listener for the entire build */
+	public static interface AfterBuildListener {
+		/** Called after the build was done, if (and only if) it completed normally */
+		void afterBuild(XBuildRequest request, XBuildResult result);
+	}
+
 	private AfterValidateListener afterValidateListener;
 
 	private AfterGenerateListener afterGenerateListener;
 
 	private AfterDeleteListener afterDeleteListener;
+
+	private AfterBuildListener afterBuildListener;
 
 	/** Create a new instance. Use {@link IBuildRequestFactory} instead! */
 	public XBuildRequest(String projectName) {
@@ -142,44 +140,31 @@ public class XBuildRequest {
 		this.externalDeltas = externalDeltas;
 	}
 
-	/** Getter. */
-	public Map<URI, Collection<LSPIssue>> getResultIssues() {
-		return this.resultIssues;
-	}
-
-	/** Setter. */
-	public void setResultIssues(String projectName, URI source, Collection<LSPIssue> issues) {
-		this.resultIssues.put(source, issues);
-		this.afterValidate(projectName, source, issues);
-	}
-
 	/** Setter. */
 	public void setAfterValidateListener(AfterValidateListener afterValidateListener) {
 		this.afterValidateListener = afterValidateListener;
 	}
 
+	/** Getter */
+	public AfterValidateListener getAfterValidateListener() {
+		return afterValidateListener;
+	}
+
 	/** Called each time a new set of issues was added for a validated source file */
-	@SuppressWarnings("hiding")
-	public void afterValidate(String projectName, URI source, Collection<LSPIssue> issues) {
+	public void afterValidate(URI source, List<? extends Issue> issues) {
 		if (afterValidateListener != null) {
-			afterValidateListener.afterValidate(projectName, source, issues);
+			afterValidateListener.afterValidate(source, issues);
 		}
 	}
 
-	/** Getter. */
-	public Map<URI, URI> getResultGeneratedFiles() {
-		return this.resultGeneratedFiles;
-	}
-
-	/** Setter. */
-	public void setResultGeneratedFile(URI source, URI generated) {
-		this.resultGeneratedFiles.put(source, generated);
-		afterGenerate(source, generated);
-	}
-
-	/** Setter. */
+	/** Setter that returns the previous value. */
 	public void setAfterGenerateListener(AfterGenerateListener afterGenerateListener) {
 		this.afterGenerateListener = afterGenerateListener;
+	}
+
+	/** Getter */
+	public AfterGenerateListener getAfterGenerateListener() {
+		return afterGenerateListener;
 	}
 
 	/** Called each time a new set of issues was added for a validated source file */
@@ -189,26 +174,37 @@ public class XBuildRequest {
 		}
 	}
 
-	/** Getter. */
-	public Collection<URI> getResultDeleteFiles() {
-		return this.resultDeletedFiles;
-	}
-
-	/** Setter. */
-	public void setResultDeleteFile(URI file) {
-		this.resultDeletedFiles.add(file);
-		afterDelete(file);
-	}
-
-	/** Setter. */
+	/** Setter, that returns the previous value. */
 	public void setAfterDeleteListener(AfterDeleteListener afterDeleteListener) {
 		this.afterDeleteListener = afterDeleteListener;
+	}
+
+	/** Getter */
+	public AfterDeleteListener getAfterDeleteListener() {
+		return afterDeleteListener;
 	}
 
 	/** Called each time a file was deleted */
 	public void afterDelete(URI file) {
 		if (afterDeleteListener != null) {
 			afterDeleteListener.afterDelete(file);
+		}
+	}
+
+	/** Setter, that returns the previous value. */
+	public void setAfterBuildListener(AfterBuildListener afterBuildListener) {
+		this.afterBuildListener = afterBuildListener;
+	}
+
+	/** Getter */
+	public AfterBuildListener getAfterBuildListener() {
+		return afterBuildListener;
+	}
+
+	/** Called after the build was done */
+	public void afterBuild(XBuildResult buildResult) {
+		if (afterBuildListener != null) {
+			afterBuildListener.afterBuild(this, buildResult);
 		}
 	}
 
@@ -302,24 +298,4 @@ public class XBuildRequest {
 		this.cancelIndicator = cancelIndicator;
 	}
 
-	/** @return true iff the given source has issues of severity ERROR */
-	public boolean containsValidationErrors(URI source) {
-		Collection<? extends LSPIssue> issues = this.resultIssues.get(source);
-		for (LSPIssue issue : issues) {
-			Severity severity = issue.getSeverity();
-			if (severity != null) {
-				switch (severity) {
-				case ERROR:
-					return true;
-				case WARNING:
-					break;
-				case INFO:
-					break;
-				case IGNORE:
-					break;
-				}
-			}
-		}
-		return false;
-	}
 }

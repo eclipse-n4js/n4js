@@ -83,6 +83,7 @@ import org.eclipse.lsp4j.services.TextDocumentService;
 import org.eclipse.lsp4j.services.WorkspaceService;
 import org.eclipse.n4js.ide.server.HeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.ide.server.LspLogger;
+import org.eclipse.n4js.ide.xtext.server.issues.PublishingIssueAcceptor;
 import org.eclipse.xtext.ide.server.ICapabilitiesContributor;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 import org.eclipse.xtext.ide.server.ILanguageServerExtension;
@@ -147,8 +148,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	@Inject
 	private ILanguageServerShutdownAndExitHandler shutdownAndExitHandler;
 
+	// TODO only here for connect / disconnect
 	@Inject
-	private IssueAcceptor issueAcceptor;
+	private PublishingIssueAcceptor issuePublisher;
 
 	@Inject
 	private LspLogger lspLogger;
@@ -358,7 +360,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	public void connect(LanguageClient client) {
 		this.client = client;
 		debugService.connect(client);
-		issueAcceptor.connect(client);
+		issuePublisher.connect(client);
 		lspLogger.connect(client);
 		lsFrontend.connect(client);
 	}
@@ -368,7 +370,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	 */
 	public void disconnect() {
 		lspLogger.disconnect();
-		issueAcceptor.disconnect();
+		issuePublisher.disconnect();
 		lsFrontend.disconnect();
 		this.client = null;
 	}

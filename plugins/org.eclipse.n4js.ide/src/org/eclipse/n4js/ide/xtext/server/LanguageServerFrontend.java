@@ -119,7 +119,7 @@ public class LanguageServerFrontend implements TextDocumentService, WorkspaceSer
 	 * Orderly shutdown of this front-end.
 	 */
 	public CompletableFuture<? extends Object> shutdown() {
-		return builderFrontend.shutdown();
+		return CompletableFuture.runAsync(builderFrontend::shutdown);
 	}
 
 	/** Connect this front-end to the given client. */
@@ -177,14 +177,17 @@ public class LanguageServerFrontend implements TextDocumentService, WorkspaceSer
 		// ignore for now
 	}
 
-	/** Deletes all generated files and clears the type index. */
+	/** Triggers the deletion of all generated files and clears the type index. Returns immediately. */
 	public CompletableFuture<Void> clean() {
-		return builderFrontend.clean();
+		builderFrontend.clean();
+		return CompletableFuture.completedFuture(null);
+
 	}
 
-	/** Triggers rebuild of the whole workspace */
+	/** Triggers rebuild of the whole workspace. Returns immediately. */
 	public CompletableFuture<Void> reinitWorkspace() {
-		return builderFrontend.reinitWorkspace();
+		builderFrontend.reinitWorkspace();
+		return CompletableFuture.completedFuture(null);
 	}
 
 	@Override

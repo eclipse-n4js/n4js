@@ -25,14 +25,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -45,9 +40,10 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.n4js.ide.xtext.server.LSPIssue;
+import org.eclipse.n4js.ide.xtext.server.QueuedExecutorService;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.utils.URIUtils;
+import org.eclipse.n4js.xtext.server.LSPIssue;
 import org.eclipse.xtext.build.Source2GeneratedMapping;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -58,9 +54,12 @@ import org.eclipse.xtext.resource.persistence.SerializableResourceDescription;
 import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ListMultimap;
 import com.google.common.io.Files;
-import com.google.common.util.concurrent.MoreExecutors;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
@@ -68,7 +67,7 @@ import com.google.inject.Singleton;
  * compiler process. The first byte in the written binary file indicates the version of the file. The file format is
  * documented per version.
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings({ "restriction", "deprecation" })
 @Singleton
 public class ProjectStatePersister {
 	private static final Logger LOG = LogManager.getLogger(ProjectStatePersister.class);
@@ -82,11 +81,11 @@ public class ProjectStatePersister {
 		/** Hashes to indicate file changes */
 		final public Map<URI, HashedFileContent> fileHashs;
 		/** Hashes to indicate file changes */
-		final public Map<URI, ? extends Collection<LSPIssue>> validationIssues;
+		final public ListMultimap<URI, LSPIssue> validationIssues;
 
 		/** Constructor */
 		public ProjectState(ResourceDescriptionsData index, XSource2GeneratedMapping fileMappings,
-				Map<URI, HashedFileContent> fileHashs, Map<URI, ? extends Collection<LSPIssue>> validationIssues) {
+				Map<URI, HashedFileContent> fileHashs, ListMultimap<URI, LSPIssue> validationIssues) {
 
 			this.index = index;
 			this.fileMappings = fileMappings;
@@ -100,7 +99,7 @@ public class ProjectStatePersister {
 					index.copy(),
 					fileMappings.copy(),
 					ImmutableMap.copyOf(fileHashs),
-					ImmutableMap.copyOf(validationIssues));
+					ImmutableListMultimap.copyOf(validationIssues));
 		}
 	}
 
@@ -118,7 +117,7 @@ public class ProjectStatePersister {
 	 * - #vs times:
 	 * 	- source URI
 	 * 	- Number #vi of issues of source
-	 * 	- #vi times a validation issue as per {@link LSPIssue#writeExternal(DataOutput) N4JSIssue.writeExternal}
+	 * 	- #vi times a validation issue as per {@link LSPIssue#writeExternal(DataOutput) LSPIssue.writeExternal}
 	 * </pre>
 	 */
 	private static final int VERSION_2 = 2;
@@ -126,7 +125,8 @@ public class ProjectStatePersister {
 	/** The current version of the persistence format. Increment to support backwards compatible deserialization. */
 	private static final int CURRENT_VERSION = VERSION_2;
 
-	private final ExecutorService writer = Executors.newSingleThreadExecutor();
+	@Inject
+	private QueuedExecutorService queuedExecutorService;
 
 	/** @return the simple name of the file with the project state. */
 	public String getPersistedFileName() {
@@ -143,21 +143,6 @@ public class ProjectStatePersister {
 		return "1";
 	}
 
-	/** Close this persister and wait for pending write operations to complete. */
-	public void close() {
-		MoreExecutors.shutdownAndAwaitTermination(writer, 5, TimeUnit.SECONDS);
-	}
-
-	/** Return a future that is completed as soon as the currently pending writes are done. */
-	public CompletableFuture<Void> pendingWrites() {
-		if (writer.isTerminated()) {
-			return CompletableFuture.completedFuture(null);
-		}
-		return CompletableFuture.runAsync(() -> {
-			// nothing to do, just wait
-		}, writer).exceptionally(any -> null);
-	}
-
 	/**
 	 * Write the index state and a hash of the project state to disk in order to allow loading it again.
 	 *
@@ -172,7 +157,7 @@ public class ProjectStatePersister {
 	}
 
 	private void asyncWriteProjectState(IProjectConfig project, ProjectState state) {
-		writer.submit(() -> {
+		queuedExecutorService.submit(ProjectStatePersister.class, "asyncWriteProjectState", (ignore) -> {
 			File file = getDataFile(project);
 			try (OutputStream nativeOut = Files.asByteSink(file).openBufferedStream()) {
 				writeProjectState(nativeOut, state);
@@ -182,6 +167,7 @@ public class ProjectStatePersister {
 					file.delete();
 				}
 			}
+			return null;
 		});
 	}
 
@@ -316,7 +302,7 @@ public class ProjectStatePersister {
 		int numberSources = allSources.size();
 		output.writeInt(numberSources);
 		for (URI source : allSources) {
-			Collection<LSPIssue> issues = state.validationIssues.get(source);
+			Collection<? extends LSPIssue> issues = state.validationIssues.get(source);
 
 			output.writeUTF(source.toString());
 
@@ -382,7 +368,7 @@ public class ProjectStatePersister {
 
 			Map<URI, HashedFileContent> fingerprints = readFingerprints(input);
 
-			Map<URI, ? extends Collection<LSPIssue>> validationIssues = readValidationIssues(input);
+			ListMultimap<URI, LSPIssue> validationIssues = readValidationIssues(input);
 
 			return new ProjectState(resourceDescriptionsData, fileMappings, fingerprints, validationIssues);
 		}
@@ -507,19 +493,19 @@ public class ProjectStatePersister {
 		return fingerprints;
 	}
 
-	private Map<URI, ? extends Collection<LSPIssue>> readValidationIssues(DataInput input) throws IOException {
+	private ListMultimap<URI, LSPIssue> readValidationIssues(DataInput input) throws IOException {
 		int numberOfSources = input.readInt();
-		Map<URI, ArrayList<LSPIssue>> validationIssues = new LinkedHashMap<>();
+		ListMultimap<URI, LSPIssue> validationIssues = ArrayListMultimap.create();
 		while (numberOfSources > 0) {
 			numberOfSources--;
 			URI source = URI.createURI(input.readUTF());
 			int numberOfIssues = input.readInt();
+			List<LSPIssue> issuesPerResource = validationIssues.get(source);
 			while (numberOfIssues > 0) {
 				numberOfIssues--;
 				LSPIssue issue = new LSPIssue();
 				issue.readExternal(input);
-				validationIssues.putIfAbsent(source, new ArrayList<LSPIssue>());
-				validationIssues.get(source).add(issue);
+				issuesPerResource.add(issue);
 			}
 		}
 		return validationIssues;

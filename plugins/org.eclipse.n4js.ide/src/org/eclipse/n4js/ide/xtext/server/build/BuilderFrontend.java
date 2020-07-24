@@ -11,11 +11,11 @@
 package org.eclipse.n4js.ide.xtext.server.build;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
-import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.DidChangeWatchedFilesParams;
 import org.eclipse.lsp4j.DidSaveTextDocumentParams;
@@ -23,12 +23,10 @@ import org.eclipse.lsp4j.FileChangeType;
 import org.eclipse.lsp4j.FileEvent;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.n4js.ide.xtext.server.QueuedExecutorService;
-import org.eclipse.n4js.ide.xtext.server.build.XBuildManager.XBuildable;
+import org.eclipse.n4js.xtext.server.LSPIssue;
 import org.eclipse.xtext.ide.server.UriExtensions;
-import org.eclipse.xtext.resource.IResourceDescription.Delta;
-import org.eclipse.xtext.util.CancelIndicator;
 
-import com.google.common.base.Stopwatch;
+import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -36,10 +34,9 @@ import com.google.inject.Singleton;
  * Facade for all builder-related functionality in the LSP server. From outside the builder-related classes, all use of
  * the LSP builder should go through this class.
  */
+@SuppressWarnings("deprecation")
 @Singleton
 public class BuilderFrontend {
-
-	private static final Logger LOG = Logger.getLogger(BuilderFrontend.class);
 
 	@Inject
 	private QueuedExecutorService queuedExecutorService;
@@ -48,13 +45,10 @@ public class BuilderFrontend {
 	private UriExtensions uriExtensions;
 
 	@Inject
-	private ProjectStatePersister persister;
-
-	@Inject
 	private XWorkspaceManager workspaceManager;
 
 	@Inject
-	private XBuildManager buildManager;
+	private XWorkspaceBuilder buildManager;
 
 	/**
 	 * Returns the base directory of the workspace.
@@ -93,30 +87,7 @@ public class BuilderFrontend {
 	 * Trigger an initial build in the background.
 	 */
 	public void initialBuild() {
-		queuedExecutorService.submitAndCancelPrevious(XBuildManager.class, "initialBuild",
-				cancelIndicator -> {
-					doInitialBuild(cancelIndicator);
-					return null;
-				});
-	}
-
-	/**
-	 * Perform the initial build.
-	 *
-	 * @param ci
-	 *            the cancel indicator.
-	 */
-	protected void doInitialBuild(CancelIndicator ci) {
-		Stopwatch sw = Stopwatch.createStarted();
-		try {
-			LOG.info("Start initial build ...");
-			buildManager.doInitialBuild(CancelIndicator.NullImpl);
-		} catch (Throwable t) {
-			LOG.error(t.getMessage(), t);
-			throw t;
-		} finally {
-			LOG.info("Initial build done after " + sw);
-		}
+		asyncRunBuildTask("initialBuild", () -> buildManager.initialBuild());
 	}
 
 	/**
@@ -124,30 +95,24 @@ public class BuilderFrontend {
 	 * includes index data, source2generated mappings, cached issues and persisted index state. A subsequent build is
 	 * not triggered automatically.
 	 */
-	public CompletableFuture<Void> clean() {
-		return queuedExecutorService.submitAndCancelPrevious(XBuildManager.class, "clean", cancelIndicator -> {
-			buildManager.clean(CancelIndicator.NullImpl);
-			return null;
-		});
+	public void clean() {
+		asyncRunBuildTask("clean", () -> buildManager.clean());
 	}
 
 	/**
 	 * Triggers rebuild of the whole workspace
 	 */
-	public CompletableFuture<Void> reinitWorkspace() {
-		return queuedExecutorService.submitAndCancelPrevious(XBuildManager.class, "reinitWorkspace",
-				cancelIndicator -> {
-					workspaceManager.reinitialize();
-					buildManager.doInitialBuild(CancelIndicator.NullImpl);
-					return null;
-				});
+	public void reinitWorkspace() {
+		asyncRunBuildTask("reinitWorkspace", () -> buildManager.initialBuild());
 	}
 
 	/**
 	 * Trigger an incremental build in the background.
 	 */
 	public void didSave(DidSaveTextDocumentParams params) {
-		runBuildable("didSave", () -> toBuildable(params));
+		URI uri = getURI(params.getTextDocument());
+		asyncRunBuildTask("didSave",
+				() -> buildManager.incrementalBuildTask(Collections.singletonList(uri), Collections.emptyList()));
 	}
 
 	/**
@@ -158,61 +123,42 @@ public class BuilderFrontend {
 		List<URI> deletedFiles = new ArrayList<>();
 		for (FileEvent fileEvent : params.getChanges()) {
 			URI uri = uriExtensions.toUri(fileEvent.getUri());
-
-			String fileName = uri.lastSegment();
-			boolean skipFile = fileName.equals(persister.getPersistedFileName());
-
-			if (!skipFile && isSourceFile(uri)) {
-				FileChangeType changeType = fileEvent.getType();
-
-				if (changeType == FileChangeType.Deleted) {
-					deletedFiles.add(uri);
-				} else {
-					dirtyFiles.add(uri);
-				}
+			FileChangeType changeType = fileEvent.getType();
+			if (changeType == FileChangeType.Deleted) {
+				deletedFiles.add(uri);
+			} else {
+				dirtyFiles.add(uri);
 			}
 		}
 		if (!dirtyFiles.isEmpty() || !deletedFiles.isEmpty()) {
-			runBuildable("didChangeWatchedFiles", () -> buildManager.didChangeFiles(dirtyFiles, deletedFiles));
+			asyncRunBuildTask("didChangeWatchedFiles",
+					() -> buildManager.incrementalBuildTask(dirtyFiles, deletedFiles));
 		}
 	}
 
-	/**
-	 * Evaluate the parameters and deduce the respective build command.
+	// TODO accept a parameter `boolean cancelPrevious` and overload most of the other methods
+	/*
+	 * Use case: We don't want to cancel the clean when we run a reinitWorkspace afterwards.
 	 */
-	protected XBuildable toBuildable(DidSaveTextDocumentParams params) {
-		return buildManager.didSave(getURI(params.getTextDocument()));
-	}
-
 	/**
-	 * Compute a buildable and run it on the queue used for the builder.
+	 * Obtain a buildable and run it on the queue used for the workspace builder.
 	 *
-	 * @param newBuildable
+	 * @param taskSupplier
 	 *            the factory for the buildable.
-	 * @return the result.
 	 */
-	public CompletableFuture<List<Delta>> runBuildable(String description,
-			Supplier<? extends XBuildable> newBuildable) {
-		return queuedExecutorService.submitAndCancelPrevious(XBuildManager.class, description, cancelIndicator -> {
-			XBuildable buildable = newBuildable.get();
-			return buildable.build(cancelIndicator);
+	public CompletableFuture<?> asyncRunBuildTask(String description,
+			Supplier<? extends BuildTask> taskSupplier) {
+		return queuedExecutorService.submitAndCancelPrevious(XWorkspaceBuilder.class, description, cancelIndicator -> {
+			return taskSupplier.get().build(cancelIndicator);
 		});
 	}
 
 	/**
 	 * Initiate an orderly shutdown.
 	 */
-	public CompletableFuture<Void> shutdown() {
-		return runBuildable("shutdown", () -> {
-			return (cancelIndicator) -> {
-				joinPersister();
-				return null;
-			};
-		}).thenApply(any -> {
-			persister.close();
-			queuedExecutorService.shutdown();
-			return null;
-		});
+	public void shutdown() {
+		join();
+		queuedExecutorService.shutdown();
 	}
 
 	/**
@@ -220,18 +166,13 @@ public class BuilderFrontend {
 	 */
 	public void join() {
 		queuedExecutorService.join();
-		joinPersister();
-	}
-
-	private void joinPersister() {
-		persister.pendingWrites().join();
 	}
 
 	/**
-	 * Answer true, if the uri is from a source folder in the current workspace.
+	 * Returns the workspace issues known for the given URI.
 	 */
-	protected boolean isSourceFile(URI uri) {
-		return workspaceManager.isSourceFile(uri);
+	public ImmutableList<? extends LSPIssue> getValidationIssues(URI uri) {
+		return workspaceManager.getValidationIssues(uri);
 	}
 
 	/**
