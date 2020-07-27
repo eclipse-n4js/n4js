@@ -11,6 +11,7 @@
 
 import * as n4jscli from 'n4js-cli';
 import * as jreProvider from 'n4js-cli/JreProvider';
+import {N4JS_CLI_CONFIG} from 'n4js-cli/Globals';
 import * as net from 'net';
 import * as childProcess from 'child_process';
 
@@ -21,6 +22,7 @@ const PORT = 5007;
 const TIMEOUT = 1000;
 
 let n4jscProcess: childProcess.ChildProcess;
+let outputChannel: any+;
 let outputAppender: (text:string)=>void;
 let n4jscjarFile: string;
 
@@ -31,7 +33,11 @@ enum TraceOutputValue {
     verbose
 }
 
-
+/*
+ * Implementation note: The output appender is a listener that is added/removed to
+ * n4jscProcess.stdout.'data' event. Hence, the variable 'outputAppender' must store
+ * the listener instance to support removing it.
+ */
 function getOutputAppender(outputChannel: any+): (text:string)=>void {
     if (!outputAppender) {
         outputAppender = (text: string) => outputChannel.append(text.toString());
@@ -41,9 +47,10 @@ function getOutputAppender(outputChannel: any+): (text:string)=>void {
 
 
 
-export function getActivate(vscode: any+, vscodeLC: any+): any {
+export function getActivate(vscode: any+, vscodeLC: any+): {function(context: any+) : void } {
     return (context: any+ /*VSCode.ExtensionContext*/) => {
-        let outputChannel = vscode.window.createOutputChannel(CHANNEL_NAME);
+        // outputChannel can be initialized already in case the #reload(...) was invoked
+        outputChannel = outputChannel ?? vscode.window.createOutputChannel(CHANNEL_NAME);
 
         let serverOptions = async () => {
             outputChannel.appendLine('Start LSP extension');
@@ -118,7 +125,12 @@ export function getActivate(vscode: any+, vscodeLC: any+): any {
             const printDebugInfoCommand = 'n4js.debug.printDebugInfo';
             const printDebugInfoHandler = () => lc.sendRequest(printDebugInfoRT, { });
             context.subscriptions.push(vscode.commands.registerCommand(printDebugInfoCommand, printDebugInfoHandler));
-            
+
+            // Add listener to changes in .n4js-cli.config to trigger restarts in case the n4jsc.jar changes
+            const fileSystemWatcher = vscode.workspace.createFileSystemWatcher(`{**/${N4JS_CLI_CONFIG}}`);
+            fileSystemWatcher.onDidCreate(() => onN4jscliConfigChange(vscode, vscodeLC, context, outputChannel) );
+            fileSystemWatcher.onDidChange(() => onN4jscliConfigChange(vscode, vscodeLC, context, outputChannel) );
+            fileSystemWatcher.onDidDelete(() => onN4jscliConfigChange(vscode, vscodeLC, context, outputChannel) );
         });
         let disposableLangClient = lc.start();
         
@@ -191,9 +203,9 @@ async function startN4jsLspServerAndConnect(port: number, vscode: any+, outputCh
     const spawnOptions: childProcess.SpawnOptions = { env: env };
     const vmOptions: ~n4jscli.VmOptions = { xmx: getJavaVMXmxSetting(vscode) };
 
-    // The server is started as a separate process
+    // track which n4jsc.jar is used (null means default)
     n4jscjarFile = n4jscli.findN4jscJarConfigProperty(workspaceDir, () => null);
-    logFn("will use " + n4jscjarFile);
+    // The server is started as a separate process
     n4jscProcess = await n4jscli.n4jscProcess(n4jscli.Goal.lsp, workspaceDir, n4jscOptions, vmOptions, spawnOptions, logFn);
 
     // Set output channels
@@ -227,7 +239,6 @@ function getWorkspaceDir(vscode: any+) : string {
 }
 
 async function connectToRunningN4jsLspServer(port: number, outputChannel: any+): net.Socket {
-
     let connectionPromise = new Promise<net.Socket, any>((resolve, reject) => {
         try {
             let timer = setTimeout(() => {
@@ -260,7 +271,39 @@ async function connectToRunningN4jsLspServer(port: number, outputChannel: any+):
 };
 
 
+function onN4jscliConfigChange(vscode: any+, vscodeLC: any+, context: any+, outputChannel: any+) : void {
+    const workspaceDir = getWorkspaceDir(vscode);
+    const newN4jscjarFile = n4jscli.findN4jscJarConfigProperty(workspaceDir, () => null);
+    if (n4jscjarFile != newN4jscjarFile) {
+        requestUserReload(vscode, vscodeLC, context, outputChannel);
+    }
+}
 
+function requestUserReload(vscode: any+, vscodeLC: any+, context: any+, outputChannel: any+) {
+    vscode.window
+        .showInformationMessage("The config file .n4js-cli.config changed. A reload of the N4JS Extension is necessary for changes to take effect.", "Reload Extension")
+        .then(async function (value: string) {
+            if (value == "Reload Extension") {
+                await reload(vscode, vscodeLC, context, outputChannel);
+            }
+        });
+}
+
+async function reload(vscode: any+, vscodeLC: any+, context: any+, outputChannel: any+) {
+    outputChannel.appendLine("Reloading N4JS Extension...");
+    for (const sub: any+ of context.subscriptions as Iterable<?>) {
+        try {
+            sub.dispose();
+        } catch (e) {
+            console.error(e);
+        }
+    }
+    const deactivate = getDeactivate(vscode, vscodeLC);
+    await deactivate();
+
+    const activate = getActivate(vscode, vscodeLC);
+    activate(context);
+}
 
 async function sleep(ms: number) {
     return new Promise<any,any>((resolve) => {
