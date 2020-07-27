@@ -90,7 +90,7 @@ public class ProjectBuilder {
 	@Inject
 	protected ProjectStatePersister projectStatePersister;
 
-	/** Holds configuration about project persisting */
+	/** Configuration for the project state persister */
 	@Inject
 	protected ProjectStatePersisterConfig persisterConfig;
 
@@ -102,7 +102,7 @@ public class ProjectBuilder {
 	@Inject
 	protected OperationCanceledManager operationCanceledManager;
 
-	/** The map for this project's resource set. */
+	/** The map for this project's resources. */
 	@Inject
 	protected ProjectUriResourceMap uriResourceMap;
 
@@ -142,7 +142,7 @@ public class ProjectBuilder {
 	 * Initial build reads the project state and resolves changes. Generate output files.
 	 * <p>
 	 * This method assumes that it is only invoked in situations when the client does not have any diagnostics stored,
-	 * e.g. directly after invoking {@link #doClean(AfterDeleteListener, CancelIndicator)}, and that therefore no
+	 * e.g. directly after invoking {@link #doClean(AfterDeleteListener, CancelIndicator)}. Therefore no
 	 * 'publishDiagnostics' events with an empty list of diagnostics need to be sent to the client in order to remove
 	 * obsolete diagnostics.
 	 * <p>

@@ -48,6 +48,7 @@ import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.LazyStringInputStream;
 import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.IResourceValidator;
+import org.eclipse.xtext.validation.Issue;
 
 import com.google.common.collect.ImmutableSetMultimap;
 import com.google.inject.Inject;
@@ -358,13 +359,14 @@ public class ResourceTaskContext {
 		IResourceServiceProvider resourceServiceProvider = resourceServiceProviderRegistry
 				.getResourceServiceProvider(mainURI);
 		IResourceValidator resourceValidator = resourceServiceProvider.getResourceValidator();
-		List<? extends LSPIssue> issues = LSPIssue
-				.cast(resourceValidator.validate(mainResource, CheckMode.ALL, cancelIndicator));
+		List<Issue> issues = resourceValidator.validate(mainResource, CheckMode.ALL, cancelIndicator);
 		operationCanceledManager.checkCanceled(cancelIndicator); // #validate() sometimes returns null when canceled!
+
+		List<? extends LSPIssue> castedIssues = LSPIssue.cast(issues);
 		if (!isTemporary()) {
-			issuePublisher.accept(mainResource.getURI(), issues);
+			issuePublisher.accept(mainResource.getURI(), castedIssues);
 		}
-		return issues;
+		return castedIssues;
 	}
 
 	/** Send dirty state index update to parent. Ignored for {@link #isTemporary() temporary} contexts. */

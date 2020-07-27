@@ -266,7 +266,6 @@ public class XWorkspaceManager {
 	 * Returns the workspace issues known for the given URI.
 	 */
 	public ImmutableList<? extends LSPIssue> getValidationIssues(URI uri) {
-		// TODO Auto-generated method stub
 		ProjectBuilder projectBuilder = getProjectBuilder(uri);
 		if (projectBuilder != null) {
 			return projectBuilder.getValidationIssues(uri);
