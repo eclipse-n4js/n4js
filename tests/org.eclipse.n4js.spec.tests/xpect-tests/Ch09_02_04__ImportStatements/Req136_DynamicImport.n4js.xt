@@ -71,3 +71,17 @@ N4JSDStatic.D;
 N4JSDDynamic.D;
 // XPECT noerrors -->
 N4JSDDynamic.X;
+
+// XPECT type of 'n4jsDynamic' --> N4JSDynamic+
+let n4jsDynamic = N4JSDynamic;
+// XPECT noerrors -->
+n4jsDynamic.C;
+// XPECT noerrors -->
+n4jsDynamic.X;
+
+// XPECT type of 'n4jsdDynamic' --> N4JSDDynamic+
+let n4jsdDynamic = N4JSDDynamic;
+// XPECT noerrors -->
+n4jsdDynamic.C;
+// XPECT noerrors -->
+n4jsdDynamic.X;
