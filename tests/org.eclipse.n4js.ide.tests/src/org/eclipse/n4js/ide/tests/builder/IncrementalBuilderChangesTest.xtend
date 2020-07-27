@@ -11,6 +11,8 @@
 package org.eclipse.n4js.ide.tests.builder
 
 import org.junit.Test
+import static org.junit.Assert.assertEquals
+import org.junit.Ignore
 
 /**
  * Tests incremental builds triggered by changes in source files.
@@ -224,5 +226,37 @@ class IncrementalBuilderChangesTest extends AbstractIncrementalBuilderTest {
 		closeFileDiscardingChanges("A", true);
 		joinServerRequests();
 		assertNoIssues();
+	}
+	
+	@Ignore("https://github.com/eclipse/n4js/issues/1822")
+	@Test
+	def void testTransitivelyAffected() {
+		testWorkspaceManager.createTestProjectOnDisk(
+			"A" -> '''
+				export public let a = {
+					a1 : {
+						a2 : ''
+					}
+				};
+			''',
+			"B" -> '''
+				import {a} from "A";
+				export public let b = a.a1;
+			''',
+			"C" -> '''
+				import {b} from "B";
+				export public let c = b.a3; // initially broken
+			'''
+		);
+		startAndWaitForLspServer();
+		var issues = getIssues().values().map[getStringLSP4J.toStringShort(it)].toSet;
+		assertEquals(issues.join('\n'), 1, issues.size);
+		assertEquals("(Error, [1:24 - 1:26], Couldn't resolve reference to IdentifiableElement 'a3'.)",	issues.head)
+
+		// Rename a2 to a3 to fix the reference in C
+		changeNonOpenedFile("A", 'a2' -> 'a3');
+		joinServerRequests();
+		issues = getIssues().values().map[getStringLSP4J.toStringShort(it)].toSet;
+		assertEquals(issues.join('\n'), 0, issues.size);
 	}
 }

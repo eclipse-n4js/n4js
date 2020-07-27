@@ -53,6 +53,31 @@ import com.google.inject.Inject;
 @SuppressWarnings({ "hiding", "restriction" })
 public class XWorkspaceBuilder {
 
+	private static class AffectedResourcesRecordingFactory implements IBuildRequestFactory {
+		private final IBuildRequestFactory delegate;
+		private final Set<URI> affected;
+
+		private AffectedResourcesRecordingFactory(IBuildRequestFactory delegate) {
+			this.delegate = delegate;
+			this.affected = new HashSet<>();
+		}
+
+		@Override
+		public XBuildRequest getBuildRequest(String projectName, Set<URI> changedFiles,
+				Set<URI> deletedFiles, List<Delta> externalDeltas) {
+			XBuildRequest result = delegate.getBuildRequest(projectName, changedFiles, deletedFiles, externalDeltas);
+			result.addAffectedListener(affected::add);
+			return result;
+		}
+
+		/**
+		 * Return all resources that have been identified as affected so far by a request created from this factory.
+		 */
+		public Set<URI> getAffectedResources() {
+			return affected;
+		}
+	}
+
 	private static final Logger LOG = LogManager.getLogger(XWorkspaceBuilder.class);
 
 	@Inject
@@ -80,7 +105,7 @@ public class XWorkspaceBuilder {
 	private final Set<URI> deletedFiles = new LinkedHashSet<>();
 
 	/** Holds all deltas of all projects. In case of a cancelled build, this set is not empty at start of next build. */
-	private List<IResourceDescription.Delta> allBuildDeltas = new ArrayList<>();
+	private List<IResourceDescription.Delta> toBeConsideredDeltas = new ArrayList<>();
 
 	/**
 	 * Announce dirty and deleted files and provide means to start a build.
@@ -271,21 +296,27 @@ public class XWorkspaceBuilder {
 			ProjectBuildOrderIterator pboIterator = projectBuildOrderInfo.getIterator(changedPDs);
 
 			while (pboIterator.hasNext()) {
+
 				ProjectDescription descr = pboIterator.next();
 				ProjectBuilder projectBuilder = workspaceManager.getProjectBuilder(descr.getName());
 				Set<URI> projectDirty = project2dirty.getOrDefault(descr, Collections.emptySet());
 				Set<URI> projectDeleted = project2deleted.getOrDefault(descr, Collections.emptySet());
 
-				// the projectResult might contain partial information in case the build was cancelled
 				XBuildResult projectResult;
+				AffectedResourcesRecordingFactory recordingFactory = new AffectedResourcesRecordingFactory(
+						buildRequestFactory);
 				try {
-					projectResult = projectBuilder.doIncrementalBuild(buildRequestFactory, projectDirty, projectDeleted,
-							allBuildDeltas, cancelIndicator);
-				} catch (BuildCanceledException e) {
-					// TODO GH-1793 remove this temporary solution
-					dirtyFiles.addAll(e.incompletelyBuiltFiles);
-					e.rethrowOriginalCancellation();
-					throw new IllegalStateException("should never get here");
+					projectResult = projectBuilder.doIncrementalBuild(
+							recordingFactory,
+							projectDirty,
+							projectDeleted,
+							toBeConsideredDeltas,
+							cancelIndicator);
+				} catch (Throwable t) {
+					// re-schedule the affected files since a subsequent build may not detect those as affected
+					// anymore but we may have produced artifacts for these already
+					this.dirtyFiles.addAll(recordingFactory.getAffectedResources());
+					throw t;
 				}
 
 				List<Delta> newlyBuiltDeltas = projectResult.getAffectedResources();
@@ -294,8 +325,8 @@ public class XWorkspaceBuilder {
 				pboIterator.visitAffected(newlyBuiltDeltas);
 			}
 
-			List<IResourceDescription.Delta> result = allBuildDeltas;
-			allBuildDeltas = new ArrayList<>();
+			List<IResourceDescription.Delta> result = toBeConsideredDeltas;
+			toBeConsideredDeltas = new ArrayList<>();
 
 			lspLogger.log("... build done.");
 
@@ -348,21 +379,21 @@ public class XWorkspaceBuilder {
 	}
 
 	private void mergeWithUnreportedDeltas(List<IResourceDescription.Delta> newDeltas) {
-		if (allBuildDeltas.isEmpty()) {
-			allBuildDeltas.addAll(newDeltas);
+		if (toBeConsideredDeltas.isEmpty()) {
+			toBeConsideredDeltas.addAll(newDeltas);
 		} else {
-			Map<URI, IResourceDescription.Delta> unreportedByUri = IterableExtensions.toMap(
-					allBuildDeltas, IResourceDescription.Delta::getUri);
+			Map<URI, IResourceDescription.Delta> deltasByURI = IterableExtensions.toMap(
+					toBeConsideredDeltas, IResourceDescription.Delta::getUri);
 
 			for (IResourceDescription.Delta newDelta : newDeltas) {
-				IResourceDescription.Delta unreportedDelta = unreportedByUri.get(newDelta.getUri());
+				IResourceDescription.Delta unreportedDelta = deltasByURI.get(newDelta.getUri());
 				if (unreportedDelta == null) {
-					allBuildDeltas.add(newDelta);
+					toBeConsideredDeltas.add(newDelta);
 				} else {
-					allBuildDeltas.remove(unreportedDelta);
+					toBeConsideredDeltas.remove(unreportedDelta);
 					IResourceDescription _old = unreportedDelta.getOld();
 					IResourceDescription _new = newDelta.getNew();
-					allBuildDeltas.add(new DefaultResourceDescriptionDelta(_old, _new));
+					toBeConsideredDeltas.add(new DefaultResourceDescriptionDelta(_old, _new));
 				}
 			}
 		}
