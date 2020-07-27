@@ -213,10 +213,11 @@ export public function findN4jscJarConfigProperty(workingDir: string, log: {func
     }
     if (workingDir && fs.existsSync(workingDir)) {
         // n4js-cli config file exists
-        const customN4jscName = getN4jscjarFromConfig(workingDir);
+        const pathN4jscliConfigFile = findN4jscliConfig(workingDir);
+        const customN4jscName = getN4jscjarFromConfig(pathN4jscliConfigFile);
         if (customN4jscName) {
             // custom n4jsc.jar set in n4js-cli configuration file
-            log("picked up property 'n4jsc.jar' in config file " + N4JS_CLI_CONFIG);
+            log("picked up property 'n4jsc.jar' from config file " + pathN4jscliConfigFile);
             return customN4jscName;
         }
     }
@@ -224,10 +225,9 @@ export public function findN4jscJarConfigProperty(workingDir: string, log: {func
     return null;
 }
 
-function getN4jscjarFromConfig(workingDir : string) : string {
-    let pathN4jscliConfig = findN4jscliConfig(workingDir);
-    if (pathN4jscliConfig) {
-        const data = fs.readFileSync(pathN4jscliConfig, {encoding : 'utf8'});
+function getN4jscjarFromConfig(pathN4jscliConfigFile : string) : string {
+    if (pathN4jscliConfigFile) {
+        const data = fs.readFileSync(pathN4jscliConfigFile, {encoding : 'utf8'});
         const n4jscliConfig : any+ = JSON.parse(data);
         if (n4jscliConfig && n4jscliConfig["n4jsc.jar"]) {
             return n4jscliConfig["n4jsc.jar"] as string;
