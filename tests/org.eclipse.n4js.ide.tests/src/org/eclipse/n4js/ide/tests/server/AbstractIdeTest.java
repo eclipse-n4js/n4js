@@ -419,6 +419,17 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		joinServerRequests();
 	}
 
+	/** Delete a non-opened file <u>from disk</u> and notify the LSP server. */
+	protected void deleteNonOpenedFile(FileURI fileURI) {
+		// 1) change on disk
+		deleteFileOnDiskWithoutNotification(fileURI);
+		// 2) notify LSP server
+		List<FileEvent> fileEvents = Collections.singletonList(
+				new FileEvent(fileURI.toString(), FileChangeType.Deleted));
+		DidChangeWatchedFilesParams params = new DidChangeWatchedFilesParams(fileEvents);
+		languageServer.didChangeWatchedFiles(params);
+	}
+
 	/**
 	 * Change a non-opened file <u>on disk</u> and notify the LSP server.
 	 * <p>

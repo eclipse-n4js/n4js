@@ -23,8 +23,8 @@ import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.DEPENDENCIE
 import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.N4JS_RUNTIME
 import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.NODE_MODULES
 import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.YARN_TEST_PROJECT
-import static org.junit.Assert.assertTrue
 import static org.junit.Assert.assertFalse
+import static org.junit.Assert.assertTrue
 
 /**
  * Tests incremental builds triggered by changes that lead to a different overall workspace configuration,
@@ -135,6 +135,49 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 		assertTrue("output file of module 'Other' should exist", outputFile.exists()); // output file has appeared
 // TODO GH-1766 update of package.json in a project depending on the added project does not work yet
 //		assertNoIssues(); // now the original errors have gone away
+	}
+
+	@Test
+	def void testDeleteProject_inYarnWorkspace() throws IOException {
+		testWorkspaceManager.createTestOnDisk(
+			NODE_MODULES + N4JS_RUNTIME -> null,
+			"MainProject" -> #[
+				"Main" -> '''
+					import {OtherClass} from "Other";
+					new OtherClass().m();
+				''',
+				DEPENDENCIES -> '''
+					«N4JS_RUNTIME»,
+					OtherProject
+				'''
+			],
+			"OtherProject" -> #[
+				"Other" -> '''
+					export public class OtherClass {
+						public m() {}
+					}
+				''',
+				DEPENDENCIES -> N4JS_RUNTIME
+			]
+		);
+
+		startAndWaitForLspServer();
+		assertNoIssues();
+
+		val packageJsonFile = getPackageJsonFile("OtherProject");
+		deleteNonOpenedFile(packageJsonFile.toFileURI);
+		joinServerRequests();
+
+		val errors = Map.of(
+			getFileURIFromModuleName("Main"), #[
+				"(Error, [0:25 - 0:32], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
+				"(Error, [1:4 - 1:14], Couldn't resolve reference to IdentifiableElement 'OtherClass'.)"
+			],
+			getPackageJsonFile("MainProject").toFileURI, #[
+				"(Error, [16:3 - 16:22], Project does not exist with project ID: OtherProject.)"
+			]
+		);
+		assertIssues(errors);
 	}
 
 	@Test
