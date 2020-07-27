@@ -140,20 +140,25 @@ export public async function downloadFile(url: string, filename: string, log: {f
     return new Promise<any, any>((resolve, reject) => {
             followRedirects.https.get(url,
                 (response : any+) => {
-                    const file = fs.createWriteStream(filename);
-                    response.pipe(file);
-                    log("receiving file ...");
+                    if (response.statusCode !== 200) {
+                        reject("Error during download: status code was " + response.statusCode);
 
-                    response.on("error",
-                        err => {
-                            log("n4js-cli" + err);
-                            reject(err);
-                        });
-                    response.on("end",
-                        () => {
-                            log("File written to " + filename);
-                            resolve();
-                        });
+                    } else {
+                        const file = fs.createWriteStream(filename);
+                        response.pipe(file);
+                        log("receiving file ...");
+    
+                        response.on("error",
+                            err => {
+                                log("n4js-cli" + err);
+                                reject(err);
+                            });
+                        response.on("end",
+                            () => {
+                                log("File written to " + filename);
+                                resolve();
+                            });
+                    }
                 });
         });
 }

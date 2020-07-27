@@ -174,10 +174,14 @@ async function modifyArgs(args: N4jscArguments, log: {function(string)}): N4jscA
     // replace n4jsc.jar (and download if not available)
     const n4jscjarConfigProperty = findN4jscJarConfigProperty(args.dir, log);
     if (n4jscjarConfigProperty) {
-        const n4jscjarName = await ensureCustomN4jscJar(n4jscjarConfigProperty, log);
-        if (n4jscjarName) {
-            log("using n4jsc.jar: " + n4jscjarName);
-            args.n4jscjar = n4jscjarName;
+        try {
+            const n4jscjarName = await ensureCustomN4jscJar(n4jscjarConfigProperty, log);
+            if (n4jscjarName) {
+                log("using n4jsc.jar: " + n4jscjarName);
+                args.n4jscjar = n4jscjarName;
+            }
+        } catch (e) {
+            log("Failed to use jar specified in .n4js-cli.config. Using default jar instead.");
         }
     }
 
@@ -267,10 +271,14 @@ async function ensureCustomN4jscJar(customN4jscName: string, log: {function(stri
     }
     if (isValidUrl(customN4jscName, log)) {
         // an URL not yet downloaded
-        await downloadFile(customN4jscName, jarInBinDir, log);
-        if (fs.existsSync(jarInBinDir)) {
-            // should be now inside bin directory
-            return jarInBinDir;
+        try {
+            await downloadFile(customN4jscName, jarInBinDir, log);
+            if (fs.existsSync(jarInBinDir)) {
+                // should be now inside bin directory
+                return jarInBinDir;
+            }
+        } catch (e) {
+            log(e as string);
         }
     }
 
