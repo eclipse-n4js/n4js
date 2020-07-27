@@ -201,15 +201,15 @@ async function modifyArgs(args: N4jscArguments, log: {function(string)}): N4jscA
  * - the value of property 'n4jscjar' of the n4js-cli configuration file,
  * - or null.
  */
-export public function findN4jscJarConfigProperty(workspaceDir: string, log: {function(string)}) : string {
+export public function findN4jscJarConfigProperty(workingDir: string, log: {function(string)}) : string {
     if (process.env.N4JSC_JAR) {
         // custom n4jsc.jar given as environment variable
         log("picked up environment variable N4JSC_JAR");
         return process.env.N4JSC_JAR as string;
     }
-    if (workspaceDir && fs.existsSync(workspaceDir)) {
+    if (workingDir && fs.existsSync(workingDir)) {
         // n4js-cli config file exists
-        const customN4jscName = getN4jscjarFromConfig(workspaceDir);
+        const customN4jscName = getN4jscjarFromConfig(workingDir);
         if (customN4jscName) {
             // custom n4jsc.jar set in n4js-cli configuration file
             log("picked up property 'n4jsc.jar' in config file " + N4JS_CLI_CONFIG);
@@ -220,8 +220,8 @@ export public function findN4jscJarConfigProperty(workspaceDir: string, log: {fu
     return null;
 }
 
-function getN4jscjarFromConfig(dirArg : string) : string {
-    let pathN4jscliConfig = findN4jscliConfig(dirArg);
+function getN4jscjarFromConfig(workingDir : string) : string {
+    let pathN4jscliConfig = findN4jscliConfig(workingDir);
     if (pathN4jscliConfig) {
         const data = fs.readFileSync(pathN4jscliConfig, {encoding : 'utf8'});
         const n4jscliConfig : any+ = JSON.parse(data);
@@ -232,8 +232,8 @@ function getN4jscjarFromConfig(dirArg : string) : string {
     return null;
 }
 
-function findN4jscliConfig(dirArg : string) : string {
-    let dir = path.resolve(dirArg);
+export public function findN4jscliConfig(workingDir : string) : string {
+    let dir = path.resolve(workingDir);
     while (true) {
         if (dir.length < 2) {
             return null;

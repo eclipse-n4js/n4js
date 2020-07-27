@@ -127,15 +127,17 @@ export function getActivate(vscode: any+, vscodeLC: any+): {function(context: an
             context.subscriptions.push(vscode.commands.registerCommand(printDebugInfoCommand, printDebugInfoHandler));
 
             // Add listener to changes in .n4js-cli.config to trigger restarts in case the n4jsc.jar changes
+            // Note: FileSystemWatchers do work only inside the workspace folder.
+            // Hence, changes won't be recognized iff the project root folder is outside (i.e. above) the workspace folder.
             const fileSystemWatcher = vscode.workspace.createFileSystemWatcher(`{**/${N4JS_CLI_CONFIG}}`);
             fileSystemWatcher.onDidCreate(() => onN4jscliConfigChange(vscode, vscodeLC, context, outputChannel) );
             fileSystemWatcher.onDidChange(() => onN4jscliConfigChange(vscode, vscodeLC, context, outputChannel) );
             fileSystemWatcher.onDidDelete(() => onN4jscliConfigChange(vscode, vscodeLC, context, outputChannel) );
         });
         let disposableLangClient = lc.start();
-        
 
-       
+
+
         // Add listener to configuration changes
         context.subscriptions.push(vscode.workspace.onDidChangeConfiguration((e: any+) => {
             if (e.affectsConfiguration('n4js.traceOutput', { languageId: 'n4js' })) {

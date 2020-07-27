@@ -21,6 +21,7 @@ export public class N4jscArguments {
     vmArgs: string[] = [];
     n4jscjar: string = N4JSC_JAR;
     goal: string;
+    /** working directory */
     dir: string;
     n4jscOptions: string[] = [];
 
