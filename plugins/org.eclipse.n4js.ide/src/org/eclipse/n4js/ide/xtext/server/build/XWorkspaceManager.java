@@ -131,7 +131,7 @@ public class XWorkspaceManager {
 	}
 
 	/**
-	 * Updates the workspace according the the updated information in the file with the given URI.
+	 * Updates the workspace according to the updated information in the file with the given URI.
 	 */
 	public WorkspaceChanges update(URI changedFile) {
 		XIWorkspaceConfig config = getWorkspaceConfig();
@@ -146,7 +146,11 @@ public class XWorkspaceManager {
 	 * Answers true, if the uri is from a source folder.
 	 */
 	public boolean isSourceFile(URI uri) {
-		IProjectConfig projectConfig = getWorkspaceConfig().findProjectContaining(uri);
+		XIWorkspaceConfig config = getWorkspaceConfig();
+		if (config == null) {
+			return false;
+		}
+		IProjectConfig projectConfig = config.findProjectContaining(uri);
 		if (projectConfig != null) {
 			ISourceFolder sourceFolder = projectConfig.findSourceFolderContaining(uri);
 			if (sourceFolder != null) {

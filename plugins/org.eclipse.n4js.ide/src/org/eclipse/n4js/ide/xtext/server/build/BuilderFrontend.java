@@ -93,7 +93,7 @@ public class BuilderFrontend {
 	 * Trigger an initial build in the background.
 	 */
 	public void initialBuild() {
-		queuedExecutorService.submitAndCancelPrevious(XBuildManager.class, "initialized",
+		queuedExecutorService.submitAndCancelPrevious(XBuildManager.class, "initialBuild",
 				cancelIndicator -> {
 					doInitialBuild(cancelIndicator);
 					return null;
@@ -120,7 +120,9 @@ public class BuilderFrontend {
 	}
 
 	/**
-	 * Trigger a clean build in the background.
+	 * Trigger a clean operation in the background. Afterwards, all previously build artifacts have been removed. This
+	 * includes index data, source2generated mappings, cached issues and persisted index state. A subsequent build is
+	 * not triggered automatically.
 	 */
 	public CompletableFuture<Void> clean() {
 		return queuedExecutorService.submitAndCancelPrevious(XBuildManager.class, "clean", cancelIndicator -> {
@@ -133,7 +135,7 @@ public class BuilderFrontend {
 	 * Triggers rebuild of the whole workspace
 	 */
 	public CompletableFuture<Void> reinitWorkspace() {
-		return queuedExecutorService.submitAndCancelPrevious(XBuildManager.class, "didChangeConfiguration",
+		return queuedExecutorService.submitAndCancelPrevious(XBuildManager.class, "reinitWorkspace",
 				cancelIndicator -> {
 					workspaceManager.reinitialize();
 					buildManager.doInitialBuild(CancelIndicator.NullImpl);

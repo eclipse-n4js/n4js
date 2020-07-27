@@ -70,9 +70,11 @@ import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIssueRegistry;
 import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIssueRegistry.IIssueRegistryListener;
 import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIssueRegistry.IssueRegistryChangeEvent;
 import org.eclipse.n4js.ide.xtext.server.contentassist.XContentAssistService;
+import org.eclipse.n4js.ide.xtext.server.findReferences.XWorkspaceResourceAccess;
 import org.eclipse.n4js.ide.xtext.server.rename.XIRenameService;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
+import org.eclipse.xtext.findReferences.IReferenceFinder.IResourceAccess;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.ide.server.codeActions.ICodeActionService;
@@ -132,6 +134,8 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 
 	private boolean hierarchicalSymbols;
 
+	private IResourceAccess resourceAccess;
+
 	private ILanguageServerAccess access;
 
 	/** Sets connection to client */
@@ -142,6 +146,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 	/** Sets non-injectable fields */
 	public void initialize(InitializeParams _initializeParams, ILanguageServerAccess _access) {
 		this.hierarchicalSymbols = isHierarchicalDocumentSymbolSupport(_initializeParams);
+		this.resourceAccess = new XWorkspaceResourceAccess(resourceTaskManager);
 		this.access = _access;
 		index.addListener(this);
 		issueRegistry.addListener(this);
@@ -150,6 +155,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 	/** Resets non-injectable fields */
 	public void disconnect() {
 		this.client = null;
+		this.resourceAccess = null;
 		this.access = null;
 		index.removeListener(this);
 		issueRegistry.removeListener(this);
@@ -222,8 +228,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 		}
 		XtextResource res = rtc.getResource();
 		XDocument doc = rtc.getDocument();
-		return Either
-				.forLeft(documentSymbolService.getDefinitions(doc, res, params, resourceTaskManager, cancelIndicator));
+		return Either.forLeft(documentSymbolService.getDefinitions(doc, res, params, resourceAccess, cancelIndicator));
 	}
 
 	@Override
@@ -245,7 +250,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 		}
 		XtextResource res = rtc.getResource();
 		XDocument doc = rtc.getDocument();
-		return documentSymbolService.getReferences(doc, res, params, resourceTaskManager,
+		return documentSymbolService.getReferences(doc, res, params, resourceAccess,
 				resourceTaskManager.createLiveScopeIndex(), cancelIndicator);
 	}
 

@@ -157,7 +157,12 @@ public class QueuedExecutorService {
 		 * future might even still complete normally if the task implementation chooses to ignore the cancellation
 		 * status of the cancel indicator.
 		 *
-		 * It is discouraged to complete semi-normally if cancellation was detected.
+		 * <p>
+		 * It is discouraged to complete the future normally if cancellation was detected. In other words: If the task
+		 * produces a list of result items and detects cancellation requests half-way through the computation, it is
+		 * discouraged to return the incomplete list. Instead an {@link CancellationException} or an
+		 * {@link OperationCanceledException} should be thrown and propagated.
+		 * </p>
 		 */
 		@Override
 		public boolean cancel(boolean mayInterruptIfRunning) {
@@ -238,8 +243,13 @@ public class QueuedExecutorService {
 
 	/** Invoked by each running task upon completion, see {@link QueuedTask#run()}. */
 	protected synchronized void onDone(QueuedTask<?> task) {
-		if (submittedTasks.remove(task.queueId) != task) {
+		QueuedTask<?> inProgress = submittedTasks.remove(task.queueId);
+		if (inProgress == null) {
 			throw new IllegalStateException("executor inconsistency: queue ID not in progress: " + task.queueId);
+		}
+		if (inProgress != task) {
+			throw new IllegalStateException("executor inconsistency: task with queue ID not in progress: "
+					+ task.queueId + ". Expected " + task + " but was " + inProgress);
 		}
 		doSubmitAllPending();
 	}
@@ -332,7 +342,8 @@ public class QueuedExecutorService {
 			}
 		}
 		sb.append(QueuedExecutorService.class.getSimpleName() + " showing all " + QueuedTask.class.getSimpleName());
-		sb.append("\nActive Tasks Queues (First task is submitted, succeeding tasks are waiting):\n");
+		sb.append(
+				"\nActive Tasks Queues (First task is submitted to delegate executor, succeeding tasks are waiting in local queue):\n");
 		for (Object taskId : activeQueue.keys()) {
 			Collection<QueuedTask<?>> tasks = activeQueue.get(taskId);
 			sb.append("[ID: " + taskId + "]\t");

@@ -127,7 +127,7 @@ public class LanguageServerFrontend implements TextDocumentService, WorkspaceSer
 		textDocumentFrontend.connect(client);
 	}
 
-	/** Disconnect this front-end from the currently connected. */
+	/** Disconnect this front-end from the currently connected client. */
 	public void disconnect() {
 		textDocumentFrontend.disconnect();
 	}

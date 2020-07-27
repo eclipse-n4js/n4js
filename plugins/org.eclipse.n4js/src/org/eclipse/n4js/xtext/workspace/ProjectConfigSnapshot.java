@@ -70,4 +70,53 @@ public class ProjectConfigSnapshot {
 		return sourceFolders;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((dependencies == null) ? 0 : dependencies.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((path == null) ? 0 : path.hashCode());
+		result = prime * result + ((sourceFolders == null) ? 0 : sourceFolders.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ProjectConfigSnapshot other = (ProjectConfigSnapshot) obj;
+		if (dependencies == null) {
+			if (other.dependencies != null)
+				return false;
+		} else if (!dependencies.equals(other.dependencies))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (path == null) {
+			if (other.path != null)
+				return false;
+		} else if (!path.equals(other.path))
+			return false;
+		if (sourceFolders == null) {
+			if (other.sourceFolders != null)
+				return false;
+		} else if (!sourceFolders.equals(other.sourceFolders))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "ProjectConfigSnapshot [name=" + name + ", path=" + path + ", dependencies=" + dependencies
+				+ ", sourceFolders=" + sourceFolders + "]";
+	}
+
 }

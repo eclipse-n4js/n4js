@@ -158,4 +158,48 @@ public class WorkspaceConfigSnapshot {
 	private static URI trimTrailingPathSeparator(URI uri) {
 		return uri.hasTrailingPathSeparator() ? uri.trimSegments(1) : uri;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((name2Project == null) ? 0 : name2Project.hashCode());
+		result = prime * result + ((path == null) ? 0 : path.hashCode());
+		result = prime * result + ((sourceFolderPath2Project == null) ? 0 : sourceFolderPath2Project.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		WorkspaceConfigSnapshot other = (WorkspaceConfigSnapshot) obj;
+		if (name2Project == null) {
+			if (other.name2Project != null)
+				return false;
+		} else if (!name2Project.equals(other.name2Project))
+			return false;
+		if (path == null) {
+			if (other.path != null)
+				return false;
+		} else if (!path.equals(other.path))
+			return false;
+		if (sourceFolderPath2Project == null) {
+			if (other.sourceFolderPath2Project != null)
+				return false;
+		} else if (!sourceFolderPath2Project.equals(other.sourceFolderPath2Project))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "WorkspaceConfigSnapshot [path=" + path + ", name2Project=" + name2Project
+				+ ", sourceFolderPath2Project=" + sourceFolderPath2Project + "]";
+	}
+
 }

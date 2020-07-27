@@ -159,7 +159,7 @@ public class LspServer {
 
 		Futures.getUnchecked(future);
 
-		N4jscConsole.println("Shutdown connection to LSP client");
+		N4jscConsole.println("Connection to LSP client was shutdown");
 	}
 
 	private Appender redirectLog4jToLspLogger(LspLogger lspLogger) {
