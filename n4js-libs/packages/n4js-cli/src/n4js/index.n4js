@@ -225,19 +225,17 @@ export public function findN4jscJarConfigProperty(workingDir: string, log: {func
     return null;
 }
 
-function getN4jscjarFromConfig(pathN4jscliConfigFile : string) : string {
-    if (pathN4jscliConfigFile) {
-        const data = fs.readFileSync(pathN4jscliConfigFile, {encoding : 'utf8'});
-        const n4jscliConfig : any+ = JSON.parse(data);
-        if (n4jscliConfig && n4jscliConfig["n4jsc.jar"]) {
-            return n4jscliConfig["n4jsc.jar"] as string;
-        }
-    }
-    return null;
-}
-
+/**
+ * Searches the n4js-cli config file. The search looks for the config file at the following places:
+ * (1) in the given folder,
+ * (2) in all parent folders,
+ * (3) in all direct sub folders (not recursivily).
+ * The first occurence is returned, or null otherwise.
+ */
 export public function findN4jscliConfig(workingDir : string) : string {
     let dir = path.resolve(workingDir);
+
+    // search in parent folders
     while (true) {
         if (dir.length < 2) {
             return null;
@@ -250,6 +248,28 @@ export public function findN4jscliConfig(workingDir : string) : string {
         dir = path.dirname(dir);
     }
 
+    // search in direct child folders (not recursivily)
+    const files = fs.readdirSync(workingDir);
+    for (const file in files) {
+        if (file instanceof fs.Dirent && file.isDirectory()) {
+            const pathN4jscliConfig = path.resolve(dir, N4JS_CLI_CONFIG);
+            if (fs.existsSync(pathN4jscliConfig)) {
+                return pathN4jscliConfig;
+            }
+        }
+    }
+
+    return null;
+}
+
+function getN4jscjarFromConfig(pathN4jscliConfigFile : string) : string {
+    if (pathN4jscliConfigFile) {
+        const data = fs.readFileSync(pathN4jscliConfigFile, {encoding : 'utf8'});
+        const n4jscliConfig : any+ = JSON.parse(data);
+        if (n4jscliConfig && n4jscliConfig["n4jsc.jar"]) {
+            return n4jscliConfig["n4jsc.jar"] as string;
+        }
+    }
     return null;
 }
 
