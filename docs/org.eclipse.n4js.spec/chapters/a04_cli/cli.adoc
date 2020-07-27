@@ -87,7 +87,7 @@ The set of all project is determined as follows:
 
 
 
-== Node wrapper n4js-cli
+== NPM n4js-cli
 
 The npm package n4js-cli has the same user API regarding all goals and options.
 However, n4js-cli has one extension: the (optional) `.n4js-cli.config` file.
