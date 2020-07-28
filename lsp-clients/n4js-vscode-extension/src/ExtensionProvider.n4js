@@ -49,7 +49,7 @@ function getOutputAppender(outputChannel: any+): (text:string)=>void {
 
 export function getActivate(vscode: any+, vscodeLC: any+): {function(context: any+) : void } {
     return (context: any+ /*VSCode.ExtensionContext*/) => {
-        // outputChannel can be initialized already in case the #reload(...) was invoked
+        // outputChannel may already have been initialized in case the #reload(...) was invoked
         outputChannel = outputChannel ?? vscode.window.createOutputChannel(CHANNEL_NAME);
 
         let serverOptions = async () => {

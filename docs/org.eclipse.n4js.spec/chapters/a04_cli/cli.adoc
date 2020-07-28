@@ -96,7 +96,7 @@ In case there exists such a file in the project root directory, it will be picke
 
 === Configurations of n4js-cli
 
-The following optional configuration properties inside `.n4js-cli.config` are supported at the moment.
+The `.n4js-cli.config` file has a json format and supports following optional configuration properties at the moment.
 
 ==== "n4jsc.jar"
 
@@ -109,6 +109,15 @@ The value can be
 In case the given `n4jsc.jar` is an URL, the file will be downloaded and saved inside the `bin` folder of the n4js-cli package.
 A new folder inside `bin` will be created for every host and path that contains the specified `n4jsc.jar` file.
 Otherwise, the given file will be used directly without copying it.
+
+Example::
+
+[source,bash]
+----
+{
+	"n4jsc.jar" : "https://n4-cd-n4ide-storage.s3.amazonaws.com/products/0.23.5.v20200723-0804/n4jsc_0.23.5.v20200723-0804.jar"
+}
+----
 
 
 
