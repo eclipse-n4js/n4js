@@ -11,8 +11,8 @@
 
 import * as n4jscli from 'n4js-cli';
 import * as jreProvider from 'n4js-cli/JreProvider';
-import {N4JS_CLI_CONFIG} from 'n4js-cli/Globals';
 import * as net from 'net';
+import * as fs from 'fs';
 import * as childProcess from 'child_process';
 
 /** This message is sent from the LSP server. */
@@ -24,7 +24,7 @@ const TIMEOUT = 1000;
 let n4jscProcess: childProcess.ChildProcess;
 let outputChannel: any+;
 let outputAppender: (text:string)=>void;
-let n4jscjarFile: string;
+const n4jscliConfig = { string jarFile: "",  {function(curr:fs.Stats, prev:fs.Stats) : void} listener: null};
 
 
 @StringBased
@@ -65,7 +65,8 @@ export function getActivate(vscode: any+, vscodeLC: any+): {function(context: an
                 reader = socket;
             } else {
                 outputChannel.appendLine('Start new N4JS LSP server.');
-                await startN4jsLspServerAndConnect(PORT, vscode, outputChannel); // will set n4jscProcess
+                // set n4jscProcess
+                await startN4jsLspServerAndConnect(PORT, vscode, vscodeLC, context, outputChannel);
                 writer = n4jscProcess.stdin;
                 reader = n4jscProcess.stdout;
             }
@@ -125,14 +126,6 @@ export function getActivate(vscode: any+, vscodeLC: any+): {function(context: an
             const printDebugInfoCommand = 'n4js.debug.printDebugInfo';
             const printDebugInfoHandler = () => lc.sendRequest(printDebugInfoRT, { });
             context.subscriptions.push(vscode.commands.registerCommand(printDebugInfoCommand, printDebugInfoHandler));
-
-            // Add listener to changes in .n4js-cli.config to trigger restarts in case the n4jsc.jar changes
-            // Note: FileSystemWatchers do work only inside the workspace folder.
-            // Hence, changes won't be recognized iff the project root folder is outside (i.e. above) the workspace folder.
-            const fileSystemWatcher = vscode.workspace.createFileSystemWatcher(`{**/${N4JS_CLI_CONFIG}}`);
-            fileSystemWatcher.onDidCreate(() => onN4jscliConfigChange(vscode, vscodeLC, context, outputChannel) );
-            fileSystemWatcher.onDidChange(() => onN4jscliConfigChange(vscode, vscodeLC, context, outputChannel) );
-            fileSystemWatcher.onDidDelete(() => onN4jscliConfigChange(vscode, vscodeLC, context, outputChannel) );
         });
         let disposableLangClient = lc.start();
 
@@ -157,6 +150,7 @@ export function getDeactivate(vscode: any+, vscodeLC: any+): {function() : Promi
             return undefined;
         }
 
+        fs.unwatchFile(n4jscliConfig.jarFile, n4jscliConfig.listener);
         n4jscProcess.kill();
 
         return new Promise<any, any>((resolve, reject) => {
@@ -195,7 +189,7 @@ function getJavaVMXmxSetting(vscode: any+): string {
 }
 
 
-async function startN4jsLspServerAndConnect(port: number, vscode: any+, outputChannel: any+): void {
+async function startN4jsLspServerAndConnect(port: number, vscode: any+, vscodeLC: any+, context: any+, outputChannel: any+): void {
     let logFn = (text: string) => outputChannel.appendLine(text) as {function(string)};
     await jreProvider.ensureJRE(logFn);
 
@@ -206,7 +200,15 @@ async function startN4jsLspServerAndConnect(port: number, vscode: any+, outputCh
     const vmOptions: ~n4jscli.VmOptions = { xmx: getJavaVMXmxSetting(vscode) };
 
     // track which n4jsc.jar is used (null means default)
-    n4jscjarFile = n4jscli.findN4jscJarConfigProperty(workspaceDir, () => null);
+    n4jscliConfig.jarFile = n4jscli.findN4jscliConfig(workspaceDir);
+    n4jscliConfig.listener = (curr, prev) => onN4jscliConfigChange(vscode, vscodeLC, context, outputChannel);
+    if (n4jscliConfig.jarFile) {
+        // Add listener to changes in .n4js-cli.config to trigger restarts in case the n4jsc.jar changes
+        // Note: VSCode's FileSystemWatchers do work only inside the workspace folder.
+        // Hence, we use a file watcher of Node.js's fs library.
+        fs.watchFile(n4jscliConfig.jarFile, {persistent:true}, n4jscliConfig.listener);
+    }
+
     // The server is started as a separate process
     n4jscProcess = await n4jscli.n4jscProcess(n4jscli.Goal.lsp, workspaceDir, n4jscOptions, vmOptions, spawnOptions, logFn);
 
@@ -276,7 +278,7 @@ async function connectToRunningN4jsLspServer(port: number, outputChannel: any+):
 function onN4jscliConfigChange(vscode: any+, vscodeLC: any+, context: any+, outputChannel: any+) : void {
     const workspaceDir = getWorkspaceDir(vscode);
     const newN4jscjarFile = n4jscli.findN4jscJarConfigProperty(workspaceDir, () => null);
-    if (n4jscjarFile != newN4jscjarFile) {
+    if (n4jscliConfig.jarFile != newN4jscjarFile) {
         requestUserReload(vscode, vscodeLC, context, outputChannel);
     }
 }
