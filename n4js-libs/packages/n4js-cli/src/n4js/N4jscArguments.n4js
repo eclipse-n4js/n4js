@@ -19,7 +19,7 @@ import {Goal, Options, VmOptions} from "n4js-cli/index";
 export public class N4jscArguments {
     jar: string = "-jar";
     vmArgs: string[] = [];
-    n4jscjar: string = N4JSC_JAR;
+    n4jscJar: string = N4JSC_JAR;
     goal: string;
     /** working directory */
     dir: string;
@@ -146,7 +146,7 @@ export public class N4jscArguments {
     }
 
     toArray() : string[] {
-        const args = [this.jar, ...this.vmArgs, this.n4jscjar, this.goal, this.dir, ...this.n4jscOptions];
+        const args = [this.jar, ...this.vmArgs, this.n4jscJar, this.goal, this.dir, ...this.n4jscOptions];
         return args.filter(n => typeof n == "string"); // remove undfined/null values
     }
 }
