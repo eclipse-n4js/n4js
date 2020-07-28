@@ -17,7 +17,7 @@ import * as fs from "fs";
 import * as url from "url";
 import debug from "debug";
 import {JAVA_VM_XMX, N4JS_CLI_CONFIG, BIN_DIR} from "Globals";
-import {getJavaCommand, downloadFile} from "JreProvider";
+import {getJavaCommand, downloadFile, toValidUrl} from "JreProvider";
 import {N4jscArguments} from "N4jscArguments";
 
 
@@ -292,28 +292,33 @@ async function ensureCustomN4jscJar(customN4jscValue: string, log: {function(str
         return customN4jscValue;
     }
 
-    const fileName = path.basename(customN4jscValue);
-    const jarInBinDir = path.resolve(BIN_DIR, fileName);
-    if (fs.existsSync(jarInBinDir)) {
-        // a local file inside bin directory
-        return jarInBinDir;
-    }
-    const dfNames = splitCustomN4jscURLValue(customN4jscValue);
-    if (dfNames) {
-        // it is an URL
-        const jarInFolderInBinDir = path.resolve(BIN_DIR, dfNames.dirName, fileName);
-        if (fs.existsSync(jarInFolderInBinDir)) {
-            return jarInFolderInBinDir;
-        }
-        // file not yet downloaded
-        try {
-            await downloadFile(customN4jscValue, jarInFolderInBinDir, log);
+    const nodeURL = toValidUrl(customN4jscValue);
+    if (nodeURL) {
+        const dfNames = splitCustomN4jscURLValue(nodeURL);
+        if (dfNames) {
+            // it is an URL
+            const jarInFolderInBinDir = path.resolve(BIN_DIR, dfNames.dirName, dfNames.fileName);
             if (fs.existsSync(jarInFolderInBinDir)) {
-                // should be now inside bin directory
                 return jarInFolderInBinDir;
             }
-        } catch (e) {
-            log(e as string);
+            // file not yet downloaded
+            try {
+                await downloadFile(nodeURL, jarInFolderInBinDir, log);
+                if (fs.existsSync(jarInFolderInBinDir)) {
+                    // should be now inside bin directory
+                    return jarInFolderInBinDir;
+                }
+            } catch (e) {
+                log(e as string);
+            }
+        }
+
+    } else {
+        const fileName = path.basename(customN4jscValue);
+        const jarInBinDir = path.resolve(BIN_DIR, fileName);
+        if (fs.existsSync(jarInBinDir)) {
+            // a local file inside bin directory
+            return jarInBinDir;
         }
     }
 
@@ -321,27 +326,13 @@ async function ensureCustomN4jscJar(customN4jscValue: string, log: {function(str
 }
 
 
-function splitCustomN4jscURLValue(customN4jscURLValue: string) : ~Object with {dirName:string, fileName:string} {
-    const nodeURL = isValidUrl(customN4jscURLValue);
-    if (nodeURL) {
-        const fileName = removeReservedCharacters(path.basename(nodeURL.pathname));
-        const dirName = getDirName(nodeURL);
-        return {dirName:dirName, fileName:fileName};
-    }
-    return null;
+function splitCustomN4jscURLValue(nodeURL: url.NodeURL) : ~Object with {dirName:string, fileName:string} {
+    const fileName = removeReservedCharacters(path.basename(nodeURL.pathname));
+    const dirName = getDirName(nodeURL);
+    return {dirName:dirName, fileName:fileName};
 }
 
 
-function isValidUrl(urlStr: string) : url.NodeURL {
-    try {
-        const nodeURL = url.parse(urlStr);
-        if (nodeURL.protocol && nodeURL.host && nodeURL.path) {
-            return nodeURL;
-        }
-    } catch (_) {
-    }
-    return null;  
-}
 
 function getDirName(nodeURL: url.NodeURL) : string {
     let dirName = nodeURL.hostname + path.dirname(nodeURL.pathname);
