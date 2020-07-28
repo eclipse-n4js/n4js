@@ -48,7 +48,7 @@ public class BuilderFrontend {
 	private XWorkspaceManager workspaceManager;
 
 	@Inject
-	private XWorkspaceBuilder buildManager;
+	private XWorkspaceBuilder workspaceBuilder;
 
 	/**
 	 * Returns the base directory of the workspace.
@@ -87,7 +87,7 @@ public class BuilderFrontend {
 	 * Trigger an initial build in the background.
 	 */
 	public void initialBuild() {
-		asyncRunBuildTask("initialBuild", () -> buildManager.initialBuild());
+		asyncRunBuildTask("initialBuild", () -> workspaceBuilder.initialBuild());
 	}
 
 	/**
@@ -96,14 +96,14 @@ public class BuilderFrontend {
 	 * not triggered automatically.
 	 */
 	public void clean() {
-		asyncRunBuildTask("clean", () -> buildManager.clean());
+		asyncRunBuildTask("clean", () -> workspaceBuilder.clean());
 	}
 
 	/**
 	 * Triggers rebuild of the whole workspace
 	 */
 	public void reinitWorkspace() {
-		asyncRunBuildTask("reinitWorkspace", () -> buildManager.initialBuild());
+		asyncRunBuildTask("reinitWorkspace", () -> workspaceBuilder.initialBuild());
 	}
 
 	/**
@@ -112,7 +112,7 @@ public class BuilderFrontend {
 	public void didSave(DidSaveTextDocumentParams params) {
 		URI uri = getURI(params.getTextDocument());
 		asyncRunBuildTask("didSave",
-				() -> buildManager.incrementalBuildTask(Collections.singletonList(uri), Collections.emptyList()));
+				() -> workspaceBuilder.incrementalBuildTask(Collections.singletonList(uri), Collections.emptyList()));
 	}
 
 	/**
@@ -132,7 +132,7 @@ public class BuilderFrontend {
 		}
 		if (!dirtyFiles.isEmpty() || !deletedFiles.isEmpty()) {
 			asyncRunBuildTask("didChangeWatchedFiles",
-					() -> buildManager.incrementalBuildTask(dirtyFiles, deletedFiles));
+					() -> workspaceBuilder.incrementalBuildTask(dirtyFiles, deletedFiles));
 		}
 	}
 
