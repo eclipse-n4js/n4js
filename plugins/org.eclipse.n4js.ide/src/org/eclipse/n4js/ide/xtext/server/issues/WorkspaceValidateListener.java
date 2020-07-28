@@ -22,27 +22,27 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Implementation of an AfterValidateListener that will forward issues to a a delegate if the underlying document is not
- * open.
+ * Implementation of an AfterValidateListener that will forward issues to a a delegate if the originating resource is
+ * not currently open in an editor.
  */
 @Singleton
 @SuppressWarnings("deprecation")
-public class RejectOpenDocumentsIssuePublisher implements AfterValidateListener {
+public class WorkspaceValidateListener implements AfterValidateListener {
 
-	private final IssueAcceptor publisher;
+	private final IssueAcceptor acceptor;
 
 	/**
 	 * Constructor.
 	 */
 	@Inject
-	public RejectOpenDocumentsIssuePublisher(PublishingIssueAcceptor publisher,
+	public WorkspaceValidateListener(PublishingIssueAcceptor publisher,
 			ResourceTaskManager resourceTaskManager) {
-		this.publisher = new FilteringIssueAcceptor(publisher, uri -> !resourceTaskManager.isOpen(uri));
+		this.acceptor = new FilteringIssueAcceptor(publisher, uri -> !resourceTaskManager.isOpen(uri));
 	}
 
 	@Override
 	public void afterValidate(URI source, List<? extends Issue> issues) {
-		publisher.accept(source, LSPIssue.cast(issues));
+		acceptor.accept(source, LSPIssue.cast(issues));
 	}
 
 }

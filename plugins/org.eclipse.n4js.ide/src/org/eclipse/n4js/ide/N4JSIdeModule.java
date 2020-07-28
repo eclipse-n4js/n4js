@@ -49,7 +49,7 @@ import org.eclipse.n4js.ide.xtext.server.build.XStatefulIncrementalBuilder;
 import org.eclipse.n4js.ide.xtext.server.build.XWorkspaceBuilder;
 import org.eclipse.n4js.ide.xtext.server.build.XWorkspaceManager;
 import org.eclipse.n4js.ide.xtext.server.contentassist.XContentAssistService;
-import org.eclipse.n4js.ide.xtext.server.issues.RejectOpenDocumentsIssuePublisher;
+import org.eclipse.n4js.ide.xtext.server.issues.WorkspaceValidateListener;
 import org.eclipse.n4js.ide.xtext.server.util.XOperationCanceledManager;
 import org.eclipse.n4js.internal.lsp.FileSystemScanner;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
@@ -219,7 +219,7 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 	}
 
 	public Class<? extends AfterValidateListener> bindAfterValidateListener() {
-		return RejectOpenDocumentsIssuePublisher.class;
+		return WorkspaceValidateListener.class;
 	}
 
 	public Class<? extends IResourceValidator> bindIResourceValidator() {
