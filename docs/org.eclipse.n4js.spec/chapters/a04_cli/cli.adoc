@@ -87,5 +87,37 @@ The set of all project is determined as follows:
 
 
 
+== NPM n4js-cli
+
+The npm package n4js-cli has the same user API regarding all goals and options.
+However, n4js-cli has one extension: the (optional) `.n4js-cli.config` file.
+In case there exists such a file in the project root directory, it will be picked up by n4js-cli.
+
+
+=== Configurations of n4js-cli
+
+The `.n4js-cli.config` file has a json format and supports following optional configuration properties at the moment.
+
+==== "n4jsc.jar"
+
+This name-value property specifies which `n4jsc.jar` to use.
+The value can be 
+* a relative file path inside the `bin` folder of the n4js-cli package,
+* an absolute file path on the file system
+* an URL pointing to a n4jsc.jar.
+
+In case the given `n4jsc.jar` is an URL, the file will be downloaded and saved inside the `bin` folder of the n4js-cli package.
+A new folder inside `bin` will be created for every host and path that contains the specified `n4jsc.jar` file.
+Otherwise, the given file will be used directly without copying it.
+
+Example::
+
+[source,bash]
+----
+{
+	"n4jsc.jar" : "https://n4-cd-n4ide-storage.s3.amazonaws.com/products/0.23.5.v20200723-0804/n4jsc_0.23.5.v20200723-0804.jar"
+}
+----
+
 
 

@@ -12,6 +12,7 @@
 import * as path from "path";
 import * as childProcess from "child_process";
 import * as fs from "fs";
+import * as lib_url from "url";
 
 import * as lib_decompress+ from "decompress";
 import * as npmlog+ from "npmlog";
@@ -122,32 +123,58 @@ function getJreInfo(log: {function(string)}) : JreInfo {
  * Downloads the AdoptOpenJDK JRE.
  */
 async function downloadJRE(jreInfo: JreInfo, log: {function(string)}) : Promise<any, any> {
-    const jreUrl = JRE_URL_DIR + jreInfo.name;
-    log("downloading JRE from " + jreUrl);
+    const jreUrl = toValidUrl(JRE_URL_DIR + jreInfo.name);
+    if (jreUrl) {
+        const output = getJreFileName(jreInfo);
+        const promise : Promise<any, any> = downloadFile(jreUrl, output, log);
+        return promise;
+    }
+    return Promise.reject("Invalid URL: " + lib_url.format(jreUrl));
+}
 
-    if (!fs.existsSync(BIN_DIR)) {
-        log("creating dir " + BIN_DIR);
-        fs.mkdirSync(BIN_DIR);
+
+export public function toValidUrl(urlStr: string) : lib_url.NodeURL {
+    try {
+        const nodeURL = lib_url.parse(urlStr);
+        if (nodeURL.protocol && nodeURL.host && nodeURL.path) {
+            return nodeURL;
+        }
+    } catch (_) {
+    }
+    return null;
+}
+
+export public async function downloadFile(url: lib_url.NodeURL, filename: string, log: {function(string)}) : Promise<any, any> {
+    log("downloading from " + lib_url.format(url));
+
+    const dir = path.dirname(filename);
+    if (!fs.existsSync(dir)) {
+        log("creating dir " + dir);
+        fs.mkdirSync(dir);
     }
 
+    const get = (url.protocol == "https:") ? followRedirects.https.get : followRedirects.http.get;
     return new Promise<any, any>((resolve, reject) => {
-            followRedirects.https.get(jreUrl,
-                (response : any+) => {
-                    const jreFileName = getJreFileName(jreInfo);
-                    const file = fs.createWriteStream(jreFileName);
-                    response.pipe(file);
-                    log("receiving JRE ...");
+            get(url, (response : any+) => {
+                    if (response.statusCode !== 200) {
+                        reject("Error during download: status code was " + response.statusCode);
 
-                    response.on("error",
-                        err => {
-                            log("n4js-cli" + err);
-                            reject(err);
-                        });
-                    response.on("end",
-                        () => {
-                            log("JRE written to file " + jreFileName);
-                            resolve();
-                        });
+                    } else {
+                        const file = fs.createWriteStream(filename);
+                        response.pipe(file);
+                        log("receiving file ...");
+    
+                        response.on("error",
+                            err => {
+                                log("n4js-cli" + err);
+                                reject(err);
+                            });
+                        response.on("end",
+                            () => {
+                                log("File written to " + filename);
+                                resolve();
+                            });
+                    }
                 });
         });
 }
