@@ -87,7 +87,7 @@ public class BuilderFrontend {
 	 * Trigger an initial build in the background.
 	 */
 	public void initialBuild() {
-		asyncRunBuildTask("initialBuild", () -> workspaceBuilder.initialBuild());
+		asyncRunBuildTask("initialBuild", workspaceBuilder::createInitialBuildTask);
 	}
 
 	/**
@@ -96,14 +96,14 @@ public class BuilderFrontend {
 	 * not triggered automatically.
 	 */
 	public void clean() {
-		asyncRunBuildTask("clean", () -> workspaceBuilder.clean());
+		asyncRunBuildTask("clean", workspaceBuilder::createCleanTask);
 	}
 
 	/**
 	 * Triggers rebuild of the whole workspace
 	 */
 	public void reinitWorkspace() {
-		asyncRunBuildTask("reinitWorkspace", () -> workspaceBuilder.initialBuild());
+		asyncRunBuildTask("reinitWorkspace", workspaceBuilder::createInitialBuildTask);
 	}
 
 	/**
@@ -112,7 +112,7 @@ public class BuilderFrontend {
 	public void didSave(DidSaveTextDocumentParams params) {
 		URI uri = getURI(params.getTextDocument());
 		asyncRunBuildTask("didSave",
-				() -> workspaceBuilder.incrementalBuildTask(Collections.singletonList(uri), Collections.emptyList()));
+				() -> workspaceBuilder.createIncrementalBuildTask(Collections.singletonList(uri), Collections.emptyList()));
 	}
 
 	/**
@@ -132,7 +132,7 @@ public class BuilderFrontend {
 		}
 		if (!dirtyFiles.isEmpty() || !deletedFiles.isEmpty()) {
 			asyncRunBuildTask("didChangeWatchedFiles",
-					() -> workspaceBuilder.incrementalBuildTask(dirtyFiles, deletedFiles));
+					() -> workspaceBuilder.createIncrementalBuildTask(dirtyFiles, deletedFiles));
 		}
 	}
 

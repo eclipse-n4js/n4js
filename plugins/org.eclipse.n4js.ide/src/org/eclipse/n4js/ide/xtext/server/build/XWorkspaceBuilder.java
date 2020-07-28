@@ -91,7 +91,7 @@ public class XWorkspaceBuilder {
 	 *            the deleted files
 	 * @return a build command that can be triggered
 	 */
-	public BuildTask incrementalBuildTask(List<URI> dirtyFiles, List<URI> deletedFiles) {
+	public BuildTask createIncrementalBuildTask(List<URI> dirtyFiles, List<URI> deletedFiles) {
 		WorkspaceChanges changes = WorkspaceChanges.createUrisRemovedAndChanged(deletedFiles, dirtyFiles);
 		// TODO pass all URIs at once.
 		for (URI uri : dirtyFiles) {
@@ -103,13 +103,13 @@ public class XWorkspaceBuilder {
 					XIProjectConfig::toSnapshot);
 			fullIndex.setProjectConfigSnapshots(projectsWithChangedDeps);
 		}
-		return toBuildTask(changes);
+		return createBuildTask(changes);
 	}
 
 	/**
 	 * Re-initializes the workspace and triggers the equivalent to an initial build.
 	 */
-	public BuildTask initialBuild() {
+	public BuildTask createInitialBuildTask() {
 		workspaceManager.reinitialize();
 		return this::doInitialBuild;
 	}
@@ -210,7 +210,7 @@ public class XWorkspaceBuilder {
 	}
 
 	/** Cleans all projects in the workspace */
-	public BuildTask clean() {
+	public BuildTask createCleanTask() {
 		return cancelIndicator -> {
 			for (ProjectBuilder projectBuilder : workspaceManager.getProjectBuilders()) {
 
@@ -229,7 +229,7 @@ public class XWorkspaceBuilder {
 	 *
 	 * @return a buildable.
 	 */
-	private BuildTask toBuildTask(WorkspaceChanges workspaceChanges) {
+	private BuildTask createBuildTask(WorkspaceChanges workspaceChanges) {
 		List<URI> dirtyFiles = workspaceChanges.scanAllAddedAndChangedURIs(scanner);
 		List<URI> deletedFiles = getAllRemovedURIs(workspaceChanges);
 		queue(this.dirtyFiles, deletedFiles, dirtyFiles);
