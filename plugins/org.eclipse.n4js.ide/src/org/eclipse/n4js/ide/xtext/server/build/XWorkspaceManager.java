@@ -166,7 +166,10 @@ public class XWorkspaceManager {
 	/** Removes a project from the workspace */
 	synchronized public void removeProject(IProjectConfig projectConfig) {
 		String projectName = projectConfig.getName();
-		projectName2ProjectBuilder.remove(projectName);
+		ProjectBuilder projectBuilder = projectName2ProjectBuilder.remove(projectName);
+		if (projectBuilder != null) {
+			projectBuilder.doClear();
+		}
 		fullIndex.removeProjectIndex(projectName);
 	}
 

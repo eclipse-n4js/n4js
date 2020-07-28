@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.cli.compiler;
 
+import java.util.Comparator;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
@@ -19,7 +20,13 @@ import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.n4js.cli.N4jscConsole;
 import org.eclipse.n4js.ide.client.AbstractN4JSLanguageClient;
+import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest;
+import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterBuildListener;
+import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
+import org.eclipse.n4js.ide.xtext.server.issues.DiagnosticComparator;
 
+import com.google.common.collect.Multimap;
+import com.google.common.collect.TreeMultimap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -27,7 +34,9 @@ import com.google.inject.Singleton;
  * Overrides the lsp {@link LanguageClient} callback when used as a CLI utility
  */
 @Singleton
-public class N4jscLanguageClient extends AbstractN4JSLanguageClient {
+public class N4jscLanguageClient extends AbstractN4JSLanguageClient implements AfterBuildListener {
+
+	private Multimap<String, Diagnostic> diagnostics;
 	private long trnspCount = 0;
 	private long delCount = 0;
 	private long errCount = 0;
@@ -38,16 +47,18 @@ public class N4jscLanguageClient extends AbstractN4JSLanguageClient {
 	protected N4jscIssueSerializer issueSerializer;
 
 	@Override
-	public void publishDiagnostics(PublishDiagnosticsParams diagnostics) {
+	public void publishDiagnostics(@SuppressWarnings("hiding") PublishDiagnosticsParams diagnostics) {
 		List<Diagnostic> issueList = diagnostics.getDiagnostics();
 		if (issueList.isEmpty()) {
 			return;
 		}
 
 		synchronized (this) {
-			N4jscConsole.println(issueSerializer.uri(diagnostics.getUri()));
+			if (this.diagnostics == null) {
+				this.diagnostics = TreeMultimap.create(Comparator.naturalOrder(), new DiagnosticComparator());
+			}
+			this.diagnostics.putAll(diagnostics.getUri(), issueList);
 			for (Diagnostic diag : issueList) {
-				N4jscConsole.println(issueSerializer.diagnostics(diag));
 				switch (diag.getSeverity()) {
 				case Error:
 					errCount++;
@@ -59,6 +70,18 @@ public class N4jscLanguageClient extends AbstractN4JSLanguageClient {
 					break;
 				}
 			}
+		}
+	}
+
+	@Override
+	public synchronized void afterBuild(XBuildRequest request, XBuildResult result) {
+		// build is done, print all received diagnostics sorted by their file location
+		if (diagnostics != null) {
+			diagnostics.asMap().forEach((uri, list) -> {
+				N4jscConsole.println(issueSerializer.uri(uri));
+				list.forEach(diag -> N4jscConsole.println(issueSerializer.diagnostics(diag)));
+			});
+			diagnostics = null;
 		}
 	}
 

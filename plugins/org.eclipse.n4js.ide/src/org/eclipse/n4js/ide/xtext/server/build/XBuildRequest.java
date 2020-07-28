@@ -11,6 +11,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -78,13 +79,13 @@ public class XBuildRequest {
 		void afterBuild(XBuildRequest request, XBuildResult result);
 	}
 
-	private AfterValidateListener afterValidateListener;
+	private List<AfterValidateListener> afterValidateListeners;
 
-	private AfterGenerateListener afterGenerateListener;
+	private List<AfterGenerateListener> afterGenerateListeners;
 
-	private AfterDeleteListener afterDeleteListener;
+	private List<AfterDeleteListener> afterDeleteListeners;
 
-	private AfterBuildListener afterBuildListener;
+	private List<AfterBuildListener> afterBuildListeners;
 
 	/** Create a new instance. Use {@link IBuildRequestFactory} instead! */
 	public XBuildRequest(String projectName) {
@@ -140,71 +141,82 @@ public class XBuildRequest {
 		this.externalDeltas = externalDeltas;
 	}
 
-	/** Setter. */
-	public void setAfterValidateListener(AfterValidateListener afterValidateListener) {
-		this.afterValidateListener = afterValidateListener;
-	}
-
-	/** Getter */
-	public AfterValidateListener getAfterValidateListener() {
-		return afterValidateListener;
+	/**
+	 * Attach a validation listener to the requested build.
+	 */
+	public void addAfterValidateListener(AfterValidateListener listener) {
+		if (afterValidateListeners == null) {
+			afterValidateListeners = new ArrayList<>();
+		}
+		afterValidateListeners.add(Objects.requireNonNull(listener));
 	}
 
 	/** Called each time a new set of issues was added for a validated source file */
 	public void afterValidate(URI source, List<? extends Issue> issues) {
-		if (afterValidateListener != null) {
-			afterValidateListener.afterValidate(source, issues);
+		if (afterValidateListeners != null) {
+			for (AfterValidateListener listener : afterValidateListeners) {
+				listener.afterValidate(source, issues);
+			}
 		}
 	}
 
-	/** Setter that returns the previous value. */
-	public void setAfterGenerateListener(AfterGenerateListener afterGenerateListener) {
-		this.afterGenerateListener = afterGenerateListener;
-	}
-
-	/** Getter */
-	public AfterGenerateListener getAfterGenerateListener() {
-		return afterGenerateListener;
+	/**
+	 * Attach a generate listener to the requested build.
+	 */
+	public void addAfterGenerateListener(AfterGenerateListener listener) {
+		if (afterGenerateListeners == null) {
+			afterGenerateListeners = new ArrayList<>();
+		}
+		afterGenerateListeners.add(Objects.requireNonNull(listener));
 	}
 
 	/** Called each time a new set of issues was added for a validated source file */
 	public void afterGenerate(URI source, URI generated) {
-		if (afterGenerateListener != null) {
-			afterGenerateListener.afterGenerate(source, generated);
+		if (afterGenerateListeners != null) {
+			for (AfterGenerateListener listener : afterGenerateListeners) {
+				listener.afterGenerate(source, generated);
+			}
 		}
 	}
 
-	/** Setter, that returns the previous value. */
-	public void setAfterDeleteListener(AfterDeleteListener afterDeleteListener) {
-		this.afterDeleteListener = afterDeleteListener;
-	}
-
-	/** Getter */
-	public AfterDeleteListener getAfterDeleteListener() {
-		return afterDeleteListener;
+	/**
+	 * Attach a delete listener to the requested build.
+	 */
+	public void addAfterDeleteListener(AfterDeleteListener listener) {
+		if (afterDeleteListeners == null) {
+			afterDeleteListeners = new ArrayList<>();
+		}
+		afterDeleteListeners.add(Objects.requireNonNull(listener));
 	}
 
 	/** Called each time a file was deleted */
 	public void afterDelete(URI file) {
-		if (afterDeleteListener != null) {
-			afterDeleteListener.afterDelete(file);
+		if (afterDeleteListeners != null) {
+			for (AfterDeleteListener listener : afterDeleteListeners) {
+				listener.afterDelete(file);
+			}
 		}
 	}
 
-	/** Setter, that returns the previous value. */
-	public void setAfterBuildListener(AfterBuildListener afterBuildListener) {
-		this.afterBuildListener = afterBuildListener;
-	}
-
-	/** Getter */
-	public AfterBuildListener getAfterBuildListener() {
-		return afterBuildListener;
+	/**
+	 * Attach a build listener to the requested build.
+	 *
+	 * Attention: The most recently added build listener will be notified first. This allows to further modify the build
+	 * result while it is being passed along the listener chain.
+	 */
+	public void addAfterBuildListener(AfterBuildListener listener) {
+		if (afterBuildListeners == null) {
+			afterBuildListeners = new ArrayList<>();
+		}
+		afterBuildListeners.add(0, Objects.requireNonNull(listener));
 	}
 
 	/** Called after the build was done */
 	public void afterBuild(XBuildResult buildResult) {
-		if (afterBuildListener != null) {
-			afterBuildListener.afterBuild(this, buildResult);
+		if (afterBuildListeners != null) {
+			for (AfterBuildListener listener : afterBuildListeners) {
+				listener.afterBuild(this, buildResult);
+			}
 		}
 	}
 

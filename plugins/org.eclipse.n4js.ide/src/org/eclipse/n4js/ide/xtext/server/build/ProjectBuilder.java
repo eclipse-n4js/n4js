@@ -26,6 +26,7 @@ import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
 import org.eclipse.n4js.ide.xtext.server.ResourceChangeSet;
 import org.eclipse.n4js.ide.xtext.server.build.ProjectStatePersister.ProjectState;
+import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterBuildListener;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterDeleteListener;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterValidateListener;
 import org.eclipse.n4js.internal.lsp.N4JSProjectConfig;
@@ -48,6 +49,7 @@ import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.util.UriUtil;
+import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.workspace.ProjectConfigAdapter;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
@@ -157,13 +159,20 @@ public class ProjectBuilder {
 		ResourceChangeSet changeSet = readProjectState();
 
 		XBuildResult result = doBuild(
-				initialBuildRequestFactory(buildRequestFactory),
+				createInitialBuildRequestFactory(buildRequestFactory),
 				changeSet.getModified(),
 				changeSet.getDeleted(),
 				Collections.emptyList(),
 				cancelIndicator);
 
 		// clear the resource set to release memory
+		clearResourceSet();
+
+		LOG.info("Project built: " + this.projectConfig.getName());
+		return result;
+	}
+
+	private void clearResourceSet() {
 		boolean wasDeliver = resourceSet.eDeliver();
 		try {
 			resourceSet.eSetDeliver(false);
@@ -171,38 +180,75 @@ public class ProjectBuilder {
 		} finally {
 			resourceSet.eSetDeliver(wasDeliver);
 		}
-
-		LOG.info("Project built: " + this.projectConfig.getName());
-		return result;
 	}
 
-	private IBuildRequestFactory initialBuildRequestFactory(IBuildRequestFactory base) {
-		return (String projectName,
-				Set<URI> changedFiles,
-				Set<URI> deletedFiles,
-				List<IResourceDescription.Delta> externalDeltas) -> {
-			XBuildRequest result = base.getBuildRequest(projectName, changedFiles, deletedFiles, externalDeltas);
-			Map<URI, ImmutableList<? extends LSPIssue>> validationIssues = new HashMap<>();
-			uriToIssues.asMap().forEach((uri, issues) -> validationIssues.put(uri, ImmutableList.copyOf(issues)));
-			List<URI> deleted = new ArrayList<>();
-			AfterValidateListener originalValidateListener = result.getAfterValidateListener();
-			result.setAfterValidateListener(
-					(uri, issues) -> validationIssues.put(uri, ImmutableList.copyOf(LSPIssue.cast(issues))));
-			AfterDeleteListener originalDeleteListener = result.getAfterDeleteListener();
-			result.setAfterDeleteListener(uri -> {
-				if (originalDeleteListener != null) {
-					originalDeleteListener.afterDelete(uri);
-					deleted.add(uri);
-				}
-			});
-			result.setAfterBuildListener((request, buildResult) -> {
-				updateProjectState(request, buildResult, validationIssues, deleted);
-				if (originalValidateListener != null) {
-					validationIssues.forEach(originalValidateListener::afterValidate);
-				}
-			});
-			return result;
+	class ProjectStateUpdater implements AfterValidateListener, AfterDeleteListener, AfterBuildListener {
+		final Map<URI, ImmutableList<? extends LSPIssue>> newValidationIssues = new HashMap<>();
+		final List<URI> deleted = new ArrayList<>();
+
+		@Override
+		public void afterValidate(URI source, List<? extends Issue> issues) {
+			newValidationIssues.put(source, ImmutableList.copyOf(LSPIssue.cast(issues)));
+		}
+
+		@Override
+		public void afterDelete(URI file) {
+			deleted.add(file);
+		}
+
+		@Override
+		public void afterBuild(XBuildRequest request, XBuildResult buildResult) {
+			updateProjectState(request, buildResult, newValidationIssues, deleted);
+
+		}
+
+		public void attachTo(XBuildRequest request) {
+			request.addAfterValidateListener(this);
+			request.addAfterDeleteListener(this);
+			request.addAfterBuildListener(this);
+		}
+	}
+
+	static class ProjectStateUpdatingBuildRequestFactory implements IBuildRequestFactory {
+
+		private final IBuildRequestFactory delegate;
+		private final ProjectStateUpdater updater;
+
+		ProjectStateUpdatingBuildRequestFactory(IBuildRequestFactory delegate, ProjectStateUpdater updater) {
+			this.delegate = delegate;
+			this.updater = updater;
+		}
+
+		@Override
+		public XBuildRequest getBuildRequest(String projectName, Set<URI> changedFiles, Set<URI> deletedFiles,
+				List<Delta> externalDeltas) {
+			XBuildRequest request = delegate.getBuildRequest(projectName, changedFiles, deletedFiles, externalDeltas);
+			updater.attachTo(request);
+			return request;
+		}
+
+	}
+
+	/**
+	 * Create a wrapper around the given build request factory that yields a build request which will update the stored
+	 * project state via {@link ProjectBuilder#updateProjectState} and publish all previously known issues along with
+	 * the newly computed issues.
+	 */
+	protected IBuildRequestFactory createInitialBuildRequestFactory(IBuildRequestFactory base) {
+		ProjectStateUpdater updater = new ProjectStateUpdater() {
+			@Override
+			public void afterBuild(XBuildRequest req, XBuildResult buildResult) {
+				super.afterBuild(req, buildResult);
+
+				// now submit all validation issues, that have not been submitted yet
+				getValidationIssues().asMap().forEach((uri, issues) -> {
+					if (!newValidationIssues.containsKey(uri)) {
+						req.afterValidate(uri, ImmutableList.copyOf(issues));
+					}
+				});
+			}
 		};
+		return new ProjectStateUpdatingBuildRequestFactory(base, updater);
 	}
 
 	/** Build increments of this project. */
@@ -213,37 +259,17 @@ public class ProjectBuilder {
 			List<IResourceDescription.Delta> externalDeltas,
 			CancelIndicator cancelIndicator) {
 
-		return doBuild(incrementalBuildRequestFactory(buildRequestFactory), dirtyFiles, deletedFiles, externalDeltas,
+		return doBuild(createIncrementalBuildFactory(buildRequestFactory), dirtyFiles, deletedFiles, externalDeltas,
 				cancelIndicator);
 	}
 
-	private IBuildRequestFactory incrementalBuildRequestFactory(IBuildRequestFactory base) {
-		return (String projectName,
-				Set<URI> changedFiles,
-				Set<URI> deletedFiles,
-				List<IResourceDescription.Delta> externalDeltas) -> {
-			XBuildRequest result = base.getBuildRequest(projectName, changedFiles, deletedFiles, externalDeltas);
-			Map<URI, List<? extends LSPIssue>> validationIssues = new HashMap<>();
-			List<URI> deleted = new ArrayList<>();
-			AfterValidateListener originalValidateListener = result.getAfterValidateListener();
-			result.setAfterValidateListener((uri, issues) -> {
-				validationIssues.put(uri, LSPIssue.cast(issues));
-				if (originalValidateListener != null) {
-					originalValidateListener.afterValidate(uri, issues);
-				}
-			});
-			AfterDeleteListener originalDeleteListener = result.getAfterDeleteListener();
-			result.setAfterDeleteListener(uri -> {
-				if (originalDeleteListener != null) {
-					originalDeleteListener.afterDelete(uri);
-					deleted.add(uri);
-				}
-			});
-			result.setAfterBuildListener((request, buildResult) -> {
-				updateProjectState(request, buildResult, validationIssues, deleted);
-			});
-			return result;
-		};
+	/**
+	 * Create a wrapper around the given build request factory that yields a build request which will update the stored
+	 * project state via {@link ProjectBuilder#updateProjectState}.
+	 */
+	protected ProjectStateUpdatingBuildRequestFactory createIncrementalBuildFactory(
+			IBuildRequestFactory buildRequestFactory) {
+		return new ProjectStateUpdatingBuildRequestFactory(buildRequestFactory, new ProjectStateUpdater());
 	}
 
 	/** Build this project according to the request provided by the given buildRequestFactory. */
@@ -443,7 +469,7 @@ public class ProjectBuilder {
 		uriToIssues.clear();
 		if (resourceSet != null) {
 			uriResourceMap.clear();
-			resourceSet.getResources().clear();
+			clearResourceSet();
 		}
 	}
 

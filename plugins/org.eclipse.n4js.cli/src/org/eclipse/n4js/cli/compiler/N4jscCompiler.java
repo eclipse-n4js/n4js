@@ -143,6 +143,7 @@ public class N4jscCompiler {
 		DefaultBuildRequestFactory buildRequestFactory = injector.getInstance(DefaultBuildRequestFactory.class);
 		buildRequestFactory.setAfterGenerateListener(callback);
 		buildRequestFactory.setAfterDeleteListener(callback);
+		buildRequestFactory.setAfterBuildListener(callback);
 	}
 
 	private void warnIfNoProjectsFound() {
