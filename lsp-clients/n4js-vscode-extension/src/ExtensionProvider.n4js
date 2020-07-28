@@ -24,7 +24,11 @@ const TIMEOUT = 1000;
 let n4jscProcess: childProcess.ChildProcess;
 let outputChannel: any+;
 let outputAppender: (text:string)=>void;
-const n4jscliConfig = { string jarFile: "",  {function(curr:fs.Stats, prev:fs.Stats) : void} listener: null};
+const n4jscliConfig = {
+    string configFile: "",
+    string jarFile: "",
+    {function(event: string, fileName: string) : any} listener: null
+};
 
 
 @StringBased
@@ -150,7 +154,6 @@ export function getDeactivate(vscode: any+, vscodeLC: any+): {function() : Promi
             return undefined;
         }
 
-        fs.unwatchFile(n4jscliConfig.jarFile, n4jscliConfig.listener);
         n4jscProcess.kill();
 
         return new Promise<any, any>((resolve, reject) => {
@@ -200,13 +203,14 @@ async function startN4jsLspServerAndConnect(port: number, vscode: any+, vscodeLC
     const vmOptions: ~n4jscli.VmOptions = { xmx: getJavaVMXmxSetting(vscode) };
 
     // track which n4jsc.jar is used (null means default)
-    n4jscliConfig.jarFile = n4jscli.findN4jscliConfig(workspaceDir);
-    n4jscliConfig.listener = (curr, prev) => onN4jscliConfigChange(vscode, vscodeLC, context, outputChannel);
-    if (n4jscliConfig.jarFile) {
+    n4jscliConfig.configFile = n4jscli.findN4jscliConfig(workspaceDir);
+    if (n4jscliConfig.configFile) {
+        n4jscliConfig.jarFile = n4jscli.findN4jscJarValue(workspaceDir, logFn);
+        n4jscliConfig.listener = (curr, prev) => onN4jscliConfigChange(vscode, vscodeLC, context, outputChannel);
         // Add listener to changes in .n4js-cli.config to trigger restarts in case the n4jsc.jar changes
         // Note: VSCode's FileSystemWatchers do work only inside the workspace folder.
         // Hence, we use a file watcher of Node.js's fs library.
-        fs.watchFile(n4jscliConfig.jarFile, {persistent:true}, n4jscliConfig.listener);
+        fs.watch(n4jscliConfig.configFile, {persistent:true}, n4jscliConfig.listener);
     }
 
     // The server is started as a separate process
@@ -275,12 +279,13 @@ async function connectToRunningN4jsLspServer(port: number, outputChannel: any+):
 };
 
 
-function onN4jscliConfigChange(vscode: any+, vscodeLC: any+, context: any+, outputChannel: any+) : void {
+function onN4jscliConfigChange(vscode: any+, vscodeLC: any+, context: any+, outputChannel: any+) : any {
     const workspaceDir = getWorkspaceDir(vscode);
     const newN4jscjarFile = n4jscli.findN4jscJarValue(workspaceDir, () => null);
     if (n4jscliConfig.jarFile != newN4jscjarFile) {
         requestUserReload(vscode, vscodeLC, context, outputChannel);
     }
+    return null;
 }
 
 function requestUserReload(vscode: any+, vscodeLC: any+, context: any+, outputChannel: any+) {

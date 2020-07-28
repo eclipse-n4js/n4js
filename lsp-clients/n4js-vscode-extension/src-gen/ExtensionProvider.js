@@ -14,6 +14,7 @@ let n4jscProcess;
 let outputChannel;
 let outputAppender;
 const n4jscliConfig = {
+	configFile: "",
 	jarFile: "",
 	listener: null
 };
@@ -114,7 +115,6 @@ export function getDeactivate(vscode, vscodeLC) {
 		if (!n4jscProcess) {
 			return undefined;
 		}
-		fs.unwatchFile(n4jscliConfig.jarFile, n4jscliConfig.listener);
 		n4jscProcess.kill();
 		return new Promise((resolve, reject)=>{
 			n4jscProcess.on('exit', ()=>{
@@ -164,10 +164,11 @@ async function startN4jsLspServerAndConnect(port, vscode, vscodeLC, context, out
 	const vmOptions = {
 		xmx: getJavaVMXmxSetting(vscode)
 	};
-	n4jscliConfig.jarFile = n4jscli.findN4jscliConfig(workspaceDir);
-	n4jscliConfig.listener = (curr, prev)=>onN4jscliConfigChange(vscode, vscodeLC, context, outputChannel);
-	if (n4jscliConfig.jarFile) {
-		fs.watchFile(n4jscliConfig.jarFile, {
+	n4jscliConfig.configFile = n4jscli.findN4jscliConfig(workspaceDir);
+	if (n4jscliConfig.configFile) {
+		n4jscliConfig.jarFile = n4jscli.findN4jscJarValue(workspaceDir, logFn);
+		n4jscliConfig.listener = (curr, prev)=>onN4jscliConfigChange(vscode, vscodeLC, context, outputChannel);
+		fs.watch(n4jscliConfig.configFile, {
 			persistent: true
 		}, n4jscliConfig.listener);
 	}
@@ -233,6 +234,7 @@ function onN4jscliConfigChange(vscode, vscodeLC, context, outputChannel) {
 	if (n4jscliConfig.jarFile != newN4jscjarFile) {
 		requestUserReload(vscode, vscodeLC, context, outputChannel);
 	}
+	return null;
 }
 function requestUserReload(vscode, vscodeLC, context, outputChannel) {
 	vscode.window.showInformationMessage("The config file .n4js-cli.config changed. A reload of the N4JS Extension is necessary for changes to take effect.", "Reload Extension").then(async function(value) {
