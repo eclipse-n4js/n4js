@@ -134,10 +134,11 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 	}
 
 	/** Sets non-injectable fields */
-	public void initialize(InitializeParams _initializeParams, ILanguageServerAccess _access) {
-		this.hierarchicalSymbols = isHierarchicalDocumentSymbolSupport(_initializeParams);
+	public void initialize(InitializeParams initializeParams,
+			@SuppressWarnings("hiding") ILanguageServerAccess access) {
+		this.hierarchicalSymbols = isHierarchicalDocumentSymbolSupport(initializeParams);
 		this.resourceAccess = new XWorkspaceResourceAccess(resourceTaskManager);
-		this.access = _access;
+		this.access = access;
 		index.addListener(this);
 	}
 

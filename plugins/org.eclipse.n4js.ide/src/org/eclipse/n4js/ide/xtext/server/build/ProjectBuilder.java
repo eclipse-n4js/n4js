@@ -133,9 +133,10 @@ public class ProjectBuilder {
 	private final ListMultimap<URI, LSPIssue> uriToIssues = ArrayListMultimap.create();
 
 	/** Initialize this project. */
-	public void initialize(ProjectDescription _projectDescription, XIProjectConfig _projectConfig) {
-		this.projectDescription = _projectDescription;
-		this.projectConfig = _projectConfig;
+	@SuppressWarnings("hiding")
+	public void initialize(ProjectDescription projectDescription, XIProjectConfig projectConfig) {
+		this.projectDescription = projectDescription;
+		this.projectConfig = projectConfig;
 		this.doClear();
 		this.resourceSet = createNewResourceSet(getProjectIndex());
 	}
