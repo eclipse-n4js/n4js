@@ -107,6 +107,7 @@ The value can be
 * an URL pointing to a n4jsc.jar.
 
 In case the given `n4jsc.jar` is an URL, the file will be downloaded and saved inside the `bin` folder of the n4js-cli package.
+A new folder inside `bin` will be created for every host and path that contains the specified `n4jsc.jar` file.
 Otherwise, the given file will be used directly without copying it.
 
 
