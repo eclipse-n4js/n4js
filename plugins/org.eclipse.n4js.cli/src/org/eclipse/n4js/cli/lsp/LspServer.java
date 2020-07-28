@@ -68,7 +68,7 @@ public class LspServer {
 
 		try {
 			if (options.isStdio()) {
-				// no need to restart LSP server's life cycle when used via stdIO
+				// no need to restart LSP server's life cycle when used via stdio
 				performLifecycle(threadPool);
 			} else {
 
