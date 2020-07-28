@@ -10,22 +10,18 @@
  */
 package org.eclipse.n4js.xtext.workspace;
 
-import static com.google.common.collect.Iterables.concat;
-import static com.google.common.collect.Lists.newArrayList;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
-import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
@@ -57,65 +53,74 @@ public class WorkspaceChanges {
 
 	/** @return a new instance of {@link WorkspaceChanges} contains the given project as removed */
 	public static WorkspaceChanges createProjectRemoved(XIProjectConfig project) {
-		return new WorkspaceChanges(false, emptyList(), emptyList(), emptyList(), emptyList(), emptyList(),
-				singletonList(project), emptyList(), emptyList());
+		return new WorkspaceChanges(false, ImmutableList.of(), ImmutableList.of(), ImmutableList.of(),
+				ImmutableList.of(), ImmutableList.of(),
+				ImmutableList.of(project), ImmutableList.of(), ImmutableList.of());
 	}
 
 	/** @return a new instance of {@link WorkspaceChanges} contains the given project as added */
 	public static WorkspaceChanges createProjectAdded(XIProjectConfig project) {
-		return new WorkspaceChanges(false, emptyList(), emptyList(), emptyList(), emptyList(), emptyList(),
-				emptyList(), singletonList(project), emptyList());
+		return new WorkspaceChanges(false, ImmutableList.of(), ImmutableList.of(), ImmutableList.of(),
+				ImmutableList.of(), ImmutableList.of(),
+				ImmutableList.of(), ImmutableList.of(project), ImmutableList.of());
 	}
 
 	/** @return a new instance of {@link WorkspaceChanges} contains the given uris as changed */
 	public static WorkspaceChanges createUrisChanged(List<URI> changedURIs) {
-		return new WorkspaceChanges(false, emptyList(), emptyList(), changedURIs, emptyList(), emptyList(),
-				emptyList(), emptyList(), emptyList());
+		return new WorkspaceChanges(false, ImmutableList.of(), ImmutableList.of(), ImmutableList.copyOf(changedURIs),
+				ImmutableList.of(),
+				ImmutableList.of(),
+				ImmutableList.of(), ImmutableList.of(), ImmutableList.of());
 	}
 
 	/** @return a new instance of {@link WorkspaceChanges} contains the given uris as removed */
 	public static WorkspaceChanges createUrisRemoved(List<URI> removedURIs) {
-		return new WorkspaceChanges(false, removedURIs, emptyList(), emptyList(), emptyList(), emptyList(),
-				emptyList(), emptyList(), emptyList());
+		return new WorkspaceChanges(false, ImmutableList.copyOf(removedURIs), ImmutableList.of(), ImmutableList.of(),
+				ImmutableList.of(),
+				ImmutableList.of(),
+				ImmutableList.of(), ImmutableList.of(), ImmutableList.of());
 	}
 
 	/** @return a new instance of {@link WorkspaceChanges} contains the given uris as removed / changed */
 	public static WorkspaceChanges createUrisRemovedAndChanged(List<URI> removedURIs, List<URI> changedURIs) {
-		return new WorkspaceChanges(false, removedURIs, changedURIs, emptyList(), emptyList(), emptyList(),
-				emptyList(), emptyList(), emptyList());
+		return new WorkspaceChanges(false, ImmutableList.copyOf(removedURIs), ImmutableList.copyOf(changedURIs),
+				ImmutableList.of(), ImmutableList.of(),
+				ImmutableList.of(),
+				ImmutableList.of(), ImmutableList.of(), ImmutableList.of());
 	}
 
 	/** true iff a name or a dependency of a (still existing) project have been modified */
-	protected boolean namesOrDependenciesChanged;
+	protected final boolean namesOrDependenciesChanged;
 	/** removed uris (excluding those from {@link #removedSourceFolders} and {@link #removedProjects}) */
-	protected List<URI> removedURIs;
+	protected final ImmutableList<URI> removedURIs;
 	/** added uris (excluding those from {@link #addedSourceFolders} and {@link #addedProjects}) */
-	protected List<URI> addedURIs;
+	protected final ImmutableList<URI> addedURIs;
 	/** changed uris */
-	protected List<URI> changedURIs;
+	protected final ImmutableList<URI> changedURIs;
 	/** removed source folders (excluding those from {@link #removedProjects}) */
-	protected List<ISourceFolder> removedSourceFolders;
+	protected final ImmutableList<ISourceFolder> removedSourceFolders;
 	/** added source folders (excluding those from {@link #addedProjects}) */
-	protected List<ISourceFolder> addedSourceFolders;
+	protected final ImmutableList<ISourceFolder> addedSourceFolders;
 	/** removed projects */
-	protected List<XIProjectConfig> removedProjects;
+	protected final ImmutableList<XIProjectConfig> removedProjects;
 	/** added projects */
-	protected List<XIProjectConfig> addedProjects;
+	protected final ImmutableList<XIProjectConfig> addedProjects;
 	/** projects that were neither added nor removed but had their dependencies changed */
-	protected List<XIProjectConfig> projectsWithChangedDependencies;
+	protected final ImmutableList<XIProjectConfig> projectsWithChangedDependencies;
 
 	/** Constructor */
 	public WorkspaceChanges() {
-		this(false, emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(),
-				emptyList());
+		this(false, ImmutableList.of(), ImmutableList.of(), ImmutableList.of(), ImmutableList.of(), ImmutableList.of(),
+				ImmutableList.of(), ImmutableList.of(),
+				ImmutableList.of());
 	}
 
 	/** Constructor */
 	public WorkspaceChanges(boolean namesOrDependenciesChanged,
-			List<URI> removedURIs, List<URI> addedURIs, List<URI> changedURIs,
-			List<ISourceFolder> removedSourceFolders, List<ISourceFolder> addedSourceFolders,
-			List<XIProjectConfig> removedProjects, List<XIProjectConfig> addedProjects,
-			List<XIProjectConfig> projectsWithChangedDependencies) {
+			ImmutableList<URI> removedURIs, ImmutableList<URI> addedURIs, ImmutableList<URI> changedURIs,
+			ImmutableList<ISourceFolder> removedSourceFolders, ImmutableList<ISourceFolder> addedSourceFolders,
+			ImmutableList<XIProjectConfig> removedProjects, ImmutableList<XIProjectConfig> addedProjects,
+			ImmutableList<XIProjectConfig> projectsWithChangedDependencies) {
 
 		this.namesOrDependenciesChanged = namesOrDependenciesChanged;
 		this.removedURIs = removedURIs;
@@ -238,23 +243,29 @@ public class WorkspaceChanges {
 		return namesOrDependenciesChanged || !addedProjects.isEmpty() || !removedProjects.isEmpty();
 	}
 
-	/** Merges the given changes into this instance */
-	public void merge(WorkspaceChanges changes) {
-		this.namesOrDependenciesChanged |= changes.namesOrDependenciesChanged;
-		this.removedURIs = newArrayList(concat(this.removedURIs, changes.removedURIs));
-		this.addedURIs = newArrayList(concat(this.addedURIs, changes.addedURIs));
-		this.changedURIs = newArrayList(concat(this.changedURIs, changes.changedURIs));
-		this.removedSourceFolders = newArrayList(concat(this.removedSourceFolders, changes.removedSourceFolders));
-		this.addedSourceFolders = newArrayList(concat(this.addedSourceFolders, changes.addedSourceFolders));
-		this.removedProjects = newArrayList(concat(this.removedProjects, changes.removedProjects));
-		this.addedProjects = newArrayList(concat(this.addedProjects, changes.addedProjects));
-		this.projectsWithChangedDependencies = newArrayList(concat(this.projectsWithChangedDependencies,
-				changes.projectsWithChangedDependencies));
+	/** Merges the given changes into a new instance */
+	public WorkspaceChanges merge(WorkspaceChanges changes) {
+		ImmutableList<XIProjectConfig> newAdded = concat(addedProjects, changes.addedProjects);
+		ImmutableList<XIProjectConfig> newRemoved = concat(removedProjects, changes.removedProjects);
 
-		// ensure consistency of 'projectsWithChangedDependencies'
-		Set<String> addedRemovedProjects = IterableExtensions
-				.toSet(Iterables.transform(concat(this.removedProjects, this.addedProjects), IProjectConfig::getName));
-		this.projectsWithChangedDependencies.removeIf(pc -> addedRemovedProjects.contains(pc.getName()));
+		ImmutableSet<String> allAddedOrRemoved = FluentIterable.concat(newAdded, newRemoved).transform(p -> p.getName())
+				.toSet();
+
+		return new WorkspaceChanges(
+				this.namesOrDependenciesChanged || changes.namesOrDependenciesChanged,
+				concat(removedURIs, changes.removedURIs),
+				concat(addedURIs, changes.addedURIs),
+				concat(changedURIs, changes.changedURIs),
+				concat(removedSourceFolders, changes.removedSourceFolders),
+				concat(addedSourceFolders, changes.addedSourceFolders),
+				newRemoved,
+				newAdded,
+				FluentIterable.concat(projectsWithChangedDependencies, projectsWithChangedDependencies)
+						.filter(config -> !allAddedOrRemoved.contains(config.getName())).toList());
+	}
+
+	private <T> ImmutableList<T> concat(ImmutableList<T> a, ImmutableList<T> b) {
+		return FluentIterable.concat(a, b).toList();
 	}
 
 }

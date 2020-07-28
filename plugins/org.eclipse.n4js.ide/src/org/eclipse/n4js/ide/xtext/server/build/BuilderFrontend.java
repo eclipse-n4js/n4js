@@ -27,8 +27,6 @@ import org.eclipse.n4js.ide.xtext.server.build.XBuildManager.XBuildable;
 import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.util.CancelIndicator;
-import org.eclipse.xtext.workspace.IProjectConfig;
-import org.eclipse.xtext.workspace.ISourceFolder;
 
 import com.google.common.base.Stopwatch;
 import com.google.inject.Inject;
@@ -38,7 +36,6 @@ import com.google.inject.Singleton;
  * Facade for all builder-related functionality in the LSP server. From outside the builder-related classes, all use of
  * the LSP builder should go through this class.
  */
-@SuppressWarnings({ "javadoc", "restriction" })
 @Singleton
 public class BuilderFrontend {
 
@@ -59,10 +56,24 @@ public class BuilderFrontend {
 	@Inject
 	private XBuildManager buildManager;
 
+	/**
+	 * Returns the base directory of the workspace.
+	 */
 	public URI getBaseDir() {
 		return workspaceManager.getBaseDir();
 	}
 
+	/*
+	 * Review feedback:
+	 *
+	 * More recent versions of the Xtext LSP integration support workspaces with multiple roots. This will break the
+	 * abstraction here.
+	 *
+	 * To me, it looks like the consumer of the issues (currently tests and the N4jscIssueSerializer) should make the
+	 * URIs relative according to their own specific semantics / working directory.
+	 *
+	 * This method should be removed here and from the workspaceManager
+	 */
 	/** @return a workspace relative URI for a given URI */
 	public URI makeWorkspaceRelative(URI uri) {
 		return workspaceManager.makeWorkspaceRelative(uri);
@@ -78,13 +89,24 @@ public class BuilderFrontend {
 		workspaceManager.initialize(newBaseDir);
 	}
 
+	/**
+	 * Trigger an initial build in the background.
+	 */
 	public void initialBuild() {
-		queuedExecutorService.submitAndCancelPrevious(XBuildManager.class, "initialized",
-				cancelIndicator -> doInitialBuild());
-
+		queuedExecutorService.submitAndCancelPrevious(XBuildManager.class, "initialBuild",
+				cancelIndicator -> {
+					doInitialBuild(cancelIndicator);
+					return null;
+				});
 	}
 
-	protected Void doInitialBuild() {
+	/**
+	 * Perform the initial build.
+	 *
+	 * @param ci
+	 *            the cancel indicator.
+	 */
+	protected void doInitialBuild(CancelIndicator ci) {
 		Stopwatch sw = Stopwatch.createStarted();
 		try {
 			LOG.info("Start initial build ...");
@@ -95,9 +117,13 @@ public class BuilderFrontend {
 		} finally {
 			LOG.info("Initial build done after " + sw);
 		}
-		return null;
 	}
 
+	/**
+	 * Trigger a clean operation in the background. Afterwards, all previously build artifacts have been removed. This
+	 * includes index data, source2generated mappings, cached issues and persisted index state. A subsequent build is
+	 * not triggered automatically.
+	 */
 	public CompletableFuture<Void> clean() {
 		return queuedExecutorService.submitAndCancelPrevious(XBuildManager.class, "clean", cancelIndicator -> {
 			buildManager.clean(CancelIndicator.NullImpl);
@@ -109,7 +135,7 @@ public class BuilderFrontend {
 	 * Triggers rebuild of the whole workspace
 	 */
 	public CompletableFuture<Void> reinitWorkspace() {
-		return queuedExecutorService.submitAndCancelPrevious(XBuildManager.class, "didChangeConfiguration",
+		return queuedExecutorService.submitAndCancelPrevious(XBuildManager.class, "reinitWorkspace",
 				cancelIndicator -> {
 					workspaceManager.reinitialize();
 					buildManager.doInitialBuild(CancelIndicator.NullImpl);
@@ -117,14 +143,19 @@ public class BuilderFrontend {
 				});
 	}
 
+	/**
+	 * Trigger an incremental build in the background.
+	 */
 	public void didSave(DidSaveTextDocumentParams params) {
 		runBuildable("didSave", () -> toBuildable(params));
 	}
 
+	/**
+	 * Trigger an incremental build in the background.
+	 */
 	public void didChangeWatchedFiles(DidChangeWatchedFilesParams params) {
-		// TODO: Set watched files to client. Note: Client may have performance issues with lots of folders to watch.
-		final List<URI> dirtyFiles = new ArrayList<>();
-		final List<URI> deletedFiles = new ArrayList<>();
+		List<URI> dirtyFiles = new ArrayList<>();
+		List<URI> deletedFiles = new ArrayList<>();
 		for (FileEvent fileEvent : params.getChanges()) {
 			URI uri = uriExtensions.toUri(fileEvent.getUri());
 
@@ -147,7 +178,7 @@ public class BuilderFrontend {
 	}
 
 	/**
-	 * Evaluate the params and deduce the respective build command.
+	 * Evaluate the parameters and deduce the respective build command.
 	 */
 	protected XBuildable toBuildable(DidSaveTextDocumentParams params) {
 		return buildManager.didSave(getURI(params.getTextDocument()));
@@ -160,7 +191,7 @@ public class BuilderFrontend {
 	 *            the factory for the buildable.
 	 * @return the result.
 	 */
-	protected CompletableFuture<List<Delta>> runBuildable(String description,
+	public CompletableFuture<List<Delta>> runBuildable(String description,
 			Supplier<? extends XBuildable> newBuildable) {
 		return queuedExecutorService.submitAndCancelPrevious(XBuildManager.class, description, cancelIndicator -> {
 			XBuildable buildable = newBuildable.get();
@@ -168,6 +199,9 @@ public class BuilderFrontend {
 		});
 	}
 
+	/**
+	 * Initiate an orderly shutdown.
+	 */
 	public CompletableFuture<Void> shutdown() {
 		return runBuildable("shutdown", () -> {
 			return (cancelIndicator) -> {
@@ -176,23 +210,28 @@ public class BuilderFrontend {
 			};
 		}).thenApply(any -> {
 			persister.close();
+			queuedExecutorService.shutdown();
 			return null;
 		});
 	}
 
-	public void joinPersister() {
+	/**
+	 * Block until all submitted background work is done.
+	 */
+	public void join() {
+		queuedExecutorService.join();
+		joinPersister();
+	}
+
+	private void joinPersister() {
 		persister.pendingWrites().join();
 	}
 
+	/**
+	 * Answer true, if the uri is from a source folder in the current workspace.
+	 */
 	protected boolean isSourceFile(URI uri) {
-		IProjectConfig projectConfig = workspaceManager.getWorkspaceConfig().findProjectContaining(uri);
-		if (projectConfig != null) {
-			ISourceFolder sourceFolder = projectConfig.findSourceFolderContaining(uri);
-			if (sourceFolder != null) {
-				return true;
-			}
-		}
-		return false;
+		return workspaceManager.isSourceFile(uri);
 	}
 
 	/**

@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.xtext.workspace.IProjectConfigSnapshot;
+import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.xtext.resource.containers.IAllContainersState;
 
 import com.google.common.collect.ImmutableList;
@@ -42,7 +42,7 @@ public class ResourceTaskContextAllContainerState implements IAllContainersState
 
 	@Override
 	public List<String> getVisibleContainerHandles(String projectName) {
-		IProjectConfigSnapshot project = resourceTaskContext.workspaceConfig.findProjectByName(projectName);
+		ProjectConfigSnapshot project = resourceTaskContext.workspaceConfig.findProjectByName(projectName);
 		if (project == null) {
 			return Collections.singletonList(projectName);
 		}
@@ -59,7 +59,7 @@ public class ResourceTaskContextAllContainerState implements IAllContainersState
 
 	@Override
 	public String getContainerHandle(URI uri) {
-		IProjectConfigSnapshot project = resourceTaskContext.workspaceConfig.findProjectContaining(uri);
+		ProjectConfigSnapshot project = resourceTaskContext.workspaceConfig.findProjectContaining(uri);
 		return project != null ? project.getName() : null;
 	}
 }

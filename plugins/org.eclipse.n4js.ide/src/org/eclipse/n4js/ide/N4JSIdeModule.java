@@ -34,20 +34,21 @@ import org.eclipse.n4js.ide.validation.N4JSDiagnosticConverter;
 import org.eclipse.n4js.ide.xtext.editor.contentassist.XIdeContentProposalAcceptor;
 import org.eclipse.n4js.ide.xtext.server.BuiltInAwareIncrementalBuilder;
 import org.eclipse.n4js.ide.xtext.server.DebugService;
-import org.eclipse.n4js.ide.xtext.server.DefaultBuildRequestFactory;
-import org.eclipse.n4js.ide.xtext.server.IBuildRequestFactory;
 import org.eclipse.n4js.ide.xtext.server.QueuedExecutorService;
 import org.eclipse.n4js.ide.xtext.server.WorkspaceAwareCanLoadFromDescriptionHelper;
 import org.eclipse.n4js.ide.xtext.server.XExecutableCommandRegistry;
 import org.eclipse.n4js.ide.xtext.server.XIProjectDescriptionFactory;
 import org.eclipse.n4js.ide.xtext.server.XIWorkspaceConfigFactory;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
+import org.eclipse.n4js.ide.xtext.server.build.DefaultBuildRequestFactory;
+import org.eclipse.n4js.ide.xtext.server.build.IBuildRequestFactory;
 import org.eclipse.n4js.ide.xtext.server.build.ProjectBuilder;
 import org.eclipse.n4js.ide.xtext.server.build.ProjectStatePersister;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildManager;
 import org.eclipse.n4js.ide.xtext.server.build.XStatefulIncrementalBuilder;
 import org.eclipse.n4js.ide.xtext.server.build.XWorkspaceManager;
 import org.eclipse.n4js.ide.xtext.server.contentassist.XContentAssistService;
+import org.eclipse.n4js.ide.xtext.server.util.XOperationCanceledManager;
 import org.eclipse.n4js.internal.lsp.FileSystemScanner;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
 import org.eclipse.xtext.generator.IGenerator;
@@ -65,6 +66,7 @@ import org.eclipse.xtext.ide.server.commands.IExecutableCommandService;
 import org.eclipse.xtext.ide.server.hover.HoverService;
 import org.eclipse.xtext.ide.server.symbol.DocumentSymbolMapper;
 import org.eclipse.xtext.ide.server.symbol.HierarchicalDocumentSymbolService;
+import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.validation.IDiagnosticConverter;
 
@@ -206,5 +208,9 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public Class<? extends ProjectStatePersister> bindProjectStatePersister() {
 		return N4JSProjectStatePersister.class;
+	}
+
+	public Class<? extends OperationCanceledManager> bindOperationCanceledManager() {
+		return XOperationCanceledManager.class;
 	}
 }

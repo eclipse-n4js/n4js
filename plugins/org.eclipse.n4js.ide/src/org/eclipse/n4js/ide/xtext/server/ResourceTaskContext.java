@@ -20,13 +20,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.ResourceLocator;
-import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIssueRegistry;
-import org.eclipse.n4js.xtext.workspace.IWorkspaceConfigSnapshot;
+import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
@@ -62,6 +60,22 @@ import com.google.inject.Provider;
 @SuppressWarnings({ "restriction" })
 public class ResourceTaskContext {
 
+	/*
+	 * Review feedback:
+	 *
+	 * It *appears* as if we are duplicating quite some logic in this class. The builder front-end is responsible for
+	 * updating resources after changes happened. We are implementing a different incremental build semantics in
+	 * refreshContext with fewer optimizations and therefore a performance drag.
+	 *
+	 * The logic, how a given resource set is updated after an incoming change is recorded, should certainly be
+	 * implemented exactly once.
+	 *
+	 * For xtext.ui, we made the mistake of duplicating this between the Eclipse builder and the reconciler, and this
+	 * was a constant PITA.
+	 *
+	 * #prepareRefresh is sort-of a brute force approach that has potential for optimizations.
+	 */
+
 	@Inject
 	private LSPIssueConverter lspIssueConverter;
 
@@ -75,40 +89,39 @@ public class ResourceTaskContext {
 	private IResourceServiceProvider.Registry resourceServiceProviderRegistry;
 
 	@Inject
-	private IResourceServiceProvider.Registry languagesRegistry;
-
-	@Inject
 	private OperationCanceledManager operationCanceledManager;
 
 	@Inject
 	private ConcurrentIssueRegistry issueRegistry;
 
 	/** The {@link ResourceTaskManager} that created this instance. */
-	protected ResourceTaskManager parent;
+	private ResourceTaskManager parent;
 	/** URI of the resource represented by this {@link ResourceTaskContext} (i.e. URI of the main resource). */
-	protected URI mainURI;
+	private URI mainURI;
 	/** Tells whether this context represents a temporarily opened file, see {@link #isTemporary()}. */
-	protected boolean temporary;
+	private boolean temporary;
+	/** Tells whether this context is still managed by the ResourceTaskManager or was already removed */
+	private boolean alive;
 
 	/**
 	 * Contains the state of all files in the workspace. For open files managed by {@link #parent} (including the open
 	 * file of this context) this state will represent the dirty state and for all other files it will represent the
 	 * persisted state (as provided by the LSP builder).
 	 */
-	protected ResourceDescriptionsData indexSnapshot;
+	private ResourceDescriptionsData indexSnapshot;
 
 	/** Maps project names to URIs of all resources contained in the project (from the last build). */
-	protected ImmutableSetMultimap<String, URI> project2BuiltURIs;
+	ImmutableSetMultimap<String, URI> project2BuiltURIs;
 
 	/** Most recent workspace configuration. */
-	protected IWorkspaceConfigSnapshot workspaceConfig;
+	WorkspaceConfigSnapshot workspaceConfig;
 
 	/** The resource set used for the current resource and any other resources required for resolution. */
-	protected XtextResourceSet mainResourceSet;
+	private XtextResourceSet mainResourceSet;
 	/** The EMF resource representing the open file. */
-	protected XtextResource mainResource = null;
+	private XtextResource mainResource = null;
 	/** The current textual content of the open file. */
-	protected XDocument document = null;
+	private XDocument document = null;
 
 	/** Within each resource task context, this provides text contents of all other context's main resources. */
 	protected class ResourceTaskContentProvider implements IExternalContentProvider {
@@ -153,6 +166,20 @@ public class ResourceTaskContext {
 	}
 
 	/**
+	 * Returns true if this context is still managed by the {@link ResourceTaskManager}.
+	 */
+	public synchronized boolean isAlive() {
+		return alive;
+	}
+
+	/**
+	 * Mark this task context as no longer managed.
+	 */
+	public synchronized void close() {
+		this.alive = false;
+	}
+
+	/**
 	 * Tells whether this {@link ResourceTaskContext} represents a context for an open file, i.e. not a
 	 * {@link #isTemporary() temporary context}.
 	 */
@@ -188,7 +215,7 @@ public class ResourceTaskContext {
 	@SuppressWarnings("hiding")
 	public synchronized void initialize(ResourceTaskManager parent, URI uri, boolean isTemporary,
 			ResourceDescriptionsData index, ImmutableSetMultimap<String, URI> project2builtURIs,
-			IWorkspaceConfigSnapshot workspaceConfig) {
+			WorkspaceConfigSnapshot workspaceConfig) {
 
 		this.parent = parent;
 		this.mainURI = uri;
@@ -196,8 +223,8 @@ public class ResourceTaskContext {
 		this.indexSnapshot = index;
 		this.project2BuiltURIs = project2builtURIs;
 		this.workspaceConfig = workspaceConfig;
-
 		this.mainResourceSet = createResourceSet();
+		this.alive = true;
 	}
 
 	/** Returns a newly created and fully configured resource set */
@@ -255,9 +282,26 @@ public class ResourceTaskContext {
 
 	/** Same as {@link #refreshContext(int, Iterable, CancelIndicator)}, but without changing the source text. */
 	public void refreshContext(CancelIndicator cancelIndicator) {
-		// TODO IDE-3402 find better solution for updating unchanged resource task contexts!
-		TextDocumentContentChangeEvent dummyChange = new TextDocumentContentChangeEvent(document.getContents());
-		refreshContext(document.getVersion(), Collections.singletonList(dummyChange), cancelIndicator);
+		prepareRefresh();
+
+		mainResource.relink();
+
+		resolveAndValidateResource(cancelIndicator);
+	}
+
+	/**
+	 * Removes all the other resources from the resource set.
+	 */
+	private void prepareRefresh() {
+		if (mainResource == null) {
+			throw new IllegalStateException("trying to refresh a resource that was not yet initialized: " + mainURI);
+		}
+		if (!mainResource.isLoaded()) {
+			throw new IllegalStateException("trying to refresh a resource that is not yet loaded: " + mainURI);
+		}
+
+		ResourceSet resSet = getResourceSet();
+		resSet.getResources().removeIf(res -> res != mainResource);
 	}
 
 	/**
@@ -267,30 +311,13 @@ public class ResourceTaskContext {
 	public void refreshContext(@SuppressWarnings("unused") int version,
 			Iterable<? extends TextDocumentContentChangeEvent> changes, CancelIndicator cancelIndicator) {
 
-		if (mainResource == null) {
-			throw new IllegalStateException("trying to refresh a resource that was not yet initialized: " + mainURI);
-		}
-		if (!mainResource.isLoaded()) {
-			throw new IllegalStateException("trying to refresh a resource that is not yet loaded: " + mainURI);
-		}
+		prepareRefresh();
 
-		ResourceSet resSet = getResourceSet();
-		for (Resource res : new ArrayList<>(resSet.getResources())) {
-			if (res != mainResource) {
-				res.unload(); // TODO IDE-3402 better way to do this? (unload is expensive due to re-proxyfication)
-				resSet.getResources().remove(res);
-			}
-		}
-
-		for (TextDocumentContentChangeEvent change : changes) {
-			Range range = change.getRange();
-			int start = range != null ? document.getOffSet(range.getStart()) : 0;
-			int end = range != null ? document.getOffSet(range.getEnd()) : document.getContents().length();
-			String replacement = change.getText();
-
-			document = document.applyTextDocumentChanges(Collections.singletonList(change));
-
-			mainResource.update(start, end - start, replacement);
+		document = document.applyTextDocumentChanges(changes);
+		try {
+			mainResource.reparse(document.getContents());
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
 
 		resolveAndValidateResource(cancelIndicator);
@@ -318,7 +345,8 @@ public class ResourceTaskContext {
 	/** Validate this context's main resource and send an issue update. */
 	public List<Issue> validateResource(CancelIndicator cancelIndicator) {
 		// validate
-		IResourceServiceProvider resourceServiceProvider = languagesRegistry.getResourceServiceProvider(mainURI);
+		IResourceServiceProvider resourceServiceProvider = resourceServiceProviderRegistry
+				.getResourceServiceProvider(mainURI);
 		IResourceValidator resourceValidator = resourceServiceProvider.getResourceValidator();
 		List<Issue> issues = resourceValidator.validate(mainResource, CheckMode.ALL, cancelIndicator);
 		operationCanceledManager.checkCanceled(cancelIndicator); // #validate() sometimes returns null when canceled!
@@ -360,13 +388,13 @@ public class ResourceTaskContext {
 	 */
 	protected void onPersistedStateChanged(Collection<? extends IResourceDescription> changedDescs,
 			Set<URI> removedURIs, ImmutableSetMultimap<String, URI> newProject2builtURIs,
-			IWorkspaceConfigSnapshot newWorkspaceConfig, CancelIndicator cancelIndicator) {
+			WorkspaceConfigSnapshot newWorkspaceConfig, CancelIndicator cancelIndicator) {
 		updateIndex(changedDescs, removedURIs, newProject2builtURIs, newWorkspaceConfig, cancelIndicator);
 	}
 
 	/** Update this context's internal index and trigger a refresh if required. */
 	protected void updateIndex(Collection<? extends IResourceDescription> changedDescs, Set<URI> removedURIs,
-			ImmutableSetMultimap<String, URI> newProject2builtURIs, IWorkspaceConfigSnapshot newWorkspaceConfig,
+			ImmutableSetMultimap<String, URI> newProject2builtURIs, WorkspaceConfigSnapshot newWorkspaceConfig,
 			CancelIndicator cancelIndicator) {
 
 		// update my cached state
@@ -378,7 +406,7 @@ public class ResourceTaskContext {
 
 		project2BuiltURIs = newProject2builtURIs;
 
-		IWorkspaceConfigSnapshot oldWorkspaceConfig = workspaceConfig;
+		WorkspaceConfigSnapshot oldWorkspaceConfig = workspaceConfig;
 		workspaceConfig = newWorkspaceConfig;
 
 		// refresh if I am affected by the changes
@@ -469,4 +497,5 @@ public class ResourceTaskContext {
 		}
 		return resourceServiceProvider.getResourceDescriptionManager();
 	}
+
 }

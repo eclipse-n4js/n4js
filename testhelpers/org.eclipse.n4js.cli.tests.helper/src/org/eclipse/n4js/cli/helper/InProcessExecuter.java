@@ -93,7 +93,7 @@ public class InProcessExecuter {
 				// save projects
 				Injector injector = N4jscFactory.getOrCreateInjector();
 				XWorkspaceManager workspaceManager = injector.getInstance(XWorkspaceManager.class);
-				Set<? extends IProjectConfig> projects = workspaceManager.getWorkspaceConfig().getProjects();
+				Set<? extends IProjectConfig> projects = workspaceManager.getProjectConfigs();
 				Map<String, String> projectMap = new TreeMap<>();
 				for (IProjectConfig pConfig : projects) {
 					Path projectPath = URIUtils.toPath(pConfig.getPath());

@@ -21,12 +21,13 @@ import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.n4js.utils.Strings;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -61,6 +62,9 @@ import com.google.inject.Singleton;
  * cancelled while waiting on the queue, so implementors of a task may choose to implement a "non-cancellable" operation
  * at the beginning of a task before reacting to the cancel indicator.
  *
+ * Tasks that consider cancellation requests should not finish normally when a cancellation is detected, but throw an
+ * {@link CancellationException} or an {@link OperationCanceledException} instead.
+ *
  * <h2>Memory Consistency Properties</h2>
  *
  * Given two tasks <code>T1</code> and <code>T2</code> submitted in this order and with equal queue IDs, this executor
@@ -75,12 +79,10 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class QueuedExecutorService {
-
 	private static final Logger LOG = Logger.getLogger(QueuedExecutorService.class);
 
 	/** The underlying executor service that is used to actually execute the tasks. */
-	@Inject
-	protected ExecutorService delegate;
+	protected ExecutorService delegate = Executors.newCachedThreadPool();
 
 	/***/
 	@Inject
@@ -89,17 +91,18 @@ public class QueuedExecutorService {
 	/** Global queue of all pending tasks across all queue IDs. */
 	protected final List<QueuedTask<?>> pendingTasks = new ArrayList<>();
 	/** Queue IDs with currently running tasks. */
-	protected final Map<Object, QueuedTask<?>> runningTasks = new LinkedHashMap<>();
+	protected final Map<Object, QueuedTask<?>> submittedTasks = new LinkedHashMap<>();
 
 	@SuppressWarnings("javadoc")
 	protected final class QueuedTask<T> implements Runnable, XCancellable {
 		protected final Object queueId;
 		protected final String description;
-		protected final Function<CancelIndicator, T> operation;
+		protected final Function<? super CancelIndicator, ? extends T> operation;
 		protected final QueuedTaskFuture<T> result;
 		protected volatile boolean cancelled = false;
 
-		protected QueuedTask(Object queueId, String description, Function<CancelIndicator, T> operation) {
+		protected QueuedTask(Object queueId, String description,
+				Function<? super CancelIndicator, ? extends T> operation) {
 			this.queueId = Objects.requireNonNull(queueId);
 			this.description = Objects.requireNonNull(description);
 			this.operation = Objects.requireNonNull(operation);
@@ -120,13 +123,13 @@ public class QueuedExecutorService {
 					}
 				});
 				result.complete(actualResult);
-			} catch (Throwable th) {
-				if (isCancellation(th)) {
+			} catch (Throwable t) {
+				if (operationCanceledManager.isOperationCanceledException(t)) {
 					result.doCancel();
 				} else {
 					// log before completing (or LSPExecutorServiceTest#testSubmitLogException() would become flaky)
-					LOG.error("error during queued task: ", th);
-					result.completeExceptionally(th);
+					LOG.error("error during queued task: ", t);
+					result.completeExceptionally(t);
 				}
 			} finally {
 				onDone(this);
@@ -153,6 +156,13 @@ public class QueuedExecutorService {
 		 * marked as cancelled, but it lies in the discretion of the task's implementation how to react to that. This
 		 * future might even still complete normally if the task implementation chooses to ignore the cancellation
 		 * status of the cancel indicator.
+		 *
+		 * <p>
+		 * It is discouraged to complete the future normally if cancellation was detected. In other words: If the task
+		 * produces a list of result items and detects cancellation requests half-way through the computation, it is
+		 * discouraged to return the incomplete list. Instead an {@link CancellationException} or an
+		 * {@link OperationCanceledException} should be thrown and propagated.
+		 * </p>
 		 */
 		@Override
 		public boolean cancel(boolean mayInterruptIfRunning) {
@@ -206,7 +216,7 @@ public class QueuedExecutorService {
 		Iterator<QueuedTask<?>> iter = pendingTasks.iterator();
 		while (iter.hasNext()) {
 			QueuedTask<?> curr = iter.next();
-			boolean isBlocked = runningTasks.containsKey(curr.queueId);
+			boolean isBlocked = submittedTasks.containsKey(curr.queueId);
 			if (!isBlocked) {
 				iter.remove();
 				return curr;
@@ -225,7 +235,7 @@ public class QueuedExecutorService {
 
 	/** Submit the given task to the delegate executor service. */
 	protected synchronized void doSubmit(QueuedTask<?> task) {
-		if (runningTasks.putIfAbsent(task.queueId, task) != null) {
+		if (submittedTasks.putIfAbsent(task.queueId, task) != null) {
 			throw new IllegalStateException("executor inconsistency: queue ID already in progress: " + task.queueId);
 		}
 		delegate.submit(task); // will eventually invoke #onDone()
@@ -233,8 +243,13 @@ public class QueuedExecutorService {
 
 	/** Invoked by each running task upon completion, see {@link QueuedTask#run()}. */
 	protected synchronized void onDone(QueuedTask<?> task) {
-		if (runningTasks.remove(task.queueId) == null) {
+		QueuedTask<?> inProgress = submittedTasks.remove(task.queueId);
+		if (inProgress == null) {
 			throw new IllegalStateException("executor inconsistency: queue ID not in progress: " + task.queueId);
+		}
+		if (inProgress != task) {
+			throw new IllegalStateException("executor inconsistency: task with queue ID not in progress: "
+					+ task.queueId + ". Expected " + task + " but was " + inProgress);
 		}
 		doSubmitAllPending();
 	}
@@ -245,13 +260,13 @@ public class QueuedExecutorService {
 	 * {@link QueuedExecutorService} for details.
 	 */
 	public synchronized void cancelAll() {
-		Stream.concat(runningTasks.values().stream(), pendingTasks.stream())
+		Stream.concat(submittedTasks.values().stream(), pendingTasks.stream())
 				.forEach(t -> t.cancel());
 	}
 
 	/** Same as {@link #cancelAll()}, but only affects tasks with a queue ID equal to the given ID. */
 	public synchronized void cancelAll(Object queueId) {
-		Stream.concat(runningTasks.values().stream(), pendingTasks.stream())
+		Stream.concat(submittedTasks.values().stream(), pendingTasks.stream())
 				.filter(t -> queueId.equals(t.queueId))
 				.forEach(t -> t.cancel());
 	}
@@ -260,7 +275,7 @@ public class QueuedExecutorService {
 	 * Blocks until all tasks complete that are running or pending at the time of invocation of this method OR are being
 	 * submitted by other threads while this method is waiting. Thus, this method waits for the executor to idle.
 	 * <p>
-	 * More precisely, this method waits for a point in time when this executor is idle but <u>does not guarantee</u>
+	 * More precisely, this method waits for a point in time when this executor is idle but <em>does not guarantee</em>
 	 * the <em>first</em> such point in time will be detected and does not guarantee the executor is <em>still</em> idle
 	 * when this method returns (however, the latter may only be untrue if there exist threads submitting issues other
 	 * than those of the tasks running or pending when this method is invoked).
@@ -280,8 +295,8 @@ public class QueuedExecutorService {
 	}
 
 	/** Same as {@link #allTasks()}, but returns <code>null</code> iff there are no running or pending tasks. */
-	public synchronized CompletableFuture<Void> allTasksOrNull() {
-		if (runningTasks.isEmpty() && pendingTasks.isEmpty()) {
+	private synchronized CompletableFuture<Void> allTasksOrNull() {
+		if (submittedTasks.isEmpty() && pendingTasks.isEmpty()) {
 			return null;
 		}
 		return allTasks();
@@ -293,29 +308,22 @@ public class QueuedExecutorService {
 	 * <code>null</code>.
 	 */
 	public synchronized CompletableFuture<Void> allTasks() {
-		CompletableFuture<?>[] allTasks = Stream.concat(runningTasks.values().stream(), pendingTasks.stream())
+		CompletableFuture<?>[] allTasks = Stream.concat(submittedTasks.values().stream(), pendingTasks.stream())
 				.map(t -> t.result)
-				.collect(Collectors.toList())
 				.toArray(CompletableFuture[]::new);
 		return CompletableFuture.allOf(allTasks);
 	}
 
 	/** An orderly shutdown of this executor service. */
 	public synchronized void shutdown() {
-		MoreExecutors.shutdownAndAwaitTermination(delegate, 2500, TimeUnit.MILLISECONDS);
 		cancelAll();
+		MoreExecutors.shutdownAndAwaitTermination(delegate, 2500, TimeUnit.MILLISECONDS);
 	}
 
 	/** May be invoked from arbitrary threads. */
 	protected /* NOT synchronized */ <T> QueuedTask<T> createQueuedTask(Object queueId, String description,
 			Function<CancelIndicator, T> task) {
-
 		return new QueuedTask<>(queueId, description, task);
-	}
-
-	/** May be invoked from arbitrary threads. */
-	protected /* NOT synchronized */ boolean isCancellation(Throwable th) {
-		return th instanceof CancellationException || operationCanceledManager.isOperationCanceledException(th);
 	}
 
 	/** Stringifies current state of the executer service. Indicates all currently running and pending tasks. */
@@ -323,7 +331,7 @@ public class QueuedExecutorService {
 		StringBuilder sb = new StringBuilder();
 		Multimap<Object, QueuedTask<?>> activeQueue = HashMultimap.create();
 		Multimap<Object, QueuedTask<?>> inactiveQueue = HashMultimap.create();
-		for (Map.Entry<Object, QueuedTask<?>> entry : runningTasks.entrySet()) {
+		for (Map.Entry<Object, QueuedTask<?>> entry : submittedTasks.entrySet()) {
 			activeQueue.put(entry.getValue(), (QueuedTask<?>) entry.getKey());
 		}
 		for (QueuedTask<?> pendingTask : pendingTasks) {
@@ -334,7 +342,8 @@ public class QueuedExecutorService {
 			}
 		}
 		sb.append(QueuedExecutorService.class.getSimpleName() + " showing all " + QueuedTask.class.getSimpleName());
-		sb.append("\nActive Tasks Queues (First task is running, succeeding tasks are waiting):\n");
+		sb.append(
+				"\nActive Tasks Queues (First task is submitted to delegate executor, succeeding tasks are waiting in local queue):\n");
 		for (Object taskId : activeQueue.keys()) {
 			Collection<QueuedTask<?>> tasks = activeQueue.get(taskId);
 			sb.append("[ID: " + taskId + "]\t");

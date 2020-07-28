@@ -39,5 +39,5 @@ public interface XIWorkspaceConfig extends IWorkspaceConfig {
 	WorkspaceChanges update(URI changedResource, Function<String, ProjectDescription> pdProvider);
 
 	/** Returns a snapshot of the current state of the workspace represented by this {@link XIWorkspaceConfig}. */
-	IWorkspaceConfigSnapshot toSnapshot();
+	WorkspaceConfigSnapshot toSnapshot();
 }

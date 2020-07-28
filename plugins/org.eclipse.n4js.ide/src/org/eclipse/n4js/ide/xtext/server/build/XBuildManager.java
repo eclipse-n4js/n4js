@@ -16,7 +16,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.CancellationException;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -25,7 +24,7 @@ import org.eclipse.n4js.ide.server.LspLogger;
 import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo;
 import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo.ProjectBuildOrderIterator;
 import org.eclipse.n4js.ide.xtext.server.build.ParallelBuildManager.ParallelJob;
-import org.eclipse.n4js.xtext.workspace.IProjectConfigSnapshot;
+import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -50,6 +49,7 @@ import com.google.inject.Inject;
  */
 @SuppressWarnings({ "hiding", "restriction" })
 public class XBuildManager {
+
 	private static final Logger LOG = LogManager.getLogger(XBuildManager.class);
 
 	/** A handle that can be used to trigger a build. */
@@ -60,10 +60,6 @@ public class XBuildManager {
 		/** Run the build */
 		List<IResourceDescription.Delta> build(CancelIndicator cancelIndicator);
 	}
-
-	/** Issue key for cyclic dependencies */
-	public static final String CYCLIC_PROJECT_DEPENDENCIES = XBuildManager.class.getName()
-			+ ".cyclicProjectDependencies";
 
 	@Inject
 	private XWorkspaceManager workspaceManager;
@@ -123,16 +119,14 @@ public class XBuildManager {
 	/** Mark the given document as saved. */
 	public XBuildManager.XBuildable didSave(URI uri) {
 		WorkspaceChanges notifiedChanges = WorkspaceChanges.createUrisChanged(ImmutableList.of(uri));
-		WorkspaceChanges workspaceChanges = workspaceManager.getWorkspaceConfig().update(uri,
-				projectName -> workspaceManager.getProjectBuilder(projectName).getProjectDescription());
+		WorkspaceChanges workspaceChanges = workspaceManager.update(uri);
 
-		Iterable<IProjectConfigSnapshot> projectsWithChangedDeps = IterableExtensions.map(
+		Iterable<ProjectConfigSnapshot> projectsWithChangedDeps = IterableExtensions.map(
 				workspaceChanges.getProjectsWithChangedDependencies(),
 				XIProjectConfig::toSnapshot);
 		fullIndex.setProjectConfigSnapshots(projectsWithChangedDeps);
 
-		workspaceChanges.merge(notifiedChanges);
-		return getIncrementalGenerateBuildable(workspaceChanges);
+		return getIncrementalGenerateBuildable(workspaceChanges.merge(notifiedChanges));
 	}
 
 	/**
@@ -311,10 +305,6 @@ public class XBuildManager {
 			lspLogger.log("... build done.");
 
 			return result;
-
-		} catch (CancellationException ce) {
-			lspLogger.log("... build canceled.");
-			throw ce;
 		} catch (Throwable th) {
 			if (operationCanceledManager.isOperationCanceledException(th)) {
 				lspLogger.log("... build canceled.");

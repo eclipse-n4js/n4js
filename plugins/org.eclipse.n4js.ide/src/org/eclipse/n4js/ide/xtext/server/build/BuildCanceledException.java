@@ -26,12 +26,20 @@ public class BuildCanceledException extends RuntimeException {
 
 	public final ImmutableList<URI> incompletelyBuiltFiles;
 
-	public BuildCanceledException(Iterable<URI> incompletelyBuiltFiles, Throwable cancellationThrowable) {
+	/*
+	 * Review feedback:
+	 *
+	 * Preferably overload the constructor with the two allowed exception types.
+	 *
+	 */
+	public BuildCanceledException(Iterable<URI> incompletelyBuiltFiles, RuntimeException cancellationThrowable) {
 		super(cancellationThrowable);
 		this.incompletelyBuiltFiles = ImmutableList.copyOf(incompletelyBuiltFiles);
-		if (!(cancellationThrowable instanceof RuntimeException || cancellationThrowable instanceof Error)) {
-			throw new IllegalArgumentException("the cancellationThrowable must be a runtime exception or error");
-		}
+	}
+
+	public BuildCanceledException(Iterable<URI> incompletelyBuiltFiles, Error cancellationThrowable) {
+		super(cancellationThrowable);
+		this.incompletelyBuiltFiles = ImmutableList.copyOf(incompletelyBuiltFiles);
 	}
 
 	public void rethrowOriginalCancellation() {
@@ -41,7 +49,7 @@ public class BuildCanceledException extends RuntimeException {
 		} else if (cause instanceof Error) {
 			throw (Error) cause;
 		} else {
-			throw new IllegalStateException(); // should not happen, see constructor
+			throw new IllegalStateException(); // cannot happen, see overloaded constructors
 		}
 	}
 }

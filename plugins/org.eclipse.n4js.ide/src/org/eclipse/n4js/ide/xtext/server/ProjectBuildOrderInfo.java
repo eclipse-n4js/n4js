@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.n4js.ide.xtext.server.build.ProjectBuilder;
-import org.eclipse.n4js.ide.xtext.server.build.XBuildManager;
 import org.eclipse.n4js.ide.xtext.server.build.XWorkspaceManager;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -35,6 +34,10 @@ import com.google.inject.Injector;
  * Implementation for sorted projects according to their build order.
  */
 public class ProjectBuildOrderInfo implements IOrderInfo<ProjectDescription> {
+
+	/** Issue key for cyclic dependencies */
+	public static final String CYCLIC_PROJECT_DEPENDENCIES = ProjectBuildOrderInfo.class.getName()
+			+ ".cyclicProjectDependencies";
 
 	/**
 	 * A provider for {@link ProjectBuildOrderInfo} instances.
@@ -192,7 +195,7 @@ public class ProjectBuildOrderInfo implements IOrderInfo<ProjectDescription> {
 		ProjectBuilder pm = workspaceManager.getProjectBuilder(projectName);
 		if (pm != null) { // can be null if project not on disk
 			String msg = "Project has cyclic dependencies";
-			pm.reportProjectIssue(msg, XBuildManager.CYCLIC_PROJECT_DEPENDENCIES, Severity.ERROR);
+			pm.reportProjectIssue(msg, CYCLIC_PROJECT_DEPENDENCIES, Severity.ERROR);
 		}
 	}
 }

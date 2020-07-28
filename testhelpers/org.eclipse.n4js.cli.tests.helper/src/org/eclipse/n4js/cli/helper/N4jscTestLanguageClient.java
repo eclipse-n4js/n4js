@@ -102,10 +102,6 @@ public class N4jscTestLanguageClient extends N4jscLanguageClient {
 		URI relGenerated = lspBuilder.makeWorkspaceRelative(generated);
 		File relFile = URIUtils.toFile(relGenerated);
 		transpiledFiles.computeIfAbsent(folder, f -> Collections.synchronizedSet(new HashSet<File>())).add(relFile);
-		if (!transpiledFiles.containsKey(folder)) {
-			transpiledFiles.put(folder, new HashSet<File>());
-		}
-		transpiledFiles.get(folder).add(relFile);
 	}
 
 	@Override

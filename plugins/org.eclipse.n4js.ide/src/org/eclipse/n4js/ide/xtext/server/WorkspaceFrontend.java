@@ -13,19 +13,12 @@ package org.eclipse.n4js.ide.xtext.server;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.lsp4j.DidChangeConfigurationParams;
-import org.eclipse.lsp4j.DidChangeWatchedFilesParams;
 import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.SymbolInformation;
-import org.eclipse.lsp4j.TextDocumentIdentifier;
-import org.eclipse.lsp4j.TextDocumentItem;
-import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.lsp4j.WorkspaceSymbolParams;
-import org.eclipse.lsp4j.services.WorkspaceService;
+import org.eclipse.n4js.ide.xtext.server.findReferences.XWorkspaceResourceAccess;
 import org.eclipse.xtext.findReferences.IReferenceFinder.IResourceAccess;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
-import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.ide.server.commands.ExecutableCommandRegistry;
 import org.eclipse.xtext.ide.server.symbol.WorkspaceSymbolService;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -38,8 +31,7 @@ import com.google.inject.Singleton;
  */
 @SuppressWarnings("restriction")
 @Singleton
-public class WorkspaceFrontend implements WorkspaceService {
-
+public class WorkspaceFrontend {
 	@Inject
 	private ResourceTaskManager resourceTaskManager;
 
@@ -50,9 +42,6 @@ public class WorkspaceFrontend implements WorkspaceService {
 	private WorkspaceSymbolService workspaceSymbolService;
 
 	@Inject
-	private UriExtensions uriExtensions;
-
-	@Inject
 	private ExecutableCommandRegistry commandRegistry;
 
 	private IResourceAccess resourceAccess;
@@ -60,12 +49,14 @@ public class WorkspaceFrontend implements WorkspaceService {
 	private ILanguageServerAccess access;
 
 	/** Sets non-injectable fields */
-	public void initialize(IResourceAccess _resourceAccess, ILanguageServerAccess _access) {
-		this.resourceAccess = _resourceAccess;
+	public void initialize(ILanguageServerAccess _access) {
+		this.resourceAccess = new XWorkspaceResourceAccess(resourceTaskManager);
 		this.access = _access;
 	}
 
-	@Override
+	/**
+	 * Compute the symbol information.
+	 */
 	public CompletableFuture<List<? extends SymbolInformation>> symbol(WorkspaceSymbolParams params) {
 		return lspExecutorService.submitAndCancelPrevious(WorkspaceSymbolParams.class, "symbol",
 				cancelIndicator -> symbol(params, cancelIndicator));
@@ -77,7 +68,9 @@ public class WorkspaceFrontend implements WorkspaceService {
 				resourceTaskManager.createLiveScopeIndex(), cancelIndicator);
 	}
 
-	@Override
+	/**
+	 * Execute the given command.
+	 */
 	public CompletableFuture<Object> executeCommand(ExecuteCommandParams params) {
 		return lspExecutorService.submit("executeCommand", cancelIndicator -> executeCommand(params, cancelIndicator));
 	}
@@ -85,31 +78,6 @@ public class WorkspaceFrontend implements WorkspaceService {
 	/** Execute the command. Runs in a read request. */
 	protected Object executeCommand(ExecuteCommandParams params, CancelIndicator cancelIndicator) {
 		return commandRegistry.executeCommand(params, access, cancelIndicator);
-	}
-
-	@Override
-	public void didChangeConfiguration(DidChangeConfigurationParams params) {
-		// nothing to do
-	}
-
-	@Override
-	public void didChangeWatchedFiles(DidChangeWatchedFilesParams params) {
-		// nothing to do
-	}
-
-	/** Obtain the URI from the given parameters. */
-	protected URI getURI(TextDocumentPositionParams params) {
-		return getURI(params.getTextDocument());
-	}
-
-	/** Obtain the URI from the given identifier. */
-	protected URI getURI(TextDocumentIdentifier documentIdentifier) {
-		return uriExtensions.toUri(documentIdentifier.getUri());
-	}
-
-	/** Obtain the URI from the given document item. */
-	protected URI getURI(TextDocumentItem documentItem) {
-		return uriExtensions.toUri(documentItem.getUri());
 	}
 
 }

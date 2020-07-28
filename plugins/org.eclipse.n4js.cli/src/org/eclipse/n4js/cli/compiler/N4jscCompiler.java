@@ -31,9 +31,9 @@ import org.eclipse.n4js.cli.N4jscExitCode;
 import org.eclipse.n4js.cli.N4jscExitState;
 import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscOptions;
-import org.eclipse.n4js.ide.xtext.server.DefaultBuildRequestFactory;
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
+import org.eclipse.n4js.ide.xtext.server.build.DefaultBuildRequestFactory;
 import org.eclipse.n4js.ide.xtext.server.build.XWorkspaceManager;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.smith.N4JSDataCollectors;
@@ -68,7 +68,12 @@ public class N4jscCompiler {
 		this.callback = N4jscFactory.getLanguageClient();
 		this.workspaceManager = N4jscFactory.getWorkspaceManager();
 
-		setPersistionOptions();
+		/*
+		 * Review feedback:
+		 *
+		 * use a correctly configured Guice module for that purpose.
+		 */
+		setPersisterOptions();
 		this.languageServer.connect(callback);
 		setupWorkspaceBuildActionListener();
 	}
@@ -108,7 +113,7 @@ public class N4jscCompiler {
 	private void performClean() {
 		Stopwatch compilationTime = Stopwatch.createStarted();
 		try (Measurement m = N4JSDataCollectors.dcCliClean.getMeasurement()) {
-			languageServer.clean().join();
+			languageServer.getFrontend().clean().join();
 		}
 		printCleanResults(compilationTime.stop());
 	}
@@ -126,7 +131,7 @@ public class N4jscCompiler {
 		printCompileResults(compilationTime.stop());
 	}
 
-	private void setPersistionOptions() {
+	private void setPersisterOptions() {
 		Injector injector = N4jscFactory.getOrCreateInjector();
 		ProjectStatePersisterConfig persisterConfig = injector.getInstance(ProjectStatePersisterConfig.class);
 		persisterConfig.setDeleteState(options.isClean());
@@ -141,7 +146,7 @@ public class N4jscCompiler {
 	}
 
 	private void warnIfNoProjectsFound() {
-		Set<? extends IProjectConfig> projects = workspaceManager.getWorkspaceConfig().getProjects();
+		Set<? extends IProjectConfig> projects = workspaceManager.getProjectConfigs();
 		if (projects.isEmpty()) {
 			N4jscConsole.println("No projects found at the given location: " + options.getDirs().get(0));
 		}
@@ -149,7 +154,7 @@ public class N4jscCompiler {
 
 	private void verbosePrintAllProjects() {
 		if (options.isVerbose()) {
-			Set<? extends IProjectConfig> projects = workspaceManager.getWorkspaceConfig().getProjects();
+			Set<? extends IProjectConfig> projects = workspaceManager.getProjectConfigs();
 			int maxPrjNameLength = projects.stream()
 					.filter(p -> p.getName() != null)
 					.mapToInt(p -> p.getName().length())

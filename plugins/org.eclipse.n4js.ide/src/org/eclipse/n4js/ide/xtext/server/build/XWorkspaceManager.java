@@ -13,19 +13,19 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.lsp4j.jsonrpc.ResponseErrorException;
-import org.eclipse.lsp4j.jsonrpc.messages.ResponseError;
-import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
 import org.eclipse.n4js.ide.xtext.server.XIProjectDescriptionFactory;
 import org.eclipse.n4js.ide.xtext.server.XIWorkspaceConfigFactory;
+import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
 import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
 import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.workspace.IProjectConfig;
+import org.eclipse.xtext.workspace.ISourceFolder;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -114,9 +114,50 @@ public class XWorkspaceManager {
 
 		// init projects
 		this.workspaceConfig = workspaceConfig;
-		for (XIProjectConfig projectConfig : getWorkspaceConfig().getProjects()) {
+		for (XIProjectConfig projectConfig : getProjectConfigs()) {
 			addProject(projectConfig);
 		}
+	}
+
+	/**
+	 * Return the project configurations.
+	 */
+	public Set<? extends XIProjectConfig> getProjectConfigs() {
+		XIWorkspaceConfig config = getWorkspaceConfig();
+		if (config == null) {
+			return Collections.emptySet();
+		}
+		return config.getProjects();
+	}
+
+	/**
+	 * Updates the workspace according to the updated information in the file with the given URI.
+	 */
+	public WorkspaceChanges update(URI changedFile) {
+		XIWorkspaceConfig config = getWorkspaceConfig();
+		if (config == null) {
+			return WorkspaceChanges.NO_CHANGES;
+		}
+		return config.update(changedFile,
+				projectName -> getProjectBuilder(projectName).getProjectDescription());
+	}
+
+	/**
+	 * Answers true, if the uri is from a source folder.
+	 */
+	public boolean isSourceFile(URI uri) {
+		XIWorkspaceConfig config = getWorkspaceConfig();
+		if (config == null) {
+			return false;
+		}
+		IProjectConfig projectConfig = config.findProjectContaining(uri);
+		if (projectConfig != null) {
+			ISourceFolder sourceFolder = projectConfig.findSourceFolderContaining(uri);
+			if (sourceFolder != null) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/** Adds a project to the workspace */
@@ -151,18 +192,16 @@ public class XWorkspaceManager {
 
 	/**
 	 * @return the workspace configuration
-	 * @throws ResponseErrorException
-	 *             if the workspace is not yet initialized
 	 */
-	public XIWorkspaceConfig getWorkspaceConfig() throws ResponseErrorException {
-		if (workspaceConfig == null) {
-			ResponseError error = new ResponseError(ResponseErrorCode.serverNotInitialized,
-					"Workspace has not been initialized yet.", null);
-			throw new ResponseErrorException(error);
-		}
+	public synchronized XIWorkspaceConfig getWorkspaceConfig() {
 		return workspaceConfig;
 	}
 
+	/*
+	 * Review feedback:
+	 *
+	 * Future versions won't have a single base directory. We ran out-of-sync with the Xtext default implementation.
+	 */
 	/** @return the current base directory {@link URI} */
 	public URI getBaseDir() {
 		if (this.workspaceConfig == null) {
@@ -187,7 +226,11 @@ public class XWorkspaceManager {
 
 	/** Find the project that contains the uri. */
 	public IProjectConfig getProjectConfig(URI uri) {
-		return getWorkspaceConfig().findProjectContaining(uri);
+		XIWorkspaceConfig config = getWorkspaceConfig();
+		if (config == null) {
+			return null;
+		}
+		return config.findProjectContaining(uri);
 	}
 
 	/**
@@ -213,7 +256,7 @@ public class XWorkspaceManager {
 	/** @return all project descriptions. */
 	public List<ProjectDescription> getProjectDescriptions() {
 		List<ProjectDescription> newProjects = new ArrayList<>();
-		for (IProjectConfig projectConfig : getWorkspaceConfig().getProjects()) {
+		for (IProjectConfig projectConfig : getProjectConfigs()) {
 			ProjectDescription projectDescription = projectDescriptionFactory.getProjectDescription(projectConfig);
 			newProjects.add(projectDescription);
 		}
