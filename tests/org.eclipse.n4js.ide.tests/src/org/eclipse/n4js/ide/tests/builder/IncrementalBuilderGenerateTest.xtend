@@ -14,17 +14,11 @@ import org.junit.Test
 
 import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.*
 import static org.junit.Assert.*
-import org.eclipse.xtext.testing.RepeatedTest
-import org.junit.Rule
 
 /**
  * Tests generation of build artifacts (i.e. output files and <code>.n4js.projectstate</code> files).
  */
-@RepeatedTest(times=50)
 class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
-
-	@Rule
-	public val repeater = new RepeatedTest.Rule()
 
 	private static val testDataWithDependency = #[
 		"Other" -> '''
