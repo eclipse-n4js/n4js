@@ -177,17 +177,18 @@ public class LanguageServerFrontend implements TextDocumentService, WorkspaceSer
 		// ignore for now
 	}
 
-	/** Triggers the deletion of all generated files and clears the type index. Returns immediately. */
-	public CompletableFuture<Void> clean() {
+	/**
+	 * Triggers the deletion of all generated files and clears the type index in the background. Can be awaited by
+	 * {@link #join()}.
+	 */
+	public void clean() {
 		builderFrontend.clean();
-		return CompletableFuture.completedFuture(null);
 
 	}
 
-	/** Triggers rebuild of the whole workspace. Returns immediately. */
-	public CompletableFuture<Void> reinitWorkspace() {
+	/** Triggers rebuild of the whole workspace in the background. Can be awaited by {@link #join()}. */
+	public void reinitWorkspace() {
 		builderFrontend.reinitWorkspace();
-		return CompletableFuture.completedFuture(null);
 	}
 
 	@Override
