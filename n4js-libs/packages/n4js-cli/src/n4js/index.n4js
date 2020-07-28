@@ -200,9 +200,9 @@ async function modifyArgs(args: N4jscArguments, log: {function(string)}): N4jscA
  * Otherwise returns null.
  */
 export public async function findN4jscJarPath(workingDir: string, log: {function(string)}) : string {
-    const n4jscJarConfigProperty = findN4jscJarConfigProperty(workingDir, log);
-    if (n4jscJarConfigProperty) {
-        const n4jscJarName = await ensureCustomN4jscJar(n4jscJarConfigProperty, log);
+    const n4jscJarValue = findN4jscJarValue(workingDir, log);
+    if (n4jscJarValue) {
+        const n4jscJarName = await ensureCustomN4jscJar(n4jscJarValue, log);
         return n4jscJarName;
     }
     return null;
@@ -214,7 +214,7 @@ export public async function findN4jscJarPath(workingDir: string, log: {function
  * - the value of property 'n4jscJar' of the n4js-cli configuration file,
  * - or null.
  */
-export public function findN4jscJarConfigProperty(workingDir: string, log: {function(string)}) : string {
+export public function findN4jscJarValue(workingDir: string, log: {function(string)}) : string {
     if (process.env.N4JSC_JAR) {
         // custom n4jsc.jar given as environment variable
         log("picked up environment variable N4JSC_JAR");
@@ -283,47 +283,62 @@ function getN4jscJarFromConfig(pathN4jscliConfigFile : string) : string {
 }
 
 /**
- * Returns the file name of the given custom n4jsc.jar property.
+ * Returns the complete file name of the given custom n4jsc.jar property.
  * Also ensures the presence of the given jar.
  */
-async function ensureCustomN4jscJar(customN4jscName: string, log: {function(string)}) : string {
-    if (fs.existsSync(customN4jscName)) {
+async function ensureCustomN4jscJar(customN4jscValue: string, log: {function(string)}) : string {
+    if (fs.existsSync(customN4jscValue)) {
         // a local file
-        return customN4jscName;
+        return customN4jscValue;
     }
 
-    const fileName = path.basename(customN4jscName);
+    const fileName = path.basename(customN4jscValue);
     const jarInBinDir = path.resolve(BIN_DIR, fileName);
     if (fs.existsSync(jarInBinDir)) {
         // a local file inside bin directory
         return jarInBinDir;
     }
-    if (isValidUrl(customN4jscName, log)) {
-        // an URL not yet downloaded
+    const dfNames = splitCustomN4jscURLValue(customN4jscValue);
+    if (dfNames) {
+        // it is an URL
+        const jarInFolderInBinDir = path.resolve(BIN_DIR, dfNames.dirName, fileName);
+        if (fs.existsSync(jarInFolderInBinDir)) {
+            return jarInFolderInBinDir;
+        }
+        // file not yet downloaded
         try {
-            await downloadFile(customN4jscName, jarInBinDir, log);
-            if (fs.existsSync(jarInBinDir)) {
+            await downloadFile(customN4jscValue, jarInFolderInBinDir, log);
+            if (fs.existsSync(jarInFolderInBinDir)) {
                 // should be now inside bin directory
-                return jarInBinDir;
+                return jarInFolderInBinDir;
             }
         } catch (e) {
             log(e as string);
         }
     }
 
-    throw new Error(`n4jsc.jar could not be found: ${customN4jscName}. Check n4js-cli config file or environment variable.`);
+    throw new Error(`n4jsc.jar could not be found: ${customN4jscValue}. Check n4js-cli config file or environment variable.`);
 }
 
 
+function splitCustomN4jscURLValue(customN4jscURLValue: string) : ~Object with {dirName:string, fileName:string} {
+    const nodeURL = isValidUrl(customN4jscURLValue);
+    if (nodeURL) {
+        const fileName = path.basename(nodeURL.pathname);
+        const dirName = nodeURL.hostname + path.dirname(nodeURL.pathname).replace(/\/|\\/g, "."); // replace separators by '.'
+        return {dirName:dirName, fileName:fileName};
+    }
+    return null;
+}
 
-function isValidUrl(urlStr: string, log: {function(string)}) {
+
+function isValidUrl(urlStr: string) : url.NodeURL {
     try {
         const nodeURL = url.parse(urlStr);
         if (nodeURL.protocol && nodeURL.host && nodeURL.path) {
-            return true;
+            return nodeURL;
         }
     } catch (_) {
     }
-    return false;  
+    return null;  
 }
-

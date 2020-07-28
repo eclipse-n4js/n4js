@@ -229,7 +229,7 @@ async function connectToRunningN4jsLspServer(port, outputChannel) {
 }
 function onN4jscliConfigChange(vscode, vscodeLC, context, outputChannel) {
 	const workspaceDir = getWorkspaceDir(vscode);
-	const newN4jscjarFile = n4jscli.findN4jscJarConfigProperty(workspaceDir, ()=>null);
+	const newN4jscjarFile = n4jscli.findN4jscJarValue(workspaceDir, ()=>null);
 	if (n4jscliConfig.jarFile != newN4jscjarFile) {
 		requestUserReload(vscode, vscodeLC, context, outputChannel);
 	}
