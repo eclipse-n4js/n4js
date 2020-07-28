@@ -325,7 +325,7 @@ function splitCustomN4jscURLValue(customN4jscURLValue: string) : ~Object with {d
     const nodeURL = isValidUrl(customN4jscURLValue);
     if (nodeURL) {
         const fileName = path.basename(nodeURL.pathname);
-        const dirName = nodeURL.hostname + path.dirname(nodeURL.pathname).replace(/\/|\\/g, "."); // replace separators by '.'
+        const dirName = getDirName(nodeURL);
         return {dirName:dirName, fileName:fileName};
     }
     return null;
@@ -341,4 +341,11 @@ function isValidUrl(urlStr: string) : url.NodeURL {
     } catch (_) {
     }
     return null;  
+}
+
+function getDirName(nodeURL: url.NodeURL) : string {
+    let dirName = nodeURL.hostname + path.dirname(nodeURL.pathname);
+    dirName = dirName.replace(/\/|\\/g, "."); // replace separators by '.'
+    dirName = dirName.replace(/<|>|:|"|\||\?|\*|&|/g, ""); // remove reserved characters
+    return dirName;
 }
