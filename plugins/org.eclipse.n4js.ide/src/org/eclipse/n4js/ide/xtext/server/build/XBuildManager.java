@@ -31,6 +31,7 @@ import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionDelta;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
+import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IFileSystemScanner;
@@ -39,6 +40,7 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.IteratorExtensions;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 import com.google.inject.Inject;
@@ -81,6 +83,7 @@ public class XBuildManager {
 
 	private final LinkedHashSet<URI> dirtyFiles = new LinkedHashSet<>();
 	private final LinkedHashSet<URI> deletedFiles = new LinkedHashSet<>();
+	private final LinkedHashSet<String> deletedProjects = new LinkedHashSet<>();
 
 	/** Holds all deltas of all projects. In case of a cancelled build, this set is not empty at start of next build. */
 	private List<IResourceDescription.Delta> allBuildDeltas = new ArrayList<>();
@@ -95,8 +98,30 @@ public class XBuildManager {
 	 * @return a build command that can be triggered
 	 */
 	public XBuildable didChangeFiles(List<URI> dirtyFiles, List<URI> deletedFiles) {
-		WorkspaceChanges workspaceChanges = WorkspaceChanges.createUrisRemovedAndChanged(deletedFiles, dirtyFiles);
+		WorkspaceChanges notifiedChanges = WorkspaceChanges.createUrisRemovedAndChanged(deletedFiles, dirtyFiles);
+		WorkspaceChanges workspaceChanges = TEMP_updateWorkspaceConfig(notifiedChanges);
 		return getIncrementalGenerateBuildable(workspaceChanges);
+	}
+
+	// FIXME don't merge this; Sebastian provides fix on his branch!
+
+	private WorkspaceChanges TEMP_updateWorkspaceConfig(WorkspaceChanges notifiedChanges) {
+		URI uri = IterableExtensions.head(Iterables.concat(
+				notifiedChanges.getRemovedURIs(), notifiedChanges.getChangedURIs()));
+		if (uri == null) {
+			return notifiedChanges;
+		}
+		WorkspaceChanges workspaceChanges = workspaceManager.getWorkspaceConfig().update(uri,
+				projectName -> workspaceManager.getProjectBuilder(projectName).getProjectDescription());
+
+		Iterable<ProjectConfigSnapshot> projectsWithChangedDeps = IterableExtensions.map(
+				workspaceChanges.getProjectsWithChangedDependencies(),
+				XIProjectConfig::toSnapshot);
+		fullIndex.setProjectConfigSnapshots(projectsWithChangedDeps);
+
+		workspaceChanges.merge(notifiedChanges);
+
+		return workspaceChanges;
 	}
 
 	/**
@@ -239,10 +264,12 @@ public class XBuildManager {
 		// when workspace changes occur):
 		// think about encapsulating WorkspaceManager#projectName2ProjectManager and WorkspaceManager#fullIndex to
 		// simplify control flow
-		for (XIProjectConfig prjConfig : workspaceChanges.getRemovedProjects()) {
-			workspaceManager.removeProject(prjConfig);
+		for (XIProjectConfig projectConfig : workspaceChanges.getRemovedProjects()) {
+			handleDeletedProject(projectConfig);
+			workspaceManager.removeProject(projectConfig);
 		}
 		for (XIProjectConfig prjConfig : workspaceChanges.getAddedProjects()) {
+			this.deletedProjects.remove(prjConfig.getName()); // in case a deleted project is being re-created
 			workspaceManager.addProject(prjConfig);
 		}
 
@@ -261,6 +288,27 @@ public class XBuildManager {
 		return deleted;
 	}
 
+	/**
+	 * Registers the given project in {@link #deletedProjects} and adds deltas to {@link #allBuildDeltas} in order to
+	 * ensure correct "isAffected"-computation in later builds.
+	 */
+	protected void handleDeletedProject(XIProjectConfig projectConfig) {
+		String projectName = projectConfig.getName();
+		this.deletedProjects.add(projectName);
+		ResourceDescriptionsData data = fullIndex.getProjectIndex(projectName);
+		if (data != null) {
+			List<IResourceDescription.Delta> deltas = new ArrayList<>();
+			for (IResourceDescription oldDesc : data.getAllResourceDescriptions()) {
+				if (oldDesc != null) {
+					// because the delta represents a deletion only, we need not create it via the
+					// IResourceDescriptionManager:
+					deltas.add(new DefaultResourceDescriptionDelta(oldDesc, null));
+				}
+			}
+			mergeWithUnreportedDeltas(deltas);
+		}
+	}
+
 	/** Run the build on the workspace */
 	protected List<IResourceDescription.Delta> doIncrementalBuild(CancelIndicator cancelIndicator) {
 		lspLogger.log("Building ...");
@@ -274,6 +322,10 @@ public class XBuildManager {
 
 			ProjectBuildOrderInfo projectBuildOrderInfo = projectBuildOrderInfoProvider.get();
 			ProjectBuildOrderIterator pboIterator = projectBuildOrderInfo.getIterator(changedPDs);
+
+			for (String deletedProjectName : deletedProjects) {
+				pboIterator.visitAffected(deletedProjectName);
+			}
 
 			while (pboIterator.hasNext()) {
 				ProjectDescription descr = pboIterator.next();
@@ -299,6 +351,8 @@ public class XBuildManager {
 				pboIterator.visitAffected(newlyBuiltDeltas);
 			}
 
+			deletedProjects.clear();
+
 			List<IResourceDescription.Delta> result = allBuildDeltas;
 			allBuildDeltas = new ArrayList<>();
 
@@ -314,6 +368,7 @@ public class XBuildManager {
 			// recover and also discard the build queue - state is undefined afterwards.
 			this.dirtyFiles.clear();
 			this.deletedFiles.clear();
+			this.deletedProjects.clear();
 			lspLogger.error("... build ABORTED due to exception:", th);
 			throw th;
 		}

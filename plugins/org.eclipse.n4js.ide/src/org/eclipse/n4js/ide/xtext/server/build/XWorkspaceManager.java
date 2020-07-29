@@ -211,12 +211,12 @@ public class XWorkspaceManager {
 	}
 
 	/**
-	 * @param uri
+	 * @param nestedURI
 	 *            the contained uri
 	 * @return the project builder.
 	 */
-	public ProjectBuilder getProjectBuilder(URI uri) {
-		IProjectConfig projectConfig = getProjectConfig(uri);
+	public ProjectBuilder getProjectBuilder(URI nestedURI) {
+		IProjectConfig projectConfig = getProjectConfig(nestedURI);
 		String name = null;
 		if (projectConfig != null) {
 			name = projectConfig.getName();
