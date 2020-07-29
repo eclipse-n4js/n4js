@@ -27,8 +27,6 @@ public class XBuildResult {
 	/** Constructor. */
 	public XBuildResult(ResourceDescriptionsData index, XSource2GeneratedMapping fileMappings,
 			List<IResourceDescription.Delta> affectedResources) {
-
-		super();
 		this.index = index;
 		this.fileMappings = fileMappings;
 		this.affectedResources = affectedResources;
@@ -36,17 +34,17 @@ public class XBuildResult {
 
 	/** Getter. */
 	public ResourceDescriptionsData getIndex() {
-		return this.index;
+		return index;
 	}
 
 	/** Getter. */
 	public XSource2GeneratedMapping getFileMappings() {
-		return this.fileMappings;
+		return fileMappings;
 	}
 
 	/** @return all deltas of resources that have been built. */
 	public List<IResourceDescription.Delta> getAffectedResources() {
-		return this.affectedResources;
+		return affectedResources;
 	}
 
 	@Override

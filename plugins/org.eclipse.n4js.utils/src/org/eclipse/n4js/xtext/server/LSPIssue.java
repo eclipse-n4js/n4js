@@ -8,12 +8,14 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.xtext.server;
+package org.eclipse.n4js.xtext.server;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.Externalizable;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 import org.eclipse.emf.common.util.URI;
@@ -28,13 +30,38 @@ import com.google.common.base.Strings;
  * GH-1537
  *
  * All line and column numbers are one-based. Offset is zero-based.
+ *
+ * @deprecated Obsolete with Xtext 2.22
+ *
  */
+@Deprecated
 public class LSPIssue extends IssueImpl {
-	/*
-	 * Review feedback:
-	 *
-	 * The class should become obsolete with more recent Xtext version.
+
+	/**
+	 * Cast the given issue to a {@link LSPIssue}. Provides a slightly more helpful error message over a plain cast via
+	 * {@code (LSPIssue)issue}.
 	 */
+	public static LSPIssue cast(Issue issue) {
+		if (issue instanceof LSPIssue) {
+			return (LSPIssue) issue;
+		}
+		throw new ClassCastException("Cannot cast " + issue.getClass().getName()
+				+ " to LSPIssue. Issue was not created from EmfDiagnosticToLSPIssueConverter.");
+	}
+
+	/**
+	 * Unsafe, but checked cast of the given list of issues to a list of {@link LSPIssue lsp issues}. Provides a
+	 * slightly more helpful error message over a plain cast via {@code (LSPIssue)issue}.
+	 *
+	 * If the given list is modified after this invocation, we are doomed.
+	 */
+	@SuppressWarnings("unchecked")
+	public static List<? extends LSPIssue> cast(List<? extends Issue> issues) {
+		for (Issue issue : issues) {
+			cast(issue);
+		}
+		return Collections.unmodifiableList((List<? extends LSPIssue>) (issues));
+	}
 
 	private static final String NULL = "";
 	private int lineNumberEnd;
@@ -79,7 +106,12 @@ public class LSPIssue extends IssueImpl {
 		if (copyFrom.getType() != null)
 			this.setType(copyFrom.getType());
 		if (copyFrom.getData() != null)
-			this.setData(copyFrom.getData());
+			this.setData(copyFrom.getData().clone());
+
+		if (copyFrom instanceof LSPIssue) {
+			this.setLineNumberEnd(((LSPIssue) copyFrom).getLineNumberEnd());
+			this.setColumnEnd(((LSPIssue) copyFrom).getColumnEnd());
+		}
 	}
 
 	/** @return line of end of issue */

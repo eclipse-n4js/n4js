@@ -86,7 +86,15 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	}
 
 	@Override
-	public WorkspaceChanges update(URI changedResource, Function<String, ProjectDescription> pdProvider) {
+	public WorkspaceChanges update(List<URI> changedResources, Function<String, ProjectDescription> pdProvider) {
+		WorkspaceChanges result = WorkspaceChanges.NO_CHANGES;
+		for (URI changedResource : changedResources) {
+			result = result.merge(update(changedResource, pdProvider));
+		}
+		return result;
+	}
+
+	private WorkspaceChanges update(URI changedResource, Function<String, ProjectDescription> pdProvider) {
 		IProjectConfig project = this.findProjectContaining(changedResource);
 
 		// get old projects here before it gets invalidated by N4JSProjectConfig#update()

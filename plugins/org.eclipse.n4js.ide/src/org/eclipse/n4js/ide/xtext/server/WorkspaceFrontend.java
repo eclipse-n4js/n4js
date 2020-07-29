@@ -49,9 +49,9 @@ public class WorkspaceFrontend {
 	private ILanguageServerAccess access;
 
 	/** Sets non-injectable fields */
-	public void initialize(ILanguageServerAccess _access) {
+	public void initialize(@SuppressWarnings("hiding") ILanguageServerAccess access) {
 		this.resourceAccess = new XWorkspaceResourceAccess(resourceTaskManager);
-		this.access = _access;
+		this.access = access;
 	}
 
 	/**

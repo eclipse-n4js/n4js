@@ -36,7 +36,7 @@ import org.eclipse.n4js.cli.helper.CliTools;
 import org.eclipse.n4js.csv.CSVData;
 import org.eclipse.n4js.csv.CSVParser;
 import org.eclipse.n4js.csv.CSVRecord;
-import org.eclipse.n4js.ide.xtext.server.DiagnosticIssueConverter;
+import org.eclipse.n4js.ide.xtext.server.issues.LSPIssueToLSPDiagnosticConverter;
 import org.eclipse.n4js.tests.codegen.Classifier;
 import org.eclipse.n4js.tests.codegen.Member;
 import org.eclipse.n4js.tests.issues.IssueExpectations;
@@ -652,7 +652,7 @@ public class AccessControlTest {
 			}
 		}
 
-		DiagnosticIssueConverter converter = new DiagnosticIssueConverter();
+		LSPIssueToLSPDiagnosticConverter converter = new LSPIssueToLSPDiagnosticConverter();
 		List<Issue> issues = new ArrayList<>();
 		for (Map.Entry<String, Diagnostic> uriDiagnostic : compileResult.getIssues().entries()) {
 			URI uri = URI.createURI(uriDiagnostic.getKey());

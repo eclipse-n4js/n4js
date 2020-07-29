@@ -29,22 +29,20 @@ import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
-import org.eclipse.n4js.ide.xtext.server.DiagnosticIssueConverter;
-import org.eclipse.n4js.ide.xtext.server.LSPIssue;
-import org.eclipse.n4js.ide.xtext.server.LSPIssueConverter;
 import org.eclipse.n4js.ide.xtext.server.ResourceTaskManager;
 import org.eclipse.n4js.ide.xtext.server.TextDocumentFrontend;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
+import org.eclipse.n4js.ide.xtext.server.issues.LSPIssueToLSPDiagnosticConverter;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.xtext.server.LSPIssue;
 import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.ide.server.codeActions.ICodeActionService2;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
-import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.base.Optional;
@@ -59,7 +57,7 @@ import com.google.inject.Singleton;
 /**
  * Infrastructure for LSP code actions
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings({ "restriction", "deprecation" })
 @Singleton
 public class N4JSCodeActionService implements ICodeActionService2 {
 
@@ -194,10 +192,7 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 	private TextDocumentFrontend textDocumentFrontend;
 
 	@Inject
-	private DiagnosticIssueConverter diagnosticIssueConverter;
-
-	@Inject
-	private LSPIssueConverter lspIssueConverter;
+	private LSPIssueToLSPDiagnosticConverter diagnosticIssueConverter;
 
 	@Inject
 	private IN4JSCore n4jsCore;
@@ -349,11 +344,10 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 		ResourceTaskManager resourceTaskManager = languageServer.getResourceTaskManager();
 		resourceTaskManager.<Void> runInTemporaryContext(uri, "doApplyToFile", false, cancelIndicator, (ofc, ci) -> {
 			XtextResource res = ofc.getResource();
-			List<Issue> issues = ofc.resolveAndValidateResource(ci);
-			List<LSPIssue> lspIssues = lspIssueConverter.convertToLSPIssues(res, issues, ci);
+			List<? extends LSPIssue> issues = ofc.resolveAndValidateResource(ci);
 
 			XDocument doc = ofc.getDocument();
-			for (LSPIssue issue : lspIssues) {
+			for (LSPIssue issue : issues) {
 				if (issueCode.equals(issue.getCode())) {
 					Options newOptions = createOptions(res, doc, textDocId, issue, ci);
 					quickfix.compute(issueCode, newOptions, collector);

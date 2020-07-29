@@ -66,9 +66,6 @@ import org.eclipse.lsp4j.services.TextDocumentService;
 import org.eclipse.n4js.ide.xtext.server.ResourceTaskManager.IResourceTaskListener;
 import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIndex;
 import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIndex.IIndexListener;
-import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIssueRegistry;
-import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIssueRegistry.IIssueRegistryListener;
-import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIssueRegistry.IssueRegistryChangeEvent;
 import org.eclipse.n4js.ide.xtext.server.contentassist.XContentAssistService;
 import org.eclipse.n4js.ide.xtext.server.findReferences.XWorkspaceResourceAccess;
 import org.eclipse.n4js.ide.xtext.server.rename.XIRenameService;
@@ -97,7 +94,6 @@ import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
-import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -106,7 +102,7 @@ import com.google.inject.Singleton;
  */
 @SuppressWarnings({ "restriction", "deprecation" })
 @Singleton
-public class TextDocumentFrontend implements TextDocumentService, IIndexListener, IIssueRegistryListener,
+public class TextDocumentFrontend implements TextDocumentService, IIndexListener,
 		IResourceTaskListener {
 
 	@Inject
@@ -119,13 +115,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 	private IResourceServiceProvider.Registry languagesRegistry;
 
 	@Inject
-	private IssueAcceptor issueAcceptor;
-
-	@Inject
 	private ConcurrentIndex index;
-
-	@Inject
-	private ConcurrentIssueRegistry issueRegistry;
 
 	@Inject
 	private SemanticHighlightingRegistry semanticHighlightingRegistry;
@@ -144,12 +134,12 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 	}
 
 	/** Sets non-injectable fields */
-	public void initialize(InitializeParams _initializeParams, ILanguageServerAccess _access) {
-		this.hierarchicalSymbols = isHierarchicalDocumentSymbolSupport(_initializeParams);
+	public void initialize(InitializeParams initializeParams,
+			@SuppressWarnings("hiding") ILanguageServerAccess access) {
+		this.hierarchicalSymbols = isHierarchicalDocumentSymbolSupport(initializeParams);
 		this.resourceAccess = new XWorkspaceResourceAccess(resourceTaskManager);
-		this.access = _access;
+		this.access = access;
 		index.addListener(this);
-		issueRegistry.addListener(this);
 	}
 
 	/** Resets non-injectable fields */
@@ -158,7 +148,6 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 		this.resourceAccess = null;
 		this.access = null;
 		index.removeListener(this);
-		issueRegistry.removeListener(this);
 	}
 
 	@Override
@@ -677,22 +666,6 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 
 		resourceTaskManager.updatePersistedState(newWorkspaceConfig, changedDescriptions, changedProjects,
 				removedProjects);
-	}
-
-	@Override
-	public void onIssuesChanged(ImmutableList<IssueRegistryChangeEvent> events) {
-		for (IssueRegistryChangeEvent event : events) {
-			if (event.persistedState && resourceTaskManager.isOpen(event.uri)) {
-				// for open files we ignore issue changes sent by builder
-				continue;
-			}
-			Iterable<LSPIssue> issuesToSend = event.dirtyState ? event.dirtyIssuesNew : event.persistedIssuesNew;
-			if (event.dirtyState && issuesToSend == null) {
-				// dirty state for a resource was entirely removed, so send its persisted state (if any)
-				issuesToSend = event.persistedIssuesNew;
-			}
-			issueAcceptor.publishDiagnostics(event.uri, issuesToSend != null ? issuesToSend : Collections.emptyList());
-		}
 	}
 
 	@Override
