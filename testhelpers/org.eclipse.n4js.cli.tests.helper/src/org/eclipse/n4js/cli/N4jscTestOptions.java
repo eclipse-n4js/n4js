@@ -203,12 +203,6 @@ public class N4jscTestOptions extends N4jscOptions {
 	}
 
 	/** Sets option */
-	public N4jscTestOptions testCatalog(File pTestCatalog) {
-		setDefinedOption(() -> options.testCatalog = pTestCatalog);
-		return this;
-	}
-
-	/** Sets option */
 	public N4jscTestOptions performanceKey(String pPerformanceKey) {
 		setDefinedOption(() -> options.performanceKey = pPerformanceKey);
 		return this;

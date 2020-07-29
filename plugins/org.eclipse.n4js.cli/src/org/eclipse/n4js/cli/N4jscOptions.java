@@ -103,14 +103,6 @@ public class N4jscOptions {
 
 		// OPTIONS for goal COMPILE
 
-		@Option(name = "--testCatalog", aliases = "-tc", //
-				usage = "[compile] generates a test catalog file to the given location. "
-						+ "The test catalog lists all available tests among the compiled sources. "
-						+ "Existing test catalog files will be replaced.", //
-				handler = N4JSCmdLineParser.N4JSFileOptionHandler.class)
-		@GoalRequirements(goals = N4jscGoal.compile)
-		File testCatalog;
-
 		@Option(name = "--noTests", //
 				forbids = "--testOnly", //
 				usage = "[compile] don't process test folders", //
@@ -326,11 +318,6 @@ public class N4jscOptions {
 		return options.logFile;
 	}
 
-	/** @return F of {@code --testCatalog F} */
-	public File getTestCatalog() {
-		return options.testCatalog;
-	}
-
 	/** @return N of {@code --maxErrs N} */
 	public int getMaxErrs() {
 		return options.maxErrs;
@@ -391,7 +378,6 @@ public class N4jscOptions {
 		s += "\n  verbose=" + options.verbose;
 		s += "\n  maxErrs=" + options.maxErrs;
 		s += "\n  maxWarns=" + options.maxWarns;
-		s += "\n  testCatalogFile=" + options.testCatalog;
 		s += "\n  testOnly=" + options.testOnly;
 		s += "\n  noTests=" + options.noTests;
 		s += "\n  port=" + options.port;

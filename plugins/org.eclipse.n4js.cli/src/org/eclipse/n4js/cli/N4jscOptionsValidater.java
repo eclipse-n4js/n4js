@@ -11,7 +11,6 @@
 package org.eclipse.n4js.cli;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -83,10 +82,6 @@ public class N4jscOptionsValidater {
 	private static void validateGoalCompileOptions(N4jscOptions options) throws N4jscException {
 		validateFilesAndDirectories(options);
 
-		if (options.getTestCatalog() != null) {
-			validateTestCatalogFile(options);
-		}
-
 		if (options.isDefinedPerformanceOption()) {
 			validatePerformanceOptions(options);
 		}
@@ -141,36 +136,6 @@ public class N4jscOptionsValidater {
 		if (!neitherFileNorDir.toString().isEmpty()) {
 			String msg = "directory(s) are neither directory nor a package.json file: " + neitherFileNorDir.toString();
 			throw new N4jscException(N4jscExitCode.ARGUMENT_DIRS_INVALID, msg);
-		}
-	}
-
-	private static void validateTestCatalogFile(N4jscOptions options) throws N4jscException {
-		if (options.getTestCatalog().exists()) {
-			if (options.getTestCatalog().isDirectory()) {
-				final String msg = "The location of the test catalog file points to a directory and not to a file. "
-						+ options.getTestCatalog();
-				throw new N4jscException(N4jscExitCode.TEST_CATALOG_ASSEMBLATION_ERROR, msg);
-			}
-
-			if (!options.getTestCatalog().delete()) {
-				final String msg = "Error while deleting existing test catalog file. " + options.getTestCatalog();
-				throw new N4jscException(N4jscExitCode.TEST_CATALOG_ASSEMBLATION_ERROR, msg);
-			}
-		}
-
-		try {
-			if (!options.getTestCatalog().createNewFile()) {
-				final String msg = "Error while creating test catalog file at: " + options.getTestCatalog();
-				throw new N4jscException(N4jscExitCode.TEST_CATALOG_ASSEMBLATION_ERROR, msg);
-			}
-		} catch (final IOException e) {
-			String msg = "Error while creating test catalog file. " + e.getMessage();
-			throw new N4jscException(N4jscExitCode.TEST_CATALOG_ASSEMBLATION_ERROR, msg);
-		}
-
-		if (!options.getTestCatalog().exists() || !options.getTestCatalog().canWrite()) {
-			final String msg = "Cannot access test catalog file at: " + options.getTestCatalog();
-			throw new N4jscException(N4jscExitCode.TEST_CATALOG_ASSEMBLATION_ERROR, msg);
 		}
 	}
 
