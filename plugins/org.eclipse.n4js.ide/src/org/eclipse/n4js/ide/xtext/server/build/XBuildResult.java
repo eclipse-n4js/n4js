@@ -19,7 +19,6 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 /**
  * The result of the build. Encapsulates the new index state and the list of changes.
  */
-@SuppressWarnings({ "javadoc" })
 public class XBuildResult {
 	private final ResourceDescriptionsData index;
 	private final XSource2GeneratedMapping fileMappings;
