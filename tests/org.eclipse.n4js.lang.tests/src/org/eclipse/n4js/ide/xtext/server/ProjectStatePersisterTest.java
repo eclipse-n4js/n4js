@@ -23,8 +23,8 @@ import java.util.zip.ZipException;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ide.xtext.server.build.HashedFileContent;
+import org.eclipse.n4js.ide.xtext.server.build.ImmutableProjectState;
 import org.eclipse.n4js.ide.xtext.server.build.ProjectStatePersister;
-import org.eclipse.n4js.ide.xtext.server.build.ProjectStatePersister.ProjectState;
 import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
 import org.eclipse.n4js.xtext.server.LSPIssue;
 import org.eclipse.xtext.builder.builderState.BuilderStateFactory;
@@ -47,11 +47,11 @@ import com.google.common.collect.ListMultimap;
 @SuppressWarnings({ "restriction", "deprecation" })
 public class ProjectStatePersisterTest {
 
-	ProjectState createProjectState() {
-		return createProjectState(null, null, null, null);
+	ImmutableProjectState createProjectState() {
+		return ImmutableProjectState.empty();
 	}
 
-	ProjectState createProjectState(ResourceDescriptionsData index, XSource2GeneratedMapping fileMappings,
+	ImmutableProjectState createProjectState(ResourceDescriptionsData index, XSource2GeneratedMapping fileMappings,
 			Map<URI, HashedFileContent> fileHashs, ListMultimap<URI, LSPIssue> validationIssues) {
 
 		index = (index != null) ? index
@@ -59,7 +59,7 @@ public class ProjectStatePersisterTest {
 		fileMappings = (fileMappings != null) ? fileMappings : new XSource2GeneratedMapping();
 		fileHashs = (fileHashs != null) ? fileHashs : Collections.emptyMap();
 		validationIssues = (validationIssues != null) ? validationIssues : ImmutableListMultimap.of();
-		return new ProjectState(index, fileMappings, fileHashs, validationIssues);
+		return ImmutableProjectState.copyFrom(index, fileMappings, fileHashs, validationIssues);
 	}
 
 	/** */
@@ -67,13 +67,13 @@ public class ProjectStatePersisterTest {
 	public void testWriteAndReadNoData() throws IOException, ClassNotFoundException {
 		ProjectStatePersister testMe = new ProjectStatePersister();
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
-		ProjectState state = createProjectState();
+		ImmutableProjectState state = createProjectState();
 		testMe.writeProjectState(output, state);
 		AtomicBoolean didCall = new AtomicBoolean();
-		ProjectState pState = testMe.readProjectState(new ByteArrayInputStream(output.toByteArray()));
-		Assert.assertTrue(pState.fileMappings.getAllGenerated().isEmpty());
-		Assert.assertTrue(pState.index.isEmpty());
-		Assert.assertTrue(pState.fileHashs.isEmpty());
+		ImmutableProjectState pState = testMe.readProjectState(new ByteArrayInputStream(output.toByteArray()));
+		Assert.assertTrue(pState.getFileMappings().getAllGenerated().isEmpty());
+		Assert.assertTrue(pState.getResourceDescriptions().isEmpty());
+		Assert.assertTrue(pState.getFileHashes().isEmpty());
 		didCall.set(true);
 		Assert.assertTrue(didCall.get());
 	}
@@ -83,7 +83,7 @@ public class ProjectStatePersisterTest {
 	public void testWriteAndReadCorruptedStream() throws IOException, ClassNotFoundException {
 		ProjectStatePersister testMe = new ProjectStatePersister();
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
-		ProjectState state = createProjectState();
+		ImmutableProjectState state = createProjectState();
 		testMe.writeProjectState(output, state);
 		byte[] bytes = output.toByteArray();
 		bytes[12]++;
@@ -95,11 +95,11 @@ public class ProjectStatePersisterTest {
 	public void testWriteAndReadFileVersionMismatch() throws IOException, ClassNotFoundException {
 		ProjectStatePersister testMe = new ProjectStatePersister();
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
-		ProjectState state = createProjectState();
+		ImmutableProjectState state = createProjectState();
 		testMe.writeProjectState(output, state);
 		byte[] bytes = output.toByteArray();
 		bytes[0]++;
-		ProjectState pState = testMe.readProjectState(new ByteArrayInputStream(bytes));
+		ImmutableProjectState pState = testMe.readProjectState(new ByteArrayInputStream(bytes));
 		Assert.assertTrue(pState == null);
 	}
 
@@ -114,22 +114,24 @@ public class ProjectStatePersisterTest {
 			}
 		};
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
-		ProjectState state = createProjectState();
+		ImmutableProjectState state = createProjectState();
 		testMe.writeProjectState(output, state);
 		languageVersion.set("2");
-		ProjectState pState = testMe.readProjectState(new ByteArrayInputStream(output.toByteArray()));
+		ImmutableProjectState pState = testMe.readProjectState(new ByteArrayInputStream(output.toByteArray()));
 		Assert.assertTrue(pState == null);
 	}
 
-	/** */
+	/**
+	 * A little bit of a flawed test since we modify the internals of the ImmutableProjectState behind its back.
+	 */
 	@Test
 	public void testWriteAndReadWithData() throws IOException, ClassNotFoundException {
 		ProjectStatePersister testMe = new ProjectStatePersister();
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 
-		ProjectState state = createProjectState();
-		ResourceDescriptionsData index = state.index;
-		XSource2GeneratedMapping fileMappings = state.fileMappings;
+		ImmutableProjectState state = createProjectState();
+		ResourceDescriptionsData index = (ResourceDescriptionsData) state.getResourceDescriptions();
+		XSource2GeneratedMapping fileMappings = state.getFileMappings();
 		ResourceDescriptionImpl resourceDescription = (ResourceDescriptionImpl) BuilderStateFactory.eINSTANCE
 				.createResourceDescription();
 		resourceDescription.setURI(URI.createURI("some:/uri"));
@@ -151,15 +153,15 @@ public class ProjectStatePersisterTest {
 		state = createProjectState(index, fileMappings, fingerprints, null);
 		testMe.writeProjectState(output, state);
 		ByteArrayInputStream outputStream = new ByteArrayInputStream(output.toByteArray());
-		ProjectState pState = testMe.readProjectState(outputStream);
+		ImmutableProjectState pState = testMe.readProjectState(outputStream);
 
-		Assert.assertEquals(fingerprints, pState.fileHashs);
-		List<URI> targets = pState.fileMappings.getGenerated(sourceURI);
+		Assert.assertEquals(fingerprints, pState.getFileHashes());
+		List<URI> targets = pState.getFileMappings().getGenerated(sourceURI);
 		Assert.assertEquals(1, targets.size());
 		Assert.assertEquals(targetURI, targets.get(0));
-		Assert.assertEquals("outputty", pState.fileMappings.getOutputConfigName(targetURI));
+		Assert.assertEquals("outputty", pState.getFileMappings().getOutputConfigName(targetURI));
 
-		Set<URI> allIndexedUris = pState.index.getAllURIs();
+		Set<URI> allIndexedUris = ((ResourceDescriptionsData) pState.getResourceDescriptions()).getAllURIs();
 		Assert.assertEquals(1, allIndexedUris.size());
 		Assert.assertTrue(allIndexedUris.contains(resourceDescription.getURI()));
 	}
@@ -186,12 +188,12 @@ public class ProjectStatePersisterTest {
 		issueMap.put(source2, src2Issue1);
 		issueMap.put(source2, src2Issue2);
 
-		ProjectState state = createProjectState(null, null, null, issueMap);
+		ImmutableProjectState state = createProjectState(null, null, null, issueMap);
 		testMe.writeProjectState(output, state);
 		byte[] bytes = output.toByteArray();
-		ProjectState pState = testMe.readProjectState(new ByteArrayInputStream(bytes));
+		ImmutableProjectState pState = testMe.readProjectState(new ByteArrayInputStream(bytes));
 		Assert.assertTrue(pState != null);
-		Assert.assertEquals(issueMap, pState.validationIssues);
+		Assert.assertEquals(issueMap, pState.getValidationIssues());
 	}
 
 	private void setValues(LSPIssue issue, String varName, int srcNo, int issueNo, Severity severity) {
