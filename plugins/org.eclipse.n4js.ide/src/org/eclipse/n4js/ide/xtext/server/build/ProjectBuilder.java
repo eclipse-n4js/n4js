@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.log4j.LogManager;
@@ -305,12 +304,9 @@ public class ProjectBuilder {
 		if (resourceSet == null) {
 			resourceSet = createNewResourceSet(newIndex);
 		} else {
-			ChunkedResourceDescriptions resDescs = ChunkedResourceDescriptions.findInEmfObject(resourceSet);
-
-			for (Entry<String, ResourceDescriptionsData> entry : fullIndex.entries()) {
-				resDescs.setContainer(entry.getKey(), entry.getValue());
-			}
-			resDescs.setContainer(projectDescription.getName(), newIndex);
+			ChunkedResourceDescriptions.removeFromEmfObject(resourceSet);
+			ChunkedResourceDescriptions index = fullIndex.toDescriptions(resourceSet);
+			index.setContainer(projectDescription.getName(), newIndex);
 		}
 		return resourceSet;
 	}
