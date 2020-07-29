@@ -67,16 +67,29 @@ public class LspServer {
 		final ExecutorService threadPool = Executors.newCachedThreadPool();
 
 		try {
-			while (true) {
-				setPersistionOptions();
-				XLanguageServerImpl languageServer = N4jscFactory.getLanguageServer();
-				setupAndRun(threadPool, languageServer);
-				N4jscFactory.resetInjector();
+			if (options.isStdio()) {
+				// no need to restart LSP server's life cycle when used via stdio
+				performLifecycle(threadPool);
+			} else {
+
+				while (true) {
+					// for sockets the life cycle is performed until the client sends the exit event
+					performLifecycle(threadPool);
+				}
 			}
 
 		} finally {
 			N4jscConsole.println("LSP server terminated.");
 		}
+	}
+
+	private void performLifecycle(ExecutorService threadPool)
+			throws InterruptedException, ExecutionException, IOException {
+
+		setPersistionOptions();
+		XLanguageServerImpl languageServer = N4jscFactory.getLanguageServer();
+		setupAndRun(threadPool, languageServer);
+		N4jscFactory.resetInjector();
 	}
 
 	private void setPersistionOptions() {
