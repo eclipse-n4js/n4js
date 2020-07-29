@@ -40,5 +40,5 @@ public interface XIProjectConfig extends IProjectConfig {
 	}
 
 	/** Returns a snapshot of the current state of the workspace represented by this {@link XIProjectConfig}. */
-	IProjectConfigSnapshot toSnapshot();
+	ProjectConfigSnapshot toSnapshot();
 }

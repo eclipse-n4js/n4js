@@ -54,6 +54,11 @@ public class LSPIssueConverter {
 		return result;
 	}
 
+	/*
+	 * Review feedback:
+	 *
+	 * Newer versions of Xtext do have Issue.getEndLine and things.
+	 */
 	// TODO IDE-3402 consider avoiding the need for an XDocument here (use NodeModelUtils#getLineAndColumn())
 	public LSPIssue convertToLSPIssue(Issue issue, XDocument document) {
 		if (issue instanceof LSPIssue) {

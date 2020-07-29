@@ -8,13 +8,12 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.xtext.server;
+package org.eclipse.n4js.ide.xtext.server.build;
 
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterDeleteListener;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterGenerateListener;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterValidateListener;
@@ -26,9 +25,9 @@ import com.google.inject.Singleton;
 /**
  *
  */
+// TODO this should not be a stateful singleton
 @Singleton
 public class DefaultBuildRequestFactory implements IBuildRequestFactory {
-
 	@Inject(optional = true)
 	private AfterValidateListener afterValidateListener;
 	@Inject(optional = true)
@@ -37,7 +36,7 @@ public class DefaultBuildRequestFactory implements IBuildRequestFactory {
 	private AfterDeleteListener afterDeleteListener;
 
 	/** Create the build request. */
-	public XBuildRequest getBuildRequest(String projectName) {
+	protected XBuildRequest getBuildRequest(String projectName) {
 		XBuildRequest result = new XBuildRequest(projectName);
 		result.setAfterDeleteListener(afterDeleteListener);
 		result.setAfterValidateListener(afterValidateListener);

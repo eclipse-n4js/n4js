@@ -36,6 +36,12 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class ConcurrentIssueRegistry {
+	/*
+	 * Review feedback:
+	 *
+	 * Used from outside of build. Maybe we should introduce a minimal interface that is required from the outside and
+	 * expose that one via the BuilderFrontend (not via getter, but as methods on the BuilderFrontend).
+	 */
 
 	/** Issues are sorted, based on this comparator. See {@link #defaultIssueComparator} for motivation. */
 	protected final Comparator<LSPIssue> issueComparator;

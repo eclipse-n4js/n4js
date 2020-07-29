@@ -21,8 +21,8 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.n4js.xtext.workspace.IProjectConfigSnapshot;
-import org.eclipse.n4js.xtext.workspace.IWorkspaceConfigSnapshot;
+import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
+import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.resource.impl.ChunkedResourceDescriptions;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 
@@ -50,31 +50,31 @@ import com.google.inject.Singleton;
 public class ConcurrentIndex {
 
 	/** Map of all project indices. */
-	protected final Map<String, ResourceDescriptionsData> project2Index = new HashMap<>();
+	private final Map<String, ResourceDescriptionsData> project2Index = new HashMap<>();
 	/** A snapshot of the current workspace configuration. */
-	protected IWorkspaceConfigSnapshot workspaceConfig = null;
+	private WorkspaceConfigSnapshot workspaceConfig = null;
 	/** Registered listeners. */
-	protected final List<IIndexListener> listeners = new CopyOnWriteArrayList<>();
+	private final List<IIndexListener> listeners = new CopyOnWriteArrayList<>();
 
 	/** Listens for changes in a {@link ConcurrentIndex}. */
 	public interface IIndexListener {
 		/** Invoked when the index has changed. */
 		public void onIndexChanged(
-				IWorkspaceConfigSnapshot newWorkspaceConfig,
+				WorkspaceConfigSnapshot newWorkspaceConfig,
 				Map<String, ? extends ResourceDescriptionsData> changedDescriptions,
-				List<? extends IProjectConfigSnapshot> changedProjects,
+				List<? extends ProjectConfigSnapshot> changedProjects,
 				Set<String> removedProjects);
 	}
 
 	/** Set an initial workspace configuration. This method won't notify listeners. */
-	public synchronized void initialize(IWorkspaceConfigSnapshot initialWorkspaceConfig) {
+	public synchronized void initialize(WorkspaceConfigSnapshot initialWorkspaceConfig) {
 		workspaceConfig = initialWorkspaceConfig;
 	}
 
 	/** Removes all projects from this index. */
 	public void removeAllProjectsIndices() {
 		ImmutableSet<String> removedProjectNames;
-		IWorkspaceConfigSnapshot workspaceConfigNew;
+		WorkspaceConfigSnapshot workspaceConfigNew;
 		synchronized (this) {
 			removedProjectNames = ImmutableSet.copyOf(project2Index.keySet());
 			project2Index.clear();
@@ -91,12 +91,12 @@ public class ConcurrentIndex {
 	}
 
 	/** Returns the workspace configuration */
-	public synchronized IWorkspaceConfigSnapshot getWorkspaceConfig() {
+	public synchronized WorkspaceConfigSnapshot getWorkspaceConfig() {
 		return workspaceConfig;
 	}
 
 	/** Returns the project configuration of the given project name. */
-	public synchronized IProjectConfigSnapshot getProjectConfig(String projectName) {
+	public synchronized ProjectConfigSnapshot getProjectConfig(String projectName) {
 		Objects.requireNonNull(projectName);
 		return workspaceConfig.findProjectByName(projectName);
 	}
@@ -106,7 +106,7 @@ public class ConcurrentIndex {
 		Objects.requireNonNull(projectName);
 		Objects.requireNonNull(projectIndex);
 		ResourceDescriptionsData oldProjectIndex;
-		IWorkspaceConfigSnapshot newWorkspaceConfig;
+		WorkspaceConfigSnapshot newWorkspaceConfig;
 		synchronized (this) {
 			oldProjectIndex = project2Index.put(projectName, projectIndex);
 			newWorkspaceConfig = workspaceConfig;
@@ -117,15 +117,15 @@ public class ConcurrentIndex {
 	}
 
 	/** Sets the given project configuration. */
-	public void setProjectConfigSnapshot(IProjectConfigSnapshot projectConfig) {
+	public void setProjectConfigSnapshot(ProjectConfigSnapshot projectConfig) {
 		setProjectConfigSnapshots(Collections.singletonList(projectConfig));
 	}
 
 	/** Sets the given project configurations. */
-	public void setProjectConfigSnapshots(Iterable<? extends IProjectConfigSnapshot> projectConfigs) {
+	public void setProjectConfigSnapshots(Iterable<? extends ProjectConfigSnapshot> projectConfigs) {
 		Objects.requireNonNull(projectConfigs);
-		ImmutableList<? extends IProjectConfigSnapshot> changedProjectConfigs = ImmutableList.copyOf(projectConfigs);
-		IWorkspaceConfigSnapshot newWorkspaceConfig;
+		ImmutableList<? extends ProjectConfigSnapshot> changedProjectConfigs = ImmutableList.copyOf(projectConfigs);
+		WorkspaceConfigSnapshot newWorkspaceConfig;
 		synchronized (this) {
 			newWorkspaceConfig = workspaceConfig.update(changedProjectConfigs, Collections.emptyList());
 			workspaceConfig = newWorkspaceConfig;
@@ -142,7 +142,7 @@ public class ConcurrentIndex {
 	public ResourceDescriptionsData removeProjectIndex(String projectName) {
 		Objects.requireNonNull(projectName);
 		ResourceDescriptionsData oldProjectIndex;
-		IWorkspaceConfigSnapshot newWorkspaceConfig;
+		WorkspaceConfigSnapshot newWorkspaceConfig;
 		synchronized (this) {
 			oldProjectIndex = project2Index.remove(projectName);
 			newWorkspaceConfig = workspaceConfig.update(Collections.emptyList(),
@@ -182,9 +182,9 @@ public class ConcurrentIndex {
 
 	/** Notify all {@link #listeners listeners} about a change of resource descriptions. */
 	protected /* NOT synchronized */ void notifyListeners(
-			IWorkspaceConfigSnapshot newWorkspaceConfig,
+			WorkspaceConfigSnapshot newWorkspaceConfig,
 			ImmutableMap<String, ? extends ResourceDescriptionsData> changedDescriptions,
-			ImmutableList<? extends IProjectConfigSnapshot> changedProjects,
+			ImmutableList<? extends ProjectConfigSnapshot> changedProjects,
 			ImmutableSet<String> removedProjects) {
 
 		for (IIndexListener l : listeners) {

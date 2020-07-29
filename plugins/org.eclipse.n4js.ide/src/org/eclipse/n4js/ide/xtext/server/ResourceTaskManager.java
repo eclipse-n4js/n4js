@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.BiConsumer;
@@ -28,8 +29,8 @@ import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.n4js.ide.xtext.server.build.BuilderFrontend;
 import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIssueRegistry;
 import org.eclipse.n4js.ide.xtext.server.util.CancelIndicatorUtil;
-import org.eclipse.n4js.xtext.workspace.IProjectConfigSnapshot;
-import org.eclipse.n4js.xtext.workspace.IWorkspaceConfigSnapshot;
+import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
+import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -68,6 +69,11 @@ public class ResourceTaskManager {
 	 */
 	protected final ThreadLocal<ResourceTaskContext> currentContext = new ThreadLocal<>();
 
+	/*
+	 * Review feedback:
+	 *
+	 * This looks like being the same as the the ConcurrentIndex structure?
+	 */
 	/** The persisted state index, not taking into account dirty state from existing resource task contexts. */
 	protected final ResourceDescriptionsData persistedIndex = new ResourceDescriptionsData(Collections.emptyList());
 	/** The dirty state index. Contains an entry for each URI with an existing resource task context. */
@@ -78,11 +84,16 @@ public class ResourceTaskManager {
 	protected ImmutableSetMultimap<String, URI> project2BuiltURIsImmutable = ImmutableSetMultimap
 			.copyOf(project2BuiltURIs);
 	/** Most recent workspace configuration. */
-	protected IWorkspaceConfigSnapshot workspaceConfig = null;
+	protected WorkspaceConfigSnapshot workspaceConfig = null;
 
 	/***/
 	protected final List<IResourceTaskListener> listeners = new CopyOnWriteArrayList<>();
 
+	/*
+	 * Review feedback:
+	 *
+	 * Rethink the terminology: refresh is not something that is usually associated with an Xtext resource.
+	 */
 	/** Listener for events in resource task contexts. */
 	public interface IResourceTaskListener {
 		/** Invoked whenever an open file was resolved, validated, etc. Invoked in the given open file context. */
@@ -233,6 +244,9 @@ public class ResourceTaskManager {
 		Object queueId = getQueueIdForContext(rtc.getURI(), rtc.isTemporary());
 		return queuedExecutorService.submit(queueId, description, ci -> {
 			try {
+				if (!rtc.isAlive()) {
+					throw new CancellationException();
+				}
 				currentContext.set(rtc);
 				return task.apply(rtc, ci);
 			} finally {
@@ -266,7 +280,10 @@ public class ResourceTaskManager {
 
 	/** Internal removal of all information related to a particular resource task context. */
 	protected synchronized void discardContextInfo(URI uri) {
-		uri2RTCs.remove(uri);
+		ResourceTaskContext result = uri2RTCs.remove(uri);
+		if (result != null) {
+			result.close();
+		}
 		updateSharedDirtyState(uri, null);
 		if (issueRegistry != null) {
 			issueRegistry.clearIssuesOfDirtyState(uri);
@@ -283,6 +300,12 @@ public class ResourceTaskManager {
 		return currentContext.get();
 	}
 
+	/*
+	 * Review feedback:
+	 *
+	 * Copying the entire index should not be necessary since we do have implementations of IResourceDescriptions that
+	 * do apply sane shadowing semantics.
+	 */
 	/** Creates an index not containing any dirty state information. */
 	protected synchronized ResourceDescriptionsData createPersistedStateIndex() {
 		return persistedIndex.copy();
@@ -303,12 +326,12 @@ public class ResourceTaskManager {
 	 * the {@link BuilderFrontend builder} has rebuilt some files.
 	 */
 	public synchronized void updatePersistedState(
-			IWorkspaceConfigSnapshot newWorkspaceConfig,
+			WorkspaceConfigSnapshot newWorkspaceConfig,
 			Map<String, ? extends ResourceDescriptionsData> changedDescriptions,
-			@SuppressWarnings("unused") List<? extends IProjectConfigSnapshot> changedProjects,
+			@SuppressWarnings("unused") List<? extends ProjectConfigSnapshot> changedProjects,
 			Set<String> removedProjects) {
 
-		IWorkspaceConfigSnapshot oldWC = workspaceConfig;
+		WorkspaceConfigSnapshot oldWC = workspaceConfig;
 
 		// compute "flat" modification info (not per project but on a global URI->description basis)
 		List<IResourceDescription> changed = new ArrayList<>();
@@ -350,7 +373,7 @@ public class ResourceTaskManager {
 			return;
 		}
 		ImmutableSetMultimap<String, URI> capturedProject2BuiltURIsImmutable = project2BuiltURIsImmutable;
-		IWorkspaceConfigSnapshot capturedWorkspaceConfig = workspaceConfig;
+		WorkspaceConfigSnapshot capturedWorkspaceConfig = workspaceConfig;
 		for (URI currURI : uri2RTCs.keySet()) {
 			runInExistingContextVoid(currURI, "updatePersistedState of existing context", (rtc, ci) -> {
 				rtc.onPersistedStateChanged(changed, removed,
@@ -373,7 +396,7 @@ public class ResourceTaskManager {
 		}
 		// update dirty state instance in each resource task context (except the one that caused the change)
 		ImmutableSetMultimap<String, URI> capturedProject2BuiltURIsImmutable = project2BuiltURIsImmutable;
-		IWorkspaceConfigSnapshot capturedWorkspaceConfig = workspaceConfig;
+		WorkspaceConfigSnapshot capturedWorkspaceConfig = workspaceConfig;
 		IResourceDescription replacementDesc = newDesc == null ? persistedIndex.getResourceDescription(uri) : null;
 		for (URI currURI : uri2RTCs.keySet()) {
 			if (currURI.equals(uri)) {

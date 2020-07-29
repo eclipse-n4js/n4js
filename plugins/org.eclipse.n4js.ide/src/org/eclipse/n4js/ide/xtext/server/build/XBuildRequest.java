@@ -14,7 +14,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.ide.xtext.server.IBuildRequestFactory;
 import org.eclipse.n4js.ide.xtext.server.LSPIssue;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -23,6 +22,7 @@ import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.UriUtil;
 
+import com.google.common.base.StandardSystemProperty;
 import com.google.common.collect.Multimap;
 
 /**
@@ -40,8 +40,6 @@ public class XBuildRequest {
 	private Collection<URI> deletedFiles = new ArrayList<>();
 
 	private Collection<IResourceDescription.Delta> externalDeltas = new ArrayList<>();
-
-	// private XIndexState state = new XIndexState();
 
 	private ResourceDescriptionsData index;
 
@@ -105,10 +103,10 @@ public class XBuildRequest {
 		this.baseDir = baseDir;
 	}
 
-	/** Return the base dir. */
+	/** Return the base directory. */
 	public URI getBaseDir() {
-		if ((this.baseDir == null)) {
-			String userDir = System.getProperty("user.dir");
+		if (this.baseDir == null) {
+			String userDir = StandardSystemProperty.USER_DIR.value();
 			this.baseDir = UriUtil.createFolderURI(new File(userDir));
 		}
 		return this.baseDir;

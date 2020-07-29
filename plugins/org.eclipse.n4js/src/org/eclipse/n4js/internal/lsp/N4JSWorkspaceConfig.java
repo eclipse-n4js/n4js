@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.internal.lsp;
 
-import static java.util.Collections.emptyList;
-
 import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -30,7 +28,6 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.ProjectDiscoveryHelper;
-import org.eclipse.n4js.xtext.workspace.IWorkspaceConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
@@ -38,6 +35,7 @@ import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.workspace.IProjectConfig;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 
 /**
@@ -102,14 +100,14 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 		if (project != null && wasExistingInWorkspace) {
 			// an existing project was modified
 			ProjectDescription pd = pdProvider.apply(project.getName());
-			update.merge(((N4JSProjectConfig) project).update(changedResource, pd));
+			update = update.merge(((N4JSProjectConfig) project).update(changedResource, pd));
 
 			if (((N4JSProjectConfig) project).isWorkspacesProject()) {
-				update.merge(detectAddedRemovedProjects(oldProjects));
+				update = update.merge(detectAddedRemovedProjects(oldProjects));
 			}
 		} else {
 			// a new project was created
-			update.merge(detectAddedRemovedProjects(oldProjects));
+			update = update.merge(detectAddedRemovedProjects(oldProjects));
 		}
 
 		if (!update.getAddedProjects().isEmpty() || !update.getRemovedProjects().isEmpty()) {
@@ -155,8 +153,10 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 		}
 
 		boolean dependenciesChanged = !addedProjects.isEmpty() || !removedProjects.isEmpty();
-		return new WorkspaceChanges(dependenciesChanged, emptyList(), emptyList(), emptyList(), emptyList(),
-				emptyList(), removedProjects, addedProjects, emptyList());
+		return new WorkspaceChanges(dependenciesChanged, ImmutableList.of(), ImmutableList.of(), ImmutableList.of(),
+				ImmutableList.of(),
+				ImmutableList.of(), ImmutableList.copyOf(removedProjects), ImmutableList.copyOf(addedProjects),
+				ImmutableList.of());
 	}
 
 	private Map<URI, XIProjectConfig> getProjectsMap(Set<? extends XIProjectConfig> projects) {
@@ -168,7 +168,7 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	}
 
 	@Override
-	public IWorkspaceConfigSnapshot toSnapshot() {
+	public WorkspaceConfigSnapshot toSnapshot() {
 		return new WorkspaceConfigSnapshot(this);
 	}
 }

@@ -51,8 +51,8 @@ import org.eclipse.n4js.ide.server.codeActions.ICodeActionAcceptor;
 import org.eclipse.n4js.ide.server.codeActions.N4JSCodeActionService;
 import org.eclipse.n4js.ide.server.codeActions.N4JSSourceActionProvider;
 import org.eclipse.n4js.ide.xtext.server.ExecuteCommandParamsDescriber;
-import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
-import org.eclipse.n4js.ide.xtext.server.build.XBuildManager;
+import org.eclipse.n4js.ide.xtext.server.LanguageServerFrontend;
+import org.eclipse.n4js.ide.xtext.server.build.BuilderFrontend;
 import org.eclipse.n4js.json.ide.codeActions.JSONCodeActionService;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.projectModel.locations.FileURI;
@@ -124,7 +124,10 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 	public static final String RESET_PERFORMANCE_DATA = "n4js.performance.collector.reset";
 
 	@Inject
-	private XLanguageServerImpl lspServer;
+	private LanguageServerFrontend lsFrontend;
+
+	@Inject
+	private BuilderFrontend builderFrontend;
 
 	@Inject
 	private N4JSCodeActionService codeActionService;
@@ -146,11 +149,11 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 
 	/**
 	 * Methods annotated as {@link ExecutableCommandHandler} will be registered as handlers for ExecuteCommand requests.
-	 * The methods are found reflectively in this class. They must define a parameter list with at least the two
+	 * The methods are found reflectively in this class. They must define a parameter list with at least these two
 	 * trailing parameters: {@code ILanguageServerAccess access, CancelIndicator cancelIndicator}. All the leading
-	 * parameters before the {@code ILanguageServerAccess} are passed by the framework. The parameter types are used to
-	 * deserialize the {@link ExecuteCommandParams#getArguments() arguments} of the execute commands in a strongly typed
-	 * way.
+	 * parameter values before the {@code ILanguageServerAccess} are provided by the framework. The parameter types are
+	 * used to deserialize the {@link ExecuteCommandParams#getArguments() arguments} of the execute commands in a
+	 * strongly typed way.
 	 */
 	@Target(ElementType.METHOD)
 	@Retention(RetentionPolicy.RUNTIME)
@@ -194,7 +197,7 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 			ExecutableCommandHandler annotation = method.getAnnotation(ExecutableCommandHandler.class);
 			if (annotation != null) {
 				List<Type> parameterTypes = Arrays.asList(method.getGenericParameterTypes());
-				// -2 since the last params are the ILanguageServerAccess and the CancelIndicator
+				// -2 since the last arguments are the ILanguageServerAccess and the CancelIndicator
 				Type[] args = parameterTypes.subList(0, parameterTypes.size() - 2).toArray(Type[]::new);
 				localArgumentTypes.put(annotation.value(), args);
 				localHandlers.put(annotation.value(), new CommandHandler(method));
@@ -225,8 +228,8 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 	 */
 	@ExecutableCommandHandler(N4JS_REBUILD)
 	public Void rebuild(ILanguageServerAccess access, CancelIndicator cancelIndicator) {
-		lspServer.clean();
-		lspServer.reinitWorkspace();
+		lsFrontend.clean();
+		lsFrontend.reinitWorkspace();
 		return null;
 	}
 
@@ -339,47 +342,50 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 			ILanguageServerAccess access,
 			CancelIndicator cancelIndicator) {
 
-		lspServer.getQueuedExecutorService().submitAndCancelPrevious(XBuildManager.class, "InstallNpm", (ci) -> {
-			// FIXME: Use CliTools in favor of npmCli
-			NPMVersionRequirement versionRequirement = semverHelper.parse(version);
-			if (versionRequirement == null) {
-				versionRequirement = SemverUtils.createEmptyVersionRequirement();
-			}
-			String normalizedVersion = SemverSerializer.serialize(versionRequirement);
-
-			N4JSProjectName projectName = new N4JSProjectName(packageName);
-			LibraryChange change = new LibraryChange(LibraryChangeType.Install, null, projectName, normalizedVersion);
-			MultiStatus multiStatus = new MultiStatus("json", 1, null, null);
-			FileURI targetProject = new FileURI(URI.createURI(fileUri)).getParent();
-			npmCli.batchInstall(new NullProgressMonitor(), multiStatus, Arrays.asList(change), targetProject);
-
-			MessageParams messageParams = new MessageParams();
-			switch (multiStatus.getSeverity()) {
-			case IStatus.INFO:
-				messageParams.setType(MessageType.Info);
-				break;
-			case IStatus.WARNING:
-				messageParams.setType(MessageType.Warning);
-				break;
-			case IStatus.ERROR:
-				messageParams.setType(MessageType.Error);
-				break;
-			default:
-				return null;
-			}
-
-			StringWriter sw = new StringWriter();
-			PrintWriter printWriter = new PrintWriter(sw);
-			for (IStatus child : multiStatus.getChildren()) {
-				if (child.getSeverity() == multiStatus.getSeverity()) {
-					printWriter.println(child.getMessage());
+		builderFrontend.runBuildable("InstallNpm", () -> {
+			return (ci) -> {
+				// FIXME: Use CliTools in favor of npmCli
+				NPMVersionRequirement versionRequirement = semverHelper.parse(version);
+				if (versionRequirement == null) {
+					versionRequirement = SemverUtils.createEmptyVersionRequirement();
 				}
-			}
-			printWriter.flush();
-			messageParams.setMessage(sw.toString());
-			access.getLanguageClient().showMessage(messageParams);
-			return null;
-		}).whenComplete((a, b) -> lspServer.reinitWorkspace());
+				String normalizedVersion = SemverSerializer.serialize(versionRequirement);
+
+				N4JSProjectName projectName = new N4JSProjectName(packageName);
+				LibraryChange change = new LibraryChange(LibraryChangeType.Install, null, projectName,
+						normalizedVersion);
+				MultiStatus multiStatus = new MultiStatus("json", 1, null, null);
+				FileURI targetProject = new FileURI(URI.createURI(fileUri)).getParent();
+				npmCli.batchInstall(new NullProgressMonitor(), multiStatus, Arrays.asList(change), targetProject);
+
+				MessageParams messageParams = new MessageParams();
+				switch (multiStatus.getSeverity()) {
+				case IStatus.INFO:
+					messageParams.setType(MessageType.Info);
+					break;
+				case IStatus.WARNING:
+					messageParams.setType(MessageType.Warning);
+					break;
+				case IStatus.ERROR:
+					messageParams.setType(MessageType.Error);
+					break;
+				default:
+					return null;
+				}
+
+				StringWriter sw = new StringWriter();
+				PrintWriter printWriter = new PrintWriter(sw);
+				for (IStatus child : multiStatus.getChildren()) {
+					if (child.getSeverity() == multiStatus.getSeverity()) {
+						printWriter.println(child.getMessage());
+					}
+				}
+				printWriter.flush();
+				messageParams.setMessage(sw.toString());
+				access.getLanguageClient().showMessage(messageParams);
+				return Collections.emptyList();
+			};
+		}).whenComplete((a, b) -> lsFrontend.reinitWorkspace());
 
 		return null;
 	}

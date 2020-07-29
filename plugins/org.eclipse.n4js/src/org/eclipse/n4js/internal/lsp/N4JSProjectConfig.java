@@ -10,9 +10,6 @@
  */
 package org.eclipse.n4js.internal.lsp;
 
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -31,7 +28,6 @@ import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.projectModel.lsp.IN4JSSourceFolder;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
-import org.eclipse.n4js.xtext.workspace.IProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
@@ -250,8 +246,10 @@ public class N4JSProjectConfig implements XIProjectConfig {
 			updateProjectDescription(projectDescriptionToUpdate);
 		}
 
-		return new WorkspaceChanges(dependencyChanged, emptyList(), emptyList(), emptyList(), removedSourceFolders,
-				addedSourceFolders, emptyList(), emptyList(), dependencyChanged ? singletonList(this) : emptyList());
+		return new WorkspaceChanges(dependencyChanged, ImmutableList.of(), ImmutableList.of(), ImmutableList.of(),
+				ImmutableList.copyOf(removedSourceFolders),
+				ImmutableList.copyOf(addedSourceFolders), ImmutableList.of(), ImmutableList.of(),
+				dependencyChanged ? ImmutableList.of(this) : ImmutableList.of());
 	}
 
 	/** Bring the given project description up-to-date with the receiving project configuration's internal state. */
@@ -273,7 +271,7 @@ public class N4JSProjectConfig implements XIProjectConfig {
 	}
 
 	@Override
-	public IProjectConfigSnapshot toSnapshot() {
+	public ProjectConfigSnapshot toSnapshot() {
 		return new ProjectConfigSnapshot(this);
 	}
 }

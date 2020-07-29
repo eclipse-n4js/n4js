@@ -65,14 +65,15 @@ import org.eclipse.lsp4j.services.LanguageClientExtensions;
 import org.eclipse.lsp4j.services.TextDocumentService;
 import org.eclipse.n4js.ide.xtext.server.ResourceTaskManager.IResourceTaskListener;
 import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIndex;
-import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIssueRegistry;
 import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIndex.IIndexListener;
+import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIssueRegistry;
 import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIssueRegistry.IIssueRegistryListener;
 import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIssueRegistry.IssueRegistryChangeEvent;
 import org.eclipse.n4js.ide.xtext.server.contentassist.XContentAssistService;
+import org.eclipse.n4js.ide.xtext.server.findReferences.XWorkspaceResourceAccess;
 import org.eclipse.n4js.ide.xtext.server.rename.XIRenameService;
-import org.eclipse.n4js.xtext.workspace.IProjectConfigSnapshot;
-import org.eclipse.n4js.xtext.workspace.IWorkspaceConfigSnapshot;
+import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
+import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.findReferences.IReferenceFinder.IResourceAccess;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 import org.eclipse.xtext.ide.server.UriExtensions;
@@ -131,7 +132,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 
 	private LanguageClient client;
 
-	private InitializeParams initializeParams;
+	private boolean hierarchicalSymbols;
 
 	private IResourceAccess resourceAccess;
 
@@ -143,11 +144,9 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 	}
 
 	/** Sets non-injectable fields */
-	public void initialize(InitializeParams _initializeParams, IResourceAccess _resourceAccess,
-			ILanguageServerAccess _access) {
-
-		this.initializeParams = _initializeParams;
-		this.resourceAccess = _resourceAccess;
+	public void initialize(InitializeParams _initializeParams, ILanguageServerAccess _access) {
+		this.hierarchicalSymbols = isHierarchicalDocumentSymbolSupport(_initializeParams);
+		this.resourceAccess = new XWorkspaceResourceAccess(resourceTaskManager);
 		this.access = _access;
 		index.addListener(this);
 		issueRegistry.addListener(this);
@@ -155,7 +154,6 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 
 	/** Resets non-injectable fields */
 	public void disconnect() {
-		this.initializeParams = null;
 		this.client = null;
 		this.resourceAccess = null;
 		this.access = null;
@@ -600,7 +598,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 		if ((serviceProvider == null)) {
 			return null;
 		}
-		if (isHierarchicalDocumentSymbolSupport()) {
+		if (hierarchicalSymbols) {
 			return serviceProvider.get(HierarchicalDocumentSymbolService.class);
 		} else {
 			return serviceProvider.get(DocumentSymbolService.class);
@@ -611,7 +609,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 	 * {@code true} if the {@code TextDocumentClientCapabilities} explicitly declares the hierarchical document symbol
 	 * support at LS initialization time. Otherwise, false.
 	 */
-	protected boolean isHierarchicalDocumentSymbolSupport() {
+	protected boolean isHierarchicalDocumentSymbolSupport(InitializeParams initializeParams) {
 		ClientCapabilities capabilities = initializeParams.getCapabilities();
 		if (capabilities != null) {
 			TextDocumentClientCapabilities textDocument = capabilities.getTextDocument();
@@ -628,7 +626,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 		return false;
 	}
 
-	/** Convert the given params to an enriched instance of options. */
+	/** Convert the given parameters to an enriched instance of options. */
 	public ICodeActionService2.Options toOptions(CodeActionParams params, XDocument doc, XtextResource res,
 			CancelIndicator cancelIndicator) {
 
@@ -653,7 +651,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 		}
 	}
 
-	/** Remove the document uri from the data of the given code lense. */
+	/** Remove the document uri from the data of the given code lens. */
 	protected URI uninstallURI(CodeLens lens) {
 		URI result = null;
 		Object data = lens.getData();
@@ -672,9 +670,9 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 
 	@Override
 	public void onIndexChanged(
-			IWorkspaceConfigSnapshot newWorkspaceConfig,
+			WorkspaceConfigSnapshot newWorkspaceConfig,
 			Map<String, ? extends ResourceDescriptionsData> changedDescriptions,
-			List<? extends IProjectConfigSnapshot> changedProjects,
+			List<? extends ProjectConfigSnapshot> changedProjects,
 			Set<String> removedProjects) {
 
 		resourceTaskManager.updatePersistedState(newWorkspaceConfig, changedDescriptions, changedProjects,

@@ -4,13 +4,20 @@ import 'n4js-runtime'
 import * as n4jscli from 'n4js-cli'
 import * as jreProvider from 'n4js-cli/src-gen/JreProvider'
 import * as net from 'net'
+import * as fs from 'fs'
 
 const LSP_SYNC_MESSAGE = 'Listening for LSP clients';
 const CHANNEL_NAME = 'N4JS Language Server';
 const PORT = 5007;
 const TIMEOUT = 1000;
 let n4jscProcess;
+let outputChannel;
 let outputAppender;
+const n4jscliConfig = {
+	configFile: "",
+	jarFile: "",
+	listener: null
+};
 function getOutputAppender(outputChannel) {
 	if (!outputAppender) {
 		outputAppender = (text)=>outputChannel.append(text.toString());
@@ -19,7 +26,8 @@ function getOutputAppender(outputChannel) {
 }
 export function getActivate(vscode, vscodeLC) {
 	return (context)=>{
-		let outputChannel = vscode.window.createOutputChannel(CHANNEL_NAME);
+		let $opt;
+		outputChannel = (($opt = outputChannel) != null ? $opt : vscode.window.createOutputChannel(CHANNEL_NAME));
 		let serverOptions = async()=>{
 			outputChannel.appendLine('Start LSP extension');
 			let writer;
@@ -30,7 +38,7 @@ export function getActivate(vscode, vscodeLC) {
 				reader = socket;
 			} else {
 				outputChannel.appendLine('Start new N4JS LSP server.');
-				await startN4jsLspServerAndConnect(PORT, vscode, outputChannel);
+				await startN4jsLspServerAndConnect(PORT, vscode, vscodeLC, context, outputChannel);
 				writer = n4jscProcess.stdin;
 				reader = n4jscProcess.stdout;
 			}
@@ -140,22 +148,31 @@ function getJavaVMXmxSetting(vscode) {
 			return vmXmx;
 	}
 }
-async function startN4jsLspServerAndConnect(port, vscode, outputChannel) {
+async function startN4jsLspServerAndConnect(port, vscode, vscodeLC, context, outputChannel) {
 	let logFn = (text)=>outputChannel.appendLine(text);
 	await jreProvider.ensureJRE(logFn);
 	const env = Object.assign({
 		NODEJS_PATH: process.argv[0]
 	}, process.env);
-	const spawnOptions = {
-		env: env
-	};
+	const workspaceDir = getWorkspaceDir(vscode);
 	const n4jscOptions = {
 		stdio: true
+	};
+	const spawnOptions = {
+		env: env
 	};
 	const vmOptions = {
 		xmx: getJavaVMXmxSetting(vscode)
 	};
-	n4jscProcess = n4jscli.n4jscProcess('lsp', undefined, n4jscOptions, vmOptions, spawnOptions, logFn);
+	n4jscliConfig.configFile = n4jscli.findN4jscliConfig(workspaceDir);
+	if (n4jscliConfig.configFile) {
+		n4jscliConfig.jarFile = n4jscli.findN4jscJarValue(workspaceDir, logFn);
+		n4jscliConfig.listener = (curr, prev)=>onN4jscliConfigChange(vscode, vscodeLC, context, outputChannel);
+		fs.watch(n4jscliConfig.configFile, {
+			persistent: true
+		}, n4jscliConfig.listener);
+	}
+	n4jscProcess = await n4jscli.n4jscProcess('lsp', workspaceDir, n4jscOptions, vmOptions, spawnOptions, logFn);
 	n4jscProcess.on('message', (data)=>outputChannel.appendLine(data.toString()));
 	n4jscProcess.on('error', (err)=>outputChannel.appendLine(err.toString()));
 	n4jscProcess.on('exit', (code)=>outputChannel.appendLine('exit ' + code));
@@ -175,6 +192,12 @@ async function startN4jsLspServerAndConnect(port, vscode, outputChannel) {
 	});
 	await serverReady;
 	outputChannel.appendLine('Connected to LSP server');
+}
+function getWorkspaceDir(vscode) {
+	for(let wFolder of vscode.workspace.workspaceFolders) {
+		return wFolder.uri.fsPath;
+	}
+	return null;
 }
 async function connectToRunningN4jsLspServer(port, outputChannel) {
 	let connectionPromise = new Promise((resolve, reject)=>{
@@ -204,6 +227,35 @@ async function connectToRunningN4jsLspServer(port, outputChannel) {
 	});
 	let result = await connectionPromise;
 	return result;
+}
+function onN4jscliConfigChange(vscode, vscodeLC, context, outputChannel) {
+	const workspaceDir = getWorkspaceDir(vscode);
+	const newN4jscjarFile = n4jscli.findN4jscJarValue(workspaceDir, ()=>null);
+	if (n4jscliConfig.jarFile != newN4jscjarFile) {
+		requestUserReload(vscode, vscodeLC, context, outputChannel);
+	}
+	return null;
+}
+function requestUserReload(vscode, vscodeLC, context, outputChannel) {
+	vscode.window.showInformationMessage("The config file .n4js-cli.config changed. A reload of the N4JS Extension is necessary for changes to take effect.", "Reload Extension").then(async function(value) {
+		if (value == "Reload Extension") {
+			await reload(vscode, vscodeLC, context, outputChannel);
+		}
+	});
+}
+async function reload(vscode, vscodeLC, context, outputChannel) {
+	outputChannel.appendLine("Reloading N4JS Extension...");
+	for(const sub of context.subscriptions) {
+		try {
+			sub.dispose();
+		} catch(e) {
+			console.error(e);
+		}
+	}
+	const deactivate = getDeactivate(vscode, vscodeLC);
+	await deactivate();
+	const activate = getActivate(vscode, vscodeLC);
+	activate(context);
 }
 async function sleep(ms) {
 	return new Promise((resolve)=>{

@@ -17,45 +17,48 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.ide.xtext.server.FutureUtil;
 import org.eclipse.n4js.ide.xtext.server.ResourceTaskContext;
 import org.eclipse.n4js.ide.xtext.server.ResourceTaskManager;
-import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 import org.eclipse.xtext.findReferences.IReferenceFinder;
+import org.eclipse.xtext.findReferences.IReferenceFinder.IResourceAccess;
+import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.Exceptions;
+import org.eclipse.xtext.util.concurrent.CancelableUnitOfWork;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 
 /**
- * @author kosyakov - Initial contribution and API
- * @since 2.11
+ * LSP specific implementation of the {@link IResourceAccess} for find references.
  */
 @SuppressWarnings("restriction")
 public class XWorkspaceResourceAccess implements IReferenceFinder.IResourceAccess {
 
-	private final XLanguageServerImpl languageServer;
+	private final ResourceTaskManager resourceTaskManager;
 
 	/**
-	 * @param languageServer
-	 *            the language server
+	 * @param resourceTaskManager
+	 *            the task manager
 	 */
-	public XWorkspaceResourceAccess(XLanguageServerImpl languageServer) {
-		this.languageServer = languageServer;
+	public XWorkspaceResourceAccess(ResourceTaskManager resourceTaskManager) {
+		this.resourceTaskManager = resourceTaskManager;
 	}
 
 	@Override
 	public <R> R readOnly(URI targetURI, IUnitOfWork<R, ResourceSet> work) {
 		URI uri = targetURI.trimFragment(); // note: targetURI may point to an EObject inside an EMF resource!
-		ResourceTaskManager resourceTaskManager = languageServer.getResourceTaskManager();
 		ResourceTaskContext currRTC = resourceTaskManager.currentContext();
 		if (currRTC != null) {
-			return doWork(currRTC.getResourceSet(), work);
+			return doWork(currRTC.getResourceSet(), work, CancelIndicator.NullImpl);
 		}
 		// TODO consider making a current context mandatory by removing the following (see GH-1774):
 		CompletableFuture<R> future = resourceTaskManager.runInTemporaryContext(uri, "XWorkspaceResourceAccess", true,
-				(ofc, ci) -> doWork(ofc.getResourceSet(), work));
+				(ofc, ci) -> doWork(ofc.getResourceSet(), work, ci));
 		return FutureUtil.getCancellableResult(future);
 	}
 
 	/** Actually do the work in the context of the given resource set. */
-	protected <R> R doWork(ResourceSet resourceSet, IUnitOfWork<R, ResourceSet> work) {
+	protected <R> R doWork(ResourceSet resourceSet, IUnitOfWork<R, ResourceSet> work, CancelIndicator ci) {
 		try {
+			if (work instanceof CancelableUnitOfWork) {
+				((CancelableUnitOfWork<?, ?>) work).setCancelIndicator(ci);
+			}
 			return work.exec(resourceSet);
 		} catch (Exception e) {
 			return Exceptions.throwUncheckedException(e);

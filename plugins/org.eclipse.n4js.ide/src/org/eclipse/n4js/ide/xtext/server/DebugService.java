@@ -29,7 +29,7 @@ import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.n4js.ide.xtext.server.DebugService.DebugServiceNullImpl;
 import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIndex;
 import org.eclipse.n4js.utils.Strings;
-import org.eclipse.n4js.xtext.workspace.IWorkspaceConfigSnapshot;
+import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 
 import com.google.inject.ImplementedBy;
 import com.google.inject.Inject;
@@ -148,7 +148,7 @@ public interface DebugService {
 		}
 
 		protected String getWorkspaceConfigDump() {
-			IWorkspaceConfigSnapshot workspace = fullIndex.getWorkspaceConfig();
+			WorkspaceConfigSnapshot workspace = fullIndex.getWorkspaceConfig();
 			String dump = "Workspace Config:\n + ";
 			dump += Strings.join("\n + ", p -> p.getName() + " \tat " + p.getPath(), workspace.getProjects());
 			return dump;

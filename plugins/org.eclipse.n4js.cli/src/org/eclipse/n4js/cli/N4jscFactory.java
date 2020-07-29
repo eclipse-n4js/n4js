@@ -14,6 +14,7 @@ import org.eclipse.n4js.cli.compiler.N4jscLanguageClient;
 import org.eclipse.n4js.ide.N4JSIdeSetup;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 import org.eclipse.n4js.ide.xtext.server.build.XWorkspaceManager;
+import org.eclipse.xtext.testing.GlobalRegistries;
 
 import com.google.common.base.Optional;
 import com.google.inject.Injector;
@@ -29,6 +30,7 @@ public class N4jscFactory {
 	/** Resets the injector setup */
 	public static void resetInjector() {
 		INSTANCE.injector = null;
+		GlobalRegistries.clearGlobalRegistries(); // clears singletons from EMF global registries
 	}
 
 	/** @return the {@link N4jscBackend} instance from the given injector */

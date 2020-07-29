@@ -102,25 +102,25 @@ abstract class AbstractIncrementalBuilderTest extends AbstractIdeTest {
 			return file;
 		}
 
-		public void update() {
+		public synchronized void update() {
 			content = getFileContent(file);
 		}
 
-		public void assertExists() {
+		public synchronized void assertExists() {
 			Assert.assertTrue("expected file to exist, but it does not exist: " + file, file.exists());
 		}
 
-		public void assertNotExists() {
+		public synchronized void assertNotExists() {
 			Assert.assertFalse("expected file to not exist, but it exists: " + file, file.exists());
 		}
 
-		public void assertUnchanged() {
+		public synchronized void assertUnchanged() {
 			assertExists();
 			Assert.assertTrue("expected file to be unchanged, but it has changed: " + file,
 					Arrays.equals(content, getFileContent(file)));
 		}
 
-		public void assertChanged() {
+		public synchronized void assertChanged() {
 			assertExists();
 			Assert.assertFalse("expected file to have changed, but it is unchanged: " + file,
 					Arrays.equals(content, getFileContent(file)));

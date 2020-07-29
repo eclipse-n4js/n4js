@@ -23,7 +23,8 @@ Require-Bundle: org.eclipse.n4js,
  org.kohsuke.args4j;bundle-version="2.33.0",
  org.eclipse.n4js.ts.ide,
  org.eclipse.n4js.smith,
- org.eclipse.n4js.tester
+ org.eclipse.n4js.tester,
+ org.eclipse.xtext.testing
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.n4js.cli,
  org.eclipse.n4js.cli.compiler

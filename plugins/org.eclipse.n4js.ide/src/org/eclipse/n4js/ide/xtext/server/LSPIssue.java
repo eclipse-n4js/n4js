@@ -30,6 +30,12 @@ import com.google.common.base.Strings;
  * All line and column numbers are one-based. Offset is zero-based.
  */
 public class LSPIssue extends IssueImpl {
+	/*
+	 * Review feedback:
+	 *
+	 * The class should become obsolete with more recent Xtext version.
+	 */
+
 	private static final String NULL = "";
 	private int lineNumberEnd;
 	private int columnEnd;

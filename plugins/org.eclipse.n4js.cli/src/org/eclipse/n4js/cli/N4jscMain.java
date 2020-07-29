@@ -17,7 +17,6 @@ import java.nio.file.Files;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.eclipse.n4js.cli.compiler.N4jscCompiler;
 import org.eclipse.n4js.smith.CollectedDataAccess;
 import org.eclipse.n4js.smith.DataCollectorCSVExporter;
 import org.eclipse.n4js.smith.DataCollectorUtils;
@@ -28,7 +27,7 @@ import org.eclipse.n4js.utils.io.FileUtils;
  * Entry point of n4jsc compiler
  */
 public class N4jscMain {
-	private static final Logger LOG = LogManager.getLogger(N4jscCompiler.class);
+	private static final Logger LOG = LogManager.getLogger(N4jscMain.class);
 
 	/** Entry point of n4jsc compiler */
 	public static void main(String[] args) {

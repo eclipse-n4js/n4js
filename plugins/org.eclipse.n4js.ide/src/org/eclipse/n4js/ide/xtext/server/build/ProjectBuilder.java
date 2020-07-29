@@ -20,7 +20,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
-import org.eclipse.n4js.ide.xtext.server.DefaultBuildRequestFactory;
 import org.eclipse.n4js.ide.xtext.server.LSPIssue;
 import org.eclipse.n4js.ide.xtext.server.ResourceChangeSet;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterValidateListener;
@@ -72,6 +71,11 @@ public class ProjectBuilder {
 	@Inject
 	protected IExternalContentSupport externalContentSupport;
 
+	/*
+	 * Review feedback:
+	 *
+	 * This should not inject a concrete type but an interface
+	 */
 	/** Creates build requests */
 	@Inject
 	protected DefaultBuildRequestFactory buildRequestFactory;

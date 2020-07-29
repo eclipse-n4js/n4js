@@ -47,6 +47,7 @@ import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.FoldingRange;
 import org.eclipse.lsp4j.FoldingRangeRequestParams;
 import org.eclipse.lsp4j.Hover;
+import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.LocationLink;
 import org.eclipse.lsp4j.PrepareRenameResult;
@@ -58,8 +59,6 @@ import org.eclipse.lsp4j.SelectionRange;
 import org.eclipse.lsp4j.SelectionRangeParams;
 import org.eclipse.lsp4j.SignatureHelp;
 import org.eclipse.lsp4j.SymbolInformation;
-import org.eclipse.lsp4j.TextDocumentIdentifier;
-import org.eclipse.lsp4j.TextDocumentItem;
 import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.TypeHierarchyItem;
@@ -68,10 +67,11 @@ import org.eclipse.lsp4j.WillSaveTextDocumentParams;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.WorkspaceSymbolParams;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
+import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.TextDocumentService;
 import org.eclipse.lsp4j.services.WorkspaceService;
 import org.eclipse.n4js.ide.xtext.server.build.BuilderFrontend;
-import org.eclipse.xtext.ide.server.UriExtensions;
+import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 
 import com.google.common.annotations.Beta;
 import com.google.inject.Inject;
@@ -92,11 +92,45 @@ public class LanguageServerFrontend implements TextDocumentService, WorkspaceSer
 	@Inject
 	private WorkspaceFrontend workspaceFrontend;
 
-	@Inject
-	private QueuedExecutorService lspExecutorService;
+	/**
+	 * Initialize this front-end according to the given arguments.
+	 */
+	public void initialize(InitializeParams params, URI baseDir, ILanguageServerAccess access) {
+		workspaceFrontend.initialize(access);
+		textDocumentFrontend.initialize(params, access);
+		builderFrontend.initialize(baseDir);
+	}
 
-	@Inject
-	private UriExtensions uriExtensions;
+	/**
+	 * Notifies the front-end that the initialization was completed.
+	 */
+	public void initialized() {
+		builderFrontend.initialBuild();
+	}
+
+	/**
+	 * Blocks until all work is done.
+	 */
+	public void join() {
+		builderFrontend.join();
+	}
+
+	/**
+	 * Orderly shutdown of this front-end.
+	 */
+	public CompletableFuture<? extends Object> shutdown() {
+		return builderFrontend.shutdown();
+	}
+
+	/** Connect this front-end to the given client. */
+	public void connect(LanguageClient client) {
+		textDocumentFrontend.connect(client);
+	}
+
+	/** Disconnect this front-end from the currently connected client. */
+	public void disconnect() {
+		textDocumentFrontend.disconnect();
+	}
 
 	@Override
 	public void didOpen(DidOpenTextDocumentParams params) {
@@ -131,18 +165,16 @@ public class LanguageServerFrontend implements TextDocumentService, WorkspaceSer
 	@Override
 	public void didChangeConfiguration(DidChangeConfigurationParams params) {
 		reinitWorkspace();
-		workspaceFrontend.didChangeConfiguration(params);
 	}
 
 	@Override
 	public void didChangeWatchedFiles(DidChangeWatchedFilesParams params) {
 		builderFrontend.didChangeWatchedFiles(params);
-		workspaceFrontend.didChangeWatchedFiles(params);
 	}
 
 	@Override
 	public void didChangeWorkspaceFolders(DidChangeWorkspaceFoldersParams params) {
-		workspaceFrontend.didChangeWorkspaceFolders(params);
+		// ignore for now
 	}
 
 	/** Deletes all generated files and clears the type index. */
@@ -312,21 +344,5 @@ public class LanguageServerFrontend implements TextDocumentService, WorkspaceSer
 	@Override
 	public CompletableFuture<List<? extends SymbolInformation>> symbol(WorkspaceSymbolParams params) {
 		return workspaceFrontend.symbol(params);
-	}
-
-	/** Obtain the URI from the given identifier. */
-	protected URI getURI(TextDocumentIdentifier documentIdentifier) {
-		return uriExtensions.toUri(documentIdentifier.getUri());
-	}
-
-	/** Obtain the URI from the given document item. */
-	protected URI getURI(TextDocumentItem documentItem) {
-		return uriExtensions.toUri(documentItem.getUri());
-	}
-
-	/** Blocks until all requests of the language server finished */
-	public void joinServerRequests() {
-		lspExecutorService.join();
-		builderFrontend.joinPersister();
 	}
 }

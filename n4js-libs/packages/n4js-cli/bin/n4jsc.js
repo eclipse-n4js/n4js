@@ -14,6 +14,6 @@
 
 
 require = require("esm")(module);
-let n4jsc = require("../src-gen/n4jsc.js");
+let n4jscli = require("../src-gen/index.js");
 
-n4jsc.runN4jscSync();
+n4jscli.runN4jscSync();
