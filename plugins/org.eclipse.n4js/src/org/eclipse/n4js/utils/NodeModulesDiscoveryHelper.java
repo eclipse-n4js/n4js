@@ -207,18 +207,7 @@ public class NodeModulesDiscoveryHelper {
 			return false;
 		}
 
-		// obtain value of property "workspaces" in package.json located in folder 'candidate'
-		final ProjectDescription prjDescr = pdCache.computeIfAbsent(folder.toPath(),
-				// load value from package.json
-				p -> {
-					ProjectDescription pd = projectDescriptionLoader
-							.loadProjectDescriptionAtLocation(new FileURI(folder));
-					return pd;
-				});
-		final List<String> workspaces = (prjDescr != null && prjDescr.isYarnWorkspaceRoot())
-				? prjDescr.getWorkspaces()
-				: null;
-
+		final List<String> workspaces = getWorkspacesOfYarnWorkspaceProject(folder, pdCache);
 		if (workspaces == null) {
 			return false;
 		}
@@ -235,9 +224,28 @@ public class NodeModulesDiscoveryHelper {
 		return true;
 	}
 
+	private List<String> getWorkspacesOfYarnWorkspaceProject(File yarnProjectFolder,
+			Map<Path, ProjectDescription> pdCache) {
+
+		// obtain value of property "workspaces" in package.json located in folder 'candidate'
+		final ProjectDescription prjDescr = pdCache.computeIfAbsent(yarnProjectFolder.toPath(),
+				// load value from package.json
+				p -> {
+					ProjectDescription pd = projectDescriptionLoader
+							.loadProjectDescriptionAtLocation(new FileURI(yarnProjectFolder));
+					return pd;
+				});
+		final List<String> workspaces = (prjDescr != null && prjDescr.isYarnWorkspaceRoot())
+				? prjDescr.getWorkspaces()
+				: null;
+
+		return workspaces;
+	}
+
 	private boolean isPointingTo(File base, String relativePath, File target) {
 		String pattern = base.getAbsolutePath() + File.separator + relativePath;
 		PathMatcher matcher = WildcardPathFilterHelper.createPathMatcher(pattern);
 		return matcher.matches(target.toPath());
 	}
+
 }
