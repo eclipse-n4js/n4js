@@ -134,6 +134,9 @@ public class CreateProjectStructureUtils {
 
 		for (Folder folder : folders) {
 			if (folder.isWorkingDir) {
+				if (workingDir != null) {
+					throw new IllegalStateException("Multiple working directories not supported");
+				}
 				workingDir = folder;
 			}
 		}
