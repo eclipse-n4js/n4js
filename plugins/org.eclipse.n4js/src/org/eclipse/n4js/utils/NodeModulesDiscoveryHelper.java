@@ -82,6 +82,11 @@ public class NodeModulesDiscoveryHelper {
 
 	/** @return the node_modules folder of the given project including a flag if this is a yarn workspace. */
 	public NodeModulesFolder getNodeModulesFolder(Path projectLocation, Map<Path, ProjectDescription> pdCache) {
+		final Path packgeJsonPath = projectLocation.resolve(N4JSGlobals.PACKAGE_JSON);
+		if (!packgeJsonPath.toFile().isFile()) {
+			return null; // given projectLocation must contain a package.json file
+		}
+
 		File projectLocationAsFile = projectLocation.toFile();
 
 		if (isYarnWorkspaceRoot(projectLocationAsFile, Optional.absent(), pdCache)) {
@@ -97,13 +102,8 @@ public class NodeModulesDiscoveryHelper {
 			return new NodeModulesFolder(false, true, localNMF, workspaceNMF);
 		}
 
-		final Path packgeJsonPath = projectLocation.resolve(N4JSGlobals.PACKAGE_JSON);
-		if (packgeJsonPath.toFile().isFile()) {
-			final Path nodeModulesPath = projectLocation.resolve(N4JSGlobals.NODE_MODULES);
-			return new NodeModulesFolder(false, false, nodeModulesPath.toFile(), null);
-		}
-
-		return null;
+		final Path nodeModulesPath = projectLocation.resolve(N4JSGlobals.NODE_MODULES);
+		return new NodeModulesFolder(false, false, nodeModulesPath.toFile(), null);
 	}
 
 	/** Same as {@link #findNodeModulesFolders(Collection, Map)} without cache */

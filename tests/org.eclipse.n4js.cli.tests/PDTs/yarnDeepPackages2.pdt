@@ -11,5 +11,6 @@ FOLDERS
 ---- D2 [PROJECT]
 
 EXPECT
+- P1
 - P1/packages/folder1/D1
 - P1/packages/folder2/D2
