@@ -55,6 +55,12 @@ public class XBuildRequest {
 
 	private CancelIndicator cancelIndicator = CancelIndicator.NullImpl;
 
+	/** Listener for affected resources */
+	public static interface AffectedListener {
+		/** Called if a resource is considered to be affected and will be built */
+		void afterDetectedAsAffected(URI source);
+	}
+
 	/** Listener for validation events */
 	public static interface AfterValidateListener {
 		/** Called after a source file was validated with the given issues */
@@ -84,6 +90,8 @@ public class XBuildRequest {
 	private List<AfterGenerateListener> afterGenerateListeners;
 
 	private List<AfterDeleteListener> afterDeleteListeners;
+
+	private List<AffectedListener> affectedListeners;
 
 	private List<AfterBuildListener> afterBuildListeners;
 
@@ -194,6 +202,27 @@ public class XBuildRequest {
 		if (afterDeleteListeners != null) {
 			for (AfterDeleteListener listener : afterDeleteListeners) {
 				listener.afterDelete(file);
+			}
+		}
+	}
+
+	/**
+	 * Attach an affected listener to the requested build.
+	 */
+	public void addAffectedListener(AffectedListener listener) {
+		if (affectedListeners == null) {
+			affectedListeners = new ArrayList<>();
+		}
+		affectedListeners.add(Objects.requireNonNull(listener));
+	}
+
+	/**
+	 * Notify the request that we are going to work with the given URI.
+	 */
+	public void afterDetectedAsAffected(URI uri) {
+		if (affectedListeners != null) {
+			for (AffectedListener listener : affectedListeners) {
+				listener.afterDetectedAsAffected(uri);
 			}
 		}
 	}

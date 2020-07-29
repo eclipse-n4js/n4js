@@ -293,7 +293,12 @@ public class ProjectBuilder {
 				cancelIndicator);
 		resourceSet = request.getResourceSet();
 
-		return incrementalBuilder.build(request);
+		try {
+			return incrementalBuilder.build(request);
+		} catch (Throwable t) {
+			updateResourceSetIndex(getProjectIndex());
+			throw t;
+		}
 	}
 
 	/** Deletes the contents of the output directory */

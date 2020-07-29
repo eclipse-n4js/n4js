@@ -115,6 +115,7 @@ public class XStatefulIncrementalBuilder {
 			List<Delta> deltasToBeProcessed = result.getResourceDeltas();
 			List<Delta> deltasFromExternal = indexer.computeAndIndexAffected(newIndex, remainingURIs,
 					request.getExternalDeltas(), allProcessedAndExternalDeltas, context);
+			deltasFromExternal.forEach(delta -> request.afterDetectedAsAffected(delta.getUri()));
 			deltasToBeProcessed.addAll(deltasFromExternal);
 
 			operationCanceledManager.checkCanceled(request.getCancelIndicator());
@@ -142,22 +143,9 @@ public class XStatefulIncrementalBuilder {
 					remainingURIs.remove(uri);
 				}
 
-				try {
-
-					List<IResourceDescription.Delta> deltasBuilt = context.executeClustered(urisToBeBuilt,
-							(loadResult) -> buildClustered(loadResult, newSource2GeneratedMapping, result));
-					newDeltas.addAll(deltasBuilt);
-
-				} catch (Throwable th) {
-					// TODO GH-1793 remove this temporary solution
-					// instead, a partial XBuildResult should be returned
-					if (operationCanceledManager.isOperationCanceledException(th)) {
-						if (th instanceof Error)
-							throw new BuildCanceledException(urisToBeBuilt, (Error) th);
-						throw new BuildCanceledException(urisToBeBuilt, (RuntimeException) th);
-					}
-					throw th;
-				}
+				List<IResourceDescription.Delta> deltasBuilt = context.executeClustered(urisToBeBuilt,
+						(loadResult) -> buildClustered(loadResult, newSource2GeneratedMapping, result));
+				newDeltas.addAll(deltasBuilt);
 
 				allProcessedDeltas.addAll(newDeltas);
 				allProcessedAndExternalDeltas.addAll(newDeltas);
@@ -165,6 +153,7 @@ public class XStatefulIncrementalBuilder {
 				// find more deltas to be processed (for affected resources)
 				deltasToBeProcessed = indexer.computeAndIndexAffected(newIndex, remainingURIs, newDeltas,
 						allProcessedAndExternalDeltas, context);
+				deltasToBeProcessed.forEach(delta -> request.afterDetectedAsAffected(delta.getUri()));
 			}
 
 		} catch (CancellationException e) {
