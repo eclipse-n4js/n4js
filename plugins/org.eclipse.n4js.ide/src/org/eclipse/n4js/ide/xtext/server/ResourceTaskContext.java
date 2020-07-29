@@ -175,12 +175,15 @@ public class ResourceTaskContext {
 	}
 
 	/**
-	 * Mark this task context as no longer managed.
+	 * Mark this task context as no longer managed. Closes the context and sends the workspace issues to the client.
 	 */
 	public synchronized void close() {
 		this.alive = false;
 		if (!isTemporary()) {
-			issuePublisher.accept(mainURI, builderFrontend.getValidationIssues(mainURI));
+			URI uri = mainURI;
+			if (uri != null) {
+				builderFrontend.asyncGetValidationIssues(uri).thenAccept(issues -> issuePublisher.accept(uri, issues));
+			}
 		}
 	}
 

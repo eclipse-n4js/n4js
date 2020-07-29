@@ -23,7 +23,6 @@ import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
 import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
 import org.eclipse.xtext.ide.server.UriExtensions;
-import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.workspace.IProjectConfig;
 
@@ -149,7 +148,7 @@ public class XWorkspaceManager {
 	}
 
 	/** Adds a project to the workspace */
-	synchronized public void addProject(XIProjectConfig projectConfig) {
+	public void addProject(XIProjectConfig projectConfig) {
 		ProjectBuilder projectBuilder = projectBuilderProvider.get();
 		ProjectDescription projectDescription = projectDescriptionFactory.getProjectDescription(projectConfig);
 		projectBuilder.initialize(projectDescription, projectConfig);
@@ -158,12 +157,12 @@ public class XWorkspaceManager {
 	}
 
 	/** Removes a project from the workspace */
-	synchronized protected void removeProject(ProjectBuilder projectBuilder) {
+	protected void removeProject(ProjectBuilder projectBuilder) {
 		removeProject(projectBuilder.getProjectConfig());
 	}
 
 	/** Removes a project from the workspace */
-	synchronized public void removeProject(IProjectConfig projectConfig) {
+	public void removeProject(IProjectConfig projectConfig) {
 		String projectName = projectConfig.getName();
 		ProjectBuilder projectBuilder = projectName2ProjectBuilder.remove(projectName);
 		if (projectBuilder != null) {
@@ -175,7 +174,7 @@ public class XWorkspaceManager {
 	/**
 	 * @return the workspace configuration
 	 */
-	public synchronized XIWorkspaceConfig getWorkspaceConfig() {
+	public XIWorkspaceConfig getWorkspaceConfig() {
 		return workspaceConfig;
 	}
 
@@ -245,18 +244,6 @@ public class XWorkspaceManager {
 		return newProjects;
 	}
 
-	/** Return true if the given resource still exists. */
-	protected boolean exists(URI uri) {
-		ProjectBuilder projectBuilder = getProjectBuilder(uri);
-		if (projectBuilder != null) {
-			XtextResourceSet rs = projectBuilder.getResourceSet();
-			if (rs != null) {
-				return rs.getURIConverter().exists(uri, null);
-			}
-		}
-		return false;
-	}
-
 	/** @return a workspace relative URI for a given URI */
 	public URI makeWorkspaceRelative(URI uri) {
 		URI withEmptyAuthority = uriExtensions.withEmptyAuthority(uri);
@@ -267,7 +254,7 @@ public class XWorkspaceManager {
 	/**
 	 * Returns the workspace issues known for the given URI.
 	 */
-	public synchronized ImmutableList<? extends LSPIssue> getValidationIssues(URI uri) {
+	public ImmutableList<? extends LSPIssue> getValidationIssues(URI uri) {
 		ProjectBuilder projectBuilder = getProjectBuilder(uri);
 		if (projectBuilder != null) {
 			return projectBuilder.getValidationIssues(uri);

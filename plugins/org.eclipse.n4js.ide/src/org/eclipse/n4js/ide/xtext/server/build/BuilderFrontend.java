@@ -171,8 +171,9 @@ public class BuilderFrontend {
 	/**
 	 * Returns the workspace issues known for the given URI.
 	 */
-	public ImmutableList<? extends LSPIssue> getValidationIssues(URI uri) {
-		return workspaceManager.getValidationIssues(uri);
+	public CompletableFuture<ImmutableList<? extends LSPIssue>> asyncGetValidationIssues(URI uri) {
+		return queuedExecutorService.submit(XWorkspaceManager.class, "getValidationIssues",
+				cancelIndicator -> workspaceManager.getValidationIssues(uri));
 	}
 
 	/**
