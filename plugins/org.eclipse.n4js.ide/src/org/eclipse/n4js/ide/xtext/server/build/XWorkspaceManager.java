@@ -129,13 +129,12 @@ public class XWorkspaceManager {
 	/**
 	 * Updates the workspace according to the updated information in the file with the given URI.
 	 */
-	public WorkspaceChanges update(URI changedFile) {
+	public WorkspaceChanges update(List<URI> changedFiles) {
 		XIWorkspaceConfig config = getWorkspaceConfig();
 		if (config == null) {
 			return WorkspaceChanges.NO_CHANGES;
 		}
-		return config.update(changedFile,
-				projectName -> getProjectBuilder(projectName).getProjectDescription());
+		return config.update(changedFiles, projectName -> getProjectBuilder(projectName).getProjectDescription());
 	}
 
 	/**

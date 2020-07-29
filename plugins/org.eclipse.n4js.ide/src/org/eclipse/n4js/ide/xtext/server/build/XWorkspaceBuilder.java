@@ -93,10 +93,7 @@ public class XWorkspaceBuilder {
 	 */
 	public BuildTask createIncrementalBuildTask(List<URI> dirtyFiles, List<URI> deletedFiles) {
 		WorkspaceChanges changes = WorkspaceChanges.createUrisRemovedAndChanged(deletedFiles, dirtyFiles);
-		// TODO pass all URIs at once.
-		for (URI uri : dirtyFiles) {
-			changes = changes.merge(workspaceManager.update(uri));
-		}
+		changes = changes.merge(workspaceManager.update(dirtyFiles));
 		if (!changes.getProjectsWithChangedDependencies().isEmpty()) {
 			Iterable<ProjectConfigSnapshot> projectsWithChangedDeps = IterableExtensions.map(
 					changes.getProjectsWithChangedDependencies(),
