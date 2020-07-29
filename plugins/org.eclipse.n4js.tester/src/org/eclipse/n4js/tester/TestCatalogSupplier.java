@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.tester.domain.TestTree;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,6 +32,9 @@ import com.google.inject.Inject;
  * used to avoid this property.
  */
 public class TestCatalogSupplier {
+
+	@Inject
+	private IN4JSCore n4jsCore;
 
 	@Inject
 	private ObjectMapper objectMapper;
@@ -83,9 +87,24 @@ public class TestCatalogSupplier {
 	 */
 	public String get(Function<? super URI, ? extends ResourceSet> resourceSetAccess,
 			boolean suppressEndpointProperty) {
-		try {
-			final TestTree testTree = getTreeForAllTests(resourceSetAccess);
 
+		return get(resourceSetAccess, n4jsCore.findAllProjects(), suppressEndpointProperty);
+	}
+
+	/**
+	 * Same as {@link #get(Function, boolean)}, except that this method only returns those tests that are contained in
+	 * the given projects.
+	 */
+	public String get(Function<? super URI, ? extends ResourceSet> resourceSetAccess,
+			Iterable<? extends IN4JSProject> projects, boolean suppressEndpointProperty) {
+
+		final TestTree testTree = testDiscoveryHelper.collectAllTestsFromProjects(resourceSetAccess, projects);
+		return serializeTestTree(testTree, suppressEndpointProperty);
+	}
+
+	/** Serializes the given {@link TestTree}. */
+	protected String serializeTestTree(TestTree testTree, boolean suppressEndpointProperty) {
+		try {
 			final Object testCatalogObject = suppressEndpointProperty
 					? treeTransformer.apply(testTree, Collections.emptyMap())
 					: treeTransformer.apply(testTree);
@@ -97,8 +116,4 @@ public class TestCatalogSupplier {
 		}
 	}
 
-	/** @return the {@link TestTree} for all tests */
-	protected TestTree getTreeForAllTests(Function<? super URI, ? extends ResourceSet> resourceSetAccess) {
-		return testDiscoveryHelper.collectAllTestsFromWorkspace(resourceSetAccess);
-	}
 }
