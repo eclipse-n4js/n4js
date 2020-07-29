@@ -301,10 +301,9 @@ public class ProjectBuilder {
 		deletePersistenceFile();
 
 		if (projectConfig instanceof N4JSProjectConfig) {
-			// TODO: merge N4JSProjectConfig#canClean() to IProjectConfig
-			// TODO: extract to N4JSProjectBuilder sub-type
+			// TODO: merge N4JSProjectConfig#indexOnly() to IProjectConfig
 			N4JSProjectConfig n4pc = (N4JSProjectConfig) projectConfig;
-			if (!n4pc.canClean()) {
+			if (n4pc.indexOnly()) {
 				return;
 			}
 		}

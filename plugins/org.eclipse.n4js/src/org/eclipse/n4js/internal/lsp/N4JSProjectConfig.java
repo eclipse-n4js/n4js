@@ -179,11 +179,6 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		return false;
 	}
 
-	/** @return true iff the output folder of this project can be cleaned */
-	public boolean canClean() {
-		return !indexOnly();
-	}
-
 	/**
 	 * Updates this project configuration's internal state. In addition, the given {@link ProjectDescription} is also
 	 * updated accordingly.
