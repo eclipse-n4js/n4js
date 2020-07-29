@@ -267,7 +267,7 @@ public class XWorkspaceManager {
 	/**
 	 * Returns the workspace issues known for the given URI.
 	 */
-	public ImmutableList<? extends LSPIssue> getValidationIssues(URI uri) {
+	public synchronized ImmutableList<? extends LSPIssue> getValidationIssues(URI uri) {
 		ProjectBuilder projectBuilder = getProjectBuilder(uri);
 		if (projectBuilder != null) {
 			return projectBuilder.getValidationIssues(uri);
