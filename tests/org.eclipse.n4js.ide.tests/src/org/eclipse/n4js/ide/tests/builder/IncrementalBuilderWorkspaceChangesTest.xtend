@@ -133,8 +133,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 		joinServerRequests();
 
 		assertTrue("output file of module 'Other' should exist", outputFile.exists()); // output file has appeared
-// TODO GH-1766 update of package.json in a project depending on the added project does not work yet
-//		assertNoIssues(); // now the original errors have gone away
+		assertNoIssues(); // now the original errors have gone away
 	}
 
 	@Test
@@ -357,7 +356,6 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 		saveOpenedFile(packageJsonFileURI);
 		joinServerRequests();
 
-// TODO GH-1766 update of a project depending on the removed project does not work yet
-//		assertIssues(originalErrors); // back to original errors
+		assertIssues(originalErrors); // back to original errors
 	}
 }
