@@ -12,8 +12,9 @@
 set -e
 cd `dirname $0`/TestPrj
 
-echo "Create test catalog"
+echo "Create test catalog and move to TestPrj"
 ../../../n4js-cli/bin/n4jsc.js compile ../../../..
+mv ../../../../testcatalog.json ./testcatalog.json
 
 echo "Run mangelhaft"
 ../../bin/n4js-mangelhaft-cli.js \
