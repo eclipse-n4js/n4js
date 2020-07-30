@@ -47,7 +47,7 @@ public class ProjectBuildOrderInfo implements IOrderInfo<ProjectDescription> {
 		@Inject
 		protected Injector injector;
 
-		/** Returns a new instanceof of {@link ProjectBuildOrderInfo}. No projects will be visited. */
+		/** Returns a new instance of {@link ProjectBuildOrderInfo}. No projects will be visited. */
 		@Override
 		public ProjectBuildOrderInfo get() {
 			return injector.getInstance(ProjectBuildOrderInfo.class);
@@ -129,7 +129,7 @@ public class ProjectBuildOrderInfo implements IOrderInfo<ProjectDescription> {
 	@Inject
 	protected XWorkspaceManager workspaceManager;
 
-	/** Inversed set of project dependency information */
+	/** Inverse set of project dependency information */
 	final protected Multimap<String, ProjectDescription> inversedDependencies = HashMultimap.create();
 	/** Build order of projects */
 	final protected List<ProjectDescription> sortedProjects = new ArrayList<>();

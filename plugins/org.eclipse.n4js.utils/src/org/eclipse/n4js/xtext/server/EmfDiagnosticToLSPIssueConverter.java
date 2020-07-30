@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.validation;
+package org.eclipse.n4js.xtext.server;
 
 import static com.google.common.collect.Lists.newArrayList;
 
@@ -21,9 +21,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.n4js.ide.server.ReflectionUtils;
-import org.eclipse.n4js.ide.xtext.server.IssueAcceptor;
-import org.eclipse.n4js.ide.xtext.server.LSPIssue;
+import org.eclipse.n4js.utils.ReflectionUtils;
 import org.eclipse.xtext.diagnostics.AbstractDiagnostic;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.nodemodel.INode;
@@ -41,16 +39,15 @@ import org.eclipse.xtext.validation.RangeBasedDiagnostic;
 
 /**
  * GH-1537: Purpose of this class is to extend the {@link Issue} by information about the end-line and the end-column.
- * Reason for this extension is that this information is needed when publishing diagnostics in
- * {@link IssueAcceptor#publishDiagnostics}. This triggers a second read of a resource, which might be even deleted by
- * then.
+ * Reason for this extension is that this information is needed when publishing diagnostics the LSP client.
  */
-public class N4JSDiagnosticConverter extends DiagnosticConverterImpl {
+@SuppressWarnings("deprecation")
+public class EmfDiagnosticToLSPIssueConverter extends DiagnosticConverterImpl {
 
 	/**
 	 * Line and column numbers are one-based
 	 */
-	static class N4JSIssueLocation extends IssueLocation {
+	static class ExtendedIssueLocation extends IssueLocation {
 		int lineNumberEnd;
 		int columnEnd;
 	}
@@ -107,8 +104,8 @@ public class N4JSDiagnosticConverter extends DiagnosticConverterImpl {
 			issue.setOffset(toInt(locationData.offset));
 			issue.setLength(toInt(locationData.length));
 			// START: Changes here
-			if (locationData instanceof N4JSIssueLocation) {
-				N4JSIssueLocation n4jsLocationData = (N4JSIssueLocation) locationData;
+			if (locationData instanceof ExtendedIssueLocation) {
+				ExtendedIssueLocation n4jsLocationData = (ExtendedIssueLocation) locationData;
 				issue.setLineNumberEnd(n4jsLocationData.lineNumberEnd);
 				issue.setColumnEnd(n4jsLocationData.columnEnd);
 			}
@@ -149,7 +146,7 @@ public class N4JSDiagnosticConverter extends DiagnosticConverterImpl {
 			if (diagnostic instanceof RangeBasedDiagnostic) {
 				RangeBasedDiagnostic castedDiagnostic = (RangeBasedDiagnostic) diagnostic;
 				INode parserNode = NodeModelUtils.getNode(causer);
-				N4JSIssueLocation result = new N4JSIssueLocation();
+				ExtendedIssueLocation result = new ExtendedIssueLocation();
 				if (parserNode != null) {
 					// START: Changes here
 					LineAndColumn lineAndColumnStart = NodeModelUtils.getLineAndColumn(parserNode,
@@ -184,7 +181,7 @@ public class N4JSDiagnosticConverter extends DiagnosticConverterImpl {
 	@Override
 	protected IssueLocation getLocationForNode(INode node) {
 		ITextRegionWithLineInformation nodeRegion = node.getTextRegionWithLineInformation();
-		N4JSIssueLocation result = new N4JSIssueLocation();
+		ExtendedIssueLocation result = new ExtendedIssueLocation();
 		result.offset = nodeRegion.getOffset();
 		result.length = nodeRegion.getLength();
 
@@ -198,7 +195,7 @@ public class N4JSDiagnosticConverter extends DiagnosticConverterImpl {
 		return result;
 	}
 
-	/** Overwritten to catch stacktrace. */
+	/** Overwritten to catch stack trace. */
 	@Override
 	protected String[] getIssueData(org.eclipse.emf.common.util.Diagnostic diagnostic) {
 		if (diagnostic instanceof AbstractValidationDiagnostic) {

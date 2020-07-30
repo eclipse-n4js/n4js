@@ -39,7 +39,8 @@ Export-Package: org.eclipse.n4js.fileextensions,
  org.eclipse.n4js.utils.validation.util,
  org.eclipse.n4js.xtext.resourceset,
  org.eclipse.n4js.xtext.scoping,
- org.eclipse.n4js.xtext.serializer
+ org.eclipse.n4js.xtext.serializer,
+ org.eclipse.n4js.xtext.server
 Bundle-Vendor: %providerName
 Bundle-ClassPath: .
 Automatic-Module-Name: org.eclipse.n4js.utils

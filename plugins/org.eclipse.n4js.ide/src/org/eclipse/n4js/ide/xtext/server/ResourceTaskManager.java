@@ -27,7 +27,6 @@ import java.util.function.BiFunction;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.n4js.ide.xtext.server.build.BuilderFrontend;
-import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIssueRegistry;
 import org.eclipse.n4js.ide.xtext.server.util.CancelIndicatorUtil;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
@@ -56,9 +55,6 @@ public class ResourceTaskManager {
 
 	@Inject
 	private QueuedExecutorService queuedExecutorService;
-
-	@Inject
-	private ConcurrentIssueRegistry issueRegistry;
 
 	/***/
 	protected final Map<URI, ResourceTaskContext> uri2RTCs = new HashMap<>();
@@ -285,9 +281,6 @@ public class ResourceTaskManager {
 			result.close();
 		}
 		updateSharedDirtyState(uri, null);
-		if (issueRegistry != null) {
-			issueRegistry.clearIssuesOfDirtyState(uri);
-		}
 	}
 
 	/**

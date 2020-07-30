@@ -29,8 +29,10 @@ import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
+import org.eclipse.xtext.resource.impl.CoarseGrainedChangeEvent;
 import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionDelta;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
+import org.eclipse.xtext.resource.impl.ResourceDescriptionChangeEvent;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -39,29 +41,45 @@ import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.IteratorExtensions;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 import com.google.inject.Inject;
 
 /**
- * @author Jan Koehnlein - Initial contribution and API
- * @since 2.11
+ * The workspace builder is the owner of the build index information. It requests builds per project and maintains a
+ * consistent index which is made accessible to the build projects via the build requests.
+ *
+ * In a project context, it is possible to request a refreshed index representation.
  */
 @SuppressWarnings({ "hiding", "restriction" })
-public class XBuildManager {
+public class XWorkspaceBuilder {
 
-	private static final Logger LOG = LogManager.getLogger(XBuildManager.class);
+	private static class AffectedResourcesRecordingFactory implements IBuildRequestFactory {
+		private final IBuildRequestFactory delegate;
+		private final Set<URI> affected;
 
-	/** A handle that can be used to trigger a build. */
-	public interface XBuildable {
-		/** No build is going to happen. */
-		XBuildable NO_BUILD = (cancelIndicator) -> Collections.emptyList();
+		private AffectedResourcesRecordingFactory(IBuildRequestFactory delegate) {
+			this.delegate = delegate;
+			this.affected = new HashSet<>();
+		}
 
-		/** Run the build */
-		List<IResourceDescription.Delta> build(CancelIndicator cancelIndicator);
+		@Override
+		public XBuildRequest getBuildRequest(String projectName, Set<URI> changedFiles,
+				Set<URI> deletedFiles, List<Delta> externalDeltas) {
+			XBuildRequest result = delegate.getBuildRequest(projectName, changedFiles, deletedFiles, externalDeltas);
+			result.addAffectedListener(affected::add);
+			return result;
+		}
+
+		/**
+		 * Return all resources that have been identified as affected so far by a request created from this factory.
+		 */
+		public Set<URI> getAffectedResources() {
+			return affected;
+		}
 	}
+
+	private static final Logger LOG = LogManager.getLogger(XWorkspaceBuilder.class);
 
 	@Inject
 	private XWorkspaceManager workspaceManager;
@@ -79,14 +97,17 @@ public class XBuildManager {
 	private OperationCanceledManager operationCanceledManager;
 
 	@Inject
+	private IBuildRequestFactory buildRequestFactory;
+
+	@Inject
 	private ConcurrentIndex fullIndex;
 
-	private final LinkedHashSet<URI> dirtyFiles = new LinkedHashSet<>();
-	private final LinkedHashSet<URI> deletedFiles = new LinkedHashSet<>();
-	private final LinkedHashSet<String> deletedProjects = new LinkedHashSet<>();
+	private final Set<URI> dirtyFiles = new LinkedHashSet<>();
+	private final Set<URI> deletedFiles = new LinkedHashSet<>();
+	private final Set<String> deletedProjects = new LinkedHashSet<>();
 
 	/** Holds all deltas of all projects. In case of a cancelled build, this set is not empty at start of next build. */
-	private List<IResourceDescription.Delta> allBuildDeltas = new ArrayList<>();
+	private List<IResourceDescription.Delta> toBeConsideredDeltas = new ArrayList<>();
 
 	/**
 	 * Announce dirty and deleted files and provide means to start a build.
@@ -97,31 +118,24 @@ public class XBuildManager {
 	 *            the deleted files
 	 * @return a build command that can be triggered
 	 */
-	public XBuildable didChangeFiles(List<URI> dirtyFiles, List<URI> deletedFiles) {
-		WorkspaceChanges notifiedChanges = WorkspaceChanges.createUrisRemovedAndChanged(deletedFiles, dirtyFiles);
-		WorkspaceChanges workspaceChanges = TEMP_updateWorkspaceConfig(notifiedChanges);
-		return getIncrementalGenerateBuildable(workspaceChanges);
+	public BuildTask createIncrementalBuildTask(List<URI> dirtyFiles, List<URI> deletedFiles) {
+		WorkspaceChanges changes = WorkspaceChanges.createUrisRemovedAndChanged(deletedFiles, dirtyFiles);
+		changes = changes.merge(workspaceManager.update(dirtyFiles));
+		if (!changes.getProjectsWithChangedDependencies().isEmpty()) {
+			Iterable<ProjectConfigSnapshot> projectsWithChangedDeps = IterableExtensions.map(
+					changes.getProjectsWithChangedDependencies(),
+					XIProjectConfig::toSnapshot);
+			fullIndex.setProjectConfigSnapshots(projectsWithChangedDeps);
+		}
+		return createBuildTask(changes);
 	}
 
-	// FIXME don't merge this; Sebastian provides fix on his branch!
-
-	private WorkspaceChanges TEMP_updateWorkspaceConfig(WorkspaceChanges notifiedChanges) {
-		URI uri = IterableExtensions.head(Iterables.concat(
-				notifiedChanges.getRemovedURIs(), notifiedChanges.getChangedURIs()));
-		if (uri == null) {
-			return notifiedChanges;
-		}
-		WorkspaceChanges workspaceChanges = workspaceManager.getWorkspaceConfig().update(uri,
-				projectName -> workspaceManager.getProjectBuilder(projectName).getProjectDescription());
-
-		Iterable<ProjectConfigSnapshot> projectsWithChangedDeps = IterableExtensions.map(
-				workspaceChanges.getProjectsWithChangedDependencies(),
-				XIProjectConfig::toSnapshot);
-		fullIndex.setProjectConfigSnapshots(projectsWithChangedDeps);
-
-		workspaceChanges.merge(notifiedChanges);
-
-		return workspaceChanges;
+	/**
+	 * Re-initializes the workspace and triggers the equivalent to an initial build.
+	 */
+	public BuildTask createInitialBuildTask() {
+		workspaceManager.reinitialize();
+		return this::doInitialBuild;
 	}
 
 	/**
@@ -130,28 +144,9 @@ public class XBuildManager {
 	 * @param cancelIndicator
 	 *            cancellation support
 	 */
-	public List<Delta> doInitialBuild(CancelIndicator cancelIndicator) {
-		List<ProjectDescription> newProjects = workspaceManager.getProjectDescriptions();
-		List<Delta> deltas = doInitialBuild(newProjects, cancelIndicator);
-		return deltas;
-	}
-
-	/** Triggers an incremental build, and will generate output files. */
-	protected XBuildable getIncrementalGenerateBuildable(WorkspaceChanges workspaceChanges) {
-		return getIncrementalBuildable(workspaceChanges);
-	}
-
-	/** Mark the given document as saved. */
-	public XBuildManager.XBuildable didSave(URI uri) {
-		WorkspaceChanges notifiedChanges = WorkspaceChanges.createUrisChanged(ImmutableList.of(uri));
-		WorkspaceChanges workspaceChanges = workspaceManager.update(uri);
-
-		Iterable<ProjectConfigSnapshot> projectsWithChangedDeps = IterableExtensions.map(
-				workspaceChanges.getProjectsWithChangedDependencies(),
-				XIProjectConfig::toSnapshot);
-		fullIndex.setProjectConfigSnapshots(projectsWithChangedDeps);
-
-		return getIncrementalGenerateBuildable(workspaceChanges.merge(notifiedChanges));
+	private IResourceDescription.Event doInitialBuild(CancelIndicator cancelIndicator) {
+		List<ProjectDescription> allProjects = workspaceManager.getProjectDescriptions();
+		return doInitialBuild(allProjects, cancelIndicator);
 	}
 
 	/**
@@ -159,28 +154,28 @@ public class XBuildManager {
 	 *
 	 * @return the delta.
 	 */
-	public List<IResourceDescription.Delta> doInitialBuild(List<ProjectDescription> projects,
+	private IResourceDescription.Event doInitialBuild(List<ProjectDescription> projects,
 			CancelIndicator indicator) {
 
 		lspLogger.log("Initial build ...");
 
 		ProjectBuildOrderInfo projectBuildOrderInfo = projectBuildOrderInfoProvider.get();
 		ProjectBuildOrderIterator pboIterator = projectBuildOrderInfo.getIterator(projects);
-		printBuildOrder();
+		logBuildOrder();
 
 		List<IResourceDescription.Delta> result = new ArrayList<>();
 
 		while (pboIterator.hasNext()) {
 			ProjectDescription description = pboIterator.next();
 			String projectName = description.getName();
-			ProjectBuilder projectManager = workspaceManager.getProjectBuilder(projectName);
-			XBuildResult partialresult = projectManager.doInitialBuild(indicator);
+			ProjectBuilder projectBuilder = workspaceManager.getProjectBuilder(projectName);
+			XBuildResult partialresult = projectBuilder.doInitialBuild(buildRequestFactory, indicator);
 			result.addAll(partialresult.getAffectedResources());
 		}
 
 		lspLogger.log("... initial build done.");
 
-		return result;
+		return new ResourceDescriptionChangeEvent(result);
 	}
 
 	/**
@@ -188,9 +183,10 @@ public class XBuildManager {
 	 *
 	 * @return the delta.
 	 */
+	@SuppressWarnings("unused")
 	@Deprecated // GH-1552: Experimental parallelization
 	// TODO: use ProjectBuildOrderProvider
-	public List<IResourceDescription.Delta> doInitialBuild2(List<ProjectDescription> projects,
+	private List<IResourceDescription.Delta> doInitialBuild2(List<ProjectDescription> projects,
 			CancelIndicator indicator) {
 
 		class BuildInitialProjectJob extends ParallelJob<String> {
@@ -204,7 +200,7 @@ public class XBuildManager {
 
 			@Override
 			public void runJob() {
-				XBuildResult partialresult = projectManager.doInitialBuild(indicator);
+				XBuildResult partialresult = projectManager.doInitialBuild(buildRequestFactory, indicator);
 				synchronized (result) {
 					result.addAll(partialresult.getAffectedResources());
 				}
@@ -238,15 +234,18 @@ public class XBuildManager {
 	}
 
 	/** Cleans all projects in the workspace */
-	public void clean(CancelIndicator cancelIndicator) {
-		doClean(cancelIndicator);
-	}
+	public BuildTask createCleanTask() {
+		return cancelIndicator -> {
+			for (ProjectBuilder projectBuilder : workspaceManager.getProjectBuilders()) {
 
-	/** Performs a clean operation in all projects */
-	public void doClean(CancelIndicator cancelIndicator) {
-		for (ProjectBuilder projectBuilder : workspaceManager.getProjectBuilders()) {
-			projectBuilder.doClean(cancelIndicator);
-		}
+				XBuildRequest buildRequest = buildRequestFactory.getBuildRequest(
+						projectBuilder.getProjectConfig().getName(),
+						Collections.emptySet(), Collections.emptySet(), Collections.emptyList());
+
+				projectBuilder.doClean(buildRequest::afterDelete, CancelIndicator.NullImpl);
+			}
+			return new CoarseGrainedChangeEvent();
+		};
 	}
 
 	/**
@@ -254,19 +253,15 @@ public class XBuildManager {
 	 *
 	 * @return a buildable.
 	 */
-	public XBuildable getIncrementalBuildable(WorkspaceChanges workspaceChanges) {
+	private BuildTask createBuildTask(WorkspaceChanges workspaceChanges) {
 		List<URI> dirtyFiles = workspaceChanges.scanAllAddedAndChangedURIs(scanner);
 		List<URI> deletedFiles = getAllRemovedURIs(workspaceChanges);
 		queue(this.dirtyFiles, deletedFiles, dirtyFiles);
 		queue(this.deletedFiles, dirtyFiles, deletedFiles);
 
-		// TODO: When introducing a "Builder Component" (i.e. a Thread that cares only about building and get notified
-		// when workspace changes occur):
-		// think about encapsulating WorkspaceManager#projectName2ProjectManager and WorkspaceManager#fullIndex to
-		// simplify control flow
-		for (XIProjectConfig projectConfig : workspaceChanges.getRemovedProjects()) {
-			handleDeletedProject(projectConfig);
-			workspaceManager.removeProject(projectConfig);
+		for (XIProjectConfig prjConfig : workspaceChanges.getRemovedProjects()) {
+			handleDeletedProject(prjConfig);
+			workspaceManager.removeProject(prjConfig);
 		}
 		for (XIProjectConfig prjConfig : workspaceChanges.getAddedProjects()) {
 			this.deletedProjects.remove(prjConfig.getName()); // in case a deleted project is being re-created
@@ -277,20 +272,22 @@ public class XBuildManager {
 	}
 
 	/** @return list of all {@link URI} that have been removed by the given changes */
-	protected List<URI> getAllRemovedURIs(WorkspaceChanges workspaceChanges) {
+	private List<URI> getAllRemovedURIs(WorkspaceChanges workspaceChanges) {
 		List<URI> deleted = new ArrayList<>(workspaceChanges.getRemovedURIs());
 		for (ISourceFolder sourceFolder : workspaceChanges.getAllRemovedSourceFolders()) {
 			URI prefix = sourceFolder.getPath();
-			ProjectBuilder projectManager = workspaceManager.getProjectBuilder(prefix);
-			List<URI> matchedURIs = projectManager.findResourcesStartingWithPrefix(prefix);
-			deleted.addAll(matchedURIs);
+			ProjectBuilder projectBuilder = workspaceManager.getProjectBuilder(prefix);
+			if (projectBuilder != null) {
+				List<URI> matchedURIs = projectBuilder.findResourcesStartingWithPrefix(prefix);
+				deleted.addAll(matchedURIs);
+			}
 		}
 		return deleted;
 	}
 
 	/**
-	 * Registers the given project in {@link #deletedProjects} and adds deltas to {@link #allBuildDeltas} in order to
-	 * ensure correct "isAffected"-computation in later builds.
+	 * Registers the given project in {@link #deletedProjects} and adds deltas to {@link #toBeConsideredDeltas} in order
+	 * to ensure correct "isAffected"-computation in later builds.
 	 */
 	protected void handleDeletedProject(XIProjectConfig projectConfig) {
 		String projectName = projectConfig.getName();
@@ -310,7 +307,7 @@ public class XBuildManager {
 	}
 
 	/** Run the build on the workspace */
-	protected List<IResourceDescription.Delta> doIncrementalBuild(CancelIndicator cancelIndicator) {
+	private IResourceDescription.Event doIncrementalBuild(CancelIndicator cancelIndicator) {
 		lspLogger.log("Building ...");
 		try {
 			Set<URI> dirtyFilesToBuild = new LinkedHashSet<>(this.dirtyFiles);
@@ -328,21 +325,27 @@ public class XBuildManager {
 			}
 
 			while (pboIterator.hasNext()) {
+
 				ProjectDescription descr = pboIterator.next();
-				ProjectBuilder projectManager = workspaceManager.getProjectBuilder(descr.getName());
+				ProjectBuilder projectBuilder = workspaceManager.getProjectBuilder(descr.getName());
 				Set<URI> projectDirty = project2dirty.getOrDefault(descr, Collections.emptySet());
 				Set<URI> projectDeleted = project2deleted.getOrDefault(descr, Collections.emptySet());
 
-				// the projectResult might contain partial information in case the build was cancelled
 				XBuildResult projectResult;
+				AffectedResourcesRecordingFactory recordingFactory = new AffectedResourcesRecordingFactory(
+						buildRequestFactory);
 				try {
-					projectResult = projectManager.doIncrementalBuild(projectDirty, projectDeleted,
-							allBuildDeltas, cancelIndicator);
-				} catch (BuildCanceledException e) {
-					// TODO GH-1793 remove this temporary solution
-					dirtyFiles.addAll(e.incompletelyBuiltFiles);
-					e.rethrowOriginalCancellation();
-					throw new IllegalStateException("should never get here");
+					projectResult = projectBuilder.doIncrementalBuild(
+							recordingFactory,
+							projectDirty,
+							projectDeleted,
+							toBeConsideredDeltas,
+							cancelIndicator);
+				} catch (Throwable t) {
+					// re-schedule the affected files since a subsequent build may not detect those as affected
+					// anymore but we may have produced artifacts for these already
+					this.dirtyFiles.addAll(recordingFactory.getAffectedResources());
+					throw t;
 				}
 
 				List<Delta> newlyBuiltDeltas = projectResult.getAffectedResources();
@@ -353,12 +356,12 @@ public class XBuildManager {
 
 			deletedProjects.clear();
 
-			List<IResourceDescription.Delta> result = allBuildDeltas;
-			allBuildDeltas = new ArrayList<>();
+			List<IResourceDescription.Delta> result = toBeConsideredDeltas;
+			toBeConsideredDeltas = new ArrayList<>();
 
 			lspLogger.log("... build done.");
 
-			return result;
+			return new ResourceDescriptionChangeEvent(result);
 		} catch (Throwable th) {
 			if (operationCanceledManager.isOperationCanceledException(th)) {
 				lspLogger.log("... build canceled.");
@@ -375,7 +378,7 @@ public class XBuildManager {
 	}
 
 	/** Update the contents of the given set. */
-	protected void queue(Set<URI> files, Collection<URI> toRemove, Collection<URI> toAdd) {
+	private void queue(Set<URI> files, Collection<URI> toRemove, Collection<URI> toAdd) {
 		files.removeAll(toRemove);
 		files.addAll(toAdd);
 	}
@@ -397,7 +400,7 @@ public class XBuildManager {
 	}
 
 	/** Update this build manager's state after the resources represented by the given deltas have been built. */
-	protected void recordBuildProgress(List<IResourceDescription.Delta> newlyBuiltDeltas) {
+	private void recordBuildProgress(List<IResourceDescription.Delta> newlyBuiltDeltas) {
 		for (Delta delta : newlyBuiltDeltas) {
 			URI uri = delta.getUri();
 			this.dirtyFiles.remove(uri);
@@ -407,30 +410,29 @@ public class XBuildManager {
 		mergeWithUnreportedDeltas(newlyBuiltDeltas);
 	}
 
-	/** @since 2.18 */
-	protected void mergeWithUnreportedDeltas(List<IResourceDescription.Delta> newDeltas) {
-		if (allBuildDeltas.isEmpty()) {
-			allBuildDeltas.addAll(newDeltas);
+	private void mergeWithUnreportedDeltas(List<IResourceDescription.Delta> newDeltas) {
+		if (toBeConsideredDeltas.isEmpty()) {
+			toBeConsideredDeltas.addAll(newDeltas);
 		} else {
-			Map<URI, IResourceDescription.Delta> unreportedByUri = IterableExtensions.toMap(
-					allBuildDeltas, IResourceDescription.Delta::getUri);
+			Map<URI, IResourceDescription.Delta> deltasByURI = IterableExtensions.toMap(
+					toBeConsideredDeltas, IResourceDescription.Delta::getUri);
 
 			for (IResourceDescription.Delta newDelta : newDeltas) {
-				IResourceDescription.Delta unreportedDelta = unreportedByUri.get(newDelta.getUri());
+				IResourceDescription.Delta unreportedDelta = deltasByURI.get(newDelta.getUri());
 				if (unreportedDelta == null) {
-					allBuildDeltas.add(newDelta);
+					toBeConsideredDeltas.add(newDelta);
 				} else {
-					allBuildDeltas.remove(unreportedDelta);
+					toBeConsideredDeltas.remove(unreportedDelta);
 					IResourceDescription _old = unreportedDelta.getOld();
 					IResourceDescription _new = newDelta.getNew();
-					allBuildDeltas.add(new DefaultResourceDescriptionDelta(_old, _new));
+					toBeConsideredDeltas.add(new DefaultResourceDescriptionDelta(_old, _new));
 				}
 			}
 		}
 	}
 
 	/** Prints build order */
-	protected void printBuildOrder() {
+	private void logBuildOrder() {
 		if (LOG.isInfoEnabled()) {
 			ProjectBuildOrderInfo projectBuildOrderInfo = projectBuildOrderInfoProvider.get();
 			ProjectBuildOrderIterator visitAll = projectBuildOrderInfo.getIterator().visitAll();

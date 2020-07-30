@@ -108,11 +108,14 @@ public class ProjectDiscoveryHelper {
 	private LinkedHashSet<Path> collectAllProjects(Path[] workspaceRoots, Map<Path, ProjectDescription> pdCache) {
 		LinkedHashSet<Path> allProjectDirs = new LinkedHashSet<>();
 		for (Path wsRoot : workspaceRoots) {
-			NodeModulesFolder nodeModulesFolder = nodeModulesDiscoveryHelper.getNodeModulesFolder(wsRoot, pdCache);
+
+			Path projectRoot = getProjectRootOrUnchanged(wsRoot);
+
+			NodeModulesFolder nodeModulesFolder = nodeModulesDiscoveryHelper.getNodeModulesFolder(projectRoot, pdCache);
 
 			if (nodeModulesFolder == null) {
 				// Is neither NPM nor Yarn project
-				collectProjects(wsRoot, true, pdCache, allProjectDirs);
+				collectProjects(projectRoot, true, pdCache, allProjectDirs);
 			} else {
 				if (nodeModulesFolder.isYarnWorkspaceRoot) {
 					// Is Yarn project
@@ -122,11 +125,21 @@ public class ProjectDiscoveryHelper {
 				} else {
 					// Is NPM project
 					// given directory is a stand-alone npm project
-					allProjectDirs.add(wsRoot);
+					allProjectDirs.add(projectRoot);
 				}
 			}
 		}
 		return allProjectDirs;
+	}
+
+	private Path getProjectRootOrUnchanged(Path dir) {
+		for (Path projectRoot = dir; projectRoot != null; projectRoot = projectRoot.getParent()) {
+			Path pckjson = projectRoot.resolve(N4JSGlobals.PACKAGE_JSON);
+			if (pckjson.toFile().isFile()) {
+				return projectRoot;
+			}
+		}
+		return dir;
 	}
 
 	private void collectYarnWorkspaceProjects(Path yarnProjectRoot, Map<Path, ProjectDescription> pdCache,

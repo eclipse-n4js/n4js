@@ -23,7 +23,9 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.ResourceLocator;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
-import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIssueRegistry;
+import org.eclipse.n4js.ide.xtext.server.build.BuilderFrontend;
+import org.eclipse.n4js.ide.xtext.server.issues.PublishingIssueAcceptor;
+import org.eclipse.n4js.xtext.server.LSPIssue;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
@@ -57,7 +59,7 @@ import com.google.inject.Provider;
  * necessary information and data structures for performing such task. In particular, this includes EMF resources for
  * files required by the main resource.
  */
-@SuppressWarnings({ "restriction" })
+@SuppressWarnings({ "restriction", "deprecation" })
 public class ResourceTaskContext {
 
 	/*
@@ -77,9 +79,6 @@ public class ResourceTaskContext {
 	 */
 
 	@Inject
-	private LSPIssueConverter lspIssueConverter;
-
-	@Inject
 	private Provider<XtextResourceSet> resourceSetProvider;
 
 	@Inject
@@ -92,7 +91,10 @@ public class ResourceTaskContext {
 	private OperationCanceledManager operationCanceledManager;
 
 	@Inject
-	private ConcurrentIssueRegistry issueRegistry;
+	private PublishingIssueAcceptor issuePublisher;
+
+	@Inject
+	private BuilderFrontend builderFrontend;
 
 	/** The {@link ResourceTaskManager} that created this instance. */
 	private ResourceTaskManager parent;
@@ -173,10 +175,16 @@ public class ResourceTaskContext {
 	}
 
 	/**
-	 * Mark this task context as no longer managed.
+	 * Mark this task context as no longer managed. Closes the context and sends the workspace issues to the client.
 	 */
 	public synchronized void close() {
 		this.alive = false;
+		if (!isTemporary()) {
+			URI uri = mainURI;
+			if (uri != null) {
+				builderFrontend.asyncGetValidationIssues(uri).thenAccept(issues -> issuePublisher.accept(uri, issues));
+			}
+		}
 	}
 
 	/**
@@ -213,8 +221,12 @@ public class ResourceTaskContext {
 
 	/** Initialize this context's non-injectable fields and resource set. Invoked once per context. */
 	@SuppressWarnings("hiding")
-	public synchronized void initialize(ResourceTaskManager parent, URI uri, boolean isTemporary,
-			ResourceDescriptionsData index, ImmutableSetMultimap<String, URI> project2builtURIs,
+	public synchronized void initialize(
+			ResourceTaskManager parent,
+			URI uri,
+			boolean isTemporary,
+			ResourceDescriptionsData index,
+			ImmutableSetMultimap<String, URI> project2builtURIs,
 			WorkspaceConfigSnapshot workspaceConfig) {
 
 		this.parent = parent;
@@ -327,7 +339,7 @@ public class ResourceTaskContext {
 	 * Triggers {@link #resolveResource(CancelIndicator) resolution} and {@link #validateResource(CancelIndicator)
 	 * validation} of this context's main resource.
 	 */
-	public List<Issue> resolveAndValidateResource(CancelIndicator cancelIndicator) {
+	public List<? extends LSPIssue> resolveAndValidateResource(CancelIndicator cancelIndicator) {
 		resolveResource(cancelIndicator);
 		return validateResource(cancelIndicator);
 	}
@@ -342,26 +354,22 @@ public class ResourceTaskContext {
 		parent.onDidRefreshContext(this, cancelIndicator);
 	}
 
-	/** Validate this context's main resource and send an issue update. */
-	public List<Issue> validateResource(CancelIndicator cancelIndicator) {
+	/**
+	 * Validate this context's main resource and send an issue update.
+	 */
+	public List<? extends LSPIssue> validateResource(CancelIndicator cancelIndicator) {
 		// validate
 		IResourceServiceProvider resourceServiceProvider = resourceServiceProviderRegistry
 				.getResourceServiceProvider(mainURI);
 		IResourceValidator resourceValidator = resourceServiceProvider.getResourceValidator();
 		List<Issue> issues = resourceValidator.validate(mainResource, CheckMode.ALL, cancelIndicator);
 		operationCanceledManager.checkCanceled(cancelIndicator); // #validate() sometimes returns null when canceled!
-		// notify LSP client
-		publishIssues(issues, cancelIndicator);
-		return issues;
-	}
 
-	/** Send issue update to issue registry. Ignored for {@link #isTemporary()} contexts. */
-	protected void publishIssues(List<Issue> issues, CancelIndicator cancelIndicator) {
-		if (isTemporary()) {
-			return; // temporarily opened files do not contribute to the global issue registry
+		List<? extends LSPIssue> castedIssues = LSPIssue.cast(issues);
+		if (!isTemporary()) {
+			issuePublisher.accept(mainResource.getURI(), castedIssues);
 		}
-		List<LSPIssue> lspIssues = lspIssueConverter.convertToLSPIssues(mainResource, issues, cancelIndicator);
-		issueRegistry.setIssuesOfDirtyState(mainURI, lspIssues);
+		return castedIssues;
 	}
 
 	/** Send dirty state index update to parent. Ignored for {@link #isTemporary() temporary} contexts. */

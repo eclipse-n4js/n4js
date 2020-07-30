@@ -51,7 +51,6 @@ import org.eclipse.n4js.ide.server.codeActions.ICodeActionAcceptor;
 import org.eclipse.n4js.ide.server.codeActions.N4JSCodeActionService;
 import org.eclipse.n4js.ide.server.codeActions.N4JSSourceActionProvider;
 import org.eclipse.n4js.ide.xtext.server.ExecuteCommandParamsDescriber;
-import org.eclipse.n4js.ide.xtext.server.LanguageServerFrontend;
 import org.eclipse.n4js.ide.xtext.server.build.BuilderFrontend;
 import org.eclipse.n4js.json.ide.codeActions.JSONCodeActionService;
 import org.eclipse.n4js.n4JS.Script;
@@ -68,6 +67,7 @@ import org.eclipse.xtext.ide.server.Document;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.ide.server.commands.IExecutableCommandService;
+import org.eclipse.xtext.resource.impl.CoarseGrainedChangeEvent;
 import org.eclipse.xtext.util.CancelIndicator;
 
 import com.google.common.base.Preconditions;
@@ -122,9 +122,6 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 	 * The command to reset the collected performance data.
 	 */
 	public static final String RESET_PERFORMANCE_DATA = "n4js.performance.collector.reset";
-
-	@Inject
-	private LanguageServerFrontend lsFrontend;
 
 	@Inject
 	private BuilderFrontend builderFrontend;
@@ -228,8 +225,8 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 	 */
 	@ExecutableCommandHandler(N4JS_REBUILD)
 	public Void rebuild(ILanguageServerAccess access, CancelIndicator cancelIndicator) {
-		lsFrontend.clean();
-		lsFrontend.reinitWorkspace();
+		builderFrontend.clean();
+		builderFrontend.reinitWorkspace();
 		return null;
 	}
 
@@ -342,7 +339,7 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 			ILanguageServerAccess access,
 			CancelIndicator cancelIndicator) {
 
-		builderFrontend.runBuildable("InstallNpm", () -> {
+		builderFrontend.asyncRunBuildTask("InstallNpm", () -> {
 			return (ci) -> {
 				// FIXME: Use CliTools in favor of npmCli
 				NPMVersionRequirement versionRequirement = semverHelper.parse(version);
@@ -383,9 +380,9 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 				printWriter.flush();
 				messageParams.setMessage(sw.toString());
 				access.getLanguageClient().showMessage(messageParams);
-				return Collections.emptyList();
+				return new CoarseGrainedChangeEvent();
 			};
-		}).whenComplete((a, b) -> lsFrontend.reinitWorkspace());
+		}).whenComplete((a, b) -> builderFrontend.reinitWorkspace());
 
 		return null;
 	}

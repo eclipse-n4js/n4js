@@ -70,6 +70,38 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 		assertTrue("output file of module 'Main' should exist", outputFile.exists()); // output file has appeared
 		assertNoIssues();
 	}
+	
+	@Test
+	def void testCreateProjectByDiskChange() throws IOException {
+		testWorkspaceManager.createTestProjectOnDisk(
+			"Main" -> '''
+				console.log('hello');
+			'''
+		);
+
+		val packageJsonFile = getPackageJsonFile();
+		val packageJsonFileURI = new FileURI(packageJsonFile);
+		val packageJsonContent = Files.readString(packageJsonFile.toPath);
+		val outputFile = getOutputFile("Main");
+
+		// before starting the LSP server, delete the package.json file
+		assertTrue(packageJsonFile.delete());
+
+		startAndWaitForLspServer();
+
+		assertFalse("output file of module 'Main' should not exist", outputFile.exists());
+		assertNoIssues();
+
+		// recreate the package.json file
+		packageJsonFile.createNewFile();
+		joinServerRequests();
+
+		changeNonOpenedFile(packageJsonFileURI) [packageJsonContent]
+		joinServerRequests();
+
+		assertTrue("output file of module 'Main' should exist", outputFile.exists()); // output file has appeared
+		assertNoIssues();
+	}
 
 	@Test
 	def void testCreateProject_inYarnWorkspace() throws IOException {

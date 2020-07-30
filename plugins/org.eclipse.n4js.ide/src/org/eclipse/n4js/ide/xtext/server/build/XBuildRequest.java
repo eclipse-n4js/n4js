@@ -10,20 +10,18 @@ package org.eclipse.n4js.ide.xtext.server.build;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.List;
+import java.util.Objects;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.ide.xtext.server.LSPIssue;
-import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.UriUtil;
+import org.eclipse.xtext.validation.Issue;
 
 import com.google.common.base.StandardSystemProperty;
-import com.google.common.collect.Multimap;
 
 /**
  * @author Jan Koehnlein - Initial contribution and API
@@ -57,17 +55,16 @@ public class XBuildRequest {
 
 	private CancelIndicator cancelIndicator = CancelIndicator.NullImpl;
 
-	/** Note that {@link Multimap} is not used here since we need to store empty lists, too. */
-	private final Map<URI, Collection<LSPIssue>> resultIssues = new LinkedHashMap<>();
-
-	private final Collection<URI> resultDeletedFiles = new ArrayList<>();
-
-	private final Map<URI, URI> resultGeneratedFiles = new LinkedHashMap<>();
+	/** Listener for affected resources */
+	public static interface AffectedListener {
+		/** Called if a resource is considered to be affected and will be built */
+		void afterDetectedAsAffected(URI source);
+	}
 
 	/** Listener for validation events */
 	public static interface AfterValidateListener {
 		/** Called after a source file was validated with the given issues */
-		void afterValidate(String projectName, URI source, Collection<? extends LSPIssue> issues);
+		void afterValidate(URI source, List<? extends Issue> issues);
 	}
 
 	/** Listener for generation events */
@@ -82,11 +79,21 @@ public class XBuildRequest {
 		void afterDelete(URI file);
 	}
 
-	private AfterValidateListener afterValidateListener;
+	/** Listener for the entire build */
+	public static interface AfterBuildListener {
+		/** Called after the build was done, if (and only if) it completed normally */
+		void afterBuild(XBuildRequest request, XBuildResult result);
+	}
 
-	private AfterGenerateListener afterGenerateListener;
+	private List<AfterValidateListener> afterValidateListeners;
 
-	private AfterDeleteListener afterDeleteListener;
+	private List<AfterGenerateListener> afterGenerateListeners;
+
+	private List<AfterDeleteListener> afterDeleteListeners;
+
+	private List<AffectedListener> affectedListeners;
+
+	private List<AfterBuildListener> afterBuildListeners;
 
 	/** Create a new instance. Use {@link IBuildRequestFactory} instead! */
 	public XBuildRequest(String projectName) {
@@ -142,73 +149,103 @@ public class XBuildRequest {
 		this.externalDeltas = externalDeltas;
 	}
 
-	/** Getter. */
-	public Map<URI, Collection<LSPIssue>> getResultIssues() {
-		return this.resultIssues;
-	}
-
-	/** Setter. */
-	public void setResultIssues(String projectName, URI source, Collection<LSPIssue> issues) {
-		this.resultIssues.put(source, issues);
-		this.afterValidate(projectName, source, issues);
-	}
-
-	/** Setter. */
-	public void setAfterValidateListener(AfterValidateListener afterValidateListener) {
-		this.afterValidateListener = afterValidateListener;
+	/**
+	 * Attach a validation listener to the requested build.
+	 */
+	public void addAfterValidateListener(AfterValidateListener listener) {
+		if (afterValidateListeners == null) {
+			afterValidateListeners = new ArrayList<>();
+		}
+		afterValidateListeners.add(Objects.requireNonNull(listener));
 	}
 
 	/** Called each time a new set of issues was added for a validated source file */
-	@SuppressWarnings("hiding")
-	public void afterValidate(String projectName, URI source, Collection<LSPIssue> issues) {
-		if (afterValidateListener != null) {
-			afterValidateListener.afterValidate(projectName, source, issues);
+	public void afterValidate(URI source, List<? extends Issue> issues) {
+		if (afterValidateListeners != null) {
+			for (AfterValidateListener listener : afterValidateListeners) {
+				listener.afterValidate(source, issues);
+			}
 		}
 	}
 
-	/** Getter. */
-	public Map<URI, URI> getResultGeneratedFiles() {
-		return this.resultGeneratedFiles;
-	}
-
-	/** Setter. */
-	public void setResultGeneratedFile(URI source, URI generated) {
-		this.resultGeneratedFiles.put(source, generated);
-		afterGenerate(source, generated);
-	}
-
-	/** Setter. */
-	public void setAfterGenerateListener(AfterGenerateListener afterGenerateListener) {
-		this.afterGenerateListener = afterGenerateListener;
+	/**
+	 * Attach a generate listener to the requested build.
+	 */
+	public void addAfterGenerateListener(AfterGenerateListener listener) {
+		if (afterGenerateListeners == null) {
+			afterGenerateListeners = new ArrayList<>();
+		}
+		afterGenerateListeners.add(Objects.requireNonNull(listener));
 	}
 
 	/** Called each time a new set of issues was added for a validated source file */
 	public void afterGenerate(URI source, URI generated) {
-		if (afterGenerateListener != null) {
-			afterGenerateListener.afterGenerate(source, generated);
+		if (afterGenerateListeners != null) {
+			for (AfterGenerateListener listener : afterGenerateListeners) {
+				listener.afterGenerate(source, generated);
+			}
 		}
 	}
 
-	/** Getter. */
-	public Collection<URI> getResultDeleteFiles() {
-		return this.resultDeletedFiles;
-	}
-
-	/** Setter. */
-	public void setResultDeleteFile(URI file) {
-		this.resultDeletedFiles.add(file);
-		afterDelete(file);
-	}
-
-	/** Setter. */
-	public void setAfterDeleteListener(AfterDeleteListener afterDeleteListener) {
-		this.afterDeleteListener = afterDeleteListener;
+	/**
+	 * Attach a delete listener to the requested build.
+	 */
+	public void addAfterDeleteListener(AfterDeleteListener listener) {
+		if (afterDeleteListeners == null) {
+			afterDeleteListeners = new ArrayList<>();
+		}
+		afterDeleteListeners.add(Objects.requireNonNull(listener));
 	}
 
 	/** Called each time a file was deleted */
 	public void afterDelete(URI file) {
-		if (afterDeleteListener != null) {
-			afterDeleteListener.afterDelete(file);
+		if (afterDeleteListeners != null) {
+			for (AfterDeleteListener listener : afterDeleteListeners) {
+				listener.afterDelete(file);
+			}
+		}
+	}
+
+	/**
+	 * Attach an affected listener to the requested build.
+	 */
+	public void addAffectedListener(AffectedListener listener) {
+		if (affectedListeners == null) {
+			affectedListeners = new ArrayList<>();
+		}
+		affectedListeners.add(Objects.requireNonNull(listener));
+	}
+
+	/**
+	 * Notify the request that we are going to work with the given URI.
+	 */
+	public void afterDetectedAsAffected(URI uri) {
+		if (affectedListeners != null) {
+			for (AffectedListener listener : affectedListeners) {
+				listener.afterDetectedAsAffected(uri);
+			}
+		}
+	}
+
+	/**
+	 * Attach a build listener to the requested build.
+	 *
+	 * Attention: The most recently added build listener will be notified first. This allows to further modify the build
+	 * result while it is being passed along the listener chain.
+	 */
+	public void addAfterBuildListener(AfterBuildListener listener) {
+		if (afterBuildListeners == null) {
+			afterBuildListeners = new ArrayList<>();
+		}
+		afterBuildListeners.add(0, Objects.requireNonNull(listener));
+	}
+
+	/** Called after the build was done */
+	public void afterBuild(XBuildResult buildResult) {
+		if (afterBuildListeners != null) {
+			for (AfterBuildListener listener : afterBuildListeners) {
+				listener.afterBuild(this, buildResult);
+			}
 		}
 	}
 
@@ -302,24 +339,4 @@ public class XBuildRequest {
 		this.cancelIndicator = cancelIndicator;
 	}
 
-	/** @return true iff the given source has issues of severity ERROR */
-	public boolean containsValidationErrors(URI source) {
-		Collection<? extends LSPIssue> issues = this.resultIssues.get(source);
-		for (LSPIssue issue : issues) {
-			Severity severity = issue.getSeverity();
-			if (severity != null) {
-				switch (severity) {
-				case ERROR:
-					return true;
-				case WARNING:
-					break;
-				case INFO:
-					break;
-				case IGNORE:
-					break;
-				}
-			}
-		}
-		return false;
-	}
 }

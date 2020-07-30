@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.server;
+package org.eclipse.n4js.utils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

@@ -18,6 +18,7 @@ import org.eclipse.n4js.json.ide.symbol.JSONDocumentSymbolKindProvider;
 import org.eclipse.n4js.json.ide.symbol.JSONDocumentSymbolNameProvider;
 import org.eclipse.n4js.json.ide.symbol.JSONHierarchicalSymbolService;
 import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.xtext.server.EmfDiagnosticToLSPIssueConverter;
 import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalProvider;
 import org.eclipse.xtext.ide.server.codeActions.ICodeActionService2;
 import org.eclipse.xtext.ide.server.contentassist.ContentAssistService;
@@ -25,6 +26,7 @@ import org.eclipse.xtext.ide.server.symbol.DocumentSymbolMapper.DocumentSymbolKi
 import org.eclipse.xtext.ide.server.symbol.DocumentSymbolMapper.DocumentSymbolNameProvider;
 import org.eclipse.xtext.ide.server.symbol.HierarchicalDocumentSymbolService;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
+import org.eclipse.xtext.validation.IDiagnosticConverter;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -53,6 +55,10 @@ public class JSONIdeModule extends AbstractJSONIdeModule {
 
 	public Class<? extends Provider<IN4JSCore>> provideN4JSCore() {
 		return N4JSCoreProvider.class;
+	}
+
+	public Class<? extends IDiagnosticConverter> bindIDiagnosticConverter() {
+		return EmfDiagnosticToLSPIssueConverter.class;
 	}
 
 	public Class<? extends ContentAssistService> bindContentAssistService() {

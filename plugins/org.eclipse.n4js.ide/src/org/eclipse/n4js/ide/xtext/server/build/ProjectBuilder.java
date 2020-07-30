@@ -8,10 +8,12 @@
 package org.eclipse.n4js.ide.xtext.server.build;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.LogManager;
@@ -19,11 +21,15 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
-import org.eclipse.n4js.ide.xtext.server.LSPIssue;
+import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
 import org.eclipse.n4js.ide.xtext.server.ResourceChangeSet;
+import org.eclipse.n4js.ide.xtext.server.build.ProjectStatePersister.ProjectState;
+import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterBuildListener;
+import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterDeleteListener;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterValidateListener;
 import org.eclipse.n4js.internal.lsp.N4JSProjectConfig;
 import org.eclipse.n4js.utils.URIUtils;
+import org.eclipse.n4js.xtext.server.LSPIssue;
 import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.generator.OutputConfiguration;
@@ -31,6 +37,8 @@ import org.eclipse.xtext.generator.OutputConfigurationProvider;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 import org.eclipse.xtext.resource.IExternalContentSupport;
 import org.eclipse.xtext.resource.IResourceDescription;
+import org.eclipse.xtext.resource.IResourceDescription.Delta;
+import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.resource.impl.ChunkedResourceDescriptions;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
@@ -39,20 +47,28 @@ import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.util.UriUtil;
+import org.eclipse.xtext.validation.Issue;
+import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.workspace.ProjectConfigAdapter;
+import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSortedSet;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableListMultimap;
+import com.google.common.collect.ListMultimap;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 /**
- * @author Sven Efftinge - Initial contribution and API
- * @since 2.11
+ * TODO JavaDoc
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings({ "restriction", "deprecation" })
 public class ProjectBuilder {
 	private static final Logger LOG = LogManager.getLogger(ProjectBuilder.class);
+
+	/** Used to filter the traversed resources */
+	@Inject
+	protected IResourceServiceProvider.Registry resourceServiceProviders;
 
 	/** The builder. */
 	@Inject
@@ -70,18 +86,13 @@ public class ProjectBuilder {
 	@Inject
 	protected IExternalContentSupport externalContentSupport;
 
-	/*
-	 * Review feedback:
-	 *
-	 * This should not inject a concrete type but an interface
-	 */
-	/** Creates build requests */
+	/** Reads and writes the type index from/to disk */
 	@Inject
-	protected DefaultBuildRequestFactory buildRequestFactory;
+	protected ProjectStatePersister projectStatePersister;
 
-	/** Holds index, hashes and issue information */
+	/** Configuration for the project state persister */
 	@Inject
-	protected ProjectStateManager projectStateManager;
+	protected ProjectStatePersisterConfig persisterConfig;
 
 	/** Holds information about the output settings, e.g. the output directory */
 	@Inject
@@ -91,7 +102,7 @@ public class ProjectBuilder {
 	@Inject
 	protected OperationCanceledManager operationCanceledManager;
 
-	/** The map for this project's resource set. */
+	/** The map for this project's resources. */
 	@Inject
 	protected ProjectUriResourceMap uriResourceMap;
 
@@ -100,40 +111,41 @@ public class ProjectBuilder {
 	protected XWorkspaceManager workspaceManager;
 
 	@Inject
-	private ConcurrentIndex fullIndex;
+	private ConcurrentIndex workspaceIndex;
 
-	@Inject
-	private ConcurrentIssueRegistry issueRegistry;
+	private XIProjectConfig projectConfig;
 
 	private XtextResourceSet resourceSet;
 
 	private ProjectDescription projectDescription;
 
-	private XIProjectConfig projectConfig;
+	private XSource2GeneratedMapping fileMappings;
 
-	private final AfterValidateListener afterValidateListener = new AfterValidateListener() {
-		@Override
-		public void afterValidate(String projectName, URI source, Collection<? extends LSPIssue> issues) {
-			publishIssues(source, issues);
-		}
-	};
+	/*
+	 * TODO use same strategy for all the state
+	 *
+	 * Currently the uriToIssues is being maintained continuously whereas the uriToHashedFileContents is replaced.
+	 */
+	private Map<URI, HashedFileContent> uriToHashedFileContents = new HashMap<>();
+
+	private final ListMultimap<URI, LSPIssue> uriToIssues = ArrayListMultimap.create();
 
 	/** Initialize this project. */
 	@SuppressWarnings("hiding")
-	public void initialize(ProjectDescription description, XIProjectConfig projectConfig) {
-		this.projectDescription = description;
+	public void initialize(ProjectDescription projectDescription, XIProjectConfig projectConfig) {
+		this.projectDescription = projectDescription;
 		this.projectConfig = projectConfig;
-		this.projectStateManager.initialize(projectConfig);
-		this.resourceSet = createNewResourceSet(projectStateManager.getIndex());
+		this.doClear();
+		this.resourceSet = createNewResourceSet(getProjectIndex());
 	}
 
 	/**
 	 * Initial build reads the project state and resolves changes. Generate output files.
 	 * <p>
 	 * This method assumes that it is only invoked in situations when the client does not have any diagnostics stored,
-	 * e.g. directly after invoking {@link #doClean(CancelIndicator)}, and that therefore no 'publishDiagnostics' events
-	 * with an empty list of diagnostics need to be sent to the client in order to remove obsolete diagnostics. The same
-	 * applies to updates of {@link #issueRegistry}, accordingly.
+	 * e.g. directly after invoking {@link #doClean(AfterDeleteListener, CancelIndicator)}. Therefore no
+	 * 'publishDiagnostics' events with an empty list of diagnostics need to be sent to the client in order to remove
+	 * obsolete diagnostics.
 	 * <p>
 	 * NOTE: this is not only invoked shortly after server startup but also at various other occasions, for example
 	 * <ul>
@@ -142,21 +154,24 @@ public class ProjectBuilder {
 	 * <li>when the workspace folder is changed in VS Code.
 	 * </ul>
 	 */
-	public XBuildResult doInitialBuild(CancelIndicator cancelIndicator) {
-		ResourceChangeSet changeSet = projectStateManager.readProjectState();
-		XBuildResult result = doBuild(
-				changeSet.getModified(), changeSet.getDeleted(), Collections.emptyList(), false, cancelIndicator);
+	public XBuildResult doInitialBuild(IBuildRequestFactory buildRequestFactory, CancelIndicator cancelIndicator) {
+		ResourceChangeSet changeSet = readProjectState();
 
-		// send issues to client
-		// (below code won't send empty 'publishDiagnostics' events for resources without validation issues, see API doc
-		// of this method for details)
-		ImmutableMap<URI, ImmutableSortedSet<LSPIssue>> validationIssues = projectStateManager.getValidationIssues();
-		for (URI location : validationIssues.keySet()) {
-			Collection<LSPIssue> issues = validationIssues.get(location);
-			publishIssues(location, issues);
-		}
+		XBuildResult result = doBuild(
+				createInitialBuildRequestFactory(buildRequestFactory),
+				changeSet.getModified(),
+				changeSet.getDeleted(),
+				Collections.emptyList(),
+				cancelIndicator);
 
 		// clear the resource set to release memory
+		clearResourceSet();
+
+		LOG.info("Project built: " + this.projectConfig.getName());
+		return result;
+	}
+
+	private void clearResourceSet() {
 		boolean wasDeliver = resourceSet.eDeliver();
 		try {
 			resourceSet.eSetDeliver(false);
@@ -164,65 +179,149 @@ public class ProjectBuilder {
 		} finally {
 			resourceSet.eSetDeliver(wasDeliver);
 		}
+	}
 
-		LOG.info("Project built: " + this.projectConfig.getName());
-		return result;
+	class ProjectStateUpdater implements AfterValidateListener, AfterDeleteListener, AfterBuildListener {
+		final Map<URI, ImmutableList<? extends LSPIssue>> newValidationIssues = new HashMap<>();
+		final List<URI> deleted = new ArrayList<>();
+
+		@Override
+		public void afterValidate(URI source, List<? extends Issue> issues) {
+			newValidationIssues.put(source, ImmutableList.copyOf(LSPIssue.cast(issues)));
+		}
+
+		@Override
+		public void afterDelete(URI file) {
+			deleted.add(file);
+		}
+
+		@Override
+		public void afterBuild(XBuildRequest request, XBuildResult buildResult) {
+			updateProjectState(request, buildResult, newValidationIssues, deleted);
+
+		}
+
+		public void attachTo(XBuildRequest request) {
+			request.addAfterValidateListener(this);
+			request.addAfterDeleteListener(this);
+			request.addAfterBuildListener(this);
+		}
+	}
+
+	static class ProjectStateUpdatingBuildRequestFactory implements IBuildRequestFactory {
+
+		private final IBuildRequestFactory delegate;
+		private final ProjectStateUpdater updater;
+
+		ProjectStateUpdatingBuildRequestFactory(IBuildRequestFactory delegate, ProjectStateUpdater updater) {
+			this.delegate = delegate;
+			this.updater = updater;
+		}
+
+		@Override
+		public XBuildRequest getBuildRequest(String projectName, Set<URI> changedFiles, Set<URI> deletedFiles,
+				List<Delta> externalDeltas) {
+			XBuildRequest request = delegate.getBuildRequest(projectName, changedFiles, deletedFiles, externalDeltas);
+			updater.attachTo(request);
+			return request;
+		}
+
+	}
+
+	/**
+	 * Create a wrapper around the given build request factory that yields a build request which will update the stored
+	 * project state via {@link ProjectBuilder#updateProjectState} and publish all previously known issues along with
+	 * the newly computed issues.
+	 */
+	protected IBuildRequestFactory createInitialBuildRequestFactory(IBuildRequestFactory base) {
+		ProjectStateUpdater updater = new ProjectStateUpdater() {
+			@Override
+			public void afterBuild(XBuildRequest req, XBuildResult buildResult) {
+				super.afterBuild(req, buildResult);
+
+				// now submit all validation issues, that have not been submitted yet
+				getValidationIssues().asMap().forEach((uri, issues) -> {
+					if (!newValidationIssues.containsKey(uri)) {
+						req.afterValidate(uri, ImmutableList.copyOf(issues));
+					}
+				});
+			}
+		};
+		return new ProjectStateUpdatingBuildRequestFactory(base, updater);
 	}
 
 	/** Build increments of this project. */
-	public XBuildResult doIncrementalBuild(Set<URI> dirtyFiles, Set<URI> deletedFiles,
-			List<IResourceDescription.Delta> externalDeltas, CancelIndicator cancelIndicator) {
+	public XBuildResult doIncrementalBuild(
+			IBuildRequestFactory buildRequestFactory,
+			Set<URI> dirtyFiles,
+			Set<URI> deletedFiles,
+			List<IResourceDescription.Delta> externalDeltas,
+			CancelIndicator cancelIndicator) {
 
-		return doBuild(dirtyFiles, deletedFiles, externalDeltas, true, cancelIndicator);
+		return doBuild(createIncrementalBuildFactory(buildRequestFactory), dirtyFiles, deletedFiles, externalDeltas,
+				cancelIndicator);
 	}
 
-	/** Build this project. */
-	protected XBuildResult doBuild(Set<URI> dirtyFiles, Set<URI> deletedFiles,
-			List<IResourceDescription.Delta> externalDeltas, boolean propagateIssues, CancelIndicator cancelIndicator) {
+	/**
+	 * Create a wrapper around the given build request factory that yields a build request which will update the stored
+	 * project state via {@link ProjectBuilder#updateProjectState}.
+	 */
+	protected ProjectStateUpdatingBuildRequestFactory createIncrementalBuildFactory(
+			IBuildRequestFactory buildRequestFactory) {
+		return new ProjectStateUpdatingBuildRequestFactory(buildRequestFactory, new ProjectStateUpdater());
+	}
 
-		URI persistenceFile = projectStateManager.getPersistenceFile();
+	/** Build this project according to the request provided by the given buildRequestFactory. */
+	protected XBuildResult doBuild(
+			IBuildRequestFactory buildRequestFactory,
+			Set<URI> dirtyFiles,
+			Set<URI> deletedFiles,
+			List<IResourceDescription.Delta> externalDeltas,
+			CancelIndicator cancelIndicator) {
+
+		URI persistenceFile = getPersistenceFile();
 		dirtyFiles.remove(persistenceFile);
 		deletedFiles.remove(persistenceFile);
 
-		XBuildRequest request = newBuildRequest(dirtyFiles, deletedFiles, externalDeltas, propagateIssues,
+		XBuildRequest request = newBuildRequest(
+				buildRequestFactory,
+				dirtyFiles,
+				deletedFiles,
+				externalDeltas,
 				cancelIndicator);
-		resourceSet = request.getResourceSet(); // resourceSet is already used during the build via #getResource(URI)
+		resourceSet = request.getResourceSet();
 
-		XBuildResult result = incrementalBuilder.build(request);
-
-		projectStateManager.updateProjectState(request, result);
-
-		ResourceDescriptionsData resourceDescriptions = projectStateManager.getIndex();
-		fullIndex.setProjectIndex(projectDescription.getName(), resourceDescriptions);
-
-		return result;
+		try {
+			return incrementalBuilder.build(request);
+		} catch (Throwable t) {
+			updateResourceSetIndex(getProjectIndex());
+			throw t;
+		}
 	}
 
 	/** Deletes the contents of the output directory */
-	public void doClean(CancelIndicator cancelIndicator) {
-		projectStateManager.deletePersistenceFile();
+	public void doClean(AfterDeleteListener deleteListener, CancelIndicator cancelIndicator) {
+		deletePersistenceFile();
 
 		if (projectConfig instanceof N4JSProjectConfig) {
-			// TODO: merge N4JSProjectConfig#canClean() to IProjectConfig
+			// TODO: merge N4JSProjectConfig#indexOnly() to IProjectConfig
 			N4JSProjectConfig n4pc = (N4JSProjectConfig) projectConfig;
-			if (!n4pc.canClean()) {
+			if (n4pc.indexOnly()) {
 				return;
 			}
 		}
 
-		XBuildRequest request = buildRequestFactory.getBuildRequest(projectConfig.getName());
 		for (File outputDirectory : getOutputDirectories()) {
 			File[] childFiles = outputDirectory.listFiles();
 			if (childFiles != null) {
 				for (int i = 0; i < childFiles.length; i++) {
 					operationCanceledManager.checkCanceled(cancelIndicator);
-					deleteFileOrFolder(request, childFiles[i]);
+					deleteFileOrFolder(deleteListener, childFiles[i]);
 				}
 			}
 		}
 
-		fullIndex.clearProjectIndex(projectConfig.getName());
-		issueRegistry.clearIssuesOfPersistedState(projectConfig.getName());
+		doClear();
 	}
 
 	/** @return list of output directories of this project */
@@ -241,18 +340,18 @@ public class ProjectBuilder {
 	}
 
 	/** Deletes the given file recursively */
-	protected void deleteFileOrFolder(XBuildRequest request, File file) {
+	protected void deleteFileOrFolder(AfterDeleteListener deleteListener, File file) {
 		if (file.isDirectory()) {
 			File[] childFildes = file.listFiles();
 			for (int i = 0; i < childFildes.length; i++) {
-				deleteFileOrFolder(request, childFildes[i]);
+				deleteFileOrFolder(deleteListener, childFildes[i]);
 			}
 		}
 		boolean wasFile = file.isFile();
 		file.delete();
 		if (wasFile) {
 			URI fileUri = URI.createFileURI(file.getAbsolutePath());
-			request.afterDelete(fileUri);
+			deleteListener.afterDelete(fileUri);
 		}
 	}
 
@@ -263,35 +362,33 @@ public class ProjectBuilder {
 		result.setCode(code);
 		result.setSeverity(severity);
 		result.setUriToProblem(getBaseDir());
-		issueRegistry.addIssueOfPersistedState(projectConfig.getName(), getBaseDir(), result);
+
+		addValidationIssue(getBaseDir(), result);
 	}
 
 	/** Creates a new build request for this project. */
-	protected XBuildRequest newBuildRequest(Set<URI> changedFiles, Set<URI> deletedFiles,
-			List<IResourceDescription.Delta> externalDeltas, boolean propagateIssues, CancelIndicator cancelIndicator) {
+	protected XBuildRequest newBuildRequest(
+			IBuildRequestFactory buildRequestFactory,
+			Set<URI> changedFiles,
+			Set<URI> deletedFiles,
+			List<IResourceDescription.Delta> externalDeltas,
+			CancelIndicator cancelIndicator) {
 
 		XBuildRequest request = buildRequestFactory.getBuildRequest(projectConfig.getName(), changedFiles, deletedFiles,
 				externalDeltas);
 
-		ResourceDescriptionsData indexCopy = projectStateManager.getIndex().copy();
-		XSource2GeneratedMapping fileMappingsCopy = projectStateManager.getFileMappings().copy();
+		ResourceDescriptionsData indexCopy = getProjectIndex().copy();
+		XSource2GeneratedMapping fileMappingsCopy = getFileMappings().copy();
 		request.setIndex(indexCopy);
 		request.setFileMappings(fileMappingsCopy);
-		request.setResourceSet(createFreshResourceSet(indexCopy));
+		updateResourceSetIndex(indexCopy);
+		request.setResourceSet(resourceSet);
 		request.setCancelIndicator(cancelIndicator);
 		request.setBaseDir(getBaseDir());
 
-		if (propagateIssues) {
-			request.setAfterValidateListener(afterValidateListener);
-		} else {
-			// during initial build, we do not want to notify about any issues because it is
-			// done at the end of the project for the deserialized issues and the new issues
-			// altogether.
-			request.setAfterValidateListener(null);
-		}
-
 		if (projectConfig instanceof N4JSProjectConfig) {
 			// TODO: merge N4JSProjectConfig#indexOnly() to IProjectConfig
+			// TODO: extract N4JSProjectBuilder
 			N4JSProjectConfig n4pc = (N4JSProjectConfig) projectConfig;
 			request.setIndexOnly(n4pc.indexOnly());
 		}
@@ -300,27 +397,22 @@ public class ProjectBuilder {
 	}
 
 	/** Create an empty resource set. */
-	protected XtextResourceSet createFreshResourceSet(ResourceDescriptionsData newIndex) {
-		if (resourceSet == null) {
-			resourceSet = createNewResourceSet(newIndex);
-		} else {
-			ChunkedResourceDescriptions.removeFromEmfObject(resourceSet);
-			ChunkedResourceDescriptions index = fullIndex.toDescriptions(resourceSet);
-			index.setContainer(projectDescription.getName(), newIndex);
-		}
-		return resourceSet;
+	protected void updateResourceSetIndex(ResourceDescriptionsData projectIndex) {
+		ChunkedResourceDescriptions.removeFromEmfObject(resourceSet);
+		ChunkedResourceDescriptions resDescs = workspaceIndex.toDescriptions(resourceSet);
+		resDescs.setContainer(projectDescription.getName(), projectIndex);
 	}
 
 	/** Create and configure a new resource set for this project. */
-	protected XtextResourceSet createNewResourceSet(ResourceDescriptionsData newIndex) {
+	protected XtextResourceSet createNewResourceSet(ResourceDescriptionsData newProjectIndex) {
 		XtextResourceSet result = resourceSetProvider.get();
 		result.setURIResourceMap(uriResourceMap);
 		projectDescription.attachToEmfObject(result);
 		ProjectConfigAdapter.install(result, projectConfig);
 		attachWorkspaceResourceLocator(result);
 
-		ChunkedResourceDescriptions index = fullIndex.toDescriptions(result);
-		index.setContainer(projectDescription.getName(), newIndex);
+		ChunkedResourceDescriptions index = workspaceIndex.toDescriptions(result);
+		index.setContainer(projectDescription.getName(), newProjectIndex);
 		return result;
 	}
 
@@ -335,25 +427,9 @@ public class ProjectBuilder {
 		return resource;
 	}
 
-	/** Publish issues for the resource with the given URI to the {@link #issueRegistry}. */
-	protected void publishIssues(URI uri, Iterable<? extends LSPIssue> issues) {
-		String projectName = projectConfig.getName();
-		if (projectConfig.isResourceWithHiddenIssues(uri)) {
-			// nothing to publish, BUT because the result value of #isResourceWithHiddenIssues() can change over time
-			// for the same URI (e.g. source folders being added/removed in an existing project), we need to ensure to
-			// remove issues that might have been published earlier:
-			ImmutableSortedSet<LSPIssue> oldIssues = issueRegistry.getIssuesOfPersistedState(projectName, uri);
-			if (oldIssues != null && !oldIssues.isEmpty()) {
-				issueRegistry.clearIssuesOfPersistedState(projectName, uri);
-			}
-			return;
-		}
-		issueRegistry.setIssuesOfPersistedState(projectConfig.getName(), uri, issues);
-	}
-
 	/** @return all resource descriptions that start with the given prefix */
 	public List<URI> findResourcesStartingWithPrefix(URI prefix) {
-		ResourceDescriptionsData resourceDescriptionsData = fullIndex.getProjectIndex(projectDescription.getName());
+		ResourceDescriptionsData resourceDescriptionsData = getProjectIndex();
 
 		// TODO: Moving this into ResourceDescriptionsData and using a sorted Map could increase performance
 		List<URI> uris = new ArrayList<>();
@@ -371,11 +447,6 @@ public class ProjectBuilder {
 	}
 
 	/** Getter */
-	public ProjectStateManager getProjectStateHolder() {
-		return projectStateManager;
-	}
-
-	/** Getter */
 	public XtextResourceSet getResourceSet() {
 		return resourceSet;
 	}
@@ -388,6 +459,218 @@ public class ProjectBuilder {
 	/** Getter */
 	public XIProjectConfig getProjectConfig() {
 		return projectConfig;
+	}
+
+	/** Clears type index of this project. */
+	protected void doClear() {
+		uriToHashedFileContents.clear();
+		fileMappings = new XSource2GeneratedMapping();
+		setProjectIndex(new ResourceDescriptionsData(CollectionLiterals.<IResourceDescription> emptySet()));
+		uriToIssues.clear();
+		if (resourceSet != null) {
+			uriResourceMap.clear();
+			clearResourceSet();
+		}
+	}
+
+	/** Deletes the persistence file on disk */
+	private void deletePersistenceFile() {
+		URI persistenceFileURI = getPersistenceFile();
+		File persistenceFile = URIUtils.toFile(persistenceFileURI);
+		if (persistenceFile.isFile()) {
+			persistenceFile.delete();
+		}
+	}
+
+	/** Persists the project state to disk */
+	private void writeProjectState() {
+		if (persisterConfig.isWriteToDisk(projectConfig)) {
+			ProjectState currentState = new ProjectState(getProjectIndex(), fileMappings, uriToHashedFileContents,
+					getValidationIssues());
+			projectStatePersister.writeProjectState(projectConfig, currentState);
+		}
+	}
+
+	/**
+	 * Reads the persisted project state from disk
+	 *
+	 * @return set of all source URIs with modified contents
+	 */
+	private ResourceChangeSet readProjectState() {
+		if (persisterConfig.isDeleteState(projectConfig)) {
+			deletePersistenceFile();
+		}
+
+		ResourceChangeSet result = new ResourceChangeSet();
+		doClear();
+
+		ProjectState projectState = projectStatePersister.readProjectState(projectConfig);
+		if (projectState != null) {
+			for (HashedFileContent hfc : projectState.fileHashs.values()) {
+				URI previouslyExistingFile = hfc.getUri();
+				switch (getSourceChangeKind(hfc, projectState)) {
+				case UNCHANGED: {
+					uriToHashedFileContents.put(previouslyExistingFile, hfc);
+					break;
+				}
+				case CHANGED: {
+					result.getModified().add(previouslyExistingFile);
+					projectState.validationIssues.removeAll(previouslyExistingFile);
+					break;
+				}
+				case DELETED: {
+					result.getDeleted().add(previouslyExistingFile);
+					projectState.validationIssues.removeAll(previouslyExistingFile);
+					break;
+				}
+				}
+			}
+			setProjectIndex(projectState.index);
+			setFileMappings(projectState.fileMappings);
+			uriToIssues.putAll(projectState.validationIssues);
+		}
+
+		Set<URI> allIndexedUris = getProjectIndex().getAllURIs();
+		for (ISourceFolder srcFolder : projectConfig.getSourceFolders()) {
+			List<URI> allSourceFolderUris = srcFolder.getAllResources(fileSystemScanner);
+			for (URI srcFolderUri : allSourceFolderUris) {
+				if (!srcFolderUri.hasTrailingPathSeparator() && !allIndexedUris.contains(srcFolderUri)) {
+					if (resourceServiceProviders.getResourceServiceProvider(srcFolderUri) != null) {
+						result.getModified().add(srcFolderUri);
+					}
+				}
+			}
+		}
+
+		return result;
+	}
+
+	/** Updates the index state, file hashes and validation issues */
+	private void updateProjectState(XBuildRequest request, XBuildResult result,
+			Map<URI, ? extends List<? extends LSPIssue>> issues, List<URI> deletedFiles) {
+		HashMap<URI, HashedFileContent> newHashedFileContents = new HashMap<>(uriToHashedFileContents);
+		for (Delta delta : result.getAffectedResources()) {
+			URI uri = delta.getUri();
+			storeHash(newHashedFileContents, uri);
+		}
+		for (URI deletedFile : deletedFiles) {
+			newHashedFileContents.remove(deletedFile);
+		}
+
+		setProjectIndex(result.getIndex());
+		setFileMappings(result.getFileMappings());
+		mergeValidationIssues(issues);
+		uriToHashedFileContents = newHashedFileContents;
+
+		if (request.isGeneratorEnabled() && !result.getAffectedResources().isEmpty()) {
+			writeProjectState();
+		}
+	}
+
+	private enum SourceChangeKind {
+		UNCHANGED, CHANGED, DELETED
+	}
+
+	private SourceChangeKind getSourceChangeKind(HashedFileContent hfc, ProjectState projectState) {
+		URI sourceUri = hfc.getUri();
+		long loadedHash = hfc.getHash();
+
+		HashedFileContent newHash = doHash(sourceUri);
+		if (newHash == null) {
+			return SourceChangeKind.DELETED;
+		}
+
+		if (loadedHash != newHash.getHash()) {
+			return SourceChangeKind.CHANGED;
+		}
+
+		XSource2GeneratedMapping sourceFileMappings = projectState.fileMappings;
+		List<URI> allPrevGenerated = sourceFileMappings.getGenerated(sourceUri);
+		for (URI prevGenerated : allPrevGenerated) {
+			File prevGeneratedFile = new File(prevGenerated.path());
+			if (!prevGeneratedFile.isFile()) {
+				return SourceChangeKind.CHANGED;
+			}
+		}
+		return SourceChangeKind.UNCHANGED;
+	}
+
+	private HashedFileContent doHash(URI uri) {
+		try {
+			File srcFile = new File(uri.path());
+			if (!srcFile.isFile()) {
+				return null;
+			}
+			HashedFileContent generatedTargetContent = new HashedFileContent(uri, srcFile);
+			return generatedTargetContent;
+		} catch (IOException e) {
+			return null;
+		}
+	}
+
+	private void storeHash(HashMap<URI, HashedFileContent> newFileContents, URI uri) {
+		HashedFileContent generatedTargetContent = doHash(uri);
+		if (generatedTargetContent != null) {
+			newFileContents.put(uri, generatedTargetContent);
+		}
+	}
+
+	/** @return the file the project state is stored to */
+	private URI getPersistenceFile() {
+		URI persistanceFile = projectStatePersister.getFileName(projectConfig);
+		return persistanceFile;
+	}
+
+	/**
+	 * Returns the known issues for the given resource.
+	 */
+	public ImmutableList<? extends LSPIssue> getValidationIssues(URI uri) {
+		return ImmutableList.copyOf(uriToIssues.get(uri));
+	}
+
+	/** @return the validation issues as an unmodifiable map. */
+	private ImmutableListMultimap<URI, LSPIssue> getValidationIssues() {
+		return ImmutableListMultimap.copyOf(uriToIssues);
+	}
+
+	private void mergeValidationIssues(Map<URI, ? extends List<? extends LSPIssue>> issues) {
+		issues.forEach(this.uriToIssues::replaceValues);
+	}
+
+	private void addValidationIssue(URI uri, LSPIssue issue) {
+		this.uriToIssues.put(uri, issue);
+	}
+
+	/** Getter. */
+	private ResourceDescriptionsData getProjectIndex() {
+		return workspaceIndex.getProjectIndex(projectConfig.getName());
+	}
+
+	/** Setter. */
+	private void setProjectIndex(ResourceDescriptionsData index) {
+		this.workspaceIndex.setProjectIndex(projectConfig.getName(), index);
+	}
+
+	/** Getter. */
+	private XSource2GeneratedMapping getFileMappings() {
+		return fileMappings;
+	}
+
+	/** Setter. */
+	private void setFileMappings(XSource2GeneratedMapping fileMappings) {
+		this.fileMappings = fileMappings;
+	}
+
+	boolean isSourceFile(URI uri) {
+		String fileName = uri.lastSegment();
+		if (fileName.equals(projectStatePersister.getPersistedFileName())) {
+			return false;
+		}
+		ISourceFolder sourceFolder = projectConfig.findSourceFolderContaining(uri);
+		if (sourceFolder != null) {
+			return true;
+		}
+		return false;
 	}
 
 }

@@ -8,37 +8,35 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.xtext.server;
+package org.eclipse.n4js.ide.xtext.server.issues;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.Diagnostic;
-import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.services.LanguageClient;
+import org.eclipse.n4js.xtext.server.LSPIssue;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.ide.server.UriExtensions;
-import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
-import com.google.common.collect.ComparisonChain;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
  *
  */
+@SuppressWarnings("deprecation")
 @Singleton
-public class IssueAcceptor {
+public class PublishingIssueAcceptor implements IssueAcceptor {
 
 	@Inject
 	private UriExtensions uriExtensions;
 
 	@Inject
-	private DiagnosticIssueConverter diagnosticIssueConverter;
+	private LSPIssueToLSPDiagnosticConverter diagnosticIssueConverter;
 
 	private LanguageClient client;
 
@@ -55,7 +53,8 @@ public class IssueAcceptor {
 	}
 
 	/** Converts given issues to {@link Diagnostic}s and sends them to LSP client */
-	public void publishDiagnostics(URI uri, Iterable<? extends LSPIssue> issues) {
+	@Override
+	public void accept(URI uri, List<? extends LSPIssue> issues) {
 		if (client != null) {
 			PublishDiagnosticsParams publishDiagnosticsParams = new PublishDiagnosticsParams();
 			publishDiagnosticsParams.setUri(uriExtensions.toUriString(uri));
@@ -66,38 +65,20 @@ public class IssueAcceptor {
 	}
 
 	/**
-	 * Convert the given issues to diagnostics. Does not return issues in files that are neither in the workspace nor
-	 * currently opened in the editor. Does not return any issue with severity {@link Severity#IGNORE ignore}.
+	 * Convert the given issues to diagnostics. Does not return any issue with severity {@link Severity#IGNORE ignore}.
 	 */
-	protected List<Diagnostic> toDiagnostics(Iterable<? extends LSPIssue> issues) {
-		if (IterableExtensions.isEmpty(issues)) {
+	protected List<Diagnostic> toDiagnostics(List<? extends LSPIssue> issues) {
+		if (issues.isEmpty()) {
 			return Collections.emptyList();
 		}
 
-		List<Diagnostic> sortedDiags = new ArrayList<>();
+		List<Diagnostic> result = new ArrayList<>();
 		for (LSPIssue issue : issues) {
 			if (issue.getSeverity() != Severity.IGNORE) {
-				sortedDiags.add(diagnosticIssueConverter.toDiagnostic(issue));
+				result.add(diagnosticIssueConverter.toDiagnostic(issue));
 			}
 		}
-
-		// Sort issues according to line and position
-		final Comparator<Diagnostic> comparator = new Comparator<>() {
-			@Override
-			public int compare(Diagnostic d1, Diagnostic d2) {
-				Position p1 = d1.getRange().getStart();
-				Position p2 = d2.getRange().getStart();
-				int result = ComparisonChain.start()
-						.compare(p1.getLine(), p2.getLine())
-						.compare(p2.getCharacter(), p2.getCharacter())
-						.result();
-				return result;
-			}
-		};
-
-		Collections.sort(sortedDiags, comparator);
-
-		return sortedDiags;
+		return result;
 	}
 
 }

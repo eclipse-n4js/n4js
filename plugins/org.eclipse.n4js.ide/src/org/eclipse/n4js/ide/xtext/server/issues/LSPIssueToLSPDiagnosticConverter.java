@@ -8,18 +8,18 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.xtext.server;
+package org.eclipse.n4js.ide.xtext.server.issues;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.DiagnosticSeverity;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
+import org.eclipse.n4js.xtext.server.LSPIssue;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.ide.server.Document;
 import org.eclipse.xtext.validation.CheckType;
 import org.eclipse.xtext.validation.Issue;
-import org.eclipse.xtext.validation.Issue.IssueImpl;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Strings;
@@ -27,7 +27,8 @@ import com.google.common.base.Strings;
 /**
  * Converter for Xtext {@link Issue}s and LSP {@link Diagnostic}s
  */
-public class DiagnosticIssueConverter {
+@SuppressWarnings("deprecation")
+public class LSPIssueToLSPDiagnosticConverter {
 
 	/** Convert the given issue to a diagnostic. */
 	public Diagnostic toDiagnostic(LSPIssue issue) {
@@ -38,7 +39,7 @@ public class DiagnosticIssueConverter {
 		result.setSeverity(toSeverity(issue.getSeverity()));
 
 		Position start = new Position(toZeroBasedInt(issue.getLineNumber()), toZeroBasedInt(issue.getColumn()));
-		Position end = new Position(issue.getLineNumberEnd() - 1, issue.getColumnEnd() - 1);
+		Position end = new Position(toZeroBasedInt(issue.getLineNumberEnd()), toZeroBasedInt(issue.getColumnEnd()));
 
 		result.setRange(new Range(start, end));
 		return result;
@@ -48,6 +49,10 @@ public class DiagnosticIssueConverter {
 	// initialized with '0'
 	private int toZeroBasedInt(Integer oneBasedInteger) {
 		return oneBasedInteger == null ? 0 : (oneBasedInteger - 1);
+	}
+
+	private int toZeroBasedInt(int oneBased) {
+		return oneBased == 0 ? 0 : (oneBased - 1);
 	}
 
 	/**
@@ -91,8 +96,8 @@ public class DiagnosticIssueConverter {
 	}
 
 	/** Convert the given diagnostic to an issue. */
-	public Issue toIssue(URI uri, Diagnostic diagnostic, Optional<Document> document) {
-		IssueImpl issue = new Issue.IssueImpl();
+	public LSPIssue toIssue(URI uri, Diagnostic diagnostic, Optional<Document> document) {
+		LSPIssue issue = new LSPIssue();
 
 		issue.setSeverity(toSeverity(diagnostic.getSeverity()));
 
@@ -108,6 +113,8 @@ public class DiagnosticIssueConverter {
 
 		issue.setLineNumber(sPos.getLine() + 1);
 		issue.setColumn(sPos.getCharacter() + 1);
+		issue.setLineNumberEnd(ePos.getLine() + 1);
+		issue.setColumnEnd(ePos.getCharacter() + 1);
 		issue.setOffset(offSetStart);
 		issue.setLength(offSetEnd - offSetStart);
 
