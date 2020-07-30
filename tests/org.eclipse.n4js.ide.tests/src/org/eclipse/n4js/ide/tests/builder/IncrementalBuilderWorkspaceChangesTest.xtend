@@ -169,7 +169,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 	}
 
 	@Test
-	def void testDeleteProject_inYarnWorkspace() throws IOException {
+	def void testDeleteProject_inYarnWorkspace_onlyPackageJson() throws IOException {
 		testWorkspaceManager.createTestOnDisk(
 			NODE_MODULES + N4JS_RUNTIME -> null,
 			"MainProject" -> #[
@@ -197,6 +197,49 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 
 		val packageJsonFile = getPackageJsonFile("OtherProject");
 		deleteNonOpenedFile(packageJsonFile.toFileURI);
+		joinServerRequests();
+
+		val errors = Map.of(
+			getFileURIFromModuleName("Main"), #[
+				"(Error, [0:25 - 0:32], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
+				"(Error, [1:4 - 1:14], Couldn't resolve reference to IdentifiableElement 'OtherClass'.)"
+			],
+			getPackageJsonFile("MainProject").toFileURI, #[
+				"(Error, [16:3 - 16:22], Project does not exist with project ID: OtherProject.)"
+			]
+		);
+		assertIssues(errors);
+	}
+
+	@Test
+	def void testDeleteProject_inYarnWorkspace_allFiles() throws IOException {
+		testWorkspaceManager.createTestOnDisk(
+			NODE_MODULES + N4JS_RUNTIME -> null,
+			"MainProject" -> #[
+				"Main" -> '''
+					import {OtherClass} from "Other";
+					new OtherClass().m();
+				''',
+				DEPENDENCIES -> '''
+					«N4JS_RUNTIME»,
+					OtherProject
+				'''
+			],
+			"OtherProject" -> #[
+				"Other" -> '''
+					export public class OtherClass {
+						public m() {}
+					}
+				''',
+				DEPENDENCIES -> N4JS_RUNTIME
+			]
+		);
+
+		startAndWaitForLspServer();
+		assertNoIssues();
+
+		val otherProjectRoot = getProjectRoot("OtherProject").toFileURI;
+		deleteFolderNotContainingOpenFiles(otherProjectRoot, ".*"); // testing with more URIs in the 'didChangeWatchedFiles' notification than VSCode would send to assert robustness of server
 		joinServerRequests();
 
 		val errors = Map.of(
