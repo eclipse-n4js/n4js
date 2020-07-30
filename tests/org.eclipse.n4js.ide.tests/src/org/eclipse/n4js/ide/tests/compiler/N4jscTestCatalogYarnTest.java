@@ -18,13 +18,11 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
 import org.eclipse.n4js.cli.helper.CliCompileResult;
 import org.eclipse.n4js.cli.helper.N4CliHelper;
-import org.eclipse.n4js.cli.helper.ProcessResult;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
@@ -33,7 +31,7 @@ import org.junit.Test;
 /**
  * Basic tests for N4jsc, testing various situations in which compiler exits with errors.
  */
-public class N4jscTestCatalogGenerationTest extends AbstractCliCompileTest {
+public class N4jscTestCatalogYarnTest extends AbstractCliCompileTest {
 
 	static final boolean DONT_CLEAN = false;
 
@@ -62,11 +60,6 @@ public class N4jscTestCatalogGenerationTest extends AbstractCliCompileTest {
 
 		CliCompileResult cliResult = n4jsc(COMPILE(workspace), VALIDATION_ERRORS);
 		assertEquals(cliResult.toString(), 16, cliResult.getTranspiledFilesCount());
-
-		Path fileA = proot.toPath().resolve("P1/src-gen/A.js");
-
-		ProcessResult nodejsResult = runNodejs(workspace.toPath(), fileA);
-		assertEquals(nodejsResult.toString(), "A", nodejsResult.getStdOut());
 
 		// GH-1666: change the following assertions
 		File testCatalogFileInYarnRoot = new File(workspace, N4JSGlobals.TEST_CATALOG);
