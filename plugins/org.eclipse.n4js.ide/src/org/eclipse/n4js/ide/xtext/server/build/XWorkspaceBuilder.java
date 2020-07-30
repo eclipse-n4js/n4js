@@ -33,6 +33,7 @@ import org.eclipse.xtext.resource.impl.CoarseGrainedChangeEvent;
 import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionDelta;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionChangeEvent;
+import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IFileSystemScanner;
@@ -40,6 +41,7 @@ import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.IteratorExtensions;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 import com.google.inject.Inject;
@@ -103,6 +105,7 @@ public class XWorkspaceBuilder {
 
 	private final Set<URI> dirtyFiles = new LinkedHashSet<>();
 	private final Set<URI> deletedFiles = new LinkedHashSet<>();
+	private final Set<String> deletedProjects = new LinkedHashSet<>();
 
 	/** Holds all deltas of all projects. In case of a cancelled build, this set is not empty at start of next build. */
 	private List<IResourceDescription.Delta> toBeConsideredDeltas = new ArrayList<>();
@@ -118,7 +121,8 @@ public class XWorkspaceBuilder {
 	 */
 	public BuildTask createIncrementalBuildTask(List<URI> dirtyFiles, List<URI> deletedFiles) {
 		WorkspaceChanges changes = WorkspaceChanges.createUrisRemovedAndChanged(deletedFiles, dirtyFiles);
-		changes = changes.merge(workspaceManager.update(dirtyFiles));
+		List<URI> allFiles = ImmutableList.<URI> builder().addAll(dirtyFiles).addAll(deletedFiles).build();
+		changes = changes.merge(workspaceManager.update(allFiles));
 		if (!changes.getProjectsWithChangedDependencies().isEmpty()) {
 			Iterable<ProjectConfigSnapshot> projectsWithChangedDeps = IterableExtensions.map(
 					changes.getProjectsWithChangedDependencies(),
@@ -258,9 +262,12 @@ public class XWorkspaceBuilder {
 		queue(this.deletedFiles, dirtyFiles, deletedFiles);
 
 		for (XIProjectConfig prjConfig : workspaceChanges.getRemovedProjects()) {
+			this.deletedProjects.add(prjConfig.getName());
+			handleDeletedProject(prjConfig);
 			workspaceManager.removeProject(prjConfig);
 		}
 		for (XIProjectConfig prjConfig : workspaceChanges.getAddedProjects()) {
+			this.deletedProjects.remove(prjConfig.getName()); // in case a deleted project is being re-created
 			workspaceManager.addProject(prjConfig);
 		}
 
@@ -281,6 +288,27 @@ public class XWorkspaceBuilder {
 		return deleted;
 	}
 
+	/**
+	 * Adds deltas to {@link #toBeConsideredDeltas} representing the deletion of all files in the deleted project to
+	 * ensure correct "isAffected"-computation on resource level during the next build (the deltas created here will be
+	 * considered as "external deltas" by {@link XStatefulIncrementalBuilder#launch()}).
+	 */
+	protected void handleDeletedProject(XIProjectConfig projectConfig) {
+		String projectName = projectConfig.getName();
+		ResourceDescriptionsData data = fullIndex.getProjectIndex(projectName);
+		if (data != null) {
+			List<IResourceDescription.Delta> deltas = new ArrayList<>();
+			for (IResourceDescription oldDesc : data.getAllResourceDescriptions()) {
+				if (oldDesc != null) {
+					// because the delta represents a deletion only, we need not create it via the
+					// IResourceDescriptionManager:
+					deltas.add(new DefaultResourceDescriptionDelta(oldDesc, null));
+				}
+			}
+			mergeWithUnreportedDeltas(deltas);
+		}
+	}
+
 	/** Run the build on the workspace */
 	private IResourceDescription.Event doIncrementalBuild(CancelIndicator cancelIndicator) {
 		lspLogger.log("Building ...");
@@ -294,6 +322,10 @@ public class XWorkspaceBuilder {
 
 			ProjectBuildOrderInfo projectBuildOrderInfo = projectBuildOrderInfoProvider.get();
 			ProjectBuildOrderIterator pboIterator = projectBuildOrderInfo.getIterator(changedPDs);
+
+			for (String deletedProjectName : deletedProjects) {
+				pboIterator.visitAffected(deletedProjectName);
+			}
 
 			while (pboIterator.hasNext()) {
 
@@ -325,6 +357,8 @@ public class XWorkspaceBuilder {
 				pboIterator.visitAffected(newlyBuiltDeltas);
 			}
 
+			deletedProjects.clear();
+
 			List<IResourceDescription.Delta> result = toBeConsideredDeltas;
 			toBeConsideredDeltas = new ArrayList<>();
 
@@ -340,6 +374,7 @@ public class XWorkspaceBuilder {
 			// recover and also discard the build queue - state is undefined afterwards.
 			this.dirtyFiles.clear();
 			this.deletedFiles.clear();
+			this.deletedProjects.clear();
 			lspLogger.error("... build ABORTED due to exception:", th);
 			throw th;
 		}

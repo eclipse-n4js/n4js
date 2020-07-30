@@ -14,8 +14,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
 import java.util.Set;
 
 import org.apache.log4j.LogManager;
@@ -400,11 +398,8 @@ public class ProjectBuilder {
 
 	/** Create an empty resource set. */
 	protected void updateResourceSetIndex(ResourceDescriptionsData projectIndex) {
-		ChunkedResourceDescriptions resDescs = ChunkedResourceDescriptions
-				.findInEmfObject(Objects.requireNonNull(resourceSet));
-		for (Entry<String, ResourceDescriptionsData> entry : workspaceIndex.entries()) {
-			resDescs.setContainer(entry.getKey(), entry.getValue());
-		}
+		ChunkedResourceDescriptions.removeFromEmfObject(resourceSet);
+		ChunkedResourceDescriptions resDescs = workspaceIndex.toDescriptions(resourceSet);
 		resDescs.setContainer(projectDescription.getName(), projectIndex);
 	}
 

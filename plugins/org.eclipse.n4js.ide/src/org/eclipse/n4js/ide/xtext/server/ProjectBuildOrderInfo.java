@@ -79,6 +79,12 @@ public class ProjectBuildOrderInfo implements IOrderInfo<ProjectDescription> {
 			return this;
 		}
 
+		/** Mark all projects as to be visited that are affected by a change in the given project. */
+		public IOrderIterator<ProjectDescription> visitAffected(String projectName) {
+			visit(inversedDependencies.get(projectName));
+			return this;
+		}
+
 		@Override
 		public ProjectBuildOrderIterator visitAffected(List<IResourceDescription.Delta> changes) {
 			visit(getAffectedProjects(changes));
