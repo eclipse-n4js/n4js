@@ -289,7 +289,9 @@ public class XWorkspaceBuilder {
 	}
 
 	/**
-	 * Adds deltas to {@link #toBeConsideredDeltas} in order to ensure correct "isAffected"-computation in later builds.
+	 * Adds deltas to {@link #toBeConsideredDeltas} representing the deletion of all files in the deleted project to
+	 * ensure correct "isAffected"-computation on resource level during the next build (the deltas created here will be
+	 * considered as "external deltas" by {@link XStatefulIncrementalBuilder#launch()}).
 	 */
 	protected void handleDeletedProject(XIProjectConfig projectConfig) {
 		String projectName = projectConfig.getName();
