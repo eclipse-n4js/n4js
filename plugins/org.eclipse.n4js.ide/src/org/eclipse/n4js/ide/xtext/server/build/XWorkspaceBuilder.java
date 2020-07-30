@@ -262,6 +262,7 @@ public class XWorkspaceBuilder {
 		queue(this.deletedFiles, dirtyFiles, deletedFiles);
 
 		for (XIProjectConfig prjConfig : workspaceChanges.getRemovedProjects()) {
+			this.deletedProjects.add(prjConfig.getName());
 			handleDeletedProject(prjConfig);
 			workspaceManager.removeProject(prjConfig);
 		}
@@ -288,12 +289,10 @@ public class XWorkspaceBuilder {
 	}
 
 	/**
-	 * Registers the given project in {@link #deletedProjects} and adds deltas to {@link #toBeConsideredDeltas} in order
-	 * to ensure correct "isAffected"-computation in later builds.
+	 * Adds deltas to {@link #toBeConsideredDeltas} in order to ensure correct "isAffected"-computation in later builds.
 	 */
 	protected void handleDeletedProject(XIProjectConfig projectConfig) {
 		String projectName = projectConfig.getName();
-		this.deletedProjects.add(projectName);
 		ResourceDescriptionsData data = fullIndex.getProjectIndex(projectName);
 		if (data != null) {
 			List<IResourceDescription.Delta> deltas = new ArrayList<>();
