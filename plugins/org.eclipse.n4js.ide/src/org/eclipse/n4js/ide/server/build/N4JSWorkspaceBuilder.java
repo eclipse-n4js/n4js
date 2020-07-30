@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,6 +34,7 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.tester.TestCatalogSupplier;
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper;
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper.NodeModulesFolder;
+import org.eclipse.n4js.utils.ProjectDiscoveryHelper;
 import org.eclipse.xtext.resource.IResourceDescription.Event;
 import org.eclipse.xtext.util.CancelIndicator;
 
@@ -56,6 +58,9 @@ public class N4JSWorkspaceBuilder extends XWorkspaceBuilder {
 
 	@Inject
 	private NodeModulesDiscoveryHelper nodeModulesDiscoveryHelper;
+
+	@Inject
+	private ProjectDiscoveryHelper projectDiscoveryHelper;
 
 	@Override
 	public BuildTask createIncrementalBuildTask(List<URI> dirtyFiles, List<URI> deletedFiles) {
@@ -111,7 +116,17 @@ public class N4JSWorkspaceBuilder extends XWorkspaceBuilder {
 			IN4JSProject yarnProject = n4jsCore.findProject(URI.createFileURI(projectRoot.getPath())).orNull();
 			if (yarnProject != null) {
 				catalogsCovered.add(yarnProject);
-				// continue here: add all contained projects
+				Set<Path> yarnSubProjectPaths = new HashSet<>();
+				projectDiscoveryHelper.collectYarnWorkspaceProjects(projectRoot.toPath(), new HashMap<>(),
+						yarnSubProjectPaths);
+
+				for (Path yarnSubProjectPath : yarnSubProjectPaths) {
+					URI yarnSubProjectUri = URI.createFileURI(yarnSubProjectPath.toString());
+					IN4JSProject yarnSubProject = n4jsCore.findProject(yarnSubProjectUri).orNull();
+					if (yarnSubProject != null) {
+						catalogsCovered.add(yarnSubProject);
+					}
+				}
 			}
 		}
 
