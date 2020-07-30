@@ -294,11 +294,7 @@ public class ResourceTaskContext {
 
 	/** Same as {@link #refreshContext(int, Iterable, CancelIndicator)}, but without changing the source text. */
 	public void refreshContext(CancelIndicator cancelIndicator) {
-		prepareRefresh();
-
-		mainResource.relink();
-
-		resolveAndValidateResource(cancelIndicator);
+		refreshContext(0, Collections.emptyList(), cancelIndicator);
 	}
 
 	/**
