@@ -174,8 +174,20 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 					internalCheckStaticPolyfill(annotation)
 				case N4JS.name:
 					internalCheckN4JS(annotation)
-				case TEST_METHOD.name:
-					internalCheckTestMethod(annotation)
+				case TEST_GROUP.name,
+				case TEST_METHOD.name,
+				case PARAMETERS.name,
+				case PARAMETER.name,
+				case BEFOREALL_SETUP.name,
+				case BEFORE_SETUP.name,
+				case TEST_METHOD.name,
+				case AFTERALL_TEARDOWN.name,
+				case AFTER_TEARDOWN.name,
+				case TEST_IGNORE.name,
+				case TEST_FIXME.name,
+				case TEST_TIMEOUT.name,
+				case DESCRIPTION.name:
+					internalCheckTestAnnotation(annotation)
 			}
 		}
 	}
@@ -378,9 +390,9 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	/**
-	 * Check TEST_METHOD annotation to be in test source location (defined in package.json).
+	 * Check that test related annotations are located in test containers (defined in package.json).
 	 */
-	private def internalCheckTestMethod(Annotation annotation) {
+	private def internalCheckTestAnnotation(Annotation annotation) {
 		val element = annotation.annotatedElement;
 		if (element === null) {
 			return;
@@ -395,7 +407,7 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 			return;
 		}
 		if (!srcContainer.isTest) {
-			val msg = getMessageForANN__TEST_ONLY_IN_TEST_SOURCES();
+			val msg = getMessageForANN__TEST_ONLY_IN_TEST_SOURCES(annotation.name);
 			addIssue(msg, annotation, ANNOTATION__NAME, ANN__TEST_ONLY_IN_TEST_SOURCES);
 			return;
 		}
