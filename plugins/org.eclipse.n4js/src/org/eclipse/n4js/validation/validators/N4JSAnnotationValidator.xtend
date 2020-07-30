@@ -58,6 +58,7 @@ import static org.eclipse.n4js.validation.IssueCodes.*
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
 import org.eclipse.n4js.validation.IssueCodes
+import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
 
 /**
  * Annotation validation rules for N4JS.
@@ -77,6 +78,9 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Inject
 	private JavaScriptVariantHelper jsVariantHelper;
+
+	@Inject
+	protected XpectAwareFileExtensionCalculator fileExtensionCalculator;
 
 	/**
 	 * NEEEDED
@@ -170,6 +174,8 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 					internalCheckStaticPolyfill(annotation)
 				case N4JS.name:
 					internalCheckN4JS(annotation)
+				case TEST_METHOD.name:
+					internalCheckTestMethod(annotation)
 			}
 		}
 	}
@@ -367,6 +373,30 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 		if (!jsVariantHelper.isExternalMode(element)) {
 			addIssue(getMessageForANN_DISALLOWED_IN_NONDEFINTION_FILE(annotation.name), annotation, ANNOTATION__NAME,
 				ANN_DISALLOWED_IN_NONDEFINTION_FILE);
+			return;
+		}
+	}
+
+	/**
+	 * Check TEST_METHOD annotation to be in test source location (defined in package.json).
+	 */
+	private def internalCheckTestMethod(Annotation annotation) {
+		val element = annotation.annotatedElement;
+		if (element === null) {
+			return;
+		}
+		val uri = fileExtensionCalculator.getUriWithoutXpectExtension(element);
+		val project = n4jsCore.findProject(uri).orNull;
+		if (project === null) {
+			return;
+		}
+		val srcContainer = project.findSourceContainerWith(uri);
+		if (srcContainer === null) {
+			return;
+		}
+		if (!srcContainer.isTest) {
+			val msg = getMessageForANN__TEST_ONLY_IN_TEST_SOURCES();
+			addIssue(msg, annotation, ANNOTATION__NAME, ANN__TEST_ONLY_IN_TEST_SOURCES);
 			return;
 		}
 	}
