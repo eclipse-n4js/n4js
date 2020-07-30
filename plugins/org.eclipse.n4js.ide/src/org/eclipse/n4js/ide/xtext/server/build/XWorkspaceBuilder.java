@@ -41,6 +41,7 @@ import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.IteratorExtensions;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 import com.google.inject.Inject;
@@ -120,7 +121,8 @@ public class XWorkspaceBuilder {
 	 */
 	public BuildTask createIncrementalBuildTask(List<URI> dirtyFiles, List<URI> deletedFiles) {
 		WorkspaceChanges changes = WorkspaceChanges.createUrisRemovedAndChanged(deletedFiles, dirtyFiles);
-		changes = changes.merge(workspaceManager.update(dirtyFiles));
+		List<URI> allFiles = ImmutableList.<URI> builder().addAll(dirtyFiles).addAll(deletedFiles).build();
+		changes = changes.merge(workspaceManager.update(allFiles));
 		if (!changes.getProjectsWithChangedDependencies().isEmpty()) {
 			Iterable<ProjectConfigSnapshot> projectsWithChangedDeps = IterableExtensions.map(
 					changes.getProjectsWithChangedDependencies(),
