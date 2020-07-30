@@ -13,7 +13,7 @@
 	
 	Workspace {
 		Project "TestAnnotationOnlyAllowedInTestFolders" {
-			Folder "src" {
+			Folder "test" {
 				ThisFile {}
 			}
 			File "package.json" { from="../package.json" }
@@ -26,11 +26,42 @@
 
 
 
-
+// XPECT noerrors -->
+@Group("")
+// XPECT noerrors -->
+@Timeout(1)
+// XPECT noerrors -->
+@Description("TEST DESCRIPTION")
 export public class TestClass {
 
-	// XPECT errors --> "Test annotation @Test may only be used in test source folders (defined in package.json)." at "Test"
+	// XPECT noerrors -->
+	@Parameter
+	myField:any;
+
+
+	// XPECT noerrors -->
+	@BeforeAll
+	// XPECT noerrors -->
+	@Before
+	public setup() : void {
+	}
+
+	// XPECT noerrors -->
+	@AfterAll
+	// XPECT noerrors -->
+	@After
+	public shutdown() : void {
+	}
+
+
+	// XPECT noerrors -->
 	@Test
+	// XPECT noerrors -->
+	@Fixme
+	// XPECT noerrors -->
+	@Ignore
+	// XPECT noerrors -->
+	@Parameters
 	public testCase() : void {
 	}
 

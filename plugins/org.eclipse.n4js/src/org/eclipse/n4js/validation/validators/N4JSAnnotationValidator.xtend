@@ -144,7 +144,11 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 				annotations.forEach[checkUnnecessaryAnnotation(definition, it)]
 			}
 
-		// no special validations yet.
+			// special validations:
+			switch (definition.name) {
+				case TEST_GROUP.name:
+					annotations.forEach[internalCheckTestAnnotation(it)]
+			}
 		}
 
 	}
@@ -174,7 +178,7 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 					internalCheckStaticPolyfill(annotation)
 				case N4JS.name:
 					internalCheckN4JS(annotation)
-				case TEST_GROUP.name,
+				/*case TEST_GROUP.name,*/ // checked in internalCheckRepeatableAnnotations()
 				case TEST_METHOD.name,
 				case PARAMETERS.name,
 				case PARAMETER.name,
