@@ -10,12 +10,9 @@
  */
 package org.eclipse.n4js.ide.server.build;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -136,9 +133,8 @@ public class N4JSWorkspaceBuilder extends XWorkspaceBuilder {
 				true); // do not include "endpoint" property here
 
 		if (catalog != null) {
-			try (OutputStream os = new BufferedOutputStream(new FileOutputStream(testCatalog))) {
-				os.write(catalog.getBytes(StandardCharsets.UTF_8));
-				os.flush();
+			try (FileWriter fileWriter = new FileWriter(testCatalog)) {
+				fileWriter.write(catalog);
 
 			} catch (IOException e) {
 				LOG.error("Error while writing test catalog file: " + testCatalog);

@@ -29,7 +29,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Basic tests for N4jsc, testing various situations in which compiler exits with errors.
+ * Tests that a test catalog file is created for each test project in the sidy-by-side situation.
  */
 public class N4jscTestCatalogSideBySideTest extends AbstractCliCompileTest {
 
