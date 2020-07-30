@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -23,10 +24,10 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
 import org.eclipse.n4js.ide.xtext.server.ResourceChangeSet;
-import org.eclipse.n4js.ide.xtext.server.build.ProjectStatePersister.ProjectState;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterBuildListener;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterDeleteListener;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterValidateListener;
+import org.eclipse.n4js.ide.xtext.server.issues.PublishingIssueAcceptor;
 import org.eclipse.n4js.internal.lsp.N4JSProjectConfig;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.xtext.server.LSPIssue;
@@ -50,12 +51,10 @@ import org.eclipse.xtext.util.UriUtil;
 import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.workspace.ProjectConfigAdapter;
-import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 
-import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
-import com.google.common.collect.ListMultimap;
+import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -110,6 +109,10 @@ public class ProjectBuilder {
 	@Inject
 	protected XWorkspaceManager workspaceManager;
 
+	/** Used to publish the issues reported via {@link #reportProjectIssue(String, String, Severity)} */
+	@Inject
+	protected PublishingIssueAcceptor issuePublisher;
+
 	@Inject
 	private ConcurrentIndex workspaceIndex;
 
@@ -119,16 +122,8 @@ public class ProjectBuilder {
 
 	private ProjectDescription projectDescription;
 
-	private XSource2GeneratedMapping fileMappings;
-
-	/*
-	 * TODO use same strategy for all the state
-	 *
-	 * Currently the uriToIssues is being maintained continuously whereas the uriToHashedFileContents is replaced.
-	 */
-	private Map<URI, HashedFileContent> uriToHashedFileContents = new HashMap<>();
-
-	private final ListMultimap<URI, LSPIssue> uriToIssues = ArrayListMultimap.create();
+	private final AtomicReference<ImmutableProjectState> projectStateSnapshot = new AtomicReference<>(
+			ImmutableProjectState.empty());
 
 	/** Initialize this project. */
 	@SuppressWarnings("hiding")
@@ -357,13 +352,21 @@ public class ProjectBuilder {
 
 	/** Report an issue. */
 	public void reportProjectIssue(String message, String code, Severity severity) {
-		LSPIssue result = new LSPIssue();
-		result.setMessage(message);
-		result.setCode(code);
-		result.setSeverity(severity);
-		result.setUriToProblem(getBaseDir());
+		URI uri = getBaseDir();
+		LSPIssue issue = new LSPIssue();
+		issue.setMessage(message);
+		issue.setCode(code);
+		issue.setSeverity(severity);
+		issue.setUriToProblem(uri);
 
-		addValidationIssue(getBaseDir(), result);
+		ImmutableProjectState updatedState = projectStateSnapshot.updateAndGet(snapshot -> {
+			ImmutableListMultimap.Builder<URI, LSPIssue> builder = ImmutableListMultimap.builder();
+			builder.putAll(snapshot.getValidationIssues());
+			builder.put(uri, issue);
+			return ImmutableProjectState.withoutCopy(snapshot.internalGetResourceDescriptions(),
+					snapshot.getFileMappings(), snapshot.getFileHashes(), builder.build());
+		});
+		issuePublisher.accept(uri, updatedState.getValidationIssues().get(uri));
 	}
 
 	/** Creates a new build request for this project. */
@@ -377,8 +380,11 @@ public class ProjectBuilder {
 		XBuildRequest request = buildRequestFactory.getBuildRequest(projectConfig.getName(), changedFiles, deletedFiles,
 				externalDeltas);
 
-		ResourceDescriptionsData indexCopy = getProjectIndex().copy();
-		XSource2GeneratedMapping fileMappingsCopy = getFileMappings().copy();
+		ImmutableProjectState currentProjectState = this.projectStateSnapshot.get();
+
+		ResourceDescriptionsData indexCopy = currentProjectState.internalGetResourceDescriptions().copy();
+		XSource2GeneratedMapping fileMappingsCopy = currentProjectState.getFileMappings().copy();
+
 		request.setIndex(indexCopy);
 		request.setFileMappings(fileMappingsCopy);
 		updateResourceSetIndex(indexCopy);
@@ -388,7 +394,6 @@ public class ProjectBuilder {
 
 		if (projectConfig instanceof N4JSProjectConfig) {
 			// TODO: merge N4JSProjectConfig#indexOnly() to IProjectConfig
-			// TODO: extract N4JSProjectBuilder
 			N4JSProjectConfig n4pc = (N4JSProjectConfig) projectConfig;
 			request.setIndexOnly(n4pc.indexOnly());
 		}
@@ -396,11 +401,11 @@ public class ProjectBuilder {
 		return request;
 	}
 
-	/** Create an empty resource set. */
-	protected void updateResourceSetIndex(ResourceDescriptionsData projectIndex) {
+	/** Update the index information that is attached to this project's resource set */
+	protected void updateResourceSetIndex(ResourceDescriptionsData newProjectIndex) {
 		ChunkedResourceDescriptions.removeFromEmfObject(resourceSet);
 		ChunkedResourceDescriptions resDescs = workspaceIndex.toDescriptions(resourceSet);
-		resDescs.setContainer(projectDescription.getName(), projectIndex);
+		resDescs.setContainer(projectDescription.getName(), newProjectIndex);
 	}
 
 	/** Create and configure a new resource set for this project. */
@@ -463,10 +468,9 @@ public class ProjectBuilder {
 
 	/** Clears type index of this project. */
 	protected void doClear() {
-		uriToHashedFileContents.clear();
-		fileMappings = new XSource2GeneratedMapping();
-		setProjectIndex(new ResourceDescriptionsData(CollectionLiterals.<IResourceDescription> emptySet()));
-		uriToIssues.clear();
+		ImmutableProjectState newState = ImmutableProjectState.empty();
+		setProjectIndex(newState.internalGetResourceDescriptions());
+		this.projectStateSnapshot.set(newState);
 		if (resourceSet != null) {
 			uriResourceMap.clear();
 			clearResourceSet();
@@ -483,11 +487,9 @@ public class ProjectBuilder {
 	}
 
 	/** Persists the project state to disk */
-	private void writeProjectState() {
+	private void writeProjectState(ImmutableProjectState state) {
 		if (persisterConfig.isWriteToDisk(projectConfig)) {
-			ProjectState currentState = new ProjectState(getProjectIndex(), fileMappings, uriToHashedFileContents,
-					getValidationIssues());
-			projectStatePersister.writeProjectState(projectConfig, currentState);
+			projectStatePersister.writeProjectState(projectConfig, state);
 		}
 	}
 
@@ -504,30 +506,26 @@ public class ProjectBuilder {
 		ResourceChangeSet result = new ResourceChangeSet();
 		doClear();
 
-		ProjectState projectState = projectStatePersister.readProjectState(projectConfig);
+		ImmutableProjectState projectState = projectStatePersister.readProjectState(projectConfig);
 		if (projectState != null) {
-			for (HashedFileContent hfc : projectState.fileHashs.values()) {
+			for (HashedFileContent hfc : projectState.getFileHashes().values()) {
 				URI previouslyExistingFile = hfc.getUri();
 				switch (getSourceChangeKind(hfc, projectState)) {
 				case UNCHANGED: {
-					uriToHashedFileContents.put(previouslyExistingFile, hfc);
 					break;
 				}
 				case CHANGED: {
 					result.getModified().add(previouslyExistingFile);
-					projectState.validationIssues.removeAll(previouslyExistingFile);
 					break;
 				}
 				case DELETED: {
 					result.getDeleted().add(previouslyExistingFile);
-					projectState.validationIssues.removeAll(previouslyExistingFile);
 					break;
 				}
 				}
 			}
-			setProjectIndex(projectState.index);
-			setFileMappings(projectState.fileMappings);
-			uriToIssues.putAll(projectState.validationIssues);
+			setProjectIndex(projectState.internalGetResourceDescriptions());
+			this.projectStateSnapshot.set(projectState);
 		}
 
 		Set<URI> allIndexedUris = getProjectIndex().getAllURIs();
@@ -546,24 +544,37 @@ public class ProjectBuilder {
 	}
 
 	/** Updates the index state, file hashes and validation issues */
-	private void updateProjectState(XBuildRequest request, XBuildResult result,
-			Map<URI, ? extends List<? extends LSPIssue>> issues, List<URI> deletedFiles) {
-		HashMap<URI, HashedFileContent> newHashedFileContents = new HashMap<>(uriToHashedFileContents);
-		for (Delta delta : result.getAffectedResources()) {
-			URI uri = delta.getUri();
-			storeHash(newHashedFileContents, uri);
-		}
-		for (URI deletedFile : deletedFiles) {
-			newHashedFileContents.remove(deletedFile);
-		}
+	private void updateProjectState(
+			XBuildRequest request,
+			XBuildResult result,
+			Map<URI, ? extends List<? extends LSPIssue>> issuesFromIncrementalBuild,
+			List<URI> deletedFiles) {
 
-		setProjectIndex(result.getIndex());
-		setFileMappings(result.getFileMappings());
-		mergeValidationIssues(issues);
-		uriToHashedFileContents = newHashedFileContents;
+		ImmutableProjectState newState = this.projectStateSnapshot.updateAndGet(snapshot -> {
+			Map<URI, HashedFileContent> newHashedFileContents = new HashMap<>(snapshot.getFileHashes());
+			// TODO where do we update the generated file hashes?
+			for (Delta delta : result.getAffectedResources()) {
+				URI uri = delta.getUri();
+				storeHash(newHashedFileContents, uri);
+			}
+			for (URI deletedFile : deletedFiles) {
+				newHashedFileContents.remove(deletedFile);
+			}
+
+			ImmutableListMultimap.Builder<URI, LSPIssue> newIssues = ImmutableListMultimap.builder();
+			snapshot.getValidationIssues().asMap().forEach((uri, oldIssues) -> {
+				if (!issuesFromIncrementalBuild.containsKey(uri)) {
+					newIssues.putAll(uri, oldIssues);
+				}
+			});
+			issuesFromIncrementalBuild.forEach(newIssues::putAll);
+			return ImmutableProjectState.withoutCopy(result.getIndex(), result.getFileMappings(),
+					ImmutableMap.copyOf(newHashedFileContents), newIssues.build());
+		});
+		setProjectIndex(newState.internalGetResourceDescriptions());
 
 		if (request.isGeneratorEnabled() && !result.getAffectedResources().isEmpty()) {
-			writeProjectState();
+			writeProjectState(newState);
 		}
 	}
 
@@ -571,7 +582,7 @@ public class ProjectBuilder {
 		UNCHANGED, CHANGED, DELETED
 	}
 
-	private SourceChangeKind getSourceChangeKind(HashedFileContent hfc, ProjectState projectState) {
+	private SourceChangeKind getSourceChangeKind(HashedFileContent hfc, ImmutableProjectState projectState) {
 		URI sourceUri = hfc.getUri();
 		long loadedHash = hfc.getHash();
 
@@ -584,7 +595,7 @@ public class ProjectBuilder {
 			return SourceChangeKind.CHANGED;
 		}
 
-		XSource2GeneratedMapping sourceFileMappings = projectState.fileMappings;
+		XSource2GeneratedMapping sourceFileMappings = projectState.getFileMappings();
 		List<URI> allPrevGenerated = sourceFileMappings.getGenerated(sourceUri);
 		for (URI prevGenerated : allPrevGenerated) {
 			File prevGeneratedFile = new File(prevGenerated.path());
@@ -608,10 +619,12 @@ public class ProjectBuilder {
 		}
 	}
 
-	private void storeHash(HashMap<URI, HashedFileContent> newFileContents, URI uri) {
-		HashedFileContent generatedTargetContent = doHash(uri);
-		if (generatedTargetContent != null) {
-			newFileContents.put(uri, generatedTargetContent);
+	private void storeHash(Map<URI, HashedFileContent> newFileContents, URI uri) {
+		HashedFileContent fileHash = doHash(uri);
+		if (fileHash != null) {
+			newFileContents.put(uri, fileHash);
+		} else {
+			newFileContents.remove(uri);
 		}
 	}
 
@@ -625,20 +638,12 @@ public class ProjectBuilder {
 	 * Returns the known issues for the given resource.
 	 */
 	public ImmutableList<? extends LSPIssue> getValidationIssues(URI uri) {
-		return ImmutableList.copyOf(uriToIssues.get(uri));
+		return getValidationIssues().get(uri);
 	}
 
 	/** @return the validation issues as an unmodifiable map. */
 	private ImmutableListMultimap<URI, LSPIssue> getValidationIssues() {
-		return ImmutableListMultimap.copyOf(uriToIssues);
-	}
-
-	private void mergeValidationIssues(Map<URI, ? extends List<? extends LSPIssue>> issues) {
-		issues.forEach(this.uriToIssues::replaceValues);
-	}
-
-	private void addValidationIssue(URI uri, LSPIssue issue) {
-		this.uriToIssues.put(uri, issue);
+		return projectStateSnapshot.get().getValidationIssues();
 	}
 
 	/** Getter. */
@@ -649,16 +654,6 @@ public class ProjectBuilder {
 	/** Setter. */
 	private void setProjectIndex(ResourceDescriptionsData index) {
 		this.workspaceIndex.setProjectIndex(projectConfig.getName(), index);
-	}
-
-	/** Getter. */
-	private XSource2GeneratedMapping getFileMappings() {
-		return fileMappings;
-	}
-
-	/** Setter. */
-	private void setFileMappings(XSource2GeneratedMapping fileMappings) {
-		this.fileMappings = fileMappings;
 	}
 
 	boolean isSourceFile(URI uri) {

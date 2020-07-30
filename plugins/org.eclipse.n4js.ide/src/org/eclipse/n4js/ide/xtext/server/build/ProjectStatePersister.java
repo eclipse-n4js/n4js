@@ -51,13 +51,13 @@ import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.resource.persistence.SerializableEObjectDescription;
 import org.eclipse.xtext.resource.persistence.SerializableReferenceDescription;
 import org.eclipse.xtext.resource.persistence.SerializableResourceDescription;
+import org.eclipse.xtext.util.Tuples;
 import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
-import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ListMultimap;
+import com.google.common.collect.Iterables;
 import com.google.common.io.Files;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -71,37 +71,6 @@ import com.google.inject.Singleton;
 @Singleton
 public class ProjectStatePersister {
 	private static final Logger LOG = LogManager.getLogger(ProjectStatePersister.class);
-
-	/** Data holder class of project state */
-	static public class ProjectState {
-		/** Type index */
-		final public ResourceDescriptionsData index;
-		/** File Mappings */
-		final public XSource2GeneratedMapping fileMappings;
-		/** Hashes to indicate file changes */
-		final public Map<URI, HashedFileContent> fileHashs;
-		/** Hashes to indicate file changes */
-		final public ListMultimap<URI, LSPIssue> validationIssues;
-
-		/** Constructor */
-		public ProjectState(ResourceDescriptionsData index, XSource2GeneratedMapping fileMappings,
-				Map<URI, HashedFileContent> fileHashs, ListMultimap<URI, LSPIssue> validationIssues) {
-
-			this.index = index;
-			this.fileMappings = fileMappings;
-			this.fileHashs = fileHashs;
-			this.validationIssues = validationIssues;
-		}
-
-		/** @return a copied instance of this with copied field values */
-		public ProjectState copy() {
-			return new ProjectState(
-					index.copy(),
-					fileMappings.copy(),
-					ImmutableMap.copyOf(fileHashs),
-					ImmutableListMultimap.copyOf(validationIssues));
-		}
-	}
 
 	/**
 	 * After the version, the stream contains a zipped, data stream of the following shape:
@@ -151,24 +120,22 @@ public class ProjectStatePersister {
 	 * @param state
 	 *            the state to be written
 	 */
-	public void writeProjectState(IProjectConfig project, ProjectState state) {
-		ProjectState stateCopy = state.copy();
-		asyncWriteProjectState(project, stateCopy);
-	}
-
-	private void asyncWriteProjectState(IProjectConfig project, ProjectState state) {
-		queuedExecutorService.submit(ProjectStatePersister.class, "asyncWriteProjectState", (ignore) -> {
-			File file = getDataFile(project);
-			try (OutputStream nativeOut = Files.asByteSink(file).openBufferedStream()) {
-				writeProjectState(nativeOut, state);
-			} catch (IOException e) {
-				e.printStackTrace();
-				if (file.isFile()) {
-					file.delete();
-				}
-			}
-			return null;
-		});
+	public void writeProjectState(IProjectConfig project, ImmutableProjectState state) {
+		queuedExecutorService.submitAndCancelPrevious(Tuples.create(ProjectStatePersister.class, project.getName()),
+				"writeProjectState", (cancelIndicator) -> {
+					if (!cancelIndicator.isCanceled()) {
+						File file = getDataFile(project);
+						try (OutputStream nativeOut = Files.asByteSink(file).openBufferedStream()) {
+							writeProjectState(nativeOut, state);
+						} catch (IOException e) {
+							e.printStackTrace();
+							if (file.isFile()) {
+								file.delete();
+							}
+						}
+					}
+					return null;
+				});
 	}
 
 	/**
@@ -179,7 +146,7 @@ public class ProjectStatePersister {
 	 * @throws IOException
 	 *             if things go bananas.
 	 */
-	public void writeProjectState(OutputStream stream, ProjectState state)
+	public void writeProjectState(OutputStream stream, ImmutableProjectState state)
 			throws IOException {
 
 		String languageVersion = getLanguageVersion();
@@ -200,9 +167,10 @@ public class ProjectStatePersister {
 		}
 	}
 
-	private void writeResourceDescriptions(ProjectState state, DataOutput output) throws IOException {
-		output.writeInt(state.index.getAllURIs().size());
-		for (IResourceDescription description : state.index.getAllResourceDescriptions()) {
+	private void writeResourceDescriptions(ImmutableProjectState state, DataOutput output) throws IOException {
+		Iterable<IResourceDescription> descriptions = state.getResourceDescriptions().getAllResourceDescriptions();
+		output.writeInt(Iterables.size(descriptions));
+		for (IResourceDescription description : descriptions) {
 			if (description instanceof SerializableResourceDescription) {
 				writeResourceDescription((SerializableResourceDescription) description, output);
 			} else {
@@ -285,24 +253,24 @@ public class ProjectStatePersister {
 		}
 	}
 
-	private void writeFileMappings(ProjectState state, DataOutputStream output) throws IOException {
-		state.fileMappings.writeExternal(output);
+	private void writeFileMappings(ImmutableProjectState state, DataOutputStream output) throws IOException {
+		state.getFileMappings().writeExternal(output);
 	}
 
-	private void writeFingerprints(ProjectState state, DataOutput output) throws IOException {
-		Collection<HashedFileContent> files = state.fileHashs.values();
+	private void writeFingerprints(ImmutableProjectState state, DataOutput output) throws IOException {
+		Collection<HashedFileContent> files = state.getFileHashes().values();
 		output.writeInt(files.size());
 		for (HashedFileContent fingerprint : files) {
 			fingerprint.write(output);
 		}
 	}
 
-	private void writeValidationIssues(ProjectState state, DataOutput output) throws IOException {
-		Set<URI> allSources = state.validationIssues.keySet();
+	private void writeValidationIssues(ImmutableProjectState state, DataOutput output) throws IOException {
+		Set<URI> allSources = state.getValidationIssues().keySet();
 		int numberSources = allSources.size();
 		output.writeInt(numberSources);
 		for (URI source : allSources) {
-			Collection<? extends LSPIssue> issues = state.validationIssues.get(source);
+			Collection<? extends LSPIssue> issues = state.getValidationIssues().get(source);
 
 			output.writeUTF(source.toString());
 
@@ -320,12 +288,12 @@ public class ProjectStatePersister {
 	 * @param project
 	 *            the project
 	 */
-	public ProjectState readProjectState(IProjectConfig project) {
+	public ImmutableProjectState readProjectState(IProjectConfig project) {
 		File file = getDataFile(project);
 		try {
 			if (file.isFile()) {
 				try (InputStream nativeIn = Files.asByteSource(file).openBufferedStream()) {
-					ProjectState result = readProjectState(nativeIn);
+					ImmutableProjectState result = readProjectState(nativeIn);
 					if (result == null && file.isFile()) {
 						file.delete();
 					}
@@ -349,7 +317,7 @@ public class ProjectStatePersister {
 	 * @throws ClassNotFoundException
 	 *             if things go bananas.
 	 */
-	public ProjectState readProjectState(InputStream stream)
+	public ImmutableProjectState readProjectState(InputStream stream)
 			throws IOException, ClassNotFoundException {
 
 		int version = stream.read();
@@ -366,11 +334,12 @@ public class ProjectStatePersister {
 
 			XSource2GeneratedMapping fileMappings = readFileMappings(input);
 
-			Map<URI, HashedFileContent> fingerprints = readFingerprints(input);
+			ImmutableMap<URI, HashedFileContent> fingerprints = readFingerprints(input);
 
-			ListMultimap<URI, LSPIssue> validationIssues = readValidationIssues(input);
+			ImmutableListMultimap<URI, LSPIssue> validationIssues = readValidationIssues(input);
 
-			return new ProjectState(resourceDescriptionsData, fileMappings, fingerprints, validationIssues);
+			return ImmutableProjectState.withoutCopy(resourceDescriptionsData, fileMappings, fingerprints,
+					validationIssues);
 		}
 	}
 
@@ -482,33 +451,32 @@ public class ProjectStatePersister {
 		return fileMappings;
 	}
 
-	private Map<URI, HashedFileContent> readFingerprints(DataInput input) throws IOException {
+	private ImmutableMap<URI, HashedFileContent> readFingerprints(DataInput input) throws IOException {
 		int size = input.readInt();
-		Map<URI, HashedFileContent> fingerprints = new HashMap<>(size);
+		ImmutableMap.Builder<URI, HashedFileContent> fingerprints = ImmutableMap.builderWithExpectedSize(size);
 		while (size > 0) {
 			size--;
 			HashedFileContent hashFileContent = new HashedFileContent(input);
 			fingerprints.put(hashFileContent.getUri(), hashFileContent);
 		}
-		return fingerprints;
+		return fingerprints.build();
 	}
 
-	private ListMultimap<URI, LSPIssue> readValidationIssues(DataInput input) throws IOException {
+	private ImmutableListMultimap<URI, LSPIssue> readValidationIssues(DataInput input) throws IOException {
 		int numberOfSources = input.readInt();
-		ListMultimap<URI, LSPIssue> validationIssues = ArrayListMultimap.create();
+		ImmutableListMultimap.Builder<URI, LSPIssue> validationIssues = ImmutableListMultimap.builder();
 		while (numberOfSources > 0) {
 			numberOfSources--;
 			URI source = URI.createURI(input.readUTF());
 			int numberOfIssues = input.readInt();
-			List<LSPIssue> issuesPerResource = validationIssues.get(source);
 			while (numberOfIssues > 0) {
 				numberOfIssues--;
 				LSPIssue issue = new LSPIssue();
 				issue.readExternal(input);
-				issuesPerResource.add(issue);
+				validationIssues.put(source, issue);
 			}
 		}
-		return validationIssues;
+		return validationIssues.build();
 	}
 
 	private File getDataFile(IProjectConfig project) {
