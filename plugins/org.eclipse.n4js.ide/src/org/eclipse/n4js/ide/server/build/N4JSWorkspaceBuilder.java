@@ -135,12 +135,14 @@ public class N4JSWorkspaceBuilder extends XWorkspaceBuilder {
 				catalogsCovered,
 				true); // do not include "endpoint" property here
 
-		try (OutputStream os = new BufferedOutputStream(new FileOutputStream(testCatalog))) {
-			os.write(catalog.getBytes(StandardCharsets.UTF_8));
-			os.flush();
+		if (catalog != null) {
+			try (OutputStream os = new BufferedOutputStream(new FileOutputStream(testCatalog))) {
+				os.write(catalog.getBytes(StandardCharsets.UTF_8));
+				os.flush();
 
-		} catch (IOException e) {
-			LOG.error("Error while writing test catalog file: " + testCatalog);
+			} catch (IOException e) {
+				LOG.error("Error while writing test catalog file: " + testCatalog);
+			}
 		}
 
 		return catalogsCovered;
