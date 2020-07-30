@@ -30,10 +30,12 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
 import org.eclipse.lsp4j.ClientCapabilities;
 import org.eclipse.lsp4j.Diagnostic;
@@ -88,6 +90,7 @@ import org.junit.BeforeClass;
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -420,6 +423,59 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		}
 		languageServer.didClose(new DidCloseTextDocumentParams(new TextDocumentIdentifier(fileURI.toString())));
 		joinServerRequests();
+	}
+
+	/**
+	 * Delete a folder and its entire content and notify the LSP server. The folder must not contain open files.
+	 * <p>
+	 * Which URIs the LSP client will include in the resulting <code>didChangeWatchedFiles</code> notification depends
+	 * on the configuration during server start-up and initialization. For example, a VSCode extension might configure a
+	 * static glob pattern for this purpose or the server could dynamically register for file events in certain folders.
+	 * To simulate various such configurations in tests, this method provides the <code>nameRegEx</code> parameter.
+	 *
+	 * @param folderURI
+	 *            URI of the folder to be deleted. Must not contain open files.
+	 * @param nameRegEx
+	 *            the URI of a deleted file/folder is included in the <code>didChangeWatchedFiles</code> notification if
+	 *            and only if the file/folder's name matches this regular expression.
+	 */
+	protected void deleteFolderNotContainingOpenFiles(FileURI folderURI, String nameRegEx) {
+		// 1) collect all files and folders to be deleted
+		List<FileURI> allFoldersAndFiles;
+		try (Stream<Path> walker = Files.walk(folderURI.toFile().toPath())) {
+			allFoldersAndFiles = walker.map(p -> toFileURI(p.toFile()))
+					.collect(Collectors.toList());
+		} catch (IOException e) {
+			throw new WrappedException("exception while walking file tree", e);
+		}
+		// 2) delete on disk
+		for (FileURI currURI : Lists.reverse(allFoldersAndFiles)) {
+			deleteFileOnDiskWithoutNotification(currURI);
+		}
+		Assert.assertFalse("folder was not properly deleted on disk", folderURI.toFile().exists());
+		// 3) notify the LSP server
+		Pattern pattern = Pattern.compile(nameRegEx);
+		List<FileEvent> fileEvents = allFoldersAndFiles.stream()
+				.filter(uri -> pattern.matcher(uri.getName()).matches())
+				.map(uri -> new FileEvent(uri.toString(), FileChangeType.Deleted))
+				.collect(Collectors.toList());
+		Assert.assertFalse("at least one deleted file/folder must match the 'nameRegEx'", fileEvents.isEmpty());
+		DidChangeWatchedFilesParams params = new DidChangeWatchedFilesParams(fileEvents);
+		languageServer.didChangeWatchedFiles(params);
+	}
+
+	/** Delete a non-opened file <u>from disk</u> and notify the LSP server. */
+	protected void deleteNonOpenedFile(FileURI fileURI) {
+		if (isOpen(fileURI)) {
+			Assert.fail("trying to delete an open file with method #deleteNonOpenedFile()");
+		}
+		// 1) delete on disk
+		deleteFileOnDiskWithoutNotification(fileURI);
+		// 2) notify LSP server
+		List<FileEvent> fileEvents = Collections.singletonList(
+				new FileEvent(fileURI.toString(), FileChangeType.Deleted));
+		DidChangeWatchedFilesParams params = new DidChangeWatchedFilesParams(fileEvents);
+		languageServer.didChangeWatchedFiles(params);
 	}
 
 	/**

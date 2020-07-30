@@ -14,8 +14,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -405,11 +403,8 @@ public class ProjectBuilder {
 
 	/** Update the index information that is attached to this project's resource set */
 	protected void updateResourceSetIndex(ResourceDescriptionsData newProjectIndex) {
-		ChunkedResourceDescriptions resDescs = ChunkedResourceDescriptions
-				.findInEmfObject(Objects.requireNonNull(resourceSet));
-		for (Entry<String, ResourceDescriptionsData> entry : workspaceIndex.entries()) {
-			resDescs.setContainer(entry.getKey(), entry.getValue());
-		}
+		ChunkedResourceDescriptions.removeFromEmfObject(resourceSet);
+		ChunkedResourceDescriptions resDescs = workspaceIndex.toDescriptions(resourceSet);
 		resDescs.setContainer(projectDescription.getName(), newProjectIndex);
 	}
 
