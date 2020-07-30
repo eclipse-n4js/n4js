@@ -166,7 +166,7 @@ public final class N4JSGlobals {
 	/**
 	 * The name of the N4JS test catalog file.
 	 */
-	public static final String TEST_CATALOG = "n4js.testcatalog";
+	public static final String TEST_CATALOG = "testcatalog.json";
 
 	/**
 	 * String used to separate segments in the string representation of a {@link QualifiedName qualified name}.
