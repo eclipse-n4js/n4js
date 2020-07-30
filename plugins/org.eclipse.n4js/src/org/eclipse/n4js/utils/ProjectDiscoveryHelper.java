@@ -142,7 +142,7 @@ public class ProjectDiscoveryHelper {
 		return dir;
 	}
 
-	private void collectYarnWorkspaceProjects(Path yarnProjectRoot, Map<Path, ProjectDescription> pdCache,
+	public void collectYarnWorkspaceProjects(Path yarnProjectRoot, Map<Path, ProjectDescription> pdCache,
 			Set<Path> projects) {
 
 		projects.add(yarnProjectRoot);
