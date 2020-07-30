@@ -29,7 +29,7 @@
 
 export public class TestClass {
 
-	// XPECT errors --> "Annotation @Test can only be used in test source folders (defined in package.json)." at "Test"
+	// XPECT errors --> "Test annotation @Test may only be used in test source folders (defined in package.json)." at "Test"
 	@Test
 	public testCase() : void {
 	}
