@@ -9,6 +9,17 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-export public class Example {
-	
+
+import { Assert } from "org/eclipse/n4js/mangelhaft/assert/Assert"
+import { C } from "C";
+
+
+export public class ExampleTest {
+
+	@Test
+	public testC() : void {
+		const c = new C();
+		Assert.isNotNull(c);
+	}
+
 }
