@@ -100,7 +100,6 @@ import org.eclipse.xtext.ide.server.semanticHighlight.SemanticHighlightingRegist
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
-import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.util.CancelIndicator;
 
 import com.google.common.base.Objects;
@@ -642,8 +641,10 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		@Override
 		public ResourceSet newLiveScopeResourceSet(URI uri) {
 			XtextResourceSet resourceSet = resourceSetProvider.get();
-			ResourceDescriptionsData index = resourceTaskManager.createLiveScopeIndex();
-			ResourceDescriptionsData.ResourceSetAdapter.installResourceDescriptionsData(resourceSet, index);
+
+			resourceTaskManager.installExternalContentSupport(resourceSet);
+			resourceTaskManager.installLiveIndex(resourceSet);
+
 			return resourceSet;
 		}
 
@@ -655,9 +656,11 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		@Override
 		public <T> CompletableFuture<T> doReadIndex(
 				Function<? super ILanguageServerAccess.IndexContext, ? extends T> function) {
+			// TODO the read operation will block the request thread which is not desirable - move in a "Resource"Task
+
 			// because access to the index is thread-safe anyway, we do not need to run anything asynchronously, here:
 			ILanguageServerAccess.IndexContext indexContext = new ILanguageServerAccess.IndexContext(
-					resourceTaskManager.createLiveScopeIndex(), CancelIndicator.NullImpl);
+					resourceTaskManager.getDirtyIndex(), CancelIndicator.NullImpl);
 			T result = function.apply(indexContext);
 			return CompletableFuture.completedFuture(result);
 		}

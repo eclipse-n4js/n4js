@@ -12,11 +12,8 @@ package org.eclipse.n4js.ide.xtext.server;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
@@ -24,24 +21,25 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.ResourceLocator;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.n4js.ide.xtext.server.build.BuilderFrontend;
+import org.eclipse.n4js.ide.xtext.server.index.ExtendedResourceDescriptionsData;
+import org.eclipse.n4js.ide.xtext.server.index.ImmutableResourceDescriptions;
+import org.eclipse.n4js.ide.xtext.server.index.ImmutableShadowedResourceDescriptions;
+import org.eclipse.n4js.ide.xtext.server.index.MutableShadowedResourceDescriptions;
 import org.eclipse.n4js.ide.xtext.server.issues.PublishingIssueAcceptor;
 import org.eclipse.n4js.xtext.server.LSPIssue;
+import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.parser.IParseResult;
-import org.eclipse.xtext.resource.IExternalContentSupport;
-import org.eclipse.xtext.resource.IExternalContentSupport.IExternalContentProvider;
 import org.eclipse.xtext.resource.IResourceDescription;
-import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.IResourceDescription.Manager.AllChangeAware;
+import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
-import org.eclipse.xtext.resource.containers.DelegatingIAllContainerAdapter;
-import org.eclipse.xtext.resource.containers.IAllContainersState;
-import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
+import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.resource.persistence.SerializableResourceDescription;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -50,7 +48,6 @@ import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue;
 
-import com.google.common.collect.ImmutableSetMultimap;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -62,27 +59,8 @@ import com.google.inject.Provider;
 @SuppressWarnings({ "restriction", "deprecation" })
 public class ResourceTaskContext {
 
-	/*
-	 * Review feedback:
-	 *
-	 * It *appears* as if we are duplicating quite some logic in this class. The builder front-end is responsible for
-	 * updating resources after changes happened. We are implementing a different incremental build semantics in
-	 * refreshContext with fewer optimizations and therefore a performance drag.
-	 *
-	 * The logic, how a given resource set is updated after an incoming change is recorded, should certainly be
-	 * implemented exactly once.
-	 *
-	 * For xtext.ui, we made the mistake of duplicating this between the Eclipse builder and the reconciler, and this
-	 * was a constant PITA.
-	 *
-	 * #prepareRefresh is sort-of a brute force approach that has potential for optimizations.
-	 */
-
 	@Inject
 	private Provider<XtextResourceSet> resourceSetProvider;
-
-	@Inject
-	private IExternalContentSupport externalContentSupport;
 
 	@Inject
 	private IResourceServiceProvider.Registry resourceServiceProviderRegistry;
@@ -93,6 +71,10 @@ public class ResourceTaskContext {
 	@Inject
 	private PublishingIssueAcceptor issuePublisher;
 
+	/*
+	 * TODO this solution does not meet our quality standards. Rather than publishing the issues from #close, the caller
+	 * of close should take care of that.
+	 */
 	@Inject
 	private BuilderFrontend builderFrontend;
 
@@ -105,44 +87,13 @@ public class ResourceTaskContext {
 	/** Tells whether this context is still managed by the ResourceTaskManager or was already removed */
 	private boolean alive;
 
-	/**
-	 * Contains the state of all files in the workspace. For open files managed by {@link #parent} (including the open
-	 * file of this context) this state will represent the dirty state and for all other files it will represent the
-	 * persisted state (as provided by the LSP builder).
-	 */
-	private ResourceDescriptionsData indexSnapshot;
-
-	/** Maps project names to URIs of all resources contained in the project (from the last build). */
-	ImmutableSetMultimap<String, URI> project2BuiltURIs;
-
-	/** Most recent workspace configuration. */
-	WorkspaceConfigSnapshot workspaceConfig;
-
+	private MutableShadowedResourceDescriptions localIndexData;
 	/** The resource set used for the current resource and any other resources required for resolution. */
 	private XtextResourceSet mainResourceSet;
 	/** The EMF resource representing the open file. */
 	private XtextResource mainResource = null;
 	/** The current textual content of the open file. */
 	private XDocument document = null;
-
-	/** Within each resource task context, this provides text contents of all other context's main resources. */
-	protected class ResourceTaskContentProvider implements IExternalContentProvider {
-		@Override
-		public String getContent(URI uri) {
-			XDocument doc = parent.getOpenDocument(uri);
-			return doc != null ? doc.getContents() : null;
-		}
-
-		@Override
-		public boolean hasContent(URI uri) {
-			return parent.getOpenDocument(uri) != null;
-		}
-
-		@Override
-		public IExternalContentProvider getActualContentProvider() {
-			return this;
-		}
-	}
 
 	/** @return URI of main resource. */
 	public synchronized URI getURI() {
@@ -212,6 +163,13 @@ public class ResourceTaskContext {
 	}
 
 	/**
+	 * Returns the local index data of this task context.
+	 */
+	public IResourceDescriptions getIndex() {
+		return this.localIndexData;
+	}
+
+	/**
 	 * May return <code>null</code> if not fully initialized yet. In contrast to most other methods of this class, this
 	 * method is thread safe, i.e. may be invoked from any thread.
 	 */
@@ -223,30 +181,27 @@ public class ResourceTaskContext {
 	@SuppressWarnings("hiding")
 	public synchronized void initialize(
 			ResourceTaskManager parent,
+			WorkspaceConfigSnapshot workspaceConfig,
 			URI uri,
 			boolean isTemporary,
-			ResourceDescriptionsData index,
-			ImmutableSetMultimap<String, URI> project2builtURIs,
-			WorkspaceConfigSnapshot workspaceConfig) {
+			ImmutableResourceDescriptions parentIndex) {
 
 		this.parent = parent;
 		this.mainURI = uri;
 		this.temporary = isTemporary;
-		this.indexSnapshot = index;
-		this.project2BuiltURIs = project2builtURIs;
-		this.workspaceConfig = workspaceConfig;
+		this.localIndexData = new MutableShadowedResourceDescriptions(new ExtendedResourceDescriptionsData(),
+				parentIndex);
 		this.mainResourceSet = createResourceSet();
+		installProjectDescription(workspaceConfig);
 		this.alive = true;
 	}
 
 	/** Returns a newly created and fully configured resource set */
 	protected XtextResourceSet createResourceSet() {
 		XtextResourceSet result = resourceSetProvider.get();
-		ResourceDescriptionsData.ResourceSetAdapter.installResourceDescriptionsData(result, indexSnapshot);
-		externalContentSupport.configureResourceSet(result, new ResourceTaskContentProvider());
 
-		IAllContainersState allContainersState = new ResourceTaskContextAllContainerState(this);
-		result.eAdapters().add(new DelegatingIAllContainerAdapter(allContainersState));
+		parent.installIndex(result, localIndexData);
+		parent.installExternalContentSupport(result);
 
 		return result;
 	}
@@ -321,12 +276,9 @@ public class ResourceTaskContext {
 
 		prepareRefresh();
 
+		int oldDocumentLength = document.getContents().length();
 		document = document.applyTextDocumentChanges(changes);
-		try {
-			mainResource.reparse(document.getContents());
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+		mainResource.update(0, oldDocumentLength, document.getContents());
 
 		resolveAndValidateResource(cancelIndicator);
 	}
@@ -374,63 +326,35 @@ public class ResourceTaskContext {
 			return; // temporarily opened files do not contribute to the parent's shared dirty state index
 		}
 		IResourceDescription newDesc = createResourceDescription();
-		indexSnapshot.addDescription(mainURI, newDesc);
-		parent.updateSharedDirtyState(newDesc.getURI(), newDesc);
-	}
-
-	/**
-	 * Invoked by {@link #parent} when a change happened in another open file (not the one represented by this
-	 * {@link ResourceTaskContext}). Will never be invoked for {@link #isTemporary() temporary} contexts.
-	 */
-	protected void onDirtyStateChanged(IResourceDescription changedDesc, CancelIndicator cancelIndicator) {
-		updateIndex(Collections.singletonList(changedDesc), Collections.emptySet(), project2BuiltURIs,
-				workspaceConfig, cancelIndicator);
-	}
-
-	/**
-	 * Invoked by {@link #parent} when a change happened in a non-opened file OR after an open file was closed.
-	 */
-	protected void onPersistedStateChanged(Collection<? extends IResourceDescription> changedDescs,
-			Set<URI> removedURIs, ImmutableSetMultimap<String, URI> newProject2builtURIs,
-			WorkspaceConfigSnapshot newWorkspaceConfig, CancelIndicator cancelIndicator) {
-		updateIndex(changedDescs, removedURIs, newProject2builtURIs, newWorkspaceConfig, cancelIndicator);
+		IResourceDescription previous = localIndexData.add(newDesc);
+		parent.updateSharedDirtyState(getResourceDescriptionManager(mainURI).createDelta(previous, newDesc));
 	}
 
 	/** Update this context's internal index and trigger a refresh if required. */
-	protected void updateIndex(Collection<? extends IResourceDescription> changedDescs, Set<URI> removedURIs,
-			ImmutableSetMultimap<String, URI> newProject2builtURIs, WorkspaceConfigSnapshot newWorkspaceConfig,
+	protected void updateIndex(
+			ImmutableShadowedResourceDescriptions dirtyIndex,
+			WorkspaceConfigSnapshot workspaceSnapshot,
+			IResourceDescription.Event event,
 			CancelIndicator cancelIndicator) {
 
-		// update my cached state
+		localIndexData = localIndexData.shallowChangeParent(dirtyIndex);
+		parent.installIndex(this.mainResourceSet, localIndexData);
+		installProjectDescription(workspaceSnapshot);
 
-		List<IResourceDescription.Delta> allDeltas = createDeltas(changedDescs, removedURIs);
-		for (IResourceDescription.Delta delta : allDeltas) {
-			indexSnapshot.register(delta);
+		IResourceDescription.Manager rdm = getResourceDescriptionManager(mainURI);
+		if (rdm == null) {
+			return;
 		}
+		boolean isAffected;
 
-		project2BuiltURIs = newProject2builtURIs;
-
-		WorkspaceConfigSnapshot oldWorkspaceConfig = workspaceConfig;
-		workspaceConfig = newWorkspaceConfig;
-
-		// refresh if I am affected by the changes
-
-		boolean isAffected = !workspaceConfig.equals(oldWorkspaceConfig);
-
-		if (!isAffected) {
-			IResourceDescription.Manager rdm = getResourceDescriptionManager(mainURI);
-			if (rdm == null) {
-				return;
-			}
-			IResourceDescription candidateDesc = indexSnapshot.getResourceDescription(mainURI);
-			if (rdm instanceof AllChangeAware) {
-				isAffected = ((AllChangeAware) rdm).isAffectedByAny(allDeltas, candidateDesc, indexSnapshot);
-			} else {
-				List<IResourceDescription.Delta> changedDeltas = allDeltas.stream()
-						.filter(d -> d.haveEObjectDescriptionsChanged())
-						.collect(Collectors.toList());
-				isAffected = rdm.isAffected(changedDeltas, candidateDesc, indexSnapshot);
-			}
+		IResourceDescription candidateDesc = localIndexData.getResourceDescription(mainURI);
+		if (rdm instanceof AllChangeAware) {
+			isAffected = ((AllChangeAware) rdm).isAffectedByAny(event.getDeltas(), candidateDesc, localIndexData);
+		} else {
+			List<IResourceDescription.Delta> changedDeltas = event.getDeltas().stream()
+					.filter(d -> d.haveEObjectDescriptionsChanged())
+					.collect(Collectors.toList());
+			isAffected = rdm.isAffected(changedDeltas, candidateDesc, localIndexData);
 		}
 
 		if (isAffected) {
@@ -438,44 +362,13 @@ public class ResourceTaskContext {
 		}
 	}
 
-	/** Create deltas for the given changes and removals. */
-	protected List<IResourceDescription.Delta> createDeltas(Collection<? extends IResourceDescription> changedDescs,
-			Set<URI> removedURIs) {
-
-		List<IResourceDescription.Delta> deltas = new ArrayList<>(changedDescs.size() + removedURIs.size());
-
-		for (IResourceDescription changedDesc : changedDescs) {
-			URI changedURI = changedDesc.getURI();
-			IResourceDescription oldDesc = indexSnapshot.getResourceDescription(changedURI);
-			IResourceDescription.Delta delta = createDelta(changedURI, oldDesc, changedDesc);
-			if (delta != null) {
-				deltas.add(delta);
-			}
-		}
-
-		for (URI removedURI : removedURIs) {
-			IResourceDescription removedDesc = indexSnapshot.getResourceDescription(removedURI);
-			IResourceDescription.Delta delta = createDelta(removedURI, removedDesc, null);
-			if (delta != null) {
-				deltas.add(delta);
-			}
-		}
-
-		return deltas;
-	}
-
-	/** Create a delta for the given change. 'oldDesc' and 'newDesc' may be <code>null</code>. */
-	protected IResourceDescription.Delta createDelta(URI uri, IResourceDescription oldDesc,
-			IResourceDescription newDesc) {
-
-		if (oldDesc != newDesc) {
-			IResourceDescription.Manager rdm = getResourceDescriptionManager(uri);
-			if (rdm != null) {
-				Delta delta = rdm.createDelta(oldDesc, newDesc);
-				return delta;
-			}
-		}
-		return null;
+	private void installProjectDescription(WorkspaceConfigSnapshot workspaceConfig) {
+		ProjectConfigSnapshot project = workspaceConfig.findProjectContaining(mainURI);
+		ProjectDescription projectDescription = new ProjectDescription();
+		projectDescription.setName(project.getName());
+		projectDescription.setDependencies(project.getDependencies().asList());
+		ProjectDescription.removeFromEmfObject(mainResourceSet);
+		projectDescription.attachToEmfObject(mainResourceSet);
 	}
 
 	/** Create a resource description representing the current state of this context's main resource. */
@@ -488,8 +381,8 @@ public class ResourceTaskContext {
 		// the resource they were created from (i.e. 'mainResource' in this case); this means they are (1) not thread
 		// safe and (2) may leak EObjects from one file context into another or to the outside. The following line
 		// seems to fix that, but requires access to restricted Xtext API:
-		SerializableResourceDescription newDesc2 = SerializableResourceDescription.createCopy(newDesc);
-		return newDesc2;
+		SerializableResourceDescription result = SerializableResourceDescription.createCopy(newDesc);
+		return result;
 	}
 
 	/** Return the correct resource description manager for the resource with the given URI. */

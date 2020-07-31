@@ -12,29 +12,31 @@ package org.eclipse.n4js.ide.xtext.server.build;
 
 import java.util.List;
 
+import org.eclipse.n4js.ide.xtext.server.index.ImmutableResourceDescriptionsData;
 import org.eclipse.xtext.resource.IResourceDescription;
-import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 /**
  * The result of the build. Encapsulates the new index state and the list of changes.
  */
 public class XBuildResult {
-	private final ResourceDescriptionsData index;
+	private final ImmutableResourceDescriptionsData updatedLocalIndex;
 	private final XSource2GeneratedMapping fileMappings;
 	private final List<IResourceDescription.Delta> affectedResources;
 
 	/** Constructor. */
-	public XBuildResult(ResourceDescriptionsData index, XSource2GeneratedMapping fileMappings,
+	public XBuildResult(
+			ImmutableResourceDescriptionsData updatedLocalIndex,
+			XSource2GeneratedMapping fileMappings,
 			List<IResourceDescription.Delta> affectedResources) {
-		this.index = index;
+		this.updatedLocalIndex = updatedLocalIndex;
 		this.fileMappings = fileMappings;
 		this.affectedResources = affectedResources;
 	}
 
 	/** Getter. */
-	public ResourceDescriptionsData getIndex() {
-		return index;
+	public ImmutableResourceDescriptionsData getUpdatedLocalIndex() {
+		return updatedLocalIndex;
 	}
 
 	/** Getter. */
@@ -51,7 +53,7 @@ public class XBuildResult {
 	public int hashCode() {
 		int prime = 31;
 		int result = 1;
-		result = prime * result + ((this.index == null) ? 0 : this.index.hashCode());
+		result = prime * result + ((this.updatedLocalIndex == null) ? 0 : this.updatedLocalIndex.hashCode());
 		result = prime * result + ((this.fileMappings == null) ? 0 : this.fileMappings.hashCode());
 		return prime * result + ((this.affectedResources == null) ? 0 : this.affectedResources.hashCode());
 	}
@@ -65,10 +67,10 @@ public class XBuildResult {
 		if (getClass() != obj.getClass())
 			return false;
 		XBuildResult other = (XBuildResult) obj;
-		if (this.index == null) {
-			if (other.index != null)
+		if (this.updatedLocalIndex == null) {
+			if (other.updatedLocalIndex != null)
 				return false;
-		} else if (!this.index.equals(other.index))
+		} else if (!this.updatedLocalIndex.equals(other.updatedLocalIndex))
 			return false;
 		if (this.fileMappings == null) {
 			if (other.fileMappings != null)
@@ -86,7 +88,7 @@ public class XBuildResult {
 	@Override
 	public String toString() {
 		ToStringBuilder b = new ToStringBuilder(this);
-		b.add("index", this.index);
+		b.add("updatedLocalIndex", this.updatedLocalIndex);
 		b.add("fileMappings", this.fileMappings);
 		b.add("affectedResources", this.affectedResources);
 		return b.toString();

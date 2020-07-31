@@ -18,6 +18,7 @@ import java.util.Set;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ide.xtext.server.XIProjectDescriptionFactory;
 import org.eclipse.n4js.ide.xtext.server.XIWorkspaceConfigFactory;
+import org.eclipse.n4js.ide.xtext.server.index.ConcurrentIndex;
 import org.eclipse.n4js.xtext.server.LSPIssue;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
@@ -66,7 +67,7 @@ public class XWorkspaceManager {
 	private UriExtensions uriExtensions;
 
 	@Inject
-	private ConcurrentIndex fullIndex;
+	private ConcurrentIndex concurrentIndex;
 
 	private final Map<String, ProjectBuilder> projectName2ProjectBuilder = new HashMap<>();
 
@@ -104,8 +105,8 @@ public class XWorkspaceManager {
 
 		projectName2ProjectBuilder.values().forEach(b -> b.doClear());
 		projectName2ProjectBuilder.clear();
-		fullIndex.initialize(workspaceConfig.toSnapshot());
-		fullIndex.removeAllProjectsIndices();
+		concurrentIndex.initialize(workspaceConfig.toSnapshot());
+		concurrentIndex.removeAllProjectsIndices();
 
 		// init projects
 		this.workspaceConfig = workspaceConfig;
@@ -153,12 +154,7 @@ public class XWorkspaceManager {
 		ProjectDescription projectDescription = projectDescriptionFactory.getProjectDescription(projectConfig);
 		projectBuilder.initialize(projectDescription, projectConfig);
 		projectName2ProjectBuilder.put(projectDescription.getName(), projectBuilder);
-		fullIndex.setProjectConfigSnapshot(projectConfig.toSnapshot());
-	}
-
-	/** Removes a project from the workspace */
-	protected void removeProject(ProjectBuilder projectBuilder) {
-		removeProject(projectBuilder.getProjectConfig());
+		concurrentIndex.setProjectConfigSnapshot(projectConfig.toSnapshot());
 	}
 
 	/** Removes a project from the workspace */
@@ -168,7 +164,7 @@ public class XWorkspaceManager {
 		if (projectBuilder != null) {
 			projectBuilder.doClear();
 		}
-		fullIndex.removeProjectIndex(projectName);
+		concurrentIndex.removeProjectIndex(projectName);
 	}
 
 	/**

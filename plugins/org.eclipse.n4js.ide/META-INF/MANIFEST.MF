@@ -40,6 +40,7 @@ Export-Package: org.eclipse.n4js.ide,
  org.eclipse.n4js.ide.server.hover,
  org.eclipse.n4js.ide.xtext.server,
  org.eclipse.n4js.ide.xtext.server.build,
+ org.eclipse.n4js.ide.xtext.server.index,
  org.eclipse.n4js.ide.xtext.server.issues,
  org.eclipse.n4js.ide.xtext.server.util
 Automatic-Module-Name: org.eclipse.n4js.ide

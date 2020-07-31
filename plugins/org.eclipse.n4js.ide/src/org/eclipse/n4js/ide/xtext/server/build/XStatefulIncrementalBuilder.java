@@ -26,6 +26,7 @@ import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.n4js.ide.xtext.server.build.XClusteringStorageAwareResourceLoader.LoadResult;
+import org.eclipse.n4js.ide.xtext.server.index.ExtendedResourceDescriptionsData;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.diagnostics.Severity;
@@ -40,7 +41,6 @@ import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
-import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.resource.persistence.IResourceStorageFacade;
 import org.eclipse.xtext.resource.persistence.SerializableResourceDescription;
 import org.eclipse.xtext.resource.persistence.StorageAwareResource;
@@ -107,11 +107,10 @@ public class XStatefulIncrementalBuilder {
 
 			List<Delta> allProcessedAndExternalDeltas = new ArrayList<>(request.getExternalDeltas());
 
-			ResourceDescriptionsData oldIndex = context.getOldIndex();
-			Set<URI> remainingURIs = new LinkedHashSet<>(oldIndex.getAllURIs()); // note: creating a copy!
+			Set<URI> remainingURIs = new LinkedHashSet<>(request.getMutableLocalIndex().getAllURIs());
 
 			XIndexer.XIndexResult result = indexer.computeAndIndexDeletedAndChanged(request, context);
-			ResourceDescriptionsData newIndex = result.getNewIndex();
+			ExtendedResourceDescriptionsData newIndex = result.getNewIndex();
 			List<Delta> deltasToBeProcessed = result.getResourceDeltas();
 			List<Delta> deltasFromExternal = indexer.computeAndIndexAffected(newIndex, remainingURIs,
 					request.getExternalDeltas(), allProcessedAndExternalDeltas, context);
@@ -161,7 +160,8 @@ public class XStatefulIncrementalBuilder {
 			// (note: do not handle OperationCanceledException this way; it would break the builder, see GH-1775)
 		}
 
-		return new XBuildResult(request.getIndex(), request.getFileMappings(), allProcessedDeltas);
+		return new XBuildResult(request.getMutableLocalIndex().snapshot(), request.getFileMappings(),
+				allProcessedDeltas);
 	}
 
 	private void removeGeneratedFiles(URI source, XSource2GeneratedMapping source2GeneratedMapping) {
@@ -210,7 +210,7 @@ public class XStatefulIncrementalBuilder {
 				result.getNewIndex().removeDescription(source);
 				request.afterValidate(source, Collections.emptyList());
 				removeGeneratedFiles(source, newSource2GeneratedMapping);
-				IResourceDescription old = context.getOldIndex().getResourceDescription(loadResult.uri);
+				IResourceDescription old = context.getOldGlobalIndex().getResourceDescription(loadResult.uri);
 				return manager.createDelta(old, null);
 			}
 			Throwables.throwIfUnchecked(loadResult.throwable);
@@ -242,7 +242,7 @@ public class XStatefulIncrementalBuilder {
 			}
 		}
 
-		IResourceDescription old = context.getOldIndex().getResourceDescription(source);
+		IResourceDescription old = context.getOldGlobalIndex().getResourceDescription(source);
 		return manager.createDelta(old, copiedDescription);
 	}
 

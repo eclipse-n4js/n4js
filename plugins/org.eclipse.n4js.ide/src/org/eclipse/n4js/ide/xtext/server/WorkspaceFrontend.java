@@ -65,7 +65,7 @@ public class WorkspaceFrontend {
 	/** Compute the symbol information. Executed in a read request. */
 	protected List<? extends SymbolInformation> symbol(WorkspaceSymbolParams params, CancelIndicator cancelIndicator) {
 		return workspaceSymbolService.getSymbols(params.getQuery(), resourceAccess,
-				resourceTaskManager.createLiveScopeIndex(), cancelIndicator);
+				resourceTaskManager.getDirtyIndex(), cancelIndicator);
 	}
 
 	/**

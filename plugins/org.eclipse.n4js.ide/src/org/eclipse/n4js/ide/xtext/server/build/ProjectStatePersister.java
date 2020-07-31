@@ -41,13 +41,13 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.ide.xtext.server.QueuedExecutorService;
+import org.eclipse.n4js.ide.xtext.server.index.ImmutableResourceDescriptionsData;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.xtext.server.LSPIssue;
 import org.eclipse.xtext.build.Source2GeneratedMapping;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IResourceDescription;
-import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.resource.persistence.SerializableEObjectDescription;
 import org.eclipse.xtext.resource.persistence.SerializableReferenceDescription;
 import org.eclipse.xtext.resource.persistence.SerializableResourceDescription;
@@ -330,7 +330,7 @@ public class ProjectStatePersister {
 			if (!getLanguageVersion().equals(languageVersion)) {
 				return null;
 			}
-			ResourceDescriptionsData resourceDescriptionsData = readResourceDescriptions(input);
+			ImmutableResourceDescriptionsData resourceDescriptionsData = readResourceDescriptions(input);
 
 			XSource2GeneratedMapping fileMappings = readFileMappings(input);
 
@@ -343,14 +343,14 @@ public class ProjectStatePersister {
 		}
 	}
 
-	private ResourceDescriptionsData readResourceDescriptions(DataInput input) throws IOException {
+	private ImmutableResourceDescriptionsData readResourceDescriptions(DataInput input) throws IOException {
 		List<IResourceDescription> descriptions = new ArrayList<>();
 		int size = input.readInt();
 		while (size > 0) {
 			size--;
 			descriptions.add(readResourceDescription(input));
 		}
-		return new ResourceDescriptionsData(descriptions);
+		return ImmutableResourceDescriptionsData.from(descriptions);
 	}
 
 	private ENamedElement readEcoreElement(DataInput input) throws IOException {

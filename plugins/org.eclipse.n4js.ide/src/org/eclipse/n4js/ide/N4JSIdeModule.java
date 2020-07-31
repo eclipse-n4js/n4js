@@ -35,6 +35,7 @@ import org.eclipse.n4js.ide.xtext.editor.contentassist.XIdeContentProposalAccept
 import org.eclipse.n4js.ide.xtext.server.BuiltInAwareIncrementalBuilder;
 import org.eclipse.n4js.ide.xtext.server.DebugService;
 import org.eclipse.n4js.ide.xtext.server.QueuedExecutorService;
+import org.eclipse.n4js.ide.xtext.server.ResourceTaskManager;
 import org.eclipse.n4js.ide.xtext.server.WorkspaceAwareCanLoadFromDescriptionHelper;
 import org.eclipse.n4js.ide.xtext.server.XExecutableCommandRegistry;
 import org.eclipse.n4js.ide.xtext.server.XIProjectDescriptionFactory;
@@ -49,6 +50,10 @@ import org.eclipse.n4js.ide.xtext.server.build.XStatefulIncrementalBuilder;
 import org.eclipse.n4js.ide.xtext.server.build.XWorkspaceBuilder;
 import org.eclipse.n4js.ide.xtext.server.build.XWorkspaceManager;
 import org.eclipse.n4js.ide.xtext.server.contentassist.XContentAssistService;
+import org.eclipse.n4js.ide.xtext.server.index.ConcurrentIndex;
+import org.eclipse.n4js.ide.xtext.server.index.ExtendedLiveShadowedDescriptions;
+import org.eclipse.n4js.ide.xtext.server.index.ExtendedProjectDescriptionBasedContainerManager;
+import org.eclipse.n4js.ide.xtext.server.index.ExtendedResourceDescriptionsProvider;
 import org.eclipse.n4js.ide.xtext.server.issues.WorkspaceValidateListener;
 import org.eclipse.n4js.ide.xtext.server.util.XOperationCanceledManager;
 import org.eclipse.n4js.internal.lsp.FileSystemScanner;
@@ -69,10 +74,19 @@ import org.eclipse.xtext.ide.server.commands.IExecutableCommandService;
 import org.eclipse.xtext.ide.server.hover.HoverService;
 import org.eclipse.xtext.ide.server.symbol.DocumentSymbolMapper;
 import org.eclipse.xtext.ide.server.symbol.HierarchicalDocumentSymbolService;
+import org.eclipse.xtext.resource.IResourceDescriptions;
+import org.eclipse.xtext.resource.containers.ProjectDescriptionBasedContainerManager;
+import org.eclipse.xtext.resource.impl.LiveShadowedChunkedResourceDescriptions;
+import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.validation.IDiagnosticConverter;
 import org.eclipse.xtext.validation.IResourceValidator;
+
+import com.google.inject.Binder;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.google.inject.name.Names;
 
 /**
  * Use this class to register ide components.
@@ -224,5 +238,59 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public Class<? extends IResourceValidator> bindIResourceValidator() {
 		return SourceFolderAwareResourceValidator.class;
+	}
+
+	public Class<? extends ResourceDescriptionsProvider> bindResourceDescriptionsProvider() {
+		return ExtendedResourceDescriptionsProvider.class;
+	}
+
+	public Class<? extends ProjectDescriptionBasedContainerManager> bindProjectDescriptionBasedContainerManager() {
+		return ExtendedProjectDescriptionBasedContainerManager.class;
+	}
+
+	public Class<? extends LiveShadowedChunkedResourceDescriptions> bindLiveShadowedChunkedResourceDescriptions() {
+		return ExtendedLiveShadowedDescriptions.class;
+	}
+
+	public void configureResourceDescriptions(Binder binder) {
+		binder
+				.bind(IResourceDescriptions.class)
+				.annotatedWith(Names.named(ResourceDescriptionsProvider.PERSISTED_DESCRIPTIONS))
+				.toProvider(PersistedResourceDescriptionsProvider.class);
+		binder
+				.bind(IResourceDescriptions.class)
+				.toProvider(DirtyStateResourceDescriptionsProvider.class);
+	}
+
+	static class PersistedResourceDescriptionsProvider implements Provider<IResourceDescriptions> {
+
+		private final ConcurrentIndex concurrentIndex;
+
+		@Inject
+		PersistedResourceDescriptionsProvider(ConcurrentIndex concurrentIndex) {
+			this.concurrentIndex = concurrentIndex;
+		}
+
+		@Override
+		public IResourceDescriptions get() {
+			return concurrentIndex.getWorkspaceIndex();
+		}
+
+	}
+
+	static class DirtyStateResourceDescriptionsProvider implements Provider<IResourceDescriptions> {
+
+		private final ResourceTaskManager resourceTaskManager;
+
+		@Inject
+		DirtyStateResourceDescriptionsProvider(ResourceTaskManager resourceTaskManager) {
+			this.resourceTaskManager = resourceTaskManager;
+		}
+
+		@Override
+		public IResourceDescriptions get() {
+			return resourceTaskManager.getDirtyIndex();
+		}
+
 	}
 }

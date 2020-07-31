@@ -10,13 +10,12 @@
  */
 package org.eclipse.n4js.ide.xtext.server.build;
 
-import java.util.Collections;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.ide.xtext.server.index.ExtendedResourceDescriptionsData;
+import org.eclipse.n4js.ide.xtext.server.index.ImmutableResourceDescriptionsData;
 import org.eclipse.n4js.xtext.server.LSPIssue;
-import org.eclipse.xtext.resource.IResourceDescriptions;
-import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableMap;
@@ -28,7 +27,7 @@ import com.google.common.collect.ListMultimap;
 @SuppressWarnings("deprecation")
 public class ImmutableProjectState {
 	/** Type index */
-	private final ResourceDescriptionsData indexData;
+	private final ImmutableResourceDescriptionsData indexData;
 	/** File Mappings */
 	private final XSource2GeneratedMapping fileMappings;
 	/** Hashes to indicate file changes */
@@ -40,11 +39,11 @@ public class ImmutableProjectState {
 	 * Factory method to make it explicit that we create copies of the passed arguments.
 	 */
 	public static ImmutableProjectState copyFrom(
-			ResourceDescriptionsData indexData,
+			ExtendedResourceDescriptionsData indexData,
 			XSource2GeneratedMapping fileMappings,
 			Map<? extends URI, ? extends HashedFileContent> fileHashes,
 			ListMultimap<? extends URI, ? extends LSPIssue> validationIssues) {
-		return new ImmutableProjectState(indexData.copy(), fileMappings.copy(), ImmutableMap.copyOf(fileHashes),
+		return new ImmutableProjectState(indexData.snapshot(), fileMappings.copy(), ImmutableMap.copyOf(fileHashes),
 				ImmutableListMultimap.copyOf(validationIssues));
 	}
 
@@ -52,7 +51,7 @@ public class ImmutableProjectState {
 	 * Returns an empty project state. No index data, no issues, no file mappings, nothing.
 	 */
 	public static ImmutableProjectState empty() {
-		return new ImmutableProjectState(new ResourceDescriptionsData(Collections.emptyList()),
+		return new ImmutableProjectState(ImmutableResourceDescriptionsData.empty(),
 				new XSource2GeneratedMapping(), ImmutableMap.of(), ImmutableListMultimap.of());
 	}
 
@@ -60,7 +59,7 @@ public class ImmutableProjectState {
 	 * Use with caution.
 	 */
 	static ImmutableProjectState withoutCopy(
-			ResourceDescriptionsData indexData,
+			ImmutableResourceDescriptionsData indexData,
 			XSource2GeneratedMapping fileMappings,
 			ImmutableMap<URI, HashedFileContent> fileHashes,
 			ImmutableListMultimap<URI, LSPIssue> validationIssues) {
@@ -69,7 +68,7 @@ public class ImmutableProjectState {
 
 	/** Non-copying constructor */
 	private ImmutableProjectState(
-			ResourceDescriptionsData indexData,
+			ImmutableResourceDescriptionsData indexData,
 			XSource2GeneratedMapping fileMappings,
 			ImmutableMap<URI, HashedFileContent> fileHashes,
 			ImmutableListMultimap<URI, LSPIssue> validationIssues) {
@@ -83,11 +82,7 @@ public class ImmutableProjectState {
 	/**
 	 * Return the index state of the snapshot.
 	 */
-	public IResourceDescriptions getResourceDescriptions() {
-		return indexData;
-	}
-
-	ResourceDescriptionsData internalGetResourceDescriptions() {
+	public ImmutableResourceDescriptionsData getResourceDescriptions() {
 		return indexData;
 	}
 

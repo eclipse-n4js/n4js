@@ -20,6 +20,8 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.ide.xtext.server.build.XClusteringStorageAwareResourceLoader.LoadResult;
+import org.eclipse.n4js.ide.xtext.server.index.ExtendedResourceDescriptionsData;
+import org.eclipse.n4js.ide.xtext.server.index.ImmutableResourceDescriptions;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.CompilerPhases;
 import org.eclipse.xtext.resource.EObjectDescription;
@@ -32,7 +34,6 @@ import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.impl.AbstractResourceDescription;
 import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionDelta;
-import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.resource.persistence.SerializableEObjectDescriptionProvider;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
@@ -57,13 +58,13 @@ public class XIndexer {
 	public static class XIndexResult {
 		private final List<IResourceDescription.Delta> resourceDeltas;
 
-		private final ResourceDescriptionsData newIndex;
+		private final ExtendedResourceDescriptionsData newIndex;
 
 		/**
 		 * Constructor.
 		 */
 		public XIndexResult(List<IResourceDescription.Delta> resourceDeltas,
-				ResourceDescriptionsData newIndex) {
+				ExtendedResourceDescriptionsData newIndex) {
 			super();
 			this.resourceDeltas = resourceDeltas;
 			this.newIndex = newIndex;
@@ -79,7 +80,7 @@ public class XIndexer {
 		/**
 		 * Getter
 		 */
-		public ResourceDescriptionsData getNewIndex() {
+		public ExtendedResourceDescriptionsData getNewIndex() {
 			return this.newIndex;
 		}
 
@@ -198,11 +199,11 @@ public class XIndexer {
 	 * register them in the request's index.
 	 */
 	public XIndexer.XIndexResult computeAndIndexDeletedAndChanged(XBuildRequest request, XBuildContext context) {
-		ResourceDescriptionsData previousIndex = context.getOldIndex();
-		ResourceDescriptionsData newIndex = request.getIndex();
+		ImmutableResourceDescriptions oldGlobalIndex = context.getOldGlobalIndex();
+		ExtendedResourceDescriptionsData newIndex = request.getMutableLocalIndex();
 		List<IResourceDescription.Delta> deltas = new ArrayList<>();
-		deltas.addAll(getDeltasForDeletedResources(request, previousIndex, context));
-		deltas.addAll(getDeltasForChangedResources(request.getDirtyFiles(), previousIndex, context));
+		deltas.addAll(getDeltasForDeletedResources(request, oldGlobalIndex, context));
+		deltas.addAll(getDeltasForChangedResources(request.getDirtyFiles(), oldGlobalIndex, context));
 		for (IResourceDescription.Delta delta : deltas) {
 			newIndex.register(delta);
 		}
@@ -226,10 +227,10 @@ public class XIndexer {
 	 *            the build context.
 	 * @return list of deltas representing the affected resources.
 	 */
-	public List<Delta> computeAndIndexAffected(ResourceDescriptionsData index, Set<URI> remainingURIs,
+	public List<Delta> computeAndIndexAffected(ExtendedResourceDescriptionsData index, Set<URI> remainingURIs,
 			Collection<Delta> newDeltas, Collection<Delta> allDeltas, XBuildContext context) {
 
-		ResourceDescriptionsData originalIndex = context.getOldIndex();
+		ImmutableResourceDescriptions originalIndex = context.getOldGlobalIndex();
 		List<URI> affectedURIs = new ArrayList<>();
 		for (URI uri : remainingURIs) {
 			IResourceServiceProvider resourceServiceProvider = context.getResourceServiceProvider(uri);
@@ -251,7 +252,7 @@ public class XIndexer {
 	 * Process the deleted resources.
 	 */
 	protected List<IResourceDescription.Delta> getDeltasForDeletedResources(XBuildRequest request,
-			ResourceDescriptionsData oldIndex, XBuildContext context) {
+			ImmutableResourceDescriptions oldIndex, XBuildContext context) {
 
 		List<IResourceDescription.Delta> deltas = new ArrayList<>();
 		for (URI deleted : request.getDeletedFiles()) {
@@ -273,7 +274,7 @@ public class XIndexer {
 	 * Process the changed resources.
 	 */
 	protected List<IResourceDescription.Delta> getDeltasForChangedResources(Iterable<URI> changedURIs,
-			ResourceDescriptionsData oldIndex, XBuildContext context) {
+			ImmutableResourceDescriptions oldIndex, XBuildContext context) {
 		try {
 			this.compilerPhases.setIndexing(context.getResourceSet(), true);
 			List<IResourceDescription.Delta> result = new ArrayList<>();
@@ -297,7 +298,7 @@ public class XIndexer {
 	 *            can be evaluated to produce different index entries depending on the phase
 	 */
 	protected IResourceDescription.Delta addToIndex(LoadResult loadResult, boolean isPreIndexing,
-			ResourceDescriptionsData oldIndex, XBuildContext context) {
+			ImmutableResourceDescriptions oldIndex, XBuildContext context) {
 
 		this.operationCanceledManager.checkCanceled(context.getCancelIndicator());
 

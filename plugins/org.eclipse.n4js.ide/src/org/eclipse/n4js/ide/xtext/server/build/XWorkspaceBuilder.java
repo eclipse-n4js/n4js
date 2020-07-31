@@ -24,6 +24,7 @@ import org.eclipse.n4js.ide.server.LspLogger;
 import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo;
 import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo.ProjectBuildOrderIterator;
 import org.eclipse.n4js.ide.xtext.server.build.ParallelBuildManager.ParallelJob;
+import org.eclipse.n4js.ide.xtext.server.index.ConcurrentIndex;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
@@ -40,6 +41,8 @@ import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.IteratorExtensions;
 
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 import com.google.inject.Inject;
@@ -78,6 +81,29 @@ public class XWorkspaceBuilder {
 		}
 	}
 
+	private static class WorkspaceBuildRequestFactory implements IBuildRequestFactory {
+		private final IBuildRequestFactory delegate;
+		private final ConcurrentIndex concurrentIndex;
+
+		@Inject
+		public WorkspaceBuildRequestFactory(IBuildRequestFactory delegate, ConcurrentIndex concurrentIndex) {
+			this.delegate = delegate;
+			this.concurrentIndex = concurrentIndex;
+		}
+
+		@Override
+		public XBuildRequest getBuildRequest(String projectName, Set<URI> changedFiles,
+				Set<URI> deletedFiles, List<Delta> externalDeltas) {
+			XBuildRequest result = delegate.getBuildRequest(projectName, changedFiles, deletedFiles, externalDeltas);
+			result.setInitialGlobalIndex(concurrentIndex.getWorkspaceIndex());
+			result.addAfterBuildListener((request, buildResult) -> {
+				concurrentIndex.setProjectIndex(projectName, buildResult.getUpdatedLocalIndex(),
+						new ResourceDescriptionChangeEvent(buildResult.getAffectedResources()));
+			});
+			return result;
+		}
+	}
+
 	private static final Logger LOG = LogManager.getLogger(XWorkspaceBuilder.class);
 
 	@Inject
@@ -96,10 +122,10 @@ public class XWorkspaceBuilder {
 	private OperationCanceledManager operationCanceledManager;
 
 	@Inject
-	private IBuildRequestFactory buildRequestFactory;
+	private WorkspaceBuildRequestFactory workspaceBuildRequestFactory;
 
-	@Inject
-	private ConcurrentIndex fullIndex;
+	// @Inject
+	// private ConcurrentIndex fullIndex;
 
 	private final Set<URI> dirtyFiles = new LinkedHashSet<>();
 	private final Set<URI> deletedFiles = new LinkedHashSet<>();
@@ -120,10 +146,11 @@ public class XWorkspaceBuilder {
 		WorkspaceChanges changes = WorkspaceChanges.createUrisRemovedAndChanged(deletedFiles, dirtyFiles);
 		changes = changes.merge(workspaceManager.update(dirtyFiles));
 		if (!changes.getProjectsWithChangedDependencies().isEmpty()) {
-			Iterable<ProjectConfigSnapshot> projectsWithChangedDeps = IterableExtensions.map(
-					changes.getProjectsWithChangedDependencies(),
-					XIProjectConfig::toSnapshot);
-			fullIndex.setProjectConfigSnapshots(projectsWithChangedDeps);
+			ImmutableSet<ProjectConfigSnapshot> projectsWithChangedDeps = FluentIterable
+					.from(changes.getProjectsWithChangedDependencies())
+					.transform(XIProjectConfig::toSnapshot)
+					.toSet();
+			workspaceBuildRequestFactory.concurrentIndex.setProjectConfigSnapshots(projectsWithChangedDeps);
 		}
 		return createBuildTask(changes);
 	}
@@ -167,7 +194,7 @@ public class XWorkspaceBuilder {
 			ProjectDescription description = pboIterator.next();
 			String projectName = description.getName();
 			ProjectBuilder projectBuilder = workspaceManager.getProjectBuilder(projectName);
-			XBuildResult partialresult = projectBuilder.doInitialBuild(buildRequestFactory, indicator);
+			XBuildResult partialresult = projectBuilder.doInitialBuild(workspaceBuildRequestFactory, indicator);
 			result.addAll(partialresult.getAffectedResources());
 		}
 
@@ -198,7 +225,7 @@ public class XWorkspaceBuilder {
 
 			@Override
 			public void runJob() {
-				XBuildResult partialresult = projectManager.doInitialBuild(buildRequestFactory, indicator);
+				XBuildResult partialresult = projectManager.doInitialBuild(workspaceBuildRequestFactory, indicator);
 				synchronized (result) {
 					result.addAll(partialresult.getAffectedResources());
 				}
@@ -236,7 +263,7 @@ public class XWorkspaceBuilder {
 		return cancelIndicator -> {
 			for (ProjectBuilder projectBuilder : workspaceManager.getProjectBuilders()) {
 
-				XBuildRequest buildRequest = buildRequestFactory.getBuildRequest(
+				XBuildRequest buildRequest = workspaceBuildRequestFactory.getBuildRequest(
 						projectBuilder.getProjectConfig().getName(),
 						Collections.emptySet(), Collections.emptySet(), Collections.emptyList());
 
@@ -304,7 +331,7 @@ public class XWorkspaceBuilder {
 
 				XBuildResult projectResult;
 				AffectedResourcesRecordingFactory recordingFactory = new AffectedResourcesRecordingFactory(
-						buildRequestFactory);
+						workspaceBuildRequestFactory);
 				try {
 					projectResult = projectBuilder.doIncrementalBuild(
 							recordingFactory,

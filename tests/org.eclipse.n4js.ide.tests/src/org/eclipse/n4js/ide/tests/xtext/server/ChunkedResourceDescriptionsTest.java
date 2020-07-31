@@ -15,7 +15,9 @@ import java.util.concurrent.TimeUnit;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EcorePackage;
-import org.eclipse.n4js.ide.xtext.server.util.IndexedChunkedResourceDescriptions;
+import org.eclipse.n4js.ide.xtext.server.index.ExtendedChunkedResourceDescriptions;
+import org.eclipse.n4js.ide.xtext.server.index.ExtendedResourceDescriptionsData;
+import org.eclipse.n4js.ide.xtext.server.index.ImmutableResourceDescriptionsData;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.impl.ChunkedResourceDescriptions;
@@ -156,10 +158,10 @@ public class ChunkedResourceDescriptionsTest {
 
 	@Test
 	public void testIndexedChunkedPerformance_EmptyContainers() {
-		IndexedChunkedResourceDescriptions descriptions = new IndexedChunkedResourceDescriptions();
+		ExtendedChunkedResourceDescriptions descriptions = new ExtendedChunkedResourceDescriptions();
 		// Test with 1000 modules, all empty
 		for (int i = 0; i < 1000; i++) {
-			descriptions.setContainer("" + i, new ResourceDescriptionsData(Collections.emptyList()));
+			descriptions.setContainer("" + i, ImmutableResourceDescriptionsData.empty());
 		}
 
 		QualifiedName name = QualifiedName.create("any");
@@ -183,11 +185,11 @@ public class ChunkedResourceDescriptionsTest {
 
 	@Test
 	public void testIndexedChunkedPerformance_FilledContainers() {
-		IndexedChunkedResourceDescriptions descriptions = new IndexedChunkedResourceDescriptions();
+		ExtendedChunkedResourceDescriptions descriptions = new ExtendedChunkedResourceDescriptions();
 		// Test with 1000 modules, all empty
 		QualifiedName name = QualifiedName.create("any");
 		for (int i = 0; i < 1000; i++) {
-			ResourceDescriptionsData segment = new ResourceDescriptionsData(Collections.emptyList());
+			ExtendedResourceDescriptionsData segment = new ExtendedResourceDescriptionsData();
 			SerializableResourceDescription resDesc = new SerializableResourceDescription();
 			resDesc.setURI(URI.createURI("" + i));
 			SerializableEObjectDescription objDesc = new SerializableEObjectDescription();
@@ -195,7 +197,7 @@ public class ChunkedResourceDescriptionsTest {
 			objDesc.setEClass(EcorePackage.Literals.EOBJECT);
 			resDesc.setDescriptions(Collections.singletonList(objDesc));
 			segment.addDescription(resDesc.getURI(), resDesc);
-			descriptions.setContainer("" + i, segment);
+			descriptions.setContainer("" + i, segment.snapshot());
 		}
 
 		for (int warmup = 0; warmup < 100; warmup++) {

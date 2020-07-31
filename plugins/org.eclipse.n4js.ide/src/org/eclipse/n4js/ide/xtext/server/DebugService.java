@@ -27,7 +27,7 @@ import org.eclipse.lsp4j.jsonrpc.services.JsonRequest;
 import org.eclipse.lsp4j.jsonrpc.services.JsonSegment;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.n4js.ide.xtext.server.DebugService.DebugServiceNullImpl;
-import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIndex;
+import org.eclipse.n4js.ide.xtext.server.index.ConcurrentIndex;
 import org.eclipse.n4js.utils.Strings;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 

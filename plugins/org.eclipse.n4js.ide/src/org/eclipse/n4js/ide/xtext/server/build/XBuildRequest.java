@@ -14,9 +14,10 @@ import java.util.List;
 import java.util.Objects;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.ide.xtext.server.index.ExtendedResourceDescriptionsData;
+import org.eclipse.n4js.ide.xtext.server.index.ImmutableResourceDescriptions;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.XtextResourceSet;
-import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.UriUtil;
 import org.eclipse.xtext.validation.Issue;
@@ -39,7 +40,15 @@ public class XBuildRequest {
 
 	private Collection<IResourceDescription.Delta> externalDeltas = new ArrayList<>();
 
-	private ResourceDescriptionsData index;
+	/**
+	 * The index state when the build was requested.
+	 */
+	private ImmutableResourceDescriptions initialGlobalIndex;
+
+	/**
+	 * The index state that this build is working on.
+	 */
+	private ExtendedResourceDescriptionsData mutableLocalIndex;
 
 	private XSource2GeneratedMapping fileMappings;
 
@@ -250,13 +259,23 @@ public class XBuildRequest {
 	}
 
 	/** Getter. */
-	public ResourceDescriptionsData getIndex() {
-		return index;
+	public ImmutableResourceDescriptions getInitialGlobalIndex() {
+		return initialGlobalIndex;
 	}
 
 	/** Setter. */
-	public void setIndex(ResourceDescriptionsData index) {
-		this.index = index;
+	public void setInitialGlobalIndex(ImmutableResourceDescriptions initialGlobalIndex) {
+		this.initialGlobalIndex = initialGlobalIndex;
+	}
+
+	/** Getter. */
+	public ExtendedResourceDescriptionsData getMutableLocalIndex() {
+		return mutableLocalIndex;
+	}
+
+	/** Setter. */
+	public void setMutableIndex(ExtendedResourceDescriptionsData mutableLocalIndex) {
+		this.mutableLocalIndex = mutableLocalIndex;
 	}
 
 	/** Getter. */

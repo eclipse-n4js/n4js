@@ -26,16 +26,15 @@ import org.eclipse.n4js.ide.xtext.server.build.HashedFileContent;
 import org.eclipse.n4js.ide.xtext.server.build.ImmutableProjectState;
 import org.eclipse.n4js.ide.xtext.server.build.ProjectStatePersister;
 import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
+import org.eclipse.n4js.ide.xtext.server.index.ExtendedResourceDescriptionsData;
 import org.eclipse.n4js.xtext.server.LSPIssue;
 import org.eclipse.xtext.builder.builderState.BuilderStateFactory;
 import org.eclipse.xtext.builder.builderState.impl.EObjectDescriptionImpl;
 import org.eclipse.xtext.builder.builderState.impl.ResourceDescriptionImpl;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.naming.QualifiedName;
-import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.resource.persistence.SerializableResourceDescription;
-import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -51,11 +50,11 @@ public class ProjectStatePersisterTest {
 		return ImmutableProjectState.empty();
 	}
 
-	ImmutableProjectState createProjectState(ResourceDescriptionsData index, XSource2GeneratedMapping fileMappings,
+	ImmutableProjectState createProjectState(ExtendedResourceDescriptionsData index,
+			XSource2GeneratedMapping fileMappings,
 			Map<URI, HashedFileContent> fileHashs, ListMultimap<URI, LSPIssue> validationIssues) {
 
-		index = (index != null) ? index
-				: new ResourceDescriptionsData(CollectionLiterals.<IResourceDescription> emptySet());
+		index = (index != null) ? index : new ExtendedResourceDescriptionsData();
 		fileMappings = (fileMappings != null) ? fileMappings : new XSource2GeneratedMapping();
 		fileHashs = (fileHashs != null) ? fileHashs : Collections.emptyMap();
 		validationIssues = (validationIssues != null) ? validationIssues : ImmutableListMultimap.of();
@@ -130,7 +129,7 @@ public class ProjectStatePersisterTest {
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 
 		ImmutableProjectState state = createProjectState();
-		ResourceDescriptionsData index = (ResourceDescriptionsData) state.getResourceDescriptions();
+		ExtendedResourceDescriptionsData index = state.getResourceDescriptions().builder();
 		XSource2GeneratedMapping fileMappings = state.getFileMappings();
 		ResourceDescriptionImpl resourceDescription = (ResourceDescriptionImpl) BuilderStateFactory.eINSTANCE
 				.createResourceDescription();

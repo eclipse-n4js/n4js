@@ -20,13 +20,13 @@ import org.eclipse.n4js.ide.xtext.server.build.XIndexer
 import org.eclipse.n4js.ide.xtext.server.build.XIndexer.XIndexResult
 import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping
 import org.eclipse.n4js.ide.xtext.server.build.XStatefulIncrementalBuilder
-import org.eclipse.xtext.resource.impl.ResourceDescriptionsData
 import org.eclipse.xtext.service.AbstractGenericModule
 import org.eclipse.xtext.service.OperationCanceledManager
 import org.eclipse.xtext.util.Strings
 import org.junit.Test
 
 import static org.junit.Assert.*
+import org.eclipse.n4js.ide.xtext.server.index.ImmutableResourceDescriptions
 
 /**
  * Tests handling of a cancellation during an incremental build.
@@ -59,7 +59,7 @@ class IncrementalBuilderCancellationTest extends AbstractIncrementalBuilderTest 
 	// Sort to get a predictable order of resources in the build
 	private static class SortingIndexer extends XIndexer {
 		
-		override protected getDeltasForChangedResources(Iterable<URI> changedURIs, ResourceDescriptionsData oldIndex, XBuildContext context) {
+		override protected getDeltasForChangedResources(Iterable<URI> changedURIs, ImmutableResourceDescriptions oldIndex, XBuildContext context) {
 			val result = super.getDeltasForChangedResources(changedURIs, oldIndex, context)
 			return result.sortBy[ it.uri.toString ]
 		}

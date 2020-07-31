@@ -14,8 +14,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -29,6 +27,10 @@ import org.eclipse.n4js.ide.xtext.server.ResourceChangeSet;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterBuildListener;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterDeleteListener;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterValidateListener;
+import org.eclipse.n4js.ide.xtext.server.index.ExtendedResourceDescriptionsData;
+import org.eclipse.n4js.ide.xtext.server.index.ExtendedResourceDescriptionsProvider;
+import org.eclipse.n4js.ide.xtext.server.index.ImmutableResourceDescriptions;
+import org.eclipse.n4js.ide.xtext.server.index.MutableShadowedResourceDescriptions;
 import org.eclipse.n4js.ide.xtext.server.issues.PublishingIssueAcceptor;
 import org.eclipse.n4js.internal.lsp.N4JSProjectConfig;
 import org.eclipse.n4js.utils.URIUtils;
@@ -43,7 +45,6 @@ import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResourceSet;
-import org.eclipse.xtext.resource.impl.ChunkedResourceDescriptions;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.service.OperationCanceledManager;
@@ -54,6 +55,7 @@ import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.workspace.ProjectConfigAdapter;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableMap;
@@ -115,8 +117,11 @@ public class ProjectBuilder {
 	@Inject
 	protected PublishingIssueAcceptor issuePublisher;
 
+	/**
+	 * The provider for resource descriptions.
+	 */
 	@Inject
-	private ConcurrentIndex workspaceIndex;
+	protected ExtendedResourceDescriptionsProvider resourceDescriptionsProvider;
 
 	private XIProjectConfig projectConfig;
 
@@ -133,7 +138,7 @@ public class ProjectBuilder {
 		this.projectDescription = projectDescription;
 		this.projectConfig = projectConfig;
 		this.doClear();
-		this.resourceSet = createNewResourceSet(getProjectIndex());
+		this.resourceSet = createNewResourceSet();
 	}
 
 	/**
@@ -286,12 +291,11 @@ public class ProjectBuilder {
 				deletedFiles,
 				externalDeltas,
 				cancelIndicator);
-		resourceSet = request.getResourceSet();
 
 		try {
 			return incrementalBuilder.build(request);
 		} catch (Throwable t) {
-			updateResourceSetIndex(getProjectIndex());
+			resourceDescriptionsProvider.replace(request.getInitialGlobalIndex(), request.getResourceSet());
 			throw t;
 		}
 	}
@@ -365,7 +369,7 @@ public class ProjectBuilder {
 			ImmutableListMultimap.Builder<URI, LSPIssue> builder = ImmutableListMultimap.builder();
 			builder.putAll(snapshot.getValidationIssues());
 			builder.put(uri, issue);
-			return ImmutableProjectState.withoutCopy(snapshot.internalGetResourceDescriptions(),
+			return ImmutableProjectState.withoutCopy(snapshot.getResourceDescriptions(),
 					snapshot.getFileMappings(), snapshot.getFileHashes(), builder.build());
 		});
 		issuePublisher.accept(uri, updatedState.getValidationIssues().get(uri));
@@ -382,14 +386,20 @@ public class ProjectBuilder {
 		XBuildRequest request = buildRequestFactory.getBuildRequest(projectConfig.getName(), changedFiles, deletedFiles,
 				externalDeltas);
 
+		Preconditions.checkNotNull(request.getInitialGlobalIndex());
+
 		ImmutableProjectState currentProjectState = this.projectStateSnapshot.get();
 
-		ResourceDescriptionsData indexCopy = currentProjectState.internalGetResourceDescriptions().copy();
 		XSource2GeneratedMapping fileMappingsCopy = currentProjectState.getFileMappings().copy();
 
-		request.setIndex(indexCopy);
+		ExtendedResourceDescriptionsData newProjectIndex = currentProjectState.getResourceDescriptions().builder();
+		request.setMutableIndex(newProjectIndex);
 		request.setFileMappings(fileMappingsCopy);
-		updateResourceSetIndex(indexCopy);
+
+		MutableShadowedResourceDescriptions mutableIndex = new MutableShadowedResourceDescriptions(newProjectIndex,
+				request.getInitialGlobalIndex());
+		resourceDescriptionsProvider.replace(mutableIndex, resourceSet);
+
 		request.setResourceSet(resourceSet);
 		request.setCancelIndicator(cancelIndicator);
 		request.setBaseDir(getBaseDir());
@@ -403,26 +413,16 @@ public class ProjectBuilder {
 		return request;
 	}
 
-	/** Update the index information that is attached to this project's resource set */
-	protected void updateResourceSetIndex(ResourceDescriptionsData newProjectIndex) {
-		ChunkedResourceDescriptions resDescs = ChunkedResourceDescriptions
-				.findInEmfObject(Objects.requireNonNull(resourceSet));
-		for (Entry<String, ResourceDescriptionsData> entry : workspaceIndex.entries()) {
-			resDescs.setContainer(entry.getKey(), entry.getValue());
-		}
-		resDescs.setContainer(projectDescription.getName(), newProjectIndex);
-	}
-
 	/** Create and configure a new resource set for this project. */
-	protected XtextResourceSet createNewResourceSet(ResourceDescriptionsData newProjectIndex) {
+	protected XtextResourceSet createNewResourceSet() {
 		XtextResourceSet result = resourceSetProvider.get();
 		result.setURIResourceMap(uriResourceMap);
 		projectDescription.attachToEmfObject(result);
 		ProjectConfigAdapter.install(result, projectConfig);
 		attachWorkspaceResourceLocator(result);
-
-		ChunkedResourceDescriptions index = workspaceIndex.toDescriptions(result);
-		index.setContainer(projectDescription.getName(), newProjectIndex);
+		ImmutableResourceDescriptions workspaceIndex = resourceDescriptionsProvider
+				.createPersistedResourceDescriptions();
+		resourceDescriptionsProvider.attachTo(workspaceIndex, result);
 		return result;
 	}
 
@@ -439,7 +439,7 @@ public class ProjectBuilder {
 
 	/** @return all resource descriptions that start with the given prefix */
 	public List<URI> findResourcesStartingWithPrefix(URI prefix) {
-		ResourceDescriptionsData resourceDescriptionsData = getProjectIndex();
+		ResourceDescriptionsData resourceDescriptionsData = projectStateSnapshot.get().getResourceDescriptions();
 
 		// TODO: Moving this into ResourceDescriptionsData and using a sorted Map could increase performance
 		List<URI> uris = new ArrayList<>();
@@ -474,11 +474,13 @@ public class ProjectBuilder {
 	/** Clears type index of this project. */
 	protected void doClear() {
 		ImmutableProjectState newState = ImmutableProjectState.empty();
-		setProjectIndex(newState.internalGetResourceDescriptions());
 		this.projectStateSnapshot.set(newState);
 		if (resourceSet != null) {
 			uriResourceMap.clear();
 			clearResourceSet();
+			ImmutableResourceDescriptions workspaceIndex = resourceDescriptionsProvider
+					.createPersistedResourceDescriptions();
+			resourceDescriptionsProvider.replace(workspaceIndex, resourceSet);
 		}
 	}
 
@@ -512,6 +514,7 @@ public class ProjectBuilder {
 		doClear();
 
 		ImmutableProjectState projectState = projectStatePersister.readProjectState(projectConfig);
+		Set<URI> allIndexedUris = Collections.emptySet();
 		if (projectState != null) {
 			for (HashedFileContent hfc : projectState.getFileHashes().values()) {
 				URI previouslyExistingFile = hfc.getUri();
@@ -529,11 +532,10 @@ public class ProjectBuilder {
 				}
 				}
 			}
-			setProjectIndex(projectState.internalGetResourceDescriptions());
+			allIndexedUris = projectState.getResourceDescriptions().getAllURIs();
 			this.projectStateSnapshot.set(projectState);
 		}
 
-		Set<URI> allIndexedUris = getProjectIndex().getAllURIs();
 		for (ISourceFolder srcFolder : projectConfig.getSourceFolders()) {
 			List<URI> allSourceFolderUris = srcFolder.getAllResources(fileSystemScanner);
 			for (URI srcFolderUri : allSourceFolderUris) {
@@ -573,11 +575,9 @@ public class ProjectBuilder {
 				}
 			});
 			issuesFromIncrementalBuild.forEach(newIssues::putAll);
-			return ImmutableProjectState.withoutCopy(result.getIndex(), result.getFileMappings(),
+			return ImmutableProjectState.withoutCopy(result.getUpdatedLocalIndex(), result.getFileMappings(),
 					ImmutableMap.copyOf(newHashedFileContents), newIssues.build());
 		});
-		setProjectIndex(newState.internalGetResourceDescriptions());
-
 		if (request.isGeneratorEnabled() && !result.getAffectedResources().isEmpty()) {
 			writeProjectState(newState);
 		}
@@ -649,16 +649,6 @@ public class ProjectBuilder {
 	/** @return the validation issues as an unmodifiable map. */
 	private ImmutableListMultimap<URI, LSPIssue> getValidationIssues() {
 		return projectStateSnapshot.get().getValidationIssues();
-	}
-
-	/** Getter. */
-	private ResourceDescriptionsData getProjectIndex() {
-		return workspaceIndex.getProjectIndex(projectConfig.getName());
-	}
-
-	/** Setter. */
-	private void setProjectIndex(ResourceDescriptionsData index) {
-		this.workspaceIndex.setProjectIndex(projectConfig.getName(), index);
 	}
 
 	boolean isSourceFile(URI uri) {

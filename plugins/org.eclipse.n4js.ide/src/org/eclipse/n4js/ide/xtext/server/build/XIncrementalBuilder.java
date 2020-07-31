@@ -11,7 +11,6 @@ import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.resource.clustering.DisabledClusteringPolicy;
 import org.eclipse.xtext.resource.clustering.IResourceClusteringPolicy;
-import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -45,10 +44,9 @@ public class XIncrementalBuilder {
 	 * Cancellation behavior: does not throw exception but returns with a partial result.
 	 */
 	public XBuildResult build(XBuildRequest request, IResourceClusteringPolicy clusteringPolicy) {
-		ResourceDescriptionsData indexCopy = request.getIndex().copy();
 		XtextResourceSet resourceSet = request.getResourceSet();
 		XBuildContext context = new XBuildContext(languagesRegistry::getResourceServiceProvider,
-				resourceSet, indexCopy, clusteringPolicy, request.getCancelIndicator());
+				resourceSet, request.getInitialGlobalIndex(), clusteringPolicy, request.getCancelIndicator());
 
 		XStatefulIncrementalBuilder builder = provider.get();
 		builder.setContext(context);

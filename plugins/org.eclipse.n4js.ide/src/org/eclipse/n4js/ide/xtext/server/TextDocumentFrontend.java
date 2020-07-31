@@ -15,8 +15,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 import org.eclipse.emf.common.util.URI;
@@ -64,12 +62,12 @@ import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageClientExtensions;
 import org.eclipse.lsp4j.services.TextDocumentService;
 import org.eclipse.n4js.ide.xtext.server.ResourceTaskManager.IResourceTaskListener;
-import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIndex;
-import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIndex.IIndexListener;
 import org.eclipse.n4js.ide.xtext.server.contentassist.XContentAssistService;
 import org.eclipse.n4js.ide.xtext.server.findReferences.XWorkspaceResourceAccess;
+import org.eclipse.n4js.ide.xtext.server.index.ConcurrentIndex;
+import org.eclipse.n4js.ide.xtext.server.index.ConcurrentIndex.IIndexListener;
+import org.eclipse.n4js.ide.xtext.server.index.ImmutableChunkedResourceDescriptions;
 import org.eclipse.n4js.ide.xtext.server.rename.XIRenameService;
-import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.findReferences.IReferenceFinder.IResourceAccess;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
@@ -88,9 +86,9 @@ import org.eclipse.xtext.ide.server.signatureHelp.ISignatureHelpService;
 import org.eclipse.xtext.ide.server.symbol.DocumentSymbolService;
 import org.eclipse.xtext.ide.server.symbol.HierarchicalDocumentSymbolService;
 import org.eclipse.xtext.ide.server.symbol.IDocumentSymbolService;
+import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResource;
-import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
@@ -239,8 +237,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 		}
 		XtextResource res = rtc.getResource();
 		XDocument doc = rtc.getDocument();
-		return documentSymbolService.getReferences(doc, res, params, resourceAccess,
-				resourceTaskManager.createLiveScopeIndex(), cancelIndicator);
+		return documentSymbolService.getReferences(doc, res, params, resourceAccess, rtc.getIndex(), cancelIndicator);
 	}
 
 	@Override
@@ -659,13 +656,10 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 
 	@Override
 	public void onIndexChanged(
+			ImmutableChunkedResourceDescriptions newWorkspaceIndex,
 			WorkspaceConfigSnapshot newWorkspaceConfig,
-			Map<String, ? extends ResourceDescriptionsData> changedDescriptions,
-			List<? extends ProjectConfigSnapshot> changedProjects,
-			Set<String> removedProjects) {
-
-		resourceTaskManager.updatePersistedState(newWorkspaceConfig, changedDescriptions, changedProjects,
-				removedProjects);
+			IResourceDescription.Event event) {
+		resourceTaskManager.updatePersistedState(newWorkspaceIndex, newWorkspaceConfig, event);
 	}
 
 	@Override

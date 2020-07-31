@@ -11,10 +11,10 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ide.xtext.server.build.XClusteringStorageAwareResourceLoader.LoadResult;
+import org.eclipse.n4js.ide.xtext.server.index.ImmutableResourceDescriptions;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.resource.clustering.IResourceClusteringPolicy;
-import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 
@@ -30,7 +30,7 @@ public class XBuildContext {
 
 	private final XtextResourceSet resourceSet;
 
-	private final ResourceDescriptionsData oldIndex;
+	private final ImmutableResourceDescriptions oldGlobalIndex;
 
 	private final IResourceClusteringPolicy clusteringPolicy;
 
@@ -43,12 +43,12 @@ public class XBuildContext {
 	 */
 	public XBuildContext(
 			Function1<? super URI, ? extends IResourceServiceProvider> resourceServiceProviderProvider,
-			XtextResourceSet resourceSet, ResourceDescriptionsData oldIndex,
+			XtextResourceSet resourceSet, ImmutableResourceDescriptions oldGlobalIndex,
 			IResourceClusteringPolicy clusteringPolicy, CancelIndicator cancelIndicator) {
 
 		this.resourceServiceProviderProvider = resourceServiceProviderProvider;
 		this.resourceSet = resourceSet;
-		this.oldIndex = oldIndex;
+		this.oldGlobalIndex = oldGlobalIndex;
 		this.clusteringPolicy = clusteringPolicy;
 		this.cancelIndicator = cancelIndicator;
 	}
@@ -91,8 +91,8 @@ public class XBuildContext {
 	/**
 	 * Getter
 	 */
-	public ResourceDescriptionsData getOldIndex() {
-		return this.oldIndex;
+	public ImmutableResourceDescriptions getOldGlobalIndex() {
+		return this.oldGlobalIndex;
 	}
 
 	/**

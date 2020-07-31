@@ -11,34 +11,43 @@
 package org.eclipse.n4js.ide.xtext.server;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.n4js.ide.xtext.server.build.BuilderFrontend;
+import org.eclipse.n4js.ide.xtext.server.index.AbstractShadowedResourceDescriptions;
+import org.eclipse.n4js.ide.xtext.server.index.ConcurrentIndex;
+import org.eclipse.n4js.ide.xtext.server.index.ExtendedResourceDescriptionsProvider;
+import org.eclipse.n4js.ide.xtext.server.index.ImmutableChunkedResourceDescriptions;
+import org.eclipse.n4js.ide.xtext.server.index.ImmutableResourceDescriptions;
+import org.eclipse.n4js.ide.xtext.server.index.ImmutableResourceDescriptionsData;
+import org.eclipse.n4js.ide.xtext.server.index.ImmutableShadowedResourceDescriptions;
+import org.eclipse.n4js.ide.xtext.server.index.MutableShadowedResourceDescriptions;
 import org.eclipse.n4js.ide.xtext.server.util.CancelIndicatorUtil;
-import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
+import org.eclipse.xtext.resource.IExternalContentSupport;
+import org.eclipse.xtext.resource.IExternalContentSupport.IExternalContentProvider;
 import org.eclipse.xtext.resource.IResourceDescription;
-import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
+import org.eclipse.xtext.resource.IResourceDescription.Delta;
+import org.eclipse.xtext.resource.IResourceDescription.Event;
+import org.eclipse.xtext.resource.IResourceDescriptions;
+import org.eclipse.xtext.resource.impl.ResourceDescriptionChangeEvent;
+import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 import org.eclipse.xtext.util.CancelIndicator;
+import org.eclipse.xtext.util.Wrapper;
 import org.eclipse.xtext.xbase.lib.Pair;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.ImmutableSetMultimap;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.SetMultimap;
+import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -50,8 +59,19 @@ import com.google.inject.Singleton;
 @Singleton
 public class ResourceTaskManager {
 
+	/** The current dirty state index */
+	private final AtomicReference<ImmutableShadowedResourceDescriptions> dirtyIndex;
+
+	private WorkspaceConfigSnapshot workspaceConfig;
+
 	@Inject
 	private Provider<ResourceTaskContext> resourceTaskContextProvider;
+
+	@Inject
+	private IExternalContentSupport externalContentSupport;
+
+	@Inject
+	private ExtendedResourceDescriptionsProvider resourceDescriptionsProvider;
 
 	@Inject
 	private QueuedExecutorService queuedExecutorService;
@@ -65,35 +85,36 @@ public class ResourceTaskManager {
 	 */
 	protected final ThreadLocal<ResourceTaskContext> currentContext = new ThreadLocal<>();
 
-	/*
-	 * Review feedback:
-	 *
-	 * This looks like being the same as the the ConcurrentIndex structure?
-	 */
-	/** The persisted state index, not taking into account dirty state from existing resource task contexts. */
-	protected final ResourceDescriptionsData persistedIndex = new ResourceDescriptionsData(Collections.emptyList());
-	/** The dirty state index. Contains an entry for each URI with an existing resource task context. */
-	protected final ResourceDescriptionsData dirtyIndex = new ResourceDescriptionsData(Collections.emptyList());
-	/** Tracks URIs per project. Derived from persisted state but applies equally to the dirty state. */
-	protected SetMultimap<String, URI> project2BuiltURIs = HashMultimap.create();
-	/** Immutable copy of {@link #project2BuiltURIs}. */
-	protected ImmutableSetMultimap<String, URI> project2BuiltURIsImmutable = ImmutableSetMultimap
-			.copyOf(project2BuiltURIs);
-	/** Most recent workspace configuration. */
-	protected WorkspaceConfigSnapshot workspaceConfig = null;
-
 	/***/
 	protected final List<IResourceTaskListener> listeners = new CopyOnWriteArrayList<>();
 
 	/*
 	 * Review feedback:
 	 *
-	 * Rethink the terminology: refresh is not something that is usually associated with an Xtext resource.
+	 * Re-think the terminology: refresh is not something that is usually associated with an Xtext resource.
 	 */
 	/** Listener for events in resource task contexts. */
 	public interface IResourceTaskListener {
 		/** Invoked whenever an open file was resolved, validated, etc. Invoked in the given open file context. */
 		public void didRefreshContext(ResourceTaskContext rtc, CancelIndicator ci);
+	}
+
+	/**
+	 * Constructor.
+	 */
+	@Inject
+	public ResourceTaskManager(ConcurrentIndex concurrentIndex) {
+		this.dirtyIndex = new AtomicReference<>(
+				new ImmutableShadowedResourceDescriptions(ImmutableResourceDescriptionsData.empty(),
+						concurrentIndex.getWorkspaceIndex()));
+		this.workspaceConfig = concurrentIndex.getWorkspaceConfig();
+	}
+
+	/**
+	 * Returns the current dirty state.
+	 */
+	public ImmutableShadowedResourceDescriptions getDirtyIndex() {
+		return dirtyIndex.get();
 	}
 
 	/** Returns true iff a non-temporary {@link ResourceTaskContext} exists for the given URI. */
@@ -201,12 +222,6 @@ public class ResourceTaskManager {
 	 * <p>
 	 * The temporary context is not retained over a longer period of time; the given task is the only task that will
 	 * ever be executed in this temporary context.
-	 * <p>
-	 * Note that instead of using this method, the caller might simply create a new resource set from scratch, configure
-	 * it with a {@link #createLiveScopeIndex() live scope index}, and synchronously perform any desired computation
-	 * there. The intention of this method is to provide means to easily perform such computations in temporary contexts
-	 * with a consistent setup/configuration and with a similar API as compared to computations in the context of
-	 * actually opened files.
 	 */
 	public synchronized <T> CompletableFuture<T> runInTemporaryContext(URI uri, String description,
 			boolean resolveAndValidate, BiFunction<ResourceTaskContext, CancelIndicator, T> task) {
@@ -269,18 +284,45 @@ public class ResourceTaskManager {
 	 */
 	protected ResourceTaskContext doCreateContext(URI uri, boolean isTemporary) {
 		ResourceTaskContext rtc = resourceTaskContextProvider.get();
-		ResourceDescriptionsData index = isTemporary ? createPersistedStateIndex() : createLiveScopeIndex();
-		rtc.initialize(this, uri, isTemporary, index, project2BuiltURIsImmutable, workspaceConfig);
+		ImmutableResourceDescriptions baseIndex = isTemporary
+				? resourceDescriptionsProvider.createPersistedResourceDescriptions()
+				: getDirtyIndex();
+		rtc.initialize(this, workspaceConfig, uri, isTemporary, baseIndex);
 		return rtc;
 	}
 
 	/** Internal removal of all information related to a particular resource task context. */
 	protected synchronized void discardContextInfo(URI uri) {
 		ResourceTaskContext result = uri2RTCs.remove(uri);
+		IResourceDescription.Manager resourceDescriptionManager = null;
 		if (result != null) {
+			resourceDescriptionManager = result.getResourceDescriptionManager(uri);
 			result.close();
 		}
-		updateSharedDirtyState(uri, null);
+
+		Wrapper<IResourceDescription> description = Wrapper.wrap(null);
+		ImmutableShadowedResourceDescriptions newDirtyState = dirtyIndex.updateAndGet(prev -> {
+			MutableShadowedResourceDescriptions mutable = prev.builder();
+			description.set(mutable.getResourceDescription(uri));
+			mutable.dropShadowingInformation(uri);
+			return mutable.snapshot();
+		});
+
+		ResourceDescriptionChangeEvent event;
+		if (resourceDescriptionManager != null) {
+			Delta delta = resourceDescriptionManager.createDelta(description.get(),
+					newDirtyState.getResourceDescription(uri));
+			event = new ResourceDescriptionChangeEvent(ImmutableList.of(delta));
+		} else {
+			event = new ResourceDescriptionChangeEvent(ImmutableList.of());
+		}
+		WorkspaceConfigSnapshot capturedWorkspaceConfig = this.workspaceConfig;
+		for (URI currURI : uri2RTCs.keySet()) {
+			runInExistingContextVoid(currURI, "update index-state of existing context", (rtc, ci) -> {
+				rtc.updateIndex(newDirtyState, capturedWorkspaceConfig, event, ci);
+			});
+		}
+
 	}
 
 	/**
@@ -293,86 +335,43 @@ public class ResourceTaskManager {
 		return currentContext.get();
 	}
 
-	/*
-	 * Review feedback:
-	 *
-	 * Copying the entire index should not be necessary since we do have implementations of IResourceDescriptions that
-	 * do apply sane shadowing semantics.
-	 */
-	/** Creates an index not containing any dirty state information. */
-	protected synchronized ResourceDescriptionsData createPersistedStateIndex() {
-		return persistedIndex.copy();
-	}
-
-	/** Creates an index containing the persisted state shadowed by the dirty state of all non-temporary contexts. */
-	public synchronized ResourceDescriptionsData createLiveScopeIndex() {
-		ResourceDescriptionsData result = createPersistedStateIndex();
-		for (IResourceDescription desc : dirtyIndex.getAllResourceDescriptions()) {
-			result.addDescription(desc.getURI(), desc);
-		}
-		return result;
-	}
-
 	/**
 	 * Updates this manager and all its {@link ResourceTaskContext}s with the given changes to the persisted state
 	 * index. Should be invoked from the outside whenever changes to the persisted state become available, e.g. because
 	 * the {@link BuilderFrontend builder} has rebuilt some files.
 	 */
 	public synchronized void updatePersistedState(
+			ImmutableChunkedResourceDescriptions newWorkspaceIndex,
 			WorkspaceConfigSnapshot newWorkspaceConfig,
-			Map<String, ? extends ResourceDescriptionsData> changedDescriptions,
-			@SuppressWarnings("unused") List<? extends ProjectConfigSnapshot> changedProjects,
-			Set<String> removedProjects) {
+			IResourceDescription.Event event) {
 
-		WorkspaceConfigSnapshot oldWC = workspaceConfig;
-
-		// compute "flat" modification info (not per project but on a global URI->description basis)
-		List<IResourceDescription> changed = new ArrayList<>();
-		Set<URI> removed = new HashSet<>();
-		for (Entry<String, ? extends ResourceDescriptionsData> entry : changedDescriptions.entrySet()) {
-			String projectName = entry.getKey();
-			ResourceDescriptionsData newData = entry.getValue();
-
-			Set<URI> oldURIsOfProject = new HashSet<>(project2BuiltURIs.get(projectName));
-			oldURIsOfProject.removeAll(uri2RTCs.keySet());
-			removed.addAll(oldURIsOfProject);
-
-			for (IResourceDescription desc : newData.getAllResourceDescriptions()) {
-				URI descURI = desc.getURI();
-				if (!uri2RTCs.containsKey(descURI)) {
-					changed.add(desc);
-					removed.remove(descURI);
-				}
-			}
-		}
-
-		// update my internal state
-		changed.stream().forEachOrdered(desc -> persistedIndex.addDescription(desc.getURI(), desc));
-		removed.stream().forEachOrdered(persistedIndex::removeDescription);
-		for (Entry<String, ? extends ResourceDescriptionsData> entry : changedDescriptions.entrySet()) {
-			String projectName = entry.getKey();
-			ResourceDescriptionsData newData = entry.getValue();
-			project2BuiltURIs.removeAll(projectName);
-			project2BuiltURIs.putAll(projectName, newData.getAllURIs());
-		}
-		for (String removedProjectName : removedProjects) {
-			project2BuiltURIs.removeAll(removedProjectName);
-		}
-		project2BuiltURIsImmutable = ImmutableSetMultimap.copyOf(project2BuiltURIs);
 		workspaceConfig = newWorkspaceConfig;
+		ImmutableShadowedResourceDescriptions newDirtyState = dirtyIndex.updateAndGet(prev -> {
+			return prev.withParent(newWorkspaceIndex);
+		});
 
-		// update internal state of all contexts
-		if (Iterables.isEmpty(changed) && removed.isEmpty() && workspaceConfig.equals(oldWC)) {
-			return;
-		}
-		ImmutableSetMultimap<String, URI> capturedProject2BuiltURIsImmutable = project2BuiltURIsImmutable;
-		WorkspaceConfigSnapshot capturedWorkspaceConfig = workspaceConfig;
+		IResourceDescription.Event sanitizedEvent = sanitize(event, newDirtyState);
 		for (URI currURI : uri2RTCs.keySet()) {
-			runInExistingContextVoid(currURI, "updatePersistedState of existing context", (rtc, ci) -> {
-				rtc.onPersistedStateChanged(changed, removed,
-						capturedProject2BuiltURIsImmutable, capturedWorkspaceConfig, ci);
+			runInExistingContextVoid(currURI, "update index-state of existing context", (rtc, ci) -> {
+				rtc.updateIndex(newDirtyState, newWorkspaceConfig, sanitizedEvent, ci);
 			});
 		}
+	}
+
+	/**
+	 * Update the given event such that it does not contain any deltas for resources that are shadowed.
+	 */
+	protected Event sanitize(Event event, AbstractShadowedResourceDescriptions shadowedDescriptions) {
+		if (event instanceof IResourceDescription.CoarseGrainedEvent) {
+			return event;
+		}
+		List<IResourceDescription.Delta> sanitizedDeltas = new ArrayList<>();
+		for (IResourceDescription.Delta delta : event.getDeltas()) {
+			if (!shadowedDescriptions.isShadowed(delta.getUri())) {
+				sanitizedDeltas.add(delta);
+			}
+		}
+		return new ResourceDescriptionChangeEvent(sanitizedDeltas);
 	}
 
 	/**
@@ -380,33 +379,26 @@ public class ResourceTaskManager {
 	 * index. Should only be invoked internally from {@link ResourceTaskContext} after
 	 * {@link ResourceTaskContext#refreshContext(int, Iterable, CancelIndicator) refreshing} its internal state.
 	 */
-	protected synchronized void updateSharedDirtyState(URI uri, IResourceDescription newDesc) {
-		// update my dirty state instance
-		if (newDesc != null) {
-			dirtyIndex.addDescription(uri, newDesc);
-		} else {
-			dirtyIndex.removeDescription(uri);
-		}
-		// update dirty state instance in each resource task context (except the one that caused the change)
-		ImmutableSetMultimap<String, URI> capturedProject2BuiltURIsImmutable = project2BuiltURIsImmutable;
+	protected synchronized void updateSharedDirtyState(IResourceDescription.Delta delta) {
+		URI uri = delta.getUri();
+		ImmutableShadowedResourceDescriptions newDirtyState = dirtyIndex.updateAndGet(prev -> {
+			MutableShadowedResourceDescriptions mutable = prev.builder();
+			if (delta.getNew() != null) {
+				mutable.add(delta.getNew());
+			} else {
+				mutable.remove(uri);
+			}
+			return mutable.snapshot();
+		});
+
 		WorkspaceConfigSnapshot capturedWorkspaceConfig = workspaceConfig;
-		IResourceDescription replacementDesc = newDesc == null ? persistedIndex.getResourceDescription(uri) : null;
+		ResourceDescriptionChangeEvent event = new ResourceDescriptionChangeEvent(ImmutableList.of(delta));
 		for (URI currURI : uri2RTCs.keySet()) {
 			if (currURI.equals(uri)) {
 				continue;
 			}
-			runInExistingContextVoid(currURI, "updateSharedDirtyState of existing context", (rtc, ci) -> {
-				if (newDesc != null) {
-					rtc.onDirtyStateChanged(newDesc, ci);
-				} else {
-					if (replacementDesc != null) {
-						rtc.onPersistedStateChanged(Collections.singleton(replacementDesc), Collections.emptySet(),
-								capturedProject2BuiltURIsImmutable, capturedWorkspaceConfig, ci);
-					} else {
-						rtc.onPersistedStateChanged(Collections.emptyList(), Collections.singleton(uri),
-								capturedProject2BuiltURIsImmutable, capturedWorkspaceConfig, ci);
-					}
-				}
+			runInExistingContextVoid(currURI, "update index-state of existing context", (rtc, ci) -> {
+				rtc.updateIndex(newDirtyState, capturedWorkspaceConfig, event, ci);
 			});
 		}
 	}
@@ -434,5 +426,47 @@ public class ResourceTaskManager {
 		for (IResourceTaskListener l : listeners) {
 			l.didRefreshContext(rtc, ci);
 		}
+	}
+
+	/** Within each resource task context, this provides text contents of all other context's main resources. */
+	protected static class ResourceTaskContentProvider implements IExternalContentProvider {
+
+		private final ResourceTaskManager resourceTaskManager;
+
+		ResourceTaskContentProvider(ResourceTaskManager resourceTaskManager) {
+			this.resourceTaskManager = resourceTaskManager;
+		}
+
+		@Override
+		public String getContent(URI uri) {
+			XDocument doc = resourceTaskManager.getOpenDocument(uri);
+			return doc != null ? doc.getContents() : null;
+		}
+
+		@Override
+		public boolean hasContent(URI uri) {
+			return resourceTaskManager.getOpenDocument(uri) != null;
+		}
+
+		@Override
+		public IExternalContentProvider getActualContentProvider() {
+			return this;
+		}
+	}
+
+	/**
+	 * Configure the given resource set.
+	 */
+	void installExternalContentSupport(ResourceSet result) {
+		externalContentSupport.configureResourceSet(result, new ResourceTaskContentProvider(this));
+	}
+
+	void installLiveIndex(ResourceSet resourceSet) {
+		resourceSet.getLoadOptions().put(ResourceDescriptionsProvider.LIVE_SCOPE, true);
+		resourceDescriptionsProvider.attachTo(getDirtyIndex(), resourceSet);
+	}
+
+	void installIndex(ResourceSet resourceSet, IResourceDescriptions index) {
+		resourceDescriptionsProvider.replace(index, resourceSet);
 	}
 }

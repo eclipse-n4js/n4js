@@ -32,7 +32,6 @@ import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
-import org.eclipse.n4js.resource.OrderedResourceDescriptionsData;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.utils.ProjectDiscoveryHelper;
 import org.eclipse.n4js.utils.ResourceType;
@@ -192,8 +191,7 @@ public class N4JSRuntimeCore extends AbstractN4JSCore implements IN4JSRuntimeCor
 
 	private void installIndex(ResourceSet resourceSet) {
 		// Fill index
-		ResourceDescriptionsData index = new OrderedResourceDescriptionsData(
-				Collections.<IResourceDescription> emptyList());
+		ResourceDescriptionsData index = new ResourceDescriptionsData(Collections.emptyList());
 		List<Resource> resources = Lists.newArrayList(resourceSet.getResources());
 		for (Resource resource : resources) {
 			index(resource, resource.getURI(), index);
