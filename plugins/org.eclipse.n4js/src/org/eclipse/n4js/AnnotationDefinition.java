@@ -335,7 +335,7 @@ public final class AnnotationDefinition {
 	 */
 	public final static AnnotationDefinition EXCLUDE_FROM_TEST_CATALOG = define("ExcludeFromTestCatalog")
 			.targets(N4_CLASS_DECLARATION, N4_METHOD_DECLARATION)
-			.retention(RetentionPolicy.AST).transitive().end();
+			.retention(RetentionPolicy.TYPE).transitive().end();
 
 	/**
 	 * N4JSSpec : chapter 11.2 Test Support, Constraints 128: TestAPI
