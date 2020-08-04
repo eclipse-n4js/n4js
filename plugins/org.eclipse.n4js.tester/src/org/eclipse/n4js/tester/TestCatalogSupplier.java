@@ -13,10 +13,10 @@ package org.eclipse.n4js.tester;
 import java.util.Collections;
 import java.util.function.Function;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.tester.domain.TestTree;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,6 +33,9 @@ import com.google.inject.Inject;
 public class TestCatalogSupplier {
 
 	@Inject
+	private IN4JSCore n4jsCore;
+
+	@Inject
 	private ObjectMapper objectMapper;
 
 	@Inject
@@ -42,9 +45,7 @@ public class TestCatalogSupplier {
 	private TestDiscoveryHelper testDiscoveryHelper;
 
 	/**
-	 * Returns with the test catalog as a string representing all available tests in the workspace. This method may
-	 * return with a test catalog of an empty {@link TestTree test tree} if the the {@link Platform platform} is not
-	 * running.
+	 * Returns with the test catalog as a string representing all available tests in the workspace.
 	 *
 	 * @return the test catalog as a JSON formatted string.
 	 */
@@ -54,9 +55,7 @@ public class TestCatalogSupplier {
 	}
 
 	/**
-	 * Returns with the test catalog as a string representing all available tests in the workspace. This method may
-	 * return with a test catalog of an empty {@link TestTree test tree} if the the {@link Platform platform} is not
-	 * running.
+	 * Returns with the test catalog as a string representing all available tests in the workspace.
 	 *
 	 * @return the test catalog as a JSON formatted string.
 	 */
@@ -66,11 +65,10 @@ public class TestCatalogSupplier {
 	}
 
 	/**
-	 * Returns with the test catalog as a string representing all available tests in the workspace. This method may
-	 * return with a test catalog of an empty {@link TestTree test tree} if the the {@link Platform platform} is not
-	 * running.
+	 * Returns with the test catalog as a string representing all available tests in the workspace or null if no test
+	 * suites were found.
 	 *
-	 * @return the test catalog as a JSON formatted string.
+	 * @return the test catalog as a JSON formatted string or null iff no test suites where found.
 	 */
 	public String get(Function<? super URI, ? extends ResourceSet> resourceSetAccess) {
 		return get(resourceSetAccess, false);
@@ -83,9 +81,27 @@ public class TestCatalogSupplier {
 	 */
 	public String get(Function<? super URI, ? extends ResourceSet> resourceSetAccess,
 			boolean suppressEndpointProperty) {
-		try {
-			final TestTree testTree = getTreeForAllTests(resourceSetAccess);
 
+		return get(resourceSetAccess, n4jsCore.findAllProjects(), suppressEndpointProperty);
+	}
+
+	/**
+	 * Same as {@link #get(Function, boolean)}, except that this method only returns those tests that are contained in
+	 * the given projects.
+	 */
+	public String get(Function<? super URI, ? extends ResourceSet> resourceSetAccess,
+			Iterable<? extends IN4JSProject> projects, boolean suppressEndpointProperty) {
+
+		final TestTree testTree = testDiscoveryHelper.collectAllTestsFromProjects(resourceSetAccess, projects);
+		if (testTree.getSuites().isEmpty()) {
+			return null;
+		}
+		return serializeTestTree(testTree, suppressEndpointProperty);
+	}
+
+	/** Serializes the given {@link TestTree}. */
+	protected String serializeTestTree(TestTree testTree, boolean suppressEndpointProperty) {
+		try {
 			final Object testCatalogObject = suppressEndpointProperty
 					? treeTransformer.apply(testTree, Collections.emptyMap())
 					: treeTransformer.apply(testTree);
@@ -97,8 +113,4 @@ public class TestCatalogSupplier {
 		}
 	}
 
-	/** @return the {@link TestTree} for all tests */
-	protected TestTree getTreeForAllTests(Function<? super URI, ? extends ResourceSet> resourceSetAccess) {
-		return testDiscoveryHelper.collectAllTestsFromWorkspace(resourceSetAccess);
-	}
 }

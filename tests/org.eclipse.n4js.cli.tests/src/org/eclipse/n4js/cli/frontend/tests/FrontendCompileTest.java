@@ -21,7 +21,6 @@ import org.junit.Test;
 
 /** Front end tests for the CLI interface */
 public class FrontendCompileTest extends AbstractCliFrontendTest {
-	private static final String FILE_TC = "file.tc";
 	private static final String REPORT_FILE_NAME_WITHOUT_EXTENSTION = "report";
 	private static final String REPORT_FILE_NAME_EXTENSTION = ".csv";
 	private static final String REPORT_FILE_NAME = REPORT_FILE_NAME_WITHOUT_EXTENSTION + REPORT_FILE_NAME_EXTENSTION;
@@ -285,57 +284,4 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 				result.getStdOut());
 	}
 
-	/**  */
-	@Test
-	public void checkTestCatalogOk() {
-		try {
-			String args[] = { ".", "--testCatalog", FILE_TC };
-			CliCompileResult result = n4jsc(args);
-			assertEquals(result.toString(), "", result.getStdOut());
-
-		} finally {
-			tryDeleteTC();
-		}
-	}
-
-	/**  */
-	@Test
-	public void checkTestCatalogMissingOp() {
-		try {
-			String args[] = { ".", "--testCatalog" };
-			CliCompileResult result = n4jsc(args, 10);
-			assertEquals(result.toString(),
-					"ERROR-10 (Invalid command line string):  Option \"--testCatalog (-tc)\" takes an operand",
-					result.getStdOut());
-
-		} finally {
-			tryDeleteTC();
-		}
-	}
-
-	/**  */
-	@Test
-	public void checkTestCatalogWrongGoal() {
-		try {
-			String args[] = { "lsp", ".", "--testCatalog", FILE_TC };
-			CliCompileResult result = n4jsc(args, 13);
-			assertEquals(result.toString(),
-					"ERROR-13 (Invalid option):  Given option --testCatalog requires goal(s) compile, but goal lsp was given.",
-					result.getStdOut());
-
-		} finally {
-			tryDeleteTC();
-		}
-	}
-
-	private void tryDeleteTC() {
-		File tc = new File(FILE_TC);
-		if (tc.exists()) {
-			try {
-				tc.delete();
-			} catch (Exception e) {
-				// ignore
-			}
-		}
-	}
 }

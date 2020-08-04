@@ -164,6 +164,11 @@ public final class N4JSGlobals {
 	public static final String N4JS_PROJECT_STATE = ".n4js.projectstate";
 
 	/**
+	 * The name of the N4JS test catalog file.
+	 */
+	public static final String TEST_CATALOG = "testcatalog.json";
+
+	/**
 	 * String used to separate segments in the string representation of a {@link QualifiedName qualified name}.
 	 *
 	 * @see N4JSQualifiedNameConverter#DELIMITER
