@@ -18,6 +18,7 @@ import static org.junit.Assert.assertFalse;
 import java.io.File;
 import java.io.IOException;
 
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
 import org.eclipse.n4js.cli.helper.CliCompileResult;
 import org.eclipse.n4js.utils.io.FileDeleter;
@@ -29,8 +30,6 @@ import org.junit.Test;
  * Tests that the test catalog file does not contain tests of packages located inside the node_modules folder.
  */
 public class N4jscTestCatalogIgnoresTestsInNodeModules extends AbstractCliCompileTest {
-
-	static final boolean DONT_CLEAN = false;
 
 	File workspace;
 	File projectRoot;
@@ -52,9 +51,8 @@ public class N4jscTestCatalogIgnoresTestsInNodeModules extends AbstractCliCompil
 	@Test
 	public void testCompileAndAssertTestCatalog() throws Exception {
 
-		File testCatalog = new File(projectRoot, "testcatalog.json"); // N4JSGlobals.TEST_CATALOG
-		CliCompileResult cliResult = n4jsc(COMPILE(workspace).testCatalog(testCatalog),
-				VALIDATION_ERRORS);
+		File testCatalog = new File(projectRoot, N4JSGlobals.TEST_CATALOG);
+		CliCompileResult cliResult = n4jsc(COMPILE(workspace), VALIDATION_ERRORS);
 		assertEquals(cliResult.toString(), 1, cliResult.getTranspiledFilesCount());
 
 		assertFalse("Superfluous test catalog in P1", testCatalog.isFile());
