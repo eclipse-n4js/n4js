@@ -474,6 +474,39 @@ AnnnotatedElement:
 * arguments -> String
 * arguments are optional -> NO
 
+
+
+[[sec:ExcludeFromTestCatalog]]
+==== Exclude from Test Catalog
+
+Excluding test methods (annotated with `@Test`) from the test catalog is done using the annotation `@ExcludeFromTestCatalog`.
+The difference between `@Ignore` and `@ExcludeFromTestCatalog` is the retention policy:
+`@ExcludeFromTestCatalog` uses AST only retention policy, i.e. that this annotation is not available at runtime.
+
+[source,xtext]
+----
+Annotation:
+    '@ExcludeFromTestCatalog'
+    AnnotatedElement
+;
+
+AnnnotatedElement:
+    N4JSClassDeclaration | N4JSMethodDeclaration
+;
+----
+
+`@ExcludeFromTestCatalog` properties
+
+* name -> ``ExcludeFromTestCatalog``
+* targets -> N4Method, N4Class
+* retention policy -> AST
+* transitive -> YES
+* arguments -> none
+* arguments are optional -> NO
+
+
+
+
 [[sec:Test_Reporting]]
 == Test Reporting
 
