@@ -25,6 +25,7 @@ import org.eclipse.n4js.ide.server.N4JSProjectDescriptionFactory;
 import org.eclipse.n4js.ide.server.N4JSProjectStatePersister;
 import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
 import org.eclipse.n4js.ide.server.SourceFolderAwareResourceValidator;
+import org.eclipse.n4js.ide.server.build.N4JSWorkspaceBuilder;
 import org.eclipse.n4js.ide.server.codeActions.N4JSCodeActionService;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
 import org.eclipse.n4js.ide.server.concurrent.N4JSQueuedExecutorService;
@@ -137,7 +138,7 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 	}
 
 	public Class<? extends XWorkspaceBuilder> bindXWorkspaceBuilder() {
-		return XWorkspaceBuilder.class;
+		return N4JSWorkspaceBuilder.class;
 	}
 
 	public Class<? extends ExecutableCommandRegistry> bindExecutableCommandRegistry() {

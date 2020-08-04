@@ -10,12 +10,7 @@
  */
 package org.eclipse.n4js.cli.compiler;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Set;
 import java.util.SortedMap;
@@ -38,7 +33,6 @@ import org.eclipse.n4js.ide.xtext.server.build.DefaultBuildRequestFactory;
 import org.eclipse.n4js.ide.xtext.server.build.XWorkspaceManager;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.smith.N4JSDataCollectors;
-import org.eclipse.n4js.tester.TestCatalogSupplier;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.workspace.IProjectConfig;
 
@@ -105,8 +99,6 @@ public class N4jscCompiler {
 
 		languageServer.shutdown();
 		languageServer.exit();
-
-		writeTestCatalog();
 
 		return determineExitState();
 	}
@@ -206,28 +198,6 @@ public class N4jscCompiler {
 				"Compile results - Transpiled: %d, Deleted: %d, Errors: %d, Warnings: %d, Duration: %s",
 				trsnp, deltd, errs, wrns, durationStr);
 		N4jscConsole.println(msg);
-	}
-
-	private void writeTestCatalog() throws N4jscException {
-		File testCatalogFile = options.getTestCatalog();
-		if (testCatalogFile != null) {
-			Injector injector = N4jscFactory.getOrCreateInjector();
-			TestCatalogSupplier testCatalogSupplier = injector.getInstance(TestCatalogSupplier.class);
-
-			String catalog = testCatalogSupplier.get((uri) -> workspaceManager.getProjectBuilder(uri).getResourceSet(),
-					true); // do not include "endpoint" property here
-
-			try (OutputStream os = new BufferedOutputStream(new FileOutputStream(testCatalogFile))) {
-				os.write(catalog.getBytes(StandardCharsets.UTF_8));
-				os.flush();
-
-			} catch (IOException e) {
-				String msg = "Error while writing test catalog file at: " + testCatalogFile;
-				throw new N4jscException(N4jscExitCode.TEST_CATALOG_ASSEMBLATION_ERROR, msg);
-			}
-
-			N4jscConsole.println("Test catalog written to " + testCatalogFile.toPath());
-		}
 	}
 
 	private N4jscExitState determineExitState() {

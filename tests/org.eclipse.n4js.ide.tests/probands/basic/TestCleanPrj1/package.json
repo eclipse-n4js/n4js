@@ -9,6 +9,9 @@
 		"sources": {
 			"source": [
 				"src"
+			],
+			"test": [
+				"test"
 			]
 		}
 	}
