@@ -15,6 +15,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
 import static java.lang.String.valueOf;
 import static java.util.UUID.randomUUID;
+import static org.eclipse.n4js.AnnotationDefinition.EXCLUDE_FROM_TEST_CATALOG;
 import static org.eclipse.n4js.AnnotationDefinition.TEST_METHOD;
 import static org.eclipse.xtext.EcoreUtil2.getContainerOfType;
 
@@ -45,6 +46,7 @@ import org.eclipse.n4js.tester.domain.ID;
 import org.eclipse.n4js.tester.domain.TestCase;
 import org.eclipse.n4js.tester.domain.TestSuite;
 import org.eclipse.n4js.tester.domain.TestTree;
+import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
@@ -528,7 +530,17 @@ public class TestDiscoveryHelper {
 	}
 
 	private static boolean isTestMethod(final TMember member) {
-		return member instanceof TMethod && TEST_METHOD.hasAnnotation(member);
+		boolean isTestMethod = member instanceof TMethod && TEST_METHOD.hasAnnotation(member);
+		if (isTestMethod) {
+			ContainerType<?> containingType = member.getContainingType();
+			if (EXCLUDE_FROM_TEST_CATALOG.hasAnnotation(containingType)
+					|| EXCLUDE_FROM_TEST_CATALOG.hasAnnotation(member)) {
+
+				return false;
+			}
+			return true;
+		}
+		return false;
 	}
 
 	private static final <T> Stream<T> stream(final Iterable<T> in) {
