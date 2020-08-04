@@ -782,9 +782,9 @@ rulePatternCharacter returns [EObject current=null]
 					setWithLastConsumed($current, "value", lv_value_0_4, null);
 				}
 				    |
-				lv_value_0_5=Comma
+				lv_value_0_5=KW__
 				{
-					newLeafNode(lv_value_0_5, grammarAccess.getPatternCharacterAccess().getValueCommaKeyword_0_4());
+					newLeafNode(lv_value_0_5, grammarAccess.getPatternCharacterAccess().getValue_Keyword_0_4());
 				}
 				{
 					if ($current==null) {
@@ -793,9 +793,9 @@ rulePatternCharacter returns [EObject current=null]
 					setWithLastConsumed($current, "value", lv_value_0_5, null);
 				}
 				    |
-				lv_value_0_6=EqualsSign
+				lv_value_0_6=Comma
 				{
-					newLeafNode(lv_value_0_6, grammarAccess.getPatternCharacterAccess().getValueEqualsSignKeyword_0_5());
+					newLeafNode(lv_value_0_6, grammarAccess.getPatternCharacterAccess().getValueCommaKeyword_0_5());
 				}
 				{
 					if ($current==null) {
@@ -804,9 +804,9 @@ rulePatternCharacter returns [EObject current=null]
 					setWithLastConsumed($current, "value", lv_value_0_6, null);
 				}
 				    |
-				lv_value_0_7=Colon
+				lv_value_0_7=EqualsSign
 				{
-					newLeafNode(lv_value_0_7, grammarAccess.getPatternCharacterAccess().getValueColonKeyword_0_6());
+					newLeafNode(lv_value_0_7, grammarAccess.getPatternCharacterAccess().getValueEqualsSignKeyword_0_6());
 				}
 				{
 					if ($current==null) {
@@ -815,9 +815,9 @@ rulePatternCharacter returns [EObject current=null]
 					setWithLastConsumed($current, "value", lv_value_0_7, null);
 				}
 				    |
-				lv_value_0_8=ExclamationMark
+				lv_value_0_8=Colon
 				{
-					newLeafNode(lv_value_0_8, grammarAccess.getPatternCharacterAccess().getValueExclamationMarkKeyword_0_7());
+					newLeafNode(lv_value_0_8, grammarAccess.getPatternCharacterAccess().getValueColonKeyword_0_7());
 				}
 				{
 					if ($current==null) {
@@ -826,9 +826,9 @@ rulePatternCharacter returns [EObject current=null]
 					setWithLastConsumed($current, "value", lv_value_0_8, null);
 				}
 				    |
-				lv_value_0_9=LeftCurlyBracket
+				lv_value_0_9=ExclamationMark
 				{
-					newLeafNode(lv_value_0_9, grammarAccess.getPatternCharacterAccess().getValueLeftCurlyBracketKeyword_0_8());
+					newLeafNode(lv_value_0_9, grammarAccess.getPatternCharacterAccess().getValueExclamationMarkKeyword_0_8());
 				}
 				{
 					if ($current==null) {
@@ -837,9 +837,9 @@ rulePatternCharacter returns [EObject current=null]
 					setWithLastConsumed($current, "value", lv_value_0_9, null);
 				}
 				    |
-				lv_value_0_10=RightCurlyBracket
+				lv_value_0_10=LeftCurlyBracket
 				{
-					newLeafNode(lv_value_0_10, grammarAccess.getPatternCharacterAccess().getValueRightCurlyBracketKeyword_0_9());
+					newLeafNode(lv_value_0_10, grammarAccess.getPatternCharacterAccess().getValueLeftCurlyBracketKeyword_0_9());
 				}
 				{
 					if ($current==null) {
@@ -848,9 +848,9 @@ rulePatternCharacter returns [EObject current=null]
 					setWithLastConsumed($current, "value", lv_value_0_10, null);
 				}
 				    |
-				lv_value_0_11=RightSquareBracket
+				lv_value_0_11=RightCurlyBracket
 				{
-					newLeafNode(lv_value_0_11, grammarAccess.getPatternCharacterAccess().getValueRightSquareBracketKeyword_0_10());
+					newLeafNode(lv_value_0_11, grammarAccess.getPatternCharacterAccess().getValueRightCurlyBracketKeyword_0_10());
 				}
 				{
 					if ($current==null) {
@@ -859,9 +859,9 @@ rulePatternCharacter returns [EObject current=null]
 					setWithLastConsumed($current, "value", lv_value_0_11, null);
 				}
 				    |
-				lv_value_0_12=LessThanSign
+				lv_value_0_12=RightSquareBracket
 				{
-					newLeafNode(lv_value_0_12, grammarAccess.getPatternCharacterAccess().getValueLessThanSignKeyword_0_11());
+					newLeafNode(lv_value_0_12, grammarAccess.getPatternCharacterAccess().getValueRightSquareBracketKeyword_0_11());
 				}
 				{
 					if ($current==null) {
@@ -870,15 +870,26 @@ rulePatternCharacter returns [EObject current=null]
 					setWithLastConsumed($current, "value", lv_value_0_12, null);
 				}
 				    |
-				lv_value_0_13=GreaterThanSign
+				lv_value_0_13=LessThanSign
 				{
-					newLeafNode(lv_value_0_13, grammarAccess.getPatternCharacterAccess().getValueGreaterThanSignKeyword_0_12());
+					newLeafNode(lv_value_0_13, grammarAccess.getPatternCharacterAccess().getValueLessThanSignKeyword_0_12());
 				}
 				{
 					if ($current==null) {
 						$current = createModelElement(grammarAccess.getPatternCharacterRule());
 					}
 					setWithLastConsumed($current, "value", lv_value_0_13, null);
+				}
+				    |
+				lv_value_0_14=GreaterThanSign
+				{
+					newLeafNode(lv_value_0_14, grammarAccess.getPatternCharacterAccess().getValueGreaterThanSignKeyword_0_13());
+				}
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getPatternCharacterRule());
+					}
+					setWithLastConsumed($current, "value", lv_value_0_14, null);
 				}
 			)
 		)
