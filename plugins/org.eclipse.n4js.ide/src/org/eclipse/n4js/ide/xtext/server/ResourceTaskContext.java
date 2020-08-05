@@ -321,12 +321,9 @@ public class ResourceTaskContext {
 
 		prepareRefresh();
 
+		int oldDocumentLength = document.getContents().length();
 		document = document.applyTextDocumentChanges(changes);
-		try {
-			mainResource.reparse(document.getContents());
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+		mainResource.update(0, oldDocumentLength, document.getContents());
 
 		resolveAndValidateResource(cancelIndicator);
 	}
