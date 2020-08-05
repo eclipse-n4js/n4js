@@ -7,7 +7,8 @@
 	},
 	"resolutions": {
 		"minimist": "~1.2.2",
-		"kind-of": "~6.0.3"
+		"kind-of": "~6.0.3",
+		"dot-prop": "~5.2.0"
 	},
 	"scripts": {
 		"test": "lerna run --stream test"
