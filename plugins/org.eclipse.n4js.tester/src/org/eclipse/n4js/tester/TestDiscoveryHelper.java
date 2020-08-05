@@ -181,19 +181,23 @@ public class TestDiscoveryHelper {
 	}
 
 	/**
-	 * Collects all test cases from the underlying (N4JS core-based) workspace and returns with a new test tree instance
-	 * representing those test cases.
+	 * Collects all test cases from the given projects and returns with a new test tree instance representing those test
+	 * cases.
 	 *
 	 * @param resourceSetAccess
 	 *            the accessor for the resource set
 	 *
+	 * @param projects
+	 *            the projects that are searched for tests
+	 *
 	 * @return a test tree representing all test cases in the workspace.
 	 */
-	public TestTree collectAllTestsFromWorkspace(Function<? super URI, ? extends ResourceSet> resourceSetAccess) {
-		List<URI> testableProjectURIs = new ArrayList<>();
-		Iterable<? extends IN4JSProject> findAllProjects = n4jsCore.findAllProjects();
+	public TestTree collectAllTestsFromProjects(Function<? super URI, ? extends ResourceSet> resourceSetAccess,
+			Iterable<? extends IN4JSProject> projects) {
 
-		for (IN4JSProject project : findAllProjects) {
+		List<URI> testableProjectURIs = new ArrayList<>();
+
+		for (IN4JSProject project : projects) {
 			URI location = project.getLocation().toURI();
 			if (project.exists() && isTestable(location)) {
 				testableProjectURIs.add(location);

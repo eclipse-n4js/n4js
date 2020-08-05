@@ -421,27 +421,29 @@ public class RegularExpressionGrammarAccess extends AbstractGrammarElementFinder
 		private final RuleCall cValueUNICODE_LETTERTerminalRuleCall_0_1 = (RuleCall)cValueAlternatives_0.eContents().get(1);
 		private final RuleCall cValueUNICODE_DIGITTerminalRuleCall_0_2 = (RuleCall)cValueAlternatives_0.eContents().get(2);
 		private final Keyword cValueHyphenMinusKeyword_0_3 = (Keyword)cValueAlternatives_0.eContents().get(3);
-		private final Keyword cValueCommaKeyword_0_4 = (Keyword)cValueAlternatives_0.eContents().get(4);
-		private final Keyword cValueEqualsSignKeyword_0_5 = (Keyword)cValueAlternatives_0.eContents().get(5);
-		private final Keyword cValueColonKeyword_0_6 = (Keyword)cValueAlternatives_0.eContents().get(6);
-		private final Keyword cValueExclamationMarkKeyword_0_7 = (Keyword)cValueAlternatives_0.eContents().get(7);
-		private final Keyword cValueLeftCurlyBracketKeyword_0_8 = (Keyword)cValueAlternatives_0.eContents().get(8);
-		private final Keyword cValueRightCurlyBracketKeyword_0_9 = (Keyword)cValueAlternatives_0.eContents().get(9);
-		private final Keyword cValueRightSquareBracketKeyword_0_10 = (Keyword)cValueAlternatives_0.eContents().get(10);
-		private final Keyword cValueLessThanSignKeyword_0_11 = (Keyword)cValueAlternatives_0.eContents().get(11);
-		private final Keyword cValueGreaterThanSignKeyword_0_12 = (Keyword)cValueAlternatives_0.eContents().get(12);
+		private final Keyword cValue_Keyword_0_4 = (Keyword)cValueAlternatives_0.eContents().get(4);
+		private final Keyword cValueCommaKeyword_0_5 = (Keyword)cValueAlternatives_0.eContents().get(5);
+		private final Keyword cValueEqualsSignKeyword_0_6 = (Keyword)cValueAlternatives_0.eContents().get(6);
+		private final Keyword cValueColonKeyword_0_7 = (Keyword)cValueAlternatives_0.eContents().get(7);
+		private final Keyword cValueExclamationMarkKeyword_0_8 = (Keyword)cValueAlternatives_0.eContents().get(8);
+		private final Keyword cValueLeftCurlyBracketKeyword_0_9 = (Keyword)cValueAlternatives_0.eContents().get(9);
+		private final Keyword cValueRightCurlyBracketKeyword_0_10 = (Keyword)cValueAlternatives_0.eContents().get(10);
+		private final Keyword cValueRightSquareBracketKeyword_0_11 = (Keyword)cValueAlternatives_0.eContents().get(11);
+		private final Keyword cValueLessThanSignKeyword_0_12 = (Keyword)cValueAlternatives_0.eContents().get(12);
+		private final Keyword cValueGreaterThanSignKeyword_0_13 = (Keyword)cValueAlternatives_0.eContents().get(13);
 		
 		//PatternCharacter:
 		//	value=(PATTERN_CHARACTER_NO_DASH | UNICODE_LETTER | UNICODE_DIGIT |
-		//	'-' |
+		//	'-' | '_' |
 		//	',' | '=' | ':' | '!' | '{' | '}' | ']' | '<' | '>');
 		@Override public ParserRule getRule() { return rule; }
 		
-		//value=(PATTERN_CHARACTER_NO_DASH | UNICODE_LETTER | UNICODE_DIGIT | '-' | ',' | '=' | ':' | '!' | '{' | '}' | ']' | '<'
-		//| '>')
+		//value=(PATTERN_CHARACTER_NO_DASH | UNICODE_LETTER | UNICODE_DIGIT | '-' | '_' | ',' | '=' | ':' | '!' | '{' | '}' | ']'
+		//| '<' | '>')
 		public Assignment getValueAssignment() { return cValueAssignment; }
 		
-		//(PATTERN_CHARACTER_NO_DASH | UNICODE_LETTER | UNICODE_DIGIT | '-' | ',' | '=' | ':' | '!' | '{' | '}' | ']' | '<' | '>')
+		//(PATTERN_CHARACTER_NO_DASH | UNICODE_LETTER | UNICODE_DIGIT | '-' | '_' | ',' | '=' | ':' | '!' | '{' | '}' | ']' | '<'
+		//| '>')
 		public Alternatives getValueAlternatives_0() { return cValueAlternatives_0; }
 		
 		//PATTERN_CHARACTER_NO_DASH
@@ -456,32 +458,35 @@ public class RegularExpressionGrammarAccess extends AbstractGrammarElementFinder
 		//'-'
 		public Keyword getValueHyphenMinusKeyword_0_3() { return cValueHyphenMinusKeyword_0_3; }
 		
+		//'_'
+		public Keyword getValue_Keyword_0_4() { return cValue_Keyword_0_4; }
+		
 		//','
-		public Keyword getValueCommaKeyword_0_4() { return cValueCommaKeyword_0_4; }
+		public Keyword getValueCommaKeyword_0_5() { return cValueCommaKeyword_0_5; }
 		
 		//'='
-		public Keyword getValueEqualsSignKeyword_0_5() { return cValueEqualsSignKeyword_0_5; }
+		public Keyword getValueEqualsSignKeyword_0_6() { return cValueEqualsSignKeyword_0_6; }
 		
 		//':'
-		public Keyword getValueColonKeyword_0_6() { return cValueColonKeyword_0_6; }
+		public Keyword getValueColonKeyword_0_7() { return cValueColonKeyword_0_7; }
 		
 		//'!'
-		public Keyword getValueExclamationMarkKeyword_0_7() { return cValueExclamationMarkKeyword_0_7; }
+		public Keyword getValueExclamationMarkKeyword_0_8() { return cValueExclamationMarkKeyword_0_8; }
 		
 		//'{'
-		public Keyword getValueLeftCurlyBracketKeyword_0_8() { return cValueLeftCurlyBracketKeyword_0_8; }
+		public Keyword getValueLeftCurlyBracketKeyword_0_9() { return cValueLeftCurlyBracketKeyword_0_9; }
 		
 		//'}'
-		public Keyword getValueRightCurlyBracketKeyword_0_9() { return cValueRightCurlyBracketKeyword_0_9; }
+		public Keyword getValueRightCurlyBracketKeyword_0_10() { return cValueRightCurlyBracketKeyword_0_10; }
 		
 		//']'
-		public Keyword getValueRightSquareBracketKeyword_0_10() { return cValueRightSquareBracketKeyword_0_10; }
+		public Keyword getValueRightSquareBracketKeyword_0_11() { return cValueRightSquareBracketKeyword_0_11; }
 		
 		//'<'
-		public Keyword getValueLessThanSignKeyword_0_11() { return cValueLessThanSignKeyword_0_11; }
+		public Keyword getValueLessThanSignKeyword_0_12() { return cValueLessThanSignKeyword_0_12; }
 		
 		//'>'
-		public Keyword getValueGreaterThanSignKeyword_0_12() { return cValueGreaterThanSignKeyword_0_12; }
+		public Keyword getValueGreaterThanSignKeyword_0_13() { return cValueGreaterThanSignKeyword_0_13; }
 	}
 	public class WildcardElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.regex.RegularExpression.Wildcard");
@@ -1514,7 +1519,7 @@ public class RegularExpressionGrammarAccess extends AbstractGrammarElementFinder
 	
 	//PatternCharacter:
 	//	value=(PATTERN_CHARACTER_NO_DASH | UNICODE_LETTER | UNICODE_DIGIT |
-	//	'-' |
+	//	'-' | '_' |
 	//	',' | '=' | ':' | '!' | '{' | '}' | ']' | '<' | '>');
 	public PatternCharacterElements getPatternCharacterAccess() {
 		return pPatternCharacter;

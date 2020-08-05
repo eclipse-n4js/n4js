@@ -3193,7 +3193,7 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
             int alt2=2;
             int LA2_0 = input.LA(1);
 
-            if ( ((LA2_0>=LeftParenthesisQuestionMarkLessThanSignExclamationMark && LA2_0<=LeftParenthesisQuestionMarkEqualsSign)||(LA2_0>=ExclamationMark && LA2_0<=LeftParenthesis)||(LA2_0>=Comma && LA2_0<=FullStop)||(LA2_0>=Colon && LA2_0<=GreaterThanSign)||(LA2_0>=LeftSquareBracket && LA2_0<=CircumflexAccent)||LA2_0==LeftCurlyBracket||(LA2_0>=RightCurlyBracket && LA2_0<=RULE_CONTROL_LETTER_ESCAPE)||(LA2_0>=RULE_HEX_ESCAPE && LA2_0<=RULE_UNICODE_ESCAPE)||(LA2_0>=RULE_DECIMAL_ESCAPE && LA2_0<=RULE_IDENTITY_ESCAPE)||LA2_0==RULE_UNICODE_DIGIT||(LA2_0>=RULE_UNICODE_LETTER && LA2_0<=RULE_PATTERN_CHARACTER_NO_DASH)) ) {
+            if ( ((LA2_0>=LeftParenthesisQuestionMarkLessThanSignExclamationMark && LA2_0<=LeftParenthesisQuestionMarkEqualsSign)||(LA2_0>=ExclamationMark && LA2_0<=LeftParenthesis)||(LA2_0>=Comma && LA2_0<=FullStop)||(LA2_0>=Colon && LA2_0<=GreaterThanSign)||(LA2_0>=LeftSquareBracket && LA2_0<=LeftCurlyBracket)||(LA2_0>=RightCurlyBracket && LA2_0<=RULE_CONTROL_LETTER_ESCAPE)||(LA2_0>=RULE_HEX_ESCAPE && LA2_0<=RULE_UNICODE_ESCAPE)||(LA2_0>=RULE_DECIMAL_ESCAPE && LA2_0<=RULE_IDENTITY_ESCAPE)||LA2_0==RULE_UNICODE_DIGIT||(LA2_0>=RULE_UNICODE_LETTER && LA2_0<=RULE_PATTERN_CHARACTER_NO_DASH)) ) {
                 alt2=1;
             }
             else if ( (LA2_0==EOF||LA2_0==RightParenthesis||LA2_0==Solidus||LA2_0==VerticalLine) ) {
@@ -3296,7 +3296,7 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
             if ( ((LA3_0>=LeftParenthesisQuestionMarkLessThanSignExclamationMark && LA3_0<=LeftParenthesisQuestionMarkExclamationMark)||LA3_0==LeftParenthesisQuestionMarkEqualsSign||LA3_0==DollarSign||LA3_0==CircumflexAccent||(LA3_0>=RULE_WORD_BOUNDARY && LA3_0<=RULE_NOT_WORD_BOUNDARY)) ) {
                 alt3=1;
             }
-            else if ( ((LA3_0>=LeftParenthesisQuestionMarkColon && LA3_0<=LeftParenthesisQuestionMarkLessThanSign)||LA3_0==ExclamationMark||LA3_0==LeftParenthesis||(LA3_0>=Comma && LA3_0<=FullStop)||(LA3_0>=Colon && LA3_0<=GreaterThanSign)||(LA3_0>=LeftSquareBracket && LA3_0<=RightSquareBracket)||LA3_0==LeftCurlyBracket||LA3_0==RightCurlyBracket||(LA3_0>=RULE_CHARACTER_CLASS_ESCAPE && LA3_0<=RULE_CONTROL_LETTER_ESCAPE)||(LA3_0>=RULE_HEX_ESCAPE && LA3_0<=RULE_UNICODE_ESCAPE)||(LA3_0>=RULE_DECIMAL_ESCAPE && LA3_0<=RULE_IDENTITY_ESCAPE)||LA3_0==RULE_UNICODE_DIGIT||(LA3_0>=RULE_UNICODE_LETTER && LA3_0<=RULE_PATTERN_CHARACTER_NO_DASH)) ) {
+            else if ( ((LA3_0>=LeftParenthesisQuestionMarkColon && LA3_0<=LeftParenthesisQuestionMarkLessThanSign)||LA3_0==ExclamationMark||LA3_0==LeftParenthesis||(LA3_0>=Comma && LA3_0<=FullStop)||(LA3_0>=Colon && LA3_0<=GreaterThanSign)||(LA3_0>=LeftSquareBracket && LA3_0<=RightSquareBracket)||(LA3_0>=KW__ && LA3_0<=LeftCurlyBracket)||LA3_0==RightCurlyBracket||(LA3_0>=RULE_CHARACTER_CLASS_ESCAPE && LA3_0<=RULE_CONTROL_LETTER_ESCAPE)||(LA3_0>=RULE_HEX_ESCAPE && LA3_0<=RULE_UNICODE_ESCAPE)||(LA3_0>=RULE_DECIMAL_ESCAPE && LA3_0<=RULE_IDENTITY_ESCAPE)||LA3_0==RULE_UNICODE_DIGIT||(LA3_0>=RULE_UNICODE_LETTER && LA3_0<=RULE_PATTERN_CHARACTER_NO_DASH)) ) {
                 alt3=2;
             }
             else {
@@ -3916,6 +3916,7 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
             case EqualsSign:
             case GreaterThanSign:
             case RightSquareBracket:
+            case KW__:
             case LeftCurlyBracket:
             case RightCurlyBracket:
             case RULE_UNICODE_DIGIT:
@@ -4095,14 +4096,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__PatternCharacter__ValueAlternatives_0"
-    // InternalRegularExpressionParser.g:1171:1: rule__PatternCharacter__ValueAlternatives_0 : ( ( RULE_PATTERN_CHARACTER_NO_DASH ) | ( RULE_UNICODE_LETTER ) | ( RULE_UNICODE_DIGIT ) | ( HyphenMinus ) | ( Comma ) | ( EqualsSign ) | ( Colon ) | ( ExclamationMark ) | ( LeftCurlyBracket ) | ( RightCurlyBracket ) | ( RightSquareBracket ) | ( LessThanSign ) | ( GreaterThanSign ) );
+    // InternalRegularExpressionParser.g:1171:1: rule__PatternCharacter__ValueAlternatives_0 : ( ( RULE_PATTERN_CHARACTER_NO_DASH ) | ( RULE_UNICODE_LETTER ) | ( RULE_UNICODE_DIGIT ) | ( HyphenMinus ) | ( KW__ ) | ( Comma ) | ( EqualsSign ) | ( Colon ) | ( ExclamationMark ) | ( LeftCurlyBracket ) | ( RightCurlyBracket ) | ( RightSquareBracket ) | ( LessThanSign ) | ( GreaterThanSign ) );
     public final void rule__PatternCharacter__ValueAlternatives_0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:1175:1: ( ( RULE_PATTERN_CHARACTER_NO_DASH ) | ( RULE_UNICODE_LETTER ) | ( RULE_UNICODE_DIGIT ) | ( HyphenMinus ) | ( Comma ) | ( EqualsSign ) | ( Colon ) | ( ExclamationMark ) | ( LeftCurlyBracket ) | ( RightCurlyBracket ) | ( RightSquareBracket ) | ( LessThanSign ) | ( GreaterThanSign ) )
-            int alt10=13;
+            // InternalRegularExpressionParser.g:1175:1: ( ( RULE_PATTERN_CHARACTER_NO_DASH ) | ( RULE_UNICODE_LETTER ) | ( RULE_UNICODE_DIGIT ) | ( HyphenMinus ) | ( KW__ ) | ( Comma ) | ( EqualsSign ) | ( Colon ) | ( ExclamationMark ) | ( LeftCurlyBracket ) | ( RightCurlyBracket ) | ( RightSquareBracket ) | ( LessThanSign ) | ( GreaterThanSign ) )
+            int alt10=14;
             switch ( input.LA(1) ) {
             case RULE_PATTERN_CHARACTER_NO_DASH:
                 {
@@ -4124,49 +4125,54 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                 alt10=4;
                 }
                 break;
-            case Comma:
+            case KW__:
                 {
                 alt10=5;
                 }
                 break;
-            case EqualsSign:
+            case Comma:
                 {
                 alt10=6;
                 }
                 break;
-            case Colon:
+            case EqualsSign:
                 {
                 alt10=7;
                 }
                 break;
-            case ExclamationMark:
+            case Colon:
                 {
                 alt10=8;
                 }
                 break;
-            case LeftCurlyBracket:
+            case ExclamationMark:
                 {
                 alt10=9;
                 }
                 break;
-            case RightCurlyBracket:
+            case LeftCurlyBracket:
                 {
                 alt10=10;
                 }
                 break;
-            case RightSquareBracket:
+            case RightCurlyBracket:
                 {
                 alt10=11;
                 }
                 break;
-            case LessThanSign:
+            case RightSquareBracket:
                 {
                 alt10=12;
                 }
                 break;
-            case GreaterThanSign:
+            case LessThanSign:
                 {
                 alt10=13;
+                }
+                break;
+            case GreaterThanSign:
+                {
+                alt10=14;
                 }
                 break;
             default:
@@ -4255,17 +4261,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 5 :
-                    // InternalRegularExpressionParser.g:1200:2: ( Comma )
+                    // InternalRegularExpressionParser.g:1200:2: ( KW__ )
                     {
-                    // InternalRegularExpressionParser.g:1200:2: ( Comma )
-                    // InternalRegularExpressionParser.g:1201:3: Comma
+                    // InternalRegularExpressionParser.g:1200:2: ( KW__ )
+                    // InternalRegularExpressionParser.g:1201:3: KW__
                     {
                     if ( state.backtracking==0 ) {
-                       before(grammarAccess.getPatternCharacterAccess().getValueCommaKeyword_0_4()); 
+                       before(grammarAccess.getPatternCharacterAccess().getValue_Keyword_0_4()); 
                     }
-                    match(input,Comma,FOLLOW_2); if (state.failed) return ;
+                    match(input,KW__,FOLLOW_2); if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       after(grammarAccess.getPatternCharacterAccess().getValueCommaKeyword_0_4()); 
+                       after(grammarAccess.getPatternCharacterAccess().getValue_Keyword_0_4()); 
                     }
 
                     }
@@ -4274,17 +4280,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 6 :
-                    // InternalRegularExpressionParser.g:1206:2: ( EqualsSign )
+                    // InternalRegularExpressionParser.g:1206:2: ( Comma )
                     {
-                    // InternalRegularExpressionParser.g:1206:2: ( EqualsSign )
-                    // InternalRegularExpressionParser.g:1207:3: EqualsSign
+                    // InternalRegularExpressionParser.g:1206:2: ( Comma )
+                    // InternalRegularExpressionParser.g:1207:3: Comma
                     {
                     if ( state.backtracking==0 ) {
-                       before(grammarAccess.getPatternCharacterAccess().getValueEqualsSignKeyword_0_5()); 
+                       before(grammarAccess.getPatternCharacterAccess().getValueCommaKeyword_0_5()); 
                     }
-                    match(input,EqualsSign,FOLLOW_2); if (state.failed) return ;
+                    match(input,Comma,FOLLOW_2); if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       after(grammarAccess.getPatternCharacterAccess().getValueEqualsSignKeyword_0_5()); 
+                       after(grammarAccess.getPatternCharacterAccess().getValueCommaKeyword_0_5()); 
                     }
 
                     }
@@ -4293,17 +4299,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 7 :
-                    // InternalRegularExpressionParser.g:1212:2: ( Colon )
+                    // InternalRegularExpressionParser.g:1212:2: ( EqualsSign )
                     {
-                    // InternalRegularExpressionParser.g:1212:2: ( Colon )
-                    // InternalRegularExpressionParser.g:1213:3: Colon
+                    // InternalRegularExpressionParser.g:1212:2: ( EqualsSign )
+                    // InternalRegularExpressionParser.g:1213:3: EqualsSign
                     {
                     if ( state.backtracking==0 ) {
-                       before(grammarAccess.getPatternCharacterAccess().getValueColonKeyword_0_6()); 
+                       before(grammarAccess.getPatternCharacterAccess().getValueEqualsSignKeyword_0_6()); 
                     }
-                    match(input,Colon,FOLLOW_2); if (state.failed) return ;
+                    match(input,EqualsSign,FOLLOW_2); if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       after(grammarAccess.getPatternCharacterAccess().getValueColonKeyword_0_6()); 
+                       after(grammarAccess.getPatternCharacterAccess().getValueEqualsSignKeyword_0_6()); 
                     }
 
                     }
@@ -4312,17 +4318,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 8 :
-                    // InternalRegularExpressionParser.g:1218:2: ( ExclamationMark )
+                    // InternalRegularExpressionParser.g:1218:2: ( Colon )
                     {
-                    // InternalRegularExpressionParser.g:1218:2: ( ExclamationMark )
-                    // InternalRegularExpressionParser.g:1219:3: ExclamationMark
+                    // InternalRegularExpressionParser.g:1218:2: ( Colon )
+                    // InternalRegularExpressionParser.g:1219:3: Colon
                     {
                     if ( state.backtracking==0 ) {
-                       before(grammarAccess.getPatternCharacterAccess().getValueExclamationMarkKeyword_0_7()); 
+                       before(grammarAccess.getPatternCharacterAccess().getValueColonKeyword_0_7()); 
                     }
-                    match(input,ExclamationMark,FOLLOW_2); if (state.failed) return ;
+                    match(input,Colon,FOLLOW_2); if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       after(grammarAccess.getPatternCharacterAccess().getValueExclamationMarkKeyword_0_7()); 
+                       after(grammarAccess.getPatternCharacterAccess().getValueColonKeyword_0_7()); 
                     }
 
                     }
@@ -4331,17 +4337,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 9 :
-                    // InternalRegularExpressionParser.g:1224:2: ( LeftCurlyBracket )
+                    // InternalRegularExpressionParser.g:1224:2: ( ExclamationMark )
                     {
-                    // InternalRegularExpressionParser.g:1224:2: ( LeftCurlyBracket )
-                    // InternalRegularExpressionParser.g:1225:3: LeftCurlyBracket
+                    // InternalRegularExpressionParser.g:1224:2: ( ExclamationMark )
+                    // InternalRegularExpressionParser.g:1225:3: ExclamationMark
                     {
                     if ( state.backtracking==0 ) {
-                       before(grammarAccess.getPatternCharacterAccess().getValueLeftCurlyBracketKeyword_0_8()); 
+                       before(grammarAccess.getPatternCharacterAccess().getValueExclamationMarkKeyword_0_8()); 
                     }
-                    match(input,LeftCurlyBracket,FOLLOW_2); if (state.failed) return ;
+                    match(input,ExclamationMark,FOLLOW_2); if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       after(grammarAccess.getPatternCharacterAccess().getValueLeftCurlyBracketKeyword_0_8()); 
+                       after(grammarAccess.getPatternCharacterAccess().getValueExclamationMarkKeyword_0_8()); 
                     }
 
                     }
@@ -4350,17 +4356,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 10 :
-                    // InternalRegularExpressionParser.g:1230:2: ( RightCurlyBracket )
+                    // InternalRegularExpressionParser.g:1230:2: ( LeftCurlyBracket )
                     {
-                    // InternalRegularExpressionParser.g:1230:2: ( RightCurlyBracket )
-                    // InternalRegularExpressionParser.g:1231:3: RightCurlyBracket
+                    // InternalRegularExpressionParser.g:1230:2: ( LeftCurlyBracket )
+                    // InternalRegularExpressionParser.g:1231:3: LeftCurlyBracket
                     {
                     if ( state.backtracking==0 ) {
-                       before(grammarAccess.getPatternCharacterAccess().getValueRightCurlyBracketKeyword_0_9()); 
+                       before(grammarAccess.getPatternCharacterAccess().getValueLeftCurlyBracketKeyword_0_9()); 
                     }
-                    match(input,RightCurlyBracket,FOLLOW_2); if (state.failed) return ;
+                    match(input,LeftCurlyBracket,FOLLOW_2); if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       after(grammarAccess.getPatternCharacterAccess().getValueRightCurlyBracketKeyword_0_9()); 
+                       after(grammarAccess.getPatternCharacterAccess().getValueLeftCurlyBracketKeyword_0_9()); 
                     }
 
                     }
@@ -4369,17 +4375,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 11 :
-                    // InternalRegularExpressionParser.g:1236:2: ( RightSquareBracket )
+                    // InternalRegularExpressionParser.g:1236:2: ( RightCurlyBracket )
                     {
-                    // InternalRegularExpressionParser.g:1236:2: ( RightSquareBracket )
-                    // InternalRegularExpressionParser.g:1237:3: RightSquareBracket
+                    // InternalRegularExpressionParser.g:1236:2: ( RightCurlyBracket )
+                    // InternalRegularExpressionParser.g:1237:3: RightCurlyBracket
                     {
                     if ( state.backtracking==0 ) {
-                       before(grammarAccess.getPatternCharacterAccess().getValueRightSquareBracketKeyword_0_10()); 
+                       before(grammarAccess.getPatternCharacterAccess().getValueRightCurlyBracketKeyword_0_10()); 
                     }
-                    match(input,RightSquareBracket,FOLLOW_2); if (state.failed) return ;
+                    match(input,RightCurlyBracket,FOLLOW_2); if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       after(grammarAccess.getPatternCharacterAccess().getValueRightSquareBracketKeyword_0_10()); 
+                       after(grammarAccess.getPatternCharacterAccess().getValueRightCurlyBracketKeyword_0_10()); 
                     }
 
                     }
@@ -4388,17 +4394,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 12 :
-                    // InternalRegularExpressionParser.g:1242:2: ( LessThanSign )
+                    // InternalRegularExpressionParser.g:1242:2: ( RightSquareBracket )
                     {
-                    // InternalRegularExpressionParser.g:1242:2: ( LessThanSign )
-                    // InternalRegularExpressionParser.g:1243:3: LessThanSign
+                    // InternalRegularExpressionParser.g:1242:2: ( RightSquareBracket )
+                    // InternalRegularExpressionParser.g:1243:3: RightSquareBracket
                     {
                     if ( state.backtracking==0 ) {
-                       before(grammarAccess.getPatternCharacterAccess().getValueLessThanSignKeyword_0_11()); 
+                       before(grammarAccess.getPatternCharacterAccess().getValueRightSquareBracketKeyword_0_11()); 
                     }
-                    match(input,LessThanSign,FOLLOW_2); if (state.failed) return ;
+                    match(input,RightSquareBracket,FOLLOW_2); if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       after(grammarAccess.getPatternCharacterAccess().getValueLessThanSignKeyword_0_11()); 
+                       after(grammarAccess.getPatternCharacterAccess().getValueRightSquareBracketKeyword_0_11()); 
                     }
 
                     }
@@ -4407,17 +4413,36 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 13 :
-                    // InternalRegularExpressionParser.g:1248:2: ( GreaterThanSign )
+                    // InternalRegularExpressionParser.g:1248:2: ( LessThanSign )
                     {
-                    // InternalRegularExpressionParser.g:1248:2: ( GreaterThanSign )
-                    // InternalRegularExpressionParser.g:1249:3: GreaterThanSign
+                    // InternalRegularExpressionParser.g:1248:2: ( LessThanSign )
+                    // InternalRegularExpressionParser.g:1249:3: LessThanSign
                     {
                     if ( state.backtracking==0 ) {
-                       before(grammarAccess.getPatternCharacterAccess().getValueGreaterThanSignKeyword_0_12()); 
+                       before(grammarAccess.getPatternCharacterAccess().getValueLessThanSignKeyword_0_12()); 
+                    }
+                    match(input,LessThanSign,FOLLOW_2); if (state.failed) return ;
+                    if ( state.backtracking==0 ) {
+                       after(grammarAccess.getPatternCharacterAccess().getValueLessThanSignKeyword_0_12()); 
+                    }
+
+                    }
+
+
+                    }
+                    break;
+                case 14 :
+                    // InternalRegularExpressionParser.g:1254:2: ( GreaterThanSign )
+                    {
+                    // InternalRegularExpressionParser.g:1254:2: ( GreaterThanSign )
+                    // InternalRegularExpressionParser.g:1255:3: GreaterThanSign
+                    {
+                    if ( state.backtracking==0 ) {
+                       before(grammarAccess.getPatternCharacterAccess().getValueGreaterThanSignKeyword_0_13()); 
                     }
                     match(input,GreaterThanSign,FOLLOW_2); if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       after(grammarAccess.getPatternCharacterAccess().getValueGreaterThanSignKeyword_0_12()); 
+                       after(grammarAccess.getPatternCharacterAccess().getValueGreaterThanSignKeyword_0_13()); 
                     }
 
                     }
@@ -4443,13 +4468,13 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__AtomEscape__Alternatives"
-    // InternalRegularExpressionParser.g:1258:1: rule__AtomEscape__Alternatives : ( ( ruleDecimalEscapeSequence ) | ( ruleCharacterEscapeSequence ) | ( ruleControlLetterEscapeSequence ) | ( ruleHexEscapeSequence ) | ( ruleUnicodeEscapeSequence ) | ( ruleIdentityEscapeSequence ) | ( ruleCharacterClassEscapeSequence ) );
+    // InternalRegularExpressionParser.g:1264:1: rule__AtomEscape__Alternatives : ( ( ruleDecimalEscapeSequence ) | ( ruleCharacterEscapeSequence ) | ( ruleControlLetterEscapeSequence ) | ( ruleHexEscapeSequence ) | ( ruleUnicodeEscapeSequence ) | ( ruleIdentityEscapeSequence ) | ( ruleCharacterClassEscapeSequence ) );
     public final void rule__AtomEscape__Alternatives() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:1262:1: ( ( ruleDecimalEscapeSequence ) | ( ruleCharacterEscapeSequence ) | ( ruleControlLetterEscapeSequence ) | ( ruleHexEscapeSequence ) | ( ruleUnicodeEscapeSequence ) | ( ruleIdentityEscapeSequence ) | ( ruleCharacterClassEscapeSequence ) )
+            // InternalRegularExpressionParser.g:1268:1: ( ( ruleDecimalEscapeSequence ) | ( ruleCharacterEscapeSequence ) | ( ruleControlLetterEscapeSequence ) | ( ruleHexEscapeSequence ) | ( ruleUnicodeEscapeSequence ) | ( ruleIdentityEscapeSequence ) | ( ruleCharacterClassEscapeSequence ) )
             int alt11=7;
             switch ( input.LA(1) ) {
             case RULE_DECIMAL_ESCAPE:
@@ -4497,10 +4522,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
             switch (alt11) {
                 case 1 :
-                    // InternalRegularExpressionParser.g:1263:2: ( ruleDecimalEscapeSequence )
+                    // InternalRegularExpressionParser.g:1269:2: ( ruleDecimalEscapeSequence )
                     {
-                    // InternalRegularExpressionParser.g:1263:2: ( ruleDecimalEscapeSequence )
-                    // InternalRegularExpressionParser.g:1264:3: ruleDecimalEscapeSequence
+                    // InternalRegularExpressionParser.g:1269:2: ( ruleDecimalEscapeSequence )
+                    // InternalRegularExpressionParser.g:1270:3: ruleDecimalEscapeSequence
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getAtomEscapeAccess().getDecimalEscapeSequenceParserRuleCall_0()); 
@@ -4520,10 +4545,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 2 :
-                    // InternalRegularExpressionParser.g:1269:2: ( ruleCharacterEscapeSequence )
+                    // InternalRegularExpressionParser.g:1275:2: ( ruleCharacterEscapeSequence )
                     {
-                    // InternalRegularExpressionParser.g:1269:2: ( ruleCharacterEscapeSequence )
-                    // InternalRegularExpressionParser.g:1270:3: ruleCharacterEscapeSequence
+                    // InternalRegularExpressionParser.g:1275:2: ( ruleCharacterEscapeSequence )
+                    // InternalRegularExpressionParser.g:1276:3: ruleCharacterEscapeSequence
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getAtomEscapeAccess().getCharacterEscapeSequenceParserRuleCall_1()); 
@@ -4543,10 +4568,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 3 :
-                    // InternalRegularExpressionParser.g:1275:2: ( ruleControlLetterEscapeSequence )
+                    // InternalRegularExpressionParser.g:1281:2: ( ruleControlLetterEscapeSequence )
                     {
-                    // InternalRegularExpressionParser.g:1275:2: ( ruleControlLetterEscapeSequence )
-                    // InternalRegularExpressionParser.g:1276:3: ruleControlLetterEscapeSequence
+                    // InternalRegularExpressionParser.g:1281:2: ( ruleControlLetterEscapeSequence )
+                    // InternalRegularExpressionParser.g:1282:3: ruleControlLetterEscapeSequence
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getAtomEscapeAccess().getControlLetterEscapeSequenceParserRuleCall_2()); 
@@ -4566,10 +4591,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 4 :
-                    // InternalRegularExpressionParser.g:1281:2: ( ruleHexEscapeSequence )
+                    // InternalRegularExpressionParser.g:1287:2: ( ruleHexEscapeSequence )
                     {
-                    // InternalRegularExpressionParser.g:1281:2: ( ruleHexEscapeSequence )
-                    // InternalRegularExpressionParser.g:1282:3: ruleHexEscapeSequence
+                    // InternalRegularExpressionParser.g:1287:2: ( ruleHexEscapeSequence )
+                    // InternalRegularExpressionParser.g:1288:3: ruleHexEscapeSequence
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getAtomEscapeAccess().getHexEscapeSequenceParserRuleCall_3()); 
@@ -4589,10 +4614,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 5 :
-                    // InternalRegularExpressionParser.g:1287:2: ( ruleUnicodeEscapeSequence )
+                    // InternalRegularExpressionParser.g:1293:2: ( ruleUnicodeEscapeSequence )
                     {
-                    // InternalRegularExpressionParser.g:1287:2: ( ruleUnicodeEscapeSequence )
-                    // InternalRegularExpressionParser.g:1288:3: ruleUnicodeEscapeSequence
+                    // InternalRegularExpressionParser.g:1293:2: ( ruleUnicodeEscapeSequence )
+                    // InternalRegularExpressionParser.g:1294:3: ruleUnicodeEscapeSequence
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getAtomEscapeAccess().getUnicodeEscapeSequenceParserRuleCall_4()); 
@@ -4612,10 +4637,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 6 :
-                    // InternalRegularExpressionParser.g:1293:2: ( ruleIdentityEscapeSequence )
+                    // InternalRegularExpressionParser.g:1299:2: ( ruleIdentityEscapeSequence )
                     {
-                    // InternalRegularExpressionParser.g:1293:2: ( ruleIdentityEscapeSequence )
-                    // InternalRegularExpressionParser.g:1294:3: ruleIdentityEscapeSequence
+                    // InternalRegularExpressionParser.g:1299:2: ( ruleIdentityEscapeSequence )
+                    // InternalRegularExpressionParser.g:1300:3: ruleIdentityEscapeSequence
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getAtomEscapeAccess().getIdentityEscapeSequenceParserRuleCall_5()); 
@@ -4635,10 +4660,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 7 :
-                    // InternalRegularExpressionParser.g:1299:2: ( ruleCharacterClassEscapeSequence )
+                    // InternalRegularExpressionParser.g:1305:2: ( ruleCharacterClassEscapeSequence )
                     {
-                    // InternalRegularExpressionParser.g:1299:2: ( ruleCharacterClassEscapeSequence )
-                    // InternalRegularExpressionParser.g:1300:3: ruleCharacterClassEscapeSequence
+                    // InternalRegularExpressionParser.g:1305:2: ( ruleCharacterClassEscapeSequence )
+                    // InternalRegularExpressionParser.g:1306:3: ruleCharacterClassEscapeSequence
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getAtomEscapeAccess().getCharacterClassEscapeSequenceParserRuleCall_6()); 
@@ -4675,13 +4700,13 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__CharacterClassAtom__Alternatives"
-    // InternalRegularExpressionParser.g:1309:1: rule__CharacterClassAtom__Alternatives : ( ( ruleEscapedCharacterClassAtom ) | ( ( rule__CharacterClassAtom__CharactersAssignment_1 ) ) );
+    // InternalRegularExpressionParser.g:1315:1: rule__CharacterClassAtom__Alternatives : ( ( ruleEscapedCharacterClassAtom ) | ( ( rule__CharacterClassAtom__CharactersAssignment_1 ) ) );
     public final void rule__CharacterClassAtom__Alternatives() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:1313:1: ( ( ruleEscapedCharacterClassAtom ) | ( ( rule__CharacterClassAtom__CharactersAssignment_1 ) ) )
+            // InternalRegularExpressionParser.g:1319:1: ( ( ruleEscapedCharacterClassAtom ) | ( ( rule__CharacterClassAtom__CharactersAssignment_1 ) ) )
             int alt12=2;
             int LA12_0 = input.LA(1);
 
@@ -4700,10 +4725,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
             }
             switch (alt12) {
                 case 1 :
-                    // InternalRegularExpressionParser.g:1314:2: ( ruleEscapedCharacterClassAtom )
+                    // InternalRegularExpressionParser.g:1320:2: ( ruleEscapedCharacterClassAtom )
                     {
-                    // InternalRegularExpressionParser.g:1314:2: ( ruleEscapedCharacterClassAtom )
-                    // InternalRegularExpressionParser.g:1315:3: ruleEscapedCharacterClassAtom
+                    // InternalRegularExpressionParser.g:1320:2: ( ruleEscapedCharacterClassAtom )
+                    // InternalRegularExpressionParser.g:1321:3: ruleEscapedCharacterClassAtom
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getCharacterClassAtomAccess().getEscapedCharacterClassAtomParserRuleCall_0()); 
@@ -4723,16 +4748,16 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 2 :
-                    // InternalRegularExpressionParser.g:1320:2: ( ( rule__CharacterClassAtom__CharactersAssignment_1 ) )
+                    // InternalRegularExpressionParser.g:1326:2: ( ( rule__CharacterClassAtom__CharactersAssignment_1 ) )
                     {
-                    // InternalRegularExpressionParser.g:1320:2: ( ( rule__CharacterClassAtom__CharactersAssignment_1 ) )
-                    // InternalRegularExpressionParser.g:1321:3: ( rule__CharacterClassAtom__CharactersAssignment_1 )
+                    // InternalRegularExpressionParser.g:1326:2: ( ( rule__CharacterClassAtom__CharactersAssignment_1 ) )
+                    // InternalRegularExpressionParser.g:1327:3: ( rule__CharacterClassAtom__CharactersAssignment_1 )
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getCharacterClassAtomAccess().getCharactersAssignment_1()); 
                     }
-                    // InternalRegularExpressionParser.g:1322:3: ( rule__CharacterClassAtom__CharactersAssignment_1 )
-                    // InternalRegularExpressionParser.g:1322:4: rule__CharacterClassAtom__CharactersAssignment_1
+                    // InternalRegularExpressionParser.g:1328:3: ( rule__CharacterClassAtom__CharactersAssignment_1 )
+                    // InternalRegularExpressionParser.g:1328:4: rule__CharacterClassAtom__CharactersAssignment_1
                     {
                     pushFollow(FOLLOW_2);
                     rule__CharacterClassAtom__CharactersAssignment_1();
@@ -4769,13 +4794,13 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__CharacterClassAtom__CharactersAlternatives_1_0"
-    // InternalRegularExpressionParser.g:1330:1: rule__CharacterClassAtom__CharactersAlternatives_1_0 : ( ( Comma ) | ( EqualsSign ) | ( Colon ) | ( ExclamationMark ) | ( KW__ ) | ( HyphenMinus ) | ( CircumflexAccent ) | ( DollarSign ) | ( FullStop ) | ( Asterisk ) | ( PlusSign ) | ( QuestionMark ) | ( LeftParenthesis ) | ( RightParenthesis ) | ( LeftSquareBracket ) | ( LeftCurlyBracket ) | ( RightCurlyBracket ) | ( VerticalLine ) | ( Solidus ) | ( LessThanSign ) | ( GreaterThanSign ) | ( LeftParenthesisQuestionMark ) | ( LeftParenthesisQuestionMarkLessThanSign ) | ( LeftParenthesisQuestionMarkEqualsSign ) | ( LeftParenthesisQuestionMarkExclamationMark ) | ( LeftParenthesisQuestionMarkLessThanSignExclamationMark ) | ( LeftParenthesisQuestionMarkLessThanSignEqualsSign ) | ( RULE_PATTERN_CHARACTER_NO_DASH ) | ( RULE_UNICODE_LETTER ) | ( RULE_UNICODE_DIGIT ) );
+    // InternalRegularExpressionParser.g:1336:1: rule__CharacterClassAtom__CharactersAlternatives_1_0 : ( ( Comma ) | ( EqualsSign ) | ( Colon ) | ( ExclamationMark ) | ( KW__ ) | ( HyphenMinus ) | ( CircumflexAccent ) | ( DollarSign ) | ( FullStop ) | ( Asterisk ) | ( PlusSign ) | ( QuestionMark ) | ( LeftParenthesis ) | ( RightParenthesis ) | ( LeftSquareBracket ) | ( LeftCurlyBracket ) | ( RightCurlyBracket ) | ( VerticalLine ) | ( Solidus ) | ( LessThanSign ) | ( GreaterThanSign ) | ( LeftParenthesisQuestionMark ) | ( LeftParenthesisQuestionMarkLessThanSign ) | ( LeftParenthesisQuestionMarkEqualsSign ) | ( LeftParenthesisQuestionMarkExclamationMark ) | ( LeftParenthesisQuestionMarkLessThanSignExclamationMark ) | ( LeftParenthesisQuestionMarkLessThanSignEqualsSign ) | ( RULE_PATTERN_CHARACTER_NO_DASH ) | ( RULE_UNICODE_LETTER ) | ( RULE_UNICODE_DIGIT ) );
     public final void rule__CharacterClassAtom__CharactersAlternatives_1_0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:1334:1: ( ( Comma ) | ( EqualsSign ) | ( Colon ) | ( ExclamationMark ) | ( KW__ ) | ( HyphenMinus ) | ( CircumflexAccent ) | ( DollarSign ) | ( FullStop ) | ( Asterisk ) | ( PlusSign ) | ( QuestionMark ) | ( LeftParenthesis ) | ( RightParenthesis ) | ( LeftSquareBracket ) | ( LeftCurlyBracket ) | ( RightCurlyBracket ) | ( VerticalLine ) | ( Solidus ) | ( LessThanSign ) | ( GreaterThanSign ) | ( LeftParenthesisQuestionMark ) | ( LeftParenthesisQuestionMarkLessThanSign ) | ( LeftParenthesisQuestionMarkEqualsSign ) | ( LeftParenthesisQuestionMarkExclamationMark ) | ( LeftParenthesisQuestionMarkLessThanSignExclamationMark ) | ( LeftParenthesisQuestionMarkLessThanSignEqualsSign ) | ( RULE_PATTERN_CHARACTER_NO_DASH ) | ( RULE_UNICODE_LETTER ) | ( RULE_UNICODE_DIGIT ) )
+            // InternalRegularExpressionParser.g:1340:1: ( ( Comma ) | ( EqualsSign ) | ( Colon ) | ( ExclamationMark ) | ( KW__ ) | ( HyphenMinus ) | ( CircumflexAccent ) | ( DollarSign ) | ( FullStop ) | ( Asterisk ) | ( PlusSign ) | ( QuestionMark ) | ( LeftParenthesis ) | ( RightParenthesis ) | ( LeftSquareBracket ) | ( LeftCurlyBracket ) | ( RightCurlyBracket ) | ( VerticalLine ) | ( Solidus ) | ( LessThanSign ) | ( GreaterThanSign ) | ( LeftParenthesisQuestionMark ) | ( LeftParenthesisQuestionMarkLessThanSign ) | ( LeftParenthesisQuestionMarkEqualsSign ) | ( LeftParenthesisQuestionMarkExclamationMark ) | ( LeftParenthesisQuestionMarkLessThanSignExclamationMark ) | ( LeftParenthesisQuestionMarkLessThanSignEqualsSign ) | ( RULE_PATTERN_CHARACTER_NO_DASH ) | ( RULE_UNICODE_LETTER ) | ( RULE_UNICODE_DIGIT ) )
             int alt13=30;
             switch ( input.LA(1) ) {
             case Comma:
@@ -4938,10 +4963,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
             switch (alt13) {
                 case 1 :
-                    // InternalRegularExpressionParser.g:1335:2: ( Comma )
+                    // InternalRegularExpressionParser.g:1341:2: ( Comma )
                     {
-                    // InternalRegularExpressionParser.g:1335:2: ( Comma )
-                    // InternalRegularExpressionParser.g:1336:3: Comma
+                    // InternalRegularExpressionParser.g:1341:2: ( Comma )
+                    // InternalRegularExpressionParser.g:1342:3: Comma
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getCharacterClassAtomAccess().getCharactersCommaKeyword_1_0_0()); 
@@ -4957,10 +4982,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 2 :
-                    // InternalRegularExpressionParser.g:1341:2: ( EqualsSign )
+                    // InternalRegularExpressionParser.g:1347:2: ( EqualsSign )
                     {
-                    // InternalRegularExpressionParser.g:1341:2: ( EqualsSign )
-                    // InternalRegularExpressionParser.g:1342:3: EqualsSign
+                    // InternalRegularExpressionParser.g:1347:2: ( EqualsSign )
+                    // InternalRegularExpressionParser.g:1348:3: EqualsSign
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getCharacterClassAtomAccess().getCharactersEqualsSignKeyword_1_0_1()); 
@@ -4976,10 +5001,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 3 :
-                    // InternalRegularExpressionParser.g:1347:2: ( Colon )
+                    // InternalRegularExpressionParser.g:1353:2: ( Colon )
                     {
-                    // InternalRegularExpressionParser.g:1347:2: ( Colon )
-                    // InternalRegularExpressionParser.g:1348:3: Colon
+                    // InternalRegularExpressionParser.g:1353:2: ( Colon )
+                    // InternalRegularExpressionParser.g:1354:3: Colon
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getCharacterClassAtomAccess().getCharactersColonKeyword_1_0_2()); 
@@ -4995,10 +5020,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 4 :
-                    // InternalRegularExpressionParser.g:1353:2: ( ExclamationMark )
+                    // InternalRegularExpressionParser.g:1359:2: ( ExclamationMark )
                     {
-                    // InternalRegularExpressionParser.g:1353:2: ( ExclamationMark )
-                    // InternalRegularExpressionParser.g:1354:3: ExclamationMark
+                    // InternalRegularExpressionParser.g:1359:2: ( ExclamationMark )
+                    // InternalRegularExpressionParser.g:1360:3: ExclamationMark
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getCharacterClassAtomAccess().getCharactersExclamationMarkKeyword_1_0_3()); 
@@ -5014,10 +5039,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 5 :
-                    // InternalRegularExpressionParser.g:1359:2: ( KW__ )
+                    // InternalRegularExpressionParser.g:1365:2: ( KW__ )
                     {
-                    // InternalRegularExpressionParser.g:1359:2: ( KW__ )
-                    // InternalRegularExpressionParser.g:1360:3: KW__
+                    // InternalRegularExpressionParser.g:1365:2: ( KW__ )
+                    // InternalRegularExpressionParser.g:1366:3: KW__
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getCharacterClassAtomAccess().getCharacters_Keyword_1_0_4()); 
@@ -5033,10 +5058,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 6 :
-                    // InternalRegularExpressionParser.g:1365:2: ( HyphenMinus )
+                    // InternalRegularExpressionParser.g:1371:2: ( HyphenMinus )
                     {
-                    // InternalRegularExpressionParser.g:1365:2: ( HyphenMinus )
-                    // InternalRegularExpressionParser.g:1366:3: HyphenMinus
+                    // InternalRegularExpressionParser.g:1371:2: ( HyphenMinus )
+                    // InternalRegularExpressionParser.g:1372:3: HyphenMinus
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getCharacterClassAtomAccess().getCharactersHyphenMinusKeyword_1_0_5()); 
@@ -5052,10 +5077,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 7 :
-                    // InternalRegularExpressionParser.g:1371:2: ( CircumflexAccent )
+                    // InternalRegularExpressionParser.g:1377:2: ( CircumflexAccent )
                     {
-                    // InternalRegularExpressionParser.g:1371:2: ( CircumflexAccent )
-                    // InternalRegularExpressionParser.g:1372:3: CircumflexAccent
+                    // InternalRegularExpressionParser.g:1377:2: ( CircumflexAccent )
+                    // InternalRegularExpressionParser.g:1378:3: CircumflexAccent
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getCharacterClassAtomAccess().getCharactersCircumflexAccentKeyword_1_0_6()); 
@@ -5071,10 +5096,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 8 :
-                    // InternalRegularExpressionParser.g:1377:2: ( DollarSign )
+                    // InternalRegularExpressionParser.g:1383:2: ( DollarSign )
                     {
-                    // InternalRegularExpressionParser.g:1377:2: ( DollarSign )
-                    // InternalRegularExpressionParser.g:1378:3: DollarSign
+                    // InternalRegularExpressionParser.g:1383:2: ( DollarSign )
+                    // InternalRegularExpressionParser.g:1384:3: DollarSign
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getCharacterClassAtomAccess().getCharactersDollarSignKeyword_1_0_7()); 
@@ -5090,10 +5115,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 9 :
-                    // InternalRegularExpressionParser.g:1383:2: ( FullStop )
+                    // InternalRegularExpressionParser.g:1389:2: ( FullStop )
                     {
-                    // InternalRegularExpressionParser.g:1383:2: ( FullStop )
-                    // InternalRegularExpressionParser.g:1384:3: FullStop
+                    // InternalRegularExpressionParser.g:1389:2: ( FullStop )
+                    // InternalRegularExpressionParser.g:1390:3: FullStop
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getCharacterClassAtomAccess().getCharactersFullStopKeyword_1_0_8()); 
@@ -5109,10 +5134,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 10 :
-                    // InternalRegularExpressionParser.g:1389:2: ( Asterisk )
+                    // InternalRegularExpressionParser.g:1395:2: ( Asterisk )
                     {
-                    // InternalRegularExpressionParser.g:1389:2: ( Asterisk )
-                    // InternalRegularExpressionParser.g:1390:3: Asterisk
+                    // InternalRegularExpressionParser.g:1395:2: ( Asterisk )
+                    // InternalRegularExpressionParser.g:1396:3: Asterisk
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getCharacterClassAtomAccess().getCharactersAsteriskKeyword_1_0_9()); 
@@ -5128,10 +5153,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 11 :
-                    // InternalRegularExpressionParser.g:1395:2: ( PlusSign )
+                    // InternalRegularExpressionParser.g:1401:2: ( PlusSign )
                     {
-                    // InternalRegularExpressionParser.g:1395:2: ( PlusSign )
-                    // InternalRegularExpressionParser.g:1396:3: PlusSign
+                    // InternalRegularExpressionParser.g:1401:2: ( PlusSign )
+                    // InternalRegularExpressionParser.g:1402:3: PlusSign
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getCharacterClassAtomAccess().getCharactersPlusSignKeyword_1_0_10()); 
@@ -5147,10 +5172,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 12 :
-                    // InternalRegularExpressionParser.g:1401:2: ( QuestionMark )
+                    // InternalRegularExpressionParser.g:1407:2: ( QuestionMark )
                     {
-                    // InternalRegularExpressionParser.g:1401:2: ( QuestionMark )
-                    // InternalRegularExpressionParser.g:1402:3: QuestionMark
+                    // InternalRegularExpressionParser.g:1407:2: ( QuestionMark )
+                    // InternalRegularExpressionParser.g:1408:3: QuestionMark
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getCharacterClassAtomAccess().getCharactersQuestionMarkKeyword_1_0_11()); 
@@ -5166,10 +5191,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 13 :
-                    // InternalRegularExpressionParser.g:1407:2: ( LeftParenthesis )
+                    // InternalRegularExpressionParser.g:1413:2: ( LeftParenthesis )
                     {
-                    // InternalRegularExpressionParser.g:1407:2: ( LeftParenthesis )
-                    // InternalRegularExpressionParser.g:1408:3: LeftParenthesis
+                    // InternalRegularExpressionParser.g:1413:2: ( LeftParenthesis )
+                    // InternalRegularExpressionParser.g:1414:3: LeftParenthesis
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisKeyword_1_0_12()); 
@@ -5185,10 +5210,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 14 :
-                    // InternalRegularExpressionParser.g:1413:2: ( RightParenthesis )
+                    // InternalRegularExpressionParser.g:1419:2: ( RightParenthesis )
                     {
-                    // InternalRegularExpressionParser.g:1413:2: ( RightParenthesis )
-                    // InternalRegularExpressionParser.g:1414:3: RightParenthesis
+                    // InternalRegularExpressionParser.g:1419:2: ( RightParenthesis )
+                    // InternalRegularExpressionParser.g:1420:3: RightParenthesis
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getCharacterClassAtomAccess().getCharactersRightParenthesisKeyword_1_0_13()); 
@@ -5204,10 +5229,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 15 :
-                    // InternalRegularExpressionParser.g:1419:2: ( LeftSquareBracket )
+                    // InternalRegularExpressionParser.g:1425:2: ( LeftSquareBracket )
                     {
-                    // InternalRegularExpressionParser.g:1419:2: ( LeftSquareBracket )
-                    // InternalRegularExpressionParser.g:1420:3: LeftSquareBracket
+                    // InternalRegularExpressionParser.g:1425:2: ( LeftSquareBracket )
+                    // InternalRegularExpressionParser.g:1426:3: LeftSquareBracket
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftSquareBracketKeyword_1_0_14()); 
@@ -5223,10 +5248,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 16 :
-                    // InternalRegularExpressionParser.g:1425:2: ( LeftCurlyBracket )
+                    // InternalRegularExpressionParser.g:1431:2: ( LeftCurlyBracket )
                     {
-                    // InternalRegularExpressionParser.g:1425:2: ( LeftCurlyBracket )
-                    // InternalRegularExpressionParser.g:1426:3: LeftCurlyBracket
+                    // InternalRegularExpressionParser.g:1431:2: ( LeftCurlyBracket )
+                    // InternalRegularExpressionParser.g:1432:3: LeftCurlyBracket
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftCurlyBracketKeyword_1_0_15()); 
@@ -5242,10 +5267,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 17 :
-                    // InternalRegularExpressionParser.g:1431:2: ( RightCurlyBracket )
+                    // InternalRegularExpressionParser.g:1437:2: ( RightCurlyBracket )
                     {
-                    // InternalRegularExpressionParser.g:1431:2: ( RightCurlyBracket )
-                    // InternalRegularExpressionParser.g:1432:3: RightCurlyBracket
+                    // InternalRegularExpressionParser.g:1437:2: ( RightCurlyBracket )
+                    // InternalRegularExpressionParser.g:1438:3: RightCurlyBracket
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getCharacterClassAtomAccess().getCharactersRightCurlyBracketKeyword_1_0_16()); 
@@ -5261,10 +5286,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 18 :
-                    // InternalRegularExpressionParser.g:1437:2: ( VerticalLine )
+                    // InternalRegularExpressionParser.g:1443:2: ( VerticalLine )
                     {
-                    // InternalRegularExpressionParser.g:1437:2: ( VerticalLine )
-                    // InternalRegularExpressionParser.g:1438:3: VerticalLine
+                    // InternalRegularExpressionParser.g:1443:2: ( VerticalLine )
+                    // InternalRegularExpressionParser.g:1444:3: VerticalLine
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getCharacterClassAtomAccess().getCharactersVerticalLineKeyword_1_0_17()); 
@@ -5280,10 +5305,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 19 :
-                    // InternalRegularExpressionParser.g:1443:2: ( Solidus )
+                    // InternalRegularExpressionParser.g:1449:2: ( Solidus )
                     {
-                    // InternalRegularExpressionParser.g:1443:2: ( Solidus )
-                    // InternalRegularExpressionParser.g:1444:3: Solidus
+                    // InternalRegularExpressionParser.g:1449:2: ( Solidus )
+                    // InternalRegularExpressionParser.g:1450:3: Solidus
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getCharacterClassAtomAccess().getCharactersSolidusKeyword_1_0_18()); 
@@ -5299,10 +5324,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 20 :
-                    // InternalRegularExpressionParser.g:1449:2: ( LessThanSign )
+                    // InternalRegularExpressionParser.g:1455:2: ( LessThanSign )
                     {
-                    // InternalRegularExpressionParser.g:1449:2: ( LessThanSign )
-                    // InternalRegularExpressionParser.g:1450:3: LessThanSign
+                    // InternalRegularExpressionParser.g:1455:2: ( LessThanSign )
+                    // InternalRegularExpressionParser.g:1456:3: LessThanSign
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getCharacterClassAtomAccess().getCharactersLessThanSignKeyword_1_0_19()); 
@@ -5318,10 +5343,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 21 :
-                    // InternalRegularExpressionParser.g:1455:2: ( GreaterThanSign )
+                    // InternalRegularExpressionParser.g:1461:2: ( GreaterThanSign )
                     {
-                    // InternalRegularExpressionParser.g:1455:2: ( GreaterThanSign )
-                    // InternalRegularExpressionParser.g:1456:3: GreaterThanSign
+                    // InternalRegularExpressionParser.g:1461:2: ( GreaterThanSign )
+                    // InternalRegularExpressionParser.g:1462:3: GreaterThanSign
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getCharacterClassAtomAccess().getCharactersGreaterThanSignKeyword_1_0_20()); 
@@ -5337,10 +5362,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 22 :
-                    // InternalRegularExpressionParser.g:1461:2: ( LeftParenthesisQuestionMark )
+                    // InternalRegularExpressionParser.g:1467:2: ( LeftParenthesisQuestionMark )
                     {
-                    // InternalRegularExpressionParser.g:1461:2: ( LeftParenthesisQuestionMark )
-                    // InternalRegularExpressionParser.g:1462:3: LeftParenthesisQuestionMark
+                    // InternalRegularExpressionParser.g:1467:2: ( LeftParenthesisQuestionMark )
+                    // InternalRegularExpressionParser.g:1468:3: LeftParenthesisQuestionMark
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkKeyword_1_0_21()); 
@@ -5356,10 +5381,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 23 :
-                    // InternalRegularExpressionParser.g:1467:2: ( LeftParenthesisQuestionMarkLessThanSign )
+                    // InternalRegularExpressionParser.g:1473:2: ( LeftParenthesisQuestionMarkLessThanSign )
                     {
-                    // InternalRegularExpressionParser.g:1467:2: ( LeftParenthesisQuestionMarkLessThanSign )
-                    // InternalRegularExpressionParser.g:1468:3: LeftParenthesisQuestionMarkLessThanSign
+                    // InternalRegularExpressionParser.g:1473:2: ( LeftParenthesisQuestionMarkLessThanSign )
+                    // InternalRegularExpressionParser.g:1474:3: LeftParenthesisQuestionMarkLessThanSign
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkLessThanSignKeyword_1_0_22()); 
@@ -5375,10 +5400,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 24 :
-                    // InternalRegularExpressionParser.g:1473:2: ( LeftParenthesisQuestionMarkEqualsSign )
+                    // InternalRegularExpressionParser.g:1479:2: ( LeftParenthesisQuestionMarkEqualsSign )
                     {
-                    // InternalRegularExpressionParser.g:1473:2: ( LeftParenthesisQuestionMarkEqualsSign )
-                    // InternalRegularExpressionParser.g:1474:3: LeftParenthesisQuestionMarkEqualsSign
+                    // InternalRegularExpressionParser.g:1479:2: ( LeftParenthesisQuestionMarkEqualsSign )
+                    // InternalRegularExpressionParser.g:1480:3: LeftParenthesisQuestionMarkEqualsSign
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkEqualsSignKeyword_1_0_23()); 
@@ -5394,10 +5419,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 25 :
-                    // InternalRegularExpressionParser.g:1479:2: ( LeftParenthesisQuestionMarkExclamationMark )
+                    // InternalRegularExpressionParser.g:1485:2: ( LeftParenthesisQuestionMarkExclamationMark )
                     {
-                    // InternalRegularExpressionParser.g:1479:2: ( LeftParenthesisQuestionMarkExclamationMark )
-                    // InternalRegularExpressionParser.g:1480:3: LeftParenthesisQuestionMarkExclamationMark
+                    // InternalRegularExpressionParser.g:1485:2: ( LeftParenthesisQuestionMarkExclamationMark )
+                    // InternalRegularExpressionParser.g:1486:3: LeftParenthesisQuestionMarkExclamationMark
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkExclamationMarkKeyword_1_0_24()); 
@@ -5413,10 +5438,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 26 :
-                    // InternalRegularExpressionParser.g:1485:2: ( LeftParenthesisQuestionMarkLessThanSignExclamationMark )
+                    // InternalRegularExpressionParser.g:1491:2: ( LeftParenthesisQuestionMarkLessThanSignExclamationMark )
                     {
-                    // InternalRegularExpressionParser.g:1485:2: ( LeftParenthesisQuestionMarkLessThanSignExclamationMark )
-                    // InternalRegularExpressionParser.g:1486:3: LeftParenthesisQuestionMarkLessThanSignExclamationMark
+                    // InternalRegularExpressionParser.g:1491:2: ( LeftParenthesisQuestionMarkLessThanSignExclamationMark )
+                    // InternalRegularExpressionParser.g:1492:3: LeftParenthesisQuestionMarkLessThanSignExclamationMark
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkLessThanSignExclamationMarkKeyword_1_0_25()); 
@@ -5432,10 +5457,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 27 :
-                    // InternalRegularExpressionParser.g:1491:2: ( LeftParenthesisQuestionMarkLessThanSignEqualsSign )
+                    // InternalRegularExpressionParser.g:1497:2: ( LeftParenthesisQuestionMarkLessThanSignEqualsSign )
                     {
-                    // InternalRegularExpressionParser.g:1491:2: ( LeftParenthesisQuestionMarkLessThanSignEqualsSign )
-                    // InternalRegularExpressionParser.g:1492:3: LeftParenthesisQuestionMarkLessThanSignEqualsSign
+                    // InternalRegularExpressionParser.g:1497:2: ( LeftParenthesisQuestionMarkLessThanSignEqualsSign )
+                    // InternalRegularExpressionParser.g:1498:3: LeftParenthesisQuestionMarkLessThanSignEqualsSign
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getCharacterClassAtomAccess().getCharactersLeftParenthesisQuestionMarkLessThanSignEqualsSignKeyword_1_0_26()); 
@@ -5451,10 +5476,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 28 :
-                    // InternalRegularExpressionParser.g:1497:2: ( RULE_PATTERN_CHARACTER_NO_DASH )
+                    // InternalRegularExpressionParser.g:1503:2: ( RULE_PATTERN_CHARACTER_NO_DASH )
                     {
-                    // InternalRegularExpressionParser.g:1497:2: ( RULE_PATTERN_CHARACTER_NO_DASH )
-                    // InternalRegularExpressionParser.g:1498:3: RULE_PATTERN_CHARACTER_NO_DASH
+                    // InternalRegularExpressionParser.g:1503:2: ( RULE_PATTERN_CHARACTER_NO_DASH )
+                    // InternalRegularExpressionParser.g:1504:3: RULE_PATTERN_CHARACTER_NO_DASH
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getCharacterClassAtomAccess().getCharactersPATTERN_CHARACTER_NO_DASHTerminalRuleCall_1_0_27()); 
@@ -5470,10 +5495,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 29 :
-                    // InternalRegularExpressionParser.g:1503:2: ( RULE_UNICODE_LETTER )
+                    // InternalRegularExpressionParser.g:1509:2: ( RULE_UNICODE_LETTER )
                     {
-                    // InternalRegularExpressionParser.g:1503:2: ( RULE_UNICODE_LETTER )
-                    // InternalRegularExpressionParser.g:1504:3: RULE_UNICODE_LETTER
+                    // InternalRegularExpressionParser.g:1509:2: ( RULE_UNICODE_LETTER )
+                    // InternalRegularExpressionParser.g:1510:3: RULE_UNICODE_LETTER
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getCharacterClassAtomAccess().getCharactersUNICODE_LETTERTerminalRuleCall_1_0_28()); 
@@ -5489,10 +5514,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 30 :
-                    // InternalRegularExpressionParser.g:1509:2: ( RULE_UNICODE_DIGIT )
+                    // InternalRegularExpressionParser.g:1515:2: ( RULE_UNICODE_DIGIT )
                     {
-                    // InternalRegularExpressionParser.g:1509:2: ( RULE_UNICODE_DIGIT )
-                    // InternalRegularExpressionParser.g:1510:3: RULE_UNICODE_DIGIT
+                    // InternalRegularExpressionParser.g:1515:2: ( RULE_UNICODE_DIGIT )
+                    // InternalRegularExpressionParser.g:1516:3: RULE_UNICODE_DIGIT
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getCharacterClassAtomAccess().getCharactersUNICODE_DIGITTerminalRuleCall_1_0_29()); 
@@ -5525,13 +5550,13 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__EscapedCharacterClassAtom__Alternatives"
-    // InternalRegularExpressionParser.g:1519:1: rule__EscapedCharacterClassAtom__Alternatives : ( ( ruleDecimalEscapeSequence ) | ( ruleBackspace ) | ( ruleCharacterEscapeSequence ) | ( ruleControlLetterEscapeSequence ) | ( ruleHexEscapeSequence ) | ( ruleUnicodeEscapeSequence ) | ( ruleIdentityEscapeSequence ) | ( ruleCharacterClassEscapeSequence ) );
+    // InternalRegularExpressionParser.g:1525:1: rule__EscapedCharacterClassAtom__Alternatives : ( ( ruleDecimalEscapeSequence ) | ( ruleBackspace ) | ( ruleCharacterEscapeSequence ) | ( ruleControlLetterEscapeSequence ) | ( ruleHexEscapeSequence ) | ( ruleUnicodeEscapeSequence ) | ( ruleIdentityEscapeSequence ) | ( ruleCharacterClassEscapeSequence ) );
     public final void rule__EscapedCharacterClassAtom__Alternatives() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:1523:1: ( ( ruleDecimalEscapeSequence ) | ( ruleBackspace ) | ( ruleCharacterEscapeSequence ) | ( ruleControlLetterEscapeSequence ) | ( ruleHexEscapeSequence ) | ( ruleUnicodeEscapeSequence ) | ( ruleIdentityEscapeSequence ) | ( ruleCharacterClassEscapeSequence ) )
+            // InternalRegularExpressionParser.g:1529:1: ( ( ruleDecimalEscapeSequence ) | ( ruleBackspace ) | ( ruleCharacterEscapeSequence ) | ( ruleControlLetterEscapeSequence ) | ( ruleHexEscapeSequence ) | ( ruleUnicodeEscapeSequence ) | ( ruleIdentityEscapeSequence ) | ( ruleCharacterClassEscapeSequence ) )
             int alt14=8;
             switch ( input.LA(1) ) {
             case RULE_DECIMAL_ESCAPE:
@@ -5584,10 +5609,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
             switch (alt14) {
                 case 1 :
-                    // InternalRegularExpressionParser.g:1524:2: ( ruleDecimalEscapeSequence )
+                    // InternalRegularExpressionParser.g:1530:2: ( ruleDecimalEscapeSequence )
                     {
-                    // InternalRegularExpressionParser.g:1524:2: ( ruleDecimalEscapeSequence )
-                    // InternalRegularExpressionParser.g:1525:3: ruleDecimalEscapeSequence
+                    // InternalRegularExpressionParser.g:1530:2: ( ruleDecimalEscapeSequence )
+                    // InternalRegularExpressionParser.g:1531:3: ruleDecimalEscapeSequence
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getEscapedCharacterClassAtomAccess().getDecimalEscapeSequenceParserRuleCall_0()); 
@@ -5607,10 +5632,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 2 :
-                    // InternalRegularExpressionParser.g:1530:2: ( ruleBackspace )
+                    // InternalRegularExpressionParser.g:1536:2: ( ruleBackspace )
                     {
-                    // InternalRegularExpressionParser.g:1530:2: ( ruleBackspace )
-                    // InternalRegularExpressionParser.g:1531:3: ruleBackspace
+                    // InternalRegularExpressionParser.g:1536:2: ( ruleBackspace )
+                    // InternalRegularExpressionParser.g:1537:3: ruleBackspace
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getEscapedCharacterClassAtomAccess().getBackspaceParserRuleCall_1()); 
@@ -5630,10 +5655,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 3 :
-                    // InternalRegularExpressionParser.g:1536:2: ( ruleCharacterEscapeSequence )
+                    // InternalRegularExpressionParser.g:1542:2: ( ruleCharacterEscapeSequence )
                     {
-                    // InternalRegularExpressionParser.g:1536:2: ( ruleCharacterEscapeSequence )
-                    // InternalRegularExpressionParser.g:1537:3: ruleCharacterEscapeSequence
+                    // InternalRegularExpressionParser.g:1542:2: ( ruleCharacterEscapeSequence )
+                    // InternalRegularExpressionParser.g:1543:3: ruleCharacterEscapeSequence
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getEscapedCharacterClassAtomAccess().getCharacterEscapeSequenceParserRuleCall_2()); 
@@ -5653,10 +5678,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 4 :
-                    // InternalRegularExpressionParser.g:1542:2: ( ruleControlLetterEscapeSequence )
+                    // InternalRegularExpressionParser.g:1548:2: ( ruleControlLetterEscapeSequence )
                     {
-                    // InternalRegularExpressionParser.g:1542:2: ( ruleControlLetterEscapeSequence )
-                    // InternalRegularExpressionParser.g:1543:3: ruleControlLetterEscapeSequence
+                    // InternalRegularExpressionParser.g:1548:2: ( ruleControlLetterEscapeSequence )
+                    // InternalRegularExpressionParser.g:1549:3: ruleControlLetterEscapeSequence
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getEscapedCharacterClassAtomAccess().getControlLetterEscapeSequenceParserRuleCall_3()); 
@@ -5676,10 +5701,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 5 :
-                    // InternalRegularExpressionParser.g:1548:2: ( ruleHexEscapeSequence )
+                    // InternalRegularExpressionParser.g:1554:2: ( ruleHexEscapeSequence )
                     {
-                    // InternalRegularExpressionParser.g:1548:2: ( ruleHexEscapeSequence )
-                    // InternalRegularExpressionParser.g:1549:3: ruleHexEscapeSequence
+                    // InternalRegularExpressionParser.g:1554:2: ( ruleHexEscapeSequence )
+                    // InternalRegularExpressionParser.g:1555:3: ruleHexEscapeSequence
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getEscapedCharacterClassAtomAccess().getHexEscapeSequenceParserRuleCall_4()); 
@@ -5699,10 +5724,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 6 :
-                    // InternalRegularExpressionParser.g:1554:2: ( ruleUnicodeEscapeSequence )
+                    // InternalRegularExpressionParser.g:1560:2: ( ruleUnicodeEscapeSequence )
                     {
-                    // InternalRegularExpressionParser.g:1554:2: ( ruleUnicodeEscapeSequence )
-                    // InternalRegularExpressionParser.g:1555:3: ruleUnicodeEscapeSequence
+                    // InternalRegularExpressionParser.g:1560:2: ( ruleUnicodeEscapeSequence )
+                    // InternalRegularExpressionParser.g:1561:3: ruleUnicodeEscapeSequence
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getEscapedCharacterClassAtomAccess().getUnicodeEscapeSequenceParserRuleCall_5()); 
@@ -5722,10 +5747,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 7 :
-                    // InternalRegularExpressionParser.g:1560:2: ( ruleIdentityEscapeSequence )
+                    // InternalRegularExpressionParser.g:1566:2: ( ruleIdentityEscapeSequence )
                     {
-                    // InternalRegularExpressionParser.g:1560:2: ( ruleIdentityEscapeSequence )
-                    // InternalRegularExpressionParser.g:1561:3: ruleIdentityEscapeSequence
+                    // InternalRegularExpressionParser.g:1566:2: ( ruleIdentityEscapeSequence )
+                    // InternalRegularExpressionParser.g:1567:3: ruleIdentityEscapeSequence
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getEscapedCharacterClassAtomAccess().getIdentityEscapeSequenceParserRuleCall_6()); 
@@ -5745,10 +5770,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 8 :
-                    // InternalRegularExpressionParser.g:1566:2: ( ruleCharacterClassEscapeSequence )
+                    // InternalRegularExpressionParser.g:1572:2: ( ruleCharacterClassEscapeSequence )
                     {
-                    // InternalRegularExpressionParser.g:1566:2: ( ruleCharacterClassEscapeSequence )
-                    // InternalRegularExpressionParser.g:1567:3: ruleCharacterClassEscapeSequence
+                    // InternalRegularExpressionParser.g:1572:2: ( ruleCharacterClassEscapeSequence )
+                    // InternalRegularExpressionParser.g:1573:3: ruleCharacterClassEscapeSequence
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getEscapedCharacterClassAtomAccess().getCharacterClassEscapeSequenceParserRuleCall_7()); 
@@ -5785,13 +5810,13 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Group__Alternatives_1"
-    // InternalRegularExpressionParser.g:1576:1: rule__Group__Alternatives_1 : ( ( LeftParenthesis ) | ( ( rule__Group__NonCapturingAssignment_1_1 ) ) | ( ( rule__Group__Group_1_2__0 ) ) );
+    // InternalRegularExpressionParser.g:1582:1: rule__Group__Alternatives_1 : ( ( LeftParenthesis ) | ( ( rule__Group__NonCapturingAssignment_1_1 ) ) | ( ( rule__Group__Group_1_2__0 ) ) );
     public final void rule__Group__Alternatives_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:1580:1: ( ( LeftParenthesis ) | ( ( rule__Group__NonCapturingAssignment_1_1 ) ) | ( ( rule__Group__Group_1_2__0 ) ) )
+            // InternalRegularExpressionParser.g:1586:1: ( ( LeftParenthesis ) | ( ( rule__Group__NonCapturingAssignment_1_1 ) ) | ( ( rule__Group__Group_1_2__0 ) ) )
             int alt15=3;
             switch ( input.LA(1) ) {
             case LeftParenthesis:
@@ -5819,10 +5844,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
             switch (alt15) {
                 case 1 :
-                    // InternalRegularExpressionParser.g:1581:2: ( LeftParenthesis )
+                    // InternalRegularExpressionParser.g:1587:2: ( LeftParenthesis )
                     {
-                    // InternalRegularExpressionParser.g:1581:2: ( LeftParenthesis )
-                    // InternalRegularExpressionParser.g:1582:3: LeftParenthesis
+                    // InternalRegularExpressionParser.g:1587:2: ( LeftParenthesis )
+                    // InternalRegularExpressionParser.g:1588:3: LeftParenthesis
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getGroupAccess().getLeftParenthesisKeyword_1_0()); 
@@ -5838,16 +5863,16 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 2 :
-                    // InternalRegularExpressionParser.g:1587:2: ( ( rule__Group__NonCapturingAssignment_1_1 ) )
+                    // InternalRegularExpressionParser.g:1593:2: ( ( rule__Group__NonCapturingAssignment_1_1 ) )
                     {
-                    // InternalRegularExpressionParser.g:1587:2: ( ( rule__Group__NonCapturingAssignment_1_1 ) )
-                    // InternalRegularExpressionParser.g:1588:3: ( rule__Group__NonCapturingAssignment_1_1 )
+                    // InternalRegularExpressionParser.g:1593:2: ( ( rule__Group__NonCapturingAssignment_1_1 ) )
+                    // InternalRegularExpressionParser.g:1594:3: ( rule__Group__NonCapturingAssignment_1_1 )
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getGroupAccess().getNonCapturingAssignment_1_1()); 
                     }
-                    // InternalRegularExpressionParser.g:1589:3: ( rule__Group__NonCapturingAssignment_1_1 )
-                    // InternalRegularExpressionParser.g:1589:4: rule__Group__NonCapturingAssignment_1_1
+                    // InternalRegularExpressionParser.g:1595:3: ( rule__Group__NonCapturingAssignment_1_1 )
+                    // InternalRegularExpressionParser.g:1595:4: rule__Group__NonCapturingAssignment_1_1
                     {
                     pushFollow(FOLLOW_2);
                     rule__Group__NonCapturingAssignment_1_1();
@@ -5867,16 +5892,16 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 3 :
-                    // InternalRegularExpressionParser.g:1593:2: ( ( rule__Group__Group_1_2__0 ) )
+                    // InternalRegularExpressionParser.g:1599:2: ( ( rule__Group__Group_1_2__0 ) )
                     {
-                    // InternalRegularExpressionParser.g:1593:2: ( ( rule__Group__Group_1_2__0 ) )
-                    // InternalRegularExpressionParser.g:1594:3: ( rule__Group__Group_1_2__0 )
+                    // InternalRegularExpressionParser.g:1599:2: ( ( rule__Group__Group_1_2__0 ) )
+                    // InternalRegularExpressionParser.g:1600:3: ( rule__Group__Group_1_2__0 )
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getGroupAccess().getGroup_1_2()); 
                     }
-                    // InternalRegularExpressionParser.g:1595:3: ( rule__Group__Group_1_2__0 )
-                    // InternalRegularExpressionParser.g:1595:4: rule__Group__Group_1_2__0
+                    // InternalRegularExpressionParser.g:1601:3: ( rule__Group__Group_1_2__0 )
+                    // InternalRegularExpressionParser.g:1601:4: rule__Group__Group_1_2__0
                     {
                     pushFollow(FOLLOW_2);
                     rule__Group__Group_1_2__0();
@@ -5913,13 +5938,13 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__RegExpIdentifierStart__Alternatives"
-    // InternalRegularExpressionParser.g:1603:1: rule__RegExpIdentifierStart__Alternatives : ( ( RULE_UNICODE_LETTER ) | ( DollarSign ) | ( KW__ ) | ( RULE_UNICODE_ESCAPE ) );
+    // InternalRegularExpressionParser.g:1609:1: rule__RegExpIdentifierStart__Alternatives : ( ( RULE_UNICODE_LETTER ) | ( DollarSign ) | ( KW__ ) | ( RULE_UNICODE_ESCAPE ) );
     public final void rule__RegExpIdentifierStart__Alternatives() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:1607:1: ( ( RULE_UNICODE_LETTER ) | ( DollarSign ) | ( KW__ ) | ( RULE_UNICODE_ESCAPE ) )
+            // InternalRegularExpressionParser.g:1613:1: ( ( RULE_UNICODE_LETTER ) | ( DollarSign ) | ( KW__ ) | ( RULE_UNICODE_ESCAPE ) )
             int alt16=4;
             switch ( input.LA(1) ) {
             case RULE_UNICODE_LETTER:
@@ -5952,10 +5977,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
             switch (alt16) {
                 case 1 :
-                    // InternalRegularExpressionParser.g:1608:2: ( RULE_UNICODE_LETTER )
+                    // InternalRegularExpressionParser.g:1614:2: ( RULE_UNICODE_LETTER )
                     {
-                    // InternalRegularExpressionParser.g:1608:2: ( RULE_UNICODE_LETTER )
-                    // InternalRegularExpressionParser.g:1609:3: RULE_UNICODE_LETTER
+                    // InternalRegularExpressionParser.g:1614:2: ( RULE_UNICODE_LETTER )
+                    // InternalRegularExpressionParser.g:1615:3: RULE_UNICODE_LETTER
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getRegExpIdentifierStartAccess().getUNICODE_LETTERTerminalRuleCall_0()); 
@@ -5971,10 +5996,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 2 :
-                    // InternalRegularExpressionParser.g:1614:2: ( DollarSign )
+                    // InternalRegularExpressionParser.g:1620:2: ( DollarSign )
                     {
-                    // InternalRegularExpressionParser.g:1614:2: ( DollarSign )
-                    // InternalRegularExpressionParser.g:1615:3: DollarSign
+                    // InternalRegularExpressionParser.g:1620:2: ( DollarSign )
+                    // InternalRegularExpressionParser.g:1621:3: DollarSign
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getRegExpIdentifierStartAccess().getDollarSignKeyword_1()); 
@@ -5990,10 +6015,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 3 :
-                    // InternalRegularExpressionParser.g:1620:2: ( KW__ )
+                    // InternalRegularExpressionParser.g:1626:2: ( KW__ )
                     {
-                    // InternalRegularExpressionParser.g:1620:2: ( KW__ )
-                    // InternalRegularExpressionParser.g:1621:3: KW__
+                    // InternalRegularExpressionParser.g:1626:2: ( KW__ )
+                    // InternalRegularExpressionParser.g:1627:3: KW__
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getRegExpIdentifierStartAccess().get_Keyword_2()); 
@@ -6009,10 +6034,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 4 :
-                    // InternalRegularExpressionParser.g:1626:2: ( RULE_UNICODE_ESCAPE )
+                    // InternalRegularExpressionParser.g:1632:2: ( RULE_UNICODE_ESCAPE )
                     {
-                    // InternalRegularExpressionParser.g:1626:2: ( RULE_UNICODE_ESCAPE )
-                    // InternalRegularExpressionParser.g:1627:3: RULE_UNICODE_ESCAPE
+                    // InternalRegularExpressionParser.g:1632:2: ( RULE_UNICODE_ESCAPE )
+                    // InternalRegularExpressionParser.g:1633:3: RULE_UNICODE_ESCAPE
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getRegExpIdentifierStartAccess().getUNICODE_ESCAPETerminalRuleCall_3()); 
@@ -6045,13 +6070,13 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__RegExpIdentifierPart__Alternatives"
-    // InternalRegularExpressionParser.g:1636:1: rule__RegExpIdentifierPart__Alternatives : ( ( RULE_UNICODE_LETTER ) | ( RULE_UNICODE_DIGIT ) | ( DollarSign ) | ( KW__ ) | ( RULE_UNICODE_ESCAPE ) );
+    // InternalRegularExpressionParser.g:1642:1: rule__RegExpIdentifierPart__Alternatives : ( ( RULE_UNICODE_LETTER ) | ( RULE_UNICODE_DIGIT ) | ( DollarSign ) | ( KW__ ) | ( RULE_UNICODE_ESCAPE ) );
     public final void rule__RegExpIdentifierPart__Alternatives() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:1640:1: ( ( RULE_UNICODE_LETTER ) | ( RULE_UNICODE_DIGIT ) | ( DollarSign ) | ( KW__ ) | ( RULE_UNICODE_ESCAPE ) )
+            // InternalRegularExpressionParser.g:1646:1: ( ( RULE_UNICODE_LETTER ) | ( RULE_UNICODE_DIGIT ) | ( DollarSign ) | ( KW__ ) | ( RULE_UNICODE_ESCAPE ) )
             int alt17=5;
             switch ( input.LA(1) ) {
             case RULE_UNICODE_LETTER:
@@ -6089,10 +6114,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
             switch (alt17) {
                 case 1 :
-                    // InternalRegularExpressionParser.g:1641:2: ( RULE_UNICODE_LETTER )
+                    // InternalRegularExpressionParser.g:1647:2: ( RULE_UNICODE_LETTER )
                     {
-                    // InternalRegularExpressionParser.g:1641:2: ( RULE_UNICODE_LETTER )
-                    // InternalRegularExpressionParser.g:1642:3: RULE_UNICODE_LETTER
+                    // InternalRegularExpressionParser.g:1647:2: ( RULE_UNICODE_LETTER )
+                    // InternalRegularExpressionParser.g:1648:3: RULE_UNICODE_LETTER
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getRegExpIdentifierPartAccess().getUNICODE_LETTERTerminalRuleCall_0()); 
@@ -6108,10 +6133,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 2 :
-                    // InternalRegularExpressionParser.g:1647:2: ( RULE_UNICODE_DIGIT )
+                    // InternalRegularExpressionParser.g:1653:2: ( RULE_UNICODE_DIGIT )
                     {
-                    // InternalRegularExpressionParser.g:1647:2: ( RULE_UNICODE_DIGIT )
-                    // InternalRegularExpressionParser.g:1648:3: RULE_UNICODE_DIGIT
+                    // InternalRegularExpressionParser.g:1653:2: ( RULE_UNICODE_DIGIT )
+                    // InternalRegularExpressionParser.g:1654:3: RULE_UNICODE_DIGIT
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getRegExpIdentifierPartAccess().getUNICODE_DIGITTerminalRuleCall_1()); 
@@ -6127,10 +6152,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 3 :
-                    // InternalRegularExpressionParser.g:1653:2: ( DollarSign )
+                    // InternalRegularExpressionParser.g:1659:2: ( DollarSign )
                     {
-                    // InternalRegularExpressionParser.g:1653:2: ( DollarSign )
-                    // InternalRegularExpressionParser.g:1654:3: DollarSign
+                    // InternalRegularExpressionParser.g:1659:2: ( DollarSign )
+                    // InternalRegularExpressionParser.g:1660:3: DollarSign
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getRegExpIdentifierPartAccess().getDollarSignKeyword_2()); 
@@ -6146,10 +6171,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 4 :
-                    // InternalRegularExpressionParser.g:1659:2: ( KW__ )
+                    // InternalRegularExpressionParser.g:1665:2: ( KW__ )
                     {
-                    // InternalRegularExpressionParser.g:1659:2: ( KW__ )
-                    // InternalRegularExpressionParser.g:1660:3: KW__
+                    // InternalRegularExpressionParser.g:1665:2: ( KW__ )
+                    // InternalRegularExpressionParser.g:1666:3: KW__
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getRegExpIdentifierPartAccess().get_Keyword_3()); 
@@ -6165,10 +6190,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 5 :
-                    // InternalRegularExpressionParser.g:1665:2: ( RULE_UNICODE_ESCAPE )
+                    // InternalRegularExpressionParser.g:1671:2: ( RULE_UNICODE_ESCAPE )
                     {
-                    // InternalRegularExpressionParser.g:1665:2: ( RULE_UNICODE_ESCAPE )
-                    // InternalRegularExpressionParser.g:1666:3: RULE_UNICODE_ESCAPE
+                    // InternalRegularExpressionParser.g:1671:2: ( RULE_UNICODE_ESCAPE )
+                    // InternalRegularExpressionParser.g:1672:3: RULE_UNICODE_ESCAPE
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getRegExpIdentifierPartAccess().getUNICODE_ESCAPETerminalRuleCall_4()); 
@@ -6201,13 +6226,13 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Quantifier__Alternatives"
-    // InternalRegularExpressionParser.g:1675:1: rule__Quantifier__Alternatives : ( ( ruleSimpleQuantifier ) | ( ruleExactQuantifier ) );
+    // InternalRegularExpressionParser.g:1681:1: rule__Quantifier__Alternatives : ( ( ruleSimpleQuantifier ) | ( ruleExactQuantifier ) );
     public final void rule__Quantifier__Alternatives() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:1679:1: ( ( ruleSimpleQuantifier ) | ( ruleExactQuantifier ) )
+            // InternalRegularExpressionParser.g:1685:1: ( ( ruleSimpleQuantifier ) | ( ruleExactQuantifier ) )
             int alt18=2;
             int LA18_0 = input.LA(1);
 
@@ -6226,10 +6251,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
             }
             switch (alt18) {
                 case 1 :
-                    // InternalRegularExpressionParser.g:1680:2: ( ruleSimpleQuantifier )
+                    // InternalRegularExpressionParser.g:1686:2: ( ruleSimpleQuantifier )
                     {
-                    // InternalRegularExpressionParser.g:1680:2: ( ruleSimpleQuantifier )
-                    // InternalRegularExpressionParser.g:1681:3: ruleSimpleQuantifier
+                    // InternalRegularExpressionParser.g:1686:2: ( ruleSimpleQuantifier )
+                    // InternalRegularExpressionParser.g:1687:3: ruleSimpleQuantifier
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getQuantifierAccess().getSimpleQuantifierParserRuleCall_0()); 
@@ -6249,10 +6274,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 2 :
-                    // InternalRegularExpressionParser.g:1686:2: ( ruleExactQuantifier )
+                    // InternalRegularExpressionParser.g:1692:2: ( ruleExactQuantifier )
                     {
-                    // InternalRegularExpressionParser.g:1686:2: ( ruleExactQuantifier )
-                    // InternalRegularExpressionParser.g:1687:3: ruleExactQuantifier
+                    // InternalRegularExpressionParser.g:1692:2: ( ruleExactQuantifier )
+                    // InternalRegularExpressionParser.g:1693:3: ruleExactQuantifier
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getQuantifierAccess().getExactQuantifierParserRuleCall_1()); 
@@ -6289,13 +6314,13 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__SimpleQuantifier__QuantifierAlternatives_0_0"
-    // InternalRegularExpressionParser.g:1696:1: rule__SimpleQuantifier__QuantifierAlternatives_0_0 : ( ( PlusSign ) | ( Asterisk ) | ( QuestionMark ) );
+    // InternalRegularExpressionParser.g:1702:1: rule__SimpleQuantifier__QuantifierAlternatives_0_0 : ( ( PlusSign ) | ( Asterisk ) | ( QuestionMark ) );
     public final void rule__SimpleQuantifier__QuantifierAlternatives_0_0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:1700:1: ( ( PlusSign ) | ( Asterisk ) | ( QuestionMark ) )
+            // InternalRegularExpressionParser.g:1706:1: ( ( PlusSign ) | ( Asterisk ) | ( QuestionMark ) )
             int alt19=3;
             switch ( input.LA(1) ) {
             case PlusSign:
@@ -6323,10 +6348,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
             switch (alt19) {
                 case 1 :
-                    // InternalRegularExpressionParser.g:1701:2: ( PlusSign )
+                    // InternalRegularExpressionParser.g:1707:2: ( PlusSign )
                     {
-                    // InternalRegularExpressionParser.g:1701:2: ( PlusSign )
-                    // InternalRegularExpressionParser.g:1702:3: PlusSign
+                    // InternalRegularExpressionParser.g:1707:2: ( PlusSign )
+                    // InternalRegularExpressionParser.g:1708:3: PlusSign
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getSimpleQuantifierAccess().getQuantifierPlusSignKeyword_0_0_0()); 
@@ -6342,10 +6367,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 2 :
-                    // InternalRegularExpressionParser.g:1707:2: ( Asterisk )
+                    // InternalRegularExpressionParser.g:1713:2: ( Asterisk )
                     {
-                    // InternalRegularExpressionParser.g:1707:2: ( Asterisk )
-                    // InternalRegularExpressionParser.g:1708:3: Asterisk
+                    // InternalRegularExpressionParser.g:1713:2: ( Asterisk )
+                    // InternalRegularExpressionParser.g:1714:3: Asterisk
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getSimpleQuantifierAccess().getQuantifierAsteriskKeyword_0_0_1()); 
@@ -6361,10 +6386,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 3 :
-                    // InternalRegularExpressionParser.g:1713:2: ( QuestionMark )
+                    // InternalRegularExpressionParser.g:1719:2: ( QuestionMark )
                     {
-                    // InternalRegularExpressionParser.g:1713:2: ( QuestionMark )
-                    // InternalRegularExpressionParser.g:1714:3: QuestionMark
+                    // InternalRegularExpressionParser.g:1719:2: ( QuestionMark )
+                    // InternalRegularExpressionParser.g:1720:3: QuestionMark
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getSimpleQuantifierAccess().getQuantifierQuestionMarkKeyword_0_0_2()); 
@@ -6397,24 +6422,24 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__ExactQuantifier__Alternatives_3"
-    // InternalRegularExpressionParser.g:1723:1: rule__ExactQuantifier__Alternatives_3 : ( ( ( rule__ExactQuantifier__Group_3_0__0 ) ) | ( ( rule__ExactQuantifier__UnboundedMaxAssignment_3_1 ) ) );
+    // InternalRegularExpressionParser.g:1729:1: rule__ExactQuantifier__Alternatives_3 : ( ( ( rule__ExactQuantifier__Group_3_0__0 ) ) | ( ( rule__ExactQuantifier__UnboundedMaxAssignment_3_1 ) ) );
     public final void rule__ExactQuantifier__Alternatives_3() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:1727:1: ( ( ( rule__ExactQuantifier__Group_3_0__0 ) ) | ( ( rule__ExactQuantifier__UnboundedMaxAssignment_3_1 ) ) )
+            // InternalRegularExpressionParser.g:1733:1: ( ( ( rule__ExactQuantifier__Group_3_0__0 ) ) | ( ( rule__ExactQuantifier__UnboundedMaxAssignment_3_1 ) ) )
             int alt20=2;
             int LA20_0 = input.LA(1);
 
             if ( (LA20_0==Comma) ) {
                 int LA20_1 = input.LA(2);
 
-                if ( (LA20_1==EOF||LA20_1==RightCurlyBracket) ) {
-                    alt20=2;
-                }
-                else if ( (LA20_1==RULE_UNICODE_DIGIT) ) {
+                if ( (LA20_1==RULE_UNICODE_DIGIT) ) {
                     alt20=1;
+                }
+                else if ( (LA20_1==EOF||LA20_1==RightCurlyBracket) ) {
+                    alt20=2;
                 }
                 else {
                     if (state.backtracking>0) {state.failed=true; return ;}
@@ -6433,16 +6458,16 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
             }
             switch (alt20) {
                 case 1 :
-                    // InternalRegularExpressionParser.g:1728:2: ( ( rule__ExactQuantifier__Group_3_0__0 ) )
+                    // InternalRegularExpressionParser.g:1734:2: ( ( rule__ExactQuantifier__Group_3_0__0 ) )
                     {
-                    // InternalRegularExpressionParser.g:1728:2: ( ( rule__ExactQuantifier__Group_3_0__0 ) )
-                    // InternalRegularExpressionParser.g:1729:3: ( rule__ExactQuantifier__Group_3_0__0 )
+                    // InternalRegularExpressionParser.g:1734:2: ( ( rule__ExactQuantifier__Group_3_0__0 ) )
+                    // InternalRegularExpressionParser.g:1735:3: ( rule__ExactQuantifier__Group_3_0__0 )
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getExactQuantifierAccess().getGroup_3_0()); 
                     }
-                    // InternalRegularExpressionParser.g:1730:3: ( rule__ExactQuantifier__Group_3_0__0 )
-                    // InternalRegularExpressionParser.g:1730:4: rule__ExactQuantifier__Group_3_0__0
+                    // InternalRegularExpressionParser.g:1736:3: ( rule__ExactQuantifier__Group_3_0__0 )
+                    // InternalRegularExpressionParser.g:1736:4: rule__ExactQuantifier__Group_3_0__0
                     {
                     pushFollow(FOLLOW_2);
                     rule__ExactQuantifier__Group_3_0__0();
@@ -6462,16 +6487,16 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 2 :
-                    // InternalRegularExpressionParser.g:1734:2: ( ( rule__ExactQuantifier__UnboundedMaxAssignment_3_1 ) )
+                    // InternalRegularExpressionParser.g:1740:2: ( ( rule__ExactQuantifier__UnboundedMaxAssignment_3_1 ) )
                     {
-                    // InternalRegularExpressionParser.g:1734:2: ( ( rule__ExactQuantifier__UnboundedMaxAssignment_3_1 ) )
-                    // InternalRegularExpressionParser.g:1735:3: ( rule__ExactQuantifier__UnboundedMaxAssignment_3_1 )
+                    // InternalRegularExpressionParser.g:1740:2: ( ( rule__ExactQuantifier__UnboundedMaxAssignment_3_1 ) )
+                    // InternalRegularExpressionParser.g:1741:3: ( rule__ExactQuantifier__UnboundedMaxAssignment_3_1 )
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getExactQuantifierAccess().getUnboundedMaxAssignment_3_1()); 
                     }
-                    // InternalRegularExpressionParser.g:1736:3: ( rule__ExactQuantifier__UnboundedMaxAssignment_3_1 )
-                    // InternalRegularExpressionParser.g:1736:4: rule__ExactQuantifier__UnboundedMaxAssignment_3_1
+                    // InternalRegularExpressionParser.g:1742:3: ( rule__ExactQuantifier__UnboundedMaxAssignment_3_1 )
+                    // InternalRegularExpressionParser.g:1742:4: rule__ExactQuantifier__UnboundedMaxAssignment_3_1
                     {
                     pushFollow(FOLLOW_2);
                     rule__ExactQuantifier__UnboundedMaxAssignment_3_1();
@@ -6508,13 +6533,13 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__RegularExpressionFlags__FlagsAlternatives_1_0"
-    // InternalRegularExpressionParser.g:1744:1: rule__RegularExpressionFlags__FlagsAlternatives_1_0 : ( ( RULE_UNICODE_LETTER ) | ( RULE_UNICODE_ESCAPE ) );
+    // InternalRegularExpressionParser.g:1750:1: rule__RegularExpressionFlags__FlagsAlternatives_1_0 : ( ( RULE_UNICODE_LETTER ) | ( RULE_UNICODE_ESCAPE ) );
     public final void rule__RegularExpressionFlags__FlagsAlternatives_1_0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:1748:1: ( ( RULE_UNICODE_LETTER ) | ( RULE_UNICODE_ESCAPE ) )
+            // InternalRegularExpressionParser.g:1754:1: ( ( RULE_UNICODE_LETTER ) | ( RULE_UNICODE_ESCAPE ) )
             int alt21=2;
             int LA21_0 = input.LA(1);
 
@@ -6533,10 +6558,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
             }
             switch (alt21) {
                 case 1 :
-                    // InternalRegularExpressionParser.g:1749:2: ( RULE_UNICODE_LETTER )
+                    // InternalRegularExpressionParser.g:1755:2: ( RULE_UNICODE_LETTER )
                     {
-                    // InternalRegularExpressionParser.g:1749:2: ( RULE_UNICODE_LETTER )
-                    // InternalRegularExpressionParser.g:1750:3: RULE_UNICODE_LETTER
+                    // InternalRegularExpressionParser.g:1755:2: ( RULE_UNICODE_LETTER )
+                    // InternalRegularExpressionParser.g:1756:3: RULE_UNICODE_LETTER
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getRegularExpressionFlagsAccess().getFlagsUNICODE_LETTERTerminalRuleCall_1_0_0()); 
@@ -6552,10 +6577,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                     }
                     break;
                 case 2 :
-                    // InternalRegularExpressionParser.g:1755:2: ( RULE_UNICODE_ESCAPE )
+                    // InternalRegularExpressionParser.g:1761:2: ( RULE_UNICODE_ESCAPE )
                     {
-                    // InternalRegularExpressionParser.g:1755:2: ( RULE_UNICODE_ESCAPE )
-                    // InternalRegularExpressionParser.g:1756:3: RULE_UNICODE_ESCAPE
+                    // InternalRegularExpressionParser.g:1761:2: ( RULE_UNICODE_ESCAPE )
+                    // InternalRegularExpressionParser.g:1762:3: RULE_UNICODE_ESCAPE
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getRegularExpressionFlagsAccess().getFlagsUNICODE_ESCAPETerminalRuleCall_1_0_1()); 
@@ -6588,14 +6613,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__RegularExpressionLiteral__Group__0"
-    // InternalRegularExpressionParser.g:1765:1: rule__RegularExpressionLiteral__Group__0 : rule__RegularExpressionLiteral__Group__0__Impl rule__RegularExpressionLiteral__Group__1 ;
+    // InternalRegularExpressionParser.g:1771:1: rule__RegularExpressionLiteral__Group__0 : rule__RegularExpressionLiteral__Group__0__Impl rule__RegularExpressionLiteral__Group__1 ;
     public final void rule__RegularExpressionLiteral__Group__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:1769:1: ( rule__RegularExpressionLiteral__Group__0__Impl rule__RegularExpressionLiteral__Group__1 )
-            // InternalRegularExpressionParser.g:1770:2: rule__RegularExpressionLiteral__Group__0__Impl rule__RegularExpressionLiteral__Group__1
+            // InternalRegularExpressionParser.g:1775:1: ( rule__RegularExpressionLiteral__Group__0__Impl rule__RegularExpressionLiteral__Group__1 )
+            // InternalRegularExpressionParser.g:1776:2: rule__RegularExpressionLiteral__Group__0__Impl rule__RegularExpressionLiteral__Group__1
             {
             pushFollow(FOLLOW_4);
             rule__RegularExpressionLiteral__Group__0__Impl();
@@ -6626,17 +6651,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__RegularExpressionLiteral__Group__0__Impl"
-    // InternalRegularExpressionParser.g:1777:1: rule__RegularExpressionLiteral__Group__0__Impl : ( Solidus ) ;
+    // InternalRegularExpressionParser.g:1783:1: rule__RegularExpressionLiteral__Group__0__Impl : ( Solidus ) ;
     public final void rule__RegularExpressionLiteral__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:1781:1: ( ( Solidus ) )
-            // InternalRegularExpressionParser.g:1782:1: ( Solidus )
+            // InternalRegularExpressionParser.g:1787:1: ( ( Solidus ) )
+            // InternalRegularExpressionParser.g:1788:1: ( Solidus )
             {
-            // InternalRegularExpressionParser.g:1782:1: ( Solidus )
-            // InternalRegularExpressionParser.g:1783:2: Solidus
+            // InternalRegularExpressionParser.g:1788:1: ( Solidus )
+            // InternalRegularExpressionParser.g:1789:2: Solidus
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getRegularExpressionLiteralAccess().getSolidusKeyword_0()); 
@@ -6667,14 +6692,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__RegularExpressionLiteral__Group__1"
-    // InternalRegularExpressionParser.g:1792:1: rule__RegularExpressionLiteral__Group__1 : rule__RegularExpressionLiteral__Group__1__Impl rule__RegularExpressionLiteral__Group__2 ;
+    // InternalRegularExpressionParser.g:1798:1: rule__RegularExpressionLiteral__Group__1 : rule__RegularExpressionLiteral__Group__1__Impl rule__RegularExpressionLiteral__Group__2 ;
     public final void rule__RegularExpressionLiteral__Group__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:1796:1: ( rule__RegularExpressionLiteral__Group__1__Impl rule__RegularExpressionLiteral__Group__2 )
-            // InternalRegularExpressionParser.g:1797:2: rule__RegularExpressionLiteral__Group__1__Impl rule__RegularExpressionLiteral__Group__2
+            // InternalRegularExpressionParser.g:1802:1: ( rule__RegularExpressionLiteral__Group__1__Impl rule__RegularExpressionLiteral__Group__2 )
+            // InternalRegularExpressionParser.g:1803:2: rule__RegularExpressionLiteral__Group__1__Impl rule__RegularExpressionLiteral__Group__2
             {
             pushFollow(FOLLOW_5);
             rule__RegularExpressionLiteral__Group__1__Impl();
@@ -6705,23 +6730,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__RegularExpressionLiteral__Group__1__Impl"
-    // InternalRegularExpressionParser.g:1804:1: rule__RegularExpressionLiteral__Group__1__Impl : ( ( rule__RegularExpressionLiteral__BodyAssignment_1 ) ) ;
+    // InternalRegularExpressionParser.g:1810:1: rule__RegularExpressionLiteral__Group__1__Impl : ( ( rule__RegularExpressionLiteral__BodyAssignment_1 ) ) ;
     public final void rule__RegularExpressionLiteral__Group__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:1808:1: ( ( ( rule__RegularExpressionLiteral__BodyAssignment_1 ) ) )
-            // InternalRegularExpressionParser.g:1809:1: ( ( rule__RegularExpressionLiteral__BodyAssignment_1 ) )
+            // InternalRegularExpressionParser.g:1814:1: ( ( ( rule__RegularExpressionLiteral__BodyAssignment_1 ) ) )
+            // InternalRegularExpressionParser.g:1815:1: ( ( rule__RegularExpressionLiteral__BodyAssignment_1 ) )
             {
-            // InternalRegularExpressionParser.g:1809:1: ( ( rule__RegularExpressionLiteral__BodyAssignment_1 ) )
-            // InternalRegularExpressionParser.g:1810:2: ( rule__RegularExpressionLiteral__BodyAssignment_1 )
+            // InternalRegularExpressionParser.g:1815:1: ( ( rule__RegularExpressionLiteral__BodyAssignment_1 ) )
+            // InternalRegularExpressionParser.g:1816:2: ( rule__RegularExpressionLiteral__BodyAssignment_1 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getRegularExpressionLiteralAccess().getBodyAssignment_1()); 
             }
-            // InternalRegularExpressionParser.g:1811:2: ( rule__RegularExpressionLiteral__BodyAssignment_1 )
-            // InternalRegularExpressionParser.g:1811:3: rule__RegularExpressionLiteral__BodyAssignment_1
+            // InternalRegularExpressionParser.g:1817:2: ( rule__RegularExpressionLiteral__BodyAssignment_1 )
+            // InternalRegularExpressionParser.g:1817:3: rule__RegularExpressionLiteral__BodyAssignment_1
             {
             pushFollow(FOLLOW_2);
             rule__RegularExpressionLiteral__BodyAssignment_1();
@@ -6756,14 +6781,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__RegularExpressionLiteral__Group__2"
-    // InternalRegularExpressionParser.g:1819:1: rule__RegularExpressionLiteral__Group__2 : rule__RegularExpressionLiteral__Group__2__Impl rule__RegularExpressionLiteral__Group__3 ;
+    // InternalRegularExpressionParser.g:1825:1: rule__RegularExpressionLiteral__Group__2 : rule__RegularExpressionLiteral__Group__2__Impl rule__RegularExpressionLiteral__Group__3 ;
     public final void rule__RegularExpressionLiteral__Group__2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:1823:1: ( rule__RegularExpressionLiteral__Group__2__Impl rule__RegularExpressionLiteral__Group__3 )
-            // InternalRegularExpressionParser.g:1824:2: rule__RegularExpressionLiteral__Group__2__Impl rule__RegularExpressionLiteral__Group__3
+            // InternalRegularExpressionParser.g:1829:1: ( rule__RegularExpressionLiteral__Group__2__Impl rule__RegularExpressionLiteral__Group__3 )
+            // InternalRegularExpressionParser.g:1830:2: rule__RegularExpressionLiteral__Group__2__Impl rule__RegularExpressionLiteral__Group__3
             {
             pushFollow(FOLLOW_6);
             rule__RegularExpressionLiteral__Group__2__Impl();
@@ -6794,17 +6819,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__RegularExpressionLiteral__Group__2__Impl"
-    // InternalRegularExpressionParser.g:1831:1: rule__RegularExpressionLiteral__Group__2__Impl : ( Solidus ) ;
+    // InternalRegularExpressionParser.g:1837:1: rule__RegularExpressionLiteral__Group__2__Impl : ( Solidus ) ;
     public final void rule__RegularExpressionLiteral__Group__2__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:1835:1: ( ( Solidus ) )
-            // InternalRegularExpressionParser.g:1836:1: ( Solidus )
+            // InternalRegularExpressionParser.g:1841:1: ( ( Solidus ) )
+            // InternalRegularExpressionParser.g:1842:1: ( Solidus )
             {
-            // InternalRegularExpressionParser.g:1836:1: ( Solidus )
-            // InternalRegularExpressionParser.g:1837:2: Solidus
+            // InternalRegularExpressionParser.g:1842:1: ( Solidus )
+            // InternalRegularExpressionParser.g:1843:2: Solidus
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getRegularExpressionLiteralAccess().getSolidusKeyword_2()); 
@@ -6835,14 +6860,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__RegularExpressionLiteral__Group__3"
-    // InternalRegularExpressionParser.g:1846:1: rule__RegularExpressionLiteral__Group__3 : rule__RegularExpressionLiteral__Group__3__Impl ;
+    // InternalRegularExpressionParser.g:1852:1: rule__RegularExpressionLiteral__Group__3 : rule__RegularExpressionLiteral__Group__3__Impl ;
     public final void rule__RegularExpressionLiteral__Group__3() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:1850:1: ( rule__RegularExpressionLiteral__Group__3__Impl )
-            // InternalRegularExpressionParser.g:1851:2: rule__RegularExpressionLiteral__Group__3__Impl
+            // InternalRegularExpressionParser.g:1856:1: ( rule__RegularExpressionLiteral__Group__3__Impl )
+            // InternalRegularExpressionParser.g:1857:2: rule__RegularExpressionLiteral__Group__3__Impl
             {
             pushFollow(FOLLOW_2);
             rule__RegularExpressionLiteral__Group__3__Impl();
@@ -6868,23 +6893,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__RegularExpressionLiteral__Group__3__Impl"
-    // InternalRegularExpressionParser.g:1857:1: rule__RegularExpressionLiteral__Group__3__Impl : ( ( rule__RegularExpressionLiteral__FlagsAssignment_3 ) ) ;
+    // InternalRegularExpressionParser.g:1863:1: rule__RegularExpressionLiteral__Group__3__Impl : ( ( rule__RegularExpressionLiteral__FlagsAssignment_3 ) ) ;
     public final void rule__RegularExpressionLiteral__Group__3__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:1861:1: ( ( ( rule__RegularExpressionLiteral__FlagsAssignment_3 ) ) )
-            // InternalRegularExpressionParser.g:1862:1: ( ( rule__RegularExpressionLiteral__FlagsAssignment_3 ) )
+            // InternalRegularExpressionParser.g:1867:1: ( ( ( rule__RegularExpressionLiteral__FlagsAssignment_3 ) ) )
+            // InternalRegularExpressionParser.g:1868:1: ( ( rule__RegularExpressionLiteral__FlagsAssignment_3 ) )
             {
-            // InternalRegularExpressionParser.g:1862:1: ( ( rule__RegularExpressionLiteral__FlagsAssignment_3 ) )
-            // InternalRegularExpressionParser.g:1863:2: ( rule__RegularExpressionLiteral__FlagsAssignment_3 )
+            // InternalRegularExpressionParser.g:1868:1: ( ( rule__RegularExpressionLiteral__FlagsAssignment_3 ) )
+            // InternalRegularExpressionParser.g:1869:2: ( rule__RegularExpressionLiteral__FlagsAssignment_3 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getRegularExpressionLiteralAccess().getFlagsAssignment_3()); 
             }
-            // InternalRegularExpressionParser.g:1864:2: ( rule__RegularExpressionLiteral__FlagsAssignment_3 )
-            // InternalRegularExpressionParser.g:1864:3: rule__RegularExpressionLiteral__FlagsAssignment_3
+            // InternalRegularExpressionParser.g:1870:2: ( rule__RegularExpressionLiteral__FlagsAssignment_3 )
+            // InternalRegularExpressionParser.g:1870:3: rule__RegularExpressionLiteral__FlagsAssignment_3
             {
             pushFollow(FOLLOW_2);
             rule__RegularExpressionLiteral__FlagsAssignment_3();
@@ -6919,14 +6944,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Disjunction__Group_0__0"
-    // InternalRegularExpressionParser.g:1873:1: rule__Disjunction__Group_0__0 : rule__Disjunction__Group_0__0__Impl rule__Disjunction__Group_0__1 ;
+    // InternalRegularExpressionParser.g:1879:1: rule__Disjunction__Group_0__0 : rule__Disjunction__Group_0__0__Impl rule__Disjunction__Group_0__1 ;
     public final void rule__Disjunction__Group_0__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:1877:1: ( rule__Disjunction__Group_0__0__Impl rule__Disjunction__Group_0__1 )
-            // InternalRegularExpressionParser.g:1878:2: rule__Disjunction__Group_0__0__Impl rule__Disjunction__Group_0__1
+            // InternalRegularExpressionParser.g:1883:1: ( rule__Disjunction__Group_0__0__Impl rule__Disjunction__Group_0__1 )
+            // InternalRegularExpressionParser.g:1884:2: rule__Disjunction__Group_0__0__Impl rule__Disjunction__Group_0__1
             {
             pushFollow(FOLLOW_7);
             rule__Disjunction__Group_0__0__Impl();
@@ -6957,17 +6982,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Disjunction__Group_0__0__Impl"
-    // InternalRegularExpressionParser.g:1885:1: rule__Disjunction__Group_0__0__Impl : ( ruleAlternative ) ;
+    // InternalRegularExpressionParser.g:1891:1: rule__Disjunction__Group_0__0__Impl : ( ruleAlternative ) ;
     public final void rule__Disjunction__Group_0__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:1889:1: ( ( ruleAlternative ) )
-            // InternalRegularExpressionParser.g:1890:1: ( ruleAlternative )
+            // InternalRegularExpressionParser.g:1895:1: ( ( ruleAlternative ) )
+            // InternalRegularExpressionParser.g:1896:1: ( ruleAlternative )
             {
-            // InternalRegularExpressionParser.g:1890:1: ( ruleAlternative )
-            // InternalRegularExpressionParser.g:1891:2: ruleAlternative
+            // InternalRegularExpressionParser.g:1896:1: ( ruleAlternative )
+            // InternalRegularExpressionParser.g:1897:2: ruleAlternative
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getDisjunctionAccess().getAlternativeParserRuleCall_0_0()); 
@@ -7002,14 +7027,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Disjunction__Group_0__1"
-    // InternalRegularExpressionParser.g:1900:1: rule__Disjunction__Group_0__1 : rule__Disjunction__Group_0__1__Impl ;
+    // InternalRegularExpressionParser.g:1906:1: rule__Disjunction__Group_0__1 : rule__Disjunction__Group_0__1__Impl ;
     public final void rule__Disjunction__Group_0__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:1904:1: ( rule__Disjunction__Group_0__1__Impl )
-            // InternalRegularExpressionParser.g:1905:2: rule__Disjunction__Group_0__1__Impl
+            // InternalRegularExpressionParser.g:1910:1: ( rule__Disjunction__Group_0__1__Impl )
+            // InternalRegularExpressionParser.g:1911:2: rule__Disjunction__Group_0__1__Impl
             {
             pushFollow(FOLLOW_2);
             rule__Disjunction__Group_0__1__Impl();
@@ -7035,22 +7060,22 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Disjunction__Group_0__1__Impl"
-    // InternalRegularExpressionParser.g:1911:1: rule__Disjunction__Group_0__1__Impl : ( ( rule__Disjunction__Group_0_1__0 )? ) ;
+    // InternalRegularExpressionParser.g:1917:1: rule__Disjunction__Group_0__1__Impl : ( ( rule__Disjunction__Group_0_1__0 )? ) ;
     public final void rule__Disjunction__Group_0__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:1915:1: ( ( ( rule__Disjunction__Group_0_1__0 )? ) )
-            // InternalRegularExpressionParser.g:1916:1: ( ( rule__Disjunction__Group_0_1__0 )? )
+            // InternalRegularExpressionParser.g:1921:1: ( ( ( rule__Disjunction__Group_0_1__0 )? ) )
+            // InternalRegularExpressionParser.g:1922:1: ( ( rule__Disjunction__Group_0_1__0 )? )
             {
-            // InternalRegularExpressionParser.g:1916:1: ( ( rule__Disjunction__Group_0_1__0 )? )
-            // InternalRegularExpressionParser.g:1917:2: ( rule__Disjunction__Group_0_1__0 )?
+            // InternalRegularExpressionParser.g:1922:1: ( ( rule__Disjunction__Group_0_1__0 )? )
+            // InternalRegularExpressionParser.g:1923:2: ( rule__Disjunction__Group_0_1__0 )?
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getDisjunctionAccess().getGroup_0_1()); 
             }
-            // InternalRegularExpressionParser.g:1918:2: ( rule__Disjunction__Group_0_1__0 )?
+            // InternalRegularExpressionParser.g:1924:2: ( rule__Disjunction__Group_0_1__0 )?
             int alt22=2;
             int LA22_0 = input.LA(1);
 
@@ -7059,7 +7084,7 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
             }
             switch (alt22) {
                 case 1 :
-                    // InternalRegularExpressionParser.g:1918:3: rule__Disjunction__Group_0_1__0
+                    // InternalRegularExpressionParser.g:1924:3: rule__Disjunction__Group_0_1__0
                     {
                     pushFollow(FOLLOW_2);
                     rule__Disjunction__Group_0_1__0();
@@ -7097,14 +7122,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Disjunction__Group_0_1__0"
-    // InternalRegularExpressionParser.g:1927:1: rule__Disjunction__Group_0_1__0 : rule__Disjunction__Group_0_1__0__Impl rule__Disjunction__Group_0_1__1 ;
+    // InternalRegularExpressionParser.g:1933:1: rule__Disjunction__Group_0_1__0 : rule__Disjunction__Group_0_1__0__Impl rule__Disjunction__Group_0_1__1 ;
     public final void rule__Disjunction__Group_0_1__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:1931:1: ( rule__Disjunction__Group_0_1__0__Impl rule__Disjunction__Group_0_1__1 )
-            // InternalRegularExpressionParser.g:1932:2: rule__Disjunction__Group_0_1__0__Impl rule__Disjunction__Group_0_1__1
+            // InternalRegularExpressionParser.g:1937:1: ( rule__Disjunction__Group_0_1__0__Impl rule__Disjunction__Group_0_1__1 )
+            // InternalRegularExpressionParser.g:1938:2: rule__Disjunction__Group_0_1__0__Impl rule__Disjunction__Group_0_1__1
             {
             pushFollow(FOLLOW_7);
             rule__Disjunction__Group_0_1__0__Impl();
@@ -7135,23 +7160,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Disjunction__Group_0_1__0__Impl"
-    // InternalRegularExpressionParser.g:1939:1: rule__Disjunction__Group_0_1__0__Impl : ( () ) ;
+    // InternalRegularExpressionParser.g:1945:1: rule__Disjunction__Group_0_1__0__Impl : ( () ) ;
     public final void rule__Disjunction__Group_0_1__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:1943:1: ( ( () ) )
-            // InternalRegularExpressionParser.g:1944:1: ( () )
+            // InternalRegularExpressionParser.g:1949:1: ( ( () ) )
+            // InternalRegularExpressionParser.g:1950:1: ( () )
             {
-            // InternalRegularExpressionParser.g:1944:1: ( () )
-            // InternalRegularExpressionParser.g:1945:2: ()
+            // InternalRegularExpressionParser.g:1950:1: ( () )
+            // InternalRegularExpressionParser.g:1951:2: ()
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getDisjunctionAccess().getDisjunctionElementsAction_0_1_0()); 
             }
-            // InternalRegularExpressionParser.g:1946:2: ()
-            // InternalRegularExpressionParser.g:1946:3: 
+            // InternalRegularExpressionParser.g:1952:2: ()
+            // InternalRegularExpressionParser.g:1952:3: 
             {
             }
 
@@ -7176,14 +7201,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Disjunction__Group_0_1__1"
-    // InternalRegularExpressionParser.g:1954:1: rule__Disjunction__Group_0_1__1 : rule__Disjunction__Group_0_1__1__Impl ;
+    // InternalRegularExpressionParser.g:1960:1: rule__Disjunction__Group_0_1__1 : rule__Disjunction__Group_0_1__1__Impl ;
     public final void rule__Disjunction__Group_0_1__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:1958:1: ( rule__Disjunction__Group_0_1__1__Impl )
-            // InternalRegularExpressionParser.g:1959:2: rule__Disjunction__Group_0_1__1__Impl
+            // InternalRegularExpressionParser.g:1964:1: ( rule__Disjunction__Group_0_1__1__Impl )
+            // InternalRegularExpressionParser.g:1965:2: rule__Disjunction__Group_0_1__1__Impl
             {
             pushFollow(FOLLOW_2);
             rule__Disjunction__Group_0_1__1__Impl();
@@ -7209,26 +7234,26 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Disjunction__Group_0_1__1__Impl"
-    // InternalRegularExpressionParser.g:1965:1: rule__Disjunction__Group_0_1__1__Impl : ( ( ( rule__Disjunction__Group_0_1_1__0 ) ) ( ( rule__Disjunction__Group_0_1_1__0 )* ) ) ;
+    // InternalRegularExpressionParser.g:1971:1: rule__Disjunction__Group_0_1__1__Impl : ( ( ( rule__Disjunction__Group_0_1_1__0 ) ) ( ( rule__Disjunction__Group_0_1_1__0 )* ) ) ;
     public final void rule__Disjunction__Group_0_1__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:1969:1: ( ( ( ( rule__Disjunction__Group_0_1_1__0 ) ) ( ( rule__Disjunction__Group_0_1_1__0 )* ) ) )
-            // InternalRegularExpressionParser.g:1970:1: ( ( ( rule__Disjunction__Group_0_1_1__0 ) ) ( ( rule__Disjunction__Group_0_1_1__0 )* ) )
+            // InternalRegularExpressionParser.g:1975:1: ( ( ( ( rule__Disjunction__Group_0_1_1__0 ) ) ( ( rule__Disjunction__Group_0_1_1__0 )* ) ) )
+            // InternalRegularExpressionParser.g:1976:1: ( ( ( rule__Disjunction__Group_0_1_1__0 ) ) ( ( rule__Disjunction__Group_0_1_1__0 )* ) )
             {
-            // InternalRegularExpressionParser.g:1970:1: ( ( ( rule__Disjunction__Group_0_1_1__0 ) ) ( ( rule__Disjunction__Group_0_1_1__0 )* ) )
-            // InternalRegularExpressionParser.g:1971:2: ( ( rule__Disjunction__Group_0_1_1__0 ) ) ( ( rule__Disjunction__Group_0_1_1__0 )* )
+            // InternalRegularExpressionParser.g:1976:1: ( ( ( rule__Disjunction__Group_0_1_1__0 ) ) ( ( rule__Disjunction__Group_0_1_1__0 )* ) )
+            // InternalRegularExpressionParser.g:1977:2: ( ( rule__Disjunction__Group_0_1_1__0 ) ) ( ( rule__Disjunction__Group_0_1_1__0 )* )
             {
-            // InternalRegularExpressionParser.g:1971:2: ( ( rule__Disjunction__Group_0_1_1__0 ) )
-            // InternalRegularExpressionParser.g:1972:3: ( rule__Disjunction__Group_0_1_1__0 )
+            // InternalRegularExpressionParser.g:1977:2: ( ( rule__Disjunction__Group_0_1_1__0 ) )
+            // InternalRegularExpressionParser.g:1978:3: ( rule__Disjunction__Group_0_1_1__0 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getDisjunctionAccess().getGroup_0_1_1()); 
             }
-            // InternalRegularExpressionParser.g:1973:3: ( rule__Disjunction__Group_0_1_1__0 )
-            // InternalRegularExpressionParser.g:1973:4: rule__Disjunction__Group_0_1_1__0
+            // InternalRegularExpressionParser.g:1979:3: ( rule__Disjunction__Group_0_1_1__0 )
+            // InternalRegularExpressionParser.g:1979:4: rule__Disjunction__Group_0_1_1__0
             {
             pushFollow(FOLLOW_8);
             rule__Disjunction__Group_0_1_1__0();
@@ -7244,13 +7269,13 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
             }
 
-            // InternalRegularExpressionParser.g:1976:2: ( ( rule__Disjunction__Group_0_1_1__0 )* )
-            // InternalRegularExpressionParser.g:1977:3: ( rule__Disjunction__Group_0_1_1__0 )*
+            // InternalRegularExpressionParser.g:1982:2: ( ( rule__Disjunction__Group_0_1_1__0 )* )
+            // InternalRegularExpressionParser.g:1983:3: ( rule__Disjunction__Group_0_1_1__0 )*
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getDisjunctionAccess().getGroup_0_1_1()); 
             }
-            // InternalRegularExpressionParser.g:1978:3: ( rule__Disjunction__Group_0_1_1__0 )*
+            // InternalRegularExpressionParser.g:1984:3: ( rule__Disjunction__Group_0_1_1__0 )*
             loop23:
             do {
                 int alt23=2;
@@ -7263,7 +7288,7 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
                 switch (alt23) {
             	case 1 :
-            	    // InternalRegularExpressionParser.g:1978:4: rule__Disjunction__Group_0_1_1__0
+            	    // InternalRegularExpressionParser.g:1984:4: rule__Disjunction__Group_0_1_1__0
             	    {
             	    pushFollow(FOLLOW_8);
             	    rule__Disjunction__Group_0_1_1__0();
@@ -7307,14 +7332,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Disjunction__Group_0_1_1__0"
-    // InternalRegularExpressionParser.g:1988:1: rule__Disjunction__Group_0_1_1__0 : rule__Disjunction__Group_0_1_1__0__Impl rule__Disjunction__Group_0_1_1__1 ;
+    // InternalRegularExpressionParser.g:1994:1: rule__Disjunction__Group_0_1_1__0 : rule__Disjunction__Group_0_1_1__0__Impl rule__Disjunction__Group_0_1_1__1 ;
     public final void rule__Disjunction__Group_0_1_1__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:1992:1: ( rule__Disjunction__Group_0_1_1__0__Impl rule__Disjunction__Group_0_1_1__1 )
-            // InternalRegularExpressionParser.g:1993:2: rule__Disjunction__Group_0_1_1__0__Impl rule__Disjunction__Group_0_1_1__1
+            // InternalRegularExpressionParser.g:1998:1: ( rule__Disjunction__Group_0_1_1__0__Impl rule__Disjunction__Group_0_1_1__1 )
+            // InternalRegularExpressionParser.g:1999:2: rule__Disjunction__Group_0_1_1__0__Impl rule__Disjunction__Group_0_1_1__1
             {
             pushFollow(FOLLOW_9);
             rule__Disjunction__Group_0_1_1__0__Impl();
@@ -7345,17 +7370,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Disjunction__Group_0_1_1__0__Impl"
-    // InternalRegularExpressionParser.g:2000:1: rule__Disjunction__Group_0_1_1__0__Impl : ( VerticalLine ) ;
+    // InternalRegularExpressionParser.g:2006:1: rule__Disjunction__Group_0_1_1__0__Impl : ( VerticalLine ) ;
     public final void rule__Disjunction__Group_0_1_1__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2004:1: ( ( VerticalLine ) )
-            // InternalRegularExpressionParser.g:2005:1: ( VerticalLine )
+            // InternalRegularExpressionParser.g:2010:1: ( ( VerticalLine ) )
+            // InternalRegularExpressionParser.g:2011:1: ( VerticalLine )
             {
-            // InternalRegularExpressionParser.g:2005:1: ( VerticalLine )
-            // InternalRegularExpressionParser.g:2006:2: VerticalLine
+            // InternalRegularExpressionParser.g:2011:1: ( VerticalLine )
+            // InternalRegularExpressionParser.g:2012:2: VerticalLine
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getDisjunctionAccess().getVerticalLineKeyword_0_1_1_0()); 
@@ -7386,14 +7411,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Disjunction__Group_0_1_1__1"
-    // InternalRegularExpressionParser.g:2015:1: rule__Disjunction__Group_0_1_1__1 : rule__Disjunction__Group_0_1_1__1__Impl ;
+    // InternalRegularExpressionParser.g:2021:1: rule__Disjunction__Group_0_1_1__1 : rule__Disjunction__Group_0_1_1__1__Impl ;
     public final void rule__Disjunction__Group_0_1_1__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2019:1: ( rule__Disjunction__Group_0_1_1__1__Impl )
-            // InternalRegularExpressionParser.g:2020:2: rule__Disjunction__Group_0_1_1__1__Impl
+            // InternalRegularExpressionParser.g:2025:1: ( rule__Disjunction__Group_0_1_1__1__Impl )
+            // InternalRegularExpressionParser.g:2026:2: rule__Disjunction__Group_0_1_1__1__Impl
             {
             pushFollow(FOLLOW_2);
             rule__Disjunction__Group_0_1_1__1__Impl();
@@ -7419,31 +7444,31 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Disjunction__Group_0_1_1__1__Impl"
-    // InternalRegularExpressionParser.g:2026:1: rule__Disjunction__Group_0_1_1__1__Impl : ( ( rule__Disjunction__ElementsAssignment_0_1_1_1 )? ) ;
+    // InternalRegularExpressionParser.g:2032:1: rule__Disjunction__Group_0_1_1__1__Impl : ( ( rule__Disjunction__ElementsAssignment_0_1_1_1 )? ) ;
     public final void rule__Disjunction__Group_0_1_1__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2030:1: ( ( ( rule__Disjunction__ElementsAssignment_0_1_1_1 )? ) )
-            // InternalRegularExpressionParser.g:2031:1: ( ( rule__Disjunction__ElementsAssignment_0_1_1_1 )? )
+            // InternalRegularExpressionParser.g:2036:1: ( ( ( rule__Disjunction__ElementsAssignment_0_1_1_1 )? ) )
+            // InternalRegularExpressionParser.g:2037:1: ( ( rule__Disjunction__ElementsAssignment_0_1_1_1 )? )
             {
-            // InternalRegularExpressionParser.g:2031:1: ( ( rule__Disjunction__ElementsAssignment_0_1_1_1 )? )
-            // InternalRegularExpressionParser.g:2032:2: ( rule__Disjunction__ElementsAssignment_0_1_1_1 )?
+            // InternalRegularExpressionParser.g:2037:1: ( ( rule__Disjunction__ElementsAssignment_0_1_1_1 )? )
+            // InternalRegularExpressionParser.g:2038:2: ( rule__Disjunction__ElementsAssignment_0_1_1_1 )?
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getDisjunctionAccess().getElementsAssignment_0_1_1_1()); 
             }
-            // InternalRegularExpressionParser.g:2033:2: ( rule__Disjunction__ElementsAssignment_0_1_1_1 )?
+            // InternalRegularExpressionParser.g:2039:2: ( rule__Disjunction__ElementsAssignment_0_1_1_1 )?
             int alt24=2;
             int LA24_0 = input.LA(1);
 
-            if ( ((LA24_0>=LeftParenthesisQuestionMarkLessThanSignExclamationMark && LA24_0<=LeftParenthesisQuestionMarkEqualsSign)||(LA24_0>=ExclamationMark && LA24_0<=LeftParenthesis)||(LA24_0>=Comma && LA24_0<=FullStop)||(LA24_0>=Colon && LA24_0<=GreaterThanSign)||(LA24_0>=LeftSquareBracket && LA24_0<=CircumflexAccent)||LA24_0==LeftCurlyBracket||(LA24_0>=RightCurlyBracket && LA24_0<=RULE_CONTROL_LETTER_ESCAPE)||(LA24_0>=RULE_HEX_ESCAPE && LA24_0<=RULE_UNICODE_ESCAPE)||(LA24_0>=RULE_DECIMAL_ESCAPE && LA24_0<=RULE_IDENTITY_ESCAPE)||LA24_0==RULE_UNICODE_DIGIT||(LA24_0>=RULE_UNICODE_LETTER && LA24_0<=RULE_PATTERN_CHARACTER_NO_DASH)) ) {
+            if ( ((LA24_0>=LeftParenthesisQuestionMarkLessThanSignExclamationMark && LA24_0<=LeftParenthesisQuestionMarkEqualsSign)||(LA24_0>=ExclamationMark && LA24_0<=LeftParenthesis)||(LA24_0>=Comma && LA24_0<=FullStop)||(LA24_0>=Colon && LA24_0<=GreaterThanSign)||(LA24_0>=LeftSquareBracket && LA24_0<=LeftCurlyBracket)||(LA24_0>=RightCurlyBracket && LA24_0<=RULE_CONTROL_LETTER_ESCAPE)||(LA24_0>=RULE_HEX_ESCAPE && LA24_0<=RULE_UNICODE_ESCAPE)||(LA24_0>=RULE_DECIMAL_ESCAPE && LA24_0<=RULE_IDENTITY_ESCAPE)||LA24_0==RULE_UNICODE_DIGIT||(LA24_0>=RULE_UNICODE_LETTER && LA24_0<=RULE_PATTERN_CHARACTER_NO_DASH)) ) {
                 alt24=1;
             }
             switch (alt24) {
                 case 1 :
-                    // InternalRegularExpressionParser.g:2033:3: rule__Disjunction__ElementsAssignment_0_1_1_1
+                    // InternalRegularExpressionParser.g:2039:3: rule__Disjunction__ElementsAssignment_0_1_1_1
                     {
                     pushFollow(FOLLOW_2);
                     rule__Disjunction__ElementsAssignment_0_1_1_1();
@@ -7481,14 +7506,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Disjunction__Group_1__0"
-    // InternalRegularExpressionParser.g:2042:1: rule__Disjunction__Group_1__0 : rule__Disjunction__Group_1__0__Impl rule__Disjunction__Group_1__1 ;
+    // InternalRegularExpressionParser.g:2048:1: rule__Disjunction__Group_1__0 : rule__Disjunction__Group_1__0__Impl rule__Disjunction__Group_1__1 ;
     public final void rule__Disjunction__Group_1__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2046:1: ( rule__Disjunction__Group_1__0__Impl rule__Disjunction__Group_1__1 )
-            // InternalRegularExpressionParser.g:2047:2: rule__Disjunction__Group_1__0__Impl rule__Disjunction__Group_1__1
+            // InternalRegularExpressionParser.g:2052:1: ( rule__Disjunction__Group_1__0__Impl rule__Disjunction__Group_1__1 )
+            // InternalRegularExpressionParser.g:2053:2: rule__Disjunction__Group_1__0__Impl rule__Disjunction__Group_1__1
             {
             pushFollow(FOLLOW_4);
             rule__Disjunction__Group_1__0__Impl();
@@ -7519,23 +7544,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Disjunction__Group_1__0__Impl"
-    // InternalRegularExpressionParser.g:2054:1: rule__Disjunction__Group_1__0__Impl : ( () ) ;
+    // InternalRegularExpressionParser.g:2060:1: rule__Disjunction__Group_1__0__Impl : ( () ) ;
     public final void rule__Disjunction__Group_1__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2058:1: ( ( () ) )
-            // InternalRegularExpressionParser.g:2059:1: ( () )
+            // InternalRegularExpressionParser.g:2064:1: ( ( () ) )
+            // InternalRegularExpressionParser.g:2065:1: ( () )
             {
-            // InternalRegularExpressionParser.g:2059:1: ( () )
-            // InternalRegularExpressionParser.g:2060:2: ()
+            // InternalRegularExpressionParser.g:2065:1: ( () )
+            // InternalRegularExpressionParser.g:2066:2: ()
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getDisjunctionAccess().getDisjunctionAction_1_0()); 
             }
-            // InternalRegularExpressionParser.g:2061:2: ()
-            // InternalRegularExpressionParser.g:2061:3: 
+            // InternalRegularExpressionParser.g:2067:2: ()
+            // InternalRegularExpressionParser.g:2067:3: 
             {
             }
 
@@ -7560,14 +7585,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Disjunction__Group_1__1"
-    // InternalRegularExpressionParser.g:2069:1: rule__Disjunction__Group_1__1 : rule__Disjunction__Group_1__1__Impl ;
+    // InternalRegularExpressionParser.g:2075:1: rule__Disjunction__Group_1__1 : rule__Disjunction__Group_1__1__Impl ;
     public final void rule__Disjunction__Group_1__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2073:1: ( rule__Disjunction__Group_1__1__Impl )
-            // InternalRegularExpressionParser.g:2074:2: rule__Disjunction__Group_1__1__Impl
+            // InternalRegularExpressionParser.g:2079:1: ( rule__Disjunction__Group_1__1__Impl )
+            // InternalRegularExpressionParser.g:2080:2: rule__Disjunction__Group_1__1__Impl
             {
             pushFollow(FOLLOW_2);
             rule__Disjunction__Group_1__1__Impl();
@@ -7593,22 +7618,22 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Disjunction__Group_1__1__Impl"
-    // InternalRegularExpressionParser.g:2080:1: rule__Disjunction__Group_1__1__Impl : ( ( rule__Disjunction__Group_1_1__0 )* ) ;
+    // InternalRegularExpressionParser.g:2086:1: rule__Disjunction__Group_1__1__Impl : ( ( rule__Disjunction__Group_1_1__0 )* ) ;
     public final void rule__Disjunction__Group_1__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2084:1: ( ( ( rule__Disjunction__Group_1_1__0 )* ) )
-            // InternalRegularExpressionParser.g:2085:1: ( ( rule__Disjunction__Group_1_1__0 )* )
+            // InternalRegularExpressionParser.g:2090:1: ( ( ( rule__Disjunction__Group_1_1__0 )* ) )
+            // InternalRegularExpressionParser.g:2091:1: ( ( rule__Disjunction__Group_1_1__0 )* )
             {
-            // InternalRegularExpressionParser.g:2085:1: ( ( rule__Disjunction__Group_1_1__0 )* )
-            // InternalRegularExpressionParser.g:2086:2: ( rule__Disjunction__Group_1_1__0 )*
+            // InternalRegularExpressionParser.g:2091:1: ( ( rule__Disjunction__Group_1_1__0 )* )
+            // InternalRegularExpressionParser.g:2092:2: ( rule__Disjunction__Group_1_1__0 )*
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getDisjunctionAccess().getGroup_1_1()); 
             }
-            // InternalRegularExpressionParser.g:2087:2: ( rule__Disjunction__Group_1_1__0 )*
+            // InternalRegularExpressionParser.g:2093:2: ( rule__Disjunction__Group_1_1__0 )*
             loop25:
             do {
                 int alt25=2;
@@ -7621,7 +7646,7 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
                 switch (alt25) {
             	case 1 :
-            	    // InternalRegularExpressionParser.g:2087:3: rule__Disjunction__Group_1_1__0
+            	    // InternalRegularExpressionParser.g:2093:3: rule__Disjunction__Group_1_1__0
             	    {
             	    pushFollow(FOLLOW_8);
             	    rule__Disjunction__Group_1_1__0();
@@ -7662,14 +7687,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Disjunction__Group_1_1__0"
-    // InternalRegularExpressionParser.g:2096:1: rule__Disjunction__Group_1_1__0 : rule__Disjunction__Group_1_1__0__Impl rule__Disjunction__Group_1_1__1 ;
+    // InternalRegularExpressionParser.g:2102:1: rule__Disjunction__Group_1_1__0 : rule__Disjunction__Group_1_1__0__Impl rule__Disjunction__Group_1_1__1 ;
     public final void rule__Disjunction__Group_1_1__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2100:1: ( rule__Disjunction__Group_1_1__0__Impl rule__Disjunction__Group_1_1__1 )
-            // InternalRegularExpressionParser.g:2101:2: rule__Disjunction__Group_1_1__0__Impl rule__Disjunction__Group_1_1__1
+            // InternalRegularExpressionParser.g:2106:1: ( rule__Disjunction__Group_1_1__0__Impl rule__Disjunction__Group_1_1__1 )
+            // InternalRegularExpressionParser.g:2107:2: rule__Disjunction__Group_1_1__0__Impl rule__Disjunction__Group_1_1__1
             {
             pushFollow(FOLLOW_9);
             rule__Disjunction__Group_1_1__0__Impl();
@@ -7700,17 +7725,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Disjunction__Group_1_1__0__Impl"
-    // InternalRegularExpressionParser.g:2108:1: rule__Disjunction__Group_1_1__0__Impl : ( VerticalLine ) ;
+    // InternalRegularExpressionParser.g:2114:1: rule__Disjunction__Group_1_1__0__Impl : ( VerticalLine ) ;
     public final void rule__Disjunction__Group_1_1__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2112:1: ( ( VerticalLine ) )
-            // InternalRegularExpressionParser.g:2113:1: ( VerticalLine )
+            // InternalRegularExpressionParser.g:2118:1: ( ( VerticalLine ) )
+            // InternalRegularExpressionParser.g:2119:1: ( VerticalLine )
             {
-            // InternalRegularExpressionParser.g:2113:1: ( VerticalLine )
-            // InternalRegularExpressionParser.g:2114:2: VerticalLine
+            // InternalRegularExpressionParser.g:2119:1: ( VerticalLine )
+            // InternalRegularExpressionParser.g:2120:2: VerticalLine
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getDisjunctionAccess().getVerticalLineKeyword_1_1_0()); 
@@ -7741,14 +7766,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Disjunction__Group_1_1__1"
-    // InternalRegularExpressionParser.g:2123:1: rule__Disjunction__Group_1_1__1 : rule__Disjunction__Group_1_1__1__Impl ;
+    // InternalRegularExpressionParser.g:2129:1: rule__Disjunction__Group_1_1__1 : rule__Disjunction__Group_1_1__1__Impl ;
     public final void rule__Disjunction__Group_1_1__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2127:1: ( rule__Disjunction__Group_1_1__1__Impl )
-            // InternalRegularExpressionParser.g:2128:2: rule__Disjunction__Group_1_1__1__Impl
+            // InternalRegularExpressionParser.g:2133:1: ( rule__Disjunction__Group_1_1__1__Impl )
+            // InternalRegularExpressionParser.g:2134:2: rule__Disjunction__Group_1_1__1__Impl
             {
             pushFollow(FOLLOW_2);
             rule__Disjunction__Group_1_1__1__Impl();
@@ -7774,31 +7799,31 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Disjunction__Group_1_1__1__Impl"
-    // InternalRegularExpressionParser.g:2134:1: rule__Disjunction__Group_1_1__1__Impl : ( ( rule__Disjunction__ElementsAssignment_1_1_1 )? ) ;
+    // InternalRegularExpressionParser.g:2140:1: rule__Disjunction__Group_1_1__1__Impl : ( ( rule__Disjunction__ElementsAssignment_1_1_1 )? ) ;
     public final void rule__Disjunction__Group_1_1__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2138:1: ( ( ( rule__Disjunction__ElementsAssignment_1_1_1 )? ) )
-            // InternalRegularExpressionParser.g:2139:1: ( ( rule__Disjunction__ElementsAssignment_1_1_1 )? )
+            // InternalRegularExpressionParser.g:2144:1: ( ( ( rule__Disjunction__ElementsAssignment_1_1_1 )? ) )
+            // InternalRegularExpressionParser.g:2145:1: ( ( rule__Disjunction__ElementsAssignment_1_1_1 )? )
             {
-            // InternalRegularExpressionParser.g:2139:1: ( ( rule__Disjunction__ElementsAssignment_1_1_1 )? )
-            // InternalRegularExpressionParser.g:2140:2: ( rule__Disjunction__ElementsAssignment_1_1_1 )?
+            // InternalRegularExpressionParser.g:2145:1: ( ( rule__Disjunction__ElementsAssignment_1_1_1 )? )
+            // InternalRegularExpressionParser.g:2146:2: ( rule__Disjunction__ElementsAssignment_1_1_1 )?
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getDisjunctionAccess().getElementsAssignment_1_1_1()); 
             }
-            // InternalRegularExpressionParser.g:2141:2: ( rule__Disjunction__ElementsAssignment_1_1_1 )?
+            // InternalRegularExpressionParser.g:2147:2: ( rule__Disjunction__ElementsAssignment_1_1_1 )?
             int alt26=2;
             int LA26_0 = input.LA(1);
 
-            if ( ((LA26_0>=LeftParenthesisQuestionMarkLessThanSignExclamationMark && LA26_0<=LeftParenthesisQuestionMarkEqualsSign)||(LA26_0>=ExclamationMark && LA26_0<=LeftParenthesis)||(LA26_0>=Comma && LA26_0<=FullStop)||(LA26_0>=Colon && LA26_0<=GreaterThanSign)||(LA26_0>=LeftSquareBracket && LA26_0<=CircumflexAccent)||LA26_0==LeftCurlyBracket||(LA26_0>=RightCurlyBracket && LA26_0<=RULE_CONTROL_LETTER_ESCAPE)||(LA26_0>=RULE_HEX_ESCAPE && LA26_0<=RULE_UNICODE_ESCAPE)||(LA26_0>=RULE_DECIMAL_ESCAPE && LA26_0<=RULE_IDENTITY_ESCAPE)||LA26_0==RULE_UNICODE_DIGIT||(LA26_0>=RULE_UNICODE_LETTER && LA26_0<=RULE_PATTERN_CHARACTER_NO_DASH)) ) {
+            if ( ((LA26_0>=LeftParenthesisQuestionMarkLessThanSignExclamationMark && LA26_0<=LeftParenthesisQuestionMarkEqualsSign)||(LA26_0>=ExclamationMark && LA26_0<=LeftParenthesis)||(LA26_0>=Comma && LA26_0<=FullStop)||(LA26_0>=Colon && LA26_0<=GreaterThanSign)||(LA26_0>=LeftSquareBracket && LA26_0<=LeftCurlyBracket)||(LA26_0>=RightCurlyBracket && LA26_0<=RULE_CONTROL_LETTER_ESCAPE)||(LA26_0>=RULE_HEX_ESCAPE && LA26_0<=RULE_UNICODE_ESCAPE)||(LA26_0>=RULE_DECIMAL_ESCAPE && LA26_0<=RULE_IDENTITY_ESCAPE)||LA26_0==RULE_UNICODE_DIGIT||(LA26_0>=RULE_UNICODE_LETTER && LA26_0<=RULE_PATTERN_CHARACTER_NO_DASH)) ) {
                 alt26=1;
             }
             switch (alt26) {
                 case 1 :
-                    // InternalRegularExpressionParser.g:2141:3: rule__Disjunction__ElementsAssignment_1_1_1
+                    // InternalRegularExpressionParser.g:2147:3: rule__Disjunction__ElementsAssignment_1_1_1
                     {
                     pushFollow(FOLLOW_2);
                     rule__Disjunction__ElementsAssignment_1_1_1();
@@ -7836,14 +7861,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Alternative__Group__0"
-    // InternalRegularExpressionParser.g:2150:1: rule__Alternative__Group__0 : rule__Alternative__Group__0__Impl rule__Alternative__Group__1 ;
+    // InternalRegularExpressionParser.g:2156:1: rule__Alternative__Group__0 : rule__Alternative__Group__0__Impl rule__Alternative__Group__1 ;
     public final void rule__Alternative__Group__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2154:1: ( rule__Alternative__Group__0__Impl rule__Alternative__Group__1 )
-            // InternalRegularExpressionParser.g:2155:2: rule__Alternative__Group__0__Impl rule__Alternative__Group__1
+            // InternalRegularExpressionParser.g:2160:1: ( rule__Alternative__Group__0__Impl rule__Alternative__Group__1 )
+            // InternalRegularExpressionParser.g:2161:2: rule__Alternative__Group__0__Impl rule__Alternative__Group__1
             {
             pushFollow(FOLLOW_9);
             rule__Alternative__Group__0__Impl();
@@ -7874,17 +7899,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Alternative__Group__0__Impl"
-    // InternalRegularExpressionParser.g:2162:1: rule__Alternative__Group__0__Impl : ( ruleTerm ) ;
+    // InternalRegularExpressionParser.g:2168:1: rule__Alternative__Group__0__Impl : ( ruleTerm ) ;
     public final void rule__Alternative__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2166:1: ( ( ruleTerm ) )
-            // InternalRegularExpressionParser.g:2167:1: ( ruleTerm )
+            // InternalRegularExpressionParser.g:2172:1: ( ( ruleTerm ) )
+            // InternalRegularExpressionParser.g:2173:1: ( ruleTerm )
             {
-            // InternalRegularExpressionParser.g:2167:1: ( ruleTerm )
-            // InternalRegularExpressionParser.g:2168:2: ruleTerm
+            // InternalRegularExpressionParser.g:2173:1: ( ruleTerm )
+            // InternalRegularExpressionParser.g:2174:2: ruleTerm
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getAlternativeAccess().getTermParserRuleCall_0()); 
@@ -7919,14 +7944,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Alternative__Group__1"
-    // InternalRegularExpressionParser.g:2177:1: rule__Alternative__Group__1 : rule__Alternative__Group__1__Impl ;
+    // InternalRegularExpressionParser.g:2183:1: rule__Alternative__Group__1 : rule__Alternative__Group__1__Impl ;
     public final void rule__Alternative__Group__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2181:1: ( rule__Alternative__Group__1__Impl )
-            // InternalRegularExpressionParser.g:2182:2: rule__Alternative__Group__1__Impl
+            // InternalRegularExpressionParser.g:2187:1: ( rule__Alternative__Group__1__Impl )
+            // InternalRegularExpressionParser.g:2188:2: rule__Alternative__Group__1__Impl
             {
             pushFollow(FOLLOW_2);
             rule__Alternative__Group__1__Impl();
@@ -7952,31 +7977,31 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Alternative__Group__1__Impl"
-    // InternalRegularExpressionParser.g:2188:1: rule__Alternative__Group__1__Impl : ( ( rule__Alternative__Group_1__0 )? ) ;
+    // InternalRegularExpressionParser.g:2194:1: rule__Alternative__Group__1__Impl : ( ( rule__Alternative__Group_1__0 )? ) ;
     public final void rule__Alternative__Group__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2192:1: ( ( ( rule__Alternative__Group_1__0 )? ) )
-            // InternalRegularExpressionParser.g:2193:1: ( ( rule__Alternative__Group_1__0 )? )
+            // InternalRegularExpressionParser.g:2198:1: ( ( ( rule__Alternative__Group_1__0 )? ) )
+            // InternalRegularExpressionParser.g:2199:1: ( ( rule__Alternative__Group_1__0 )? )
             {
-            // InternalRegularExpressionParser.g:2193:1: ( ( rule__Alternative__Group_1__0 )? )
-            // InternalRegularExpressionParser.g:2194:2: ( rule__Alternative__Group_1__0 )?
+            // InternalRegularExpressionParser.g:2199:1: ( ( rule__Alternative__Group_1__0 )? )
+            // InternalRegularExpressionParser.g:2200:2: ( rule__Alternative__Group_1__0 )?
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getAlternativeAccess().getGroup_1()); 
             }
-            // InternalRegularExpressionParser.g:2195:2: ( rule__Alternative__Group_1__0 )?
+            // InternalRegularExpressionParser.g:2201:2: ( rule__Alternative__Group_1__0 )?
             int alt27=2;
             int LA27_0 = input.LA(1);
 
-            if ( ((LA27_0>=LeftParenthesisQuestionMarkLessThanSignExclamationMark && LA27_0<=LeftParenthesisQuestionMarkEqualsSign)||(LA27_0>=ExclamationMark && LA27_0<=LeftParenthesis)||(LA27_0>=Comma && LA27_0<=FullStop)||(LA27_0>=Colon && LA27_0<=GreaterThanSign)||(LA27_0>=LeftSquareBracket && LA27_0<=CircumflexAccent)||LA27_0==LeftCurlyBracket||(LA27_0>=RightCurlyBracket && LA27_0<=RULE_CONTROL_LETTER_ESCAPE)||(LA27_0>=RULE_HEX_ESCAPE && LA27_0<=RULE_UNICODE_ESCAPE)||(LA27_0>=RULE_DECIMAL_ESCAPE && LA27_0<=RULE_IDENTITY_ESCAPE)||LA27_0==RULE_UNICODE_DIGIT||(LA27_0>=RULE_UNICODE_LETTER && LA27_0<=RULE_PATTERN_CHARACTER_NO_DASH)) ) {
+            if ( ((LA27_0>=LeftParenthesisQuestionMarkLessThanSignExclamationMark && LA27_0<=LeftParenthesisQuestionMarkEqualsSign)||(LA27_0>=ExclamationMark && LA27_0<=LeftParenthesis)||(LA27_0>=Comma && LA27_0<=FullStop)||(LA27_0>=Colon && LA27_0<=GreaterThanSign)||(LA27_0>=LeftSquareBracket && LA27_0<=LeftCurlyBracket)||(LA27_0>=RightCurlyBracket && LA27_0<=RULE_CONTROL_LETTER_ESCAPE)||(LA27_0>=RULE_HEX_ESCAPE && LA27_0<=RULE_UNICODE_ESCAPE)||(LA27_0>=RULE_DECIMAL_ESCAPE && LA27_0<=RULE_IDENTITY_ESCAPE)||LA27_0==RULE_UNICODE_DIGIT||(LA27_0>=RULE_UNICODE_LETTER && LA27_0<=RULE_PATTERN_CHARACTER_NO_DASH)) ) {
                 alt27=1;
             }
             switch (alt27) {
                 case 1 :
-                    // InternalRegularExpressionParser.g:2195:3: rule__Alternative__Group_1__0
+                    // InternalRegularExpressionParser.g:2201:3: rule__Alternative__Group_1__0
                     {
                     pushFollow(FOLLOW_2);
                     rule__Alternative__Group_1__0();
@@ -8014,14 +8039,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Alternative__Group_1__0"
-    // InternalRegularExpressionParser.g:2204:1: rule__Alternative__Group_1__0 : rule__Alternative__Group_1__0__Impl rule__Alternative__Group_1__1 ;
+    // InternalRegularExpressionParser.g:2210:1: rule__Alternative__Group_1__0 : rule__Alternative__Group_1__0__Impl rule__Alternative__Group_1__1 ;
     public final void rule__Alternative__Group_1__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2208:1: ( rule__Alternative__Group_1__0__Impl rule__Alternative__Group_1__1 )
-            // InternalRegularExpressionParser.g:2209:2: rule__Alternative__Group_1__0__Impl rule__Alternative__Group_1__1
+            // InternalRegularExpressionParser.g:2214:1: ( rule__Alternative__Group_1__0__Impl rule__Alternative__Group_1__1 )
+            // InternalRegularExpressionParser.g:2215:2: rule__Alternative__Group_1__0__Impl rule__Alternative__Group_1__1
             {
             pushFollow(FOLLOW_9);
             rule__Alternative__Group_1__0__Impl();
@@ -8052,23 +8077,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Alternative__Group_1__0__Impl"
-    // InternalRegularExpressionParser.g:2216:1: rule__Alternative__Group_1__0__Impl : ( () ) ;
+    // InternalRegularExpressionParser.g:2222:1: rule__Alternative__Group_1__0__Impl : ( () ) ;
     public final void rule__Alternative__Group_1__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2220:1: ( ( () ) )
-            // InternalRegularExpressionParser.g:2221:1: ( () )
+            // InternalRegularExpressionParser.g:2226:1: ( ( () ) )
+            // InternalRegularExpressionParser.g:2227:1: ( () )
             {
-            // InternalRegularExpressionParser.g:2221:1: ( () )
-            // InternalRegularExpressionParser.g:2222:2: ()
+            // InternalRegularExpressionParser.g:2227:1: ( () )
+            // InternalRegularExpressionParser.g:2228:2: ()
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getAlternativeAccess().getSequenceElementsAction_1_0()); 
             }
-            // InternalRegularExpressionParser.g:2223:2: ()
-            // InternalRegularExpressionParser.g:2223:3: 
+            // InternalRegularExpressionParser.g:2229:2: ()
+            // InternalRegularExpressionParser.g:2229:3: 
             {
             }
 
@@ -8093,14 +8118,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Alternative__Group_1__1"
-    // InternalRegularExpressionParser.g:2231:1: rule__Alternative__Group_1__1 : rule__Alternative__Group_1__1__Impl ;
+    // InternalRegularExpressionParser.g:2237:1: rule__Alternative__Group_1__1 : rule__Alternative__Group_1__1__Impl ;
     public final void rule__Alternative__Group_1__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2235:1: ( rule__Alternative__Group_1__1__Impl )
-            // InternalRegularExpressionParser.g:2236:2: rule__Alternative__Group_1__1__Impl
+            // InternalRegularExpressionParser.g:2241:1: ( rule__Alternative__Group_1__1__Impl )
+            // InternalRegularExpressionParser.g:2242:2: rule__Alternative__Group_1__1__Impl
             {
             pushFollow(FOLLOW_2);
             rule__Alternative__Group_1__1__Impl();
@@ -8126,26 +8151,26 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Alternative__Group_1__1__Impl"
-    // InternalRegularExpressionParser.g:2242:1: rule__Alternative__Group_1__1__Impl : ( ( ( rule__Alternative__ElementsAssignment_1_1 ) ) ( ( rule__Alternative__ElementsAssignment_1_1 )* ) ) ;
+    // InternalRegularExpressionParser.g:2248:1: rule__Alternative__Group_1__1__Impl : ( ( ( rule__Alternative__ElementsAssignment_1_1 ) ) ( ( rule__Alternative__ElementsAssignment_1_1 )* ) ) ;
     public final void rule__Alternative__Group_1__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2246:1: ( ( ( ( rule__Alternative__ElementsAssignment_1_1 ) ) ( ( rule__Alternative__ElementsAssignment_1_1 )* ) ) )
-            // InternalRegularExpressionParser.g:2247:1: ( ( ( rule__Alternative__ElementsAssignment_1_1 ) ) ( ( rule__Alternative__ElementsAssignment_1_1 )* ) )
+            // InternalRegularExpressionParser.g:2252:1: ( ( ( ( rule__Alternative__ElementsAssignment_1_1 ) ) ( ( rule__Alternative__ElementsAssignment_1_1 )* ) ) )
+            // InternalRegularExpressionParser.g:2253:1: ( ( ( rule__Alternative__ElementsAssignment_1_1 ) ) ( ( rule__Alternative__ElementsAssignment_1_1 )* ) )
             {
-            // InternalRegularExpressionParser.g:2247:1: ( ( ( rule__Alternative__ElementsAssignment_1_1 ) ) ( ( rule__Alternative__ElementsAssignment_1_1 )* ) )
-            // InternalRegularExpressionParser.g:2248:2: ( ( rule__Alternative__ElementsAssignment_1_1 ) ) ( ( rule__Alternative__ElementsAssignment_1_1 )* )
+            // InternalRegularExpressionParser.g:2253:1: ( ( ( rule__Alternative__ElementsAssignment_1_1 ) ) ( ( rule__Alternative__ElementsAssignment_1_1 )* ) )
+            // InternalRegularExpressionParser.g:2254:2: ( ( rule__Alternative__ElementsAssignment_1_1 ) ) ( ( rule__Alternative__ElementsAssignment_1_1 )* )
             {
-            // InternalRegularExpressionParser.g:2248:2: ( ( rule__Alternative__ElementsAssignment_1_1 ) )
-            // InternalRegularExpressionParser.g:2249:3: ( rule__Alternative__ElementsAssignment_1_1 )
+            // InternalRegularExpressionParser.g:2254:2: ( ( rule__Alternative__ElementsAssignment_1_1 ) )
+            // InternalRegularExpressionParser.g:2255:3: ( rule__Alternative__ElementsAssignment_1_1 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getAlternativeAccess().getElementsAssignment_1_1()); 
             }
-            // InternalRegularExpressionParser.g:2250:3: ( rule__Alternative__ElementsAssignment_1_1 )
-            // InternalRegularExpressionParser.g:2250:4: rule__Alternative__ElementsAssignment_1_1
+            // InternalRegularExpressionParser.g:2256:3: ( rule__Alternative__ElementsAssignment_1_1 )
+            // InternalRegularExpressionParser.g:2256:4: rule__Alternative__ElementsAssignment_1_1
             {
             pushFollow(FOLLOW_10);
             rule__Alternative__ElementsAssignment_1_1();
@@ -8161,26 +8186,26 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
             }
 
-            // InternalRegularExpressionParser.g:2253:2: ( ( rule__Alternative__ElementsAssignment_1_1 )* )
-            // InternalRegularExpressionParser.g:2254:3: ( rule__Alternative__ElementsAssignment_1_1 )*
+            // InternalRegularExpressionParser.g:2259:2: ( ( rule__Alternative__ElementsAssignment_1_1 )* )
+            // InternalRegularExpressionParser.g:2260:3: ( rule__Alternative__ElementsAssignment_1_1 )*
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getAlternativeAccess().getElementsAssignment_1_1()); 
             }
-            // InternalRegularExpressionParser.g:2255:3: ( rule__Alternative__ElementsAssignment_1_1 )*
+            // InternalRegularExpressionParser.g:2261:3: ( rule__Alternative__ElementsAssignment_1_1 )*
             loop28:
             do {
                 int alt28=2;
                 int LA28_0 = input.LA(1);
 
-                if ( ((LA28_0>=LeftParenthesisQuestionMarkLessThanSignExclamationMark && LA28_0<=LeftParenthesisQuestionMarkEqualsSign)||(LA28_0>=ExclamationMark && LA28_0<=LeftParenthesis)||(LA28_0>=Comma && LA28_0<=FullStop)||(LA28_0>=Colon && LA28_0<=GreaterThanSign)||(LA28_0>=LeftSquareBracket && LA28_0<=CircumflexAccent)||LA28_0==LeftCurlyBracket||(LA28_0>=RightCurlyBracket && LA28_0<=RULE_CONTROL_LETTER_ESCAPE)||(LA28_0>=RULE_HEX_ESCAPE && LA28_0<=RULE_UNICODE_ESCAPE)||(LA28_0>=RULE_DECIMAL_ESCAPE && LA28_0<=RULE_IDENTITY_ESCAPE)||LA28_0==RULE_UNICODE_DIGIT||(LA28_0>=RULE_UNICODE_LETTER && LA28_0<=RULE_PATTERN_CHARACTER_NO_DASH)) ) {
+                if ( ((LA28_0>=LeftParenthesisQuestionMarkLessThanSignExclamationMark && LA28_0<=LeftParenthesisQuestionMarkEqualsSign)||(LA28_0>=ExclamationMark && LA28_0<=LeftParenthesis)||(LA28_0>=Comma && LA28_0<=FullStop)||(LA28_0>=Colon && LA28_0<=GreaterThanSign)||(LA28_0>=LeftSquareBracket && LA28_0<=LeftCurlyBracket)||(LA28_0>=RightCurlyBracket && LA28_0<=RULE_CONTROL_LETTER_ESCAPE)||(LA28_0>=RULE_HEX_ESCAPE && LA28_0<=RULE_UNICODE_ESCAPE)||(LA28_0>=RULE_DECIMAL_ESCAPE && LA28_0<=RULE_IDENTITY_ESCAPE)||LA28_0==RULE_UNICODE_DIGIT||(LA28_0>=RULE_UNICODE_LETTER && LA28_0<=RULE_PATTERN_CHARACTER_NO_DASH)) ) {
                     alt28=1;
                 }
 
 
                 switch (alt28) {
             	case 1 :
-            	    // InternalRegularExpressionParser.g:2255:4: rule__Alternative__ElementsAssignment_1_1
+            	    // InternalRegularExpressionParser.g:2261:4: rule__Alternative__ElementsAssignment_1_1
             	    {
             	    pushFollow(FOLLOW_10);
             	    rule__Alternative__ElementsAssignment_1_1();
@@ -8224,14 +8249,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Term__Group_1__0"
-    // InternalRegularExpressionParser.g:2265:1: rule__Term__Group_1__0 : rule__Term__Group_1__0__Impl rule__Term__Group_1__1 ;
+    // InternalRegularExpressionParser.g:2271:1: rule__Term__Group_1__0 : rule__Term__Group_1__0__Impl rule__Term__Group_1__1 ;
     public final void rule__Term__Group_1__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2269:1: ( rule__Term__Group_1__0__Impl rule__Term__Group_1__1 )
-            // InternalRegularExpressionParser.g:2270:2: rule__Term__Group_1__0__Impl rule__Term__Group_1__1
+            // InternalRegularExpressionParser.g:2275:1: ( rule__Term__Group_1__0__Impl rule__Term__Group_1__1 )
+            // InternalRegularExpressionParser.g:2276:2: rule__Term__Group_1__0__Impl rule__Term__Group_1__1
             {
             pushFollow(FOLLOW_11);
             rule__Term__Group_1__0__Impl();
@@ -8262,17 +8287,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Term__Group_1__0__Impl"
-    // InternalRegularExpressionParser.g:2277:1: rule__Term__Group_1__0__Impl : ( ruleAtom ) ;
+    // InternalRegularExpressionParser.g:2283:1: rule__Term__Group_1__0__Impl : ( ruleAtom ) ;
     public final void rule__Term__Group_1__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2281:1: ( ( ruleAtom ) )
-            // InternalRegularExpressionParser.g:2282:1: ( ruleAtom )
+            // InternalRegularExpressionParser.g:2287:1: ( ( ruleAtom ) )
+            // InternalRegularExpressionParser.g:2288:1: ( ruleAtom )
             {
-            // InternalRegularExpressionParser.g:2282:1: ( ruleAtom )
-            // InternalRegularExpressionParser.g:2283:2: ruleAtom
+            // InternalRegularExpressionParser.g:2288:1: ( ruleAtom )
+            // InternalRegularExpressionParser.g:2289:2: ruleAtom
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getTermAccess().getAtomParserRuleCall_1_0()); 
@@ -8307,14 +8332,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Term__Group_1__1"
-    // InternalRegularExpressionParser.g:2292:1: rule__Term__Group_1__1 : rule__Term__Group_1__1__Impl ;
+    // InternalRegularExpressionParser.g:2298:1: rule__Term__Group_1__1 : rule__Term__Group_1__1__Impl ;
     public final void rule__Term__Group_1__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2296:1: ( rule__Term__Group_1__1__Impl )
-            // InternalRegularExpressionParser.g:2297:2: rule__Term__Group_1__1__Impl
+            // InternalRegularExpressionParser.g:2302:1: ( rule__Term__Group_1__1__Impl )
+            // InternalRegularExpressionParser.g:2303:2: rule__Term__Group_1__1__Impl
             {
             pushFollow(FOLLOW_2);
             rule__Term__Group_1__1__Impl();
@@ -8340,27 +8365,27 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Term__Group_1__1__Impl"
-    // InternalRegularExpressionParser.g:2303:1: rule__Term__Group_1__1__Impl : ( ( rule__Term__QuantifierAssignment_1_1 )? ) ;
+    // InternalRegularExpressionParser.g:2309:1: rule__Term__Group_1__1__Impl : ( ( rule__Term__QuantifierAssignment_1_1 )? ) ;
     public final void rule__Term__Group_1__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2307:1: ( ( ( rule__Term__QuantifierAssignment_1_1 )? ) )
-            // InternalRegularExpressionParser.g:2308:1: ( ( rule__Term__QuantifierAssignment_1_1 )? )
+            // InternalRegularExpressionParser.g:2313:1: ( ( ( rule__Term__QuantifierAssignment_1_1 )? ) )
+            // InternalRegularExpressionParser.g:2314:1: ( ( rule__Term__QuantifierAssignment_1_1 )? )
             {
-            // InternalRegularExpressionParser.g:2308:1: ( ( rule__Term__QuantifierAssignment_1_1 )? )
-            // InternalRegularExpressionParser.g:2309:2: ( rule__Term__QuantifierAssignment_1_1 )?
+            // InternalRegularExpressionParser.g:2314:1: ( ( rule__Term__QuantifierAssignment_1_1 )? )
+            // InternalRegularExpressionParser.g:2315:2: ( rule__Term__QuantifierAssignment_1_1 )?
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getTermAccess().getQuantifierAssignment_1_1()); 
             }
-            // InternalRegularExpressionParser.g:2310:2: ( rule__Term__QuantifierAssignment_1_1 )?
+            // InternalRegularExpressionParser.g:2316:2: ( rule__Term__QuantifierAssignment_1_1 )?
             int alt29=2;
             alt29 = dfa29.predict(input);
             switch (alt29) {
                 case 1 :
-                    // InternalRegularExpressionParser.g:2310:3: rule__Term__QuantifierAssignment_1_1
+                    // InternalRegularExpressionParser.g:2316:3: rule__Term__QuantifierAssignment_1_1
                     {
                     pushFollow(FOLLOW_2);
                     rule__Term__QuantifierAssignment_1_1();
@@ -8398,14 +8423,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__LineStart__Group__0"
-    // InternalRegularExpressionParser.g:2319:1: rule__LineStart__Group__0 : rule__LineStart__Group__0__Impl rule__LineStart__Group__1 ;
+    // InternalRegularExpressionParser.g:2325:1: rule__LineStart__Group__0 : rule__LineStart__Group__0__Impl rule__LineStart__Group__1 ;
     public final void rule__LineStart__Group__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2323:1: ( rule__LineStart__Group__0__Impl rule__LineStart__Group__1 )
-            // InternalRegularExpressionParser.g:2324:2: rule__LineStart__Group__0__Impl rule__LineStart__Group__1
+            // InternalRegularExpressionParser.g:2329:1: ( rule__LineStart__Group__0__Impl rule__LineStart__Group__1 )
+            // InternalRegularExpressionParser.g:2330:2: rule__LineStart__Group__0__Impl rule__LineStart__Group__1
             {
             pushFollow(FOLLOW_12);
             rule__LineStart__Group__0__Impl();
@@ -8436,23 +8461,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__LineStart__Group__0__Impl"
-    // InternalRegularExpressionParser.g:2331:1: rule__LineStart__Group__0__Impl : ( () ) ;
+    // InternalRegularExpressionParser.g:2337:1: rule__LineStart__Group__0__Impl : ( () ) ;
     public final void rule__LineStart__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2335:1: ( ( () ) )
-            // InternalRegularExpressionParser.g:2336:1: ( () )
+            // InternalRegularExpressionParser.g:2341:1: ( ( () ) )
+            // InternalRegularExpressionParser.g:2342:1: ( () )
             {
-            // InternalRegularExpressionParser.g:2336:1: ( () )
-            // InternalRegularExpressionParser.g:2337:2: ()
+            // InternalRegularExpressionParser.g:2342:1: ( () )
+            // InternalRegularExpressionParser.g:2343:2: ()
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getLineStartAccess().getLineStartAction_0()); 
             }
-            // InternalRegularExpressionParser.g:2338:2: ()
-            // InternalRegularExpressionParser.g:2338:3: 
+            // InternalRegularExpressionParser.g:2344:2: ()
+            // InternalRegularExpressionParser.g:2344:3: 
             {
             }
 
@@ -8477,14 +8502,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__LineStart__Group__1"
-    // InternalRegularExpressionParser.g:2346:1: rule__LineStart__Group__1 : rule__LineStart__Group__1__Impl ;
+    // InternalRegularExpressionParser.g:2352:1: rule__LineStart__Group__1 : rule__LineStart__Group__1__Impl ;
     public final void rule__LineStart__Group__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2350:1: ( rule__LineStart__Group__1__Impl )
-            // InternalRegularExpressionParser.g:2351:2: rule__LineStart__Group__1__Impl
+            // InternalRegularExpressionParser.g:2356:1: ( rule__LineStart__Group__1__Impl )
+            // InternalRegularExpressionParser.g:2357:2: rule__LineStart__Group__1__Impl
             {
             pushFollow(FOLLOW_2);
             rule__LineStart__Group__1__Impl();
@@ -8510,17 +8535,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__LineStart__Group__1__Impl"
-    // InternalRegularExpressionParser.g:2357:1: rule__LineStart__Group__1__Impl : ( CircumflexAccent ) ;
+    // InternalRegularExpressionParser.g:2363:1: rule__LineStart__Group__1__Impl : ( CircumflexAccent ) ;
     public final void rule__LineStart__Group__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2361:1: ( ( CircumflexAccent ) )
-            // InternalRegularExpressionParser.g:2362:1: ( CircumflexAccent )
+            // InternalRegularExpressionParser.g:2367:1: ( ( CircumflexAccent ) )
+            // InternalRegularExpressionParser.g:2368:1: ( CircumflexAccent )
             {
-            // InternalRegularExpressionParser.g:2362:1: ( CircumflexAccent )
-            // InternalRegularExpressionParser.g:2363:2: CircumflexAccent
+            // InternalRegularExpressionParser.g:2368:1: ( CircumflexAccent )
+            // InternalRegularExpressionParser.g:2369:2: CircumflexAccent
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getLineStartAccess().getCircumflexAccentKeyword_1()); 
@@ -8551,14 +8576,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__LineEnd__Group__0"
-    // InternalRegularExpressionParser.g:2373:1: rule__LineEnd__Group__0 : rule__LineEnd__Group__0__Impl rule__LineEnd__Group__1 ;
+    // InternalRegularExpressionParser.g:2379:1: rule__LineEnd__Group__0 : rule__LineEnd__Group__0__Impl rule__LineEnd__Group__1 ;
     public final void rule__LineEnd__Group__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2377:1: ( rule__LineEnd__Group__0__Impl rule__LineEnd__Group__1 )
-            // InternalRegularExpressionParser.g:2378:2: rule__LineEnd__Group__0__Impl rule__LineEnd__Group__1
+            // InternalRegularExpressionParser.g:2383:1: ( rule__LineEnd__Group__0__Impl rule__LineEnd__Group__1 )
+            // InternalRegularExpressionParser.g:2384:2: rule__LineEnd__Group__0__Impl rule__LineEnd__Group__1
             {
             pushFollow(FOLLOW_13);
             rule__LineEnd__Group__0__Impl();
@@ -8589,23 +8614,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__LineEnd__Group__0__Impl"
-    // InternalRegularExpressionParser.g:2385:1: rule__LineEnd__Group__0__Impl : ( () ) ;
+    // InternalRegularExpressionParser.g:2391:1: rule__LineEnd__Group__0__Impl : ( () ) ;
     public final void rule__LineEnd__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2389:1: ( ( () ) )
-            // InternalRegularExpressionParser.g:2390:1: ( () )
+            // InternalRegularExpressionParser.g:2395:1: ( ( () ) )
+            // InternalRegularExpressionParser.g:2396:1: ( () )
             {
-            // InternalRegularExpressionParser.g:2390:1: ( () )
-            // InternalRegularExpressionParser.g:2391:2: ()
+            // InternalRegularExpressionParser.g:2396:1: ( () )
+            // InternalRegularExpressionParser.g:2397:2: ()
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getLineEndAccess().getLineEndAction_0()); 
             }
-            // InternalRegularExpressionParser.g:2392:2: ()
-            // InternalRegularExpressionParser.g:2392:3: 
+            // InternalRegularExpressionParser.g:2398:2: ()
+            // InternalRegularExpressionParser.g:2398:3: 
             {
             }
 
@@ -8630,14 +8655,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__LineEnd__Group__1"
-    // InternalRegularExpressionParser.g:2400:1: rule__LineEnd__Group__1 : rule__LineEnd__Group__1__Impl ;
+    // InternalRegularExpressionParser.g:2406:1: rule__LineEnd__Group__1 : rule__LineEnd__Group__1__Impl ;
     public final void rule__LineEnd__Group__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2404:1: ( rule__LineEnd__Group__1__Impl )
-            // InternalRegularExpressionParser.g:2405:2: rule__LineEnd__Group__1__Impl
+            // InternalRegularExpressionParser.g:2410:1: ( rule__LineEnd__Group__1__Impl )
+            // InternalRegularExpressionParser.g:2411:2: rule__LineEnd__Group__1__Impl
             {
             pushFollow(FOLLOW_2);
             rule__LineEnd__Group__1__Impl();
@@ -8663,17 +8688,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__LineEnd__Group__1__Impl"
-    // InternalRegularExpressionParser.g:2411:1: rule__LineEnd__Group__1__Impl : ( DollarSign ) ;
+    // InternalRegularExpressionParser.g:2417:1: rule__LineEnd__Group__1__Impl : ( DollarSign ) ;
     public final void rule__LineEnd__Group__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2415:1: ( ( DollarSign ) )
-            // InternalRegularExpressionParser.g:2416:1: ( DollarSign )
+            // InternalRegularExpressionParser.g:2421:1: ( ( DollarSign ) )
+            // InternalRegularExpressionParser.g:2422:1: ( DollarSign )
             {
-            // InternalRegularExpressionParser.g:2416:1: ( DollarSign )
-            // InternalRegularExpressionParser.g:2417:2: DollarSign
+            // InternalRegularExpressionParser.g:2422:1: ( DollarSign )
+            // InternalRegularExpressionParser.g:2423:2: DollarSign
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getLineEndAccess().getDollarSignKeyword_1()); 
@@ -8704,14 +8729,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__WordBoundary__Group__0"
-    // InternalRegularExpressionParser.g:2427:1: rule__WordBoundary__Group__0 : rule__WordBoundary__Group__0__Impl rule__WordBoundary__Group__1 ;
+    // InternalRegularExpressionParser.g:2433:1: rule__WordBoundary__Group__0 : rule__WordBoundary__Group__0__Impl rule__WordBoundary__Group__1 ;
     public final void rule__WordBoundary__Group__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2431:1: ( rule__WordBoundary__Group__0__Impl rule__WordBoundary__Group__1 )
-            // InternalRegularExpressionParser.g:2432:2: rule__WordBoundary__Group__0__Impl rule__WordBoundary__Group__1
+            // InternalRegularExpressionParser.g:2437:1: ( rule__WordBoundary__Group__0__Impl rule__WordBoundary__Group__1 )
+            // InternalRegularExpressionParser.g:2438:2: rule__WordBoundary__Group__0__Impl rule__WordBoundary__Group__1
             {
             pushFollow(FOLLOW_14);
             rule__WordBoundary__Group__0__Impl();
@@ -8742,23 +8767,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__WordBoundary__Group__0__Impl"
-    // InternalRegularExpressionParser.g:2439:1: rule__WordBoundary__Group__0__Impl : ( () ) ;
+    // InternalRegularExpressionParser.g:2445:1: rule__WordBoundary__Group__0__Impl : ( () ) ;
     public final void rule__WordBoundary__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2443:1: ( ( () ) )
-            // InternalRegularExpressionParser.g:2444:1: ( () )
+            // InternalRegularExpressionParser.g:2449:1: ( ( () ) )
+            // InternalRegularExpressionParser.g:2450:1: ( () )
             {
-            // InternalRegularExpressionParser.g:2444:1: ( () )
-            // InternalRegularExpressionParser.g:2445:2: ()
+            // InternalRegularExpressionParser.g:2450:1: ( () )
+            // InternalRegularExpressionParser.g:2451:2: ()
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getWordBoundaryAccess().getWordBoundaryAction_0()); 
             }
-            // InternalRegularExpressionParser.g:2446:2: ()
-            // InternalRegularExpressionParser.g:2446:3: 
+            // InternalRegularExpressionParser.g:2452:2: ()
+            // InternalRegularExpressionParser.g:2452:3: 
             {
             }
 
@@ -8783,14 +8808,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__WordBoundary__Group__1"
-    // InternalRegularExpressionParser.g:2454:1: rule__WordBoundary__Group__1 : rule__WordBoundary__Group__1__Impl ;
+    // InternalRegularExpressionParser.g:2460:1: rule__WordBoundary__Group__1 : rule__WordBoundary__Group__1__Impl ;
     public final void rule__WordBoundary__Group__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2458:1: ( rule__WordBoundary__Group__1__Impl )
-            // InternalRegularExpressionParser.g:2459:2: rule__WordBoundary__Group__1__Impl
+            // InternalRegularExpressionParser.g:2464:1: ( rule__WordBoundary__Group__1__Impl )
+            // InternalRegularExpressionParser.g:2465:2: rule__WordBoundary__Group__1__Impl
             {
             pushFollow(FOLLOW_2);
             rule__WordBoundary__Group__1__Impl();
@@ -8816,23 +8841,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__WordBoundary__Group__1__Impl"
-    // InternalRegularExpressionParser.g:2465:1: rule__WordBoundary__Group__1__Impl : ( ( rule__WordBoundary__Alternatives_1 ) ) ;
+    // InternalRegularExpressionParser.g:2471:1: rule__WordBoundary__Group__1__Impl : ( ( rule__WordBoundary__Alternatives_1 ) ) ;
     public final void rule__WordBoundary__Group__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2469:1: ( ( ( rule__WordBoundary__Alternatives_1 ) ) )
-            // InternalRegularExpressionParser.g:2470:1: ( ( rule__WordBoundary__Alternatives_1 ) )
+            // InternalRegularExpressionParser.g:2475:1: ( ( ( rule__WordBoundary__Alternatives_1 ) ) )
+            // InternalRegularExpressionParser.g:2476:1: ( ( rule__WordBoundary__Alternatives_1 ) )
             {
-            // InternalRegularExpressionParser.g:2470:1: ( ( rule__WordBoundary__Alternatives_1 ) )
-            // InternalRegularExpressionParser.g:2471:2: ( rule__WordBoundary__Alternatives_1 )
+            // InternalRegularExpressionParser.g:2476:1: ( ( rule__WordBoundary__Alternatives_1 ) )
+            // InternalRegularExpressionParser.g:2477:2: ( rule__WordBoundary__Alternatives_1 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getWordBoundaryAccess().getAlternatives_1()); 
             }
-            // InternalRegularExpressionParser.g:2472:2: ( rule__WordBoundary__Alternatives_1 )
-            // InternalRegularExpressionParser.g:2472:3: rule__WordBoundary__Alternatives_1
+            // InternalRegularExpressionParser.g:2478:2: ( rule__WordBoundary__Alternatives_1 )
+            // InternalRegularExpressionParser.g:2478:3: rule__WordBoundary__Alternatives_1
             {
             pushFollow(FOLLOW_2);
             rule__WordBoundary__Alternatives_1();
@@ -8867,14 +8892,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__AbstractLookAhead__Group__0"
-    // InternalRegularExpressionParser.g:2481:1: rule__AbstractLookAhead__Group__0 : rule__AbstractLookAhead__Group__0__Impl rule__AbstractLookAhead__Group__1 ;
+    // InternalRegularExpressionParser.g:2487:1: rule__AbstractLookAhead__Group__0 : rule__AbstractLookAhead__Group__0__Impl rule__AbstractLookAhead__Group__1 ;
     public final void rule__AbstractLookAhead__Group__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2485:1: ( rule__AbstractLookAhead__Group__0__Impl rule__AbstractLookAhead__Group__1 )
-            // InternalRegularExpressionParser.g:2486:2: rule__AbstractLookAhead__Group__0__Impl rule__AbstractLookAhead__Group__1
+            // InternalRegularExpressionParser.g:2491:1: ( rule__AbstractLookAhead__Group__0__Impl rule__AbstractLookAhead__Group__1 )
+            // InternalRegularExpressionParser.g:2492:2: rule__AbstractLookAhead__Group__0__Impl rule__AbstractLookAhead__Group__1
             {
             pushFollow(FOLLOW_4);
             rule__AbstractLookAhead__Group__0__Impl();
@@ -8905,23 +8930,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__AbstractLookAhead__Group__0__Impl"
-    // InternalRegularExpressionParser.g:2493:1: rule__AbstractLookAhead__Group__0__Impl : ( ( rule__AbstractLookAhead__Alternatives_0 ) ) ;
+    // InternalRegularExpressionParser.g:2499:1: rule__AbstractLookAhead__Group__0__Impl : ( ( rule__AbstractLookAhead__Alternatives_0 ) ) ;
     public final void rule__AbstractLookAhead__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2497:1: ( ( ( rule__AbstractLookAhead__Alternatives_0 ) ) )
-            // InternalRegularExpressionParser.g:2498:1: ( ( rule__AbstractLookAhead__Alternatives_0 ) )
+            // InternalRegularExpressionParser.g:2503:1: ( ( ( rule__AbstractLookAhead__Alternatives_0 ) ) )
+            // InternalRegularExpressionParser.g:2504:1: ( ( rule__AbstractLookAhead__Alternatives_0 ) )
             {
-            // InternalRegularExpressionParser.g:2498:1: ( ( rule__AbstractLookAhead__Alternatives_0 ) )
-            // InternalRegularExpressionParser.g:2499:2: ( rule__AbstractLookAhead__Alternatives_0 )
+            // InternalRegularExpressionParser.g:2504:1: ( ( rule__AbstractLookAhead__Alternatives_0 ) )
+            // InternalRegularExpressionParser.g:2505:2: ( rule__AbstractLookAhead__Alternatives_0 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getAbstractLookAheadAccess().getAlternatives_0()); 
             }
-            // InternalRegularExpressionParser.g:2500:2: ( rule__AbstractLookAhead__Alternatives_0 )
-            // InternalRegularExpressionParser.g:2500:3: rule__AbstractLookAhead__Alternatives_0
+            // InternalRegularExpressionParser.g:2506:2: ( rule__AbstractLookAhead__Alternatives_0 )
+            // InternalRegularExpressionParser.g:2506:3: rule__AbstractLookAhead__Alternatives_0
             {
             pushFollow(FOLLOW_2);
             rule__AbstractLookAhead__Alternatives_0();
@@ -8956,14 +8981,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__AbstractLookAhead__Group__1"
-    // InternalRegularExpressionParser.g:2508:1: rule__AbstractLookAhead__Group__1 : rule__AbstractLookAhead__Group__1__Impl rule__AbstractLookAhead__Group__2 ;
+    // InternalRegularExpressionParser.g:2514:1: rule__AbstractLookAhead__Group__1 : rule__AbstractLookAhead__Group__1__Impl rule__AbstractLookAhead__Group__2 ;
     public final void rule__AbstractLookAhead__Group__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2512:1: ( rule__AbstractLookAhead__Group__1__Impl rule__AbstractLookAhead__Group__2 )
-            // InternalRegularExpressionParser.g:2513:2: rule__AbstractLookAhead__Group__1__Impl rule__AbstractLookAhead__Group__2
+            // InternalRegularExpressionParser.g:2518:1: ( rule__AbstractLookAhead__Group__1__Impl rule__AbstractLookAhead__Group__2 )
+            // InternalRegularExpressionParser.g:2519:2: rule__AbstractLookAhead__Group__1__Impl rule__AbstractLookAhead__Group__2
             {
             pushFollow(FOLLOW_15);
             rule__AbstractLookAhead__Group__1__Impl();
@@ -8994,23 +9019,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__AbstractLookAhead__Group__1__Impl"
-    // InternalRegularExpressionParser.g:2520:1: rule__AbstractLookAhead__Group__1__Impl : ( ( rule__AbstractLookAhead__PatternAssignment_1 ) ) ;
+    // InternalRegularExpressionParser.g:2526:1: rule__AbstractLookAhead__Group__1__Impl : ( ( rule__AbstractLookAhead__PatternAssignment_1 ) ) ;
     public final void rule__AbstractLookAhead__Group__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2524:1: ( ( ( rule__AbstractLookAhead__PatternAssignment_1 ) ) )
-            // InternalRegularExpressionParser.g:2525:1: ( ( rule__AbstractLookAhead__PatternAssignment_1 ) )
+            // InternalRegularExpressionParser.g:2530:1: ( ( ( rule__AbstractLookAhead__PatternAssignment_1 ) ) )
+            // InternalRegularExpressionParser.g:2531:1: ( ( rule__AbstractLookAhead__PatternAssignment_1 ) )
             {
-            // InternalRegularExpressionParser.g:2525:1: ( ( rule__AbstractLookAhead__PatternAssignment_1 ) )
-            // InternalRegularExpressionParser.g:2526:2: ( rule__AbstractLookAhead__PatternAssignment_1 )
+            // InternalRegularExpressionParser.g:2531:1: ( ( rule__AbstractLookAhead__PatternAssignment_1 ) )
+            // InternalRegularExpressionParser.g:2532:2: ( rule__AbstractLookAhead__PatternAssignment_1 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getAbstractLookAheadAccess().getPatternAssignment_1()); 
             }
-            // InternalRegularExpressionParser.g:2527:2: ( rule__AbstractLookAhead__PatternAssignment_1 )
-            // InternalRegularExpressionParser.g:2527:3: rule__AbstractLookAhead__PatternAssignment_1
+            // InternalRegularExpressionParser.g:2533:2: ( rule__AbstractLookAhead__PatternAssignment_1 )
+            // InternalRegularExpressionParser.g:2533:3: rule__AbstractLookAhead__PatternAssignment_1
             {
             pushFollow(FOLLOW_2);
             rule__AbstractLookAhead__PatternAssignment_1();
@@ -9045,14 +9070,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__AbstractLookAhead__Group__2"
-    // InternalRegularExpressionParser.g:2535:1: rule__AbstractLookAhead__Group__2 : rule__AbstractLookAhead__Group__2__Impl ;
+    // InternalRegularExpressionParser.g:2541:1: rule__AbstractLookAhead__Group__2 : rule__AbstractLookAhead__Group__2__Impl ;
     public final void rule__AbstractLookAhead__Group__2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2539:1: ( rule__AbstractLookAhead__Group__2__Impl )
-            // InternalRegularExpressionParser.g:2540:2: rule__AbstractLookAhead__Group__2__Impl
+            // InternalRegularExpressionParser.g:2545:1: ( rule__AbstractLookAhead__Group__2__Impl )
+            // InternalRegularExpressionParser.g:2546:2: rule__AbstractLookAhead__Group__2__Impl
             {
             pushFollow(FOLLOW_2);
             rule__AbstractLookAhead__Group__2__Impl();
@@ -9078,17 +9103,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__AbstractLookAhead__Group__2__Impl"
-    // InternalRegularExpressionParser.g:2546:1: rule__AbstractLookAhead__Group__2__Impl : ( RightParenthesis ) ;
+    // InternalRegularExpressionParser.g:2552:1: rule__AbstractLookAhead__Group__2__Impl : ( RightParenthesis ) ;
     public final void rule__AbstractLookAhead__Group__2__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2550:1: ( ( RightParenthesis ) )
-            // InternalRegularExpressionParser.g:2551:1: ( RightParenthesis )
+            // InternalRegularExpressionParser.g:2556:1: ( ( RightParenthesis ) )
+            // InternalRegularExpressionParser.g:2557:1: ( RightParenthesis )
             {
-            // InternalRegularExpressionParser.g:2551:1: ( RightParenthesis )
-            // InternalRegularExpressionParser.g:2552:2: RightParenthesis
+            // InternalRegularExpressionParser.g:2557:1: ( RightParenthesis )
+            // InternalRegularExpressionParser.g:2558:2: RightParenthesis
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getAbstractLookAheadAccess().getRightParenthesisKeyword_2()); 
@@ -9119,14 +9144,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__AbstractLookAhead__Group_0_0__0"
-    // InternalRegularExpressionParser.g:2562:1: rule__AbstractLookAhead__Group_0_0__0 : rule__AbstractLookAhead__Group_0_0__0__Impl rule__AbstractLookAhead__Group_0_0__1 ;
+    // InternalRegularExpressionParser.g:2568:1: rule__AbstractLookAhead__Group_0_0__0 : rule__AbstractLookAhead__Group_0_0__0__Impl rule__AbstractLookAhead__Group_0_0__1 ;
     public final void rule__AbstractLookAhead__Group_0_0__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2566:1: ( rule__AbstractLookAhead__Group_0_0__0__Impl rule__AbstractLookAhead__Group_0_0__1 )
-            // InternalRegularExpressionParser.g:2567:2: rule__AbstractLookAhead__Group_0_0__0__Impl rule__AbstractLookAhead__Group_0_0__1
+            // InternalRegularExpressionParser.g:2572:1: ( rule__AbstractLookAhead__Group_0_0__0__Impl rule__AbstractLookAhead__Group_0_0__1 )
+            // InternalRegularExpressionParser.g:2573:2: rule__AbstractLookAhead__Group_0_0__0__Impl rule__AbstractLookAhead__Group_0_0__1
             {
             pushFollow(FOLLOW_16);
             rule__AbstractLookAhead__Group_0_0__0__Impl();
@@ -9157,23 +9182,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__AbstractLookAhead__Group_0_0__0__Impl"
-    // InternalRegularExpressionParser.g:2574:1: rule__AbstractLookAhead__Group_0_0__0__Impl : ( () ) ;
+    // InternalRegularExpressionParser.g:2580:1: rule__AbstractLookAhead__Group_0_0__0__Impl : ( () ) ;
     public final void rule__AbstractLookAhead__Group_0_0__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2578:1: ( ( () ) )
-            // InternalRegularExpressionParser.g:2579:1: ( () )
+            // InternalRegularExpressionParser.g:2584:1: ( ( () ) )
+            // InternalRegularExpressionParser.g:2585:1: ( () )
             {
-            // InternalRegularExpressionParser.g:2579:1: ( () )
-            // InternalRegularExpressionParser.g:2580:2: ()
+            // InternalRegularExpressionParser.g:2585:1: ( () )
+            // InternalRegularExpressionParser.g:2586:2: ()
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getAbstractLookAheadAccess().getLookAheadAction_0_0_0()); 
             }
-            // InternalRegularExpressionParser.g:2581:2: ()
-            // InternalRegularExpressionParser.g:2581:3: 
+            // InternalRegularExpressionParser.g:2587:2: ()
+            // InternalRegularExpressionParser.g:2587:3: 
             {
             }
 
@@ -9198,14 +9223,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__AbstractLookAhead__Group_0_0__1"
-    // InternalRegularExpressionParser.g:2589:1: rule__AbstractLookAhead__Group_0_0__1 : rule__AbstractLookAhead__Group_0_0__1__Impl ;
+    // InternalRegularExpressionParser.g:2595:1: rule__AbstractLookAhead__Group_0_0__1 : rule__AbstractLookAhead__Group_0_0__1__Impl ;
     public final void rule__AbstractLookAhead__Group_0_0__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2593:1: ( rule__AbstractLookAhead__Group_0_0__1__Impl )
-            // InternalRegularExpressionParser.g:2594:2: rule__AbstractLookAhead__Group_0_0__1__Impl
+            // InternalRegularExpressionParser.g:2599:1: ( rule__AbstractLookAhead__Group_0_0__1__Impl )
+            // InternalRegularExpressionParser.g:2600:2: rule__AbstractLookAhead__Group_0_0__1__Impl
             {
             pushFollow(FOLLOW_2);
             rule__AbstractLookAhead__Group_0_0__1__Impl();
@@ -9231,23 +9256,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__AbstractLookAhead__Group_0_0__1__Impl"
-    // InternalRegularExpressionParser.g:2600:1: rule__AbstractLookAhead__Group_0_0__1__Impl : ( ( rule__AbstractLookAhead__Alternatives_0_0_1 ) ) ;
+    // InternalRegularExpressionParser.g:2606:1: rule__AbstractLookAhead__Group_0_0__1__Impl : ( ( rule__AbstractLookAhead__Alternatives_0_0_1 ) ) ;
     public final void rule__AbstractLookAhead__Group_0_0__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2604:1: ( ( ( rule__AbstractLookAhead__Alternatives_0_0_1 ) ) )
-            // InternalRegularExpressionParser.g:2605:1: ( ( rule__AbstractLookAhead__Alternatives_0_0_1 ) )
+            // InternalRegularExpressionParser.g:2610:1: ( ( ( rule__AbstractLookAhead__Alternatives_0_0_1 ) ) )
+            // InternalRegularExpressionParser.g:2611:1: ( ( rule__AbstractLookAhead__Alternatives_0_0_1 ) )
             {
-            // InternalRegularExpressionParser.g:2605:1: ( ( rule__AbstractLookAhead__Alternatives_0_0_1 ) )
-            // InternalRegularExpressionParser.g:2606:2: ( rule__AbstractLookAhead__Alternatives_0_0_1 )
+            // InternalRegularExpressionParser.g:2611:1: ( ( rule__AbstractLookAhead__Alternatives_0_0_1 ) )
+            // InternalRegularExpressionParser.g:2612:2: ( rule__AbstractLookAhead__Alternatives_0_0_1 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getAbstractLookAheadAccess().getAlternatives_0_0_1()); 
             }
-            // InternalRegularExpressionParser.g:2607:2: ( rule__AbstractLookAhead__Alternatives_0_0_1 )
-            // InternalRegularExpressionParser.g:2607:3: rule__AbstractLookAhead__Alternatives_0_0_1
+            // InternalRegularExpressionParser.g:2613:2: ( rule__AbstractLookAhead__Alternatives_0_0_1 )
+            // InternalRegularExpressionParser.g:2613:3: rule__AbstractLookAhead__Alternatives_0_0_1
             {
             pushFollow(FOLLOW_2);
             rule__AbstractLookAhead__Alternatives_0_0_1();
@@ -9282,14 +9307,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__AbstractLookAhead__Group_0_1__0"
-    // InternalRegularExpressionParser.g:2616:1: rule__AbstractLookAhead__Group_0_1__0 : rule__AbstractLookAhead__Group_0_1__0__Impl rule__AbstractLookAhead__Group_0_1__1 ;
+    // InternalRegularExpressionParser.g:2622:1: rule__AbstractLookAhead__Group_0_1__0 : rule__AbstractLookAhead__Group_0_1__0__Impl rule__AbstractLookAhead__Group_0_1__1 ;
     public final void rule__AbstractLookAhead__Group_0_1__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2620:1: ( rule__AbstractLookAhead__Group_0_1__0__Impl rule__AbstractLookAhead__Group_0_1__1 )
-            // InternalRegularExpressionParser.g:2621:2: rule__AbstractLookAhead__Group_0_1__0__Impl rule__AbstractLookAhead__Group_0_1__1
+            // InternalRegularExpressionParser.g:2626:1: ( rule__AbstractLookAhead__Group_0_1__0__Impl rule__AbstractLookAhead__Group_0_1__1 )
+            // InternalRegularExpressionParser.g:2627:2: rule__AbstractLookAhead__Group_0_1__0__Impl rule__AbstractLookAhead__Group_0_1__1
             {
             pushFollow(FOLLOW_17);
             rule__AbstractLookAhead__Group_0_1__0__Impl();
@@ -9320,23 +9345,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__AbstractLookAhead__Group_0_1__0__Impl"
-    // InternalRegularExpressionParser.g:2628:1: rule__AbstractLookAhead__Group_0_1__0__Impl : ( () ) ;
+    // InternalRegularExpressionParser.g:2634:1: rule__AbstractLookAhead__Group_0_1__0__Impl : ( () ) ;
     public final void rule__AbstractLookAhead__Group_0_1__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2632:1: ( ( () ) )
-            // InternalRegularExpressionParser.g:2633:1: ( () )
+            // InternalRegularExpressionParser.g:2638:1: ( ( () ) )
+            // InternalRegularExpressionParser.g:2639:1: ( () )
             {
-            // InternalRegularExpressionParser.g:2633:1: ( () )
-            // InternalRegularExpressionParser.g:2634:2: ()
+            // InternalRegularExpressionParser.g:2639:1: ( () )
+            // InternalRegularExpressionParser.g:2640:2: ()
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getAbstractLookAheadAccess().getLookBehindAction_0_1_0()); 
             }
-            // InternalRegularExpressionParser.g:2635:2: ()
-            // InternalRegularExpressionParser.g:2635:3: 
+            // InternalRegularExpressionParser.g:2641:2: ()
+            // InternalRegularExpressionParser.g:2641:3: 
             {
             }
 
@@ -9361,14 +9386,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__AbstractLookAhead__Group_0_1__1"
-    // InternalRegularExpressionParser.g:2643:1: rule__AbstractLookAhead__Group_0_1__1 : rule__AbstractLookAhead__Group_0_1__1__Impl ;
+    // InternalRegularExpressionParser.g:2649:1: rule__AbstractLookAhead__Group_0_1__1 : rule__AbstractLookAhead__Group_0_1__1__Impl ;
     public final void rule__AbstractLookAhead__Group_0_1__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2647:1: ( rule__AbstractLookAhead__Group_0_1__1__Impl )
-            // InternalRegularExpressionParser.g:2648:2: rule__AbstractLookAhead__Group_0_1__1__Impl
+            // InternalRegularExpressionParser.g:2653:1: ( rule__AbstractLookAhead__Group_0_1__1__Impl )
+            // InternalRegularExpressionParser.g:2654:2: rule__AbstractLookAhead__Group_0_1__1__Impl
             {
             pushFollow(FOLLOW_2);
             rule__AbstractLookAhead__Group_0_1__1__Impl();
@@ -9394,23 +9419,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__AbstractLookAhead__Group_0_1__1__Impl"
-    // InternalRegularExpressionParser.g:2654:1: rule__AbstractLookAhead__Group_0_1__1__Impl : ( ( rule__AbstractLookAhead__Alternatives_0_1_1 ) ) ;
+    // InternalRegularExpressionParser.g:2660:1: rule__AbstractLookAhead__Group_0_1__1__Impl : ( ( rule__AbstractLookAhead__Alternatives_0_1_1 ) ) ;
     public final void rule__AbstractLookAhead__Group_0_1__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2658:1: ( ( ( rule__AbstractLookAhead__Alternatives_0_1_1 ) ) )
-            // InternalRegularExpressionParser.g:2659:1: ( ( rule__AbstractLookAhead__Alternatives_0_1_1 ) )
+            // InternalRegularExpressionParser.g:2664:1: ( ( ( rule__AbstractLookAhead__Alternatives_0_1_1 ) ) )
+            // InternalRegularExpressionParser.g:2665:1: ( ( rule__AbstractLookAhead__Alternatives_0_1_1 ) )
             {
-            // InternalRegularExpressionParser.g:2659:1: ( ( rule__AbstractLookAhead__Alternatives_0_1_1 ) )
-            // InternalRegularExpressionParser.g:2660:2: ( rule__AbstractLookAhead__Alternatives_0_1_1 )
+            // InternalRegularExpressionParser.g:2665:1: ( ( rule__AbstractLookAhead__Alternatives_0_1_1 ) )
+            // InternalRegularExpressionParser.g:2666:2: ( rule__AbstractLookAhead__Alternatives_0_1_1 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getAbstractLookAheadAccess().getAlternatives_0_1_1()); 
             }
-            // InternalRegularExpressionParser.g:2661:2: ( rule__AbstractLookAhead__Alternatives_0_1_1 )
-            // InternalRegularExpressionParser.g:2661:3: rule__AbstractLookAhead__Alternatives_0_1_1
+            // InternalRegularExpressionParser.g:2667:2: ( rule__AbstractLookAhead__Alternatives_0_1_1 )
+            // InternalRegularExpressionParser.g:2667:3: rule__AbstractLookAhead__Alternatives_0_1_1
             {
             pushFollow(FOLLOW_2);
             rule__AbstractLookAhead__Alternatives_0_1_1();
@@ -9445,14 +9470,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Wildcard__Group__0"
-    // InternalRegularExpressionParser.g:2670:1: rule__Wildcard__Group__0 : rule__Wildcard__Group__0__Impl rule__Wildcard__Group__1 ;
+    // InternalRegularExpressionParser.g:2676:1: rule__Wildcard__Group__0 : rule__Wildcard__Group__0__Impl rule__Wildcard__Group__1 ;
     public final void rule__Wildcard__Group__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2674:1: ( rule__Wildcard__Group__0__Impl rule__Wildcard__Group__1 )
-            // InternalRegularExpressionParser.g:2675:2: rule__Wildcard__Group__0__Impl rule__Wildcard__Group__1
+            // InternalRegularExpressionParser.g:2680:1: ( rule__Wildcard__Group__0__Impl rule__Wildcard__Group__1 )
+            // InternalRegularExpressionParser.g:2681:2: rule__Wildcard__Group__0__Impl rule__Wildcard__Group__1
             {
             pushFollow(FOLLOW_18);
             rule__Wildcard__Group__0__Impl();
@@ -9483,23 +9508,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Wildcard__Group__0__Impl"
-    // InternalRegularExpressionParser.g:2682:1: rule__Wildcard__Group__0__Impl : ( () ) ;
+    // InternalRegularExpressionParser.g:2688:1: rule__Wildcard__Group__0__Impl : ( () ) ;
     public final void rule__Wildcard__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2686:1: ( ( () ) )
-            // InternalRegularExpressionParser.g:2687:1: ( () )
+            // InternalRegularExpressionParser.g:2692:1: ( ( () ) )
+            // InternalRegularExpressionParser.g:2693:1: ( () )
             {
-            // InternalRegularExpressionParser.g:2687:1: ( () )
-            // InternalRegularExpressionParser.g:2688:2: ()
+            // InternalRegularExpressionParser.g:2693:1: ( () )
+            // InternalRegularExpressionParser.g:2694:2: ()
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getWildcardAccess().getWildcardAction_0()); 
             }
-            // InternalRegularExpressionParser.g:2689:2: ()
-            // InternalRegularExpressionParser.g:2689:3: 
+            // InternalRegularExpressionParser.g:2695:2: ()
+            // InternalRegularExpressionParser.g:2695:3: 
             {
             }
 
@@ -9524,14 +9549,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Wildcard__Group__1"
-    // InternalRegularExpressionParser.g:2697:1: rule__Wildcard__Group__1 : rule__Wildcard__Group__1__Impl ;
+    // InternalRegularExpressionParser.g:2703:1: rule__Wildcard__Group__1 : rule__Wildcard__Group__1__Impl ;
     public final void rule__Wildcard__Group__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2701:1: ( rule__Wildcard__Group__1__Impl )
-            // InternalRegularExpressionParser.g:2702:2: rule__Wildcard__Group__1__Impl
+            // InternalRegularExpressionParser.g:2707:1: ( rule__Wildcard__Group__1__Impl )
+            // InternalRegularExpressionParser.g:2708:2: rule__Wildcard__Group__1__Impl
             {
             pushFollow(FOLLOW_2);
             rule__Wildcard__Group__1__Impl();
@@ -9557,17 +9582,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Wildcard__Group__1__Impl"
-    // InternalRegularExpressionParser.g:2708:1: rule__Wildcard__Group__1__Impl : ( FullStop ) ;
+    // InternalRegularExpressionParser.g:2714:1: rule__Wildcard__Group__1__Impl : ( FullStop ) ;
     public final void rule__Wildcard__Group__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2712:1: ( ( FullStop ) )
-            // InternalRegularExpressionParser.g:2713:1: ( FullStop )
+            // InternalRegularExpressionParser.g:2718:1: ( ( FullStop ) )
+            // InternalRegularExpressionParser.g:2719:1: ( FullStop )
             {
-            // InternalRegularExpressionParser.g:2713:1: ( FullStop )
-            // InternalRegularExpressionParser.g:2714:2: FullStop
+            // InternalRegularExpressionParser.g:2719:1: ( FullStop )
+            // InternalRegularExpressionParser.g:2720:2: FullStop
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getWildcardAccess().getFullStopKeyword_1()); 
@@ -9598,14 +9623,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__CharacterClass__Group__0"
-    // InternalRegularExpressionParser.g:2724:1: rule__CharacterClass__Group__0 : rule__CharacterClass__Group__0__Impl rule__CharacterClass__Group__1 ;
+    // InternalRegularExpressionParser.g:2730:1: rule__CharacterClass__Group__0 : rule__CharacterClass__Group__0__Impl rule__CharacterClass__Group__1 ;
     public final void rule__CharacterClass__Group__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2728:1: ( rule__CharacterClass__Group__0__Impl rule__CharacterClass__Group__1 )
-            // InternalRegularExpressionParser.g:2729:2: rule__CharacterClass__Group__0__Impl rule__CharacterClass__Group__1
+            // InternalRegularExpressionParser.g:2734:1: ( rule__CharacterClass__Group__0__Impl rule__CharacterClass__Group__1 )
+            // InternalRegularExpressionParser.g:2735:2: rule__CharacterClass__Group__0__Impl rule__CharacterClass__Group__1
             {
             pushFollow(FOLLOW_19);
             rule__CharacterClass__Group__0__Impl();
@@ -9636,23 +9661,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__CharacterClass__Group__0__Impl"
-    // InternalRegularExpressionParser.g:2736:1: rule__CharacterClass__Group__0__Impl : ( () ) ;
+    // InternalRegularExpressionParser.g:2742:1: rule__CharacterClass__Group__0__Impl : ( () ) ;
     public final void rule__CharacterClass__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2740:1: ( ( () ) )
-            // InternalRegularExpressionParser.g:2741:1: ( () )
+            // InternalRegularExpressionParser.g:2746:1: ( ( () ) )
+            // InternalRegularExpressionParser.g:2747:1: ( () )
             {
-            // InternalRegularExpressionParser.g:2741:1: ( () )
-            // InternalRegularExpressionParser.g:2742:2: ()
+            // InternalRegularExpressionParser.g:2747:1: ( () )
+            // InternalRegularExpressionParser.g:2748:2: ()
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getCharacterClassAccess().getCharacterClassAction_0()); 
             }
-            // InternalRegularExpressionParser.g:2743:2: ()
-            // InternalRegularExpressionParser.g:2743:3: 
+            // InternalRegularExpressionParser.g:2749:2: ()
+            // InternalRegularExpressionParser.g:2749:3: 
             {
             }
 
@@ -9677,14 +9702,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__CharacterClass__Group__1"
-    // InternalRegularExpressionParser.g:2751:1: rule__CharacterClass__Group__1 : rule__CharacterClass__Group__1__Impl rule__CharacterClass__Group__2 ;
+    // InternalRegularExpressionParser.g:2757:1: rule__CharacterClass__Group__1 : rule__CharacterClass__Group__1__Impl rule__CharacterClass__Group__2 ;
     public final void rule__CharacterClass__Group__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2755:1: ( rule__CharacterClass__Group__1__Impl rule__CharacterClass__Group__2 )
-            // InternalRegularExpressionParser.g:2756:2: rule__CharacterClass__Group__1__Impl rule__CharacterClass__Group__2
+            // InternalRegularExpressionParser.g:2761:1: ( rule__CharacterClass__Group__1__Impl rule__CharacterClass__Group__2 )
+            // InternalRegularExpressionParser.g:2762:2: rule__CharacterClass__Group__1__Impl rule__CharacterClass__Group__2
             {
             pushFollow(FOLLOW_20);
             rule__CharacterClass__Group__1__Impl();
@@ -9715,17 +9740,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__CharacterClass__Group__1__Impl"
-    // InternalRegularExpressionParser.g:2763:1: rule__CharacterClass__Group__1__Impl : ( LeftSquareBracket ) ;
+    // InternalRegularExpressionParser.g:2769:1: rule__CharacterClass__Group__1__Impl : ( LeftSquareBracket ) ;
     public final void rule__CharacterClass__Group__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2767:1: ( ( LeftSquareBracket ) )
-            // InternalRegularExpressionParser.g:2768:1: ( LeftSquareBracket )
+            // InternalRegularExpressionParser.g:2773:1: ( ( LeftSquareBracket ) )
+            // InternalRegularExpressionParser.g:2774:1: ( LeftSquareBracket )
             {
-            // InternalRegularExpressionParser.g:2768:1: ( LeftSquareBracket )
-            // InternalRegularExpressionParser.g:2769:2: LeftSquareBracket
+            // InternalRegularExpressionParser.g:2774:1: ( LeftSquareBracket )
+            // InternalRegularExpressionParser.g:2775:2: LeftSquareBracket
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getCharacterClassAccess().getLeftSquareBracketKeyword_1()); 
@@ -9756,14 +9781,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__CharacterClass__Group__2"
-    // InternalRegularExpressionParser.g:2778:1: rule__CharacterClass__Group__2 : rule__CharacterClass__Group__2__Impl rule__CharacterClass__Group__3 ;
+    // InternalRegularExpressionParser.g:2784:1: rule__CharacterClass__Group__2 : rule__CharacterClass__Group__2__Impl rule__CharacterClass__Group__3 ;
     public final void rule__CharacterClass__Group__2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2782:1: ( rule__CharacterClass__Group__2__Impl rule__CharacterClass__Group__3 )
-            // InternalRegularExpressionParser.g:2783:2: rule__CharacterClass__Group__2__Impl rule__CharacterClass__Group__3
+            // InternalRegularExpressionParser.g:2788:1: ( rule__CharacterClass__Group__2__Impl rule__CharacterClass__Group__3 )
+            // InternalRegularExpressionParser.g:2789:2: rule__CharacterClass__Group__2__Impl rule__CharacterClass__Group__3
             {
             pushFollow(FOLLOW_20);
             rule__CharacterClass__Group__2__Impl();
@@ -9794,35 +9819,35 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__CharacterClass__Group__2__Impl"
-    // InternalRegularExpressionParser.g:2790:1: rule__CharacterClass__Group__2__Impl : ( ( rule__CharacterClass__Group_2__0 )? ) ;
+    // InternalRegularExpressionParser.g:2796:1: rule__CharacterClass__Group__2__Impl : ( ( rule__CharacterClass__Group_2__0 )? ) ;
     public final void rule__CharacterClass__Group__2__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2794:1: ( ( ( rule__CharacterClass__Group_2__0 )? ) )
-            // InternalRegularExpressionParser.g:2795:1: ( ( rule__CharacterClass__Group_2__0 )? )
+            // InternalRegularExpressionParser.g:2800:1: ( ( ( rule__CharacterClass__Group_2__0 )? ) )
+            // InternalRegularExpressionParser.g:2801:1: ( ( rule__CharacterClass__Group_2__0 )? )
             {
-            // InternalRegularExpressionParser.g:2795:1: ( ( rule__CharacterClass__Group_2__0 )? )
-            // InternalRegularExpressionParser.g:2796:2: ( rule__CharacterClass__Group_2__0 )?
+            // InternalRegularExpressionParser.g:2801:1: ( ( rule__CharacterClass__Group_2__0 )? )
+            // InternalRegularExpressionParser.g:2802:2: ( rule__CharacterClass__Group_2__0 )?
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getCharacterClassAccess().getGroup_2()); 
             }
-            // InternalRegularExpressionParser.g:2797:2: ( rule__CharacterClass__Group_2__0 )?
+            // InternalRegularExpressionParser.g:2803:2: ( rule__CharacterClass__Group_2__0 )?
             int alt30=2;
             int LA30_0 = input.LA(1);
 
             if ( (LA30_0==CircumflexAccent) ) {
                 int LA30_1 = input.LA(2);
 
-                if ( (synpred92_InternalRegularExpressionParser()) ) {
+                if ( (synpred93_InternalRegularExpressionParser()) ) {
                     alt30=1;
                 }
             }
             switch (alt30) {
                 case 1 :
-                    // InternalRegularExpressionParser.g:2797:3: rule__CharacterClass__Group_2__0
+                    // InternalRegularExpressionParser.g:2803:3: rule__CharacterClass__Group_2__0
                     {
                     pushFollow(FOLLOW_2);
                     rule__CharacterClass__Group_2__0();
@@ -9860,14 +9885,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__CharacterClass__Group__3"
-    // InternalRegularExpressionParser.g:2805:1: rule__CharacterClass__Group__3 : rule__CharacterClass__Group__3__Impl rule__CharacterClass__Group__4 ;
+    // InternalRegularExpressionParser.g:2811:1: rule__CharacterClass__Group__3 : rule__CharacterClass__Group__3__Impl rule__CharacterClass__Group__4 ;
     public final void rule__CharacterClass__Group__3() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2809:1: ( rule__CharacterClass__Group__3__Impl rule__CharacterClass__Group__4 )
-            // InternalRegularExpressionParser.g:2810:2: rule__CharacterClass__Group__3__Impl rule__CharacterClass__Group__4
+            // InternalRegularExpressionParser.g:2815:1: ( rule__CharacterClass__Group__3__Impl rule__CharacterClass__Group__4 )
+            // InternalRegularExpressionParser.g:2816:2: rule__CharacterClass__Group__3__Impl rule__CharacterClass__Group__4
             {
             pushFollow(FOLLOW_20);
             rule__CharacterClass__Group__3__Impl();
@@ -9898,22 +9923,22 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__CharacterClass__Group__3__Impl"
-    // InternalRegularExpressionParser.g:2817:1: rule__CharacterClass__Group__3__Impl : ( ( rule__CharacterClass__ElementsAssignment_3 )* ) ;
+    // InternalRegularExpressionParser.g:2823:1: rule__CharacterClass__Group__3__Impl : ( ( rule__CharacterClass__ElementsAssignment_3 )* ) ;
     public final void rule__CharacterClass__Group__3__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2821:1: ( ( ( rule__CharacterClass__ElementsAssignment_3 )* ) )
-            // InternalRegularExpressionParser.g:2822:1: ( ( rule__CharacterClass__ElementsAssignment_3 )* )
+            // InternalRegularExpressionParser.g:2827:1: ( ( ( rule__CharacterClass__ElementsAssignment_3 )* ) )
+            // InternalRegularExpressionParser.g:2828:1: ( ( rule__CharacterClass__ElementsAssignment_3 )* )
             {
-            // InternalRegularExpressionParser.g:2822:1: ( ( rule__CharacterClass__ElementsAssignment_3 )* )
-            // InternalRegularExpressionParser.g:2823:2: ( rule__CharacterClass__ElementsAssignment_3 )*
+            // InternalRegularExpressionParser.g:2828:1: ( ( rule__CharacterClass__ElementsAssignment_3 )* )
+            // InternalRegularExpressionParser.g:2829:2: ( rule__CharacterClass__ElementsAssignment_3 )*
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getCharacterClassAccess().getElementsAssignment_3()); 
             }
-            // InternalRegularExpressionParser.g:2824:2: ( rule__CharacterClass__ElementsAssignment_3 )*
+            // InternalRegularExpressionParser.g:2830:2: ( rule__CharacterClass__ElementsAssignment_3 )*
             loop31:
             do {
                 int alt31=2;
@@ -9926,7 +9951,7 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
                 switch (alt31) {
             	case 1 :
-            	    // InternalRegularExpressionParser.g:2824:3: rule__CharacterClass__ElementsAssignment_3
+            	    // InternalRegularExpressionParser.g:2830:3: rule__CharacterClass__ElementsAssignment_3
             	    {
             	    pushFollow(FOLLOW_21);
             	    rule__CharacterClass__ElementsAssignment_3();
@@ -9967,14 +9992,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__CharacterClass__Group__4"
-    // InternalRegularExpressionParser.g:2832:1: rule__CharacterClass__Group__4 : rule__CharacterClass__Group__4__Impl ;
+    // InternalRegularExpressionParser.g:2838:1: rule__CharacterClass__Group__4 : rule__CharacterClass__Group__4__Impl ;
     public final void rule__CharacterClass__Group__4() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2836:1: ( rule__CharacterClass__Group__4__Impl )
-            // InternalRegularExpressionParser.g:2837:2: rule__CharacterClass__Group__4__Impl
+            // InternalRegularExpressionParser.g:2842:1: ( rule__CharacterClass__Group__4__Impl )
+            // InternalRegularExpressionParser.g:2843:2: rule__CharacterClass__Group__4__Impl
             {
             pushFollow(FOLLOW_2);
             rule__CharacterClass__Group__4__Impl();
@@ -10000,17 +10025,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__CharacterClass__Group__4__Impl"
-    // InternalRegularExpressionParser.g:2843:1: rule__CharacterClass__Group__4__Impl : ( RightSquareBracket ) ;
+    // InternalRegularExpressionParser.g:2849:1: rule__CharacterClass__Group__4__Impl : ( RightSquareBracket ) ;
     public final void rule__CharacterClass__Group__4__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2847:1: ( ( RightSquareBracket ) )
-            // InternalRegularExpressionParser.g:2848:1: ( RightSquareBracket )
+            // InternalRegularExpressionParser.g:2853:1: ( ( RightSquareBracket ) )
+            // InternalRegularExpressionParser.g:2854:1: ( RightSquareBracket )
             {
-            // InternalRegularExpressionParser.g:2848:1: ( RightSquareBracket )
-            // InternalRegularExpressionParser.g:2849:2: RightSquareBracket
+            // InternalRegularExpressionParser.g:2854:1: ( RightSquareBracket )
+            // InternalRegularExpressionParser.g:2855:2: RightSquareBracket
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getCharacterClassAccess().getRightSquareBracketKeyword_4()); 
@@ -10041,14 +10066,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__CharacterClass__Group_2__0"
-    // InternalRegularExpressionParser.g:2859:1: rule__CharacterClass__Group_2__0 : rule__CharacterClass__Group_2__0__Impl ;
+    // InternalRegularExpressionParser.g:2865:1: rule__CharacterClass__Group_2__0 : rule__CharacterClass__Group_2__0__Impl ;
     public final void rule__CharacterClass__Group_2__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2863:1: ( rule__CharacterClass__Group_2__0__Impl )
-            // InternalRegularExpressionParser.g:2864:2: rule__CharacterClass__Group_2__0__Impl
+            // InternalRegularExpressionParser.g:2869:1: ( rule__CharacterClass__Group_2__0__Impl )
+            // InternalRegularExpressionParser.g:2870:2: rule__CharacterClass__Group_2__0__Impl
             {
             pushFollow(FOLLOW_2);
             rule__CharacterClass__Group_2__0__Impl();
@@ -10074,23 +10099,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__CharacterClass__Group_2__0__Impl"
-    // InternalRegularExpressionParser.g:2870:1: rule__CharacterClass__Group_2__0__Impl : ( ( rule__CharacterClass__NegatedAssignment_2_0 ) ) ;
+    // InternalRegularExpressionParser.g:2876:1: rule__CharacterClass__Group_2__0__Impl : ( ( rule__CharacterClass__NegatedAssignment_2_0 ) ) ;
     public final void rule__CharacterClass__Group_2__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2874:1: ( ( ( rule__CharacterClass__NegatedAssignment_2_0 ) ) )
-            // InternalRegularExpressionParser.g:2875:1: ( ( rule__CharacterClass__NegatedAssignment_2_0 ) )
+            // InternalRegularExpressionParser.g:2880:1: ( ( ( rule__CharacterClass__NegatedAssignment_2_0 ) ) )
+            // InternalRegularExpressionParser.g:2881:1: ( ( rule__CharacterClass__NegatedAssignment_2_0 ) )
             {
-            // InternalRegularExpressionParser.g:2875:1: ( ( rule__CharacterClass__NegatedAssignment_2_0 ) )
-            // InternalRegularExpressionParser.g:2876:2: ( rule__CharacterClass__NegatedAssignment_2_0 )
+            // InternalRegularExpressionParser.g:2881:1: ( ( rule__CharacterClass__NegatedAssignment_2_0 ) )
+            // InternalRegularExpressionParser.g:2882:2: ( rule__CharacterClass__NegatedAssignment_2_0 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getCharacterClassAccess().getNegatedAssignment_2_0()); 
             }
-            // InternalRegularExpressionParser.g:2877:2: ( rule__CharacterClass__NegatedAssignment_2_0 )
-            // InternalRegularExpressionParser.g:2877:3: rule__CharacterClass__NegatedAssignment_2_0
+            // InternalRegularExpressionParser.g:2883:2: ( rule__CharacterClass__NegatedAssignment_2_0 )
+            // InternalRegularExpressionParser.g:2883:3: rule__CharacterClass__NegatedAssignment_2_0
             {
             pushFollow(FOLLOW_2);
             rule__CharacterClass__NegatedAssignment_2_0();
@@ -10125,14 +10150,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__CharacterClassElement__Group__0"
-    // InternalRegularExpressionParser.g:2886:1: rule__CharacterClassElement__Group__0 : rule__CharacterClassElement__Group__0__Impl rule__CharacterClassElement__Group__1 ;
+    // InternalRegularExpressionParser.g:2892:1: rule__CharacterClassElement__Group__0 : rule__CharacterClassElement__Group__0__Impl rule__CharacterClassElement__Group__1 ;
     public final void rule__CharacterClassElement__Group__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2890:1: ( rule__CharacterClassElement__Group__0__Impl rule__CharacterClassElement__Group__1 )
-            // InternalRegularExpressionParser.g:2891:2: rule__CharacterClassElement__Group__0__Impl rule__CharacterClassElement__Group__1
+            // InternalRegularExpressionParser.g:2896:1: ( rule__CharacterClassElement__Group__0__Impl rule__CharacterClassElement__Group__1 )
+            // InternalRegularExpressionParser.g:2897:2: rule__CharacterClassElement__Group__0__Impl rule__CharacterClassElement__Group__1
             {
             pushFollow(FOLLOW_22);
             rule__CharacterClassElement__Group__0__Impl();
@@ -10163,17 +10188,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__CharacterClassElement__Group__0__Impl"
-    // InternalRegularExpressionParser.g:2898:1: rule__CharacterClassElement__Group__0__Impl : ( ruleCharacterClassAtom ) ;
+    // InternalRegularExpressionParser.g:2904:1: rule__CharacterClassElement__Group__0__Impl : ( ruleCharacterClassAtom ) ;
     public final void rule__CharacterClassElement__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2902:1: ( ( ruleCharacterClassAtom ) )
-            // InternalRegularExpressionParser.g:2903:1: ( ruleCharacterClassAtom )
+            // InternalRegularExpressionParser.g:2908:1: ( ( ruleCharacterClassAtom ) )
+            // InternalRegularExpressionParser.g:2909:1: ( ruleCharacterClassAtom )
             {
-            // InternalRegularExpressionParser.g:2903:1: ( ruleCharacterClassAtom )
-            // InternalRegularExpressionParser.g:2904:2: ruleCharacterClassAtom
+            // InternalRegularExpressionParser.g:2909:1: ( ruleCharacterClassAtom )
+            // InternalRegularExpressionParser.g:2910:2: ruleCharacterClassAtom
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getCharacterClassElementAccess().getCharacterClassAtomParserRuleCall_0()); 
@@ -10208,14 +10233,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__CharacterClassElement__Group__1"
-    // InternalRegularExpressionParser.g:2913:1: rule__CharacterClassElement__Group__1 : rule__CharacterClassElement__Group__1__Impl ;
+    // InternalRegularExpressionParser.g:2919:1: rule__CharacterClassElement__Group__1 : rule__CharacterClassElement__Group__1__Impl ;
     public final void rule__CharacterClassElement__Group__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2917:1: ( rule__CharacterClassElement__Group__1__Impl )
-            // InternalRegularExpressionParser.g:2918:2: rule__CharacterClassElement__Group__1__Impl
+            // InternalRegularExpressionParser.g:2923:1: ( rule__CharacterClassElement__Group__1__Impl )
+            // InternalRegularExpressionParser.g:2924:2: rule__CharacterClassElement__Group__1__Impl
             {
             pushFollow(FOLLOW_2);
             rule__CharacterClassElement__Group__1__Impl();
@@ -10241,27 +10266,27 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__CharacterClassElement__Group__1__Impl"
-    // InternalRegularExpressionParser.g:2924:1: rule__CharacterClassElement__Group__1__Impl : ( ( rule__CharacterClassElement__Group_1__0 )? ) ;
+    // InternalRegularExpressionParser.g:2930:1: rule__CharacterClassElement__Group__1__Impl : ( ( rule__CharacterClassElement__Group_1__0 )? ) ;
     public final void rule__CharacterClassElement__Group__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2928:1: ( ( ( rule__CharacterClassElement__Group_1__0 )? ) )
-            // InternalRegularExpressionParser.g:2929:1: ( ( rule__CharacterClassElement__Group_1__0 )? )
+            // InternalRegularExpressionParser.g:2934:1: ( ( ( rule__CharacterClassElement__Group_1__0 )? ) )
+            // InternalRegularExpressionParser.g:2935:1: ( ( rule__CharacterClassElement__Group_1__0 )? )
             {
-            // InternalRegularExpressionParser.g:2929:1: ( ( rule__CharacterClassElement__Group_1__0 )? )
-            // InternalRegularExpressionParser.g:2930:2: ( rule__CharacterClassElement__Group_1__0 )?
+            // InternalRegularExpressionParser.g:2935:1: ( ( rule__CharacterClassElement__Group_1__0 )? )
+            // InternalRegularExpressionParser.g:2936:2: ( rule__CharacterClassElement__Group_1__0 )?
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getCharacterClassElementAccess().getGroup_1()); 
             }
-            // InternalRegularExpressionParser.g:2931:2: ( rule__CharacterClassElement__Group_1__0 )?
+            // InternalRegularExpressionParser.g:2937:2: ( rule__CharacterClassElement__Group_1__0 )?
             int alt32=2;
             alt32 = dfa32.predict(input);
             switch (alt32) {
                 case 1 :
-                    // InternalRegularExpressionParser.g:2931:3: rule__CharacterClassElement__Group_1__0
+                    // InternalRegularExpressionParser.g:2937:3: rule__CharacterClassElement__Group_1__0
                     {
                     pushFollow(FOLLOW_2);
                     rule__CharacterClassElement__Group_1__0();
@@ -10299,14 +10324,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__CharacterClassElement__Group_1__0"
-    // InternalRegularExpressionParser.g:2940:1: rule__CharacterClassElement__Group_1__0 : rule__CharacterClassElement__Group_1__0__Impl ;
+    // InternalRegularExpressionParser.g:2946:1: rule__CharacterClassElement__Group_1__0 : rule__CharacterClassElement__Group_1__0__Impl ;
     public final void rule__CharacterClassElement__Group_1__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2944:1: ( rule__CharacterClassElement__Group_1__0__Impl )
-            // InternalRegularExpressionParser.g:2945:2: rule__CharacterClassElement__Group_1__0__Impl
+            // InternalRegularExpressionParser.g:2950:1: ( rule__CharacterClassElement__Group_1__0__Impl )
+            // InternalRegularExpressionParser.g:2951:2: rule__CharacterClassElement__Group_1__0__Impl
             {
             pushFollow(FOLLOW_2);
             rule__CharacterClassElement__Group_1__0__Impl();
@@ -10332,23 +10357,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__CharacterClassElement__Group_1__0__Impl"
-    // InternalRegularExpressionParser.g:2951:1: rule__CharacterClassElement__Group_1__0__Impl : ( ( rule__CharacterClassElement__Group_1_0__0 ) ) ;
+    // InternalRegularExpressionParser.g:2957:1: rule__CharacterClassElement__Group_1__0__Impl : ( ( rule__CharacterClassElement__Group_1_0__0 ) ) ;
     public final void rule__CharacterClassElement__Group_1__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2955:1: ( ( ( rule__CharacterClassElement__Group_1_0__0 ) ) )
-            // InternalRegularExpressionParser.g:2956:1: ( ( rule__CharacterClassElement__Group_1_0__0 ) )
+            // InternalRegularExpressionParser.g:2961:1: ( ( ( rule__CharacterClassElement__Group_1_0__0 ) ) )
+            // InternalRegularExpressionParser.g:2962:1: ( ( rule__CharacterClassElement__Group_1_0__0 ) )
             {
-            // InternalRegularExpressionParser.g:2956:1: ( ( rule__CharacterClassElement__Group_1_0__0 ) )
-            // InternalRegularExpressionParser.g:2957:2: ( rule__CharacterClassElement__Group_1_0__0 )
+            // InternalRegularExpressionParser.g:2962:1: ( ( rule__CharacterClassElement__Group_1_0__0 ) )
+            // InternalRegularExpressionParser.g:2963:2: ( rule__CharacterClassElement__Group_1_0__0 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getCharacterClassElementAccess().getGroup_1_0()); 
             }
-            // InternalRegularExpressionParser.g:2958:2: ( rule__CharacterClassElement__Group_1_0__0 )
-            // InternalRegularExpressionParser.g:2958:3: rule__CharacterClassElement__Group_1_0__0
+            // InternalRegularExpressionParser.g:2964:2: ( rule__CharacterClassElement__Group_1_0__0 )
+            // InternalRegularExpressionParser.g:2964:3: rule__CharacterClassElement__Group_1_0__0
             {
             pushFollow(FOLLOW_2);
             rule__CharacterClassElement__Group_1_0__0();
@@ -10383,14 +10408,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__CharacterClassElement__Group_1_0__0"
-    // InternalRegularExpressionParser.g:2967:1: rule__CharacterClassElement__Group_1_0__0 : rule__CharacterClassElement__Group_1_0__0__Impl rule__CharacterClassElement__Group_1_0__1 ;
+    // InternalRegularExpressionParser.g:2973:1: rule__CharacterClassElement__Group_1_0__0 : rule__CharacterClassElement__Group_1_0__0__Impl rule__CharacterClassElement__Group_1_0__1 ;
     public final void rule__CharacterClassElement__Group_1_0__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2971:1: ( rule__CharacterClassElement__Group_1_0__0__Impl rule__CharacterClassElement__Group_1_0__1 )
-            // InternalRegularExpressionParser.g:2972:2: rule__CharacterClassElement__Group_1_0__0__Impl rule__CharacterClassElement__Group_1_0__1
+            // InternalRegularExpressionParser.g:2977:1: ( rule__CharacterClassElement__Group_1_0__0__Impl rule__CharacterClassElement__Group_1_0__1 )
+            // InternalRegularExpressionParser.g:2978:2: rule__CharacterClassElement__Group_1_0__0__Impl rule__CharacterClassElement__Group_1_0__1
             {
             pushFollow(FOLLOW_22);
             rule__CharacterClassElement__Group_1_0__0__Impl();
@@ -10421,23 +10446,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__CharacterClassElement__Group_1_0__0__Impl"
-    // InternalRegularExpressionParser.g:2979:1: rule__CharacterClassElement__Group_1_0__0__Impl : ( () ) ;
+    // InternalRegularExpressionParser.g:2985:1: rule__CharacterClassElement__Group_1_0__0__Impl : ( () ) ;
     public final void rule__CharacterClassElement__Group_1_0__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2983:1: ( ( () ) )
-            // InternalRegularExpressionParser.g:2984:1: ( () )
+            // InternalRegularExpressionParser.g:2989:1: ( ( () ) )
+            // InternalRegularExpressionParser.g:2990:1: ( () )
             {
-            // InternalRegularExpressionParser.g:2984:1: ( () )
-            // InternalRegularExpressionParser.g:2985:2: ()
+            // InternalRegularExpressionParser.g:2990:1: ( () )
+            // InternalRegularExpressionParser.g:2991:2: ()
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getCharacterClassElementAccess().getCharacterClassRangeLeftAction_1_0_0()); 
             }
-            // InternalRegularExpressionParser.g:2986:2: ()
-            // InternalRegularExpressionParser.g:2986:3: 
+            // InternalRegularExpressionParser.g:2992:2: ()
+            // InternalRegularExpressionParser.g:2992:3: 
             {
             }
 
@@ -10462,14 +10487,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__CharacterClassElement__Group_1_0__1"
-    // InternalRegularExpressionParser.g:2994:1: rule__CharacterClassElement__Group_1_0__1 : rule__CharacterClassElement__Group_1_0__1__Impl rule__CharacterClassElement__Group_1_0__2 ;
+    // InternalRegularExpressionParser.g:3000:1: rule__CharacterClassElement__Group_1_0__1 : rule__CharacterClassElement__Group_1_0__1__Impl rule__CharacterClassElement__Group_1_0__2 ;
     public final void rule__CharacterClassElement__Group_1_0__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:2998:1: ( rule__CharacterClassElement__Group_1_0__1__Impl rule__CharacterClassElement__Group_1_0__2 )
-            // InternalRegularExpressionParser.g:2999:2: rule__CharacterClassElement__Group_1_0__1__Impl rule__CharacterClassElement__Group_1_0__2
+            // InternalRegularExpressionParser.g:3004:1: ( rule__CharacterClassElement__Group_1_0__1__Impl rule__CharacterClassElement__Group_1_0__2 )
+            // InternalRegularExpressionParser.g:3005:2: rule__CharacterClassElement__Group_1_0__1__Impl rule__CharacterClassElement__Group_1_0__2
             {
             pushFollow(FOLLOW_23);
             rule__CharacterClassElement__Group_1_0__1__Impl();
@@ -10500,17 +10525,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__CharacterClassElement__Group_1_0__1__Impl"
-    // InternalRegularExpressionParser.g:3006:1: rule__CharacterClassElement__Group_1_0__1__Impl : ( HyphenMinus ) ;
+    // InternalRegularExpressionParser.g:3012:1: rule__CharacterClassElement__Group_1_0__1__Impl : ( HyphenMinus ) ;
     public final void rule__CharacterClassElement__Group_1_0__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3010:1: ( ( HyphenMinus ) )
-            // InternalRegularExpressionParser.g:3011:1: ( HyphenMinus )
+            // InternalRegularExpressionParser.g:3016:1: ( ( HyphenMinus ) )
+            // InternalRegularExpressionParser.g:3017:1: ( HyphenMinus )
             {
-            // InternalRegularExpressionParser.g:3011:1: ( HyphenMinus )
-            // InternalRegularExpressionParser.g:3012:2: HyphenMinus
+            // InternalRegularExpressionParser.g:3017:1: ( HyphenMinus )
+            // InternalRegularExpressionParser.g:3018:2: HyphenMinus
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getCharacterClassElementAccess().getHyphenMinusKeyword_1_0_1()); 
@@ -10541,14 +10566,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__CharacterClassElement__Group_1_0__2"
-    // InternalRegularExpressionParser.g:3021:1: rule__CharacterClassElement__Group_1_0__2 : rule__CharacterClassElement__Group_1_0__2__Impl ;
+    // InternalRegularExpressionParser.g:3027:1: rule__CharacterClassElement__Group_1_0__2 : rule__CharacterClassElement__Group_1_0__2__Impl ;
     public final void rule__CharacterClassElement__Group_1_0__2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3025:1: ( rule__CharacterClassElement__Group_1_0__2__Impl )
-            // InternalRegularExpressionParser.g:3026:2: rule__CharacterClassElement__Group_1_0__2__Impl
+            // InternalRegularExpressionParser.g:3031:1: ( rule__CharacterClassElement__Group_1_0__2__Impl )
+            // InternalRegularExpressionParser.g:3032:2: rule__CharacterClassElement__Group_1_0__2__Impl
             {
             pushFollow(FOLLOW_2);
             rule__CharacterClassElement__Group_1_0__2__Impl();
@@ -10574,23 +10599,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__CharacterClassElement__Group_1_0__2__Impl"
-    // InternalRegularExpressionParser.g:3032:1: rule__CharacterClassElement__Group_1_0__2__Impl : ( ( rule__CharacterClassElement__RightAssignment_1_0_2 ) ) ;
+    // InternalRegularExpressionParser.g:3038:1: rule__CharacterClassElement__Group_1_0__2__Impl : ( ( rule__CharacterClassElement__RightAssignment_1_0_2 ) ) ;
     public final void rule__CharacterClassElement__Group_1_0__2__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3036:1: ( ( ( rule__CharacterClassElement__RightAssignment_1_0_2 ) ) )
-            // InternalRegularExpressionParser.g:3037:1: ( ( rule__CharacterClassElement__RightAssignment_1_0_2 ) )
+            // InternalRegularExpressionParser.g:3042:1: ( ( ( rule__CharacterClassElement__RightAssignment_1_0_2 ) ) )
+            // InternalRegularExpressionParser.g:3043:1: ( ( rule__CharacterClassElement__RightAssignment_1_0_2 ) )
             {
-            // InternalRegularExpressionParser.g:3037:1: ( ( rule__CharacterClassElement__RightAssignment_1_0_2 ) )
-            // InternalRegularExpressionParser.g:3038:2: ( rule__CharacterClassElement__RightAssignment_1_0_2 )
+            // InternalRegularExpressionParser.g:3043:1: ( ( rule__CharacterClassElement__RightAssignment_1_0_2 ) )
+            // InternalRegularExpressionParser.g:3044:2: ( rule__CharacterClassElement__RightAssignment_1_0_2 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getCharacterClassElementAccess().getRightAssignment_1_0_2()); 
             }
-            // InternalRegularExpressionParser.g:3039:2: ( rule__CharacterClassElement__RightAssignment_1_0_2 )
-            // InternalRegularExpressionParser.g:3039:3: rule__CharacterClassElement__RightAssignment_1_0_2
+            // InternalRegularExpressionParser.g:3045:2: ( rule__CharacterClassElement__RightAssignment_1_0_2 )
+            // InternalRegularExpressionParser.g:3045:3: rule__CharacterClassElement__RightAssignment_1_0_2
             {
             pushFollow(FOLLOW_2);
             rule__CharacterClassElement__RightAssignment_1_0_2();
@@ -10625,14 +10650,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Backspace__Group__0"
-    // InternalRegularExpressionParser.g:3048:1: rule__Backspace__Group__0 : rule__Backspace__Group__0__Impl rule__Backspace__Group__1 ;
+    // InternalRegularExpressionParser.g:3054:1: rule__Backspace__Group__0 : rule__Backspace__Group__0__Impl rule__Backspace__Group__1 ;
     public final void rule__Backspace__Group__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3052:1: ( rule__Backspace__Group__0__Impl rule__Backspace__Group__1 )
-            // InternalRegularExpressionParser.g:3053:2: rule__Backspace__Group__0__Impl rule__Backspace__Group__1
+            // InternalRegularExpressionParser.g:3058:1: ( rule__Backspace__Group__0__Impl rule__Backspace__Group__1 )
+            // InternalRegularExpressionParser.g:3059:2: rule__Backspace__Group__0__Impl rule__Backspace__Group__1
             {
             pushFollow(FOLLOW_24);
             rule__Backspace__Group__0__Impl();
@@ -10663,23 +10688,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Backspace__Group__0__Impl"
-    // InternalRegularExpressionParser.g:3060:1: rule__Backspace__Group__0__Impl : ( () ) ;
+    // InternalRegularExpressionParser.g:3066:1: rule__Backspace__Group__0__Impl : ( () ) ;
     public final void rule__Backspace__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3064:1: ( ( () ) )
-            // InternalRegularExpressionParser.g:3065:1: ( () )
+            // InternalRegularExpressionParser.g:3070:1: ( ( () ) )
+            // InternalRegularExpressionParser.g:3071:1: ( () )
             {
-            // InternalRegularExpressionParser.g:3065:1: ( () )
-            // InternalRegularExpressionParser.g:3066:2: ()
+            // InternalRegularExpressionParser.g:3071:1: ( () )
+            // InternalRegularExpressionParser.g:3072:2: ()
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getBackspaceAccess().getBackspaceAction_0()); 
             }
-            // InternalRegularExpressionParser.g:3067:2: ()
-            // InternalRegularExpressionParser.g:3067:3: 
+            // InternalRegularExpressionParser.g:3073:2: ()
+            // InternalRegularExpressionParser.g:3073:3: 
             {
             }
 
@@ -10704,14 +10729,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Backspace__Group__1"
-    // InternalRegularExpressionParser.g:3075:1: rule__Backspace__Group__1 : rule__Backspace__Group__1__Impl ;
+    // InternalRegularExpressionParser.g:3081:1: rule__Backspace__Group__1 : rule__Backspace__Group__1__Impl ;
     public final void rule__Backspace__Group__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3079:1: ( rule__Backspace__Group__1__Impl )
-            // InternalRegularExpressionParser.g:3080:2: rule__Backspace__Group__1__Impl
+            // InternalRegularExpressionParser.g:3085:1: ( rule__Backspace__Group__1__Impl )
+            // InternalRegularExpressionParser.g:3086:2: rule__Backspace__Group__1__Impl
             {
             pushFollow(FOLLOW_2);
             rule__Backspace__Group__1__Impl();
@@ -10737,17 +10762,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Backspace__Group__1__Impl"
-    // InternalRegularExpressionParser.g:3086:1: rule__Backspace__Group__1__Impl : ( RULE_WORD_BOUNDARY ) ;
+    // InternalRegularExpressionParser.g:3092:1: rule__Backspace__Group__1__Impl : ( RULE_WORD_BOUNDARY ) ;
     public final void rule__Backspace__Group__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3090:1: ( ( RULE_WORD_BOUNDARY ) )
-            // InternalRegularExpressionParser.g:3091:1: ( RULE_WORD_BOUNDARY )
+            // InternalRegularExpressionParser.g:3096:1: ( ( RULE_WORD_BOUNDARY ) )
+            // InternalRegularExpressionParser.g:3097:1: ( RULE_WORD_BOUNDARY )
             {
-            // InternalRegularExpressionParser.g:3091:1: ( RULE_WORD_BOUNDARY )
-            // InternalRegularExpressionParser.g:3092:2: RULE_WORD_BOUNDARY
+            // InternalRegularExpressionParser.g:3097:1: ( RULE_WORD_BOUNDARY )
+            // InternalRegularExpressionParser.g:3098:2: RULE_WORD_BOUNDARY
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getBackspaceAccess().getWORD_BOUNDARYTerminalRuleCall_1()); 
@@ -10778,14 +10803,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Group__Group__0"
-    // InternalRegularExpressionParser.g:3102:1: rule__Group__Group__0 : rule__Group__Group__0__Impl rule__Group__Group__1 ;
+    // InternalRegularExpressionParser.g:3108:1: rule__Group__Group__0 : rule__Group__Group__0__Impl rule__Group__Group__1 ;
     public final void rule__Group__Group__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3106:1: ( rule__Group__Group__0__Impl rule__Group__Group__1 )
-            // InternalRegularExpressionParser.g:3107:2: rule__Group__Group__0__Impl rule__Group__Group__1
+            // InternalRegularExpressionParser.g:3112:1: ( rule__Group__Group__0__Impl rule__Group__Group__1 )
+            // InternalRegularExpressionParser.g:3113:2: rule__Group__Group__0__Impl rule__Group__Group__1
             {
             pushFollow(FOLLOW_9);
             rule__Group__Group__0__Impl();
@@ -10816,23 +10841,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Group__Group__0__Impl"
-    // InternalRegularExpressionParser.g:3114:1: rule__Group__Group__0__Impl : ( () ) ;
+    // InternalRegularExpressionParser.g:3120:1: rule__Group__Group__0__Impl : ( () ) ;
     public final void rule__Group__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3118:1: ( ( () ) )
-            // InternalRegularExpressionParser.g:3119:1: ( () )
+            // InternalRegularExpressionParser.g:3124:1: ( ( () ) )
+            // InternalRegularExpressionParser.g:3125:1: ( () )
             {
-            // InternalRegularExpressionParser.g:3119:1: ( () )
-            // InternalRegularExpressionParser.g:3120:2: ()
+            // InternalRegularExpressionParser.g:3125:1: ( () )
+            // InternalRegularExpressionParser.g:3126:2: ()
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getGroupAccess().getGroupAction_0()); 
             }
-            // InternalRegularExpressionParser.g:3121:2: ()
-            // InternalRegularExpressionParser.g:3121:3: 
+            // InternalRegularExpressionParser.g:3127:2: ()
+            // InternalRegularExpressionParser.g:3127:3: 
             {
             }
 
@@ -10857,14 +10882,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Group__Group__1"
-    // InternalRegularExpressionParser.g:3129:1: rule__Group__Group__1 : rule__Group__Group__1__Impl rule__Group__Group__2 ;
+    // InternalRegularExpressionParser.g:3135:1: rule__Group__Group__1 : rule__Group__Group__1__Impl rule__Group__Group__2 ;
     public final void rule__Group__Group__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3133:1: ( rule__Group__Group__1__Impl rule__Group__Group__2 )
-            // InternalRegularExpressionParser.g:3134:2: rule__Group__Group__1__Impl rule__Group__Group__2
+            // InternalRegularExpressionParser.g:3139:1: ( rule__Group__Group__1__Impl rule__Group__Group__2 )
+            // InternalRegularExpressionParser.g:3140:2: rule__Group__Group__1__Impl rule__Group__Group__2
             {
             pushFollow(FOLLOW_4);
             rule__Group__Group__1__Impl();
@@ -10895,23 +10920,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Group__Group__1__Impl"
-    // InternalRegularExpressionParser.g:3141:1: rule__Group__Group__1__Impl : ( ( rule__Group__Alternatives_1 ) ) ;
+    // InternalRegularExpressionParser.g:3147:1: rule__Group__Group__1__Impl : ( ( rule__Group__Alternatives_1 ) ) ;
     public final void rule__Group__Group__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3145:1: ( ( ( rule__Group__Alternatives_1 ) ) )
-            // InternalRegularExpressionParser.g:3146:1: ( ( rule__Group__Alternatives_1 ) )
+            // InternalRegularExpressionParser.g:3151:1: ( ( ( rule__Group__Alternatives_1 ) ) )
+            // InternalRegularExpressionParser.g:3152:1: ( ( rule__Group__Alternatives_1 ) )
             {
-            // InternalRegularExpressionParser.g:3146:1: ( ( rule__Group__Alternatives_1 ) )
-            // InternalRegularExpressionParser.g:3147:2: ( rule__Group__Alternatives_1 )
+            // InternalRegularExpressionParser.g:3152:1: ( ( rule__Group__Alternatives_1 ) )
+            // InternalRegularExpressionParser.g:3153:2: ( rule__Group__Alternatives_1 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getGroupAccess().getAlternatives_1()); 
             }
-            // InternalRegularExpressionParser.g:3148:2: ( rule__Group__Alternatives_1 )
-            // InternalRegularExpressionParser.g:3148:3: rule__Group__Alternatives_1
+            // InternalRegularExpressionParser.g:3154:2: ( rule__Group__Alternatives_1 )
+            // InternalRegularExpressionParser.g:3154:3: rule__Group__Alternatives_1
             {
             pushFollow(FOLLOW_2);
             rule__Group__Alternatives_1();
@@ -10946,14 +10971,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Group__Group__2"
-    // InternalRegularExpressionParser.g:3156:1: rule__Group__Group__2 : rule__Group__Group__2__Impl rule__Group__Group__3 ;
+    // InternalRegularExpressionParser.g:3162:1: rule__Group__Group__2 : rule__Group__Group__2__Impl rule__Group__Group__3 ;
     public final void rule__Group__Group__2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3160:1: ( rule__Group__Group__2__Impl rule__Group__Group__3 )
-            // InternalRegularExpressionParser.g:3161:2: rule__Group__Group__2__Impl rule__Group__Group__3
+            // InternalRegularExpressionParser.g:3166:1: ( rule__Group__Group__2__Impl rule__Group__Group__3 )
+            // InternalRegularExpressionParser.g:3167:2: rule__Group__Group__2__Impl rule__Group__Group__3
             {
             pushFollow(FOLLOW_15);
             rule__Group__Group__2__Impl();
@@ -10984,23 +11009,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Group__Group__2__Impl"
-    // InternalRegularExpressionParser.g:3168:1: rule__Group__Group__2__Impl : ( ( rule__Group__PatternAssignment_2 ) ) ;
+    // InternalRegularExpressionParser.g:3174:1: rule__Group__Group__2__Impl : ( ( rule__Group__PatternAssignment_2 ) ) ;
     public final void rule__Group__Group__2__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3172:1: ( ( ( rule__Group__PatternAssignment_2 ) ) )
-            // InternalRegularExpressionParser.g:3173:1: ( ( rule__Group__PatternAssignment_2 ) )
+            // InternalRegularExpressionParser.g:3178:1: ( ( ( rule__Group__PatternAssignment_2 ) ) )
+            // InternalRegularExpressionParser.g:3179:1: ( ( rule__Group__PatternAssignment_2 ) )
             {
-            // InternalRegularExpressionParser.g:3173:1: ( ( rule__Group__PatternAssignment_2 ) )
-            // InternalRegularExpressionParser.g:3174:2: ( rule__Group__PatternAssignment_2 )
+            // InternalRegularExpressionParser.g:3179:1: ( ( rule__Group__PatternAssignment_2 ) )
+            // InternalRegularExpressionParser.g:3180:2: ( rule__Group__PatternAssignment_2 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getGroupAccess().getPatternAssignment_2()); 
             }
-            // InternalRegularExpressionParser.g:3175:2: ( rule__Group__PatternAssignment_2 )
-            // InternalRegularExpressionParser.g:3175:3: rule__Group__PatternAssignment_2
+            // InternalRegularExpressionParser.g:3181:2: ( rule__Group__PatternAssignment_2 )
+            // InternalRegularExpressionParser.g:3181:3: rule__Group__PatternAssignment_2
             {
             pushFollow(FOLLOW_2);
             rule__Group__PatternAssignment_2();
@@ -11035,14 +11060,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Group__Group__3"
-    // InternalRegularExpressionParser.g:3183:1: rule__Group__Group__3 : rule__Group__Group__3__Impl ;
+    // InternalRegularExpressionParser.g:3189:1: rule__Group__Group__3 : rule__Group__Group__3__Impl ;
     public final void rule__Group__Group__3() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3187:1: ( rule__Group__Group__3__Impl )
-            // InternalRegularExpressionParser.g:3188:2: rule__Group__Group__3__Impl
+            // InternalRegularExpressionParser.g:3193:1: ( rule__Group__Group__3__Impl )
+            // InternalRegularExpressionParser.g:3194:2: rule__Group__Group__3__Impl
             {
             pushFollow(FOLLOW_2);
             rule__Group__Group__3__Impl();
@@ -11068,17 +11093,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Group__Group__3__Impl"
-    // InternalRegularExpressionParser.g:3194:1: rule__Group__Group__3__Impl : ( RightParenthesis ) ;
+    // InternalRegularExpressionParser.g:3200:1: rule__Group__Group__3__Impl : ( RightParenthesis ) ;
     public final void rule__Group__Group__3__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3198:1: ( ( RightParenthesis ) )
-            // InternalRegularExpressionParser.g:3199:1: ( RightParenthesis )
+            // InternalRegularExpressionParser.g:3204:1: ( ( RightParenthesis ) )
+            // InternalRegularExpressionParser.g:3205:1: ( RightParenthesis )
             {
-            // InternalRegularExpressionParser.g:3199:1: ( RightParenthesis )
-            // InternalRegularExpressionParser.g:3200:2: RightParenthesis
+            // InternalRegularExpressionParser.g:3205:1: ( RightParenthesis )
+            // InternalRegularExpressionParser.g:3206:2: RightParenthesis
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getGroupAccess().getRightParenthesisKeyword_3()); 
@@ -11109,14 +11134,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Group__Group_1_2__0"
-    // InternalRegularExpressionParser.g:3210:1: rule__Group__Group_1_2__0 : rule__Group__Group_1_2__0__Impl rule__Group__Group_1_2__1 ;
+    // InternalRegularExpressionParser.g:3216:1: rule__Group__Group_1_2__0 : rule__Group__Group_1_2__0__Impl rule__Group__Group_1_2__1 ;
     public final void rule__Group__Group_1_2__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3214:1: ( rule__Group__Group_1_2__0__Impl rule__Group__Group_1_2__1 )
-            // InternalRegularExpressionParser.g:3215:2: rule__Group__Group_1_2__0__Impl rule__Group__Group_1_2__1
+            // InternalRegularExpressionParser.g:3220:1: ( rule__Group__Group_1_2__0__Impl rule__Group__Group_1_2__1 )
+            // InternalRegularExpressionParser.g:3221:2: rule__Group__Group_1_2__0__Impl rule__Group__Group_1_2__1
             {
             pushFollow(FOLLOW_25);
             rule__Group__Group_1_2__0__Impl();
@@ -11147,23 +11172,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Group__Group_1_2__0__Impl"
-    // InternalRegularExpressionParser.g:3222:1: rule__Group__Group_1_2__0__Impl : ( ( rule__Group__NamedAssignment_1_2_0 ) ) ;
+    // InternalRegularExpressionParser.g:3228:1: rule__Group__Group_1_2__0__Impl : ( ( rule__Group__NamedAssignment_1_2_0 ) ) ;
     public final void rule__Group__Group_1_2__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3226:1: ( ( ( rule__Group__NamedAssignment_1_2_0 ) ) )
-            // InternalRegularExpressionParser.g:3227:1: ( ( rule__Group__NamedAssignment_1_2_0 ) )
+            // InternalRegularExpressionParser.g:3232:1: ( ( ( rule__Group__NamedAssignment_1_2_0 ) ) )
+            // InternalRegularExpressionParser.g:3233:1: ( ( rule__Group__NamedAssignment_1_2_0 ) )
             {
-            // InternalRegularExpressionParser.g:3227:1: ( ( rule__Group__NamedAssignment_1_2_0 ) )
-            // InternalRegularExpressionParser.g:3228:2: ( rule__Group__NamedAssignment_1_2_0 )
+            // InternalRegularExpressionParser.g:3233:1: ( ( rule__Group__NamedAssignment_1_2_0 ) )
+            // InternalRegularExpressionParser.g:3234:2: ( rule__Group__NamedAssignment_1_2_0 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getGroupAccess().getNamedAssignment_1_2_0()); 
             }
-            // InternalRegularExpressionParser.g:3229:2: ( rule__Group__NamedAssignment_1_2_0 )
-            // InternalRegularExpressionParser.g:3229:3: rule__Group__NamedAssignment_1_2_0
+            // InternalRegularExpressionParser.g:3235:2: ( rule__Group__NamedAssignment_1_2_0 )
+            // InternalRegularExpressionParser.g:3235:3: rule__Group__NamedAssignment_1_2_0
             {
             pushFollow(FOLLOW_2);
             rule__Group__NamedAssignment_1_2_0();
@@ -11198,14 +11223,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Group__Group_1_2__1"
-    // InternalRegularExpressionParser.g:3237:1: rule__Group__Group_1_2__1 : rule__Group__Group_1_2__1__Impl rule__Group__Group_1_2__2 ;
+    // InternalRegularExpressionParser.g:3243:1: rule__Group__Group_1_2__1 : rule__Group__Group_1_2__1__Impl rule__Group__Group_1_2__2 ;
     public final void rule__Group__Group_1_2__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3241:1: ( rule__Group__Group_1_2__1__Impl rule__Group__Group_1_2__2 )
-            // InternalRegularExpressionParser.g:3242:2: rule__Group__Group_1_2__1__Impl rule__Group__Group_1_2__2
+            // InternalRegularExpressionParser.g:3247:1: ( rule__Group__Group_1_2__1__Impl rule__Group__Group_1_2__2 )
+            // InternalRegularExpressionParser.g:3248:2: rule__Group__Group_1_2__1__Impl rule__Group__Group_1_2__2
             {
             pushFollow(FOLLOW_26);
             rule__Group__Group_1_2__1__Impl();
@@ -11236,23 +11261,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Group__Group_1_2__1__Impl"
-    // InternalRegularExpressionParser.g:3249:1: rule__Group__Group_1_2__1__Impl : ( ( rule__Group__NameAssignment_1_2_1 ) ) ;
+    // InternalRegularExpressionParser.g:3255:1: rule__Group__Group_1_2__1__Impl : ( ( rule__Group__NameAssignment_1_2_1 ) ) ;
     public final void rule__Group__Group_1_2__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3253:1: ( ( ( rule__Group__NameAssignment_1_2_1 ) ) )
-            // InternalRegularExpressionParser.g:3254:1: ( ( rule__Group__NameAssignment_1_2_1 ) )
+            // InternalRegularExpressionParser.g:3259:1: ( ( ( rule__Group__NameAssignment_1_2_1 ) ) )
+            // InternalRegularExpressionParser.g:3260:1: ( ( rule__Group__NameAssignment_1_2_1 ) )
             {
-            // InternalRegularExpressionParser.g:3254:1: ( ( rule__Group__NameAssignment_1_2_1 ) )
-            // InternalRegularExpressionParser.g:3255:2: ( rule__Group__NameAssignment_1_2_1 )
+            // InternalRegularExpressionParser.g:3260:1: ( ( rule__Group__NameAssignment_1_2_1 ) )
+            // InternalRegularExpressionParser.g:3261:2: ( rule__Group__NameAssignment_1_2_1 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getGroupAccess().getNameAssignment_1_2_1()); 
             }
-            // InternalRegularExpressionParser.g:3256:2: ( rule__Group__NameAssignment_1_2_1 )
-            // InternalRegularExpressionParser.g:3256:3: rule__Group__NameAssignment_1_2_1
+            // InternalRegularExpressionParser.g:3262:2: ( rule__Group__NameAssignment_1_2_1 )
+            // InternalRegularExpressionParser.g:3262:3: rule__Group__NameAssignment_1_2_1
             {
             pushFollow(FOLLOW_2);
             rule__Group__NameAssignment_1_2_1();
@@ -11287,14 +11312,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Group__Group_1_2__2"
-    // InternalRegularExpressionParser.g:3264:1: rule__Group__Group_1_2__2 : rule__Group__Group_1_2__2__Impl ;
+    // InternalRegularExpressionParser.g:3270:1: rule__Group__Group_1_2__2 : rule__Group__Group_1_2__2__Impl ;
     public final void rule__Group__Group_1_2__2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3268:1: ( rule__Group__Group_1_2__2__Impl )
-            // InternalRegularExpressionParser.g:3269:2: rule__Group__Group_1_2__2__Impl
+            // InternalRegularExpressionParser.g:3274:1: ( rule__Group__Group_1_2__2__Impl )
+            // InternalRegularExpressionParser.g:3275:2: rule__Group__Group_1_2__2__Impl
             {
             pushFollow(FOLLOW_2);
             rule__Group__Group_1_2__2__Impl();
@@ -11320,17 +11345,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Group__Group_1_2__2__Impl"
-    // InternalRegularExpressionParser.g:3275:1: rule__Group__Group_1_2__2__Impl : ( GreaterThanSign ) ;
+    // InternalRegularExpressionParser.g:3281:1: rule__Group__Group_1_2__2__Impl : ( GreaterThanSign ) ;
     public final void rule__Group__Group_1_2__2__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3279:1: ( ( GreaterThanSign ) )
-            // InternalRegularExpressionParser.g:3280:1: ( GreaterThanSign )
+            // InternalRegularExpressionParser.g:3285:1: ( ( GreaterThanSign ) )
+            // InternalRegularExpressionParser.g:3286:1: ( GreaterThanSign )
             {
-            // InternalRegularExpressionParser.g:3280:1: ( GreaterThanSign )
-            // InternalRegularExpressionParser.g:3281:2: GreaterThanSign
+            // InternalRegularExpressionParser.g:3286:1: ( GreaterThanSign )
+            // InternalRegularExpressionParser.g:3287:2: GreaterThanSign
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getGroupAccess().getGreaterThanSignKeyword_1_2_2()); 
@@ -11361,14 +11386,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__RegExpIdentifierName__Group__0"
-    // InternalRegularExpressionParser.g:3291:1: rule__RegExpIdentifierName__Group__0 : rule__RegExpIdentifierName__Group__0__Impl rule__RegExpIdentifierName__Group__1 ;
+    // InternalRegularExpressionParser.g:3297:1: rule__RegExpIdentifierName__Group__0 : rule__RegExpIdentifierName__Group__0__Impl rule__RegExpIdentifierName__Group__1 ;
     public final void rule__RegExpIdentifierName__Group__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3295:1: ( rule__RegExpIdentifierName__Group__0__Impl rule__RegExpIdentifierName__Group__1 )
-            // InternalRegularExpressionParser.g:3296:2: rule__RegExpIdentifierName__Group__0__Impl rule__RegExpIdentifierName__Group__1
+            // InternalRegularExpressionParser.g:3301:1: ( rule__RegExpIdentifierName__Group__0__Impl rule__RegExpIdentifierName__Group__1 )
+            // InternalRegularExpressionParser.g:3302:2: rule__RegExpIdentifierName__Group__0__Impl rule__RegExpIdentifierName__Group__1
             {
             pushFollow(FOLLOW_27);
             rule__RegExpIdentifierName__Group__0__Impl();
@@ -11399,17 +11424,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__RegExpIdentifierName__Group__0__Impl"
-    // InternalRegularExpressionParser.g:3303:1: rule__RegExpIdentifierName__Group__0__Impl : ( ruleRegExpIdentifierStart ) ;
+    // InternalRegularExpressionParser.g:3309:1: rule__RegExpIdentifierName__Group__0__Impl : ( ruleRegExpIdentifierStart ) ;
     public final void rule__RegExpIdentifierName__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3307:1: ( ( ruleRegExpIdentifierStart ) )
-            // InternalRegularExpressionParser.g:3308:1: ( ruleRegExpIdentifierStart )
+            // InternalRegularExpressionParser.g:3313:1: ( ( ruleRegExpIdentifierStart ) )
+            // InternalRegularExpressionParser.g:3314:1: ( ruleRegExpIdentifierStart )
             {
-            // InternalRegularExpressionParser.g:3308:1: ( ruleRegExpIdentifierStart )
-            // InternalRegularExpressionParser.g:3309:2: ruleRegExpIdentifierStart
+            // InternalRegularExpressionParser.g:3314:1: ( ruleRegExpIdentifierStart )
+            // InternalRegularExpressionParser.g:3315:2: ruleRegExpIdentifierStart
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getRegExpIdentifierNameAccess().getRegExpIdentifierStartParserRuleCall_0()); 
@@ -11444,14 +11469,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__RegExpIdentifierName__Group__1"
-    // InternalRegularExpressionParser.g:3318:1: rule__RegExpIdentifierName__Group__1 : rule__RegExpIdentifierName__Group__1__Impl ;
+    // InternalRegularExpressionParser.g:3324:1: rule__RegExpIdentifierName__Group__1 : rule__RegExpIdentifierName__Group__1__Impl ;
     public final void rule__RegExpIdentifierName__Group__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3322:1: ( rule__RegExpIdentifierName__Group__1__Impl )
-            // InternalRegularExpressionParser.g:3323:2: rule__RegExpIdentifierName__Group__1__Impl
+            // InternalRegularExpressionParser.g:3328:1: ( rule__RegExpIdentifierName__Group__1__Impl )
+            // InternalRegularExpressionParser.g:3329:2: rule__RegExpIdentifierName__Group__1__Impl
             {
             pushFollow(FOLLOW_2);
             rule__RegExpIdentifierName__Group__1__Impl();
@@ -11477,22 +11502,22 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__RegExpIdentifierName__Group__1__Impl"
-    // InternalRegularExpressionParser.g:3329:1: rule__RegExpIdentifierName__Group__1__Impl : ( ( ruleRegExpIdentifierPart )* ) ;
+    // InternalRegularExpressionParser.g:3335:1: rule__RegExpIdentifierName__Group__1__Impl : ( ( ruleRegExpIdentifierPart )* ) ;
     public final void rule__RegExpIdentifierName__Group__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3333:1: ( ( ( ruleRegExpIdentifierPart )* ) )
-            // InternalRegularExpressionParser.g:3334:1: ( ( ruleRegExpIdentifierPart )* )
+            // InternalRegularExpressionParser.g:3339:1: ( ( ( ruleRegExpIdentifierPart )* ) )
+            // InternalRegularExpressionParser.g:3340:1: ( ( ruleRegExpIdentifierPart )* )
             {
-            // InternalRegularExpressionParser.g:3334:1: ( ( ruleRegExpIdentifierPart )* )
-            // InternalRegularExpressionParser.g:3335:2: ( ruleRegExpIdentifierPart )*
+            // InternalRegularExpressionParser.g:3340:1: ( ( ruleRegExpIdentifierPart )* )
+            // InternalRegularExpressionParser.g:3341:2: ( ruleRegExpIdentifierPart )*
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getRegExpIdentifierNameAccess().getRegExpIdentifierPartParserRuleCall_1()); 
             }
-            // InternalRegularExpressionParser.g:3336:2: ( ruleRegExpIdentifierPart )*
+            // InternalRegularExpressionParser.g:3342:2: ( ruleRegExpIdentifierPart )*
             loop33:
             do {
                 int alt33=2;
@@ -11505,7 +11530,7 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
                 switch (alt33) {
             	case 1 :
-            	    // InternalRegularExpressionParser.g:3336:3: ruleRegExpIdentifierPart
+            	    // InternalRegularExpressionParser.g:3342:3: ruleRegExpIdentifierPart
             	    {
             	    pushFollow(FOLLOW_28);
             	    ruleRegExpIdentifierPart();
@@ -11546,14 +11571,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__SimpleQuantifier__Group__0"
-    // InternalRegularExpressionParser.g:3345:1: rule__SimpleQuantifier__Group__0 : rule__SimpleQuantifier__Group__0__Impl rule__SimpleQuantifier__Group__1 ;
+    // InternalRegularExpressionParser.g:3351:1: rule__SimpleQuantifier__Group__0 : rule__SimpleQuantifier__Group__0__Impl rule__SimpleQuantifier__Group__1 ;
     public final void rule__SimpleQuantifier__Group__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3349:1: ( rule__SimpleQuantifier__Group__0__Impl rule__SimpleQuantifier__Group__1 )
-            // InternalRegularExpressionParser.g:3350:2: rule__SimpleQuantifier__Group__0__Impl rule__SimpleQuantifier__Group__1
+            // InternalRegularExpressionParser.g:3355:1: ( rule__SimpleQuantifier__Group__0__Impl rule__SimpleQuantifier__Group__1 )
+            // InternalRegularExpressionParser.g:3356:2: rule__SimpleQuantifier__Group__0__Impl rule__SimpleQuantifier__Group__1
             {
             pushFollow(FOLLOW_29);
             rule__SimpleQuantifier__Group__0__Impl();
@@ -11584,23 +11609,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__SimpleQuantifier__Group__0__Impl"
-    // InternalRegularExpressionParser.g:3357:1: rule__SimpleQuantifier__Group__0__Impl : ( ( rule__SimpleQuantifier__QuantifierAssignment_0 ) ) ;
+    // InternalRegularExpressionParser.g:3363:1: rule__SimpleQuantifier__Group__0__Impl : ( ( rule__SimpleQuantifier__QuantifierAssignment_0 ) ) ;
     public final void rule__SimpleQuantifier__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3361:1: ( ( ( rule__SimpleQuantifier__QuantifierAssignment_0 ) ) )
-            // InternalRegularExpressionParser.g:3362:1: ( ( rule__SimpleQuantifier__QuantifierAssignment_0 ) )
+            // InternalRegularExpressionParser.g:3367:1: ( ( ( rule__SimpleQuantifier__QuantifierAssignment_0 ) ) )
+            // InternalRegularExpressionParser.g:3368:1: ( ( rule__SimpleQuantifier__QuantifierAssignment_0 ) )
             {
-            // InternalRegularExpressionParser.g:3362:1: ( ( rule__SimpleQuantifier__QuantifierAssignment_0 ) )
-            // InternalRegularExpressionParser.g:3363:2: ( rule__SimpleQuantifier__QuantifierAssignment_0 )
+            // InternalRegularExpressionParser.g:3368:1: ( ( rule__SimpleQuantifier__QuantifierAssignment_0 ) )
+            // InternalRegularExpressionParser.g:3369:2: ( rule__SimpleQuantifier__QuantifierAssignment_0 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getSimpleQuantifierAccess().getQuantifierAssignment_0()); 
             }
-            // InternalRegularExpressionParser.g:3364:2: ( rule__SimpleQuantifier__QuantifierAssignment_0 )
-            // InternalRegularExpressionParser.g:3364:3: rule__SimpleQuantifier__QuantifierAssignment_0
+            // InternalRegularExpressionParser.g:3370:2: ( rule__SimpleQuantifier__QuantifierAssignment_0 )
+            // InternalRegularExpressionParser.g:3370:3: rule__SimpleQuantifier__QuantifierAssignment_0
             {
             pushFollow(FOLLOW_2);
             rule__SimpleQuantifier__QuantifierAssignment_0();
@@ -11635,14 +11660,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__SimpleQuantifier__Group__1"
-    // InternalRegularExpressionParser.g:3372:1: rule__SimpleQuantifier__Group__1 : rule__SimpleQuantifier__Group__1__Impl ;
+    // InternalRegularExpressionParser.g:3378:1: rule__SimpleQuantifier__Group__1 : rule__SimpleQuantifier__Group__1__Impl ;
     public final void rule__SimpleQuantifier__Group__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3376:1: ( rule__SimpleQuantifier__Group__1__Impl )
-            // InternalRegularExpressionParser.g:3377:2: rule__SimpleQuantifier__Group__1__Impl
+            // InternalRegularExpressionParser.g:3382:1: ( rule__SimpleQuantifier__Group__1__Impl )
+            // InternalRegularExpressionParser.g:3383:2: rule__SimpleQuantifier__Group__1__Impl
             {
             pushFollow(FOLLOW_2);
             rule__SimpleQuantifier__Group__1__Impl();
@@ -11668,22 +11693,22 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__SimpleQuantifier__Group__1__Impl"
-    // InternalRegularExpressionParser.g:3383:1: rule__SimpleQuantifier__Group__1__Impl : ( ( rule__SimpleQuantifier__NonGreedyAssignment_1 )? ) ;
+    // InternalRegularExpressionParser.g:3389:1: rule__SimpleQuantifier__Group__1__Impl : ( ( rule__SimpleQuantifier__NonGreedyAssignment_1 )? ) ;
     public final void rule__SimpleQuantifier__Group__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3387:1: ( ( ( rule__SimpleQuantifier__NonGreedyAssignment_1 )? ) )
-            // InternalRegularExpressionParser.g:3388:1: ( ( rule__SimpleQuantifier__NonGreedyAssignment_1 )? )
+            // InternalRegularExpressionParser.g:3393:1: ( ( ( rule__SimpleQuantifier__NonGreedyAssignment_1 )? ) )
+            // InternalRegularExpressionParser.g:3394:1: ( ( rule__SimpleQuantifier__NonGreedyAssignment_1 )? )
             {
-            // InternalRegularExpressionParser.g:3388:1: ( ( rule__SimpleQuantifier__NonGreedyAssignment_1 )? )
-            // InternalRegularExpressionParser.g:3389:2: ( rule__SimpleQuantifier__NonGreedyAssignment_1 )?
+            // InternalRegularExpressionParser.g:3394:1: ( ( rule__SimpleQuantifier__NonGreedyAssignment_1 )? )
+            // InternalRegularExpressionParser.g:3395:2: ( rule__SimpleQuantifier__NonGreedyAssignment_1 )?
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getSimpleQuantifierAccess().getNonGreedyAssignment_1()); 
             }
-            // InternalRegularExpressionParser.g:3390:2: ( rule__SimpleQuantifier__NonGreedyAssignment_1 )?
+            // InternalRegularExpressionParser.g:3396:2: ( rule__SimpleQuantifier__NonGreedyAssignment_1 )?
             int alt34=2;
             int LA34_0 = input.LA(1);
 
@@ -11692,7 +11717,7 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
             }
             switch (alt34) {
                 case 1 :
-                    // InternalRegularExpressionParser.g:3390:3: rule__SimpleQuantifier__NonGreedyAssignment_1
+                    // InternalRegularExpressionParser.g:3396:3: rule__SimpleQuantifier__NonGreedyAssignment_1
                     {
                     pushFollow(FOLLOW_2);
                     rule__SimpleQuantifier__NonGreedyAssignment_1();
@@ -11730,14 +11755,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__ExactQuantifier__Group__0"
-    // InternalRegularExpressionParser.g:3399:1: rule__ExactQuantifier__Group__0 : rule__ExactQuantifier__Group__0__Impl rule__ExactQuantifier__Group__1 ;
+    // InternalRegularExpressionParser.g:3405:1: rule__ExactQuantifier__Group__0 : rule__ExactQuantifier__Group__0__Impl rule__ExactQuantifier__Group__1 ;
     public final void rule__ExactQuantifier__Group__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3403:1: ( rule__ExactQuantifier__Group__0__Impl rule__ExactQuantifier__Group__1 )
-            // InternalRegularExpressionParser.g:3404:2: rule__ExactQuantifier__Group__0__Impl rule__ExactQuantifier__Group__1
+            // InternalRegularExpressionParser.g:3409:1: ( rule__ExactQuantifier__Group__0__Impl rule__ExactQuantifier__Group__1 )
+            // InternalRegularExpressionParser.g:3410:2: rule__ExactQuantifier__Group__0__Impl rule__ExactQuantifier__Group__1
             {
             pushFollow(FOLLOW_11);
             rule__ExactQuantifier__Group__0__Impl();
@@ -11768,23 +11793,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__ExactQuantifier__Group__0__Impl"
-    // InternalRegularExpressionParser.g:3411:1: rule__ExactQuantifier__Group__0__Impl : ( () ) ;
+    // InternalRegularExpressionParser.g:3417:1: rule__ExactQuantifier__Group__0__Impl : ( () ) ;
     public final void rule__ExactQuantifier__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3415:1: ( ( () ) )
-            // InternalRegularExpressionParser.g:3416:1: ( () )
+            // InternalRegularExpressionParser.g:3421:1: ( ( () ) )
+            // InternalRegularExpressionParser.g:3422:1: ( () )
             {
-            // InternalRegularExpressionParser.g:3416:1: ( () )
-            // InternalRegularExpressionParser.g:3417:2: ()
+            // InternalRegularExpressionParser.g:3422:1: ( () )
+            // InternalRegularExpressionParser.g:3423:2: ()
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getExactQuantifierAccess().getExactQuantifierAction_0()); 
             }
-            // InternalRegularExpressionParser.g:3418:2: ()
-            // InternalRegularExpressionParser.g:3418:3: 
+            // InternalRegularExpressionParser.g:3424:2: ()
+            // InternalRegularExpressionParser.g:3424:3: 
             {
             }
 
@@ -11809,14 +11834,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__ExactQuantifier__Group__1"
-    // InternalRegularExpressionParser.g:3426:1: rule__ExactQuantifier__Group__1 : rule__ExactQuantifier__Group__1__Impl rule__ExactQuantifier__Group__2 ;
+    // InternalRegularExpressionParser.g:3432:1: rule__ExactQuantifier__Group__1 : rule__ExactQuantifier__Group__1__Impl rule__ExactQuantifier__Group__2 ;
     public final void rule__ExactQuantifier__Group__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3430:1: ( rule__ExactQuantifier__Group__1__Impl rule__ExactQuantifier__Group__2 )
-            // InternalRegularExpressionParser.g:3431:2: rule__ExactQuantifier__Group__1__Impl rule__ExactQuantifier__Group__2
+            // InternalRegularExpressionParser.g:3436:1: ( rule__ExactQuantifier__Group__1__Impl rule__ExactQuantifier__Group__2 )
+            // InternalRegularExpressionParser.g:3437:2: rule__ExactQuantifier__Group__1__Impl rule__ExactQuantifier__Group__2
             {
             pushFollow(FOLLOW_30);
             rule__ExactQuantifier__Group__1__Impl();
@@ -11847,17 +11872,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__ExactQuantifier__Group__1__Impl"
-    // InternalRegularExpressionParser.g:3438:1: rule__ExactQuantifier__Group__1__Impl : ( LeftCurlyBracket ) ;
+    // InternalRegularExpressionParser.g:3444:1: rule__ExactQuantifier__Group__1__Impl : ( LeftCurlyBracket ) ;
     public final void rule__ExactQuantifier__Group__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3442:1: ( ( LeftCurlyBracket ) )
-            // InternalRegularExpressionParser.g:3443:1: ( LeftCurlyBracket )
+            // InternalRegularExpressionParser.g:3448:1: ( ( LeftCurlyBracket ) )
+            // InternalRegularExpressionParser.g:3449:1: ( LeftCurlyBracket )
             {
-            // InternalRegularExpressionParser.g:3443:1: ( LeftCurlyBracket )
-            // InternalRegularExpressionParser.g:3444:2: LeftCurlyBracket
+            // InternalRegularExpressionParser.g:3449:1: ( LeftCurlyBracket )
+            // InternalRegularExpressionParser.g:3450:2: LeftCurlyBracket
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getExactQuantifierAccess().getLeftCurlyBracketKeyword_1()); 
@@ -11888,14 +11913,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__ExactQuantifier__Group__2"
-    // InternalRegularExpressionParser.g:3453:1: rule__ExactQuantifier__Group__2 : rule__ExactQuantifier__Group__2__Impl rule__ExactQuantifier__Group__3 ;
+    // InternalRegularExpressionParser.g:3459:1: rule__ExactQuantifier__Group__2 : rule__ExactQuantifier__Group__2__Impl rule__ExactQuantifier__Group__3 ;
     public final void rule__ExactQuantifier__Group__2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3457:1: ( rule__ExactQuantifier__Group__2__Impl rule__ExactQuantifier__Group__3 )
-            // InternalRegularExpressionParser.g:3458:2: rule__ExactQuantifier__Group__2__Impl rule__ExactQuantifier__Group__3
+            // InternalRegularExpressionParser.g:3463:1: ( rule__ExactQuantifier__Group__2__Impl rule__ExactQuantifier__Group__3 )
+            // InternalRegularExpressionParser.g:3464:2: rule__ExactQuantifier__Group__2__Impl rule__ExactQuantifier__Group__3
             {
             pushFollow(FOLLOW_31);
             rule__ExactQuantifier__Group__2__Impl();
@@ -11926,23 +11951,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__ExactQuantifier__Group__2__Impl"
-    // InternalRegularExpressionParser.g:3465:1: rule__ExactQuantifier__Group__2__Impl : ( ( rule__ExactQuantifier__MinAssignment_2 ) ) ;
+    // InternalRegularExpressionParser.g:3471:1: rule__ExactQuantifier__Group__2__Impl : ( ( rule__ExactQuantifier__MinAssignment_2 ) ) ;
     public final void rule__ExactQuantifier__Group__2__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3469:1: ( ( ( rule__ExactQuantifier__MinAssignment_2 ) ) )
-            // InternalRegularExpressionParser.g:3470:1: ( ( rule__ExactQuantifier__MinAssignment_2 ) )
+            // InternalRegularExpressionParser.g:3475:1: ( ( ( rule__ExactQuantifier__MinAssignment_2 ) ) )
+            // InternalRegularExpressionParser.g:3476:1: ( ( rule__ExactQuantifier__MinAssignment_2 ) )
             {
-            // InternalRegularExpressionParser.g:3470:1: ( ( rule__ExactQuantifier__MinAssignment_2 ) )
-            // InternalRegularExpressionParser.g:3471:2: ( rule__ExactQuantifier__MinAssignment_2 )
+            // InternalRegularExpressionParser.g:3476:1: ( ( rule__ExactQuantifier__MinAssignment_2 ) )
+            // InternalRegularExpressionParser.g:3477:2: ( rule__ExactQuantifier__MinAssignment_2 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getExactQuantifierAccess().getMinAssignment_2()); 
             }
-            // InternalRegularExpressionParser.g:3472:2: ( rule__ExactQuantifier__MinAssignment_2 )
-            // InternalRegularExpressionParser.g:3472:3: rule__ExactQuantifier__MinAssignment_2
+            // InternalRegularExpressionParser.g:3478:2: ( rule__ExactQuantifier__MinAssignment_2 )
+            // InternalRegularExpressionParser.g:3478:3: rule__ExactQuantifier__MinAssignment_2
             {
             pushFollow(FOLLOW_2);
             rule__ExactQuantifier__MinAssignment_2();
@@ -11977,14 +12002,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__ExactQuantifier__Group__3"
-    // InternalRegularExpressionParser.g:3480:1: rule__ExactQuantifier__Group__3 : rule__ExactQuantifier__Group__3__Impl rule__ExactQuantifier__Group__4 ;
+    // InternalRegularExpressionParser.g:3486:1: rule__ExactQuantifier__Group__3 : rule__ExactQuantifier__Group__3__Impl rule__ExactQuantifier__Group__4 ;
     public final void rule__ExactQuantifier__Group__3() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3484:1: ( rule__ExactQuantifier__Group__3__Impl rule__ExactQuantifier__Group__4 )
-            // InternalRegularExpressionParser.g:3485:2: rule__ExactQuantifier__Group__3__Impl rule__ExactQuantifier__Group__4
+            // InternalRegularExpressionParser.g:3490:1: ( rule__ExactQuantifier__Group__3__Impl rule__ExactQuantifier__Group__4 )
+            // InternalRegularExpressionParser.g:3491:2: rule__ExactQuantifier__Group__3__Impl rule__ExactQuantifier__Group__4
             {
             pushFollow(FOLLOW_31);
             rule__ExactQuantifier__Group__3__Impl();
@@ -12015,22 +12040,22 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__ExactQuantifier__Group__3__Impl"
-    // InternalRegularExpressionParser.g:3492:1: rule__ExactQuantifier__Group__3__Impl : ( ( rule__ExactQuantifier__Alternatives_3 )? ) ;
+    // InternalRegularExpressionParser.g:3498:1: rule__ExactQuantifier__Group__3__Impl : ( ( rule__ExactQuantifier__Alternatives_3 )? ) ;
     public final void rule__ExactQuantifier__Group__3__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3496:1: ( ( ( rule__ExactQuantifier__Alternatives_3 )? ) )
-            // InternalRegularExpressionParser.g:3497:1: ( ( rule__ExactQuantifier__Alternatives_3 )? )
+            // InternalRegularExpressionParser.g:3502:1: ( ( ( rule__ExactQuantifier__Alternatives_3 )? ) )
+            // InternalRegularExpressionParser.g:3503:1: ( ( rule__ExactQuantifier__Alternatives_3 )? )
             {
-            // InternalRegularExpressionParser.g:3497:1: ( ( rule__ExactQuantifier__Alternatives_3 )? )
-            // InternalRegularExpressionParser.g:3498:2: ( rule__ExactQuantifier__Alternatives_3 )?
+            // InternalRegularExpressionParser.g:3503:1: ( ( rule__ExactQuantifier__Alternatives_3 )? )
+            // InternalRegularExpressionParser.g:3504:2: ( rule__ExactQuantifier__Alternatives_3 )?
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getExactQuantifierAccess().getAlternatives_3()); 
             }
-            // InternalRegularExpressionParser.g:3499:2: ( rule__ExactQuantifier__Alternatives_3 )?
+            // InternalRegularExpressionParser.g:3505:2: ( rule__ExactQuantifier__Alternatives_3 )?
             int alt35=2;
             int LA35_0 = input.LA(1);
 
@@ -12039,7 +12064,7 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
             }
             switch (alt35) {
                 case 1 :
-                    // InternalRegularExpressionParser.g:3499:3: rule__ExactQuantifier__Alternatives_3
+                    // InternalRegularExpressionParser.g:3505:3: rule__ExactQuantifier__Alternatives_3
                     {
                     pushFollow(FOLLOW_2);
                     rule__ExactQuantifier__Alternatives_3();
@@ -12077,14 +12102,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__ExactQuantifier__Group__4"
-    // InternalRegularExpressionParser.g:3507:1: rule__ExactQuantifier__Group__4 : rule__ExactQuantifier__Group__4__Impl rule__ExactQuantifier__Group__5 ;
+    // InternalRegularExpressionParser.g:3513:1: rule__ExactQuantifier__Group__4 : rule__ExactQuantifier__Group__4__Impl rule__ExactQuantifier__Group__5 ;
     public final void rule__ExactQuantifier__Group__4() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3511:1: ( rule__ExactQuantifier__Group__4__Impl rule__ExactQuantifier__Group__5 )
-            // InternalRegularExpressionParser.g:3512:2: rule__ExactQuantifier__Group__4__Impl rule__ExactQuantifier__Group__5
+            // InternalRegularExpressionParser.g:3517:1: ( rule__ExactQuantifier__Group__4__Impl rule__ExactQuantifier__Group__5 )
+            // InternalRegularExpressionParser.g:3518:2: rule__ExactQuantifier__Group__4__Impl rule__ExactQuantifier__Group__5
             {
             pushFollow(FOLLOW_29);
             rule__ExactQuantifier__Group__4__Impl();
@@ -12115,17 +12140,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__ExactQuantifier__Group__4__Impl"
-    // InternalRegularExpressionParser.g:3519:1: rule__ExactQuantifier__Group__4__Impl : ( RightCurlyBracket ) ;
+    // InternalRegularExpressionParser.g:3525:1: rule__ExactQuantifier__Group__4__Impl : ( RightCurlyBracket ) ;
     public final void rule__ExactQuantifier__Group__4__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3523:1: ( ( RightCurlyBracket ) )
-            // InternalRegularExpressionParser.g:3524:1: ( RightCurlyBracket )
+            // InternalRegularExpressionParser.g:3529:1: ( ( RightCurlyBracket ) )
+            // InternalRegularExpressionParser.g:3530:1: ( RightCurlyBracket )
             {
-            // InternalRegularExpressionParser.g:3524:1: ( RightCurlyBracket )
-            // InternalRegularExpressionParser.g:3525:2: RightCurlyBracket
+            // InternalRegularExpressionParser.g:3530:1: ( RightCurlyBracket )
+            // InternalRegularExpressionParser.g:3531:2: RightCurlyBracket
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getExactQuantifierAccess().getRightCurlyBracketKeyword_4()); 
@@ -12156,14 +12181,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__ExactQuantifier__Group__5"
-    // InternalRegularExpressionParser.g:3534:1: rule__ExactQuantifier__Group__5 : rule__ExactQuantifier__Group__5__Impl ;
+    // InternalRegularExpressionParser.g:3540:1: rule__ExactQuantifier__Group__5 : rule__ExactQuantifier__Group__5__Impl ;
     public final void rule__ExactQuantifier__Group__5() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3538:1: ( rule__ExactQuantifier__Group__5__Impl )
-            // InternalRegularExpressionParser.g:3539:2: rule__ExactQuantifier__Group__5__Impl
+            // InternalRegularExpressionParser.g:3544:1: ( rule__ExactQuantifier__Group__5__Impl )
+            // InternalRegularExpressionParser.g:3545:2: rule__ExactQuantifier__Group__5__Impl
             {
             pushFollow(FOLLOW_2);
             rule__ExactQuantifier__Group__5__Impl();
@@ -12189,22 +12214,22 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__ExactQuantifier__Group__5__Impl"
-    // InternalRegularExpressionParser.g:3545:1: rule__ExactQuantifier__Group__5__Impl : ( ( rule__ExactQuantifier__NonGreedyAssignment_5 )? ) ;
+    // InternalRegularExpressionParser.g:3551:1: rule__ExactQuantifier__Group__5__Impl : ( ( rule__ExactQuantifier__NonGreedyAssignment_5 )? ) ;
     public final void rule__ExactQuantifier__Group__5__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3549:1: ( ( ( rule__ExactQuantifier__NonGreedyAssignment_5 )? ) )
-            // InternalRegularExpressionParser.g:3550:1: ( ( rule__ExactQuantifier__NonGreedyAssignment_5 )? )
+            // InternalRegularExpressionParser.g:3555:1: ( ( ( rule__ExactQuantifier__NonGreedyAssignment_5 )? ) )
+            // InternalRegularExpressionParser.g:3556:1: ( ( rule__ExactQuantifier__NonGreedyAssignment_5 )? )
             {
-            // InternalRegularExpressionParser.g:3550:1: ( ( rule__ExactQuantifier__NonGreedyAssignment_5 )? )
-            // InternalRegularExpressionParser.g:3551:2: ( rule__ExactQuantifier__NonGreedyAssignment_5 )?
+            // InternalRegularExpressionParser.g:3556:1: ( ( rule__ExactQuantifier__NonGreedyAssignment_5 )? )
+            // InternalRegularExpressionParser.g:3557:2: ( rule__ExactQuantifier__NonGreedyAssignment_5 )?
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getExactQuantifierAccess().getNonGreedyAssignment_5()); 
             }
-            // InternalRegularExpressionParser.g:3552:2: ( rule__ExactQuantifier__NonGreedyAssignment_5 )?
+            // InternalRegularExpressionParser.g:3558:2: ( rule__ExactQuantifier__NonGreedyAssignment_5 )?
             int alt36=2;
             int LA36_0 = input.LA(1);
 
@@ -12213,7 +12238,7 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
             }
             switch (alt36) {
                 case 1 :
-                    // InternalRegularExpressionParser.g:3552:3: rule__ExactQuantifier__NonGreedyAssignment_5
+                    // InternalRegularExpressionParser.g:3558:3: rule__ExactQuantifier__NonGreedyAssignment_5
                     {
                     pushFollow(FOLLOW_2);
                     rule__ExactQuantifier__NonGreedyAssignment_5();
@@ -12251,14 +12276,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__ExactQuantifier__Group_3_0__0"
-    // InternalRegularExpressionParser.g:3561:1: rule__ExactQuantifier__Group_3_0__0 : rule__ExactQuantifier__Group_3_0__0__Impl rule__ExactQuantifier__Group_3_0__1 ;
+    // InternalRegularExpressionParser.g:3567:1: rule__ExactQuantifier__Group_3_0__0 : rule__ExactQuantifier__Group_3_0__0__Impl rule__ExactQuantifier__Group_3_0__1 ;
     public final void rule__ExactQuantifier__Group_3_0__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3565:1: ( rule__ExactQuantifier__Group_3_0__0__Impl rule__ExactQuantifier__Group_3_0__1 )
-            // InternalRegularExpressionParser.g:3566:2: rule__ExactQuantifier__Group_3_0__0__Impl rule__ExactQuantifier__Group_3_0__1
+            // InternalRegularExpressionParser.g:3571:1: ( rule__ExactQuantifier__Group_3_0__0__Impl rule__ExactQuantifier__Group_3_0__1 )
+            // InternalRegularExpressionParser.g:3572:2: rule__ExactQuantifier__Group_3_0__0__Impl rule__ExactQuantifier__Group_3_0__1
             {
             pushFollow(FOLLOW_30);
             rule__ExactQuantifier__Group_3_0__0__Impl();
@@ -12289,17 +12314,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__ExactQuantifier__Group_3_0__0__Impl"
-    // InternalRegularExpressionParser.g:3573:1: rule__ExactQuantifier__Group_3_0__0__Impl : ( Comma ) ;
+    // InternalRegularExpressionParser.g:3579:1: rule__ExactQuantifier__Group_3_0__0__Impl : ( Comma ) ;
     public final void rule__ExactQuantifier__Group_3_0__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3577:1: ( ( Comma ) )
-            // InternalRegularExpressionParser.g:3578:1: ( Comma )
+            // InternalRegularExpressionParser.g:3583:1: ( ( Comma ) )
+            // InternalRegularExpressionParser.g:3584:1: ( Comma )
             {
-            // InternalRegularExpressionParser.g:3578:1: ( Comma )
-            // InternalRegularExpressionParser.g:3579:2: Comma
+            // InternalRegularExpressionParser.g:3584:1: ( Comma )
+            // InternalRegularExpressionParser.g:3585:2: Comma
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getExactQuantifierAccess().getCommaKeyword_3_0_0()); 
@@ -12330,14 +12355,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__ExactQuantifier__Group_3_0__1"
-    // InternalRegularExpressionParser.g:3588:1: rule__ExactQuantifier__Group_3_0__1 : rule__ExactQuantifier__Group_3_0__1__Impl ;
+    // InternalRegularExpressionParser.g:3594:1: rule__ExactQuantifier__Group_3_0__1 : rule__ExactQuantifier__Group_3_0__1__Impl ;
     public final void rule__ExactQuantifier__Group_3_0__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3592:1: ( rule__ExactQuantifier__Group_3_0__1__Impl )
-            // InternalRegularExpressionParser.g:3593:2: rule__ExactQuantifier__Group_3_0__1__Impl
+            // InternalRegularExpressionParser.g:3598:1: ( rule__ExactQuantifier__Group_3_0__1__Impl )
+            // InternalRegularExpressionParser.g:3599:2: rule__ExactQuantifier__Group_3_0__1__Impl
             {
             pushFollow(FOLLOW_2);
             rule__ExactQuantifier__Group_3_0__1__Impl();
@@ -12363,23 +12388,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__ExactQuantifier__Group_3_0__1__Impl"
-    // InternalRegularExpressionParser.g:3599:1: rule__ExactQuantifier__Group_3_0__1__Impl : ( ( rule__ExactQuantifier__MaxAssignment_3_0_1 ) ) ;
+    // InternalRegularExpressionParser.g:3605:1: rule__ExactQuantifier__Group_3_0__1__Impl : ( ( rule__ExactQuantifier__MaxAssignment_3_0_1 ) ) ;
     public final void rule__ExactQuantifier__Group_3_0__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3603:1: ( ( ( rule__ExactQuantifier__MaxAssignment_3_0_1 ) ) )
-            // InternalRegularExpressionParser.g:3604:1: ( ( rule__ExactQuantifier__MaxAssignment_3_0_1 ) )
+            // InternalRegularExpressionParser.g:3609:1: ( ( ( rule__ExactQuantifier__MaxAssignment_3_0_1 ) ) )
+            // InternalRegularExpressionParser.g:3610:1: ( ( rule__ExactQuantifier__MaxAssignment_3_0_1 ) )
             {
-            // InternalRegularExpressionParser.g:3604:1: ( ( rule__ExactQuantifier__MaxAssignment_3_0_1 ) )
-            // InternalRegularExpressionParser.g:3605:2: ( rule__ExactQuantifier__MaxAssignment_3_0_1 )
+            // InternalRegularExpressionParser.g:3610:1: ( ( rule__ExactQuantifier__MaxAssignment_3_0_1 ) )
+            // InternalRegularExpressionParser.g:3611:2: ( rule__ExactQuantifier__MaxAssignment_3_0_1 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getExactQuantifierAccess().getMaxAssignment_3_0_1()); 
             }
-            // InternalRegularExpressionParser.g:3606:2: ( rule__ExactQuantifier__MaxAssignment_3_0_1 )
-            // InternalRegularExpressionParser.g:3606:3: rule__ExactQuantifier__MaxAssignment_3_0_1
+            // InternalRegularExpressionParser.g:3612:2: ( rule__ExactQuantifier__MaxAssignment_3_0_1 )
+            // InternalRegularExpressionParser.g:3612:3: rule__ExactQuantifier__MaxAssignment_3_0_1
             {
             pushFollow(FOLLOW_2);
             rule__ExactQuantifier__MaxAssignment_3_0_1();
@@ -12414,14 +12439,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__RegularExpressionFlags__Group__0"
-    // InternalRegularExpressionParser.g:3615:1: rule__RegularExpressionFlags__Group__0 : rule__RegularExpressionFlags__Group__0__Impl rule__RegularExpressionFlags__Group__1 ;
+    // InternalRegularExpressionParser.g:3621:1: rule__RegularExpressionFlags__Group__0 : rule__RegularExpressionFlags__Group__0__Impl rule__RegularExpressionFlags__Group__1 ;
     public final void rule__RegularExpressionFlags__Group__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3619:1: ( rule__RegularExpressionFlags__Group__0__Impl rule__RegularExpressionFlags__Group__1 )
-            // InternalRegularExpressionParser.g:3620:2: rule__RegularExpressionFlags__Group__0__Impl rule__RegularExpressionFlags__Group__1
+            // InternalRegularExpressionParser.g:3625:1: ( rule__RegularExpressionFlags__Group__0__Impl rule__RegularExpressionFlags__Group__1 )
+            // InternalRegularExpressionParser.g:3626:2: rule__RegularExpressionFlags__Group__0__Impl rule__RegularExpressionFlags__Group__1
             {
             pushFollow(FOLLOW_6);
             rule__RegularExpressionFlags__Group__0__Impl();
@@ -12452,23 +12477,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__RegularExpressionFlags__Group__0__Impl"
-    // InternalRegularExpressionParser.g:3627:1: rule__RegularExpressionFlags__Group__0__Impl : ( () ) ;
+    // InternalRegularExpressionParser.g:3633:1: rule__RegularExpressionFlags__Group__0__Impl : ( () ) ;
     public final void rule__RegularExpressionFlags__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3631:1: ( ( () ) )
-            // InternalRegularExpressionParser.g:3632:1: ( () )
+            // InternalRegularExpressionParser.g:3637:1: ( ( () ) )
+            // InternalRegularExpressionParser.g:3638:1: ( () )
             {
-            // InternalRegularExpressionParser.g:3632:1: ( () )
-            // InternalRegularExpressionParser.g:3633:2: ()
+            // InternalRegularExpressionParser.g:3638:1: ( () )
+            // InternalRegularExpressionParser.g:3639:2: ()
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getRegularExpressionFlagsAccess().getRegularExpressionFlagsAction_0()); 
             }
-            // InternalRegularExpressionParser.g:3634:2: ()
-            // InternalRegularExpressionParser.g:3634:3: 
+            // InternalRegularExpressionParser.g:3640:2: ()
+            // InternalRegularExpressionParser.g:3640:3: 
             {
             }
 
@@ -12493,14 +12518,14 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__RegularExpressionFlags__Group__1"
-    // InternalRegularExpressionParser.g:3642:1: rule__RegularExpressionFlags__Group__1 : rule__RegularExpressionFlags__Group__1__Impl ;
+    // InternalRegularExpressionParser.g:3648:1: rule__RegularExpressionFlags__Group__1 : rule__RegularExpressionFlags__Group__1__Impl ;
     public final void rule__RegularExpressionFlags__Group__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3646:1: ( rule__RegularExpressionFlags__Group__1__Impl )
-            // InternalRegularExpressionParser.g:3647:2: rule__RegularExpressionFlags__Group__1__Impl
+            // InternalRegularExpressionParser.g:3652:1: ( rule__RegularExpressionFlags__Group__1__Impl )
+            // InternalRegularExpressionParser.g:3653:2: rule__RegularExpressionFlags__Group__1__Impl
             {
             pushFollow(FOLLOW_2);
             rule__RegularExpressionFlags__Group__1__Impl();
@@ -12526,22 +12551,22 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__RegularExpressionFlags__Group__1__Impl"
-    // InternalRegularExpressionParser.g:3653:1: rule__RegularExpressionFlags__Group__1__Impl : ( ( rule__RegularExpressionFlags__FlagsAssignment_1 )* ) ;
+    // InternalRegularExpressionParser.g:3659:1: rule__RegularExpressionFlags__Group__1__Impl : ( ( rule__RegularExpressionFlags__FlagsAssignment_1 )* ) ;
     public final void rule__RegularExpressionFlags__Group__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3657:1: ( ( ( rule__RegularExpressionFlags__FlagsAssignment_1 )* ) )
-            // InternalRegularExpressionParser.g:3658:1: ( ( rule__RegularExpressionFlags__FlagsAssignment_1 )* )
+            // InternalRegularExpressionParser.g:3663:1: ( ( ( rule__RegularExpressionFlags__FlagsAssignment_1 )* ) )
+            // InternalRegularExpressionParser.g:3664:1: ( ( rule__RegularExpressionFlags__FlagsAssignment_1 )* )
             {
-            // InternalRegularExpressionParser.g:3658:1: ( ( rule__RegularExpressionFlags__FlagsAssignment_1 )* )
-            // InternalRegularExpressionParser.g:3659:2: ( rule__RegularExpressionFlags__FlagsAssignment_1 )*
+            // InternalRegularExpressionParser.g:3664:1: ( ( rule__RegularExpressionFlags__FlagsAssignment_1 )* )
+            // InternalRegularExpressionParser.g:3665:2: ( rule__RegularExpressionFlags__FlagsAssignment_1 )*
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getRegularExpressionFlagsAccess().getFlagsAssignment_1()); 
             }
-            // InternalRegularExpressionParser.g:3660:2: ( rule__RegularExpressionFlags__FlagsAssignment_1 )*
+            // InternalRegularExpressionParser.g:3666:2: ( rule__RegularExpressionFlags__FlagsAssignment_1 )*
             loop37:
             do {
                 int alt37=2;
@@ -12554,7 +12579,7 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
                 switch (alt37) {
             	case 1 :
-            	    // InternalRegularExpressionParser.g:3660:3: rule__RegularExpressionFlags__FlagsAssignment_1
+            	    // InternalRegularExpressionParser.g:3666:3: rule__RegularExpressionFlags__FlagsAssignment_1
             	    {
             	    pushFollow(FOLLOW_32);
             	    rule__RegularExpressionFlags__FlagsAssignment_1();
@@ -12595,17 +12620,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__RegularExpressionLiteral__BodyAssignment_1"
-    // InternalRegularExpressionParser.g:3669:1: rule__RegularExpressionLiteral__BodyAssignment_1 : ( ruleRegularExpressionBody ) ;
+    // InternalRegularExpressionParser.g:3675:1: rule__RegularExpressionLiteral__BodyAssignment_1 : ( ruleRegularExpressionBody ) ;
     public final void rule__RegularExpressionLiteral__BodyAssignment_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3673:1: ( ( ruleRegularExpressionBody ) )
-            // InternalRegularExpressionParser.g:3674:2: ( ruleRegularExpressionBody )
+            // InternalRegularExpressionParser.g:3679:1: ( ( ruleRegularExpressionBody ) )
+            // InternalRegularExpressionParser.g:3680:2: ( ruleRegularExpressionBody )
             {
-            // InternalRegularExpressionParser.g:3674:2: ( ruleRegularExpressionBody )
-            // InternalRegularExpressionParser.g:3675:3: ruleRegularExpressionBody
+            // InternalRegularExpressionParser.g:3680:2: ( ruleRegularExpressionBody )
+            // InternalRegularExpressionParser.g:3681:3: ruleRegularExpressionBody
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getRegularExpressionLiteralAccess().getBodyRegularExpressionBodyParserRuleCall_1_0()); 
@@ -12640,17 +12665,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__RegularExpressionLiteral__FlagsAssignment_3"
-    // InternalRegularExpressionParser.g:3684:1: rule__RegularExpressionLiteral__FlagsAssignment_3 : ( ruleRegularExpressionFlags ) ;
+    // InternalRegularExpressionParser.g:3690:1: rule__RegularExpressionLiteral__FlagsAssignment_3 : ( ruleRegularExpressionFlags ) ;
     public final void rule__RegularExpressionLiteral__FlagsAssignment_3() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3688:1: ( ( ruleRegularExpressionFlags ) )
-            // InternalRegularExpressionParser.g:3689:2: ( ruleRegularExpressionFlags )
+            // InternalRegularExpressionParser.g:3694:1: ( ( ruleRegularExpressionFlags ) )
+            // InternalRegularExpressionParser.g:3695:2: ( ruleRegularExpressionFlags )
             {
-            // InternalRegularExpressionParser.g:3689:2: ( ruleRegularExpressionFlags )
-            // InternalRegularExpressionParser.g:3690:3: ruleRegularExpressionFlags
+            // InternalRegularExpressionParser.g:3695:2: ( ruleRegularExpressionFlags )
+            // InternalRegularExpressionParser.g:3696:3: ruleRegularExpressionFlags
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getRegularExpressionLiteralAccess().getFlagsRegularExpressionFlagsParserRuleCall_3_0()); 
@@ -12685,17 +12710,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__RegularExpressionBody__PatternAssignment"
-    // InternalRegularExpressionParser.g:3699:1: rule__RegularExpressionBody__PatternAssignment : ( ruleDisjunction ) ;
+    // InternalRegularExpressionParser.g:3705:1: rule__RegularExpressionBody__PatternAssignment : ( ruleDisjunction ) ;
     public final void rule__RegularExpressionBody__PatternAssignment() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3703:1: ( ( ruleDisjunction ) )
-            // InternalRegularExpressionParser.g:3704:2: ( ruleDisjunction )
+            // InternalRegularExpressionParser.g:3709:1: ( ( ruleDisjunction ) )
+            // InternalRegularExpressionParser.g:3710:2: ( ruleDisjunction )
             {
-            // InternalRegularExpressionParser.g:3704:2: ( ruleDisjunction )
-            // InternalRegularExpressionParser.g:3705:3: ruleDisjunction
+            // InternalRegularExpressionParser.g:3710:2: ( ruleDisjunction )
+            // InternalRegularExpressionParser.g:3711:3: ruleDisjunction
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getRegularExpressionBodyAccess().getPatternDisjunctionParserRuleCall_0()); 
@@ -12730,17 +12755,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Disjunction__ElementsAssignment_0_1_1_1"
-    // InternalRegularExpressionParser.g:3714:1: rule__Disjunction__ElementsAssignment_0_1_1_1 : ( ruleAlternative ) ;
+    // InternalRegularExpressionParser.g:3720:1: rule__Disjunction__ElementsAssignment_0_1_1_1 : ( ruleAlternative ) ;
     public final void rule__Disjunction__ElementsAssignment_0_1_1_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3718:1: ( ( ruleAlternative ) )
-            // InternalRegularExpressionParser.g:3719:2: ( ruleAlternative )
+            // InternalRegularExpressionParser.g:3724:1: ( ( ruleAlternative ) )
+            // InternalRegularExpressionParser.g:3725:2: ( ruleAlternative )
             {
-            // InternalRegularExpressionParser.g:3719:2: ( ruleAlternative )
-            // InternalRegularExpressionParser.g:3720:3: ruleAlternative
+            // InternalRegularExpressionParser.g:3725:2: ( ruleAlternative )
+            // InternalRegularExpressionParser.g:3726:3: ruleAlternative
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getDisjunctionAccess().getElementsAlternativeParserRuleCall_0_1_1_1_0()); 
@@ -12775,17 +12800,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Disjunction__ElementsAssignment_1_1_1"
-    // InternalRegularExpressionParser.g:3729:1: rule__Disjunction__ElementsAssignment_1_1_1 : ( ruleAlternative ) ;
+    // InternalRegularExpressionParser.g:3735:1: rule__Disjunction__ElementsAssignment_1_1_1 : ( ruleAlternative ) ;
     public final void rule__Disjunction__ElementsAssignment_1_1_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3733:1: ( ( ruleAlternative ) )
-            // InternalRegularExpressionParser.g:3734:2: ( ruleAlternative )
+            // InternalRegularExpressionParser.g:3739:1: ( ( ruleAlternative ) )
+            // InternalRegularExpressionParser.g:3740:2: ( ruleAlternative )
             {
-            // InternalRegularExpressionParser.g:3734:2: ( ruleAlternative )
-            // InternalRegularExpressionParser.g:3735:3: ruleAlternative
+            // InternalRegularExpressionParser.g:3740:2: ( ruleAlternative )
+            // InternalRegularExpressionParser.g:3741:3: ruleAlternative
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getDisjunctionAccess().getElementsAlternativeParserRuleCall_1_1_1_0()); 
@@ -12820,17 +12845,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Alternative__ElementsAssignment_1_1"
-    // InternalRegularExpressionParser.g:3744:1: rule__Alternative__ElementsAssignment_1_1 : ( ruleTerm ) ;
+    // InternalRegularExpressionParser.g:3750:1: rule__Alternative__ElementsAssignment_1_1 : ( ruleTerm ) ;
     public final void rule__Alternative__ElementsAssignment_1_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3748:1: ( ( ruleTerm ) )
-            // InternalRegularExpressionParser.g:3749:2: ( ruleTerm )
+            // InternalRegularExpressionParser.g:3754:1: ( ( ruleTerm ) )
+            // InternalRegularExpressionParser.g:3755:2: ( ruleTerm )
             {
-            // InternalRegularExpressionParser.g:3749:2: ( ruleTerm )
-            // InternalRegularExpressionParser.g:3750:3: ruleTerm
+            // InternalRegularExpressionParser.g:3755:2: ( ruleTerm )
+            // InternalRegularExpressionParser.g:3756:3: ruleTerm
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getAlternativeAccess().getElementsTermParserRuleCall_1_1_0()); 
@@ -12865,17 +12890,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Term__QuantifierAssignment_1_1"
-    // InternalRegularExpressionParser.g:3759:1: rule__Term__QuantifierAssignment_1_1 : ( ruleQuantifier ) ;
+    // InternalRegularExpressionParser.g:3765:1: rule__Term__QuantifierAssignment_1_1 : ( ruleQuantifier ) ;
     public final void rule__Term__QuantifierAssignment_1_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3763:1: ( ( ruleQuantifier ) )
-            // InternalRegularExpressionParser.g:3764:2: ( ruleQuantifier )
+            // InternalRegularExpressionParser.g:3769:1: ( ( ruleQuantifier ) )
+            // InternalRegularExpressionParser.g:3770:2: ( ruleQuantifier )
             {
-            // InternalRegularExpressionParser.g:3764:2: ( ruleQuantifier )
-            // InternalRegularExpressionParser.g:3765:3: ruleQuantifier
+            // InternalRegularExpressionParser.g:3770:2: ( ruleQuantifier )
+            // InternalRegularExpressionParser.g:3771:3: ruleQuantifier
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getTermAccess().getQuantifierQuantifierParserRuleCall_1_1_0()); 
@@ -12910,17 +12935,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__WordBoundary__NotAssignment_1_1"
-    // InternalRegularExpressionParser.g:3774:1: rule__WordBoundary__NotAssignment_1_1 : ( RULE_NOT_WORD_BOUNDARY ) ;
+    // InternalRegularExpressionParser.g:3780:1: rule__WordBoundary__NotAssignment_1_1 : ( RULE_NOT_WORD_BOUNDARY ) ;
     public final void rule__WordBoundary__NotAssignment_1_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3778:1: ( ( RULE_NOT_WORD_BOUNDARY ) )
-            // InternalRegularExpressionParser.g:3779:2: ( RULE_NOT_WORD_BOUNDARY )
+            // InternalRegularExpressionParser.g:3784:1: ( ( RULE_NOT_WORD_BOUNDARY ) )
+            // InternalRegularExpressionParser.g:3785:2: ( RULE_NOT_WORD_BOUNDARY )
             {
-            // InternalRegularExpressionParser.g:3779:2: ( RULE_NOT_WORD_BOUNDARY )
-            // InternalRegularExpressionParser.g:3780:3: RULE_NOT_WORD_BOUNDARY
+            // InternalRegularExpressionParser.g:3785:2: ( RULE_NOT_WORD_BOUNDARY )
+            // InternalRegularExpressionParser.g:3786:3: RULE_NOT_WORD_BOUNDARY
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getWordBoundaryAccess().getNotNOT_WORD_BOUNDARYTerminalRuleCall_1_1_0()); 
@@ -12951,23 +12976,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__AbstractLookAhead__NotAssignment_0_0_1_1"
-    // InternalRegularExpressionParser.g:3789:1: rule__AbstractLookAhead__NotAssignment_0_0_1_1 : ( ( LeftParenthesisQuestionMarkExclamationMark ) ) ;
+    // InternalRegularExpressionParser.g:3795:1: rule__AbstractLookAhead__NotAssignment_0_0_1_1 : ( ( LeftParenthesisQuestionMarkExclamationMark ) ) ;
     public final void rule__AbstractLookAhead__NotAssignment_0_0_1_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3793:1: ( ( ( LeftParenthesisQuestionMarkExclamationMark ) ) )
-            // InternalRegularExpressionParser.g:3794:2: ( ( LeftParenthesisQuestionMarkExclamationMark ) )
+            // InternalRegularExpressionParser.g:3799:1: ( ( ( LeftParenthesisQuestionMarkExclamationMark ) ) )
+            // InternalRegularExpressionParser.g:3800:2: ( ( LeftParenthesisQuestionMarkExclamationMark ) )
             {
-            // InternalRegularExpressionParser.g:3794:2: ( ( LeftParenthesisQuestionMarkExclamationMark ) )
-            // InternalRegularExpressionParser.g:3795:3: ( LeftParenthesisQuestionMarkExclamationMark )
+            // InternalRegularExpressionParser.g:3800:2: ( ( LeftParenthesisQuestionMarkExclamationMark ) )
+            // InternalRegularExpressionParser.g:3801:3: ( LeftParenthesisQuestionMarkExclamationMark )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getAbstractLookAheadAccess().getNotLeftParenthesisQuestionMarkExclamationMarkKeyword_0_0_1_1_0()); 
             }
-            // InternalRegularExpressionParser.g:3796:3: ( LeftParenthesisQuestionMarkExclamationMark )
-            // InternalRegularExpressionParser.g:3797:4: LeftParenthesisQuestionMarkExclamationMark
+            // InternalRegularExpressionParser.g:3802:3: ( LeftParenthesisQuestionMarkExclamationMark )
+            // InternalRegularExpressionParser.g:3803:4: LeftParenthesisQuestionMarkExclamationMark
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getAbstractLookAheadAccess().getNotLeftParenthesisQuestionMarkExclamationMarkKeyword_0_0_1_1_0()); 
@@ -13004,23 +13029,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__AbstractLookAhead__NotAssignment_0_1_1_1"
-    // InternalRegularExpressionParser.g:3808:1: rule__AbstractLookAhead__NotAssignment_0_1_1_1 : ( ( LeftParenthesisQuestionMarkLessThanSignExclamationMark ) ) ;
+    // InternalRegularExpressionParser.g:3814:1: rule__AbstractLookAhead__NotAssignment_0_1_1_1 : ( ( LeftParenthesisQuestionMarkLessThanSignExclamationMark ) ) ;
     public final void rule__AbstractLookAhead__NotAssignment_0_1_1_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3812:1: ( ( ( LeftParenthesisQuestionMarkLessThanSignExclamationMark ) ) )
-            // InternalRegularExpressionParser.g:3813:2: ( ( LeftParenthesisQuestionMarkLessThanSignExclamationMark ) )
+            // InternalRegularExpressionParser.g:3818:1: ( ( ( LeftParenthesisQuestionMarkLessThanSignExclamationMark ) ) )
+            // InternalRegularExpressionParser.g:3819:2: ( ( LeftParenthesisQuestionMarkLessThanSignExclamationMark ) )
             {
-            // InternalRegularExpressionParser.g:3813:2: ( ( LeftParenthesisQuestionMarkLessThanSignExclamationMark ) )
-            // InternalRegularExpressionParser.g:3814:3: ( LeftParenthesisQuestionMarkLessThanSignExclamationMark )
+            // InternalRegularExpressionParser.g:3819:2: ( ( LeftParenthesisQuestionMarkLessThanSignExclamationMark ) )
+            // InternalRegularExpressionParser.g:3820:3: ( LeftParenthesisQuestionMarkLessThanSignExclamationMark )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getAbstractLookAheadAccess().getNotLeftParenthesisQuestionMarkLessThanSignExclamationMarkKeyword_0_1_1_1_0()); 
             }
-            // InternalRegularExpressionParser.g:3815:3: ( LeftParenthesisQuestionMarkLessThanSignExclamationMark )
-            // InternalRegularExpressionParser.g:3816:4: LeftParenthesisQuestionMarkLessThanSignExclamationMark
+            // InternalRegularExpressionParser.g:3821:3: ( LeftParenthesisQuestionMarkLessThanSignExclamationMark )
+            // InternalRegularExpressionParser.g:3822:4: LeftParenthesisQuestionMarkLessThanSignExclamationMark
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getAbstractLookAheadAccess().getNotLeftParenthesisQuestionMarkLessThanSignExclamationMarkKeyword_0_1_1_1_0()); 
@@ -13057,17 +13082,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__AbstractLookAhead__PatternAssignment_1"
-    // InternalRegularExpressionParser.g:3827:1: rule__AbstractLookAhead__PatternAssignment_1 : ( ruleDisjunction ) ;
+    // InternalRegularExpressionParser.g:3833:1: rule__AbstractLookAhead__PatternAssignment_1 : ( ruleDisjunction ) ;
     public final void rule__AbstractLookAhead__PatternAssignment_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3831:1: ( ( ruleDisjunction ) )
-            // InternalRegularExpressionParser.g:3832:2: ( ruleDisjunction )
+            // InternalRegularExpressionParser.g:3837:1: ( ( ruleDisjunction ) )
+            // InternalRegularExpressionParser.g:3838:2: ( ruleDisjunction )
             {
-            // InternalRegularExpressionParser.g:3832:2: ( ruleDisjunction )
-            // InternalRegularExpressionParser.g:3833:3: ruleDisjunction
+            // InternalRegularExpressionParser.g:3838:2: ( ruleDisjunction )
+            // InternalRegularExpressionParser.g:3839:3: ruleDisjunction
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getAbstractLookAheadAccess().getPatternDisjunctionParserRuleCall_1_0()); 
@@ -13102,23 +13127,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__PatternCharacter__ValueAssignment"
-    // InternalRegularExpressionParser.g:3842:1: rule__PatternCharacter__ValueAssignment : ( ( rule__PatternCharacter__ValueAlternatives_0 ) ) ;
+    // InternalRegularExpressionParser.g:3848:1: rule__PatternCharacter__ValueAssignment : ( ( rule__PatternCharacter__ValueAlternatives_0 ) ) ;
     public final void rule__PatternCharacter__ValueAssignment() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3846:1: ( ( ( rule__PatternCharacter__ValueAlternatives_0 ) ) )
-            // InternalRegularExpressionParser.g:3847:2: ( ( rule__PatternCharacter__ValueAlternatives_0 ) )
+            // InternalRegularExpressionParser.g:3852:1: ( ( ( rule__PatternCharacter__ValueAlternatives_0 ) ) )
+            // InternalRegularExpressionParser.g:3853:2: ( ( rule__PatternCharacter__ValueAlternatives_0 ) )
             {
-            // InternalRegularExpressionParser.g:3847:2: ( ( rule__PatternCharacter__ValueAlternatives_0 ) )
-            // InternalRegularExpressionParser.g:3848:3: ( rule__PatternCharacter__ValueAlternatives_0 )
+            // InternalRegularExpressionParser.g:3853:2: ( ( rule__PatternCharacter__ValueAlternatives_0 ) )
+            // InternalRegularExpressionParser.g:3854:3: ( rule__PatternCharacter__ValueAlternatives_0 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getPatternCharacterAccess().getValueAlternatives_0()); 
             }
-            // InternalRegularExpressionParser.g:3849:3: ( rule__PatternCharacter__ValueAlternatives_0 )
-            // InternalRegularExpressionParser.g:3849:4: rule__PatternCharacter__ValueAlternatives_0
+            // InternalRegularExpressionParser.g:3855:3: ( rule__PatternCharacter__ValueAlternatives_0 )
+            // InternalRegularExpressionParser.g:3855:4: rule__PatternCharacter__ValueAlternatives_0
             {
             pushFollow(FOLLOW_2);
             rule__PatternCharacter__ValueAlternatives_0();
@@ -13153,17 +13178,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__CharacterClassEscapeSequence__SequenceAssignment"
-    // InternalRegularExpressionParser.g:3857:1: rule__CharacterClassEscapeSequence__SequenceAssignment : ( RULE_CHARACTER_CLASS_ESCAPE ) ;
+    // InternalRegularExpressionParser.g:3863:1: rule__CharacterClassEscapeSequence__SequenceAssignment : ( RULE_CHARACTER_CLASS_ESCAPE ) ;
     public final void rule__CharacterClassEscapeSequence__SequenceAssignment() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3861:1: ( ( RULE_CHARACTER_CLASS_ESCAPE ) )
-            // InternalRegularExpressionParser.g:3862:2: ( RULE_CHARACTER_CLASS_ESCAPE )
+            // InternalRegularExpressionParser.g:3867:1: ( ( RULE_CHARACTER_CLASS_ESCAPE ) )
+            // InternalRegularExpressionParser.g:3868:2: ( RULE_CHARACTER_CLASS_ESCAPE )
             {
-            // InternalRegularExpressionParser.g:3862:2: ( RULE_CHARACTER_CLASS_ESCAPE )
-            // InternalRegularExpressionParser.g:3863:3: RULE_CHARACTER_CLASS_ESCAPE
+            // InternalRegularExpressionParser.g:3868:2: ( RULE_CHARACTER_CLASS_ESCAPE )
+            // InternalRegularExpressionParser.g:3869:3: RULE_CHARACTER_CLASS_ESCAPE
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getCharacterClassEscapeSequenceAccess().getSequenceCHARACTER_CLASS_ESCAPETerminalRuleCall_0()); 
@@ -13194,17 +13219,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__CharacterEscapeSequence__SequenceAssignment"
-    // InternalRegularExpressionParser.g:3872:1: rule__CharacterEscapeSequence__SequenceAssignment : ( RULE_CONTROL_ESCAPE ) ;
+    // InternalRegularExpressionParser.g:3878:1: rule__CharacterEscapeSequence__SequenceAssignment : ( RULE_CONTROL_ESCAPE ) ;
     public final void rule__CharacterEscapeSequence__SequenceAssignment() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3876:1: ( ( RULE_CONTROL_ESCAPE ) )
-            // InternalRegularExpressionParser.g:3877:2: ( RULE_CONTROL_ESCAPE )
+            // InternalRegularExpressionParser.g:3882:1: ( ( RULE_CONTROL_ESCAPE ) )
+            // InternalRegularExpressionParser.g:3883:2: ( RULE_CONTROL_ESCAPE )
             {
-            // InternalRegularExpressionParser.g:3877:2: ( RULE_CONTROL_ESCAPE )
-            // InternalRegularExpressionParser.g:3878:3: RULE_CONTROL_ESCAPE
+            // InternalRegularExpressionParser.g:3883:2: ( RULE_CONTROL_ESCAPE )
+            // InternalRegularExpressionParser.g:3884:3: RULE_CONTROL_ESCAPE
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getCharacterEscapeSequenceAccess().getSequenceCONTROL_ESCAPETerminalRuleCall_0()); 
@@ -13235,17 +13260,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__ControlLetterEscapeSequence__SequenceAssignment"
-    // InternalRegularExpressionParser.g:3887:1: rule__ControlLetterEscapeSequence__SequenceAssignment : ( RULE_CONTROL_LETTER_ESCAPE ) ;
+    // InternalRegularExpressionParser.g:3893:1: rule__ControlLetterEscapeSequence__SequenceAssignment : ( RULE_CONTROL_LETTER_ESCAPE ) ;
     public final void rule__ControlLetterEscapeSequence__SequenceAssignment() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3891:1: ( ( RULE_CONTROL_LETTER_ESCAPE ) )
-            // InternalRegularExpressionParser.g:3892:2: ( RULE_CONTROL_LETTER_ESCAPE )
+            // InternalRegularExpressionParser.g:3897:1: ( ( RULE_CONTROL_LETTER_ESCAPE ) )
+            // InternalRegularExpressionParser.g:3898:2: ( RULE_CONTROL_LETTER_ESCAPE )
             {
-            // InternalRegularExpressionParser.g:3892:2: ( RULE_CONTROL_LETTER_ESCAPE )
-            // InternalRegularExpressionParser.g:3893:3: RULE_CONTROL_LETTER_ESCAPE
+            // InternalRegularExpressionParser.g:3898:2: ( RULE_CONTROL_LETTER_ESCAPE )
+            // InternalRegularExpressionParser.g:3899:3: RULE_CONTROL_LETTER_ESCAPE
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getControlLetterEscapeSequenceAccess().getSequenceCONTROL_LETTER_ESCAPETerminalRuleCall_0()); 
@@ -13276,17 +13301,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__HexEscapeSequence__SequenceAssignment"
-    // InternalRegularExpressionParser.g:3902:1: rule__HexEscapeSequence__SequenceAssignment : ( RULE_HEX_ESCAPE ) ;
+    // InternalRegularExpressionParser.g:3908:1: rule__HexEscapeSequence__SequenceAssignment : ( RULE_HEX_ESCAPE ) ;
     public final void rule__HexEscapeSequence__SequenceAssignment() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3906:1: ( ( RULE_HEX_ESCAPE ) )
-            // InternalRegularExpressionParser.g:3907:2: ( RULE_HEX_ESCAPE )
+            // InternalRegularExpressionParser.g:3912:1: ( ( RULE_HEX_ESCAPE ) )
+            // InternalRegularExpressionParser.g:3913:2: ( RULE_HEX_ESCAPE )
             {
-            // InternalRegularExpressionParser.g:3907:2: ( RULE_HEX_ESCAPE )
-            // InternalRegularExpressionParser.g:3908:3: RULE_HEX_ESCAPE
+            // InternalRegularExpressionParser.g:3913:2: ( RULE_HEX_ESCAPE )
+            // InternalRegularExpressionParser.g:3914:3: RULE_HEX_ESCAPE
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getHexEscapeSequenceAccess().getSequenceHEX_ESCAPETerminalRuleCall_0()); 
@@ -13317,17 +13342,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__UnicodeEscapeSequence__SequenceAssignment"
-    // InternalRegularExpressionParser.g:3917:1: rule__UnicodeEscapeSequence__SequenceAssignment : ( RULE_UNICODE_ESCAPE ) ;
+    // InternalRegularExpressionParser.g:3923:1: rule__UnicodeEscapeSequence__SequenceAssignment : ( RULE_UNICODE_ESCAPE ) ;
     public final void rule__UnicodeEscapeSequence__SequenceAssignment() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3921:1: ( ( RULE_UNICODE_ESCAPE ) )
-            // InternalRegularExpressionParser.g:3922:2: ( RULE_UNICODE_ESCAPE )
+            // InternalRegularExpressionParser.g:3927:1: ( ( RULE_UNICODE_ESCAPE ) )
+            // InternalRegularExpressionParser.g:3928:2: ( RULE_UNICODE_ESCAPE )
             {
-            // InternalRegularExpressionParser.g:3922:2: ( RULE_UNICODE_ESCAPE )
-            // InternalRegularExpressionParser.g:3923:3: RULE_UNICODE_ESCAPE
+            // InternalRegularExpressionParser.g:3928:2: ( RULE_UNICODE_ESCAPE )
+            // InternalRegularExpressionParser.g:3929:3: RULE_UNICODE_ESCAPE
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getUnicodeEscapeSequenceAccess().getSequenceUNICODE_ESCAPETerminalRuleCall_0()); 
@@ -13358,17 +13383,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__IdentityEscapeSequence__SequenceAssignment"
-    // InternalRegularExpressionParser.g:3932:1: rule__IdentityEscapeSequence__SequenceAssignment : ( RULE_IDENTITY_ESCAPE ) ;
+    // InternalRegularExpressionParser.g:3938:1: rule__IdentityEscapeSequence__SequenceAssignment : ( RULE_IDENTITY_ESCAPE ) ;
     public final void rule__IdentityEscapeSequence__SequenceAssignment() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3936:1: ( ( RULE_IDENTITY_ESCAPE ) )
-            // InternalRegularExpressionParser.g:3937:2: ( RULE_IDENTITY_ESCAPE )
+            // InternalRegularExpressionParser.g:3942:1: ( ( RULE_IDENTITY_ESCAPE ) )
+            // InternalRegularExpressionParser.g:3943:2: ( RULE_IDENTITY_ESCAPE )
             {
-            // InternalRegularExpressionParser.g:3937:2: ( RULE_IDENTITY_ESCAPE )
-            // InternalRegularExpressionParser.g:3938:3: RULE_IDENTITY_ESCAPE
+            // InternalRegularExpressionParser.g:3943:2: ( RULE_IDENTITY_ESCAPE )
+            // InternalRegularExpressionParser.g:3944:3: RULE_IDENTITY_ESCAPE
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getIdentityEscapeSequenceAccess().getSequenceIDENTITY_ESCAPETerminalRuleCall_0()); 
@@ -13399,17 +13424,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__DecimalEscapeSequence__SequenceAssignment"
-    // InternalRegularExpressionParser.g:3947:1: rule__DecimalEscapeSequence__SequenceAssignment : ( RULE_DECIMAL_ESCAPE ) ;
+    // InternalRegularExpressionParser.g:3953:1: rule__DecimalEscapeSequence__SequenceAssignment : ( RULE_DECIMAL_ESCAPE ) ;
     public final void rule__DecimalEscapeSequence__SequenceAssignment() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3951:1: ( ( RULE_DECIMAL_ESCAPE ) )
-            // InternalRegularExpressionParser.g:3952:2: ( RULE_DECIMAL_ESCAPE )
+            // InternalRegularExpressionParser.g:3957:1: ( ( RULE_DECIMAL_ESCAPE ) )
+            // InternalRegularExpressionParser.g:3958:2: ( RULE_DECIMAL_ESCAPE )
             {
-            // InternalRegularExpressionParser.g:3952:2: ( RULE_DECIMAL_ESCAPE )
-            // InternalRegularExpressionParser.g:3953:3: RULE_DECIMAL_ESCAPE
+            // InternalRegularExpressionParser.g:3958:2: ( RULE_DECIMAL_ESCAPE )
+            // InternalRegularExpressionParser.g:3959:3: RULE_DECIMAL_ESCAPE
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getDecimalEscapeSequenceAccess().getSequenceDECIMAL_ESCAPETerminalRuleCall_0()); 
@@ -13440,23 +13465,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__CharacterClass__NegatedAssignment_2_0"
-    // InternalRegularExpressionParser.g:3962:1: rule__CharacterClass__NegatedAssignment_2_0 : ( ( CircumflexAccent ) ) ;
+    // InternalRegularExpressionParser.g:3968:1: rule__CharacterClass__NegatedAssignment_2_0 : ( ( CircumflexAccent ) ) ;
     public final void rule__CharacterClass__NegatedAssignment_2_0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3966:1: ( ( ( CircumflexAccent ) ) )
-            // InternalRegularExpressionParser.g:3967:2: ( ( CircumflexAccent ) )
+            // InternalRegularExpressionParser.g:3972:1: ( ( ( CircumflexAccent ) ) )
+            // InternalRegularExpressionParser.g:3973:2: ( ( CircumflexAccent ) )
             {
-            // InternalRegularExpressionParser.g:3967:2: ( ( CircumflexAccent ) )
-            // InternalRegularExpressionParser.g:3968:3: ( CircumflexAccent )
+            // InternalRegularExpressionParser.g:3973:2: ( ( CircumflexAccent ) )
+            // InternalRegularExpressionParser.g:3974:3: ( CircumflexAccent )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getCharacterClassAccess().getNegatedCircumflexAccentKeyword_2_0_0()); 
             }
-            // InternalRegularExpressionParser.g:3969:3: ( CircumflexAccent )
-            // InternalRegularExpressionParser.g:3970:4: CircumflexAccent
+            // InternalRegularExpressionParser.g:3975:3: ( CircumflexAccent )
+            // InternalRegularExpressionParser.g:3976:4: CircumflexAccent
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getCharacterClassAccess().getNegatedCircumflexAccentKeyword_2_0_0()); 
@@ -13493,17 +13518,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__CharacterClass__ElementsAssignment_3"
-    // InternalRegularExpressionParser.g:3981:1: rule__CharacterClass__ElementsAssignment_3 : ( ruleCharacterClassElement ) ;
+    // InternalRegularExpressionParser.g:3987:1: rule__CharacterClass__ElementsAssignment_3 : ( ruleCharacterClassElement ) ;
     public final void rule__CharacterClass__ElementsAssignment_3() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:3985:1: ( ( ruleCharacterClassElement ) )
-            // InternalRegularExpressionParser.g:3986:2: ( ruleCharacterClassElement )
+            // InternalRegularExpressionParser.g:3991:1: ( ( ruleCharacterClassElement ) )
+            // InternalRegularExpressionParser.g:3992:2: ( ruleCharacterClassElement )
             {
-            // InternalRegularExpressionParser.g:3986:2: ( ruleCharacterClassElement )
-            // InternalRegularExpressionParser.g:3987:3: ruleCharacterClassElement
+            // InternalRegularExpressionParser.g:3992:2: ( ruleCharacterClassElement )
+            // InternalRegularExpressionParser.g:3993:3: ruleCharacterClassElement
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getCharacterClassAccess().getElementsCharacterClassElementParserRuleCall_3_0()); 
@@ -13538,17 +13563,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__CharacterClassElement__RightAssignment_1_0_2"
-    // InternalRegularExpressionParser.g:3996:1: rule__CharacterClassElement__RightAssignment_1_0_2 : ( ruleCharacterClassAtom ) ;
+    // InternalRegularExpressionParser.g:4002:1: rule__CharacterClassElement__RightAssignment_1_0_2 : ( ruleCharacterClassAtom ) ;
     public final void rule__CharacterClassElement__RightAssignment_1_0_2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:4000:1: ( ( ruleCharacterClassAtom ) )
-            // InternalRegularExpressionParser.g:4001:2: ( ruleCharacterClassAtom )
+            // InternalRegularExpressionParser.g:4006:1: ( ( ruleCharacterClassAtom ) )
+            // InternalRegularExpressionParser.g:4007:2: ( ruleCharacterClassAtom )
             {
-            // InternalRegularExpressionParser.g:4001:2: ( ruleCharacterClassAtom )
-            // InternalRegularExpressionParser.g:4002:3: ruleCharacterClassAtom
+            // InternalRegularExpressionParser.g:4007:2: ( ruleCharacterClassAtom )
+            // InternalRegularExpressionParser.g:4008:3: ruleCharacterClassAtom
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getCharacterClassElementAccess().getRightCharacterClassAtomParserRuleCall_1_0_2_0()); 
@@ -13583,23 +13608,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__CharacterClassAtom__CharactersAssignment_1"
-    // InternalRegularExpressionParser.g:4011:1: rule__CharacterClassAtom__CharactersAssignment_1 : ( ( rule__CharacterClassAtom__CharactersAlternatives_1_0 ) ) ;
+    // InternalRegularExpressionParser.g:4017:1: rule__CharacterClassAtom__CharactersAssignment_1 : ( ( rule__CharacterClassAtom__CharactersAlternatives_1_0 ) ) ;
     public final void rule__CharacterClassAtom__CharactersAssignment_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:4015:1: ( ( ( rule__CharacterClassAtom__CharactersAlternatives_1_0 ) ) )
-            // InternalRegularExpressionParser.g:4016:2: ( ( rule__CharacterClassAtom__CharactersAlternatives_1_0 ) )
+            // InternalRegularExpressionParser.g:4021:1: ( ( ( rule__CharacterClassAtom__CharactersAlternatives_1_0 ) ) )
+            // InternalRegularExpressionParser.g:4022:2: ( ( rule__CharacterClassAtom__CharactersAlternatives_1_0 ) )
             {
-            // InternalRegularExpressionParser.g:4016:2: ( ( rule__CharacterClassAtom__CharactersAlternatives_1_0 ) )
-            // InternalRegularExpressionParser.g:4017:3: ( rule__CharacterClassAtom__CharactersAlternatives_1_0 )
+            // InternalRegularExpressionParser.g:4022:2: ( ( rule__CharacterClassAtom__CharactersAlternatives_1_0 ) )
+            // InternalRegularExpressionParser.g:4023:3: ( rule__CharacterClassAtom__CharactersAlternatives_1_0 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getCharacterClassAtomAccess().getCharactersAlternatives_1_0()); 
             }
-            // InternalRegularExpressionParser.g:4018:3: ( rule__CharacterClassAtom__CharactersAlternatives_1_0 )
-            // InternalRegularExpressionParser.g:4018:4: rule__CharacterClassAtom__CharactersAlternatives_1_0
+            // InternalRegularExpressionParser.g:4024:3: ( rule__CharacterClassAtom__CharactersAlternatives_1_0 )
+            // InternalRegularExpressionParser.g:4024:4: rule__CharacterClassAtom__CharactersAlternatives_1_0
             {
             pushFollow(FOLLOW_2);
             rule__CharacterClassAtom__CharactersAlternatives_1_0();
@@ -13634,23 +13659,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Group__NonCapturingAssignment_1_1"
-    // InternalRegularExpressionParser.g:4026:1: rule__Group__NonCapturingAssignment_1_1 : ( ( LeftParenthesisQuestionMarkColon ) ) ;
+    // InternalRegularExpressionParser.g:4032:1: rule__Group__NonCapturingAssignment_1_1 : ( ( LeftParenthesisQuestionMarkColon ) ) ;
     public final void rule__Group__NonCapturingAssignment_1_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:4030:1: ( ( ( LeftParenthesisQuestionMarkColon ) ) )
-            // InternalRegularExpressionParser.g:4031:2: ( ( LeftParenthesisQuestionMarkColon ) )
+            // InternalRegularExpressionParser.g:4036:1: ( ( ( LeftParenthesisQuestionMarkColon ) ) )
+            // InternalRegularExpressionParser.g:4037:2: ( ( LeftParenthesisQuestionMarkColon ) )
             {
-            // InternalRegularExpressionParser.g:4031:2: ( ( LeftParenthesisQuestionMarkColon ) )
-            // InternalRegularExpressionParser.g:4032:3: ( LeftParenthesisQuestionMarkColon )
+            // InternalRegularExpressionParser.g:4037:2: ( ( LeftParenthesisQuestionMarkColon ) )
+            // InternalRegularExpressionParser.g:4038:3: ( LeftParenthesisQuestionMarkColon )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getGroupAccess().getNonCapturingLeftParenthesisQuestionMarkColonKeyword_1_1_0()); 
             }
-            // InternalRegularExpressionParser.g:4033:3: ( LeftParenthesisQuestionMarkColon )
-            // InternalRegularExpressionParser.g:4034:4: LeftParenthesisQuestionMarkColon
+            // InternalRegularExpressionParser.g:4039:3: ( LeftParenthesisQuestionMarkColon )
+            // InternalRegularExpressionParser.g:4040:4: LeftParenthesisQuestionMarkColon
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getGroupAccess().getNonCapturingLeftParenthesisQuestionMarkColonKeyword_1_1_0()); 
@@ -13687,23 +13712,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Group__NamedAssignment_1_2_0"
-    // InternalRegularExpressionParser.g:4045:1: rule__Group__NamedAssignment_1_2_0 : ( ( LeftParenthesisQuestionMarkLessThanSign ) ) ;
+    // InternalRegularExpressionParser.g:4051:1: rule__Group__NamedAssignment_1_2_0 : ( ( LeftParenthesisQuestionMarkLessThanSign ) ) ;
     public final void rule__Group__NamedAssignment_1_2_0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:4049:1: ( ( ( LeftParenthesisQuestionMarkLessThanSign ) ) )
-            // InternalRegularExpressionParser.g:4050:2: ( ( LeftParenthesisQuestionMarkLessThanSign ) )
+            // InternalRegularExpressionParser.g:4055:1: ( ( ( LeftParenthesisQuestionMarkLessThanSign ) ) )
+            // InternalRegularExpressionParser.g:4056:2: ( ( LeftParenthesisQuestionMarkLessThanSign ) )
             {
-            // InternalRegularExpressionParser.g:4050:2: ( ( LeftParenthesisQuestionMarkLessThanSign ) )
-            // InternalRegularExpressionParser.g:4051:3: ( LeftParenthesisQuestionMarkLessThanSign )
+            // InternalRegularExpressionParser.g:4056:2: ( ( LeftParenthesisQuestionMarkLessThanSign ) )
+            // InternalRegularExpressionParser.g:4057:3: ( LeftParenthesisQuestionMarkLessThanSign )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getGroupAccess().getNamedLeftParenthesisQuestionMarkLessThanSignKeyword_1_2_0_0()); 
             }
-            // InternalRegularExpressionParser.g:4052:3: ( LeftParenthesisQuestionMarkLessThanSign )
-            // InternalRegularExpressionParser.g:4053:4: LeftParenthesisQuestionMarkLessThanSign
+            // InternalRegularExpressionParser.g:4058:3: ( LeftParenthesisQuestionMarkLessThanSign )
+            // InternalRegularExpressionParser.g:4059:4: LeftParenthesisQuestionMarkLessThanSign
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getGroupAccess().getNamedLeftParenthesisQuestionMarkLessThanSignKeyword_1_2_0_0()); 
@@ -13740,17 +13765,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Group__NameAssignment_1_2_1"
-    // InternalRegularExpressionParser.g:4064:1: rule__Group__NameAssignment_1_2_1 : ( ruleRegExpIdentifierName ) ;
+    // InternalRegularExpressionParser.g:4070:1: rule__Group__NameAssignment_1_2_1 : ( ruleRegExpIdentifierName ) ;
     public final void rule__Group__NameAssignment_1_2_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:4068:1: ( ( ruleRegExpIdentifierName ) )
-            // InternalRegularExpressionParser.g:4069:2: ( ruleRegExpIdentifierName )
+            // InternalRegularExpressionParser.g:4074:1: ( ( ruleRegExpIdentifierName ) )
+            // InternalRegularExpressionParser.g:4075:2: ( ruleRegExpIdentifierName )
             {
-            // InternalRegularExpressionParser.g:4069:2: ( ruleRegExpIdentifierName )
-            // InternalRegularExpressionParser.g:4070:3: ruleRegExpIdentifierName
+            // InternalRegularExpressionParser.g:4075:2: ( ruleRegExpIdentifierName )
+            // InternalRegularExpressionParser.g:4076:3: ruleRegExpIdentifierName
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getGroupAccess().getNameRegExpIdentifierNameParserRuleCall_1_2_1_0()); 
@@ -13785,17 +13810,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__Group__PatternAssignment_2"
-    // InternalRegularExpressionParser.g:4079:1: rule__Group__PatternAssignment_2 : ( ruleDisjunction ) ;
+    // InternalRegularExpressionParser.g:4085:1: rule__Group__PatternAssignment_2 : ( ruleDisjunction ) ;
     public final void rule__Group__PatternAssignment_2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:4083:1: ( ( ruleDisjunction ) )
-            // InternalRegularExpressionParser.g:4084:2: ( ruleDisjunction )
+            // InternalRegularExpressionParser.g:4089:1: ( ( ruleDisjunction ) )
+            // InternalRegularExpressionParser.g:4090:2: ( ruleDisjunction )
             {
-            // InternalRegularExpressionParser.g:4084:2: ( ruleDisjunction )
-            // InternalRegularExpressionParser.g:4085:3: ruleDisjunction
+            // InternalRegularExpressionParser.g:4090:2: ( ruleDisjunction )
+            // InternalRegularExpressionParser.g:4091:3: ruleDisjunction
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getGroupAccess().getPatternDisjunctionParserRuleCall_2_0()); 
@@ -13830,23 +13855,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__SimpleQuantifier__QuantifierAssignment_0"
-    // InternalRegularExpressionParser.g:4094:1: rule__SimpleQuantifier__QuantifierAssignment_0 : ( ( rule__SimpleQuantifier__QuantifierAlternatives_0_0 ) ) ;
+    // InternalRegularExpressionParser.g:4100:1: rule__SimpleQuantifier__QuantifierAssignment_0 : ( ( rule__SimpleQuantifier__QuantifierAlternatives_0_0 ) ) ;
     public final void rule__SimpleQuantifier__QuantifierAssignment_0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:4098:1: ( ( ( rule__SimpleQuantifier__QuantifierAlternatives_0_0 ) ) )
-            // InternalRegularExpressionParser.g:4099:2: ( ( rule__SimpleQuantifier__QuantifierAlternatives_0_0 ) )
+            // InternalRegularExpressionParser.g:4104:1: ( ( ( rule__SimpleQuantifier__QuantifierAlternatives_0_0 ) ) )
+            // InternalRegularExpressionParser.g:4105:2: ( ( rule__SimpleQuantifier__QuantifierAlternatives_0_0 ) )
             {
-            // InternalRegularExpressionParser.g:4099:2: ( ( rule__SimpleQuantifier__QuantifierAlternatives_0_0 ) )
-            // InternalRegularExpressionParser.g:4100:3: ( rule__SimpleQuantifier__QuantifierAlternatives_0_0 )
+            // InternalRegularExpressionParser.g:4105:2: ( ( rule__SimpleQuantifier__QuantifierAlternatives_0_0 ) )
+            // InternalRegularExpressionParser.g:4106:3: ( rule__SimpleQuantifier__QuantifierAlternatives_0_0 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getSimpleQuantifierAccess().getQuantifierAlternatives_0_0()); 
             }
-            // InternalRegularExpressionParser.g:4101:3: ( rule__SimpleQuantifier__QuantifierAlternatives_0_0 )
-            // InternalRegularExpressionParser.g:4101:4: rule__SimpleQuantifier__QuantifierAlternatives_0_0
+            // InternalRegularExpressionParser.g:4107:3: ( rule__SimpleQuantifier__QuantifierAlternatives_0_0 )
+            // InternalRegularExpressionParser.g:4107:4: rule__SimpleQuantifier__QuantifierAlternatives_0_0
             {
             pushFollow(FOLLOW_2);
             rule__SimpleQuantifier__QuantifierAlternatives_0_0();
@@ -13881,23 +13906,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__SimpleQuantifier__NonGreedyAssignment_1"
-    // InternalRegularExpressionParser.g:4109:1: rule__SimpleQuantifier__NonGreedyAssignment_1 : ( ( QuestionMark ) ) ;
+    // InternalRegularExpressionParser.g:4115:1: rule__SimpleQuantifier__NonGreedyAssignment_1 : ( ( QuestionMark ) ) ;
     public final void rule__SimpleQuantifier__NonGreedyAssignment_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:4113:1: ( ( ( QuestionMark ) ) )
-            // InternalRegularExpressionParser.g:4114:2: ( ( QuestionMark ) )
+            // InternalRegularExpressionParser.g:4119:1: ( ( ( QuestionMark ) ) )
+            // InternalRegularExpressionParser.g:4120:2: ( ( QuestionMark ) )
             {
-            // InternalRegularExpressionParser.g:4114:2: ( ( QuestionMark ) )
-            // InternalRegularExpressionParser.g:4115:3: ( QuestionMark )
+            // InternalRegularExpressionParser.g:4120:2: ( ( QuestionMark ) )
+            // InternalRegularExpressionParser.g:4121:3: ( QuestionMark )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getSimpleQuantifierAccess().getNonGreedyQuestionMarkKeyword_1_0()); 
             }
-            // InternalRegularExpressionParser.g:4116:3: ( QuestionMark )
-            // InternalRegularExpressionParser.g:4117:4: QuestionMark
+            // InternalRegularExpressionParser.g:4122:3: ( QuestionMark )
+            // InternalRegularExpressionParser.g:4123:4: QuestionMark
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getSimpleQuantifierAccess().getNonGreedyQuestionMarkKeyword_1_0()); 
@@ -13934,17 +13959,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__ExactQuantifier__MinAssignment_2"
-    // InternalRegularExpressionParser.g:4128:1: rule__ExactQuantifier__MinAssignment_2 : ( ruleINT ) ;
+    // InternalRegularExpressionParser.g:4134:1: rule__ExactQuantifier__MinAssignment_2 : ( ruleINT ) ;
     public final void rule__ExactQuantifier__MinAssignment_2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:4132:1: ( ( ruleINT ) )
-            // InternalRegularExpressionParser.g:4133:2: ( ruleINT )
+            // InternalRegularExpressionParser.g:4138:1: ( ( ruleINT ) )
+            // InternalRegularExpressionParser.g:4139:2: ( ruleINT )
             {
-            // InternalRegularExpressionParser.g:4133:2: ( ruleINT )
-            // InternalRegularExpressionParser.g:4134:3: ruleINT
+            // InternalRegularExpressionParser.g:4139:2: ( ruleINT )
+            // InternalRegularExpressionParser.g:4140:3: ruleINT
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getExactQuantifierAccess().getMinINTParserRuleCall_2_0()); 
@@ -13979,17 +14004,17 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__ExactQuantifier__MaxAssignment_3_0_1"
-    // InternalRegularExpressionParser.g:4143:1: rule__ExactQuantifier__MaxAssignment_3_0_1 : ( ruleINT ) ;
+    // InternalRegularExpressionParser.g:4149:1: rule__ExactQuantifier__MaxAssignment_3_0_1 : ( ruleINT ) ;
     public final void rule__ExactQuantifier__MaxAssignment_3_0_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:4147:1: ( ( ruleINT ) )
-            // InternalRegularExpressionParser.g:4148:2: ( ruleINT )
+            // InternalRegularExpressionParser.g:4153:1: ( ( ruleINT ) )
+            // InternalRegularExpressionParser.g:4154:2: ( ruleINT )
             {
-            // InternalRegularExpressionParser.g:4148:2: ( ruleINT )
-            // InternalRegularExpressionParser.g:4149:3: ruleINT
+            // InternalRegularExpressionParser.g:4154:2: ( ruleINT )
+            // InternalRegularExpressionParser.g:4155:3: ruleINT
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getExactQuantifierAccess().getMaxINTParserRuleCall_3_0_1_0()); 
@@ -14024,23 +14049,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__ExactQuantifier__UnboundedMaxAssignment_3_1"
-    // InternalRegularExpressionParser.g:4158:1: rule__ExactQuantifier__UnboundedMaxAssignment_3_1 : ( ( Comma ) ) ;
+    // InternalRegularExpressionParser.g:4164:1: rule__ExactQuantifier__UnboundedMaxAssignment_3_1 : ( ( Comma ) ) ;
     public final void rule__ExactQuantifier__UnboundedMaxAssignment_3_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:4162:1: ( ( ( Comma ) ) )
-            // InternalRegularExpressionParser.g:4163:2: ( ( Comma ) )
+            // InternalRegularExpressionParser.g:4168:1: ( ( ( Comma ) ) )
+            // InternalRegularExpressionParser.g:4169:2: ( ( Comma ) )
             {
-            // InternalRegularExpressionParser.g:4163:2: ( ( Comma ) )
-            // InternalRegularExpressionParser.g:4164:3: ( Comma )
+            // InternalRegularExpressionParser.g:4169:2: ( ( Comma ) )
+            // InternalRegularExpressionParser.g:4170:3: ( Comma )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getExactQuantifierAccess().getUnboundedMaxCommaKeyword_3_1_0()); 
             }
-            // InternalRegularExpressionParser.g:4165:3: ( Comma )
-            // InternalRegularExpressionParser.g:4166:4: Comma
+            // InternalRegularExpressionParser.g:4171:3: ( Comma )
+            // InternalRegularExpressionParser.g:4172:4: Comma
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getExactQuantifierAccess().getUnboundedMaxCommaKeyword_3_1_0()); 
@@ -14077,23 +14102,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__ExactQuantifier__NonGreedyAssignment_5"
-    // InternalRegularExpressionParser.g:4177:1: rule__ExactQuantifier__NonGreedyAssignment_5 : ( ( QuestionMark ) ) ;
+    // InternalRegularExpressionParser.g:4183:1: rule__ExactQuantifier__NonGreedyAssignment_5 : ( ( QuestionMark ) ) ;
     public final void rule__ExactQuantifier__NonGreedyAssignment_5() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:4181:1: ( ( ( QuestionMark ) ) )
-            // InternalRegularExpressionParser.g:4182:2: ( ( QuestionMark ) )
+            // InternalRegularExpressionParser.g:4187:1: ( ( ( QuestionMark ) ) )
+            // InternalRegularExpressionParser.g:4188:2: ( ( QuestionMark ) )
             {
-            // InternalRegularExpressionParser.g:4182:2: ( ( QuestionMark ) )
-            // InternalRegularExpressionParser.g:4183:3: ( QuestionMark )
+            // InternalRegularExpressionParser.g:4188:2: ( ( QuestionMark ) )
+            // InternalRegularExpressionParser.g:4189:3: ( QuestionMark )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getExactQuantifierAccess().getNonGreedyQuestionMarkKeyword_5_0()); 
             }
-            // InternalRegularExpressionParser.g:4184:3: ( QuestionMark )
-            // InternalRegularExpressionParser.g:4185:4: QuestionMark
+            // InternalRegularExpressionParser.g:4190:3: ( QuestionMark )
+            // InternalRegularExpressionParser.g:4191:4: QuestionMark
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getExactQuantifierAccess().getNonGreedyQuestionMarkKeyword_5_0()); 
@@ -14130,23 +14155,23 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
 
     // $ANTLR start "rule__RegularExpressionFlags__FlagsAssignment_1"
-    // InternalRegularExpressionParser.g:4196:1: rule__RegularExpressionFlags__FlagsAssignment_1 : ( ( rule__RegularExpressionFlags__FlagsAlternatives_1_0 ) ) ;
+    // InternalRegularExpressionParser.g:4202:1: rule__RegularExpressionFlags__FlagsAssignment_1 : ( ( rule__RegularExpressionFlags__FlagsAlternatives_1_0 ) ) ;
     public final void rule__RegularExpressionFlags__FlagsAssignment_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRegularExpressionParser.g:4200:1: ( ( ( rule__RegularExpressionFlags__FlagsAlternatives_1_0 ) ) )
-            // InternalRegularExpressionParser.g:4201:2: ( ( rule__RegularExpressionFlags__FlagsAlternatives_1_0 ) )
+            // InternalRegularExpressionParser.g:4206:1: ( ( ( rule__RegularExpressionFlags__FlagsAlternatives_1_0 ) ) )
+            // InternalRegularExpressionParser.g:4207:2: ( ( rule__RegularExpressionFlags__FlagsAlternatives_1_0 ) )
             {
-            // InternalRegularExpressionParser.g:4201:2: ( ( rule__RegularExpressionFlags__FlagsAlternatives_1_0 ) )
-            // InternalRegularExpressionParser.g:4202:3: ( rule__RegularExpressionFlags__FlagsAlternatives_1_0 )
+            // InternalRegularExpressionParser.g:4207:2: ( ( rule__RegularExpressionFlags__FlagsAlternatives_1_0 ) )
+            // InternalRegularExpressionParser.g:4208:3: ( rule__RegularExpressionFlags__FlagsAlternatives_1_0 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getRegularExpressionFlagsAccess().getFlagsAlternatives_1_0()); 
             }
-            // InternalRegularExpressionParser.g:4203:3: ( rule__RegularExpressionFlags__FlagsAlternatives_1_0 )
-            // InternalRegularExpressionParser.g:4203:4: rule__RegularExpressionFlags__FlagsAlternatives_1_0
+            // InternalRegularExpressionParser.g:4209:3: ( rule__RegularExpressionFlags__FlagsAlternatives_1_0 )
+            // InternalRegularExpressionParser.g:4209:4: rule__RegularExpressionFlags__FlagsAlternatives_1_0
             {
             pushFollow(FOLLOW_2);
             rule__RegularExpressionFlags__FlagsAlternatives_1_0();
@@ -14179,10 +14204,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
     }
     // $ANTLR end "rule__RegularExpressionFlags__FlagsAssignment_1"
 
-    // $ANTLR start synpred91_InternalRegularExpressionParser
-    public final void synpred91_InternalRegularExpressionParser_fragment() throws RecognitionException {   
-        // InternalRegularExpressionParser.g:2310:3: ( rule__Term__QuantifierAssignment_1_1 )
-        // InternalRegularExpressionParser.g:2310:3: rule__Term__QuantifierAssignment_1_1
+    // $ANTLR start synpred92_InternalRegularExpressionParser
+    public final void synpred92_InternalRegularExpressionParser_fragment() throws RecognitionException {   
+        // InternalRegularExpressionParser.g:2316:3: ( rule__Term__QuantifierAssignment_1_1 )
+        // InternalRegularExpressionParser.g:2316:3: rule__Term__QuantifierAssignment_1_1
         {
         pushFollow(FOLLOW_2);
         rule__Term__QuantifierAssignment_1_1();
@@ -14192,12 +14217,12 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
         }
     }
-    // $ANTLR end synpred91_InternalRegularExpressionParser
+    // $ANTLR end synpred92_InternalRegularExpressionParser
 
-    // $ANTLR start synpred92_InternalRegularExpressionParser
-    public final void synpred92_InternalRegularExpressionParser_fragment() throws RecognitionException {   
-        // InternalRegularExpressionParser.g:2797:3: ( rule__CharacterClass__Group_2__0 )
-        // InternalRegularExpressionParser.g:2797:3: rule__CharacterClass__Group_2__0
+    // $ANTLR start synpred93_InternalRegularExpressionParser
+    public final void synpred93_InternalRegularExpressionParser_fragment() throws RecognitionException {   
+        // InternalRegularExpressionParser.g:2803:3: ( rule__CharacterClass__Group_2__0 )
+        // InternalRegularExpressionParser.g:2803:3: rule__CharacterClass__Group_2__0
         {
         pushFollow(FOLLOW_2);
         rule__CharacterClass__Group_2__0();
@@ -14207,12 +14232,12 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
         }
     }
-    // $ANTLR end synpred92_InternalRegularExpressionParser
+    // $ANTLR end synpred93_InternalRegularExpressionParser
 
-    // $ANTLR start synpred94_InternalRegularExpressionParser
-    public final void synpred94_InternalRegularExpressionParser_fragment() throws RecognitionException {   
-        // InternalRegularExpressionParser.g:2931:3: ( rule__CharacterClassElement__Group_1__0 )
-        // InternalRegularExpressionParser.g:2931:3: rule__CharacterClassElement__Group_1__0
+    // $ANTLR start synpred95_InternalRegularExpressionParser
+    public final void synpred95_InternalRegularExpressionParser_fragment() throws RecognitionException {   
+        // InternalRegularExpressionParser.g:2937:3: ( rule__CharacterClassElement__Group_1__0 )
+        // InternalRegularExpressionParser.g:2937:3: rule__CharacterClassElement__Group_1__0
         {
         pushFollow(FOLLOW_2);
         rule__CharacterClassElement__Group_1__0();
@@ -14222,24 +14247,10 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
 
         }
     }
-    // $ANTLR end synpred94_InternalRegularExpressionParser
+    // $ANTLR end synpred95_InternalRegularExpressionParser
 
     // Delegated rules
 
-    public final boolean synpred94_InternalRegularExpressionParser() {
-        state.backtracking++;
-        int start = input.mark();
-        try {
-            synpred94_InternalRegularExpressionParser_fragment(); // can never throw exception
-        } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
-        }
-        boolean success = !state.failed;
-        input.rewind(start);
-        state.backtracking--;
-        state.failed=false;
-        return success;
-    }
     public final boolean synpred92_InternalRegularExpressionParser() {
         state.backtracking++;
         int start = input.mark();
@@ -14254,11 +14265,25 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
         state.failed=false;
         return success;
     }
-    public final boolean synpred91_InternalRegularExpressionParser() {
+    public final boolean synpred95_InternalRegularExpressionParser() {
         state.backtracking++;
         int start = input.mark();
         try {
-            synpred91_InternalRegularExpressionParser_fragment(); // can never throw exception
+            synpred95_InternalRegularExpressionParser_fragment(); // can never throw exception
+        } catch (RecognitionException re) {
+            System.err.println("impossible: "+re);
+        }
+        boolean success = !state.failed;
+        input.rewind(start);
+        state.backtracking--;
+        state.failed=false;
+        return success;
+    }
+    public final boolean synpred93_InternalRegularExpressionParser() {
+        state.backtracking++;
+        int start = input.mark();
+        try {
+            synpred93_InternalRegularExpressionParser_fragment(); // can never throw exception
         } catch (RecognitionException re) {
             System.err.println("impossible: "+re);
         }
@@ -14279,16 +14304,16 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
     static final String dfa_5s = "\1\uffff\1\1\1\uffff\1\2\6\uffff";
     static final String dfa_6s = "\7\uffff\1\0\2\uffff}>";
     static final String[] dfa_7s = {
-            "\6\3\1\uffff\4\3\2\1\10\3\1\1\3\3\1\uffff\1\2\7\3\1\uffff\2\3\1\uffff\2\3\1\uffff\1\3\1\uffff\2\3",
+            "\6\3\1\uffff\4\3\2\1\10\3\1\1\4\3\1\2\7\3\1\uffff\2\3\1\uffff\2\3\1\uffff\1\3\1\uffff\2\3",
             "",
-            "\6\3\1\uffff\22\3\1\uffff\10\3\1\uffff\2\3\1\uffff\2\3\1\uffff\1\4\1\uffff\2\3",
+            "\6\3\1\uffff\33\3\1\uffff\2\3\1\uffff\2\3\1\uffff\1\4\1\uffff\2\3",
             "",
-            "\6\3\1\uffff\6\3\1\6\13\3\1\uffff\2\3\1\7\5\3\1\uffff\2\3\1\uffff\2\3\1\uffff\1\5\1\uffff\2\3",
-            "\6\3\1\uffff\6\3\1\6\13\3\1\uffff\2\3\1\7\5\3\1\uffff\2\3\1\uffff\2\3\1\uffff\1\5\1\uffff\2\3",
-            "\6\3\1\uffff\22\3\1\uffff\2\3\1\7\5\3\1\uffff\2\3\1\uffff\2\3\1\uffff\1\10\1\uffff\2\3",
+            "\6\3\1\uffff\6\3\1\6\16\3\1\7\5\3\1\uffff\2\3\1\uffff\2\3\1\uffff\1\5\1\uffff\2\3",
+            "\6\3\1\uffff\6\3\1\6\16\3\1\7\5\3\1\uffff\2\3\1\uffff\2\3\1\uffff\1\5\1\uffff\2\3",
+            "\6\3\1\uffff\25\3\1\7\5\3\1\uffff\2\3\1\uffff\2\3\1\uffff\1\10\1\uffff\2\3",
             "\1\uffff",
-            "\6\3\1\uffff\22\3\1\uffff\2\3\1\7\5\3\1\uffff\2\3\1\uffff\2\3\1\uffff\1\11\1\uffff\2\3",
-            "\6\3\1\uffff\22\3\1\uffff\2\3\1\7\5\3\1\uffff\2\3\1\uffff\2\3\1\uffff\1\11\1\uffff\2\3"
+            "\6\3\1\uffff\25\3\1\7\5\3\1\uffff\2\3\1\uffff\2\3\1\uffff\1\11\1\uffff\2\3",
+            "\6\3\1\uffff\25\3\1\7\5\3\1\uffff\2\3\1\uffff\2\3\1\uffff\1\11\1\uffff\2\3"
     };
 
     static final short[] dfa_1 = DFA.unpackEncodedString(dfa_1s);
@@ -14313,7 +14338,7 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
             this.transition = dfa_7;
         }
         public String getDescription() {
-            return "2310:2: ( rule__Term__QuantifierAssignment_1_1 )?";
+            return "2316:2: ( rule__Term__QuantifierAssignment_1_1 )?";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -14326,7 +14351,7 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                         int index29_7 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred91_InternalRegularExpressionParser()) ) {s = 1;}
+                        if ( (synpred92_InternalRegularExpressionParser()) ) {s = 1;}
 
                         else if ( (true) ) {s = 3;}
 
@@ -14347,7 +14372,7 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
     static final String dfa_10s = "\2\4\1\uffff\46\0\1\uffff";
     static final String dfa_11s = "\2\60\1\uffff\46\0\1\uffff";
     static final String dfa_12s = "\2\uffff\1\2\46\uffff\1\1";
-    static final String dfa_13s = "\3\uffff\1\4\1\32\1\43\1\10\1\36\1\27\1\6\1\21\1\34\1\17\1\41\1\2\1\22\1\14\1\30\1\37\1\11\1\44\1\15\1\24\1\0\1\33\1\5\1\13\1\35\1\20\1\42\1\3\1\23\1\7\1\31\1\40\1\12\1\45\1\16\1\25\1\1\1\26\1\uffff}>";
+    static final String dfa_13s = "\3\uffff\1\30\1\21\1\22\1\36\1\13\1\4\1\33\1\0\1\24\1\7\1\31\1\42\1\11\1\41\1\17\1\26\1\1\1\34\1\5\1\14\1\37\1\23\1\44\1\3\1\25\1\10\1\32\1\43\1\12\1\45\1\20\1\27\1\2\1\35\1\6\1\15\1\40\1\16\1\uffff}>";
     static final String[] dfa_14s = {
             "\3\2\1\uffff\12\2\1\1\17\2\1\uffff\3\2\1\uffff\2\2\1\uffff\2\2\1\uffff\1\2\1\uffff\2\2",
             "\1\44\1\45\1\43\1\uffff\1\41\1\42\1\40\1\16\1\22\1\27\1\30\1\24\1\25\1\13\1\20\1\23\1\35\1\15\1\36\1\14\1\37\1\26\1\31\1\2\1\21\1\17\1\32\1\34\1\33\1\4\1\uffff\1\12\1\5\1\6\1\uffff\1\7\1\10\1\uffff\1\3\1\11\1\uffff\1\50\1\uffff\1\47\1\46",
@@ -14415,275 +14440,20 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
             this.transition = dfa_14;
         }
         public String getDescription() {
-            return "2931:2: ( rule__CharacterClassElement__Group_1__0 )?";
+            return "2937:2: ( rule__CharacterClassElement__Group_1__0 )?";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
         	int _s = s;
             switch ( s ) {
                     case 0 : 
-                        int LA32_23 = input.LA(1);
-
-                         
-                        int index32_23 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred94_InternalRegularExpressionParser()) ) {s = 41;}
-
-                        else if ( (true) ) {s = 2;}
-
-                         
-                        input.seek(index32_23);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 1 : 
-                        int LA32_39 = input.LA(1);
-
-                         
-                        int index32_39 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred94_InternalRegularExpressionParser()) ) {s = 41;}
-
-                        else if ( (true) ) {s = 2;}
-
-                         
-                        input.seek(index32_39);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 2 : 
-                        int LA32_14 = input.LA(1);
-
-                         
-                        int index32_14 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred94_InternalRegularExpressionParser()) ) {s = 41;}
-
-                        else if ( (true) ) {s = 2;}
-
-                         
-                        input.seek(index32_14);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 3 : 
-                        int LA32_30 = input.LA(1);
-
-                         
-                        int index32_30 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred94_InternalRegularExpressionParser()) ) {s = 41;}
-
-                        else if ( (true) ) {s = 2;}
-
-                         
-                        input.seek(index32_30);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 4 : 
-                        int LA32_3 = input.LA(1);
-
-                         
-                        int index32_3 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred94_InternalRegularExpressionParser()) ) {s = 41;}
-
-                        else if ( (true) ) {s = 2;}
-
-                         
-                        input.seek(index32_3);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 5 : 
-                        int LA32_25 = input.LA(1);
-
-                         
-                        int index32_25 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred94_InternalRegularExpressionParser()) ) {s = 41;}
-
-                        else if ( (true) ) {s = 2;}
-
-                         
-                        input.seek(index32_25);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 6 : 
-                        int LA32_9 = input.LA(1);
-
-                         
-                        int index32_9 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred94_InternalRegularExpressionParser()) ) {s = 41;}
-
-                        else if ( (true) ) {s = 2;}
-
-                         
-                        input.seek(index32_9);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 7 : 
-                        int LA32_32 = input.LA(1);
-
-                         
-                        int index32_32 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred94_InternalRegularExpressionParser()) ) {s = 41;}
-
-                        else if ( (true) ) {s = 2;}
-
-                         
-                        input.seek(index32_32);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 8 : 
-                        int LA32_6 = input.LA(1);
-
-                         
-                        int index32_6 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred94_InternalRegularExpressionParser()) ) {s = 41;}
-
-                        else if ( (true) ) {s = 2;}
-
-                         
-                        input.seek(index32_6);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 9 : 
-                        int LA32_19 = input.LA(1);
-
-                         
-                        int index32_19 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred94_InternalRegularExpressionParser()) ) {s = 41;}
-
-                        else if ( (true) ) {s = 2;}
-
-                         
-                        input.seek(index32_19);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 10 : 
-                        int LA32_35 = input.LA(1);
-
-                         
-                        int index32_35 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred94_InternalRegularExpressionParser()) ) {s = 41;}
-
-                        else if ( (true) ) {s = 2;}
-
-                         
-                        input.seek(index32_35);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 11 : 
-                        int LA32_26 = input.LA(1);
-
-                         
-                        int index32_26 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred94_InternalRegularExpressionParser()) ) {s = 41;}
-
-                        else if ( (true) ) {s = 2;}
-
-                         
-                        input.seek(index32_26);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 12 : 
-                        int LA32_16 = input.LA(1);
-
-                         
-                        int index32_16 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred94_InternalRegularExpressionParser()) ) {s = 41;}
-
-                        else if ( (true) ) {s = 2;}
-
-                         
-                        input.seek(index32_16);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 13 : 
-                        int LA32_21 = input.LA(1);
-
-                         
-                        int index32_21 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred94_InternalRegularExpressionParser()) ) {s = 41;}
-
-                        else if ( (true) ) {s = 2;}
-
-                         
-                        input.seek(index32_21);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 14 : 
-                        int LA32_37 = input.LA(1);
-
-                         
-                        int index32_37 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred94_InternalRegularExpressionParser()) ) {s = 41;}
-
-                        else if ( (true) ) {s = 2;}
-
-                         
-                        input.seek(index32_37);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 15 : 
-                        int LA32_12 = input.LA(1);
-
-                         
-                        int index32_12 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred94_InternalRegularExpressionParser()) ) {s = 41;}
-
-                        else if ( (true) ) {s = 2;}
-
-                         
-                        input.seek(index32_12);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 16 : 
-                        int LA32_28 = input.LA(1);
-
-                         
-                        int index32_28 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred94_InternalRegularExpressionParser()) ) {s = 41;}
-
-                        else if ( (true) ) {s = 2;}
-
-                         
-                        input.seek(index32_28);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 17 : 
                         int LA32_10 = input.LA(1);
 
                          
                         int index32_10 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred94_InternalRegularExpressionParser()) ) {s = 41;}
+                        if ( (synpred95_InternalRegularExpressionParser()) ) {s = 41;}
 
                         else if ( (true) ) {s = 2;}
 
@@ -14691,89 +14461,59 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                         input.seek(index32_10);
                         if ( s>=0 ) return s;
                         break;
-                    case 18 : 
-                        int LA32_15 = input.LA(1);
+                    case 1 : 
+                        int LA32_19 = input.LA(1);
 
                          
-                        int index32_15 = input.index();
+                        int index32_19 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred94_InternalRegularExpressionParser()) ) {s = 41;}
+                        if ( (synpred95_InternalRegularExpressionParser()) ) {s = 41;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index32_15);
+                        input.seek(index32_19);
                         if ( s>=0 ) return s;
                         break;
-                    case 19 : 
-                        int LA32_31 = input.LA(1);
+                    case 2 : 
+                        int LA32_35 = input.LA(1);
 
                          
-                        int index32_31 = input.index();
+                        int index32_35 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred94_InternalRegularExpressionParser()) ) {s = 41;}
+                        if ( (synpred95_InternalRegularExpressionParser()) ) {s = 41;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index32_31);
+                        input.seek(index32_35);
                         if ( s>=0 ) return s;
                         break;
-                    case 20 : 
-                        int LA32_22 = input.LA(1);
+                    case 3 : 
+                        int LA32_26 = input.LA(1);
 
                          
-                        int index32_22 = input.index();
+                        int index32_26 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred94_InternalRegularExpressionParser()) ) {s = 41;}
+                        if ( (synpred95_InternalRegularExpressionParser()) ) {s = 41;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index32_22);
+                        input.seek(index32_26);
                         if ( s>=0 ) return s;
                         break;
-                    case 21 : 
-                        int LA32_38 = input.LA(1);
-
-                         
-                        int index32_38 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred94_InternalRegularExpressionParser()) ) {s = 41;}
-
-                        else if ( (true) ) {s = 2;}
-
-                         
-                        input.seek(index32_38);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 22 : 
-                        int LA32_40 = input.LA(1);
-
-                         
-                        int index32_40 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred94_InternalRegularExpressionParser()) ) {s = 41;}
-
-                        else if ( (true) ) {s = 2;}
-
-                         
-                        input.seek(index32_40);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 23 : 
+                    case 4 : 
                         int LA32_8 = input.LA(1);
 
                          
                         int index32_8 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred94_InternalRegularExpressionParser()) ) {s = 41;}
+                        if ( (synpred95_InternalRegularExpressionParser()) ) {s = 41;}
 
                         else if ( (true) ) {s = 2;}
 
@@ -14781,104 +14521,104 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                         input.seek(index32_8);
                         if ( s>=0 ) return s;
                         break;
-                    case 24 : 
-                        int LA32_17 = input.LA(1);
+                    case 5 : 
+                        int LA32_21 = input.LA(1);
 
                          
-                        int index32_17 = input.index();
+                        int index32_21 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred94_InternalRegularExpressionParser()) ) {s = 41;}
+                        if ( (synpred95_InternalRegularExpressionParser()) ) {s = 41;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index32_17);
+                        input.seek(index32_21);
                         if ( s>=0 ) return s;
                         break;
-                    case 25 : 
-                        int LA32_33 = input.LA(1);
+                    case 6 : 
+                        int LA32_37 = input.LA(1);
 
                          
-                        int index32_33 = input.index();
+                        int index32_37 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred94_InternalRegularExpressionParser()) ) {s = 41;}
+                        if ( (synpred95_InternalRegularExpressionParser()) ) {s = 41;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index32_33);
+                        input.seek(index32_37);
                         if ( s>=0 ) return s;
                         break;
-                    case 26 : 
-                        int LA32_4 = input.LA(1);
+                    case 7 : 
+                        int LA32_12 = input.LA(1);
 
                          
-                        int index32_4 = input.index();
+                        int index32_12 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred94_InternalRegularExpressionParser()) ) {s = 41;}
+                        if ( (synpred95_InternalRegularExpressionParser()) ) {s = 41;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index32_4);
+                        input.seek(index32_12);
                         if ( s>=0 ) return s;
                         break;
-                    case 27 : 
-                        int LA32_24 = input.LA(1);
+                    case 8 : 
+                        int LA32_28 = input.LA(1);
 
                          
-                        int index32_24 = input.index();
+                        int index32_28 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred94_InternalRegularExpressionParser()) ) {s = 41;}
+                        if ( (synpred95_InternalRegularExpressionParser()) ) {s = 41;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index32_24);
+                        input.seek(index32_28);
                         if ( s>=0 ) return s;
                         break;
-                    case 28 : 
-                        int LA32_11 = input.LA(1);
+                    case 9 : 
+                        int LA32_15 = input.LA(1);
 
                          
-                        int index32_11 = input.index();
+                        int index32_15 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred94_InternalRegularExpressionParser()) ) {s = 41;}
+                        if ( (synpred95_InternalRegularExpressionParser()) ) {s = 41;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index32_11);
+                        input.seek(index32_15);
                         if ( s>=0 ) return s;
                         break;
-                    case 29 : 
-                        int LA32_27 = input.LA(1);
+                    case 10 : 
+                        int LA32_31 = input.LA(1);
 
                          
-                        int index32_27 = input.index();
+                        int index32_31 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred94_InternalRegularExpressionParser()) ) {s = 41;}
+                        if ( (synpred95_InternalRegularExpressionParser()) ) {s = 41;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index32_27);
+                        input.seek(index32_31);
                         if ( s>=0 ) return s;
                         break;
-                    case 30 : 
+                    case 11 : 
                         int LA32_7 = input.LA(1);
 
                          
                         int index32_7 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred94_InternalRegularExpressionParser()) ) {s = 41;}
+                        if ( (synpred95_InternalRegularExpressionParser()) ) {s = 41;}
 
                         else if ( (true) ) {s = 2;}
 
@@ -14886,74 +14626,104 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                         input.seek(index32_7);
                         if ( s>=0 ) return s;
                         break;
-                    case 31 : 
-                        int LA32_18 = input.LA(1);
+                    case 12 : 
+                        int LA32_22 = input.LA(1);
 
                          
-                        int index32_18 = input.index();
+                        int index32_22 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred94_InternalRegularExpressionParser()) ) {s = 41;}
+                        if ( (synpred95_InternalRegularExpressionParser()) ) {s = 41;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index32_18);
+                        input.seek(index32_22);
                         if ( s>=0 ) return s;
                         break;
-                    case 32 : 
-                        int LA32_34 = input.LA(1);
+                    case 13 : 
+                        int LA32_38 = input.LA(1);
 
                          
-                        int index32_34 = input.index();
+                        int index32_38 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred94_InternalRegularExpressionParser()) ) {s = 41;}
+                        if ( (synpred95_InternalRegularExpressionParser()) ) {s = 41;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index32_34);
+                        input.seek(index32_38);
                         if ( s>=0 ) return s;
                         break;
-                    case 33 : 
-                        int LA32_13 = input.LA(1);
+                    case 14 : 
+                        int LA32_40 = input.LA(1);
 
                          
-                        int index32_13 = input.index();
+                        int index32_40 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred94_InternalRegularExpressionParser()) ) {s = 41;}
+                        if ( (synpred95_InternalRegularExpressionParser()) ) {s = 41;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index32_13);
+                        input.seek(index32_40);
                         if ( s>=0 ) return s;
                         break;
-                    case 34 : 
-                        int LA32_29 = input.LA(1);
+                    case 15 : 
+                        int LA32_17 = input.LA(1);
 
                          
-                        int index32_29 = input.index();
+                        int index32_17 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred94_InternalRegularExpressionParser()) ) {s = 41;}
+                        if ( (synpred95_InternalRegularExpressionParser()) ) {s = 41;}
 
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index32_29);
+                        input.seek(index32_17);
                         if ( s>=0 ) return s;
                         break;
-                    case 35 : 
+                    case 16 : 
+                        int LA32_33 = input.LA(1);
+
+                         
+                        int index32_33 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred95_InternalRegularExpressionParser()) ) {s = 41;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index32_33);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 17 : 
+                        int LA32_4 = input.LA(1);
+
+                         
+                        int index32_4 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred95_InternalRegularExpressionParser()) ) {s = 41;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index32_4);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 18 : 
                         int LA32_5 = input.LA(1);
 
                          
                         int index32_5 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred94_InternalRegularExpressionParser()) ) {s = 41;}
+                        if ( (synpred95_InternalRegularExpressionParser()) ) {s = 41;}
 
                         else if ( (true) ) {s = 2;}
 
@@ -14961,14 +14731,149 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                         input.seek(index32_5);
                         if ( s>=0 ) return s;
                         break;
-                    case 36 : 
+                    case 19 : 
+                        int LA32_24 = input.LA(1);
+
+                         
+                        int index32_24 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred95_InternalRegularExpressionParser()) ) {s = 41;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index32_24);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 20 : 
+                        int LA32_11 = input.LA(1);
+
+                         
+                        int index32_11 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred95_InternalRegularExpressionParser()) ) {s = 41;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index32_11);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 21 : 
+                        int LA32_27 = input.LA(1);
+
+                         
+                        int index32_27 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred95_InternalRegularExpressionParser()) ) {s = 41;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index32_27);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 22 : 
+                        int LA32_18 = input.LA(1);
+
+                         
+                        int index32_18 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred95_InternalRegularExpressionParser()) ) {s = 41;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index32_18);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 23 : 
+                        int LA32_34 = input.LA(1);
+
+                         
+                        int index32_34 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred95_InternalRegularExpressionParser()) ) {s = 41;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index32_34);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 24 : 
+                        int LA32_3 = input.LA(1);
+
+                         
+                        int index32_3 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred95_InternalRegularExpressionParser()) ) {s = 41;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index32_3);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 25 : 
+                        int LA32_13 = input.LA(1);
+
+                         
+                        int index32_13 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred95_InternalRegularExpressionParser()) ) {s = 41;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index32_13);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 26 : 
+                        int LA32_29 = input.LA(1);
+
+                         
+                        int index32_29 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred95_InternalRegularExpressionParser()) ) {s = 41;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index32_29);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 27 : 
+                        int LA32_9 = input.LA(1);
+
+                         
+                        int index32_9 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred95_InternalRegularExpressionParser()) ) {s = 41;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index32_9);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 28 : 
                         int LA32_20 = input.LA(1);
 
                          
                         int index32_20 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred94_InternalRegularExpressionParser()) ) {s = 41;}
+                        if ( (synpred95_InternalRegularExpressionParser()) ) {s = 41;}
 
                         else if ( (true) ) {s = 2;}
 
@@ -14976,19 +14881,139 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
                         input.seek(index32_20);
                         if ( s>=0 ) return s;
                         break;
-                    case 37 : 
+                    case 29 : 
                         int LA32_36 = input.LA(1);
 
                          
                         int index32_36 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred94_InternalRegularExpressionParser()) ) {s = 41;}
+                        if ( (synpred95_InternalRegularExpressionParser()) ) {s = 41;}
 
                         else if ( (true) ) {s = 2;}
 
                          
                         input.seek(index32_36);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 30 : 
+                        int LA32_6 = input.LA(1);
+
+                         
+                        int index32_6 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred95_InternalRegularExpressionParser()) ) {s = 41;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index32_6);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 31 : 
+                        int LA32_23 = input.LA(1);
+
+                         
+                        int index32_23 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred95_InternalRegularExpressionParser()) ) {s = 41;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index32_23);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 32 : 
+                        int LA32_39 = input.LA(1);
+
+                         
+                        int index32_39 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred95_InternalRegularExpressionParser()) ) {s = 41;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index32_39);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 33 : 
+                        int LA32_16 = input.LA(1);
+
+                         
+                        int index32_16 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred95_InternalRegularExpressionParser()) ) {s = 41;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index32_16);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 34 : 
+                        int LA32_14 = input.LA(1);
+
+                         
+                        int index32_14 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred95_InternalRegularExpressionParser()) ) {s = 41;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index32_14);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 35 : 
+                        int LA32_30 = input.LA(1);
+
+                         
+                        int index32_30 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred95_InternalRegularExpressionParser()) ) {s = 41;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index32_30);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 36 : 
+                        int LA32_25 = input.LA(1);
+
+                         
+                        int index32_25 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred95_InternalRegularExpressionParser()) ) {s = 41;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index32_25);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 37 : 
+                        int LA32_32 = input.LA(1);
+
+                         
+                        int index32_32 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred95_InternalRegularExpressionParser()) ) {s = 41;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index32_32);
                         if ( s>=0 ) return s;
                         break;
             }
@@ -15004,13 +15029,13 @@ public class InternalRegularExpressionParser extends AbstractInternalContentAssi
     public static final BitSet FOLLOW_1 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_2 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_3 = new BitSet(new long[]{0x0000200000000002L});
-    public static final BitSet FOLLOW_4 = new BitSet(new long[]{0x0001ADBFDDEE3BF0L});
+    public static final BitSet FOLLOW_4 = new BitSet(new long[]{0x0001ADBFFDEE3BF0L});
     public static final BitSet FOLLOW_5 = new BitSet(new long[]{0x0000000000100000L});
     public static final BitSet FOLLOW_6 = new BitSet(new long[]{0x0000810000000000L});
     public static final BitSet FOLLOW_7 = new BitSet(new long[]{0x0000000080000000L});
     public static final BitSet FOLLOW_8 = new BitSet(new long[]{0x0000000080000002L});
-    public static final BitSet FOLLOW_9 = new BitSet(new long[]{0x0001ADBF5DEE3BF0L});
-    public static final BitSet FOLLOW_10 = new BitSet(new long[]{0x0001ADBF5DEE3BF2L});
+    public static final BitSet FOLLOW_9 = new BitSet(new long[]{0x0001ADBF7DEE3BF0L});
+    public static final BitSet FOLLOW_10 = new BitSet(new long[]{0x0001ADBF7DEE3BF2L});
     public static final BitSet FOLLOW_11 = new BitSet(new long[]{0x0000000042018000L});
     public static final BitSet FOLLOW_12 = new BitSet(new long[]{0x0000000010000000L});
     public static final BitSet FOLLOW_13 = new BitSet(new long[]{0x0000000000001000L});

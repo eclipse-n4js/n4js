@@ -100,11 +100,6 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 				" --showSetup                    : prints n4jsc setup (default: false)\n" +
 				" --stdio                        : [lsp] uses stdin/stdout for communication\n" +
 				"                                  instead of sockets (default: false)\n" +
-				" --testCatalog (-tc) FILE       : [compile] generates a test catalog file to\n" +
-				"                                  the given location. The test catalog lists\n" +
-				"                                  all available tests among the compiled\n" +
-				"                                  sources. Existing test catalog files will be\n" +
-				"                                  replaced.\n" +
 				" --testOnly                     : [compile] only transpile contents of test\n" +
 				"                                  folders (default: false)\n" +
 				" --verbose                      : enables verbose output (default: false)\n" +
@@ -123,7 +118,6 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 						"  verbose=false\n" +
 						"  maxErrs=0\n" +
 						"  maxWarns=0\n" +
-						"  testCatalogFile=null\n" +
 						"  testOnly=false\n" +
 						"  noTests=false\n" +
 						"  port=5007\n" +
