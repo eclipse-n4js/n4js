@@ -816,6 +816,7 @@ public class RegularExpressionSemanticSequencer extends AbstractDelegatingSemant
 	 *         value=UNICODE_LETTER | 
 	 *         value=UNICODE_DIGIT | 
 	 *         value='-' | 
+	 *         value='_' | 
 	 *         value=',' | 
 	 *         value='=' | 
 	 *         value=':' | 
@@ -847,6 +848,7 @@ public class RegularExpressionSemanticSequencer extends AbstractDelegatingSemant
 	 *             value=UNICODE_LETTER | 
 	 *             value=UNICODE_DIGIT | 
 	 *             value='-' | 
+	 *             value='_' | 
 	 *             value=',' | 
 	 *             value='=' | 
 	 *             value=':' | 
