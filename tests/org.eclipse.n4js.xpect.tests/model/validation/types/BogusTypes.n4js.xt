@@ -34,10 +34,8 @@ abstract class F {
 	// XPECT errors --> "Wrong type syntax: Use foo:Type rather than Type foo. " at "int"
 	int m() {}
 
-	/* XPECT errors ---
-		"Test annotation @Test may only be used in test source folders (defined in package.json)." at "Test"
-		"Wrong type syntax: Use foo:Type rather than Type foo." at "int"
-	--- */
+	// XPECT warnings --> "Test annotation @Test may only be used in test source folders (defined in package.json)." at "Test"
+	// XPECT errors --> "Wrong type syntax: Use foo:Type rather than Type foo." at "int"
 	@Test int ma() {}
 
 	// XPECT errors --> "Wrong type syntax: Use foo:Type rather than Type foo. " at "int"

@@ -9,7 +9,9 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest
+   IssueConfiguration { IssueCode "ANN__TEST_ONLY_IN_TEST_SOURCES" {enabled=false} }
+   END_SETUP */
 
 /* XPECT output ---
 [Function: D]

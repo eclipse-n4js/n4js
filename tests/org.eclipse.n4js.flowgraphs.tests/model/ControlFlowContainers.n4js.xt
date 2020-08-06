@@ -94,7 +94,7 @@ class FieldInitializer1 {
 
 class AnnotationParameter1 {
 	// AnnotationParameter1 XPECT cfContainer of '1' --> LiteralAnnotationArgument::IntLiteral
-	// AnnotationParameter1 XPECT errors --> "Test annotation @Parameter may only be used in test source folders (defined in package.json)." at "Parameter"
+	// AnnotationParameter1 XPECT warnings --> "Test annotation @Parameter may only be used in test source folders (defined in package.json)." at "Parameter"
 	@Parameter(1)
     field;
 }
