@@ -482,6 +482,9 @@ AnnnotatedElement:
 Excluding test methods (annotated with `@Test`) from the test catalog is done using the annotation `@ExcludeFromTestCatalog`.
 The difference between `@Ignore` and `@ExcludeFromTestCatalog` is the retention policy:
 `@ExcludeFromTestCatalog` uses retention policy TYPE, i.e. that this annotation is not available at runtime.
+One use-case of this annotation is to support meta-programming,
+i.e. tests that dynamically execute tests from other modules that do not show up in the test catalog.
+ 
 
 [source,xtext]
 ----
