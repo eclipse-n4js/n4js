@@ -19,7 +19,7 @@ pipeline {
     
     tools {
         maven 'apache-maven-3.6.0'
-        jdk 'adoptopenjdk-hotspot-jdk11'
+        jdk 'adoptopenjdk-hotspot-jdk11-latest'
     }
 
     options {
