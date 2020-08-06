@@ -169,6 +169,50 @@ class IncrementalBuilderChangesTest extends AbstractIncrementalBuilderTest {
 	}
 
 	@Test
+	def void testChangeInOpenedFile_acrossFiles03() {
+		testWorkspaceManager.createTestProjectOnDisk(testDataAcrossFiles);
+		startAndWaitForLspServer();
+		assertNoIssues();
+
+		openFile("A");
+		changeOpenedFile("A", '42' -> '"hello"');
+		joinServerRequests();
+		assertNoIssues(); // error in "B" not showing up, because A not saved and B not opened
+		
+		openFile("B");
+		joinServerRequests();
+		assertIssues("B" -> #[
+			"(Error, [1:18 - 1:19], string is not a subtype of number.)"
+		]);
+	}
+
+	@Test
+	def void testChangeInOpenedFile_acrossFiles04() {
+		testWorkspaceManager.createTestProjectOnDisk(testDataAcrossFiles);
+		startAndWaitForLspServer();
+		assertNoIssues();
+
+		openFile("A");
+		changeOpenedFile("A", '42' -> '"hello"');
+		joinServerRequests();
+
+		saveOpenedFile("A");
+		joinServerRequests();
+
+		closeFile("A");
+		joinServerRequests();
+		assertIssues("B" -> #[
+			"(Error, [1:18 - 1:19], string is not a subtype of number.)"
+		]);
+
+		openFile("B");
+		joinServerRequests();
+		assertIssues("B" -> #[
+			"(Error, [1:18 - 1:19], string is not a subtype of number.)"
+		]);
+	}
+
+	@Test
 	def void testChangeInOpenedFile_acrossProjects01() {
 		testWorkspaceManager.createTestOnDisk(testDataAcrossProjects);
 		startAndWaitForLspServer();
@@ -202,6 +246,50 @@ class IncrementalBuilderChangesTest extends AbstractIncrementalBuilderTest {
 		assertNoIssues(); // error in "B" not showing up, because A not saved and B not opened
 
 		saveOpenedFile("A");
+		joinServerRequests();
+		assertIssues("B" -> #[
+			"(Error, [1:18 - 1:19], string is not a subtype of number.)"
+		]);
+	}
+
+	@Test
+	def void testChangeInOpenedFile_acrossProjects03() {
+		testWorkspaceManager.createTestOnDisk(testDataAcrossProjects);
+		startAndWaitForLspServer();
+		assertNoIssues();
+
+		openFile("A");
+		changeOpenedFile("A", '42' -> '"hello"');
+		joinServerRequests();
+		assertNoIssues(); // error in "B" not showing up, because A not saved and B not opened
+
+		openFile("B");
+		joinServerRequests();
+		assertIssues("B" -> #[
+			"(Error, [1:18 - 1:19], string is not a subtype of number.)"
+		]);
+	}
+
+	@Test
+	def void testChangeInOpenedFile_acrossProjects04() {
+		testWorkspaceManager.createTestOnDisk(testDataAcrossProjects);
+		startAndWaitForLspServer();
+		assertNoIssues();
+
+		openFile("A");
+		changeOpenedFile("A", '42' -> '"hello"');
+		joinServerRequests();
+
+		saveOpenedFile("A");
+		joinServerRequests();
+
+		closeFile("A");
+		joinServerRequests();
+		assertIssues("B" -> #[
+			"(Error, [1:18 - 1:19], string is not a subtype of number.)"
+		]);
+
+		openFile("B");
 		joinServerRequests();
 		assertIssues("B" -> #[
 			"(Error, [1:18 - 1:19], string is not a subtype of number.)"
