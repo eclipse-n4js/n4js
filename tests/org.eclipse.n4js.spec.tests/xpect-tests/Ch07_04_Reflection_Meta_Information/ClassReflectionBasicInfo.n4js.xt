@@ -34,7 +34,7 @@ class S extends SS{}
 interface RR{}
 interface R extends RR{}
 
-// XPECT errors --> "Test annotation @Ignore may only be used in test source folders (defined in package.json)." at "Ignore"
+// XPECT warnings --> "Test annotation @Ignore may only be used in test source folders (defined in package.json)." at "Ignore"
 @Ignore()
 class ClassWithStuff extends S implements R {}
 
