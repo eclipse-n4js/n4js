@@ -190,7 +190,8 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 				case TEST_IGNORE.name,
 				case TEST_FIXME.name,
 				case TEST_TIMEOUT.name,
-				case DESCRIPTION.name:
+				case DESCRIPTION.name,
+				case EXCLUDE_FROM_TEST_CATALOG.name:
 					internalCheckTestAnnotation(annotation)
 			}
 		}
