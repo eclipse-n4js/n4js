@@ -18,6 +18,8 @@
 	Preference "line.width.max" "100" {}
 	Preference "format.auto_wrap_in_front_of_logical_operator" "false" {}
 
+    IssueConfiguration { IssueCode "ANN__TEST_ONLY_IN_TEST_SOURCES" {enabled=false} }
+   
    END_SETUP
  */
 
