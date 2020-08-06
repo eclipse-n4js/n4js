@@ -334,15 +334,12 @@ public class ResourceTaskManager {
 			ResourceDescriptionsData newData = entry.getValue();
 
 			Set<URI> oldURIsOfProject = new HashSet<>(project2BuiltURIs.get(projectName));
-			oldURIsOfProject.removeAll(uri2RTCs.keySet());
 			removed.addAll(oldURIsOfProject);
 
 			for (IResourceDescription desc : newData.getAllResourceDescriptions()) {
 				URI descURI = desc.getURI();
-				if (!uri2RTCs.containsKey(descURI)) {
-					changed.add(desc);
-					removed.remove(descURI);
-				}
+				changed.add(desc);
+				removed.remove(descURI);
 			}
 		}
 
@@ -360,6 +357,10 @@ public class ResourceTaskManager {
 		}
 		project2BuiltURIsImmutable = ImmutableSetMultimap.copyOf(project2BuiltURIs);
 		workspaceConfig = newWorkspaceConfig;
+
+		// from this point forward: ignore changes/removals related to existing resource task contexts
+		changed.removeIf(desc -> uri2RTCs.containsKey(desc.getURI()));
+		removed.removeAll(uri2RTCs.keySet());
 
 		// update internal state of all contexts
 		if (Iterables.isEmpty(changed) && removed.isEmpty() && workspaceConfig.equals(oldWC)) {
