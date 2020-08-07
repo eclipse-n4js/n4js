@@ -10,11 +10,11 @@
  */
 package org.eclipse.n4js.resource
 
+import com.google.common.base.Strings
 import com.google.inject.Singleton
-import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
-import com.google.common.base.Strings
+import org.eclipse.n4js.N4JSGlobals
 
 /**
  * This class provides methods for calculating file extensions. The calculation takes into account Xpect file extension
@@ -51,6 +51,26 @@ public class XpectAwareFileExtensionCalculator {
 		} else {
 			return uri.lastSegment;
 		}
+	}
+	
+	/**
+	 * Returns the URI of the given EObject but without the Xpect file
+	 * extension in case that is present.
+	 */
+	def public URI getUriWithoutXpectExtension(EObject eObject) {
+		if ((eObject === null) || (eObject.eResource === null)) {
+			return null;
+		}
+		return getUriWithoutXpectExtension(eObject.eResource.URI);
+	}
+	
+	/**
+	 * Removes the Xpect file extension in case that is present of the given URI.
+	 */
+	def public URI getUriWithoutXpectExtension(URI uri) {
+		val fileName = getFilenameWithoutXpectExtension(uri);
+		val uriWithoutXpectExtension = uri.trimSegments(1).appendSegment(fileName);
+		return uriWithoutXpectExtension;
 	}
 
 	def private String getXpectAwareFileExtensionOrEmpty(URI uri){

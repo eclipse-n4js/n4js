@@ -9,7 +9,10 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+   IssueConfiguration { IssueCode "ANN__TEST_ONLY_IN_TEST_SOURCES" {enabled=false} }
+   END_SETUP
+ */
 // IDE-561
 
 /* XPECT output ---

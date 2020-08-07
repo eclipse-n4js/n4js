@@ -14,6 +14,8 @@ import {async} from "org/eclipse/n4js/mangelhaft/Test";
 import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert";
 import {Precondition} from "org/eclipse/n4js/mangelhaft/precondition/Precondition";
 import {MockTest} from "org/eclipse/n4js/mangelhaft/test/helper/MockTest";
+
+@ExcludeFromTestCatalog
 export public class BeforeAllErrorMockTest  {
     @BeforeAll
     throwing() {
@@ -29,6 +31,7 @@ export public class BeforeAllErrorMockTest  {
     }
 }
 
+@ExcludeFromTestCatalog
 export public class BeforeErrorMockTest  {
     @Before
     throwing() {
@@ -43,6 +46,7 @@ export public class BeforeErrorMockTest  {
 
     }
 }
+@ExcludeFromTestCatalog
 export public class AfterErrorMockTest  {
     @After
     throwing() {
@@ -57,6 +61,7 @@ export public class AfterErrorMockTest  {
 
     }
 }
+@ExcludeFromTestCatalog
 export public class AfterAllErrorMockTest  {
     @AfterAll
     throwing() {
@@ -72,6 +77,7 @@ export public class AfterAllErrorMockTest  {
     }
 }
 
+@ExcludeFromTestCatalog
 export public class OneTest {
     @Test
     smallDelayTest() {
@@ -82,6 +88,7 @@ export public class OneTest {
         })
     }
 }
+@ExcludeFromTestCatalog
 export public class OneTestBeforeAllAfterAll {
     @BeforeAll
     setup() {
@@ -111,6 +118,7 @@ export public class OneTestBeforeAllAfterAll {
     }
 
 }
+@ExcludeFromTestCatalog
 export public class OneTestOneWithEverything {
 
 
@@ -162,6 +170,7 @@ export public class OneTestOneWithEverything {
 
 }
 
+@ExcludeFromTestCatalog
 export public class ChildOfMock extends MockTest {
     @Test
     childSmallDelayTest() {
@@ -176,6 +185,7 @@ export public class ChildOfMock extends MockTest {
     }
 }
 
+@ExcludeFromTestCatalog
 export public class PreconditionTests {
     @Test
     basicPreconditionFailure() {
@@ -183,6 +193,7 @@ export public class PreconditionTests {
     }
 }
 
+@ExcludeFromTestCatalog
 export public class FixmeTests {
   @Test @Fixme("no scope") 
    fixme__noScope___success() {
@@ -232,6 +243,7 @@ export public class FixmeTests {
 
 }
 
+@ExcludeFromTestCatalog
 export public class MixedBag {
     @Test
     success() {

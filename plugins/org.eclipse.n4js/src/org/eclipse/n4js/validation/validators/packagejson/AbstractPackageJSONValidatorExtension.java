@@ -295,7 +295,7 @@ public abstract class AbstractPackageJSONValidatorExtension extends AbstractDecl
 		URI expectedLocation = project.getLocation().appendSegment(IN4JSProject.PACKAGE_JSON).toURI();
 
 		// In test Xpect scenarios (see bundle packagejson.xpect.tests) package.json files can be named package.json.xt
-		URI pckjsonUriWithoutXpectExtension = pckjsonUri.trimSegments(1).appendSegment(fileName);
+		URI pckjsonUriWithoutXpectExtension = fileExtensionCalculator.getUriWithoutXpectExtension(pckjsonUri);
 		return expectedLocation.equals(pckjsonUriWithoutXpectExtension);
 	}
 

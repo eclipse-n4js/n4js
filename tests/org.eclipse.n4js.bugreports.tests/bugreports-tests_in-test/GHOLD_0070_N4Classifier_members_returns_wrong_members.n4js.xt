@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.N4JSBugreportTest END_SETUP  */
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.N4JSBugreportTestInTest END_SETUP  */
 
 
 // note: this file covers GHOLD-70 and GHOLD-71 together

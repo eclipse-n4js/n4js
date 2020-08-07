@@ -26,9 +26,6 @@
     "vendorName": "Eclipse N4JS Project",
     "output": "src-gen",
     "sources": {
-      "source": [
-        "src/n4js"
-      ],
       "test": [
         "test/n4js"
       ]

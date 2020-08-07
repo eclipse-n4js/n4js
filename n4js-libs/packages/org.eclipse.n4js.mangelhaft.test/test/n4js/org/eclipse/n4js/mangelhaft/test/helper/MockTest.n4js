@@ -8,6 +8,9 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
+
+
+@ExcludeFromTestCatalog
 export public class MockTest  {
     public static beforeAllCount = 0;
     public static beforeCount = 0;

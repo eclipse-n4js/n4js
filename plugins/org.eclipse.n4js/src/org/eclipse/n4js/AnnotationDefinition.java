@@ -331,6 +331,13 @@ public final class AnnotationDefinition {
 			.retention(RetentionPolicy.RUNTIME).args(STRING_LITERAL).end();
 
 	/**
+	 * N4JSIDESpec : chapter 9 Testing
+	 */
+	public final static AnnotationDefinition EXCLUDE_FROM_TEST_CATALOG = define("ExcludeFromTestCatalog")
+			.targets(N4_CLASS_DECLARATION, N4_METHOD_DECLARATION)
+			.retention(RetentionPolicy.TYPE).transitive().end();
+
+	/**
 	 * N4JSSpec : chapter 11.2 Test Support, Constraints 128: TestAPI
 	 */
 	public final static AnnotationDefinition TEST_API = define("TestAPI")
@@ -873,8 +880,9 @@ public final class AnnotationDefinition {
 		 */
 		public EAnnotatableWrapper<A> getContainerAnnotatable() {
 			final EObject container = getContainerOfType(getContainer(), containerTypeClass);
-			return null == container ? null : new EAnnotatableWrapper<>(container, annotationResolver,
-					containerTypeClass);
+			return null == container ? null
+					: new EAnnotatableWrapper<>(container, annotationResolver,
+							containerTypeClass);
 		}
 
 		/**

@@ -1,0 +1,68 @@
+/*
+ * Copyright (c) 2020 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+	
+	Workspace {
+		Project "TestAnnotationOnlyAllowedInTestFolders" {
+			Folder "test" {
+				ThisFile {}
+			}
+			File "package.json" { from="../package.json" }
+		}
+	}
+	
+   END_SETUP 
+ */
+
+
+
+
+// XPECT noerrors -->
+@Group("")
+// XPECT noerrors -->
+@Timeout(1)
+// XPECT noerrors -->
+@Description("TEST DESCRIPTION")
+export public class TestClass {
+
+	// XPECT noerrors -->
+	@Parameter
+	myField:any;
+
+
+	// XPECT noerrors -->
+	@BeforeAll
+	// XPECT noerrors -->
+	@Before
+	public setup() : void {
+	}
+
+	// XPECT noerrors -->
+	@AfterAll
+	// XPECT noerrors -->
+	@After
+	public shutdown() : void {
+	}
+
+
+	// XPECT noerrors -->
+	@Test
+	// XPECT noerrors -->
+	@Fixme
+	// XPECT noerrors -->
+	@Ignore
+	// XPECT noerrors -->
+	@Parameters
+	public testCase() : void {
+	}
+
+}

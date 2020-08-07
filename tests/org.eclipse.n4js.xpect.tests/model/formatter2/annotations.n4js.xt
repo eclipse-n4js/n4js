@@ -10,7 +10,7 @@
  */
 
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest
-
+   IssueConfiguration { IssueCode "ANN__TEST_ONLY_IN_TEST_SOURCES" {enabled=false} }
    END_SETUP
  */
 

@@ -10,6 +10,9 @@
 			"source": [
 				"bugreports-tests",
 				"bugreports-pending"
+			],
+			"test": [
+				"bugreports-tests_in-test"
 			]
 		}
 	}
