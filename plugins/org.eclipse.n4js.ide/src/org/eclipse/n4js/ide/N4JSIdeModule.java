@@ -104,10 +104,6 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 		return WorkspaceAwareCanLoadFromDescriptionHelper.class;
 	}
 
-	public Class<? extends ProjectBuilder> bindXProjectManager() {
-		return ProjectBuilder.class;
-	}
-
 	public Class<? extends XIProjectDescriptionFactory> bindXIProjectDescriptionFactory() {
 		return N4JSProjectDescriptionFactory.class;
 	}
