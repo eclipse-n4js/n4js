@@ -55,6 +55,7 @@ import org.eclipse.xtext.workspace.ProjectConfigAdapter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -316,7 +317,21 @@ public class ProjectBuilder {
 			}
 		}
 
+		doCleanIssues();
+
 		doClear();
+	}
+
+	/**
+	 * Send the necessary 'publishDiagnostics' notifications to the LSP client to removing all existing issues located
+	 * in this project. Will not remove those issues from the current project state in {@link #projectStateSnapshot}.
+	 */
+	protected void doCleanIssues() {
+		ImmutableProjectState projectState = projectStateSnapshot.get();
+		ImmutableSet<URI> urisWithIssues = projectState.getValidationIssues().keySet();
+		for (URI uri : urisWithIssues) {
+			issuePublisher.accept(uri, Collections.emptyList());
+		}
 	}
 
 	/** @return list of output directories of this project */
