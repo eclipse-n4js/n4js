@@ -10,8 +10,10 @@
  */
 package org.eclipse.n4js.ide.tests.server;
 
+import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.DEFAULT_MODULE_NAME;
 import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.DEFAULT_PROJECT_NAME;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 
 import java.io.IOException;
@@ -117,6 +119,34 @@ public class CommandRebuildTest extends AbstractStructuredIdeTest<Void> {
 
 		assertEquals(FILE_TIME_MILLISECONDS, prjStateTime.toMillis());
 		assertEquals(FILE_TIME_MILLISECONDS, genFileTime.toMillis());
+	}
+
+	/** Expectation is that files '.n4js.projectstate' and 'src-gen/Module.js' are deleted and issues are cleared. */
+	@Test
+	public void testCleanOnly() throws Exception {
+		test("class A { foo(a: A) { } } class Main { main(a: A) { a.foo(null); } }");
+
+		// close test file
+		// (important because we are interested in persisted issues created/removed by builder, not issues in open
+		// editors which are not affected by a clean operation)
+		closeFile(DEFAULT_MODULE_NAME);
+
+		// add an error so we can assert that issues are being removed
+		changeNonOpenedFile(DEFAULT_MODULE_NAME, Pair.of("class A {", "let x:number = 'oops'; class A {"));
+		joinServerRequests();
+		assertIssues(Pair.of(DEFAULT_MODULE_NAME,
+				Collections.singletonList("(Error, [0:15 - 0:21], string is not a subtype of number.)")));
+
+		// send command under test
+		languageServer.getFrontend().clean();
+
+		// wait for previous command to finish
+		joinServerRequests();
+
+		// evaluate
+		assertNoIssues();
+		assertFalse(Files.exists(prjStatePath));
+		assertFalse(Files.exists(genFileStatePath));
 	}
 
 	/**
