@@ -25,6 +25,7 @@ import org.eclipse.n4js.ide.server.N4JSProjectDescriptionFactory;
 import org.eclipse.n4js.ide.server.N4JSProjectStatePersister;
 import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
 import org.eclipse.n4js.ide.server.SourceFolderAwareResourceValidator;
+import org.eclipse.n4js.ide.server.build.N4JSBuilderFrontend;
 import org.eclipse.n4js.ide.server.build.N4JSWorkspaceBuilder;
 import org.eclipse.n4js.ide.server.codeActions.N4JSCodeActionService;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
@@ -41,6 +42,7 @@ import org.eclipse.n4js.ide.xtext.server.XExecutableCommandRegistry;
 import org.eclipse.n4js.ide.xtext.server.XIProjectDescriptionFactory;
 import org.eclipse.n4js.ide.xtext.server.XIWorkspaceConfigFactory;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
+import org.eclipse.n4js.ide.xtext.server.build.BuilderFrontend;
 import org.eclipse.n4js.ide.xtext.server.build.DefaultBuildRequestFactory;
 import org.eclipse.n4js.ide.xtext.server.build.IBuildRequestFactory;
 import org.eclipse.n4js.ide.xtext.server.build.ProjectBuilder;
@@ -87,6 +89,10 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public Class<? extends ILanguageServerShutdownAndExitHandler> bindILanguageServerShutdownAndExitHandler() {
 		return ILanguageServerShutdownAndExitHandler.NullImpl.class;
+	}
+
+	public Class<? extends BuilderFrontend> bindBuilderFrontend() {
+		return N4JSBuilderFrontend.class;
 	}
 
 	public Class<? extends XWorkspaceManager> bindXWorkspaceManager() {
