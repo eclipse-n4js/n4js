@@ -102,7 +102,7 @@ public class XWorkspaceManager {
 			return;
 		}
 
-		projectName2ProjectBuilder.values().forEach(b -> b.doClear());
+		projectName2ProjectBuilder.values().forEach(b -> b.doClearWithNotification());
 		projectName2ProjectBuilder.clear();
 		fullIndex.initialize(workspaceConfig.toSnapshot());
 		fullIndex.removeAllProjectsIndices();
@@ -166,7 +166,7 @@ public class XWorkspaceManager {
 		String projectName = projectConfig.getName();
 		ProjectBuilder projectBuilder = projectName2ProjectBuilder.remove(projectName);
 		if (projectBuilder != null) {
-			projectBuilder.doClear();
+			projectBuilder.doClearWithNotification();
 		}
 		fullIndex.removeProjectIndex(projectName);
 	}
