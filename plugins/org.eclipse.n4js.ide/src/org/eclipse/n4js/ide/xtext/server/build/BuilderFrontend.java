@@ -103,7 +103,7 @@ public class BuilderFrontend {
 	 * Triggers rebuild of the whole workspace
 	 */
 	public void reinitWorkspace() {
-		asyncRunBuildTask("reinitWorkspace", workspaceBuilder::createInitialBuildTask);
+		asyncRunBuildTask("reinitWorkspace", workspaceBuilder::createReinitialBuildTask);
 	}
 
 	/**
@@ -112,7 +112,8 @@ public class BuilderFrontend {
 	public void didSave(DidSaveTextDocumentParams params) {
 		URI uri = getURI(params.getTextDocument());
 		asyncRunBuildTask("didSave",
-				() -> workspaceBuilder.createIncrementalBuildTask(Collections.singletonList(uri), Collections.emptyList()));
+				() -> workspaceBuilder.createIncrementalBuildTask(Collections.singletonList(uri),
+						Collections.emptyList()));
 	}
 
 	/**

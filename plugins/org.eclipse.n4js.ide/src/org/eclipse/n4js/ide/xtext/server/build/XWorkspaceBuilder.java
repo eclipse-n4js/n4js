@@ -133,9 +133,16 @@ public class XWorkspaceBuilder {
 	}
 
 	/**
-	 * Re-initializes the workspace and triggers the equivalent to an initial build.
+	 * Initializes the workspace and triggers the equivalent to an initial build.
 	 */
 	public BuildTask createInitialBuildTask() {
+		return this::doInitialBuild;
+	}
+
+	/**
+	 * Re-initializes the workspace and triggers the equivalent to an initial build.
+	 */
+	public BuildTask createReinitialBuildTask() {
 		workspaceManager.reinitialize();
 		return this::doInitialBuild;
 	}
@@ -264,12 +271,12 @@ public class XWorkspaceBuilder {
 		for (XIProjectConfig prjConfig : workspaceChanges.getRemovedProjects()) {
 			this.deletedProjects.add(prjConfig.getName());
 			handleDeletedProject(prjConfig);
-			workspaceManager.removeProject(prjConfig);
 		}
+		workspaceManager.removeProjects(workspaceChanges.getRemovedProjects());
 		for (XIProjectConfig prjConfig : workspaceChanges.getAddedProjects()) {
 			this.deletedProjects.remove(prjConfig.getName()); // in case a deleted project is being re-created
-			workspaceManager.addProject(prjConfig);
 		}
+		workspaceManager.addProjects(workspaceChanges.getAddedProjects());
 
 		return (cancelIndicator) -> doIncrementalBuild(cancelIndicator);
 	}
