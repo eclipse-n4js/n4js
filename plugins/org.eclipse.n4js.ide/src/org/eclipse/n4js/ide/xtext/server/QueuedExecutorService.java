@@ -140,6 +140,11 @@ public class QueuedExecutorService {
 		public void cancel() {
 			cancelled = true;
 		}
+
+		@Override
+		public String toString() {
+			return description;
+		}
 	}
 
 	@SuppressWarnings("javadoc")
