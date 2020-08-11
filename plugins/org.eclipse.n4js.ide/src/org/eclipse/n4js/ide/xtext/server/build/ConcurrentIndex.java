@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ide.xtext.server.build;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -111,8 +112,11 @@ public class ConcurrentIndex {
 			oldProjectIndex = project2Index.put(projectName, projectIndex);
 			newWorkspaceConfig = workspaceConfig;
 		}
-		notifyListeners(newWorkspaceConfig, ImmutableMap.of(projectName, projectIndex), ImmutableList.of(),
-				ImmutableSet.of());
+		if ((oldProjectIndex != null && !oldProjectIndex.isEmpty()) || !projectIndex.isEmpty()) {
+			// check avoids many notifications during initialization
+			notifyListeners(newWorkspaceConfig, ImmutableMap.of(projectName, projectIndex), ImmutableList.of(),
+					ImmutableSet.of());
+		}
 		return oldProjectIndex;
 	}
 
@@ -139,21 +143,25 @@ public class ConcurrentIndex {
 	}
 
 	/** Removes the project with the given name from the index. */
-	public ResourceDescriptionsData removeProjectIndex(String projectName) {
-		Objects.requireNonNull(projectName);
-		ResourceDescriptionsData oldProjectIndex;
+	public List<ResourceDescriptionsData> removeProjectIndices(List<String> projectNames) {
+		Objects.requireNonNull(projectNames);
+		List<ResourceDescriptionsData> oldProjectIndices = new ArrayList<>();
 		WorkspaceConfigSnapshot newWorkspaceConfig;
+		ImmutableSet<String> projectNamesCpy = new ImmutableSet.Builder<String>().addAll(projectNames).build();
 		synchronized (this) {
-			oldProjectIndex = project2Index.remove(projectName);
-			newWorkspaceConfig = workspaceConfig.update(Collections.emptyList(),
-					Collections.singletonList(projectName));
+			for (String projectName : projectNames) {
+				ResourceDescriptionsData oldProjectIndex = project2Index.remove(projectName);
+				if (oldProjectIndex != null) {
+					oldProjectIndices.add(oldProjectIndex);
+				}
+			}
+			newWorkspaceConfig = workspaceConfig.update(Collections.emptyList(), projectNamesCpy);
 			workspaceConfig = newWorkspaceConfig;
 		}
-		if (oldProjectIndex != null) {
-			notifyListeners(newWorkspaceConfig, ImmutableMap.of(), ImmutableList.of(),
-					ImmutableSet.of(projectName));
+		if (!oldProjectIndices.isEmpty()) {
+			notifyListeners(newWorkspaceConfig, ImmutableMap.of(), ImmutableList.of(), projectNamesCpy);
 		}
-		return oldProjectIndex;
+		return oldProjectIndices;
 	}
 
 	/**
