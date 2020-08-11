@@ -131,7 +131,7 @@ public class ProjectBuilder {
 	public void initialize(ProjectDescription projectDescription, XIProjectConfig projectConfig) {
 		this.projectDescription = projectDescription;
 		this.projectConfig = projectConfig;
-		this.doClear();
+		this.doClearWithoutNotification();
 		this.resourceSet = createNewResourceSet(getProjectIndex());
 	}
 
@@ -317,21 +317,7 @@ public class ProjectBuilder {
 			}
 		}
 
-		doCleanIssues();
-
-		doClear();
-	}
-
-	/**
-	 * Send the necessary 'publishDiagnostics' notifications to the LSP client to removing all existing issues located
-	 * in this project. Will not remove those issues from the current project state in {@link #projectStateSnapshot}.
-	 */
-	protected void doCleanIssues() {
-		ImmutableProjectState projectState = projectStateSnapshot.get();
-		ImmutableSet<URI> urisWithIssues = projectState.getValidationIssues().keySet();
-		for (URI uri : urisWithIssues) {
-			issuePublisher.accept(uri, Collections.emptyList());
-		}
+		doClearWithNotification();
 	}
 
 	/** @return list of output directories of this project */
@@ -481,8 +467,24 @@ public class ProjectBuilder {
 		return projectConfig;
 	}
 
-	/** Clears type index of this project. */
-	protected void doClear() {
+	/** Same as {@link #doClearWithoutNotification()}, but also sends corresponding notifications to the LSP client. */
+	protected void doClearWithNotification() {
+		// send 'publishDiagnostics' notifications to the LSP client for removing all existing issues in this project
+		ImmutableProjectState projectState = projectStateSnapshot.get();
+		ImmutableSet<URI> urisWithIssues = projectState.getValidationIssues().keySet();
+		for (URI uri : urisWithIssues) {
+			issuePublisher.accept(uri, Collections.emptyList());
+		}
+		// actually clear internal state
+		doClearWithoutNotification();
+	}
+
+	/**
+	 * Clears the {@link #projectStateSnapshot project state}, type index, and resource set of this project.
+	 * <p>
+	 * Does <em>not</em> send any corresponding notifications to the LSP client.
+	 */
+	protected void doClearWithoutNotification() {
 		ImmutableProjectState newState = ImmutableProjectState.empty();
 		setProjectIndex(newState.internalGetResourceDescriptions());
 		this.projectStateSnapshot.set(newState);
@@ -519,7 +521,7 @@ public class ProjectBuilder {
 		}
 
 		ResourceChangeSet result = new ResourceChangeSet();
-		doClear();
+		doClearWithoutNotification();
 
 		ImmutableProjectState projectState = projectStatePersister.readProjectState(projectConfig);
 		if (projectState != null) {
