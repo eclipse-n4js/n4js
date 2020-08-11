@@ -398,8 +398,10 @@ public class ResourceTaskManager {
 			}
 			runInExistingContextVoid(currURI, "updateSharedDirtyState of existing context", (rtc, ci) -> {
 				if (newDesc != null) {
+					// happens in case a resource context has changed
 					rtc.onDirtyStateChanged(newDesc, ci);
 				} else {
+					// happens in case a resource context is closed
 					if (replacementDesc != null) {
 						rtc.onPersistedStateChanged(Collections.singleton(replacementDesc), Collections.emptySet(),
 								capturedProject2BuiltURIsImmutable, capturedWorkspaceConfig, ci);
