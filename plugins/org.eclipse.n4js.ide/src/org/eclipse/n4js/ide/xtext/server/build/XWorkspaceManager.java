@@ -19,6 +19,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ide.xtext.server.XIProjectDescriptionFactory;
 import org.eclipse.n4js.ide.xtext.server.XIWorkspaceConfigFactory;
 import org.eclipse.n4js.xtext.server.LSPIssue;
+import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
 import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
@@ -109,9 +110,7 @@ public class XWorkspaceManager {
 
 		// init projects
 		this.workspaceConfig = workspaceConfig;
-		for (XIProjectConfig projectConfig : getProjectConfigs()) {
-			addProject(projectConfig);
-		}
+		addProjects(getProjectConfigs());
 	}
 
 	/**
@@ -148,27 +147,29 @@ public class XWorkspaceManager {
 	}
 
 	/** Adds a project to the workspace */
-	public void addProject(XIProjectConfig projectConfig) {
-		ProjectBuilder projectBuilder = projectBuilderProvider.get();
-		ProjectDescription projectDescription = projectDescriptionFactory.getProjectDescription(projectConfig);
-		projectBuilder.initialize(projectDescription, projectConfig);
-		projectName2ProjectBuilder.put(projectDescription.getName(), projectBuilder);
-		fullIndex.setProjectConfigSnapshot(projectConfig.toSnapshot());
-	}
-
-	/** Removes a project from the workspace */
-	protected void removeProject(ProjectBuilder projectBuilder) {
-		removeProject(projectBuilder.getProjectConfig());
-	}
-
-	/** Removes a project from the workspace */
-	public void removeProject(IProjectConfig projectConfig) {
-		String projectName = projectConfig.getName();
-		ProjectBuilder projectBuilder = projectName2ProjectBuilder.remove(projectName);
-		if (projectBuilder != null) {
-			projectBuilder.doClearWithNotification();
+	public void addProjects(Collection<? extends XIProjectConfig> projectConfigs) {
+		Collection<ProjectConfigSnapshot> pcSnapshots = new ArrayList<>();
+		for (XIProjectConfig projectConfig : projectConfigs) {
+			ProjectDescription projectDescription = projectDescriptionFactory.getProjectDescription(projectConfig);
+			ProjectBuilder projectBuilder = projectBuilderProvider.get();
+			projectBuilder.initialize(projectDescription, projectConfig);
+			projectName2ProjectBuilder.put(projectDescription.getName(), projectBuilder);
+			pcSnapshots.add(projectConfig.toSnapshot());
 		}
-		fullIndex.removeProjectIndex(projectName);
+		fullIndex.setProjectConfigSnapshots(pcSnapshots);
+	}
+
+	/** Removes a project from the workspace */
+	public void removeProjects(Collection<XIProjectConfig> projectConfigs) {
+		List<String> projectNames = new ArrayList<>();
+		for (XIProjectConfig projectConfig : projectConfigs) {
+			String projectName = projectConfig.getName();
+			ProjectBuilder projectBuilder = projectName2ProjectBuilder.remove(projectName);
+			if (projectBuilder != null) {
+				projectBuilder.doClearWithNotification();
+			}
+		}
+		fullIndex.removeProjectIndices(projectNames);
 	}
 
 	/**

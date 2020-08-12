@@ -176,6 +176,10 @@ public class ProjectBuildOrderInfo implements IOrderInfo<ProjectDescription> {
 			LinkedHashSet<String> projectStack) {
 
 		String pdName = pd.getName();
+		if (orderedProjects.contains(pdName)) {
+			return;
+		}
+
 		if (projectStack.contains(pdName)) {
 			for (String cyclicPD : projectStack) {
 				reportDependencyCycle(cyclicPD);

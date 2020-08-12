@@ -620,8 +620,11 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		changeFileOnDiskWithoutNotification(fileURI, info.content);
 		// 2) notify LSP server
 		VersionedTextDocumentIdentifier docId = new VersionedTextDocumentIdentifier(fileURI.toString(), info.version);
-		DidSaveTextDocumentParams params = new DidSaveTextDocumentParams(docId);
-		languageServer.didSave(params);
+		DidSaveTextDocumentParams didSaveParams = new DidSaveTextDocumentParams(docId);
+		List<FileEvent> fEvents = Collections.singletonList(new FileEvent(fileURI.toString(), FileChangeType.Changed));
+		DidChangeWatchedFilesParams didChangeWatchedFilesParams = new DidChangeWatchedFilesParams(fEvents);
+		languageServer.didSave(didSaveParams);
+		languageServer.didChangeWatchedFiles(didChangeWatchedFilesParams);
 	}
 
 	/**
