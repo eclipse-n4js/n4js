@@ -55,6 +55,7 @@ import org.eclipse.xtext.workspace.ProjectConfigAdapter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -130,7 +131,7 @@ public class ProjectBuilder {
 	public void initialize(ProjectDescription projectDescription, XIProjectConfig projectConfig) {
 		this.projectDescription = projectDescription;
 		this.projectConfig = projectConfig;
-		this.doClear();
+		this.doClearWithoutNotification();
 		this.resourceSet = createNewResourceSet(getProjectIndex());
 	}
 
@@ -316,7 +317,7 @@ public class ProjectBuilder {
 			}
 		}
 
-		doClear();
+		doClearWithNotification();
 	}
 
 	/** @return list of output directories of this project */
@@ -466,8 +467,24 @@ public class ProjectBuilder {
 		return projectConfig;
 	}
 
-	/** Clears type index of this project. */
-	protected void doClear() {
+	/** Same as {@link #doClearWithoutNotification()}, but also sends corresponding notifications to the LSP client. */
+	protected void doClearWithNotification() {
+		// send 'publishDiagnostics' notifications to the LSP client for removing all existing issues in this project
+		ImmutableProjectState projectState = projectStateSnapshot.get();
+		ImmutableSet<URI> urisWithIssues = projectState.getValidationIssues().keySet();
+		for (URI uri : urisWithIssues) {
+			issuePublisher.accept(uri, Collections.emptyList());
+		}
+		// actually clear internal state
+		doClearWithoutNotification();
+	}
+
+	/**
+	 * Clears the {@link #projectStateSnapshot project state}, type index, and resource set of this project.
+	 * <p>
+	 * Does <em>not</em> send any corresponding notifications to the LSP client.
+	 */
+	protected void doClearWithoutNotification() {
 		ImmutableProjectState newState = ImmutableProjectState.empty();
 		setProjectIndex(newState.internalGetResourceDescriptions());
 		this.projectStateSnapshot.set(newState);
@@ -504,7 +521,7 @@ public class ProjectBuilder {
 		}
 
 		ResourceChangeSet result = new ResourceChangeSet();
-		doClear();
+		doClearWithoutNotification();
 
 		ImmutableProjectState projectState = projectStatePersister.readProjectState(projectConfig);
 		if (projectState != null) {
