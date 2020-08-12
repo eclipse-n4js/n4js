@@ -107,17 +107,21 @@ public class BuilderFrontend {
 	}
 
 	/**
-	 * Trigger an incremental build in the background.
+	 * Trigger an incremental build in the background when open editors are being saved.
+	 * <p>
+	 * NOTE: if the LSP client is configured to send 'didChangeWatchedFiles' notifications for the file being saved
+	 * here, then such a notification will arrive for this file in addition to 'didSave'. To avoid duplicate build
+	 * triggering in this case, one of the triggers should be suppressed, e.g. by overriding this method with an empty
+	 * body.
 	 */
 	public void didSave(DidSaveTextDocumentParams params) {
 		URI uri = getURI(params.getTextDocument());
-		asyncRunBuildTask("didSave",
-				() -> workspaceBuilder.createIncrementalBuildTask(Collections.singletonList(uri),
-						Collections.emptyList()));
+		asyncRunBuildTask("didSave", () -> workspaceBuilder.createIncrementalBuildTask(Collections.singletonList(uri),
+				Collections.emptyList()));
 	}
 
 	/**
-	 * Trigger an incremental build in the background.
+	 * Trigger an incremental build in the background when files change on disk.
 	 */
 	public void didChangeWatchedFiles(DidChangeWatchedFilesParams params) {
 		List<URI> dirtyFiles = new ArrayList<>();
