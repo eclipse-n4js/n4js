@@ -59,8 +59,8 @@ public class N4JSProjectBuilder extends ProjectBuilder {
 	}
 
 	@Override
-	protected void doClear() {
-		super.doClear();
+	protected void doClearWithoutNotification() {
+		super.doClearWithoutNotification();
 
 		removeTestCatalog();
 	}
