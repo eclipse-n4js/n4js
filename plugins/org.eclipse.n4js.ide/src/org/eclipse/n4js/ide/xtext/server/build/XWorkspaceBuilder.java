@@ -133,7 +133,7 @@ public class XWorkspaceBuilder {
 	}
 
 	/**
-	 * Initializes the workspace and triggers the equivalent to an initial build.
+	 * Initializes the workspace and triggers an initial build.
 	 */
 	public BuildTask createInitialBuildTask() {
 		return this::doInitialBuild;

@@ -59,7 +59,12 @@ public class ConcurrentIndex {
 
 	/** Listens for changes in a {@link ConcurrentIndex}. */
 	public interface IIndexListener {
-		/** Invoked when the index has changed. */
+		/**
+		 * Invoked when the index has changed.
+		 * <p>
+		 * <b>Attention:</b> In case an index for a new project is added and this new index is empty, there is no event
+		 * emitted. The reason is to minimize events during startup.
+		 */
 		public void onIndexChanged(
 				WorkspaceConfigSnapshot newWorkspaceConfig,
 				Map<String, ? extends ResourceDescriptionsData> changedDescriptions,
