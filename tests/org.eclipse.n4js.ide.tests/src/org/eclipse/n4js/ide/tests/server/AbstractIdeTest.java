@@ -51,8 +51,10 @@ import org.eclipse.lsp4j.FileEvent;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.Range;
+import org.eclipse.lsp4j.RenameCapabilities;
 import org.eclipse.lsp4j.ResourceChange;
 import org.eclipse.lsp4j.ResourceOperation;
+import org.eclipse.lsp4j.TextDocumentClientCapabilities;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.lsp4j.TextDocumentEdit;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
@@ -247,6 +249,9 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		WorkspaceClientCapabilities wcc = new WorkspaceClientCapabilities();
 		wcc.setExecuteCommand(new ExecuteCommandCapabilities());
 		capabilities.setWorkspace(wcc);
+		TextDocumentClientCapabilities tdcc = new TextDocumentClientCapabilities();
+		tdcc.setRename(new RenameCapabilities(true, false)); // activate 'prepareRename' requests
+		capabilities.setTextDocument(tdcc);
 		InitializeParams initParams = new InitializeParams();
 		initParams.setCapabilities(capabilities);
 		initParams.setRootUri(new FileURI(root).toString());
@@ -1092,8 +1097,9 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		return new FileURI(file);
 	}
 
+	/** Applies the given replacements to the given character sequence and returns the resulting string. */
 	@SafeVarargs
-	private static String applyReplacements(CharSequence oldContent, Pair<String, String>... replacements) {
+	protected static String applyReplacements(CharSequence oldContent, Pair<String, String>... replacements) {
 		StringBuilder newContent = new StringBuilder(oldContent);
 		for (Pair<String, String> replacement : replacements) {
 			int offset = newContent.indexOf(replacement.getKey());
@@ -1107,7 +1113,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		return newContent.toString();
 	}
 
-	private static String applyTextEdits(CharSequence oldContent, Iterable<? extends TextEdit> textEdits) {
+	/** Applies the given text edits to the given character sequence and returns the resulting string. */
+	protected static String applyTextEdits(CharSequence oldContent, Iterable<? extends TextEdit> textEdits) {
 		XDocument oldDocument = new XDocument(0, oldContent.toString(), true, true);
 		XDocument newDocument = oldDocument.applyChanges(textEdits);
 		return newDocument.getContents();
