@@ -31,6 +31,7 @@ import org.eclipse.n4js.ide.server.codeActions.N4JSCodeActionService;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
 import org.eclipse.n4js.ide.server.concurrent.N4JSQueuedExecutorService;
 import org.eclipse.n4js.ide.server.hover.N4JSHoverService;
+import org.eclipse.n4js.ide.server.rename.N4JSRenameService;
 import org.eclipse.n4js.ide.server.symbol.N4JSDocumentSymbolMapper;
 import org.eclipse.n4js.ide.server.symbol.N4JSHierarchicalDocumentSymbolService;
 import org.eclipse.n4js.ide.xtext.editor.contentassist.XIdeContentProposalAcceptor;
@@ -53,6 +54,7 @@ import org.eclipse.n4js.ide.xtext.server.build.XWorkspaceBuilder;
 import org.eclipse.n4js.ide.xtext.server.build.XWorkspaceManager;
 import org.eclipse.n4js.ide.xtext.server.contentassist.XContentAssistService;
 import org.eclipse.n4js.ide.xtext.server.issues.WorkspaceValidateListener;
+import org.eclipse.n4js.ide.xtext.server.symbol.XDocumentSymbolService;
 import org.eclipse.n4js.ide.xtext.server.util.XOperationCanceledManager;
 import org.eclipse.n4js.internal.lsp.FileSystemScanner;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
@@ -70,7 +72,9 @@ import org.eclipse.xtext.ide.server.codeActions.ICodeActionService2;
 import org.eclipse.xtext.ide.server.commands.ExecutableCommandRegistry;
 import org.eclipse.xtext.ide.server.commands.IExecutableCommandService;
 import org.eclipse.xtext.ide.server.hover.HoverService;
+import org.eclipse.xtext.ide.server.rename.IRenameService2;
 import org.eclipse.xtext.ide.server.symbol.DocumentSymbolMapper;
+import org.eclipse.xtext.ide.server.symbol.DocumentSymbolService;
 import org.eclipse.xtext.ide.server.symbol.HierarchicalDocumentSymbolService;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.IFileSystemScanner;
@@ -176,6 +180,15 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 		return N4JSCommandService.class;
 	}
 
+	@Override
+	public Class<? extends IRenameService2> bindIRenameService2() {
+		return N4JSRenameService.class;
+	}
+
+	public Class<? extends DocumentSymbolService> bindDocumentSymbolService() {
+		return XDocumentSymbolService.class;
+	}
+
 	public Class<? extends IPrefixMatcher> bindIPrefixMatcher() {
 		return FQNPrefixMatcher.class;
 	}
@@ -188,7 +201,7 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 		return N4JSLanguageServer.class;
 	}
 
-	public Class<? extends QueuedExecutorService> bindLSPExecutorService() {
+	public Class<? extends QueuedExecutorService> bindQueuedExecutorService() {
 		return N4JSQueuedExecutorService.class;
 	}
 

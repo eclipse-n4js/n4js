@@ -10,9 +10,12 @@
  */
 package org.eclipse.n4js.n4JS
 
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EStructuralFeature
+import org.eclipse.n4js.ts.types.IdentifiableElement
 
 import static org.eclipse.n4js.n4JS.N4JSPackage.Literals.*
+import static org.eclipse.n4js.ts.types.TypesPackage.Literals.*
 
 /**
  * Static utility methods for retrieving features of AST elements.
@@ -22,8 +25,8 @@ class N4JSFeatureUtils {
 	/**
 	 * Returns attribute feature actually holding the name or null, if no such attribute exists.
 	 */
-	public static def EStructuralFeature attributeOfNameFeature(NamedElement namedElement) {
-		switch (namedElement) {
+	public static def EStructuralFeature attributeOfNameFeature(EObject elementWithName) {
+		switch (elementWithName) {
 			Annotation: ANNOTATION__NAME
 			FunctionDeclaration: FUNCTION_DECLARATION__NAME
 			FunctionExpression: FUNCTION_EXPRESSION__NAME
@@ -32,6 +35,7 @@ class N4JSFeatureUtils {
 			N4ClassExpression: N4_CLASS_EXPRESSION__NAME
 			N4EnumLiteral: N4_ENUM_LITERAL__NAME
 			PropertyNameOwner: PROPERTY_NAME_OWNER__DECLARED_NAME
+			IdentifiableElement: IDENTIFIABLE_ELEMENT__NAME
 			default: null
 		}
 	}
