@@ -28,7 +28,6 @@ import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterBuildListener;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterDeleteListener;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterValidateListener;
 import org.eclipse.n4js.ide.xtext.server.issues.PublishingIssueAcceptor;
-import org.eclipse.n4js.internal.lsp.N4JSProjectConfig;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.xtext.server.LSPIssue;
 import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
@@ -299,13 +298,10 @@ public class ProjectBuilder {
 	public void doClean(AfterDeleteListener deleteListener, CancelIndicator cancelIndicator) {
 		deletePersistenceFile();
 
-		if (projectConfig instanceof N4JSProjectConfig) {
-			// TODO: merge N4JSProjectConfig#indexOnly() to IProjectConfig
-			N4JSProjectConfig n4pc = (N4JSProjectConfig) projectConfig;
-			if (n4pc.indexOnly()) {
-				return;
-			}
-		}
+		// TODO: temporarily commented out to also rebuild node_modules projects, see GH-1856.
+		// if (projectConfig.indexOnly()) {
+		// return;
+		// }
 
 		for (File outputDirectory : getOutputDirectories()) {
 			File[] childFiles = outputDirectory.listFiles();
@@ -392,12 +388,7 @@ public class ProjectBuilder {
 		request.setResourceSet(resourceSet);
 		request.setCancelIndicator(cancelIndicator);
 		request.setBaseDir(getBaseDir());
-
-		if (projectConfig instanceof N4JSProjectConfig) {
-			// TODO: merge N4JSProjectConfig#indexOnly() to IProjectConfig
-			N4JSProjectConfig n4pc = (N4JSProjectConfig) projectConfig;
-			request.setIndexOnly(n4pc.indexOnly());
-		}
+		request.setIndexOnly(projectConfig.indexOnly());
 
 		return request;
 	}
