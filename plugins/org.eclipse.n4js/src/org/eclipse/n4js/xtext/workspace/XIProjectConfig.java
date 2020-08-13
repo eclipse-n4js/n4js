@@ -20,6 +20,11 @@ import org.eclipse.xtext.workspace.IProjectConfig;
 @SuppressWarnings("restriction")
 public interface XIProjectConfig extends IProjectConfig {
 
+	/** Returns true iff this project will be indexed only (i.e. not validated and generated) */
+	default boolean indexOnly() {
+		return false;
+	}
+
 	/** Returns the names of all other projects the receiving project depends on. */
 	Set<String> getDependencies();
 
