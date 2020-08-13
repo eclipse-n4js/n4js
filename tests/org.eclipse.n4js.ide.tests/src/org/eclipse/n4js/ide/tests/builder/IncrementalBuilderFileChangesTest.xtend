@@ -111,7 +111,7 @@ class IncrementalBuilderFileChangesTest extends AbstractIncrementalBuilderTest {
 	}
 
 	@Test
-	def void testFixFileBetweenSessions() {
+	def void testFixFileBetweenServerSessions() {
 		testWorkspaceManager.createTestOnDisk(
 			TestWorkspaceManager.NODE_MODULES + "n4js-runtime" -> null,
 			"ProviderProject" -> #[
@@ -155,7 +155,7 @@ class IncrementalBuilderFileChangesTest extends AbstractIncrementalBuilderTest {
 	}
 
 	@Test
-	def void testBreakFileBetweenSessions() {
+	def void testBreakFileBetweenServerSessions() {
 		testWorkspaceManager.createTestOnDisk(
 			TestWorkspaceManager.NODE_MODULES + "n4js-runtime" -> null,
 			"ProviderProject" -> #[
