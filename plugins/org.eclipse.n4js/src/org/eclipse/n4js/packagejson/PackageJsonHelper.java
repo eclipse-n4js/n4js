@@ -287,7 +287,8 @@ public class PackageJsonHelper {
 			target.setMainModule(MAIN_MODULE.defaultValue);
 		}
 		if (target.getOutputPath() == null) {
-			target.setOutputPath(OUTPUT.defaultValue);
+			// a default output path will cause all files inside to be deleted on a 'clean build'
+			// this causes problems especially if this project is a yarn workspace project
 		}
 
 		// if no source containers are defined (no matter what type),
