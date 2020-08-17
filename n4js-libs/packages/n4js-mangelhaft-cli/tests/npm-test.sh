@@ -15,20 +15,14 @@ cd `dirname $0`/TestPrj
 echo "Create test catalogs"
 ../../../n4js-cli/bin/n4jsc.js compile ../../../..
 
-find ../../.. -name "testcatalog.json" -type f | while read -r FILE; do
-	PROJECT_PATH=$(cd $(dirname ${FILE}); pwd)
-	echo ""
-    echo "Run mangelhaft for ${PROJECT_PATH}:"
-	PROJECT_NAME=$(basename ${PROJECT_PATH})
-	REPORT_NAME="./build/report_${PROJECT_NAME}.xml"
-	
-	# run mangelhaft
-	../../bin/n4js-mangelhaft-cli.js \
-	    --testCatalog ${FILE} \
-	    --xunitReportFile ${REPORT_NAME} \
+
+echo "Run Mangelhaft"
+../../bin/n4js-mangelhaft-cli.js
+		--testCatalog . \
+	    --xunitReportFile ./build/report.xml \
 	    --xunitReportName test-report \
-	    --xunitReportPackage ${PROJECT_NAME} \
+	    --xunitReportPackage n4js-libs-report \
 	    $@
 
-    echo "Saved test report at: ${REPORT_NAME}"
-done
+echo "Saved test report at: ${REPORT_NAME}"
+
