@@ -15,7 +15,7 @@ import org.junit.Ignore
 import org.junit.Test
 
 /**
- *
+ * Tests to ensure that various AST nodes can be renamed.
  */
 class RenameBasicTest extends AbstractRenameTest {
 
@@ -36,11 +36,11 @@ class RenameBasicTest extends AbstractRenameTest {
 	}
 
 	@Test def void testFunctionDecl_FormalParameter_atDecl() {
-		testAtCursors("function foo(<|>na<|>me<|>) { name; }", "nameNew", "function foo(nameNew) { nameNew; }");
+		testAtCursors("function foo(<|>na<|>me<|>, param2) { name; param2; }", "nameNew", "function foo(nameNew, param2) { nameNew; param2; }");
 	}
 
 	@Test def void testFunctionDecl_FormalParameter_atRef() {
-		testAtCursors("function foo(name) { <|>na<|>me<|>; }", "nameNew", "function foo(nameNew) { nameNew; }");
+		testAtCursors("function foo(name, param2) { <|>na<|>me<|>; param2; }", "nameNew", "function foo(nameNew, param2) { nameNew; param2; }");
 	}
 
 	@Test def void testFunctionExpr_atDecl() {
@@ -67,12 +67,44 @@ class RenameBasicTest extends AbstractRenameTest {
 		testAtCursors("class Cls { name; } new Cls().<|>na<|>me<|>;", "nameNew", "class Cls { nameNew; } new Cls().nameNew;");
 	}
 
-	@Test def void testMethod_atDecl() {
-		testAtCursors("class Cls { <|>na<|>me<|>() {} } new Cls().name();", "nameNew", "class Cls { nameNew() {} } new Cls().nameNew();");
+	@Test def void testGetter_atDecl() {
+		testAtCursors("class Cls { get <|>na<|>me<|>() { return this.name; } } new Cls().name;", "nameNew", "class Cls { get nameNew() { return this.nameNew; } } new Cls().nameNew;");
 	}
 
-	@Test def void testMethod_atRef() {
-		testAtCursors("class Cls { name() {} } new Cls().<|>na<|>me<|>();", "nameNew", "class Cls { nameNew() {} } new Cls().nameNew();");
+	@Test def void testGetter_atRefs() {
+		testAtCursors("class Cls { get name() { return this.<|>na<|>me<|>; } } new Cls().<|>na<|>me<|>;", "nameNew", "class Cls { get nameNew() { return this.nameNew; } } new Cls().nameNew;");
+	}
+
+	@Test def void testSetter_atDecl() {
+		testAtCursors("class Cls { set <|>na<|>me<|>(value) { this.name = null; } } new Cls().name = null;", "nameNew", "class Cls { set nameNew(value) { this.nameNew = null; } } new Cls().nameNew = null;");
+	}
+
+	@Test def void testSetter_atRefs() {
+		testAtCursors("class Cls { set name(value) { this.<|>na<|>me<|> = null; } } new Cls().<|>na<|>me<|> = null;", "nameNew", "class Cls { set nameNew(value) { this.nameNew = null; } } new Cls().nameNew = null;");
+	}
+
+	@Test def void testSetter_FormalParameter_atDecl() {
+		testAtCursors("class Cls { set setter(<|>na<|>me<|>) { name; } }", "nameNew", "class Cls { set setter(nameNew) { nameNew; } }");
+	}
+
+	@Test def void testSetter_FormalParameter_atRef() {
+		testAtCursors("class Cls { set setter(name) { <|>na<|>me<|>; } }", "nameNew", "class Cls { set setter(nameNew) { nameNew; } }");
+	}
+
+	@Test def void testMethod_atDecl() {
+		testAtCursors("class Cls { <|>na<|>me<|>() { return this.name(); } } new Cls().name();", "nameNew", "class Cls { nameNew() { return this.nameNew(); } } new Cls().nameNew();");
+	}
+
+	@Test def void testMethod_atRefs() {
+		testAtCursors("class Cls { name() { return this.<|>na<|>me<|>(); } } new Cls().<|>na<|>me<|>();", "nameNew", "class Cls { nameNew() { return this.nameNew(); } } new Cls().nameNew();");
+	}
+
+	@Test def void testMethod_FormalParameter_atDecl() {
+		testAtCursors("class Cls { method(<|>na<|>me<|>, param2) { name; param2; } }", "nameNew", "class Cls { method(nameNew, param2) { nameNew; param2; } }");
+	}
+
+	@Test def void testMethod_FormalParameter_atRef() {
+		testAtCursors("class Cls { method(name, param2) { <|>na<|>me<|>; param2; } }", "nameNew", "class Cls { method(nameNew, param2) { nameNew; param2; } }");
 	}
 
 	@Ignore("class expressions not supported")

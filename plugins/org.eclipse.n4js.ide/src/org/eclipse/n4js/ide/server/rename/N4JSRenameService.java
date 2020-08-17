@@ -21,12 +21,14 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.RenameParams;
+import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.n4js.ide.xtext.server.ResourceTaskContext;
 import org.eclipse.n4js.ide.xtext.server.ResourceTaskManager;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.n4js.ide.xtext.server.symbol.XDocumentSymbolService;
+import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4JSFeatureUtils;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.xtext.findReferences.IReferenceFinder.IResourceAccess;
@@ -74,21 +76,15 @@ public class N4JSRenameService extends RenameService2 {
 	@Inject
 	private UriExtensions uriExtensions;
 
-	// @Override
-	// public Either<Range, PrepareRenameResult> prepareRename(PrepareRenameOptions options) {
-	// return null;
-	// }
-
 	@Override
 	public WorkspaceEdit rename(Options options) {
 		RenameParams renameParams = options.getRenameParams();
 		ILanguageServerAccess languageServerAccess = options.getLanguageServerAccess();
 		CancelIndicator cancelIndicator = options.getCancelIndicator();
 
-		String uriStr = renameParams.getTextDocument().getUri();
-		URI uri = uriExtensions.toUri(uriStr);
+		URI uri = getURI(renameParams.getTextDocument());
 		String description = "rename (" + N4JSRenameService.class.getSimpleName() + ")";
-		// FIXME it would be cleaner to use languageServerAccess here
+		// FIXME avoid duplicate context creation; also it would be cleaner to use languageServerAccess here
 		CompletableFuture<WorkspaceEdit> result = resourceTaskManager.runInTemporaryContext(uri, description, true,
 				cancelIndicator, (rtc, ci) -> doRename(rtc, renameParams, ci));
 
@@ -170,7 +166,7 @@ public class N4JSRenameService extends RenameService2 {
 	}
 
 	protected TextEdit computeRenameEditForElement(EObject element, String newName) {
-		EStructuralFeature nameFeature = N4JSFeatureUtils.attributeOfNameFeature(element);
+		EStructuralFeature nameFeature = getElementNameFeature(element);
 		Location location = nameFeature != null ? documentExtensions.newLocation(element, nameFeature, -1) : null;
 		if (location != null) {
 			TextEdit edit = new TextEdit(location.getRange(), newName);
@@ -183,7 +179,8 @@ public class N4JSRenameService extends RenameService2 {
 			int indexInList, String newName) {
 		if (eRef != N4JSPackage.eINSTANCE.getIdentifierRef_Id()
 				&& eRef != N4JSPackage.eINSTANCE.getNamedImportSpecifier_ImportedElement()
-				&& eRef != N4JSPackage.eINSTANCE.getParameterizedPropertyAccessExpression_Property()) {
+				&& eRef != N4JSPackage.eINSTANCE.getParameterizedPropertyAccessExpression_Property()
+				&& eRef != N4JSPackage.eINSTANCE.getLabelRef_Label()) {
 			return null;
 		}
 		Location location = documentExtensions.newLocation(obj, eRef, indexInList);
@@ -195,6 +192,41 @@ public class N4JSRenameService extends RenameService2 {
 	}
 
 	protected EObject getElementToBeRenamed(XtextResource resource, int offset) {
-		return eObjectAtOffsetHelper.resolveElementAt(resource, offset);
+		EObject result = eObjectAtOffsetHelper.resolveElementAt(resource, offset);
+
+		// special case: literal or computed property names
+		if (result instanceof LiteralOrComputedPropertyName) {
+			result = result.eContainer();
+		}
+
+		return result;
+	}
+
+	@Override
+	protected String getElementName(EObject element) {
+		// special case: literal or computed property names
+		if (element instanceof LiteralOrComputedPropertyName) {
+			String name = ((LiteralOrComputedPropertyName) element).getName();
+			return name != null && !name.isEmpty() ? name : null;
+		}
+
+		EStructuralFeature nameFeature = getElementNameFeature(element);
+		if (nameFeature != null) {
+			Object name = element.eGet(nameFeature);
+			if (name instanceof String && !((String) name).isEmpty()) {
+				return (String) name;
+			}
+		}
+		return null;
+	}
+
+	protected EStructuralFeature getElementNameFeature(EObject element) {
+		return N4JSFeatureUtils.attributeOfNameFeature(element);
+	}
+
+	protected URI getURI(TextDocumentIdentifier textDocuemntIdentifier) {
+		String uriStr = textDocuemntIdentifier.getUri();
+		URI uri = uriExtensions.toUri(uriStr);
+		return uri;
 	}
 }

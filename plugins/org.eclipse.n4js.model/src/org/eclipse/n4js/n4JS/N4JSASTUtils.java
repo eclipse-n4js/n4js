@@ -10,6 +10,9 @@
  */
 package org.eclipse.n4js.n4JS;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
@@ -31,6 +34,7 @@ import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.resource.XtextResource;
 
 import com.google.common.base.Charsets;
+import com.google.common.collect.ImmutableList;
 import com.google.common.hash.Hashing;
 
 /**
@@ -435,6 +439,25 @@ public abstract class N4JSASTUtils {
 			astNode = expr;
 		}
 		return astNode;
+	}
+
+	/**
+	 * Returns the formal parameters of the given declared function, function expression, method or accessor. Always
+	 * returns an empty list when given a getter.
+	 */
+	public static List<FormalParameter> getFormalParameters(FunctionOrFieldAccessor functionOrFieldAccessor) {
+		if (functionOrFieldAccessor == null) {
+			return Collections.emptyList();
+		} else if (functionOrFieldAccessor instanceof GetterDeclaration) {
+			return Collections.emptyList();
+		} else if (functionOrFieldAccessor instanceof SetterDeclaration) {
+			return Collections.singletonList(((SetterDeclaration) functionOrFieldAccessor).getFpar());
+		} else if (functionOrFieldAccessor instanceof FunctionDefinition) {
+			return ImmutableList.copyOf(((FunctionDefinition) functionOrFieldAccessor).getFpars());
+		} else {
+			throw new IllegalStateException("unhandled subclass of FunctionOrFieldAccessor: "
+					+ functionOrFieldAccessor.getClass().getSimpleName());
+		}
 	}
 
 	/**

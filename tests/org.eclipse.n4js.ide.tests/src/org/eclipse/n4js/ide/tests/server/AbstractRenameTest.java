@@ -86,7 +86,8 @@ abstract public class AbstractRenameTest extends AbstractStructuredIdeTest<Renam
 		textDocumentPositionParams.setTextDocument(new TextDocumentIdentifier(fileURI));
 		textDocumentPositionParams.setPosition(pos);
 		Either<Range, PrepareRenameResult> result1 = languageServer.prepareRename(textDocumentPositionParams).get();
-		assertTrue(result1 != null && (result1.getLeft() != null || result1.getRight() != null));
+		assertTrue("element cannot be renamed",
+				result1 != null && (result1.getLeft() != null || result1.getRight() != null));
 
 		RenameParams renameParams = new RenameParams();
 		renameParams.setTextDocument(new TextDocumentIdentifier(fileURI));
