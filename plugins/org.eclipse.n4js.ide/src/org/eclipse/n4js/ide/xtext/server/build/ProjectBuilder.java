@@ -388,7 +388,7 @@ public class ProjectBuilder {
 		request.setResourceSet(resourceSet);
 		request.setCancelIndicator(cancelIndicator);
 		request.setBaseDir(getBaseDir());
-		request.setIndexOnly(projectConfig.indexOnly());
+		// request.setIndexOnly(projectConfig.indexOnly());
 
 		return request;
 	}
