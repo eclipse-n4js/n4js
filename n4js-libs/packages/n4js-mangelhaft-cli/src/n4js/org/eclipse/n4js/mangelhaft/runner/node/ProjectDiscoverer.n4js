@@ -1,0 +1,92 @@
+/*
+ * Copyright (c) 2020 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+import * as lib_path from "path";
+import * as lib_fs from "fs";
+import * as lib_minimatch+ from "minimatch";
+import glob from "glob";
+
+const minimatch = (lib_minimatch as any) as {function(proband: string, pattern: string): boolean};
+
+
+/**
+ * @param {string} [initial]
+ * @return {string|null}
+ */
+export public function findProjectDirectories(dir: string) : string[] {
+    const projects : string[] = [];
+    const parentProjectDir = findParentProjectDir(dir);
+    if (parentProjectDir) {
+        projects.push(parentProjectDir);
+        const workspacesGlobs = getWorkspacesGlobs(parentProjectDir, dir);
+        const options = { cwd: parentProjectDir, absolute: true };
+        for (const workspacesGlob of workspacesGlobs) {
+            glob(workspacesGlob, options, (err, files) => {
+                for (const subProjectDir of files) {
+                    const manifestFile = lib_path.join(subProjectDir, 'package.json');
+                    if (lib_fs.existsSync(manifestFile)) {
+                        projects.push(subProjectDir);
+                    }
+                }
+            });
+        }
+    }
+    return projects;
+}
+
+/**
+ * @param {string} [initial]
+ * @return {string|null}
+ */
+function findParentProjectDir(initialDir: string) : string {
+    let previousDir = null;
+    let currentDir = lib_path.normalize(initialDir);
+
+    do {
+        const manifest = readPackageJSON(currentDir);
+        if (manifest) {
+            return currentDir;
+        }
+
+        previousDir = currentDir;
+        currentDir = lib_path.dirname(currentDir);
+    } while (currentDir !== previousDir);
+
+    return null;
+}
+
+function getWorkspacesGlobs(yarnworkspaceDir:string, subprojectDir: string) : string[] {
+    const manifest = readPackageJSON(yarnworkspaceDir);
+    const workspaces = extractWorkspaces(manifest);
+    if (workspaces) {
+        // is yarn workspaces project
+        const relativePath = lib_path.relative(yarnworkspaceDir, subprojectDir);
+        for (const workspacesEntry of workspaces) {
+            if (relativePath === '' || minimatch(relativePath, workspacesEntry)) {
+                return workspaces; 
+            }
+        }
+    }
+    return [];
+}
+
+function readPackageJSON(dir: string) : Object {
+    const file = lib_path.join(dir, 'package.json');
+    if (lib_fs.existsSync(file)) {
+        return JSON.parse(lib_fs.readFileSync(file, {encoding : 'utf8'})) as Object;
+    }
+    return null;
+}
+
+function extractWorkspaces(manifest : any+) : string[] {
+    const workspaces = manifest?.workspaces;
+    return (workspaces?.packages as string[]) || ((Array.isArray(workspaces) ? workspaces : null) as string[]);
+}

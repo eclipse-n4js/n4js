@@ -28,8 +28,12 @@ import {TestInfos} from "org/eclipse/n4js/mangelhaft/types/TestInfos";
 import {readJsonFile} from "org/eclipse/n4js/mangelhaft/util/fs";
 import {isHTTP_re} from "org/eclipse/n4js/mangelhaft/util/npm";
 import {waitAndExitProcess} from "org/eclipse/n4js/mangelhaft/util/proc";
+import {findProjectDirectories} from "org/eclipse/n4js/mangelhaft/runner/node/ProjectDiscoverer";
 import * as cli_color_+ from "cli-color";
 import {parse} from "url";
+import * as lib_path from "path";
+import * as lib_fs from "fs";
+
 
 class NodeTestRunner  {
     @Inject
@@ -47,9 +51,17 @@ class NodeTestRunner  {
             return;
         }
  
+        const log = options.quiet ? function(...p) {} : console.log.bind(console);
         let testCatalog: TestInfos;
- 
-        if (isHTTP_re.test(options.testCatalog)) { // running IDE
+
+        const stat = lib_fs.statSync(options.testCatalog);
+        if (stat.isFile()) {
+            testCatalog = loadTestCatalog(log, options.testCatalog);
+        } else if (stat.isDirectory()) {
+            const projectDirs : string[] = findProjectDirectories(options.testCatalog);
+            const testCatalogs : TestInfos[] = loadTestCatalogsInDirectories(log, projectDirs);
+            testCatalog = mergeTestCatalogs(testCatalogs);
+        } else if (isHTTP_re.test(options.testCatalog)) { // running IDE
             const req = await fetch(options.testCatalog, {
                 headers: {
                     "Content-Type": "application/vnd.n4js.assemble_test_catalog_req.tm+json"
@@ -57,7 +69,7 @@ class NodeTestRunner  {
             });
             testCatalog = (await req.json()) as TestInfos;
         } else {
-            testCatalog = readJsonFile(options.testCatalog) as TestInfos;
+            throw "Unknown value for option 'testCatalog': " + options.testCatalog;
         }
 
         if (options.filter && options.filter.length) { // filter out tests
@@ -89,13 +101,16 @@ class NodeTestRunner  {
             testCatalog.testDescriptors = descriptors;
         }
         
-        const log = options.quiet ? function(...p) {} : console.log.bind(console);
         this.consoleReporter.cliColor = cli_color_.default;
         this.consoleReporter.setLogger(log);
 
         const reporters: ITestReporter[] = [this.consoleReporter];
 
         if (options.xunitReportFile) {
+            if (!options.xunitReportPackage) {
+                options.testCatalog
+                options.xunitReportPackage = lib_path.dirname(options.testCatalog);
+            }
             this.xunitReporter.spec = options;
             reporters.push(this.xunitReporter);
         }
@@ -133,6 +148,40 @@ class NodeTestRunner  {
         }
     }
 }
+
+function loadTestCatalog(log: {function(any):void}, testCatalogFile: string) : TestInfos {
+    log("Loading test catalog: " + testCatalogFile);
+    return readJsonFile(testCatalogFile) as TestInfos;
+}
+
+function loadTestCatalogsInDirectories(log: {function(any):void}, projectDirs: string[]) : TestInfos[] {
+    const catalogs : TestInfos[] = [];
+    for (const pd of projectDirs) {
+        const potentialTestCatalogFile = lib_path.resolve(pd, "test-catalog.json");
+        const stat = lib_fs.statSync(potentialTestCatalogFile);
+        if (stat.isFile()) {
+            const catalog = loadTestCatalog(log, potentialTestCatalogFile);
+            catalogs.push(catalog);
+        }
+    }
+    return catalogs;
+}
+
+function mergeTestCatalogs(testCatalogs: TestInfos[]) : TestInfos {
+    if (!testCatalogs) {
+        return null;
+    }
+    const mergedTI = new TestInfos();
+    mergedTI.endpoint = testCatalogs[0].endpoint;
+    mergedTI.sessionId = testCatalogs[0].sessionId;
+    for (const ti of testCatalogs) {
+        for (const td of ti.testDescriptors) {
+            mergedTI.testDescriptors.push(td);
+        }
+    }
+    return mergedTI;
+}
+
 
 @Bind(IFIXME, FIXME1)
 @Bind(IFIXME2, FIXME2)
