@@ -26,21 +26,29 @@ export public function detectJavaVersion() : int {
     if (!fs.existsSync(JAVA_CLASS_FILE)) {
         const procCompile = childProcess.spawnSync('javac', [JAVA_SOURCE_FILE]);
         if (procCompile.error) {
-            return null;
+            throw procCompile.error;
         }
     }
 
     // Compiling was successful
     const procRun = childProcess.spawnSync('java', [JAVA_SOURCE_FILE]);
-    if (procRun.error || !procRun.stdout) {
-        return null;
+    if (procRun.error) {
+        throw procRun.error;
+    }
+    if (procRun.stderr) {
+        throw procRun.stderr;
     }
 
     // Executing PrintJavaVersion was successful
     const versionFeature = procRun.stdout.toString().trim();
     if (!versionFeature) {
-        return null;
+        throw "Missing return value of " + JAVA_SOURCE_FILE;
     }
 
-    return parseInt(versionFeature);
+    const version = parseInt(versionFeature);
+    if (!version) {
+        throw "Invalid Java version " + version;
+    }
+
+    return version;
 }
