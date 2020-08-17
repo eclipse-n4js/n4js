@@ -61,6 +61,10 @@ class NodeTestRunner  {
             const projectDirs : string[] = findProjectDirectories(options.testCatalog);
             const testCatalogs : TestInfos[] = loadTestCatalogsInDirectories(log, projectDirs);
             testCatalog = mergeTestCatalogs(testCatalogs);
+            if (!testCatalog) {
+                log("Did not find any test catalogs in: " + projectDirs);
+                return;
+            }
         } else if (isHTTP_re.test(options.testCatalog)) { // running IDE
             const req = await fetch(options.testCatalog, {
                 headers: {
@@ -158,8 +162,7 @@ function loadTestCatalogsInDirectories(log: {function(any):void}, projectDirs: s
     const catalogs : TestInfos[] = [];
     for (const pd of projectDirs) {
         const potentialTestCatalogFile = lib_path.resolve(pd, "test-catalog.json");
-        const stat = lib_fs.statSync(potentialTestCatalogFile);
-        if (stat.isFile()) {
+        if (lib_fs.existsSync(potentialTestCatalogFile) && lib_fs.statSync(potentialTestCatalogFile).isFile()) {
             const catalog = loadTestCatalog(log, potentialTestCatalogFile);
             catalogs.push(catalog);
         }
@@ -168,7 +171,7 @@ function loadTestCatalogsInDirectories(log: {function(any):void}, projectDirs: s
 }
 
 function mergeTestCatalogs(testCatalogs: TestInfos[]) : TestInfos {
-    if (!testCatalogs) {
+    if (!testCatalogs || testCatalogs.length === 0) {
         return null;
     }
     const mergedTI = new TestInfos();
