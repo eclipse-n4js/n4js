@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.types.ContainerType;
@@ -439,6 +440,30 @@ public abstract class N4JSASTUtils {
 			astNode = expr;
 		}
 		return astNode;
+	}
+
+	/**
+	 * Returns the name of the given AST or types model element or <code>null</code> if it does not have a name.
+	 *
+	 * @see N4JSFeatureUtils#getElementNameFeature(EObject)
+	 */
+	public static String getElementName(EObject element) {
+		if (element == null) {
+			return null;
+		} else if (element instanceof LiteralOrComputedPropertyName) {
+			return ((LiteralOrComputedPropertyName) element).getName();
+		}
+		EStructuralFeature nameFeature = N4JSFeatureUtils.getElementNameFeature(element);
+		if (nameFeature != null) {
+			Object name = element.eGet(nameFeature);
+			if (name instanceof LiteralOrComputedPropertyName) {
+				return ((LiteralOrComputedPropertyName) name).getName();
+			} else if (name instanceof String) {
+				return (String) name;
+			}
+		}
+		return null;
+
 	}
 
 	/**

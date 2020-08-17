@@ -10,7 +10,9 @@
  */
 package org.eclipse.n4js.n4JS
 
+import org.eclipse.emf.ecore.EAttribute
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.EReference
 import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.n4js.ts.types.IdentifiableElement
 
@@ -23,9 +25,15 @@ import static org.eclipse.n4js.ts.types.TypesPackage.Literals.*
 class N4JSFeatureUtils {
 
 	/**
-	 * Returns attribute feature actually holding the name or null, if no such attribute exists.
+	 * Returns the EMF feature actually holding the name of the given element or <code>null</code>,
+	 * if no such feature exists.
+	 * <p>
+	 * Note that this does not always return {@link EAttribute}s of type {@link String} but
+	 * may also return an {@link EReference} of type {@link LiteralOrComputedPropertyName}.
+	 * 
+	 * @see N4JSASTUtils#getElementName(EObject)
 	 */
-	public static def EStructuralFeature attributeOfNameFeature(EObject elementWithName) {
+	public static def EStructuralFeature getElementNameFeature(EObject elementWithName) {
 		switch (elementWithName) {
 			Annotation: ANNOTATION__NAME
 			FunctionDeclaration: FUNCTION_DECLARATION__NAME

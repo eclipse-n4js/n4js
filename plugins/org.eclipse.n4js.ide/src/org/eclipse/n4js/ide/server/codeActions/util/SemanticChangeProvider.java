@@ -416,7 +416,7 @@ public class SemanticChangeProvider {
 			}
 
 			if (element instanceof NamedElement) {
-				EStructuralFeature attr = N4JSFeatureUtils.attributeOfNameFeature((NamedElement) element);
+				EStructuralFeature attr = N4JSFeatureUtils.getElementNameFeature(element);
 				List<INode> nodes = NodeModelUtils.findNodesForFeature(element, attr);
 				if (nodes != null && !nodes.isEmpty()) {
 					nodes.get(0).getOffset();

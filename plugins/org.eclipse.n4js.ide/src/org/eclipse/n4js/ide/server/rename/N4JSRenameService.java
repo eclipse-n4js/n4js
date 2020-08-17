@@ -29,6 +29,7 @@ import org.eclipse.n4js.ide.xtext.server.ResourceTaskManager;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.n4js.ide.xtext.server.symbol.XDocumentSymbolService;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
+import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.N4JSFeatureUtils;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.xtext.findReferences.IReferenceFinder.IResourceAccess;
@@ -204,24 +205,12 @@ public class N4JSRenameService extends RenameService2 {
 
 	@Override
 	protected String getElementName(EObject element) {
-		// special case: literal or computed property names
-		if (element instanceof LiteralOrComputedPropertyName) {
-			String name = ((LiteralOrComputedPropertyName) element).getName();
-			return name != null && !name.isEmpty() ? name : null;
-		}
-
-		EStructuralFeature nameFeature = getElementNameFeature(element);
-		if (nameFeature != null) {
-			Object name = element.eGet(nameFeature);
-			if (name instanceof String && !((String) name).isEmpty()) {
-				return (String) name;
-			}
-		}
-		return null;
+		String name = N4JSASTUtils.getElementName(element);
+		return name != null && !name.isEmpty() ? name : null;
 	}
 
 	protected EStructuralFeature getElementNameFeature(EObject element) {
-		return N4JSFeatureUtils.attributeOfNameFeature(element);
+		return N4JSFeatureUtils.getElementNameFeature(element);
 	}
 
 	protected URI getURI(TextDocumentIdentifier textDocuemntIdentifier) {
