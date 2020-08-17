@@ -297,11 +297,11 @@ public class ProjectBuilder {
 	/** Deletes the contents of the output directory */
 	public void doClean(AfterDeleteListener deleteListener, CancelIndicator cancelIndicator) {
 		deletePersistenceFile();
+		doClearWithNotification();
 
-		// TODO: temporarily commented out to also rebuild node_modules projects, see GH-1856.
-		// if (projectConfig.indexOnly()) {
-		// return;
-		// }
+		if (projectConfig.indexOnly()) {
+			return;
+		}
 
 		for (File outputDirectory : getOutputDirectories()) {
 			File[] childFiles = outputDirectory.listFiles();
@@ -312,8 +312,6 @@ public class ProjectBuilder {
 				}
 			}
 		}
-
-		doClearWithNotification();
 	}
 
 	/** @return list of output directories of this project */
@@ -388,7 +386,7 @@ public class ProjectBuilder {
 		request.setResourceSet(resourceSet);
 		request.setCancelIndicator(cancelIndicator);
 		request.setBaseDir(getBaseDir());
-		// request.setIndexOnly(projectConfig.indexOnly());
+		request.setIndexOnly(projectConfig.indexOnly());
 
 		return request;
 	}
