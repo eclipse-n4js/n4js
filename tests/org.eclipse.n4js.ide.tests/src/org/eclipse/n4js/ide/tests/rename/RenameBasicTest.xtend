@@ -148,6 +148,14 @@ class RenameBasicTest extends AbstractRenameTest {
 	@Test def void testLabeledLoop_atRef() {
 		testAtCursors("name: for(;;) { for(;;) { continue <|>na<|>me<|>; } }", "nameNew", "nameNew: for(;;) { for(;;) { continue nameNew; } }");
 	}
-	
-	// FIXME: more cases (esp. subclasses of PropertyNameOwner, object literals, destructuring)
+
+	// FIXME: more cases (esp. subclasses of PropertyNameOwner, object literals, destructuring, various kinds of type references)
+
+	@Test def void testProperty_atDecl() {
+		testAtCursors("({<|>na<|>me<|>: ''}).name;", "nameNew", "({nameNew: ''}).nameNew;");
+	}
+
+	@Test def void testProperty_atRef() {
+		testAtCursors("({name: ''}).<|>na<|>me<|>;", "nameNew", "({nameNew: ''}).nameNew;");
+	}
 }

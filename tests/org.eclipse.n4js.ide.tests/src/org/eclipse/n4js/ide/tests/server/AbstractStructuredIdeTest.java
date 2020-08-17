@@ -90,8 +90,8 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 	 * @param project
 	 *            project that was created and is used during the test
 	 * @param moduleName
-	 *            name of the module passed to the {@link #test(LinkedHashMap, String, String, Object) #test())} method
-	 *            and opened.
+	 *            name of the module passed to the {@link #test(Map, String, String, Object) #test())} method and
+	 *            opened.
 	 * @param t
 	 *            given argument from the {@code test()} method
 	 */
@@ -231,8 +231,8 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 	}
 
 	/**
-	 * Same as {@link #test(LinkedHashMap, String, String, Object)}, but name and content of the modules can be provided
-	 * as {@link Pair pairs}.
+	 * Same as {@link #test(Map, String, String, Object)}, but name and content of the modules can be provided as
+	 * {@link Pair pairs}.
 	 * <p>
 	 * Finds the selected project and module using the {@link TestWorkspaceManager#MODULE_SELECTOR} and removes the
 	 * selector.
@@ -260,7 +260,7 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 	 * @param t
 	 *            will be passed to {@link #performTest(Project, String, Object)}.
 	 */
-	protected Project test(LinkedHashMap<String, Map<String, String>> projectsModulesContents, String projectPath,
+	protected Project test(Map<String, Map<String, String>> projectsModulesContents, String projectPath,
 			String moduleName, T t) {
 
 		Project project = testWorkspaceManager.createTestOnDisk(projectsModulesContents);

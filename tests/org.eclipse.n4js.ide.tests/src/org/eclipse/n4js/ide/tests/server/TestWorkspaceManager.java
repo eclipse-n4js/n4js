@@ -479,7 +479,7 @@ public class TestWorkspaceManager {
 	 * </ol>
 	 */
 	/* package */ static Pair<String, String> convertProjectsModulesContentsToMap(
-			Iterable<Pair<String, List<Pair<String, String>>>> projectsModulesContentsAsPairs,
+			Iterable<? extends Pair<String, ? extends Iterable<Pair<String, String>>>> projectsModulesContentsAsPairs,
 			Map<String, Map<String, String>> addHere,
 			boolean requireSelectedModule) {
 

@@ -91,6 +91,7 @@ import org.junit.BeforeClass;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
@@ -337,6 +338,11 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		return !contentOnDisk.equals(contentInMemory);
 	}
 
+	/** Returns the file URIs of all currently open files. */
+	protected Set<FileURI> getOpenFiles() {
+		return ImmutableSet.copyOf(openFiles.keySet());
+	}
+
 	/** Same as {@link #openFile(FileURI)}, accepting a module name instead of a file URI. */
 	protected void openFile(String moduleName) {
 		FileURI fileURI = getFileURIFromModuleName(moduleName);
@@ -370,6 +376,13 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		openFiles.put(fileURI, new OpenFileInfo(content));
 
 		joinServerRequests();
+	}
+
+	/** Closes all currently open files. */
+	protected void closeAllFiles() {
+		for (FileURI fileURI : new ArrayList<>(openFiles.keySet())) {
+			closeFile(fileURI);
+		}
 	}
 
 	/** Same as {@link #closeFile(FileURI)}, but accepts a module name instead of a file URI. */

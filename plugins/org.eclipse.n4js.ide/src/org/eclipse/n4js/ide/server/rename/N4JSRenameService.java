@@ -131,7 +131,7 @@ public class N4JSRenameService extends RenameService2 {
 
 		TextEdit editForElement = computeRenameEditForElement(element, newName);
 		if (editForElement != null) {
-			edits.put(resource.getURI().toString(), editForElement);
+			edits.put(element.eResource().getURI().toString(), editForElement);
 		}
 
 		ReferenceAcceptor referenceAcceptor = new ReferenceAcceptor(resourceServiceProviderRegistry, reference -> {
