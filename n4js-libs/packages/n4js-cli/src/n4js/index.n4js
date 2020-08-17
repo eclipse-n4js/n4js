@@ -146,7 +146,7 @@ export public async function n4jscProcess(
  */
 export public async function createN4JSProcess(args: N4jscArguments, spawnOptions: childProcess.SpawnOptions, log: {function(string)} = npmlog.info) : childProcess.ChildProcess {
     const modifedArgs = await modifyArgs(args, log);
-    const java = getJavaCommand(log);
+    const java = getJavaCommand();
     return childProcess.spawn(java, modifedArgs.toArray(), spawnOptions);
 }
 
