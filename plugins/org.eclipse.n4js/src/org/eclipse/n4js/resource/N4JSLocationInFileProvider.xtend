@@ -45,8 +45,10 @@ class N4JSLocationInFileProvider extends DefaultLocationInFileProvider {
 
 	override getSignificantTextRegion(EObject element) {
 		if(element instanceof NamedImportSpecifier) {
-			if(element.getAlias() !== null) {
-				return super.getSignificantTextRegion(element, N4JSPackage.eINSTANCE.getNamedImportSpecifier_Alias(), -1);
+			if(!element.isDefaultImport()) {
+				if(element.getAlias() !== null) {
+					return super.getSignificantTextRegion(element, N4JSPackage.eINSTANCE.getNamedImportSpecifier_Alias(), -1);
+				}
 			}
 		} else if(element instanceof NamespaceImportSpecifier) {
 			if (element.getAlias() !== null) {

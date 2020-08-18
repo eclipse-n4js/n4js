@@ -36,6 +36,7 @@ import org.eclipse.n4js.n4JS.N4JSFeatureUtils;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
+import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.xtext.findReferences.IReferenceFinder.IResourceAccess;
 import org.eclipse.xtext.findReferences.ReferenceAcceptor;
 import org.eclipse.xtext.ide.server.DocumentExtensions;
@@ -174,6 +175,7 @@ public class N4JSRenameService extends RenameService2 {
 		EStructuralFeature nameFeature = getElementNameFeature(element);
 		if (nameFeature == null
 				&& element instanceof NamedImportSpecifier
+				&& !((NamedImportSpecifier) element).isDefaultImport()
 				&& ((NamedImportSpecifier) element).getAlias() != null) {
 			nameFeature = N4JSPackage.eINSTANCE.getNamedImportSpecifier_Alias();
 		} else if (nameFeature == null
@@ -195,16 +197,19 @@ public class N4JSRenameService extends RenameService2 {
 				&& eRef != N4JSPackage.eINSTANCE.getIdentifierRef_OriginImport()
 				&& eRef != N4JSPackage.eINSTANCE.getNamedImportSpecifier_ImportedElement()
 				&& eRef != N4JSPackage.eINSTANCE.getParameterizedPropertyAccessExpression_Property()
-				&& eRef != N4JSPackage.eINSTANCE.getLabelRef_Label()) {
+				&& eRef != N4JSPackage.eINSTANCE.getLabelRef_Label()
+				&& eRef != TypeRefsPackage.eINSTANCE.getParameterizedTypeRef_DeclaredType()) {
 			return null;
 		}
 
 		if (obj instanceof IdentifierRef && eRef == N4JSPackage.eINSTANCE.getIdentifierRef_Id()) {
 			ImportSpecifier originImport = ((IdentifierRef) obj).getOriginImport();
 			if (originImport instanceof NamedImportSpecifier) {
-				boolean isImportedViaAlias = ((NamedImportSpecifier) originImport).getAlias() != null;
-				if (isImportedViaAlias) {
-					return null;
+				if (!((NamedImportSpecifier) originImport).isDefaultImport()) {
+					boolean isImportedViaAlias = ((NamedImportSpecifier) originImport).getAlias() != null;
+					if (isImportedViaAlias) {
+						return null;
+					}
 				}
 			}
 		}
@@ -243,6 +248,7 @@ public class N4JSRenameService extends RenameService2 {
 		if (containedElement instanceof IdentifierRef) {
 			ImportSpecifier originImport = ((IdentifierRef) containedElement).getOriginImport();
 			if (originImport instanceof NamedImportSpecifier
+					&& !((NamedImportSpecifier) originImport).isDefaultImport()
 					&& ((NamedImportSpecifier) originImport).getAlias() != null) {
 				return (NamedImportSpecifier) originImport;
 			}
@@ -263,9 +269,11 @@ public class N4JSRenameService extends RenameService2 {
 	@Override
 	protected String getElementName(EObject element) {
 		if (element instanceof NamedImportSpecifier) {
-			String alias = ((NamedImportSpecifier) element).getAlias();
-			if (alias != null && !alias.isEmpty()) {
-				return alias;
+			if (!((NamedImportSpecifier) element).isDefaultImport()) {
+				String alias = ((NamedImportSpecifier) element).getAlias();
+				if (alias != null && !alias.isEmpty()) {
+					return alias;
+				}
 			}
 		} else if (element instanceof NamespaceImportSpecifier) {
 			String namespaceName = ((NamespaceImportSpecifier) element).getAlias();

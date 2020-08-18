@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.ide.tests.server;
 
-import static org.junit.Assert.assertFalse;
-
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -135,6 +133,13 @@ abstract public class AbstractRenameTest extends AbstractStructuredIdeTest<Renam
 		TestWorkspaceManager.convertProjectsModulesContentsToMap(
 				projectsModulesSourcesBefore, projectsModulesSourcesBeforeAsMap, false);
 
+		projectsModulesSourcesBeforeAsMap.put(TestWorkspaceManager.NODE_MODULES + "n4js-runtime", null);
+		projectsModulesSourcesBeforeAsMap.forEach((projectName, moduleName2SourceBefore) -> {
+			if (moduleName2SourceBefore != null) {
+				moduleName2SourceBefore.put(TestWorkspaceManager.DEPENDENCIES, "n4js-runtime");
+			}
+		});
+
 		List<RenamePosition> positions = new ArrayList<>();
 		for (Pair<String, ? extends Iterable<Pair<String, String>>> modulesSourcesBefore : projectsModulesSourcesBefore) {
 			String projectName = modulesSourcesBefore.getKey();
@@ -152,7 +157,7 @@ abstract public class AbstractRenameTest extends AbstractStructuredIdeTest<Renam
 						.collect(Collectors.toList()));
 			}
 		}
-		assertFalse("no rename positions marked with " + CURSOR_SYMBOL + " in source code", positions.isEmpty());
+		Assert.assertFalse("no rename positions marked with " + CURSOR_SYMBOL + " in source code", positions.isEmpty());
 
 		Map<String, Map<String, String>> projectsModulesExpectedSourcesAfterAsMap = new LinkedHashMap<>();
 		TestWorkspaceManager.convertProjectsModulesContentsToMap(
@@ -169,6 +174,8 @@ abstract public class AbstractRenameTest extends AbstractStructuredIdeTest<Renam
 	@Override
 	protected void performTest(Project project, String moduleName, RenameTestConfiguration config)
 			throws InterruptedException, ExecutionException, URISyntaxException {
+
+		assertNoIssues();
 
 		for (RenamePosition pos : config.positions) {
 			performTestAtPosition(pos, config);
@@ -250,10 +257,20 @@ abstract public class AbstractRenameTest extends AbstractStructuredIdeTest<Renam
 		}
 
 		Map<FileURI, String> fileURI2ActualSourceAfter = new LinkedHashMap<>();
-		for (Map<String, String> moduleName2SourceBefore : projectsModulesSourcesBefore.values()) {
+		for (Entry<String, Map<String, String>> entry1 : projectsModulesSourcesBefore.entrySet()) {
+			String projectName = entry1.getKey();
+			Map<String, String> moduleName2SourceBefore = entry1.getValue();
+			if (projectName.startsWith("#")) {
+				// ignore entries with special information, e.g. TestWorkspaceManager#NODE_MODULES
+				continue;
+			}
 			for (Entry<String, String> entry2 : moduleName2SourceBefore.entrySet()) {
 				String moduleName = entry2.getKey();
 				String sourceBefore = entry2.getValue();
+				if (moduleName.startsWith("#")) {
+					// ignore entries with special information, e.g. TestWorkspaceManager#DEPENDENCIES
+					continue;
+				}
 				FileURI fileURI = getFileURIFromModuleName(moduleName);
 				List<TextEdit> textEdits = fileURI2TextEdits.get(fileURI);
 				if (textEdits != null) {

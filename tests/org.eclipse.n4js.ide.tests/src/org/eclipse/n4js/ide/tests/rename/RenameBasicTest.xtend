@@ -149,7 +149,7 @@ class RenameBasicTest extends AbstractRenameTest {
 		testAtCursors("name: for(;;) { for(;;) { continue <|>na<|>me<|>; } }", "nameNew", "nameNew: for(;;) { for(;;) { continue nameNew; } }");
 	}
 
-	// FIXME: more cases (esp. subclasses of PropertyNameOwner, object literals, destructuring, various kinds of type references)
+	// FIXME: more cases (esp. subclasses of PropertyNameOwner, object literals, destructuring, structural types)
 
 	@Test def void testProperty_atDecl() {
 		testAtCursors("({<|>na<|>me<|>: ''}).name;", "nameNew", "({nameNew: ''}).nameNew;");
@@ -157,5 +157,21 @@ class RenameBasicTest extends AbstractRenameTest {
 
 	@Test def void testProperty_atRef() {
 		testAtCursors("({name: ''}).<|>na<|>me<|>;", "nameNew", "({nameNew: ''}).nameNew;");
+	}
+
+	@Test def void testProperty_viaInferredType_atDecl() {
+		testAtCursors("let obj = {<|>na<|>me<|>: ''}; obj.name;", "nameNew", "let obj = {nameNew: ''}; obj.nameNew;");
+	}
+
+	@Test def void testProperty_viaInferredType_atRef() {
+		testAtCursors("let obj = {name: ''}; obj.<|>na<|>me<|>;", "nameNew", "let obj = {nameNew: ''}; obj.nameNew;");
+	}
+
+	@Test def void testProperty_viaDeclaredType_atDecl() {
+		testAtCursors("let obj: ~Object with {<|>na<|>me<|>: string}; obj.name;", "nameNew", "let obj: ~Object with {nameNew: string}; obj.nameNew;");
+	}
+
+	@Test def void testProperty_viaDeclaredType_atRef() {
+		testAtCursors("let obj: ~Object with {name: string}; obj.<|>na<|>me<|>;", "nameNew", "let obj: ~Object with {nameNew: string}; obj.nameNew;");
 	}
 }

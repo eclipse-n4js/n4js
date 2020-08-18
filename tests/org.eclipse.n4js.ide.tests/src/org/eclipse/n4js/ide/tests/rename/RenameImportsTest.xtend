@@ -79,6 +79,24 @@ class RenameImportsTest extends AbstractRenameTest {
 	}
 
 	@Test
+	def void testDefaultImport() {
+		testAtCursors(#[
+			"Cls" -> '''
+				export default class Cls {}
+			''',
+			"Main" -> '''
+				import <|>Na<|>me<|> from "Cls"
+				new <|>Na<|>me<|>();
+			'''
+		], "NameNew", #[
+			"Main" -> '''
+				import NameNew from "Cls"
+				new NameNew();
+			'''
+		]);
+	}
+
+	@Test
 	def void testNamespaceImport_renameElement() {
 		testAtCursors(#[
 			"Cls" -> '''
