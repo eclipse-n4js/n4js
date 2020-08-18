@@ -22,6 +22,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.ide.xtext.server.build.IBuildRequestFactory;
 import org.eclipse.n4js.ide.xtext.server.build.ProjectBuilder;
+import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterDeleteListener;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
@@ -59,8 +60,8 @@ public class N4JSProjectBuilder extends ProjectBuilder {
 	}
 
 	@Override
-	protected void doClearWithoutNotification() {
-		super.doClearWithoutNotification();
+	public void doClean(AfterDeleteListener deleteListener, CancelIndicator cancelIndicator) {
+		super.doClean(deleteListener, cancelIndicator);
 
 		removeTestCatalog();
 	}
