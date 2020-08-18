@@ -11,8 +11,6 @@
 package org.eclipse.n4js.ide.tests.server;
 
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -36,9 +34,11 @@ import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.ide.tests.server.AbstractRenameTest.RenameTestConfiguration;
+import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.tests.codegen.Project;
 import org.eclipse.xtext.xbase.lib.Pair;
+import org.junit.Assert;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
@@ -190,12 +190,15 @@ abstract public class AbstractRenameTest extends AbstractStructuredIdeTest<Renam
 			joinServerRequests();
 		}
 
+		String sourceBefore = config.projectsModulesSourcesBefore.get(pos.projectName).get(pos.moduleName);
+
 		TextDocumentPositionParams textDocumentPositionParams = new TextDocumentPositionParams();
 		textDocumentPositionParams.setTextDocument(new TextDocumentIdentifier(uriStr));
 		textDocumentPositionParams.setPosition(new Position(pos.line, pos.column));
 		Either<Range, PrepareRenameResult> result1 = languageServer.prepareRename(textDocumentPositionParams).get();
-		assertTrue("element cannot be renamed",
-				result1 != null && (result1.getLeft() != null || result1.getRight() != null));
+		if (result1 == null || (result1.getLeft() == null && result1.getRight() == null)) {
+			fail("element cannot be renamed", sourceBefore, pos);
+		}
 
 		RenameParams renameParams = new RenameParams();
 		renameParams.setTextDocument(new TextDocumentIdentifier(uriStr));
@@ -204,7 +207,7 @@ abstract public class AbstractRenameTest extends AbstractStructuredIdeTest<Renam
 		WorkspaceEdit workspaceEdit = languageServer.rename(renameParams).get();
 
 		Map<FileURI, String> fileURI2ActualSourceAfter = applyWorkspaceEdit(config.projectsModulesSourcesBefore,
-				workspaceEdit);
+				workspaceEdit, pos, config);
 
 		Set<FileURI> checkedFileURIs = new LinkedHashSet<>();
 		for (Map<String, String> moduleName2ExpectedSourceAfter : config.projectsModulesExpectedSourcesAfter.values()) {
@@ -215,14 +218,10 @@ abstract public class AbstractRenameTest extends AbstractStructuredIdeTest<Renam
 				String actualSourceAfter = fileURI2ActualSourceAfter.get(changedFileURI);
 				if (actualSourceAfter == null) {
 					fail("expected changes in module '" + moduleName
-							+ "' but rename did not lead to any changes in this module");
+							+ "' but rename did not lead to any changes in this module", sourceBefore, pos);
 				} else if (!actualSourceAfter.equals(expectedSourceAfter)) {
-					String msg = "rename led to incorrect source code changes in module '" + moduleName + "'\n"
-							+ "EXPECTED SOURCE AFTER RENAME:\n"
-							+ expectedSourceAfter.trim() + "\n"
-							+ "ACTUAL SOURCE AFTER RENAME:\n"
-							+ actualSourceAfter.trim();
-					fail(msg);
+					fail("rename led to incorrect source code changes in module '" + moduleName + "'", sourceBefore,
+							pos, expectedSourceAfter, actualSourceAfter);
 				}
 				checkedFileURIs.add(changedFileURI);
 			}
@@ -232,17 +231,15 @@ abstract public class AbstractRenameTest extends AbstractStructuredIdeTest<Renam
 			FileURI changedFileURI = entry.getKey();
 			String actualSourceAfter = entry.getValue();
 			if (!checkedFileURIs.contains(changedFileURI)) {
-				String msg = "rename led to unexpected changes in file '" + changedFileURI.getName() + "'\n"
-						+ "ACTUAL SOURCE AFTER RENAME:\n"
-						+ actualSourceAfter.trim();
-				fail(msg);
+				fail("rename led to unexpected changes in file '" + changedFileURI.getName() + "'", sourceBefore, pos,
+						null, actualSourceAfter);
 			}
 		}
 	}
 
 	/** Unchanged modules are not included in the returned map. */
 	private Map<FileURI, String> applyWorkspaceEdit(Map<String, Map<String, String>> projectsModulesSourcesBefore,
-			WorkspaceEdit edit) {
+			WorkspaceEdit edit, RenamePosition pos, RenameTestConfiguration config) {
 
 		Map<FileURI, List<TextEdit>> fileURI2TextEdits = new LinkedHashMap<>();
 		for (Entry<String, List<TextEdit>> entry : edit.getChanges().entrySet()) {
@@ -270,9 +267,45 @@ abstract public class AbstractRenameTest extends AbstractStructuredIdeTest<Renam
 
 		Set<FileURI> unknownURIs = new LinkedHashSet<>(fileURI2TextEdits.keySet());
 		unknownURIs.removeAll(fileURI2ActualSourceAfter.keySet());
-		assertTrue("rename led to text edits in unknown URIs: " + Joiner.on(", ").join(unknownURIs),
-				unknownURIs.isEmpty());
+		if (!unknownURIs.isEmpty()) {
+			String sourceBefore = config.projectsModulesSourcesBefore.get(pos.projectName).get(pos.moduleName);
+			fail("rename led to text edits in unknown URIs: " + Joiner.on(", ").join(unknownURIs), sourceBefore, pos);
+		}
 
 		return fileURI2ActualSourceAfter;
+	}
+
+	private void fail(String msg, String sourceBefore, RenamePosition pos) {
+		fail(msg, sourceBefore, pos, null, null);
+	}
+
+	private void fail(String msg, String sourceBefore, RenamePosition pos, String expectedCodeAfter,
+			String actualCodeAfter) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(msg);
+		if (sourceBefore != null && pos != null) {
+			sb.append('\n');
+			sb.append("TEST CASE:");
+			sb.append('\n');
+			sb.append(insertCursorSymbol(sourceBefore, pos).trim());
+		}
+		if (expectedCodeAfter != null) {
+			sb.append('\n');
+			sb.append("EXPECTED SOURCE AFTER RENAME:");
+			sb.append('\n');
+			sb.append(expectedCodeAfter.trim());
+		}
+		if (actualCodeAfter != null) {
+			sb.append('\n');
+			sb.append("ACTUAL SOURCE AFTER RENAME:");
+			sb.append('\n');
+			sb.append(actualCodeAfter.trim());
+		}
+		Assert.fail(sb.toString());
+	}
+
+	private String insertCursorSymbol(String source, RenamePosition pos) {
+		int offset = new XDocument(0, source).getOffSet(new Position(pos.line, pos.column));
+		return source.substring(0, offset) + CURSOR_SYMBOL + source.substring(offset);
 	}
 }
