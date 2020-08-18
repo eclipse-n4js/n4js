@@ -18,8 +18,7 @@ echo "Create test catalogs"
 
 REPORT_NAME="./build/report.xml"
 echo "Run Mangelhaft"
-../../bin/n4js-mangelhaft-cli.js \
-		--testCatalog ../../../.. \
+../../bin/n4js-mangelhaft-cli.js ../../../.. \
 		--xunitReportFile $REPORT_NAME \
 		--xunitReportName test-report \
 		--xunitReportPackage n4js-libs-report \
