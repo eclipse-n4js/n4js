@@ -179,7 +179,7 @@ async function modifyArgs(args: N4jscArguments, log: {function(string)}): N4jscA
             args.n4jscJar = n4jscJarName;
         }
     } catch (e) {
-        log("Failed to use jar specified in .n4js-cli.config. Using default jar instead.");
+        log("Failed to use jar specified in n4js-cli.config. Using default jar instead.");
     }
 
     // lsp goal forbids dir argument, but n4js-cli uses this argument to support n4js-cli configuration files
