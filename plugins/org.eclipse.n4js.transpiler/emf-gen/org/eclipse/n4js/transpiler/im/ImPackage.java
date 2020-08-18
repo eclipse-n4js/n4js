@@ -602,6 +602,15 @@ public interface ImPackage extends EPackage {
 	int IDENTIFIER_REF_IM__ID_AS_TEXT = N4JSPackage.IDENTIFIER_REF__ID_AS_TEXT;
 
 	/**
+	 * The feature id for the '<em><b>Origin Import</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDENTIFIER_REF_IM__ORIGIN_IMPORT = N4JSPackage.IDENTIFIER_REF__ORIGIN_IMPORT;
+
+	/**
 	 * The feature id for the '<em><b>Rewired Target</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4077,6 +4086,15 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int VERSIONED_IDENTIFIER_REF_IM__ID_AS_TEXT = IDENTIFIER_REF_IM__ID_AS_TEXT;
+
+	/**
+	 * The feature id for the '<em><b>Origin Import</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_IDENTIFIER_REF_IM__ORIGIN_IMPORT = IDENTIFIER_REF_IM__ORIGIN_IMPORT;
 
 	/**
 	 * The feature id for the '<em><b>Rewired Target</b></em>' reference.

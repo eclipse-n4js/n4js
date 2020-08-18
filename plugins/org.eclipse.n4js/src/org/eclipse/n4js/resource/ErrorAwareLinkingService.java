@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
 import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.n4JS.DefaultImportSpecifier;
+import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.scoping.IUsageAwareEObjectDescription;
@@ -108,9 +109,13 @@ public class ErrorAwareLinkingService extends DefaultLinkingService {
 					throw new AssertionError("Found an instance without resource and without URI");
 				}
 
-				// if supported, mark object description as used
+				// if supported, mark object description as used and record the origin import
 				if (eObjectDescription instanceof IUsageAwareEObjectDescription) {
-					((IUsageAwareEObjectDescription) eObjectDescription).markAsUsed();
+					IUsageAwareEObjectDescription eObjectDescriptionCasted = (IUsageAwareEObjectDescription) eObjectDescription;
+					eObjectDescriptionCasted.markAsUsed();
+					if (context instanceof IdentifierRef) {
+						eObjectDescriptionCasted.recordOrigin((IdentifierRef) context);
+					}
 				}
 
 				return Collections.singletonList(candidate);

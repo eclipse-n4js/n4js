@@ -28,10 +28,13 @@ import org.eclipse.n4js.ide.xtext.server.ResourceTaskContext;
 import org.eclipse.n4js.ide.xtext.server.ResourceTaskManager;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.n4js.ide.xtext.server.symbol.XDocumentSymbolService;
+import org.eclipse.n4js.n4JS.IdentifierRef;
+import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.N4JSFeatureUtils;
 import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.xtext.findReferences.IReferenceFinder.IResourceAccess;
 import org.eclipse.xtext.findReferences.ReferenceAcceptor;
 import org.eclipse.xtext.ide.server.DocumentExtensions;
@@ -184,6 +187,17 @@ public class N4JSRenameService extends RenameService2 {
 				&& eRef != N4JSPackage.eINSTANCE.getLabelRef_Label()) {
 			return null;
 		}
+
+		if (obj instanceof IdentifierRef) {
+			ImportSpecifier originImport = ((IdentifierRef) obj).getOriginImport();
+			if (originImport instanceof NamedImportSpecifier) {
+				boolean isAlias = ((NamedImportSpecifier) originImport).getAlias() != null;
+				if (isAlias) {
+					return null;
+				}
+			}
+		}
+
 		Location location = documentExtensions.newLocation(obj, eRef, indexInList);
 		if (location == null) {
 			return null;
