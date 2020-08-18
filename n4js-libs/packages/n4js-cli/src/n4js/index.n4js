@@ -238,8 +238,8 @@ export public function findN4jscJarValue(workingDir: string, log: {function(stri
  * Searches the n4js-cli config file. The search looks for the config file at the following places:
  * (1) in the given folder,
  * (2) in all parent folders,
- * (3) in all direct sub folders (not recursivily).
- * The first occurence is returned, or null otherwise.
+ * (3) in all direct sub folders (not recursively).
+ * The first occurrence is returned, or null otherwise.
  */
 export public function findN4jscliConfig(workingDir : string) : string {
     let dir = path.resolve(workingDir);
@@ -257,7 +257,7 @@ export public function findN4jscliConfig(workingDir : string) : string {
         dir = path.dirname(dir);
     }
 
-    // search in direct child folders (not recursivily)
+    // search in direct child folders (not recursively)
     const files = fs.readdirSync(workingDir);
     for (const file in files) {
         if (file instanceof fs.Dirent && file.isDirectory()) {
