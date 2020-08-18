@@ -72,7 +72,7 @@ public class N4jscTestCatalogYarnTest extends AbstractCliCompileTest {
 		}
 		for (String projectName : testProjectNames) {
 			File testCatalogFileInSubProject = new File(proot, projectName + File.separator + N4JSGlobals.TEST_CATALOG);
-			assertTrue("Test catalog of '" + projectName + "' must not exist", testCatalogFileInSubProject.isFile());
+			assertTrue("Test catalog of '" + projectName + "' must exist", testCatalogFileInSubProject.isFile());
 		}
 
 	}
