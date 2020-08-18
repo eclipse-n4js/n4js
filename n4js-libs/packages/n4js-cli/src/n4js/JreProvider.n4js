@@ -153,7 +153,7 @@ export public function toValidUrl(urlStr: string) : lib_url.NodeURL {
     return null;
 }
 
-export public async function downloadFile(url: lib_url.NodeURL, filename: string, log: {function(string)}) : Promise<any, any> {
+export public async function downloadFile(url: lib_url.NodeURL, filename: string, log: {function(string)}) : void {
     log("downloading from " + lib_url.format(url));
 
     const dir = path.dirname(filename);
@@ -167,7 +167,7 @@ export public async function downloadFile(url: lib_url.NodeURL, filename: string
     }
 
     const get = (url.protocol == "https:") ? followRedirects.https.get : followRedirects.http.get;
-    return new Promise<any, any>((resolve, reject) => {
+    await new Promise<any, any>((resolve, reject) => {
             get(url, (response : any+) => {
                     if (response.statusCode !== 200) {
                         reject("Error during download: status code was " + response.statusCode);
