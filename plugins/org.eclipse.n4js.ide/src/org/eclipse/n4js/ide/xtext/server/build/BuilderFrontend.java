@@ -103,7 +103,7 @@ public class BuilderFrontend {
 	 * Triggers rebuild of the whole workspace
 	 */
 	public void reinitWorkspace() {
-		asyncRunBuildTask("reinitWorkspace", workspaceBuilder::createInitialBuildTask);
+		asyncRunBuildTask("reinitWorkspace", workspaceBuilder::createReinitialBuildTask);
 	}
 
 	/**
