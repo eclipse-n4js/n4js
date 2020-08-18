@@ -71,9 +71,6 @@ class RenameImportsTest extends AbstractRenameTest {
 				new <|>Na<|>me<|>();
 			'''
 		], "NameNew", #[
-			"Cls" -> '''
-				export class Cls {}
-			''',
 			"Main" -> '''
 				import {Cls as NameNew} from "Cls"
 				new NameNew();
@@ -113,9 +110,6 @@ class RenameImportsTest extends AbstractRenameTest {
 				new <|>Na<|>me<|>.Cls();
 			'''
 		], "NameNew", #[
-			"Cls" -> '''
-				export class Cls {}
-			''',
 			"Main" -> '''
 				import * as NameNew from "Cls"
 				new NameNew.Cls();

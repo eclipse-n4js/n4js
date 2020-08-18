@@ -35,6 +35,7 @@ import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.N4JSFeatureUtils;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
+import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
 import org.eclipse.xtext.findReferences.IReferenceFinder.IResourceAccess;
 import org.eclipse.xtext.findReferences.ReferenceAcceptor;
 import org.eclipse.xtext.ide.server.DocumentExtensions;
@@ -162,8 +163,8 @@ public class N4JSRenameService extends RenameService2 {
 				}
 			}
 		};
-		((XDocumentSymbolService) documentSymbolService).getReferences(resource, offset, referenceAcceptor,
-				resourceAccess, indexData, cancelIndicator);
+		((XDocumentSymbolService) documentSymbolService).getReferences(element, referenceAcceptor, resourceAccess,
+				indexData, cancelIndicator);
 
 		WorkspaceEdit result = new WorkspaceEdit(Multimaps.asMap(edits));
 		return result;
@@ -171,6 +172,15 @@ public class N4JSRenameService extends RenameService2 {
 
 	protected TextEdit computeRenameEditForElement(EObject element, String newName) {
 		EStructuralFeature nameFeature = getElementNameFeature(element);
+		if (nameFeature == null
+				&& element instanceof NamedImportSpecifier
+				&& ((NamedImportSpecifier) element).getAlias() != null) {
+			nameFeature = N4JSPackage.eINSTANCE.getNamedImportSpecifier_Alias();
+		} else if (nameFeature == null
+				&& element instanceof NamespaceImportSpecifier
+				&& ((NamespaceImportSpecifier) element).getAlias() != null) {
+			nameFeature = N4JSPackage.eINSTANCE.getNamespaceImportSpecifier_Alias();
+		}
 		Location location = nameFeature != null ? documentExtensions.newLocation(element, nameFeature, -1) : null;
 		if (location != null) {
 			TextEdit edit = new TextEdit(location.getRange(), newName);
@@ -182,17 +192,18 @@ public class N4JSRenameService extends RenameService2 {
 	protected TextEdit computeRenameEditForReference(IReferenceDescription refDesc, EObject obj, EReference eRef,
 			int indexInList, String newName) {
 		if (eRef != N4JSPackage.eINSTANCE.getIdentifierRef_Id()
+				&& eRef != N4JSPackage.eINSTANCE.getIdentifierRef_OriginImport()
 				&& eRef != N4JSPackage.eINSTANCE.getNamedImportSpecifier_ImportedElement()
 				&& eRef != N4JSPackage.eINSTANCE.getParameterizedPropertyAccessExpression_Property()
 				&& eRef != N4JSPackage.eINSTANCE.getLabelRef_Label()) {
 			return null;
 		}
 
-		if (obj instanceof IdentifierRef) {
+		if (obj instanceof IdentifierRef && eRef == N4JSPackage.eINSTANCE.getIdentifierRef_Id()) {
 			ImportSpecifier originImport = ((IdentifierRef) obj).getOriginImport();
 			if (originImport instanceof NamedImportSpecifier) {
-				boolean isAlias = ((NamedImportSpecifier) originImport).getAlias() != null;
-				if (isAlias) {
+				boolean isImportedViaAlias = ((NamedImportSpecifier) originImport).getAlias() != null;
+				if (isImportedViaAlias) {
 					return null;
 				}
 			}
@@ -207,6 +218,13 @@ public class N4JSRenameService extends RenameService2 {
 	}
 
 	protected EObject getElementToBeRenamed(XtextResource resource, int offset) {
+		// special case: when triggering rename on a reference to a target element that is imported via an aliased named
+		// import, then rename the alias instead of the target element
+		NamedImportSpecifier originImport = getImportIfReferenceToAliasOfNamedImport(resource, offset);
+		if (originImport != null) {
+			return originImport;
+		}
+
 		EObject result = eObjectAtOffsetHelper.resolveElementAt(resource, offset);
 
 		// special case: literal or computed property names
@@ -217,8 +235,44 @@ public class N4JSRenameService extends RenameService2 {
 		return result;
 	}
 
+	private NamedImportSpecifier getImportIfReferenceToAliasOfNamedImport(XtextResource resource, int offset) {
+		EObject containedElement = eObjectAtOffsetHelper.resolveContainedElementAt(resource, offset);
+		if (!(containedElement instanceof IdentifierRef) && offset > 0) {
+			containedElement = eObjectAtOffsetHelper.resolveContainedElementAt(resource, offset - 1);
+		}
+		if (containedElement instanceof IdentifierRef) {
+			ImportSpecifier originImport = ((IdentifierRef) containedElement).getOriginImport();
+			if (originImport instanceof NamedImportSpecifier
+					&& ((NamedImportSpecifier) originImport).getAlias() != null) {
+				return (NamedImportSpecifier) originImport;
+			}
+		}
+		return null;
+	}
+
+	// FIXME next two overrides only required because prepareRename is still used from super class!
+	@Override
+	protected EObject getElementWithIdentifierAt(XtextResource resource, int offset) {
+		NamedImportSpecifier originImport = getImportIfReferenceToAliasOfNamedImport(resource, offset);
+		if (originImport != null) {
+			return originImport;
+		}
+		return super.getElementWithIdentifierAt(resource, offset);
+	}
+
 	@Override
 	protected String getElementName(EObject element) {
+		if (element instanceof NamedImportSpecifier) {
+			String alias = ((NamedImportSpecifier) element).getAlias();
+			if (alias != null && !alias.isEmpty()) {
+				return alias;
+			}
+		} else if (element instanceof NamespaceImportSpecifier) {
+			String namespaceName = ((NamespaceImportSpecifier) element).getAlias();
+			if (namespaceName != null && !namespaceName.isEmpty()) {
+				return namespaceName;
+			}
+		}
 		String name = N4JSASTUtils.getElementName(element);
 		return name != null && !name.isEmpty() ? name : null;
 	}

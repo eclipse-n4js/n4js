@@ -24,13 +24,15 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
+import org.eclipse.n4js.n4JS.IdentifierRef;
+import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.findReferences.SimpleResourceAccess;
 import org.eclipse.n4js.ts.findReferences.TargetURIKey;
 import org.eclipse.n4js.ts.types.TMember;
-import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.findReferences.ReferenceFinder;
 import org.eclipse.xtext.findReferences.TargetURIs;
@@ -198,18 +200,9 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 							}
 						}
 					} else if (!ref.isContainer()
-							// CUSTOM BEHAVIOR: Ignore defined corresponding TModule nodes of AST nodes because we do
-							// not want
-							// declarations to be part of the find ref result.
-							// These cases correspond to those in {@link InferredElements} + the TStructMember case !
-							&& ref != N4JSPackage.Literals.SCRIPT__MODULE
-							&& ref != N4JSPackage.Literals.TYPE_DEFINING_ELEMENT__DEFINED_TYPE
-							&& ref != N4JSPackage.Literals.N4_FIELD_DECLARATION__DEFINED_FIELD
-							&& ref != N4JSPackage.Literals.GETTER_DECLARATION__DEFINED_GETTER
-							&& ref != N4JSPackage.Literals.SETTER_DECLARATION__DEFINED_SETTER
-							&& ref != N4JSPackage.Literals.N4_ENUM_LITERAL__DEFINED_LITERAL
-							&& ref != N4JSPackage.Literals.EXPORTED_VARIABLE_DECLARATION__DEFINED_VARIABLE
-							&& ref != TypesPackage.Literals.TSTRUCT_MEMBER__DEFINED_MEMBER) {
+							// CUSTOM BEHAVIOR: don't show references for transient attributes, because they represent
+							// internal helper values and should therefore not appear in a list of references
+							&& !ref.isTransient()) {
 						if (doProcess(ref, targetURIs)) {
 							if (ref.isMany()) {
 								@SuppressWarnings("unchecked")
@@ -223,6 +216,12 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 								checkValue((EObject) value, localResource, targetURIs, sourceCandidate, sourceURI, ref,
 										acceptor);
 							}
+						}
+					} else if (ref == N4JSPackage.Literals.IDENTIFIER_REF__ORIGIN_IMPORT
+							&& isIdentifierRefToAlias(sourceCandidate)) {
+						if (doProcess(ref, targetURIs)) {
+							checkValue((EObject) value, localResource, targetURIs, sourceCandidate, sourceURI, ref,
+									acceptor);
 						}
 					}
 				}
@@ -266,4 +265,16 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 		return result;
 	}
 
+	/** Tells whether the given object is an IdentifierRef pointing to the alias of a named import. */
+	private boolean isIdentifierRefToAlias(EObject obj) {
+		if (obj instanceof IdentifierRef) {
+			ImportSpecifier originImport = ((IdentifierRef) obj).getOriginImport();
+			if (originImport instanceof NamedImportSpecifier) {
+				if (((NamedImportSpecifier) originImport).getAlias() != null) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 }

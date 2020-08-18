@@ -76,7 +76,6 @@ public class XDocumentSymbolService extends DocumentSymbolService {
 		return locations;
 	}
 
-	// FIXME consider using referenceFinder directly from N4JSRenameService (then no need for this class)
 	public boolean getReferences(
 			XtextResource resource,
 			int offset,
@@ -90,6 +89,18 @@ public class XDocumentSymbolService extends DocumentSymbolService {
 			return false;
 		}
 
+		getReferences(element, referenceAcceptor, resourceAccess, indexData, cancelIndicator);
+		return true;
+	}
+
+	// FIXME consider using referenceFinder directly from N4JSRenameService (then no need for this class)
+	public void getReferences(
+			EObject element,
+			IReferenceFinder.Acceptor referenceAcceptor,
+			IResourceAccess resourceAccess,
+			IResourceDescriptions indexData,
+			CancelIndicator cancelIndicator) {
+
 		TargetURIs targetURIs = collectTargetURIs(element);
 		referenceFinder.findAllReferences(
 				targetURIs,
@@ -97,6 +108,5 @@ public class XDocumentSymbolService extends DocumentSymbolService {
 				indexData,
 				referenceAcceptor,
 				new CancelIndicatorProgressMonitor(cancelIndicator));
-		return true;
 	}
 }
