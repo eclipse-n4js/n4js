@@ -20,7 +20,14 @@ import org.eclipse.xtext.workspace.IProjectConfig;
 @SuppressWarnings("restriction")
 public interface XIProjectConfig extends IProjectConfig {
 
-	/** Returns true iff this project will be indexed only (i.e. not validated and generated) */
+	/**
+	 * Returns true iff this project will be indexed only, i.e. neither validated nor generated.
+	 * <p>
+	 * Regarding generation the semantics is that the generated files will always remain untouched, i.e. they will
+	 * neither be added nor removed.
+	 * <p>
+	 * Regarding validation the semantics is that issues will not be created. However, issues might be cleaned/removed.
+	 */
 	default boolean indexOnly() {
 		return false;
 	}
