@@ -99,6 +99,20 @@ public class TestCatalogSupplier {
 		return serializeTestTree(testTree, suppressEndpointProperty);
 	}
 
+	/**
+	 * Same as {@link #get(Function, boolean)}, except that this method only returns those tests that are contained in
+	 * the given projects.
+	 */
+	public String get(ResourceSet resourceSet, IN4JSProject project, boolean suppressEndpointProperty) {
+		final TestTree testTree = testDiscoveryHelper.collectAllTestsFromProjects((uri) -> resourceSet,
+				Collections.singletonList(project));
+
+		if (testTree.getSuites().isEmpty()) {
+			return null;
+		}
+		return serializeTestTree(testTree, suppressEndpointProperty);
+	}
+
 	/** Serializes the given {@link TestTree}. */
 	protected String serializeTestTree(TestTree testTree, boolean suppressEndpointProperty) {
 		try {
