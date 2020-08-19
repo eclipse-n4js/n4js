@@ -117,23 +117,28 @@ export public class N4jscArguments {
         const allOptions = process.argv.slice(2);
         const args = new N4jscArguments();
         
-        let index = 0;
-        if (allOptions && allOptions[index]) {
+        if (allOptions && allOptions.length > 0) {
+            let index = 0;
             // parse goal
             if (Goal.literals.indexOf(allOptions[index]) >= 0) {
                 args.goal = allOptions[index];
+                index++;
+            } else {
+                args.goal = Goal.compile;
             }
             // parse dir
-            if (!args.goal) {
-                args.goal = allOptions[index];
-            } else if (args.goal != Goal.lsp) {
-                index++;
-                if (allOptions[index]) {
+            if (allOptions[index] && !allOptions[index].startsWith("-")) {
+                if (args.goal != Goal.lsp) {
+                    // ignore directory argument when goal is LSP to support search for n4js-cli.config in LSP case
                     args.dir = allOptions[index];
                 }
+                index++;
+            }
+
+            if (allOptions[index]) {
+                args.n4jscOptions = allOptions.slice(index);
             }
         }
-        args.n4jscOptions = allOptions.slice(index + 1);
 
         args.print(log);
         return args;

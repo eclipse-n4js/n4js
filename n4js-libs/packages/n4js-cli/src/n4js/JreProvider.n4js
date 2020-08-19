@@ -31,11 +31,16 @@ export const JRE_VERSION = 11;
  * Returns an object literal that contains the Java version of the available environment
  * and the boolean flag 'suffices' which is true if n4jsc.jar can be executed using this Java version.
  */
-export public function getJavaVersionInfo() : ~Object with {version: int, suffices: boolean} {
-    const version = detectJavaVersion();
-    const suffices: boolean = !!version && version == JRE_VERSION;
+export public function getJavaVersionInfo(log: {function(string)}) : ~Object with {version: int, suffices: boolean} {
+    try {
+        const version = detectJavaVersion();
+        const suffices: boolean = !!version && version == JRE_VERSION;
+        return {version: version, suffices: suffices};
 
-    return {version: version, suffices: suffices};
+    } catch (err) {
+        log(err as string);
+        return {version: NaN, suffices: false};
+    }
 }
 
 /**
@@ -43,8 +48,8 @@ export public function getJavaVersionInfo() : ~Object with {version: int, suffic
  * In case the bin folder contains a JRE, this function returns the absolute path
  * to the Java executable.
  */
-export function getJavaCommand(log: {function(string)}) : string {
-    const jreInfo = getJreInfo(log);
+export function getJavaCommand() : string {
+    const jreInfo = getJreInfo();
     if (jreInfo && fs.existsSync(JRE_DIR)) {
         const directories = fs.readdirSync(JRE_DIR, { withFileTypes: true }) as fs.Dirent[];
         const dirNames = directories
@@ -76,13 +81,13 @@ export function isLocalJre(javaPath: string): boolean {
  * and extracted to the local bin folder.
  */
 export public async function ensureJRE(log: {function(string)} = npmlog.info) : void {
-    const java = getJavaCommand(log);
+    const java = getJavaCommand();
     if (isLocalJre(java)) {
         log("Local JRE found.");
         return;
     }
 
-    let versionInfo = getJavaVersionInfo();
+    let versionInfo = getJavaVersionInfo(log);
     if (versionInfo.version) {
         if (versionInfo.suffices) {
             log("Global JRE found in version " + versionInfo.version);
@@ -96,25 +101,30 @@ export public async function ensureJRE(log: {function(string)} = npmlog.info) : 
     }
 
     // Download and extract JRE
-    const jreInfo = getJreInfo(log);
+    const jreInfo = getJreInfo();
     if (jreInfo) {
-        log("Downloading and extracting JRE into local folder.");
-
-        await downloadJRE(jreInfo, log);
-        await extractJRE(jreInfo, log);
+        if (isPlatformProblemMuslLibc()) {
+            log("Detected musl libc on this platform: Will not download Adopt OpenJDK since musl libc is not supported by Adopt OpenJDK.");
+        } else {
+            log("Downloading and extracting JRE (Adopt OpenJDK) into local folder.");
+            
+            try {
+                await downloadJRE(jreInfo, log);
+                await extractJRE(jreInfo, log);
+                return;
+            } catch (err) {
+                log(err as string);
+            }
+        }
 
     } else {
         log("Platform not supported: " + process.platform);
-        log("Please install JRE in version " + JRE_VERSION + " and make the call to 'bin/java' globally available.");
     }
+    log("Please install JRE in version " + JRE_VERSION + " and make the call to 'bin/java' globally available.");
 }
 
-function getJreInfo(log: {function(string)}) : JreInfo {
+function getJreInfo() : JreInfo {
     const platform = process.arch + "_" + process.platform;
-    if (platform == Platform.x64_linux && isMuslLibc()) {
-        log("Musl libc is not supported by Adopt OpenJDK");
-        return null;
-    }
     return JRE_INFO_MAP.get(platform as Platform);
 }
 
@@ -122,14 +132,13 @@ function getJreInfo(log: {function(string)}) : JreInfo {
 /**
  * Downloads the AdoptOpenJDK JRE.
  */
-async function downloadJRE(jreInfo: JreInfo, log: {function(string)}) : Promise<any, any> {
+async function downloadJRE(jreInfo: JreInfo, log: {function(string)}) : void {
     const jreUrl = toValidUrl(JRE_URL_DIR + jreInfo.name);
-    if (jreUrl) {
-        const output = getJreFileName(jreInfo);
-        const promise : Promise<any, any> = downloadFile(jreUrl, output, log);
-        return promise;
+    if (!jreUrl) {
+        throw "Invalid URL: " + lib_url.format(jreUrl);
     }
-    return Promise.reject("Invalid URL: " + lib_url.format(jreUrl));
+    const output = getJreFileName(jreInfo);
+    await downloadFile(jreUrl, output, log);
 }
 
 
@@ -144,7 +153,7 @@ export public function toValidUrl(urlStr: string) : lib_url.NodeURL {
     return null;
 }
 
-export public async function downloadFile(url: lib_url.NodeURL, filename: string, log: {function(string)}) : Promise<any, any> {
+export public async function downloadFile(url: lib_url.NodeURL, filename: string, log: {function(string)}) : void {
     log("downloading from " + lib_url.format(url));
 
     const dir = path.dirname(filename);
@@ -152,9 +161,13 @@ export public async function downloadFile(url: lib_url.NodeURL, filename: string
         log("creating dir " + dir);
         fs.mkdirSync(dir);
     }
+    if (fs.existsSync(filename)) {
+        log("deleting already existing file " + filename);
+        fs.unlinkSync(filename);
+    }
 
     const get = (url.protocol == "https:") ? followRedirects.https.get : followRedirects.http.get;
-    return new Promise<any, any>((resolve, reject) => {
+    await new Promise<any, any>((resolve, reject) => {
             get(url, (response : any+) => {
                     if (response.statusCode !== 200) {
                         reject("Error during download: status code was " + response.statusCode);
@@ -166,7 +179,7 @@ export public async function downloadFile(url: lib_url.NodeURL, filename: string
     
                         response.on("error",
                             err => {
-                                log("n4js-cli" + err);
+                                log(err as string);
                                 reject(err);
                             });
                         response.on("end",
@@ -175,6 +188,9 @@ export public async function downloadFile(url: lib_url.NodeURL, filename: string
                                 resolve();
                             });
                     }
+                }).on("error", (err) => {
+                    log(err as string);
+                    reject(err);
                 });
         });
 }
@@ -195,6 +211,15 @@ async function extractJRE(jreInfo: JreInfo, log: {function(string)}) {
 
 function getJreFileName(jreInfo: JreInfo): string {
     return path.resolve(BIN_DIR, jreInfo.name);
+}
+
+
+function isPlatformProblemMuslLibc() : boolean {
+    const platform = process.arch + "_" + process.platform;
+    if (platform == Platform.x64_linux && isMuslLibc()) {
+        return true;
+    }
+    return false;
 }
 
 /** Returns true if the installed libc is musl */
