@@ -38,6 +38,7 @@ import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
+import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.findReferences.IReferenceFinder.IResourceAccess;
 import org.eclipse.xtext.findReferences.ReferenceAcceptor;
 import org.eclipse.xtext.ide.server.DocumentExtensions;
@@ -139,6 +140,10 @@ public class N4JSRenameService extends RenameService2 {
 		XtextResource resource = rtc.getResource();
 		XDocument document = rtc.getDocument();
 		int offset = document.getOffSet(renameParams.getPosition());
+
+		// in case the temporary resource task context we are using was created without 'resolveAndValidate' we need to
+		// trigger resolution (not validation) here:
+		EcoreUtil2.resolveLazyCrossReferences(resource, cancelIndicator);
 
 		EObject element = getElementToBeRenamed(resource, offset);
 		if (element == null) {
