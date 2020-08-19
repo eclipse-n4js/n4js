@@ -15,9 +15,9 @@ import org.junit.Ignore
 import org.junit.Test
 
 /**
- * Tests to ensure that various AST nodes can be renamed.
+ * Tests to ensure that various kinds of AST nodes can be renamed.
  */
-class RenameBasicTest extends AbstractRenameTest {
+class RenameASTNodesTest extends AbstractRenameTest {
 
 	@Test def void testVar_topLevel_atDecl() {
 		testAtCursors("var <|>na<|>me<|> = ''; name;", "nameNew", "var nameNew = ''; nameNew;");
