@@ -48,6 +48,9 @@ class N4JSElementSignatureProvider {
 			return o.typeRefAsString;
 		}
 		val id = getIdentifiableElement(o);
+		if (id === null) {
+			return null;
+		}
 		val label = doGetLabel(id, o);
 		sanitizeForHTML(label);
 		return label;

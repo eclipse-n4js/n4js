@@ -165,13 +165,9 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	/** Deletes the test project in case it exists. */
 	@After
 	final public void deleteTestProject() {
-		// clear thread pools
-		languageServer.shutdown().join();
+		shutdownLspServer();
 		// clear the state related to the test
 		testWorkspaceManager.deleteTestFromDiskIfCreated();
-		languageClient.clearLogMessages();
-		languageClient.clearIssues();
-		openFiles.clear();
 	}
 
 	/** @return the workspace root folder as a {@link File}. */
@@ -218,6 +214,15 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	/** @return instance of {@link StringLSP4J}. */
 	protected StringLSP4J getStringLSP4J() {
 		return new StringLSP4J(getRoot());
+	}
+
+	/** Shuts down a running LSP server. Does not clean disk. */
+	protected void shutdownLspServer() {
+		// clear thread pools
+		languageServer.shutdown().join();
+		openFiles.clear();
+		languageClient.clearLogMessages();
+		languageClient.clearIssues();
 	}
 
 	/**

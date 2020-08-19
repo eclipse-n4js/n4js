@@ -26,7 +26,7 @@ import org.eclipse.n4js.ide.server.N4JSProjectStatePersister;
 import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
 import org.eclipse.n4js.ide.server.SourceFolderAwareResourceValidator;
 import org.eclipse.n4js.ide.server.build.N4JSBuilderFrontend;
-import org.eclipse.n4js.ide.server.build.N4JSWorkspaceBuilder;
+import org.eclipse.n4js.ide.server.build.N4JSProjectBuilder;
 import org.eclipse.n4js.ide.server.codeActions.N4JSCodeActionService;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
 import org.eclipse.n4js.ide.server.concurrent.N4JSQueuedExecutorService;
@@ -50,7 +50,6 @@ import org.eclipse.n4js.ide.xtext.server.build.ProjectBuilder;
 import org.eclipse.n4js.ide.xtext.server.build.ProjectStatePersister;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterValidateListener;
 import org.eclipse.n4js.ide.xtext.server.build.XStatefulIncrementalBuilder;
-import org.eclipse.n4js.ide.xtext.server.build.XWorkspaceBuilder;
 import org.eclipse.n4js.ide.xtext.server.build.XWorkspaceManager;
 import org.eclipse.n4js.ide.xtext.server.contentassist.XContentAssistService;
 import org.eclipse.n4js.ide.xtext.server.issues.WorkspaceValidateListener;
@@ -115,10 +114,6 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 		return WorkspaceAwareCanLoadFromDescriptionHelper.class;
 	}
 
-	public Class<? extends ProjectBuilder> bindXProjectManager() {
-		return ProjectBuilder.class;
-	}
-
 	public Class<? extends XIProjectDescriptionFactory> bindXIProjectDescriptionFactory() {
 		return N4JSProjectDescriptionFactory.class;
 	}
@@ -147,8 +142,8 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 		return N4JSHoverService.class;
 	}
 
-	public Class<? extends XWorkspaceBuilder> bindXWorkspaceBuilder() {
-		return N4JSWorkspaceBuilder.class;
+	public Class<? extends ProjectBuilder> bindProjectBuilder() {
+		return N4JSProjectBuilder.class;
 	}
 
 	public Class<? extends ExecutableCommandRegistry> bindExecutableCommandRegistry() {

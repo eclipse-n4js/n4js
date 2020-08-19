@@ -12,14 +12,17 @@
 set -e
 cd `dirname $0`/TestPrj
 
-echo "Create test catalog and move to TestPrj"
+echo "Create test catalogs"
 ../../../n4js-cli/bin/n4jsc.js compile ../../../..
-mv ../../../../testcatalog.json ./testcatalog.json
 
-echo "Run mangelhaft"
-../../bin/n4js-mangelhaft-cli.js \
-    --testCatalog ./testcatalog.json \
-    --xunitReportFile ./build/report.xml \
-    --xunitReportName test-report \
-    --xunitReportPackage TestPrj \
-    $@
+
+REPORT_NAME="./build/report.xml"
+echo "Run Mangelhaft"
+../../bin/n4js-mangelhaft-cli.js ../../../.. \
+		--xunitReportFile $REPORT_NAME \
+		--xunitReportName test-report \
+		--xunitReportPackage n4js-libs-report \
+		$@
+
+echo "Saved test report at: ${REPORT_NAME}"
+

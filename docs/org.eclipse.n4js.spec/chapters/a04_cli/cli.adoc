@@ -90,13 +90,13 @@ The set of all project is determined as follows:
 == NPM n4js-cli
 
 The npm package n4js-cli has the same user API regarding all goals and options.
-However, n4js-cli has one extension: the (optional) `.n4js-cli.config` file.
+However, n4js-cli has one extension: the (optional) `n4js-cli.config` file.
 In case there exists such a file in the project root directory, it will be picked up by n4js-cli.
 
 
 === Configurations of n4js-cli
 
-The `.n4js-cli.config` file has a json format and supports following optional configuration properties at the moment.
+The `n4js-cli.config` file has a json format and supports following optional configuration properties at the moment.
 
 ==== "n4jsc.jar"
 

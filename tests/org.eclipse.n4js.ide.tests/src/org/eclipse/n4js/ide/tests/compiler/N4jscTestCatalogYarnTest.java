@@ -61,13 +61,18 @@ public class N4jscTestCatalogYarnTest extends AbstractCliCompileTest {
 		CliCompileResult cliResult = n4jsc(COMPILE(workspace), VALIDATION_ERRORS);
 		assertEquals(cliResult.toString(), 16, cliResult.getTranspiledFilesCount());
 
-		// GH-1666: change the following assertions
-		File testCatalogFileInYarnRoot = new File(workspace, N4JSGlobals.TEST_CATALOG);
-		assertTrue("Test catalog is missing", testCatalogFileInYarnRoot.isFile());
-		String[] projectNames = { "P1", "P2", "P3", "P4", "PSingle", "Test01", "TestCleanPrj1", "TestCleanPrj2" };
-		for (String projectName : projectNames) {
+		File testCatalogFileInWorkspace = new File(workspace, N4JSGlobals.TEST_CATALOG);
+		assertFalse("Test catalog of workspace must not exist", testCatalogFileInWorkspace.isFile());
+
+		String[] sourceProjectNames = { "P1", "P2", "P3", "P4", "PSingle" };
+		String[] testProjectNames = { "Test01", "TestCleanPrj1", "TestCleanPrj2" };
+		for (String projectName : sourceProjectNames) {
 			File testCatalogFileInSubProject = new File(proot, projectName + File.separator + N4JSGlobals.TEST_CATALOG);
-			assertFalse("Test catalog of sub project must not exist", testCatalogFileInSubProject.isFile());
+			assertFalse("Test catalog of '" + projectName + "' must not exist", testCatalogFileInSubProject.isFile());
+		}
+		for (String projectName : testProjectNames) {
+			File testCatalogFileInSubProject = new File(proot, projectName + File.separator + N4JSGlobals.TEST_CATALOG);
+			assertTrue("Test catalog of '" + projectName + "' must exist", testCatalogFileInSubProject.isFile());
 		}
 
 	}
