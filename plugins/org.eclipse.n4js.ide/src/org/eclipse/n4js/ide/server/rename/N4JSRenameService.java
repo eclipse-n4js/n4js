@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.ide.server.rename;
 
+import java.util.stream.Stream;
+
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -20,9 +22,11 @@ import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.RenameParams;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.ide.xtext.server.ResourceTaskContext;
 import org.eclipse.n4js.ide.xtext.server.ResourceTaskManager;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
+import org.eclipse.n4js.ide.xtext.server.build.BuilderFrontend;
 import org.eclipse.n4js.ide.xtext.server.symbol.XDocumentSymbolService;
 import org.eclipse.n4js.n4JS.DefaultImportSpecifier;
 import org.eclipse.n4js.n4JS.IdentifierRef;
@@ -32,6 +36,7 @@ import org.eclipse.n4js.n4JS.N4JSFeatureUtils;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
+import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.xtext.findReferences.IReferenceFinder.IResourceAccess;
 import org.eclipse.xtext.findReferences.ReferenceAcceptor;
@@ -58,6 +63,9 @@ import com.google.inject.Inject;
 public class N4JSRenameService extends RenameService2 {
 
 	@Inject
+	private BuilderFrontend builderFrontend;
+
+	@Inject
 	private ResourceTaskManager resourceTaskManager;
 
 	@Inject
@@ -75,8 +83,8 @@ public class N4JSRenameService extends RenameService2 {
 	// #################################################################################################################
 	// prepareRename
 	//
-	// We use #prepareRename() from the super class. Only the following two overrides with N4JS-specific adjustments are
-	// required:
+	// In case of #prepareRename() we largely use the implementation from the super class. Only the following two
+	// overrides with N4JS-specific adjustments are required:
 
 	@Override
 	protected EObject getElementWithIdentifierAt(XtextResource resource, int offset) {
@@ -84,7 +92,13 @@ public class N4JSRenameService extends RenameService2 {
 		if (originImport != null) {
 			return originImport;
 		}
-		return super.getElementWithIdentifierAt(resource, offset);
+		EObject result = super.getElementWithIdentifierAt(resource, offset);
+		if (result != null) {
+			if (N4Scheme.isFromResourceWithN4Scheme(result) || isFromResourceInNodeModules(result)) {
+				return null;
+			}
+		}
+		return result;
 	}
 
 	@Override
@@ -107,8 +121,8 @@ public class N4JSRenameService extends RenameService2 {
 	// #################################################################################################################
 	// rename
 	//
-	// To use reference finding as far as possible (for consistency), we replace #rename() from the super class entirely
-	// by our own implementation:
+	// In case of #rename() we entirely replace the implementation from the super class by our own implementation (in
+	// order to reuse reference finding as far as possible, for consistency):
 
 	@Override
 	public WorkspaceEdit rename(Options options) {
@@ -254,6 +268,11 @@ public class N4JSRenameService extends RenameService2 {
 		return eObjectAtOffsetHelper.resolveElementAt(resource, offset);
 	}
 
+	/** Returns the {@link EStructuralFeature feature} that represents the given element's name. */
+	protected EStructuralFeature getElementNameFeature(EObject element) {
+		return N4JSFeatureUtils.getElementNameFeature(element);
+	}
+
 	private NamedImportSpecifier getImportIfReferenceToAliasOfNamedImport(XtextResource resource, int offset) {
 		EObject containedElement = eObjectAtOffsetHelper.resolveContainedElementAt(resource, offset);
 		if (!(containedElement instanceof IdentifierRef) && offset > 0) {
@@ -269,8 +288,11 @@ public class N4JSRenameService extends RenameService2 {
 		return null;
 	}
 
-	/** Returns the {@link EStructuralFeature feature} that represents the given element's name. */
-	protected EStructuralFeature getElementNameFeature(EObject element) {
-		return N4JSFeatureUtils.getElementNameFeature(element);
+	private boolean isFromResourceInNodeModules(EObject eobj) {
+		Resource res = eobj != null ? eobj.eResource() : null;
+		URI uri = res != null ? res.getURI() : null;
+		URI uriRelative = uri != null ? builderFrontend.makeWorkspaceRelative(uri) : null;
+		return uriRelative != null
+				&& Stream.of(uriRelative.segments()).anyMatch(segment -> N4JSGlobals.NODE_MODULES.equals(segment));
 	}
 }
