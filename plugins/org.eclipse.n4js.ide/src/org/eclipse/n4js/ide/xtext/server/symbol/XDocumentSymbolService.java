@@ -32,6 +32,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * Minor adjustments compared to the default {@link DocumentSymbolService}.
  */
 @Singleton
 @SuppressWarnings("restriction")
@@ -49,6 +50,7 @@ public class XDocumentSymbolService extends DocumentSymbolService {
 	@Inject
 	private DocumentExtensions documentExtensions;
 
+	// Overridden only to be able to factor out methods that accept custom reference acceptors:
 	@Override
 	public List<? extends Location> getReferences(
 			XtextResource resource,
@@ -76,6 +78,10 @@ public class XDocumentSymbolService extends DocumentSymbolService {
 		return locations;
 	}
 
+	/**
+	 * Same as {@link #getReferences(XtextResource, int, IResourceAccess, IResourceDescriptions, CancelIndicator)}, but
+	 * a custom reference acceptor can be provided.
+	 */
 	public boolean getReferences(
 			XtextResource resource,
 			int offset,
@@ -93,7 +99,7 @@ public class XDocumentSymbolService extends DocumentSymbolService {
 		return true;
 	}
 
-	// FIXME consider using referenceFinder directly from N4JSRenameService (then no need for this class)
+	/** Find references pointing to the given element and invoke the given acceptor for each reference. */
 	public void getReferences(
 			EObject element,
 			IReferenceFinder.Acceptor referenceAcceptor,
