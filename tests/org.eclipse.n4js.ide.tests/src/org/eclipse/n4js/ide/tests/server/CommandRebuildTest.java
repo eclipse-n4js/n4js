@@ -16,10 +16,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.attribute.BasicFileAttributeView;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.util.Collections;
@@ -75,8 +73,8 @@ public class CommandRebuildTest extends AbstractStructuredIdeTest<Void> {
 		prjStatePath = getFileURIFromModuleName(DEFAULT_PROJECT_NAME + "/" + PROJECT_STATE_NAME).toFileSystemPath();
 		genFileStatePath = getFileURIFromModuleName(moduleName + ".js").toFileSystemPath();
 
-		setFileCreationDate(prjStatePath);
-		setFileCreationDate(genFileStatePath);
+		setFileCreationDate(prjStatePath, FILE_TIME_MILLISECONDS);
+		setFileCreationDate(genFileStatePath, FILE_TIME_MILLISECONDS);
 	}
 
 	/** Expectation is that files '.n4js.projectstate' and 'src-gen/Module.js' are changed due to rebuild action. */
@@ -181,15 +179,6 @@ public class CommandRebuildTest extends AbstractStructuredIdeTest<Void> {
 		joinServerRequests();
 
 		assertNoIssues();
-	}
-
-	private void setFileCreationDate(Path filePath) throws IOException {
-		BasicFileAttributeView attributes = Files.getFileAttributeView(filePath, BasicFileAttributeView.class);
-		FileTime time = FileTime.fromMillis(FILE_TIME_MILLISECONDS);
-		attributes.setTimes(time, time, time);
-
-		FileTime fileTime = Files.readAttributes(filePath, BasicFileAttributes.class).lastModifiedTime();
-		assertEquals(FILE_TIME_MILLISECONDS, fileTime.toMillis());
 	}
 
 }

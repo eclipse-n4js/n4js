@@ -118,7 +118,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 	static val API_TYPE = anyOf(API);
 	static val RE_TYPE = anyOf(RUNTIME_ENVIRONMENT);
 	static val RL_TYPE = anyOf(RUNTIME_LIBRARY);
-	static val TEST_TYPE = anyOf(TEST);
+	static val TEST_TYPE = anyOf(ProjectType.TEST);
 	static val RE_OR_RL_TYPE = anyOf(RUNTIME_ENVIRONMENT, RUNTIME_LIBRARY);
 	static val PLAINJS_TYPE = anyOf(PLAINJS);
 
@@ -464,7 +464,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 		val description = getProjectDescription();
 		
 		// make sure the listed tested projects do not mismatch in their type (API vs. library)
-		if (TEST == description.projectType) {
+		if (ProjectType.TEST == description.projectType) {
 			val projects = description.testedProjects;
 			if (!projects.nullOrEmpty) {
 				val allProjects = getAllProjectsByName();

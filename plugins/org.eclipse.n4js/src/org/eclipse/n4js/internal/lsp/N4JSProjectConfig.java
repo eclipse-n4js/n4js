@@ -155,6 +155,7 @@ public class N4JSProjectConfig implements XIProjectConfig {
 	 *
 	 * @return true iff this project should be indexed only
 	 */
+	@Override
 	public boolean indexOnly() {
 		String outputPath = delegate.getOutputPath();
 		if (".".equals(outputPath)) {

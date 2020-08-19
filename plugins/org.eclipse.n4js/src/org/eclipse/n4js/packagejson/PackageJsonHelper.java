@@ -287,6 +287,8 @@ public class PackageJsonHelper {
 			target.setMainModule(MAIN_MODULE.defaultValue);
 		}
 		if (target.getOutputPath() == null) {
+			// note that in case the project is a yarn workspace project and there is a 'clean build' running
+			// the entire contents will be deleted.
 			target.setOutputPath(OUTPUT.defaultValue);
 		}
 

@@ -11,12 +11,16 @@
 package org.eclipse.n4js.ide.tests.server;
 
 import static java.util.Collections.singletonList;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.nio.file.attribute.BasicFileAttributeView;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -1116,5 +1120,15 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		XDocument oldDocument = new XDocument(0, oldContent.toString(), true, true);
 		XDocument newDocument = oldDocument.applyChanges(textEdits);
 		return newDocument.getContents();
+	}
+
+	/** Sets and asserts all time attributes of the given file to the given time [ms] */
+	protected static void setFileCreationDate(Path filePath, long millis) throws IOException {
+		BasicFileAttributeView attributes = Files.getFileAttributeView(filePath, BasicFileAttributeView.class);
+		FileTime time = FileTime.fromMillis(millis);
+		attributes.setTimes(time, time, time);
+
+		FileTime fileTime = Files.readAttributes(filePath, BasicFileAttributes.class).lastModifiedTime();
+		assertEquals(millis, fileTime.toMillis());
 	}
 }
