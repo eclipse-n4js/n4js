@@ -23,17 +23,6 @@ The language provides built-in support for state-of-the-art programming paradigm
 For more information about N4JS, please refer to the official [project home](https://www.eclipse.org/n4js/).
 
 
-## Create distributable VSCode extension package
-
-This extension will be made available via the VSCode market place in the near future.
-
-To install the VSCode LSP extension for N4JS you can create a distributable package.
-This package can then be copied to a user and be installed into VSCode using `code  --install-extension <package name>`. 
-Create the package from within this folder by first executing `npm install` and then `vsce package`.
-If `vsce` is not available yet, you can install it with `npm install -g vsce`.
-For more information, please refer to [visualstudio.com](https://code.visualstudio.com/api/working-with-extensions/publishing-extension#packaging-extensions).
-
-
 ## License
 
 Copyright (c) 2020 NumberFour AG.
