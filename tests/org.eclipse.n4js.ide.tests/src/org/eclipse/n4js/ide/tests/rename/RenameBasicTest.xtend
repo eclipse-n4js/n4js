@@ -19,12 +19,52 @@ import org.junit.Test
  */
 class RenameBasicTest extends AbstractRenameTest {
 
-	@Test def void testLet_atDecl() {
+	@Test def void testVar_topLevel_atDecl() {
+		testAtCursors("var <|>na<|>me<|> = ''; name;", "nameNew", "var nameNew = ''; nameNew;");
+	}
+
+	@Test def void testVar_topLevel_atRef() {
+		testAtCursors("var name = ''; <|>na<|>me<|>;", "nameNew", "var nameNew = ''; nameNew;");
+	}
+
+	@Test def void testVar_exported_atDecl() {
+		testAtCursors("export var <|>na<|>me<|> = ''; name;", "nameNew", "export var nameNew = ''; nameNew;");
+	}
+
+	@Test def void testVar_exported_atRef() {
+		testAtCursors("export var name = ''; <|>na<|>me<|>;", "nameNew", "export var nameNew = ''; nameNew;");
+	}
+
+	@Test def void testVar_local_atDecl() {
+		testAtCursors("function foo() { var <|>na<|>me<|> = ''; name; }", "nameNew", "function foo() { var nameNew = ''; nameNew; }");
+	}
+
+	@Test def void testVar_local_atRef() {
+		testAtCursors("function foo() { var name = ''; <|>na<|>me<|>; }", "nameNew", "function foo() { var nameNew = ''; nameNew; }");
+	}
+
+	@Test def void testLet_topLevel_atDecl() {
 		testAtCursors("let <|>na<|>me<|> = ''; name;", "nameNew", "let nameNew = ''; nameNew;");
 	}
 
-	@Test def void testLet_atRef() {
+	@Test def void testLet_topLevel_atRef() {
 		testAtCursors("let name = ''; <|>na<|>me<|>;", "nameNew", "let nameNew = ''; nameNew;");
+	}
+
+	@Test def void testLet_exported_atDecl() {
+		testAtCursors("export let <|>na<|>me<|> = ''; name;", "nameNew", "export let nameNew = ''; nameNew;");
+	}
+
+	@Test def void testLet_exported_atRef() {
+		testAtCursors("export let name = ''; <|>na<|>me<|>;", "nameNew", "export let nameNew = ''; nameNew;");
+	}
+
+	@Test def void testLet_local_atDecl() {
+		testAtCursors("function foo() { let <|>na<|>me<|> = ''; name; }", "nameNew", "function foo() { let nameNew = ''; nameNew; }");
+	}
+
+	@Test def void testLet_local_atRef() {
+		testAtCursors("function foo() { let name = ''; <|>na<|>me<|>; }", "nameNew", "function foo() { let nameNew = ''; nameNew; }");
 	}
 
 	@Test def void testFunctionDecl_atDecl() {

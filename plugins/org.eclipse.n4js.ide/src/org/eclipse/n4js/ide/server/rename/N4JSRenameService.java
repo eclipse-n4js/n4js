@@ -28,9 +28,9 @@ import org.eclipse.n4js.ide.xtext.server.ResourceTaskContext;
 import org.eclipse.n4js.ide.xtext.server.ResourceTaskManager;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.n4js.ide.xtext.server.symbol.XDocumentSymbolService;
+import org.eclipse.n4js.n4JS.DefaultImportSpecifier;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
-import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.N4JSFeatureUtils;
 import org.eclipse.n4js.n4JS.N4JSPackage;
@@ -174,8 +174,7 @@ public class N4JSRenameService extends RenameService2 {
 	protected TextEdit computeRenameEditForElement(EObject element, String newName) {
 		EStructuralFeature nameFeature = getElementNameFeature(element);
 		if (nameFeature == null
-				&& element instanceof NamedImportSpecifier
-				&& !((NamedImportSpecifier) element).isDefaultImport()
+				&& element instanceof NamedImportSpecifier // including DefaultImportSpecifier
 				&& ((NamedImportSpecifier) element).getAlias() != null) {
 			nameFeature = N4JSPackage.eINSTANCE.getNamedImportSpecifier_Alias();
 		} else if (nameFeature == null
@@ -204,14 +203,15 @@ public class N4JSRenameService extends RenameService2 {
 
 		if (obj instanceof IdentifierRef && eRef == N4JSPackage.eINSTANCE.getIdentifierRef_Id()) {
 			ImportSpecifier originImport = ((IdentifierRef) obj).getOriginImport();
-			if (originImport instanceof NamedImportSpecifier) {
-				if (!((NamedImportSpecifier) originImport).isDefaultImport()) {
-					boolean isImportedViaAlias = ((NamedImportSpecifier) originImport).getAlias() != null;
-					if (isImportedViaAlias) {
-						return null;
-					}
+			if (originImport instanceof NamedImportSpecifier) { // including DefaultImportSpecifier
+				boolean isImportedViaAlias = ((NamedImportSpecifier) originImport).getAlias() != null;
+				if (isImportedViaAlias) {
+					return null;
 				}
 			}
+		} else if (obj instanceof DefaultImportSpecifier
+				&& eRef == N4JSPackage.eINSTANCE.getNamedImportSpecifier_ImportedElement()) {
+			return null;
 		}
 
 		Location location = documentExtensions.newLocation(obj, eRef, indexInList);
@@ -230,14 +230,7 @@ public class N4JSRenameService extends RenameService2 {
 			return originImport;
 		}
 
-		EObject result = eObjectAtOffsetHelper.resolveElementAt(resource, offset);
-
-		// special case: literal or computed property names
-		if (result instanceof LiteralOrComputedPropertyName) {
-			result = result.eContainer();
-		}
-
-		return result;
+		return eObjectAtOffsetHelper.resolveElementAt(resource, offset);
 	}
 
 	private NamedImportSpecifier getImportIfReferenceToAliasOfNamedImport(XtextResource resource, int offset) {
@@ -247,8 +240,7 @@ public class N4JSRenameService extends RenameService2 {
 		}
 		if (containedElement instanceof IdentifierRef) {
 			ImportSpecifier originImport = ((IdentifierRef) containedElement).getOriginImport();
-			if (originImport instanceof NamedImportSpecifier
-					&& !((NamedImportSpecifier) originImport).isDefaultImport()
+			if (originImport instanceof NamedImportSpecifier // including DefaultImportSpecifier
 					&& ((NamedImportSpecifier) originImport).getAlias() != null) {
 				return (NamedImportSpecifier) originImport;
 			}
@@ -268,12 +260,10 @@ public class N4JSRenameService extends RenameService2 {
 
 	@Override
 	protected String getElementName(EObject element) {
-		if (element instanceof NamedImportSpecifier) {
-			if (!((NamedImportSpecifier) element).isDefaultImport()) {
-				String alias = ((NamedImportSpecifier) element).getAlias();
-				if (alias != null && !alias.isEmpty()) {
-					return alias;
-				}
+		if (element instanceof NamedImportSpecifier) { // including DefaultImportSpecifier
+			String alias = ((NamedImportSpecifier) element).getAlias();
+			if (alias != null && !alias.isEmpty()) {
+				return alias;
 			}
 		} else if (element instanceof NamespaceImportSpecifier) {
 			String namespaceName = ((NamespaceImportSpecifier) element).getAlias();

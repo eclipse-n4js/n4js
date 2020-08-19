@@ -362,9 +362,14 @@ public abstract class N4JSASTUtils {
 	public static EObject getCorrespondingTypeModelElement(EObject obj) {
 		// is obj already a type model element?
 		if (obj != null && obj.eClass().getEPackage() == TypesPackage.eINSTANCE) {
+			// special case: is obj a TypeVariable used in the AST?
+			if (obj instanceof TypeVariable && ((TypeVariable) obj).getDefinedTypeVariable() != null) {
+				return ((TypeVariable) obj).getDefinedTypeVariable();
+			}
 			// special case: is obj a TStructMember used in the AST?
 			if (obj instanceof TStructMember && ((TStructMember) obj).getDefinedMember() != null)
 				return ((TStructMember) obj).getDefinedMember();
+			// yes, obj is already a type model element -> simply return it
 			return obj;
 		}
 		// is obj an AST node that defines a type model element?

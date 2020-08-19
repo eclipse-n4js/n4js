@@ -79,7 +79,62 @@ class RenameImportsTest extends AbstractRenameTest {
 	}
 
 	@Test
-	def void testDefaultImport() {
+	def void testDefaultImport_equalAlias_renameElement() {
+		testAtCursors(#[
+			"Cls" -> '''
+				export default class <|>Na<|>me<|> {}
+			''',
+			"Main" -> '''
+				import Name from "Cls"
+				new Name();
+			'''
+		], "NameNew", #[
+			"Cls" -> '''
+				export default class NameNew {}
+			'''
+			// NOTE: "Main" must remain unchanged!
+		]);
+	}
+
+	@Test
+	def void testDefaultImport_equalAlias_renameAlias() {
+		testAtCursors(#[
+			"Cls" -> '''
+				export default class Name {}
+			''',
+			"Main" -> '''
+				import <|>Na<|>me<|> from "Cls"
+				new <|>Na<|>me<|>();
+			'''
+		], "NameNew", #[
+			// NOTE: "Cls" must remain unchanged!
+			"Main" -> '''
+				import NameNew from "Cls"
+				new NameNew();
+			'''
+		]);
+	}
+
+	@Test
+	def void testDefaultImport_differentAlias_renameElement() {
+		testAtCursors(#[
+			"Cls" -> '''
+				export default class <|>Na<|>me<|> {}
+			''',
+			"Main" -> '''
+				import Alias from "Cls"
+				new Alias();
+			'''
+		], "NameNew", #[
+			"Cls" -> '''
+				export default class NameNew {}
+			'''
+			// NOTE: "Main" must remain unchanged!
+		]);
+	}
+
+	@Test
+	def void testDefaultImport_differentAlias_renameAlias() {
 		testAtCursors(#[
 			"Cls" -> '''
 				export default class Cls {}
@@ -89,6 +144,7 @@ class RenameImportsTest extends AbstractRenameTest {
 				new <|>Na<|>me<|>();
 			'''
 		], "NameNew", #[
+			// NOTE: "Cls" must remain unchanged!
 			"Main" -> '''
 				import NameNew from "Cls"
 				new NameNew();

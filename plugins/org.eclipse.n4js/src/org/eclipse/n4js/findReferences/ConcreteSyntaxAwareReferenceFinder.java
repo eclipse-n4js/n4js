@@ -24,7 +24,6 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
-import org.eclipse.n4js.n4JS.DefaultImportSpecifier;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.N4JSPackage;
@@ -270,8 +269,7 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 	private boolean isIdentifierRefToAlias(EObject obj) {
 		if (obj instanceof IdentifierRef) {
 			ImportSpecifier originImport = ((IdentifierRef) obj).getOriginImport();
-			if (originImport instanceof NamedImportSpecifier
-					&& !(originImport instanceof DefaultImportSpecifier)) {
+			if (originImport instanceof NamedImportSpecifier) { // including DefaultImportSpecifier
 				if (((NamedImportSpecifier) originImport).getAlias() != null) {
 					return true;
 				}
