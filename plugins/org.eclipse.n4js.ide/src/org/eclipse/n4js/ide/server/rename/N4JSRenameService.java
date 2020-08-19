@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.ide.server.rename;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Stream;
 
 import org.eclipse.emf.common.util.URI;
@@ -38,6 +40,7 @@ import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
+import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.findReferences.IReferenceFinder.IResourceAccess;
 import org.eclipse.xtext.findReferences.ReferenceAcceptor;
@@ -165,11 +168,18 @@ public class N4JSRenameService extends RenameService2 {
 
 		ListMultimap<String, TextEdit> edits = ArrayListMultimap.create();
 
-		TextEdit editForElement = computeRenameEditForElement(element, newName);
-		if (editForElement != null) {
-			edits.put(element.eResource().getURI().toString(), editForElement);
+		// compute edit(s) for the element(s) to be renamed
+		List<? extends EObject> actualElements = element instanceof TMember && ((TMember) element).isComposed()
+				? ((TMember) element).getConstituentMembers()
+				: Collections.singletonList(element);
+		for (EObject actualElement : actualElements) {
+			TextEdit edit = computeRenameEditForElement(actualElement, newName);
+			if (edit != null) {
+				edits.put(actualElement.eResource().getURI().toString(), edit);
+			}
 		}
 
+		// compute edits for all references
 		ReferenceAcceptor referenceAcceptor = new ReferenceAcceptor(resourceServiceProviderRegistry, reference -> {
 			URI objURI = reference.getSourceEObjectUri();
 			EObject obj = resourceSet.getEObject(objURI, true);
