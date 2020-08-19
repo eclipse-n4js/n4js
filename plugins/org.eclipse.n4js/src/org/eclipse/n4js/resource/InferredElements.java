@@ -22,6 +22,7 @@ import org.eclipse.n4js.n4JS.N4GetterDeclaration;
 import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.n4JS.N4MethodDeclaration;
 import org.eclipse.n4js.n4JS.N4SetterDeclaration;
+import org.eclipse.n4js.n4JS.PropertyAssignment;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.TypeDefiningElement;
 import org.eclipse.n4js.n4JS.util.N4JSSwitch;
@@ -89,6 +90,12 @@ public class InferredElements {
 		public Void caseN4SetterDeclaration(N4SetterDeclaration object) {
 			result.accept(object.getDefinedSetter());
 			return super.caseN4SetterDeclaration(object);
+		}
+
+		@Override
+		public Void casePropertyAssignment(PropertyAssignment object) {
+			result.accept(object.getDefinedMember());
+			return super.casePropertyAssignment(object);
 		}
 
 		@Override

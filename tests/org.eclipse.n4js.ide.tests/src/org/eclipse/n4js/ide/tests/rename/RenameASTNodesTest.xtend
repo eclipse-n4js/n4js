@@ -212,4 +212,28 @@ class RenameASTNodesTest extends AbstractRenameTest {
 	@Test def void testProperty_viaDeclaredType_atRef() {
 		testAtCursors("let obj: ~Object with {name: string}; obj.<|>na<|>me<|>;", "nameNew", "let obj: ~Object with {nameNew: string}; obj.nameNew;");
 	}
+
+	@Test def void testPropertyGetter_atDecl() {
+		testAtCursors("({get <|>na<|>me<|>() { return null; }}).name;", "nameNew", "({get nameNew() { return null; }}).nameNew;");
+	}
+
+	@Test def void testPropertyGetter_atRef() {
+		testAtCursors("({get name() { return null; }}).<|>na<|>me<|>;", "nameNew", "({get nameNew() { return null; }}).nameNew;");
+	}
+
+	@Test def void testPropertySetter_atDecl() {
+		testAtCursors("({set <|>na<|>me<|>(value) {}}).name = null;", "nameNew", "({set nameNew(value) {}}).nameNew = null;");
+	}
+
+	@Test def void testPropertySetter_atRef() {
+		testAtCursors("({set name(value) {}}).<|>na<|>me<|> = null;", "nameNew", "({set nameNew(value) {}}).nameNew = null;");
+	}
+
+	@Test def void testPropertyMethod_atDecl() {
+		testAtCursors("({<|>na<|>me<|>() {}}).name();", "nameNew", "({nameNew() {}}).nameNew();");
+	}
+
+	@Test def void testPropertyMethod_atRef() {
+		testAtCursors("({name() {}}).<|>na<|>me<|>();", "nameNew", "({nameNew() {}}).nameNew();");
+	}
 }
