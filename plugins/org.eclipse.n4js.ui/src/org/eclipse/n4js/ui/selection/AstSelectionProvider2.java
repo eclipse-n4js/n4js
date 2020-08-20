@@ -20,6 +20,7 @@ import static org.eclipse.xtext.nodemodel.util.NodeModelUtils.findLeafNodeAtOffs
 import java.util.regex.Pattern;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.xtext.nodemodel.ILeafNode;
 import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
@@ -150,7 +151,10 @@ public class AstSelectionProvider2 extends AstSelectionProvider {
 			for (int i = actualTextRegion.getOffset() + 1; i < getEndOffset(trimmedRegion); i++) {
 				final EObject followingObject = offsetHelper.resolveElementAt(resource, i);
 				if (null == followingObject || objectAtOffset != followingObject) {
-					return null;
+					EObject typeOfObjectAtOffset = N4JSASTUtils.getCorrespondingTypeModelElement(objectAtOffset);
+					if (typeOfObjectAtOffset != followingObject) {
+						return null;
+					}
 				}
 			}
 

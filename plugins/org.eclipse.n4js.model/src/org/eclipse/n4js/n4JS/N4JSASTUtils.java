@@ -377,6 +377,8 @@ public abstract class N4JSASTUtils {
 			return ((TypeDefiningElement) obj).getDefinedType();
 		} else if (obj instanceof N4MemberDeclaration) {
 			return ((N4MemberDeclaration) obj).getDefinedTypeElement();
+		} else if (obj instanceof N4EnumLiteral) {
+			return ((N4EnumLiteral) obj).getDefinedLiteral();
 		} else if (obj instanceof PropertyAssignment) {
 			return ((PropertyAssignment) obj).getDefinedMember();
 		} else if (obj instanceof FormalParameter) {
