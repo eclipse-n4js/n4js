@@ -173,6 +173,7 @@ VERSION_INFO_FILE="${REPO_ROOT_DIR}/version-info.json"
 echo "Writing entire version information to file ${VERSION_INFO_FILE}"
 cat > ${VERSION_INFO_FILE} <<EOF
 {
+    "baseVersion": "${N4JS_LIBS_BASE_VERSION}",
     "languageVersion": "${LANGUAGE_VERSION}",
     "n4jsLibsVersion": "${N4JS_LIBS_VERSION}",
     "n4jsLibsDistTag": "${N4JS_LIBS_DIST_TAG}",
