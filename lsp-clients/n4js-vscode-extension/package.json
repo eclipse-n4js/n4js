@@ -15,7 +15,7 @@
   },
   "icon": "images/n4js_logo.png",
   "galleryBanner": {
-	"color": "#BFCFDF"
+    "color": "#BFCFDF"
   },
   "engines": {
     "vscode": "^1.48.0"
