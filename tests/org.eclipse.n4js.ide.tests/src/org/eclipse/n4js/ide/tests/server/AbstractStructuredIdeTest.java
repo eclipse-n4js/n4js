@@ -46,19 +46,41 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 		}
 	}
 
-	/** @return the content (without cursor symbol) and position of the cursor symbol for a given string */
+	/** @return the content (without cursor symbol) and position of the single cursor symbol for a given string */
 	protected ContentAndPosition getContentAndPosition(String codeWithCursor) {
-		int cursorIdx = codeWithCursor.indexOf(CURSOR_SYMBOL);
-		if (cursorIdx < 0) {
-			throw new IllegalArgumentException("Cursor symbol " + CURSOR_SYMBOL + " missing");
+		List<ContentAndPosition> result = getContentAndPositions(codeWithCursor);
+		if (result.size() > 1) {
+			throw new IllegalArgumentException("Multiple cursor symbols " + CURSOR_SYMBOL + " in input string.");
+		}
+		return result.get(0);
+	}
+
+	/** @return the content (without cursor symbol) and positions of the cursor symbol(s) for a given string */
+	protected List<ContentAndPosition> getContentAndPositions(String codeWithManyCursors) {
+		String codeWithoutCursors = codeWithManyCursors.replace(CURSOR_SYMBOL, "");
+
+		List<ContentAndPosition> result = new ArrayList<>();
+		String code = codeWithManyCursors;
+		while (true) {
+			int cursorIdx = code.indexOf(CURSOR_SYMBOL);
+			if (cursorIdx < 0) {
+				break;
+			}
+
+			String codeBeforeCursor = code.substring(0, cursorIdx);
+			String[] lines = codeBeforeCursor.replaceAll("\r", "").split("\n");
+			int lineCountBeforeCursor = lines.length - 1;
+			int columnBeforeCursor = lines[lineCountBeforeCursor].length();
+			result.add(new ContentAndPosition(codeWithoutCursors, lineCountBeforeCursor, columnBeforeCursor));
+
+			code = codeBeforeCursor + code.substring(cursorIdx + CURSOR_SYMBOL.length());
 		}
 
-		String model = codeWithCursor.replace(CURSOR_SYMBOL, "");
-		String[] lines = model.substring(0, cursorIdx).replaceAll("\r", "").split("\n");
-		int lineCountBeforeCursor = lines.length - 1;
-		int columnBeforeCursor = lines[lineCountBeforeCursor].length();
+		if (result.isEmpty()) {
+			throw new IllegalArgumentException("Cursor symbol " + CURSOR_SYMBOL + " missing in input string.");
+		}
 
-		return new ContentAndPosition(model, lineCountBeforeCursor, columnBeforeCursor);
+		return result;
 	}
 
 	/**
@@ -68,8 +90,8 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 	 * @param project
 	 *            project that was created and is used during the test
 	 * @param moduleName
-	 *            name of the module passed to the {@link #test(LinkedHashMap, String, String, Object) #test())} method
-	 *            and opened.
+	 *            name of the module passed to the {@link #test(Map, String, String, Object) #test())} method and
+	 *            opened.
 	 * @param t
 	 *            given argument from the {@code test()} method
 	 */
@@ -209,8 +231,8 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 	}
 
 	/**
-	 * Same as {@link #test(LinkedHashMap, String, String, Object)}, but name and content of the modules can be provided
-	 * as {@link Pair pairs}.
+	 * Same as {@link #test(Map, String, String, Object)}, but name and content of the modules can be provided as
+	 * {@link Pair pairs}.
 	 * <p>
 	 * Finds the selected project and module using the {@link TestWorkspaceManager#MODULE_SELECTOR} and removes the
 	 * selector.
@@ -238,7 +260,7 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 	 * @param t
 	 *            will be passed to {@link #performTest(Project, String, Object)}.
 	 */
-	protected Project test(LinkedHashMap<String, Map<String, String>> projectsModulesContents, String projectPath,
+	protected Project test(Map<String, Map<String, String>> projectsModulesContents, String projectPath,
 			String moduleName, T t) {
 
 		Project project = testWorkspaceManager.createTestOnDisk(projectsModulesContents);

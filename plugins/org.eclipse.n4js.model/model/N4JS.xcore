@@ -1078,6 +1078,12 @@ class IdentifierRef extends PrimaryExpression, StrictModeRelevant, org.eclipse.n
 	transient String idAsText
 
 	/*
+	 * If the element returned by {@link IdentifierRef#getId() getId()} was imported, this refers to
+	 * the corresponding import. Will be set during proxy resolution of property 'id'.
+	 */
+	refers transient ImportSpecifier originImport
+
+	/*
 	 * Similar to {@link IdentifierRef#getId() getId()}, but in case of references via the namespace of
 	 * a namespace import this method returns the actually referenced element instead of the
 	 * {@link ModuleNamespaceVirtualType} representing the namespace.

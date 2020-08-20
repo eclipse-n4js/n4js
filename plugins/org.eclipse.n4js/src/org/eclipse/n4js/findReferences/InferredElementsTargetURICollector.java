@@ -11,12 +11,21 @@
 package org.eclipse.n4js.findReferences;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.n4js.resource.InferredElements;
+import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
+import org.eclipse.n4js.n4JS.N4ClassDeclaration;
+import org.eclipse.n4js.n4JS.N4JSASTUtils;
+import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.n4JS.N4MemberDeclaration;
+import org.eclipse.n4js.ts.types.TClassifier;
+import org.eclipse.n4js.ts.types.TGetter;
 import org.eclipse.n4js.ts.types.TMember;
+import org.eclipse.n4js.ts.types.TSetter;
 import org.eclipse.n4js.ts.types.TStructMember;
 import org.eclipse.n4js.utils.StaticPolyfillHelper;
 import org.eclipse.xtext.findReferences.TargetURICollector;
@@ -32,9 +41,6 @@ import com.google.inject.Inject;
 public class InferredElementsTargetURICollector extends TargetURICollector {
 
 	@Inject
-	private InferredElements inferredElements;
-
-	@Inject
 	private StaticPolyfillHelper staticPolyfillHelper;
 
 	@Override
@@ -44,6 +50,10 @@ public class InferredElementsTargetURICollector extends TargetURICollector {
 		if (resource == null)
 			return;
 		EcoreUtil.resolveAll(primaryTarget.eResource());
+
+		if (primaryTarget instanceof LiteralOrComputedPropertyName) {
+			primaryTarget = primaryTarget.eContainer();
+		}
 
 		// Special handling for composed members and TStructMember
 		if (primaryTarget instanceof TMember && ((TMember) primaryTarget).isComposed()) {
@@ -62,11 +72,44 @@ public class InferredElementsTargetURICollector extends TargetURICollector {
 			super.doAdd(primaryTarget, targetURIsAddHere);
 		}
 
-		inferredElements.collectInferredElements(primaryTarget, (object) -> {
-			if (object != null) {
-				super.doAdd(object, targetURIsAddHere);
+		EObject targetInTypeModel = N4JSASTUtils.getCorrespondingTypeModelElement(primaryTarget);
+		if (targetInTypeModel != null && targetInTypeModel != primaryTarget) {
+			super.doAdd(targetInTypeModel, targetURIsAddHere);
+		}
+		if (targetInTypeModel instanceof TMember) {
+			TMember filledMember = getPolyfilledMember((TMember) targetInTypeModel);
+			if (filledMember != null) {
+				super.doAdd(filledMember, targetURIsAddHere);
 			}
-		}, staticPolyfillHelper);
+		}
 	}
 
+	private TMember getPolyfilledMember(TMember tMember) {
+		// If this member is replaced by a polyfill's member, we collect that polyfill's member as well.
+		// Note that we enable this for static polyfill. We may want to extend this to runtime polyfill as well.
+		if (tMember != null && tMember.getContainingModule().isStaticPolyfillAware()) {
+			TClassifier tClassFilled = (TClassifier) tMember.getContainingType();
+			N4ClassDeclaration filler = staticPolyfillHelper.getStaticPolyfill(tClassFilled);
+			// Search for the polyfill's member
+			String name = tMember.getName();
+			EClass memberKind;
+			if (tMember instanceof TGetter) {
+				memberKind = N4JSPackage.eINSTANCE.getGetterDeclaration();
+			} else if (tMember instanceof TSetter) {
+				memberKind = N4JSPackage.eINSTANCE.getSetterDeclaration();
+			} else {
+				memberKind = N4JSPackage.eINSTANCE.getN4MemberDeclaration();
+			}
+			Optional<N4MemberDeclaration> fillerMember = filler.getOwnedMembers().stream()
+					.filter(mem -> memberKind.isInstance(mem) && mem.getName().equals(name))
+					.findFirst();
+			if (fillerMember.isPresent()) {
+				EObject fillerMemberInTypeModel = N4JSASTUtils.getCorrespondingTypeModelElement(fillerMember.get());
+				if (fillerMemberInTypeModel instanceof TMember) {
+					return (TMember) fillerMemberInTypeModel;
+				}
+			}
+		}
+		return null;
+	}
 }

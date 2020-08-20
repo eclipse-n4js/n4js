@@ -5581,13 +5581,22 @@ public interface N4JSPackage extends EPackage {
 	int IDENTIFIER_REF__ID_AS_TEXT = PRIMARY_EXPRESSION_FEATURE_COUNT + 2;
 
 	/**
+	 * The feature id for the '<em><b>Origin Import</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDENTIFIER_REF__ORIGIN_IMPORT = PRIMARY_EXPRESSION_FEATURE_COUNT + 3;
+
+	/**
 	 * The number of structural features of the '<em>Identifier Ref</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IDENTIFIER_REF_FEATURE_COUNT = PRIMARY_EXPRESSION_FEATURE_COUNT + 3;
+	int IDENTIFIER_REF_FEATURE_COUNT = PRIMARY_EXPRESSION_FEATURE_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Get Version</em>' operation.
@@ -15980,6 +15989,15 @@ public interface N4JSPackage extends EPackage {
 	int VERSIONED_IDENTIFIER_REF__ID_AS_TEXT = IDENTIFIER_REF__ID_AS_TEXT;
 
 	/**
+	 * The feature id for the '<em><b>Origin Import</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_IDENTIFIER_REF__ORIGIN_IMPORT = IDENTIFIER_REF__ORIGIN_IMPORT;
+
+	/**
 	 * The feature id for the '<em><b>Requested Version</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -18682,6 +18700,17 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getIdentifierRef_IdAsText();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.n4js.n4JS.IdentifierRef#getOriginImport <em>Origin Import</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Origin Import</em>'.
+	 * @see org.eclipse.n4js.n4JS.IdentifierRef#getOriginImport()
+	 * @see #getIdentifierRef()
+	 * @generated
+	 */
+	EReference getIdentifierRef_OriginImport();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.IdentifierRef#getTargetElement() <em>Get Target Element</em>}' operation.
@@ -24292,6 +24321,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IDENTIFIER_REF__ID_AS_TEXT = eINSTANCE.getIdentifierRef_IdAsText();
+
+		/**
+		 * The meta object literal for the '<em><b>Origin Import</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IDENTIFIER_REF__ORIGIN_IMPORT = eINSTANCE.getIdentifierRef_OriginImport();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Target Element</b></em>' operation.

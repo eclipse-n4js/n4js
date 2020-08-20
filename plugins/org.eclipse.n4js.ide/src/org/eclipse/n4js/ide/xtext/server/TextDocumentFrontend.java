@@ -470,7 +470,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 	@Override
 	public CompletableFuture<WorkspaceEdit> rename(RenameParams renameParams) {
 		URI uri = getURI(renameParams.getTextDocument());
-		return resourceTaskManager.runInExistingContext(uri, "rename", (rtc, ci) -> {
+		return resourceTaskManager.runInTemporaryContext(uri, "rename", false, (rtc, ci) -> {
 			return rename(rtc, renameParams, ci);
 		});
 	}

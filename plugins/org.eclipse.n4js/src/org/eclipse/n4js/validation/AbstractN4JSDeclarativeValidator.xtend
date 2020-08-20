@@ -449,7 +449,7 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 	 */
 	def Pair<? extends EObject, ? extends EStructuralFeature> findNameFeature(EObject eo) {
 		if (eo instanceof NamedElement) {
-			val attribute = N4JSFeatureUtils.attributeOfNameFeature(eo);
+			val attribute = N4JSFeatureUtils.getElementNameFeature(eo);
 			if (attribute !== null) {
 				return eo -> attribute;
 			}

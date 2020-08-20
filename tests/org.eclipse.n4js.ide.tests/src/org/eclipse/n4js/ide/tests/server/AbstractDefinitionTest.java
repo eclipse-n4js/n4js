@@ -27,7 +27,7 @@ import org.eclipse.n4js.tests.codegen.Project;
 import org.eclipse.xtext.testing.DefinitionTestConfiguration;
 
 /**
- * Abstract test class for defintion protocol tests
+ * Abstract test class for definition protocol tests.
  */
 abstract public class AbstractDefinitionTest extends AbstractStructuredIdeTest<DefinitionTestConfiguration> {
 

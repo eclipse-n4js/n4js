@@ -134,7 +134,7 @@ class GenericClass<T> {}
 	new GenericClass<any>();
 }
 {
-	// XPECT warnings --> "Variable any is not of type any but of type number." at "any = 3.0"
+	// XPECT warnings --> "Variable any is not of type any but of type number." at "any"
 	let any = 3.0;
 	// If name isn't primitive type, referencing should be allowed XPECT noerrors
 	let a = any

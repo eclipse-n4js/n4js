@@ -55,8 +55,10 @@ import org.eclipse.lsp4j.FileEvent;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.Range;
+import org.eclipse.lsp4j.RenameCapabilities;
 import org.eclipse.lsp4j.ResourceChange;
 import org.eclipse.lsp4j.ResourceOperation;
+import org.eclipse.lsp4j.TextDocumentClientCapabilities;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.lsp4j.TextDocumentEdit;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
@@ -93,6 +95,7 @@ import org.junit.BeforeClass;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
@@ -256,6 +259,9 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		WorkspaceClientCapabilities wcc = new WorkspaceClientCapabilities();
 		wcc.setExecuteCommand(new ExecuteCommandCapabilities());
 		capabilities.setWorkspace(wcc);
+		TextDocumentClientCapabilities tdcc = new TextDocumentClientCapabilities();
+		tdcc.setRename(new RenameCapabilities(true, false)); // activate 'prepareRename' requests
+		capabilities.setTextDocument(tdcc);
 		InitializeParams initParams = new InitializeParams();
 		initParams.setCapabilities(capabilities);
 		initParams.setRootUri(new FileURI(root).toString());
@@ -341,6 +347,11 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		return !contentOnDisk.equals(contentInMemory);
 	}
 
+	/** Returns the file URIs of all currently open files. */
+	protected Set<FileURI> getOpenFiles() {
+		return ImmutableSet.copyOf(openFiles.keySet());
+	}
+
 	/** Same as {@link #openFile(FileURI)}, accepting a module name instead of a file URI. */
 	protected void openFile(String moduleName) {
 		FileURI fileURI = getFileURIFromModuleName(moduleName);
@@ -374,6 +385,13 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		openFiles.put(fileURI, new OpenFileInfo(content));
 
 		joinServerRequests();
+	}
+
+	/** Closes all currently open files. */
+	protected void closeAllFiles() {
+		for (FileURI fileURI : new ArrayList<>(openFiles.keySet())) {
+			closeFile(fileURI);
+		}
 	}
 
 	/** Same as {@link #closeFile(FileURI)}, but accepts a module name instead of a file URI. */
@@ -1101,8 +1119,9 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		return new FileURI(file);
 	}
 
+	/** Applies the given replacements to the given character sequence and returns the resulting string. */
 	@SafeVarargs
-	private static String applyReplacements(CharSequence oldContent, Pair<String, String>... replacements) {
+	protected static String applyReplacements(CharSequence oldContent, Pair<String, String>... replacements) {
 		StringBuilder newContent = new StringBuilder(oldContent);
 		for (Pair<String, String> replacement : replacements) {
 			int offset = newContent.indexOf(replacement.getKey());
@@ -1116,7 +1135,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		return newContent.toString();
 	}
 
-	private static String applyTextEdits(CharSequence oldContent, Iterable<? extends TextEdit> textEdits) {
+	/** Applies the given text edits to the given character sequence and returns the resulting string. */
+	protected static String applyTextEdits(CharSequence oldContent, Iterable<? extends TextEdit> textEdits) {
 		XDocument oldDocument = new XDocument(0, oldContent.toString(), true, true);
 		XDocument newDocument = oldDocument.applyChanges(textEdits);
 		return newDocument.getContents();

@@ -3943,6 +3943,16 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
+	public EReference getIdentifierRef_OriginImport() {
+		return (EReference)identifierRefEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EOperation getIdentifierRef__GetTargetElement() {
 		return identifierRefEClass.getEOperations().get(0);
 	}
@@ -7765,6 +7775,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		identifierRefEClass = createEClass(IDENTIFIER_REF);
 		createEReference(identifierRefEClass, IDENTIFIER_REF__ID);
 		createEAttribute(identifierRefEClass, IDENTIFIER_REF__ID_AS_TEXT);
+		createEReference(identifierRefEClass, IDENTIFIER_REF__ORIGIN_IMPORT);
 		createEOperation(identifierRefEClass, IDENTIFIER_REF___GET_TARGET_ELEMENT);
 		createEOperation(identifierRefEClass, IDENTIFIER_REF___IS_VALID_SIMPLE_ASSIGNMENT_TARGET);
 
@@ -8884,6 +8895,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEClass(identifierRefEClass, IdentifierRef.class, "IdentifierRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getIdentifierRef_Id(), theTypesPackage.getIdentifiableElement(), null, "id", null, 0, 1, IdentifierRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIdentifierRef_IdAsText(), theEcorePackage.getEString(), "idAsText", null, 0, 1, IdentifierRef.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIdentifierRef_OriginImport(), this.getImportSpecifier(), null, "originImport", null, 0, 1, IdentifierRef.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getIdentifierRef__GetTargetElement(), theTypesPackage.getIdentifiableElement(), "getTargetElement", 0, 1, !IS_UNIQUE, IS_ORDERED);
 

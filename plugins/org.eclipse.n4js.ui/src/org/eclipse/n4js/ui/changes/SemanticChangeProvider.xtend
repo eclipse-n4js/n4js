@@ -364,7 +364,7 @@ public class SemanticChangeProvider {
 					}
 				}
 				NamedElement: {
-					val attr = N4JSFeatureUtils.attributeOfNameFeature(element);
+					val attr = N4JSFeatureUtils.getElementNameFeature(element);
 					val nodes = NodeModelUtils.findNodesForFeature(element, attr);
 					if (nodes!==null && !nodes.empty) {
 						nodes.get(0).offset;

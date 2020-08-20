@@ -10,7 +10,11 @@
  */
 package org.eclipse.n4js.n4JS;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.types.ContainerType;
@@ -31,6 +35,7 @@ import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.resource.XtextResource;
 
 import com.google.common.base.Charsets;
+import com.google.common.collect.ImmutableList;
 import com.google.common.hash.Hashing;
 
 /**
@@ -357,9 +362,14 @@ public abstract class N4JSASTUtils {
 	public static EObject getCorrespondingTypeModelElement(EObject obj) {
 		// is obj already a type model element?
 		if (obj != null && obj.eClass().getEPackage() == TypesPackage.eINSTANCE) {
+			// special case: is obj a TypeVariable used in the AST?
+			if (obj instanceof TypeVariable && ((TypeVariable) obj).getDefinedTypeVariable() != null) {
+				return ((TypeVariable) obj).getDefinedTypeVariable();
+			}
 			// special case: is obj a TStructMember used in the AST?
 			if (obj instanceof TStructMember && ((TStructMember) obj).getDefinedMember() != null)
 				return ((TStructMember) obj).getDefinedMember();
+			// yes, obj is already a type model element -> simply return it
 			return obj;
 		}
 		// is obj an AST node that defines a type model element?
@@ -367,6 +377,8 @@ public abstract class N4JSASTUtils {
 			return ((TypeDefiningElement) obj).getDefinedType();
 		} else if (obj instanceof N4MemberDeclaration) {
 			return ((N4MemberDeclaration) obj).getDefinedTypeElement();
+		} else if (obj instanceof N4EnumLiteral) {
+			return ((N4EnumLiteral) obj).getDefinedLiteral();
 		} else if (obj instanceof PropertyAssignment) {
 			return ((PropertyAssignment) obj).getDefinedMember();
 		} else if (obj instanceof FormalParameter) {
@@ -384,11 +396,39 @@ public abstract class N4JSASTUtils {
 	 */
 	public static EObject getCorrespondingASTNode(EObject obj) {
 		// is obj already an AST node?
-		if (obj != null && obj.eClass().getEPackage() == N4JSPackage.eINSTANCE)
+		if (obj != null && obj.eClass().getEPackage() == N4JSPackage.eINSTANCE) {
 			return obj;
+		} else if (obj instanceof TypeVariable && ((TypeVariable) obj).getDefinedTypeVariable() != null) {
+			return obj; // type variables with a non-null 'definedTypeVariable' property are AST nodes
+		}
 		// is obj a type model element related to an AST node?
-		if (obj instanceof SyntaxRelatedTElement)
+		if (obj instanceof SyntaxRelatedTElement) {
 			return ((SyntaxRelatedTElement) obj).getAstElement();
+		} else if (obj instanceof TypeVariable) {
+			return getCorrespondingTypeVariableInAST((TypeVariable) obj);
+		}
+		return null;
+	}
+
+	/**
+	 * If the given type variable is located in the TModule, then this method returns its corresponding type variable in
+	 * the AST or <code>null</code> if it is not available or not found. If the given type variable is already located
+	 * in the AST, it is returned unchanged.
+	 */
+	public static TypeVariable getCorrespondingTypeVariableInAST(TypeVariable tv) {
+		if (tv.getDefinedTypeVariable() != null) {
+			return tv; // 'tv' is already an AST node
+		}
+		EObject containerInTModule = tv.eContainer();
+		EObject containerInAST = containerInTModule != null ? getCorrespondingASTNode(containerInTModule) : null;
+		if (containerInTModule instanceof Type && containerInAST instanceof GenericDeclaration) {
+			List<TypeVariable> typeVarsInTModule = ((Type) containerInTModule).getTypeVars();
+			List<TypeVariable> typeVarsInAST = ((GenericDeclaration) containerInAST).getTypeVars();
+			int idx = typeVarsInTModule.indexOf(tv);
+			if (idx >= 0 && idx < typeVarsInAST.size()) {
+				return typeVarsInAST.get(idx);
+			}
+		}
 		return null;
 	}
 
@@ -435,6 +475,49 @@ public abstract class N4JSASTUtils {
 			astNode = expr;
 		}
 		return astNode;
+	}
+
+	/**
+	 * Returns the name of the given AST or types model element or <code>null</code> if it does not have a name.
+	 *
+	 * @see N4JSFeatureUtils#getElementNameFeature(EObject)
+	 */
+	public static String getElementName(EObject element) {
+		if (element == null) {
+			return null;
+		} else if (element instanceof LiteralOrComputedPropertyName) {
+			return ((LiteralOrComputedPropertyName) element).getName();
+		}
+		EStructuralFeature nameFeature = N4JSFeatureUtils.getElementNameFeature(element);
+		if (nameFeature != null) {
+			Object name = element.eGet(nameFeature);
+			if (name instanceof LiteralOrComputedPropertyName) {
+				return ((LiteralOrComputedPropertyName) name).getName();
+			} else if (name instanceof String) {
+				return (String) name;
+			}
+		}
+		return null;
+
+	}
+
+	/**
+	 * Returns the formal parameters of the given declared function, function expression, method or accessor. Always
+	 * returns an empty list when given a getter.
+	 */
+	public static List<FormalParameter> getFormalParameters(FunctionOrFieldAccessor functionOrFieldAccessor) {
+		if (functionOrFieldAccessor == null) {
+			return Collections.emptyList();
+		} else if (functionOrFieldAccessor instanceof GetterDeclaration) {
+			return Collections.emptyList();
+		} else if (functionOrFieldAccessor instanceof SetterDeclaration) {
+			return Collections.singletonList(((SetterDeclaration) functionOrFieldAccessor).getFpar());
+		} else if (functionOrFieldAccessor instanceof FunctionDefinition) {
+			return ImmutableList.copyOf(((FunctionDefinition) functionOrFieldAccessor).getFpars());
+		} else {
+			throw new IllegalStateException("unhandled subclass of FunctionOrFieldAccessor: "
+					+ functionOrFieldAccessor.getClass().getSimpleName());
+		}
 	}
 
 	/**
