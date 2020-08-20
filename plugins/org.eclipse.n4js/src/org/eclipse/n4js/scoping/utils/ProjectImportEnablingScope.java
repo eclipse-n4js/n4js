@@ -217,7 +217,14 @@ public class ProjectImportEnablingScope implements IScope {
 		case COMPLETE: {
 			final N4JSProjectName firstSegment = new N4JSProjectName(name.getFirstSegment());
 			final IN4JSProject targetProject = findProject(firstSegment, contextProject);
-			return getElementsWithDesiredProjectName(name.skipFirst(1), targetProject.getProjectName());
+			Collection<IEObjectDescription> result;
+			result = getElementsWithDesiredProjectName(name.skipFirst(1), targetProject.getProjectName());
+			if (result.isEmpty() && !Objects.equals(targetProject.getProjectName(), firstSegment)) {
+				// no elements found AND #findProject() returned a different project than we asked for (happens if a
+				// type definition project is available) -> as a fall back, try again in project we asked for:
+				result = getElementsWithDesiredProjectName(name.skipFirst(1), firstSegment);
+			}
+			return result;
 		}
 		case PLAIN: {
 			return parent.getElements(name);
