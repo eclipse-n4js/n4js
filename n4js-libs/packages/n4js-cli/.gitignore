@@ -1,4 +1,3 @@
 !bin/
 bin/*
 !bin/n4jsc.js
-!bin/PrintJavaVersion.java
