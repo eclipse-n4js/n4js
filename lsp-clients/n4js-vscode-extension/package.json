@@ -1,10 +1,11 @@
 {
   "name": "n4js-vscode-extension",
-  "displayName": "N4JS VSCode extension",
+  "displayName": "N4JS VSCode Extension",
   "description": "Language support for N4JS",
   "version": "0.1.0",
   "publisher": "n4js",
   "license": "EPL-1.0",
+  "homepage": "https://www.eclipse.org/n4js/",
   "repository": {
     "type": "git",
     "url": "https://github.com/Eclipse/n4js"
@@ -13,8 +14,11 @@
     "url": "https://github.com/Eclipse/n4js/issues"
   },
   "icon": "images/n4js_logo.png",
+  "galleryBanner": {
+    "color": "#BFCFDF"
+  },
   "engines": {
-    "vscode": "^1.41.1"
+    "vscode": "^1.48.0"
   },
   "categories": [
     "Programming Languages"

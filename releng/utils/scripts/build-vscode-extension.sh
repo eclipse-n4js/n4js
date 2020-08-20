@@ -35,12 +35,20 @@ else
     PACKAGE_NAME=$1
 fi
 
-# PARAMETER 2: version.
+# PARAMETER 2: libs version.
 if [ -z "$2" ]; then
     echo "The version must be specified as the first parameter."
     exit -1
 else
-    VERSION=$2
+    VERSION_LIBS=$2
+fi
+
+# PARAMETER 3 (Optional): extension version.
+if [ -z "$3" ]; then
+    echo "No extension version was given. Using given libs verson ${VERSION_LIBS}."
+    VERSION_EXTENSION=${VERSION_LIBS}
+else
+    VERSION_EXTENSION=$3
 fi
 
 
@@ -48,15 +56,15 @@ fi
 
 # PRECONDITION: version not published already (GH-1723)
 set +e
-RESULT=$(npm view n4js-runtime@${VERSION} | grep n4js-runtime)
+RESULT=$(npm view n4js-runtime@${VERSION_LIBS} | grep n4js-runtime)
 set -e
 
 if [[ $RESULT == *"n4js-runtime"* ]]; then
-    echo "Version ${VERSION} already published. Skipping build of N4JS VSCode extension."
+    echo "Version ${VERSION_LIBS} already published. Skipping build of N4JS VSCode extension."
     exit 0
 
 else
-    echo "Version ${VERSION} not yet in use. Continue build of N4JS VSCode extension."
+    echo "Version ${VERSION_LIBS} not yet in use. Continue build of N4JS VSCode extension."
 fi
 
 
@@ -113,7 +121,7 @@ echo "=="
 echo "="
 echo "=="
 echo "==="
-${SCRIPT_DIR}/publish-n4js-libs.sh local ${VERSION}
+${SCRIPT_DIR}/publish-n4js-libs.sh local ${VERSION_LIBS}
 echo "==="
 echo "=="
 echo "="
@@ -125,11 +133,11 @@ echo "==="
 echo "==== STEP 4/8: Update versions inside package.json of extension"
 pushd ${EXTENSION_DIR}
     npx json -I -f package.json -e "
-        this.version=\"$VERSION\"
-        this.dependencies['n4js-cli']=\"$VERSION\"
-        this.dependencies['n4js-runtime']=\"$VERSION\"
-        this.dependencies['n4js-runtime-node']=\"$VERSION\"
-        this.dependencies['n4js-runtime-es2015']=\"$VERSION\"
+        this.version=\"$VERSION_EXTENSION\"
+        this.dependencies['n4js-cli']=\"$VERSION_LIBS\"
+        this.dependencies['n4js-runtime']=\"$VERSION_LIBS\"
+        this.dependencies['n4js-runtime-node']=\"$VERSION_LIBS\"
+        this.dependencies['n4js-runtime-es2015']=\"$VERSION_LIBS\"
     "
 
     echo "==== STEP 5/8: Call npm install (use local verdaccio registry)"
