@@ -81,7 +81,7 @@ if [ "$DESTINATION" != "local" ]; then
     if [ "$DIST_TAG" = "latest" ]; then
         if [[ "$PUBLISH_VERSION" == *"-"* ]]; then
             echo "When publishing to dist-tag 'latest', the version must not include a pre-release segment!"
-#TEMP!            exit -1
+            exit -1
         fi
     else
         if [[ "$PUBLISH_VERSION" != *"-$DIST_TAG"* ]]; then
