@@ -23,6 +23,7 @@ import org.eclipse.n4js.ide.server.N4JSLanguageServer;
 import org.eclipse.n4js.ide.server.N4JSOutputConfigurationProvider;
 import org.eclipse.n4js.ide.server.N4JSProjectDescriptionFactory;
 import org.eclipse.n4js.ide.server.N4JSProjectStatePersister;
+import org.eclipse.n4js.ide.server.N4JSTextDocumentFrontend;
 import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
 import org.eclipse.n4js.ide.server.SourceFolderAwareResourceValidator;
 import org.eclipse.n4js.ide.server.build.N4JSBuilderFrontend;
@@ -38,6 +39,7 @@ import org.eclipse.n4js.ide.xtext.editor.contentassist.XIdeContentProposalAccept
 import org.eclipse.n4js.ide.xtext.server.BuiltInAwareIncrementalBuilder;
 import org.eclipse.n4js.ide.xtext.server.DebugService;
 import org.eclipse.n4js.ide.xtext.server.QueuedExecutorService;
+import org.eclipse.n4js.ide.xtext.server.TextDocumentFrontend;
 import org.eclipse.n4js.ide.xtext.server.WorkspaceAwareCanLoadFromDescriptionHelper;
 import org.eclipse.n4js.ide.xtext.server.XExecutableCommandRegistry;
 import org.eclipse.n4js.ide.xtext.server.XIProjectDescriptionFactory;
@@ -96,6 +98,10 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public Class<? extends BuilderFrontend> bindBuilderFrontend() {
 		return N4JSBuilderFrontend.class;
+	}
+
+	public Class<? extends TextDocumentFrontend> bindTextDocumentFrontend() {
+		return N4JSTextDocumentFrontend.class;
 	}
 
 	public Class<? extends XWorkspaceManager> bindXWorkspaceManager() {
