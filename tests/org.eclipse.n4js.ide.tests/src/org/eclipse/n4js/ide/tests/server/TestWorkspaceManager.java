@@ -53,8 +53,8 @@ public class TestWorkspaceManager {
 	static final public String TEST_DATA_FOLDER = "/test-workspace";
 	/** Vendor of the created test project */
 	static final public String VENDOR = "VENDOR";
-	/** Name of the created test module */
-	static final public String SRC_FOLDER = "src";
+	/** Default name of the source folder */
+	static final public String DEFAULT_SOURCE_FOLDER = "src";
 	/** Default extension of test modules */
 	static final public String DEFAULT_EXTENSION = "n4js";
 	/** Default name of the created test project */
@@ -73,6 +73,11 @@ public class TestWorkspaceManager {
 	 * see {@link Documentation#MAIN_MODULE}
 	 */
 	static final public String MAIN_MODULE = "#MAIN_MODULE";
+	/**
+	 * Reserved string to defined the source folder in the package.json.<br>
+	 * Usage is similar to {@link #MAIN_MODULE}, see {@link Documentation#MAIN_MODULE}.
+	 */
+	static final public String SOURCE_FOLDER = "#SOURCE_FOLDER";
 	/**
 	 * Reserved string to identify the directory 'node_modules'<br>
 	 * see {@link Documentation#PROJECT_NODE_MODULES} and {@link Documentation#WORKSPACE_NODE_MODULES}
@@ -360,7 +365,9 @@ public class TestWorkspaceManager {
 				: projectType;
 
 		Project project = new Project(projectName, VENDOR, VENDOR + "_name", prjType);
-		SourceFolder sourceFolder = project.createSourceFolder(SRC_FOLDER);
+		String customSourceFolderName = modulesContents.get(SOURCE_FOLDER);
+		SourceFolder sourceFolder = project
+				.createSourceFolder(customSourceFolderName != null ? customSourceFolderName : DEFAULT_SOURCE_FOLDER);
 
 		for (String moduleName : modulesContents.keySet()) {
 			String contents = modulesContents.get(moduleName);
@@ -372,6 +379,9 @@ public class TestWorkspaceManager {
 
 			} else if (moduleName.equals(MAIN_MODULE)) {
 				project.setMainModule(contents);
+
+			} else if (moduleName.equals(SOURCE_FOLDER)) {
+				// ignore (already processed above)
 
 			} else if (moduleName.equals(PACKAGE_JSON)) {
 				project.setProjectDescriptionContent(contents);
@@ -390,7 +400,7 @@ public class TestWorkspaceManager {
 					Project nmProject = project.getNodeModuleProject(nmName);
 					if (nmProject == null) {
 						nmProject = new Project(nmName, VENDOR, VENDOR + "_name", prjType);
-						nmProject.createSourceFolder(SRC_FOLDER);
+						nmProject.createSourceFolder(DEFAULT_SOURCE_FOLDER);
 						project.addNodeModuleProject(nmProject);
 					}
 					SourceFolder nmSourceFolder = nmProject.getSourceFolders().get(0);
@@ -398,6 +408,10 @@ public class TestWorkspaceManager {
 				}
 
 			} else {
+				if (moduleName.startsWith("#")) {
+					throw new IllegalArgumentException("unknown reserved string: " + moduleName);
+				}
+
 				createAndAddModule(contents, moduleName, sourceFolder);
 			}
 		}
