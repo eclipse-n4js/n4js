@@ -113,13 +113,13 @@ class IncrementalBuilderFileChangesTest extends AbstractIncrementalBuilderTest {
 	@Test
 	def void testFixFileBetweenServerSessions() {
 		testWorkspaceManager.createTestOnDisk(
-			TestWorkspaceManager.NODE_MODULES + "n4js-runtime" -> null,
+			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"ProviderProject" -> #[
 				"SomeModule" -> '''
 					export public class SomeClassX {
 					}
 				''',
-				TestWorkspaceManager.DEPENDENCIES -> '''
+				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
 					n4js-runtime
 				'''
 			],
@@ -129,7 +129,7 @@ class IncrementalBuilderFileChangesTest extends AbstractIncrementalBuilderTest {
 					const x: SomeClass = null;
 					x;
 				''',
-				TestWorkspaceManager.DEPENDENCIES -> '''
+				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
 					n4js-runtime,
 					ProviderProject
 				'''
@@ -157,13 +157,13 @@ class IncrementalBuilderFileChangesTest extends AbstractIncrementalBuilderTest {
 	@Test
 	def void testBreakFileBetweenServerSessions() {
 		testWorkspaceManager.createTestOnDisk(
-			TestWorkspaceManager.NODE_MODULES + "n4js-runtime" -> null,
+			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"ProviderProject" -> #[
 				"SomeModule" -> '''
 					export public class SomeClass {
 					}
 				''',
-				TestWorkspaceManager.DEPENDENCIES -> '''
+				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
 					n4js-runtime
 				'''
 			],
@@ -173,7 +173,7 @@ class IncrementalBuilderFileChangesTest extends AbstractIncrementalBuilderTest {
 					const x: SomeClass = null;
 					x;
 				''',
-				TestWorkspaceManager.DEPENDENCIES -> '''
+				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
 					n4js-runtime,
 					ProviderProject
 				'''

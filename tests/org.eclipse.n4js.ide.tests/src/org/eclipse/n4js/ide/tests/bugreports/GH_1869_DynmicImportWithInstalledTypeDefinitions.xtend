@@ -19,15 +19,15 @@ class GH_1869_DynmicImportWithInstalledTypeDefinitions extends AbstractIdeTest {
 	@Test
 	def void testGH1869() {
 		testWorkspaceManager.createTestOnDisk(
-			TestWorkspaceManager.NODE_MODULES + "n4js-runtime" -> null,
-			TestWorkspaceManager.NODE_MODULES + "some-pkg" -> #[
+			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
+			TestWorkspaceManager.CFG_NODE_MODULES + "some-pkg" -> #[
 				"PlainJSModuleWithTypeDefs.js" -> '''
 					export const valueWithTypeDef = "hello from plain JS";
 				''',
 				"PlainJSModule.js" -> '''
 					export const value = "hello from plain JS";
 				''',
-				TestWorkspaceManager.SOURCE_FOLDER -> ".",
+				TestWorkspaceManager.CFG_SOURCE_FOLDER -> ".",
 				TestWorkspaceManager.PACKAGE_JSON -> '''
 					{
 						"name": "some-pkg",
@@ -35,11 +35,11 @@ class GH_1869_DynmicImportWithInstalledTypeDefinitions extends AbstractIdeTest {
 					}
 				'''
 			],
-			TestWorkspaceManager.NODE_MODULES + "@n4jsd/some-pkg" -> #[
+			TestWorkspaceManager.CFG_NODE_MODULES + "@n4jsd/some-pkg" -> #[
 				"PlainJSModuleWithTypeDefs.n4jsd" -> '''
 					export external public const valueWithTypeDef: string;
 				''',
-				TestWorkspaceManager.SOURCE_FOLDER -> ".",
+				TestWorkspaceManager.CFG_SOURCE_FOLDER -> ".",
 				TestWorkspaceManager.PACKAGE_JSON -> '''
 					{
 						"name": "@n4jsd/some-pkg",
@@ -73,7 +73,7 @@ class GH_1869_DynmicImportWithInstalledTypeDefinitions extends AbstractIdeTest {
 					import * as N+ from "some-pkg/PlainJSModule";
 					let v: any = N.value;
 				''',
-				TestWorkspaceManager.DEPENDENCIES -> '''
+				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
 					@n4jsd/some-pkg,
 					some-pkg,
 					n4js-runtime

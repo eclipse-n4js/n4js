@@ -21,14 +21,14 @@ class IncrementalBuilderBasicTest extends AbstractIncrementalBuilderTest {
 	@Test
 	def void testBuildAfterServerInitialization() {
 		testWorkspaceManager.createTestOnDisk(
-			TestWorkspaceManager.NODE_MODULES + "n4js-runtime" -> null,
+			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"OtherProject" -> #[
 				"Other" -> '''
 					export public class Other {
 						public mOther() {}
 					}
 				''',
-				TestWorkspaceManager.DEPENDENCIES -> "n4js-runtime"
+				TestWorkspaceManager.CFG_DEPENDENCIES -> "n4js-runtime"
 			],
 			"MainProject" -> #[
 				"A" -> '''
@@ -43,7 +43,7 @@ class IncrementalBuilderBasicTest extends AbstractIncrementalBuilderTest {
 					new A().ma();
 					new Other().mOther();
 				''',
-				TestWorkspaceManager.DEPENDENCIES -> '''
+				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
 					n4js-runtime,
 					OtherProject
 				'''

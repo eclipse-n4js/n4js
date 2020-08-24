@@ -31,7 +31,7 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 	];
 
 	private static val testDataWithNodeModules = #[
-		NODE_MODULES + "OtherProject" + SRC + "Other" -> '''
+		CFG_NODE_MODULES + "OtherProject" + CFG_SRC + "Other" -> '''
 			export public class Other {
 				public m(): number { return undefined; }
 			}

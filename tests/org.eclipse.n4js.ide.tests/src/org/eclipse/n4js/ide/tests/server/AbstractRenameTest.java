@@ -133,10 +133,10 @@ abstract public class AbstractRenameTest extends AbstractStructuredIdeTest<Renam
 		TestWorkspaceManager.convertProjectsModulesContentsToMap(
 				projectsModulesSourcesBefore, projectsModulesSourcesBeforeAsMap, false);
 
-		projectsModulesSourcesBeforeAsMap.put(TestWorkspaceManager.NODE_MODULES + "n4js-runtime", null);
+		projectsModulesSourcesBeforeAsMap.put(TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime", null);
 		projectsModulesSourcesBeforeAsMap.forEach((projectName, moduleName2SourceBefore) -> {
 			if (moduleName2SourceBefore != null) {
-				moduleName2SourceBefore.put(TestWorkspaceManager.DEPENDENCIES, "n4js-runtime");
+				moduleName2SourceBefore.put(TestWorkspaceManager.CFG_DEPENDENCIES, "n4js-runtime");
 			}
 		});
 

@@ -10,11 +10,11 @@
  */
 package org.eclipse.n4js.ide.tests.server;
 
+import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.CFG_DEPENDENCIES;
+import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.CFG_NODE_MODULES;
 import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.DEFAULT_MODULE_NAME;
 import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.DEFAULT_PROJECT_NAME;
-import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.DEPENDENCIES;
 import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.N4JS_RUNTIME;
-import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.NODE_MODULES;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -219,8 +219,8 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 	 */
 	protected Project test(List<Pair<String, String>> modulesContents, T t) {
 		ArrayList<Pair<String, String>> modulesContentsCpy = new ArrayList<>(modulesContents);
-		Pair<String, String> pairN4jsRuntime = Pair.of(NODE_MODULES + N4JS_RUNTIME, null);
-		modulesContentsCpy.add(Pair.of(DEPENDENCIES, N4JS_RUNTIME));
+		Pair<String, String> pairN4jsRuntime = Pair.of(CFG_NODE_MODULES + N4JS_RUNTIME, null);
+		modulesContentsCpy.add(Pair.of(CFG_DEPENDENCIES, N4JS_RUNTIME));
 		modulesContentsCpy.add(pairN4jsRuntime);
 
 		ArrayList<Pair<String, List<Pair<String, String>>>> projects = new ArrayList<>();

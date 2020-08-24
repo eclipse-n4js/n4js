@@ -29,7 +29,7 @@ class IncrementalBuilderIndexOnlyTest extends AbstractIncrementalBuilderTest {
 	@Test
 	def void testIndexOnlyRebuild() throws IOException {
 		testWorkspaceManager.createTestProjectOnDisk(#[
-			NODE_MODULES + "LibProject" + SRC + "LibModule" -> 
+			CFG_NODE_MODULES + "LibProject" + CFG_SRC + "LibModule" -> 
 				'''
 					export public class LibClass1 {
 						public libMethod() {}
@@ -41,7 +41,7 @@ class IncrementalBuilderIndexOnlyTest extends AbstractIncrementalBuilderTest {
 					
 					new LibClass().libMethod();
 				''',
-			TestWorkspaceManager.DEPENDENCIES ->
+			TestWorkspaceManager.CFG_DEPENDENCIES ->
 				'''
 					n4js-runtime,
 					LibProject

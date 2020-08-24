@@ -64,35 +64,33 @@ public class TestWorkspaceManager {
 	/** Default name of the created test module */
 	static final public String DEFAULT_MODULE_NAME = "MyModule";
 	/**
-	 * Reserved string to identify comma separated list of dependencies to other projects.<br>
-	 * see {@link Documentation#DEPENDENCIES}
+	 * Reserved string to define the project's dependencies to other projects; the value must be a comma separated list
+	 * of project names.<br>
+	 * see {@link Documentation#CFG_DEPENDENCIES}
 	 */
-	static final public String DEPENDENCIES = "#DEPENDENCY";
+	static final public String CFG_DEPENDENCIES = "#DEPENDENCY";
 	/**
 	 * Reserved string to define the main module property "main" in the package.json.<br>
-	 * see {@link Documentation#MAIN_MODULE}
+	 * see {@link Documentation#CFG_MAIN_MODULE}
 	 */
-	static final public String MAIN_MODULE = "#MAIN_MODULE";
+	static final public String CFG_MAIN_MODULE = "#MAIN_MODULE";
 	/**
 	 * Reserved string to defined the source folder in the package.json.<br>
-	 * Usage is similar to {@link #MAIN_MODULE}, see {@link Documentation#MAIN_MODULE}.
+	 * Usage is similar to {@link #CFG_MAIN_MODULE}, see {@link Documentation#CFG_MAIN_MODULE}.
 	 */
-	static final public String SOURCE_FOLDER = "#SOURCE_FOLDER";
+	static final public String CFG_SOURCE_FOLDER = "#SOURCE_FOLDER";
 	/**
 	 * Reserved string to identify the directory 'node_modules'<br>
-	 * see {@link Documentation#PROJECT_NODE_MODULES} and {@link Documentation#WORKSPACE_NODE_MODULES}
+	 * see {@link Documentation#CFG_PROJECT_NODE_MODULES} and {@link Documentation#WORKSPACE_NODE_MODULES}
 	 */
-	static final public String NODE_MODULES = "#NODE_MODULES:";
-	/**
-	 * Reserved string to identify the directory 'node_modules'<br>
-	 * see {@link Documentation#PACKAGE_JSON}
-	 */
-	static final public String PACKAGE_JSON = "package.json";
+	static final public String CFG_NODE_MODULES = "#NODE_MODULES:";
 	/**
 	 * Reserved string to identify the src folder of a project<br>
-	 * see {@link #NODE_MODULES}
+	 * see {@link #CFG_NODE_MODULES}
 	 */
-	static final public String SRC = "#SRC:";
+	static final public String CFG_SRC = "#SRC:";
+	/** Name of the package.json file. */
+	static final public String PACKAGE_JSON = N4JSGlobals.PACKAGE_JSON;
 	/** Name of n4js library 'n4js-runtime' */
 	static final public String N4JS_RUNTIME = N4JSGlobals.N4JS_RUNTIME.getRawName();
 	/** Default project object for 'n4js-runtime' */
@@ -103,7 +101,7 @@ public class TestWorkspaceManager {
 	 * Project type used for all projects created.
 	 * <p>
 	 * Implementation note:<br>
-	 * In case you like to refactor this, consider to align this analogously to {@link #DEPENDENCIES}.
+	 * In case you like to refactor this, consider to align this analogously to {@link #CFG_DEPENDENCIES}.
 	 */
 	private final ProjectType projectType;
 
@@ -307,8 +305,8 @@ public class TestWorkspaceManager {
 		Map<String, String> modulesContentsCpy = new HashMap<>(modulesContents);
 		LinkedHashMap<String, Map<String, String>> projectsModulesContents = new LinkedHashMap<>();
 		projectsModulesContents.put(projectName, modulesContentsCpy);
-		modulesContentsCpy.put(NODE_MODULES + N4JS_RUNTIME, null);
-		modulesContentsCpy.put(DEPENDENCIES, N4JS_RUNTIME);
+		modulesContentsCpy.put(CFG_NODE_MODULES + N4JS_RUNTIME, null);
+		modulesContentsCpy.put(CFG_DEPENDENCIES, N4JS_RUNTIME);
 
 		return createTestOnDisk(destination, projectsModulesContents);
 	}
@@ -365,38 +363,38 @@ public class TestWorkspaceManager {
 				: projectType;
 
 		Project project = new Project(projectName, VENDOR, VENDOR + "_name", prjType);
-		String customSourceFolderName = modulesContents.get(SOURCE_FOLDER);
+		String customSourceFolderName = modulesContents.get(CFG_SOURCE_FOLDER);
 		SourceFolder sourceFolder = project
 				.createSourceFolder(customSourceFolderName != null ? customSourceFolderName : DEFAULT_SOURCE_FOLDER);
 
 		for (String moduleName : modulesContents.keySet()) {
 			String contents = modulesContents.get(moduleName);
-			if (moduleName.equals(DEPENDENCIES)) {
+			if (moduleName.equals(CFG_DEPENDENCIES)) {
 				String[] allDeps = contents.split(",");
 				for (String dependency : allDeps) {
 					dependencies.put(projectName, dependency.trim());
 				}
 
-			} else if (moduleName.equals(MAIN_MODULE)) {
+			} else if (moduleName.equals(CFG_MAIN_MODULE)) {
 				project.setMainModule(contents);
 
-			} else if (moduleName.equals(SOURCE_FOLDER)) {
+			} else if (moduleName.equals(CFG_SOURCE_FOLDER)) {
 				// ignore (already processed above)
 
 			} else if (moduleName.equals(PACKAGE_JSON)) {
 				project.setProjectDescriptionContent(contents);
 
-			} else if (moduleName.startsWith(NODE_MODULES)) {
-				int indexOfSrc = moduleName.indexOf(SRC);
-				if (moduleName.equals(NODE_MODULES + N4JS_RUNTIME) && indexOfSrc == -1) {
+			} else if (moduleName.startsWith(CFG_NODE_MODULES)) {
+				int indexOfSrc = moduleName.indexOf(CFG_SRC);
+				if (moduleName.equals(CFG_NODE_MODULES + N4JS_RUNTIME) && indexOfSrc == -1) {
 					project.addNodeModuleProject(N4JS_RUNTIME_FAKE);
 
 				} else {
 					if (indexOfSrc == -1) {
 						throw new IllegalArgumentException("Missing #SRC: in module location");
 					}
-					String nmModuleName = moduleName.substring(indexOfSrc + SRC.length());
-					String nmName = moduleName.substring(NODE_MODULES.length(), indexOfSrc);
+					String nmModuleName = moduleName.substring(indexOfSrc + CFG_SRC.length());
+					String nmName = moduleName.substring(CFG_NODE_MODULES.length(), indexOfSrc);
 					Project nmProject = project.getNodeModuleProject(nmName);
 					if (nmProject == null) {
 						nmProject = new Project(nmName, VENDOR, VENDOR + "_name", prjType);
@@ -434,8 +432,8 @@ public class TestWorkspaceManager {
 
 			String prjName = projectNameWithSelector;
 
-			if (prjName.startsWith(NODE_MODULES)) {
-				prjName = prjName.substring(NODE_MODULES.length());
+			if (prjName.startsWith(CFG_NODE_MODULES)) {
+				prjName = prjName.substring(CFG_NODE_MODULES.length());
 				Project project = createSimpleProject(prjName, moduleContents, dependencies);
 				yarnProject.addNodeModuleProject(project);
 			} else {
