@@ -12,6 +12,7 @@ package org.eclipse.n4js.ide.server;
 
 import static org.eclipse.n4js.N4JSGlobals.JS_FILE_EXTENSION;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,9 @@ import org.eclipse.n4js.ide.xtext.server.ResourceTaskContext;
 import org.eclipse.n4js.ide.xtext.server.TextDocumentFrontend;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.transpiler.sourcemap.MappingEntry;
+import org.eclipse.n4js.transpiler.sourcemap.SourceMap;
+import org.eclipse.n4js.transpiler.sourcemap.SourceMapFileLocator;
 import org.eclipse.n4js.utils.ResourceNameComputer;
 import org.eclipse.xtext.util.CancelIndicator;
 
@@ -44,9 +48,12 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 	@Inject
 	private ResourceNameComputer resourceNameComputer;
 
+	@Inject
+	private SourceMapFileLocator sourceMapFileLocator;
+
 	@Override
 	protected Either<List<? extends Location>, List<? extends LocationLink>> implementation(ResourceTaskContext rtc,
-			TextDocumentPositionParams position, CancelIndicator cancelIndicator) {
+			TextDocumentPositionParams positionParams, CancelIndicator cancelIndicator) {
 
 		URI uri = rtc.getURI();
 		IN4JSProject project = core.findProject(uri).orNull();
@@ -56,12 +63,30 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 			String outputPath = project.getOutputPath();
 			Path projectLocation = project.getLocation().toFileSystemPath();
 			Path genFilePath = projectLocation.resolve(outputPath + "/" + targetFileName);
+
+			Range range = findRange(positionParams, genFilePath);
 			Location location = new Location();
 			location.setUri(genFilePath.toString());
-			location.setRange(new Range(new Position(1, 1), new Position(1, 1)));
+			location.setRange(range);
 			locations.add(location);
 		}
 		return Either.forLeft(locations);
+	}
+
+	private Range findRange(TextDocumentPositionParams positionParams, Path genFilePath) {
+		try {
+			File sourceMapFile = sourceMapFileLocator.resolveSourceMapFromGen(genFilePath);
+			SourceMap sourceMap = SourceMap.loadAndResolve(sourceMapFile.toPath());
+			Position position = positionParams.getPosition();
+			MappingEntry mappingEntry = sourceMap.findMappingForSrcPosition(0, position.getLine(),
+					position.getCharacter());
+
+			Position startPos = new Position(mappingEntry.genLine, mappingEntry.genColumn);
+			Position endPos = new Position(mappingEntry.genLine, mappingEntry.genColumn);
+			return new Range(startPos, endPos);
+		} catch (Exception e) {
+			return new Range(new Position(), new Position());
+		}
 	}
 
 }
