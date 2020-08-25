@@ -28,6 +28,7 @@ import org.eclipse.n4js.ide.xtext.server.ResourceTaskContext;
 import org.eclipse.n4js.ide.xtext.server.TextDocumentFrontend;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.transpiler.sourcemap.MappingEntry;
 import org.eclipse.n4js.transpiler.sourcemap.SourceMap;
 import org.eclipse.n4js.transpiler.sourcemap.SourceMapFileLocator;
@@ -66,7 +67,7 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 
 			Range range = findRange(positionParams, genFilePath);
 			Location location = new Location();
-			location.setUri(genFilePath.toString());
+			location.setUri(new FileURI(genFilePath.toFile()).toString());
 			location.setRange(range);
 			locations.add(location);
 		}
