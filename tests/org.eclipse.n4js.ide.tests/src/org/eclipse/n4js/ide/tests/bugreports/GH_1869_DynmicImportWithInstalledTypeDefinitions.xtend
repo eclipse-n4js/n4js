@@ -27,11 +27,15 @@ class GH_1869_DynmicImportWithInstalledTypeDefinitions extends AbstractIdeTest {
 				"PlainJSModule.js" -> '''
 					export const value = "hello from plain JS";
 				''',
+				"MainModule.js" -> '''
+					export const value = "hello from the main module";
+				''',
 				TestWorkspaceManager.CFG_SOURCE_FOLDER -> ".",
 				TestWorkspaceManager.PACKAGE_JSON -> '''
 					{
 						"name": "some-pkg",
-						"version": "0.0.1"
+						"version": "0.0.1",
+						"main": "MainModule.js"
 					}
 				'''
 			],
@@ -71,6 +75,17 @@ class GH_1869_DynmicImportWithInstalledTypeDefinitions extends AbstractIdeTest {
 				"Test3" -> '''
 					// XPECT noerrors --> "Cannot resolve complete module specifier (with project name as first segment): no matching module found."
 					import * as N+ from "some-pkg/PlainJSModule";
+					let v: any = N.value;
+				''',
+				// a main module specified explicitly (worked before):
+				"Test4" -> '''
+					import * as N+ from "MainModule";
+					let v: any = N.value;
+				''',
+				// a main module specified via a project import (did not work before the fix):
+				"Test5" -> '''
+					// XPECT noerrors --> "Cannot resolve project import: no matching module found."
+					import * as N+ from "some-pkg";
 					let v: any = N.value;
 				''',
 				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
