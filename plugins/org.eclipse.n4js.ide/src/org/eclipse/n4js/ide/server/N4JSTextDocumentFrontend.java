@@ -13,10 +13,12 @@ package org.eclipse.n4js.ide.server;
 import static org.eclipse.n4js.N4JSGlobals.JS_FILE_EXTENSION;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.LocationLink;
@@ -26,6 +28,7 @@ import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.ide.xtext.server.ResourceTaskContext;
 import org.eclipse.n4js.ide.xtext.server.TextDocumentFrontend;
+import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.locations.FileURI;
@@ -42,6 +45,7 @@ import com.google.inject.Inject;
  * Extends {@link N4JSTextDocumentFrontend} to implement N4JS server capabilities.
  */
 public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
+	private static Logger LOG = Logger.getLogger(XLanguageServerImpl.class);
 
 	@Inject
 	private IN4JSCore core;
@@ -77,17 +81,22 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 	private Range findRange(TextDocumentPositionParams positionParams, Path genFilePath) {
 		try {
 			File sourceMapFile = sourceMapFileLocator.resolveSourceMapFromGen(genFilePath);
-			SourceMap sourceMap = SourceMap.loadAndResolve(sourceMapFile.toPath());
-			Position position = positionParams.getPosition();
-			MappingEntry mappingEntry = sourceMap.findMappingForSrcPosition(0, position.getLine(),
-					position.getCharacter());
+			if (sourceMapFile != null) {
+				SourceMap sourceMap = SourceMap.loadAndResolve(sourceMapFile.toPath());
+				Position position = positionParams.getPosition();
+				MappingEntry mappingEntry = sourceMap.findMappingForSrcPosition(0, position.getLine(),
+						position.getCharacter());
 
-			Position startPos = new Position(mappingEntry.genLine, mappingEntry.genColumn);
-			Position endPos = new Position(mappingEntry.genLine, mappingEntry.genColumn);
-			return new Range(startPos, endPos);
-		} catch (Exception e) {
-			return new Range(new Position(), new Position());
+				if (mappingEntry != null) {
+					Position startPos = new Position(mappingEntry.genLine, mappingEntry.genColumn);
+					Position endPos = new Position(mappingEntry.genLine, mappingEntry.genColumn);
+					return new Range(startPos, endPos);
+				}
+			}
+		} catch (IOException e) {
+			LOG.error(e);
 		}
+		return new Range(new Position(), new Position());
 	}
 
 }
