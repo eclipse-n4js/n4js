@@ -251,7 +251,7 @@ public class SourceMapView extends ViewPart {
 	/**
 	 * Tries to find the map file from source, then delegates to {@link #resolveFromMap(Path)} to initialize the view.
 	 */
-	private void resolveFromSrc(Path path) throws Exception {
+	private void resolveFromSrc(Path path) throws IOException {
 		File file = sourceMapFileLocator.resolveSourceMapFromSrc(path);
 		if (file == null)
 			return;
@@ -261,7 +261,7 @@ public class SourceMapView extends ViewPart {
 	/**
 	 * Tries to find the map file from gen, then delegates to {@link #resolveFromMap(Path)} to initialize the view.
 	 */
-	private void resolveFromGen(Path path) throws Exception {
+	private void resolveFromGen(Path path) throws IOException {
 		File file = sourceMapFileLocator.resolveSourceMapFromGen(path);
 		if (file == null)
 			return;
@@ -271,7 +271,7 @@ public class SourceMapView extends ViewPart {
 	/**
 	 * Loads the map file from given path and initializes the view.
 	 */
-	private void resolveFromMap(Path path) throws Exception {
+	private void resolveFromMap(Path path) throws IOException {
 		File mapFile = path.toFile();
 		String s = readFile(mapFile);
 		textMapFile.setText(s);
@@ -383,7 +383,7 @@ public class SourceMapView extends ViewPart {
 
 	}
 
-	private String readFile(File file) throws Exception {
+	private String readFile(File file) throws IOException {
 		InputStream in = new FileInputStream(file);
 		try (InputStreamReader reader = new InputStreamReader(in, Charsets.UTF_8)) {
 			return CharStreams.toString(reader);

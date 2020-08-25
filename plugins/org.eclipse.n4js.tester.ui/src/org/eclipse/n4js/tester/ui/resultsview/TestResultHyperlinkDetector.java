@@ -11,6 +11,7 @@
 package org.eclipse.n4js.tester.ui.resultsview;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -110,7 +111,7 @@ public class TestResultHyperlinkDetector extends AbstractHyperlinkDetector {
 				}
 				Path sourcePath = sourceMap.getResolvedSources().get(mappingEntry.srcIndex);
 				return new JSStackTraceLocationText(sourcePath, mappingEntry.srcLine + 1, mappingEntry.srcColumn + 1);
-			} catch (Exception e) {
+			} catch (IOException e) {
 				// we will fall back to JavaScript link
 			}
 		}
