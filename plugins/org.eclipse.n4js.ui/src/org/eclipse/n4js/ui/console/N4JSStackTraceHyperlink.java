@@ -11,6 +11,7 @@
 package org.eclipse.n4js.ui.console;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 
 import org.eclipse.core.filesystem.EFS;
@@ -130,7 +131,7 @@ public class N4JSStackTraceHyperlink implements IHyperlink {
 						Path sourcePath = sourceMap.getResolvedSources().get(mappingEntry.srcIndex);
 						searchCompleted(sourcePath.toFile().getAbsolutePath(), mappingEntry.srcLine,
 								mappingEntry.srcColumn);
-					} catch (Exception ex) {
+					} catch (IOException ex) {
 						searchCompleted(jsLink.fileName, jsLink.line - 1, jsLink.column - 1);
 					}
 

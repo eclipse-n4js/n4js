@@ -449,6 +449,18 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	}
 
 	@Override
+	public CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> typeDefinition(
+			TextDocumentPositionParams position) {
+		return lsFrontend.typeDefinition(position);
+	}
+
+	@Override
+	public CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> implementation(
+			TextDocumentPositionParams position) {
+		return lsFrontend.implementation(position);
+	}
+
+	@Override
 	public CompletableFuture<List<? extends Location>> references(ReferenceParams params) {
 		return lsFrontend.references(params);
 	}

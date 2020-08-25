@@ -83,7 +83,7 @@ public class SourceMapFileLocatorPluginTest {
 	 * Ensures that the map file can be retrieved from a given source file within the current workspace.
 	 */
 	@Test
-	public void testMapFromSrc() throws Exception {
+	public void testMapFromSrc() {
 		IProject project = ProjectTestsUtils.getProjectByName(new EclipseProjectName("SVDemo"));
 		IFile fileSrc = project.getFile("src/pac/SVDemo.n4js");
 		Path path = Paths.get(fileSrc.getLocationURI());
@@ -95,7 +95,7 @@ public class SourceMapFileLocatorPluginTest {
 	 * Ensures that the map file can be retrieved from a given generated file within the current workspace.
 	 */
 	@Test
-	public void testMapFromGen() throws Exception {
+	public void testMapFromGen() {
 		IProject project = ProjectTestsUtils.getProjectByName(new EclipseProjectName("SVDemo"));
 		IFile fileGen = project.getFile("src-gen/pac/SVDemo.js");
 		Path path = Paths.get(fileGen.getLocationURI());

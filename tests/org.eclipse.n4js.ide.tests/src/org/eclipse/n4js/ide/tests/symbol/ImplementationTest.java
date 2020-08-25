@@ -23,21 +23,21 @@ import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
-import org.eclipse.n4js.ide.tests.server.AbstractDefinitionTest;
+import org.eclipse.n4js.ide.tests.server.AbstractImplementationTest;
 import org.eclipse.n4js.ide.tests.server.StringLSP4J;
 import org.junit.Test;
 
 /**
- * Test for navigation to definition.
+ * Test for navigation to implementation.
  */
-public class DefinitionTest extends AbstractDefinitionTest {
+public class ImplementationTest extends AbstractImplementationTest {
 
 	/***/
 	@Test
 	public void testDefinition_01() throws Exception {
 		testAtCursor(
 				"var s: s<|>tring = ''; s.length;",
-				"(n4scheme:/primitives_js.n4ts, [33:10 - 33:16])");
+				"(test-project/src-gen/MyModule.js, [4:4 - 4:4])");
 	}
 
 	/***/
@@ -45,7 +45,7 @@ public class DefinitionTest extends AbstractDefinitionTest {
 	public void testDefinition_02() throws Exception {
 		testAtCursor(
 				"var s: string = ''; s<|>.length;",
-				"(test-project/src/MyModule.n4js, [0:4 - 0:5])");
+				"(test-project/src-gen/MyModule.js, [5:0 - 5:0])");
 	}
 
 	/***/
@@ -53,7 +53,7 @@ public class DefinitionTest extends AbstractDefinitionTest {
 	public void testDefinition_03() throws Exception {
 		testAtCursor(
 				"var s: string = ''; s.le<|>ngth;",
-				"(n4scheme:/builtin_js.n4ts, [838:15 - 838:21])");
+				"(test-project/src-gen/MyModule.js, [5:0 - 5:0])");
 	}
 
 	/***/
