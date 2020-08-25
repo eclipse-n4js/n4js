@@ -248,7 +248,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 			TextDocumentPositionParams position) {
 
 		URI uri = getURI(position);
-		return resourceTaskManager.runInExistingContext(uri, "references", (rtc, ci) -> {
+		return resourceTaskManager.runInExistingContext(uri, "implementation", (rtc, ci) -> {
 			return implementation(rtc, position, ci);
 		});
 	}
