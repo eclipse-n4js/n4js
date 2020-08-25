@@ -81,7 +81,7 @@ public class TestWorkspaceManager {
 	static final public String CFG_SOURCE_FOLDER = "#SOURCE_FOLDER";
 	/**
 	 * Reserved string to identify the directory 'node_modules'<br>
-	 * see {@link Documentation#CFG_PROJECT_NODE_MODULES} and {@link Documentation#WORKSPACE_NODE_MODULES}
+	 * see {@link Documentation#PROJECT_NODE_MODULES} and {@link Documentation#WORKSPACE_NODE_MODULES}
 	 */
 	static final public String CFG_NODE_MODULES = "#NODE_MODULES:";
 	/**
