@@ -16,6 +16,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.internal.N4JSModel;
+import org.eclipse.n4js.internal.TypeDefinitionsAwareDependenciesSupplier;
 import org.eclipse.n4js.projectDescription.ModuleFilter;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
@@ -110,13 +111,16 @@ public interface IN4JSProject {
 	ImmutableList<? extends IN4JSProject> getDependencies();
 
 	/**
-	 * Return the dependencies of this project in a well defined order.
-	 *
+	 * Return the dependencies of this project in a well defined order. Ensures that type definition projects always
+	 * occur right in front of the corresponding implementation project (see
+	 * {@link TypeDefinitionsAwareDependenciesSupplier#get(IN4JSProject) here} for details).
+	 * <p>
 	 * The sorting allows the use definition projects and their implementation counterparts side by side in a meaningful
 	 * way. In a nutshell: Implementation projects may contribute modules to the index that are not available as n4jsd
 	 * files yet. All other modules should be shadowed by the definition project.
 	 *
 	 * @see N4JSModel#getSortedDependencies(IN4JSProject)
+	 * @see TypeDefinitionsAwareDependenciesSupplier#get(IN4JSProject)
 	 */
 	ImmutableList<? extends IN4JSProject> getSortedDependencies();
 

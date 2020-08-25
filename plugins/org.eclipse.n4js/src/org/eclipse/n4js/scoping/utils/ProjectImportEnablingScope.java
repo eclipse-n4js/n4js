@@ -314,14 +314,11 @@ public class ProjectImportEnablingScope implements IScope {
 		}
 
 		Iterable<? extends IN4JSProject> dependencies = project.getSortedDependencies();
-		if (preferDefinitionProject) {
-			for (IN4JSProject p : dependencies) {
-				if (Objects.equals(p.getDefinesPackageName(), projectName)) {
-					return p;
-				}
-			}
-		}
 		for (IN4JSProject p : dependencies) {
+			// note: dependencies are sorted, so the following two checks can be done in the same loop:
+			if (preferDefinitionProject && Objects.equals(p.getDefinesPackageName(), projectName)) {
+				return p;
+			}
 			if (Objects.equals(p.getProjectName(), projectName)) {
 				return p;
 			}
