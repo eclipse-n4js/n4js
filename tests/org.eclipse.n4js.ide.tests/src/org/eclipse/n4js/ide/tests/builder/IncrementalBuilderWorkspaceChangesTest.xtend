@@ -19,12 +19,12 @@ import org.eclipse.n4js.utils.io.FileCopier
 import org.eclipse.n4js.utils.io.FileDeleter
 import org.junit.Test
 
-import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.DEPENDENCIES
 import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.N4JS_RUNTIME
-import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.NODE_MODULES
 import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.YARN_TEST_PROJECT
 import static org.junit.Assert.assertFalse
 import static org.junit.Assert.assertTrue
+import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.CFG_DEPENDENCIES
+import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.CFG_NODE_MODULES
 
 /**
  * Tests incremental builds triggered by changes that lead to a different overall workspace configuration,
@@ -33,13 +33,13 @@ import static org.junit.Assert.assertTrue
 class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderTest {
 
 	private static val testCode_yarnWorkspaceWithTwoProjects = #[
-		NODE_MODULES + N4JS_RUNTIME -> null,
+		CFG_NODE_MODULES + N4JS_RUNTIME -> null,
 		"MainProject" -> #[
 			"Main" -> '''
 				import {OtherClass} from "Other";
 				new OtherClass().m();
 			''',
-			DEPENDENCIES -> '''
+			CFG_DEPENDENCIES -> '''
 				«N4JS_RUNTIME»,
 				OtherProject
 			'''
@@ -50,7 +50,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 					public m() {}
 				}
 			''',
-			DEPENDENCIES -> N4JS_RUNTIME
+			CFG_DEPENDENCIES -> N4JS_RUNTIME
 		]
 	];
 
@@ -208,13 +208,13 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 	@Test
 	def void testChangePackageJson_addRemoveDependency() throws IOException {
 		testWorkspaceManager.createTestOnDisk(
-			NODE_MODULES + N4JS_RUNTIME -> null,
+			CFG_NODE_MODULES + N4JS_RUNTIME -> null,
 			"MainProject" -> #[
 				"Main" -> '''
 					import {OtherClass} from "Other";
 					new OtherClass().m();
 				''',
-				DEPENDENCIES -> N4JS_RUNTIME // note: missing the dependency to OtherProject
+				CFG_DEPENDENCIES -> N4JS_RUNTIME // note: missing the dependency to OtherProject
 			],
 			"OtherProject" -> #[
 				"Other" -> '''
@@ -222,7 +222,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 						public m() {}
 					}
 				''',
-				DEPENDENCIES -> N4JS_RUNTIME
+				CFG_DEPENDENCIES -> N4JS_RUNTIME
 			]
 		);
 		startAndWaitForLspServer();

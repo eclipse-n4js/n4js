@@ -25,7 +25,7 @@ public class CompletionWithImportsWorkspaceTest extends AbstractCompletionTest {
 	override final List<Pair<String, List<Pair<String, String>>>> getDefaultTestWorkspace() {
 		return #[
 			"P1*" -> #[
-				DEPENDENCIES -> '''
+				CFG_DEPENDENCIES -> '''
 					«N4JS_RUNTIME»,
 					P2,
 					SomeNPM,
@@ -36,10 +36,10 @@ public class CompletionWithImportsWorkspaceTest extends AbstractCompletionTest {
 					export public class XY {}
 				'''],
 				
-			NODE_MODULES + N4JS_RUNTIME -> null,
-			NODE_MODULES + "SomeNPM" -> #[
+			CFG_NODE_MODULES + N4JS_RUNTIME -> null,
+			CFG_NODE_MODULES + "SomeNPM" -> #[
 				"index"  -> '''//some npm js code'''],
-			NODE_MODULES + "@n4jsd/SomeNPM" -> #[
+			CFG_NODE_MODULES + "@n4jsd/SomeNPM" -> #[
 				"index.n4jsd"  -> '''
 							export public external class A1 {}
 							''',

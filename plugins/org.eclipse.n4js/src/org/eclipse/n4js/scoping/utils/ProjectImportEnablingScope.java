@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ModuleSpecifierForm;
 import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
@@ -210,14 +211,11 @@ public class ProjectImportEnablingScope implements IScope {
 		switch (moduleSpecifierForm) {
 		case PROJECT: {
 			final N4JSProjectName firstSegment = new N4JSProjectName(name.getFirstSegment());
-			final IN4JSProject targetProject = findProject(firstSegment, contextProject);
-			final QualifiedName mainModule = ImportSpecifierUtil.getMainModuleOfProject(targetProject);
-			return getElementsWithDesiredProjectName(mainModule, targetProject.getProjectName());
+			return findModulesInProject(Optional.absent(), firstSegment);
 		}
 		case COMPLETE: {
 			final N4JSProjectName firstSegment = new N4JSProjectName(name.getFirstSegment());
-			final IN4JSProject targetProject = findProject(firstSegment, contextProject);
-			return getElementsWithDesiredProjectName(name.skipFirst(1), targetProject.getProjectName());
+			return findModulesInProject(Optional.of(name.skipFirst(1)), firstSegment);
 		}
 		case PLAIN: {
 			return parent.getElements(name);
@@ -243,6 +241,50 @@ public class ProjectImportEnablingScope implements IScope {
 	}
 
 	/**
+	 * Finds all modules with the given module FQN (without project name) in the given project. Supports two special
+	 * cases:
+	 * <ol>
+	 * <li>if the module name is absent, the given project's main module will be returned.
+	 * <li>if a {@link ProjectDescription#getDefinesPackage() definition project} exists for the given project, modules
+	 * of the definition project will be returned and only if that fails, modules of the given project will be returned.
+	 * </ol>
+	 */
+	private Collection<IEObjectDescription> findModulesInProject(Optional<QualifiedName> moduleName,
+			N4JSProjectName projectName) {
+
+		boolean useMainModule = !moduleName.isPresent();
+
+		IN4JSProject targetProject = findProject(projectName, contextProject, true);
+		QualifiedName moduleNameToSearch = useMainModule
+				? ImportSpecifierUtil.getMainModuleOfProject(targetProject)
+				: moduleName.get();
+
+		Collection<IEObjectDescription> result;
+		result = moduleNameToSearch != null
+				? getElementsWithDesiredProjectName(moduleNameToSearch, targetProject.getProjectName())
+				: Collections.emptyList();
+
+		if (result.isEmpty()
+				&& targetProject != null
+				&& !Objects.equals(targetProject.getProjectName(), projectName)) {
+			// no elements found AND #findProject() returned a different project than we asked for (happens if a
+			// type definition project is available)
+			// -> as a fall back, try again in project we asked for (i.e. the defined project)
+			if (useMainModule) {
+				targetProject = findProject(projectName, contextProject, false);
+				moduleNameToSearch = ImportSpecifierUtil.getMainModuleOfProject(targetProject);
+			} else {
+				// leave 'moduleNameToSearch' unchanged
+			}
+			result = moduleNameToSearch != null
+					? getElementsWithDesiredProjectName(moduleNameToSearch, projectName)
+					: Collections.emptyList();
+		}
+
+		return result;
+	}
+
+	/**
 	 * This method asks {@link #delegate} for elements matching provided <code>moduleSpecifier</code>. Returned results
 	 * are filtered by expected {@link IN4JSProject#getProjectName()}.
 	 */
@@ -264,14 +306,17 @@ public class ProjectImportEnablingScope implements IScope {
 		return result.values();
 	}
 
-	private IN4JSProject findProject(N4JSProjectName projectName, IN4JSProject project) {
+	private IN4JSProject findProject(N4JSProjectName projectName, IN4JSProject project,
+			boolean preferDefinitionProject) {
+
 		if (Objects.equals(project.getProjectName(), projectName)) {
 			return project;
 		}
 
 		Iterable<? extends IN4JSProject> dependencies = project.getSortedDependencies();
 		for (IN4JSProject p : dependencies) {
-			if (Objects.equals(p.getDefinesPackageName(), projectName)) {
+			// note: dependencies are sorted, so the following two checks can be done in the same loop:
+			if (preferDefinitionProject && Objects.equals(p.getDefinesPackageName(), projectName)) {
 				return p;
 			}
 			if (Objects.equals(p.getProjectName(), projectName)) {
@@ -286,7 +331,7 @@ public class ProjectImportEnablingScope implements IScope {
 	 */
 	private ModuleSpecifierForm computeImportType(QualifiedName name, IN4JSProject project) {
 		final String firstSegment = name.getFirstSegment();
-		final IN4JSProject targetProject = findProject(new N4JSProjectName(firstSegment), project);
+		final IN4JSProject targetProject = findProject(new N4JSProjectName(firstSegment), project, true);
 		final boolean firstSegmentIsProjectName = targetProject != null;
 		return ImportSpecifierUtil.computeImportType(name, firstSegmentIsProjectName, targetProject);
 	}
