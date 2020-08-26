@@ -70,7 +70,7 @@ export function getActivate(vscode, vscodeLC) {
 				}
 			],
 			synchronize: {
-				fileEvents: vscode.workspace.createFileSystemWatcher('**/{*.n4js,*.n4jsd,*.n4jsx,*.n4idl,package.json}')
+				fileEvents: vscode.workspace.createFileSystemWatcher('**/{*.n4js,*.n4jsd,*.n4jsx,*.n4idl,*.js,package.json}')
 			},
 			outputChannel: outputChannel
 		};
