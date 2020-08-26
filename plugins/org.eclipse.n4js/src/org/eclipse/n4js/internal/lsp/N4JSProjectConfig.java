@@ -163,7 +163,8 @@ public class N4JSProjectConfig implements XIProjectConfig {
 
 	/** @return the output folders of this project */
 	public List<URI> getOutputFolders() {
-		return Collections.singletonList(delegate.getLocation().appendPath(delegate.getOutputPath()).toURI());
+		return Collections.singletonList(
+				delegate.getLocation().appendPath(delegate.getOutputPath()).withTrailingPathDelimiter().toURI());
 	}
 
 	@Override
