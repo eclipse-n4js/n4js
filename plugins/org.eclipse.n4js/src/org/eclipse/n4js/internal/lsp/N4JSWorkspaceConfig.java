@@ -29,7 +29,6 @@ import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.ProjectDiscoveryHelper;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
-import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
 import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
@@ -173,10 +172,5 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 			projectsMap.put(projectConfig.getPath(), projectConfig);
 		}
 		return projectsMap;
-	}
-
-	@Override
-	public WorkspaceConfigSnapshot toSnapshot() {
-		return new WorkspaceConfigSnapshot(this);
 	}
 }

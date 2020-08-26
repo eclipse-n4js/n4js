@@ -28,7 +28,7 @@ import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.projectModel.lsp.IN4JSSourceFolder;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
-import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
+import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
@@ -116,6 +116,28 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		public URI getPath() {
 			return delegate.getLocation().toURI();
 		}
+
+		@Override
+		public SourceFolderSnapshot toSnapshot() {
+			return new SourceFolderSnapshotForPackageJson(this);
+		}
+	}
+
+	private class SourceFolderSnapshotForPackageJson extends SourceFolderSnapshot {
+
+		private final URI pckjsonURI;
+
+		public SourceFolderSnapshotForPackageJson(SourceContainerForPackageJson sourceFolder) {
+			super(sourceFolder.getName(), sourceFolder.getPath());
+			this.pckjsonURI = sourceFolder.pckjsonURI;
+		}
+
+		@Override
+		public boolean contains(URI uri) {
+			return pckjsonURI.equals(uri);
+		}
+
+		// note: no need to override #equals() and #hashCode()
 	}
 
 	@Override
@@ -264,10 +286,5 @@ public class N4JSProjectConfig implements XIProjectConfig {
 	/** @see N4JSProject#isWorkspacesProject() */
 	public boolean isWorkspacesProject() {
 		return ((N4JSProject) delegate).isWorkspacesProject();
-	}
-
-	@Override
-	public ProjectConfigSnapshot toSnapshot() {
-		return new ProjectConfigSnapshot(this);
 	}
 }

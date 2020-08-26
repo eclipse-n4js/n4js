@@ -11,6 +11,7 @@
 package org.eclipse.n4js.xtext.workspace;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.xtext.util.UriUtil;
 import org.eclipse.xtext.workspace.ISourceFolder;
 
 /**
@@ -21,11 +22,6 @@ public class SourceFolderSnapshot {
 
 	private final String name;
 	private final URI path;
-
-	/** See {@link SourceFolderSnapshot}. */
-	public SourceFolderSnapshot(ISourceFolder sourceFolder) {
-		this(sourceFolder.getName(), sourceFolder.getPath());
-	}
 
 	/** See {@link SourceFolderSnapshot}. */
 	public SourceFolderSnapshot(String name, URI path) {
@@ -45,6 +41,18 @@ public class SourceFolderSnapshot {
 	 */
 	public URI getPath() {
 		return path;
+	}
+
+	/**
+	 * Tells whether the given URI is a source file that belongs to this source folder. By default, this returns
+	 * <code>true</code> iff this source folder's {@link #getPath() path} is a prefix of the given URI. However,
+	 * language-specific implementations may decide to return <code>true</code> for fewer URIs, resulting in those URIs
+	 * to be excluded from builds.
+	 *
+	 * @see ISourceFolder#contains(URI)
+	 */
+	public boolean contains(URI uri) {
+		return UriUtil.isPrefixOf(getPath(), uri);
 	}
 
 	@Override
