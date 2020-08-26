@@ -435,9 +435,13 @@ public class XWorkspaceBuilder {
 					toBeConsideredDeltas.remove(unreportedDelta);
 					IResourceDescription _old = unreportedDelta.getOld();
 					IResourceDescription _new = newDelta.getNew();
-					if (_old != null || _new != null) {
-						toBeConsideredDeltas.add(new DefaultResourceDescriptionDelta(_old, _new));
+					if (_old == null && _new == null) {
+						// happens in case a resource was created, the build was cancelled and deleted again
+						// before the next build
+						_old = newDelta.getOld();
 					}
+
+					toBeConsideredDeltas.add(new DefaultResourceDescriptionDelta(_old, _new));
 				}
 			}
 		}
