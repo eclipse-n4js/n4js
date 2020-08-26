@@ -41,6 +41,7 @@ import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.IteratorExtensions;
 
+import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
@@ -167,24 +168,35 @@ public class XWorkspaceBuilder {
 			CancelIndicator indicator) {
 
 		lspLogger.log("Initial build ...");
+		Stopwatch stopwatch = Stopwatch.createStarted();
 
-		ProjectBuildOrderInfo projectBuildOrderInfo = projectBuildOrderInfoProvider.get();
-		ProjectBuildOrderIterator pboIterator = projectBuildOrderInfo.getIterator(projects);
-		logBuildOrder();
+		try {
+			ProjectBuildOrderInfo projectBuildOrderInfo = projectBuildOrderInfoProvider.get();
+			ProjectBuildOrderIterator pboIterator = projectBuildOrderInfo.getIterator(projects);
+			logBuildOrder();
 
-		List<IResourceDescription.Delta> result = new ArrayList<>();
+			List<IResourceDescription.Delta> result = new ArrayList<>();
 
-		while (pboIterator.hasNext()) {
-			ProjectDescription description = pboIterator.next();
-			String projectName = description.getName();
-			ProjectBuilder projectBuilder = workspaceManager.getProjectBuilder(projectName);
-			XBuildResult partialresult = projectBuilder.doInitialBuild(buildRequestFactory, indicator);
-			result.addAll(partialresult.getAffectedResources());
+			while (pboIterator.hasNext()) {
+				ProjectDescription description = pboIterator.next();
+				String projectName = description.getName();
+				ProjectBuilder projectBuilder = workspaceManager.getProjectBuilder(projectName);
+				XBuildResult partialresult = projectBuilder.doInitialBuild(buildRequestFactory, indicator);
+				result.addAll(partialresult.getAffectedResources());
+			}
+
+			stopwatch.stop();
+			lspLogger.log("... initial build done (" + stopwatch.toString() + ").");
+
+			return new ResourceDescriptionChangeEvent(result);
+		} catch (Throwable th) {
+			if (operationCanceledManager.isOperationCanceledException(th)) {
+				lspLogger.log("... initial build canceled.");
+				operationCanceledManager.propagateIfCancelException(th);
+			}
+			lspLogger.error("... initial build ABORTED due to exception:", th);
+			throw th;
 		}
-
-		lspLogger.log("... initial build done.");
-
-		return new ResourceDescriptionChangeEvent(result);
 	}
 
 	/**
