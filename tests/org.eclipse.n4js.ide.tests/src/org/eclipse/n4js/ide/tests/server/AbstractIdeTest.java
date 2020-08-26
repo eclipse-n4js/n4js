@@ -12,6 +12,7 @@ package org.eclipse.n4js.ide.tests.server;
 
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,6 +55,7 @@ import org.eclipse.lsp4j.FileChangeType;
 import org.eclipse.lsp4j.FileEvent;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.MessageParams;
+import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.RenameCapabilities;
 import org.eclipse.lsp4j.ResourceChange;
@@ -95,6 +97,7 @@ import org.junit.BeforeClass;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -169,6 +172,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	/** Deletes the test project in case it exists. */
 	@After
 	final public void deleteTestProject() {
+		assertNoErrorsInLog();
 		shutdownLspServer();
 		// clear the state related to the test
 		testWorkspaceManager.deleteTestFromDiskIfCreated();
@@ -894,6 +898,14 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 */
 	protected void assertNoIssues() {
 		assertIssues(Collections.emptyMap());
+	}
+
+	/** Asserts that there are no ERRORs in the LSP log. */
+	protected void assertNoErrorsInLog() {
+		for (MessageParams msg : languageClient.getLogMessages()) {
+			String message = Strings.nullToEmpty(msg.getMessage());
+			assertNotEquals("Unexpected ERROR in log:\n" + message, MessageType.Error, msg.getType());
+		}
 	}
 
 	/**
