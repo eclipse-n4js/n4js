@@ -32,7 +32,7 @@ public class N4JSBuilderFrontend extends BuilderFrontend {
 		if (uri != null && N4JSGlobals.PACKAGE_JSON.equals(uri.lastSegment())) {
 			// the default logic fails for package.json files in case a change in a package.json file would lead to a
 			// new project showing up in the workspace (because that project does not yet exist in 'workspaceConfig',
-			// the default logic would return false)
+			// the default logic would return false for 'uri')
 			return true;
 		}
 		return super.isSourceFile(workspaceConfig, uri);
