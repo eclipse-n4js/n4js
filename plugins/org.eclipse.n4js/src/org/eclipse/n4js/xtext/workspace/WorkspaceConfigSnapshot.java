@@ -77,22 +77,28 @@ public class WorkspaceConfigSnapshot {
 	}
 
 	/**
-	 * Find the project with the given nested location.
+	 * Same as {@link IWorkspaceConfig#findProjectContaining(URI)}: finds the project having a source folder that
+	 * {@link SourceFolderSnapshot#contains(URI) actually contains} the given nested URI. Returns <code>null</code> if
+	 * no such project is found. The given URI may point to a file or folder.
+	 *
+	 * @see IWorkspaceConfig#findProjectContaining(URI)
+	 * @see SourceFolderSnapshot#contains(URI)
 	 */
 	public ProjectConfigSnapshot findProjectContaining(URI nestedLocation) {
 		URI curr = trimTrailingPathSeparator(nestedLocation);
 		do {
-			ProjectConfigSnapshot match = sourceFolderPath2Project.get(curr);
-			if (match != null) {
-				// in addition to checking the source folder's path, we have to make sure the source folder actually
-				// "contains" the URI as defined by method ISourceFolder#contains(URI):
-				for (SourceFolderSnapshot sourceFolder : match.getSourceFolders()) {
+			ProjectConfigSnapshot candidate = sourceFolderPath2Project.get(curr);
+			if (candidate != null) {
+				// in addition to checking the source folder paths, we have to make sure the source folder actually
+				// "contains" the URI as defined by method SourceFolderSnapshot#contains(URI):
+				for (SourceFolderSnapshot sourceFolder : candidate.getSourceFolders()) {
 					if (Objects.equals(trimTrailingPathSeparator(sourceFolder.getPath()), curr)) {
 						if (sourceFolder.contains(nestedLocation)) {
-							return match;
+							return candidate;
 						}
 					}
 				}
+				return null;
 			}
 			curr = curr.segmentCount() > 0 ? curr.trimSegments(1) : null;
 		} while (curr != null);
