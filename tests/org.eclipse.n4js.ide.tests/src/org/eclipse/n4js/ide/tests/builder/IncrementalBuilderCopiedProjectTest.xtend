@@ -21,7 +21,7 @@ import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.*
 
 /**
  */
-class IncrementalBuilderMovedProjectTest extends AbstractIncrementalBuilderTest {
+class IncrementalBuilderCopiedProjectTest extends AbstractIncrementalBuilderTest {
 
 	/**
 	 * This test creates a copy of a built project (including .n4js.projectstate files).
