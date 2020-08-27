@@ -10,6 +10,7 @@ package org.eclipse.n4js.ide.xtext.server.build;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -33,11 +34,11 @@ public class XBuildRequest {
 
 	private URI baseDir;
 
-	private Collection<URI> dirtyFiles = new ArrayList<>();
+	private Collection<URI> dirtyFiles = Collections.emptyList();
 
-	private Collection<URI> deletedFiles = new ArrayList<>();
+	private Collection<URI> deletedFiles = Collections.emptyList();
 
-	private Collection<IResourceDescription.Delta> externalDeltas = new ArrayList<>();
+	private Collection<IResourceDescription.Delta> externalDeltas = Collections.emptyList();
 
 	private ResourceDescriptionsData index;
 
@@ -126,7 +127,7 @@ public class XBuildRequest {
 
 	/** Setter. */
 	public void setDirtyFiles(Collection<URI> dirtyFiles) {
-		this.dirtyFiles = dirtyFiles;
+		this.dirtyFiles = Collections.unmodifiableCollection(dirtyFiles);
 	}
 
 	/** Getter. */
@@ -136,7 +137,7 @@ public class XBuildRequest {
 
 	/** Setter. */
 	public void setDeletedFiles(Collection<URI> deletedFiles) {
-		this.deletedFiles = deletedFiles;
+		this.deletedFiles = Collections.unmodifiableCollection(deletedFiles);
 	}
 
 	/** Getter. */
@@ -146,7 +147,7 @@ public class XBuildRequest {
 
 	/** Setter. */
 	public void setExternalDeltas(Collection<IResourceDescription.Delta> externalDeltas) {
-		this.externalDeltas = externalDeltas;
+		this.externalDeltas = Collections.unmodifiableCollection(externalDeltas);
 	}
 
 	/**
