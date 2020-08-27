@@ -26,6 +26,9 @@ class IncrementalBuilderCopiedProjectTest extends AbstractIncrementalBuilderTest
 	/**
 	 * This test creates a copy of a built project (including .n4js.projectstate files).
 	 * After copying, both of the projects should compile like the original project compiled before.
+	 * 
+	 * The contents of the test files (polyfills etc.) would create many warnings in case the
+	 * .n4js.projectstate would reference absolute URIs.
 	 */
 	@Test
 	def void testCreateDuplicateProject() throws IOException {
