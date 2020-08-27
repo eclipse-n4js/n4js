@@ -12,6 +12,7 @@ package org.eclipse.n4js.ide.tests.server;
 
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 
 import java.io.File;
@@ -173,6 +174,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	@After
 	final public void deleteTestProject() {
 		assertNoErrorsInLog();
+		assertNoErrorsInOutput();
 		shutdownLspServer();
 		// clear the state related to the test
 		testWorkspaceManager.deleteTestFromDiskIfCreated();
@@ -906,6 +908,12 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 			String message = Strings.nullToEmpty(msg.getMessage());
 			assertNotEquals("Unexpected ERROR in log:\n" + message, MessageType.Error, msg.getType());
 		}
+	}
+
+	/** Asserts that there are no ERRORs in the output streams. */
+	static protected void assertNoErrorsInOutput() {
+		assertFalse(SYSTEM_OUT_REDIRECTER.getSystemErr().contains("ERROR"));
+		assertFalse(SYSTEM_OUT_REDIRECTER.getSystemOut().contains("ERROR"));
 	}
 
 	/**
