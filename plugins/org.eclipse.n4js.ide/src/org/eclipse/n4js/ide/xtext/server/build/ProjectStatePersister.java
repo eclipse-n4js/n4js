@@ -78,7 +78,7 @@ public class ProjectStatePersister {
 	 * <pre>
 	 * - Language version as per {@link #getLanguageVersion() getLanguageVersion}
 	 * - Number #r of resource descriptions
-	 * - #r times a serializable resource description as per {@link #writeResourceDescription(SerializableResourceDescription, DataOutput)}
+	 * - #r times a serializable resource description as per {@link #writeResourceDescription(SerializableResourceDescription, URI, DataOutput)}
 	 * - A mapping of generated URIs as per {@link Source2GeneratedMapping#writeExternal(java.io.ObjectOutput) Source2GeneratedMapping.writeExternal}
 	 * - Number #f of fingerprints per URI
 	 * - #f times a fingerprint as per {@link HashedFileContent#write(DataOutput) HashedFileContent.write}
@@ -88,11 +88,13 @@ public class ProjectStatePersister {
 	 * 	- Number #vi of issues of source
 	 * 	- #vi times a validation issue as per {@link LSPIssue#writeExternal(DataOutput) LSPIssue.writeExternal}
 	 * </pre>
+	 *
+	 * All URIs are relative to the project's base directory.
 	 */
-	private static final int VERSION_2 = 2;
+	private static final int VERSION_3 = 3;
 
 	/** The current version of the persistence format. Increment to support backwards compatible deserialization. */
-	private static final int CURRENT_VERSION = VERSION_2;
+	private static final int CURRENT_VERSION = VERSION_3;
 
 	@Inject
 	private QueuedExecutorService queuedExecutorService;
@@ -124,9 +126,10 @@ public class ProjectStatePersister {
 		queuedExecutorService.submitAndCancelPrevious(Tuples.create(ProjectStatePersister.class, project.getName()),
 				"writeProjectState", (cancelIndicator) -> {
 					if (!cancelIndicator.isCanceled()) {
+						URI baseURI = getBaseURI(project);
 						File file = getDataFile(project);
 						try (OutputStream nativeOut = Files.asByteSink(file).openBufferedStream()) {
-							writeProjectState(nativeOut, state);
+							writeProjectState(baseURI, nativeOut, state);
 						} catch (IOException e) {
 							e.printStackTrace();
 							if (file.isFile()) {
@@ -146,7 +149,7 @@ public class ProjectStatePersister {
 	 * @throws IOException
 	 *             if things go bananas.
 	 */
-	public void writeProjectState(OutputStream stream, ImmutableProjectState state)
+	public void writeProjectState(URI baseURI, OutputStream stream, ImmutableProjectState state)
 			throws IOException {
 
 		String languageVersion = getLanguageVersion();
@@ -157,37 +160,38 @@ public class ProjectStatePersister {
 
 			output.writeUTF(languageVersion);
 
-			writeResourceDescriptions(state, output);
+			writeResourceDescriptions(state, baseURI, output);
 
 			writeFileMappings(state, output);
 
 			writeFingerprints(state, output);
 
-			writeValidationIssues(state, output);
+			writeValidationIssues(state, baseURI, output);
 		}
 	}
 
-	private void writeResourceDescriptions(ImmutableProjectState state, DataOutput output) throws IOException {
+	private void writeResourceDescriptions(ImmutableProjectState state, URI baseURI, DataOutput output)
+			throws IOException {
 		Iterable<IResourceDescription> descriptions = state.getResourceDescriptions().getAllResourceDescriptions();
 		output.writeInt(Iterables.size(descriptions));
 		for (IResourceDescription description : descriptions) {
 			if (description instanceof SerializableResourceDescription) {
-				writeResourceDescription((SerializableResourceDescription) description, output);
+				writeResourceDescription((SerializableResourceDescription) description, baseURI, output);
 			} else {
 				throw new IOException("Unexpected type: " + description.getClass().getName());
 			}
 		}
 	}
 
-	private void writeResourceDescription(SerializableResourceDescription description, DataOutput output)
+	private void writeResourceDescription(SerializableResourceDescription description, URI baseURI, DataOutput output)
 			throws IOException {
 
 		// description.writeExternal(output);
 		// relies on writeObject which is very slow
 
-		output.writeUTF(description.getURI().toString());
-		writeEObjectDescriptions(description, output);
-		writeReferenceDescriptions(description, output);
+		output.writeUTF(makeRelative(baseURI, description.getURI()));
+		writeEObjectDescriptions(description, baseURI, output);
+		writeReferenceDescriptions(description, baseURI, output);
 		writeImportedNames(description, output);
 	}
 
@@ -201,28 +205,28 @@ public class ProjectStatePersister {
 		}
 	}
 
-	private void writeReferenceDescriptions(SerializableResourceDescription resourceDescription, DataOutput output)
-			throws IOException {
+	private void writeReferenceDescriptions(SerializableResourceDescription resourceDescription, URI baseURI,
+			DataOutput output) throws IOException {
 
 		List<SerializableReferenceDescription> references = resourceDescription.getReferences();
 		output.writeInt(references.size());
 		for (SerializableReferenceDescription reference : references) {
-			output.writeUTF(reference.getSourceEObjectUri().toString());
-			output.writeUTF(reference.getTargetEObjectUri().toString());
-			output.writeUTF(reference.getContainerEObjectURI().toString());
-			output.writeUTF(EcoreUtil.getURI(reference.getEReference()).toString());
+			output.writeUTF(makeRelative(baseURI, reference.getSourceEObjectUri()));
+			output.writeUTF(makeRelative(baseURI, reference.getTargetEObjectUri()));
+			output.writeUTF(makeRelative(baseURI, reference.getContainerEObjectURI()));
+			output.writeUTF(makeRelative(baseURI, EcoreUtil.getURI(reference.getEReference())));
 			output.writeInt(reference.getIndexInList());
 		}
 	}
 
-	private void writeEObjectDescriptions(SerializableResourceDescription resourceDescription, DataOutput output)
-			throws IOException {
+	private void writeEObjectDescriptions(SerializableResourceDescription resourceDescription, URI baseURI,
+			DataOutput output) throws IOException {
 
 		List<SerializableEObjectDescription> objects = resourceDescription.getDescriptions();
 		output.writeInt(objects.size());
 		for (SerializableEObjectDescription object : objects) {
-			output.writeUTF(object.getEObjectURI().toString());
-			output.writeUTF(EcoreUtil.getURI(object.getEClass()).toString());
+			output.writeUTF(makeRelative(baseURI, object.getEObjectURI()));
+			output.writeUTF(makeRelative(baseURI, EcoreUtil.getURI(object.getEClass())));
 			QualifiedName qn = object.getQualifiedName();
 			writeQualifiedName(qn, output);
 			Map<String, String> userData = object.getUserData();
@@ -265,14 +269,15 @@ public class ProjectStatePersister {
 		}
 	}
 
-	private void writeValidationIssues(ImmutableProjectState state, DataOutput output) throws IOException {
+	private void writeValidationIssues(ImmutableProjectState state, URI baseURI, DataOutput output)
+			throws IOException {
 		Set<URI> allSources = state.getValidationIssues().keySet();
 		int numberSources = allSources.size();
 		output.writeInt(numberSources);
 		for (URI source : allSources) {
 			Collection<? extends LSPIssue> issues = state.getValidationIssues().get(source);
 
-			output.writeUTF(source.toString());
+			output.writeUTF(makeRelative(baseURI, source));
 
 			int numberIssues = issues.size();
 			output.writeInt(numberIssues);
@@ -289,11 +294,12 @@ public class ProjectStatePersister {
 	 *            the project
 	 */
 	public ImmutableProjectState readProjectState(IProjectConfig project) {
+		URI baseURI = getBaseURI(project);
 		File file = getDataFile(project);
 		try {
 			if (file.isFile()) {
 				try (InputStream nativeIn = Files.asByteSource(file).openBufferedStream()) {
-					ImmutableProjectState result = readProjectState(nativeIn);
+					ImmutableProjectState result = readProjectState(baseURI, nativeIn);
 					if (result == null && file.isFile()) {
 						file.delete();
 					}
@@ -317,7 +323,7 @@ public class ProjectStatePersister {
 	 * @throws ClassNotFoundException
 	 *             if things go bananas.
 	 */
-	public ImmutableProjectState readProjectState(InputStream stream)
+	public ImmutableProjectState readProjectState(URI baseURI, InputStream stream)
 			throws IOException, ClassNotFoundException {
 
 		int version = stream.read();
@@ -330,31 +336,31 @@ public class ProjectStatePersister {
 			if (!getLanguageVersion().equals(languageVersion)) {
 				return null;
 			}
-			ResourceDescriptionsData resourceDescriptionsData = readResourceDescriptions(input);
+			ResourceDescriptionsData resourceDescriptionsData = readResourceDescriptions(baseURI, input);
 
 			XSource2GeneratedMapping fileMappings = readFileMappings(input);
 
 			ImmutableMap<URI, HashedFileContent> fingerprints = readFingerprints(input);
 
-			ImmutableListMultimap<URI, LSPIssue> validationIssues = readValidationIssues(input);
+			ImmutableListMultimap<URI, LSPIssue> validationIssues = readValidationIssues(baseURI, input);
 
 			return ImmutableProjectState.withoutCopy(resourceDescriptionsData, fileMappings, fingerprints,
 					validationIssues);
 		}
 	}
 
-	private ResourceDescriptionsData readResourceDescriptions(DataInput input) throws IOException {
+	private ResourceDescriptionsData readResourceDescriptions(URI baseURI, DataInput input) throws IOException {
 		List<IResourceDescription> descriptions = new ArrayList<>();
 		int size = input.readInt();
 		while (size > 0) {
 			size--;
-			descriptions.add(readResourceDescription(input));
+			descriptions.add(readResourceDescription(baseURI, input));
 		}
 		return new ResourceDescriptionsData(descriptions);
 	}
 
-	private ENamedElement readEcoreElement(DataInput input) throws IOException {
-		URI uri = URI.createURI(input.readUTF());
+	private ENamedElement readEcoreElement(URI baseURI, DataInput input) throws IOException {
+		URI uri = makeAbsolute(baseURI, input.readUTF());
 		EPackage ePackage = EPackage.Registry.INSTANCE.getEPackage(uri.trimFragment().toString());
 		if (ePackage != null) {
 			Resource resource = ePackage.eResource();
@@ -363,11 +369,11 @@ public class ProjectStatePersister {
 		return null;
 	}
 
-	private SerializableResourceDescription readResourceDescription(DataInput input) throws IOException {
+	private SerializableResourceDescription readResourceDescription(URI baseURI, DataInput input) throws IOException {
 		SerializableResourceDescription result = new SerializableResourceDescription();
-		result.setURI(URI.createURI(input.readUTF()));
-		result.setDescriptions(readEObjectDescriptions(input));
-		result.setReferences(readReferenceDescriptions(input));
+		result.setURI(makeAbsolute(baseURI, input.readUTF()));
+		result.setDescriptions(readEObjectDescriptions(baseURI, input));
+		result.setReferences(readReferenceDescriptions(baseURI, input));
 		result.setImportedNames(readImportedNames(input));
 		return result;
 	}
@@ -385,7 +391,9 @@ public class ProjectStatePersister {
 		return result;
 	}
 
-	private List<SerializableReferenceDescription> readReferenceDescriptions(DataInput input) throws IOException {
+	private List<SerializableReferenceDescription> readReferenceDescriptions(URI baseURI, DataInput input)
+			throws IOException {
+
 		int size = input.readInt();
 		if (size == 0) {
 			return Collections.emptyList();
@@ -394,17 +402,19 @@ public class ProjectStatePersister {
 		while (size > 0) {
 			size--;
 			SerializableReferenceDescription reference = new SerializableReferenceDescription();
-			reference.setSourceEObjectUri(URI.createURI(input.readUTF()));
-			reference.setTargetEObjectUri(URI.createURI(input.readUTF()));
-			reference.setContainerEObjectURI(URI.createURI(input.readUTF()));
-			reference.setEReference((EReference) readEcoreElement(input));
+			reference.setSourceEObjectUri(makeAbsolute(baseURI, input.readUTF()));
+			reference.setTargetEObjectUri(makeAbsolute(baseURI, input.readUTF()));
+			reference.setContainerEObjectURI(makeAbsolute(baseURI, input.readUTF()));
+			reference.setEReference((EReference) readEcoreElement(baseURI, input));
 			reference.setIndexInList(input.readInt() - 1);
 			result.add(reference);
 		}
 		return result;
 	}
 
-	private List<SerializableEObjectDescription> readEObjectDescriptions(DataInput input) throws IOException {
+	private List<SerializableEObjectDescription> readEObjectDescriptions(URI baseURI, DataInput input)
+			throws IOException {
+
 		int size = input.readInt();
 		if (size == 0) {
 			return Collections.emptyList();
@@ -413,8 +423,8 @@ public class ProjectStatePersister {
 		while (size > 0) {
 			size--;
 			SerializableEObjectDescription object = new SerializableEObjectDescription();
-			object.setEObjectURI(URI.createURI(input.readUTF()));
-			object.setEClass((EClass) readEcoreElement(input));
+			object.setEObjectURI(makeAbsolute(baseURI, input.readUTF()));
+			object.setEClass((EClass) readEcoreElement(baseURI, input));
 			object.setQualifiedName(readQualifiedName(input));
 			int userDataSize = input.readInt();
 			HashMap<String, String> userData = new HashMap<>();
@@ -462,12 +472,14 @@ public class ProjectStatePersister {
 		return fingerprints.build();
 	}
 
-	private ImmutableListMultimap<URI, LSPIssue> readValidationIssues(DataInput input) throws IOException {
+	private ImmutableListMultimap<URI, LSPIssue> readValidationIssues(URI baseURI, DataInput input)
+			throws IOException {
+
 		int numberOfSources = input.readInt();
 		ImmutableListMultimap.Builder<URI, LSPIssue> validationIssues = ImmutableListMultimap.builder();
 		while (numberOfSources > 0) {
 			numberOfSources--;
-			URI source = URI.createURI(input.readUTF());
+			URI source = makeAbsolute(baseURI, input.readUTF());
 			int numberOfIssues = input.readInt();
 			while (numberOfIssues > 0) {
 				numberOfIssues--;
@@ -485,10 +497,32 @@ public class ProjectStatePersister {
 		return file;
 	}
 
+	private String makeRelative(URI baseURI, URI absoluteURI) {
+		if ("file".equals(absoluteURI.scheme())) {
+			URI relativeURI = absoluteURI.deresolve(baseURI);
+			return relativeURI.toString();
+		}
+		return absoluteURI.toString();
+	}
+
+	private URI makeAbsolute(URI baseURI, String relativeString) {
+		if (relativeString.contains(":/")) {
+			return URI.createURI(relativeString);
+		}
+		URI relativeURI = URI.createFileURI(relativeString);
+		URI absoluteURI = relativeURI.resolve(baseURI);
+		return new FileURI(absoluteURI).toURI();
+	}
+
 	/** @return the file URI of the persisted index */
 	public URI getFileName(IProjectConfig project) {
 		String fileName = getPersistedFileName();
-		URI rootPath = project.getPath();
-		return new FileURI(rootPath).appendSegment(fileName).toURI();
+		URI fileNameURI = URI.createFileURI(fileName);
+		URI baseURI = getBaseURI(project);
+		return new FileURI(fileNameURI.resolve(baseURI)).toURI();
+	}
+
+	private URI getBaseURI(IProjectConfig project) {
+		return project.getPath();
 	}
 }
