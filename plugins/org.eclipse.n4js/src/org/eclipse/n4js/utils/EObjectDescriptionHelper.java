@@ -10,7 +10,9 @@
  */
 package org.eclipse.n4js.utils;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
@@ -48,9 +50,11 @@ public final class EObjectDescriptionHelper {
 	 */
 	public boolean isDescriptionOfModuleWith(IEObjectDescription eoDescription, EObject eObject) {
 		// check if module names are the same
-		final String eobjectModuleName = EcoreUtil2.getContainerOfType(eObject, Script.class).getModule()
-				.getQualifiedName();
-		if (!eobjectModuleName.equals(qualifiedNameConverter.toString(eoDescription.getQualifiedName()))) {
+		final Script containingScript = EcoreUtil2.getContainerOfType(eObject, Script.class);
+		final TModule containingModule = containingScript != null ? containingScript.getModule() : null;
+		final String eObjectModuleName = containingModule != null ? containingModule.getQualifiedName() : null;
+		if (eObjectModuleName == null
+				|| !eObjectModuleName.equals(qualifiedNameConverter.toString(eoDescription.getQualifiedName()))) {
 			return false;
 		}
 
@@ -60,8 +64,14 @@ public final class EObjectDescriptionHelper {
 		}
 
 		// for main modules we check containing project
+		Resource eObjectResource = eObject != null ? eObject.eResource() : null;
+		URI eObjectResourceURI = eObjectResource != null ? eObjectResource.getURI() : null;
+		if (eObjectResourceURI == null) {
+			return false;
+		}
+
 		final IN4JSProject targetProject = n4jsCore.findProject(eoDescription.getEObjectURI()).orNull();
-		final IN4JSProject currentProject = n4jsCore.findProject(eObject.eResource().getURI()).orNull();
+		final IN4JSProject currentProject = n4jsCore.findProject(eObjectResourceURI).orNull();
 
 		return targetProject == currentProject;
 	}
