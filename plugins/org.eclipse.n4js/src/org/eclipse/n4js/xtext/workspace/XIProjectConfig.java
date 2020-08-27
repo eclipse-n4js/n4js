@@ -14,11 +14,16 @@ import java.util.Set;
 
 import org.eclipse.xtext.workspace.IProjectConfig;
 
+import com.google.common.collect.ImmutableSet;
+
 /**
- * Extension of {@link XIProjectConfig} to include project dependencies and support for snapshots.
+ * Extension of {@link IProjectConfig} to include project dependencies and support for snapshots.
  */
 @SuppressWarnings("restriction")
 public interface XIProjectConfig extends IProjectConfig {
+
+	@Override
+	Set<? extends XISourceFolder> getSourceFolders();
 
 	/**
 	 * Returns true iff this project will be indexed only, i.e. neither validated nor generated.
@@ -36,5 +41,10 @@ public interface XIProjectConfig extends IProjectConfig {
 	Set<String> getDependencies();
 
 	/** Returns a snapshot of the current state of the workspace represented by this {@link XIProjectConfig}. */
-	ProjectConfigSnapshot toSnapshot();
+	default ProjectConfigSnapshot toSnapshot() {
+		ImmutableSet<SourceFolderSnapshot> sourceFolderSnapshots = getSourceFolders().stream()
+				.map(XISourceFolder::toSnapshot)
+				.collect(ImmutableSet.toImmutableSet());
+		return new ProjectConfigSnapshot(getName(), getPath(), getDependencies(), sourceFolderSnapshots);
+	}
 }

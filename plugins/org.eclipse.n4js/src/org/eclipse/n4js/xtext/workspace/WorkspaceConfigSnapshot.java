@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
@@ -36,12 +36,6 @@ public class WorkspaceConfigSnapshot {
 	protected final ImmutableBiMap<String, ProjectConfigSnapshot> name2Project;
 	/** Keys are URIs <em>without</em> trailing path separator. */
 	protected final ImmutableMap<URI, ProjectConfigSnapshot> sourceFolderPath2Project;
-
-	/** See {@link WorkspaceConfigSnapshot}. */
-	public WorkspaceConfigSnapshot(XIWorkspaceConfig workspace) {
-		this(workspace.getPath(),
-				workspace.getProjects().stream().map(ProjectConfigSnapshot::new).collect(Collectors.toList()));
-	}
 
 	/** See {@link WorkspaceConfigSnapshot}. */
 	public WorkspaceConfigSnapshot(URI path, Iterable<? extends ProjectConfigSnapshot> projects) {
@@ -76,26 +70,40 @@ public class WorkspaceConfigSnapshot {
 	}
 
 	/**
-	 * Find the project with the given nested location.
-	 */
-	public ProjectConfigSnapshot findProjectContaining(URI nestedLocation) {
-		nestedLocation = trimTrailingPathSeparator(nestedLocation);
-		do {
-			ProjectConfigSnapshot match = sourceFolderPath2Project.get(nestedLocation);
-			if (match != null) {
-				return match;
-			}
-			nestedLocation = nestedLocation.segmentCount() > 0 ? nestedLocation.trimSegments(1) : null;
-		} while (nestedLocation != null);
-
-		return null;
-	}
-
-	/**
 	 * Find the project with the given name.
 	 */
 	public ProjectConfigSnapshot findProjectByName(String name) {
 		return name2Project.get(name);
+	}
+
+	/**
+	 * Same as {@link IWorkspaceConfig#findProjectContaining(URI)}: finds the project having a source folder that
+	 * {@link SourceFolderSnapshot#contains(URI) actually contains} the given nested URI. Returns <code>null</code> if
+	 * no such project is found. The given URI may point to a file or folder.
+	 *
+	 * @see IWorkspaceConfig#findProjectContaining(URI)
+	 * @see SourceFolderSnapshot#contains(URI)
+	 */
+	public ProjectConfigSnapshot findProjectContaining(URI nestedLocation) {
+		URI currLoc = trimTrailingPathSeparator(nestedLocation);
+		do {
+			ProjectConfigSnapshot match = sourceFolderPath2Project.get(currLoc);
+			if (match != null) {
+				// in addition to checking the source folder paths, we have to make sure the source folder actually
+				// "contains" the URI as defined by method SourceFolderSnapshot#contains(URI):
+				for (SourceFolderSnapshot sourceFolder : match.getSourceFolders()) {
+					if (Objects.equals(trimTrailingPathSeparator(sourceFolder.getPath()), currLoc)) {
+						if (sourceFolder.contains(nestedLocation)) {
+							return match;
+						}
+					}
+				}
+				return null;
+			}
+			currLoc = currLoc.segmentCount() > 0 ? currLoc.trimSegments(1) : null;
+		} while (currLoc != null);
+
+		return null;
 	}
 
 	/**

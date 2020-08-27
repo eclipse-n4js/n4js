@@ -27,13 +27,6 @@ public class ProjectConfigSnapshot {
 	private final ImmutableSet<SourceFolderSnapshot> sourceFolders;
 
 	/** See {@link ProjectConfigSnapshot}. */
-	public ProjectConfigSnapshot(XIProjectConfig project) {
-		this(project.getName(), project.getPath(), project.getDependencies(),
-				project.getSourceFolders().stream().map(SourceFolderSnapshot::new)
-						.collect(ImmutableSet.toImmutableSet()));
-	}
-
-	/** See {@link ProjectConfigSnapshot}. */
 	public ProjectConfigSnapshot(String name, URI path, Iterable<String> dependencies,
 			Iterable<? extends SourceFolderSnapshot> sourceFolders) {
 		this.name = name;
