@@ -21,13 +21,14 @@ import org.eclipse.xtext.findReferences.IReferenceFinder.IResourceAccess;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 import org.eclipse.xtext.ide.server.commands.ExecutableCommandRegistry;
 import org.eclipse.xtext.ide.server.symbol.WorkspaceSymbolService;
+import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.util.CancelIndicator;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- *
+ * Handles all lsp calls that refer to the whole workspace, i.e. do not specify a specific test document.
  */
 @SuppressWarnings("restriction")
 @Singleton
@@ -50,13 +51,11 @@ public class WorkspaceFrontend {
 
 	/** Sets non-injectable fields */
 	public void initialize(@SuppressWarnings("hiding") ILanguageServerAccess access) {
-		this.resourceAccess = new XWorkspaceResourceAccess(resourceTaskManager);
+		this.resourceAccess = new XWorkspaceResourceAccess(resourceTaskManager, false);
 		this.access = access;
 	}
 
-	/**
-	 * Compute the symbol information.
-	 */
+	/** Compute the symbol information. */
 	public CompletableFuture<List<? extends SymbolInformation>> symbol(WorkspaceSymbolParams params) {
 		return lspExecutorService.submitAndCancelPrevious(WorkspaceSymbolParams.class, "symbol",
 				cancelIndicator -> symbol(params, cancelIndicator));
@@ -64,13 +63,11 @@ public class WorkspaceFrontend {
 
 	/** Compute the symbol information. Executed in a read request. */
 	protected List<? extends SymbolInformation> symbol(WorkspaceSymbolParams params, CancelIndicator cancelIndicator) {
-		return workspaceSymbolService.getSymbols(params.getQuery(), resourceAccess,
-				resourceTaskManager.createLiveScopeIndex(), cancelIndicator);
+		ResourceDescriptionsData liveScopeIndex = resourceTaskManager.createLiveScopeIndex();
+		return workspaceSymbolService.getSymbols(params.getQuery(), resourceAccess, liveScopeIndex, cancelIndicator);
 	}
 
-	/**
-	 * Execute the given command.
-	 */
+	/** Execute the given command. */
 	public CompletableFuture<Object> executeCommand(ExecuteCommandParams params) {
 		return lspExecutorService.submit("executeCommand", cancelIndicator -> executeCommand(params, cancelIndicator));
 	}
