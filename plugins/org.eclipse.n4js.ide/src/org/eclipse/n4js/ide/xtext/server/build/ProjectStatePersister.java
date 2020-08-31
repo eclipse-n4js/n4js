@@ -498,7 +498,7 @@ public class ProjectStatePersister {
 	}
 
 	private String makeRelative(URI baseURI, URI absoluteURI) {
-		if ("file".equals(absoluteURI.scheme())) {
+		if (absoluteURI.isFile()) {
 			URI relativeURI = absoluteURI.deresolve(baseURI);
 			return relativeURI.toString();
 		}
