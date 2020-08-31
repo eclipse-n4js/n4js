@@ -12,7 +12,7 @@ package org.eclipse.n4js.ide.tests.builder
 
 import java.io.File
 import java.io.IOException
-import java.util.Collections
+import java.util.Map
 import org.eclipse.n4js.projectModel.locations.FileURI
 import org.eclipse.n4js.utils.io.FileCopier
 import org.junit.Test
@@ -50,6 +50,7 @@ class IncrementalBuilderCopiedProjectTest extends AbstractIncrementalBuilderTest
 		);
 
 		startAndWaitForLspServer();
+		assertProjectBuildOrder("[lib, n4js-runtime, test-project]");
 		assertIssues("MyModule" -> #["(Error, [0:0 - 0:11], Couldn't resolve reference to IdentifiableElement '_globalThis'.)"]);
 		shutdownLspServer();
 		
@@ -57,12 +58,18 @@ class IncrementalBuilderCopiedProjectTest extends AbstractIncrementalBuilderTest
 		val projectFolder = new File(getRoot(), DEFAULT_PROJECT_NAME);
 		val projectFolder2 = new File(getRoot(), DEFAULT_PROJECT_NAME+"2");
 		FileCopier.copy(projectFolder, projectFolder2);
-		
+		val packagejson2 = new FileURI(new File(getRoot(), DEFAULT_PROJECT_NAME+"2/package.json"));
+		changeFileOnDiskWithoutNotification(packagejson2, "test-project" -> "test-project2");
+
+
 		startAndWaitForLspServer();
+		val myModule1 = new FileURI(new File(getRoot(), DEFAULT_PROJECT_NAME+"/src/MyModule.n4js"));
 		val myModule2 = new FileURI(new File(getRoot(), DEFAULT_PROJECT_NAME+"2/src/MyModule.n4js"));
-		assertIssues(Collections.singletonMap(myModule2, #[
-			"(Error, [0:0 - 0:11], Couldn't resolve reference to IdentifiableElement '_globalThis'.)"
-		]));
+		assertProjectBuildOrder("[lib, n4js-runtime, test-project, test-project2]");
+		assertIssues(Map.of(
+			myModule1, #["(Error, [0:0 - 0:11], Couldn't resolve reference to IdentifiableElement '_globalThis'.)"],
+			myModule2, #["(Error, [0:0 - 0:11], Couldn't resolve reference to IdentifiableElement '_globalThis'.)"]
+		));
 	}
 	
 }

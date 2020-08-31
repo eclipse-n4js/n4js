@@ -78,6 +78,8 @@ import org.eclipse.n4js.cli.helper.SystemOutRedirecter;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
 import org.eclipse.n4js.ide.tests.client.IdeTestLanguageClient;
 import org.eclipse.n4js.ide.tests.client.IdeTestLanguageClient.IIdeTestLanguageClientListener;
+import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo;
+import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo.ProjectBuildOrderIterator;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 import org.eclipse.n4js.ide.xtext.server.build.BuilderFrontend;
@@ -151,6 +153,9 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	/** */
 	@Inject
 	protected LanguageInfo languageInfo;
+	/** */
+	@Inject
+	protected ProjectBuildOrderInfo.Provider projectBuildOrderInfoProvider;
 
 	/** Utility to create/delete the test workspace on disk */
 	protected final TestWorkspaceManager testWorkspaceManager = new TestWorkspaceManager(getProjectType());
@@ -895,9 +900,14 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		}
 	}
 
-	/**
-	 * Asserts that there are no issues in the entire workspace.
-	 */
+	/** Asserts the build order of all projects in the workspace. */
+	protected void assertProjectBuildOrder(String expectedProjectBuildOrder) {
+		ProjectBuildOrderIterator iter = projectBuildOrderInfoProvider.get().getIterator().visitAll();
+		String buildOrderString = org.eclipse.n4js.utils.Strings.toString(pd -> pd.getName(), () -> iter);
+		assertEquals("Project build order did not match expectation.", expectedProjectBuildOrder, buildOrderString);
+	}
+
+	/** Asserts that there are no issues in the entire workspace. */
 	protected void assertNoIssues() {
 		assertIssues(Collections.emptyMap());
 	}
