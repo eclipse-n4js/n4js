@@ -49,7 +49,7 @@ import com.google.common.collect.ListMultimap;
 @SuppressWarnings({ "restriction", "deprecation" })
 public class ProjectStatePersisterTest {
 
-	static final URI BASE_URI = new FileURI(new File("/")).toURI();
+	static final URI BASE_URI = new FileURI(new File(".").getAbsoluteFile()).toURI();
 
 	ImmutableProjectState createProjectState() {
 		return ImmutableProjectState.empty();
@@ -74,7 +74,8 @@ public class ProjectStatePersisterTest {
 		ImmutableProjectState state = createProjectState();
 		testMe.writeProjectState(BASE_URI, output, state);
 		AtomicBoolean didCall = new AtomicBoolean();
-		ImmutableProjectState pState = testMe.readProjectState(BASE_URI, new ByteArrayInputStream(output.toByteArray()));
+		ImmutableProjectState pState = testMe.readProjectState(BASE_URI,
+				new ByteArrayInputStream(output.toByteArray()));
 		Assert.assertTrue(pState.getFileMappings().getAllGenerated().isEmpty());
 		Assert.assertTrue(pState.getResourceDescriptions().isEmpty());
 		Assert.assertTrue(pState.getFileHashes().isEmpty());
@@ -121,7 +122,8 @@ public class ProjectStatePersisterTest {
 		ImmutableProjectState state = createProjectState();
 		testMe.writeProjectState(BASE_URI, output, state);
 		languageVersion.set("2");
-		ImmutableProjectState pState = testMe.readProjectState(BASE_URI, new ByteArrayInputStream(output.toByteArray()));
+		ImmutableProjectState pState = testMe.readProjectState(BASE_URI,
+				new ByteArrayInputStream(output.toByteArray()));
 		Assert.assertTrue(pState == null);
 	}
 
