@@ -12,6 +12,7 @@ package org.eclipse.n4js.ide.xtext.server;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -26,6 +27,7 @@ import org.eclipse.n4js.ide.xtext.server.build.HashedFileContent;
 import org.eclipse.n4js.ide.xtext.server.build.ImmutableProjectState;
 import org.eclipse.n4js.ide.xtext.server.build.ProjectStatePersister;
 import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
+import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.xtext.server.LSPIssue;
 import org.eclipse.xtext.builder.builderState.BuilderStateFactory;
 import org.eclipse.xtext.builder.builderState.impl.EObjectDescriptionImpl;
@@ -46,6 +48,8 @@ import com.google.common.collect.ListMultimap;
 /** */
 @SuppressWarnings({ "restriction", "deprecation" })
 public class ProjectStatePersisterTest {
+
+	static final URI BASE_URI = new FileURI(new File(".").getAbsoluteFile()).toURI();
 
 	ImmutableProjectState createProjectState() {
 		return ImmutableProjectState.empty();
@@ -68,9 +72,10 @@ public class ProjectStatePersisterTest {
 		ProjectStatePersister testMe = new ProjectStatePersister();
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		ImmutableProjectState state = createProjectState();
-		testMe.writeProjectState(output, state);
+		testMe.writeProjectState(BASE_URI, output, state);
 		AtomicBoolean didCall = new AtomicBoolean();
-		ImmutableProjectState pState = testMe.readProjectState(new ByteArrayInputStream(output.toByteArray()));
+		ImmutableProjectState pState = testMe.readProjectState(BASE_URI,
+				new ByteArrayInputStream(output.toByteArray()));
 		Assert.assertTrue(pState.getFileMappings().getAllGenerated().isEmpty());
 		Assert.assertTrue(pState.getResourceDescriptions().isEmpty());
 		Assert.assertTrue(pState.getFileHashes().isEmpty());
@@ -84,10 +89,10 @@ public class ProjectStatePersisterTest {
 		ProjectStatePersister testMe = new ProjectStatePersister();
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		ImmutableProjectState state = createProjectState();
-		testMe.writeProjectState(output, state);
+		testMe.writeProjectState(BASE_URI, output, state);
 		byte[] bytes = output.toByteArray();
 		bytes[12]++;
-		testMe.readProjectState(new ByteArrayInputStream(bytes));
+		testMe.readProjectState(BASE_URI, new ByteArrayInputStream(bytes));
 	}
 
 	/** */
@@ -96,10 +101,10 @@ public class ProjectStatePersisterTest {
 		ProjectStatePersister testMe = new ProjectStatePersister();
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		ImmutableProjectState state = createProjectState();
-		testMe.writeProjectState(output, state);
+		testMe.writeProjectState(BASE_URI, output, state);
 		byte[] bytes = output.toByteArray();
 		bytes[0]++;
-		ImmutableProjectState pState = testMe.readProjectState(new ByteArrayInputStream(bytes));
+		ImmutableProjectState pState = testMe.readProjectState(BASE_URI, new ByteArrayInputStream(bytes));
 		Assert.assertTrue(pState == null);
 	}
 
@@ -115,9 +120,10 @@ public class ProjectStatePersisterTest {
 		};
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		ImmutableProjectState state = createProjectState();
-		testMe.writeProjectState(output, state);
+		testMe.writeProjectState(BASE_URI, output, state);
 		languageVersion.set("2");
-		ImmutableProjectState pState = testMe.readProjectState(new ByteArrayInputStream(output.toByteArray()));
+		ImmutableProjectState pState = testMe.readProjectState(BASE_URI,
+				new ByteArrayInputStream(output.toByteArray()));
 		Assert.assertTrue(pState == null);
 	}
 
@@ -151,9 +157,9 @@ public class ProjectStatePersisterTest {
 				new HashedFileContent(hashUri, 123));
 
 		state = createProjectState(index, fileMappings, fingerprints, null);
-		testMe.writeProjectState(output, state);
+		testMe.writeProjectState(BASE_URI, output, state);
 		ByteArrayInputStream outputStream = new ByteArrayInputStream(output.toByteArray());
-		ImmutableProjectState pState = testMe.readProjectState(outputStream);
+		ImmutableProjectState pState = testMe.readProjectState(BASE_URI, outputStream);
 
 		Assert.assertEquals(fingerprints, pState.getFileHashes());
 		List<URI> targets = pState.getFileMappings().getGenerated(sourceURI);
@@ -189,9 +195,9 @@ public class ProjectStatePersisterTest {
 		issueMap.put(source2, src2Issue2);
 
 		ImmutableProjectState state = createProjectState(null, null, null, issueMap);
-		testMe.writeProjectState(output, state);
+		testMe.writeProjectState(BASE_URI, output, state);
 		byte[] bytes = output.toByteArray();
-		ImmutableProjectState pState = testMe.readProjectState(new ByteArrayInputStream(bytes));
+		ImmutableProjectState pState = testMe.readProjectState(BASE_URI, new ByteArrayInputStream(bytes));
 		Assert.assertTrue(pState != null);
 		Assert.assertEquals(issueMap, pState.getValidationIssues());
 	}
