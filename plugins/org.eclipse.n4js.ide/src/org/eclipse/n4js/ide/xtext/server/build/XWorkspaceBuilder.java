@@ -394,7 +394,8 @@ public class XWorkspaceBuilder {
 			this.dirtyFiles.clear();
 			this.deletedFiles.clear();
 			this.deletedProjects.clear();
-			lspLogger.error("... build ABORTED due to exception:", th);
+			// QueueExecutorService will log this as an error with stack trace, so here we just use #log():
+			lspLogger.log("... build ABORTED due to exception: " + th.getMessage());
 			throw th;
 		}
 	}

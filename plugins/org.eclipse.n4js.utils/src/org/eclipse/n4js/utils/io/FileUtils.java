@@ -79,6 +79,26 @@ public abstract class FileUtils {
 	}
 
 	/**
+	 * Returns with the value of {@code System.getProperty("user.home")}. Never {@code null}.
+	 */
+	private static final String getUserHomeValue() {
+		return checkNotNull(StandardSystemProperty.USER_HOME.value(), "Null for user.home system property.");
+	}
+
+	/**
+	 * Returns with the path of the user home folder. Never returns with {@code null}.
+	 *
+	 * @return the path to the user home folder.
+	 */
+	public static Path getUserHomeFolder() {
+		final File file = new File(getUserHomeValue());
+		if (!file.exists() || !file.canWrite()) {
+			throw new RuntimeException("Cannot access user home directory under: " + file);
+		}
+		return file.toPath();
+	}
+
+	/**
 	 * Creates a new directory with the given parent folder and folder name. The newly created folder will be deleted on
 	 * graceful VM shutdown.
 	 *

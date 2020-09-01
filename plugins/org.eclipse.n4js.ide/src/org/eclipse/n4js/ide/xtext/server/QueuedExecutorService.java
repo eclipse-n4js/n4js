@@ -33,6 +33,7 @@ import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.inject.Inject;
@@ -333,19 +334,24 @@ public class QueuedExecutorService {
 
 	/** Stringifies current state of the executer service. Indicates all currently running and pending tasks. */
 	public synchronized String stringify() {
-		StringBuilder sb = new StringBuilder();
-		Multimap<Object, QueuedTask<?>> activeQueue = HashMultimap.create();
+		Multimap<Object, QueuedTask<?>> activeQueue = LinkedHashMultimap.create();
 		Multimap<Object, QueuedTask<?>> inactiveQueue = HashMultimap.create();
 		for (Map.Entry<Object, QueuedTask<?>> entry : submittedTasks.entrySet()) {
-			activeQueue.put(entry.getValue(), (QueuedTask<?>) entry.getKey());
+			activeQueue.put(entry.getKey(), entry.getValue());
 		}
 		for (QueuedTask<?> pendingTask : pendingTasks) {
-			if (activeQueue.containsKey(pendingTask)) {
-				activeQueue.put(pendingTask.queueId, pendingTask);
+			Object id = pendingTask.queueId;
+			if (activeQueue.containsKey(id)) {
+				activeQueue.put(id, pendingTask);
 			} else {
-				inactiveQueue.put(pendingTask.queueId, pendingTask);
+				inactiveQueue.put(id, pendingTask);
 			}
 		}
+		if (activeQueue.isEmpty() && inactiveQueue.isEmpty()) {
+			return QueuedExecutorService.class.getSimpleName() + " is empty.";
+		}
+
+		StringBuilder sb = new StringBuilder();
 		sb.append(QueuedExecutorService.class.getSimpleName() + " showing all " + QueuedTask.class.getSimpleName());
 		sb.append(
 				"\nActive Tasks Queues (First task is submitted to delegate executor, succeeding tasks are waiting in local queue):\n");
