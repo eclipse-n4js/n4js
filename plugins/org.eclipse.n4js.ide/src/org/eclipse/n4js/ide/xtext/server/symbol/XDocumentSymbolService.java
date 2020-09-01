@@ -76,6 +76,7 @@ public class XDocumentSymbolService extends DocumentSymbolService {
 			return CollectionLiterals.newLinkedList();
 		}
 
+		// TODO GH-1881 avoid creating a context per IResourceDescription, instead caller should create a single context
 		AtomicReference<List<SymbolInformation>> refSymbols = new AtomicReference<>(CollectionLiterals.newLinkedList());
 		resourceAccess.readOnly(resourceDescription.getURI(), (resourceSet) -> {
 			List<SymbolInformation> symbols = refSymbols.get();
