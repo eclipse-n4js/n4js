@@ -424,11 +424,4 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 		}
 		return true;
 	}
-
-@Check
-def void checkTEMP(N4ClassDeclaration classDecl) {
-	if(classDecl.name == "THROW") {
-		throw new RuntimeException("found class with name THROW");
-	}
-}
 }
