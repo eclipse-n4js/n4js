@@ -124,7 +124,7 @@ import com.google.inject.Singleton;
 @SuppressWarnings({ "restriction", "deprecation" })
 @Singleton
 public class XLanguageServerImpl implements LanguageServer, WorkspaceService, TextDocumentService, LanguageClientAware,
-		Endpoint, JsonRpcMethodProvider, DebugService {
+		Endpoint, JsonRpcMethodProvider, DebugEndpointDefinition {
 
 	private static final Logger LOG = Logger.getLogger(XLanguageServerImpl.class);
 
@@ -692,11 +692,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	@Override
 	public CompletableFuture<Void> printDebugInfo() {
 		return debugService.printDebugInfo();
-	}
-
-	@Override
-	public String getDebugInfo() {
-		return debugService.getDebugInfo();
 	}
 
 	/**

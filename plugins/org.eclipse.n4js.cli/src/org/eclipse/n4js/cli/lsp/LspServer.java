@@ -23,7 +23,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.function.Function;
 
 import org.apache.log4j.Appender;
 import org.apache.log4j.AppenderSkeleton;
@@ -35,7 +34,6 @@ import org.apache.log4j.WriterAppender;
 import org.apache.log4j.spi.LoggingEvent;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.jsonrpc.Launcher.Builder;
-import org.eclipse.lsp4j.jsonrpc.MessageConsumer;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.n4js.cli.N4jscConsole;
 import org.eclipse.n4js.cli.N4jscFactory;
@@ -43,7 +41,6 @@ import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.ide.server.LspLogger;
 import org.eclipse.n4js.ide.server.util.DiagnosisLogger;
 import org.eclipse.n4js.ide.xtext.server.DebugService;
-import org.eclipse.n4js.ide.xtext.server.DebugService.AbstractTracingDebugService;
 import org.eclipse.n4js.ide.xtext.server.ExecuteCommandParamsTypeAdapter;
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
@@ -112,6 +109,8 @@ public class LspServer {
 	private void setupAndRun(ExecutorService threadPool, XLanguageServerImpl languageServer)
 			throws InterruptedException, ExecutionException, IOException {
 
+		DebugService debugService = languageServer.getDebugService();
+
 		Builder<LanguageClient> lsBuilder = new PatchedLauncherBuilder<LanguageClient>()
 				.setLocalService(languageServer)
 				.setRemoteInterface(LanguageClient.class)
@@ -119,15 +118,9 @@ public class LspServer {
 				.configureGson(gsonBuilder -> {
 					gsonBuilder.registerTypeAdapterFactory(new ExecuteCommandParamsTypeAdapter.Factory(languageServer));
 				})
+				.wrapMessages(debugService.getTracingMessageWrapper())
 		// .traceMessages(new PrintWriter(System.out))
 		;
-
-		DebugService debugService = languageServer.getDebugService();
-		if (debugService instanceof AbstractTracingDebugService) {
-			Function<MessageConsumer, MessageConsumer> msgWrapper = ((AbstractTracingDebugService) debugService)
-					.getTracingMessageWrapper();
-			lsBuilder = lsBuilder.wrapMessages(msgWrapper);
-		}
 
 		if (options.isStdio()) {
 			setupAndRunWithSystemIO(languageServer, lsBuilder);
@@ -239,6 +232,7 @@ public class LspServer {
 		return appender;
 	}
 
+	/** TEMPORARY functionality (see {@link DiagnosisLogger} for details). */
 	private static final class DiagnosisLoggerAppender extends AppenderSkeleton {
 
 		private final DiagnosisLogger delegate;

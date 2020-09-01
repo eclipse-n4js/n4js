@@ -18,6 +18,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CancellationException;
 
@@ -26,6 +27,7 @@ import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.n4js.ide.xtext.server.build.XClusteringStorageAwareResourceLoader.LoadResult;
+import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.diagnostics.Severity;
@@ -52,6 +54,7 @@ import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.Exceptions;
+import org.eclipse.xtext.xbase.lib.IteratorExtensions;
 
 import com.google.common.base.Throwables;
 import com.google.common.collect.Maps;
@@ -226,6 +229,12 @@ public class XStatefulIncrementalBuilder {
 		SerializableResourceDescription copiedDescription = SerializableResourceDescription.createCopy(description);
 		result.getNewIndex().addDescription(source, copiedDescription);
 		operationCanceledManager.checkCanceled(cancelIndicator);
+
+		if (IteratorExtensions.exists(resource.getContents().get(0).eAllContents(),
+				eobj -> eobj instanceof N4ClassDeclaration
+						&& Objects.equals("THROV", ((N4ClassDeclaration) eobj).getName()))) {
+			throw new RuntimeException("exception from within builder");
+		}
 
 		if (request.canValidate()) {
 			List<Issue> issues = resourceValidator.validate(resource, CheckMode.ALL, cancelIndicator);
