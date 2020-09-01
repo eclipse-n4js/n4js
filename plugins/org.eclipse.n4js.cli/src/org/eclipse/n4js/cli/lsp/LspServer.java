@@ -23,22 +23,32 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.function.Function;
 
 import org.apache.log4j.Appender;
+import org.apache.log4j.AppenderSkeleton;
+import org.apache.log4j.Layout;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.SimpleLayout;
 import org.apache.log4j.WriterAppender;
+import org.apache.log4j.spi.LoggingEvent;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.jsonrpc.Launcher.Builder;
+import org.eclipse.lsp4j.jsonrpc.MessageConsumer;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.n4js.cli.N4jscConsole;
 import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.ide.server.LspLogger;
+import org.eclipse.n4js.ide.server.util.DiagnosisLogger;
+import org.eclipse.n4js.ide.xtext.server.DebugService;
+import org.eclipse.n4js.ide.xtext.server.DebugService.AbstractTracingDebugService;
 import org.eclipse.n4js.ide.xtext.server.ExecuteCommandParamsTypeAdapter;
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 
+import com.google.common.base.Joiner;
 import com.google.common.util.concurrent.Futures;
 import com.google.inject.Injector;
 
@@ -110,8 +120,14 @@ public class LspServer {
 					gsonBuilder.registerTypeAdapterFactory(new ExecuteCommandParamsTypeAdapter.Factory(languageServer));
 				})
 		// .traceMessages(new PrintWriter(System.out))
-		// .wrapMessages(a -> a)
 		;
+
+		DebugService debugService = languageServer.getDebugService();
+		if (debugService instanceof AbstractTracingDebugService) {
+			Function<MessageConsumer, MessageConsumer> msgWrapper = ((AbstractTracingDebugService) debugService)
+					.getTracingMessageWrapper();
+			lsBuilder = lsBuilder.wrapMessages(msgWrapper);
+		}
 
 		if (options.isStdio()) {
 			setupAndRunWithSystemIO(languageServer, lsBuilder);
@@ -122,6 +138,8 @@ public class LspServer {
 
 	private void setupAndRunWithSocket(XLanguageServerImpl languageServer, Builder<LanguageClient> lsBuilder)
 			throws InterruptedException, ExecutionException, IOException {
+
+		Appender diagnosisLoggerAppender = copyLog4jErrorsToDiagnosisLogger(languageServer.getDiagnosisLogger());
 
 		InetSocketAddress address = new InetSocketAddress("localhost", options.getPort());
 
@@ -137,14 +155,19 @@ public class LspServer {
 				N4jscConsole.println("Connected to LSP client");
 				run(languageServer, lsBuilder, in, out);
 			}
+		} finally {
+			Logger.getRootLogger().removeAppender(diagnosisLoggerAppender);
 		}
 	}
 
 	private void setupAndRunWithSystemIO(XLanguageServerImpl languageServer, Builder<LanguageClient> lsBuilder) {
 		N4jscConsole.println(LSP_SYNC_MESSAGE + " on stdio ...");
 		N4jscConsole.setSuppress(true);
+
 		LspLogger lspLogger = languageServer.getLspLogger();
 		Appender lspLoggerAppender = redirectLog4jToLspLogger(lspLogger);
+		Appender diagnosisLoggerAppender = copyLog4jErrorsToDiagnosisLogger(languageServer.getDiagnosisLogger());
+
 		PrintStream oldStdOut = System.out;
 		PrintStream oldStdErr = System.err;
 		try (PrintStream loggingStream = new LoggingPrintStream(lspLogger)) {
@@ -154,6 +177,7 @@ public class LspServer {
 		} finally {
 			System.setErr(oldStdErr);
 			System.setOut(oldStdOut);
+			Logger.getRootLogger().removeAppender(diagnosisLoggerAppender);
 			Logger.getRootLogger().removeAppender(lspLoggerAppender);
 		}
 	}
@@ -207,5 +231,47 @@ public class LspServer {
 		});
 		Logger.getRootLogger().addAppender(appender);
 		return appender;
+	}
+
+	private Appender copyLog4jErrorsToDiagnosisLogger(DiagnosisLogger diagnosisLogger) {
+		Appender appender = new DiagnosisLoggerAppender(diagnosisLogger);
+		Logger.getRootLogger().addAppender(appender);
+		return appender;
+	}
+
+	private static final class DiagnosisLoggerAppender extends AppenderSkeleton {
+
+		private final DiagnosisLogger delegate;
+
+		public DiagnosisLoggerAppender(DiagnosisLogger delegate) {
+			this.delegate = delegate;
+			setThreshold(Level.ERROR);
+			setLayout(new SimpleLayout());
+		}
+
+		@Override
+		public boolean requiresLayout() {
+			return false;
+		}
+
+		@Override
+		protected void append(LoggingEvent event) {
+			if (!isAsSevereAsThreshold(event.getLevel())) {
+				return;
+			}
+			String msg = layout.format(event);
+			if (layout.ignoresThrowable()) {
+				String[] s = event.getThrowableStrRep();
+				if (s != null) {
+					msg += Joiner.on(Layout.LINE_SEP).join(s);
+				}
+			}
+			delegate.reportError(msg);
+		}
+
+		@Override
+		public void close() {
+			// ignore
+		}
 	}
 }

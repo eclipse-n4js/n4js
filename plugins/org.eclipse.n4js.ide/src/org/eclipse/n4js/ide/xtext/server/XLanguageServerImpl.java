@@ -83,6 +83,7 @@ import org.eclipse.lsp4j.services.TextDocumentService;
 import org.eclipse.lsp4j.services.WorkspaceService;
 import org.eclipse.n4js.ide.server.HeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.ide.server.LspLogger;
+import org.eclipse.n4js.ide.server.util.DiagnosisLogger;
 import org.eclipse.n4js.ide.xtext.server.issues.PublishingIssueAcceptor;
 import org.eclipse.xtext.ide.server.ICapabilitiesContributor;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
@@ -154,6 +155,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Inject
 	private LspLogger lspLogger;
+
+	@Inject
+	private DiagnosisLogger diagnosisLogger;
 
 	@Inject
 	private Provider<XtextResourceSet> resourceSetProvider;
@@ -690,6 +694,11 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		return debugService.printDebugInfo();
 	}
 
+	@Override
+	public String getDebugInfo() {
+		return debugService.getDebugInfo();
+	}
+
 	/**
 	 * @since 2.16
 	 */
@@ -748,10 +757,24 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	}
 
 	/**
+	 * Getter
+	 */
+	public DiagnosisLogger getDiagnosisLogger() {
+		return diagnosisLogger;
+	}
+
+	/**
 	 * Returns the front-end to this server instance.
 	 */
 	public LanguageServerFrontend getFrontend() {
 		return lsFrontend;
+	}
+
+	/**
+	 * Returns the debug service used by this server instance.
+	 */
+	public DebugService getDebugService() {
+		return debugService;
 	}
 
 	/** Blocks until all requests of the language server finished */
