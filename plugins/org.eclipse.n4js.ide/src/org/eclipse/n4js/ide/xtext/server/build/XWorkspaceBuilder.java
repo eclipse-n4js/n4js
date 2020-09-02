@@ -41,6 +41,7 @@ import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.IteratorExtensions;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
@@ -149,30 +150,20 @@ public class XWorkspaceBuilder {
 	}
 
 	/**
-	 * Perform a build on all projects
+	 * Run a full build on the entire workspace, i.e. build all projects.
 	 *
 	 * @param cancelIndicator
 	 *            cancellation support
-	 */
-	private IResourceDescription.Event doInitialBuild(CancelIndicator cancelIndicator) {
-		List<ProjectDescription> allProjects = workspaceManager.getProjectDescriptions();
-		return doInitialBuild(allProjects, cancelIndicator);
-	}
-
-	/**
-	 * Run a full build on the workspace
-	 *
 	 * @return the delta.
 	 */
-	private IResourceDescription.Event doInitialBuild(List<ProjectDescription> projects,
-			CancelIndicator indicator) {
-
+	private IResourceDescription.Event doInitialBuild(CancelIndicator cancelIndicator) {
 		lspLogger.log("Initial build ...");
 		Stopwatch stopwatch = Stopwatch.createStarted();
 
 		try {
+			List<ProjectDescription> allProjects = workspaceManager.getProjectDescriptions();
 			ProjectBuildOrderInfo projectBuildOrderInfo = projectBuildOrderInfoProvider.get();
-			ProjectBuildOrderIterator pboIterator = projectBuildOrderInfo.getIterator(projects);
+			ProjectBuildOrderIterator pboIterator = projectBuildOrderInfo.getIterator(allProjects);
 			logBuildOrder();
 
 			List<IResourceDescription.Delta> result = new ArrayList<>();
@@ -181,15 +172,19 @@ public class XWorkspaceBuilder {
 				ProjectDescription description = pboIterator.next();
 				String projectName = description.getName();
 				ProjectBuilder projectBuilder = workspaceManager.getProjectBuilder(projectName);
-				XBuildResult partialresult = projectBuilder.doInitialBuild(buildRequestFactory, indicator);
+				XBuildResult partialresult = projectBuilder.doInitialBuild(buildRequestFactory, cancelIndicator);
 				result.addAll(partialresult.getAffectedResources());
 			}
+
+			onBuildDone(true, Optional.absent());
 
 			stopwatch.stop();
 			lspLogger.log("... initial build done (" + stopwatch.toString() + ").");
 
 			return new ResourceDescriptionChangeEvent(result);
 		} catch (Throwable th) {
+			onBuildDone(true, Optional.of(th));
+
 			if (operationCanceledManager.isOperationCanceledException(th)) {
 				lspLogger.log("... initial build canceled.");
 				operationCanceledManager.propagateIfCancelException(th);
@@ -376,6 +371,8 @@ public class XWorkspaceBuilder {
 				pboIterator.visitAffected(newlyBuiltDeltas);
 			}
 
+			onBuildDone(false, Optional.absent());
+
 			deletedProjects.clear();
 
 			List<IResourceDescription.Delta> result = toBeConsideredDeltas;
@@ -385,10 +382,13 @@ public class XWorkspaceBuilder {
 
 			return new ResourceDescriptionChangeEvent(result);
 		} catch (Throwable th) {
+			onBuildDone(false, Optional.of(th));
+
 			if (operationCanceledManager.isOperationCanceledException(th)) {
 				lspLogger.log("... build canceled.");
 				operationCanceledManager.propagateIfCancelException(th);
 			}
+
 			// unknown exception or error (and not a cancellation case):
 			// recover and also discard the build queue - state is undefined afterwards.
 			this.dirtyFiles.clear();
@@ -458,6 +458,22 @@ public class XWorkspaceBuilder {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Invoked when a build ends.
+	 * <p>
+	 * If this method is invoked with 'throwable' being absent and it throws an exception or error, it will be invoked
+	 * again with the exception/error being passed in as 'throwable'.
+	 *
+	 * @param wasInitialBuild
+	 *            <code>true</code> if the build was an initial build, <code>false</code> if the build was an
+	 *            incremental build.
+	 * @param throwable
+	 *            absent if the build completed normally, present if the build ended early due to an exception.
+	 */
+	protected void onBuildDone(boolean wasInitialBuild, Optional<Throwable> throwable) {
+		workspaceManager.clearResourceSets();
 	}
 
 	/** Prints build order */

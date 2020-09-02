@@ -166,7 +166,10 @@ public class ProjectBuilder {
 		return result;
 	}
 
-	private void clearResourceSet() {
+	/**
+	 * Clear all resources and their contents from this project builder's resource set.
+	 */
+	public void clearResourceSet() {
 		boolean wasDeliver = resourceSet.eDeliver();
 		try {
 			resourceSet.eSetDeliver(false);
