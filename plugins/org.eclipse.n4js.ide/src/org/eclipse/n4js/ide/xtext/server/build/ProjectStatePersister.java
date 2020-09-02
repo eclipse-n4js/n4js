@@ -55,6 +55,7 @@ import org.eclipse.xtext.util.Tuples;
 import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
@@ -98,6 +99,20 @@ public class ProjectStatePersister {
 
 	@Inject
 	private QueuedExecutorService queuedExecutorService;
+
+	@Inject
+	private URITransformer uriTransformer;
+
+	/** Standard constructor */
+	public ProjectStatePersister() {
+		// empty
+	}
+
+	/** Constructor for manual setup and testing */
+	public ProjectStatePersister(QueuedExecutorService queuedExecutorService, URITransformer uriTransformer) {
+		this.queuedExecutorService = queuedExecutorService;
+		this.uriTransformer = uriTransformer;
+	}
 
 	/** @return the simple name of the file with the project state. */
 	public String getPersistedFileName() {
@@ -189,7 +204,7 @@ public class ProjectStatePersister {
 		// description.writeExternal(output);
 		// relies on writeObject which is very slow
 
-		output.writeUTF(makeRelative(baseURI, description.getURI()));
+		output.writeUTF(uriTransformer.serialize(baseURI, description.getURI()));
 		writeEObjectDescriptions(description, baseURI, output);
 		writeReferenceDescriptions(description, baseURI, output);
 		writeImportedNames(description, output);
@@ -211,10 +226,10 @@ public class ProjectStatePersister {
 		List<SerializableReferenceDescription> references = resourceDescription.getReferences();
 		output.writeInt(references.size());
 		for (SerializableReferenceDescription reference : references) {
-			output.writeUTF(makeRelative(baseURI, reference.getSourceEObjectUri()));
-			output.writeUTF(makeRelative(baseURI, reference.getTargetEObjectUri()));
-			output.writeUTF(makeRelative(baseURI, reference.getContainerEObjectURI()));
-			output.writeUTF(makeRelative(baseURI, EcoreUtil.getURI(reference.getEReference())));
+			output.writeUTF(uriTransformer.serialize(baseURI, reference.getSourceEObjectUri()));
+			output.writeUTF(uriTransformer.serialize(baseURI, reference.getTargetEObjectUri()));
+			output.writeUTF(uriTransformer.serialize(baseURI, reference.getContainerEObjectURI()));
+			output.writeUTF(uriTransformer.serialize(baseURI, EcoreUtil.getURI(reference.getEReference())));
 			output.writeInt(reference.getIndexInList());
 		}
 	}
@@ -225,8 +240,8 @@ public class ProjectStatePersister {
 		List<SerializableEObjectDescription> objects = resourceDescription.getDescriptions();
 		output.writeInt(objects.size());
 		for (SerializableEObjectDescription object : objects) {
-			output.writeUTF(makeRelative(baseURI, object.getEObjectURI()));
-			output.writeUTF(makeRelative(baseURI, EcoreUtil.getURI(object.getEClass())));
+			output.writeUTF(uriTransformer.serialize(baseURI, object.getEObjectURI()));
+			output.writeUTF(uriTransformer.serialize(baseURI, EcoreUtil.getURI(object.getEClass())));
 			QualifiedName qn = object.getQualifiedName();
 			writeQualifiedName(qn, output);
 			Map<String, String> userData = object.getUserData();
@@ -277,7 +292,7 @@ public class ProjectStatePersister {
 		for (URI source : allSources) {
 			Collection<? extends LSPIssue> issues = state.getValidationIssues().get(source);
 
-			output.writeUTF(makeRelative(baseURI, source));
+			output.writeUTF(uriTransformer.serialize(baseURI, source));
 
 			int numberIssues = issues.size();
 			output.writeInt(numberIssues);
@@ -360,7 +375,7 @@ public class ProjectStatePersister {
 	}
 
 	private ENamedElement readEcoreElement(URI baseURI, DataInput input) throws IOException {
-		URI uri = makeAbsolute(baseURI, input.readUTF());
+		URI uri = uriTransformer.deserialize(baseURI, input.readUTF());
 		EPackage ePackage = EPackage.Registry.INSTANCE.getEPackage(uri.trimFragment().toString());
 		if (ePackage != null) {
 			Resource resource = ePackage.eResource();
@@ -371,7 +386,7 @@ public class ProjectStatePersister {
 
 	private SerializableResourceDescription readResourceDescription(URI baseURI, DataInput input) throws IOException {
 		SerializableResourceDescription result = new SerializableResourceDescription();
-		result.setURI(makeAbsolute(baseURI, input.readUTF()));
+		result.setURI(uriTransformer.deserialize(baseURI, input.readUTF()));
 		result.setDescriptions(readEObjectDescriptions(baseURI, input));
 		result.setReferences(readReferenceDescriptions(baseURI, input));
 		result.setImportedNames(readImportedNames(input));
@@ -402,9 +417,9 @@ public class ProjectStatePersister {
 		while (size > 0) {
 			size--;
 			SerializableReferenceDescription reference = new SerializableReferenceDescription();
-			reference.setSourceEObjectUri(makeAbsolute(baseURI, input.readUTF()));
-			reference.setTargetEObjectUri(makeAbsolute(baseURI, input.readUTF()));
-			reference.setContainerEObjectURI(makeAbsolute(baseURI, input.readUTF()));
+			reference.setSourceEObjectUri(uriTransformer.deserialize(baseURI, input.readUTF()));
+			reference.setTargetEObjectUri(uriTransformer.deserialize(baseURI, input.readUTF()));
+			reference.setContainerEObjectURI(uriTransformer.deserialize(baseURI, input.readUTF()));
 			reference.setEReference((EReference) readEcoreElement(baseURI, input));
 			reference.setIndexInList(input.readInt() - 1);
 			result.add(reference);
@@ -423,7 +438,7 @@ public class ProjectStatePersister {
 		while (size > 0) {
 			size--;
 			SerializableEObjectDescription object = new SerializableEObjectDescription();
-			object.setEObjectURI(makeAbsolute(baseURI, input.readUTF()));
+			object.setEObjectURI(uriTransformer.deserialize(baseURI, input.readUTF()));
 			object.setEClass((EClass) readEcoreElement(baseURI, input));
 			object.setQualifiedName(readQualifiedName(input));
 			int userDataSize = input.readInt();
@@ -479,7 +494,7 @@ public class ProjectStatePersister {
 		ImmutableListMultimap.Builder<URI, LSPIssue> validationIssues = ImmutableListMultimap.builder();
 		while (numberOfSources > 0) {
 			numberOfSources--;
-			URI source = makeAbsolute(baseURI, input.readUTF());
+			URI source = uriTransformer.deserialize(baseURI, input.readUTF());
 			int numberOfIssues = input.readInt();
 			while (numberOfIssues > 0) {
 				numberOfIssues--;
@@ -497,23 +512,6 @@ public class ProjectStatePersister {
 		return file;
 	}
 
-	private String makeRelative(URI baseURI, URI absoluteURI) {
-		if (absoluteURI.isFile()) {
-			URI relativeURI = absoluteURI.deresolve(baseURI);
-			return relativeURI.toString();
-		}
-		return absoluteURI.toString();
-	}
-
-	private URI makeAbsolute(URI baseURI, String relativeString) {
-		if (relativeString.contains(":/")) {
-			return URI.createURI(relativeString);
-		}
-		URI relativeURI = URI.createFileURI(relativeString);
-		URI absoluteURI = relativeURI.resolve(baseURI);
-		return new FileURI(absoluteURI).toURI();
-	}
-
 	/** @return the file URI of the persisted index */
 	public URI getFileName(IProjectConfig project) {
 		String fileName = getPersistedFileName();
@@ -525,4 +523,76 @@ public class ProjectStatePersister {
 	private URI getBaseURI(IProjectConfig project) {
 		return project.getPath();
 	}
+
+	/** Helper class to serialize and deserizalize URIs */
+	static public class URITransformer {
+		enum URIPrefix {
+			/** Unknown prefix. Used only in the {@link #parsePrefix(String)} */
+			Unknown(null),
+			/** URI that was relativized */
+			Relative("R!"),
+			/** URI that was not changed */
+			Absolute("A!");
+
+			String id;
+
+			URIPrefix(String id) {
+				if (id != null) {
+					Preconditions.checkArgument(id.length() == 2);
+					Preconditions.checkArgument(id.charAt(1) == '!');
+				}
+				this.id = id;
+			}
+
+			@Override
+			public String toString() {
+				return this.id;
+			}
+		}
+
+		/** @return a string to be written to the project state file from a given absolute uri and base directory */
+		String serialize(URI baseURI, URI absoluteURI) {
+			if (absoluteURI.isFile() && !absoluteURI.isRelative()) {
+				URI relativeURI = absoluteURI.deresolve(baseURI);
+				return URIPrefix.Relative + relativeURI.toString();
+			}
+			return URIPrefix.Absolute + absoluteURI.toString();
+		}
+
+		/** @return a {@link URI} parsed from inside a project state file */
+		URI deserialize(URI baseURI, String relativeString) {
+			URIPrefix prefix = parsePrefix(relativeString);
+			URI parsedURI = parseURI(relativeString);
+			switch (prefix) {
+			case Absolute:
+				return parsedURI;
+			case Relative:
+				URI absoluteURI = parsedURI.resolve(baseURI);
+				return new FileURI(absoluteURI).toURI();
+			default:
+				return parsedURI;
+			}
+		}
+
+		/** @return the parsed prefix or {@link URIPrefix#Unknown} otherwise */
+		URIPrefix parsePrefix(String str) {
+			String prefixStr = str.substring(0, 2);
+			for (URIPrefix prefix : URIPrefix.values()) {
+				if (prefix != URIPrefix.Unknown) {
+					if (prefix.id.equals(prefixStr)) {
+						return prefix;
+					}
+				}
+			}
+			return URIPrefix.Unknown;
+		}
+
+		/** @return the URI */
+		URI parseURI(String str) {
+			String uriStr = str.substring(2);
+			URI parsedURI = URI.createURI(uriStr);
+			return parsedURI;
+		}
+	}
+
 }

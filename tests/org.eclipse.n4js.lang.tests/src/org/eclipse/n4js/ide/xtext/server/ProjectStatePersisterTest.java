@@ -26,6 +26,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ide.xtext.server.build.HashedFileContent;
 import org.eclipse.n4js.ide.xtext.server.build.ImmutableProjectState;
 import org.eclipse.n4js.ide.xtext.server.build.ProjectStatePersister;
+import org.eclipse.n4js.ide.xtext.server.build.ProjectStatePersister.URITransformer;
 import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.xtext.server.LSPIssue;
@@ -34,6 +35,7 @@ import org.eclipse.xtext.builder.builderState.impl.EObjectDescriptionImpl;
 import org.eclipse.xtext.builder.builderState.impl.ResourceDescriptionImpl;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.naming.QualifiedName;
+import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.resource.persistence.SerializableResourceDescription;
@@ -69,7 +71,7 @@ public class ProjectStatePersisterTest {
 	/** */
 	@Test
 	public void testWriteAndReadNoData() throws IOException, ClassNotFoundException {
-		ProjectStatePersister testMe = new ProjectStatePersister();
+		ProjectStatePersister testMe = new ProjectStatePersister(null, new URITransformer());
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		ImmutableProjectState state = createProjectState();
 		testMe.writeProjectState(BASE_URI, output, state);
@@ -86,7 +88,7 @@ public class ProjectStatePersisterTest {
 	/** */
 	@Test(expected = ZipException.class)
 	public void testWriteAndReadCorruptedStream() throws IOException, ClassNotFoundException {
-		ProjectStatePersister testMe = new ProjectStatePersister();
+		ProjectStatePersister testMe = new ProjectStatePersister(null, new URITransformer());
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		ImmutableProjectState state = createProjectState();
 		testMe.writeProjectState(BASE_URI, output, state);
@@ -98,7 +100,7 @@ public class ProjectStatePersisterTest {
 	/** */
 	@Test
 	public void testWriteAndReadFileVersionMismatch() throws IOException, ClassNotFoundException {
-		ProjectStatePersister testMe = new ProjectStatePersister();
+		ProjectStatePersister testMe = new ProjectStatePersister(null, new URITransformer());
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		ImmutableProjectState state = createProjectState();
 		testMe.writeProjectState(BASE_URI, output, state);
@@ -112,7 +114,7 @@ public class ProjectStatePersisterTest {
 	@Test
 	public void testWriteAndReadLangVersionMismatch() throws IOException, ClassNotFoundException {
 		AtomicReference<String> languageVersion = new AtomicReference<>("1");
-		ProjectStatePersister testMe = new ProjectStatePersister() {
+		ProjectStatePersister testMe = new ProjectStatePersister(null, new URITransformer()) {
 			@Override
 			public String getLanguageVersion() {
 				return languageVersion.get();
@@ -128,11 +130,26 @@ public class ProjectStatePersisterTest {
 	}
 
 	/**
-	 * A little bit of a flawed test since we modify the internals of the ImmutableProjectState behind its back.
+	 * calls Test {@link #writeAndReadWithDataForFileScheme(String)} with scheme {@code other}
 	 */
 	@Test
-	public void testWriteAndReadWithData() throws IOException, ClassNotFoundException {
-		ProjectStatePersister testMe = new ProjectStatePersister();
+	public void testWriteAndReadWithDataForOtherScheme() throws IOException, ClassNotFoundException {
+		writeAndReadWithDataForFileScheme("other:/");
+	}
+
+	/**
+	 * calls Test {@link #writeAndReadWithDataForFileScheme(String)} with scheme {@code file}
+	 */
+	@Test
+	public void testWriteAndReadWithDataForFileScheme() throws IOException, ClassNotFoundException {
+		writeAndReadWithDataForFileScheme("file://");
+	}
+
+	/**
+	 * A little bit of a flawed test since we modify the internals of the ImmutableProjectState behind its back.
+	 */
+	private void writeAndReadWithDataForFileScheme(String scheme) throws IOException, ClassNotFoundException {
+		ProjectStatePersister testMe = new ProjectStatePersister(null, new URITransformer());
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 
 		ImmutableProjectState state = createProjectState();
@@ -140,19 +157,19 @@ public class ProjectStatePersisterTest {
 		XSource2GeneratedMapping fileMappings = state.getFileMappings();
 		ResourceDescriptionImpl resourceDescription = (ResourceDescriptionImpl) BuilderStateFactory.eINSTANCE
 				.createResourceDescription();
-		resourceDescription.setURI(URI.createURI("some:/uri"));
+		resourceDescription.setURI(URI.createURI(scheme + "uri"));
+		URI uri = resourceDescription.getURI();
 		EObjectDescriptionImpl objectDescription = (EObjectDescriptionImpl) BuilderStateFactory.eINSTANCE
 				.createEObjectDescription();
 		objectDescription.setName(QualifiedName.create("some", "name"));
-		objectDescription.setFragment("some/object");
+		objectDescription.setFragment("some/object#/1");
 		objectDescription.setEClass(objectDescription.eClass());
 		resourceDescription.getExportedObjects().add(objectDescription);
-		index.addDescription(resourceDescription.getURI(),
-				SerializableResourceDescription.createCopy(resourceDescription));
-		URI sourceURI = URI.createURI("some:/source");
-		URI targetURI = URI.createURI("some:/target");
+		index.addDescription(uri, SerializableResourceDescription.createCopy(resourceDescription));
+		URI sourceURI = URI.createURI(scheme + "source");
+		URI targetURI = URI.createURI(scheme + "target");
 		fileMappings.addSource2Generated(sourceURI, targetURI, "outputty");
-		URI hashUri = URI.createURI("some:/hash");
+		URI hashUri = URI.createURI(scheme + "hash");
 		Map<URI, HashedFileContent> fingerprints = Collections.singletonMap(hashUri,
 				new HashedFileContent(hashUri, 123));
 
@@ -167,15 +184,21 @@ public class ProjectStatePersisterTest {
 		Assert.assertEquals(targetURI, targets.get(0));
 		Assert.assertEquals("outputty", pState.getFileMappings().getOutputConfigName(targetURI));
 
-		Set<URI> allIndexedUris = ((ResourceDescriptionsData) pState.getResourceDescriptions()).getAllURIs();
-		Assert.assertEquals(1, allIndexedUris.size());
-		Assert.assertTrue(allIndexedUris.contains(resourceDescription.getURI()));
+		ResourceDescriptionsData resourceDescriptions2 = (ResourceDescriptionsData) pState.getResourceDescriptions();
+		Set<URI> allIndexedUris2 = resourceDescriptions2.getAllURIs();
+		IResourceDescription resourceDescription2 = resourceDescriptions2.getResourceDescription(uri);
+		IEObjectDescription expObjDescr2 = resourceDescription2.getExportedObjects().iterator().next();
+
+		Assert.assertEquals(1, allIndexedUris2.size());
+		Assert.assertTrue(allIndexedUris2.contains(uri));
+		IEObjectDescription expObjDescr = resourceDescription.getExportedObjects().iterator().next();
+		Assert.assertEquals(expObjDescr.getEObjectURI(), expObjDescr2.getEObjectURI());
 	}
 
 	/** */
 	@Test
 	public void testWriteAndReadValidationIssues() throws IOException, ClassNotFoundException {
-		ProjectStatePersister testMe = new ProjectStatePersister();
+		ProjectStatePersister testMe = new ProjectStatePersister(null, new URITransformer());
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 
 		URI source1 = URI.createURI("some:/source1");
