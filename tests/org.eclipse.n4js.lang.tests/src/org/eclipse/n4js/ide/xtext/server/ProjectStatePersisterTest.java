@@ -26,6 +26,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ide.xtext.server.build.HashedFileContent;
 import org.eclipse.n4js.ide.xtext.server.build.ImmutableProjectState;
 import org.eclipse.n4js.ide.xtext.server.build.ProjectStatePersister;
+import org.eclipse.n4js.ide.xtext.server.build.ProjectStatePersister.URITransformer;
 import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.xtext.server.LSPIssue;
@@ -70,7 +71,7 @@ public class ProjectStatePersisterTest {
 	/** */
 	@Test
 	public void testWriteAndReadNoData() throws IOException, ClassNotFoundException {
-		ProjectStatePersister testMe = new ProjectStatePersister();
+		ProjectStatePersister testMe = new ProjectStatePersister(null, new URITransformer());
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		ImmutableProjectState state = createProjectState();
 		testMe.writeProjectState(BASE_URI, output, state);
@@ -87,7 +88,7 @@ public class ProjectStatePersisterTest {
 	/** */
 	@Test(expected = ZipException.class)
 	public void testWriteAndReadCorruptedStream() throws IOException, ClassNotFoundException {
-		ProjectStatePersister testMe = new ProjectStatePersister();
+		ProjectStatePersister testMe = new ProjectStatePersister(null, new URITransformer());
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		ImmutableProjectState state = createProjectState();
 		testMe.writeProjectState(BASE_URI, output, state);
@@ -99,7 +100,7 @@ public class ProjectStatePersisterTest {
 	/** */
 	@Test
 	public void testWriteAndReadFileVersionMismatch() throws IOException, ClassNotFoundException {
-		ProjectStatePersister testMe = new ProjectStatePersister();
+		ProjectStatePersister testMe = new ProjectStatePersister(null, new URITransformer());
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		ImmutableProjectState state = createProjectState();
 		testMe.writeProjectState(BASE_URI, output, state);
@@ -113,7 +114,7 @@ public class ProjectStatePersisterTest {
 	@Test
 	public void testWriteAndReadLangVersionMismatch() throws IOException, ClassNotFoundException {
 		AtomicReference<String> languageVersion = new AtomicReference<>("1");
-		ProjectStatePersister testMe = new ProjectStatePersister() {
+		ProjectStatePersister testMe = new ProjectStatePersister(null, new URITransformer()) {
 			@Override
 			public String getLanguageVersion() {
 				return languageVersion.get();
@@ -148,7 +149,7 @@ public class ProjectStatePersisterTest {
 	 * A little bit of a flawed test since we modify the internals of the ImmutableProjectState behind its back.
 	 */
 	private void writeAndReadWithDataForFileScheme(String scheme) throws IOException, ClassNotFoundException {
-		ProjectStatePersister testMe = new ProjectStatePersister();
+		ProjectStatePersister testMe = new ProjectStatePersister(null, new URITransformer());
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 
 		ImmutableProjectState state = createProjectState();
@@ -197,7 +198,7 @@ public class ProjectStatePersisterTest {
 	/** */
 	@Test
 	public void testWriteAndReadValidationIssues() throws IOException, ClassNotFoundException {
-		ProjectStatePersister testMe = new ProjectStatePersister();
+		ProjectStatePersister testMe = new ProjectStatePersister(null, new URITransformer());
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 
 		URI source1 = URI.createURI("some:/source1");
