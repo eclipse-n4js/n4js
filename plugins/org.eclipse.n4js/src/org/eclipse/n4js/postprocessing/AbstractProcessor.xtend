@@ -13,6 +13,7 @@ package org.eclipse.n4js.postprocessing
 import com.google.common.base.Throwables
 import com.google.inject.Inject
 import java.util.function.BooleanSupplier
+import org.apache.log4j.Logger
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.IdentifierRef
@@ -41,6 +42,8 @@ import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
  * details on processors and post-processing of {@link N4JSResource}s.
  */
 package abstract class AbstractProcessor {
+
+	val private static Logger LOG = Logger.getLogger(AbstractProcessor);
 
 	val private static DEBUG_LOG = false;
 	val private static DEBUG_LOG_RESULT = false;
@@ -207,11 +210,13 @@ package abstract class AbstractProcessor {
 		System.out.flush();
 		System.err.println(msg);
 		System.err.flush();
+		LOG.error(msg);
 	}
 
 	def protected static Throwable logException(Throwable th) {
 		// always log exceptions, even if !isDEBUG_LOG()
 		th.printStackTrace // enforce dumping all exceptions to stderr
+		LOG.error("exception in " + AbstractProcessor.simpleName, th);
 		return th;
 	}
 
