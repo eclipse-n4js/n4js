@@ -509,7 +509,7 @@ public class ProjectStatePersister {
 		if (relativeString.contains(":/")) {
 			return URI.createURI(relativeString);
 		}
-		URI relativeURI = URI.createFileURI(relativeString);
+		URI relativeURI = URI.createURI(relativeString);
 		URI absoluteURI = relativeURI.resolve(baseURI);
 		return new FileURI(absoluteURI).toURI();
 	}
