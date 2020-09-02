@@ -235,6 +235,17 @@ public class XWorkspaceManager {
 		return projectName2ProjectBuilder.get(projectName);
 	}
 
+	/**
+	 * Clears the resource set of all project builders.
+	 *
+	 * @see ProjectBuilder#clearResourceSet()
+	 */
+	public void clearResourceSets() {
+		for (ProjectBuilder pb : projectName2ProjectBuilder.values()) {
+			pb.clearResourceSet();
+		}
+	}
+
 	/** @return all project descriptions. */
 	public List<ProjectDescription> getProjectDescriptions() {
 		List<ProjectDescription> newProjects = new ArrayList<>();
