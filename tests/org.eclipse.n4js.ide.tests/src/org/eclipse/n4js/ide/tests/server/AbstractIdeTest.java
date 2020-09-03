@@ -86,6 +86,7 @@ import org.eclipse.n4js.ide.xtext.server.build.BuilderFrontend;
 import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIndex;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.xtext.LanguageInfo;
 import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -96,6 +97,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 
 import com.google.common.base.Joiner;
@@ -172,6 +174,15 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		OpenFileInfo(String content) {
 			this.version = 1;
 			this.content = content;
+		}
+	}
+
+	/** Deletes the test data folder if it exists (to ensure tests are not affected by old test data). */
+	@Before
+	public void cleanupTestDataFolder() {
+		File root = testWorkspaceManager.getRoot();
+		if (root.exists()) {
+			FileUtils.deleteFileOrFolder(root);
 		}
 	}
 
