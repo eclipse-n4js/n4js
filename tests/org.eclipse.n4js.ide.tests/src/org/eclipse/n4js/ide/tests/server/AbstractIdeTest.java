@@ -183,6 +183,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 			assertNoErrorsInOutput();
 		} finally {
 			shutdownLspServer();
+			SYSTEM_OUT_REDIRECTER.clearSystemOut();
+			SYSTEM_OUT_REDIRECTER.clearSystemErr();
 			// clear the state related to the test
 			testWorkspaceManager.deleteTestFromDiskIfCreated();
 		}

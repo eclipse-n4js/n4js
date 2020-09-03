@@ -56,6 +56,16 @@ public class SystemOutRedirecter {
 		System.err.close();
 		System.setOut(oldSystemOut);
 		System.setErr(oldSystemErr);
+		redirectOut = null;
+		redirectErr = null;
+	}
+
+	/** Clear output from {@link System#out} that was recorded so far. */
+	public void clearSystemOut() {
+		ByteArrayOutputStream baos = redirectOut;
+		if (baos != null) {
+			baos.reset();
+		}
 	}
 
 	/** @return console output */
@@ -67,6 +77,14 @@ public class SystemOutRedirecter {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 			return "";
+		}
+	}
+
+	/** Clear output from {@link System#err} that was recorded so far. */
+	public void clearSystemErr() {
+		ByteArrayOutputStream baos = redirectErr;
+		if (baos != null) {
+			baos.reset();
 		}
 	}
 
