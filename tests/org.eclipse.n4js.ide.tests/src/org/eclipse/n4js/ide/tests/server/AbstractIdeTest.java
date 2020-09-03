@@ -178,11 +178,14 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	/** Deletes the test project in case it exists. */
 	@After
 	final public void deleteTestProject() {
-		assertNoErrorsInLog();
-		assertNoErrorsInOutput();
-		shutdownLspServer();
-		// clear the state related to the test
-		testWorkspaceManager.deleteTestFromDiskIfCreated();
+		try {
+			assertNoErrorsInLog();
+			assertNoErrorsInOutput();
+		} finally {
+			shutdownLspServer();
+			// clear the state related to the test
+			testWorkspaceManager.deleteTestFromDiskIfCreated();
+		}
 	}
 
 	/** @return the workspace root folder as a {@link File}. */
