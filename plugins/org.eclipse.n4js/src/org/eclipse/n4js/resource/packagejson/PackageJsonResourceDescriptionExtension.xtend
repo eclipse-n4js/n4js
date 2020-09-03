@@ -222,7 +222,9 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 		}
 		val description = projectDescriptionLoader.loadProjectDescriptionAtLocation(projectLocation, document);
 		if(description === null) {
-			LOGGER.error("creation of EObjectDescriptions failed: cannot load project description at location: " + projectLocation);
+			// this can happen when package.json files are opened that do not belong to a valid N4JS or PLAINJS project
+			// (maybe during manual creation of a new project); therefore we cannot log an error here:
+			// LOGGER.error("creation of EObjectDescriptions failed: cannot load project description at location: " + projectLocation);
 			return;
 		}
 		val userData = createProjectDescriptionUserData(description);
