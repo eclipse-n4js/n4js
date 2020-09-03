@@ -927,8 +927,12 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	/** Asserts that there are no ERRORs in the output streams. */
 	static protected void assertNoErrorsInOutput() {
-		assertFalse(SYSTEM_OUT_REDIRECTER.getSystemErr().contains("ERROR"));
-		assertFalse(SYSTEM_OUT_REDIRECTER.getSystemOut().contains("ERROR"));
+		String syserr = SYSTEM_OUT_REDIRECTER.getSystemErr();
+		assertFalse("an error was logged to System.err during the test:" + System.lineSeparator() + syserr,
+				syserr.contains("ERROR"));
+		String sysout = SYSTEM_OUT_REDIRECTER.getSystemOut();
+		assertFalse("an error was logged to System.out during the test:" + System.lineSeparator() + sysout,
+				sysout.contains("ERROR"));
 	}
 
 	/**
