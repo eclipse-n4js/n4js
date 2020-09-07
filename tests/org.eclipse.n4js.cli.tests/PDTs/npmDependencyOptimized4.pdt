@@ -1,0 +1,18 @@
+# Project Discovery Test
+# working dir marked with '*'
+
+# The optimization applies only to projects in the node_modules folder,
+# not to projects in the workspace. Therefore, D2 is included.
+
+FOLDERS
+-*PY [PROJECT workspaces=["packages/*"]]
+-- packages
+--- P1 [PROJECT dependencies={"D1":"*"}]
+--- D1 [PROJECT plainJS]
+--- D2 [PROJECT plainJS]
+
+EXPECT
+- PY
+- PY/packages/P1
+- PY/packages/D1
+- PY/packages/D2
