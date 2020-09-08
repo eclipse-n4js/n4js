@@ -22,6 +22,10 @@ import com.google.common.collect.ImmutableSet;
 @SuppressWarnings("restriction")
 public interface XIProjectConfig extends IProjectConfig {
 
+	// overridden to avoid "restriction" warnings in client code
+	@Override
+	String getName();
+
 	@Override
 	Set<? extends XISourceFolder> getSourceFolders();
 

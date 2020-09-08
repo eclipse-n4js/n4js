@@ -16,6 +16,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -45,7 +46,6 @@ import com.google.common.base.Optional;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
-import com.google.common.collect.Sets.SetView;
 import com.google.inject.Inject;
 
 /**
@@ -161,7 +161,7 @@ public class XWorkspaceBuilder {
 		Stopwatch stopwatch = Stopwatch.createStarted();
 
 		try {
-			List<ProjectDescription> allProjects = workspaceManager.getProjectDescriptions();
+			Collection<? extends XIProjectConfig> allProjects = workspaceManager.getProjectConfigs();
 			ProjectBuildOrderInfo projectBuildOrderInfo = projectBuildOrderInfoProvider.get();
 			ProjectBuildOrderIterator pboIterator = projectBuildOrderInfo.getIterator(allProjects);
 			logBuildOrder();
@@ -169,8 +169,8 @@ public class XWorkspaceBuilder {
 			List<IResourceDescription.Delta> result = new ArrayList<>();
 
 			while (pboIterator.hasNext()) {
-				ProjectDescription description = pboIterator.next();
-				String projectName = description.getName();
+				XIProjectConfig projectConfig = pboIterator.next();
+				String projectName = projectConfig.getName();
 				ProjectBuilder projectBuilder = workspaceManager.getProjectBuilder(projectName);
 				XBuildResult partialresult = projectBuilder.doInitialBuild(buildRequestFactory, cancelIndicator);
 				result.addAll(partialresult.getAffectedResources());
@@ -229,7 +229,7 @@ public class XWorkspaceBuilder {
 
 			@Override
 			public Collection<String> getDependencyIDs() {
-				return projectManager.getProjectDescription().getDependencies();
+				return projectManager.getProjectConfig().getDependencies();
 			}
 		}
 
@@ -330,12 +330,15 @@ public class XWorkspaceBuilder {
 			Set<URI> dirtyFilesToBuild = new LinkedHashSet<>(this.dirtyFiles);
 			Set<URI> deletedFilesToBuild = new LinkedHashSet<>(this.deletedFiles);
 
-			Map<ProjectDescription, Set<URI>> project2dirty = computeProjectToUriMap(dirtyFilesToBuild);
-			Map<ProjectDescription, Set<URI>> project2deleted = computeProjectToUriMap(deletedFilesToBuild);
-			SetView<ProjectDescription> changedPDs = Sets.union(project2dirty.keySet(), project2deleted.keySet());
+			Map<String, Set<URI>> project2dirty = computeProjectToUriMap(dirtyFilesToBuild);
+			Map<String, Set<URI>> project2deleted = computeProjectToUriMap(deletedFilesToBuild);
+			Set<String> changedProjects = Sets.union(project2dirty.keySet(), project2deleted.keySet());
+			List<XIProjectConfig> changedPCs = changedProjects.stream()
+					.map(workspaceManager::getProjectBuilder)
+					.map(ProjectBuilder::getProjectConfig).collect(Collectors.toList());
 
 			ProjectBuildOrderInfo projectBuildOrderInfo = projectBuildOrderInfoProvider.get();
-			ProjectBuildOrderIterator pboIterator = projectBuildOrderInfo.getIterator(changedPDs);
+			ProjectBuildOrderIterator pboIterator = projectBuildOrderInfo.getIterator(changedPCs);
 
 			for (String deletedProjectName : deletedProjects) {
 				pboIterator.visitAffected(deletedProjectName);
@@ -343,10 +346,11 @@ public class XWorkspaceBuilder {
 
 			while (pboIterator.hasNext()) {
 
-				ProjectDescription descr = pboIterator.next();
-				ProjectBuilder projectBuilder = workspaceManager.getProjectBuilder(descr.getName());
-				Set<URI> projectDirty = project2dirty.getOrDefault(descr, Collections.emptySet());
-				Set<URI> projectDeleted = project2deleted.getOrDefault(descr, Collections.emptySet());
+				XIProjectConfig projectConfig = pboIterator.next();
+				String projectName = projectConfig.getName();
+				ProjectBuilder projectBuilder = workspaceManager.getProjectBuilder(projectName);
+				Set<URI> projectDirty = project2dirty.getOrDefault(projectName, Collections.emptySet());
+				Set<URI> projectDeleted = project2deleted.getOrDefault(projectName, Collections.emptySet());
 
 				XBuildResult projectResult;
 				AffectedResourcesRecordingFactory recordingFactory = new AffectedResourcesRecordingFactory(
@@ -406,18 +410,18 @@ public class XWorkspaceBuilder {
 		files.addAll(toAdd);
 	}
 
-	private Map<ProjectDescription, Set<URI>> computeProjectToUriMap(Collection<URI> uris) {
-		Map<ProjectDescription, Set<URI>> project2uris = new HashMap<>();
+	private Map<String, Set<URI>> computeProjectToUriMap(Collection<URI> uris) {
+		Map<String, Set<URI>> project2uris = new HashMap<>();
 		for (URI uri : uris) {
 			ProjectBuilder projectManager = workspaceManager.getProjectBuilder(uri);
 			if (projectManager == null) {
 				continue; // happens when editing a package.json file in a newly created project
 			}
-			ProjectDescription projectDescription = projectManager.getProjectDescription();
-			if (!project2uris.containsKey(projectDescription)) {
-				project2uris.put(projectDescription, new HashSet<>());
+			String projectName = projectManager.getName();
+			if (!project2uris.containsKey(projectName)) {
+				project2uris.put(projectName, new HashSet<>());
 			}
-			project2uris.get(projectDescription).add(uri);
+			project2uris.get(projectName).add(uri);
 		}
 		return project2uris;
 	}
@@ -482,7 +486,7 @@ public class XWorkspaceBuilder {
 			ProjectBuildOrderInfo projectBuildOrderInfo = projectBuildOrderInfoProvider.get();
 			ProjectBuildOrderIterator visitAll = projectBuildOrderInfo.getIterator().visitAll();
 			String output = "Project build order:\n  "
-					+ IteratorExtensions.join(visitAll, "\n  ", ProjectDescription::getName);
+					+ IteratorExtensions.join(visitAll, "\n  ", XIProjectConfig::getName);
 			LOG.info(output);
 		}
 	}

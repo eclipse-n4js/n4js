@@ -13,7 +13,6 @@ package org.eclipse.n4js.internal.lsp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +26,6 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.projectModel.lsp.IN4JSSourceFolder;
-import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
@@ -74,15 +72,8 @@ public class N4JSProjectConfig implements XIProjectConfig {
 
 	@Override
 	public Set<String> getDependencies() {
-		Set<String> result = new HashSet<>();
-		for (IN4JSProject dependency : delegate.getDependencies()) {
-			N4JSProjectName projectName = dependency.getProjectName();
-			String name = projectName != null ? projectName.getRawName() : null;
-			if (name != null) {
-				result.add(name);
-			}
-		}
-		return result;
+		List<String> deps = ((N4JSProject) delegate).getAllDependenciesAndImplementedApiNames();
+		return new LinkedHashSet<>(deps);
 	}
 
 	private class SourceContainerForPackageJson implements IN4JSSourceFolder {
@@ -213,7 +204,7 @@ public class N4JSProjectConfig implements XIProjectConfig {
 	 * <li>existing -> non-existing (project deletion)
 	 * </ul>
 	 */
-	public WorkspaceChanges update(URI changedResource, ProjectDescription projectDescriptionToUpdate) {
+	public WorkspaceChanges update(URI changedResource) {
 		SafeURI<?> pckjsonSafeUri = delegate.getProjectDescriptionLocation();
 		if (pckjsonSafeUri == null || !delegate.exists()) {
 			// project was deleted
@@ -261,22 +252,10 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		// note that a change of the name attribute is not relevant since the folder name is used
 		boolean dependencyChanged = !Objects.equals(oldDeps, newDeps);
 
-		if (dependencyChanged && projectDescriptionToUpdate != null) {
-			updateProjectDescription(projectDescriptionToUpdate);
-		}
-
 		return new WorkspaceChanges(dependencyChanged, ImmutableList.of(), ImmutableList.of(), ImmutableList.of(),
 				ImmutableList.copyOf(removedSourceFolders),
 				ImmutableList.copyOf(addedSourceFolders), ImmutableList.of(), ImmutableList.of(),
 				dependencyChanged ? ImmutableList.of(this) : ImmutableList.of());
-	}
-
-	/** Bring the given project description up-to-date with the receiving project configuration's internal state. */
-	public void updateProjectDescription(ProjectDescription projectDescriptionToUpdate) {
-		String currName = ((N4JSProject) delegate).getProjectName().getRawName();
-		List<String> currDeps = ((N4JSProject) delegate).getAllDependenciesAndImplementedApiNames();
-		projectDescriptionToUpdate.setName(currName);
-		projectDescriptionToUpdate.setDependencies(currDeps);
 	}
 
 	/** @see N4JSProject#getWorkspaces() */

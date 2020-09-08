@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.ide.xtext.server.XIProjectDescriptionFactory;
 import org.eclipse.n4js.ide.xtext.server.XIWorkspaceConfigFactory;
 import org.eclipse.n4js.xtext.server.LSPIssue;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
@@ -24,7 +23,6 @@ import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
 import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
 import org.eclipse.xtext.ide.server.UriExtensions;
-import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.workspace.IProjectConfig;
 
 import com.google.common.collect.ImmutableList;
@@ -59,9 +57,6 @@ public class XWorkspaceManager {
 
 	@Inject
 	private Provider<ProjectBuilder> projectBuilderProvider;
-
-	@Inject
-	private XIProjectDescriptionFactory projectDescriptionFactory;
 
 	@Inject
 	private UriExtensions uriExtensions;
@@ -132,7 +127,19 @@ public class XWorkspaceManager {
 		if (config == null) {
 			return WorkspaceChanges.NO_CHANGES;
 		}
-		return config.update(changedFiles, projectName -> getProjectBuilder(projectName).getProjectDescription());
+
+		WorkspaceChanges changes = config.update(changedFiles);
+
+		if (!changes.getProjectsWithChangedDependencies().isEmpty()) {
+			for (IProjectConfig pc : changes.getProjectsWithChangedDependencies()) {
+				ProjectBuilder pb = getProjectBuilder(pc.getName());
+				if (pb != null) {
+					pb.onDependenciesChanged();
+				}
+			}
+		}
+
+		return changes;
 	}
 
 	/**
@@ -150,10 +157,9 @@ public class XWorkspaceManager {
 	public void addProjects(Collection<? extends XIProjectConfig> projectConfigs) {
 		Collection<ProjectConfigSnapshot> pcSnapshots = new ArrayList<>();
 		for (XIProjectConfig projectConfig : projectConfigs) {
-			ProjectDescription projectDescription = projectDescriptionFactory.getProjectDescription(projectConfig);
 			ProjectBuilder projectBuilder = projectBuilderProvider.get();
-			projectBuilder.initialize(projectDescription, projectConfig);
-			projectName2ProjectBuilder.put(projectDescription.getName(), projectBuilder);
+			projectBuilder.initialize(projectConfig);
+			projectName2ProjectBuilder.put(projectConfig.getName(), projectBuilder);
 			pcSnapshots.add(projectConfig.toSnapshot());
 		}
 		fullIndex.setProjectConfigSnapshots(pcSnapshots);
@@ -244,16 +250,6 @@ public class XWorkspaceManager {
 		for (ProjectBuilder pb : projectName2ProjectBuilder.values()) {
 			pb.clearResourceSet();
 		}
-	}
-
-	/** @return all project descriptions. */
-	public List<ProjectDescription> getProjectDescriptions() {
-		List<ProjectDescription> newProjects = new ArrayList<>();
-		for (IProjectConfig projectConfig : getProjectConfigs()) {
-			ProjectDescription projectDescription = projectDescriptionFactory.getProjectDescription(projectConfig);
-			newProjects.add(projectDescription);
-		}
-		return newProjects;
 	}
 
 	/** @return a workspace relative URI for a given URI */

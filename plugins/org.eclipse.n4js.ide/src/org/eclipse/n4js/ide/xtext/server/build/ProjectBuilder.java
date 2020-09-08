@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
 import org.eclipse.n4js.ide.xtext.server.ResourceChangeSet;
+import org.eclipse.n4js.ide.xtext.server.XIProjectDescriptionFactory;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterBuildListener;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterDeleteListener;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterValidateListener;
@@ -97,6 +98,10 @@ public class ProjectBuilder {
 	@Inject
 	protected OutputConfigurationProvider outputConfigProvider;
 
+	/** Factory for creating the {@link ProjectDescription} attached to this project builder's resource set. */
+	@Inject
+	protected XIProjectDescriptionFactory projectDescriptionFactory;
+
 	/** Checks whether the current action was cancelled */
 	@Inject
 	protected OperationCanceledManager operationCanceledManager;
@@ -120,15 +125,12 @@ public class ProjectBuilder {
 
 	private XtextResourceSet resourceSet;
 
-	private ProjectDescription projectDescription;
-
 	private final AtomicReference<ImmutableProjectState> projectStateSnapshot = new AtomicReference<>(
 			ImmutableProjectState.empty());
 
 	/** Initialize this project. */
 	@SuppressWarnings("hiding")
-	public void initialize(ProjectDescription projectDescription, XIProjectConfig projectConfig) {
-		this.projectDescription = projectDescription;
+	public void initialize(XIProjectConfig projectConfig) {
 		this.projectConfig = projectConfig;
 		this.doClearWithoutNotification();
 		this.resourceSet = createNewResourceSet(getProjectIndex());
@@ -398,24 +400,37 @@ public class ProjectBuilder {
 	protected void updateResourceSetIndex(ResourceDescriptionsData newProjectIndex) {
 		ChunkedResourceDescriptions.removeFromEmfObject(resourceSet);
 		ChunkedResourceDescriptions resDescs = workspaceIndex.toDescriptions(resourceSet);
-		resDescs.setContainer(projectDescription.getName(), newProjectIndex);
+		resDescs.setContainer(projectConfig.getName(), newProjectIndex);
+	}
+
+	/** Update the {@link ProjectDescription} instance that is attached to this project's resource set. */
+	protected void updateResourceSetProjectDescription() {
+		ProjectDescription.removeFromEmfObject(resourceSet);
+		ProjectDescription newPD = projectDescriptionFactory.getProjectDescription(projectConfig);
+		newPD.attachToEmfObject(resourceSet);
 	}
 
 	/** Create and configure a new resource set for this project. */
 	protected XtextResourceSet createNewResourceSet(ResourceDescriptionsData newProjectIndex) {
 		XtextResourceSet result = resourceSetProvider.get();
 		result.setURIResourceMap(uriResourceMap);
+		ProjectDescription projectDescription = projectDescriptionFactory.getProjectDescription(projectConfig);
 		projectDescription.attachToEmfObject(result);
 		ProjectConfigAdapter.install(result, projectConfig);
 		attachWorkspaceResourceLocator(result);
 
 		ChunkedResourceDescriptions index = workspaceIndex.toDescriptions(result);
-		index.setContainer(projectDescription.getName(), newProjectIndex);
+		index.setContainer(projectConfig.getName(), newProjectIndex);
 		return result;
 	}
 
 	private WorkspaceAwareResourceLocator attachWorkspaceResourceLocator(XtextResourceSet result) {
 		return new WorkspaceAwareResourceLocator(result, workspaceManager);
+	}
+
+	// FIXME reconsider
+	public void onDependenciesChanged() {
+		updateResourceSetProjectDescription();
 	}
 
 	/** Get the resource with the given URI. */
@@ -440,6 +455,11 @@ public class ProjectBuilder {
 	}
 
 	/** Getter */
+	public String getName() {
+		return getProjectConfig().getName();
+	}
+
+	/** Getter */
 	public URI getBaseDir() {
 		return getProjectConfig().getPath();
 	}
@@ -447,11 +467,6 @@ public class ProjectBuilder {
 	/** Getter */
 	public XtextResourceSet getResourceSet() {
 		return resourceSet;
-	}
-
-	/** Getter */
-	public ProjectDescription getProjectDescription() {
-		return projectDescription;
 	}
 
 	/** Getter */

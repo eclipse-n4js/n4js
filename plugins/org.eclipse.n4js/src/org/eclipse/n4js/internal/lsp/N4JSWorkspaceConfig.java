@@ -19,7 +19,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.N4JSRuntimeCore;
@@ -31,7 +30,6 @@ import org.eclipse.n4js.utils.ProjectDiscoveryHelper;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
 import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
-import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.workspace.IProjectConfig;
 
 import com.google.common.collect.ImmutableList;
@@ -85,15 +83,15 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	}
 
 	@Override
-	public WorkspaceChanges update(List<URI> changedResources, Function<String, ProjectDescription> pdProvider) {
+	public WorkspaceChanges update(List<URI> changedResources) {
 		WorkspaceChanges result = WorkspaceChanges.NO_CHANGES;
 		for (URI changedResource : changedResources) {
-			result = result.merge(update(changedResource, pdProvider));
+			result = result.merge(update(changedResource));
 		}
 		return result;
 	}
 
-	private WorkspaceChanges update(URI changedResource, Function<String, ProjectDescription> pdProvider) {
+	private WorkspaceChanges update(URI changedResource) {
 		IProjectConfig project = this.findProjectContaining(changedResource);
 
 		// get old projects here before it gets invalidated by N4JSProjectConfig#update()
@@ -106,8 +104,7 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 		boolean wasExistingInWorkspace = projectUri != null && ((N4JSRuntimeCore) delegate).isRegistered(projectUri);
 		if (project != null && wasExistingInWorkspace) {
 			// an existing project was modified
-			ProjectDescription pd = pdProvider.apply(project.getName());
-			update = update.merge(((N4JSProjectConfig) project).update(changedResource, pd));
+			update = update.merge(((N4JSProjectConfig) project).update(changedResource));
 
 			if (((N4JSProjectConfig) project).isWorkspacesProject()) {
 				update = update.merge(detectAddedRemovedProjects(oldProjects));
@@ -115,18 +112,6 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 		} else {
 			// a new project was created
 			update = update.merge(detectAddedRemovedProjects(oldProjects));
-		}
-
-		if (!update.getAddedProjects().isEmpty() || !update.getRemovedProjects().isEmpty()) {
-			// since the list of dependencies cached in class ProjectDescription does not contain names of projects that
-			// do not exist (in case of unresolved dependencies), we have to recompute all those lists of dependencies
-			// whenever a project is being added or removed:
-			for (IProjectConfig pc : oldProjects) {
-				ProjectDescription pd = pdProvider.apply(pc.getName());
-				if (pd != null) {
-					((N4JSProjectConfig) pc).updateProjectDescription(pd);
-				}
-			}
 		}
 
 		return update;

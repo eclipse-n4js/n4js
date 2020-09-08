@@ -260,7 +260,7 @@ public class WorkspaceChanges {
 				concat(addedSourceFolders, changes.addedSourceFolders),
 				newRemoved,
 				newAdded,
-				FluentIterable.concat(projectsWithChangedDependencies, projectsWithChangedDependencies)
+				FluentIterable.concat(projectsWithChangedDependencies, changes.projectsWithChangedDependencies)
 						.filter(config -> !allAddedOrRemoved.contains(config.getName())).toList());
 	}
 

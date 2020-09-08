@@ -27,6 +27,7 @@ import org.eclipse.n4js.ide.server.N4JSTextDocumentFrontend;
 import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
 import org.eclipse.n4js.ide.server.SourceFolderAwareResourceValidator;
 import org.eclipse.n4js.ide.server.build.N4JSBuilderFrontend;
+import org.eclipse.n4js.ide.server.build.N4JSProjectBuildOrderInfo;
 import org.eclipse.n4js.ide.server.build.N4JSProjectBuilder;
 import org.eclipse.n4js.ide.server.codeActions.N4JSCodeActionService;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
@@ -38,6 +39,7 @@ import org.eclipse.n4js.ide.server.symbol.N4JSHierarchicalDocumentSymbolService;
 import org.eclipse.n4js.ide.xtext.editor.contentassist.XIdeContentProposalAcceptor;
 import org.eclipse.n4js.ide.xtext.server.BuiltInAwareIncrementalBuilder;
 import org.eclipse.n4js.ide.xtext.server.DebugService;
+import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo;
 import org.eclipse.n4js.ide.xtext.server.QueuedExecutorService;
 import org.eclipse.n4js.ide.xtext.server.TextDocumentFrontend;
 import org.eclipse.n4js.ide.xtext.server.WorkspaceAwareCanLoadFromDescriptionHelper;
@@ -158,6 +160,10 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public Class<? extends XStatefulIncrementalBuilder> bindStatefulIncrementalBuilder() {
 		return BuiltInAwareIncrementalBuilder.class;
+	}
+
+	public Class<? extends ProjectBuildOrderInfo> bindProjectBuildOrderInfo() {
+		return N4JSProjectBuildOrderInfo.class;
 	}
 
 	public Class<? extends IDiagnosticConverter> bindIDiagnosticConverter() {

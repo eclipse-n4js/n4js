@@ -15,23 +15,24 @@ import org.eclipse.n4js.internal.lsp.N4JSProjectConfig;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
+import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
-import org.eclipse.xtext.workspace.IProjectConfig;
 
 import com.google.common.collect.FluentIterable;
 
 /**
  * Creates {@link ProjectDescription}s for {@link IN4JSProject}s: Adds dependencies.
  */
-@SuppressWarnings("restriction")
 public class N4JSProjectDescriptionFactory extends XDefaultProjectDescriptionFactory {
 
 	@Override
-	public ProjectDescription getProjectDescription(IProjectConfig config) {
+	public ProjectDescription getProjectDescription(XIProjectConfig config) {
 		ProjectDescription projectDescription = super.getProjectDescription(config);
+		projectDescription.getDependencies().clear();
 		N4JSProjectConfig casted = (N4JSProjectConfig) config;
 		IN4JSProject project = casted.toProject();
 		if (project.getProjectType() == ProjectType.PLAINJS) {
+			// see N4JSProjectBuildOrderInfo for why we ignore dependencies of PLAINJS projects:
 			return projectDescription;
 		}
 		FluentIterable
@@ -39,9 +40,6 @@ public class N4JSProjectDescriptionFactory extends XDefaultProjectDescriptionFac
 				.transform(IN4JSProject::getProjectName)
 				.transform(N4JSProjectName::getRawName)
 				.copyInto(projectDescription.getDependencies());
-		if (project.getProjectType() == ProjectType.DEFINITION) {
-			projectDescription.getDependencies().add(project.getDefinesPackageName().getRawName());
-		}
 		return projectDescription;
 	}
 

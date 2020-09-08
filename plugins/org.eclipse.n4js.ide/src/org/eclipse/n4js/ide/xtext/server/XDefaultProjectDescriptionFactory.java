@@ -10,20 +10,20 @@
  */
 package org.eclipse.n4js.ide.xtext.server;
 
+import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
-import org.eclipse.xtext.workspace.IProjectConfig;
 
 /**
  * @author Jan Koehnlein - Initial contribution and API
  * @since 2.11
  */
-@SuppressWarnings("restriction")
 public class XDefaultProjectDescriptionFactory implements XIProjectDescriptionFactory {
 
 	@Override
-	public ProjectDescription getProjectDescription(IProjectConfig config) {
+	public ProjectDescription getProjectDescription(XIProjectConfig config) {
 		ProjectDescription result = new ProjectDescription();
 		result.setName(config.getName());
+		result.getDependencies().addAll(config.getDependencies());
 		return result;
 	}
 
