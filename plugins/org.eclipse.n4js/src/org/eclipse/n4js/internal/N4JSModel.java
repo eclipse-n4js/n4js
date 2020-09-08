@@ -259,6 +259,7 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 	@SuppressWarnings("unchecked")
 	public void invalidateProject(SafeURI<?> location) {
 		workspace.invalidateProject((Loc) location);
+		cache.clear(MultiCleartriggerCache.CACHE_KEY_SORTED_DEPENDENCIES, location.toURI());
 	}
 
 	public ImmutableList<? extends IN4JSProject> getDependencies(N4JSProject project,

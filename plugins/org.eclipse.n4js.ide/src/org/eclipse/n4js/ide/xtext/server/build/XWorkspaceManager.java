@@ -23,7 +23,6 @@ import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
 import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
 import org.eclipse.xtext.ide.server.UriExtensions;
-import org.eclipse.xtext.workspace.IProjectConfig;
 
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
@@ -48,7 +47,7 @@ import com.google.inject.Singleton;
  * @author Sven Efftinge - Initial contribution and API
  * @since 2.11
  */
-@SuppressWarnings({ "restriction", "deprecation" })
+@SuppressWarnings({ "deprecation" })
 @Singleton
 public class XWorkspaceManager {
 
@@ -131,7 +130,7 @@ public class XWorkspaceManager {
 		WorkspaceChanges changes = config.update(changedFiles);
 
 		if (!changes.getProjectsWithChangedDependencies().isEmpty()) {
-			for (IProjectConfig pc : changes.getProjectsWithChangedDependencies()) {
+			for (XIProjectConfig pc : changes.getProjectsWithChangedDependencies()) {
 				ProjectBuilder pb = getProjectBuilder(pc.getName());
 				if (pb != null) {
 					pb.onDependenciesChanged();
@@ -204,7 +203,7 @@ public class XWorkspaceManager {
 	 * @return the project builder.
 	 */
 	public ProjectBuilder getProjectBuilder(URI nestedURI) {
-		IProjectConfig projectConfig = getProjectConfig(nestedURI);
+		XIProjectConfig projectConfig = getProjectConfig(nestedURI);
 		String name = null;
 		if (projectConfig != null) {
 			name = projectConfig.getName();
@@ -213,7 +212,7 @@ public class XWorkspaceManager {
 	}
 
 	/** Find the project that contains the uri. */
-	public IProjectConfig getProjectConfig(URI uri) {
+	public XIProjectConfig getProjectConfig(URI uri) {
 		XIWorkspaceConfig config = getWorkspaceConfig();
 		if (config == null) {
 			return null;
