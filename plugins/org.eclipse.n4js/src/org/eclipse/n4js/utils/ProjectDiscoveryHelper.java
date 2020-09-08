@@ -102,30 +102,11 @@ public class ProjectDiscoveryHelper {
 		Map<Path, ProjectDescription> pdCache = new HashMap<>();
 
 		LinkedHashSet<Path> allProjectDirs = collectAllProjects(workspaceRoots, pdCache);
-		removeIgnoredPlainjsProjects(allProjectDirs, pdCache);
 
 		LinkedHashSet<Path> dependencies = collectNecessaryDependencies(allProjectDirs, pdCache);
 		allProjectDirs.addAll(dependencies);
 
 		return allProjectDirs;
-	}
-
-	private void removeIgnoredPlainjsProjects(Set<Path> projects, Map<Path, ProjectDescription> pdCache) {
-		Map<String, Path> plainjsProjects = new HashMap<>();
-		Set<String> projectsRequiredByAnN4JSProject = new HashSet<>();
-		for (Path project : projects) {
-			ProjectDescription pd = getCachedProjectDescription(project, pdCache);
-			ProjectType type = pd.getProjectType();
-			if (type == ProjectType.PLAINJS) {
-				plainjsProjects.put(pd.getProjectName(), project);
-			} else {
-				List<String> deps = pd.getProjectDependencies().stream()
-						.map(ProjectReference::getProjectName).collect(Collectors.toList());
-				projectsRequiredByAnN4JSProject.addAll(deps);
-			}
-		}
-		plainjsProjects.keySet().removeAll(projectsRequiredByAnN4JSProject);
-		projects.removeAll(plainjsProjects.values());
 	}
 
 	/** Searches all projects in the given array of workspace directories */
@@ -149,7 +130,7 @@ public class ProjectDiscoveryHelper {
 				} else {
 					// Is NPM project
 					// given directory is a stand-alone npm project
-					allProjectDirs.add(projectRoot);
+					addIfNotPlainjs(allProjectDirs, projectRoot, pdCache);
 				}
 			}
 		}
@@ -175,16 +156,20 @@ public class ProjectDiscoveryHelper {
 	public void collectYarnWorkspaceProjects(Path yarnProjectRoot, Map<Path, ProjectDescription> pdCache,
 			Set<Path> projects) {
 
-		projects.add(yarnProjectRoot);
+		addIfNotPlainjs(projects, yarnProjectRoot, pdCache);
+
 		ProjectDescription projectDescription = getCachedProjectDescription(yarnProjectRoot, pdCache);
 		final List<String> workspaces = (projectDescription == null) ? null : projectDescription.getWorkspaces();
 		if (workspaces == null) {
 			return;
 		}
 
+		Set<Path> memberProjects = new LinkedHashSet<>();
 		for (String workspaceGlob : workspaces) {
-			collectGlobMatches(workspaceGlob, yarnProjectRoot, pdCache, projects);
+			collectGlobMatches(workspaceGlob, yarnProjectRoot, pdCache, memberProjects);
 		}
+		removeUnnecessaryPlainjsProjects(memberProjects, pdCache);
+		projects.addAll(memberProjects);
 	}
 
 	private void collectProjects(Path root, boolean includeSubtree, Map<Path, ProjectDescription> pdCache,
@@ -224,7 +209,7 @@ public class ProjectDiscoveryHelper {
 								&& nodeModulesDiscoveryHelper.isYarnWorkspaceRoot(dir.toFile(), pdCache)) {
 							collectYarnWorkspaceProjects(dir, pdCache, allProjectDirs);
 						} else {
-							allProjectDirs.add(dir);
+							addIfNotPlainjs(allProjectDirs, dir, pdCache);
 						}
 						return FileVisitResult.SKIP_SUBTREE;
 					}
@@ -261,6 +246,8 @@ public class ProjectDiscoveryHelper {
 						} else {
 							File pckJson = dir.resolve(N4JSGlobals.PACKAGE_JSON).toFile();
 							if (pckJson.isFile()) {
+								// note: add 'dir' to 'allProjectDirs' even if it is PLAINJS (will be taken care of by
+								// #removeUnnecessaryPlainjsProjects() below)
 								allProjectDirs.add(dir);
 								return FileVisitResult.SKIP_SUBTREE;
 							}
@@ -278,6 +265,32 @@ public class ProjectDiscoveryHelper {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * Removes from <code>projects</code> all "unnecessary" {@link ProjectType#PLAINJS PLAINJS} projects. A PLAINJS
+	 * project is "unnecessary" if there does not exist an N4JS project P' in <code>projects</code> that has a
+	 * dependency to P.
+	 */
+	private void removeUnnecessaryPlainjsProjects(Set<Path> projects, Map<Path, ProjectDescription> pdCache) {
+		Map<String, Path> plainjsProjects = new HashMap<>();
+		Set<String> projectsRequiredByAnN4JSProject = new HashSet<>();
+		for (Path project : projects) {
+			ProjectDescription pd = getCachedProjectDescription(project, pdCache);
+			if (pd == null) {
+				continue;
+			}
+			ProjectType type = pd.getProjectType();
+			if (type == ProjectType.PLAINJS) {
+				plainjsProjects.put(pd.getProjectName(), project);
+			} else {
+				List<String> deps = pd.getProjectDependencies().stream()
+						.map(ProjectReference::getProjectName).collect(Collectors.toList());
+				projectsRequiredByAnN4JSProject.addAll(deps);
+			}
+		}
+		plainjsProjects.keySet().removeAll(projectsRequiredByAnN4JSProject);
+		projects.removeAll(plainjsProjects.values());
 	}
 
 	/** @return the potentially cached {@link ProjectDescription} for the project in the given directory */
@@ -397,5 +410,12 @@ public class ProjectDiscoveryHelper {
 		}
 
 		return null;
+	}
+
+	private void addIfNotPlainjs(Set<Path> addHere, Path project, Map<Path, ProjectDescription> pdCache) {
+		ProjectDescription pd = getCachedProjectDescription(project, pdCache);
+		if (pd != null && pd.getProjectType() != ProjectType.PLAINJS) {
+			addHere.add(project);
+		}
 	}
 }
