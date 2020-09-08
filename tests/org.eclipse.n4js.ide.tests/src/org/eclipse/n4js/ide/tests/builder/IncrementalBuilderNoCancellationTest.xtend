@@ -26,7 +26,8 @@ import org.junit.Test
 import static org.junit.Assert.*
 
 /**
- * Tests certain cases in which the builder must *not* be cancelled.
+ * Tests certain cases in which the builder must *not* be cancelled (i.e. changes to files
+ * not contained in an N4JS source folder).
  */
 class IncrementalBuilderNoCancellationTest extends AbstractIncrementalBuilderTest {
 
@@ -57,7 +58,7 @@ class IncrementalBuilderNoCancellationTest extends AbstractIncrementalBuilderTes
 	}
 
 	@Test
-	def void testFileOutsideSourceFolderDoesNotCancelBuild() {
+	def void testChangeInFileOutsideSourceFolderDoesNotCancelBuild() {
 		testWorkspaceManager.createTestProjectOnDisk(
 			"A" -> '''
 				console.log('hello');
@@ -72,7 +73,7 @@ class IncrementalBuilderNoCancellationTest extends AbstractIncrementalBuilderTes
 	}
 
 	@Test
-	def void testOutputFileDoesNotCancelBuild() {
+	def void testChangeInOutputFileDoesNotCancelBuild() {
 		testWorkspaceManager.createTestProjectOnDisk(
 			"A" -> '''
 				console.log('hello');
@@ -86,7 +87,7 @@ class IncrementalBuilderNoCancellationTest extends AbstractIncrementalBuilderTes
 	}
 
 	@Test
-	def void testFileInYarnWorkspaceRootProjectDoesNotCancelBuild() {
+	def void testChangeInFileInYarnWorkspaceRootProjectDoesNotCancelBuild() {
 		testWorkspaceManager.createTestOnDisk(
 			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"ProjectA" -> #[
@@ -111,7 +112,7 @@ class IncrementalBuilderNoCancellationTest extends AbstractIncrementalBuilderTes
 	}
 
 	@Test
-	def void testFileOutsideSourceFolderOfYarnWorkspaceMemberProjectDoesNotCancelBuild() {
+	def void testChangeInFileOutsideSourceFolderOfYarnWorkspaceMemberProjectDoesNotCancelBuild() {
 		testWorkspaceManager.createTestOnDisk(
 			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"ProjectA" -> #[
@@ -136,7 +137,7 @@ class IncrementalBuilderNoCancellationTest extends AbstractIncrementalBuilderTes
 	}
 
 	@Test
-	def void testOutputFileOfYarnWorkspaceMemberProjectDoesNotCancelBuild() {
+	def void testChangeInOutputFileOfYarnWorkspaceMemberProjectDoesNotCancelBuild() {
 		testWorkspaceManager.createTestOnDisk(
 			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"ProjectA" -> #[
@@ -159,12 +160,62 @@ class IncrementalBuilderNoCancellationTest extends AbstractIncrementalBuilderTes
 		simulateFileChangeAndAssertNoCancellation(outputFileOfModuleA);
 	}
 
+	@Test
+	def void testChangeInFileOfPlainJsProjectDoesNotCancelBuild() {
+		testWorkspaceManager.createTestOnDisk(
+			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
+			"ProjectN4JS" -> #[
+				"A" -> '''
+					console.log('hello from A');
+				''',
+				TestWorkspaceManager.CFG_DEPENDENCIES -> "n4js-runtime"
+			],
+			"ProjectPlain" -> #[
+				TestWorkspaceManager.CFG_SOURCE_FOLDER -> ".",
+				TestWorkspaceManager.PACKAGE_JSON -> '''
+					{
+						"name": "some-pkg",
+						"version": "0.0.1",
+						"main": "MainModule.js"
+					}
+				'''
+			]
+		);
+		startAndWaitForLspServer();
+		assertNoIssues();
+
+		val projectPlain = getProjectRoot("ProjectPlain");
+		val n4jsFileInYarnWorkspaceRootProject = new File(projectPlain, "SomeModule.js").toFileURI;
+		simulateFileChangeAndAssertNoCancellation(n4jsFileInYarnWorkspaceRootProject);
+	}
+
+	/** This test method is only included to ensure that dependency injection is correctly set up. */
+	@Test
+	def void ensureCorrectSetup() {
+		testWorkspaceManager.createTestProjectOnDisk(
+			"A" -> '''
+				console.log('hello');
+			'''
+		);
+		startAndWaitForLspServer();
+		assertNoIssues();
+
+		val outputFileOfModuleA = getFileURIFromModuleName("A");
+
+		cancellationCounter.set(0);
+		val fileEvents = Collections.singletonList(new FileEvent(outputFileOfModuleA.toString(), FileChangeType.Changed));
+		val params = new DidChangeWatchedFilesParams(fileEvents);
+		languageServer.didChangeWatchedFiles(params);
+		joinServerRequests();
+		assertTrue(cancellationCounter.get() > 0);
+	}
+
 	def private void simulateFileChangeAndAssertNoCancellation(FileURI fileURI) {
 		cancellationCounter.set(0);
 		val fileEvents = Collections.singletonList(new FileEvent(fileURI.toString(), FileChangeType.Changed));
 		val params = new DidChangeWatchedFilesParams(fileEvents);
 		languageServer.didChangeWatchedFiles(params);
-		joinServerRequests();
+		joinServerRequests(); // we don't expect the builder to do anything at this point; but if it incorrectly does something we want to wait for it to finish
 		assertNoCancellation();
 	}
 
