@@ -13,7 +13,9 @@ package org.eclipse.n4js.internal;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Supplier;
 
 import org.eclipse.emf.common.util.URI;
@@ -132,6 +134,14 @@ public class MultiCleartriggerCache {
 		}
 		if (triggerMap != null) {
 			triggerMap.clear();
+		}
+	}
+
+	/** Same as {@link #clear(String, URI)}, but values for all existing keys are cleared. */
+	public void clear(URI trigger) {
+		Set<String> allKeys = new HashSet<>(entryCache.keySet());
+		for (String key : allKeys) {
+			clear(key, trigger);
 		}
 	}
 
