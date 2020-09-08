@@ -25,15 +25,19 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectDescription.ProjectDependency;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectReference;
+import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper.NodeModulesFolder;
 
@@ -98,10 +102,30 @@ public class ProjectDiscoveryHelper {
 		Map<Path, ProjectDescription> pdCache = new HashMap<>();
 
 		LinkedHashSet<Path> allProjectDirs = collectAllProjects(workspaceRoots, pdCache);
+		removeIgnoredPlainjsProjects(allProjectDirs, pdCache);
+
 		LinkedHashSet<Path> dependencies = collectNecessaryDependencies(allProjectDirs, pdCache);
 		allProjectDirs.addAll(dependencies);
 
 		return allProjectDirs;
+	}
+
+	private void removeIgnoredPlainjsProjects(Set<Path> projects, Map<Path, ProjectDescription> pdCache) {
+		Map<String, Path> plainjsProjects = new HashMap<>();
+		Set<String> projectsRequiredByAnN4JSProject = new HashSet<>();
+		for (Path project : projects) {
+			ProjectDescription pd = getCachedProjectDescription(project, pdCache);
+			ProjectType type = pd.getProjectType();
+			if (type == ProjectType.PLAINJS) {
+				plainjsProjects.put(pd.getProjectName(), project);
+			} else {
+				List<String> deps = pd.getProjectDependencies().stream()
+						.map(ProjectReference::getProjectName).collect(Collectors.toList());
+				projectsRequiredByAnN4JSProject.addAll(deps);
+			}
+		}
+		plainjsProjects.keySet().removeAll(projectsRequiredByAnN4JSProject);
+		projects.removeAll(plainjsProjects.values());
 	}
 
 	/** Searches all projects in the given array of workspace directories */
