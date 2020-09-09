@@ -55,8 +55,8 @@ public class N4JSWorkspaceManager extends XWorkspaceManager {
 	}
 
 	@Override
-	public WorkspaceChanges update(List<URI> changedFiles) {
-		WorkspaceChanges changes = super.update(changedFiles);
+	public WorkspaceChanges update(List<URI> dirtyFiles, List<URI> deletedFiles) {
+		WorkspaceChanges changes = super.update(dirtyFiles, deletedFiles);
 
 		if (!changes.getAddedProjects().isEmpty() || !changes.getRemovedProjects().isEmpty()) {
 			// since the list of dependencies cached in instances of ProjectDescriptions is based on

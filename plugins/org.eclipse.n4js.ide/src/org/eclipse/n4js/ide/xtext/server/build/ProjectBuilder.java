@@ -31,7 +31,9 @@ import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterValidateListen
 import org.eclipse.n4js.ide.xtext.server.issues.PublishingIssueAcceptor;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.xtext.server.LSPIssue;
-import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
+import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
+import org.eclipse.n4js.xtext.workspace.SourceFolderScanner;
+import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.generator.OutputConfiguration;
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
@@ -49,7 +51,6 @@ import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.util.UriUtil;
 import org.eclipse.xtext.validation.Issue;
-import org.eclipse.xtext.workspace.ISourceFolder;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
@@ -61,7 +62,7 @@ import com.google.inject.Provider;
 /**
  * TODO JavaDoc
  */
-@SuppressWarnings({ "restriction", "deprecation" })
+@SuppressWarnings({ "deprecation" })
 public class ProjectBuilder {
 	private static final Logger LOG = LogManager.getLogger(ProjectBuilder.class);
 
@@ -76,6 +77,10 @@ public class ProjectBuilder {
 	/** Creates a new resource set. */
 	@Inject
 	protected Provider<XtextResourceSet> resourceSetProvider;
+
+	/** Scans the file system for source files contained in a {@link SourceFolderSnapshot source folder}. */
+	@Inject
+	protected SourceFolderScanner sourceFolderScanner;
 
 	/** Scans the file system. */
 	@Inject
@@ -120,7 +125,7 @@ public class ProjectBuilder {
 	@Inject
 	private ConcurrentIndex workspaceIndex;
 
-	private XIProjectConfig projectConfig;
+	private ProjectConfigSnapshot projectConfig;
 
 	private XtextResourceSet resourceSet;
 
@@ -129,7 +134,7 @@ public class ProjectBuilder {
 
 	/** Initialize this project. */
 	@SuppressWarnings("hiding")
-	public void initialize(XIProjectConfig projectConfig) {
+	public void initialize(ProjectConfigSnapshot projectConfig) {
 		this.projectConfig = projectConfig;
 		this.doClearWithoutNotification();
 		this.resourceSet = createNewResourceSet(getProjectIndex());
@@ -468,7 +473,7 @@ public class ProjectBuilder {
 	}
 
 	/** Getter */
-	public XIProjectConfig getProjectConfig() {
+	public ProjectConfigSnapshot getProjectConfig() {
 		return projectConfig;
 	}
 
@@ -551,8 +556,8 @@ public class ProjectBuilder {
 		}
 
 		Set<URI> allIndexedUris = getProjectIndex().getAllURIs();
-		for (ISourceFolder srcFolder : projectConfig.getSourceFolders()) {
-			List<URI> allSourceFolderUris = srcFolder.getAllResources(fileSystemScanner);
+		for (SourceFolderSnapshot srcFolder : projectConfig.getSourceFolders()) {
+			List<URI> allSourceFolderUris = sourceFolderScanner.findAllSourceFiles(srcFolder, fileSystemScanner);
 			for (URI srcFolderUri : allSourceFolderUris) {
 				if (!srcFolderUri.hasTrailingPathSeparator() && !allIndexedUris.contains(srcFolderUri)) {
 					if (resourceServiceProviders.getResourceServiceProvider(srcFolderUri) != null) {
@@ -677,17 +682,4 @@ public class ProjectBuilder {
 	private void setProjectIndex(ResourceDescriptionsData index) {
 		this.workspaceIndex.setProjectIndex(projectConfig.getName(), index);
 	}
-
-	boolean isSourceFile(URI uri) {
-		String fileName = uri.lastSegment();
-		if (fileName.equals(projectStatePersister.getPersistedFileName())) {
-			return false;
-		}
-		ISourceFolder sourceFolder = projectConfig.findSourceFolderContaining(uri);
-		if (sourceFolder != null) {
-			return true;
-		}
-		return false;
-	}
-
 }

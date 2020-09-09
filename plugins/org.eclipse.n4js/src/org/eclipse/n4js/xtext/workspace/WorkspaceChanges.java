@@ -14,16 +14,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.workspace.IProjectConfig;
-import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 
 /**
  * This data class contains information about all changes that happened to the workspace setup, which boils down to (1)
@@ -52,14 +48,14 @@ public class WorkspaceChanges {
 	public static final WorkspaceChanges NO_CHANGES = new WorkspaceChanges();
 
 	/** @return a new instance of {@link WorkspaceChanges} contains the given project as removed */
-	public static WorkspaceChanges createProjectRemoved(XIProjectConfig project) {
+	public static WorkspaceChanges createProjectRemoved(ProjectConfigSnapshot project) {
 		return new WorkspaceChanges(false, ImmutableList.of(), ImmutableList.of(), ImmutableList.of(),
 				ImmutableList.of(), ImmutableList.of(),
 				ImmutableList.of(project), ImmutableList.of(), ImmutableList.of());
 	}
 
 	/** @return a new instance of {@link WorkspaceChanges} contains the given project as added */
-	public static WorkspaceChanges createProjectAdded(XIProjectConfig project) {
+	public static WorkspaceChanges createProjectAdded(ProjectConfigSnapshot project) {
 		return new WorkspaceChanges(false, ImmutableList.of(), ImmutableList.of(), ImmutableList.of(),
 				ImmutableList.of(), ImmutableList.of(),
 				ImmutableList.of(), ImmutableList.of(project), ImmutableList.of());
@@ -98,15 +94,15 @@ public class WorkspaceChanges {
 	/** changed uris */
 	protected final ImmutableList<URI> changedURIs;
 	/** removed source folders (excluding those from {@link #removedProjects}) */
-	protected final ImmutableList<ISourceFolder> removedSourceFolders;
+	protected final ImmutableList<SourceFolderSnapshot> removedSourceFolders;
 	/** added source folders (excluding those from {@link #addedProjects}) */
-	protected final ImmutableList<ISourceFolder> addedSourceFolders;
+	protected final ImmutableList<SourceFolderSnapshot> addedSourceFolders;
 	/** removed projects */
-	protected final ImmutableList<XIProjectConfig> removedProjects;
+	protected final ImmutableList<ProjectConfigSnapshot> removedProjects;
 	/** added projects */
-	protected final ImmutableList<XIProjectConfig> addedProjects;
+	protected final ImmutableList<ProjectConfigSnapshot> addedProjects;
 	/** projects that were neither added nor removed but had their dependencies changed */
-	protected final ImmutableList<XIProjectConfig> projectsWithChangedDependencies;
+	protected final ImmutableList<ProjectConfigSnapshot> projectsWithChangedDependencies;
 
 	/** Constructor */
 	public WorkspaceChanges() {
@@ -118,9 +114,11 @@ public class WorkspaceChanges {
 	/** Constructor */
 	public WorkspaceChanges(boolean namesOrDependenciesChanged,
 			ImmutableList<URI> removedURIs, ImmutableList<URI> addedURIs, ImmutableList<URI> changedURIs,
-			ImmutableList<ISourceFolder> removedSourceFolders, ImmutableList<ISourceFolder> addedSourceFolders,
-			ImmutableList<XIProjectConfig> removedProjects, ImmutableList<XIProjectConfig> addedProjects,
-			ImmutableList<XIProjectConfig> projectsWithChangedDependencies) {
+			ImmutableList<SourceFolderSnapshot> removedSourceFolders,
+			ImmutableList<SourceFolderSnapshot> addedSourceFolders,
+			ImmutableList<ProjectConfigSnapshot> removedProjects,
+			ImmutableList<ProjectConfigSnapshot> addedProjects,
+			ImmutableList<ProjectConfigSnapshot> projectsWithChangedDependencies) {
 
 		this.namesOrDependenciesChanged = namesOrDependenciesChanged;
 		this.removedURIs = removedURIs;
@@ -160,82 +158,46 @@ public class WorkspaceChanges {
 	}
 
 	/** @return all source folders that have been removed (excluding those from {@link #removedProjects}) */
-	public List<ISourceFolder> getRemovedSourceFolders() {
+	public List<SourceFolderSnapshot> getRemovedSourceFolders() {
 		return removedSourceFolders;
 	}
 
 	/** @return all source folders that have been added (excluding those from {@link #addedProjects}) */
-	public List<ISourceFolder> getAddedSourceFolders() {
+	public List<SourceFolderSnapshot> getAddedSourceFolders() {
 		return addedSourceFolders;
 	}
 
 	/** @return all projects that have been removed */
-	public List<XIProjectConfig> getRemovedProjects() {
+	public List<ProjectConfigSnapshot> getRemovedProjects() {
 		return removedProjects;
 	}
 
 	/** @return all projects that have been added */
-	public List<XIProjectConfig> getAddedProjects() {
+	public List<ProjectConfigSnapshot> getAddedProjects() {
 		return addedProjects;
 	}
 
 	/** @return that were neither added nor removed but had their dependencies changed */
-	public List<XIProjectConfig> getProjectsWithChangedDependencies() {
+	public List<ProjectConfigSnapshot> getProjectsWithChangedDependencies() {
 		return projectsWithChangedDependencies;
 	}
 
 	/** @return a list of all removed source folders including those inside {@link #removedProjects} */
-	public List<ISourceFolder> getAllRemovedSourceFolders() {
-		List<ISourceFolder> sourceFolders = new ArrayList<>(removedSourceFolders);
-		for (IProjectConfig project : removedProjects) {
+	public List<SourceFolderSnapshot> getAllRemovedSourceFolders() {
+		List<SourceFolderSnapshot> sourceFolders = new ArrayList<>(removedSourceFolders);
+		for (ProjectConfigSnapshot project : removedProjects) {
 			sourceFolders.addAll(project.getSourceFolders());
 		}
 		return sourceFolders;
 	}
 
 	/** @return a list of all added source folders including those inside {@link #addedProjects} */
-	public List<ISourceFolder> getAllAddedSourceFolders() {
-		List<ISourceFolder> sourceFolders = new ArrayList<>(addedSourceFolders);
-		for (IProjectConfig project : addedProjects) {
+	public List<SourceFolderSnapshot> getAllAddedSourceFolders() {
+		List<SourceFolderSnapshot> sourceFolders = new ArrayList<>(addedSourceFolders);
+		for (ProjectConfigSnapshot project : addedProjects) {
 			sourceFolders.addAll(project.getSourceFolders());
 		}
 		return sourceFolders;
-	}
-
-	/**
-	 * Note that scanning in source folders of {@link #getAllRemovedSourceFolders()} might retrieve non-reliable results
-	 * in case the underlying resources have been actually already deleted.
-	 *
-	 * @return a list of all {@link URI}s that have been removed including those inside
-	 *         {@link #getAllRemovedSourceFolders()}
-	 */
-	public List<URI> scanAllRemovedURIs(IFileSystemScanner scanner) {
-		List<URI> uris = new ArrayList<>(removedURIs);
-		for (ISourceFolder sourceFolder : getAllRemovedSourceFolders()) {
-			uris.addAll(sourceFolder.getAllResources(scanner));
-		}
-		return uris;
-	}
-
-	/**
-	 * @return a list of all {@link URI}s that have been added including those inside
-	 *         {@link #getAllAddedSourceFolders()}
-	 */
-	public List<URI> scanAllAddedURIs(IFileSystemScanner scanner) {
-		List<URI> uris = new ArrayList<>(addedURIs);
-		for (ISourceFolder sourceFolder : getAllAddedSourceFolders()) {
-			uris.addAll(sourceFolder.getAllResources(scanner));
-		}
-		return uris;
-	}
-
-	/**
-	 * @return a list of all {@link URI}s that have been changed / added including those of
-	 *         {@link #scanAllAddedURIs(IFileSystemScanner)}
-	 */
-	public List<URI> scanAllAddedAndChangedURIs(IFileSystemScanner scanner) {
-		List<URI> allChangedURIs = Lists.newArrayList(Iterables.concat(scanAllAddedURIs(scanner), getChangedURIs()));
-		return allChangedURIs;
 	}
 
 	/** @return true iff this instance implies a change of the build order */
@@ -245,8 +207,8 @@ public class WorkspaceChanges {
 
 	/** Merges the given changes into a new instance */
 	public WorkspaceChanges merge(WorkspaceChanges changes) {
-		ImmutableList<XIProjectConfig> newAdded = concat(addedProjects, changes.addedProjects);
-		ImmutableList<XIProjectConfig> newRemoved = concat(removedProjects, changes.removedProjects);
+		ImmutableList<ProjectConfigSnapshot> newAdded = concat(addedProjects, changes.addedProjects);
+		ImmutableList<ProjectConfigSnapshot> newRemoved = concat(removedProjects, changes.removedProjects);
 
 		ImmutableSet<String> allAddedOrRemoved = FluentIterable.concat(newAdded, newRemoved).transform(p -> p.getName())
 				.toSet();

@@ -11,14 +11,11 @@
 package org.eclipse.n4js.ide.server;
 
 import org.eclipse.n4js.ide.xtext.server.XDefaultProjectDescriptionFactory;
-import org.eclipse.n4js.internal.lsp.N4JSProjectConfig;
+import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.projectModel.names.N4JSProjectName;
-import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
+import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
-
-import com.google.common.collect.FluentIterable;
 
 /**
  * Creates {@link ProjectDescription}s for {@link IN4JSProject}s: Adds dependencies.
@@ -26,20 +23,15 @@ import com.google.common.collect.FluentIterable;
 public class N4JSProjectDescriptionFactory extends XDefaultProjectDescriptionFactory {
 
 	@Override
-	public ProjectDescription getProjectDescription(XIProjectConfig config) {
+	public ProjectDescription getProjectDescription(ProjectConfigSnapshot config) {
 		ProjectDescription projectDescription = super.getProjectDescription(config);
 		projectDescription.getDependencies().clear();
-		N4JSProjectConfig casted = (N4JSProjectConfig) config;
-		IN4JSProject project = casted.toProject();
-		if (project.getProjectType() == ProjectType.PLAINJS) {
+		N4JSProjectConfigSnapshot casted = (N4JSProjectConfigSnapshot) config;
+		if (casted.getType() == ProjectType.PLAINJS) {
 			// see N4JSProjectBuildOrderInfo for why we ignore dependencies of PLAINJS projects:
 			return projectDescription;
 		}
-		FluentIterable
-				.from(project.getSortedDependencies())
-				.transform(IN4JSProject::getProjectName)
-				.transform(N4JSProjectName::getRawName)
-				.copyInto(projectDescription.getDependencies());
+		projectDescription.getDependencies().addAll(casted.getSortedDependencies());
 		return projectDescription;
 	}
 

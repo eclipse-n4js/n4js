@@ -14,9 +14,9 @@ import java.util.Collections;
 import java.util.Set;
 
 import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo;
-import org.eclipse.n4js.internal.lsp.N4JSProjectConfig;
+import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.projectDescription.ProjectType;
-import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
+import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 
 /**
  * Customized in order to ignore dependencies of {@link ProjectType#PLAINJS plain-JS} projects.
@@ -24,9 +24,8 @@ import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
 public class N4JSProjectBuildOrderInfo extends ProjectBuildOrderInfo {
 
 	@Override
-	protected Set<String> getDependencies(XIProjectConfig pc) {
-		ProjectType type = pc instanceof N4JSProjectConfig ? ((N4JSProjectConfig) pc).toProject().getProjectType()
-				: null;
+	protected Set<String> getDependencies(ProjectConfigSnapshot pc) {
+		ProjectType type = pc instanceof N4JSProjectConfigSnapshot ? ((N4JSProjectConfigSnapshot) pc).getType() : null;
 		if (type == ProjectType.PLAINJS) {
 			// ignore dependencies of plain-JS projects, because
 			// (1) they are irrelevant for the build order of N4JS code,

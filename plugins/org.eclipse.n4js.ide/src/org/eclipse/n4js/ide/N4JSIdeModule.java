@@ -59,8 +59,10 @@ import org.eclipse.n4js.ide.xtext.server.issues.WorkspaceValidateListener;
 import org.eclipse.n4js.ide.xtext.server.symbol.XDocumentSymbolService;
 import org.eclipse.n4js.ide.xtext.server.util.XOperationCanceledManager;
 import org.eclipse.n4js.internal.lsp.FileSystemScanner;
+import org.eclipse.n4js.internal.lsp.N4JSSourceFolderScanner;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
 import org.eclipse.n4js.xtext.server.EmfDiagnosticToLSPIssueConverter;
+import org.eclipse.n4js.xtext.workspace.SourceFolderScanner;
 import org.eclipse.xtext.generator.IGenerator;
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
 import org.eclipse.xtext.ide.editor.contentassist.FQNPrefixMatcher;
@@ -162,6 +164,10 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public Class<? extends ProjectBuildOrderInfo> bindProjectBuildOrderInfo() {
 		return N4JSProjectBuildOrderInfo.class;
+	}
+
+	public Class<? extends SourceFolderScanner> bindSourceFolderScanner() {
+		return N4JSSourceFolderScanner.class;
 	}
 
 	public Class<? extends IDiagnosticConverter> bindIDiagnosticConverter() {

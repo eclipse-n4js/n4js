@@ -112,26 +112,26 @@ public class ConcurrentIndex {
 		Objects.requireNonNull(projectName);
 		Objects.requireNonNull(projectIndex);
 		ResourceDescriptionsData oldProjectIndex;
-		WorkspaceConfigSnapshot newWorkspaceConfig;
+		WorkspaceConfigSnapshot currWorkspaceConfig;
 		synchronized (this) {
 			oldProjectIndex = project2Index.put(projectName, projectIndex);
-			newWorkspaceConfig = workspaceConfig;
+			currWorkspaceConfig = workspaceConfig;
 		}
 		if ((oldProjectIndex != null && !oldProjectIndex.isEmpty()) || !projectIndex.isEmpty()) {
 			// check avoids many notifications during initialization
-			notifyListeners(newWorkspaceConfig, ImmutableMap.of(projectName, projectIndex), ImmutableList.of(),
+			notifyListeners(currWorkspaceConfig, ImmutableMap.of(projectName, projectIndex), ImmutableList.of(),
 					ImmutableSet.of());
 		}
 		return oldProjectIndex;
 	}
 
 	/** Sets the given project configuration. */
-	public void setProjectConfigSnapshot(ProjectConfigSnapshot projectConfig) {
-		setProjectConfigSnapshots(Collections.singletonList(projectConfig));
+	public WorkspaceConfigSnapshot setProjectConfigSnapshot(ProjectConfigSnapshot projectConfig) {
+		return setProjectConfigSnapshots(Collections.singletonList(projectConfig));
 	}
 
 	/** Sets the given project configurations. */
-	public void setProjectConfigSnapshots(Iterable<? extends ProjectConfigSnapshot> projectConfigs) {
+	public WorkspaceConfigSnapshot setProjectConfigSnapshots(Iterable<? extends ProjectConfigSnapshot> projectConfigs) {
 		Objects.requireNonNull(projectConfigs);
 		ImmutableList<? extends ProjectConfigSnapshot> changedProjectConfigs = ImmutableList.copyOf(projectConfigs);
 		WorkspaceConfigSnapshot newWorkspaceConfig;
@@ -140,6 +140,7 @@ public class ConcurrentIndex {
 			workspaceConfig = newWorkspaceConfig;
 		}
 		notifyListeners(newWorkspaceConfig, ImmutableMap.of(), changedProjectConfigs, ImmutableSet.of());
+		return newWorkspaceConfig;
 	}
 
 	/** Sets the contents of the project with the given name to the empty set, but does not remove the project. */
@@ -148,7 +149,7 @@ public class ConcurrentIndex {
 	}
 
 	/** Removes the project with the given name from the index. */
-	public List<ResourceDescriptionsData> removeProjectIndices(List<String> projectNames) {
+	public WorkspaceConfigSnapshot removeProjectIndices(List<String> projectNames) {
 		Objects.requireNonNull(projectNames);
 		List<ResourceDescriptionsData> oldProjectIndices = new ArrayList<>();
 		WorkspaceConfigSnapshot newWorkspaceConfig;
@@ -166,7 +167,7 @@ public class ConcurrentIndex {
 		if (!oldProjectIndices.isEmpty()) {
 			notifyListeners(newWorkspaceConfig, ImmutableMap.of(), ImmutableList.of(), projectNamesCpy);
 		}
-		return oldProjectIndices;
+		return newWorkspaceConfig;
 	}
 
 	/**

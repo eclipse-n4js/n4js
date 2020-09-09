@@ -20,7 +20,7 @@ import org.eclipse.n4js.ide.xtext.server.XIWorkspaceConfigFactory;
 import org.eclipse.n4js.xtext.server.LSPIssue;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
-import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
+import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
 import org.eclipse.xtext.ide.server.UriExtensions;
 
@@ -67,6 +67,8 @@ public class XWorkspaceManager {
 
 	private XIWorkspaceConfig workspaceConfig;
 
+	private WorkspaceConfigSnapshot workspaceConfigSnapshot;
+
 	/** Reinitialize a workspace at the current location. */
 	public void reinitialize() {
 		initialize(getBaseDir());
@@ -99,19 +101,22 @@ public class XWorkspaceManager {
 
 		projectName2ProjectBuilder.values().forEach(b -> b.doClearWithNotification());
 		projectName2ProjectBuilder.clear();
-		workspaceIndex.initialize(workspaceConfig.toSnapshot());
+
+		this.workspaceConfig = workspaceConfig;
+		this.workspaceConfigSnapshot = workspaceConfig.toSnapshot();
+
+		workspaceIndex.initialize(this.workspaceConfigSnapshot);
 		workspaceIndex.removeAllProjectsIndices();
 
 		// init projects
-		this.workspaceConfig = workspaceConfig;
-		addProjects(getProjectConfigs());
+		addProjects(this.workspaceConfigSnapshot.getProjects());
 	}
 
 	/**
 	 * Return the project configurations.
 	 */
-	public Set<? extends XIProjectConfig> getProjectConfigs() {
-		XIWorkspaceConfig config = getWorkspaceConfig();
+	public Set<? extends ProjectConfigSnapshot> getProjectConfigs() {
+		WorkspaceConfigSnapshot config = getWorkspaceConfig();
 		if (config == null) {
 			return Collections.emptySet();
 		}
@@ -121,16 +126,21 @@ public class XWorkspaceManager {
 	/**
 	 * Updates the workspace according to the updated information in the file with the given URI.
 	 */
-	public WorkspaceChanges update(List<URI> changedFiles) {
-		XIWorkspaceConfig config = getWorkspaceConfig();
-		if (config == null) {
+	public WorkspaceChanges update(List<URI> dirtyFiles, List<URI> deletedFiles) {
+		if (workspaceConfig == null) {
 			return WorkspaceChanges.NO_CHANGES;
 		}
 
-		WorkspaceChanges changes = config.update(changedFiles);
+		WorkspaceChanges changes = workspaceConfig.update(workspaceConfigSnapshot, dirtyFiles, deletedFiles);
+
+		// FIXME not just when dependencies changed!!!!
+		if (!changes.getProjectsWithChangedDependencies().isEmpty()) {
+			workspaceConfigSnapshot = workspaceIndex
+					.setProjectConfigSnapshots(changes.getProjectsWithChangedDependencies());
+		}
 
 		if (!changes.getProjectsWithChangedDependencies().isEmpty()) {
-			for (XIProjectConfig pc : changes.getProjectsWithChangedDependencies()) {
+			for (ProjectConfigSnapshot pc : changes.getProjectsWithChangedDependencies()) {
 				ProjectBuilder pb = getProjectBuilder(pc.getName());
 				if (pb != null) {
 					pb.onDependenciesChanged();
@@ -141,47 +151,34 @@ public class XWorkspaceManager {
 		return changes;
 	}
 
-	/**
-	 * Answers true, if the uri is from a source folder.
-	 */
-	public boolean isSourceFile(URI uri) {
-		ProjectBuilder projectBuilder = getProjectBuilder(uri);
-		if (projectBuilder != null) {
-			return projectBuilder.isSourceFile(uri);
-		}
-		return false;
-	}
-
 	/** Adds a project to the workspace */
-	public void addProjects(Collection<? extends XIProjectConfig> projectConfigs) {
-		Collection<ProjectConfigSnapshot> pcSnapshots = new ArrayList<>();
-		for (XIProjectConfig projectConfig : projectConfigs) {
+	public void addProjects(Iterable<? extends ProjectConfigSnapshot> projectConfigs) {
+		for (ProjectConfigSnapshot projectConfig : projectConfigs) {
 			ProjectBuilder projectBuilder = projectBuilderProvider.get();
 			projectBuilder.initialize(projectConfig);
 			projectName2ProjectBuilder.put(projectConfig.getName(), projectBuilder);
-			pcSnapshots.add(projectConfig.toSnapshot());
 		}
-		workspaceIndex.setProjectConfigSnapshots(pcSnapshots);
+		workspaceConfigSnapshot = workspaceIndex.setProjectConfigSnapshots(projectConfigs);
 	}
 
 	/** Removes a project from the workspace */
-	public void removeProjects(Collection<XIProjectConfig> projectConfigs) {
+	public void removeProjects(Iterable<? extends ProjectConfigSnapshot> projectConfigs) {
 		List<String> projectNames = new ArrayList<>();
-		for (XIProjectConfig projectConfig : projectConfigs) {
+		for (ProjectConfigSnapshot projectConfig : projectConfigs) {
 			String projectName = projectConfig.getName();
 			ProjectBuilder projectBuilder = projectName2ProjectBuilder.remove(projectName);
 			if (projectBuilder != null) {
 				projectBuilder.doClearWithNotification();
 			}
 		}
-		workspaceIndex.removeProjectIndices(projectNames);
+		workspaceConfigSnapshot = workspaceIndex.removeProjectIndices(projectNames);
 	}
 
 	/**
 	 * @return the workspace configuration
 	 */
-	public XIWorkspaceConfig getWorkspaceConfig() {
-		return workspaceConfig;
+	public WorkspaceConfigSnapshot getWorkspaceConfig() {
+		return workspaceConfigSnapshot;
 	}
 
 	/*
@@ -203,7 +200,7 @@ public class XWorkspaceManager {
 	 * @return the project builder.
 	 */
 	public ProjectBuilder getProjectBuilder(URI nestedURI) {
-		XIProjectConfig projectConfig = getProjectConfig(nestedURI);
+		ProjectConfigSnapshot projectConfig = getProjectConfig(nestedURI);
 		String name = null;
 		if (projectConfig != null) {
 			name = projectConfig.getName();
@@ -212,8 +209,8 @@ public class XWorkspaceManager {
 	}
 
 	/** Find the project that contains the uri. */
-	public XIProjectConfig getProjectConfig(URI uri) {
-		XIWorkspaceConfig config = getWorkspaceConfig();
+	public ProjectConfigSnapshot getProjectConfig(URI uri) {
+		WorkspaceConfigSnapshot config = getWorkspaceConfig();
 		if (config == null) {
 			return null;
 		}

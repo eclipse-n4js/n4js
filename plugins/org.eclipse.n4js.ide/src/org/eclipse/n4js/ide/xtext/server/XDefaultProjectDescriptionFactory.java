@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.ide.xtext.server;
 
-import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
+import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 
 /**
@@ -20,7 +20,7 @@ import org.eclipse.xtext.resource.impl.ProjectDescription;
 public class XDefaultProjectDescriptionFactory implements XIProjectDescriptionFactory {
 
 	@Override
-	public ProjectDescription getProjectDescription(XIProjectConfig config) {
+	public ProjectDescription getProjectDescription(ProjectConfigSnapshot config) {
 		ProjectDescription result = new ProjectDescription();
 		result.setName(config.getName());
 		result.getDependencies().addAll(config.getDependencies());

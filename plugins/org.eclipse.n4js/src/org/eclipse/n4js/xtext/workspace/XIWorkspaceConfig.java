@@ -36,7 +36,7 @@ public interface XIWorkspaceConfig extends IWorkspaceConfig {
 	URI getPath();
 
 	/** Updates internal data based on changes of the given resource */
-	WorkspaceChanges update(List<URI> changedResources);
+	WorkspaceChanges update(WorkspaceConfigSnapshot oldWorkspaceConfig, List<URI> dirtyFiles, List<URI> deletedFiles);
 
 	/** Returns a snapshot of the current state of the workspace represented by this {@link XIWorkspaceConfig}. */
 	default WorkspaceConfigSnapshot toSnapshot() {

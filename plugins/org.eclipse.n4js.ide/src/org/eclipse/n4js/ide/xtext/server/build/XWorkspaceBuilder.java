@@ -26,8 +26,10 @@ import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo;
 import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo.ProjectBuildOrderIterator;
 import org.eclipse.n4js.ide.xtext.server.build.ParallelBuildManager.ParallelJob;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
+import org.eclipse.n4js.xtext.workspace.SourceFolderScanner;
+import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
-import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
+import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.impl.CoarseGrainedChangeEvent;
@@ -38,13 +40,13 @@ import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IFileSystemScanner;
-import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.IteratorExtensions;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Stopwatch;
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
@@ -54,7 +56,7 @@ import com.google.inject.Inject;
  *
  * In a project context, it is possible to request a refreshed index representation.
  */
-@SuppressWarnings({ "hiding", "restriction" })
+@SuppressWarnings({ "hiding" })
 public class XWorkspaceBuilder {
 
 	private static class AffectedResourcesRecordingFactory implements IBuildRequestFactory {
@@ -94,6 +96,9 @@ public class XWorkspaceBuilder {
 	private LspLogger lspLogger;
 
 	@Inject
+	private SourceFolderScanner sourceFolderScanner;
+
+	@Inject
 	private IFileSystemScanner scanner;
 
 	@Inject
@@ -122,15 +127,7 @@ public class XWorkspaceBuilder {
 	 * @return a build command that can be triggered
 	 */
 	public BuildTask createIncrementalBuildTask(List<URI> dirtyFiles, List<URI> deletedFiles) {
-		WorkspaceChanges changes = WorkspaceChanges.createUrisRemovedAndChanged(deletedFiles, dirtyFiles);
-		List<URI> allFiles = ImmutableList.<URI> builder().addAll(dirtyFiles).addAll(deletedFiles).build();
-		changes = changes.merge(workspaceManager.update(allFiles));
-		if (!changes.getProjectsWithChangedDependencies().isEmpty()) {
-			Iterable<ProjectConfigSnapshot> projectsWithChangedDeps = IterableExtensions.map(
-					changes.getProjectsWithChangedDependencies(),
-					XIProjectConfig::toSnapshot);
-			workspaceIndex.setProjectConfigSnapshots(projectsWithChangedDeps);
-		}
+		WorkspaceChanges changes = workspaceManager.update(dirtyFiles, deletedFiles);
 		return createBuildTask(changes);
 	}
 
@@ -161,7 +158,7 @@ public class XWorkspaceBuilder {
 		Stopwatch stopwatch = Stopwatch.createStarted();
 
 		try {
-			Collection<? extends XIProjectConfig> allProjects = workspaceManager.getProjectConfigs();
+			Collection<? extends ProjectConfigSnapshot> allProjects = workspaceManager.getProjectConfigs();
 			ProjectBuildOrderInfo projectBuildOrderInfo = projectBuildOrderInfoProvider.get();
 			ProjectBuildOrderIterator pboIterator = projectBuildOrderInfo.getIterator(allProjects);
 			logBuildOrder();
@@ -169,7 +166,7 @@ public class XWorkspaceBuilder {
 			List<IResourceDescription.Delta> result = new ArrayList<>();
 
 			while (pboIterator.hasNext()) {
-				XIProjectConfig projectConfig = pboIterator.next();
+				ProjectConfigSnapshot projectConfig = pboIterator.next();
 				String projectName = projectConfig.getName();
 				ProjectBuilder projectBuilder = workspaceManager.getProjectBuilder(projectName);
 				XBuildResult partialresult = projectBuilder.doInitialBuild(buildRequestFactory, cancelIndicator);
@@ -270,17 +267,17 @@ public class XWorkspaceBuilder {
 	 * @return a buildable.
 	 */
 	private BuildTask createBuildTask(WorkspaceChanges workspaceChanges) {
-		List<URI> dirtyFiles = workspaceChanges.scanAllAddedAndChangedURIs(scanner);
+		List<URI> dirtyFiles = scanAllAddedAndChangedURIs(workspaceChanges, scanner);
 		List<URI> deletedFiles = getAllRemovedURIs(workspaceChanges);
 		queue(this.dirtyFiles, deletedFiles, dirtyFiles);
 		queue(this.deletedFiles, dirtyFiles, deletedFiles);
 
-		for (XIProjectConfig prjConfig : workspaceChanges.getRemovedProjects()) {
+		for (ProjectConfigSnapshot prjConfig : workspaceChanges.getRemovedProjects()) {
 			this.deletedProjects.add(prjConfig.getName());
 			handleDeletedProject(prjConfig);
 		}
 		workspaceManager.removeProjects(workspaceChanges.getRemovedProjects());
-		for (XIProjectConfig prjConfig : workspaceChanges.getAddedProjects()) {
+		for (ProjectConfigSnapshot prjConfig : workspaceChanges.getAddedProjects()) {
 			this.deletedProjects.remove(prjConfig.getName()); // in case a deleted project is being re-created
 		}
 		workspaceManager.addProjects(workspaceChanges.getAddedProjects());
@@ -288,10 +285,20 @@ public class XWorkspaceBuilder {
 		return (cancelIndicator) -> doIncrementalBuild(cancelIndicator);
 	}
 
+	public List<URI> scanAllAddedAndChangedURIs(WorkspaceChanges changes, IFileSystemScanner scanner) {
+		List<URI> allAddedURIs = new ArrayList<>(changes.getAddedURIs());
+		for (SourceFolderSnapshot sourceFolder : changes.getAllAddedSourceFolders()) {
+			List<URI> sourceFilesOnDisk = sourceFolderScanner.findAllSourceFiles(sourceFolder, scanner);
+			allAddedURIs.addAll(sourceFilesOnDisk);
+		}
+		List<URI> allChangedURIs = Lists.newArrayList(Iterables.concat(allAddedURIs, changes.getChangedURIs()));
+		return allChangedURIs;
+	}
+
 	/** @return list of all {@link URI} that have been removed by the given changes */
 	private List<URI> getAllRemovedURIs(WorkspaceChanges workspaceChanges) {
 		List<URI> deleted = new ArrayList<>(workspaceChanges.getRemovedURIs());
-		for (ISourceFolder sourceFolder : workspaceChanges.getAllRemovedSourceFolders()) {
+		for (SourceFolderSnapshot sourceFolder : workspaceChanges.getAllRemovedSourceFolders()) {
 			URI prefix = sourceFolder.getPath();
 			ProjectBuilder projectBuilder = workspaceManager.getProjectBuilder(prefix);
 			if (projectBuilder != null) {
@@ -307,7 +314,7 @@ public class XWorkspaceBuilder {
 	 * ensure correct "isAffected"-computation on resource level during the next build (the deltas created here will be
 	 * considered as "external deltas" by {@link XStatefulIncrementalBuilder#launch()}).
 	 */
-	protected void handleDeletedProject(XIProjectConfig projectConfig) {
+	protected void handleDeletedProject(ProjectConfigSnapshot projectConfig) {
 		String projectName = projectConfig.getName();
 		ResourceDescriptionsData data = workspaceIndex.getProjectIndex(projectName);
 		if (data != null) {
@@ -333,9 +340,9 @@ public class XWorkspaceBuilder {
 			Map<String, Set<URI>> project2dirty = computeProjectToUriMap(dirtyFilesToBuild);
 			Map<String, Set<URI>> project2deleted = computeProjectToUriMap(deletedFilesToBuild);
 			Set<String> changedProjects = Sets.union(project2dirty.keySet(), project2deleted.keySet());
-			List<XIProjectConfig> changedPCs = changedProjects.stream()
-					.map(workspaceManager::getProjectBuilder)
-					.map(ProjectBuilder::getProjectConfig).collect(Collectors.toList());
+			WorkspaceConfigSnapshot workspaceConfig = workspaceManager.getWorkspaceConfig();
+			List<ProjectConfigSnapshot> changedPCs = changedProjects.stream()
+					.map(workspaceConfig::findProjectByName).collect(Collectors.toList());
 
 			ProjectBuildOrderInfo projectBuildOrderInfo = projectBuildOrderInfoProvider.get();
 			ProjectBuildOrderIterator pboIterator = projectBuildOrderInfo.getIterator(changedPCs);
@@ -346,7 +353,7 @@ public class XWorkspaceBuilder {
 
 			while (pboIterator.hasNext()) {
 
-				XIProjectConfig projectConfig = pboIterator.next();
+				ProjectConfigSnapshot projectConfig = pboIterator.next();
 				String projectName = projectConfig.getName();
 				ProjectBuilder projectBuilder = workspaceManager.getProjectBuilder(projectName);
 				Set<URI> projectDirty = project2dirty.getOrDefault(projectName, Collections.emptySet());
@@ -486,7 +493,7 @@ public class XWorkspaceBuilder {
 			ProjectBuildOrderInfo projectBuildOrderInfo = projectBuildOrderInfoProvider.get();
 			ProjectBuildOrderIterator visitAll = projectBuildOrderInfo.getIterator().visitAll();
 			String output = "Project build order:\n  "
-					+ IteratorExtensions.join(visitAll, "\n  ", XIProjectConfig::getName);
+					+ IteratorExtensions.join(visitAll, "\n  ", ProjectConfigSnapshot::getName);
 			LOG.info(output);
 		}
 	}

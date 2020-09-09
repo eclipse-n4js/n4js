@@ -44,6 +44,7 @@ import org.eclipse.n4js.ide.xtext.server.QueuedExecutorService;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.xtext.server.LSPIssue;
+import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.xtext.build.Source2GeneratedMapping;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -52,7 +53,6 @@ import org.eclipse.xtext.resource.persistence.SerializableEObjectDescription;
 import org.eclipse.xtext.resource.persistence.SerializableReferenceDescription;
 import org.eclipse.xtext.resource.persistence.SerializableResourceDescription;
 import org.eclipse.xtext.util.Tuples;
-import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.base.Preconditions;
@@ -137,7 +137,7 @@ public class ProjectStatePersister {
 	 * @param state
 	 *            the state to be written
 	 */
-	public void writeProjectState(IProjectConfig project, ImmutableProjectState state) {
+	public void writeProjectState(ProjectConfigSnapshot project, ImmutableProjectState state) {
 		queuedExecutorService.submitAndCancelPrevious(Tuples.create(ProjectStatePersister.class, project.getName()),
 				"writeProjectState", (cancelIndicator) -> {
 					if (!cancelIndicator.isCanceled()) {
@@ -308,7 +308,7 @@ public class ProjectStatePersister {
 	 * @param project
 	 *            the project
 	 */
-	public ImmutableProjectState readProjectState(IProjectConfig project) {
+	public ImmutableProjectState readProjectState(ProjectConfigSnapshot project) {
 		URI baseURI = getBaseURI(project);
 		File file = getDataFile(project);
 		try {
@@ -506,21 +506,21 @@ public class ProjectStatePersister {
 		return validationIssues.build();
 	}
 
-	private File getDataFile(IProjectConfig project) {
+	private File getDataFile(ProjectConfigSnapshot project) {
 		URI fileName = getFileName(project);
 		File file = URIUtils.toFile(fileName);
 		return file;
 	}
 
 	/** @return the file URI of the persisted index */
-	public URI getFileName(IProjectConfig project) {
+	public URI getFileName(ProjectConfigSnapshot project) {
 		String fileName = getPersistedFileName();
 		URI fileNameURI = URI.createFileURI(fileName);
 		URI baseURI = getBaseURI(project);
 		return new FileURI(fileNameURI.resolve(baseURI)).toURI();
 	}
 
-	private URI getBaseURI(IProjectConfig project) {
+	private URI getBaseURI(ProjectConfigSnapshot project) {
 		return project.getPath();
 	}
 

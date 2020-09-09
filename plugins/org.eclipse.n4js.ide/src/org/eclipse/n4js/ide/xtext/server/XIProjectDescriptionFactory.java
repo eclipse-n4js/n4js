@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.ide.xtext.server;
 
-import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
+import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 
 /**
@@ -25,5 +25,5 @@ public interface XIProjectDescriptionFactory {
 	 *            the project configuration
 	 * @return the description for the project.
 	 */
-	ProjectDescription getProjectDescription(XIProjectConfig project);
+	ProjectDescription getProjectDescription(ProjectConfigSnapshot project);
 }

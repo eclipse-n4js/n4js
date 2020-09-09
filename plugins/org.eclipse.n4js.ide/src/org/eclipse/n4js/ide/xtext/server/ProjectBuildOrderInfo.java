@@ -20,7 +20,8 @@ import java.util.Set;
 
 import org.eclipse.n4js.ide.xtext.server.build.ProjectBuilder;
 import org.eclipse.n4js.ide.xtext.server.build.XWorkspaceManager;
-import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
+import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
+import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.resource.IResourceDescription;
 
@@ -33,7 +34,7 @@ import com.google.inject.Injector;
 /**
  * Implementation for sorted projects according to their build order.
  */
-public class ProjectBuildOrderInfo implements IOrderInfo<XIProjectConfig> {
+public class ProjectBuildOrderInfo implements IOrderInfo<ProjectConfigSnapshot> {
 
 	/** Issue key for cyclic dependencies */
 	public static final String CYCLIC_PROJECT_DEPENDENCIES = ProjectBuildOrderInfo.class.getName()
@@ -42,7 +43,7 @@ public class ProjectBuildOrderInfo implements IOrderInfo<XIProjectConfig> {
 	/**
 	 * A provider for {@link ProjectBuildOrderInfo} instances.
 	 */
-	public static class Provider implements com.google.inject.Provider<IOrderInfo<XIProjectConfig>> {
+	public static class Provider implements com.google.inject.Provider<IOrderInfo<ProjectConfigSnapshot>> {
 		/** Injector to be used for creating instances of {@link #ProjectBuildOrderInfo()} */
 		@Inject
 		protected Injector injector;
@@ -57,14 +58,14 @@ public class ProjectBuildOrderInfo implements IOrderInfo<XIProjectConfig> {
 	/**
 	 * {@link Iterator} that iterates over {@link ProjectBuildOrderInfo#sortedProjects}.
 	 */
-	public class ProjectBuildOrderIterator implements IOrderIterator<XIProjectConfig> {
+	public class ProjectBuildOrderIterator implements IOrderIterator<ProjectConfigSnapshot> {
 		/**
 		 * Subset of {@link #sortedProjects}: when {@link #ProjectBuildOrderInfo()} is used as an iterator, only those
 		 * projects are iterated over that are contained in this set
 		 */
 		final protected Set<String> visitProjectNames = new HashSet<>();
 		/** Iterator delegate */
-		final protected Iterator<XIProjectConfig> iteratorDelegate;
+		final protected Iterator<ProjectConfigSnapshot> iteratorDelegate;
 
 		ProjectBuildOrderIterator() {
 			this.iteratorDelegate = Iterables
@@ -72,15 +73,15 @@ public class ProjectBuildOrderInfo implements IOrderInfo<XIProjectConfig> {
 		}
 
 		@Override
-		public ProjectBuildOrderIterator visit(Collection<? extends XIProjectConfig> projectConfigs) {
-			for (XIProjectConfig pc : projectConfigs) {
+		public ProjectBuildOrderIterator visit(Collection<? extends ProjectConfigSnapshot> projectConfigs) {
+			for (ProjectConfigSnapshot pc : projectConfigs) {
 				visitProjectNames.add(pc.getName());
 			}
 			return this;
 		}
 
 		/** Mark all projects as to be visited that are affected by a change in the given project. */
-		public IOrderIterator<XIProjectConfig> visitAffected(String projectName) {
+		public IOrderIterator<ProjectConfigSnapshot> visitAffected(String projectName) {
 			visit(inversedDependencies.get(projectName));
 			return this;
 		}
@@ -98,14 +99,14 @@ public class ProjectBuildOrderInfo implements IOrderInfo<XIProjectConfig> {
 		}
 
 		/** @return the set of projects that may contain resources that need to be rebuild given the list of changes */
-		protected Set<XIProjectConfig> getAffectedProjects(List<IResourceDescription.Delta> changes) {
+		protected Set<ProjectConfigSnapshot> getAffectedProjects(List<IResourceDescription.Delta> changes) {
 			Set<String> changedProjectsNames = new HashSet<>();
 			for (IResourceDescription.Delta change : changes) {
 				ProjectBuilder projectBuilder = workspaceManager.getProjectBuilder(change.getUri());
 				changedProjectsNames.add(projectBuilder.getName());
 			}
 
-			Set<XIProjectConfig> affectedProjects = new HashSet<>();
+			Set<ProjectConfigSnapshot> affectedProjects = new HashSet<>();
 			for (String changedProjectName : changedProjectsNames) {
 				affectedProjects.addAll(inversedDependencies.get(changedProjectName));
 			}
@@ -119,7 +120,7 @@ public class ProjectBuildOrderInfo implements IOrderInfo<XIProjectConfig> {
 		}
 
 		@Override
-		public XIProjectConfig next() {
+		public ProjectConfigSnapshot next() {
 			return iteratorDelegate.next();
 		}
 	}
@@ -129,9 +130,9 @@ public class ProjectBuildOrderInfo implements IOrderInfo<XIProjectConfig> {
 	protected XWorkspaceManager workspaceManager;
 
 	/** Inverse set of project dependency information */
-	final protected Multimap<String, XIProjectConfig> inversedDependencies = HashMultimap.create();
+	final protected Multimap<String, ProjectConfigSnapshot> inversedDependencies = HashMultimap.create();
 	/** Build order of projects */
-	final protected List<XIProjectConfig> sortedProjects = new ArrayList<>();
+	final protected List<ProjectConfigSnapshot> sortedProjects = new ArrayList<>();
 
 	/**
 	 * Creates a new instance of {@link ProjectBuildOrderIterator}. Assumes a succeeding call to
@@ -144,7 +145,7 @@ public class ProjectBuildOrderInfo implements IOrderInfo<XIProjectConfig> {
 
 	/** Creates a new instance of {@link ProjectBuildOrderIterator}. The given set of projects will be visited only. */
 	@Override
-	public ProjectBuildOrderIterator getIterator(Collection<? extends XIProjectConfig> projectDescriptions) {
+	public ProjectBuildOrderIterator getIterator(Collection<? extends ProjectConfigSnapshot> projectDescriptions) {
 		ProjectBuildOrderIterator iterator = getIterator();
 		iterator.visit(projectDescriptions);
 		return iterator;
@@ -153,9 +154,9 @@ public class ProjectBuildOrderInfo implements IOrderInfo<XIProjectConfig> {
 	/** Populates {@link #sortedProjects} and {@link #inversedDependencies} */
 	@Inject
 	protected void init() {
+		WorkspaceConfigSnapshot workspaceConfig = workspaceManager.getWorkspaceConfig();
 		LinkedHashSet<String> orderedProjectNames = new LinkedHashSet<>();
-		for (ProjectBuilder pb : workspaceManager.getProjectBuilders()) {
-			XIProjectConfig pc = pb.getProjectConfig();
+		for (ProjectConfigSnapshot pc : workspaceConfig.getProjects()) {
 			for (String dependencyName : getDependencies(pc)) {
 				inversedDependencies.put(dependencyName, pc);
 			}
@@ -163,15 +164,15 @@ public class ProjectBuildOrderInfo implements IOrderInfo<XIProjectConfig> {
 		}
 
 		for (String projectName : orderedProjectNames) {
-			ProjectBuilder pb = workspaceManager.getProjectBuilder(projectName);
-			if (pb != null) { // can be null if project not on disk
-				sortedProjects.add(pb.getProjectConfig());
+			ProjectConfigSnapshot pc = workspaceConfig.findProjectByName(projectName);
+			if (pc != null) {
+				sortedProjects.add(pc);
 			}
 		}
 	}
 
 	/** Computes the build order of all projects in the workspace */
-	protected void computeOrder(XIProjectConfig pc, LinkedHashSet<String> orderedProjects,
+	protected void computeOrder(ProjectConfigSnapshot pc, LinkedHashSet<String> orderedProjects,
 			LinkedHashSet<String> projectStack) {
 
 		String pdName = pc.getName();
@@ -186,10 +187,10 @@ public class ProjectBuildOrderInfo implements IOrderInfo<XIProjectConfig> {
 		} else {
 			projectStack.add(pdName);
 
+			WorkspaceConfigSnapshot workspaceConfig = workspaceManager.getWorkspaceConfig();
 			for (String depName : getDependencies(pc)) {
-				ProjectBuilder pb = workspaceManager.getProjectBuilder(depName);
-				if (pb != null) { // can be null if project not on disk
-					XIProjectConfig depPC = pb.getProjectConfig();
+				ProjectConfigSnapshot depPC = workspaceConfig.findProjectByName(depName);
+				if (depPC != null) {
 					computeOrder(depPC, orderedProjects, projectStack);
 				}
 			}
@@ -201,9 +202,9 @@ public class ProjectBuildOrderInfo implements IOrderInfo<XIProjectConfig> {
 
 	/**
 	 * Returns the project dependencies to be considered for build order computation. By default, simply returns
-	 * {@link XIProjectConfig#getDependencies()}; subclasses may override to customize this.
+	 * {@link ProjectConfigSnapshot#getDependencies()}; subclasses may override to customize this.
 	 */
-	protected Set<String> getDependencies(XIProjectConfig pc) {
+	protected Set<String> getDependencies(ProjectConfigSnapshot pc) {
 		return pc.getDependencies();
 	}
 

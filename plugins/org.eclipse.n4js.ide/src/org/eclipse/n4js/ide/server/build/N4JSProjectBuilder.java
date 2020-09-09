@@ -28,7 +28,7 @@ import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.tester.TestCatalogSupplier;
-import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
+import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.util.CancelIndicator;
 
@@ -37,7 +37,6 @@ import com.google.inject.Inject;
 /**
  * Adds {@link #writeTestCatalog()} and {@link #removeTestCatalog()}.
  */
-@SuppressWarnings("restriction")
 public class N4JSProjectBuilder extends ProjectBuilder {
 	private static final Logger LOG = LogManager.getLogger(N4JSProjectBuilder.class);
 
@@ -68,7 +67,7 @@ public class N4JSProjectBuilder extends ProjectBuilder {
 
 	/** Generates the test catalog for the project. */
 	private void writeTestCatalog() {
-		XIProjectConfig projectConfig = getProjectConfig();
+		ProjectConfigSnapshot projectConfig = getProjectConfig();
 		IN4JSProject project = n4jsCore.findProject(new N4JSProjectName(projectConfig.getName())).orNull();
 		File testCatalog = getTestCatalogFile(projectConfig);
 
@@ -89,7 +88,7 @@ public class N4JSProjectBuilder extends ProjectBuilder {
 
 	/** Removes the test catalog for the project. */
 	private void removeTestCatalog() {
-		XIProjectConfig projectConfig = getProjectConfig();
+		ProjectConfigSnapshot projectConfig = getProjectConfig();
 		File testCatalog = getTestCatalogFile(projectConfig);
 
 		if (testCatalog.isFile()) {
@@ -102,7 +101,7 @@ public class N4JSProjectBuilder extends ProjectBuilder {
 		}
 	}
 
-	private File getTestCatalogFile(XIProjectConfig projectConfig) {
+	private File getTestCatalogFile(ProjectConfigSnapshot projectConfig) {
 		return new File(projectConfig.getPath().toFileString(), N4JSGlobals.TEST_CATALOG);
 	}
 }

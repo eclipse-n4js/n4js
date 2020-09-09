@@ -34,7 +34,7 @@ import org.eclipse.n4js.ide.xtext.server.build.XWorkspaceManager;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.utils.URIUtils;
-import org.eclipse.xtext.workspace.IProjectConfig;
+import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 
 import com.google.common.base.Stopwatch;
 import com.google.inject.Injector;
@@ -42,7 +42,6 @@ import com.google.inject.Injector;
 /**
  * The entry point for all cli calls with the goals 'compile' and 'clean'
  */
-@SuppressWarnings("restriction")
 public class N4jscCompiler {
 	private static final Logger LOG = LogManager.getLogger(N4jscCompiler.class);
 
@@ -142,7 +141,7 @@ public class N4jscCompiler {
 	}
 
 	private void warnIfNoProjectsFound() {
-		Set<? extends IProjectConfig> projects = workspaceManager.getProjectConfigs();
+		Set<? extends ProjectConfigSnapshot> projects = workspaceManager.getProjectConfigs();
 		if (projects.isEmpty()) {
 			N4jscConsole.println("No projects found at the given location: " + options.getDirs().get(0));
 		}
@@ -150,7 +149,7 @@ public class N4jscCompiler {
 
 	private void verbosePrintAllProjects() {
 		if (options.isVerbose()) {
-			Set<? extends IProjectConfig> projects = workspaceManager.getProjectConfigs();
+			Set<? extends ProjectConfigSnapshot> projects = workspaceManager.getProjectConfigs();
 			int maxPrjNameLength = projects.stream()
 					.filter(p -> p.getName() != null)
 					.mapToInt(p -> p.getName().length())
@@ -161,7 +160,7 @@ public class N4jscCompiler {
 				Path workspace = options.getDirs().get(0).toPath();
 
 				SortedMap<String, String> projectNameList = new TreeMap<>();
-				for (IProjectConfig prj : projects) {
+				for (ProjectConfigSnapshot prj : projects) {
 					String prjName = prj.getName() == null ? "[no_name]" : prj.getName();
 					String locationStr = null;
 					if (prj.getPath() == null) {
