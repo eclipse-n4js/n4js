@@ -103,7 +103,7 @@ public class XWorkspaceBuilder {
 	private IBuildRequestFactory buildRequestFactory;
 
 	@Inject
-	private ConcurrentIndex fullIndex;
+	private ConcurrentIndex workspaceIndex;
 
 	private final Set<URI> dirtyFiles = new LinkedHashSet<>();
 	private final Set<URI> deletedFiles = new LinkedHashSet<>();
@@ -129,7 +129,7 @@ public class XWorkspaceBuilder {
 			Iterable<ProjectConfigSnapshot> projectsWithChangedDeps = IterableExtensions.map(
 					changes.getProjectsWithChangedDependencies(),
 					XIProjectConfig::toSnapshot);
-			fullIndex.setProjectConfigSnapshots(projectsWithChangedDeps);
+			workspaceIndex.setProjectConfigSnapshots(projectsWithChangedDeps);
 		}
 		return createBuildTask(changes);
 	}
@@ -309,7 +309,7 @@ public class XWorkspaceBuilder {
 	 */
 	protected void handleDeletedProject(XIProjectConfig projectConfig) {
 		String projectName = projectConfig.getName();
-		ResourceDescriptionsData data = fullIndex.getProjectIndex(projectName);
+		ResourceDescriptionsData data = workspaceIndex.getProjectIndex(projectName);
 		if (data != null) {
 			List<IResourceDescription.Delta> deltas = new ArrayList<>();
 			for (IResourceDescription oldDesc : data.getAllResourceDescriptions()) {

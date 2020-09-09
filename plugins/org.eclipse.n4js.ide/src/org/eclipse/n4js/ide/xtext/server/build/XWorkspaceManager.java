@@ -61,7 +61,7 @@ public class XWorkspaceManager {
 	private UriExtensions uriExtensions;
 
 	@Inject
-	private ConcurrentIndex fullIndex;
+	private ConcurrentIndex workspaceIndex;
 
 	private final Map<String, ProjectBuilder> projectName2ProjectBuilder = new HashMap<>();
 
@@ -99,8 +99,8 @@ public class XWorkspaceManager {
 
 		projectName2ProjectBuilder.values().forEach(b -> b.doClearWithNotification());
 		projectName2ProjectBuilder.clear();
-		fullIndex.initialize(workspaceConfig.toSnapshot());
-		fullIndex.removeAllProjectsIndices();
+		workspaceIndex.initialize(workspaceConfig.toSnapshot());
+		workspaceIndex.removeAllProjectsIndices();
 
 		// init projects
 		this.workspaceConfig = workspaceConfig;
@@ -161,7 +161,7 @@ public class XWorkspaceManager {
 			projectName2ProjectBuilder.put(projectConfig.getName(), projectBuilder);
 			pcSnapshots.add(projectConfig.toSnapshot());
 		}
-		fullIndex.setProjectConfigSnapshots(pcSnapshots);
+		workspaceIndex.setProjectConfigSnapshots(pcSnapshots);
 	}
 
 	/** Removes a project from the workspace */
@@ -174,7 +174,7 @@ public class XWorkspaceManager {
 				projectBuilder.doClearWithNotification();
 			}
 		}
-		fullIndex.removeProjectIndices(projectNames);
+		workspaceIndex.removeProjectIndices(projectNames);
 	}
 
 	/**
