@@ -50,7 +50,6 @@ import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.util.UriUtil;
 import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.workspace.ISourceFolder;
-import org.eclipse.xtext.workspace.ProjectConfigAdapter;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
@@ -416,7 +415,6 @@ public class ProjectBuilder {
 		result.setURIResourceMap(uriResourceMap);
 		ProjectDescription projectDescription = projectDescriptionFactory.getProjectDescription(projectConfig);
 		projectDescription.attachToEmfObject(result);
-		ProjectConfigAdapter.install(result, projectConfig);
 		attachWorkspaceResourceLocator(result);
 
 		ChunkedResourceDescriptions index = workspaceIndex.toDescriptions(result);

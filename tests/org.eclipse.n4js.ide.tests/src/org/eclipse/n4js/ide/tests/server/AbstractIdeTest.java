@@ -352,6 +352,21 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		throw new AssertionError("should never reach this point");
 	}
 
+	/**
+	 * Send a 'didChangeWatchedFiles' notification to the server. The file change type will be
+	 * {@link FileChangeType#Changed Changed} for all given URIs.
+	 */
+	protected void sendDidChangeWatchedFiles(FileURI... changedFileURIs) {
+		if (changedFileURIs == null || changedFileURIs.length == 0) {
+			Assert.fail("no URIs of changed files given");
+		}
+		List<FileEvent> fileEvents = Stream.of(changedFileURIs)
+				.map(fileURI -> new FileEvent(fileURI.toString(), FileChangeType.Changed))
+				.collect(Collectors.toList());
+		DidChangeWatchedFilesParams params = new DidChangeWatchedFilesParams(fileEvents);
+		languageServer.didChangeWatchedFiles(params);
+	}
+
 	/** Same as {@link #isOpen(FileURI)}, but accepts a module name. */
 	protected boolean isOpen(String moduleName) {
 		FileURI fileURI = getFileURIFromModuleName(moduleName);
@@ -577,10 +592,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		// 1) change on disk
 		changeFileOnDiskWithoutNotification(fileURI, modification);
 		// 2) notify LSP server
-		List<FileEvent> fileEvents = Collections.singletonList(
-				new FileEvent(fileURI.toString(), FileChangeType.Changed));
-		DidChangeWatchedFilesParams params = new DidChangeWatchedFilesParams(fileEvents);
-		languageServer.didChangeWatchedFiles(params);
+		sendDidChangeWatchedFiles(fileURI);
 	}
 
 	/** Same as {@link #changeOpenedFile(FileURI, String)}, but accepts a module name. */
@@ -675,10 +687,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		// 2) notify LSP server
 		VersionedTextDocumentIdentifier docId = new VersionedTextDocumentIdentifier(fileURI.toString(), info.version);
 		DidSaveTextDocumentParams didSaveParams = new DidSaveTextDocumentParams(docId);
-		List<FileEvent> fEvents = Collections.singletonList(new FileEvent(fileURI.toString(), FileChangeType.Changed));
-		DidChangeWatchedFilesParams didChangeWatchedFilesParams = new DidChangeWatchedFilesParams(fEvents);
 		languageServer.didSave(didSaveParams);
-		languageServer.didChangeWatchedFiles(didChangeWatchedFilesParams);
+		sendDidChangeWatchedFiles(fileURI);
 	}
 
 	/**

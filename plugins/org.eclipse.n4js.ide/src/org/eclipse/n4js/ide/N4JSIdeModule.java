@@ -25,7 +25,6 @@ import org.eclipse.n4js.ide.server.N4JSProjectDescriptionFactory;
 import org.eclipse.n4js.ide.server.N4JSProjectStatePersister;
 import org.eclipse.n4js.ide.server.N4JSTextDocumentFrontend;
 import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
-import org.eclipse.n4js.ide.server.SourceFolderAwareResourceValidator;
 import org.eclipse.n4js.ide.server.build.N4JSBuilderFrontend;
 import org.eclipse.n4js.ide.server.build.N4JSProjectBuildOrderInfo;
 import org.eclipse.n4js.ide.server.build.N4JSProjectBuilder;
@@ -82,7 +81,6 @@ import org.eclipse.xtext.ide.server.symbol.HierarchicalDocumentSymbolService;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.validation.IDiagnosticConverter;
-import org.eclipse.xtext.validation.IResourceValidator;
 
 /**
  * Use this class to register ide components.
@@ -247,9 +245,5 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public Class<? extends AfterValidateListener> bindAfterValidateListener() {
 		return WorkspaceValidateListener.class;
-	}
-
-	public Class<? extends IResourceValidator> bindIResourceValidator() {
-		return SourceFolderAwareResourceValidator.class;
 	}
 }
