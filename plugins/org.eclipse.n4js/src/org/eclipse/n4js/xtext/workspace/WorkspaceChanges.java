@@ -30,11 +30,12 @@ import com.google.common.collect.ImmutableSet;
  * <p>
  * Instances of {@link WorkspaceChanges} will mainly focus on removed/added/changed {@link URI}s that need to be
  * respected by the builder due to caching of the builder. Other changes that affect the build order (e.g. name,
- * dependencies) are only reflected by {@link #namesOrDependenciesChanged}.
+ * dependencies) are only reflected by {@link #changedProjects}.
  * <p>
  * All data fields of {@link WorkspaceChanges} (e.g. {@link #removedURIs}) are mutually exclusive, i.e. that
  * {@link URI}s mentioned in {@link #removedURIs} are neither listed in {@link #removedSourceFolders} nor in one of the
- * source folders of #{@link #removedProjects}.
+ * source folders of #{@link #removedProjects}. But note that projects in which source folders were added/removed do
+ * appear in {@link #changedProjects}.
  * <p>
  * At a first glance it seems redundant to provide added/removed data fields on different levels (plain, source folders,
  * projects). However, mind that returning the highest level is always desired (i.e. projects prior to source folders
@@ -49,28 +50,28 @@ public class WorkspaceChanges {
 
 	/** @return a new instance of {@link WorkspaceChanges} contains the given project as removed */
 	public static WorkspaceChanges createProjectRemoved(ProjectConfigSnapshot project) {
-		return new WorkspaceChanges(false, ImmutableList.of(), ImmutableList.of(), ImmutableList.of(),
+		return new WorkspaceChanges(ImmutableList.of(), ImmutableList.of(), ImmutableList.of(),
 				ImmutableList.of(), ImmutableList.of(),
 				ImmutableList.of(project), ImmutableList.of(), ImmutableList.of());
 	}
 
 	/** @return a new instance of {@link WorkspaceChanges} contains the given project as added */
 	public static WorkspaceChanges createProjectAdded(ProjectConfigSnapshot project) {
-		return new WorkspaceChanges(false, ImmutableList.of(), ImmutableList.of(), ImmutableList.of(),
+		return new WorkspaceChanges(ImmutableList.of(), ImmutableList.of(), ImmutableList.of(),
 				ImmutableList.of(), ImmutableList.of(),
 				ImmutableList.of(), ImmutableList.of(project), ImmutableList.of());
 	}
 
 	/** @return a new instance of {@link WorkspaceChanges} contains the given projects as changed */
 	public static WorkspaceChanges createProjectsChanged(Iterable<? extends ProjectConfigSnapshot> changedProjects) {
-		return new WorkspaceChanges(true, ImmutableList.of(), ImmutableList.of(), ImmutableList.of(),
+		return new WorkspaceChanges(ImmutableList.of(), ImmutableList.of(), ImmutableList.of(),
 				ImmutableList.of(), ImmutableList.of(),
 				ImmutableList.of(), ImmutableList.of(), ImmutableList.copyOf(changedProjects));
 	}
 
 	/** @return a new instance of {@link WorkspaceChanges} contains the given uris as changed */
 	public static WorkspaceChanges createUrisChanged(List<URI> changedURIs) {
-		return new WorkspaceChanges(false, ImmutableList.of(), ImmutableList.of(), ImmutableList.copyOf(changedURIs),
+		return new WorkspaceChanges(ImmutableList.of(), ImmutableList.of(), ImmutableList.copyOf(changedURIs),
 				ImmutableList.of(),
 				ImmutableList.of(),
 				ImmutableList.of(), ImmutableList.of(), ImmutableList.of());
@@ -78,7 +79,7 @@ public class WorkspaceChanges {
 
 	/** @return a new instance of {@link WorkspaceChanges} contains the given uris as removed */
 	public static WorkspaceChanges createUrisRemoved(List<URI> removedURIs) {
-		return new WorkspaceChanges(false, ImmutableList.copyOf(removedURIs), ImmutableList.of(), ImmutableList.of(),
+		return new WorkspaceChanges(ImmutableList.copyOf(removedURIs), ImmutableList.of(), ImmutableList.of(),
 				ImmutableList.of(),
 				ImmutableList.of(),
 				ImmutableList.of(), ImmutableList.of(), ImmutableList.of());
@@ -86,14 +87,12 @@ public class WorkspaceChanges {
 
 	/** @return a new instance of {@link WorkspaceChanges} contains the given uris as removed / changed */
 	public static WorkspaceChanges createUrisRemovedAndChanged(List<URI> removedURIs, List<URI> changedURIs) {
-		return new WorkspaceChanges(false, ImmutableList.copyOf(removedURIs), ImmutableList.copyOf(changedURIs),
+		return new WorkspaceChanges(ImmutableList.copyOf(removedURIs), ImmutableList.copyOf(changedURIs),
 				ImmutableList.of(), ImmutableList.of(),
 				ImmutableList.of(),
 				ImmutableList.of(), ImmutableList.of(), ImmutableList.of());
 	}
 
-	/** true iff a name or a dependency of a (still existing) project have been modified */
-	protected final boolean namesOrDependenciesChanged; // FIXME probably obsolete; remove!
 	/** removed uris (excluding those from {@link #removedSourceFolders} and {@link #removedProjects}) */
 	protected final ImmutableList<URI> removedURIs;
 	/** added uris (excluding those from {@link #addedSourceFolders} and {@link #addedProjects}) */
@@ -113,21 +112,20 @@ public class WorkspaceChanges {
 
 	/** Constructor */
 	public WorkspaceChanges() {
-		this(false, ImmutableList.of(), ImmutableList.of(), ImmutableList.of(), ImmutableList.of(), ImmutableList.of(),
+		this(ImmutableList.of(), ImmutableList.of(), ImmutableList.of(), ImmutableList.of(), ImmutableList.of(),
 				ImmutableList.of(), ImmutableList.of(),
 				ImmutableList.of());
 	}
 
 	/** Constructor */
-	public WorkspaceChanges(boolean namesOrDependenciesChanged,
-			ImmutableList<URI> removedURIs, ImmutableList<URI> addedURIs, ImmutableList<URI> changedURIs,
+	public WorkspaceChanges(ImmutableList<URI> removedURIs, ImmutableList<URI> addedURIs,
+			ImmutableList<URI> changedURIs,
 			ImmutableList<SourceFolderSnapshot> removedSourceFolders,
 			ImmutableList<SourceFolderSnapshot> addedSourceFolders,
 			ImmutableList<ProjectConfigSnapshot> removedProjects,
 			ImmutableList<ProjectConfigSnapshot> addedProjects,
 			ImmutableList<ProjectConfigSnapshot> changedProjects) {
 
-		this.namesOrDependenciesChanged = namesOrDependenciesChanged;
 		this.removedURIs = removedURIs;
 		this.addedURIs = addedURIs;
 		this.changedURIs = changedURIs;
@@ -136,11 +134,6 @@ public class WorkspaceChanges {
 		this.removedProjects = removedProjects;
 		this.addedProjects = addedProjects;
 		this.changedProjects = changedProjects;
-	}
-
-	/** @return true iff a name or dependencies of a still existing project changed */
-	public boolean isNamesOrDependenciesChanged() {
-		return namesOrDependenciesChanged;
 	}
 
 	/**
@@ -209,7 +202,7 @@ public class WorkspaceChanges {
 
 	/** @return true iff this instance implies a change of the build order */
 	public boolean isBuildOrderAffected() {
-		return namesOrDependenciesChanged || !addedProjects.isEmpty() || !removedProjects.isEmpty();
+		return !addedProjects.isEmpty() || !removedProjects.isEmpty() || !changedProjects.isEmpty();
 	}
 
 	/** Merges the given changes into a new instance */
@@ -221,7 +214,6 @@ public class WorkspaceChanges {
 				.toSet();
 
 		return new WorkspaceChanges(
-				this.namesOrDependenciesChanged || changes.namesOrDependenciesChanged,
 				concat(removedURIs, changes.removedURIs),
 				concat(addedURIs, changes.addedURIs),
 				concat(changedURIs, changes.changedURIs),

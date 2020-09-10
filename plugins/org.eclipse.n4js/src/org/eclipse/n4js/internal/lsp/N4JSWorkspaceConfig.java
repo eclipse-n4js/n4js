@@ -149,8 +149,7 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 			}
 		}
 
-		boolean dependenciesChanged = !addedProjects.isEmpty() || !removedProjects.isEmpty();
-		return new WorkspaceChanges(dependenciesChanged, ImmutableList.of(), ImmutableList.of(), ImmutableList.of(),
+		return new WorkspaceChanges(ImmutableList.of(), ImmutableList.of(), ImmutableList.of(),
 				ImmutableList.of(),
 				ImmutableList.of(), ImmutableList.copyOf(removedProjects), ImmutableList.copyOf(addedProjects),
 				ImmutableList.of());

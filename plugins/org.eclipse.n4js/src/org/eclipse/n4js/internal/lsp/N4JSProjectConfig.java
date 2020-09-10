@@ -271,7 +271,7 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		boolean propertiesChanged = !addedSourceFolders.isEmpty() || !removedSourceFolders.isEmpty()
 				|| !Objects.equals(oldProjectConfig, newProjectConfig);
 
-		return new WorkspaceChanges(propertiesChanged, ImmutableList.of(), ImmutableList.of(), ImmutableList.of(),
+		return new WorkspaceChanges(ImmutableList.of(), ImmutableList.of(), ImmutableList.of(),
 				ImmutableList.copyOf(removedSourceFolders),
 				ImmutableList.copyOf(addedSourceFolders), ImmutableList.of(), ImmutableList.of(),
 				propertiesChanged ? ImmutableList.of(newProjectConfig) : ImmutableList.of());
