@@ -14,8 +14,10 @@ import java.util.List;
 import java.util.Objects;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.packagejson.PackageJsonProperties;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
 
@@ -27,20 +29,28 @@ import com.google.common.collect.ImmutableList;
 public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 
 	private final ProjectType type;
+	private final N4JSProjectName definesPackage;
 	private final ImmutableList<String> sortedDependencies;
 
 	/** Creates a new {@link N4JSProjectConfigSnapshot}. */
-	public N4JSProjectConfigSnapshot(String name, ProjectType type, URI path, boolean indexOnly,
+	public N4JSProjectConfigSnapshot(String name, URI path,
+			ProjectType type, N4JSProjectName definesPackage, boolean indexOnly,
 			Iterable<String> dependencies, Iterable<String> sortedDependencies,
 			Iterable<? extends SourceFolderSnapshot> sourceFolders) {
 		super(name, path, indexOnly, dependencies, sourceFolders);
 		this.type = type;
+		this.definesPackage = definesPackage;
 		this.sortedDependencies = ImmutableList.copyOf(sortedDependencies);
 	}
 
 	/** Returns the {@link ProjectType project type}. */
 	public ProjectType getType() {
 		return type;
+	}
+
+	/** Returns the value of the {@link PackageJsonProperties#DEFINES_PACKAGE "definesPackage"} property. */
+	public N4JSProjectName getDefinesPackage() {
+		return definesPackage;
 	}
 
 	/** Returns the {@link IN4JSProject#getSortedDependencies() sorted dependencies}. */
@@ -53,6 +63,7 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 		return Objects.hash(
 				super.hashCode(),
 				type,
+				definesPackage,
 				sortedDependencies);
 	}
 
@@ -68,6 +79,8 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 			return false;
 		N4JSProjectConfigSnapshot other = (N4JSProjectConfigSnapshot) obj;
 		if (type != other.type)
+			return false;
+		if (!Objects.equals(definesPackage, other.definesPackage))
 			return false;
 		if (!Objects.equals(sortedDependencies, other.sortedDependencies))
 			return false;

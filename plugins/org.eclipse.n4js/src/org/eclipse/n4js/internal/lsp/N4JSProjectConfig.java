@@ -295,7 +295,8 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		ImmutableSet<SourceFolderSnapshot> sourceFolderSnapshots = getSourceFolders().stream()
 				.map(XISourceFolder::toSnapshot)
 				.collect(ImmutableSet.toImmutableSet());
-		return new N4JSProjectConfigSnapshot(getName(), toProject().getProjectType(), getPath(), indexOnly(),
+		return new N4JSProjectConfigSnapshot(getName(), getPath(),
+				toProject().getProjectType(), toProject().getDefinesPackageName(), indexOnly(),
 				getDependencies(), sortedDependencies, sourceFolderSnapshots);
 	}
 }

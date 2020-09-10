@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -181,8 +182,11 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	 */
 	private WorkspaceChanges recomputeSortedDependenciesIfNecessary(WorkspaceConfigSnapshot oldWorkspaceConfig,
 			WorkspaceChanges changes) {
-		// FIXME also required if the definesProject property changes
-		if (!changes.getAddedProjects().isEmpty() || !changes.getRemovedProjects().isEmpty()) {
+
+		boolean needRecompute = !changes.getAddedProjects().isEmpty() || !changes.getRemovedProjects().isEmpty()
+				|| Iterables.any(changes.getChangedProjects(), pc -> didDefinesPackageChange(pc, oldWorkspaceConfig));
+
+		if (needRecompute) {
 			multiCleartriggerCache.clear(MultiCleartriggerCache.CACHE_KEY_SORTED_DEPENDENCIES);
 			Set<String> changedProjectNames = changes.getChangedProjects().stream().map(ProjectConfigSnapshot::getName)
 					.collect(Collectors.toSet());
@@ -213,5 +217,13 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 			}
 		}
 		return changes;
+	}
+
+	private boolean didDefinesPackageChange(ProjectConfigSnapshot projectConfig,
+			WorkspaceConfigSnapshot oldWorkspaceConfig) {
+		ProjectConfigSnapshot oldProjectConfig = oldWorkspaceConfig.findProjectByName(projectConfig.getName());
+		return oldProjectConfig == null || !Objects.equals(
+				((N4JSProjectConfigSnapshot) projectConfig).getDefinesPackage(),
+				((N4JSProjectConfigSnapshot) oldProjectConfig).getDefinesPackage());
 	}
 }
