@@ -11,16 +11,12 @@
 package org.eclipse.n4js.ide.server;
 
 import java.util.Collection;
-import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ide.xtext.server.build.ProjectBuilder;
 import org.eclipse.n4js.ide.xtext.server.build.XWorkspaceManager;
-import org.eclipse.n4js.internal.MultiCleartriggerCache;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
-import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
@@ -28,9 +24,6 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class N4JSWorkspaceManager extends XWorkspaceManager {
-
-	@Inject
-	private MultiCleartriggerCache multiCleartriggerCache;
 
 	/**
 	 * @param uri
@@ -52,24 +45,5 @@ public class N4JSWorkspaceManager extends XWorkspaceManager {
 			return anyProjectBuilder;
 		}
 		return null;
-	}
-
-	@Override
-	public WorkspaceChanges update(List<URI> dirtyFiles, List<URI> deletedFiles) {
-		WorkspaceChanges changes = super.update(dirtyFiles, deletedFiles);
-
-		if (!changes.getAddedProjects().isEmpty() || !changes.getRemovedProjects().isEmpty()) {
-			// since the list of dependencies cached in instances of ProjectDescriptions is based on
-			// IN4JSProject#getSortedDependencies() (see N4JSProjectDescriptionFactory) and therefore does not contain
-			// names of projects that do not exist (in case of unresolved dependencies), we have to recompute all those
-			// dependency list in the ProjectDescription instances of all existing project builders whenever a project
-			// is being added or removed:
-			multiCleartriggerCache.clear(MultiCleartriggerCache.CACHE_KEY_SORTED_DEPENDENCIES);
-			for (ProjectBuilder pb : getProjectBuilders()) {
-				pb.onDependenciesChanged();
-			}
-		}
-
-		return changes;
 	}
 }

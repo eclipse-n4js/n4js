@@ -24,6 +24,7 @@ import org.eclipse.n4js.ide.xtext.server.build.IBuildRequestFactory;
 import org.eclipse.n4js.ide.xtext.server.build.ProjectBuilder;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterDeleteListener;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
+import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
@@ -45,6 +46,29 @@ public class N4JSProjectBuilder extends ProjectBuilder {
 
 	@Inject
 	private TestCatalogSupplier testCatalogSupplier;
+
+	@Override
+	public N4JSProjectConfigSnapshot getProjectConfig() {
+		return (N4JSProjectConfigSnapshot) super.getProjectConfig();
+	}
+
+	@Override
+	public void setProjectConfig(ProjectConfigSnapshot newProjectConfig) {
+		N4JSProjectConfigSnapshot oldPC = getProjectConfig();
+		N4JSProjectConfigSnapshot newPCCasted = (N4JSProjectConfigSnapshot) newProjectConfig;
+		boolean depsHaveChanged = oldPC == null
+				|| !oldPC.getDependencies().equals(newProjectConfig.getDependencies());
+		boolean sortedDepsHaveChanged = oldPC == null
+				|| !oldPC.getSortedDependencies().equals(newPCCasted.getSortedDependencies());
+
+		super.setProjectConfig(newProjectConfig);
+
+		if (sortedDepsHaveChanged && !depsHaveChanged) {
+			// note: not doing this if 'depsHaveChanged', because then the super method has already invoked
+			// #onDependenciesChanged()
+			onDependenciesChanged();
+		}
+	}
 
 	@Override
 	protected XBuildResult doBuild(IBuildRequestFactory buildRequestFactory, Set<URI> dirtyFiles, Set<URI> deletedFiles,

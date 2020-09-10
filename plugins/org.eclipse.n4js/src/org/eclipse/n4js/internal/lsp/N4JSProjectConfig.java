@@ -238,13 +238,11 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		Set<? extends SourceFolderSnapshot> oldSourceFolders = oldProjectConfig != null
 				? oldProjectConfig.getSourceFolders()
 				: Collections.emptySet();
-		Set<String> oldDeps = oldProjectConfig != null ? oldProjectConfig.getDependencies() : Collections.emptySet();
 
 		((N4JSProject) delegate).invalidate();
 		ProjectConfigSnapshot newProjectConfig = toSnapshot();
 
 		Set<? extends SourceFolderSnapshot> newSourceFolders = newProjectConfig.getSourceFolders();
-		Set<String> newDeps = newProjectConfig.getDependencies();
 
 		// detect added/removed source folders
 		Map<URI, SourceFolderSnapshot> oldSFs = new HashMap<>();
@@ -269,14 +267,14 @@ public class N4JSProjectConfig implements XIProjectConfig {
 			}
 		}
 
-		// detect changes in dependencies
-		// note that a change of the name attribute is not relevant since the folder name is used
-		boolean dependencyChanged = !Objects.equals(oldDeps, newDeps);
+		// detect changes in project properties
+		boolean propertiesChanged = !addedSourceFolders.isEmpty() || !removedSourceFolders.isEmpty()
+				|| !Objects.equals(oldProjectConfig, newProjectConfig);
 
-		return new WorkspaceChanges(dependencyChanged, ImmutableList.of(), ImmutableList.of(), ImmutableList.of(),
+		return new WorkspaceChanges(propertiesChanged, ImmutableList.of(), ImmutableList.of(), ImmutableList.of(),
 				ImmutableList.copyOf(removedSourceFolders),
 				ImmutableList.copyOf(addedSourceFolders), ImmutableList.of(), ImmutableList.of(),
-				dependencyChanged ? ImmutableList.of(newProjectConfig) : ImmutableList.of());
+				propertiesChanged ? ImmutableList.of(newProjectConfig) : ImmutableList.of());
 	}
 
 	/** @see N4JSProject#getWorkspaces() */

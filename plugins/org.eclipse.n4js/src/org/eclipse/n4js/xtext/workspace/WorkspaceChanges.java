@@ -61,6 +61,13 @@ public class WorkspaceChanges {
 				ImmutableList.of(), ImmutableList.of(project), ImmutableList.of());
 	}
 
+	/** @return a new instance of {@link WorkspaceChanges} contains the given projects as changed */
+	public static WorkspaceChanges createProjectsChanged(Iterable<? extends ProjectConfigSnapshot> changedProjects) {
+		return new WorkspaceChanges(true, ImmutableList.of(), ImmutableList.of(), ImmutableList.of(),
+				ImmutableList.of(), ImmutableList.of(),
+				ImmutableList.of(), ImmutableList.of(), ImmutableList.copyOf(changedProjects));
+	}
+
 	/** @return a new instance of {@link WorkspaceChanges} contains the given uris as changed */
 	public static WorkspaceChanges createUrisChanged(List<URI> changedURIs) {
 		return new WorkspaceChanges(false, ImmutableList.of(), ImmutableList.of(), ImmutableList.copyOf(changedURIs),
@@ -86,7 +93,7 @@ public class WorkspaceChanges {
 	}
 
 	/** true iff a name or a dependency of a (still existing) project have been modified */
-	protected final boolean namesOrDependenciesChanged;
+	protected final boolean namesOrDependenciesChanged; // FIXME probably obsolete; remove!
 	/** removed uris (excluding those from {@link #removedSourceFolders} and {@link #removedProjects}) */
 	protected final ImmutableList<URI> removedURIs;
 	/** added uris (excluding those from {@link #addedSourceFolders} and {@link #addedProjects}) */
@@ -101,8 +108,8 @@ public class WorkspaceChanges {
 	protected final ImmutableList<ProjectConfigSnapshot> removedProjects;
 	/** added projects */
 	protected final ImmutableList<ProjectConfigSnapshot> addedProjects;
-	/** projects that were neither added nor removed but had their dependencies changed */
-	protected final ImmutableList<ProjectConfigSnapshot> projectsWithChangedDependencies;
+	/** projects that were neither added nor removed but had their properties changed */
+	protected final ImmutableList<ProjectConfigSnapshot> changedProjects;
 
 	/** Constructor */
 	public WorkspaceChanges() {
@@ -118,7 +125,7 @@ public class WorkspaceChanges {
 			ImmutableList<SourceFolderSnapshot> addedSourceFolders,
 			ImmutableList<ProjectConfigSnapshot> removedProjects,
 			ImmutableList<ProjectConfigSnapshot> addedProjects,
-			ImmutableList<ProjectConfigSnapshot> projectsWithChangedDependencies) {
+			ImmutableList<ProjectConfigSnapshot> changedProjects) {
 
 		this.namesOrDependenciesChanged = namesOrDependenciesChanged;
 		this.removedURIs = removedURIs;
@@ -128,7 +135,7 @@ public class WorkspaceChanges {
 		this.addedSourceFolders = addedSourceFolders;
 		this.removedProjects = removedProjects;
 		this.addedProjects = addedProjects;
-		this.projectsWithChangedDependencies = projectsWithChangedDependencies;
+		this.changedProjects = changedProjects;
 	}
 
 	/** @return true iff a name or dependencies of a still existing project changed */
@@ -177,9 +184,9 @@ public class WorkspaceChanges {
 		return addedProjects;
 	}
 
-	/** @return that were neither added nor removed but had their dependencies changed */
-	public List<ProjectConfigSnapshot> getProjectsWithChangedDependencies() {
-		return projectsWithChangedDependencies;
+	/** @return that were neither added nor removed but had their properties changed */
+	public List<ProjectConfigSnapshot> getChangedProjects() {
+		return changedProjects;
 	}
 
 	/** @return a list of all removed source folders including those inside {@link #removedProjects} */
@@ -222,7 +229,7 @@ public class WorkspaceChanges {
 				concat(addedSourceFolders, changes.addedSourceFolders),
 				newRemoved,
 				newAdded,
-				FluentIterable.concat(projectsWithChangedDependencies, changes.projectsWithChangedDependencies)
+				FluentIterable.concat(changedProjects, changes.changedProjects)
 						.filter(config -> !allAddedOrRemoved.contains(config.getName())).toList());
 	}
 

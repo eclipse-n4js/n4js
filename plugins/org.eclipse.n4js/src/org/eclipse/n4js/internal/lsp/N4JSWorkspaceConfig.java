@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.internal.lsp;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,6 +21,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.internal.MultiCleartriggerCache;
 import org.eclipse.n4js.internal.N4JSRuntimeCore;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
@@ -47,11 +47,13 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 
 	private final URI baseDirectory;
 	private final IN4JSCore delegate;
+	private final MultiCleartriggerCache multiCleartriggerCache;
 
 	/** Constructor */
-	public N4JSWorkspaceConfig(URI baseDirectory, IN4JSCore delegate) {
+	public N4JSWorkspaceConfig(URI baseDirectory, IN4JSCore delegate, MultiCleartriggerCache multiCleartriggerCache) {
 		this.baseDirectory = baseDirectory;
 		this.delegate = delegate;
+		this.multiCleartriggerCache = multiCleartriggerCache;
 	}
 
 	@Override
@@ -89,34 +91,32 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	@Override
 	public WorkspaceChanges update(WorkspaceConfigSnapshot oldWorkspaceConfig, List<URI> dirtyFiles,
 			List<URI> deletedFiles) {
-		WorkspaceChanges result = WorkspaceChanges.createUrisRemovedAndChanged(deletedFiles, dirtyFiles);
+		WorkspaceChanges changes = WorkspaceChanges.createUrisRemovedAndChanged(deletedFiles, dirtyFiles);
 		for (URI changedResource : Iterables.concat(dirtyFiles, deletedFiles)) {
-			result = result.merge(update(oldWorkspaceConfig, changedResource));
+			changes = changes.merge(update(oldWorkspaceConfig, changedResource));
 		}
-		return result;
+		changes = recomputeSortedDependenciesIfNecessary(oldWorkspaceConfig, changes);
+		return changes;
 	}
 
 	private WorkspaceChanges update(WorkspaceConfigSnapshot oldWorkspaceConfig, URI changedResource) {
-		IProjectConfig project = this.findProjectContaining(changedResource);
+		WorkspaceChanges changes = WorkspaceChanges.NO_CHANGES;
 
-		WorkspaceChanges update = new WorkspaceChanges();
-
-		// project location do not end with an empty segment
-		FileURI projectUri = project != null ? new FileURI(new File(project.getPath().toFileString())) : null;
-		boolean wasExistingInWorkspace = projectUri != null && ((N4JSRuntimeCore) delegate).isRegistered(projectUri);
-		if (project != null && wasExistingInWorkspace) {
+		ProjectConfigSnapshot oldProject = oldWorkspaceConfig.findProjectContaining(changedResource);
+		IProjectConfig project = oldProject != null ? findProjectByName(oldProject.getName()) : null;
+		if (oldProject != null && project != null) {
 			// an existing project was modified
-			update = update.merge(((N4JSProjectConfig) project).update(oldWorkspaceConfig, changedResource));
+			changes = changes.merge(((N4JSProjectConfig) project).update(oldWorkspaceConfig, changedResource));
 
 			if (((N4JSProjectConfig) project).isWorkspacesProject()) {
-				update = update.merge(detectAddedRemovedProjects(oldWorkspaceConfig));
+				changes = changes.merge(detectAddedRemovedProjects(oldWorkspaceConfig));
 			}
 		} else {
 			// a new project was created
-			update = update.merge(detectAddedRemovedProjects(oldWorkspaceConfig));
+			changes = changes.merge(detectAddedRemovedProjects(oldWorkspaceConfig));
 		}
 
-		return update;
+		return changes;
 	}
 
 	private WorkspaceChanges detectAddedRemovedProjects(WorkspaceConfigSnapshot oldWorkspaceConfig) {
@@ -162,5 +162,57 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 			projectsMap.put(projectConfig.getPath(), projectConfig);
 		}
 		return projectsMap;
+	}
+
+	/**
+	 * The list of {@link IN4JSProject#getSortedDependencies() sorted dependencies} of {@link IN4JSProject}s is tricky
+	 * for two reasons:
+	 * <ol>
+	 * <li>the sorted dependencies do not contain names of non-existing projects (in case of unresolved project
+	 * references in the package.json),
+	 * <li>the order of the sorted dependencies depends on the characteristics of the target projects (mainly the
+	 * {@link IN4JSProject#getDefinesPackageName() "defines package"} property).
+	 * </ol>
+	 * Therefore, the "sorted dependencies" can change even without a change in the <code>package.json</code> file of
+	 * the source project. To detect and apply these changes is the purpose of this method.
+	 * <p>
+	 * TODO: sorted dependencies should not be a property of IN4JSProject/N4JSProjectConfig/N4JSProjectConfigSnapshot
+	 * (probably the scoping has to be adjusted, because the sorted dependencies ensure correct shadowing between
+	 * definition and defined projects)
+	 */
+	private WorkspaceChanges recomputeSortedDependenciesIfNecessary(WorkspaceConfigSnapshot oldWorkspaceConfig,
+			WorkspaceChanges changes) {
+		// FIXME also required if the definesProject property changes
+		if (!changes.getAddedProjects().isEmpty() || !changes.getRemovedProjects().isEmpty()) {
+			multiCleartriggerCache.clear(MultiCleartriggerCache.CACHE_KEY_SORTED_DEPENDENCIES);
+			Set<String> changedProjectNames = changes.getChangedProjects().stream().map(ProjectConfigSnapshot::getName)
+					.collect(Collectors.toSet());
+			List<ProjectConfigSnapshot> projectsWithChangedSortedDeps = new ArrayList<>();
+			for (XIProjectConfig pc : getProjects()) {
+				String projectName = pc.getName();
+				if (changedProjectNames.contains(projectName)) {
+					continue; // should already be up-to-date
+				}
+				ProjectConfigSnapshot oldSnapshot = oldWorkspaceConfig.findProjectByName(projectName);
+				if (oldSnapshot == null) {
+					continue;
+				}
+				List<String> oldSortedDeps = ((N4JSProjectConfigSnapshot) oldSnapshot).getSortedDependencies();
+				List<String> newSortedDeps = ((N4JSProjectConfig) pc).toProject().getSortedDependencies().stream()
+						.map(IN4JSProject::getProjectName)
+						.map(N4JSProjectName::getRawName)
+						.collect(Collectors.toList());
+				if (!newSortedDeps.equals(oldSortedDeps)) {
+					ProjectConfigSnapshot newSnapshot = pc.toSnapshot();
+					if (!newSnapshot.equals(oldSnapshot)) {
+						projectsWithChangedSortedDeps.add(newSnapshot);
+					}
+				}
+			}
+			if (!projectsWithChangedSortedDeps.isEmpty()) {
+				changes = changes.merge(WorkspaceChanges.createProjectsChanged(projectsWithChangedSortedDeps));
+			}
+		}
+		return changes;
 	}
 }

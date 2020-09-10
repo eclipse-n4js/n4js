@@ -133,19 +133,15 @@ public class XWorkspaceManager {
 
 		WorkspaceChanges changes = workspaceConfig.update(workspaceConfigSnapshot, dirtyFiles, deletedFiles);
 
-		// FIXME not just when dependencies changed!!!!
-		if (!changes.getProjectsWithChangedDependencies().isEmpty()) {
-			workspaceConfigSnapshot = workspaceIndex
-					.setProjectConfigSnapshots(changes.getProjectsWithChangedDependencies());
-		}
-
-		if (!changes.getProjectsWithChangedDependencies().isEmpty()) {
-			for (ProjectConfigSnapshot pc : changes.getProjectsWithChangedDependencies()) {
+		if (!changes.getChangedProjects().isEmpty()) {
+			for (ProjectConfigSnapshot pc : changes.getChangedProjects()) {
 				ProjectBuilder pb = getProjectBuilder(pc.getName());
 				if (pb != null) {
-					pb.onDependenciesChanged();
+					pb.setProjectConfig(pc);
 				}
 			}
+
+			workspaceConfigSnapshot = workspaceIndex.setProjectConfigSnapshots(changes.getChangedProjects());
 		}
 
 		return changes;
@@ -214,7 +210,7 @@ public class XWorkspaceManager {
 		if (config == null) {
 			return null;
 		}
-		return config.findProjectContaining(uri);
+		return config.findProjectByNestedLocation(uri);
 	}
 
 	/**

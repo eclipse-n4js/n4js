@@ -431,11 +431,6 @@ public class ProjectBuilder {
 		return new WorkspaceAwareResourceLocator(result, workspaceManager);
 	}
 
-	// FIXME reconsider
-	public void onDependenciesChanged() {
-		updateResourceSetProjectDescription();
-	}
-
 	/** Get the resource with the given URI. */
 	public Resource getResource(URI uri) {
 		Resource resource = resourceSet.getResource(uri, true);
@@ -475,6 +470,25 @@ public class ProjectBuilder {
 	/** Getter */
 	public ProjectConfigSnapshot getProjectConfig() {
 		return projectConfig;
+	}
+
+	/** Setter */
+	public void setProjectConfig(ProjectConfigSnapshot newProjectConfig) {
+		boolean depsHaveChanged = projectConfig == null
+				|| !projectConfig.getDependencies().equals(newProjectConfig.getDependencies());
+
+		projectConfig = newProjectConfig;
+
+		if (depsHaveChanged) {
+			onDependenciesChanged();
+		}
+	}
+
+	/** Invoked whenever the dependencies of this builder's project change. */
+	protected void onDependenciesChanged() {
+		// since the ProjectDescription instance attached to this#resourceSet caches the project dependencies, we have
+		// to update those whenever the dependencies change:
+		updateResourceSetProjectDescription();
 	}
 
 	/** Same as {@link #doClearWithoutNotification()}, but also sends corresponding notifications to the LSP client. */
