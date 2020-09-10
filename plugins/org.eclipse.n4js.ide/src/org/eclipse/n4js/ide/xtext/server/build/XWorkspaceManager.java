@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ide.xtext.server.XIWorkspaceConfigFactory;
@@ -23,8 +24,11 @@ import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
 import org.eclipse.xtext.ide.server.UriExtensions;
+import org.eclipse.xtext.resource.IResourceDescription;
+import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -69,6 +73,21 @@ public class XWorkspaceManager {
 
 	private WorkspaceConfigSnapshot workspaceConfigSnapshot;
 
+	/** The result of a {@link XWorkspaceManager#update(List, List) workspace update}. */
+	public static class UpdateResult {
+		/** The workspace changes. */
+		public final WorkspaceChanges changes;
+		/** Former contents of the projects that were removed. */
+		public final List<IResourceDescription> removedProjectsContents;
+
+		/** Creates a new {@link UpdateResult}. */
+		public UpdateResult(WorkspaceChanges changes,
+				Iterable<? extends IResourceDescription> removedProjectsContents) {
+			this.changes = changes;
+			this.removedProjectsContents = ImmutableList.copyOf(removedProjectsContents);
+		}
+	}
+
 	/** Reinitialize a workspace at the current location. */
 	public void reinitialize() {
 		initialize(getBaseDir());
@@ -105,11 +124,9 @@ public class XWorkspaceManager {
 		this.workspaceConfig = workspaceConfig;
 		this.workspaceConfigSnapshot = workspaceConfig.toSnapshot();
 
-		workspaceIndex.initialize(this.workspaceConfigSnapshot);
-		workspaceIndex.removeAllProjectsIndices();
-
 		// init projects
 		addProjects(this.workspaceConfigSnapshot.getProjects());
+		workspaceIndex.initialize(this.workspaceConfigSnapshot);
 	}
 
 	/**
@@ -124,42 +141,63 @@ public class XWorkspaceManager {
 	}
 
 	/**
-	 * Updates the workspace according to the updated information in the file with the given URI.
+	 * Updates the workspace according to the updated information in the files with the given URIs.
 	 */
-	public WorkspaceChanges update(List<URI> dirtyFiles, List<URI> deletedFiles) {
+	public UpdateResult update(List<URI> dirtyFiles, List<URI> deletedFiles) {
 		if (workspaceConfig == null) {
-			return WorkspaceChanges.NO_CHANGES;
+			return new UpdateResult(WorkspaceChanges.NO_CHANGES, Collections.emptyList());
 		}
 
 		WorkspaceChanges changes = workspaceConfig.update(workspaceConfigSnapshot, dirtyFiles, deletedFiles);
+		return applyWorkspaceChanges(changes);
+	}
 
-		if (!changes.getChangedProjects().isEmpty()) {
-			for (ProjectConfigSnapshot pc : changes.getChangedProjects()) {
-				ProjectBuilder pb = getProjectBuilder(pc.getName());
-				if (pb != null) {
-					pb.setProjectConfig(pc);
-				}
+	/**
+	 * Apply the given workspace changes to this manager's internal state and notify the workspace index.
+	 */
+	protected UpdateResult applyWorkspaceChanges(WorkspaceChanges changes) {
+		// collects contents of removed projects before actually removing anything
+		List<IResourceDescription> removedProjectsContents = collectAllResourceDescriptions(
+				changes.getRemovedProjects());
+
+		removeProjects(changes.getRemovedProjects());
+		updateProjects(changes.getChangedProjects());
+		addProjects(changes.getAddedProjects());
+
+		workspaceConfigSnapshot = workspaceIndex.changeOrRemoveProjects(
+				Iterables.concat(changes.getAddedProjects(), changes.getChangedProjects()),
+				changes.getRemovedProjects().stream()
+						.map(ProjectConfigSnapshot::getName)
+						.collect(Collectors.toList()));
+
+		return new UpdateResult(changes, removedProjectsContents);
+	}
+
+	private List<IResourceDescription> collectAllResourceDescriptions(
+			Iterable<? extends ProjectConfigSnapshot> projects) {
+
+		List<IResourceDescription> result = new ArrayList<>();
+		for (ProjectConfigSnapshot pc : projects) {
+			String projectName = pc.getName();
+			ResourceDescriptionsData data = workspaceIndex.getProjectIndex(projectName);
+			if (data != null) {
+				Iterables.addAll(result, data.getAllResourceDescriptions());
 			}
-
-			workspaceConfigSnapshot = workspaceIndex.setProjectConfigSnapshots(changes.getChangedProjects());
 		}
-
-		return changes;
+		return result;
 	}
 
 	/** Adds a project to the workspace */
-	public void addProjects(Iterable<? extends ProjectConfigSnapshot> projectConfigs) {
+	protected void addProjects(Iterable<? extends ProjectConfigSnapshot> projectConfigs) {
 		for (ProjectConfigSnapshot projectConfig : projectConfigs) {
 			ProjectBuilder projectBuilder = projectBuilderProvider.get();
 			projectBuilder.initialize(projectConfig);
 			projectName2ProjectBuilder.put(projectConfig.getName(), projectBuilder);
 		}
-		workspaceConfigSnapshot = workspaceIndex.setProjectConfigSnapshots(projectConfigs);
 	}
 
 	/** Removes a project from the workspace */
-	public void removeProjects(Iterable<? extends ProjectConfigSnapshot> projectConfigs) {
-		List<String> projectNames = new ArrayList<>();
+	protected void removeProjects(Iterable<? extends ProjectConfigSnapshot> projectConfigs) {
 		for (ProjectConfigSnapshot projectConfig : projectConfigs) {
 			String projectName = projectConfig.getName();
 			ProjectBuilder projectBuilder = projectName2ProjectBuilder.remove(projectName);
@@ -167,7 +205,16 @@ public class XWorkspaceManager {
 				projectBuilder.doClearWithNotification();
 			}
 		}
-		workspaceConfigSnapshot = workspaceIndex.removeProjectIndices(projectNames);
+	}
+
+	/** Updates projects after their project configuration has changed. */
+	protected void updateProjects(Iterable<? extends ProjectConfigSnapshot> projectConfigs) {
+		for (ProjectConfigSnapshot projectConfig : projectConfigs) {
+			ProjectBuilder pb = getProjectBuilder(projectConfig.getName());
+			if (pb != null) {
+				pb.setProjectConfig(projectConfig);
+			}
+		}
 	}
 
 	/**

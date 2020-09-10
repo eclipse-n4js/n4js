@@ -25,6 +25,7 @@ import org.eclipse.n4js.ide.server.LspLogger;
 import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo;
 import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo.ProjectBuildOrderIterator;
 import org.eclipse.n4js.ide.xtext.server.build.ParallelBuildManager.ParallelJob;
+import org.eclipse.n4js.ide.xtext.server.build.XWorkspaceManager.UpdateResult;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.SourceFolderScanner;
 import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
@@ -36,7 +37,6 @@ import org.eclipse.xtext.resource.impl.CoarseGrainedChangeEvent;
 import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionDelta;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionChangeEvent;
-import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IFileSystemScanner;
@@ -107,29 +107,12 @@ public class XWorkspaceBuilder {
 	@Inject
 	private IBuildRequestFactory buildRequestFactory;
 
-	@Inject
-	private ConcurrentIndex workspaceIndex;
-
 	private final Set<URI> dirtyFiles = new LinkedHashSet<>();
 	private final Set<URI> deletedFiles = new LinkedHashSet<>();
 	private final Set<String> deletedProjects = new LinkedHashSet<>();
 
 	/** Holds all deltas of all projects. In case of a cancelled build, this set is not empty at start of next build. */
 	private List<IResourceDescription.Delta> toBeConsideredDeltas = new ArrayList<>();
-
-	/**
-	 * Announce dirty and deleted files and provide means to start a build.
-	 *
-	 * @param dirtyFiles
-	 *            the dirty files
-	 * @param deletedFiles
-	 *            the deleted files
-	 * @return a build command that can be triggered
-	 */
-	public BuildTask createIncrementalBuildTask(List<URI> dirtyFiles, List<URI> deletedFiles) {
-		WorkspaceChanges changes = workspaceManager.update(dirtyFiles, deletedFiles);
-		return createBuildTask(changes);
-	}
 
 	/**
 	 * Initializes the workspace and triggers an initial build.
@@ -262,30 +245,37 @@ public class XWorkspaceBuilder {
 	}
 
 	/**
-	 * Enqueue a build for the given file changes.
+	 * Announce dirty and deleted files and perform an incremental build.
 	 *
-	 * @return a buildable.
+	 * @param dirtyFiles
+	 *            the dirty files, i.e. added and changes files.
+	 * @param deletedFiles
+	 *            the deleted files.
+	 * @return a build command that can be triggered.
 	 */
-	private BuildTask createBuildTask(WorkspaceChanges workspaceChanges) {
-		List<URI> dirtyFiles = scanAllAddedAndChangedURIs(workspaceChanges, scanner);
-		List<URI> deletedFiles = getAllRemovedURIs(workspaceChanges);
-		queue(this.dirtyFiles, deletedFiles, dirtyFiles);
-		queue(this.deletedFiles, dirtyFiles, deletedFiles);
+	public BuildTask createIncrementalBuildTask(List<URI> dirtyFiles, List<URI> deletedFiles) {
+		UpdateResult updateResult = workspaceManager.update(dirtyFiles, deletedFiles);
+		WorkspaceChanges changes = updateResult.changes;
 
-		for (ProjectConfigSnapshot prjConfig : workspaceChanges.getRemovedProjects()) {
+		List<URI> actualDirtyFiles = scanAllAddedAndChangedURIs(changes, scanner);
+		List<URI> actualDeletedFiles = getAllRemovedURIs(changes); // n.b.: not including URIs of removed projects
+		queue(this.dirtyFiles, actualDeletedFiles, actualDirtyFiles);
+		queue(this.deletedFiles, actualDirtyFiles, actualDeletedFiles);
+
+		// take care of removed projects
+		for (ProjectConfigSnapshot prjConfig : changes.getRemovedProjects()) {
 			this.deletedProjects.add(prjConfig.getName());
-			handleDeletedProject(prjConfig);
 		}
-		workspaceManager.removeProjects(workspaceChanges.getRemovedProjects());
-		for (ProjectConfigSnapshot prjConfig : workspaceChanges.getAddedProjects()) {
+		for (ProjectConfigSnapshot prjConfig : changes.getAddedProjects()) {
 			this.deletedProjects.remove(prjConfig.getName()); // in case a deleted project is being re-created
 		}
-		workspaceManager.addProjects(workspaceChanges.getAddedProjects());
+		handleContentsOfRemovedProjects(updateResult.removedProjectsContents);
 
-		return (cancelIndicator) -> doIncrementalBuild(cancelIndicator);
+		return this::doIncrementalBuild;
 	}
 
-	public List<URI> scanAllAddedAndChangedURIs(WorkspaceChanges changes, IFileSystemScanner scanner) {
+	/** @return list of all added/changed URIs (including URIs of added projects). */
+	private List<URI> scanAllAddedAndChangedURIs(WorkspaceChanges changes, IFileSystemScanner scanner) {
 		List<URI> allAddedURIs = new ArrayList<>(changes.getAddedURIs());
 		for (SourceFolderSnapshot sourceFolder : changes.getAllAddedSourceFolders()) {
 			List<URI> sourceFilesOnDisk = sourceFolderScanner.findAllSourceFiles(sourceFolder, scanner);
@@ -295,10 +285,10 @@ public class XWorkspaceBuilder {
 		return allChangedURIs;
 	}
 
-	/** @return list of all {@link URI} that have been removed by the given changes */
+	/** @return list of all removed URIs (<em>not</em> including URIs of removed projects). */
 	private List<URI> getAllRemovedURIs(WorkspaceChanges workspaceChanges) {
 		List<URI> deleted = new ArrayList<>(workspaceChanges.getRemovedURIs());
-		for (SourceFolderSnapshot sourceFolder : workspaceChanges.getAllRemovedSourceFolders()) {
+		for (SourceFolderSnapshot sourceFolder : workspaceChanges.getRemovedSourceFolders()) {
 			URI prefix = sourceFolder.getPath();
 			ProjectBuilder projectBuilder = workspaceManager.getProjectBuilder(prefix);
 			if (projectBuilder != null) {
@@ -310,24 +300,20 @@ public class XWorkspaceBuilder {
 	}
 
 	/**
-	 * Adds deltas to {@link #toBeConsideredDeltas} representing the deletion of all files in the deleted project to
+	 * Adds deltas to {@link #toBeConsideredDeltas} representing the deletion of all files in the removed projects to
 	 * ensure correct "isAffected"-computation on resource level during the next build (the deltas created here will be
 	 * considered as "external deltas" by {@link XStatefulIncrementalBuilder#launch()}).
 	 */
-	protected void handleDeletedProject(ProjectConfigSnapshot projectConfig) {
-		String projectName = projectConfig.getName();
-		ResourceDescriptionsData data = workspaceIndex.getProjectIndex(projectName);
-		if (data != null) {
-			List<IResourceDescription.Delta> deltas = new ArrayList<>();
-			for (IResourceDescription oldDesc : data.getAllResourceDescriptions()) {
-				if (oldDesc != null) {
-					// because the delta represents a deletion only, we need not create it via the
-					// IResourceDescriptionManager:
-					deltas.add(new DefaultResourceDescriptionDelta(oldDesc, null));
-				}
+	protected void handleContentsOfRemovedProjects(Iterable<? extends IResourceDescription> removedContents) {
+		List<IResourceDescription.Delta> deltas = new ArrayList<>();
+		for (IResourceDescription oldDesc : removedContents) {
+			if (oldDesc != null) {
+				// because the delta represents a deletion only, we need not create it via the
+				// IResourceDescriptionManager:
+				deltas.add(new DefaultResourceDescriptionDelta(oldDesc, null));
 			}
-			mergeWithUnreportedDeltas(deltas);
 		}
+		mergeWithUnreportedDeltas(deltas);
 	}
 
 	/** Run the build on the workspace */
