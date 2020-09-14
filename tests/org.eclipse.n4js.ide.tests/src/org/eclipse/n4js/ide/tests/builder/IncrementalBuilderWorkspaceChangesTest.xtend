@@ -13,18 +13,21 @@ package org.eclipse.n4js.ide.tests.builder
 import java.io.File
 import java.io.IOException
 import java.nio.file.Files
+import java.util.List
 import java.util.Map
 import org.eclipse.n4js.projectModel.locations.FileURI
 import org.eclipse.n4js.utils.io.FileCopier
 import org.eclipse.n4js.utils.io.FileDeleter
 import org.junit.Test
 
+import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.CFG_DEPENDENCIES
+import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.CFG_NODE_MODULES
+import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.CFG_SOURCE_FOLDER
 import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.N4JS_RUNTIME
+import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.PACKAGE_JSON
 import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.YARN_TEST_PROJECT
 import static org.junit.Assert.assertFalse
 import static org.junit.Assert.assertTrue
-import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.CFG_DEPENDENCIES
-import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.CFG_NODE_MODULES
 
 /**
  * Tests incremental builds triggered by changes that lead to a different overall workspace configuration,
@@ -206,7 +209,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 	}
 
 	@Test
-	def void testChangePackageJson_addRemoveDependency() throws IOException {
+	def void testChangePackageJson_addRemoveDependency_ofN4JSProject() throws IOException {
 		testWorkspaceManager.createTestOnDisk(
 			CFG_NODE_MODULES + N4JS_RUNTIME -> null,
 			"MainProject" -> #[
@@ -228,20 +231,67 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 		startAndWaitForLspServer();
 
 		val originalErrors = #[
-			"(Error, [0:25 - 0:32], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
-			"(Error, [1:4 - 1:14], Couldn't resolve reference to IdentifiableElement 'OtherClass'.)"
+			"Main" -> #[
+				"(Error, [0:25 - 0:32], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
+				"(Error, [1:4 - 1:14], Couldn't resolve reference to IdentifiableElement 'OtherClass'.)"
+			]
 		];
-		assertIssues("Main" -> originalErrors);
 
-		// add dependency from MainProject to OtherProject in package.json
-		val packageJsonFileURI = getPackageJsonFile("MainProject").toFileURI;
+		doTestAddRemoveDependency("MainProject" -> "OtherProject", originalErrors);
+	}
+
+	@Test
+	def void testChangePackageJson_addRemoveDependency_ofPlainjsProjectInNodeModules() throws IOException {
+		testWorkspaceManager.createTestOnDisk(
+			CFG_NODE_MODULES + N4JS_RUNTIME -> null,
+			CFG_NODE_MODULES + "PlainjsProject" -> #[
+				"PlainjsModule.js" -> '''
+					export public class OtherClass {
+						public m() {}
+					}
+				''',
+				CFG_SOURCE_FOLDER -> ".",
+				PACKAGE_JSON -> '''
+					{
+						"name": "PlainjsProject",
+						"version": "0.0.1"
+					}
+				'''
+			],
+			"MainProject" -> #[
+				"Main" -> '''
+					import * as N+ from "PlainjsModule";
+					N.XYZ;
+				''',
+				CFG_DEPENDENCIES -> N4JS_RUNTIME // note: missing the dependency to PlainjsProject
+			]
+		);
+		startAndWaitForLspServer();
+
+		val originalErrors = #[
+			"Main" -> #[
+				"(Error, [0:20 - 0:35], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)"
+			]
+		];
+
+		doTestAddRemoveDependency("MainProject" -> "PlainjsProject", originalErrors);
+	}
+
+	def private void doTestAddRemoveDependency(Pair<String, String> dependency, Pair<String, List<String>>[] originalErrors) {
+		val sourceProjectName = dependency.key;
+		val targetProjectName = dependency.value;
+
+		assertIssues(originalErrors);
+
+		// add dependency from source project to target project (in package.json of source project)
+		val packageJsonFileURI = getPackageJsonFile(sourceProjectName).toFileURI;
 		openFile(packageJsonFileURI);
 		changeOpenedFile(packageJsonFileURI,
-			'"n4js-runtime": "*"' -> '"n4js-runtime": "*", "OtherProject": "*"'
+			'"n4js-runtime": "*"' -> '''"n4js-runtime": "*", "«targetProjectName»": "*"'''
 		);
 		joinServerRequests();
 
-		assertIssues("Main" -> originalErrors); // changes in package.json not saved yet, so still the original errors
+		assertIssues(originalErrors); // changes in package.json not saved yet, so still the original errors
 
 		saveOpenedFile(packageJsonFileURI);
 		joinServerRequests();
@@ -249,12 +299,12 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 		assertNoIssues(); // now the original errors have gone away
 
 		changeOpenedFile(packageJsonFileURI,
-			'"n4js-runtime": "*", "OtherProject": "*"' -> '"n4js-runtime": "*"'
+			'''"n4js-runtime": "*", "«targetProjectName»": "*"''' -> '"n4js-runtime": "*"'
 		);
 		saveOpenedFile(packageJsonFileURI);
 		joinServerRequests();
 
-		assertIssues("Main" -> originalErrors); // back to original errors
+		assertIssues(originalErrors); // back to original errors
 	}
 
 	@Test

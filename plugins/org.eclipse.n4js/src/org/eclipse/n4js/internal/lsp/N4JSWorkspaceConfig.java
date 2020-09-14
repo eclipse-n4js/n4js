@@ -25,6 +25,7 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.internal.MultiCleartriggerCache;
 import org.eclipse.n4js.internal.N4JSRuntimeCore;
 import org.eclipse.n4js.packagejson.PackageJsonProperties;
+import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.locations.FileURI;
@@ -37,6 +38,7 @@ import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
 import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
@@ -118,6 +120,10 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 				needToDetectAddedRemovedProjects = true;
 			}
 		}
+
+		// because the ProjectDiscoveryHelper discovers a plainJS-project P only if there is an N4JS project with a
+		// dependency to P, we need to re-discover projects whenever dependencies of N4JS projects change:
+		needToDetectAddedRemovedProjects |= didDependenciesOfAnyN4JSProjectChange(changes, oldWorkspaceConfig);
 
 		if (needToDetectAddedRemovedProjects) {
 			changes = changes.merge(detectAddedRemovedProjects(oldWorkspaceConfig));
@@ -217,12 +223,36 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 		return changes;
 	}
 
+	/** Tells whether the dependencies of any N4JS project changed w.r.t. the given old workspace config. */
+	private static boolean didDependenciesOfAnyN4JSProjectChange(WorkspaceChanges changes,
+			WorkspaceConfigSnapshot oldWorkspaceConfig) {
+		return !allExceptPlainjs(changes.getAddedProjects()).isEmpty()
+				|| !allExceptPlainjs(changes.getRemovedProjects()).isEmpty()
+				|| allExceptPlainjs(changes.getChangedProjects())
+						.anyMatch(pc -> didDependenciesChange(pc, oldWorkspaceConfig));
+	}
+
+	/** Tells whether the dependencies of the given project changed w.r.t. the given old workspace config. */
+	private static boolean didDependenciesChange(ProjectConfigSnapshot projectConfig,
+			WorkspaceConfigSnapshot oldWorkspaceConfig) {
+		ProjectConfigSnapshot oldProjectConfig = oldWorkspaceConfig.findProjectByName(projectConfig.getName());
+		return oldProjectConfig == null || !Objects.equals(
+				((N4JSProjectConfigSnapshot) projectConfig).getDependencies(),
+				((N4JSProjectConfigSnapshot) oldProjectConfig).getDependencies());
+	}
+
 	/** Tells whether the property {@link PackageJsonProperties#DEFINES_PACKAGE "definesPackage"} changed. */
-	private boolean didDefinesPackageChange(ProjectConfigSnapshot projectConfig,
+	private static boolean didDefinesPackageChange(ProjectConfigSnapshot projectConfig,
 			WorkspaceConfigSnapshot oldWorkspaceConfig) {
 		ProjectConfigSnapshot oldProjectConfig = oldWorkspaceConfig.findProjectByName(projectConfig.getName());
 		return oldProjectConfig == null || !Objects.equals(
 				((N4JSProjectConfigSnapshot) projectConfig).getDefinesPackage(),
 				((N4JSProjectConfigSnapshot) oldProjectConfig).getDefinesPackage());
+	}
+
+	private static FluentIterable<? extends ProjectConfigSnapshot> allExceptPlainjs(
+			Iterable<? extends ProjectConfigSnapshot> projectConfigs) {
+		return FluentIterable.from(projectConfigs)
+				.filter(pc -> ((N4JSProjectConfigSnapshot) pc).getType() != ProjectType.PLAINJS);
 	}
 }
