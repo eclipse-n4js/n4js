@@ -17,6 +17,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
+import java.util.SortedMap;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -305,6 +306,9 @@ public class URIUtils {
 	 * Returns from the given map the value of the key that is the longest prefix of the given URI or <code>null</code>
 	 * if none of the given map's keys is a prefix of the given URI. Assumes keys to be URIs <em>without</em> a trailing
 	 * path separator.
+	 * <p>
+	 * TODO: consider using a {@link SortedMap} for this purpose to avoid multiple <code>Map#get()</code>-calls (then
+	 * also improve the similar implementation in {@code FileBasedWorkspace#findProjectWith(FileURI)}).
 	 */
 	public static <T> T findInMapByNestedURI(Map<URI, T> map, URI nestedURI) {
 		URI currPrefix = trimTrailingPathSeparator(nestedURI);

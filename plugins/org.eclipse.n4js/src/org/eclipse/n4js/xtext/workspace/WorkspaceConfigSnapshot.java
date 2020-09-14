@@ -84,9 +84,13 @@ public class WorkspaceConfigSnapshot {
 	}
 
 	/**
-	 * Finds the project having a path that is a prefix of the given URI.
+	 * Finds the project having a path that is a prefix of the given URI. Returns <code>null</code> if no such project
+	 * is found. The given URI may point to a file or folder.
 	 * <p>
-	 * Note the difference to {@link #findProjectContaining(URI)}!
+	 * Note the difference to {@link #findProjectContaining(URI)}: this method will return a project <code>P</code> when
+	 * given any URI denoting a file/folder below the path of <code>P</code>, whereas {@code #findProjectContaining()}
+	 * will return <code>P</code> only when given URIs {@link SourceFolderSnapshot#contains(URI) actually contained} in
+	 * one of <code>P</code>'s source folders.
 	 */
 	public ProjectConfigSnapshot findProjectByNestedLocation(URI nestedLocation) {
 		return URIUtils.findInMapByNestedURI(projectPath2Project, nestedLocation);
@@ -183,8 +187,7 @@ public class WorkspaceConfigSnapshot {
 		int result = 1;
 		result = prime * result + ((name2Project == null) ? 0 : name2Project.hashCode());
 		result = prime * result + ((path == null) ? 0 : path.hashCode());
-		result = prime * result + ((projectPath2Project == null) ? 0 : projectPath2Project.hashCode());
-		result = prime * result + ((sourceFolderPath2Project == null) ? 0 : sourceFolderPath2Project.hashCode());
+		// note: no need to consider the lookup maps "projectPath2Project" and "sourceFolderPath2Project"
 		return result;
 	}
 
@@ -207,16 +210,7 @@ public class WorkspaceConfigSnapshot {
 				return false;
 		} else if (!path.equals(other.path))
 			return false;
-		if (projectPath2Project == null) {
-			if (other.projectPath2Project != null)
-				return false;
-		} else if (!projectPath2Project.equals(other.projectPath2Project))
-			return false;
-		if (sourceFolderPath2Project == null) {
-			if (other.sourceFolderPath2Project != null)
-				return false;
-		} else if (!sourceFolderPath2Project.equals(other.sourceFolderPath2Project))
-			return false;
+		// note: no need to check the lookup maps "projectPath2Project" and "sourceFolderPath2Project"
 		return true;
 	}
 

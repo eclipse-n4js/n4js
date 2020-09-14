@@ -20,6 +20,8 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
+import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
+import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 
 import com.google.common.collect.ImmutableList;
 
@@ -53,7 +55,14 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 		return definesPackage;
 	}
 
-	/** Returns the {@link IN4JSProject#getSortedDependencies() sorted dependencies}. */
+	/**
+	 * Returns the {@link IN4JSProject#getSortedDependencies() sorted dependencies}.
+	 * <p>
+	 * WARNING: this value depends on other projects' properties (esp. "definesPackage") so it may change whenever other
+	 * projects' <code>package.json</code> files change! See
+	 * {@link N4JSWorkspaceConfig#recomputeSortedDependenciesIfNecessary(WorkspaceConfigSnapshot, WorkspaceChanges)
+	 * here} for details.
+	 */
 	public List<String> getSortedDependencies() {
 		return sortedDependencies;
 	}

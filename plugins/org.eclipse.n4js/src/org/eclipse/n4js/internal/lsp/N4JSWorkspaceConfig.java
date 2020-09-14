@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.MultiCleartriggerCache;
 import org.eclipse.n4js.internal.N4JSRuntimeCore;
+import org.eclipse.n4js.packagejson.PackageJsonProperties;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.locations.FileURI;
@@ -33,7 +34,6 @@ import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
 import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
-import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.collect.ImmutableList;
@@ -98,7 +98,7 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 		boolean needToDetectAddedRemovedProjects = false;
 		for (URI changedResource : Iterables.concat(dirtyFiles, deletedFiles)) {
 			ProjectConfigSnapshot oldProject = oldWorkspaceConfig.findProjectContaining(changedResource);
-			IProjectConfig project = oldProject != null ? findProjectByName(oldProject.getName()) : null;
+			XIProjectConfig project = oldProject != null ? findProjectByName(oldProject.getName()) : null;
 			if (oldProject != null && project != null) {
 				// an existing project was modified (maybe removed)
 				changes = changes.merge(((N4JSProjectConfig) project).update(oldWorkspaceConfig, changedResource));
@@ -111,6 +111,7 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 				needToDetectAddedRemovedProjects = true;
 			}
 		}
+
 		if (needToDetectAddedRemovedProjects) {
 			changes = changes.merge(detectAddedRemovedProjects(oldWorkspaceConfig));
 		}
@@ -170,7 +171,7 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	 * (probably the scoping has to be adjusted, because the sorted dependencies ensure correct shadowing between
 	 * definition and defined projects)
 	 */
-	private WorkspaceChanges recomputeSortedDependenciesIfNecessary(WorkspaceConfigSnapshot oldWorkspaceConfig,
+	protected WorkspaceChanges recomputeSortedDependenciesIfNecessary(WorkspaceConfigSnapshot oldWorkspaceConfig,
 			WorkspaceChanges changes) {
 
 		boolean needRecompute = !changes.getAddedProjects().isEmpty() || !changes.getRemovedProjects().isEmpty()
@@ -209,6 +210,7 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 		return changes;
 	}
 
+	/** Tells whether the property {@link PackageJsonProperties#DEFINES_PACKAGE "definesPackage"} changed. */
 	private boolean didDefinesPackageChange(ProjectConfigSnapshot projectConfig,
 			WorkspaceConfigSnapshot oldWorkspaceConfig) {
 		ProjectConfigSnapshot oldProjectConfig = oldWorkspaceConfig.findProjectByName(projectConfig.getName());
