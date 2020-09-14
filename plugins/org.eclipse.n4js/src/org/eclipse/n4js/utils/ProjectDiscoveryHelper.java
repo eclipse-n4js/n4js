@@ -44,7 +44,11 @@ import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper.NodeModulesFolder;
 import com.google.inject.Inject;
 
 /**
- * Given a workspace root directory, this class finds npm and yarn projects as follows:
+ * Given a workspace root directory, this class finds npm and yarn projects. Plain-JS projects are included only if
+ * there is an N4JS project with a dependency to this plain-JS project, except for yarn workspace root projects, which
+ * are always included.
+ * <p>
+ * Projects are collected as follows:
  * <ol>
  * <li>Find projects:
  * <ol>
@@ -156,7 +160,13 @@ public class ProjectDiscoveryHelper {
 	public void collectYarnWorkspaceProjects(Path yarnProjectRoot, Map<Path, ProjectDescription> pdCache,
 			Set<Path> projects) {
 
-		addIfNotPlainjs(projects, yarnProjectRoot, pdCache);
+		// add the yarn workspace root project even if it is a PLAINJS project
+		// Rationale:
+		// 1) otherwise not possible for later code to distinguish between yarn workspace and side-by-side use cases,
+		// 2) having the workspace root project or not makes a huge difference (projects exist inside projects) and it
+		// is better to always stick to one situation (otherwise many tests would have to be provided in two variants),
+		// 3) the yarn workspace root project has always been included.
+		projects.add(yarnProjectRoot);
 
 		ProjectDescription projectDescription = getCachedProjectDescription(yarnProjectRoot, pdCache);
 		final List<String> workspaces = (projectDescription == null) ? null : projectDescription.getWorkspaces();
@@ -293,6 +303,13 @@ public class ProjectDiscoveryHelper {
 		projects.removeAll(plainjsProjects.values());
 	}
 
+	private void addIfNotPlainjs(Set<Path> addHere, Path project, Map<Path, ProjectDescription> pdCache) {
+		ProjectDescription pd = getCachedProjectDescription(project, pdCache);
+		if (pd != null && pd.getProjectType() != ProjectType.PLAINJS) {
+			addHere.add(project);
+		}
+	}
+
 	/** @return the potentially cached {@link ProjectDescription} for the project in the given directory */
 	private ProjectDescription getCachedProjectDescription(Path path, Map<Path, ProjectDescription> cache) {
 		if (!cache.containsKey(path)) {
@@ -410,12 +427,5 @@ public class ProjectDiscoveryHelper {
 		}
 
 		return null;
-	}
-
-	private void addIfNotPlainjs(Set<Path> addHere, Path project, Map<Path, ProjectDescription> pdCache) {
-		ProjectDescription pd = getCachedProjectDescription(project, pdCache);
-		if (pd != null && pd.getProjectType() != ProjectType.PLAINJS) {
-			addHere.add(project);
-		}
 	}
 }

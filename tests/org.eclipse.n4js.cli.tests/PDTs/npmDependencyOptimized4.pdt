@@ -1,8 +1,8 @@
 # Project Discovery Test
 # working dir marked with '*'
 
-# The optimization applies only to projects in the node_modules folder,
-# not to projects in the workspace. Therefore, D2 is included.
+# The optimization of not discovering PLAINJS project applies not only to projects in the node_modules folder,
+# but also to projects in the workspace. Therefore, D2 is not included.
 
 FOLDERS
 -*PY [PROJECT workspaces=["packages/*"]]
@@ -15,4 +15,3 @@ EXPECT
 - PY
 - PY/packages/P1
 - PY/packages/D1
-- PY/packages/D2
