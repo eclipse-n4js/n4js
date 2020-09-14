@@ -12,7 +12,6 @@ package org.eclipse.n4js.internal.lsp;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -35,6 +34,7 @@ import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
 import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
 import org.eclipse.xtext.workspace.IProjectConfig;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
@@ -92,30 +92,30 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	@Override
 	public WorkspaceChanges update(WorkspaceConfigSnapshot oldWorkspaceConfig, List<URI> dirtyFiles,
 			List<URI> deletedFiles) {
+
 		WorkspaceChanges changes = WorkspaceChanges.createUrisRemovedAndChanged(deletedFiles, dirtyFiles);
+
+		boolean needToDetectAddedRemovedProjects = false;
 		for (URI changedResource : Iterables.concat(dirtyFiles, deletedFiles)) {
-			changes = changes.merge(update(oldWorkspaceConfig, changedResource));
-		}
-		changes = recomputeSortedDependenciesIfNecessary(oldWorkspaceConfig, changes);
-		return changes;
-	}
+			ProjectConfigSnapshot oldProject = oldWorkspaceConfig.findProjectContaining(changedResource);
+			IProjectConfig project = oldProject != null ? findProjectByName(oldProject.getName()) : null;
+			if (oldProject != null && project != null) {
+				// an existing project was modified (maybe removed)
+				changes = changes.merge(((N4JSProjectConfig) project).update(oldWorkspaceConfig, changedResource));
 
-	private WorkspaceChanges update(WorkspaceConfigSnapshot oldWorkspaceConfig, URI changedResource) {
-		WorkspaceChanges changes = WorkspaceChanges.NO_CHANGES;
-
-		ProjectConfigSnapshot oldProject = oldWorkspaceConfig.findProjectContaining(changedResource);
-		IProjectConfig project = oldProject != null ? findProjectByName(oldProject.getName()) : null;
-		if (oldProject != null && project != null) {
-			// an existing project was modified
-			changes = changes.merge(((N4JSProjectConfig) project).update(oldWorkspaceConfig, changedResource));
-
-			if (((N4JSProjectConfig) project).isWorkspacesProject()) {
-				changes = changes.merge(detectAddedRemovedProjects(oldWorkspaceConfig));
+				if (((N4JSProjectConfig) project).isWorkspacesProject()) {
+					needToDetectAddedRemovedProjects = true;
+				}
+			} else {
+				// a new project was created
+				needToDetectAddedRemovedProjects = true;
 			}
-		} else {
-			// a new project was created
+		}
+		if (needToDetectAddedRemovedProjects) {
 			changes = changes.merge(detectAddedRemovedProjects(oldWorkspaceConfig));
 		}
+
+		changes = recomputeSortedDependenciesIfNecessary(oldWorkspaceConfig, changes);
 
 		return changes;
 	}
@@ -133,11 +133,9 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 		}
 
 		// detect changes
-		Set<? extends ProjectConfigSnapshot> oldProjects = oldWorkspaceConfig.getProjects();
-		List<? extends ProjectConfigSnapshot> newProjects = getProjects().stream()
-				.map(XIProjectConfig::toSnapshot).collect(Collectors.toList());
-		Map<URI, ProjectConfigSnapshot> oldProjectsMap = getProjectsMap(oldProjects);
-		Map<URI, ProjectConfigSnapshot> newProjectsMap = getProjectsMap(newProjects);
+		Map<URI, ProjectConfigSnapshot> oldProjectsMap = IterableExtensions.toMap(oldWorkspaceConfig.getProjects(),
+				ProjectConfigSnapshot::getPath);
+		Map<URI, XIProjectConfig> newProjectsMap = IterableExtensions.toMap(getProjects(), XIProjectConfig::getPath);
 		List<ProjectConfigSnapshot> addedProjects = new ArrayList<>();
 		List<ProjectConfigSnapshot> removedProjects = new ArrayList<>();
 		for (URI uri : Sets.union(oldProjectsMap.keySet(), newProjectsMap.keySet())) {
@@ -146,7 +144,7 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 			if (isOld && !isNew) {
 				removedProjects.add(oldProjectsMap.get(uri));
 			} else if (!isOld && isNew) {
-				addedProjects.add(newProjectsMap.get(uri));
+				addedProjects.add(newProjectsMap.get(uri).toSnapshot());
 			}
 		}
 
@@ -154,14 +152,6 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 				ImmutableList.of(),
 				ImmutableList.of(), ImmutableList.copyOf(removedProjects), ImmutableList.copyOf(addedProjects),
 				ImmutableList.of());
-	}
-
-	private Map<URI, ProjectConfigSnapshot> getProjectsMap(Iterable<? extends ProjectConfigSnapshot> projects) {
-		Map<URI, ProjectConfigSnapshot> projectsMap = new HashMap<>();
-		for (ProjectConfigSnapshot projectConfig : projects) {
-			projectsMap.put(projectConfig.getPath(), projectConfig);
-		}
-		return projectsMap;
 	}
 
 	/**
