@@ -21,6 +21,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.internal.MultiCleartriggerCache;
 import org.eclipse.n4js.internal.N4JSRuntimeCore;
 import org.eclipse.n4js.packagejson.PackageJsonProperties;
@@ -97,6 +98,12 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 
 		boolean needToDetectAddedRemovedProjects = false;
 		for (URI changedResource : Iterables.concat(dirtyFiles, deletedFiles)) {
+			String lastSegment = changedResource.lastSegment();
+			boolean isPackageJson = lastSegment != null && lastSegment.equals(N4JSGlobals.PACKAGE_JSON);
+			if (!isPackageJson) {
+				continue;
+			}
+
 			ProjectConfigSnapshot oldProject = oldWorkspaceConfig.findProjectContaining(changedResource);
 			XIProjectConfig project = oldProject != null ? findProjectByName(oldProject.getName()) : null;
 			if (oldProject != null && project != null) {
