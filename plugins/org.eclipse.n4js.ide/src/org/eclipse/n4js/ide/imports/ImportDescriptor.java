@@ -31,6 +31,7 @@ public class ImportDescriptor implements Comparable<ImportDescriptor> {
 	private final boolean isNamed;
 	private final boolean isNamespace;
 	private final boolean isDefault;
+	private final boolean isDynamic;
 	private final String elementName;
 	private final String alias;
 	private final String moduleSpecifier;
@@ -38,10 +39,13 @@ public class ImportDescriptor implements Comparable<ImportDescriptor> {
 
 	private final int originalIndex;
 
-	private ImportDescriptor(boolean isNamed, boolean isNamespace, boolean isDefault, String elementName, String alias,
-			String moduleSpecifier, QualifiedName moduleFQN, int originalIndex) {
+	private ImportDescriptor(boolean isNamed, boolean isNamespace, boolean isDefault, boolean isDynamic,
+			String elementName, String alias, String moduleSpecifier, QualifiedName moduleFQN, int originalIndex) {
 		if (isDefault && !isNamed) {
 			throw new IllegalArgumentException("default imports must be named imports");
+		}
+		if (isDynamic && !isNamespace) {
+			throw new IllegalArgumentException("dynamic imports must be namespace imports");
 		}
 		if (elementName != null && !isNamed) {
 			throw new IllegalArgumentException("elementName may only be non-null for named imports");
@@ -51,6 +55,7 @@ public class ImportDescriptor implements Comparable<ImportDescriptor> {
 		this.isNamed = isNamed;
 		this.isNamespace = isNamespace;
 		this.isDefault = isDefault;
+		this.isDynamic = isDynamic;
 		this.elementName = isDefault ? N4JSLanguageConstants.EXPORT_DEFAULT_NAME : elementName;
 		this.alias = alias;
 		this.moduleSpecifier = moduleSpecifier;
@@ -65,12 +70,13 @@ public class ImportDescriptor implements Comparable<ImportDescriptor> {
 		boolean isNamed = false;
 		boolean isNamespace = false;
 		boolean isDefault = false;
+		boolean isDynamic = false;
 		String elementName = null;
 		String alias = null;
 		QualifiedName moduleFQN = getFQN(targetProjectName, targetModule);
 
-		return new ImportDescriptor(isNamed, isNamespace, isDefault, elementName, alias, moduleSpecifier, moduleFQN,
-				originalIndex);
+		return new ImportDescriptor(isNamed, isNamespace, isDefault, isDynamic, elementName, alias, moduleSpecifier,
+				moduleFQN, originalIndex);
 	}
 
 	/** Create a named import. */
@@ -80,10 +86,11 @@ public class ImportDescriptor implements Comparable<ImportDescriptor> {
 		boolean isNamed = true;
 		boolean isNamespace = false;
 		boolean isDefault = false;
+		boolean isDynamic = false;
 		QualifiedName moduleFQN = getFQN(targetProjectName, targetModule);
 
-		return new ImportDescriptor(isNamed, isNamespace, isDefault, elementName, alias, moduleSpecifier, moduleFQN,
-				originalIndex);
+		return new ImportDescriptor(isNamed, isNamespace, isDefault, isDynamic, elementName, alias, moduleSpecifier,
+				moduleFQN, originalIndex);
 	}
 
 	/** Create a default import. */
@@ -93,17 +100,18 @@ public class ImportDescriptor implements Comparable<ImportDescriptor> {
 		boolean isNamed = true;
 		boolean isNamespace = false;
 		boolean isDefault = true;
+		boolean isDynamic = false;
 		String elementName = null;
 		String alias = localName;
 		QualifiedName moduleFQN = getFQN(targetProjectName, targetModule);
 
-		return new ImportDescriptor(isNamed, isNamespace, isDefault, elementName, alias, moduleSpecifier, moduleFQN,
-				originalIndex);
+		return new ImportDescriptor(isNamed, isNamespace, isDefault, isDynamic, elementName, alias, moduleSpecifier,
+				moduleFQN, originalIndex);
 	}
 
 	/** Create a namespace import. */
-	public static ImportDescriptor createNamespaceImport(String localNamespaceName, String moduleSpecifier,
-			N4JSProjectName targetProjectName, QualifiedName targetModule, int originalIndex) {
+	public static ImportDescriptor createNamespaceImport(String localNamespaceName, boolean isDynamic,
+			String moduleSpecifier, N4JSProjectName targetProjectName, QualifiedName targetModule, int originalIndex) {
 
 		boolean isNamed = false;
 		boolean isNamespace = true;
@@ -112,8 +120,8 @@ public class ImportDescriptor implements Comparable<ImportDescriptor> {
 		String alias = localNamespaceName;
 		QualifiedName moduleFQN = getFQN(targetProjectName, targetModule);
 
-		return new ImportDescriptor(isNamed, isNamespace, isDefault, elementName, alias, moduleSpecifier, moduleFQN,
-				originalIndex);
+		return new ImportDescriptor(isNamed, isNamespace, isDefault, isDynamic, elementName, alias, moduleSpecifier,
+				moduleFQN, originalIndex);
 	}
 
 	private static QualifiedName getFQN(N4JSProjectName projectName, QualifiedName moduleName) {
@@ -131,7 +139,7 @@ public class ImportDescriptor implements Comparable<ImportDescriptor> {
 		// 1) the module specifier is redundant to 'moduleFQN' (only required to capture the desired module
 		// specifier form),
 		// 2) two imports that differ only in original index should be deemed duplicates.
-		return Objects.hash(isNamed, isNamespace, isDefault, elementName, alias, moduleFQN);
+		return Objects.hash(isNamed, isNamespace, isDefault, isDynamic, elementName, alias, moduleFQN);
 	}
 
 	@Override
@@ -171,8 +179,12 @@ public class ImportDescriptor implements Comparable<ImportDescriptor> {
 		if (this.isNamespace && other.isNamespace) {
 			// Two namespace imports for the same target module is an error case. Still, we want to handle this case
 			// gracefully.
-			// -> sort by name of namespace
-			return this.alias.compareTo(other.alias);
+			// -> sort by name of namespace and isDynamic
+			int cmpAlias = this.alias.compareTo(other.alias);
+			if (cmpAlias != 0) {
+				return cmpAlias;
+			}
+			return Boolean.compare(this.isDynamic, other.isDynamic) * -1;
 		}
 		// NOW: both are named imports ...
 		// 5) move default imports to the top
@@ -214,6 +226,9 @@ public class ImportDescriptor implements Comparable<ImportDescriptor> {
 		} else if (isNamespace) {
 			sb.append("* as ");
 			sb.append(alias);
+			if (isDynamic) {
+				sb.append('+');
+			}
 			sb.append(' ');
 		}
 		if (!isBare()) {

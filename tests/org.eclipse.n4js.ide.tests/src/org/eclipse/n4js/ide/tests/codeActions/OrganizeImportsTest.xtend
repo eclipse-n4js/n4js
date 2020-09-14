@@ -68,6 +68,18 @@ class OrganizeImportsTest extends AbstractOrganizeImportsTest {
 	}
 
 	@Test
+	def void testRemoveUnused_dynamic() {
+		test('''
+			import * as NP+ from "PlainJS";
+			import * as NB from "B";
+			NB.B01;
+		''', '''
+			import * as NB from "B";
+			NB.B01;
+		''');
+	}
+
+	@Test
 	def void testRemoveUnused_allGone() {
 		test('''
 			import {A03, A01} from "A";
@@ -84,9 +96,11 @@ class OrganizeImportsTest extends AbstractOrganizeImportsTest {
 		test('''
 			import "OOPS";
 			import {C01} from "C";
-			import {X1} from "BAD";
+			import {X1} from "BAD1";
 			import {X2} from "B";
 			import {A01} from "A";
+			import * as N from "BAD2"
+			import * as N2+ from "BAD3"
 			A01,C01;
 		''', '''
 			import {A01} from "A";
@@ -266,10 +280,37 @@ class OrganizeImportsTest extends AbstractOrganizeImportsTest {
 	}
 
 	@Test
+	def void testRemoveDuplicate_dynamic() {
+		test('''
+			import * as N+ from "PlainJS";
+			import * as N+ from "PlainJS";
+			N.XYZ;
+		''', '''
+			import * as N+ from "PlainJS";
+			N.XYZ;
+		''')
+	}
+
+	@Test
+	def void testRemoveDuplicate_dynamic_exception() {
+		// don't remove duplicate in case it is being used
+		test('''
+			import * as N1+ from "PlainJS";
+			import * as N2+ from "PlainJS";
+			N1.XYZ;N2.XYZ;
+		''', '''
+			import * as N1+ from "PlainJS";
+			import * as N2+ from "PlainJS";
+			N1.XYZ;N2.XYZ;
+		''')
+	}
+
+	@Test
 	def void testSorting() {
 		test('''
 			import * as NB from "B";
 			import {A03, A01} from "A";
+			import * as NP+ from "PlainJS";
 			import {Def03} from "Def";
 			import {A02} from "A";
 			import * as NA from "A";
@@ -277,7 +318,7 @@ class OrganizeImportsTest extends AbstractOrganizeImportsTest {
 			import MyDef, {Def02} from "Def";
 			import "A";
 			import {Def01} from "Def";
-			A01;A02;A03;NA.A04;NB.B01;Def01;Def02;Def03;MyDef;
+			A01;A02;A03;NA.A04;NB.B01;Def01;Def02;Def03;MyDef;NP.XYZ;
 		''', '''
 			import "C";
 			import "A";
@@ -290,7 +331,8 @@ class OrganizeImportsTest extends AbstractOrganizeImportsTest {
 			import {Def01} from "Def";
 			import {Def02} from "Def";
 			import {Def03} from "Def";
-			A01;A02;A03;NA.A04;NB.B01;Def01;Def02;Def03;MyDef;
+			import * as NP+ from "PlainJS";
+			A01;A02;A03;NA.A04;NB.B01;Def01;Def02;Def03;MyDef;NP.XYZ;
 		''');
 	}
 
