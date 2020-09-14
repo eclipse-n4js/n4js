@@ -123,20 +123,18 @@ public class ImportHelper {
 				if (importSpecCasted.isDefaultImport()) {
 					String localName = importSpecCasted.getAlias();
 					return ImportDescriptor.createDefaultImport(localName, moduleSpecifier, targetProjectName,
-							targetModule,
-							originalIndex);
+							targetModule, originalIndex);
 				} else {
 					String elementName = importSpecCasted.getImportedElementAsText();
 					String alias = importSpecCasted.getAlias();
 					return ImportDescriptor.createNamedImport(elementName, alias, moduleSpecifier, targetProjectName,
-							targetModule,
-							originalIndex);
+							targetModule, originalIndex);
 				}
 			} else if (importSpec instanceof NamespaceImportSpecifier) {
 				String localNamespaceName = ((NamespaceImportSpecifier) importSpec).getAlias();
-				return ImportDescriptor.createNamespaceImport(localNamespaceName, moduleSpecifier, targetProjectName,
-						targetModule,
-						originalIndex);
+				boolean isDynamic = ((NamespaceImportSpecifier) importSpec).isDeclaredDynamic();
+				return ImportDescriptor.createNamespaceImport(localNamespaceName, isDynamic, moduleSpecifier,
+						targetProjectName, targetModule, originalIndex);
 			} else if (importSpec != null) {
 				throw new IllegalArgumentException(
 						"unknown subclass of ImportSpecifier: " + importSpec.getClass().getSimpleName());

@@ -102,7 +102,9 @@ public abstract class AbstractOrganizeImportsTest extends AbstractStructuredIdeT
 						"export class Def02 {}",
 						"export class Def03 {}",
 						"export class Def04 {}",
-						"export default class DefCls {}")));
+						"export default class DefCls {}")),
+				Pair.of("PlainJS.js",
+						"// no content required"));
 	}
 
 	/** Same as {@link #test(CharSequence, List, CharSequence)}, but without expected issues. */
