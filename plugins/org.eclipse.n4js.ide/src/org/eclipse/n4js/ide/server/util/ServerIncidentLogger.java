@@ -119,8 +119,7 @@ public class ServerIncidentLogger {
 				String serverInstanceFolderName = sanitizeTimeStampForFileName(serverInstanceTimeStamp)
 						+ "__" + languageVersion
 						+ "__" + serverInstanceId.toString().substring(0, 6);
-				outputFolder = userHomePath.resolve(SERVER_INCIDENTS_FOLDER)
-						.resolve(serverInstanceFolderName);
+				outputFolder = userHomePath.resolve(SERVER_INCIDENTS_FOLDER).resolve(serverInstanceFolderName);
 			}
 			Files.createDirectories(outputFolder);
 			return outputFolder;
