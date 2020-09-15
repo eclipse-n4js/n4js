@@ -11,37 +11,27 @@
 package org.eclipse.n4js.ide.server;
 
 import org.eclipse.n4js.ide.xtext.server.XDefaultProjectDescriptionFactory;
-import org.eclipse.n4js.internal.lsp.N4JSProjectConfig;
+import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.projectModel.names.N4JSProjectName;
+import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
-import org.eclipse.xtext.workspace.IProjectConfig;
-
-import com.google.common.collect.FluentIterable;
 
 /**
  * Creates {@link ProjectDescription}s for {@link IN4JSProject}s: Adds dependencies.
  */
-@SuppressWarnings("restriction")
 public class N4JSProjectDescriptionFactory extends XDefaultProjectDescriptionFactory {
 
 	@Override
-	public ProjectDescription getProjectDescription(IProjectConfig config) {
+	public ProjectDescription getProjectDescription(ProjectConfigSnapshot config) {
 		ProjectDescription projectDescription = super.getProjectDescription(config);
-		N4JSProjectConfig casted = (N4JSProjectConfig) config;
-		IN4JSProject project = casted.toProject();
-		if (project.getProjectType() == ProjectType.PLAINJS) {
+		projectDescription.getDependencies().clear();
+		N4JSProjectConfigSnapshot casted = (N4JSProjectConfigSnapshot) config;
+		if (casted.getType() == ProjectType.PLAINJS) {
+			// see N4JSProjectBuildOrderInfo for why we ignore dependencies of PLAINJS projects:
 			return projectDescription;
 		}
-		FluentIterable
-				.from(project.getSortedDependencies())
-				.transform(IN4JSProject::getProjectName)
-				.transform(N4JSProjectName::getRawName)
-				.copyInto(projectDescription.getDependencies());
-		if (project.getProjectType() == ProjectType.DEFINITION) {
-			projectDescription.getDependencies().add(project.getDefinesPackageName().getRawName());
-		}
+		projectDescription.getDependencies().addAll(casted.getSortedDependencies());
 		return projectDescription;
 	}
 

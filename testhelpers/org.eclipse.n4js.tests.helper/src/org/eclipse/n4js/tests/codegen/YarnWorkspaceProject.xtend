@@ -32,21 +32,21 @@ public class YarnWorkspaceProject extends Project {
 
 	/**
 	 * Same as {@link #Project(String, String, String, ProjectType)}, but with
-	 * a default project type of {@link ProjectType#LIBRARY LIBRARY}.
+	 * a default project type of {@link ProjectType#PLAINJS PLAINJS}.
 	 */
 	public new(String projectName, String vendorId, String vendorName) {
 		this(projectName, vendorId, vendorName, PACKAGES);
 	}
-	
+
 	/**
 	 * Same as {@link #Project(String, String, String, ProjectType)}, but with
-	 * a default project type of {@link ProjectType#LIBRARY LIBRARY}.
+	 * a default project type of {@link ProjectType#PLAINJS PLAINJS}.
 	 */
 	public new(String projectName, String vendorId, String vendorName, String workspacesFolderName) {
-		super(projectName, vendorId, vendorName, ProjectType.LIBRARY);
+		super(projectName, vendorId, vendorName, ProjectType.PLAINJS);
 		this.workspacesFolderName = workspacesFolderName;
 	}
-	
+
 	public def void addProject(Project project) {
 		this.projects.put(project.projectName, project);
 	}
@@ -58,8 +58,8 @@ public class YarnWorkspaceProject extends Project {
 	public def Project getProject(String projectName) {
 		return this.projects.get(projectName);
 	}
-	
-	
+
+
 	/**
 	 * Generates the {@link IN4JSProject#PACKAGE_JSON} for this project.
 	 */
@@ -77,7 +77,7 @@ public class YarnWorkspaceProject extends Project {
 						"«dep.projectName»": "*"
 					«ENDFOR»
 					«ENDIF»
-				}
+			}
 		}
 	'''
 
@@ -98,7 +98,7 @@ public class YarnWorkspaceProject extends Project {
 	 */
 	public override File create(Path parentDirectoryPath) {
 		super.create(parentDirectoryPath);
-		
+
 		var File parentDirectory = Objects.requireNonNull(parentDirectoryPath).toFile
 		val File projectDirectory = new File(parentDirectory, projectName);
 		val File workspacesDirectory = new File(new File(parentDirectory, projectName), workspacesFolderName);

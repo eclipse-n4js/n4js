@@ -27,6 +27,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.n4js.ide.xtext.server.build.XClusteringStorageAwareResourceLoader.LoadResult;
 import org.eclipse.n4js.utils.URIUtils;
+import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.generator.GeneratorContext;
@@ -49,7 +50,6 @@ import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue;
-import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 
@@ -321,7 +321,7 @@ public class XStatefulIncrementalBuilder {
 		}
 		OutputConfigurationProvider outputConfProvider = serviceProvider.get(OutputConfigurationProvider.class);
 		URI resourceUri = resource.getURI();
-		IProjectConfig projectConfig = workspaceManager.getProjectConfig(resourceUri);
+		ProjectConfigSnapshot projectConfig = workspaceManager.getProjectConfig(resourceUri);
 		Set<OutputConfiguration> outputConfigurations = outputConfProvider.getOutputConfigurations(resource);
 		URI projectBaseUri = projectConfig.getPath();
 		Path resourcePath = URIUtils.toPath(resourceUri);

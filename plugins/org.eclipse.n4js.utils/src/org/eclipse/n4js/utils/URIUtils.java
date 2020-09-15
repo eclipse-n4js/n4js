@@ -16,6 +16,8 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Map;
+import java.util.SortedMap;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -298,5 +300,34 @@ public class URIUtils {
 	 */
 	static public Path toPath(URI uri) {
 		return toFile(uri).toPath();
+	}
+
+	/**
+	 * Returns from the given map the value of the key that is the longest prefix of the given URI or <code>null</code>
+	 * if none of the given map's keys is a prefix of the given URI. Assumes keys to be URIs <em>without</em> a trailing
+	 * path separator.
+	 * <p>
+	 * TODO: consider using a {@link SortedMap} for this purpose to avoid multiple <code>Map#get()</code>-calls (then
+	 * also improve the similar implementation in {@code FileBasedWorkspace#findProjectWith(FileURI)}).
+	 */
+	public static <T> T findInMapByNestedURI(Map<URI, T> map, URI nestedURI) {
+		URI currPrefix = trimTrailingPathSeparator(nestedURI);
+		do {
+			T match = map.get(currPrefix);
+			if (match != null) {
+				return match;
+			}
+			currPrefix = currPrefix.segmentCount() > 0 ? currPrefix.trimSegments(1) : null;
+		} while (currPrefix != null);
+
+		return null;
+	}
+
+	/**
+	 * Returns the URI formed by removing the {@link URI#hasTrailingPathSeparator() trailing path separator} of the
+	 * given URI, if it has one. Otherwise returns the given URI unchanged.
+	 */
+	public static URI trimTrailingPathSeparator(URI uri) {
+		return uri.hasTrailingPathSeparator() ? uri.trimSegments(1) : uri;
 	}
 }

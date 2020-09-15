@@ -23,6 +23,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ide.xtext.server.XIWorkspaceConfigFactory;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
+import org.eclipse.n4js.internal.MultiCleartriggerCache;
 import org.eclipse.n4js.internal.N4JSBrokenProjectException;
 import org.eclipse.n4js.internal.lsp.N4JSWorkspaceConfig;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
@@ -48,6 +49,9 @@ public class FileBasedWorkspaceInitializer implements XIWorkspaceConfigFactory {
 	private IN4JSCore n4jsCore;
 
 	@Inject
+	private MultiCleartriggerCache multiCleartriggerCache;
+
+	@Inject
 	private ProjectDescriptionLoader projectDescriptionLoader;
 
 	@Inject
@@ -67,7 +71,7 @@ public class FileBasedWorkspaceInitializer implements XIWorkspaceConfigFactory {
 	public XIWorkspaceConfig createWorkspaceConfig(URI workspaceBaseURI) {
 		try {
 			if (workspaceBaseURI.equals(knownWorkspaceBaseURI)) {
-				return new N4JSWorkspaceConfig(workspaceBaseURI, n4jsCore);
+				return new N4JSWorkspaceConfig(workspaceBaseURI, n4jsCore, multiCleartriggerCache);
 			}
 
 			// TODO is this correct if we have multiple workspace URIs?
@@ -84,7 +88,7 @@ public class FileBasedWorkspaceInitializer implements XIWorkspaceConfigFactory {
 
 			registerProjectsToFileBasedWorkspace(allProjectURIs);
 
-			return new N4JSWorkspaceConfig(workspaceBaseURI, n4jsCore);
+			return new N4JSWorkspaceConfig(workspaceBaseURI, n4jsCore, multiCleartriggerCache);
 
 		} finally {
 			this.knownWorkspaceBaseURI = workspaceBaseURI;

@@ -15,7 +15,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.xtext.resource.IResourceDescription;
-import org.eclipse.xtext.resource.impl.ProjectDescription;
 
 /**
  * This interface is intended for use cases where sorting elements and computing an "is affected" information are
@@ -38,7 +37,7 @@ public interface IOrderInfo<T> {
 		public IOrderIterator<T> visitAffected(List<IResourceDescription.Delta> changes);
 
 		/** Set the given elements of the underlying collection to be visited by this iterator. */
-		public IOrderIterator<T> visit(Collection<T> elements);
+		public IOrderIterator<T> visit(Collection<? extends T> elements);
 
 		/** Sets all elements of the underlying collection to be visited by this iterator. */
 		public IOrderIterator<T> visitAll();
@@ -52,6 +51,6 @@ public interface IOrderInfo<T> {
 	public IOrderIterator<T> getIterator();
 
 	/** Creates a new instance of {@link IOrderIterator}. The given set of projects will be visited only. */
-	public IOrderIterator<T> getIterator(Collection<ProjectDescription> elements);
+	public IOrderIterator<T> getIterator(Collection<? extends T> elements);
 
 }

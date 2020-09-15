@@ -22,6 +22,10 @@ import com.google.common.collect.ImmutableSet;
 @SuppressWarnings("restriction")
 public interface XIProjectConfig extends IProjectConfig {
 
+	// overridden to avoid "restriction" warnings in client code
+	@Override
+	String getName();
+
 	@Override
 	Set<? extends XISourceFolder> getSourceFolders();
 
@@ -45,6 +49,6 @@ public interface XIProjectConfig extends IProjectConfig {
 		ImmutableSet<SourceFolderSnapshot> sourceFolderSnapshots = getSourceFolders().stream()
 				.map(XISourceFolder::toSnapshot)
 				.collect(ImmutableSet.toImmutableSet());
-		return new ProjectConfigSnapshot(getName(), getPath(), getDependencies(), sourceFolderSnapshots);
+		return new ProjectConfigSnapshot(getName(), getPath(), indexOnly(), getDependencies(), sourceFolderSnapshots);
 	}
 }

@@ -13,12 +13,12 @@ package org.eclipse.n4js.internal.lsp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
@@ -27,17 +27,19 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.projectModel.lsp.IN4JSSourceFolder;
-import org.eclipse.n4js.projectModel.names.N4JSProjectName;
+import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
+import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
+import org.eclipse.n4js.xtext.workspace.XISourceFolder;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.workspace.IProjectConfig;
-import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 
 /**
@@ -74,15 +76,10 @@ public class N4JSProjectConfig implements XIProjectConfig {
 
 	@Override
 	public Set<String> getDependencies() {
-		Set<String> result = new HashSet<>();
-		for (IN4JSProject dependency : delegate.getDependencies()) {
-			N4JSProjectName projectName = dependency.getProjectName();
-			String name = projectName != null ? projectName.getRawName() : null;
-			if (name != null) {
-				result.add(name);
-			}
-		}
-		return result;
+		// note: it is important to return a list that contains names of unresolved (i.e. non-existing) projects, to
+		// avoid the need to recompute the list of dependencies of all existing projects whenever a project is added!
+		List<String> deps = ((N4JSProject) delegate).getAllDependenciesAndImplementedApiNames();
+		return new LinkedHashSet<>(deps);
 	}
 
 	private class SourceContainerForPackageJson implements IN4JSSourceFolder {
@@ -123,13 +120,20 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		}
 	}
 
-	private class SourceFolderSnapshotForPackageJson extends SourceFolderSnapshot {
+	/** A {@link SourceFolderSnapshot} that only contains a single <code>package.json</code> file. */
+	public static class SourceFolderSnapshotForPackageJson extends SourceFolderSnapshot {
 
 		private final URI pckjsonURI;
 
+		/** Creates a new {@link SourceFolderSnapshotForPackageJson}. */
 		public SourceFolderSnapshotForPackageJson(SourceContainerForPackageJson sourceFolder) {
 			super(sourceFolder.getName(), sourceFolder.getPath());
 			this.pckjsonURI = sourceFolder.pckjsonURI;
+		}
+
+		/** @return the URI of the <code>package.json</code> file of this source folder. */
+		public URI getPackageJsonURI() {
+			return pckjsonURI;
 		}
 
 		@Override
@@ -213,11 +217,16 @@ public class N4JSProjectConfig implements XIProjectConfig {
 	 * <li>existing -> non-existing (project deletion)
 	 * </ul>
 	 */
-	public WorkspaceChanges update(URI changedResource, ProjectDescription projectDescriptionToUpdate) {
+	public WorkspaceChanges update(WorkspaceConfigSnapshot oldWorkspaceConfig, URI changedResource) {
+		String projectName = getName();
+		ProjectConfigSnapshot oldProjectConfig = projectName != null ? oldWorkspaceConfig.findProjectByName(projectName)
+				: null;
+
 		SafeURI<?> pckjsonSafeUri = delegate.getProjectDescriptionLocation();
 		if (pckjsonSafeUri == null || !delegate.exists()) {
 			// project was deleted
-			return WorkspaceChanges.createProjectRemoved(this);
+			return oldProjectConfig != null ? WorkspaceChanges.createProjectRemoved(oldProjectConfig)
+					: WorkspaceChanges.NO_CHANGES;
 		}
 
 		URI pckjson = pckjsonSafeUri.toURI();
@@ -228,23 +237,26 @@ public class N4JSProjectConfig implements XIProjectConfig {
 
 		// package.json was modified
 
-		Set<? extends IN4JSSourceFolder> oldSourceFolders = getSourceFolders();
-		ImmutableList<String> oldDeps = ((N4JSProject) delegate).getAllDependenciesAndImplementedApiNames();
+		Set<? extends SourceFolderSnapshot> oldSourceFolders = oldProjectConfig != null
+				? oldProjectConfig.getSourceFolders()
+				: Collections.emptySet();
+
 		((N4JSProject) delegate).invalidate();
-		Set<? extends IN4JSSourceFolder> newSourceFolders = getSourceFolders();
-		ImmutableList<String> newDeps = ((N4JSProject) delegate).getAllDependenciesAndImplementedApiNames();
+		ProjectConfigSnapshot newProjectConfig = toSnapshot();
+
+		Set<? extends SourceFolderSnapshot> newSourceFolders = newProjectConfig.getSourceFolders();
 
 		// detect added/removed source folders
-		Map<URI, IN4JSSourceFolder> oldSFs = new HashMap<>();
-		Map<URI, IN4JSSourceFolder> newSFs = new HashMap<>();
-		for (IN4JSSourceFolder sourceFolder : oldSourceFolders) {
+		Map<URI, SourceFolderSnapshot> oldSFs = new HashMap<>();
+		Map<URI, SourceFolderSnapshot> newSFs = new HashMap<>();
+		for (SourceFolderSnapshot sourceFolder : oldSourceFolders) {
 			oldSFs.put(sourceFolder.getPath(), sourceFolder);
 		}
-		for (IN4JSSourceFolder sourceFolder : newSourceFolders) {
+		for (SourceFolderSnapshot sourceFolder : newSourceFolders) {
 			newSFs.put(sourceFolder.getPath(), sourceFolder);
 		}
-		List<ISourceFolder> addedSourceFolders = new ArrayList<>();
-		List<ISourceFolder> removedSourceFolders = new ArrayList<>();
+		List<SourceFolderSnapshot> addedSourceFolders = new ArrayList<>();
+		List<SourceFolderSnapshot> removedSourceFolders = new ArrayList<>();
 		for (URI sfUri : Iterables.concat(oldSFs.keySet(), newSFs.keySet())) {
 			boolean isOld = oldSFs.containsKey(sfUri);
 			boolean isNew = newSFs.containsKey(sfUri);
@@ -257,26 +269,14 @@ public class N4JSProjectConfig implements XIProjectConfig {
 			}
 		}
 
-		// detect changes in dependencies
-		// note that a change of the name attribute is not relevant since the folder name is used
-		boolean dependencyChanged = !Objects.equals(oldDeps, newDeps);
+		// detect changes in project properties
+		boolean propertiesChanged = !addedSourceFolders.isEmpty() || !removedSourceFolders.isEmpty()
+				|| !Objects.equals(oldProjectConfig, newProjectConfig);
 
-		if (dependencyChanged && projectDescriptionToUpdate != null) {
-			updateProjectDescription(projectDescriptionToUpdate);
-		}
-
-		return new WorkspaceChanges(dependencyChanged, ImmutableList.of(), ImmutableList.of(), ImmutableList.of(),
+		return new WorkspaceChanges(ImmutableList.of(), ImmutableList.of(), ImmutableList.of(),
 				ImmutableList.copyOf(removedSourceFolders),
 				ImmutableList.copyOf(addedSourceFolders), ImmutableList.of(), ImmutableList.of(),
-				dependencyChanged ? ImmutableList.of(this) : ImmutableList.of());
-	}
-
-	/** Bring the given project description up-to-date with the receiving project configuration's internal state. */
-	public void updateProjectDescription(ProjectDescription projectDescriptionToUpdate) {
-		String currName = ((N4JSProject) delegate).getProjectName().getRawName();
-		List<String> currDeps = ((N4JSProject) delegate).getAllDependenciesAndImplementedApiNames();
-		projectDescriptionToUpdate.setName(currName);
-		projectDescriptionToUpdate.setDependencies(currDeps);
+				propertiesChanged ? ImmutableList.of(newProjectConfig) : ImmutableList.of());
 	}
 
 	/** @see N4JSProject#getWorkspaces() */
@@ -287,5 +287,18 @@ public class N4JSProjectConfig implements XIProjectConfig {
 	/** @see N4JSProject#isWorkspacesProject() */
 	public boolean isWorkspacesProject() {
 		return ((N4JSProject) delegate).isWorkspacesProject();
+	}
+
+	@Override
+	public ProjectConfigSnapshot toSnapshot() {
+		List<String> sortedDependencies = delegate.getSortedDependencies().stream()
+				.map(p -> p.getProjectName().getRawName())
+				.collect(Collectors.toList());
+		ImmutableSet<SourceFolderSnapshot> sourceFolderSnapshots = getSourceFolders().stream()
+				.map(XISourceFolder::toSnapshot)
+				.collect(ImmutableSet.toImmutableSet());
+		return new N4JSProjectConfigSnapshot(getName(), getPath(),
+				toProject().getProjectType(), toProject().getDefinesPackageName(), indexOnly(),
+				getDependencies(), sortedDependencies, sourceFolderSnapshots);
 	}
 }

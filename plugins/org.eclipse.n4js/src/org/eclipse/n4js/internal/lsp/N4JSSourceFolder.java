@@ -10,18 +10,11 @@
  */
 package org.eclipse.n4js.internal.lsp;
 
-import java.io.IOException;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Path;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.projectModel.lsp.IN4JSSourceFolder;
-import org.eclipse.xtext.util.IAcceptor;
 import org.eclipse.xtext.util.IFileSystemScanner;
 
 /**
@@ -55,31 +48,9 @@ public class N4JSSourceFolder implements IN4JSSourceFolder {
 		return delegate.getLocation().withTrailingPathDelimiter().toURI();
 	}
 
-	/**
-	 * Excludes all files in the folder {@link N4JSGlobals#NODE_MODULES}
-	 *
-	 * @return a list of all URIs that are passed to the acceptor of {@link IFileSystemScanner#scan(URI, IAcceptor)}
-	 */
 	@Override
 	public List<URI> getAllResources(IFileSystemScanner scanner) {
-		List<URI> uris = new ArrayList<>();
-		URI projectBase = getPath();
-		scanner.scan(projectBase, new FileVisitingAcceptor() {
-			@Override
-			public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-				if (dir.endsWith(N4JSGlobals.NODE_MODULES)) {
-					return FileVisitResult.SKIP_SUBTREE;
-				}
-				return FileVisitResult.CONTINUE;
-			}
-
-			@Override
-			public void accept(URI uri) {
-				uris.add(uri);
-			}
-
-		});
-		return uris;
+		return N4JSSourceFolderScanner.findAllSourceFilesInFolder(getPath(), scanner);
 	}
 
 }

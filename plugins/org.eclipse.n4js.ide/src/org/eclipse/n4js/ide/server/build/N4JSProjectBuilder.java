@@ -24,11 +24,12 @@ import org.eclipse.n4js.ide.xtext.server.build.IBuildRequestFactory;
 import org.eclipse.n4js.ide.xtext.server.build.ProjectBuilder;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterDeleteListener;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
+import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.tester.TestCatalogSupplier;
-import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
+import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.util.CancelIndicator;
 
@@ -37,7 +38,6 @@ import com.google.inject.Inject;
 /**
  * Adds {@link #writeTestCatalog()} and {@link #removeTestCatalog()}.
  */
-@SuppressWarnings("restriction")
 public class N4JSProjectBuilder extends ProjectBuilder {
 	private static final Logger LOG = LogManager.getLogger(N4JSProjectBuilder.class);
 
@@ -46,6 +46,29 @@ public class N4JSProjectBuilder extends ProjectBuilder {
 
 	@Inject
 	private TestCatalogSupplier testCatalogSupplier;
+
+	@Override
+	public N4JSProjectConfigSnapshot getProjectConfig() {
+		return (N4JSProjectConfigSnapshot) super.getProjectConfig();
+	}
+
+	@Override
+	public void setProjectConfig(ProjectConfigSnapshot newProjectConfig) {
+		N4JSProjectConfigSnapshot oldPC = getProjectConfig();
+		N4JSProjectConfigSnapshot newPCCasted = (N4JSProjectConfigSnapshot) newProjectConfig;
+		boolean depsHaveChanged = oldPC == null
+				|| !oldPC.getDependencies().equals(newProjectConfig.getDependencies());
+		boolean sortedDepsHaveChanged = oldPC == null
+				|| !oldPC.getSortedDependencies().equals(newPCCasted.getSortedDependencies());
+
+		super.setProjectConfig(newProjectConfig);
+
+		if (sortedDepsHaveChanged && !depsHaveChanged) {
+			// note: not doing this if 'depsHaveChanged', because then the super method has already invoked
+			// #onDependenciesChanged()
+			onDependenciesChanged();
+		}
+	}
 
 	@Override
 	protected XBuildResult doBuild(IBuildRequestFactory buildRequestFactory, Set<URI> dirtyFiles, Set<URI> deletedFiles,
@@ -68,7 +91,7 @@ public class N4JSProjectBuilder extends ProjectBuilder {
 
 	/** Generates the test catalog for the project. */
 	private void writeTestCatalog() {
-		XIProjectConfig projectConfig = getProjectConfig();
+		ProjectConfigSnapshot projectConfig = getProjectConfig();
 		IN4JSProject project = n4jsCore.findProject(new N4JSProjectName(projectConfig.getName())).orNull();
 		File testCatalog = getTestCatalogFile(projectConfig);
 
@@ -89,7 +112,7 @@ public class N4JSProjectBuilder extends ProjectBuilder {
 
 	/** Removes the test catalog for the project. */
 	private void removeTestCatalog() {
-		XIProjectConfig projectConfig = getProjectConfig();
+		ProjectConfigSnapshot projectConfig = getProjectConfig();
 		File testCatalog = getTestCatalogFile(projectConfig);
 
 		if (testCatalog.isFile()) {
@@ -102,7 +125,7 @@ public class N4JSProjectBuilder extends ProjectBuilder {
 		}
 	}
 
-	private File getTestCatalogFile(XIProjectConfig projectConfig) {
+	private File getTestCatalogFile(ProjectConfigSnapshot projectConfig) {
 		return new File(projectConfig.getPath().toFileString(), N4JSGlobals.TEST_CATALOG);
 	}
 }
