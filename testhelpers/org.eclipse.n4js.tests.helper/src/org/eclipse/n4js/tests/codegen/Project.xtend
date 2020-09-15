@@ -274,7 +274,6 @@ public class Project {
 	
 	public def void addNodeModuleProject(Project project) {
 		this.nodeModuleProjects.put(project.projectName, project);
-		this.addProjectDependency(project);
 	}
 	
 	public def Project getNodeModuleProject(String projectName) {
@@ -317,7 +316,7 @@ public class Project {
 						"«dep.projectName»": "*"
 					«ENDFOR»
 					«ENDIF»
-				}
+			}
 		}
 		«ENDIF»
 	'''

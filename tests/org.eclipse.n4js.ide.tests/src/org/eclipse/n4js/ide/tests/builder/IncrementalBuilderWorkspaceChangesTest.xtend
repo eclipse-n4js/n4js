@@ -209,7 +209,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 	}
 
 	@Test
-	def void testChangePackageJson_addRemoveDependency_ofN4JSProject() throws IOException {
+	def void testChangePackageJson_addRemoveDependency_toN4JSProject() throws IOException {
 		testWorkspaceManager.createTestOnDisk(
 			CFG_NODE_MODULES + N4JS_RUNTIME -> null,
 			"MainProject" -> #[
@@ -237,11 +237,11 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 			]
 		];
 
-		doTestAddRemoveDependency("MainProject" -> "OtherProject", originalErrors);
+		doTestAddRemoveDependency("MainProject" -> "OtherProject", true, originalErrors);
 	}
 
 	@Test
-	def void testChangePackageJson_addRemoveDependency_ofPlainjsProjectInNodeModules() throws IOException {
+	def void testChangePackageJson_addRemoveDependency_toPlainjsProjectInNodeModules() throws IOException {
 		testWorkspaceManager.createTestOnDisk(
 			CFG_NODE_MODULES + N4JS_RUNTIME -> null,
 			CFG_NODE_MODULES + "PlainjsProject" -> #[
@@ -274,10 +274,17 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 			]
 		];
 
-		doTestAddRemoveDependency("MainProject" -> "PlainjsProject", originalErrors);
+		doTestAddRemoveDependency("MainProject" -> "PlainjsProject", false, originalErrors);
 	}
 
-	def private void doTestAddRemoveDependency(Pair<String, String> dependency, Pair<String, List<String>>[] originalErrors) {
+	/**
+	 * @param targetIsN4JSProject
+	 *            tells whether the target project of the new dependency is an N4JS project (i.e. has
+	 *            a project type other than PLAINJS).
+	 */
+	def private void doTestAddRemoveDependency(Pair<String, String> dependency, boolean targetIsN4JSProject,
+		Pair<String, List<String>>[] originalErrors) {
+
 		val sourceProjectName = dependency.key;
 		val targetProjectName = dependency.value;
 
@@ -291,7 +298,17 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 		);
 		joinServerRequests();
 
-		assertIssues(originalErrors); // changes in package.json not saved yet, so still the original errors
+		if (targetIsN4JSProject) {
+			assertIssues(originalErrors); // changes in package.json not saved yet, so still the original errors
+		} else {
+			// unfortunately we have an additional error in the open, non-saved package.json file when a dependency to a plain-JS-project is added
+			// (due to the optimization in ProjectDiscoveryHelper of hiding all unnecessary PLAINJS projects)
+			val errorsBeforeSaving = originalErrors.toMap([getFileURIFromModuleName(it.key)], [it.value]);
+			errorsBeforeSaving.put(packageJsonFileURI, #[
+				"(Error, [15:24 - 15:45], Project does not exist with project ID: PlainjsProject.)"
+			]);
+			assertIssues(errorsBeforeSaving); // changes in package.json not saved yet, so still the original errors + 1 error in the unsaved package.json editor
+		}
 
 		saveOpenedFile(packageJsonFileURI);
 		joinServerRequests();

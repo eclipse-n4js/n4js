@@ -192,14 +192,9 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 
 		if (needRecompute) {
 			multiCleartriggerCache.clear(MultiCleartriggerCache.CACHE_KEY_SORTED_DEPENDENCIES);
-			Set<String> changedProjectNames = changes.getChangedProjects().stream().map(ProjectConfigSnapshot::getName)
-					.collect(Collectors.toSet());
 			List<ProjectConfigSnapshot> projectsWithChangedSortedDeps = new ArrayList<>();
 			for (XIProjectConfig pc : getProjects()) {
 				String projectName = pc.getName();
-				if (changedProjectNames.contains(projectName)) {
-					continue; // should already be up-to-date
-				}
 				ProjectConfigSnapshot oldSnapshot = oldWorkspaceConfig.findProjectByName(projectName);
 				if (oldSnapshot == null) {
 					continue;
