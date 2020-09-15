@@ -16,6 +16,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -24,28 +25,29 @@ import org.eclipse.n4js.ide.server.LspLogger;
 import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo;
 import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo.ProjectBuildOrderIterator;
 import org.eclipse.n4js.ide.xtext.server.build.ParallelBuildManager.ParallelJob;
+import org.eclipse.n4js.ide.xtext.server.build.XWorkspaceManager.UpdateResult;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
+import org.eclipse.n4js.xtext.workspace.SourceFolderScanner;
+import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
-import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
+import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.impl.CoarseGrainedChangeEvent;
 import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionDelta;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionChangeEvent;
-import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IFileSystemScanner;
-import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.IteratorExtensions;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Stopwatch;
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.google.common.collect.Sets.SetView;
 import com.google.inject.Inject;
 
 /**
@@ -54,7 +56,7 @@ import com.google.inject.Inject;
  *
  * In a project context, it is possible to request a refreshed index representation.
  */
-@SuppressWarnings({ "hiding", "restriction" })
+@SuppressWarnings({ "hiding" })
 public class XWorkspaceBuilder {
 
 	private static class AffectedResourcesRecordingFactory implements IBuildRequestFactory {
@@ -94,6 +96,9 @@ public class XWorkspaceBuilder {
 	private LspLogger lspLogger;
 
 	@Inject
+	private SourceFolderScanner sourceFolderScanner;
+
+	@Inject
 	private IFileSystemScanner scanner;
 
 	@Inject
@@ -102,37 +107,12 @@ public class XWorkspaceBuilder {
 	@Inject
 	private IBuildRequestFactory buildRequestFactory;
 
-	@Inject
-	private ConcurrentIndex fullIndex;
-
 	private final Set<URI> dirtyFiles = new LinkedHashSet<>();
 	private final Set<URI> deletedFiles = new LinkedHashSet<>();
 	private final Set<String> deletedProjects = new LinkedHashSet<>();
 
 	/** Holds all deltas of all projects. In case of a cancelled build, this set is not empty at start of next build. */
 	private List<IResourceDescription.Delta> toBeConsideredDeltas = new ArrayList<>();
-
-	/**
-	 * Announce dirty and deleted files and provide means to start a build.
-	 *
-	 * @param dirtyFiles
-	 *            the dirty files
-	 * @param deletedFiles
-	 *            the deleted files
-	 * @return a build command that can be triggered
-	 */
-	public BuildTask createIncrementalBuildTask(List<URI> dirtyFiles, List<URI> deletedFiles) {
-		WorkspaceChanges changes = WorkspaceChanges.createUrisRemovedAndChanged(deletedFiles, dirtyFiles);
-		List<URI> allFiles = ImmutableList.<URI> builder().addAll(dirtyFiles).addAll(deletedFiles).build();
-		changes = changes.merge(workspaceManager.update(allFiles));
-		if (!changes.getProjectsWithChangedDependencies().isEmpty()) {
-			Iterable<ProjectConfigSnapshot> projectsWithChangedDeps = IterableExtensions.map(
-					changes.getProjectsWithChangedDependencies(),
-					XIProjectConfig::toSnapshot);
-			fullIndex.setProjectConfigSnapshots(projectsWithChangedDeps);
-		}
-		return createBuildTask(changes);
-	}
 
 	/**
 	 * Initializes the workspace and triggers an initial build.
@@ -161,7 +141,7 @@ public class XWorkspaceBuilder {
 		Stopwatch stopwatch = Stopwatch.createStarted();
 
 		try {
-			List<ProjectDescription> allProjects = workspaceManager.getProjectDescriptions();
+			Collection<? extends ProjectConfigSnapshot> allProjects = workspaceManager.getProjectConfigs();
 			ProjectBuildOrderInfo projectBuildOrderInfo = projectBuildOrderInfoProvider.get();
 			ProjectBuildOrderIterator pboIterator = projectBuildOrderInfo.getIterator(allProjects);
 			logBuildOrder();
@@ -169,8 +149,8 @@ public class XWorkspaceBuilder {
 			List<IResourceDescription.Delta> result = new ArrayList<>();
 
 			while (pboIterator.hasNext()) {
-				ProjectDescription description = pboIterator.next();
-				String projectName = description.getName();
+				ProjectConfigSnapshot projectConfig = pboIterator.next();
+				String projectName = projectConfig.getName();
 				ProjectBuilder projectBuilder = workspaceManager.getProjectBuilder(projectName);
 				XBuildResult partialresult = projectBuilder.doInitialBuild(buildRequestFactory, cancelIndicator);
 				result.addAll(partialresult.getAffectedResources());
@@ -229,7 +209,7 @@ public class XWorkspaceBuilder {
 
 			@Override
 			public Collection<String> getDependencyIDs() {
-				return projectManager.getProjectDescription().getDependencies();
+				return projectManager.getProjectConfig().getDependencies();
 			}
 		}
 
@@ -265,33 +245,50 @@ public class XWorkspaceBuilder {
 	}
 
 	/**
-	 * Enqueue a build for the given file changes.
+	 * Announce dirty and deleted files and perform an incremental build.
 	 *
-	 * @return a buildable.
+	 * @param dirtyFiles
+	 *            the dirty files, i.e. added and changes files.
+	 * @param deletedFiles
+	 *            the deleted files.
+	 * @return a build command that can be triggered.
 	 */
-	private BuildTask createBuildTask(WorkspaceChanges workspaceChanges) {
-		List<URI> dirtyFiles = workspaceChanges.scanAllAddedAndChangedURIs(scanner);
-		List<URI> deletedFiles = getAllRemovedURIs(workspaceChanges);
-		queue(this.dirtyFiles, deletedFiles, dirtyFiles);
-		queue(this.deletedFiles, dirtyFiles, deletedFiles);
+	public BuildTask createIncrementalBuildTask(List<URI> dirtyFiles, List<URI> deletedFiles) {
+		UpdateResult updateResult = workspaceManager.update(dirtyFiles, deletedFiles);
+		WorkspaceChanges changes = updateResult.changes;
 
-		for (XIProjectConfig prjConfig : workspaceChanges.getRemovedProjects()) {
+		List<URI> actualDirtyFiles = scanAllAddedAndChangedURIs(changes, scanner);
+		List<URI> actualDeletedFiles = getAllRemovedURIs(changes); // n.b.: not including URIs of removed projects
+		queue(this.dirtyFiles, actualDeletedFiles, actualDirtyFiles);
+		queue(this.deletedFiles, actualDirtyFiles, actualDeletedFiles);
+
+		// take care of removed projects
+		for (ProjectConfigSnapshot prjConfig : changes.getRemovedProjects()) {
 			this.deletedProjects.add(prjConfig.getName());
-			handleDeletedProject(prjConfig);
 		}
-		workspaceManager.removeProjects(workspaceChanges.getRemovedProjects());
-		for (XIProjectConfig prjConfig : workspaceChanges.getAddedProjects()) {
+		for (ProjectConfigSnapshot prjConfig : changes.getAddedProjects()) {
 			this.deletedProjects.remove(prjConfig.getName()); // in case a deleted project is being re-created
 		}
-		workspaceManager.addProjects(workspaceChanges.getAddedProjects());
+		handleContentsOfRemovedProjects(updateResult.removedProjectsContents);
 
-		return (cancelIndicator) -> doIncrementalBuild(cancelIndicator);
+		return this::doIncrementalBuild;
 	}
 
-	/** @return list of all {@link URI} that have been removed by the given changes */
+	/** @return list of all added/changed URIs (including URIs of added projects). */
+	private List<URI> scanAllAddedAndChangedURIs(WorkspaceChanges changes, IFileSystemScanner scanner) {
+		List<URI> allAddedURIs = new ArrayList<>(changes.getAddedURIs());
+		for (SourceFolderSnapshot sourceFolder : changes.getAllAddedSourceFolders()) {
+			List<URI> sourceFilesOnDisk = sourceFolderScanner.findAllSourceFiles(sourceFolder, scanner);
+			allAddedURIs.addAll(sourceFilesOnDisk);
+		}
+		List<URI> allChangedURIs = Lists.newArrayList(Iterables.concat(allAddedURIs, changes.getChangedURIs()));
+		return allChangedURIs;
+	}
+
+	/** @return list of all removed URIs (<em>not</em> including URIs of removed projects). */
 	private List<URI> getAllRemovedURIs(WorkspaceChanges workspaceChanges) {
 		List<URI> deleted = new ArrayList<>(workspaceChanges.getRemovedURIs());
-		for (ISourceFolder sourceFolder : workspaceChanges.getAllRemovedSourceFolders()) {
+		for (SourceFolderSnapshot sourceFolder : workspaceChanges.getRemovedSourceFolders()) {
 			URI prefix = sourceFolder.getPath();
 			ProjectBuilder projectBuilder = workspaceManager.getProjectBuilder(prefix);
 			if (projectBuilder != null) {
@@ -303,24 +300,20 @@ public class XWorkspaceBuilder {
 	}
 
 	/**
-	 * Adds deltas to {@link #toBeConsideredDeltas} representing the deletion of all files in the deleted project to
+	 * Adds deltas to {@link #toBeConsideredDeltas} representing the deletion of all files in the removed projects to
 	 * ensure correct "isAffected"-computation on resource level during the next build (the deltas created here will be
 	 * considered as "external deltas" by {@link XStatefulIncrementalBuilder#launch()}).
 	 */
-	protected void handleDeletedProject(XIProjectConfig projectConfig) {
-		String projectName = projectConfig.getName();
-		ResourceDescriptionsData data = fullIndex.getProjectIndex(projectName);
-		if (data != null) {
-			List<IResourceDescription.Delta> deltas = new ArrayList<>();
-			for (IResourceDescription oldDesc : data.getAllResourceDescriptions()) {
-				if (oldDesc != null) {
-					// because the delta represents a deletion only, we need not create it via the
-					// IResourceDescriptionManager:
-					deltas.add(new DefaultResourceDescriptionDelta(oldDesc, null));
-				}
+	protected void handleContentsOfRemovedProjects(Iterable<? extends IResourceDescription> removedContents) {
+		List<IResourceDescription.Delta> deltas = new ArrayList<>();
+		for (IResourceDescription oldDesc : removedContents) {
+			if (oldDesc != null) {
+				// because the delta represents a deletion only, we need not create it via the
+				// IResourceDescriptionManager:
+				deltas.add(new DefaultResourceDescriptionDelta(oldDesc, null));
 			}
-			mergeWithUnreportedDeltas(deltas);
 		}
+		mergeWithUnreportedDeltas(deltas);
 	}
 
 	/** Run the build on the workspace */
@@ -330,12 +323,15 @@ public class XWorkspaceBuilder {
 			Set<URI> dirtyFilesToBuild = new LinkedHashSet<>(this.dirtyFiles);
 			Set<URI> deletedFilesToBuild = new LinkedHashSet<>(this.deletedFiles);
 
-			Map<ProjectDescription, Set<URI>> project2dirty = computeProjectToUriMap(dirtyFilesToBuild);
-			Map<ProjectDescription, Set<URI>> project2deleted = computeProjectToUriMap(deletedFilesToBuild);
-			SetView<ProjectDescription> changedPDs = Sets.union(project2dirty.keySet(), project2deleted.keySet());
+			Map<String, Set<URI>> project2dirty = computeProjectToUriMap(dirtyFilesToBuild);
+			Map<String, Set<URI>> project2deleted = computeProjectToUriMap(deletedFilesToBuild);
+			Set<String> changedProjects = Sets.union(project2dirty.keySet(), project2deleted.keySet());
+			WorkspaceConfigSnapshot workspaceConfig = workspaceManager.getWorkspaceConfig();
+			List<ProjectConfigSnapshot> changedPCs = changedProjects.stream()
+					.map(workspaceConfig::findProjectByName).collect(Collectors.toList());
 
 			ProjectBuildOrderInfo projectBuildOrderInfo = projectBuildOrderInfoProvider.get();
-			ProjectBuildOrderIterator pboIterator = projectBuildOrderInfo.getIterator(changedPDs);
+			ProjectBuildOrderIterator pboIterator = projectBuildOrderInfo.getIterator(changedPCs);
 
 			for (String deletedProjectName : deletedProjects) {
 				pboIterator.visitAffected(deletedProjectName);
@@ -343,10 +339,11 @@ public class XWorkspaceBuilder {
 
 			while (pboIterator.hasNext()) {
 
-				ProjectDescription descr = pboIterator.next();
-				ProjectBuilder projectBuilder = workspaceManager.getProjectBuilder(descr.getName());
-				Set<URI> projectDirty = project2dirty.getOrDefault(descr, Collections.emptySet());
-				Set<URI> projectDeleted = project2deleted.getOrDefault(descr, Collections.emptySet());
+				ProjectConfigSnapshot projectConfig = pboIterator.next();
+				String projectName = projectConfig.getName();
+				ProjectBuilder projectBuilder = workspaceManager.getProjectBuilder(projectName);
+				Set<URI> projectDirty = project2dirty.getOrDefault(projectName, Collections.emptySet());
+				Set<URI> projectDeleted = project2deleted.getOrDefault(projectName, Collections.emptySet());
 
 				XBuildResult projectResult;
 				AffectedResourcesRecordingFactory recordingFactory = new AffectedResourcesRecordingFactory(
@@ -406,18 +403,18 @@ public class XWorkspaceBuilder {
 		files.addAll(toAdd);
 	}
 
-	private Map<ProjectDescription, Set<URI>> computeProjectToUriMap(Collection<URI> uris) {
-		Map<ProjectDescription, Set<URI>> project2uris = new HashMap<>();
+	private Map<String, Set<URI>> computeProjectToUriMap(Collection<URI> uris) {
+		Map<String, Set<URI>> project2uris = new HashMap<>();
 		for (URI uri : uris) {
 			ProjectBuilder projectManager = workspaceManager.getProjectBuilder(uri);
 			if (projectManager == null) {
 				continue; // happens when editing a package.json file in a newly created project
 			}
-			ProjectDescription projectDescription = projectManager.getProjectDescription();
-			if (!project2uris.containsKey(projectDescription)) {
-				project2uris.put(projectDescription, new HashSet<>());
+			String projectName = projectManager.getName();
+			if (!project2uris.containsKey(projectName)) {
+				project2uris.put(projectName, new HashSet<>());
 			}
-			project2uris.get(projectDescription).add(uri);
+			project2uris.get(projectName).add(uri);
 		}
 		return project2uris;
 	}
@@ -482,7 +479,7 @@ public class XWorkspaceBuilder {
 			ProjectBuildOrderInfo projectBuildOrderInfo = projectBuildOrderInfoProvider.get();
 			ProjectBuildOrderIterator visitAll = projectBuildOrderInfo.getIterator().visitAll();
 			String output = "Project build order:\n  "
-					+ IteratorExtensions.join(visitAll, "\n  ", ProjectDescription::getName);
+					+ IteratorExtensions.join(visitAll, "\n  ", ProjectConfigSnapshot::getName);
 			LOG.info(output);
 		}
 	}

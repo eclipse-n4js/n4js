@@ -12,11 +12,9 @@ package org.eclipse.n4js.xtext.workspace;
 
 import java.util.List;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
 /**
@@ -38,7 +36,7 @@ public interface XIWorkspaceConfig extends IWorkspaceConfig {
 	URI getPath();
 
 	/** Updates internal data based on changes of the given resource */
-	WorkspaceChanges update(List<URI> changedResources, Function<String, ProjectDescription> pdProvider);
+	WorkspaceChanges update(WorkspaceConfigSnapshot oldWorkspaceConfig, List<URI> dirtyFiles, List<URI> deletedFiles);
 
 	/** Returns a snapshot of the current state of the workspace represented by this {@link XIWorkspaceConfig}. */
 	default WorkspaceConfigSnapshot toSnapshot() {

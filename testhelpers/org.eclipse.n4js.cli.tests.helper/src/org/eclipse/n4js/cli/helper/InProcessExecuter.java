@@ -24,9 +24,9 @@ import org.eclipse.n4js.cli.N4jscTestFactory;
 import org.eclipse.n4js.cli.helper.SystemExitRedirecter.SystemExitException;
 import org.eclipse.n4js.ide.xtext.server.build.XWorkspaceManager;
 import org.eclipse.n4js.utils.URIUtils;
+import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.xtext.testing.GlobalRegistries;
 import org.eclipse.xtext.testing.GlobalRegistries.GlobalStateMemento;
-import org.eclipse.xtext.workspace.IProjectConfig;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Stopwatch;
@@ -35,7 +35,6 @@ import com.google.inject.Injector;
 /**
  * Abstract test class to be used when testing N4JS CLI related things.
  */
-@SuppressWarnings("restriction")
 public class InProcessExecuter {
 	final private SystemOutRedirecter systemOutRedirecter = new SystemOutRedirecter();
 	final private SystemExitRedirecter systemExitRedirecter = new SystemExitRedirecter();
@@ -93,9 +92,9 @@ public class InProcessExecuter {
 				// save projects
 				Injector injector = N4jscFactory.getOrCreateInjector();
 				XWorkspaceManager workspaceManager = injector.getInstance(XWorkspaceManager.class);
-				Set<? extends IProjectConfig> projects = workspaceManager.getProjectConfigs();
+				Set<? extends ProjectConfigSnapshot> projects = workspaceManager.getProjectConfigs();
 				Map<String, String> projectMap = new TreeMap<>();
-				for (IProjectConfig pConfig : projects) {
+				for (ProjectConfigSnapshot pConfig : projects) {
 					Path projectPath = URIUtils.toPath(pConfig.getPath());
 					Path relativeProjectPath = workspaceRoot.toPath().relativize(projectPath);
 					projectMap.put(pConfig.getName(), relativeProjectPath.toString());

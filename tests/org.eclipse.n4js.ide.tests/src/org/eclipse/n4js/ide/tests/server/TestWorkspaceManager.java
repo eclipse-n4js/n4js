@@ -388,6 +388,7 @@ public class TestWorkspaceManager {
 				int indexOfSrc = moduleName.indexOf(CFG_SRC);
 				if (moduleName.equals(CFG_NODE_MODULES + N4JS_RUNTIME) && indexOfSrc == -1) {
 					project.addNodeModuleProject(N4JS_RUNTIME_FAKE);
+					project.addProjectDependency(N4JS_RUNTIME_FAKE);
 
 				} else {
 					if (indexOfSrc == -1) {
@@ -400,6 +401,7 @@ public class TestWorkspaceManager {
 						nmProject = new Project(nmName, VENDOR, VENDOR + "_name", prjType);
 						nmProject.createSourceFolder(DEFAULT_SOURCE_FOLDER);
 						project.addNodeModuleProject(nmProject);
+						project.addProjectDependency(nmProject);
 					}
 					SourceFolder nmSourceFolder = nmProject.getSourceFolders().get(0);
 					createAndAddModule(contents, nmModuleName, nmSourceFolder);

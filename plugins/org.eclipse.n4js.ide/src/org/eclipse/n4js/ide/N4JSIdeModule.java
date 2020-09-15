@@ -25,8 +25,8 @@ import org.eclipse.n4js.ide.server.N4JSProjectDescriptionFactory;
 import org.eclipse.n4js.ide.server.N4JSProjectStatePersister;
 import org.eclipse.n4js.ide.server.N4JSTextDocumentFrontend;
 import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
-import org.eclipse.n4js.ide.server.SourceFolderAwareResourceValidator;
 import org.eclipse.n4js.ide.server.build.N4JSBuilderFrontend;
+import org.eclipse.n4js.ide.server.build.N4JSProjectBuildOrderInfo;
 import org.eclipse.n4js.ide.server.build.N4JSProjectBuilder;
 import org.eclipse.n4js.ide.server.codeActions.N4JSCodeActionService;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
@@ -38,6 +38,7 @@ import org.eclipse.n4js.ide.server.symbol.N4JSHierarchicalDocumentSymbolService;
 import org.eclipse.n4js.ide.xtext.editor.contentassist.XIdeContentProposalAcceptor;
 import org.eclipse.n4js.ide.xtext.server.BuiltInAwareIncrementalBuilder;
 import org.eclipse.n4js.ide.xtext.server.DebugService;
+import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo;
 import org.eclipse.n4js.ide.xtext.server.QueuedExecutorService;
 import org.eclipse.n4js.ide.xtext.server.TextDocumentFrontend;
 import org.eclipse.n4js.ide.xtext.server.WorkspaceAwareCanLoadFromDescriptionHelper;
@@ -58,8 +59,10 @@ import org.eclipse.n4js.ide.xtext.server.issues.WorkspaceValidateListener;
 import org.eclipse.n4js.ide.xtext.server.symbol.XDocumentSymbolService;
 import org.eclipse.n4js.ide.xtext.server.util.XOperationCanceledManager;
 import org.eclipse.n4js.internal.lsp.FileSystemScanner;
+import org.eclipse.n4js.internal.lsp.N4JSSourceFolderScanner;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
 import org.eclipse.n4js.xtext.server.EmfDiagnosticToLSPIssueConverter;
+import org.eclipse.n4js.xtext.workspace.SourceFolderScanner;
 import org.eclipse.xtext.generator.IGenerator;
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
 import org.eclipse.xtext.ide.editor.contentassist.FQNPrefixMatcher;
@@ -80,7 +83,6 @@ import org.eclipse.xtext.ide.server.symbol.HierarchicalDocumentSymbolService;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.validation.IDiagnosticConverter;
-import org.eclipse.xtext.validation.IResourceValidator;
 
 /**
  * Use this class to register ide components.
@@ -158,6 +160,14 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public Class<? extends XStatefulIncrementalBuilder> bindStatefulIncrementalBuilder() {
 		return BuiltInAwareIncrementalBuilder.class;
+	}
+
+	public Class<? extends ProjectBuildOrderInfo> bindProjectBuildOrderInfo() {
+		return N4JSProjectBuildOrderInfo.class;
+	}
+
+	public Class<? extends SourceFolderScanner> bindSourceFolderScanner() {
+		return N4JSSourceFolderScanner.class;
 	}
 
 	public Class<? extends IDiagnosticConverter> bindIDiagnosticConverter() {
@@ -241,9 +251,5 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public Class<? extends AfterValidateListener> bindAfterValidateListener() {
 		return WorkspaceValidateListener.class;
-	}
-
-	public Class<? extends IResourceValidator> bindIResourceValidator() {
-		return SourceFolderAwareResourceValidator.class;
 	}
 }

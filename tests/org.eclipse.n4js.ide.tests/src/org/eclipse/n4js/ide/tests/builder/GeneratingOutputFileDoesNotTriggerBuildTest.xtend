@@ -11,13 +11,9 @@
 package org.eclipse.n4js.ide.tests.builder
 
 import com.google.common.base.Optional
-import java.util.Collections
 import java.util.List
 import java.util.concurrent.atomic.AtomicInteger
 import org.eclipse.emf.common.util.URI
-import org.eclipse.lsp4j.DidChangeWatchedFilesParams
-import org.eclipse.lsp4j.FileChangeType
-import org.eclipse.lsp4j.FileEvent
 import org.eclipse.n4js.ide.xtext.server.build.XWorkspaceBuilder
 import org.eclipse.xtext.service.AbstractGenericModule
 import org.junit.Test
@@ -72,9 +68,7 @@ class GeneratingOutputFileDoesNotTriggerBuildTest extends AbstractIncrementalBui
 		// simulate that the client reports that the output file has been changed
 		// (as happens when the builder (re-)generates the output file)
 		val outputFileURI = getOutputFile("SomeModule").toFileURI;
-		val fileEvents = Collections.singletonList(new FileEvent(outputFileURI.toString(), FileChangeType.Changed));
-		val params = new DidChangeWatchedFilesParams(fileEvents);
-		languageServer.didChangeWatchedFiles(params);
+		sendDidChangeWatchedFiles(outputFileURI);
 		joinServerRequests(); // we don't expect the builder to do anything at this point; but if it incorrectly does something we want to wait for it to finish
 
 		assertEquals("did not expect any builds to be triggered, but one or more builds were triggered", 0, incrementalBuildWasTriggered.get());

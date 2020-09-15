@@ -14,20 +14,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.ide.xtext.server.XIProjectDescriptionFactory;
 import org.eclipse.n4js.ide.xtext.server.XIWorkspaceConfigFactory;
 import org.eclipse.n4js.xtext.server.LSPIssue;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
-import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
+import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
 import org.eclipse.xtext.ide.server.UriExtensions;
-import org.eclipse.xtext.resource.impl.ProjectDescription;
-import org.eclipse.xtext.workspace.IProjectConfig;
+import org.eclipse.xtext.resource.IResourceDescription;
+import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -50,7 +52,7 @@ import com.google.inject.Singleton;
  * @author Sven Efftinge - Initial contribution and API
  * @since 2.11
  */
-@SuppressWarnings({ "restriction", "deprecation" })
+@SuppressWarnings({ "deprecation" })
 @Singleton
 public class XWorkspaceManager {
 
@@ -61,17 +63,31 @@ public class XWorkspaceManager {
 	private Provider<ProjectBuilder> projectBuilderProvider;
 
 	@Inject
-	private XIProjectDescriptionFactory projectDescriptionFactory;
-
-	@Inject
 	private UriExtensions uriExtensions;
 
 	@Inject
-	private ConcurrentIndex fullIndex;
+	private ConcurrentIndex workspaceIndex;
 
 	private final Map<String, ProjectBuilder> projectName2ProjectBuilder = new HashMap<>();
 
 	private XIWorkspaceConfig workspaceConfig;
+
+	private WorkspaceConfigSnapshot workspaceConfigSnapshot;
+
+	/** The result of a {@link XWorkspaceManager#update(List, List) workspace update}. */
+	public static class UpdateResult {
+		/** The workspace changes. */
+		public final WorkspaceChanges changes;
+		/** Former contents of the projects that were removed. */
+		public final List<IResourceDescription> removedProjectsContents;
+
+		/** Creates a new {@link UpdateResult}. */
+		public UpdateResult(WorkspaceChanges changes,
+				Iterable<? extends IResourceDescription> removedProjectsContents) {
+			this.changes = changes;
+			this.removedProjectsContents = ImmutableList.copyOf(removedProjectsContents);
+		}
+	}
 
 	/** Reinitialize a workspace at the current location. */
 	public void reinitialize() {
@@ -105,19 +121,20 @@ public class XWorkspaceManager {
 
 		projectName2ProjectBuilder.values().forEach(b -> b.doClearWithNotification());
 		projectName2ProjectBuilder.clear();
-		fullIndex.initialize(workspaceConfig.toSnapshot());
-		fullIndex.removeAllProjectsIndices();
+
+		this.workspaceConfig = workspaceConfig;
+		this.workspaceConfigSnapshot = workspaceConfig.toSnapshot();
 
 		// init projects
-		this.workspaceConfig = workspaceConfig;
-		addProjects(getProjectConfigs());
+		addProjects(this.workspaceConfigSnapshot.getProjects());
+		workspaceIndex.initialize(this.workspaceConfigSnapshot);
 	}
 
 	/**
 	 * Return the project configurations.
 	 */
-	public Set<? extends XIProjectConfig> getProjectConfigs() {
-		XIWorkspaceConfig config = getWorkspaceConfig();
+	public Set<? extends ProjectConfigSnapshot> getProjectConfigs() {
+		WorkspaceConfigSnapshot config = getWorkspaceConfig();
 		if (config == null) {
 			return Collections.emptySet();
 		}
@@ -125,58 +142,87 @@ public class XWorkspaceManager {
 	}
 
 	/**
-	 * Updates the workspace according to the updated information in the file with the given URI.
+	 * Updates the workspace according to the updated information in the files with the given URIs.
 	 */
-	public WorkspaceChanges update(List<URI> changedFiles) {
-		XIWorkspaceConfig config = getWorkspaceConfig();
-		if (config == null) {
-			return WorkspaceChanges.NO_CHANGES;
+	public UpdateResult update(List<URI> dirtyFiles, List<URI> deletedFiles) {
+		if (workspaceConfig == null) {
+			return new UpdateResult(WorkspaceChanges.NO_CHANGES, Collections.emptyList());
 		}
-		return config.update(changedFiles, projectName -> getProjectBuilder(projectName).getProjectDescription());
+
+		WorkspaceChanges changes = workspaceConfig.update(workspaceConfigSnapshot, dirtyFiles, deletedFiles);
+		return applyWorkspaceChanges(changes);
 	}
 
 	/**
-	 * Answers true, if the uri is from a source folder.
+	 * Apply the given workspace changes to this manager's internal state and notify the workspace index.
 	 */
-	public boolean isSourceFile(URI uri) {
-		ProjectBuilder projectBuilder = getProjectBuilder(uri);
-		if (projectBuilder != null) {
-			return projectBuilder.isSourceFile(uri);
+	protected UpdateResult applyWorkspaceChanges(WorkspaceChanges changes) {
+		// collects contents of removed projects before actually removing anything
+		List<IResourceDescription> removedProjectsContents = collectAllResourceDescriptions(
+				changes.getRemovedProjects());
+
+		removeProjects(changes.getRemovedProjects());
+		updateProjects(changes.getChangedProjects());
+		addProjects(changes.getAddedProjects());
+
+		workspaceConfigSnapshot = workspaceIndex.changeOrRemoveProjects(
+				Iterables.concat(changes.getAddedProjects(), changes.getChangedProjects()),
+				changes.getRemovedProjects().stream()
+						.map(ProjectConfigSnapshot::getName)
+						.collect(Collectors.toList()));
+
+		return new UpdateResult(changes, removedProjectsContents);
+	}
+
+	private List<IResourceDescription> collectAllResourceDescriptions(
+			Iterable<? extends ProjectConfigSnapshot> projects) {
+
+		List<IResourceDescription> result = new ArrayList<>();
+		for (ProjectConfigSnapshot pc : projects) {
+			String projectName = pc.getName();
+			ResourceDescriptionsData data = workspaceIndex.getProjectIndex(projectName);
+			if (data != null) {
+				Iterables.addAll(result, data.getAllResourceDescriptions());
+			}
 		}
-		return false;
+		return result;
 	}
 
 	/** Adds a project to the workspace */
-	public void addProjects(Collection<? extends XIProjectConfig> projectConfigs) {
-		Collection<ProjectConfigSnapshot> pcSnapshots = new ArrayList<>();
-		for (XIProjectConfig projectConfig : projectConfigs) {
-			ProjectDescription projectDescription = projectDescriptionFactory.getProjectDescription(projectConfig);
+	protected void addProjects(Iterable<? extends ProjectConfigSnapshot> projectConfigs) {
+		for (ProjectConfigSnapshot projectConfig : withoutDuplicates(projectConfigs)) {
 			ProjectBuilder projectBuilder = projectBuilderProvider.get();
-			projectBuilder.initialize(projectDescription, projectConfig);
-			projectName2ProjectBuilder.put(projectDescription.getName(), projectBuilder);
-			pcSnapshots.add(projectConfig.toSnapshot());
+			projectBuilder.initialize(projectConfig);
+			projectName2ProjectBuilder.put(projectConfig.getName(), projectBuilder);
 		}
-		fullIndex.setProjectConfigSnapshots(pcSnapshots);
 	}
 
 	/** Removes a project from the workspace */
-	public void removeProjects(Collection<XIProjectConfig> projectConfigs) {
-		List<String> projectNames = new ArrayList<>();
-		for (XIProjectConfig projectConfig : projectConfigs) {
+	protected void removeProjects(Iterable<? extends ProjectConfigSnapshot> projectConfigs) {
+		for (ProjectConfigSnapshot projectConfig : projectConfigs) { // no need for #withoutDuplicates() here
 			String projectName = projectConfig.getName();
 			ProjectBuilder projectBuilder = projectName2ProjectBuilder.remove(projectName);
 			if (projectBuilder != null) {
-				projectBuilder.doClearWithNotification();
+				projectBuilder.doClearWithoutNotification();
 			}
 		}
-		fullIndex.removeProjectIndices(projectNames);
+	}
+
+	/** Updates projects after their project configuration has changed. */
+	protected void updateProjects(Iterable<? extends ProjectConfigSnapshot> projectConfigs) {
+		for (ProjectConfigSnapshot projectConfig : withoutDuplicates(projectConfigs)) {
+			ProjectBuilder pb = getProjectBuilder(projectConfig.getName());
+			if (pb != null) {
+				pb.setProjectConfig(projectConfig);
+			}
+		}
 	}
 
 	/**
 	 * @return the workspace configuration
 	 */
-	public XIWorkspaceConfig getWorkspaceConfig() {
-		return workspaceConfig;
+	public WorkspaceConfigSnapshot getWorkspaceConfig() {
+		return workspaceConfigSnapshot;
 	}
 
 	/*
@@ -198,7 +244,7 @@ public class XWorkspaceManager {
 	 * @return the project builder.
 	 */
 	public ProjectBuilder getProjectBuilder(URI nestedURI) {
-		IProjectConfig projectConfig = getProjectConfig(nestedURI);
+		ProjectConfigSnapshot projectConfig = getProjectConfig(nestedURI);
 		String name = null;
 		if (projectConfig != null) {
 			name = projectConfig.getName();
@@ -207,12 +253,12 @@ public class XWorkspaceManager {
 	}
 
 	/** Find the project that contains the uri. */
-	public IProjectConfig getProjectConfig(URI uri) {
-		XIWorkspaceConfig config = getWorkspaceConfig();
+	public ProjectConfigSnapshot getProjectConfig(URI uri) {
+		WorkspaceConfigSnapshot config = getWorkspaceConfig();
 		if (config == null) {
 			return null;
 		}
-		return config.findProjectContaining(uri);
+		return config.findProjectByNestedLocation(uri);
 	}
 
 	/**
@@ -246,16 +292,6 @@ public class XWorkspaceManager {
 		}
 	}
 
-	/** @return all project descriptions. */
-	public List<ProjectDescription> getProjectDescriptions() {
-		List<ProjectDescription> newProjects = new ArrayList<>();
-		for (IProjectConfig projectConfig : getProjectConfigs()) {
-			ProjectDescription projectDescription = projectDescriptionFactory.getProjectDescription(projectConfig);
-			newProjects.add(projectDescription);
-		}
-		return newProjects;
-	}
-
 	/** @return a workspace relative URI for a given URI */
 	public URI makeWorkspaceRelative(URI uri) {
 		URI withEmptyAuthority = uriExtensions.withEmptyAuthority(uri);
@@ -272,5 +308,18 @@ public class XWorkspaceManager {
 			return projectBuilder.getValidationIssues(uri);
 		}
 		return ImmutableList.of();
+	}
+
+	/**
+	 * Removes duplicates from the given iterable of projects (based on path), retaining in each case the <em>last</em>
+	 * project.
+	 */
+	protected Iterable<? extends ProjectConfigSnapshot> withoutDuplicates(
+			Iterable<? extends ProjectConfigSnapshot> projectConfigs) {
+
+		if (IterableExtensions.isEmpty(projectConfigs)) {
+			return projectConfigs;
+		}
+		return IterableExtensions.toMap(projectConfigs, ProjectConfigSnapshot::getPath).values();
 	}
 }

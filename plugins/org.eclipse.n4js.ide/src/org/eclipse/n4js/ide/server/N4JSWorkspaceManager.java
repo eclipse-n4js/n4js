@@ -46,5 +46,4 @@ public class N4JSWorkspaceManager extends XWorkspaceManager {
 		}
 		return null;
 	}
-
 }
