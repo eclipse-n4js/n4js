@@ -12,11 +12,7 @@ package org.eclipse.n4js.ide.tests.builder
 
 import com.google.common.base.Optional
 import java.io.File
-import java.util.Collections
 import java.util.concurrent.atomic.AtomicInteger
-import org.eclipse.lsp4j.DidChangeWatchedFilesParams
-import org.eclipse.lsp4j.FileChangeType
-import org.eclipse.lsp4j.FileEvent
 import org.eclipse.n4js.ide.tests.server.TestWorkspaceManager
 import org.eclipse.n4js.ide.xtext.server.QueuedExecutorService
 import org.eclipse.n4js.projectModel.locations.FileURI
@@ -203,18 +199,14 @@ class IncrementalBuilderNoCancellationTest extends AbstractIncrementalBuilderTes
 		val outputFileOfModuleA = getFileURIFromModuleName("A");
 
 		cancellationCounter.set(0);
-		val fileEvents = Collections.singletonList(new FileEvent(outputFileOfModuleA.toString(), FileChangeType.Changed));
-		val params = new DidChangeWatchedFilesParams(fileEvents);
-		languageServer.didChangeWatchedFiles(params);
+		sendDidChangeWatchedFiles(outputFileOfModuleA);
 		joinServerRequests();
 		assertTrue(cancellationCounter.get() > 0);
 	}
 
 	def private void simulateFileChangeAndAssertNoCancellation(FileURI fileURI) {
 		cancellationCounter.set(0);
-		val fileEvents = Collections.singletonList(new FileEvent(fileURI.toString(), FileChangeType.Changed));
-		val params = new DidChangeWatchedFilesParams(fileEvents);
-		languageServer.didChangeWatchedFiles(params);
+		sendDidChangeWatchedFiles(fileURI);
 		joinServerRequests(); // we don't expect the builder to do anything at this point; but if it incorrectly does something we want to wait for it to finish
 		assertNoCancellation();
 	}
