@@ -26,6 +26,7 @@ import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
 import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
@@ -189,7 +190,7 @@ public class XWorkspaceManager {
 
 	/** Adds a project to the workspace */
 	protected void addProjects(Iterable<? extends ProjectConfigSnapshot> projectConfigs) {
-		for (ProjectConfigSnapshot projectConfig : projectConfigs) {
+		for (ProjectConfigSnapshot projectConfig : withoutDuplicates(projectConfigs)) {
 			ProjectBuilder projectBuilder = projectBuilderProvider.get();
 			projectBuilder.initialize(projectConfig);
 			projectName2ProjectBuilder.put(projectConfig.getName(), projectBuilder);
@@ -198,18 +199,18 @@ public class XWorkspaceManager {
 
 	/** Removes a project from the workspace */
 	protected void removeProjects(Iterable<? extends ProjectConfigSnapshot> projectConfigs) {
-		for (ProjectConfigSnapshot projectConfig : projectConfigs) {
+		for (ProjectConfigSnapshot projectConfig : projectConfigs) { // no need for #withoutDuplicates() here
 			String projectName = projectConfig.getName();
 			ProjectBuilder projectBuilder = projectName2ProjectBuilder.remove(projectName);
 			if (projectBuilder != null) {
-				projectBuilder.doClearWithNotification();
+				projectBuilder.doClearWithoutNotification();
 			}
 		}
 	}
 
 	/** Updates projects after their project configuration has changed. */
 	protected void updateProjects(Iterable<? extends ProjectConfigSnapshot> projectConfigs) {
-		for (ProjectConfigSnapshot projectConfig : projectConfigs) {
+		for (ProjectConfigSnapshot projectConfig : withoutDuplicates(projectConfigs)) {
 			ProjectBuilder pb = getProjectBuilder(projectConfig.getName());
 			if (pb != null) {
 				pb.setProjectConfig(projectConfig);
@@ -307,5 +308,18 @@ public class XWorkspaceManager {
 			return projectBuilder.getValidationIssues(uri);
 		}
 		return ImmutableList.of();
+	}
+
+	/**
+	 * Removes duplicates from the given iterable of projects (based on path), retaining in each case the <em>last</em>
+	 * project.
+	 */
+	protected Iterable<? extends ProjectConfigSnapshot> withoutDuplicates(
+			Iterable<? extends ProjectConfigSnapshot> projectConfigs) {
+
+		if (IterableExtensions.isEmpty(projectConfigs)) {
+			return projectConfigs;
+		}
+		return IterableExtensions.toMap(projectConfigs, ProjectConfigSnapshot::getPath).values();
 	}
 }
