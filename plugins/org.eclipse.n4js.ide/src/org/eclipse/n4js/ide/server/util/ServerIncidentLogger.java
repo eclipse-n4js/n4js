@@ -22,6 +22,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.eclipse.n4js.ide.xtext.server.DebugService;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.io.FileUtils;
 
 import com.google.common.base.Throwables;
@@ -35,10 +36,10 @@ import com.google.inject.Singleton;
  * This is TEMPORARY functionality for debugging that will be removed in the future.
  */
 @Singleton
-public class DiagnosisLogger {
+public class ServerIncidentLogger {
 
-	/** Name of folder where the log file is placed. */
-	public static final String FOLDER_NAME = ".n4js";
+	/** Path of the folder where the log files are placed, relative to the user's home directory. */
+	public static final Path SERVER_INCIDENTS_FOLDER = Path.of(".n4js", "server-incidents");
 	/** Base name of the log file, will be amended by a time stamp. */
 	public static final String BASE_FILE_NAME = "server-incident_.log";
 
@@ -114,12 +115,23 @@ public class DiagnosisLogger {
 		private Path getOrCreateOutputFolder() throws IOException {
 			if (outputFolder == null) {
 				Path userHomePath = FileUtils.getUserHomeFolder();
+				String languageVersion = getLanguageVersion();
 				String serverInstanceFolderName = sanitizeTimeStampForFileName(serverInstanceTimeStamp)
-						+ "_" + serverInstanceId.toString().substring(0, 6);
-				outputFolder = userHomePath.resolve(FOLDER_NAME).resolve(serverInstanceFolderName);
+						+ "__" + languageVersion
+						+ "__" + serverInstanceId.toString().substring(0, 6);
+				outputFolder = userHomePath.resolve(SERVER_INCIDENTS_FOLDER)
+						.resolve(serverInstanceFolderName);
 			}
 			Files.createDirectories(outputFolder);
 			return outputFolder;
+		}
+
+		private String getLanguageVersion() {
+			try {
+				return N4JSLanguageUtils.getLanguageVersion();
+			} catch (Throwable th) {
+				return N4JSLanguageUtils.DEFAULT_LANGUAGE_VERSION;
+			}
 		}
 	}
 }

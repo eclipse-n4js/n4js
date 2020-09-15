@@ -16,7 +16,7 @@ import java.io.StringWriter;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.services.LanguageClient;
-import org.eclipse.n4js.ide.server.util.DiagnosisLogger;
+import org.eclipse.n4js.ide.server.util.ServerIncidentLogger;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -29,7 +29,7 @@ import com.google.inject.Singleton;
 public class LspLogger {
 
 	@Inject
-	private DiagnosisLogger diagnosisLogger;
+	private ServerIncidentLogger serverIncidentLogger;
 
 	private LanguageClient languageClient;
 
@@ -83,7 +83,7 @@ public class LspLogger {
 		lc.logMessage(message);
 
 		if (type == MessageType.Error) {
-			diagnosisLogger.reportError(messageString);
+			serverIncidentLogger.reportError(messageString);
 		}
 	}
 
