@@ -1,0 +1,17 @@
+# Project Discovery Test
+# working dir marked with '*'
+
+# The optimization of not discovering PLAINJS project applies not only to projects in the node_modules folder,
+# but also to top-level projects (i.e. project in side-by-side use case). Therefore, P1 is not discovered.
+#
+# Because dependencies are not possible between side-by-side projects, also P2 is not discovered even though
+# there is a dependency from N4JS project P3 to P2.
+
+FOLDERS
+-*SomeFolder
+-- P1 [PROJECT plainJS]
+-- P2 [PROJECT plainJS]
+-- P3 [PROJECT dependencies={"P2":"*"}]
+
+EXPECT
+- SomeFolder/P3

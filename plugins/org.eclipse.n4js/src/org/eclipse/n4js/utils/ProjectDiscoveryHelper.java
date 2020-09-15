@@ -25,22 +25,30 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectDescription.ProjectDependency;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectReference;
+import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper.NodeModulesFolder;
 
 import com.google.inject.Inject;
 
 /**
- * Given a workspace root directory, this class finds npm and yarn projects as follows:
+ * Given a workspace root directory, this class finds npm and yarn projects. Plain-JS projects are included only if
+ * there is an N4JS project with a dependency to this plain-JS project, except for yarn workspace root projects, which
+ * are always included.
+ * <p>
+ * Projects are collected as follows:
  * <ol>
  * <li>Find projects:
  * <ol>
@@ -98,6 +106,7 @@ public class ProjectDiscoveryHelper {
 		Map<Path, ProjectDescription> pdCache = new HashMap<>();
 
 		LinkedHashSet<Path> allProjectDirs = collectAllProjects(workspaceRoots, pdCache);
+
 		LinkedHashSet<Path> dependencies = collectNecessaryDependencies(allProjectDirs, pdCache);
 		allProjectDirs.addAll(dependencies);
 
@@ -125,7 +134,7 @@ public class ProjectDiscoveryHelper {
 				} else {
 					// Is NPM project
 					// given directory is a stand-alone npm project
-					allProjectDirs.add(projectRoot);
+					addIfNotPlainjs(allProjectDirs, projectRoot, pdCache);
 				}
 			}
 		}
@@ -151,16 +160,26 @@ public class ProjectDiscoveryHelper {
 	public void collectYarnWorkspaceProjects(Path yarnProjectRoot, Map<Path, ProjectDescription> pdCache,
 			Set<Path> projects) {
 
+		// add the yarn workspace root project even if it is a PLAINJS project
+		// Rationale:
+		// 1) otherwise not possible for later code to distinguish between yarn workspace and side-by-side use cases,
+		// 2) having the workspace root project or not makes a huge difference (projects exist inside projects) and it
+		// is better to always stick to one situation (otherwise many tests would have to be provided in two variants),
+		// 3) the yarn workspace root project has always been included.
 		projects.add(yarnProjectRoot);
+
 		ProjectDescription projectDescription = getCachedProjectDescription(yarnProjectRoot, pdCache);
 		final List<String> workspaces = (projectDescription == null) ? null : projectDescription.getWorkspaces();
 		if (workspaces == null) {
 			return;
 		}
 
+		Set<Path> memberProjects = new LinkedHashSet<>();
 		for (String workspaceGlob : workspaces) {
-			collectGlobMatches(workspaceGlob, yarnProjectRoot, pdCache, projects);
+			collectGlobMatches(workspaceGlob, yarnProjectRoot, pdCache, memberProjects);
 		}
+		removeUnnecessaryPlainjsProjects(memberProjects, pdCache);
+		projects.addAll(memberProjects);
 	}
 
 	private void collectProjects(Path root, boolean includeSubtree, Map<Path, ProjectDescription> pdCache,
@@ -200,7 +219,7 @@ public class ProjectDiscoveryHelper {
 								&& nodeModulesDiscoveryHelper.isYarnWorkspaceRoot(dir.toFile(), pdCache)) {
 							collectYarnWorkspaceProjects(dir, pdCache, allProjectDirs);
 						} else {
-							allProjectDirs.add(dir);
+							addIfNotPlainjs(allProjectDirs, dir, pdCache);
 						}
 						return FileVisitResult.SKIP_SUBTREE;
 					}
@@ -237,6 +256,8 @@ public class ProjectDiscoveryHelper {
 						} else {
 							File pckJson = dir.resolve(N4JSGlobals.PACKAGE_JSON).toFile();
 							if (pckJson.isFile()) {
+								// note: add 'dir' to 'allProjectDirs' even if it is PLAINJS (will be taken care of by
+								// #removeUnnecessaryPlainjsProjects() below)
 								allProjectDirs.add(dir);
 								return FileVisitResult.SKIP_SUBTREE;
 							}
@@ -253,6 +274,39 @@ public class ProjectDiscoveryHelper {
 			});
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Removes from <code>projects</code> all "unnecessary" {@link ProjectType#PLAINJS PLAINJS} projects. A PLAINJS
+	 * project is "unnecessary" if there does not exist an N4JS project P' in <code>projects</code> that has a
+	 * dependency to P.
+	 */
+	private void removeUnnecessaryPlainjsProjects(Set<Path> projects, Map<Path, ProjectDescription> pdCache) {
+		Map<String, Path> plainjsProjects = new HashMap<>();
+		Set<String> projectsRequiredByAnN4JSProject = new HashSet<>();
+		for (Path project : projects) {
+			ProjectDescription pd = getCachedProjectDescription(project, pdCache);
+			if (pd == null) {
+				continue;
+			}
+			ProjectType type = pd.getProjectType();
+			if (type == ProjectType.PLAINJS) {
+				plainjsProjects.put(pd.getProjectName(), project);
+			} else {
+				List<String> deps = pd.getProjectDependencies().stream()
+						.map(ProjectReference::getProjectName).collect(Collectors.toList());
+				projectsRequiredByAnN4JSProject.addAll(deps);
+			}
+		}
+		plainjsProjects.keySet().removeAll(projectsRequiredByAnN4JSProject);
+		projects.removeAll(plainjsProjects.values());
+	}
+
+	private void addIfNotPlainjs(Set<Path> addHere, Path project, Map<Path, ProjectDescription> pdCache) {
+		ProjectDescription pd = getCachedProjectDescription(project, pdCache);
+		if (pd != null && pd.getProjectType() != ProjectType.PLAINJS) {
+			addHere.add(project);
 		}
 	}
 

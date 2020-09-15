@@ -277,6 +277,41 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 		doTestAddRemoveDependency("MainProject" -> "PlainjsProject", false, originalErrors);
 	}
 
+	@Test
+	def void testChangePackageJson_addRemoveDependency_toPlainjsProjectInWorkspace() throws IOException {
+		testWorkspaceManager.createTestOnDisk(
+			CFG_NODE_MODULES + N4JS_RUNTIME -> null,
+			"MainProject" -> #[
+				"Main" -> '''
+					import * as N+ from "PlainjsModule";
+					N.XYZ;
+				''',
+				CFG_DEPENDENCIES -> N4JS_RUNTIME // note: missing the dependency to PlainjsProject
+			],
+			"PlainjsProject" -> #[
+				"PlainjsModule.js" -> '''
+					// content is irrelevant
+				''',
+				CFG_SOURCE_FOLDER -> ".",
+				PACKAGE_JSON -> '''
+					{
+						"name": "PlainjsProject",
+						"version": "0.0.1"
+					}
+				'''
+			]
+		);
+		startAndWaitForLspServer();
+
+		val originalErrors = #[
+			"Main" -> #[
+				"(Error, [0:20 - 0:35], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)"
+			]
+		];
+
+		doTestAddRemoveDependency("MainProject" -> "PlainjsProject", false, originalErrors);
+	}
+
 	/**
 	 * @param targetIsN4JSProject
 	 *            tells whether the target project of the new dependency is an N4JS project (i.e. has
