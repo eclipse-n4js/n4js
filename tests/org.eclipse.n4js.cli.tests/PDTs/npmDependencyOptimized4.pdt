@@ -2,7 +2,7 @@
 # working dir marked with '*'
 
 # The optimization of not discovering PLAINJS project applies not only to projects in the node_modules folder,
-# but also to projects in the workspace. Therefore, D2 is not included.
+# but also to projects in the workspace. Therefore, D2 is not discovered.
 
 FOLDERS
 -*PY [PROJECT workspaces=["packages/*"]]
