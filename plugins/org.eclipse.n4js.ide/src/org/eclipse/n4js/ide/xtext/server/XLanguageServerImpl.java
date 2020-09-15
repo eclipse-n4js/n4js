@@ -83,7 +83,7 @@ import org.eclipse.lsp4j.services.TextDocumentService;
 import org.eclipse.lsp4j.services.WorkspaceService;
 import org.eclipse.n4js.ide.server.HeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.ide.server.LspLogger;
-import org.eclipse.n4js.ide.server.util.DiagnosisLogger;
+import org.eclipse.n4js.ide.server.util.ServerIncidentLogger;
 import org.eclipse.n4js.ide.xtext.server.issues.PublishingIssueAcceptor;
 import org.eclipse.xtext.ide.server.ICapabilitiesContributor;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
@@ -157,7 +157,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	private LspLogger lspLogger;
 
 	@Inject
-	private DiagnosisLogger diagnosisLogger;
+	private ServerIncidentLogger serverIncidentLogger;
 
 	@Inject
 	private Provider<XtextResourceSet> resourceSetProvider;
@@ -754,8 +754,8 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	/**
 	 * Getter
 	 */
-	public DiagnosisLogger getDiagnosisLogger() {
-		return diagnosisLogger;
+	public ServerIncidentLogger getServerIncidentLogger() {
+		return serverIncidentLogger;
 	}
 
 	/**

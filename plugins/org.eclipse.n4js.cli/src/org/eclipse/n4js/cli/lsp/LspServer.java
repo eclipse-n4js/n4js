@@ -39,7 +39,7 @@ import org.eclipse.n4js.cli.N4jscConsole;
 import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.ide.server.LspLogger;
-import org.eclipse.n4js.ide.server.util.DiagnosisLogger;
+import org.eclipse.n4js.ide.server.util.ServerIncidentLogger;
 import org.eclipse.n4js.ide.xtext.server.DebugService;
 import org.eclipse.n4js.ide.xtext.server.ExecuteCommandParamsTypeAdapter;
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
@@ -132,7 +132,8 @@ public class LspServer {
 	private void setupAndRunWithSocket(XLanguageServerImpl languageServer, Builder<LanguageClient> lsBuilder)
 			throws InterruptedException, ExecutionException, IOException {
 
-		Appender diagnosisLoggerAppender = copyLog4jErrorsToDiagnosisLogger(languageServer.getDiagnosisLogger());
+		Appender serverIncidentAppender = copyLog4jErrorsToServerIncidentLogger(
+				languageServer.getServerIncidentLogger());
 
 		InetSocketAddress address = new InetSocketAddress("localhost", options.getPort());
 
@@ -149,7 +150,7 @@ public class LspServer {
 				run(languageServer, lsBuilder, in, out);
 			}
 		} finally {
-			Logger.getRootLogger().removeAppender(diagnosisLoggerAppender);
+			Logger.getRootLogger().removeAppender(serverIncidentAppender);
 		}
 	}
 
@@ -159,7 +160,8 @@ public class LspServer {
 
 		LspLogger lspLogger = languageServer.getLspLogger();
 		Appender lspLoggerAppender = redirectLog4jToLspLogger(lspLogger);
-		Appender diagnosisLoggerAppender = copyLog4jErrorsToDiagnosisLogger(languageServer.getDiagnosisLogger());
+		Appender serverIncidentAppender = copyLog4jErrorsToServerIncidentLogger(
+				languageServer.getServerIncidentLogger());
 
 		PrintStream oldStdOut = System.out;
 		PrintStream oldStdErr = System.err;
@@ -170,7 +172,7 @@ public class LspServer {
 		} finally {
 			System.setErr(oldStdErr);
 			System.setOut(oldStdOut);
-			Logger.getRootLogger().removeAppender(diagnosisLoggerAppender);
+			Logger.getRootLogger().removeAppender(serverIncidentAppender);
 			Logger.getRootLogger().removeAppender(lspLoggerAppender);
 		}
 	}
@@ -226,18 +228,18 @@ public class LspServer {
 		return appender;
 	}
 
-	private Appender copyLog4jErrorsToDiagnosisLogger(DiagnosisLogger diagnosisLogger) {
-		Appender appender = new DiagnosisLoggerAppender(diagnosisLogger);
+	private Appender copyLog4jErrorsToServerIncidentLogger(ServerIncidentLogger serverIncidentLogger) {
+		Appender appender = new ServerIncidentAppender(serverIncidentLogger);
 		Logger.getRootLogger().addAppender(appender);
 		return appender;
 	}
 
-	/** TEMPORARY functionality (see {@link DiagnosisLogger} for details). */
-	private static final class DiagnosisLoggerAppender extends AppenderSkeleton {
+	/** TEMPORARY functionality (see {@link ServerIncidentLogger} for details). */
+	private static final class ServerIncidentAppender extends AppenderSkeleton {
 
-		private final DiagnosisLogger delegate;
+		private final ServerIncidentLogger delegate;
 
-		public DiagnosisLoggerAppender(DiagnosisLogger delegate) {
+		public ServerIncidentAppender(ServerIncidentLogger delegate) {
 			this.delegate = delegate;
 			setThreshold(Level.ERROR);
 			setLayout(new SimpleLayout());
