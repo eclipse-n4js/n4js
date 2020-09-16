@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CancellationException;
+import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
@@ -113,10 +114,11 @@ public class XStatefulIncrementalBuilder {
 			XIndexer.XIndexResult result = indexer.computeAndIndexDeletedAndChanged(request, context);
 			ResourceDescriptionsData newIndex = result.getNewIndex();
 			List<Delta> deltasToBeProcessed = result.getResourceDeltas();
-			List<Delta> deltasFromExternal = indexer.computeAndIndexAffected(newIndex, remainingURIs,
+			List<Delta> affectedByExternal = indexer.computeAndIndexAffected(newIndex, remainingURIs,
 					request.getExternalDeltas(), allProcessedAndExternalDeltas, context);
-			deltasFromExternal.forEach(delta -> request.afterDetectedAsAffected(delta.getUri()));
-			deltasToBeProcessed.addAll(deltasFromExternal);
+			affectedByExternal.forEach(delta -> request.afterDetectedAsAffected(delta.getUri()));
+			// avoid duplicates in case resources reported as changed/deleted are also affected by external deltas:
+			addIfNotYetPresent(deltasToBeProcessed, affectedByExternal);
 
 			operationCanceledManager.checkCanceled(request.getCancelIndicator());
 
@@ -162,6 +164,15 @@ public class XStatefulIncrementalBuilder {
 		}
 
 		return new XBuildResult(request.getIndex(), request.getFileMappings(), allProcessedDeltas);
+	}
+
+	private void addIfNotYetPresent(List<Delta> addHere, List<Delta> toBeAdded) {
+		Set<URI> presentURIs = addHere.stream().map(Delta::getUri).collect(Collectors.toSet());
+		for (Delta delta : toBeAdded) {
+			if (!presentURIs.contains(delta.getUri())) {
+				addHere.add(delta);
+			}
+		}
 	}
 
 	private void removeGeneratedFiles(URI source, XSource2GeneratedMapping source2GeneratedMapping) {
