@@ -443,6 +443,7 @@ public class XWorkspaceBuilder {
 					toBeConsideredDeltas.add(newDelta);
 				} else {
 					toBeConsideredDeltas.remove(unreportedDelta);
+
 					IResourceDescription _old = unreportedDelta.getOld();
 					IResourceDescription _new = newDelta.getNew();
 					if (_old == null && _new == null) {
@@ -451,7 +452,15 @@ public class XWorkspaceBuilder {
 						_old = newDelta.getOld();
 					}
 
-					toBeConsideredDeltas.add(new DefaultResourceDescriptionDelta(_old, _new));
+					IResourceDescription.Delta mergedDesc = new DefaultResourceDescriptionDelta(_old, _new);
+
+					if (!mergedDesc.haveEObjectDescriptionsChanged()) {
+						// happens in case a resource was changed, the build was cancelled, and the resource was changed
+						// back to its original state before the next build
+						mergedDesc = newDelta;
+					}
+
+					toBeConsideredDeltas.add(mergedDesc);
 				}
 			}
 		}

@@ -13,13 +13,16 @@ package org.eclipse.n4js.ide.tests.builder
 import com.google.common.base.Optional
 import com.google.inject.Inject
 import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.atomic.AtomicReference
 import org.eclipse.emf.common.util.URI
+import org.eclipse.n4js.ide.tests.server.TestWorkspaceManager
 import org.eclipse.n4js.ide.xtext.server.build.XBuildContext
 import org.eclipse.n4js.ide.xtext.server.build.XClusteringStorageAwareResourceLoader.LoadResult
 import org.eclipse.n4js.ide.xtext.server.build.XIndexer
 import org.eclipse.n4js.ide.xtext.server.build.XIndexer.XIndexResult
 import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping
 import org.eclipse.n4js.ide.xtext.server.build.XStatefulIncrementalBuilder
+import org.eclipse.n4js.ide.xtext.server.build.XWorkspaceBuilder
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData
 import org.eclipse.xtext.service.AbstractGenericModule
 import org.eclipse.xtext.service.OperationCanceledManager
@@ -27,8 +30,6 @@ import org.eclipse.xtext.util.Strings
 import org.junit.Test
 
 import static org.junit.Assert.*
-import java.util.concurrent.atomic.AtomicReference
-import org.eclipse.n4js.ide.tests.server.TestWorkspaceManager
 
 /**
  * Tests handling of a cancellation during an incremental build.
@@ -36,7 +37,6 @@ import org.eclipse.n4js.ide.tests.server.TestWorkspaceManager
 class IncrementalBuilderCancellationTest extends AbstractIncrementalBuilderTest {
 
 	private static final AtomicReference<URI> cancelOnResource = new AtomicReference(null);
-	private static final AtomicReference<URI> cancelAfterResource = new AtomicReference(null);
 	
 	/**
 	 * Iff greater zero, then cancel before building the n-th resource. Cancellation happens before the very first 
@@ -58,10 +58,8 @@ class IncrementalBuilderCancellationTest extends AbstractIncrementalBuilderTest 
 			}
 			synchronized(cancelOnResource) {
 				isCancelledByResource = cancelOnResource.get() !== null && cancelOnResource.get() == loadResult.uri;
-			}
-			synchronized(cancelAfterResource) {
-				if (cancelAfterResource.get() !== null && cancelAfterResource.get() == loadResult.uri) {
-					cancelOnCountZero.set(1);
+				if(isCancelledByResource) {
+					cancelOnResource.set(null);
 				}
 			}
 
@@ -305,6 +303,7 @@ class IncrementalBuilderCancellationTest extends AbstractIncrementalBuilderTest 
 				public methNew() {} // trigger rebuild of MainClient
 			''');
 		joinServerRequests();
+		assertNull("expected cancellation to have happened, but it did not happen", cancelOnResource.get());
 		
 		// due to cancellation the errors still remain
 		assertIssues(
@@ -314,7 +313,6 @@ class IncrementalBuilderCancellationTest extends AbstractIncrementalBuilderTest 
 		
 		
 		val uriMainLib_TEMP = getFileURIFromModuleName("MainLibTEMP");
-		cancelOnResource.set(null);
 		// perform two different changes
 		// Change #1: introduce new errors that should show up
 		changeFileOnDiskWithoutNotification("MainClientA", "public methA() {}" -> "public methXXX() {} // introduce error");
@@ -330,5 +328,71 @@ class IncrementalBuilderCancellationTest extends AbstractIncrementalBuilderTest 
 			// This error is due to change #2
 			"MainClientB" -> #[
 				"(Error, [1:11 - 1:16], Couldn't resolve reference to IdentifiableElement 'methA'.)"]);
+	}
+
+	/**
+	 * Because of the cancellation during building "ProjectClient2" (which is being built last), the deltas produced by
+	 * building "ProjectMain" and "ProjectClient1" will remain in {@link XWorkspaceBuilder#toBeConsideredDeltas}. This
+	 * test makes sure that those deltas do not mess up the incremental build following the cancellation.
+	 */
+	@Test
+	def void testCancelWhileProcessingCrossProjectDependencies() {
+		testWorkspaceManager.createTestOnDisk(
+			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
+			"ProjectMain" -> #[
+				"MainModule" -> '''
+					export public class Cls {
+						public meth() {}
+					}
+				''',
+				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
+					n4js-runtime
+				'''
+			],
+			"ProjectClient1" -> #[
+				"ClientModule1" -> '''
+					import {Cls} from "MainModule";
+					new Cls().meth();
+				''',
+				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
+					n4js-runtime,
+					ProjectMain
+				'''
+			],
+			"ProjectClient2" -> #[
+				"ClientModule2" -> '''
+					import {Cls} from "MainModule";
+					new Cls().meth();
+				''',
+				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
+					n4js-runtime,
+					ProjectMain,
+					ProjectClient1
+				'''
+			]
+		);
+		startAndWaitForLspServer();
+		assertNoIssues();
+
+		val clientModule2FileURI = getFileURIFromModuleName("ClientModule2");
+
+		cancelOnResource.set(clientModule2FileURI.toURI);
+		changeNonOpenedFile("MainModule", "meth(" -> "methx(");
+		joinServerRequests();
+		assertNull("expected cancellation to have happened, but it did not happen", cancelOnResource.get());
+
+		assertIssues(
+			"ClientModule1" -> #[
+				"(Error, [1:10 - 1:14], Couldn't resolve reference to IdentifiableElement 'meth'.)"
+			],
+			"ClientModule2" -> #[
+				// the error in this module must not show up, due to the cancellation!
+			]
+		);
+
+		changeNonOpenedFile("MainModule", "methx(" -> "meth(");
+		joinServerRequests();
+
+		assertNoIssues();
 	}
 }
