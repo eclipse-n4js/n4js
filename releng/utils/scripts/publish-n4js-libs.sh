@@ -56,7 +56,7 @@ echo "Version    : $PUBLISH_VERSION"
 echo "Dist-tag   : $DIST_TAG"
 
 # Set working directory to root folder of repository
-# (we assume this scripts is located in folder /releng/utils/scripts)
+# (we assume this script is located in folder /releng/utils/scripts)
 cd `dirname $0`
 cd ../../..
 REPO_ROOT_DIR=`pwd -P`
@@ -99,6 +99,8 @@ rm -rf $(find . -type d -name "node_modules")
 # make sure to not publish any dirty state in the working copy.
 # Thus, we reset the working copy here:
 git checkout HEAD -- .
+# obtain commit ID of 'n4js' repository (used only for informational purposes):
+N4JS_COMMIT_ID_LOCAL=`git log -1 --format="%H"`
 # obtain commit ID of folder 'n4js-libs' in the local git working copy:
 N4JS_LIBS_COMMIT_ID_LOCAL=`git log -1 --format="%H" -- .`
 # prepare .npmrc for credentials
@@ -136,7 +138,7 @@ lerna exec -- json -I -f package.json -e $SCRIPT
 
 
 echo "==== STEP 6/7: Appending version information to README.md files ..."
-export VERSION_INFO="\n\n## Version\n\nVersion ${PUBLISH_VERSION} of \${LERNA_PACKAGE_NAME} was built from commit [${N4JS_LIBS_COMMIT_ID_LOCAL}](https://github.com/eclipse/n4js/tree/${N4JS_LIBS_COMMIT_ID_LOCAL}/n4js-libs/packages/\${LERNA_PACKAGE_NAME}).\n\n"
+export VERSION_INFO="\n\n## Version\n\nVersion ${PUBLISH_VERSION} of \${LERNA_PACKAGE_NAME} was built from commit [${N4JS_LIBS_COMMIT_ID_LOCAL}](https://github.com/eclipse/n4js/tree/${N4JS_LIBS_COMMIT_ID_LOCAL}/n4js-libs/packages/\${LERNA_PACKAGE_NAME}).\n\nCompiled with an N4JS compiler built from commit [${N4JS_COMMIT_ID_LOCAL}](https://github.com/eclipse/n4js/tree/${N4JS_COMMIT_ID_LOCAL}).\n\n"
 lerna exec -- 'printf "'${VERSION_INFO}'" >> README.md'
 
 echo "==== STEP 7/7: Now publishing with version '${PUBLISH_VERSION}' and dist-tag '${DIST_TAG}' to registry ${NPM_REGISTRY}"

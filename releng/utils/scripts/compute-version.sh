@@ -140,6 +140,7 @@ else
     N4JS_LIBS_BASE_VERSION="${N4JS_LIBS_VERSION_PUBLIC}"
 fi
 N4JS_LIBS_VERSION="${N4JS_LIBS_BASE_VERSION}"
+N4JS_LIBS_COMMIT="${N4JS_LIBS_COMMIT_ID_LOCAL}"
 N4JS_LIBS_DIST_TAG="latest"
 if [ \( "$VERSION_DIST_TAG_REQUESTED" != "null" \) -a \( "$VERSION_DIST_TAG_REQUESTED" != "" \) ]; then
     echo "Npm dist-tag requested -> appending a generated pre-release segment to n4js-libs version"
@@ -147,6 +148,7 @@ if [ \( "$VERSION_DIST_TAG_REQUESTED" != "null" \) -a \( "$VERSION_DIST_TAG_REQU
     N4JS_LIBS_DIST_TAG="${VERSION_DIST_TAG_REQUESTED}"
 fi
 echo "This build's n4js-libs version: ${N4JS_LIBS_VERSION}"
+echo "This build's n4js-libs commit : ${N4JS_LIBS_COMMIT}"
 
 echo "==== STEP 5/7: Computing language version (derived from n4js-libs version) ..."
 if [ "$N4JS_LIBS_DIST_TAG" != "latest" ]; then
@@ -154,7 +156,9 @@ if [ "$N4JS_LIBS_DIST_TAG" != "latest" ]; then
 else
     LANGUAGE_VERSION="${N4JS_LIBS_BASE_VERSION}.v${TIMESTAMP_DATE}-${TIMESTAMP_TIME}"
 fi
+LANGUAGE_COMMIT="${N4JS_COMMIT_ID_LOCAL}"
 echo "This build's language version: ${LANGUAGE_VERSION}"
+echo "This build's language commit : ${LANGUAGE_COMMIT}"
 
 echo "==== STEP 6/7: Check validity ..."
 HISTORY_OF_MASTER=`git log -n 50 --pretty=format:\"%H\" origin/master | grep $N4JS_COMMIT_ID_LOCAL || true`
@@ -175,7 +179,9 @@ cat > ${VERSION_INFO_FILE} <<EOF
 {
     "baseVersion": "${N4JS_LIBS_BASE_VERSION}",
     "languageVersion": "${LANGUAGE_VERSION}",
+    "languageCommit": "${LANGUAGE_COMMIT}",
     "n4jsLibsVersion": "${N4JS_LIBS_VERSION}",
+    "n4jsLibsCommit": "${N4JS_LIBS_COMMIT}",
     "n4jsLibsDistTag": "${N4JS_LIBS_DIST_TAG}",
     "n4jsLibsPublishingRequired": ${N4JS_LIBS_PUBLISHING_REQUIRED}
 }
@@ -185,6 +191,6 @@ cat ${VERSION_INFO_FILE}
 LANGUAGE_VERSION_PROPERTIES_FILE="${REPO_ROOT_DIR}/plugins/org.eclipse.n4js/res/language-version.properties"
 echo "Writing language version ${LANGUAGE_VERSION} to file ${LANGUAGE_VERSION_PROPERTIES_FILE}"
 rm -f ${LANGUAGE_VERSION_PROPERTIES_FILE}
-echo "language.version = ${LANGUAGE_VERSION}" > ${LANGUAGE_VERSION_PROPERTIES_FILE}
+echo "language.version = ${LANGUAGE_VERSION}\nlanguage.commit = ${LANGUAGE_COMMIT}" > ${LANGUAGE_VERSION_PROPERTIES_FILE}
 
 echo "==== COMPUTE VERSION - DONE"
