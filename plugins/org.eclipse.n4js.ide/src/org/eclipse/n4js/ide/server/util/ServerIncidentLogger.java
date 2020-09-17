@@ -106,6 +106,9 @@ public class ServerIncidentLogger {
 						+ "Incident Time Stamp: " + timeStamp + NL
 						+ SEPARATOR + NL
 						+ content;
+				if (!actualContent.endsWith(NL)) {
+					actualContent += NL; // always end the file with a NL
+				}
 				Files.writeString(file, actualContent, StandardOpenOption.CREATE_NEW);
 			} catch (Throwable th) {
 				// ignore

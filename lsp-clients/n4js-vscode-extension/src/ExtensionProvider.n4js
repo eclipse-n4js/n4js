@@ -236,7 +236,7 @@ async function startN4jsLspServerAndConnect(port: number, vscode: any+, vscodeLC
         n4jscProcess.stdout.on('data', waitForListenMsg);
     });
     await serverReady;
-    outputChannel.appendLine('Connected to LSP server');
+    // now connected to LSP server (the server will log a welcome message)
 }
 
 function getWorkspaceDir(vscode: any+) : string {

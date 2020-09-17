@@ -191,7 +191,6 @@ async function startN4jsLspServerAndConnect(port, vscode, vscodeLC, context, out
 		n4jscProcess.stdout.on('data', waitForListenMsg);
 	});
 	await serverReady;
-	outputChannel.appendLine('Connected to LSP server');
 }
 function getWorkspaceDir(vscode) {
 	for(let wFolder of vscode.workspace.workspaceFolders) {

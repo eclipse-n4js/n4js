@@ -19,7 +19,9 @@ import org.eclipse.n4js.ide.editor.contentassist.N4JSContentAssistService;
 import org.eclipse.n4js.ide.editor.contentassist.N4JSFollowElementCalculator;
 import org.eclipse.n4js.ide.editor.contentassist.N4JSIdeContentProposalProvider;
 import org.eclipse.n4js.ide.server.FileBasedWorkspaceInitializer;
+import org.eclipse.n4js.ide.server.N4JSDebugService;
 import org.eclipse.n4js.ide.server.N4JSLanguageServer;
+import org.eclipse.n4js.ide.server.N4JSLanguageServerFrontend;
 import org.eclipse.n4js.ide.server.N4JSOutputConfigurationProvider;
 import org.eclipse.n4js.ide.server.N4JSProjectDescriptionFactory;
 import org.eclipse.n4js.ide.server.N4JSProjectStatePersister;
@@ -38,6 +40,7 @@ import org.eclipse.n4js.ide.server.symbol.N4JSHierarchicalDocumentSymbolService;
 import org.eclipse.n4js.ide.xtext.editor.contentassist.XIdeContentProposalAcceptor;
 import org.eclipse.n4js.ide.xtext.server.BuiltInAwareIncrementalBuilder;
 import org.eclipse.n4js.ide.xtext.server.DebugService;
+import org.eclipse.n4js.ide.xtext.server.LanguageServerFrontend;
 import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo;
 import org.eclipse.n4js.ide.xtext.server.QueuedExecutorService;
 import org.eclipse.n4js.ide.xtext.server.TextDocumentFrontend;
@@ -96,6 +99,10 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public Class<? extends ILanguageServerShutdownAndExitHandler> bindILanguageServerShutdownAndExitHandler() {
 		return ILanguageServerShutdownAndExitHandler.NullImpl.class;
+	}
+
+	public Class<? extends LanguageServerFrontend> bindLanguageServerFrontend() {
+		return N4JSLanguageServerFrontend.class;
 	}
 
 	public Class<? extends BuilderFrontend> bindBuilderFrontend() {
@@ -238,7 +245,7 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 	}
 
 	public Class<? extends DebugService> bindDebugService() {
-		return DebugService.DebugServiceDefaultImpl.class;
+		return N4JSDebugService.class;
 	}
 
 	public Class<? extends ProjectStatePersister> bindProjectStatePersister() {

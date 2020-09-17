@@ -144,18 +144,25 @@ public interface DebugService extends DebugEndpointDefinition {
 
 		@Override
 		public String getDebugInfo() {
-			String info = "==   DEBUG INFO   ==\n";
-			info += messageTracer.getTraceDump();
-			info += "\n--------------\n";
-			info += getWorkspaceConfigDump();
-			info += "\n--------------\n";
-			info += getExecuterServiceDump();
-			info += "\n--------------\n";
-			info += getMemoryDump();
-			info += "\n--------------\n";
-			info += getThreadDump();
-			info += "\n== DEBUG INFO END ==\n";
-			return info;
+			StringBuilder sb = new StringBuilder();
+			sb.append("== DEBUG INFO ==");
+			sb.append('\n');
+			compileDebugInfo(sb, "\n--------------\n");
+			sb.append('\n');
+			sb.append("== DEBUG INFO END ==");
+			return sb.toString();
+		}
+
+		protected void compileDebugInfo(StringBuilder sb, String separator) {
+			sb.append(messageTracer.getTraceDump());
+			sb.append(separator);
+			sb.append(getWorkspaceConfigDump());
+			sb.append(separator);
+			sb.append(getExecuterServiceDump());
+			sb.append(separator);
+			sb.append(getMemoryDump());
+			sb.append(separator);
+			sb.append(getThreadDump());
 		}
 
 		protected String getThreadDump() {

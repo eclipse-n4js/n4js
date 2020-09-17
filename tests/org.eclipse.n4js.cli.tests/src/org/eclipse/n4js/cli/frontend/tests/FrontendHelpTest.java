@@ -68,7 +68,7 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 	}
 
 	private String getVersionExpectation() {
-		return N4JSLanguageUtils.DEFAULT_LANGUAGE_VERSION;
+		return N4JSLanguageUtils.DEFAULT_LANGUAGE_VERSION + " (commit " + N4JSLanguageUtils.getLanguageCommit() + ")";
 	}
 
 	private String getUsageExpectation() {

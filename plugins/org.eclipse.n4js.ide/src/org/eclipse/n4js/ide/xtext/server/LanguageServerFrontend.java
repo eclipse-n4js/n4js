@@ -70,6 +70,7 @@ import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.TextDocumentService;
 import org.eclipse.lsp4j.services.WorkspaceService;
+import org.eclipse.n4js.ide.server.LspLogger;
 import org.eclipse.n4js.ide.xtext.server.build.BuilderFrontend;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 
@@ -92,13 +93,24 @@ public class LanguageServerFrontend implements TextDocumentService, WorkspaceSer
 	@Inject
 	private WorkspaceFrontend workspaceFrontend;
 
+	@Inject
+	private LspLogger lspLogger;
+
 	/**
 	 * Initialize this front-end according to the given arguments.
 	 */
 	public void initialize(InitializeParams params, URI baseDir, ILanguageServerAccess access) {
+		logWelcomeMessage();
 		workspaceFrontend.initialize(access);
 		textDocumentFrontend.initialize(params, access);
 		builderFrontend.initialize(baseDir);
+	}
+
+	/**
+	 * Sends a welcome message to the client when initialization begins.
+	 */
+	protected void logWelcomeMessage() {
+		lspLogger.log("Connected to LSP server");
 	}
 
 	/**

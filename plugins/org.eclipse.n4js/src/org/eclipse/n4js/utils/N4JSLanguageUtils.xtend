@@ -176,11 +176,11 @@ public class N4JSLanguageUtils {
 		} catch (IOException e) {
 			throw new RuntimeException("unable to load properties file " + LANGUAGE_VERSION_PROPERTIES_FILE_NAME, e);
 		}
-		val versionStr =  properties.getProperty(propertyId);
-		if (versionStr === null) {
+		val value = properties.getProperty(propertyId);
+		if (value === null) {
 			throw new RuntimeException("properties file " + LANGUAGE_VERSION_PROPERTIES_FILE_NAME + " does not contain property " + propertyId);
 		}
-		return versionStr;
+		return value;
 	}
 
 	/**
