@@ -115,18 +115,18 @@ public class XWorkspaceBuilder {
 	private List<IResourceDescription.Delta> toBeConsideredDeltas = new ArrayList<>();
 
 	/**
-	 * Initializes the workspace and triggers an initial build.
+	 * Initializes the workspace and triggers a non-cancelable initial build.
 	 */
 	public BuildTask createInitialBuildTask() {
-		return this::doInitialBuild;
+		return (cancelIndicator) -> this.doInitialBuild(CancelIndicator.NullImpl);
 	}
 
 	/**
-	 * Re-initializes the workspace and triggers the equivalent to an initial build.
+	 * Re-initializes the workspace and triggers the equivalent to an initial build (also non-cancelable).
 	 */
 	public BuildTask createReinitialBuildTask() {
 		workspaceManager.reinitialize();
-		return this::doInitialBuild;
+		return (cancelIndicator) -> this.doInitialBuild(CancelIndicator.NullImpl);
 	}
 
 	/**
