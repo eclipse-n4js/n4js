@@ -115,13 +115,13 @@ public class XWorkspaceBuilder {
 	private final Set<String> deletedProjects = new LinkedHashSet<>();
 
 	/** Holds all deltas of all projects. In case of a cancelled build, this set is not empty at start of next build. */
-	private List<IResourceDescription.Delta> toBeConsideredDeltas = new ArrayList<>();
+	private final List<IResourceDescription.Delta> toBeConsideredDeltas = new ArrayList<>();
 
 	/**
 	 * Initializes the workspace and triggers a non-cancelable initial build.
 	 */
 	public BuildTask createInitialBuildTask() {
-		return (cancelIndicator) -> this.doInitialBuild(CancelIndicator.NullImpl);
+		return (cancelIndicator) -> this.doInitialBuild();
 	}
 
 	/**
@@ -129,19 +129,23 @@ public class XWorkspaceBuilder {
 	 */
 	public BuildTask createReinitialBuildTask() {
 		workspaceManager.reinitialize();
-		return (cancelIndicator) -> this.doInitialBuild(CancelIndicator.NullImpl);
+		return (cancelIndicator) -> this.doInitialBuild();
 	}
 
 	/**
 	 * Run a full build on the entire workspace, i.e. build all projects.
 	 *
-	 * @param cancelIndicator
-	 *            cancellation support
 	 * @return the delta.
 	 */
-	private IResourceDescription.Event doInitialBuild(CancelIndicator cancelIndicator) {
+	private IResourceDescription.Event doInitialBuild() {
 		lspLogger.log("Initial build ...");
 		Stopwatch stopwatch = Stopwatch.createStarted();
+
+		// because we are about to build everything anyway, we can get rid of all changes reported up to this point
+		// (but do not do this at then end of the initial build, because changes that are reported during the initial
+		// build must not be overlooked!)
+		newDirtyFiles.clear();
+		newDeletedFiles.clear();
 
 		try {
 			Collection<? extends ProjectConfigSnapshot> allProjects = workspaceManager.getProjectConfigs();
@@ -155,23 +159,26 @@ public class XWorkspaceBuilder {
 				ProjectConfigSnapshot projectConfig = pboIterator.next();
 				String projectName = projectConfig.getName();
 				ProjectBuilder projectBuilder = workspaceManager.getProjectBuilder(projectName);
-				XBuildResult partialresult = projectBuilder.doInitialBuild(buildRequestFactory, cancelIndicator);
+				XBuildResult partialresult = projectBuilder.doInitialBuild(buildRequestFactory);
 				result.addAll(partialresult.getAffectedResources());
 			}
 
-			onBuildDone(true, Optional.absent());
+			onBuildDone(true, false, Optional.absent());
 
 			stopwatch.stop();
 			lspLogger.log("... initial build done (" + stopwatch.toString() + ").");
 
 			return new ResourceDescriptionChangeEvent(result);
 		} catch (Throwable th) {
-			onBuildDone(true, Optional.of(th));
+			boolean wasCanceled = operationCanceledManager.isOperationCanceledException(th);
 
-			if (operationCanceledManager.isOperationCanceledException(th)) {
+			onBuildDone(true, wasCanceled, Optional.of(th));
+
+			if (wasCanceled) {
 				lspLogger.log("... initial build canceled.");
 				operationCanceledManager.propagateIfCancelException(th);
 			}
+
 			lspLogger.error("... initial build ABORTED due to exception:", th);
 			throw th;
 		}
@@ -185,8 +192,7 @@ public class XWorkspaceBuilder {
 	@SuppressWarnings("unused")
 	@Deprecated // GH-1552: Experimental parallelization
 	// TODO: use ProjectBuildOrderProvider
-	private List<IResourceDescription.Delta> doInitialBuild2(List<ProjectDescription> projects,
-			CancelIndicator indicator) {
+	private List<IResourceDescription.Delta> doInitialBuild2(List<ProjectDescription> projects) {
 
 		class BuildInitialProjectJob extends ParallelJob<String> {
 			ProjectBuilder projectManager;
@@ -199,7 +205,7 @@ public class XWorkspaceBuilder {
 
 			@Override
 			public void runJob() {
-				XBuildResult partialresult = projectManager.doInitialBuild(buildRequestFactory, indicator);
+				XBuildResult partialresult = projectManager.doInitialBuild(buildRequestFactory);
 				synchronized (result) {
 					result.addAll(partialresult.getAffectedResources());
 				}
@@ -393,29 +399,24 @@ public class XWorkspaceBuilder {
 				pboIterator.visitAffected(newlyBuiltDeltas);
 			}
 
-			onBuildDone(false, Optional.absent());
-
-			deletedProjects.clear();
-
 			List<IResourceDescription.Delta> result = toBeConsideredDeltas;
-			toBeConsideredDeltas = new ArrayList<>();
+
+			onBuildDone(false, false, Optional.absent());
 
 			lspLogger.log("... build done.");
 
 			return new ResourceDescriptionChangeEvent(result);
 		} catch (Throwable th) {
-			onBuildDone(false, Optional.of(th));
+			boolean wasCanceled = operationCanceledManager.isOperationCanceledException(th);
 
-			if (operationCanceledManager.isOperationCanceledException(th)) {
+			onBuildDone(false, wasCanceled, Optional.of(th));
+
+			if (wasCanceled) {
 				lspLogger.log("... build canceled.");
 				operationCanceledManager.propagateIfCancelException(th);
 			}
 
 			// unknown exception or error (and not a cancellation case):
-			// recover and also discard the build queue - state is undefined afterwards.
-			this.dirtyFiles.clear();
-			this.deletedFiles.clear();
-			this.deletedProjects.clear();
 			// QueueExecutorService will log this as an error with stack trace, so here we just use #log():
 			lspLogger.log("... build ABORTED due to exception: " + th.getMessage());
 			throw th;
@@ -500,11 +501,29 @@ public class XWorkspaceBuilder {
 	 * @param wasInitialBuild
 	 *            <code>true</code> if the build was an initial build, <code>false</code> if the build was an
 	 *            incremental build.
+	 * @param wasCanceled
+	 *            <code>true</code> iff the build was canceled.
 	 * @param throwable
-	 *            absent if the build completed normally, present if the build ended early due to an exception.
+	 *            absent if the build completed normally, present if the build ended early due to cancellation or some
+	 *            other exception.
 	 */
-	protected void onBuildDone(boolean wasInitialBuild, Optional<Throwable> throwable) {
+	protected void onBuildDone(boolean wasInitialBuild, boolean wasCanceled, Optional<Throwable> throwable) {
 		workspaceManager.clearResourceSets();
+		if (!wasCanceled) {
+			discardIncrementalBuildQueue();
+		}
+	}
+
+	/**
+	 * Discards the internal collections of pending dirty/deleted files/projects and to-be-considered deltas used by the
+	 * incremental builder to track its progress. Does <em>not</em> discard the sets of still unprocessed changes
+	 * reported from the outside (i.e. {@link #newDirtyFiles}, {@link #newDeletedFiles}).
+	 */
+	protected void discardIncrementalBuildQueue() {
+		dirtyFiles.clear();
+		deletedFiles.clear();
+		deletedProjects.clear();
+		toBeConsideredDeltas.clear();
 	}
 
 	/** Prints build order */
