@@ -107,6 +107,9 @@ public class XWorkspaceBuilder {
 	@Inject
 	private IBuildRequestFactory buildRequestFactory;
 
+	private final Set<URI> newDirtyFiles = new LinkedHashSet<>();
+	private final Set<URI> newDeletedFiles = new LinkedHashSet<>();
+
 	private final Set<URI> dirtyFiles = new LinkedHashSet<>();
 	private final Set<URI> deletedFiles = new LinkedHashSet<>();
 	private final Set<String> deletedProjects = new LinkedHashSet<>();
@@ -247,14 +250,36 @@ public class XWorkspaceBuilder {
 	/**
 	 * Announce dirty and deleted files and perform an incremental build.
 	 *
-	 * @param dirtyFiles
+	 * @param newDirtyFiles
 	 *            the dirty files, i.e. added and changes files.
-	 * @param deletedFiles
+	 * @param newDeletedFiles
 	 *            the deleted files.
-	 * @return a build command that can be triggered.
+	 * @return a build task that can be triggered.
 	 */
-	public BuildTask createIncrementalBuildTask(List<URI> dirtyFiles, List<URI> deletedFiles) {
-		UpdateResult updateResult = workspaceManager.update(dirtyFiles, deletedFiles);
+	public BuildTask createIncrementalBuildTask(List<URI> newDirtyFiles, List<URI> newDeletedFiles) {
+		queue(this.newDirtyFiles, newDeletedFiles, newDirtyFiles);
+		queue(this.newDeletedFiles, newDirtyFiles, newDeletedFiles);
+		return this::doIncrementalWorkspaceUpdateAndBuild;
+	}
+
+	/**
+	 * Based on the changes accumulated in {@link #newDirtyFiles} / {@link #newDeletedFiles}, perform an update of the
+	 * workspace configuration and <em>move</em> the changes to {@link #dirtyFiles} / {@link #deletedFiles} /
+	 * {@link #deletedProjects}; then run an incremental build.
+	 */
+	protected IResourceDescription.Event doIncrementalWorkspaceUpdateAndBuild(CancelIndicator cancelIndicator) {
+
+		// in case many incremental build tasks pile up in the queue (e.g. while a non-cancelable initial build is
+		// running), we don't want to repeatedly invoke IWorkspaceManager#update() in each of those tasks but only in
+		// the last one; therefore, we here check for a cancellation:
+		operationCanceledManager.checkCanceled(cancelIndicator);
+
+		Set<URI> newDirtyFiles = new LinkedHashSet<>(this.newDirtyFiles);
+		Set<URI> newDeletedFiles = new LinkedHashSet<>(this.newDeletedFiles);
+		this.newDirtyFiles.clear();
+		this.newDeletedFiles.clear();
+
+		UpdateResult updateResult = workspaceManager.update(newDirtyFiles, newDeletedFiles);
 		WorkspaceChanges changes = updateResult.changes;
 
 		List<URI> actualDirtyFiles = scanAllAddedAndChangedURIs(changes, scanner);
@@ -271,7 +296,7 @@ public class XWorkspaceBuilder {
 		}
 		handleContentsOfRemovedProjects(updateResult.removedProjectsContents);
 
-		return this::doIncrementalBuild;
+		return doIncrementalBuild(cancelIndicator);
 	}
 
 	/** @return list of all added/changed URIs (including URIs of added projects). */

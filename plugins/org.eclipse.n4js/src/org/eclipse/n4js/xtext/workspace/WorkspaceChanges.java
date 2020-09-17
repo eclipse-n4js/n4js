@@ -70,7 +70,7 @@ public class WorkspaceChanges {
 	}
 
 	/** @return a new instance of {@link WorkspaceChanges} contains the given uris as changed */
-	public static WorkspaceChanges createUrisChanged(List<URI> changedURIs) {
+	public static WorkspaceChanges createUrisChanged(Iterable<URI> changedURIs) {
 		return new WorkspaceChanges(ImmutableList.of(), ImmutableList.of(), ImmutableList.copyOf(changedURIs),
 				ImmutableList.of(),
 				ImmutableList.of(),
@@ -78,7 +78,7 @@ public class WorkspaceChanges {
 	}
 
 	/** @return a new instance of {@link WorkspaceChanges} contains the given uris as removed */
-	public static WorkspaceChanges createUrisRemoved(List<URI> removedURIs) {
+	public static WorkspaceChanges createUrisRemoved(Iterable<URI> removedURIs) {
 		return new WorkspaceChanges(ImmutableList.copyOf(removedURIs), ImmutableList.of(), ImmutableList.of(),
 				ImmutableList.of(),
 				ImmutableList.of(),
@@ -86,7 +86,7 @@ public class WorkspaceChanges {
 	}
 
 	/** @return a new instance of {@link WorkspaceChanges} contains the given uris as removed / changed */
-	public static WorkspaceChanges createUrisRemovedAndChanged(List<URI> removedURIs, List<URI> changedURIs) {
+	public static WorkspaceChanges createUrisRemovedAndChanged(Iterable<URI> removedURIs, Iterable<URI> changedURIs) {
 		return new WorkspaceChanges(ImmutableList.copyOf(removedURIs), ImmutableList.copyOf(changedURIs),
 				ImmutableList.of(), ImmutableList.of(),
 				ImmutableList.of(),

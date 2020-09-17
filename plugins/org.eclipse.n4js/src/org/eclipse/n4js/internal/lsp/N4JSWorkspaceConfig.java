@@ -93,8 +93,8 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	}
 
 	@Override
-	public WorkspaceChanges update(WorkspaceConfigSnapshot oldWorkspaceConfig, List<URI> dirtyFiles,
-			List<URI> deletedFiles) {
+	public WorkspaceChanges update(WorkspaceConfigSnapshot oldWorkspaceConfig, Set<URI> dirtyFiles,
+			Set<URI> deletedFiles) {
 
 		WorkspaceChanges changes = WorkspaceChanges.createUrisRemovedAndChanged(deletedFiles, dirtyFiles);
 
