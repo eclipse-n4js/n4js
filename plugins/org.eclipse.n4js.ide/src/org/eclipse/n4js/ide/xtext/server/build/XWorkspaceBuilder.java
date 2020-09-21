@@ -118,7 +118,7 @@ public class XWorkspaceBuilder {
 	private final List<IResourceDescription.Delta> toBeConsideredDeltas = new ArrayList<>();
 
 	/**
-	 * Initializes the workspace and triggers a non-cancelable initial build.
+	 * Initializes the workspace and triggers an initial build (always non-cancelable).
 	 */
 	public BuildTask createInitialBuildTask() {
 		return (cancelIndicator) -> this.doInitialBuild();
@@ -128,6 +128,12 @@ public class XWorkspaceBuilder {
 	 * Re-initializes the workspace and triggers the equivalent to an initial build (also non-cancelable).
 	 */
 	public BuildTask createReinitialBuildTask() {
+		// because we are about to re-initialize the workspace and build everything anyway, we can get rid of all
+		// changes reported up to this point (but do not clear #newDirty|DeletedFiles at then end of the initial build,
+		// because changes that are reported during the initial build must not be overlooked!)
+		newDirtyFiles.clear();
+		newDeletedFiles.clear();
+
 		workspaceManager.reinitialize();
 		return (cancelIndicator) -> this.doInitialBuild();
 	}
@@ -140,12 +146,6 @@ public class XWorkspaceBuilder {
 	private IResourceDescription.Event doInitialBuild() {
 		lspLogger.log("Initial build ...");
 		Stopwatch stopwatch = Stopwatch.createStarted();
-
-		// because we are about to build everything anyway, we can get rid of all changes reported up to this point
-		// (but do not do this at then end of the initial build, because changes that are reported during the initial
-		// build must not be overlooked!)
-		newDirtyFiles.clear();
-		newDeletedFiles.clear();
 
 		try {
 			Collection<? extends ProjectConfigSnapshot> allProjects = workspaceManager.getProjectConfigs();
@@ -269,9 +269,15 @@ public class XWorkspaceBuilder {
 	}
 
 	/**
-	 * Based on the changes accumulated in {@link #newDirtyFiles} / {@link #newDeletedFiles}, perform an update of the
-	 * workspace configuration and <em>move</em> the changes to {@link #dirtyFiles} / {@link #deletedFiles} /
-	 * {@link #deletedProjects}; then run an incremental build.
+	 * Based on the raw, "reported changes" accumulated in {@link #newDirtyFiles} / {@link #newDeletedFiles}, do the
+	 * following:
+	 * <ol>
+	 * <li>perform an update of the workspace configuration, if necessary, which may lead to additional "discovered
+	 * changes" (e.g. resources in newly added source folders),
+	 * <li><em>move</em> the "reported changes" together with the "discovered changes" to {@link #dirtyFiles} /
+	 * {@link #deletedFiles} / {@link #deletedProjects},
+	 * <li>then trigger an incremental build.
+	 * </ol>
 	 */
 	protected IResourceDescription.Event doIncrementalWorkspaceUpdateAndBuild(CancelIndicator cancelIndicator) {
 
