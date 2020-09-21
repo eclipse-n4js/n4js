@@ -30,33 +30,42 @@ public class CompletionWithImportsWorkspaceTest extends AbstractCompletionTest {
 					P2,
 					SomeNPM,
 					@n4jsd/SomeNPM
-				'''],
+				'''
+			],
 			"P2" -> #[
 				"LibXY" -> '''
 					export public class XY {}
-				'''],
-				
+				'''
+			],
+
 			CFG_NODE_MODULES + N4JS_RUNTIME -> null,
 			CFG_NODE_MODULES + "SomeNPM" -> #[
-				"index"  -> '''//some npm js code'''],
+				"index" -> '''//some npm js code''',
+				"AnotherModule.js" -> '''//some npm js code'''
+			],
 			CFG_NODE_MODULES + "@n4jsd/SomeNPM" -> #[
-				"index.n4jsd"  -> '''
-							export public external class A1 {}
-							''',
-				PACKAGE_JSON  -> '''
-							{
-								"name": "@n4jsd/SomeNPM",
-								"version": "0.0.1",
-								"n4js": {
-									"projectType": "definition",
-									"definesPackage": "SomeNPM",
-									"sources": {
-										"source": [
-											"src"
-										]
-									}
-								}
-							}''']
+				"index.n4jsd" -> '''
+					export public external class A1 {}
+				''',
+				"AnotherModule.n4jsd" -> '''
+					export public external class AnotherClass {}
+				''',
+				PACKAGE_JSON -> '''
+					{
+						"name": "@n4jsd/SomeNPM",
+						"version": "0.0.1",
+						"n4js": {
+							"projectType": "definition",
+							"definesPackage": "SomeNPM",
+							"sources": {
+								"source": [
+									"src"
+								]
+							}
+						}
+					}
+				'''
+			]
 		];
 	}
 
@@ -80,4 +89,13 @@ public class CompletionWithImportsWorkspaceTest extends AbstractCompletionTest {
 		''');
 	}
 
+	@Test
+	def void testAddImportFromDefinitionProject() {
+		testAtCursor('''
+			AnotherClass<|>
+		''', ''' 
+			(AnotherClass, Class, AnotherModule, , , 00000, , , , ([0:0 - 0:12], AnotherClass), [([0:0 - 0:0], import {AnotherClass} from "SomeNPM/AnotherModule";
+			)], [], , )
+		''');
+	}
 }
