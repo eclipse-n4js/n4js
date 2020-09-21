@@ -22,6 +22,7 @@ import org.eclipse.n4js.ide.editor.contentassist.ContentAssistDataCollectors;
 import org.eclipse.n4js.n4JS.ImportCallExpression;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4idl.N4IDLGlobals;
+import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
@@ -608,22 +609,29 @@ public class ReferenceResolutionFinder {
 			return new NameAndAlias(importName, alias);
 		}
 
-		/** In case of main module, adjust the qualified name, e.g. index.Element -> react.Element */
+		/** Return fully qualified name (= module specifier + element name) of the element to be imported. */
 		private QualifiedName getImportName() {
 			QualifiedName qfn = candidate.getQualifiedName();
 			int qfnSegmentCount = qfn.getSegmentCount();
 			String tmodule = (qfnSegmentCount >= 2) ? qfn.getSegment(qfnSegmentCount - 2) : null;
+			ProjectType projectType = candidateProject != null ? candidateProject.getProjectType() : null;
 
 			QualifiedName candidateName;
 			if (candidateProject != null && tmodule != null && tmodule.equals(candidateProject.getMainModule())) {
-				N4JSProjectName projectName = candidateProject.getProjectName();
-				N4JSProjectName definesPackage = candidateProject.getDefinesPackageName();
-				if (definesPackage != null) {
-					projectName = definesPackage;
-				}
+				// use project import when importing from a main module (e.g. index.Element -> react.Element)
+				N4JSProjectName projectName = getNameOfDefinedOrGivenProject(candidateProject);
 				String lastSegmentOfQFN = candidate.getQualifiedName().getLastSegment().toString();
-				candidateName = QualifiedName.create(projectName.getRawName(), lastSegmentOfQFN);
+				candidateName = projectName.toQualifiedName().append(lastSegmentOfQFN);
+
+			} else if (candidateProject != null
+					&& (projectType == ProjectType.PLAINJS || projectType == ProjectType.DEFINITION)) {
+				// use complete module specifier when importing from PLAINJS or DEFINITION project
+				// (i.e. prepend project name)
+				N4JSProjectName projectName = getNameOfDefinedOrGivenProject(candidateProject);
+				candidateName = projectName.toQualifiedName().append(candidate.getQualifiedName());
+
 			} else {
+				// standard case: use plain module specifier
 				candidateName = candidate.getQualifiedName();
 			}
 			return candidateName;
@@ -644,6 +652,16 @@ public class ReferenceResolutionFinder {
 		public boolean isNamespace() {
 			return accessType == CandidateAccessType.namespace;
 		}
+	}
+
+	private static N4JSProjectName getNameOfDefinedOrGivenProject(IN4JSProject project) {
+		if (project.getProjectType() == ProjectType.DEFINITION) {
+			N4JSProjectName definedProjectName = project.getDefinesPackageName();
+			if (definedProjectName != null) {
+				return definedProjectName;
+			}
+		}
+		return project.getProjectName();
 	}
 
 	private static class NameAndAlias {
