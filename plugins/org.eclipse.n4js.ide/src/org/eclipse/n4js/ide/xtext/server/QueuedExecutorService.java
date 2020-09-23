@@ -333,16 +333,28 @@ public class QueuedExecutorService {
 		return CompletableFuture.allOf(allTasks);
 	}
 
-	/** An orderly shutdown of this executor service. */
-	public synchronized void shutdown() {
-		if (isShutDown) {
-			return;
+	/** Same as {@link #shutdown(long, TimeUnit)}, but with a default timeout of 4 seconds. */
+	public /* NOT synchronized */ void shutdown() {
+		shutdown(4, TimeUnit.SECONDS);
+	}
+
+	/**
+	 * An orderly shutdown of this executor service. For details, see
+	 * {@link MoreExecutors#shutdownAndAwaitTermination(ExecutorService, long, TimeUnit)}.
+	 */
+	public /* NOT synchronized */ void shutdown(long timeout, TimeUnit unit) {
+		synchronized (this) {
+			if (isShutDown) {
+				return;
+			}
+			cancelAll();
+			isShutDown = true;
+			submittedTasks.clear();
+			pendingTasks.clear();
 		}
-		cancelAll();
-		MoreExecutors.shutdownAndAwaitTermination(delegate, 4000, TimeUnit.MILLISECONDS);
-		isShutDown = true;
-		submittedTasks.clear();
-		pendingTasks.clear();
+		// to give tasks a chance to orderly shut down during the first half of the timeout, the following line must be
+		// executed outside the synchronize block:
+		MoreExecutors.shutdownAndAwaitTermination(delegate, timeout, unit);
 	}
 
 	/** May be invoked from arbitrary threads. */

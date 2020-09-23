@@ -16,6 +16,7 @@ import com.google.common.util.concurrent.Uninterruptibles
 import com.google.inject.Guice
 import com.google.inject.Inject
 import java.util.concurrent.CountDownLatch
+import java.util.concurrent.RejectedExecutionException
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 import org.apache.log4j.Level
@@ -249,5 +250,68 @@ class QueuedExecutorServiceTest {
 		queuedExecutorService.cancelAll("id2");
 		// assert that now 'second' also got the cancellation event
 		Uninterruptibles.awaitUninterruptibly(secondCanceled)
+	}
+
+	@Test(timeout = 1000)
+	def void testShutdown() {
+		queuedExecutorService.shutdown();
+		try {
+			queuedExecutorService.submit("id", "test") [];
+			fail("expected RejectedExecutionException was not thrown");
+		} catch(RejectedExecutionException e) {
+			assertEquals("this QueuedExecutorService has been shut down", e.message);
+		}
+	}
+
+	@Test(timeout = 3000)
+	def void testShutdownDuration_noTasks() {
+		val start = System.currentTimeMillis();
+		queuedExecutorService.shutdown(2000, TimeUnit.MILLISECONDS);
+		val duration = System.currentTimeMillis() - start;
+		assertTrue("expected a shutdown duration below 100ms, but was: " + duration + "ms", duration < 100);
+	}
+
+	@Test(timeout = 3000)
+	def void testShutdownDuration_cancelableTask() {
+		queuedExecutorService.submit("id", "test") [ ci |
+			while (!ci.isCanceled()) {
+				Uninterruptibles.sleepUninterruptibly(10, TimeUnit.MILLISECONDS)
+			}
+			null
+		]
+		val start = System.currentTimeMillis();
+		queuedExecutorService.shutdown(2000, TimeUnit.MILLISECONDS);
+		val duration = System.currentTimeMillis() - start;
+		assertTrue("expected a shutdown duration below 100ms, but was: " + duration + "ms", duration < 100);
+	}
+
+	@Test(timeout = 3000)
+	def void testShutdownDuration_nonCancelableButInterruptibleTask() {
+		queuedExecutorService.submit("id", "test") [ ci |
+			try {
+				Thread.sleep(3000);
+			} catch(InterruptedException e) {
+				// end task when interrupted
+			}
+			null
+		]
+		val start = System.currentTimeMillis();
+		// first half of timeout will expire, because task does not react to cancellation:
+		queuedExecutorService.shutdown(2000, TimeUnit.MILLISECONDS);
+		val duration = System.currentTimeMillis() - start;
+		assertTrue("expected a shutdown duration above 1000ms but below 1100ms, but was: " + duration + "ms", 1000 <= duration && duration < 1100);
+	}
+
+	@Test(timeout = 3000)
+	def void testShutdownDuration_uninterruptibleTask() {
+		queuedExecutorService.submit("id", "test") [ ci |
+			Uninterruptibles.sleepUninterruptibly(3000, TimeUnit.MILLISECONDS);
+			null
+		]
+		val start = System.currentTimeMillis();
+		// first AND second half of timeout will expire, because task does react neither to cancellation nor interrupt:
+		queuedExecutorService.shutdown(2000, TimeUnit.MILLISECONDS);
+		val duration = System.currentTimeMillis() - start;
+		assertTrue("expected a shutdown duration above 2000ms but below 2100ms, but was: " + duration + "ms", 2000 <= duration && duration < 2100);
 	}
 }
