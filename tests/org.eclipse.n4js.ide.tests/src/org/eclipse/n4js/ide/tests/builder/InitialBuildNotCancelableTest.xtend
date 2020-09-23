@@ -107,8 +107,8 @@ class InitialBuildNotCancelableTest extends AbstractIdeTest {
 		return Optional.of(InitialBuildNotCancelableTestModule);
 	}
 
-	@Test
-	def void testInitialBuildNotCancelable() {
+	@Test(timeout = 10000)
+	def void testInitialBuildNotCancelable() throws InterruptedException {
 		testWorkspaceManager.createTestOnDisk(
 			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"OtherProject" -> #[
@@ -132,26 +132,23 @@ class InitialBuildNotCancelableTest extends AbstractIdeTest {
 		);
 		startLspServerWithoutWaiting(); // will trigger initial build
 
-		Uninterruptibles.awaitUninterruptibly(didBuildModuleOther);
+		didBuildModuleOther.await();
 		// at this point, file Other.n4js has been built completely but initial build is still in progress
 
 		changeNonOpenedFile("Other", "mX" -> "m"); // fix the error
-		Uninterruptibles.awaitUninterruptibly(didPerformCancellation); // continue initial build
+		didPerformCancellation.await(); // continue initial build
 
-		Uninterruptibles.awaitUninterruptibly(didCompleteInitialBuild);
+		didCompleteInitialBuild.await();
 		assertTrue("expected initial build to complete normally (no cancellation, no exceptions)", initialBuildCompletedNormally.get);
 		// at this point, the initial build has completed
 
-		try {
-			// assert successful completion of initial build by ensuring the already fixed error has still shown up:
-			assertIssues("Main" -> #[
-				"(Error, [1:12 - 1:13], Couldn't resolve reference to IdentifiableElement 'm'.)"
-			]);
-		} finally {
-			didCheckResultOfInitialBuild.countDown();
-		}
+		// assert successful completion of initial build by ensuring the already fixed error has still shown up:
+		assertIssues("Main" -> #[
+			"(Error, [1:12 - 1:13], Couldn't resolve reference to IdentifiableElement 'm'.)"
+		]);
+		didCheckResultOfInitialBuild.countDown();
 
-		joinServerRequests(); // let incremental build complete
+		joinServerRequests(); // wait for incremental build to complete
 		assertNoIssues(); // assert that the incremental build that was delayed by the initial build successfully removed the error
 	}	
 }

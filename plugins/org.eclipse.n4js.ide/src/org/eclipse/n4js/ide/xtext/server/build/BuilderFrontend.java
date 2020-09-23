@@ -185,7 +185,6 @@ public class BuilderFrontend {
 	 * Initiate an orderly shutdown.
 	 */
 	public void shutdown() {
-		join();
 		queuedExecutorService.shutdown();
 	}
 
