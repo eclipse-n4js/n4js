@@ -74,7 +74,7 @@ public class XWorkspaceManager {
 
 	private WorkspaceConfigSnapshot workspaceConfigSnapshot;
 
-	/** The result of a {@link XWorkspaceManager#update(List, List) workspace update}. */
+	/** The result of a {@link XWorkspaceManager#update(Set, Set) workspace update}. */
 	public static class UpdateResult {
 		/** The workspace changes. */
 		public final WorkspaceChanges changes;
@@ -144,7 +144,7 @@ public class XWorkspaceManager {
 	/**
 	 * Updates the workspace according to the updated information in the files with the given URIs.
 	 */
-	public UpdateResult update(List<URI> dirtyFiles, List<URI> deletedFiles) {
+	public UpdateResult update(Set<URI> dirtyFiles, Set<URI> deletedFiles) {
 		if (workspaceConfig == null) {
 			return new UpdateResult(WorkspaceChanges.NO_CHANGES, Collections.emptyList());
 		}

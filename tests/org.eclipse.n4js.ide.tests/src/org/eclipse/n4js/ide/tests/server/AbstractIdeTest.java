@@ -262,9 +262,14 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * or modifying files and rebuilding.
 	 */
 	protected void startAndWaitForLspServer() {
-		createInjector();
-		startLspServer(getRoot());
+		startLspServerWithoutWaiting();
 		joinServerRequests();
+	}
+
+	/** Same as {@link #startAndWaitForLspServer()}, but without waiting. */
+	protected void startLspServerWithoutWaiting() {
+		createInjector();
+		doStartLspServer(getRoot());
 	}
 
 	/** Creates injector for N4JS */
@@ -281,7 +286,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	}
 
 	/** Connects, initializes and waits for the initial build of the test project. */
-	protected void startLspServer(File root) {
+	protected void doStartLspServer(File root) {
 		ClientCapabilities capabilities = new ClientCapabilities();
 		WorkspaceClientCapabilities wcc = new WorkspaceClientCapabilities();
 		wcc.setExecuteCommand(new ExecuteCommandCapabilities());
@@ -298,7 +303,6 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		languageServer.connect(languageClient);
 		languageServer.initialize(initParams);
 		languageServer.initialized(null);
-		joinServerRequests();
 	}
 
 	@Override

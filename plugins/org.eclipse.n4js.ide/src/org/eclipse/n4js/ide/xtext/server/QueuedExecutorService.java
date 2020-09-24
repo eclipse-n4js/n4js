@@ -22,6 +22,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -93,6 +94,9 @@ public class QueuedExecutorService {
 	protected final List<QueuedTask<?>> pendingTasks = new ArrayList<>();
 	/** Queue IDs with currently running tasks. */
 	protected final Map<Object, QueuedTask<?>> submittedTasks = new LinkedHashMap<>();
+
+	/** Tells whether this service has been {@link #shutdown() shut down}. */
+	protected boolean isShutDown = false;
 
 	@SuppressWarnings("javadoc")
 	protected final class QueuedTask<T> implements Runnable, XCancellable {
@@ -203,9 +207,18 @@ public class QueuedExecutorService {
 		return submit(queueId, description, task);
 	}
 
-	/** Submits the given task under the given queue ID. See {@link QueuedExecutorService} for details. */
+	/**
+	 * Submits the given task under the given queue ID. See {@link QueuedExecutorService} for details.
+	 *
+	 * @throws RejectedExecutionException
+	 *             in case the receiving {@link QueuedExecutorService} has already been shut down.
+	 */
 	public synchronized <T> QueuedTaskFuture<T> submit(Object queueId, String description,
 			Function<CancelIndicator, T> task) {
+		if (isShutDown) {
+			throw new RejectedExecutionException(
+					"this " + QueuedExecutorService.class.getSimpleName() + " has been shut down");
+		}
 		QueuedTask<T> queuedTask = createQueuedTask(queueId, description, task);
 		enqueue(queuedTask);
 		doSubmitAllPending();
@@ -320,10 +333,28 @@ public class QueuedExecutorService {
 		return CompletableFuture.allOf(allTasks);
 	}
 
-	/** An orderly shutdown of this executor service. */
-	public synchronized void shutdown() {
-		cancelAll();
-		MoreExecutors.shutdownAndAwaitTermination(delegate, 2500, TimeUnit.MILLISECONDS);
+	/** Same as {@link #shutdown(long, TimeUnit)}, but with a default timeout of 4 seconds. */
+	public /* NOT synchronized */ void shutdown() {
+		shutdown(4, TimeUnit.SECONDS);
+	}
+
+	/**
+	 * An orderly shutdown of this executor service. For details, see
+	 * {@link MoreExecutors#shutdownAndAwaitTermination(ExecutorService, long, TimeUnit)}.
+	 */
+	public /* NOT synchronized */ void shutdown(long timeout, TimeUnit unit) {
+		synchronized (this) {
+			if (isShutDown) {
+				return;
+			}
+			cancelAll();
+			isShutDown = true;
+			submittedTasks.clear();
+			pendingTasks.clear();
+		}
+		// to give tasks a chance to orderly shut down during the first half of the timeout, the following line must be
+		// executed outside the synchronize block:
+		MoreExecutors.shutdownAndAwaitTermination(delegate, timeout, unit);
 	}
 
 	/** May be invoked from arbitrary threads. */

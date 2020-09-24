@@ -39,7 +39,7 @@ class IncrementalBuilderBasicTest extends AbstractIncrementalBuilderTest {
 				"Main" -> '''
 					import {A} from "A";
 					import {Other} from "Other";
-					
+
 					new A().ma();
 					new Other().mOther();
 				''',
