@@ -607,7 +607,7 @@ class ScenarioGenerator {
 	 */
 	private Project createClientProject(Module clientModule, String vendorId, Project supplierProject) {
 		Project clientProject = new Project("ClientProject", vendorId, vendorId + "_name", PROJECT_TYPE);
-		clientProject.addProjectDependency(supplierProject);
+		clientProject.addProjectDependency(supplierProject.getProjectName());
 		clientProject.createSourceFolder("src").addModule(clientModule);
 		return clientProject;
 	}
