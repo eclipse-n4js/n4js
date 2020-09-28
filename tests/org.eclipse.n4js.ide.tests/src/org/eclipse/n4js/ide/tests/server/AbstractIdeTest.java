@@ -92,6 +92,7 @@ import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
+import org.eclipse.xtext.testing.GlobalRegistries;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
 import org.junit.After;
@@ -121,6 +122,17 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	static final protected String FILE_CONTENT_ASSERTION_WILDCARD = "[...]";
 
 	static final SystemOutRedirecter SYSTEM_OUT_REDIRECTER = new SystemOutRedirecter();
+
+	/** Clear global state to ensure IDE tests run on a clean slate. */
+	@BeforeClass
+	static final public void clearGlobalRegistries() {
+		// Due to problems in {@link InProcessExecuter}, invalid global state was leaking from tests that use the
+		// {@link CliTools} (e.g. singletons from an earlier test were used in later tests).
+		// Should be fixed as of GH-1915, so clearing the global state should no longer be necessary, here. But because
+		// this is hard to notice and debug, we still clear the global state to make the IDE tests more robust against
+		// similar problems in the future.
+		GlobalRegistries.clearGlobalRegistries();
+	}
 
 	/** Catch outputs on console to an internal buffer */
 	@BeforeClass
@@ -254,6 +266,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		openFiles.clear();
 		languageClient.clearLogMessages();
 		languageClient.clearIssues();
+		N4jscTestFactory.unset();
 	}
 
 	/**
