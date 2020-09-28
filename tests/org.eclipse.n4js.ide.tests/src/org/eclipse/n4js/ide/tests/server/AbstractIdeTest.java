@@ -202,10 +202,14 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	@After
 	final public void deleteTestProject() {
 		try {
-			assertNoErrorsInLog();
+			if (languageClient != null) { // only if LSP server was started
+				assertNoErrorsInLog();
+			}
 			assertNoErrorsInOutput();
 		} finally {
-			shutdownLspServer();
+			if (languageServer != null) { // only if LSP server was started
+				shutdownLspServer();
+			}
 			SYSTEM_OUT_REDIRECTER.clearSystemOut();
 			SYSTEM_OUT_REDIRECTER.clearSystemErr();
 			// clear the state related to the test
@@ -261,6 +265,9 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	/** Shuts down a running LSP server. Does not clean disk. */
 	protected void shutdownLspServer() {
+		if (languageServer == null) {
+			throw new IllegalStateException("trying to shut down LSP server, but it was never started");
+		}
 		// clear thread pools
 		languageServer.shutdown().join();
 		openFiles.clear();
