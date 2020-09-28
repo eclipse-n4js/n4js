@@ -13,6 +13,7 @@ package org.eclipse.n4js.cli;
 import org.eclipse.n4js.cli.compiler.N4jscLanguageClient;
 import org.eclipse.n4js.cli.helper.N4jscTestLanguageClient;
 import org.eclipse.xtext.testing.GlobalRegistries;
+import org.eclipse.xtext.testing.GlobalRegistries.GlobalStateMemento;
 
 import com.google.common.base.Optional;
 import com.google.inject.Module;
@@ -21,6 +22,18 @@ import com.google.inject.Module;
  * Overwrites some bindings of N4jscFactory
  */
 public class N4jscTestFactory extends N4jscFactory {
+
+	/** An {@link N4jscFactory} and related global state. */
+	@SuppressWarnings("javadoc")
+	public static final class State {
+		public final N4jscFactory n4jscFactory;
+		public final GlobalStateMemento globalState;
+
+		public State(N4jscFactory n4jscFactory, GlobalStateMemento globalState) {
+			this.n4jscFactory = n4jscFactory;
+			this.globalState = globalState;
+		}
+	}
 
 	/** Enable overwriting bindings */
 	static public void set(boolean isEnabledBackend, Optional<Class<? extends Module>> overridingModule) {
@@ -32,6 +45,23 @@ public class N4jscTestFactory extends N4jscFactory {
 	static public void unset() {
 		resetInjector();
 		N4jscFactory.INSTANCE = new N4jscFactory();
+	}
+
+	/** Like {@link #set(boolean, Optional)}, but stores the global state prior to setting the test factory. */
+	static public State setAfterStoringState(boolean isEnabledBackend,
+			Optional<Class<? extends Module>> overridingModule) {
+		N4jscFactory oldFactory = N4jscFactory.INSTANCE;
+		GlobalStateMemento oldGlobalState = GlobalRegistries.makeCopyOfGlobalState();
+		// next line is important: otherwise #resetInjector() in #set() would change the state of 'oldFactory'
+		N4jscFactory.INSTANCE = new N4jscFactory();
+		set(isEnabledBackend, overridingModule);
+		return new State(oldFactory, oldGlobalState);
+	}
+
+	/** Like {@link #unset()}, but restores a previous global state. */
+	static public void unsetAndRestoreState(State previousState) {
+		previousState.globalState.restoreGlobalState();
+		N4jscFactory.INSTANCE = previousState.n4jscFactory;
 	}
 
 	/** Forces to create new injector */
