@@ -460,7 +460,9 @@ public class TestWorkspaceManager {
 				if (dependency == null) {
 					dependency = yarnProject.getNodeModuleProject(projectDependency);
 					if (dependency == null) {
-						throw new IllegalArgumentException("project not found: " + projectDependency);
+						// unresolved dependency in a package.json file
+						// -> this might be a valid test case, so ignore this problem
+						continue;
 					}
 				}
 				project.addProjectDependency(dependency.getProjectName());
