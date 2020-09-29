@@ -11,6 +11,7 @@
 package org.eclipse.n4js.utils;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -220,18 +221,11 @@ public class ProjectDescriptionUtils {
 				&& IDENTIFIER_PATTERN.matcher(name).matches();
 	}
 
-	/**
-	 * Given a URI as used internally to identify N4JS projects, this method returns the corresponding N4JS project name
-	 * which may or may not {@link #isProjectNameWithScope(String) include an npm scope}. The given URI may be a
-	 * {@link URI#isFile() file URI} (headless case) or a {@link URI#isPlatform() platform URI} (UI case).
-	 * <p>
-	 * For details on N4JS project name handling, see {@link #isProjectNameWithScope(String)}.
-	 */
+	/** Same as {@link #deriveN4JSProjectNameFromURI(URI)}, accepting a {@link SafeURI}. */
 	public static String deriveN4JSProjectNameFromURI(SafeURI<?> location) {
 		if (location == null) {
 			return null;
 		}
-
 		return deriveN4JSProjectNameFromURI(location.toURI());
 	}
 
@@ -242,6 +236,7 @@ public class ProjectDescriptionUtils {
 	 * <p>
 	 * For details on N4JS project name handling, see {@link #isProjectNameWithScope(String)}.
 	 */
+	// keep aligned to #deriveN4JSProjectNameFromPath(Path) below!
 	public static String deriveN4JSProjectNameFromURI(URI uri) {
 		if (uri == null) {
 			return null;
@@ -265,6 +260,28 @@ public class ProjectDescriptionUtils {
 			return last;
 		}
 		throw new IllegalArgumentException("neither a file nor a platform URI: " + uri);
+	}
+
+	/** Same as {@link #deriveN4JSProjectNameFromURI(URI)}, but from a {@link Path path}. */
+	// keep aligned to #deriveN4JSProjectNameFromURI(URI) above!
+	public static String deriveN4JSProjectNameFromPath(Path path) {
+		if (path == null) {
+			return null;
+		}
+		int segCount = path.getNameCount();
+		String last = segCount > 0 ? path.getName(segCount - 1).toString() : null;
+		// due to conventions we cannot influence, the scope name and plain project name are represented as two
+		// separate segments in paths:
+		String secondToLast = segCount > 1 ? path.getName(segCount - 2).toString() : null;
+		if (secondToLast != null && secondToLast.startsWith(NPM_SCOPE_PREFIX)) {
+			return secondToLast + NPM_SCOPE_SEPARATOR + last;
+		}
+		return last;
+	}
+
+	/** Same as {@link #deriveN4JSProjectNameFromURI(URI)}, but from a {@link File file}. */
+	public static String deriveN4JSProjectNameFromFile(File file) {
+		return deriveN4JSProjectNameFromPath(file.toPath());
 	}
 
 	/**
