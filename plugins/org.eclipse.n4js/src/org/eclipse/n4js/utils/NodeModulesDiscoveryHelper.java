@@ -61,8 +61,18 @@ public class NodeModulesDiscoveryHelper {
 			this.workspaceNodeModulesFolder = workspaceNodeModulesFolder;
 		}
 
-		/** @return {@link #localNodeModulesFolder} and {@link #workspaceNodeModulesFolder} iff not null */
-		public List<File> getNodeModulesFolders() {
+		/**
+		 * Returns the {@link #localNodeModulesFolder local} and {@link #workspaceNodeModulesFolder workspace
+		 * node_modules folder} in the order of priority from high to low, meaning that if a project exists in both
+		 * folders, the N4JS implementation should use the project in the folder that comes first in the returned list.
+		 * Values of <code>null</code> are omitted, so the returned list may also have a size of 0 or 1 instead of 2.
+		 *
+		 * @return {@link #localNodeModulesFolder} and {@link #workspaceNodeModulesFolder} iff not null.
+		 */
+		public List<File> getNodeModulesFoldersInOrderOfPriority() {
+			// GH-1314: according to node's module look-up semantics it would be correct to give the local folder
+			// priority over the workspace folder; however, because N4JS does not yet support several projects with the
+			// same name, we have to give the workspace folder the higher priority
 			ArrayList<File> nmfList = Lists.newArrayList(this.workspaceNodeModulesFolder, this.localNodeModulesFolder);
 			nmfList.removeAll(Collections.singleton(null));
 			return Collections.unmodifiableList(nmfList);

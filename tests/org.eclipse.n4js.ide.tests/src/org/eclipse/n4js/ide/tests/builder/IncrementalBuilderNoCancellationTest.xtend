@@ -128,8 +128,8 @@ class IncrementalBuilderNoCancellationTest extends AbstractIncrementalBuilderTes
 		assertNoIssues();
 
 		val projectA = getProjectRoot("ProjectA");
-		val n4jsFileInYarnWorkspaceRootProject = new File(projectA, "SomeModule.n4js").toFileURI;
-		simulateFileChangeAndAssertNoCancellation(n4jsFileInYarnWorkspaceRootProject);
+		val n4jsFileProjectA = new File(projectA, "SomeModule.n4js").toFileURI;
+		simulateFileChangeAndAssertNoCancellation(n4jsFileProjectA);
 	}
 
 	@Test
@@ -170,7 +170,7 @@ class IncrementalBuilderNoCancellationTest extends AbstractIncrementalBuilderTes
 				TestWorkspaceManager.CFG_SOURCE_FOLDER -> ".",
 				TestWorkspaceManager.PACKAGE_JSON -> '''
 					{
-						"name": "some-pkg",
+						"name": "ProjectPlain",
 						"version": "0.0.1",
 						"main": "MainModule.js"
 					}
@@ -181,8 +181,8 @@ class IncrementalBuilderNoCancellationTest extends AbstractIncrementalBuilderTes
 		assertNoIssues();
 
 		val projectPlain = getProjectRoot("ProjectPlain");
-		val n4jsFileInYarnWorkspaceRootProject = new File(projectPlain, "SomeModule.js").toFileURI;
-		simulateFileChangeAndAssertNoCancellation(n4jsFileInYarnWorkspaceRootProject);
+		val jsFileInProjectPlain = new File(projectPlain, "SomeModule.js").toFileURI;
+		simulateFileChangeAndAssertNoCancellation(jsFileInProjectPlain);
 	}
 
 	/** This test method is only included to ensure that dependency injection is correctly set up. */

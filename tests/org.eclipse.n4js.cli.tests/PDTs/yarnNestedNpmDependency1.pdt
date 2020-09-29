@@ -10,6 +10,7 @@ FOLDERS
 ----- node_modules
 ------ Q1 [PROJECT]
 --- node_modules
+---- D1 [SYMLINK_TO_PATH someFolder/P1/packages/D1]
 ---- Q2 [PROJECT]
 
 EXPECT

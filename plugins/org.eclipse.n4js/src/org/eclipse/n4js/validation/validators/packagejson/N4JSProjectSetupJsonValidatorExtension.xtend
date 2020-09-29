@@ -1170,7 +1170,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 			var Path currNPM = null;
 			val nmFolders = allNodeModuleFolders.get(currentProjectName);
 			if (nmFolders !== null) {
-				for (File nodeModulesFolder : nmFolders.nodeModulesFolders) {
+				for (File nodeModulesFolder : nmFolders.nodeModulesFoldersInOrderOfPriority) {
 					if (currNPM === null || !currNPM.toFile.exists) {
 						currNPM = nodeModulesFolder.toPath.resolve(id.rawName);
 					}
