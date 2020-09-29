@@ -420,19 +420,12 @@ public class ProjectDiscoveryHelper {
 		if (nodeModulesFolder == null) {
 			return prjNodeModules.resolve(depName);
 		}
-		if (nodeModulesFolder.workspaceNodeModulesFolder != null) {
-			File depLocation = new File(nodeModulesFolder.workspaceNodeModulesFolder, depName);
+		for (File currNMF : nodeModulesFolder.getNodeModulesFoldersInOrderOfPriority()) {
+			File depLocation = new File(currNMF, depName);
 			if (depLocation.isDirectory()) {
 				return depLocation.toPath();
 			}
 		}
-		if (nodeModulesFolder.localNodeModulesFolder != null) {
-			File depLocation = new File(nodeModulesFolder.localNodeModulesFolder, depName);
-			if (depLocation.isDirectory()) {
-				return depLocation.toPath();
-			}
-		}
-
 		return null;
 	}
 
