@@ -154,10 +154,8 @@ public class ProjectDiscoveryHelper {
 	/**
 	 * Adds all paths to projects to the given set of {@code projects} that match the workspace property of the given
 	 * yarn workspace project.
-	 *
-	 * @implNote Accessibility may be reduced to private again after GH-1666 was done.
 	 */
-	public void collectYarnWorkspaceProjects(Path yarnProjectRoot, Map<Path, ProjectDescription> pdCache,
+	private void collectYarnWorkspaceProjects(Path yarnProjectRoot, Map<Path, ProjectDescription> pdCache,
 			Set<Path> projects) {
 
 		// add the yarn workspace root project even if it is a PLAINJS project

@@ -74,7 +74,7 @@ public class YarnWorkspaceProject extends Project {
 			"dependencies": {
 					«IF !projectDependencies.nullOrEmpty»
 					«FOR dep : projectDependencies SEPARATOR ','»
-						"«dep.projectName»": "*"
+						"«dep»": "*"
 					«ENDFOR»
 					«ENDIF»
 			}

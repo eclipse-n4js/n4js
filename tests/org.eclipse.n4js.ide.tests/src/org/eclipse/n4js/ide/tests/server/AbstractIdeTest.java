@@ -202,10 +202,14 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	@After
 	final public void deleteTestProject() {
 		try {
-			assertNoErrorsInLog();
+			if (languageClient != null) { // only if LSP server was started
+				assertNoErrorsInLog();
+			}
 			assertNoErrorsInOutput();
 		} finally {
-			shutdownLspServer();
+			if (languageServer != null) { // only if LSP server was started
+				shutdownLspServer();
+			}
 			SYSTEM_OUT_REDIRECTER.clearSystemOut();
 			SYSTEM_OUT_REDIRECTER.clearSystemErr();
 			// clear the state related to the test
@@ -261,6 +265,9 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	/** Shuts down a running LSP server. Does not clean disk. */
 	protected void shutdownLspServer() {
+		if (languageServer == null) {
+			throw new IllegalStateException("trying to shut down LSP server, but it was never started");
+		}
 		// clear thread pools
 		languageServer.shutdown().join();
 		openFiles.clear();
@@ -986,8 +993,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * Same as {@link #assertIssues(Map, boolean)}, but with <code>withIgnoredIssues</code> always set to
 	 * <code>false</code>.
 	 */
-	protected void assertIssues(Map<FileURI, List<String>> moduleIdToExpectedIssues) {
-		assertIssues(moduleIdToExpectedIssues, false);
+	protected void assertIssues(Map<FileURI, List<String>> fileURIToExpectedIssues) {
+		assertIssues(fileURIToExpectedIssues, false);
 	}
 
 	/**
@@ -995,10 +1002,10 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * map's keys, this method will also assert that the remaining files in the workspace do not contain any issues.
 	 * Flag <code>withIgnoredIssues</code> applies to those issues accordingly.
 	 */
-	protected void assertIssues(Map<FileURI, List<String>> fileUriToExpectedIssues, boolean withIgnoredIssues) {
+	protected void assertIssues(Map<FileURI, List<String>> fileURIToExpectedIssues, boolean withIgnoredIssues) {
 		// check given expectations
-		assertIssuesInFiles(fileUriToExpectedIssues, withIgnoredIssues);
-		Set<FileURI> checkedModules = fileUriToExpectedIssues.keySet();
+		assertIssuesInFiles(fileURIToExpectedIssues, withIgnoredIssues);
+		Set<FileURI> checkedModules = fileURIToExpectedIssues.keySet();
 
 		// check that there are no other issues in the workspace
 		Multimap<FileURI, Diagnostic> allIssues = languageClient.getIssues();
@@ -1006,7 +1013,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		Set<FileURI> uncheckedModulesWithIssues = new LinkedHashSet<>(modulesWithIssues);
 		uncheckedModulesWithIssues.removeAll(checkedModules);
 		if (!uncheckedModulesWithIssues.isEmpty()) {
-			String msg = fileUriToExpectedIssues.size() == 0
+			String msg = fileURIToExpectedIssues.size() == 0
 					? "expected no issues in workspace but found one or more issues:"
 					: "found one or more unexpected issues in workspace:";
 			StringBuilder sb = new StringBuilder();
@@ -1042,8 +1049,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * Same as {@link #assertIssuesInFiles(Map, boolean)}, but with <code>withIgnoredIssues</code> always set to
 	 * <code>false</code>.
 	 */
-	protected void assertIssuesInFiles(Map<FileURI, List<String>> moduleIdToExpectedIssues) {
-		assertIssuesInFiles(moduleIdToExpectedIssues, false);
+	protected void assertIssuesInFiles(Map<FileURI, List<String>> fileURIToExpectedIssues) {
+		assertIssuesInFiles(fileURIToExpectedIssues, false);
 	}
 
 	/**
@@ -1194,6 +1201,11 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	/** */
 	protected static FileURI toFileURI(File file) {
 		return new FileURI(file);
+	}
+
+	/** */
+	protected static FileURI toFileURI(Path path) {
+		return new FileURI(path.toFile());
 	}
 
 	/** Applies the given replacements to the given character sequence and returns the resulting string. */
