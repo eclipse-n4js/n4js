@@ -280,7 +280,7 @@ public class ProjectDiscoveryHelper {
 
 	/**
 	 * Removes from <code>projects</code> all "unnecessary" {@link ProjectType#PLAINJS PLAINJS} projects. A PLAINJS
-	 * project is "unnecessary" if there does not exist an N4JS project P' in <code>projects</code> that has a
+	 * project P is "unnecessary" if there does not exist an N4JS project P' in <code>projects</code> that has a
 	 * dependency to P.
 	 */
 	private void removeUnnecessaryPlainjsProjects(Map<String, Path> projects, Map<Path, ProjectDescription> pdCache) {
@@ -293,7 +293,7 @@ public class ProjectDiscoveryHelper {
 			}
 			ProjectType type = pd.getProjectType();
 			if (type == ProjectType.PLAINJS) {
-				plainjsProjects.put(pd.getProjectName(), project);
+				plainjsProjects.put(getProjectNameFromPath(project), project);
 			} else {
 				List<String> deps = pd.getProjectDependencies().stream()
 						.map(ProjectReference::getProjectName).collect(Collectors.toList());
