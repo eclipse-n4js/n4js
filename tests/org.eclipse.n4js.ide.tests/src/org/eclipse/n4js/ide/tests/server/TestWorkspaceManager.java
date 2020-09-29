@@ -305,8 +305,8 @@ public class TestWorkspaceManager {
 		Map<String, String> modulesContentsCpy = new HashMap<>(modulesContents);
 		LinkedHashMap<String, Map<String, String>> projectsModulesContents = new LinkedHashMap<>();
 		projectsModulesContents.put(projectName, modulesContentsCpy);
-		modulesContentsCpy.put(CFG_NODE_MODULES + N4JS_RUNTIME, null);
-		modulesContentsCpy.put(CFG_DEPENDENCIES, N4JS_RUNTIME);
+		modulesContentsCpy.putIfAbsent(CFG_NODE_MODULES + N4JS_RUNTIME, null);
+		modulesContentsCpy.putIfAbsent(CFG_DEPENDENCIES, N4JS_RUNTIME);
 
 		return createTestOnDisk(destination, projectsModulesContents);
 	}
@@ -372,7 +372,9 @@ public class TestWorkspaceManager {
 			if (moduleName.equals(CFG_DEPENDENCIES)) {
 				String[] allDeps = contents.split(",");
 				for (String dependency : allDeps) {
-					dependencies.put(projectName, dependency.trim());
+					String dependencyTrimmed = dependency.trim();
+					dependencies.put(projectName, dependencyTrimmed);
+					project.addProjectDependency(dependencyTrimmed);
 				}
 
 			} else if (moduleName.equals(CFG_MAIN_MODULE)) {
@@ -388,7 +390,7 @@ public class TestWorkspaceManager {
 				int indexOfSrc = moduleName.indexOf(CFG_SRC);
 				if (moduleName.equals(CFG_NODE_MODULES + N4JS_RUNTIME) && indexOfSrc == -1) {
 					project.addNodeModuleProject(N4JS_RUNTIME_FAKE);
-					project.addProjectDependency(N4JS_RUNTIME_FAKE);
+					project.addProjectDependency(N4JS_RUNTIME_FAKE.getProjectName());
 
 				} else {
 					if (indexOfSrc == -1) {
@@ -401,7 +403,7 @@ public class TestWorkspaceManager {
 						nmProject = new Project(nmName, VENDOR, VENDOR + "_name", prjType);
 						nmProject.createSourceFolder(DEFAULT_SOURCE_FOLDER);
 						project.addNodeModuleProject(nmProject);
-						project.addProjectDependency(nmProject);
+						project.addProjectDependency(nmProject.getProjectName());
 					}
 					SourceFolder nmSourceFolder = nmProject.getSourceFolders().get(0);
 					createAndAddModule(contents, nmModuleName, nmSourceFolder);
@@ -458,10 +460,12 @@ public class TestWorkspaceManager {
 				if (dependency == null) {
 					dependency = yarnProject.getNodeModuleProject(projectDependency);
 					if (dependency == null) {
-						throw new IllegalArgumentException("project not found: " + projectDependency);
+						// unresolved dependency in a package.json file
+						// -> this might be a valid test case, so ignore this problem
+						continue;
 					}
 				}
-				project.addProjectDependency(dependency);
+				project.addProjectDependency(dependency.getProjectName());
 			}
 		}
 	}
