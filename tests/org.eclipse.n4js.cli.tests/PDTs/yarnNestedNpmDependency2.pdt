@@ -9,6 +9,8 @@ FOLDERS
 ---- D1 [PROJECT dependencies={"Q1":"*"}]
 ----- node_modules
 ------ Q1 [PROJECT]
+--- node_modules
+---- D1 [SYMLINK_TO_PATH someFolder/P1/packages/D1]
 
 EXPECT
 - someFolder/P1

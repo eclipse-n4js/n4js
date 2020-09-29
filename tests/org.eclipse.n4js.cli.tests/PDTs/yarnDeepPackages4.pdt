@@ -9,6 +9,9 @@ FOLDERS
 ----*D1 [PROJECT]
 --- folder2
 ---- D2 [PROJECT]
+-- node_modules
+--- D1 [SYMLINK_TO_PATH P1/packages/folder1/D1]
+--- D2 [SYMLINK_TO_PATH P1/packages/folder2/D2]
 
 EXPECT
 - P1/packages/folder1/D1

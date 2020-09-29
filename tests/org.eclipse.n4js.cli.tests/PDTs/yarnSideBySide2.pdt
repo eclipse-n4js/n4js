@@ -7,13 +7,20 @@ FOLDERS
 -- YarnWSP1 [PROJECT workspaces=["packages/*"]]
 --- packages
 ---- WS1P1 [PROJECT]
+--- node_modules
+---- WS1P1 [SYMLINK_TO_PATH someFolder/YarnWSP1/packages/WS1P1]
 -- YarnWSP2 [PROJECT workspaces=["packages/*"]]
 --- packages
 ---- WS2P1 [PROJECT]
+--- node_modules
+---- WS2P1 [SYMLINK_TO_PATH someFolder/YarnWSP2/packages/WS2P1]
 -- YarnWSP3 [PROJECT workspaces=["packages/*"]]
 --- packages
 ---- WS3P1 [PROJECT]
 ---- WS3P2 [PROJECT]
+--- node_modules
+---- WS3P1 [SYMLINK_TO_PATH someFolder/YarnWSP3/packages/WS3P1]
+---- WS3P2 [SYMLINK_TO_PATH someFolder/YarnWSP3/packages/WS3P2]
 
 EXPECT
 - someFolder/YarnWSP1
