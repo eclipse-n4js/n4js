@@ -1,6 +1,10 @@
 {
 	"name": "Test01",
 	"version": "0.0.1",
+	"dependencies": {
+		"n4js-runtime": "*",
+		"org.eclipse.n4js.mangelhaft.assert": "*"
+	},
 	"n4js": {
 		"projectType": "library",
 		"vendorId": "org.eclipse.n4js",

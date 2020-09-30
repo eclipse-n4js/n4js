@@ -60,8 +60,10 @@ public class N4jscTestCatalogSideBySideTest extends AbstractCliCompileTest {
 		N4CliHelper.copyN4jsLibsToLocation(workspace.toPath().resolve(N4JSGlobals.NODE_MODULES),
 				N4JSGlobals.N4JS_RUNTIME);
 
+		// this test is using projects that are intended for a yarn workspace (i.e. having dependencies between each
+		// other) to test a side-by-side use case; this is why validation errors are expected in next line:
 		CliCompileResult cliResult = n4jsc(COMPILE(workspace), VALIDATION_ERRORS);
-		assertEquals(cliResult.toString(), 16, cliResult.getTranspiledFilesCount());
+		assertEquals(cliResult.toString(), 17, cliResult.getTranspiledFilesCount());
 
 		for (int i = 0; i < projectNames.length; i++) {
 			File projectRoot = projectRoots[i];

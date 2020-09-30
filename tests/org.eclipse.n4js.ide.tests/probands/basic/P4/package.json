@@ -2,6 +2,7 @@
 	"name": "P4",
 	"version": "0.0.1",
 	"dependencies": {
+		"n4js-runtime": "*",
 		"P2": "*"
 	},
 	"n4js": {
