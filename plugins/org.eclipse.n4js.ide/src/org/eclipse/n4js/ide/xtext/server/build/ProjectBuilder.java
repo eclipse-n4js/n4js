@@ -155,14 +155,14 @@ public class ProjectBuilder {
 	 * <li>when the workspace folder is changed in VS Code.
 	 * </ul>
 	 */
-	public XBuildResult doInitialBuild(IBuildRequestFactory buildRequestFactory) {
+	public XBuildResult doInitialBuild(IBuildRequestFactory buildRequestFactory, List<Delta> externalDeltas) {
 		ResourceChangeSet changeSet = readProjectState();
 
 		XBuildResult result = doBuild(
 				createInitialBuildRequestFactory(buildRequestFactory),
 				changeSet.getModified(),
 				changeSet.getDeleted(),
-				Collections.emptyList(),
+				externalDeltas,
 				CancelIndicator.NullImpl);
 
 		// clear the resource set to release memory
