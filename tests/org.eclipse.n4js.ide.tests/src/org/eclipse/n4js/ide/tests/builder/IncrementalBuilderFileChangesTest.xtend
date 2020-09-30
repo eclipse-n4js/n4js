@@ -147,8 +147,7 @@ class IncrementalBuilderFileChangesTest extends AbstractIncrementalBuilderTest {
 
 
 		startAndWaitForLspServer();
-		// FIXME: GH-1860: should have no errors here already:
-//		assertNoIssues();
+		assertNoIssues();
 		
 		openFile("ClientModule");
 		joinServerRequests();
@@ -188,11 +187,10 @@ class IncrementalBuilderFileChangesTest extends AbstractIncrementalBuilderTest {
 
 
 		startAndWaitForLspServer();
-		// FIXME: GH-1860: should have errors here already:
-//		assertIssues("ClientModule" -> #[
-//			"(Error, [0:8 - 0:17], Import of SomeClass cannot be resolved.)",
-//			"(Error, [1:9 - 1:18], Couldn't resolve reference to Type 'SomeClass'.)"
-//		]);
+		assertIssues("ClientModule" -> #[
+			"(Error, [0:8 - 0:17], Import of SomeClass cannot be resolved.)",
+			"(Error, [1:9 - 1:18], Couldn't resolve reference to Type 'SomeClass'.)"
+		]);
 		
 		openFile("ClientModule");
 		joinServerRequests();
