@@ -321,7 +321,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		languageClient.addListener(this);
 
 		languageServer.connect(languageClient);
-		languageServer.initialize(initParams);
+		languageServer.initialize(initParams)
+				.join(); // according to LSP, we must to wait here before sending #initialized():
 		languageServer.initialized(null);
 	}
 
