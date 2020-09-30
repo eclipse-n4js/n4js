@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
@@ -38,6 +39,7 @@ import org.eclipse.xtext.util.Pair;
 import org.osgi.framework.Bundle;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 
 /**
  * Basic utility methods that do not require any N4JS-specific code.
@@ -246,6 +248,28 @@ public class UtilN4 {
 	public static void fill(StringBuilder strb, int offset) {
 		while (strb.length() < offset)
 			strb.append(' ');
+	}
+
+	/**
+	 * Concatenate the given collections and return a newly created {@link List list}.
+	 * <p>
+	 * If an iterable is sufficient as a result, use {@link Iterables#concat(Iterable, Iterable)} or similar methods
+	 * instead.
+	 */
+	@SafeVarargs
+	public static <T> List<T> concat(Collection<? extends T>... collections) {
+		if (collections.length == 0) {
+			return new ArrayList<>();
+		}
+		int size = 0;
+		for (Collection<? extends T> coll : collections) {
+			size += coll.size();
+		}
+		ArrayList<T> result = new ArrayList<>(size);
+		for (Collection<? extends T> coll : collections) {
+			result.addAll(coll);
+		}
+		return result;
 	}
 
 	/**

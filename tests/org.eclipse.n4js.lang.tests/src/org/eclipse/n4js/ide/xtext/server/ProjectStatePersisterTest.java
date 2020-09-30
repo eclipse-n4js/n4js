@@ -65,7 +65,7 @@ public class ProjectStatePersisterTest {
 		fileMappings = (fileMappings != null) ? fileMappings : new XSource2GeneratedMapping();
 		fileHashs = (fileHashs != null) ? fileHashs : Collections.emptyMap();
 		validationIssues = (validationIssues != null) ? validationIssues : ImmutableListMultimap.of();
-		return ImmutableProjectState.copyFrom(index, fileMappings, fileHashs, validationIssues);
+		return ImmutableProjectState.copyFrom(index, fileMappings, fileHashs, validationIssues, Collections.emptyMap());
 	}
 
 	/** */
