@@ -13,6 +13,7 @@ package org.eclipse.n4js.ide.tests.builder
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
+import java.util.Map
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.ide.tests.server.TestWorkspaceManager
 import org.eclipse.n4js.utils.io.FileDeleter
@@ -214,6 +215,96 @@ class InitialBuildTest extends AbstractIncrementalBuilderTest {
 		// sub-case #3: add file between server sessions (this time, containing project does contain an up-to-date '.n4js.projectstate' file!)
 		Files.move(someModuleHidden, someModule);
 		assertTrue("project state file does not exist", Files.isRegularFile(getProjectRoot("ProviderProject").toPath.resolve(N4JSGlobals.N4JS_PROJECT_STATE)))
+
+		startAndWaitForLspServer();
+		assertNoIssues();
+
+		openFile("ClientModule");
+		joinServerRequests();
+		assertNoIssues();
+		closeFile("ClientModule");
+		joinServerRequests();
+		assertNoIssues();
+	}
+
+	@Test
+	def void testAddRemoveProjectBetweenServerSessions() throws IOException {
+		testWorkspaceManager.createTestOnDisk(
+			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
+			"ProviderProject" -> #[
+				"SomeModule" -> '''
+					export public class SomeClass {
+					}
+				''',
+				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
+					n4js-runtime
+				'''
+			],
+			"ClientProject" -> #[
+				"ClientModule" -> '''
+					import {SomeClass} from "SomeModule";
+					const x: SomeClass = null;
+					x;
+				''',
+				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
+					n4js-runtime,
+					ProviderProject
+				'''
+			]
+		);
+
+		val providerProjectPath = getProjectRoot("ProviderProject").toPath;
+		val providerProjectPathHidden = temporaryFolder.resolve("ProviderProject");
+		Files.move(providerProjectPath, providerProjectPathHidden);
+
+		startAndWaitForLspServer();
+		val errorsWithProviderProjectMissing = Map.of(
+			getFileURIFromModuleName("ClientModule"), #[
+				"(Error, [0:24 - 0:36], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
+				"(Error, [1:9 - 1:18], Couldn't resolve reference to Type 'SomeClass'.)"
+			],
+			getPackageJsonFile("ClientProject").toFileURI, #[
+				"(Error, [16:3 - 16:25], Project does not exist with project ID: ProviderProject.)"
+			]
+		);
+		assertIssues(errorsWithProviderProjectMissing);
+
+		shutdownLspServer();
+		
+		// sub-case #1: add project between server sessions (project does *not* contain a .n4js.projectstate file)
+		Files.move(providerProjectPathHidden, providerProjectPath);
+
+		startAndWaitForLspServer();
+		assertNoIssues();
+
+		openFile("ClientModule");
+		joinServerRequests();
+		assertNoIssues();
+		closeFile("ClientModule");
+		joinServerRequests();
+		assertNoIssues();
+
+		shutdownLspServer();
+
+		// sub-case #2: remove project between server sessions
+		Files.move(providerProjectPath, providerProjectPathHidden);
+
+		startAndWaitForLspServer();
+//cleanBuildAndWait();
+		assertIssues(errorsWithProviderProjectMissing);
+
+		openFile("ClientModule");
+		joinServerRequests();
+		assertIssues(errorsWithProviderProjectMissing);
+		closeFile("ClientModule");
+		joinServerRequests();
+		assertIssues(errorsWithProviderProjectMissing);
+
+		shutdownLspServer();
+
+		// sub-case #3: add project between server sessions (this time, project does contain an up-to-date '.n4js.projectstate' file!)
+		Files.move(providerProjectPathHidden, providerProjectPath);
+		assertTrue("project state file does not exist", Files.isRegularFile(providerProjectPath.resolve(N4JSGlobals.N4JS_PROJECT_STATE)))
 
 		startAndWaitForLspServer();
 		assertNoIssues();
