@@ -527,7 +527,6 @@ public class ProjectStatePersister {
 	}
 
 	private ImmutableMap<String, Boolean> readDependencies(DataInput input) throws IOException {
-
 		int numberOfDeps = input.readInt();
 		ImmutableMap.Builder<String, Boolean> dependencies = ImmutableMap.builder();
 		while (numberOfDeps > 0) {
