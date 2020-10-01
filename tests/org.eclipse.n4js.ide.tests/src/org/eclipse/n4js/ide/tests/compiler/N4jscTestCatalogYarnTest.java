@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.ide.tests.compiler;
 
-import static org.eclipse.n4js.cli.N4jscExitCode.VALIDATION_ERRORS;
+import static org.eclipse.n4js.cli.N4jscExitCode.SUCCESS;
 import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -42,6 +42,8 @@ public class N4jscTestCatalogYarnTest extends AbstractCliCompileTest {
 	@Before
 	public void setupWorkspace() throws IOException {
 		workspace = setupWorkspace("basic", true);
+		N4CliHelper.copyN4jsLibsToLocation(workspace.toPath().resolve(N4JSGlobals.NODE_MODULES),
+				N4JSGlobals.N4JS_RUNTIME, N4JSGlobals.MANGELHAFT_ASSERT);
 		proot = new File(workspace, PACKAGES).getAbsoluteFile();
 	}
 
@@ -54,12 +56,8 @@ public class N4jscTestCatalogYarnTest extends AbstractCliCompileTest {
 	/** Compile and check if test catalog exists. */
 	@Test
 	public void testCompileAndAssertTestCatalog() throws Exception {
-		// because we want to execute stuff, we have to install the runtime:
-		N4CliHelper.copyN4jsLibsToLocation(workspace.toPath().resolve(N4JSGlobals.NODE_MODULES),
-				N4JSGlobals.N4JS_RUNTIME);
-
-		CliCompileResult cliResult = n4jsc(COMPILE(workspace), VALIDATION_ERRORS);
-		assertEquals(cliResult.toString(), 16, cliResult.getTranspiledFilesCount());
+		CliCompileResult cliResult = n4jsc(COMPILE(workspace), SUCCESS);
+		assertEquals(cliResult.toString(), 20, cliResult.getTranspiledFilesCount());
 
 		File testCatalogFileInWorkspace = new File(workspace, N4JSGlobals.TEST_CATALOG);
 		assertFalse("Test catalog of workspace must not exist", testCatalogFileInWorkspace.isFile());

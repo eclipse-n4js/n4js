@@ -35,6 +35,8 @@ public class ImmutableProjectState {
 	private final ImmutableMap<URI, HashedFileContent> fileHashes;
 	/** Hashes to indicate file changes */
 	private final ImmutableListMultimap<URI, LSPIssue> validationIssues;
+	/** Dependencies and whether they existed at the time this project state was computed. */
+	private final ImmutableMap<String, Boolean> dependencies;
 
 	/**
 	 * Factory method to make it explicit that we create copies of the passed arguments.
@@ -43,9 +45,10 @@ public class ImmutableProjectState {
 			ResourceDescriptionsData indexData,
 			XSource2GeneratedMapping fileMappings,
 			Map<? extends URI, ? extends HashedFileContent> fileHashes,
-			ListMultimap<? extends URI, ? extends LSPIssue> validationIssues) {
+			ListMultimap<? extends URI, ? extends LSPIssue> validationIssues,
+			Map<String, Boolean> dependencies) {
 		return new ImmutableProjectState(indexData.copy(), fileMappings.copy(), ImmutableMap.copyOf(fileHashes),
-				ImmutableListMultimap.copyOf(validationIssues));
+				ImmutableListMultimap.copyOf(validationIssues), ImmutableMap.copyOf(dependencies));
 	}
 
 	/**
@@ -53,7 +56,8 @@ public class ImmutableProjectState {
 	 */
 	public static ImmutableProjectState empty() {
 		return new ImmutableProjectState(new ResourceDescriptionsData(Collections.emptyList()),
-				new XSource2GeneratedMapping(), ImmutableMap.of(), ImmutableListMultimap.of());
+				new XSource2GeneratedMapping(), ImmutableMap.of(), ImmutableListMultimap.of(),
+				ImmutableMap.of());
 	}
 
 	/**
@@ -63,8 +67,9 @@ public class ImmutableProjectState {
 			ResourceDescriptionsData indexData,
 			XSource2GeneratedMapping fileMappings,
 			ImmutableMap<URI, HashedFileContent> fileHashes,
-			ImmutableListMultimap<URI, LSPIssue> validationIssues) {
-		return new ImmutableProjectState(indexData, fileMappings, fileHashes, validationIssues);
+			ImmutableListMultimap<URI, LSPIssue> validationIssues,
+			ImmutableMap<String, Boolean> dependencies) {
+		return new ImmutableProjectState(indexData, fileMappings, fileHashes, validationIssues, dependencies);
 	}
 
 	/** Non-copying constructor */
@@ -72,12 +77,14 @@ public class ImmutableProjectState {
 			ResourceDescriptionsData indexData,
 			XSource2GeneratedMapping fileMappings,
 			ImmutableMap<URI, HashedFileContent> fileHashes,
-			ImmutableListMultimap<URI, LSPIssue> validationIssues) {
+			ImmutableListMultimap<URI, LSPIssue> validationIssues,
+			ImmutableMap<String, Boolean> dependencies) {
 
 		this.indexData = indexData;
 		this.fileMappings = fileMappings;
 		this.fileHashes = fileHashes;
 		this.validationIssues = validationIssues;
+		this.dependencies = dependencies;
 	}
 
 	/**
@@ -113,4 +120,11 @@ public class ImmutableProjectState {
 		return validationIssues;
 	}
 
+	/**
+	 * Return the project dependencies of the snapshot, as a map from project name to a boolean telling whether that
+	 * project existed at the time this project state was computed.
+	 */
+	public ImmutableMap<String, Boolean> getDependencies() {
+		return dependencies;
+	}
 }

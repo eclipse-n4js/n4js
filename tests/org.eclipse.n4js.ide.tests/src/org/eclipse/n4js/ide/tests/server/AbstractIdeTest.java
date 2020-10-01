@@ -191,16 +191,16 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	/** Deletes the test data folder if it exists (to ensure tests are not affected by old test data). */
 	@Before
-	public void cleanupTestDataFolder() {
+	public void cleanupTestDataFolder() throws IOException {
 		File root = testWorkspaceManager.getRoot();
 		if (root.exists()) {
-			FileUtils.deleteFileOrFolder(root);
+			FileUtils.delete(root);
 		}
 	}
 
 	/** Deletes the test project in case it exists. */
 	@After
-	final public void deleteTestProject() {
+	final public void deleteTestProject() throws IOException {
 		try {
 			if (languageClient != null) { // only if LSP server was started
 				assertNoErrorsInLog();
@@ -321,7 +321,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		languageClient.addListener(this);
 
 		languageServer.connect(languageClient);
-		languageServer.initialize(initParams);
+		languageServer.initialize(initParams)
+				.join(); // according to LSP, we must to wait here before sending #initialized():
 		languageServer.initialized(null);
 	}
 
@@ -978,6 +979,52 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		String sysout = SYSTEM_OUT_REDIRECTER.getSystemOut();
 		assertFalse("an error was logged to System.out during the test:" + System.lineSeparator() + sysout,
 				sysout.contains("ERROR"));
+	}
+
+	/**
+	 * Asserts that there are no issues in the entire workspace and in open editors. See
+	 * {@link #assertIssuesInBuilderAndEditors(Iterable, Map)} for details.
+	 */
+	protected void assertNoIssuesInBuilderAndEditors(Iterable<String> moduleNamesForEditors) {
+		assertIssuesInBuilderAndEditors(moduleNamesForEditors, Collections.emptyMap());
+	}
+
+	/**
+	 * Same as {@link #assertIssuesInBuilderAndEditors(Iterable, Map)}, accepting pairs from module name to issue list
+	 * instead of a map from file URI to issue list.
+	 */
+	@SafeVarargs
+	protected final void assertIssuesInBuilderAndEditors(Iterable<String> moduleNamesForEditors,
+			Pair<String, List<String>>... moduleNameToExpectedIssues) {
+
+		assertIssuesInBuilderAndEditors(moduleNamesForEditors,
+				convertModuleNamePairsToIdMap(moduleNameToExpectedIssues));
+	}
+
+	/**
+	 * Asserts that there are the given issues in the workspace (as done by {@link #assertIssues(Map)}) <em>and</em>
+	 * also opens editors for the modules given in 'moduleNamesForEditors' to assert that the same issues appear in the
+	 * validation performed inside the editors.
+	 */
+	protected void assertIssuesInBuilderAndEditors(Iterable<String> moduleNamesForEditors,
+			Map<FileURI, List<String>> fileURIToExpectedIssues) {
+
+		if (IterableExtensions.isEmpty(moduleNamesForEditors)) {
+			throw new IllegalArgumentException("no module names for editors given");
+		}
+
+		// in builder:
+		assertIssues(fileURIToExpectedIssues);
+
+		// in editors:
+		for (String moduleName : moduleNamesForEditors) {
+			openFile(moduleName);
+			joinServerRequests();
+			assertIssues(fileURIToExpectedIssues);
+			closeFile(moduleName);
+			joinServerRequests();
+			assertIssues(fileURIToExpectedIssues);
+		}
 	}
 
 	/**

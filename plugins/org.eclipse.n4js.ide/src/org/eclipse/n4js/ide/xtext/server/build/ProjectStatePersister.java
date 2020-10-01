@@ -88,6 +88,10 @@ public class ProjectStatePersister {
 	 * 	- source URI
 	 * 	- Number #vi of issues of source
 	 * 	- #vi times a validation issue as per {@link LSPIssue#writeExternal(DataOutput) LSPIssue.writeExternal}
+	 * - Number #d of dependencies of this project
+	 * - #d times:
+	 * 	- project name of dependency
+	 * 	- a boolean telling whether the dependency project existed at the time the project state was computed.
 	 * </pre>
 	 *
 	 * All URIs are relative to the project's base directory.
@@ -182,6 +186,8 @@ public class ProjectStatePersister {
 			writeFingerprints(state, output);
 
 			writeValidationIssues(state, baseURI, output);
+
+			writeDependencies(state, output);
 		}
 	}
 
@@ -302,6 +308,18 @@ public class ProjectStatePersister {
 		}
 	}
 
+	private void writeDependencies(ImmutableProjectState state, DataOutput output) throws IOException {
+		Set<String> allDeps = state.getDependencies().keySet();
+		int numberDeps = allDeps.size();
+		output.writeInt(numberDeps);
+		for (String depName : allDeps) {
+			boolean depExists = state.getDependencies().get(depName);
+
+			output.writeUTF(depName);
+			output.writeBoolean(depExists);
+		}
+	}
+
 	/**
 	 * Read the index state as it was written to disk for the given project.
 	 *
@@ -359,8 +377,10 @@ public class ProjectStatePersister {
 
 			ImmutableListMultimap<URI, LSPIssue> validationIssues = readValidationIssues(baseURI, input);
 
+			ImmutableMap<String, Boolean> dependencies = readDependencies(input);
+
 			return ImmutableProjectState.withoutCopy(resourceDescriptionsData, fileMappings, fingerprints,
-					validationIssues);
+					validationIssues, dependencies);
 		}
 	}
 
@@ -504,6 +524,18 @@ public class ProjectStatePersister {
 			}
 		}
 		return validationIssues.build();
+	}
+
+	private ImmutableMap<String, Boolean> readDependencies(DataInput input) throws IOException {
+		int numberOfDeps = input.readInt();
+		ImmutableMap.Builder<String, Boolean> dependencies = ImmutableMap.builder();
+		while (numberOfDeps > 0) {
+			numberOfDeps--;
+			String depName = input.readUTF();
+			boolean depExists = input.readBoolean();
+			dependencies.put(depName, depExists);
+		}
+		return dependencies.build();
 	}
 
 	private File getDataFile(ProjectConfigSnapshot project) {

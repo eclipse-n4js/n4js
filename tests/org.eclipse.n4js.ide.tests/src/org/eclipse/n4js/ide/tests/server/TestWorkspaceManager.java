@@ -471,7 +471,7 @@ public class TestWorkspaceManager {
 	}
 
 	/** Deletes the test workspace. Throws exception if it has not yet been created. */
-	public void deleteTestFromDisk() {
+	public void deleteTestFromDisk() throws IOException {
 		if (createdProject == null) {
 			throw new IllegalStateException("trying to delete test from disk without first creating it");
 		}
@@ -479,10 +479,10 @@ public class TestWorkspaceManager {
 	}
 
 	/** Same as {@link #deleteTestFromDisk()}, but does nothing if no test workspace has been created yet. */
-	public void deleteTestFromDiskIfCreated() {
+	public void deleteTestFromDiskIfCreated() throws IOException {
 		if (createdProject != null) {
 			File root = getRoot();
-			FileUtils.deleteFileOrFolder(root);
+			FileUtils.delete(root);
 
 			createdProject = null;
 		}

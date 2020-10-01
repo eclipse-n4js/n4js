@@ -153,14 +153,14 @@ public class XWorkspaceBuilder {
 			ProjectBuildOrderIterator pboIterator = projectBuildOrderInfo.getIterator(allProjects);
 			logBuildOrder();
 
-			List<IResourceDescription.Delta> result = new ArrayList<>();
+			List<IResourceDescription.Delta> allDeltas = new ArrayList<>();
 
 			while (pboIterator.hasNext()) {
 				ProjectConfigSnapshot projectConfig = pboIterator.next();
 				String projectName = projectConfig.getName();
 				ProjectBuilder projectBuilder = workspaceManager.getProjectBuilder(projectName);
-				XBuildResult partialresult = projectBuilder.doInitialBuild(buildRequestFactory);
-				result.addAll(partialresult.getAffectedResources());
+				XBuildResult partialresult = projectBuilder.doInitialBuild(buildRequestFactory, allDeltas);
+				allDeltas.addAll(partialresult.getAffectedResources());
 			}
 
 			onBuildDone(true, false, Optional.absent());
@@ -168,7 +168,7 @@ public class XWorkspaceBuilder {
 			stopwatch.stop();
 			lspLogger.log("... initial build done (" + stopwatch.toString() + ").");
 
-			return new ResourceDescriptionChangeEvent(result);
+			return new ResourceDescriptionChangeEvent(allDeltas);
 		} catch (Throwable th) {
 			boolean wasCanceled = operationCanceledManager.isOperationCanceledException(th);
 
@@ -205,7 +205,9 @@ public class XWorkspaceBuilder {
 
 			@Override
 			public void runJob() {
-				XBuildResult partialresult = projectManager.doInitialBuild(buildRequestFactory);
+				// TODO: properly propagate external deltas across jobs
+				List<IResourceDescription.Delta> externalDeltas = Collections.emptyList();
+				XBuildResult partialresult = projectManager.doInitialBuild(buildRequestFactory, externalDeltas);
 				synchronized (result) {
 					result.addAll(partialresult.getAffectedResources());
 				}

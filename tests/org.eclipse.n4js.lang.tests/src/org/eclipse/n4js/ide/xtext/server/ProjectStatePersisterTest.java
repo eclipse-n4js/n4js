@@ -17,11 +17,14 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.zip.ZipException;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ide.xtext.server.build.HashedFileContent;
 import org.eclipse.n4js.ide.xtext.server.build.ImmutableProjectState;
@@ -40,11 +43,14 @@ import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.resource.persistence.SerializableResourceDescription;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
+import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableListMultimap;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ListMultimap;
 
 /** */
@@ -53,19 +59,37 @@ public class ProjectStatePersisterTest {
 
 	static final URI BASE_URI = new FileURI(new File(".").getAbsoluteFile()).toURI();
 
+	private static Level oldLevel = null;
+
+	/***/
+	@BeforeClass
+	public static void suppressNoisyLogging() {
+		Logger rootLogger = Logger.getRootLogger();
+		oldLevel = rootLogger.getLevel();
+		rootLogger.setLevel(Level.WARN);
+	}
+
+	/***/
+	@AfterClass
+	public static void restoreLogLevel() {
+		Logger.getRootLogger().setLevel(Objects.requireNonNull(oldLevel));
+	}
+
 	ImmutableProjectState createProjectState() {
 		return ImmutableProjectState.empty();
 	}
 
 	ImmutableProjectState createProjectState(ResourceDescriptionsData index, XSource2GeneratedMapping fileMappings,
-			Map<URI, HashedFileContent> fileHashs, ListMultimap<URI, LSPIssue> validationIssues) {
+			Map<URI, HashedFileContent> fileHashs, ListMultimap<URI, LSPIssue> validationIssues,
+			Map<String, Boolean> dependencies) {
 
 		index = (index != null) ? index
 				: new ResourceDescriptionsData(CollectionLiterals.<IResourceDescription> emptySet());
 		fileMappings = (fileMappings != null) ? fileMappings : new XSource2GeneratedMapping();
 		fileHashs = (fileHashs != null) ? fileHashs : Collections.emptyMap();
 		validationIssues = (validationIssues != null) ? validationIssues : ImmutableListMultimap.of();
-		return ImmutableProjectState.copyFrom(index, fileMappings, fileHashs, validationIssues);
+		dependencies = (dependencies != null) ? dependencies : ImmutableMap.of();
+		return ImmutableProjectState.copyFrom(index, fileMappings, fileHashs, validationIssues, dependencies);
 	}
 
 	/** */
@@ -173,7 +197,7 @@ public class ProjectStatePersisterTest {
 		Map<URI, HashedFileContent> fingerprints = Collections.singletonMap(hashUri,
 				new HashedFileContent(hashUri, 123));
 
-		state = createProjectState(index, fileMappings, fingerprints, null);
+		state = createProjectState(index, fileMappings, fingerprints, null, null);
 		testMe.writeProjectState(BASE_URI, output, state);
 		ByteArrayInputStream outputStream = new ByteArrayInputStream(output.toByteArray());
 		ImmutableProjectState pState = testMe.readProjectState(BASE_URI, outputStream);
@@ -217,12 +241,32 @@ public class ProjectStatePersisterTest {
 		issueMap.put(source2, src2Issue1);
 		issueMap.put(source2, src2Issue2);
 
-		ImmutableProjectState state = createProjectState(null, null, null, issueMap);
+		ImmutableProjectState state = createProjectState(null, null, null, issueMap, null);
 		testMe.writeProjectState(BASE_URI, output, state);
 		byte[] bytes = output.toByteArray();
 		ImmutableProjectState pState = testMe.readProjectState(BASE_URI, new ByteArrayInputStream(bytes));
 		Assert.assertTrue(pState != null);
 		Assert.assertEquals(issueMap, pState.getValidationIssues());
+	}
+
+	/***/
+	@Test
+	public void testWriteAndReadDependencies() throws IOException, ClassNotFoundException {
+		ProjectStatePersister testMe = new ProjectStatePersister(null, new URITransformer());
+		ByteArrayOutputStream output = new ByteArrayOutputStream();
+
+		Map<String, Boolean> dependencies = Map.of(
+				"dep1", true,
+				"dep2", false);
+
+		ImmutableProjectState state = createProjectState(null, null, null, null, dependencies);
+		testMe.writeProjectState(BASE_URI, output, state);
+		byte[] bytes = output.toByteArray();
+		ImmutableProjectState pState = testMe.readProjectState(BASE_URI, new ByteArrayInputStream(bytes));
+
+		Assert.assertEquals(2, pState.getDependencies().size());
+		Assert.assertEquals(dependencies.keySet(), pState.getDependencies().keySet());
+		Assert.assertEquals(dependencies.entrySet(), pState.getDependencies().entrySet());
 	}
 
 	private void setValues(LSPIssue issue, String varName, int srcNo, int issueNo, Severity severity) {
