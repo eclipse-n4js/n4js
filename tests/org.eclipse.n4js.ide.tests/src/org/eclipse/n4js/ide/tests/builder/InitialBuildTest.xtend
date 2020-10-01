@@ -26,7 +26,7 @@ import org.junit.Test
 import static org.junit.Assert.*
 
 /**
- * Test various cases of changes between server sessions to ensure the initial build of the later session
+ * Test various cases of changes between LSP server sessions to ensure the initial build of the later session
  * correctly reacts to those changes.
  */
 class InitialBuildTest extends AbstractIncrementalBuilderTest {
@@ -118,6 +118,7 @@ class InitialBuildTest extends AbstractIncrementalBuilderTest {
 	def void testAddRemoveFileBetweenServerSessions() throws IOException {
 		testWorkspaceManager.createTestOnDisk(testData);
 
+		val providerProjectStateFile = getProjectRoot("ProviderProject").toPath.resolve(N4JSGlobals.N4JS_PROJECT_STATE);
 		val someModule = getFileURIFromModuleName("SomeModule").toFile.toPath;
 		val someModuleHidden = temporaryFolder.resolve(someModule.fileName.toString);
 		FileUtils.move(someModule, someModuleHidden);
@@ -134,6 +135,7 @@ class InitialBuildTest extends AbstractIncrementalBuilderTest {
 		shutdownLspServer();
 
 		// sub-case #1: add file between server sessions (containing project does *not* contain a .n4js.projectstate file)
+		FileUtils.delete(providerProjectStateFile);
 		FileUtils.move(someModuleHidden, someModule);
 
 		startAndWaitForLspServer();
@@ -149,9 +151,62 @@ class InitialBuildTest extends AbstractIncrementalBuilderTest {
 
 		shutdownLspServer();
 
-		// sub-case #3: add file between server sessions (this time, containing project does contain an up-to-date '.n4js.projectstate' file!)
+		// sub-case #3: add file between server sessions (this time, containing project does contain an out-dated '.n4js.projectstate' file!)
+		assertTrue("project state file should exist but does not exist", Files.isRegularFile(providerProjectStateFile))
 		FileUtils.move(someModuleHidden, someModule);
-		assertTrue("project state file does not exist", Files.isRegularFile(getProjectRoot("ProviderProject").toPath.resolve(N4JSGlobals.N4JS_PROJECT_STATE)))
+
+		startAndWaitForLspServer();
+		assertNoIssuesInBuilderAndEditors(#["ClientModule"]);
+	}
+
+	@Test
+	def void testAddRemoveDependencyBetweenServerSessions() throws IOException {
+		testWorkspaceManager.createTestOnDisk(testData);
+
+		val providerProjectStateFile = getProjectRoot("ProviderProject").toPath.resolve(N4JSGlobals.N4JS_PROJECT_STATE);
+		val clientProjectPackageJson = getProjectRoot("ClientProject").toPath.resolve(N4JSGlobals.PACKAGE_JSON);
+		changeFileOnDiskWithoutNotification(clientProjectPackageJson.toFileURI,
+			'"n4js-runtime": "*",' -> '"n4js-runtime": "*"',
+			'"ProviderProject": "*"' -> ''
+		);
+
+		startAndWaitForLspServer();
+		val errorsWithDependencyMissing = #[
+			"ClientModule" -> #[
+				"(Error, [0:24 - 0:36], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
+				"(Error, [1:9 - 1:18], Couldn't resolve reference to Type 'SomeClass'.)"
+			]
+		];
+		assertIssues(errorsWithDependencyMissing);
+
+		shutdownLspServer();
+
+		// sub-case #1: add dependency between server sessions (target project does *not* contain a .n4js.projectstate file)
+		FileUtils.delete(providerProjectStateFile);
+		changeFileOnDiskWithoutNotification(clientProjectPackageJson.toFileURI,
+			'"n4js-runtime": "*"' -> '"n4js-runtime": "*", "ProviderProject": "*"'
+		);
+
+		startAndWaitForLspServer();
+		assertNoIssuesInBuilderAndEditors(#["ClientModule"]);
+
+		shutdownLspServer();
+
+		// sub-case #2: remove dependency between server sessions
+		changeFileOnDiskWithoutNotification(clientProjectPackageJson.toFileURI,
+			'"n4js-runtime": "*", "ProviderProject": "*"' -> '"n4js-runtime": "*"'
+		);
+
+		startAndWaitForLspServer();
+		assertIssuesInBuilderAndEditors(#["ClientModule"], errorsWithDependencyMissing);
+
+		shutdownLspServer();
+
+		// sub-case #3: add dependency between server sessions (this time, target project does contain an up-to-date '.n4js.projectstate' file!)
+		assertTrue("project state file should exist but does not exist", Files.isRegularFile(providerProjectStateFile))
+		changeFileOnDiskWithoutNotification(clientProjectPackageJson.toFileURI,
+			'"n4js-runtime": "*"' -> '"n4js-runtime": "*", "ProviderProject": "*"'
+		);
 
 		startAndWaitForLspServer();
 		assertNoIssuesInBuilderAndEditors(#["ClientModule"]);
