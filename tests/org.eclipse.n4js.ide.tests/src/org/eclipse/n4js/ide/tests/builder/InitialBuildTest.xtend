@@ -31,6 +31,30 @@ import static org.junit.Assert.*
  */
 class InitialBuildTest extends AbstractIncrementalBuilderTest {
 
+	private static val testData = #[
+		TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
+		"ProviderProject" -> #[
+			"SomeModule" -> '''
+				export public class SomeClass {
+				}
+			''',
+			TestWorkspaceManager.CFG_DEPENDENCIES -> '''
+				n4js-runtime
+			'''
+		],
+		"ClientProject" -> #[
+			"ClientModule" -> '''
+				import {SomeClass} from "SomeModule";
+				const x: SomeClass = null;
+				x;
+			''',
+			TestWorkspaceManager.CFG_DEPENDENCIES -> '''
+				n4js-runtime,
+				ProviderProject
+			'''
+		]
+	];
+
 	private static Path temporaryFolder;
 
 	@BeforeClass
@@ -52,29 +76,8 @@ class InitialBuildTest extends AbstractIncrementalBuilderTest {
 
 	@Test
 	def void testFixFileBetweenServerSessions() {
-		testWorkspaceManager.createTestOnDisk(
-			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
-			"ProviderProject" -> #[
-				"SomeModule" -> '''
-					export public class SomeClassX {
-					}
-				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime
-				'''
-			],
-			"ClientProject" -> #[
-				"ClientModule" -> '''
-					import {SomeClass} from "SomeModule";
-					const x: SomeClass = null;
-					x;
-				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime,
-					ProviderProject
-				'''
-			]
-		);
+		testWorkspaceManager.createTestOnDisk(testData);
+		changeFileOnDiskWithoutNotification("SomeModule", "SomeClass" -> "SomeClassX");
 		startAndWaitForLspServer();
 		assertIssues("ClientModule" -> #[
 			"(Error, [0:8 - 0:17], Import of SomeClass cannot be resolved.)",
@@ -83,96 +86,37 @@ class InitialBuildTest extends AbstractIncrementalBuilderTest {
 
 		shutdownLspServer();
 
+		// test case: fix file between server sessions
 		changeFileOnDiskWithoutNotification("SomeModule", Pair.of("SomeClassX", "SomeClass"));
 
 		startAndWaitForLspServer();
-		assertNoIssues();
-
-		openFile("ClientModule");
-		joinServerRequests();
-		assertNoIssues();
-		closeFile("ClientModule");
-		joinServerRequests();
-		assertNoIssues();
+		assertNoIssuesInBuilderAndEditors(#["ClientModule"]);
 	}
 
 	@Test
 	def void testBreakFileBetweenServerSessions() {
-		testWorkspaceManager.createTestOnDisk(
-			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
-			"ProviderProject" -> #[
-				"SomeModule" -> '''
-					export public class SomeClass {
-					}
-				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime
-				'''
-			],
-			"ClientProject" -> #[
-				"ClientModule" -> '''
-					import {SomeClass} from "SomeModule";
-					const x: SomeClass = null;
-					x;
-				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime,
-					ProviderProject
-				'''
-			]
-		);
+		testWorkspaceManager.createTestOnDisk(testData);
 		startAndWaitForLspServer();
 		assertNoIssues();
 
 		shutdownLspServer();
 
+		// test case: break file between server sessions
 		changeFileOnDiskWithoutNotification("SomeModule", Pair.of("SomeClass", "SomeClassX"));
 
 		startAndWaitForLspServer();
-		assertIssues("ClientModule" -> #[
-			"(Error, [0:8 - 0:17], Import of SomeClass cannot be resolved.)",
-			"(Error, [1:9 - 1:18], Couldn't resolve reference to Type 'SomeClass'.)"
-		]);
-
-		openFile("ClientModule");
-		joinServerRequests();
-		assertIssues("ClientModule" -> #[
-			"(Error, [0:8 - 0:17], Import of SomeClass cannot be resolved.)",
-			"(Error, [1:9 - 1:18], Couldn't resolve reference to Type 'SomeClass'.)"
-		]);
-		closeFile("ClientModule");
-		joinServerRequests();
-		assertIssues("ClientModule" -> #[
-			"(Error, [0:8 - 0:17], Import of SomeClass cannot be resolved.)",
-			"(Error, [1:9 - 1:18], Couldn't resolve reference to Type 'SomeClass'.)"
-		]);
+		assertIssuesInBuilderAndEditors(
+			#["ClientModule"],
+			"ClientModule" -> #[
+				"(Error, [0:8 - 0:17], Import of SomeClass cannot be resolved.)",
+				"(Error, [1:9 - 1:18], Couldn't resolve reference to Type 'SomeClass'.)"
+			]
+		);
 	}
 
 	@Test
 	def void testAddRemoveFileBetweenServerSessions() throws IOException {
-		testWorkspaceManager.createTestOnDisk(
-			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
-			"ProviderProject" -> #[
-				"SomeModule" -> '''
-					export public class SomeClass {
-					}
-				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime
-				'''
-			],
-			"ClientProject" -> #[
-				"ClientModule" -> '''
-					import {SomeClass} from "SomeModule";
-					const x: SomeClass = null;
-					x;
-				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime,
-					ProviderProject
-				'''
-			]
-		);
+		testWorkspaceManager.createTestOnDisk(testData);
 
 		val someModule = getFileURIFromModuleName("SomeModule").toFile.toPath;
 		val someModuleHidden = temporaryFolder.resolve(someModule.fileName.toString);
@@ -193,14 +137,7 @@ class InitialBuildTest extends AbstractIncrementalBuilderTest {
 		FileUtils.move(someModuleHidden, someModule);
 
 		startAndWaitForLspServer();
-		assertNoIssues();
-
-		openFile("ClientModule");
-		joinServerRequests();
-		assertNoIssues();
-		closeFile("ClientModule");
-		joinServerRequests();
-		assertNoIssues();
+		assertNoIssuesInBuilderAndEditors(#["ClientModule"]);
 
 		shutdownLspServer();
 
@@ -208,14 +145,7 @@ class InitialBuildTest extends AbstractIncrementalBuilderTest {
 		FileUtils.move(someModule, someModuleHidden);
 
 		startAndWaitForLspServer();
-		assertIssues(errorsWithSomeModuleMissing);
-
-		openFile("ClientModule");
-		joinServerRequests();
-		assertIssues(errorsWithSomeModuleMissing);
-		closeFile("ClientModule");
-		joinServerRequests();
-		assertIssues(errorsWithSomeModuleMissing);
+		assertIssuesInBuilderAndEditors(#["ClientModule"], errorsWithSomeModuleMissing);
 
 		shutdownLspServer();
 
@@ -224,41 +154,12 @@ class InitialBuildTest extends AbstractIncrementalBuilderTest {
 		assertTrue("project state file does not exist", Files.isRegularFile(getProjectRoot("ProviderProject").toPath.resolve(N4JSGlobals.N4JS_PROJECT_STATE)))
 
 		startAndWaitForLspServer();
-		assertNoIssues();
-
-		openFile("ClientModule");
-		joinServerRequests();
-		assertNoIssues();
-		closeFile("ClientModule");
-		joinServerRequests();
-		assertNoIssues();
+		assertNoIssuesInBuilderAndEditors(#["ClientModule"]);
 	}
 
 	@Test
 	def void testAddRemoveProjectBetweenServerSessions() throws IOException {
-		testWorkspaceManager.createTestOnDisk(
-			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
-			"ProviderProject" -> #[
-				"SomeModule" -> '''
-					export public class SomeClass {
-					}
-				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime
-				'''
-			],
-			"ClientProject" -> #[
-				"ClientModule" -> '''
-					import {SomeClass} from "SomeModule";
-					const x: SomeClass = null;
-					x;
-				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime,
-					ProviderProject
-				'''
-			]
-		);
+		testWorkspaceManager.createTestOnDisk(testData);
 
 		val providerProjectPath = getProjectRoot("ProviderProject").toPath;
 		val providerProjectPathHidden = temporaryFolder.resolve("ProviderProject");
@@ -277,19 +178,12 @@ class InitialBuildTest extends AbstractIncrementalBuilderTest {
 		assertIssues(errorsWithProviderProjectMissing);
 
 		shutdownLspServer();
-		
+
 		// sub-case #1: add project between server sessions (project does *not* contain a .n4js.projectstate file)
 		FileUtils.move(providerProjectPathHidden, providerProjectPath);
 
 		startAndWaitForLspServer();
-		assertNoIssues();
-
-		openFile("ClientModule");
-		joinServerRequests();
-		assertNoIssues();
-		closeFile("ClientModule");
-		joinServerRequests();
-		assertNoIssues();
+		assertNoIssuesInBuilderAndEditors(#["ClientModule"]);
 
 		shutdownLspServer();
 
@@ -297,14 +191,7 @@ class InitialBuildTest extends AbstractIncrementalBuilderTest {
 		FileUtils.move(providerProjectPath, providerProjectPathHidden);
 
 		startAndWaitForLspServer();
-		assertIssues(errorsWithProviderProjectMissing);
-
-		openFile("ClientModule");
-		joinServerRequests();
-		assertIssues(errorsWithProviderProjectMissing);
-		closeFile("ClientModule");
-		joinServerRequests();
-		assertIssues(errorsWithProviderProjectMissing);
+		assertIssuesInBuilderAndEditors(#["ClientModule"], errorsWithProviderProjectMissing);
 
 		shutdownLspServer();
 
@@ -313,13 +200,6 @@ class InitialBuildTest extends AbstractIncrementalBuilderTest {
 		assertTrue("project state file does not exist", Files.isRegularFile(providerProjectPath.resolve(N4JSGlobals.N4JS_PROJECT_STATE)))
 
 		startAndWaitForLspServer();
-		assertNoIssues();
-
-		openFile("ClientModule");
-		joinServerRequests();
-		assertNoIssues();
-		closeFile("ClientModule");
-		joinServerRequests();
-		assertNoIssues();
+		assertNoIssuesInBuilderAndEditors(#["ClientModule"]);
 	}
 }
