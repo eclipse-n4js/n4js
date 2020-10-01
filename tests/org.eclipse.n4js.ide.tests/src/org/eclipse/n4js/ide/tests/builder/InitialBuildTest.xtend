@@ -17,7 +17,9 @@ import java.util.Map
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.ide.tests.server.TestWorkspaceManager
 import org.eclipse.n4js.utils.io.FileDeleter
+import org.eclipse.n4js.utils.io.FileUtils
 import org.junit.AfterClass
+import org.junit.Before
 import org.junit.BeforeClass
 import org.junit.Test
 
@@ -41,6 +43,11 @@ class InitialBuildTest extends AbstractIncrementalBuilderTest {
 		if (temporaryFolder !== null) {
 			FileDeleter.delete(temporaryFolder);
 		}
+	}
+
+	@Before
+	def void cleanTemporaryFolder() throws IOException {
+		FileUtils.cleanFolder(temporaryFolder);
 	}
 
 	@Test
@@ -169,7 +176,7 @@ class InitialBuildTest extends AbstractIncrementalBuilderTest {
 
 		val someModule = getFileURIFromModuleName("SomeModule").toFile.toPath;
 		val someModuleHidden = temporaryFolder.resolve(someModule.fileName.toString);
-		Files.move(someModule, someModuleHidden);
+		FileUtils.move(someModule, someModuleHidden);
 
 		startAndWaitForLspServer();
 		val errorsWithSomeModuleMissing = #[
@@ -183,7 +190,7 @@ class InitialBuildTest extends AbstractIncrementalBuilderTest {
 		shutdownLspServer();
 
 		// sub-case #1: add file between server sessions (containing project does *not* contain a .n4js.projectstate file)
-		Files.move(someModuleHidden, someModule);
+		FileUtils.move(someModuleHidden, someModule);
 
 		startAndWaitForLspServer();
 		assertNoIssues();
@@ -198,7 +205,7 @@ class InitialBuildTest extends AbstractIncrementalBuilderTest {
 		shutdownLspServer();
 
 		// sub-case #2: remove file between server sessions
-		Files.move(someModule, someModuleHidden);
+		FileUtils.move(someModule, someModuleHidden);
 
 		startAndWaitForLspServer();
 		assertIssues(errorsWithSomeModuleMissing);
@@ -213,7 +220,7 @@ class InitialBuildTest extends AbstractIncrementalBuilderTest {
 		shutdownLspServer();
 
 		// sub-case #3: add file between server sessions (this time, containing project does contain an up-to-date '.n4js.projectstate' file!)
-		Files.move(someModuleHidden, someModule);
+		FileUtils.move(someModuleHidden, someModule);
 		assertTrue("project state file does not exist", Files.isRegularFile(getProjectRoot("ProviderProject").toPath.resolve(N4JSGlobals.N4JS_PROJECT_STATE)))
 
 		startAndWaitForLspServer();
@@ -255,7 +262,7 @@ class InitialBuildTest extends AbstractIncrementalBuilderTest {
 
 		val providerProjectPath = getProjectRoot("ProviderProject").toPath;
 		val providerProjectPathHidden = temporaryFolder.resolve("ProviderProject");
-		Files.move(providerProjectPath, providerProjectPathHidden);
+		FileUtils.move(providerProjectPath, providerProjectPathHidden);
 
 		startAndWaitForLspServer();
 		val errorsWithProviderProjectMissing = Map.of(
@@ -272,7 +279,7 @@ class InitialBuildTest extends AbstractIncrementalBuilderTest {
 		shutdownLspServer();
 		
 		// sub-case #1: add project between server sessions (project does *not* contain a .n4js.projectstate file)
-		Files.move(providerProjectPathHidden, providerProjectPath);
+		FileUtils.move(providerProjectPathHidden, providerProjectPath);
 
 		startAndWaitForLspServer();
 		assertNoIssues();
@@ -287,10 +294,9 @@ class InitialBuildTest extends AbstractIncrementalBuilderTest {
 		shutdownLspServer();
 
 		// sub-case #2: remove project between server sessions
-		Files.move(providerProjectPath, providerProjectPathHidden);
+		FileUtils.move(providerProjectPath, providerProjectPathHidden);
 
 		startAndWaitForLspServer();
-//cleanBuildAndWait();
 		assertIssues(errorsWithProviderProjectMissing);
 
 		openFile("ClientModule");
@@ -303,7 +309,7 @@ class InitialBuildTest extends AbstractIncrementalBuilderTest {
 		shutdownLspServer();
 
 		// sub-case #3: add project between server sessions (this time, project does contain an up-to-date '.n4js.projectstate' file!)
-		Files.move(providerProjectPathHidden, providerProjectPath);
+		FileUtils.move(providerProjectPathHidden, providerProjectPath);
 		assertTrue("project state file does not exist", Files.isRegularFile(providerProjectPath.resolve(N4JSGlobals.N4JS_PROJECT_STATE)))
 
 		startAndWaitForLspServer();

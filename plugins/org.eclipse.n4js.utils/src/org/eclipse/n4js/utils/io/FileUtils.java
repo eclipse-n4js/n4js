@@ -39,6 +39,36 @@ public abstract class FileUtils {
 		// private.
 	}
 
+	/** Same as {@link FileDeleter#delete(File)}. For more options see class {@link FileDeleter}. */
+	public static void delete(File resourceToDelete) throws IOException {
+		FileDeleter.delete(resourceToDelete);
+	}
+
+	/** Same as {@link FileDeleter#delete(Path)}. For more options see class {@link FileDeleter}. */
+	public static void delete(Path resourceToDelete) throws IOException {
+		FileDeleter.delete(resourceToDelete);
+	}
+
+	/** Same as {@link FileCopier#copy(File, File)}. For more options see class {@link FileCopier}. */
+	public static void copy(File from, File to) throws IOException {
+		FileCopier.copy(from, to);
+	}
+
+	/** Same as {@link FileCopier#copy(Path, Path)}. For more options see class {@link FileCopier}. */
+	public static void copy(Path from, Path to) throws IOException {
+		FileCopier.copy(from, to);
+	}
+
+	/** Same as {@link FileMover#move(File, File)}. */
+	public static void move(File from, File to) throws IOException {
+		FileMover.move(from, to);
+	}
+
+	/** Same as {@link FileMover#move(Path, Path)}. */
+	public static void move(Path from, Path to) throws IOException {
+		FileMover.move(from, to);
+	}
+
 	/** Same as {@link #appendToFileName(Path, String)}, but always appends a time stamp. */
 	public static Path appendTimeStampToFileName(Path path) {
 		String timeStamp = TIME_STAMP_FORMAT.format(new Date());
@@ -304,24 +334,6 @@ public abstract class FileUtils {
 	}
 
 	/**
-	 * Delete a file or a possibly non-empty folder.
-	 *
-	 * @param file
-	 *            file or folder to be deleted
-	 */
-	public static void deleteFileOrFolder(File file) {
-		if (!file.isDirectory()) {
-			file.delete();
-		} else {
-			File[] childFildes = file.listFiles();
-			for (int i = 0; i < childFildes.length; i++) {
-				deleteFileOrFolder(childFildes[i]);
-			}
-		}
-		file.delete();
-	}
-
-	/**
 	 * Delete a file or a possibly non-empty folder on JVM exit using {@link File#deleteOnExit()}
 	 *
 	 * @param file
@@ -337,18 +349,24 @@ public abstract class FileUtils {
 		}
 	}
 
+	/** Same as {@link #cleanFolder(File)}, accepting a {@link Path}. */
+	public static void cleanFolder(Path folder) throws IOException {
+		cleanFolder(folder.toFile());
+	}
+
 	/**
 	 * Clean a possibly non-empty folder. This method does not remove the folder itself but only empty its content.
 	 *
 	 * @param folder
 	 *            the folder to be cleaned
 	 */
-	public static void cleanFolder(File folder) {
-		if (folder.isDirectory()) {
-			File[] childFiles = folder.listFiles();
-			for (int i = 0; i < childFiles.length; i++) {
-				deleteFileOrFolder(childFiles[i]);
-			}
+	public static void cleanFolder(File folder) throws IOException {
+		if (!folder.isDirectory()) {
+			throw new IllegalArgumentException("not a folder: " + folder);
+		}
+		File[] childFiles = folder.listFiles();
+		for (int i = 0; i < childFiles.length; i++) {
+			delete(childFiles[i]);
 		}
 	}
 

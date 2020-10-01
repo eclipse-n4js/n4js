@@ -191,16 +191,16 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	/** Deletes the test data folder if it exists (to ensure tests are not affected by old test data). */
 	@Before
-	public void cleanupTestDataFolder() {
+	public void cleanupTestDataFolder() throws IOException {
 		File root = testWorkspaceManager.getRoot();
 		if (root.exists()) {
-			FileUtils.deleteFileOrFolder(root);
+			FileUtils.delete(root);
 		}
 	}
 
 	/** Deletes the test project in case it exists. */
 	@After
-	final public void deleteTestProject() {
+	final public void deleteTestProject() throws IOException {
 		try {
 			if (languageClient != null) { // only if LSP server was started
 				assertNoErrorsInLog();
