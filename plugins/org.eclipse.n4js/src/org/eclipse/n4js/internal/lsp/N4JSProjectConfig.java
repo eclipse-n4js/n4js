@@ -78,7 +78,7 @@ public class N4JSProjectConfig implements XIProjectConfig {
 	public Set<String> getDependencies() {
 		// note: it is important to return a list that contains names of unresolved (i.e. non-existing) projects, to
 		// avoid the need to recompute the list of dependencies of all existing projects whenever a project is added!
-		List<String> deps = ((N4JSProject) delegate).getAllDependenciesAndImplementedApiNames();
+		List<String> deps = ((N4JSProject) delegate).getDependenciesUnresolved();
 		return new LinkedHashSet<>(deps);
 	}
 
