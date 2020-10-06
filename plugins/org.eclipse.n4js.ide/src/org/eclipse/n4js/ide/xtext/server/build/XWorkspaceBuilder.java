@@ -310,7 +310,7 @@ public class XWorkspaceBuilder {
 		List<URI> actualDirtyFiles = scanAllAddedAndChangedURIs(changes, scanner);
 		List<URI> actualDeletedFiles = getAllRemovedURIs(changes); // n.b.: not including URIs of removed projects
 		if (newRefreshRequest) {
-			// scan for changes in source files
+			// scan for source file changes
 			for (ProjectBuilder projectBuilder : workspaceManager.getProjectBuilders()) {
 				ResourceChangeSet dirtySourceFiles = projectBuilder.searchForModifiedAndDeletedSourceFiles();
 				actualDirtyFiles.addAll(dirtySourceFiles.getModified());

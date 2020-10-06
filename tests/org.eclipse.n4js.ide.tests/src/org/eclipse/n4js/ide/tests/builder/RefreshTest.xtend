@@ -146,6 +146,52 @@ class RefreshTest extends AbstractIncrementalBuilderTest {
 		assertNoIssues();
 	}
 
+	@Test
+	def void testAddRemoveFileInNodeModulesProject() throws IOException {
+		testWorkspaceManager.createTestOnDisk(
+			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
+			TestWorkspaceManager.CFG_NODE_MODULES + "SomeProject" -> #[
+				// SomeModule omitted
+				TestWorkspaceManager.CFG_DEPENDENCIES -> "n4js-runtime"
+			],
+			"MainProject" -> #[
+				"MainModule" -> '''
+					import {SomeClass} from "SomeModule"
+					new SomeClass().m();
+				''',
+				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
+					n4js-runtime,
+					SomeProject
+				'''
+			]
+		);
+		startAndWaitForLspServer();
+		val errorsWhenSomeModuleMissing = "MainModule" -> #[
+			"(Error, [0:24 - 0:36], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
+			"(Error, [1:4 - 1:13], Couldn't resolve reference to IdentifiableElement 'SomeClass'.)"
+		];
+		assertIssues(errorsWhenSomeModuleMissing);
+
+		val someModule = getProjectRoot("SomeProject").toPath.resolve("src").resolve("SomeModule.n4js");
+		Files.writeString(someModule, '''
+			export public class SomeClass {
+				public m() {}
+			}
+		''');
+
+		assertIssues(errorsWhenSomeModuleMissing);
+		executeCommand(N4JSCommandService.N4JS_REFRESH);
+		joinServerRequests();
+		assertNoIssues();
+
+		Files.delete(someModule);
+
+		assertNoIssues();
+		executeCommand(N4JSCommandService.N4JS_REFRESH);
+		joinServerRequests();
+		assertIssues(errorsWhenSomeModuleMissing);
+	}
+
 	/**
 	 * The special aspect of this test is that we change a <code>package.json</code> file in a way
 	 * that does *not* lead to a project being added/removed to/from the workspace.

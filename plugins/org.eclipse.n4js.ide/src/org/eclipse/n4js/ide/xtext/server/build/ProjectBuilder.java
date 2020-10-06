@@ -268,6 +268,7 @@ public class ProjectBuilder {
 	public ResourceChangeSet searchForModifiedAndDeletedSourceFiles() {
 		ResourceChangeSet result = new ResourceChangeSet();
 		handleSourceFileChangesSinceProjectStateWasComputed(result, this.projectStateSnapshot.get());
+		result.getModified().addAll(scanForSourceFiles(true));
 		return result;
 	}
 
@@ -573,19 +574,30 @@ public class ProjectBuilder {
 			this.projectStateSnapshot.set(projectState);
 		}
 
-		Set<URI> allIndexedUris = getProjectIndex().getAllURIs();
+		result.getModified().addAll(scanForSourceFiles(!fullBuildRequired));
+
+		return result;
+	}
+
+	/**
+	 * Scans the file system for source files.
+	 *
+	 * @param onlyNew
+	 *            if <code>true</code>, only newly added source files will be included in the result.
+	 */
+	private List<URI> scanForSourceFiles(boolean onlyNew) {
+		Set<URI> suppressedURIs = onlyNew ? getProjectIndex().getAllURIs() : Collections.emptySet();
+		List<URI> result = new ArrayList<>();
 		for (SourceFolderSnapshot srcFolder : projectConfig.getSourceFolders()) {
-			List<URI> allSourceFolderUris = sourceFolderScanner.findAllSourceFiles(srcFolder, fileSystemScanner);
-			for (URI srcFolderUri : allSourceFolderUris) {
-				if (!srcFolderUri.hasTrailingPathSeparator()
-						&& (fullBuildRequired || !allIndexedUris.contains(srcFolderUri))) {
-					if (resourceServiceProviders.getResourceServiceProvider(srcFolderUri) != null) {
-						result.getModified().add(srcFolderUri);
+			List<URI> allSourceFileUris = sourceFolderScanner.findAllSourceFiles(srcFolder, fileSystemScanner);
+			for (URI srcFileUri : allSourceFileUris) {
+				if (!srcFileUri.hasTrailingPathSeparator() && !suppressedURIs.contains(srcFileUri)) {
+					if (resourceServiceProviders.getResourceServiceProvider(srcFileUri) != null) {
+						result.add(srcFileUri);
 					}
 				}
 			}
 		}
-
 		return result;
 	}
 
