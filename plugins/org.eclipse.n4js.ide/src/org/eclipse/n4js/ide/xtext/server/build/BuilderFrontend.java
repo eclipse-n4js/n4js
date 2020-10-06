@@ -110,6 +110,12 @@ public class BuilderFrontend {
 		asyncRunBuildTask("reinitWorkspace", workspaceBuilder::createReinitialBuildTask);
 	}
 
+	public void refresh() {
+		asyncRunBuildTask("refresh",
+				() -> workspaceBuilder.createIncrementalBuildTask(Collections.emptyList(), Collections.emptyList(),
+						true));
+	}
+
 	/**
 	 * Trigger an incremental build in the background when open editors are being saved.
 	 * <p>
@@ -124,7 +130,7 @@ public class BuilderFrontend {
 			return;
 		}
 		asyncRunBuildTask("didSave", () -> workspaceBuilder.createIncrementalBuildTask(Collections.singletonList(uri),
-				Collections.emptyList()));
+				Collections.emptyList(), false));
 	}
 
 	/**
@@ -147,8 +153,8 @@ public class BuilderFrontend {
 			}
 		}
 		if (!dirtyFiles.isEmpty() || !deletedFiles.isEmpty()) {
-			asyncRunBuildTask("didChangeWatchedFiles",
-					() -> workspaceBuilder.createIncrementalBuildTask(dirtyFiles, deletedFiles));
+			// asyncRunBuildTask("didChangeWatchedFiles",
+			// () -> workspaceBuilder.createIncrementalBuildTask(dirtyFiles, deletedFiles, false));
 		}
 	}
 

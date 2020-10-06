@@ -24,6 +24,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ide.server.LspLogger;
 import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo;
 import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo.ProjectBuildOrderIterator;
+import org.eclipse.n4js.ide.xtext.server.ResourceChangeSet;
 import org.eclipse.n4js.ide.xtext.server.build.ParallelBuildManager.ParallelJob;
 import org.eclipse.n4js.ide.xtext.server.build.XWorkspaceManager.UpdateResult;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
@@ -109,6 +110,7 @@ public class XWorkspaceBuilder {
 
 	private final Set<URI> newDirtyFiles = new LinkedHashSet<>();
 	private final Set<URI> newDeletedFiles = new LinkedHashSet<>();
+	private boolean newRefreshRequest = false;
 
 	private final Set<URI> dirtyFiles = new LinkedHashSet<>();
 	private final Set<URI> deletedFiles = new LinkedHashSet<>();
@@ -264,9 +266,11 @@ public class XWorkspaceBuilder {
 	 *            the deleted files.
 	 * @return a build task that can be triggered.
 	 */
-	public BuildTask createIncrementalBuildTask(List<URI> newDirtyFiles, List<URI> newDeletedFiles) {
+	public BuildTask createIncrementalBuildTask(List<URI> newDirtyFiles, List<URI> newDeletedFiles,
+			boolean newRefreshRequest) {
 		queue(this.newDirtyFiles, newDeletedFiles, newDirtyFiles);
 		queue(this.newDeletedFiles, newDirtyFiles, newDeletedFiles);
+		this.newRefreshRequest |= newRefreshRequest;
 		return this::doIncrementalWorkspaceUpdateAndBuild;
 	}
 
@@ -290,14 +294,29 @@ public class XWorkspaceBuilder {
 
 		Set<URI> newDirtyFiles = new LinkedHashSet<>(this.newDirtyFiles);
 		Set<URI> newDeletedFiles = new LinkedHashSet<>(this.newDeletedFiles);
+		boolean newRefreshRequest = this.newRefreshRequest;
 		this.newDirtyFiles.clear();
 		this.newDeletedFiles.clear();
+		this.newRefreshRequest = false;
 
-		UpdateResult updateResult = workspaceManager.update(newDirtyFiles, newDeletedFiles);
+		Stopwatch stopwatch = Stopwatch.createStarted();
+		if (newRefreshRequest) {
+			lspLogger.log("Refreshing ...");
+		}
+
+		UpdateResult updateResult = workspaceManager.update(newDirtyFiles, newDeletedFiles, newRefreshRequest);
 		WorkspaceChanges changes = updateResult.changes;
 
 		List<URI> actualDirtyFiles = scanAllAddedAndChangedURIs(changes, scanner);
 		List<URI> actualDeletedFiles = getAllRemovedURIs(changes); // n.b.: not including URIs of removed projects
+		if (newRefreshRequest) {
+			for (ProjectBuilder projectBuilder : workspaceManager.getProjectBuilders()) {
+				ResourceChangeSet dirtySourceFiles = projectBuilder.getModifiedDeletedSourceFiles();
+				actualDirtyFiles.addAll(dirtySourceFiles.getModified());
+				actualDeletedFiles.addAll(dirtySourceFiles.getDeleted());
+			}
+		}
+
 		queue(this.dirtyFiles, actualDeletedFiles, actualDirtyFiles);
 		queue(this.deletedFiles, actualDirtyFiles, actualDeletedFiles);
 
@@ -309,6 +328,17 @@ public class XWorkspaceBuilder {
 			this.deletedProjects.remove(prjConfig.getName()); // in case a deleted project is being re-created
 		}
 		handleContentsOfRemovedProjects(updateResult.removedProjectsContents);
+
+		if (newRefreshRequest) {
+			lspLogger.log("... refresh done (" + stopwatch.toString() + "; "
+					+ "projects added/removed: " + changes.getAddedProjects().size() + "/"
+					+ changes.getRemovedProjects().size() + "; "
+					+ "files dirty/deleted: " + dirtyFiles.size() + "/" + deletedFiles.size() + ").");
+		}
+
+		if (dirtyFiles.isEmpty() && deletedFiles.isEmpty() && deletedProjects.isEmpty()) {
+			return new ResourceDescriptionChangeEvent(Collections.emptyList());
+		}
 
 		return doIncrementalBuild(cancelIndicator);
 	}

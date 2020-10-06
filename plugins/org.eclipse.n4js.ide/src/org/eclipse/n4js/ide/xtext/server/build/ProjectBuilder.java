@@ -609,6 +609,12 @@ public class ProjectBuilder {
 		return false;
 	}
 
+	public ResourceChangeSet getModifiedDeletedSourceFiles() {
+		ResourceChangeSet result = new ResourceChangeSet();
+		handleSourceFileChangesSinceProjectStateWasComputed(result, this.projectStateSnapshot.get());
+		return result;
+	}
+
 	/** @return <code>true</code> iff full build of this builder's project is required due to source file changes. */
 	private boolean handleSourceFileChangesSinceProjectStateWasComputed(ResourceChangeSet result,
 			ImmutableProjectState projectState) {

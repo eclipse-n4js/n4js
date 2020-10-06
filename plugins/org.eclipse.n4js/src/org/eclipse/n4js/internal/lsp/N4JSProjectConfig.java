@@ -237,13 +237,25 @@ public class N4JSProjectConfig implements XIProjectConfig {
 
 		// package.json was modified
 
-		Set<? extends SourceFolderSnapshot> oldSourceFolders = oldProjectConfig != null
-				? oldProjectConfig.getSourceFolders()
-				: Collections.emptySet();
-
 		((N4JSProject) delegate).invalidate();
 		ProjectConfigSnapshot newProjectConfig = toSnapshot();
 
+		if (oldProjectConfig == null) {
+			return WorkspaceChanges.createProjectAdded(newProjectConfig);
+		}
+
+		return computeChanges(oldProjectConfig, newProjectConfig);
+	}
+
+	/**
+	 * Given two project configuration snapshots representing the old and new state of the receiving project, this
+	 * method computes the corresponding workspace changes. If no changes occurred, an empty {@link WorkspaceChanges}
+	 * instance will be returned.
+	 */
+	public static WorkspaceChanges computeChanges(ProjectConfigSnapshot oldProjectConfig,
+			ProjectConfigSnapshot newProjectConfig) {
+
+		Set<? extends SourceFolderSnapshot> oldSourceFolders = oldProjectConfig.getSourceFolders();
 		Set<? extends SourceFolderSnapshot> newSourceFolders = newProjectConfig.getSourceFolders();
 
 		// detect added/removed source folders

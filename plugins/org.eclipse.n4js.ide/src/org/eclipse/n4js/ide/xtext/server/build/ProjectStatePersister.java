@@ -325,6 +325,8 @@ public class ProjectStatePersister {
 	 *
 	 * @param project
 	 *            the project
+	 * @return the project state or <code>null</code> if not available (e.g. file does not exist, was corrupted, was of
+	 *         an incompatible file format or language version).
 	 */
 	public ImmutableProjectState readProjectState(ProjectConfigSnapshot project) {
 		URI baseURI = getBaseURI(project);
@@ -351,6 +353,8 @@ public class ProjectStatePersister {
 	/**
 	 * @param stream
 	 *            the stream to read from.
+	 * @return the project state or <code>null</code> if not available (e.g. file does not exist, was corrupted, was of
+	 *         an incompatible file format or language version).
 	 * @throws IOException
 	 *             if things go bananas.
 	 * @throws ClassNotFoundException
