@@ -220,6 +220,10 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 		return handlers.get(params.getCommand()).execute(params, access, cancelIndicator);
 	}
 
+	/**
+	 * Performs a {@link BuilderFrontend#refresh() refresh} and triggers an incremental build (if necessary).
+	 */
+	@SuppressWarnings("unused")
 	@ExecutableCommandHandler(N4JS_REFRESH)
 	public Void refresh(ILanguageServerAccess access, CancelIndicator cancelIndicator) {
 		builderFrontend.refresh();

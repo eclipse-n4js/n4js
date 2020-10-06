@@ -110,10 +110,17 @@ public class BuilderFrontend {
 		asyncRunBuildTask("reinitWorkspace", workspaceBuilder::createReinitialBuildTask);
 	}
 
+	/**
+	 * Performs a refresh as follows:
+	 * <ol>
+	 * <li>complete re-computation of workspace configuration,
+	 * <li>scanning for changes in source files,
+	 * <li>triggering an incremental build, if necessary, based on the changes found.
+	 * </ol>
+	 */
 	public void refresh() {
-		asyncRunBuildTask("refresh",
-				() -> workspaceBuilder.createIncrementalBuildTask(Collections.emptyList(), Collections.emptyList(),
-						true));
+		asyncRunBuildTask("refresh", () -> workspaceBuilder.createIncrementalBuildTask(Collections.emptyList(),
+				Collections.emptyList(), true));
 	}
 
 	/**

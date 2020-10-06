@@ -259,6 +259,18 @@ public class ProjectBuilder {
 		return new ProjectStateUpdatingBuildRequestFactory(base, updater);
 	}
 
+	/**
+	 * For all source files known to this builder (i.e. registered in its current {@link #projectStateSnapshot project
+	 * state}), this method checks whether their current content on disk is still equal to the content at the time of
+	 * the last build (based on a hash comparison). Finds only source file modifications and deletions; does not scan
+	 * the disk for new source files added since the last build.
+	 */
+	public ResourceChangeSet searchForModifiedAndDeletedSourceFiles() {
+		ResourceChangeSet result = new ResourceChangeSet();
+		handleSourceFileChangesSinceProjectStateWasComputed(result, this.projectStateSnapshot.get());
+		return result;
+	}
+
 	/** Build increments of this project. */
 	public XBuildResult doIncrementalBuild(
 			IBuildRequestFactory buildRequestFactory,
@@ -607,12 +619,6 @@ public class ProjectBuilder {
 			}
 		}
 		return false;
-	}
-
-	public ResourceChangeSet getModifiedDeletedSourceFiles() {
-		ResourceChangeSet result = new ResourceChangeSet();
-		handleSourceFileChangesSinceProjectStateWasComputed(result, this.projectStateSnapshot.get());
-		return result;
 	}
 
 	/** @return <code>true</code> iff full build of this builder's project is required due to source file changes. */
