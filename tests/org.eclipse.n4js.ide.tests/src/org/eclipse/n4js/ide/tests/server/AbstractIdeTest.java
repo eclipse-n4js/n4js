@@ -24,6 +24,7 @@ import java.nio.file.attribute.BasicFileAttributeView;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -341,8 +342,14 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	/** Cleans and rebuilds entire workspace without waiting for LSP server to finish. */
 	protected CompletableFuture<Object> cleanBuildWithoutWait() {
-		ExecuteCommandParams params = new ExecuteCommandParams(N4JSCommandService.N4JS_REBUILD,
-				Collections.emptyList());
+		return executeCommand(N4JSCommandService.N4JS_REBUILD);
+	}
+
+	/** Executes the command with the given ID and the given arguments. */
+	protected CompletableFuture<Object> executeCommand(String commandId, Object... args) {
+		Objects.requireNonNull(commandId);
+		Objects.requireNonNull(args);
+		ExecuteCommandParams params = new ExecuteCommandParams(commandId, Arrays.asList(args));
 		return languageServer.executeCommand(params);
 	}
 
