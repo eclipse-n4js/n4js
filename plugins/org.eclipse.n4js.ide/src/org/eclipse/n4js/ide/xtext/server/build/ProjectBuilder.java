@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -266,8 +267,42 @@ public class ProjectBuilder {
 	 */
 	public ResourceChangeSet scanForSourceFileChanges() {
 		ResourceChangeSet result = new ResourceChangeSet();
-		handleSourceFileChangesSinceProjectStateWasComputed(result, this.projectStateSnapshot.get());
-		result.getModified().addAll(scanForSourceFiles(true));
+		ImmutableProjectState oldProjectState = this.projectStateSnapshot.get();
+		Map<URI, HashedFileContent> oldHashes = oldProjectState.getFileHashes();
+		Set<URI> oldSourceFilesURIs = oldProjectState.internalGetResourceDescriptions().getAllURIs();
+		Set<URI> existingSourceFileURIs = scanForSourceFiles(false);
+		for (URI currURI : Sets.union(oldSourceFilesURIs, existingSourceFileURIs)) {
+			boolean isOld = oldSourceFilesURIs.contains(currURI);
+			boolean isNew = existingSourceFileURIs.contains(currURI);
+			if (!isOld && isNew) {
+				// added
+				result.getModified().add(currURI);
+			} else if (isOld && !isNew) {
+				// removed
+				result.getDeleted().add(currURI);
+			} else if (isOld && isNew) {
+				// compare hash ...
+				HashedFileContent hfc = oldHashes.get(currURI);
+				if (hfc != null) {
+					switch (getSourceChangeKind(hfc, oldProjectState)) {
+					case UNCHANGED: {
+						break;
+					}
+					case CHANGED: {
+						result.getModified().add(currURI);
+						break;
+					}
+					case DELETED: {
+						result.getDeleted().add(currURI);
+						break;
+					}
+					}
+				} else {
+					LOG.warn("inconsistency in project state: URI is indexed but not hashed: " + currURI);
+					result.getModified().add(currURI);
+				}
+			}
+		}
 		return result;
 	}
 
@@ -584,9 +619,9 @@ public class ProjectBuilder {
 	 * @param onlyNew
 	 *            if <code>true</code>, only newly added source files will be included in the result.
 	 */
-	private List<URI> scanForSourceFiles(boolean onlyNew) {
+	private Set<URI> scanForSourceFiles(boolean onlyNew) {
 		Set<URI> suppressedURIs = onlyNew ? getProjectIndex().getAllURIs() : Collections.emptySet();
-		List<URI> result = new ArrayList<>();
+		Set<URI> result = new HashSet<>();
 		for (SourceFolderSnapshot srcFolder : projectConfig.getSourceFolders()) {
 			List<URI> allSourceFileUris = sourceFolderScanner.findAllSourceFiles(srcFolder, fileSystemScanner);
 			for (URI srcFileUri : allSourceFileUris) {
@@ -674,7 +709,11 @@ public class ProjectBuilder {
 			// TODO where do we update the generated file hashes?
 			for (Delta delta : result.getAffectedResources()) {
 				URI uri = delta.getUri();
-				storeHash(newHashedFileContents, uri);
+				if (delta.getNew() != null) {
+					storeHash(newHashedFileContents, uri);
+				} else {
+					newHashedFileContents.remove(uri);
+				}
 			}
 			for (URI deletedFile : deletedFiles) {
 				newHashedFileContents.remove(deletedFile);

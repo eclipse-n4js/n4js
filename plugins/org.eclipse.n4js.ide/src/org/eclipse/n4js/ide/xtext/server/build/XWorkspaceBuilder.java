@@ -309,7 +309,11 @@ public class XWorkspaceBuilder {
 		List<URI> actualDirtyFiles = UtilN4.concat(changes.getAddedURIs(), changes.getChangedURIs());
 		List<URI> actualDeletedFiles = new ArrayList<>(changes.getRemovedURIs());
 		if (newRefreshRequest) {
-			// scan all source folders in all projects for source file additions, changes, and deletions
+			// scan all source folders of all projects for source file additions, changes, and deletions
+			// - including source files of added projects,
+			// - including source files of added source folders of existing projects,
+			// - including source files of removed source folders of existing projects,
+			// - *not* including source files of removed projects.
 			actualDirtyFiles = new ArrayList<>();
 			actualDeletedFiles = new ArrayList<>();
 			for (ProjectBuilder projectBuilder : workspaceManager.getProjectBuilders()) {
@@ -320,8 +324,9 @@ public class XWorkspaceBuilder {
 		} else {
 			// scan only the added source folders (including those of added projects) for source files
 			actualDirtyFiles.addAll(scanAddedSourceFoldersForNewSourceFiles(changes, scanner));
+			// collect URIs from removed source folders (*not* including those of removed projects)
+			actualDeletedFiles.addAll(getURIsFromRemovedSourceFolders(changes));
 		}
-		actualDeletedFiles.addAll(getURIsFromRemovedSourceFolders(changes)); // not including URIs of removed projects
 
 		queue(this.dirtyFiles, actualDeletedFiles, actualDirtyFiles);
 		queue(this.deletedFiles, actualDirtyFiles, actualDeletedFiles);
