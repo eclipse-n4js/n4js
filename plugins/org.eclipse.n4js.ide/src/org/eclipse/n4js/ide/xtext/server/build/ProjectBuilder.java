@@ -260,12 +260,11 @@ public class ProjectBuilder {
 	}
 
 	/**
-	 * For all source files known to this builder (i.e. registered in its current {@link #projectStateSnapshot project
-	 * state}), this method checks whether their current content on disk is still equal to the content at the time of
-	 * the last build (based on a hash comparison). Finds only source file modifications and deletions; does not scan
-	 * the disk for new source files added since the last build.
+	 * Scans the files system and returns URIs of source files that were added, changed, removed since this builder's
+	 * current {@link #projectStateSnapshot project state} was created. Content changes in source files are detected by
+	 * way of hash comparison.
 	 */
-	public ResourceChangeSet searchForModifiedAndDeletedSourceFiles() {
+	public ResourceChangeSet scanForSourceFileChanges() {
 		ResourceChangeSet result = new ResourceChangeSet();
 		handleSourceFileChangesSinceProjectStateWasComputed(result, this.projectStateSnapshot.get());
 		result.getModified().addAll(scanForSourceFiles(true));

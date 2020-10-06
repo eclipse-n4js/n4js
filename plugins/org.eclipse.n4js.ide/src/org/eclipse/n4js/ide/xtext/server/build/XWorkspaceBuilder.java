@@ -27,6 +27,7 @@ import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo.ProjectBuildOrder
 import org.eclipse.n4js.ide.xtext.server.ResourceChangeSet;
 import org.eclipse.n4js.ide.xtext.server.build.ParallelBuildManager.ParallelJob;
 import org.eclipse.n4js.ide.xtext.server.build.XWorkspaceManager.UpdateResult;
+import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.SourceFolderScanner;
 import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
@@ -46,8 +47,6 @@ import org.eclipse.xtext.xbase.lib.IteratorExtensions;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Stopwatch;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
@@ -307,16 +306,22 @@ public class XWorkspaceBuilder {
 		UpdateResult updateResult = workspaceManager.update(newDirtyFiles, newDeletedFiles, newRefreshRequest);
 		WorkspaceChanges changes = updateResult.changes;
 
-		List<URI> actualDirtyFiles = scanAllAddedAndChangedURIs(changes, scanner);
-		List<URI> actualDeletedFiles = getAllRemovedURIs(changes); // n.b.: not including URIs of removed projects
+		List<URI> actualDirtyFiles = UtilN4.concat(changes.getAddedURIs(), changes.getChangedURIs());
+		List<URI> actualDeletedFiles = new ArrayList<>(changes.getRemovedURIs());
 		if (newRefreshRequest) {
-			// scan for source file changes
+			// scan all source folders in all projects for source file additions, changes, and deletions
+			actualDirtyFiles = new ArrayList<>();
+			actualDeletedFiles = new ArrayList<>();
 			for (ProjectBuilder projectBuilder : workspaceManager.getProjectBuilders()) {
-				ResourceChangeSet dirtySourceFiles = projectBuilder.searchForModifiedAndDeletedSourceFiles();
+				ResourceChangeSet dirtySourceFiles = projectBuilder.scanForSourceFileChanges();
 				actualDirtyFiles.addAll(dirtySourceFiles.getModified());
 				actualDeletedFiles.addAll(dirtySourceFiles.getDeleted());
 			}
+		} else {
+			// scan only the added source folders (including those of added projects) for source files
+			actualDirtyFiles.addAll(scanAddedSourceFoldersForNewSourceFiles(changes, scanner));
 		}
+		actualDeletedFiles.addAll(getURIsFromRemovedSourceFolders(changes)); // not including URIs of removed projects
 
 		queue(this.dirtyFiles, actualDeletedFiles, actualDirtyFiles);
 		queue(this.deletedFiles, actualDirtyFiles, actualDeletedFiles);
@@ -344,19 +349,18 @@ public class XWorkspaceBuilder {
 		return doIncrementalBuild(cancelIndicator);
 	}
 
-	/** @return list of all added/changed URIs (including URIs of added projects). */
-	private List<URI> scanAllAddedAndChangedURIs(WorkspaceChanges changes, IFileSystemScanner scanner) {
-		List<URI> allAddedURIs = new ArrayList<>(changes.getAddedURIs());
+	/** @return list of URIs from newly added source folders (including source folders of added projects). */
+	private List<URI> scanAddedSourceFoldersForNewSourceFiles(WorkspaceChanges changes, IFileSystemScanner scanner) {
+		List<URI> added = new ArrayList<>();
 		for (SourceFolderSnapshot sourceFolder : changes.getAllAddedSourceFolders()) {
 			List<URI> sourceFilesOnDisk = sourceFolderScanner.findAllSourceFiles(sourceFolder, scanner);
-			allAddedURIs.addAll(sourceFilesOnDisk);
+			added.addAll(sourceFilesOnDisk);
 		}
-		List<URI> allChangedURIs = Lists.newArrayList(Iterables.concat(allAddedURIs, changes.getChangedURIs()));
-		return allChangedURIs;
+		return added;
 	}
 
-	/** @return list of all removed URIs (<em>not</em> including URIs of removed projects). */
-	private List<URI> getAllRemovedURIs(WorkspaceChanges workspaceChanges) {
+	/** @return list of URIs from removed source folders (<em>not</em> including URIs of removed projects). */
+	private List<URI> getURIsFromRemovedSourceFolders(WorkspaceChanges workspaceChanges) {
 		List<URI> deleted = new ArrayList<>(workspaceChanges.getRemovedURIs());
 		for (SourceFolderSnapshot sourceFolder : workspaceChanges.getRemovedSourceFolders()) {
 			URI prefix = sourceFolder.getPath();
