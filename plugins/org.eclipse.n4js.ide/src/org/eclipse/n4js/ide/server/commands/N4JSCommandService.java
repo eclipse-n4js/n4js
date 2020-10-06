@@ -79,6 +79,11 @@ import com.google.inject.Inject;
  */
 public class N4JSCommandService implements IExecutableCommandService, ExecuteCommandParamsDescriber {
 	/**
+	 * The refresh command.
+	 */
+	public static final String N4JS_REFRESH = "n4js.refresh";
+
+	/**
 	 * The rebuild command.
 	 */
 	public static final String N4JS_REBUILD = "n4js.rebuild";
@@ -213,6 +218,12 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 	@Override
 	public Object execute(ExecuteCommandParams params, ILanguageServerAccess access, CancelIndicator cancelIndicator) {
 		return handlers.get(params.getCommand()).execute(params, access, cancelIndicator);
+	}
+
+	@ExecutableCommandHandler(N4JS_REFRESH)
+	public Void refresh(ILanguageServerAccess access, CancelIndicator cancelIndicator) {
+		builderFrontend.refresh();
+		return null;
 	}
 
 	/**
