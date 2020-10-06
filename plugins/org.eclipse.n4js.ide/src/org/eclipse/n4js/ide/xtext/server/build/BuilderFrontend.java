@@ -160,8 +160,8 @@ public class BuilderFrontend {
 			}
 		}
 		if (!dirtyFiles.isEmpty() || !deletedFiles.isEmpty()) {
-			// asyncRunBuildTask("didChangeWatchedFiles",
-			// () -> workspaceBuilder.createIncrementalBuildTask(dirtyFiles, deletedFiles, false));
+			asyncRunBuildTask("didChangeWatchedFiles",
+					() -> workspaceBuilder.createIncrementalBuildTask(dirtyFiles, deletedFiles, false));
 		}
 	}
 
