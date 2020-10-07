@@ -25,6 +25,7 @@ import org.eclipse.n4js.ts.types.IdentifiableElement;
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.IdentifierRef#getId <em>Id</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.IdentifierRef#getIdAsText <em>Id As Text</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.IdentifierRef#getOriginImport <em>Origin Import</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.n4JS.N4JSPackage#getIdentifierRef()
@@ -75,6 +76,32 @@ public interface IdentifierRef extends PrimaryExpression, StrictModeRelevant, Ve
 	 * @generated
 	 */
 	void setIdAsText(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Origin Import</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * If the element returned by {@link IdentifierRef#getId() getId()} was imported, this refers to
+	 * the corresponding import. Will be set during proxy resolution of property 'id'.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Origin Import</em>' reference.
+	 * @see #setOriginImport(ImportSpecifier)
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getIdentifierRef_OriginImport()
+	 * @model transient="true"
+	 * @generated
+	 */
+	ImportSpecifier getOriginImport();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.IdentifierRef#getOriginImport <em>Origin Import</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Origin Import</em>' reference.
+	 * @see #getOriginImport()
+	 * @generated
+	 */
+	void setOriginImport(ImportSpecifier value);
 
 	/**
 	 * <!-- begin-user-doc -->

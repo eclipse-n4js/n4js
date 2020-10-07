@@ -31,13 +31,27 @@ import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 public class XWorkspaceResourceAccess implements IReferenceFinder.IResourceAccess {
 
 	private final ResourceTaskManager resourceTaskManager;
+	private final boolean resolveAndValidate;
 
 	/**
 	 * @param resourceTaskManager
 	 *            the task manager
 	 */
 	public XWorkspaceResourceAccess(ResourceTaskManager resourceTaskManager) {
+		this(resourceTaskManager, true);
+	}
+
+	/**
+	 * @param resourceTaskManager
+	 *            the task manager
+	 * @param resolveAndValidate
+	 *            see
+	 *            {@link ResourceTaskManager#runInTemporaryContext(URI, String, boolean, java.util.function.BiFunction)
+	 *            runInTemporaryContext(, , resolveAndValidate, )}
+	 */
+	public XWorkspaceResourceAccess(ResourceTaskManager resourceTaskManager, boolean resolveAndValidate) {
 		this.resourceTaskManager = resourceTaskManager;
+		this.resolveAndValidate = resolveAndValidate;
 	}
 
 	@Override
@@ -48,7 +62,8 @@ public class XWorkspaceResourceAccess implements IReferenceFinder.IResourceAcces
 			return doWork(currRTC.getResourceSet(), work, CancelIndicator.NullImpl);
 		}
 		// TODO consider making a current context mandatory by removing the following (see GH-1774):
-		CompletableFuture<R> future = resourceTaskManager.runInTemporaryContext(uri, "XWorkspaceResourceAccess", true,
+		CompletableFuture<R> future = resourceTaskManager.runInTemporaryContext(
+				uri, "XWorkspaceResourceAccess", resolveAndValidate,
 				(ofc, ci) -> doWork(ofc.getResourceSet(), work, ci));
 		return FutureUtil.getCancellableResult(future);
 	}

@@ -23,7 +23,6 @@ import org.eclipse.n4js.projectDescription.ModuleFilter;
 import org.eclipse.n4js.projectDescription.ModuleFilterType;
 import org.eclipse.n4js.projectDescription.ProjectDependency;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
-import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
@@ -176,7 +175,7 @@ public class N4JSProject implements IN4JSProject {
 		return getDependencies();
 	}
 
-	public ImmutableList<String> getAllDependenciesAndImplementedApiNames() {
+	public ImmutableList<String> getDependenciesUnresolved() {
 		if (!exists()) {
 			return ImmutableList.of();
 		}
@@ -187,9 +186,6 @@ public class N4JSProject implements IN4JSProject {
 		List<String> allDependencyNames = new ArrayList<>();
 		for (ProjectDependency prjDep : pd.getProjectDependencies()) {
 			allDependencyNames.add(prjDep.getProjectName());
-		}
-		for (ProjectReference prjRef : pd.getImplementedProjects()) {
-			allDependencyNames.add(prjRef.getProjectName());
 		}
 		return ImmutableList.copyOf(allDependencyNames);
 	}

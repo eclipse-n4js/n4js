@@ -6,6 +6,8 @@ FOLDERS
 - P1 [PROJECT workspaces=["packages/*"]]
 -- packages
 ---*D1 [PROJECT]
+-- node_modules
+--- D1 [SYMLINK_TO_PATH P1/packages/D1]
 
 EXPECT
 - P1/packages/D1

@@ -178,7 +178,7 @@ public class N4JSNameValidator extends AbstractN4JSDeclarativeValidator {
 	private boolean holdsDoesNotEqualWithConstructor(final N4MemberDeclaration n4Member) {
 		if (n4Member.isStatic() && CONSTRUCTOR.equals(getDeclarationName(n4Member))) {
 			final String message = getMessageForCLF_NAME_CONFLICTS_WITH_CONSTRUCTOR();
-			addIssue(message, n4Member, N4JSFeatureUtils.attributeOfNameFeature(n4Member),
+			addIssue(message, n4Member, N4JSFeatureUtils.getElementNameFeature(n4Member),
 					CLF_NAME_CONFLICTS_WITH_CONSTRUCTOR);
 			return false;
 		}
@@ -194,7 +194,7 @@ public class N4JSNameValidator extends AbstractN4JSDeclarativeValidator {
 				final String message = getMessageForCLF_NAME_CONTAINS_DISCOURAGED_CHARACTER(discouragedCharacterLabel);
 				addIssue(message,
 						n4Member,
-						N4JSFeatureUtils.attributeOfNameFeature(n4Member),
+						N4JSFeatureUtils.getElementNameFeature(n4Member),
 						CLF_NAME_CONTAINS_DISCOURAGED_CHARACTER);
 				return false;
 			}
@@ -237,7 +237,7 @@ public class N4JSNameValidator extends AbstractN4JSDeclarativeValidator {
 			addIssue(
 					Strings.toFirstUpper(msg),
 					n4Member,
-					N4JSFeatureUtils.attributeOfNameFeature(n4Member),
+					N4JSFeatureUtils.getElementNameFeature(n4Member),
 					CLF_NAME_DOES_NOT_START_LOWERCASE);
 			return false;
 		}
@@ -340,7 +340,7 @@ public class N4JSNameValidator extends AbstractN4JSDeclarativeValidator {
 						final String message = getMessageForCLF_NAME_DIFFERS_TYPE(
 								validatorMessageHelper.description(namedElement), name, typeName);
 						addIssue(Strings.toFirstUpper(message), namedElement,
-								N4JSFeatureUtils.attributeOfNameFeature(namedElement),
+								N4JSFeatureUtils.getElementNameFeature(namedElement),
 								CLF_NAME_DIFFERS_TYPE);
 						return false;
 					}
@@ -355,7 +355,7 @@ public class N4JSNameValidator extends AbstractN4JSDeclarativeValidator {
 		if (category.contains(element.getName()) && !(element instanceof FunctionDefinition)) {
 			final String message = getMessageForCLF_NAME_RESERVED(validatorMessageHelper.description(element),
 					suffix);
-			addIssue(Strings.toFirstUpper(message), element, N4JSFeatureUtils.attributeOfNameFeature(element),
+			addIssue(Strings.toFirstUpper(message), element, N4JSFeatureUtils.getElementNameFeature(element),
 					CLF_NAME_RESERVED);
 			return false;
 		}

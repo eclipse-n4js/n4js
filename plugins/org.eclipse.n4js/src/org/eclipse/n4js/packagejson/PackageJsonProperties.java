@@ -91,7 +91,9 @@ public enum PackageJsonProperties {
 	NV_MODULE("module", "", N4JS, NO_VALIDATE),
 
 	/** Key of package.json property "source" inside "sources". */
-	SOURCE("source", "List of source folders", JSONArray.class, N4JS, SOURCES);
+	SOURCE("source", "List of source folders", JSONArray.class, N4JS, SOURCES),
+	/** Key of package.json property "test" inside "sources". */
+	TEST("test", "List of source folders for tests", JSONArray.class, N4JS, SOURCES);
 
 	/** section of the property within the package.json */
 	final public PackageJsonProperties[] parents;

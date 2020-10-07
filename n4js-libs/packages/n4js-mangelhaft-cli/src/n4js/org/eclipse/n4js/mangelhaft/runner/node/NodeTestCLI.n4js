@@ -18,9 +18,11 @@ const resolvePath = (p: string): string => lib_path.resolve(cwd, p);
 
 const nomnomOptions: Object = {
     testCatalog: {
-        default: "http://localhost:9415/n4js/testing/sessions/testcatalog",
+        position: 0,
+        list: false,
+        default: ".",
         metavar: "URL|PATH|NPM-relpath",
-        help: "Test catalog (JSON) to be used. Option --compile will write the file, switches to temp file in case of URL."
+        help: "Test catalog (JSON) or project location to be inspected for test cases."
     },
     filter: {
         abbr: "f",
@@ -37,7 +39,7 @@ const nomnomOptions: Object = {
         help: "jUnit/xUnit report name."
     },
     xunitReportPackage: {
-        help: "jUnit/xUnit report package name."
+        help: "jUnit/xUnit report package name. Default is the project name."
     },
     inspectBrk: {
         type: "number",

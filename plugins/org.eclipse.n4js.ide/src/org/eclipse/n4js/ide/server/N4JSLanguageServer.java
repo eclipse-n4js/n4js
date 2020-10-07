@@ -15,6 +15,8 @@ import java.util.concurrent.CompletableFuture;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.CodeActionKind;
+import org.eclipse.lsp4j.InitializeParams;
+import org.eclipse.lsp4j.ServerCapabilities;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.n4js.ide.xtext.server.ResourceTaskContext;
 import org.eclipse.n4js.ide.xtext.server.TextDocumentFrontend;
@@ -62,4 +64,12 @@ public class N4JSLanguageServer extends XLanguageServerImpl implements N4JSProto
 		return doc.getContents();
 	}
 
+	@Override
+	protected ServerCapabilities createServerCapabilities(InitializeParams params) {
+		ServerCapabilities capabilities = super.createServerCapabilities(params);
+
+		capabilities.setImplementationProvider(true);
+
+		return capabilities;
+	}
 }

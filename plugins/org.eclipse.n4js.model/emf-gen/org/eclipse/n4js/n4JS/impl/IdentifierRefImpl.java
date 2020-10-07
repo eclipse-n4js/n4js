@@ -26,6 +26,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.IdentifierRef;
+import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.StrictModeRelevant;
@@ -47,6 +48,7 @@ import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
  *   <li>{@link org.eclipse.n4js.n4JS.impl.IdentifierRefImpl#isStrictMode <em>Strict Mode</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.IdentifierRefImpl#getId <em>Id</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.IdentifierRefImpl#getIdAsText <em>Id As Text</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.IdentifierRefImpl#getOriginImport <em>Origin Import</em>}</li>
  * </ul>
  *
  * @generated
@@ -101,6 +103,16 @@ public class IdentifierRefImpl extends PrimaryExpressionImpl implements Identifi
 	 * @ordered
 	 */
 	protected String idAsText = ID_AS_TEXT_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getOriginImport() <em>Origin Import</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getOriginImport()
+	 * @generated
+	 * @ordered
+	 */
+	protected ImportSpecifier originImport;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -213,6 +225,46 @@ public class IdentifierRefImpl extends PrimaryExpressionImpl implements Identifi
 	 * @generated
 	 */
 	@Override
+	public ImportSpecifier getOriginImport() {
+		if (originImport != null && originImport.eIsProxy()) {
+			InternalEObject oldOriginImport = (InternalEObject)originImport;
+			originImport = (ImportSpecifier)eResolveProxy(oldOriginImport);
+			if (originImport != oldOriginImport) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, N4JSPackage.IDENTIFIER_REF__ORIGIN_IMPORT, oldOriginImport, originImport));
+			}
+		}
+		return originImport;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ImportSpecifier basicGetOriginImport() {
+		return originImport;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setOriginImport(ImportSpecifier newOriginImport) {
+		ImportSpecifier oldOriginImport = originImport;
+		originImport = newOriginImport;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.IDENTIFIER_REF__ORIGIN_IMPORT, oldOriginImport, originImport));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public IdentifiableElement getTargetElement() {
 		final IdentifiableElement targetRaw = this.getId();
 		if ((targetRaw instanceof ModuleNamespaceVirtualType)) {
@@ -263,6 +315,9 @@ public class IdentifierRefImpl extends PrimaryExpressionImpl implements Identifi
 				return basicGetId();
 			case N4JSPackage.IDENTIFIER_REF__ID_AS_TEXT:
 				return getIdAsText();
+			case N4JSPackage.IDENTIFIER_REF__ORIGIN_IMPORT:
+				if (resolve) return getOriginImport();
+				return basicGetOriginImport();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -283,6 +338,9 @@ public class IdentifierRefImpl extends PrimaryExpressionImpl implements Identifi
 				return;
 			case N4JSPackage.IDENTIFIER_REF__ID_AS_TEXT:
 				setIdAsText((String)newValue);
+				return;
+			case N4JSPackage.IDENTIFIER_REF__ORIGIN_IMPORT:
+				setOriginImport((ImportSpecifier)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -305,6 +363,9 @@ public class IdentifierRefImpl extends PrimaryExpressionImpl implements Identifi
 			case N4JSPackage.IDENTIFIER_REF__ID_AS_TEXT:
 				setIdAsText(ID_AS_TEXT_EDEFAULT);
 				return;
+			case N4JSPackage.IDENTIFIER_REF__ORIGIN_IMPORT:
+				setOriginImport((ImportSpecifier)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -323,6 +384,8 @@ public class IdentifierRefImpl extends PrimaryExpressionImpl implements Identifi
 				return id != null;
 			case N4JSPackage.IDENTIFIER_REF__ID_AS_TEXT:
 				return ID_AS_TEXT_EDEFAULT == null ? idAsText != null : !ID_AS_TEXT_EDEFAULT.equals(idAsText);
+			case N4JSPackage.IDENTIFIER_REF__ORIGIN_IMPORT:
+				return originImport != null;
 		}
 		return super.eIsSet(featureID);
 	}

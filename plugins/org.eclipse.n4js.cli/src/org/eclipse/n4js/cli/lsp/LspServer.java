@@ -25,9 +25,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import org.apache.log4j.Appender;
+import org.apache.log4j.AppenderSkeleton;
+import org.apache.log4j.Layout;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.SimpleLayout;
 import org.apache.log4j.WriterAppender;
+import org.apache.log4j.spi.LoggingEvent;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.jsonrpc.Launcher.Builder;
 import org.eclipse.lsp4j.services.LanguageClient;
@@ -35,10 +39,13 @@ import org.eclipse.n4js.cli.N4jscConsole;
 import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.ide.server.LspLogger;
+import org.eclipse.n4js.ide.server.util.ServerIncidentLogger;
+import org.eclipse.n4js.ide.xtext.server.DebugService;
 import org.eclipse.n4js.ide.xtext.server.ExecuteCommandParamsTypeAdapter;
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 
+import com.google.common.base.Joiner;
 import com.google.common.util.concurrent.Futures;
 import com.google.inject.Injector;
 
@@ -102,6 +109,8 @@ public class LspServer {
 	private void setupAndRun(ExecutorService threadPool, XLanguageServerImpl languageServer)
 			throws InterruptedException, ExecutionException, IOException {
 
+		DebugService debugService = languageServer.getDebugService();
+
 		Builder<LanguageClient> lsBuilder = new PatchedLauncherBuilder<LanguageClient>()
 				.setLocalService(languageServer)
 				.setRemoteInterface(LanguageClient.class)
@@ -109,8 +118,8 @@ public class LspServer {
 				.configureGson(gsonBuilder -> {
 					gsonBuilder.registerTypeAdapterFactory(new ExecuteCommandParamsTypeAdapter.Factory(languageServer));
 				})
+				.wrapMessages(debugService.getTracingMessageWrapper())
 		// .traceMessages(new PrintWriter(System.out))
-		// .wrapMessages(a -> a)
 		;
 
 		if (options.isStdio()) {
@@ -122,6 +131,9 @@ public class LspServer {
 
 	private void setupAndRunWithSocket(XLanguageServerImpl languageServer, Builder<LanguageClient> lsBuilder)
 			throws InterruptedException, ExecutionException, IOException {
+
+		Appender serverIncidentAppender = copyLog4jErrorsToServerIncidentLogger(
+				languageServer.getServerIncidentLogger());
 
 		InetSocketAddress address = new InetSocketAddress("localhost", options.getPort());
 
@@ -137,14 +149,20 @@ public class LspServer {
 				N4jscConsole.println("Connected to LSP client");
 				run(languageServer, lsBuilder, in, out);
 			}
+		} finally {
+			Logger.getRootLogger().removeAppender(serverIncidentAppender);
 		}
 	}
 
 	private void setupAndRunWithSystemIO(XLanguageServerImpl languageServer, Builder<LanguageClient> lsBuilder) {
 		N4jscConsole.println(LSP_SYNC_MESSAGE + " on stdio ...");
 		N4jscConsole.setSuppress(true);
+
 		LspLogger lspLogger = languageServer.getLspLogger();
 		Appender lspLoggerAppender = redirectLog4jToLspLogger(lspLogger);
+		Appender serverIncidentAppender = copyLog4jErrorsToServerIncidentLogger(
+				languageServer.getServerIncidentLogger());
+
 		PrintStream oldStdOut = System.out;
 		PrintStream oldStdErr = System.err;
 		try (PrintStream loggingStream = new LoggingPrintStream(lspLogger)) {
@@ -154,6 +172,7 @@ public class LspServer {
 		} finally {
 			System.setErr(oldStdErr);
 			System.setOut(oldStdOut);
+			Logger.getRootLogger().removeAppender(serverIncidentAppender);
 			Logger.getRootLogger().removeAppender(lspLoggerAppender);
 		}
 	}
@@ -207,5 +226,48 @@ public class LspServer {
 		});
 		Logger.getRootLogger().addAppender(appender);
 		return appender;
+	}
+
+	private Appender copyLog4jErrorsToServerIncidentLogger(ServerIncidentLogger serverIncidentLogger) {
+		Appender appender = new ServerIncidentAppender(serverIncidentLogger);
+		Logger.getRootLogger().addAppender(appender);
+		return appender;
+	}
+
+	/** TEMPORARY functionality (see {@link ServerIncidentLogger} for details). */
+	private static final class ServerIncidentAppender extends AppenderSkeleton {
+
+		private final ServerIncidentLogger delegate;
+
+		public ServerIncidentAppender(ServerIncidentLogger delegate) {
+			this.delegate = delegate;
+			setThreshold(Level.ERROR);
+			setLayout(new SimpleLayout());
+		}
+
+		@Override
+		public boolean requiresLayout() {
+			return false;
+		}
+
+		@Override
+		protected void append(LoggingEvent event) {
+			if (!isAsSevereAsThreshold(event.getLevel())) {
+				return;
+			}
+			String msg = layout.format(event);
+			if (layout.ignoresThrowable()) {
+				String[] s = event.getThrowableStrRep();
+				if (s != null) {
+					msg += Joiner.on(Layout.LINE_SEP).join(s);
+				}
+			}
+			delegate.reportError(msg);
+		}
+
+		@Override
+		public void close() {
+			// ignore
+		}
 	}
 }

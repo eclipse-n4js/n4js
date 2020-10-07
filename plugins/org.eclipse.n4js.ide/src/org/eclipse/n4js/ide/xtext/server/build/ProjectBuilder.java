@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -24,14 +25,17 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
 import org.eclipse.n4js.ide.xtext.server.ResourceChangeSet;
+import org.eclipse.n4js.ide.xtext.server.XIProjectDescriptionFactory;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterBuildListener;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterDeleteListener;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterValidateListener;
 import org.eclipse.n4js.ide.xtext.server.issues.PublishingIssueAcceptor;
-import org.eclipse.n4js.internal.lsp.N4JSProjectConfig;
 import org.eclipse.n4js.utils.URIUtils;
+import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.xtext.server.LSPIssue;
-import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
+import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
+import org.eclipse.n4js.xtext.workspace.SourceFolderScanner;
+import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.generator.OutputConfiguration;
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
@@ -42,6 +46,7 @@ import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.resource.impl.ChunkedResourceDescriptions;
+import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionDelta;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.service.OperationCanceledManager;
@@ -49,20 +54,20 @@ import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.util.UriUtil;
 import org.eclipse.xtext.validation.Issue;
-import org.eclipse.xtext.workspace.ISourceFolder;
-import org.eclipse.xtext.workspace.ProjectConfigAdapter;
 
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 /**
  * TODO JavaDoc
  */
-@SuppressWarnings({ "restriction", "deprecation" })
+@SuppressWarnings({ "deprecation" })
 public class ProjectBuilder {
 	private static final Logger LOG = LogManager.getLogger(ProjectBuilder.class);
 
@@ -77,6 +82,10 @@ public class ProjectBuilder {
 	/** Creates a new resource set. */
 	@Inject
 	protected Provider<XtextResourceSet> resourceSetProvider;
+
+	/** Scans the file system for source files contained in a {@link SourceFolderSnapshot source folder}. */
+	@Inject
+	protected SourceFolderScanner sourceFolderScanner;
 
 	/** Scans the file system. */
 	@Inject
@@ -98,6 +107,10 @@ public class ProjectBuilder {
 	@Inject
 	protected OutputConfigurationProvider outputConfigProvider;
 
+	/** Factory for creating the {@link ProjectDescription} attached to this project builder's resource set. */
+	@Inject
+	protected XIProjectDescriptionFactory projectDescriptionFactory;
+
 	/** Checks whether the current action was cancelled */
 	@Inject
 	protected OperationCanceledManager operationCanceledManager;
@@ -117,19 +130,16 @@ public class ProjectBuilder {
 	@Inject
 	private ConcurrentIndex workspaceIndex;
 
-	private XIProjectConfig projectConfig;
+	private ProjectConfigSnapshot projectConfig;
 
 	private XtextResourceSet resourceSet;
-
-	private ProjectDescription projectDescription;
 
 	private final AtomicReference<ImmutableProjectState> projectStateSnapshot = new AtomicReference<>(
 			ImmutableProjectState.empty());
 
 	/** Initialize this project. */
 	@SuppressWarnings("hiding")
-	public void initialize(ProjectDescription projectDescription, XIProjectConfig projectConfig) {
-		this.projectDescription = projectDescription;
+	public void initialize(ProjectConfigSnapshot projectConfig) {
 		this.projectConfig = projectConfig;
 		this.doClearWithoutNotification();
 		this.resourceSet = createNewResourceSet(getProjectIndex());
@@ -150,15 +160,15 @@ public class ProjectBuilder {
 	 * <li>when the workspace folder is changed in VS Code.
 	 * </ul>
 	 */
-	public XBuildResult doInitialBuild(IBuildRequestFactory buildRequestFactory, CancelIndicator cancelIndicator) {
+	public XBuildResult doInitialBuild(IBuildRequestFactory buildRequestFactory, List<Delta> externalDeltas) {
 		ResourceChangeSet changeSet = readProjectState();
 
 		XBuildResult result = doBuild(
 				createInitialBuildRequestFactory(buildRequestFactory),
 				changeSet.getModified(),
 				changeSet.getDeleted(),
-				Collections.emptyList(),
-				cancelIndicator);
+				UtilN4.concat(externalDeltas, changeSet.getAdditionalExternalDeltas()),
+				CancelIndicator.NullImpl);
 
 		// clear the resource set to release memory
 		clearResourceSet();
@@ -167,7 +177,10 @@ public class ProjectBuilder {
 		return result;
 	}
 
-	private void clearResourceSet() {
+	/**
+	 * Clear all resources and their contents from this project builder's resource set.
+	 */
+	public void clearResourceSet() {
 		boolean wasDeliver = resourceSet.eDeliver();
 		try {
 			resourceSet.eSetDeliver(false);
@@ -298,13 +311,10 @@ public class ProjectBuilder {
 	/** Deletes the contents of the output directory */
 	public void doClean(AfterDeleteListener deleteListener, CancelIndicator cancelIndicator) {
 		deletePersistenceFile();
+		doClearWithNotification();
 
-		if (projectConfig instanceof N4JSProjectConfig) {
-			// TODO: merge N4JSProjectConfig#indexOnly() to IProjectConfig
-			N4JSProjectConfig n4pc = (N4JSProjectConfig) projectConfig;
-			if (n4pc.indexOnly()) {
-				return;
-			}
+		if (projectConfig.indexOnly()) {
+			return;
 		}
 
 		for (File outputDirectory : getOutputDirectories()) {
@@ -316,8 +326,6 @@ public class ProjectBuilder {
 				}
 			}
 		}
-
-		doClearWithNotification();
 	}
 
 	/** @return list of output directories of this project */
@@ -365,7 +373,7 @@ public class ProjectBuilder {
 			builder.putAll(snapshot.getValidationIssues());
 			builder.put(uri, issue);
 			return ImmutableProjectState.withoutCopy(snapshot.internalGetResourceDescriptions(),
-					snapshot.getFileMappings(), snapshot.getFileHashes(), builder.build());
+					snapshot.getFileMappings(), snapshot.getFileHashes(), builder.build(), snapshot.getDependencies());
 		});
 		issuePublisher.accept(uri, updatedState.getValidationIssues().get(uri));
 	}
@@ -392,12 +400,7 @@ public class ProjectBuilder {
 		request.setResourceSet(resourceSet);
 		request.setCancelIndicator(cancelIndicator);
 		request.setBaseDir(getBaseDir());
-
-		if (projectConfig instanceof N4JSProjectConfig) {
-			// TODO: merge N4JSProjectConfig#indexOnly() to IProjectConfig
-			N4JSProjectConfig n4pc = (N4JSProjectConfig) projectConfig;
-			request.setIndexOnly(n4pc.indexOnly());
-		}
+		request.setIndexOnly(projectConfig.indexOnly());
 
 		return request;
 	}
@@ -406,19 +409,26 @@ public class ProjectBuilder {
 	protected void updateResourceSetIndex(ResourceDescriptionsData newProjectIndex) {
 		ChunkedResourceDescriptions.removeFromEmfObject(resourceSet);
 		ChunkedResourceDescriptions resDescs = workspaceIndex.toDescriptions(resourceSet);
-		resDescs.setContainer(projectDescription.getName(), newProjectIndex);
+		resDescs.setContainer(projectConfig.getName(), newProjectIndex);
+	}
+
+	/** Update the {@link ProjectDescription} instance that is attached to this project's resource set. */
+	protected void updateResourceSetProjectDescription() {
+		ProjectDescription.removeFromEmfObject(resourceSet);
+		ProjectDescription newPD = projectDescriptionFactory.getProjectDescription(projectConfig);
+		newPD.attachToEmfObject(resourceSet);
 	}
 
 	/** Create and configure a new resource set for this project. */
 	protected XtextResourceSet createNewResourceSet(ResourceDescriptionsData newProjectIndex) {
 		XtextResourceSet result = resourceSetProvider.get();
 		result.setURIResourceMap(uriResourceMap);
+		ProjectDescription projectDescription = projectDescriptionFactory.getProjectDescription(projectConfig);
 		projectDescription.attachToEmfObject(result);
-		ProjectConfigAdapter.install(result, projectConfig);
 		attachWorkspaceResourceLocator(result);
 
 		ChunkedResourceDescriptions index = workspaceIndex.toDescriptions(result);
-		index.setContainer(projectDescription.getName(), newProjectIndex);
+		index.setContainer(projectConfig.getName(), newProjectIndex);
 		return result;
 	}
 
@@ -448,6 +458,11 @@ public class ProjectBuilder {
 	}
 
 	/** Getter */
+	public String getName() {
+		return getProjectConfig().getName();
+	}
+
+	/** Getter */
 	public URI getBaseDir() {
 		return getProjectConfig().getPath();
 	}
@@ -458,13 +473,27 @@ public class ProjectBuilder {
 	}
 
 	/** Getter */
-	public ProjectDescription getProjectDescription() {
-		return projectDescription;
+	public ProjectConfigSnapshot getProjectConfig() {
+		return projectConfig;
 	}
 
-	/** Getter */
-	public XIProjectConfig getProjectConfig() {
-		return projectConfig;
+	/** Setter */
+	public void setProjectConfig(ProjectConfigSnapshot newProjectConfig) {
+		boolean depsHaveChanged = projectConfig == null
+				|| !projectConfig.getDependencies().equals(newProjectConfig.getDependencies());
+
+		projectConfig = newProjectConfig;
+
+		if (depsHaveChanged) {
+			onDependenciesChanged();
+		}
+	}
+
+	/** Invoked whenever the dependencies of this builder's project change. */
+	protected void onDependenciesChanged() {
+		// since the ProjectDescription instance attached to this#resourceSet caches the project dependencies, we have
+		// to update those whenever the dependencies change:
+		updateResourceSetProjectDescription();
 	}
 
 	/** Same as {@link #doClearWithoutNotification()}, but also sends corresponding notifications to the LSP client. */
@@ -523,33 +552,21 @@ public class ProjectBuilder {
 		ResourceChangeSet result = new ResourceChangeSet();
 		doClearWithoutNotification();
 
+		boolean fullBuildRequired = false;
 		ImmutableProjectState projectState = projectStatePersister.readProjectState(projectConfig);
 		if (projectState != null) {
-			for (HashedFileContent hfc : projectState.getFileHashes().values()) {
-				URI previouslyExistingFile = hfc.getUri();
-				switch (getSourceChangeKind(hfc, projectState)) {
-				case UNCHANGED: {
-					break;
-				}
-				case CHANGED: {
-					result.getModified().add(previouslyExistingFile);
-					break;
-				}
-				case DELETED: {
-					result.getDeleted().add(previouslyExistingFile);
-					break;
-				}
-				}
-			}
+			fullBuildRequired |= handleProjectAdditionRemovalSinceProjectStateWasComputed(result, projectState);
+			fullBuildRequired |= handleSourceFileChangesSinceProjectStateWasComputed(result, projectState);
 			setProjectIndex(projectState.internalGetResourceDescriptions());
 			this.projectStateSnapshot.set(projectState);
 		}
 
 		Set<URI> allIndexedUris = getProjectIndex().getAllURIs();
-		for (ISourceFolder srcFolder : projectConfig.getSourceFolders()) {
-			List<URI> allSourceFolderUris = srcFolder.getAllResources(fileSystemScanner);
+		for (SourceFolderSnapshot srcFolder : projectConfig.getSourceFolders()) {
+			List<URI> allSourceFolderUris = sourceFolderScanner.findAllSourceFiles(srcFolder, fileSystemScanner);
 			for (URI srcFolderUri : allSourceFolderUris) {
-				if (!srcFolderUri.hasTrailingPathSeparator() && !allIndexedUris.contains(srcFolderUri)) {
+				if (!srcFolderUri.hasTrailingPathSeparator()
+						&& (fullBuildRequired || !allIndexedUris.contains(srcFolderUri))) {
 					if (resourceServiceProviders.getResourceServiceProvider(srcFolderUri) != null) {
 						result.getModified().add(srcFolderUri);
 					}
@@ -560,12 +577,74 @@ public class ProjectBuilder {
 		return result;
 	}
 
+	/** @return <code>true</code> iff full build of this builder's project is required due to project changes. */
+	private boolean handleProjectAdditionRemovalSinceProjectStateWasComputed(ResourceChangeSet result,
+			ImmutableProjectState projectState) {
+
+		Set<String> oldExistingDeps = FluentIterable.from(projectState.getDependencies().entrySet())
+				.filter(Entry::getValue) // value tells whether project did exist when project state was computed
+				.transform(Entry::getKey).toSet();
+		Set<String> newExistingDeps = FluentIterable.from(projectConfig.getDependencies())
+				.filter(depName -> workspaceIndex.getProjectIndex(depName) != null).toSet();
+		if (!Sets.difference(oldExistingDeps, newExistingDeps).isEmpty()) {
+			// projects among the dependencies of this builder's project were removed since 'projectState' was computed
+			// WHAT WE WOULD LIKE TO DO: treat all resources that existed before in those removed projects as deleted,
+			// by creating additional external deltas for them
+			// BUT: this is not possible, because we cannot create IResourceDescriptions/Deltas for them (without
+			// persisting far more information in the project state files, which is not feasible)
+			// -> therefore we simply perform a full build of this builder's project
+			return true;
+		}
+		for (String depName : Sets.difference(newExistingDeps, oldExistingDeps)) {
+			// project 'depName' was added since 'projectState' was persisted
+			// -> treat all resources that exist now in that added project as newly created, by creating additional
+			// external deltas for them
+			ResourceDescriptionsData addedDepIndex = workspaceIndex.getProjectIndex(depName);
+			if (addedDepIndex != null) {
+				FluentIterable.from(addedDepIndex.getAllResourceDescriptions())
+						.transform(desc -> new DefaultResourceDescriptionDelta(null, desc))
+						.copyInto(result.getAdditionalExternalDeltas());
+			}
+		}
+		return false;
+	}
+
+	/** @return <code>true</code> iff full build of this builder's project is required due to source file changes. */
+	private boolean handleSourceFileChangesSinceProjectStateWasComputed(ResourceChangeSet result,
+			ImmutableProjectState projectState) {
+
+		for (HashedFileContent hfc : projectState.getFileHashes().values()) {
+			URI previouslyExistingFile = hfc.getUri();
+			switch (getSourceChangeKind(hfc, projectState)) {
+			case UNCHANGED: {
+				break;
+			}
+			case CHANGED: {
+				result.getModified().add(previouslyExistingFile);
+				break;
+			}
+			case DELETED: {
+				result.getDeleted().add(previouslyExistingFile);
+				break;
+			}
+			}
+		}
+
+		return false;
+	}
+
 	/** Updates the index state, file hashes and validation issues */
 	private void updateProjectState(
 			XBuildRequest request,
 			XBuildResult result,
 			Map<URI, ? extends List<? extends LSPIssue>> issuesFromIncrementalBuild,
 			List<URI> deletedFiles) {
+
+		ImmutableMap.Builder<String, Boolean> dependencies = ImmutableMap.builder();
+		for (String currDepName : projectConfig.getDependencies()) {
+			boolean currDepExists = workspaceIndex.getProjectIndex(currDepName) != null;
+			dependencies.put(currDepName, currDepExists);
+		}
 
 		ImmutableProjectState newState = this.projectStateSnapshot.updateAndGet(snapshot -> {
 			Map<URI, HashedFileContent> newHashedFileContents = new HashMap<>(snapshot.getFileHashes());
@@ -586,7 +665,7 @@ public class ProjectBuilder {
 			});
 			issuesFromIncrementalBuild.forEach(newIssues::putAll);
 			return ImmutableProjectState.withoutCopy(result.getIndex(), result.getFileMappings(),
-					ImmutableMap.copyOf(newHashedFileContents), newIssues.build());
+					ImmutableMap.copyOf(newHashedFileContents), newIssues.build(), dependencies.build());
 		});
 		setProjectIndex(newState.internalGetResourceDescriptions());
 
@@ -672,17 +751,4 @@ public class ProjectBuilder {
 	private void setProjectIndex(ResourceDescriptionsData index) {
 		this.workspaceIndex.setProjectIndex(projectConfig.getName(), index);
 	}
-
-	boolean isSourceFile(URI uri) {
-		String fileName = uri.lastSegment();
-		if (fileName.equals(projectStatePersister.getPersistedFileName())) {
-			return false;
-		}
-		ISourceFolder sourceFolder = projectConfig.findSourceFolderContaining(uri);
-		if (sourceFolder != null) {
-			return true;
-		}
-		return false;
-	}
-
 }

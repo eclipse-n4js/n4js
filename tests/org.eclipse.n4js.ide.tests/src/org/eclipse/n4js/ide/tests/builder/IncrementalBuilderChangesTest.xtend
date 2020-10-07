@@ -10,9 +10,12 @@
  */
 package org.eclipse.n4js.ide.tests.builder
 
-import org.junit.Test
-import static org.junit.Assert.assertEquals
+import java.io.File
+import org.eclipse.n4js.ide.tests.server.TestWorkspaceManager
 import org.junit.Ignore
+import org.junit.Test
+
+import static org.junit.Assert.assertEquals
 
 /**
  * Tests incremental builds triggered by changes in source files.
@@ -315,7 +318,28 @@ class IncrementalBuilderChangesTest extends AbstractIncrementalBuilderTest {
 		joinServerRequests();
 		assertNoIssues();
 	}
-	
+
+	@Test
+	def void testChangeInPlainJS() throws Exception {
+		testWorkspaceManager.createTestProjectOnDisk(
+			"PlainJSModule.js" -> '''
+				console.log('hello');
+			'''
+		);
+		startAndWaitForLspServer();
+		assertNoIssues();
+
+		val sourceFileURI = new File(new File(getProjectRoot(TestWorkspaceManager.DEFAULT_PROJECT_NAME), TestWorkspaceManager.DEFAULT_SOURCE_FOLDER), "PlainJSModule.js").toFileURI;
+		val outputFileURI = new File(getOutputFolder(), "PlainJSModule.js").toFileURI;
+
+		assertContentOfFileOnDisk(outputFileURI, "console.log('hello');");
+
+		changeNonOpenedFile(sourceFileURI, ["// changed"]);
+		joinServerRequests();
+
+		assertContentOfFileOnDisk(outputFileURI, "// changed");
+	}
+
 	@Ignore("https://github.com/eclipse/n4js/issues/1822")
 	@Test
 	def void testTransitivelyAffected() {

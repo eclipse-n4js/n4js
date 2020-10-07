@@ -13,6 +13,8 @@ package org.eclipse.n4js.scoping;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.n4JS.IdentifierRef;
+import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
 
@@ -24,12 +26,14 @@ public abstract class UsageAwareObjectDescription<T extends IEObjectDescription>
 		implements IUsageAwareEObjectDescription {
 
 	private final T delegate;
+	private final ImportSpecifier origin;
 
 	/**
 	 * Instantiates a new {@link UsageAwareObjectDescription} with the given description delegate.
 	 */
-	public UsageAwareObjectDescription(T delegate) {
+	public UsageAwareObjectDescription(T delegate, ImportSpecifier origin) {
 		this.delegate = delegate;
+		this.origin = origin;
 	}
 
 	@Override
@@ -74,9 +78,17 @@ public abstract class UsageAwareObjectDescription<T extends IEObjectDescription>
 		return this.delegate;
 	}
 
+	@Override
+	public ImportSpecifier getOrigin() {
+		return this.origin;
+	}
+
 	/**
 	 * This method is invoked when this {@link IEObjectDescription} used to bind a name.
 	 */
 	@Override
 	public abstract void markAsUsed();
+
+	@Override
+	public abstract void recordOrigin(IdentifierRef identRef);
 }

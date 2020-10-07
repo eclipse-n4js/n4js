@@ -126,13 +126,20 @@ public class N4JSLanguageUtils {
 
 	/**
 	 * The default language version returned by method {@link #getLanguageVersion()} in case no actual
-	 * language version was set during the build . See {@link #getLanguageVersion()} for details.
+	 * language version/commit was set during the build. See {@link #getLanguageVersion()} for details.
 	 */
 	public static final String DEFAULT_LANGUAGE_VERSION = "0.0.0.v19990101_0000";
+
+	/**
+	 * The default language commit hash returned by method {@link #getLanguageCommit()} in case no actual
+	 * language version/commit was set during the build. See {@link #getLanguageVersion()} for details.
+	 */
+	public static final String DEFAULT_LANGUAGE_COMMIT = "0000000000000000000000000000000000000000";
 
 	private static final String LANGUAGE_VERSION_PROPERTIES_FILE_NAME = "language-version.properties";
 
 	private static String languageVersionStr = null;
+	private static String languageCommitStr = null;
 
 	/**
 	 * Returns the N4JS language version as defined in file {@value #LANGUAGE_VERSION_PROPERTIES_FILE_NAME}.
@@ -144,9 +151,21 @@ public class N4JSLanguageUtils {
 	 * builds and the nightly builds).
 	 */
 	def public static String getLanguageVersion() {
-		if (languageVersionStr !== null) {
-			return languageVersionStr;
+		if (languageVersionStr === null) {
+			languageVersionStr = readLanguageVersionProperty("language.version");
 		}
+		return languageVersionStr;
+	}
+
+	/** Like {@link #getLanguageVersion()}, but for the git commit hash the language version was built from. */
+	def public static String getLanguageCommit() {
+		if (languageCommitStr === null) {
+			languageCommitStr = readLanguageVersionProperty("language.commit");
+		}
+		return languageCommitStr;
+	}
+
+	def private static String readLanguageVersionProperty(String propertyId) {
 		var Properties properties;
 		try (val InputStream in = N4JSLanguageUtils.getClassLoader().getResourceAsStream(LANGUAGE_VERSION_PROPERTIES_FILE_NAME)) {
 			if (in === null) {
@@ -157,12 +176,11 @@ public class N4JSLanguageUtils {
 		} catch (IOException e) {
 			throw new RuntimeException("unable to load properties file " + LANGUAGE_VERSION_PROPERTIES_FILE_NAME, e);
 		}
-		val versionStr =  properties.getProperty("language.version");
-		if (versionStr === null) {
-			throw new RuntimeException("properties file " + LANGUAGE_VERSION_PROPERTIES_FILE_NAME + " does not contain property language.version");
+		val value = properties.getProperty(propertyId);
+		if (value === null) {
+			throw new RuntimeException("properties file " + LANGUAGE_VERSION_PROPERTIES_FILE_NAME + " does not contain property " + propertyId);
 		}
-		languageVersionStr = versionStr;
-		return languageVersionStr;
+		return value;
 	}
 
 	/**

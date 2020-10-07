@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CancellationException;
+import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
@@ -27,6 +28,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.n4js.ide.xtext.server.build.XClusteringStorageAwareResourceLoader.LoadResult;
 import org.eclipse.n4js.utils.URIUtils;
+import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.generator.GeneratorContext;
@@ -49,7 +51,6 @@ import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue;
-import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 
@@ -113,10 +114,11 @@ public class XStatefulIncrementalBuilder {
 			XIndexer.XIndexResult result = indexer.computeAndIndexDeletedAndChanged(request, context);
 			ResourceDescriptionsData newIndex = result.getNewIndex();
 			List<Delta> deltasToBeProcessed = result.getResourceDeltas();
-			List<Delta> deltasFromExternal = indexer.computeAndIndexAffected(newIndex, remainingURIs,
+			List<Delta> affectedByExternal = indexer.computeAndIndexAffected(newIndex, remainingURIs,
 					request.getExternalDeltas(), allProcessedAndExternalDeltas, context);
-			deltasFromExternal.forEach(delta -> request.afterDetectedAsAffected(delta.getUri()));
-			deltasToBeProcessed.addAll(deltasFromExternal);
+			affectedByExternal.forEach(delta -> request.afterDetectedAsAffected(delta.getUri()));
+			// avoid duplicates in case resources reported as changed/deleted are also affected by external deltas:
+			addIfNotYetPresent(deltasToBeProcessed, affectedByExternal);
 
 			operationCanceledManager.checkCanceled(request.getCancelIndicator());
 
@@ -162,6 +164,15 @@ public class XStatefulIncrementalBuilder {
 		}
 
 		return new XBuildResult(request.getIndex(), request.getFileMappings(), allProcessedDeltas);
+	}
+
+	private void addIfNotYetPresent(List<Delta> addHere, List<Delta> toBeAdded) {
+		Set<URI> presentURIs = addHere.stream().map(Delta::getUri).collect(Collectors.toSet());
+		for (Delta delta : toBeAdded) {
+			if (!presentURIs.contains(delta.getUri())) {
+				addHere.add(delta);
+			}
+		}
 	}
 
 	private void removeGeneratedFiles(URI source, XSource2GeneratedMapping source2GeneratedMapping) {
@@ -321,7 +332,7 @@ public class XStatefulIncrementalBuilder {
 		}
 		OutputConfigurationProvider outputConfProvider = serviceProvider.get(OutputConfigurationProvider.class);
 		URI resourceUri = resource.getURI();
-		IProjectConfig projectConfig = workspaceManager.getProjectConfig(resourceUri);
+		ProjectConfigSnapshot projectConfig = workspaceManager.getProjectConfig(resourceUri);
 		Set<OutputConfiguration> outputConfigurations = outputConfProvider.getOutputConfigurations(resource);
 		URI projectBaseUri = projectConfig.getPath();
 		Path resourcePath = URIUtils.toPath(resourceUri);

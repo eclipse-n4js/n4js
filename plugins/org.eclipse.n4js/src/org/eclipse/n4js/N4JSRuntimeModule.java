@@ -62,6 +62,7 @@ import org.eclipse.n4js.ts.scoping.builtin.ConfiguredResourceSetProvider;
 import org.eclipse.n4js.ts.validation.TypesKeywordProvider;
 import org.eclipse.n4js.typesbuilder.N4JSTypesBuilder;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
+import org.eclipse.n4js.utils.N4JSEObjectAtOffsetHelper;
 import org.eclipse.n4js.utils.di.scopes.ScopeManager;
 import org.eclipse.n4js.utils.di.scopes.TransformationScoped;
 import org.eclipse.n4js.utils.validation.PrePostDiagnostician;
@@ -91,6 +92,7 @@ import org.eclipse.xtext.parser.antlr.SyntaxErrorMessageProvider;
 import org.eclipse.xtext.parsetree.reconstr.IHiddenTokenHelper;
 import org.eclipse.xtext.preferences.IPreferenceValuesProvider;
 import org.eclipse.xtext.resource.DescriptionUtils;
+import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
 import org.eclipse.xtext.resource.IDerivedStateComputer;
 import org.eclipse.xtext.resource.ILocationInFileProvider;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -361,6 +363,11 @@ public class N4JSRuntimeModule extends org.eclipse.n4js.AbstractN4JSRuntimeModul
 	 */
 	public Class<? extends Provider<? extends SynchronizedXtextResourceSet>> provideConfiguredXtextResourceSet() {
 		return ConfiguredResourceSetProvider.class;
+	}
+
+	/** Binds a custom {@link N4JSEObjectAtOffsetHelper}. */
+	public Class<? extends EObjectAtOffsetHelper> bindEObjectAtOffsetHelper() {
+		return N4JSEObjectAtOffsetHelper.class;
 	}
 
 	/**

@@ -244,6 +244,23 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 	}
 
 	@Override
+	public CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> implementation(
+			TextDocumentPositionParams position) {
+
+		URI uri = getURI(position);
+		return resourceTaskManager.runInExistingContext(uri, "implementation", (rtc, ci) -> {
+			return implementation(rtc, position, ci);
+		});
+	}
+
+	/** Compute the implementation locations. */
+	@SuppressWarnings("unused")
+	protected Either<List<? extends Location>, List<? extends LocationLink>> implementation(ResourceTaskContext rtc,
+			TextDocumentPositionParams position, CancelIndicator cancelIndicator) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
 	public CompletableFuture<List<Either<SymbolInformation, DocumentSymbol>>> documentSymbol(
 			DocumentSymbolParams params) {
 
@@ -470,7 +487,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 	@Override
 	public CompletableFuture<WorkspaceEdit> rename(RenameParams renameParams) {
 		URI uri = getURI(renameParams.getTextDocument());
-		return resourceTaskManager.runInExistingContext(uri, "rename", (rtc, ci) -> {
+		return resourceTaskManager.runInTemporaryContext(uri, "rename", false, (rtc, ci) -> {
 			return rename(rtc, renameParams, ci);
 		});
 	}

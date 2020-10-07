@@ -11,12 +11,18 @@
 package org.eclipse.n4js.ide.tests.server;
 
 import static java.util.Collections.singletonList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.nio.file.attribute.BasicFileAttributeView;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -50,9 +56,12 @@ import org.eclipse.lsp4j.FileChangeType;
 import org.eclipse.lsp4j.FileEvent;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.MessageParams;
+import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.Range;
+import org.eclipse.lsp4j.RenameCapabilities;
 import org.eclipse.lsp4j.ResourceChange;
 import org.eclipse.lsp4j.ResourceOperation;
+import org.eclipse.lsp4j.TextDocumentClientCapabilities;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.lsp4j.TextDocumentEdit;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
@@ -69,26 +78,33 @@ import org.eclipse.n4js.cli.helper.SystemOutRedirecter;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
 import org.eclipse.n4js.ide.tests.client.IdeTestLanguageClient;
 import org.eclipse.n4js.ide.tests.client.IdeTestLanguageClient.IIdeTestLanguageClientListener;
+import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo;
+import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo.ProjectBuildOrderIterator;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 import org.eclipse.n4js.ide.xtext.server.build.BuilderFrontend;
 import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIndex;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.xtext.LanguageInfo;
 import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
+import org.eclipse.xtext.testing.GlobalRegistries;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
+import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
@@ -106,6 +122,17 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	static final protected String FILE_CONTENT_ASSERTION_WILDCARD = "[...]";
 
 	static final SystemOutRedirecter SYSTEM_OUT_REDIRECTER = new SystemOutRedirecter();
+
+	/** Clear global state to ensure IDE tests run on a clean slate. */
+	@BeforeClass
+	static final public void clearGlobalRegistries() {
+		// Due to problems in {@link InProcessExecuter}, invalid global state was leaking from tests that use the
+		// {@link CliTools} (e.g. singletons from an earlier test were used in later tests).
+		// Should be fixed as of GH-1915, so clearing the global state should no longer be necessary, here. But because
+		// this is hard to notice and debug, we still clear the global state to make the IDE tests more robust against
+		// similar problems in the future.
+		GlobalRegistries.clearGlobalRegistries();
+	}
 
 	/** Catch outputs on console to an internal buffer */
 	@BeforeClass
@@ -140,6 +167,9 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	/** */
 	@Inject
 	protected LanguageInfo languageInfo;
+	/** */
+	@Inject
+	protected ProjectBuildOrderInfo.Provider projectBuildOrderInfoProvider;
 
 	/** Utility to create/delete the test workspace on disk */
 	protected final TestWorkspaceManager testWorkspaceManager = new TestWorkspaceManager(getProjectType());
@@ -159,16 +189,32 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		}
 	}
 
+	/** Deletes the test data folder if it exists (to ensure tests are not affected by old test data). */
+	@Before
+	public void cleanupTestDataFolder() throws IOException {
+		File root = testWorkspaceManager.getRoot();
+		if (root.exists()) {
+			FileUtils.delete(root);
+		}
+	}
+
 	/** Deletes the test project in case it exists. */
 	@After
-	final public void deleteTestProject() {
-		// clear thread pools
-		languageServer.shutdown().join();
-		// clear the state related to the test
-		testWorkspaceManager.deleteTestFromDiskIfCreated();
-		languageClient.clearLogMessages();
-		languageClient.clearIssues();
-		openFiles.clear();
+	final public void deleteTestProject() throws IOException {
+		try {
+			if (languageClient != null) { // only if LSP server was started
+				assertNoErrorsInLog();
+			}
+			assertNoErrorsInOutput();
+		} finally {
+			if (languageServer != null) { // only if LSP server was started
+				shutdownLspServer();
+			}
+			SYSTEM_OUT_REDIRECTER.clearSystemOut();
+			SYSTEM_OUT_REDIRECTER.clearSystemErr();
+			// clear the state related to the test
+			testWorkspaceManager.deleteTestFromDiskIfCreated();
+		}
 	}
 
 	/** @return the workspace root folder as a {@link File}. */
@@ -217,15 +263,33 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		return new StringLSP4J(getRoot());
 	}
 
+	/** Shuts down a running LSP server. Does not clean disk. */
+	protected void shutdownLspServer() {
+		if (languageServer == null) {
+			throw new IllegalStateException("trying to shut down LSP server, but it was never started");
+		}
+		// clear thread pools
+		languageServer.shutdown().join();
+		openFiles.clear();
+		languageClient.clearLogMessages();
+		languageClient.clearIssues();
+		N4jscTestFactory.unset();
+	}
+
 	/**
 	 * Call this method after creating the test project(s) to start the LSP server and perform other initializations
 	 * required for testing. Afterwards, actual testing can begin, e.g. checking issues with {@link #assertNoIssues()}
 	 * or modifying files and rebuilding.
 	 */
 	protected void startAndWaitForLspServer() {
-		createInjector();
-		startLspServer(getRoot());
+		startLspServerWithoutWaiting();
 		joinServerRequests();
+	}
+
+	/** Same as {@link #startAndWaitForLspServer()}, but without waiting. */
+	protected void startLspServerWithoutWaiting() {
+		createInjector();
+		doStartLspServer(getRoot());
 	}
 
 	/** Creates injector for N4JS */
@@ -242,11 +306,14 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	}
 
 	/** Connects, initializes and waits for the initial build of the test project. */
-	protected void startLspServer(File root) {
+	protected void doStartLspServer(File root) {
 		ClientCapabilities capabilities = new ClientCapabilities();
 		WorkspaceClientCapabilities wcc = new WorkspaceClientCapabilities();
 		wcc.setExecuteCommand(new ExecuteCommandCapabilities());
 		capabilities.setWorkspace(wcc);
+		TextDocumentClientCapabilities tdcc = new TextDocumentClientCapabilities();
+		tdcc.setRename(new RenameCapabilities(true, false)); // activate 'prepareRename' requests
+		capabilities.setTextDocument(tdcc);
 		InitializeParams initParams = new InitializeParams();
 		initParams.setCapabilities(capabilities);
 		initParams.setRootUri(new FileURI(root).toString());
@@ -254,9 +321,9 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		languageClient.addListener(this);
 
 		languageServer.connect(languageClient);
-		languageServer.initialize(initParams);
+		languageServer.initialize(initParams)
+				.join(); // according to LSP, we must to wait here before sending #initialized():
 		languageServer.initialized(null);
-		joinServerRequests();
 	}
 
 	@Override
@@ -310,6 +377,21 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		throw new AssertionError("should never reach this point");
 	}
 
+	/**
+	 * Send a 'didChangeWatchedFiles' notification to the server. The file change type will be
+	 * {@link FileChangeType#Changed Changed} for all given URIs.
+	 */
+	protected void sendDidChangeWatchedFiles(FileURI... changedFileURIs) {
+		if (changedFileURIs == null || changedFileURIs.length == 0) {
+			Assert.fail("no URIs of changed files given");
+		}
+		List<FileEvent> fileEvents = Stream.of(changedFileURIs)
+				.map(fileURI -> new FileEvent(fileURI.toString(), FileChangeType.Changed))
+				.collect(Collectors.toList());
+		DidChangeWatchedFilesParams params = new DidChangeWatchedFilesParams(fileEvents);
+		languageServer.didChangeWatchedFiles(params);
+	}
+
 	/** Same as {@link #isOpen(FileURI)}, but accepts a module name. */
 	protected boolean isOpen(String moduleName) {
 		FileURI fileURI = getFileURIFromModuleName(moduleName);
@@ -330,6 +412,11 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		String contentInMemory = info.content;
 		String contentOnDisk = getContentOfFileOnDisk(fileURI);
 		return !contentOnDisk.equals(contentInMemory);
+	}
+
+	/** Returns the file URIs of all currently open files. */
+	protected Set<FileURI> getOpenFiles() {
+		return ImmutableSet.copyOf(openFiles.keySet());
 	}
 
 	/** Same as {@link #openFile(FileURI)}, accepting a module name instead of a file URI. */
@@ -365,6 +452,13 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		openFiles.put(fileURI, new OpenFileInfo(content));
 
 		joinServerRequests();
+	}
+
+	/** Closes all currently open files. */
+	protected void closeAllFiles() {
+		for (FileURI fileURI : new ArrayList<>(openFiles.keySet())) {
+			closeFile(fileURI);
+		}
 	}
 
 	/** Same as {@link #closeFile(FileURI)}, but accepts a module name instead of a file URI. */
@@ -523,10 +617,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		// 1) change on disk
 		changeFileOnDiskWithoutNotification(fileURI, modification);
 		// 2) notify LSP server
-		List<FileEvent> fileEvents = Collections.singletonList(
-				new FileEvent(fileURI.toString(), FileChangeType.Changed));
-		DidChangeWatchedFilesParams params = new DidChangeWatchedFilesParams(fileEvents);
-		languageServer.didChangeWatchedFiles(params);
+		sendDidChangeWatchedFiles(fileURI);
 	}
 
 	/** Same as {@link #changeOpenedFile(FileURI, String)}, but accepts a module name. */
@@ -620,8 +711,9 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		changeFileOnDiskWithoutNotification(fileURI, info.content);
 		// 2) notify LSP server
 		VersionedTextDocumentIdentifier docId = new VersionedTextDocumentIdentifier(fileURI.toString(), info.version);
-		DidSaveTextDocumentParams params = new DidSaveTextDocumentParams(docId);
-		languageServer.didSave(params);
+		DidSaveTextDocumentParams didSaveParams = new DidSaveTextDocumentParams(docId);
+		languageServer.didSave(didSaveParams);
+		sendDidChangeWatchedFiles(fileURI);
 	}
 
 	/**
@@ -859,11 +951,80 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		}
 	}
 
-	/**
-	 * Asserts that there are no issues in the entire workspace.
-	 */
+	/** Asserts the build order of all projects in the workspace. */
+	protected void assertProjectBuildOrder(String expectedProjectBuildOrder) {
+		ProjectBuildOrderIterator iter = projectBuildOrderInfoProvider.get().getIterator().visitAll();
+		String buildOrderString = org.eclipse.n4js.utils.Strings.toString(pd -> pd.getName(), () -> iter);
+		assertEquals("Project build order did not match expectation.", expectedProjectBuildOrder, buildOrderString);
+	}
+
+	/** Asserts that there are no issues in the entire workspace. */
 	protected void assertNoIssues() {
 		assertIssues(Collections.emptyMap());
+	}
+
+	/** Asserts that there are no ERRORs in the LSP log. */
+	protected void assertNoErrorsInLog() {
+		for (MessageParams msg : languageClient.getLogMessages()) {
+			String message = Strings.nullToEmpty(msg.getMessage());
+			assertNotEquals("Unexpected ERROR in log:\n" + message, MessageType.Error, msg.getType());
+		}
+	}
+
+	/** Asserts that there are no ERRORs in the output streams. */
+	static protected void assertNoErrorsInOutput() {
+		String syserr = SYSTEM_OUT_REDIRECTER.getSystemErr();
+		assertFalse("an error was logged to System.err during the test:" + System.lineSeparator() + syserr,
+				syserr.contains("ERROR"));
+		String sysout = SYSTEM_OUT_REDIRECTER.getSystemOut();
+		assertFalse("an error was logged to System.out during the test:" + System.lineSeparator() + sysout,
+				sysout.contains("ERROR"));
+	}
+
+	/**
+	 * Asserts that there are no issues in the entire workspace and in open editors. See
+	 * {@link #assertIssuesInBuilderAndEditors(Iterable, Map)} for details.
+	 */
+	protected void assertNoIssuesInBuilderAndEditors(Iterable<String> moduleNamesForEditors) {
+		assertIssuesInBuilderAndEditors(moduleNamesForEditors, Collections.emptyMap());
+	}
+
+	/**
+	 * Same as {@link #assertIssuesInBuilderAndEditors(Iterable, Map)}, accepting pairs from module name to issue list
+	 * instead of a map from file URI to issue list.
+	 */
+	@SafeVarargs
+	protected final void assertIssuesInBuilderAndEditors(Iterable<String> moduleNamesForEditors,
+			Pair<String, List<String>>... moduleNameToExpectedIssues) {
+
+		assertIssuesInBuilderAndEditors(moduleNamesForEditors,
+				convertModuleNamePairsToIdMap(moduleNameToExpectedIssues));
+	}
+
+	/**
+	 * Asserts that there are the given issues in the workspace (as done by {@link #assertIssues(Map)}) <em>and</em>
+	 * also opens editors for the modules given in 'moduleNamesForEditors' to assert that the same issues appear in the
+	 * validation performed inside the editors.
+	 */
+	protected void assertIssuesInBuilderAndEditors(Iterable<String> moduleNamesForEditors,
+			Map<FileURI, List<String>> fileURIToExpectedIssues) {
+
+		if (IterableExtensions.isEmpty(moduleNamesForEditors)) {
+			throw new IllegalArgumentException("no module names for editors given");
+		}
+
+		// in builder:
+		assertIssues(fileURIToExpectedIssues);
+
+		// in editors:
+		for (String moduleName : moduleNamesForEditors) {
+			openFile(moduleName);
+			joinServerRequests();
+			assertIssues(fileURIToExpectedIssues);
+			closeFile(moduleName);
+			joinServerRequests();
+			assertIssues(fileURIToExpectedIssues);
+		}
 	}
 
 	/**
@@ -879,8 +1040,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * Same as {@link #assertIssues(Map, boolean)}, but with <code>withIgnoredIssues</code> always set to
 	 * <code>false</code>.
 	 */
-	protected void assertIssues(Map<FileURI, List<String>> moduleIdToExpectedIssues) {
-		assertIssues(moduleIdToExpectedIssues, false);
+	protected void assertIssues(Map<FileURI, List<String>> fileURIToExpectedIssues) {
+		assertIssues(fileURIToExpectedIssues, false);
 	}
 
 	/**
@@ -888,10 +1049,10 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * map's keys, this method will also assert that the remaining files in the workspace do not contain any issues.
 	 * Flag <code>withIgnoredIssues</code> applies to those issues accordingly.
 	 */
-	protected void assertIssues(Map<FileURI, List<String>> fileUriToExpectedIssues, boolean withIgnoredIssues) {
+	protected void assertIssues(Map<FileURI, List<String>> fileURIToExpectedIssues, boolean withIgnoredIssues) {
 		// check given expectations
-		assertIssuesInFiles(fileUriToExpectedIssues, withIgnoredIssues);
-		Set<FileURI> checkedModules = fileUriToExpectedIssues.keySet();
+		assertIssuesInFiles(fileURIToExpectedIssues, withIgnoredIssues);
+		Set<FileURI> checkedModules = fileURIToExpectedIssues.keySet();
 
 		// check that there are no other issues in the workspace
 		Multimap<FileURI, Diagnostic> allIssues = languageClient.getIssues();
@@ -899,7 +1060,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		Set<FileURI> uncheckedModulesWithIssues = new LinkedHashSet<>(modulesWithIssues);
 		uncheckedModulesWithIssues.removeAll(checkedModules);
 		if (!uncheckedModulesWithIssues.isEmpty()) {
-			String msg = fileUriToExpectedIssues.size() == 0
+			String msg = fileURIToExpectedIssues.size() == 0
 					? "expected no issues in workspace but found one or more issues:"
 					: "found one or more unexpected issues in workspace:";
 			StringBuilder sb = new StringBuilder();
@@ -935,8 +1096,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * Same as {@link #assertIssuesInFiles(Map, boolean)}, but with <code>withIgnoredIssues</code> always set to
 	 * <code>false</code>.
 	 */
-	protected void assertIssuesInFiles(Map<FileURI, List<String>> moduleIdToExpectedIssues) {
-		assertIssuesInFiles(moduleIdToExpectedIssues, false);
+	protected void assertIssuesInFiles(Map<FileURI, List<String>> fileURIToExpectedIssues) {
+		assertIssuesInFiles(fileURIToExpectedIssues, false);
 	}
 
 	/**
@@ -1089,8 +1250,14 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		return new FileURI(file);
 	}
 
+	/** */
+	protected static FileURI toFileURI(Path path) {
+		return new FileURI(path.toFile());
+	}
+
+	/** Applies the given replacements to the given character sequence and returns the resulting string. */
 	@SafeVarargs
-	private static String applyReplacements(CharSequence oldContent, Pair<String, String>... replacements) {
+	protected static String applyReplacements(CharSequence oldContent, Pair<String, String>... replacements) {
 		StringBuilder newContent = new StringBuilder(oldContent);
 		for (Pair<String, String> replacement : replacements) {
 			int offset = newContent.indexOf(replacement.getKey());
@@ -1104,9 +1271,20 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		return newContent.toString();
 	}
 
-	private static String applyTextEdits(CharSequence oldContent, Iterable<? extends TextEdit> textEdits) {
+	/** Applies the given text edits to the given character sequence and returns the resulting string. */
+	protected static String applyTextEdits(CharSequence oldContent, Iterable<? extends TextEdit> textEdits) {
 		XDocument oldDocument = new XDocument(0, oldContent.toString(), true, true);
 		XDocument newDocument = oldDocument.applyChanges(textEdits);
 		return newDocument.getContents();
+	}
+
+	/** Sets and asserts all time attributes of the given file to the given time [ms] */
+	protected static void setFileCreationDate(Path filePath, long millis) throws IOException {
+		BasicFileAttributeView attributes = Files.getFileAttributeView(filePath, BasicFileAttributeView.class);
+		FileTime time = FileTime.fromMillis(millis);
+		attributes.setTimes(time, time, time);
+
+		FileTime fileTime = Files.readAttributes(filePath, BasicFileAttributes.class).lastModifiedTime();
+		assertEquals(millis, fileTime.toMillis());
 	}
 }

@@ -14,9 +14,11 @@ import java.util.HashMap;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.scoping.UsageAwareObjectDescription;
+import org.eclipse.n4js.utils.EcoreUtilN4;
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -107,16 +109,16 @@ public class OriginAwareScope implements IScope {
 				// TODO: Mark Twin-Ambiguous as well as used.
 				if (original instanceof AmbiguousImportDescription) {
 					AmbiguousImportDescription ambiguousImportDescription = (AmbiguousImportDescription) original;
-					return new UsageAwareAmbiguousImportDescription(ambiguousImportDescription);
+					return new UsageAwareAmbiguousImportDescription(ambiguousImportDescription, origin);
 				} else if (original instanceof PlainAccessOfAliasedImportDescription) {
 					PlainAccessOfAliasedImportDescription plainAccess = (PlainAccessOfAliasedImportDescription) original;
-					return new UsageAwarePlainAccessOfAliasedImportDescription(plainAccess);
+					return new UsageAwarePlainAccessOfAliasedImportDescription(plainAccess, origin);
 				} else {
 					if (IEObjectDescriptionWithError.isErrorDescription(original)) {
 						return new UsageAwareImportDescriptionWithError<>(
-								(IEObjectDescriptionWithError) original);
+								(IEObjectDescriptionWithError) original, origin);
 					} else {
-						return new UsageAwareImportDescription<>(original);
+						return new UsageAwareImportDescription<>(original, origin);
 					}
 
 				}
@@ -134,13 +136,23 @@ public class OriginAwareScope implements IScope {
 		/**
 		 *
 		 */
-		public UsageAwareImportDescription(T delegate) {
-			super(delegate);
+		public UsageAwareImportDescription(T delegate, ImportSpecifier origin) {
+			super(delegate, origin);
 		}
 
 		@Override
 		public void markAsUsed() {
-			markImportSpecifierAsUsed(origins.get(this.getDelegate()));
+			markImportSpecifierAsUsed(getOrigin());
+		}
+
+		@Override
+		public void recordOrigin(IdentifierRef identRef) {
+			if (identRef.getOriginImport() != null) {
+				return;
+			}
+			EcoreUtilN4.doWithDeliver(false, () -> {
+				identRef.setOriginImport(getOrigin());
+			}, identRef);
 		}
 
 		@Override
@@ -153,8 +165,8 @@ public class OriginAwareScope implements IScope {
 			extends UsageAwareImportDescription<T> implements IEObjectDescriptionWithError {
 
 		/** */
-		public UsageAwareImportDescriptionWithError(T delegate) {
-			super(delegate);
+		public UsageAwareImportDescriptionWithError(T delegate, ImportSpecifier origin) {
+			super(delegate, origin);
 		}
 
 		@Override
@@ -174,8 +186,9 @@ public class OriginAwareScope implements IScope {
 
 		/**
 		 */
-		public UsageAwarePlainAccessOfAliasedImportDescription(PlainAccessOfAliasedImportDescription delegate) {
-			super(delegate);
+		public UsageAwarePlainAccessOfAliasedImportDescription(PlainAccessOfAliasedImportDescription delegate,
+				ImportSpecifier origin) {
+			super(delegate, origin);
 		}
 
 		@Override
@@ -192,8 +205,8 @@ public class OriginAwareScope implements IScope {
 	private class UsageAwareAmbiguousImportDescription
 			extends UsageAwareImportDescriptionWithError<AmbiguousImportDescription> {
 
-		public UsageAwareAmbiguousImportDescription(AmbiguousImportDescription delegate) {
-			super(delegate);
+		public UsageAwareAmbiguousImportDescription(AmbiguousImportDescription delegate, ImportSpecifier origin) {
+			super(delegate, origin);
 		}
 
 		@Override

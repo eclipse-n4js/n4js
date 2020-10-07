@@ -19,24 +19,31 @@ import org.eclipse.n4js.ide.editor.contentassist.N4JSContentAssistService;
 import org.eclipse.n4js.ide.editor.contentassist.N4JSFollowElementCalculator;
 import org.eclipse.n4js.ide.editor.contentassist.N4JSIdeContentProposalProvider;
 import org.eclipse.n4js.ide.server.FileBasedWorkspaceInitializer;
+import org.eclipse.n4js.ide.server.N4JSDebugService;
 import org.eclipse.n4js.ide.server.N4JSLanguageServer;
+import org.eclipse.n4js.ide.server.N4JSLanguageServerFrontend;
 import org.eclipse.n4js.ide.server.N4JSOutputConfigurationProvider;
 import org.eclipse.n4js.ide.server.N4JSProjectDescriptionFactory;
 import org.eclipse.n4js.ide.server.N4JSProjectStatePersister;
+import org.eclipse.n4js.ide.server.N4JSTextDocumentFrontend;
 import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
-import org.eclipse.n4js.ide.server.SourceFolderAwareResourceValidator;
 import org.eclipse.n4js.ide.server.build.N4JSBuilderFrontend;
-import org.eclipse.n4js.ide.server.build.N4JSWorkspaceBuilder;
+import org.eclipse.n4js.ide.server.build.N4JSProjectBuildOrderInfo;
+import org.eclipse.n4js.ide.server.build.N4JSProjectBuilder;
 import org.eclipse.n4js.ide.server.codeActions.N4JSCodeActionService;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
 import org.eclipse.n4js.ide.server.concurrent.N4JSQueuedExecutorService;
 import org.eclipse.n4js.ide.server.hover.N4JSHoverService;
+import org.eclipse.n4js.ide.server.rename.N4JSRenameService;
 import org.eclipse.n4js.ide.server.symbol.N4JSDocumentSymbolMapper;
 import org.eclipse.n4js.ide.server.symbol.N4JSHierarchicalDocumentSymbolService;
 import org.eclipse.n4js.ide.xtext.editor.contentassist.XIdeContentProposalAcceptor;
 import org.eclipse.n4js.ide.xtext.server.BuiltInAwareIncrementalBuilder;
 import org.eclipse.n4js.ide.xtext.server.DebugService;
+import org.eclipse.n4js.ide.xtext.server.LanguageServerFrontend;
+import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo;
 import org.eclipse.n4js.ide.xtext.server.QueuedExecutorService;
+import org.eclipse.n4js.ide.xtext.server.TextDocumentFrontend;
 import org.eclipse.n4js.ide.xtext.server.WorkspaceAwareCanLoadFromDescriptionHelper;
 import org.eclipse.n4js.ide.xtext.server.XExecutableCommandRegistry;
 import org.eclipse.n4js.ide.xtext.server.XIProjectDescriptionFactory;
@@ -49,14 +56,16 @@ import org.eclipse.n4js.ide.xtext.server.build.ProjectBuilder;
 import org.eclipse.n4js.ide.xtext.server.build.ProjectStatePersister;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterValidateListener;
 import org.eclipse.n4js.ide.xtext.server.build.XStatefulIncrementalBuilder;
-import org.eclipse.n4js.ide.xtext.server.build.XWorkspaceBuilder;
 import org.eclipse.n4js.ide.xtext.server.build.XWorkspaceManager;
 import org.eclipse.n4js.ide.xtext.server.contentassist.XContentAssistService;
 import org.eclipse.n4js.ide.xtext.server.issues.WorkspaceValidateListener;
+import org.eclipse.n4js.ide.xtext.server.symbol.XDocumentSymbolService;
 import org.eclipse.n4js.ide.xtext.server.util.XOperationCanceledManager;
 import org.eclipse.n4js.internal.lsp.FileSystemScanner;
+import org.eclipse.n4js.internal.lsp.N4JSSourceFolderScanner;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
 import org.eclipse.n4js.xtext.server.EmfDiagnosticToLSPIssueConverter;
+import org.eclipse.n4js.xtext.workspace.SourceFolderScanner;
 import org.eclipse.xtext.generator.IGenerator;
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
 import org.eclipse.xtext.ide.editor.contentassist.FQNPrefixMatcher;
@@ -70,12 +79,13 @@ import org.eclipse.xtext.ide.server.codeActions.ICodeActionService2;
 import org.eclipse.xtext.ide.server.commands.ExecutableCommandRegistry;
 import org.eclipse.xtext.ide.server.commands.IExecutableCommandService;
 import org.eclipse.xtext.ide.server.hover.HoverService;
+import org.eclipse.xtext.ide.server.rename.IRenameService2;
 import org.eclipse.xtext.ide.server.symbol.DocumentSymbolMapper;
+import org.eclipse.xtext.ide.server.symbol.DocumentSymbolService;
 import org.eclipse.xtext.ide.server.symbol.HierarchicalDocumentSymbolService;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.validation.IDiagnosticConverter;
-import org.eclipse.xtext.validation.IResourceValidator;
 
 /**
  * Use this class to register ide components.
@@ -91,8 +101,16 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 		return ILanguageServerShutdownAndExitHandler.NullImpl.class;
 	}
 
+	public Class<? extends LanguageServerFrontend> bindLanguageServerFrontend() {
+		return N4JSLanguageServerFrontend.class;
+	}
+
 	public Class<? extends BuilderFrontend> bindBuilderFrontend() {
 		return N4JSBuilderFrontend.class;
+	}
+
+	public Class<? extends TextDocumentFrontend> bindTextDocumentFrontend() {
+		return N4JSTextDocumentFrontend.class;
 	}
 
 	public Class<? extends XWorkspaceManager> bindXWorkspaceManager() {
@@ -109,10 +127,6 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public Class<? extends CanLoadFromDescriptionHelper> bindCanLoadFromDescriptionHelper() {
 		return WorkspaceAwareCanLoadFromDescriptionHelper.class;
-	}
-
-	public Class<? extends ProjectBuilder> bindXProjectManager() {
-		return ProjectBuilder.class;
 	}
 
 	public Class<? extends XIProjectDescriptionFactory> bindXIProjectDescriptionFactory() {
@@ -143,8 +157,8 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 		return N4JSHoverService.class;
 	}
 
-	public Class<? extends XWorkspaceBuilder> bindXWorkspaceBuilder() {
-		return N4JSWorkspaceBuilder.class;
+	public Class<? extends ProjectBuilder> bindProjectBuilder() {
+		return N4JSProjectBuilder.class;
 	}
 
 	public Class<? extends ExecutableCommandRegistry> bindExecutableCommandRegistry() {
@@ -153,6 +167,14 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public Class<? extends XStatefulIncrementalBuilder> bindStatefulIncrementalBuilder() {
 		return BuiltInAwareIncrementalBuilder.class;
+	}
+
+	public Class<? extends ProjectBuildOrderInfo> bindProjectBuildOrderInfo() {
+		return N4JSProjectBuildOrderInfo.class;
+	}
+
+	public Class<? extends SourceFolderScanner> bindSourceFolderScanner() {
+		return N4JSSourceFolderScanner.class;
 	}
 
 	public Class<? extends IDiagnosticConverter> bindIDiagnosticConverter() {
@@ -176,6 +198,15 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 		return N4JSCommandService.class;
 	}
 
+	@Override
+	public Class<? extends IRenameService2> bindIRenameService2() {
+		return N4JSRenameService.class;
+	}
+
+	public Class<? extends DocumentSymbolService> bindDocumentSymbolService() {
+		return XDocumentSymbolService.class;
+	}
+
 	public Class<? extends IPrefixMatcher> bindIPrefixMatcher() {
 		return FQNPrefixMatcher.class;
 	}
@@ -188,7 +219,7 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 		return N4JSLanguageServer.class;
 	}
 
-	public Class<? extends QueuedExecutorService> bindLSPExecutorService() {
+	public Class<? extends QueuedExecutorService> bindQueuedExecutorService() {
 		return N4JSQueuedExecutorService.class;
 	}
 
@@ -214,7 +245,7 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 	}
 
 	public Class<? extends DebugService> bindDebugService() {
-		return DebugService.DebugServiceDefaultImpl.class;
+		return N4JSDebugService.class;
 	}
 
 	public Class<? extends ProjectStatePersister> bindProjectStatePersister() {
@@ -227,9 +258,5 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public Class<? extends AfterValidateListener> bindAfterValidateListener() {
 		return WorkspaceValidateListener.class;
-	}
-
-	public Class<? extends IResourceValidator> bindIResourceValidator() {
-		return SourceFolderAwareResourceValidator.class;
 	}
 }

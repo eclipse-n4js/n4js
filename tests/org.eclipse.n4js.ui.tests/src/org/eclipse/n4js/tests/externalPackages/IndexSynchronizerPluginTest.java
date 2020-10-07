@@ -78,7 +78,7 @@ public class IndexSynchronizerPluginTest extends AbstractBuilderParticipantTest 
 		File file = location.toFile();
 		assertTrue(file.exists());
 
-		FileUtils.deleteFileOrFolder(file);
+		FileUtils.delete(file);
 		assertFalse(file.exists());
 		assertTrue(indexSynchronizer.findNpmsInIndex().containsKey(NPM_SNAFU));
 		indexSynchronizer.checkAndClearIndex(new NullProgressMonitor());
@@ -161,7 +161,7 @@ public class IndexSynchronizerPluginTest extends AbstractBuilderParticipantTest 
 		File tmpLocation = file.getParentFile().getParentFile();
 		File oldCopy = tmpLocation.toPath().resolve(file.getName()).toFile();
 		if (oldCopy.exists()) {
-			FileUtils.deleteFileOrFolder(oldCopy);
+			FileUtils.delete(oldCopy);
 		}
 		Files.move(file.toPath(), oldCopy.toPath());
 		assertFalse(file.exists());

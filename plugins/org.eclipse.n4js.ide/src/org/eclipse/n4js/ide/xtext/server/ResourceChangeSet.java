@@ -10,11 +10,14 @@
  */
 package org.eclipse.n4js.ide.xtext.server;
 
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.xtext.resource.IResourceDescription;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 /**
@@ -24,6 +27,7 @@ public class ResourceChangeSet {
 
 	private final Set<URI> changed = Sets.newHashSet();
 	private final Set<URI> deleted = Sets.newHashSet();
+	private final List<IResourceDescription.Delta> additionalExternalDeltas = Lists.newArrayList();
 
 	/**
 	 * Return the deleted uris.
@@ -39,6 +43,13 @@ public class ResourceChangeSet {
 		return changed;
 	}
 
+	/**
+	 * Return the additional external deltas.
+	 */
+	public List<IResourceDescription.Delta> getAdditionalExternalDeltas() {
+		return additionalExternalDeltas;
+	}
+
 	@Override
 	public String toString() {
 		Joiner joiner = Joiner.on("\n  ");
@@ -47,6 +58,8 @@ public class ResourceChangeSet {
 		joiner.appendTo(result, changed);
 		result.append("\nDELETED:\n  ");
 		joiner.appendTo(result, deleted);
+		result.append("\nADDITIONAL EXTERNAL DELTAS:\n  ");
+		joiner.appendTo(result, additionalExternalDeltas);
 		return result.toString();
 	}
 

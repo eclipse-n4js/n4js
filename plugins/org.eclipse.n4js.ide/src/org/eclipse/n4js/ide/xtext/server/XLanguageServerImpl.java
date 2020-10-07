@@ -83,6 +83,7 @@ import org.eclipse.lsp4j.services.TextDocumentService;
 import org.eclipse.lsp4j.services.WorkspaceService;
 import org.eclipse.n4js.ide.server.HeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.ide.server.LspLogger;
+import org.eclipse.n4js.ide.server.util.ServerIncidentLogger;
 import org.eclipse.n4js.ide.xtext.server.issues.PublishingIssueAcceptor;
 import org.eclipse.xtext.ide.server.ICapabilitiesContributor;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
@@ -123,7 +124,7 @@ import com.google.inject.Singleton;
 @SuppressWarnings({ "restriction", "deprecation" })
 @Singleton
 public class XLanguageServerImpl implements LanguageServer, WorkspaceService, TextDocumentService, LanguageClientAware,
-		Endpoint, JsonRpcMethodProvider, DebugService {
+		Endpoint, JsonRpcMethodProvider, DebugEndpointDefinition {
 
 	private static final Logger LOG = Logger.getLogger(XLanguageServerImpl.class);
 
@@ -154,6 +155,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Inject
 	private LspLogger lspLogger;
+
+	@Inject
+	private ServerIncidentLogger serverIncidentLogger;
 
 	@Inject
 	private Provider<XtextResourceSet> resourceSetProvider;
@@ -449,6 +453,18 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	}
 
 	@Override
+	public CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> typeDefinition(
+			TextDocumentPositionParams position) {
+		return lsFrontend.typeDefinition(position);
+	}
+
+	@Override
+	public CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> implementation(
+			TextDocumentPositionParams position) {
+		return lsFrontend.implementation(position);
+	}
+
+	@Override
 	public CompletableFuture<List<? extends Location>> references(ReferenceParams params) {
 		return lsFrontend.references(params);
 	}
@@ -736,10 +752,24 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	}
 
 	/**
+	 * Getter
+	 */
+	public ServerIncidentLogger getServerIncidentLogger() {
+		return serverIncidentLogger;
+	}
+
+	/**
 	 * Returns the front-end to this server instance.
 	 */
 	public LanguageServerFrontend getFrontend() {
 		return lsFrontend;
+	}
+
+	/**
+	 * Returns the debug service used by this server instance.
+	 */
+	public DebugService getDebugService() {
+		return debugService;
 	}
 
 	/** Blocks until all requests of the language server finished */

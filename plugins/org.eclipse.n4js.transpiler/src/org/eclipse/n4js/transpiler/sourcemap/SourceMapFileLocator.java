@@ -38,7 +38,7 @@ public class SourceMapFileLocator {
 	 *
 	 * @return existing source map file or null, if no such file exists
 	 */
-	public File resolveSourceMapFromSrc(Path srcLocation) throws Exception {
+	public File resolveSourceMapFromSrc(Path srcLocation) {
 		URI uri = new FileURI(srcLocation.normalize().toFile()).toURI();
 		Optional<? extends IN4JSSourceContainer> optSrcContainer = n4jsCore.findN4JSSourceContainer(uri);
 		if (!optSrcContainer.isPresent()) {
@@ -71,7 +71,7 @@ public class SourceMapFileLocator {
 	 *
 	 * @return existing source map file or null, if no such file exists
 	 */
-	public File resolveSourceMapFromGen(Path genLocation) throws Exception {
+	public File resolveSourceMapFromGen(Path genLocation) {
 		Path genParentPath = genLocation.getParent();
 		String nameWithoutExtension = extractSimpleFilenameWithoutExtension(genLocation);
 		return resolveMapFileInGenPath(nameWithoutExtension, genParentPath);

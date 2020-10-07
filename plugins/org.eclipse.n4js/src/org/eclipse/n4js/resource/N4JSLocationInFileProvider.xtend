@@ -14,6 +14,8 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.n4js.n4JS.GenericDeclaration
 import org.eclipse.n4js.n4JS.N4JSPackage
+import org.eclipse.n4js.n4JS.NamedImportSpecifier
+import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.PropertyNameOwner
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
@@ -21,11 +23,11 @@ import org.eclipse.n4js.ts.types.TFormalParameter
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TStructMember
 import org.eclipse.n4js.ts.types.TStructMethod
+import org.eclipse.n4js.ts.types.TStructuralType
 import org.eclipse.n4js.ts.types.TypeVariable
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.resource.DefaultLocationInFileProvider
 import org.eclipse.xtext.resource.ILocationInFileProviderExtension
-import org.eclipse.xtext.nodemodel.util.NodeModelUtils
-import org.eclipse.n4js.ts.types.TStructuralType
 
 /**
  * A location in file provider that is aware of inferred types. The location
@@ -42,6 +44,17 @@ class N4JSLocationInFileProvider extends DefaultLocationInFileProvider {
 	}
 
 	override getSignificantTextRegion(EObject element) {
+		if(element instanceof NamedImportSpecifier) {
+			if(!element.isDefaultImport()) {
+				if(element.getAlias() !== null) {
+					return super.getSignificantTextRegion(element, N4JSPackage.eINSTANCE.getNamedImportSpecifier_Alias(), -1);
+				}
+			}
+		} else if(element instanceof NamespaceImportSpecifier) {
+			if (element.getAlias() !== null) {
+				return super.getSignificantTextRegion(element, N4JSPackage.eINSTANCE.getNamespaceImportSpecifier_Alias(), -1);
+			}
+		}
 		return super.getSignificantTextRegion(convertToSource(element));
 	}
 

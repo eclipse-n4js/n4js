@@ -17,6 +17,7 @@ import java.nio.file.Path
 import java.util.List
 import java.util.Map
 import java.util.Objects
+import java.util.Set
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSProject
@@ -93,7 +94,7 @@ public class Project {
 	final String vendorId;
 	final String vendorName;
 	final List<SourceFolder> sourceFolders = newLinkedList();
-	final List<Project> projectDependencies = newLinkedList();
+	final Set<String> projectDependencies = newLinkedHashSet();
 	final Map<String, Project> nodeModuleProjects = newHashMap();
 	ProjectType projectType;
 	String projectVersion = "1.0.0";
@@ -256,9 +257,9 @@ public class Project {
 	/**
 	 * Adds a project dependency to this project.
 	 *
-	 * @param projectDependency the project dependency to add
+	 * @param projectDependency the name of the project to add to the list of dependencies.
 	 */
-	public def Project addProjectDependency(Project projectDependency) {
+	public def Project addProjectDependency(String projectDependency) {
 		projectDependencies.add(Objects.requireNonNull(projectDependency));
 		return this;
 	}
@@ -268,13 +269,12 @@ public class Project {
 	 *
 	 * @return projectDependencies the project
 	 */
-	public def List<Project> getProjectDependencies() {
+	public def Set<String> getProjectDependencies() {
 		return this.projectDependencies;
 	}
 	
 	public def void addNodeModuleProject(Project project) {
 		this.nodeModuleProjects.put(project.projectName, project);
-		this.addProjectDependency(project);
 	}
 	
 	public def Project getNodeModuleProject(String projectName) {
@@ -314,10 +314,10 @@ public class Project {
 			"dependencies": {
 					«IF !projectDependencies.nullOrEmpty»
 					«FOR dep : projectDependencies SEPARATOR ','»
-						"«dep.projectName»": "*"
+						"«dep»": "*"
 					«ENDFOR»
 					«ENDIF»
-				}
+			}
 		}
 		«ENDIF»
 	'''

@@ -23,6 +23,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ide.xtext.server.XIWorkspaceConfigFactory;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
+import org.eclipse.n4js.internal.MultiCleartriggerCache;
 import org.eclipse.n4js.internal.N4JSBrokenProjectException;
 import org.eclipse.n4js.internal.lsp.N4JSWorkspaceConfig;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
@@ -38,7 +39,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- *
+ * N4JS-specific implementation of {@link XIWorkspaceConfigFactory}.
  */
 @Singleton
 public class FileBasedWorkspaceInitializer implements XIWorkspaceConfigFactory {
@@ -48,14 +49,15 @@ public class FileBasedWorkspaceInitializer implements XIWorkspaceConfigFactory {
 	private IN4JSCore n4jsCore;
 
 	@Inject
+	private MultiCleartriggerCache multiCleartriggerCache;
+
+	@Inject
 	private ProjectDescriptionLoader projectDescriptionLoader;
 
 	@Inject
 	private FileBasedWorkspace workspace;
 
 	private ProjectDiscoveryHelper projectDiscoveryHelper;
-
-	private URI knownWorkspaceBaseURI = null;
 
 	/** Sets {@link #projectDiscoveryHelper} */
 	@Inject
@@ -65,30 +67,22 @@ public class FileBasedWorkspaceInitializer implements XIWorkspaceConfigFactory {
 
 	@Override
 	public XIWorkspaceConfig createWorkspaceConfig(URI workspaceBaseURI) {
-		try {
-			if (workspaceBaseURI.equals(knownWorkspaceBaseURI)) {
-				return new N4JSWorkspaceConfig(workspaceBaseURI, n4jsCore);
-			}
+		// TODO is this correct if we have multiple workspace URIs?
+		workspace.clear();
+		multiCleartriggerCache.clear();
 
-			// TODO is this correct if we have multiple workspace URIs?
-			workspace.clear();
+		File workspaceRoot = URIUtils.toFile(workspaceBaseURI);
 
-			File workspaceRoot = URIUtils.toFile(workspaceBaseURI);
+		Set<Path> allProjectLocations = projectDiscoveryHelper.collectAllProjectDirs(workspaceRoot.toPath());
 
-			Set<Path> allProjectLocations = projectDiscoveryHelper.collectAllProjectDirs(workspaceRoot.toPath());
-
-			List<FileURI> allProjectURIs = new ArrayList<>();
-			for (Path path : allProjectLocations) {
-				allProjectURIs.add(new FileURI(path.toFile()));
-			}
-
-			registerProjectsToFileBasedWorkspace(allProjectURIs);
-
-			return new N4JSWorkspaceConfig(workspaceBaseURI, n4jsCore);
-
-		} finally {
-			this.knownWorkspaceBaseURI = workspaceBaseURI;
+		List<FileURI> allProjectURIs = new ArrayList<>();
+		for (Path path : allProjectLocations) {
+			allProjectURIs.add(new FileURI(path.toFile()));
 		}
+
+		registerProjectsToFileBasedWorkspace(allProjectURIs);
+
+		return new N4JSWorkspaceConfig(workspaceBaseURI, n4jsCore, multiCleartriggerCache);
 	}
 
 	/**

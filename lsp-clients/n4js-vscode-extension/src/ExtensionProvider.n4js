@@ -92,7 +92,7 @@ export function getActivate(vscode: any+, vscodeLC: any+): {function(context: an
                 { scheme: 'untitled', language: 'n4js' }
             ],
             synchronize: {
-                fileEvents: vscode.workspace.createFileSystemWatcher('**/{*.n4js,*.n4jsd,*.n4jsx,*.n4idl,package.json}')
+                fileEvents: vscode.workspace.createFileSystemWatcher('**/{*.n4js,*.n4jsd,*.n4jsx,*.n4idl,*.js,package.json}')
             },
             outputChannel: outputChannel
             /* use this channel for trace outputs
@@ -207,7 +207,7 @@ async function startN4jsLspServerAndConnect(port: number, vscode: any+, vscodeLC
     if (n4jscliConfig.configFile) {
         n4jscliConfig.jarFile = n4jscli.findN4jscJarValue(workspaceDir, logFn);
         n4jscliConfig.listener = (curr, prev) => onN4jscliConfigChange(vscode, vscodeLC, context, outputChannel);
-        // Add listener to changes in .n4js-cli.config to trigger restarts in case the n4jsc.jar changes
+        // Add listener to changes in n4js-cli.config to trigger restarts in case the n4jsc.jar changes
         // Note: VSCode's FileSystemWatchers do work only inside the workspace folder.
         // Hence, we use a file watcher of Node.js's fs library.
         fs.watch(n4jscliConfig.configFile, {persistent:true}, n4jscliConfig.listener);
@@ -236,7 +236,7 @@ async function startN4jsLspServerAndConnect(port: number, vscode: any+, vscodeLC
         n4jscProcess.stdout.on('data', waitForListenMsg);
     });
     await serverReady;
-    outputChannel.appendLine('Connected to LSP server');
+    // now connected to LSP server (the server will log a welcome message)
 }
 
 function getWorkspaceDir(vscode: any+) : string {
@@ -290,7 +290,7 @@ function onN4jscliConfigChange(vscode: any+, vscodeLC: any+, context: any+, outp
 
 function requestUserReload(vscode: any+, vscodeLC: any+, context: any+, outputChannel: any+) {
     vscode.window
-        .showInformationMessage("The config file .n4js-cli.config changed. A reload of the N4JS Extension is necessary for changes to take effect.", "Reload Extension")
+        .showInformationMessage("The config file n4js-cli.config changed. A reload of the N4JS Extension is necessary for changes to take effect.", "Reload Extension")
         .then(async function (value: string) {
             if (value == "Reload Extension") {
                 await reload(vscode, vscodeLC, context, outputChannel);

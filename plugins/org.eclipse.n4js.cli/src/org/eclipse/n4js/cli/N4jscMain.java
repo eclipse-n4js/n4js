@@ -37,7 +37,8 @@ public class N4jscMain {
 		if (!options.isVerbose()) {
 			Logger.getRootLogger().setLevel(Level.ERROR);
 		}
-		LOG.info("Starting n4jsc (language version " + N4JSLanguageUtils.getLanguageVersion() + ")");
+		LOG.info("Starting n4jsc (language version " + N4JSLanguageUtils.getLanguageVersion()
+				+ ", commit " + N4JSLanguageUtils.getLanguageCommit() + ")");
 
 		// inform user about data collection
 		if (options.isDefinedPerformanceOption()) {
@@ -112,7 +113,8 @@ public class N4jscMain {
 			return N4jscExitState.SUCCESS;
 
 		case version:
-			N4jscConsole.println(N4JSLanguageUtils.getLanguageVersion());
+			N4jscConsole.println(N4JSLanguageUtils.getLanguageVersion()
+					+ " (commit " + N4JSLanguageUtils.getLanguageCommit() + ")");
 			return N4jscExitState.SUCCESS;
 
 		case lsp:

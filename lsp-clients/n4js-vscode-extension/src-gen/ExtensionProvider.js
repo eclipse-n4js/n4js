@@ -70,7 +70,7 @@ export function getActivate(vscode, vscodeLC) {
 				}
 			],
 			synchronize: {
-				fileEvents: vscode.workspace.createFileSystemWatcher('**/{*.n4js,*.n4jsd,*.n4jsx,*.n4idl,package.json}')
+				fileEvents: vscode.workspace.createFileSystemWatcher('**/{*.n4js,*.n4jsd,*.n4jsx,*.n4idl,*.js,package.json}')
 			},
 			outputChannel: outputChannel
 		};
@@ -191,7 +191,6 @@ async function startN4jsLspServerAndConnect(port, vscode, vscodeLC, context, out
 		n4jscProcess.stdout.on('data', waitForListenMsg);
 	});
 	await serverReady;
-	outputChannel.appendLine('Connected to LSP server');
 }
 function getWorkspaceDir(vscode) {
 	for(let wFolder of vscode.workspace.workspaceFolders) {

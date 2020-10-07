@@ -28,7 +28,7 @@ import org.eclipse.n4js.ide.tests.server.StringLSP4J;
 import org.junit.Test;
 
 /**
- * Test for document symbols.
+ * Test for navigation to definition.
  */
 public class DefinitionTest extends AbstractDefinitionTest {
 

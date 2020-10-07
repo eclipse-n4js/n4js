@@ -146,7 +146,7 @@ export public async function n4jscProcess(
  */
 export public async function createN4JSProcess(args: N4jscArguments, spawnOptions: childProcess.SpawnOptions, log: {function(string)} = npmlog.info) : childProcess.ChildProcess {
     const modifedArgs = await modifyArgs(args, log);
-    const java = getJavaCommand(log);
+    const java = getJavaCommand();
     return childProcess.spawn(java, modifedArgs.toArray(), spawnOptions);
 }
 
@@ -179,7 +179,7 @@ async function modifyArgs(args: N4jscArguments, log: {function(string)}): N4jscA
             args.n4jscJar = n4jscJarName;
         }
     } catch (e) {
-        log("Failed to use jar specified in .n4js-cli.config. Using default jar instead.");
+        log("Failed to use jar specified in n4js-cli.config. Using default jar instead.");
     }
 
     // lsp goal forbids dir argument, but n4js-cli uses this argument to support n4js-cli configuration files
@@ -238,8 +238,8 @@ export public function findN4jscJarValue(workingDir: string, log: {function(stri
  * Searches the n4js-cli config file. The search looks for the config file at the following places:
  * (1) in the given folder,
  * (2) in all parent folders,
- * (3) in all direct sub folders (not recursivily).
- * The first occurence is returned, or null otherwise.
+ * (3) in all direct sub folders (not recursively).
+ * The first occurrence is returned, or null otherwise.
  */
 export public function findN4jscliConfig(workingDir : string) : string {
     let dir = path.resolve(workingDir);
@@ -257,7 +257,7 @@ export public function findN4jscliConfig(workingDir : string) : string {
         dir = path.dirname(dir);
     }
 
-    // search in direct child folders (not recursivily)
+    // search in direct child folders (not recursively)
     const files = fs.readdirSync(workingDir);
     for (const file in files) {
         if (file instanceof fs.Dirent && file.isDirectory()) {

@@ -23,21 +23,16 @@ public class ProjectConfigSnapshot {
 
 	private final String name;
 	private final URI path;
+	private final boolean indexOnly;
 	private final ImmutableSet<String> dependencies;
 	private final ImmutableSet<SourceFolderSnapshot> sourceFolders;
 
 	/** See {@link ProjectConfigSnapshot}. */
-	public ProjectConfigSnapshot(XIProjectConfig project) {
-		this(project.getName(), project.getPath(), project.getDependencies(),
-				project.getSourceFolders().stream().map(SourceFolderSnapshot::new)
-						.collect(ImmutableSet.toImmutableSet()));
-	}
-
-	/** See {@link ProjectConfigSnapshot}. */
-	public ProjectConfigSnapshot(String name, URI path, Iterable<String> dependencies,
+	public ProjectConfigSnapshot(String name, URI path, boolean indexOnly, Iterable<String> dependencies,
 			Iterable<? extends SourceFolderSnapshot> sourceFolders) {
 		this.name = name;
 		this.path = path;
+		this.indexOnly = indexOnly;
 		this.dependencies = ImmutableSet.copyOf(dependencies);
 		this.sourceFolders = ImmutableSet.copyOf(sourceFolders);
 	}
@@ -54,6 +49,15 @@ public class ProjectConfigSnapshot {
 	 */
 	public URI getPath() {
 		return path;
+	}
+
+	/**
+	 * Returns true iff this project will be indexed only, i.e. neither validated nor generated.
+	 *
+	 * @see XIProjectConfig#indexOnly()
+	 */
+	public boolean indexOnly() {
+		return indexOnly;
 	}
 
 	/**

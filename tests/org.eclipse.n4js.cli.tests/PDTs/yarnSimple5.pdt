@@ -7,9 +7,13 @@ FOLDERS
 --*P1 [PROJECT workspaces=["packages/*"]]
 --- packages
 ---- D1 [PROJECT]
+--- node_modules
+---- D1 [SYMLINK_TO_PATH someFolder/P1/packages/D1]
 -- P2 [PROJECT workspaces=["packages/*"]]
 --- packages
 ---- D2 [PROJECT]
+--- node_modules
+---- D2 [SYMLINK_TO_PATH someFolder/P2/packages/D2]
 
 EXPECT
 - someFolder/P1

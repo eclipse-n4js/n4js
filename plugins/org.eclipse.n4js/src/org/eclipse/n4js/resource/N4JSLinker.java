@@ -328,6 +328,7 @@ public class N4JSLinker extends LazyLinker {
 			((NamedImportSpecifier) obj).setImportedElementAsText(null);
 		} else if (obj instanceof IdentifierRef) {
 			((IdentifierRef) obj).setIdAsText(null);
+			((IdentifierRef) obj).setOriginImport(null);
 		} else if (obj instanceof LabelRef) {
 			((LabelRef) obj).setLabelAsText(null);
 		} else if (obj instanceof ParameterizedPropertyAccessExpression) {

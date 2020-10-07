@@ -8,6 +8,9 @@ FOLDERS
 --- D1 [PROJECT]
 -- packages2
 --- D2 [PROJECT]
+-- node_modules
+--- D1 [SYMLINK_TO_PATH P1/packages1/D1]
+--- D2 [SYMLINK_TO_PATH P1/packages2/D2]
 
 EXPECT
 - P1

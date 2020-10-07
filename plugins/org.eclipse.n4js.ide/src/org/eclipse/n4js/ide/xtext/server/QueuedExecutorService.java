@@ -22,6 +22,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -33,6 +34,7 @@ import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.inject.Inject;
@@ -93,6 +95,9 @@ public class QueuedExecutorService {
 	/** Queue IDs with currently running tasks. */
 	protected final Map<Object, QueuedTask<?>> submittedTasks = new LinkedHashMap<>();
 
+	/** Tells whether this service has been {@link #shutdown() shut down}. */
+	protected boolean isShutDown = false;
+
 	@SuppressWarnings("javadoc")
 	protected final class QueuedTask<T> implements Runnable, XCancellable {
 		protected final Object queueId;
@@ -139,6 +144,11 @@ public class QueuedExecutorService {
 		@Override
 		public void cancel() {
 			cancelled = true;
+		}
+
+		@Override
+		public String toString() {
+			return description;
 		}
 	}
 
@@ -197,9 +207,18 @@ public class QueuedExecutorService {
 		return submit(queueId, description, task);
 	}
 
-	/** Submits the given task under the given queue ID. See {@link QueuedExecutorService} for details. */
+	/**
+	 * Submits the given task under the given queue ID. See {@link QueuedExecutorService} for details.
+	 *
+	 * @throws RejectedExecutionException
+	 *             in case the receiving {@link QueuedExecutorService} has already been shut down.
+	 */
 	public synchronized <T> QueuedTaskFuture<T> submit(Object queueId, String description,
 			Function<CancelIndicator, T> task) {
+		if (isShutDown) {
+			throw new RejectedExecutionException(
+					"this " + QueuedExecutorService.class.getSimpleName() + " has been shut down");
+		}
 		QueuedTask<T> queuedTask = createQueuedTask(queueId, description, task);
 		enqueue(queuedTask);
 		doSubmitAllPending();
@@ -314,10 +333,28 @@ public class QueuedExecutorService {
 		return CompletableFuture.allOf(allTasks);
 	}
 
-	/** An orderly shutdown of this executor service. */
-	public synchronized void shutdown() {
-		cancelAll();
-		MoreExecutors.shutdownAndAwaitTermination(delegate, 2500, TimeUnit.MILLISECONDS);
+	/** Same as {@link #shutdown(long, TimeUnit)}, but with a default timeout of 4 seconds. */
+	public /* NOT synchronized */ void shutdown() {
+		shutdown(4, TimeUnit.SECONDS);
+	}
+
+	/**
+	 * An orderly shutdown of this executor service. For details, see
+	 * {@link MoreExecutors#shutdownAndAwaitTermination(ExecutorService, long, TimeUnit)}.
+	 */
+	public /* NOT synchronized */ void shutdown(long timeout, TimeUnit unit) {
+		synchronized (this) {
+			if (isShutDown) {
+				return;
+			}
+			cancelAll();
+			isShutDown = true;
+			submittedTasks.clear();
+			pendingTasks.clear();
+		}
+		// to give tasks a chance to orderly shut down during the first half of the timeout, the following line must be
+		// executed outside the synchronize block:
+		MoreExecutors.shutdownAndAwaitTermination(delegate, timeout, unit);
 	}
 
 	/** May be invoked from arbitrary threads. */
@@ -328,19 +365,24 @@ public class QueuedExecutorService {
 
 	/** Stringifies current state of the executer service. Indicates all currently running and pending tasks. */
 	public synchronized String stringify() {
-		StringBuilder sb = new StringBuilder();
-		Multimap<Object, QueuedTask<?>> activeQueue = HashMultimap.create();
+		Multimap<Object, QueuedTask<?>> activeQueue = LinkedHashMultimap.create();
 		Multimap<Object, QueuedTask<?>> inactiveQueue = HashMultimap.create();
 		for (Map.Entry<Object, QueuedTask<?>> entry : submittedTasks.entrySet()) {
-			activeQueue.put(entry.getValue(), (QueuedTask<?>) entry.getKey());
+			activeQueue.put(entry.getKey(), entry.getValue());
 		}
 		for (QueuedTask<?> pendingTask : pendingTasks) {
-			if (activeQueue.containsKey(pendingTask)) {
-				activeQueue.put(pendingTask.queueId, pendingTask);
+			Object id = pendingTask.queueId;
+			if (activeQueue.containsKey(id)) {
+				activeQueue.put(id, pendingTask);
 			} else {
-				inactiveQueue.put(pendingTask.queueId, pendingTask);
+				inactiveQueue.put(id, pendingTask);
 			}
 		}
+		if (activeQueue.isEmpty() && inactiveQueue.isEmpty()) {
+			return QueuedExecutorService.class.getSimpleName() + " is empty.";
+		}
+
+		StringBuilder sb = new StringBuilder();
 		sb.append(QueuedExecutorService.class.getSimpleName() + " showing all " + QueuedTask.class.getSimpleName());
 		sb.append(
 				"\nActive Tasks Queues (First task is submitted to delegate executor, succeeding tasks are waiting in local queue):\n");

@@ -24,6 +24,7 @@ import org.eclipse.lsp4j.FileEvent;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.n4js.ide.xtext.server.QueuedExecutorService;
 import org.eclipse.n4js.xtext.server.LSPIssue;
+import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.ide.server.UriExtensions;
 
 import com.google.common.collect.ImmutableList;
@@ -49,6 +50,9 @@ public class BuilderFrontend {
 
 	@Inject
 	private XWorkspaceBuilder workspaceBuilder;
+
+	@Inject
+	private ConcurrentIndex concurrentIndex;
 
 	/**
 	 * Returns the base directory of the workspace.
@@ -103,7 +107,7 @@ public class BuilderFrontend {
 	 * Triggers rebuild of the whole workspace
 	 */
 	public void reinitWorkspace() {
-		asyncRunBuildTask("reinitWorkspace", workspaceBuilder::createInitialBuildTask);
+		asyncRunBuildTask("reinitWorkspace", workspaceBuilder::createReinitialBuildTask);
 	}
 
 	/**
@@ -116,6 +120,9 @@ public class BuilderFrontend {
 	 */
 	public void didSave(DidSaveTextDocumentParams params) {
 		URI uri = getURI(params.getTextDocument());
+		if (!isSourceFile(concurrentIndex.getWorkspaceConfig(), uri)) {
+			return;
+		}
 		asyncRunBuildTask("didSave", () -> workspaceBuilder.createIncrementalBuildTask(Collections.singletonList(uri),
 				Collections.emptyList()));
 	}
@@ -126,8 +133,12 @@ public class BuilderFrontend {
 	public void didChangeWatchedFiles(DidChangeWatchedFilesParams params) {
 		List<URI> dirtyFiles = new ArrayList<>();
 		List<URI> deletedFiles = new ArrayList<>();
+		WorkspaceConfigSnapshot workspaceConfig = concurrentIndex.getWorkspaceConfig();
 		for (FileEvent fileEvent : params.getChanges()) {
 			URI uri = uriExtensions.toUri(fileEvent.getUri());
+			if (!isSourceFile(workspaceConfig, uri)) {
+				continue;
+			}
 			FileChangeType changeType = fileEvent.getType();
 			if (changeType == FileChangeType.Deleted) {
 				deletedFiles.add(uri);
@@ -139,6 +150,18 @@ public class BuilderFrontend {
 			asyncRunBuildTask("didChangeWatchedFiles",
 					() -> workspaceBuilder.createIncrementalBuildTask(dirtyFiles, deletedFiles));
 		}
+	}
+
+	/**
+	 * Tells whether the given URI denotes a source file to be considered by the builder. This is used for an early
+	 * filtering of file events, i.e. URIs for which this method returns <code>false</code> will not trigger an
+	 * incremental build.
+	 * <p>
+	 * Because this filtering happens early on, even before the {@link #asyncRunBuildTask(String, Supplier)} scheduling
+	 * of a build task}, this method will run in parallel to the rest of the build and must thus be thread safe.
+	 */
+	protected boolean isSourceFile(WorkspaceConfigSnapshot workspaceConfig, URI uri) {
+		return workspaceConfig.findProjectContaining(uri) != null;
 	}
 
 	// TODO accept a parameter `boolean cancelPrevious` and overload most of the other methods
@@ -162,7 +185,6 @@ public class BuilderFrontend {
 	 * Initiate an orderly shutdown.
 	 */
 	public void shutdown() {
-		join();
 		queuedExecutorService.shutdown();
 	}
 
