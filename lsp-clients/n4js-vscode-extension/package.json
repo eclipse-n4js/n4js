@@ -64,6 +64,10 @@
     ],
     "commands": [
       {
+        "command": "n4js.refresh",
+        "title": "N4JS: Refresh"
+      },
+      {
         "command": "n4js.rebuild",
         "title": "N4JS: Rebuild"
       },
@@ -97,10 +101,14 @@
       }
     ],
     "activationEvents": [
+      "onCommand:n4js.refresh",
       "onCommand:n4js.rebuild"
     ],
     "menus": {
       "commandPalette": [
+        {
+          "command": "n4js.refresh"
+        },
         {
           "command": "n4js.rebuild"
         }

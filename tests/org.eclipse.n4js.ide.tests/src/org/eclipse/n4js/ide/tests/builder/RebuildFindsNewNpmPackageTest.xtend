@@ -16,6 +16,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.util.Map
 import org.eclipse.n4js.N4JSGlobals
+import org.eclipse.n4js.ide.server.commands.N4JSCommandService
 import org.eclipse.n4js.ide.tests.server.AbstractIdeTest
 import org.eclipse.n4js.ide.tests.server.TestWorkspaceManager
 import org.eclipse.n4js.utils.io.FileDeleter
@@ -86,13 +87,15 @@ class RebuildFindsNewNpmPackageTest extends AbstractIdeTest {
 		// create the missing npm package (without notifications to the server)
 		val libProjectFolder = createNpmPackageLib(rootProjectFolder);
 
-		cleanBuildAndWait();
+		executeCommand(N4JSCommandService.N4JS_REBUILD);
+		joinServerRequests();
 		assertNoIssues();
 
 		// remove npm package (without notifications to the server)
 		FileDeleter.delete(libProjectFolder);
 
-		cleanBuildAndWait();
+		executeCommand(N4JSCommandService.N4JS_REBUILD);
+		joinServerRequests();
 		assertIssues(errorsWhenNpmPackageMissing);
 	}
 

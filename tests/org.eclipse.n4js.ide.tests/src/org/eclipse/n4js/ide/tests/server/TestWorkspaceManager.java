@@ -455,6 +455,12 @@ public class TestWorkspaceManager {
 		for (String projectName : dependencies.keySet()) {
 			Collection<String> projectDependencies = dependencies.get(projectName);
 			Project project = yarnProject.getProject(projectName);
+			if (project == null) {
+				project = yarnProject.getNodeModuleProject(projectName);
+				if (project == null) {
+					throw new IllegalStateException("unknown project: " + projectName);
+				}
+			}
 			for (String projectDependency : projectDependencies) {
 				Project dependency = yarnProject.getProject(projectDependency);
 				if (dependency == null) {

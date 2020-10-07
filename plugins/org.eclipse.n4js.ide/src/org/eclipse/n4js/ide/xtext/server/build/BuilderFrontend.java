@@ -111,6 +111,19 @@ public class BuilderFrontend {
 	}
 
 	/**
+	 * Performs a refresh as follows:
+	 * <ol>
+	 * <li>complete re-computation of workspace configuration,
+	 * <li>scanning for changes in source files,
+	 * <li>triggering an incremental build, if necessary, based on the changes found.
+	 * </ol>
+	 */
+	public void refresh() {
+		asyncRunBuildTask("refresh", () -> workspaceBuilder.createIncrementalBuildTask(Collections.emptyList(),
+				Collections.emptyList(), true));
+	}
+
+	/**
 	 * Trigger an incremental build in the background when open editors are being saved.
 	 * <p>
 	 * NOTE: if the LSP client is configured to send 'didChangeWatchedFiles' notifications for the file being saved
@@ -124,7 +137,7 @@ public class BuilderFrontend {
 			return;
 		}
 		asyncRunBuildTask("didSave", () -> workspaceBuilder.createIncrementalBuildTask(Collections.singletonList(uri),
-				Collections.emptyList()));
+				Collections.emptyList(), false));
 	}
 
 	/**
@@ -148,7 +161,7 @@ public class BuilderFrontend {
 		}
 		if (!dirtyFiles.isEmpty() || !deletedFiles.isEmpty()) {
 			asyncRunBuildTask("didChangeWatchedFiles",
-					() -> workspaceBuilder.createIncrementalBuildTask(dirtyFiles, deletedFiles));
+					() -> workspaceBuilder.createIncrementalBuildTask(dirtyFiles, deletedFiles, false));
 		}
 	}
 

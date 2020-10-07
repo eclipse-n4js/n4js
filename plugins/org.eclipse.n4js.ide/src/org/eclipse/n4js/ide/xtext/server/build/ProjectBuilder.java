@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -165,7 +166,7 @@ public class ProjectBuilder {
 
 		XBuildResult result = doBuild(
 				createInitialBuildRequestFactory(buildRequestFactory),
-				changeSet.getModified(),
+				changeSet.getDirty(),
 				changeSet.getDeleted(),
 				UtilN4.concat(externalDeltas, changeSet.getAdditionalExternalDeltas()),
 				CancelIndicator.NullImpl);
@@ -257,6 +258,52 @@ public class ProjectBuilder {
 			}
 		};
 		return new ProjectStateUpdatingBuildRequestFactory(base, updater);
+	}
+
+	/**
+	 * Scans the files system and returns URIs of source files that were added, changed, removed since this builder's
+	 * current {@link #projectStateSnapshot project state} was created. Content changes in source files are detected by
+	 * way of hash comparison.
+	 */
+	public ResourceChangeSet scanForSourceFileChanges() {
+		ResourceChangeSet result = new ResourceChangeSet();
+		ImmutableProjectState oldProjectState = this.projectStateSnapshot.get();
+		Map<URI, HashedFileContent> oldHashes = oldProjectState.getFileHashes();
+		Set<URI> oldSourceFilesURIs = oldProjectState.internalGetResourceDescriptions().getAllURIs();
+		Set<URI> existingSourceFileURIs = scanForSourceFiles();
+		for (URI currURI : Sets.union(oldSourceFilesURIs, existingSourceFileURIs)) {
+			boolean isOld = oldSourceFilesURIs.contains(currURI);
+			boolean isNew = existingSourceFileURIs.contains(currURI);
+			if (!isOld && isNew) {
+				// added
+				result.getDirty().add(currURI);
+			} else if (isOld && !isNew) {
+				// removed
+				result.getDeleted().add(currURI);
+			} else if (isOld && isNew) {
+				// compare hash ...
+				HashedFileContent hfc = oldHashes.get(currURI);
+				if (hfc != null) {
+					switch (getSourceChangeKind(hfc, oldProjectState)) {
+					case UNCHANGED: {
+						break;
+					}
+					case CHANGED: {
+						result.getDirty().add(currURI);
+						break;
+					}
+					case DELETED: {
+						result.getDeleted().add(currURI);
+						break;
+					}
+					}
+				} else {
+					LOG.warn("inconsistency in project state: URI is indexed but not hashed: " + currURI);
+					result.getDirty().add(currURI);
+				}
+			}
+		}
+		return result;
 	}
 
 	/** Build increments of this project. */
@@ -550,30 +597,40 @@ public class ProjectBuilder {
 		}
 
 		ResourceChangeSet result = new ResourceChangeSet();
-		doClearWithoutNotification();
+		doClearWithoutNotification(); // sets this#projectStateSnapshot to an empty project state
 
 		boolean fullBuildRequired = false;
 		ImmutableProjectState projectState = projectStatePersister.readProjectState(projectConfig);
 		if (projectState != null) {
 			fullBuildRequired |= handleProjectAdditionRemovalSinceProjectStateWasComputed(result, projectState);
-			fullBuildRequired |= handleSourceFileChangesSinceProjectStateWasComputed(result, projectState);
 			setProjectIndex(projectState.internalGetResourceDescriptions());
 			this.projectStateSnapshot.set(projectState);
 		}
 
-		Set<URI> allIndexedUris = getProjectIndex().getAllURIs();
+		if (fullBuildRequired) {
+			result.getDirty().addAll(scanForSourceFiles());
+		} else {
+			result.addAll(scanForSourceFileChanges());
+		}
+
+		return result;
+	}
+
+	/**
+	 * Scans the file system for source files, going over all source folders.
+	 */
+	private Set<URI> scanForSourceFiles() {
+		Set<URI> result = new HashSet<>();
 		for (SourceFolderSnapshot srcFolder : projectConfig.getSourceFolders()) {
-			List<URI> allSourceFolderUris = sourceFolderScanner.findAllSourceFiles(srcFolder, fileSystemScanner);
-			for (URI srcFolderUri : allSourceFolderUris) {
-				if (!srcFolderUri.hasTrailingPathSeparator()
-						&& (fullBuildRequired || !allIndexedUris.contains(srcFolderUri))) {
-					if (resourceServiceProviders.getResourceServiceProvider(srcFolderUri) != null) {
-						result.getModified().add(srcFolderUri);
+			List<URI> allSourceFileUris = sourceFolderScanner.findAllSourceFiles(srcFolder, fileSystemScanner);
+			for (URI srcFileUri : allSourceFileUris) {
+				if (!srcFileUri.hasTrailingPathSeparator()) {
+					if (resourceServiceProviders.getResourceServiceProvider(srcFileUri) != null) {
+						result.add(srcFileUri);
 					}
 				}
 			}
 		}
-
 		return result;
 	}
 
@@ -609,30 +666,6 @@ public class ProjectBuilder {
 		return false;
 	}
 
-	/** @return <code>true</code> iff full build of this builder's project is required due to source file changes. */
-	private boolean handleSourceFileChangesSinceProjectStateWasComputed(ResourceChangeSet result,
-			ImmutableProjectState projectState) {
-
-		for (HashedFileContent hfc : projectState.getFileHashes().values()) {
-			URI previouslyExistingFile = hfc.getUri();
-			switch (getSourceChangeKind(hfc, projectState)) {
-			case UNCHANGED: {
-				break;
-			}
-			case CHANGED: {
-				result.getModified().add(previouslyExistingFile);
-				break;
-			}
-			case DELETED: {
-				result.getDeleted().add(previouslyExistingFile);
-				break;
-			}
-			}
-		}
-
-		return false;
-	}
-
 	/** Updates the index state, file hashes and validation issues */
 	private void updateProjectState(
 			XBuildRequest request,
@@ -651,7 +684,11 @@ public class ProjectBuilder {
 			// TODO where do we update the generated file hashes?
 			for (Delta delta : result.getAffectedResources()) {
 				URI uri = delta.getUri();
-				storeHash(newHashedFileContents, uri);
+				if (delta.getNew() != null) {
+					storeHash(newHashedFileContents, uri);
+				} else {
+					newHashedFileContents.remove(uri);
+				}
 			}
 			for (URI deletedFile : deletedFiles) {
 				newHashedFileContents.remove(deletedFile);
