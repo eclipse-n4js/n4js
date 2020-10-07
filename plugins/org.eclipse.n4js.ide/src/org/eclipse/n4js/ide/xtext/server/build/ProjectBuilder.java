@@ -166,7 +166,7 @@ public class ProjectBuilder {
 
 		XBuildResult result = doBuild(
 				createInitialBuildRequestFactory(buildRequestFactory),
-				changeSet.getModified(),
+				changeSet.getDirty(),
 				changeSet.getDeleted(),
 				UtilN4.concat(externalDeltas, changeSet.getAdditionalExternalDeltas()),
 				CancelIndicator.NullImpl);
@@ -270,13 +270,13 @@ public class ProjectBuilder {
 		ImmutableProjectState oldProjectState = this.projectStateSnapshot.get();
 		Map<URI, HashedFileContent> oldHashes = oldProjectState.getFileHashes();
 		Set<URI> oldSourceFilesURIs = oldProjectState.internalGetResourceDescriptions().getAllURIs();
-		Set<URI> existingSourceFileURIs = scanForSourceFiles(false);
+		Set<URI> existingSourceFileURIs = scanForSourceFiles();
 		for (URI currURI : Sets.union(oldSourceFilesURIs, existingSourceFileURIs)) {
 			boolean isOld = oldSourceFilesURIs.contains(currURI);
 			boolean isNew = existingSourceFileURIs.contains(currURI);
 			if (!isOld && isNew) {
 				// added
-				result.getModified().add(currURI);
+				result.getDirty().add(currURI);
 			} else if (isOld && !isNew) {
 				// removed
 				result.getDeleted().add(currURI);
@@ -289,7 +289,7 @@ public class ProjectBuilder {
 						break;
 					}
 					case CHANGED: {
-						result.getModified().add(currURI);
+						result.getDirty().add(currURI);
 						break;
 					}
 					case DELETED: {
@@ -299,7 +299,7 @@ public class ProjectBuilder {
 					}
 				} else {
 					LOG.warn("inconsistency in project state: URI is indexed but not hashed: " + currURI);
-					result.getModified().add(currURI);
+					result.getDirty().add(currURI);
 				}
 			}
 		}
@@ -597,35 +597,34 @@ public class ProjectBuilder {
 		}
 
 		ResourceChangeSet result = new ResourceChangeSet();
-		doClearWithoutNotification();
+		doClearWithoutNotification(); // sets this#projectStateSnapshot to an empty project state
 
 		boolean fullBuildRequired = false;
 		ImmutableProjectState projectState = projectStatePersister.readProjectState(projectConfig);
 		if (projectState != null) {
 			fullBuildRequired |= handleProjectAdditionRemovalSinceProjectStateWasComputed(result, projectState);
-			fullBuildRequired |= handleSourceFileChangesSinceProjectStateWasComputed(result, projectState);
 			setProjectIndex(projectState.internalGetResourceDescriptions());
 			this.projectStateSnapshot.set(projectState);
 		}
 
-		result.getModified().addAll(scanForSourceFiles(!fullBuildRequired));
+		if (fullBuildRequired) {
+			result.getDirty().addAll(scanForSourceFiles());
+		} else {
+			result.addAll(scanForSourceFileChanges());
+		}
 
 		return result;
 	}
 
 	/**
-	 * Scans the file system for source files.
-	 *
-	 * @param onlyNew
-	 *            if <code>true</code>, only newly added source files will be included in the result.
+	 * Scans the file system for source files, going over all source folders.
 	 */
-	private Set<URI> scanForSourceFiles(boolean onlyNew) {
-		Set<URI> suppressedURIs = onlyNew ? getProjectIndex().getAllURIs() : Collections.emptySet();
+	private Set<URI> scanForSourceFiles() {
 		Set<URI> result = new HashSet<>();
 		for (SourceFolderSnapshot srcFolder : projectConfig.getSourceFolders()) {
 			List<URI> allSourceFileUris = sourceFolderScanner.findAllSourceFiles(srcFolder, fileSystemScanner);
 			for (URI srcFileUri : allSourceFileUris) {
-				if (!srcFileUri.hasTrailingPathSeparator() && !suppressedURIs.contains(srcFileUri)) {
+				if (!srcFileUri.hasTrailingPathSeparator()) {
 					if (resourceServiceProviders.getResourceServiceProvider(srcFileUri) != null) {
 						result.add(srcFileUri);
 					}
@@ -664,30 +663,6 @@ public class ProjectBuilder {
 						.copyInto(result.getAdditionalExternalDeltas());
 			}
 		}
-		return false;
-	}
-
-	/** @return <code>true</code> iff full build of this builder's project is required due to source file changes. */
-	private boolean handleSourceFileChangesSinceProjectStateWasComputed(ResourceChangeSet result,
-			ImmutableProjectState projectState) {
-
-		for (HashedFileContent hfc : projectState.getFileHashes().values()) {
-			URI previouslyExistingFile = hfc.getUri();
-			switch (getSourceChangeKind(hfc, projectState)) {
-			case UNCHANGED: {
-				break;
-			}
-			case CHANGED: {
-				result.getModified().add(previouslyExistingFile);
-				break;
-			}
-			case DELETED: {
-				result.getDeleted().add(previouslyExistingFile);
-				break;
-			}
-			}
-		}
-
 		return false;
 	}
 

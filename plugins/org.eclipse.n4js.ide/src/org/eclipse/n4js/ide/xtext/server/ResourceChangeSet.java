@@ -25,22 +25,22 @@ import com.google.common.collect.Sets;
  */
 public class ResourceChangeSet {
 
-	private final Set<URI> changed = Sets.newHashSet();
+	private final Set<URI> dirty = Sets.newHashSet();
 	private final Set<URI> deleted = Sets.newHashSet();
 	private final List<IResourceDescription.Delta> additionalExternalDeltas = Lists.newArrayList();
 
 	/**
-	 * Return the deleted uris.
+	 * Return the dirty, i.e. added or changed, URIs.
 	 */
-	public Set<URI> getDeleted() {
-		return deleted;
+	public Set<URI> getDirty() {
+		return dirty;
 	}
 
 	/**
-	 * Return the modified uris.
+	 * Return the deleted URIs.
 	 */
-	public Set<URI> getModified() {
-		return changed;
+	public Set<URI> getDeleted() {
+		return deleted;
 	}
 
 	/**
@@ -50,12 +50,21 @@ public class ResourceChangeSet {
 		return additionalExternalDeltas;
 	}
 
+	/**
+	 * Add to this {@link ResourceChangeSet} all URIs / deltas of the given change set.
+	 */
+	public void addAll(ResourceChangeSet moreChanges) {
+		this.dirty.addAll(moreChanges.dirty);
+		this.deleted.addAll(moreChanges.deleted);
+		this.additionalExternalDeltas.addAll(moreChanges.additionalExternalDeltas);
+	}
+
 	@Override
 	public String toString() {
 		Joiner joiner = Joiner.on("\n  ");
 		StringBuilder result = new StringBuilder();
-		result.append("CHANGED:\n  ");
-		joiner.appendTo(result, changed);
+		result.append("DIRTY:\n  ");
+		joiner.appendTo(result, dirty);
 		result.append("\nDELETED:\n  ");
 		joiner.appendTo(result, deleted);
 		result.append("\nADDITIONAL EXTERNAL DELTAS:\n  ");

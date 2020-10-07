@@ -317,9 +317,9 @@ public class XWorkspaceBuilder {
 			actualDirtyFiles = new ArrayList<>();
 			actualDeletedFiles = new ArrayList<>();
 			for (ProjectBuilder projectBuilder : workspaceManager.getProjectBuilders()) {
-				ResourceChangeSet dirtySourceFiles = projectBuilder.scanForSourceFileChanges();
-				actualDirtyFiles.addAll(dirtySourceFiles.getModified());
-				actualDeletedFiles.addAll(dirtySourceFiles.getDeleted());
+				ResourceChangeSet sourceFileChanges = projectBuilder.scanForSourceFileChanges();
+				actualDirtyFiles.addAll(sourceFileChanges.getDirty());
+				actualDeletedFiles.addAll(sourceFileChanges.getDeleted());
 			}
 		} else {
 			// scan only the added source folders (including those of added projects) for source files
