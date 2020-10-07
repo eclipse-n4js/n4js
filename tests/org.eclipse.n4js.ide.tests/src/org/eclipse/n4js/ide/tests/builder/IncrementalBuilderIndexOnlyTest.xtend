@@ -43,7 +43,6 @@ class IncrementalBuilderIndexOnlyTest extends AbstractIncrementalBuilderTest {
 				''',
 			TestWorkspaceManager.CFG_DEPENDENCIES ->
 				'''
-					n4js-runtime,
 					LibProject
 				'''
 		]);

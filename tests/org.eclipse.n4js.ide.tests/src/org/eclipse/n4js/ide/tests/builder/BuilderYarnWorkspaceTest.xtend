@@ -43,7 +43,6 @@ class BuilderYarnWorkspaceTest extends AbstractIncrementalBuilderTest {
 					new Other().m();
 				''',
 				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime,
 					OtherProject
 				'''
 			]
@@ -96,7 +95,6 @@ class BuilderYarnWorkspaceTest extends AbstractIncrementalBuilderTest {
 					new Other().m();
 				''',
 				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime,
 					OtherProject
 				'''
 			]

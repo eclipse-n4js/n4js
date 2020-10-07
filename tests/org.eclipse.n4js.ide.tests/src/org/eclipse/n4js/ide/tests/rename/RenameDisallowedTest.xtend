@@ -53,7 +53,6 @@ class RenameDisallowedTest extends AbstractIdeTest {
 					someConst;
 				''',
 				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime,
 					ProjectInNodeModules
 				'''
 			]

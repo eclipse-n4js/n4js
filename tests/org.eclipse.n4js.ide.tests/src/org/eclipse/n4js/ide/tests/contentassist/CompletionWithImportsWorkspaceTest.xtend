@@ -26,7 +26,6 @@ public class CompletionWithImportsWorkspaceTest extends AbstractCompletionTest {
 		return #[
 			"P1*" -> #[
 				CFG_DEPENDENCIES -> '''
-					«N4JS_RUNTIME»,
 					P2,
 					SomeNPM,
 					@n4jsd/SomeNPM

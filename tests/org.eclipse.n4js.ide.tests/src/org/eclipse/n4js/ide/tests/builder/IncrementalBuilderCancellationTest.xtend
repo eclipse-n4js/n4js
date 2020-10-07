@@ -256,7 +256,6 @@ class IncrementalBuilderCancellationTest extends AbstractIncrementalBuilderTest 
 					}
 				''',
 				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime,
 					ProjectLib
 				'''
 			],
@@ -266,7 +265,6 @@ class IncrementalBuilderCancellationTest extends AbstractIncrementalBuilderTest 
 					new ClsA().methA();
 				''',
 				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime,
 					ProjectClientA
 				'''
 			],
@@ -347,7 +345,6 @@ class IncrementalBuilderCancellationTest extends AbstractIncrementalBuilderTest 
 					new Cls().meth();
 				''',
 				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime,
 					ProjectMain
 				'''
 			],
@@ -357,7 +354,6 @@ class IncrementalBuilderCancellationTest extends AbstractIncrementalBuilderTest 
 					new Cls().meth();
 				''',
 				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime,
 					ProjectMain,
 					ProjectClient1
 				'''

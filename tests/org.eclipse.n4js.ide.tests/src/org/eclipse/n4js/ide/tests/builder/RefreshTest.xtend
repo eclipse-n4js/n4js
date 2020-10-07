@@ -74,7 +74,6 @@ class RefreshTest extends AbstractIncrementalBuilderTest {
 					new SomeClass().m();
 				''',
 				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime,
 					SomeProject
 				'''
 			]
@@ -116,7 +115,6 @@ class RefreshTest extends AbstractIncrementalBuilderTest {
 					new SomeClass().m();
 				''',
 				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime,
 					SomeProject
 				'''
 			]
@@ -154,7 +152,6 @@ class RefreshTest extends AbstractIncrementalBuilderTest {
 					new SomeClass().m();
 				''',
 				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime,
 					SomeProject
 				'''
 			]
@@ -206,7 +203,6 @@ class RefreshTest extends AbstractIncrementalBuilderTest {
 					new SomeClass().m();
 				''',
 				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime,
 					SomeProject
 				'''
 			]
@@ -259,7 +255,6 @@ class RefreshTest extends AbstractIncrementalBuilderTest {
 					new SomeClass2().m();
 				''',
 				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime,
 					SomeProject2
 				'''
 			]
@@ -304,7 +299,6 @@ class RefreshTest extends AbstractIncrementalBuilderTest {
 					export public class SomeClass2 extends SomeClass1 {}
 				''',
 				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime,
 					SomeProject1
 				'''
 			],
@@ -314,7 +308,6 @@ class RefreshTest extends AbstractIncrementalBuilderTest {
 					new SomeClass2().m();
 				''',
 				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime,
 					SomeProject2
 				'''
 			]

@@ -44,7 +44,6 @@ class IncrementalBuilderCopiedProjectTest extends AbstractIncrementalBuilderTest
 				_globalThis.MigrationContext;
 			''',
 			CFG_DEPENDENCIES -> '''
-				n4js-runtime,
 				lib
 			'''
 		);

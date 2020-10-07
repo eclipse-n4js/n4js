@@ -89,8 +89,7 @@ class GH_1869_DynmicImportWithInstalledTypeDefinitions extends AbstractIdeTest {
 				''',
 				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
 					@n4jsd/some-pkg,
-					some-pkg,
-					n4js-runtime
+					some-pkg
 				'''
 			]
 		);

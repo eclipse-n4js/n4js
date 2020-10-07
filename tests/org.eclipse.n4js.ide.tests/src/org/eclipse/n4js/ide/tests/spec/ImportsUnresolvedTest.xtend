@@ -16,7 +16,6 @@ import org.junit.Test
 
 import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.CFG_DEPENDENCIES
 import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.CFG_MAIN_MODULE
-import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.N4JS_RUNTIME
 
 /**
  * Tests for the error messages of unresolved imports. See also Xpect test file 'ImportsUnresolved.n4js.xt'.
@@ -77,7 +76,6 @@ class ImportsUnresolvedTest extends AbstractIdeTest {
 					import {X} from "OtherProject/a/b/SomeModule"
 				''',
 				CFG_DEPENDENCIES -> '''
-					«N4JS_RUNTIME»,
 					OtherProject
 				'''
 			],
@@ -102,7 +100,6 @@ class ImportsUnresolvedTest extends AbstractIdeTest {
 					import {X} from "OtherProject"
 				''',
 				CFG_DEPENDENCIES -> '''
-					«N4JS_RUNTIME»,
 					OtherProject
 				'''
 			],
@@ -131,7 +128,6 @@ class ImportsUnresolvedTest extends AbstractIdeTest {
 					import {X} from "OtherProject"
 				''',
 				CFG_DEPENDENCIES -> '''
-					«N4JS_RUNTIME»,
 					OtherProject
 				'''
 			],

@@ -23,7 +23,6 @@ import org.junit.Test
 import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.CFG_DEPENDENCIES
 import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.CFG_NODE_MODULES
 import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.CFG_SOURCE_FOLDER
-import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.N4JS_RUNTIME
 import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.PACKAGE_JSON
 import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.YARN_TEST_PROJECT
 import static org.junit.Assert.assertFalse
@@ -42,7 +41,6 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 				new OtherClass().m();
 			''',
 			CFG_DEPENDENCIES -> '''
-				«N4JS_RUNTIME»,
 				OtherProject
 			'''
 		],
@@ -62,7 +60,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 				"(Error, [1:4 - 1:14], Couldn't resolve reference to IdentifiableElement 'OtherClass'.)"
 			],
 			getPackageJsonFile("MainProject").toFileURI, #[
-				"(Error, [16:3 - 16:22], Project does not exist with project ID: OtherProject.)"
+				"(Error, [15:3 - 15:22], Project does not exist with project ID: OtherProject.)"
 			]
 		);
 	}

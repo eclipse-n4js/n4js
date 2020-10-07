@@ -123,7 +123,6 @@ class InitialBuildNotCancelableTest extends AbstractIdeTest {
 					new Other().m();
 				''',
 				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime,
 					OtherProject
 				'''
 			]

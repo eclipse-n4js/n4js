@@ -42,7 +42,6 @@ class IncrementalBuilderBasicTest extends AbstractIncrementalBuilderTest {
 					new Other().mOther();
 				''',
 				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime,
 					OtherProject
 				'''
 			]
