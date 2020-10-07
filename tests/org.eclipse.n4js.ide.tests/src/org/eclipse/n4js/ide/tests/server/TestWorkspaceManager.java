@@ -31,11 +31,13 @@ import org.eclipse.n4js.tests.codegen.Project;
 import org.eclipse.n4js.tests.codegen.Project.SourceFolder;
 import org.eclipse.n4js.tests.codegen.YarnWorkspaceProject;
 import org.eclipse.n4js.utils.io.FileUtils;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
 import org.junit.Assert;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Streams;
 
@@ -176,16 +178,16 @@ public class TestWorkspaceManager {
 		}
 
 		Path projectNamePath = projectNameToRelativePath(projectName);
-		Path createdProjectNamePath = projectNameToRelativePath(createdProject.getProjectName());
+		Path createdProjectNamePath = projectNameToRelativePath(createdProject.getName());
 
 		Path createdProjectPath = getRoot().toPath().resolve(createdProjectNamePath);
 
-		if (projectName.equals(createdProject.getProjectName())) {
+		if (projectName.equals(createdProject.getName())) {
 			return createdProjectPath.toFile();
 		}
 
 		if (createdProject instanceof YarnWorkspaceProject) {
-			Project containedProject = ((YarnWorkspaceProject) createdProject).getProject(projectName);
+			Project containedProject = ((YarnWorkspaceProject) createdProject).getMemberProject(projectName);
 			if (containedProject != null) {
 				return createdProjectPath.resolve(YarnWorkspaceProject.PACKAGES).resolve(projectNamePath).toFile();
 			}
@@ -197,10 +199,10 @@ public class TestWorkspaceManager {
 		}
 
 		if (createdProject instanceof YarnWorkspaceProject) {
-			for (Project containedProject : ((YarnWorkspaceProject) createdProject).getProjects()) {
+			for (Project containedProject : ((YarnWorkspaceProject) createdProject).getMemberProjects()) {
 				Project containedNodeModuleProject = createdProject.getNodeModuleProject(projectName);
 				if (containedNodeModuleProject != null) {
-					Path containedProjectNamePath = projectNameToRelativePath(containedProject.getProjectName());
+					Path containedProjectNamePath = projectNameToRelativePath(containedProject.getName());
 					return createdProjectPath
 							.resolve(YarnWorkspaceProject.PACKAGES).resolve(containedProjectNamePath)
 							.resolve(N4JSGlobals.NODE_MODULES).resolve(projectNamePath).toFile();
@@ -298,17 +300,7 @@ public class TestWorkspaceManager {
 
 	/** Creates the default project on file system. Adds dependency to n4js-runtime. */
 	public Project createTestProjectOnDisk(Map<String, String> modulesContents) {
-		return createClientProject(getRoot().toPath(), DEFAULT_PROJECT_NAME, modulesContents);
-	}
-
-	private Project createClientProject(Path destination, String projectName, Map<String, String> modulesContents) {
-		Map<String, String> modulesContentsCpy = new HashMap<>(modulesContents);
-		LinkedHashMap<String, Map<String, String>> projectsModulesContents = new LinkedHashMap<>();
-		projectsModulesContents.put(projectName, modulesContentsCpy);
-		modulesContentsCpy.putIfAbsent(CFG_NODE_MODULES + N4JS_RUNTIME, null);
-		modulesContentsCpy.putIfAbsent(CFG_DEPENDENCIES, N4JS_RUNTIME);
-
-		return createTestOnDisk(destination, projectsModulesContents);
+		return createTestOnDisk(getRoot().toPath(), ImmutableMap.of(DEFAULT_PROJECT_NAME, modulesContents));
 	}
 
 	/** Same as {@link #createTestOnDisk(Map)}, but accepts pairs instead of a map. */
@@ -339,8 +331,9 @@ public class TestWorkspaceManager {
 		if (projectsModulesContents.size() == 1) {
 			Entry<String, Map<String, String>> singleProject = projectsModulesContents.entrySet().iterator().next();
 			String projectName = singleProject.getKey();
-			Map<String, String> moduleContents = singleProject.getValue();
-			createdProject = createSimpleProject(projectName, moduleContents, HashMultimap.create());
+			Map<String, String> modulesContents = singleProject.getValue();
+			createdProject = createSimpleProject(projectName, modulesContents, HashMultimap.create(),
+					ProjectKind.TopLevel);
 		} else {
 			createdProject = createYarnProject(projectsModulesContents);
 		}
@@ -351,8 +344,17 @@ public class TestWorkspaceManager {
 		return createdProject;
 	}
 
+	private enum ProjectKind {
+		/** A top-level project. */
+		TopLevel,
+		/** A member project of a yarn workspace. */
+		Member,
+		/** A project inside a <code>node_modules</code> folder. */
+		NodeModule
+	}
+
 	private Project createSimpleProject(String projectName, Map<String, String> modulesContents,
-			Multimap<String, String> dependencies) {
+			Multimap<String, String> dependencies, ProjectKind projectKind) {
 
 		if (projectName.equals(N4JS_RUNTIME) && (modulesContents == null || modulesContents.isEmpty())) {
 			return N4JS_RUNTIME_FAKE;
@@ -390,7 +392,7 @@ public class TestWorkspaceManager {
 				int indexOfSrc = moduleName.indexOf(CFG_SRC);
 				if (moduleName.equals(CFG_NODE_MODULES + N4JS_RUNTIME) && indexOfSrc == -1) {
 					project.addNodeModuleProject(N4JS_RUNTIME_FAKE);
-					project.addProjectDependency(N4JS_RUNTIME_FAKE.getProjectName());
+					project.addProjectDependency(N4JS_RUNTIME_FAKE.getName());
 
 				} else {
 					if (indexOfSrc == -1) {
@@ -403,7 +405,7 @@ public class TestWorkspaceManager {
 						nmProject = new Project(nmName, VENDOR, VENDOR + "_name", prjType);
 						nmProject.createSourceFolder(DEFAULT_SOURCE_FOLDER);
 						project.addNodeModuleProject(nmProject);
-						project.addProjectDependency(nmProject.getProjectName());
+						project.addProjectDependency(nmProject.getName());
 					}
 					SourceFolder nmSourceFolder = nmProject.getSourceFolders().get(0);
 					createAndAddModule(contents, nmModuleName, nmSourceFolder);
@@ -415,6 +417,18 @@ public class TestWorkspaceManager {
 				}
 
 				createAndAddModule(contents, moduleName, sourceFolder);
+			}
+		}
+
+		// apply default values
+		if (N4JSGlobals.PROJECT_TYPES_REQUIRING_N4JS_RUNTIME.contains(project.getType())) {
+			// add dependency to n4js-runtime (if not already present)
+			project.addProjectDependency(N4JS_RUNTIME);
+			// add fake n4js-runtime to node_modules folder (if not already present)
+			if (projectKind == ProjectKind.TopLevel) {
+				if (project.getNodeModuleProject(N4JS_RUNTIME) == null) {
+					project.addNodeModuleProject(N4JS_RUNTIME_FAKE);
+				}
 			}
 		}
 
@@ -438,15 +452,24 @@ public class TestWorkspaceManager {
 
 			if (prjName.startsWith(CFG_NODE_MODULES)) {
 				prjName = prjName.substring(CFG_NODE_MODULES.length());
-				Project project = createSimpleProject(prjName, moduleContents, dependencies);
+				Project project = createSimpleProject(prjName, moduleContents, dependencies, ProjectKind.NodeModule);
 				yarnProject.addNodeModuleProject(project);
 			} else {
-				Project project = createSimpleProject(prjName, moduleContents, dependencies);
-				yarnProject.addProject(project);
+				Project project = createSimpleProject(prjName, moduleContents, dependencies, ProjectKind.Member);
+				yarnProject.addMemberProject(project);
 			}
 		}
 
 		setDependencies(yarnProject, dependencies);
+
+		// apply default values
+		boolean haveMemberRequiringN4jsRuntime = IterableExtensions.exists(yarnProject.getMemberProjects(),
+				p -> N4JSGlobals.PROJECT_TYPES_REQUIRING_N4JS_RUNTIME.contains(p.getType()));
+		if (haveMemberRequiringN4jsRuntime) {
+			if (yarnProject.getNodeModuleProject(N4JS_RUNTIME) == null) {
+				yarnProject.addNodeModuleProject(N4JS_RUNTIME_FAKE);
+			}
+		}
 
 		return yarnProject;
 	}
@@ -454,7 +477,7 @@ public class TestWorkspaceManager {
 	private void setDependencies(YarnWorkspaceProject yarnProject, Multimap<String, String> dependencies) {
 		for (String projectName : dependencies.keySet()) {
 			Collection<String> projectDependencies = dependencies.get(projectName);
-			Project project = yarnProject.getProject(projectName);
+			Project project = yarnProject.getMemberProject(projectName);
 			if (project == null) {
 				project = yarnProject.getNodeModuleProject(projectName);
 				if (project == null) {
@@ -462,7 +485,7 @@ public class TestWorkspaceManager {
 				}
 			}
 			for (String projectDependency : projectDependencies) {
-				Project dependency = yarnProject.getProject(projectDependency);
+				Project dependency = yarnProject.getMemberProject(projectDependency);
 				if (dependency == null) {
 					dependency = yarnProject.getNodeModuleProject(projectDependency);
 					if (dependency == null) {
@@ -471,7 +494,7 @@ public class TestWorkspaceManager {
 						continue;
 					}
 				}
-				project.addProjectDependency(dependency.getProjectName());
+				project.addProjectDependency(dependency.getName());
 			}
 		}
 	}
