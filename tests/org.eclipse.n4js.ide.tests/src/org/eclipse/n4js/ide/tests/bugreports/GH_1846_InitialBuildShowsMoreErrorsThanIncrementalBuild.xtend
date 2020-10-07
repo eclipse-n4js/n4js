@@ -52,13 +52,11 @@ class GH_1846_InitialBuildShowsMoreErrorsThanIncrementalBuild extends AbstractId
 	@Test
 	def void testMinimal_multipleProjects() {
 		testWorkspaceManager.createTestOnDisk(
-			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"ProjectA" -> #[
 				"A" -> '''
 					export public const someConstant: string = null;
 					export public class A {}
-				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> "n4js-runtime"
+				'''
 			],
 			"ProjectMain" -> #[
 				"Main" -> '''
@@ -66,7 +64,6 @@ class GH_1846_InitialBuildShowsMoreErrorsThanIncrementalBuild extends AbstractId
 					new A();
 				''',
 				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime,
 					ProjectA
 				'''
 			]
@@ -92,7 +89,6 @@ class GH_1846_InitialBuildShowsMoreErrorsThanIncrementalBuild extends AbstractId
 	@Test
 	def void testExampleFromTaskDescription() {
 		testWorkspaceManager.createTestOnDisk(
-			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"ProjectA" -> #[
 				"IDataCollection" -> '''
 					export public interface IDataCollection {
@@ -111,8 +107,7 @@ class GH_1846_InitialBuildShowsMoreErrorsThanIncrementalBuild extends AbstractId
 
 					let l: IDataList;
 					l = null;
-				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> "n4js-runtime"
+				'''
 			],
 			"ProjectB" -> #[
 				"MainB" -> '''
@@ -122,7 +117,6 @@ class GH_1846_InitialBuildShowsMoreErrorsThanIncrementalBuild extends AbstractId
 					l = null;
 				''',
 				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime,
 					ProjectA
 				'''
 			]
