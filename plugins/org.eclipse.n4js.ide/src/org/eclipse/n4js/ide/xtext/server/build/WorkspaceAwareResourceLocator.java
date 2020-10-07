@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.ide.xtext.server.build;
 
-import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -20,8 +19,6 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.ResourceLocator;
  * A resource locator that will redirect requests to the resource set of the containing project.
  */
 public class WorkspaceAwareResourceLocator extends ResourceLocator {
-
-	private static final Logger LOG = Logger.getLogger(WorkspaceAwareResourceLocator.class);
 
 	private final XWorkspaceManager workspaceManager;
 
@@ -37,13 +34,9 @@ public class WorkspaceAwareResourceLocator extends ResourceLocator {
 	public Resource getResource(URI uri, boolean loadOnDemand) {
 		Resource candidate = resourceSet.getURIResourceMap().get(uri);
 		if (candidate != null) {
-			// TODO check if candidate is not loaded but we want to load on demand
-			if (loadOnDemand && !candidate.isLoaded()) {
-				// demandLoadHelper(candidate);
-				LOG.warn("Returning a resource that is not loaded even though loadOnDemand was set to true: "
-						+ candidate.getURI());
+			if (!loadOnDemand || candidate.isLoaded()) {
+				return candidate;
 			}
-			return candidate;
 		}
 		ProjectBuilder projectManager = this.workspaceManager.getProjectBuilder(uri);
 		if (projectManager == null || projectManager.getResourceSet() == resourceSet) {
