@@ -110,14 +110,12 @@ class InitialBuildNotCancelableTest extends AbstractIdeTest {
 	@Test(timeout = 10000)
 	def void testInitialBuildNotCancelable() throws InterruptedException {
 		testWorkspaceManager.createTestOnDisk(
-			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"OtherProject" -> #[
 				"Other" -> '''
 					export public class Other {
 						public mX() {}
 					}
-				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> "n4js-runtime"
+				'''
 			],
 			"MainProject" -> #[
 				"Main" -> '''

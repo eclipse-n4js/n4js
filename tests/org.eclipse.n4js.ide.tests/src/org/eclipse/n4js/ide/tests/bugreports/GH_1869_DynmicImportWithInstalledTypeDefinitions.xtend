@@ -19,7 +19,6 @@ class GH_1869_DynmicImportWithInstalledTypeDefinitions extends AbstractIdeTest {
 	@Test
 	def void testGH1869() {
 		testWorkspaceManager.createTestOnDisk(
-			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
 			TestWorkspaceManager.CFG_NODE_MODULES + "some-pkg" -> #[
 				"PlainJSModuleWithTypeDefs.js" -> '''
 					export const valueWithTypeDef = "hello from plain JS";

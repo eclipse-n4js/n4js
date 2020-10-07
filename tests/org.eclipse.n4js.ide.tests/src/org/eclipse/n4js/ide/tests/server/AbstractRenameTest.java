@@ -133,13 +133,6 @@ abstract public class AbstractRenameTest extends AbstractStructuredIdeTest<Renam
 		TestWorkspaceManager.convertProjectsModulesContentsToMap(
 				projectsModulesSourcesBefore, projectsModulesSourcesBeforeAsMap, false);
 
-		projectsModulesSourcesBeforeAsMap.put(TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime", null);
-		projectsModulesSourcesBeforeAsMap.forEach((projectName, moduleName2SourceBefore) -> {
-			if (moduleName2SourceBefore != null) {
-				moduleName2SourceBefore.put(TestWorkspaceManager.CFG_DEPENDENCIES, "n4js-runtime");
-			}
-		});
-
 		List<RenamePosition> positions = new ArrayList<>();
 		for (Pair<String, ? extends Iterable<Pair<String, String>>> modulesSourcesBefore : projectsModulesSourcesBefore) {
 			String projectName = modulesSourcesBefore.getKey();

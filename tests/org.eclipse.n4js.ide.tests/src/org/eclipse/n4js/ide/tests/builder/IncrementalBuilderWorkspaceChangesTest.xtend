@@ -36,7 +36,6 @@ import static org.junit.Assert.assertTrue
 class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderTest {
 
 	private static val testCode_yarnWorkspaceWithTwoProjects = #[
-		CFG_NODE_MODULES + N4JS_RUNTIME -> null,
 		"MainProject" -> #[
 			"Main" -> '''
 				import {OtherClass} from "Other";
@@ -52,8 +51,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 				export public class OtherClass {
 					public m() {}
 				}
-			''',
-			CFG_DEPENDENCIES -> N4JS_RUNTIME
+			'''
 		]
 	];
 
@@ -211,21 +209,19 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 	@Test
 	def void testChangePackageJson_addRemoveDependency_toN4JSProject() throws IOException {
 		testWorkspaceManager.createTestOnDisk(
-			CFG_NODE_MODULES + N4JS_RUNTIME -> null,
 			"MainProject" -> #[
 				"Main" -> '''
 					import {OtherClass} from "Other";
 					new OtherClass().m();
-				''',
-				CFG_DEPENDENCIES -> N4JS_RUNTIME // note: missing the dependency to OtherProject
+				'''
+				// note: missing the dependency to OtherProject
 			],
 			"OtherProject" -> #[
 				"Other" -> '''
 					export public class OtherClass {
 						public m() {}
 					}
-				''',
-				CFG_DEPENDENCIES -> N4JS_RUNTIME
+				'''
 			]
 		);
 		startAndWaitForLspServer();
@@ -243,7 +239,6 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 	@Test
 	def void testChangePackageJson_addRemoveDependency_toPlainjsProjectInNodeModules() throws IOException {
 		testWorkspaceManager.createTestOnDisk(
-			CFG_NODE_MODULES + N4JS_RUNTIME -> null,
 			CFG_NODE_MODULES + "PlainjsProject" -> #[
 				"PlainjsModule.js" -> '''
 					export public class OtherClass {
@@ -262,8 +257,8 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 				"Main" -> '''
 					import * as N+ from "PlainjsModule";
 					N.XYZ;
-				''',
-				CFG_DEPENDENCIES -> N4JS_RUNTIME // note: missing the dependency to PlainjsProject
+				'''
+				// note: missing the dependency to PlainjsProject
 			]
 		);
 		startAndWaitForLspServer();
@@ -280,13 +275,12 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 	@Test
 	def void testChangePackageJson_addRemoveDependency_toPlainjsProjectInWorkspace() throws IOException {
 		testWorkspaceManager.createTestOnDisk(
-			CFG_NODE_MODULES + N4JS_RUNTIME -> null,
 			"MainProject" -> #[
 				"Main" -> '''
 					import * as N+ from "PlainjsModule";
 					N.XYZ;
-				''',
-				CFG_DEPENDENCIES -> N4JS_RUNTIME // note: missing the dependency to PlainjsProject
+				'''
+				// note: missing the dependency to PlainjsProject
 			],
 			"PlainjsProject" -> #[
 				"PlainjsModule.js" -> '''

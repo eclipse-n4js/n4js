@@ -32,14 +32,10 @@ import static org.junit.Assert.*
 class InitialBuildTest extends AbstractIncrementalBuilderTest {
 
 	private static val testData = #[
-		TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
 		"ProviderProject" -> #[
 			"SomeModule" -> '''
 				export public class SomeClass {
 				}
-			''',
-			TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-				n4js-runtime
 			'''
 		],
 		"ClientProject" -> #[

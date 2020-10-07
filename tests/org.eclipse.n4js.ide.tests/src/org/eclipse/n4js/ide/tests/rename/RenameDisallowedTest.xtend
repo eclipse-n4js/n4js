@@ -40,7 +40,6 @@ class RenameDisallowedTest extends AbstractIdeTest {
 	@Test
 	def void testDisallowRenamingTypeFromNodeModules() throws Exception {
 		testWorkspaceManager.createTestOnDisk(
-			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
 			TestWorkspaceManager.CFG_NODE_MODULES + "ProjectInNodeModules" -> #[
 				"ModuleInNodeModules" -> '''
 					export public class SomeClass {}
@@ -53,7 +52,7 @@ class RenameDisallowedTest extends AbstractIdeTest {
 					SomeClass;
 					someConst;
 				''',
-				"#DEPENDENCY" -> '''
+				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
 					n4js-runtime,
 					ProjectInNodeModules
 				'''

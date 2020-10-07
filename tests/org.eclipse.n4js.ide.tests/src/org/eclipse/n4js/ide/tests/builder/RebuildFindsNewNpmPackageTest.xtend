@@ -48,7 +48,6 @@ class RebuildFindsNewNpmPackageTest extends AbstractIdeTest {
 	@Test
 	def void testGlobalNodeModulesFolder() throws IOException {
 		testWorkspaceManager.createTestOnDisk(
-			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"ProjectMain" -> #[
 				"Main" -> '''
 					import * as N+ from "LibModule"
@@ -59,9 +58,7 @@ class RebuildFindsNewNpmPackageTest extends AbstractIdeTest {
 					lib
 				'''
 			],
-			"ProjectOther" -> #[ // only required to obtain a yarn workspace
-				TestWorkspaceManager.CFG_DEPENDENCIES -> "n4js-runtime"
-			]
+			"ProjectOther" -> #[] // only required to obtain a yarn workspace
 		);
 		performTest(getProjectRoot(TestWorkspaceManager.YARN_TEST_PROJECT), getProjectRoot("ProjectMain"));
 	}

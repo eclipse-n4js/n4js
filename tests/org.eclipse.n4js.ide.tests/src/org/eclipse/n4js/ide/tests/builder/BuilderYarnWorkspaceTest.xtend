@@ -30,14 +30,12 @@ class BuilderYarnWorkspaceTest extends AbstractIncrementalBuilderTest {
 		val otherProjectName = "OtherProject";
 
 		testWorkspaceManager.createTestOnDisk(
-			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
 			otherProjectName -> #[
 				"folder/Other" -> '''
 					export public class Other {
 						public m() {}
 					}
-				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> "n4js-runtime"
+				'''
 			],
 			"MainProject" -> #[
 				"Main" -> '''
@@ -62,7 +60,6 @@ class BuilderYarnWorkspaceTest extends AbstractIncrementalBuilderTest {
 		val otherProjectName = "OtherProject";
 
 		testWorkspaceManager.createTestOnDisk(
-			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
 			otherProjectName -> #[
 				"folder/Other" -> '''
 					export public class Other {

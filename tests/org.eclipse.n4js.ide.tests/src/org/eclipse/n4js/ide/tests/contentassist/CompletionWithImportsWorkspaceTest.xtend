@@ -38,7 +38,6 @@ public class CompletionWithImportsWorkspaceTest extends AbstractCompletionTest {
 				'''
 			],
 
-			CFG_NODE_MODULES + N4JS_RUNTIME -> null,
 			CFG_NODE_MODULES + "SomeNPM" -> #[
 				"index" -> '''//some npm js code''',
 				"AnotherModule.js" -> '''//some npm js code'''

@@ -19,7 +19,6 @@ class GH_1923_BogusDuplicateModuleErrorInImplProjects extends AbstractIdeTest {
 	@Test
 	def void testApiImplProjects() {
 		testWorkspaceManager.createTestOnDisk(
-			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"ProjectApi" -> #[
 				"Module.n4jsd" -> '''
 					export external public class Cls {
