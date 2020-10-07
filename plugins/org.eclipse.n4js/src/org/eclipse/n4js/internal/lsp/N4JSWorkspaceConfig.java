@@ -39,7 +39,6 @@ import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 
@@ -94,6 +93,24 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 
 	@Override
 	public WorkspaceChanges update(WorkspaceConfigSnapshot oldWorkspaceConfig, Set<URI> dirtyFiles,
+			Set<URI> deletedFiles, boolean refresh) {
+
+		WorkspaceChanges changes = refresh
+				? doCompleteUpdate(oldWorkspaceConfig)
+				: doMinimalUpdate(oldWorkspaceConfig, dirtyFiles, deletedFiles);
+
+		changes = recomputeSortedDependenciesIfNecessary(oldWorkspaceConfig, changes);
+
+		return changes;
+	}
+
+	/** Always performs a complete re-computation of the workspace configuration. */
+	private WorkspaceChanges doCompleteUpdate(WorkspaceConfigSnapshot oldWorkspaceConfig) {
+		return detectAddedRemovedProjects(oldWorkspaceConfig, true);
+	}
+
+	/** Based on the given dirty/deleted files, performs a workspace update with as few computations as possible. */
+	private WorkspaceChanges doMinimalUpdate(WorkspaceConfigSnapshot oldWorkspaceConfig, Set<URI> dirtyFiles,
 			Set<URI> deletedFiles) {
 
 		WorkspaceChanges changes = WorkspaceChanges.createUrisRemovedAndChanged(deletedFiles, dirtyFiles);
@@ -126,15 +143,14 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 		needToDetectAddedRemovedProjects |= didDependenciesOfAnyN4JSProjectChange(changes, oldWorkspaceConfig);
 
 		if (needToDetectAddedRemovedProjects) {
-			changes = changes.merge(detectAddedRemovedProjects(oldWorkspaceConfig));
+			changes = changes.merge(detectAddedRemovedProjects(oldWorkspaceConfig, false));
 		}
-
-		changes = recomputeSortedDependenciesIfNecessary(oldWorkspaceConfig, changes);
 
 		return changes;
 	}
 
-	private WorkspaceChanges detectAddedRemovedProjects(WorkspaceConfigSnapshot oldWorkspaceConfig) {
+	private WorkspaceChanges detectAddedRemovedProjects(WorkspaceConfigSnapshot oldWorkspaceConfig,
+			boolean alsoDetectChangedProjects) {
 
 		// update all projects
 		((N4JSRuntimeCore) delegate).deregisterAll();
@@ -146,26 +162,29 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 			((N4JSRuntimeCore) delegate).registerProject(newProjectPath.toFile());
 		}
 
-		// detect changes
+		// detect project additions, removals (and also changes, iff 'alsoDetectChangedProjects' is set)
 		Map<URI, ProjectConfigSnapshot> oldProjectsMap = IterableExtensions.toMap(oldWorkspaceConfig.getProjects(),
 				ProjectConfigSnapshot::getPath);
 		Map<URI, XIProjectConfig> newProjectsMap = IterableExtensions.toMap(getProjects(), XIProjectConfig::getPath);
-		List<ProjectConfigSnapshot> addedProjects = new ArrayList<>();
-		List<ProjectConfigSnapshot> removedProjects = new ArrayList<>();
+		WorkspaceChanges changes = new WorkspaceChanges();
 		for (URI uri : Sets.union(oldProjectsMap.keySet(), newProjectsMap.keySet())) {
 			boolean isOld = oldProjectsMap.containsKey(uri);
 			boolean isNew = newProjectsMap.containsKey(uri);
 			if (isOld && !isNew) {
-				removedProjects.add(oldProjectsMap.get(uri));
+				changes = changes.merge(WorkspaceChanges.createProjectRemoved(oldProjectsMap.get(uri)));
 			} else if (!isOld && isNew) {
-				addedProjects.add(newProjectsMap.get(uri).toSnapshot());
+				ProjectConfigSnapshot newPC = newProjectsMap.get(uri).toSnapshot();
+				changes = changes.merge(WorkspaceChanges.createProjectAdded(newPC));
+			} else if (isOld && isNew) {
+				if (alsoDetectChangedProjects) {
+					ProjectConfigSnapshot oldPC = oldProjectsMap.get(uri);
+					ProjectConfigSnapshot newPC = newProjectsMap.get(uri).toSnapshot();
+					changes = changes.merge(N4JSProjectConfig.computeChanges(oldPC, newPC));
+				}
 			}
 		}
 
-		return new WorkspaceChanges(ImmutableList.of(), ImmutableList.of(), ImmutableList.of(),
-				ImmutableList.of(),
-				ImmutableList.of(), ImmutableList.copyOf(removedProjects), ImmutableList.copyOf(addedProjects),
-				ImmutableList.of());
+		return changes;
 	}
 
 	/**
