@@ -263,18 +263,14 @@ class RefreshTest extends AbstractIncrementalBuilderTest {
 		val errorWhenDependencyMissing = "MainModule" -> #[
 			"(Error, [1:17 - 1:18], Couldn't resolve reference to IdentifiableElement 'm'.)"
 		];
-		val errorWhenDependencyMissing_GH1846 = "MainModule" -> #[
-			// TODO GH-1846 the error message should be the same as in 'errorWhenDependencyMissing'
-			"(Error, [1:4 - 1:14], Couldn't resolve reference to IdentifiableElement 'SomeClass2'.)"
-		];
-		assertIssues(errorWhenDependencyMissing_GH1846);
+		assertIssues(errorWhenDependencyMissing);
 
 		val packageJsonOfSomeProject2 = getPackageJsonFile("SomeProject2").toFileURI;
 		changeFileOnDiskWithoutNotification(packageJsonOfSomeProject2,
 			'"n4js-runtime": "*"' -> '"n4js-runtime": "*", "SomeProject1": "*"'
 		);
 
-		assertIssues(errorWhenDependencyMissing_GH1846);
+		assertIssues(errorWhenDependencyMissing);
 		executeCommand(N4JSCommandService.N4JS_REFRESH);
 		joinServerRequests();
 		assertNoIssues();
@@ -316,15 +312,11 @@ class RefreshTest extends AbstractIncrementalBuilderTest {
 		val errorWhenSomeProject1Missing = "MainModule" -> #[
 			"(Error, [1:17 - 1:18], Couldn't resolve reference to IdentifiableElement 'm'.)"
 		];
-		val errorWhenSomeProject1Missing_GH1846 = "MainModule" -> #[
-			// TODO GH-1846 the error message should be the same as in 'errorWhenSomeProject1Missing'
-			"(Error, [1:4 - 1:14], Couldn't resolve reference to IdentifiableElement 'SomeClass2'.)"
-		];
-		assertIssues(errorWhenSomeProject1Missing_GH1846);
+		assertIssues(errorWhenSomeProject1Missing);
 
 		createMissingProject(getProjectRoot("SomeProject2").toPath.parent);
 
-		assertIssues(errorWhenSomeProject1Missing_GH1846);
+		assertIssues(errorWhenSomeProject1Missing);
 		executeCommand(N4JSCommandService.N4JS_REFRESH);
 		joinServerRequests();
 		assertNoIssues();

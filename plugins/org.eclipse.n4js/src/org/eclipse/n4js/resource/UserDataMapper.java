@@ -153,6 +153,9 @@ public final class UserDataMapper {
 			// 2016-05-11: keeping fail-safe behavior for now (in place at least since end of 2014).
 			// Fail-fast behavior not possible, because common case (e.g. typo in an identifier in the source code, that
 			// leads to an unresolvable proxy in the TModule)
+			// 2020-10-07: the effect of returning a time stamp user data, here, is that resources with unresolved
+			// proxies will have no serialized TModule in the index and thus the fall-back behavior of "load from
+			// source" will apply when proxies to such a resource are being resolved.
 			return createTimestampUserData(exportedModule);
 		}
 
