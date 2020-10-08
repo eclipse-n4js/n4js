@@ -72,6 +72,7 @@ import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
 import org.eclipse.lsp4j.WorkspaceClientCapabilities;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscTestFactory;
@@ -120,9 +121,33 @@ import com.google.inject.Module;
 abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener {
 
 	/** Wildcard string that may be used at the start or end of a file content expectation. */
-	static final protected String FILE_CONTENT_ASSERTION_WILDCARD = "[...]";
+	protected static final String FILE_CONTENT_ASSERTION_WILDCARD = "[...]";
 
-	static final SystemOutRedirecter SYSTEM_OUT_REDIRECTER = new SystemOutRedirecter();
+	private static final SystemOutRedirecter SYSTEM_OUT_REDIRECTER = new SystemOutRedirecter();
+
+	// copy some constants to avoid having to deal with fragile static imports in subclasses:
+	/** @see TestWorkspaceManager#DEFAULT_PROJECT_NAME */
+	public static final String DEFAULT_PROJECT_NAME = TestWorkspaceManager.DEFAULT_PROJECT_NAME;
+	/** @see TestWorkspaceManager#DEFAULT_MODULE_NAME */
+	public static final String DEFAULT_MODULE_NAME = TestWorkspaceManager.DEFAULT_MODULE_NAME;
+	/** @see TestWorkspaceManager#DEFAULT_SOURCE_FOLDER */
+	public static final String DEFAULT_SOURCE_FOLDER = TestWorkspaceManager.DEFAULT_SOURCE_FOLDER;
+	/** @see TestWorkspaceManager#CFG_DEPENDENCIES */
+	public static final String CFG_DEPENDENCIES = TestWorkspaceManager.CFG_DEPENDENCIES;
+	/** @see TestWorkspaceManager#CFG_MAIN_MODULE */
+	public static final String CFG_MAIN_MODULE = TestWorkspaceManager.CFG_MAIN_MODULE;
+	/** @see TestWorkspaceManager#CFG_SOURCE_FOLDER */
+	public static final String CFG_SOURCE_FOLDER = TestWorkspaceManager.CFG_SOURCE_FOLDER;
+	/** @see TestWorkspaceManager#CFG_NODE_MODULES */
+	public static final String CFG_NODE_MODULES = TestWorkspaceManager.CFG_NODE_MODULES;
+	/** @see TestWorkspaceManager#CFG_SRC */
+	public static final String CFG_SRC = TestWorkspaceManager.CFG_SRC;
+	/** Name of the package.json file. */
+	protected static final String PACKAGE_JSON = N4JSGlobals.PACKAGE_JSON;
+	/** Name of n4js library 'n4js-runtime'. */
+	protected static final String N4JS_RUNTIME = N4JSGlobals.N4JS_RUNTIME.getRawName();
+	/** Name of the npm node_modules folder. */
+	protected static final String NODE_MODULES = N4JSGlobals.NODE_MODULES;
 
 	/** Clear global state to ensure IDE tests run on a clean slate. */
 	@BeforeClass
@@ -1204,7 +1229,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	/** Same as {@link #getResourceDescriptionFromIndex(String, FileURI)}, assuming file belongs to default project. */
 	protected IResourceDescription getResourceDescriptionFromIndex(FileURI fileURI) {
-		return getResourceDescriptionFromIndex(TestWorkspaceManager.DEFAULT_PROJECT_NAME, fileURI);
+		return getResourceDescriptionFromIndex(DEFAULT_PROJECT_NAME, fileURI);
 	}
 
 	/** Reads the resource description of the source file with the given URI from the index. */

@@ -91,8 +91,6 @@ public class TestWorkspaceManager {
 	 * see {@link #CFG_NODE_MODULES}
 	 */
 	static final public String CFG_SRC = "#SRC:";
-	/** Name of the package.json file. */
-	static final public String PACKAGE_JSON = N4JSGlobals.PACKAGE_JSON;
 	/** Name of n4js library 'n4js-runtime' */
 	static final public String N4JS_RUNTIME = N4JSGlobals.N4JS_RUNTIME.getRawName();
 	/** Default project object for 'n4js-runtime' */
@@ -220,7 +218,7 @@ public class TestWorkspaceManager {
 
 	/** Returns the package.json file of the {@link #DEFAULT_PROJECT_NAME default project}. */
 	protected File getPackageJsonFile() {
-		return getPackageJsonFile(TestWorkspaceManager.DEFAULT_PROJECT_NAME);
+		return getPackageJsonFile(DEFAULT_PROJECT_NAME);
 	}
 
 	/** Returns the package.json file of the project with the given name. */
@@ -405,7 +403,7 @@ public class TestWorkspaceManager {
 			} else if (moduleName.equals(CFG_SOURCE_FOLDER)) {
 				// ignore (already processed above)
 
-			} else if (moduleName.equals(PACKAGE_JSON)) {
+			} else if (moduleName.equals(N4JSGlobals.PACKAGE_JSON)) {
 				project.setProjectDescriptionContent(contents);
 
 			} else if (moduleName.startsWith(CFG_NODE_MODULES)) {
