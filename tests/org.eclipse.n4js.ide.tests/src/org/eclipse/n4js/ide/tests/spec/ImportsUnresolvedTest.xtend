@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.ide.tests.spec
 
-import java.util.Map
+import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.ide.tests.server.AbstractIdeTest
 import org.junit.Test
 
@@ -137,13 +137,13 @@ class ImportsUnresolvedTest extends AbstractIdeTest {
 		);
 		startAndWaitForLspServer();
 
-		assertIssues(Map.of(
-			getFileURIFromModuleName("Main"), #[
+		assertIssues(
+			"Main" -> #[
 				"(Error, [0:16 - 0:30], Cannot resolve project import: no matching module found.)"
 			],
-			getPackageJsonFile("OtherProject").toFileURI, #[
+			"OtherProject/" + N4JSGlobals.PACKAGE_JSON -> #[
 				"(Error, [7:17 - 7:24], Main module specifier Other does not exist.)"
 			]
-		));
+		);
 	}
 }

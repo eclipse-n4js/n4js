@@ -14,7 +14,7 @@ import java.io.File
 import java.io.IOException
 import java.nio.file.Files
 import java.util.List
-import java.util.Map
+import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.projectModel.locations.FileURI
 import org.eclipse.n4js.utils.io.FileCopier
 import org.eclipse.n4js.utils.io.FileDeleter
@@ -53,17 +53,15 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 		]
 	];
 
-	def private getExpectedErrorsWhenOtherProjectIsMissing() {
-		return Map.of(
-			getFileURIFromModuleName("Main"), #[
-				"(Error, [0:25 - 0:32], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
-				"(Error, [1:4 - 1:14], Couldn't resolve reference to IdentifiableElement 'OtherClass'.)"
-			],
-			getPackageJsonFile("MainProject").toFileURI, #[
-				"(Error, [15:3 - 15:22], Project does not exist with project ID: OtherProject.)"
-			]
-		);
-	}
+	private static val expectedErrorsWhenOtherProjectIsMissing = #[
+		"Main" -> #[
+			"(Error, [0:25 - 0:32], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
+			"(Error, [1:4 - 1:14], Couldn't resolve reference to IdentifiableElement 'OtherClass'.)"
+		],
+		"MainProject/" + N4JSGlobals.PACKAGE_JSON -> #[
+			"(Error, [15:3 - 15:22], Project does not exist with project ID: OtherProject.)"
+		]
+	];
 
 
 	@Test
@@ -153,8 +151,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 
 		assertFalse("output file of module 'Other' should not exist", outputFile.exists());
 
-		val originalErrors = getExpectedErrorsWhenOtherProjectIsMissing();
-		assertIssues(originalErrors);
+		assertIssues(expectedErrorsWhenOtherProjectIsMissing);
 
 		// recreate the package.json file
 		packageJsonFile.createNewFile();
@@ -165,7 +162,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 		joinServerRequests();
 
 		assertFalse("output file of module 'Other' should not exist", outputFile.exists()); // package.json not saved yet
-		assertIssues(originalErrors); // package.json not saved yet, so still the original errors
+		assertIssues(expectedErrorsWhenOtherProjectIsMissing); // package.json not saved yet, so still the original errors
 
 		saveOpenedFile(packageJsonFileURI);
 		joinServerRequests();
@@ -185,8 +182,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 		deleteNonOpenedFile(packageJsonFile.toFileURI);
 		joinServerRequests();
 
-		val errors = getExpectedErrorsWhenOtherProjectIsMissing();
-		assertIssues(errors);
+		assertIssues(expectedErrorsWhenOtherProjectIsMissing);
 	}
 
 	@Test
@@ -200,8 +196,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 		deleteFolderNotContainingOpenFiles(otherProjectRoot, ".*"); // testing with more URIs in the 'didChangeWatchedFiles' notification than VSCode would send to assert robustness of server
 		joinServerRequests();
 
-		val errors = getExpectedErrorsWhenOtherProjectIsMissing();
-		assertIssues(errors);
+		assertIssues(expectedErrorsWhenOtherProjectIsMissing);
 	}
 
 	@Test
@@ -330,10 +325,11 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 		} else {
 			// unfortunately we have an additional error in the open, non-saved package.json file when a dependency to a plain-JS-project is added
 			// (due to the optimization in ProjectDiscoveryHelper of hiding all unnecessary PLAINJS projects)
-			val errorsBeforeSaving = originalErrors.toMap([getFileURIFromModuleName(it.key)], [it.value]);
-			errorsBeforeSaving.put(packageJsonFileURI, #[
-				"(Error, [15:24 - 15:45], Project does not exist with project ID: PlainjsProject.)"
-			]);
+			val errorsBeforeSaving = originalErrors + #[
+				sourceProjectName + "/" + N4JSGlobals.PACKAGE_JSON -> #[
+					"(Error, [15:24 - 15:45], Project does not exist with project ID: PlainjsProject.)"
+				]
+			];
 			assertIssues(errorsBeforeSaving); // changes in package.json not saved yet, so still the original errors + 1 error in the unsaved package.json editor
 		}
 
@@ -420,8 +416,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 
 		startAndWaitForLspServer();
 
-		val originalErrors = getExpectedErrorsWhenOtherProjectIsMissing();
-		assertIssues(originalErrors);
+		assertIssues(expectedErrorsWhenOtherProjectIsMissing);
 
 		// register new packages folder in package.json in yarn workspace root folder
 		val packageJsonFileURI = getPackageJsonFile(YARN_TEST_PROJECT).toFileURI;
@@ -431,7 +426,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 		);
 		joinServerRequests();
 
-		assertIssues(originalErrors); // changes in package.json not saved yet, so still the original errors
+		assertIssues(expectedErrorsWhenOtherProjectIsMissing); // changes in package.json not saved yet, so still the original errors
 
 		saveOpenedFile(packageJsonFileURI);
 		joinServerRequests();
@@ -448,6 +443,6 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 		saveOpenedFile(packageJsonFileURI);
 		joinServerRequests();
 
-		assertIssues(originalErrors); // back to original errors
+		assertIssues(expectedErrorsWhenOtherProjectIsMissing); // back to original errors
 	}
 }

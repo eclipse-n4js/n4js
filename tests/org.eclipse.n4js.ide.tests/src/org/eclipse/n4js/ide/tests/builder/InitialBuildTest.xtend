@@ -13,7 +13,6 @@ package org.eclipse.n4js.ide.tests.builder
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
-import java.util.Map
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.ide.tests.server.TestWorkspaceManager
 import org.eclipse.n4js.utils.io.FileDeleter
@@ -215,15 +214,15 @@ class InitialBuildTest extends AbstractIncrementalBuilderTest {
 		FileUtils.move(providerProjectPath, providerProjectPathHidden);
 
 		startAndWaitForLspServer();
-		val errorsWithProviderProjectMissing = Map.of(
-			getFileURIFromModuleName("ClientModule"), #[
+		val errorsWithProviderProjectMissing = #[
+			"ClientModule" -> #[
 				"(Error, [0:24 - 0:36], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
 				"(Error, [1:9 - 1:18], Couldn't resolve reference to Type 'SomeClass'.)"
 			],
-			getPackageJsonFile("ClientProject").toFileURI, #[
+			"ClientProject/" + N4JSGlobals.PACKAGE_JSON -> #[
 				"(Error, [15:3 - 15:25], Project does not exist with project ID: ProviderProject.)"
 			]
-		);
+		];
 		assertIssues(errorsWithProviderProjectMissing);
 
 		shutdownLspServer();
