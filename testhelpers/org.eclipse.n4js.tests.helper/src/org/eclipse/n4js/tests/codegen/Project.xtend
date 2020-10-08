@@ -130,8 +130,17 @@ public class Project {
 	 *
 	 * @return the project name.
 	 */
-	public def String getProjectName() {
+	public def String getName() {
 		return projectName;
+	}
+
+	/**
+	 * Returns the project type.
+	 *
+	 * @return the project type.
+	 */
+	public def ProjectType getType() {
+		return projectType;
 	}
 
 	/**

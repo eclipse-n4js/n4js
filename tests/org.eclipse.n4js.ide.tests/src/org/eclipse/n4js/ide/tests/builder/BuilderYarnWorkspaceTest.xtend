@@ -12,7 +12,6 @@ package org.eclipse.n4js.ide.tests.builder
 
 import java.io.IOException
 import java.nio.file.Files
-import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.ide.tests.server.TestWorkspaceManager
 import org.eclipse.n4js.utils.io.FileCopier
 import org.eclipse.n4js.utils.io.FileDeleter
@@ -30,22 +29,19 @@ class BuilderYarnWorkspaceTest extends AbstractIncrementalBuilderTest {
 		val otherProjectName = "OtherProject";
 
 		testWorkspaceManager.createTestOnDisk(
-			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
 			otherProjectName -> #[
 				"folder/Other" -> '''
 					export public class Other {
 						public m() {}
 					}
-				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> "n4js-runtime"
+				'''
 			],
 			"MainProject" -> #[
 				"Main" -> '''
 					import {Other} from "folder/Other";
 					new Other().m();
 				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime,
+				CFG_DEPENDENCIES -> '''
 					OtherProject
 				'''
 			]
@@ -62,14 +58,13 @@ class BuilderYarnWorkspaceTest extends AbstractIncrementalBuilderTest {
 		val otherProjectName = "OtherProject";
 
 		testWorkspaceManager.createTestOnDisk(
-			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
 			otherProjectName -> #[
 				"folder/Other" -> '''
 					export public class Other {
 						public m() {}
 					}
 				''',
-				TestWorkspaceManager.PACKAGE_JSON -> '''
+				PACKAGE_JSON -> '''
 					{
 						"name": "«otherProjectName»",
 						"version": "0.0.1",
@@ -98,8 +93,7 @@ class BuilderYarnWorkspaceTest extends AbstractIncrementalBuilderTest {
 					import {Other} from "OtherProject";
 					new Other().m();
 				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime,
+				CFG_DEPENDENCIES -> '''
 					OtherProject
 				'''
 			]
@@ -120,7 +114,7 @@ class BuilderYarnWorkspaceTest extends AbstractIncrementalBuilderTest {
 		FileCopier.copy(otherProjectFolderOld, otherProjectFolderNew); // warning: java.nio.file.Files#move() will fail if temporary folder is located on a different FileStore!
 		FileDeleter.delete(otherProjectFolderOld);
 
-		val nodeModulesFolder = rootFolder.resolve(TestWorkspaceManager.YARN_TEST_PROJECT).resolve(N4JSGlobals.NODE_MODULES);
+		val nodeModulesFolder = rootFolder.resolve(TestWorkspaceManager.YARN_TEST_PROJECT).resolve(NODE_MODULES);
 		Files.createSymbolicLink(nodeModulesFolder.resolve(projectName), otherProjectFolderNew);
 	}
 }

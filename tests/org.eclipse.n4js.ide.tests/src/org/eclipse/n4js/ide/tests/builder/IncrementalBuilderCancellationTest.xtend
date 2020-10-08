@@ -15,7 +15,6 @@ import com.google.inject.Inject
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
 import org.eclipse.emf.common.util.URI
-import org.eclipse.n4js.ide.tests.server.TestWorkspaceManager
 import org.eclipse.n4js.ide.xtext.server.build.XBuildContext
 import org.eclipse.n4js.ide.xtext.server.build.XClusteringStorageAwareResourceLoader.LoadResult
 import org.eclipse.n4js.ide.xtext.server.build.XIndexer
@@ -247,7 +246,6 @@ class IncrementalBuilderCancellationTest extends AbstractIncrementalBuilderTest 
 	@Test
 	def void testDeletionDuringCancelledBuild() {
 		testWorkspaceManager.createTestOnDisk(
-			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"ProjectClientA" -> #[
 				"MainClientA" -> '''
 					import {Cls} from "MainLibTEMP";
@@ -256,8 +254,7 @@ class IncrementalBuilderCancellationTest extends AbstractIncrementalBuilderTest 
 						public methA() {}
 					}
 				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime,
+				CFG_DEPENDENCIES -> '''
 					ProjectLib
 				'''
 			],
@@ -266,8 +263,7 @@ class IncrementalBuilderCancellationTest extends AbstractIncrementalBuilderTest 
 					import {ClsA} from "MainClientA";
 					new ClsA().methA();
 				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime,
+				CFG_DEPENDENCIES -> '''
 					ProjectClientA
 				'''
 			],
@@ -276,9 +272,6 @@ class IncrementalBuilderCancellationTest extends AbstractIncrementalBuilderTest 
 					export public class Cls {
 						public meth() {}
 					}
-				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime
 				'''
 			]
 		);
@@ -338,15 +331,11 @@ class IncrementalBuilderCancellationTest extends AbstractIncrementalBuilderTest 
 	@Test
 	def void testCancelWhileProcessingCrossProjectDependencies() {
 		testWorkspaceManager.createTestOnDisk(
-			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"ProjectMain" -> #[
 				"MainModule" -> '''
 					export public class Cls {
 						public meth() {}
 					}
-				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime
 				'''
 			],
 			"ProjectClient1" -> #[
@@ -354,8 +343,7 @@ class IncrementalBuilderCancellationTest extends AbstractIncrementalBuilderTest 
 					import {Cls} from "MainModule";
 					new Cls().meth();
 				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime,
+				CFG_DEPENDENCIES -> '''
 					ProjectMain
 				'''
 			],
@@ -364,8 +352,7 @@ class IncrementalBuilderCancellationTest extends AbstractIncrementalBuilderTest 
 					import {Cls} from "MainModule";
 					new Cls().meth();
 				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime,
+				CFG_DEPENDENCIES -> '''
 					ProjectMain,
 					ProjectClient1
 				'''

@@ -14,10 +14,8 @@ import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.attribute.BasicFileAttributes
 import org.eclipse.n4js.N4JSGlobals
-import org.eclipse.n4js.ide.tests.server.TestWorkspaceManager
 import org.junit.Test
 
-import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.*
 import static org.junit.Assert.assertNotEquals
 
 /**
@@ -41,9 +39,8 @@ class IncrementalBuilderIndexOnlyTest extends AbstractIncrementalBuilderTest {
 					
 					new LibClass().libMethod();
 				''',
-			TestWorkspaceManager.CFG_DEPENDENCIES ->
+			CFG_DEPENDENCIES ->
 				'''
-					n4js-runtime,
 					LibProject
 				'''
 		]);
@@ -61,7 +58,7 @@ class IncrementalBuilderIndexOnlyTest extends AbstractIncrementalBuilderTest {
 		val libModule = getFileURIFromModuleName("LibModule");
 		changeFileOnDiskWithoutNotification(libModule, "LibClass1" -> "LibClass");
 
-		val libStateName = DEFAULT_PROJECT_NAME + "/" + N4JSGlobals.NODE_MODULES + "/LibProject/" + N4JSGlobals.N4JS_PROJECT_STATE;
+		val libStateName = DEFAULT_PROJECT_NAME + "/" + NODE_MODULES + "/LibProject/" + N4JSGlobals.N4JS_PROJECT_STATE;
 		val prjStatePath = getFileURIFromModuleName(libStateName).toFileSystemPath();
 		setFileCreationDate(prjStatePath, FILE_TIME_MILLISECONDS);
 

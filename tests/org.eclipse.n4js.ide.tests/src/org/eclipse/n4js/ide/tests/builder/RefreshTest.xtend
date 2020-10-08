@@ -13,9 +13,7 @@ package org.eclipse.n4js.ide.tests.builder
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
-import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService
-import org.eclipse.n4js.ide.tests.server.TestWorkspaceManager
 import org.eclipse.n4js.utils.io.FileUtils
 import org.junit.Test
 
@@ -61,22 +59,19 @@ class RefreshTest extends AbstractIncrementalBuilderTest {
 	@Test
 	def void testChangeFileInWorkspaceProject() {
 		testWorkspaceManager.createTestOnDisk(
-			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"SomeProject" -> #[
 				"SomeModule" -> '''
 					export public class SomeClass {
 						public m() {}
 					}
-				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> "n4js-runtime"
+				'''
 			],
 			"MainProject" -> #[
 				"MainModule" -> '''
 					import {SomeClass} from "SomeModule"
 					new SomeClass().m();
 				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime,
+				CFG_DEPENDENCIES -> '''
 					SomeProject
 				'''
 			]
@@ -105,22 +100,19 @@ class RefreshTest extends AbstractIncrementalBuilderTest {
 	@Test
 	def void testChangeFileInNodeModulesProject() {
 		testWorkspaceManager.createTestOnDisk(
-			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
-			TestWorkspaceManager.CFG_NODE_MODULES + "SomeProject" -> #[
+			CFG_NODE_MODULES + "SomeProject" -> #[
 				"SomeModule" -> '''
 					export public class SomeClass {
 						public m() {}
 					}
-				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> "n4js-runtime"
+				'''
 			],
 			"MainProject" -> #[
 				"MainModule" -> '''
 					import {SomeClass} from "SomeModule"
 					new SomeClass().m();
 				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime,
+				CFG_DEPENDENCIES -> '''
 					SomeProject
 				'''
 			]
@@ -149,18 +141,15 @@ class RefreshTest extends AbstractIncrementalBuilderTest {
 	@Test
 	def void testAddRemoveFileInNodeModulesProject() throws IOException {
 		testWorkspaceManager.createTestOnDisk(
-			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
-			TestWorkspaceManager.CFG_NODE_MODULES + "SomeProject" -> #[
+			CFG_NODE_MODULES + "SomeProject" -> #[
 				// SomeModule omitted
-				TestWorkspaceManager.CFG_DEPENDENCIES -> "n4js-runtime"
 			],
 			"MainProject" -> #[
 				"MainModule" -> '''
 					import {SomeClass} from "SomeModule"
 					new SomeClass().m();
 				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime,
+				CFG_DEPENDENCIES -> '''
 					SomeProject
 				'''
 			]
@@ -199,22 +188,19 @@ class RefreshTest extends AbstractIncrementalBuilderTest {
 	@Test
 	def void testChangePackageJsonInNodeModulesProject() {
 		testWorkspaceManager.createTestOnDisk(
-			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
-			TestWorkspaceManager.CFG_NODE_MODULES + "SomeProject" -> #[
+			CFG_NODE_MODULES + "SomeProject" -> #[
 				"SomeModule" -> '''
 					export public class SomeClass {
 						public m() {}
 					}
-				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> "n4js-runtime"
+				'''
 			],
 			"MainProject" -> #[
 				"MainModule" -> '''
 					import {SomeClass} from "SomeModule"
 					new SomeClass().m();
 				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime,
+				CFG_DEPENDENCIES -> '''
 					SomeProject
 				'''
 			]
@@ -247,29 +233,26 @@ class RefreshTest extends AbstractIncrementalBuilderTest {
 	@Test
 	def void testAddRemoveDependencyInNodeModulesProject() {
 		testWorkspaceManager.createTestOnDisk(
-			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
-			TestWorkspaceManager.CFG_NODE_MODULES + "SomeProject1" -> #[
+			CFG_NODE_MODULES + "SomeProject1" -> #[
 				"SomeModule1" -> '''
 					export public class SomeClass1 {
 						public m() {}
 					}
-				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> "n4js-runtime"
+				'''
 			],
-			TestWorkspaceManager.CFG_NODE_MODULES + "SomeProject2" -> #[
+			CFG_NODE_MODULES + "SomeProject2" -> #[
 				"SomeModule2" -> '''
 					import {SomeClass1} from "SomeModule1"
 					export public class SomeClass2 extends SomeClass1 {}
-				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> "n4js-runtime" // missing dependency: SomeProject1
+				'''
+				// missing dependency: SomeProject1
 			],
 			"MainProject" -> #[
 				"MainModule" -> '''
 					import {SomeClass2} from "SomeModule2"
 					new SomeClass2().m();
 				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime,
+				CFG_DEPENDENCIES -> '''
 					SomeProject2
 				'''
 			]
@@ -303,14 +286,13 @@ class RefreshTest extends AbstractIncrementalBuilderTest {
 	@Test
 	def void testAddRemoveProjectInNodeModulesFolder() throws IOException {
 		testWorkspaceManager.createTestOnDisk(
-			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
-			TestWorkspaceManager.CFG_NODE_MODULES + "SomeProject2" -> #[
+			// missing project: SomeProject1
+			CFG_NODE_MODULES + "SomeProject2" -> #[
 				"SomeModule2" -> '''
 					import {SomeClass1} from "SomeModule1"
 					export public class SomeClass2 extends SomeClass1 {}
 				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime,
+				CFG_DEPENDENCIES -> '''
 					SomeProject1
 				'''
 			],
@@ -319,8 +301,7 @@ class RefreshTest extends AbstractIncrementalBuilderTest {
 					import {SomeClass2} from "SomeModule2"
 					new SomeClass2().m();
 				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime,
+				CFG_DEPENDENCIES -> '''
 					SomeProject2
 				'''
 			]
@@ -355,7 +336,7 @@ class RefreshTest extends AbstractIncrementalBuilderTest {
 				public m() {}
 			}
 		''');
-		Files.writeString(someProject1Path.resolve(N4JSGlobals.PACKAGE_JSON), '''
+		Files.writeString(someProject1Path.resolve(PACKAGE_JSON), '''
 			{
 				"name": "SomeProject1",
 				"n4js": {

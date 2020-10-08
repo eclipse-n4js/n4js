@@ -27,7 +27,7 @@ public class YarnWorkspaceProject extends Project {
 	/** Name of the 'packages' folder, i.e. the folder containing the actual projects. */
 	public static final String PACKAGES = "packages";
 
-	final Map<String, Project> projects = newHashMap();
+	final Map<String, Project> memberProjects = newHashMap();
 	final String workspacesFolderName;
 
 	/**
@@ -47,16 +47,16 @@ public class YarnWorkspaceProject extends Project {
 		this.workspacesFolderName = workspacesFolderName;
 	}
 
-	public def void addProject(Project project) {
-		this.projects.put(project.projectName, project);
+	public def void addMemberProject(Project project) {
+		this.memberProjects.put(project.name, project);
 	}
 
-	public def Collection<Project> getProjects() {
-		return this.projects.values();
+	public def Collection<Project> getMemberProjects() {
+		return this.memberProjects.values();
 	}
 
-	public def Project getProject(String projectName) {
-		return this.projects.get(projectName);
+	public def Project getMemberProject(String projectName) {
+		return this.memberProjects.get(projectName);
 	}
 
 
@@ -65,7 +65,7 @@ public class YarnWorkspaceProject extends Project {
 	 */
 	public override String generate() '''
 		{
-			"name": "«projectName»",
+			"name": "«name»",
 			"version": "«version»",
 			"private": true,
 			"workspaces": [
@@ -100,8 +100,8 @@ public class YarnWorkspaceProject extends Project {
 		super.create(parentDirectoryPath);
 
 		var File parentDirectory = Objects.requireNonNull(parentDirectoryPath).toFile
-		val File projectDirectory = new File(parentDirectory, projectName);
-		val File workspacesDirectory = new File(new File(parentDirectory, projectName), workspacesFolderName);
+		val File projectDirectory = new File(parentDirectory, name);
+		val File workspacesDirectory = new File(new File(parentDirectory, name), workspacesFolderName);
 		if (workspacesDirectory.exists)
 			FileDeleter.delete(workspacesDirectory);
 		workspacesDirectory.mkdirs();
@@ -112,7 +112,7 @@ public class YarnWorkspaceProject extends Project {
 	}
 
 	private def void createWorkspaceProjects(File parentDirectory) {
-		for (project: projects.values())
+		for (project: memberProjects.values())
 			project.create(parentDirectory.toPath);
 	}
 }

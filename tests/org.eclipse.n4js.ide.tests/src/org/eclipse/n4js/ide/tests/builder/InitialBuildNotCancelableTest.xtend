@@ -16,7 +16,6 @@ import com.google.inject.Inject
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicBoolean
 import org.eclipse.n4js.ide.tests.server.AbstractIdeTest
-import org.eclipse.n4js.ide.tests.server.TestWorkspaceManager
 import org.eclipse.n4js.ide.xtext.server.BuiltInAwareIncrementalBuilder
 import org.eclipse.n4js.ide.xtext.server.QueuedExecutorService
 import org.eclipse.n4js.ide.xtext.server.build.XClusteringStorageAwareResourceLoader.LoadResult
@@ -110,22 +109,19 @@ class InitialBuildNotCancelableTest extends AbstractIdeTest {
 	@Test(timeout = 10000)
 	def void testInitialBuildNotCancelable() throws InterruptedException {
 		testWorkspaceManager.createTestOnDisk(
-			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"OtherProject" -> #[
 				"Other" -> '''
 					export public class Other {
 						public mX() {}
 					}
-				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> "n4js-runtime"
+				'''
 			],
 			"MainProject" -> #[
 				"Main" -> '''
 					import {Other} from "Other";
 					new Other().m();
 				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime,
+				CFG_DEPENDENCIES -> '''
 					OtherProject
 				'''
 			]

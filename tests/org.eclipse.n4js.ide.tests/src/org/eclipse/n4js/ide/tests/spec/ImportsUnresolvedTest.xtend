@@ -10,14 +10,8 @@
  */
 package org.eclipse.n4js.ide.tests.spec
 
-import java.util.Map
 import org.eclipse.n4js.ide.tests.server.AbstractIdeTest
 import org.junit.Test
-
-import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.N4JS_RUNTIME
-import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.CFG_DEPENDENCIES
-import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.CFG_MAIN_MODULE
-import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.CFG_NODE_MODULES
 
 /**
  * Tests for the error messages of unresolved imports. See also Xpect test file 'ImportsUnresolved.n4js.xt'.
@@ -27,16 +21,13 @@ class ImportsUnresolvedTest extends AbstractIdeTest {
 	@Test
 	def void testPlainModuleSpecifier01() {
 		testWorkspaceManager.createTestOnDisk(
-			CFG_NODE_MODULES + N4JS_RUNTIME -> null,
 			"MainProject" -> #[
 				"Main" -> '''
 					import {X} from "OtherProject"
-				''',
-				CFG_DEPENDENCIES -> N4JS_RUNTIME // note: OtherProject not defined here!
+				'''
+				// note: dependency to OtherProject missing!
 			],
-			"OtherProject" -> #[
-				CFG_DEPENDENCIES -> N4JS_RUNTIME
-			]
+			"OtherProject" -> #[]
 		);
 		startAndWaitForLspServer();
 
@@ -53,16 +44,13 @@ class ImportsUnresolvedTest extends AbstractIdeTest {
 	@Test
 	def void testPlainModuleSpecifier02() {
 		testWorkspaceManager.createTestOnDisk(
-			CFG_NODE_MODULES + N4JS_RUNTIME -> null,
 			"MainProject" -> #[
 				"Main" -> '''
 					import {X} from "OtherProject/a/b/SomeModule"
-				''',
-				CFG_DEPENDENCIES -> N4JS_RUNTIME // note: OtherProject not defined here!
+				'''
+				// note: dependency to OtherProject missing!
 			],
-			"OtherProject" -> #[
-				CFG_DEPENDENCIES -> N4JS_RUNTIME
-			]
+			"OtherProject" -> #[]
 		);
 		startAndWaitForLspServer();
 
@@ -79,19 +67,15 @@ class ImportsUnresolvedTest extends AbstractIdeTest {
 	@Test
 	def void testCompleteModuleSpecifier() {
 		testWorkspaceManager.createTestOnDisk(
-			CFG_NODE_MODULES + N4JS_RUNTIME -> null,
 			"MainProject" -> #[
 				"Main" -> '''
 					import {X} from "OtherProject/a/b/SomeModule"
 				''',
 				CFG_DEPENDENCIES -> '''
-					«N4JS_RUNTIME»,
 					OtherProject
 				'''
 			],
-			"OtherProject" -> #[
-				CFG_DEPENDENCIES -> N4JS_RUNTIME
-			]
+			"OtherProject" -> #[]
 		);
 		startAndWaitForLspServer();
 
@@ -107,19 +91,16 @@ class ImportsUnresolvedTest extends AbstractIdeTest {
 	@Test
 	def void testProjectImport_noMainModuleDefined() {
 		testWorkspaceManager.createTestOnDisk(
-			CFG_NODE_MODULES + N4JS_RUNTIME -> null,
 			"MainProject" -> #[
 				"Main" -> '''
 					import {X} from "OtherProject"
 				''',
 				CFG_DEPENDENCIES -> '''
-					«N4JS_RUNTIME»,
 					OtherProject
 				'''
 			],
 			"OtherProject" -> #[
 				// no main module defined
-				CFG_DEPENDENCIES -> N4JS_RUNTIME
 			]
 		);
 		startAndWaitForLspServer();
@@ -138,30 +119,27 @@ class ImportsUnresolvedTest extends AbstractIdeTest {
 	@Test
 	def void testProjectImport_mainModuleDefinedButDoesNotExist() {
 		testWorkspaceManager.createTestOnDisk(
-			CFG_NODE_MODULES + N4JS_RUNTIME -> null,
 			"MainProject" -> #[
 				"Main" -> '''
 					import {X} from "OtherProject"
 				''',
 				CFG_DEPENDENCIES -> '''
-					«N4JS_RUNTIME»,
 					OtherProject
 				'''
 			],
 			"OtherProject" -> #[
-				CFG_MAIN_MODULE -> "Other",
-				CFG_DEPENDENCIES -> N4JS_RUNTIME
+				CFG_MAIN_MODULE -> "Other"
 			]
 		);
 		startAndWaitForLspServer();
 
-		assertIssues(Map.of(
-			getFileURIFromModuleName("Main"), #[
+		assertIssues(
+			"Main" -> #[
 				"(Error, [0:16 - 0:30], Cannot resolve project import: no matching module found.)"
 			],
-			getPackageJsonFile("OtherProject").toFileURI, #[
+			"OtherProject/" + PACKAGE_JSON -> #[
 				"(Error, [7:17 - 7:24], Main module specifier Other does not exist.)"
 			]
-		));
+		);
 	}
 }

@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.ide.tests.builder
 
-import org.eclipse.n4js.ide.tests.server.TestWorkspaceManager
 import org.junit.Test
 
 /**
@@ -21,14 +20,12 @@ class IncrementalBuilderBasicTest extends AbstractIncrementalBuilderTest {
 	@Test
 	def void testBuildAfterServerInitialization() {
 		testWorkspaceManager.createTestOnDisk(
-			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"OtherProject" -> #[
 				"Other" -> '''
 					export public class Other {
 						public mOther() {}
 					}
-				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> "n4js-runtime"
+				'''
 			],
 			"MainProject" -> #[
 				"A" -> '''
@@ -43,8 +40,7 @@ class IncrementalBuilderBasicTest extends AbstractIncrementalBuilderTest {
 					new A().ma();
 					new Other().mOther();
 				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-					n4js-runtime,
+				CFG_DEPENDENCIES -> '''
 					OtherProject
 				'''
 			]

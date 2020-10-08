@@ -11,7 +11,6 @@
 package org.eclipse.n4js.ide.tests.bugreports
 
 import org.eclipse.n4js.ide.tests.server.AbstractIdeTest
-import org.eclipse.n4js.ide.tests.server.TestWorkspaceManager
 import org.junit.Test
 
 class GH_1869_DynmicImportWithInstalledTypeDefinitions extends AbstractIdeTest {
@@ -19,8 +18,7 @@ class GH_1869_DynmicImportWithInstalledTypeDefinitions extends AbstractIdeTest {
 	@Test
 	def void testGH1869() {
 		testWorkspaceManager.createTestOnDisk(
-			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
-			TestWorkspaceManager.CFG_NODE_MODULES + "some-pkg" -> #[
+			CFG_NODE_MODULES + "some-pkg" -> #[
 				"PlainJSModuleWithTypeDefs.js" -> '''
 					export const valueWithTypeDef = "hello from plain JS";
 				''',
@@ -30,8 +28,8 @@ class GH_1869_DynmicImportWithInstalledTypeDefinitions extends AbstractIdeTest {
 				"MainModule.js" -> '''
 					export const value = "hello from the main module";
 				''',
-				TestWorkspaceManager.CFG_SOURCE_FOLDER -> ".",
-				TestWorkspaceManager.PACKAGE_JSON -> '''
+				CFG_SOURCE_FOLDER -> ".",
+				PACKAGE_JSON -> '''
 					{
 						"name": "some-pkg",
 						"version": "0.0.1",
@@ -39,12 +37,12 @@ class GH_1869_DynmicImportWithInstalledTypeDefinitions extends AbstractIdeTest {
 					}
 				'''
 			],
-			TestWorkspaceManager.CFG_NODE_MODULES + "@n4jsd/some-pkg" -> #[
+			CFG_NODE_MODULES + "@n4jsd/some-pkg" -> #[
 				"PlainJSModuleWithTypeDefs.n4jsd" -> '''
 					export external public const valueWithTypeDef: string;
 				''',
-				TestWorkspaceManager.CFG_SOURCE_FOLDER -> ".",
-				TestWorkspaceManager.PACKAGE_JSON -> '''
+				CFG_SOURCE_FOLDER -> ".",
+				PACKAGE_JSON -> '''
 					{
 						"name": "@n4jsd/some-pkg",
 						"version": "0.0.1",
@@ -88,10 +86,9 @@ class GH_1869_DynmicImportWithInstalledTypeDefinitions extends AbstractIdeTest {
 					import * as N+ from "some-pkg";
 					let v: any = N.value;
 				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
+				CFG_DEPENDENCIES -> '''
 					@n4jsd/some-pkg,
-					some-pkg,
-					n4js-runtime
+					some-pkg
 				'''
 			]
 		);

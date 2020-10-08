@@ -11,7 +11,6 @@
 package org.eclipse.n4js.ide.tests.bugreports
 
 import org.eclipse.n4js.ide.tests.server.AbstractIdeTest
-import org.eclipse.n4js.ide.tests.server.TestWorkspaceManager
 import org.junit.Test
 
 class GH_1923_BogusDuplicateModuleErrorInImplProjects extends AbstractIdeTest {
@@ -19,14 +18,13 @@ class GH_1923_BogusDuplicateModuleErrorInImplProjects extends AbstractIdeTest {
 	@Test
 	def void testApiImplProjects() {
 		testWorkspaceManager.createTestOnDisk(
-			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"ProjectApi" -> #[
 				"Module.n4jsd" -> '''
 					export external public class Cls {
 						public m(p: string): number;
 					}
 				''',
-				TestWorkspaceManager.PACKAGE_JSON -> '''
+				PACKAGE_JSON -> '''
 					{
 						"name": "ProjectApi",
 						"version": "0.0.1",
@@ -51,7 +49,7 @@ class GH_1923_BogusDuplicateModuleErrorInImplProjects extends AbstractIdeTest {
 						}
 					}
 				''',
-				TestWorkspaceManager.PACKAGE_JSON -> '''
+				PACKAGE_JSON -> '''
 					{
 						"name": "ProjectImpl",
 						"version": "0.0.1",

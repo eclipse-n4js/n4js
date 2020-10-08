@@ -111,8 +111,8 @@ abstract class Documentation {
 
 	/**
 	 * {@code package.json} files are created automatically. In case this should be overridden by a custom file, use
-	 * {@link org.eclipse.n4js.ide.tests.server.TestWorkspaceManager#PACKAGE_JSON PACKAGE_JSON} as a module name and
-	 * define its contents.
+	 * {@link org.eclipse.n4js.ide.tests.server.AbstractIdeTest#PACKAGE_JSON PACKAGE_JSON} as a module name and define
+	 * its contents.
 	 *
 	 * <p>
 	 * <b>Simple example</b>

@@ -13,9 +13,7 @@ package org.eclipse.n4js.ide.tests.builder
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
-import java.util.Map
 import org.eclipse.n4js.N4JSGlobals
-import org.eclipse.n4js.ide.tests.server.TestWorkspaceManager
 import org.eclipse.n4js.utils.io.FileDeleter
 import org.eclipse.n4js.utils.io.FileUtils
 import org.junit.AfterClass
@@ -32,14 +30,10 @@ import static org.junit.Assert.*
 class InitialBuildTest extends AbstractIncrementalBuilderTest {
 
 	private static val testData = #[
-		TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
 		"ProviderProject" -> #[
 			"SomeModule" -> '''
 				export public class SomeClass {
 				}
-			''',
-			TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-				n4js-runtime
 			'''
 		],
 		"ClientProject" -> #[
@@ -48,8 +42,7 @@ class InitialBuildTest extends AbstractIncrementalBuilderTest {
 				const x: SomeClass = null;
 				x;
 			''',
-			TestWorkspaceManager.CFG_DEPENDENCIES -> '''
-				n4js-runtime,
+			CFG_DEPENDENCIES -> '''
 				ProviderProject
 			'''
 		]
@@ -164,10 +157,9 @@ class InitialBuildTest extends AbstractIncrementalBuilderTest {
 		testWorkspaceManager.createTestOnDisk(testData);
 
 		val providerProjectStateFile = getProjectRoot("ProviderProject").toPath.resolve(N4JSGlobals.N4JS_PROJECT_STATE);
-		val clientProjectPackageJson = getProjectRoot("ClientProject").toPath.resolve(N4JSGlobals.PACKAGE_JSON);
+		val clientProjectPackageJson = getProjectRoot("ClientProject").toPath.resolve(PACKAGE_JSON);
 		changeFileOnDiskWithoutNotification(clientProjectPackageJson.toFileURI,
-			'"n4js-runtime": "*",' -> '"n4js-runtime": "*"',
-			'"ProviderProject": "*"' -> ''
+			'"ProviderProject": "*",' -> ''
 		);
 
 		startAndWaitForLspServer();
@@ -184,7 +176,7 @@ class InitialBuildTest extends AbstractIncrementalBuilderTest {
 		// sub-case #1: add dependency between server sessions (target project does *not* contain a .n4js.projectstate file)
 		FileUtils.delete(providerProjectStateFile);
 		changeFileOnDiskWithoutNotification(clientProjectPackageJson.toFileURI,
-			'"n4js-runtime": "*"' -> '"n4js-runtime": "*", "ProviderProject": "*"'
+			'"n4js-runtime": "*"' -> '"ProviderProject": "*", "n4js-runtime": "*"'
 		);
 
 		startAndWaitForLspServer();
@@ -194,7 +186,7 @@ class InitialBuildTest extends AbstractIncrementalBuilderTest {
 
 		// sub-case #2: remove dependency between server sessions
 		changeFileOnDiskWithoutNotification(clientProjectPackageJson.toFileURI,
-			'"n4js-runtime": "*", "ProviderProject": "*"' -> '"n4js-runtime": "*"'
+			'"ProviderProject": "*", "n4js-runtime": "*"' -> '"n4js-runtime": "*"'
 		);
 
 		startAndWaitForLspServer();
@@ -205,7 +197,7 @@ class InitialBuildTest extends AbstractIncrementalBuilderTest {
 		// sub-case #3: add dependency between server sessions (this time, target project does contain an up-to-date '.n4js.projectstate' file!)
 		assertTrue("project state file should exist but does not exist", Files.isRegularFile(providerProjectStateFile))
 		changeFileOnDiskWithoutNotification(clientProjectPackageJson.toFileURI,
-			'"n4js-runtime": "*"' -> '"n4js-runtime": "*", "ProviderProject": "*"'
+			'"n4js-runtime": "*"' -> '"ProviderProject": "*", "n4js-runtime": "*"'
 		);
 
 		startAndWaitForLspServer();
@@ -221,15 +213,15 @@ class InitialBuildTest extends AbstractIncrementalBuilderTest {
 		FileUtils.move(providerProjectPath, providerProjectPathHidden);
 
 		startAndWaitForLspServer();
-		val errorsWithProviderProjectMissing = Map.of(
-			getFileURIFromModuleName("ClientModule"), #[
+		val errorsWithProviderProjectMissing = #[
+			"ClientModule" -> #[
 				"(Error, [0:24 - 0:36], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
 				"(Error, [1:9 - 1:18], Couldn't resolve reference to Type 'SomeClass'.)"
 			],
-			getPackageJsonFile("ClientProject").toFileURI, #[
-				"(Error, [16:3 - 16:25], Project does not exist with project ID: ProviderProject.)"
+			"ClientProject/" + PACKAGE_JSON -> #[
+				"(Error, [15:3 - 15:25], Project does not exist with project ID: ProviderProject.)"
 			]
-		);
+		];
 		assertIssues(errorsWithProviderProjectMissing);
 
 		shutdownLspServer();

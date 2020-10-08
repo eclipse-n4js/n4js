@@ -85,18 +85,15 @@ class IncrementalBuilderNoCancellationTest extends AbstractIncrementalBuilderTes
 	@Test
 	def void testChangeInFileInYarnWorkspaceRootProjectDoesNotCancelBuild() {
 		testWorkspaceManager.createTestOnDisk(
-			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"ProjectA" -> #[
 				"A" -> '''
 					console.log('hello from A');
-				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> "n4js-runtime"
+				'''
 			],
 			"ProjectB" -> #[
 				"B" -> '''
 					console.log('hello from B');
-				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> "n4js-runtime"
+				'''
 			]
 		);
 		startAndWaitForLspServer();
@@ -110,18 +107,15 @@ class IncrementalBuilderNoCancellationTest extends AbstractIncrementalBuilderTes
 	@Test
 	def void testChangeInFileOutsideSourceFolderOfYarnWorkspaceMemberProjectDoesNotCancelBuild() {
 		testWorkspaceManager.createTestOnDisk(
-			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"ProjectA" -> #[
 				"A" -> '''
 					console.log('hello from A');
-				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> "n4js-runtime"
+				'''
 			],
 			"ProjectB" -> #[
 				"B" -> '''
 					console.log('hello from B');
-				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> "n4js-runtime"
+				'''
 			]
 		);
 		startAndWaitForLspServer();
@@ -135,18 +129,15 @@ class IncrementalBuilderNoCancellationTest extends AbstractIncrementalBuilderTes
 	@Test
 	def void testChangeInOutputFileOfYarnWorkspaceMemberProjectDoesNotCancelBuild() {
 		testWorkspaceManager.createTestOnDisk(
-			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"ProjectA" -> #[
 				"A" -> '''
 					console.log('hello from A');
-				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> "n4js-runtime"
+				'''
 			],
 			"ProjectB" -> #[
 				"B" -> '''
 					console.log('hello from B');
-				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> "n4js-runtime"
+				'''
 			]
 		);
 		startAndWaitForLspServer();
@@ -159,16 +150,14 @@ class IncrementalBuilderNoCancellationTest extends AbstractIncrementalBuilderTes
 	@Test
 	def void testChangeInFileOfPlainJsProjectDoesNotCancelBuild() {
 		testWorkspaceManager.createTestOnDisk(
-			TestWorkspaceManager.CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"ProjectN4JS" -> #[
 				"A" -> '''
 					console.log('hello from A');
-				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> "n4js-runtime"
+				'''
 			],
 			"ProjectPlain" -> #[
-				TestWorkspaceManager.CFG_SOURCE_FOLDER -> ".",
-				TestWorkspaceManager.PACKAGE_JSON -> '''
+				CFG_SOURCE_FOLDER -> ".",
+				PACKAGE_JSON -> '''
 					{
 						"name": "ProjectPlain",
 						"version": "0.0.1",

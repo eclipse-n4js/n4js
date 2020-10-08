@@ -13,8 +13,6 @@ import java.util.List
 import org.eclipse.n4js.ide.tests.server.AbstractCompletionTest
 import org.junit.Test
 
-import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.*
-
 /**
  * Code completion tests for scenarios that also might add an import statement
  * from dependency projects
@@ -26,7 +24,6 @@ public class CompletionWithImportsWorkspaceTest extends AbstractCompletionTest {
 		return #[
 			"P1*" -> #[
 				CFG_DEPENDENCIES -> '''
-					«N4JS_RUNTIME»,
 					P2,
 					SomeNPM,
 					@n4jsd/SomeNPM
@@ -38,7 +35,6 @@ public class CompletionWithImportsWorkspaceTest extends AbstractCompletionTest {
 				'''
 			],
 
-			CFG_NODE_MODULES + N4JS_RUNTIME -> null,
 			CFG_NODE_MODULES + "SomeNPM" -> #[
 				"index" -> '''//some npm js code''',
 				"AnotherModule.js" -> '''//some npm js code'''

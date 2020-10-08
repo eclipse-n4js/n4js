@@ -12,7 +12,6 @@ package org.eclipse.n4js.ide.tests.builder
 
 import org.junit.Test
 
-import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.*
 import static org.junit.Assert.*
 
 /**
