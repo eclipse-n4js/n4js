@@ -236,8 +236,28 @@ public class TestWorkspaceManager {
 		return moduleName;
 	}
 
-	/** Translates a given module name to a file URI used in LSP call data. */
+	/**
+	 * Translates a given module name to a file URI used in LSP call data. When 'moduleName' is <code>null</code>, the
+	 * file URI of the {@link #DEFAULT_MODULE_NAME default module} will be returned.
+	 * <p>
+	 * Because <code>package.json</code> files often play a similar role as modules (e.g. when asserting issues), this
+	 * method also supports <code>package.json</code> files, even though they aren't modules: for special names of the
+	 * format
+	 *
+	 * <pre>
+	 * &lt;project-name>/package.json
+	 * </pre>
+	 *
+	 * this method will return the file URI of the <code>package.json</code> file of the project with the given name.
+	 */
 	public FileURI getFileURIFromModuleName(String moduleName) {
+		// special case for package.json files:
+		if (moduleName != null && moduleName.endsWith("/" + N4JSGlobals.PACKAGE_JSON)) {
+			String projectName = moduleName.substring(0, moduleName.length() - (1 + N4JSGlobals.PACKAGE_JSON.length()));
+			File packageJsonFile = getPackageJsonFile(projectName);
+			return new FileURI(packageJsonFile);
+		}
+		// standard case for modules:
 		String extension = getN4JSNameAndExtension(moduleName).extension == null ? "." + DEFAULT_EXTENSION : "";
 		String moduleNameWithExtension = getModuleNameOrDefault(moduleName) + extension;
 		try {

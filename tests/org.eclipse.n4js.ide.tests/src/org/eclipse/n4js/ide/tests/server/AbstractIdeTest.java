@@ -1213,7 +1213,10 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		return index.getResourceDescription(fileURI.toURI());
 	}
 
-	/** Translates a given module name to a file URI used in LSP call data. */
+	/**
+	 * Translates a given module name to a file URI used in LSP call data. Also supports package.json files. For
+	 * details, see {@link TestWorkspaceManager#getFileURIFromModuleName(String) here}.
+	 */
 	protected FileURI getFileURIFromModuleName(String moduleName) {
 		return testWorkspaceManager.getFileURIFromModuleName(moduleName);
 	}

@@ -192,7 +192,8 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 	 * contents.
 	 *
 	 * @param moduleName
-	 *            used to create a module in a default project.
+	 *            used to create a module in a default project or <code>null</code> for using the
+	 *            {@link TestWorkspaceManager#DEFAULT_MODULE_NAME default module name}.
 	 * @param contents
 	 *            contents of the {@code moduleName} module.
 	 * @param t
