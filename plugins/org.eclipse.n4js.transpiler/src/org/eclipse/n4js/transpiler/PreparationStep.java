@@ -70,6 +70,7 @@ import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.util.Arrays;
 import org.eclipse.xtext.util.LineAndColumn;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
 
@@ -348,10 +349,9 @@ public class PreparationStep {
 				} else if (MigrationUtils.isMigrateCall(eObject.eContainer())) {
 					// unresolved migrate-calls can still be transpiled
 				} else {
-					final ICompositeNode node = NodeModelUtils.findActualNodeFor(eObject);
-					final LineAndColumn pos = NodeModelUtils.getLineAndColumn(node, node.getOffset());
-					throw new UnresolvedProxyInSubGeneratorException(
-							eObject.eResource(), pos.getLine(), pos.getColumn());
+					ICompositeNode node = NodeModelUtils.findActualNodeFor(eObject);
+					LineAndColumn pos = node != null ? NodeModelUtils.getLineAndColumn(node, node.getOffset()) : null;
+					throw new UnresolvedProxyInSubGeneratorException(eObject.eResource(), Optional.fromNullable(pos));
 				}
 			}
 		}

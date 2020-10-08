@@ -12,6 +12,9 @@ package org.eclipse.n4js.generator;
 
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.projectDescription.ModuleFilterType;
+import org.eclipse.xtext.util.LineAndColumn;
+
+import com.google.common.base.Optional;
 
 /**
  * This exception will be thrown by the transpiler if the resource being transpiled contains unresolved proxies, usually
@@ -27,8 +30,9 @@ public class UnresolvedProxyInSubGeneratorException extends IllegalStateExceptio
 	/**
 	 * Creates a new instance. See {@link UnresolvedProxyInSubGeneratorException}.
 	 */
-	public UnresolvedProxyInSubGeneratorException(Resource resource, int line, int column) {
-		super("unable to transpile file " + resource.getURI().lastSegment()
-				+ " due to an unresolved reference in line " + line + " at column " + column);
+	public UnresolvedProxyInSubGeneratorException(Resource resource, Optional<LineAndColumn> pos) {
+		super("unable to transpile file " + resource.getURI().lastSegment() + " due to an unresolved reference"
+				+ " in line " + (pos.isPresent() ? pos.get().getLine() : "<unknown>")
+				+ " at column " + (pos.isPresent() ? pos.get().getColumn() : "<unknown>"));
 	}
 }
