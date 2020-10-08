@@ -94,10 +94,10 @@ abstract public class AbstractRenameTest extends AbstractStructuredIdeTest<Renam
 	/** Call this method in a single-file test. */
 	protected void testAtCursors(CharSequence sourceBefore, String newName, CharSequence expectedSourceAfter) {
 		Pair<String, String> sourceBeforeAsPair = Pair.of(
-				TestWorkspaceManager.DEFAULT_MODULE_NAME,
+				DEFAULT_MODULE_NAME,
 				sourceBefore.toString());
 		Pair<String, String> expectedSourceAfterAsPair = Pair.of(
-				TestWorkspaceManager.DEFAULT_MODULE_NAME,
+				DEFAULT_MODULE_NAME,
 				expectedSourceAfter.toString());
 		testAtCursors(
 				Collections.singletonList(sourceBeforeAsPair),
@@ -112,10 +112,10 @@ abstract public class AbstractRenameTest extends AbstractStructuredIdeTest<Renam
 			Iterable<Pair<String, String>> modulesExpectedSourcesAfter) {
 
 		Pair<String, ? extends Iterable<Pair<String, String>>> sourceBeforeAsPair = Pair.of(
-				TestWorkspaceManager.DEFAULT_PROJECT_NAME,
+				DEFAULT_PROJECT_NAME,
 				modulesSourcesBefore);
 		Pair<String, ? extends Iterable<Pair<String, String>>> expectedSourceAfterAsPair = Pair.of(
-				TestWorkspaceManager.DEFAULT_PROJECT_NAME,
+				DEFAULT_PROJECT_NAME,
 				modulesExpectedSourcesAfter);
 		testAtCursorsWS(
 				Collections.singletonList(sourceBeforeAsPair),

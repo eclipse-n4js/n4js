@@ -18,7 +18,6 @@ import java.util.Arrays;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.ide.tests.server.AbstractIdeTest;
-import org.eclipse.n4js.ide.tests.server.TestWorkspaceManager;
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
 import org.junit.Assert;
 
@@ -39,7 +38,7 @@ abstract class AbstractIncrementalBuilderTest extends AbstractIdeTest {
 	}
 
 	protected File getOutputFile(String moduleName) {
-		return getOutputFile(TestWorkspaceManager.DEFAULT_PROJECT_NAME, moduleName);
+		return getOutputFile(DEFAULT_PROJECT_NAME, moduleName);
 	}
 
 	protected File getOutputFile(String projectName, String moduleName) {
@@ -47,7 +46,7 @@ abstract class AbstractIncrementalBuilderTest extends AbstractIdeTest {
 	}
 
 	protected File getOutputFolder() {
-		return getOutputFolder(TestWorkspaceManager.DEFAULT_PROJECT_NAME);
+		return getOutputFolder(DEFAULT_PROJECT_NAME);
 	}
 
 	protected File getOutputFolder(String projectName) {
@@ -55,7 +54,7 @@ abstract class AbstractIncrementalBuilderTest extends AbstractIdeTest {
 	}
 
 	protected File getProjectStateFile() {
-		return getProjectStateFile(TestWorkspaceManager.DEFAULT_PROJECT_NAME);
+		return getProjectStateFile(DEFAULT_PROJECT_NAME);
 	}
 
 	protected File getProjectStateFile(String projectName) {
@@ -63,7 +62,7 @@ abstract class AbstractIncrementalBuilderTest extends AbstractIdeTest {
 	}
 
 	protected void assertOutputFileExists(String moduleName) {
-		assertOutputFileExists(TestWorkspaceManager.DEFAULT_PROJECT_NAME, moduleName);
+		assertOutputFileExists(DEFAULT_PROJECT_NAME, moduleName);
 	}
 
 	protected void assertOutputFileExists(String projectName, String moduleName) {
@@ -72,7 +71,7 @@ abstract class AbstractIncrementalBuilderTest extends AbstractIdeTest {
 	}
 
 	protected FileSnapshot createSnapshotForOutputFile(String moduleName) {
-		return createSnapshotForOutputFile(TestWorkspaceManager.DEFAULT_PROJECT_NAME, moduleName);
+		return createSnapshotForOutputFile(DEFAULT_PROJECT_NAME, moduleName);
 	}
 
 	protected FileSnapshot createSnapshotForOutputFile(String projectName, String moduleName) {
@@ -80,7 +79,7 @@ abstract class AbstractIncrementalBuilderTest extends AbstractIdeTest {
 	}
 
 	protected FileSnapshot createSnapshotForProjectStateFile() {
-		return createSnapshotForProjectStateFile(TestWorkspaceManager.DEFAULT_PROJECT_NAME);
+		return createSnapshotForProjectStateFile(DEFAULT_PROJECT_NAME);
 	}
 
 	protected FileSnapshot createSnapshotForProjectStateFile(String projectName) {

@@ -14,7 +14,6 @@ import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
 import org.eclipse.n4js.N4JSGlobals
-import org.eclipse.n4js.ide.tests.server.TestWorkspaceManager
 import org.eclipse.n4js.utils.io.FileDeleter
 import org.eclipse.n4js.utils.io.FileUtils
 import org.junit.AfterClass
@@ -43,7 +42,7 @@ class InitialBuildTest extends AbstractIncrementalBuilderTest {
 				const x: SomeClass = null;
 				x;
 			''',
-			TestWorkspaceManager.CFG_DEPENDENCIES -> '''
+			CFG_DEPENDENCIES -> '''
 				ProviderProject
 			'''
 		]
@@ -158,7 +157,7 @@ class InitialBuildTest extends AbstractIncrementalBuilderTest {
 		testWorkspaceManager.createTestOnDisk(testData);
 
 		val providerProjectStateFile = getProjectRoot("ProviderProject").toPath.resolve(N4JSGlobals.N4JS_PROJECT_STATE);
-		val clientProjectPackageJson = getProjectRoot("ClientProject").toPath.resolve(N4JSGlobals.PACKAGE_JSON);
+		val clientProjectPackageJson = getProjectRoot("ClientProject").toPath.resolve(PACKAGE_JSON);
 		changeFileOnDiskWithoutNotification(clientProjectPackageJson.toFileURI,
 			'"ProviderProject": "*",' -> ''
 		);
@@ -219,7 +218,7 @@ class InitialBuildTest extends AbstractIncrementalBuilderTest {
 				"(Error, [0:24 - 0:36], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
 				"(Error, [1:9 - 1:18], Couldn't resolve reference to Type 'SomeClass'.)"
 			],
-			"ClientProject/" + N4JSGlobals.PACKAGE_JSON -> #[
+			"ClientProject/" + PACKAGE_JSON -> #[
 				"(Error, [15:3 - 15:25], Project does not exist with project ID: ProviderProject.)"
 			]
 		];

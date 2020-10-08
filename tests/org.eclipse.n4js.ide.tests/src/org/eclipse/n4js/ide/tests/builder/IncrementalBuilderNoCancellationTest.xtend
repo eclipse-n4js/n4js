@@ -156,8 +156,8 @@ class IncrementalBuilderNoCancellationTest extends AbstractIncrementalBuilderTes
 				'''
 			],
 			"ProjectPlain" -> #[
-				TestWorkspaceManager.CFG_SOURCE_FOLDER -> ".",
-				TestWorkspaceManager.PACKAGE_JSON -> '''
+				CFG_SOURCE_FOLDER -> ".",
+				PACKAGE_JSON -> '''
 					{
 						"name": "ProjectPlain",
 						"version": "0.0.1",

@@ -14,7 +14,6 @@ import org.eclipse.lsp4j.Position
 import org.eclipse.lsp4j.TextDocumentIdentifier
 import org.eclipse.lsp4j.TextDocumentPositionParams
 import org.eclipse.n4js.ide.tests.server.AbstractIdeTest
-import org.eclipse.n4js.ide.tests.server.TestWorkspaceManager
 import org.junit.Test
 
 import static org.junit.Assert.*
@@ -40,7 +39,7 @@ class RenameDisallowedTest extends AbstractIdeTest {
 	@Test
 	def void testDisallowRenamingTypeFromNodeModules() throws Exception {
 		testWorkspaceManager.createTestOnDisk(
-			TestWorkspaceManager.CFG_NODE_MODULES + "ProjectInNodeModules" -> #[
+			CFG_NODE_MODULES + "ProjectInNodeModules" -> #[
 				"ModuleInNodeModules" -> '''
 					export public class SomeClass {}
 					export public const someConst = 42;
@@ -52,7 +51,7 @@ class RenameDisallowedTest extends AbstractIdeTest {
 					SomeClass;
 					someConst;
 				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
+				CFG_DEPENDENCIES -> '''
 					ProjectInNodeModules
 				'''
 			]

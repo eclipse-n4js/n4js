@@ -14,16 +14,11 @@ import java.io.File
 import java.io.IOException
 import java.nio.file.Files
 import java.util.List
-import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.projectModel.locations.FileURI
 import org.eclipse.n4js.utils.io.FileCopier
 import org.eclipse.n4js.utils.io.FileDeleter
 import org.junit.Test
 
-import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.CFG_DEPENDENCIES
-import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.CFG_NODE_MODULES
-import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.CFG_SOURCE_FOLDER
-import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.PACKAGE_JSON
 import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.YARN_TEST_PROJECT
 import static org.junit.Assert.assertFalse
 import static org.junit.Assert.assertTrue
@@ -58,7 +53,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 			"(Error, [0:25 - 0:32], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
 			"(Error, [1:4 - 1:14], Couldn't resolve reference to IdentifiableElement 'OtherClass'.)"
 		],
-		"MainProject/" + N4JSGlobals.PACKAGE_JSON -> #[
+		"MainProject/" + PACKAGE_JSON -> #[
 			"(Error, [15:3 - 15:22], Project does not exist with project ID: OtherProject.)"
 		]
 	];
@@ -326,7 +321,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 			// unfortunately we have an additional error in the open, non-saved package.json file when a dependency to a plain-JS-project is added
 			// (due to the optimization in ProjectDiscoveryHelper of hiding all unnecessary PLAINJS projects)
 			val errorsBeforeSaving = originalErrors + #[
-				sourceProjectName + "/" + N4JSGlobals.PACKAGE_JSON -> #[
+				sourceProjectName + "/" + PACKAGE_JSON -> #[
 					"(Error, [15:24 - 15:45], Project does not exist with project ID: PlainjsProject.)"
 				]
 			];

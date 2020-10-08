@@ -12,7 +12,6 @@ package org.eclipse.n4js.ide.tests.builder
 
 import java.io.File
 import org.eclipse.lsp4j.MessageType
-import org.eclipse.n4js.ide.tests.server.TestWorkspaceManager
 import org.junit.Test
 
 import static org.junit.Assert.*
@@ -121,7 +120,7 @@ class IncrementalBuilderFileChangesTest extends AbstractIncrementalBuilderTest {
 		startAndWaitForLspServer();
 		assertNoIssues();
 
-		val sourceFileURI = new File(new File(getProjectRoot(TestWorkspaceManager.DEFAULT_PROJECT_NAME), TestWorkspaceManager.DEFAULT_SOURCE_FOLDER), "PlainJSModule.js").toFileURI;
+		val sourceFileURI = new File(new File(getProjectRoot(DEFAULT_PROJECT_NAME), DEFAULT_SOURCE_FOLDER), "PlainJSModule.js").toFileURI;
 		val outputFile = new File(getOutputFolder(), "PlainJSModule.js");
 		val outputFileURI = outputFile.toFileURI;
 

@@ -11,7 +11,6 @@
 package org.eclipse.n4js.ide.tests.bugreports
 
 import org.eclipse.n4js.ide.tests.server.AbstractIdeTest
-import org.eclipse.n4js.ide.tests.server.TestWorkspaceManager
 import org.junit.Test
 
 class GH_1923_BogusDuplicateModuleErrorInImplProjects extends AbstractIdeTest {
@@ -25,7 +24,7 @@ class GH_1923_BogusDuplicateModuleErrorInImplProjects extends AbstractIdeTest {
 						public m(p: string): number;
 					}
 				''',
-				TestWorkspaceManager.PACKAGE_JSON -> '''
+				PACKAGE_JSON -> '''
 					{
 						"name": "ProjectApi",
 						"version": "0.0.1",
@@ -50,7 +49,7 @@ class GH_1923_BogusDuplicateModuleErrorInImplProjects extends AbstractIdeTest {
 						}
 					}
 				''',
-				TestWorkspaceManager.PACKAGE_JSON -> '''
+				PACKAGE_JSON -> '''
 					{
 						"name": "ProjectImpl",
 						"version": "0.0.1",

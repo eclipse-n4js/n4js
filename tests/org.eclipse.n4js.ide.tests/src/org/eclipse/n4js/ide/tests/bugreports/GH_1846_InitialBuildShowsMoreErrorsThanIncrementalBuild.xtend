@@ -12,7 +12,6 @@ package org.eclipse.n4js.ide.tests.bugreports
 
 import java.util.List
 import org.eclipse.n4js.ide.tests.server.AbstractIdeTest
-import org.eclipse.n4js.ide.tests.server.TestWorkspaceManager
 import org.junit.Test
 
 import static org.junit.Assert.assertTrue
@@ -63,7 +62,7 @@ class GH_1846_InitialBuildShowsMoreErrorsThanIncrementalBuild extends AbstractId
 					import {A} from "A"
 					new A();
 				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
+				CFG_DEPENDENCIES -> '''
 					ProjectA
 				'''
 			]
@@ -116,7 +115,7 @@ class GH_1846_InitialBuildShowsMoreErrorsThanIncrementalBuild extends AbstractId
 					let l: IDataList;
 					l = null;
 				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
+				CFG_DEPENDENCIES -> '''
 					ProjectA
 				'''
 			]

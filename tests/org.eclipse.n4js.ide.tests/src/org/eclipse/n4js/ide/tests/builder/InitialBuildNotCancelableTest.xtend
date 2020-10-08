@@ -16,7 +16,6 @@ import com.google.inject.Inject
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicBoolean
 import org.eclipse.n4js.ide.tests.server.AbstractIdeTest
-import org.eclipse.n4js.ide.tests.server.TestWorkspaceManager
 import org.eclipse.n4js.ide.xtext.server.BuiltInAwareIncrementalBuilder
 import org.eclipse.n4js.ide.xtext.server.QueuedExecutorService
 import org.eclipse.n4js.ide.xtext.server.build.XClusteringStorageAwareResourceLoader.LoadResult
@@ -122,7 +121,7 @@ class InitialBuildNotCancelableTest extends AbstractIdeTest {
 					import {Other} from "Other";
 					new Other().m();
 				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
+				CFG_DEPENDENCIES -> '''
 					OtherProject
 				'''
 			]

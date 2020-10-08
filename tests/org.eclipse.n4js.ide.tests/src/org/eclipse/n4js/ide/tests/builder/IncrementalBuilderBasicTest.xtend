@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.ide.tests.builder
 
-import org.eclipse.n4js.ide.tests.server.TestWorkspaceManager
 import org.junit.Test
 
 /**
@@ -41,7 +40,7 @@ class IncrementalBuilderBasicTest extends AbstractIncrementalBuilderTest {
 					new A().ma();
 					new Other().mOther();
 				''',
-				TestWorkspaceManager.CFG_DEPENDENCIES -> '''
+				CFG_DEPENDENCIES -> '''
 					OtherProject
 				'''
 			]

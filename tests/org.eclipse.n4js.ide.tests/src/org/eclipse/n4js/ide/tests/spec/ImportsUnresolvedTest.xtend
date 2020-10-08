@@ -10,12 +10,8 @@
  */
 package org.eclipse.n4js.ide.tests.spec
 
-import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.ide.tests.server.AbstractIdeTest
 import org.junit.Test
-
-import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.CFG_DEPENDENCIES
-import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.CFG_MAIN_MODULE
 
 /**
  * Tests for the error messages of unresolved imports. See also Xpect test file 'ImportsUnresolved.n4js.xt'.
@@ -141,7 +137,7 @@ class ImportsUnresolvedTest extends AbstractIdeTest {
 			"Main" -> #[
 				"(Error, [0:16 - 0:30], Cannot resolve project import: no matching module found.)"
 			],
-			"OtherProject/" + N4JSGlobals.PACKAGE_JSON -> #[
+			"OtherProject/" + PACKAGE_JSON -> #[
 				"(Error, [7:17 - 7:24], Main module specifier Other does not exist.)"
 			]
 		);

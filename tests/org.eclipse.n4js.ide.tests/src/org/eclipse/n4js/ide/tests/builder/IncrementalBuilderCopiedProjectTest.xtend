@@ -17,8 +17,6 @@ import org.eclipse.n4js.projectModel.locations.FileURI
 import org.eclipse.n4js.utils.io.FileCopier
 import org.junit.Test
 
-import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.*
-
 /**
  */
 class IncrementalBuilderCopiedProjectTest extends AbstractIncrementalBuilderTest {
