@@ -44,7 +44,6 @@ import org.eclipse.n4js.ide.xtext.server.LanguageServerFrontend;
 import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo;
 import org.eclipse.n4js.ide.xtext.server.QueuedExecutorService;
 import org.eclipse.n4js.ide.xtext.server.TextDocumentFrontend;
-import org.eclipse.n4js.ide.xtext.server.WorkspaceAwareCanLoadFromDescriptionHelper;
 import org.eclipse.n4js.ide.xtext.server.XExecutableCommandRegistry;
 import org.eclipse.n4js.ide.xtext.server.XIProjectDescriptionFactory;
 import org.eclipse.n4js.ide.xtext.server.XIWorkspaceConfigFactory;
@@ -63,7 +62,6 @@ import org.eclipse.n4js.ide.xtext.server.symbol.XDocumentSymbolService;
 import org.eclipse.n4js.ide.xtext.server.util.XOperationCanceledManager;
 import org.eclipse.n4js.internal.lsp.FileSystemScanner;
 import org.eclipse.n4js.internal.lsp.N4JSSourceFolderScanner;
-import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
 import org.eclipse.n4js.xtext.server.EmfDiagnosticToLSPIssueConverter;
 import org.eclipse.n4js.xtext.workspace.SourceFolderScanner;
 import org.eclipse.xtext.generator.IGenerator;
@@ -123,10 +121,6 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public Class<? extends XIWorkspaceConfigFactory> bindXIWorkspaceConfigFactory() {
 		return FileBasedWorkspaceInitializer.class;
-	}
-
-	public Class<? extends CanLoadFromDescriptionHelper> bindCanLoadFromDescriptionHelper() {
-		return WorkspaceAwareCanLoadFromDescriptionHelper.class;
 	}
 
 	public Class<? extends XIProjectDescriptionFactory> bindXIProjectDescriptionFactory() {
