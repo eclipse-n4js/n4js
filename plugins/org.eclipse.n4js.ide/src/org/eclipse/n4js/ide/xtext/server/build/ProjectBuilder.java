@@ -21,8 +21,11 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
 import org.eclipse.n4js.ide.xtext.server.ResourceChangeSet;
@@ -476,7 +479,35 @@ public class ProjectBuilder {
 
 		ChunkedResourceDescriptions index = workspaceIndex.toDescriptions(result);
 		index.setContainer(projectConfig.getName(), newProjectIndex);
+
+		result.eAdapters().add(new AdapterImpl() {
+			@Override
+			public void notifyChanged(Notification msg) {
+				Object newValue = msg.getNewValue();
+				if (msg.getEventType() == Notification.ADD
+						&& msg.getFeatureID(ResourceSet.class) == ResourceSet.RESOURCE_SET__RESOURCES
+						&& newValue instanceof Resource) {
+					onResourceAdded((Resource) newValue);
+				}
+			}
+		});
+
 		return result;
+	}
+
+	/**
+	 * Invoked after a new resource was added to this builder's resource set.
+	 *
+	 * @param newResource
+	 *            the resource that was added; never <code>null</code>.
+	 */
+	protected void onResourceAdded(Resource newResource) {
+		URI newResourceURI = newResource.getURI();
+		URI projectPath = projectConfig != null ? UriUtil.toFolderURI(projectConfig.getPath()) : null;
+		if (newResourceURI != null && projectPath != null && !UriUtil.isPrefixOf(projectPath, newResourceURI)) {
+			LOG.error("resource created in incorrect project builder (project path: " + projectPath + "; resource URI: "
+					+ newResourceURI + ")");
+		}
 	}
 
 	private WorkspaceAwareResourceLocator attachWorkspaceResourceLocator(XtextResourceSet result) {

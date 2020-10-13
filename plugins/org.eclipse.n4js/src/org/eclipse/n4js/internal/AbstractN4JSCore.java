@@ -19,6 +19,7 @@ import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.utils.EcoreUtilN4;
 import org.eclipse.n4js.utils.WildcardPathFilterHelper;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.ISynchronizable;
@@ -84,11 +85,11 @@ public abstract class AbstractN4JSCore implements IN4JSCore {
 						return result;
 					}
 					if (resource == null) {
-						resource = resourceSet.createResource(resourceURI);
+						resource = EcoreUtilN4.createResourceInCorrectResourceSet(resourceSet, resourceURI);
 					}
 				}
 			} else {
-				resource = resourceSet.createResource(resourceURI);
+				resource = EcoreUtilN4.createResourceInCorrectResourceSet(resourceSet, resourceURI);
 			}
 		}
 		if (resource instanceof N4JSResource) {

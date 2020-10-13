@@ -12,13 +12,15 @@ package org.eclipse.n4js.ide.xtext.server.build;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.ResourceLocator;
+import org.eclipse.n4js.utils.EcoreUtilN4.IResourceLocatorWithCreateSupport;
 
 /**
  * A resource locator that will redirect requests to the resource set of the containing project.
  */
-public class WorkspaceAwareResourceLocator extends ResourceLocator {
+public class WorkspaceAwareResourceLocator extends ResourceLocator implements IResourceLocatorWithCreateSupport {
 
 	private final XWorkspaceManager workspaceManager;
 
@@ -30,6 +32,12 @@ public class WorkspaceAwareResourceLocator extends ResourceLocator {
 		this.workspaceManager = workspaceManager;
 	}
 
+	/** Returns the resource set a resource with the given URI would belong to. */
+	protected ResourceSet getTargetResourceSet(URI uri) {
+		ProjectBuilder projectBuilder = this.workspaceManager.getProjectBuilder(uri);
+		return projectBuilder != null ? projectBuilder.getResourceSet() : null;
+	}
+
 	@Override
 	public Resource getResource(URI uri, boolean loadOnDemand) {
 		Resource candidate = resourceSet.getURIResourceMap().get(uri);
@@ -38,11 +46,19 @@ public class WorkspaceAwareResourceLocator extends ResourceLocator {
 				return candidate;
 			}
 		}
-		ProjectBuilder projectManager = this.workspaceManager.getProjectBuilder(uri);
-		if (projectManager == null || projectManager.getResourceSet() == resourceSet) {
+		ResourceSet target = getTargetResourceSet(uri);
+		if (target == null || target == resourceSet) {
 			return basicGetResource(uri, loadOnDemand);
 		}
-		return projectManager.getResourceSet().getResource(uri, loadOnDemand);
+		return target.getResource(uri, loadOnDemand);
 	}
 
+	@Override
+	public Resource createResource(URI uri) {
+		ResourceSet target = getTargetResourceSet(uri);
+		if (target == null || target == resourceSet) {
+			return demandCreateResource(uri);
+		}
+		return target.createResource(uri);
+	}
 }
