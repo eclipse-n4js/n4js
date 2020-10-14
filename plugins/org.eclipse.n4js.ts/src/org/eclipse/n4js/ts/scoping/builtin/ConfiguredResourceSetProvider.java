@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.ts.scoping.builtin;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.ResourceLocator;
 import org.eclipse.n4js.xtext.resourceset.EmptyAuthorityAddingNormalizer;
@@ -51,6 +53,19 @@ public class ConfiguredResourceSetProvider extends BasicResourceSetProvider {
 	@Override
 	public SynchronizedXtextResourceSet get() {
 		SynchronizedXtextResourceSet result = super.get();
+		result.setClasspathURIContext(classLoader);
+		initialize(result);
+		return result;
+	}
+
+	/* package */ <T extends SynchronizedXtextResourceSet> T getOfType(Class<T> type) {
+		T result;
+		try {
+			result = type.getDeclaredConstructor().newInstance();
+		} catch (IllegalAccessException | InstantiationException | InvocationTargetException
+				| NoSuchMethodException e) {
+			throw new RuntimeException(e);
+		}
 		result.setClasspathURIContext(classLoader);
 		initialize(result);
 		return result;

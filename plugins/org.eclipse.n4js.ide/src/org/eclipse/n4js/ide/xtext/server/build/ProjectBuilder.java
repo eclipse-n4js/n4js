@@ -48,7 +48,6 @@ import org.eclipse.xtext.resource.IExternalContentSupport;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
-import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.resource.impl.ChunkedResourceDescriptions;
 import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionDelta;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
@@ -85,7 +84,7 @@ public class ProjectBuilder {
 
 	/** Creates a new resource set. */
 	@Inject
-	protected Provider<XtextResourceSet> resourceSetProvider;
+	protected Provider<WorkspaceAwareResourceSet> resourceSetProvider;
 
 	/** Scans the file system for source files contained in a {@link SourceFolderSnapshot source folder}. */
 	@Inject
@@ -136,7 +135,7 @@ public class ProjectBuilder {
 
 	private ProjectConfigSnapshot projectConfig;
 
-	private XtextResourceSet resourceSet;
+	private WorkspaceAwareResourceSet resourceSet;
 
 	private final AtomicReference<ImmutableProjectState> projectStateSnapshot = new AtomicReference<>(
 			ImmutableProjectState.empty());
@@ -470,12 +469,12 @@ public class ProjectBuilder {
 	}
 
 	/** Create and configure a new resource set for this project. */
-	protected XtextResourceSet createNewResourceSet(ResourceDescriptionsData newProjectIndex) {
-		XtextResourceSet result = resourceSetProvider.get();
+	protected WorkspaceAwareResourceSet createNewResourceSet(ResourceDescriptionsData newProjectIndex) {
+		WorkspaceAwareResourceSet result = resourceSetProvider.get();
+		result.setWorkspaceManager(workspaceManager);
 		result.setURIResourceMap(uriResourceMap);
 		ProjectDescription projectDescription = projectDescriptionFactory.getProjectDescription(projectConfig);
 		projectDescription.attachToEmfObject(result);
-		attachWorkspaceResourceLocator(result);
 
 		ChunkedResourceDescriptions index = workspaceIndex.toDescriptions(result);
 		index.setContainer(projectConfig.getName(), newProjectIndex);
@@ -510,10 +509,6 @@ public class ProjectBuilder {
 		}
 	}
 
-	private WorkspaceAwareResourceLocator attachWorkspaceResourceLocator(XtextResourceSet result) {
-		return new WorkspaceAwareResourceLocator(result, workspaceManager);
-	}
-
 	/** Get the resource with the given URI. */
 	public Resource getResource(URI uri) {
 		Resource resource = resourceSet.getResource(uri, true);
@@ -546,7 +541,7 @@ public class ProjectBuilder {
 	}
 
 	/** Getter */
-	public XtextResourceSet getResourceSet() {
+	public WorkspaceAwareResourceSet getResourceSet() {
 		return resourceSet;
 	}
 

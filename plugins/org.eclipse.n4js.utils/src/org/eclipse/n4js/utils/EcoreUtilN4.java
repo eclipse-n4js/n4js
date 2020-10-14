@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.utils;
 
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -22,15 +21,12 @@ import java.util.NoSuchElementException;
 import org.eclipse.emf.common.util.AbstractTreeIterator;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.TreeIterator;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.BasicEObjectImpl;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.ResourceLocator;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure0;
 
@@ -41,32 +37,6 @@ import com.google.common.collect.Iterators;
 /**
  */
 public class EcoreUtilN4 {
-
-	private static final Field ResourceSetImpl_resourceLocator;
-
-	static {
-		try {
-			Field field = ResourceSetImpl.class.getDeclaredField("resourceLocator");
-			field.setAccessible(true);
-			ResourceSetImpl_resourceLocator = field;
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	/**
-	 * Returns the {@link ResourceLocator} of the given resource set or <code>null</code> if it does not have a resource
-	 * locator or an error occurred. If the given resource set is not an instance of {@link ResourceSetImpl} this method
-	 * will always return <code>null</code>.
-	 */
-	public static ResourceLocator getResourceLocator(ResourceSet resourceSet) {
-		try {
-			// note: no need to check if 'resourceSet' is an instance of 'ResourceSetImpl' (will be caught below)
-			return (ResourceLocator) ResourceSetImpl_resourceLocator.get(resourceSet);
-		} catch (IllegalArgumentException | IllegalAccessException e) {
-			return null;
-		}
-	}
 
 	/**
 	 * Returns the ResourceSet containing the first given object. If it is not contained in a ResourceSet, the other
@@ -100,39 +70,6 @@ public class EcoreUtilN4 {
 				return res;
 		}
 		return null;
-	}
-
-	/** See {@link EcoreUtilN4#createResourceInCorrectResourceSet(ResourceSet, URI)}. */
-	public interface IResourceLocatorWithCreateSupport {
-		/** Create a resource for the given URI in the appropriate resource set. */
-		public Resource createResource(URI uri);
-	}
-
-	/**
-	 * Creates a new resource while <em>trying</em> to respect the resource creation semantics of the
-	 * {@link ResourceLocator} registered on the given resource set. Will only work if the first(!) resource locator in
-	 * the chain of resource locators of the given resource set implements {@link IResourceLocatorWithCreateSupport}.
-	 * Will fall back to {@link ResourceSet#createResource(URI) ordinary resource creation} if the given resource set
-	 * does not have a resource locator or the resource locator does not implement the interface.
-	 * <p>
-	 * This method is necessary because ...
-	 * <ul>
-	 * <li>{@link ResourceSet#createResource(URI)} creates the new resource always in the receiving resource set,
-	 * possibly violating rules defined by registered resource locators.
-	 * <li>{@link ResourceSet#getResource(URI, boolean)} with <code>false</code> as second argument does not create the
-	 * resource.
-	 * <li>{@link ResourceSet#getResource(URI, boolean)} with <code>true</code> as second argument does actually create
-	 * the resource if necessary, but also immediately loads the newly created resource.
-	 * </ul>
-	 * So, clients that want to create a new resource without loading it and without violating the resource locators'
-	 * rules should use this method.
-	 */
-	public static Resource createResourceInCorrectResourceSet(ResourceSet resourceSetCandidate, URI uriOfNewResource) {
-		ResourceLocator locator = getResourceLocator(resourceSetCandidate);
-		if (locator instanceof IResourceLocatorWithCreateSupport) {
-			return ((IResourceLocatorWithCreateSupport) locator).createResource(uriOfNewResource);
-		}
-		return resourceSetCandidate.createResource(uriOfNewResource);
 	}
 
 	/**

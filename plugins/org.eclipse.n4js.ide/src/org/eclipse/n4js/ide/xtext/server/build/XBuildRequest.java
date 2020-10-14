@@ -16,7 +16,6 @@ import java.util.Objects;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.xtext.resource.IResourceDescription;
-import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.UriUtil;
@@ -52,7 +51,7 @@ public class XBuildRequest {
 
 	private boolean writeStorageResources = false;
 
-	private XtextResourceSet resourceSet;
+	private WorkspaceAwareResourceSet resourceSet;
 
 	private CancelIndicator cancelIndicator = CancelIndicator.NullImpl;
 
@@ -321,12 +320,12 @@ public class XBuildRequest {
 	}
 
 	/** Getter. */
-	public XtextResourceSet getResourceSet() {
+	public WorkspaceAwareResourceSet getResourceSet() {
 		return this.resourceSet;
 	}
 
 	/** Setter. */
-	public void setResourceSet(XtextResourceSet resourceSet) {
+	public void setResourceSet(WorkspaceAwareResourceSet resourceSet) {
 		this.resourceSet = resourceSet;
 	}
 

@@ -24,7 +24,6 @@ import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.resource.UserDataMapper;
-import org.eclipse.n4js.utils.EcoreUtilN4;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.ISynchronizable;
@@ -258,12 +257,12 @@ public class CanLoadFromDescriptionHelper {
 			synchronized (((ISynchronizable<?>) resourceSet).getLock()) {
 				Resource resource = resourceSet.getResource(resourceURI, false);
 				if (resource == null) {
-					resource = EcoreUtilN4.createResourceInCorrectResourceSet(resourceSet, resourceURI);
+					resource = resourceSet.createResource(resourceURI);
 				}
 				return resource;
 			}
 		} else {
-			return EcoreUtilN4.createResourceInCorrectResourceSet(resourceSet, resourceURI);
+			return resourceSet.createResource(resourceURI);
 		}
 	}
 
