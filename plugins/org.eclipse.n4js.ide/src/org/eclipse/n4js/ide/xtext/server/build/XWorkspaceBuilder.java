@@ -47,6 +47,7 @@ import org.eclipse.xtext.xbase.lib.IteratorExtensions;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Stopwatch;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
@@ -335,7 +336,8 @@ public class XWorkspaceBuilder {
 		for (ProjectConfigSnapshot prjConfig : changes.getRemovedProjects()) {
 			this.deletedProjects.add(prjConfig.getName());
 		}
-		for (ProjectConfigSnapshot prjConfig : changes.getAddedProjects()) {
+		for (ProjectConfigSnapshot prjConfig : Iterables.concat(changes.getAddedProjects(),
+				changes.getChangedProjects())) {
 			this.deletedProjects.remove(prjConfig.getName()); // in case a deleted project is being re-created
 		}
 		handleContentsOfRemovedProjects(updateResult.removedProjectsContents);

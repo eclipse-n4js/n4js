@@ -635,7 +635,7 @@ public class ProjectBuilder {
 	}
 
 	/** @return <code>true</code> iff full build of this builder's project is required due to project changes. */
-	private boolean handleProjectAdditionRemovalSinceProjectStateWasComputed(ResourceChangeSet result,
+	protected boolean handleProjectAdditionRemovalSinceProjectStateWasComputed(ResourceChangeSet result,
 			ImmutableProjectState projectState) {
 
 		Set<String> oldExistingDeps = FluentIterable.from(projectState.getDependencies().entrySet())
