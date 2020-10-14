@@ -27,9 +27,9 @@ import com.google.common.base.Predicate;
 
 /**
  */
+@SuppressWarnings("javadoc")
 public class EcoreUtilN4Test {
 
-	@SuppressWarnings("javadoc")
 	@Test
 	public void testGetAllContentsFiltered() {
 
@@ -49,7 +49,6 @@ public class EcoreUtilN4Test {
 		assertEqualsByNames("A,B,C,D,E,F,notfiltered,Sub1A,Sub1C", iter);
 	}
 
-	@SuppressWarnings("javadoc")
 	@Test
 	public void testGetAllContentsFilteredIgnoreRootPredicate() {
 
@@ -69,14 +68,12 @@ public class EcoreUtilN4Test {
 		assertEqualsByNames("A,B,C,D,E,F,notfiltered,Sub1A,Sub1C", iter);
 	}
 
-	@SuppressWarnings("javadoc")
 	@Test
 	public void testGetAllContentsFilteredNoMatch() {
 
 		EPackage root = epack("root",
 				epack("filteredSub1", ecl("Sub1A"), edt("Sub1C")), //
-				epack("filteredSub2", ecl("Sub2A"), ecl("Sub2B"), edt("Sub2C"))
-				);
+				epack("filteredSub2", ecl("Sub2A"), ecl("Sub2B"), edt("Sub2C")));
 		Iterator<EObject> iter = EcoreUtilN4.getAllContentsFiltered(root, new Predicate<EObject>() {
 
 			@Override
@@ -87,7 +84,6 @@ public class EcoreUtilN4Test {
 		assertEqualsByNames("", iter);
 	}
 
-	@SuppressWarnings("javadoc")
 	@Test
 	public void testGetAllContentsFilteredEmpty() {
 

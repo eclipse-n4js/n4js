@@ -253,11 +253,6 @@ public class CanLoadFromDescriptionHelper {
 	 * It is not a generic replacement for all clients of the resource set.
 	 */
 	public Resource createResource(ResourceSet resourceSet, URI resourceURI) {
-		/*
-		 * Implementation note: In LSP we need to redirect the request to create a resource to a well defined resource
-		 * set. LSP associates projects to resource sets and we have to make sure that we do not create resources in the
-		 * wrong project context. Therefore this method if overridden for LSP.
-		 */
 		if (resourceSet instanceof ISynchronizable<?>) {
 			synchronized (((ISynchronizable<?>) resourceSet).getLock()) {
 				Resource resource = resourceSet.getResource(resourceURI, false);

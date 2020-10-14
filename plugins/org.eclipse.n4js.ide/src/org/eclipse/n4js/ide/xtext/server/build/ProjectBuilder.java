@@ -21,8 +21,11 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
 import org.eclipse.n4js.ide.xtext.server.ResourceChangeSet;
@@ -45,7 +48,6 @@ import org.eclipse.xtext.resource.IExternalContentSupport;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
-import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.resource.impl.ChunkedResourceDescriptions;
 import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionDelta;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
@@ -82,7 +84,7 @@ public class ProjectBuilder {
 
 	/** Creates a new resource set. */
 	@Inject
-	protected Provider<XtextResourceSet> resourceSetProvider;
+	protected Provider<WorkspaceAwareResourceSet> resourceSetProvider;
 
 	/** Scans the file system for source files contained in a {@link SourceFolderSnapshot source folder}. */
 	@Inject
@@ -133,7 +135,7 @@ public class ProjectBuilder {
 
 	private ProjectConfigSnapshot projectConfig;
 
-	private XtextResourceSet resourceSet;
+	private WorkspaceAwareResourceSet resourceSet;
 
 	private final AtomicReference<ImmutableProjectState> projectStateSnapshot = new AtomicReference<>(
 			ImmutableProjectState.empty());
@@ -467,20 +469,44 @@ public class ProjectBuilder {
 	}
 
 	/** Create and configure a new resource set for this project. */
-	protected XtextResourceSet createNewResourceSet(ResourceDescriptionsData newProjectIndex) {
-		XtextResourceSet result = resourceSetProvider.get();
+	protected WorkspaceAwareResourceSet createNewResourceSet(ResourceDescriptionsData newProjectIndex) {
+		WorkspaceAwareResourceSet result = resourceSetProvider.get();
+		result.setWorkspaceManager(workspaceManager);
 		result.setURIResourceMap(uriResourceMap);
 		ProjectDescription projectDescription = projectDescriptionFactory.getProjectDescription(projectConfig);
 		projectDescription.attachToEmfObject(result);
-		attachWorkspaceResourceLocator(result);
 
 		ChunkedResourceDescriptions index = workspaceIndex.toDescriptions(result);
 		index.setContainer(projectConfig.getName(), newProjectIndex);
+
+		result.eAdapters().add(new AdapterImpl() {
+			@Override
+			public void notifyChanged(Notification msg) {
+				Object newValue = msg.getNewValue();
+				if (msg.getEventType() == Notification.ADD
+						&& msg.getFeatureID(ResourceSet.class) == ResourceSet.RESOURCE_SET__RESOURCES
+						&& newValue instanceof Resource) {
+					onResourceAdded((Resource) newValue);
+				}
+			}
+		});
+
 		return result;
 	}
 
-	private WorkspaceAwareResourceLocator attachWorkspaceResourceLocator(XtextResourceSet result) {
-		return new WorkspaceAwareResourceLocator(result, workspaceManager);
+	/**
+	 * Invoked after a new resource was added to this builder's resource set.
+	 *
+	 * @param newResource
+	 *            the resource that was added; never <code>null</code>.
+	 */
+	protected void onResourceAdded(Resource newResource) {
+		URI newResourceURI = newResource.getURI();
+		URI projectPath = projectConfig != null ? UriUtil.toFolderURI(projectConfig.getPath()) : null;
+		if (newResourceURI != null && projectPath != null && !UriUtil.isPrefixOf(projectPath, newResourceURI)) {
+			LOG.error("resource created in incorrect project builder (project path: " + projectPath + "; resource URI: "
+					+ newResourceURI + ")");
+		}
 	}
 
 	/** Get the resource with the given URI. */
@@ -515,7 +541,7 @@ public class ProjectBuilder {
 	}
 
 	/** Getter */
-	public XtextResourceSet getResourceSet() {
+	public WorkspaceAwareResourceSet getResourceSet() {
 		return resourceSet;
 	}
 

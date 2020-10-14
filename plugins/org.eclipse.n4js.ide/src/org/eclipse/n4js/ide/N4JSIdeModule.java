@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ide;
 
+import org.eclipse.n4js.N4JSRuntimeModule;
 import org.eclipse.n4js.generator.N4JSCompositeGenerator;
 import org.eclipse.n4js.ide.editor.contentassist.CamelCasePrefixMatcher;
 import org.eclipse.n4js.ide.editor.contentassist.ContentAssistDataCollectors;
@@ -37,6 +38,7 @@ import org.eclipse.n4js.ide.server.hover.N4JSHoverService;
 import org.eclipse.n4js.ide.server.rename.N4JSRenameService;
 import org.eclipse.n4js.ide.server.symbol.N4JSDocumentSymbolMapper;
 import org.eclipse.n4js.ide.server.symbol.N4JSHierarchicalDocumentSymbolService;
+import org.eclipse.n4js.ide.server.util.ConfiguredWorkspaceAwareResourceSetProvider;
 import org.eclipse.n4js.ide.xtext.editor.contentassist.XIdeContentProposalAcceptor;
 import org.eclipse.n4js.ide.xtext.server.BuiltInAwareIncrementalBuilder;
 import org.eclipse.n4js.ide.xtext.server.DebugService;
@@ -44,7 +46,6 @@ import org.eclipse.n4js.ide.xtext.server.LanguageServerFrontend;
 import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo;
 import org.eclipse.n4js.ide.xtext.server.QueuedExecutorService;
 import org.eclipse.n4js.ide.xtext.server.TextDocumentFrontend;
-import org.eclipse.n4js.ide.xtext.server.WorkspaceAwareCanLoadFromDescriptionHelper;
 import org.eclipse.n4js.ide.xtext.server.XExecutableCommandRegistry;
 import org.eclipse.n4js.ide.xtext.server.XIProjectDescriptionFactory;
 import org.eclipse.n4js.ide.xtext.server.XIWorkspaceConfigFactory;
@@ -54,6 +55,7 @@ import org.eclipse.n4js.ide.xtext.server.build.DefaultBuildRequestFactory;
 import org.eclipse.n4js.ide.xtext.server.build.IBuildRequestFactory;
 import org.eclipse.n4js.ide.xtext.server.build.ProjectBuilder;
 import org.eclipse.n4js.ide.xtext.server.build.ProjectStatePersister;
+import org.eclipse.n4js.ide.xtext.server.build.WorkspaceAwareResourceSet;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterValidateListener;
 import org.eclipse.n4js.ide.xtext.server.build.XStatefulIncrementalBuilder;
 import org.eclipse.n4js.ide.xtext.server.build.XWorkspaceManager;
@@ -63,7 +65,6 @@ import org.eclipse.n4js.ide.xtext.server.symbol.XDocumentSymbolService;
 import org.eclipse.n4js.ide.xtext.server.util.XOperationCanceledManager;
 import org.eclipse.n4js.internal.lsp.FileSystemScanner;
 import org.eclipse.n4js.internal.lsp.N4JSSourceFolderScanner;
-import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
 import org.eclipse.n4js.xtext.server.EmfDiagnosticToLSPIssueConverter;
 import org.eclipse.n4js.xtext.workspace.SourceFolderScanner;
 import org.eclipse.xtext.generator.IGenerator;
@@ -87,6 +88,8 @@ import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.validation.IDiagnosticConverter;
 
+import com.google.inject.Provider;
+
 /**
  * Use this class to register ide components.
  */
@@ -95,6 +98,15 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public ClassLoader bindClassLoaderToInstance() {
 		return getClass().getClassLoader();
+	}
+
+	/**
+	 * Binds a special provider for creating configured {@link WorkspaceAwareResourceSet}s.
+	 *
+	 * @see N4JSRuntimeModule#provideConfiguredXtextResourceSet()
+	 */
+	public Class<? extends Provider<? extends WorkspaceAwareResourceSet>> provideConfiguredWorkspaceAwareResourceSet() {
+		return ConfiguredWorkspaceAwareResourceSetProvider.class;
 	}
 
 	public Class<? extends ILanguageServerShutdownAndExitHandler> bindILanguageServerShutdownAndExitHandler() {
@@ -123,10 +135,6 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public Class<? extends XIWorkspaceConfigFactory> bindXIWorkspaceConfigFactory() {
 		return FileBasedWorkspaceInitializer.class;
-	}
-
-	public Class<? extends CanLoadFromDescriptionHelper> bindCanLoadFromDescriptionHelper() {
-		return WorkspaceAwareCanLoadFromDescriptionHelper.class;
 	}
 
 	public Class<? extends XIProjectDescriptionFactory> bindXIProjectDescriptionFactory() {
