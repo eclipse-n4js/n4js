@@ -12,6 +12,7 @@ package org.eclipse.n4js.ide.xtext.server.build;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.xtext.server.LSPIssue;
@@ -80,11 +81,11 @@ public class ImmutableProjectState {
 			ImmutableListMultimap<URI, LSPIssue> validationIssues,
 			ImmutableMap<String, Boolean> dependencies) {
 
-		this.indexData = indexData;
-		this.fileMappings = fileMappings;
-		this.fileHashes = fileHashes;
-		this.validationIssues = validationIssues;
-		this.dependencies = dependencies;
+		this.indexData = Objects.requireNonNull(indexData);
+		this.fileMappings = Objects.requireNonNull(fileMappings);
+		this.fileHashes = Objects.requireNonNull(fileHashes);
+		this.validationIssues = Objects.requireNonNull(validationIssues);
+		this.dependencies = Objects.requireNonNull(dependencies);
 	}
 
 	/**

@@ -16,6 +16,7 @@ import com.google.inject.Inject
 import java.util.Collection
 import java.util.Collections
 import java.util.Map
+import java.util.Objects
 import org.apache.log4j.Logger
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
@@ -28,8 +29,10 @@ import org.eclipse.n4js.projectDescription.ProjectDescription
 import org.eclipse.n4js.projectDescription.ProjectReference
 import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSCore
+import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.semver.model.SemverSerializer
 import org.eclipse.n4js.utils.ProjectDescriptionLoader
+import org.eclipse.n4js.utils.ProjectDescriptionUtils
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.resource.EObjectDescription
@@ -40,8 +43,6 @@ import org.eclipse.xtext.resource.IResourceDescriptions
 import org.eclipse.xtext.util.IAcceptor
 
 import static extension com.google.common.base.Strings.nullToEmpty
-import java.util.Objects
-import org.eclipse.n4js.projectModel.IN4JSProject
 
 /**
  * {@link IJSONResourceDescriptionExtension} implementation that provides custom resource descriptions of
@@ -52,7 +53,7 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 	/**
 	 * Separator that is used to serialize multiple project identifiers as a string.
 	 */
-	private static val SEPARATOR = "/";
+	private static val SEPARATOR = ";";
 
 	/** The key of the user data for retrieving the project name. */
 	public static val PROJECT_NAME_KEY = 'projectName';
@@ -248,7 +249,7 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 
 		val testedProjects = it.testedProjects;
 		if (!testedProjects.nullOrEmpty) {
-			builder.put(org.eclipse.n4js.resource.packagejson.PackageJsonResourceDescriptionExtension.TESTED_PROJECT_NAMES_KEY, testedProjects.asString);
+			builder.put(PackageJsonResourceDescriptionExtension.TESTED_PROJECT_NAMES_KEY, testedProjects.asString);
 		}
 
 		val implementedProjects = it.implementedProjects;
@@ -307,7 +308,7 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 	 * Returns with a collection of distinct IDs of the tested projects. Never returns with {@code null}.
 	 */
 	public static def getTestedProjectNames(IEObjectDescription it) {
-		return getProjectNamesUserDataOf(org.eclipse.n4js.resource.packagejson.PackageJsonResourceDescriptionExtension.TESTED_PROJECT_NAMES_KEY);
+		return getProjectNamesUserDataOf(PackageJsonResourceDescriptionExtension.TESTED_PROJECT_NAMES_KEY);
 	}
 
 	/**
@@ -356,7 +357,7 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 		if (it === null) {
 			return emptySet;
 		}
-		return it.getUserData(key).nullToEmpty.split(SEPARATOR).toSet;
+		return it.getUserData(key).nullToEmpty.split(SEPARATOR).filter[!nullOrEmpty].toSet;
 	}
 
 	private static def String asString(Iterable<? extends ProjectReference> it) {
@@ -376,7 +377,8 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 	 */
 	private static def String getProjectNameFromPackageJSONUri(URI uri) {
 		Preconditions.checkArgument(uri.isPackageJSON, '''Expected URI with «N4JSGlobals.PACKAGE_JSON» as last segment. Was: «uri»''');
-		return uri.segment(uri.segmentCount - 2);
+		val projectURI = uri.trimSegments(1);
+		return ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(projectURI);
 	}
 
 	private static def boolean isPackageJSON(IResourceDescription desc) {

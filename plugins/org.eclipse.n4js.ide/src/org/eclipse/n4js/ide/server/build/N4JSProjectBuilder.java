@@ -96,7 +96,14 @@ public class N4JSProjectBuilder extends ProjectBuilder {
 	protected boolean handleProjectAdditionRemovalSinceProjectStateWasComputed(ResourceChangeSet result,
 			ImmutableProjectState projectState) {
 
+		// ignore PLAINJS projects here
 		if (getProjectConfig().getType() == ProjectType.PLAINJS) {
+			// NOTE: This is more than just a performance tweak! Since project dependencies of PLAINJS projects are
+			// ignored when computing the project build order (see #getDependencies(ProjectConfigSnapshot) in class
+			// N4JSProjectBuildOrderInfo), the dependency information in the project state files of PLAINJS projects
+			// may be out-dated, so this would lead to unnecessary building of PLAINJS projects. In combination with
+			// bug GH-1935 this could lead to large parts of a yarn workspace being rebuilt unnecessarily if this
+			// project builder's project is the root project of a yarn workspace.
 			return false;
 		}
 		return super.handleProjectAdditionRemovalSinceProjectStateWasComputed(result, projectState);
