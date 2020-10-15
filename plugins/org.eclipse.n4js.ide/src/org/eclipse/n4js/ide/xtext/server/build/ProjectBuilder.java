@@ -699,11 +699,13 @@ public class ProjectBuilder {
 			Map<URI, ? extends List<? extends LSPIssue>> issuesFromIncrementalBuild,
 			List<URI> deletedFiles) {
 
-		ImmutableMap.Builder<String, Boolean> dependencies = ImmutableMap.builder();
+		ImmutableMap.Builder<String, Boolean> newDependenciesBuilder = ImmutableMap.builder();
 		for (String currDepName : projectConfig.getDependencies()) {
 			boolean currDepExists = workspaceIndex.getProjectIndex(currDepName) != null;
-			dependencies.put(currDepName, currDepExists);
+			newDependenciesBuilder.put(currDepName, currDepExists);
 		}
+		ImmutableMap<String, Boolean> newDependencies = newDependenciesBuilder.build();
+		boolean dependenciesChanged = !newDependencies.equals(projectStateSnapshot.get().getDependencies());
 
 		ImmutableProjectState newState = this.projectStateSnapshot.updateAndGet(snapshot -> {
 			Map<URI, HashedFileContent> newHashedFileContents = new HashMap<>(snapshot.getFileHashes());
@@ -728,11 +730,11 @@ public class ProjectBuilder {
 			});
 			issuesFromIncrementalBuild.forEach(newIssues::putAll);
 			return ImmutableProjectState.withoutCopy(result.getIndex(), result.getFileMappings(),
-					ImmutableMap.copyOf(newHashedFileContents), newIssues.build(), dependencies.build());
+					ImmutableMap.copyOf(newHashedFileContents), newIssues.build(), newDependencies);
 		});
 		setProjectIndex(newState.internalGetResourceDescriptions());
 
-		if (request.isGeneratorEnabled() && !result.getAffectedResources().isEmpty()) {
+		if (request.isGeneratorEnabled() && (!result.getAffectedResources().isEmpty() || dependenciesChanged)) {
 			writeProjectState(newState);
 		}
 	}
