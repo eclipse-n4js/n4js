@@ -23,6 +23,7 @@ import org.eclipse.n4js.projectDescription.ModuleFilter;
 import org.eclipse.n4js.projectDescription.ModuleFilterType;
 import org.eclipse.n4js.projectDescription.ProjectDependency;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
@@ -176,6 +177,14 @@ public class N4JSProject implements IN4JSProject {
 	}
 
 	public ImmutableList<String> getDependenciesUnresolved() {
+		return doGetDependenciesUnresolved(false);
+	}
+
+	public ImmutableList<String> getDependenciesAndImplementedApisUnresolved() {
+		return doGetDependenciesUnresolved(true);
+	}
+
+	public ImmutableList<String> doGetDependenciesUnresolved(boolean includeImplementedApis) {
 		if (!exists()) {
 			return ImmutableList.of();
 		}
@@ -185,7 +194,18 @@ public class N4JSProject implements IN4JSProject {
 		}
 		List<String> allDependencyNames = new ArrayList<>();
 		for (ProjectDependency prjDep : pd.getProjectDependencies()) {
-			allDependencyNames.add(prjDep.getProjectName());
+			String projectName = prjDep != null ? prjDep.getProjectName() : null;
+			if (projectName != null) {
+				allDependencyNames.add(projectName);
+			}
+		}
+		if (includeImplementedApis) {
+			for (ProjectReference prjRef : pd.getImplementedProjects()) {
+				String projectName = prjRef != null ? prjRef.getProjectName() : null;
+				if (projectName != null) {
+					allDependencyNames.add(projectName);
+				}
+			}
 		}
 		return ImmutableList.copyOf(allDependencyNames);
 	}

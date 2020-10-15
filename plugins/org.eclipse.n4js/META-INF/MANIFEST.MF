@@ -89,5 +89,6 @@ Export-Package: org.eclipse.n4js,
  org.eclipse.n4js.validation.validators,
  org.eclipse.n4js.validation.validators.packagejson,
  org.eclipse.n4js.validation.validators.utils,
+ org.eclipse.n4js.xtext.server.util,
  org.eclipse.n4js.xtext.workspace
 Automatic-Module-Name: org.eclipse.n4js

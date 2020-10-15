@@ -7,11 +7,9 @@
  */
 package org.eclipse.n4js.ide.xtext.server.build;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -28,8 +26,12 @@ import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableListMultimap;
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -78,14 +80,13 @@ public class XWorkspaceManager {
 	public static class UpdateResult {
 		/** The workspace changes. */
 		public final WorkspaceChanges changes;
-		/** Former contents of the projects that were removed. */
-		public final List<IResourceDescription> removedProjectsContents;
+		/** Former contents of the projects that were removed (per project name). */
+		public final Multimap<String, IResourceDescription> removedProjectsContents;
 
 		/** Creates a new {@link UpdateResult}. */
-		public UpdateResult(WorkspaceChanges changes,
-				Iterable<? extends IResourceDescription> removedProjectsContents) {
+		public UpdateResult(WorkspaceChanges changes, Multimap<String, IResourceDescription> removedProjectsContents) {
 			this.changes = changes;
-			this.removedProjectsContents = ImmutableList.copyOf(removedProjectsContents);
+			this.removedProjectsContents = ImmutableMultimap.copyOf(removedProjectsContents);
 		}
 	}
 
@@ -149,7 +150,7 @@ public class XWorkspaceManager {
 	 */
 	public UpdateResult update(Set<URI> dirtyFiles, Set<URI> deletedFiles, boolean refresh) {
 		if (workspaceConfig == null) {
-			return new UpdateResult(WorkspaceChanges.NO_CHANGES, Collections.emptyList());
+			return new UpdateResult(WorkspaceChanges.NO_CHANGES, ImmutableListMultimap.of());
 		}
 
 		WorkspaceChanges changes = workspaceConfig.update(workspaceConfigSnapshot, dirtyFiles, deletedFiles, refresh);
@@ -161,7 +162,7 @@ public class XWorkspaceManager {
 	 */
 	protected UpdateResult applyWorkspaceChanges(WorkspaceChanges changes) {
 		// collects contents of removed projects before actually removing anything
-		List<IResourceDescription> removedProjectsContents = collectAllResourceDescriptions(
+		Multimap<String, IResourceDescription> removedProjectsContents = collectAllResourceDescriptions(
 				changes.getRemovedProjects());
 
 		removeProjects(changes.getRemovedProjects());
@@ -177,15 +178,15 @@ public class XWorkspaceManager {
 		return new UpdateResult(changes, removedProjectsContents);
 	}
 
-	private List<IResourceDescription> collectAllResourceDescriptions(
+	private Multimap<String, IResourceDescription> collectAllResourceDescriptions(
 			Iterable<? extends ProjectConfigSnapshot> projects) {
 
-		List<IResourceDescription> result = new ArrayList<>();
+		Multimap<String, IResourceDescription> result = ArrayListMultimap.create();
 		for (ProjectConfigSnapshot pc : projects) {
 			String projectName = pc.getName();
 			ResourceDescriptionsData data = workspaceIndex.getProjectIndex(projectName);
 			if (data != null) {
-				Iterables.addAll(result, data.getAllResourceDescriptions());
+				result.putAll(projectName, data.getAllResourceDescriptions());
 			}
 		}
 		return result;

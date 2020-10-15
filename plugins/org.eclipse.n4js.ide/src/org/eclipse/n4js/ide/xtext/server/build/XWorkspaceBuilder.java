@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -28,6 +29,7 @@ import org.eclipse.n4js.ide.xtext.server.ResourceChangeSet;
 import org.eclipse.n4js.ide.xtext.server.build.ParallelBuildManager.ParallelJob;
 import org.eclipse.n4js.ide.xtext.server.build.XWorkspaceManager.UpdateResult;
 import org.eclipse.n4js.utils.UtilN4;
+import org.eclipse.n4js.xtext.server.util.RemovedProjectResourceDescriptionDelta;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.SourceFolderScanner;
 import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
@@ -48,6 +50,7 @@ import org.eclipse.xtext.xbase.lib.IteratorExtensions;
 import com.google.common.base.Optional;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
@@ -385,14 +388,12 @@ public class XWorkspaceBuilder {
 	 * ensure correct "isAffected"-computation on resource level during the next build (the deltas created here will be
 	 * considered as "external deltas" by {@link XStatefulIncrementalBuilder#launch()}).
 	 */
-	protected void handleContentsOfRemovedProjects(Iterable<? extends IResourceDescription> removedContents) {
+	protected void handleContentsOfRemovedProjects(Multimap<String, ? extends IResourceDescription> removedContents) {
 		List<IResourceDescription.Delta> deltas = new ArrayList<>();
-		for (IResourceDescription oldDesc : removedContents) {
-			if (oldDesc != null) {
-				// because the delta represents a deletion only, we need not create it via the
-				// IResourceDescriptionManager:
-				deltas.add(new DefaultResourceDescriptionDelta(oldDesc, null));
-			}
+		for (Entry<String, ? extends IResourceDescription> entry : removedContents.entries()) {
+			// because the delta represents a deletion only, we need not create it via the
+			// IResourceDescriptionManager:
+			deltas.add(new RemovedProjectResourceDescriptionDelta(entry.getKey(), entry.getValue()));
 		}
 		mergeWithUnreportedDeltas(deltas);
 	}
