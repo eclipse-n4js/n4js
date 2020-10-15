@@ -668,7 +668,7 @@ public class ProjectBuilder {
 				.filter(Entry::getValue) // value tells whether project did exist when project state was computed
 				.transform(Entry::getKey).toSet();
 		Set<String> newExistingDeps = FluentIterable.from(projectConfig.getDependencies())
-				.filter(depName -> workspaceIndex.getProjectIndex(depName) != null).toSet();
+				.filter(depName -> workspaceIndex.getProjectConfig(depName) != null).toSet();
 		if (!Sets.difference(oldExistingDeps, newExistingDeps).isEmpty()) {
 			// projects among the dependencies of this builder's project were removed since 'projectState' was computed
 			// WHAT WE WOULD LIKE TO DO: treat all resources that existed before in those removed projects as deleted,
