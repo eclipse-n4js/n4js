@@ -386,16 +386,24 @@ public class QueuedExecutorService {
 		sb.append(QueuedExecutorService.class.getSimpleName() + " showing all " + QueuedTask.class.getSimpleName());
 		sb.append(
 				"\nActive Tasks Queues (First task is submitted to delegate executor, succeeding tasks are waiting in local queue):\n");
-		for (Object taskId : activeQueue.keys()) {
-			Collection<QueuedTask<?>> tasks = activeQueue.get(taskId);
-			sb.append("[ID: " + taskId + "]\t");
-			sb.append(Strings.join(", ", tasks) + "\n");
+		if (!activeQueue.isEmpty()) {
+			for (Object taskId : activeQueue.keySet()) {
+				Collection<QueuedTask<?>> tasks = activeQueue.get(taskId);
+				sb.append("[ID: " + taskId + "]:  ");
+				sb.append(Strings.join(", ", tasks) + "\n");
+			}
+		} else {
+			sb.append("<none>\n");
 		}
 		sb.append("\nInactive Tasks Queues (No task is running):\n");
-		for (Object taskId : inactiveQueue.keys()) {
-			Collection<QueuedTask<?>> tasks = activeQueue.get(taskId);
-			sb.append("[ID: " + taskId + "]\t");
-			sb.append(Strings.join(", ", tasks) + "\n");
+		if (!inactiveQueue.isEmpty()) {
+			for (Object taskId : inactiveQueue.keySet()) {
+				Collection<QueuedTask<?>> tasks = activeQueue.get(taskId);
+				sb.append("[ID: " + taskId + "]:  ");
+				sb.append(Strings.join(", ", tasks) + "\n");
+			}
+		} else {
+			sb.append("<none>\n");
 		}
 		return sb.toString();
 	}

@@ -203,7 +203,7 @@ public interface DebugService extends DebugEndpointDefinition {
 		private static class MessageTracer {
 
 			/** Number of recent LSP messages that will be shown when reporting an error. */
-			public static final int TRACE_SIZE = 20;
+			public static final int TRACE_SIZE = 50;
 
 			private static final Set<String> IGNORED_LSP_METHODS = ImmutableSet.of("window/logMessage");
 
