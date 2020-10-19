@@ -46,6 +46,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
+import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
@@ -159,8 +160,13 @@ public abstract class AbstractPackageJSONValidatorExtension extends AbstractDecl
 					} catch (IllegalAccessException | IllegalArgumentException e) {
 						throw new IllegalStateException("Failed to invoke @CheckProperty method " + method + ": " + e);
 					} catch (InvocationTargetException e) {
-						LOGGER.error(
-								"Failed to invoke @CheckProperty method " + method + ": " + e.getTargetException());
+						// GH-1938: TEMPORARY DEBUG LOGGING
+						// Only passing the exception to Logger#error(String,Throwable) does not emit the stack trace of
+						// the caught exception in all logger configurations; we therefore include the stack trace in
+						// the main message:
+						LOGGER.error("Failed to invoke @CheckProperty method " + method + ": "
+								+ e.getTargetException().getMessage() + "\n"
+								+ Throwables.getStackTraceAsString(e.getTargetException()));
 						e.getTargetException().printStackTrace();
 					}
 				}

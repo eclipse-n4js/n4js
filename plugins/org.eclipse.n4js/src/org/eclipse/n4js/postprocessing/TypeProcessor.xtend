@@ -143,7 +143,7 @@ public class TypeProcessor extends AbstractProcessor {
 			}
 		} catch (Throwable th) {
 			operationCanceledManager.propagateIfCancelException(th);
-			logErr("exception while obtaining type from type system: " + th.message);
+			logException("exception while obtaining type from type system: " + th.message, th);
 			th.printStackTrace
 			cache.storeType(node, TypeRefsFactory.eINSTANCE.createUnknownTypeRef);
 		}

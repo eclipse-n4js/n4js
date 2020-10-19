@@ -262,6 +262,9 @@ public class ResourceTaskContext {
 
 		mainResource = (XtextResource) mainResourceSet.createResource(mainURI);
 		document = new XDocument(version, content);
+		if (mainResource == null) {
+			throw new IllegalStateException("unable to create resource for URI: " + mainURI);
+		}
 
 		try (InputStream in = new LazyStringInputStream(document.getContents(), mainResource.getEncoding())) {
 			mainResource.load(in, null);

@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.validation
 
+import com.google.common.base.Throwables
 import com.google.inject.Inject
 import java.lang.reflect.Method
 import org.eclipse.emf.common.util.BasicDiagnostic
@@ -153,7 +154,10 @@ class N4JSValidator extends AbstractMessageAdjustingN4JSValidator {
 				super.invoke(state);
 			} catch (Exception e) {
 				operationCanceledManager.propagateIfCancelException(e);
-				logger.error("Error executing EValidator", e);
+				// GH-1938: TEMPORARY DEBUG LOGGING
+				// Only passing the exception to Logger#error(String,Throwable) does not emit the stack trace of the caught
+				// exception in all logger configurations; we therefore include the stack trace in the main message:
+				logger.error("exception while executing EValidator: " + e.message + "\n" + Throwables.getStackTraceAsString(e), e);
 				new RuntimeException(e).printStackTrace();
 
 				state.chain.add(
