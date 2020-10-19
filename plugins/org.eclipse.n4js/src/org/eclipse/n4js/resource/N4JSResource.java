@@ -1136,7 +1136,18 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 
 	@Override
 	public synchronized EObject getEObject(String uriFragment) {
-		EObject result = super.getEObject(uriFragment);
+		EObject result;
+		try {
+			result = super.getEObject(uriFragment);
+		} catch (Throwable th) {
+			// GH-1938: TEMPORARY DEBUG LOGGING
+			// The logging in LazyLinkingResource#getEObject(String) does not emit the stack trace of the caught
+			// exception in all logger configurations; we therefore log the error again and include the stack trace in
+			// the main message:
+			LOGGER.error("exception during proxy resolution in super class of N4JSResource:\n"
+					+ Throwables.getStackTraceAsString(th));
+			throw th;
+		}
 		if (result == null
 				&& isLoaded()
 				&& !isFullyProcessed()
