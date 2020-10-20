@@ -221,9 +221,19 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	 * actually exists on disk).
 	 */
 	protected boolean isSupported(URI uri) {
-		// TODO consider also checking the extension, etc. based on #languagesRegistry
-		// (e.g. extension must be registered and/or delegating to IResourceServiceProvider#canHandle(URI))
-		return uri != null && "file".equalsIgnoreCase(uri.scheme());
+		if (uri == null) {
+			return false;
+		}
+		// TODO consider also delegating to IResourceServiceProvider#canHandle(URI)
+		String scheme = uri.scheme();
+		if (languagesRegistry.getProtocolToFactoryMap().containsKey(scheme)) {
+			return true;
+		}
+		if ("file".equalsIgnoreCase(scheme)
+				&& languagesRegistry.getExtensionToFactoryMap().containsKey(uri.fileExtension())) {
+			return true;
+		}
+		return false;
 	}
 
 	@Override
