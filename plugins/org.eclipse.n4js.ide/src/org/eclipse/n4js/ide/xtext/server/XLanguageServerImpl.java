@@ -7,6 +7,7 @@
  */
 package org.eclipse.n4js.ide.xtext.server;
 
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
@@ -85,6 +87,7 @@ import org.eclipse.n4js.ide.server.HeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.ide.server.LspLogger;
 import org.eclipse.n4js.ide.server.util.ServerIncidentLogger;
 import org.eclipse.n4js.ide.xtext.server.issues.PublishingIssueAcceptor;
+import org.eclipse.n4js.ide.xtext.server.util.ParamHelper;
 import org.eclipse.xtext.ide.server.ICapabilitiesContributor;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 import org.eclipse.xtext.ide.server.ILanguageServerExtension;
@@ -95,9 +98,11 @@ import org.eclipse.xtext.ide.server.codeActions.ICodeActionService2;
 import org.eclipse.xtext.ide.server.codelens.ICodeLensResolver;
 import org.eclipse.xtext.ide.server.codelens.ICodeLensService;
 import org.eclipse.xtext.ide.server.commands.ExecutableCommandRegistry;
+import org.eclipse.xtext.ide.server.hover.IHoverService;
 import org.eclipse.xtext.ide.server.rename.IRenameService;
 import org.eclipse.xtext.ide.server.rename.IRenameService2;
 import org.eclipse.xtext.ide.server.semanticHighlight.SemanticHighlightingRegistry;
+import org.eclipse.xtext.ide.server.signatureHelp.ISignatureHelpService;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
@@ -136,6 +141,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Inject
 	private UriExtensions uriExtensions;
+
+	@Inject
+	private ParamHelper paramHelper;
 
 	@Inject
 	private IResourceServiceProvider.Registry languagesRegistry;
@@ -200,6 +208,22 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 			sorted.put(ext, languagesRegistry.getResourceServiceProvider(URI.createURI("synth:///file." + ext)));
 		}
 		return ImmutableSet.copyOf(sorted.values());
+	}
+
+	/**
+	 * Tells whether the given URI is supported by this server and its registered languages. If this method returns
+	 * <code>false</code> the LSP notification/request that contained the given URI will be ignored by this server.
+	 * Returns <code>false</code> when given <code>null</code>.
+	 * <p>
+	 * This method should be used only for an early, very simple sanity check of the URIs sent by the LSP client (e.g.
+	 * supported scheme and/or file extension), to avoid exceptions and invalid state deep inside the builder, etc.; it
+	 * should not be used for more sophisticated, expensive checks (e.g. whether a URI denotes a valid source file that
+	 * actually exists on disk).
+	 */
+	protected boolean isSupported(URI uri) {
+		// TODO consider also checking the extension, etc. based on #languagesRegistry
+		// (e.g. extension must be registered and/or delegating to IResourceServiceProvider#canHandle(URI))
+		return uri != null && "file".equalsIgnoreCase(uri.scheme());
 	}
 
 	@Override
@@ -413,27 +437,53 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public void didOpen(DidOpenTextDocumentParams params) {
+		if (!isSupported(paramHelper.getURI(params))) {
+			return;
+		}
 		lsFrontend.didOpen(params);
 	}
 
 	@Override
 	public void didChange(DidChangeTextDocumentParams params) {
+		if (!isSupported(paramHelper.getURI(params))) {
+			return;
+		}
 		lsFrontend.didChange(params);
 	}
 
 	@Override
 	public void didClose(DidCloseTextDocumentParams params) {
+		if (!isSupported(paramHelper.getURI(params))) {
+			return;
+		}
 		lsFrontend.didClose(params);
 	}
 
 	@Override
 	public void didSave(DidSaveTextDocumentParams params) {
+		if (!isSupported(paramHelper.getURI(params))) {
+			return;
+		}
 		lsFrontend.didSave(params);
 	}
 
 	@Override
 	public void didChangeWatchedFiles(DidChangeWatchedFilesParams params) {
-		lsFrontend.didChangeWatchedFiles(params);
+		DidChangeWatchedFilesParams paramsSupported = removeUnsupportedURIs(params);
+		if (paramsSupported.getChanges().isEmpty()) {
+			return;
+		}
+		lsFrontend.didChangeWatchedFiles(paramsSupported);
+	}
+
+	/**
+	 * Returns a new parameter object including all changes of the given parameter object that have a
+	 * {@link #isSupported(URI) supported} URI. Returned parameters may have an empty list of changes.
+	 */
+	protected DidChangeWatchedFilesParams removeUnsupportedURIs(DidChangeWatchedFilesParams params) {
+		return new DidChangeWatchedFilesParams(params.getChanges().stream()
+				.filter(change -> isSupported(paramHelper.getURI(change)))
+				.collect(Collectors.toList()));
 	}
 
 	@Override
@@ -443,35 +493,53 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public CompletableFuture<Either<List<CompletionItem>, CompletionList>> completion(CompletionParams params) {
+		if (!isSupported(paramHelper.getURI(params))) {
+			return CompletableFuture.completedFuture(Either.forLeft(Collections.emptyList()));
+		}
 		return lsFrontend.completion(params);
 	}
 
 	@Override
 	public CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> definition(
 			TextDocumentPositionParams params) {
+		if (!isSupported(paramHelper.getURI(params))) {
+			return CompletableFuture.completedFuture(Either.forLeft(Collections.emptyList()));
+		}
 		return lsFrontend.definition(params);
 	}
 
 	@Override
 	public CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> typeDefinition(
-			TextDocumentPositionParams position) {
-		return lsFrontend.typeDefinition(position);
+			TextDocumentPositionParams params) {
+		if (!isSupported(paramHelper.getURI(params))) {
+			return CompletableFuture.completedFuture(Either.forLeft(Collections.emptyList()));
+		}
+		return lsFrontend.typeDefinition(params);
 	}
 
 	@Override
 	public CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> implementation(
-			TextDocumentPositionParams position) {
-		return lsFrontend.implementation(position);
+			TextDocumentPositionParams params) {
+		if (!isSupported(paramHelper.getURI(params))) {
+			return CompletableFuture.completedFuture(Either.forLeft(Collections.emptyList()));
+		}
+		return lsFrontend.implementation(params);
 	}
 
 	@Override
 	public CompletableFuture<List<? extends Location>> references(ReferenceParams params) {
+		if (!isSupported(paramHelper.getURI(params))) {
+			return CompletableFuture.completedFuture(Collections.emptyList());
+		}
 		return lsFrontend.references(params);
 	}
 
 	@Override
 	public CompletableFuture<List<Either<SymbolInformation, DocumentSymbol>>> documentSymbol(
 			DocumentSymbolParams params) {
+		if (!isSupported(paramHelper.getURI(params))) {
+			return CompletableFuture.completedFuture(Collections.emptyList());
+		}
 		return lsFrontend.documentSymbol(params);
 	}
 
@@ -482,6 +550,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public CompletableFuture<Hover> hover(TextDocumentPositionParams params) {
+		if (!isSupported(paramHelper.getURI(params))) {
+			return CompletableFuture.completedFuture(IHoverService.EMPTY_HOVER);
+		}
 		return lsFrontend.hover(params);
 	}
 
@@ -492,21 +563,33 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public CompletableFuture<SignatureHelp> signatureHelp(TextDocumentPositionParams params) {
+		if (!isSupported(paramHelper.getURI(params))) {
+			return CompletableFuture.completedFuture(ISignatureHelpService.EMPTY);
+		}
 		return lsFrontend.signatureHelp(params);
 	}
 
 	@Override
 	public CompletableFuture<List<? extends DocumentHighlight>> documentHighlight(TextDocumentPositionParams params) {
+		if (!isSupported(paramHelper.getURI(params))) {
+			return CompletableFuture.completedFuture(Collections.emptyList());
+		}
 		return lsFrontend.documentHighlight(params);
 	}
 
 	@Override
 	public CompletableFuture<List<Either<Command, CodeAction>>> codeAction(CodeActionParams params) {
+		if (!isSupported(paramHelper.getURI(params))) {
+			return CompletableFuture.completedFuture(Collections.emptyList());
+		}
 		return lsFrontend.codeAction(params);
 	}
 
 	@Override
 	public CompletableFuture<List<? extends CodeLens>> codeLens(CodeLensParams params) {
+		if (!isSupported(paramHelper.getURI(params))) {
+			return CompletableFuture.completedFuture(Collections.emptyList());
+		}
 		return lsFrontend.codeLens(params);
 	}
 
@@ -517,11 +600,17 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public CompletableFuture<List<? extends TextEdit>> formatting(DocumentFormattingParams params) {
+		if (!isSupported(paramHelper.getURI(params))) {
+			return CompletableFuture.completedFuture(Collections.emptyList());
+		}
 		return lsFrontend.formatting(params);
 	}
 
 	@Override
 	public CompletableFuture<List<? extends TextEdit>> rangeFormatting(DocumentRangeFormattingParams params) {
+		if (!isSupported(paramHelper.getURI(params))) {
+			return CompletableFuture.completedFuture(Collections.emptyList());
+		}
 		return lsFrontend.formatting(params);
 	}
 
@@ -532,16 +621,27 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public CompletableFuture<List<? extends TextEdit>> onTypeFormatting(DocumentOnTypeFormattingParams params) {
+		if (!isSupported(paramHelper.getURI(params))) {
+			return CompletableFuture.completedFuture(Collections.emptyList());
+		}
 		return lsFrontend.onTypeFormatting(params);
 	}
 
 	@Override
 	public CompletableFuture<WorkspaceEdit> rename(RenameParams params) {
+		if (!isSupported(paramHelper.getURI(params))) {
+			return CompletableFuture.completedFuture(new WorkspaceEdit());
+		}
 		return lsFrontend.rename(params);
 	}
 
 	@Override
 	public CompletableFuture<Either<Range, PrepareRenameResult>> prepareRename(TextDocumentPositionParams params) {
+		if (!isSupported(paramHelper.getURI(params))) {
+			// LSP specification: "If null is returned then it is deemed that a ‘textDocument/rename’ request
+			// is not valid at the given position."
+			return CompletableFuture.completedFuture(Either.forLeft(null));
+		}
 		return lsFrontend.prepareRename(params);
 	}
 

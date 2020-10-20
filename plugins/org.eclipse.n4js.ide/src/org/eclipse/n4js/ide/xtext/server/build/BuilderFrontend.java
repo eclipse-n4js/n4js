@@ -21,11 +21,10 @@ import org.eclipse.lsp4j.DidChangeWatchedFilesParams;
 import org.eclipse.lsp4j.DidSaveTextDocumentParams;
 import org.eclipse.lsp4j.FileChangeType;
 import org.eclipse.lsp4j.FileEvent;
-import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.n4js.ide.xtext.server.QueuedExecutorService;
+import org.eclipse.n4js.ide.xtext.server.util.ParamHelper;
 import org.eclipse.n4js.xtext.server.LSPIssue;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
-import org.eclipse.xtext.ide.server.UriExtensions;
 
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
@@ -43,7 +42,7 @@ public class BuilderFrontend {
 	private QueuedExecutorService queuedExecutorService;
 
 	@Inject
-	private UriExtensions uriExtensions;
+	private ParamHelper paramHelper;
 
 	@Inject
 	private XWorkspaceManager workspaceManager;
@@ -132,7 +131,7 @@ public class BuilderFrontend {
 	 * body.
 	 */
 	public void didSave(DidSaveTextDocumentParams params) {
-		URI uri = getURI(params.getTextDocument());
+		URI uri = paramHelper.getURI(params);
 		if (!isSourceFile(concurrentIndex.getWorkspaceConfig(), uri)) {
 			return;
 		}
@@ -148,7 +147,7 @@ public class BuilderFrontend {
 		List<URI> deletedFiles = new ArrayList<>();
 		WorkspaceConfigSnapshot workspaceConfig = concurrentIndex.getWorkspaceConfig();
 		for (FileEvent fileEvent : params.getChanges()) {
-			URI uri = uriExtensions.toUri(fileEvent.getUri());
+			URI uri = paramHelper.getURI(fileEvent);
 			if (!isSourceFile(workspaceConfig, uri)) {
 				continue;
 			}
@@ -214,12 +213,5 @@ public class BuilderFrontend {
 	public CompletableFuture<ImmutableList<? extends LSPIssue>> asyncGetValidationIssues(URI uri) {
 		return queuedExecutorService.submit(XWorkspaceManager.class, "getValidationIssues",
 				cancelIndicator -> workspaceManager.getValidationIssues(uri));
-	}
-
-	/**
-	 * Obtain the URI from the given identifier.
-	 */
-	protected URI getURI(TextDocumentIdentifier documentIdentifier) {
-		return uriExtensions.toUri(documentIdentifier.getUri());
 	}
 }
