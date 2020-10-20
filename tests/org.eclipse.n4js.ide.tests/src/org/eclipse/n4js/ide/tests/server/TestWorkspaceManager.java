@@ -254,8 +254,12 @@ public class TestWorkspaceManager {
 			String projectName = moduleName.substring(0, moduleName.length() - (1 + N4JSGlobals.PACKAGE_JSON.length()));
 			File packageJsonFile = getPackageJsonFile(projectName);
 			return new FileURI(packageJsonFile);
+		} else if (moduleName != null && moduleName.contains(N4JSGlobals.PACKAGE_JSON)) {
+			// in this case, people probably messed up the special syntax for denoting package.json files:
+			Assert.fail("format for denoting package.json inside a module name argument is \"<project name>/"
+					+ N4JSGlobals.PACKAGE_JSON + "\", but argument was: \"" + moduleName + "\"");
 		}
-		// standard case for modules:
+		// standard case for modules ('moduleName' seems to denote the name of a module):
 		String extension = getN4JSNameAndExtension(moduleName).extension == null ? "." + DEFAULT_EXTENSION : "";
 		String moduleNameWithExtension = getModuleNameOrDefault(moduleName) + extension;
 		try {
