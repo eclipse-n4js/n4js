@@ -14,7 +14,6 @@ import com.google.inject.Inject
 import java.util.List
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.ResourceSet
-import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.MemberAccess
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.scoping.accessModifiers.MemberVisibilityChecker
@@ -47,6 +46,8 @@ import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.EcoreUtilN4
+import org.eclipse.n4js.utils.N4JSLanguageUtils
+import org.eclipse.n4js.utils.N4JSLanguageUtils.EnumKind
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.xtext.scoping.FilterWithErrorMarkerScope
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError
@@ -229,8 +230,8 @@ class MemberScopingHelper {
 			staticMembers = new DynamicPseudoScope(staticMembers.decorate(staticRequest, ttr))
 		}
 		// in addition, we need instance members of either Function (in case of constructor{T}) or Object (for type{T})
-		// except for @StringBased enums:
-		if (ctrStaticType instanceof TEnum && AnnotationDefinition.STRING_BASED.hasAnnotation(ctrStaticType)) {
+		// except for @NumberBased/@StringBased enums:
+		if (ctrStaticType instanceof TEnum && N4JSLanguageUtils.getEnumKind(ctrStaticType as TEnum) !== EnumKind.Normal) {
 			return staticMembers.decorate(staticRequest, ttr);
 		}
 		val MemberScopeRequest instanceRequest = request.enforceInstance;
@@ -361,12 +362,13 @@ class MemberScopingHelper {
 	 */
 	private def dispatch IScope membersOfType(TEnum enumeration, MemberScopeRequest request) {
 		val builtInTypeScope = BuiltInTypeScope.get(getResourceSet(enumeration, request.context));
-		// IDE-1221 select built-in type depending on whether this enumeration is tagged string-based
-		val TObjectPrototype specificEnumType = if (TypeSystemHelper.isStringBasedEnumeration(enumeration)) {
-				builtInTypeScope.n4StringBasedEnumType
-			} else {
-				builtInTypeScope.n4EnumType
-			};
+		// IDE-1221 select built-in type depending on whether this enumeration is tagged number-/string-based
+		val enumKind = N4JSLanguageUtils.getEnumKind(enumeration);
+		val TObjectPrototype specificEnumType = switch(enumKind) {
+			case Normal: builtInTypeScope.n4EnumType
+			case NumberBased: builtInTypeScope.n4NumberBasedEnumType
+			case StringBased: builtInTypeScope.n4StringBasedEnumType
+		};
 		return membersOfType(specificEnumType, request);
 	}
 
