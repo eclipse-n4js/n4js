@@ -16,7 +16,7 @@ import org.junit.Test
 
 import static org.junit.Assert.assertTrue
 
-class GH_1846_InitialBuildShowsMoreErrorsThanIncrementalBuild extends AbstractIdeTest {
+class GH_1846_InitialBuildShowsMoreErrorsThanIncrementalBuildTest extends AbstractIdeTest {
 
 	@Test
 	def void testMinimal_singleProject() {

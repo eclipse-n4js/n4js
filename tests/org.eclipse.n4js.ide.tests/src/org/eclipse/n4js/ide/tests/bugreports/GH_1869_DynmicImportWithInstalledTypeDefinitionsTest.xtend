@@ -13,7 +13,7 @@ package org.eclipse.n4js.ide.tests.bugreports
 import org.eclipse.n4js.ide.tests.server.AbstractIdeTest
 import org.junit.Test
 
-class GH_1869_DynmicImportWithInstalledTypeDefinitions extends AbstractIdeTest {
+class GH_1869_DynmicImportWithInstalledTypeDefinitionsTest extends AbstractIdeTest {
 
 	@Test
 	def void testGH1869() {

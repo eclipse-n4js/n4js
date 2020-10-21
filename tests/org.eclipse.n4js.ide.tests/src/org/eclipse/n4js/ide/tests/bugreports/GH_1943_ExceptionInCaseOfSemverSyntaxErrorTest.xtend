@@ -17,7 +17,7 @@ import org.junit.Test
  * This test is required, because the Xpect tests and Xpect UI tests for package.json files are green even when
  * the exceptions reported in GH-1943 are thrown.
  */
-class GH_1943_ExceptionInCaseOfSemverSyntaxError extends AbstractIdeTest {
+class GH_1943_ExceptionInCaseOfSemverSyntaxErrorTest extends AbstractIdeTest {
 
 	@Test
 	def void testVersionConstraintWithSyntaxError() {
