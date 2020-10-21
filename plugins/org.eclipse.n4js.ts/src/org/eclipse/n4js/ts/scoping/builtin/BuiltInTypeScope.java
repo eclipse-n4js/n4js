@@ -98,6 +98,10 @@ public final class BuiltInTypeScope extends EnumerableScope {
 	 */
 	public static final QualifiedName QN_NUMBER = QualifiedName.create("number");
 	/**
+	 * The object type name {@code Number}
+	 */
+	public static final QualifiedName QN_NUMBER_OBJECT = QualifiedName.create("Number");
+	/**
 	 * The primitive name {@code int}
 	 */
 	public static final QualifiedName QN_INT = QualifiedName.create("int");
@@ -180,6 +184,11 @@ public final class BuiltInTypeScope extends EnumerableScope {
 	 * The built-in name {@code N4Enum}
 	 */
 	public static final QualifiedName QN_N4ENUM = QualifiedName.create("N4Enum");
+
+	/**
+	 * The built-in name {@code N4NumberBasedEnum}
+	 */
+	public static final QualifiedName QN_N4NUMBERBASEDENUM = QualifiedName.create("N4NumberBasedEnum");
 
 	/**
 	 * The built-in name {@code N4StringBasedEnum}
@@ -303,6 +312,13 @@ public final class BuiltInTypeScope extends EnumerableScope {
 	 */
 	public final PrimitiveType getNumberType() {
 		return getEObjectOrProxy(QN_NUMBER);
+	}
+
+	/**
+	 * Returns the built-in object type "Number" (upper case!).
+	 */
+	public final TObjectPrototype getNumberObjectType() {
+		return getEObjectOrProxy(QN_NUMBER_OBJECT);
 	}
 
 	/**
@@ -435,6 +451,14 @@ public final class BuiltInTypeScope extends EnumerableScope {
 	 */
 	public final TObjectPrototype getN4EnumType() {
 		return getEObjectOrProxy(QN_N4ENUM);
+	}
+
+	/**
+	 * Returns the built-in type "N4NumberBasedEnum", implicit base class for all N4 number based enumerations, enums
+	 * annotated with @NumberBased.
+	 */
+	public final TObjectPrototype getN4NumberBasedEnumType() {
+		return getEObjectOrProxy(QN_N4NUMBERBASEDENUM);
 	}
 
 	/**

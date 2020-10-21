@@ -22,7 +22,6 @@ import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.FieldAccessor
 import org.eclipse.n4js.ts.types.PrimitiveType
-import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TField
 import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TMember
@@ -34,6 +33,7 @@ import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.ts.utils.TypeCompareUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.constraints.TypeConstraint
+import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.StructuralMembersTriple
 import org.eclipse.n4js.utils.StructuralTypesHelper
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
@@ -125,8 +125,8 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 	 */
 	def StructuralTypingResult isPrimitiveStructuralSubtype(RuleEnvironment G, TypeRef leftRaw, TypeRef right) {
 
-		// for the purpose of the rules implemented here, a string-based enum behaves like type 'string' (lower-case)
-		val left = changeStringBasedEnumToString(G, leftRaw);
+		// for the purpose of the rules implemented here, a number-/string-based enum behaves like type 'number'/'string' (lower-case)
+		val left = changeNumberOrStringBasedEnumToPrimitive(G, leftRaw);
 
 		// check if we're dealing with structural primitive types
 		val rightIsPrimitive = right.declaredType instanceof PrimitiveType;
@@ -157,15 +157,16 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 	}
 
 	/**
-	 * Replace type references pointing to the type of a <code>@StringBased</code> enum by a reference to built-in type
-	 * <code>string</code>, leaving all other types unchanged.
+	 * Replace type references pointing to the type of a <code>@NumberBased</code> / <code>@StringBased</code> enum by
+	 * a reference to built-in type <code>number</code> / <code>string</code>, leaving all other types unchanged.
 	 */
-	def private TypeRef changeStringBasedEnumToString(RuleEnvironment G, TypeRef typeRef) {
+	def private TypeRef changeNumberOrStringBasedEnumToPrimitive(RuleEnvironment G, TypeRef typeRef) {
 		val declType = typeRef.declaredType;
-		if (declType instanceof TEnum && AnnotationDefinition.STRING_BASED.hasAnnotation(declType)) {
-			return G.stringTypeRef;
+		return switch (N4JSLanguageUtils.getEnumKind(declType).orNull) {
+			case NumberBased: G.numberTypeRef
+			case StringBased: G.stringTypeRef
+			default: typeRef
 		}
-		return typeRef;
 	}
 
 	def private void checkMembers(TypeRef leftTypeRef, StructuralMembersTriple triple, StructTypingInfo info) {

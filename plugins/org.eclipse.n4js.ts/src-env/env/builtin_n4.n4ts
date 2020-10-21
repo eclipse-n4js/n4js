@@ -358,8 +358,29 @@ public class N4Object extends Object {
 
 
 /**
- * Base class for all @StringBased enumerations, literals are assumed to be static constant fields of concrete subclasses with the type of these subclasses.
- * @see N4Enum
+ * Base class for @NumberBased enumerations.
+ */
+public object N4NumberBasedEnum extends number {
+
+	/**
+	 * Disallow instantiation of this type by user code.
+	 */
+	private constructor():void;
+
+	/**
+	 * Returns a string representation of a concrete literal, it returns
+	 * the same result as value()
+	 */
+	 public toString(): string
+
+	/**
+	 * Returns array of concrete enum literals
+	 */
+	public static get literals(): Array<? extends this>
+}
+
+/**
+ * Base class for @StringBased enumerations.
  */
 public object N4StringBasedEnum extends string {
 
@@ -368,50 +389,16 @@ public object N4StringBasedEnum extends string {
 	 */
 	private constructor():void;
 
-	// - IDE-1221 Commented out since not applicable to Stringbased Enums
-	///**
-	// * Returns the name of a concrete literal
-	// */
-	//public get name(): string
-
-	// - IDE-1221 Commented out since not applicable to Stringbased Enums
-	///**
-	// * Returns the value of a concrete literal. If no value is
-	// * explicitly set, it is similar to the name.
-	// */
-	//public get value(): string
-
 	/**
 	 * Returns a string representation of a concrete literal, it returns
 	 * the same result as value()
 	 */
 	 public toString(): string
 
-	// Commented out since not applicable to Stringbased Enums
-	///**
-	// * Returns the meta class object of this enum literal for reflection.
-	// * The very same meta class object can be retrieved from the enumeration type directly.
-	// */
-	//public static get n4type(): N4StringBasedEnumType
-
 	/**
 	 * Returns array of concrete enum literals
 	 */
 	public static get literals(): Array<? extends this>
-
-	// - IDE-1221 Commented out since not applicable to Stringbased Enums
-	///**
-	// * Returns concrete enum literal that matches provided name,
-	// * if no match found returns undefined.
-	// */
-	//public static findLiteralByName(name: string): this
-
-	// Commented out since not applicable to Stringbased Enums
-	///**
-	// * Returns concrete enum literal that matches provided value,
-	// * if no match found returns undefined.
-	// */
-	//public static findLiteralByValue (value: string): this
 }
 
 

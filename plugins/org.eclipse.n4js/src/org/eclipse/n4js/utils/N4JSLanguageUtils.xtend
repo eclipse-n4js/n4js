@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.utils
 
+import com.google.common.base.Optional
 import java.io.IOException
 import java.io.InputStream
 import java.util.Properties
@@ -181,6 +182,41 @@ public class N4JSLanguageUtils {
 			throw new RuntimeException("properties file " + LANGUAGE_VERSION_PROPERTIES_FILE_NAME + " does not contain property " + propertyId);
 		}
 		return value;
+	}
+
+	static enum EnumKind {
+		Normal,
+		NumberBased,
+		StringBased
+	}
+
+	def static Optional<EnumKind> getEnumKind(EObject obj) {
+		return switch (obj) {
+			N4EnumDeclaration:
+				Optional.of(getEnumKind(obj))
+			TEnum:
+				Optional.of(getEnumKind(obj))
+			default:
+				Optional.absent()
+		};
+	}
+
+	def static EnumKind getEnumKind(N4EnumDeclaration enumDecl) {
+		if (AnnotationDefinition.NUMBER_BASED.hasAnnotation(enumDecl)) {
+			return EnumKind.NumberBased;
+		} else if (AnnotationDefinition.STRING_BASED.hasAnnotation(enumDecl)) {
+			return EnumKind.StringBased;
+		}
+		return EnumKind.Normal;
+	}
+
+	def static EnumKind getEnumKind(TEnum tEnum) {
+		if (AnnotationDefinition.NUMBER_BASED.hasAnnotation(tEnum)) {
+			return EnumKind.NumberBased;
+		} else if (AnnotationDefinition.STRING_BASED.hasAnnotation(tEnum)) {
+			return EnumKind.StringBased;
+		}
+		return EnumKind.Normal;
 	}
 
 	/**
@@ -948,9 +984,8 @@ public class N4JSLanguageUtils {
 		val isNonN4JSInterfaceInN4JSD = typeDecl instanceof N4InterfaceDeclaration
 			&& javaScriptVariantHelper.isExternalMode(typeDecl)
 			&& !AnnotationDefinition.N4JS.hasAnnotation(typeDecl as N4InterfaceDeclaration);
-		val isStringBasedEnum = typeDecl instanceof N4EnumDeclaration
-			&& AnnotationDefinition.STRING_BASED.hasAnnotation(typeDecl as N4EnumDeclaration);
-		return typeDecl !== null && !isNonN4JSInterfaceInN4JSD && !isStringBasedEnum;
+		val enumKind = getEnumKind(typeDecl).orNull();
+		return typeDecl !== null && !isNonN4JSInterfaceInN4JSD && (enumKind === null || enumKind === EnumKind.Normal);
 	}
 
 	/**
@@ -962,10 +997,10 @@ public class N4JSLanguageUtils {
 	 */
 	def static boolean hasRuntimeRepresentation(IdentifiableElement element, JavaScriptVariantHelper javaScriptVariantHelper) {
 		val isNonN4JSInterfaceInN4JSD = element instanceof TInterface
-			&& javaScriptVariantHelper.isExternalMode(element) && !AnnotationDefinition.N4JS.hasAnnotation(element as TInterface);
-		val isStringBasedEnum = element instanceof TEnum
-			&& AnnotationDefinition.STRING_BASED.hasAnnotation(element as TEnum);
-		return element !== null && !isNonN4JSInterfaceInN4JSD && !isStringBasedEnum;
+			&& javaScriptVariantHelper.isExternalMode(element)
+			&& !AnnotationDefinition.N4JS.hasAnnotation(element as TInterface);
+		val enumKind = getEnumKind(element).orNull();
+		return element !== null && !isNonN4JSInterfaceInN4JSD && (enumKind === null || enumKind === EnumKind.Normal);
 	}
 
 	/**
