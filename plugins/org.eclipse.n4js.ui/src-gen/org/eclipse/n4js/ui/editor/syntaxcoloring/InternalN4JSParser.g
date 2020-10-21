@@ -15195,6 +15195,31 @@ ruleNumericLiteralAsString
 )
 ;
 
+// Entry rule entryRuleSignedNumericLiteralAsString
+entryRuleSignedNumericLiteralAsString
+	:
+	ruleSignedNumericLiteralAsString
+	EOF;
+
+// Rule SignedNumericLiteralAsString
+ruleSignedNumericLiteralAsString
+@init {
+}
+:
+(
+	(
+		HyphenMinusKeyword_0_0=HyphenMinus {
+			announce($HyphenMinusKeyword_0_0, grammarAccess.getSignedNumericLiteralAsStringAccess().getHyphenMinusKeyword_0_0());
+		}
+		    |
+		PlusSignKeyword_0_1=PlusSign {
+			announce($PlusSignKeyword_0_1, grammarAccess.getSignedNumericLiteralAsStringAccess().getPlusSignKeyword_0_1());
+		}
+	)?
+	ruleNumericLiteralAsString
+)
+;
+
 // Entry rule entryRuleIdentifierOrThis
 entryRuleIdentifierOrThis
 	:
@@ -16212,9 +16237,19 @@ ruleN4EnumLiteral
 		}
 		(
 			(
-				ValueSTRINGTerminalRuleCall_1_1_0=RULE_STRING{
-					announce($ValueSTRINGTerminalRuleCall_1_1_0, grammarAccess.getN4EnumLiteralAccess().getValueAssignment_1_1());
-				}
+				(
+					ValueSTRINGTerminalRuleCall_1_1_0_0=RULE_STRING{
+						announce($ValueSTRINGTerminalRuleCall_1_1_0_0, grammarAccess.getN4EnumLiteralAccess().getValueAssignment_1_1_0());
+					}
+				)
+			)
+			    |
+			(
+				(
+					ValueSignedNumericLiteralAsStringParserRuleCall_1_1_1_0=ruleSignedNumericLiteralAsString{
+						announce($ValueSignedNumericLiteralAsStringParserRuleCall_1_1_1_0.start, $ValueSignedNumericLiteralAsStringParserRuleCall_1_1_1_0.stop, grammarAccess.getN4EnumLiteralAccess().getValueAssignment_1_1_1());
+					}
+				)
 			)
 		)
 	)?

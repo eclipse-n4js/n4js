@@ -6463,6 +6463,16 @@ ruleNumericLiteralAsString:
 	)
 ;
 
+// Rule SignedNumericLiteralAsString
+ruleSignedNumericLiteralAsString:
+	(
+		'-'
+		    |
+		'+'
+	)?
+	ruleNumericLiteralAsString
+;
+
 // Rule IdentifierOrThis
 ruleIdentifierOrThis:
 	(
@@ -6828,7 +6838,11 @@ ruleN4EnumLiteral:
 	ruleIdentifierName
 	(
 		':'
-		RULE_STRING
+		(
+			RULE_STRING
+			    |
+			ruleSignedNumericLiteralAsString
+		)
 	)?
 ;
 

@@ -90,6 +90,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getBooleanLiteralAccess().getAlternatives_1(), "rule__BooleanLiteral__Alternatives_1");
 			builder.put(grammarAccess.getNumericLiteralAccess().getAlternatives(), "rule__NumericLiteral__Alternatives");
 			builder.put(grammarAccess.getNumericLiteralAsStringAccess().getAlternatives(), "rule__NumericLiteralAsString__Alternatives");
+			builder.put(grammarAccess.getSignedNumericLiteralAsStringAccess().getAlternatives_0(), "rule__SignedNumericLiteralAsString__Alternatives_0");
 			builder.put(grammarAccess.getIdentifierOrThisAccess().getAlternatives(), "rule__IdentifierOrThis__Alternatives");
 			builder.put(grammarAccess.getAnnotationNameAccess().getAlternatives(), "rule__AnnotationName__Alternatives");
 			builder.put(grammarAccess.getREGEX_LITERALAccess().getAlternatives_0(), "rule__REGEX_LITERAL__Alternatives_0");
@@ -98,6 +99,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getClassExtendsImplementsAccess().getAlternatives(), "rule__ClassExtendsImplements__Alternatives");
 			builder.put(grammarAccess.getClassExtendsClauseAccess().getAlternatives_1(), "rule__ClassExtendsClause__Alternatives_1");
 			builder.put(grammarAccess.getInterfaceExtendsListAccess().getAlternatives_0(), "rule__InterfaceExtendsList__Alternatives_0");
+			builder.put(grammarAccess.getN4EnumLiteralAccess().getAlternatives_1_1(), "rule__N4EnumLiteral__Alternatives_1_1");
 			builder.put(grammarAccess.getN4MemberDeclarationAccess().getAlternatives(), "rule__N4MemberDeclaration__Alternatives");
 			builder.put(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getAlternatives_1(), "rule__AnnotatedN4MemberDeclaration__Alternatives_1");
 			builder.put(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getAlternatives_1_2_0_0_4(), "rule__AnnotatedN4MemberDeclaration__Alternatives_1_2_0_0_4");
@@ -447,6 +449,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getTemplateMiddleAccess().getGroup(), "rule__TemplateMiddle__Group__0");
 			builder.put(grammarAccess.getNullLiteralAccess().getGroup(), "rule__NullLiteral__Group__0");
 			builder.put(grammarAccess.getBooleanLiteralAccess().getGroup(), "rule__BooleanLiteral__Group__0");
+			builder.put(grammarAccess.getSignedNumericLiteralAsStringAccess().getGroup(), "rule__SignedNumericLiteralAsString__Group__0");
 			builder.put(grammarAccess.getREGEX_LITERALAccess().getGroup(), "rule__REGEX_LITERAL__Group__0");
 			builder.put(grammarAccess.getAnnotationAccess().getGroup(), "rule__Annotation__Group__0");
 			builder.put(grammarAccess.getScriptAnnotationAccess().getGroup(), "rule__ScriptAnnotation__Group__0");
@@ -938,7 +941,8 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getN4EnumDeclarationAccess().getLiteralsAssignment_2_0(), "rule__N4EnumDeclaration__LiteralsAssignment_2_0");
 			builder.put(grammarAccess.getN4EnumDeclarationAccess().getLiteralsAssignment_2_1_1(), "rule__N4EnumDeclaration__LiteralsAssignment_2_1_1");
 			builder.put(grammarAccess.getN4EnumLiteralAccess().getNameAssignment_0(), "rule__N4EnumLiteral__NameAssignment_0");
-			builder.put(grammarAccess.getN4EnumLiteralAccess().getValueAssignment_1_1(), "rule__N4EnumLiteral__ValueAssignment_1_1");
+			builder.put(grammarAccess.getN4EnumLiteralAccess().getValueAssignment_1_1_0(), "rule__N4EnumLiteral__ValueAssignment_1_1_0");
+			builder.put(grammarAccess.getN4EnumLiteralAccess().getValueAssignment_1_1_1(), "rule__N4EnumLiteral__ValueAssignment_1_1_1");
 			builder.put(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getDeclaredModifiersAssignment_1_0_0_0_1(), "rule__AnnotatedN4MemberDeclaration__DeclaredModifiersAssignment_1_0_0_0_1");
 			builder.put(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getBodyAssignment_1_0_1(), "rule__AnnotatedN4MemberDeclaration__BodyAssignment_1_0_1");
 			builder.put(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getDeclaredModifiersAssignment_1_1_0_0_1(), "rule__AnnotatedN4MemberDeclaration__DeclaredModifiersAssignment_1_1_0_0_1");

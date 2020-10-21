@@ -27069,6 +27069,48 @@ ruleNumericLiteralAsString returns [AntlrDatatypeRuleToken current=new AntlrData
 	)
 ;
 
+// Entry rule entryRuleSignedNumericLiteralAsString
+entryRuleSignedNumericLiteralAsString returns [String current=null]:
+	{ newCompositeNode(grammarAccess.getSignedNumericLiteralAsStringRule()); }
+	iv_ruleSignedNumericLiteralAsString=ruleSignedNumericLiteralAsString
+	{ $current=$iv_ruleSignedNumericLiteralAsString.current.getText(); }
+	EOF;
+
+// Rule SignedNumericLiteralAsString
+ruleSignedNumericLiteralAsString returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			kw=HyphenMinus
+			{
+				$current.merge(kw);
+				newLeafNode(kw, grammarAccess.getSignedNumericLiteralAsStringAccess().getHyphenMinusKeyword_0_0());
+			}
+			    |
+			kw=PlusSign
+			{
+				$current.merge(kw);
+				newLeafNode(kw, grammarAccess.getSignedNumericLiteralAsStringAccess().getPlusSignKeyword_0_1());
+			}
+		)?
+		{
+			newCompositeNode(grammarAccess.getSignedNumericLiteralAsStringAccess().getNumericLiteralAsStringParserRuleCall_1());
+		}
+		this_NumericLiteralAsString_2=ruleNumericLiteralAsString
+		{
+			$current.merge(this_NumericLiteralAsString_2);
+		}
+		{
+			afterParserOrEnumRuleCall();
+		}
+	)
+;
+
 // Entry rule entryRuleIdentifierOrThis
 entryRuleIdentifierOrThis returns [String current=null]:
 	{ newCompositeNode(grammarAccess.getIdentifierOrThisRule()); }
@@ -29017,20 +29059,42 @@ ruleN4EnumLiteral returns [EObject current=null]
 			}
 			(
 				(
-					lv_value_2_0=RULE_STRING
-					{
-						newLeafNode(lv_value_2_0, grammarAccess.getN4EnumLiteralAccess().getValueSTRINGTerminalRuleCall_1_1_0());
-					}
-					{
-						if ($current==null) {
-							$current = createModelElement(grammarAccess.getN4EnumLiteralRule());
+					(
+						lv_value_2_0=RULE_STRING
+						{
+							newLeafNode(lv_value_2_0, grammarAccess.getN4EnumLiteralAccess().getValueSTRINGTerminalRuleCall_1_1_0_0());
 						}
-						setWithLastConsumed(
-							$current,
-							"value",
-							lv_value_2_0,
-							"org.eclipse.n4js.N4JS.STRING");
-					}
+						{
+							if ($current==null) {
+								$current = createModelElement(grammarAccess.getN4EnumLiteralRule());
+							}
+							setWithLastConsumed(
+								$current,
+								"value",
+								lv_value_2_0,
+								"org.eclipse.n4js.N4JS.STRING");
+						}
+					)
+				)
+				    |
+				(
+					(
+						{
+							newCompositeNode(grammarAccess.getN4EnumLiteralAccess().getValueSignedNumericLiteralAsStringParserRuleCall_1_1_1_0());
+						}
+						lv_value_3_0=ruleSignedNumericLiteralAsString
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getN4EnumLiteralRule());
+							}
+							set(
+								$current,
+								"value",
+								lv_value_3_0,
+								"org.eclipse.n4js.N4JS.SignedNumericLiteralAsString");
+							afterParserOrEnumRuleCall();
+						}
+					)
 				)
 			)
 		)?

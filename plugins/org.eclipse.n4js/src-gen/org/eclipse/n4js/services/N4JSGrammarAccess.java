@@ -7349,6 +7349,33 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//SCIENTIFIC_INT
 		public RuleCall getSCIENTIFIC_INTTerminalRuleCall_4() { return cSCIENTIFIC_INTTerminalRuleCall_4; }
 	}
+	public class SignedNumericLiteralAsStringElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.SignedNumericLiteralAsString");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Alternatives cAlternatives_0 = (Alternatives)cGroup.eContents().get(0);
+		private final Keyword cHyphenMinusKeyword_0_0 = (Keyword)cAlternatives_0.eContents().get(0);
+		private final Keyword cPlusSignKeyword_0_1 = (Keyword)cAlternatives_0.eContents().get(1);
+		private final RuleCall cNumericLiteralAsStringParserRuleCall_1 = (RuleCall)cGroup.eContents().get(1);
+		
+		//SignedNumericLiteralAsString:
+		//	('-' | '+')? NumericLiteralAsString;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//('-' | '+')? NumericLiteralAsString
+		public Group getGroup() { return cGroup; }
+		
+		//('-' | '+')?
+		public Alternatives getAlternatives_0() { return cAlternatives_0; }
+		
+		//'-'
+		public Keyword getHyphenMinusKeyword_0_0() { return cHyphenMinusKeyword_0_0; }
+		
+		//'+'
+		public Keyword getPlusSignKeyword_0_1() { return cPlusSignKeyword_0_1; }
+		
+		//NumericLiteralAsString
+		public RuleCall getNumericLiteralAsStringParserRuleCall_1() { return cNumericLiteralAsStringParserRuleCall_1; }
+	}
 	public class IdentifierOrThisElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.IdentifierOrThis");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
@@ -8316,16 +8343,17 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cNameIdentifierNameParserRuleCall_0_0 = (RuleCall)cNameAssignment_0.eContents().get(0);
 		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
 		private final Keyword cColonKeyword_1_0 = (Keyword)cGroup_1.eContents().get(0);
-		private final Assignment cValueAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
-		private final RuleCall cValueSTRINGTerminalRuleCall_1_1_0 = (RuleCall)cValueAssignment_1_1.eContents().get(0);
+		private final Alternatives cAlternatives_1_1 = (Alternatives)cGroup_1.eContents().get(1);
+		private final Assignment cValueAssignment_1_1_0 = (Assignment)cAlternatives_1_1.eContents().get(0);
+		private final RuleCall cValueSTRINGTerminalRuleCall_1_1_0_0 = (RuleCall)cValueAssignment_1_1_0.eContents().get(0);
+		private final Assignment cValueAssignment_1_1_1 = (Assignment)cAlternatives_1_1.eContents().get(1);
+		private final RuleCall cValueSignedNumericLiteralAsStringParserRuleCall_1_1_1_0 = (RuleCall)cValueAssignment_1_1_1.eContents().get(0);
 		
-		///*
-		// * Only upper case literals are allows, this is to be checked by the validator
-		// */ N4EnumLiteral:
-		//	name=IdentifierName (':' value=STRING)?;
+		//N4EnumLiteral:
+		//	name=IdentifierName (':' (value=STRING | value=SignedNumericLiteralAsString))?;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//name=IdentifierName (':' value=STRING)?
+		//name=IdentifierName (':' (value=STRING | value=SignedNumericLiteralAsString))?
 		public Group getGroup() { return cGroup; }
 		
 		//name=IdentifierName
@@ -8334,17 +8362,26 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//IdentifierName
 		public RuleCall getNameIdentifierNameParserRuleCall_0_0() { return cNameIdentifierNameParserRuleCall_0_0; }
 		
-		//(':' value=STRING)?
+		//(':' (value=STRING | value=SignedNumericLiteralAsString))?
 		public Group getGroup_1() { return cGroup_1; }
 		
 		//':'
 		public Keyword getColonKeyword_1_0() { return cColonKeyword_1_0; }
 		
+		//(value=STRING | value=SignedNumericLiteralAsString)
+		public Alternatives getAlternatives_1_1() { return cAlternatives_1_1; }
+		
 		//value=STRING
-		public Assignment getValueAssignment_1_1() { return cValueAssignment_1_1; }
+		public Assignment getValueAssignment_1_1_0() { return cValueAssignment_1_1_0; }
 		
 		//STRING
-		public RuleCall getValueSTRINGTerminalRuleCall_1_1_0() { return cValueSTRINGTerminalRuleCall_1_1_0; }
+		public RuleCall getValueSTRINGTerminalRuleCall_1_1_0_0() { return cValueSTRINGTerminalRuleCall_1_1_0_0; }
+		
+		//value=SignedNumericLiteralAsString
+		public Assignment getValueAssignment_1_1_1() { return cValueAssignment_1_1_1; }
+		
+		//SignedNumericLiteralAsString
+		public RuleCall getValueSignedNumericLiteralAsStringParserRuleCall_1_1_1_0() { return cValueSignedNumericLiteralAsStringParserRuleCall_1_1_1_0; }
 	}
 	public class N4MemberDeclarationElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.N4MemberDeclaration");
@@ -8356,8 +8393,6 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cN4FieldDeclarationParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
 		private final RuleCall cN4CallableConstructorDeclarationParserRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
 		
-		//// TODO jvp: order matters, seems odd. What about object literal getters and setter?
-		//// TODO sz: what about it?
 		//N4MemberDeclaration <Yield>:
 		//	AnnotatedN4MemberDeclaration<Yield> | N4GetterDeclaration<Yield> | N4SetterDeclaration<Yield> |
 		//	N4MethodDeclaration<Yield> | N4FieldDeclaration<Yield> | N4CallableConstructorDeclaration<Yield>;
@@ -10444,6 +10479,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	private final ScientificIntLiteralElements pScientificIntLiteral;
 	private final RegularExpressionLiteralElements pRegularExpressionLiteral;
 	private final NumericLiteralAsStringElements pNumericLiteralAsString;
+	private final SignedNumericLiteralAsStringElements pSignedNumericLiteralAsString;
 	private final IdentifierOrThisElements pIdentifierOrThis;
 	private final AnnotationNameElements pAnnotationName;
 	private final TerminalRule tDOUBLE;
@@ -10700,6 +10736,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		this.pScientificIntLiteral = new ScientificIntLiteralElements();
 		this.pRegularExpressionLiteral = new RegularExpressionLiteralElements();
 		this.pNumericLiteralAsString = new NumericLiteralAsStringElements();
+		this.pSignedNumericLiteralAsString = new SignedNumericLiteralAsStringElements();
 		this.pIdentifierOrThis = new IdentifierOrThisElements();
 		this.pAnnotationName = new AnnotationNameElements();
 		this.tDOUBLE = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.DOUBLE");
@@ -12658,6 +12695,16 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		return getNumericLiteralAsStringAccess().getRule();
 	}
 	
+	//SignedNumericLiteralAsString:
+	//	('-' | '+')? NumericLiteralAsString;
+	public SignedNumericLiteralAsStringElements getSignedNumericLiteralAsStringAccess() {
+		return pSignedNumericLiteralAsString;
+	}
+	
+	public ParserRule getSignedNumericLiteralAsStringRule() {
+		return getSignedNumericLiteralAsStringAccess().getRule();
+	}
+	
 	//IdentifierOrThis:
 	//	IDENTIFIER
 	//	| 'This'
@@ -13169,10 +13216,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		return getN4EnumDeclarationAccess().getRule();
 	}
 	
-	///*
-	// * Only upper case literals are allows, this is to be checked by the validator
-	// */ N4EnumLiteral:
-	//	name=IdentifierName (':' value=STRING)?;
+	//N4EnumLiteral:
+	//	name=IdentifierName (':' (value=STRING | value=SignedNumericLiteralAsString))?;
 	public N4EnumLiteralElements getN4EnumLiteralAccess() {
 		return pN4EnumLiteral;
 	}
@@ -13191,8 +13236,6 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		return getN4ModifierAccess().getRule();
 	}
 	
-	//// TODO jvp: order matters, seems odd. What about object literal getters and setter?
-	//// TODO sz: what about it?
 	//N4MemberDeclaration <Yield>:
 	//	AnnotatedN4MemberDeclaration<Yield> | N4GetterDeclaration<Yield> | N4SetterDeclaration<Yield> |
 	//	N4MethodDeclaration<Yield> | N4FieldDeclaration<Yield> | N4CallableConstructorDeclaration<Yield>;

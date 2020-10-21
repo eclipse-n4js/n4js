@@ -3694,13 +3694,13 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *                 bogusTypeRef=TypeRefWithModifiers? 
 	 *                 (declaredName=LiteralOrComputedPropertyName | declaredName=LiteralOrComputedPropertyName)
 	 *             ) | 
+	 *             (declaredModifiers+=N4Modifier+ bogusTypeRef=TypeRefWithModifiers? generator?='*' declaredName=LiteralOrComputedPropertyName) | 
+	 *             (declaredModifiers+=N4Modifier+ declaredName=LiteralOrComputedPropertyName) | 
 	 *             (
 	 *                 (declaredModifiers+=N4Modifier+ | (declaredModifiers+=N4Modifier+ bogusTypeRef=TypeRefWithModifiers?)) 
 	 *                 generator?='*' 
 	 *                 declaredName=LiteralOrComputedPropertyName
-	 *             ) | 
-	 *             (declaredModifiers+=N4Modifier+ declaredName=LiteralOrComputedPropertyName) | 
-	 *             (declaredModifiers+=N4Modifier+ bogusTypeRef=TypeRefWithModifiers? generator?='*' declaredName=LiteralOrComputedPropertyName)
+	 *             )
 	 *         )? 
 	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
 	 *         returnTypeRef=TypeRef? 
@@ -19925,7 +19925,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     N4EnumLiteral returns N4EnumLiteral
 	 *
 	 * Constraint:
-	 *     (name=IdentifierName value=STRING?)
+	 *     (name=IdentifierName (value=STRING | value=SignedNumericLiteralAsString)?)
 	 */
 	protected void sequence_N4EnumLiteral(ISerializationContext context, N4EnumLiteral semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
