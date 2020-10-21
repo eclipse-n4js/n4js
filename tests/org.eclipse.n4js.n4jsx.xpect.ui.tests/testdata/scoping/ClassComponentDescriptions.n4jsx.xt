@@ -59,7 +59,7 @@ export public class MyComponent extends React.Component<~React.ComponentProps wi
 		LowerComponent, Math, MigrationContext, MigrationController, MyComponent, N4Accessor,
 		N4Annotation, N4ApiNotImplementedError, N4Class, N4Classifier, N4DataField, N4Element,
 		N4Enum, N4EnumType, N4Interface, N4Member, N4Method, N4NamedElement, N4Object,
-		N4Provider, N4StringBasedEnum, N4StringBasedEnumType, N4Type, NaN, Number, Object, Promise,
+		N4Provider, N4StringBasedEnum, N4Type, NaN, Number, Object, Promise,
 		RangeError, React, ReferenceError, RegExp,
 		String, Symbol, SyntaxError, TEMP_ReturnTypeOfMatchExec, TypeError, URIError,
 		__proto__, arguments, console, constText, constructor,
