@@ -995,6 +995,12 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		assertIssues(Collections.emptyMap());
 	}
 
+	/** Both {@link #assertNoErrorsInLog()} and {@link #assertNoErrorsInOutput()}. */
+	protected void assertNoErrorsInLogOrOutput() {
+		assertNoErrorsInLog();
+		assertNoErrorsInOutput();
+	}
+
 	/** Asserts that there are no ERRORs in the LSP log. */
 	protected void assertNoErrorsInLog() {
 		for (MessageParams msg : languageClient.getLogMessages()) {
