@@ -42,10 +42,12 @@ import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensi
 class EnumAccessTransformation extends Transformation {
 
 	private final Map<TEnum, VariableDeclaration> literalsConstants = newHashMap; // need not be linked
+	private TMember member_NumberBasedEnum_literals;
 	private TMember member_StringBasedEnum_literals;
 
 
 	override assertPreConditions() {
+		assertNotNull("member of built-in type not found: NumberBasedEnum#literals", member_NumberBasedEnum_literals);
 		assertNotNull("member of built-in type not found: StringBasedEnum#literals", member_StringBasedEnum_literals);
 	}
 
@@ -53,6 +55,7 @@ class EnumAccessTransformation extends Transformation {
 	}
 
 	override analyze() {
+		member_NumberBasedEnum_literals = state.G.n4NumberBasedEnumType.findOwnedMember("literals", false, true);
 		member_StringBasedEnum_literals = state.G.n4StringBasedEnumType.findOwnedMember("literals", false, true);
 	}
 
@@ -66,7 +69,7 @@ class EnumAccessTransformation extends Transformation {
 		switch prop {
 			TEnumLiteral:
 				resolveOriginalNumberOrStringBasedEnum(expr).transformEnumLiteralAccess(expr, prop)
-			case prop === member_StringBasedEnum_literals:
+			case prop === member_StringBasedEnum_literals || prop === member_NumberBasedEnum_literals:
 				resolveOriginalNumberOrStringBasedEnum(expr).transformEnumLiteralsConstantAccess(expr)
 		}
 	}
