@@ -1014,6 +1014,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 	private static class ValidationProjectReference {
 		N4JSProjectName referencedProjectName;
 		NPMVersionRequirement npmVersion;
+		boolean hasSyntaxErrors;
 		EObject astRepresentation;
 	}
 	
@@ -1052,8 +1053,9 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 			if (pair.value instanceof JSONStringLiteral) {
 				val stringLit = pair.value as JSONStringLiteral;
 				val prjID = new N4JSProjectName(pair.name);
-				val npmVersion = semverHelper.parse(stringLit.value);
-				val vpr = new ValidationProjectReference(prjID, npmVersion, pair);
+				val parseResult = semverHelper.getParseResult(stringLit.value);
+				val npmVersion = semverHelper.parse(parseResult);
+				val vpr = new ValidationProjectReference(prjID, npmVersion, parseResult.hasSyntaxErrors, pair);
 				vprs.add(vpr);
 			}
 		}
@@ -1069,7 +1071,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 	 */ 
 	private def List<ValidationProjectReference> getReferencesFromJSONStringLiteral(JSONValue value) {
 		if (value instanceof JSONStringLiteral) {
-			return #[new ValidationProjectReference(new N4JSProjectName(value.value), null, value)];
+			return #[new ValidationProjectReference(new N4JSProjectName(value.value), null, false, value)];
 		} else {
 			emptyList;
 		}
@@ -1274,6 +1276,10 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 	private def checkVersions(IN4JSProject curPrj, ValidationProjectReference ref, N4JSProjectName id, Map<N4JSProjectName, IN4JSProject> allProjects) {
 		val desiredVersion = ref.npmVersion;
 		if (desiredVersion === null) {
+			return;
+		}
+		if (ref.hasSyntaxErrors) {
+			// another validation will show an issue for the syntax error, see PackageJsonValidatorExtension#checkVersion(JSONValue)
 			return;
 		}
 
