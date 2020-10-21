@@ -65,8 +65,8 @@ class EnumDeclarationTransformation extends Transformation {
 	}
 
 	def private void transformEnumDecl(N4EnumDeclaration enumDecl) {
-		if(enumDecl.isStringBased) {
-			// declarations of string-based enums are simply removed
+		if(enumDecl.isNumberBased || enumDecl.isStringBased) {
+			// declarations of number/string-based enums are simply removed
 			// (they do not have a representation in the output code)
 			val root = enumDecl.orContainingExportDeclaration;
 			remove(root);
@@ -129,6 +129,10 @@ class EnumDeclarationTransformation extends Transformation {
 				if (literal.value !== null) _StringLiteral(literal.value)
 			)
 		);
+	}
+
+	def private boolean isNumberBased(N4EnumDeclaration enumDecl) {
+		return AnnotationDefinition.NUMBER_BASED.hasAnnotation(enumDecl);
 	}
 
 	def private boolean isStringBased(N4EnumDeclaration enumDecl) {

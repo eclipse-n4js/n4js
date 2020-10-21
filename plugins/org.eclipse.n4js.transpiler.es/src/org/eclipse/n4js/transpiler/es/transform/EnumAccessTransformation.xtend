@@ -10,10 +10,13 @@
  */
 package org.eclipse.n4js.transpiler.es.transform
 
+import java.math.BigDecimal
 import java.util.Map
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ImportDeclaration
+import org.eclipse.n4js.n4JS.Literal
+import org.eclipse.n4js.n4JS.NumericLiteral
 import org.eclipse.n4js.n4JS.ParenExpression
 import org.eclipse.n4js.n4JS.StringLiteral
 import org.eclipse.n4js.n4JS.VariableDeclaration
@@ -73,10 +76,9 @@ class EnumAccessTransformation extends Transformation {
 	 * @param expr expression which will have value generated.
 	 * @param prop enum literal from which value is generated.
 	 */
-	private def transformEnumLiteralAccess(TEnum originalEnum, ParameterizedPropertyAccessExpression_IM expr,
-		TEnumLiteral prop) {
+	private def transformEnumLiteralAccess(TEnum originalEnum, ParameterizedPropertyAccessExpression_IM expr, TEnumLiteral prop) {
 		if (originalEnum !== null && expr !== null && prop !== null) {
-			replace(expr, enumLiteralToStringLiteral(prop));
+			replace(expr, enumLiteralToNumericOrStringLiteral(prop));
 		}
 	}
 
@@ -102,10 +104,10 @@ class EnumAccessTransformation extends Transformation {
 	def private TEnum resolveOriginalStringBasedEnum(ParameterizedPropertyAccessExpression_IM pex) {
 		val targetEnumSTE = resolveOriginalExpressionTarget(pex.target)
 		if (targetEnumSTE instanceof SymbolTableEntryOriginal) {
-			val orginal = targetEnumSTE.originalTarget;
-			if (orginal instanceof TEnum) {
-				if (orginal.isStringBased) {
-					return orginal;
+			val original = targetEnumSTE.originalTarget;
+			if (original instanceof TEnum) {
+				if (original.isNumberBased || original.isStringBased) {
+					return original;
 				}
 			}
 		}
@@ -143,7 +145,7 @@ class EnumAccessTransformation extends Transformation {
 
 	def private VariableDeclaration createLiteralsConstant(TEnum tEnum) {
 		val name = findUniqueNameForLiteralsConstant(tEnum);
-		val vdecl = _VariableDeclaration(name, _ArrLit(tEnum.literals.map[enumLiteralToStringLiteral]));
+		val vdecl = _VariableDeclaration(name, _ArrLit(tEnum.literals.map[enumLiteralToNumericOrStringLiteral]));
 		val vstmnt = _VariableStatement(vdecl);
 		val lastImport = state.im.scriptElements.filter(ImportDeclaration).last;
 		if (lastImport !== null) {
@@ -170,11 +172,44 @@ class EnumAccessTransformation extends Transformation {
 		return newName;
 	}
 
+	def private boolean isNumberBased(TEnum tEnum) {
+		return AnnotationDefinition.NUMBER_BASED.hasAnnotation(tEnum);
+	}
+
 	def private boolean isStringBased(TEnum tEnum) {
 		return AnnotationDefinition.STRING_BASED.hasAnnotation(tEnum);
 	}
 
+	/** Assumes the given literal belongs to an enum that is either <code>@NumberBased</code> or <code>@StringBased</code>. */
+	def private Literal enumLiteralToNumericOrStringLiteral(TEnumLiteral enumLiteral) {
+		val tEnum = enumLiteral.eContainer() as TEnum;
+		if (tEnum.isNumberBased) {
+			return enumLiteralToNumericLiteral(enumLiteral)
+		}
+		return enumLiteralToStringLiteral(enumLiteral)
+	}
+
+	def private NumericLiteral enumLiteralToNumericLiteral(TEnumLiteral enumLiteral) {
+		val num = parseBigDecimal(enumLiteral?.value); // note: types builder will set a default value in case of @NumberBased enums!
+		if (num === null) {
+			// validations prevent this from ever happening
+			throw new IllegalStateException("value of literal of @NumberBased enum cannot be converted to BigDecimal: " + enumLiteral?.value);
+		}
+		return _NumericLiteral(num);
+	}
+
 	def private StringLiteral enumLiteralToStringLiteral(TEnumLiteral enumLiteral) {
 		return _StringLiteral(enumLiteral?.value ?: enumLiteral.name);
+	}
+
+	def private BigDecimal parseBigDecimal(String bigDecimalStr) {
+		if (bigDecimalStr === null) {
+			return null;
+		}
+		try {
+			return new BigDecimal(bigDecimalStr);
+		} catch (NumberFormatException e) {
+			return null;
+		}
 	}
 }

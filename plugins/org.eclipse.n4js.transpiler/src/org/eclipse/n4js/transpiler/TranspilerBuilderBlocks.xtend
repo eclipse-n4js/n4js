@@ -723,8 +723,12 @@ public class TranspilerBuilderBlocks
 	}
 
 	public static def NumericLiteral _NumericLiteral(int num) {
+		return _NumericLiteral(BigDecimal.valueOf(num));
+	}
+
+	public static def NumericLiteral _NumericLiteral(BigDecimal num) {
 		val result = N4JSFactory.eINSTANCE.createNumericLiteral;
-		result.value = BigDecimal.valueOf(num);
+		result.value = num;
 		return result;
 	}
 

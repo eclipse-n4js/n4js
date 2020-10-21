@@ -11,6 +11,7 @@
 package org.eclipse.n4js.typesbuilder
 
 import com.google.inject.Inject
+import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4EnumLiteral
 import org.eclipse.n4js.ts.types.TEnum
@@ -84,15 +85,23 @@ public class N4JSEnumDeclarationTypesBuilder {
 	}
 
 	def private void addLiterals(TEnum enumType, N4EnumDeclaration n4Enum, boolean preLinkingPhase) {
-		enumType.literals.addAll(n4Enum.literals.filter(typeof(N4EnumLiteral)).map [createEnumLiteral(preLinkingPhase)]);
+		enumType.literals.addAll(n4Enum.literals.filter(N4EnumLiteral).map[createEnumLiteral(n4Enum, it, preLinkingPhase)]);
 	}
 
-	def private TEnumLiteral createEnumLiteral(N4EnumLiteral it, boolean preLinkingPhase) {
-		val enumLiteral = TypesFactory::eINSTANCE.createTEnumLiteral();
-		enumLiteral.name = it.name;
-		enumLiteral.value = it.value;
-		enumLiteral.astElement = it;
-		it.definedLiteral = enumLiteral
-		enumLiteral;
+	def private TEnumLiteral createEnumLiteral(N4EnumDeclaration n4Enum, N4EnumLiteral n4Literal, boolean preLinkingPhase) {
+		val literal = TypesFactory::eINSTANCE.createTEnumLiteral();
+		literal.name = n4Literal.name;
+		literal.value = n4Literal.value ?: getDefaultValue(n4Enum, n4Literal);
+		literal.astElement = n4Literal;
+		n4Literal.definedLiteral = literal
+		return literal;
+	}
+
+	def private String getDefaultValue(N4EnumDeclaration n4Enum, N4EnumLiteral n4Literal) {
+		if (AnnotationDefinition.NUMBER_BASED.hasAnnotation(n4Enum)) {
+			val idx = n4Enum.literals.indexOf(n4Literal);
+			return Integer.toString(idx);
+		}
+		return null;
 	}
 }
