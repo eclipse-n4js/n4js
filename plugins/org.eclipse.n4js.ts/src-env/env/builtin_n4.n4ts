@@ -358,17 +358,6 @@ public class N4Object extends Object {
 
 
 /**
- * Description of an N4StringBasedEnum
- */
-public final class N4StringBasedEnumType extends N4Type {
-	/**
-	 * Returns true if this N4Classifier describes an N4-enumeration declaration.
-	 */
-	/* @Override */
-	public get isEnum(): boolean
-}
-
-/**
  * Base class for all @StringBased enumerations, literals are assumed to be static constant fields of concrete subclasses with the type of these subclasses.
  * @see N4Enum
  */

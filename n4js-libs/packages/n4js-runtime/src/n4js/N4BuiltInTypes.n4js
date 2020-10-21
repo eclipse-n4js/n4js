@@ -14,7 +14,7 @@
 //
 // This file is only responsible for creating the output code for the below types,
 // which will be used during runtime. The below types will not be directly made
-// available to N4JS code at compile type (type information, etc.); instead, files
+// available to N4JS code at compile time (type information, etc.); instead, files
 // builtin_n4.n4ts and builtin_n4idl.n4ts declare the below types as built-in types.
 //
 // This has the following consequences:
@@ -249,13 +249,6 @@ abstract class N4Enum extends Object {
 	}
 }
 
-@Final class N4StringBasedEnumType extends N4Type {
-
-	@Override public get isEnum(): boolean {
-		return true;
-	}
-}
-
 abstract class N4StringBasedEnum extends Object { // NOTE: cannot subclass 'string' as in builtin_n4.n4ts
 
 	public static get literals(): Array<? extends N4StringBasedEnum> {
@@ -312,7 +305,6 @@ _globalThis.N4DataField = N4DataField;
 _globalThis.N4Accessor = N4Accessor;
 _globalThis.N4EnumType = N4EnumType;
 _globalThis.N4Enum = N4Enum;
-_globalThis.N4StringBasedEnumType = N4StringBasedEnumType;
 _globalThis.N4StringBasedEnum = N4StringBasedEnum;
 _globalThis.N4Annotation = N4Annotation;
 _globalThis.N4Provider = N4Provider;
