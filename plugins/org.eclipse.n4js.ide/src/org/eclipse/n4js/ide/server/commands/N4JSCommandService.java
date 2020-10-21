@@ -52,6 +52,7 @@ import org.eclipse.n4js.ide.server.codeActions.N4JSCodeActionService;
 import org.eclipse.n4js.ide.server.codeActions.N4JSSourceActionProvider;
 import org.eclipse.n4js.ide.xtext.server.ExecuteCommandParamsDescriber;
 import org.eclipse.n4js.ide.xtext.server.build.BuilderFrontend;
+import org.eclipse.n4js.ide.xtext.server.util.ParamHelper;
 import org.eclipse.n4js.json.ide.codeActions.JSONCodeActionService;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.projectModel.locations.FileURI;
@@ -65,7 +66,6 @@ import org.eclipse.n4js.smith.CollectedDataAccess;
 import org.eclipse.n4js.smith.DataCollectorUtils;
 import org.eclipse.xtext.ide.server.Document;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
-import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.ide.server.commands.IExecutableCommandService;
 import org.eclipse.xtext.resource.impl.CoarseGrainedChangeEvent;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -147,7 +147,7 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 	private ImportOrganizer importOrganizer;
 
 	@Inject
-	private UriExtensions uriExtensions;
+	private ParamHelper paramHelper;
 
 	/**
 	 * Methods annotated as {@link ExecutableCommandHandler} will be registered as handlers for ExecuteCommand requests.
@@ -317,9 +317,7 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 	public Void fixAllInFile(String title, String code, String fixId, CodeActionParams codeActionParams,
 			ILanguageServerAccess access, CancelIndicator cancelIndicator) {
 
-		String uriString = codeActionParams.getTextDocument().getUri();
-		URI uri = uriExtensions.toUri(uriString);
-
+		URI uri = paramHelper.getURI(codeActionParams);
 		WorkspaceEdit edit = codeActionService.applyToFile(uri, code, fixId, cancelIndicator);
 		access.getLanguageClient().applyEdit(new ApplyWorkspaceEditParams(edit, title));
 		return null;
@@ -332,9 +330,7 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 	public Void fixAllInProject(String title, String code, String fixId, CodeActionParams codeActionParams,
 			ILanguageServerAccess access, CancelIndicator cancelIndicator) {
 
-		String uriString = codeActionParams.getTextDocument().getUri();
-		URI uri = uriExtensions.toUri(uriString);
-
+		URI uri = paramHelper.getURI(codeActionParams);
 		WorkspaceEdit edit = codeActionService.applyToProject(uri, code, fixId, cancelIndicator);
 		access.getLanguageClient().applyEdit(new ApplyWorkspaceEditParams(edit, title));
 		return null;

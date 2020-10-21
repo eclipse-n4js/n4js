@@ -53,7 +53,6 @@ import org.eclipse.lsp4j.RenameParams;
 import org.eclipse.lsp4j.SignatureHelp;
 import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.TextDocumentClientCapabilities;
-import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.TextDocumentItem;
 import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.lsp4j.TextEdit;
@@ -69,11 +68,11 @@ import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIndex.IIndexListener;
 import org.eclipse.n4js.ide.xtext.server.contentassist.XContentAssistService;
 import org.eclipse.n4js.ide.xtext.server.findReferences.XWorkspaceResourceAccess;
 import org.eclipse.n4js.ide.xtext.server.rename.XIRenameService;
+import org.eclipse.n4js.ide.xtext.server.util.ParamHelper;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.findReferences.IReferenceFinder.IResourceAccess;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
-import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.ide.server.codeActions.ICodeActionService;
 import org.eclipse.xtext.ide.server.codeActions.ICodeActionService2;
 import org.eclipse.xtext.ide.server.codelens.ICodeLensResolver;
@@ -109,7 +108,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 	private ResourceTaskManager resourceTaskManager;
 
 	@Inject
-	private UriExtensions uriExtensions;
+	private ParamHelper paramHelper;
 
 	@Inject
 	private IResourceServiceProvider.Registry languagesRegistry;
@@ -152,29 +151,28 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 
 	@Override
 	public void didOpen(DidOpenTextDocumentParams params) {
+		URI uri = paramHelper.getURI(params);
 		TextDocumentItem textDocument = params.getTextDocument();
-		URI uri = getURI(textDocument);
 		resourceTaskManager.createContext(uri, textDocument.getVersion(), textDocument.getText());
 	}
 
 	@Override
 	public void didChange(DidChangeTextDocumentParams params) {
+		URI uri = paramHelper.getURI(params);
 		VersionedTextDocumentIdentifier textDocument = params.getTextDocument();
-		URI uri = getURI(textDocument);
 		resourceTaskManager.changeSourceTextOfExistingContext(uri, textDocument.getVersion(),
 				params.getContentChanges());
 	}
 
 	@Override
 	public void didClose(DidCloseTextDocumentParams params) {
-		TextDocumentIdentifier textDocument = params.getTextDocument();
-		URI uri = getURI(textDocument);
+		URI uri = paramHelper.getURI(params);
 		resourceTaskManager.closeContext(uri);
 	}
 
 	@Override
 	public CompletableFuture<Either<List<CompletionItem>, CompletionList>> completion(CompletionParams params) {
-		URI uri = getURI(params);
+		URI uri = paramHelper.getURI(params);
 		return resourceTaskManager.runInExistingContext(uri, "completion", (rtc, ci) -> {
 			return completion(rtc, params, ci);
 		});
@@ -199,7 +197,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 	@Override
 	public CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> definition(
 			TextDocumentPositionParams params) {
-		URI uri = getURI(params);
+		URI uri = paramHelper.getURI(params);
 		// LSP clients will usually use this request for open files only, but that is not strictly required by the LSP
 		// specification, so we use "runInExistingOrTemporary..." here:
 		return resourceTaskManager.runInExistingOrTemporaryContext(uri, "definition", (rtc, ci) -> {
@@ -222,7 +220,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 
 	@Override
 	public CompletableFuture<List<? extends Location>> references(ReferenceParams params) {
-		URI uri = getURI(params);
+		URI uri = paramHelper.getURI(params);
 		return resourceTaskManager.runInExistingContext(uri, "references", (rtc, ci) -> {
 			return references(rtc, params, ci);
 		});
@@ -245,11 +243,11 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 
 	@Override
 	public CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> implementation(
-			TextDocumentPositionParams position) {
+			TextDocumentPositionParams params) {
 
-		URI uri = getURI(position);
+		URI uri = paramHelper.getURI(params);
 		return resourceTaskManager.runInExistingContext(uri, "implementation", (rtc, ci) -> {
-			return implementation(rtc, position, ci);
+			return implementation(rtc, params, ci);
 		});
 	}
 
@@ -264,7 +262,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 	public CompletableFuture<List<Either<SymbolInformation, DocumentSymbol>>> documentSymbol(
 			DocumentSymbolParams params) {
 
-		URI uri = getURI(params.getTextDocument());
+		URI uri = paramHelper.getURI(params);
 		return resourceTaskManager.runInExistingContext(uri, "documentSymbol", (rtc, ci) -> {
 			return documentSymbol(rtc, params, ci);
 		});
@@ -286,7 +284,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 
 	@Override
 	public CompletableFuture<Hover> hover(TextDocumentPositionParams params) {
-		URI uri = getURI(params);
+		URI uri = paramHelper.getURI(params);
 		return resourceTaskManager.runInExistingContext(uri, "hover", (rtc, ci) -> {
 			return hover(rtc, params, ci);
 		});
@@ -312,7 +310,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 
 	@Override
 	public CompletableFuture<SignatureHelp> signatureHelp(TextDocumentPositionParams params) {
-		URI uri = getURI(params);
+		URI uri = paramHelper.getURI(params);
 		return resourceTaskManager.runInExistingContext(uri, "signatureHelp", (rtc, ci) -> {
 			return signatureHelp(rtc, params, ci);
 		});
@@ -333,7 +331,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 
 	@Override
 	public CompletableFuture<List<? extends DocumentHighlight>> documentHighlight(TextDocumentPositionParams params) {
-		URI uri = getURI(params);
+		URI uri = paramHelper.getURI(params);
 		return resourceTaskManager.runInExistingContext(uri, "documentHighlight", (rtc, ci) -> {
 			return documentHighlight(rtc, params, ci);
 		});
@@ -354,7 +352,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 
 	@Override
 	public CompletableFuture<List<Either<Command, CodeAction>>> codeAction(CodeActionParams params) {
-		URI uri = getURI(params.getTextDocument());
+		URI uri = paramHelper.getURI(params);
 		return resourceTaskManager.runInExistingContext(uri, "codeAction", (rtc, ci) -> {
 			return codeAction(rtc, params, ci);
 		});
@@ -393,7 +391,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 
 	@Override
 	public CompletableFuture<List<? extends CodeLens>> codeLens(CodeLensParams params) {
-		URI uri = getURI(params.getTextDocument());
+		URI uri = paramHelper.getURI(params);
 		return resourceTaskManager.runInExistingContext(uri, "codeLens", (rtc, ci) -> {
 			return codeLens(rtc, params, ci);
 		});
@@ -439,7 +437,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 
 	@Override
 	public CompletableFuture<List<? extends TextEdit>> formatting(DocumentFormattingParams params) {
-		URI uri = getURI(params.getTextDocument());
+		URI uri = paramHelper.getURI(params);
 		return resourceTaskManager.runInExistingContext(uri, "formatting", (rtc, ci) -> {
 			return formatting(rtc, params, ci);
 		});
@@ -460,7 +458,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 
 	@Override
 	public CompletableFuture<List<? extends TextEdit>> rangeFormatting(DocumentRangeFormattingParams params) {
-		URI uri = getURI(params.getTextDocument());
+		URI uri = paramHelper.getURI(params);
 		return resourceTaskManager.runInExistingContext(uri, "rangeFormatting", (rtc, ci) -> {
 			return rangeFormatting(rtc, params, ci);
 		});
@@ -485,10 +483,10 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 	}
 
 	@Override
-	public CompletableFuture<WorkspaceEdit> rename(RenameParams renameParams) {
-		URI uri = getURI(renameParams.getTextDocument());
+	public CompletableFuture<WorkspaceEdit> rename(RenameParams params) {
+		URI uri = paramHelper.getURI(params);
 		return resourceTaskManager.runInTemporaryContext(uri, "rename", false, (rtc, ci) -> {
-			return rename(rtc, renameParams, ci);
+			return rename(rtc, params, ci);
 		});
 	}
 
@@ -517,7 +515,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 
 	@Override
 	public CompletableFuture<Either<Range, PrepareRenameResult>> prepareRename(TextDocumentPositionParams params) {
-		URI uri = getURI(params);
+		URI uri = paramHelper.getURI(params);
 		return resourceTaskManager.runInExistingContext(uri, "prepareRename", (rtc, ci) -> {
 			return prepareRename(rtc, params, ci);
 		});
@@ -542,21 +540,6 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 	@Override
 	public void didSave(DidSaveTextDocumentParams params) {
 		throw new UnsupportedOperationException();
-	}
-
-	/** Obtain the URI from the given parameters. */
-	public URI getURI(TextDocumentPositionParams params) {
-		return getURI(params.getTextDocument());
-	}
-
-	/** Obtain the URI from the given identifier. */
-	public URI getURI(TextDocumentIdentifier documentIdentifier) {
-		return uriExtensions.toUri(documentIdentifier.getUri());
-	}
-
-	/** Obtain the URI from the given document item. */
-	public URI getURI(TextDocumentItem documentItem) {
-		return uriExtensions.toUri(documentItem.getUri());
 	}
 
 	/**

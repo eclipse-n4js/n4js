@@ -13,7 +13,7 @@ package org.eclipse.n4js.ide.tests.bugreports
 import org.eclipse.n4js.ide.tests.server.AbstractIdeTest
 import org.junit.Test
 
-class GH_1923_BogusDuplicateModuleErrorInImplProjects extends AbstractIdeTest {
+class GH_1923_BogusDuplicateModuleErrorInImplProjectsTest extends AbstractIdeTest {
 
 	@Test
 	def void testApiImplProjects() {
