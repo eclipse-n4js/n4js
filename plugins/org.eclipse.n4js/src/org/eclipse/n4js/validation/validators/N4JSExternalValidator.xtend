@@ -11,6 +11,7 @@
 package org.eclipse.n4js.validation.validators
 
 import com.google.inject.Inject
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.AnnotableElement
 import org.eclipse.n4js.n4JS.Annotation
@@ -42,9 +43,10 @@ import org.eclipse.n4js.ts.types.TObjectPrototype
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
+import org.eclipse.n4js.utils.N4JSLanguageUtils
+import org.eclipse.n4js.utils.N4JSLanguageUtils.EnumKind
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
-import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.util.Tuples
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
@@ -264,7 +266,8 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 
 	def private handleN4EnumDeclaration(ExportDeclaration eo, N4EnumDeclaration exported) {
 		// relaxed by IDEBUG-561:		exported.validateEnumIsPublicApi(eo)
-		if (!exported.isStringBased) { // note: literal in a string-based enum may have value even in .n4jsd files!
+		val enumKind = N4JSLanguageUtils.getEnumKind(exported);
+		if (enumKind === EnumKind.Normal) { // note: literal in a number-/string-based enum may have value even in .n4jsd files!
 			for (literal : exported.literals.filter[it.value !== null]) {
 				val message = getMessageForCLF_EXT_LITERAL_NO_VALUE
 				addIssue(message, literal, N4JSPackage.Literals.N4_ENUM_LITERAL__VALUE, CLF_EXT_LITERAL_NO_VALUE)
@@ -296,12 +299,6 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 		}
 
 		return true;
-
-	//
-	// val message =getMessageForCLF_EXT_NO_MATCH
-	// val eObjectToNameFeature = element.findNameFeature
-	// addIssue(message, eObjectToNameFeature.key, eObjectToNameFeature.value,CLF_EXT_NO_MATCH)
-	// return false;
 	}
 
 	/**
@@ -532,9 +529,5 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 			return false;
 		}
 		return true
-	}
-
-	def private boolean isStringBased(N4EnumDeclaration enumDecl) {
-		return AnnotationDefinition.STRING_BASED.hasAnnotation(enumDecl);
 	}
 }
