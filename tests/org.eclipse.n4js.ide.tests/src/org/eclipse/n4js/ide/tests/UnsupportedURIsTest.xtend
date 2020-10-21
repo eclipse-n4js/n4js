@@ -52,13 +52,11 @@ class UnsupportedURIsTest extends AbstractIdeTest {
 		openFile(uri); // must not throw exceptions
 		joinServerRequests();
 		assertNoIssues(); // URI is ignored, so no issues are created
-		assertNoErrorsInLog();
-		assertNoErrorsInOutput();
+		assertNoErrorsInLogOrOutput();
 
 		val response = hover(uri.toURI, 0, 10); // must not throw exceptions
 		joinServerRequests();
-		assertNoErrorsInLog();
-		assertNoErrorsInOutput();
+		assertNoErrorsInLogOrOutput();
 		assertFalse(response.cancelled);
 		assertFalse(response.completedExceptionally); // unsupported URIs should be ignore (no errors should be shown to user)
 		assertTrue(response.done);
@@ -67,15 +65,13 @@ class UnsupportedURIsTest extends AbstractIdeTest {
 		changeOpenedFile(uri, "let" -> "// let"); // must not throw exceptions
 		joinServerRequests();
 		assertNoIssues();
-		assertNoErrorsInLog();
-		assertNoErrorsInOutput();
+		assertNoErrorsInLogOrOutput();
 
 		saveOpenedFile(uri);
 		closeFile(uri); // must not throw exceptions
 		joinServerRequests();
 		assertNoIssues();
-		assertNoErrorsInLog();
-		assertNoErrorsInOutput();
+		assertNoErrorsInLogOrOutput();
 	}
 
 	/** Simulates opening a new editor with CMD+N in VSCode and changing language mode to "n4js" before saving. */
@@ -89,13 +85,11 @@ class UnsupportedURIsTest extends AbstractIdeTest {
 		openFile(uri, "let s: string = 42;"); // must not throw exceptions
 		joinServerRequests();
 		assertNoIssues(); // URI is ignored, so no issues are created
-		assertNoErrorsInLog();
-		assertNoErrorsInOutput();
+		assertNoErrorsInLogOrOutput();
 
 		val response = hover(uri, 0, 10); // must not throw exceptions
 		joinServerRequests();
-		assertNoErrorsInLog();
-		assertNoErrorsInOutput();
+		assertNoErrorsInLogOrOutput();
 		assertFalse(response.cancelled);
 		assertFalse(response.completedExceptionally); // unsupported URIs should be ignore (no errors should be shown to user)
 		assertTrue(response.done);
@@ -104,14 +98,12 @@ class UnsupportedURIsTest extends AbstractIdeTest {
 		changeOpenedFile(uri, 2, "// "); // must not throw exceptions
 		joinServerRequests();
 		assertNoIssues();
-		assertNoErrorsInLog();
-		assertNoErrorsInOutput();
+		assertNoErrorsInLogOrOutput();
 
 		closeFile(uri); // must not throw exceptions
 		joinServerRequests();
 		assertNoIssues();
-		assertNoErrorsInLog();
-		assertNoErrorsInOutput();
+		assertNoErrorsInLogOrOutput();
 	}
 
 	// because AbstractIdeTest#openFile(FileURI), etc. force us to use file URIs, we here need custom implementations:
