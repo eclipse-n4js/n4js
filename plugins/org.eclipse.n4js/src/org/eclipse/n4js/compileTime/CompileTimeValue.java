@@ -303,6 +303,25 @@ public abstract class CompileTimeValue {
 	}
 
 	/**
+	 * Converts the given string to a number, returning a {@link ValueInvalid} if the string is not a valid
+	 * representation of a BigDecimal, see {@link BigDecimal#BigDecimal(String)}.
+	 *
+	 * @param numberStr
+	 *            the string to convert into a number.
+	 * @param astNode
+	 *            location in the AST (for error messages) or <code>null</code> if not applicable.
+	 * @param feature
+	 *            EMF feature in the AST (for error messages) or <code>null</code> if not applicable.
+	 */
+	public static CompileTimeValue asNumber(String numberStr, EObject astNode, EStructuralFeature feature) {
+		try {
+			return of(new BigDecimal(numberStr));
+		} catch (NumberFormatException | NullPointerException e) {
+			return error("malformed number: " + (numberStr != null ? numberStr : "<null>"), astNode, feature);
+		}
+	}
+
+	/**
 	 * Inverts the given boolean value. Returns a {@link ValueInvalid} in case of errors. Never returns
 	 * <code>null</code>.
 	 *

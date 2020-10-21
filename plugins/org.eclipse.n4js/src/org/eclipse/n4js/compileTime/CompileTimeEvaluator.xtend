@@ -11,10 +11,8 @@
 package org.eclipse.n4js.compileTime
 
 import com.google.inject.Inject
-import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.compileTime.CompileTimeValue.ValueBoolean
 import org.eclipse.n4js.compileTime.CompileTimeValue.ValueInvalid
 import org.eclipse.n4js.compileTime.CompileTimeValue.ValueNumber
@@ -45,8 +43,10 @@ import org.eclipse.n4js.ts.types.TConstableElement
 import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TField
 import org.eclipse.n4js.ts.types.TypesPackage
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
+import org.eclipse.n4js.utils.N4JSLanguageUtils.EnumKind
 import org.eclipse.n4js.utils.RecursionGuard
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
 import org.eclipse.n4js.validation.validators.N4JSExpressionValidator
@@ -255,12 +255,21 @@ class CompileTimeEvaluator {
 				return CompileTimeValue.of(memberInSym);
 			}
 		} else if (targetElem instanceof TEnum) {
-			// B) Is 'expr' an access to the literal of a @StringBased enum?
-			if (AnnotationDefinition.STRING_BASED.hasAnnotation(targetElem)) {
+			// B) Is 'expr' an access to the literal of a @NumberBased or @StringBased enum?
+			val enumKind = N4JSLanguageUtils.getEnumKind(targetElem);
+			if (enumKind !== EnumKind.Normal) {
 				val litInEnum = targetElem.literals.findFirst[name == propName]; // custom scoping logic!
 				if (litInEnum !== null) {
 					// yes, it is!
-					return CompileTimeValue.of(litInEnum.valueOrName);
+					return switch (enumKind) {
+						case Normal:
+							throw new IllegalStateException("cannot happen")
+						case NumberBased:
+							// litInEnum.value is never null (types builder sets a default value, if necessary)
+							CompileTimeValue.asNumber(litInEnum.value, targetExpr, N4JSPackage.eINSTANCE.parameterizedPropertyAccessExpression_Property)
+						case StringBased:
+							CompileTimeValue.of(litInEnum.valueOrName)
+					};
 				}
 			}
 		} else if (targetElem instanceof TClassifier) {
@@ -296,7 +305,7 @@ class CompileTimeEvaluator {
 				"target of a property access must be a direct reference to a class, interface, or enum", expr,
 				N4JSPackage.Literals.EXPRESSION_WITH_TARGET__TARGET);
 		}
-		return CompileTimeValue.error("property access must point to const fields, literals of @StringBased enums, or built-in symbols", expr);
+		return CompileTimeValue.error("property access must point to const fields, literals of @NumberBased/@StringBased enums, or built-in symbols", expr);
 	}
 
 
