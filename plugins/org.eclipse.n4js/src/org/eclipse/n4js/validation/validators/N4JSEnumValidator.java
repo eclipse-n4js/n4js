@@ -16,6 +16,7 @@ import static org.eclipse.n4js.validation.IssueCodes.getMessageForENM_DUPLICTAE_
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForENM_LITERALS_HIDE_META;
 import static org.eclipse.n4js.validation.validators.StaticPolyfillValidatorExtension.internalCheckNotInStaticPolyfillModule;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -27,6 +28,7 @@ import org.eclipse.n4js.n4JS.N4EnumLiteral;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
+import org.eclipse.n4js.services.N4JSGrammarAccess;
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TEnum;
@@ -39,14 +41,24 @@ import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.N4JSLanguageUtils.EnumKind;
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator;
 import org.eclipse.n4js.validation.IssueCodes;
+import org.eclipse.xtext.AbstractRule;
 import org.eclipse.xtext.EnumLiteralDeclaration;
+import org.eclipse.xtext.RuleCall;
+import org.eclipse.xtext.nodemodel.INode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.EValidatorRegistrar;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
+
+import com.google.inject.Inject;
 
 /**
  * Validation for N4Enums.
  */
 public class N4JSEnumValidator extends AbstractN4JSDeclarativeValidator {
+
+	@Inject
+	private N4JSGrammarAccess n4jsGrammarAccess;
 
 	/**
 	 * NEEEDED
@@ -66,7 +78,7 @@ public class N4JSEnumValidator extends AbstractN4JSDeclarativeValidator {
 	 *            whose literals will be validated
 	 */
 	@Check
-	public void checkEnumLiterals(N4EnumDeclaration n4EnumDeclaration) {
+	public void checkNamesOfEnumLiterals(N4EnumDeclaration n4EnumDeclaration) {
 		Set<String> builtInEnumMembersNames = findBuiltInN4EnumMembers(n4EnumDeclaration);
 
 		internalCheckNotInStaticPolyfillModule(n4EnumDeclaration, this);
@@ -116,6 +128,44 @@ public class N4JSEnumValidator extends AbstractN4JSDeclarativeValidator {
 				.map(tm -> {
 					return tm.getName();
 				}).collect(Collectors.toSet());
+	}
+
+	/**
+	 * Checks values of enum literals.
+	 */
+	@Check
+	public void checkValuesOfEnumLiterals(N4EnumDeclaration n4EnumDecl) {
+		EnumKind enumKind = N4JSLanguageUtils.getEnumKind(n4EnumDecl);
+		for (N4EnumLiteral literal : n4EnumDecl.getLiterals()) {
+			if (literal.getValue() == null) {
+				continue;
+			}
+			boolean isNumeric = hasNumericValue(literal);
+			if (enumKind == EnumKind.NumberBased) {
+				if (!isNumeric) {
+					addIssue(IssueCodes.getMessageForENM_ILLEGAL_STRING_VALUE(), literal,
+							N4JSPackage.Literals.N4_ENUM_LITERAL__VALUE, IssueCodes.ENM_ILLEGAL_STRING_VALUE);
+				}
+			} else {
+				if (isNumeric) {
+					addIssue(IssueCodes.getMessageForENM_ILLEGAL_NUMERIC_VALUE(), literal,
+							N4JSPackage.Literals.N4_ENUM_LITERAL__VALUE, IssueCodes.ENM_ILLEGAL_NUMERIC_VALUE);
+				}
+			}
+		}
+	}
+
+	private boolean hasNumericValue(N4EnumLiteral n4EnumLiteral) {
+		if (n4EnumLiteral.getValue() == null) {
+			return false;
+		}
+		List<INode> nodes = NodeModelUtils.findNodesForFeature(n4EnumLiteral,
+				N4JSPackage.eINSTANCE.getN4EnumLiteral_Value());
+		INode firstNode = IterableExtensions.head(nodes);
+		EObject grammarElement = firstNode != null ? firstNode.getGrammarElement() : null;
+		AbstractRule rule = grammarElement instanceof RuleCall ? ((RuleCall) grammarElement).getRule() : null;
+		return rule == n4jsGrammarAccess.getSignedNumericLiteralAsStringRule()
+				|| rule == n4jsGrammarAccess.getNumericLiteralAsStringRule();
 	}
 
 	/**
