@@ -268,9 +268,9 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 		// relaxed by IDEBUG-561:		exported.validateEnumIsPublicApi(eo)
 		val enumKind = N4JSLanguageUtils.getEnumKind(exported);
 		if (enumKind === EnumKind.Normal) { // note: literal in a number-/string-based enum may have value even in .n4jsd files!
-			for (literal : exported.literals.filter[it.value !== null]) {
+			for (literal : exported.literals.filter[it.valueExpression !== null]) {
 				val message = getMessageForCLF_EXT_LITERAL_NO_VALUE
-				addIssue(message, literal, N4JSPackage.Literals.N4_ENUM_LITERAL__VALUE, CLF_EXT_LITERAL_NO_VALUE)
+				addIssue(message, literal, N4JSPackage.Literals.N4_ENUM_LITERAL__VALUE_EXPRESSION, CLF_EXT_LITERAL_NO_VALUE)
 			}
 		}
 	}

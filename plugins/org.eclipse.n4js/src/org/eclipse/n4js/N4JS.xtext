@@ -1009,11 +1009,7 @@ ScientificIntLiteral: value=SCIENTIFIC_INT;
 RegularExpressionLiteral: value=REGEX_LITERAL;
 
 NumericLiteralAsString:
-	DOUBLE | INT | OCTAL_INT | HEX_INT | SCIENTIFIC_INT
-;
-
-SignedNumericLiteralAsString:
-	('-' | '+')? NumericLiteralAsString
+	DOUBLE | INT | BINARY_INT | OCTAL_INT | HEX_INT | SCIENTIFIC_INT
 ;
 
 IdentifierOrThis:
@@ -1338,7 +1334,7 @@ N4EnumDeclaration <Yield>:
 	'}'
 ;
 
-N4EnumLiteral: name=IdentifierName (':' (value=STRING | value=SignedNumericLiteralAsString))?;
+N4EnumLiteral: name=IdentifierName (':' valueExpression=AssignmentExpression<In=true,Yield=false>)?;
 
 // grammar allows use of these modifiers in many places that are not actually valid;
 // this is checked in N4JSSyntaxValidator (see N4Modifier in N4JS.xcore for details)

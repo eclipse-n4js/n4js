@@ -54,6 +54,7 @@ import org.eclipse.n4js.n4JS.PropertyAssignmentAnnotationList
 import org.eclipse.n4js.n4JS.PropertyMethodDeclaration
 import org.eclipse.n4js.n4JS.PropertyNameKind
 import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.n4JS.StringLiteral
 import org.eclipse.n4js.n4JS.TypeDefiningElement
 import org.eclipse.n4js.n4JS.UnaryExpression
 import org.eclipse.n4js.n4JS.UnaryOperator
@@ -217,6 +218,29 @@ public class N4JSLanguageUtils {
 			return EnumKind.StringBased;
 		}
 		return EnumKind.Normal;
+	}
+
+	def static boolean isEnumLiteralValueExpressionValid(N4EnumLiteral n4EnumLiteral) {
+		return n4EnumLiteral?.valueExpression === null || getEnumLiteralValue(n4EnumLiteral) !== null;
+	}
+
+	def static Object getEnumLiteralValue(N4EnumLiteral n4EnumLiteral) {
+		val valueExpr = n4EnumLiteral?.valueExpression;
+		if (valueExpr instanceof StringLiteral) {
+			return valueExpr.valueAsString;
+		} else if (valueExpr instanceof NumericLiteral) {
+			return valueExpr.value;
+		} else if (valueExpr instanceof UnaryExpression) {
+			val expr = valueExpr.expression;
+			if (expr instanceof NumericLiteral) {
+				if (valueExpr.op === UnaryOperator.NEG) {
+					return expr.value?.negate;
+				} else {
+					return expr.value;
+				}
+			}
+		}
+		return null;
 	}
 
 	/**

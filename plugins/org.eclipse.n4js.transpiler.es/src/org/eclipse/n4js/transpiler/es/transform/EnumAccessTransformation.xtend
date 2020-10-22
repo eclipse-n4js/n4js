@@ -29,7 +29,6 @@ import org.eclipse.n4js.ts.types.TEnumLiteral
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.N4JSLanguageUtils.EnumKind
-import org.eclipse.n4js.utils.UtilN4
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
@@ -191,15 +190,10 @@ class EnumAccessTransformation extends Transformation {
 	}
 
 	def private NumericLiteral enumLiteralToNumericLiteral(TEnumLiteral enumLiteral) {
-		val num = UtilN4.parseBigDecimal(enumLiteral?.valueOrDefault); // note: types builder will set a default value in case of @NumberBased enums!
-		if (num === null) {
-			// validations prevent this from ever happening
-			throw new IllegalStateException("value of literal of @NumberBased enum cannot be converted to BigDecimal: " + enumLiteral?.value);
-		}
-		return _NumericLiteral(num);
+		return _NumericLiteral(enumLiteral?.valueNumber);
 	}
 
 	def private StringLiteral enumLiteralToStringLiteral(TEnumLiteral enumLiteral) {
-		return _StringLiteral(enumLiteral?.valueOrDefault);
+		return _StringLiteral(enumLiteral?.valueString);
 	}
 }

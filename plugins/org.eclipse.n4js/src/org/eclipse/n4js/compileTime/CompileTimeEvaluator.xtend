@@ -265,10 +265,9 @@ class CompileTimeEvaluator {
 						case Normal:
 							throw new IllegalStateException("cannot happen")
 						case NumberBased:
-							// litInEnum.value is never null (types builder sets a default value, if necessary)
-							CompileTimeValue.asNumber(litInEnum.valueOrDefault, targetExpr, N4JSPackage.eINSTANCE.parameterizedPropertyAccessExpression_Property)
+							CompileTimeValue.of(litInEnum.valueNumber)
 						case StringBased:
-							CompileTimeValue.of(litInEnum.valueOrDefault)
+							CompileTimeValue.of(litInEnum.valueString)
 					};
 				}
 			}

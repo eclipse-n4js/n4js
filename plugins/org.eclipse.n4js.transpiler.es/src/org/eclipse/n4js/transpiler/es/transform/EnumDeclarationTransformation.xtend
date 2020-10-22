@@ -122,13 +122,14 @@ class EnumDeclarationTransformation extends Transformation {
 	}
 
 	def private N4FieldDeclaration convertLiteralToField(N4EnumLiteral literal, SymbolTableEntry classSTE) {
+		val value = N4JSLanguageUtils.getEnumLiteralValue(literal);
 		return _N4FieldDecl(
 			true,
 			literal.name,
 			_NewExpr(
 				_IdentRef(classSTE),
 				_StringLiteral(literal.name),
-				if (literal.value !== null) _StringLiteral(literal.value)
+				if (value instanceof String) _StringLiteral(value)
 			)
 		);
 	}

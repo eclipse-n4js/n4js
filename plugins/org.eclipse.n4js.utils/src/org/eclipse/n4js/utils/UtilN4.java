@@ -16,8 +16,6 @@ import static org.eclipse.xtext.util.Tuples.pair;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -130,34 +128,6 @@ public class UtilN4 {
 			}
 		}
 		return null;
-	}
-
-	/**
-	 * Parses the given string as a {@link BigInteger}, returning <code>null</code> in case of an error.
-	 */
-	public static BigInteger parseBigInteger(String bigIntegerStr) {
-		if (bigIntegerStr == null) {
-			return null;
-		}
-		try {
-			return new BigInteger(bigIntegerStr);
-		} catch (NumberFormatException e) {
-			return null;
-		}
-	}
-
-	/**
-	 * Parses the given string as a {@link BigDecimal}, returning <code>null</code> in case of an error.
-	 */
-	public static BigDecimal parseBigDecimal(String bigDecimalStr) {
-		if (bigDecimalStr == null) {
-			return null;
-		}
-		try {
-			return new BigDecimal(bigDecimalStr);
-		} catch (NumberFormatException e) {
-			return null;
-		}
 	}
 
 	/**

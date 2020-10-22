@@ -12,6 +12,8 @@ package org.eclipse.n4js.ts.types.impl;
 
 import java.lang.reflect.InvocationTargetException;
 
+import java.math.BigDecimal;
+
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.common.util.EList;
@@ -37,7 +39,8 @@ import org.eclipse.xtext.EcoreUtil2;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TEnumLiteralImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.impl.TEnumLiteralImpl#getValue <em>Value</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TEnumLiteralImpl#getValueString <em>Value String</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TEnumLiteralImpl#getValueNumber <em>Value Number</em>}</li>
  * </ul>
  *
  * @generated
@@ -64,24 +67,44 @@ public class TEnumLiteralImpl extends SyntaxRelatedTElementImpl implements TEnum
 	protected String name = NAME_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getValue() <em>Value</em>}' attribute.
+	 * The default value of the '{@link #getValueString() <em>Value String</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getValue()
+	 * @see #getValueString()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String VALUE_EDEFAULT = null;
+	protected static final String VALUE_STRING_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getValue() <em>Value</em>}' attribute.
+	 * The cached value of the '{@link #getValueString() <em>Value String</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getValue()
+	 * @see #getValueString()
 	 * @generated
 	 * @ordered
 	 */
-	protected String value = VALUE_EDEFAULT;
+	protected String valueString = VALUE_STRING_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getValueNumber() <em>Value Number</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getValueNumber()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final BigDecimal VALUE_NUMBER_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getValueNumber() <em>Value Number</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getValueNumber()
+	 * @generated
+	 * @ordered
+	 */
+	protected BigDecimal valueNumber = VALUE_NUMBER_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -131,8 +154,8 @@ public class TEnumLiteralImpl extends SyntaxRelatedTElementImpl implements TEnum
 	 * @generated
 	 */
 	@Override
-	public String getValue() {
-		return value;
+	public String getValueString() {
+		return valueString;
 	}
 
 	/**
@@ -141,11 +164,11 @@ public class TEnumLiteralImpl extends SyntaxRelatedTElementImpl implements TEnum
 	 * @generated
 	 */
 	@Override
-	public void setValue(String newValue) {
-		String oldValue = value;
-		value = newValue;
+	public void setValueString(String newValueString) {
+		String oldValueString = valueString;
+		valueString = newValueString;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TENUM_LITERAL__VALUE, oldValue, value));
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TENUM_LITERAL__VALUE_STRING, oldValueString, valueString));
 	}
 
 	/**
@@ -154,16 +177,21 @@ public class TEnumLiteralImpl extends SyntaxRelatedTElementImpl implements TEnum
 	 * @generated
 	 */
 	@Override
-	public String getValueOrDefault() {
-		String _elvis = null;
-		String _value = this.getValue();
-		if (_value != null) {
-			_elvis = _value;
-		} else {
-			String _name = this.getName();
-			_elvis = _name;
-		}
-		return _elvis;
+	public BigDecimal getValueNumber() {
+		return valueNumber;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setValueNumber(BigDecimal newValueNumber) {
+		BigDecimal oldValueNumber = valueNumber;
+		valueNumber = newValueNumber;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TENUM_LITERAL__VALUE_NUMBER, oldValueNumber, valueNumber));
 	}
 
 	/**
@@ -186,8 +214,10 @@ public class TEnumLiteralImpl extends SyntaxRelatedTElementImpl implements TEnum
 		switch (featureID) {
 			case TypesPackage.TENUM_LITERAL__NAME:
 				return getName();
-			case TypesPackage.TENUM_LITERAL__VALUE:
-				return getValue();
+			case TypesPackage.TENUM_LITERAL__VALUE_STRING:
+				return getValueString();
+			case TypesPackage.TENUM_LITERAL__VALUE_NUMBER:
+				return getValueNumber();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -203,8 +233,11 @@ public class TEnumLiteralImpl extends SyntaxRelatedTElementImpl implements TEnum
 			case TypesPackage.TENUM_LITERAL__NAME:
 				setName((String)newValue);
 				return;
-			case TypesPackage.TENUM_LITERAL__VALUE:
-				setValue((String)newValue);
+			case TypesPackage.TENUM_LITERAL__VALUE_STRING:
+				setValueString((String)newValue);
+				return;
+			case TypesPackage.TENUM_LITERAL__VALUE_NUMBER:
+				setValueNumber((BigDecimal)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -221,8 +254,11 @@ public class TEnumLiteralImpl extends SyntaxRelatedTElementImpl implements TEnum
 			case TypesPackage.TENUM_LITERAL__NAME:
 				setName(NAME_EDEFAULT);
 				return;
-			case TypesPackage.TENUM_LITERAL__VALUE:
-				setValue(VALUE_EDEFAULT);
+			case TypesPackage.TENUM_LITERAL__VALUE_STRING:
+				setValueString(VALUE_STRING_EDEFAULT);
+				return;
+			case TypesPackage.TENUM_LITERAL__VALUE_NUMBER:
+				setValueNumber(VALUE_NUMBER_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -238,8 +274,10 @@ public class TEnumLiteralImpl extends SyntaxRelatedTElementImpl implements TEnum
 		switch (featureID) {
 			case TypesPackage.TENUM_LITERAL__NAME:
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-			case TypesPackage.TENUM_LITERAL__VALUE:
-				return VALUE_EDEFAULT == null ? value != null : !VALUE_EDEFAULT.equals(value);
+			case TypesPackage.TENUM_LITERAL__VALUE_STRING:
+				return VALUE_STRING_EDEFAULT == null ? valueString != null : !VALUE_STRING_EDEFAULT.equals(valueString);
+			case TypesPackage.TENUM_LITERAL__VALUE_NUMBER:
+				return VALUE_NUMBER_EDEFAULT == null ? valueNumber != null : !VALUE_NUMBER_EDEFAULT.equals(valueNumber);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -315,8 +353,6 @@ public class TEnumLiteralImpl extends SyntaxRelatedTElementImpl implements TEnum
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
-			case TypesPackage.TENUM_LITERAL___GET_VALUE_OR_DEFAULT:
-				return getValueOrDefault();
 			case TypesPackage.TENUM_LITERAL___GET_CONTAINING_MODULE:
 				return getContainingModule();
 		}
@@ -335,8 +371,10 @@ public class TEnumLiteralImpl extends SyntaxRelatedTElementImpl implements TEnum
 		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (name: ");
 		result.append(name);
-		result.append(", value: ");
-		result.append(value);
+		result.append(", valueString: ");
+		result.append(valueString);
+		result.append(", valueNumber: ");
+		result.append(valueNumber);
 		result.append(')');
 		return result.toString();
 	}

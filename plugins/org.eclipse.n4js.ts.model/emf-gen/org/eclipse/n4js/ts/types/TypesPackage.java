@@ -12400,13 +12400,22 @@ public interface TypesPackage extends EPackage {
 	int TENUM_LITERAL__NAME = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Value</b></em>' attribute.
+	 * The feature id for the '<em><b>Value String</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TENUM_LITERAL__VALUE = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 1;
+	int TENUM_LITERAL__VALUE_STRING = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Value Number</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TENUM_LITERAL__VALUE_NUMBER = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of structural features of the '<em>TEnum Literal</em>' class.
@@ -12415,7 +12424,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TENUM_LITERAL_FEATURE_COUNT = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 2;
+	int TENUM_LITERAL_FEATURE_COUNT = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -12427,22 +12436,13 @@ public interface TypesPackage extends EPackage {
 	int TENUM_LITERAL___GET_CONTAINING_MODULE = SYNTAX_RELATED_TELEMENT_OPERATION_COUNT + 0;
 
 	/**
-	 * The operation id for the '<em>Get Value Or Default</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TENUM_LITERAL___GET_VALUE_OR_DEFAULT = SYNTAX_RELATED_TELEMENT_OPERATION_COUNT + 1;
-
-	/**
 	 * The number of operations of the '<em>TEnum Literal</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TENUM_LITERAL_OPERATION_COUNT = SYNTAX_RELATED_TELEMENT_OPERATION_COUNT + 2;
+	int TENUM_LITERAL_OPERATION_COUNT = SYNTAX_RELATED_TELEMENT_OPERATION_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TConstableElementImpl <em>TConstable Element</em>}' class.
@@ -15589,25 +15589,26 @@ public interface TypesPackage extends EPackage {
 	EClass getTEnumLiteral();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TEnumLiteral#getValue <em>Value</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TEnumLiteral#getValueString <em>Value String</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Value</em>'.
-	 * @see org.eclipse.n4js.ts.types.TEnumLiteral#getValue()
+	 * @return the meta object for the attribute '<em>Value String</em>'.
+	 * @see org.eclipse.n4js.ts.types.TEnumLiteral#getValueString()
 	 * @see #getTEnumLiteral()
 	 * @generated
 	 */
-	EAttribute getTEnumLiteral_Value();
+	EAttribute getTEnumLiteral_ValueString();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TEnumLiteral#getValueOrDefault() <em>Get Value Or Default</em>}' operation.
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TEnumLiteral#getValueNumber <em>Value Number</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Value Or Default</em>' operation.
-	 * @see org.eclipse.n4js.ts.types.TEnumLiteral#getValueOrDefault()
+	 * @return the meta object for the attribute '<em>Value Number</em>'.
+	 * @see org.eclipse.n4js.ts.types.TEnumLiteral#getValueNumber()
+	 * @see #getTEnumLiteral()
 	 * @generated
 	 */
-	EOperation getTEnumLiteral__GetValueOrDefault();
+	EAttribute getTEnumLiteral_ValueNumber();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.SyntaxRelatedTElement <em>Syntax Related TElement</em>}'.
@@ -18121,20 +18122,20 @@ public interface TypesPackage extends EPackage {
 		EClass TENUM_LITERAL = eINSTANCE.getTEnumLiteral();
 
 		/**
-		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Value String</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute TENUM_LITERAL__VALUE = eINSTANCE.getTEnumLiteral_Value();
+		EAttribute TENUM_LITERAL__VALUE_STRING = eINSTANCE.getTEnumLiteral_ValueString();
 
 		/**
-		 * The meta object literal for the '<em><b>Get Value Or Default</b></em>' operation.
+		 * The meta object literal for the '<em><b>Value Number</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation TENUM_LITERAL___GET_VALUE_OR_DEFAULT = eINSTANCE.getTEnumLiteral__GetValueOrDefault();
+		EAttribute TENUM_LITERAL__VALUE_NUMBER = eINSTANCE.getTEnumLiteral_ValueNumber();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.SyntaxRelatedTElementImpl <em>Syntax Related TElement</em>}' class.

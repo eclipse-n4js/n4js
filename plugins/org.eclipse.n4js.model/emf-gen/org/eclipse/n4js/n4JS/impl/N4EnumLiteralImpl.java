@@ -11,12 +11,14 @@
 package org.eclipse.n4js.n4JS.impl;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.N4EnumLiteral;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 
@@ -33,7 +35,7 @@ import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4EnumLiteralImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.N4EnumLiteralImpl#getValue <em>Value</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.N4EnumLiteralImpl#getValueExpression <em>Value Expression</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4EnumLiteralImpl#getDefinedLiteral <em>Defined Literal</em>}</li>
  * </ul>
  *
@@ -61,24 +63,14 @@ public class N4EnumLiteralImpl extends ProxyResolvingEObjectImpl implements N4En
 	protected String name = NAME_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getValue() <em>Value</em>}' attribute.
+	 * The cached value of the '{@link #getValueExpression() <em>Value Expression</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getValue()
+	 * @see #getValueExpression()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String VALUE_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getValue() <em>Value</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getValue()
-	 * @generated
-	 * @ordered
-	 */
-	protected String value = VALUE_EDEFAULT;
+	protected Expression valueExpression;
 
 	/**
 	 * The cached value of the '{@link #getDefinedLiteral() <em>Defined Literal</em>}' reference.
@@ -138,8 +130,23 @@ public class N4EnumLiteralImpl extends ProxyResolvingEObjectImpl implements N4En
 	 * @generated
 	 */
 	@Override
-	public String getValue() {
-		return value;
+	public Expression getValueExpression() {
+		return valueExpression;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetValueExpression(Expression newValueExpression, NotificationChain msgs) {
+		Expression oldValueExpression = valueExpression;
+		valueExpression = newValueExpression;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_ENUM_LITERAL__VALUE_EXPRESSION, oldValueExpression, newValueExpression);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
 	}
 
 	/**
@@ -148,11 +155,18 @@ public class N4EnumLiteralImpl extends ProxyResolvingEObjectImpl implements N4En
 	 * @generated
 	 */
 	@Override
-	public void setValue(String newValue) {
-		String oldValue = value;
-		value = newValue;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_ENUM_LITERAL__VALUE, oldValue, value));
+	public void setValueExpression(Expression newValueExpression) {
+		if (newValueExpression != valueExpression) {
+			NotificationChain msgs = null;
+			if (valueExpression != null)
+				msgs = ((InternalEObject)valueExpression).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.N4_ENUM_LITERAL__VALUE_EXPRESSION, null, msgs);
+			if (newValueExpression != null)
+				msgs = ((InternalEObject)newValueExpression).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.N4_ENUM_LITERAL__VALUE_EXPRESSION, null, msgs);
+			msgs = basicSetValueExpression(newValueExpression, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_ENUM_LITERAL__VALUE_EXPRESSION, newValueExpression, newValueExpression));
 	}
 
 	/**
@@ -201,12 +215,26 @@ public class N4EnumLiteralImpl extends ProxyResolvingEObjectImpl implements N4En
 	 * @generated
 	 */
 	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case N4JSPackage.N4_ENUM_LITERAL__VALUE_EXPRESSION:
+				return basicSetValueExpression(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case N4JSPackage.N4_ENUM_LITERAL__NAME:
 				return getName();
-			case N4JSPackage.N4_ENUM_LITERAL__VALUE:
-				return getValue();
+			case N4JSPackage.N4_ENUM_LITERAL__VALUE_EXPRESSION:
+				return getValueExpression();
 			case N4JSPackage.N4_ENUM_LITERAL__DEFINED_LITERAL:
 				if (resolve) return getDefinedLiteral();
 				return basicGetDefinedLiteral();
@@ -225,8 +253,8 @@ public class N4EnumLiteralImpl extends ProxyResolvingEObjectImpl implements N4En
 			case N4JSPackage.N4_ENUM_LITERAL__NAME:
 				setName((String)newValue);
 				return;
-			case N4JSPackage.N4_ENUM_LITERAL__VALUE:
-				setValue((String)newValue);
+			case N4JSPackage.N4_ENUM_LITERAL__VALUE_EXPRESSION:
+				setValueExpression((Expression)newValue);
 				return;
 			case N4JSPackage.N4_ENUM_LITERAL__DEFINED_LITERAL:
 				setDefinedLiteral((TEnumLiteral)newValue);
@@ -246,8 +274,8 @@ public class N4EnumLiteralImpl extends ProxyResolvingEObjectImpl implements N4En
 			case N4JSPackage.N4_ENUM_LITERAL__NAME:
 				setName(NAME_EDEFAULT);
 				return;
-			case N4JSPackage.N4_ENUM_LITERAL__VALUE:
-				setValue(VALUE_EDEFAULT);
+			case N4JSPackage.N4_ENUM_LITERAL__VALUE_EXPRESSION:
+				setValueExpression((Expression)null);
 				return;
 			case N4JSPackage.N4_ENUM_LITERAL__DEFINED_LITERAL:
 				setDefinedLiteral((TEnumLiteral)null);
@@ -266,8 +294,8 @@ public class N4EnumLiteralImpl extends ProxyResolvingEObjectImpl implements N4En
 		switch (featureID) {
 			case N4JSPackage.N4_ENUM_LITERAL__NAME:
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-			case N4JSPackage.N4_ENUM_LITERAL__VALUE:
-				return VALUE_EDEFAULT == null ? value != null : !VALUE_EDEFAULT.equals(value);
+			case N4JSPackage.N4_ENUM_LITERAL__VALUE_EXPRESSION:
+				return valueExpression != null;
 			case N4JSPackage.N4_ENUM_LITERAL__DEFINED_LITERAL:
 				return definedLiteral != null;
 		}
@@ -286,8 +314,6 @@ public class N4EnumLiteralImpl extends ProxyResolvingEObjectImpl implements N4En
 		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (name: ");
 		result.append(name);
-		result.append(", value: ");
-		result.append(value);
 		result.append(')');
 		return result.toString();
 	}

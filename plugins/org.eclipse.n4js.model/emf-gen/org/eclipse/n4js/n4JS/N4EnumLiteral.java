@@ -23,7 +23,7 @@ import org.eclipse.n4js.ts.types.TypableElement;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.N4EnumLiteral#getName <em>Name</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.N4EnumLiteral#getValue <em>Value</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.N4EnumLiteral#getValueExpression <em>Value Expression</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.N4EnumLiteral#getDefinedLiteral <em>Defined Literal</em>}</li>
  * </ul>
  *
@@ -55,26 +55,26 @@ public interface N4EnumLiteral extends NamedElement, TypableElement {
 	void setName(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Value</b></em>' attribute.
+	 * Returns the value of the '<em><b>Value Expression</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Value</em>' attribute.
-	 * @see #setValue(String)
-	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getN4EnumLiteral_Value()
-	 * @model unique="false"
+	 * @return the value of the '<em>Value Expression</em>' containment reference.
+	 * @see #setValueExpression(Expression)
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getN4EnumLiteral_ValueExpression()
+	 * @model containment="true"
 	 * @generated
 	 */
-	String getValue();
+	Expression getValueExpression();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.N4EnumLiteral#getValue <em>Value</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.N4EnumLiteral#getValueExpression <em>Value Expression</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Value</em>' attribute.
-	 * @see #getValue()
+	 * @param value the new value of the '<em>Value Expression</em>' containment reference.
+	 * @see #getValueExpression()
 	 * @generated
 	 */
-	void setValue(String value);
+	void setValueExpression(Expression value);
 
 	/**
 	 * Returns the value of the '<em><b>Defined Literal</b></em>' reference.

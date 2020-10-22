@@ -1698,15 +1698,18 @@ class TEnum extends DeclaredTypeWithAccessModifier, SyntaxRelatedTElement, TVers
  * Literal of a TEnum
  */
 class TEnumLiteral extends SyntaxRelatedTElement, IdentifiableElement {
-	String value
-
 	/*
-	 * Returns the value declared in the source code, or the default value computed by the types
-	 * builder (only for <code>@NumberBased</code> enums), or the literal's name as a default.
+	 * For normal and <code>@StringBased</code> enums this is the literal's value as given in the
+	 * source code or the default value set by the types builder; <code>null</code> iff this literal
+	 * belongs to a <code>@NumberBased</code> enum.
 	 */
-	op String getValueOrDefault() {
-		return value ?: name;
-	}
+	String valueString
+	/*
+	 * For <code>@NumberBased</code> enums this is the literal's value as given in the source code or
+	 * the default value computed by the types builder; <code>null</code> iff this literal belongs to
+	 * a normal or <code>@StringBased</code> enum.
+	 */
+	BigDecimal valueNumber
 }
 
 /*

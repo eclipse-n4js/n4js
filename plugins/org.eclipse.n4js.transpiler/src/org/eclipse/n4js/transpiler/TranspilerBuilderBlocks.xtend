@@ -785,7 +785,7 @@ public class TranspilerBuilderBlocks
 	public static def _EnumLiteral(String name, String value) {
 		val result = N4JSFactory.eINSTANCE.createN4EnumLiteral;
 		result.name = name;
-		result.value = value;
+		result.valueExpression = if (value !== null) _StringLiteral(value);
 		return result;
 	}
 
