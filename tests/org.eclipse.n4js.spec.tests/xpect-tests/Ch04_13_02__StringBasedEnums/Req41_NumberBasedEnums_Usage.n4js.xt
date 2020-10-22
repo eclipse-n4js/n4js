@@ -68,11 +68,17 @@ E.hasOwnProperty('foo');
 E.fromCharCode(42);
 // XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'getOwnPropertyNames'." at "getOwnPropertyNames"
 E.getOwnPropertyNames({});
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'charAt'." at "charAt"
+E.L.charAt(0);
 
 
 
 // -----------------------------------------------------------------
-// also this shouldn't work:
+// but this should work:
 
-// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'charAt'." at "charAt"
-E.L.charAt(0);
+// XPECT noerrors -->
+"hello"[E.L];
+// XPECT noerrors -->
+-E.L;
+// XPECT noerrors -->
+42*E.L;
