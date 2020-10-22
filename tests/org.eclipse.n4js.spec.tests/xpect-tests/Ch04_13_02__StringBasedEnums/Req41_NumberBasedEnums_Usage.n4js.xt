@@ -12,7 +12,7 @@
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
 
 
-@StringBased
+@NumberBased
 export public enum E {
 	L
 }
@@ -21,11 +21,11 @@ export public enum E {
 class G<T extends E> {}
 
 // XPECT noerrors -->
-class H<T extends N4StringBasedEnum> {}
+class H<T extends N4NumberBasedEnum> {}
 
 
 // -----------------------------------------------------------------
-// valid use cases of @StringBased enums
+// valid use cases of @NumberBased enums
 
 
 // XPECT noerrors -->
@@ -55,7 +55,7 @@ console.log((((E))).literals);
 
 
 // -----------------------------------------------------------------
-// some INVALID use cases of @StringBased enums
+// some INVALID use cases of @NumberBased enums
 
 
 // XPECT errors --> "A @NumberBased or @StringBased enum may only be used in type annotations and in property access expressions to access either one of its literals or the static getter called literals." at "E"
@@ -72,7 +72,7 @@ E.getOwnPropertyNames({});
 
 
 // -----------------------------------------------------------------
-// but this should work:
+// also this shouldn't work:
 
-// XPECT noerrors -->
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'charAt'." at "charAt"
 E.L.charAt(0);

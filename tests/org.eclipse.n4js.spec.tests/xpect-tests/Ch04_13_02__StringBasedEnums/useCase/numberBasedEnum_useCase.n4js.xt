@@ -1,0 +1,36 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+
+	ResourceSet {
+		ThisFile {}
+		File "SomeNBEnum.n4jsd" {}
+	}
+
+	END_SETUP
+*/
+
+
+// NOTE: see file 'stringBasedEnum_useCase.n4js.xt' for detailed explanation.
+
+
+import { Color } from "Ch04_13_02__StringBasedEnums/useCase/SomeNBEnum"
+
+console.log(Color.RED);
+console.log(Color.GREEN);
+console.log(Color.literals);
+
+/* XPECT output ---
+-1
+0
+[ -1, 0 ]
+--- */
