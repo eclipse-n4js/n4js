@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.N4EnumDeclaration;
 import org.eclipse.n4js.n4JS.N4EnumLiteral;
@@ -58,6 +59,18 @@ public class N4JSEnumValidator extends AbstractN4JSDeclarativeValidator {
 	@Override
 	public void register(EValidatorRegistrar registrar) {
 		/* nop */
+	}
+
+	/**
+	 * Checks annotations on enum declarations.
+	 */
+	@Check
+	public void checkEnumAnnotations(N4EnumDeclaration n4EnumDecl) {
+		if (AnnotationDefinition.NUMBER_BASED.hasAnnotation(n4EnumDecl)
+				&& AnnotationDefinition.STRING_BASED.hasAnnotation(n4EnumDecl)) {
+			addIssue(IssueCodes.getMessageForENM_BOTH_NUMBER_AND_STRING_BASED(), n4EnumDecl,
+					N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME, IssueCodes.ENM_BOTH_NUMBER_AND_STRING_BASED);
+		}
 	}
 
 	/**
