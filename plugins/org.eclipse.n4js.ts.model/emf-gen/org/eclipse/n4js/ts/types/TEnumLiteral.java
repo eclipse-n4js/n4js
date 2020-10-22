@@ -57,9 +57,13 @@ public interface TEnumLiteral extends SyntaxRelatedTElement, IdentifiableElement
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Returns the value declared in the source code, or the default value computed by the types
+	 * builder (only for <code>@NumberBased</code> enums), or the literal's name as a default.
+	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
-	String getValueOrName();
+	String getValueOrDefault();
 
 } // TEnumLiteral

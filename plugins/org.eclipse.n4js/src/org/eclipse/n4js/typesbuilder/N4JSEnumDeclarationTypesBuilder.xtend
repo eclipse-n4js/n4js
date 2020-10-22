@@ -11,6 +11,8 @@
 package org.eclipse.n4js.typesbuilder
 
 import com.google.inject.Inject
+import java.math.BigInteger
+import java.util.Map
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4EnumLiteral
@@ -18,6 +20,7 @@ import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TEnumLiteral
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypesFactory
+import org.eclipse.n4js.utils.UtilN4
 
 public class N4JSEnumDeclarationTypesBuilder {
 
@@ -60,10 +63,12 @@ public class N4JSEnumDeclarationTypesBuilder {
 			return null;
 		}
 
+		val computedValues = computeDefaultValues(n4Enum);
+
 		val enumType = n4Enum.createTEnum
 		enumType.setTypeAccessModifier(n4Enum)
 		enumType.setProvidedByRuntime(n4Enum, preLinkingPhase)
-		enumType.addLiterals(n4Enum, preLinkingPhase)
+		enumType.addLiterals(n4Enum, computedValues, preLinkingPhase)
 		enumType.copyAnnotations(n4Enum, preLinkingPhase)
 
 		enumType.astElement = n4Enum
@@ -84,24 +89,37 @@ public class N4JSEnumDeclarationTypesBuilder {
 		enumType
 	}
 
-	def private void addLiterals(TEnum enumType, N4EnumDeclaration n4Enum, boolean preLinkingPhase) {
-		enumType.literals.addAll(n4Enum.literals.filter(N4EnumLiteral).map[createEnumLiteral(n4Enum, it, preLinkingPhase)]);
+	def private void addLiterals(TEnum enumType, N4EnumDeclaration n4Enum, Map<N4EnumLiteral, String> computedValues, boolean preLinkingPhase) {
+		enumType.literals.addAll(n4Enum.literals.filter(N4EnumLiteral).map[createEnumLiteral(computedValues, preLinkingPhase)]);
 	}
 
-	def private TEnumLiteral createEnumLiteral(N4EnumDeclaration n4Enum, N4EnumLiteral n4Literal, boolean preLinkingPhase) {
+	def private TEnumLiteral createEnumLiteral(N4EnumLiteral n4Literal, Map<N4EnumLiteral, String> computedValues, boolean preLinkingPhase) {
 		val literal = TypesFactory::eINSTANCE.createTEnumLiteral();
 		literal.name = n4Literal.name;
-		literal.value = n4Literal.value ?: getDefaultValue(n4Enum, n4Literal);
+		literal.value = n4Literal.value ?: computedValues.get(n4Literal); // if this evaluates to 'null', TEnumLiteral#getValueOrDefault() will use 'name' as value
 		literal.astElement = n4Literal;
 		n4Literal.definedLiteral = literal
 		return literal;
 	}
 
-	def private String getDefaultValue(N4EnumDeclaration n4Enum, N4EnumLiteral n4Literal) {
-		if (AnnotationDefinition.NUMBER_BASED.hasAnnotation(n4Enum)) {
-			val idx = n4Enum.literals.indexOf(n4Literal);
-			return Integer.toString(idx);
+	def private Map<N4EnumLiteral, String> computeDefaultValues(N4EnumDeclaration n4Enum) {
+		val isNumberBased = AnnotationDefinition.NUMBER_BASED.hasAnnotation(n4Enum);
+		if (!isNumberBased) {
+			return emptyMap(); // only @NumberBased enums have computed default values
 		}
-		return null;
+		val result = newHashMap;
+		val usedNumbers = n4Enum.literals.map[UtilN4.parseBigInteger(value)].filterNull.toSet;
+		var next = BigInteger.valueOf(-1);
+		var idx = 0;
+		for (n4Literal : n4Enum.literals) {
+			if (n4Literal.value === null) {
+				do {
+					next = next.add(BigInteger.ONE);
+				} while(usedNumbers.contains(next));
+				result.put(n4Literal, next.toString);
+				idx++;
+			}
+		}
+		return result;
 	}
 }

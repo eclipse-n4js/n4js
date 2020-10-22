@@ -154,7 +154,7 @@ public class TEnumLiteralImpl extends SyntaxRelatedTElementImpl implements TEnum
 	 * @generated
 	 */
 	@Override
-	public String getValueOrName() {
+	public String getValueOrDefault() {
 		String _elvis = null;
 		String _value = this.getValue();
 		if (_value != null) {
@@ -315,8 +315,8 @@ public class TEnumLiteralImpl extends SyntaxRelatedTElementImpl implements TEnum
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
-			case TypesPackage.TENUM_LITERAL___GET_VALUE_OR_NAME:
-				return getValueOrName();
+			case TypesPackage.TENUM_LITERAL___GET_VALUE_OR_DEFAULT:
+				return getValueOrDefault();
 			case TypesPackage.TENUM_LITERAL___GET_CONTAINING_MODULE:
 				return getContainingModule();
 		}

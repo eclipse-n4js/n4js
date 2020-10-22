@@ -29,6 +29,7 @@ import org.eclipse.n4js.ts.types.TField;
 import org.eclipse.n4js.ts.types.TObjectPrototype;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
+import org.eclipse.n4js.utils.UtilN4;
 
 /**
  * The value of a compile-time expression as returned by {@link ASTMetaInfoCache#getCompileTimeValue(Expression)} and
@@ -314,11 +315,11 @@ public abstract class CompileTimeValue {
 	 *            EMF feature in the AST (for error messages) or <code>null</code> if not applicable.
 	 */
 	public static CompileTimeValue asNumber(String numberStr, EObject astNode, EStructuralFeature feature) {
-		try {
-			return of(new BigDecimal(numberStr));
-		} catch (NumberFormatException | NullPointerException e) {
+		BigDecimal number = UtilN4.parseBigDecimal(numberStr);
+		if (number == null) {
 			return error("malformed number: " + (numberStr != null ? numberStr : "<null>"), astNode, feature);
 		}
+		return of(number);
 	}
 
 	/**
