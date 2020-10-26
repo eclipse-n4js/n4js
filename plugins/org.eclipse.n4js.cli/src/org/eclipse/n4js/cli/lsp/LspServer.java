@@ -36,6 +36,8 @@ import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.jsonrpc.Launcher.Builder;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.n4js.cli.N4jscConsole;
+import org.eclipse.n4js.cli.N4jscException;
+import org.eclipse.n4js.cli.N4jscExitCode;
 import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.ide.server.LspLogger;
@@ -82,6 +84,10 @@ public class LspServer {
 				while (true) {
 					// for sockets the life cycle is performed until the client sends the exit event
 					performLifecycle(threadPool);
+
+					if (options.getExec() != null) {
+						break; // when --exec is given on command line, terminate after client disconnects
+					}
 				}
 			}
 
@@ -91,7 +97,7 @@ public class LspServer {
 	}
 
 	private void performLifecycle(ExecutorService threadPool)
-			throws InterruptedException, ExecutionException, IOException {
+			throws N4jscException, InterruptedException, ExecutionException, IOException {
 
 		setPersistionOptions();
 		XLanguageServerImpl languageServer = N4jscFactory.getLanguageServer();
@@ -107,7 +113,7 @@ public class LspServer {
 	}
 
 	private void setupAndRun(ExecutorService threadPool, XLanguageServerImpl languageServer)
-			throws InterruptedException, ExecutionException, IOException {
+			throws N4jscException, InterruptedException, ExecutionException, IOException {
 
 		DebugService debugService = languageServer.getDebugService();
 
@@ -130,7 +136,7 @@ public class LspServer {
 	}
 
 	private void setupAndRunWithSocket(XLanguageServerImpl languageServer, Builder<LanguageClient> lsBuilder)
-			throws InterruptedException, ExecutionException, IOException {
+			throws N4jscException, InterruptedException, ExecutionException, IOException {
 
 		Appender serverIncidentAppender = copyLog4jErrorsToServerIncidentLogger(
 				languageServer.getServerIncidentLogger());
@@ -142,7 +148,11 @@ public class LspServer {
 			// Attention: the VSCode LSP extension is waiting for this line 'Listening for LSP clients'.
 			N4jscConsole.println(LSP_SYNC_MESSAGE + " on port " + options.getPort() + "...");
 
-			try (AsynchronousSocketChannel socketChannel = serverSocket.accept().get();
+			Future<AsynchronousSocketChannel> futureChannel = serverSocket.accept();
+
+			executeUserCommand();
+
+			try (AsynchronousSocketChannel socketChannel = futureChannel.get();
 					InputStream in = Channels.newInputStream(socketChannel);
 					OutputStream out = Channels.newOutputStream(socketChannel)) {
 
@@ -174,6 +184,17 @@ public class LspServer {
 			System.setOut(oldStdOut);
 			Logger.getRootLogger().removeAppender(serverIncidentAppender);
 			Logger.getRootLogger().removeAppender(lspLoggerAppender);
+		}
+	}
+
+	private void executeUserCommand() throws N4jscException {
+		String userCommand = options.getExec();
+		if (userCommand != null) {
+			try {
+				Runtime.getRuntime().exec(userCommand);
+			} catch (Exception e) {
+				throw new N4jscException(N4jscExitCode.EXEC_ERROR, e);
+			}
 		}
 	}
 

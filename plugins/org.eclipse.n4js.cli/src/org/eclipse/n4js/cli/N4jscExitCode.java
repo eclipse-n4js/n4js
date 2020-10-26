@@ -55,6 +55,10 @@ public enum N4jscExitCode {
 	/** Error when assembling the test catalog */
 	PERFORMANCE_REPORT_ERROR(120, "Error creating performance report"),
 
+	// Errors on N4jsc goal lsp
+
+	/** Error while executing the user command provided via option <code>--exec</code> */
+	EXEC_ERROR(210, "Error executing user command provided via option --exec"),
 	;
 
 	private static final Map<Integer, N4jscExitCode> lookup = new HashMap<>();
