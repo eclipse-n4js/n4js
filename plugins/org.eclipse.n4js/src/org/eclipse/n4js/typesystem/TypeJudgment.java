@@ -167,6 +167,7 @@ import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.utils.DestructureHelper;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
+import org.eclipse.n4js.utils.N4JSLanguageUtils.EnumKind;
 import org.eclipse.n4js.utils.PromisifyHelper;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
@@ -811,7 +812,7 @@ import com.google.inject.Inject;
 
 			final Type targetDeclType = targetTypeRef.getDeclaredType();
 			final boolean targetIsLiteralOfStringBasedEnum = targetDeclType instanceof TEnum
-					&& AnnotationDefinition.STRING_BASED.hasAnnotation(targetDeclType);
+					&& N4JSLanguageUtils.getEnumKind((TEnum) targetDeclType) == EnumKind.StringBased;
 			final boolean indexIsNumeric = ts.subtype(G, indexTypeRef, numberTypeRef(G)).isSuccess();
 			final CompileTimeValue indexValue = ASTMetaInfoUtils.getCompileTimeValue(expr.getIndex());
 			final String memberName = N4JSLanguageUtils.derivePropertyNameFromCompileTimeValue(indexValue);

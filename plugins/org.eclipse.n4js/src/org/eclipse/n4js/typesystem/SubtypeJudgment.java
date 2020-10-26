@@ -39,7 +39,6 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
@@ -70,6 +69,7 @@ import org.eclipse.n4js.typesystem.utils.Result;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.StructuralTypingResult;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
+import org.eclipse.n4js.utils.N4JSLanguageUtils.EnumKind;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
@@ -243,20 +243,20 @@ import com.google.common.collect.Iterables;
 			return success(); // int <: number AND number <: int (for now, int and number are synonymous)
 		}
 		if (leftDeclType instanceof TEnum) {
+			EnumKind enumKind = N4JSLanguageUtils.getEnumKind((TEnum) leftDeclType);
 			if (rightDeclType == n4EnumType(G)
 					|| rightDeclType == objectType(G)) {
-				return resultFromBoolean(!AnnotationDefinition.NUMBER_BASED.hasAnnotation(leftDeclType)
-						&& !AnnotationDefinition.STRING_BASED.hasAnnotation(leftDeclType));
+				return resultFromBoolean(enumKind == EnumKind.Normal);
 			}
 			if (rightDeclType == n4NumberBasedEnumType(G)
 					|| rightDeclType == numberType(G)
 					|| rightDeclType == numberObjectType(G)) {
-				return resultFromBoolean(AnnotationDefinition.NUMBER_BASED.hasAnnotation(leftDeclType));
+				return resultFromBoolean(enumKind == EnumKind.NumberBased);
 			}
 			if (rightDeclType == n4StringBasedEnumType(G)
 					|| rightDeclType == stringType(G)
 					|| rightDeclType == stringObjectType(G)) {
-				return resultFromBoolean(AnnotationDefinition.STRING_BASED.hasAnnotation(leftDeclType));
+				return resultFromBoolean(enumKind == EnumKind.StringBased);
 			}
 		}
 		if (leftDeclType == n4NumberBasedEnumType(G)

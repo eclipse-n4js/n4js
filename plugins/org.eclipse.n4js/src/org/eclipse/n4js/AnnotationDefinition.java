@@ -94,14 +94,14 @@ public final class AnnotationDefinition {
 			.end();
 
 	/**
-	 * FIXME
+	 * 4.13.2 Number-/String-Based Enumeration Type
 	 */
 	public final static AnnotationDefinition NUMBER_BASED = define("NumberBased")
 			.targets(N4JSPackage.Literals.N4_ENUM_DECLARATION).retention(RetentionPolicy.TYPE)
 			.end();
 
 	/**
-	 * 4.14.2 StringBased Enumeration Type (subtype of string)
+	 * 4.13.2 Number-/String-Based Enumeration Type
 	 */
 	public final static AnnotationDefinition STRING_BASED = define("StringBased")
 			.targets(N4JSPackage.Literals.N4_ENUM_DECLARATION).retention(RetentionPolicy.TYPE)

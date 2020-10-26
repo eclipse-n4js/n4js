@@ -22,6 +22,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.FieldAccessor
 import org.eclipse.n4js.ts.types.PrimitiveType
+import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TField
 import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TMember
@@ -34,6 +35,7 @@ import org.eclipse.n4js.ts.utils.TypeCompareUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.constraints.TypeConstraint
 import org.eclipse.n4js.utils.N4JSLanguageUtils
+import org.eclipse.n4js.utils.N4JSLanguageUtils.EnumKind
 import org.eclipse.n4js.utils.StructuralMembersTriple
 import org.eclipse.n4js.utils.StructuralTypesHelper
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
@@ -162,11 +164,15 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 	 */
 	def private TypeRef changeNumberOrStringBasedEnumToPrimitive(RuleEnvironment G, TypeRef typeRef) {
 		val declType = typeRef.declaredType;
-		return switch (N4JSLanguageUtils.getEnumKind(declType).orNull) {
-			case NumberBased: G.numberTypeRef
-			case StringBased: G.stringTypeRef
-			default: typeRef
+		if (declType instanceof TEnum) {
+			val enumKind = N4JSLanguageUtils.getEnumKind(declType);
+			if (enumKind === EnumKind.NumberBased) {
+				return G.numberTypeRef;
+			} else if (enumKind === EnumKind.StringBased) {
+				return G.stringTypeRef;
+			}
 		}
+		return typeRef;
 	}
 
 	def private void checkMembers(TypeRef leftTypeRef, StructuralMembersTriple triple, StructTypingInfo info) {

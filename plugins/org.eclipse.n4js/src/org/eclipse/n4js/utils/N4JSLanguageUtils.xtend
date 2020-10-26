@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.utils
 
-import com.google.common.base.Optional
 import java.io.IOException
 import java.io.InputStream
 import java.util.Properties
@@ -191,17 +190,6 @@ public class N4JSLanguageUtils {
 		StringBased
 	}
 
-	def static Optional<EnumKind> getEnumKind(EObject obj) {
-		return switch (obj) {
-			N4EnumDeclaration:
-				Optional.of(getEnumKind(obj))
-			TEnum:
-				Optional.of(getEnumKind(obj))
-			default:
-				Optional.absent()
-		};
-	}
-
 	def static EnumKind getEnumKind(N4EnumDeclaration enumDecl) {
 		if (AnnotationDefinition.NUMBER_BASED.hasAnnotation(enumDecl)) {
 			return EnumKind.NumberBased;
@@ -220,10 +208,17 @@ public class N4JSLanguageUtils {
 		return EnumKind.Normal;
 	}
 
+	/**
+	 * Tells whether the given enum literal has a valid value expression (i.e. a string literal or
+	 * a, possibly negated, number literal). */
 	def static boolean isEnumLiteralValueExpressionValid(N4EnumLiteral n4EnumLiteral) {
 		return n4EnumLiteral?.valueExpression === null || getEnumLiteralValue(n4EnumLiteral) !== null;
 	}
 
+	/**
+	 * Obtains from the AST the value of the given enum literal. Returns <code>null</code> iff the
+	 * enum literal has an invalid value expression.
+	 */
 	def static Object getEnumLiteralValue(N4EnumLiteral n4EnumLiteral) {
 		val valueExpr = n4EnumLiteral?.valueExpression;
 		if (valueExpr instanceof StringLiteral) {
@@ -235,7 +230,7 @@ public class N4JSLanguageUtils {
 			if (expr instanceof NumericLiteral) {
 				if (valueExpr.op === UnaryOperator.NEG) {
 					return expr.value?.negate;
-				} else {
+				} else if (valueExpr.op === UnaryOperator.POS) {
 					return expr.value;
 				}
 			}
@@ -1008,8 +1003,9 @@ public class N4JSLanguageUtils {
 		val isNonN4JSInterfaceInN4JSD = typeDecl instanceof N4InterfaceDeclaration
 			&& javaScriptVariantHelper.isExternalMode(typeDecl)
 			&& !AnnotationDefinition.N4JS.hasAnnotation(typeDecl as N4InterfaceDeclaration);
-		val enumKind = getEnumKind(typeDecl).orNull();
-		return typeDecl !== null && !isNonN4JSInterfaceInN4JSD && (enumKind === null || enumKind === EnumKind.Normal);
+		val isNumberOrStringBasedEnum = typeDecl instanceof N4EnumDeclaration
+			&& getEnumKind(typeDecl as N4EnumDeclaration) !== EnumKind.Normal;
+		return typeDecl !== null && !isNonN4JSInterfaceInN4JSD && !isNumberOrStringBasedEnum;
 	}
 
 	/**
@@ -1023,8 +1019,9 @@ public class N4JSLanguageUtils {
 		val isNonN4JSInterfaceInN4JSD = element instanceof TInterface
 			&& javaScriptVariantHelper.isExternalMode(element)
 			&& !AnnotationDefinition.N4JS.hasAnnotation(element as TInterface);
-		val enumKind = getEnumKind(element).orNull();
-		return element !== null && !isNonN4JSInterfaceInN4JSD && (enumKind === null || enumKind === EnumKind.Normal);
+		val isNumberOrStringBasedEnum = element instanceof TEnum
+			&& getEnumKind(element as TEnum) !== EnumKind.Normal;
+		return element !== null && !isNonN4JSInterfaceInN4JSD && !isNumberOrStringBasedEnum;
 	}
 
 	/**

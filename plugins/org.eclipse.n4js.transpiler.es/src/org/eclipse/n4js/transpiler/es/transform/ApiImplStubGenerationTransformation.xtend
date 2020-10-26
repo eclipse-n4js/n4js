@@ -205,14 +205,19 @@ class ApiImplStubGenerationTransformation extends Transformation {
 			stub0
 		) as ScriptElement;
 
-		// string based
+		// number-/string-based
 		val enumKind = N4JSLanguageUtils.getEnumKind(tenum);
-		val annotationList = switch (enumKind) {
-			case Normal: _AnnotationList(#[])
-			case NumberBased: _AnnotationList(#[AnnotationDefinition.NUMBER_BASED])
-			case StringBased: _AnnotationList(#[AnnotationDefinition.STRING_BASED])
+		switch (enumKind) {
+			case Normal: {
+				// do nothing
+			}
+			case NumberBased: {
+				(stub as AnnotableScriptElement).annotationList = _AnnotationList(#[AnnotationDefinition.NUMBER_BASED]);
+			}
+			case StringBased: {
+				(stub as AnnotableScriptElement).annotationList = _AnnotationList(#[AnnotationDefinition.STRING_BASED]);
+			}
 		};
-		(stub as AnnotableScriptElement).annotationList = annotationList;
 
 		appendToScript( stub )
 

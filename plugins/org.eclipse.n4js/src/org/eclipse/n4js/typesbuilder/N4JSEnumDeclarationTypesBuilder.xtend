@@ -12,7 +12,6 @@ package org.eclipse.n4js.typesbuilder
 
 import com.google.inject.Inject
 import java.math.BigDecimal
-import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4EnumLiteral
 import org.eclipse.n4js.ts.types.TEnum
@@ -20,6 +19,7 @@ import org.eclipse.n4js.ts.types.TEnumLiteral
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.utils.N4JSLanguageUtils
+import org.eclipse.n4js.utils.N4JSLanguageUtils.EnumKind
 
 public class N4JSEnumDeclarationTypesBuilder {
 
@@ -105,16 +105,20 @@ public class N4JSEnumDeclarationTypesBuilder {
 	}
 
 	def private void computeDefaultValues(TEnum enumType, N4EnumDeclaration n4Enum) {
-		if (AnnotationDefinition.NUMBER_BASED.hasAnnotation(n4Enum)) {
+		val enumKind = N4JSLanguageUtils.getEnumKind(n4Enum);
+		if (enumKind === EnumKind.NumberBased) {
 			// @NumberBased enums
 			val usedNumbers = enumType.literals.map[valueNumber].filterNull.toSet;
 			var next = BigDecimal.ONE.negate();
 			for (tLiteral : enumType.literals) {
-				if (tLiteral.valueNumber === null) {
+				if (tLiteral.valueNumber !== null) {
+					next = tLiteral.valueNumber;
+				} else {
 					do {
 						next = next.add(BigDecimal.ONE);
 					} while(usedNumbers.contains(next));
 					tLiteral.valueNumber = next;
+					usedNumbers += next;
 				}
 			}
 		} else {

@@ -29,13 +29,37 @@ enum ENB1 {
 
 @NumberBased
 enum ENB2 {
-	L0: -1,
+	L0: 1,
 	L1,
 	L2
 }
 
 @NumberBased
 enum ENB3 {
+	L0: -1,
+	L1,
+	L2
+}
+
+@NumberBased
+enum ENB4 {
+	L0: -5,
+	L1,
+	L2
+}
+
+@NumberBased
+enum ENB5 {
+	L0,
+	L1,
+	L2,
+	L3: 10,
+	L4,
+	L5
+}
+
+@NumberBased
+enum ENB6 {
 	L0,
 	L1,
 	L2,
@@ -49,11 +73,17 @@ console.log(ESB.L);
 console.log(ENB1.literals);
 console.log(ENB2.literals);
 console.log(ENB3.literals);
+console.log(ENB4.literals);
+console.log(ENB5.literals);
+console.log(ENB6.literals);
 
 /* XPECT output ---
 L
 L
 [0, 1, 2]
+[1, 2, 3]
 [-1, 0, 1]
+[-5, -4, -3]
+[0, 1, 2, 10, 11, 12]
 [0, 2, 3, 1, 4, 5]
 --- */
