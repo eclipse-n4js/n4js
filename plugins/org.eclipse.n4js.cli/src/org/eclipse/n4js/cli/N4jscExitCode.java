@@ -58,7 +58,7 @@ public enum N4jscExitCode {
 	// Errors on N4jsc goal lsp
 
 	/** Error while executing the user command provided via option <code>--exec</code> */
-	EXEC_ERROR(210, "Error executing user command"),
+	EXEC_ERROR(210, "Error executing user command provided via option --exec"),
 	;
 
 	private static final Map<Integer, N4jscExitCode> lookup = new HashMap<>();
