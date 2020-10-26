@@ -3358,7 +3358,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTEnumLiteral_Value() {
+	public EAttribute getTEnumLiteral_ValueString() {
 		return (EAttribute)tEnumLiteralEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -3368,8 +3368,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getTEnumLiteral__GetValueOrName() {
-		return tEnumLiteralEClass.getEOperations().get(0);
+	public EAttribute getTEnumLiteral_ValueNumber() {
+		return (EAttribute)tEnumLiteralEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -3925,8 +3925,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEOperation(tEnumEClass, TENUM___GET_TYPE_VARS);
 
 		tEnumLiteralEClass = createEClass(TENUM_LITERAL);
-		createEAttribute(tEnumLiteralEClass, TENUM_LITERAL__VALUE);
-		createEOperation(tEnumLiteralEClass, TENUM_LITERAL___GET_VALUE_OR_NAME);
+		createEAttribute(tEnumLiteralEClass, TENUM_LITERAL__VALUE_STRING);
+		createEAttribute(tEnumLiteralEClass, TENUM_LITERAL__VALUE_NUMBER);
 
 		syntaxRelatedTElementEClass = createEClass(SYNTAX_RELATED_TELEMENT);
 		createEReference(syntaxRelatedTElementEClass, SYNTAX_RELATED_TELEMENT__AST_ELEMENT);
@@ -4557,9 +4557,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEOperation(getTEnum__GetTypeVars(), this.getTypeVariable(), "getTypeVars", 0, -1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(tEnumLiteralEClass, TEnumLiteral.class, "TEnumLiteral", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getTEnumLiteral_Value(), theEcorePackage.getEString(), "value", null, 0, 1, TEnumLiteral.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEOperation(getTEnumLiteral__GetValueOrName(), theEcorePackage.getEString(), "getValueOrName", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		initEAttribute(getTEnumLiteral_ValueString(), theEcorePackage.getEString(), "valueString", null, 0, 1, TEnumLiteral.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTEnumLiteral_ValueNumber(), theEcorePackage.getEBigDecimal(), "valueNumber", null, 0, 1, TEnumLiteral.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(syntaxRelatedTElementEClass, SyntaxRelatedTElement.class, "SyntaxRelatedTElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getSyntaxRelatedTElement_AstElement(), theEcorePackage.getEObject(), null, "astElement", null, 0, 1, SyntaxRelatedTElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

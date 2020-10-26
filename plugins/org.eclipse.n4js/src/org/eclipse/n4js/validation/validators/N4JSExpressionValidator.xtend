@@ -18,7 +18,6 @@ import java.util.List
 import java.util.Set
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.util.EcoreUtil
-import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.compileTime.CompileTimeEvaluationError
 import org.eclipse.n4js.compileTime.CompileTimeEvaluator.UnresolvedPropertyAccessError
 import org.eclipse.n4js.compileTime.CompileTimeValue
@@ -120,6 +119,7 @@ import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
+import org.eclipse.n4js.utils.N4JSLanguageUtils.EnumKind
 import org.eclipse.n4js.utils.PromisifyHelper
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
@@ -1427,7 +1427,8 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 
 		// prepare some information about the particular form of index access we have
 		val targetDeclType = targetTypeRef.declaredType;
-		val targetIsLiteralOfStringBasedEnum = targetDeclType instanceof TEnum && AnnotationDefinition.STRING_BASED.hasAnnotation(targetDeclType);
+		val targetIsLiteralOfStringBasedEnum = targetDeclType instanceof TEnum
+			&& N4JSLanguageUtils.getEnumKind(targetDeclType as TEnum) === EnumKind.StringBased;
 		val accessedBuiltInSymbol = N4JSLanguageUtils.getAccessedBuiltInSymbol(G, index);
 		val accessedStaticType = if(targetTypeRef instanceof TypeTypeRef) tsh.getStaticType(G, targetTypeRef);
 		val indexIsNumeric = ts.subtypeSucceeded(G, indexTypeRef, G.numberTypeRef);

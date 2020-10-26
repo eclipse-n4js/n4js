@@ -34,8 +34,8 @@ import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TVariable
-import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.ContainerTypesHelper
+import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
@@ -198,8 +198,6 @@ class ApiImplStubGenerationTransformation extends Transformation {
 	}
 	def private dispatch missing(TEnum tenum){
 
-		val stringBased = TypeSystemHelper.isStringBasedEnumeration(tenum);
-
 		val stub0 = _EnumDeclaration(tenum.name, tenum.literals.map[ _EnumLiteral(name, name) ] );
 
 		// exported
@@ -207,10 +205,19 @@ class ApiImplStubGenerationTransformation extends Transformation {
 			stub0
 		) as ScriptElement;
 
-		// string based
-		if( stringBased ) {
-			(stub as AnnotableScriptElement).annotationList =_AnnotationList( #[AnnotationDefinition.STRING_BASED] )
-		}
+		// number-/string-based
+		val enumKind = N4JSLanguageUtils.getEnumKind(tenum);
+		switch (enumKind) {
+			case Normal: {
+				// do nothing
+			}
+			case NumberBased: {
+				(stub as AnnotableScriptElement).annotationList = _AnnotationList(#[AnnotationDefinition.NUMBER_BASED]);
+			}
+			case StringBased: {
+				(stub as AnnotableScriptElement).annotationList = _AnnotationList(#[AnnotationDefinition.STRING_BASED]);
+			}
+		};
 
 		appendToScript( stub )
 

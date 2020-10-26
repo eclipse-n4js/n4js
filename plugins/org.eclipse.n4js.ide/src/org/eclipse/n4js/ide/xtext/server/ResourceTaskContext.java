@@ -419,17 +419,16 @@ public class ResourceTaskContext {
 
 		if (!isAffected) {
 			IResourceDescription.Manager rdm = getResourceDescriptionManager(mainURI);
-			if (rdm == null) {
-				return;
-			}
 			IResourceDescription candidateDesc = indexSnapshot.getResourceDescription(mainURI);
-			if (rdm instanceof AllChangeAware) {
-				isAffected = ((AllChangeAware) rdm).isAffectedByAny(allDeltas, candidateDesc, indexSnapshot);
-			} else {
-				List<IResourceDescription.Delta> changedDeltas = allDeltas.stream()
-						.filter(d -> d.haveEObjectDescriptionsChanged())
-						.collect(Collectors.toList());
-				isAffected = rdm.isAffected(changedDeltas, candidateDesc, indexSnapshot);
+			if (rdm != null && candidateDesc != null) {
+				if (rdm instanceof AllChangeAware) {
+					isAffected = ((AllChangeAware) rdm).isAffectedByAny(allDeltas, candidateDesc, indexSnapshot);
+				} else {
+					List<IResourceDescription.Delta> changedDeltas = allDeltas.stream()
+							.filter(d -> d.haveEObjectDescriptionsChanged())
+							.collect(Collectors.toList());
+					isAffected = rdm.isAffected(changedDeltas, candidateDesc, indexSnapshot);
+				}
 			}
 		}
 

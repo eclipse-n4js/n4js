@@ -1009,7 +1009,7 @@ ScientificIntLiteral: value=SCIENTIFIC_INT;
 RegularExpressionLiteral: value=REGEX_LITERAL;
 
 NumericLiteralAsString:
-	DOUBLE | INT | OCTAL_INT | HEX_INT | SCIENTIFIC_INT
+	DOUBLE | INT | BINARY_INT | OCTAL_INT | HEX_INT | SCIENTIFIC_INT
 ;
 
 IdentifierOrThis:
@@ -1333,17 +1333,13 @@ N4EnumDeclaration <Yield>:
 		(literals+=N4EnumLiteral (',' literals+=N4EnumLiteral)*)?
 	'}'
 ;
-/*
- * Only upper case literals are allows, this is to be checked by the validator
- */
-N4EnumLiteral: name=IdentifierName (':' value=STRING)?;
 
-	// grammar allows use of these modifiers in many places that are not actually valid;
+N4EnumLiteral: name=IdentifierName (':' valueExpression=AssignmentExpression<In=true,Yield=false>)?;
+
+// grammar allows use of these modifiers in many places that are not actually valid;
 // this is checked in N4JSSyntaxValidator (see N4Modifier in N4JS.xcore for details)
 enum N4Modifier: private | project | protected | public | external | abstract | static | const;
 
-	// TODO jvp: order matters, seems odd. What about object literal getters and setter?
-// TODO sz: what about it?
 N4MemberDeclaration <Yield>:
 	AnnotatedN4MemberDeclaration<Yield>
 	| N4GetterDeclaration<Yield>

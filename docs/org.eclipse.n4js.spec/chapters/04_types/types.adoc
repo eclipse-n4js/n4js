@@ -2904,21 +2904,27 @@ var c: Color = colors.get();
 
 
 
-=== String-Based Enums
+=== Number- and String-Based Enums
 
+An enum may be annotated with `@NumberBased` or `@StringBased` to obtain a light-weight form of enumeration
+with literals that can be used in the same way as ordinary numbers / strings, for example passed to
+a function that expects a number / string. However, the opposite does not apply, i.e. a number / string
+cannot be passed to a function that expects a `@NumberBased` / `@StringBased` enum literal. This way, these
+enums provide a certain degree of type safety at almost no runtime overhead.
 
-In current web standards cite:[W3C:Steen:14:XL], definitions of enumerations are often given in webIDL syntax.
-While the webIDL-definition assembles a set of unique string literals as a named enum-entity, the language binding to ECMAScript refers to the usage of the members of these enumerations only.
-Hence, if an element of an enumeration is stored in a variable or field, passed as a parameter into a method or function or given back as a result, the actual type in JavaScript will be `string`.
-To provide the N4JS user with some validations regarding the validity of a statement at compile time, a special kind of subtypes of `string` are introduced: the string-based enum using the `@StringBased` annotation.
-(See also other string-based types like `typename<T>` `pathSelector<T>` and `i18nKey` in <<_primitive-pathselector-and-i18nkey>>.)
+Number-/string-based enums do not have any kind of runtime representation; instead, the transpiler will
+replace each reference to a literal of a number-/string-based enum by a corresponding number/string literal
+in the output code.
+Furthermore, no meta-information is available for these enums, i.e. the `n4type` property is not available.
+The only exception is the static getter `literals`: it is available also for number-/string-based enums and
+has the same meaning. In case of number-/string-based enums, however, there won’t be a getter used at runtime;
+instead, the transpiler replaces every read access to this getter by an array literal containing a number/string
+literal for each of the enum’s literals.
 
-String-based enums do not have any kind of runtime representation; instead, the transpiler will replace each reference to a literal of a string-based enum by a corresponding string literal in the output code.
-Furthermore, no meta-information is available for string-based enums, i.e. the `n4type` property is not available.
-The only exception is the static getter `literals`: it is available also for string-based enums and has the same meaning.
-In case of string-based enums, however, there won’t be a getter used at runtime; instead, the transpiler replaces every read access to this getter by an array literal containing a string literal for each of the enum’s literals.
+In `.n4jsd` files, number-/string-based enums are special in that their literals may be provided with values,
+which is not allowed for normal enums in `.n4jsd` files.
 
-.String-Based Enum Type Rules
+.Number-/String-Based Enum Type Rules
 [req,id=IDE-41,version=1]
 --
 
@@ -2970,10 +2976,21 @@ value, as in
     @StringBased enum Color { RED, GREEN, BLUE }
     var c = Color;
 ----
+. Constraints 1. to 6. apply to number-based enums accordingly.
+. An enum may not be annotated with both `@NumberBased` and `@StringBased`.
+
+--
+
 
 .WebIDL example
 [example]
 ====
+
+In current web standards cite:[W3C:Steen:14:XL], definitions of enumerations are often given in webIDL syntax.
+While the webIDL-definition assembles a set of unique string literals as a named enum-entity, the language binding to ECMAScript refers to the usage of the members of these enumerations only.
+Hence, if an element of an enumeration is stored in a variable or field, passed as a parameter into a method or function or given back as a result, the actual type in JavaScript will be `string`.
+To provide the N4JS user with some validations regarding the validity of a statement at compile time, a special kind of subtypes of `string` are introduced: the string-based enum using the `@StringBased` annotation.
+(See also other string-based types like `typename<T>` `pathSelector<T>` and `i18nKey` in <<_primitive-pathselector-and-i18nkey>>.)
 
 .Gecko-Engine webIDL XMLHttpRequestResponseType as taken from cite:[W3C:Steen:14:XL]
 [source,n4js]
@@ -3043,7 +3060,6 @@ public function process(req: XMLHttpRequest) : void {
 
 ====
 
---
 
 
 [.language-n4js]

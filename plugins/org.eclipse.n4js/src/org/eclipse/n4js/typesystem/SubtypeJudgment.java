@@ -21,9 +21,11 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.intTyp
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.isFunction;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.isObject;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.n4EnumType;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.n4NumberBasedEnumType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.n4ObjectType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.n4StringBasedEnumType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.nullType;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.numberObjectType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.numberType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.objectType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.stringObjectType;
@@ -37,7 +39,6 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
@@ -68,6 +69,7 @@ import org.eclipse.n4js.typesystem.utils.Result;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.StructuralTypingResult;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
+import org.eclipse.n4js.utils.N4JSLanguageUtils.EnumKind;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
@@ -240,16 +242,26 @@ import com.google.common.collect.Iterables;
 				|| (leftDeclType == numberType(G) && rightDeclType == intType(G))) {
 			return success(); // int <: number AND number <: int (for now, int and number are synonymous)
 		}
-		if (leftDeclType instanceof TEnum
-				&& (rightDeclType == n4EnumType(G)
-						|| rightDeclType == objectType(G))) {
-			return resultFromBoolean(!AnnotationDefinition.STRING_BASED.hasAnnotation(leftDeclType));
+		if (leftDeclType instanceof TEnum) {
+			EnumKind enumKind = N4JSLanguageUtils.getEnumKind((TEnum) leftDeclType);
+			if (rightDeclType == n4EnumType(G)
+					|| rightDeclType == objectType(G)) {
+				return resultFromBoolean(enumKind == EnumKind.Normal);
+			}
+			if (rightDeclType == n4NumberBasedEnumType(G)
+					|| rightDeclType == numberType(G)
+					|| rightDeclType == numberObjectType(G)) {
+				return resultFromBoolean(enumKind == EnumKind.NumberBased);
+			}
+			if (rightDeclType == n4StringBasedEnumType(G)
+					|| rightDeclType == stringType(G)
+					|| rightDeclType == stringObjectType(G)) {
+				return resultFromBoolean(enumKind == EnumKind.StringBased);
+			}
 		}
-		if (leftDeclType instanceof TEnum
-				&& (rightDeclType == n4StringBasedEnumType(G)
-						|| rightDeclType == stringType(G)
-						|| rightDeclType == stringObjectType(G))) {
-			return resultFromBoolean(AnnotationDefinition.STRING_BASED.hasAnnotation(leftDeclType));
+		if (leftDeclType == n4NumberBasedEnumType(G)
+				&& (rightDeclType == numberType(G) || rightDeclType == numberObjectType(G))) {
+			return success();
 		}
 		if (leftDeclType == n4StringBasedEnumType(G)
 				&& (rightDeclType == stringType(G) || rightDeclType == stringObjectType(G))) {

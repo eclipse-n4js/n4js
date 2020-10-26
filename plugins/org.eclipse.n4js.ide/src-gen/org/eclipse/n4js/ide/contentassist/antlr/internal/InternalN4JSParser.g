@@ -12694,21 +12694,27 @@ rule__NumericLiteralAsString__Alternatives
 	)
 	|
 	(
-		{ before(grammarAccess.getNumericLiteralAsStringAccess().getOCTAL_INTTerminalRuleCall_2()); }
+		{ before(grammarAccess.getNumericLiteralAsStringAccess().getBINARY_INTTerminalRuleCall_2()); }
+		RULE_BINARY_INT
+		{ after(grammarAccess.getNumericLiteralAsStringAccess().getBINARY_INTTerminalRuleCall_2()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getNumericLiteralAsStringAccess().getOCTAL_INTTerminalRuleCall_3()); }
 		RULE_OCTAL_INT
-		{ after(grammarAccess.getNumericLiteralAsStringAccess().getOCTAL_INTTerminalRuleCall_2()); }
+		{ after(grammarAccess.getNumericLiteralAsStringAccess().getOCTAL_INTTerminalRuleCall_3()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getNumericLiteralAsStringAccess().getHEX_INTTerminalRuleCall_3()); }
+		{ before(grammarAccess.getNumericLiteralAsStringAccess().getHEX_INTTerminalRuleCall_4()); }
 		RULE_HEX_INT
-		{ after(grammarAccess.getNumericLiteralAsStringAccess().getHEX_INTTerminalRuleCall_3()); }
+		{ after(grammarAccess.getNumericLiteralAsStringAccess().getHEX_INTTerminalRuleCall_4()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getNumericLiteralAsStringAccess().getSCIENTIFIC_INTTerminalRuleCall_4()); }
+		{ before(grammarAccess.getNumericLiteralAsStringAccess().getSCIENTIFIC_INTTerminalRuleCall_5()); }
 		RULE_SCIENTIFIC_INT
-		{ after(grammarAccess.getNumericLiteralAsStringAccess().getSCIENTIFIC_INTTerminalRuleCall_4()); }
+		{ after(grammarAccess.getNumericLiteralAsStringAccess().getSCIENTIFIC_INTTerminalRuleCall_5()); }
 	)
 ;
 finally {
@@ -61965,9 +61971,9 @@ rule__N4EnumLiteral__Group_1__1__Impl
 	}
 :
 (
-	{ before(grammarAccess.getN4EnumLiteralAccess().getValueAssignment_1_1()); }
-	(rule__N4EnumLiteral__ValueAssignment_1_1)
-	{ after(grammarAccess.getN4EnumLiteralAccess().getValueAssignment_1_1()); }
+	{ before(grammarAccess.getN4EnumLiteralAccess().getValueExpressionAssignment_1_1()); }
+	(rule__N4EnumLiteral__ValueExpressionAssignment_1_1)
+	{ after(grammarAccess.getN4EnumLiteralAccess().getValueExpressionAssignment_1_1()); }
 )
 ;
 finally {
@@ -85382,15 +85388,15 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__N4EnumLiteral__ValueAssignment_1_1
+rule__N4EnumLiteral__ValueExpressionAssignment_1_1
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getN4EnumLiteralAccess().getValueSTRINGTerminalRuleCall_1_1_0()); }
-		RULE_STRING
-		{ after(grammarAccess.getN4EnumLiteralAccess().getValueSTRINGTerminalRuleCall_1_1_0()); }
+		{ before(grammarAccess.getN4EnumLiteralAccess().getValueExpressionAssignmentExpressionParserRuleCall_1_1_0()); }
+		norm1_AssignmentExpression
+		{ after(grammarAccess.getN4EnumLiteralAccess().getValueExpressionAssignmentExpressionParserRuleCall_1_1_0()); }
 	)
 ;
 finally {

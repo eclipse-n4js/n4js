@@ -1,0 +1,40 @@
+/**
+ * Copyright (c) 2020 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+@NumberBased
+enum E {
+	// XPECT noerrors -->
+	L0: 0,
+	// XPECT noerrors -->
+	L1: -1,
+	// XPECT noerrors -->
+	L2: +42,
+	// XPECT noerrors -->
+	L3: 1.2345,
+	// XPECT noerrors -->
+	L4: 1.2345e-2,
+	// XPECT noerrors -->
+	L5: 0b10101,
+	// XPECT noerrors -->
+	L6: -0b10101,
+	// XPECT noerrors -->
+	L7: 0o12345,
+	// XPECT noerrors -->
+	L8: 0xabcde
+}
+
+console.log(E.literals);
+
+/* XPECT output ---
+[ 0, -1, 42, 1.2345, 0.012345, 21, -21, 5349, 703710 ]
+--- */

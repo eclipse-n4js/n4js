@@ -6363,8 +6363,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getN4EnumLiteral_Value() {
-		return (EAttribute)n4EnumLiteralEClass.getEStructuralFeatures().get(1);
+	public EReference getN4EnumLiteral_ValueExpression() {
+		return (EReference)n4EnumLiteralEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -8094,7 +8094,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		n4EnumLiteralEClass = createEClass(N4_ENUM_LITERAL);
 		createEAttribute(n4EnumLiteralEClass, N4_ENUM_LITERAL__NAME);
-		createEAttribute(n4EnumLiteralEClass, N4_ENUM_LITERAL__VALUE);
+		createEReference(n4EnumLiteralEClass, N4_ENUM_LITERAL__VALUE_EXPRESSION);
 		createEReference(n4EnumLiteralEClass, N4_ENUM_LITERAL__DEFINED_LITERAL);
 
 		modifiableElementEClass = createEClass(MODIFIABLE_ELEMENT);
@@ -9283,7 +9283,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEClass(n4EnumLiteralEClass, N4EnumLiteral.class, "N4EnumLiteral", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getN4EnumLiteral_Name(), theEcorePackage.getEString(), "name", null, 0, 1, N4EnumLiteral.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getN4EnumLiteral_Value(), theEcorePackage.getEString(), "value", null, 0, 1, N4EnumLiteral.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getN4EnumLiteral_ValueExpression(), this.getExpression(), null, "valueExpression", null, 0, 1, N4EnumLiteral.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getN4EnumLiteral_DefinedLiteral(), theTypesPackage.getTEnumLiteral(), null, "definedLiteral", null, 0, 1, N4EnumLiteral.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(modifiableElementEClass, ModifiableElement.class, "ModifiableElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

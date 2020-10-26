@@ -1,0 +1,61 @@
+/**
+ * Copyright (c) 2020 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+// syntax errors (checked by ASTStructureValidator):
+
+function foo() {}
+const c = 42;
+
+enum E0 {
+	// XPECT errors --> "Only string literals and number literals are allowed as value of an enum literal." at "1+2+3"
+	L0: 1+2+3,
+	// XPECT errors --> "Only string literals and number literals are allowed as value of an enum literal." at "(42)"
+	L1: (42),
+	// XPECT errors --> "Only string literals and number literals are allowed as value of an enum literal." at "c"
+	L2: c,
+	// XPECT errors --> "Only string literals and number literals are allowed as value of an enum literal." at "foo()"
+	L3: foo()
+}
+
+
+// invalid type of value:
+
+enum E1 {
+	// XPECT noerrors --> 
+	L0,
+	// XPECT noerrors --> 
+	L1: 'v1',
+	// XPECT errors --> "Values of type number may only be used for literals of @NumberBased enums." at "42"
+	L2: 42
+}
+
+@NumberBased
+enum E2 {
+	// XPECT noerrors --> 
+	L0,
+	// XPECT errors --> "Values of literals in @NumberBased enums must be of type number." at "'v1'"
+	L1: 'v1',
+	// XPECT noerrors -->
+	L2: 42
+}
+
+@StringBased
+enum E3 {
+	// XPECT noerrors --> 
+	L0,
+	// XPECT noerrors --> 
+	L1: 'v1',
+	// XPECT errors --> "Values of type number may only be used for literals of @NumberBased enums." at "42"
+	L2: 42
+}

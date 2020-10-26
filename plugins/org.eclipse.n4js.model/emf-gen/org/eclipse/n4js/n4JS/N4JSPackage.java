@@ -12794,13 +12794,13 @@ public interface N4JSPackage extends EPackage {
 	int N4_ENUM_LITERAL__NAME = NAMED_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Value</b></em>' attribute.
+	 * The feature id for the '<em><b>Value Expression</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_ENUM_LITERAL__VALUE = NAMED_ELEMENT_FEATURE_COUNT + 1;
+	int N4_ENUM_LITERAL__VALUE_EXPRESSION = NAMED_ELEMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Defined Literal</b></em>' reference.
@@ -21218,15 +21218,15 @@ public interface N4JSPackage extends EPackage {
 	EAttribute getN4EnumLiteral_Name();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4JS.N4EnumLiteral#getValue <em>Value</em>}'.
+	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4JS.N4EnumLiteral#getValueExpression <em>Value Expression</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Value</em>'.
-	 * @see org.eclipse.n4js.n4JS.N4EnumLiteral#getValue()
+	 * @return the meta object for the containment reference '<em>Value Expression</em>'.
+	 * @see org.eclipse.n4js.n4JS.N4EnumLiteral#getValueExpression()
 	 * @see #getN4EnumLiteral()
 	 * @generated
 	 */
-	EAttribute getN4EnumLiteral_Value();
+	EReference getN4EnumLiteral_ValueExpression();
 
 	/**
 	 * Returns the meta object for the reference '{@link org.eclipse.n4js.n4JS.N4EnumLiteral#getDefinedLiteral <em>Defined Literal</em>}'.
@@ -26413,12 +26413,12 @@ public interface N4JSPackage extends EPackage {
 		EAttribute N4_ENUM_LITERAL__NAME = eINSTANCE.getN4EnumLiteral_Name();
 
 		/**
-		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Value Expression</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute N4_ENUM_LITERAL__VALUE = eINSTANCE.getN4EnumLiteral_Value();
+		EReference N4_ENUM_LITERAL__VALUE_EXPRESSION = eINSTANCE.getN4EnumLiteral_ValueExpression();
 
 		/**
 		 * The meta object literal for the '<em><b>Defined Literal</b></em>' reference feature.

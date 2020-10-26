@@ -26,8 +26,6 @@ console.log(new N4Class())
 console.log(new N4Interface())
 // XPECT errors --> "The constructor of N4EnumType is not visible." at "N4EnumType"
 console.log(new N4EnumType())
-// XPECT errors --> "The constructor of N4StringBasedEnumType is not visible." at "N4StringBasedEnumType"
-console.log(new N4StringBasedEnumType())
 // XPECT errors --> "Cannot instantiate abstract class N4Member." at "N4Member"
 console.log(new N4Member())
 // XPECT errors --> "The constructor of N4DataField is not visible." at "N4DataField"
@@ -54,8 +52,6 @@ class X05 extends N4Class {}
 class X06 extends N4Interface {}
 // XPECT errors --> "Cannot extend final class N4EnumType." at "N4EnumType"
 class X07 extends N4EnumType {}
-// XPECT errors --> "Cannot extend final class N4StringBasedEnumType." at "N4StringBasedEnumType"
-class X08 extends N4StringBasedEnumType {}
 // XPECT errors --> "Cannot extend class N4Member because its constructor is not accessible." at "N4Member"
 class X09 extends N4Member {}
 // XPECT errors --> "Cannot extend final class N4DataField." at "N4DataField"

@@ -53,7 +53,7 @@ N4Classifier - builtin_n4.n4ts, N4DataField - builtin_n4.n4ts, N4Element - built
 N4Enum - builtin_n4.n4ts, N4EnumType - builtin_n4.n4ts,
 N4Interface - builtin_n4.n4ts, N4Member - builtin_n4.n4ts, N4Method - builtin_n4.n4ts,
 N4NamedElement - builtin_n4.n4ts, N4Object - builtin_n4.n4ts, N4Provider - builtin_n4.n4ts,
-N4StringBasedEnum - builtin_n4.n4ts, N4StringBasedEnumType - builtin_n4.n4ts,
+N4StringBasedEnum - builtin_n4.n4ts,
 N4Type - builtin_n4.n4ts,
 N4ApiNotImplementedError - builtin_n4.n4ts,
 Number - builtin_js.n4ts, Object - builtin_js.n4ts, Promise - builtin_js.n4ts,

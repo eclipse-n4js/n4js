@@ -51,6 +51,7 @@ import org.eclipse.n4js.ts.types.UndefinedType
 import org.eclipse.n4js.ts.types.VoidType
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
+import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.RecursionGuard
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.service.OperationCanceledManager
@@ -411,6 +412,16 @@ class RuleEnvironmentExtensions {
 		G.numberType.createTypeRef
 	}
 
+	/* Returns built-in object type {@code Number} */
+	public def static numberObjectType(RuleEnvironment G) {
+		G.getPredefinedTypes().builtInTypeScope.numberObjectType
+	}
+
+	/* Returns newly created reference to built-in object type {@code Number} */
+	public def static numberObjectTypeRef(RuleEnvironment G) {
+		G.numberObjectType.createTypeRef
+	}
+
 	/* Returns built-in type {@code int} */
 	public def static intType(RuleEnvironment G) {
 		G.getPredefinedTypes().builtInTypeScope.intType
@@ -565,6 +576,15 @@ class RuleEnvironmentExtensions {
 		G.n4EnumType.createTypeRef
 	}
 
+	/* Returns built-in type {@code N4NumberBasedEnum} */
+	public def static n4NumberBasedEnumType(RuleEnvironment G) {
+		G.getPredefinedTypes().builtInTypeScope.n4NumberBasedEnumType
+	}
+	/* Returns a newly created reference to the built-in type {@code N4NumberBasedEnum} */
+	public def static n4NumberBasedEnumTypeRef(RuleEnvironment G) {
+		G.n4NumberBasedEnumType.createTypeRef
+	}
+
 	/* Returns built-in type {@code N4StringBasedEnum} */
 	public def static n4StringBasedEnumType(RuleEnvironment G) {
 		G.getPredefinedTypes().builtInTypeScope.n4StringBasedEnumType
@@ -573,6 +593,7 @@ class RuleEnvironmentExtensions {
 	public def static n4StringBasedEnumTypeRef(RuleEnvironment G) {
 		G.n4StringBasedEnumType.createTypeRef
 	}
+
 	/* Returns built-in type {@code i18nKey} */
 	public def static i18nKeyType(RuleEnvironment G) {
 		G.getPredefinedTypes().builtInTypeScope.i18nKeyType
@@ -936,10 +957,11 @@ class RuleEnvironmentExtensions {
 				else
 					G.objectPrototypesAllImplicitSuperTypeRefs
 			TEnum:
-				if( TypeSystemHelper::isStringBasedEnumeration( declaredType ))
-					#[G.n4StringBasedEnumTypeRef /* ,  G.stringTypeRef*/]
-				else
-					#[G.objectTypeRef]
+				switch (N4JSLanguageUtils.getEnumKind(declaredType)) {
+					case Normal: #[G.objectTypeRef]
+					case NumberBased: #[G.n4NumberBasedEnumTypeRef /* , G.numberTypeRef */]
+					case StringBased: #[G.n4StringBasedEnumTypeRef /* , G.stringTypeRef */]
+				}
 			default:
 				emptyList // quick exit
 		}

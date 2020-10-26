@@ -58,9 +58,9 @@ console.log((((E))).literals);
 // some INVALID use cases of @StringBased enums
 
 
-// XPECT errors --> "A @StringBased enum may only be used in type annotations and in property access expressions to access either one of its literals the static getter called literals." at "E"
+// XPECT errors --> "A @NumberBased or @StringBased enum may only be used in type annotations and in property access expressions to access either one of its literals or the static getter called literals." at "E"
 E;
-// XPECT errors --> "A @StringBased enum may only be used in type annotations and in property access expressions to access either one of its literals the static getter called literals." at "E"
+// XPECT errors --> "A @NumberBased or @StringBased enum may only be used in type annotations and in property access expressions to access either one of its literals or the static getter called literals." at "E"
 console.log(E);
 // XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'hasOwnProperty'." at "hasOwnProperty"
 E.hasOwnProperty('foo');

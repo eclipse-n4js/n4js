@@ -19925,7 +19925,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     N4EnumLiteral returns N4EnumLiteral
 	 *
 	 * Constraint:
-	 *     (name=IdentifierName value=STRING?)
+	 *     (name=IdentifierName valueExpression=AssignmentExpression?)
 	 */
 	protected void sequence_N4EnumLiteral(ISerializationContext context, N4EnumLiteral semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

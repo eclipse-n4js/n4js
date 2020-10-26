@@ -18,7 +18,6 @@ import java.util.Arrays
 import java.util.LinkedList
 import java.util.List
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor
@@ -43,7 +42,6 @@ import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TClass
-import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TMember
@@ -310,13 +308,6 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 			default:
 				null
 		}
-	}
-
-	/**
-	 * Helper Method checking existence of "@StringBased" annotation.
-	 */
-	public static def boolean isStringBasedEnumeration (TEnum tEnum) {
-		return tEnum.annotations.exists[it.name == AnnotationDefinition.STRING_BASED.name]
 	}
 
 	/**

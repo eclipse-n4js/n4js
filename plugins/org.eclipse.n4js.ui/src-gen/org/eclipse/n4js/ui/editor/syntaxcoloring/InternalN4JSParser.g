@@ -7377,6 +7377,8 @@ rulePropertyAssignment
 				    |
 				RULE_INT
 				    |
+				RULE_BINARY_INT
+				    |
 				RULE_OCTAL_INT
 				    |
 				RULE_HEX_INT
@@ -7609,6 +7611,8 @@ norm1_PropertyAssignment
 				RULE_DOUBLE
 				    |
 				RULE_INT
+				    |
+				RULE_BINARY_INT
 				    |
 				RULE_OCTAL_INT
 				    |
@@ -7887,6 +7891,8 @@ ruleAnnotatedPropertyAssignment
 						    |
 						RULE_INT
 						    |
+						RULE_BINARY_INT
+						    |
 						RULE_OCTAL_INT
 						    |
 						RULE_HEX_INT
@@ -7964,7 +7970,7 @@ ruleAnnotatedPropertyAssignment
 						Public | 
 						Out | 
 						LeftSquareBracket | 
-						RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+						RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 						(
 							DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_1_2_0_0_2_0=ruleLiteralOrComputedPropertyName{
 								announce($DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_1_2_0_0_2_0.start, $DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_1_2_0_0_2_0.stop, grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredNameAssignment_1_2_0_0_2());
@@ -8369,6 +8375,8 @@ norm1_AnnotatedPropertyAssignment
 						    |
 						RULE_INT
 						    |
+						RULE_BINARY_INT
+						    |
 						RULE_OCTAL_INT
 						    |
 						RULE_HEX_INT
@@ -8446,7 +8454,7 @@ norm1_AnnotatedPropertyAssignment
 						Public | 
 						Out | 
 						LeftSquareBracket | 
-						RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+						RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 						(
 							DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_1_2_0_0_2_0=norm1_LiteralOrComputedPropertyName{
 								announce($DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_1_2_0_0_2_0.start, $DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_1_2_0_0_2_0.stop, grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredNameAssignment_1_2_0_0_2());
@@ -9270,6 +9278,8 @@ rulePropertySetterDeclaration
 				    |
 				RULE_INT
 				    |
+				RULE_BINARY_INT
+				    |
 				RULE_OCTAL_INT
 				    |
 				RULE_HEX_INT
@@ -9347,7 +9357,7 @@ rulePropertySetterDeclaration
 				Public | 
 				Out | 
 				LeftSquareBracket | 
-				RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+				RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 				(
 					DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_2_0=ruleLiteralOrComputedPropertyName{
 						announce($DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_2_0.start, $DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_2_0.stop, grammarAccess.getPropertySetterDeclarationAccess().getDeclaredNameAssignment_0_0_2());
@@ -9537,6 +9547,8 @@ norm1_PropertySetterDeclaration
 				    |
 				RULE_INT
 				    |
+				RULE_BINARY_INT
+				    |
 				RULE_OCTAL_INT
 				    |
 				RULE_HEX_INT
@@ -9614,7 +9626,7 @@ norm1_PropertySetterDeclaration
 				Public | 
 				Out | 
 				LeftSquareBracket | 
-				RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+				RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 				(
 					DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_2_0=norm1_LiteralOrComputedPropertyName{
 						announce($DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_2_0.start, $DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_2_0.stop, grammarAccess.getPropertySetterDeclarationAccess().getDeclaredNameAssignment_0_0_2());
@@ -15187,6 +15199,8 @@ ruleNumericLiteralAsString
 	    |
 	RULE_INT
 	    |
+	RULE_BINARY_INT
+	    |
 	RULE_OCTAL_INT
 	    |
 	RULE_HEX_INT
@@ -16212,8 +16226,8 @@ ruleN4EnumLiteral
 		}
 		(
 			(
-				ValueSTRINGTerminalRuleCall_1_1_0=RULE_STRING{
-					announce($ValueSTRINGTerminalRuleCall_1_1_0, grammarAccess.getN4EnumLiteralAccess().getValueAssignment_1_1());
+				ValueExpressionAssignmentExpressionParserRuleCall_1_1_0=norm1_AssignmentExpression{
+					announce($ValueExpressionAssignmentExpressionParserRuleCall_1_1_0.start, $ValueExpressionAssignmentExpressionParserRuleCall_1_1_0.stop, grammarAccess.getN4EnumLiteralAccess().getValueExpressionAssignment_1_1());
 				}
 			)
 		)
@@ -16389,6 +16403,8 @@ ruleN4MemberDeclaration
 				RULE_DOUBLE
 				    |
 				RULE_INT
+				    |
+				RULE_BINARY_INT
 				    |
 				RULE_OCTAL_INT
 				    |
@@ -16613,6 +16629,8 @@ norm1_N4MemberDeclaration
 				RULE_DOUBLE
 				    |
 				RULE_INT
+				    |
+				RULE_BINARY_INT
 				    |
 				RULE_OCTAL_INT
 				    |
@@ -16870,6 +16888,8 @@ ruleAnnotatedN4MemberDeclaration
 						    |
 						RULE_INT
 						    |
+						RULE_BINARY_INT
+						    |
 						RULE_OCTAL_INT
 						    |
 						RULE_HEX_INT
@@ -16952,7 +16972,7 @@ ruleAnnotatedN4MemberDeclaration
 						Public | 
 						Out | 
 						LeftSquareBracket | 
-						RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+						RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 						(
 							DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_1_1_0_0_3_0=ruleLiteralOrComputedPropertyName{
 								announce($DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_1_1_0_0_3_0.start, $DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_1_1_0_0_3_0.stop, grammarAccess.getAnnotatedN4MemberDeclarationAccess().getDeclaredNameAssignment_1_1_0_0_3());
@@ -17304,6 +17324,8 @@ norm1_AnnotatedN4MemberDeclaration
 						    |
 						RULE_INT
 						    |
+						RULE_BINARY_INT
+						    |
 						RULE_OCTAL_INT
 						    |
 						RULE_HEX_INT
@@ -17386,7 +17408,7 @@ norm1_AnnotatedN4MemberDeclaration
 						Public | 
 						Out | 
 						LeftSquareBracket | 
-						RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+						RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 						(
 							DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_1_1_0_0_3_0=norm1_LiteralOrComputedPropertyName{
 								announce($DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_1_1_0_0_3_0.start, $DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_1_1_0_0_3_0.stop, grammarAccess.getAnnotatedN4MemberDeclarationAccess().getDeclaredNameAssignment_1_1_0_0_3());
@@ -18192,7 +18214,7 @@ ruleGetterHeader
 		Public | 
 		Out | 
 		LeftSquareBracket | 
-		RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+		RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 		(
 			DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_2_0=ruleLiteralOrComputedPropertyName{
 				announce($DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_2_0.start, $DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_2_0.stop, grammarAccess.getGetterHeaderAccess().getDeclaredNameAssignment_2());
@@ -18298,7 +18320,7 @@ norm1_GetterHeader
 		Public | 
 		Out | 
 		LeftSquareBracket | 
-		RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+		RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 		(
 			DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_2_0=norm1_LiteralOrComputedPropertyName{
 				announce($DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_2_0.start, $DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_2_0.stop, grammarAccess.getGetterHeaderAccess().getDeclaredNameAssignment_2());
@@ -18481,6 +18503,8 @@ ruleN4SetterDeclaration
 				    |
 				RULE_INT
 				    |
+				RULE_BINARY_INT
+				    |
 				RULE_OCTAL_INT
 				    |
 				RULE_HEX_INT
@@ -18563,7 +18587,7 @@ ruleN4SetterDeclaration
 				Public | 
 				Out | 
 				LeftSquareBracket | 
-				RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+				RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 				(
 					DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_3_0=ruleLiteralOrComputedPropertyName{
 						announce($DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_3_0.start, $DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_3_0.stop, grammarAccess.getN4SetterDeclarationAccess().getDeclaredNameAssignment_0_0_3());
@@ -18764,6 +18788,8 @@ norm1_N4SetterDeclaration
 				    |
 				RULE_INT
 				    |
+				RULE_BINARY_INT
+				    |
 				RULE_OCTAL_INT
 				    |
 				RULE_HEX_INT
@@ -18846,7 +18872,7 @@ norm1_N4SetterDeclaration
 				Public | 
 				Out | 
 				LeftSquareBracket | 
-				RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+				RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 				(
 					DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_3_0=norm1_LiteralOrComputedPropertyName{
 						announce($DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_3_0.start, $DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_3_0.stop, grammarAccess.getN4SetterDeclarationAccess().getDeclaredNameAssignment_0_0_3());

@@ -1,0 +1,84 @@
+/*
+ * Copyright (c) 2018 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+@NumberBased
+export public enum E {
+	L
+}
+
+// XPECT noerrors -->
+class G<T extends E> {}
+
+// XPECT noerrors -->
+class H<T extends N4NumberBasedEnum> {}
+
+
+// -----------------------------------------------------------------
+// valid use cases of @NumberBased enums
+
+
+// XPECT noerrors -->
+let e: E;
+
+// XPECT noerrors -->
+let ge: G<E>;
+
+// XPECT noerrors -->
+let he: H<E>;
+
+// XPECT noerrors -->
+function foo(p: E) {}
+
+// XPECT noerrors -->
+console.log(E.L);
+
+// XPECT noerrors -->
+console.log(E.literals);
+
+// XPECT noerrors -->
+console.log((((E))).L);
+
+// XPECT noerrors -->
+console.log((((E))).literals);
+
+
+
+// -----------------------------------------------------------------
+// some INVALID use cases of @NumberBased enums
+
+
+// XPECT errors --> "A @NumberBased or @StringBased enum may only be used in type annotations and in property access expressions to access either one of its literals or the static getter called literals." at "E"
+E;
+// XPECT errors --> "A @NumberBased or @StringBased enum may only be used in type annotations and in property access expressions to access either one of its literals or the static getter called literals." at "E"
+console.log(E);
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'hasOwnProperty'." at "hasOwnProperty"
+E.hasOwnProperty('foo');
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'fromCharCode'." at "fromCharCode"
+E.fromCharCode(42);
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'getOwnPropertyNames'." at "getOwnPropertyNames"
+E.getOwnPropertyNames({});
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'charAt'." at "charAt"
+E.L.charAt(0);
+
+
+
+// -----------------------------------------------------------------
+// but this should work:
+
+// XPECT noerrors -->
+"hello"[E.L];
+// XPECT noerrors -->
+-E.L;
+// XPECT noerrors -->
+42*E.L;

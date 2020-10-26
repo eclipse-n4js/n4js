@@ -28,6 +28,7 @@ import org.eclipse.n4js.n4JS.BindingElement
 import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.BreakStatement
 import org.eclipse.n4js.n4JS.CatchBlock
+import org.eclipse.n4js.n4JS.CoalesceExpression
 import org.eclipse.n4js.n4JS.ContinueStatement
 import org.eclipse.n4js.n4JS.DestructureUtils
 import org.eclipse.n4js.n4JS.ExportDeclaration
@@ -54,6 +55,7 @@ import org.eclipse.n4js.n4JS.N4ClassDefinition
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.N4ClassifierDefinition
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
+import org.eclipse.n4js.n4JS.N4EnumLiteral
 import org.eclipse.n4js.n4JS.N4FieldAccessor
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSPackage
@@ -90,6 +92,7 @@ import org.eclipse.n4js.services.N4JSGrammarAccess
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.utils.N4JSLanguageHelper
+import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.xtend.lib.annotations.ToString
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.diagnostics.DiagnosticMessage
@@ -103,7 +106,6 @@ import static org.eclipse.n4js.validation.helper.FunctionValidationHelper.*
 import static extension org.eclipse.n4js.conversion.AbstractN4JSStringValueConverter.*
 import static extension org.eclipse.n4js.n4JS.DestructureUtils.isTopOfDestructuringAssignment
 import static extension org.eclipse.n4js.n4JS.DestructureUtils.isTopOfDestructuringForStatement
-import org.eclipse.n4js.n4JS.CoalesceExpression
 
 /**
  * A utility that validates the structure of the AST in one pass.
@@ -470,12 +472,35 @@ class ASTStructureValidator {
 				new DiagnosticMessage(IssueCodes.messageForENM_WITHOUT_LITERALS,
 					IssueCodes.getDefaultSeverity(IssueCodes.ENM_WITHOUT_LITERALS), IssueCodes.ENM_WITHOUT_LITERALS))
 		}
+
 		recursiveValidateASTStructure(
 			model,
 			producer,
 			validLabels,
 			// according to ecma6 spec, class bodies are always strict
 			constraints.strict(true).allowNestedFunctions(true).allowReturn(false).allowContinue(false).allowBreak(false).allowBreakWithoutLabel(false)
+		)
+	}
+
+	def private dispatch void validateASTStructure(
+		N4EnumLiteral model,
+		ASTStructureDiagnosticProducer producer,
+		Set<LabelledStatement> validLabels,
+		Constraints constraints
+	) {
+		if (!N4JSLanguageUtils.isEnumLiteralValueExpressionValid(model)) {
+			val nodes = NodeModelUtils.findNodesForFeature(model, N4JSPackage.eINSTANCE.n4EnumLiteral_ValueExpression);
+			producer.node = nodes.head;
+			producer.addDiagnostic(
+				new DiagnosticMessage(IssueCodes.messageForENM_INVALID_VALUE_EXPRESSION,
+					IssueCodes.getDefaultSeverity(IssueCodes.ENM_INVALID_VALUE_EXPRESSION), IssueCodes.ENM_INVALID_VALUE_EXPRESSION))
+		}
+
+		recursiveValidateASTStructure(
+			model,
+			producer,
+			validLabels,
+			constraints
 		)
 	}
 

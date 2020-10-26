@@ -938,7 +938,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getN4EnumDeclarationAccess().getLiteralsAssignment_2_0(), "rule__N4EnumDeclaration__LiteralsAssignment_2_0");
 			builder.put(grammarAccess.getN4EnumDeclarationAccess().getLiteralsAssignment_2_1_1(), "rule__N4EnumDeclaration__LiteralsAssignment_2_1_1");
 			builder.put(grammarAccess.getN4EnumLiteralAccess().getNameAssignment_0(), "rule__N4EnumLiteral__NameAssignment_0");
-			builder.put(grammarAccess.getN4EnumLiteralAccess().getValueAssignment_1_1(), "rule__N4EnumLiteral__ValueAssignment_1_1");
+			builder.put(grammarAccess.getN4EnumLiteralAccess().getValueExpressionAssignment_1_1(), "rule__N4EnumLiteral__ValueExpressionAssignment_1_1");
 			builder.put(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getDeclaredModifiersAssignment_1_0_0_0_1(), "rule__AnnotatedN4MemberDeclaration__DeclaredModifiersAssignment_1_0_0_0_1");
 			builder.put(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getBodyAssignment_1_0_1(), "rule__AnnotatedN4MemberDeclaration__BodyAssignment_1_0_1");
 			builder.put(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getDeclaredModifiersAssignment_1_1_0_0_1(), "rule__AnnotatedN4MemberDeclaration__DeclaredModifiersAssignment_1_1_0_0_1");

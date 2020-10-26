@@ -11,12 +11,15 @@
 package org.eclipse.n4js.typesbuilder
 
 import com.google.inject.Inject
+import java.math.BigDecimal
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4EnumLiteral
 import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TEnumLiteral
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypesFactory
+import org.eclipse.n4js.utils.N4JSLanguageUtils
+import org.eclipse.n4js.utils.N4JSLanguageUtils.EnumKind
 
 public class N4JSEnumDeclarationTypesBuilder {
 
@@ -65,13 +68,15 @@ public class N4JSEnumDeclarationTypesBuilder {
 		enumType.addLiterals(n4Enum, preLinkingPhase)
 		enumType.copyAnnotations(n4Enum, preLinkingPhase)
 
-		enumType.astElement = n4Enum
+		computeDefaultValues(enumType, n4Enum);
 
+		enumType.astElement = n4Enum
 		n4Enum.definedType = enumType
+
 		target.topLevelTypes += enumType
-		
+
 		VersionedTypesBuilderUtil.setTypeVersion(enumType, n4Enum);
-		
+
 		return enumType;
 	}
 
@@ -84,15 +89,41 @@ public class N4JSEnumDeclarationTypesBuilder {
 	}
 
 	def private void addLiterals(TEnum enumType, N4EnumDeclaration n4Enum, boolean preLinkingPhase) {
-		enumType.literals.addAll(n4Enum.literals.filter(typeof(N4EnumLiteral)).map [createEnumLiteral(preLinkingPhase)]);
+		enumType.literals.addAll(n4Enum.literals.filter(N4EnumLiteral).map[createEnumLiteral(preLinkingPhase)]);
 	}
 
-	def private TEnumLiteral createEnumLiteral(N4EnumLiteral it, boolean preLinkingPhase) {
-		val enumLiteral = TypesFactory::eINSTANCE.createTEnumLiteral();
-		enumLiteral.name = it.name;
-		enumLiteral.value = it.value;
-		enumLiteral.astElement = it;
-		it.definedLiteral = enumLiteral
-		enumLiteral;
+	def private TEnumLiteral createEnumLiteral(N4EnumLiteral n4Literal, boolean preLinkingPhase) {
+		val value = N4JSLanguageUtils.getEnumLiteralValue(n4Literal);
+
+		val tLiteral = TypesFactory::eINSTANCE.createTEnumLiteral();
+		tLiteral.name = n4Literal.name;
+		tLiteral.valueString = if (value instanceof String) value;
+		tLiteral.valueNumber = if (value instanceof BigDecimal) value;
+		tLiteral.astElement = n4Literal;
+		n4Literal.definedLiteral = tLiteral
+		return tLiteral;
+	}
+
+	def private void computeDefaultValues(TEnum enumType, N4EnumDeclaration n4Enum) {
+		val enumKind = N4JSLanguageUtils.getEnumKind(n4Enum);
+		if (enumKind === EnumKind.NumberBased) {
+			// @NumberBased enums
+			val usedNumbers = enumType.literals.map[valueNumber].filterNull.toSet;
+			var next = BigDecimal.ONE.negate();
+			for (tLiteral : enumType.literals) {
+				if (tLiteral.valueNumber !== null) {
+					next = tLiteral.valueNumber;
+				} else {
+					do {
+						next = next.add(BigDecimal.ONE);
+					} while(usedNumbers.contains(next));
+					tLiteral.valueNumber = next;
+					usedNumbers += next;
+				}
+			}
+		} else {
+			// ordinary and @StringBased enums
+			enumType.literals.filter[valueString === null].forEach[valueString = name];
+		}
 	}
 }

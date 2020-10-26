@@ -14,12 +14,30 @@
 // Declaring a string based enum
 
 @StringBased enum SBEnum1 {
-	// only strings are allowed as literals XPECT errors --> "mismatched input '1' expecting RULE_STRING" at "1"
-	a: 1
+	// only strings are allowed as literals XPECT errors --> "Values of type number may only be used for literals of @NumberBased enums." at "1"
+	a: 1,
+	// XPECT noerrors -->
+	b: 'v'
 }
 
 @StringBased enum SBEnum2 {
 	// unique literal names XPECT errors --> "Multiple literals with name a." at "a"
 	a: "a",
 	a: "b"
+}
+
+
+// Declaring a number based enum
+
+@NumberBased enum NBEnum1 {
+	// XPECT noerrors -->
+	a: 1,
+	// only numbers are allowed as literals XPECT errors --> "Values of literals in @NumberBased enums must be of type number." at "'v'"
+	b: 'v'
+}
+
+@NumberBased enum NBEnum2 {
+	// unique literal names XPECT errors --> "Multiple literals with name a." at "a"
+	a: 1,
+	a: 2
 }

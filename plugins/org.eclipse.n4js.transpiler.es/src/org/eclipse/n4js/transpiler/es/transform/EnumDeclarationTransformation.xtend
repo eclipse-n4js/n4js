@@ -11,7 +11,6 @@
 package org.eclipse.n4js.transpiler.es.transform
 
 import com.google.inject.Inject
-import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4EnumLiteral
@@ -24,6 +23,8 @@ import org.eclipse.n4js.transpiler.assistants.TypeAssistant
 import org.eclipse.n4js.transpiler.es.assistants.ReflectionAssistant
 import org.eclipse.n4js.transpiler.im.ImFactory
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
+import org.eclipse.n4js.utils.N4JSLanguageUtils
+import org.eclipse.n4js.utils.N4JSLanguageUtils.EnumKind
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
@@ -65,8 +66,9 @@ class EnumDeclarationTransformation extends Transformation {
 	}
 
 	def private void transformEnumDecl(N4EnumDeclaration enumDecl) {
-		if(enumDecl.isStringBased) {
-			// declarations of string-based enums are simply removed
+		val enumKind = N4JSLanguageUtils.getEnumKind(enumDecl);
+		if(enumKind !== EnumKind.Normal) {
+			// declarations of number/string-based enums are simply removed
 			// (they do not have a representation in the output code)
 			val root = enumDecl.orContainingExportDeclaration;
 			remove(root);
@@ -120,18 +122,15 @@ class EnumDeclarationTransformation extends Transformation {
 	}
 
 	def private N4FieldDeclaration convertLiteralToField(N4EnumLiteral literal, SymbolTableEntry classSTE) {
+		val value = N4JSLanguageUtils.getEnumLiteralValue(literal);
 		return _N4FieldDecl(
 			true,
 			literal.name,
 			_NewExpr(
 				_IdentRef(classSTE),
 				_StringLiteral(literal.name),
-				if (literal.value !== null) _StringLiteral(literal.value)
+				if (value instanceof String) _StringLiteral(value)
 			)
 		);
-	}
-
-	def private boolean isStringBased(N4EnumDeclaration enumDecl) {
-		return AnnotationDefinition.STRING_BASED.hasAnnotation(enumDecl);
 	}
 }

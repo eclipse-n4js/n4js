@@ -2103,7 +2103,7 @@ class N4EnumDeclaration extends N4TypeDeclaration, Versionable, VersionedElement
 
 class N4EnumLiteral extends NamedElement, TypableElement {
 	String name
-	String value
+	contains Expression valueExpression
 	refers transient TEnumLiteral definedLiteral
 }
 
