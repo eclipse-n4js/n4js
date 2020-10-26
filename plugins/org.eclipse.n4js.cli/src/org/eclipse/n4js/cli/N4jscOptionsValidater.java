@@ -69,6 +69,11 @@ public class N4jscOptionsValidater {
 			throw new N4jscException(N4jscExitCode.OPTION_INVALID, msg);
 		}
 
+		if (options.getExec() != null && options.isStdio()) {
+			String msg = "Option --exec may not be combined with --stdio.";
+			throw new N4jscException(N4jscExitCode.OPTION_INVALID, msg);
+		}
+
 		if (!options.getDirs().isEmpty()) {
 			String msg = "Goal LSP does not expect superfluous directory argument";
 			throw new N4jscException(N4jscExitCode.ARGUMENT_DIRS_INVALID, msg);

@@ -174,6 +174,14 @@ public class N4jscOptions {
 		@GoalRequirements(goals = N4jscGoal.lsp)
 		boolean stdio = false;
 
+		@Option(name = "--exec", //
+				hidden = true, //
+				usage = "[lsp] executes the given command string once the LSP server is listening for clients and shuts "
+						+ "down the server after the first client disconnects. Must not be used with option --stdio.", //
+				handler = N4JSCmdLineParser.N4JSStringOptionHandler.class)
+		@GoalRequirements(goals = N4jscGoal.lsp)
+		String exec = null;
+
 		// ARGUMENTS
 
 		@Argument(metaVar = "GOAL", multiValued = false, index = 0, required = false, //
@@ -346,6 +354,11 @@ public class N4jscOptions {
 	/** @return true iff {@code --stdio} */
 	public boolean isStdio() {
 		return options.stdio;
+	}
+
+	/** @return the user command as provided via option {@code --exec} or <code>null</code> if not given. */
+	public String getExec() {
+		return options.exec;
 	}
 
 	/** @return true iff either option {@code performanceKey} or {@code performanceReport} was given */
