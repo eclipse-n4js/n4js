@@ -249,6 +249,7 @@ import com.google.common.collect.Iterables;
 				return resultFromBoolean(enumKind == EnumKind.Normal);
 			}
 			if (rightDeclType == n4NumberBasedEnumType(G)
+					|| rightDeclType == intType(G)
 					|| rightDeclType == numberType(G)
 					|| rightDeclType == numberObjectType(G)) {
 				return resultFromBoolean(enumKind == EnumKind.NumberBased);
