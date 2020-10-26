@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.N4JSExpectMatrixPendingTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.N4JSExpectMatrixTest END_SETUP */
 
 // Math.max()
 // Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/max
