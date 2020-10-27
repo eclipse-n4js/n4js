@@ -19,8 +19,6 @@ import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -155,7 +153,7 @@ public class FileDeleter implements FileVisitor<Path> {
 	private final Predicate<Path> predicate;
 	private final boolean logToStdErr;
 
-	private final Set<Path> toBeDeletedDirs = new HashSet<>();
+	private Path containingDeletedDir = null;
 
 	/**
 	 * Creates a new file deleter instance.
@@ -179,16 +177,15 @@ public class FileDeleter implements FileVisitor<Path> {
 
 	@Override
 	public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-		if (isToBeDeleted(dir)) {
-			toBeDeletedDirs.add(dir);
+		if (containingDeletedDir == null && isToBeDeleted(dir)) {
+			containingDeletedDir = dir;
 		}
 		return CONTINUE;
 	}
 
 	@Override
 	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-		boolean insideToBeDeletedDir = !toBeDeletedDirs.isEmpty();
-		if (insideToBeDeletedDir || isToBeDeleted(file)) {
+		if (containingDeletedDir != null || isToBeDeleted(file)) {
 			Files.delete(file);
 		}
 		return CONTINUE;
@@ -202,10 +199,11 @@ public class FileDeleter implements FileVisitor<Path> {
 
 	@Override
 	public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-		boolean insideToBeDeletedDir = !toBeDeletedDirs.isEmpty();
-		if (insideToBeDeletedDir) { // no need to check "isToBeDeleted(dir)" again
-			toBeDeletedDirs.remove(dir);
+		if (containingDeletedDir != null) { // no need to check "isToBeDeleted(dir)" again
 			Files.delete(dir);
+			if (containingDeletedDir.equals(dir)) {
+				containingDeletedDir = null;
+			}
 		}
 		return CONTINUE;
 	}

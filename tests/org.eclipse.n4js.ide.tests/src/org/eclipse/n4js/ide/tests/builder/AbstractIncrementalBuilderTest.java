@@ -18,10 +18,7 @@ import java.util.Arrays;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest;
-import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
 import org.junit.Assert;
-
-import com.google.inject.Injector;
 
 /**
  * Abstract base class for tests of the incremental builder in the LSP server.
@@ -29,12 +26,8 @@ import com.google.inject.Injector;
 abstract class AbstractIncrementalBuilderTest extends AbstractIdeTest {
 
 	@Override
-	protected Injector createInjector() {
-		Injector injector = super.createInjector();
-		ProjectStatePersisterConfig persisterConfig = injector.getInstance(ProjectStatePersisterConfig.class);
-		persisterConfig.setDeleteState(false);
-		persisterConfig.setWriteToDisk(true);
-		return injector;
+	protected boolean enableProjectStatePersister() {
+		return true;
 	}
 
 	protected File getOutputFile(String moduleName) {

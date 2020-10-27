@@ -25,14 +25,12 @@ import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
 import org.eclipse.n4js.ide.tests.helper.server.AbstractStructuredIdeTest;
-import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
 import org.eclipse.n4js.tests.codegen.Project;
 import org.eclipse.xtext.xbase.lib.Pair;
 import org.junit.After;
 import org.junit.Test;
 
 import com.google.common.collect.Lists;
-import com.google.inject.Injector;
 
 /**
  * Tests the client command 'n4js.rebuild'
@@ -56,12 +54,8 @@ public class CommandRebuildTest extends AbstractStructuredIdeTest<Void> {
 	}
 
 	@Override
-	protected Injector createInjector() {
-		Injector injector = super.createInjector();
-		ProjectStatePersisterConfig persisterConfig = injector.getInstance(ProjectStatePersisterConfig.class);
-		persisterConfig.setDeleteState(false);
-		persisterConfig.setWriteToDisk(true);
-		return injector;
+	protected boolean enableProjectStatePersister() {
+		return true;
 	}
 
 	@Override

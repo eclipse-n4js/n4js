@@ -46,6 +46,7 @@ import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
 import org.eclipse.lsp4j.ClientCapabilities;
 import org.eclipse.lsp4j.Diagnostic;
+import org.eclipse.lsp4j.DiagnosticSeverity;
 import org.eclipse.lsp4j.DidChangeTextDocumentParams;
 import org.eclipse.lsp4j.DidChangeWatchedFilesParams;
 import org.eclipse.lsp4j.DidCloseTextDocumentParams;
@@ -82,6 +83,7 @@ import org.eclipse.n4js.ide.tests.helper.client.IdeTestLanguageClient;
 import org.eclipse.n4js.ide.tests.helper.client.IdeTestLanguageClient.IIdeTestLanguageClientListener;
 import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo;
 import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo.ProjectBuildOrderIterator;
+import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 import org.eclipse.n4js.ide.xtext.server.build.BuilderFrontend;
@@ -108,6 +110,7 @@ import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
@@ -323,7 +326,21 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		N4jscTestFactory.set(true, getOverridingModule());
 		Injector injector = N4jscFactory.getOrCreateInjector();
 		injector.injectMembers(this);
+		if (enableProjectStatePersister()) {
+			ProjectStatePersisterConfig persisterConfig = injector.getInstance(ProjectStatePersisterConfig.class);
+			persisterConfig.setDeleteState(false);
+			persisterConfig.setWriteToDisk(true);
+		}
 		return injector;
+	}
+
+	/**
+	 * By default, tests usually run with a disabled project state persister (i.e. project state files will be deleted
+	 * upon start up and not written to disk). Override this method to return <code>true</code> in order to activate the
+	 * ordinary project state persistence as in the LSP server. The default implementation returns <code>false</code>.
+	 */
+	protected boolean enableProjectStatePersister() {
+		return false;
 	}
 
 	/** Returns an optional module overriding default injection bindings for testing purposes. */
@@ -990,11 +1007,6 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		assertEquals("Project build order did not match expectation.", expectedProjectBuildOrder, buildOrderString);
 	}
 
-	/** Asserts that there are no issues in the entire workspace. */
-	protected void assertNoIssues() {
-		assertIssues(Collections.emptyMap());
-	}
-
 	/** Both {@link #assertNoErrorsInLog()} and {@link #assertNoErrorsInOutput()}. */
 	protected void assertNoErrorsInLogOrOutput() {
 		assertNoErrorsInLog();
@@ -1065,6 +1077,30 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		}
 	}
 
+	/** Asserts that there are no issues in the entire workspace. */
+	protected void assertNoIssues() {
+		assertIssues(Collections.emptyMap());
+	}
+
+	/**
+	 * Asserts that there are no errors in the entire workspace. Issues of other severity than
+	 * {@link DiagnosticSeverity#Error ERROR} are ignored.
+	 * <p>
+	 * Does not check for errors on stdout and in the log; use {@link #assertNoErrorsInLogOrOutput()} for that.
+	 */
+	protected void assertNoErrors() {
+		Multimap<FileURI, String> allErrors = LinkedHashMultimap.create();
+		for (Entry<FileURI, Diagnostic> entry : languageClient.getIssues().entries()) {
+			if (entry.getValue().getSeverity() == DiagnosticSeverity.Error) {
+				allErrors.put(entry.getKey(), languageClient.getIssueString(entry.getValue()));
+			}
+		}
+		if (!allErrors.isEmpty()) {
+			Assert.fail("expected no errors in workspace, but found " + allErrors.size() + " errors:\n"
+					+ issuesToString(allErrors));
+		}
+	}
+
 	/**
 	 * Same as {@link #assertIssues(Map)}, accepting pairs from module name to issue list instead of a map from file URI
 	 * to issue list.
@@ -1098,25 +1134,16 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		Set<FileURI> uncheckedModulesWithIssues = new LinkedHashSet<>(modulesWithIssues);
 		uncheckedModulesWithIssues.removeAll(checkedModules);
 		if (!uncheckedModulesWithIssues.isEmpty()) {
-			String msg = fileURIToExpectedIssues.size() == 0
-					? "expected no issues in workspace but found one or more issues:"
-					: "found one or more unexpected issues in workspace:";
-			StringBuilder sb = new StringBuilder();
+			Multimap<FileURI, String> issuesPerUncheckedModule = LinkedHashMultimap.create();
 			for (FileURI currModuleURI : uncheckedModulesWithIssues) {
 				List<String> currModuleIssuesAsList = getIssuesInFile(currModuleURI, withIgnoredIssues);
-				if (!currModuleIssuesAsList.isEmpty()) { // empty if all issues in current module are ignored
-					if (sb.length() > 0) {
-						sb.append('\n');
-					}
-					String currModuleRelPath = getRelativePathFromFileUri(currModuleURI);
-					sb.append(currModuleRelPath);
-					sb.append(":\n    ");
-					String currModuleIssuesAsString = issuesToSortedString(currModuleIssuesAsList, "    ");
-					sb.append(currModuleIssuesAsString);
-				}
+				issuesPerUncheckedModule.putAll(currModuleURI, currModuleIssuesAsList);
 			}
-			if (sb.length() > 0) { // empty if all remaining issues are ignored
-				Assert.fail(msg + "\n" + sb.toString());
+			if (!issuesPerUncheckedModule.isEmpty()) { // empty if all remaining issues are ignored
+				String msg = fileURIToExpectedIssues.size() == 0
+						? "expected no issues in workspace but found one or more issues:"
+						: "found one or more unexpected issues in workspace:";
+				Assert.fail(msg + "\n" + issuesToString(issuesPerUncheckedModule));
 			}
 		}
 	}
@@ -1166,9 +1193,9 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 				String fileRelPath = getRelativePathFromFileUri(fileURI);
 				failureMessages.add("issues in file " + fileRelPath + " do not meet expectation\n"
 						+ "EXPECTED:\n"
-						+ issuesToSortedString(expectedIssuesAsSet, indent) + "\n"
+						+ issuesToString(expectedIssuesAsSet, indent) + "\n"
 						+ "ACTUAL:\n"
-						+ issuesToSortedString(actualIssuesAsSet, indent));
+						+ issuesToString(actualIssuesAsSet, indent));
 			}
 		}
 		if (failureMessages.size() == 1) {
@@ -1193,7 +1220,26 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		return issuesInFile.map(issue -> languageClient.getIssueString(issue)).collect(Collectors.toList());
 	}
 
-	private String issuesToSortedString(Iterable<String> issues, String indent) {
+	private String issuesToString(Multimap<FileURI, String> issuesPerFile) {
+		if (issuesPerFile.isEmpty()) {
+			return "<none>";
+		}
+		StringBuilder sb = new StringBuilder();
+		for (FileURI currModuleURI : issuesPerFile.keySet()) {
+			Collection<String> currModuleIssuesAsList = issuesPerFile.get(currModuleURI);
+			if (sb.length() > 0) {
+				sb.append('\n');
+			}
+			String currModuleRelPath = getRelativePathFromFileUri(currModuleURI);
+			sb.append(currModuleRelPath);
+			sb.append(":\n    ");
+			String currModuleIssuesAsString = issuesToString(currModuleIssuesAsList, "    ");
+			sb.append(currModuleIssuesAsString);
+		}
+		return sb.toString();
+	}
+
+	private String issuesToString(Iterable<String> issues, String indent) {
 		if (Iterables.isEmpty(issues)) {
 			return indent + "<none>";
 		}
