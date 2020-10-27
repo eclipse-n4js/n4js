@@ -29,6 +29,9 @@ var v3a : Number = E.L;
 var v3b : number = E.L;
 
 // XPECT noerrors -->
+var v3c : int = E.L;
+
+// XPECT noerrors -->
 var v4 : N4NumberBasedEnum = E.L;
 
 
