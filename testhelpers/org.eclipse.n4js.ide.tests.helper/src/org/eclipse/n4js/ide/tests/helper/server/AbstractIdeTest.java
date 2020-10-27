@@ -113,6 +113,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Module;
@@ -1089,15 +1090,10 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * Does not check for errors on stdout and in the log; use {@link #assertNoErrorsInLogOrOutput()} for that.
 	 */
 	protected void assertNoErrors() {
-		Multimap<FileURI, String> allErrors = LinkedHashMultimap.create();
-		for (Entry<FileURI, Diagnostic> entry : languageClient.getIssues().entries()) {
-			if (entry.getValue().getSeverity() == DiagnosticSeverity.Error) {
-				allErrors.put(entry.getKey(), languageClient.getIssueString(entry.getValue()));
-			}
-		}
+		Multimap<FileURI, Diagnostic> allErrors = languageClient.getErrors();
 		if (!allErrors.isEmpty()) {
 			Assert.fail("expected no errors in workspace, but found " + allErrors.size() + " errors:\n"
-					+ issuesToString(allErrors));
+					+ issuesToString(Multimaps.transformValues(allErrors, languageClient::getIssueString)));
 		}
 	}
 
@@ -1193,9 +1189,9 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 				String fileRelPath = getRelativePathFromFileUri(fileURI);
 				failureMessages.add("issues in file " + fileRelPath + " do not meet expectation\n"
 						+ "EXPECTED:\n"
-						+ issuesToString(expectedIssuesAsSet, indent) + "\n"
+						+ issuesToSortedString(expectedIssuesAsSet, indent) + "\n"
 						+ "ACTUAL:\n"
-						+ issuesToString(actualIssuesAsSet, indent));
+						+ issuesToSortedString(actualIssuesAsSet, indent));
 			}
 		}
 		if (failureMessages.size() == 1) {
@@ -1220,7 +1216,17 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		return issuesInFile.map(issue -> languageClient.getIssueString(issue)).collect(Collectors.toList());
 	}
 
-	private String issuesToString(Multimap<FileURI, String> issuesPerFile) {
+	/**
+	 * Joins the given issues into a single string.
+	 * <p>
+	 * In case only a map with diagnostics is available, use
+	 * {@link Multimaps#transformValues(Multimap, com.google.common.base.Function) transformValues()} as follows:
+	 *
+	 * <pre>
+	 * Multimaps.transformValues(uriToDiagnostic, languageClient::getIssueString)
+	 * </pre>
+	 */
+	protected String issuesToString(Multimap<FileURI, String> issuesPerFile) {
 		if (issuesPerFile.isEmpty()) {
 			return "<none>";
 		}
@@ -1233,13 +1239,14 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 			String currModuleRelPath = getRelativePathFromFileUri(currModuleURI);
 			sb.append(currModuleRelPath);
 			sb.append(":\n    ");
-			String currModuleIssuesAsString = issuesToString(currModuleIssuesAsList, "    ");
+			String currModuleIssuesAsString = issuesToSortedString(currModuleIssuesAsList, "    ");
 			sb.append(currModuleIssuesAsString);
 		}
 		return sb.toString();
 	}
 
-	private String issuesToString(Iterable<String> issues, String indent) {
+	/** Sorts the given issues and joins them into a single string. */
+	protected String issuesToSortedString(Iterable<String> issues, String indent) {
 		if (Iterables.isEmpty(issues)) {
 			return indent + "<none>";
 		}

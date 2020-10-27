@@ -50,8 +50,8 @@ public class IdeTestLanguageClient extends AbstractN4JSLanguageClient {
 	private final List<MessageParams> logMessages = Collections.synchronizedList(new ArrayList<>());
 
 	private final Multimap<FileURI, Diagnostic> issues = Multimaps.synchronizedMultimap(HashMultimap.create());
-	private final Multimap<FileURI, String> errors = Multimaps.synchronizedMultimap(HashMultimap.create());
-	private final Multimap<FileURI, String> warnings = Multimaps.synchronizedMultimap(HashMultimap.create());
+	private final Multimap<FileURI, Diagnostic> errors = Multimaps.synchronizedMultimap(HashMultimap.create());
+	private final Multimap<FileURI, Diagnostic> warnings = Multimaps.synchronizedMultimap(HashMultimap.create());
 
 	private StringLSP4J stringLSP4J;
 
@@ -137,15 +137,14 @@ public class IdeTestLanguageClient extends AbstractN4JSLanguageClient {
 		}
 
 		for (Diagnostic diag : issueList) {
-			String issueString = getIssueString(diag);
 			issues.put(uri, diag);
 
 			switch (diag.getSeverity()) {
 			case Error:
-				errors.put(uri, issueString);
+				errors.put(uri, diag);
 				break;
 			case Warning:
-				warnings.put(uri, issueString);
+				warnings.put(uri, diag);
 				break;
 			default:
 				// ignore
@@ -175,18 +174,28 @@ public class IdeTestLanguageClient extends AbstractN4JSLanguageClient {
 		return issues;
 	}
 
+	/** @return all errors in the workspace as a multi-map from file URI to {@link Diagnostic}s. */
+	public Multimap<FileURI, Diagnostic> getErrors() {
+		return errors;
+	}
+
+	/** @return all warnings in the workspace as a multi-map from file URI to {@link Diagnostic}s. */
+	public Multimap<FileURI, Diagnostic> getWarnings() {
+		return warnings;
+	}
+
 	/** @return issues in the module with the given file URI. */
 	public Collection<Diagnostic> getIssues(FileURI uri) {
 		return issues.get(uri);
 	}
 
 	/** @return messages of errors in the module with the given file URI. */
-	public Collection<String> getErrors(FileURI uri) {
+	public Collection<Diagnostic> getErrors(FileURI uri) {
 		return errors.get(uri);
 	}
 
 	/** @return messages of warnings in the module with the given file URI. */
-	public Collection<String> getWarnings(FileURI uri) {
+	public Collection<Diagnostic> getWarnings(FileURI uri) {
 		return warnings.get(uri);
 	}
 
