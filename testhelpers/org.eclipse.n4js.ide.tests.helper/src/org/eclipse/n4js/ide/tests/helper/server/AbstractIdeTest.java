@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -1231,16 +1232,16 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 			return "<none>";
 		}
 		StringBuilder sb = new StringBuilder();
-		for (FileURI currModuleURI : issuesPerFile.keySet()) {
-			Collection<String> currModuleIssuesAsList = issuesPerFile.get(currModuleURI);
+		List<FileURI> sortedFileURIs = IterableExtensions.sortWith(issuesPerFile.keySet(),
+				Comparator.comparing(FileURI::toString));
+		for (FileURI currFileURI : sortedFileURIs) {
 			if (sb.length() > 0) {
 				sb.append('\n');
 			}
-			String currModuleRelPath = getRelativePathFromFileUri(currModuleURI);
-			sb.append(currModuleRelPath);
+			sb.append(getRelativePathFromFileUri(currFileURI));
 			sb.append(":\n    ");
-			String currModuleIssuesAsString = issuesToSortedString(currModuleIssuesAsList, "    ");
-			sb.append(currModuleIssuesAsString);
+			Collection<String> currFileIssues = issuesPerFile.get(currFileURI);
+			sb.append(issuesToSortedString(currFileIssues, "    "));
 		}
 		return sb.toString();
 	}
