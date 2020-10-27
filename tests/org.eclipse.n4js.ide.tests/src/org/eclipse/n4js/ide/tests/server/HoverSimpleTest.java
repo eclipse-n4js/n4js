@@ -10,11 +10,12 @@
  */
 package org.eclipse.n4js.ide.tests.server;
 
+import org.eclipse.n4js.ide.tests.helper.server.AbstractHoverTest;
 import org.junit.Ignore;
 import org.junit.Test;
 
-/**	
- * Hover test class for N4JS elements	
+/**
+ * Hover test class for N4JS elements
  */
 public class HoverSimpleTest extends AbstractHoverTest {
 

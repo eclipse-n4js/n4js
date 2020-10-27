@@ -15,7 +15,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.Collection;
 
 import org.eclipse.lsp4j.Diagnostic;
-import org.eclipse.n4js.ide.tests.server.AbstractStructuredIdeTest;
+import org.eclipse.n4js.ide.tests.helper.server.AbstractStructuredIdeTest;
 import org.eclipse.n4js.tests.codegen.Project;
 import org.junit.Test;
 

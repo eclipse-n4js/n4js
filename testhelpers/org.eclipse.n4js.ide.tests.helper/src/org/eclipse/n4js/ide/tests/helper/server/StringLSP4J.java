@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.tests.server;
+package org.eclipse.n4js.ide.tests.helper.server;
 
 import java.io.File;
 import java.net.URI;

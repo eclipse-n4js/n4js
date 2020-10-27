@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.tests.server;
+package org.eclipse.n4js.ide.tests.helper.server;
 
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
@@ -78,8 +78,8 @@ import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscTestFactory;
 import org.eclipse.n4js.cli.helper.SystemOutRedirecter;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
-import org.eclipse.n4js.ide.tests.client.IdeTestLanguageClient;
-import org.eclipse.n4js.ide.tests.client.IdeTestLanguageClient.IIdeTestLanguageClientListener;
+import org.eclipse.n4js.ide.tests.helper.client.IdeTestLanguageClient;
+import org.eclipse.n4js.ide.tests.helper.client.IdeTestLanguageClient.IIdeTestLanguageClientListener;
 import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo;
 import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo.ProjectBuildOrderIterator;
 import org.eclipse.n4js.ide.xtext.server.XDocument;

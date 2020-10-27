@@ -11,7 +11,7 @@
 package org.eclipse.n4js.ide.tests.bugreports
 
 import java.util.List
-import org.eclipse.n4js.ide.tests.server.AbstractIdeTest
+import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest
 import org.junit.Test
 
 import static org.junit.Assert.assertTrue

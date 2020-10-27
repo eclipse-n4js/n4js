@@ -24,7 +24,7 @@ import org.eclipse.lsp4j.TextDocumentIdentifier
 import org.eclipse.lsp4j.TextDocumentItem
 import org.eclipse.lsp4j.TextDocumentPositionParams
 import org.eclipse.lsp4j.VersionedTextDocumentIdentifier
-import org.eclipse.n4js.ide.tests.server.AbstractIdeTest
+import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest
 import org.eclipse.xtext.ide.server.hover.IHoverService
 import org.junit.Test
 

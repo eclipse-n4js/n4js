@@ -10,7 +10,7 @@
 package org.eclipse.n4js.ide.tests.contentassist;
 
 import java.util.List
-import org.eclipse.n4js.ide.tests.server.AbstractCompletionTest
+import org.eclipse.n4js.ide.tests.helper.server.AbstractCompletionTest
 import org.junit.Test
 
 /**

@@ -11,7 +11,7 @@
 package org.eclipse.n4js.ide.tests.codeActions
 
 import org.eclipse.lsp4j.CodeActionParams
-import org.eclipse.n4js.ide.tests.server.AbstractCodeActionTest
+import org.eclipse.n4js.ide.tests.helper.server.AbstractCodeActionTest
 import org.junit.Test
 
 /**

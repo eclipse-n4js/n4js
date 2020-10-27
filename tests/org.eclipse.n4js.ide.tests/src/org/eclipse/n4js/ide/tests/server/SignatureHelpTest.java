@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ide.tests.server;
 
+import org.eclipse.n4js.ide.tests.helper.server.AbstractSignatureHelpTest;
 import org.eclipse.xtext.testing.SignatureHelpConfiguration;
 import org.junit.Test;
 

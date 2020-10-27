@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.tests.client;
+package org.eclipse.n4js.ide.tests.helper.client;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,8 +25,8 @@ import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.n4js.ide.client.AbstractN4JSLanguageClient;
-import org.eclipse.n4js.ide.tests.server.AbstractIdeTest;
-import org.eclipse.n4js.ide.tests.server.StringLSP4J;
+import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest;
+import org.eclipse.n4js.ide.tests.helper.server.StringLSP4J;
 import org.eclipse.n4js.ide.xtext.server.build.BuilderFrontend;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;

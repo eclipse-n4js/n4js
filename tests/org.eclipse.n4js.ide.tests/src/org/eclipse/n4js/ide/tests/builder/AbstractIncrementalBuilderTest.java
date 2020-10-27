@@ -17,7 +17,7 @@ import java.util.Arrays;
 
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSLanguageConstants;
-import org.eclipse.n4js.ide.tests.server.AbstractIdeTest;
+import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest;
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
 import org.junit.Assert;
 
