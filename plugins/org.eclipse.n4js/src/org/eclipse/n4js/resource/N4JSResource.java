@@ -249,6 +249,11 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	private ASTMetaInfoCache astMetaInfoCache;
 
 	/**
+	 * Tells whether an error/exception occurred during the last loading attempt.
+	 */
+	private boolean isLoadedWithFailure;
+
+	/**
 	 * Set by the dirty state support to announce an upcoming unloading request.
 	 */
 	private boolean aboutToBeUnloaded;
@@ -282,6 +287,14 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	@Inject
 	public N4JSResource() {
 		super();
+	}
+
+	@Override
+	protected Notification setLoaded(boolean isLoaded) {
+		if (!isLoaded) {
+			isLoadedWithFailure = false;
+		}
+		return super.setLoaded(isLoaded);
 	}
 
 	@Override
@@ -574,7 +587,12 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	}
 
 	private void superLoad(Map<?, ?> options) throws IOException {
-		super.load(options);
+		try {
+			super.load(options);
+		} catch (Throwable th) {
+			isLoadedWithFailure = true;
+			throw th;
+		}
 	}
 
 	private void forceInstallDerivedState(boolean preIndexingPhase) {
@@ -1136,6 +1154,13 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 
 	@Override
 	public synchronized EObject getEObject(String uriFragment) {
+		if (isLoaded && isLoadedWithFailure) {
+			// an exception did occur while this resource was loaded, e.g. file not found (such a resource is in an
+			// invalid state and trying to look-up an EObject might make us run into an arbitrary exception due to some
+			// fail-fast consistency check)
+			// -> make all proxies unresolvable that point to a resource that could not be loaded
+			return null;
+		}
 		EObject result;
 		try {
 			result = super.getEObject(uriFragment);
