@@ -18,7 +18,6 @@ package org.eclipse.n4js.resource;
 import static org.eclipse.xtext.diagnostics.Diagnostic.SYNTAX_DIAGNOSTIC_WITH_RANGE;
 
 import java.io.BufferedInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -1116,13 +1115,15 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 					// (might load targetResource from disk if it wasn't loaded from index above)
 					targetObject = resSet.getEObject(targetUri, true);
 				} catch (Exception exc) {
-					if (exc.getCause() instanceof FileNotFoundException) {
-						// This happens when an external library was removed,
-						// but another external library depends on the removed one.
-						LOGGER.warn("File not found during proxy resolution", exc);
+					Throwable cause = exc.getCause();
+					if (cause instanceof IOException) {
+						// This happens when a proxy points to a removed or otherwise inaccessible file, meaning we
+						// could see IOExceptions wherever an EMF-getter for a cross-reference property is invoked
+						// -> make the proxy unresolvable instead of throwing exception
+						LOGGER.warn("IOException during proxy resolution: " + cause.getMessage(), exc);
 						return proxy;
 					}
-					if (exc.getCause() instanceof ResourceException) {
+					if (cause instanceof ResourceException) {
 						// This happens when a workspace project was removed,
 						// but another project depends on the removed one.
 						LOGGER.warn("Resource not found during proxy resolution", exc);
