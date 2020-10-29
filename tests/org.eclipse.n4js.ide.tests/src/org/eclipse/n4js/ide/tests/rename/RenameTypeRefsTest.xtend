@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.ide.tests.rename
 
-import org.eclipse.n4js.ide.tests.server.AbstractRenameTest
+import org.eclipse.n4js.ide.tests.helper.server.AbstractRenameTest
 import org.junit.Test
 
 /**

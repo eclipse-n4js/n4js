@@ -141,7 +141,7 @@ Contributors:
 		<!-- use "-Dlog4j.debug -Dorg.apache.logging.log4j.simplelog.StatusLogger.level=TRACE" to get debug messages from the logger -->
 		<loggingArgs>-Dlog4j.configuration="file:${basedir}/../../plugins/org.eclipse.n4js.utils.logging/log4j_tests.xml"</loggingArgs>
 
-		<junit-version>4.12</junit-version>
+		<junit-version>4.13.1</junit-version>
 		<ts-version>[0.0.1,0.1.0)</ts-version>
 		<n4js-version>[0.0.1,0.1.0)</n4js-version>
 

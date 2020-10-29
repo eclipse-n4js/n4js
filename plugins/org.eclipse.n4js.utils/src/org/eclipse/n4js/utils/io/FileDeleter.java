@@ -20,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
@@ -55,7 +56,7 @@ public class FileDeleter implements FileVisitor<Path> {
 	 *             in unrecognized cases.
 	 */
 	public static void delete(Path resourceToDelete) throws IOException {
-		delete(resourceToDelete, false);
+		delete(resourceToDelete, null, false);
 	}
 
 	/**
@@ -70,8 +71,29 @@ public class FileDeleter implements FileVisitor<Path> {
 	 *             in unrecognized cases.
 	 */
 	public static void delete(Path resourceToDelete, boolean logToStdErr) throws IOException {
+		delete(resourceToDelete, null, logToStdErr);
+	}
+
+	/**
+	 * Deletes a single file or recursively a folder with its content.
+	 *
+	 * @param root
+	 *            path to the file or folder to delete.
+	 * @param predicate
+	 *            if non-<code>null</code>, only files/folders for which this predicate returns <code>true</code> will
+	 *            be deleted (and all contents of such folders). If <code>null</code>, all files/folders will be
+	 *            deleted.
+	 * @throws IOException
+	 *             in unrecognized cases.
+	 */
+	public static void deleteSome(Path root, Predicate<Path> predicate) throws IOException {
+		delete(root, predicate, false);
+	}
+
+	private static void delete(Path resourceToDelete, Predicate<Path> predicate, boolean logToStdErr)
+			throws IOException {
 		if (resourceToDelete.toFile().exists()) {
-			Files.walkFileTree(resourceToDelete, new FileDeleter(logToStdErr));
+			Files.walkFileTree(resourceToDelete, new FileDeleter(predicate, logToStdErr));
 		}
 	}
 
@@ -87,7 +109,7 @@ public class FileDeleter implements FileVisitor<Path> {
 	public static void delete(File resourceToDelete, Consumer<? super IOException> errorHandler) {
 		if (resourceToDelete.exists()) {
 			try {
-				Files.walkFileTree(resourceToDelete.toPath(), new FileDeleter(false));
+				Files.walkFileTree(resourceToDelete.toPath(), new FileDeleter(null, false));
 			} catch (IOException ioe) {
 				errorHandler.accept(ioe);
 			}
@@ -106,7 +128,7 @@ public class FileDeleter implements FileVisitor<Path> {
 	public static void delete(Path resourceToDelete, Consumer<IOException> errorHandler) {
 		if (resourceToDelete.toFile().exists()) {
 			try {
-				Files.walkFileTree(resourceToDelete, new FileDeleter(false));
+				Files.walkFileTree(resourceToDelete, new FileDeleter(null, false));
 			} catch (IOException ioe) {
 				errorHandler.accept(ioe);
 			}
@@ -128,27 +150,44 @@ public class FileDeleter implements FileVisitor<Path> {
 		}
 	}
 
+	private final Predicate<Path> predicate;
 	private final boolean logToStdErr;
+
+	private Path containingDeletedDir = null;
 
 	/**
 	 * Creates a new file deleter instance.
 	 *
+	 * @param predicate
+	 *            if non-<code>null</code>, only files/folders for which this predicate returns <code>true</code> will
+	 *            be deleted (and all contents of such folders). If <code>null</code>, all files/folders will be
+	 *            deleted.
 	 * @param logToStdErr
 	 *            {@code true} if any error messages should be logged to the standard out instead of the logger
 	 *            instance. This could be useful when using file deleted in the headless tool.
 	 */
-	public FileDeleter(boolean logToStdErr) {
+	public FileDeleter(Predicate<Path> predicate, boolean logToStdErr) {
+		this.predicate = predicate;
 		this.logToStdErr = logToStdErr;
+	}
+
+	private boolean isToBeDeleted(Path dirOrFile) {
+		return predicate == null || predicate.test(dirOrFile);
 	}
 
 	@Override
 	public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+		if (containingDeletedDir == null && isToBeDeleted(dir)) {
+			containingDeletedDir = dir;
+		}
 		return CONTINUE;
 	}
 
 	@Override
 	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-		Files.delete(file);
+		if (containingDeletedDir != null || isToBeDeleted(file)) {
+			Files.delete(file);
+		}
 		return CONTINUE;
 	}
 
@@ -160,16 +199,21 @@ public class FileDeleter implements FileVisitor<Path> {
 
 	@Override
 	public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-		Files.delete(dir);
+		if (containingDeletedDir != null) { // no need to check "isToBeDeleted(dir)" again
+			Files.delete(dir);
+			if (containingDeletedDir.equals(dir)) {
+				containingDeletedDir = null;
+			}
+		}
 		return CONTINUE;
 	}
 
 	private void logError(Path path, IOException e) {
 		if (logToStdErr) {
-			System.err.println("Unexpected file visiting failure" + path);
+			System.err.println("Unexpected file visiting failure: " + path);
 			e.printStackTrace();
 		} else {
-			LOGGER.error("Unexpected file visiting failure" + path, e);
+			LOGGER.error("Unexpected file visiting failure: " + path, e);
 		}
 	}
 

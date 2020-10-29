@@ -56,7 +56,10 @@ public class N4jscJarProvider {
 			jar = new File(providedJar).getAbsoluteFile();
 		}
 		LOGGER.info("Using n4jsc.jar at: " + jar.getAbsolutePath());
-		checkState(jar.exists(), "n4jsc.jar does not exist at location: " + jar);
+		if (!jar.exists()) {
+			LOGGER.error("n4jsc.jar does not exist at location: " + jar);
+			checkState(jar.exists(), "n4jsc.jar does not exist at location: " + jar);
+		}
 		return jar;
 	}
 

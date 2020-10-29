@@ -23,8 +23,8 @@ import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
-import org.eclipse.n4js.ide.tests.server.AbstractDefinitionTest;
-import org.eclipse.n4js.ide.tests.server.StringLSP4J;
+import org.eclipse.n4js.ide.tests.helper.server.AbstractDefinitionTest;
+import org.eclipse.n4js.ide.tests.helper.server.StringLSP4J;
 import org.junit.Test;
 
 /**

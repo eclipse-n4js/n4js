@@ -15,7 +15,7 @@ import com.google.common.util.concurrent.Uninterruptibles
 import com.google.inject.Inject
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicBoolean
-import org.eclipse.n4js.ide.tests.server.AbstractIdeTest
+import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest
 import org.eclipse.n4js.ide.xtext.server.BuiltInAwareIncrementalBuilder
 import org.eclipse.n4js.ide.xtext.server.QueuedExecutorService
 import org.eclipse.n4js.ide.xtext.server.build.XClusteringStorageAwareResourceLoader.LoadResult

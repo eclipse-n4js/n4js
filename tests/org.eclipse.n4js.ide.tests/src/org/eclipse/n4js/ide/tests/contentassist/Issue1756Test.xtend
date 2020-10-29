@@ -9,7 +9,7 @@
  */
 package org.eclipse.n4js.ide.tests.contentassist
 
-import org.eclipse.n4js.ide.tests.server.AbstractCompletionTest
+import org.eclipse.n4js.ide.tests.helper.server.AbstractCompletionTest
 import org.junit.Test
 
 /**

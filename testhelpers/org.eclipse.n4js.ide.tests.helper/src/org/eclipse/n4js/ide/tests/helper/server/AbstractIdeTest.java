@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.tests.server;
+package org.eclipse.n4js.ide.tests.helper.server;
 
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -46,6 +47,7 @@ import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
 import org.eclipse.lsp4j.ClientCapabilities;
 import org.eclipse.lsp4j.Diagnostic;
+import org.eclipse.lsp4j.DiagnosticSeverity;
 import org.eclipse.lsp4j.DidChangeTextDocumentParams;
 import org.eclipse.lsp4j.DidChangeWatchedFilesParams;
 import org.eclipse.lsp4j.DidCloseTextDocumentParams;
@@ -78,10 +80,11 @@ import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscTestFactory;
 import org.eclipse.n4js.cli.helper.SystemOutRedirecter;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
-import org.eclipse.n4js.ide.tests.client.IdeTestLanguageClient;
-import org.eclipse.n4js.ide.tests.client.IdeTestLanguageClient.IIdeTestLanguageClientListener;
+import org.eclipse.n4js.ide.tests.helper.client.IdeTestLanguageClient;
+import org.eclipse.n4js.ide.tests.helper.client.IdeTestLanguageClient.IIdeTestLanguageClientListener;
 import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo;
 import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo.ProjectBuildOrderIterator;
+import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 import org.eclipse.n4js.ide.xtext.server.build.BuilderFrontend;
@@ -108,8 +111,10 @@ import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Module;
@@ -323,7 +328,21 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		N4jscTestFactory.set(true, getOverridingModule());
 		Injector injector = N4jscFactory.getOrCreateInjector();
 		injector.injectMembers(this);
+		if (enableProjectStatePersister()) {
+			ProjectStatePersisterConfig persisterConfig = injector.getInstance(ProjectStatePersisterConfig.class);
+			persisterConfig.setDeleteState(false);
+			persisterConfig.setWriteToDisk(true);
+		}
 		return injector;
+	}
+
+	/**
+	 * By default, tests usually run with a disabled project state persister (i.e. project state files will be deleted
+	 * upon start up and not written to disk). Override this method to return <code>true</code> in order to activate the
+	 * ordinary project state persistence as in the LSP server. The default implementation returns <code>false</code>.
+	 */
+	protected boolean enableProjectStatePersister() {
+		return false;
 	}
 
 	/** Returns an optional module overriding default injection bindings for testing purposes. */
@@ -990,11 +1009,6 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		assertEquals("Project build order did not match expectation.", expectedProjectBuildOrder, buildOrderString);
 	}
 
-	/** Asserts that there are no issues in the entire workspace. */
-	protected void assertNoIssues() {
-		assertIssues(Collections.emptyMap());
-	}
-
 	/** Both {@link #assertNoErrorsInLog()} and {@link #assertNoErrorsInOutput()}. */
 	protected void assertNoErrorsInLogOrOutput() {
 		assertNoErrorsInLog();
@@ -1065,6 +1079,25 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		}
 	}
 
+	/** Asserts that there are no issues in the entire workspace. */
+	protected void assertNoIssues() {
+		assertIssues(Collections.emptyMap());
+	}
+
+	/**
+	 * Asserts that there are no errors in the entire workspace. Issues of other severity than
+	 * {@link DiagnosticSeverity#Error ERROR} are ignored.
+	 * <p>
+	 * Does not check for errors on stdout and in the log; use {@link #assertNoErrorsInLogOrOutput()} for that.
+	 */
+	protected void assertNoErrors() {
+		Multimap<FileURI, Diagnostic> allErrors = languageClient.getErrors();
+		if (!allErrors.isEmpty()) {
+			Assert.fail("expected no errors in workspace, but found " + allErrors.size() + " errors:\n"
+					+ issuesToString(Multimaps.transformValues(allErrors, languageClient::getIssueString)));
+		}
+	}
+
 	/**
 	 * Same as {@link #assertIssues(Map)}, accepting pairs from module name to issue list instead of a map from file URI
 	 * to issue list.
@@ -1098,25 +1131,16 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		Set<FileURI> uncheckedModulesWithIssues = new LinkedHashSet<>(modulesWithIssues);
 		uncheckedModulesWithIssues.removeAll(checkedModules);
 		if (!uncheckedModulesWithIssues.isEmpty()) {
-			String msg = fileURIToExpectedIssues.size() == 0
-					? "expected no issues in workspace but found one or more issues:"
-					: "found one or more unexpected issues in workspace:";
-			StringBuilder sb = new StringBuilder();
+			Multimap<FileURI, String> issuesPerUncheckedModule = LinkedHashMultimap.create();
 			for (FileURI currModuleURI : uncheckedModulesWithIssues) {
 				List<String> currModuleIssuesAsList = getIssuesInFile(currModuleURI, withIgnoredIssues);
-				if (!currModuleIssuesAsList.isEmpty()) { // empty if all issues in current module are ignored
-					if (sb.length() > 0) {
-						sb.append('\n');
-					}
-					String currModuleRelPath = getRelativePathFromFileUri(currModuleURI);
-					sb.append(currModuleRelPath);
-					sb.append(":\n    ");
-					String currModuleIssuesAsString = issuesToSortedString(currModuleIssuesAsList, "    ");
-					sb.append(currModuleIssuesAsString);
-				}
+				issuesPerUncheckedModule.putAll(currModuleURI, currModuleIssuesAsList);
 			}
-			if (sb.length() > 0) { // empty if all remaining issues are ignored
-				Assert.fail(msg + "\n" + sb.toString());
+			if (!issuesPerUncheckedModule.isEmpty()) { // empty if all remaining issues are ignored
+				String msg = fileURIToExpectedIssues.size() == 0
+						? "expected no issues in workspace but found one or more issues:"
+						: "found one or more unexpected issues in workspace:";
+				Assert.fail(msg + "\n" + issuesToString(issuesPerUncheckedModule));
 			}
 		}
 	}
@@ -1193,7 +1217,37 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		return issuesInFile.map(issue -> languageClient.getIssueString(issue)).collect(Collectors.toList());
 	}
 
-	private String issuesToSortedString(Iterable<String> issues, String indent) {
+	/**
+	 * Joins the given issues into a single string.
+	 * <p>
+	 * In case only a map with diagnostics is available, use
+	 * {@link Multimaps#transformValues(Multimap, com.google.common.base.Function) transformValues()} as follows:
+	 *
+	 * <pre>
+	 * Multimaps.transformValues(uriToDiagnostic, languageClient::getIssueString)
+	 * </pre>
+	 */
+	protected String issuesToString(Multimap<FileURI, String> issuesPerFile) {
+		if (issuesPerFile.isEmpty()) {
+			return "<none>";
+		}
+		StringBuilder sb = new StringBuilder();
+		List<FileURI> sortedFileURIs = IterableExtensions.sortWith(issuesPerFile.keySet(),
+				Comparator.comparing(FileURI::toString));
+		for (FileURI currFileURI : sortedFileURIs) {
+			if (sb.length() > 0) {
+				sb.append('\n');
+			}
+			sb.append(getRelativePathFromFileUri(currFileURI));
+			sb.append(":\n    ");
+			Collection<String> currFileIssues = issuesPerFile.get(currFileURI);
+			sb.append(issuesToSortedString(currFileIssues, "    "));
+		}
+		return sb.toString();
+	}
+
+	/** Sorts the given issues and joins them into a single string. */
+	protected String issuesToSortedString(Iterable<String> issues, String indent) {
 		if (Iterables.isEmpty(issues)) {
 			return indent + "<none>";
 		}

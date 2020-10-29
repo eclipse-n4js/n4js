@@ -13,7 +13,7 @@ package org.eclipse.n4js.ide.tests.rename
 import org.eclipse.lsp4j.Position
 import org.eclipse.lsp4j.TextDocumentIdentifier
 import org.eclipse.lsp4j.TextDocumentPositionParams
-import org.eclipse.n4js.ide.tests.server.AbstractIdeTest
+import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest
 import org.junit.Test
 
 import static org.junit.Assert.*
