@@ -19,7 +19,7 @@ import org.eclipse.n4js.utils.io.FileCopier
 import org.eclipse.n4js.utils.io.FileDeleter
 import org.junit.Test
 
-import static org.eclipse.n4js.ide.tests.server.TestWorkspaceManager.YARN_TEST_PROJECT
+import static org.eclipse.n4js.ide.tests.helper.server.TestWorkspaceManager.YARN_TEST_PROJECT
 import static org.junit.Assert.assertFalse
 import static org.junit.Assert.assertTrue
 

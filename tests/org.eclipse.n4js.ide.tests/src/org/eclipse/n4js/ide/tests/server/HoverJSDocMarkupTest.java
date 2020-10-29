@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ide.tests.server;
 
+import org.eclipse.n4js.ide.tests.helper.server.AbstractHoverTest;
 import org.junit.Test;
 
 /**

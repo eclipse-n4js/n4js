@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.tests.server;
+package org.eclipse.n4js.ide.tests.helper.server;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
-import org.eclipse.n4js.ide.tests.server.AbstractRenameTest.RenameTestConfiguration;
+import org.eclipse.n4js.ide.tests.helper.server.AbstractRenameTest.RenameTestConfiguration;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.tests.codegen.Project;

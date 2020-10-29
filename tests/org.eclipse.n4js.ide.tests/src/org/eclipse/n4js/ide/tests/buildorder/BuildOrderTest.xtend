@@ -12,7 +12,7 @@ package org.eclipse.n4js.ide.tests.buildorder
 
 import com.google.inject.Injector
 import java.util.List
-import org.eclipse.n4js.ide.tests.server.AbstractIdeTest
+import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest
 import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo
 import org.junit.Test
 

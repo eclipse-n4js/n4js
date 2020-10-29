@@ -43,6 +43,12 @@ Contributors:
          version="0.0.0"/>
 
    <plugin
+         id="org.eclipse.n4js.ide.tests.helper"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
          id="org.eclipse.n4js.ui.tests.helper"
          download-size="0"
          install-size="0"
