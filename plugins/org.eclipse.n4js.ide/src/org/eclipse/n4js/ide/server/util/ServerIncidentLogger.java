@@ -16,9 +16,9 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -47,8 +47,8 @@ public class ServerIncidentLogger {
 	public static final String BASE_FILE_NAME = "server-incident_.log";
 
 	/**
-	 * When receiving {@link #SUSPENSION_COUNT} incidents within {@link #SUSPENSION_INTERVAL} seconds, reporting will be
-	 * suspended until not receiving any further incidents for {@link #SUSPENSION_DURATION} seconds.
+	 * When receiving more than {@link #SUSPENSION_COUNT} incidents within {@link #SUSPENSION_INTERVAL} seconds,
+	 * reporting will be suspended until not receiving any further incidents for {@link #SUSPENSION_DURATION} seconds.
 	 */
 	public static final int SUSPENSION_COUNT = 30;
 	/** @see #SUSPENSION_COUNT */
@@ -68,27 +68,42 @@ public class ServerIncidentLogger {
 	private final SuspensionTracker suspensionTracker = new SuspensionTracker();
 	private final FileCreator fileCreator = new FileCreator();
 
-	/** Same as {@link #reportError(String)}, but also including the stack trace of the given throwable. */
-	public void reportError(String msg, Throwable th) {
-		String stackTraceStr = Throwables.getStackTraceAsString(th);
-		reportError(msg + ": " + stackTraceStr);
+	/** Write the given message to a report file without adding any additional information. */
+	public void report(String msg) {
+		doReport(msg, false, null);
 	}
 
 	/** Write the given message to a report file, including additional diagnosis information. */
 	public void reportError(String msg) {
-		String debugInfo = debugService.getDebugInfo();
-		String fullMsg = msg + NL
-				+ SEPARATOR + NL
-				+ debugInfo;
-		report(fullMsg);
+		doReport(msg, true, null);
 	}
 
-	/** Write the given message to a report file without adding any additional information. */
-	public void report(String msg) {
+	/** Same as {@link #reportError(String)}, but also including the stack trace of the given throwable. */
+	public void reportError(String msg, Throwable th) {
+		doReport(msg, true, th);
+	}
+
+	private void doReport(String msg, boolean includeDebugInfo, Throwable th) {
 		long timeStamp = System.currentTimeMillis();
-		if (!suspensionTracker.isSuspended(timeStamp, fileCreator)) {
-			fileCreator.createFile(timeStamp, msg);
+		if (suspensionTracker.isSuspended(timeStamp, fileCreator)) {
+			return; // exit before compiling debug info, etc.
 		}
+		StringBuilder sb = new StringBuilder();
+		sb.append(msg);
+		if (th != null) {
+			String stackTraceStr = Throwables.getStackTraceAsString(th);
+			sb.append(": ");
+			sb.append(stackTraceStr);
+		}
+		if (includeDebugInfo) {
+			String debugInfo = debugService.getDebugInfo();
+			sb.append(NL);
+			sb.append(SEPARATOR);
+			sb.append(NL);
+			sb.append(debugInfo);
+		}
+		String fullMsg = sb.toString();
+		fileCreator.createFile(timeStamp, fullMsg);
 	}
 
 	private static String getTimeStampString(long timeStamp) {
@@ -102,7 +117,7 @@ public class ServerIncidentLogger {
 	private static class SuspensionTracker {
 
 		private long suspendedUntil = 0;
-		private final Queue<Long> timeStampHistory = new LinkedList<>();
+		private final List<Long> timeStampHistory = new ArrayList<>();
 
 		/** See {@link ServerIncidentLogger#SUSPENSION_COUNT SUSPENSION_COUNT} for details. */
 		public synchronized boolean isSuspended(long timeStamp, FileCreator fileCreator) {
@@ -110,9 +125,7 @@ public class ServerIncidentLogger {
 			if (!isSuspended) {
 				timeStampHistory.add(timeStamp);
 				long historyStartTime = timeStamp - TimeUnit.SECONDS.toMillis(SUSPENSION_INTERVAL);
-				while (timeStampHistory.peek() < historyStartTime) {
-					timeStampHistory.remove();
-				}
+				timeStampHistory.removeIf(t -> t < historyStartTime);
 				isSuspended = timeStampHistory.size() > SUSPENSION_COUNT;
 				if (isSuspended) {
 					timeStampHistory.clear();

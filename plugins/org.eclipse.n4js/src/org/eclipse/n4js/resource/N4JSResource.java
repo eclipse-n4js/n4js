@@ -579,7 +579,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			// ----
 			// However, this would break existing code using SyntaxRelatedTElement#getAstElement() in case of hash
 			// mismatch. Therefore, keep current behavior for now, but report it:
-			logger.error(e.getMessage());
+			logger.error(e.getMessage(), e);
 			return myContents.basicGet(0);
 		} catch (IOException | IllegalStateException ioe) {
 			if (myContents.isEmpty()) {
