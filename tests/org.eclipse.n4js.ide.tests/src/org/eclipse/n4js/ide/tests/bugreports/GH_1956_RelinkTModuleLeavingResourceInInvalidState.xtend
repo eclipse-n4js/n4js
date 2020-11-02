@@ -10,11 +10,17 @@
  */
 package org.eclipse.n4js.ide.tests.bugreports
 
+import org.eclipse.lsp4j.Hover
+import org.eclipse.lsp4j.Location
 import org.eclipse.lsp4j.Position
+import org.eclipse.lsp4j.Range
 import org.eclipse.lsp4j.TextDocumentIdentifier
 import org.eclipse.lsp4j.TextDocumentPositionParams
 import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest
+import org.junit.Assert
 import org.junit.Test
+
+import static org.junit.Assert.assertEquals
 
 /**
  * If TModule reconciliation fails due to a hash mismatch, the resource was left in an invalid state.
@@ -53,17 +59,25 @@ class GH_1956_RelinkTModuleLeavingResourceInInvalidState extends AbstractIdeTest
 		// NOTE: even with notification the bug would occur, because this is only a change inside a comment and
 		// therefore resource "A" in resource set of editor "Main" won't be affected and thus won't be updated!
 
-		languageServer.hover(textDocPos("Main", 1, 8));
+		val h1 = languageServer.hover(textDocPos("Main", 1, 8));
 		joinServerRequests();
-		assertNoErrorsInLogOrOutput(); // logged two exceptions
+// for the time being, we still have to log relink-failure due to hash mismatch as error, thus next line is commented out:
+//		assertNoErrorsInLogOrOutput(); // logged two exceptions
+clearLogMessages();
+clearOutput();
 
-		languageServer.hover(textDocPos("Main", 0, 12));
+		val h2 = languageServer.hover(textDocPos("Main", 0, 12));
 		joinServerRequests();
 		assertNoErrorsInLogOrOutput(); // logged hundreds of exceptions (via post-processing)
 
-		languageServer.definition(textDocPos("Main", 0, 12));
+		val d = languageServer.definition(textDocPos("Main", 0, 12));
 		joinServerRequests();
 		assertNoErrorsInLogOrOutput(); // logged hundreds of exceptions (via a different call path)
+
+		assertHoverResult("markdown", "Some nice documentation.", h1.get);
+		assertHoverResult("markdown", "Some nice documentation.", h2.get);
+
+		assertEquals(#[ location("A", 2, 20, 2, 29) ], d.get.getLeft);
 	}
 
 	/** Line/column is zero-based. */
@@ -72,5 +86,26 @@ class GH_1956_RelinkTModuleLeavingResourceInInvalidState extends AbstractIdeTest
 			new TextDocumentIdentifier(getFileURIFromModuleName(moduleName).toString),
 			new Position(line, column)
 		);
+	}
+
+	def private Location location(String moduleName, int startLine, int startColumn, int endLine, int endColumn) {
+		return new Location(
+			getFileURIFromModuleName(moduleName).toString,
+			new Range(
+				new Position(startLine, startColumn),
+				new Position(endLine, endColumn)
+			)
+		);
+	}
+
+	def private void assertHoverResult(String expectedLanguage, String expectedText, Hover actualResult) {
+		val success = actualResult.contents.getLeft.filter[isRight].exists[
+			getRight.language == expectedLanguage && getRight.value == expectedText
+		];
+		if (!success) {
+			Assert.fail(
+				'''expected a hover with language="«expectedLanguage»" and value="«expectedText»", but got:\n'''
+				+ actualResult);
+		}
 	}
 }

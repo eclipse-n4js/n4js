@@ -571,10 +571,16 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			return result;
 		} catch (RelinkTModuleHashMismatchException e) {
 			// reconciliation failed, resource is in an invalid state
-			// -> go back to state "Loaded from Description":
-			discardAST(); // reinstalls an AST proxy at contents[0]
-			fullyPostProcessed = true;
-			return object;
+			// -> we could go back to state "Loaded from Description" with:
+			// ----
+			// discardAST(); // reinstalls an AST proxy at contents[0]
+			// fullyPostProcessed = true;
+			// return object;
+			// ----
+			// However, this would break existing code using SyntaxRelatedTElement#getAstElement() in case of hash
+			// mismatch. Therefore, keep current behavior for now, but report it:
+			logger.error(e.getMessage());
+			return myContents.basicGet(0);
 		} catch (IOException | IllegalStateException ioe) {
 			if (myContents.isEmpty()) {
 				myContents.sneakyAdd(oldScript);

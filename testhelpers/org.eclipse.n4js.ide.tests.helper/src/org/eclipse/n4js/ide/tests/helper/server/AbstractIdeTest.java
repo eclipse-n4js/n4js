@@ -397,6 +397,12 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		return languageServer.executeCommand(params);
 	}
 
+	/** Clears system output and error streams. */
+	protected void clearOutput() {
+		SYSTEM_OUT_REDIRECTER.clearSystemOut();
+		SYSTEM_OUT_REDIRECTER.clearSystemErr();
+	}
+
 	/** Clear the log messages received from the server via LSP notification 'logMessage'. */
 	protected void clearLogMessages() {
 		languageClient.clearLogMessages();

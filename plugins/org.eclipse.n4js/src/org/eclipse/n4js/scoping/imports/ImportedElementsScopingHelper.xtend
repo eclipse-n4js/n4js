@@ -241,6 +241,9 @@ class ImportedElementsScopingHelper {
 		if (specifier.alias === null) {
 			return; // if broken code, e.g. "import * as 123 as N from 'some/Module'"
 		}
+		if (script.module === null) {
+			return;
+		}
 
 		// add namespace to scope
 		val namespaceName = specifier.alias;
