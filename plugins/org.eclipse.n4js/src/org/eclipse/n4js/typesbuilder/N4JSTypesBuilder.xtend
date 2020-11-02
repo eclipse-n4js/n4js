@@ -11,6 +11,7 @@
 package org.eclipse.n4js.typesbuilder
 
 import com.google.inject.Inject
+import org.eclipse.emf.common.util.URI
 import org.eclipse.n4js.n4JS.ExportableElement
 import org.eclipse.n4js.n4JS.ExportedVariableStatement
 import org.eclipse.n4js.n4JS.FunctionDeclaration
@@ -82,6 +83,14 @@ public class N4JSTypesBuilder {
 	@Inject private SpecifierConverter specifierConverter
 	@Inject protected JavaScriptVariantHelper jsVariantHelper;
 
+	/** Thrown when reconciliation of a TModule fails due to a hash mismatch. */
+	public static class RelinkTModuleHashMismatchException extends IllegalStateException {
+
+		public new(URI resourceURI) {
+			super("cannot link existing TModule to new AST due to hash mismatch: " + resourceURI);
+		}
+	}
+
 	/**
 	 * When demand-loading an AST for a resource that already has a TModule (usually retrieved from the index) by
 	 * calling SyntaxRelatedTElement#getAstElement(), we are facing a challenge: we could simply replace the original
@@ -110,8 +119,7 @@ public class N4JSTypesBuilder {
 
 			val astMD5New = N4JSASTUtils.md5Hex(resource);
 			if (astMD5New != module.astMD5) {
-				throw new IllegalStateException("cannot link existing TModule to new AST due to hash mismatch: " +
-					resource.URI);
+				throw new RelinkTModuleHashMismatchException(resource.getURI());
 			}
 			module.reconciled = true;
 

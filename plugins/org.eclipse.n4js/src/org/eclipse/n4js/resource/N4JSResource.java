@@ -72,6 +72,7 @@ import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.ts.types.util.TypeModelUtils;
+import org.eclipse.n4js.typesbuilder.N4JSTypesBuilder.RelinkTModuleHashMismatchException;
 import org.eclipse.n4js.utils.EcoreUtilN4;
 import org.eclipse.n4js.utils.N4JSLanguageHelper;
 import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
@@ -568,6 +569,12 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			}
 			fullyPostProcessed = false;
 			return result;
+		} catch (RelinkTModuleHashMismatchException e) {
+			// reconciliation failed, resource is in an invalid state
+			// -> go back to state "Loaded from Description":
+			discardAST(); // reinstalls an AST proxy at contents[0]
+			fullyPostProcessed = true;
+			return object;
 		} catch (IOException | IllegalStateException ioe) {
 			if (myContents.isEmpty()) {
 				myContents.sneakyAdd(oldScript);
@@ -929,7 +936,8 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	private void proxifyASTReferences(EObject object) {
 		if (object instanceof SyntaxRelatedTElement) {
 			SyntaxRelatedTElement element = (SyntaxRelatedTElement) object;
-			EObject astElement = element.getAstElement();
+			EObject astElement = (EObject) element.eGet(TypesPackage.Literals.SYNTAX_RELATED_TELEMENT__AST_ELEMENT,
+					false);
 			if (astElement != null && !astElement.eIsProxy()) {
 				InternalEObject proxy = (InternalEObject) EcoreUtil.create(astElement.eClass());
 				proxy.eSetProxyURI(EcoreUtil.getURI(astElement));
