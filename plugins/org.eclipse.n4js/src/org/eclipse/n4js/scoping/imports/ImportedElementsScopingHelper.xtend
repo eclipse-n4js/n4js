@@ -242,7 +242,7 @@ class ImportedElementsScopingHelper {
 			return; // if broken code, e.g. "import * as 123 as N from 'some/Module'"
 		}
 		if (script.module === null) {
-			return;
+			return; // when reconciliation of TModule fails due to hash mismatch
 		}
 
 		// add namespace to scope
