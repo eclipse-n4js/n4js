@@ -44,7 +44,6 @@ import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.utils.Strings;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
-import org.eclipse.xtext.resource.XtextResource;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -185,7 +184,6 @@ public interface DebugService extends DebugEndpointDefinition {
 				sb.append("<none>");
 			} else {
 				sb.append(ctx.getURI());
-				XtextResource mainRes = ctx.getResource();
 				ResourceSet resSet = ctx.getResourceSet();
 				if (resSet != null) {
 					for (Resource res : resSet.getResources()) {
