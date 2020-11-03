@@ -72,6 +72,7 @@ import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.ts.types.util.TypeModelUtils;
+import org.eclipse.n4js.typesbuilder.N4JSTypesBuilder.RelinkTModuleHashMismatchException;
 import org.eclipse.n4js.utils.EcoreUtilN4;
 import org.eclipse.n4js.utils.N4JSLanguageHelper;
 import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
@@ -568,6 +569,19 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			}
 			fullyPostProcessed = false;
 			return result;
+		} catch (RelinkTModuleHashMismatchException e) {
+			// reconciliation failed, resource is in an invalid state
+			// -> we could go back to state "Loaded from Description" with:
+			// ----
+			// discardAST(); // reinstalls an AST proxy at contents[0]
+			// fullyPostProcessed = true;
+			// return object;
+			// ----
+			// TODO GH-1958 find long-term solution
+			// However, this would break existing code using SyntaxRelatedTElement#getAstElement() in case of hash
+			// mismatch. Therefore, keep current behavior for now, but report it:
+			logger.error(e.getMessage(), e);
+			return myContents.basicGet(0);
 		} catch (IOException | IllegalStateException ioe) {
 			if (myContents.isEmpty()) {
 				myContents.sneakyAdd(oldScript);
@@ -929,7 +943,8 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	private void proxifyASTReferences(EObject object) {
 		if (object instanceof SyntaxRelatedTElement) {
 			SyntaxRelatedTElement element = (SyntaxRelatedTElement) object;
-			EObject astElement = element.getAstElement();
+			EObject astElement = (EObject) element.eGet(TypesPackage.Literals.SYNTAX_RELATED_TELEMENT__AST_ELEMENT,
+					false);
 			if (astElement != null && !astElement.eIsProxy()) {
 				InternalEObject proxy = (InternalEObject) EcoreUtil.create(astElement.eClass());
 				proxy.eSetProxyURI(EcoreUtil.getURI(astElement));

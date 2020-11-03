@@ -16,14 +16,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.documentation.impl.MultiLineCommentDocumentationProvider;
-import org.eclipse.xtext.nodemodel.BidiTreeIterator;
-import org.eclipse.xtext.nodemodel.ICompositeNode;
-import org.eclipse.xtext.nodemodel.INode;
-import org.eclipse.xtext.nodemodel.impl.LeafNode;
-import org.eclipse.xtext.nodemodel.impl.LeafNodeWithSyntaxError;
-import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
-
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
@@ -32,6 +24,13 @@ import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.parser.InternalSemicolonInjectingParser;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.xtext.documentation.impl.MultiLineCommentDocumentationProvider;
+import org.eclipse.xtext.nodemodel.BidiTreeIterator;
+import org.eclipse.xtext.nodemodel.ICompositeNode;
+import org.eclipse.xtext.nodemodel.INode;
+import org.eclipse.xtext.nodemodel.impl.LeafNode;
+import org.eclipse.xtext.nodemodel.impl.LeafNodeWithSyntaxError;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 
 /**
  */
@@ -46,8 +45,19 @@ public class N4JSDocumentationProvider extends MultiLineCommentDocumentationProv
 	 */
 	@Override
 	public List<INode> getDocumentationNodes(EObject object) {
-		final EObject astNode = N4JSASTUtils.getCorrespondingASTNode(object);
-		if (astNode != null) {
+		EObject astNode = N4JSASTUtils.getCorrespondingASTNode(object);
+		// TODO GH-1958 approach for documentation look-up in case of hash mismatch:
+		// if (astNode != null && astNode.eIsProxy()) {
+		// // proxy from TModule back to AST could not be resolved (e.g. reconciliation failed due to hash mismatch)
+		// // -> try to obtain AST node in temporary resource without using reconciliation
+		// Resource originalResource = object.eResource();
+		// URI originalResourceURI = originalResource != null ? originalResource.getURI() : null;
+		// if (originalResource != null && originalResourceURI != null) {
+		// ResourceSet tempResSet = n4jsCore.createResourceSet(Optional.absent());
+		// astNode = EcoreUtil.resolve(astNode, tempResSet); // TODO disable types builder & post-processing!
+		// }
+		// }
+		if (astNode != null && !astNode.eIsProxy()) {
 			List<INode> nodes = super.getDocumentationNodes(astNode);
 			if (nodes.isEmpty() && astNode instanceof VariableDeclaration) {
 				TypeRef typeRef = ((VariableDeclaration) astNode).getDeclaredTypeRef();
@@ -72,7 +82,7 @@ public class N4JSDocumentationProvider extends MultiLineCommentDocumentationProv
 				// backward search for first non-hidden element, over-stepping if it is a LeafNodeWithSyntaxError from
 				// ASI.
 				ICompositeNode ptNodeOfASTNode = NodeModelUtils.getNode(astNode);
-				LeafNode lNode = searchLeafNodeDocumentation(ptNodeOfASTNode);
+				LeafNode lNode = ptNodeOfASTNode != null ? searchLeafNodeDocumentation(ptNodeOfASTNode) : null;
 				if (lNode != null) {
 					return Collections.<INode> singletonList(lNode);
 				}
