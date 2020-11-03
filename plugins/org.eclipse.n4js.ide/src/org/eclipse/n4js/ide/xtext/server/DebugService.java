@@ -24,6 +24,9 @@ import java.util.function.Function;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.jsonrpc.JsonRpcException;
@@ -36,8 +39,12 @@ import org.eclipse.lsp4j.jsonrpc.messages.RequestMessage;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.n4js.ide.xtext.server.DebugService.DebugServiceNullImpl;
 import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIndex;
+import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.utils.Strings;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
+import org.eclipse.xtext.resource.XtextResource;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -102,6 +109,9 @@ public interface DebugService extends DebugEndpointDefinition {
 		private final Logger LOG = LogManager.getLogger(DebugServiceDefaultImpl.class);
 
 		@Inject
+		private ResourceTaskManager resourceTaskManager;
+
+		@Inject
 		private QueuedExecutorService executerService;
 
 		@Inject
@@ -154,6 +164,8 @@ public interface DebugService extends DebugEndpointDefinition {
 		}
 
 		protected void compileDebugInfo(StringBuilder sb, String separator) {
+			sb.append(getResourceTaskContextDump());
+			sb.append(separator);
 			sb.append(messageTracer.getTraceDump());
 			sb.append(separator);
 			sb.append(getWorkspaceConfigDump());
@@ -163,6 +175,42 @@ public interface DebugService extends DebugEndpointDefinition {
 			sb.append(getMemoryDump());
 			sb.append(separator);
 			sb.append(getThreadDump());
+		}
+
+		protected String getResourceTaskContextDump() {
+			StringBuilder sb = new StringBuilder();
+			sb.append("Resource Task Context: ");
+			ResourceTaskContext ctx = resourceTaskManager.currentContext();
+			if (ctx == null) {
+				sb.append("<none>");
+			} else {
+				sb.append(ctx.getURI());
+				XtextResource mainRes = ctx.getResource();
+				ResourceSet resSet = ctx.getResourceSet();
+				if (resSet != null) {
+					for (Resource res : resSet.getResources()) {
+						sb.append("\n    ");
+						appendResourceInfo(sb, res);
+					}
+				}
+			}
+			return sb.toString();
+		}
+
+		protected void appendResourceInfo(StringBuilder sb, Resource res) {
+			URI uri = res.getURI();
+			sb.append(uri != null ? uri.lastSegment() : "<null>");
+			if (res instanceof N4JSResource) {
+				N4JSResource resCasted = (N4JSResource) res;
+				Script script = resCasted.getScript();
+				TModule module = resCasted.getModule();
+				sb.append(" script: ");
+				sb.append(script != null ? (script.eIsProxy() ? "<proxy>" : "<no proxy>") : "<null>");
+				sb.append(" module: ");
+				sb.append(module != null ? (module.eIsProxy() ? "<proxy>" : "<no proxy>") : "<null>");
+			}
+			sb.append(" uri: ");
+			sb.append(uri);
 		}
 
 		protected String getThreadDump() {

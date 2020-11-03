@@ -243,7 +243,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 					)
 				}
 			} else {
-				throw new IllegalStateException("No container library found for " + ieoT.qualifiedName)
+				throw new IllegalStateException("No container library found for " + ieoT.qualifiedName + " with URI: " + ieoT.EObjectURI)
 			}
 		}
 
