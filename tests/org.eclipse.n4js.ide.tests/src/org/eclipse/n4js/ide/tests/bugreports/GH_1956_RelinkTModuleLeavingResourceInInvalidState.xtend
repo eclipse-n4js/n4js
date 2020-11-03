@@ -63,6 +63,7 @@ class GH_1956_RelinkTModuleLeavingResourceInInvalidState extends AbstractIdeTest
 		joinServerRequests();
 // for the time being, we still have to log relink-failure due to hash mismatch as error, thus next line is commented out:
 //		assertNoErrorsInLogOrOutput(); // logged two exceptions
+// TODO GH-1958 comment in previous line and delete next two lines
 clearLogMessages();
 clearOutput();
 

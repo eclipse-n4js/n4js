@@ -577,6 +577,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			// fullyPostProcessed = true;
 			// return object;
 			// ----
+			// TODO GH-1958 find long-term solution
 			// However, this would break existing code using SyntaxRelatedTElement#getAstElement() in case of hash
 			// mismatch. Therefore, keep current behavior for now, but report it:
 			logger.error(e.getMessage(), e);

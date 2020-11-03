@@ -45,7 +45,18 @@ public class N4JSDocumentationProvider extends MultiLineCommentDocumentationProv
 	 */
 	@Override
 	public List<INode> getDocumentationNodes(EObject object) {
-		final EObject astNode = N4JSASTUtils.getCorrespondingASTNode(object);
+		EObject astNode = N4JSASTUtils.getCorrespondingASTNode(object);
+		// TODO GH-1958 approach for documentation look-up in case of hash mismatch:
+		// if (astNode != null && astNode.eIsProxy()) {
+		// // proxy from TModule back to AST could not be resolved (e.g. reconciliation failed due to hash mismatch)
+		// // -> try to obtain AST node in temporary resource without using reconciliation
+		// Resource originalResource = object.eResource();
+		// URI originalResourceURI = originalResource != null ? originalResource.getURI() : null;
+		// if (originalResource != null && originalResourceURI != null) {
+		// ResourceSet tempResSet = n4jsCore.createResourceSet(Optional.absent());
+		// astNode = EcoreUtil.resolve(astNode, tempResSet); // TODO disable types builder & post-processing!
+		// }
+		// }
 		if (astNode != null && !astNode.eIsProxy()) {
 			List<INode> nodes = super.getDocumentationNodes(astNode);
 			if (nodes.isEmpty() && astNode instanceof VariableDeclaration) {
