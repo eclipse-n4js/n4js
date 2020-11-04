@@ -13,6 +13,7 @@ package org.eclipse.n4js.scoping.imports
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import java.util.HashMap
+import org.apache.log4j.Logger
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.n4JS.ImportDeclaration
@@ -20,6 +21,7 @@ import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.n4idl.scoping.utils.MultiImportedElementsMap
 import org.eclipse.n4js.n4idl.versioning.VersionHelper
 import org.eclipse.n4js.resource.N4JSEObjectDescription
 import org.eclipse.n4js.scoping.N4JSScopeProvider
@@ -50,7 +52,6 @@ import org.eclipse.xtext.resource.impl.AliasedEObjectDescription
 import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.scoping.impl.SimpleScope
 import org.eclipse.xtext.util.IResourceScopeCache
-import org.eclipse.n4js.n4idl.scoping.utils.MultiImportedElementsMap
 
 /** internal helper collection type */
 class IEODesc2ISpec extends HashMap<IEObjectDescription, ImportSpecifier> {}
@@ -62,6 +63,8 @@ class IEODesc2ISpec extends HashMap<IEObjectDescription, ImportSpecifier> {}
  */
 @Singleton
 class ImportedElementsScopingHelper {
+
+	private final static Logger LOGGER = Logger.getLogger(ImportedElementsScopingHelper);
 
 	@Inject
 	IResourceScopeCache cache
@@ -252,6 +255,25 @@ class ImportedElementsScopingHelper {
 			interType instanceof ModuleNamespaceVirtualType &&
 				(interType as ModuleNamespaceVirtualType).module === imp.module
 		]
+		if (namespaceType === null) {
+			// TODO GH-1959 remove this temporary debug logging
+			val sb = new StringBuilder();
+			sb.append("contextResource?.getURI(): " + contextResource?.getURI());
+			sb.append("specifier.definedType" + specifier.definedType);
+			sb.append("imp.module: " + imp.module);
+			sb.append("script.module: " + script.module);
+			sb.append("script.module.isPreLinkingPhase: " + script.module.isPreLinkingPhase);
+			sb.append("script.module.isReconciled: " + script.module.isReconciled);
+			sb.append("script.module.internalTypes.size: " + script.module.internalTypes.size);
+			sb.append("script.module.exposedInternalTypes.size: " + script.module.exposedInternalTypes.size);
+			for (type : (script.module.internalTypes + script.module.exposedInternalTypes)) {
+				if (type instanceof ModuleNamespaceVirtualType) {
+					sb.append("type[n].module: " + type.module);
+				}
+			}
+			LOGGER.error("namespaceType not found\n" + sb.toString);
+			return;
+		}
 		val ieodx = validImports.putOrError(namespaceType, namespaceQName, IssueCodes.IMP_AMBIGUOUS)
 		originatorMap.putWithOrigin(ieodx, specifier)
 
