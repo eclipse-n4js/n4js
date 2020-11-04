@@ -19,7 +19,6 @@ var olFun = {
 	},
 };
 var st2 : ~Object with { fn : {function(any) : number};};
-// XyPECT errors --> "" at "fn"
 
 // XPECT type of 'olFun' --> ~Object with { fn: {function(any):number} }
 olFun;
@@ -27,3 +26,20 @@ olFun;
 st2 = olFun;
 // XPECT noerrors -->
 olFun = st2;
+
+
+// same with single name syntax:
+
+let fn = function(a) : number {
+	return 0;
+};
+let olFun_sn = {
+	fn
+};
+
+// XPECT type of 'olFun_sn' --> ~Object with { fn: {function(any):number} }
+olFun_sn;
+// XPECT noerrors -->
+st2 = olFun_sn;
+// XPECT noerrors -->
+olFun_sn = st2;

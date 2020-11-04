@@ -23,3 +23,20 @@ ol;
 st1 = ol;
 // XPECT noerrors -->
 ol = st1;
+
+
+// same with single name syntax:
+
+let s = "hello";
+let n = 42;
+let ol_sn = {
+	s,
+	n
+};
+
+// XPECT type of 'ol_sn' --> ~Object with { s: string; n: int }
+ol_sn;
+// XPECT noerrors -->
+st1 = ol_sn;
+// XPECT noerrors -->
+ol_sn = st1;
