@@ -12,16 +12,12 @@ package org.eclipse.n4js.n4JS.impl;
 
 import java.lang.reflect.InvocationTargetException;
 
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.InternalEObject;
 
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
+import org.eclipse.n4js.n4JS.AssignmentExpression;
+import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.NamedElement;
@@ -33,26 +29,10 @@ import org.eclipse.n4js.n4JS.PropertyNameValuePairSingleName;
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Property Name Value Pair Single Name</b></em>'.
  * <!-- end-user-doc -->
- * <p>
- * The following features are implemented:
- * </p>
- * <ul>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.PropertyNameValuePairSingleNameImpl#getIdentifierRef <em>Identifier Ref</em>}</li>
- * </ul>
  *
  * @generated
  */
 public class PropertyNameValuePairSingleNameImpl extends PropertyNameValuePairImpl implements PropertyNameValuePairSingleName {
-	/**
-	 * The cached value of the '{@link #getIdentifierRef() <em>Identifier Ref</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getIdentifierRef()
-	 * @generated
-	 * @ordered
-	 */
-	protected IdentifierRef identifierRef;
-
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -79,42 +59,20 @@ public class PropertyNameValuePairSingleNameImpl extends PropertyNameValuePairIm
 	 */
 	@Override
 	public IdentifierRef getIdentifierRef() {
-		return identifierRef;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public NotificationChain basicSetIdentifierRef(IdentifierRef newIdentifierRef, NotificationChain msgs) {
-		IdentifierRef oldIdentifierRef = identifierRef;
-		identifierRef = newIdentifierRef;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.PROPERTY_NAME_VALUE_PAIR_SINGLE_NAME__IDENTIFIER_REF, oldIdentifierRef, newIdentifierRef);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
+		final Expression expr = this.getExpression();
+		Expression _xifexpression = null;
+		if ((expr instanceof AssignmentExpression)) {
+			_xifexpression = ((AssignmentExpression)expr).getLhs();
 		}
-		return msgs;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setIdentifierRef(IdentifierRef newIdentifierRef) {
-		if (newIdentifierRef != identifierRef) {
-			NotificationChain msgs = null;
-			if (identifierRef != null)
-				msgs = ((InternalEObject)identifierRef).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.PROPERTY_NAME_VALUE_PAIR_SINGLE_NAME__IDENTIFIER_REF, null, msgs);
-			if (newIdentifierRef != null)
-				msgs = ((InternalEObject)newIdentifierRef).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.PROPERTY_NAME_VALUE_PAIR_SINGLE_NAME__IDENTIFIER_REF, null, msgs);
-			msgs = basicSetIdentifierRef(newIdentifierRef, msgs);
-			if (msgs != null) msgs.dispatch();
+		else {
+			_xifexpression = expr;
 		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.PROPERTY_NAME_VALUE_PAIR_SINGLE_NAME__IDENTIFIER_REF, newIdentifierRef, newIdentifierRef));
+		final Expression candidate = _xifexpression;
+		IdentifierRef _xifexpression_1 = null;
+		if ((candidate instanceof IdentifierRef)) {
+			_xifexpression_1 = ((IdentifierRef)candidate);
+		}
+		return _xifexpression_1;
 	}
 
 	/**
@@ -137,78 +95,6 @@ public class PropertyNameValuePairSingleNameImpl extends PropertyNameValuePairIm
 			_elvis = _idAsText;
 		}
 		return _elvis;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR_SINGLE_NAME__IDENTIFIER_REF:
-				return basicSetIdentifierRef(null, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR_SINGLE_NAME__IDENTIFIER_REF:
-				return getIdentifierRef();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR_SINGLE_NAME__IDENTIFIER_REF:
-				setIdentifierRef((IdentifierRef)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void eUnset(int featureID) {
-		switch (featureID) {
-			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR_SINGLE_NAME__IDENTIFIER_REF:
-				setIdentifierRef((IdentifierRef)null);
-				return;
-		}
-		super.eUnset(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR_SINGLE_NAME__IDENTIFIER_REF:
-				return identifierRef != null;
-		}
-		return super.eIsSet(featureID);
 	}
 
 	/**
@@ -247,6 +133,8 @@ public class PropertyNameValuePairSingleNameImpl extends PropertyNameValuePairIm
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
+			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR_SINGLE_NAME___GET_IDENTIFIER_REF:
+				return getIdentifierRef();
 			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR_SINGLE_NAME___GET_NAME:
 				return getName();
 		}

@@ -1297,7 +1297,11 @@ class PropertyNameValuePair extends AnnotablePropertyAssignment, TypedElement, T
 }
 
 class PropertyNameValuePairSingleName extends PropertyNameValuePair {
-	contains IdentifierRef identifierRef
+	op IdentifierRef getIdentifierRef() {
+		val expr = getExpression();
+		val candidate = if (expr instanceof AssignmentExpression) expr.lhs else expr;
+		return if (candidate instanceof IdentifierRef) candidate;
+	}
 	/*
 	 * Note: if this AST node was created by the parser, then super.getName() will always be null and we get
 	 * the name from the parse tree; if this AST node is created programmatically (e.g. refactoring), then

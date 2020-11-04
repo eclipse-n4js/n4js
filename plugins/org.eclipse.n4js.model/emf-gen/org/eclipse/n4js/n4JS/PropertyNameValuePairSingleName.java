@@ -16,12 +16,6 @@ package org.eclipse.n4js.n4JS;
  * A representation of the model object '<em><b>Property Name Value Pair Single Name</b></em>'.
  * <!-- end-user-doc -->
  *
- * <p>
- * The following features are supported:
- * </p>
- * <ul>
- *   <li>{@link org.eclipse.n4js.n4JS.PropertyNameValuePairSingleName#getIdentifierRef <em>Identifier Ref</em>}</li>
- * </ul>
  *
  * @see org.eclipse.n4js.n4JS.N4JSPackage#getPropertyNameValuePairSingleName()
  * @model
@@ -29,26 +23,12 @@ package org.eclipse.n4js.n4JS;
  */
 public interface PropertyNameValuePairSingleName extends PropertyNameValuePair {
 	/**
-	 * Returns the value of the '<em><b>Identifier Ref</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Identifier Ref</em>' containment reference.
-	 * @see #setIdentifierRef(IdentifierRef)
-	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getPropertyNameValuePairSingleName_IdentifierRef()
-	 * @model containment="true"
+	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
 	IdentifierRef getIdentifierRef();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.PropertyNameValuePairSingleName#getIdentifierRef <em>Identifier Ref</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Identifier Ref</em>' containment reference.
-	 * @see #getIdentifierRef()
-	 * @generated
-	 */
-	void setIdentifierRef(IdentifierRef value);
 
 	/**
 	 * <!-- begin-user-doc -->

@@ -8122,24 +8122,11 @@ ruleAnnotatedPropertyAssignment
 			)?
 			(
 				(
-					IdentifierRefIdentifierRefParserRuleCall_1_4_2_0=ruleIdentifierRef{
-						announce($IdentifierRefIdentifierRefParserRuleCall_1_4_2_0.start, $IdentifierRefIdentifierRefParserRuleCall_1_4_2_0.stop, grammarAccess.getAnnotatedPropertyAssignmentAccess().getIdentifierRefAssignment_1_4_2());
+					ExpressionPropertyNameValuePairSingleNamePartParserRuleCall_1_4_2_0=rulePropertyNameValuePairSingleNamePart{
+						announce($ExpressionPropertyNameValuePairSingleNamePartParserRuleCall_1_4_2_0.start, $ExpressionPropertyNameValuePairSingleNamePartParserRuleCall_1_4_2_0.stop, grammarAccess.getAnnotatedPropertyAssignmentAccess().getExpressionAssignment_1_4_2());
 					}
 				)
 			)
-			(
-				EqualsSignKeyword_1_4_3_0=EqualsSign
-				 {
-					announce($EqualsSignKeyword_1_4_3_0, grammarAccess.getAnnotatedPropertyAssignmentAccess().getEqualsSignKeyword_1_4_3_0());
-				}
-				(
-					(
-						ExpressionAssignmentExpressionParserRuleCall_1_4_3_1_0=norm1_AssignmentExpression{
-							announce($ExpressionAssignmentExpressionParserRuleCall_1_4_3_1_0.start, $ExpressionAssignmentExpressionParserRuleCall_1_4_3_1_0.stop, grammarAccess.getAnnotatedPropertyAssignmentAccess().getExpressionAssignment_1_4_3_1());
-						}
-					)
-				)
-			)?
 		)
 		    |
 		(
@@ -8606,24 +8593,11 @@ norm1_AnnotatedPropertyAssignment
 			)?
 			(
 				(
-					IdentifierRefIdentifierRefParserRuleCall_1_4_2_0=norm1_IdentifierRef{
-						announce($IdentifierRefIdentifierRefParserRuleCall_1_4_2_0.start, $IdentifierRefIdentifierRefParserRuleCall_1_4_2_0.stop, grammarAccess.getAnnotatedPropertyAssignmentAccess().getIdentifierRefAssignment_1_4_2());
+					ExpressionPropertyNameValuePairSingleNamePartParserRuleCall_1_4_2_0=norm1_PropertyNameValuePairSingleNamePart{
+						announce($ExpressionPropertyNameValuePairSingleNamePartParserRuleCall_1_4_2_0.start, $ExpressionPropertyNameValuePairSingleNamePartParserRuleCall_1_4_2_0.stop, grammarAccess.getAnnotatedPropertyAssignmentAccess().getExpressionAssignment_1_4_2());
 					}
 				)
 			)
-			(
-				EqualsSignKeyword_1_4_3_0=EqualsSign
-				 {
-					announce($EqualsSignKeyword_1_4_3_0, grammarAccess.getAnnotatedPropertyAssignmentAccess().getEqualsSignKeyword_1_4_3_0());
-				}
-				(
-					(
-						ExpressionAssignmentExpressionParserRuleCall_1_4_3_1_0=norm3_AssignmentExpression{
-							announce($ExpressionAssignmentExpressionParserRuleCall_1_4_3_1_0.start, $ExpressionAssignmentExpressionParserRuleCall_1_4_3_1_0.stop, grammarAccess.getAnnotatedPropertyAssignmentAccess().getExpressionAssignment_1_4_3_1());
-						}
-					)
-				)
-			)?
 		)
 		    |
 		(
@@ -9009,24 +8983,11 @@ rulePropertyNameValuePairSingleName
 	)?
 	(
 		(
-			IdentifierRefIdentifierRefParserRuleCall_1_0=ruleIdentifierRef{
-				announce($IdentifierRefIdentifierRefParserRuleCall_1_0.start, $IdentifierRefIdentifierRefParserRuleCall_1_0.stop, grammarAccess.getPropertyNameValuePairSingleNameAccess().getIdentifierRefAssignment_1());
+			ExpressionPropertyNameValuePairSingleNamePartParserRuleCall_1_0=rulePropertyNameValuePairSingleNamePart{
+				announce($ExpressionPropertyNameValuePairSingleNamePartParserRuleCall_1_0.start, $ExpressionPropertyNameValuePairSingleNamePartParserRuleCall_1_0.stop, grammarAccess.getPropertyNameValuePairSingleNameAccess().getExpressionAssignment_1());
 			}
 		)
 	)
-	(
-		EqualsSignKeyword_2_0=EqualsSign
-		 {
-			announce($EqualsSignKeyword_2_0, grammarAccess.getPropertyNameValuePairSingleNameAccess().getEqualsSignKeyword_2_0());
-		}
-		(
-			(
-				ExpressionAssignmentExpressionParserRuleCall_2_1_0=norm1_AssignmentExpression{
-					announce($ExpressionAssignmentExpressionParserRuleCall_2_1_0.start, $ExpressionAssignmentExpressionParserRuleCall_2_1_0.stop, grammarAccess.getPropertyNameValuePairSingleNameAccess().getExpressionAssignment_2_1());
-				}
-			)
-		)
-	)?
 )
 ;
 
@@ -9045,20 +9006,64 @@ norm1_PropertyNameValuePairSingleName
 	)?
 	(
 		(
-			IdentifierRefIdentifierRefParserRuleCall_1_0=norm1_IdentifierRef{
-				announce($IdentifierRefIdentifierRefParserRuleCall_1_0.start, $IdentifierRefIdentifierRefParserRuleCall_1_0.stop, grammarAccess.getPropertyNameValuePairSingleNameAccess().getIdentifierRefAssignment_1());
+			ExpressionPropertyNameValuePairSingleNamePartParserRuleCall_1_0=norm1_PropertyNameValuePairSingleNamePart{
+				announce($ExpressionPropertyNameValuePairSingleNamePartParserRuleCall_1_0.start, $ExpressionPropertyNameValuePairSingleNamePartParserRuleCall_1_0.stop, grammarAccess.getPropertyNameValuePairSingleNameAccess().getExpressionAssignment_1());
 			}
 		)
 	)
+)
+;
+
+// Entry rule entryRulePropertyNameValuePairSingleNamePart
+entryRulePropertyNameValuePairSingleNamePart
+	:
+	rulePropertyNameValuePairSingleNamePart
+	EOF;
+
+// Rule PropertyNameValuePairSingleNamePart
+rulePropertyNameValuePairSingleNamePart
+@init {
+}:
+(
+	IdentifierRefParserRuleCall_0=ruleIdentifierRef{ announce($IdentifierRefParserRuleCall_0.start, $IdentifierRefParserRuleCall_0.stop, grammarAccess.getPropertyNameValuePairSingleNamePartAccess().getIdentifierRefParserRuleCall_0()); }
 	(
-		EqualsSignKeyword_2_0=EqualsSign
-		 {
-			announce($EqualsSignKeyword_2_0, grammarAccess.getPropertyNameValuePairSingleNameAccess().getEqualsSignKeyword_2_0());
-		}
 		(
 			(
-				ExpressionAssignmentExpressionParserRuleCall_2_1_0=norm3_AssignmentExpression{
-					announce($ExpressionAssignmentExpressionParserRuleCall_2_1_0.start, $ExpressionAssignmentExpressionParserRuleCall_2_1_0.stop, grammarAccess.getPropertyNameValuePairSingleNameAccess().getExpressionAssignment_2_1());
+				OpAssignmentOperatorOnlyAssignParserRuleCall_1_1_0=ruleAssignmentOperatorOnlyAssign{
+					announce($OpAssignmentOperatorOnlyAssignParserRuleCall_1_1_0.start, $OpAssignmentOperatorOnlyAssignParserRuleCall_1_1_0.stop, grammarAccess.getPropertyNameValuePairSingleNamePartAccess().getOpAssignment_1_1());
+				}
+			)
+		)
+		(
+			(
+				RhsAssignmentExpressionParserRuleCall_1_2_0=norm1_AssignmentExpression{
+					announce($RhsAssignmentExpressionParserRuleCall_1_2_0.start, $RhsAssignmentExpressionParserRuleCall_1_2_0.stop, grammarAccess.getPropertyNameValuePairSingleNamePartAccess().getRhsAssignment_1_2());
+				}
+			)
+		)
+	)?
+)
+;
+
+
+// Rule PropertyNameValuePairSingleNamePart
+norm1_PropertyNameValuePairSingleNamePart
+@init {
+}:
+(
+	IdentifierRefParserRuleCall_0=norm1_IdentifierRef{ announce($IdentifierRefParserRuleCall_0.start, $IdentifierRefParserRuleCall_0.stop, grammarAccess.getPropertyNameValuePairSingleNamePartAccess().getIdentifierRefParserRuleCall_0()); }
+	(
+		(
+			(
+				OpAssignmentOperatorOnlyAssignParserRuleCall_1_1_0=ruleAssignmentOperatorOnlyAssign{
+					announce($OpAssignmentOperatorOnlyAssignParserRuleCall_1_1_0.start, $OpAssignmentOperatorOnlyAssignParserRuleCall_1_1_0.stop, grammarAccess.getPropertyNameValuePairSingleNamePartAccess().getOpAssignment_1_1());
+				}
+			)
+		)
+		(
+			(
+				RhsAssignmentExpressionParserRuleCall_1_2_0=norm3_AssignmentExpression{
+					announce($RhsAssignmentExpressionParserRuleCall_1_2_0.start, $RhsAssignmentExpressionParserRuleCall_1_2_0.stop, grammarAccess.getPropertyNameValuePairSingleNamePartAccess().getRhsAssignment_1_2());
 				}
 			)
 		)
@@ -14284,6 +14289,22 @@ ruleAssignmentOperator
 		announce($VerticalLineEqualsSignKeyword_10, grammarAccess.getAssignmentOperatorAccess().getVerticalLineEqualsSignKeyword_10());
 	}
 )
+;
+
+// Entry rule entryRuleAssignmentOperatorOnlyAssign
+entryRuleAssignmentOperatorOnlyAssign
+	:
+	ruleAssignmentOperatorOnlyAssign
+	EOF;
+
+// Rule AssignmentOperatorOnlyAssign
+ruleAssignmentOperatorOnlyAssign
+@init {
+}
+:
+EqualsSignKeyword=EqualsSign {
+	announce($EqualsSignKeyword, grammarAccess.getAssignmentOperatorOnlyAssignAccess().getEqualsSignKeyword());
+}
 ;
 
 // Entry rule entryRuleAwaitExpression

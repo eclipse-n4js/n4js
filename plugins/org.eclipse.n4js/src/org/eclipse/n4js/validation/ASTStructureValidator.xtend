@@ -1540,11 +1540,15 @@ class ASTStructureValidator {
 	}
 
 	def private void validateSingleNameInObjectLiteral(PropertyNameValuePair elem, ASTStructureDiagnosticProducer producer) {
-		if(elem instanceof PropertyNameValuePairSingleName && !DestructureUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(elem.eContainer)) {
-			producer.node = NodeModelUtils.findActualNodeFor(elem)
+		if(elem instanceof PropertyNameValuePairSingleName
+			&& !DestructureUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(elem.eContainer)
+			&& elem.expression instanceof AssignmentExpression) {
+
+			val nodes = NodeModelUtils.findNodesForFeature(elem.expression, N4JSPackage.Literals.ASSIGNMENT_EXPRESSION__RHS)
+			producer.node = nodes.head ?: NodeModelUtils.findActualNodeFor(elem.expression)
 			producer.addDiagnostic(
-				new DiagnosticMessage(IssueCodes.getMessageForAST_SINGLE_NAME_IN_OBJECT_LITERAL_UNSUPPORTED,
-					IssueCodes.getDefaultSeverity(IssueCodes.AST_SINGLE_NAME_IN_OBJECT_LITERAL_UNSUPPORTED), IssueCodes.AST_SINGLE_NAME_IN_OBJECT_LITERAL_UNSUPPORTED))
+				new DiagnosticMessage(IssueCodes.getMessageForAST_INVALID_DEFAULT_EXPR_SINGLE_NAME_PROPERTY,
+					IssueCodes.getDefaultSeverity(IssueCodes.AST_INVALID_DEFAULT_EXPR_SINGLE_NAME_PROPERTY), IssueCodes.AST_INVALID_DEFAULT_EXPR_SINGLE_NAME_PROPERTY))
 		}
 	}
 

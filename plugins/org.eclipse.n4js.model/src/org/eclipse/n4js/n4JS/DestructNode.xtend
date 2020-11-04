@@ -10,15 +10,15 @@
  */
 package org.eclipse.n4js.n4JS
 
+import java.util.Iterator
+import java.util.LinkedList
+import java.util.List
 import java.util.stream.Stream
 import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.xtend.lib.annotations.Data
-import java.util.Iterator
-import java.util.List
-import java.util.LinkedList
 
 /**
  * Destructuring patterns can appear in very different forms within the AST and in different contexts.
@@ -113,8 +113,10 @@ public class DestructNode {
 	def Pair<EObject, EStructuralFeature> getEObjectAndFeatureForPropName() {
 		if (propName !== null) {
 			switch (astElement) {
+				PropertyNameValuePairSingleName case astElement.expression instanceof AssignmentExpression:
+					astElement.expression -> N4JSPackage.eINSTANCE.assignmentExpression_Lhs
 				PropertyNameValuePairSingleName:
-					astElement -> N4JSPackage.eINSTANCE.propertyNameValuePairSingleName_IdentifierRef
+					astElement -> N4JSPackage.eINSTANCE.propertyNameValuePair_Expression
 				BindingProperty case astElement.declaredName !== null:
 					astElement -> N4JSPackage.eINSTANCE.propertyNameOwner_DeclaredName
 				BindingProperty case astElement.value?.varDecl?.name !== null:
@@ -295,15 +297,11 @@ public class DestructNode {
 
 	private static def DestructNode toEntry(PropertyNameValuePair pa, EObject rhs) {
 		val EObject rhsExpr = if (rhs instanceof PropertyNameValuePair) rhs.expression else rhs;
-		if (pa instanceof PropertyNameValuePairSingleName)
-			toEntry(pa, pa.name, pa.identifierRef, pa.expression, false, rhsExpr)
-		else {
-			val expr = pa.expression;
-			if (expr instanceof AssignmentExpression)
-				toEntry(pa, pa.name, expr.lhs, expr.rhs, false, rhsExpr)
-			else
-				toEntry(pa, pa.name, expr, null, false, rhsExpr)
-		}
+		val expr = pa.expression;
+		if (expr instanceof AssignmentExpression)
+			toEntry(pa, pa.name, expr.lhs, expr.rhs, false, rhsExpr)
+		else
+			toEntry(pa, pa.name, expr, null, false, rhsExpr)
 	}
 
 	private static def DestructNode toEntry(BindingElement elem, EObject rhs) {
@@ -393,7 +391,10 @@ public class DestructNode {
 				}
 
 			} else if (eobj instanceof PropertyNameValuePairSingleName) {
-				idRefs.add(eobj.getIdentifierRef());
+				val idRef = eobj.getIdentifierRef();
+				if (idRef !== null) {
+					idRefs.add(idRef);
+				}
 
 			} else if (eobj instanceof PropertyNameValuePair) {
 				val Expression expr = eobj.getExpression();

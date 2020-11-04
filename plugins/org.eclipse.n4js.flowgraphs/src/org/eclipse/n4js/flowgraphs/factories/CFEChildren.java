@@ -299,7 +299,8 @@ final class CFEChildren {
 					addDelegatingNode(cfc, "expression_" + i, ol, pnvp.getExpression());
 					if (pa instanceof PropertyNameValuePairSingleName) {
 						PropertyNameValuePairSingleName pnvpsv = (PropertyNameValuePairSingleName) pa;
-						addDelegatingNode(cfc, "identifierRef_" + i, ol, pnvpsv.getIdentifierRef());
+						// addDelegatingNode(cfc, "identifierRef_" + i, ol, pnvpsv.getIdentifierRef());
+						// FIXME
 					}
 				}
 			}

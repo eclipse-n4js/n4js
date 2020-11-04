@@ -179,6 +179,8 @@ class SpreadOperatorParserTest extends AbstractParserTest {
 				... obj,
 				prop2,
 				... obj,
+				prop3 = "oof",
+				... obj,
 				get foo() { return '!!!'; },
 				... obj,
 				set bar(value) {},
@@ -188,23 +190,25 @@ class SpreadOperatorParserTest extends AbstractParserTest {
 		'''.parseESWithError;
 		
 		assertEquals(1, script.eResource.errors.size);
-		assertEquals(6, script.eResource.errors.head.line);
+		assertEquals(8, script.eResource.errors.head.line);
 		assertEquals(
-			"Single name syntax in object literals is unsupported at the moment (only allowed in object destructuring patterns).",
+			"A default value is only allowed within a destructuring pattern.",
 			script.eResource.errors.head.message);
 
 		val objLit = script.eAllContents.filter(ObjectLiteral).head;
 		assertNotNull(objLit);
-		assertEquals(9, objLit.propertyAssignments.size);
+		assertEquals(11, objLit.propertyAssignments.size);
 		assertTrue(objLit.propertyAssignments.get(0) instanceof PropertyNameValuePair);
 		assertTrue(objLit.propertyAssignments.get(1) instanceof PropertySpread);
 		assertTrue(objLit.propertyAssignments.get(2) instanceof PropertyNameValuePairSingleName);
 		assertTrue(objLit.propertyAssignments.get(3) instanceof PropertySpread);
-		assertTrue(objLit.propertyAssignments.get(4) instanceof PropertyGetterDeclaration);
+		assertTrue(objLit.propertyAssignments.get(4) instanceof PropertyNameValuePairSingleName);
 		assertTrue(objLit.propertyAssignments.get(5) instanceof PropertySpread);
-		assertTrue(objLit.propertyAssignments.get(6) instanceof PropertySetterDeclaration);
+		assertTrue(objLit.propertyAssignments.get(6) instanceof PropertyGetterDeclaration);
 		assertTrue(objLit.propertyAssignments.get(7) instanceof PropertySpread);
-		assertTrue(objLit.propertyAssignments.get(8) instanceof PropertyMethodDeclaration);
+		assertTrue(objLit.propertyAssignments.get(8) instanceof PropertySetterDeclaration);
+		assertTrue(objLit.propertyAssignments.get(9) instanceof PropertySpread);
+		assertTrue(objLit.propertyAssignments.get(10) instanceof PropertyMethodDeclaration);
 	}
 
 	@Test
@@ -222,6 +226,10 @@ class SpreadOperatorParserTest extends AbstractParserTest {
 				@FancyProp
 				... obj,
 				@FancyProp
+				prop3 = "oof",
+				@FancyProp
+				... obj,
+				@FancyProp
 				get foo() { return '!!!'; },
 				@FancyProp
 				... obj,
@@ -235,23 +243,25 @@ class SpreadOperatorParserTest extends AbstractParserTest {
 		'''.parseESWithError;
 		
 		assertEquals(1, script.eResource.errors.size);
-		assertEquals(8, script.eResource.errors.head.line);
+		assertEquals(13, script.eResource.errors.head.line);
 		assertEquals(
-			"Single name syntax in object literals is unsupported at the moment (only allowed in object destructuring patterns).",
+			"A default value is only allowed within a destructuring pattern.",
 			script.eResource.errors.head.message);
 
 		val objLit = script.eAllContents.filter(ObjectLiteral).head;
 		assertNotNull(objLit);
-		assertEquals(9, objLit.propertyAssignments.size);
+		assertEquals(11, objLit.propertyAssignments.size);
 		assertTrue(objLit.propertyAssignments.get(0) instanceof PropertyNameValuePair);
 		assertTrue(objLit.propertyAssignments.get(1) instanceof PropertySpread);
 		assertTrue(objLit.propertyAssignments.get(2) instanceof PropertyNameValuePairSingleName);
 		assertTrue(objLit.propertyAssignments.get(3) instanceof PropertySpread);
-		assertTrue(objLit.propertyAssignments.get(4) instanceof PropertyGetterDeclaration);
+		assertTrue(objLit.propertyAssignments.get(4) instanceof PropertyNameValuePairSingleName);
 		assertTrue(objLit.propertyAssignments.get(5) instanceof PropertySpread);
-		assertTrue(objLit.propertyAssignments.get(6) instanceof PropertySetterDeclaration);
+		assertTrue(objLit.propertyAssignments.get(6) instanceof PropertyGetterDeclaration);
 		assertTrue(objLit.propertyAssignments.get(7) instanceof PropertySpread);
-		assertTrue(objLit.propertyAssignments.get(8) instanceof PropertyMethodDeclaration);
+		assertTrue(objLit.propertyAssignments.get(8) instanceof PropertySetterDeclaration);
+		assertTrue(objLit.propertyAssignments.get(9) instanceof PropertySpread);
+		assertTrue(objLit.propertyAssignments.get(10) instanceof PropertyMethodDeclaration);
 
 		assertEquals("FancyProp", (objLit.propertyAssignments.get(0) as AnnotablePropertyAssignment).annotations.head.name);
 		assertEquals("FancyProp", (objLit.propertyAssignments.get(1) as AnnotablePropertyAssignment).annotations.head.name);
@@ -262,6 +272,8 @@ class SpreadOperatorParserTest extends AbstractParserTest {
 		assertEquals("FancyProp", (objLit.propertyAssignments.get(6) as AnnotablePropertyAssignment).annotations.head.name);
 		assertEquals("FancyProp", (objLit.propertyAssignments.get(7) as AnnotablePropertyAssignment).annotations.head.name);
 		assertEquals("FancyProp", (objLit.propertyAssignments.get(8) as AnnotablePropertyAssignment).annotations.head.name);
+		assertEquals("FancyProp", (objLit.propertyAssignments.get(9) as AnnotablePropertyAssignment).annotations.head.name);
+		assertEquals("FancyProp", (objLit.propertyAssignments.get(10) as AnnotablePropertyAssignment).annotations.head.name);
 	}
 
 	@Test
