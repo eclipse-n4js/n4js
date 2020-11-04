@@ -62,7 +62,6 @@ import org.eclipse.n4js.n4JS.NewExpression;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
 import org.eclipse.n4js.n4JS.PostfixExpression;
 import org.eclipse.n4js.n4JS.PropertyNameValuePair;
-import org.eclipse.n4js.n4JS.PropertyNameValuePairSingleName;
 import org.eclipse.n4js.n4JS.PropertySpread;
 import org.eclipse.n4js.n4JS.RelationalExpression;
 import org.eclipse.n4js.n4JS.RelationalOperator;
@@ -594,9 +593,9 @@ import com.google.inject.Inject;
 
 		@Override
 		public TypeRef casePropertyNameValuePair(PropertyNameValuePair pnvp) {
-			if (pnvp instanceof PropertyNameValuePairSingleName
-					&& pnvp.getExpression() instanceof AssignmentExpression
-					&& expression == pnvp.getExpression()) {
+			if (expression == pnvp.getExpression()
+					&& expression instanceof AssignmentExpression
+					&& DestructureUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(pnvp.eContainer())) {
 				return NO_EXPECTATION; // no type expectation at all
 			}
 			final TypeRef declTypeRef = pnvp.getDeclaredTypeRef();
