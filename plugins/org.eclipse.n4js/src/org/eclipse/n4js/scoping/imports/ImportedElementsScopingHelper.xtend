@@ -256,11 +256,14 @@ class ImportedElementsScopingHelper {
 				(interType as ModuleNamespaceVirtualType).module === imp.module
 		]
 		if (namespaceType === null) {
+			// TODO GH-1959 remove this temporary debug logging
 			val sb = new StringBuilder();
 			sb.append("contextResource?.getURI(): " + contextResource?.getURI());
 			sb.append("specifier.definedType" + specifier.definedType);
 			sb.append("imp.module: " + imp.module);
 			sb.append("script.module: " + script.module);
+			sb.append("script.module.isPreLinkingPhase: " + script.module.isPreLinkingPhase);
+			sb.append("script.module.isReconciled: " + script.module.isReconciled);
 			sb.append("script.module.internalTypes.size: " + script.module.internalTypes.size);
 			sb.append("script.module.exposedInternalTypes.size: " + script.module.exposedInternalTypes.size);
 			for (type : (script.module.internalTypes + script.module.exposedInternalTypes)) {
