@@ -4393,8 +4393,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getPropertyNameValuePairSingleName_IdentifierRef() {
-		return (EReference)propertyNameValuePairSingleNameEClass.getEStructuralFeatures().get(0);
+	public EOperation getPropertyNameValuePairSingleName__GetIdentifierRef() {
+		return propertyNameValuePairSingleNameEClass.getEOperations().get(0);
 	}
 
 	/**
@@ -4404,7 +4404,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 */
 	@Override
 	public EOperation getPropertyNameValuePairSingleName__GetName() {
-		return propertyNameValuePairSingleNameEClass.getEOperations().get(0);
+		return propertyNameValuePairSingleNameEClass.getEOperations().get(1);
 	}
 
 	/**
@@ -7834,7 +7834,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEOperation(propertyNameValuePairEClass, PROPERTY_NAME_VALUE_PAIR___IS_VALID_NAME);
 
 		propertyNameValuePairSingleNameEClass = createEClass(PROPERTY_NAME_VALUE_PAIR_SINGLE_NAME);
-		createEReference(propertyNameValuePairSingleNameEClass, PROPERTY_NAME_VALUE_PAIR_SINGLE_NAME__IDENTIFIER_REF);
+		createEOperation(propertyNameValuePairSingleNameEClass, PROPERTY_NAME_VALUE_PAIR_SINGLE_NAME___GET_IDENTIFIER_REF);
 		createEOperation(propertyNameValuePairSingleNameEClass, PROPERTY_NAME_VALUE_PAIR_SINGLE_NAME___GET_NAME);
 
 		propertyMethodDeclarationEClass = createEClass(PROPERTY_METHOD_DECLARATION);
@@ -8969,7 +8969,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEOperation(getPropertyNameValuePair__IsValidName(), theEcorePackage.getEBoolean(), "isValidName", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(propertyNameValuePairSingleNameEClass, PropertyNameValuePairSingleName.class, "PropertyNameValuePairSingleName", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getPropertyNameValuePairSingleName_IdentifierRef(), this.getIdentifierRef(), null, "identifierRef", null, 0, 1, PropertyNameValuePairSingleName.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getPropertyNameValuePairSingleName__GetIdentifierRef(), this.getIdentifierRef(), "getIdentifierRef", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getPropertyNameValuePairSingleName__GetName(), theEcorePackage.getEString(), "getName", 0, 1, !IS_UNIQUE, IS_ORDERED);
 

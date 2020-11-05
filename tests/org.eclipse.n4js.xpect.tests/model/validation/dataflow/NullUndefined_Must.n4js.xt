@@ -144,42 +144,78 @@ function f16() {
 	a.toString();
 }
 
-function f20() {
+function f20a() {
+	let a : any+ = 0;
+	({p:a} = {p:1});
+	// XPECT nowarnings -->
+	a.toString();
+}
+function f20b() {
 	let a : any+ = 0;
 	({a} = {a:1});
 	// XPECT nowarnings -->
 	a.toString();
 }
 
-function f22() {
+function f22a() {
+	let a : any+ = 0;
+	({p:a = 1} = {p:null});
+	// XPECT warnings --> "Variable a is null" at "a"
+	a.toString();
+}
+function f22b() {
 	let a : any+ = 0;
 	({a = 1} = {a:null});
 	// XPECT warnings --> "Variable a is null" at "a"
 	a.toString();
 }
 
-function f23() {
+function f23a() {
+	let a : any+ = 0;
+	({p:a = 1} = {p:undefined});
+	// XPECT nowarnings -->
+	a.toString();
+}
+function f23b() {
 	let a : any+ = 0;
 	({a = 1} = {a:undefined});
 	// XPECT nowarnings -->
 	a.toString();
 }
 
-function f24() {
+function f24a() {
+	let a : any+ = 0;
+	({p:a = null} = {p:undefined});
+	// XPECT warnings --> "Variable a is null" at "a"
+	a.toString();
+}
+function f24b() {
 	let a : any+ = 0;
 	({a = null} = {a:undefined});
 	// XPECT warnings --> "Variable a is null" at "a"
 	a.toString();
 }
 
-function f25() {
+function f25a() {
+	let a : any+ = 0;
+	({p:a = undefined} = {p:undefined});
+	// XPECT warnings --> "Variable a is undefined" at "a"
+	a.toString();
+}
+function f25b() {
 	let a : any+ = 0;
 	({a = undefined} = {a:undefined});
 	// XPECT warnings --> "Variable a is undefined" at "a"
 	a.toString();
 }
 
-function f26() {
+function f26a() {
+	let a : any+ = 0;
+	({p:a = undefined} = {p:1});
+	// XPECT nowarnings -->
+	a.toString();
+}
+function f26b() {
 	let a : any+ = 0;
 	({a = undefined} = {a:1});
 	// XPECT nowarnings -->

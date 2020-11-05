@@ -3408,11 +3408,7 @@ ruleAnnotatedPropertyAssignment:
 		    |
 		ruleTypeRef
 		?
-		ruleIdentifierRef
-		(
-			'='
-			norm1_AssignmentExpression
-		)?
+		rulePropertyNameValuePairSingleNamePart
 		    |
 		'...'
 		norm1_AssignmentExpression
@@ -3645,11 +3641,7 @@ norm1_AnnotatedPropertyAssignment:
 		    |
 		ruleTypeRef
 		?
-		norm1_IdentifierRef
-		(
-			'='
-			norm3_AssignmentExpression
-		)?
+		norm1_PropertyNameValuePairSingleNamePart
 		    |
 		'...'
 		norm3_AssignmentExpression
@@ -3772,20 +3764,30 @@ norm1_PropertyNameValuePair:
 rulePropertyNameValuePairSingleName:
 	ruleTypeRef
 	?
-	ruleIdentifierRef
-	(
-		'='
-		norm1_AssignmentExpression
-	)?
+	rulePropertyNameValuePairSingleNamePart
 ;
 
 // Rule PropertyNameValuePairSingleName
 norm1_PropertyNameValuePairSingleName:
 	ruleTypeRef
 	?
+	norm1_PropertyNameValuePairSingleNamePart
+;
+
+// Rule PropertyNameValuePairSingleNamePart
+rulePropertyNameValuePairSingleNamePart:
+	ruleIdentifierRef
+	(
+		ruleAssignmentOperatorOnlyAssign
+		norm1_AssignmentExpression
+	)?
+;
+
+// Rule PropertyNameValuePairSingleNamePart
+norm1_PropertyNameValuePairSingleNamePart:
 	norm1_IdentifierRef
 	(
-		'='
+		ruleAssignmentOperatorOnlyAssign
 		norm3_AssignmentExpression
 	)?
 ;
@@ -6162,6 +6164,11 @@ ruleAssignmentOperator:
 		    |
 		'|='
 	)
+;
+
+// Rule AssignmentOperatorOnlyAssign
+ruleAssignmentOperatorOnlyAssign:
+	'='
 ;
 
 // Rule AwaitExpression

@@ -17,7 +17,7 @@
 
 let a;
 
-// XPECT errors --> "Single name syntax in object literals is unsupported at the moment (only allowed in object destructuring patterns)." at "a = 0"
+// XPECT errors --> "A default value is only allowed within a destructuring pattern." at "0"
 ({a = 0});
 
 
@@ -25,6 +25,6 @@ function f() {
 // XPECT errors --> "Value to be destructured does not contain a property, field or getter named "a": ~Object." at "a"
   ({a = (0,
 
-// XPECT errors --> "Single name syntax in object literals is unsupported at the moment (only allowed in object destructuring patterns)." at "a = 0"
+// XPECT errors --> "A default value is only allowed within a destructuring pattern." at "0"
   	{a = 0})} = {})
 }

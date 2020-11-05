@@ -6675,22 +6675,13 @@ public interface N4JSPackage extends EPackage {
 	int PROPERTY_NAME_VALUE_PAIR_SINGLE_NAME__EXPRESSION = PROPERTY_NAME_VALUE_PAIR__EXPRESSION;
 
 	/**
-	 * The feature id for the '<em><b>Identifier Ref</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROPERTY_NAME_VALUE_PAIR_SINGLE_NAME__IDENTIFIER_REF = PROPERTY_NAME_VALUE_PAIR_FEATURE_COUNT + 0;
-
-	/**
 	 * The number of structural features of the '<em>Property Name Value Pair Single Name</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_NAME_VALUE_PAIR_SINGLE_NAME_FEATURE_COUNT = PROPERTY_NAME_VALUE_PAIR_FEATURE_COUNT + 1;
+	int PROPERTY_NAME_VALUE_PAIR_SINGLE_NAME_FEATURE_COUNT = PROPERTY_NAME_VALUE_PAIR_FEATURE_COUNT + 0;
 
 	/**
 	 * The operation id for the '<em>Get All Annotations</em>' operation.
@@ -6756,13 +6747,22 @@ public interface N4JSPackage extends EPackage {
 	int PROPERTY_NAME_VALUE_PAIR_SINGLE_NAME___IS_VALID_NAME = PROPERTY_NAME_VALUE_PAIR___IS_VALID_NAME;
 
 	/**
+	 * The operation id for the '<em>Get Identifier Ref</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROPERTY_NAME_VALUE_PAIR_SINGLE_NAME___GET_IDENTIFIER_REF = PROPERTY_NAME_VALUE_PAIR_OPERATION_COUNT + 0;
+
+	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_NAME_VALUE_PAIR_SINGLE_NAME___GET_NAME = PROPERTY_NAME_VALUE_PAIR_OPERATION_COUNT + 0;
+	int PROPERTY_NAME_VALUE_PAIR_SINGLE_NAME___GET_NAME = PROPERTY_NAME_VALUE_PAIR_OPERATION_COUNT + 1;
 
 	/**
 	 * The number of operations of the '<em>Property Name Value Pair Single Name</em>' class.
@@ -6771,7 +6771,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_NAME_VALUE_PAIR_SINGLE_NAME_OPERATION_COUNT = PROPERTY_NAME_VALUE_PAIR_OPERATION_COUNT + 1;
+	int PROPERTY_NAME_VALUE_PAIR_SINGLE_NAME_OPERATION_COUNT = PROPERTY_NAME_VALUE_PAIR_OPERATION_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.PropertyMethodDeclarationImpl <em>Property Method Declaration</em>}' class.
@@ -19168,15 +19168,14 @@ public interface N4JSPackage extends EPackage {
 	EClass getPropertyNameValuePairSingleName();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4JS.PropertyNameValuePairSingleName#getIdentifierRef <em>Identifier Ref</em>}'.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.PropertyNameValuePairSingleName#getIdentifierRef() <em>Get Identifier Ref</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Identifier Ref</em>'.
+	 * @return the meta object for the '<em>Get Identifier Ref</em>' operation.
 	 * @see org.eclipse.n4js.n4JS.PropertyNameValuePairSingleName#getIdentifierRef()
-	 * @see #getPropertyNameValuePairSingleName()
 	 * @generated
 	 */
-	EReference getPropertyNameValuePairSingleName_IdentifierRef();
+	EOperation getPropertyNameValuePairSingleName__GetIdentifierRef();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.PropertyNameValuePairSingleName#getName() <em>Get Name</em>}' operation.
@@ -24711,12 +24710,12 @@ public interface N4JSPackage extends EPackage {
 		EClass PROPERTY_NAME_VALUE_PAIR_SINGLE_NAME = eINSTANCE.getPropertyNameValuePairSingleName();
 
 		/**
-		 * The meta object literal for the '<em><b>Identifier Ref</b></em>' containment reference feature.
+		 * The meta object literal for the '<em><b>Get Identifier Ref</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference PROPERTY_NAME_VALUE_PAIR_SINGLE_NAME__IDENTIFIER_REF = eINSTANCE.getPropertyNameValuePairSingleName_IdentifierRef();
+		EOperation PROPERTY_NAME_VALUE_PAIR_SINGLE_NAME___GET_IDENTIFIER_REF = eINSTANCE.getPropertyNameValuePairSingleName__GetIdentifierRef();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Name</b></em>' operation.

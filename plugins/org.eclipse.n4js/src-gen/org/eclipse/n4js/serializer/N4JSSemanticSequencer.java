@@ -205,8 +205,17 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				sequence_ArrowExpression_ColonSepReturnTypeRef_StrictFormalParameters(context, (ArrowFunction) semanticObject); 
 				return; 
 			case N4JSPackage.ASSIGNMENT_EXPRESSION:
-				sequence_AssignmentExpression(context, (AssignmentExpression) semanticObject); 
-				return; 
+				if (rule == grammarAccess.getAssignmentExpressionRule()
+						|| rule == grammarAccess.getExpressionRule()
+						|| action == grammarAccess.getExpressionAccess().getCommaExpressionExprsAction_1_0()) {
+					sequence_AssignmentExpression(context, (AssignmentExpression) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getPropertyNameValuePairSingleNamePartRule()) {
+					sequence_PropertyNameValuePairSingleNamePart(context, (AssignmentExpression) semanticObject); 
+					return; 
+				}
+				else break;
 			case N4JSPackage.AWAIT_EXPRESSION:
 				sequence_AwaitExpression(context, (AwaitExpression) semanticObject); 
 				return; 
@@ -514,6 +523,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 			case N4JSPackage.IDENTIFIER_REF:
 				if (rule == grammarAccess.getPrimaryExpressionRule()
 						|| rule == grammarAccess.getIdentifierRefRule()
+						|| rule == grammarAccess.getPropertyNameValuePairSingleNamePartRule()
+						|| action == grammarAccess.getPropertyNameValuePairSingleNamePartAccess().getAssignmentExpressionLhsAction_1_0()
 						|| rule == grammarAccess.getLeftHandSideExpressionRule()
 						|| action == grammarAccess.getLeftHandSideExpressionAccess().getParameterizedCallExpressionTargetAction_1_0()
 						|| rule == grammarAccess.getMemberExpressionRule()
@@ -3694,13 +3705,13 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *                 bogusTypeRef=TypeRefWithModifiers? 
 	 *                 (declaredName=LiteralOrComputedPropertyName | declaredName=LiteralOrComputedPropertyName)
 	 *             ) | 
+	 *             (declaredModifiers+=N4Modifier+ bogusTypeRef=TypeRefWithModifiers? generator?='*' declaredName=LiteralOrComputedPropertyName) | 
+	 *             (declaredModifiers+=N4Modifier+ declaredName=LiteralOrComputedPropertyName) | 
 	 *             (
 	 *                 (declaredModifiers+=N4Modifier+ | (declaredModifiers+=N4Modifier+ bogusTypeRef=TypeRefWithModifiers?)) 
 	 *                 generator?='*' 
 	 *                 declaredName=LiteralOrComputedPropertyName
-	 *             ) | 
-	 *             (declaredModifiers+=N4Modifier+ declaredName=LiteralOrComputedPropertyName) | 
-	 *             (declaredModifiers+=N4Modifier+ bogusTypeRef=TypeRefWithModifiers? generator?='*' declaredName=LiteralOrComputedPropertyName)
+	 *             )
 	 *         )? 
 	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
 	 *         returnTypeRef=TypeRef? 
@@ -3978,8 +3989,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     (
 	 *         annotationList=AnnotatedPropertyAssignment_PropertyNameValuePairSingleName_1_4_0 
 	 *         declaredTypeRef=TypeRef? 
-	 *         identifierRef=IdentifierRef 
-	 *         expression=AssignmentExpression?
+	 *         expression=PropertyNameValuePairSingleNamePart
 	 *     )
 	 */
 	protected void sequence_AnnotatedPropertyAssignment(ISerializationContext context, PropertyNameValuePairSingleName semanticObject) {
@@ -3997,10 +4007,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         (
 	 *             annotationList=AnnotatedPropertyAssignment_PropertyNameValuePairSingleName_1_4_0 
 	 *             declaredTypeRef=TypeRef? 
-	 *             identifierRef=IdentifierRef 
-	 *             expression=AssignmentExpression?
+	 *             expression=PropertyNameValuePairSingleNamePart
 	 *         ) | 
-	 *         (declaredTypeRef=TypeRef? identifierRef=IdentifierRef expression=AssignmentExpression?)
+	 *         (declaredTypeRef=TypeRef? expression=PropertyNameValuePairSingleNamePart)
 	 *     )
 	 */
 	protected void sequence_AnnotatedPropertyAssignment_PropertyNameValuePairSingleName(ISerializationContext context, PropertyNameValuePairSingleName semanticObject) {
@@ -12824,6 +12833,10 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     PrimaryExpression returns IdentifierRef
 	 *     IdentifierRef<Yield> returns IdentifierRef
 	 *     IdentifierRef returns IdentifierRef
+	 *     PropertyNameValuePairSingleNamePart<Yield> returns IdentifierRef
+	 *     PropertyNameValuePairSingleNamePart returns IdentifierRef
+	 *     PropertyNameValuePairSingleNamePart.AssignmentExpression_1_0<Yield> returns IdentifierRef
+	 *     PropertyNameValuePairSingleNamePart.AssignmentExpression_1_0 returns IdentifierRef
 	 *     LeftHandSideExpression<Yield> returns IdentifierRef
 	 *     LeftHandSideExpression returns IdentifierRef
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<Yield> returns IdentifierRef
@@ -13470,6 +13483,10 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     PrimaryExpression returns VersionedIdentifierRef
 	 *     IdentifierRef<Yield> returns VersionedIdentifierRef
 	 *     IdentifierRef returns VersionedIdentifierRef
+	 *     PropertyNameValuePairSingleNamePart<Yield> returns VersionedIdentifierRef
+	 *     PropertyNameValuePairSingleNamePart returns VersionedIdentifierRef
+	 *     PropertyNameValuePairSingleNamePart.AssignmentExpression_1_0<Yield> returns VersionedIdentifierRef
+	 *     PropertyNameValuePairSingleNamePart.AssignmentExpression_1_0 returns VersionedIdentifierRef
 	 *     LeftHandSideExpression<Yield> returns VersionedIdentifierRef
 	 *     LeftHandSideExpression returns VersionedIdentifierRef
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<Yield> returns VersionedIdentifierRef
@@ -23290,11 +23307,36 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
+	 *     PropertyNameValuePairSingleNamePart<Yield> returns AssignmentExpression
+	 *     PropertyNameValuePairSingleNamePart returns AssignmentExpression
+	 *
+	 * Constraint:
+	 *     (lhs=PropertyNameValuePairSingleNamePart_AssignmentExpression_1_0 op=AssignmentOperatorOnlyAssign rhs=AssignmentExpression)
+	 */
+	protected void sequence_PropertyNameValuePairSingleNamePart(ISerializationContext context, AssignmentExpression semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.ASSIGNMENT_EXPRESSION__LHS) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.ASSIGNMENT_EXPRESSION__LHS));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.ASSIGNMENT_EXPRESSION__OP) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.ASSIGNMENT_EXPRESSION__OP));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.ASSIGNMENT_EXPRESSION__RHS) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.ASSIGNMENT_EXPRESSION__RHS));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getPropertyNameValuePairSingleNamePartAccess().getAssignmentExpressionLhsAction_1_0(), semanticObject.getLhs());
+		feeder.accept(grammarAccess.getPropertyNameValuePairSingleNamePartAccess().getOpAssignmentOperatorOnlyAssignParserRuleCall_1_1_0(), semanticObject.getOp());
+		feeder.accept(grammarAccess.getPropertyNameValuePairSingleNamePartAccess().getRhsAssignmentExpressionParserRuleCall_1_2_0(), semanticObject.getRhs());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
 	 *     PropertyNameValuePairSingleName<Yield> returns PropertyNameValuePairSingleName
 	 *     PropertyNameValuePairSingleName returns PropertyNameValuePairSingleName
 	 *
 	 * Constraint:
-	 *     (declaredTypeRef=TypeRef? identifierRef=IdentifierRef expression=AssignmentExpression?)
+	 *     (declaredTypeRef=TypeRef? expression=PropertyNameValuePairSingleNamePart)
 	 */
 	protected void sequence_PropertyNameValuePairSingleName(ISerializationContext context, PropertyNameValuePairSingleName semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

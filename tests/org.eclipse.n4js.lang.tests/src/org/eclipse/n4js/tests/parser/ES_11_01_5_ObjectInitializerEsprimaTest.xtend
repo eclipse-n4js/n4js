@@ -475,4 +475,30 @@ class ES_11_01_5_ObjectInitializerEsprimaTest extends AbstractParserTest {
 		assertEquals("width", setter.name)
 		assertEquals("width", setter.fpar.name)
 	}
+
+	@Test
+	def void testSingleNameSyntax_positiveCases() {
+		val script = 'x = {a,prop:b};'.parse
+		assertTrue(script.eResource.errors.toString,script.eResource.errors.empty);
+	}
+
+	@Test
+	def void testSingleNameSyntax_positiveCases_destructuring() {
+		val script = '''
+			({a,prop:b}=null); // simple case
+			({a,prop1:{b},prop2:[x,{c},y]}=null); // nesting cases
+			for({a,prop1:{b},prop2:[x,{c},y]} in null){} // for..in loop
+			for({a,prop1:{b},prop2:[x,{c},y]} of null){} // for..of loop
+		'''.parse
+		assertTrue(script.eResource.errors.toString,script.eResource.errors.empty);
+	}
+
+	@Test
+	def void testSingleNameSyntax_negativeCases() {
+		val script = 'x = {a="oof"};'.parse
+		assertEquals(1,script.eResource.errors.size)
+		assertEquals(
+				"A default value is only allowed within a destructuring pattern.",
+				script.eResource.errors.get(0).message)
+	}
 }

@@ -765,11 +765,7 @@ import org.eclipse.xtext.EcoreUtil2;
 
 	@Override
 	public Boolean casePropertyNameValuePairSingleName(PropertyNameValuePairSingleName original) {
-		process(original.getIdentifierRef());
-		if (original.getExpression() != null) {
-			write(" = ");
-			process(original.getExpression());
-		}
+		process(original.getExpression());
 		return DONE;
 	}
 

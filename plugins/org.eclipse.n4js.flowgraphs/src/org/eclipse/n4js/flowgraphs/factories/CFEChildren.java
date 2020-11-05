@@ -63,7 +63,6 @@ import org.eclipse.n4js.n4JS.PostfixExpression;
 import org.eclipse.n4js.n4JS.PromisifyExpression;
 import org.eclipse.n4js.n4JS.PropertyAssignment;
 import org.eclipse.n4js.n4JS.PropertyNameValuePair;
-import org.eclipse.n4js.n4JS.PropertyNameValuePairSingleName;
 import org.eclipse.n4js.n4JS.RelationalExpression;
 import org.eclipse.n4js.n4JS.ShiftExpression;
 import org.eclipse.n4js.n4JS.SuperLiteral;
@@ -297,10 +296,6 @@ final class CFEChildren {
 						addDelegatingNode(cfc, "declaredName_" + i, ol, locpn.getExpression());
 					}
 					addDelegatingNode(cfc, "expression_" + i, ol, pnvp.getExpression());
-					if (pa instanceof PropertyNameValuePairSingleName) {
-						PropertyNameValuePairSingleName pnvpsv = (PropertyNameValuePairSingleName) pa;
-						addDelegatingNode(cfc, "identifierRef_" + i, ol, pnvpsv.getIdentifierRef());
-					}
 				}
 			}
 			return cfc;

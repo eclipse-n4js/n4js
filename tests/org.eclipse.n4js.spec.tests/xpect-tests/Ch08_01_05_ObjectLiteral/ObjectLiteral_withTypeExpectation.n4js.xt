@@ -59,35 +59,76 @@ class ~ClsPairStruct {
 
 // with field from use-site structural class
 
-// XPECT noerrors -->
-var ol01 : ~ClsField = { field: c };
-// XPECT errors --> "~Object with { field: A } is not a structural subtype of ~ClsField: field failed: A is not equal to B." at "{ field: a }"
-var ol02 : ~ClsField = { field: a };
+function f01() {
+	var field = c;
+	// XPECT noerrors -->
+	var ol1 : ~ClsField = { field: c };
+	// XPECT noerrors -->
+	var ol2 : ~ClsField = { field };
+}
+function f02() {
+	var field = a;
+	// XPECT errors --> "~Object with { field: A } is not a structural subtype of ~ClsField: field failed: A is not equal to B." at "{ field: a }"
+	var ol1 : ~ClsField = { field: a };
+	// XPECT errors --> "~Object with { field: A } is not a structural subtype of ~ClsField: field failed: A is not equal to B." at "{ field }"
+	var ol2 : ~ClsField = { field };
+}
 
 
 // with getter from use-site structural class
 
-// XPECT noerrors --> "note: this case is working even without taking into account the expected type, because if there's only a getter, then a subtype field is accepted anyway"
-var ol03 : ~ClsGetter = { g: c };
-// XPECT errors --> "~Object with { g: A } is not a structural subtype of ~ClsGetter: g failed: A is not a subtype of B." at "{ g: a }"
-var ol04 : ~ClsGetter = { g: a };
+function f03() {
+	var g = c;
+	// XPECT noerrors --> "note: this case is working even without taking into account the expected type, because if there's only a getter, then a subtype field is accepted anyway"
+	var ol1 : ~ClsGetter = { g: c };
+	// XPECT noerrors --> "note: this case is working even without taking into account the expected type, because if there's only a getter, then a subtype field is accepted anyway"
+	var ol2 : ~ClsGetter = { g };
+}
+function f04() {
+	var g = a;
+	// XPECT errors --> "~Object with { g: A } is not a structural subtype of ~ClsGetter: g failed: A is not a subtype of B." at "{ g: a }"
+	var ol1 : ~ClsGetter = { g: a };
+	// XPECT errors --> "~Object with { g: A } is not a structural subtype of ~ClsGetter: g failed: A is not a subtype of B." at "{ g }"
+	var ol2 : ~ClsGetter = { g };
+}
 
 
 // with setter from use-site structural class
 
-// XPECT type of '{ s: c }' --> ~Object with { s: B }
-// XPECT noerrors -->
-var ol05 : ~ClsSetter = { s: c };
-// XPECT noerrors --> "note: this case is working even without taking into account the expected type, because if there's only a getter, then a subtype field is accepted anyway"
-var ol06 : ~ClsSetter = { s: a };
+function f05() {
+	var s = c;
+	// XPECT type of '{ s: c }' --> ~Object with { s: B }
+	// XPECT noerrors -->
+	var ol1 : ~ClsSetter = { s: c };
+	// XPECT type of '{ s }' --> ~Object with { s: B }
+	// XPECT noerrors -->
+	var ol2 : ~ClsSetter = { s };
+}
+function f06() {
+	var s = a;
+	// XPECT noerrors --> "note: this case is working even without taking into account the expected type, because if there's only a getter, then a subtype field is accepted anyway"
+	var ol1 : ~ClsSetter = { s: a };
+	// XPECT noerrors --> "note: this case is working even without taking into account the expected type, because if there's only a getter, then a subtype field is accepted anyway"
+	var ol2 : ~ClsSetter = { s };
+}
 
 
 // with getter+setter pair from use-site structural class
 
-// XPECT noerrors -->
-var ol07 : ~ClsPair = { p: c };
-// XPECT errors --> "~Object with { p: A } is not a structural subtype of ~ClsPair: p failed: A is not a subtype of B." at "{ p: a }"
-var ol08 : ~ClsPair = { p: a };
+function f07() {
+	var p = c;
+	// XPECT noerrors -->
+	var ol1 : ~ClsPair = { p: c };
+	// XPECT noerrors -->
+	var ol2 : ~ClsPair = { p };
+}
+function f08() {
+	var p = a;
+	// XPECT errors --> "~Object with { p: A } is not a structural subtype of ~ClsPair: p failed: A is not a subtype of B." at "{ p: a }"
+	var ol1 : ~ClsPair = { p: a };
+	// XPECT errors --> "~Object with { p: A } is not a structural subtype of ~ClsPair: p failed: A is not a subtype of B." at "{ p }"
+	var ol2 : ~ClsPair = { p };
+}
 
 
 
@@ -98,74 +139,156 @@ var ol08 : ~ClsPair = { p: a };
 
 // with field from def-site structural class
 
-// XPECT noerrors -->
-var ol11 : ClsFieldStruct = { field: c };
-// XPECT errors --> "~Object with { field: A } is not a structural subtype of ClsFieldStruct: field failed: A is not equal to B." at "{ field: a }"
-var ol12 : ClsFieldStruct = { field: a };
+function f11() {
+	var field = c;
+	// XPECT noerrors -->
+	var ol1 : ClsFieldStruct = { field: c };
+	// XPECT noerrors -->
+	var ol2 : ClsFieldStruct = { field };
+}
+function f12() {
+	var field = a;
+	// XPECT errors --> "~Object with { field: A } is not a structural subtype of ClsFieldStruct: field failed: A is not equal to B." at "{ field: a }"
+	var ol1 : ClsFieldStruct = { field: a };
+	// XPECT errors --> "~Object with { field: A } is not a structural subtype of ClsFieldStruct: field failed: A is not equal to B." at "{ field }"
+	var ol2 : ClsFieldStruct = { field };
+}
 
 
 // with getter from def-site structural class
 
-// XPECT noerrors --> "note: this case is working even without taking into account the expected type, because if there's only a getter, then a subtype field is accepted anyway"
-var ol13 : ClsGetterStruct = { g: c };
-// XPECT errors --> "~Object with { g: A } is not a structural subtype of ClsGetterStruct: g failed: A is not a subtype of B." at "{ g: a }"
-var ol14 : ClsGetterStruct = { g: a };
+function f13() {
+	var g = c;
+	// XPECT noerrors --> "note: this case is working even without taking into account the expected type, because if there's only a getter, then a subtype field is accepted anyway"
+	var ol1 : ClsGetterStruct = { g: c };
+	// XPECT noerrors --> "note: this case is working even without taking into account the expected type, because if there's only a getter, then a subtype field is accepted anyway"
+	var ol2 : ClsGetterStruct = { g };
+}
+function f14() {
+	var g = a;
+	// XPECT errors --> "~Object with { g: A } is not a structural subtype of ClsGetterStruct: g failed: A is not a subtype of B." at "{ g: a }"
+	var ol1 : ClsGetterStruct = { g: a };
+	// XPECT errors --> "~Object with { g: A } is not a structural subtype of ClsGetterStruct: g failed: A is not a subtype of B." at "{ g }"
+	var ol2 : ClsGetterStruct = { g };
+}
 
 
 // with setter from def-site structural class
 
-// XPECT type of '{ s: c }' --> ~Object with { s: B }
-// XPECT noerrors -->
-var ol15 : ClsSetterStruct = { s: c };
-// XPECT noerrors --> "note: this case is working even without taking into account the expected type, because if there's only a getter, then a subtype field is accepted anyway"
-var ol16 : ClsSetterStruct = { s: a };
+function f15() {
+	var s = c;
+	// XPECT type of '{ s: c }' --> ~Object with { s: B }
+	// XPECT noerrors -->
+	var ol1 : ClsSetterStruct = { s: c };
+	// XPECT type of '{ s }' --> ~Object with { s: B }
+	// XPECT noerrors -->
+	var ol2 : ClsSetterStruct = { s };
+}
+function f16() {
+	var s = a;
+	// XPECT noerrors --> "note: this case is working even without taking into account the expected type, because if there's only a getter, then a subtype field is accepted anyway"
+	var ol1 : ClsSetterStruct = { s: a };
+	// XPECT noerrors --> "note: this case is working even without taking into account the expected type, because if there's only a getter, then a subtype field is accepted anyway"
+	var ol2 : ClsSetterStruct = { s };
+}
 
 
 // with getter+setter pair from def-site structural class
 
-// XPECT noerrors -->
-var ol17 : ClsPairStruct = { p: c };
-// XPECT errors --> "~Object with { p: A } is not a structural subtype of ClsPairStruct: p failed: A is not a subtype of B." at "{ p: a }"
-var ol18 : ClsPairStruct = { p: a };
+function f17() {
+	var p = c;
+	// XPECT noerrors -->
+	var ol1 : ClsPairStruct = { p: c };
+	// XPECT noerrors -->
+	var ol2 : ClsPairStruct = { p };
+}
+function f18() {
+	var p = a;
+	// XPECT errors --> "~Object with { p: A } is not a structural subtype of ClsPairStruct: p failed: A is not a subtype of B." at "{ p: a }"
+	var ol1 : ClsPairStruct = { p: a };
+	// XPECT errors --> "~Object with { p: A } is not a structural subtype of ClsPairStruct: p failed: A is not a subtype of B." at "{ p }"
+	var ol2 : ClsPairStruct = { p };
+}
 
 
 
 
 // ################################################################################################################
-// expectation comes from a def-site structural type
+// expectation comes from a "with"-clause
 
 
 // with property from "with"-clause
 
-// XPECT noerrors -->
-var ol21 : ~Object with { prop : B; } = { prop: c };
-// XPECT errors --> "~Object with { prop: A } is not a structural subtype of ~Object with { prop: B }: prop failed: A is not equal to B." at "{ prop: a }"
-var ol22 : ~Object with { prop : B; } = { prop: a };
+function f21() {
+	var prop = c;
+	// XPECT noerrors -->
+	var ol1 : ~Object with { prop : B; } = { prop: c };
+	// XPECT noerrors -->
+	var ol2 : ~Object with { prop : B; } = { prop };
+}
+function f22() {
+	var prop = a;
+	// XPECT errors --> "~Object with { prop: A } is not a structural subtype of ~Object with { prop: B }: prop failed: A is not equal to B." at "{ prop: a }"
+	var ol1 : ~Object with { prop : B; } = { prop: a };
+	// XPECT errors --> "~Object with { prop: A } is not a structural subtype of ~Object with { prop: B }: prop failed: A is not equal to B." at "{ prop }"
+	var ol2 : ~Object with { prop : B; } = { prop };
+}
 
 
 // with getter from "with"-clause
 
-// XPECT noerrors --> "note: this case is working even without taking into account the expected type, because if there's only a getter, then a subtype field is accepted anyway"
-var ol23 : ~Object with { get g() : B } = { g: c };
-// XPECT errors --> "~Object with { g: A } is not a structural subtype of ~Object with { get g(): B }: g failed: A is not a subtype of B." at "{ g: a }"
-var ol24 : ~Object with { get g() : B } = { g: a };
+function f23() {
+	var g = c;
+	// XPECT noerrors --> "note: this case is working even without taking into account the expected type, because if there's only a getter, then a subtype field is accepted anyway"
+	var ol1 : ~Object with { get g() : B } = { g: c };
+	// XPECT noerrors --> "note: this case is working even without taking into account the expected type, because if there's only a getter, then a subtype field is accepted anyway"
+	var ol2 : ~Object with { get g() : B } = { g };
+}
+function f24() {
+	var g = a;
+	// XPECT errors --> "~Object with { g: A } is not a structural subtype of ~Object with { get g(): B }: g failed: A is not a subtype of B." at "{ g: a }"
+	var ol1 : ~Object with { get g() : B } = { g: a };
+	// XPECT errors --> "~Object with { g: A } is not a structural subtype of ~Object with { get g(): B }: g failed: A is not a subtype of B." at "{ g }"
+	var ol2 : ~Object with { get g() : B } = { g };
+}
 
 
 // with setter from "with"-clause
 
-// XPECT type of '{ s: c }' --> ~Object with { s: B }
-// XPECT noerrors -->
-var ol25 : ~Object with { set s(value : B) } = { s: c };
-// XPECT noerrors --> "note: this case is working even without taking into account the expected type, because if there's only a getter, then a subtype field is accepted anyway"
-var ol26 : ~Object with { set s(value : B) } = { s: a };
+function f25() {
+	var s = c;
+	// XPECT type of '{ s: c }' --> ~Object with { s: B }
+	// XPECT noerrors -->
+	var ol1 : ~Object with { set s(value : B) } = { s: c };
+	// XPECT type of '{ s }' --> ~Object with { s: B }
+	// XPECT noerrors -->
+	var ol2 : ~Object with { set s(value : B) } = { s };
+}
+function f26() {
+	var s = a;
+	// XPECT noerrors --> "note: this case is working even without taking into account the expected type, because if there's only a getter, then a subtype field is accepted anyway"
+	var ol1 : ~Object with { set s(value : B) } = { s: a };
+	// XPECT noerrors --> "note: this case is working even without taking into account the expected type, because if there's only a getter, then a subtype field is accepted anyway"
+	var ol2 : ~Object with { set s(value : B) } = { s };
+}
 
 
 // with getter+setter pair from "with"-clause
 
-// XPECT noerrors -->
-var ol27 : ~Object with { get p() : B  set p(value : B) } = { p: c };
-// XPECT errors --> "~Object with { p: A } is not a structural subtype of ~Object with { get p(): B; set p(value: B) }: p failed: A is not a subtype of B." at "{ p: a }"
-var ol28 : ~Object with { get p() : B  set p(value : B) } = { p: a };
+function f27() {
+	var p = c;
+	// XPECT noerrors -->
+	var ol1 : ~Object with { get p() : B  set p(value : B) } = { p: c };
+	// XPECT noerrors -->
+	var ol2 : ~Object with { get p() : B  set p(value : B) } = { p };
+}
+function f28() {
+	var p = a;
+	// XPECT errors --> "~Object with { p: A } is not a structural subtype of ~Object with { get p(): B; set p(value: B) }: p failed: A is not a subtype of B." at "{ p: a }"
+	var ol1 : ~Object with { get p() : B  set p(value : B) } = { p: a };
+	// XPECT errors --> "~Object with { p: A } is not a structural subtype of ~Object with { get p(): B; set p(value: B) }: p failed: A is not a subtype of B." at "{ p }"
+	var ol2 : ~Object with { get p() : B  set p(value : B) } = { p };
+}
 
 
 
@@ -176,32 +299,73 @@ var ol28 : ~Object with { get p() : B  set p(value : B) } = { p: a };
 
 // with field via ~~this constructor
 
-// XPECT noerrors -->
-new ClsField({ field: c });
-// XPECT errors --> "~Object with { field: A } is not a structural subtype of ~~ClsField: field failed: A is not equal to B." at "{ field: a }"
-new ClsField({ field: a });
+function f31() {
+	var field = c;
+	// XPECT noerrors -->
+	new ClsField({ field: c });
+	// XPECT noerrors -->
+	new ClsField({ field });
+}
+function f32() {
+	var field = a;
+	// XPECT errors --> "~Object with { field: A } is not a structural subtype of ~~ClsField: field failed: A is not equal to B." at "{ field: a }"
+	new ClsField({ field: a });
+	// XPECT errors --> "~Object with { field: A } is not a structural subtype of ~~ClsField: field failed: A is not equal to B." at "{ field }"
+	new ClsField({ field });
+}
 
 
 // with getter via ~~this constructor
 
-// XPECT noerrors --> "note: this case is working even without taking into account the expected type, because if there's only a getter, then a subtype field is accepted anyway"
-new ClsGetter({ g: c });
-// XPECT errors --> "~Object with { g: A } is not a structural subtype of ~~ClsGetter: g failed: A is not a subtype of B." at "{ g: a }"
-new ClsGetter({ g: a });
+function f33() {
+	var g = c;
+	// XPECT noerrors --> "note: this case is working even without taking into account the expected type, because if there's only a getter, then a subtype field is accepted anyway"
+	new ClsGetter({ g: c });
+	// XPECT noerrors --> "note: this case is working even without taking into account the expected type, because if there's only a getter, then a subtype field is accepted anyway"
+	new ClsGetter({ g });
+}
+function f34() {
+	var g = a;
+	// XPECT errors --> "~Object with { g: A } is not a structural subtype of ~~ClsGetter: g failed: A is not a subtype of B." at "{ g: a }"
+	new ClsGetter({ g: a });
+	// XPECT errors --> "~Object with { g: A } is not a structural subtype of ~~ClsGetter: g failed: A is not a subtype of B." at "{ g }"
+	new ClsGetter({ g });
+}
 
 
 // with setter via ~~this constructor
 
-// XPECT type of '{ s: c }' --> ~Object with { s: B }
-// XPECT noerrors -->
-new ClsSetter({ s: c });
-// XPECT noerrors --> "note: this case is working even without taking into account the expected type, because if there's only a getter, then a subtype field is accepted anyway"
-new ClsSetter({ s: a });
+function f35() {
+	var s = c;
+	// XPECT type of '{ s: c }' --> ~Object with { s: B }
+	// XPECT noerrors -->
+	new ClsSetter({ s: c });
+	// XPECT type of '{ s }' --> ~Object with { s: B }
+	// XPECT noerrors -->
+	new ClsSetter({ s });
+}
+function f36() {
+	var s = a;
+	// XPECT noerrors --> "note: this case is working even without taking into account the expected type, because if there's only a getter, then a subtype field is accepted anyway"
+	new ClsSetter({ s: a });
+	// XPECT noerrors --> "note: this case is working even without taking into account the expected type, because if there's only a getter, then a subtype field is accepted anyway"
+	new ClsSetter({ s });
+}
 
 
 // with getter+setter pair via ~~this constructor
 
-// XPECT noerrors -->
-new ClsPair({ p: c });
-// XPECT errors --> "~Object with { p: A } is not a structural subtype of ~~ClsPair: p failed: A is not a subtype of B." at "{ p: a }"
-new ClsPair({ p: a });
+function f37() {
+	var p = c;
+	// XPECT noerrors -->
+	new ClsPair({ p: c });
+	// XPECT noerrors -->
+	new ClsPair({ p });
+}
+function f38() {
+	var p = a;
+	// XPECT errors --> "~Object with { p: A } is not a structural subtype of ~~ClsPair: p failed: A is not a subtype of B." at "{ p: a }"
+	new ClsPair({ p: a });
+	// XPECT errors --> "~Object with { p: A } is not a structural subtype of ~~ClsPair: p failed: A is not a subtype of B." at "{ p }"
+	new ClsPair({ p });
+}

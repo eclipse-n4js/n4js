@@ -111,8 +111,24 @@ import com.google.inject.Inject;
 
 	/** See {@link N4JSTypeSystem#expectedType(RuleEnvironment, EObject, Expression)}. */
 	public TypeRef apply(RuleEnvironment G, EObject container, Expression expression) {
-		return expression != null ? new ExpectedTypeJudgmentSwitch(G, expression).doSwitch(container) : null;
+		if (expression != null) {
+			TypeRef expectedType = new ExpectedTypeJudgmentSwitch(G, expression).doSwitch(container);
+			if (expectedType != NO_EXPECTATION) {
+				return expectedType;
+			}
+		}
+		return null;
 	}
+
+	/**
+	 * Represents "no type expectation at all", as explained for the return value of <code>null</code> in
+	 * {@link N4JSTypeSystem#expectedType(RuleEnvironment, EObject, Expression) N4JSTypeSystem#expectedType()}.
+	 * <p>
+	 * We cannot use <code>null</code> as return value within EMF switches (that would invoke the case-methods of super
+	 * types of the argument). Therefore this special value is being returned inside the switch, whenever method
+	 * {@link #apply(RuleEnvironment, EObject, Expression) apply()} should return <code>null</code>.
+	 */
+	private static final TypeRef NO_EXPECTATION = TypeRefsFactory.eINSTANCE.createDeferredTypeRef();
 
 	private final class ExpectedTypeJudgmentSwitch extends N4JSSwitch<TypeRef> {
 
@@ -126,7 +142,7 @@ import com.google.inject.Inject;
 
 		@Override
 		public TypeRef defaultCase(EObject container) {
-			return null; // null is the default and means 'no type expectation' (even void is allowed)
+			return NO_EXPECTATION;
 		}
 
 		@Override
@@ -580,6 +596,11 @@ import com.google.inject.Inject;
 
 		@Override
 		public TypeRef casePropertyNameValuePair(PropertyNameValuePair pnvp) {
+			if (expression == pnvp.getExpression()
+					&& expression instanceof AssignmentExpression
+					&& DestructureUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(pnvp.eContainer())) {
+				return NO_EXPECTATION; // no type expectation at all
+			}
 			final TypeRef declTypeRef = pnvp.getDeclaredTypeRef();
 			if (declTypeRef != null) {
 				return declTypeRef;
@@ -604,7 +625,7 @@ import com.google.inject.Inject;
 						iterableTypeRef(G, TypeUtils.createWildcard()),
 						stringTypeRef(G));
 			}
-			return null;
+			return NO_EXPECTATION;
 		}
 
 		@Override
@@ -629,7 +650,7 @@ import com.google.inject.Inject;
 				return typeSystemHelper.getExpectedTypeOfReturnValueExpression(G, expression);
 			}
 			// default case:
-			return null; // null means: no type expectation
+			return NO_EXPECTATION; // no type expectation at all
 		}
 
 		@Override
@@ -679,7 +700,7 @@ import com.google.inject.Inject;
 				// expected type of the 'in' part in a for...in statement: object
 				return TypeUtils.createNonSimplifiedUnionType(objectTypeRef(G), stringTypeRef(G), argumentsTypeRef(G));
 			} else {
-				return null;
+				return NO_EXPECTATION;
 			}
 		}
 
@@ -687,7 +708,7 @@ import com.google.inject.Inject;
 		public TypeRef caseAwaitExpression(AwaitExpression awaitExpr) {
 			if (promisifyHelper.isAutoPromisify(awaitExpr)) {
 				// special case: short syntax of
-				return null; // no type expectation at all (even void is acceptable)
+				return NO_EXPECTATION; // no type expectation at all (even void is acceptable)
 			} else {
 				return anyTypeRef(G);
 			}
@@ -711,7 +732,7 @@ import com.google.inject.Inject;
 					return TypeUtils.createFunctionTypeExpression(argumentTypeRefs, anyTypeRef(G));
 				}
 			}
-			return null; // null means: no type expectation
+			return NO_EXPECTATION; // no type expectation at all
 		}
 
 		@Override

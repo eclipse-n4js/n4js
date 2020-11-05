@@ -672,8 +672,7 @@ AnnotatedPropertyAssignment <Yield> returns PropertyAssignment:
 				| declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsAndBody <Generator=false>
 			)
 		) ';'?
-	| {PropertyNameValuePairSingleName.annotationList=current} declaredTypeRef=TypeRef? identifierRef=IdentifierRef<Yield>
-		( '=' expression=AssignmentExpression<In=true,Yield>)?
+	| {PropertyNameValuePairSingleName.annotationList=current} declaredTypeRef=TypeRef? expression=PropertyNameValuePairSingleNamePart<Yield>
 	| {PropertySpread.annotationList=current} '...' expression=AssignmentExpression<In=true,Yield>
 	)
 ;
@@ -700,14 +699,14 @@ PropertyNameValuePair <Yield>:
 	expression=AssignmentExpression<In=true,Yield>
 ;
 
-/*
- * Support for single name syntax in ObjectLiteral (but disallowed in actual object literals by ASTStructureValidator
- * except in assignment destructuring patterns)
- */
 PropertyNameValuePairSingleName <Yield>:
 	declaredTypeRef=TypeRef?
-	identifierRef=IdentifierRef<Yield>
-	('=' expression=AssignmentExpression<In=true,Yield>)?
+	expression=PropertyNameValuePairSingleNamePart<Yield>
+;
+
+PropertyNameValuePairSingleNamePart <Yield> returns Expression:
+	IdentifierRef<Yield>
+	({AssignmentExpression.lhs=current} op=AssignmentOperatorOnlyAssign rhs=AssignmentExpression<In=true,Yield>)?
 ;
 
 PropertyGetterDeclaration <Yield>:
@@ -942,6 +941,10 @@ AssignmentOperator returns AssignmentOperator:
 	| '<<='
 	| '>' '>' '>'? '='
 	| '&=' | '^=' | '|='
+;
+
+AssignmentOperatorOnlyAssign returns AssignmentOperator:
+	'='
 ;
 
 /*
