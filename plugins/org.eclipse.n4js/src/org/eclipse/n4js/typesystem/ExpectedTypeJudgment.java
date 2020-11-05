@@ -121,8 +121,11 @@ import com.google.inject.Inject;
 	}
 
 	/**
-	 * We cannot use <code>null</code> as return value in EMF switches (would invoke case-methods of super types of the
-	 * argument). Therefore this special value is being returned inside the switch, when method
+	 * Represents "no type expectation at all", as explained for the return value of <code>null</code> in
+	 * {@link N4JSTypeSystem#expectedType(RuleEnvironment, EObject, Expression) N4JSTypeSystem#expectedType()}.
+	 * <p>
+	 * We cannot use <code>null</code> as return value within EMF switches (that would invoke the case-methods of super
+	 * types of the argument). Therefore this special value is being returned inside the switch, whenever method
 	 * {@link #apply(RuleEnvironment, EObject, Expression) apply()} should return <code>null</code>.
 	 */
 	private static final TypeRef NO_EXPECTATION = TypeRefsFactory.eINSTANCE.createDeferredTypeRef();

@@ -391,10 +391,7 @@ public class DestructNode {
 				}
 
 			} else if (eobj instanceof PropertyNameValuePairSingleName) {
-				val idRef = eobj.getIdentifierRef();
-				if (idRef !== null) {
-					idRefs.add(idRef);
-				}
+				idRefs.add(eobj.getIdentifierRef());
 
 			} else if (eobj instanceof PropertyNameValuePair) {
 				val Expression expr = eobj.getExpression();

@@ -699,10 +699,6 @@ PropertyNameValuePair <Yield>:
 	expression=AssignmentExpression<In=true,Yield>
 ;
 
-/*
- * Support for single name syntax in ObjectLiteral (but disallowed in actual object literals by ASTStructureValidator
- * except in assignment destructuring patterns)
- */
 PropertyNameValuePairSingleName <Yield>:
 	declaredTypeRef=TypeRef?
 	expression=PropertyNameValuePairSingleNamePart<Yield>

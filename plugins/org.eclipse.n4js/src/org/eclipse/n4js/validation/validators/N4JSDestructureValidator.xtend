@@ -25,7 +25,6 @@ import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.ObjectBindingPattern
 import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
-import org.eclipse.n4js.n4JS.PropertyNameValuePairSingleName
 import org.eclipse.n4js.n4JS.VariableBinding
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
@@ -261,7 +260,7 @@ class N4JSDestructureValidator extends AbstractN4JSDeclarativeValidator {
 				val msg = getMessageForDESTRUCT_TYPE_ERROR_PATTERN(patternKind, elemDesc, tsMsg);
 				val astElem = node.astElement;
 				switch(astElem) {
-					PropertyNameValuePair case !(astElem instanceof PropertyNameValuePairSingleName):
+					PropertyNameValuePair:
 						addIssue(msg, astElem, N4JSPackage.eINSTANCE.propertyNameValuePair_Expression, DESTRUCT_TYPE_ERROR_PATTERN)
 					BindingProperty:
 						addIssue(msg, astElem, N4JSPackage.eINSTANCE.bindingProperty_Value, DESTRUCT_TYPE_ERROR_PATTERN)
