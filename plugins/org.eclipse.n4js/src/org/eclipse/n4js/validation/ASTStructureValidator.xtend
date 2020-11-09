@@ -730,7 +730,7 @@ class ASTStructureValidator {
 				issueArgumentsError(model, name, constraints.isStrict, producer)
 			} else {
 				if (name != YIELD_KEYWORD && (languageHelper.getECMAKeywords.contains(name)
-					|| 'enum'.equals(name) || 'await'.equals(name) || 'let'.equals(name)
+					|| 'enum'.equals(name) || 'await'.equals(name)
 					|| 'true'.equals(name) || 'false'.equals(name) || 'null'.equals(name))) {
 					issueNameDiagnostic(model, producer, name)
 				} else if (constraints.isStrict) {
