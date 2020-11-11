@@ -7,3 +7,15 @@
 # E.g., some files contain illegal code in eval functions, which is
 # interpreted as string by the parser.
 #
+
+
+
+#
+# The following tests are blacklisted because they contain syntax that was
+# invalid in ES5 but is now valid as of ES6: they expect a syntax error that
+# our parser does no longer produce.
+#
+
+test262/suite/ch12/12.1/S12.1_A4_T1.js
+test262/suite/ch12/12.1/S12.1_A4_T2.js
+test262/suite/ch12/12.6/12.6.4/S12.6.4_A15.js
