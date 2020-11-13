@@ -364,9 +364,6 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 		return types;
 	}
 	
-	/** IDEBUG-266 issue error warning on cyclic dependencies. */
-	// TODO: GH-1500: Check if cyclic dependencies are already found in BuildManager#sortByDependencies()
-	// @Check // Commented out because there are performance issues.
 	@CheckProperty(property = DEPENDENCIES)
 	def checkCyclicDependencies(JSONValue dependenciesValue) {
 		// exit early in case of a malformed dependencies section (structural validation is handled elsewhere)
