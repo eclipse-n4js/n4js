@@ -23,6 +23,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
+import org.eclipse.n4js.xtext.workspace.XWorkspaceConfigSnapshotProvider;
 import org.eclipse.xtext.resource.impl.ChunkedResourceDescriptions;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 
@@ -47,7 +48,7 @@ import com.google.inject.Singleton;
  * </ul>
  */
 @Singleton
-public class ConcurrentIndex {
+public class ConcurrentIndex implements XWorkspaceConfigSnapshotProvider {
 
 	/** Map of all project indices. */
 	private final Map<String, ResourceDescriptionsData> project2Index = new HashMap<>();
@@ -219,5 +220,10 @@ public class ConcurrentIndex {
 	/** Create a snapshot of this index and attach it to the given resource set. */
 	public synchronized ChunkedResourceDescriptions toDescriptions(ResourceSet resourceSet) {
 		return new ChunkedResourceDescriptions(project2Index, resourceSet);
+	}
+
+	@Override
+	public WorkspaceConfigSnapshot get() {
+		return workspaceConfig;
 	}
 }
