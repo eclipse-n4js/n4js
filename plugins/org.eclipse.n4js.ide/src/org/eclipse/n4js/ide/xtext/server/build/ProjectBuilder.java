@@ -408,7 +408,7 @@ public class ProjectBuilder {
 		}
 	}
 
-	/** Report an issue. */
+	/** Report an issue related to the whole project. */
 	public void reportProjectIssue(String message, String code, Severity severity) {
 		URI uri = getBaseDir();
 		LSPIssue issue = new LSPIssue();
@@ -416,6 +416,11 @@ public class ProjectBuilder {
 		issue.setCode(code);
 		issue.setSeverity(severity);
 		issue.setUriToProblem(uri);
+		// we need to set these values, otherwise VSCode would not show the issue:
+		issue.setLineNumber(1);
+		issue.setLineNumberEnd(1);
+		issue.setColumn(1);
+		issue.setColumnEnd(1);
 
 		ImmutableProjectState updatedState = projectStateSnapshot.updateAndGet(snapshot -> {
 			ImmutableListMultimap.Builder<URI, LSPIssue> builder = ImmutableListMultimap.builder();
@@ -577,8 +582,14 @@ public class ProjectBuilder {
 		for (URI uri : urisWithIssues) {
 			issuePublisher.accept(uri, Collections.emptyList());
 		}
+		clearProjectIssues();
 		// actually clear internal state
 		doClearWithoutNotification();
+	}
+
+	/** Clears all project issues. Counterpart is {@link #reportProjectIssue(String, String, Severity)} */
+	public void clearProjectIssues() {
+		issuePublisher.accept(getBaseDir(), Collections.emptyList());
 	}
 
 	/**
