@@ -22,12 +22,12 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ide.server.LspLogger;
-import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo;
-import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo.ProjectBuildOrderIterator;
 import org.eclipse.n4js.ide.xtext.server.ResourceChangeSet;
 import org.eclipse.n4js.ide.xtext.server.build.ParallelBuildManager.ParallelJob;
 import org.eclipse.n4js.ide.xtext.server.build.XWorkspaceManager.UpdateResult;
 import org.eclipse.n4js.utils.UtilN4;
+import org.eclipse.n4js.xtext.workspace.ProjectBuildOrderInfo;
+import org.eclipse.n4js.xtext.workspace.ProjectBuildOrderInfo.ProjectBuildOrderIterator;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.SourceFolderScanner;
 import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
@@ -91,9 +91,6 @@ public class XWorkspaceBuilder {
 	private XWorkspaceManager workspaceManager;
 
 	@Inject
-	private ProjectBuildOrderInfo.Provider projectBuildOrderInfoProvider;
-
-	@Inject
 	private LspLogger lspLogger;
 
 	@Inject
@@ -151,9 +148,10 @@ public class XWorkspaceBuilder {
 
 		try {
 			Collection<? extends ProjectConfigSnapshot> allProjects = workspaceManager.getProjectConfigs();
-			ProjectBuildOrderInfo projectBuildOrderInfo = projectBuildOrderInfoProvider.get();
+			WorkspaceConfigSnapshot workspaceConfig = workspaceManager.getWorkspaceConfig();
+			ProjectBuildOrderInfo projectBuildOrderInfo = workspaceConfig.getProjectBuildOrderInfo();
 			ProjectBuildOrderIterator pboIterator = projectBuildOrderInfo.getIterator(allProjects);
-			logBuildOrder();
+			logBuildOrder(projectBuildOrderInfo);
 
 			List<IResourceDescription.Delta> allDeltas = new ArrayList<>();
 
@@ -411,7 +409,7 @@ public class XWorkspaceBuilder {
 			List<ProjectConfigSnapshot> changedPCs = changedProjects.stream()
 					.map(workspaceConfig::findProjectByName).collect(Collectors.toList());
 
-			ProjectBuildOrderInfo projectBuildOrderInfo = projectBuildOrderInfoProvider.get();
+			ProjectBuildOrderInfo projectBuildOrderInfo = workspaceConfig.getProjectBuildOrderInfo();
 			ProjectBuildOrderIterator pboIterator = projectBuildOrderInfo.getIterator(changedPCs);
 
 			for (String deletedProjectName : deletedProjects) {
@@ -577,9 +575,8 @@ public class XWorkspaceBuilder {
 	}
 
 	/** Prints build order */
-	private void logBuildOrder() {
+	private void logBuildOrder(ProjectBuildOrderInfo projectBuildOrderInfo) {
 		if (LOG.isInfoEnabled()) {
-			ProjectBuildOrderInfo projectBuildOrderInfo = projectBuildOrderInfoProvider.get();
 			ProjectBuildOrderIterator visitAll = projectBuildOrderInfo.getIterator().visitAll();
 			String output = "Project build order:\n  "
 					+ IteratorExtensions.join(visitAll, "\n  ", ProjectConfigSnapshot::getName);

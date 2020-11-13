@@ -13,9 +13,9 @@ package org.eclipse.n4js.ide.server.build;
 import java.util.Collections;
 import java.util.Set;
 
-import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo;
 import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.projectDescription.ProjectType;
+import org.eclipse.n4js.xtext.workspace.ProjectBuildOrderInfo;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 
 /**
