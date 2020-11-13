@@ -10,12 +10,35 @@
  */
 package org.eclipse.n4js.xtext.workspace;
 
+import java.util.Collections;
+
+import org.eclipse.n4js.xtext.workspace.XWorkspaceConfigSnapshotProvider.NullXWorkspaceConfigSnapshotProvider;
+
+import com.google.inject.ImplementedBy;
+import com.google.inject.Inject;
+
 /**
  * Provider for {@link XWorkspaceConfigSnapshotProvider}s
  */
+@ImplementedBy(NullXWorkspaceConfigSnapshotProvider.class)
 public interface XWorkspaceConfigSnapshotProvider {
 
 	/** @return the {@link WorkspaceConfigSnapshot} of the current build */
 	WorkspaceConfigSnapshot get();
+
+	/**
+	 * This provider returns empty {@link XWorkspaceConfigSnapshotProvider}s
+	 *
+	 * Note that this implementation may be removed when the N4JS Eclipse product is removed.
+	 */
+	class NullXWorkspaceConfigSnapshotProvider implements XWorkspaceConfigSnapshotProvider {
+		@Inject
+		ProjectBuildOrderInfo.Provider provider;
+
+		@Override
+		public WorkspaceConfigSnapshot get() {
+			return new WorkspaceConfigSnapshot(null, Collections.emptyList(), provider);
+		}
+	}
 
 }
