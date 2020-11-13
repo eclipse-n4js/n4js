@@ -34,7 +34,7 @@ public class ImmutableProjectState {
 	private final XSource2GeneratedMapping fileMappings;
 	/** Hashes to indicate file changes */
 	private final ImmutableMap<URI, HashedFileContent> fileHashes;
-	/** Hashes to indicate file changes */
+	/** Validation issues related to a URI */
 	private final ImmutableListMultimap<URI, LSPIssue> validationIssues;
 	/** Dependencies and whether they existed at the time this project state was computed. */
 	private final ImmutableMap<String, Boolean> dependencies;
