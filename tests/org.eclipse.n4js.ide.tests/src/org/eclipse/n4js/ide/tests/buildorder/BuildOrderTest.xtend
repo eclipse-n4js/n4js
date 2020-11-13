@@ -13,20 +13,23 @@ package org.eclipse.n4js.ide.tests.buildorder
 import com.google.inject.Injector
 import java.util.List
 import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest
-import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo
+import org.eclipse.n4js.xtext.workspace.ProjectBuildOrderInfo
 import org.junit.Test
 
 import static org.junit.Assert.assertEquals
+import org.eclipse.n4js.xtext.workspace.XWorkspaceConfigSnapshotProvider
 
 /**
- *
+ * Test for build order
  */
 class BuildOrderTest extends AbstractIdeTest {
 
+	private XWorkspaceConfigSnapshotProvider workspaceConfigProvider;
 	private ProjectBuildOrderInfo.Provider projectBuildOrderInfoProvider;
 
 	override Injector createInjector() {
 		val Injector injector = super.createInjector();
+		workspaceConfigProvider = injector.getInstance(XWorkspaceConfigSnapshotProvider);
 		projectBuildOrderInfoProvider = injector.getInstance(ProjectBuildOrderInfo.Provider);
 		return injector;
 	}
@@ -42,7 +45,8 @@ class BuildOrderTest extends AbstractIdeTest {
 		testWorkspaceManager.createTestOnDisk(projectsModulesContents);
 		startAndWaitForLspServer();
 
-		val projectBuildOrderInfo = projectBuildOrderInfoProvider.get();
+		val workspaceConfig = workspaceConfigProvider.get();
+		val projectBuildOrderInfo = projectBuildOrderInfoProvider.get(workspaceConfig);
 		val boIterator = projectBuildOrderInfo.getIterator().visitAll();
 		try {
 			val String names = IteratorExtensions.join(boIterator, ", ", [it.name]);
