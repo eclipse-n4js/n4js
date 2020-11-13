@@ -46,10 +46,10 @@ public interface XIWorkspaceConfig extends IWorkspaceConfig {
 			boolean refresh);
 
 	/** Returns a snapshot of the current state of the workspace represented by this {@link XIWorkspaceConfig}. */
-	default WorkspaceConfigSnapshot toSnapshot() {
+	default WorkspaceConfigSnapshot toSnapshot(ProjectBuildOrderInfo.Provider projectBuildOrderInfoProvider) {
 		List<ProjectConfigSnapshot> projectSnapshots = getProjects().stream()
 				.map(XIProjectConfig::toSnapshot)
 				.collect(Collectors.toList());
-		return new WorkspaceConfigSnapshot(getPath(), projectSnapshots);
+		return new WorkspaceConfigSnapshot(getPath(), projectSnapshots, projectBuildOrderInfoProvider);
 	}
 }
