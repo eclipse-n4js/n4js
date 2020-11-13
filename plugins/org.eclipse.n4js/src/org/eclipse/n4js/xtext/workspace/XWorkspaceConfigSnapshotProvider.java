@@ -11,10 +11,11 @@
 package org.eclipse.n4js.xtext.workspace;
 
 /**
- *
+ * Provider for {@link XWorkspaceConfigSnapshotProvider}s
  */
 public interface XWorkspaceConfigSnapshotProvider {
 
+	/** @return the {@link WorkspaceConfigSnapshot} of the current build */
 	WorkspaceConfigSnapshot get();
 
 }
