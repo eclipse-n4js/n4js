@@ -43,7 +43,6 @@ import org.eclipse.n4js.ide.xtext.editor.contentassist.XIdeContentProposalAccept
 import org.eclipse.n4js.ide.xtext.server.BuiltInAwareIncrementalBuilder;
 import org.eclipse.n4js.ide.xtext.server.DebugService;
 import org.eclipse.n4js.ide.xtext.server.LanguageServerFrontend;
-import org.eclipse.n4js.ide.xtext.server.ProjectBuildOrderInfo;
 import org.eclipse.n4js.ide.xtext.server.QueuedExecutorService;
 import org.eclipse.n4js.ide.xtext.server.TextDocumentFrontend;
 import org.eclipse.n4js.ide.xtext.server.XExecutableCommandRegistry;
@@ -51,6 +50,7 @@ import org.eclipse.n4js.ide.xtext.server.XIProjectDescriptionFactory;
 import org.eclipse.n4js.ide.xtext.server.XIWorkspaceConfigFactory;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 import org.eclipse.n4js.ide.xtext.server.build.BuilderFrontend;
+import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIndex;
 import org.eclipse.n4js.ide.xtext.server.build.DefaultBuildRequestFactory;
 import org.eclipse.n4js.ide.xtext.server.build.IBuildRequestFactory;
 import org.eclipse.n4js.ide.xtext.server.build.ProjectBuilder;
@@ -66,7 +66,9 @@ import org.eclipse.n4js.ide.xtext.server.util.XOperationCanceledManager;
 import org.eclipse.n4js.internal.lsp.FileSystemScanner;
 import org.eclipse.n4js.internal.lsp.N4JSSourceFolderScanner;
 import org.eclipse.n4js.xtext.server.EmfDiagnosticToLSPIssueConverter;
+import org.eclipse.n4js.xtext.workspace.ProjectBuildOrderInfo;
 import org.eclipse.n4js.xtext.workspace.SourceFolderScanner;
+import org.eclipse.n4js.xtext.workspace.XWorkspaceConfigSnapshotProvider;
 import org.eclipse.xtext.generator.IGenerator;
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
 import org.eclipse.xtext.ide.editor.contentassist.FQNPrefixMatcher;
@@ -266,5 +268,9 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public Class<? extends AfterValidateListener> bindAfterValidateListener() {
 		return WorkspaceValidateListener.class;
+	}
+
+	public Class<? extends XWorkspaceConfigSnapshotProvider> bindXWorkspaceConfigSnapshotProvider() {
+		return ConcurrentIndex.class;
 	}
 }
