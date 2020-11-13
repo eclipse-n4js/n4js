@@ -21,6 +21,8 @@ import com.google.common.base.Equivalence;
  * collect transitive dependencies).
  *
  * Apart from that this traverser may also be used to detect dependency cycles.
+ *
+ * Note that dependency cycles are detected using ProjectBuildOrderInfo (see GH-1964)
  */
 public class DependencyTraverser<T> {
 
