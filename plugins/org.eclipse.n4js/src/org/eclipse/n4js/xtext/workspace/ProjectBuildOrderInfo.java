@@ -43,8 +43,7 @@ public class ProjectBuildOrderInfo implements IOrderInfo<ProjectConfigSnapshot> 
 
 		/** Returns a new instance of {@link ProjectBuildOrderInfo}. No projects will be visited. */
 		public ProjectBuildOrderInfo getProjectBuildOrderInfo(WorkspaceConfigSnapshot workspaceConfig) {
-			ProjectBuildOrderInfo projectBuildOrderInfo = new ProjectBuildOrderInfo(workspaceConfig);
-			return projectBuildOrderInfo;
+			return new ProjectBuildOrderInfo(workspaceConfig);
 		}
 	}
 

@@ -25,7 +25,7 @@ import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 public class N4JSProjectBuildOrderInfo extends ProjectBuildOrderInfo {
 
 	/** Provides instances of {@link #N4JSProjectBuildOrderInfo()} */
-	public class Provider extends ProjectBuildOrderInfo.Provider {
+	public static class Provider extends ProjectBuildOrderInfo.Provider {
 		@Override
 		public ProjectBuildOrderInfo getProjectBuildOrderInfo(WorkspaceConfigSnapshot pWorkspaceConfig) {
 			return new N4JSProjectBuildOrderInfo(pWorkspaceConfig);
