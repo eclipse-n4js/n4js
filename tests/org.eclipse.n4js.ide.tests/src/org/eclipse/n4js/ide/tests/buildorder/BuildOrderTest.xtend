@@ -43,7 +43,7 @@ class BuildOrderTest extends AbstractIdeTest {
 	 *            test workspace
 	 */
 	@SafeVarargs
-	 def final void test(String buildOrder, Pair<String, List<Pair<String, String>>>... projectsModulesContents) {
+	def final void test(String buildOrder, Pair<String, List<Pair<String, String>>>... projectsModulesContents) {
 		test(buildOrder, emptyList, projectsModulesContents);
 	}
 
@@ -54,12 +54,12 @@ class BuildOrderTest extends AbstractIdeTest {
 	 *            test workspace
 	 */
 	@SafeVarargs
-	 def final void test(String buildOrder, Collection<Collection<String>> cycles, Pair<String, List<Pair<String, String>>>... projectsModulesContents) {
+	def final void test(String buildOrder, Collection<Collection<String>> cycles, Pair<String, List<Pair<String, String>>>... projectsModulesContents) {
 		testWorkspaceManager.createTestOnDisk(projectsModulesContents);
 		startAndWaitForLspServer();
 
-		val workspaceConfig = workspaceConfigProvider.get();
-		val projectBuildOrderInfo = projectBuildOrderInfoProvider.get(workspaceConfig);
+		val workspaceConfig = workspaceConfigProvider.getWorkspaceConfigSnapshot();
+		val projectBuildOrderInfo = projectBuildOrderInfoProvider.getProjectBuildOrderInfo(workspaceConfig);
 		val boIterator = projectBuildOrderInfo.getIterator().visitAll();
 		try {
 			val String names = IteratorExtensions.join(boIterator, ", ", [it.name]);
