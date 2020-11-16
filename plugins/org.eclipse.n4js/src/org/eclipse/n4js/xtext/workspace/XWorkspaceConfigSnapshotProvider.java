@@ -24,7 +24,7 @@ import com.google.inject.Inject;
 public interface XWorkspaceConfigSnapshotProvider {
 
 	/** @return the {@link WorkspaceConfigSnapshot} of the current build */
-	WorkspaceConfigSnapshot get();
+	WorkspaceConfigSnapshot getWorkspaceConfigSnapshot();
 
 	/**
 	 * This provider returns empty {@link XWorkspaceConfigSnapshotProvider}s
@@ -36,7 +36,7 @@ public interface XWorkspaceConfigSnapshotProvider {
 		ProjectBuildOrderInfo.Provider provider;
 
 		@Override
-		public WorkspaceConfigSnapshot get() {
+		public WorkspaceConfigSnapshot getWorkspaceConfigSnapshot() {
 			return new WorkspaceConfigSnapshot(null, Collections.emptyList(), provider);
 		}
 	}

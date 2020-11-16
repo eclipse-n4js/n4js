@@ -39,8 +39,6 @@ public class WorkspaceConfigSnapshot {
 	/** Keys are URIs <em>without</em> trailing path separator. */
 	protected final ImmutableMap<URI, ProjectConfigSnapshot> sourceFolderPath2Project;
 	/** Project build order */
-	protected final ProjectBuildOrderInfo.Provider projectBuildOrderInfoProvider;
-	/** Project build order */
 	protected final ProjectBuildOrderInfo projectBuildOrderInfo;
 
 	/** See {@link WorkspaceConfigSnapshot}. */
@@ -57,8 +55,7 @@ public class WorkspaceConfigSnapshot {
 		this.name2Project = ImmutableBiMap.copyOf(lookupName2Project);
 		this.projectPath2Project = ImmutableMap.copyOf(lookupProjectPath2Project);
 		this.sourceFolderPath2Project = ImmutableMap.copyOf(lookupSourceFolderPath2Project);
-		this.projectBuildOrderInfoProvider = projectBuildOrderInfoProvider;
-		this.projectBuildOrderInfo = projectBuildOrderInfoProvider.get(this);
+		this.projectBuildOrderInfo = projectBuildOrderInfoProvider.getProjectBuildOrderInfo(this);
 	}
 
 	/** See {@link WorkspaceConfigSnapshot}. */
@@ -71,8 +68,7 @@ public class WorkspaceConfigSnapshot {
 		this.name2Project = name2Project;
 		this.projectPath2Project = projectPath2Project;
 		this.sourceFolderPath2Project = sourceFolderPath2Project;
-		this.projectBuildOrderInfoProvider = projectBuildOrderInfoProvider;
-		this.projectBuildOrderInfo = projectBuildOrderInfoProvider.get(this);
+		this.projectBuildOrderInfo = projectBuildOrderInfoProvider.getProjectBuildOrderInfo(this);
 	}
 
 	/** Getter for the root path. */
@@ -132,12 +128,12 @@ public class WorkspaceConfigSnapshot {
 
 	/** Return an empty workspace snapshot. */
 	public WorkspaceConfigSnapshot clear() {
-		return new WorkspaceConfigSnapshot(getPath(), Collections.emptyList(), projectBuildOrderInfoProvider);
+		return new WorkspaceConfigSnapshot(getPath(), Collections.emptyList(), new ProjectBuildOrderInfo.Provider());
 	}
 
 	/** Return an updated version snapshot. */
 	public WorkspaceConfigSnapshot update(Iterable<? extends ProjectConfigSnapshot> changedProjects,
-			Iterable<String> removedProjects) {
+			Iterable<String> removedProjects, ProjectBuildOrderInfo.Provider projectBuildOrderInfoProvider) {
 
 		Map<String, ProjectConfigSnapshot> lookupName2Project = new HashMap<>(name2Project);
 		Map<URI, ProjectConfigSnapshot> lookupProjectPath2Project = new HashMap<>(projectPath2Project);
