@@ -240,7 +240,7 @@ public interface DebugService extends DebugEndpointDefinition {
 		}
 
 		protected String getWorkspaceConfigDump() {
-			WorkspaceConfigSnapshot workspace = fullIndex.getWorkspaceConfig();
+			WorkspaceConfigSnapshot workspace = fullIndex.getWorkspaceConfigSnapshot();
 			String dump = "Workspace Config:\n + ";
 			dump += Strings.join("\n + ", p -> p.getName() + " \tat " + p.getPath(), workspace.getProjects());
 			return dump;

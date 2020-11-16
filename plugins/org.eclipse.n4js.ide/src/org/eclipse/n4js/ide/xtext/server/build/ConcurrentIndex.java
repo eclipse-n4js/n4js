@@ -21,6 +21,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.n4js.xtext.workspace.ProjectBuildOrderInfo;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.XWorkspaceConfigSnapshotProvider;
@@ -32,6 +33,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
@@ -49,6 +51,9 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class ConcurrentIndex implements XWorkspaceConfigSnapshotProvider {
+
+	@Inject
+	private ProjectBuildOrderInfo.Provider projectBuildOrderInfoProvider;
 
 	/** Map of all project indices. */
 	private final Map<String, ResourceDescriptionsData> project2Index = new HashMap<>();
@@ -108,8 +113,8 @@ public class ConcurrentIndex implements XWorkspaceConfigSnapshotProvider {
 		return project2Index.get(projectName);
 	}
 
-	/** Returns the workspace configuration */
-	public synchronized WorkspaceConfigSnapshot getWorkspaceConfig() {
+	@Override
+	public synchronized WorkspaceConfigSnapshot getWorkspaceConfigSnapshot() {
 		return workspaceConfig;
 	}
 
@@ -166,7 +171,9 @@ public class ConcurrentIndex implements XWorkspaceConfigSnapshotProvider {
 					actuallyRemovedProjectsBuilder.add(removedProjectName);
 				}
 			}
-			newWorkspaceConfig = workspaceConfig.update(changedProjectsCpy, removedProjectsCpy);
+			newWorkspaceConfig = workspaceConfig.update(changedProjectsCpy, removedProjectsCpy,
+					projectBuildOrderInfoProvider);
+
 			workspaceConfig = newWorkspaceConfig;
 		}
 		ImmutableSet<String> actuallyRemovedProjects = actuallyRemovedProjectsBuilder.build();
@@ -220,10 +227,5 @@ public class ConcurrentIndex implements XWorkspaceConfigSnapshotProvider {
 	/** Create a snapshot of this index and attach it to the given resource set. */
 	public synchronized ChunkedResourceDescriptions toDescriptions(ResourceSet resourceSet) {
 		return new ChunkedResourceDescriptions(project2Index, resourceSet);
-	}
-
-	@Override
-	public WorkspaceConfigSnapshot get() {
-		return workspaceConfig;
 	}
 }

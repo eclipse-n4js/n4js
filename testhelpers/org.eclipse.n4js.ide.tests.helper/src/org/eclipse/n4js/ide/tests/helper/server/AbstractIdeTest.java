@@ -1015,8 +1015,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	/** Asserts the build order of all projects in the workspace. */
 	protected void assertProjectBuildOrder(String expectedProjectBuildOrder) {
-		WorkspaceConfigSnapshot workspaceConfig = workspaceConfigProvider.get();
-		ProjectBuildOrderIterator iter = projectBuildOrderInfoProvider.get(workspaceConfig).getIterator().visitAll();
+		WorkspaceConfigSnapshot workspaceConfig = workspaceConfigProvider.getWorkspaceConfigSnapshot();
+		ProjectBuildOrderIterator iter = projectBuildOrderInfoProvider.getProjectBuildOrderInfo(workspaceConfig).getIterator().visitAll();
 		String buildOrderString = org.eclipse.n4js.utils.Strings.toString(pd -> pd.getName(), () -> iter);
 		assertEquals("Project build order did not match expectation.", expectedProjectBuildOrder, buildOrderString);
 	}
