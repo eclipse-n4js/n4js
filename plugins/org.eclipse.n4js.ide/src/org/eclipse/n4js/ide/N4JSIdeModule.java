@@ -179,8 +179,8 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 		return BuiltInAwareIncrementalBuilder.class;
 	}
 
-	public Class<? extends ProjectBuildOrderInfo> bindProjectBuildOrderInfo() {
-		return N4JSProjectBuildOrderInfo.class;
+	public Class<? extends ProjectBuildOrderInfo.Provider> bindProjectBuildOrderInfoProvider() {
+		return N4JSProjectBuildOrderInfo.Provider.class;
 	}
 
 	public Class<? extends SourceFolderScanner> bindSourceFolderScanner() {
