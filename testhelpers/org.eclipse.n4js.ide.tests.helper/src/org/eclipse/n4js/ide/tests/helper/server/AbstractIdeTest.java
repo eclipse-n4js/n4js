@@ -755,6 +755,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		List<TextDocumentContentChangeEvent> changes = changeComputer.apply(oldContent, newContent);
 		DidChangeTextDocumentParams params = new DidChangeTextDocumentParams(docId, changes);
 		languageServer.didChange(params);
+		joinServerRequests();
 	}
 
 	/** Same as {@link #saveOpenedFile(FileURI)}, accepting a module name instead of a file URI. */
@@ -776,6 +777,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		DidSaveTextDocumentParams didSaveParams = new DidSaveTextDocumentParams(docId);
 		languageServer.didSave(didSaveParams);
 		sendDidChangeWatchedFiles(fileURI);
+		joinServerRequests();
 	}
 
 	/**
@@ -1016,7 +1018,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	/** Asserts the build order of all projects in the workspace. */
 	protected void assertProjectBuildOrder(String expectedProjectBuildOrder) {
 		WorkspaceConfigSnapshot workspaceConfig = workspaceConfigProvider.getWorkspaceConfigSnapshot();
-		ProjectBuildOrderIterator iter = projectBuildOrderInfoProvider.getProjectBuildOrderInfo(workspaceConfig).getIterator().visitAll();
+		ProjectBuildOrderIterator iter = projectBuildOrderInfoProvider.getProjectBuildOrderInfo(workspaceConfig)
+				.getIterator().visitAll();
 		String buildOrderString = org.eclipse.n4js.utils.Strings.toString(pd -> pd.getName(), () -> iter);
 		assertEquals("Project build order did not match expectation.", expectedProjectBuildOrder, buildOrderString);
 	}
