@@ -38,47 +38,55 @@ public class WorkspaceConfigSnapshot {
 	protected final ImmutableMap<URI, ProjectConfigSnapshot> projectPath2Project;
 	/** Keys are URIs <em>without</em> trailing path separator. */
 	protected final ImmutableMap<URI, ProjectConfigSnapshot> sourceFolderPath2Project;
+	/** Project build order */
+	protected final ProjectBuildOrderInfo projectBuildOrderInfo;
 
 	/** See {@link WorkspaceConfigSnapshot}. */
-	public WorkspaceConfigSnapshot(URI path, Iterable<? extends ProjectConfigSnapshot> projects) {
+	public WorkspaceConfigSnapshot(URI path, Iterable<? extends ProjectConfigSnapshot> projects,
+			ProjectBuildOrderInfo.Provider projectBuildOrderInfoProvider) {
+
 		Map<String, ProjectConfigSnapshot> lookupName2Project = new HashMap<>();
 		Map<URI, ProjectConfigSnapshot> lookupProjectPath2Project = new HashMap<>();
 		Map<URI, ProjectConfigSnapshot> lookupSourceFolderPath2Project = new HashMap<>();
 		updateLookupMaps(lookupName2Project, lookupProjectPath2Project, lookupSourceFolderPath2Project, projects,
 				Collections.emptyList());
+
 		this.path = path;
 		this.name2Project = ImmutableBiMap.copyOf(lookupName2Project);
 		this.projectPath2Project = ImmutableMap.copyOf(lookupProjectPath2Project);
 		this.sourceFolderPath2Project = ImmutableMap.copyOf(lookupSourceFolderPath2Project);
+		this.projectBuildOrderInfo = projectBuildOrderInfoProvider.getProjectBuildOrderInfo(this);
 	}
 
 	/** See {@link WorkspaceConfigSnapshot}. */
 	protected WorkspaceConfigSnapshot(URI path, ImmutableBiMap<String, ProjectConfigSnapshot> name2Project,
 			ImmutableMap<URI, ProjectConfigSnapshot> projectPath2Project,
-			ImmutableMap<URI, ProjectConfigSnapshot> sourceFolderPath2Project) {
+			ImmutableMap<URI, ProjectConfigSnapshot> sourceFolderPath2Project,
+			ProjectBuildOrderInfo.Provider projectBuildOrderInfoProvider) {
+
 		this.path = path;
 		this.name2Project = name2Project;
 		this.projectPath2Project = projectPath2Project;
 		this.sourceFolderPath2Project = sourceFolderPath2Project;
+		this.projectBuildOrderInfo = projectBuildOrderInfoProvider.getProjectBuildOrderInfo(this);
 	}
 
-	/**
-	 * Getter for the root path.
-	 */
+	/** Getter for the root path. */
 	public URI getPath() {
 		return path;
 	}
 
-	/**
-	 * Get all the projects known in this snapshot.
-	 */
+	/** Get all the projects known in this snapshot. */
 	public ImmutableSet<? extends ProjectConfigSnapshot> getProjects() {
 		return name2Project.values();
 	}
 
-	/**
-	 * Find the project with the given name.
-	 */
+	/** Get build order of all projects of this workspace snapshot */
+	public ProjectBuildOrderInfo getProjectBuildOrderInfo() {
+		return projectBuildOrderInfo;
+	}
+
+	/** Find the project with the given name. */
 	public ProjectConfigSnapshot findProjectByName(String name) {
 		return name2Project.get(name);
 	}
@@ -118,26 +126,24 @@ public class WorkspaceConfigSnapshot {
 		return null;
 	}
 
-	/**
-	 * Return an empty workspace snapshot.
-	 */
+	/** Return an empty workspace snapshot. */
 	public WorkspaceConfigSnapshot clear() {
-		return new WorkspaceConfigSnapshot(getPath(), Collections.emptyList());
+		return new WorkspaceConfigSnapshot(getPath(), Collections.emptyList(), new ProjectBuildOrderInfo.Provider());
 	}
 
-	/**
-	 * Return an updated version snapshot.
-	 */
+	/** Return an updated version snapshot. */
 	public WorkspaceConfigSnapshot update(Iterable<? extends ProjectConfigSnapshot> changedProjects,
-			Iterable<String> removedProjects) {
+			Iterable<String> removedProjects, ProjectBuildOrderInfo.Provider projectBuildOrderInfoProvider) {
 
 		Map<String, ProjectConfigSnapshot> lookupName2Project = new HashMap<>(name2Project);
 		Map<URI, ProjectConfigSnapshot> lookupProjectPath2Project = new HashMap<>(projectPath2Project);
 		Map<URI, ProjectConfigSnapshot> lookupSourceFolderPath2Project = new HashMap<>(sourceFolderPath2Project);
 		updateLookupMaps(lookupName2Project, lookupProjectPath2Project, lookupSourceFolderPath2Project,
 				changedProjects, removedProjects);
+
 		return new WorkspaceConfigSnapshot(path, ImmutableBiMap.copyOf(lookupName2Project),
-				ImmutableMap.copyOf(lookupProjectPath2Project), ImmutableMap.copyOf(lookupSourceFolderPath2Project));
+				ImmutableMap.copyOf(lookupProjectPath2Project), ImmutableMap.copyOf(lookupSourceFolderPath2Project),
+				projectBuildOrderInfoProvider);
 	}
 
 	/** Change the given lookup maps to include the given project changes and removals. */
@@ -187,7 +193,8 @@ public class WorkspaceConfigSnapshot {
 		int result = 1;
 		result = prime * result + ((name2Project == null) ? 0 : name2Project.hashCode());
 		result = prime * result + ((path == null) ? 0 : path.hashCode());
-		// note: no need to consider the lookup maps "projectPath2Project" and "sourceFolderPath2Project"
+		// note: no need to consider "projectBuildOrderInfo" and the lookup maps "projectPath2Project" and
+		// "sourceFolderPath2Project"
 		return result;
 	}
 
@@ -210,7 +217,8 @@ public class WorkspaceConfigSnapshot {
 				return false;
 		} else if (!path.equals(other.path))
 			return false;
-		// note: no need to check the lookup maps "projectPath2Project" and "sourceFolderPath2Project"
+		// note: no need to check "projectBuildOrderInfo" and the lookup maps "projectPath2Project" and
+		// "sourceFolderPath2Project"
 		return true;
 	}
 

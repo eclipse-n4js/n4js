@@ -82,6 +82,7 @@ import org.eclipse.n4js.utils.WildcardPathFilterHelper
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
 import org.eclipse.n4js.validation.helper.SourceContainerAwareDependencyProvider
+import org.eclipse.n4js.xtext.workspace.XWorkspaceConfigSnapshotProvider
 import org.eclipse.xtend.lib.annotations.Data
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.resource.IContainer
@@ -98,6 +99,7 @@ import static org.eclipse.n4js.validation.IssueCodes.*
 import static org.eclipse.n4js.validation.validators.packagejson.ProjectTypePredicate.*
 
 import static extension com.google.common.base.Strings.nullToEmpty
+import org.eclipse.n4js.utils.Strings
 
 /**
  * A JSON validator extension that validates {@code package.json} resources in the context
@@ -179,6 +181,9 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 
 	@Inject
 	protected NodeModulesDiscoveryHelper nodeModulesDiscoveryHelper;
+
+	@Inject
+	protected XWorkspaceConfigSnapshotProvider workspaceConfigProvider;
 
 
 	/**
@@ -359,30 +364,39 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 		return types;
 	}
 	
-	/** IDEBUG-266 issue error warning on cyclic dependencies. */
-	// TODO: GH-1500: Check if cyclic dependencies are already found in BuildManager#sortByDependencies()
-	// @Check // Commented out because there are performance issues.
-	def checkCyclicDependencies(JSONDocument document) {
-		val project = findProject(document.eResource.URI).orNull;
-		if (null !== project) {
-			
-			val dependencyProvider = new SourceContainerAwareDependencyProvider(true);
-			val traverser = new DependencyTraverser(project, dependencyProvider, true);
-			
-			val traversalResult = traverser.findCycle();
-			
-			if (traversalResult.hasCycle) {
-				// add issue to 'name' property or alternatively to the whole document
-				val nameValue = getSingleDocumentValue(NAME);
-				val message = getMessageForPROJECT_DEPENDENCY_CYCLE(traversalResult.prettyPrint([calculateName.rawName]));
-				addIssuePreferred(#[nameValue], message, PROJECT_DEPENDENCY_CYCLE);
-			} else {
-				//for performance reasons following is not separate check
-				/*
-				 * otherwise we would traverse all transitive dependencies multiple times,
-				 * and we would care for cycles
-				 */
-				project.holdsProjectWithTestFragmentDependsOnTestLibrary()
+	@CheckProperty(property = DEPENDENCIES)
+	def checkCyclicDependencies(JSONValue dependenciesValue) {
+		// exit early in case of a malformed dependencies section (structural validation is handled elsewhere)
+		if (!(dependenciesValue instanceof JSONObject)) {
+			return;
+		}
+		
+		// pairs that represent project dependencies
+		val dependencyPairs = (dependenciesValue as JSONObject).nameValuePairs;
+		// obtain project description for higher-level access to contained information
+		val projectName = getProjectDescription().projectName;
+		// get project build order of current build
+		val projectOrderInfo = workspaceConfigProvider.workspaceConfigSnapshot.getProjectBuildOrderInfo;
+		
+		// check for dependency cycles
+		for (projectCycle : projectOrderInfo.getProjectCycles) {
+			if (projectCycle.contains(projectName)) {
+				for (dependencyPair : dependencyPairs) {
+					if (projectCycle.contains(dependencyPair.name)) {
+						val dependencyCycle = Strings.join(", ", projectCycle);
+						val message = getMessageForPROJECT_DEPENDENCY_CYCLE(dependencyCycle);
+						addIssue(message, dependencyPair, JSONPackage.Literals.NAME_VALUE_PAIR__NAME, PROJECT_DEPENDENCY_CYCLE);
+					}
+				}
+			}
+		}
+		
+		// check for required dependency to mangelhaft
+		if (projectOrderInfo.getProjectCycles.isEmpty) {
+			// the following cannot be checked in presence of dependency cycles
+			val project = findProject(document.eResource.URI).orNull;
+			if (null !== project) {
+				holdsProjectWithTestFragmentDependsOnTestLibrary(project);
 			}
 		}
 	}
@@ -448,10 +462,6 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 			}
 			return false;
 		}
-	}
-
-	private def N4JSProjectName calculateName(IN4JSProject it) {
-		it.projectName;
 	}
 
 	/**

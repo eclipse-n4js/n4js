@@ -8,26 +8,23 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.xtext.server;
+package org.eclipse.n4js.xtext.workspace;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.n4js.ide.xtext.server.build.ProjectBuilder;
-import org.eclipse.n4js.ide.xtext.server.build.XWorkspaceManager;
-import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
-import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
-import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.resource.IResourceDescription;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
@@ -36,22 +33,17 @@ import com.google.inject.Injector;
  */
 public class ProjectBuildOrderInfo implements IOrderInfo<ProjectConfigSnapshot> {
 
-	/** Issue key for cyclic dependencies */
-	public static final String CYCLIC_PROJECT_DEPENDENCIES = ProjectBuildOrderInfo.class.getName()
-			+ ".cyclicProjectDependencies";
-
 	/**
 	 * A provider for {@link ProjectBuildOrderInfo} instances.
 	 */
-	public static class Provider implements com.google.inject.Provider<IOrderInfo<ProjectConfigSnapshot>> {
-		/** Injector to be used for creating instances of {@link #ProjectBuildOrderInfo()} */
+	public static class Provider {
+		/** Injector to be used for creating instances of {@link ProjectBuildOrderInfo} */
 		@Inject
 		protected Injector injector;
 
 		/** Returns a new instance of {@link ProjectBuildOrderInfo}. No projects will be visited. */
-		@Override
-		public ProjectBuildOrderInfo get() {
-			return injector.getInstance(ProjectBuildOrderInfo.class);
+		public ProjectBuildOrderInfo getProjectBuildOrderInfo(WorkspaceConfigSnapshot workspaceConfig) {
+			return new ProjectBuildOrderInfo(workspaceConfig);
 		}
 	}
 
@@ -60,7 +52,7 @@ public class ProjectBuildOrderInfo implements IOrderInfo<ProjectConfigSnapshot> 
 	 */
 	public class ProjectBuildOrderIterator implements IOrderIterator<ProjectConfigSnapshot> {
 		/**
-		 * Subset of {@link #sortedProjects}: when {@link #ProjectBuildOrderInfo()} is used as an iterator, only those
+		 * Subset of {@link #sortedProjects}: when {@link ProjectBuildOrderInfo} is used as an iterator, only those
 		 * projects are iterated over that are contained in this set
 		 */
 		final protected Set<String> visitProjectNames = new HashSet<>();
@@ -102,8 +94,8 @@ public class ProjectBuildOrderInfo implements IOrderInfo<ProjectConfigSnapshot> 
 		protected Set<ProjectConfigSnapshot> getAffectedProjects(List<IResourceDescription.Delta> changes) {
 			Set<String> changedProjectsNames = new HashSet<>();
 			for (IResourceDescription.Delta change : changes) {
-				ProjectBuilder projectBuilder = workspaceManager.getProjectBuilder(change.getUri());
-				changedProjectsNames.add(projectBuilder.getName());
+				ProjectConfigSnapshot projectConfig = workspaceConfig.findProjectByNestedLocation(change.getUri());
+				changedProjectsNames.add(projectConfig.getName());
 			}
 
 			Set<ProjectConfigSnapshot> affectedProjects = new HashSet<>();
@@ -125,22 +117,27 @@ public class ProjectBuildOrderInfo implements IOrderInfo<ProjectConfigSnapshot> 
 		}
 	}
 
-	/** Workspace manager */
-	@Inject
-	protected XWorkspaceManager workspaceManager;
-
+	/** Workspace configuration related to this build order */
+	final protected WorkspaceConfigSnapshot workspaceConfig;
 	/** Inverse set of project dependency information */
-	final protected Multimap<String, ProjectConfigSnapshot> inversedDependencies = HashMultimap.create();
+	final protected Multimap<String, ProjectConfigSnapshot> inversedDependencies;
 	/** Build order of projects */
-	final protected List<ProjectConfigSnapshot> sortedProjects = new ArrayList<>();
+	final protected List<ProjectConfigSnapshot> sortedProjects;
+	/** All project cycles, each cycle given as a list of project names */
+	final protected Collection<List<String>> projectCycles;
 
-	/**
-	 * Creates a new instance of {@link ProjectBuildOrderIterator}. Assumes a succeeding call to
-	 * {@link ProjectBuildOrderIterator#visit(Collection)} method.
-	 */
-	@Override
-	public ProjectBuildOrderIterator getIterator() {
-		return new ProjectBuildOrderIterator();
+	/** Constructor */
+	public ProjectBuildOrderInfo(WorkspaceConfigSnapshot pWorkspaceConfig) {
+		Multimap<String, ProjectConfigSnapshot> pInversedDependencies = HashMultimap.create();
+		List<ProjectConfigSnapshot> pSortedProjects = new ArrayList<>();
+		Set<List<String>> pProjectCycles = new HashSet<>();
+
+		init(pWorkspaceConfig, pInversedDependencies, pSortedProjects, pProjectCycles);
+
+		workspaceConfig = pWorkspaceConfig;
+		inversedDependencies = Multimaps.unmodifiableMultimap(pInversedDependencies);
+		sortedProjects = Collections.unmodifiableList(pSortedProjects);
+		projectCycles = Collections.unmodifiableSet(pProjectCycles);
 	}
 
 	/** Creates a new instance of {@link ProjectBuildOrderIterator}. The given set of projects will be visited only. */
@@ -151,28 +148,45 @@ public class ProjectBuildOrderInfo implements IOrderInfo<ProjectConfigSnapshot> 
 		return iterator;
 	}
 
-	/** Populates {@link #sortedProjects} and {@link #inversedDependencies} */
-	@Inject
-	protected void init() {
-		WorkspaceConfigSnapshot workspaceConfig = workspaceManager.getWorkspaceConfig();
+	/**
+	 * Creates a new instance of {@link ProjectBuildOrderIterator}. Assumes a succeeding call to
+	 * {@link ProjectBuildOrderIterator#visit(Collection)} method.
+	 */
+	@Override
+	public ProjectBuildOrderIterator getIterator() {
+		return new ProjectBuildOrderIterator();
+	}
+
+	/** @return all project cycles as lists of project names */
+	public Collection<List<String>> getProjectCycles() {
+		return this.projectCycles;
+	}
+
+	/** Populates {@link #sortedProjects}, {@link #inversedDependencies} and {@link #projectCycles} */
+	protected void init(WorkspaceConfigSnapshot pWorkspaceConfig,
+			Multimap<String, ProjectConfigSnapshot> pInversedDependencies,
+			List<ProjectConfigSnapshot> pSortedProjects, Collection<List<String>> pProjectCycles) {
+
 		LinkedHashSet<String> orderedProjectNames = new LinkedHashSet<>();
-		for (ProjectConfigSnapshot pc : workspaceConfig.getProjects()) {
+		for (ProjectConfigSnapshot pc : pWorkspaceConfig.getProjects()) {
 			for (String dependencyName : getDependencies(pc)) {
-				inversedDependencies.put(dependencyName, pc);
+				pInversedDependencies.put(dependencyName, pc);
 			}
-			computeOrder(pc, orderedProjectNames, new LinkedHashSet<>());
+			computeOrder(pWorkspaceConfig, pProjectCycles, pc, orderedProjectNames, new LinkedHashSet<>());
 		}
 
 		for (String projectName : orderedProjectNames) {
-			ProjectConfigSnapshot pc = workspaceConfig.findProjectByName(projectName);
+			ProjectConfigSnapshot pc = pWorkspaceConfig.findProjectByName(projectName);
 			if (pc != null) {
-				sortedProjects.add(pc);
+				pSortedProjects.add(pc);
 			}
 		}
 	}
 
 	/** Computes the build order of all projects in the workspace */
-	protected void computeOrder(ProjectConfigSnapshot pc, LinkedHashSet<String> orderedProjects,
+	protected void computeOrder(WorkspaceConfigSnapshot pWorkspaceConfig,
+			Collection<List<String>> pProjectCycles,
+			ProjectConfigSnapshot pc, LinkedHashSet<String> orderedProjects,
 			LinkedHashSet<String> projectStack) {
 
 		String pdName = pc.getName();
@@ -181,17 +195,16 @@ public class ProjectBuildOrderInfo implements IOrderInfo<ProjectConfigSnapshot> 
 		}
 
 		if (projectStack.contains(pdName)) {
-			for (String cyclicPD : projectStack) {
-				reportDependencyCycle(cyclicPD);
-			}
+			ArrayList<String> listStack = new ArrayList<>(projectStack);
+			List<String> cycle = listStack.subList(listStack.indexOf(pdName), listStack.size());
+			pProjectCycles.add(Collections.unmodifiableList(cycle));
 		} else {
 			projectStack.add(pdName);
 
-			WorkspaceConfigSnapshot workspaceConfig = workspaceManager.getWorkspaceConfig();
 			for (String depName : getDependencies(pc)) {
-				ProjectConfigSnapshot depPC = workspaceConfig.findProjectByName(depName);
+				ProjectConfigSnapshot depPC = pWorkspaceConfig.findProjectByName(depName);
 				if (depPC != null) {
-					computeOrder(depPC, orderedProjects, projectStack);
+					computeOrder(pWorkspaceConfig, pProjectCycles, depPC, orderedProjects, projectStack);
 				}
 			}
 
@@ -208,12 +221,4 @@ public class ProjectBuildOrderInfo implements IOrderInfo<ProjectConfigSnapshot> 
 		return pc.getDependencies();
 	}
 
-	/** Report cycle. */
-	protected void reportDependencyCycle(String projectName) {
-		ProjectBuilder pm = workspaceManager.getProjectBuilder(projectName);
-		if (pm != null) { // can be null if project not on disk
-			String msg = "Project has cyclic dependencies";
-			pm.reportProjectIssue(msg, CYCLIC_PROJECT_DEPENDENCIES, Severity.ERROR);
-		}
-	}
 }
