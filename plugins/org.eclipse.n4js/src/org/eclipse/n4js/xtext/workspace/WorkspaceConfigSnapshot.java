@@ -193,7 +193,8 @@ public class WorkspaceConfigSnapshot {
 		int result = 1;
 		result = prime * result + ((name2Project == null) ? 0 : name2Project.hashCode());
 		result = prime * result + ((path == null) ? 0 : path.hashCode());
-		// note: no need to consider the lookup maps "projectPath2Project" and "sourceFolderPath2Project"
+		// note: no need to consider "projectBuildOrderInfo" and the lookup maps "projectPath2Project" and
+		// "sourceFolderPath2Project"
 		return result;
 	}
 
@@ -216,7 +217,8 @@ public class WorkspaceConfigSnapshot {
 				return false;
 		} else if (!path.equals(other.path))
 			return false;
-		// note: no need to check the lookup maps "projectPath2Project" and "sourceFolderPath2Project"
+		// note: no need to check "projectBuildOrderInfo" and the lookup maps "projectPath2Project" and
+		// "sourceFolderPath2Project"
 		return true;
 	}
 
