@@ -69,8 +69,8 @@ public class ProjectBuildOrderInfo implements IOrderInfo<ProjectConfigSnapshot> 
 
 				if (!visitedAlready.contains(pc) && sortedProjects.indexOf(pc) < iteratorIndex) {
 					String currentProjectName = current().getName();
-					throw new IllegalStateException("Dependency-inverse visit order not supported. (From "
-							+ currentProjectName + " to " + projectName + ".) Override <> for this use case.");
+					throw new IllegalStateException("Dependency-inverse visit order not supported: from "
+							+ currentProjectName + " to " + projectName);
 				}
 			}
 			return this;
