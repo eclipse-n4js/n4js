@@ -129,4 +129,42 @@ class CyclicDependenciesBuilderTest extends AbstractIncrementalBuilderTest {
 		
 		assertNoIssues();
 	}
+
+	@Test
+	def void testOnlyDirtyStateBuildInsideCycle() throws IOException {
+		testWorkspaceManager.createTestOnDisk(testData2);
+
+		startAndWaitForLspServer();
+		
+		assertIssues(
+			"P1/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
+			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"]
+		);
+		
+		openFile("M1");
+		
+		changeOpenedFile("M1", "export public class C1 {" -> "export public class C1 { #");
+		
+		assertIssues(
+			"P1/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
+			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
+			"M1"              -> #["(Error, [0:25 - 1:0], extraneous input '#\\n' expecting '}')"]
+		);
+		
+		saveOpenedFile("M1");
+		
+		assertIssues(
+			"P1/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
+			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
+			"M1"              -> #["(Error, [0:25 - 1:0], extraneous input '#\\n' expecting '}')"]
+		);
+		
+		closeFile("M1");
+		
+		assertIssues(
+			"P1/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
+			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"]
+		);
+		
+	}
 }
