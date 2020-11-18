@@ -126,7 +126,7 @@ public class XBuildRequest {
 
 	/** Setter. */
 	public void setDirtyFiles(Collection<URI> dirtyFiles) {
-		this.dirtyFiles = Collections.unmodifiableCollection(dirtyFiles);
+		this.dirtyFiles = Collections.unmodifiableCollection(new ArrayList<>(dirtyFiles));
 	}
 
 	/** Getter. */
@@ -136,7 +136,7 @@ public class XBuildRequest {
 
 	/** Setter. */
 	public void setDeletedFiles(Collection<URI> deletedFiles) {
-		this.deletedFiles = Collections.unmodifiableCollection(deletedFiles);
+		this.deletedFiles = Collections.unmodifiableCollection(new ArrayList<>(deletedFiles));
 	}
 
 	/** Getter. */
@@ -146,7 +146,7 @@ public class XBuildRequest {
 
 	/** Setter. */
 	public void setExternalDeltas(Collection<IResourceDescription.Delta> externalDeltas) {
-		this.externalDeltas = Collections.unmodifiableCollection(externalDeltas);
+		this.externalDeltas = Collections.unmodifiableCollection(new ArrayList<>(externalDeltas));
 	}
 
 	/**
