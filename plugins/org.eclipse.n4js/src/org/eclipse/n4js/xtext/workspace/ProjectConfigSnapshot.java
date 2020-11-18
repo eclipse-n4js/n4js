@@ -31,8 +31,9 @@ public class ProjectConfigSnapshot {
 	private final ImmutableSet<SourceFolderSnapshot> sourceFolders;
 
 	/** See {@link ProjectConfigSnapshot}. */
-	public ProjectConfigSnapshot(String name, URI path, boolean indexOnly, Iterable<String> dependencies,
-			Iterable<? extends SourceFolderSnapshot> sourceFolders, Iterable<? extends URI> projectDescriptionUris) {
+	public ProjectConfigSnapshot(String name, URI path, boolean indexOnly,
+			Iterable<String> dependencies, Iterable<? extends SourceFolderSnapshot> sourceFolders,
+			Iterable<? extends URI> projectDescriptionUris) {
 
 		this.name = name;
 		this.path = path;
