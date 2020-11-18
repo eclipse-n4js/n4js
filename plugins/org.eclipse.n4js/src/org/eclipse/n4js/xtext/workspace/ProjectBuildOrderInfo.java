@@ -58,20 +58,25 @@ public class ProjectBuildOrderInfo implements IOrderInfo<ProjectConfigSnapshot> 
 		final protected Set<String> visitProjectNames = new HashSet<>();
 		/** Set of all projects that have already visited by this iterator */
 		final protected LinkedHashSet<ProjectConfigSnapshot> visitedAlready = new LinkedHashSet<>();
-
-		private int iteratorIndex = -1;
+		/** The last visited project or null */
+		protected ProjectConfigSnapshot lastVisited;
+		/** The iterator index of the next project to visit */
+		protected int iteratorIndex = -1;
 
 		@Override
 		public ProjectBuildOrderIterator visit(Collection<? extends ProjectConfigSnapshot> projectConfigs) {
 			for (ProjectConfigSnapshot pc : projectConfigs) {
 				String projectName = pc.getName();
-				visitProjectNames.add(projectName);
 
-				if (!visitedAlready.contains(pc) && sortedProjects.indexOf(pc) < iteratorIndex) {
+				if (!visitedAlready.contains(pc) && sortedProjects.indexOf(pc) < sortedProjects.indexOf(lastVisited)) {
 					String currentProjectName = current().getName();
 					throw new IllegalStateException("Dependency-inverse visit order not supported: from "
 							+ currentProjectName + " to " + projectName);
 				}
+
+				visitProjectNames.add(projectName);
+				iteratorIndex = sortedProjects.indexOf(lastVisited);
+				moveNext();
 			}
 			return this;
 		}
@@ -112,14 +117,7 @@ public class ProjectBuildOrderInfo implements IOrderInfo<ProjectConfigSnapshot> 
 
 		/** @return the current {@link ProjectConfigSnapshot} of this iterator */
 		public ProjectConfigSnapshot current() {
-			if (notStarted()) {
-				throw new IllegalStateException("Must call next() before calling current()");
-			}
-			if (isDone()) {
-				return sortedProjects.get(sortedProjects.size() - 1);
-			}
-			return sortedProjects.get(iteratorIndex);
-
+			return lastVisited;
 		}
 
 		@Override
@@ -140,25 +138,27 @@ public class ProjectBuildOrderInfo implements IOrderInfo<ProjectConfigSnapshot> 
 				throw new NoSuchElementException();
 			}
 
-			ProjectConfigSnapshot next = current();
+			ProjectConfigSnapshot next = atIndex();
 			visitedAlready.add(next);
+			lastVisited = next;
 
 			moveNext();
 
 			return next;
 		}
 
+		private ProjectConfigSnapshot atIndex() {
+			return sortedProjects.get(iteratorIndex);
+
+		}
+
 		private boolean notStarted() {
 			return iteratorIndex < 0;
 		}
 
-		private boolean isDone() {
-			return iteratorIndex >= sortedProjects.size();
-		}
-
 		private void moveNext() {
 			iteratorIndex++;
-			while (hasNext() && !visitProjectNames.contains(current().getName())) {
+			while (hasNext() && !visitProjectNames.contains(atIndex().getName())) {
 				iteratorIndex++;
 			}
 		}
