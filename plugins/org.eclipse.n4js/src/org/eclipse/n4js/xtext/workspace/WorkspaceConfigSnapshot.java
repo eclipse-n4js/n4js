@@ -126,6 +126,16 @@ public class WorkspaceConfigSnapshot {
 		return null;
 	}
 
+	/** Return true iff the given project is part of a dependency cycle */
+	public boolean isInDependencyCycle(String projectName) {
+		for (List<String> projectCycle : projectBuildOrderInfo.projectCycles) {
+			if (projectCycle.contains(projectName)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	/** Return an empty workspace snapshot. */
 	public WorkspaceConfigSnapshot clear() {
 		return new WorkspaceConfigSnapshot(getPath(), Collections.emptyList(), new ProjectBuildOrderInfo.Provider());
