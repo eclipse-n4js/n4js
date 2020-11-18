@@ -32,17 +32,19 @@ export function getDTSMode(file: ts.SourceFile): model.DTSMode {
 	if (!file.isDeclarationFile) {
 		return model.DTSMode.NONE;
 	}
-	let result = model.DTSMode.MODULE;
-	const children = file.getChildren();
-	file.forEachChild(node => {
-		if (ts.isExportAssignment(node) && node.isExportEquals) {
-			result = model.DTSMode.LEGACY;
+	const containsExportEquals = getExportEquals(file) !== undefined;
+	return containsExportEquals ? model.DTSMode.LEGACY : model.DTSMode.MODULE;
+}
+
+export function getExportEquals(file: ts.SourceFile): ts.ExportAssignment {
+	if (file.isDeclarationFile) {
+		for (const child of getAllChildNodes(file)) {
+			if (ts.isExportAssignment(child) && child.isExportEquals) {
+				return child;
+			}
 		}
-	});
-	return result;
-	// does not work:
-	// const containsExportEquals = file.getChildren().some(node => ts.isExportAssignment(node) && node.isExportEquals);
-	// return containsExportEquals ? DTSMode.LEGACY : DTSMode.MODULE;
+	}
+	return undefined;
 }
 
 export function getVarDeclKeyword(node: ts.VariableDeclarationList): 'var' | 'let' | 'const' {

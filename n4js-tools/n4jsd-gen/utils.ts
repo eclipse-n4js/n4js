@@ -163,3 +163,25 @@ export function lastSegmentOfPath(path: string) {
 	}
 	return path;
 }
+
+export function testFlagsOR(value: number, ...flags: number[]) {
+	for (const flag of flags) {
+		if (testFlag(value, flag)) {
+			return true;
+		}
+	}
+	return false;
+}
+
+export function testFlagsAND(value: number, ...flags: number[]) {
+	for (const flag of flags) {
+		if (!testFlag(value, flag)) {
+			return false;
+		}
+	}
+	return true;
+}
+
+export function testFlag(value: number, flag: number) {
+	return (value & flag) === flag;
+}

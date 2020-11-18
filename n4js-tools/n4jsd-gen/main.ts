@@ -95,7 +95,7 @@ function processFileOrFolder(inputPath: string, opts: utils.Options) {
 			console.log("Writing n4jsd-file: " + trgtN4jsdPath);
 		}
 		fs.mkdirSync(utils.trimSegmentsFromPath(trgtN4jsdPath, 1), { recursive: true });
-		fs.writeFileSync(trgtN4jsdPath, n4jsdStr);
+		fs.writeFileSync(trgtN4jsdPath, n4jsdStr + "\n");
 	}
 }
 

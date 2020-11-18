@@ -105,6 +105,7 @@ class Emitter {
 		if (fun.exported) {
 			buff.push("export ");
 		}
+		buff.push("external ");
 		buff.push("function ");
 		buff.push(fun.name);
 		this.emitSignature(fun.signatures[0]);
@@ -113,6 +114,10 @@ class Emitter {
 
 	emitType(type: Type) {
 		const buff = this.buff;
+		if (type.exported) {
+			buff.push("export ");
+		}
+		buff.push("external ");
 		buff.pushln(type.kind, ' ', type.name, ' {');
 		buff.indent();
 		for (const m of type.members) {

@@ -11,6 +11,7 @@ class Converter {
 	readonly program: ts.Program;
 	readonly checker: ts.TypeChecker;
 
+	legacyExportedNamespace: ts.Symbol;
 	readonly issues: utils.Issue[] = [];
 
 	constructor(program: ts.Program) {
@@ -19,16 +20,26 @@ class Converter {
 	}
 
 	convertScript(sourceFilePath: string): model.Script {
+		// clean up
+		this.legacyExportedNamespace = undefined;
 		this.issues.length = 0;
 
-		const result = new model.Script();
 		const sourceFile = this.program.getSourceFile(sourceFilePath);
-		result.mode = utils_ts.getDTSMode(sourceFile);
-		sourceFile.forEachChild(node => {
-			const elem = this.convertNode(node);
-			if (elem !== undefined) {
-				result.topLevelElements.push(...elem);
+		const dtsMode = utils_ts.getDTSMode(sourceFile);
+
+		if (dtsMode == model.DTSMode.LEGACY) {
+			const legacyExport = utils_ts.getExportEquals(sourceFile);
+			const sym = this.checker.getSymbolAtLocation(legacyExport.expression);
+			if (utils.testFlagsOR(sym.flags, ts.SymbolFlags.ValueModule, ts.SymbolFlags.NamespaceModule)) {
+				this.legacyExportedNamespace = sym;
 			}
+		}
+
+		const result = new model.Script();
+		result.mode = dtsMode;
+		sourceFile.forEachChild(node => {
+			const elems = this.convertNode(node);
+			result.topLevelElements.push(...elems);
 		});
 		result.issues.push(...this.issues);
 
@@ -37,13 +48,15 @@ class Converter {
 
 	convertNode(node: ts.Node): model.ExportableElement[] {
 		if (node.kind === ts.SyntaxKind.EndOfFileToken) {
-			return undefined; // ignore
+			return []; // ignore
 		}
 		const typeKind = utils_ts.getTypeKind(node);
 		if (ts.isImportDeclaration(node)) {
-			return undefined; // TODO!!!
+			return []; // TODO!!!
 		} else if (ts.isExportAssignment(node) && !node.isExportEquals) { // default exports
-			return undefined; // TODO!!!
+			return []; // TODO!!!
+		} else if (ts.isExportAssignment(node) && node.isExportEquals) {
+			return []; // was handled in #convertScript(), ignore it here
 		} else if (ts.isVariableDeclarationList(node)) {
 			return this.convertVariableDeclList(node); // TODO can a VariableDeclarationList even appear here?
 		} else if (ts.isFunctionDeclaration(node)) {
@@ -59,13 +72,22 @@ class Converter {
 				// something like "export var someStr: string, someNum: number;"
 				return this.convertVariableDeclList(children[1] as ts.VariableDeclarationList);
 			}
+		} else if (ts.isModuleDeclaration(node)) {
+			const sym = this.checker.getSymbolAtLocation(node.name);
+			if (sym === this.legacyExportedNamespace) {
+				const result = [];
+				node.body.forEachChild(child => {
+					result.push(...this.convertNode(child));
+				});
+				return result;
+			}
 		}
 		// create issue for unsupported node
 		const nodeKindStr = ts.SyntaxKind[node.kind];
 		const offendingCode = utils_ts.getSourceCodeForNode(node, "    |");
 		const error = utils.error("unsupported construct " + nodeKindStr + ":\n" + offendingCode);
 		this.issues.push(error);
-		return undefined;
+		return [];
 	}
 
 	convertVariableDeclList(node: ts.VariableDeclarationList): model.Variable[] {
