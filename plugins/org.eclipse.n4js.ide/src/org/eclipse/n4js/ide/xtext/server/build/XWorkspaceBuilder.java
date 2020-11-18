@@ -70,9 +70,13 @@ public class XWorkspaceBuilder {
 		}
 
 		@Override
-		public XBuildRequest getBuildRequest(String projectName, Set<URI> changedFiles,
-				Set<URI> deletedFiles, List<Delta> externalDeltas) {
-			XBuildRequest result = delegate.getBuildRequest(projectName, changedFiles, deletedFiles, externalDeltas);
+		public XBuildRequest getBuildRequest(WorkspaceConfigSnapshot workspaceConfig,
+				ProjectConfigSnapshot projectConfig, Set<URI> changedFiles, Set<URI> deletedFiles,
+				List<Delta> externalDeltas) {
+
+			XBuildRequest result = delegate.getBuildRequest(workspaceConfig, projectConfig, changedFiles, deletedFiles,
+					externalDeltas);
+
 			result.addAffectedListener(affected::add);
 			return result;
 		}
@@ -245,9 +249,9 @@ public class XWorkspaceBuilder {
 		return cancelIndicator -> {
 			for (ProjectBuilder projectBuilder : workspaceManager.getProjectBuilders()) {
 
-				XBuildRequest buildRequest = buildRequestFactory.getBuildRequest(
-						projectBuilder.getProjectConfig().getName(),
-						Collections.emptySet(), Collections.emptySet(), Collections.emptyList());
+				XBuildRequest buildRequest = buildRequestFactory.getBuildRequest(workspaceManager.getWorkspaceConfig(),
+						projectBuilder.getProjectConfig(), Collections.emptySet(), Collections.emptySet(),
+						Collections.emptyList());
 
 				projectBuilder.doClean(buildRequest::afterDelete, CancelIndicator.NullImpl);
 			}
