@@ -84,7 +84,7 @@ public class XWorkspaceManager {
 		public final WorkspaceChanges changes;
 		/** Former contents of the projects that were removed. */
 		public final List<IResourceDescription> removedProjectsContents;
-		/** Former contents of the projects that were removed. */
+		/** Projects that have been or are still parts of dependency cycles. */
 		public final List<String> cyclicProjectChanges;
 
 		/** Creates a new {@link UpdateResult}. */

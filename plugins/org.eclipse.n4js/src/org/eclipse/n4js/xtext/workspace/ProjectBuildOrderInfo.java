@@ -23,7 +23,6 @@ import java.util.Set;
 import org.eclipse.xtext.resource.IResourceDescription;
 
 import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 import com.google.inject.Inject;
@@ -57,17 +56,10 @@ public class ProjectBuildOrderInfo implements IOrderInfo<ProjectConfigSnapshot> 
 		 * projects are iterated over that are contained in this set
 		 */
 		final protected Set<String> visitProjectNames = new HashSet<>();
-		/** Iterator delegate */
-		final protected Iterator<ProjectConfigSnapshot> iteratorDelegate;
-		/** Iterator delegate */
+		/** Set of all projects that have already visited by this iterator */
 		final protected LinkedHashSet<ProjectConfigSnapshot> visitedAlready = new LinkedHashSet<>();
 
 		private int iteratorIndex = -1;
-
-		ProjectBuildOrderIterator() {
-			this.iteratorDelegate = Iterables
-					.filter(sortedProjects, input -> visitProjectNames.contains(input.getName())).iterator();
-		}
 
 		@Override
 		public ProjectBuildOrderIterator visit(Collection<? extends ProjectConfigSnapshot> projectConfigs) {
