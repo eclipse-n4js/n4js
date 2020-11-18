@@ -10,10 +10,12 @@
  */
 package org.eclipse.n4js.internal.lsp;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.packagejson.PackageJsonProperties;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
@@ -39,7 +41,10 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 			ProjectType type, N4JSProjectName definesPackage, boolean indexOnly,
 			Iterable<String> dependencies, Iterable<String> sortedDependencies,
 			Iterable<? extends SourceFolderSnapshot> sourceFolders) {
-		super(name, path, indexOnly, dependencies, sourceFolders);
+
+		super(name, path, indexOnly, dependencies, sourceFolders,
+				Collections.singleton(path.trimSegments(1).appendSegment(N4JSGlobals.PACKAGE_JSON)));
+
 		this.type = type;
 		this.definesPackage = definesPackage;
 		this.sortedDependencies = ImmutableList.copyOf(sortedDependencies);

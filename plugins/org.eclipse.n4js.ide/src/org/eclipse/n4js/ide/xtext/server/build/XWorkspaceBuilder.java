@@ -347,6 +347,14 @@ public class XWorkspaceBuilder {
 					+ "files dirty/deleted: " + dirtyFiles.size() + "/" + deletedFiles.size() + ").");
 		}
 
+		for (String cyclicProject : updateResult.cyclicProjectChanges) {
+			ProjectConfigSnapshot projectConfig = workspaceManager.getWorkspaceConfig()
+					.findProjectByName(cyclicProject);
+
+			Collection<URI> projectDescriptionUris = projectConfig.getProjectDescriptionUris();
+			dirtyFiles.addAll(projectDescriptionUris);
+		}
+
 		if (dirtyFiles.isEmpty() && deletedFiles.isEmpty() && deletedProjects.isEmpty()) {
 			return new ResourceDescriptionChangeEvent(Collections.emptyList());
 		}
