@@ -105,9 +105,8 @@ class CyclicDependenciesBuilderTest extends AbstractIncrementalBuilderTest {
 		saveOpenedFile("P1/package.json");
 		
 		assertIssues(
-			"P1/package.json" -> #["(Error, [15:24 - 15:28], Dependency cycle of the projects: P1, P2.)"]
-			// TODO GH-1967
-			//, "P2/package.json" -> #["(Error, [15:24 - 15:28], Dependency cycle of the projects: P1, P2.)"]
+			"P1/package.json" -> #["(Error, [15:24 - 15:28], Dependency cycle of the projects: P1, P2.)"],
+			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"]
 		);
 	}
 
