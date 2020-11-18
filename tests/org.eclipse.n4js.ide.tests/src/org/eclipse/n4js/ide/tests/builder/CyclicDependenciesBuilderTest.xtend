@@ -118,10 +118,7 @@ class CyclicDependenciesBuilderTest extends AbstractIncrementalBuilderTest {
 		
 		assertIssues(
 			"P1/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
-			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
-			"M2" -> #[
-				"(Error, [0:17 - 0:21], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
-				"(Error, [1:9 - 1:11], Couldn't resolve reference to Type 'C1'.)"]
+			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"]
 		);
 		
 		openFile("P1/package.json");
