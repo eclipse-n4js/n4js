@@ -177,14 +177,15 @@ public class XWorkspaceManager {
 		updateProjects(changes.getChangedProjects());
 		addProjects(changes.getAddedProjects());
 
-		Collection<List<String>> oldCycles = workspaceIndex.getWorkspaceConfigSnapshot().getProjectBuildOrderInfo()
-				.getProjectCycles();
+		Collection<ImmutableList<String>> oldCycles = workspaceIndex.getWorkspaceConfigSnapshot()
+				.getProjectBuildOrderInfo().getProjectCycles();
 
 		workspaceConfigSnapshot = workspaceIndex.changeOrRemoveProjects(
 				Iterables.concat(changes.getAddedProjects(), changes.getChangedProjects()),
 				Iterables.transform(changes.getRemovedProjects(), ProjectConfigSnapshot::getName));
 
-		Collection<List<String>> newCycles = workspaceConfigSnapshot.getProjectBuildOrderInfo().getProjectCycles();
+		Collection<ImmutableList<String>> newCycles = workspaceConfigSnapshot.getProjectBuildOrderInfo()
+				.getProjectCycles();
 
 		Set<String> cyclicProjectChanges = new HashSet<>();
 		for (List<String> cycle : Iterables.concat(oldCycles, newCycles)) {

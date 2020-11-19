@@ -10,7 +10,6 @@ package org.eclipse.n4js.ide.xtext.server.build;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -22,6 +21,8 @@ import org.eclipse.xtext.util.UriUtil;
 import org.eclipse.xtext.validation.Issue;
 
 import com.google.common.base.StandardSystemProperty;
+import com.google.common.collect.ImmutableCollection;
+import com.google.common.collect.ImmutableList;
 
 /**
  * @author Jan Koehnlein - Initial contribution and API
@@ -33,11 +34,11 @@ public class XBuildRequest {
 
 	private URI baseDir;
 
-	private Collection<URI> dirtyFiles = Collections.emptyList();
+	private ImmutableCollection<URI> dirtyFiles = ImmutableList.of();
 
-	private Collection<URI> deletedFiles = Collections.emptyList();
+	private ImmutableCollection<URI> deletedFiles = ImmutableList.of();
 
-	private Collection<IResourceDescription.Delta> externalDeltas = Collections.emptyList();
+	private ImmutableCollection<IResourceDescription.Delta> externalDeltas = ImmutableList.of();
 
 	private ResourceDescriptionsData index;
 
@@ -126,7 +127,7 @@ public class XBuildRequest {
 
 	/** Setter. */
 	public void setDirtyFiles(Collection<URI> dirtyFiles) {
-		this.dirtyFiles = Collections.unmodifiableCollection(new ArrayList<>(dirtyFiles));
+		this.dirtyFiles = ImmutableList.copyOf(dirtyFiles);
 	}
 
 	/** Getter. */
@@ -136,7 +137,7 @@ public class XBuildRequest {
 
 	/** Setter. */
 	public void setDeletedFiles(Collection<URI> deletedFiles) {
-		this.deletedFiles = Collections.unmodifiableCollection(new ArrayList<>(deletedFiles));
+		this.deletedFiles = ImmutableList.copyOf(deletedFiles);
 	}
 
 	/** Getter. */
@@ -146,7 +147,7 @@ public class XBuildRequest {
 
 	/** Setter. */
 	public void setExternalDeltas(Collection<IResourceDescription.Delta> externalDeltas) {
-		this.externalDeltas = Collections.unmodifiableCollection(new ArrayList<>(externalDeltas));
+		this.externalDeltas = ImmutableList.copyOf(externalDeltas);
 	}
 
 	/**
