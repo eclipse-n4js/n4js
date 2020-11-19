@@ -7,6 +7,13 @@ export enum DTSMode {
 	LEGACY
 }
 
+export class Script {
+	mode: DTSMode = DTSMode.NONE;
+	imports: Import[] = [];
+	topLevelElements: ExportableElement[] = [];
+	issues: utils.Issue[] = [];
+}
+
 export abstract class Import {
 	moduleSpecifier: string;
 }
@@ -28,22 +35,6 @@ export abstract class ExportableElement extends NamedElement {
 	exported: boolean;
 }
 
-export class Parameter extends NamedElement {
-	typeStr: string = 'any+';
-}
-
-export class Signature {
-	parameters: Parameter[] = [];
-	/** Will be undefined iff this signature belongs to a constructor. */
-	returnTypeStr?: string;
-}
-
-export class Member extends NamedElement {
-	kind: 'ctor' | 'field' | 'getter' | 'setter' | 'method';
-	typeStr?: string;
-	signatures?: Signature[];
-}
-
 export class Variable extends ExportableElement {
 	keyword: 'var' | 'let' | 'const';
 	typeStr: string = 'any+';
@@ -58,11 +49,20 @@ export class Type extends ExportableElement {
 	members: Member[] = [];
 }
 
-export class Script {
-	mode: DTSMode = DTSMode.NONE;
-	imports: Import[] = [];
-	topLevelElements: ExportableElement[] = [];
-	issues: utils.Issue[] = [];
+export class Member extends NamedElement {
+	kind: 'ctor' | 'field' | 'getter' | 'setter' | 'method';
+	typeStr?: string;
+	signatures?: Signature[];
+}
+
+export class Signature {
+	parameters: Parameter[] = [];
+	/** Will be undefined iff this signature belongs to a constructor. */
+	returnTypeStr?: string;
+}
+
+export class Parameter extends NamedElement {
+	typeStr: string = 'any+';
 }
 
 
