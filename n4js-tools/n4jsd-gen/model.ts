@@ -7,6 +7,19 @@ export enum DTSMode {
 	LEGACY
 }
 
+export abstract class Import {
+	moduleSpecifier: string;
+}
+
+export class NamespaceImport extends Import {
+	namespaceName: string;
+}
+
+export class NamedImport extends Import {
+	importedElementName: string;
+	aliasName?: string;
+}
+
 export abstract class NamedElement {
 	name: string;
 }
@@ -46,6 +59,7 @@ export class Type extends ExportableElement {
 
 export class Script {
 	mode: DTSMode = DTSMode.NONE;
+	imports: Import[] = [];
 	topLevelElements: ExportableElement[] = [];
 	issues: utils.Issue[] = [];
 }
@@ -67,6 +81,16 @@ class Emitter {
 
 	emitScript(script: Script) {
 		const buff = this.buff;
+		if (script.imports.length > 0) {
+			script.imports.forEach((elem, idx) => {
+				if (idx > 0) {
+					buff.pushln();
+				}
+				this.emitImport(elem);
+			});
+			buff.pushln();
+			buff.pushln();
+		}
 		script.topLevelElements.forEach((elem, idx) => {
 			if (idx > 0) {
 				buff.pushln();
@@ -74,6 +98,23 @@ class Emitter {
 			}
 			this.emitExportableElement(elem);
 		});
+	}
+
+	emitImport(elem: Import) {
+		const buff = this.buff;
+		buff.push("import ");
+		if (elem instanceof NamespaceImport) {
+			buff.push("* as ", elem.namespaceName, " ");
+		} else if (elem instanceof NamedImport) {
+			buff.push("{ ", elem.importedElementName);
+			if (elem.aliasName !== undefined) {
+				buff.push(" as ", elem.aliasName);
+			}
+			buff.push(" } ");
+		} else {
+			throw "unsupported sub-class of Import";
+		}
+		buff.push("from \"", elem.moduleSpecifier, "\";");
 	}
 
 	emitExportableElement(elem: ExportableElement) {

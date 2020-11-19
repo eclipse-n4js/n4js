@@ -4,7 +4,7 @@ import * as path from "path";
 import * as glob from "glob"
 
 import * as model from "./model";
-import { convertScript } from "./convert";
+import { Converter } from "./convert";
 import * as utils from "./utils";
 import { exitWithError } from "./utils";
 
@@ -42,7 +42,7 @@ function processFileOrFolder(inputPath: string, opts: utils.Options) {
 	if (stats.isFile() && inputPath.endsWith(".d.ts")) {
 		sourceDtsFilePaths.push(inputPath);
 	} else if (stats.isDirectory()) {
-		sourceProjectPath = inputPath;
+		sourceProjectPath = path.isAbsolute(inputPath) ? inputPath : path.resolve(inputPath);
 		const globStr = utils.appendToPath(inputPath, "**/*.d.ts");
 		sourceDtsFilePaths.push(...glob.sync(globStr, {}));
 		if (sourceDtsFilePaths.length === 0) {
@@ -55,10 +55,11 @@ function processFileOrFolder(inputPath: string, opts: utils.Options) {
 	}
 
 	const program = ts.createProgram(sourceDtsFilePaths, { allowJs: true });
+	const converter = new Converter(program, sourceProjectPath);
 	const scripts = new Map<string,model.Script>();
 	let hasIssues = false;
 	for (const srcDtsPath of sourceDtsFilePaths) {
-		const script = convertScript(program, srcDtsPath);
+		const script = converter.convertScript(srcDtsPath);
 		scripts.set(srcDtsPath, script);
 		hasIssues = hasIssues || script.issues.length > 0;
 	}
