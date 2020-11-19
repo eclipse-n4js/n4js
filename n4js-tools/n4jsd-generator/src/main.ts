@@ -1,7 +1,7 @@
 import * as ts from "typescript";
-import * as fs from "fs";
-import * as path from "path";
-import * as glob from "glob"
+import * as fs_lib from "fs";
+import * as path_lib from "path";
+import * as glob_lib from "glob"
 
 import * as model from "./model";
 import { Converter } from "./convert";
@@ -30,20 +30,20 @@ function runN4jsdGen(args: string[]) {
  * @param inputPath must point to a folder or a single '.d.ts' file.
  */
 function processFileOrFolder(inputPath: string, opts: utils.Options) {
-	if (!fs.existsSync(inputPath)) {
+	if (!fs_lib.existsSync(inputPath)) {
 		logError("does not exist: " + inputPath);
 		return;
 	}
 
 	let sourceProjectPath = undefined;
 	const sourceDtsFilePaths = [] as string[];
-	const stats = fs.statSync(inputPath);
+	const stats = fs_lib.statSync(inputPath);
 	if (stats.isFile() && inputPath.endsWith(".d.ts")) {
 		sourceDtsFilePaths.push(inputPath);
 	} else if (stats.isDirectory()) {
-		sourceProjectPath = path.isAbsolute(inputPath) ? inputPath : path.resolve(inputPath);
-		const globStr = path.join(inputPath, "**", "*.d.ts");
-		sourceDtsFilePaths.push(...glob.sync(globStr, {}));
+		sourceProjectPath = path_lib.isAbsolute(inputPath) ? inputPath : path_lib.resolve(inputPath);
+		const globStr = path_lib.join(inputPath, "**", "*.d.ts");
+		sourceDtsFilePaths.push(...glob_lib.sync(globStr, {}));
 		if (sourceDtsFilePaths.length === 0) {
 			logError("no '.d.ts' files found in folder: " + inputPath);
 			return;
@@ -94,21 +94,21 @@ function processFileOrFolder(inputPath: string, opts: utils.Options) {
 		if (opts.verbose) {
 			console.log("Writing n4jsd-file: " + trgtN4jsdPath);
 		}
-		fs.mkdirSync(path.dirname(trgtN4jsdPath), { recursive: true });
-		fs.writeFileSync(trgtN4jsdPath, n4jsdStr + "\n");
+		fs_lib.mkdirSync(path_lib.dirname(trgtN4jsdPath), { recursive: true });
+		fs_lib.writeFileSync(trgtN4jsdPath, n4jsdStr + "\n");
 	}
 }
 
 // TODO error handling!
 function createTargetProject(srcPath: string, opts: utils.Options): string {
-	const srcName = path.basename(srcPath);
+	const srcName = path_lib.basename(srcPath);
 	const trgtName = "@n4jsd/" + srcName;
 	const trgtPath = opts.outputPath !== undefined
-		? path.join(opts.outputPath, trgtName)
-		: path.dirname(srcPath);
-	fs.mkdirSync(trgtPath, { recursive: true });
+		? path_lib.join(opts.outputPath, trgtName)
+		: path_lib.dirname(srcPath);
+	fs_lib.mkdirSync(trgtPath, { recursive: true });
 
-	const srcPackageJsonPath = path.join(srcPath, utils.PACKAGE_JSON);
+	const srcPackageJsonPath = path_lib.join(srcPath, utils.PACKAGE_JSON);
 	const trgtPackageJson: any = {
 		name: trgtName,
 		repository: {
@@ -132,8 +132,8 @@ function createTargetProject(srcPath: string, opts: utils.Options): string {
 		}
 		// dependencies will be added below from original package.json
 	};
-	if (fs.existsSync(srcPackageJsonPath)) {
-		const srcPackageJsonStr = fs.readFileSync(srcPackageJsonPath).toString();
+	if (fs_lib.existsSync(srcPackageJsonPath)) {
+		const srcPackageJsonStr = fs_lib.readFileSync(srcPackageJsonPath).toString();
 		const srcPackageJson = JSON.parse(srcPackageJsonStr);
 		if (srcPackageJson) {
 			if (srcPackageJson.dependencies) {
@@ -144,8 +144,8 @@ function createTargetProject(srcPath: string, opts: utils.Options): string {
 			}
 		}
 	}
-	const trgtPackageJsonPath = path.join(trgtPath, utils.PACKAGE_JSON);
-	fs.writeFileSync(trgtPackageJsonPath, JSON.stringify(trgtPackageJson, undefined, "\t"));
+	const trgtPackageJsonPath = path_lib.join(trgtPath, utils.PACKAGE_JSON);
+	fs_lib.writeFileSync(trgtPackageJsonPath, JSON.stringify(trgtPackageJson, undefined, "\t"));
 
 	return trgtPath;
 }
@@ -157,8 +157,8 @@ function chooseTargetN4jsdPath(sourceDtsFilePath: string, sourceProjectPath: str
 		: sourceDtsFilePath;
 	let trgtN4jsdPath = srcPathWithoutExt + ".n4jsd";
 	if (sourceProjectPath !== undefined && targetProjectPath !== undefined) {
-		const projectRelativePath = path.relative(sourceProjectPath, trgtN4jsdPath);
-		trgtN4jsdPath = path.resolve(targetProjectPath, projectRelativePath);
+		const projectRelativePath = path_lib.relative(sourceProjectPath, trgtN4jsdPath);
+		trgtN4jsdPath = path_lib.resolve(targetProjectPath, projectRelativePath);
 	}
 	return trgtN4jsdPath;
 }

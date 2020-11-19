@@ -1,5 +1,5 @@
-import * as glob from "glob"
-import * as fs from "fs";
+import * as fs_lib from "fs";
+import * as glob_lib from "glob"
 
 export const PACKAGE_JSON = "package.json";
 
@@ -71,7 +71,7 @@ function resolveInputPathStr(opts: Options) {
 		if (!pathGlob.startsWith("/")) {
 			pathGlob = __dirname + "/" + pathGlob;
 		}
-		const currPaths = glob.sync(pathGlob, {});
+		const currPaths = glob_lib.sync(pathGlob, {});
 		if (currPaths.length === 0) {
 			opts.error = "input path does not exist: " + pathGlob;
 			continue;
@@ -80,11 +80,11 @@ function resolveInputPathStr(opts: Options) {
 	}
 	const errors = [] as string[];
 	for (const path of paths) {
-		if (!fs.existsSync(path)) {
+		if (!fs_lib.existsSync(path)) {
 			errors.push("input path does not exist: " + path);
 			continue;
 		}
-		const stats = fs.statSync(path);
+		const stats = fs_lib.statSync(path);
 		const valid = (stats.isFile() && path.endsWith(".d.ts")) || stats.isDirectory();
 		if (!valid) {
 			errors.push("neither a folder nor a '.d.ts' file: " + path);

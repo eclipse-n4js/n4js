@@ -1,5 +1,5 @@
 import * as ts from "typescript";
-import * as path from "path";
+import * as path_lib from "path";
 import * as model from "./model";
 import * as utils from "./utils";
 import * as utils_ts from "./utils_ts";
@@ -13,7 +13,7 @@ export class Converter {
 	readonly issues: utils.Issue[] = [];
 
 	constructor(program: ts.Program, projectPath?: string) {
-		if (projectPath !== undefined && !path.isAbsolute(projectPath)) {
+		if (projectPath !== undefined && !path_lib.isAbsolute(projectPath)) {
 			throw "projectPath must be absolute";
 		}
 
@@ -246,10 +246,10 @@ export class Converter {
 		let moduleSpecStr = moduleSpec.text;
 		if (moduleSpecStr.startsWith(".")) {
 			if (this.projectPath !== undefined) {
-				const srcFilePath = path.dirname(importDecl.getSourceFile().fileName);
-				const srcFilePathAbs = path.isAbsolute(srcFilePath) ? srcFilePath : path.resolve(srcFilePath);
-				const trgtFilePath = path.resolve(srcFilePathAbs, moduleSpecStr).normalize();
-				moduleSpecStr = path.relative(this.projectPath, trgtFilePath);
+				const srcFilePath = path_lib.dirname(importDecl.getSourceFile().fileName);
+				const srcFilePathAbs = path_lib.isAbsolute(srcFilePath) ? srcFilePath : path_lib.resolve(srcFilePath);
+				const trgtFilePath = path_lib.resolve(srcFilePathAbs, moduleSpecStr).normalize();
+				moduleSpecStr = path_lib.relative(this.projectPath, trgtFilePath);
 			} else {
 				this.issues.push(utils.error("cannot resolve relative module specifier in single-file mode: " + moduleSpecStr));
 			}
