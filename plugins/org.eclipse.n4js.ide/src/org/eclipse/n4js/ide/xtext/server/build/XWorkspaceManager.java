@@ -84,7 +84,11 @@ public class XWorkspaceManager {
 		public final WorkspaceChanges changes;
 		/** Former contents of the projects that were removed. */
 		public final List<IResourceDescription> removedProjectsContents;
-		/** Projects that have been or are still parts of dependency cycles. */
+		/**
+		 * Names of projects that have been or are now inside a dependency cycle before or after this update. Note that
+		 * {@link ProjectBuildOrderInfo#getProjectCycles()} of {@link WorkspaceConfigSnapshot} represents the new state
+		 * only.
+		 */
 		public final List<String> cyclicProjectChanges;
 
 		/** Creates a new {@link UpdateResult}. */
@@ -177,8 +181,8 @@ public class XWorkspaceManager {
 		updateProjects(changes.getChangedProjects());
 		addProjects(changes.getAddedProjects());
 
-		Collection<ImmutableList<String>> oldCycles = workspaceIndex.getWorkspaceConfigSnapshot()
-				.getProjectBuildOrderInfo().getProjectCycles();
+		Collection<ImmutableList<String>> oldCycles = workspaceConfigSnapshot.getProjectBuildOrderInfo()
+				.getProjectCycles();
 
 		workspaceConfigSnapshot = workspaceIndex.changeOrRemoveProjects(
 				Iterables.concat(changes.getAddedProjects(), changes.getChangedProjects()),
