@@ -158,6 +158,9 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	/** True: Proxies of IdentifierRefs are only resolved within the resource. Otherwise, the proxy is returned. */
 	private boolean suppressCrossFileResolutionOfIdentifierRef = false;
 	
+	/** True: Request will return all members according to receiver type and ignore whether read/write access restriction. */
+	private boolean suppressAccessKindOnMemberScopeRequest = false;
+	
 	public def TameAutoClosable newCrossFileResolutionSuppressor() {
 		val TameAutoClosable tac =  new TameAutoClosable() {
 			private boolean tmpSuppressCrossFileResolutionOfIdentifierRef = init();
@@ -252,7 +255,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	}
 
 	override getScopeForContentAssist(EObject context, EReference reference) {
-
+		suppressAccessKindOnMemberScopeRequest = true;
 		val scope = getScope(context, reference);
 
 		if (scope === IScope.NULLSCOPE) {
@@ -504,8 +507,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	 * In <pre>receiver.property</pre>, binds "property".
 	 *
 	 */
-	private def IScope scope_PropertyAccessExpression_property(ParameterizedPropertyAccessExpression propertyAccess,
-		EReference ref) {
+	private def IScope scope_PropertyAccessExpression_property(ParameterizedPropertyAccessExpression propertyAccess, EReference ref) {
 		val Expression receiver = propertyAccess.target;
 
 		// if accessing namespace import
@@ -524,7 +526,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		val staticAccess = typeRef instanceof TypeTypeRef;
 		val structFieldInitMode = typeRef.typingStrategy === TypingStrategy.STRUCTURAL_FIELD_INITIALIZER;
 		val checkVisibility = true;
-		return memberScopingHelper.createMemberScope(typeRef, propertyAccess, checkVisibility, staticAccess, structFieldInitMode);
+		return memberScopingHelper.createMemberScope(typeRef, propertyAccess, checkVisibility, staticAccess, structFieldInitMode, suppressAccessKindOnMemberScopeRequest);
 	}
 
 	private def IScope createScopeForNamespaceAccess(ModuleNamespaceVirtualType namespace, EObject context) {
@@ -715,7 +717,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 					// Prevent "Cannot resolve to element" error message of unknown attributes since
 					// we want to issue a warning instead
 					val memberScope = memberScopingHelper.createMemberScope(propsTypeRef, context, checkVisibility,
-						staticAccess, structFieldInitMode);
+						staticAccess, structFieldInitMode, suppressAccessKindOnMemberScopeRequest);
 					return new DynamicPseudoScope(memberScope);
 				} else {
 					val scope = getN4JSScope(context, reference);
