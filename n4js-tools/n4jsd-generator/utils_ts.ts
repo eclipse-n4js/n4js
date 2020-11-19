@@ -1,3 +1,4 @@
+import { RSA_NO_PADDING } from "constants";
 import * as ts from "typescript";
 import * as model from "./model";
 
@@ -26,6 +27,18 @@ export function traverse(sourceFile: ts.SourceFile, fn: (node: ts.Node, indent: 
 export function isExported(node: ts.Node): boolean {
 	return (ts.getCombinedModifierFlags(node as ts.Declaration) & ts.ModifierFlags.Export) !== 0
 		|| (!!node.parent && node.parent.kind === ts.SyntaxKind.SourceFile);
+}
+
+export function getAccessibility(node: ts.Declaration): model.Accessibility {
+	const flags = ts.getCombinedModifierFlags(node);
+	if ((flags & ts.ModifierFlags.Public) !== 0) {
+		return model.Accessibility.PUBLIC;
+	} else if ((flags & ts.ModifierFlags.Protected) !== 0) {
+		return model.Accessibility.PROTECTED;
+	} else if ((flags & ts.ModifierFlags.Private) !== 0) {
+		return model.Accessibility.PRIVATE;
+	}
+	return undefined;
 }
 
 export function getDTSMode(file: ts.SourceFile): model.DTSMode {

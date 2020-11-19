@@ -81,11 +81,7 @@ export class Converter {
 			}
 			return results;
 		}
-		// create issue for unsupported import
-		const nodeKindStr = ts.SyntaxKind[node.kind];
-		const offendingCode = utils_ts.getSourceCodeForNode(node);
-		const error = utils.error("unsupported kind of import " + nodeKindStr + ":\n" + offendingCode);
-		this.issues.push(error);
+		this.createIssueForUnsupportedNode(node, "import");
 		return [];
 	}
 
@@ -105,7 +101,7 @@ export class Converter {
 		} else if (ts.isFunctionDeclaration(node)) {
 			return [ this.convertFunction(node) ];
 		} else if (typeKind !== undefined) {
-			return [ this.convertType(node) ];
+			return [ this.convertType(node as ts.NamedDeclaration) ];
 		} else if (node.kind === ts.SyntaxKind.FirstStatement) {
 			const children = utils_ts.getAllChildNodes(node);
 			if (children.length === 2
@@ -125,11 +121,7 @@ export class Converter {
 				return result;
 			}
 		}
-		// create issue for unsupported node
-		const nodeKindStr = ts.SyntaxKind[node.kind];
-		const offendingCode = utils_ts.getSourceCodeForNode(node);
-		const error = utils.error("unsupported construct " + nodeKindStr + ":\n" + offendingCode);
-		this.issues.push(error);
+		this.createIssueForUnsupportedNode(node);
 		return [];
 	}
 
@@ -166,10 +158,9 @@ export class Converter {
 		return result;
 	}
 
-	private convertType(node: ts.Node): model.Type {
-		const name = (node as ts.NamedDeclaration).name;
-		const sym = this.checker.getSymbolAtLocation(name);
-		const kind = utils_ts.getTypeKind(sym.declarations[0]);
+	private convertType(node: ts.NamedDeclaration): model.Type {
+		const sym = this.checker.getSymbolAtLocation(node.name);
+		const kind = utils_ts.getTypeKind(node);
 
 		let result = new model.Type();
 		result.name = sym.getName();
@@ -177,34 +168,46 @@ export class Converter {
 		result.defSiteStructural = kind == 'class' || kind == 'interface' ? true : undefined;
 		result.exported = utils_ts.isExported(node);
 
-		sym.members?.forEach((member, name) => {
-			result.members.push(this.convertMember(member, sym));
+		sym.members?.forEach((symMember, name) => {
+			const member = this.convertMember(symMember, sym);
+			if (member !== undefined) {
+				result.members.push(member);
+			}
 		});
 
 		return result;
 	}
 
-	private convertMember(member: ts.Symbol, owner: ts.Symbol): model.Member {
-		const result = new model.Member();
+	private convertMember(symMember: ts.Symbol, symOwner: ts.Symbol): model.Member {
+		// we need an AST node; in case of overloading there will be several declarations (one per signature)
+		// but because relevant properties (kind, accessibility, etc.) will be the same in all cases we can
+		// simply use the first one as representative:
+		const nodeOfFirstDecl = symMember.declarations[0] as ts.NamedDeclaration;
 
-		const memberName = member.getName();
-		if (memberName == '__constructor') {
+		const result = new model.Member();
+		result.accessibility = utils_ts.getAccessibility(nodeOfFirstDecl);
+
+		if (ts.isConstructorDeclaration(nodeOfFirstDecl)) {
 			result.kind = 'ctor';
-			result.signatures = this.convertConstructSignatures(owner);
+			result.signatures = this.convertConstructSignatures(symOwner);
 			return result;
 		}
-		result.name = memberName;
 
-		const sigs = this.convertCallSignatures(member);
-		if (sigs.length > 0) {
+		result.name = symMember.getName();
+
+		if (ts.isPropertyDeclaration(nodeOfFirstDecl)) {
+			result.kind = 'field';
+			result.typeStr = this.convertTypeReferenceOfTypedSymbol(symMember);
+			return result;
+		} else if (ts.isMethodDeclaration(nodeOfFirstDecl)
+				|| ts.isMethodSignature(nodeOfFirstDecl)) {
+			const sigs = this.convertCallSignatures(symMember);
 			result.kind = 'method';
 			result.signatures = sigs;
 			return result;
 		}
-
-		result.kind = 'field';
-		result.typeStr = this.convertTypeReferenceOfTypedSymbol(member);
-		return result;
+		this.createIssueForUnsupportedNode(nodeOfFirstDecl, "member");
+		return undefined;
 	}
 
 	private convertConstructSignatures(somethingWithCtors: ts.Symbol): model.Signature[] {
@@ -269,5 +272,12 @@ export class Converter {
 	}
 	private convertTypeReference(node?: ts.TypeNode): string {
 		return node?.getText().trim();
+	}
+
+	private createIssueForUnsupportedNode(node: ts.Node, superKind: string = "node") {
+		const nodeKindStr = ts.SyntaxKind[node.kind];
+		const offendingCode = utils_ts.getSourceCodeForNode(node);
+		const error = utils.error("unsupported kind of " + superKind + ": " + nodeKindStr + "\n" + offendingCode);
+		this.issues.push(error);
 	}
 }

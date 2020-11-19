@@ -7,6 +7,12 @@ export enum DTSMode {
 	LEGACY
 }
 
+export enum Accessibility {
+	PUBLIC,
+	PROTECTED,
+	PRIVATE
+}
+
 export class Script {
 	mode: DTSMode = DTSMode.NONE;
 	imports: Import[] = [];
@@ -37,7 +43,7 @@ export abstract class ExportableElement extends NamedElement {
 
 export class Variable extends ExportableElement {
 	keyword: 'var' | 'let' | 'const';
-	typeStr: string = 'any+';
+	typeStr: string;
 }
 
 export class Function extends ExportableElement {
@@ -52,6 +58,7 @@ export class Type extends ExportableElement {
 
 export class Member extends NamedElement {
 	kind: 'ctor' | 'field' | 'getter' | 'setter' | 'method';
+	accessibility: Accessibility;
 	typeStr?: string;
 	signatures?: Signature[];
 }
@@ -177,6 +184,10 @@ class Emitter {
 
 	emitMember(member: Member) {
 		const buff = this.buff;
+		if (member.accessibility !== undefined) {
+			this.emitAccessibility(member);
+			buff.push(" ");
+		}
 		switch(member.kind) {
 			case 'ctor':
 				buff.push("constructor");
@@ -219,5 +230,20 @@ class Emitter {
 	emitParameter(param: Parameter) {
 		const buff = this.buff;
 		buff.push(param.name, ": ", param.typeStr);
+	}
+
+	emitAccessibility(member: Member) {
+		const buff = this.buff;
+		if (member.accessibility === undefined) {
+			// ignore
+		} else if (member.accessibility == Accessibility.PUBLIC) {
+			buff.push("public");
+		} else if (member.accessibility == Accessibility.PROTECTED) {
+			buff.push("protected");
+		} else if (member.accessibility == Accessibility.PRIVATE) {
+			buff.push("private");
+		} else {
+			throw "unkown member accessibility: " + Accessibility[member.accessibility];
+		}
 	}
 }
