@@ -246,7 +246,7 @@ export class Converter {
 		let moduleSpecStr = moduleSpec.text;
 		if (moduleSpecStr.startsWith(".")) {
 			if (this.projectPath !== undefined) {
-				const srcFilePath = utils.trimSegmentsFromPath(importDecl.getSourceFile().fileName, 1);
+				const srcFilePath = path.dirname(importDecl.getSourceFile().fileName);
 				const srcFilePathAbs = path.isAbsolute(srcFilePath) ? srcFilePath : path.resolve(srcFilePath);
 				const trgtFilePath = path.resolve(srcFilePathAbs, moduleSpecStr).normalize();
 				moduleSpecStr = path.relative(this.projectPath, trgtFilePath);

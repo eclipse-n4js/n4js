@@ -6,7 +6,6 @@ import * as glob from "glob"
 import * as model from "./model";
 import { Converter } from "./convert";
 import * as utils from "./utils";
-import { exitWithError } from "./utils";
 
 
 runN4jsdGen(process.argv.slice(2)); // strip the first two args (path of node binary and main script)
@@ -43,7 +42,7 @@ function processFileOrFolder(inputPath: string, opts: utils.Options) {
 		sourceDtsFilePaths.push(inputPath);
 	} else if (stats.isDirectory()) {
 		sourceProjectPath = path.isAbsolute(inputPath) ? inputPath : path.resolve(inputPath);
-		const globStr = utils.appendToPath(inputPath, "**/*.d.ts");
+		const globStr = path.join(inputPath, "**", "*.d.ts");
 		sourceDtsFilePaths.push(...glob.sync(globStr, {}));
 		if (sourceDtsFilePaths.length === 0) {
 			logError("no '.d.ts' files found in folder: " + inputPath);
@@ -95,21 +94,21 @@ function processFileOrFolder(inputPath: string, opts: utils.Options) {
 		if (opts.verbose) {
 			console.log("Writing n4jsd-file: " + trgtN4jsdPath);
 		}
-		fs.mkdirSync(utils.trimSegmentsFromPath(trgtN4jsdPath, 1), { recursive: true });
+		fs.mkdirSync(path.dirname(trgtN4jsdPath), { recursive: true });
 		fs.writeFileSync(trgtN4jsdPath, n4jsdStr + "\n");
 	}
 }
 
 // TODO error handling!
 function createTargetProject(srcPath: string, opts: utils.Options): string {
-	const srcName = utils.lastSegmentOfPath(srcPath);
+	const srcName = path.basename(srcPath);
 	const trgtName = "@n4jsd/" + srcName;
 	const trgtPath = opts.outputPath !== undefined
-		? utils.appendToPath(opts.outputPath, trgtName)
-		: utils.trimSegmentsFromPath(srcPath, 1);
+		? path.join(opts.outputPath, trgtName)
+		: path.dirname(srcPath);
 	fs.mkdirSync(trgtPath, { recursive: true });
 
-	const srcPackageJsonPath = utils.appendToPath(srcPath, "package.json");
+	const srcPackageJsonPath = path.join(srcPath, utils.PACKAGE_JSON);
 	const trgtPackageJson: any = {
 		name: trgtName,
 		repository: {
@@ -145,7 +144,7 @@ function createTargetProject(srcPath: string, opts: utils.Options): string {
 			}
 		}
 	}
-	const trgtPackageJsonPath = utils.appendToPath(trgtPath, "package.json");
+	const trgtPackageJsonPath = path.join(trgtPath, utils.PACKAGE_JSON);
 	fs.writeFileSync(trgtPackageJsonPath, JSON.stringify(trgtPackageJson, undefined, "\t"));
 
 	return trgtPath;
@@ -171,5 +170,14 @@ function logIssues(issues: utils.Issue[]) {
 }
 
 function logError(msg: string) {
-	console.log(msg);
+	console.log("ERROR: " + msg);
+}
+
+function exitWithError(msg: string, showUsage?: boolean): never {
+	logError(msg);
+	if (showUsage) {
+		console.log();
+		console.log(utils.usage);
+	}
+	process.exit(1);
 }

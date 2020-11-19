@@ -1,6 +1,7 @@
 import { RSA_NO_PADDING } from "constants";
 import * as ts from "typescript";
 import * as model from "./model";
+import * as utils from "./utils";
 
 // utilities related to TypeScript
 
@@ -25,17 +26,18 @@ export function traverse(sourceFile: ts.SourceFile, fn: (node: ts.Node, indent: 
 }
 
 export function isExported(node: ts.Node): boolean {
-	return (ts.getCombinedModifierFlags(node as ts.Declaration) & ts.ModifierFlags.Export) !== 0
+	const flags = ts.getCombinedModifierFlags(node as ts.Declaration);
+	return utils.testFlag(flags, ts.ModifierFlags.Export)
 		|| (!!node.parent && node.parent.kind === ts.SyntaxKind.SourceFile);
 }
 
 export function getAccessibility(node: ts.Declaration): model.Accessibility {
 	const flags = ts.getCombinedModifierFlags(node);
-	if ((flags & ts.ModifierFlags.Public) !== 0) {
+	if (utils.testFlag(flags, ts.ModifierFlags.Public)) {
 		return model.Accessibility.PUBLIC;
-	} else if ((flags & ts.ModifierFlags.Protected) !== 0) {
+	} else if (utils.testFlag(flags, ts.ModifierFlags.Protected)) {
 		return model.Accessibility.PROTECTED;
-	} else if ((flags & ts.ModifierFlags.Private) !== 0) {
+	} else if (utils.testFlag(flags, ts.ModifierFlags.Private)) {
 		return model.Accessibility.PRIVATE;
 	}
 	return undefined;
@@ -61,9 +63,10 @@ export function getExportEquals(file: ts.SourceFile): ts.ExportAssignment {
 }
 
 export function getVarDeclKeyword(node: ts.VariableDeclarationList): 'var' | 'let' | 'const' {
-	if ((node.flags & ts.NodeFlags.Let) !== 0) {
+	const flags = ts.getCombinedNodeFlags(node);
+	if (utils.testFlag(flags, ts.NodeFlags.Let)) {
 		return 'let';
-	} else if ((node.flags & ts.NodeFlags.Const) !== 0) {
+	} else if (utils.testFlag(flags, ts.NodeFlags.Const)) {
 		return 'const';
 	}
 	return 'var';

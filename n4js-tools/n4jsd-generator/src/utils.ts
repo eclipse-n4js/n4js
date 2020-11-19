@@ -1,7 +1,7 @@
 import * as glob from "glob"
 import * as fs from "fs";
 
-export const indentStr = '    ';
+export const PACKAGE_JSON = "package.json";
 
 export const usage = `\
 USAGE: n4jsd-gen [<options>] <inputPath> ...`;
@@ -98,6 +98,7 @@ function resolveInputPathStr(opts: Options) {
 }
 
 
+
 export class Issue {
 	kind: 'warning' | 'error';
 	message: string;
@@ -115,54 +116,6 @@ export function warning(msg: string) {
 }
 
 
-export function exitWithError(msg: string, showUsage?: boolean): never {
-	console.log("Error: " + msg);
-	if (showUsage) {
-		console.log();
-		console.log(usage);
-	}
-	process.exit(1);
-}
-
-export function appendToPath(basePath: string, ...moreSegments: string[]) {
-	let result = basePath;
-	for (let seg of moreSegments) {
-		if (!result.endsWith("/")) {
-			result += "/";
-		}
-		if (seg.startsWith("/")) {
-			seg = seg.slice(1);
-		}
-		result += seg;
-	}
-	return result;
-}
-
-export function trimEmptySegmentFromPath(path: string) {
-	if (path.endsWith("/")) {
-		path = path.slice(0, path.length - 1);
-	}
-	return path;
-}
-
-export function trimSegmentsFromPath(path: string, count: number = 1) {
-	path = trimEmptySegmentFromPath(path);
-	for (let n = 0; n < count; n++) {
-		const idx = path.lastIndexOf("/");
-		if (idx >= 0) {
-			path = path.slice(0, idx);
-		}
-	}
-	return path;
-}
-
-export function lastSegmentOfPath(path: string) {
-	const idx = path.lastIndexOf("/");
-	if (idx >= 0) {
-		return path.slice(idx + 1, path.length);
-	}
-	return path;
-}
 
 export function testFlagsOR(value: number, ...flags: number[]) {
 	for (const flag of flags) {
