@@ -47,10 +47,10 @@ class InitialBuildNotCancelableTest extends AbstractIdeTest {
 	private static final AtomicBoolean initialBuildCompletedNormally = new AtomicBoolean(false);
 
 	private static final class TestWorkspaceBuilder extends XWorkspaceBuilder {
-		override protected void onBuildDone(boolean wasInitialBuild, boolean discardIncrementalBuildQueue, Optional<Throwable> throwable) {
-			super.onBuildDone(wasInitialBuild, discardIncrementalBuildQueue, throwable);
+		override protected void onBuildDone(boolean wasInitialBuild, boolean wasCanceled, boolean hasDependencyCycle, Optional<Throwable> throwable) {
+			super.onBuildDone(wasInitialBuild, wasCanceled, hasDependencyCycle, throwable);
 			if (wasInitialBuild) {
-				initialBuildCompletedNormally.set(discardIncrementalBuildQueue && !throwable.present); // normally = no cancellation, no exceptions
+				initialBuildCompletedNormally.set(!wasCanceled && !throwable.present); // normally = no cancellation, no exceptions
 				didCompleteInitialBuild.countDown();
 				Uninterruptibles.awaitUninterruptibly(didCheckResultOfInitialBuild);
 			}

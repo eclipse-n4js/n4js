@@ -168,7 +168,7 @@ public class XWorkspaceBuilder {
 				allDeltas.addAll(partialresult.getAffectedResources());
 			}
 
-			onBuildDone(true, !hasDependencyCycle, Optional.absent());
+			onBuildDone(true, false, hasDependencyCycle, Optional.absent());
 
 			stopwatch.stop();
 			lspLogger.log("... initial build done (" + stopwatch.toString() + ").");
@@ -177,7 +177,7 @@ public class XWorkspaceBuilder {
 		} catch (Throwable th) {
 			boolean wasCanceled = operationCanceledManager.isOperationCanceledException(th);
 
-			onBuildDone(true, !wasCanceled && !hasDependencyCycle, Optional.of(th));
+			onBuildDone(true, wasCanceled, hasDependencyCycle, Optional.of(th));
 
 			if (wasCanceled) {
 				lspLogger.log("... initial build canceled.");
@@ -464,7 +464,7 @@ public class XWorkspaceBuilder {
 
 			List<IResourceDescription.Delta> result = toBeConsideredDeltas;
 
-			onBuildDone(false, !hasDependencyCycle, Optional.absent());
+			onBuildDone(false, false, hasDependencyCycle, Optional.absent());
 
 			lspLogger.log("... build done.");
 
@@ -472,7 +472,7 @@ public class XWorkspaceBuilder {
 		} catch (Throwable th) {
 			boolean wasCanceled = operationCanceledManager.isOperationCanceledException(th);
 
-			onBuildDone(false, !wasCanceled && !hasDependencyCycle, Optional.of(th));
+			onBuildDone(false, wasCanceled, hasDependencyCycle, Optional.of(th));
 
 			if (wasCanceled) {
 				lspLogger.log("... build canceled.");
@@ -564,17 +564,19 @@ public class XWorkspaceBuilder {
 	 * @param wasInitialBuild
 	 *            <code>true</code> if the build was an initial build, <code>false</code> if the build was an
 	 *            incremental build.
-	 * @param discardIncrementalBuildQueue
-	 *            <code>true</code> iff the incremental build queue should be discarded.
+	 * @param wasCancelled
+	 *            <code>true</code> iff the build was cancelled.
+	 * @param wasCyclic
+	 *            <code>true</code> iff the workspace projects have cyclic dependencies.
 	 * @param throwable
 	 *            absent if the build completed normally, present if the build ended early due to cancellation or some
 	 *            other exception.
 	 */
-	protected void onBuildDone(boolean wasInitialBuild, boolean discardIncrementalBuildQueue,
+	protected void onBuildDone(boolean wasInitialBuild, boolean wasCancelled, boolean wasCyclic,
 			Optional<Throwable> throwable) {
 
 		workspaceManager.clearResourceSets();
-		if (discardIncrementalBuildQueue) {
+		if (!wasCancelled && !wasCyclic) {
 			discardIncrementalBuildQueue();
 		}
 	}
