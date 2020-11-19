@@ -11,6 +11,7 @@
 package org.eclipse.n4js.ide.tests.helper.server;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -34,22 +35,47 @@ import org.junit.Assert;
  */
 abstract public class AbstractCompletionTest extends AbstractStructuredIdeTest<TestCompletionConfiguration> {
 
-	/** Executes the given module contents using the default workspace. */
+	/**
+	 * Executes the given module contents using the default workspace. Expects the given proposals to be equal to the
+	 * results.
+	 */
 	protected void testAtCursor(String codeWithCursor, String expectedProposals) {
+		testAtCursor(codeWithCursor, expectedProposals, null);
+	}
+
+	/**
+	 * Executes the given module contents using the default workspace. Expects the given proposals to be among the
+	 * results.
+	 */
+	protected void testAtCursorPartially(String codeWithCursor, String partialExpectedProposals) {
+		testAtCursor(codeWithCursor, null, partialExpectedProposals);
+	}
+
+	/** Executes the given module contents using the default workspace. */
+	protected void testAtCursor(String codeWithCursor, String expectedProposals, String partialExpectedProposals) {
 		ContentAndPosition contentAndPosition = getContentAndPosition(codeWithCursor);
-		TestCompletionConfiguration tcc = createTestCompletionConfiguration(contentAndPosition, expectedProposals);
+		TestCompletionConfiguration tcc = createTestCompletionConfiguration(contentAndPosition, expectedProposals,
+				partialExpectedProposals);
 		super.testInDefaultWorkspace(contentAndPosition.content, tcc);
 	}
 
 	/** @return {@link TestCompletionConfiguration} for a given code with cursor symbol */
 	protected TestCompletionConfiguration createTestCompletionConfiguration(ContentAndPosition contentAndPosition,
-			String expectedProposals) {
+			String expectedProposals, String partialExpectedProposals) {
 
 		TestCompletionConfiguration tcc = new TestCompletionConfiguration();
 		tcc.setModel(contentAndPosition.content);
 		tcc.setLine(contentAndPosition.line);
 		tcc.setColumn(contentAndPosition.column);
 		tcc.setExpectedCompletionItems(expectedProposals);
+		if (partialExpectedProposals != null) {
+			tcc.setAssertCompletionList(completionList -> {
+				List<CompletionItem> items = completionList.getItems();
+				String resultStr = Strings.join("\n", getStringLSP4J()::toString, items);
+				assertTrue("Result:\n" + resultStr + "\ndoes not contain:\n" + partialExpectedProposals,
+						resultStr.contains(partialExpectedProposals));
+			});
+		}
 
 		return tcc;
 	}
