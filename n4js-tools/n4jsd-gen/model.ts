@@ -34,7 +34,8 @@ export class Parameter extends NamedElement {
 
 export class Signature {
 	parameters: Parameter[] = [];
-	returnTypeStr: string = 'any+';
+	/** Will be undefined iff this signature belongs to a constructor. */
+	returnTypeStr?: string;
 }
 
 export class Member extends NamedElement {
@@ -159,46 +160,59 @@ class Emitter {
 			buff.push("export ");
 		}
 		buff.push("external ");
-		buff.pushln(type.kind, ' ', type.name, ' {');
+		buff.pushln(type.kind, " ", type.name, " {");
 		buff.indent();
 		for (const m of type.members) {
 			this.emitMember(m);
 			buff.pushln();
 		}
 		buff.undent();
-		buff.push('}');
+		buff.push("}");
 	}
 
 	emitMember(member: Member) {
 		const buff = this.buff;
 		switch(member.kind) {
+			case 'ctor':
+				buff.push("constructor");
+				this.emitSignature(member.signatures[0]);
+				buff.push(";");
+				break;
 			case 'field':
-				buff.push(member.name, ': ', member.typeStr, ';');
+				buff.push(member.name, ": ", member.typeStr, ";");
 				break;
 			case 'method':
 				buff.push(member.name);
 				this.emitSignature(member.signatures[0]);
-				buff.push(';');
+				buff.push(";");
+				break;
+			default:
+				throw "unknown kind of member: " + member.kind;
+		}
+		if (member.signatures !== undefined && member.signatures.length > 1) {
+			buff.push(" // further signatures were omitted");
 		}
 	}
 
 	emitSignature(sig: Signature) {
 		const buff = this.buff;
-		buff.push('(');
+		buff.push("(");
 		let needSep = false;
 		for (const param of sig.parameters) {
 			if (needSep) {
-				buff.push(', ');
+				buff.push(", ");
 			}
 			this.emitParameter(param);
 			needSep = true;
 		}
-		buff.push(')');
-		buff.push(': ', sig.returnTypeStr);
+		buff.push(")");
+		if (sig.returnTypeStr !== undefined) {
+			buff.push(": ", sig.returnTypeStr);
+		}
 	}
 
 	emitParameter(param: Parameter) {
 		const buff = this.buff;
-		buff.push(param.name, ': ', param.typeStr);
+		buff.push(param.name, ": ", param.typeStr);
 	}
 }

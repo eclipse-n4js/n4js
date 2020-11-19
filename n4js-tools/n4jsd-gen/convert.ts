@@ -176,18 +176,19 @@ export class Converter {
 		result.exported = utils_ts.isExported(node);
 
 		sym.members?.forEach((member, name) => {
-			result.members.push(this.convertMember(member));
+			result.members.push(this.convertMember(member, sym));
 		});
 
 		return result;
 	}
 
-	private convertMember(member: ts.Symbol): model.Member {
+	private convertMember(member: ts.Symbol, owner: ts.Symbol): model.Member {
 		const result = new model.Member();
 
 		const memberName = member.getName();
 		if (memberName == '__constructor') {
 			result.kind = 'ctor';
+			result.signatures = this.convertConstructSignatures(owner);
 			return result;
 		}
 		result.name = memberName;
@@ -204,13 +205,22 @@ export class Converter {
 		return result;
 	}
 
+	private convertConstructSignatures(somethingWithCtors: ts.Symbol): model.Signature[] {
+		const type = this.checker.getTypeOfSymbolAtLocation(somethingWithCtors, somethingWithCtors.valueDeclaration!);
+		return this.convertSignatures([...type.getConstructSignatures()]);
+	}
+
 	private convertCallSignatures(somethingWithSignatures: ts.Symbol): model.Signature[] {
 		const type = this.checker.getTypeOfSymbolAtLocation(somethingWithSignatures, somethingWithSignatures.valueDeclaration!);
+		return this.convertSignatures([...type.getCallSignatures()]);
+	}
+
+	private convertSignatures(signatures: ts.Signature[]): model.Signature[] {
 		const results = [] as model.Signature[];
-		for (const callSig of type.getCallSignatures()) {
+		for (const sig of signatures) {
 			const result = new model.Signature();
-			result.parameters = callSig.getParameters().map(param => this.convertParameter(param));
-			result.returnTypeStr = this.convertTypeReferenceOfTypedDeclaration(callSig.declaration);
+			result.parameters = sig.getParameters().map(param => this.convertParameter(param));
+			result.returnTypeStr = this.convertTypeReferenceOfTypedDeclaration(sig.declaration);
 			results.push(result);
 		}
 		return results;
@@ -250,7 +260,7 @@ export class Converter {
 	}
 	private convertTypeReferenceOfTypedDeclaration(decl: ts.Declaration): string {
 		const typeRef = (decl as any).type; // no common interface available
-		if (ts.isTypeNode(typeRef)) {
+		if (typeRef !== undefined && ts.isTypeNode(typeRef)) {
 			return this.convertTypeReference(typeRef);
 		}
 		return undefined;
