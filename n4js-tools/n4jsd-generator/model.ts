@@ -45,7 +45,8 @@ export class Function extends ExportableElement {
 }
 
 export class Type extends ExportableElement {
-	kind: 'class' | 'interface' | 'enum' | 'alias' | 'unknown' = 'unknown';
+	kind: 'class' | 'interface' | 'enum' | 'alias';
+	defSiteStructural?: boolean;
 	members: Member[] = [];
 }
 
@@ -160,7 +161,11 @@ class Emitter {
 			buff.push("export ");
 		}
 		buff.push("external ");
-		buff.pushln(type.kind, " ", type.name, " {");
+		buff.push(type.kind, " ");
+		if (type.defSiteStructural) {
+			buff.push("~");
+		}
+		buff.pushln(type.name, " {");
 		buff.indent();
 		for (const m of type.members) {
 			this.emitMember(m);

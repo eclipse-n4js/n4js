@@ -68,7 +68,7 @@ export function getTypeKind(decl: ts.Node) {
 			return 'alias';
 		}
 	}
-	return 'unknown';
+	return undefined;
 }
 
 export function getSourceCodeForNode(node: ts.Node, indentStr: string = "  |"): string {

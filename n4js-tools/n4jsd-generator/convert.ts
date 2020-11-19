@@ -104,7 +104,7 @@ export class Converter {
 			return this.convertVariableDeclList(node); // TODO can a VariableDeclarationList even appear here?
 		} else if (ts.isFunctionDeclaration(node)) {
 			return [ this.convertFunction(node) ];
-		} else if (typeKind && typeKind !== 'unknown') {
+		} else if (typeKind !== undefined) {
 			return [ this.convertType(node) ];
 		} else if (node.kind === ts.SyntaxKind.FirstStatement) {
 			const children = utils_ts.getAllChildNodes(node);
@@ -169,10 +169,12 @@ export class Converter {
 	private convertType(node: ts.Node): model.Type {
 		const name = (node as ts.NamedDeclaration).name;
 		const sym = this.checker.getSymbolAtLocation(name);
+		const kind = utils_ts.getTypeKind(sym.declarations[0]);
 
 		let result = new model.Type();
 		result.name = sym.getName();
-		result.kind = utils_ts.getTypeKind(sym.declarations[0]);
+		result.kind = kind;
+		result.defSiteStructural = kind == 'class' || kind == 'interface' ? true : undefined;
 		result.exported = utils_ts.isExported(node);
 
 		sym.members?.forEach((member, name) => {
