@@ -42,8 +42,8 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 			Iterable<String> dependencies, Iterable<String> sortedDependencies,
 			Iterable<? extends SourceFolderSnapshot> sourceFolders) {
 
-		super(name, path, indexOnly, dependencies, sourceFolders,
-				Collections.singleton(path.trimSegments(1).appendSegment(N4JSGlobals.PACKAGE_JSON)));
+		super(name, path, Collections.singleton(path.trimSegments(1).appendSegment(N4JSGlobals.PACKAGE_JSON)),
+				indexOnly, dependencies, sourceFolders);
 
 		this.type = type;
 		this.definesPackage = definesPackage;

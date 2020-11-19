@@ -58,7 +58,7 @@ public interface XIProjectConfig extends IProjectConfig {
 				.map(XISourceFolder::toSnapshot)
 				.collect(ImmutableSet.toImmutableSet());
 
-		return new ProjectConfigSnapshot(getName(), getPath(), indexOnly(), getDependencies(), sourceFolderSnapshots,
-				getProjectDescriptionUris());
+		return new ProjectConfigSnapshot(getName(), getPath(), getProjectDescriptionUris(), indexOnly(),
+				getDependencies(), sourceFolderSnapshots);
 	}
 }
