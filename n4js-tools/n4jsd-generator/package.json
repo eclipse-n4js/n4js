@@ -4,9 +4,9 @@
   "description": "N4JS Definition Generator",
   "author": "Eclipse N4JS Project",
   "license": "EPL-1.0",
-  "main": "./main.js",
+  "main": "./src-gen/main.js",
   "bin": {
-    "dts2n4jsd": "./main.js"
+    "dts2n4jsd": "./src-gen/main.js"
   },
   "dependencies": {
     "@types/glob": "^7.1.3",
