@@ -3,6 +3,7 @@ import * as fs_lib from "fs";
 import * as path_lib from "path";
 import * as glob_lib from "glob"
 
+import { Options, usage, parseCommandLineOptions } from "./cmdLineOpts";
 import * as model from "./model";
 import { Converter } from "./convert";
 import * as utils from "./utils";
@@ -11,7 +12,7 @@ import * as utils from "./utils";
 runN4jsdGen(process.argv.slice(2)); // strip the first two args (path of node binary and main script)
 
 function runN4jsdGen(args: string[]) {
-	const opts = utils.parseCommandLineOptions(args);
+	const opts = parseCommandLineOptions(args);
 	if (opts.error !== undefined) {
 		exitWithError(opts.error, true);
 	}
@@ -19,17 +20,17 @@ function runN4jsdGen(args: string[]) {
 		if(opts.verbose) {
 			console.log();
 			console.log("Input path: " + inputPath);
-			processFileOrFolder(inputPath, opts);
 		}
+		processFileOrFolder(inputPath, opts);
 	}
 }
 
 /**
- * Convert one or more '.d.ts' files to n4jsd-files.
+ * Convert one or more '.d.ts' files / folders to n4jsd-files / definition projects.
  *
- * @param inputPath must point to a folder or a single '.d.ts' file.
+ * @param inputPath must point to a folder or a single '.d.ts' file. Glob patterns are not allowed.
  */
-function processFileOrFolder(inputPath: string, opts: utils.Options) {
+function processFileOrFolder(inputPath: string, opts: Options) {
 	if (!fs_lib.existsSync(inputPath)) {
 		logError("does not exist: " + inputPath);
 		return;
@@ -100,7 +101,7 @@ function processFileOrFolder(inputPath: string, opts: utils.Options) {
 }
 
 // TODO error handling!
-function createTargetProject(srcPath: string, opts: utils.Options): string {
+function createTargetProject(srcPath: string, opts: Options): string {
 	const srcName = path_lib.basename(srcPath);
 	const trgtName = "@n4jsd/" + srcName;
 	const trgtPath = opts.outputPath !== undefined
@@ -177,7 +178,7 @@ function exitWithError(msg: string, showUsage?: boolean): never {
 	logError(msg);
 	if (showUsage) {
 		console.log();
-		console.log(utils.usage);
+		console.log(usage);
 	}
 	process.exit(1);
 }
