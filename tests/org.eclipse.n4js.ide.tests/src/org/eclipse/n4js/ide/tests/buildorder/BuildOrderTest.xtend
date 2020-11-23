@@ -15,7 +15,7 @@ import java.util.Collection
 import java.util.List
 import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest
 import org.eclipse.n4js.utils.Strings
-import org.eclipse.n4js.xtext.workspace.ProjectBuildOrderInfo
+import org.eclipse.n4js.xtext.workspace.ProjectBuildOrderFactory
 import org.eclipse.n4js.xtext.workspace.XWorkspaceConfigSnapshotProvider
 import org.junit.Test
 
@@ -27,12 +27,12 @@ import static org.junit.Assert.*
 class BuildOrderTest extends AbstractIdeTest {
 
 	private XWorkspaceConfigSnapshotProvider workspaceConfigProvider;
-	private ProjectBuildOrderInfo.Provider projectBuildOrderInfoProvider;
+	private ProjectBuildOrderFactory projectBuildOrderFactory;
 
 	override Injector createInjector() {
 		val Injector injector = super.createInjector();
 		workspaceConfigProvider = injector.getInstance(XWorkspaceConfigSnapshotProvider);
-		projectBuildOrderInfoProvider = injector.getInstance(ProjectBuildOrderInfo.Provider);
+		projectBuildOrderFactory = injector.getInstance(ProjectBuildOrderFactory);
 		return injector;
 	}
 
@@ -59,7 +59,7 @@ class BuildOrderTest extends AbstractIdeTest {
 		startAndWaitForLspServer();
 
 		val workspaceConfig = workspaceConfigProvider.getWorkspaceConfigSnapshot();
-		val projectBuildOrderInfo = projectBuildOrderInfoProvider.getProjectBuildOrderInfo(workspaceConfig);
+		val projectBuildOrderInfo = projectBuildOrderFactory.compute(workspaceConfig);
 		val boIterator = projectBuildOrderInfo.getIterator().visitAll();
 		try {
 			val String names = IteratorExtensions.join(boIterator, ", ", [it.name]);
