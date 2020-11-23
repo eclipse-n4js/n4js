@@ -2,7 +2,7 @@ import * as fs_lib from "fs";
 import * as glob_lib from "glob"
 
 
-export const usage = `\
+export const USAGE = `\
 USAGE: dts2n4jsd [<options>] <input> ...
 
 Each argument <input> must be a path or glob pattern denoting either one or more individual '.d.ts' files or

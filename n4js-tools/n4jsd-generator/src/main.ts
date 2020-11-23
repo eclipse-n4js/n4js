@@ -3,7 +3,7 @@ import * as fs_lib from "fs";
 import * as path_lib from "path";
 import * as glob_lib from "glob"
 
-import { Options, usage, parseCommandLineOptions } from "./cmdLineOpts";
+import { USAGE, Options, parseCommandLineOptions } from "./cmdLineOpts";
 import * as model from "./model";
 import { Converter } from "./convert";
 import * as utils from "./utils";
@@ -178,7 +178,7 @@ function exitWithError(msg: string, showUsage?: boolean): never {
 	logError(msg);
 	if (showUsage) {
 		console.log();
-		console.log(usage);
+		console.log(USAGE);
 	}
 	process.exit(1);
 }
