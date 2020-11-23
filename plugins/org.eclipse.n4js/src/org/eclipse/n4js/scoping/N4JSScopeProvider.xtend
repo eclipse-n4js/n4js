@@ -158,18 +158,34 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	/** True: Proxies of IdentifierRefs are only resolved within the resource. Otherwise, the proxy is returned. */
 	private boolean suppressCrossFileResolutionOfIdentifierRef = false;
 	
-	/** True: Request will return all members according to receiver type and ignore whether read/write access restriction. */
+	/** True: Request will return all members according to receiver type and ignore read/write access restriction. */
 	private boolean suppressAccessKindOnMemberScopeRequest = false;
 	
 	public def TameAutoClosable newCrossFileResolutionSuppressor() {
-		val TameAutoClosable tac =  new TameAutoClosable() {
+		val TameAutoClosable tac = new TameAutoClosable() {
 			private boolean tmpSuppressCrossFileResolutionOfIdentifierRef = init();
 			private def boolean init() {
 				this.tmpSuppressCrossFileResolutionOfIdentifierRef = suppressCrossFileResolutionOfIdentifierRef;
 				suppressCrossFileResolutionOfIdentifierRef = true;
+				return tmpSuppressCrossFileResolutionOfIdentifierRef;
 			}	
 			override close() {
 				suppressCrossFileResolutionOfIdentifierRef = tmpSuppressCrossFileResolutionOfIdentifierRef;
+			}
+		};
+		return tac;
+	}
+	
+	public def TameAutoClosable newAccessKindSuppressor() {
+		val TameAutoClosable tac = new TameAutoClosable() {
+			private boolean tmpSuppressAccessKindOnMemberScopeRequest = init();
+			private def boolean init() {
+				this.tmpSuppressAccessKindOnMemberScopeRequest = suppressAccessKindOnMemberScopeRequest;
+				suppressAccessKindOnMemberScopeRequest = true;
+				return tmpSuppressAccessKindOnMemberScopeRequest;
+			}	
+			override close() {
+				suppressAccessKindOnMemberScopeRequest = tmpSuppressAccessKindOnMemberScopeRequest;
 			}
 		};
 		return tac;
@@ -255,39 +271,44 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	}
 
 	override getScopeForContentAssist(EObject context, EReference reference) {
-		suppressAccessKindOnMemberScopeRequest = true;
-		val scope = getScope(context, reference);
-
-		if (scope === IScope.NULLSCOPE) {
-			// used for type references in JSDoc (see JSDocCompletionProposalComputer):
-			if (reference == N4JSPackage.Literals.IMPORT_DECLARATION__MODULE) {
-				return scope_ImportedAndCurrentModule(context, reference);
+		val aks = newAccessKindSuppressor();
+		try {
+			val scope = getScope(context, reference);
+	
+			if (scope === IScope.NULLSCOPE) {
+				// used for type references in JSDoc (see JSDocCompletionProposalComputer):
+				if (reference == N4JSPackage.Literals.IMPORT_DECLARATION__MODULE) {
+					return scope_ImportedAndCurrentModule(context, reference);
+				}
+	
+				// the following cases are only required for content assist (i.e. scoping on broken ASTs or at unusual
+				// locations) otherwise use context:
+				switch (context) {
+					Script:
+						return scope_EObject_id(context, reference)
+					N4TypeDeclaration:
+						return scope_EObject_id(context, reference)
+					VariableDeclaration:
+						return scope_EObject_id(context, reference)
+					Statement:
+						return scope_EObject_id(context, reference)
+					NewExpression:
+						return scope_EObject_id(context, reference)
+					ParameterizedCallExpression:
+						return scope_EObject_id(context, reference)
+					Argument:
+						return scope_EObject_id(context, reference)
+					Expression:
+						return scope_EObject_id(context, reference)
+					LiteralOrComputedPropertyName:
+						return scope_EObject_id(context, reference)
+				}
 			}
 
-			// the following cases are only required for content assist (i.e. scoping on broken ASTs or at unusual
-			// locations) otherwise use context:
-			switch (context) {
-				Script:
-					return scope_EObject_id(context, reference)
-				N4TypeDeclaration:
-					return scope_EObject_id(context, reference)
-				VariableDeclaration:
-					return scope_EObject_id(context, reference)
-				Statement:
-					return scope_EObject_id(context, reference)
-				NewExpression:
-					return scope_EObject_id(context, reference)
-				ParameterizedCallExpression:
-					return scope_EObject_id(context, reference)
-				Argument:
-					return scope_EObject_id(context, reference)
-				Expression:
-					return scope_EObject_id(context, reference)
-				LiteralOrComputedPropertyName:
-					return scope_EObject_id(context, reference)
-			}
+			return scope;
+		} finally {
+			aks.close;
 		}
-		return scope;
 	}
 
 	/**
