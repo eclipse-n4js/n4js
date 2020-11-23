@@ -182,12 +182,12 @@ export class Converter {
 		// we need an AST node; in case of overloading there will be several declarations (one per signature)
 		// but because relevant properties (kind, accessibility, etc.) will be the same in all cases we can
 		// simply use the first one as representative:
-		const nodeOfFirstDecl = symMember.declarations[0] as ts.NamedDeclaration;
+		const representativeNode = symMember.declarations[0] as ts.NamedDeclaration;
 
 		const result = new model.Member();
-		result.accessibility = utils_ts.getAccessibility(nodeOfFirstDecl);
+		result.accessibility = utils_ts.getAccessibility(representativeNode);
 
-		if (ts.isConstructorDeclaration(nodeOfFirstDecl)) {
+		if (ts.isConstructorDeclaration(representativeNode)) {
 			result.kind = 'ctor';
 			result.signatures = this.convertConstructSignatures(symOwner);
 			return result;
@@ -195,18 +195,26 @@ export class Converter {
 
 		result.name = symMember.getName();
 
-		if (ts.isPropertyDeclaration(nodeOfFirstDecl)) {
+		if (ts.isPropertyDeclaration(representativeNode)) {
 			result.kind = 'field';
 			result.typeStr = this.convertTypeReferenceOfTypedSymbol(symMember);
 			return result;
-		} else if (ts.isMethodDeclaration(nodeOfFirstDecl)
-				|| ts.isMethodSignature(nodeOfFirstDecl)) {
+		} else if (ts.isGetAccessorDeclaration(representativeNode)) {
+			result.kind = 'getter';
+			result.typeStr = this.convertTypeReferenceOfTypedSymbol(symMember);
+			return result;
+		} else if (ts.isSetAccessorDeclaration(representativeNode)) {
+			result.kind = 'setter';
+			result.typeStr = this.convertTypeReferenceOfTypedDeclaration(representativeNode.parameters[0]);
+			return result;
+		} else if (ts.isMethodDeclaration(representativeNode)
+				|| ts.isMethodSignature(representativeNode)) {
 			const sigs = this.convertCallSignatures(symMember);
 			result.kind = 'method';
 			result.signatures = sigs;
 			return result;
 		}
-		this.createIssueForUnsupportedNode(nodeOfFirstDecl, "member");
+		this.createIssueForUnsupportedNode(representativeNode, "member");
 		return undefined;
 	}
 
@@ -261,10 +269,10 @@ export class Converter {
 		// note: the following API might be of use when proper handling of type references is being implemented:
 		// const symType = this.checker.getTypeOfSymbolAtLocation(sym, sym.valueDeclaration!);
 		// const typeAsStr = this.checker.typeToString(symType);
-		return this.convertTypeReferenceOfTypedDeclaration(sym.valueDeclaration);
+		return this.convertTypeReferenceOfTypedDeclaration(sym?.valueDeclaration);
 	}
 	private convertTypeReferenceOfTypedDeclaration(decl: ts.Declaration): string {
-		const typeRef = (decl as any).type; // no common interface available
+		const typeRef = (decl as any)?.type; // no common interface available
 		if (typeRef !== undefined && ts.isTypeNode(typeRef)) {
 			return this.convertTypeReference(typeRef);
 		}

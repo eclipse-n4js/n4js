@@ -197,6 +197,12 @@ class Emitter {
 			case 'field':
 				buff.push(member.name, ": ", member.typeStr, ";");
 				break;
+			case 'getter':
+				buff.push("get ", member.name, "(): ", member.typeStr, ";");
+				break;
+			case 'setter':
+				buff.push("set ", member.name, "(", "value: ", member.typeStr, ");");
+				break;
 			case 'method':
 				buff.push(member.name);
 				this.emitSignature(member.signatures[0]);
