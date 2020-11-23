@@ -839,7 +839,7 @@ import com.google.inject.Inject;
 						.getTypingStrategy() == TypingStrategy.STRUCTURAL_FIELD_INITIALIZER;
 				final boolean checkVisibility = false; // access modifiers checked in validation
 				final IScope scope = memberScopingHelper.createMemberScope(targetTypeRef, expr, checkVisibility,
-						staticAccess, structFieldInitMode, true);
+						staticAccess, structFieldInitMode, false);
 				final IEObjectDescription memberDesc = !memberName.isEmpty()
 						? scope.getSingleElement(qualifiedNameConverter.toQualifiedName(memberName))
 						: null;

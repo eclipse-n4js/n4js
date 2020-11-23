@@ -111,7 +111,7 @@ class MemberScopingHelper {
 		boolean checkVisibility, boolean staticAccess, boolean structFieldInitMode) {
 
 		val request = new MemberScopeRequest(receiverTypeRef, context, false, checkVisibility, staticAccess,
-			structFieldInitMode, receiverTypeRef.isDynamic, true);
+			structFieldInitMode, receiverTypeRef.isDynamic, false);
 		return decoratedMemberScopeFor(receiverTypeRef, request);
 	}
 
