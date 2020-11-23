@@ -51,9 +51,15 @@ export class Function extends ExportableElement {
 }
 
 export class Type extends ExportableElement {
-	kind: 'class' | 'interface' | 'enum' | 'alias';
+	kind: 'enum' | 'interface' | 'class' | 'alias';
 	defSiteStructural?: boolean;
+	primitiveBased?: 'string' | 'number';
+	literals: EnumLiteral[] = [];
 	members: Member[] = [];
+}
+
+export class EnumLiteral extends NamedElement {
+	value?: string | number;
 }
 
 export class Member extends NamedElement {
@@ -164,6 +170,11 @@ class Emitter {
 
 	emitType(type: Type) {
 		const buff = this.buff;
+		if (type.primitiveBased == 'string') {
+			buff.pushln("@StringBased");
+		} else if (type.primitiveBased == 'number') {
+			buff.pushln("@NumberBased");
+		}
 		if (type.exported) {
 			buff.push("export ");
 		}
@@ -174,12 +185,45 @@ class Emitter {
 		}
 		buff.pushln(type.name, " {");
 		buff.indent();
-		for (const m of type.members) {
-			this.emitMember(m);
-			buff.pushln();
+		if (type.kind == 'interface' || type.kind == 'class') {
+			this.emitMembers(type.members);
+		} else if (type.kind == 'enum') {
+			this.emitEnumLiterals(type.literals, type.primitiveBased == 'string');
+		} else {
+			throw "unknown kind of type: " + type.kind;
 		}
 		buff.undent();
 		buff.push("}");
+	}
+
+	emitEnumLiterals(literals: EnumLiteral[], isStringBased: boolean) {
+		const buff = this.buff;
+		const len = literals.length;
+		for (let i = 0; i < len; i++) {
+			const lit = literals[i];
+			buff.push(lit.name);
+			if (lit.value !== undefined) {
+				buff.push(": ");
+				if (typeof lit.value == 'string') {
+					buff.push("'" + lit.value + "'"); // TODO escaping!
+				} else {
+					buff.push("" + lit.value);
+				}
+			}
+			if (i + 1 < len) {
+				buff.pushln(",");
+			} else {
+				buff.pushln();
+			}
+		}
+	}
+
+	emitMembers(members: Member[]) {
+		const buff = this.buff;
+		for (const m of members) {
+			this.emitMember(m);
+			buff.pushln();
+		}
 	}
 
 	emitMember(member: Member) {

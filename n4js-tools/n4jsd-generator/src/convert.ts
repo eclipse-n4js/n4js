@@ -89,7 +89,6 @@ export class Converter {
 		if (node.kind === ts.SyntaxKind.EndOfFileToken) {
 			return []; // ignore
 		}
-		const typeKind = utils_ts.getTypeKind(node);
 		if (ts.isImportDeclaration(node)) {
 			return []; // imports are handled in #convertScript(), ignore them here
 		} else if (ts.isExportAssignment(node) && node.isExportEquals) {
@@ -100,8 +99,12 @@ export class Converter {
 			return this.convertVariableDeclList(node); // TODO can a VariableDeclarationList even appear here?
 		} else if (ts.isFunctionDeclaration(node)) {
 			return [ this.convertFunction(node) ];
-		} else if (typeKind !== undefined) {
-			return [ this.convertType(node as ts.NamedDeclaration) ];
+		} else if (ts.isEnumDeclaration(node)) {
+			return [ this.convertEnum(node) ];
+		} else if (ts.isInterfaceDeclaration(node)) {
+			return [ this.convertInterface(node) ];
+		} else if (ts.isClassDeclaration(node)) {
+			return [ this.convertClass(node) ];
 		} else if (node.kind === ts.SyntaxKind.FirstStatement) {
 			const children = utils_ts.getAllChildNodes(node);
 			if (children.length === 2
@@ -158,23 +161,79 @@ export class Converter {
 		return result;
 	}
 
-	private convertType(node: ts.NamedDeclaration): model.Type {
+	private convertEnum(node: ts.EnumDeclaration): model.Type {
 		const sym = this.checker.getSymbolAtLocation(node.name);
-		const kind = utils_ts.getTypeKind(node);
-
 		let result = new model.Type();
 		result.name = sym.getName();
-		result.kind = kind;
-		result.defSiteStructural = kind == 'class' || kind == 'interface' ? true : undefined;
+		result.kind = 'enum';
 		result.exported = utils_ts.isExported(node);
 
+		const flags = ts.getCombinedModifierFlags(node);
+		const isConst = utils.testFlag(flags, ts.ModifierFlags.Const);
+		if (isConst) {
+			const valueTypes = utils_ts.getValueTypesOfEnum(node, this.checker);
+			const singleValueType = valueTypes.length === 1 ? valueTypes[0] : undefined;
+			if (valueTypes.length === 0) {
+				// in TypeScript, const enums are number-based by default:
+				result.primitiveBased = 'number';
+			} else if (singleValueType == 'string' || singleValueType == 'number') {
+				result.primitiveBased = singleValueType;
+			} else {
+				result.primitiveBased = 'string'; // use @StringBased enum in error case
+				this.createIssueForNode("unsupported value types in const enum: " + valueTypes.join(", "), node);
+			}
+		}
+
+		result.literals.push(...this.convertEnumLiterals(node, isConst));
+
+		return result;
+	}
+
+	private convertEnumLiterals(node: ts.EnumDeclaration, isConst: boolean): model.EnumLiteral[] {
+		const results = [] as model.EnumLiteral[];
+		for (const lit of node.members) {
+			const litSym = this.checker.getSymbolAtLocation(lit.name);
+			const result = new model.EnumLiteral();
+			result.name = litSym.getName();
+			if (isConst) {
+				result.value = this.checker.getConstantValue(lit);
+			}
+			results.push(result);
+		}
+		return results;
+	}
+
+	private convertInterface(node: ts.InterfaceDeclaration): model.Type {
+		const sym = this.checker.getSymbolAtLocation(node.name);
+		let result = new model.Type();
+		result.name = sym.getName();
+		result.kind = 'interface';
+		result.defSiteStructural = true;
+		result.members.push(...this.convertMembers(node));
+		result.exported = utils_ts.isExported(node);
+		return result;
+	}
+
+	private convertClass(node: ts.ClassDeclaration): model.Type {
+		const sym = this.checker.getSymbolAtLocation(node.name);
+		let result = new model.Type();
+		result.name = sym.getName();
+		result.kind = 'class';
+		result.defSiteStructural = true;
+		result.members.push(...this.convertMembers(node));
+		result.exported = utils_ts.isExported(node);
+		return result;
+	}
+
+	private convertMembers(node: ts.NamedDeclaration): model.Member[] {
+		const sym = this.checker.getSymbolAtLocation(node.name);
+		const result = [] as model.Member[];
 		sym.members?.forEach((symMember, name) => {
 			const member = this.convertMember(symMember, sym);
 			if (member !== undefined) {
-				result.members.push(member);
+				result.push(member);
 			}
 		});
-
 		return result;
 	}
 
@@ -284,8 +343,12 @@ export class Converter {
 
 	private createIssueForUnsupportedNode(node: ts.Node, superKind: string = "node") {
 		const nodeKindStr = ts.SyntaxKind[node.kind];
+		this.createIssueForNode("unsupported kind of " + superKind + ": " + nodeKindStr, node);
+	}
+
+	private createIssueForNode(msg: string, node: ts.Node) {
 		const offendingCode = utils_ts.getSourceCodeForNode(node);
-		const error = utils.error("unsupported kind of " + superKind + ": " + nodeKindStr + "\n" + offendingCode);
+		const error = utils.error(msg + "\n" + offendingCode);
 		this.issues.push(error);
 	}
 }

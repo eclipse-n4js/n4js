@@ -86,6 +86,25 @@ export function getTypeKind(decl: ts.Node) {
 	return undefined;
 }
 
+export function getValueTypesOfEnum(enumDecl: ts.EnumDeclaration, checker: ts.TypeChecker): string[] {
+	const types = new Set<string>();
+	for (const lit of enumDecl.members) {
+		const initExpr = lit.initializer;
+		if (initExpr !== undefined) {
+			const type = checker.getTypeAtLocation(initExpr);
+			if (type !== undefined) {
+				const baseType = checker.getBaseTypeOfLiteralType(type);
+				if (baseType !== undefined) {
+					types.add(checker.typeToString(baseType));
+				} else {
+					types.add(checker.typeToString(type));
+				}
+			}
+		}
+	}
+	return Array.from(types.values());
+}
+
 export function getSourceCodeForNode(node: ts.Node, indentStr: string = "  |"): string {
 	const sourceFile = node.getSourceFile();
 	let offendingCode = sourceFile.text.substring(node.pos, node.end);
