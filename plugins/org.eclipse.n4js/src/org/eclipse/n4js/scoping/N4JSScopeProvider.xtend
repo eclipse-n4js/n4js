@@ -157,10 +157,8 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	
 	/** True: Proxies of IdentifierRefs are only resolved within the resource. Otherwise, the proxy is returned. */
 	private boolean suppressCrossFileResolutionOfIdentifierRef = false;
-	
-	/** True: Request will return all members according to receiver type and ignore read/write access restriction. */
-	private boolean suppressAccessKindOnMemberScopeRequest = false;
-	
+
+
 	public def TameAutoClosable newCrossFileResolutionSuppressor() {
 		val TameAutoClosable tac = new TameAutoClosable() {
 			private boolean tmpSuppressCrossFileResolutionOfIdentifierRef = init();
@@ -176,20 +174,6 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		return tac;
 	}
 	
-	public def TameAutoClosable newAccessKindSuppressor() {
-		val TameAutoClosable tac = new TameAutoClosable() {
-			private boolean tmpSuppressAccessKindOnMemberScopeRequest = init();
-			private def boolean init() {
-				this.tmpSuppressAccessKindOnMemberScopeRequest = suppressAccessKindOnMemberScopeRequest;
-				suppressAccessKindOnMemberScopeRequest = true;
-				return tmpSuppressAccessKindOnMemberScopeRequest;
-			}	
-			override close() {
-				suppressAccessKindOnMemberScopeRequest = tmpSuppressAccessKindOnMemberScopeRequest;
-			}
-		};
-		return tac;
-	}
 
 	protected def IScope delegateGetScope(EObject context, EReference reference) {
 		return delegate.getScope(context, reference)
@@ -271,44 +255,39 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	}
 
 	override getScopeForContentAssist(EObject context, EReference reference) {
-		val aks = newAccessKindSuppressor();
-		try {
-			val scope = getScope(context, reference);
-	
-			if (scope === IScope.NULLSCOPE) {
-				// used for type references in JSDoc (see JSDocCompletionProposalComputer):
-				if (reference == N4JSPackage.Literals.IMPORT_DECLARATION__MODULE) {
-					return scope_ImportedAndCurrentModule(context, reference);
-				}
-	
-				// the following cases are only required for content assist (i.e. scoping on broken ASTs or at unusual
-				// locations) otherwise use context:
-				switch (context) {
-					Script:
-						return scope_EObject_id(context, reference)
-					N4TypeDeclaration:
-						return scope_EObject_id(context, reference)
-					VariableDeclaration:
-						return scope_EObject_id(context, reference)
-					Statement:
-						return scope_EObject_id(context, reference)
-					NewExpression:
-						return scope_EObject_id(context, reference)
-					ParameterizedCallExpression:
-						return scope_EObject_id(context, reference)
-					Argument:
-						return scope_EObject_id(context, reference)
-					Expression:
-						return scope_EObject_id(context, reference)
-					LiteralOrComputedPropertyName:
-						return scope_EObject_id(context, reference)
-				}
+		val scope = getScope(context, reference);
+
+		if (scope === IScope.NULLSCOPE) {
+			// used for type references in JSDoc (see JSDocCompletionProposalComputer):
+			if (reference == N4JSPackage.Literals.IMPORT_DECLARATION__MODULE) {
+				return scope_ImportedAndCurrentModule(context, reference);
 			}
 
-			return scope;
-		} finally {
-			aks.close;
+			// the following cases are only required for content assist (i.e. scoping on broken ASTs or at unusual
+			// locations) otherwise use context:
+			switch (context) {
+				Script:
+					return scope_EObject_id(context, reference)
+				N4TypeDeclaration:
+					return scope_EObject_id(context, reference)
+				VariableDeclaration:
+					return scope_EObject_id(context, reference)
+				Statement:
+					return scope_EObject_id(context, reference)
+				NewExpression:
+					return scope_EObject_id(context, reference)
+				ParameterizedCallExpression:
+					return scope_EObject_id(context, reference)
+				Argument:
+					return scope_EObject_id(context, reference)
+				Expression:
+					return scope_EObject_id(context, reference)
+				LiteralOrComputedPropertyName:
+					return scope_EObject_id(context, reference)
+			}
 		}
+
+		return scope;
 	}
 
 	/**
@@ -547,7 +526,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		val staticAccess = typeRef instanceof TypeTypeRef;
 		val structFieldInitMode = typeRef.typingStrategy === TypingStrategy.STRUCTURAL_FIELD_INITIALIZER;
 		val checkVisibility = true;
-		return memberScopingHelper.createMemberScope(typeRef, propertyAccess, checkVisibility, staticAccess, structFieldInitMode, suppressAccessKindOnMemberScopeRequest);
+		return memberScopingHelper.createMemberScope(typeRef, propertyAccess, checkVisibility, staticAccess, structFieldInitMode);
 	}
 
 	private def IScope createScopeForNamespaceAccess(ModuleNamespaceVirtualType namespace, EObject context) {
@@ -738,7 +717,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 					// Prevent "Cannot resolve to element" error message of unknown attributes since
 					// we want to issue a warning instead
 					val memberScope = memberScopingHelper.createMemberScope(propsTypeRef, context, checkVisibility,
-						staticAccess, structFieldInitMode, suppressAccessKindOnMemberScopeRequest);
+						staticAccess, structFieldInitMode);
 					return new DynamicPseudoScope(memberScope);
 				} else {
 					val scope = getN4JSScope(context, reference);

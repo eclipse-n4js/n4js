@@ -40,8 +40,6 @@ public class MemberScopeRequest {
 	public final boolean structFieldInitMode;
 	/** Flag whether the TypeRef is dynamic. */
 	public final boolean isDynamicType;
-	/** Flag whether the kind of access (read/write) should be respected. */
-	public final boolean suppressAccessKind;
 
 	/**
 	 * Creates a new member scope request with given values, these values are directly accessible via fields.
@@ -53,8 +51,7 @@ public class MemberScopeRequest {
 	 *            see {@link #provideContainedMembers}.
 	 */
 	public MemberScopeRequest(TypeRef originalReceiverTypeRef, EObject context, boolean provideContainedMembers,
-			boolean checkVisibility, boolean staticAccess, boolean structFieldInitMode, boolean isDynamicType,
-			boolean suppressAccessKind) {
+			boolean checkVisibility, boolean staticAccess, boolean structFieldInitMode, boolean isDynamicType) {
 
 		if (provideContainedMembers && !(context instanceof MemberAccess)) {
 			throw new IllegalStateException(
@@ -68,7 +65,6 @@ public class MemberScopeRequest {
 		this.staticAccess = staticAccess;
 		this.structFieldInitMode = structFieldInitMode;
 		this.isDynamicType = isDynamicType;
-		this.suppressAccessKind = suppressAccessKind;
 	}
 
 	/**
@@ -79,7 +75,7 @@ public class MemberScopeRequest {
 			return this;
 		}
 		return new MemberScopeRequest(originalReceiverTypeRef, context, provideContainedMembers, checkVisibility,
-				true, structFieldInitMode, isDynamicType, suppressAccessKind);
+				true, structFieldInitMode, isDynamicType);
 	}
 
 	/**
@@ -90,7 +86,7 @@ public class MemberScopeRequest {
 			return this;
 		}
 		return new MemberScopeRequest(originalReceiverTypeRef, context, provideContainedMembers, checkVisibility,
-				false, structFieldInitMode, isDynamicType, suppressAccessKind);
+				false, structFieldInitMode, isDynamicType);
 	}
 
 	/**
@@ -102,6 +98,6 @@ public class MemberScopeRequest {
 			return this;
 		}
 		return new MemberScopeRequest(originalReceiverTypeRef, context, provideContainedMembers, checkVisibility,
-				staticAccess, structFieldInitMode, isDynamicType, suppressAccessKind);
+				staticAccess, structFieldInitMode, isDynamicType);
 	}
 }

@@ -16,6 +16,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.n4js.n4JS.JSXElement;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
+import org.eclipse.n4js.scoping.members.WrongTypingStrategyDescription;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
@@ -43,7 +44,7 @@ import com.google.inject.Inject;
 public class N4JSIdeContentProposalProvider extends IdeContentProposalProvider {
 
 	/**
-	 * TODO ADD JAVADOC
+	 * Filter for invalid content assist entries
 	 */
 	static public class N4JSCandidateFilter implements Predicate<IEObjectDescription> {
 		@Override
@@ -52,11 +53,25 @@ public class N4JSIdeContentProposalProvider extends IdeContentProposalProvider {
 			final IEObjectDescription eObjectDescription = candidate;
 			// Don't propose any erroneous descriptions.
 			boolean valid = true;
-			valid &= !(IEObjectDescriptionWithError.isErrorDescription(eObjectDescription));
+			valid &= !isErrorDescription(eObjectDescription);
 			valid &= !N4TSQualifiedNameProvider.GLOBAL_NAMESPACE_SEGMENT.equals(qualifiedName.getFirstSegment());
 			valid &= !N4TSQualifiedNameProvider.isModulePolyfill(qualifiedName);
 			valid &= !N4TSQualifiedNameProvider.isPolyfill(qualifiedName);
 			return valid;
+		}
+
+		boolean isErrorDescription(IEObjectDescription eObjectDescription) {
+			IEObjectDescriptionWithError descriptionWithError = IEObjectDescriptionWithError
+					.getDescriptionWithError(eObjectDescription);
+			if (descriptionWithError != null) {
+				descriptionWithError.getIssueCode();
+
+				if (descriptionWithError instanceof WrongTypingStrategyDescription) {
+					return false;
+				}
+				return true;
+			}
+			return false;
 		}
 	}
 

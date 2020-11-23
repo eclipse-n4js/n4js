@@ -38,16 +38,11 @@ public class TypingStrategyAwareMemberScope extends FilterWithErrorMarkerScope {
 	 * @param receiverType
 	 *            in case of use site structural typing, the strategy is set in the reference
 	 */
-	public TypingStrategyAwareMemberScope(IScope parent, TypeRef receiverType, EObject context,
-			boolean suppressAccessKind) {
-
+	public TypingStrategyAwareMemberScope(IScope parent, TypeRef receiverType, EObject context) {
 		super(parent);
 		TypingStrategy typingStrategy = TypeUtils.retrieveTypingStrategy(receiverType);
 
-		boolean isLeftHand = suppressAccessKind
-				? typingStrategy == TypingStrategy.STRUCTURAL_WRITE_ONLY_FIELDS
-				: ExpressionExtensions.isLeftHandSide(context);
-
+		boolean isLeftHand = ExpressionExtensions.isLeftHandSide(context);
 		strategyFilter = new TypingStrategyFilterDesc(typingStrategy, isLeftHand);
 		useSite = receiverType != null && receiverType.isUseSiteStructuralTyping();
 		receiverTypeName = (receiverType == null || receiverType.eIsProxy()) ? "unknown type"

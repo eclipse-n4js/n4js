@@ -86,10 +86,10 @@ class MemberScopingHelper {
 	 *               see {@link AbstractMemberScope#structFieldInitMode}.
 	 */
 	public def IScope createMemberScope(TypeRef receiverTypeRef, MemberAccess context,
-		boolean checkVisibility, boolean staticAccess, boolean structFieldInitMode, boolean suppressAccessKind) {
+		boolean checkVisibility, boolean staticAccess, boolean structFieldInitMode) {
 
 		val request = new MemberScopeRequest(receiverTypeRef, context, true, checkVisibility, staticAccess,
-			structFieldInitMode, receiverTypeRef.isDynamic, suppressAccessKind);
+			structFieldInitMode, receiverTypeRef.isDynamic);
 		return decoratedMemberScopeFor(receiverTypeRef, request);
 	}
 
@@ -111,7 +111,7 @@ class MemberScopingHelper {
 		boolean checkVisibility, boolean staticAccess, boolean structFieldInitMode) {
 
 		val request = new MemberScopeRequest(receiverTypeRef, context, false, checkVisibility, staticAccess,
-			structFieldInitMode, receiverTypeRef.isDynamic, false);
+			structFieldInitMode, receiverTypeRef.isDynamic);
 		return decoratedMemberScopeFor(receiverTypeRef, request);
 	}
 
@@ -145,7 +145,7 @@ class MemberScopingHelper {
 		if (memberScopeRequest.checkVisibility &&
 			! FilterWithErrorMarkerScope.isDecoratedWithFilter(scope, TypingStrategyAwareMemberScope)) {
 			decoratedScope = new TypingStrategyAwareMemberScope(decoratedScope, receiverTypeRef,
-				memberScopeRequest.context, memberScopeRequest.suppressAccessKind);
+				memberScopeRequest.context);
 		}
 		return decoratedScope;
 	}

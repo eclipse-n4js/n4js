@@ -1481,7 +1481,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		val checkVisibility = true
 		val staticAccess = (receiverTypeRef instanceof TypeTypeRef)
 		val structFieldInitMode = receiverTypeRef.typingStrategy === TypingStrategy.STRUCTURAL_FIELD_INITIALIZER
-		val scope = memberScopingHelper.createMemberScope(receiverTypeRef, indexedAccess, checkVisibility, staticAccess, structFieldInitMode, false)
+		val scope = memberScopingHelper.createMemberScope(receiverTypeRef, indexedAccess, checkVisibility, staticAccess, structFieldInitMode)
 		val memberDesc = if(memberName!==null && !memberName.empty) {
 			scope.getSingleElement(qualifiedNameConverter.toQualifiedName(memberName))
 		};
