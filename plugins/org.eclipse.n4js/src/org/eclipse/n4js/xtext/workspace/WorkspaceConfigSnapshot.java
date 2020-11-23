@@ -35,19 +35,19 @@ public class WorkspaceConfigSnapshot {
 	/** Keys are URIs <em>without</em> trailing path separator. */
 	protected final ImmutableMap<URI, ProjectConfigSnapshot> sourceFolderPath2Project;
 	/** Project build order */
-	protected final ProjectBuildOrderInfo projectBuildOrderInfo;
+	protected final BuildOrderInfo buildOrderInfo;
 
 	/** See {@link WorkspaceConfigSnapshot}. */
 	public WorkspaceConfigSnapshot(URI path, ImmutableBiMap<String, ProjectConfigSnapshot> name2Project,
 			ImmutableMap<URI, ProjectConfigSnapshot> projectPath2Project,
 			ImmutableMap<URI, ProjectConfigSnapshot> sourceFolderPath2Project,
-			ProjectBuildOrderFactory projectBuildOrderFactory) {
+			BuildOrderInfo buildOrderInfo) {
 
 		this.path = path;
 		this.name2Project = name2Project;
 		this.projectPath2Project = projectPath2Project;
 		this.sourceFolderPath2Project = sourceFolderPath2Project;
-		this.projectBuildOrderInfo = projectBuildOrderFactory.compute(this);
+		this.buildOrderInfo = buildOrderInfo;
 	}
 
 	/** Getter for the root path. */
@@ -61,8 +61,8 @@ public class WorkspaceConfigSnapshot {
 	}
 
 	/** Get build order of all projects of this workspace snapshot */
-	public ProjectBuildOrderInfo getProjectBuildOrderInfo() {
-		return projectBuildOrderInfo;
+	public BuildOrderInfo getBuildOrderInfo() {
+		return buildOrderInfo;
 	}
 
 	/** Find the project with the given name. */
@@ -107,12 +107,12 @@ public class WorkspaceConfigSnapshot {
 
 	/** Return true iff there exist projects in this workspace that have a dependency cycle */
 	public boolean hasDependencyCycle() {
-		return !projectBuildOrderInfo.projectCycles.isEmpty();
+		return !buildOrderInfo.projectCycles.isEmpty();
 	}
 
 	/** Return true iff the given project is part of a dependency cycle */
 	public boolean isInDependencyCycle(String projectName) {
-		for (List<String> projectCycle : projectBuildOrderInfo.projectCycles) {
+		for (List<String> projectCycle : buildOrderInfo.projectCycles) {
 			if (projectCycle.contains(projectName)) {
 				return true;
 			}
@@ -126,7 +126,7 @@ public class WorkspaceConfigSnapshot {
 		int result = 1;
 		result = prime * result + ((name2Project == null) ? 0 : name2Project.hashCode());
 		result = prime * result + ((path == null) ? 0 : path.hashCode());
-		// note: no need to consider "projectBuildOrderInfo" and the lookup maps "projectPath2Project" and
+		// note: no need to consider "buildOrderInfo" and the lookup maps "projectPath2Project" and
 		// "sourceFolderPath2Project"
 		return result;
 	}
@@ -150,7 +150,7 @@ public class WorkspaceConfigSnapshot {
 				return false;
 		} else if (!path.equals(other.path))
 			return false;
-		// note: no need to check "projectBuildOrderInfo" and the lookup maps "projectPath2Project" and
+		// note: no need to check "buildOrderInfo" and the lookup maps "projectPath2Project" and
 		// "sourceFolderPath2Project"
 		return true;
 	}

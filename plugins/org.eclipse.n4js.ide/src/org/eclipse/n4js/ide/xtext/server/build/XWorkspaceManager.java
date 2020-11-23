@@ -20,7 +20,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ide.xtext.server.XIWorkspaceConfigFactory;
 import org.eclipse.n4js.xtext.server.LSPIssue;
 import org.eclipse.n4js.xtext.workspace.ConfigSnapshotFactory;
-import org.eclipse.n4js.xtext.workspace.ProjectBuildOrderInfo;
+import org.eclipse.n4js.xtext.workspace.BuildOrderInfo;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
@@ -87,7 +87,7 @@ public class XWorkspaceManager {
 		public final List<IResourceDescription> removedProjectsContents;
 		/**
 		 * Names of projects that have been or are now inside a dependency cycle before or after this update. Note that
-		 * {@link ProjectBuildOrderInfo#getProjectCycles()} of {@link WorkspaceConfigSnapshot} represents the new state
+		 * {@link BuildOrderInfo#getProjectCycles()} of {@link WorkspaceConfigSnapshot} represents the new state
 		 * only.
 		 */
 		public final List<String> cyclicProjectChanges;
@@ -183,14 +183,14 @@ public class XWorkspaceManager {
 		updateProjects(changes.getChangedProjects());
 		addProjects(changes.getAddedProjects());
 
-		Collection<ImmutableList<String>> oldCycles = workspaceConfigSnapshot.getProjectBuildOrderInfo()
+		Collection<ImmutableList<String>> oldCycles = workspaceConfigSnapshot.getBuildOrderInfo()
 				.getProjectCycles();
 
 		workspaceConfigSnapshot = workspaceIndex.changeOrRemoveProjects(
 				Iterables.concat(changes.getAddedProjects(), changes.getChangedProjects()),
 				Iterables.transform(changes.getRemovedProjects(), ProjectConfigSnapshot::getName));
 
-		Collection<ImmutableList<String>> newCycles = workspaceConfigSnapshot.getProjectBuildOrderInfo()
+		Collection<ImmutableList<String>> newCycles = workspaceConfigSnapshot.getBuildOrderInfo()
 				.getProjectCycles();
 
 		Set<String> cyclicProjectChanges = new HashSet<>();

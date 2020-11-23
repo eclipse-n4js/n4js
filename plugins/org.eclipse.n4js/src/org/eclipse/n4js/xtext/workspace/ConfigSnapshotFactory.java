@@ -34,9 +34,9 @@ import com.google.inject.Inject;
 @SuppressWarnings("restriction")
 public class ConfigSnapshotFactory {
 
-	/** Provider to create {@link ProjectBuildOrderInfo} instances */
+	/** Provider to create {@link BuildOrderInfo} instances */
 	@Inject
-	protected ProjectBuildOrderFactory buildOrderFactory;
+	protected BuildOrderFactory buildOrderFactory;
 
 	/** Creates an instance of {@link WorkspaceConfigSnapshot} */
 	public WorkspaceConfigSnapshot createWorkspaceConfigSnapshot(XIWorkspaceConfig workspaceConfig) {
@@ -80,11 +80,13 @@ public class ConfigSnapshotFactory {
 			ImmutableMap<URI, ProjectConfigSnapshot> projectPath2Project,
 			ImmutableMap<URI, ProjectConfigSnapshot> sourceFolderPath2Project) {
 
+		BuildOrderInfo buildOrderInfo = buildOrderFactory.createBuildOrderInfo(name2Project);
+
 		return new WorkspaceConfigSnapshot(path,
 				ImmutableBiMap.copyOf(name2Project),
 				ImmutableMap.copyOf(projectPath2Project),
 				ImmutableMap.copyOf(sourceFolderPath2Project),
-				buildOrderFactory);
+				buildOrderInfo);
 	}
 
 	/** Creates an instance of {@link WorkspaceConfigSnapshot} only with the path of the given snapshot */
