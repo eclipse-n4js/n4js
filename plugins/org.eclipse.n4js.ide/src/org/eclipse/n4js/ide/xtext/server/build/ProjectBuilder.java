@@ -40,6 +40,7 @@ import org.eclipse.n4js.xtext.server.LSPIssue;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.SourceFolderScanner;
 import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
+import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.generator.OutputConfiguration;
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
@@ -231,9 +232,13 @@ public class ProjectBuilder {
 		}
 
 		@Override
-		public XBuildRequest getBuildRequest(String projectName, Set<URI> changedFiles, Set<URI> deletedFiles,
+		public XBuildRequest getBuildRequest(WorkspaceConfigSnapshot workspaceConfig,
+				ProjectConfigSnapshot projectConfig, Set<URI> changedFiles, Set<URI> deletedFiles,
 				List<Delta> externalDeltas) {
-			XBuildRequest request = delegate.getBuildRequest(projectName, changedFiles, deletedFiles, externalDeltas);
+
+			XBuildRequest request = delegate.getBuildRequest(workspaceConfig, projectConfig, changedFiles, deletedFiles,
+					externalDeltas);
+
 			updater.attachTo(request);
 			return request;
 		}
@@ -440,8 +445,8 @@ public class ProjectBuilder {
 			List<IResourceDescription.Delta> externalDeltas,
 			CancelIndicator cancelIndicator) {
 
-		XBuildRequest request = buildRequestFactory.getBuildRequest(projectConfig.getName(), changedFiles, deletedFiles,
-				externalDeltas);
+		XBuildRequest request = buildRequestFactory.getBuildRequest(workspaceManager.getWorkspaceConfig(),
+				projectConfig, changedFiles, deletedFiles, externalDeltas);
 
 		ImmutableProjectState currentProjectState = this.projectStateSnapshot.get();
 

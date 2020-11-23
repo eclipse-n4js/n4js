@@ -105,9 +105,8 @@ class CyclicDependenciesBuilderTest extends AbstractIncrementalBuilderTest {
 		saveOpenedFile("P1/package.json");
 		
 		assertIssues(
-			"P1/package.json" -> #["(Error, [15:24 - 15:28], Dependency cycle of the projects: P1, P2.)"]
-			// TODO GH-1967
-			//, "P2/package.json" -> #["(Error, [15:24 - 15:28], Dependency cycle of the projects: P1, P2.)"]
+			"P1/package.json" -> #["(Error, [15:24 - 15:28], Dependency cycle of the projects: P1, P2.)"],
+			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"]
 		);
 	}
 
@@ -119,10 +118,7 @@ class CyclicDependenciesBuilderTest extends AbstractIncrementalBuilderTest {
 		
 		assertIssues(
 			"P1/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
-			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
-			"M2" -> #[
-				"(Error, [0:17 - 0:21], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
-				"(Error, [1:9 - 1:11], Couldn't resolve reference to Type 'C1'.)"]
+			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"]
 		);
 		
 		openFile("P1/package.json");
@@ -132,5 +128,131 @@ class CyclicDependenciesBuilderTest extends AbstractIncrementalBuilderTest {
 		saveOpenedFile("P1/package.json");
 		
 		assertNoIssues();
+	}
+
+	@Test
+	def void testOnlyDirtyStateBuildInsideCycle() throws IOException {
+		testWorkspaceManager.createTestOnDisk(testData2);
+
+		startAndWaitForLspServer();
+		
+		assertIssues(
+			"P1/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
+			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"]
+		);
+		
+		openFile("M1");
+		
+		changeOpenedFile("M1", "export public class C1 {" -> "export public class C1 { #");
+		
+		assertIssues(
+			"P1/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
+			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
+			"M1"              -> #["(Error, [0:25 - 1:0], extraneous input '#\\n' expecting '}')"]
+		);
+		
+		saveOpenedFile("M1");
+		
+		assertIssues(
+			"P1/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
+			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
+			"M1"              -> #["(Error, [0:25 - 1:0], extraneous input '#\\n' expecting '}')"]
+		);
+		
+		closeFile("M1");
+		
+		assertIssues(
+			"P1/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
+			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"]
+		);
+	}
+
+	@Test
+	def void testBuildDirtyAfterRemoveCycle1() throws IOException {
+		testWorkspaceManager.createTestOnDisk(testData2);
+
+		startAndWaitForLspServer();
+		
+		assertIssues(
+			"P1/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
+			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"]
+		);
+		
+		openFile("M1");
+		
+		changeOpenedFile("M1", "export public class C1 {" -> "export public class C1 { #");
+		
+		assertIssues(
+			"P1/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
+			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
+			"M1"              -> #["(Error, [0:25 - 1:0], extraneous input '#\\n' expecting '}')"]
+		);
+		
+		saveOpenedFile("M1");
+		
+		assertIssues(
+			"P1/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
+			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
+			"M1"              -> #["(Error, [0:25 - 1:0], extraneous input '#\\n' expecting '}')"]
+		);
+		
+		closeFile("M1");
+		
+		assertIssues(
+			"P1/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
+			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"]
+		);
+			
+		
+		// remove cycle
+		openFile("P1/package.json");
+		changeOpenedFile("P1/package.json", "\"P2\": \"*\"," -> "");
+		saveOpenedFile("P1/package.json");
+
+		
+		assertIssues(
+			"M1"              -> #["(Error, [0:25 - 1:0], extraneous input '#\\n' expecting '}')"]
+		);
+	}
+
+	@Test
+	def void testBuildDirtyAfterRemoveCycle2() throws IOException {
+		testWorkspaceManager.createTestOnDisk(testData2);
+
+		startAndWaitForLspServer();
+		
+		assertIssues(
+			"P1/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
+			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"]
+		);
+		
+		openFile("M1");
+		
+		changeOpenedFile("M1", "export public class C1 {" -> "export public class C1 { #");
+		
+		assertIssues(
+			"P1/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
+			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
+			"M1"              -> #["(Error, [0:25 - 1:0], extraneous input '#\\n' expecting '}')"]
+		);
+		
+		saveOpenedFile("M1");
+		
+		assertIssues(
+			"P1/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
+			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
+			"M1"              -> #["(Error, [0:25 - 1:0], extraneous input '#\\n' expecting '}')"]
+		);
+			
+		
+		// remove cycle
+		openFile("P1/package.json");
+		changeOpenedFile("P1/package.json", "\"P2\": \"*\"," -> "");
+		saveOpenedFile("P1/package.json");
+
+		
+		assertIssues(
+			"M1"              -> #["(Error, [0:25 - 1:0], extraneous input '#\\n' expecting '}')"]
+		);
 	}
 }

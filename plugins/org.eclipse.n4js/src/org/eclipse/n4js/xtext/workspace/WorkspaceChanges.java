@@ -50,46 +50,49 @@ public class WorkspaceChanges {
 
 	/** @return a new instance of {@link WorkspaceChanges} contains the given project as removed */
 	public static WorkspaceChanges createProjectRemoved(ProjectConfigSnapshot project) {
-		return new WorkspaceChanges(ImmutableList.of(), ImmutableList.of(), ImmutableList.of(),
+		return new WorkspaceChanges(
+				ImmutableList.of(), ImmutableList.of(), ImmutableList.of(),
 				ImmutableList.of(), ImmutableList.of(),
 				ImmutableList.of(project), ImmutableList.of(), ImmutableList.of());
 	}
 
 	/** @return a new instance of {@link WorkspaceChanges} contains the given project as added */
 	public static WorkspaceChanges createProjectAdded(ProjectConfigSnapshot project) {
-		return new WorkspaceChanges(ImmutableList.of(), ImmutableList.of(), ImmutableList.of(),
+		return new WorkspaceChanges(
+				ImmutableList.of(), ImmutableList.of(), ImmutableList.of(),
 				ImmutableList.of(), ImmutableList.of(),
 				ImmutableList.of(), ImmutableList.of(project), ImmutableList.of());
 	}
 
 	/** @return a new instance of {@link WorkspaceChanges} contains the given projects as changed */
 	public static WorkspaceChanges createProjectsChanged(Iterable<? extends ProjectConfigSnapshot> changedProjects) {
-		return new WorkspaceChanges(ImmutableList.of(), ImmutableList.of(), ImmutableList.of(),
+		return new WorkspaceChanges(
+				ImmutableList.of(), ImmutableList.of(), ImmutableList.of(),
 				ImmutableList.of(), ImmutableList.of(),
 				ImmutableList.of(), ImmutableList.of(), ImmutableList.copyOf(changedProjects));
 	}
 
 	/** @return a new instance of {@link WorkspaceChanges} contains the given uris as changed */
 	public static WorkspaceChanges createUrisChanged(Iterable<URI> changedURIs) {
-		return new WorkspaceChanges(ImmutableList.of(), ImmutableList.of(), ImmutableList.copyOf(changedURIs),
-				ImmutableList.of(),
-				ImmutableList.of(),
+		return new WorkspaceChanges(
+				ImmutableList.of(), ImmutableList.of(), ImmutableList.copyOf(changedURIs),
+				ImmutableList.of(), ImmutableList.of(),
 				ImmutableList.of(), ImmutableList.of(), ImmutableList.of());
 	}
 
 	/** @return a new instance of {@link WorkspaceChanges} contains the given uris as removed */
 	public static WorkspaceChanges createUrisRemoved(Iterable<URI> removedURIs) {
-		return new WorkspaceChanges(ImmutableList.copyOf(removedURIs), ImmutableList.of(), ImmutableList.of(),
-				ImmutableList.of(),
-				ImmutableList.of(),
+		return new WorkspaceChanges(
+				ImmutableList.copyOf(removedURIs), ImmutableList.of(), ImmutableList.of(),
+				ImmutableList.of(), ImmutableList.of(),
 				ImmutableList.of(), ImmutableList.of(), ImmutableList.of());
 	}
 
 	/** @return a new instance of {@link WorkspaceChanges} contains the given uris as removed / changed */
 	public static WorkspaceChanges createUrisRemovedAndChanged(Iterable<URI> removedURIs, Iterable<URI> changedURIs) {
-		return new WorkspaceChanges(ImmutableList.copyOf(removedURIs), ImmutableList.copyOf(changedURIs),
+		return new WorkspaceChanges(
+				ImmutableList.copyOf(removedURIs), ImmutableList.of(), ImmutableList.copyOf(changedURIs),
 				ImmutableList.of(), ImmutableList.of(),
-				ImmutableList.of(),
 				ImmutableList.of(), ImmutableList.of(), ImmutableList.of());
 	}
 
@@ -113,12 +116,13 @@ public class WorkspaceChanges {
 	/** Constructor */
 	public WorkspaceChanges() {
 		this(ImmutableList.of(), ImmutableList.of(), ImmutableList.of(), ImmutableList.of(), ImmutableList.of(),
-				ImmutableList.of(), ImmutableList.of(),
-				ImmutableList.of());
+				ImmutableList.of(), ImmutableList.of(), ImmutableList.of());
 	}
 
 	/** Constructor */
-	public WorkspaceChanges(ImmutableList<URI> removedURIs, ImmutableList<URI> addedURIs,
+	public WorkspaceChanges(
+			ImmutableList<URI> removedURIs,
+			ImmutableList<URI> addedURIs,
 			ImmutableList<URI> changedURIs,
 			ImmutableList<SourceFolderSnapshot> removedSourceFolders,
 			ImmutableList<SourceFolderSnapshot> addedSourceFolders,

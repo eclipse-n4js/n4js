@@ -11,10 +11,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ide.xtext.server.XIWorkspaceConfigFactory;
@@ -84,12 +84,21 @@ public class XWorkspaceManager {
 		public final WorkspaceChanges changes;
 		/** Former contents of the projects that were removed. */
 		public final List<IResourceDescription> removedProjectsContents;
+		/**
+		 * Names of projects that have been or are now inside a dependency cycle before or after this update. Note that
+		 * {@link ProjectBuildOrderInfo#getProjectCycles()} of {@link WorkspaceConfigSnapshot} represents the new state
+		 * only.
+		 */
+		public final List<String> cyclicProjectChanges;
 
 		/** Creates a new {@link UpdateResult}. */
 		public UpdateResult(WorkspaceChanges changes,
-				Iterable<? extends IResourceDescription> removedProjectsContents) {
+				Iterable<? extends IResourceDescription> removedProjectsContents,
+				Iterable<String> cyclicProjectChanges) {
+
 			this.changes = changes;
 			this.removedProjectsContents = ImmutableList.copyOf(removedProjectsContents);
+			this.cyclicProjectChanges = ImmutableList.copyOf(cyclicProjectChanges);
 		}
 	}
 
@@ -153,7 +162,7 @@ public class XWorkspaceManager {
 	 */
 	public UpdateResult update(Set<URI> dirtyFiles, Set<URI> deletedFiles, boolean refresh) {
 		if (workspaceConfig == null) {
-			return new UpdateResult(WorkspaceChanges.NO_CHANGES, Collections.emptyList());
+			return new UpdateResult(WorkspaceChanges.NO_CHANGES, Collections.emptyList(), Collections.emptyList());
 		}
 
 		WorkspaceChanges changes = workspaceConfig.update(workspaceConfigSnapshot, dirtyFiles, deletedFiles, refresh);
@@ -172,13 +181,24 @@ public class XWorkspaceManager {
 		updateProjects(changes.getChangedProjects());
 		addProjects(changes.getAddedProjects());
 
+		Collection<ImmutableList<String>> oldCycles = workspaceConfigSnapshot.getProjectBuildOrderInfo()
+				.getProjectCycles();
+
 		workspaceConfigSnapshot = workspaceIndex.changeOrRemoveProjects(
 				Iterables.concat(changes.getAddedProjects(), changes.getChangedProjects()),
-				changes.getRemovedProjects().stream()
-						.map(ProjectConfigSnapshot::getName)
-						.collect(Collectors.toList()));
+				Iterables.transform(changes.getRemovedProjects(), ProjectConfigSnapshot::getName));
 
-		return new UpdateResult(changes, removedProjectsContents);
+		Collection<ImmutableList<String>> newCycles = workspaceConfigSnapshot.getProjectBuildOrderInfo()
+				.getProjectCycles();
+
+		Set<String> cyclicProjectChanges = new HashSet<>();
+		for (List<String> cycle : Iterables.concat(oldCycles, newCycles)) {
+			for (String projectName : cycle) {
+				cyclicProjectChanges.add(projectName);
+			}
+		}
+
+		return new UpdateResult(changes, removedProjectsContents, cyclicProjectChanges);
 	}
 
 	private List<IResourceDescription> collectAllResourceDescriptions(

@@ -12,19 +12,20 @@ package org.eclipse.n4js.xtext.workspace;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 import org.eclipse.xtext.resource.IResourceDescription;
 
 import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Iterables;
+import com.google.common.collect.ImmutableCollection;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import com.google.common.collect.Multimaps;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
@@ -56,18 +57,27 @@ public class ProjectBuildOrderInfo implements IOrderInfo<ProjectConfigSnapshot> 
 		 * projects are iterated over that are contained in this set
 		 */
 		final protected Set<String> visitProjectNames = new HashSet<>();
-		/** Iterator delegate */
-		final protected Iterator<ProjectConfigSnapshot> iteratorDelegate;
-
-		ProjectBuildOrderIterator() {
-			this.iteratorDelegate = Iterables
-					.filter(sortedProjects, input -> visitProjectNames.contains(input.getName())).iterator();
-		}
+		/** Set of all projects that have already visited by this iterator */
+		final protected LinkedHashSet<ProjectConfigSnapshot> visitedAlready = new LinkedHashSet<>();
+		/** The last visited project or null */
+		protected ProjectConfigSnapshot lastVisited;
+		/** The iterator index of the next project to visit */
+		protected int iteratorIndex = -1;
 
 		@Override
 		public ProjectBuildOrderIterator visit(Collection<? extends ProjectConfigSnapshot> projectConfigs) {
 			for (ProjectConfigSnapshot pc : projectConfigs) {
-				visitProjectNames.add(pc.getName());
+				String projectName = pc.getName();
+
+				if (!visitedAlready.contains(pc) && sortedProjects.indexOf(pc) < sortedProjects.indexOf(lastVisited)) {
+					String currentProjectName = current().getName();
+					throw new IllegalStateException("Dependency-inverse visit order not supported: from "
+							+ currentProjectName + " to " + projectName);
+				}
+
+				visitProjectNames.add(projectName);
+				iteratorIndex = sortedProjects.indexOf(lastVisited);
+				moveNext();
 			}
 			return this;
 		}
@@ -106,38 +116,76 @@ public class ProjectBuildOrderInfo implements IOrderInfo<ProjectConfigSnapshot> 
 			return affectedProjects;
 		}
 
+		/** @return the current {@link ProjectConfigSnapshot} of this iterator */
+		public ProjectConfigSnapshot current() {
+			return lastVisited;
+		}
+
 		@Override
 		public boolean hasNext() {
-			return iteratorDelegate.hasNext();
+			if (notStarted()) {
+				moveNext();
+			}
+			return iteratorIndex < sortedProjects.size();
 		}
 
 		@Override
 		public ProjectConfigSnapshot next() {
-			return iteratorDelegate.next();
+			if (notStarted()) {
+				moveNext();
+			}
+
+			if (!hasNext()) {
+				throw new NoSuchElementException();
+			}
+
+			ProjectConfigSnapshot next = atIndex();
+			visitedAlready.add(next);
+			lastVisited = next;
+
+			moveNext();
+
+			return next;
+		}
+
+		private ProjectConfigSnapshot atIndex() {
+			return sortedProjects.get(iteratorIndex);
+
+		}
+
+		private boolean notStarted() {
+			return iteratorIndex < 0;
+		}
+
+		private void moveNext() {
+			iteratorIndex++;
+			while (hasNext() && !visitProjectNames.contains(atIndex().getName())) {
+				iteratorIndex++;
+			}
 		}
 	}
 
 	/** Workspace configuration related to this build order */
 	final protected WorkspaceConfigSnapshot workspaceConfig;
 	/** Inverse set of project dependency information */
-	final protected Multimap<String, ProjectConfigSnapshot> inversedDependencies;
+	final protected ImmutableMultimap<String, ProjectConfigSnapshot> inversedDependencies;
 	/** Build order of projects */
-	final protected List<ProjectConfigSnapshot> sortedProjects;
+	final protected ImmutableList<ProjectConfigSnapshot> sortedProjects;
 	/** All project cycles, each cycle given as a list of project names */
-	final protected Collection<List<String>> projectCycles;
+	final protected ImmutableCollection<ImmutableList<String>> projectCycles;
 
 	/** Constructor */
 	public ProjectBuildOrderInfo(WorkspaceConfigSnapshot pWorkspaceConfig) {
 		Multimap<String, ProjectConfigSnapshot> pInversedDependencies = HashMultimap.create();
 		List<ProjectConfigSnapshot> pSortedProjects = new ArrayList<>();
-		Set<List<String>> pProjectCycles = new HashSet<>();
+		Set<ImmutableList<String>> pProjectCycles = new HashSet<>();
 
 		init(pWorkspaceConfig, pInversedDependencies, pSortedProjects, pProjectCycles);
 
 		workspaceConfig = pWorkspaceConfig;
-		inversedDependencies = Multimaps.unmodifiableMultimap(pInversedDependencies);
-		sortedProjects = Collections.unmodifiableList(pSortedProjects);
-		projectCycles = Collections.unmodifiableSet(pProjectCycles);
+		inversedDependencies = ImmutableMultimap.copyOf(pInversedDependencies);
+		sortedProjects = ImmutableList.copyOf(pSortedProjects);
+		projectCycles = ImmutableList.copyOf(pProjectCycles);
 	}
 
 	/** Creates a new instance of {@link ProjectBuildOrderIterator}. The given set of projects will be visited only. */
@@ -158,14 +206,14 @@ public class ProjectBuildOrderInfo implements IOrderInfo<ProjectConfigSnapshot> 
 	}
 
 	/** @return all project cycles as lists of project names */
-	public Collection<List<String>> getProjectCycles() {
+	public ImmutableCollection<ImmutableList<String>> getProjectCycles() {
 		return this.projectCycles;
 	}
 
 	/** Populates {@link #sortedProjects}, {@link #inversedDependencies} and {@link #projectCycles} */
 	protected void init(WorkspaceConfigSnapshot pWorkspaceConfig,
 			Multimap<String, ProjectConfigSnapshot> pInversedDependencies,
-			List<ProjectConfigSnapshot> pSortedProjects, Collection<List<String>> pProjectCycles) {
+			List<ProjectConfigSnapshot> pSortedProjects, Collection<ImmutableList<String>> pProjectCycles) {
 
 		LinkedHashSet<String> orderedProjectNames = new LinkedHashSet<>();
 		for (ProjectConfigSnapshot pc : pWorkspaceConfig.getProjects()) {
@@ -185,7 +233,7 @@ public class ProjectBuildOrderInfo implements IOrderInfo<ProjectConfigSnapshot> 
 
 	/** Computes the build order of all projects in the workspace */
 	protected void computeOrder(WorkspaceConfigSnapshot pWorkspaceConfig,
-			Collection<List<String>> pProjectCycles,
+			Collection<ImmutableList<String>> pProjectCycles,
 			ProjectConfigSnapshot pc, LinkedHashSet<String> orderedProjects,
 			LinkedHashSet<String> projectStack) {
 
@@ -197,7 +245,7 @@ public class ProjectBuildOrderInfo implements IOrderInfo<ProjectConfigSnapshot> 
 		if (projectStack.contains(pdName)) {
 			ArrayList<String> listStack = new ArrayList<>(projectStack);
 			List<String> cycle = listStack.subList(listStack.indexOf(pdName), listStack.size());
-			pProjectCycles.add(Collections.unmodifiableList(cycle));
+			pProjectCycles.add(ImmutableList.copyOf(cycle));
 		} else {
 			projectStack.add(pdName);
 
