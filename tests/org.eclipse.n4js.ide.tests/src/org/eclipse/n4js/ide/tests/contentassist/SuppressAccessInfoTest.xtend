@@ -31,7 +31,7 @@ public class SuppressAccessInfoTest extends AbstractCompletionTest {
 			    c;
 			}
 		''', ''' 
-			(field, Field, field, , , 00009, , , , ([5:10 - 5:10], field), [], [], , )
+			(field, Field, field, , , 00010, , , , ([5:10 - 5:10], field), [], [], , )
 		''');
 	}
 }
