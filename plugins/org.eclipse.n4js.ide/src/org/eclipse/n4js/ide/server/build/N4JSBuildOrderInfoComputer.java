@@ -15,13 +15,13 @@ import java.util.Set;
 
 import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.projectDescription.ProjectType;
-import org.eclipse.n4js.xtext.workspace.ProjectBuildOrderFactory;
+import org.eclipse.n4js.xtext.workspace.BuildOrderFactory;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 
 /**
  * Customized in order to ignore dependencies of {@link ProjectType#PLAINJS plain-JS} projects.
  */
-public class N4JSProjectBuildOrderFactory extends ProjectBuildOrderFactory {
+public class N4JSBuildOrderInfoComputer extends BuildOrderFactory.BuildOrderInfoComputer {
 
 	@Override
 	protected Set<String> getDependencies(ProjectConfigSnapshot pc) {
