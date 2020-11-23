@@ -19,6 +19,7 @@ import java.util.Set;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ide.xtext.server.XIWorkspaceConfigFactory;
 import org.eclipse.n4js.xtext.server.LSPIssue;
+import org.eclipse.n4js.xtext.workspace.ConfigSnapshotFactory;
 import org.eclipse.n4js.xtext.workspace.ProjectBuildOrderInfo;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
@@ -70,7 +71,7 @@ public class XWorkspaceManager {
 	private ConcurrentIndex workspaceIndex;
 
 	@Inject
-	private ProjectBuildOrderInfo.Provider projectBuildOrderInfoProvider;
+	private ConfigSnapshotFactory configSnapshotFactory;
 
 	private final Map<String, ProjectBuilder> projectName2ProjectBuilder = new HashMap<>();
 
@@ -136,7 +137,8 @@ public class XWorkspaceManager {
 		projectName2ProjectBuilder.clear();
 
 		this.workspaceConfig = workspaceConfig;
-		this.workspaceConfigSnapshot = workspaceConfig.toSnapshot(projectBuildOrderInfoProvider);
+
+		this.workspaceConfigSnapshot = configSnapshotFactory.createWorkspaceConfigSnapshot(workspaceConfig);
 
 		// init projects
 		addProjects(this.workspaceConfigSnapshot.getProjects());

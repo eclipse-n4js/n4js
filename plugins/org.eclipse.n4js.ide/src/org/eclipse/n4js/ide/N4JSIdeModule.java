@@ -29,7 +29,8 @@ import org.eclipse.n4js.ide.server.N4JSProjectStatePersister;
 import org.eclipse.n4js.ide.server.N4JSTextDocumentFrontend;
 import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
 import org.eclipse.n4js.ide.server.build.N4JSBuilderFrontend;
-import org.eclipse.n4js.ide.server.build.N4JSProjectBuildOrderInfo;
+import org.eclipse.n4js.ide.server.build.N4JSConfigSnapshotFactory;
+import org.eclipse.n4js.ide.server.build.N4JSProjectBuildOrderFactory;
 import org.eclipse.n4js.ide.server.build.N4JSProjectBuilder;
 import org.eclipse.n4js.ide.server.codeActions.N4JSCodeActionService;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
@@ -66,7 +67,8 @@ import org.eclipse.n4js.ide.xtext.server.util.XOperationCanceledManager;
 import org.eclipse.n4js.internal.lsp.FileSystemScanner;
 import org.eclipse.n4js.internal.lsp.N4JSSourceFolderScanner;
 import org.eclipse.n4js.xtext.server.EmfDiagnosticToLSPIssueConverter;
-import org.eclipse.n4js.xtext.workspace.ProjectBuildOrderInfo;
+import org.eclipse.n4js.xtext.workspace.ConfigSnapshotFactory;
+import org.eclipse.n4js.xtext.workspace.ProjectBuildOrderFactory;
 import org.eclipse.n4js.xtext.workspace.SourceFolderScanner;
 import org.eclipse.n4js.xtext.workspace.XWorkspaceConfigSnapshotProvider;
 import org.eclipse.xtext.generator.IGenerator;
@@ -179,8 +181,12 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 		return BuiltInAwareIncrementalBuilder.class;
 	}
 
-	public Class<? extends ProjectBuildOrderInfo.Provider> bindProjectBuildOrderInfoProvider() {
-		return N4JSProjectBuildOrderInfo.Provider.class;
+	public Class<? extends ProjectBuildOrderFactory> bindProjectBuildOrderFactory() {
+		return N4JSProjectBuildOrderFactory.class;
+	}
+
+	public Class<? extends ConfigSnapshotFactory> bindConfigSnapshotFactory() {
+		return N4JSConfigSnapshotFactory.class;
 	}
 
 	public Class<? extends SourceFolderScanner> bindSourceFolderScanner() {

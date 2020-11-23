@@ -20,6 +20,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.ide.server.build.N4JSConfigSnapshotFactory;
 import org.eclipse.n4js.ide.xtext.server.XIWorkspaceConfigFactory;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
@@ -57,6 +58,9 @@ public class FileBasedWorkspaceInitializer implements XIWorkspaceConfigFactory {
 	@Inject
 	private FileBasedWorkspace workspace;
 
+	@Inject
+	private N4JSConfigSnapshotFactory configSnapshotFactory;
+
 	private ProjectDiscoveryHelper projectDiscoveryHelper;
 
 	/** Sets {@link #projectDiscoveryHelper} */
@@ -82,7 +86,7 @@ public class FileBasedWorkspaceInitializer implements XIWorkspaceConfigFactory {
 
 		registerProjectsToFileBasedWorkspace(allProjectURIs);
 
-		return new N4JSWorkspaceConfig(workspaceBaseURI, n4jsCore, multiCleartriggerCache);
+		return new N4JSWorkspaceConfig(workspaceBaseURI, n4jsCore, multiCleartriggerCache, configSnapshotFactory);
 	}
 
 	/**
