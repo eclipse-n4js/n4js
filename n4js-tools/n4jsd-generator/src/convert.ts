@@ -240,7 +240,7 @@ export class Converter {
 		return result;
 	}
 
-	private convertMember(symMember: ts.Symbol, symOwner: ts.Symbol): model.Member {
+	private convertMember(symMember: ts.Symbol, symOwner: ts.Symbol): model.Member | undefined {
 		// we need an AST node; in case of overloading there will be several declarations (one per signature)
 		// but because relevant properties (kind, accessibility, etc.) will be the same in all cases we can
 		// simply use the first one as representative:
@@ -312,8 +312,9 @@ export class Converter {
 		if (!ts.isUnionTypeNode(node.type)
 			|| node.type.types.length === 0
 			|| !node.type.types.every(ts.isLiteralTypeNode)) {
+			// not the special case covered by this method
 			this.createIssueForNode("type alias not supported (except the special case of an aliased union of literal types)", node);
-			return undefined; // not the special case covered by this method
+			return undefined;
 		}
 		const literalValues = [] as (string | number)[];
 		for (const elemTypeNode of node.type.types) {
