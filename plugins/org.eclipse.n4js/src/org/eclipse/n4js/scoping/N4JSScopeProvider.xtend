@@ -157,13 +157,15 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	
 	/** True: Proxies of IdentifierRefs are only resolved within the resource. Otherwise, the proxy is returned. */
 	private boolean suppressCrossFileResolutionOfIdentifierRef = false;
-	
+
+
 	public def TameAutoClosable newCrossFileResolutionSuppressor() {
-		val TameAutoClosable tac =  new TameAutoClosable() {
+		val TameAutoClosable tac = new TameAutoClosable() {
 			private boolean tmpSuppressCrossFileResolutionOfIdentifierRef = init();
 			private def boolean init() {
 				this.tmpSuppressCrossFileResolutionOfIdentifierRef = suppressCrossFileResolutionOfIdentifierRef;
 				suppressCrossFileResolutionOfIdentifierRef = true;
+				return tmpSuppressCrossFileResolutionOfIdentifierRef;
 			}	
 			override close() {
 				suppressCrossFileResolutionOfIdentifierRef = tmpSuppressCrossFileResolutionOfIdentifierRef;
@@ -171,6 +173,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		};
 		return tac;
 	}
+	
 
 	protected def IScope delegateGetScope(EObject context, EReference reference) {
 		return delegate.getScope(context, reference)
@@ -252,7 +255,6 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	}
 
 	override getScopeForContentAssist(EObject context, EReference reference) {
-
 		val scope = getScope(context, reference);
 
 		if (scope === IScope.NULLSCOPE) {
@@ -284,6 +286,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 					return scope_EObject_id(context, reference)
 			}
 		}
+
 		return scope;
 	}
 
@@ -504,8 +507,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	 * In <pre>receiver.property</pre>, binds "property".
 	 *
 	 */
-	private def IScope scope_PropertyAccessExpression_property(ParameterizedPropertyAccessExpression propertyAccess,
-		EReference ref) {
+	private def IScope scope_PropertyAccessExpression_property(ParameterizedPropertyAccessExpression propertyAccess, EReference ref) {
 		val Expression receiver = propertyAccess.target;
 
 		// if accessing namespace import
