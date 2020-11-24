@@ -14,6 +14,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.xtext.workspace.XWorkspaceConfigSnapshotProvider.NullXWorkspaceConfigSnapshotProvider;
 
 import com.google.inject.ImplementedBy;
+import com.google.inject.Inject;
 
 /**
  * Provider for {@link XWorkspaceConfigSnapshotProvider}s
@@ -30,9 +31,12 @@ public interface XWorkspaceConfigSnapshotProvider {
 	 * Note that this implementation may be removed when the N4JS Eclipse product is removed.
 	 */
 	class NullXWorkspaceConfigSnapshotProvider implements XWorkspaceConfigSnapshotProvider {
+		@Inject
+		ConfigSnapshotFactory configSnapshotFactory;
+
 		@Override
 		public WorkspaceConfigSnapshot getWorkspaceConfigSnapshot() {
-			return new ConfigSnapshotFactory().createWorkspaceConfigSnapshot((URI) null);
+			return configSnapshotFactory.createWorkspaceConfigSnapshot((URI) null);
 		}
 	}
 
