@@ -105,6 +105,9 @@ export class Converter {
 			return [ this.convertInterface(node) ];
 		} else if (ts.isClassDeclaration(node)) {
 			return [ this.convertClass(node) ];
+		} else if (ts.isTypeAliasDeclaration(node)) {
+			const elem = this.convertTypeAlias(node);
+			return elem !== undefined ? [ elem ] : [];
 		} else if (node.kind === ts.SyntaxKind.FirstStatement) {
 			const children = utils_ts.getAllChildNodes(node);
 			if (children.length === 2
@@ -172,15 +175,15 @@ export class Converter {
 		const isConst = utils.testFlag(flags, ts.ModifierFlags.Const);
 		if (isConst) {
 			const valueTypes = utils_ts.getValueTypesOfEnum(node, this.checker);
-			const singleValueType = valueTypes.length === 1 ? valueTypes[0] : undefined;
-			if (valueTypes.length === 0) {
+			const singleValueType = valueTypes.size === 1 ? valueTypes.values().next().value : undefined;
+			if (valueTypes.size === 0) {
 				// in TypeScript, const enums are number-based by default:
 				result.primitiveBased = 'number';
 			} else if (singleValueType == 'string' || singleValueType == 'number') {
 				result.primitiveBased = singleValueType;
 			} else {
 				result.primitiveBased = 'string'; // use @StringBased enum in error case
-				this.createIssueForNode("unsupported value types in const enum: " + valueTypes.join(", "), node);
+				this.createIssueForNode("unsupported value types in const enum: " + Array.from(valueTypes).join(", "), node);
 			}
 		}
 
@@ -302,6 +305,45 @@ export class Converter {
 		const result = new model.Parameter();
 		result.name = param.getName();
 		result.typeStr = this.convertTypeReferenceOfTypedSymbol(param);
+		return result;
+	}
+
+	private convertTypeAlias(node: ts.TypeAliasDeclaration): model.Type | undefined {
+		if (!ts.isUnionTypeNode(node.type)
+			|| node.type.types.length === 0
+			|| !node.type.types.every(ts.isLiteralTypeNode)) {
+			this.createIssueForNode("type alias not supported (except the special case of an aliased union of literal types)", node);
+			return undefined; // not the special case covered by this method
+		}
+		const literalValues = [] as (string | number)[];
+		for (const elemTypeNode of node.type.types) {
+			const elemType = this.checker.getTypeFromTypeNode(elemTypeNode);
+			if (elemType.isLiteral()) {
+				if (elemType.isNumberLiteral()) {
+					literalValues.push(elemType.value);
+					continue;
+				} else if (elemType.isStringLiteral()) {
+					literalValues.push(elemType.value);
+					continue;
+				}
+			}
+			this.createIssueForNode("unsupported type in aliased union of literal types: " + this.checker.typeToString(elemType), node);
+			return undefined;
+		}
+		const isAllString = literalValues.every(v => typeof v == 'string');
+		const isAllNumber = literalValues.every(v => typeof v == 'number');
+		if (!isAllString && !isAllNumber) {
+			this.createIssueForNode("a combination of strings and numbers in an aliased union of literal types is not allowed", node);
+			return undefined;
+		}
+
+		const sym = this.checker.getSymbolAtLocation(node.name);
+		const result = new model.Type();
+		result.name = sym.getName();
+		result.kind = 'enum';
+		result.exported = utils_ts.isExported(node);
+		result.primitiveBased = isAllString ? 'string' : 'number';
+		result.literals.push(...utils_ts.createEnumLiteralsFromValues(literalValues));
 		return result;
 	}
 

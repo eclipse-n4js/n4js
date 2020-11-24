@@ -86,7 +86,7 @@ export function getTypeKind(decl: ts.Node) {
 	return undefined;
 }
 
-export function getValueTypesOfEnum(enumDecl: ts.EnumDeclaration, checker: ts.TypeChecker): string[] {
+export function getValueTypesOfEnum(enumDecl: ts.EnumDeclaration, checker: ts.TypeChecker): Set<string> {
 	const types = new Set<string>();
 	for (const lit of enumDecl.members) {
 		const initExpr = lit.initializer;
@@ -102,7 +102,50 @@ export function getValueTypesOfEnum(enumDecl: ts.EnumDeclaration, checker: ts.Ty
 			}
 		}
 	}
-	return Array.from(types.values());
+	return types;
+}
+
+export function createEnumLiteralsFromValues(values: (string | number)[]): model.EnumLiteral[] {
+	const litNames = new Set<string>();
+	const results = [] as model.EnumLiteral[];
+	for (const value of values) {
+		let name: string;
+		// 1) choose a valid identifier as name
+		if (typeof value == 'string') {
+			if (value.length === 0) {
+				name = "_";
+			} else {
+				name = value;
+				if (name.charAt(0) >= '0' && name.charAt(0) <= '9') {
+					name = "_" + name;
+				}
+				for (let i = 0; i < name.length; i++) {
+					const ch = name.charAt(i).toUpperCase();
+					const isValid = ch == '_' || (ch >= 'A' && ch <= 'Z') || (i > 0 && ch >= '0' && ch <= '9');
+					if (!isValid) {
+						name = name.substring(0, i) + (ch == " " ? "_" : "X") + name.substring(i + 1, name.length);
+					}
+				}
+			}
+		} else {
+			name = "L" + value;
+		}
+		// 2) make unique
+		if (litNames.has(name)) {
+			let i = 2;
+			while (litNames.has(name + i)) {
+				i++;
+			}
+			name = name + i;
+		}
+		litNames.add(name);
+		// 3) create enum literal
+		const result = new model.EnumLiteral();
+		result.name = name;
+		result.value = value;
+		results.push(result);
+	}
+	return results;
 }
 
 export function getSourceCodeForNode(node: ts.Node, indentStr: string = "  |"): string {
