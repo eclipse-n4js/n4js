@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.n4js.xtext.workspace.ProjectBuildOrderInfo;
+import org.eclipse.n4js.xtext.workspace.ConfigSnapshotFactory;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.XWorkspaceConfigSnapshotProvider;
@@ -53,7 +53,7 @@ import com.google.inject.Singleton;
 public class ConcurrentIndex implements XWorkspaceConfigSnapshotProvider {
 
 	@Inject
-	private ProjectBuildOrderInfo.Provider projectBuildOrderInfoProvider;
+	private ConfigSnapshotFactory configSnapshotFactory;
 
 	/** Map of all project indices. */
 	private final Map<String, ResourceDescriptionsData> project2Index = new HashMap<>();
@@ -101,7 +101,7 @@ public class ConcurrentIndex implements XWorkspaceConfigSnapshotProvider {
 		synchronized (this) {
 			removedProjectNames = ImmutableSet.copyOf(project2Index.keySet());
 			project2Index.clear();
-			workspaceConfigNew = workspaceConfig.clear();
+			workspaceConfigNew = configSnapshotFactory.clear(workspaceConfig);
 			workspaceConfig = workspaceConfigNew;
 		}
 		notifyListeners(workspaceConfigNew, ImmutableMap.of(), ImmutableList.of(), removedProjectNames);
@@ -171,8 +171,8 @@ public class ConcurrentIndex implements XWorkspaceConfigSnapshotProvider {
 					actuallyRemovedProjectsBuilder.add(removedProjectName);
 				}
 			}
-			newWorkspaceConfig = workspaceConfig.update(changedProjectsCpy, removedProjectsCpy,
-					projectBuildOrderInfoProvider);
+
+			newWorkspaceConfig = configSnapshotFactory.update(workspaceConfig, changedProjectsCpy, removedProjectsCpy);
 
 			workspaceConfig = newWorkspaceConfig;
 		}

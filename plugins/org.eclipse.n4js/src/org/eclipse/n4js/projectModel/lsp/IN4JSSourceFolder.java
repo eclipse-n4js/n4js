@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.projectModel.lsp;
 
-import org.eclipse.n4js.xtext.workspace.XISourceFolder;
 import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.workspace.ISourceFolder;
 
@@ -18,7 +17,7 @@ import org.eclipse.xtext.workspace.ISourceFolder;
  * N4JS specific extension to {@link ISourceFolder} to ensure that the containing project is a {@link IProjectConfig}.
  */
 @SuppressWarnings("restriction")
-public interface IN4JSSourceFolder extends XISourceFolder {
+public interface IN4JSSourceFolder extends ISourceFolder {
 
 	/** @return the parent project */
 	IProjectConfig getProject();

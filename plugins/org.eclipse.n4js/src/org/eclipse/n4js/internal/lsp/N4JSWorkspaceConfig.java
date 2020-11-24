@@ -31,6 +31,7 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.ProjectDiscoveryHelper;
+import org.eclipse.n4js.xtext.workspace.ConfigSnapshotFactory;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
@@ -51,12 +52,16 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	private final URI baseDirectory;
 	private final IN4JSCore delegate;
 	private final MultiCleartriggerCache multiCleartriggerCache;
+	private final ConfigSnapshotFactory configSnapshotFactory;
 
 	/** Constructor */
-	public N4JSWorkspaceConfig(URI baseDirectory, IN4JSCore delegate, MultiCleartriggerCache multiCleartriggerCache) {
+	public N4JSWorkspaceConfig(URI baseDirectory, IN4JSCore delegate, MultiCleartriggerCache multiCleartriggerCache,
+			ConfigSnapshotFactory configSnapshotFactory) {
+
 		this.baseDirectory = baseDirectory;
 		this.delegate = delegate;
 		this.multiCleartriggerCache = multiCleartriggerCache;
+		this.configSnapshotFactory = configSnapshotFactory;
 	}
 
 	@Override
@@ -127,7 +132,8 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 			XIProjectConfig project = oldProject != null ? findProjectByName(oldProject.getName()) : null;
 			if (oldProject != null && project != null) {
 				// an existing project was modified (maybe removed)
-				changes = changes.merge(((N4JSProjectConfig) project).update(oldWorkspaceConfig, changedResource));
+				changes = changes.merge(((N4JSProjectConfig) project).update(oldWorkspaceConfig, changedResource,
+						configSnapshotFactory));
 
 				if (((N4JSProjectConfig) project).isWorkspacesProject()) {
 					needToDetectAddedRemovedProjects = true;
@@ -173,12 +179,15 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 			if (isOld && !isNew) {
 				changes = changes.merge(WorkspaceChanges.createProjectRemoved(oldProjectsMap.get(uri)));
 			} else if (!isOld && isNew) {
-				ProjectConfigSnapshot newPC = newProjectsMap.get(uri).toSnapshot();
+				ProjectConfigSnapshot newPC = configSnapshotFactory
+						.createProjectConfigSnapshot(newProjectsMap.get(uri));
 				changes = changes.merge(WorkspaceChanges.createProjectAdded(newPC));
 			} else if (isOld && isNew) {
 				if (alsoDetectChangedProjects) {
 					ProjectConfigSnapshot oldPC = oldProjectsMap.get(uri);
-					ProjectConfigSnapshot newPC = newProjectsMap.get(uri).toSnapshot();
+					ProjectConfigSnapshot newPC = configSnapshotFactory
+							.createProjectConfigSnapshot(newProjectsMap.get(uri));
+
 					changes = changes.merge(N4JSProjectConfig.computeChanges(oldPC, newPC));
 				}
 			}
@@ -224,7 +233,7 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 						.map(N4JSProjectName::getRawName)
 						.collect(Collectors.toList());
 				if (!newSortedDeps.equals(oldSortedDeps)) {
-					ProjectConfigSnapshot newSnapshot = pc.toSnapshot();
+					ProjectConfigSnapshot newSnapshot = configSnapshotFactory.createProjectConfigSnapshot(pc);
 					if (!newSnapshot.equals(oldSnapshot)) {
 						projectsWithChangedSortedDeps.add(newSnapshot);
 					}

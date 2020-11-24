@@ -15,27 +15,13 @@ import java.util.Set;
 
 import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.projectDescription.ProjectType;
-import org.eclipse.n4js.xtext.workspace.ProjectBuildOrderInfo;
+import org.eclipse.n4js.xtext.workspace.BuildOrderFactory;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
-import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 
 /**
  * Customized in order to ignore dependencies of {@link ProjectType#PLAINJS plain-JS} projects.
  */
-public class N4JSProjectBuildOrderInfo extends ProjectBuildOrderInfo {
-
-	/** Provides instances of {@link #N4JSProjectBuildOrderInfo()} */
-	public static class Provider extends ProjectBuildOrderInfo.Provider {
-		@Override
-		public ProjectBuildOrderInfo getProjectBuildOrderInfo(WorkspaceConfigSnapshot pWorkspaceConfig) {
-			return new N4JSProjectBuildOrderInfo(pWorkspaceConfig);
-		}
-	}
-
-	/** Constructor */
-	public N4JSProjectBuildOrderInfo(WorkspaceConfigSnapshot pWorkspaceConfig) {
-		super(pWorkspaceConfig);
-	}
+public class N4JSBuildOrderInfoComputer extends BuildOrderFactory.BuildOrderInfoComputer {
 
 	@Override
 	protected Set<String> getDependencies(ProjectConfigSnapshot pc) {

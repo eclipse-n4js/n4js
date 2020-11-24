@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
@@ -27,19 +26,18 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.projectModel.lsp.IN4JSSourceFolder;
+import org.eclipse.n4js.xtext.workspace.ConfigSnapshotFactory;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
-import org.eclipse.n4js.xtext.workspace.XISourceFolder;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 
 /**
@@ -82,7 +80,8 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		return new LinkedHashSet<>(deps);
 	}
 
-	private class SourceContainerForPackageJson implements IN4JSSourceFolder {
+	/** Special implementation for package.json files */
+	public class SourceContainerForPackageJson implements IN4JSSourceFolder {
 		private final URI pckjsonURI;
 
 		SourceContainerForPackageJson() {
@@ -113,16 +112,10 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		public URI getPath() {
 			return delegate.getLocation().toURI();
 		}
-
-		@Override
-		public SourceFolderSnapshot toSnapshot() {
-			return new SourceFolderSnapshotForPackageJson(this);
-		}
 	}
 
 	/** A {@link SourceFolderSnapshot} that only contains a single <code>package.json</code> file. */
 	public static class SourceFolderSnapshotForPackageJson extends SourceFolderSnapshot {
-
 		private final URI pckjsonURI;
 
 		/** Creates a new {@link SourceFolderSnapshotForPackageJson}. */
@@ -217,7 +210,9 @@ public class N4JSProjectConfig implements XIProjectConfig {
 	 * <li>existing -> non-existing (project deletion)
 	 * </ul>
 	 */
-	public WorkspaceChanges update(WorkspaceConfigSnapshot oldWorkspaceConfig, URI changedResource) {
+	public WorkspaceChanges update(WorkspaceConfigSnapshot oldWorkspaceConfig, URI changedResource,
+			ConfigSnapshotFactory configSnapshotFactory) {
+
 		String projectName = getName();
 		ProjectConfigSnapshot oldProjectConfig = projectName != null ? oldWorkspaceConfig.findProjectByName(projectName)
 				: null;
@@ -238,7 +233,7 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		// package.json was modified
 
 		((N4JSProject) delegate).invalidate();
-		ProjectConfigSnapshot newProjectConfig = toSnapshot();
+		ProjectConfigSnapshot newProjectConfig = configSnapshotFactory.createProjectConfigSnapshot(this);
 
 		if (oldProjectConfig == null) {
 			return WorkspaceChanges.createProjectAdded(newProjectConfig);
@@ -301,16 +296,4 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		return ((N4JSProject) delegate).isWorkspacesProject();
 	}
 
-	@Override
-	public ProjectConfigSnapshot toSnapshot() {
-		List<String> sortedDependencies = delegate.getSortedDependencies().stream()
-				.map(p -> p.getProjectName().getRawName())
-				.collect(Collectors.toList());
-		ImmutableSet<SourceFolderSnapshot> sourceFolderSnapshots = getSourceFolders().stream()
-				.map(XISourceFolder::toSnapshot)
-				.collect(ImmutableSet.toImmutableSet());
-		return new N4JSProjectConfigSnapshot(getName(), getPath(),
-				toProject().getProjectType(), toProject().getDefinesPackageName(), indexOnly(),
-				getDependencies(), sortedDependencies, sourceFolderSnapshots);
-	}
 }

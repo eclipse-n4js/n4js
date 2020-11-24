@@ -15,11 +15,11 @@ import java.util.Collection
 import java.util.List
 import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest
 import org.eclipse.n4js.utils.Strings
-import org.eclipse.n4js.xtext.workspace.ProjectBuildOrderInfo
 import org.eclipse.n4js.xtext.workspace.XWorkspaceConfigSnapshotProvider
 import org.junit.Test
 
 import static org.junit.Assert.*
+import org.eclipse.n4js.xtext.workspace.BuildOrderFactory
 
 /**
  * Test for build order
@@ -27,12 +27,12 @@ import static org.junit.Assert.*
 class BuildOrderTest extends AbstractIdeTest {
 
 	private XWorkspaceConfigSnapshotProvider workspaceConfigProvider;
-	private ProjectBuildOrderInfo.Provider projectBuildOrderInfoProvider;
+	private BuildOrderFactory projectBuildOrderFactory;
 
 	override Injector createInjector() {
 		val Injector injector = super.createInjector();
 		workspaceConfigProvider = injector.getInstance(XWorkspaceConfigSnapshotProvider);
-		projectBuildOrderInfoProvider = injector.getInstance(ProjectBuildOrderInfo.Provider);
+		projectBuildOrderFactory = injector.getInstance(BuildOrderFactory);
 		return injector;
 	}
 
@@ -59,17 +59,17 @@ class BuildOrderTest extends AbstractIdeTest {
 		startAndWaitForLspServer();
 
 		val workspaceConfig = workspaceConfigProvider.getWorkspaceConfigSnapshot();
-		val projectBuildOrderInfo = projectBuildOrderInfoProvider.getProjectBuildOrderInfo(workspaceConfig);
-		val boIterator = projectBuildOrderInfo.getIterator().visitAll();
+		val projectBuildOrderInfo = projectBuildOrderFactory.createBuildOrderInfo(workspaceConfig);
+		val boIterator = projectBuildOrderFactory.createBuildOrderIterator(workspaceConfig).visitAll();
 		try {
 			val String names = IteratorExtensions.join(boIterator, ", ", [it.name]);
 			assertEquals(buildOrder, names);
 		} catch (Exception exc) {
 			throw new RuntimeException("Never happens since toString never throws an exception. Bogus xtext warning", exc)
 		};
-		assertEquals(cycles.size, projectBuildOrderInfo.projectCycles.size);
+		assertEquals(cycles.size, projectBuildOrderInfo.getProjectCycles.size);
 		val expectedCycles = cycles.map[Strings.join(", ", it)].toSet;
-		for (cycle : projectBuildOrderInfo.projectCycles) {
+		for (cycle : projectBuildOrderInfo.getProjectCycles) {
 			val detectedCycle = Strings.join(", ", cycle);
 			assertTrue(expectedCycles.contains(detectedCycle));
 		}

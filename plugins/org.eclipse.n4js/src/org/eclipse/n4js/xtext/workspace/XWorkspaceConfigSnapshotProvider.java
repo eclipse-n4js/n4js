@@ -10,8 +10,7 @@
  */
 package org.eclipse.n4js.xtext.workspace;
 
-import java.util.Collections;
-
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.xtext.workspace.XWorkspaceConfigSnapshotProvider.NullXWorkspaceConfigSnapshotProvider;
 
 import com.google.inject.ImplementedBy;
@@ -33,11 +32,11 @@ public interface XWorkspaceConfigSnapshotProvider {
 	 */
 	class NullXWorkspaceConfigSnapshotProvider implements XWorkspaceConfigSnapshotProvider {
 		@Inject
-		ProjectBuildOrderInfo.Provider provider;
+		ConfigSnapshotFactory configSnapshotFactory;
 
 		@Override
 		public WorkspaceConfigSnapshot getWorkspaceConfigSnapshot() {
-			return new WorkspaceConfigSnapshot(null, Collections.emptyList(), provider);
+			return configSnapshotFactory.createWorkspaceConfigSnapshot((URI) null);
 		}
 	}
 

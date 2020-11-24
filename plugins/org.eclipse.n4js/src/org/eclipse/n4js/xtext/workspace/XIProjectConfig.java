@@ -17,8 +17,6 @@ import java.util.Set;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.xtext.workspace.IProjectConfig;
 
-import com.google.common.collect.ImmutableSet;
-
 /**
  * Extension of {@link IProjectConfig} to include project dependencies and support for snapshots.
  */
@@ -28,9 +26,6 @@ public interface XIProjectConfig extends IProjectConfig {
 	// overridden to avoid "restriction" warnings in client code
 	@Override
 	String getName();
-
-	@Override
-	Set<? extends XISourceFolder> getSourceFolders();
 
 	/** Return all {@link URI} of files that describe the project. */
 	default Collection<URI> getProjectDescriptionUris() {
@@ -52,13 +47,4 @@ public interface XIProjectConfig extends IProjectConfig {
 	/** Returns the names of all other projects the receiving project depends on. */
 	Set<String> getDependencies();
 
-	/** Returns a snapshot of the current state of the workspace represented by this {@link XIProjectConfig}. */
-	default ProjectConfigSnapshot toSnapshot() {
-		ImmutableSet<SourceFolderSnapshot> sourceFolderSnapshots = getSourceFolders().stream()
-				.map(XISourceFolder::toSnapshot)
-				.collect(ImmutableSet.toImmutableSet());
-
-		return new ProjectConfigSnapshot(getName(), getPath(), getProjectDescriptionUris(), indexOnly(),
-				getDependencies(), sourceFolderSnapshots);
-	}
 }
