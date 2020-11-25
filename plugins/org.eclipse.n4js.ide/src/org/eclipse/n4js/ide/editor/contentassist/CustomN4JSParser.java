@@ -219,7 +219,7 @@ public class CustomN4JSParser extends N4JSParser implements IPartialContentAssis
 			}
 
 			// Yeah Xpect fallback, Lord this is annoying.
-			while (ruleName == null && entryPoint != null) {
+			while (ruleName == null && entryPoint != null && entryPoint.getParent() != null) {
 				entryPoint = entryPoint.getParent();
 				ruleName = getRuleName(entryPoint);
 			}
@@ -250,10 +250,10 @@ public class CustomN4JSParser extends N4JSParser implements IPartialContentAssis
 			AbstractRule rule = rc.getRule();
 			if (rule instanceof ParserRule) {
 				if (!GrammarUtil.isMultipleCardinality(rule.getAlternatives())) {
-					EObject grammarElement2 = rule.getAlternatives();
-					String[][] names = getRequiredRuleNames(getRuleName((AbstractElement) grammarElement2),
+					grammarElement = rule.getAlternatives();
+					String[][] names = getRequiredRuleNames(getRuleName((AbstractElement) grammarElement),
 							Ints.asList(getParamConfig(entryPoint)),
-							(AbstractElement) grammarElement2);
+							(AbstractElement) grammarElement);
 					if (names.length > 0) {
 						return names[0][0];
 					}
