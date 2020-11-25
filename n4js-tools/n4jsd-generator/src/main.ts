@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import * as ts from "typescript";
 import * as fs_lib from "fs";
 import * as path_lib from "path";
