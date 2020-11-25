@@ -41,6 +41,8 @@ import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.PropertyNameOwner
 import org.eclipse.n4js.projectDescription.ProjectDependency
 import org.eclipse.n4js.projectDescription.ProjectReference
+import org.eclipse.n4js.projectModel.locations.PlatformResourceURI
+import org.eclipse.n4js.projectModel.names.N4JSProjectName
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement
 import org.eclipse.n4js.semver.SemverUtils
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
@@ -76,13 +78,6 @@ import org.eclipse.xtext.validation.Issue
 
 import static org.eclipse.n4js.ui.changes.ChangeProvider.*
 import static org.eclipse.n4js.ui.quickfix.QuickfixUtil.*
-import org.eclipse.n4js.projectModel.names.N4JSProjectName
-import org.eclipse.n4js.projectModel.locations.PlatformResourceURI
-import org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl
-import org.eclipse.n4js.n4JS.impl.N4MethodDeclarationImpl
-import org.eclipse.n4js.utils.nodemodel.NodeModelUtilsN4
-import org.eclipse.xtext.nodemodel.impl.CompositeNodeWithSemanticElement
-import org.eclipse.n4js.n4JS.N4JSPackage
 
 /**
  * N4JS quick fixes.
@@ -117,55 +112,6 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 	static final String OVERRIDE_ANNOTATION = AnnotationDefinition.OVERRIDE.name;
 	static final String FINAL_ANNOTATION = AnnotationDefinition.FINAL.name;
 
-	/*
-	 * If a type declaration has Java-form such as 'int foo() {}', then the following quickfix proposed
-	 * which transforms it to colon style: 'foo(): int {}'
-	 * It searches the bogus return type (which is 'int' in the example above) beginning from the parent node (N4MethodDeclarationImpl)
-	 * of the method declaration.
-	 * The bogus return type removed from the old position.
-	 * A colon followed by the bogus return type added to the right side of the method name.
-	 */
-	@Fix(IssueCodes.TYS_INVALID_TYPE_SYNTAX)
-	def transformJavaTypeAnnotationToColonStyle(Issue issue, IssueResolutionAcceptor acceptor) {
-		acceptor.accept(issue, 'Convert to colon style', 'The type annotation should be in colon style. This quick fix will change the code to colon style.', ImageNames.REORDER) [ context, marker, offset, length, element |
-			if (!(element instanceof ParameterizedTypeRefImpl) ||
-					!((element as ParameterizedTypeRefImpl).eContainer instanceof N4MethodDeclarationImpl)
-			) {
-				return #[]; // Its not a N4MethodDeclarationImpl. Not implemented yet.
-			}
-
-			val node = NodeModelUtils.getNode(element)
-			var parentNode = node.parent;
-			while (!(parentNode instanceof CompositeNodeWithSemanticElement) ||
-						!(parentNode.semanticElement instanceof N4MethodDeclarationImpl)
-			) {
-				parentNode = parentNode.parent;
-			}
-
-			val roundBracketNode = NodeModelUtilsN4.findKeywordNode(parentNode, ')')
-			val bogusNode = NodeModelUtils.findNodesForFeature((parentNode as CompositeNodeWithSemanticElement).semanticElement, N4JSPackage.Literals.TYPED_ELEMENT__BOGUS_TYPE_REF).head;
-
-			val stringOfBogusType = NodeModelUtilsN4.getTokenTextWithHiddenTokens(bogusNode);
-
-			val nodeAfterBogus = NodeModelUtils.findLeafNodeAtOffset(parentNode,bogusNode.endOffset);
-			val spaceAfterBogusLength =
-				if (nodeAfterBogus !== null && nodeAfterBogus.text.startsWith(" ")) {
-					1
-				} else {
-					0
-				};
-
-			val offsetBogusType = bogusNode.offset;
-			val bogusTypeLength = stringOfBogusType.length;
-			
-			val offsetRoundBracket = roundBracketNode.totalOffset;
-
-			return #[
-				replace(context.xtextDocument, offsetBogusType, bogusTypeLength + spaceAfterBogusLength, ""), // removes the bogus type and whitespace at the old location
-				replace(context.xtextDocument, offsetRoundBracket + 1, 0, ": " + stringOfBogusType) // inserts the bogus type at the new location (behind the closing round bracket)
-			];
-		]
-	}
 
 	@Fix(IssueCodes.CLF_FIELD_OPTIONAL_OLD_SYNTAX)
 	def fixOldSyntaxForOptionalFields(Issue issue, IssueResolutionAcceptor acceptor) {
