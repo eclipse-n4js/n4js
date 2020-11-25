@@ -41,7 +41,6 @@ import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.ThisLiteral
-import org.eclipse.n4js.n4JS.TypedElement
 import org.eclipse.n4js.n4JS.UnaryExpression
 import org.eclipse.n4js.n4JS.UnaryOperator
 import org.eclipse.n4js.n4JS.VariableDeclaration
@@ -618,12 +617,6 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		}
 	}
 
-	@Check
-	def void checkBogusTypeReference(TypedElement te) {
-		if (te.bogusTypeRef !== null) {
-			addIssue(IssueCodes.getMessageForTYS_INVALID_TYPE_SYNTAX, te.bogusTypeRef, TYS_INVALID_TYPE_SYNTAX);
-		}
-	}
 
 //  TODO IDE-1010 Code-snippet with partial solution
 //	@Check
