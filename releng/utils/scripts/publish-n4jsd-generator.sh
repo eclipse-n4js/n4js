@@ -14,7 +14,7 @@ set -eo pipefail
 #set -x
 
 
-NPM_REGISTRY="https://nexus3.internal.numberfour.eu/repository/npm-internal"
+NPM_REGISTRY="https://nexus3.internal.numberfour.eu/repository/npm-internal/"
 BASE_VERSION="0.0.1"
 
 # Choose a version for publishing
@@ -48,7 +48,7 @@ rm -rf src-gen
 mkdir src-gen
 # prepare .npmrc for credentials
 # (we made sure above that NPM_TOKEN is set)
-echo '//nexus3.internal.numberfour.eu/:_authToken=${NPM_TOKEN}' >> .npmrc
+echo '//nexus3.internal.numberfour.eu/repository/npm-internal/:_authToken=${NPM_TOKEN}' >> .npmrc
 
 echo "==== STEP 3/5: install dependencies and prepare npm task scripts"
 npm install
@@ -58,6 +58,8 @@ echo "==== STEP 4/5: build n4jsd-generator"
 tsc
 
 echo "==== STEP 5/5: Now publishing with version '${PUBLISH_VERSION}' to registry ${NPM_REGISTRY}"
+export NPM_CONFIG_GLOBALCONFIG=`pwd -P`/.npmrc
+echo "Publishing using .npmrc configuration at ${NPM_CONFIG_GLOBALCONFIG}";
 npm version "${PUBLISH_VERSION}"
 npm publish --registry $NPM_REGISTRY
 
