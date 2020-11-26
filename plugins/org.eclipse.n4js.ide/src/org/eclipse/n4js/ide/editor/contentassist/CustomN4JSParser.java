@@ -217,11 +217,18 @@ public class CustomN4JSParser extends N4JSParser implements IPartialContentAssis
 			} else {
 				ruleName = getRuleName(entryPoint);
 			}
+
 			// Yeah Xpect fallback, Lord this is annoying.
+			// TODO @szarnekow, please have a look a this (comment out loop, check failing tests)
+			while (ruleName == null && entryPoint != null && entryPoint.getParent() != null) {
+				entryPoint = entryPoint.getParent();
+				ruleName = getRuleName(entryPoint);
+			}
 			if (ruleName == null) {
 				entryPoint = parseResult.getRootNode();
 				ruleName = "ruleScript";
 			}
+
 			TokenSource tokenSource = tokenSourceFactory.toTokenSource(entryPoint, entryPoint.getOffset(), offset,
 					true);
 			CustomInternalN4JSParser parser = collectFollowElements(tokenSource, getEntryGrammarElement(entryPoint),
