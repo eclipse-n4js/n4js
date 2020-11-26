@@ -75,7 +75,8 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 		} finally {
 			long elapsedSeconds = sw.stop().elapsed(TimeUnit.SECONDS);
 			if (elapsedSeconds > 3) {
-				serverIncidentLogger.report("Slow content assist\nPARAMS:\n" + params.toString(), true);
+				String msg = "Slow content assist\nPARAMS:\n" + params.toString();
+				serverIncidentLogger.reportWithFileBaseName("slow-ca", msg, true);
 			}
 		}
 	}
