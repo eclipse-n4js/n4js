@@ -17,15 +17,20 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.lsp4j.CompletionItem;
+import org.eclipse.lsp4j.CompletionList;
+import org.eclipse.lsp4j.CompletionParams;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.LocationLink;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
+import org.eclipse.n4js.ide.server.util.ServerIncidentLogger;
 import org.eclipse.n4js.ide.xtext.server.ResourceTaskContext;
 import org.eclipse.n4js.ide.xtext.server.TextDocumentFrontend;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
@@ -38,6 +43,7 @@ import org.eclipse.n4js.transpiler.sourcemap.SourceMapFileLocator;
 import org.eclipse.n4js.utils.ResourceNameComputer;
 import org.eclipse.xtext.util.CancelIndicator;
 
+import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
 
@@ -55,6 +61,24 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 
 	@Inject
 	private SourceMapFileLocator sourceMapFileLocator;
+
+	@Inject
+	private ServerIncidentLogger serverIncidentLogger;
+
+	@Override
+	protected Either<List<CompletionItem>, CompletionList> completion(ResourceTaskContext rtc, CompletionParams params,
+			CancelIndicator originalCancelIndicator) {
+
+		Stopwatch sw = Stopwatch.createStarted();
+		try {
+			return super.completion(rtc, params, originalCancelIndicator);
+		} finally {
+			long elapsedSeconds = sw.stop().elapsed(TimeUnit.SECONDS);
+			if (elapsedSeconds > 3) {
+				serverIncidentLogger.report("Slow content assist\nPARAMS:\n" + params.toString(), true);
+			}
+		}
+	}
 
 	@Override
 	protected Either<List<? extends Location>, List<? extends LocationLink>> implementation(ResourceTaskContext rtc,

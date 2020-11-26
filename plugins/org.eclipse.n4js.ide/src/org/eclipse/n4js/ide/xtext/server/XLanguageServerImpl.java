@@ -801,13 +801,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public CompletableFuture<Void> printDebugInfo() {
-		// in some error cases, the debug information might not show up in the output window of the LSP client or might
-		// scroll away too fast, so we also report this via the ServerIncidentLogger to obtain a file on disk with the
-		// debug information:
-		String debugInfo = debugService.getDebugInfo();
-		serverIncidentLogger.report("(user request for printing debug information)" + System.lineSeparator()
-				+ debugInfo);
-
+		serverIncidentLogger.report("(user request for printing debug information)", true);
 		return debugService.printDebugInfo();
 	}
 

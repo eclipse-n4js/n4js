@@ -283,7 +283,7 @@ public class LspServer {
 					msg += Joiner.on(Layout.LINE_SEP).join(s);
 				}
 			}
-			delegate.reportError(msg);
+			delegate.report(msg, true);
 		}
 
 		@Override

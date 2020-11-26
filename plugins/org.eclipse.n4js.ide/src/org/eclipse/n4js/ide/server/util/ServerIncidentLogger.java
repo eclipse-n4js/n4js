@@ -68,17 +68,22 @@ public class ServerIncidentLogger {
 	private final SuspensionTracker suspensionTracker = new SuspensionTracker();
 	private final FileCreator fileCreator = new FileCreator();
 
-	/** Write the given message to a report file without adding any additional information. */
-	public void report(String msg) {
-		doReport(msg, false, null);
+	/**
+	 * Write a report file.
+	 *
+	 * @param msg
+	 *            message to report
+	 * @param includeDebugInfo
+	 *            iff true the debug info will be written to the output as well
+	 */
+	public void report(String msg, boolean includeDebugInfo) {
+		doReport(msg, includeDebugInfo, null);
 	}
 
-	/** Write the given message to a report file, including additional diagnosis information. */
-	public void reportError(String msg) {
-		doReport(msg, true, null);
-	}
-
-	/** Same as {@link #reportError(String)}, but also including the stack trace of the given throwable. */
+	/**
+	 * Same as {@link #report(String, boolean)}, with {@code includeDebugInfo} set to {@code true}. Also including the
+	 * stack trace of the given throwable.
+	 */
 	public void reportError(String msg, Throwable th) {
 		doReport(msg, true, th);
 	}
