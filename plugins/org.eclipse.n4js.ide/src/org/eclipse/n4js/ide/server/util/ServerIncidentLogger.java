@@ -43,10 +43,10 @@ public class ServerIncidentLogger {
 
 	/** Path of the folder where the log files are placed, relative to the user's home directory. */
 	public static final Path SERVER_INCIDENTS_FOLDER = Path.of(".n4js", "server-incidents");
-	/** Base name of the log file. */
+	/** Base name of the log file. The name will be amended by '_' followed by a time stamp. */
 	public static final String DEFAULT_BASE_FILE_NAME = "server-incident";
-	/** Suffix and extension of the log file name. The suffix will be amended by a time stamp. */
-	public static final String BASE_FILE_NAME_EXTENSION = "_.log";
+	/** File extension of the log file name. */
+	public static final String FILE_EXTENSION = ".log";
 
 	/**
 	 * When receiving more than {@link #SUSPENSION_COUNT} incidents within {@link #SUSPENSION_INTERVAL} seconds,
@@ -187,7 +187,7 @@ public class ServerIncidentLogger {
 		private void doCreateFile(String baseFileName, long timeStamp, String content, String fileNameSuffix) {
 			try {
 				Path folder = getOrCreateOutputFolder();
-				Path file = folder.resolve(baseFileName + BASE_FILE_NAME_EXTENSION);
+				Path file = folder.resolve(baseFileName + "_" + FILE_EXTENSION);
 				String timeStampStr = getTimeStampString(timeStamp);
 				file = FileUtils.appendToFileName(file, sanitizeTimeStampForFileName(timeStampStr));
 				if (fileNameSuffix != null) {
