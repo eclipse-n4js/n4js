@@ -58,8 +58,8 @@ echo "==== STEP 4/5: build n4jsd-generator"
 tsc
 
 echo "==== STEP 5/5: Now publishing with version '${PUBLISH_VERSION}' to registry ${NPM_REGISTRY}"
+echo "Using .npmrc configuration at ${NPM_CONFIG_GLOBALCONFIG}"
 export NPM_CONFIG_GLOBALCONFIG=`pwd -P`/.npmrc
-echo "Publishing using .npmrc configuration at ${NPM_CONFIG_GLOBALCONFIG}";
 npm version "${PUBLISH_VERSION}"
 npm publish --registry $NPM_REGISTRY
 
