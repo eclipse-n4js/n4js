@@ -12,7 +12,7 @@
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
 
 
-// type expectations in for-await-of
+// type expectations for the "value to be iterated over" in for-await-of loops
 
 
 class A {}
