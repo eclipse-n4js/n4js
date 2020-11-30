@@ -169,7 +169,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Check
 	def checkAwaitExpression(AwaitExpression awaitExpression) {
-		if (N4JSLanguageUtils.isValidLocationForAwait(awaitExpression)) {
+		if (!N4JSLanguageUtils.isValidLocationForAwait(awaitExpression)) {
 			val message = IssueCodes.getMessageForEXP_MISPLACED_AWAIT("await", "async");
 			addIssue(message, awaitExpression, IssueCodes.EXP_MISPLACED_AWAIT);
 		}
