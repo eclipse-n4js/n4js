@@ -1,0 +1,51 @@
+/*
+ * Copyright (c) 2020 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest
+
+	IssueConfiguration {
+		IssueCode "EXP_MISSNG_AWAIT_FOR_ASYNC_TARGET" {enabled=false}
+	}
+
+END_SETUP */
+
+
+const asyncIterable = {
+	elems: [ '1st', '2nd' ],
+	idx: 0,
+	AsyncIterator<string> [Symbol.asyncIterator]() {
+		const _this = this;
+		return {
+			Promise<IteratorEntry<string>,any> next() {
+				return Promise.resolve(_this.idx < _this.elems.length
+					? { value: _this.elems[_this.idx++], done: false }
+					: { string value: undefined, done: true });
+			}
+		};
+	}
+};
+
+const asyncIterator = asyncIterable[Symbol.asyncIterator]();
+
+asyncIterator.next().then(e => console.log(e));
+asyncIterator.next().then(e => console.log(e));
+asyncIterator.next().then(e => console.log(e));
+asyncIterator.next().then(e => console.log(e));
+
+console.log('Done.');
+
+/* XPECT output ---
+Done.
+{ value: '1st', done: false }
+{ value: '2nd', done: false }
+{ value: undefined, done: true }
+{ value: undefined, done: true }
+--- */
