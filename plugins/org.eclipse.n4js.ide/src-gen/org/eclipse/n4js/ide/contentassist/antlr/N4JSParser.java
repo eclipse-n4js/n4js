@@ -50,7 +50,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getImportClauseAccess().getAlternatives(), "rule__ImportClause__Alternatives");
 			builder.put(grammarAccess.getImportSpecifiersExceptDefaultAccess().getAlternatives(), "rule__ImportSpecifiersExceptDefault__Alternatives");
 			builder.put(grammarAccess.getNamedImportSpecifierAccess().getAlternatives(), "rule__NamedImportSpecifier__Alternatives");
-			builder.put(grammarAccess.getFunctionImplAccess().getAlternatives_1(), "rule__FunctionImpl__Alternatives_1");
+			builder.put(grammarAccess.getFunctionImplNoKeywordAccess().getAlternatives(), "rule__FunctionImplNoKeyword__Alternatives");
 			builder.put(grammarAccess.getArrowExpressionAccess().getAlternatives_0_0_0(), "rule__ArrowExpression__Alternatives_0_0_0");
 			builder.put(grammarAccess.getArrowExpressionAccess().getAlternatives_1(), "rule__ArrowExpression__Alternatives_1");
 			builder.put(grammarAccess.getAnnotatedExpressionAccess().getAlternatives_1(), "rule__AnnotatedExpression__Alternatives_1");
@@ -191,8 +191,8 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getFunctionDeclarationAccess().getGroup_0_0(), "rule__FunctionDeclaration__Group_0_0__0");
 			builder.put(grammarAccess.getAsyncNoTrailingLineBreakAccess().getGroup(), "rule__AsyncNoTrailingLineBreak__Group__0");
 			builder.put(grammarAccess.getFunctionImplAccess().getGroup(), "rule__FunctionImpl__Group__0");
-			builder.put(grammarAccess.getFunctionImplAccess().getGroup_1_0(), "rule__FunctionImpl__Group_1_0__0");
-			builder.put(grammarAccess.getFunctionImplAccess().getGroup_1_1(), "rule__FunctionImpl__Group_1_1__0");
+			builder.put(grammarAccess.getFunctionImplNoKeywordAccess().getGroup_0(), "rule__FunctionImplNoKeyword__Group_0__0");
+			builder.put(grammarAccess.getFunctionImplNoKeywordAccess().getGroup_1(), "rule__FunctionImplNoKeyword__Group_1__0");
 			builder.put(grammarAccess.getFunctionHeaderAccess().getGroup(), "rule__FunctionHeader__Group__0");
 			builder.put(grammarAccess.getAnnotatedFunctionDeclarationAccess().getGroup(), "rule__AnnotatedFunctionDeclaration__Group__0");
 			builder.put(grammarAccess.getFunctionExpressionAccess().getGroup(), "rule__FunctionExpression__Group__0");
@@ -675,7 +675,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getNamespaceImportSpecifierAccess().getDeclaredDynamicAssignment_4(), "rule__NamespaceImportSpecifier__DeclaredDynamicAssignment_4");
 			builder.put(grammarAccess.getFunctionDeclarationAccess().getDeclaredModifiersAssignment_0_0_1(), "rule__FunctionDeclaration__DeclaredModifiersAssignment_0_0_1");
 			builder.put(grammarAccess.getAsyncNoTrailingLineBreakAccess().getDeclaredAsyncAssignment_0(), "rule__AsyncNoTrailingLineBreak__DeclaredAsyncAssignment_0");
-			builder.put(grammarAccess.getFunctionImplAccess().getGeneratorAssignment_1_0_0(), "rule__FunctionImpl__GeneratorAssignment_1_0_0");
+			builder.put(grammarAccess.getFunctionImplNoKeywordAccess().getGeneratorAssignment_0_0(), "rule__FunctionImplNoKeyword__GeneratorAssignment_0_0");
 			builder.put(grammarAccess.getFunctionHeaderAccess().getNameAssignment_1(), "rule__FunctionHeader__NameAssignment_1");
 			builder.put(grammarAccess.getFunctionBodyAccess().getBodyAssignment_1_0(), "rule__FunctionBody__BodyAssignment_1_0");
 			builder.put(grammarAccess.getFunctionBodyAccess().getBodyAssignment_0_0(), "rule__FunctionBody__BodyAssignment_0_0");

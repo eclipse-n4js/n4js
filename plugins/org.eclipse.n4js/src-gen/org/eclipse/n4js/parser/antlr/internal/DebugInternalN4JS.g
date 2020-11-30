@@ -482,6 +482,23 @@ ruleAsyncNoTrailingLineBreak:
 // Rule FunctionImpl
 ruleFunctionImpl:
 	'function'
+	ruleFunctionImplNoKeyword
+;
+
+// Rule FunctionImpl
+norm3_FunctionImpl:
+	'function'
+	norm3_FunctionImplNoKeyword
+;
+
+// Rule FunctionImpl
+norm6_FunctionImpl:
+	'function'
+	norm6_FunctionImplNoKeyword
+;
+
+// Rule FunctionImplNoKeyword
+ruleFunctionImplNoKeyword:
 	(
 		'*'
 		norm2_FunctionHeader
@@ -492,9 +509,32 @@ ruleFunctionImpl:
 	)
 ;
 
-// Rule FunctionImpl
-norm3_FunctionImpl:
-	'function'
+// Rule FunctionImplNoKeyword
+norm1_FunctionImplNoKeyword:
+	(
+		'*'
+		norm2_FunctionHeader
+		norm1_FunctionBody
+		    |
+		norm1_FunctionHeader
+		ruleFunctionBody
+	)
+;
+
+// Rule FunctionImplNoKeyword
+norm2_FunctionImplNoKeyword:
+	(
+		'*'
+		norm3_FunctionHeader
+		norm1_FunctionBody
+		    |
+		ruleFunctionHeader
+		ruleFunctionBody
+	)
+;
+
+// Rule FunctionImplNoKeyword
+norm3_FunctionImplNoKeyword:
 	(
 		'*'
 		norm3_FunctionHeader
@@ -505,15 +545,50 @@ norm3_FunctionImpl:
 	)
 ;
 
-// Rule FunctionImpl
-norm6_FunctionImpl:
-	'function'
+// Rule FunctionImplNoKeyword
+norm4_FunctionImplNoKeyword:
+	(
+		'*'
+		norm2_FunctionHeader
+		norm3_FunctionBody
+		    |
+		ruleFunctionHeader
+		norm2_FunctionBody
+	)
+;
+
+// Rule FunctionImplNoKeyword
+norm5_FunctionImplNoKeyword:
+	(
+		'*'
+		norm2_FunctionHeader
+		norm3_FunctionBody
+		    |
+		norm1_FunctionHeader
+		norm2_FunctionBody
+	)
+;
+
+// Rule FunctionImplNoKeyword
+norm6_FunctionImplNoKeyword:
 	(
 		'*'
 		norm3_FunctionHeader
 		norm3_FunctionBody
 		    |
 		ruleFunctionHeader
+		norm2_FunctionBody
+	)
+;
+
+// Rule FunctionImplNoKeyword
+norm7_FunctionImplNoKeyword:
+	(
+		'*'
+		norm3_FunctionHeader
+		norm3_FunctionBody
+		    |
+		norm1_FunctionHeader
 		norm2_FunctionBody
 	)
 ;
@@ -662,8 +737,7 @@ ruleAsyncFunctionExpression:
 		ruleNoLineTerminator
 		'function'
 	)
-	ruleFunctionHeader
-	norm2_FunctionBody
+	norm6_FunctionImplNoKeyword
 ;
 
 // Rule ArrowExpression
