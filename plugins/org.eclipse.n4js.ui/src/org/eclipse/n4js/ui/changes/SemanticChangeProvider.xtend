@@ -343,8 +343,6 @@ public class SemanticChangeProvider {
 					var List<INode> nodes = null;
 					nodes = NodeModelUtils.findNodesForFeature(element, N4JSPackage.Literals.GENERIC_DECLARATION__TYPE_VARS);
 					if (nodes.empty)
-						nodes = NodeModelUtils.findNodesForFeature(element, N4JSPackage.Literals.TYPED_ELEMENT__BOGUS_TYPE_REF);
-					if (nodes.empty)
 						nodes = NodeModelUtils.findNodesForFeature(element, N4JSPackage.Literals.FUNCTION_DEFINITION__GENERATOR);
 					if (nodes.empty)
 						nodes = NodeModelUtils.findNodesForFeature(element, N4JSPackage.Literals.FUNCTION_DEFINITION__DECLARED_ASYNC);
