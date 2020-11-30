@@ -2894,93 +2894,95 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Action cForStatementAction_0 = (Action)cGroup.eContents().get(0);
 		private final Keyword cForKeyword_1 = (Keyword)cGroup.eContents().get(1);
-		private final Keyword cLeftParenthesisKeyword_2 = (Keyword)cGroup.eContents().get(2);
-		private final Alternatives cAlternatives_3 = (Alternatives)cGroup.eContents().get(3);
-		private final Group cGroup_3_0 = (Group)cAlternatives_3.eContents().get(0);
-		private final Group cGroup_3_0_0 = (Group)cGroup_3_0.eContents().get(0);
-		private final Assignment cInitExprAssignment_3_0_0_0 = (Assignment)cGroup_3_0_0.eContents().get(0);
-		private final RuleCall cInitExprLetIdentifierRefParserRuleCall_3_0_0_0_0 = (RuleCall)cInitExprAssignment_3_0_0_0.eContents().get(0);
-		private final Assignment cForInAssignment_3_0_0_1 = (Assignment)cGroup_3_0_0.eContents().get(1);
-		private final Keyword cForInInKeyword_3_0_0_1_0 = (Keyword)cForInAssignment_3_0_0_1.eContents().get(0);
-		private final Assignment cExpressionAssignment_3_0_0_2 = (Assignment)cGroup_3_0_0.eContents().get(2);
-		private final RuleCall cExpressionExpressionParserRuleCall_3_0_0_2_0 = (RuleCall)cExpressionAssignment_3_0_0_2.eContents().get(0);
-		private final Keyword cRightParenthesisKeyword_3_0_0_3 = (Keyword)cGroup_3_0_0.eContents().get(3);
-		private final Group cGroup_3_1 = (Group)cAlternatives_3.eContents().get(1);
-		private final Alternatives cAlternatives_3_1_0 = (Alternatives)cGroup_3_1.eContents().get(0);
-		private final Group cGroup_3_1_0_0 = (Group)cAlternatives_3_1_0.eContents().get(0);
-		private final Assignment cVarStmtKeywordAssignment_3_1_0_0_0 = (Assignment)cGroup_3_1_0_0.eContents().get(0);
-		private final RuleCall cVarStmtKeywordVariableStatementKeywordEnumRuleCall_3_1_0_0_0_0 = (RuleCall)cVarStmtKeywordAssignment_3_1_0_0_0.eContents().get(0);
-		private final Alternatives cAlternatives_3_1_0_0_1 = (Alternatives)cGroup_3_1_0_0.eContents().get(1);
-		private final Group cGroup_3_1_0_0_1_0 = (Group)cAlternatives_3_1_0_0_1.eContents().get(0);
-		private final Group cGroup_3_1_0_0_1_0_0 = (Group)cGroup_3_1_0_0_1_0.eContents().get(0);
-		private final Assignment cVarDeclsOrBindingsAssignment_3_1_0_0_1_0_0_0 = (Assignment)cGroup_3_1_0_0_1_0_0.eContents().get(0);
-		private final RuleCall cVarDeclsOrBindingsBindingIdentifierAsVariableDeclarationParserRuleCall_3_1_0_0_1_0_0_0_0 = (RuleCall)cVarDeclsOrBindingsAssignment_3_1_0_0_1_0_0_0.eContents().get(0);
-		private final Alternatives cAlternatives_3_1_0_0_1_0_0_1 = (Alternatives)cGroup_3_1_0_0_1_0_0.eContents().get(1);
-		private final Assignment cForInAssignment_3_1_0_0_1_0_0_1_0 = (Assignment)cAlternatives_3_1_0_0_1_0_0_1.eContents().get(0);
-		private final Keyword cForInInKeyword_3_1_0_0_1_0_0_1_0_0 = (Keyword)cForInAssignment_3_1_0_0_1_0_0_1_0.eContents().get(0);
-		private final Assignment cForOfAssignment_3_1_0_0_1_0_0_1_1 = (Assignment)cAlternatives_3_1_0_0_1_0_0_1.eContents().get(1);
-		private final Keyword cForOfOfKeyword_3_1_0_0_1_0_0_1_1_0 = (Keyword)cForOfAssignment_3_1_0_0_1_0_0_1_1.eContents().get(0);
-		private final Assignment cExpressionAssignment_3_1_0_0_1_0_0_2 = (Assignment)cGroup_3_1_0_0_1_0_0.eContents().get(2);
-		private final RuleCall cExpressionAssignmentExpressionParserRuleCall_3_1_0_0_1_0_0_2_0 = (RuleCall)cExpressionAssignment_3_1_0_0_1_0_0_2.eContents().get(0);
-		private final Group cGroup_3_1_0_0_1_1 = (Group)cAlternatives_3_1_0_0_1.eContents().get(1);
-		private final Assignment cVarDeclsOrBindingsAssignment_3_1_0_0_1_1_0 = (Assignment)cGroup_3_1_0_0_1_1.eContents().get(0);
-		private final RuleCall cVarDeclsOrBindingsVariableDeclarationOrBindingParserRuleCall_3_1_0_0_1_1_0_0 = (RuleCall)cVarDeclsOrBindingsAssignment_3_1_0_0_1_1_0.eContents().get(0);
-		private final Alternatives cAlternatives_3_1_0_0_1_1_1 = (Alternatives)cGroup_3_1_0_0_1_1.eContents().get(1);
-		private final Group cGroup_3_1_0_0_1_1_1_0 = (Group)cAlternatives_3_1_0_0_1_1_1.eContents().get(0);
-		private final Group cGroup_3_1_0_0_1_1_1_0_0 = (Group)cGroup_3_1_0_0_1_1_1_0.eContents().get(0);
-		private final Keyword cCommaKeyword_3_1_0_0_1_1_1_0_0_0 = (Keyword)cGroup_3_1_0_0_1_1_1_0_0.eContents().get(0);
-		private final Assignment cVarDeclsOrBindingsAssignment_3_1_0_0_1_1_1_0_0_1 = (Assignment)cGroup_3_1_0_0_1_1_1_0_0.eContents().get(1);
-		private final RuleCall cVarDeclsOrBindingsVariableDeclarationOrBindingParserRuleCall_3_1_0_0_1_1_1_0_0_1_0 = (RuleCall)cVarDeclsOrBindingsAssignment_3_1_0_0_1_1_1_0_0_1.eContents().get(0);
-		private final Keyword cSemicolonKeyword_3_1_0_0_1_1_1_0_1 = (Keyword)cGroup_3_1_0_0_1_1_1_0.eContents().get(1);
-		private final Assignment cExpressionAssignment_3_1_0_0_1_1_1_0_2 = (Assignment)cGroup_3_1_0_0_1_1_1_0.eContents().get(2);
-		private final RuleCall cExpressionExpressionParserRuleCall_3_1_0_0_1_1_1_0_2_0 = (RuleCall)cExpressionAssignment_3_1_0_0_1_1_1_0_2.eContents().get(0);
-		private final Keyword cSemicolonKeyword_3_1_0_0_1_1_1_0_3 = (Keyword)cGroup_3_1_0_0_1_1_1_0.eContents().get(3);
-		private final Assignment cUpdateExprAssignment_3_1_0_0_1_1_1_0_4 = (Assignment)cGroup_3_1_0_0_1_1_1_0.eContents().get(4);
-		private final RuleCall cUpdateExprExpressionParserRuleCall_3_1_0_0_1_1_1_0_4_0 = (RuleCall)cUpdateExprAssignment_3_1_0_0_1_1_1_0_4.eContents().get(0);
-		private final Group cGroup_3_1_0_0_1_1_1_1 = (Group)cAlternatives_3_1_0_0_1_1_1.eContents().get(1);
-		private final Assignment cForInAssignment_3_1_0_0_1_1_1_1_0 = (Assignment)cGroup_3_1_0_0_1_1_1_1.eContents().get(0);
-		private final Keyword cForInInKeyword_3_1_0_0_1_1_1_1_0_0 = (Keyword)cForInAssignment_3_1_0_0_1_1_1_1_0.eContents().get(0);
-		private final Assignment cExpressionAssignment_3_1_0_0_1_1_1_1_1 = (Assignment)cGroup_3_1_0_0_1_1_1_1.eContents().get(1);
-		private final RuleCall cExpressionExpressionParserRuleCall_3_1_0_0_1_1_1_1_1_0 = (RuleCall)cExpressionAssignment_3_1_0_0_1_1_1_1_1.eContents().get(0);
-		private final Group cGroup_3_1_0_0_1_1_1_2 = (Group)cAlternatives_3_1_0_0_1_1_1.eContents().get(2);
-		private final Assignment cForOfAssignment_3_1_0_0_1_1_1_2_0 = (Assignment)cGroup_3_1_0_0_1_1_1_2.eContents().get(0);
-		private final Keyword cForOfOfKeyword_3_1_0_0_1_1_1_2_0_0 = (Keyword)cForOfAssignment_3_1_0_0_1_1_1_2_0.eContents().get(0);
-		private final Assignment cExpressionAssignment_3_1_0_0_1_1_1_2_1 = (Assignment)cGroup_3_1_0_0_1_1_1_2.eContents().get(1);
-		private final RuleCall cExpressionAssignmentExpressionParserRuleCall_3_1_0_0_1_1_1_2_1_0 = (RuleCall)cExpressionAssignment_3_1_0_0_1_1_1_2_1.eContents().get(0);
-		private final Group cGroup_3_1_0_1 = (Group)cAlternatives_3_1_0.eContents().get(1);
-		private final Assignment cInitExprAssignment_3_1_0_1_0 = (Assignment)cGroup_3_1_0_1.eContents().get(0);
-		private final RuleCall cInitExprExpressionParserRuleCall_3_1_0_1_0_0 = (RuleCall)cInitExprAssignment_3_1_0_1_0.eContents().get(0);
-		private final Alternatives cAlternatives_3_1_0_1_1 = (Alternatives)cGroup_3_1_0_1.eContents().get(1);
-		private final Group cGroup_3_1_0_1_1_0 = (Group)cAlternatives_3_1_0_1_1.eContents().get(0);
-		private final Keyword cSemicolonKeyword_3_1_0_1_1_0_0 = (Keyword)cGroup_3_1_0_1_1_0.eContents().get(0);
-		private final Assignment cExpressionAssignment_3_1_0_1_1_0_1 = (Assignment)cGroup_3_1_0_1_1_0.eContents().get(1);
-		private final RuleCall cExpressionExpressionParserRuleCall_3_1_0_1_1_0_1_0 = (RuleCall)cExpressionAssignment_3_1_0_1_1_0_1.eContents().get(0);
-		private final Keyword cSemicolonKeyword_3_1_0_1_1_0_2 = (Keyword)cGroup_3_1_0_1_1_0.eContents().get(2);
-		private final Assignment cUpdateExprAssignment_3_1_0_1_1_0_3 = (Assignment)cGroup_3_1_0_1_1_0.eContents().get(3);
-		private final RuleCall cUpdateExprExpressionParserRuleCall_3_1_0_1_1_0_3_0 = (RuleCall)cUpdateExprAssignment_3_1_0_1_1_0_3.eContents().get(0);
-		private final Group cGroup_3_1_0_1_1_1 = (Group)cAlternatives_3_1_0_1_1.eContents().get(1);
-		private final Assignment cForInAssignment_3_1_0_1_1_1_0 = (Assignment)cGroup_3_1_0_1_1_1.eContents().get(0);
-		private final Keyword cForInInKeyword_3_1_0_1_1_1_0_0 = (Keyword)cForInAssignment_3_1_0_1_1_1_0.eContents().get(0);
-		private final Assignment cExpressionAssignment_3_1_0_1_1_1_1 = (Assignment)cGroup_3_1_0_1_1_1.eContents().get(1);
-		private final RuleCall cExpressionExpressionParserRuleCall_3_1_0_1_1_1_1_0 = (RuleCall)cExpressionAssignment_3_1_0_1_1_1_1.eContents().get(0);
-		private final Group cGroup_3_1_0_1_1_2 = (Group)cAlternatives_3_1_0_1_1.eContents().get(2);
-		private final Assignment cForOfAssignment_3_1_0_1_1_2_0 = (Assignment)cGroup_3_1_0_1_1_2.eContents().get(0);
-		private final Keyword cForOfOfKeyword_3_1_0_1_1_2_0_0 = (Keyword)cForOfAssignment_3_1_0_1_1_2_0.eContents().get(0);
-		private final Assignment cExpressionAssignment_3_1_0_1_1_2_1 = (Assignment)cGroup_3_1_0_1_1_2.eContents().get(1);
-		private final RuleCall cExpressionAssignmentExpressionParserRuleCall_3_1_0_1_1_2_1_0 = (RuleCall)cExpressionAssignment_3_1_0_1_1_2_1.eContents().get(0);
-		private final Group cGroup_3_1_0_2 = (Group)cAlternatives_3_1_0.eContents().get(2);
-		private final Keyword cSemicolonKeyword_3_1_0_2_0 = (Keyword)cGroup_3_1_0_2.eContents().get(0);
-		private final Assignment cExpressionAssignment_3_1_0_2_1 = (Assignment)cGroup_3_1_0_2.eContents().get(1);
-		private final RuleCall cExpressionExpressionParserRuleCall_3_1_0_2_1_0 = (RuleCall)cExpressionAssignment_3_1_0_2_1.eContents().get(0);
-		private final Keyword cSemicolonKeyword_3_1_0_2_2 = (Keyword)cGroup_3_1_0_2.eContents().get(2);
-		private final Assignment cUpdateExprAssignment_3_1_0_2_3 = (Assignment)cGroup_3_1_0_2.eContents().get(3);
-		private final RuleCall cUpdateExprExpressionParserRuleCall_3_1_0_2_3_0 = (RuleCall)cUpdateExprAssignment_3_1_0_2_3.eContents().get(0);
-		private final Keyword cRightParenthesisKeyword_3_1_1 = (Keyword)cGroup_3_1.eContents().get(1);
-		private final Assignment cStatementAssignment_4 = (Assignment)cGroup.eContents().get(4);
-		private final RuleCall cStatementStatementParserRuleCall_4_0 = (RuleCall)cStatementAssignment_4.eContents().get(0);
+		private final Assignment cAwaitAssignment_2 = (Assignment)cGroup.eContents().get(2);
+		private final Keyword cAwaitAwaitKeyword_2_0 = (Keyword)cAwaitAssignment_2.eContents().get(0);
+		private final Keyword cLeftParenthesisKeyword_3 = (Keyword)cGroup.eContents().get(3);
+		private final Alternatives cAlternatives_4 = (Alternatives)cGroup.eContents().get(4);
+		private final Group cGroup_4_0 = (Group)cAlternatives_4.eContents().get(0);
+		private final Group cGroup_4_0_0 = (Group)cGroup_4_0.eContents().get(0);
+		private final Assignment cInitExprAssignment_4_0_0_0 = (Assignment)cGroup_4_0_0.eContents().get(0);
+		private final RuleCall cInitExprLetIdentifierRefParserRuleCall_4_0_0_0_0 = (RuleCall)cInitExprAssignment_4_0_0_0.eContents().get(0);
+		private final Assignment cForInAssignment_4_0_0_1 = (Assignment)cGroup_4_0_0.eContents().get(1);
+		private final Keyword cForInInKeyword_4_0_0_1_0 = (Keyword)cForInAssignment_4_0_0_1.eContents().get(0);
+		private final Assignment cExpressionAssignment_4_0_0_2 = (Assignment)cGroup_4_0_0.eContents().get(2);
+		private final RuleCall cExpressionExpressionParserRuleCall_4_0_0_2_0 = (RuleCall)cExpressionAssignment_4_0_0_2.eContents().get(0);
+		private final Keyword cRightParenthesisKeyword_4_0_0_3 = (Keyword)cGroup_4_0_0.eContents().get(3);
+		private final Group cGroup_4_1 = (Group)cAlternatives_4.eContents().get(1);
+		private final Alternatives cAlternatives_4_1_0 = (Alternatives)cGroup_4_1.eContents().get(0);
+		private final Group cGroup_4_1_0_0 = (Group)cAlternatives_4_1_0.eContents().get(0);
+		private final Assignment cVarStmtKeywordAssignment_4_1_0_0_0 = (Assignment)cGroup_4_1_0_0.eContents().get(0);
+		private final RuleCall cVarStmtKeywordVariableStatementKeywordEnumRuleCall_4_1_0_0_0_0 = (RuleCall)cVarStmtKeywordAssignment_4_1_0_0_0.eContents().get(0);
+		private final Alternatives cAlternatives_4_1_0_0_1 = (Alternatives)cGroup_4_1_0_0.eContents().get(1);
+		private final Group cGroup_4_1_0_0_1_0 = (Group)cAlternatives_4_1_0_0_1.eContents().get(0);
+		private final Group cGroup_4_1_0_0_1_0_0 = (Group)cGroup_4_1_0_0_1_0.eContents().get(0);
+		private final Assignment cVarDeclsOrBindingsAssignment_4_1_0_0_1_0_0_0 = (Assignment)cGroup_4_1_0_0_1_0_0.eContents().get(0);
+		private final RuleCall cVarDeclsOrBindingsBindingIdentifierAsVariableDeclarationParserRuleCall_4_1_0_0_1_0_0_0_0 = (RuleCall)cVarDeclsOrBindingsAssignment_4_1_0_0_1_0_0_0.eContents().get(0);
+		private final Alternatives cAlternatives_4_1_0_0_1_0_0_1 = (Alternatives)cGroup_4_1_0_0_1_0_0.eContents().get(1);
+		private final Assignment cForInAssignment_4_1_0_0_1_0_0_1_0 = (Assignment)cAlternatives_4_1_0_0_1_0_0_1.eContents().get(0);
+		private final Keyword cForInInKeyword_4_1_0_0_1_0_0_1_0_0 = (Keyword)cForInAssignment_4_1_0_0_1_0_0_1_0.eContents().get(0);
+		private final Assignment cForOfAssignment_4_1_0_0_1_0_0_1_1 = (Assignment)cAlternatives_4_1_0_0_1_0_0_1.eContents().get(1);
+		private final Keyword cForOfOfKeyword_4_1_0_0_1_0_0_1_1_0 = (Keyword)cForOfAssignment_4_1_0_0_1_0_0_1_1.eContents().get(0);
+		private final Assignment cExpressionAssignment_4_1_0_0_1_0_0_2 = (Assignment)cGroup_4_1_0_0_1_0_0.eContents().get(2);
+		private final RuleCall cExpressionAssignmentExpressionParserRuleCall_4_1_0_0_1_0_0_2_0 = (RuleCall)cExpressionAssignment_4_1_0_0_1_0_0_2.eContents().get(0);
+		private final Group cGroup_4_1_0_0_1_1 = (Group)cAlternatives_4_1_0_0_1.eContents().get(1);
+		private final Assignment cVarDeclsOrBindingsAssignment_4_1_0_0_1_1_0 = (Assignment)cGroup_4_1_0_0_1_1.eContents().get(0);
+		private final RuleCall cVarDeclsOrBindingsVariableDeclarationOrBindingParserRuleCall_4_1_0_0_1_1_0_0 = (RuleCall)cVarDeclsOrBindingsAssignment_4_1_0_0_1_1_0.eContents().get(0);
+		private final Alternatives cAlternatives_4_1_0_0_1_1_1 = (Alternatives)cGroup_4_1_0_0_1_1.eContents().get(1);
+		private final Group cGroup_4_1_0_0_1_1_1_0 = (Group)cAlternatives_4_1_0_0_1_1_1.eContents().get(0);
+		private final Group cGroup_4_1_0_0_1_1_1_0_0 = (Group)cGroup_4_1_0_0_1_1_1_0.eContents().get(0);
+		private final Keyword cCommaKeyword_4_1_0_0_1_1_1_0_0_0 = (Keyword)cGroup_4_1_0_0_1_1_1_0_0.eContents().get(0);
+		private final Assignment cVarDeclsOrBindingsAssignment_4_1_0_0_1_1_1_0_0_1 = (Assignment)cGroup_4_1_0_0_1_1_1_0_0.eContents().get(1);
+		private final RuleCall cVarDeclsOrBindingsVariableDeclarationOrBindingParserRuleCall_4_1_0_0_1_1_1_0_0_1_0 = (RuleCall)cVarDeclsOrBindingsAssignment_4_1_0_0_1_1_1_0_0_1.eContents().get(0);
+		private final Keyword cSemicolonKeyword_4_1_0_0_1_1_1_0_1 = (Keyword)cGroup_4_1_0_0_1_1_1_0.eContents().get(1);
+		private final Assignment cExpressionAssignment_4_1_0_0_1_1_1_0_2 = (Assignment)cGroup_4_1_0_0_1_1_1_0.eContents().get(2);
+		private final RuleCall cExpressionExpressionParserRuleCall_4_1_0_0_1_1_1_0_2_0 = (RuleCall)cExpressionAssignment_4_1_0_0_1_1_1_0_2.eContents().get(0);
+		private final Keyword cSemicolonKeyword_4_1_0_0_1_1_1_0_3 = (Keyword)cGroup_4_1_0_0_1_1_1_0.eContents().get(3);
+		private final Assignment cUpdateExprAssignment_4_1_0_0_1_1_1_0_4 = (Assignment)cGroup_4_1_0_0_1_1_1_0.eContents().get(4);
+		private final RuleCall cUpdateExprExpressionParserRuleCall_4_1_0_0_1_1_1_0_4_0 = (RuleCall)cUpdateExprAssignment_4_1_0_0_1_1_1_0_4.eContents().get(0);
+		private final Group cGroup_4_1_0_0_1_1_1_1 = (Group)cAlternatives_4_1_0_0_1_1_1.eContents().get(1);
+		private final Assignment cForInAssignment_4_1_0_0_1_1_1_1_0 = (Assignment)cGroup_4_1_0_0_1_1_1_1.eContents().get(0);
+		private final Keyword cForInInKeyword_4_1_0_0_1_1_1_1_0_0 = (Keyword)cForInAssignment_4_1_0_0_1_1_1_1_0.eContents().get(0);
+		private final Assignment cExpressionAssignment_4_1_0_0_1_1_1_1_1 = (Assignment)cGroup_4_1_0_0_1_1_1_1.eContents().get(1);
+		private final RuleCall cExpressionExpressionParserRuleCall_4_1_0_0_1_1_1_1_1_0 = (RuleCall)cExpressionAssignment_4_1_0_0_1_1_1_1_1.eContents().get(0);
+		private final Group cGroup_4_1_0_0_1_1_1_2 = (Group)cAlternatives_4_1_0_0_1_1_1.eContents().get(2);
+		private final Assignment cForOfAssignment_4_1_0_0_1_1_1_2_0 = (Assignment)cGroup_4_1_0_0_1_1_1_2.eContents().get(0);
+		private final Keyword cForOfOfKeyword_4_1_0_0_1_1_1_2_0_0 = (Keyword)cForOfAssignment_4_1_0_0_1_1_1_2_0.eContents().get(0);
+		private final Assignment cExpressionAssignment_4_1_0_0_1_1_1_2_1 = (Assignment)cGroup_4_1_0_0_1_1_1_2.eContents().get(1);
+		private final RuleCall cExpressionAssignmentExpressionParserRuleCall_4_1_0_0_1_1_1_2_1_0 = (RuleCall)cExpressionAssignment_4_1_0_0_1_1_1_2_1.eContents().get(0);
+		private final Group cGroup_4_1_0_1 = (Group)cAlternatives_4_1_0.eContents().get(1);
+		private final Assignment cInitExprAssignment_4_1_0_1_0 = (Assignment)cGroup_4_1_0_1.eContents().get(0);
+		private final RuleCall cInitExprExpressionParserRuleCall_4_1_0_1_0_0 = (RuleCall)cInitExprAssignment_4_1_0_1_0.eContents().get(0);
+		private final Alternatives cAlternatives_4_1_0_1_1 = (Alternatives)cGroup_4_1_0_1.eContents().get(1);
+		private final Group cGroup_4_1_0_1_1_0 = (Group)cAlternatives_4_1_0_1_1.eContents().get(0);
+		private final Keyword cSemicolonKeyword_4_1_0_1_1_0_0 = (Keyword)cGroup_4_1_0_1_1_0.eContents().get(0);
+		private final Assignment cExpressionAssignment_4_1_0_1_1_0_1 = (Assignment)cGroup_4_1_0_1_1_0.eContents().get(1);
+		private final RuleCall cExpressionExpressionParserRuleCall_4_1_0_1_1_0_1_0 = (RuleCall)cExpressionAssignment_4_1_0_1_1_0_1.eContents().get(0);
+		private final Keyword cSemicolonKeyword_4_1_0_1_1_0_2 = (Keyword)cGroup_4_1_0_1_1_0.eContents().get(2);
+		private final Assignment cUpdateExprAssignment_4_1_0_1_1_0_3 = (Assignment)cGroup_4_1_0_1_1_0.eContents().get(3);
+		private final RuleCall cUpdateExprExpressionParserRuleCall_4_1_0_1_1_0_3_0 = (RuleCall)cUpdateExprAssignment_4_1_0_1_1_0_3.eContents().get(0);
+		private final Group cGroup_4_1_0_1_1_1 = (Group)cAlternatives_4_1_0_1_1.eContents().get(1);
+		private final Assignment cForInAssignment_4_1_0_1_1_1_0 = (Assignment)cGroup_4_1_0_1_1_1.eContents().get(0);
+		private final Keyword cForInInKeyword_4_1_0_1_1_1_0_0 = (Keyword)cForInAssignment_4_1_0_1_1_1_0.eContents().get(0);
+		private final Assignment cExpressionAssignment_4_1_0_1_1_1_1 = (Assignment)cGroup_4_1_0_1_1_1.eContents().get(1);
+		private final RuleCall cExpressionExpressionParserRuleCall_4_1_0_1_1_1_1_0 = (RuleCall)cExpressionAssignment_4_1_0_1_1_1_1.eContents().get(0);
+		private final Group cGroup_4_1_0_1_1_2 = (Group)cAlternatives_4_1_0_1_1.eContents().get(2);
+		private final Assignment cForOfAssignment_4_1_0_1_1_2_0 = (Assignment)cGroup_4_1_0_1_1_2.eContents().get(0);
+		private final Keyword cForOfOfKeyword_4_1_0_1_1_2_0_0 = (Keyword)cForOfAssignment_4_1_0_1_1_2_0.eContents().get(0);
+		private final Assignment cExpressionAssignment_4_1_0_1_1_2_1 = (Assignment)cGroup_4_1_0_1_1_2.eContents().get(1);
+		private final RuleCall cExpressionAssignmentExpressionParserRuleCall_4_1_0_1_1_2_1_0 = (RuleCall)cExpressionAssignment_4_1_0_1_1_2_1.eContents().get(0);
+		private final Group cGroup_4_1_0_2 = (Group)cAlternatives_4_1_0.eContents().get(2);
+		private final Keyword cSemicolonKeyword_4_1_0_2_0 = (Keyword)cGroup_4_1_0_2.eContents().get(0);
+		private final Assignment cExpressionAssignment_4_1_0_2_1 = (Assignment)cGroup_4_1_0_2.eContents().get(1);
+		private final RuleCall cExpressionExpressionParserRuleCall_4_1_0_2_1_0 = (RuleCall)cExpressionAssignment_4_1_0_2_1.eContents().get(0);
+		private final Keyword cSemicolonKeyword_4_1_0_2_2 = (Keyword)cGroup_4_1_0_2.eContents().get(2);
+		private final Assignment cUpdateExprAssignment_4_1_0_2_3 = (Assignment)cGroup_4_1_0_2.eContents().get(3);
+		private final RuleCall cUpdateExprExpressionParserRuleCall_4_1_0_2_3_0 = (RuleCall)cUpdateExprAssignment_4_1_0_2_3.eContents().get(0);
+		private final Keyword cRightParenthesisKeyword_4_1_1 = (Keyword)cGroup_4_1.eContents().get(1);
+		private final Assignment cStatementAssignment_5 = (Assignment)cGroup.eContents().get(5);
+		private final RuleCall cStatementStatementParserRuleCall_5_0 = (RuleCall)cStatementAssignment_5.eContents().get(0);
 		
 		//ForStatement <Yield>:
-		//	{ForStatement} 'for' '(' (
+		//	{ForStatement} 'for' await?='await'? '(' (
 		//	// this is not in the spec as far as I can tell, but there are tests that rely on this to be valid JS
 		//	=> (initExpr=LetIdentifierRef forIn?='in' expression=Expression<In=true,Yield> ')') | (->
 		//	varStmtKeyword=VariableStatementKeyword (=>
@@ -2998,7 +3000,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//	')') statement=Statement<Yield>;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//{ForStatement} 'for' '(' ( // this is not in the spec as far as I can tell, but there are tests that rely on this to be valid JS
+		//{ForStatement} 'for' await?='await'? '(' ( // this is not in the spec as far as I can tell, but there are tests that rely on this to be valid JS
 		//=> (initExpr=LetIdentifierRef forIn?='in' expression=Expression<In=true,Yield> ')') | (->
 		//varStmtKeyword=VariableStatementKeyword (=> (varDeclsOrBindings+=BindingIdentifierAsVariableDeclaration<In=false,Yield>
 		//(forIn?='in' | forOf?='of') -> expression=AssignmentExpression<In=true,Yield>?) |
@@ -3017,8 +3019,14 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//'for'
 		public Keyword getForKeyword_1() { return cForKeyword_1; }
 		
+		//await?='await'?
+		public Assignment getAwaitAssignment_2() { return cAwaitAssignment_2; }
+		
+		//'await'
+		public Keyword getAwaitAwaitKeyword_2_0() { return cAwaitAwaitKeyword_2_0; }
+		
 		//'('
-		public Keyword getLeftParenthesisKeyword_2() { return cLeftParenthesisKeyword_2; }
+		public Keyword getLeftParenthesisKeyword_3() { return cLeftParenthesisKeyword_3; }
 		
 		//( // this is not in the spec as far as I can tell, but there are tests that rely on this to be valid JS
 		//=> (initExpr=LetIdentifierRef forIn?='in' expression=Expression<In=true,Yield> ')') | (->
@@ -3031,35 +3039,35 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//expression=Expression<In=true,Yield>? ';' updateExpr=Expression<In=true,Yield>? | forIn?='in'
 		//expression=Expression<In=true,Yield>? | forOf?='of' expression=AssignmentExpression<In=true,Yield>?) | ';'
 		//expression=Expression<In=true,Yield>? ';' updateExpr=Expression<In=true,Yield>?) ')')
-		public Alternatives getAlternatives_3() { return cAlternatives_3; }
+		public Alternatives getAlternatives_4() { return cAlternatives_4; }
 		
 		//// this is not in the spec as far as I can tell, but there are tests that rely on this to be valid JS
 		//=> (initExpr=LetIdentifierRef forIn?='in' expression=Expression<In=true,Yield> ')')
-		public Group getGroup_3_0() { return cGroup_3_0; }
+		public Group getGroup_4_0() { return cGroup_4_0; }
 		
 		//(initExpr=LetIdentifierRef forIn?='in' expression=Expression<In=true,Yield> ')')
-		public Group getGroup_3_0_0() { return cGroup_3_0_0; }
+		public Group getGroup_4_0_0() { return cGroup_4_0_0; }
 		
 		//initExpr=LetIdentifierRef
-		public Assignment getInitExprAssignment_3_0_0_0() { return cInitExprAssignment_3_0_0_0; }
+		public Assignment getInitExprAssignment_4_0_0_0() { return cInitExprAssignment_4_0_0_0; }
 		
 		//LetIdentifierRef
-		public RuleCall getInitExprLetIdentifierRefParserRuleCall_3_0_0_0_0() { return cInitExprLetIdentifierRefParserRuleCall_3_0_0_0_0; }
+		public RuleCall getInitExprLetIdentifierRefParserRuleCall_4_0_0_0_0() { return cInitExprLetIdentifierRefParserRuleCall_4_0_0_0_0; }
 		
 		//forIn?='in'
-		public Assignment getForInAssignment_3_0_0_1() { return cForInAssignment_3_0_0_1; }
+		public Assignment getForInAssignment_4_0_0_1() { return cForInAssignment_4_0_0_1; }
 		
 		//'in'
-		public Keyword getForInInKeyword_3_0_0_1_0() { return cForInInKeyword_3_0_0_1_0; }
+		public Keyword getForInInKeyword_4_0_0_1_0() { return cForInInKeyword_4_0_0_1_0; }
 		
 		//expression=Expression<In=true,Yield>
-		public Assignment getExpressionAssignment_3_0_0_2() { return cExpressionAssignment_3_0_0_2; }
+		public Assignment getExpressionAssignment_4_0_0_2() { return cExpressionAssignment_4_0_0_2; }
 		
 		//Expression<In=true,Yield>
-		public RuleCall getExpressionExpressionParserRuleCall_3_0_0_2_0() { return cExpressionExpressionParserRuleCall_3_0_0_2_0; }
+		public RuleCall getExpressionExpressionParserRuleCall_4_0_0_2_0() { return cExpressionExpressionParserRuleCall_4_0_0_2_0; }
 		
 		//')'
-		public Keyword getRightParenthesisKeyword_3_0_0_3() { return cRightParenthesisKeyword_3_0_0_3; }
+		public Keyword getRightParenthesisKeyword_4_0_0_3() { return cRightParenthesisKeyword_4_0_0_3; }
 		
 		//(-> varStmtKeyword=VariableStatementKeyword (=>
 		//(varDeclsOrBindings+=BindingIdentifierAsVariableDeclaration<In=false,Yield> (forIn?='in' | forOf?='of') ->
@@ -3071,7 +3079,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//expression=Expression<In=true,Yield>? ';' updateExpr=Expression<In=true,Yield>? | forIn?='in'
 		//expression=Expression<In=true,Yield>? | forOf?='of' expression=AssignmentExpression<In=true,Yield>?) | ';'
 		//expression=Expression<In=true,Yield>? ';' updateExpr=Expression<In=true,Yield>?) ')'
-		public Group getGroup_3_1() { return cGroup_3_1; }
+		public Group getGroup_4_1() { return cGroup_4_1; }
 		
 		//(-> varStmtKeyword=VariableStatementKeyword (=>
 		//(varDeclsOrBindings+=BindingIdentifierAsVariableDeclaration<In=false,Yield> (forIn?='in' | forOf?='of') ->
@@ -3083,7 +3091,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//expression=Expression<In=true,Yield>? ';' updateExpr=Expression<In=true,Yield>? | forIn?='in'
 		//expression=Expression<In=true,Yield>? | forOf?='of' expression=AssignmentExpression<In=true,Yield>?) | ';'
 		//expression=Expression<In=true,Yield>? ';' updateExpr=Expression<In=true,Yield>?)
-		public Alternatives getAlternatives_3_1_0() { return cAlternatives_3_1_0; }
+		public Alternatives getAlternatives_4_1_0() { return cAlternatives_4_1_0; }
 		
 		//-> varStmtKeyword=VariableStatementKeyword (=>
 		//(varDeclsOrBindings+=BindingIdentifierAsVariableDeclaration<In=false,Yield> (forIn?='in' | forOf?='of') ->
@@ -3092,13 +3100,13 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//varDeclsOrBindings+=VariableDeclarationOrBinding<In=false,Yield,false>)* ';' expression=Expression<In=true,Yield>? ';'
 		//updateExpr=Expression<In=true,Yield>? | forIn?='in' expression=Expression<In=true,Yield>? | forOf?='of'
 		//expression=AssignmentExpression<In=true,Yield>?))
-		public Group getGroup_3_1_0_0() { return cGroup_3_1_0_0; }
+		public Group getGroup_4_1_0_0() { return cGroup_4_1_0_0; }
 		
 		//-> varStmtKeyword=VariableStatementKeyword
-		public Assignment getVarStmtKeywordAssignment_3_1_0_0_0() { return cVarStmtKeywordAssignment_3_1_0_0_0; }
+		public Assignment getVarStmtKeywordAssignment_4_1_0_0_0() { return cVarStmtKeywordAssignment_4_1_0_0_0; }
 		
 		//VariableStatementKeyword
-		public RuleCall getVarStmtKeywordVariableStatementKeywordEnumRuleCall_3_1_0_0_0_0() { return cVarStmtKeywordVariableStatementKeywordEnumRuleCall_3_1_0_0_0_0; }
+		public RuleCall getVarStmtKeywordVariableStatementKeywordEnumRuleCall_4_1_0_0_0_0() { return cVarStmtKeywordVariableStatementKeywordEnumRuleCall_4_1_0_0_0_0; }
 		
 		//(=> (varDeclsOrBindings+=BindingIdentifierAsVariableDeclaration<In=false,Yield> (forIn?='in' | forOf?='of') ->
 		//expression=AssignmentExpression<In=true,Yield>?) |
@@ -3106,218 +3114,218 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//varDeclsOrBindings+=VariableDeclarationOrBinding<In=false,Yield,false>)* ';' expression=Expression<In=true,Yield>? ';'
 		//updateExpr=Expression<In=true,Yield>? | forIn?='in' expression=Expression<In=true,Yield>? | forOf?='of'
 		//expression=AssignmentExpression<In=true,Yield>?))
-		public Alternatives getAlternatives_3_1_0_0_1() { return cAlternatives_3_1_0_0_1; }
+		public Alternatives getAlternatives_4_1_0_0_1() { return cAlternatives_4_1_0_0_1; }
 		
 		//=> (varDeclsOrBindings+=BindingIdentifierAsVariableDeclaration<In=false,Yield> (forIn?='in' | forOf?='of') ->
 		//expression=AssignmentExpression<In=true,Yield>?)
-		public Group getGroup_3_1_0_0_1_0() { return cGroup_3_1_0_0_1_0; }
+		public Group getGroup_4_1_0_0_1_0() { return cGroup_4_1_0_0_1_0; }
 		
 		//(varDeclsOrBindings+=BindingIdentifierAsVariableDeclaration<In=false,Yield> (forIn?='in' | forOf?='of') ->
 		//expression=AssignmentExpression<In=true,Yield>?)
-		public Group getGroup_3_1_0_0_1_0_0() { return cGroup_3_1_0_0_1_0_0; }
+		public Group getGroup_4_1_0_0_1_0_0() { return cGroup_4_1_0_0_1_0_0; }
 		
 		//varDeclsOrBindings+=BindingIdentifierAsVariableDeclaration<In=false,Yield>
-		public Assignment getVarDeclsOrBindingsAssignment_3_1_0_0_1_0_0_0() { return cVarDeclsOrBindingsAssignment_3_1_0_0_1_0_0_0; }
+		public Assignment getVarDeclsOrBindingsAssignment_4_1_0_0_1_0_0_0() { return cVarDeclsOrBindingsAssignment_4_1_0_0_1_0_0_0; }
 		
 		//BindingIdentifierAsVariableDeclaration<In=false,Yield>
-		public RuleCall getVarDeclsOrBindingsBindingIdentifierAsVariableDeclarationParserRuleCall_3_1_0_0_1_0_0_0_0() { return cVarDeclsOrBindingsBindingIdentifierAsVariableDeclarationParserRuleCall_3_1_0_0_1_0_0_0_0; }
+		public RuleCall getVarDeclsOrBindingsBindingIdentifierAsVariableDeclarationParserRuleCall_4_1_0_0_1_0_0_0_0() { return cVarDeclsOrBindingsBindingIdentifierAsVariableDeclarationParserRuleCall_4_1_0_0_1_0_0_0_0; }
 		
 		//(forIn?='in' | forOf?='of')
-		public Alternatives getAlternatives_3_1_0_0_1_0_0_1() { return cAlternatives_3_1_0_0_1_0_0_1; }
+		public Alternatives getAlternatives_4_1_0_0_1_0_0_1() { return cAlternatives_4_1_0_0_1_0_0_1; }
 		
 		//forIn?='in'
-		public Assignment getForInAssignment_3_1_0_0_1_0_0_1_0() { return cForInAssignment_3_1_0_0_1_0_0_1_0; }
+		public Assignment getForInAssignment_4_1_0_0_1_0_0_1_0() { return cForInAssignment_4_1_0_0_1_0_0_1_0; }
 		
 		//'in'
-		public Keyword getForInInKeyword_3_1_0_0_1_0_0_1_0_0() { return cForInInKeyword_3_1_0_0_1_0_0_1_0_0; }
+		public Keyword getForInInKeyword_4_1_0_0_1_0_0_1_0_0() { return cForInInKeyword_4_1_0_0_1_0_0_1_0_0; }
 		
 		//forOf?='of'
-		public Assignment getForOfAssignment_3_1_0_0_1_0_0_1_1() { return cForOfAssignment_3_1_0_0_1_0_0_1_1; }
+		public Assignment getForOfAssignment_4_1_0_0_1_0_0_1_1() { return cForOfAssignment_4_1_0_0_1_0_0_1_1; }
 		
 		//'of'
-		public Keyword getForOfOfKeyword_3_1_0_0_1_0_0_1_1_0() { return cForOfOfKeyword_3_1_0_0_1_0_0_1_1_0; }
+		public Keyword getForOfOfKeyword_4_1_0_0_1_0_0_1_1_0() { return cForOfOfKeyword_4_1_0_0_1_0_0_1_1_0; }
 		
 		//-> expression=AssignmentExpression<In=true,Yield>?
-		public Assignment getExpressionAssignment_3_1_0_0_1_0_0_2() { return cExpressionAssignment_3_1_0_0_1_0_0_2; }
+		public Assignment getExpressionAssignment_4_1_0_0_1_0_0_2() { return cExpressionAssignment_4_1_0_0_1_0_0_2; }
 		
 		//AssignmentExpression<In=true,Yield>
-		public RuleCall getExpressionAssignmentExpressionParserRuleCall_3_1_0_0_1_0_0_2_0() { return cExpressionAssignmentExpressionParserRuleCall_3_1_0_0_1_0_0_2_0; }
+		public RuleCall getExpressionAssignmentExpressionParserRuleCall_4_1_0_0_1_0_0_2_0() { return cExpressionAssignmentExpressionParserRuleCall_4_1_0_0_1_0_0_2_0; }
 		
 		//varDeclsOrBindings+=VariableDeclarationOrBinding<In=false,Yield,OptionalInit=true> ((','
 		//varDeclsOrBindings+=VariableDeclarationOrBinding<In=false,Yield,false>)* ';' expression=Expression<In=true,Yield>? ';'
 		//updateExpr=Expression<In=true,Yield>? | forIn?='in' expression=Expression<In=true,Yield>? | forOf?='of'
 		//expression=AssignmentExpression<In=true,Yield>?)
-		public Group getGroup_3_1_0_0_1_1() { return cGroup_3_1_0_0_1_1; }
+		public Group getGroup_4_1_0_0_1_1() { return cGroup_4_1_0_0_1_1; }
 		
 		//varDeclsOrBindings+=VariableDeclarationOrBinding<In=false,Yield,OptionalInit=true>
-		public Assignment getVarDeclsOrBindingsAssignment_3_1_0_0_1_1_0() { return cVarDeclsOrBindingsAssignment_3_1_0_0_1_1_0; }
+		public Assignment getVarDeclsOrBindingsAssignment_4_1_0_0_1_1_0() { return cVarDeclsOrBindingsAssignment_4_1_0_0_1_1_0; }
 		
 		//VariableDeclarationOrBinding<In=false,Yield,OptionalInit=true>
-		public RuleCall getVarDeclsOrBindingsVariableDeclarationOrBindingParserRuleCall_3_1_0_0_1_1_0_0() { return cVarDeclsOrBindingsVariableDeclarationOrBindingParserRuleCall_3_1_0_0_1_1_0_0; }
+		public RuleCall getVarDeclsOrBindingsVariableDeclarationOrBindingParserRuleCall_4_1_0_0_1_1_0_0() { return cVarDeclsOrBindingsVariableDeclarationOrBindingParserRuleCall_4_1_0_0_1_1_0_0; }
 		
 		//((',' varDeclsOrBindings+=VariableDeclarationOrBinding<In=false,Yield,false>)* ';' expression=Expression<In=true,Yield>?
 		//';' updateExpr=Expression<In=true,Yield>? | forIn?='in' expression=Expression<In=true,Yield>? | forOf?='of'
 		//expression=AssignmentExpression<In=true,Yield>?)
-		public Alternatives getAlternatives_3_1_0_0_1_1_1() { return cAlternatives_3_1_0_0_1_1_1; }
+		public Alternatives getAlternatives_4_1_0_0_1_1_1() { return cAlternatives_4_1_0_0_1_1_1; }
 		
 		//(',' varDeclsOrBindings+=VariableDeclarationOrBinding<In=false,Yield,false>)* ';' expression=Expression<In=true,Yield>?
 		//';' updateExpr=Expression<In=true,Yield>?
-		public Group getGroup_3_1_0_0_1_1_1_0() { return cGroup_3_1_0_0_1_1_1_0; }
+		public Group getGroup_4_1_0_0_1_1_1_0() { return cGroup_4_1_0_0_1_1_1_0; }
 		
 		//(',' varDeclsOrBindings+=VariableDeclarationOrBinding<In=false,Yield,false>)*
-		public Group getGroup_3_1_0_0_1_1_1_0_0() { return cGroup_3_1_0_0_1_1_1_0_0; }
+		public Group getGroup_4_1_0_0_1_1_1_0_0() { return cGroup_4_1_0_0_1_1_1_0_0; }
 		
 		//','
-		public Keyword getCommaKeyword_3_1_0_0_1_1_1_0_0_0() { return cCommaKeyword_3_1_0_0_1_1_1_0_0_0; }
+		public Keyword getCommaKeyword_4_1_0_0_1_1_1_0_0_0() { return cCommaKeyword_4_1_0_0_1_1_1_0_0_0; }
 		
 		//varDeclsOrBindings+=VariableDeclarationOrBinding<In=false,Yield,false>
-		public Assignment getVarDeclsOrBindingsAssignment_3_1_0_0_1_1_1_0_0_1() { return cVarDeclsOrBindingsAssignment_3_1_0_0_1_1_1_0_0_1; }
+		public Assignment getVarDeclsOrBindingsAssignment_4_1_0_0_1_1_1_0_0_1() { return cVarDeclsOrBindingsAssignment_4_1_0_0_1_1_1_0_0_1; }
 		
 		//VariableDeclarationOrBinding<In=false,Yield,false>
-		public RuleCall getVarDeclsOrBindingsVariableDeclarationOrBindingParserRuleCall_3_1_0_0_1_1_1_0_0_1_0() { return cVarDeclsOrBindingsVariableDeclarationOrBindingParserRuleCall_3_1_0_0_1_1_1_0_0_1_0; }
+		public RuleCall getVarDeclsOrBindingsVariableDeclarationOrBindingParserRuleCall_4_1_0_0_1_1_1_0_0_1_0() { return cVarDeclsOrBindingsVariableDeclarationOrBindingParserRuleCall_4_1_0_0_1_1_1_0_0_1_0; }
 		
 		//';'
-		public Keyword getSemicolonKeyword_3_1_0_0_1_1_1_0_1() { return cSemicolonKeyword_3_1_0_0_1_1_1_0_1; }
+		public Keyword getSemicolonKeyword_4_1_0_0_1_1_1_0_1() { return cSemicolonKeyword_4_1_0_0_1_1_1_0_1; }
 		
 		//expression=Expression<In=true,Yield>?
-		public Assignment getExpressionAssignment_3_1_0_0_1_1_1_0_2() { return cExpressionAssignment_3_1_0_0_1_1_1_0_2; }
+		public Assignment getExpressionAssignment_4_1_0_0_1_1_1_0_2() { return cExpressionAssignment_4_1_0_0_1_1_1_0_2; }
 		
 		//Expression<In=true,Yield>
-		public RuleCall getExpressionExpressionParserRuleCall_3_1_0_0_1_1_1_0_2_0() { return cExpressionExpressionParserRuleCall_3_1_0_0_1_1_1_0_2_0; }
+		public RuleCall getExpressionExpressionParserRuleCall_4_1_0_0_1_1_1_0_2_0() { return cExpressionExpressionParserRuleCall_4_1_0_0_1_1_1_0_2_0; }
 		
 		//';'
-		public Keyword getSemicolonKeyword_3_1_0_0_1_1_1_0_3() { return cSemicolonKeyword_3_1_0_0_1_1_1_0_3; }
+		public Keyword getSemicolonKeyword_4_1_0_0_1_1_1_0_3() { return cSemicolonKeyword_4_1_0_0_1_1_1_0_3; }
 		
 		//updateExpr=Expression<In=true,Yield>?
-		public Assignment getUpdateExprAssignment_3_1_0_0_1_1_1_0_4() { return cUpdateExprAssignment_3_1_0_0_1_1_1_0_4; }
+		public Assignment getUpdateExprAssignment_4_1_0_0_1_1_1_0_4() { return cUpdateExprAssignment_4_1_0_0_1_1_1_0_4; }
 		
 		//Expression<In=true,Yield>
-		public RuleCall getUpdateExprExpressionParserRuleCall_3_1_0_0_1_1_1_0_4_0() { return cUpdateExprExpressionParserRuleCall_3_1_0_0_1_1_1_0_4_0; }
+		public RuleCall getUpdateExprExpressionParserRuleCall_4_1_0_0_1_1_1_0_4_0() { return cUpdateExprExpressionParserRuleCall_4_1_0_0_1_1_1_0_4_0; }
 		
 		//forIn?='in' expression=Expression<In=true,Yield>?
-		public Group getGroup_3_1_0_0_1_1_1_1() { return cGroup_3_1_0_0_1_1_1_1; }
+		public Group getGroup_4_1_0_0_1_1_1_1() { return cGroup_4_1_0_0_1_1_1_1; }
 		
 		//forIn?='in'
-		public Assignment getForInAssignment_3_1_0_0_1_1_1_1_0() { return cForInAssignment_3_1_0_0_1_1_1_1_0; }
+		public Assignment getForInAssignment_4_1_0_0_1_1_1_1_0() { return cForInAssignment_4_1_0_0_1_1_1_1_0; }
 		
 		//'in'
-		public Keyword getForInInKeyword_3_1_0_0_1_1_1_1_0_0() { return cForInInKeyword_3_1_0_0_1_1_1_1_0_0; }
+		public Keyword getForInInKeyword_4_1_0_0_1_1_1_1_0_0() { return cForInInKeyword_4_1_0_0_1_1_1_1_0_0; }
 		
 		//expression=Expression<In=true,Yield>?
-		public Assignment getExpressionAssignment_3_1_0_0_1_1_1_1_1() { return cExpressionAssignment_3_1_0_0_1_1_1_1_1; }
+		public Assignment getExpressionAssignment_4_1_0_0_1_1_1_1_1() { return cExpressionAssignment_4_1_0_0_1_1_1_1_1; }
 		
 		//Expression<In=true,Yield>
-		public RuleCall getExpressionExpressionParserRuleCall_3_1_0_0_1_1_1_1_1_0() { return cExpressionExpressionParserRuleCall_3_1_0_0_1_1_1_1_1_0; }
+		public RuleCall getExpressionExpressionParserRuleCall_4_1_0_0_1_1_1_1_1_0() { return cExpressionExpressionParserRuleCall_4_1_0_0_1_1_1_1_1_0; }
 		
 		//forOf?='of' expression=AssignmentExpression<In=true,Yield>?
-		public Group getGroup_3_1_0_0_1_1_1_2() { return cGroup_3_1_0_0_1_1_1_2; }
+		public Group getGroup_4_1_0_0_1_1_1_2() { return cGroup_4_1_0_0_1_1_1_2; }
 		
 		//forOf?='of'
-		public Assignment getForOfAssignment_3_1_0_0_1_1_1_2_0() { return cForOfAssignment_3_1_0_0_1_1_1_2_0; }
+		public Assignment getForOfAssignment_4_1_0_0_1_1_1_2_0() { return cForOfAssignment_4_1_0_0_1_1_1_2_0; }
 		
 		//'of'
-		public Keyword getForOfOfKeyword_3_1_0_0_1_1_1_2_0_0() { return cForOfOfKeyword_3_1_0_0_1_1_1_2_0_0; }
+		public Keyword getForOfOfKeyword_4_1_0_0_1_1_1_2_0_0() { return cForOfOfKeyword_4_1_0_0_1_1_1_2_0_0; }
 		
 		//expression=AssignmentExpression<In=true,Yield>?
-		public Assignment getExpressionAssignment_3_1_0_0_1_1_1_2_1() { return cExpressionAssignment_3_1_0_0_1_1_1_2_1; }
+		public Assignment getExpressionAssignment_4_1_0_0_1_1_1_2_1() { return cExpressionAssignment_4_1_0_0_1_1_1_2_1; }
 		
 		//AssignmentExpression<In=true,Yield>
-		public RuleCall getExpressionAssignmentExpressionParserRuleCall_3_1_0_0_1_1_1_2_1_0() { return cExpressionAssignmentExpressionParserRuleCall_3_1_0_0_1_1_1_2_1_0; }
+		public RuleCall getExpressionAssignmentExpressionParserRuleCall_4_1_0_0_1_1_1_2_1_0() { return cExpressionAssignmentExpressionParserRuleCall_4_1_0_0_1_1_1_2_1_0; }
 		
 		//initExpr=Expression<In=false,Yield> (';' expression=Expression<In=true,Yield>? ';' updateExpr=Expression<In=true,Yield>?
 		//| forIn?='in' expression=Expression<In=true,Yield>? | forOf?='of' expression=AssignmentExpression<In=true,Yield>?)
-		public Group getGroup_3_1_0_1() { return cGroup_3_1_0_1; }
+		public Group getGroup_4_1_0_1() { return cGroup_4_1_0_1; }
 		
 		//initExpr=Expression<In=false,Yield>
-		public Assignment getInitExprAssignment_3_1_0_1_0() { return cInitExprAssignment_3_1_0_1_0; }
+		public Assignment getInitExprAssignment_4_1_0_1_0() { return cInitExprAssignment_4_1_0_1_0; }
 		
 		//Expression<In=false,Yield>
-		public RuleCall getInitExprExpressionParserRuleCall_3_1_0_1_0_0() { return cInitExprExpressionParserRuleCall_3_1_0_1_0_0; }
+		public RuleCall getInitExprExpressionParserRuleCall_4_1_0_1_0_0() { return cInitExprExpressionParserRuleCall_4_1_0_1_0_0; }
 		
 		//(';' expression=Expression<In=true,Yield>? ';' updateExpr=Expression<In=true,Yield>? | forIn?='in'
 		//expression=Expression<In=true,Yield>? | forOf?='of' expression=AssignmentExpression<In=true,Yield>?)
-		public Alternatives getAlternatives_3_1_0_1_1() { return cAlternatives_3_1_0_1_1; }
+		public Alternatives getAlternatives_4_1_0_1_1() { return cAlternatives_4_1_0_1_1; }
 		
 		//';' expression=Expression<In=true,Yield>? ';' updateExpr=Expression<In=true,Yield>?
-		public Group getGroup_3_1_0_1_1_0() { return cGroup_3_1_0_1_1_0; }
+		public Group getGroup_4_1_0_1_1_0() { return cGroup_4_1_0_1_1_0; }
 		
 		//';'
-		public Keyword getSemicolonKeyword_3_1_0_1_1_0_0() { return cSemicolonKeyword_3_1_0_1_1_0_0; }
+		public Keyword getSemicolonKeyword_4_1_0_1_1_0_0() { return cSemicolonKeyword_4_1_0_1_1_0_0; }
 		
 		//expression=Expression<In=true,Yield>?
-		public Assignment getExpressionAssignment_3_1_0_1_1_0_1() { return cExpressionAssignment_3_1_0_1_1_0_1; }
+		public Assignment getExpressionAssignment_4_1_0_1_1_0_1() { return cExpressionAssignment_4_1_0_1_1_0_1; }
 		
 		//Expression<In=true,Yield>
-		public RuleCall getExpressionExpressionParserRuleCall_3_1_0_1_1_0_1_0() { return cExpressionExpressionParserRuleCall_3_1_0_1_1_0_1_0; }
+		public RuleCall getExpressionExpressionParserRuleCall_4_1_0_1_1_0_1_0() { return cExpressionExpressionParserRuleCall_4_1_0_1_1_0_1_0; }
 		
 		//';'
-		public Keyword getSemicolonKeyword_3_1_0_1_1_0_2() { return cSemicolonKeyword_3_1_0_1_1_0_2; }
+		public Keyword getSemicolonKeyword_4_1_0_1_1_0_2() { return cSemicolonKeyword_4_1_0_1_1_0_2; }
 		
 		//updateExpr=Expression<In=true,Yield>?
-		public Assignment getUpdateExprAssignment_3_1_0_1_1_0_3() { return cUpdateExprAssignment_3_1_0_1_1_0_3; }
+		public Assignment getUpdateExprAssignment_4_1_0_1_1_0_3() { return cUpdateExprAssignment_4_1_0_1_1_0_3; }
 		
 		//Expression<In=true,Yield>
-		public RuleCall getUpdateExprExpressionParserRuleCall_3_1_0_1_1_0_3_0() { return cUpdateExprExpressionParserRuleCall_3_1_0_1_1_0_3_0; }
+		public RuleCall getUpdateExprExpressionParserRuleCall_4_1_0_1_1_0_3_0() { return cUpdateExprExpressionParserRuleCall_4_1_0_1_1_0_3_0; }
 		
 		//forIn?='in' expression=Expression<In=true,Yield>?
-		public Group getGroup_3_1_0_1_1_1() { return cGroup_3_1_0_1_1_1; }
+		public Group getGroup_4_1_0_1_1_1() { return cGroup_4_1_0_1_1_1; }
 		
 		//forIn?='in'
-		public Assignment getForInAssignment_3_1_0_1_1_1_0() { return cForInAssignment_3_1_0_1_1_1_0; }
+		public Assignment getForInAssignment_4_1_0_1_1_1_0() { return cForInAssignment_4_1_0_1_1_1_0; }
 		
 		//'in'
-		public Keyword getForInInKeyword_3_1_0_1_1_1_0_0() { return cForInInKeyword_3_1_0_1_1_1_0_0; }
+		public Keyword getForInInKeyword_4_1_0_1_1_1_0_0() { return cForInInKeyword_4_1_0_1_1_1_0_0; }
 		
 		//expression=Expression<In=true,Yield>?
-		public Assignment getExpressionAssignment_3_1_0_1_1_1_1() { return cExpressionAssignment_3_1_0_1_1_1_1; }
+		public Assignment getExpressionAssignment_4_1_0_1_1_1_1() { return cExpressionAssignment_4_1_0_1_1_1_1; }
 		
 		//Expression<In=true,Yield>
-		public RuleCall getExpressionExpressionParserRuleCall_3_1_0_1_1_1_1_0() { return cExpressionExpressionParserRuleCall_3_1_0_1_1_1_1_0; }
+		public RuleCall getExpressionExpressionParserRuleCall_4_1_0_1_1_1_1_0() { return cExpressionExpressionParserRuleCall_4_1_0_1_1_1_1_0; }
 		
 		//forOf?='of' expression=AssignmentExpression<In=true,Yield>?
-		public Group getGroup_3_1_0_1_1_2() { return cGroup_3_1_0_1_1_2; }
+		public Group getGroup_4_1_0_1_1_2() { return cGroup_4_1_0_1_1_2; }
 		
 		//forOf?='of'
-		public Assignment getForOfAssignment_3_1_0_1_1_2_0() { return cForOfAssignment_3_1_0_1_1_2_0; }
+		public Assignment getForOfAssignment_4_1_0_1_1_2_0() { return cForOfAssignment_4_1_0_1_1_2_0; }
 		
 		//'of'
-		public Keyword getForOfOfKeyword_3_1_0_1_1_2_0_0() { return cForOfOfKeyword_3_1_0_1_1_2_0_0; }
+		public Keyword getForOfOfKeyword_4_1_0_1_1_2_0_0() { return cForOfOfKeyword_4_1_0_1_1_2_0_0; }
 		
 		//expression=AssignmentExpression<In=true,Yield>?
-		public Assignment getExpressionAssignment_3_1_0_1_1_2_1() { return cExpressionAssignment_3_1_0_1_1_2_1; }
+		public Assignment getExpressionAssignment_4_1_0_1_1_2_1() { return cExpressionAssignment_4_1_0_1_1_2_1; }
 		
 		//AssignmentExpression<In=true,Yield>
-		public RuleCall getExpressionAssignmentExpressionParserRuleCall_3_1_0_1_1_2_1_0() { return cExpressionAssignmentExpressionParserRuleCall_3_1_0_1_1_2_1_0; }
+		public RuleCall getExpressionAssignmentExpressionParserRuleCall_4_1_0_1_1_2_1_0() { return cExpressionAssignmentExpressionParserRuleCall_4_1_0_1_1_2_1_0; }
 		
 		//';' expression=Expression<In=true,Yield>? ';' updateExpr=Expression<In=true,Yield>?
-		public Group getGroup_3_1_0_2() { return cGroup_3_1_0_2; }
+		public Group getGroup_4_1_0_2() { return cGroup_4_1_0_2; }
 		
 		//';'
-		public Keyword getSemicolonKeyword_3_1_0_2_0() { return cSemicolonKeyword_3_1_0_2_0; }
+		public Keyword getSemicolonKeyword_4_1_0_2_0() { return cSemicolonKeyword_4_1_0_2_0; }
 		
 		//expression=Expression<In=true,Yield>?
-		public Assignment getExpressionAssignment_3_1_0_2_1() { return cExpressionAssignment_3_1_0_2_1; }
+		public Assignment getExpressionAssignment_4_1_0_2_1() { return cExpressionAssignment_4_1_0_2_1; }
 		
 		//Expression<In=true,Yield>
-		public RuleCall getExpressionExpressionParserRuleCall_3_1_0_2_1_0() { return cExpressionExpressionParserRuleCall_3_1_0_2_1_0; }
+		public RuleCall getExpressionExpressionParserRuleCall_4_1_0_2_1_0() { return cExpressionExpressionParserRuleCall_4_1_0_2_1_0; }
 		
 		//';'
-		public Keyword getSemicolonKeyword_3_1_0_2_2() { return cSemicolonKeyword_3_1_0_2_2; }
+		public Keyword getSemicolonKeyword_4_1_0_2_2() { return cSemicolonKeyword_4_1_0_2_2; }
 		
 		//updateExpr=Expression<In=true,Yield>?
-		public Assignment getUpdateExprAssignment_3_1_0_2_3() { return cUpdateExprAssignment_3_1_0_2_3; }
+		public Assignment getUpdateExprAssignment_4_1_0_2_3() { return cUpdateExprAssignment_4_1_0_2_3; }
 		
 		//Expression<In=true,Yield>
-		public RuleCall getUpdateExprExpressionParserRuleCall_3_1_0_2_3_0() { return cUpdateExprExpressionParserRuleCall_3_1_0_2_3_0; }
+		public RuleCall getUpdateExprExpressionParserRuleCall_4_1_0_2_3_0() { return cUpdateExprExpressionParserRuleCall_4_1_0_2_3_0; }
 		
 		//')'
-		public Keyword getRightParenthesisKeyword_3_1_1() { return cRightParenthesisKeyword_3_1_1; }
+		public Keyword getRightParenthesisKeyword_4_1_1() { return cRightParenthesisKeyword_4_1_1; }
 		
 		//statement=Statement<Yield>
-		public Assignment getStatementAssignment_4() { return cStatementAssignment_4; }
+		public Assignment getStatementAssignment_5() { return cStatementAssignment_5; }
 		
 		//Statement<Yield>
-		public RuleCall getStatementStatementParserRuleCall_4_0() { return cStatementStatementParserRuleCall_4_0; }
+		public RuleCall getStatementStatementParserRuleCall_5_0() { return cStatementStatementParserRuleCall_5_0; }
 	}
 	public class LetIdentifierRefElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.LetIdentifierRef");
@@ -4879,10 +4887,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cExpressionAssignment_1 = (Assignment)cGroup.eContents().get(1);
 		private final RuleCall cExpressionPropertyNameValuePairSingleNamePartParserRuleCall_1_0 = (RuleCall)cExpressionAssignment_1.eContents().get(0);
 		
-		///*
-		// * Support for single name syntax in ObjectLiteral (but disallowed in actual object literals by ASTStructureValidator
-		// * except in assignment destructuring patterns)
-		// */ PropertyNameValuePairSingleName <Yield>:
+		//PropertyNameValuePairSingleName <Yield>:
 		//	declaredTypeRef=TypeRef?
 		//	expression=PropertyNameValuePairSingleNamePart<Yield>;
 		@Override public ParserRule getRule() { return rule; }
@@ -11533,7 +11538,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//ForStatement <Yield>:
-	//	{ForStatement} 'for' '(' (
+	//	{ForStatement} 'for' await?='await'? '(' (
 	//	// this is not in the spec as far as I can tell, but there are tests that rely on this to be valid JS
 	//	=> (initExpr=LetIdentifierRef forIn?='in' expression=Expression<In=true,Yield> ')') | (->
 	//	varStmtKeyword=VariableStatementKeyword (=>
@@ -11933,10 +11938,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		return getPropertyNameValuePairAccess().getRule();
 	}
 	
-	///*
-	// * Support for single name syntax in ObjectLiteral (but disallowed in actual object literals by ASTStructureValidator
-	// * except in assignment destructuring patterns)
-	// */ PropertyNameValuePairSingleName <Yield>:
+	//PropertyNameValuePairSingleName <Yield>:
 	//	declaredTypeRef=TypeRef?
 	//	expression=PropertyNameValuePairSingleNamePart<Yield>;
 	public PropertyNameValuePairSingleNameElements getPropertyNameValuePairSingleNameAccess() {

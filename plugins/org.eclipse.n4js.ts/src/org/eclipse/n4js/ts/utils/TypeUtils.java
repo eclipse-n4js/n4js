@@ -1388,12 +1388,23 @@ public class TypeUtils {
 		return false;
 	}
 
+	// FIXME go through all clients of this and similar methods and adjust them for async generators!
 	/**
 	 * Returns true iff the {@link TypeRef} is a generator.
 	 */
 	public static boolean isGenerator(TypeRef ref, BuiltInTypeScope scope) {
 		if (ref instanceof ParameterizedTypeRef) {
 			return ref.getDeclaredType() == scope.getGeneratorType();
+		}
+		return false;
+	}
+
+	/**
+	 * Returns true iff the {@link TypeRef} is an asynchronous generator.
+	 */
+	public static boolean isAsyncGenerator(TypeRef ref, BuiltInTypeScope scope) {
+		if (ref instanceof ParameterizedTypeRef) {
+			return ref.getDeclaredType() == scope.getAsyncGeneratorType();
 		}
 		return false;
 	}
@@ -1437,9 +1448,11 @@ public class TypeUtils {
 	 * WARNING: this method will resolve proxies in 'successType' (in order to check if it points to type 'void')
 	 */
 	public static ParameterizedTypeRef createGeneratorTypeRef(BuiltInTypeScope scope, FunctionDefinition funDef) {
+
 		Objects.requireNonNull(scope);
 		Objects.requireNonNull(funDef);
 
+		boolean async = funDef.isAsync();
 		TypeRef definedReturn = funDef.getReturnTypeRef();
 		TypeArgument tYield;
 		TypeArgument tReturn = inferReturnTypeFromReturns(funDef, scope);
@@ -1453,7 +1466,7 @@ public class TypeUtils {
 			}
 		}
 
-		ParameterizedTypeRef generatorTypeRef = createGeneratorTypeRef(scope, tYield, tReturn, null);
+		ParameterizedTypeRef generatorTypeRef = createGeneratorTypeRef(scope, async, tYield, tReturn, null);
 		return generatorTypeRef;
 	}
 
@@ -1462,13 +1475,15 @@ public class TypeUtils {
 	 * {@code tReturn} is of type {@code void}, it will be transformed to {@code undefined}. In case {@code tNext} is
 	 * {@code null}, it will be of type {@code any}.
 	 */
-	public static ParameterizedTypeRef createGeneratorTypeRef(BuiltInTypeScope scope, TypeArgument tYield,
-			TypeArgument tReturn, TypeArgument tNext) {
+	public static ParameterizedTypeRef createGeneratorTypeRef(BuiltInTypeScope scope, boolean async,
+			TypeArgument tYield, TypeArgument tReturn, TypeArgument tNext) {
 
 		tYield = isVoid(tYield) ? scope.getUndefinedTypeRef() : TypeUtils.copyWithProxies(tYield);
 		tReturn = isVoid(tReturn) ? scope.getUndefinedTypeRef() : TypeUtils.copyWithProxies(tReturn);
 		tNext = (tNext == null) ? scope.getAnyTypeRef() : TypeUtils.copyWithProxies(tNext);
-		ParameterizedTypeRef generatorTypeRef = createTypeRef(scope.getGeneratorType(), tYield, tReturn, tNext);
+		ParameterizedTypeRef generatorTypeRef = createTypeRef(
+				async ? scope.getAsyncGeneratorType() : scope.getGeneratorType(),
+				tYield, tReturn, tNext);
 		return generatorTypeRef;
 	}
 

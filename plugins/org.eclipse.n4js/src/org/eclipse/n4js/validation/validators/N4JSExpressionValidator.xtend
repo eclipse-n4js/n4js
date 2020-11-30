@@ -38,7 +38,6 @@ import org.eclipse.n4js.n4JS.EqualityExpression
 import org.eclipse.n4js.n4JS.EqualityOperator
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ExpressionStatement
-import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.IndexedAccessExpression
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName
@@ -170,10 +169,9 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Check
 	def checkAwaitExpression(AwaitExpression awaitExpression) {
-		val FunctionDefinition containerFunDef = EcoreUtil2.getContainerOfType(awaitExpression, FunctionDefinition);
-		if (containerFunDef === null || containerFunDef.isAsync() === false) {
-			val message = IssueCodes.getMessageForEXP_MISPLACED_AWAIT_EXPRESSION("await", "async");
-			addIssue(message, awaitExpression, IssueCodes.EXP_MISPLACED_AWAIT_EXPRESSION);
+		if (N4JSLanguageUtils.isValidLocationForAwait(awaitExpression)) {
+			val message = IssueCodes.getMessageForEXP_MISPLACED_AWAIT("await", "async");
+			addIssue(message, awaitExpression, IssueCodes.EXP_MISPLACED_AWAIT);
 		}
 
 		if( awaitExpression.getExpression() === null ){
@@ -1504,29 +1502,35 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 
 	def private boolean internalCheckIndexedAccessWithSymbol(RuleEnvironment G,
 		IndexedAccessExpression indexedAccess, TypeRef receiverTypeRef, TField accessedBuiltInSymbol) {
-		// check valid symbol (currently only 'iterator')
-		if (accessedBuiltInSymbol !== G.symbolObjectType.ownedMembers.findFirst[name == "iterator"]) {
-			addIssue(messageForEXP_INDEXED_ACCESS_SYMBOL_INVALID, indexedAccess,
-				EXP_INDEXED_ACCESS_SYMBOL_INVALID);
+		// check valid symbol (currently only 'iterator' and 'asyncIterator')
+		val symbolIterator = G.symbolObjectType.findOwnedMember("iterator", false, true);
+		val symbolAsyncIterator = G.symbolObjectType.findOwnedMember("asyncIterator", false, true);
+		if (accessedBuiltInSymbol !== symbolIterator && accessedBuiltInSymbol !== symbolAsyncIterator) {
+			val msg = getMessageForEXP_INDEXED_ACCESS_SYMBOL_INVALID("Symbol.iterator and Symbol.asyncIterator");
+			addIssue(msg, indexedAccess, N4JSPackage.Literals.INDEXED_ACCESS_EXPRESSION__INDEX, EXP_INDEXED_ACCESS_SYMBOL_INVALID);
 			return false;
 		}
-		// check valid receiver type (currently only for instance of Iterable and immediate(!) instances of Object and dynamic types)
-		val isIterable = ts.subtypeSucceeded(G, receiverTypeRef,
-			G.iterableTypeRef(TypeRefsFactory.eINSTANCE.createWildcard));
+		// check valid receiver type (currently only for instance of [Async]Iterable and immediate(!) instances of Object and dynamic types)
+		val correspondingIterableTypeRef = if (accessedBuiltInSymbol === symbolIterator) {
+			G.iterableTypeRef(TypeRefsFactory.eINSTANCE.createWildcard)
+		} else {
+			G.asyncIterableTypeRef(TypeRefsFactory.eINSTANCE.createWildcard)
+		};
+		val isIterable = ts.subtypeSucceeded(G, receiverTypeRef, correspondingIterableTypeRef);
 		val isObjectImmediate = receiverTypeRef.declaredType === G.objectType &&
 			receiverTypeRef.typingStrategy === TypingStrategy.NOMINAL;
 		val isDynamic = receiverTypeRef.dynamic;
 		if (!(isIterable || isObjectImmediate || isDynamic)) {
-			addIssue(messageForEXP_INDEXED_ACCESS_SYMBOL_WRONG_TYPE, indexedAccess,
-				EXP_INDEXED_ACCESS_SYMBOL_WRONG_TYPE);
+			val msg = getMessageForEXP_INDEXED_ACCESS_SYMBOL_WRONG_TYPE(accessedBuiltInSymbol.name, correspondingIterableTypeRef.declaredType.name);
+			addIssue(msg, indexedAccess, N4JSPackage.Literals.INDEXED_ACCESS_EXPRESSION__INDEX, EXP_INDEXED_ACCESS_SYMBOL_WRONG_TYPE);
 			return false;
 		}
 		// check valid access (currently read-only, except for immediate(!) instances of Object and dynamic types)
 		if (!(isObjectImmediate || isDynamic)) {
 			val boolean writeAccess = ExpressionExtensions.isLeftHandSide(indexedAccess);
 			if (writeAccess) {
-				addIssue(messageForEXP_INDEXED_ACCESS_SYMBOL_READONLY, indexedAccess,
-					EXP_INDEXED_ACCESS_SYMBOL_READONLY);
+				val msg = getMessageForEXP_INDEXED_ACCESS_SYMBOL_READONLY(accessedBuiltInSymbol.name, correspondingIterableTypeRef.declaredType.name);
+				addIssue(msg, indexedAccess, N4JSPackage.Literals.INDEXED_ACCESS_EXPRESSION__INDEX, EXP_INDEXED_ACCESS_SYMBOL_READONLY);
 				return false;
 			}
 		}

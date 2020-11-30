@@ -166,9 +166,19 @@ public final class BuiltInTypeScope extends EnumerableScope {
 	public static final QualifiedName QN_ITERABLE = QualifiedName.create("Iterable");
 
 	/**
+	 * The built-in name {@code AsyncIterable}
+	 */
+	public static final QualifiedName QN_ASYNC_ITERABLE = QualifiedName.create("AsyncIterable");
+
+	/**
 	 * The built-in name {@code Generator}
 	 */
 	public static final QualifiedName QN_GENERATOR = QualifiedName.create("Generator");
+
+	/**
+	 * The built-in name {@code AsyncGenerator}
+	 */
+	public static final QualifiedName QN_ASYNC_GENERATOR = QualifiedName.create("AsyncGenerator");
 
 	/**
 	 * The built-in name {@code Promise}
@@ -400,10 +410,24 @@ public final class BuiltInTypeScope extends EnumerableScope {
 	}
 
 	/**
+	 * Returns the built-in type "AsyncIterable".
+	 */
+	public final TInterface getAsyncIterableType() {
+		return getEObjectOrProxy(QN_ASYNC_ITERABLE);
+	}
+
+	/**
 	 * Returns the built-in type "Generator".
 	 */
 	public final TInterface getGeneratorType() {
 		return getEObjectOrProxy(QN_GENERATOR);
+	}
+
+	/**
+	 * Returns the built-in type "AsyncGenerator".
+	 */
+	public final TInterface getAsyncGeneratorType() {
+		return getEObjectOrProxy(QN_ASYNC_GENERATOR);
 	}
 
 	/**

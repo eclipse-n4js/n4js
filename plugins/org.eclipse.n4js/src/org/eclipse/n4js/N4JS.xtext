@@ -463,7 +463,7 @@ DoStatement <Yield>: 'do' statement=Statement<Yield> 'while' '(' expression=Expr
 WhileStatement <Yield>: 'while' '(' expression=Expression<In=true,Yield> ')' statement=Statement<Yield>;
 
 ForStatement <Yield>:
-	{ForStatement} 'for' '('
+	{ForStatement} 'for' (await?='await')? '('
 	(
 		// this is not in the spec as far as I can tell, but there are tests that rely on this to be valid JS
 			=>(initExpr=LetIdentifierRef forIn?='in' expression=Expression<In=true,Yield> ')')

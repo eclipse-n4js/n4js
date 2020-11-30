@@ -153,7 +153,9 @@ package class ExpectedTypeComputer extends TypeSystemHelperStrategy {
 						val superNext = TypeUtils.createWildcardSuper(nextTypeRefCopy);
 						val extendsYield = TypeUtils.createWildcardExtends(yieldTypeRefCopy);
 						val tReturn = scope.getAnyTypeRef(); // the return type does not matter since its use is optional
-						val recursiveGeneratorSuperType = TypeUtils.createGeneratorTypeRef(scope, extendsYield, tReturn, superNext);
+						val recursiveGeneratorSuperType = TypeUtils.createGeneratorTypeRef(scope,
+							false, // FIXME check this!
+							extendsYield, tReturn, superNext); 
 						return recursiveGeneratorSuperType;
 					} else {
 						val iterableTypeRef = G.iterableTypeRef(yieldTypeRefCopy)

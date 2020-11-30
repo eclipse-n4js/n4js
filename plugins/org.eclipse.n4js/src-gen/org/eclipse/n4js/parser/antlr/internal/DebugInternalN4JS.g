@@ -1808,6 +1808,8 @@ norm1_WhileStatement:
 // Rule ForStatement
 ruleForStatement:
 	'for'
+	'await'
+	?
 	'('
 	(
 		(
@@ -2029,6 +2031,8 @@ ruleForStatement:
 // Rule ForStatement
 norm1_ForStatement:
 	'for'
+	'await'
+	?
 	'('
 	(
 		(

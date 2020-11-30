@@ -654,6 +654,16 @@ class RuleEnvironmentExtensions {
 		createTypeRef(G.iterableType, typeArgs);
 	}
 
+	/* Returns built-in type {@code AsyncIterable<T>} */
+	public def static asyncIterableType(RuleEnvironment G) {
+		G.getPredefinedTypes().builtInTypeScope.asyncIterableType
+	}
+
+	/* Returns newly created reference to built-in type {@code AsyncIterable<T>} */
+	public def static asyncIterableTypeRef(RuleEnvironment G, TypeArgument... typeArgs) {
+		createTypeRef(G.asyncIterableType, typeArgs);
+	}
+
 	/* Returns built-in type {@code IterableN<T1...TN>} */
 	public def static iterableNType(RuleEnvironment G, int n) {
 		G.getPredefinedTypes().builtInTypeScope.getIterableNType(n)

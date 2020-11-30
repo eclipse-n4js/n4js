@@ -48,7 +48,7 @@ public class TypesParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getTypesComputedPropertyNameAccess().getAlternatives_1(), "rule__TypesComputedPropertyName__Alternatives_1");
 			builder.put(grammarAccess.getTMemberAccess().getAlternatives(), "rule__TMember__Alternatives");
 			builder.put(grammarAccess.getTMethodAccess().getAlternatives_0_0_1(), "rule__TMethod__Alternatives_0_0_1");
-			builder.put(grammarAccess.getTMethodAccess().getAlternatives_0_0_3(), "rule__TMethod__Alternatives_0_0_3");
+			builder.put(grammarAccess.getTMethodAccess().getAlternatives_0_0_4(), "rule__TMethod__Alternatives_0_0_4");
 			builder.put(grammarAccess.getTFieldAccess().getAlternatives_1(), "rule__TField__Alternatives_1");
 			builder.put(grammarAccess.getTFieldAccess().getAlternatives_2(), "rule__TField__Alternatives_2");
 			builder.put(grammarAccess.getTGetterAccess().getAlternatives_0_0_1(), "rule__TGetter__Alternatives_0_0_1");
@@ -272,8 +272,9 @@ public class TypesParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getTMethodAccess().getDeclaredMemberAccessModifierAssignment_0_0_0(), "rule__TMethod__DeclaredMemberAccessModifierAssignment_0_0_0");
 			builder.put(grammarAccess.getTMethodAccess().getDeclaredAbstractAssignment_0_0_1_0(), "rule__TMethod__DeclaredAbstractAssignment_0_0_1_0");
 			builder.put(grammarAccess.getTMethodAccess().getDeclaredStaticAssignment_0_0_1_1(), "rule__TMethod__DeclaredStaticAssignment_0_0_1_1");
-			builder.put(grammarAccess.getTMethodAccess().getNameAssignment_0_0_3_0(), "rule__TMethod__NameAssignment_0_0_3_0");
-			builder.put(grammarAccess.getTMethodAccess().getNameAssignment_0_0_3_1(), "rule__TMethod__NameAssignment_0_0_3_1");
+			builder.put(grammarAccess.getTMethodAccess().getDeclaredAsyncAssignment_0_0_2(), "rule__TMethod__DeclaredAsyncAssignment_0_0_2");
+			builder.put(grammarAccess.getTMethodAccess().getNameAssignment_0_0_4_0(), "rule__TMethod__NameAssignment_0_0_4_0");
+			builder.put(grammarAccess.getTMethodAccess().getNameAssignment_0_0_4_1(), "rule__TMethod__NameAssignment_0_0_4_1");
 			builder.put(grammarAccess.getTFieldAccess().getDeclaredMemberAccessModifierAssignment_0(), "rule__TField__DeclaredMemberAccessModifierAssignment_0");
 			builder.put(grammarAccess.getTFieldAccess().getDeclaredStaticAssignment_1_0(), "rule__TField__DeclaredStaticAssignment_1_0");
 			builder.put(grammarAccess.getTFieldAccess().getConstAssignment_1_1(), "rule__TField__ConstAssignment_1_1");
