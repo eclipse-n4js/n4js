@@ -1,0 +1,29 @@
+/*
+ * Copyright (c) 2020 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+let syncGenObj: Generator<string,number,any>;
+let asyncGenObj: AsyncGenerator<string,number,any>;
+
+
+// yield* in async generator functions supports non-async generators as argument
+async function* ag01(): AsyncGenerator<string,number,any> {
+	// XPECT noerrors -->
+	yield* syncGenObj;
+}
+
+// ... but not vice versa:
+function* g01(): Generator<string,number,?> {
+	// XPECT errors --> "AsyncGenerator<string,number,any> is not a structural subtype of Generator<? extends string,?,? super any>: missing method #iterator; next failed: {function(any=…):Promise<IteratorEntry<string>>} is not a subtype of {function(any=…):IteratorEntry<? extends string>} and 2 more problems." at "asyncGenObj"
+	yield* asyncGenObj;
+}
