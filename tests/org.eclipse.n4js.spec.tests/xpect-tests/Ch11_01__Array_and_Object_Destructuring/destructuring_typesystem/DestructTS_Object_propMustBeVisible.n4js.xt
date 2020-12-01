@@ -1,0 +1,37 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+
+	ResourceSet {
+		ThisFile {}
+		File "M.n4js" {}
+	}
+
+	END_SETUP
+*/
+
+
+import { Cls } from "Ch11_01__Array_and_Object_Destructuring/destructuring_typesystem/M"
+
+var cls : Cls;
+
+
+// public and project should be ok  XPECT errors --> "Property named "fieldPrivate" is not readable: The field fieldPrivate is not visible." at "fieldPrivate"
+var {fieldPublic:a1, fieldProject:b1, fieldPrivate:c1} = cls;
+// public and project should be ok  XPECT errors --> "Property named "fieldPrivate" is not readable: The field fieldPrivate is not visible." at "fieldPrivate"
+({fieldPublic:a1, fieldProject:b1, fieldPrivate:c1} = cls);
+
+
+// public and project should be ok  XPECT errors --> "Property named "fieldPrivate" is not readable: The field fieldPrivate is not visible." at "fieldPrivate"
+var {fieldPublic, fieldProject, fieldPrivate} = cls;
+// public and project should be ok  XPECT errors --> "Property named "fieldPrivate" is not readable: The field fieldPrivate is not visible." at "fieldPrivate"
+({fieldPublic, fieldProject, fieldPrivate} = cls);

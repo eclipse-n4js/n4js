@@ -26,25 +26,6 @@ class CodeActionTest extends AbstractCodeActionTest {
 	@Test
 	def void test_01() throws Exception {
 		test(new N4JSTestCodeActionConfiguration => [
-			model = 'class X { int m() { return 1 } }';
-			column = 10;
-			expectedCodeActions = '''
-				title      : Convert to colon style
-				kind       : quickfix
-				command    : 
-				diagnostics: (CODE:TYS_INVALID_TYPE_SYNTAX, Error, , [0:10 - 0:13], Wrong type syntax: Use foo:Type rather than Type foo., [])
-				edit       : ([], 
-				   test-project/src/MyModule.n4js -> [([0:17 - 0:17], : int), ([0:10 - 0:14], )])''';
-			assertCodeActions = [ list |
-				 assertEquals('class X { m(): int { return 1 } }', model.modify(list.head.getRight));
-				 assertEquals(expectedCodeActions, getStringLSP4J().toString(list.head.getRight));
-			];
-		]);
-	}
-	
-	@Test
-	def void test_02() throws Exception {
-		test(new N4JSTestCodeActionConfiguration => [
 			model = 'class X { i: int?; }';
 			column = 13;
 			expectedCodeActions = '''
@@ -62,7 +43,7 @@ class CodeActionTest extends AbstractCodeActionTest {
 	}
 	
 	@Test
-	def void test_03() throws Exception {
+	def void test_02() throws Exception {
 		test(new N4JSTestCodeActionConfiguration => [
 			model = 'class X { i?: int?; }';
 			column = 14;
@@ -81,7 +62,7 @@ class CodeActionTest extends AbstractCodeActionTest {
 	}
 	
 	@Test
-	def void test_04() throws Exception {
+	def void test_03() throws Exception {
 		test(new N4JSTestCodeActionConfiguration => [
 			model = 'class X { i?: int ? ; }';
 			column = 14;

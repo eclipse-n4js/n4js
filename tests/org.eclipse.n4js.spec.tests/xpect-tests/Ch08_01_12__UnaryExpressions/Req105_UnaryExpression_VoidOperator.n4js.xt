@@ -1,0 +1,43 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+
+    ResourceSet {
+		ThisFile {}
+		File "ExampleClasses.n4js" {}
+	}
+
+   END_SETUP
+ */
+
+import * as EC from "Ch08_01_12__UnaryExpressions/ExampleClasses";
+
+
+
+
+///////////////////////////////////
+// unary expressions
+//  void
+//  - always evaluates the expression (for the sake of side-effects)
+//  - returns undefined
+///////////////////////////////////
+var vUndef;
+var vd1 : string = void "Hallo";
+var vd2 : string = void new String("Hallo2");
+var vd3 : string = void vd1; // it's a string
+var vd4 : string = void true
+var vd5 : string = void (true && true)
+var vd6 : string = void NaN
+var vd7 : string = void 45
+var vd8 : string = void new EC.C()
+var vd9 : string = void vUndef
+var vd10 : string = void new EC.D().v()

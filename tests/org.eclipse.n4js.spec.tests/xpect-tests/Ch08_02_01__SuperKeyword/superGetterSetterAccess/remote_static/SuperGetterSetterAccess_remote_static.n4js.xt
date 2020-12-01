@@ -1,0 +1,57 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+
+    ResourceSet {
+		ThisFile {}
+		File "C1.n4js" {}
+		File "C2.n4js" {}
+		File "C3.n4js" {}
+		File "I1.n4js" {}
+		File "I2.n4js" {}
+		File "I3.n4js" {}
+	}
+
+   END_SETUP
+*/
+
+
+//
+// tests the case that the getter/setter accessed via 'super' resides in a remote file and
+// its containing type is not directly accessible from the file containing the 'super' keyword
+//
+// two sub-cases:
+// 1) getter/setter defined in a super class
+// 2) getter/setter defined (with body) in an interface and consumed by a super class
+//
+// NOTE: sub-case 2) does *not* apply to the static case tested in this file. However, this might
+//       be changed by IDE-1453, and then this test should be aligned to the one for the non-static
+//       case in folder "../remote";
+//
+
+
+import { C3 } from "Ch08_02_01__SuperKeyword/superGetterSetterAccess/remote_static/C3"
+
+
+C3.test();
+
+
+/* XPECT output ---
+* testing access with "this"
+called C1#g
+called C1#s
+called C1#m
+* testing access with "super"
+called C1#g
+called C1#s
+called C1#m
+--- */

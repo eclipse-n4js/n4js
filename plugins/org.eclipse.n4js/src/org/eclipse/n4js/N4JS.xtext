@@ -339,13 +339,9 @@ FormalParameter <Yield>:
 
 fragment BindingElementFragment <Yield>*:
 	( => bindingPattern=BindingPattern<Yield>
-	| annotations+=Annotation* BogusTypeRefFragment? variadic?='...'? name=BindingIdentifier<Yield> ColonSepDeclaredTypeRef?
+	| annotations+=Annotation* variadic?='...'? name=BindingIdentifier<Yield> ColonSepDeclaredTypeRef?
 	)
 	(hasInitializerAssignment?='=' initializer=AssignmentExpression<In=true, Yield>?)?
-;
-
-fragment BogusTypeRefFragment*:
-	bogusTypeRef=TypeRefWithModifiers
 ;
 
 Block <Yield>: => ({Block} '{') statements+=Statement<Yield>* '}';
@@ -555,7 +551,7 @@ CatchBlock <Yield>:	{CatchBlock} 'catch' '(' catchVariable=CatchVariable<Yield> 
 CatchVariable <Yield>:
 		=>bindingPattern=BindingPattern<Yield>
 	|	=>(name=BindingIdentifier<Yield> -> ColonSepDeclaredTypeRef)
-	|	BogusTypeRefFragment? name=BindingIdentifier<Yield>
+	|	name=BindingIdentifier<Yield>
 ;
 
 FinallyBlock <Yield>: {FinallyBlock} 'finally' block=Block<Yield>;
@@ -1367,7 +1363,7 @@ AnnotatedN4MemberDeclaration <Yield> returns N4MemberDeclaration:
 		| 	=> ({N4SetterDeclaration.annotationList=current} (declaredModifiers+=N4Modifier)* 'set' -> declaredName=LiteralOrComputedPropertyName <Yield>)
 				(declaredOptional?='?')? '(' fpar=FormalParameter<Yield> ')' (body=Block<Yield>)? ';'?
 		| 	=> (
-				{N4MethodDeclaration.annotationList=current} (declaredModifiers+=N4Modifier)* TypeVariables? BogusTypeRefFragment?
+				{N4MethodDeclaration.annotationList=current} (declaredModifiers+=N4Modifier)* TypeVariables?
 				(
 						generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=true>
 					| 	AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=false>
@@ -1378,7 +1374,7 @@ AnnotatedN4MemberDeclaration <Yield> returns N4MemberDeclaration:
 ;
 
 fragment FieldDeclarationImpl <Yield>*:
-	(declaredModifiers+=N4Modifier)* BogusTypeRefFragment?
+	(declaredModifiers+=N4Modifier)*
 	declaredName=LiteralOrComputedPropertyName<Yield>
 	(declaredOptional?='?')?
 	ColonSepDeclaredTypeRef?
@@ -1392,7 +1388,7 @@ N4FieldDeclaration <Yield>:
 ;
 
 N4MethodDeclaration <Yield>:
-	=> ({N4MethodDeclaration} (declaredModifiers+=N4Modifier)* TypeVariables? BogusTypeRefFragment?
+	=> ({N4MethodDeclaration} (declaredModifiers+=N4Modifier)* TypeVariables?
 		(
 				generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=true>
 			|	AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=false>
@@ -1426,7 +1422,7 @@ N4GetterDeclaration <Yield>:
 ;
 
 fragment GetterHeader <Yield>*:
-	BogusTypeRefFragment? 'get' -> declaredName=LiteralOrComputedPropertyName<Yield> (declaredOptional?='?')? '(' ')' ColonSepDeclaredTypeRef?
+	'get' -> declaredName=LiteralOrComputedPropertyName<Yield> (declaredOptional?='?')? '(' ')' ColonSepDeclaredTypeRef?
 ;
 
 N4SetterDeclaration <Yield>:

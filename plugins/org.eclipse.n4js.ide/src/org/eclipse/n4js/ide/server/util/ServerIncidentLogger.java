@@ -43,8 +43,10 @@ public class ServerIncidentLogger {
 
 	/** Path of the folder where the log files are placed, relative to the user's home directory. */
 	public static final Path SERVER_INCIDENTS_FOLDER = Path.of(".n4js", "server-incidents");
-	/** Base name of the log file, will be amended by a time stamp. */
-	public static final String BASE_FILE_NAME = "server-incident_.log";
+	/** Base name of the log file. The name will be amended by '_' followed by a time stamp. */
+	public static final String DEFAULT_BASE_FILE_NAME = "server-incident";
+	/** File extension of the log file name. */
+	public static final String FILE_EXTENSION = ".log";
 
 	/**
 	 * When receiving more than {@link #SUSPENSION_COUNT} incidents within {@link #SUSPENSION_INTERVAL} seconds,
@@ -68,22 +70,37 @@ public class ServerIncidentLogger {
 	private final SuspensionTracker suspensionTracker = new SuspensionTracker();
 	private final FileCreator fileCreator = new FileCreator();
 
-	/** Write the given message to a report file without adding any additional information. */
-	public void report(String msg) {
-		doReport(msg, false, null);
+	/**
+	 * Write a report file.
+	 *
+	 * @param msg
+	 *            message to report
+	 * @param includeDebugInfo
+	 *            iff true the debug info will be written to the output as well
+	 */
+	public void report(String msg, boolean includeDebugInfo) {
+		doReport(DEFAULT_BASE_FILE_NAME, msg, includeDebugInfo, null);
 	}
 
-	/** Write the given message to a report file, including additional diagnosis information. */
-	public void reportError(String msg) {
-		doReport(msg, true, null);
+	/**
+	 * Same as {@link #report(String, boolean)}, with additional parameter:
+	 *
+	 * @param baseFileName
+	 *            file name prefix of generated log file
+	 */
+	public void reportWithFileBaseName(String baseFileName, String msg, boolean includeDebugInfo) {
+		doReport(baseFileName, msg, includeDebugInfo, null);
 	}
 
-	/** Same as {@link #reportError(String)}, but also including the stack trace of the given throwable. */
+	/**
+	 * Same as {@link #report(String, boolean)}, with {@code includeDebugInfo} set to {@code true}. Also including the
+	 * stack trace of the given throwable.
+	 */
 	public void reportError(String msg, Throwable th) {
-		doReport(msg, true, th);
+		doReport(DEFAULT_BASE_FILE_NAME, msg, true, th);
 	}
 
-	private void doReport(String msg, boolean includeDebugInfo, Throwable th) {
+	private void doReport(String baseFileName, String msg, boolean includeDebugInfo, Throwable th) {
 		long timeStamp = System.currentTimeMillis();
 		if (suspensionTracker.isSuspended(timeStamp, fileCreator)) {
 			return; // exit before compiling debug info, etc.
@@ -103,7 +120,7 @@ public class ServerIncidentLogger {
 			sb.append(debugInfo);
 		}
 		String fullMsg = sb.toString();
-		fileCreator.createFile(timeStamp, fullMsg);
+		fileCreator.createFile(baseFileName, timeStamp, fullMsg);
 	}
 
 	private static String getTimeStampString(long timeStamp) {
@@ -130,11 +147,11 @@ public class ServerIncidentLogger {
 				if (isSuspended) {
 					timeStampHistory.clear();
 					if (fileCreator != null) {
-						fileCreator.createFile(timeStamp, "Reporting is being suspended due to receiving more than "
+						String msg = "Reporting is being suspended due to receiving more than "
 								+ SUSPENSION_COUNT + " incidents within " + SUSPENSION_INTERVAL + " seconds.\n"
 								+ "This will be in effect until not receiving any further incidents for "
-								+ SUSPENSION_DURATION + " seconds.",
-								"__SUSPENDED");
+								+ SUSPENSION_DURATION + " seconds.";
+						fileCreator.createFile(timeStamp, msg, "__SUSPENDED");
 					}
 				}
 			}
@@ -155,18 +172,22 @@ public class ServerIncidentLogger {
 
 		private Path outputFolder = null;
 
-		public void createFile(long timeStamp, String content) {
-			createFile(timeStamp, content, null);
-		}
-
 		public void createFile(long timeStamp, String content, String fileNameSuffix) {
-			executorService.submit(() -> doCreateFile(timeStamp, content, fileNameSuffix));
+			createFile(DEFAULT_BASE_FILE_NAME, timeStamp, content, fileNameSuffix);
 		}
 
-		private void doCreateFile(long timeStamp, String content, String fileNameSuffix) {
+		public void createFile(String baseFileName, long timeStamp, String content) {
+			createFile(baseFileName, timeStamp, content, null);
+		}
+
+		public void createFile(String baseFileName, long timeStamp, String content, String fileNameSuffix) {
+			executorService.submit(() -> doCreateFile(baseFileName, timeStamp, content, fileNameSuffix));
+		}
+
+		private void doCreateFile(String baseFileName, long timeStamp, String content, String fileNameSuffix) {
 			try {
 				Path folder = getOrCreateOutputFolder();
-				Path file = folder.resolve(BASE_FILE_NAME);
+				Path file = folder.resolve(baseFileName + "_" + FILE_EXTENSION);
 				String timeStampStr = getTimeStampString(timeStamp);
 				file = FileUtils.appendToFileName(file, sanitizeTimeStampForFileName(timeStampStr));
 				if (fileNameSuffix != null) {

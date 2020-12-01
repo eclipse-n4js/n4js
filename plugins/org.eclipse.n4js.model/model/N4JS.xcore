@@ -289,7 +289,6 @@ interface TypeProvidingElement {
 // TODO reconsider the approach on how to handle inferred types, accessors on the model etc
 abstract class TypedElement extends TypeProvidingElement {
 	contains TypeRef declaredTypeRef
-	contains TypeRef bogusTypeRef
 }
 
 // TODO jvp: check ECMAScript spec and probably update this environment things with function and classes

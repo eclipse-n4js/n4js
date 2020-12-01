@@ -1,0 +1,88 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+
+    ResourceSet {
+		ThisFile {}
+		File "ExampleClasses.n4js" {}
+	}
+
+   END_SETUP
+ */
+
+import * as EC from "Ch08_01_12__UnaryExpressions/ExampleClasses";
+
+
+
+
+///////////////////////////////////
+// unary expressions
+//  dec='--'
+//    See (�11.4.5 ECMA-262-5.1)
+//    See ToNumber() (�9.3 ECMA-262-5.1)
+///////////////////////////////////
+var  nDec1 =  12; //
+var  nDec2 : boolean = true; //
+var  nDec3 =  2^32; //
+var  nDec4 =  +1; //
+var  nDec5 =  2; //
+var  nDec6 : number =  4; //
+var  nDec7 : any =  8; //
+var  nDec8 =  +255; //
+var  nDec9 =  "4"; //
+var  nDec10 =  Infinity; //
+var  nDec11 =  {}; //
+var  nDec12 =  NaN; //
+var  nDec13 =  new EC.C(); //
+var  nDec14 =  this; //
+
+var nDec1r : number = -- nDec1
+var nDec2r : number = --
+// XPECT errors --> "boolean is not a subtype of number." at "nDec2"
+nDec2
+var nDec3r : number = -- nDec3
+var nDec4r : number = -- nDec4
+var nDec5r : number = -- nDec5
+var nDec6r : number = -- nDec6
+var nDec7r : number = --
+// XPECT errors --> "any is not a subtype of number." at "nDec7"
+nDec7
+var nDec8r : number = -- nDec8
+var nDec9r : number = --
+// XPECT errors --> "string is not a subtype of number." at "nDec9"
+nDec9
+var nDec10r : number = -- nDec10
+var nDec11r : number = --
+// XPECT errors --> "Structural type ~Object is not a subtype of non-structural type number." at "nDec11"
+nDec11
+var nDec12r : number = -- nDec12
+var nDec13r : number = --
+// XPECT errors --> "C is not a subtype of number." at "nDec13"
+nDec13
+var nDec14r : number = --
+// XPECT errors --> "any is not a subtype of number." at "nDec14"
+nDec14
+
+var nDec15 : number = --
+/* XPECT errors ---
+"The operation requires both read and write access, but only write-access is available." at "numSetOnly"
+ --- */
+new EC.C().numSetOnly;
+
+var nDec16 : number = --
+/* XPECT errors ---
+"Property numGetOnly has no setter." at "numGetOnly"
+"The operation requires both read and write access, but only read-access is available." at "numGetOnly"
+--- */
+new EC.C().numGetOnly;
+
+var nDec17 : number = -- new EC.C().numGetAndSet;

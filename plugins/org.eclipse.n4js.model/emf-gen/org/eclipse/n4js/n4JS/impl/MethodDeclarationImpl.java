@@ -66,7 +66,6 @@ import org.eclipse.xtext.xbase.lib.IteratorExtensions;
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.MethodDeclarationImpl#getTypeVars <em>Type Vars</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.MethodDeclarationImpl#getDeclaredTypeRef <em>Declared Type Ref</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.MethodDeclarationImpl#getBogusTypeRef <em>Bogus Type Ref</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.MethodDeclarationImpl#getDeclaredName <em>Declared Name</em>}</li>
  * </ul>
  *
@@ -92,16 +91,6 @@ public abstract class MethodDeclarationImpl extends FunctionDefinitionImpl imple
 	 * @ordered
 	 */
 	protected TypeRef declaredTypeRef;
-
-	/**
-	 * The cached value of the '{@link #getBogusTypeRef() <em>Bogus Type Ref</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getBogusTypeRef()
-	 * @generated
-	 * @ordered
-	 */
-	protected TypeRef bogusTypeRef;
 
 	/**
 	 * The cached value of the '{@link #getDeclaredName() <em>Declared Name</em>}' containment reference.
@@ -188,51 +177,6 @@ public abstract class MethodDeclarationImpl extends FunctionDefinitionImpl imple
 		}
 		else if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.METHOD_DECLARATION__DECLARED_TYPE_REF, newDeclaredTypeRef, newDeclaredTypeRef));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public TypeRef getBogusTypeRef() {
-		return bogusTypeRef;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public NotificationChain basicSetBogusTypeRef(TypeRef newBogusTypeRef, NotificationChain msgs) {
-		TypeRef oldBogusTypeRef = bogusTypeRef;
-		bogusTypeRef = newBogusTypeRef;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.METHOD_DECLARATION__BOGUS_TYPE_REF, oldBogusTypeRef, newBogusTypeRef);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setBogusTypeRef(TypeRef newBogusTypeRef) {
-		if (newBogusTypeRef != bogusTypeRef) {
-			NotificationChain msgs = null;
-			if (bogusTypeRef != null)
-				msgs = ((InternalEObject)bogusTypeRef).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.METHOD_DECLARATION__BOGUS_TYPE_REF, null, msgs);
-			if (newBogusTypeRef != null)
-				msgs = ((InternalEObject)newBogusTypeRef).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.METHOD_DECLARATION__BOGUS_TYPE_REF, null, msgs);
-			msgs = basicSetBogusTypeRef(newBogusTypeRef, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.METHOD_DECLARATION__BOGUS_TYPE_REF, newBogusTypeRef, newBogusTypeRef));
 	}
 
 	/**
@@ -391,8 +335,6 @@ public abstract class MethodDeclarationImpl extends FunctionDefinitionImpl imple
 				return ((InternalEList<?>)getTypeVars()).basicRemove(otherEnd, msgs);
 			case N4JSPackage.METHOD_DECLARATION__DECLARED_TYPE_REF:
 				return basicSetDeclaredTypeRef(null, msgs);
-			case N4JSPackage.METHOD_DECLARATION__BOGUS_TYPE_REF:
-				return basicSetBogusTypeRef(null, msgs);
 			case N4JSPackage.METHOD_DECLARATION__DECLARED_NAME:
 				return basicSetDeclaredName(null, msgs);
 		}
@@ -411,8 +353,6 @@ public abstract class MethodDeclarationImpl extends FunctionDefinitionImpl imple
 				return getTypeVars();
 			case N4JSPackage.METHOD_DECLARATION__DECLARED_TYPE_REF:
 				return getDeclaredTypeRef();
-			case N4JSPackage.METHOD_DECLARATION__BOGUS_TYPE_REF:
-				return getBogusTypeRef();
 			case N4JSPackage.METHOD_DECLARATION__DECLARED_NAME:
 				return getDeclaredName();
 		}
@@ -435,9 +375,6 @@ public abstract class MethodDeclarationImpl extends FunctionDefinitionImpl imple
 			case N4JSPackage.METHOD_DECLARATION__DECLARED_TYPE_REF:
 				setDeclaredTypeRef((TypeRef)newValue);
 				return;
-			case N4JSPackage.METHOD_DECLARATION__BOGUS_TYPE_REF:
-				setBogusTypeRef((TypeRef)newValue);
-				return;
 			case N4JSPackage.METHOD_DECLARATION__DECLARED_NAME:
 				setDeclaredName((LiteralOrComputedPropertyName)newValue);
 				return;
@@ -459,9 +396,6 @@ public abstract class MethodDeclarationImpl extends FunctionDefinitionImpl imple
 			case N4JSPackage.METHOD_DECLARATION__DECLARED_TYPE_REF:
 				setDeclaredTypeRef((TypeRef)null);
 				return;
-			case N4JSPackage.METHOD_DECLARATION__BOGUS_TYPE_REF:
-				setBogusTypeRef((TypeRef)null);
-				return;
 			case N4JSPackage.METHOD_DECLARATION__DECLARED_NAME:
 				setDeclaredName((LiteralOrComputedPropertyName)null);
 				return;
@@ -481,8 +415,6 @@ public abstract class MethodDeclarationImpl extends FunctionDefinitionImpl imple
 				return typeVars != null && !typeVars.isEmpty();
 			case N4JSPackage.METHOD_DECLARATION__DECLARED_TYPE_REF:
 				return declaredTypeRef != null;
-			case N4JSPackage.METHOD_DECLARATION__BOGUS_TYPE_REF:
-				return bogusTypeRef != null;
 			case N4JSPackage.METHOD_DECLARATION__DECLARED_NAME:
 				return declaredName != null;
 		}
@@ -510,7 +442,6 @@ public abstract class MethodDeclarationImpl extends FunctionDefinitionImpl imple
 		if (baseClass == TypedElement.class) {
 			switch (derivedFeatureID) {
 				case N4JSPackage.METHOD_DECLARATION__DECLARED_TYPE_REF: return N4JSPackage.TYPED_ELEMENT__DECLARED_TYPE_REF;
-				case N4JSPackage.METHOD_DECLARATION__BOGUS_TYPE_REF: return N4JSPackage.TYPED_ELEMENT__BOGUS_TYPE_REF;
 				default: return -1;
 			}
 		}
@@ -549,7 +480,6 @@ public abstract class MethodDeclarationImpl extends FunctionDefinitionImpl imple
 		if (baseClass == TypedElement.class) {
 			switch (baseFeatureID) {
 				case N4JSPackage.TYPED_ELEMENT__DECLARED_TYPE_REF: return N4JSPackage.METHOD_DECLARATION__DECLARED_TYPE_REF;
-				case N4JSPackage.TYPED_ELEMENT__BOGUS_TYPE_REF: return N4JSPackage.METHOD_DECLARATION__BOGUS_TYPE_REF;
 				default: return -1;
 			}
 		}

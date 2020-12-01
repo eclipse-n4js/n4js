@@ -1,0 +1,31 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+// IDE-561
+
+/* XPECT output ---
+Ch07_04__Reflection_Meta_Information/Example57_ReflectionAtRuntime/B
+Ch07_04__Reflection_Meta_Information/Example57_ReflectionAtRuntime/B
+Ch07_04__Reflection_Meta_Information/Example57_ReflectionAtRuntime/A
+Ch07_04__Reflection_Meta_Information/Example57_ReflectionAtRuntime/B
+N4BuiltInTypes/N4Class
+--- */
+
+
+class A {}
+class B extends A {}
+var b = new B();
+console.log(B.n4type.fqn);
+console.log(b.constructor.n4type.fqn);
+console.log(b.constructor.n4type.n4superType.fqn);
+console.log(N4Type.of(b).fqn);
+console.log(N4Type.of(B.n4type).fqn);
