@@ -678,6 +678,7 @@ AnnotatedPropertyAssignment <Yield> returns PropertyAssignment:
 PropertyMethodDeclaration <Yield>:
 	=> ({PropertyMethodDeclaration}
 		TypeVariables? returnTypeRef=TypeRefWithModifiers?
+		AsyncNoTrailingLineBreak
 			(
 				generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> ->MethodParamsAndBody<Generator=true>
 				| declaredName=LiteralOrComputedPropertyName<Yield> ->MethodParamsAndBody <Generator=false>
@@ -1389,9 +1390,10 @@ N4FieldDeclaration <Yield>:
 
 N4MethodDeclaration <Yield>:
 	=> ({N4MethodDeclaration} (declaredModifiers+=N4Modifier)* TypeVariables?
+		AsyncNoTrailingLineBreak 
 		(
 				generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=true>
-			|	AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=false>
+			|	declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=false>
 		)
 	) ';'?
 ;

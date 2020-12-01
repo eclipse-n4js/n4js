@@ -3040,6 +3040,7 @@ rulePropertyAssignment:
 			(ruleTypeVariables?
 			ruleTypeRefWithModifiers
 			?
+			ruleAsyncNoTrailingLineBreak
 			(
 				'*'
 				ruleLiteralOrComputedPropertyName
@@ -3233,6 +3234,7 @@ norm1_PropertyAssignment:
 			(ruleTypeVariables?
 			ruleTypeRefWithModifiers
 			?
+			ruleAsyncNoTrailingLineBreak
 			(
 				'*'
 				norm1_LiteralOrComputedPropertyName
@@ -3723,6 +3725,7 @@ rulePropertyMethodDeclaration:
 		(ruleTypeVariables?
 		ruleTypeRefWithModifiers
 		?
+		ruleAsyncNoTrailingLineBreak
 		(
 			'*'
 			ruleLiteralOrComputedPropertyName
@@ -3735,6 +3738,7 @@ rulePropertyMethodDeclaration:
 		ruleTypeVariables?
 		ruleTypeRefWithModifiers
 		?
+		ruleAsyncNoTrailingLineBreak
 		(
 			'*'
 			ruleLiteralOrComputedPropertyName
@@ -3759,6 +3763,7 @@ norm1_PropertyMethodDeclaration:
 		(ruleTypeVariables?
 		ruleTypeRefWithModifiers
 		?
+		ruleAsyncNoTrailingLineBreak
 		(
 			'*'
 			norm1_LiteralOrComputedPropertyName
@@ -3771,6 +3776,7 @@ norm1_PropertyMethodDeclaration:
 		ruleTypeVariables?
 		ruleTypeRefWithModifiers
 		?
+		ruleAsyncNoTrailingLineBreak
 		(
 			'*'
 			norm1_LiteralOrComputedPropertyName
@@ -7090,12 +7096,12 @@ ruleN4MemberDeclaration:
 			(ruleN4Modifier
 			*
 			ruleTypeVariables?
+			ruleAsyncNoTrailingLineBreak
 			(
 				'*'
 				ruleLiteralOrComputedPropertyName
 				'('
 				    |
-				ruleAsyncNoTrailingLineBreak
 				ruleLiteralOrComputedPropertyName
 				'('
 			)
@@ -7277,12 +7283,12 @@ norm1_N4MemberDeclaration:
 			(ruleN4Modifier
 			*
 			ruleTypeVariables?
+			ruleAsyncNoTrailingLineBreak
 			(
 				'*'
 				norm1_LiteralOrComputedPropertyName
 				'('
 				    |
-				ruleAsyncNoTrailingLineBreak
 				norm1_LiteralOrComputedPropertyName
 				'('
 			)
@@ -7796,12 +7802,12 @@ ruleN4MethodDeclaration:
 		(ruleN4Modifier
 		*
 		ruleTypeVariables?
+		ruleAsyncNoTrailingLineBreak
 		(
 			'*'
 			ruleLiteralOrComputedPropertyName
 			'('
 			    |
-			ruleAsyncNoTrailingLineBreak
 			ruleLiteralOrComputedPropertyName
 			'('
 		)
@@ -7809,6 +7815,7 @@ ruleN4MethodDeclaration:
 		ruleN4Modifier
 		*
 		ruleTypeVariables?
+		ruleAsyncNoTrailingLineBreak
 		(
 			'*'
 			ruleLiteralOrComputedPropertyName
@@ -7817,7 +7824,6 @@ ruleN4MethodDeclaration:
 				norm1_MethodParamsReturnAndBody
 			)
 			    |
-			ruleAsyncNoTrailingLineBreak
 			ruleLiteralOrComputedPropertyName
 			(
 				('(')=>
@@ -7834,12 +7840,12 @@ norm1_N4MethodDeclaration:
 		(ruleN4Modifier
 		*
 		ruleTypeVariables?
+		ruleAsyncNoTrailingLineBreak
 		(
 			'*'
 			norm1_LiteralOrComputedPropertyName
 			'('
 			    |
-			ruleAsyncNoTrailingLineBreak
 			norm1_LiteralOrComputedPropertyName
 			'('
 		)
@@ -7847,6 +7853,7 @@ norm1_N4MethodDeclaration:
 		ruleN4Modifier
 		*
 		ruleTypeVariables?
+		ruleAsyncNoTrailingLineBreak
 		(
 			'*'
 			norm1_LiteralOrComputedPropertyName
@@ -7855,7 +7862,6 @@ norm1_N4MethodDeclaration:
 				norm1_MethodParamsReturnAndBody
 			)
 			    |
-			ruleAsyncNoTrailingLineBreak
 			norm1_LiteralOrComputedPropertyName
 			(
 				('(')=>

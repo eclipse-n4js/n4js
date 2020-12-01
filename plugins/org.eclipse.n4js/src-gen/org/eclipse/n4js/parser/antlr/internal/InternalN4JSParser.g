@@ -14650,6 +14650,7 @@ rulePropertyAssignment returns [EObject current=null]
 						ruleTypeRefWithModifiers
 					)
 				)?
+				ruleAsyncNoTrailingLineBreak[null]
 				(
 					(
 						(
@@ -14946,6 +14947,7 @@ norm1_PropertyAssignment returns [EObject current=null]
 						ruleTypeRefWithModifiers
 					)
 				)?
+				ruleAsyncNoTrailingLineBreak[null]
 				(
 					(
 						(
@@ -16394,6 +16396,7 @@ rulePropertyMethodDeclaration returns [EObject current=null]
 						ruleTypeRefWithModifiers
 					)
 				)?
+				ruleAsyncNoTrailingLineBreak[null]
 				(
 					(
 						(
@@ -16460,13 +16463,24 @@ rulePropertyMethodDeclaration returns [EObject current=null]
 						}
 					)
 				)?
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getPropertyMethodDeclarationRule());
+					}
+					newCompositeNode(grammarAccess.getPropertyMethodDeclarationAccess().getAsyncNoTrailingLineBreakParserRuleCall_0_0_3());
+				}
+				this_AsyncNoTrailingLineBreak_3=ruleAsyncNoTrailingLineBreak[$current]
+				{
+					$current = $this_AsyncNoTrailingLineBreak_3.current;
+					afterParserOrEnumRuleCall();
+				}
 				(
 					(
 						(
 							(
-								lv_generator_3_0=Asterisk
+								lv_generator_4_0=Asterisk
 								{
-									newLeafNode(lv_generator_3_0, grammarAccess.getPropertyMethodDeclarationAccess().getGeneratorAsteriskKeyword_0_0_3_0_0_0());
+									newLeafNode(lv_generator_4_0, grammarAccess.getPropertyMethodDeclarationAccess().getGeneratorAsteriskKeyword_0_0_4_0_0_0());
 								}
 								{
 									if ($current==null) {
@@ -16479,9 +16493,9 @@ rulePropertyMethodDeclaration returns [EObject current=null]
 						(
 							(
 								{
-									newCompositeNode(grammarAccess.getPropertyMethodDeclarationAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_3_0_1_0());
+									newCompositeNode(grammarAccess.getPropertyMethodDeclarationAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_4_0_1_0());
 								}
-								lv_declaredName_4_0=ruleLiteralOrComputedPropertyName
+								lv_declaredName_5_0=ruleLiteralOrComputedPropertyName
 								{
 									if ($current==null) {
 										$current = createModelElementForParent(grammarAccess.getPropertyMethodDeclarationRule());
@@ -16489,7 +16503,7 @@ rulePropertyMethodDeclaration returns [EObject current=null]
 									set(
 										$current,
 										"declaredName",
-										lv_declaredName_4_0,
+										lv_declaredName_5_0,
 										"org.eclipse.n4js.N4JS.LiteralOrComputedPropertyName");
 									afterParserOrEnumRuleCall();
 								}
@@ -16501,11 +16515,11 @@ rulePropertyMethodDeclaration returns [EObject current=null]
 								if ($current==null) {
 									$current = createModelElement(grammarAccess.getPropertyMethodDeclarationRule());
 								}
-								newCompositeNode(grammarAccess.getPropertyMethodDeclarationAccess().getMethodParamsAndBodyParserRuleCall_0_0_3_0_2());
+								newCompositeNode(grammarAccess.getPropertyMethodDeclarationAccess().getMethodParamsAndBodyParserRuleCall_0_0_4_0_2());
 							}
-							this_MethodParamsAndBody_5=norm1_MethodParamsAndBody[$current]
+							this_MethodParamsAndBody_6=norm1_MethodParamsAndBody[$current]
 							{
-								$current = $this_MethodParamsAndBody_5.current;
+								$current = $this_MethodParamsAndBody_6.current;
 								afterParserOrEnumRuleCall();
 							}
 						)
@@ -16515,9 +16529,9 @@ rulePropertyMethodDeclaration returns [EObject current=null]
 						(
 							(
 								{
-									newCompositeNode(grammarAccess.getPropertyMethodDeclarationAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_3_1_0_0());
+									newCompositeNode(grammarAccess.getPropertyMethodDeclarationAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_4_1_0_0());
 								}
-								lv_declaredName_6_0=ruleLiteralOrComputedPropertyName
+								lv_declaredName_7_0=ruleLiteralOrComputedPropertyName
 								{
 									if ($current==null) {
 										$current = createModelElementForParent(grammarAccess.getPropertyMethodDeclarationRule());
@@ -16525,7 +16539,7 @@ rulePropertyMethodDeclaration returns [EObject current=null]
 									set(
 										$current,
 										"declaredName",
-										lv_declaredName_6_0,
+										lv_declaredName_7_0,
 										"org.eclipse.n4js.N4JS.LiteralOrComputedPropertyName");
 									afterParserOrEnumRuleCall();
 								}
@@ -16537,11 +16551,11 @@ rulePropertyMethodDeclaration returns [EObject current=null]
 								if ($current==null) {
 									$current = createModelElement(grammarAccess.getPropertyMethodDeclarationRule());
 								}
-								newCompositeNode(grammarAccess.getPropertyMethodDeclarationAccess().getMethodParamsAndBodyParserRuleCall_0_0_3_1_1());
+								newCompositeNode(grammarAccess.getPropertyMethodDeclarationAccess().getMethodParamsAndBodyParserRuleCall_0_0_4_1_1());
 							}
-							this_MethodParamsAndBody_7=ruleMethodParamsAndBody[$current]
+							this_MethodParamsAndBody_8=ruleMethodParamsAndBody[$current]
 							{
-								$current = $this_MethodParamsAndBody_7.current;
+								$current = $this_MethodParamsAndBody_8.current;
 								afterParserOrEnumRuleCall();
 							}
 						)
@@ -16550,9 +16564,9 @@ rulePropertyMethodDeclaration returns [EObject current=null]
 			)
 		)
 		(
-			otherlv_8=Semicolon
+			otherlv_9=Semicolon
 			{
-				newLeafNode(otherlv_8, grammarAccess.getPropertyMethodDeclarationAccess().getSemicolonKeyword_1());
+				newLeafNode(otherlv_9, grammarAccess.getPropertyMethodDeclarationAccess().getSemicolonKeyword_1());
 			}
 		)?
 	)
@@ -16580,6 +16594,7 @@ norm1_PropertyMethodDeclaration returns [EObject current=null]
 						ruleTypeRefWithModifiers
 					)
 				)?
+				ruleAsyncNoTrailingLineBreak[null]
 				(
 					(
 						(
@@ -16646,13 +16661,24 @@ norm1_PropertyMethodDeclaration returns [EObject current=null]
 						}
 					)
 				)?
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getPropertyMethodDeclarationRule());
+					}
+					newCompositeNode(grammarAccess.getPropertyMethodDeclarationAccess().getAsyncNoTrailingLineBreakParserRuleCall_0_0_3());
+				}
+				this_AsyncNoTrailingLineBreak_3=ruleAsyncNoTrailingLineBreak[$current]
+				{
+					$current = $this_AsyncNoTrailingLineBreak_3.current;
+					afterParserOrEnumRuleCall();
+				}
 				(
 					(
 						(
 							(
-								lv_generator_3_0=Asterisk
+								lv_generator_4_0=Asterisk
 								{
-									newLeafNode(lv_generator_3_0, grammarAccess.getPropertyMethodDeclarationAccess().getGeneratorAsteriskKeyword_0_0_3_0_0_0());
+									newLeafNode(lv_generator_4_0, grammarAccess.getPropertyMethodDeclarationAccess().getGeneratorAsteriskKeyword_0_0_4_0_0_0());
 								}
 								{
 									if ($current==null) {
@@ -16665,9 +16691,9 @@ norm1_PropertyMethodDeclaration returns [EObject current=null]
 						(
 							(
 								{
-									newCompositeNode(grammarAccess.getPropertyMethodDeclarationAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_3_0_1_0());
+									newCompositeNode(grammarAccess.getPropertyMethodDeclarationAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_4_0_1_0());
 								}
-								lv_declaredName_4_0=norm1_LiteralOrComputedPropertyName
+								lv_declaredName_5_0=norm1_LiteralOrComputedPropertyName
 								{
 									if ($current==null) {
 										$current = createModelElementForParent(grammarAccess.getPropertyMethodDeclarationRule());
@@ -16675,7 +16701,7 @@ norm1_PropertyMethodDeclaration returns [EObject current=null]
 									set(
 										$current,
 										"declaredName",
-										lv_declaredName_4_0,
+										lv_declaredName_5_0,
 										"org.eclipse.n4js.N4JS.LiteralOrComputedPropertyName");
 									afterParserOrEnumRuleCall();
 								}
@@ -16687,11 +16713,11 @@ norm1_PropertyMethodDeclaration returns [EObject current=null]
 								if ($current==null) {
 									$current = createModelElement(grammarAccess.getPropertyMethodDeclarationRule());
 								}
-								newCompositeNode(grammarAccess.getPropertyMethodDeclarationAccess().getMethodParamsAndBodyParserRuleCall_0_0_3_0_2());
+								newCompositeNode(grammarAccess.getPropertyMethodDeclarationAccess().getMethodParamsAndBodyParserRuleCall_0_0_4_0_2());
 							}
-							this_MethodParamsAndBody_5=norm1_MethodParamsAndBody[$current]
+							this_MethodParamsAndBody_6=norm1_MethodParamsAndBody[$current]
 							{
-								$current = $this_MethodParamsAndBody_5.current;
+								$current = $this_MethodParamsAndBody_6.current;
 								afterParserOrEnumRuleCall();
 							}
 						)
@@ -16701,9 +16727,9 @@ norm1_PropertyMethodDeclaration returns [EObject current=null]
 						(
 							(
 								{
-									newCompositeNode(grammarAccess.getPropertyMethodDeclarationAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_3_1_0_0());
+									newCompositeNode(grammarAccess.getPropertyMethodDeclarationAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_4_1_0_0());
 								}
-								lv_declaredName_6_0=norm1_LiteralOrComputedPropertyName
+								lv_declaredName_7_0=norm1_LiteralOrComputedPropertyName
 								{
 									if ($current==null) {
 										$current = createModelElementForParent(grammarAccess.getPropertyMethodDeclarationRule());
@@ -16711,7 +16737,7 @@ norm1_PropertyMethodDeclaration returns [EObject current=null]
 									set(
 										$current,
 										"declaredName",
-										lv_declaredName_6_0,
+										lv_declaredName_7_0,
 										"org.eclipse.n4js.N4JS.LiteralOrComputedPropertyName");
 									afterParserOrEnumRuleCall();
 								}
@@ -16723,11 +16749,11 @@ norm1_PropertyMethodDeclaration returns [EObject current=null]
 								if ($current==null) {
 									$current = createModelElement(grammarAccess.getPropertyMethodDeclarationRule());
 								}
-								newCompositeNode(grammarAccess.getPropertyMethodDeclarationAccess().getMethodParamsAndBodyParserRuleCall_0_0_3_1_1());
+								newCompositeNode(grammarAccess.getPropertyMethodDeclarationAccess().getMethodParamsAndBodyParserRuleCall_0_0_4_1_1());
 							}
-							this_MethodParamsAndBody_7=ruleMethodParamsAndBody[$current]
+							this_MethodParamsAndBody_8=ruleMethodParamsAndBody[$current]
 							{
-								$current = $this_MethodParamsAndBody_7.current;
+								$current = $this_MethodParamsAndBody_8.current;
 								afterParserOrEnumRuleCall();
 							}
 						)
@@ -16736,9 +16762,9 @@ norm1_PropertyMethodDeclaration returns [EObject current=null]
 			)
 		)
 		(
-			otherlv_8=Semicolon
+			otherlv_9=Semicolon
 			{
-				newLeafNode(otherlv_8, grammarAccess.getPropertyMethodDeclarationAccess().getSemicolonKeyword_1());
+				newLeafNode(otherlv_9, grammarAccess.getPropertyMethodDeclarationAccess().getSemicolonKeyword_1());
 			}
 		)?
 	)
@@ -29723,6 +29749,7 @@ ruleN4MemberDeclaration returns [EObject current=null]
 				(
 					ruleTypeVariables[null]
 				)?
+				ruleAsyncNoTrailingLineBreak[null]
 				(
 					(
 						(
@@ -29739,7 +29766,6 @@ ruleN4MemberDeclaration returns [EObject current=null]
 					)
 					    |
 					(
-						ruleAsyncNoTrailingLineBreak[null]
 						(
 							(
 								ruleLiteralOrComputedPropertyName
@@ -29998,6 +30024,7 @@ norm1_N4MemberDeclaration returns [EObject current=null]
 				(
 					ruleTypeVariables[null]
 				)?
+				ruleAsyncNoTrailingLineBreak[null]
 				(
 					(
 						(
@@ -30014,7 +30041,6 @@ norm1_N4MemberDeclaration returns [EObject current=null]
 					)
 					    |
 					(
-						ruleAsyncNoTrailingLineBreak[null]
 						(
 							(
 								norm1_LiteralOrComputedPropertyName
@@ -31577,6 +31603,7 @@ ruleN4MethodDeclaration returns [EObject current=null]
 				(
 					ruleTypeVariables[null]
 				)?
+				ruleAsyncNoTrailingLineBreak[null]
 				(
 					(
 						(
@@ -31593,7 +31620,6 @@ ruleN4MethodDeclaration returns [EObject current=null]
 					)
 					    |
 					(
-						ruleAsyncNoTrailingLineBreak[null]
 						(
 							(
 								ruleLiteralOrComputedPropertyName
@@ -31644,13 +31670,24 @@ ruleN4MethodDeclaration returns [EObject current=null]
 						afterParserOrEnumRuleCall();
 					}
 				)?
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getN4MethodDeclarationRule());
+					}
+					newCompositeNode(grammarAccess.getN4MethodDeclarationAccess().getAsyncNoTrailingLineBreakParserRuleCall_0_0_3());
+				}
+				this_AsyncNoTrailingLineBreak_3=ruleAsyncNoTrailingLineBreak[$current]
+				{
+					$current = $this_AsyncNoTrailingLineBreak_3.current;
+					afterParserOrEnumRuleCall();
+				}
 				(
 					(
 						(
 							(
-								lv_generator_3_0=Asterisk
+								lv_generator_4_0=Asterisk
 								{
-									newLeafNode(lv_generator_3_0, grammarAccess.getN4MethodDeclarationAccess().getGeneratorAsteriskKeyword_0_0_3_0_0_0());
+									newLeafNode(lv_generator_4_0, grammarAccess.getN4MethodDeclarationAccess().getGeneratorAsteriskKeyword_0_0_4_0_0_0());
 								}
 								{
 									if ($current==null) {
@@ -31663,9 +31700,9 @@ ruleN4MethodDeclaration returns [EObject current=null]
 						(
 							(
 								{
-									newCompositeNode(grammarAccess.getN4MethodDeclarationAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_3_0_1_0());
+									newCompositeNode(grammarAccess.getN4MethodDeclarationAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_4_0_1_0());
 								}
-								lv_declaredName_4_0=ruleLiteralOrComputedPropertyName
+								lv_declaredName_5_0=ruleLiteralOrComputedPropertyName
 								{
 									if ($current==null) {
 										$current = createModelElementForParent(grammarAccess.getN4MethodDeclarationRule());
@@ -31673,7 +31710,7 @@ ruleN4MethodDeclaration returns [EObject current=null]
 									set(
 										$current,
 										"declaredName",
-										lv_declaredName_4_0,
+										lv_declaredName_5_0,
 										"org.eclipse.n4js.N4JS.LiteralOrComputedPropertyName");
 									afterParserOrEnumRuleCall();
 								}
@@ -31685,32 +31722,21 @@ ruleN4MethodDeclaration returns [EObject current=null]
 								if ($current==null) {
 									$current = createModelElement(grammarAccess.getN4MethodDeclarationRule());
 								}
-								newCompositeNode(grammarAccess.getN4MethodDeclarationAccess().getMethodParamsReturnAndBodyParserRuleCall_0_0_3_0_2());
+								newCompositeNode(grammarAccess.getN4MethodDeclarationAccess().getMethodParamsReturnAndBodyParserRuleCall_0_0_4_0_2());
 							}
-							this_MethodParamsReturnAndBody_5=norm1_MethodParamsReturnAndBody[$current]
+							this_MethodParamsReturnAndBody_6=norm1_MethodParamsReturnAndBody[$current]
 							{
-								$current = $this_MethodParamsReturnAndBody_5.current;
+								$current = $this_MethodParamsReturnAndBody_6.current;
 								afterParserOrEnumRuleCall();
 							}
 						)
 					)
 					    |
 					(
-						{
-							if ($current==null) {
-								$current = createModelElement(grammarAccess.getN4MethodDeclarationRule());
-							}
-							newCompositeNode(grammarAccess.getN4MethodDeclarationAccess().getAsyncNoTrailingLineBreakParserRuleCall_0_0_3_1_0());
-						}
-						this_AsyncNoTrailingLineBreak_6=ruleAsyncNoTrailingLineBreak[$current]
-						{
-							$current = $this_AsyncNoTrailingLineBreak_6.current;
-							afterParserOrEnumRuleCall();
-						}
 						(
 							(
 								{
-									newCompositeNode(grammarAccess.getN4MethodDeclarationAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_3_1_1_0());
+									newCompositeNode(grammarAccess.getN4MethodDeclarationAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_4_1_0_0());
 								}
 								lv_declaredName_7_0=ruleLiteralOrComputedPropertyName
 								{
@@ -31732,7 +31758,7 @@ ruleN4MethodDeclaration returns [EObject current=null]
 								if ($current==null) {
 									$current = createModelElement(grammarAccess.getN4MethodDeclarationRule());
 								}
-								newCompositeNode(grammarAccess.getN4MethodDeclarationAccess().getMethodParamsReturnAndBodyParserRuleCall_0_0_3_1_2());
+								newCompositeNode(grammarAccess.getN4MethodDeclarationAccess().getMethodParamsReturnAndBodyParserRuleCall_0_0_4_1_1());
 							}
 							this_MethodParamsReturnAndBody_8=ruleMethodParamsReturnAndBody[$current]
 							{
@@ -31775,6 +31801,7 @@ norm1_N4MethodDeclaration returns [EObject current=null]
 				(
 					ruleTypeVariables[null]
 				)?
+				ruleAsyncNoTrailingLineBreak[null]
 				(
 					(
 						(
@@ -31791,7 +31818,6 @@ norm1_N4MethodDeclaration returns [EObject current=null]
 					)
 					    |
 					(
-						ruleAsyncNoTrailingLineBreak[null]
 						(
 							(
 								norm1_LiteralOrComputedPropertyName
@@ -31842,13 +31868,24 @@ norm1_N4MethodDeclaration returns [EObject current=null]
 						afterParserOrEnumRuleCall();
 					}
 				)?
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getN4MethodDeclarationRule());
+					}
+					newCompositeNode(grammarAccess.getN4MethodDeclarationAccess().getAsyncNoTrailingLineBreakParserRuleCall_0_0_3());
+				}
+				this_AsyncNoTrailingLineBreak_3=ruleAsyncNoTrailingLineBreak[$current]
+				{
+					$current = $this_AsyncNoTrailingLineBreak_3.current;
+					afterParserOrEnumRuleCall();
+				}
 				(
 					(
 						(
 							(
-								lv_generator_3_0=Asterisk
+								lv_generator_4_0=Asterisk
 								{
-									newLeafNode(lv_generator_3_0, grammarAccess.getN4MethodDeclarationAccess().getGeneratorAsteriskKeyword_0_0_3_0_0_0());
+									newLeafNode(lv_generator_4_0, grammarAccess.getN4MethodDeclarationAccess().getGeneratorAsteriskKeyword_0_0_4_0_0_0());
 								}
 								{
 									if ($current==null) {
@@ -31861,9 +31898,9 @@ norm1_N4MethodDeclaration returns [EObject current=null]
 						(
 							(
 								{
-									newCompositeNode(grammarAccess.getN4MethodDeclarationAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_3_0_1_0());
+									newCompositeNode(grammarAccess.getN4MethodDeclarationAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_4_0_1_0());
 								}
-								lv_declaredName_4_0=norm1_LiteralOrComputedPropertyName
+								lv_declaredName_5_0=norm1_LiteralOrComputedPropertyName
 								{
 									if ($current==null) {
 										$current = createModelElementForParent(grammarAccess.getN4MethodDeclarationRule());
@@ -31871,7 +31908,7 @@ norm1_N4MethodDeclaration returns [EObject current=null]
 									set(
 										$current,
 										"declaredName",
-										lv_declaredName_4_0,
+										lv_declaredName_5_0,
 										"org.eclipse.n4js.N4JS.LiteralOrComputedPropertyName");
 									afterParserOrEnumRuleCall();
 								}
@@ -31883,32 +31920,21 @@ norm1_N4MethodDeclaration returns [EObject current=null]
 								if ($current==null) {
 									$current = createModelElement(grammarAccess.getN4MethodDeclarationRule());
 								}
-								newCompositeNode(grammarAccess.getN4MethodDeclarationAccess().getMethodParamsReturnAndBodyParserRuleCall_0_0_3_0_2());
+								newCompositeNode(grammarAccess.getN4MethodDeclarationAccess().getMethodParamsReturnAndBodyParserRuleCall_0_0_4_0_2());
 							}
-							this_MethodParamsReturnAndBody_5=norm1_MethodParamsReturnAndBody[$current]
+							this_MethodParamsReturnAndBody_6=norm1_MethodParamsReturnAndBody[$current]
 							{
-								$current = $this_MethodParamsReturnAndBody_5.current;
+								$current = $this_MethodParamsReturnAndBody_6.current;
 								afterParserOrEnumRuleCall();
 							}
 						)
 					)
 					    |
 					(
-						{
-							if ($current==null) {
-								$current = createModelElement(grammarAccess.getN4MethodDeclarationRule());
-							}
-							newCompositeNode(grammarAccess.getN4MethodDeclarationAccess().getAsyncNoTrailingLineBreakParserRuleCall_0_0_3_1_0());
-						}
-						this_AsyncNoTrailingLineBreak_6=ruleAsyncNoTrailingLineBreak[$current]
-						{
-							$current = $this_AsyncNoTrailingLineBreak_6.current;
-							afterParserOrEnumRuleCall();
-						}
 						(
 							(
 								{
-									newCompositeNode(grammarAccess.getN4MethodDeclarationAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_3_1_1_0());
+									newCompositeNode(grammarAccess.getN4MethodDeclarationAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_4_1_0_0());
 								}
 								lv_declaredName_7_0=norm1_LiteralOrComputedPropertyName
 								{
@@ -31930,7 +31956,7 @@ norm1_N4MethodDeclaration returns [EObject current=null]
 								if ($current==null) {
 									$current = createModelElement(grammarAccess.getN4MethodDeclarationRule());
 								}
-								newCompositeNode(grammarAccess.getN4MethodDeclarationAccess().getMethodParamsReturnAndBodyParserRuleCall_0_0_3_1_2());
+								newCompositeNode(grammarAccess.getN4MethodDeclarationAccess().getMethodParamsReturnAndBodyParserRuleCall_0_0_4_1_1());
 							}
 							this_MethodParamsReturnAndBody_8=ruleMethodParamsReturnAndBody[$current]
 							{

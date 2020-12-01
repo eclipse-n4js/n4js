@@ -737,7 +737,8 @@ import com.google.inject.Inject;
 				final Expression yieldValue = y.getExpression();
 				TypeRef yieldValueTypeRef = ts.type(G, yieldValue);
 				final BuiltInTypeScope scope = getPredefinedTypes(G).builtInTypeScope;
-				if (TypeUtils.isGenerator(yieldValueTypeRef, scope)) {
+				if (TypeUtils.isGenerator(yieldValueTypeRef, scope)
+						|| TypeUtils.isAsyncGenerator(yieldValueTypeRef, scope)) {
 					t = typeSystemHelper.getGeneratorTReturn(G, yieldValueTypeRef);
 				} else {
 					final ParameterizedTypeRef itTypeRef = iterableTypeRef(G, TypeUtils.createWildcard());
