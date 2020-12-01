@@ -12,15 +12,18 @@
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
 
 
-// type expectations for the "value to be iterated over" in for-await-of loops
-
-
 class A {}
 class B extends A {}
 class C extends B {}
 
 let iterable: Iterable<B>;
 let asyncIterable: AsyncIterable<B>;
+
+function* syncGenerator(): string {}
+async function* asyncGenerator(): string {}
+
+
+// type expectations for the "value to be iterated over" in for-await-of loops
 
 async function simple() {
 
@@ -56,6 +59,7 @@ async function simple() {
 
 
 // tests regarding the expected element type of AsyncIterable<>
+
 async function expectedElemType() {
 	let a: A;
 	let b: B;
@@ -79,7 +83,3 @@ async function expectedElemType() {
 	// XPECT errors --> "AsyncIterable<B> is not a subtype of union{AsyncIterable<? extends C>,Iterable<? extends C>}." at "asyncIterable"
 	for await (c of asyncIterable) {}
 }
-
-
-function* syncGenerator(): string {}
-async function* asyncGenerator(): string {}

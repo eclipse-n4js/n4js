@@ -227,8 +227,8 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 	}
 
 	/** @see IterableComputer#extractIterableElementType(RuleEnvironment, TypeRef) */
-	public def TypeArgument extractIterableElementType(RuleEnvironment G, TypeRef typeRef) {
-		return iterableComputer.extractIterableElementType(G, typeRef);
+	public def TypeArgument extractIterableElementType(RuleEnvironment G, TypeRef typeRef, boolean includeAsyncIterable) {
+		return iterableComputer.extractIterableElementType(G, typeRef, includeAsyncIterable);
 	}
 
 

@@ -365,14 +365,15 @@ import com.google.inject.Inject;
 				}
 			} else if (vdecl.eContainer() instanceof ForStatement && ((ForStatement) vdecl.eContainer()).isForOf()) {
 				final ForStatement forOfStmnt = (ForStatement) vdecl.eContainer();
-				// we have a situation like this: for(var x of myList) { ... }
+				// we have a situation like this: for [await](var x of myList) { ... }
 				// --> infer type of 'x' to the first type argument of the type of 'myList'
 				final Pair<String, EObject> guardKey = Pair.of(GUARD_VARIABLE_DECLARATION, vdecl.eContainer());
 				if (G.get(guardKey) == null) {
 					final RuleEnvironment G2 = wrap(G);
 					G2.put(guardKey, Boolean.TRUE);
 					final TypeRef ofPartTypeRef = ts.type(G2, forOfStmnt.getExpression());
-					final TypeArgument elemType = tsh.extractIterableElementType(G2, ofPartTypeRef);
+					final TypeArgument elemType = tsh.extractIterableElementType(G2, ofPartTypeRef,
+							forOfStmnt.isAwait());
 					if (elemType != null) {
 						T = typeSystemHelper.sanitizeTypeOfVariableFieldPropertyParameter(G2, elemType);
 					} else {

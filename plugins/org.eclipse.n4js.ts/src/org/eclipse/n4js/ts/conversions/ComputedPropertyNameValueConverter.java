@@ -66,7 +66,12 @@ public class ComputedPropertyNameValueConverter extends IdentifierDelegateValueC
 	/**
 	 * Internally special-casing [Symbol.iterator] as a member named hash-iterator.
 	 */
-	public static final String SYMBOL_ITERATOR_MANGLED = "#iterator";
+	public static final String SYMBOL_ITERATOR_MANGLED = SYMBOL_IDENTIFIER_PREFIX + "iterator";
+
+	/**
+	 * Internally special-casing [Symbol.asyncIterator] as a member named hash-iterator.
+	 */
+	public static final String SYMBOL_ASYNC_ITERATOR_MANGLED = SYMBOL_IDENTIFIER_PREFIX + "asyncIterator";
 
 	/**
 	 * This method handles computed-names, for example {@code [System.iterator]} and {@code ["@type"]}.
