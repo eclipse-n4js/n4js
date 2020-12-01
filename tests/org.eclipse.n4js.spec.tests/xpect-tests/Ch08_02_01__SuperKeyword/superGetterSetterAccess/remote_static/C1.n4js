@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-import { I3 } from "Ch08_02_01_SuperKeyword/superGetterSetterAccess/remote_static/I3"
+import { I3 } from "Ch08_02_01__SuperKeyword/superGetterSetterAccess/remote_static/I3"
 
 
 export public class C1 implements I3 {

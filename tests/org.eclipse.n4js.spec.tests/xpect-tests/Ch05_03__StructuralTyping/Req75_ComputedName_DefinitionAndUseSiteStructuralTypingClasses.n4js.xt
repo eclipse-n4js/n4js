@@ -18,7 +18,7 @@
    END_SETUP
  */
 
-import * as E from "Ch05_05_StructuralTyping/Externals";
+import * as E from "Ch05_03__StructuralTyping/Externals";
 
 class ~SomeN4Object{
 	public ['s'] : string;

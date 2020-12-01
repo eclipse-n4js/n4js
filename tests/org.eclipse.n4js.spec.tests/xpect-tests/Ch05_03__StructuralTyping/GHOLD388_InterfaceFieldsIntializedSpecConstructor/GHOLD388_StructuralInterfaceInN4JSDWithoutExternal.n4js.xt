@@ -19,7 +19,7 @@
 	END_SETUP
 */
 
-import { K } from "Ch05_05_StructuralTyping/GHOLD388_InterfaceFieldsIntializedSpecConstructor/GHOLD388_Interface";
+import { K } from "Ch05_03__StructuralTyping/GHOLD388_InterfaceFieldsIntializedSpecConstructor/GHOLD388_Interface";
 
 // K is an structural interface without external modifier
 class C implements K {

@@ -39,7 +39,7 @@
 //
 
 
-import { C3 } from "Ch08_02_01_SuperKeyword/superGetterSetterAccess/remote_static/C3"
+import { C3 } from "Ch08_02_01__SuperKeyword/superGetterSetterAccess/remote_static/C3"
 
 
 C3.test();

@@ -14,12 +14,12 @@
 
 /* XPECT output ---
 name ClassWithStuff
-fqn Ch07_04_Reflection_Meta_Information/ClassReflectionBasicInfo/ClassWithStuff
+fqn Ch07_04__Reflection_Meta_Information/ClassReflectionBasicInfo/ClassWithStuff
 annotations : 
  - Ignore
 interfaces : 
- - Ch07_04_Reflection_Meta_Information/ClassReflectionBasicInfo/R
- - Ch07_04_Reflection_Meta_Information/ClassReflectionBasicInfo/RR
+ - Ch07_04__Reflection_Meta_Information/ClassReflectionBasicInfo/R
+ - Ch07_04__Reflection_Meta_Information/ClassReflectionBasicInfo/RR
 super chain
  - S
  - SS

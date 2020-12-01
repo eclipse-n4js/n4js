@@ -19,7 +19,7 @@
 	END_SETUP
 */
 
-import { IteratorExt } from "Ch05_05_StructuralTyping/GHOLD388_InterfaceFieldsIntializedSpecConstructor/GHOLD388_Iterator";
+import { IteratorExt } from "Ch05_03__StructuralTyping/GHOLD388_InterfaceFieldsIntializedSpecConstructor/GHOLD388_Iterator";
 
 class C implements IteratorExt<string> {
 	constructor(@Spec spec:~i~this) {

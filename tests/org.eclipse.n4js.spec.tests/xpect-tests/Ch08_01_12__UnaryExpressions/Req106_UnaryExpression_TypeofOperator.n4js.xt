@@ -19,7 +19,7 @@
    END_SETUP
  */
 
-import * as EC from "Ch08_01_12_UnaryExpressions/ExampleClasses";
+import * as EC from "Ch08_01_12__UnaryExpressions/ExampleClasses";
 
 
 

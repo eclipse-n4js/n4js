@@ -20,7 +20,7 @@
 */
 
 
-import { Cls } from "Ch11_01_Array_and_Object_Destructuring/destructuring_typesystem/M"
+import { Cls } from "Ch11_01__Array_and_Object_Destructuring/destructuring_typesystem/M"
 
 var cls : Cls;
 

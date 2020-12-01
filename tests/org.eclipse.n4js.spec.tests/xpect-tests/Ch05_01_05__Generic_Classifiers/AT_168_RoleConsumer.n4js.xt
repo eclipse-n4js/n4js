@@ -41,11 +41,11 @@ interface ConsmerR extends R1,R2,R3{}
 
 
 //part 4 - Role cannot be consumed multiple times
-// XPECT errors --> "Cannot consume Ch05_01_04__Generic_Classifiers/AT_168_RoleConsumer/R1 multiple times." at "R1"
+// XPECT errors --> "Cannot consume Ch05_01_05__Generic_Classifiers/AT_168_RoleConsumer/R1 multiple times." at "R1"
 class Cr1r1 implements R1, R1 {}
 
 
-// XPECT errors --> "Cannot consume Ch05_01_04__Generic_Classifiers/AT_168_RoleConsumer/R3 multiple times." at "R3"
+// XPECT errors --> "Cannot consume Ch05_01_05__Generic_Classifiers/AT_168_RoleConsumer/R3 multiple times." at "R3"
 interface Rr3r3 extends R3, R3 {}
 
 interface RoleWithR1 extends R1{}

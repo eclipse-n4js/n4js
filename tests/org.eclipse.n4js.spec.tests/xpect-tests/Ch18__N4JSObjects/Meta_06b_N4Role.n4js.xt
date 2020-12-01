@@ -37,7 +37,7 @@
   - test.ownedMembers is empty
   - test.consumedMembers is empty
  = inspect test as N4Type
-  - test.fqn is a string ChB_N4Objects/Meta_06b_N4Role/TestN4Role
+  - test.fqn is a string Ch18__N4JSObjects/Meta_06b_N4Role/TestN4Role
   - test.of is a function of
  = inspect test as N4NamedElement
   - test.name is a string TestN4Role
@@ -57,7 +57,7 @@
 --- */
 
 
-import * as N from "ChB_N4Objects/N4Inspection"
+import * as N from "Ch18__N4JSObjects/N4Inspection"
 
 
 console.log("#", "inspect N4Role");

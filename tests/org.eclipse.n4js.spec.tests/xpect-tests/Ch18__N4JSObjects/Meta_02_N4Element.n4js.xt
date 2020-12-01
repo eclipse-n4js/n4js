@@ -38,7 +38,7 @@
 --- */
 
 
-import * as N from "ChB_N4Objects/N4Inspection"
+import * as N from "Ch18__N4JSObjects/N4Inspection"
 
 
 console.log("#", "inspect N4Element");

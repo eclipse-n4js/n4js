@@ -19,7 +19,7 @@
  */
 // cf GHOLD-219
 
-import {A,B,C} from "Ch04_10_UnionType/ABC"
+import {A,B,C} from "Ch04_10__UnionType/ABC"
 
 let a: A;
 // XPECT errors --> "The field s is not visible." at "s"

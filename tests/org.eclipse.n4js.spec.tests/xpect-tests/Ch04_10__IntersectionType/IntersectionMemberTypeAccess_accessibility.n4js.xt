@@ -18,7 +18,7 @@
    END_SETUP
  */
 
-import {A,B,C} from "Ch04_10_IntersectionType/ABC"
+import {A,B,C} from "Ch04_10__IntersectionType/ABC"
 
 interface P {
 	protected s;

@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-import { C2 } from "Ch08_02_01_SuperKeyword/superGetterSetterAccess/remote/C2"
+import { C2 } from "Ch08_02_01__SuperKeyword/superGetterSetterAccess/remote/C2"
 
 
 export public class C3 extends C2 {

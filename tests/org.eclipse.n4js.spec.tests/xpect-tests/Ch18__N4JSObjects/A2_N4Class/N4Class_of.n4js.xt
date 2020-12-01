@@ -13,7 +13,7 @@
 // IDE-977
 
 /* XPECT output ---
-ChB_N4Objects/A2_N4Class/N4Class_of/C
+Ch18__N4JSObjects/A2_N4Class/N4Class_of/C
 --- */
 
 interface R {

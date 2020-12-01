@@ -19,7 +19,7 @@
 	END_SETUP
 */
 
-import { I } from "Ch05_05_StructuralTyping/GHOLD388_InterfaceFieldsIntializedSpecConstructor/GHOLD388_Interface";
+import { I } from "Ch05_03__StructuralTyping/GHOLD388_InterfaceFieldsIntializedSpecConstructor/GHOLD388_Interface";
 
 // I is an external interface WITHOUT @N4JS annotation
 class C implements I {

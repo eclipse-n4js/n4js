@@ -34,7 +34,7 @@ class annotations
     origin: 'org.eclipse.n4js.spec.tests',
     annotations: [ [N4Annotation], [N4Annotation], [Circular] ],
     name: 'ClassWithAnnotations',
-    fqn: 'Ch07_04_Reflection_Meta_Information/AnnotationsInfo/ClassWithAnnotations',
+    fqn: 'Ch07_04__Reflection_Meta_Information/AnnotationsInfo/ClassWithAnnotations',
     n4superType: N4Class {
       origin: 'n4js-runtime',
       annotations: [],
@@ -58,7 +58,7 @@ N4Annotation {
     origin: 'org.eclipse.n4js.spec.tests',
     annotations: [ [Circular], [N4Annotation], [N4Annotation] ],
     name: 'ClassWithAnnotations',
-    fqn: 'Ch07_04_Reflection_Meta_Information/AnnotationsInfo/ClassWithAnnotations',
+    fqn: 'Ch07_04__Reflection_Meta_Information/AnnotationsInfo/ClassWithAnnotations',
     n4superType: N4Class {
       origin: 'n4js-runtime',
       annotations: [],
@@ -82,7 +82,7 @@ N4Annotation {
     origin: 'org.eclipse.n4js.spec.tests',
     annotations: [ [N4Annotation], [Circular], [N4Annotation] ],
     name: 'ClassWithAnnotations',
-    fqn: 'Ch07_04_Reflection_Meta_Information/AnnotationsInfo/ClassWithAnnotations',
+    fqn: 'Ch07_04__Reflection_Meta_Information/AnnotationsInfo/ClassWithAnnotations',
     n4superType: N4Class {
       origin: 'n4js-runtime',
       annotations: [],
@@ -105,7 +105,7 @@ N4Annotation {
     origin: 'org.eclipse.n4js.spec.tests',
     annotations: [ [N4Annotation], [N4Annotation], [Circular] ],
     name: 'ClassWithAnnotations',
-    fqn: 'Ch07_04_Reflection_Meta_Information/AnnotationsInfo/ClassWithAnnotations',
+    fqn: 'Ch07_04__Reflection_Meta_Information/AnnotationsInfo/ClassWithAnnotations',
     n4superType: N4Class {
       origin: 'n4js-runtime',
       annotations: [],
