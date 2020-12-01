@@ -14,42 +14,63 @@
 
 class C {
 	// no return ok
-// XPECT noerrors
-	* g1() {
-	}
+	// XPECT noerrors
+	* g1() {}
+	// XPECT noerrors
+	async * ag1() {}
+
 
 	// recursive yield type ok
-// XPECT noerrors
 	* g2() {
+		// XPECT noerrors
 		yield * this.g1();
 	}
+	async * ag2() {
+		// XPECT noerrors
+		yield * this.ag1();
+	}
+
 
 	// yield has return
-// XPECT noerrors
 	* g3a() {
+		// XPECT noerrors
 		let x = yield;
-		x;
+	}
+	async * ag3a() {
+		// XPECT noerrors
+		let x = yield;
 	}
 
-	// err
+
 	// yield has return of type any, error case
 	* g3b() {
-// XPECT errors --> "any is not a subtype of string." at "yield"
+		// XPECT errors --> "any is not a subtype of string." at "yield"
 		let x : string = yield;
-		x;
 	}
+	async * ag3b() {
+		// XPECT errors --> "any is not a subtype of string." at "yield"
+		let x : string = yield;
+	}
+
 
 	// yield has return
 	* g3c() : Generator<?,?,int> {
-// XPECT noerrors
+		// XPECT noerrors
 		let x = yield;
-		x;
 	}
+	async * ag3c() : AsyncGenerator<?,?,int> {
+		// XPECT noerrors
+		let x = yield;
+	}
+
 
 	// yield has return of type TNext
 	* g4() : Generator<?,?,string>{
-// XPECT noerrors
+		// XPECT noerrors
 		let x : string = yield;
-		x;
+	}
+	async * ag4() : AsyncGenerator<?,?,string>{
+		// XPECT noerrors
+		let x : string = yield;
 	}
 }
