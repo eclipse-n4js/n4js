@@ -28,6 +28,7 @@ import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.FixMethodOrder
+import org.eclipse.xtext.Assignment
 
 /**
  */
@@ -67,14 +68,15 @@ abstract class AbstractContentAssistParserTest extends Assert {
 		val followElements = getFollowElements(node, 0, 0, true)
 		val grammarElements = followElements.map [ grammarElement ].toSet
 		
-		assertEquals(1, grammarElements.size) 
-		assertTrue(grammarElements.get(0) instanceof Alternatives);
+		assertEquals(2, grammarElements.size)
+		assertTrue(grammarElements.get(0) instanceof Assignment);
+		assertTrue(grammarElements.get(1) instanceof Alternatives);
 		
-		val alternatives = (grammarElements.get(0) as Alternatives).elements;
+		val alternatives = (grammarElements.get(1) as Alternatives).elements;
 		
 		assertEquals(2, alternatives.size);
-		assertTrue(alternatives.contains(grammarAccess.scriptAccess.annotationsAssignment_1_0))
-		assertTrue(alternatives.contains(grammarAccess.scriptAccess.scriptElementsAssignment_1_1))
+		assertTrue(alternatives.contains(grammarAccess.scriptAccess.annotationsAssignment_2_0))
+		assertTrue(alternatives.contains(grammarAccess.scriptAccess.scriptElementsAssignment_2_1))
 	}
 
 	@Test
@@ -92,7 +94,7 @@ abstract class AbstractContentAssistParserTest extends Assert {
 		val followElements = getFollowElements(node)
 		val grammarElements = followElements.map [ grammarElement ].toSet
 		assertEquals(grammarElements.prettyPrint, 1, grammarElements.size)
-		assertTrue(grammarElements.contains(grammarAccess.scriptAccess.alternatives_1))
+		assertTrue(grammarElements.contains(grammarAccess.scriptAccess.alternatives_2))
 		assertFalse(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.postfixExpressionAccess.group_1))
 	}
 
@@ -102,7 +104,7 @@ abstract class AbstractContentAssistParserTest extends Assert {
 		val followElements = getFollowElements(node)
 		val grammarElements = followElements.map [ grammarElement ].toSet
 		assertEquals(grammarElements.prettyPrint, 1, grammarElements.size)
-		assertTrue(grammarElements.contains(grammarAccess.scriptAccess.alternatives_1))
+		assertTrue(grammarElements.contains(grammarAccess.scriptAccess.alternatives_2))
 		assertFalse(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.postfixExpressionAccess.group_1))
 	}
 
@@ -112,7 +114,7 @@ abstract class AbstractContentAssistParserTest extends Assert {
 		val followElements = getFollowElements(node)
 		val grammarElements = followElements.map [ grammarElement ].toSet
 		assertEquals(grammarElements.prettyPrint, 1, grammarElements.size)
-		assertTrue(grammarElements.contains(grammarAccess.scriptAccess.alternatives_1))
+		assertTrue(grammarElements.contains(grammarAccess.scriptAccess.alternatives_2))
 		assertFalse(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.postfixExpressionAccess.group_1))
 	}
 
@@ -122,7 +124,7 @@ abstract class AbstractContentAssistParserTest extends Assert {
 		val followElements = getFollowElements(node)
 		val grammarElements = followElements.map [ grammarElement ].toSet
 		assertEquals(grammarElements.prettyPrint, 19, grammarElements.size)
-		assertTrue(grammarElements.contains(grammarAccess.scriptAccess.alternatives_1))
+		assertTrue(grammarElements.contains(grammarAccess.scriptAccess.alternatives_2))
 		assertFalse(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.postfixExpressionAccess.group_1))
 	}
 
@@ -132,7 +134,7 @@ abstract class AbstractContentAssistParserTest extends Assert {
 		val followElements = getFollowElements(node)
 		val grammarElements = followElements.map [ grammarElement ].toSet
 		assertEquals(grammarElements.prettyPrint, 19, grammarElements.size)
-		assertTrue(grammarElements.contains(grammarAccess.scriptAccess.alternatives_1))
+		assertTrue(grammarElements.contains(grammarAccess.scriptAccess.alternatives_2))
 		assertFalse(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.postfixExpressionAccess.group_1))
 	}
 
@@ -143,7 +145,7 @@ abstract class AbstractContentAssistParserTest extends Assert {
 		val grammarElements = followElements.map [ grammarElement ].toSet
 		assertEquals(grammarElements.prettyPrint, 19, grammarElements.size)
 		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.postfixExpressionAccess.group_1))
-		assertFalse(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.scriptAccess.scriptElementsAssignment_1_1))
+		assertFalse(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.scriptAccess.scriptElementsAssignment_2_1))
 	}
 
 	@Test
@@ -152,7 +154,7 @@ abstract class AbstractContentAssistParserTest extends Assert {
 		val followElements = getFollowElements(node)
 		val grammarElements = followElements.map [ grammarElement ].toSet
 		assertEquals(grammarElements.prettyPrint, 1, grammarElements.size)
-		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.scriptAccess.alternatives_1))
+		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.scriptAccess.alternatives_2))
 	}
 
 	@Test
@@ -161,7 +163,7 @@ abstract class AbstractContentAssistParserTest extends Assert {
 		val followElements = getFollowElements(node)
 		val grammarElements = followElements.map [ grammarElement ].toSet
 		assertEquals(grammarElements.prettyPrint, 1, grammarElements.size)
-		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.scriptAccess.alternatives_1))
+		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.scriptAccess.alternatives_2))
 	}
 
 	@Test
@@ -176,8 +178,8 @@ abstract class AbstractContentAssistParserTest extends Assert {
 		val alternatives = (grammarElements.get(0) as Alternatives).elements;
 		
 		assertEquals(alternatives.prettyPrint, 2, alternatives.size);
-		assertTrue(alternatives.contains(grammarAccess.scriptAccess.annotationsAssignment_1_0))
-		assertTrue(alternatives.contains(grammarAccess.scriptAccess.scriptElementsAssignment_1_1))
+		assertTrue(alternatives.contains(grammarAccess.scriptAccess.annotationsAssignment_2_0))
+		assertTrue(alternatives.contains(grammarAccess.scriptAccess.scriptElementsAssignment_2_1))
 		
 	}
 
@@ -187,7 +189,7 @@ abstract class AbstractContentAssistParserTest extends Assert {
 		val followElements = getFollowElements(node, 'return/*\n*/')
 		val grammarElements = followElements.map [ grammarElement ].toSet
 		assertEquals(grammarElements.prettyPrint, 1, grammarElements.size)
-		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.scriptAccess.alternatives_1))
+		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.scriptAccess.alternatives_2))
 	}
 
 	@Test
@@ -320,7 +322,7 @@ abstract class AbstractContentAssistParserTest extends Assert {
 		assertEquals(grammarElements.prettyPrint, 3, grammarElements.size)
 		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getFunctionBodyAccess().getBodyAssignment_1_0))
 		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getRootStatementAccess().getAlternatives))
-		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getScriptAccess().alternatives_1))
+		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getScriptAccess().alternatives_2 ))
 	}
 
 	@Test
@@ -335,7 +337,7 @@ abstract class AbstractContentAssistParserTest extends Assert {
 		assertEquals(grammarElements.prettyPrint, 3, grammarElements.size)
 		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getFunctionBodyAccess().getBodyAssignment_1_0))
 		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getRootStatementAccess().getAlternatives))
-		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getScriptAccess().alternatives_1))
+		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getScriptAccess().alternatives_2))
 	}
 
 	@Test
@@ -349,7 +351,7 @@ abstract class AbstractContentAssistParserTest extends Assert {
 		val grammarElements = followElements.map [ grammarElement ].toSet
 		assertEquals(grammarElements.prettyPrint, 2, grammarElements.size)
 		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getFunctionBodyAccess().getBodyAssignment_1_0))
-		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getScriptAccess().alternatives_1))
+		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getScriptAccess().alternatives_2))
 	}
 	
 	@Test
@@ -449,7 +451,7 @@ abstract class AbstractContentAssistParserTest extends Assert {
 			export public function* foo(req: A) { 
 			  yield 5; // removing 5 fixes the problem
 			  req.'''.toNode
-		val followElement = getFollowElements(node, false).filter[grammarElement == grammarAccess.scriptAccess.alternatives_1].head
+		val followElement = getFollowElements(node, false).filter[grammarElement == grammarAccess.scriptAccess.alternatives_2].head
 		assertNotNull(followElement)
 		val followElements = getFollowElements(followElement);
 		
@@ -510,7 +512,7 @@ abstract class AbstractContentAssistParserTest extends Assert {
 		val grammarElements = followElements.map [ grammarElement ].toSet
 		assertEquals(grammarElements.prettyPrint, 19, grammarElements.size)
 		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.postfixExpressionAccess.group_1))
-		assertFalse(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.scriptAccess.scriptElementsAssignment_1_1))
+		assertFalse(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.scriptAccess.scriptElementsAssignment_2_1))
 	}
 
 	@Test
@@ -520,7 +522,7 @@ abstract class AbstractContentAssistParserTest extends Assert {
 		val grammarElements = followElements.map [ grammarElement ].toSet
 		assertEquals(grammarElements.prettyPrint, 19, grammarElements.size)
 		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.postfixExpressionAccess.group_1))
-		assertFalse(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.scriptAccess.scriptElementsAssignment_1_1))
+		assertFalse(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.scriptAccess.scriptElementsAssignment_2_1))
 	}
 
 	@Test
@@ -529,7 +531,7 @@ abstract class AbstractContentAssistParserTest extends Assert {
 		val followElements = getFollowElements(node, 0, 2, true)
 		val grammarElements = followElements.map [ grammarElement ].toSet
 		assertEquals(grammarElements.prettyPrint, 19, grammarElements.size)
-		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.scriptAccess.alternatives_1))
+		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.scriptAccess.alternatives_2))
 		assertFalse(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.postfixExpressionAccess.group_1))
 	}
 
@@ -539,7 +541,7 @@ abstract class AbstractContentAssistParserTest extends Assert {
 		val followElements = getFollowElements(node, 0, 6, true)
 		val grammarElements = followElements.map [ grammarElement ].toSet
 		assertEquals(grammarElements.prettyPrint, 19, grammarElements.size)
-		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.scriptAccess.alternatives_1))
+		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.scriptAccess.alternatives_2))
 		assertFalse(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.postfixExpressionAccess.group_1))
 	}
 
@@ -549,7 +551,7 @@ abstract class AbstractContentAssistParserTest extends Assert {
 		val followElements = getFollowElements(node, '1')
 		val grammarElements = followElements.map [ grammarElement ].toSet
 		assertEquals(grammarElements.prettyPrint, 19, grammarElements.size)
-		assertFalse(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.scriptAccess.scriptElementsAssignment_1_1))
+		assertFalse(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.scriptAccess.scriptElementsAssignment_2_1))
 		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.postfixExpressionAccess.group_1))
 	}
 
@@ -561,7 +563,7 @@ abstract class AbstractContentAssistParserTest extends Assert {
 		
 		assertEquals(grammarElements.prettyPrint, 19, grammarElements.size)
 				
-		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.scriptAccess.alternatives_1))
+		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.scriptAccess.alternatives_2))
 		assertFalse(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.postfixExpressionAccess.group_1))
 	}
 
@@ -571,7 +573,7 @@ abstract class AbstractContentAssistParserTest extends Assert {
 		val followElements = getFollowElements(node, '1')
 		val grammarElements = followElements.map [ grammarElement ].toSet
 		assertEquals(grammarElements.prettyPrint, 19, grammarElements.size)
-		assertFalse(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.scriptAccess.scriptElementsAssignment_1_1))
+		assertFalse(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.scriptAccess.scriptElementsAssignment_2_1))
 		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.postfixExpressionAccess.group_1))
 	}
 
@@ -581,7 +583,7 @@ abstract class AbstractContentAssistParserTest extends Assert {
 		val followElements = getFollowElements(node, '1;')
 		val grammarElements = followElements.map [ grammarElement ].toSet
 		assertEquals(grammarElements.prettyPrint, 1, grammarElements.size)
-		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.scriptAccess.alternatives_1))
+		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.scriptAccess.alternatives_2))
 	}
 
 	@Test
@@ -590,7 +592,7 @@ abstract class AbstractContentAssistParserTest extends Assert {
 		val followElements = getFollowElements(node, '1/*\n*/')
 		val grammarElements = followElements.map [ grammarElement ].toSet
 		assertEquals(grammarElements.prettyPrint, 19, grammarElements.size)
-		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.scriptAccess.alternatives_1))
+		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.scriptAccess.alternatives_2))
 		assertFalse(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.postfixExpressionAccess.group_1))
 	}
 
