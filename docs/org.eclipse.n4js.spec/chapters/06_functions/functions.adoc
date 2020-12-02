@@ -756,7 +756,7 @@ For more constraints on using the variadic modifier, see <<_function-object-type
 
 
 
-=== Generator Functions
+=== Generator Functions [[generator-functions]]
 
 
 Generators come together with the `yield` expression and can play three roles:
@@ -1164,11 +1164,42 @@ function snafu(i1: I<int>, i2: I<Promise<int,?>>) {
 
 ==== Asynchronous Arrow Functions
 
-
+Also arrow functions can be declared asynchronous by using keyword `async`.
 An `await` expression is allowed in the body of an async arrow function but not
-in the body of a non-async arrow function. The semantics here are
-intentional and are in line with similar constraint for function
-expressions.
+in the body of a non-async arrow function.
+
+
+==== Asynchronous Generator Functions
+
+Also generator functions can be declared asynchronous with keyword `async`.
+
+.Asynchronous Generator Functions
+[req,id=GH-572,version=1]
+--
+
+For an asynchronous generator function the rules for synchronous generator functions given in <<generator-functions>>
+as well as the rules for non-generator asynchronous functions (see <<asynchronous-functions-semantics>>)
+apply at the same time, except for the following changes:
+
+. built-in type `AsyncGenerator<TYield,TReturn,TNext>` is used as return type, instead of `Generator<TYield,TReturn,TNext>`.
+  Regarding the inference of type arguments `TYield`, `TReturn`, and `TNext` as well as the short-hand form for declaring
+  the return type, all rules apply accordingly.
+. a warning is shown when type `Generator` is used as return type of a synchronous generator function.
+. a warning is shown when type `AsyncGenerator` is used as return type of an asynchronous generator.
+. `yield*` used inside asynchronous generator functions accepts values of type `AsyncGenerator` and then delegates to
+  that given asynchronous generator until it is done, in much the same way as defined for `yield*` when used inside
+  synchronous generator functions with values of type `Generator`. In addition, `yield*` used inside asynchronous
+  generator functions still accepts values of type `Generator`, allowing to implement a delegation from an
+  asynchronous generator function to a synchronous generator.
+
+--
+
+Note that an `AsyncGenerator` is an `AsyncIterable` (not an `Iterable`) returning an `AsyncIterator`, not an ordinary `Iterator`.
+Method `#next()` in `AsyncIterator` returns a `Promise<IteratorEntry<T>>`, not directly an `IteratorEntry<T>`.
+
+All the above applies equally to both declared generator functions as well as generator function expressions.
+
+
 
 [.language-n4js]
 == N4JS Extended Function Definition
@@ -1191,9 +1222,9 @@ function <S,T> foo(s: Array<S>): T { return new T(s); }
 If a generic type parameter is not used as a formal parameter type or
 the return type, a warning is generated.
 
+
+
 === Promisifiable Functions
-
-
 
 In many existing libraries, which have been developed in pre-ES6-promise-API times, callback methods are used for asynchronous behavior.
 An asynchronous function follows the following conventions:
