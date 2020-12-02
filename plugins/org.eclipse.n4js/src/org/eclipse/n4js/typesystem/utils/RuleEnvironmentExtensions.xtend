@@ -712,6 +712,16 @@ class RuleEnvironmentExtensions {
 		createTypeRef(G.generatorType, typeArgs);
 	}
 
+	/* Returns built-in type {@code AsyncGenerator<Y,R,N>} */
+	public def static asyncGeneratorType(RuleEnvironment G) {
+		G.getPredefinedTypes().builtInTypeScope.asyncGeneratorType
+	}
+
+	/* Returns newly created reference to built-in type {@code AsyncGenerator<Y,R,N>} */
+	public def static asyncGeneratorTypeRef(RuleEnvironment G, TypeArgument... typeArgs) {
+		createTypeRef(G.asyncGeneratorType, typeArgs);
+	}
+
 	/* Returns built-in type {@code N4Element} */
 	public def static TClass n4ElementType(RuleEnvironment G) {
 		G.getPredefinedTypes().builtInTypeScope.n4ElementType
