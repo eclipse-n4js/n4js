@@ -45,6 +45,7 @@ import "http://www.eclipse.org/n4js/ts/TypeRefs" as types
 // [ECMWiki] http://wiki.ecmascript.org/doku.php?id=harmony:modules
 // ****************************************************************************************************
 Script: {Script}
+	(hashbang=HASH_BANG)?
 	( annotations+=ScriptAnnotation
 	| scriptElements+=ScriptElement )*;
 
@@ -337,9 +338,13 @@ FormalParameter <Yield>:
 
 fragment BindingElementFragment <Yield>*:
 	( => bindingPattern=BindingPattern<Yield>
-	| annotations+=Annotation* variadic?='...'? name=BindingIdentifier<Yield> ColonSepDeclaredTypeRef?
+	| annotations+=Annotation* BogusTypeRefFragment? variadic?='...'? name=BindingIdentifier<Yield> ColonSepDeclaredTypeRef?
 	)
 	(hasInitializerAssignment?='=' initializer=AssignmentExpression<In=true, Yield>?)?
+;
+
+fragment BogusTypeRefFragment*:
+	bogusTypeRef=TypeRefWithModifiers
 ;
 
 Block <Yield>: => ({Block} '{') statements+=Statement<Yield>* '}';
@@ -549,7 +554,7 @@ CatchBlock <Yield>:	{CatchBlock} 'catch' '(' catchVariable=CatchVariable<Yield> 
 CatchVariable <Yield>:
 		=>bindingPattern=BindingPattern<Yield>
 	|	=>(name=BindingIdentifier<Yield> -> ColonSepDeclaredTypeRef)
-	|	name=BindingIdentifier<Yield>
+	|	BogusTypeRefFragment? name=BindingIdentifier<Yield>
 ;
 
 FinallyBlock <Yield>: {FinallyBlock} 'finally' block=Block<Yield>;
@@ -1074,6 +1079,10 @@ terminal STRING:
 	| "'" SINGLE_STRING_CHAR* "'"?
 ;
 
+terminal HASH_BANG:
+	  '#!' DOUBLE_STRING_CHAR* EOL
+;
+
 terminal fragment DOUBLE_STRING_CHAR:
 	  !(LINE_TERMINATOR_FRAGMENT | '"' | '\\')
 	| '\\' (LINE_TERMINATOR_SEQUENCE_FRAGMENT | !LINE_TERMINATOR_FRAGMENT)?
@@ -1361,7 +1370,7 @@ AnnotatedN4MemberDeclaration <Yield> returns N4MemberDeclaration:
 		| 	=> ({N4SetterDeclaration.annotationList=current} (declaredModifiers+=N4Modifier)* 'set' -> declaredName=LiteralOrComputedPropertyName <Yield>)
 				(declaredOptional?='?')? '(' fpar=FormalParameter<Yield> ')' (body=Block<Yield>)? ';'?
 		| 	=> (
-				{N4MethodDeclaration.annotationList=current} (declaredModifiers+=N4Modifier)* TypeVariables?
+				{N4MethodDeclaration.annotationList=current} (declaredModifiers+=N4Modifier)* TypeVariables? BogusTypeRefFragment?
 				(
 						generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=true>
 					| 	AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=false>
@@ -1372,7 +1381,7 @@ AnnotatedN4MemberDeclaration <Yield> returns N4MemberDeclaration:
 ;
 
 fragment FieldDeclarationImpl <Yield>*:
-	(declaredModifiers+=N4Modifier)*
+	(declaredModifiers+=N4Modifier)* BogusTypeRefFragment?
 	declaredName=LiteralOrComputedPropertyName<Yield>
 	(declaredOptional?='?')?
 	ColonSepDeclaredTypeRef?
@@ -1386,7 +1395,7 @@ N4FieldDeclaration <Yield>:
 ;
 
 N4MethodDeclaration <Yield>:
-	=> ({N4MethodDeclaration} (declaredModifiers+=N4Modifier)* TypeVariables?
+	=> ({N4MethodDeclaration} (declaredModifiers+=N4Modifier)* TypeVariables? BogusTypeRefFragment?
 		(
 				generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=true>
 			|	AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=false>
@@ -1420,7 +1429,7 @@ N4GetterDeclaration <Yield>:
 ;
 
 fragment GetterHeader <Yield>*:
-	'get' -> declaredName=LiteralOrComputedPropertyName<Yield> (declaredOptional?='?')? '(' ')' ColonSepDeclaredTypeRef?
+	BogusTypeRefFragment? 'get' -> declaredName=LiteralOrComputedPropertyName<Yield> (declaredOptional?='?')? '(' ')' ColonSepDeclaredTypeRef?
 ;
 
 N4SetterDeclaration <Yield>:
