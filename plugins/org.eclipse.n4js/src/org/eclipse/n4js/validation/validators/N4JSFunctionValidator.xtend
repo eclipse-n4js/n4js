@@ -492,7 +492,7 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	@Check
-	def checkGeneratorReturnType(FunctionDefinition funDef) {
+	def checkGeneratorReturnTypeDeclaration(FunctionDefinition funDef) {
 		if (!funDef.generator) {
 			return;
 		}

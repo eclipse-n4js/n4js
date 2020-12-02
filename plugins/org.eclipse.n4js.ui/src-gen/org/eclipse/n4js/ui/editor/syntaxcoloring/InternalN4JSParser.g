@@ -1245,7 +1245,7 @@ ruleFunctionImpl
 	 {
 		announce($FunctionKeyword_0, grammarAccess.getFunctionImplAccess().getFunctionKeyword_0());
 	}
-	FunctionImplNoKeywordParserRuleCall_1=ruleFunctionImplNoKeyword{ announce($FunctionImplNoKeywordParserRuleCall_1.start, $FunctionImplNoKeywordParserRuleCall_1.stop, grammarAccess.getFunctionImplAccess().getFunctionImplNoKeywordParserRuleCall_1()); }
+	FunctionImplWithoutKeywordParserRuleCall_1=ruleFunctionImplWithoutKeyword{ announce($FunctionImplWithoutKeywordParserRuleCall_1.start, $FunctionImplWithoutKeywordParserRuleCall_1.stop, grammarAccess.getFunctionImplAccess().getFunctionImplWithoutKeywordParserRuleCall_1()); }
 )
 ;
 
@@ -1259,7 +1259,7 @@ norm3_FunctionImpl
 	 {
 		announce($FunctionKeyword_0, grammarAccess.getFunctionImplAccess().getFunctionKeyword_0());
 	}
-	FunctionImplNoKeywordParserRuleCall_1=norm3_FunctionImplNoKeyword{ announce($FunctionImplNoKeywordParserRuleCall_1.start, $FunctionImplNoKeywordParserRuleCall_1.stop, grammarAccess.getFunctionImplAccess().getFunctionImplNoKeywordParserRuleCall_1()); }
+	FunctionImplWithoutKeywordParserRuleCall_1=norm3_FunctionImplWithoutKeyword{ announce($FunctionImplWithoutKeywordParserRuleCall_1.start, $FunctionImplWithoutKeywordParserRuleCall_1.stop, grammarAccess.getFunctionImplAccess().getFunctionImplWithoutKeywordParserRuleCall_1()); }
 )
 ;
 
@@ -1273,13 +1273,13 @@ norm6_FunctionImpl
 	 {
 		announce($FunctionKeyword_0, grammarAccess.getFunctionImplAccess().getFunctionKeyword_0());
 	}
-	FunctionImplNoKeywordParserRuleCall_1=norm6_FunctionImplNoKeyword{ announce($FunctionImplNoKeywordParserRuleCall_1.start, $FunctionImplNoKeywordParserRuleCall_1.stop, grammarAccess.getFunctionImplAccess().getFunctionImplNoKeywordParserRuleCall_1()); }
+	FunctionImplWithoutKeywordParserRuleCall_1=norm6_FunctionImplWithoutKeyword{ announce($FunctionImplWithoutKeywordParserRuleCall_1.start, $FunctionImplWithoutKeywordParserRuleCall_1.stop, grammarAccess.getFunctionImplAccess().getFunctionImplWithoutKeywordParserRuleCall_1()); }
 )
 ;
 
 
-// Rule FunctionImplNoKeyword
-ruleFunctionImplNoKeyword
+// Rule FunctionImplWithoutKeyword
+ruleFunctionImplWithoutKeyword
 @init {
 }:
 (
@@ -1288,24 +1288,24 @@ ruleFunctionImplNoKeyword
 			(
 				GeneratorAsteriskKeyword_0_0_0=Asterisk
 				 {
-					announce($GeneratorAsteriskKeyword_0_0_0, grammarAccess.getFunctionImplNoKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
+					announce($GeneratorAsteriskKeyword_0_0_0, grammarAccess.getFunctionImplWithoutKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
 				}
 			)
 		)
-		FunctionHeaderParserRuleCall_0_1=norm2_FunctionHeader{ announce($FunctionHeaderParserRuleCall_0_1.start, $FunctionHeaderParserRuleCall_0_1.stop, grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_0_1()); }
-		FunctionBodyParserRuleCall_0_2=norm1_FunctionBody{ announce($FunctionBodyParserRuleCall_0_2.start, $FunctionBodyParserRuleCall_0_2.stop, grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_0_2()); }
+		FunctionHeaderParserRuleCall_0_1=norm2_FunctionHeader{ announce($FunctionHeaderParserRuleCall_0_1.start, $FunctionHeaderParserRuleCall_0_1.stop, grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_0_1()); }
+		FunctionBodyParserRuleCall_0_2=norm1_FunctionBody{ announce($FunctionBodyParserRuleCall_0_2.start, $FunctionBodyParserRuleCall_0_2.stop, grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_0_2()); }
 	)
 	    |
 	(
-		FunctionHeaderParserRuleCall_1_0=ruleFunctionHeader{ announce($FunctionHeaderParserRuleCall_1_0.start, $FunctionHeaderParserRuleCall_1_0.stop, grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_1_0()); }
-		FunctionBodyParserRuleCall_1_1=ruleFunctionBody{ announce($FunctionBodyParserRuleCall_1_1.start, $FunctionBodyParserRuleCall_1_1.stop, grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_1_1()); }
+		FunctionHeaderParserRuleCall_1_0=ruleFunctionHeader{ announce($FunctionHeaderParserRuleCall_1_0.start, $FunctionHeaderParserRuleCall_1_0.stop, grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_1_0()); }
+		FunctionBodyParserRuleCall_1_1=ruleFunctionBody{ announce($FunctionBodyParserRuleCall_1_1.start, $FunctionBodyParserRuleCall_1_1.stop, grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_1_1()); }
 	)
 )
 ;
 
 
-// Rule FunctionImplNoKeyword
-norm1_FunctionImplNoKeyword
+// Rule FunctionImplWithoutKeyword
+norm1_FunctionImplWithoutKeyword
 @init {
 }:
 (
@@ -1314,24 +1314,24 @@ norm1_FunctionImplNoKeyword
 			(
 				GeneratorAsteriskKeyword_0_0_0=Asterisk
 				 {
-					announce($GeneratorAsteriskKeyword_0_0_0, grammarAccess.getFunctionImplNoKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
+					announce($GeneratorAsteriskKeyword_0_0_0, grammarAccess.getFunctionImplWithoutKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
 				}
 			)
 		)
-		FunctionHeaderParserRuleCall_0_1=norm2_FunctionHeader{ announce($FunctionHeaderParserRuleCall_0_1.start, $FunctionHeaderParserRuleCall_0_1.stop, grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_0_1()); }
-		FunctionBodyParserRuleCall_0_2=norm1_FunctionBody{ announce($FunctionBodyParserRuleCall_0_2.start, $FunctionBodyParserRuleCall_0_2.stop, grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_0_2()); }
+		FunctionHeaderParserRuleCall_0_1=norm2_FunctionHeader{ announce($FunctionHeaderParserRuleCall_0_1.start, $FunctionHeaderParserRuleCall_0_1.stop, grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_0_1()); }
+		FunctionBodyParserRuleCall_0_2=norm1_FunctionBody{ announce($FunctionBodyParserRuleCall_0_2.start, $FunctionBodyParserRuleCall_0_2.stop, grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_0_2()); }
 	)
 	    |
 	(
-		FunctionHeaderParserRuleCall_1_0=norm1_FunctionHeader{ announce($FunctionHeaderParserRuleCall_1_0.start, $FunctionHeaderParserRuleCall_1_0.stop, grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_1_0()); }
-		FunctionBodyParserRuleCall_1_1=ruleFunctionBody{ announce($FunctionBodyParserRuleCall_1_1.start, $FunctionBodyParserRuleCall_1_1.stop, grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_1_1()); }
+		FunctionHeaderParserRuleCall_1_0=norm1_FunctionHeader{ announce($FunctionHeaderParserRuleCall_1_0.start, $FunctionHeaderParserRuleCall_1_0.stop, grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_1_0()); }
+		FunctionBodyParserRuleCall_1_1=ruleFunctionBody{ announce($FunctionBodyParserRuleCall_1_1.start, $FunctionBodyParserRuleCall_1_1.stop, grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_1_1()); }
 	)
 )
 ;
 
 
-// Rule FunctionImplNoKeyword
-norm2_FunctionImplNoKeyword
+// Rule FunctionImplWithoutKeyword
+norm2_FunctionImplWithoutKeyword
 @init {
 }:
 (
@@ -1340,24 +1340,24 @@ norm2_FunctionImplNoKeyword
 			(
 				GeneratorAsteriskKeyword_0_0_0=Asterisk
 				 {
-					announce($GeneratorAsteriskKeyword_0_0_0, grammarAccess.getFunctionImplNoKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
+					announce($GeneratorAsteriskKeyword_0_0_0, grammarAccess.getFunctionImplWithoutKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
 				}
 			)
 		)
-		FunctionHeaderParserRuleCall_0_1=norm3_FunctionHeader{ announce($FunctionHeaderParserRuleCall_0_1.start, $FunctionHeaderParserRuleCall_0_1.stop, grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_0_1()); }
-		FunctionBodyParserRuleCall_0_2=norm1_FunctionBody{ announce($FunctionBodyParserRuleCall_0_2.start, $FunctionBodyParserRuleCall_0_2.stop, grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_0_2()); }
+		FunctionHeaderParserRuleCall_0_1=norm3_FunctionHeader{ announce($FunctionHeaderParserRuleCall_0_1.start, $FunctionHeaderParserRuleCall_0_1.stop, grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_0_1()); }
+		FunctionBodyParserRuleCall_0_2=norm1_FunctionBody{ announce($FunctionBodyParserRuleCall_0_2.start, $FunctionBodyParserRuleCall_0_2.stop, grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_0_2()); }
 	)
 	    |
 	(
-		FunctionHeaderParserRuleCall_1_0=ruleFunctionHeader{ announce($FunctionHeaderParserRuleCall_1_0.start, $FunctionHeaderParserRuleCall_1_0.stop, grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_1_0()); }
-		FunctionBodyParserRuleCall_1_1=ruleFunctionBody{ announce($FunctionBodyParserRuleCall_1_1.start, $FunctionBodyParserRuleCall_1_1.stop, grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_1_1()); }
+		FunctionHeaderParserRuleCall_1_0=ruleFunctionHeader{ announce($FunctionHeaderParserRuleCall_1_0.start, $FunctionHeaderParserRuleCall_1_0.stop, grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_1_0()); }
+		FunctionBodyParserRuleCall_1_1=ruleFunctionBody{ announce($FunctionBodyParserRuleCall_1_1.start, $FunctionBodyParserRuleCall_1_1.stop, grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_1_1()); }
 	)
 )
 ;
 
 
-// Rule FunctionImplNoKeyword
-norm3_FunctionImplNoKeyword
+// Rule FunctionImplWithoutKeyword
+norm3_FunctionImplWithoutKeyword
 @init {
 }:
 (
@@ -1366,24 +1366,24 @@ norm3_FunctionImplNoKeyword
 			(
 				GeneratorAsteriskKeyword_0_0_0=Asterisk
 				 {
-					announce($GeneratorAsteriskKeyword_0_0_0, grammarAccess.getFunctionImplNoKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
+					announce($GeneratorAsteriskKeyword_0_0_0, grammarAccess.getFunctionImplWithoutKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
 				}
 			)
 		)
-		FunctionHeaderParserRuleCall_0_1=norm3_FunctionHeader{ announce($FunctionHeaderParserRuleCall_0_1.start, $FunctionHeaderParserRuleCall_0_1.stop, grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_0_1()); }
-		FunctionBodyParserRuleCall_0_2=norm1_FunctionBody{ announce($FunctionBodyParserRuleCall_0_2.start, $FunctionBodyParserRuleCall_0_2.stop, grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_0_2()); }
+		FunctionHeaderParserRuleCall_0_1=norm3_FunctionHeader{ announce($FunctionHeaderParserRuleCall_0_1.start, $FunctionHeaderParserRuleCall_0_1.stop, grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_0_1()); }
+		FunctionBodyParserRuleCall_0_2=norm1_FunctionBody{ announce($FunctionBodyParserRuleCall_0_2.start, $FunctionBodyParserRuleCall_0_2.stop, grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_0_2()); }
 	)
 	    |
 	(
-		FunctionHeaderParserRuleCall_1_0=norm1_FunctionHeader{ announce($FunctionHeaderParserRuleCall_1_0.start, $FunctionHeaderParserRuleCall_1_0.stop, grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_1_0()); }
-		FunctionBodyParserRuleCall_1_1=ruleFunctionBody{ announce($FunctionBodyParserRuleCall_1_1.start, $FunctionBodyParserRuleCall_1_1.stop, grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_1_1()); }
+		FunctionHeaderParserRuleCall_1_0=norm1_FunctionHeader{ announce($FunctionHeaderParserRuleCall_1_0.start, $FunctionHeaderParserRuleCall_1_0.stop, grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_1_0()); }
+		FunctionBodyParserRuleCall_1_1=ruleFunctionBody{ announce($FunctionBodyParserRuleCall_1_1.start, $FunctionBodyParserRuleCall_1_1.stop, grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_1_1()); }
 	)
 )
 ;
 
 
-// Rule FunctionImplNoKeyword
-norm4_FunctionImplNoKeyword
+// Rule FunctionImplWithoutKeyword
+norm4_FunctionImplWithoutKeyword
 @init {
 }:
 (
@@ -1392,24 +1392,24 @@ norm4_FunctionImplNoKeyword
 			(
 				GeneratorAsteriskKeyword_0_0_0=Asterisk
 				 {
-					announce($GeneratorAsteriskKeyword_0_0_0, grammarAccess.getFunctionImplNoKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
+					announce($GeneratorAsteriskKeyword_0_0_0, grammarAccess.getFunctionImplWithoutKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
 				}
 			)
 		)
-		FunctionHeaderParserRuleCall_0_1=norm2_FunctionHeader{ announce($FunctionHeaderParserRuleCall_0_1.start, $FunctionHeaderParserRuleCall_0_1.stop, grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_0_1()); }
-		FunctionBodyParserRuleCall_0_2=norm3_FunctionBody{ announce($FunctionBodyParserRuleCall_0_2.start, $FunctionBodyParserRuleCall_0_2.stop, grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_0_2()); }
+		FunctionHeaderParserRuleCall_0_1=norm2_FunctionHeader{ announce($FunctionHeaderParserRuleCall_0_1.start, $FunctionHeaderParserRuleCall_0_1.stop, grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_0_1()); }
+		FunctionBodyParserRuleCall_0_2=norm3_FunctionBody{ announce($FunctionBodyParserRuleCall_0_2.start, $FunctionBodyParserRuleCall_0_2.stop, grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_0_2()); }
 	)
 	    |
 	(
-		FunctionHeaderParserRuleCall_1_0=ruleFunctionHeader{ announce($FunctionHeaderParserRuleCall_1_0.start, $FunctionHeaderParserRuleCall_1_0.stop, grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_1_0()); }
-		FunctionBodyParserRuleCall_1_1=norm2_FunctionBody{ announce($FunctionBodyParserRuleCall_1_1.start, $FunctionBodyParserRuleCall_1_1.stop, grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_1_1()); }
+		FunctionHeaderParserRuleCall_1_0=ruleFunctionHeader{ announce($FunctionHeaderParserRuleCall_1_0.start, $FunctionHeaderParserRuleCall_1_0.stop, grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_1_0()); }
+		FunctionBodyParserRuleCall_1_1=norm2_FunctionBody{ announce($FunctionBodyParserRuleCall_1_1.start, $FunctionBodyParserRuleCall_1_1.stop, grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_1_1()); }
 	)
 )
 ;
 
 
-// Rule FunctionImplNoKeyword
-norm5_FunctionImplNoKeyword
+// Rule FunctionImplWithoutKeyword
+norm5_FunctionImplWithoutKeyword
 @init {
 }:
 (
@@ -1418,24 +1418,24 @@ norm5_FunctionImplNoKeyword
 			(
 				GeneratorAsteriskKeyword_0_0_0=Asterisk
 				 {
-					announce($GeneratorAsteriskKeyword_0_0_0, grammarAccess.getFunctionImplNoKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
+					announce($GeneratorAsteriskKeyword_0_0_0, grammarAccess.getFunctionImplWithoutKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
 				}
 			)
 		)
-		FunctionHeaderParserRuleCall_0_1=norm2_FunctionHeader{ announce($FunctionHeaderParserRuleCall_0_1.start, $FunctionHeaderParserRuleCall_0_1.stop, grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_0_1()); }
-		FunctionBodyParserRuleCall_0_2=norm3_FunctionBody{ announce($FunctionBodyParserRuleCall_0_2.start, $FunctionBodyParserRuleCall_0_2.stop, grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_0_2()); }
+		FunctionHeaderParserRuleCall_0_1=norm2_FunctionHeader{ announce($FunctionHeaderParserRuleCall_0_1.start, $FunctionHeaderParserRuleCall_0_1.stop, grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_0_1()); }
+		FunctionBodyParserRuleCall_0_2=norm3_FunctionBody{ announce($FunctionBodyParserRuleCall_0_2.start, $FunctionBodyParserRuleCall_0_2.stop, grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_0_2()); }
 	)
 	    |
 	(
-		FunctionHeaderParserRuleCall_1_0=norm1_FunctionHeader{ announce($FunctionHeaderParserRuleCall_1_0.start, $FunctionHeaderParserRuleCall_1_0.stop, grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_1_0()); }
-		FunctionBodyParserRuleCall_1_1=norm2_FunctionBody{ announce($FunctionBodyParserRuleCall_1_1.start, $FunctionBodyParserRuleCall_1_1.stop, grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_1_1()); }
+		FunctionHeaderParserRuleCall_1_0=norm1_FunctionHeader{ announce($FunctionHeaderParserRuleCall_1_0.start, $FunctionHeaderParserRuleCall_1_0.stop, grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_1_0()); }
+		FunctionBodyParserRuleCall_1_1=norm2_FunctionBody{ announce($FunctionBodyParserRuleCall_1_1.start, $FunctionBodyParserRuleCall_1_1.stop, grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_1_1()); }
 	)
 )
 ;
 
 
-// Rule FunctionImplNoKeyword
-norm6_FunctionImplNoKeyword
+// Rule FunctionImplWithoutKeyword
+norm6_FunctionImplWithoutKeyword
 @init {
 }:
 (
@@ -1444,24 +1444,24 @@ norm6_FunctionImplNoKeyword
 			(
 				GeneratorAsteriskKeyword_0_0_0=Asterisk
 				 {
-					announce($GeneratorAsteriskKeyword_0_0_0, grammarAccess.getFunctionImplNoKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
+					announce($GeneratorAsteriskKeyword_0_0_0, grammarAccess.getFunctionImplWithoutKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
 				}
 			)
 		)
-		FunctionHeaderParserRuleCall_0_1=norm3_FunctionHeader{ announce($FunctionHeaderParserRuleCall_0_1.start, $FunctionHeaderParserRuleCall_0_1.stop, grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_0_1()); }
-		FunctionBodyParserRuleCall_0_2=norm3_FunctionBody{ announce($FunctionBodyParserRuleCall_0_2.start, $FunctionBodyParserRuleCall_0_2.stop, grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_0_2()); }
+		FunctionHeaderParserRuleCall_0_1=norm3_FunctionHeader{ announce($FunctionHeaderParserRuleCall_0_1.start, $FunctionHeaderParserRuleCall_0_1.stop, grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_0_1()); }
+		FunctionBodyParserRuleCall_0_2=norm3_FunctionBody{ announce($FunctionBodyParserRuleCall_0_2.start, $FunctionBodyParserRuleCall_0_2.stop, grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_0_2()); }
 	)
 	    |
 	(
-		FunctionHeaderParserRuleCall_1_0=ruleFunctionHeader{ announce($FunctionHeaderParserRuleCall_1_0.start, $FunctionHeaderParserRuleCall_1_0.stop, grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_1_0()); }
-		FunctionBodyParserRuleCall_1_1=norm2_FunctionBody{ announce($FunctionBodyParserRuleCall_1_1.start, $FunctionBodyParserRuleCall_1_1.stop, grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_1_1()); }
+		FunctionHeaderParserRuleCall_1_0=ruleFunctionHeader{ announce($FunctionHeaderParserRuleCall_1_0.start, $FunctionHeaderParserRuleCall_1_0.stop, grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_1_0()); }
+		FunctionBodyParserRuleCall_1_1=norm2_FunctionBody{ announce($FunctionBodyParserRuleCall_1_1.start, $FunctionBodyParserRuleCall_1_1.stop, grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_1_1()); }
 	)
 )
 ;
 
 
-// Rule FunctionImplNoKeyword
-norm7_FunctionImplNoKeyword
+// Rule FunctionImplWithoutKeyword
+norm7_FunctionImplWithoutKeyword
 @init {
 }:
 (
@@ -1470,17 +1470,17 @@ norm7_FunctionImplNoKeyword
 			(
 				GeneratorAsteriskKeyword_0_0_0=Asterisk
 				 {
-					announce($GeneratorAsteriskKeyword_0_0_0, grammarAccess.getFunctionImplNoKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
+					announce($GeneratorAsteriskKeyword_0_0_0, grammarAccess.getFunctionImplWithoutKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
 				}
 			)
 		)
-		FunctionHeaderParserRuleCall_0_1=norm3_FunctionHeader{ announce($FunctionHeaderParserRuleCall_0_1.start, $FunctionHeaderParserRuleCall_0_1.stop, grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_0_1()); }
-		FunctionBodyParserRuleCall_0_2=norm3_FunctionBody{ announce($FunctionBodyParserRuleCall_0_2.start, $FunctionBodyParserRuleCall_0_2.stop, grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_0_2()); }
+		FunctionHeaderParserRuleCall_0_1=norm3_FunctionHeader{ announce($FunctionHeaderParserRuleCall_0_1.start, $FunctionHeaderParserRuleCall_0_1.stop, grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_0_1()); }
+		FunctionBodyParserRuleCall_0_2=norm3_FunctionBody{ announce($FunctionBodyParserRuleCall_0_2.start, $FunctionBodyParserRuleCall_0_2.stop, grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_0_2()); }
 	)
 	    |
 	(
-		FunctionHeaderParserRuleCall_1_0=norm1_FunctionHeader{ announce($FunctionHeaderParserRuleCall_1_0.start, $FunctionHeaderParserRuleCall_1_0.stop, grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_1_0()); }
-		FunctionBodyParserRuleCall_1_1=norm2_FunctionBody{ announce($FunctionBodyParserRuleCall_1_1.start, $FunctionBodyParserRuleCall_1_1.stop, grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_1_1()); }
+		FunctionHeaderParserRuleCall_1_0=norm1_FunctionHeader{ announce($FunctionHeaderParserRuleCall_1_0.start, $FunctionHeaderParserRuleCall_1_0.stop, grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_1_0()); }
+		FunctionBodyParserRuleCall_1_1=norm2_FunctionBody{ announce($FunctionBodyParserRuleCall_1_1.start, $FunctionBodyParserRuleCall_1_1.stop, grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_1_1()); }
 	)
 )
 ;
@@ -1795,7 +1795,7 @@ ruleAsyncFunctionExpression
 			}
 		)
 	)
-	FunctionImplNoKeywordParserRuleCall_1=norm6_FunctionImplNoKeyword{ announce($FunctionImplNoKeywordParserRuleCall_1.start, $FunctionImplNoKeywordParserRuleCall_1.stop, grammarAccess.getAsyncFunctionExpressionAccess().getFunctionImplNoKeywordParserRuleCall_1()); }
+	FunctionImplWithoutKeywordParserRuleCall_1=norm6_FunctionImplWithoutKeyword{ announce($FunctionImplWithoutKeywordParserRuleCall_1.start, $FunctionImplWithoutKeywordParserRuleCall_1.stop, grammarAccess.getAsyncFunctionExpressionAccess().getFunctionImplWithoutKeywordParserRuleCall_1()); }
 )
 ;
 

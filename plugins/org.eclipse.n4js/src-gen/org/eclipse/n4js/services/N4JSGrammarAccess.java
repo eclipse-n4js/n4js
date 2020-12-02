@@ -1395,24 +1395,24 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.FunctionImpl");
 		private final Group cGroup = (Group)rule.eContents().get(0);
 		private final Keyword cFunctionKeyword_0 = (Keyword)cGroup.eContents().get(0);
-		private final RuleCall cFunctionImplNoKeywordParserRuleCall_1 = (RuleCall)cGroup.eContents().get(1);
+		private final RuleCall cFunctionImplWithoutKeywordParserRuleCall_1 = (RuleCall)cGroup.eContents().get(1);
 		
 		//fragment FunctionImpl <Yield, YieldIfGenerator, Expression> *:
 		//	'function'
-		//	FunctionImplNoKeyword<Yield,YieldIfGenerator,Expression>;
+		//	FunctionImplWithoutKeyword<Yield,YieldIfGenerator,Expression>;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//'function' FunctionImplNoKeyword<Yield,YieldIfGenerator,Expression>
+		//'function' FunctionImplWithoutKeyword<Yield,YieldIfGenerator,Expression>
 		public Group getGroup() { return cGroup; }
 		
 		//'function'
 		public Keyword getFunctionKeyword_0() { return cFunctionKeyword_0; }
 		
-		//FunctionImplNoKeyword<Yield,YieldIfGenerator,Expression>
-		public RuleCall getFunctionImplNoKeywordParserRuleCall_1() { return cFunctionImplNoKeywordParserRuleCall_1; }
+		//FunctionImplWithoutKeyword<Yield,YieldIfGenerator,Expression>
+		public RuleCall getFunctionImplWithoutKeywordParserRuleCall_1() { return cFunctionImplWithoutKeywordParserRuleCall_1; }
 	}
-	public class FunctionImplNoKeywordElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.FunctionImplNoKeyword");
+	public class FunctionImplWithoutKeywordElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.FunctionImplWithoutKeyword");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(0);
 		private final Group cGroup_0 = (Group)cAlternatives.eContents().get(0);
 		private final Assignment cGeneratorAssignment_0_0 = (Assignment)cGroup_0.eContents().get(0);
@@ -1423,7 +1423,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cFunctionHeaderParserRuleCall_1_0 = (RuleCall)cGroup_1.eContents().get(0);
 		private final RuleCall cFunctionBodyParserRuleCall_1_1 = (RuleCall)cGroup_1.eContents().get(1);
 		
-		//fragment FunctionImplNoKeyword <Yield, YieldIfGenerator, Expression> *:
+		//fragment FunctionImplWithoutKeyword <Yield, YieldIfGenerator, Expression> *:
 		//	generator?='*' FunctionHeader<YieldIfGenerator,Generator=true> FunctionBody<Yield=true,Expression> |
 		//	FunctionHeader<Yield,Generator=false> FunctionBody<Yield=false,Expression>;
 		@Override public ParserRule getRule() { return rule; }
@@ -1599,17 +1599,17 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cDeclaredAsyncAsyncKeyword_0_0_0_0 = (Keyword)cDeclaredAsyncAssignment_0_0_0.eContents().get(0);
 		private final RuleCall cNoLineTerminatorParserRuleCall_0_0_1 = (RuleCall)cGroup_0_0.eContents().get(1);
 		private final Keyword cFunctionKeyword_0_0_2 = (Keyword)cGroup_0_0.eContents().get(2);
-		private final RuleCall cFunctionImplNoKeywordParserRuleCall_1 = (RuleCall)cGroup.eContents().get(1);
+		private final RuleCall cFunctionImplWithoutKeywordParserRuleCall_1 = (RuleCall)cGroup.eContents().get(1);
 		
 		///**
 		// * We cannot use fragments here since we have to combine the terminals into a syntactic predicate.
 		// */ AsyncFunctionExpression FunctionExpression:
 		//	=> (declaredAsync?='async' NoLineTerminator 'function')
-		//	FunctionImplNoKeyword<Yield=false,YieldIfGenerator=true,Expression=true>;
+		//	FunctionImplWithoutKeyword<Yield=false,YieldIfGenerator=true,Expression=true>;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//=> (declaredAsync?='async' NoLineTerminator 'function')
-		//FunctionImplNoKeyword<Yield=false,YieldIfGenerator=true,Expression=true>
+		//FunctionImplWithoutKeyword<Yield=false,YieldIfGenerator=true,Expression=true>
 		public Group getGroup() { return cGroup; }
 		
 		//=> (declaredAsync?='async' NoLineTerminator 'function')
@@ -1630,8 +1630,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//'function'
 		public Keyword getFunctionKeyword_0_0_2() { return cFunctionKeyword_0_0_2; }
 		
-		//FunctionImplNoKeyword<Yield=false,YieldIfGenerator=true,Expression=true>
-		public RuleCall getFunctionImplNoKeywordParserRuleCall_1() { return cFunctionImplNoKeywordParserRuleCall_1; }
+		//FunctionImplWithoutKeyword<Yield=false,YieldIfGenerator=true,Expression=true>
+		public RuleCall getFunctionImplWithoutKeywordParserRuleCall_1() { return cFunctionImplWithoutKeywordParserRuleCall_1; }
 	}
 	public class ArrowExpressionElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.ArrowExpression");
@@ -10295,7 +10295,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	private final FunctionDeclarationElements pFunctionDeclaration;
 	private final AsyncNoTrailingLineBreakElements pAsyncNoTrailingLineBreak;
 	private final FunctionImplElements pFunctionImpl;
-	private final FunctionImplNoKeywordElements pFunctionImplNoKeyword;
+	private final FunctionImplWithoutKeywordElements pFunctionImplWithoutKeyword;
 	private final FunctionHeaderElements pFunctionHeader;
 	private final FunctionBodyElements pFunctionBody;
 	private final AnnotatedFunctionDeclarationElements pAnnotatedFunctionDeclaration;
@@ -10553,7 +10553,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		this.pFunctionDeclaration = new FunctionDeclarationElements();
 		this.pAsyncNoTrailingLineBreak = new AsyncNoTrailingLineBreakElements();
 		this.pFunctionImpl = new FunctionImplElements();
-		this.pFunctionImplNoKeyword = new FunctionImplNoKeywordElements();
+		this.pFunctionImplWithoutKeyword = new FunctionImplWithoutKeywordElements();
 		this.pFunctionHeader = new FunctionHeaderElements();
 		this.pFunctionBody = new FunctionBodyElements();
 		this.pAnnotatedFunctionDeclaration = new AnnotatedFunctionDeclarationElements();
@@ -11084,7 +11084,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//fragment FunctionImpl <Yield, YieldIfGenerator, Expression> *:
 	//	'function'
-	//	FunctionImplNoKeyword<Yield,YieldIfGenerator,Expression>;
+	//	FunctionImplWithoutKeyword<Yield,YieldIfGenerator,Expression>;
 	public FunctionImplElements getFunctionImplAccess() {
 		return pFunctionImpl;
 	}
@@ -11093,15 +11093,15 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		return getFunctionImplAccess().getRule();
 	}
 	
-	//fragment FunctionImplNoKeyword <Yield, YieldIfGenerator, Expression> *:
+	//fragment FunctionImplWithoutKeyword <Yield, YieldIfGenerator, Expression> *:
 	//	generator?='*' FunctionHeader<YieldIfGenerator,Generator=true> FunctionBody<Yield=true,Expression> |
 	//	FunctionHeader<Yield,Generator=false> FunctionBody<Yield=false,Expression>;
-	public FunctionImplNoKeywordElements getFunctionImplNoKeywordAccess() {
-		return pFunctionImplNoKeyword;
+	public FunctionImplWithoutKeywordElements getFunctionImplWithoutKeywordAccess() {
+		return pFunctionImplWithoutKeyword;
 	}
 	
-	public ParserRule getFunctionImplNoKeywordRule() {
-		return getFunctionImplNoKeywordAccess().getRule();
+	public ParserRule getFunctionImplWithoutKeywordRule() {
+		return getFunctionImplWithoutKeywordAccess().getRule();
 	}
 	
 	//fragment FunctionHeader <Yield, Generator> *:
@@ -11156,7 +11156,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	// * We cannot use fragments here since we have to combine the terminals into a syntactic predicate.
 	// */ AsyncFunctionExpression FunctionExpression:
 	//	=> (declaredAsync?='async' NoLineTerminator 'function')
-	//	FunctionImplNoKeyword<Yield=false,YieldIfGenerator=true,Expression=true>;
+	//	FunctionImplWithoutKeyword<Yield=false,YieldIfGenerator=true,Expression=true>;
 	public AsyncFunctionExpressionElements getAsyncFunctionExpressionAccess() {
 		return pAsyncFunctionExpression;
 	}

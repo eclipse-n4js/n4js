@@ -482,23 +482,23 @@ ruleAsyncNoTrailingLineBreak:
 // Rule FunctionImpl
 ruleFunctionImpl:
 	'function'
-	ruleFunctionImplNoKeyword
+	ruleFunctionImplWithoutKeyword
 ;
 
 // Rule FunctionImpl
 norm3_FunctionImpl:
 	'function'
-	norm3_FunctionImplNoKeyword
+	norm3_FunctionImplWithoutKeyword
 ;
 
 // Rule FunctionImpl
 norm6_FunctionImpl:
 	'function'
-	norm6_FunctionImplNoKeyword
+	norm6_FunctionImplWithoutKeyword
 ;
 
-// Rule FunctionImplNoKeyword
-ruleFunctionImplNoKeyword:
+// Rule FunctionImplWithoutKeyword
+ruleFunctionImplWithoutKeyword:
 	(
 		'*'
 		norm2_FunctionHeader
@@ -509,8 +509,8 @@ ruleFunctionImplNoKeyword:
 	)
 ;
 
-// Rule FunctionImplNoKeyword
-norm1_FunctionImplNoKeyword:
+// Rule FunctionImplWithoutKeyword
+norm1_FunctionImplWithoutKeyword:
 	(
 		'*'
 		norm2_FunctionHeader
@@ -521,8 +521,8 @@ norm1_FunctionImplNoKeyword:
 	)
 ;
 
-// Rule FunctionImplNoKeyword
-norm2_FunctionImplNoKeyword:
+// Rule FunctionImplWithoutKeyword
+norm2_FunctionImplWithoutKeyword:
 	(
 		'*'
 		norm3_FunctionHeader
@@ -533,8 +533,8 @@ norm2_FunctionImplNoKeyword:
 	)
 ;
 
-// Rule FunctionImplNoKeyword
-norm3_FunctionImplNoKeyword:
+// Rule FunctionImplWithoutKeyword
+norm3_FunctionImplWithoutKeyword:
 	(
 		'*'
 		norm3_FunctionHeader
@@ -545,8 +545,8 @@ norm3_FunctionImplNoKeyword:
 	)
 ;
 
-// Rule FunctionImplNoKeyword
-norm4_FunctionImplNoKeyword:
+// Rule FunctionImplWithoutKeyword
+norm4_FunctionImplWithoutKeyword:
 	(
 		'*'
 		norm2_FunctionHeader
@@ -557,8 +557,8 @@ norm4_FunctionImplNoKeyword:
 	)
 ;
 
-// Rule FunctionImplNoKeyword
-norm5_FunctionImplNoKeyword:
+// Rule FunctionImplWithoutKeyword
+norm5_FunctionImplWithoutKeyword:
 	(
 		'*'
 		norm2_FunctionHeader
@@ -569,8 +569,8 @@ norm5_FunctionImplNoKeyword:
 	)
 ;
 
-// Rule FunctionImplNoKeyword
-norm6_FunctionImplNoKeyword:
+// Rule FunctionImplWithoutKeyword
+norm6_FunctionImplWithoutKeyword:
 	(
 		'*'
 		norm3_FunctionHeader
@@ -581,8 +581,8 @@ norm6_FunctionImplNoKeyword:
 	)
 ;
 
-// Rule FunctionImplNoKeyword
-norm7_FunctionImplNoKeyword:
+// Rule FunctionImplWithoutKeyword
+norm7_FunctionImplWithoutKeyword:
 	(
 		'*'
 		norm3_FunctionHeader
@@ -737,7 +737,7 @@ ruleAsyncFunctionExpression:
 		ruleNoLineTerminator
 		'function'
 	)
-	norm6_FunctionImplNoKeyword
+	norm6_FunctionImplWithoutKeyword
 ;
 
 // Rule ArrowExpression

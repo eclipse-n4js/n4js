@@ -121,8 +121,7 @@ class IterableComputer extends TypeSystemHelperStrategy {
 			// structural but may still be implemented explicitly which would be simpler for us)
 			val results = newArrayList;
 			for(superTypeRef : AllSuperTypeRefsCollector.collect(declType)) {
-				val superDeclType = superTypeRef?.declaredType;
-				if(superDeclType===iterableType || (includeIterableN && G.isIterableN(superTypeRef))) {
+				if(superTypeRef?.declaredType===iterableType || (includeIterableN && G.isIterableN(superTypeRef))) {
 					// next if() is important: sorts out the super-type references to IterableN-1 in IterableN
 					// (but only required if including the IterableN)
 					val isContainedInIterable = G.isIterableN(superTypeRef.eContainer);

@@ -1478,7 +1478,6 @@ public class TypeUtils {
 	 * WARNING: this method will resolve proxies in 'successType' (in order to check if it points to type 'void')
 	 */
 	public static ParameterizedTypeRef createGeneratorTypeRef(BuiltInTypeScope scope, FunctionDefinition funDef) {
-
 		Objects.requireNonNull(scope);
 		Objects.requireNonNull(funDef);
 

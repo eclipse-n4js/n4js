@@ -9,13 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest
-
-	IssueConfiguration {
-		IssueCode "EXP_MISSNG_AWAIT_FOR_ASYNC_TARGET" {enabled=false}
-	}
-
-END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
 
 
 const asyncIterable = {

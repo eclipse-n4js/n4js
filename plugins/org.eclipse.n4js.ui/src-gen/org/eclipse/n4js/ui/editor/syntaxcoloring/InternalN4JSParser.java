@@ -2878,7 +2878,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         InternalN4JSParser.ruleFunctionImpl_return retval = new InternalN4JSParser.ruleFunctionImpl_return();
         retval.start = input.LT(1);
         Token FunctionKeyword_0=null;
-        InternalN4JSParser.ruleFunctionImplNoKeyword_return FunctionImplNoKeywordParserRuleCall_1 = null;
+        InternalN4JSParser.ruleFunctionImplWithoutKeyword_return FunctionImplWithoutKeywordParserRuleCall_1 = null;
         try {
             {
             {
@@ -2887,11 +2887,11 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
               		announce(FunctionKeyword_0, grammarAccess.getFunctionImplAccess().getFunctionKeyword_0());
             }
             pushFollow(FOLLOW_2);
-            FunctionImplNoKeywordParserRuleCall_1=ruleFunctionImplNoKeyword();
+            FunctionImplWithoutKeywordParserRuleCall_1=ruleFunctionImplWithoutKeyword();
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) {
-               announce((FunctionImplNoKeywordParserRuleCall_1!=null?((Token)FunctionImplNoKeywordParserRuleCall_1.start):null), (FunctionImplNoKeywordParserRuleCall_1!=null?((Token)FunctionImplNoKeywordParserRuleCall_1.stop):null), grammarAccess.getFunctionImplAccess().getFunctionImplNoKeywordParserRuleCall_1()); 
+               announce((FunctionImplWithoutKeywordParserRuleCall_1!=null?((Token)FunctionImplWithoutKeywordParserRuleCall_1.start):null), (FunctionImplWithoutKeywordParserRuleCall_1!=null?((Token)FunctionImplWithoutKeywordParserRuleCall_1.stop):null), grammarAccess.getFunctionImplAccess().getFunctionImplWithoutKeywordParserRuleCall_1()); 
             }
             }
             }
@@ -2910,7 +2910,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         InternalN4JSParser.norm3_FunctionImpl_return retval = new InternalN4JSParser.norm3_FunctionImpl_return();
         retval.start = input.LT(1);
         Token FunctionKeyword_0=null;
-        InternalN4JSParser.norm3_FunctionImplNoKeyword_return FunctionImplNoKeywordParserRuleCall_1 = null;
+        InternalN4JSParser.norm3_FunctionImplWithoutKeyword_return FunctionImplWithoutKeywordParserRuleCall_1 = null;
         try {
             {
             {
@@ -2919,11 +2919,11 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
               		announce(FunctionKeyword_0, grammarAccess.getFunctionImplAccess().getFunctionKeyword_0());
             }
             pushFollow(FOLLOW_2);
-            FunctionImplNoKeywordParserRuleCall_1=norm3_FunctionImplNoKeyword();
+            FunctionImplWithoutKeywordParserRuleCall_1=norm3_FunctionImplWithoutKeyword();
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) {
-               announce((FunctionImplNoKeywordParserRuleCall_1!=null?((Token)FunctionImplNoKeywordParserRuleCall_1.start):null), (FunctionImplNoKeywordParserRuleCall_1!=null?((Token)FunctionImplNoKeywordParserRuleCall_1.stop):null), grammarAccess.getFunctionImplAccess().getFunctionImplNoKeywordParserRuleCall_1()); 
+               announce((FunctionImplWithoutKeywordParserRuleCall_1!=null?((Token)FunctionImplWithoutKeywordParserRuleCall_1.start):null), (FunctionImplWithoutKeywordParserRuleCall_1!=null?((Token)FunctionImplWithoutKeywordParserRuleCall_1.stop):null), grammarAccess.getFunctionImplAccess().getFunctionImplWithoutKeywordParserRuleCall_1()); 
             }
             }
             }
@@ -2942,7 +2942,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         InternalN4JSParser.norm6_FunctionImpl_return retval = new InternalN4JSParser.norm6_FunctionImpl_return();
         retval.start = input.LT(1);
         Token FunctionKeyword_0=null;
-        InternalN4JSParser.norm6_FunctionImplNoKeyword_return FunctionImplNoKeywordParserRuleCall_1 = null;
+        InternalN4JSParser.norm6_FunctionImplWithoutKeyword_return FunctionImplWithoutKeywordParserRuleCall_1 = null;
         try {
             {
             {
@@ -2951,11 +2951,11 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
               		announce(FunctionKeyword_0, grammarAccess.getFunctionImplAccess().getFunctionKeyword_0());
             }
             pushFollow(FOLLOW_2);
-            FunctionImplNoKeywordParserRuleCall_1=norm6_FunctionImplNoKeyword();
+            FunctionImplWithoutKeywordParserRuleCall_1=norm6_FunctionImplWithoutKeyword();
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) {
-               announce((FunctionImplNoKeywordParserRuleCall_1!=null?((Token)FunctionImplNoKeywordParserRuleCall_1.start):null), (FunctionImplNoKeywordParserRuleCall_1!=null?((Token)FunctionImplNoKeywordParserRuleCall_1.stop):null), grammarAccess.getFunctionImplAccess().getFunctionImplNoKeywordParserRuleCall_1()); 
+               announce((FunctionImplWithoutKeywordParserRuleCall_1!=null?((Token)FunctionImplWithoutKeywordParserRuleCall_1.start):null), (FunctionImplWithoutKeywordParserRuleCall_1!=null?((Token)FunctionImplWithoutKeywordParserRuleCall_1.stop):null), grammarAccess.getFunctionImplAccess().getFunctionImplWithoutKeywordParserRuleCall_1()); 
             }
             }
             }
@@ -2968,10 +2968,10 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         }
         return retval;
     }
-    public static class ruleFunctionImplNoKeyword_return extends ParserRuleReturnScope {
+    public static class ruleFunctionImplWithoutKeyword_return extends ParserRuleReturnScope {
     };
-    public final InternalN4JSParser.ruleFunctionImplNoKeyword_return ruleFunctionImplNoKeyword() throws RecognitionException {
-        InternalN4JSParser.ruleFunctionImplNoKeyword_return retval = new InternalN4JSParser.ruleFunctionImplNoKeyword_return();
+    public final InternalN4JSParser.ruleFunctionImplWithoutKeyword_return ruleFunctionImplWithoutKeyword() throws RecognitionException {
+        InternalN4JSParser.ruleFunctionImplWithoutKeyword_return retval = new InternalN4JSParser.ruleFunctionImplWithoutKeyword_return();
         retval.start = input.LT(1);
         Token GeneratorAsteriskKeyword_0_0_0=null;
         InternalN4JSParser.norm2_FunctionHeader_return FunctionHeaderParserRuleCall_0_1 = null;
@@ -3002,7 +3002,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     GeneratorAsteriskKeyword_0_0_0=(Token)match(input,Asterisk,FOLLOW_39); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
-                      					announce(GeneratorAsteriskKeyword_0_0_0, grammarAccess.getFunctionImplNoKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
+                      					announce(GeneratorAsteriskKeyword_0_0_0, grammarAccess.getFunctionImplWithoutKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
                     }
                     }
                     }
@@ -3011,14 +3011,14 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     state._fsp--;
                     if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
-                       announce((FunctionHeaderParserRuleCall_0_1!=null?((Token)FunctionHeaderParserRuleCall_0_1.start):null), (FunctionHeaderParserRuleCall_0_1!=null?((Token)FunctionHeaderParserRuleCall_0_1.stop):null), grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_0_1()); 
+                       announce((FunctionHeaderParserRuleCall_0_1!=null?((Token)FunctionHeaderParserRuleCall_0_1.start):null), (FunctionHeaderParserRuleCall_0_1!=null?((Token)FunctionHeaderParserRuleCall_0_1.stop):null), grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_0_1()); 
                     }
                     pushFollow(FOLLOW_2);
                     FunctionBodyParserRuleCall_0_2=norm1_FunctionBody();
                     state._fsp--;
                     if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
-                       announce((FunctionBodyParserRuleCall_0_2!=null?((Token)FunctionBodyParserRuleCall_0_2.start):null), (FunctionBodyParserRuleCall_0_2!=null?((Token)FunctionBodyParserRuleCall_0_2.stop):null), grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_0_2()); 
+                       announce((FunctionBodyParserRuleCall_0_2!=null?((Token)FunctionBodyParserRuleCall_0_2.start):null), (FunctionBodyParserRuleCall_0_2!=null?((Token)FunctionBodyParserRuleCall_0_2.stop):null), grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_0_2()); 
                     }
                     }
                     }
@@ -3031,14 +3031,14 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     state._fsp--;
                     if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
-                       announce((FunctionHeaderParserRuleCall_1_0!=null?((Token)FunctionHeaderParserRuleCall_1_0.start):null), (FunctionHeaderParserRuleCall_1_0!=null?((Token)FunctionHeaderParserRuleCall_1_0.stop):null), grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_1_0()); 
+                       announce((FunctionHeaderParserRuleCall_1_0!=null?((Token)FunctionHeaderParserRuleCall_1_0.start):null), (FunctionHeaderParserRuleCall_1_0!=null?((Token)FunctionHeaderParserRuleCall_1_0.stop):null), grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_1_0()); 
                     }
                     pushFollow(FOLLOW_2);
                     FunctionBodyParserRuleCall_1_1=ruleFunctionBody();
                     state._fsp--;
                     if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
-                       announce((FunctionBodyParserRuleCall_1_1!=null?((Token)FunctionBodyParserRuleCall_1_1.start):null), (FunctionBodyParserRuleCall_1_1!=null?((Token)FunctionBodyParserRuleCall_1_1.stop):null), grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_1_1()); 
+                       announce((FunctionBodyParserRuleCall_1_1!=null?((Token)FunctionBodyParserRuleCall_1_1.start):null), (FunctionBodyParserRuleCall_1_1!=null?((Token)FunctionBodyParserRuleCall_1_1.stop):null), grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_1_1()); 
                     }
                     }
                     }
@@ -3054,7 +3054,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         }
         return retval;
     }
-    public final void norm1_FunctionImplNoKeyword() throws RecognitionException {
+    public final void norm1_FunctionImplWithoutKeyword() throws RecognitionException {
         Token GeneratorAsteriskKeyword_0_0_0=null;
         InternalN4JSParser.norm2_FunctionHeader_return FunctionHeaderParserRuleCall_0_1 = null;
         InternalN4JSParser.norm1_FunctionBody_return FunctionBodyParserRuleCall_0_2 = null;
@@ -3084,7 +3084,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     GeneratorAsteriskKeyword_0_0_0=(Token)match(input,Asterisk,FOLLOW_39); if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                      					announce(GeneratorAsteriskKeyword_0_0_0, grammarAccess.getFunctionImplNoKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
+                      					announce(GeneratorAsteriskKeyword_0_0_0, grammarAccess.getFunctionImplWithoutKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
                     }
                     }
                     }
@@ -3093,14 +3093,14 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     state._fsp--;
                     if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       announce((FunctionHeaderParserRuleCall_0_1!=null?((Token)FunctionHeaderParserRuleCall_0_1.start):null), (FunctionHeaderParserRuleCall_0_1!=null?((Token)FunctionHeaderParserRuleCall_0_1.stop):null), grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_0_1()); 
+                       announce((FunctionHeaderParserRuleCall_0_1!=null?((Token)FunctionHeaderParserRuleCall_0_1.start):null), (FunctionHeaderParserRuleCall_0_1!=null?((Token)FunctionHeaderParserRuleCall_0_1.stop):null), grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_0_1()); 
                     }
                     pushFollow(FOLLOW_2);
                     FunctionBodyParserRuleCall_0_2=norm1_FunctionBody();
                     state._fsp--;
                     if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       announce((FunctionBodyParserRuleCall_0_2!=null?((Token)FunctionBodyParserRuleCall_0_2.start):null), (FunctionBodyParserRuleCall_0_2!=null?((Token)FunctionBodyParserRuleCall_0_2.stop):null), grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_0_2()); 
+                       announce((FunctionBodyParserRuleCall_0_2!=null?((Token)FunctionBodyParserRuleCall_0_2.start):null), (FunctionBodyParserRuleCall_0_2!=null?((Token)FunctionBodyParserRuleCall_0_2.stop):null), grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_0_2()); 
                     }
                     }
                     }
@@ -3113,14 +3113,14 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     state._fsp--;
                     if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       announce((FunctionHeaderParserRuleCall_1_0!=null?((Token)FunctionHeaderParserRuleCall_1_0.start):null), (FunctionHeaderParserRuleCall_1_0!=null?((Token)FunctionHeaderParserRuleCall_1_0.stop):null), grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_1_0()); 
+                       announce((FunctionHeaderParserRuleCall_1_0!=null?((Token)FunctionHeaderParserRuleCall_1_0.start):null), (FunctionHeaderParserRuleCall_1_0!=null?((Token)FunctionHeaderParserRuleCall_1_0.stop):null), grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_1_0()); 
                     }
                     pushFollow(FOLLOW_2);
                     FunctionBodyParserRuleCall_1_1=ruleFunctionBody();
                     state._fsp--;
                     if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       announce((FunctionBodyParserRuleCall_1_1!=null?((Token)FunctionBodyParserRuleCall_1_1.start):null), (FunctionBodyParserRuleCall_1_1!=null?((Token)FunctionBodyParserRuleCall_1_1.stop):null), grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_1_1()); 
+                       announce((FunctionBodyParserRuleCall_1_1!=null?((Token)FunctionBodyParserRuleCall_1_1.start):null), (FunctionBodyParserRuleCall_1_1!=null?((Token)FunctionBodyParserRuleCall_1_1.stop):null), grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_1_1()); 
                     }
                     }
                     }
@@ -3135,7 +3135,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         }
         return ;
     }
-    public final void norm2_FunctionImplNoKeyword() throws RecognitionException {
+    public final void norm2_FunctionImplWithoutKeyword() throws RecognitionException {
         Token GeneratorAsteriskKeyword_0_0_0=null;
         InternalN4JSParser.norm3_FunctionHeader_return FunctionHeaderParserRuleCall_0_1 = null;
         InternalN4JSParser.norm1_FunctionBody_return FunctionBodyParserRuleCall_0_2 = null;
@@ -3165,7 +3165,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     GeneratorAsteriskKeyword_0_0_0=(Token)match(input,Asterisk,FOLLOW_39); if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                      					announce(GeneratorAsteriskKeyword_0_0_0, grammarAccess.getFunctionImplNoKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
+                      					announce(GeneratorAsteriskKeyword_0_0_0, grammarAccess.getFunctionImplWithoutKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
                     }
                     }
                     }
@@ -3174,14 +3174,14 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     state._fsp--;
                     if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       announce((FunctionHeaderParserRuleCall_0_1!=null?((Token)FunctionHeaderParserRuleCall_0_1.start):null), (FunctionHeaderParserRuleCall_0_1!=null?((Token)FunctionHeaderParserRuleCall_0_1.stop):null), grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_0_1()); 
+                       announce((FunctionHeaderParserRuleCall_0_1!=null?((Token)FunctionHeaderParserRuleCall_0_1.start):null), (FunctionHeaderParserRuleCall_0_1!=null?((Token)FunctionHeaderParserRuleCall_0_1.stop):null), grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_0_1()); 
                     }
                     pushFollow(FOLLOW_2);
                     FunctionBodyParserRuleCall_0_2=norm1_FunctionBody();
                     state._fsp--;
                     if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       announce((FunctionBodyParserRuleCall_0_2!=null?((Token)FunctionBodyParserRuleCall_0_2.start):null), (FunctionBodyParserRuleCall_0_2!=null?((Token)FunctionBodyParserRuleCall_0_2.stop):null), grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_0_2()); 
+                       announce((FunctionBodyParserRuleCall_0_2!=null?((Token)FunctionBodyParserRuleCall_0_2.start):null), (FunctionBodyParserRuleCall_0_2!=null?((Token)FunctionBodyParserRuleCall_0_2.stop):null), grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_0_2()); 
                     }
                     }
                     }
@@ -3194,14 +3194,14 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     state._fsp--;
                     if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       announce((FunctionHeaderParserRuleCall_1_0!=null?((Token)FunctionHeaderParserRuleCall_1_0.start):null), (FunctionHeaderParserRuleCall_1_0!=null?((Token)FunctionHeaderParserRuleCall_1_0.stop):null), grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_1_0()); 
+                       announce((FunctionHeaderParserRuleCall_1_0!=null?((Token)FunctionHeaderParserRuleCall_1_0.start):null), (FunctionHeaderParserRuleCall_1_0!=null?((Token)FunctionHeaderParserRuleCall_1_0.stop):null), grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_1_0()); 
                     }
                     pushFollow(FOLLOW_2);
                     FunctionBodyParserRuleCall_1_1=ruleFunctionBody();
                     state._fsp--;
                     if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       announce((FunctionBodyParserRuleCall_1_1!=null?((Token)FunctionBodyParserRuleCall_1_1.start):null), (FunctionBodyParserRuleCall_1_1!=null?((Token)FunctionBodyParserRuleCall_1_1.stop):null), grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_1_1()); 
+                       announce((FunctionBodyParserRuleCall_1_1!=null?((Token)FunctionBodyParserRuleCall_1_1.start):null), (FunctionBodyParserRuleCall_1_1!=null?((Token)FunctionBodyParserRuleCall_1_1.stop):null), grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_1_1()); 
                     }
                     }
                     }
@@ -3216,10 +3216,10 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         }
         return ;
     }
-    public static class norm3_FunctionImplNoKeyword_return extends ParserRuleReturnScope {
+    public static class norm3_FunctionImplWithoutKeyword_return extends ParserRuleReturnScope {
     };
-    public final InternalN4JSParser.norm3_FunctionImplNoKeyword_return norm3_FunctionImplNoKeyword() throws RecognitionException {
-        InternalN4JSParser.norm3_FunctionImplNoKeyword_return retval = new InternalN4JSParser.norm3_FunctionImplNoKeyword_return();
+    public final InternalN4JSParser.norm3_FunctionImplWithoutKeyword_return norm3_FunctionImplWithoutKeyword() throws RecognitionException {
+        InternalN4JSParser.norm3_FunctionImplWithoutKeyword_return retval = new InternalN4JSParser.norm3_FunctionImplWithoutKeyword_return();
         retval.start = input.LT(1);
         Token GeneratorAsteriskKeyword_0_0_0=null;
         InternalN4JSParser.norm3_FunctionHeader_return FunctionHeaderParserRuleCall_0_1 = null;
@@ -3250,7 +3250,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     GeneratorAsteriskKeyword_0_0_0=(Token)match(input,Asterisk,FOLLOW_39); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
-                      					announce(GeneratorAsteriskKeyword_0_0_0, grammarAccess.getFunctionImplNoKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
+                      					announce(GeneratorAsteriskKeyword_0_0_0, grammarAccess.getFunctionImplWithoutKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
                     }
                     }
                     }
@@ -3259,14 +3259,14 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     state._fsp--;
                     if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
-                       announce((FunctionHeaderParserRuleCall_0_1!=null?((Token)FunctionHeaderParserRuleCall_0_1.start):null), (FunctionHeaderParserRuleCall_0_1!=null?((Token)FunctionHeaderParserRuleCall_0_1.stop):null), grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_0_1()); 
+                       announce((FunctionHeaderParserRuleCall_0_1!=null?((Token)FunctionHeaderParserRuleCall_0_1.start):null), (FunctionHeaderParserRuleCall_0_1!=null?((Token)FunctionHeaderParserRuleCall_0_1.stop):null), grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_0_1()); 
                     }
                     pushFollow(FOLLOW_2);
                     FunctionBodyParserRuleCall_0_2=norm1_FunctionBody();
                     state._fsp--;
                     if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
-                       announce((FunctionBodyParserRuleCall_0_2!=null?((Token)FunctionBodyParserRuleCall_0_2.start):null), (FunctionBodyParserRuleCall_0_2!=null?((Token)FunctionBodyParserRuleCall_0_2.stop):null), grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_0_2()); 
+                       announce((FunctionBodyParserRuleCall_0_2!=null?((Token)FunctionBodyParserRuleCall_0_2.start):null), (FunctionBodyParserRuleCall_0_2!=null?((Token)FunctionBodyParserRuleCall_0_2.stop):null), grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_0_2()); 
                     }
                     }
                     }
@@ -3279,14 +3279,14 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     state._fsp--;
                     if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
-                       announce((FunctionHeaderParserRuleCall_1_0!=null?((Token)FunctionHeaderParserRuleCall_1_0.start):null), (FunctionHeaderParserRuleCall_1_0!=null?((Token)FunctionHeaderParserRuleCall_1_0.stop):null), grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_1_0()); 
+                       announce((FunctionHeaderParserRuleCall_1_0!=null?((Token)FunctionHeaderParserRuleCall_1_0.start):null), (FunctionHeaderParserRuleCall_1_0!=null?((Token)FunctionHeaderParserRuleCall_1_0.stop):null), grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_1_0()); 
                     }
                     pushFollow(FOLLOW_2);
                     FunctionBodyParserRuleCall_1_1=ruleFunctionBody();
                     state._fsp--;
                     if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
-                       announce((FunctionBodyParserRuleCall_1_1!=null?((Token)FunctionBodyParserRuleCall_1_1.start):null), (FunctionBodyParserRuleCall_1_1!=null?((Token)FunctionBodyParserRuleCall_1_1.stop):null), grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_1_1()); 
+                       announce((FunctionBodyParserRuleCall_1_1!=null?((Token)FunctionBodyParserRuleCall_1_1.start):null), (FunctionBodyParserRuleCall_1_1!=null?((Token)FunctionBodyParserRuleCall_1_1.stop):null), grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_1_1()); 
                     }
                     }
                     }
@@ -3302,7 +3302,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         }
         return retval;
     }
-    public final void norm4_FunctionImplNoKeyword() throws RecognitionException {
+    public final void norm4_FunctionImplWithoutKeyword() throws RecognitionException {
         Token GeneratorAsteriskKeyword_0_0_0=null;
         InternalN4JSParser.norm2_FunctionHeader_return FunctionHeaderParserRuleCall_0_1 = null;
         InternalN4JSParser.norm3_FunctionBody_return FunctionBodyParserRuleCall_0_2 = null;
@@ -3332,7 +3332,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     GeneratorAsteriskKeyword_0_0_0=(Token)match(input,Asterisk,FOLLOW_39); if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                      					announce(GeneratorAsteriskKeyword_0_0_0, grammarAccess.getFunctionImplNoKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
+                      					announce(GeneratorAsteriskKeyword_0_0_0, grammarAccess.getFunctionImplWithoutKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
                     }
                     }
                     }
@@ -3341,14 +3341,14 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     state._fsp--;
                     if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       announce((FunctionHeaderParserRuleCall_0_1!=null?((Token)FunctionHeaderParserRuleCall_0_1.start):null), (FunctionHeaderParserRuleCall_0_1!=null?((Token)FunctionHeaderParserRuleCall_0_1.stop):null), grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_0_1()); 
+                       announce((FunctionHeaderParserRuleCall_0_1!=null?((Token)FunctionHeaderParserRuleCall_0_1.start):null), (FunctionHeaderParserRuleCall_0_1!=null?((Token)FunctionHeaderParserRuleCall_0_1.stop):null), grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_0_1()); 
                     }
                     pushFollow(FOLLOW_2);
                     FunctionBodyParserRuleCall_0_2=norm3_FunctionBody();
                     state._fsp--;
                     if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       announce((FunctionBodyParserRuleCall_0_2!=null?((Token)FunctionBodyParserRuleCall_0_2.start):null), (FunctionBodyParserRuleCall_0_2!=null?((Token)FunctionBodyParserRuleCall_0_2.stop):null), grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_0_2()); 
+                       announce((FunctionBodyParserRuleCall_0_2!=null?((Token)FunctionBodyParserRuleCall_0_2.start):null), (FunctionBodyParserRuleCall_0_2!=null?((Token)FunctionBodyParserRuleCall_0_2.stop):null), grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_0_2()); 
                     }
                     }
                     }
@@ -3361,14 +3361,14 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     state._fsp--;
                     if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       announce((FunctionHeaderParserRuleCall_1_0!=null?((Token)FunctionHeaderParserRuleCall_1_0.start):null), (FunctionHeaderParserRuleCall_1_0!=null?((Token)FunctionHeaderParserRuleCall_1_0.stop):null), grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_1_0()); 
+                       announce((FunctionHeaderParserRuleCall_1_0!=null?((Token)FunctionHeaderParserRuleCall_1_0.start):null), (FunctionHeaderParserRuleCall_1_0!=null?((Token)FunctionHeaderParserRuleCall_1_0.stop):null), grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_1_0()); 
                     }
                     pushFollow(FOLLOW_2);
                     FunctionBodyParserRuleCall_1_1=norm2_FunctionBody();
                     state._fsp--;
                     if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       announce((FunctionBodyParserRuleCall_1_1!=null?((Token)FunctionBodyParserRuleCall_1_1.start):null), (FunctionBodyParserRuleCall_1_1!=null?((Token)FunctionBodyParserRuleCall_1_1.stop):null), grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_1_1()); 
+                       announce((FunctionBodyParserRuleCall_1_1!=null?((Token)FunctionBodyParserRuleCall_1_1.start):null), (FunctionBodyParserRuleCall_1_1!=null?((Token)FunctionBodyParserRuleCall_1_1.stop):null), grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_1_1()); 
                     }
                     }
                     }
@@ -3383,7 +3383,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         }
         return ;
     }
-    public final void norm5_FunctionImplNoKeyword() throws RecognitionException {
+    public final void norm5_FunctionImplWithoutKeyword() throws RecognitionException {
         Token GeneratorAsteriskKeyword_0_0_0=null;
         InternalN4JSParser.norm2_FunctionHeader_return FunctionHeaderParserRuleCall_0_1 = null;
         InternalN4JSParser.norm3_FunctionBody_return FunctionBodyParserRuleCall_0_2 = null;
@@ -3413,7 +3413,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     GeneratorAsteriskKeyword_0_0_0=(Token)match(input,Asterisk,FOLLOW_39); if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                      					announce(GeneratorAsteriskKeyword_0_0_0, grammarAccess.getFunctionImplNoKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
+                      					announce(GeneratorAsteriskKeyword_0_0_0, grammarAccess.getFunctionImplWithoutKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
                     }
                     }
                     }
@@ -3422,14 +3422,14 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     state._fsp--;
                     if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       announce((FunctionHeaderParserRuleCall_0_1!=null?((Token)FunctionHeaderParserRuleCall_0_1.start):null), (FunctionHeaderParserRuleCall_0_1!=null?((Token)FunctionHeaderParserRuleCall_0_1.stop):null), grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_0_1()); 
+                       announce((FunctionHeaderParserRuleCall_0_1!=null?((Token)FunctionHeaderParserRuleCall_0_1.start):null), (FunctionHeaderParserRuleCall_0_1!=null?((Token)FunctionHeaderParserRuleCall_0_1.stop):null), grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_0_1()); 
                     }
                     pushFollow(FOLLOW_2);
                     FunctionBodyParserRuleCall_0_2=norm3_FunctionBody();
                     state._fsp--;
                     if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       announce((FunctionBodyParserRuleCall_0_2!=null?((Token)FunctionBodyParserRuleCall_0_2.start):null), (FunctionBodyParserRuleCall_0_2!=null?((Token)FunctionBodyParserRuleCall_0_2.stop):null), grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_0_2()); 
+                       announce((FunctionBodyParserRuleCall_0_2!=null?((Token)FunctionBodyParserRuleCall_0_2.start):null), (FunctionBodyParserRuleCall_0_2!=null?((Token)FunctionBodyParserRuleCall_0_2.stop):null), grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_0_2()); 
                     }
                     }
                     }
@@ -3442,14 +3442,14 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     state._fsp--;
                     if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       announce((FunctionHeaderParserRuleCall_1_0!=null?((Token)FunctionHeaderParserRuleCall_1_0.start):null), (FunctionHeaderParserRuleCall_1_0!=null?((Token)FunctionHeaderParserRuleCall_1_0.stop):null), grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_1_0()); 
+                       announce((FunctionHeaderParserRuleCall_1_0!=null?((Token)FunctionHeaderParserRuleCall_1_0.start):null), (FunctionHeaderParserRuleCall_1_0!=null?((Token)FunctionHeaderParserRuleCall_1_0.stop):null), grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_1_0()); 
                     }
                     pushFollow(FOLLOW_2);
                     FunctionBodyParserRuleCall_1_1=norm2_FunctionBody();
                     state._fsp--;
                     if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       announce((FunctionBodyParserRuleCall_1_1!=null?((Token)FunctionBodyParserRuleCall_1_1.start):null), (FunctionBodyParserRuleCall_1_1!=null?((Token)FunctionBodyParserRuleCall_1_1.stop):null), grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_1_1()); 
+                       announce((FunctionBodyParserRuleCall_1_1!=null?((Token)FunctionBodyParserRuleCall_1_1.start):null), (FunctionBodyParserRuleCall_1_1!=null?((Token)FunctionBodyParserRuleCall_1_1.stop):null), grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_1_1()); 
                     }
                     }
                     }
@@ -3464,10 +3464,10 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         }
         return ;
     }
-    public static class norm6_FunctionImplNoKeyword_return extends ParserRuleReturnScope {
+    public static class norm6_FunctionImplWithoutKeyword_return extends ParserRuleReturnScope {
     };
-    public final InternalN4JSParser.norm6_FunctionImplNoKeyword_return norm6_FunctionImplNoKeyword() throws RecognitionException {
-        InternalN4JSParser.norm6_FunctionImplNoKeyword_return retval = new InternalN4JSParser.norm6_FunctionImplNoKeyword_return();
+    public final InternalN4JSParser.norm6_FunctionImplWithoutKeyword_return norm6_FunctionImplWithoutKeyword() throws RecognitionException {
+        InternalN4JSParser.norm6_FunctionImplWithoutKeyword_return retval = new InternalN4JSParser.norm6_FunctionImplWithoutKeyword_return();
         retval.start = input.LT(1);
         Token GeneratorAsteriskKeyword_0_0_0=null;
         InternalN4JSParser.norm3_FunctionHeader_return FunctionHeaderParserRuleCall_0_1 = null;
@@ -3498,7 +3498,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     GeneratorAsteriskKeyword_0_0_0=(Token)match(input,Asterisk,FOLLOW_39); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
-                      					announce(GeneratorAsteriskKeyword_0_0_0, grammarAccess.getFunctionImplNoKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
+                      					announce(GeneratorAsteriskKeyword_0_0_0, grammarAccess.getFunctionImplWithoutKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
                     }
                     }
                     }
@@ -3507,14 +3507,14 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     state._fsp--;
                     if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
-                       announce((FunctionHeaderParserRuleCall_0_1!=null?((Token)FunctionHeaderParserRuleCall_0_1.start):null), (FunctionHeaderParserRuleCall_0_1!=null?((Token)FunctionHeaderParserRuleCall_0_1.stop):null), grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_0_1()); 
+                       announce((FunctionHeaderParserRuleCall_0_1!=null?((Token)FunctionHeaderParserRuleCall_0_1.start):null), (FunctionHeaderParserRuleCall_0_1!=null?((Token)FunctionHeaderParserRuleCall_0_1.stop):null), grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_0_1()); 
                     }
                     pushFollow(FOLLOW_2);
                     FunctionBodyParserRuleCall_0_2=norm3_FunctionBody();
                     state._fsp--;
                     if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
-                       announce((FunctionBodyParserRuleCall_0_2!=null?((Token)FunctionBodyParserRuleCall_0_2.start):null), (FunctionBodyParserRuleCall_0_2!=null?((Token)FunctionBodyParserRuleCall_0_2.stop):null), grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_0_2()); 
+                       announce((FunctionBodyParserRuleCall_0_2!=null?((Token)FunctionBodyParserRuleCall_0_2.start):null), (FunctionBodyParserRuleCall_0_2!=null?((Token)FunctionBodyParserRuleCall_0_2.stop):null), grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_0_2()); 
                     }
                     }
                     }
@@ -3527,14 +3527,14 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     state._fsp--;
                     if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
-                       announce((FunctionHeaderParserRuleCall_1_0!=null?((Token)FunctionHeaderParserRuleCall_1_0.start):null), (FunctionHeaderParserRuleCall_1_0!=null?((Token)FunctionHeaderParserRuleCall_1_0.stop):null), grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_1_0()); 
+                       announce((FunctionHeaderParserRuleCall_1_0!=null?((Token)FunctionHeaderParserRuleCall_1_0.start):null), (FunctionHeaderParserRuleCall_1_0!=null?((Token)FunctionHeaderParserRuleCall_1_0.stop):null), grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_1_0()); 
                     }
                     pushFollow(FOLLOW_2);
                     FunctionBodyParserRuleCall_1_1=norm2_FunctionBody();
                     state._fsp--;
                     if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
-                       announce((FunctionBodyParserRuleCall_1_1!=null?((Token)FunctionBodyParserRuleCall_1_1.start):null), (FunctionBodyParserRuleCall_1_1!=null?((Token)FunctionBodyParserRuleCall_1_1.stop):null), grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_1_1()); 
+                       announce((FunctionBodyParserRuleCall_1_1!=null?((Token)FunctionBodyParserRuleCall_1_1.start):null), (FunctionBodyParserRuleCall_1_1!=null?((Token)FunctionBodyParserRuleCall_1_1.stop):null), grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_1_1()); 
                     }
                     }
                     }
@@ -3550,7 +3550,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         }
         return retval;
     }
-    public final void norm7_FunctionImplNoKeyword() throws RecognitionException {
+    public final void norm7_FunctionImplWithoutKeyword() throws RecognitionException {
         Token GeneratorAsteriskKeyword_0_0_0=null;
         InternalN4JSParser.norm3_FunctionHeader_return FunctionHeaderParserRuleCall_0_1 = null;
         InternalN4JSParser.norm3_FunctionBody_return FunctionBodyParserRuleCall_0_2 = null;
@@ -3580,7 +3580,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     GeneratorAsteriskKeyword_0_0_0=(Token)match(input,Asterisk,FOLLOW_39); if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                      					announce(GeneratorAsteriskKeyword_0_0_0, grammarAccess.getFunctionImplNoKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
+                      					announce(GeneratorAsteriskKeyword_0_0_0, grammarAccess.getFunctionImplWithoutKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
                     }
                     }
                     }
@@ -3589,14 +3589,14 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     state._fsp--;
                     if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       announce((FunctionHeaderParserRuleCall_0_1!=null?((Token)FunctionHeaderParserRuleCall_0_1.start):null), (FunctionHeaderParserRuleCall_0_1!=null?((Token)FunctionHeaderParserRuleCall_0_1.stop):null), grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_0_1()); 
+                       announce((FunctionHeaderParserRuleCall_0_1!=null?((Token)FunctionHeaderParserRuleCall_0_1.start):null), (FunctionHeaderParserRuleCall_0_1!=null?((Token)FunctionHeaderParserRuleCall_0_1.stop):null), grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_0_1()); 
                     }
                     pushFollow(FOLLOW_2);
                     FunctionBodyParserRuleCall_0_2=norm3_FunctionBody();
                     state._fsp--;
                     if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       announce((FunctionBodyParserRuleCall_0_2!=null?((Token)FunctionBodyParserRuleCall_0_2.start):null), (FunctionBodyParserRuleCall_0_2!=null?((Token)FunctionBodyParserRuleCall_0_2.stop):null), grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_0_2()); 
+                       announce((FunctionBodyParserRuleCall_0_2!=null?((Token)FunctionBodyParserRuleCall_0_2.start):null), (FunctionBodyParserRuleCall_0_2!=null?((Token)FunctionBodyParserRuleCall_0_2.stop):null), grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_0_2()); 
                     }
                     }
                     }
@@ -3609,14 +3609,14 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     state._fsp--;
                     if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       announce((FunctionHeaderParserRuleCall_1_0!=null?((Token)FunctionHeaderParserRuleCall_1_0.start):null), (FunctionHeaderParserRuleCall_1_0!=null?((Token)FunctionHeaderParserRuleCall_1_0.stop):null), grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_1_0()); 
+                       announce((FunctionHeaderParserRuleCall_1_0!=null?((Token)FunctionHeaderParserRuleCall_1_0.start):null), (FunctionHeaderParserRuleCall_1_0!=null?((Token)FunctionHeaderParserRuleCall_1_0.stop):null), grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_1_0()); 
                     }
                     pushFollow(FOLLOW_2);
                     FunctionBodyParserRuleCall_1_1=norm2_FunctionBody();
                     state._fsp--;
                     if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       announce((FunctionBodyParserRuleCall_1_1!=null?((Token)FunctionBodyParserRuleCall_1_1.start):null), (FunctionBodyParserRuleCall_1_1!=null?((Token)FunctionBodyParserRuleCall_1_1.stop):null), grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_1_1()); 
+                       announce((FunctionBodyParserRuleCall_1_1!=null?((Token)FunctionBodyParserRuleCall_1_1.start):null), (FunctionBodyParserRuleCall_1_1!=null?((Token)FunctionBodyParserRuleCall_1_1.stop):null), grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_1_1()); 
                     }
                     }
                     }
@@ -4403,7 +4403,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         Token DeclaredAsyncAsyncKeyword_0_0_0_0=null;
         Token FunctionKeyword_0_0_2=null;
         InternalN4JSParser.ruleNoLineTerminator_return NoLineTerminatorParserRuleCall_0_0_1 = null;
-        InternalN4JSParser.norm6_FunctionImplNoKeyword_return FunctionImplNoKeywordParserRuleCall_1 = null;
+        InternalN4JSParser.norm6_FunctionImplWithoutKeyword_return FunctionImplWithoutKeywordParserRuleCall_1 = null;
         try {
             {
             {
@@ -4431,11 +4431,11 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             }
             }
             pushFollow(FOLLOW_2);
-            FunctionImplNoKeywordParserRuleCall_1=norm6_FunctionImplNoKeyword();
+            FunctionImplWithoutKeywordParserRuleCall_1=norm6_FunctionImplWithoutKeyword();
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) {
-               announce((FunctionImplNoKeywordParserRuleCall_1!=null?((Token)FunctionImplNoKeywordParserRuleCall_1.start):null), (FunctionImplNoKeywordParserRuleCall_1!=null?((Token)FunctionImplNoKeywordParserRuleCall_1.stop):null), grammarAccess.getAsyncFunctionExpressionAccess().getFunctionImplNoKeywordParserRuleCall_1()); 
+               announce((FunctionImplWithoutKeywordParserRuleCall_1!=null?((Token)FunctionImplWithoutKeywordParserRuleCall_1.start):null), (FunctionImplWithoutKeywordParserRuleCall_1!=null?((Token)FunctionImplWithoutKeywordParserRuleCall_1.stop):null), grammarAccess.getAsyncFunctionExpressionAccess().getFunctionImplWithoutKeywordParserRuleCall_1()); 
             }
             }
             }

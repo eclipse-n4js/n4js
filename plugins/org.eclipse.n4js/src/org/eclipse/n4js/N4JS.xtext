@@ -234,10 +234,10 @@ fragment AsyncNoTrailingLineBreak *: (declaredAsync?='async' NoLineTerminator)?;
 
 fragment FunctionImpl<Yield, YieldIfGenerator, Expression>*:
 	'function'
-	FunctionImplNoKeyword<Yield, YieldIfGenerator, Expression>
+	FunctionImplWithoutKeyword<Yield, YieldIfGenerator, Expression>
 ;
 
-fragment FunctionImplNoKeyword<Yield, YieldIfGenerator, Expression>*:
+fragment FunctionImplWithoutKeyword<Yield, YieldIfGenerator, Expression>*:
 	generator?='*' FunctionHeader<YieldIfGenerator,Generator=true> FunctionBody<Yield=true,Expression>
 | 	FunctionHeader<Yield,Generator=false> FunctionBody<Yield=false,Expression>
 ;
@@ -278,7 +278,7 @@ FunctionExpression:
  */
 AsyncFunctionExpression returns FunctionExpression:
 	=> (declaredAsync?='async' NoLineTerminator 'function')
-	FunctionImplNoKeyword<Yield=false,YieldIfGenerator=true,Expression=true>
+	FunctionImplWithoutKeyword<Yield=false,YieldIfGenerator=true,Expression=true>
 ;
 
 ArrowExpression <In, Yield> returns ArrowFunction:

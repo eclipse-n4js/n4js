@@ -111,8 +111,7 @@ package class ExpectedTypeComputer extends TypeSystemHelperStrategy {
 		val tFun = funDef.definedFunction;
 		if (tFun !== null) {
 			val actualReturnTypeRef = tFun.returnTypeRef;
-			val scope = G.getPredefinedTypes().builtInTypeScope;
-			if (TypeUtils.isGeneratorOrAsyncGenerator(actualReturnTypeRef, scope)) {
+			if (TypeUtils.isGeneratorOrAsyncGenerator(actualReturnTypeRef, G.getPredefinedTypes().builtInTypeScope)) {
 				return tsh.getGeneratorTReturn(G, actualReturnTypeRef);
 			}
 		}

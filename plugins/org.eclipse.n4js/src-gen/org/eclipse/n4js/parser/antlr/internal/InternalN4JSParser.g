@@ -2573,11 +2573,11 @@ ruleFunctionImpl[EObject in_current]  returns [EObject current=in_current]
 			if ($current==null) {
 				$current = createModelElement(grammarAccess.getFunctionImplRule());
 			}
-			newCompositeNode(grammarAccess.getFunctionImplAccess().getFunctionImplNoKeywordParserRuleCall_1());
+			newCompositeNode(grammarAccess.getFunctionImplAccess().getFunctionImplWithoutKeywordParserRuleCall_1());
 		}
-		this_FunctionImplNoKeyword_1=ruleFunctionImplNoKeyword[$current]
+		this_FunctionImplWithoutKeyword_1=ruleFunctionImplWithoutKeyword[$current]
 		{
-			$current = $this_FunctionImplNoKeyword_1.current;
+			$current = $this_FunctionImplWithoutKeyword_1.current;
 			afterParserOrEnumRuleCall();
 		}
 	)
@@ -2601,11 +2601,11 @@ norm3_FunctionImpl[EObject in_current]  returns [EObject current=in_current]
 			if ($current==null) {
 				$current = createModelElement(grammarAccess.getFunctionImplRule());
 			}
-			newCompositeNode(grammarAccess.getFunctionImplAccess().getFunctionImplNoKeywordParserRuleCall_1());
+			newCompositeNode(grammarAccess.getFunctionImplAccess().getFunctionImplWithoutKeywordParserRuleCall_1());
 		}
-		this_FunctionImplNoKeyword_1=norm3_FunctionImplNoKeyword[$current]
+		this_FunctionImplWithoutKeyword_1=norm3_FunctionImplWithoutKeyword[$current]
 		{
-			$current = $this_FunctionImplNoKeyword_1.current;
+			$current = $this_FunctionImplWithoutKeyword_1.current;
 			afterParserOrEnumRuleCall();
 		}
 	)
@@ -2629,19 +2629,19 @@ norm6_FunctionImpl[EObject in_current]  returns [EObject current=in_current]
 			if ($current==null) {
 				$current = createModelElement(grammarAccess.getFunctionImplRule());
 			}
-			newCompositeNode(grammarAccess.getFunctionImplAccess().getFunctionImplNoKeywordParserRuleCall_1());
+			newCompositeNode(grammarAccess.getFunctionImplAccess().getFunctionImplWithoutKeywordParserRuleCall_1());
 		}
-		this_FunctionImplNoKeyword_1=norm6_FunctionImplNoKeyword[$current]
+		this_FunctionImplWithoutKeyword_1=norm6_FunctionImplWithoutKeyword[$current]
 		{
-			$current = $this_FunctionImplNoKeyword_1.current;
+			$current = $this_FunctionImplWithoutKeyword_1.current;
 			afterParserOrEnumRuleCall();
 		}
 	)
 ;
 
 
-// Rule FunctionImplNoKeyword
-ruleFunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_current]
+// Rule FunctionImplWithoutKeyword
+ruleFunctionImplWithoutKeyword[EObject in_current]  returns [EObject current=in_current]
 @init {
 	enterRule();
 }
@@ -2654,11 +2654,11 @@ ruleFunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_curre
 				(
 					lv_generator_0_0=Asterisk
 					{
-						newLeafNode(lv_generator_0_0, grammarAccess.getFunctionImplNoKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
+						newLeafNode(lv_generator_0_0, grammarAccess.getFunctionImplWithoutKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
 					}
 					{
 						if ($current==null) {
-							$current = createModelElement(grammarAccess.getFunctionImplNoKeywordRule());
+							$current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
 						}
 						setWithLastConsumed($current, "generator", true, "*");
 					}
@@ -2666,9 +2666,9 @@ ruleFunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_curre
 			)
 			{
 				if ($current==null) {
-					$current = createModelElement(grammarAccess.getFunctionImplNoKeywordRule());
+					$current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_0_1());
+				newCompositeNode(grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_0_1());
 			}
 			this_FunctionHeader_1=norm2_FunctionHeader[$current]
 			{
@@ -2677,9 +2677,9 @@ ruleFunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_curre
 			}
 			{
 				if ($current==null) {
-					$current = createModelElement(grammarAccess.getFunctionImplNoKeywordRule());
+					$current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_0_2());
+				newCompositeNode(grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_0_2());
 			}
 			this_FunctionBody_2=norm1_FunctionBody[$current]
 			{
@@ -2691,9 +2691,9 @@ ruleFunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_curre
 		(
 			{
 				if ($current==null) {
-					$current = createModelElement(grammarAccess.getFunctionImplNoKeywordRule());
+					$current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_1_0());
+				newCompositeNode(grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_1_0());
 			}
 			this_FunctionHeader_3=ruleFunctionHeader[$current]
 			{
@@ -2702,9 +2702,9 @@ ruleFunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_curre
 			}
 			{
 				if ($current==null) {
-					$current = createModelElement(grammarAccess.getFunctionImplNoKeywordRule());
+					$current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_1_1());
+				newCompositeNode(grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_1_1());
 			}
 			this_FunctionBody_4=ruleFunctionBody[$current]
 			{
@@ -2716,8 +2716,8 @@ ruleFunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_curre
 ;
 
 
-// Rule FunctionImplNoKeyword
-norm1_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_current]
+// Rule FunctionImplWithoutKeyword
+norm1_FunctionImplWithoutKeyword[EObject in_current]  returns [EObject current=in_current]
 @init {
 	enterRule();
 }
@@ -2730,11 +2730,11 @@ norm1_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_cur
 				(
 					lv_generator_0_0=Asterisk
 					{
-						newLeafNode(lv_generator_0_0, grammarAccess.getFunctionImplNoKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
+						newLeafNode(lv_generator_0_0, grammarAccess.getFunctionImplWithoutKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
 					}
 					{
 						if ($current==null) {
-							$current = createModelElement(grammarAccess.getFunctionImplNoKeywordRule());
+							$current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
 						}
 						setWithLastConsumed($current, "generator", true, "*");
 					}
@@ -2742,9 +2742,9 @@ norm1_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_cur
 			)
 			{
 				if ($current==null) {
-					$current = createModelElement(grammarAccess.getFunctionImplNoKeywordRule());
+					$current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_0_1());
+				newCompositeNode(grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_0_1());
 			}
 			this_FunctionHeader_1=norm2_FunctionHeader[$current]
 			{
@@ -2753,9 +2753,9 @@ norm1_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_cur
 			}
 			{
 				if ($current==null) {
-					$current = createModelElement(grammarAccess.getFunctionImplNoKeywordRule());
+					$current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_0_2());
+				newCompositeNode(grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_0_2());
 			}
 			this_FunctionBody_2=norm1_FunctionBody[$current]
 			{
@@ -2767,9 +2767,9 @@ norm1_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_cur
 		(
 			{
 				if ($current==null) {
-					$current = createModelElement(grammarAccess.getFunctionImplNoKeywordRule());
+					$current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_1_0());
+				newCompositeNode(grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_1_0());
 			}
 			this_FunctionHeader_3=norm1_FunctionHeader[$current]
 			{
@@ -2778,9 +2778,9 @@ norm1_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_cur
 			}
 			{
 				if ($current==null) {
-					$current = createModelElement(grammarAccess.getFunctionImplNoKeywordRule());
+					$current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_1_1());
+				newCompositeNode(grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_1_1());
 			}
 			this_FunctionBody_4=ruleFunctionBody[$current]
 			{
@@ -2792,8 +2792,8 @@ norm1_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_cur
 ;
 
 
-// Rule FunctionImplNoKeyword
-norm2_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_current]
+// Rule FunctionImplWithoutKeyword
+norm2_FunctionImplWithoutKeyword[EObject in_current]  returns [EObject current=in_current]
 @init {
 	enterRule();
 }
@@ -2806,11 +2806,11 @@ norm2_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_cur
 				(
 					lv_generator_0_0=Asterisk
 					{
-						newLeafNode(lv_generator_0_0, grammarAccess.getFunctionImplNoKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
+						newLeafNode(lv_generator_0_0, grammarAccess.getFunctionImplWithoutKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
 					}
 					{
 						if ($current==null) {
-							$current = createModelElement(grammarAccess.getFunctionImplNoKeywordRule());
+							$current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
 						}
 						setWithLastConsumed($current, "generator", true, "*");
 					}
@@ -2818,9 +2818,9 @@ norm2_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_cur
 			)
 			{
 				if ($current==null) {
-					$current = createModelElement(grammarAccess.getFunctionImplNoKeywordRule());
+					$current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_0_1());
+				newCompositeNode(grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_0_1());
 			}
 			this_FunctionHeader_1=norm3_FunctionHeader[$current]
 			{
@@ -2829,9 +2829,9 @@ norm2_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_cur
 			}
 			{
 				if ($current==null) {
-					$current = createModelElement(grammarAccess.getFunctionImplNoKeywordRule());
+					$current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_0_2());
+				newCompositeNode(grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_0_2());
 			}
 			this_FunctionBody_2=norm1_FunctionBody[$current]
 			{
@@ -2843,9 +2843,9 @@ norm2_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_cur
 		(
 			{
 				if ($current==null) {
-					$current = createModelElement(grammarAccess.getFunctionImplNoKeywordRule());
+					$current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_1_0());
+				newCompositeNode(grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_1_0());
 			}
 			this_FunctionHeader_3=ruleFunctionHeader[$current]
 			{
@@ -2854,9 +2854,9 @@ norm2_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_cur
 			}
 			{
 				if ($current==null) {
-					$current = createModelElement(grammarAccess.getFunctionImplNoKeywordRule());
+					$current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_1_1());
+				newCompositeNode(grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_1_1());
 			}
 			this_FunctionBody_4=ruleFunctionBody[$current]
 			{
@@ -2868,8 +2868,8 @@ norm2_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_cur
 ;
 
 
-// Rule FunctionImplNoKeyword
-norm3_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_current]
+// Rule FunctionImplWithoutKeyword
+norm3_FunctionImplWithoutKeyword[EObject in_current]  returns [EObject current=in_current]
 @init {
 	enterRule();
 }
@@ -2882,11 +2882,11 @@ norm3_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_cur
 				(
 					lv_generator_0_0=Asterisk
 					{
-						newLeafNode(lv_generator_0_0, grammarAccess.getFunctionImplNoKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
+						newLeafNode(lv_generator_0_0, grammarAccess.getFunctionImplWithoutKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
 					}
 					{
 						if ($current==null) {
-							$current = createModelElement(grammarAccess.getFunctionImplNoKeywordRule());
+							$current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
 						}
 						setWithLastConsumed($current, "generator", true, "*");
 					}
@@ -2894,9 +2894,9 @@ norm3_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_cur
 			)
 			{
 				if ($current==null) {
-					$current = createModelElement(grammarAccess.getFunctionImplNoKeywordRule());
+					$current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_0_1());
+				newCompositeNode(grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_0_1());
 			}
 			this_FunctionHeader_1=norm3_FunctionHeader[$current]
 			{
@@ -2905,9 +2905,9 @@ norm3_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_cur
 			}
 			{
 				if ($current==null) {
-					$current = createModelElement(grammarAccess.getFunctionImplNoKeywordRule());
+					$current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_0_2());
+				newCompositeNode(grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_0_2());
 			}
 			this_FunctionBody_2=norm1_FunctionBody[$current]
 			{
@@ -2919,9 +2919,9 @@ norm3_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_cur
 		(
 			{
 				if ($current==null) {
-					$current = createModelElement(grammarAccess.getFunctionImplNoKeywordRule());
+					$current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_1_0());
+				newCompositeNode(grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_1_0());
 			}
 			this_FunctionHeader_3=norm1_FunctionHeader[$current]
 			{
@@ -2930,9 +2930,9 @@ norm3_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_cur
 			}
 			{
 				if ($current==null) {
-					$current = createModelElement(grammarAccess.getFunctionImplNoKeywordRule());
+					$current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_1_1());
+				newCompositeNode(grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_1_1());
 			}
 			this_FunctionBody_4=ruleFunctionBody[$current]
 			{
@@ -2944,8 +2944,8 @@ norm3_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_cur
 ;
 
 
-// Rule FunctionImplNoKeyword
-norm4_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_current]
+// Rule FunctionImplWithoutKeyword
+norm4_FunctionImplWithoutKeyword[EObject in_current]  returns [EObject current=in_current]
 @init {
 	enterRule();
 }
@@ -2958,11 +2958,11 @@ norm4_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_cur
 				(
 					lv_generator_0_0=Asterisk
 					{
-						newLeafNode(lv_generator_0_0, grammarAccess.getFunctionImplNoKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
+						newLeafNode(lv_generator_0_0, grammarAccess.getFunctionImplWithoutKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
 					}
 					{
 						if ($current==null) {
-							$current = createModelElement(grammarAccess.getFunctionImplNoKeywordRule());
+							$current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
 						}
 						setWithLastConsumed($current, "generator", true, "*");
 					}
@@ -2970,9 +2970,9 @@ norm4_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_cur
 			)
 			{
 				if ($current==null) {
-					$current = createModelElement(grammarAccess.getFunctionImplNoKeywordRule());
+					$current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_0_1());
+				newCompositeNode(grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_0_1());
 			}
 			this_FunctionHeader_1=norm2_FunctionHeader[$current]
 			{
@@ -2981,9 +2981,9 @@ norm4_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_cur
 			}
 			{
 				if ($current==null) {
-					$current = createModelElement(grammarAccess.getFunctionImplNoKeywordRule());
+					$current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_0_2());
+				newCompositeNode(grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_0_2());
 			}
 			this_FunctionBody_2=norm3_FunctionBody[$current]
 			{
@@ -2995,9 +2995,9 @@ norm4_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_cur
 		(
 			{
 				if ($current==null) {
-					$current = createModelElement(grammarAccess.getFunctionImplNoKeywordRule());
+					$current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_1_0());
+				newCompositeNode(grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_1_0());
 			}
 			this_FunctionHeader_3=ruleFunctionHeader[$current]
 			{
@@ -3006,9 +3006,9 @@ norm4_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_cur
 			}
 			{
 				if ($current==null) {
-					$current = createModelElement(grammarAccess.getFunctionImplNoKeywordRule());
+					$current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_1_1());
+				newCompositeNode(grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_1_1());
 			}
 			this_FunctionBody_4=norm2_FunctionBody[$current]
 			{
@@ -3020,8 +3020,8 @@ norm4_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_cur
 ;
 
 
-// Rule FunctionImplNoKeyword
-norm5_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_current]
+// Rule FunctionImplWithoutKeyword
+norm5_FunctionImplWithoutKeyword[EObject in_current]  returns [EObject current=in_current]
 @init {
 	enterRule();
 }
@@ -3034,11 +3034,11 @@ norm5_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_cur
 				(
 					lv_generator_0_0=Asterisk
 					{
-						newLeafNode(lv_generator_0_0, grammarAccess.getFunctionImplNoKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
+						newLeafNode(lv_generator_0_0, grammarAccess.getFunctionImplWithoutKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
 					}
 					{
 						if ($current==null) {
-							$current = createModelElement(grammarAccess.getFunctionImplNoKeywordRule());
+							$current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
 						}
 						setWithLastConsumed($current, "generator", true, "*");
 					}
@@ -3046,9 +3046,9 @@ norm5_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_cur
 			)
 			{
 				if ($current==null) {
-					$current = createModelElement(grammarAccess.getFunctionImplNoKeywordRule());
+					$current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_0_1());
+				newCompositeNode(grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_0_1());
 			}
 			this_FunctionHeader_1=norm2_FunctionHeader[$current]
 			{
@@ -3057,9 +3057,9 @@ norm5_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_cur
 			}
 			{
 				if ($current==null) {
-					$current = createModelElement(grammarAccess.getFunctionImplNoKeywordRule());
+					$current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_0_2());
+				newCompositeNode(grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_0_2());
 			}
 			this_FunctionBody_2=norm3_FunctionBody[$current]
 			{
@@ -3071,9 +3071,9 @@ norm5_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_cur
 		(
 			{
 				if ($current==null) {
-					$current = createModelElement(grammarAccess.getFunctionImplNoKeywordRule());
+					$current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_1_0());
+				newCompositeNode(grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_1_0());
 			}
 			this_FunctionHeader_3=norm1_FunctionHeader[$current]
 			{
@@ -3082,9 +3082,9 @@ norm5_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_cur
 			}
 			{
 				if ($current==null) {
-					$current = createModelElement(grammarAccess.getFunctionImplNoKeywordRule());
+					$current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_1_1());
+				newCompositeNode(grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_1_1());
 			}
 			this_FunctionBody_4=norm2_FunctionBody[$current]
 			{
@@ -3096,8 +3096,8 @@ norm5_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_cur
 ;
 
 
-// Rule FunctionImplNoKeyword
-norm6_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_current]
+// Rule FunctionImplWithoutKeyword
+norm6_FunctionImplWithoutKeyword[EObject in_current]  returns [EObject current=in_current]
 @init {
 	enterRule();
 }
@@ -3110,11 +3110,11 @@ norm6_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_cur
 				(
 					lv_generator_0_0=Asterisk
 					{
-						newLeafNode(lv_generator_0_0, grammarAccess.getFunctionImplNoKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
+						newLeafNode(lv_generator_0_0, grammarAccess.getFunctionImplWithoutKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
 					}
 					{
 						if ($current==null) {
-							$current = createModelElement(grammarAccess.getFunctionImplNoKeywordRule());
+							$current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
 						}
 						setWithLastConsumed($current, "generator", true, "*");
 					}
@@ -3122,9 +3122,9 @@ norm6_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_cur
 			)
 			{
 				if ($current==null) {
-					$current = createModelElement(grammarAccess.getFunctionImplNoKeywordRule());
+					$current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_0_1());
+				newCompositeNode(grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_0_1());
 			}
 			this_FunctionHeader_1=norm3_FunctionHeader[$current]
 			{
@@ -3133,9 +3133,9 @@ norm6_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_cur
 			}
 			{
 				if ($current==null) {
-					$current = createModelElement(grammarAccess.getFunctionImplNoKeywordRule());
+					$current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_0_2());
+				newCompositeNode(grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_0_2());
 			}
 			this_FunctionBody_2=norm3_FunctionBody[$current]
 			{
@@ -3147,9 +3147,9 @@ norm6_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_cur
 		(
 			{
 				if ($current==null) {
-					$current = createModelElement(grammarAccess.getFunctionImplNoKeywordRule());
+					$current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_1_0());
+				newCompositeNode(grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_1_0());
 			}
 			this_FunctionHeader_3=ruleFunctionHeader[$current]
 			{
@@ -3158,9 +3158,9 @@ norm6_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_cur
 			}
 			{
 				if ($current==null) {
-					$current = createModelElement(grammarAccess.getFunctionImplNoKeywordRule());
+					$current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_1_1());
+				newCompositeNode(grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_1_1());
 			}
 			this_FunctionBody_4=norm2_FunctionBody[$current]
 			{
@@ -3172,8 +3172,8 @@ norm6_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_cur
 ;
 
 
-// Rule FunctionImplNoKeyword
-norm7_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_current]
+// Rule FunctionImplWithoutKeyword
+norm7_FunctionImplWithoutKeyword[EObject in_current]  returns [EObject current=in_current]
 @init {
 	enterRule();
 }
@@ -3186,11 +3186,11 @@ norm7_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_cur
 				(
 					lv_generator_0_0=Asterisk
 					{
-						newLeafNode(lv_generator_0_0, grammarAccess.getFunctionImplNoKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
+						newLeafNode(lv_generator_0_0, grammarAccess.getFunctionImplWithoutKeywordAccess().getGeneratorAsteriskKeyword_0_0_0());
 					}
 					{
 						if ($current==null) {
-							$current = createModelElement(grammarAccess.getFunctionImplNoKeywordRule());
+							$current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
 						}
 						setWithLastConsumed($current, "generator", true, "*");
 					}
@@ -3198,9 +3198,9 @@ norm7_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_cur
 			)
 			{
 				if ($current==null) {
-					$current = createModelElement(grammarAccess.getFunctionImplNoKeywordRule());
+					$current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_0_1());
+				newCompositeNode(grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_0_1());
 			}
 			this_FunctionHeader_1=norm3_FunctionHeader[$current]
 			{
@@ -3209,9 +3209,9 @@ norm7_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_cur
 			}
 			{
 				if ($current==null) {
-					$current = createModelElement(grammarAccess.getFunctionImplNoKeywordRule());
+					$current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_0_2());
+				newCompositeNode(grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_0_2());
 			}
 			this_FunctionBody_2=norm3_FunctionBody[$current]
 			{
@@ -3223,9 +3223,9 @@ norm7_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_cur
 		(
 			{
 				if ($current==null) {
-					$current = createModelElement(grammarAccess.getFunctionImplNoKeywordRule());
+					$current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionImplNoKeywordAccess().getFunctionHeaderParserRuleCall_1_0());
+				newCompositeNode(grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionHeaderParserRuleCall_1_0());
 			}
 			this_FunctionHeader_3=norm1_FunctionHeader[$current]
 			{
@@ -3234,9 +3234,9 @@ norm7_FunctionImplNoKeyword[EObject in_current]  returns [EObject current=in_cur
 			}
 			{
 				if ($current==null) {
-					$current = createModelElement(grammarAccess.getFunctionImplNoKeywordRule());
+					$current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionImplNoKeywordAccess().getFunctionBodyParserRuleCall_1_1());
+				newCompositeNode(grammarAccess.getFunctionImplWithoutKeywordAccess().getFunctionBodyParserRuleCall_1_1());
 			}
 			this_FunctionBody_4=norm2_FunctionBody[$current]
 			{
@@ -4001,11 +4001,11 @@ ruleAsyncFunctionExpression returns [EObject current=null]
 			if ($current==null) {
 				$current = createModelElement(grammarAccess.getAsyncFunctionExpressionRule());
 			}
-			newCompositeNode(grammarAccess.getAsyncFunctionExpressionAccess().getFunctionImplNoKeywordParserRuleCall_1());
+			newCompositeNode(grammarAccess.getAsyncFunctionExpressionAccess().getFunctionImplWithoutKeywordParserRuleCall_1());
 		}
-		this_FunctionImplNoKeyword_3=norm6_FunctionImplNoKeyword[$current]
+		this_FunctionImplWithoutKeyword_3=norm6_FunctionImplWithoutKeyword[$current]
 		{
-			$current = $this_FunctionImplNoKeyword_3.current;
+			$current = $this_FunctionImplWithoutKeyword_3.current;
 			afterParserOrEnumRuleCall();
 		}
 	)
