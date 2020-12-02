@@ -49,6 +49,7 @@ import org.eclipse.n4js.ts.types.TMember;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4FieldDeclarationImpl#getDeclaredTypeRef <em>Declared Type Ref</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.N4FieldDeclarationImpl#getBogusTypeRef <em>Bogus Type Ref</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4FieldDeclarationImpl#getDeclaredName <em>Declared Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4FieldDeclarationImpl#getDefinedField <em>Defined Field</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4FieldDeclarationImpl#isDeclaredOptional <em>Declared Optional</em>}</li>
@@ -67,6 +68,16 @@ public class N4FieldDeclarationImpl extends AnnotableN4MemberDeclarationImpl imp
 	 * @ordered
 	 */
 	protected TypeRef declaredTypeRef;
+
+	/**
+	 * The cached value of the '{@link #getBogusTypeRef() <em>Bogus Type Ref</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getBogusTypeRef()
+	 * @generated
+	 * @ordered
+	 */
+	protected TypeRef bogusTypeRef;
 
 	/**
 	 * The cached value of the '{@link #getDeclaredName() <em>Declared Name</em>}' containment reference.
@@ -180,6 +191,51 @@ public class N4FieldDeclarationImpl extends AnnotableN4MemberDeclarationImpl imp
 		}
 		else if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_FIELD_DECLARATION__DECLARED_TYPE_REF, newDeclaredTypeRef, newDeclaredTypeRef));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TypeRef getBogusTypeRef() {
+		return bogusTypeRef;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetBogusTypeRef(TypeRef newBogusTypeRef, NotificationChain msgs) {
+		TypeRef oldBogusTypeRef = bogusTypeRef;
+		bogusTypeRef = newBogusTypeRef;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_FIELD_DECLARATION__BOGUS_TYPE_REF, oldBogusTypeRef, newBogusTypeRef);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setBogusTypeRef(TypeRef newBogusTypeRef) {
+		if (newBogusTypeRef != bogusTypeRef) {
+			NotificationChain msgs = null;
+			if (bogusTypeRef != null)
+				msgs = ((InternalEObject)bogusTypeRef).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.N4_FIELD_DECLARATION__BOGUS_TYPE_REF, null, msgs);
+			if (newBogusTypeRef != null)
+				msgs = ((InternalEObject)newBogusTypeRef).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.N4_FIELD_DECLARATION__BOGUS_TYPE_REF, null, msgs);
+			msgs = basicSetBogusTypeRef(newBogusTypeRef, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_FIELD_DECLARATION__BOGUS_TYPE_REF, newBogusTypeRef, newBogusTypeRef));
 	}
 
 	/**
@@ -431,6 +487,8 @@ public class N4FieldDeclarationImpl extends AnnotableN4MemberDeclarationImpl imp
 		switch (featureID) {
 			case N4JSPackage.N4_FIELD_DECLARATION__DECLARED_TYPE_REF:
 				return basicSetDeclaredTypeRef(null, msgs);
+			case N4JSPackage.N4_FIELD_DECLARATION__BOGUS_TYPE_REF:
+				return basicSetBogusTypeRef(null, msgs);
 			case N4JSPackage.N4_FIELD_DECLARATION__DECLARED_NAME:
 				return basicSetDeclaredName(null, msgs);
 			case N4JSPackage.N4_FIELD_DECLARATION__EXPRESSION:
@@ -449,6 +507,8 @@ public class N4FieldDeclarationImpl extends AnnotableN4MemberDeclarationImpl imp
 		switch (featureID) {
 			case N4JSPackage.N4_FIELD_DECLARATION__DECLARED_TYPE_REF:
 				return getDeclaredTypeRef();
+			case N4JSPackage.N4_FIELD_DECLARATION__BOGUS_TYPE_REF:
+				return getBogusTypeRef();
 			case N4JSPackage.N4_FIELD_DECLARATION__DECLARED_NAME:
 				return getDeclaredName();
 			case N4JSPackage.N4_FIELD_DECLARATION__DEFINED_FIELD:
@@ -472,6 +532,9 @@ public class N4FieldDeclarationImpl extends AnnotableN4MemberDeclarationImpl imp
 		switch (featureID) {
 			case N4JSPackage.N4_FIELD_DECLARATION__DECLARED_TYPE_REF:
 				setDeclaredTypeRef((TypeRef)newValue);
+				return;
+			case N4JSPackage.N4_FIELD_DECLARATION__BOGUS_TYPE_REF:
+				setBogusTypeRef((TypeRef)newValue);
 				return;
 			case N4JSPackage.N4_FIELD_DECLARATION__DECLARED_NAME:
 				setDeclaredName((LiteralOrComputedPropertyName)newValue);
@@ -500,6 +563,9 @@ public class N4FieldDeclarationImpl extends AnnotableN4MemberDeclarationImpl imp
 			case N4JSPackage.N4_FIELD_DECLARATION__DECLARED_TYPE_REF:
 				setDeclaredTypeRef((TypeRef)null);
 				return;
+			case N4JSPackage.N4_FIELD_DECLARATION__BOGUS_TYPE_REF:
+				setBogusTypeRef((TypeRef)null);
+				return;
 			case N4JSPackage.N4_FIELD_DECLARATION__DECLARED_NAME:
 				setDeclaredName((LiteralOrComputedPropertyName)null);
 				return;
@@ -526,6 +592,8 @@ public class N4FieldDeclarationImpl extends AnnotableN4MemberDeclarationImpl imp
 		switch (featureID) {
 			case N4JSPackage.N4_FIELD_DECLARATION__DECLARED_TYPE_REF:
 				return declaredTypeRef != null;
+			case N4JSPackage.N4_FIELD_DECLARATION__BOGUS_TYPE_REF:
+				return bogusTypeRef != null;
 			case N4JSPackage.N4_FIELD_DECLARATION__DECLARED_NAME:
 				return declaredName != null;
 			case N4JSPackage.N4_FIELD_DECLARATION__DEFINED_FIELD:
@@ -548,6 +616,7 @@ public class N4FieldDeclarationImpl extends AnnotableN4MemberDeclarationImpl imp
 		if (baseClass == TypedElement.class) {
 			switch (derivedFeatureID) {
 				case N4JSPackage.N4_FIELD_DECLARATION__DECLARED_TYPE_REF: return N4JSPackage.TYPED_ELEMENT__DECLARED_TYPE_REF;
+				case N4JSPackage.N4_FIELD_DECLARATION__BOGUS_TYPE_REF: return N4JSPackage.TYPED_ELEMENT__BOGUS_TYPE_REF;
 				default: return -1;
 			}
 		}
@@ -575,6 +644,7 @@ public class N4FieldDeclarationImpl extends AnnotableN4MemberDeclarationImpl imp
 		if (baseClass == TypedElement.class) {
 			switch (baseFeatureID) {
 				case N4JSPackage.TYPED_ELEMENT__DECLARED_TYPE_REF: return N4JSPackage.N4_FIELD_DECLARATION__DECLARED_TYPE_REF;
+				case N4JSPackage.TYPED_ELEMENT__BOGUS_TYPE_REF: return N4JSPackage.N4_FIELD_DECLARATION__BOGUS_TYPE_REF;
 				default: return -1;
 			}
 		}

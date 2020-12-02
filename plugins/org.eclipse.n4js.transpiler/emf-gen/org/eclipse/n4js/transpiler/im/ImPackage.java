@@ -90,6 +90,15 @@ public interface ImPackage extends EPackage {
 	int SCRIPT_IM = 0;
 
 	/**
+	 * The feature id for the '<em><b>Hashbang</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCRIPT_IM__HASHBANG = N4JSPackage.SCRIPT__HASHBANG;
+
+	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2030,6 +2039,15 @@ public interface ImPackage extends EPackage {
 	int DELEGATING_GETTER_DECLARATION__DECLARED_TYPE_REF = N4JSPackage.N4_GETTER_DECLARATION__DECLARED_TYPE_REF;
 
 	/**
+	 * The feature id for the '<em><b>Bogus Type Ref</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELEGATING_GETTER_DECLARATION__BOGUS_TYPE_REF = N4JSPackage.N4_GETTER_DECLARATION__BOGUS_TYPE_REF;
+
+	/**
 	 * The feature id for the '<em><b>Defined Getter</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2786,6 +2804,15 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int DELEGATING_METHOD_DECLARATION__DECLARED_TYPE_REF = N4JSPackage.N4_METHOD_DECLARATION__DECLARED_TYPE_REF;
+
+	/**
+	 * The feature id for the '<em><b>Bogus Type Ref</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELEGATING_METHOD_DECLARATION__BOGUS_TYPE_REF = N4JSPackage.N4_METHOD_DECLARATION__BOGUS_TYPE_REF;
 
 	/**
 	 * The feature id for the '<em><b>Declared Name</b></em>' containment reference.

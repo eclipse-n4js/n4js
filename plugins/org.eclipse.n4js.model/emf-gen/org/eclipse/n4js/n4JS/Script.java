@@ -27,6 +27,7 @@ import org.eclipse.n4js.ts.types.TModule;
  * The following features are supported:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.n4JS.Script#getHashbang <em>Hashbang</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.Script#getAnnotations <em>Annotations</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.Script#getScriptElements <em>Script Elements</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.Script#getModule <em>Module</em>}</li>
@@ -38,6 +39,28 @@ import org.eclipse.n4js.ts.types.TModule;
  * @generated
  */
 public interface Script extends VariableEnvironmentElement, AnnotableElement, ControlFlowElement {
+	/**
+	 * Returns the value of the '<em><b>Hashbang</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Hashbang</em>' attribute.
+	 * @see #setHashbang(String)
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getScript_Hashbang()
+	 * @model unique="false"
+	 * @generated
+	 */
+	String getHashbang();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.Script#getHashbang <em>Hashbang</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Hashbang</em>' attribute.
+	 * @see #getHashbang()
+	 * @generated
+	 */
+	void setHashbang(String value);
+
 	/**
 	 * Returns the value of the '<em><b>Annotations</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.n4JS.Annotation}.

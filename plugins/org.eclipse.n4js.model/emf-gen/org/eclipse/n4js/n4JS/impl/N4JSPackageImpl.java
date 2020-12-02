@@ -1713,8 +1713,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getScript_Annotations() {
-		return (EReference)scriptEClass.getEStructuralFeatures().get(0);
+	public EAttribute getScript_Hashbang() {
+		return (EAttribute)scriptEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -1723,7 +1723,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getScript_ScriptElements() {
+	public EReference getScript_Annotations() {
 		return (EReference)scriptEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -1733,7 +1733,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getScript_Module() {
+	public EReference getScript_ScriptElements() {
 		return (EReference)scriptEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -1743,8 +1743,18 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
+	public EReference getScript_Module() {
+		return (EReference)scriptEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EAttribute getScript_FlaggedUsageMarkingFinished() {
-		return (EAttribute)scriptEClass.getEStructuralFeatures().get(3);
+		return (EAttribute)scriptEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -2165,6 +2175,16 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	@Override
 	public EReference getTypedElement_DeclaredTypeRef() {
 		return (EReference)typedElementEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getTypedElement_BogusTypeRef() {
+		return (EReference)typedElementEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -7472,6 +7492,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		controlFlowElementEClass = createEClass(CONTROL_FLOW_ELEMENT);
 
 		scriptEClass = createEClass(SCRIPT);
+		createEAttribute(scriptEClass, SCRIPT__HASHBANG);
 		createEReference(scriptEClass, SCRIPT__ANNOTATIONS);
 		createEReference(scriptEClass, SCRIPT__SCRIPT_ELEMENTS);
 		createEReference(scriptEClass, SCRIPT__MODULE);
@@ -7529,6 +7550,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		typedElementEClass = createEClass(TYPED_ELEMENT);
 		createEReference(typedElementEClass, TYPED_ELEMENT__DECLARED_TYPE_REF);
+		createEReference(typedElementEClass, TYPED_ELEMENT__BOGUS_TYPE_REF);
 
 		variableEnvironmentElementEClass = createEClass(VARIABLE_ENVIRONMENT_ELEMENT);
 		createEOperation(variableEnvironmentElementEClass, VARIABLE_ENVIRONMENT_ELEMENT___APPLIES_ONLY_TO_BLOCK_SCOPED_ELEMENTS);
@@ -8528,6 +8550,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEClass(controlFlowElementEClass, ControlFlowElement.class, "ControlFlowElement", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(scriptEClass, Script.class, "Script", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getScript_Hashbang(), theEcorePackage.getEString(), "hashbang", null, 0, 1, Script.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getScript_Annotations(), this.getAnnotation(), null, "annotations", null, 0, -1, Script.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getScript_ScriptElements(), this.getScriptElement(), null, "scriptElements", null, 0, -1, Script.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getScript_Module(), theTypesPackage.getTModule(), null, "module", null, 0, 1, Script.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -8595,6 +8618,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEClass(typedElementEClass, TypedElement.class, "TypedElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getTypedElement_DeclaredTypeRef(), theTypeRefsPackage.getTypeRef(), null, "declaredTypeRef", null, 0, 1, TypedElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTypedElement_BogusTypeRef(), theTypeRefsPackage.getTypeRef(), null, "bogusTypeRef", null, 0, 1, TypedElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(variableEnvironmentElementEClass, VariableEnvironmentElement.class, "VariableEnvironmentElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
