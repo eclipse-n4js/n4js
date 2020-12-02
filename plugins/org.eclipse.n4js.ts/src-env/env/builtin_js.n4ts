@@ -1889,7 +1889,7 @@ public providedByRuntime interface ~AsyncIterator<out T> {
 	 *     any JavaScript value returned by the iterator. Can be omitted when done is true.
 	 * </ul>
 	 */
-	public abstract async next(): Promise<IteratorEntry<T>> // must wrap return type explicitly, because not done automatically in n4ts
+	public abstract next(): Promise<IteratorEntry<T>, ?>
 }
 
 /**
@@ -2009,17 +2009,67 @@ public providedByRuntime interface ~Generator<out TYield, out TReturn, in TNext>
 	public abstract return(value: TNext = undefined): IteratorEntry<TReturn>;
 }
 
-
+/**
+ * An asynchronous generator object. See interface <code>Generator</code> for details.
+ */
 public providedByRuntime interface ~AsyncGenerator<out TYield, out TReturn, in TNext>
 	extends AsyncIterable<TYield>, AsyncIterator<TYield> {
 
-	public abstract async next(value: TNext = undefined): Promise<IteratorEntry<TYield>> // must wrap return type explicitly, because not done automatically in n4ts
+	/**
+	 * A one (optional) argument function. The (optional) argument <code>value</code> is passed to the
+	 * current yield expression in the generator function. Return a promise of an <code>IteratorEntry</code>
+	 * with two properties:
+	 * <ul>
+	 * <li>done (boolean)<br>
+	 *     Has the value true if the iterator is past the end of the iterated sequence. In this case value
+	 *     optionally specifies the return value of the iterator. The return values are explained here.
+	 *     Has the value false if the iterator was able to produce the next value in the sequence. This is
+	 *     equivalent of not specifying the done property altogether.
+	 * <li>value<br>
+	 *     any JavaScript value returned by the iterator. Can be omitted when done is true.
+	 * </ul>
+	 */
+	public abstract next(value: TNext = undefined): Promise<IteratorEntry<TYield>, ?>
 
+	/**
+	 * A zero arguments function that returns the <code>this</code> object, conforming to the asynchronous
+	 * iterator interface.
+	 * <p>
+	 * Note that the iterator can only be iterated once.
+	 */
 	public abstract [Symbol.asyncIterator](): AsyncGenerator<TYield, TReturn, TNext>
 
-	public abstract throw(exception: any): Promise<IteratorEntry<TYield>>; // FIXME correct?
+	/**
+	 * A one argument function. The argument <code>exception</code> is thrown at the current yield
+	 * expression in the generator function. Returns a promise of an <code>IteratorEntry</code> with two
+	 * properties:
+	 * <ul>
+	 * <li>done (boolean)<br>
+	 *     Has the value true if the iterator is past the end of the iterated sequence. In this case value
+	 *     optionally specifies the return value of the iterator. The return values are explained here.
+	 *     Has the value false if the iterator was able to produce the next value in the sequence. This is
+	 *     equivalent of not specifying the done property altogether.
+	 * <li>value<br>
+	 *     any JavaScript value returned by the iterator. Can be omitted when done is true.
+	 * </ul>
+	 */
+	public abstract throw(exception: any): Promise<IteratorEntry<TYield>, any>;
 
-	public abstract return(value: TNext = undefined): Promise<IteratorEntry<TReturn>>; // FIXME correct?
+    /**
+	 * A one (optional) argument function. The (optional) argument <code>value</code> is passed to the
+	 * current yield expression in the generator function. Returns a promise of an <code>IteratorEntry</code> with
+	 * two properties:
+	 * <ul>
+	 * <li>done (boolean)<br>
+	 *     Has the value true if the iterator is past the end of the iterated sequence. In this case value
+	 *     optionally specifies the return value of the iterator. The return values are explained here.
+	 *     Has the value false if the iterator was able to produce the next value in the sequence. This is
+	 *     equivalent of not specifying the done property altogether.
+	 * <li>value<br>
+	 *     any JavaScript value returned by the iterator. Can be omitted when done is true.
+	 * </ul>
+	 */
+	public abstract return(value: TNext = undefined): Promise<IteratorEntry<TReturn>, ?>;
 }
 
 /**
