@@ -112,8 +112,7 @@ package class ExpectedTypeComputer extends TypeSystemHelperStrategy {
 		if (tFun !== null) {
 			val actualReturnTypeRef = tFun.returnTypeRef;
 			val scope = G.getPredefinedTypes().builtInTypeScope;
-			if (TypeUtils.isGenerator(actualReturnTypeRef, scope)
-				|| TypeUtils.isAsyncGenerator(actualReturnTypeRef, scope)) {
+			if (TypeUtils.isGeneratorOrAsyncGenerator(actualReturnTypeRef, scope)) {
 				return tsh.getGeneratorTReturn(G, actualReturnTypeRef);
 			}
 		}
@@ -144,13 +143,11 @@ package class ExpectedTypeComputer extends TypeSystemHelperStrategy {
 		if (tFun !== null) {
 			val actualReturnTypeRef = tFun.returnTypeRef;
 			val scope = G.getPredefinedTypes().builtInTypeScope;
-			if (TypeUtils.isGenerator(actualReturnTypeRef, scope)
-				|| TypeUtils.isAsyncGenerator(actualReturnTypeRef, scope)) {
+			if (TypeUtils.isGeneratorOrAsyncGenerator(actualReturnTypeRef, scope)) {
 				val yieldTypeRef = tsh.getGeneratorTYield(G, actualReturnTypeRef);
 				val yieldTypeRefCopy = TypeUtils.copyWithProxies(yieldTypeRef);
 				if (yieldExpr.isMany()) {
-					if (TypeUtils.isGenerator(exprTypeRef, scope)
-						|| TypeUtils.isAsyncGenerator(exprTypeRef, scope)) {
+					if (TypeUtils.isGeneratorOrAsyncGenerator(exprTypeRef, scope)) {
 						val nextTypeRef = tsh.getGeneratorTNext(G, actualReturnTypeRef);
 						val nextTypeRefCopy = TypeUtils.copyWithProxies(nextTypeRef);
 						val superNext = TypeUtils.createWildcardSuper(nextTypeRefCopy);

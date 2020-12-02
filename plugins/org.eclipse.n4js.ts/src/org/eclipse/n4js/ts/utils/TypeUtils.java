@@ -1379,7 +1379,9 @@ public class TypeUtils {
 	}
 
 	/**
-	 * Returns true iff the {@link TypeRef} is a promise.
+	 * Returns true iff the {@link TypeRef} refers to built-in type {@link BuiltInTypeScope#getPromiseType() Promise}.
+	 * <p>
+	 * WARNING: returns false for subtypes of <code>Promise</code>.
 	 */
 	public static boolean isPromise(TypeRef ref, BuiltInTypeScope scope) {
 		if (ref instanceof ParameterizedTypeRef) {
@@ -1388,9 +1390,15 @@ public class TypeUtils {
 		return false;
 	}
 
-	// FIXME go through all clients of this and similar methods and adjust them for async generators!
 	/**
-	 * Returns true iff the {@link TypeRef} is a generator.
+	 * Returns true iff the {@link TypeRef} refers to built-in type {@link BuiltInTypeScope#getGeneratorType()
+	 * Generator}.
+	 * <p>
+	 * WARNINGS:
+	 * <ul>
+	 * <li>returns false for <code>AsyncGenerator</code>.
+	 * <li>returns false for subtypes of <code>Generator</code>.
+	 * </ul>
 	 */
 	public static boolean isGenerator(TypeRef ref, BuiltInTypeScope scope) {
 		if (ref instanceof ParameterizedTypeRef) {
@@ -1400,13 +1408,35 @@ public class TypeUtils {
 	}
 
 	/**
-	 * Returns true iff the {@link TypeRef} is an asynchronous generator.
+	 * Returns true iff the {@link TypeRef} refers to built-in type {@link BuiltInTypeScope#getAsyncGeneratorType()
+	 * AsyncGenerator}.
+	 * <p>
+	 * WARNINGS:
+	 * <ul>
+	 * <li>returns false for <code>Generator</code>.
+	 * <li>returns false for subtypes of <code>AsyncGenerator</code>.
+	 * </ul>
 	 */
 	public static boolean isAsyncGenerator(TypeRef ref, BuiltInTypeScope scope) {
 		if (ref instanceof ParameterizedTypeRef) {
 			return ref.getDeclaredType() == scope.getAsyncGeneratorType();
 		}
 		return false;
+	}
+
+	/**
+	 * Returns true iff the {@link TypeRef} refers to built-in type {@link BuiltInTypeScope#getGeneratorType()
+	 * Generator} or {@link BuiltInTypeScope#getAsyncGeneratorType() AsyncGenerator}.
+	 * <p>
+	 * WARNING: returns false for subtypes of <code>Generator</code> and <code>AsyncGenerator</code>.
+	 */
+	public static boolean isGeneratorOrAsyncGenerator(TypeRef ref, BuiltInTypeScope scope) {
+		if (ref instanceof ParameterizedTypeRef) {
+			Type declType = ref.getDeclaredType();
+			return declType == scope.getGeneratorType() || declType == scope.getAsyncGeneratorType();
+		}
+		return false;
+
 	}
 
 	/**

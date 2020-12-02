@@ -412,6 +412,7 @@ class ValidatorMessageHelper {
 		if (rs === null) { // should not happen, but in case of messages the tfunction may be a temp. instance
 			return false;
 		}
-		return TypeUtils.isGenerator(tfunction.returnTypeRef, BuiltInTypeScope.get(rs));
+		val builtInTypeScope = BuiltInTypeScope.get(rs);
+		return TypeUtils.isGeneratorOrAsyncGenerator(tfunction.returnTypeRef, builtInTypeScope);
 	}
 }

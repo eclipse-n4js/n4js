@@ -494,8 +494,7 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		if (tFun instanceof TFunction) {
 			val actualReturnTypeRef = tFun.returnTypeRef;
 			val scope = G.getPredefinedTypes().builtInTypeScope;
-			if (TypeUtils.isGenerator(actualReturnTypeRef, scope)
-				|| TypeUtils.isAsyncGenerator(actualReturnTypeRef, scope)) {
+			if (TypeUtils.isGeneratorOrAsyncGenerator(actualReturnTypeRef, scope)) {
 				return actualReturnTypeRef;
 			}
 		}
