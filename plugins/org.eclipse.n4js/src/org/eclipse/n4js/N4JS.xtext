@@ -1079,8 +1079,8 @@ terminal STRING:
 	| "'" SINGLE_STRING_CHAR* "'"?
 ;
 
-terminal HASH_BANG:
-	  '#!' DOUBLE_STRING_CHAR* EOL
+terminal HASH_BANG returns ecore::EString:
+	  '#!' (!LINE_TERMINATOR_FRAGMENT)*
 ;
 
 terminal fragment DOUBLE_STRING_CHAR:
