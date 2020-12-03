@@ -423,9 +423,7 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 	 * folder.
 	 */
 	private boolean isRequiresOutputAndSourceFolder(ProjectType type) {
-		return type != ProjectType.DEFINITION &&
-				type != ProjectType.VALIDATION &&
-				type != ProjectType.PLAINJS;
+		return !N4JSGlobals.PROJECT_TYPES_WITHOUT_GENERATION.contains(type);
 	}
 
 	/**

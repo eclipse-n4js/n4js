@@ -66,6 +66,9 @@ public class DefaultBuildRequestFactory implements IBuildRequestFactory {
 		String projectName = projectConfig.getName();
 		XBuildRequest result = getBuildRequest(projectName);
 
+		result.setIndexOnly(projectConfig.indexOnly());
+		result.setGeneratorEnabled(projectConfig.isGeneratorEnabled());
+
 		if (workspaceConfig.isInDependencyCycle(projectName)) {
 			changedFiles = new HashSet<>(changedFiles);
 			changedFiles.retainAll(projectConfig.getProjectDescriptionUris());
@@ -76,6 +79,7 @@ public class DefaultBuildRequestFactory implements IBuildRequestFactory {
 		result.setDeletedFiles(deletedFiles);
 
 		result.setExternalDeltas(externalDeltas);
+
 		return result;
 	}
 

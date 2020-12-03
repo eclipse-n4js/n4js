@@ -243,8 +243,8 @@ public class XStatefulIncrementalBuilder {
 			// next line required, because #validate() sometimes returns null when canceled:
 			operationCanceledManager.checkCanceled(cancelIndicator);
 			request.afterValidate(source, issues);
-			boolean proceedGenerate = !containsValidationErrors(issues);
 
+			boolean proceedGenerate = request.canGenerate() && !containsValidationErrors(issues);
 			if (proceedGenerate) {
 				operationCanceledManager.checkCanceled(cancelIndicator);
 				generate(resource, newSource2GeneratedMapping, serviceProvider);
@@ -309,18 +309,17 @@ public class XStatefulIncrementalBuilder {
 				resourceStorageFacade.saveResource((StorageAwareResource) resource, fileSystemAccess);
 			}
 		}
-		if (request.canGenerate()) {
-			GeneratorContext generatorContext = new GeneratorContext();
-			generatorContext.setCancelIndicator(request.getCancelIndicator());
-			generator.generate(resource, fileSystemAccess, generatorContext);
-			XtextResourceSet resourceSet = request.getResourceSet();
-			for (URI noLongerCreated : previous) {
-				try {
-					resourceSet.getURIConverter().delete(noLongerCreated, CollectionLiterals.emptyMap());
-					request.afterDelete(noLongerCreated);
-				} catch (IOException e) {
-					Exceptions.sneakyThrow(e);
-				}
+
+		GeneratorContext generatorContext = new GeneratorContext();
+		generatorContext.setCancelIndicator(request.getCancelIndicator());
+		generator.generate(resource, fileSystemAccess, generatorContext);
+		XtextResourceSet resourceSet = request.getResourceSet();
+		for (URI noLongerCreated : previous) {
+			try {
+				resourceSet.getURIConverter().delete(noLongerCreated, CollectionLiterals.emptyMap());
+				request.afterDelete(noLongerCreated);
+			} catch (IOException e) {
+				Exceptions.sneakyThrow(e);
 			}
 		}
 	}

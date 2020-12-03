@@ -161,6 +161,7 @@ public class ConfigSnapshotFactory {
 				projectConfig.getPath(),
 				projectConfig.getProjectDescriptionUris(),
 				projectConfig.indexOnly(),
+				projectConfig.isGeneratorEnabled(),
 				projectConfig.getDependencies(),
 				Iterables.transform(projectConfig.getSourceFolders(), this::createSourceFolderSnapshot));
 	}

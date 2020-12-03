@@ -42,7 +42,9 @@ public class N4JSOutputConfigurationProvider extends OutputConfigurationProvider
 
 		for (IN4JSProject prj : n4jsCore.findAllProjects()) {
 			OutputConfiguration outputConfiguration = getOutputConfiguration(prj);
-			outputConfs.add(outputConfiguration);
+			if (outputConfiguration != null) {
+				outputConfs.add(outputConfiguration);
+			}
 		}
 
 		return outputConfs;
@@ -67,11 +69,16 @@ public class N4JSOutputConfigurationProvider extends OutputConfigurationProvider
 
 	private Set<OutputConfiguration> getOutputConfigurationSet(IN4JSProject project) {
 		Set<OutputConfiguration> outputConfs = new HashSet<>();
-		outputConfs.add(getOutputConfiguration(project));
+		OutputConfiguration outputConf = getOutputConfiguration(project);
+		if (outputConf != null) {
+			outputConfs.add(outputConf);
+		}
 		return outputConfs;
 	}
 
 	private OutputConfiguration getOutputConfiguration(IN4JSProject project) {
+		// if (project.)
+
 		String outputPath = null;
 		if (project != null) {
 			outputPath = project.getOutputPath();
