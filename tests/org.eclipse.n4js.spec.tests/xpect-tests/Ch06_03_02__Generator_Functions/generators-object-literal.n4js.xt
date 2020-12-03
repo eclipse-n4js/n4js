@@ -13,12 +13,15 @@
 
 
 // generator method in object literal
-// XPECT noerrors
+// XPECT type of 'o1' --> ~Object with { g(): Generator<undefined,undefined,any> }
 let o1 = {
 	* g() {}
 };
-// XPECT type of 'o1' --> ~Object with { g(): Generator<undefined,undefined,any> }
-o1;
+// XPECT type of 'ao1' --> ~Object with { ag(): AsyncGenerator<undefined,undefined,any> }
+let ao1 = {
+	async * ag() {}
+};
+
 
 // XPECT type of 'o2' --> ~Object with { g(): Generator<string,undefined,any> }
 let o2 = {
@@ -26,59 +29,105 @@ let o2 = {
 };
 // XPECT warnings at 'o2.g' --> "A reference to method g is created detached from a (correct) this-instance." at "g"
 let o2g = o2.g;
-// XPECT FIXME type of 'o2g' --> {method * g1(): Generator<undefined,undefined,any>}
+// XPECT type of 'o2g' --> {function():Generator<string,undefined,any>}
 o2g;
+// XPECT type of 'ao2' --> ~Object with { ag(): AsyncGenerator<string,undefined,any> }
+let ao2 = {
+    string async * ag() {}
+};
+// XPECT warnings at 'ao2.ag' --> "A reference to method ag is created detached from a (correct) this-instance." at "ag"
+let ao2ag = ao2.ag;
+// XPECT type of 'ao2ag' --> {function():AsyncGenerator<string,undefined,any>}
+ao2ag;
+
 
 // XPECT type of 'o3' --> ~Object with { g(): Generator<string,any,any> }
 let o3 = {
-    string * g() {	return 1;	}
+    string * g() { return 1; }
 };
-o3;
+// XPECT type of 'ao3' --> ~Object with { ag(): AsyncGenerator<string,any,any> }
+let ao3 = {
+    string async * ag() { return 1; }
+};
+
 
 // XPECT type of 'o4' --> ~Object with { g(): Generator<string,undefined,any> }
 let o4 = {
-    string * g() {	yield "1";	}
+    string * g() { yield "1"; }
 };
-o4;
+// XPECT type of 'ao4' --> ~Object with { ag(): AsyncGenerator<string,undefined,any> }
+let ao4 = {
+    string async * ag() { yield "1"; }
+};
+
 
 let o5 = {
     string * g() {
-// XPECT errors at '1' --> "int is not a subtype of string." at "1"
+		// XPECT errors at '1' --> "int is not a subtype of string." at "1"
     	yield 1;
     }
 };
-o5;
+let ao5 = {
+    string async * ag() {
+		// XPECT errors at '1' --> "int is not a subtype of string." at "1"
+    	yield 1;
+    }
+};
+
 
 // XPECT type of 'o6' --> ~Object with { g(): Generator<undefined,undefined,any> }
 let o6 = {
-    void * g() {	}
+    void * g() {}
 };
-o6;
+// XPECT type of 'ao6' --> ~Object with { ag(): AsyncGenerator<undefined,undefined,any> }
+let ao6 = {
+    void async * ag() {}
+};
 
-// XPECT noerrors
+
 let o7 = {
-    void * g() {	yield; return; }
+	// XPECT noerrors
+    void * g() { yield; return; }
 };
-o7;
+let ao7 = {
+	// XPECT noerrors
+    void async * ag() { yield; return; }
+};
 
-// XPECT noerrors
+
 let o8 = {
-    void * g() {	 return undefined; }
+	// XPECT noerrors
+    void * g() { return undefined; }
 };
-o8;
+let ao8 = {
+	// XPECT noerrors
+    void async * ag() { return undefined; }
+};
+
 
 let o9 = {
     void * g() {
-// XPECT errors at '1' -->"int is not a subtype of undefined." at "1"
+		// XPECT errors at '1' -->"int is not a subtype of undefined." at "1"
     	return 1;
     }
 };
-o9;
+let ao9 = {
+    void async * ag() {
+		// XPECT errors at '1' -->"int is not a subtype of undefined." at "1"
+    	return 1;
+    }
+};
+
 
 let o10 = {
     void * g() {
-// XPECT errors at '1' -->"int is not a subtype of undefined." at "1"
+		// XPECT errors at '1' -->"int is not a subtype of undefined." at "1"
     	yield 1;
     }
 };
-o10;
+let ao10 = {
+    void async * ag() {
+		// XPECT errors at '1' -->"int is not a subtype of undefined." at "1"
+    	yield 1;
+    }
+};

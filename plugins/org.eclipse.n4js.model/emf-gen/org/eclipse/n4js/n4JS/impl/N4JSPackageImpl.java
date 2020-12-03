@@ -3443,7 +3443,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getForStatement_ForIn() {
+	public EAttribute getForStatement_Await() {
 		return (EAttribute)forStatementEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -3453,8 +3453,18 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getForStatement_ForOf() {
+	public EAttribute getForStatement_ForIn() {
 		return (EAttribute)forStatementEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getForStatement_ForOf() {
+		return (EAttribute)forStatementEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -7695,6 +7705,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		forStatementEClass = createEClass(FOR_STATEMENT);
 		createEReference(forStatementEClass, FOR_STATEMENT__INIT_EXPR);
 		createEReference(forStatementEClass, FOR_STATEMENT__UPDATE_EXPR);
+		createEAttribute(forStatementEClass, FOR_STATEMENT__AWAIT);
 		createEAttribute(forStatementEClass, FOR_STATEMENT__FOR_IN);
 		createEAttribute(forStatementEClass, FOR_STATEMENT__FOR_OF);
 		createEOperation(forStatementEClass, FOR_STATEMENT___IS_FOR_PLAIN);
@@ -8808,6 +8819,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEClass(forStatementEClass, ForStatement.class, "ForStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getForStatement_InitExpr(), this.getExpression(), null, "initExpr", null, 0, 1, ForStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getForStatement_UpdateExpr(), this.getExpression(), null, "updateExpr", null, 0, 1, ForStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getForStatement_Await(), theEcorePackage.getEBoolean(), "await", null, 0, 1, ForStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getForStatement_ForIn(), theEcorePackage.getEBoolean(), "forIn", null, 0, 1, ForStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getForStatement_ForOf(), theEcorePackage.getEBoolean(), "forOf", null, 0, 1, ForStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 

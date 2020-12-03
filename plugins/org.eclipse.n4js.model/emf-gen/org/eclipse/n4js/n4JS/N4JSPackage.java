@@ -4471,13 +4471,22 @@ public interface N4JSPackage extends EPackage {
 	int FOR_STATEMENT__UPDATE_EXPR = VARIABLE_DECLARATION_CONTAINER_FEATURE_COUNT + 3;
 
 	/**
+	 * The feature id for the '<em><b>Await</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FOR_STATEMENT__AWAIT = VARIABLE_DECLARATION_CONTAINER_FEATURE_COUNT + 4;
+
+	/**
 	 * The feature id for the '<em><b>For In</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FOR_STATEMENT__FOR_IN = VARIABLE_DECLARATION_CONTAINER_FEATURE_COUNT + 4;
+	int FOR_STATEMENT__FOR_IN = VARIABLE_DECLARATION_CONTAINER_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>For Of</b></em>' attribute.
@@ -4486,7 +4495,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FOR_STATEMENT__FOR_OF = VARIABLE_DECLARATION_CONTAINER_FEATURE_COUNT + 5;
+	int FOR_STATEMENT__FOR_OF = VARIABLE_DECLARATION_CONTAINER_FEATURE_COUNT + 6;
 
 	/**
 	 * The number of structural features of the '<em>For Statement</em>' class.
@@ -4495,7 +4504,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FOR_STATEMENT_FEATURE_COUNT = VARIABLE_DECLARATION_CONTAINER_FEATURE_COUNT + 6;
+	int FOR_STATEMENT_FEATURE_COUNT = VARIABLE_DECLARATION_CONTAINER_FEATURE_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Get Var Decl</em>' operation.
@@ -18025,6 +18034,17 @@ public interface N4JSPackage extends EPackage {
 	EReference getForStatement_UpdateExpr();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4JS.ForStatement#isAwait <em>Await</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Await</em>'.
+	 * @see org.eclipse.n4js.n4JS.ForStatement#isAwait()
+	 * @see #getForStatement()
+	 * @generated
+	 */
+	EAttribute getForStatement_Await();
+
+	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4JS.ForStatement#isForIn <em>For In</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -23716,6 +23736,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EReference FOR_STATEMENT__UPDATE_EXPR = eINSTANCE.getForStatement_UpdateExpr();
+
+		/**
+		 * The meta object literal for the '<em><b>Await</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute FOR_STATEMENT__AWAIT = eINSTANCE.getForStatement_Await();
 
 		/**
 		 * The meta object literal for the '<em><b>For In</b></em>' attribute feature.

@@ -1,0 +1,70 @@
+/*
+ * Copyright (c) 2020 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+// XPECT errors --> "for-await-of is allowed only inside functions annotated with async." at "await"
+for await (const c of []) {}
+
+function bad() {
+	// XPECT errors --> "for-await-of is allowed only inside functions annotated with async." at "await"
+	for await (const c of []) {}
+}
+
+function* badGenerator(): string {
+	// XPECT errors --> "for-await-of is allowed only inside functions annotated with async." at "await"
+	for await (const c of []) {}
+}
+
+async function good() {
+	// XPECT noerrors -->
+	for await (const c of []) {}
+}
+
+async function* goodGenerator(): string {
+	// XPECT noerrors -->
+	for await (const c of []) {}
+}
+
+(async function() {
+	// XPECT noerrors -->
+	for await (const c of []) {}
+});
+
+(async () => {
+	// XPECT noerrors -->
+	for await (const c of []) {}
+});
+
+class C {
+	methodBad() {
+		// XPECT errors --> "for-await-of is allowed only inside functions annotated with async." at "await"
+		for await (const c of []) {}
+	}
+	
+	async methodGood() {
+		// XPECT noerrors -->
+		for await (const c of []) {}
+	}
+}
+
+interface I {
+	methodBad() {
+		// XPECT errors --> "for-await-of is allowed only inside functions annotated with async." at "await"
+		for await (const c of []) {}
+	}
+	
+	async methodGood() {
+		// XPECT noerrors -->
+		for await (const c of []) {}
+	}
+}

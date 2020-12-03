@@ -17,6 +17,13 @@ var str : string;
 var num : number;
 
 
+// should require an iterable:
+
+var notAnIterable : number;
+// XPECT errors --> "number is not a subtype of Iterable<? extends any>." at "notAnIterable"
+for(elem of notAnIterable) {}
+
+
 // should work with the built-in iterable type:
 
 var anyIterable : Iterable<?>;

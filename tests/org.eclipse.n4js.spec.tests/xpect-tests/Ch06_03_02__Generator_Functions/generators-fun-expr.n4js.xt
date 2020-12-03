@@ -13,40 +13,59 @@
 
 
 // return without expression is ok in shorthand form
-// XPECT noerrors
 let g50 = function * () : int {
+	// XPECT noerrors
 	return;
 }
-g50;
+let ag50 = async function * () : int {
+	// XPECT noerrors
+	return;
+}
 
 // return with expression is ok in shorthand form
-// XPECT noerrors
 let g51 = function * () : int {
+	// XPECT noerrors
 	return 1;
 }
-g51;
+let ag51 = async function * () : int {
+	// XPECT noerrors
+	return 1;
+}
 
 // return without expression is ok when void
-// XPECT noerrors
 let g52 = function * () : void {
-	yield ;
+	// XPECT noerrors
+	yield;
+	// XPECT noerrors
 	return;
 }
-g52;
+let ag52 = async function * () : void {
+	// XPECT noerrors
+	yield;
+	// XPECT noerrors
+	return;
+}
 
-let g53 = function * () : void {
-	yield ;
-// err
 // return with expression is not ok when void
-// XPECT errors --> "int is not a subtype of undefined." at "1"
+let g53 = function * () : void {
+	// XPECT errors --> "int is not a subtype of undefined." at "1"
+	yield 1;
+	// XPECT errors --> "int is not a subtype of undefined." at "1"
 	return 1;
 }
-g53;
+let ag53 = async function * () : void {
+	// XPECT errors --> "int is not a subtype of undefined." at "1"
+	yield 1;
+	// XPECT errors --> "int is not a subtype of undefined." at "1"
+	return 1;
+}
 
 // yield has return of type TNext
-// XPECT noerrors
 let g54 = function * () : Generator<?,?,string>{
+	// XPECT noerrors
 	let x : string = yield;
-	x;
 }
-g54;
+let ag54 = async function * () : AsyncGenerator<?,?,string>{
+	// XPECT noerrors
+	let x : string = yield;
+}

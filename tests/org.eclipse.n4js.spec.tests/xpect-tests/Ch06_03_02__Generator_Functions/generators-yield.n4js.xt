@@ -12,60 +12,156 @@
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
 
 
-
-// yield has return
-// XPECT noerrors
-function * g3a() {
-	let x = yield;
-	x;
-}
-
-function * g3b() {
-// err
-// yield has return of type any, error case
-// XPECT errors --> "any is not a subtype of string." at "yield"
-	let x : string = yield;
-	x;
-}
-
-// yield has return
-// XPECT noerrors
-function * g3c() : Generator<?,?,int> {
-	let x = yield;
-	x;
-}
-
-// yield has return of type TNext
-// XPECT noerrors
-function * g4() : Generator<?,?,string>{
-	let x : string = yield;
-	x;
-}
-
-function g5() {
-// err
 // yield is only allowed in generators
-/* XPECT errors ---
-"yield is a reserved identifier." at "yield"
-"Couldn't resolve reference to IdentifiableElement 'yield'." at "yield"
---- */
+function g0() {
+	/* XPECT errors ---
+	"yield is a reserved identifier." at "yield"
+	"Couldn't resolve reference to IdentifiableElement 'yield'." at "yield"
+	--- */
+	yield;
+}
+async function ag0() {
+	/* XPECT errors ---
+	"yield is a reserved identifier." at "yield"
+	"Couldn't resolve reference to IdentifiableElement 'yield'." at "yield"
+	--- */
 	yield;
 }
 
-// yield can provide a return expression
-// XPECT noerrors
+
+// yield does not have to yield a value
+function * g1() {
+	// XPECT noerrors -->
+	yield;
+}
+async function * ag1() {
+	// XPECT noerrors -->
+	yield;
+}
+// ... and then TYield is inferred to 'undefined'
+// XPECT type of 'g1' --> {function():Generator<undefined,undefined,any>}
+g1;
+// XPECT type of 'ag1' --> {function():AsyncGenerator<undefined,undefined,any>}
+ag1;
+
+
+// yield may yield a value
+function * g2() {
+	// XPECT noerrors -->
+	yield 1 + 2;
+}
+async function * ag2() {
+	// XPECT noerrors -->
+	yield 1 + 2;
+}
+// ... and then TYield is inferred to 'any'
+// XPECT type of 'g2' --> {function():Generator<any,undefined,any>}
+g2;
+// XPECT type of 'ag2' --> {function():AsyncGenerator<any,undefined,any>}
+ag2;
+
+
+// yield must yield a value of type TYield (if given using the shorthand form)
+function * g3a() : int {
+	// XPECT errors --> "string is not a subtype of int." at "'bad'"
+	yield 'bad';
+}
+function * <T> g3b() : T {
+	// XPECT errors --> "string is not a subtype of T." at "'bad'"
+	yield 'bad';
+}
+function * <T> g3c(p: T) : T {
+	// XPECT noerrors -->
+	yield p;
+}
+async function * ag3a() : int {
+	// XPECT errors --> "string is not a subtype of int." at "'bad'"
+	yield 'bad';
+}
+async function * <T> ag3b() : T {
+	// XPECT errors --> "string is not a subtype of T." at "'bad'"
+	yield 'bad';
+}
+async function * <T> ag3c(p: T) : T {
+	// XPECT noerrors -->
+	yield p;
+}
+
+
+// yield must yield a value of type TYield (if given using the explicit form)
+function * g4a() : Generator<int, ?, ?> {
+	// XPECT errors --> "string is not a subtype of int." at "'bad'"
+	yield 'bad';
+}
+function * <T> g4b() : Generator<T, ?, ?> {
+	// XPECT errors --> "string is not a subtype of T." at "'bad'"
+	yield 'bad';
+}
+function * <T> g4c(p: T) : Generator<T, ?, ?> {
+	// XPECT noerrors -->
+	yield p;
+}
+function * g4d() : Generator<?, ?, ?> {
+	// XPECT noerrors -->
+	yield 'good';
+}
+async function * ag4a() : AsyncGenerator<int, ?, ?> {
+	// XPECT errors --> "string is not a subtype of int." at "'bad'"
+	yield 'bad';
+}
+async function * <T> ag4b() : AsyncGenerator<T, ?, ?> {
+	// XPECT errors --> "string is not a subtype of T." at "'bad'"
+	yield 'bad';
+}
+async function * <T> ag4c(p: T) : AsyncGenerator<T, ?, ?> {
+	// XPECT noerrors -->
+	yield p;
+}
+async function * ag4d() : AsyncGenerator<?, ?, ?> {
+	// XPECT noerrors -->
+	yield 'good';
+}
+
+
+// yield must not yield a value in void generators
+function * g5() : void {
+	// XPECT errors --> "string is not a subtype of undefined." at "'bad'"
+	yield 'bad';
+}
+async function * ag5() : void {
+	// XPECT errors --> "string is not a subtype of undefined." at "'bad'"
+	yield 'bad';
+}
+
+
+// yield returns a value
 function * g6() {
-	yield 1 + 2;
+	// XPECT noerrors
+	let x = yield;
+}
+async function * ag6() {
+	// XPECT noerrors
+	let x = yield;
 }
 
-// yield can provide a return expression using the shorthand form
-// XPECT noerrors
-function * g7() : int {
-	yield 1 + 2;
+
+// yield returns a value of type any, by default
+function * g7() {
+	// XPECT errors --> "any is not a subtype of string." at "yield"
+	let x: string = yield;
+}
+async function * ag7() {
+	// XPECT errors --> "any is not a subtype of string." at "yield"
+	let x: string = yield;
 }
 
-// yield can provide a return expression using the explicit form
-// XPECT noerrors
-function * g8() : Generator<int, ?, ?> {
-	yield 1 + 2;
+
+// yield returns a value of type TNext
+function * g8() : Generator<?,?,int> {
+	// XPECT type of 'x' --> int
+	let x = yield;
+}
+async function * ag8() : AsyncGenerator<?,?,int> {
+	// XPECT type of 'x' --> int
+	let x = yield;
 }

@@ -2395,6 +2395,11 @@ ruleTMember returns [EObject current=null]
 					)
 				)?
 				(
+					(
+						Async
+					)
+				)?
+				(
 					ruleTypeVariables[null]
 				)?
 				(
@@ -2471,6 +2476,11 @@ ruleTMethod returns [EObject current=null]
 					)
 				)?
 				(
+					(
+						Async
+					)
+				)?
+				(
 					ruleTypeVariables[null]
 				)?
 				(
@@ -2541,15 +2551,29 @@ ruleTMethod returns [EObject current=null]
 					)
 				)?
 				(
+					(
+						lv_declaredAsync_3_0=Async
+						{
+							newLeafNode(lv_declaredAsync_3_0, grammarAccess.getTMethodAccess().getDeclaredAsyncAsyncKeyword_0_0_2_0());
+						}
+						{
+							if ($current==null) {
+								$current = createModelElement(grammarAccess.getTMethodRule());
+							}
+							setWithLastConsumed($current, "declaredAsync", true, "async");
+						}
+					)
+				)?
+				(
 					{
 						if ($current==null) {
 							$current = createModelElement(grammarAccess.getTMethodRule());
 						}
-						newCompositeNode(grammarAccess.getTMethodAccess().getTypeVariablesParserRuleCall_0_0_2());
+						newCompositeNode(grammarAccess.getTMethodAccess().getTypeVariablesParserRuleCall_0_0_3());
 					}
-					this_TypeVariables_3=ruleTypeVariables[$current]
+					this_TypeVariables_4=ruleTypeVariables[$current]
 					{
-						$current = $this_TypeVariables_3.current;
+						$current = $this_TypeVariables_4.current;
 						afterParserOrEnumRuleCall();
 					}
 				)?
@@ -2557,9 +2581,9 @@ ruleTMethod returns [EObject current=null]
 					(
 						(
 							{
-								newCompositeNode(grammarAccess.getTMethodAccess().getNameTypesIdentifierParserRuleCall_0_0_3_0_0());
+								newCompositeNode(grammarAccess.getTMethodAccess().getNameTypesIdentifierParserRuleCall_0_0_4_0_0());
 							}
-							lv_name_4_0=ruleTypesIdentifier
+							lv_name_5_0=ruleTypesIdentifier
 							{
 								if ($current==null) {
 									$current = createModelElementForParent(grammarAccess.getTMethodRule());
@@ -2567,7 +2591,7 @@ ruleTMethod returns [EObject current=null]
 								set(
 									$current,
 									"name",
-									lv_name_4_0,
+									lv_name_5_0,
 									"org.eclipse.n4js.ts.Types.TypesIdentifier");
 								afterParserOrEnumRuleCall();
 							}
@@ -2577,9 +2601,9 @@ ruleTMethod returns [EObject current=null]
 					(
 						(
 							{
-								newCompositeNode(grammarAccess.getTMethodAccess().getNameTypesComputedPropertyNameParserRuleCall_0_0_3_1_0());
+								newCompositeNode(grammarAccess.getTMethodAccess().getNameTypesComputedPropertyNameParserRuleCall_0_0_4_1_0());
 							}
-							lv_name_5_0=ruleTypesComputedPropertyName
+							lv_name_6_0=ruleTypesComputedPropertyName
 							{
 								if ($current==null) {
 									$current = createModelElementForParent(grammarAccess.getTMethodRule());
@@ -2587,7 +2611,7 @@ ruleTMethod returns [EObject current=null]
 								set(
 									$current,
 									"name",
-									lv_name_5_0,
+									lv_name_6_0,
 									"org.eclipse.n4js.ts.Types.TypesComputedPropertyName");
 								afterParserOrEnumRuleCall();
 							}
@@ -2600,11 +2624,11 @@ ruleTMethod returns [EObject current=null]
 						if ($current==null) {
 							$current = createModelElement(grammarAccess.getTMethodRule());
 						}
-						newCompositeNode(grammarAccess.getTMethodAccess().getTFormalParametersParserRuleCall_0_0_4());
+						newCompositeNode(grammarAccess.getTMethodAccess().getTFormalParametersParserRuleCall_0_0_5());
 					}
-					this_TFormalParameters_6=ruleTFormalParameters[$current]
+					this_TFormalParameters_7=ruleTFormalParameters[$current]
 					{
-						$current = $this_TFormalParameters_6.current;
+						$current = $this_TFormalParameters_7.current;
 						afterParserOrEnumRuleCall();
 					}
 				)
@@ -2616,15 +2640,15 @@ ruleTMethod returns [EObject current=null]
 			}
 			newCompositeNode(grammarAccess.getTMethodAccess().getColonSepReturnTypeRefParserRuleCall_1());
 		}
-		this_ColonSepReturnTypeRef_7=ruleColonSepReturnTypeRef[$current]
+		this_ColonSepReturnTypeRef_8=ruleColonSepReturnTypeRef[$current]
 		{
-			$current = $this_ColonSepReturnTypeRef_7.current;
+			$current = $this_ColonSepReturnTypeRef_8.current;
 			afterParserOrEnumRuleCall();
 		}
 		(
-			otherlv_8=Semicolon
+			otherlv_9=Semicolon
 			{
-				newLeafNode(otherlv_8, grammarAccess.getTMethodAccess().getSemicolonKeyword_2());
+				newLeafNode(otherlv_9, grammarAccess.getTMethodAccess().getSemicolonKeyword_2());
 			}
 		)?
 	)

@@ -17,15 +17,28 @@ class A {}
 class B extends A {}
 class C extends B {}
 
+class MyCollectionNominal<T> implements Iterable<T> {
+	@Override
+	public [Symbol.iterator]() : Iterator<T> {
+		return null;
+	}
+}
+class MyCollectionStructural<T> extends Object {
+	public [Symbol.iterator]() : Iterator<T> {
+		return null;
+	}
+}
+
 var aIterable : Iterable<A>;
 var bIterable : Iterable<B>;
 var cIterable : Iterable<C>;
 
-// using pre-declared variables in for...of
-
 var a : A;
 var b : B;
 var c : C;
+
+
+// using pre-declared variables in for...of
 
 // XPECT noerrors -->
 for(b of bIterable) {}
@@ -40,6 +53,7 @@ for(b of bIterable) {}
 for(a of bIterable) {}
 // XPECT errors --> "Iterable<B> is not a structural subtype of Iterable<? extends C>: #iterator failed: {function():Iterator<B>} is not a subtype of {function():Iterator<? extends C>}." at "bIterable"
 for(c of bIterable) {}
+
 
 // declaring explicitly typed variables in for...of
 // (these cases should behave exactly as the cases with pre-declared variables)
@@ -81,4 +95,26 @@ for(var v9 of anyIterable) {
 for(var v10 of []) {
 	// XPECT errors --> "any is not a subtype of X." at "v10"
 	var test10 : X = v10;
+}
+
+var myCollNomB: MyCollectionNominal<B>;
+for(var v11 of myCollNomB) {
+	// XPECT errors --> "B is not a subtype of X." at "v11"
+	var test11 : X = v11;
+}
+var myCollNomBelowB: MyCollectionNominal<? extends B>;
+for(var v12 of myCollNomBelowB) {
+	// XPECT errors --> "B is not a subtype of X." at "v12"
+	var test12 : X = v12;
+}
+
+var myCollStructB: MyCollectionStructural<B>;
+for(var v13 of myCollStructB) {
+	// XPECT errors --> "B is not a subtype of X." at "v13"
+	var test13 : X = v13;
+}
+var myCollStructBelowB: MyCollectionStructural<? extends B>;
+for(var v14 of myCollStructBelowB) {
+	// XPECT errors --> "B is not a subtype of X." at "v14"
+	var test14 : X = v14;
 }

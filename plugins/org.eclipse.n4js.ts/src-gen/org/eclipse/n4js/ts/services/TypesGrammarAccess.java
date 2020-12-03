@@ -1413,34 +1413,38 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cDeclaredAbstractAbstractKeyword_0_0_1_0_0 = (Keyword)cDeclaredAbstractAssignment_0_0_1_0.eContents().get(0);
 		private final Assignment cDeclaredStaticAssignment_0_0_1_1 = (Assignment)cAlternatives_0_0_1.eContents().get(1);
 		private final Keyword cDeclaredStaticStaticKeyword_0_0_1_1_0 = (Keyword)cDeclaredStaticAssignment_0_0_1_1.eContents().get(0);
-		private final RuleCall cTypeVariablesParserRuleCall_0_0_2 = (RuleCall)cGroup_0_0.eContents().get(2);
-		private final Alternatives cAlternatives_0_0_3 = (Alternatives)cGroup_0_0.eContents().get(3);
-		private final Assignment cNameAssignment_0_0_3_0 = (Assignment)cAlternatives_0_0_3.eContents().get(0);
-		private final RuleCall cNameTypesIdentifierParserRuleCall_0_0_3_0_0 = (RuleCall)cNameAssignment_0_0_3_0.eContents().get(0);
-		private final Assignment cNameAssignment_0_0_3_1 = (Assignment)cAlternatives_0_0_3.eContents().get(1);
-		private final RuleCall cNameTypesComputedPropertyNameParserRuleCall_0_0_3_1_0 = (RuleCall)cNameAssignment_0_0_3_1.eContents().get(0);
-		private final RuleCall cTFormalParametersParserRuleCall_0_0_4 = (RuleCall)cGroup_0_0.eContents().get(4);
+		private final Assignment cDeclaredAsyncAssignment_0_0_2 = (Assignment)cGroup_0_0.eContents().get(2);
+		private final Keyword cDeclaredAsyncAsyncKeyword_0_0_2_0 = (Keyword)cDeclaredAsyncAssignment_0_0_2.eContents().get(0);
+		private final RuleCall cTypeVariablesParserRuleCall_0_0_3 = (RuleCall)cGroup_0_0.eContents().get(3);
+		private final Alternatives cAlternatives_0_0_4 = (Alternatives)cGroup_0_0.eContents().get(4);
+		private final Assignment cNameAssignment_0_0_4_0 = (Assignment)cAlternatives_0_0_4.eContents().get(0);
+		private final RuleCall cNameTypesIdentifierParserRuleCall_0_0_4_0_0 = (RuleCall)cNameAssignment_0_0_4_0.eContents().get(0);
+		private final Assignment cNameAssignment_0_0_4_1 = (Assignment)cAlternatives_0_0_4.eContents().get(1);
+		private final RuleCall cNameTypesComputedPropertyNameParserRuleCall_0_0_4_1_0 = (RuleCall)cNameAssignment_0_0_4_1.eContents().get(0);
+		private final RuleCall cTFormalParametersParserRuleCall_0_0_5 = (RuleCall)cGroup_0_0.eContents().get(5);
 		private final RuleCall cColonSepReturnTypeRefParserRuleCall_1 = (RuleCall)cGroup.eContents().get(1);
 		private final Keyword cSemicolonKeyword_2 = (Keyword)cGroup.eContents().get(2);
 		
 		//TMethod:
 		//	=>
 		//	(declaredMemberAccessModifier=MemberAccessModifier (declaredAbstract?='abstract' | declaredStatic?='static')?
+		//	declaredAsync?='async'?
 		//	TypeVariables? (name=TypesIdentifier | name=TypesComputedPropertyName)
 		//	-> TFormalParameters) ColonSepReturnTypeRef
 		//	';'?;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//=> (declaredMemberAccessModifier=MemberAccessModifier (declaredAbstract?='abstract' | declaredStatic?='static')?
-		//TypeVariables? (name=TypesIdentifier | name=TypesComputedPropertyName) -> TFormalParameters) ColonSepReturnTypeRef ';'?
+		//declaredAsync?='async'? TypeVariables? (name=TypesIdentifier | name=TypesComputedPropertyName) -> TFormalParameters)
+		//ColonSepReturnTypeRef ';'?
 		public Group getGroup() { return cGroup; }
 		
 		//=> (declaredMemberAccessModifier=MemberAccessModifier (declaredAbstract?='abstract' | declaredStatic?='static')?
-		//TypeVariables? (name=TypesIdentifier | name=TypesComputedPropertyName) -> TFormalParameters)
+		//declaredAsync?='async'? TypeVariables? (name=TypesIdentifier | name=TypesComputedPropertyName) -> TFormalParameters)
 		public Group getGroup_0() { return cGroup_0; }
 		
 		//(declaredMemberAccessModifier=MemberAccessModifier (declaredAbstract?='abstract' | declaredStatic?='static')?
-		//TypeVariables? (name=TypesIdentifier | name=TypesComputedPropertyName) -> TFormalParameters)
+		//declaredAsync?='async'? TypeVariables? (name=TypesIdentifier | name=TypesComputedPropertyName) -> TFormalParameters)
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//declaredMemberAccessModifier=MemberAccessModifier
@@ -1464,26 +1468,32 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		//'static'
 		public Keyword getDeclaredStaticStaticKeyword_0_0_1_1_0() { return cDeclaredStaticStaticKeyword_0_0_1_1_0; }
 		
+		//declaredAsync?='async'?
+		public Assignment getDeclaredAsyncAssignment_0_0_2() { return cDeclaredAsyncAssignment_0_0_2; }
+		
+		//'async'
+		public Keyword getDeclaredAsyncAsyncKeyword_0_0_2_0() { return cDeclaredAsyncAsyncKeyword_0_0_2_0; }
+		
 		//TypeVariables?
-		public RuleCall getTypeVariablesParserRuleCall_0_0_2() { return cTypeVariablesParserRuleCall_0_0_2; }
+		public RuleCall getTypeVariablesParserRuleCall_0_0_3() { return cTypeVariablesParserRuleCall_0_0_3; }
 		
 		//(name=TypesIdentifier | name=TypesComputedPropertyName)
-		public Alternatives getAlternatives_0_0_3() { return cAlternatives_0_0_3; }
+		public Alternatives getAlternatives_0_0_4() { return cAlternatives_0_0_4; }
 		
 		//name=TypesIdentifier
-		public Assignment getNameAssignment_0_0_3_0() { return cNameAssignment_0_0_3_0; }
+		public Assignment getNameAssignment_0_0_4_0() { return cNameAssignment_0_0_4_0; }
 		
 		//TypesIdentifier
-		public RuleCall getNameTypesIdentifierParserRuleCall_0_0_3_0_0() { return cNameTypesIdentifierParserRuleCall_0_0_3_0_0; }
+		public RuleCall getNameTypesIdentifierParserRuleCall_0_0_4_0_0() { return cNameTypesIdentifierParserRuleCall_0_0_4_0_0; }
 		
 		//name=TypesComputedPropertyName
-		public Assignment getNameAssignment_0_0_3_1() { return cNameAssignment_0_0_3_1; }
+		public Assignment getNameAssignment_0_0_4_1() { return cNameAssignment_0_0_4_1; }
 		
 		//TypesComputedPropertyName
-		public RuleCall getNameTypesComputedPropertyNameParserRuleCall_0_0_3_1_0() { return cNameTypesComputedPropertyNameParserRuleCall_0_0_3_1_0; }
+		public RuleCall getNameTypesComputedPropertyNameParserRuleCall_0_0_4_1_0() { return cNameTypesComputedPropertyNameParserRuleCall_0_0_4_1_0; }
 		
 		//-> TFormalParameters
-		public RuleCall getTFormalParametersParserRuleCall_0_0_4() { return cTFormalParametersParserRuleCall_0_0_4; }
+		public RuleCall getTFormalParametersParserRuleCall_0_0_5() { return cTFormalParametersParserRuleCall_0_0_5; }
 		
 		//ColonSepReturnTypeRef
 		public RuleCall getColonSepReturnTypeRefParserRuleCall_1() { return cColonSepReturnTypeRefParserRuleCall_1; }
@@ -2541,6 +2551,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	//TMethod:
 	//	=>
 	//	(declaredMemberAccessModifier=MemberAccessModifier (declaredAbstract?='abstract' | declaredStatic?='static')?
+	//	declaredAsync?='async'?
 	//	TypeVariables? (name=TypesIdentifier | name=TypesComputedPropertyName)
 	//	-> TFormalParameters) ColonSepReturnTypeRef
 	//	';'?;

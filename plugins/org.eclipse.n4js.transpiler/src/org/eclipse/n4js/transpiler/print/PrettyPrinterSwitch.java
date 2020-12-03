@@ -530,7 +530,11 @@ import org.eclipse.xtext.EcoreUtil2;
 
 	@Override
 	public Boolean caseForStatement(ForStatement original) {
-		write("for(");
+		write("for");
+		if (original.isAwait()) {
+			write(" await ");
+		}
+		write('(');
 		if (!original.getVarDeclsOrBindings().isEmpty()) {
 			write(keyword(original.getVarStmtKeyword()));
 			write(' ');

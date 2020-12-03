@@ -22,6 +22,7 @@ package org.eclipse.n4js.n4JS;
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.ForStatement#getInitExpr <em>Init Expr</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.ForStatement#getUpdateExpr <em>Update Expr</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.ForStatement#isAwait <em>Await</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.ForStatement#isForIn <em>For In</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.ForStatement#isForOf <em>For Of</em>}</li>
  * </ul>
@@ -74,6 +75,31 @@ public interface ForStatement extends VariableDeclarationContainer, IterationSta
 	 * @generated
 	 */
 	void setUpdateExpr(Expression value);
+
+	/**
+	 * Returns the value of the '<em><b>Await</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 *  Note: it is a syntax error if this is true while {@code #forOf} is false.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Await</em>' attribute.
+	 * @see #setAwait(boolean)
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getForStatement_Await()
+	 * @model unique="false"
+	 * @generated
+	 */
+	boolean isAwait();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.ForStatement#isAwait <em>Await</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Await</em>' attribute.
+	 * @see #isAwait()
+	 * @generated
+	 */
+	void setAwait(boolean value);
 
 	/**
 	 * Returns the value of the '<em><b>For In</b></em>' attribute.

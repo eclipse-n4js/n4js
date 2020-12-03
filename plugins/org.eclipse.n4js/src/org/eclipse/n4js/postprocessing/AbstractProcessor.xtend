@@ -86,51 +86,17 @@ package abstract class AbstractProcessor {
 
 
 	/**
-	 * Some special handling for async functions (including methods): we have to wrap their inner return type
-	 * <code>R</code> into a <code>Promise&lt;R,?></code> and use that as their actual, outer return type. This means
-	 * for async functions, the types builder will create a <code>TFunction</code> with the inner return type and during
-	 * post-processing this method will change that return type to a <code>Promise</code> (only the return type of the
-	 * TFunction in the types model is changed; the declared return type in the AST remains unchanged).
+	 * Some special handling for async and/or generator functions (including methods): we have to wrap their inner return type
+	 * <code>R</code> into a {@code Promise<R,?>}, {@code Generator<R,R,TNext>}, or {@code AsyncGenerator<R,R,TNext>} and use
+	 * that as their actual, outer return type. This means for async and/or generator functions, the types builder will create
+	 * a <code>TFunction</code> with the inner return type and during post-processing this method will change that return type
+	 * to a <code>Promise</code>/<code>Generator</code>/<code>AsyncGenerator</code> (only the return type of the TFunction in
+	 * the types model is changed; the declared return type in the AST remains unchanged).
 	 * <p>
-	 * In addition, a return type of <code>void</code> will be replaced by <code>undefined</code>, i.e. will produce an
-	 * outer return type of <code>Promise&lt;undefined,?></code>. This will be taken care of by method
-	 * {@link TypeUtils#createPromiseTypeRef(BuiltInTypeScope,TypeArgument,TypeArgument)}.
-	 * <p>
-	 * NOTES:
-	 * <ol>
-	 * <li>normally, this wrapping could easily be done in the types builder, but because we have to check if the inner
-	 * return type is <code>void</code> we need to resolve proxies, which is not allowed in the types builder.
-	 * </ol>
-	 */
-	def protected void handleAsyncFunctionDefinition(RuleEnvironment G, FunctionDefinition funDef, ASTMetaInfoCache cache) {
-		if(funDef.isAsync) {
-			val tFunction = funDef.definedType;
-			if(tFunction instanceof TFunction) {
-				val innerReturnTypeRef = tFunction.returnTypeRef;
-				if(innerReturnTypeRef!==null && !(innerReturnTypeRef instanceof DeferredTypeRef)) {
-					val scope = G.builtInTypeScope;
-				    if (!TypeUtils.isPromise(innerReturnTypeRef, scope)) {
-						val outerReturnTypeRef = TypeUtils.createPromiseTypeRef(scope, innerReturnTypeRef, null);
-						EcoreUtilN4.doWithDeliver(false, [
-							tFunction.returnTypeRef = outerReturnTypeRef;
-						], tFunction);
-					}
-				}
-			}
-		}
-	}
-
-
-	/**
-	 * Some special handling for generator functions (including methods): we have to wrap their inner return type
-	 * <code>R</code> into a {@code Generator<R,TReturn,TNext>} and use that as their actual, outer return type. This means
-	 * for generator functions, the types builder will create a <code>TFunction</code> with the inner return type and during
-	 * post-processing this method will change that return type to a <code>Generator</code> (only the return type of the
-	 * TFunction in the types model is changed; the declared return type in the AST remains unchanged).
-	 * <p>
-	 * In addition, a return type of <code>void</code> will be replaced by <code>undefined</code>, i.e. will produce an
-	 * outer return type of {@code Generator<undefined,undefined,TNext>}. This will be taken care of by method
-	 * {@link TypeUtils#createGeneratorTypeRef(BuiltInTypeScope,FunctionDefinition)}.
+	 * In addition, a return type of <code>void</code> will be replaced by <code>undefined</code>, i.e. will produce an outer
+	 * return type of <code>Promise&lt;undefined,?></code>, <code>Generator&lt;undefined,undefined,TNext></code>, etc. This will
+	 * be taken care of by utility methods {@link TypeUtils#createPromiseTypeRef(BuiltInTypeScope,TypeArgument,TypeArgument)}
+	 * and {@link TypeUtils#createGeneratorTypeRef(BuiltInTypeScope,FunctionDefinition)}, respectively.
 	 * <p>
 	 * NOTES:
 	 * <ol>
@@ -138,19 +104,29 @@ package abstract class AbstractProcessor {
 	 * return type is <code>void</code> we need to resolve proxies, which is not allowed in the types builder.
 	 * </ol>
 	 */
-	def protected void handleGeneratorFunctionDefinition(RuleEnvironment G, FunctionDefinition funDef, ASTMetaInfoCache cache) {
-		if(funDef.isGenerator) {
+	def protected void handleAsyncOrGeneratorFunctionDefinition(RuleEnvironment G, FunctionDefinition funDef, ASTMetaInfoCache cache) {
+		val isAsync = funDef.isAsync;
+		val isGenerator = funDef.isGenerator;
+		if(isAsync || isGenerator) {
 			val tFunction = funDef.definedType;
 			if(tFunction instanceof TFunction) {
 				val innerReturnTypeRef = tFunction.returnTypeRef;
 				if (innerReturnTypeRef !== null && !(innerReturnTypeRef instanceof DeferredTypeRef)) {
 					val scope = G.builtInTypeScope;
-					if (!TypeUtils.isGenerator(innerReturnTypeRef, scope)) {
-					    val outerReturnTypeRef = TypeUtils.createGeneratorTypeRef(scope, funDef);
+					val needsRewrite =
+						(isAsync && !isGenerator && !TypeUtils.isPromise(innerReturnTypeRef, scope)) ||
+						(!isAsync && isGenerator && !TypeUtils.isGenerator(innerReturnTypeRef, scope)) ||
+						(isAsync && isGenerator && !TypeUtils.isAsyncGenerator(innerReturnTypeRef, scope));
+					if (needsRewrite) {
+						val outerReturnTypeRef = if (!isGenerator) {
+							TypeUtils.createPromiseTypeRef(scope, innerReturnTypeRef, null);
+						} else {
+							TypeUtils.createGeneratorTypeRef(scope, funDef); // note: this method handles the choice Generator vs. AsyncGenerator
+						};
 						EcoreUtilN4.doWithDeliver(false, [
 							tFunction.returnTypeRef = outerReturnTypeRef;
 						], tFunction);
-				    }
+					}
 				}
 			}
 		}

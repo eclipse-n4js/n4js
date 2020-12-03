@@ -12,75 +12,108 @@
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
 
 
-
-// yield has an empty return as default, no return type defined
-// XPECT noerrors
-function * g9() {
+// return does not have to return a value
+function * g1() {
+	// XPECT noerrors -->
 	return;
 }
-
-// yield can have an undefined return as default, no return type defined
-// XPECT noerrors
-function * g10() {
-	return undefined;
-}
-
-// yield has an empty return as default, shorthand return type
-// XPECT noerrors
-function * g11() {
+async function * ag1() {
+	// XPECT noerrors -->
 	return;
 }
+// ... and then TReturn is inferred to 'undefined'
+// XPECT type of 'g1' --> {function():Generator<undefined,undefined,any>}
+g1;
+// XPECT type of 'ag1' --> {function():AsyncGenerator<undefined,undefined,any>}
+ag1;
 
-// yield can have an undefined return as default, shorthand return type
-// XPECT noerrors
-function * g12() {
-	return undefined;
+
+// return may return a value
+function * g2() {
+	// XPECT noerrors -->
+	return 1 + 2;
+}
+async function * ag2() {
+	// XPECT noerrors -->
+	return 1 + 2;
+}
+// ... and then TReturn is inferred to 'any'
+// XPECT type of 'g2' --> {function():Generator<undefined,any,any>}
+g2;
+// XPECT type of 'ag2' --> {function():AsyncGenerator<undefined,any,any>}
+ag2;
+
+
+// return must return a value of type TReturn (if given using the shorthand form)
+// (NOTE: when using the shorthand form, the explicitly declared type is only used for TYield;
+// TReturn is inferred as usual via poor-man's return type inference, so no error expected here)
+function * g3a() : int {
+	// XPECT noerrors -->
+	return 'good';
+}
+function * <T> g3b() : T {
+	// XPECT noerrors -->
+	return 'good';
+}
+function * <T> g3c(p: T) : T {
+	// XPECT noerrors -->
+	return p;
+}
+async function * ag3a() : int {
+	// XPECT noerrors -->
+	return 'good';
+}
+async function * <T> ag3b() : T {
+	// XPECT noerrors -->
+	return 'good';
+}
+async function * <T> ag3c(p: T) : T {
+	// XPECT noerrors -->
+	return p;
 }
 
-// yield can have an undefined return as default, explitly no return type 1
-// XPECT noerrors
-function * g13() : Generator<?, ?, ?> {
+
+// return must return a value of type TReturn (if given using the explicit form)
+function * g4a() : Generator<?, int, ?> {
+	// XPECT errors --> "string is not a subtype of int." at "'bad'"
+	return 'bad';
+}
+function * <T> g4b() : Generator<?, T, ?> {
+	// XPECT errors --> "string is not a subtype of T." at "'bad'"
+	return 'bad';
+}
+function * <T> g4c(p: T) : Generator<?, T, ?> {
+	// XPECT noerrors -->
+	return p;
+}
+function * g4d() : Generator<?, ?, ?> {
+	// XPECT noerrors -->
+	return 'good';
+}
+async function * ag4a() : AsyncGenerator<?, int, ?> {
+	// XPECT errors --> "string is not a subtype of int." at "'bad'"
+	return 'bad';
+}
+async function * <T> ag4b() : AsyncGenerator<?, T, ?> {
+	// XPECT errors --> "string is not a subtype of T." at "'bad'"
+	return 'bad';
+}
+async function * <T> ag4c(p: T) : AsyncGenerator<?, T, ?> {
+	// XPECT noerrors -->
+	return p;
+}
+async function * ag4d() : AsyncGenerator<?, ?, ?> {
+	// XPECT noerrors -->
+	return 'good';
 }
 
-// yield can have an undefined return as default, explitly no return type 2
-// XPECT noerrors
-function * g14() : Generator<?, ?, ?> {
-	return 1;
-}
 
-// yield can have an undefined return as default, explitly no return type 3
-// XPECT noerrors
-function * g15() : Generator<?, ?, ?> {
-	return undefined;
+// return must not return a value in void generators
+function * g5() : void {
+	// XPECT errors --> "string is not a subtype of undefined." at "'bad'"
+	return 'bad';
 }
-
-// yield can have an explit return type
-// XPECT noerrors
-function * g16() : Generator<?, int, ?> {
-	return 0;
-}
-
-// yield can have an explit, generic return type
-// XPECT noerrors
-function * <T>g17(t : T) : Generator<?, T, ?> {
-	return t;
-}
-
-// The given return type void evaluates to Generator<undefined, undefined, any>
-// XPECT noerrors
-function * g18() : void {
-	return undefined;
-}
-
-// The given return type void evaluates to Generator<undefined, undefined, any>
-// XPECT noerrors
-function * g19() : Generator<undefined,undefined,undefined> {
-	return;
-}
-
-function * g19b() : Generator<undefined,undefined,undefined> {
-// err
-// The given return type void evaluates to Generator<undefined, undefined, any>
-// XPECT errors --> "int is not a subtype of undefined." at "1"
-	return 1;
+async function * ag5() : void {
+	// XPECT errors --> "string is not a subtype of undefined." at "'bad'"
+	return 'bad';
 }

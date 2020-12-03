@@ -60,7 +60,7 @@ package class ExpectedTypeComputer extends TypeSystemHelperStrategy {
 		val G2 = if (G === null) RuleEnvironmentExtensions.newRuleEnvironment(fofa) else G;
 
 		if (fofa instanceof FunctionDefinition) {
-			if (fofa.isAsync) {
+			if (fofa.isAsync && !fofa.isGenerator) {
 		        return getExpectedTypeOfReturnValueExpressionForAsyncFunction(G2, fofa);
 
 		    } else if (fofa.isGenerator()) {
@@ -111,7 +111,7 @@ package class ExpectedTypeComputer extends TypeSystemHelperStrategy {
 		val tFun = funDef.definedFunction;
 		if (tFun !== null) {
 			val actualReturnTypeRef = tFun.returnTypeRef;
-			if (TypeUtils.isGenerator(actualReturnTypeRef, G.getPredefinedTypes().builtInTypeScope)) {
+			if (TypeUtils.isGeneratorOrAsyncGenerator(actualReturnTypeRef, G.getPredefinedTypes().builtInTypeScope)) {
 				return tsh.getGeneratorTReturn(G, actualReturnTypeRef);
 			}
 		}
@@ -126,7 +126,7 @@ package class ExpectedTypeComputer extends TypeSystemHelperStrategy {
 	/**
 	 * Returns the expected type of the yield value. It is retrieved from the type TYield of the actual function return type
 	 * (with regard to {@code Generator<TYield,TReturn,TNext>}). In case the yield expression is recursive (features a star),
-	 * the expected type must conform to {@code Generator<? extends TYield,any,? super TNext>}.
+	 * the expected type must conform to {@code [Async]Generator<? extends TYield,?,? super TNext>}.
 	 */
 	def TypeRef getExpectedTypeOfYieldValueExpression(RuleEnvironment G, YieldExpression yieldExpr, TypeRef exprTypeRef) {
 		val expression = yieldExpr.expression;
@@ -136,25 +136,30 @@ package class ExpectedTypeComputer extends TypeSystemHelperStrategy {
 		G2.addThisType(myThisTypeRef); // takes the real-this type even if it is a type{this} reference.
 
 		if (funDef === null || !funDef.isGenerator)
-			return null; // yields only occur in generator functions
+			return null; // yield only occurs in generator functions
 
 		val tFun = funDef.definedFunction;
 		if (tFun !== null) {
 			val actualReturnTypeRef = tFun.returnTypeRef;
 			val scope = G.getPredefinedTypes().builtInTypeScope;
-			if (TypeUtils.isGenerator(actualReturnTypeRef, scope)) {
+			if (TypeUtils.isGeneratorOrAsyncGenerator(actualReturnTypeRef, scope)) {
 				val yieldTypeRef = tsh.getGeneratorTYield(G, actualReturnTypeRef);
 				val yieldTypeRefCopy = TypeUtils.copyWithProxies(yieldTypeRef);
 				if (yieldExpr.isMany()) {
-					val isGenerator = TypeUtils.isGenerator(exprTypeRef, scope);
-					if (isGenerator) {
+					if (TypeUtils.isGeneratorOrAsyncGenerator(exprTypeRef, scope)) {
 						val nextTypeRef = tsh.getGeneratorTNext(G, actualReturnTypeRef);
 						val nextTypeRefCopy = TypeUtils.copyWithProxies(nextTypeRef);
 						val superNext = TypeUtils.createWildcardSuper(nextTypeRefCopy);
 						val extendsYield = TypeUtils.createWildcardExtends(yieldTypeRefCopy);
-						val tReturn = scope.getAnyTypeRef(); // the return type does not matter since its use is optional
-						val recursiveGeneratorSuperType = TypeUtils.createGeneratorTypeRef(scope, extendsYield, tReturn, superNext);
-						return recursiveGeneratorSuperType;
+						val tReturn = TypeUtils.createWildcard(); // the return type does not matter since its use is optional
+						var TypeRef result = TypeUtils.createGeneratorTypeRef(scope, false, extendsYield, tReturn, superNext);
+						if (funDef.async) {
+							// yield* in async generators supports both async and non-async generators as argument
+							result = TypeUtils.createNonSimplifiedUnionType(
+								TypeUtils.createGeneratorTypeRef(scope, true, extendsYield, tReturn, superNext),
+								result);
+						}
+						return result;
 					} else {
 						val iterableTypeRef = G.iterableTypeRef(yieldTypeRefCopy)
 						return iterableTypeRef;

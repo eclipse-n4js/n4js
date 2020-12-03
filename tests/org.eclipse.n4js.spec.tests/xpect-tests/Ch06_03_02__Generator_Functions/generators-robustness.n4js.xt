@@ -12,35 +12,56 @@
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
 
 
-
 // Declared Generator misses type arguments: TNext
 // XPECT errors --> "Incorrect number of type arguments for interface Generator: expected 3, got 0." at "Generator"
 function * g1() : Generator {
 	let x = yield;
-	x;
 }
+// XPECT errors --> "Incorrect number of type arguments for interface AsyncGenerator: expected 3, got 0." at "AsyncGenerator"
+async function * ag1() : AsyncGenerator {
+	let x = yield;
+}
+
 
 // Declared Generator misses type arguments: TYield
 // XPECT errors --> "Incorrect number of type arguments for interface Generator: expected 3, got 0." at "Generator"
 function * g2() : Generator {
 	yield 1;
 }
+// XPECT errors --> "Incorrect number of type arguments for interface AsyncGenerator: expected 3, got 0." at "AsyncGenerator"
+async function * ag2() : AsyncGenerator {
+	yield 1;
+}
+
 
 // Declared Generator misses type arguments: TReturn
 // XPECT errors --> "Incorrect number of type arguments for interface Generator: expected 3, got 0." at "Generator"
 function * g3() : Generator {
 	return 1;
 }
+// XPECT errors --> "Incorrect number of type arguments for interface AsyncGenerator: expected 3, got 0." at "AsyncGenerator"
+async function * ag3() : AsyncGenerator {
+	return 1;
+}
+
 
 // Declared Generator misses type arguments: yield * TYield/TNext
 // XPECT errors --> "Incorrect number of type arguments for interface Generator: expected 3, got 0." at "Generator"
 function * g4() : Generator {
 	yield * g4();
 }
+// XPECT errors --> "Incorrect number of type arguments for interface AsyncGenerator: expected 3, got 0." at "AsyncGenerator"
+async function * ag4() : AsyncGenerator {
+	yield * ag4();
+}
+
 
 // Declared Generator misses type arguments: yield * TReturn
 // XPECT errors --> "Incorrect number of type arguments for interface Generator: expected 3, got 0." at "Generator"
 function * g5() : Generator {
 	let x = yield * g5();
-	x;
+}
+// XPECT errors --> "Incorrect number of type arguments for interface AsyncGenerator: expected 3, got 0." at "AsyncGenerator"
+async function * ag5() : AsyncGenerator {
+	let x = yield * ag5();
 }

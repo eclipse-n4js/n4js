@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.tests.parser
 
+import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.AssignmentOperator
 import org.eclipse.n4js.n4JS.ExpressionStatement
@@ -23,8 +24,9 @@ import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
-import org.eclipse.emf.ecore.util.EcoreUtil
+import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.xtext.diagnostics.Diagnostic
+import org.eclipse.xtext.linking.impl.XtextLinkingDiagnostic
 import org.eclipse.xtext.nodemodel.impl.InvariantChecker
 import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.xtext.resource.XtextSyntaxDiagnostic
@@ -537,5 +539,32 @@ class N4_SyntaxErrorTest extends AbstractParserTest {
 		val node = parseResult.rootNode
 		assertSame(node.rootNode, node)
 		new InvariantChecker().checkInvariant(node)
+	}
+
+	@Test
+	def void testForAwaitOf01() {
+		val script = '''
+			for await (let i = 0; i < 100; i++) {}
+		'''.parseESWithError;
+		val errors = script.eResource.errors;
+		assertEquals(1, errors.size);
+		assertEquals(IssueCodes.AST_INVALID_FOR_AWAIT, (errors.head as XtextLinkingDiagnostic).code);
+	}
+
+	@Test
+	def void testForAwaitOf02() {
+		val script = '''
+			for await (let p in []) {}
+		'''.parseESWithError;
+		val errors = script.eResource.errors;
+		assertEquals(1, errors.size);
+		assertEquals(IssueCodes.AST_INVALID_FOR_AWAIT, (errors.head as XtextLinkingDiagnostic).code);
+	}
+
+	@Test
+	def void testForAwaitOf03() {
+		'''
+			for await (let p of []) {}
+		'''.parseESSuccessfully;
 	}
 }

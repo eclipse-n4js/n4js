@@ -40,7 +40,7 @@ var iA = a[Symbol.iterator]();
 class B {}
 
 var b : B = new B();
-// B is not iterable XPECT errors --> "Access of property Symbol.iterator only allowed for instances of Iterable and immediate instances of Object." at "b[Symbol.iterator]"
+// B is not iterable XPECT errors --> "Access of property Symbol.iterator only allowed for instances of Iterable, immediate instances of Object, and dynamic types." at "Symbol.iterator"
 var iB = b[Symbol.iterator]();
 
 class C {
@@ -48,5 +48,5 @@ class C {
 }
 
 var c : C = new C();
-// C has the property but cannot access it bc C is not iterable XPECT errors --> "Access of property Symbol.iterator only allowed for instances of Iterable and immediate instances of Object." at "c[Symbol.iterator]"
+// C has the property but cannot access it bc C is not iterable XPECT errors --> "Access of property Symbol.iterator only allowed for instances of Iterable, immediate instances of Object, and dynamic types." at "Symbol.iterator"
 var iC = c[Symbol.iterator]();

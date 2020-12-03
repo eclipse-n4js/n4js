@@ -270,6 +270,9 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 			(A2, Class, MBA, , , 00002, , , , ([0:8 - 0:9], A2), [], [], , )
 			(any, Text, any, , , 00003, , , , ([0:8 - 0:9], any), [], [], , )
 			(Array, Text, Array, , , 00004, , , , ([0:8 - 0:9], Array), [], [], , )
+			(AsyncGenerator, Interface, AsyncGenerator, , , 00005, , , , ([0:8 - 0:9], AsyncGenerator), [], [], , )
+			(AsyncIterable, Interface, AsyncIterable, , , 00006, , , , ([0:8 - 0:9], AsyncIterable), [], [], , )
+			(AsyncIterator, Interface, AsyncIterator, , , 00007, , , , ([0:8 - 0:9], AsyncIterator), [], [], , )
 		''');
 	}
 
@@ -283,6 +286,9 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 			(A2, Class, MBA, , , 00002, , , , ([0:8 - 0:9], A2), [], [], , )
 			(any, Text, any, , , 00003, , , , ([0:8 - 0:9], any), [], [], , )
 			(Array, Text, Array, , , 00004, , , , ([0:8 - 0:9], Array), [], [], , )
+			(AsyncGenerator, Interface, AsyncGenerator, , , 00005, , , , ([0:8 - 0:9], AsyncGenerator), [], [], , )
+			(AsyncIterable, Interface, AsyncIterable, , , 00006, , , , ([0:8 - 0:9], AsyncIterable), [], [], , )
+			(AsyncIterator, Interface, AsyncIterator, , , 00007, , , , ([0:8 - 0:9], AsyncIterator), [], [], , )
 		''');
 	}
 
