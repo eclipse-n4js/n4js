@@ -63,6 +63,9 @@ public class ValueConverters extends AbstractDeclarativeValueConverterService {
 	private RegExLiteralConverter regExLiteralConverter;
 
 	@Inject
+	private HashbangValueConverter hashbangValueConverter;
+
+	@Inject
 	private STRINGValueConverter stringValueConverter;
 	@Inject
 	private KeywordAlternativeConverter stringLiteralAsNameConverter;
@@ -227,6 +230,14 @@ public class ValueConverters extends AbstractDeclarativeValueConverterService {
 	@ValueConverter(rule = "STRING")
 	public IValueConverter<String> STRING() {
 		return stringValueConverter;
+	}
+
+	/**
+	 * @return the registered value converter for the rule {@code STRING}
+	 */
+	@ValueConverter(rule = "HASH_BANG")
+	public IValueConverter<String> HASH_BANG() {
+		return hashbangValueConverter;
 	}
 
 	/**
