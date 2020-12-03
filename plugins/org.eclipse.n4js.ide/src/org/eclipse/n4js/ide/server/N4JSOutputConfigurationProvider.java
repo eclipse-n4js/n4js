@@ -16,6 +16,7 @@ import java.util.Set;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
@@ -77,7 +78,10 @@ public class N4JSOutputConfigurationProvider extends OutputConfigurationProvider
 	}
 
 	private OutputConfiguration getOutputConfiguration(IN4JSProject project) {
-		// if (project.)
+		if (project != null
+				&& N4JSGlobals.PROJECT_TYPES_WITHOUT_GENERATION.contains(project.getProjectType())) {
+			return null;
+		}
 
 		String outputPath = null;
 		if (project != null) {
