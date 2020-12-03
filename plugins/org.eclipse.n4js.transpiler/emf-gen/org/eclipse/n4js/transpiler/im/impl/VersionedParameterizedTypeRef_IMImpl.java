@@ -11,20 +11,13 @@
 package org.eclipse.n4js.transpiler.im.impl;
 
 import java.lang.reflect.InvocationTargetException;
-
 import java.math.BigDecimal;
-
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.n4js.transpiler.im.ImPackage;
 import org.eclipse.n4js.transpiler.im.VersionedParameterizedTypeRef_IM;
-
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.typeRefs.Versionable;
@@ -54,7 +47,6 @@ public class VersionedParameterizedTypeRef_IMImpl extends ParameterizedTypeRef_I
 	 * @ordered
 	 */
 	protected static final BigDecimal REQUESTED_VERSION_EDEFAULT = null;
-
 	/**
 	 * The cached value of the '{@link #getRequestedVersion() <em>Requested Version</em>}' attribute.
 	 * <!-- begin-user-doc -->

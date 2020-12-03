@@ -27,7 +27,6 @@ import org.eclipse.n4js.transpiler.im.ImPackage;
 import org.eclipse.n4js.transpiler.im.ReferencingElement_IM;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
-
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 
 /**
