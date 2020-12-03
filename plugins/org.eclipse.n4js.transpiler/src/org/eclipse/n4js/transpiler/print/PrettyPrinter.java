@@ -55,13 +55,9 @@ public class PrettyPrinter {
 			Optional<SourceMapInfo> optSourceMapInfo) throws IOException {
 
 		final boolean emitSourceMaps = optSourceMapInfo.isPresent();
-
 		final SourceMapAwareAppendable out = new SourceMapAwareAppendable(outCode, INDENT, emitSourceMaps);
-		if (optPreamble.isPresent()) {
-			out.append(optPreamble.get()); // #append(CharSequence) will convert '\n' to correct line separator
-			out.newLine();
-		}
-		PrettyPrinterSwitch.append(out, state);
+
+		PrettyPrinterSwitch.append(out, state, optPreamble);
 
 		if (emitSourceMaps) {
 			final SourceMapInfo sourceMapInfo = optSourceMapInfo.get();

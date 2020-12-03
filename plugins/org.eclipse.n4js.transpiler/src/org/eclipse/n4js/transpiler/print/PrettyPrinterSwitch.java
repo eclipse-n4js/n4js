@@ -40,17 +40,20 @@ import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.xtext.EcoreUtil2;
 
+import com.google.common.base.Optional;
+import com.google.common.base.Strings;
+
 /**
  * Traverses an intermediate model and serializes it to a {@link SourceMapAwareAppendable}. Client code should only use
- * the static method {@link #append(SourceMapAwareAppendable, TranspilerState)}.
+ * the static method {@link #append(SourceMapAwareAppendable, TranspilerState, Optional)}.
  */
 /* package */ final class PrettyPrinterSwitch extends N4JSSwitch<Boolean> {
 
 	/**
 	 * Appends the given transpiler state's intermediate model to the given {@link SourceMapAwareAppendable}.
 	 */
-	public static void append(SourceMapAwareAppendable out, TranspilerState state) {
-		final PrettyPrinterSwitch theSwitch = new PrettyPrinterSwitch(out);
+	public static void append(SourceMapAwareAppendable out, TranspilerState state, Optional<String> optPreamble) {
+		final PrettyPrinterSwitch theSwitch = new PrettyPrinterSwitch(out, optPreamble);
 		theSwitch.doSwitch(state.im);
 	}
 
@@ -58,9 +61,11 @@ import org.eclipse.xtext.EcoreUtil2;
 	private static final Boolean DONE = Boolean.TRUE;
 
 	private final SourceMapAwareAppendable out;
+	private final Optional<String> optPreamble;
 
-	private PrettyPrinterSwitch(SourceMapAwareAppendable out) {
+	private PrettyPrinterSwitch(SourceMapAwareAppendable out, Optional<String> optPreamble) {
 		this.out = out;
+		this.optPreamble = optPreamble;
 	}
 
 	@Override
@@ -92,6 +97,8 @@ import org.eclipse.xtext.EcoreUtil2;
 	@Override
 	public Boolean caseScript(Script original) {
 		final Script_IM original_IM = (Script_IM) original;
+		processHashbang(original_IM.getHashbang());
+		processPreamble();
 		processAnnotations(original_IM.getAnnotations());
 		process(original_IM.getScriptElements(), () -> {
 			newLine();
@@ -1258,6 +1265,20 @@ import org.eclipse.xtext.EcoreUtil2;
 		doSwitch(elemInIM);
 	}
 
+	private void processHashbang(String hashbang) {
+		if (!Strings.isNullOrEmpty(hashbang)) {
+			write(prependHashbang(hashbang));
+			newLine();
+		}
+	}
+
+	private void processPreamble() {
+		if (optPreamble.isPresent()) {
+			write(optPreamble.get()); // #append(CharSequence) will convert '\n' to correct line separator
+			newLine();
+		}
+	}
+
 	private void processAnnotations(Iterable<? extends Annotation> annotations) {
 		processAnnotations(annotations, true);
 	}
@@ -1397,6 +1418,10 @@ import org.eclipse.xtext.EcoreUtil2;
 
 	private String quote(String txt) {
 		return '\'' + ValueConverterUtils.convertToEscapedString(txt, false) + '\'';
+	}
+
+	private String prependHashbang(String txt) {
+		return "#!" + txt;
 	}
 
 	/**
