@@ -12796,7 +12796,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//terminal HASH_BANG:
-	//	'#!' DOUBLE_STRING_CHAR* EOL;
+	//	'#!' !LINE_TERMINATOR_FRAGMENT*;
 	public TerminalRule getHASH_BANGRule() {
 		return tHASH_BANG;
 	}
