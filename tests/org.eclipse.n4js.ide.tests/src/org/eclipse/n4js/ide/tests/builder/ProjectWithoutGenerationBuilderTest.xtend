@@ -27,36 +27,36 @@ import static org.junit.Assert.*
 class ProjectWithoutGenerationBuilderTest extends AbstractIdeTest {
 
 	@Test
-	def void testDefinitionProject_n4jsdFilesAreValidated_sourceFolderUnspecified() {
-		doTestN4jsdFilesAreValidated(DEFINITION, Optional.absent());
+	def void testDefinitionProject_sourceFilesAreValidated_sourceFolderUnspecified() {
+		doTestSourceFilesAreValidated(DEFINITION, Optional.absent());
 	}
 
 	@Test
-	def void testDefinitionProject_n4jsdFilesAreValidated_sourceFolderDot() {
-		doTestN4jsdFilesAreValidated(DEFINITION, Optional.of("."));
+	def void testDefinitionProject_sourceFilesAreValidated_sourceFolderDot() {
+		doTestSourceFilesAreValidated(DEFINITION, Optional.of("."));
 	}
 
 	@Test
-	def void testDefinitionProject_n4jsdFilesAreValidated_sourceFolderCustom() {
-		doTestN4jsdFilesAreValidated(DEFINITION, Optional.of("src"));
+	def void testDefinitionProject_sourceFilesAreValidated_sourceFolderCustom() {
+		doTestSourceFilesAreValidated(DEFINITION, Optional.of("src"));
 	}
 
 	@Test
-	def void testValidationProject_n4jsdFilesAreValidated_sourceFolderUnspecified() {
-		doTestN4jsdFilesAreValidated(VALIDATION, Optional.absent());
+	def void testValidationProject_sourceFilesAreValidated_sourceFolderUnspecified() {
+		doTestSourceFilesAreValidated(VALIDATION, Optional.absent());
 	}
 
 	@Test
-	def void testValidationProject_n4jsdFilesAreValidated_sourceFolderDot() {
-		doTestN4jsdFilesAreValidated(VALIDATION, Optional.of("."));
+	def void testValidationProject_sourceFilesAreValidated_sourceFolderDot() {
+		doTestSourceFilesAreValidated(VALIDATION, Optional.of("."));
 	}
 
 	@Test
-	def void testValidationProject_n4jsdFilesAreValidated_sourceFolderCustom() {
-		doTestN4jsdFilesAreValidated(VALIDATION, Optional.of("src"));
+	def void testValidationProject_sourceFilesAreValidated_sourceFolderCustom() {
+		doTestSourceFilesAreValidated(VALIDATION, Optional.of("src"));
 	}
 
-	def private void doTestN4jsdFilesAreValidated(ProjectType projectType, Optional<String> sourceFolder) {
+	def private void doTestSourceFilesAreValidated(ProjectType projectType, Optional<String> sourceFolder) {
 		createSampleProject(projectType, sourceFolder, true);
 		startAndWaitForLspServer();
 		assertIssues(
