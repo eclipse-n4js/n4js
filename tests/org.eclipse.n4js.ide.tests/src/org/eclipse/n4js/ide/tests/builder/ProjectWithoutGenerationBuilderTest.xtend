@@ -14,8 +14,10 @@ import com.google.common.base.Optional
 import java.io.File
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest
+import org.eclipse.n4js.projectDescription.ProjectType
 import org.junit.Test
 
+import static org.eclipse.n4js.projectDescription.ProjectType.*
 import static org.junit.Assert.*
 
 /**
@@ -26,21 +28,36 @@ class ProjectWithoutGenerationBuilderTest extends AbstractIdeTest {
 
 	@Test
 	def void testDefinitionProject_n4jsdFilesAreValidated_sourceFolderUnspecified() {
-		doTestDefinitionProject_n4jsdFilesAreValidated(Optional.absent());
+		doTestN4jsdFilesAreValidated(DEFINITION, Optional.absent());
 	}
 
 	@Test
 	def void testDefinitionProject_n4jsdFilesAreValidated_sourceFolderDot() {
-		doTestDefinitionProject_n4jsdFilesAreValidated(Optional.of("."));
+		doTestN4jsdFilesAreValidated(DEFINITION, Optional.of("."));
 	}
 
 	@Test
 	def void testDefinitionProject_n4jsdFilesAreValidated_sourceFolderCustom() {
-		doTestDefinitionProject_n4jsdFilesAreValidated(Optional.of("src"));
+		doTestN4jsdFilesAreValidated(DEFINITION, Optional.of("src"));
 	}
 
-	def private void doTestDefinitionProject_n4jsdFilesAreValidated(Optional<String> sourceFolder) {
-		createSampleDefinitionProject(sourceFolder, true);
+	@Test
+	def void testValidationProject_n4jsdFilesAreValidated_sourceFolderUnspecified() {
+		doTestN4jsdFilesAreValidated(VALIDATION, Optional.absent());
+	}
+
+	@Test
+	def void testValidationProject_n4jsdFilesAreValidated_sourceFolderDot() {
+		doTestN4jsdFilesAreValidated(VALIDATION, Optional.of("."));
+	}
+
+	@Test
+	def void testValidationProject_n4jsdFilesAreValidated_sourceFolderCustom() {
+		doTestN4jsdFilesAreValidated(VALIDATION, Optional.of("src"));
+	}
+
+	def private void doTestN4jsdFilesAreValidated(ProjectType projectType, Optional<String> sourceFolder) {
+		createSampleProject(projectType, sourceFolder, true);
 		startAndWaitForLspServer();
 		assertIssues(
 			"Test.n4jsd" -> #[
@@ -50,50 +67,97 @@ class ProjectWithoutGenerationBuilderTest extends AbstractIdeTest {
 	}
 
 	@Test
+	def void testPlainjsProject_cleanDoesNotDeleteEntireProject_sourceFolderUnspecified() {
+		doTestCleanDoesNotDeleteEntireProject(PLAINJS, Optional.absent());
+	}
+
+	@Test
+	def void testPlainjsProject_cleanDoesNotDeleteEntireProject_sourceFolderDot() {
+		doTestCleanDoesNotDeleteEntireProject(PLAINJS, Optional.of("."));
+	}
+
+	@Test
 	def void testDefinitionProject_cleanDoesNotDeleteEntireProject_sourceFolderUnspecified() {
-		doTestDefinitionProject_cleanDoesNotDeleteEntireProject(Optional.absent());
+		doTestCleanDoesNotDeleteEntireProject(DEFINITION, Optional.absent());
 	}
 
 	@Test
 	def void testDefinitionProject_cleanDoesNotDeleteEntireProject_sourceFolderDot() {
-		doTestDefinitionProject_cleanDoesNotDeleteEntireProject(Optional.of("."));
+		doTestCleanDoesNotDeleteEntireProject(DEFINITION, Optional.of("."));
 	}
 
-	def private void doTestDefinitionProject_cleanDoesNotDeleteEntireProject(Optional<String> sourceFolder) {
-		createSampleDefinitionProject(sourceFolder, false);
+	@Test
+	def void testValidationProject_cleanDoesNotDeleteEntireProject_sourceFolderUnspecified() {
+		doTestCleanDoesNotDeleteEntireProject(VALIDATION, Optional.absent());
+	}
+
+	@Test
+	def void testValidationProject_cleanDoesNotDeleteEntireProject_sourceFolderDot() {
+		doTestCleanDoesNotDeleteEntireProject(VALIDATION, Optional.of("."));
+	}
+
+	def private void doTestCleanDoesNotDeleteEntireProject(ProjectType projectType, Optional<String> sourceFolder) {
+		createSampleProject(projectType, sourceFolder, false);
 		startAndWaitForLspServer();
 		assertNoIssues();
 
 		val projectRoot = getProjectRoot();
+		val testFileName = if (projectType === PLAINJS) "Test.js" else "Test.n4jsd";
 
 		cleanBuildAndWait();
 		assertTrue(projectRoot.isDirectory);
-		assertTrue(new File(projectRoot, "Test.n4jsd").isFile);
+		assertTrue(new File(projectRoot, testFileName).isFile);
 		assertTrue(new File(projectRoot, PACKAGE_JSON).isFile);
 	}
 
-	def private void createSampleDefinitionProject(Optional<String> sourceFolder, boolean withValidationError) {
-		testWorkspaceManager.createTestProjectOnDisk(
-			"Test.n4jsd" -> '''
-				export external public class Cls {}
-				«IF withValidationError»Object; // intentional error«ENDIF»
-			''',
-			CFG_SOURCE_FOLDER -> sourceFolder.or("."), // don't use TestWorkspaceManager#DEFAULT_SOURCE_FOLDER here!
-			PACKAGE_JSON -> '''
-				{
-					"name": "«DEFAULT_PROJECT_NAME»",
-					"version": "0.0.1",
-					"n4js": {
-						"projectType": "definition",
-						"definesPackage": "defined_project"«IF sourceFolder.present»,
-						"sources": {
-							"source": [
-								"«sourceFolder.get»"
-							]
-						}«ENDIF»
+	def private void createSampleProject(ProjectType projectType, Optional<String> sourceFolder, boolean withValidationError) {
+		if (projectType === PLAINJS) {
+			testWorkspaceManager.createTestProjectOnDisk(
+				"Test.js" -> '''
+					console.log('hello world');
+				''',
+				CFG_SOURCE_FOLDER -> sourceFolder.or("."), // don't use TestWorkspaceManager#DEFAULT_SOURCE_FOLDER here!
+				PACKAGE_JSON -> '''
+					{
+						"name": "«DEFAULT_PROJECT_NAME»",
+						"version": "0.0.1",
+						"n4js": {
+							"projectType": "plainjs"«IF sourceFolder.present»,
+							"sources": {
+								"source": [
+									"«sourceFolder.get»"
+								]
+							}«ENDIF»
+						}
 					}
-				}
-			'''
-		);
+				'''
+			);
+		} else if (projectType === DEFINITION || projectType === VALIDATION) {
+			val projectTypeKeyword = if (projectType === DEFINITION) "definition" else "validation";
+			testWorkspaceManager.createTestProjectOnDisk(
+				"Test.n4jsd" -> '''
+					export external public class Cls {}
+					«IF withValidationError»Object; // intentional error«ENDIF»
+				''',
+				CFG_SOURCE_FOLDER -> sourceFolder.or("."), // don't use TestWorkspaceManager#DEFAULT_SOURCE_FOLDER here!
+				PACKAGE_JSON -> '''
+					{
+						"name": "«DEFAULT_PROJECT_NAME»",
+						"version": "0.0.1",
+						"n4js": {
+							"projectType": "«projectTypeKeyword»"«IF projectType === DEFINITION»,
+							"definesPackage": "defined_project"«ENDIF»«IF sourceFolder.present»,
+							"sources": {
+								"source": [
+									"«sourceFolder.get»"
+								]
+							}«ENDIF»
+						}
+					}
+				'''
+			);
+		} else {
+			throw new IllegalStateException("project type not supported by this method: " + projectType);
+		}
 	}
 }
