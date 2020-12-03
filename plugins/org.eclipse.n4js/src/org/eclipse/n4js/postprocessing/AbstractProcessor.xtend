@@ -118,15 +118,15 @@ package abstract class AbstractProcessor {
 						(!isAsync && isGenerator && !TypeUtils.isGenerator(innerReturnTypeRef, scope)) ||
 						(isAsync && isGenerator && !TypeUtils.isAsyncGenerator(innerReturnTypeRef, scope));
 					if (needsRewrite) {
-					    val outerReturnTypeRef = if (!isGenerator) {
-					    	TypeUtils.createPromiseTypeRef(scope, innerReturnTypeRef, null);
-					    } else {
-						    TypeUtils.createGeneratorTypeRef(scope, funDef); // note: this method handles the choice Generator vs. AsyncGenerator
-					    };
+						val outerReturnTypeRef = if (!isGenerator) {
+							TypeUtils.createPromiseTypeRef(scope, innerReturnTypeRef, null);
+						} else {
+							TypeUtils.createGeneratorTypeRef(scope, funDef); // note: this method handles the choice Generator vs. AsyncGenerator
+						};
 						EcoreUtilN4.doWithDeliver(false, [
 							tFunction.returnTypeRef = outerReturnTypeRef;
 						], tFunction);
-				    }
+					}
 				}
 			}
 		}
