@@ -239,6 +239,7 @@ TMethod: =>
 	(
 	 	declaredMemberAccessModifier=MemberAccessModifier
 	 	(declaredAbstract?='abstract'|declaredStatic?='static')?
+	 	(declaredAsync?='async')?
 	 	TypeVariables?
 	 	(name=TypesIdentifier | name=TypesComputedPropertyName)
 	->TFormalParameters)

@@ -15,50 +15,86 @@
 // generator function expression
 // XPECT noerrors
 let xx = function * () {};
-xx;
+// XPECT noerrors
+let axx = async function * () {};
+
 
 // generator method
-// XPECT noerrors
 class M {
+	// XPECT noerrors
 	* g0 () {}
 }
+class AM {
+	// XPECT noerrors
+	async * ag0 () {}
+}
+
 
 // no return ok
 // XPECT noerrors
-function * g1() {
-}
+function * g1() {}
+// XPECT noerrors
+async function * ag1() {}
+
 
 // recursive yield type ok
-// XPECT noerrors
 function * g2() {
+	// XPECT noerrors
 	yield * g1();
 }
-
+async function * ag2() {
+	// XPECT noerrors
+	yield * ag1();
+}
 
 
 // return without expression is ok in shorthand form
-// XPECT noerrors
 function * g40() : int {
+	// XPECT noerrors
+	return;
+}
+async function * ag40() : int {
+	// XPECT noerrors
 	return;
 }
 
+
 // return with expression is ok in shorthand form
-// XPECT noerrors
 function * g41() : int {
+	// XPECT noerrors
+	return 1;
+}
+async function * ag41() : int {
+	// XPECT noerrors
 	return 1;
 }
 
+
 // return without expression is ok when void
-// XPECT noerrors
 function * g42() : void {
-	yield ;
+	// XPECT noerrors
+	yield;
+	// XPECT noerrors
+	return;
+}
+async function * ag42() : void {
+	// XPECT noerrors
+	yield;
+	// XPECT noerrors
 	return;
 }
 
-function * g43() : void {
-	yield ;
-// err
+
 // return with expression is not ok when void
-// XPECT errors --> "int is not a subtype of undefined." at "1"
+function * g43() : void {
+	// XPECT errors --> "int is not a subtype of undefined." at "1"
+	yield 1;
+	// XPECT errors --> "int is not a subtype of undefined." at "1"
+	return 1;
+}
+async function * ag43() : void {
+	// XPECT errors --> "int is not a subtype of undefined." at "1"
+	yield 1;
+	// XPECT errors --> "int is not a subtype of undefined." at "1"
 	return 1;
 }

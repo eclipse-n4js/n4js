@@ -235,10 +235,12 @@ fragment AsyncNoTrailingLineBreak *: (declaredAsync?='async' NoLineTerminator)?;
 
 fragment FunctionImpl<Yield, YieldIfGenerator, Expression>*:
 	'function'
-	(
-		generator?='*' FunctionHeader<YieldIfGenerator,Generator=true> FunctionBody<Yield=true,Expression>
-	| 	FunctionHeader<Yield,Generator=false> FunctionBody<Yield=false,Expression>
-	)
+	FunctionImplWithoutKeyword<Yield, YieldIfGenerator, Expression>
+;
+
+fragment FunctionImplWithoutKeyword<Yield, YieldIfGenerator, Expression>*:
+	generator?='*' FunctionHeader<YieldIfGenerator,Generator=true> FunctionBody<Yield=true,Expression>
+| 	FunctionHeader<Yield,Generator=false> FunctionBody<Yield=false,Expression>
 ;
 
 fragment FunctionHeader<Yield, Generator>*:
@@ -276,8 +278,8 @@ FunctionExpression:
  * We cannot use fragments here since we have to combine the terminals into a syntactic predicate.
  */
 AsyncFunctionExpression returns FunctionExpression:
-	 =>(declaredAsync?='async' NoLineTerminator 'function')
-		FunctionHeader<Yield=false,Generator=false> FunctionBody<Yield=false,Expression=true>
+	=> (declaredAsync?='async' NoLineTerminator 'function')
+	FunctionImplWithoutKeyword<Yield=false,YieldIfGenerator=true,Expression=true>
 ;
 
 ArrowExpression <In, Yield> returns ArrowFunction:
@@ -464,7 +466,7 @@ DoStatement <Yield>: 'do' statement=Statement<Yield> 'while' '(' expression=Expr
 WhileStatement <Yield>: 'while' '(' expression=Expression<In=true,Yield> ')' statement=Statement<Yield>;
 
 ForStatement <Yield>:
-	{ForStatement} 'for' '('
+	{ForStatement} 'for' (await?='await')? '('
 	(
 		// this is not in the spec as far as I can tell, but there are tests that rely on this to be valid JS
 			=>(initExpr=LetIdentifierRef forIn?='in' expression=Expression<In=true,Yield> ')')
@@ -681,6 +683,7 @@ AnnotatedPropertyAssignment <Yield> returns PropertyAssignment:
 PropertyMethodDeclaration <Yield>:
 	=> ({PropertyMethodDeclaration}
 		TypeVariables? returnTypeRef=TypeRefWithModifiers?
+		AsyncNoTrailingLineBreak
 			(
 				generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> ->MethodParamsAndBody<Generator=true>
 				| declaredName=LiteralOrComputedPropertyName<Yield> ->MethodParamsAndBody <Generator=false>
@@ -1395,10 +1398,11 @@ N4FieldDeclaration <Yield>:
 ;
 
 N4MethodDeclaration <Yield>:
-	=> ({N4MethodDeclaration} (declaredModifiers+=N4Modifier)* TypeVariables? BogusTypeRefFragment?
+	=> ({N4MethodDeclaration} (declaredModifiers+=N4Modifier)* TypeVariables?
+		AsyncNoTrailingLineBreak
 		(
 				generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=true>
-			|	AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=false>
+			|	declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=false>
 		)
 	) ';'?
 ;

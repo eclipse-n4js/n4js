@@ -1003,6 +1003,13 @@ public providedByRuntime final object Symbol extends Object @Global {
 	public const iterator: symbol
 
 	/**
+	 * This "well-known" symbol may be used to define the default asynchronous iterator of an object.
+	 *
+	 * @see ES2018, 19.4.2.1
+	 */
+	public const asyncIterator: symbol
+
+	/**
 	 * This "well-known" symbol may be used to customize the behavior of the 'instanceof' operator.
 	 *
 	 * @see ES6, 19.4.2.2
@@ -1867,6 +1874,25 @@ public providedByRuntime interface ~Iterator<out T> {
 }
 
 /**
+ * Same as interface <code>Iterator</code>, but for asynchronous iteration.
+ */
+public providedByRuntime interface ~AsyncIterator<out T> {
+	/**
+	 * A zero arguments function that returns a promise of an object with two properties:
+	 * <ul>
+	 * <li>done (boolean)<br>
+	 *     Has the value true if the iterator is past the end of the iterated sequence. In this case value
+	 *     optionally specifies the return value of the iterator. The return values are explained here.
+	 *     Has the value false if the iterator was able to produce the next value in the sequence. This is
+	 *     equivalent of not specifying the done property altogether.
+	 * <li>value<br>
+	 *     any JavaScript value returned by the iterator. Can be omitted when done is true.
+	 * </ul>
+	 */
+	public abstract next(): Promise<IteratorEntry<T>, ?>
+}
+
+/**
  * The value returned by an Iterator's method next().
  */
 public providedByRuntime interface ~IteratorEntry<out T> {
@@ -1895,12 +1921,24 @@ public providedByRuntime interface ~IteratorEntry<out T> {
  * <p>
  * Note that in ECMAScript 6 this is not a built-in type, but a protocol. This protocol can be implemented
  * by any object respecting some conventions.
+ * <p>
+ * For asynchronous iteration use interface <code>AsyncIterable</code> instead.
  */
 public providedByRuntime interface ~Iterable<out T> {
 	/**
-	 * A zero arguments function that returns an object, conforming to the iterator protocol.
+	 * Returns an object conforming to the iteration protocol.
 	 */
 	public abstract [Symbol.iterator](): Iterator<T>
+}
+
+/**
+ * Same as interface <code>Iterable</code>, but for asynchronous iteration.
+ */
+public providedByRuntime interface ~AsyncIterable<out T> {
+	/**
+	 * Returns an object conforming to the asynchronous iteration protocol.
+	 */
+	public abstract [Symbol.asyncIterator](): AsyncIterator<T>
 }
 
 
@@ -1911,7 +1949,7 @@ public providedByRuntime interface ~Iterable<out T> {
  * Note that in ECMAScript 6 this is not a built-in type, but a protocol. This protocol can be implemented
  * by any object respecting some conventions.
  */
-public providedByRuntime interface Generator<out TYield, out TReturn, in TNext>
+public providedByRuntime interface ~Generator<out TYield, out TReturn, in TNext>
 	extends Iterable<TYield>, Iterator<TYield> {
 
 	/**
@@ -1969,6 +2007,69 @@ public providedByRuntime interface Generator<out TYield, out TReturn, in TNext>
 	 * </ul>
 	 */
 	public abstract return(value: TNext = undefined): IteratorEntry<TReturn>;
+}
+
+/**
+ * An asynchronous generator object. See interface <code>Generator</code> for details.
+ */
+public providedByRuntime interface ~AsyncGenerator<out TYield, out TReturn, in TNext>
+	extends AsyncIterable<TYield>, AsyncIterator<TYield> {
+
+	/**
+	 * A one (optional) argument function. The (optional) argument <code>value</code> is passed to the
+	 * current yield expression in the generator function. Return a promise of an <code>IteratorEntry</code>
+	 * with two properties:
+	 * <ul>
+	 * <li>done (boolean)<br>
+	 *     Has the value true if the iterator is past the end of the iterated sequence. In this case value
+	 *     optionally specifies the return value of the iterator. The return values are explained here.
+	 *     Has the value false if the iterator was able to produce the next value in the sequence. This is
+	 *     equivalent of not specifying the done property altogether.
+	 * <li>value<br>
+	 *     any JavaScript value returned by the iterator. Can be omitted when done is true.
+	 * </ul>
+	 */
+	public abstract next(value: TNext = undefined): Promise<IteratorEntry<TYield>, ?>
+
+	/**
+	 * A zero arguments function that returns the <code>this</code> object, conforming to the asynchronous
+	 * iterator interface.
+	 * <p>
+	 * Note that the iterator can only be iterated once.
+	 */
+	public abstract [Symbol.asyncIterator](): AsyncGenerator<TYield, TReturn, TNext>
+
+	/**
+	 * A one argument function. The argument <code>exception</code> is thrown at the current yield
+	 * expression in the generator function. Returns a promise of an <code>IteratorEntry</code> with two
+	 * properties:
+	 * <ul>
+	 * <li>done (boolean)<br>
+	 *     Has the value true if the iterator is past the end of the iterated sequence. In this case value
+	 *     optionally specifies the return value of the iterator. The return values are explained here.
+	 *     Has the value false if the iterator was able to produce the next value in the sequence. This is
+	 *     equivalent of not specifying the done property altogether.
+	 * <li>value<br>
+	 *     any JavaScript value returned by the iterator. Can be omitted when done is true.
+	 * </ul>
+	 */
+	public abstract throw(exception: any): Promise<IteratorEntry<TYield>, any>;
+
+    /**
+	 * A one (optional) argument function. The (optional) argument <code>value</code> is passed to the
+	 * current yield expression in the generator function. Returns a promise of an <code>IteratorEntry</code> with
+	 * two properties:
+	 * <ul>
+	 * <li>done (boolean)<br>
+	 *     Has the value true if the iterator is past the end of the iterated sequence. In this case value
+	 *     optionally specifies the return value of the iterator. The return values are explained here.
+	 *     Has the value false if the iterator was able to produce the next value in the sequence. This is
+	 *     equivalent of not specifying the done property altogether.
+	 * <li>value<br>
+	 *     any JavaScript value returned by the iterator. Can be omitted when done is true.
+	 * </ul>
+	 */
+	public abstract return(value: TNext = undefined): Promise<IteratorEntry<TReturn>, ?>;
 }
 
 /**

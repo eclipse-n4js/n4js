@@ -680,6 +680,7 @@ public class TypesSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     (
 	 *         declaredMemberAccessModifier=MemberAccessModifier 
 	 *         (declaredAbstract?='abstract' | declaredStatic?='static')? 
+	 *         declaredAsync?='async'? 
 	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
 	 *         (name=TypesIdentifier | name=TypesComputedPropertyName) 
 	 *         (fpars+=TFormalParameter fpars+=TFormalParameter*)? 

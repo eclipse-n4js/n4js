@@ -14,8 +14,10 @@ import java.util.Collection;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.JSXElement;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
+import org.eclipse.n4js.n4JS.PropertyNameValuePair;
 import org.eclipse.n4js.scoping.members.WrongTypingStrategyDescription;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
 import org.eclipse.n4js.smith.Measurement;
@@ -139,9 +141,13 @@ public class N4JSIdeContentProposalProvider extends IdeContentProposalProvider {
 
 		EObject currentModel = context.getCurrentModel();
 		EObject previousModel = context.getPreviousModel();
+		if (currentModel instanceof ImportSpecifier || previousModel instanceof ImportSpecifier)
+			return; // filter out all keywords if we are in the context of an import specifier
 		if (currentModel instanceof ParameterizedPropertyAccessExpression ||
 				previousModel instanceof ParameterizedPropertyAccessExpression)
 			return; // filter out all keywords if we are in the context of a property access
+		if (currentModel instanceof PropertyNameValuePair || previousModel instanceof PropertyNameValuePair)
+			return; // filter out all keywords if we are in the context of a property name/value pair
 		if (currentModel instanceof JSXElement || previousModel instanceof JSXElement)
 			return; // filter out all keywords if we are in the context of a JSX element
 		if (!Character.isAlphabetic(keyword.getValue().charAt(0)))

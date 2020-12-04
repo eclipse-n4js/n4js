@@ -1,0 +1,122 @@
+/*
+ * Copyright (c) 2020 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+class X {}
+
+class A {}
+class B extends A {}
+class C extends B {}
+
+class MyCollectionNominal<T> implements AsyncIterable<T> {
+	@Override
+	public [Symbol.asyncIterator]() : AsyncIterator<T> {
+		return null;
+	}
+}
+class MyCollectionStructural<T> extends Object {
+	public [Symbol.asyncIterator]() : AsyncIterator<T> {
+		return null;
+	}
+}
+
+var aIterable : AsyncIterable<A>;
+var bIterable : AsyncIterable<B>;
+var cIterable : AsyncIterable<C>;
+
+var a : A;
+var b : B;
+var c : C;
+
+
+async function foo() {
+
+	// using pre-declared variables in for await...of
+
+	// XPECT noerrors -->
+	for await (b of bIterable) {}
+	// XPECT errors --> "AsyncIterable<A> is not a subtype of union{AsyncIterable<? extends B>,Iterable<? extends B>}." at "aIterable"
+	for await (b of aIterable) {}
+	// XPECT noerrors -->
+	for await (b of cIterable) {}
+
+	// XPECT noerrors -->
+	for await (b of bIterable) {}
+	// XPECT noerrors -->
+	for await (a of bIterable) {}
+	// XPECT errors --> "AsyncIterable<B> is not a subtype of union{AsyncIterable<? extends C>,Iterable<? extends C>}." at "bIterable"
+	for await (c of bIterable) {}
+
+	// declaring explicitly typed variables in for...of
+	// (these cases should behave exactly as the cases with pre-declared variables)
+
+	// XPECT noerrors -->
+	for await (var v1 : B of bIterable) {}
+	// XPECT errors --> "AsyncIterable<A> is not a subtype of union{AsyncIterable<? extends B>,Iterable<? extends B>}." at "aIterable"
+	for await (var v2 : B of aIterable) {}
+	// XPECT noerrors -->
+	for await (var v3 : B of cIterable) {}
+
+	// XPECT noerrors -->
+	for await (var v4 : B of bIterable) {}
+	// XPECT noerrors -->
+	for await (var v5 : A of bIterable) {}
+	// XPECT errors --> "AsyncIterable<B> is not a subtype of union{AsyncIterable<? extends C>,Iterable<? extends C>}." at "bIterable"
+	for await (var v6 : C of bIterable) {}
+
+
+	// inferring the type of a variable declared within a for...of loop:
+
+	for await (var v7 of bIterable) {
+		// XPECT errors --> "B is not a subtype of X." at "v7"
+		var test7 : X = v7;
+	}
+
+	var belowBIterable : AsyncIterable<? extends B>;
+	for await (var v8 of belowBIterable) {
+		// XPECT errors --> "B is not a subtype of X." at "v8"
+		var test8 : X = v8;
+	}
+
+	var anyIterable : AsyncIterable<?>;
+	for await (var v9 of anyIterable) {
+		// XPECT errors --> "any is not a subtype of X." at "v9"
+		var test9 : X = v9;
+	}
+
+	for await (var v10 of []) {
+		// XPECT errors --> "any is not a subtype of X." at "v10"
+		var test10 : X = v10;
+	}
+
+	var myCollNomB: MyCollectionNominal<B>;
+	for await (var v11 of myCollNomB) {
+		// XPECT errors --> "B is not a subtype of X." at "v11"
+		var test11 : X = v11;
+	}
+	var myCollNomBelowB: MyCollectionNominal<? extends B>;
+	for await (var v12 of myCollNomBelowB) {
+		// XPECT errors --> "B is not a subtype of X." at "v12"
+		var test12 : X = v12;
+	}
+
+	var myCollStructB: MyCollectionStructural<B>;
+	for await (var v13 of myCollStructB) {
+		// XPECT errors --> "B is not a subtype of X." at "v13"
+		var test13 : X = v13;
+	}
+	var myCollStructBelowB: MyCollectionStructural<? extends B>;
+	for await (var v14 of myCollStructBelowB) {
+		// XPECT errors --> "B is not a subtype of X." at "v14"
+		var test14 : X = v14;
+	}
+}

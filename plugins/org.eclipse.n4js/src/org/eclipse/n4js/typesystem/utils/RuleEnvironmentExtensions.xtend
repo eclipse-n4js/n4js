@@ -654,6 +654,16 @@ class RuleEnvironmentExtensions {
 		createTypeRef(G.iterableType, typeArgs);
 	}
 
+	/* Returns built-in type {@code AsyncIterable<T>} */
+	public def static asyncIterableType(RuleEnvironment G) {
+		G.getPredefinedTypes().builtInTypeScope.asyncIterableType
+	}
+
+	/* Returns newly created reference to built-in type {@code AsyncIterable<T>} */
+	public def static asyncIterableTypeRef(RuleEnvironment G, TypeArgument... typeArgs) {
+		createTypeRef(G.asyncIterableType, typeArgs);
+	}
+
 	/* Returns built-in type {@code IterableN<T1...TN>} */
 	public def static iterableNType(RuleEnvironment G, int n) {
 		G.getPredefinedTypes().builtInTypeScope.getIterableNType(n)
@@ -700,6 +710,16 @@ class RuleEnvironmentExtensions {
 	/* Returns newly created reference to built-in type {@code Generator<Y,R,N>} */
 	public def static generatorTypeRef(RuleEnvironment G, TypeArgument... typeArgs) {
 		createTypeRef(G.generatorType, typeArgs);
+	}
+
+	/* Returns built-in type {@code AsyncGenerator<Y,R,N>} */
+	public def static asyncGeneratorType(RuleEnvironment G) {
+		G.getPredefinedTypes().builtInTypeScope.asyncGeneratorType
+	}
+
+	/* Returns newly created reference to built-in type {@code AsyncGenerator<Y,R,N>} */
+	public def static asyncGeneratorTypeRef(RuleEnvironment G, TypeArgument... typeArgs) {
+		createTypeRef(G.asyncGeneratorType, typeArgs);
 	}
 
 	/* Returns built-in type {@code N4Element} */

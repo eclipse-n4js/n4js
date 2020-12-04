@@ -1379,7 +1379,9 @@ public class TypeUtils {
 	}
 
 	/**
-	 * Returns true iff the {@link TypeRef} is a promise.
+	 * Returns true iff the {@link TypeRef} refers to built-in type {@link BuiltInTypeScope#getPromiseType() Promise}.
+	 * <p>
+	 * WARNING: returns false for subtypes of <code>Promise</code>.
 	 */
 	public static boolean isPromise(TypeRef ref, BuiltInTypeScope scope) {
 		if (ref instanceof ParameterizedTypeRef) {
@@ -1389,13 +1391,52 @@ public class TypeUtils {
 	}
 
 	/**
-	 * Returns true iff the {@link TypeRef} is a generator.
+	 * Returns true iff the {@link TypeRef} refers to built-in type {@link BuiltInTypeScope#getGeneratorType()
+	 * Generator}.
+	 * <p>
+	 * WARNINGS:
+	 * <ul>
+	 * <li>returns false for <code>AsyncGenerator</code>.
+	 * <li>returns false for subtypes of <code>Generator</code>.
+	 * </ul>
 	 */
 	public static boolean isGenerator(TypeRef ref, BuiltInTypeScope scope) {
 		if (ref instanceof ParameterizedTypeRef) {
 			return ref.getDeclaredType() == scope.getGeneratorType();
 		}
 		return false;
+	}
+
+	/**
+	 * Returns true iff the {@link TypeRef} refers to built-in type {@link BuiltInTypeScope#getAsyncGeneratorType()
+	 * AsyncGenerator}.
+	 * <p>
+	 * WARNINGS:
+	 * <ul>
+	 * <li>returns false for <code>Generator</code>.
+	 * <li>returns false for subtypes of <code>AsyncGenerator</code>.
+	 * </ul>
+	 */
+	public static boolean isAsyncGenerator(TypeRef ref, BuiltInTypeScope scope) {
+		if (ref instanceof ParameterizedTypeRef) {
+			return ref.getDeclaredType() == scope.getAsyncGeneratorType();
+		}
+		return false;
+	}
+
+	/**
+	 * Returns true iff the {@link TypeRef} refers to built-in type {@link BuiltInTypeScope#getGeneratorType()
+	 * Generator} or {@link BuiltInTypeScope#getAsyncGeneratorType() AsyncGenerator}.
+	 * <p>
+	 * WARNING: returns false for subtypes of <code>Generator</code> and <code>AsyncGenerator</code>.
+	 */
+	public static boolean isGeneratorOrAsyncGenerator(TypeRef ref, BuiltInTypeScope scope) {
+		if (ref instanceof ParameterizedTypeRef) {
+			Type declType = ref.getDeclaredType();
+			return declType == scope.getGeneratorType() || declType == scope.getAsyncGeneratorType();
+		}
+		return false;
+
 	}
 
 	/**
@@ -1440,6 +1481,7 @@ public class TypeUtils {
 		Objects.requireNonNull(scope);
 		Objects.requireNonNull(funDef);
 
+		boolean async = funDef.isAsync();
 		TypeRef definedReturn = funDef.getReturnTypeRef();
 		TypeArgument tYield;
 		TypeArgument tReturn = inferReturnTypeFromReturns(funDef, scope);
@@ -1453,7 +1495,7 @@ public class TypeUtils {
 			}
 		}
 
-		ParameterizedTypeRef generatorTypeRef = createGeneratorTypeRef(scope, tYield, tReturn, null);
+		ParameterizedTypeRef generatorTypeRef = createGeneratorTypeRef(scope, async, tYield, tReturn, null);
 		return generatorTypeRef;
 	}
 
@@ -1462,13 +1504,15 @@ public class TypeUtils {
 	 * {@code tReturn} is of type {@code void}, it will be transformed to {@code undefined}. In case {@code tNext} is
 	 * {@code null}, it will be of type {@code any}.
 	 */
-	public static ParameterizedTypeRef createGeneratorTypeRef(BuiltInTypeScope scope, TypeArgument tYield,
-			TypeArgument tReturn, TypeArgument tNext) {
+	public static ParameterizedTypeRef createGeneratorTypeRef(BuiltInTypeScope scope, boolean async,
+			TypeArgument tYield, TypeArgument tReturn, TypeArgument tNext) {
 
 		tYield = isVoid(tYield) ? scope.getUndefinedTypeRef() : TypeUtils.copyWithProxies(tYield);
 		tReturn = isVoid(tReturn) ? scope.getUndefinedTypeRef() : TypeUtils.copyWithProxies(tReturn);
 		tNext = (tNext == null) ? scope.getAnyTypeRef() : TypeUtils.copyWithProxies(tNext);
-		ParameterizedTypeRef generatorTypeRef = createTypeRef(scope.getGeneratorType(), tYield, tReturn, tNext);
+		ParameterizedTypeRef generatorTypeRef = createTypeRef(
+				async ? scope.getAsyncGeneratorType() : scope.getGeneratorType(),
+				tYield, tReturn, tNext);
 		return generatorTypeRef;
 	}
 
