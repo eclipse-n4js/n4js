@@ -1,0 +1,36 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP  */
+
+
+
+
+// XPECT type of 'arrayOfInt' --> Array<int>
+const arrayOfInt = [1, 2, 3];
+
+
+// XPECT type of 'arrayB1' --> Array<int>
+const arrayB1 = arrayOfInt || [];
+// XPECT type of 'arrayB2' --> Array<int>
+const arrayB2 = [] || arrayOfInt;
+
+
+// XPECT type of 'arrayC1' --> Array<int>
+const arrayC1 = arrayOfInt ?? [];
+// XPECT type of 'arrayC2' --> Array<int>
+const arrayC2 = [] ?? arrayOfInt;
+
+
+// XPECT type of 'cond1' --> Array<int>
+const cond1 = "a" == "b" ? arrayOfInt : [];
+// XPECT type of 'cond2' --> Array<int>
+const cond2 = "a" == "b" ? [] : arrayOfInt;
