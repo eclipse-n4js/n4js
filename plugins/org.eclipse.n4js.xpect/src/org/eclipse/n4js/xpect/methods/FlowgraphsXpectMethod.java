@@ -378,7 +378,7 @@ public class FlowgraphsXpectMethod {
 		N4JSFlowAnalyser flowAnalyzer = createFlowAnalyzer(cfe);
 		flowAnalyzer.accept(iga);
 
-		Collection<InstanceofGuard> ioGuards = iga.getAlwaysHoldingTypes(cfe);
+		Collection<InstanceofGuard> ioGuards = iga.getAlwaysHoldingGuards(cfe);
 
 		List<String> commonPredStrs = new LinkedList<>();
 		for (InstanceofGuard ioGuard : ioGuards) {
