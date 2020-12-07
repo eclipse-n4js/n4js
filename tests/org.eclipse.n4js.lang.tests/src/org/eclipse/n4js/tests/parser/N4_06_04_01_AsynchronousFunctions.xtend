@@ -22,8 +22,8 @@ import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.ParenExpression
 import org.eclipse.n4js.n4JS.ScriptElement
 import org.eclipse.n4js.n4JS.VariableStatement
-import org.junit.Test
 import org.junit.Ignore
+import org.junit.Test
 
 /**
  * Parser tests for asynchronous functions-
@@ -194,7 +194,39 @@ class N4_06_04_01_AsynchronousFunctions extends AbstractParserTest {
 		'''.parse
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertInstances(script.scriptElements, ExpressionStatement)
-		assertFExprAsync(script.scriptElements.get(0), true);
+		assertFExprAsync(script.scriptElements.get(0), true, false);
+	}
+
+	@Test
+	def void test_AsyncGenExpr1() {
+		val script = '''
+			(async function* foo(): void {})
+		'''.parseESSuccessfully
+		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
+		assertInstances(script.scriptElements, ExpressionStatement)
+		assertFExprAsync(script.scriptElements.get(0), true, true);
+	}
+
+	@Test
+	def void test_AsyncGenExpr2() {
+		val script = '''
+			(async function*(): void {})
+		'''.parseESSuccessfully
+		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
+		assertInstances(script.scriptElements, ExpressionStatement)
+		assertFExprAsync(script.scriptElements.get(0), true, true);
+	}
+
+	@Test
+	def void test_AsyncGenExpr3() {
+		val script = '''
+			(async function* <T> (syncIterable: Iterable<T>): T {})
+		'''.parseESSuccessfully
+		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
+		assertInstances(script.scriptElements, ExpressionStatement)
+		val fe = assertFExprAsync(script.scriptElements.get(0), true, true);
+		assertEquals(1, fe.typeVars.size);
+		assertEquals("T", fe.typeVars.head.name);
 	}
 
 	@Test
@@ -204,7 +236,7 @@ class N4_06_04_01_AsynchronousFunctions extends AbstractParserTest {
 		'''.parse
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertInstances(script.scriptElements, ExpressionStatement)
-		assertFExprAsync(script.scriptElements.get(0), false);
+		assertFExprAsync(script.scriptElements.get(0), false, false);
 	}
 
 	@Test
@@ -229,13 +261,15 @@ class N4_06_04_01_AsynchronousFunctions extends AbstractParserTest {
 		assertInstanceOf((script.scriptElements.get(0) as ExpressionStatement).expression, ParameterizedCallExpression)
 	}
 
-	private def assertFExprAsync(ScriptElement stmt, boolean expectedAsync) {
+	private def FunctionExpression assertFExprAsync(ScriptElement stmt, boolean expectedAsync, boolean expectedGenerator) {
 		assertInstanceOf(stmt, ExpressionStatement)
 		val expr = (stmt as ExpressionStatement).expression;
 		assertInstanceOf(expr, ParenExpression);
 		val fexpr = (expr as ParenExpression).expression;
 		assertInstanceOf(fexpr, FunctionExpression);
 		assertEquals(expectedAsync, (fexpr as FunctionExpression).async)
+		assertEquals(expectedGenerator, (fexpr as FunctionExpression).generator)
+		return fexpr as FunctionExpression;
 	}
 
 	@Test
@@ -295,14 +329,14 @@ class N4_06_04_01_AsynchronousFunctions extends AbstractParserTest {
 
 	}
 
-	def void assertInstanceOf(Object obj, Class<?> type) {
+	def private void assertInstanceOf(Object obj, Class<?> type) {
 		assertTrue(
 			"Expected type " + type.simpleName + " but was " + if (obj === null) "null" else obj.class.simpleName,
 			type.isInstance(obj)
 		);
 	}
 
-	def void assertInstances(Iterable<? extends Object> objs, Class<?>... types) {
+	def private void assertInstances(Iterable<? extends Object> objs, Class<?>... types) {
 		var i = 0;
 		for (obj : objs) {
 			if (i >= types.length) {

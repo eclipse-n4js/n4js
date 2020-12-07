@@ -226,9 +226,9 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		return iterableComputer.extractIterableElementTypeUB(G, typeRef);
 	}
 
-	/** @see IterableComputer#extractIterableElementType(RuleEnvironment, TypeRef) */
-	public def TypeArgument extractIterableElementType(RuleEnvironment G, TypeRef typeRef) {
-		return iterableComputer.extractIterableElementType(G, typeRef);
+	/** @see IterableComputer#extractIterableElementType(RuleEnvironment, TypeRef, boolean) */
+	public def TypeArgument extractIterableElementType(RuleEnvironment G, TypeRef typeRef, boolean includeAsyncIterable) {
+		return iterableComputer.extractIterableElementType(G, typeRef, includeAsyncIterable);
 	}
 
 
@@ -479,7 +479,7 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 
 	/**
 	 * From any expression within a generator function or method, the type TNext is returned (referring to the
-	 * actual (outer) return type, which is {@code Generator<TYield,TReturn,TNext>}).
+	 * actual (outer) return type, which is {@code [Async]Generator<TYield,TReturn,TNext>}).
 	 */
 	def TypeRef getActualGeneratorReturnType(RuleEnvironment G, Expression expr) {
 		val funDef = EcoreUtil2.getContainerOfType(expr?.eContainer, FunctionDefinition);
@@ -488,13 +488,13 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		G2.addThisType(myThisTypeRef); // takes the real-this type even if it is a type{this} reference.
 
 		if (funDef === null || !funDef.isGenerator)
-			return null; // yields only occur in generator functions
+			return null; // yield only occurs in generator functions
 
 		val tFun = funDef.definedType;
 		if (tFun instanceof TFunction) {
 			val actualReturnTypeRef = tFun.returnTypeRef;
 			val scope = G.getPredefinedTypes().builtInTypeScope;
-			if (TypeUtils.isGenerator(actualReturnTypeRef, scope)) {
+			if (TypeUtils.isGeneratorOrAsyncGenerator(actualReturnTypeRef, scope)) {
 				return actualReturnTypeRef;
 			}
 		}
@@ -502,7 +502,7 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 	}
 
 	/**
-	 * Given a {@link TypeRef} to a {@code Generator<TYield,TReturn,TNext>} class, this method returns TYield, if existent.
+	 * Given a {@link TypeRef} to a {@code [Async]Generator<TYield,TReturn,TNext>} class, this method returns TYield, if existent.
 	 */
 	def TypeRef getGeneratorTYield(RuleEnvironment G, TypeRef generatorTypeRef) {
 		var TypeRef yieldTypeRef = null;
@@ -515,7 +515,7 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 	}
 
 	/**
-	 * Given a {@link TypeRef} to a {@code Generator<TYield,TReturn,TNext>} class, this method returns TReturn, if existent.
+	 * Given a {@link TypeRef} to a {@code [Async]Generator<TYield,TReturn,TNext>} class, this method returns TReturn, if existent.
 	 */
 	def TypeRef getGeneratorTReturn(RuleEnvironment G, TypeRef generatorTypeRef) {
 		var TypeRef returnTypeRef = null;
@@ -528,7 +528,7 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 	}
 
 	/**
-	 * Given a {@link TypeRef} to a {@code Generator<TYield,TReturn,TNext>} class, this method returns TNext, if existent.
+	 * Given a {@link TypeRef} to a {@code [Async]Generator<TYield,TReturn,TNext>} class, this method returns TNext, if existent.
 	 */
 	def TypeRef getGeneratorTNext(RuleEnvironment G, TypeRef generatorTypeRef) {
 		var TypeRef nextTypeRef = null;

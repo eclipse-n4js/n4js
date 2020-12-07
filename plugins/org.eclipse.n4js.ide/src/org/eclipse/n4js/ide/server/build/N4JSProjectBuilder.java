@@ -24,7 +24,7 @@ import org.eclipse.n4js.ide.xtext.server.ResourceChangeSet;
 import org.eclipse.n4js.ide.xtext.server.build.IBuildRequestFactory;
 import org.eclipse.n4js.ide.xtext.server.build.ImmutableProjectState;
 import org.eclipse.n4js.ide.xtext.server.build.ProjectBuilder;
-import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterDeleteListener;
+import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
 import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.projectDescription.ProjectType;
@@ -86,8 +86,8 @@ public class N4JSProjectBuilder extends ProjectBuilder {
 	}
 
 	@Override
-	public void doClean(AfterDeleteListener deleteListener, CancelIndicator cancelIndicator) {
-		super.doClean(deleteListener, cancelIndicator);
+	public void doClean(XBuildRequest buildRequest, CancelIndicator cancelIndicator) {
+		super.doClean(buildRequest, cancelIndicator);
 
 		removeTestCatalog();
 	}

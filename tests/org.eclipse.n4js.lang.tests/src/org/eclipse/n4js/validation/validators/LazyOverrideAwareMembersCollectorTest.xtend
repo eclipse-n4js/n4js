@@ -111,10 +111,10 @@ class LazyOverrideAwareMembersCollectorTest {
 	def void testConsumed() {
 		val script = '''
 			interface R1 {
-				void f(p: number) {}
+				f(p: number) : void{}
 			}
 			interface R2 {
-				void f(p: string) {}
+				f(p: string) : void{}
 			}
 			class C implements R1, R2 {}
 		'''.parse // only parsed, not linked
@@ -135,7 +135,7 @@ class LazyOverrideAwareMembersCollectorTest {
 				x: string;
 			}
 			class S {
-				void x() {}
+				x(): void {}
 			}
 			class C1 extends S implements R1 {}
 		'''.parse // only parsed, not linked

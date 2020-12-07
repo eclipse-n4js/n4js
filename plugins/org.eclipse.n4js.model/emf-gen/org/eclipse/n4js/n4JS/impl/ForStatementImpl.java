@@ -43,6 +43,7 @@ import org.eclipse.n4js.n4JS.VariableEnvironmentElement;
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ForStatementImpl#getExpression <em>Expression</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ForStatementImpl#getInitExpr <em>Init Expr</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ForStatementImpl#getUpdateExpr <em>Update Expr</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.ForStatementImpl#isAwait <em>Await</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ForStatementImpl#isForIn <em>For In</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ForStatementImpl#isForOf <em>For Of</em>}</li>
  * </ul>
@@ -89,6 +90,26 @@ public class ForStatementImpl extends VariableDeclarationContainerImpl implement
 	 * @ordered
 	 */
 	protected Expression updateExpr;
+
+	/**
+	 * The default value of the '{@link #isAwait() <em>Await</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isAwait()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean AWAIT_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isAwait() <em>Await</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isAwait()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean await = AWAIT_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #isForIn() <em>For In</em>}' attribute.
@@ -335,6 +356,29 @@ public class ForStatementImpl extends VariableDeclarationContainerImpl implement
 	 * @generated
 	 */
 	@Override
+	public boolean isAwait() {
+		return await;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setAwait(boolean newAwait) {
+		boolean oldAwait = await;
+		await = newAwait;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.FOR_STATEMENT__AWAIT, oldAwait, await));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public boolean isForIn() {
 		return forIn;
 	}
@@ -431,6 +475,8 @@ public class ForStatementImpl extends VariableDeclarationContainerImpl implement
 				return getInitExpr();
 			case N4JSPackage.FOR_STATEMENT__UPDATE_EXPR:
 				return getUpdateExpr();
+			case N4JSPackage.FOR_STATEMENT__AWAIT:
+				return isAwait();
 			case N4JSPackage.FOR_STATEMENT__FOR_IN:
 				return isForIn();
 			case N4JSPackage.FOR_STATEMENT__FOR_OF:
@@ -458,6 +504,9 @@ public class ForStatementImpl extends VariableDeclarationContainerImpl implement
 				return;
 			case N4JSPackage.FOR_STATEMENT__UPDATE_EXPR:
 				setUpdateExpr((Expression)newValue);
+				return;
+			case N4JSPackage.FOR_STATEMENT__AWAIT:
+				setAwait((Boolean)newValue);
 				return;
 			case N4JSPackage.FOR_STATEMENT__FOR_IN:
 				setForIn((Boolean)newValue);
@@ -489,6 +538,9 @@ public class ForStatementImpl extends VariableDeclarationContainerImpl implement
 			case N4JSPackage.FOR_STATEMENT__UPDATE_EXPR:
 				setUpdateExpr((Expression)null);
 				return;
+			case N4JSPackage.FOR_STATEMENT__AWAIT:
+				setAwait(AWAIT_EDEFAULT);
+				return;
 			case N4JSPackage.FOR_STATEMENT__FOR_IN:
 				setForIn(FOR_IN_EDEFAULT);
 				return;
@@ -515,6 +567,8 @@ public class ForStatementImpl extends VariableDeclarationContainerImpl implement
 				return initExpr != null;
 			case N4JSPackage.FOR_STATEMENT__UPDATE_EXPR:
 				return updateExpr != null;
+			case N4JSPackage.FOR_STATEMENT__AWAIT:
+				return await != AWAIT_EDEFAULT;
 			case N4JSPackage.FOR_STATEMENT__FOR_IN:
 				return forIn != FOR_IN_EDEFAULT;
 			case N4JSPackage.FOR_STATEMENT__FOR_OF:
@@ -659,7 +713,9 @@ public class ForStatementImpl extends VariableDeclarationContainerImpl implement
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (forIn: ");
+		result.append(" (await: ");
+		result.append(await);
+		result.append(", forIn: ");
 		result.append(forIn);
 		result.append(", forOf: ");
 		result.append(forOf);

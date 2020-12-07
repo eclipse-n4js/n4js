@@ -1,0 +1,71 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+// return without expression is ok in shorthand form
+let g50 = function * () : int {
+	// XPECT noerrors
+	return;
+}
+let ag50 = async function * () : int {
+	// XPECT noerrors
+	return;
+}
+
+// return with expression is ok in shorthand form
+let g51 = function * () : int {
+	// XPECT noerrors
+	return 1;
+}
+let ag51 = async function * () : int {
+	// XPECT noerrors
+	return 1;
+}
+
+// return without expression is ok when void
+let g52 = function * () : void {
+	// XPECT noerrors
+	yield;
+	// XPECT noerrors
+	return;
+}
+let ag52 = async function * () : void {
+	// XPECT noerrors
+	yield;
+	// XPECT noerrors
+	return;
+}
+
+// return with expression is not ok when void
+let g53 = function * () : void {
+	// XPECT errors --> "int is not a subtype of undefined." at "1"
+	yield 1;
+	// XPECT errors --> "int is not a subtype of undefined." at "1"
+	return 1;
+}
+let ag53 = async function * () : void {
+	// XPECT errors --> "int is not a subtype of undefined." at "1"
+	yield 1;
+	// XPECT errors --> "int is not a subtype of undefined." at "1"
+	return 1;
+}
+
+// yield has return of type TNext
+let g54 = function * () : Generator<?,?,string>{
+	// XPECT noerrors
+	let x : string = yield;
+}
+let ag54 = async function * () : AsyncGenerator<?,?,string>{
+	// XPECT noerrors
+	let x : string = yield;
+}

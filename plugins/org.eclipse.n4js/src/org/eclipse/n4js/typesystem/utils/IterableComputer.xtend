@@ -23,6 +23,7 @@ import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.PrimitiveType
 import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TMethod
+import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.util.AllSuperTypeRefsCollector
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
@@ -56,14 +57,14 @@ class IterableComputer extends TypeSystemHelperStrategy {
 	 * but if there are invalid type references with too many arguments, this might happen.
 	 */
 	public def Iterable<? extends TypeRef> extractIterableElementTypes(RuleEnvironment G, TypeRef typeRef) {
-		return extractIterableElementTypes(G, typeRef, true);
+		return extractIterableElementTypes(G, typeRef, G.iterableType, true);
 	}
 
 	/**
 	 * Same as {@link #extractIterableElementType(RuleEnvironment,TypeRef)}, but returns the upper bound.
 	 */
 	public def TypeRef extractIterableElementTypeUB(RuleEnvironment G, TypeRef typeRef) {
-		return extractIterableElementTypes(G, typeRef, false).map[ts.upperBound(G,it)].head;
+		return extractIterableElementTypes(G, typeRef, G.iterableType, false).map[ts.upperBound(G,it)].head;
 	}
 
 	/**
@@ -72,14 +73,21 @@ class IterableComputer extends TypeSystemHelperStrategy {
 	 *
 	 * Returns <code>null</code> if 'typeRef' does not implement Iterable.
 	 */
-	public def TypeArgument extractIterableElementType(RuleEnvironment G, TypeRef typeRef) {
-		return extractIterableElementTypes(G, typeRef, false).head;
+	public def TypeArgument extractIterableElementType(RuleEnvironment G, TypeRef typeRef, boolean includeAsyncIterable) {
+		var result = null as TypeArgument;
+		if (includeAsyncIterable) {
+			result = extractIterableElementTypes(G, typeRef, G.asyncIterableType, false).head;
+		}
+		if (result === null) {
+			result = extractIterableElementTypes(G, typeRef, G.iterableType, false).head;
+		}
+		return result;
 	}
 
-	private def Iterable<? extends TypeRef> extractIterableElementTypes(RuleEnvironment G, TypeRef typeRef, boolean includeIterableN) {
+	private def Iterable<? extends TypeRef> extractIterableElementTypes(RuleEnvironment G, TypeRef typeRef, Type iterableType, boolean includeIterableN) {
 		var Iterable<? extends TypeRef> result = null;
 		val declType = typeRef?.declaredType;
-		if(declType===G.iterableType || (includeIterableN && G.isIterableN(declType))) {
+		if(declType===iterableType || (includeIterableN && G.isIterableN(declType))) {
 			// simple: typeRef directly points to Iterable<> or an IterableN<>
 			result = typeRef.typeArgs.toUpperBounds(G);
 		} else if(declType instanceof PrimitiveType) {
@@ -96,7 +104,7 @@ class IterableComputer extends TypeSystemHelperStrategy {
 		} else if(typeRef instanceof ComposedTypeRef) {
 			val results = newArrayList;
 			for(containedTypeRef : typeRef.typeRefs) {
-				val currResult = extractIterableElementTypes(G, containedTypeRef, includeIterableN);
+				val currResult = extractIterableElementTypes(G, containedTypeRef, iterableType, includeIterableN);
 				if(currResult.empty) {
 					// one of the types in the ComposedTypeRef does not implement Iterable/IterableN at all
 					// -> the entire composed type ref must be treated as if it did not implement them at all
@@ -113,7 +121,7 @@ class IterableComputer extends TypeSystemHelperStrategy {
 			// structural but may still be implemented explicitly which would be simpler for us)
 			val results = newArrayList;
 			for(superTypeRef : AllSuperTypeRefsCollector.collect(declType)) {
-				if(superTypeRef?.declaredType===G.iterableType || (includeIterableN && G.isIterableN(superTypeRef))) {
+				if(superTypeRef?.declaredType===iterableType || (includeIterableN && G.isIterableN(superTypeRef))) {
 					// next if() is important: sorts out the super-type references to IterableN-1 in IterableN
 					// (but only required if including the IterableN)
 					val isContainedInIterable = G.isIterableN(superTypeRef.eContainer);
@@ -136,7 +144,12 @@ class IterableComputer extends TypeSystemHelperStrategy {
 			if(result===null) {
 				val res = G.get(Resource);
 				if(res instanceof Resource) {
-					val m = containerTypesHelper.fromContext(res).findMember(declType,ComputedPropertyNameValueConverter.SYMBOL_ITERATOR_MANGLED,false,false);
+					val memberName = if(iterableType===G.asyncIterableType) {
+						ComputedPropertyNameValueConverter.SYMBOL_ASYNC_ITERATOR_MANGLED;
+					} else {
+						ComputedPropertyNameValueConverter.SYMBOL_ITERATOR_MANGLED;
+					};
+					val m = containerTypesHelper.fromContext(res).findMember(declType,memberName,false,false);
 					if(m instanceof TMethod) {
 						result = m.returnTypeRef?.typeArgs.toUpperBounds(G); // no problem if we set 'result' to null (it's the default anyway)
 					}

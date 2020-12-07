@@ -1,0 +1,51 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+
+    ResourceSet {
+		ThisFile {}
+		File "ExampleClasses.n4js" {}
+	}
+
+   END_SETUP
+ */
+
+import * as EC from "Ch08_01_12__UnaryExpressions/ExampleClasses";
+
+
+
+///////////////////////////////////
+// unary expressions
+//  not=’!’
+//   See ToBoolean() in (§9.2 ECMA-262-5.1) always evaluates to boolean
+///////////////////////////////////
+var varUndefined;
+var buaNeg1 : boolean = ! true; // false
+var buaNeg2 : boolean = ! null; // true
+var buaNeg3 : boolean = ! false; // true
+var buaNeg4 : boolean = ! 42; // false
+var buaNeg5 : boolean = ! "Hallo"; // false
+var buaNeg6 : boolean = ! ""; // true
+var buaNeg7 : boolean = ! new EC.C(); // false
+var buaNeg8 : boolean = ! varUndefined; // true
+var buaNeg9 : boolean = ! {a:"a"}; //false
+var buaNeg10 : boolean = ! NaN; //true
+
+
+
+
+// XPECT errors --> "boolean is not a subtype of number." at "! buaNeg1"
+var numX : number = ! buaNeg1;
+// XPECT errors --> "boolean is not a subtype of string." at "! buaNeg1"
+var strX : string = ! buaNeg1;
+// XPECT errors --> "boolean is not a subtype of Object." at "! buaNeg1"
+var objX : Object = ! buaNeg1;

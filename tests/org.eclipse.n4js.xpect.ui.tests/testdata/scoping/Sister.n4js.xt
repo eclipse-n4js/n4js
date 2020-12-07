@@ -40,7 +40,7 @@ import { Child } from "scoping/Child";
 
 export class Sister {
 /* XPECT scope at ': |Brother' ---
-Array, Boolean, Brother, Child, Date, Error, EvalError, Function, Generator,
+Array, AsyncGenerator, AsyncIterable, AsyncIterator, Boolean, Brother, Child, Date, Error, EvalError, Function, Generator,
 Iterable,
 Iterable2, Iterable3, Iterable4, Iterable5, Iterable6, Iterable7, Iterable8, Iterable9,
 Iterator, IteratorEntry,

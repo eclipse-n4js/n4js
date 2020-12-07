@@ -28,8 +28,8 @@ END_SETUP
 class Base {
 	protected async foo() {}
 	protected <T>bar(t: T) {}
-	// XPECT errors --> "Wrong type syntax: Use foo:Type rather than Type foo." at "int"
-	protected int old() {}
+	// XPECT errors --> "Missing return or throw statement." at "old"
+	protected old() : int {}
 	protected *generator() {}
 }
 
@@ -61,7 +61,7 @@ class Test extends Base {
 	+ 	protected
 	  	<T> bar(t: T) {}
 	  	@Override
-	  	int old() {} // old syntax, but anyway
+	  	old() : int {}
 	(...)
 	--- */
 	<T> bar(t: T) {}
@@ -69,28 +69,28 @@ class Test extends Base {
 
 	@Override
 	/* XPECT errors ---
+		"Missing return or throw statement." at "old"
 		"The method Test.old cannot reduce the visibility of method Base.old." at "old"
-		"Wrong type syntax: Use foo:Type rather than Type foo." at "int"
 	--- */
-	/* XPECT quickFix at 'int <|>old() {' apply 'Set access modifier to "protected" (align with Base.old)' ---
+	/* XPECT quickFix at '<|>old() : int {' apply 'Set access modifier to "protected" (align with Base.old)' ---
 	(...)
 	  	@Override
 	  	<T> bar(t: T) {}
 	  	@Override
 	+ 	protected
-	  	int old() {} // old syntax, but anyway
+	  	old() : int {}
 	  	@Override
 	  	*generator() {}
 	(...)
 	--- */
-	int old() {} // old syntax, but anyway
+	old() : int {}
 
 
 	@Override
 	/* XPECT quickFix at '*<|>generator() {' apply 'Set access modifier to "protected" (align with Base.generator)' ---
 	(...)
 	  	@Override
-	  	int old() {} // old syntax, but anyway
+	  	old() : int {}
 	  	@Override
 	+ 	protected
 	  	*generator() {}

@@ -16,6 +16,7 @@ import java.util.Set;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
@@ -42,7 +43,9 @@ public class N4JSOutputConfigurationProvider extends OutputConfigurationProvider
 
 		for (IN4JSProject prj : n4jsCore.findAllProjects()) {
 			OutputConfiguration outputConfiguration = getOutputConfiguration(prj);
-			outputConfs.add(outputConfiguration);
+			if (outputConfiguration != null) {
+				outputConfs.add(outputConfiguration);
+			}
 		}
 
 		return outputConfs;
@@ -67,11 +70,19 @@ public class N4JSOutputConfigurationProvider extends OutputConfigurationProvider
 
 	private Set<OutputConfiguration> getOutputConfigurationSet(IN4JSProject project) {
 		Set<OutputConfiguration> outputConfs = new HashSet<>();
-		outputConfs.add(getOutputConfiguration(project));
+		OutputConfiguration outputConf = getOutputConfiguration(project);
+		if (outputConf != null) {
+			outputConfs.add(outputConf);
+		}
 		return outputConfs;
 	}
 
 	private OutputConfiguration getOutputConfiguration(IN4JSProject project) {
+		if (project != null
+				&& N4JSGlobals.PROJECT_TYPES_WITHOUT_GENERATION.contains(project.getProjectType())) {
+			return null;
+		}
+
 		String outputPath = null;
 		if (project != null) {
 			outputPath = project.getOutputPath();

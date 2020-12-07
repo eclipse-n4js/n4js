@@ -1,0 +1,76 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+class C {
+	// no return ok
+	// XPECT noerrors
+	* g1() {}
+	// XPECT noerrors
+	async * ag1() {}
+
+
+	// recursive yield type ok
+	* g2() {
+		// XPECT noerrors
+		yield * this.g1();
+	}
+	async * ag2() {
+		// XPECT noerrors
+		yield * this.ag1();
+	}
+
+
+	// yield has return
+	* g3a() {
+		// XPECT noerrors
+		let x = yield;
+	}
+	async * ag3a() {
+		// XPECT noerrors
+		let x = yield;
+	}
+
+
+	// yield has return of type any, error case
+	* g3b() {
+		// XPECT errors --> "any is not a subtype of string." at "yield"
+		let x : string = yield;
+	}
+	async * ag3b() {
+		// XPECT errors --> "any is not a subtype of string." at "yield"
+		let x : string = yield;
+	}
+
+
+	// yield has return
+	* g3c() : Generator<?,?,int> {
+		// XPECT noerrors
+		let x = yield;
+	}
+	async * ag3c() : AsyncGenerator<?,?,int> {
+		// XPECT noerrors
+		let x = yield;
+	}
+
+
+	// yield has return of type TNext
+	* g4() : Generator<?,?,string>{
+		// XPECT noerrors
+		let x : string = yield;
+	}
+	async * ag4() : AsyncGenerator<?,?,string>{
+		// XPECT noerrors
+		let x : string = yield;
+	}
+}

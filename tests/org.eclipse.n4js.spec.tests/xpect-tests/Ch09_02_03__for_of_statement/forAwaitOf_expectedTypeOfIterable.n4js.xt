@@ -1,0 +1,85 @@
+/*
+ * Copyright (c) 2020 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+class A {}
+class B extends A {}
+class C extends B {}
+
+let iterable: Iterable<B>;
+let asyncIterable: AsyncIterable<B>;
+
+function* syncGenerator(): string {}
+async function* asyncGenerator(): string {}
+
+
+// type expectations for the "value to be iterated over" in for-await-of loops
+
+async function simple() {
+
+	// XPECT errors --> "int is not a subtype of union{AsyncIterable<?>,Iterable<?>}." at "42"
+	for await (const x of 42) {}
+
+	// XPECT errors --> "~Object is not a subtype of union{AsyncIterable<?>,Iterable<?>}." at "{}"
+	for await (const x of {}) {}
+
+	// XPECT noerrors -->
+	for await (const x of []) {}
+
+	// XPECT noerrors -->
+	for await (const x of iterable) {}
+
+	// XPECT noerrors -->
+	for await (const x of asyncIterable) {}
+
+	// XPECT noerrors -->
+	for await (const x of syncGenerator()) {}
+
+	// XPECT noerrors -->
+	for await (const x of asyncGenerator()) {}
+
+	// ordinary for..of loops should behave inversely w.r.t. generators:
+
+	// XPECT noerrors -->
+	for (const x of syncGenerator()) {}
+
+	// XPECT errors --> "AsyncGenerator<string,undefined,any> is not a structural subtype of Iterable<?>: missing method #iterator." at "asyncGenerator()"
+	for (const x of asyncGenerator()) {}
+}
+
+
+// tests regarding the expected element type of AsyncIterable<>
+
+async function expectedElemType() {
+	let a: A;
+	let b: B;
+	let c: C;
+
+	// XPECT noerrors -->
+	for await (const x: B of asyncIterable) {}
+
+	// XPECT noerrors -->
+	for await (const x: A of asyncIterable) {}
+
+	// XPECT errors --> "AsyncIterable<B> is not a subtype of union{AsyncIterable<? extends C>,Iterable<? extends C>}." at "asyncIterable"
+	for await (const x: C of asyncIterable) {}
+
+	// XPECT noerrors -->
+	for await (b of asyncIterable) {}
+
+	// XPECT noerrors -->
+	for await (a of asyncIterable) {}
+
+	// XPECT errors --> "AsyncIterable<B> is not a subtype of union{AsyncIterable<? extends C>,Iterable<? extends C>}." at "asyncIterable"
+	for await (c of asyncIterable) {}
+}

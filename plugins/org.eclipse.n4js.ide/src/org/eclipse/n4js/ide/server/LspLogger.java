@@ -83,7 +83,7 @@ public class LspLogger {
 		lc.logMessage(message);
 
 		if (type == MessageType.Error) {
-			serverIncidentLogger.reportError(messageString);
+			serverIncidentLogger.report(messageString, true);
 		}
 	}
 

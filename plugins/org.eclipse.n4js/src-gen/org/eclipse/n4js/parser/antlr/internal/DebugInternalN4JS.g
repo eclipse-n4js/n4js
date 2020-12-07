@@ -482,6 +482,23 @@ ruleAsyncNoTrailingLineBreak:
 // Rule FunctionImpl
 ruleFunctionImpl:
 	'function'
+	ruleFunctionImplWithoutKeyword
+;
+
+// Rule FunctionImpl
+norm3_FunctionImpl:
+	'function'
+	norm3_FunctionImplWithoutKeyword
+;
+
+// Rule FunctionImpl
+norm6_FunctionImpl:
+	'function'
+	norm6_FunctionImplWithoutKeyword
+;
+
+// Rule FunctionImplWithoutKeyword
+ruleFunctionImplWithoutKeyword:
 	(
 		'*'
 		norm2_FunctionHeader
@@ -492,9 +509,32 @@ ruleFunctionImpl:
 	)
 ;
 
-// Rule FunctionImpl
-norm3_FunctionImpl:
-	'function'
+// Rule FunctionImplWithoutKeyword
+norm1_FunctionImplWithoutKeyword:
+	(
+		'*'
+		norm2_FunctionHeader
+		norm1_FunctionBody
+		    |
+		norm1_FunctionHeader
+		ruleFunctionBody
+	)
+;
+
+// Rule FunctionImplWithoutKeyword
+norm2_FunctionImplWithoutKeyword:
+	(
+		'*'
+		norm3_FunctionHeader
+		norm1_FunctionBody
+		    |
+		ruleFunctionHeader
+		ruleFunctionBody
+	)
+;
+
+// Rule FunctionImplWithoutKeyword
+norm3_FunctionImplWithoutKeyword:
 	(
 		'*'
 		norm3_FunctionHeader
@@ -505,15 +545,50 @@ norm3_FunctionImpl:
 	)
 ;
 
-// Rule FunctionImpl
-norm6_FunctionImpl:
-	'function'
+// Rule FunctionImplWithoutKeyword
+norm4_FunctionImplWithoutKeyword:
+	(
+		'*'
+		norm2_FunctionHeader
+		norm3_FunctionBody
+		    |
+		ruleFunctionHeader
+		norm2_FunctionBody
+	)
+;
+
+// Rule FunctionImplWithoutKeyword
+norm5_FunctionImplWithoutKeyword:
+	(
+		'*'
+		norm2_FunctionHeader
+		norm3_FunctionBody
+		    |
+		norm1_FunctionHeader
+		norm2_FunctionBody
+	)
+;
+
+// Rule FunctionImplWithoutKeyword
+norm6_FunctionImplWithoutKeyword:
 	(
 		'*'
 		norm3_FunctionHeader
 		norm3_FunctionBody
 		    |
 		ruleFunctionHeader
+		norm2_FunctionBody
+	)
+;
+
+// Rule FunctionImplWithoutKeyword
+norm7_FunctionImplWithoutKeyword:
+	(
+		'*'
+		norm3_FunctionHeader
+		norm3_FunctionBody
+		    |
+		norm1_FunctionHeader
 		norm2_FunctionBody
 	)
 ;
@@ -662,8 +737,7 @@ ruleAsyncFunctionExpression:
 		ruleNoLineTerminator
 		'function'
 	)
-	ruleFunctionHeader
-	norm2_FunctionBody
+	norm6_FunctionImplWithoutKeyword
 ;
 
 // Rule ArrowExpression
@@ -1035,7 +1109,6 @@ ruleBindingElementFragment:
 		    |
 		ruleAnnotation
 		*
-		ruleBogusTypeRefFragment?
 		'...'
 		?
 		ruleBindingIdentifier
@@ -1059,7 +1132,6 @@ norm1_BindingElementFragment:
 		    |
 		ruleAnnotation
 		*
-		ruleBogusTypeRefFragment?
 		'...'
 		?
 		norm1_BindingIdentifier
@@ -1070,11 +1142,6 @@ norm1_BindingElementFragment:
 		norm3_AssignmentExpression
 		?
 	)?
-;
-
-// Rule BogusTypeRefFragment
-ruleBogusTypeRefFragment:
-	ruleTypeRefWithModifiers
 ;
 
 // Rule Block
@@ -1808,6 +1875,8 @@ norm1_WhileStatement:
 // Rule ForStatement
 ruleForStatement:
 	'for'
+	'await'
+	?
 	'('
 	(
 		(
@@ -2029,6 +2098,8 @@ ruleForStatement:
 // Rule ForStatement
 norm1_ForStatement:
 	'for'
+	'await'
+	?
 	'('
 	(
 		(
@@ -2519,7 +2590,6 @@ ruleCatchVariable:
 			)
 		)
 		    |
-		ruleBogusTypeRefFragment?
 		ruleBindingIdentifier
 	)
 ;
@@ -2544,7 +2614,6 @@ norm1_CatchVariable:
 			)
 		)
 		    |
-		ruleBogusTypeRefFragment?
 		norm1_BindingIdentifier
 	)
 ;
@@ -2971,6 +3040,7 @@ rulePropertyAssignment:
 			(ruleTypeVariables?
 			ruleTypeRefWithModifiers
 			?
+			ruleAsyncNoTrailingLineBreak
 			(
 				'*'
 				ruleLiteralOrComputedPropertyName
@@ -3164,6 +3234,7 @@ norm1_PropertyAssignment:
 			(ruleTypeVariables?
 			ruleTypeRefWithModifiers
 			?
+			ruleAsyncNoTrailingLineBreak
 			(
 				'*'
 				norm1_LiteralOrComputedPropertyName
@@ -3654,6 +3725,7 @@ rulePropertyMethodDeclaration:
 		(ruleTypeVariables?
 		ruleTypeRefWithModifiers
 		?
+		ruleAsyncNoTrailingLineBreak
 		(
 			'*'
 			ruleLiteralOrComputedPropertyName
@@ -3666,6 +3738,7 @@ rulePropertyMethodDeclaration:
 		ruleTypeVariables?
 		ruleTypeRefWithModifiers
 		?
+		ruleAsyncNoTrailingLineBreak
 		(
 			'*'
 			ruleLiteralOrComputedPropertyName
@@ -3690,6 +3763,7 @@ norm1_PropertyMethodDeclaration:
 		(ruleTypeVariables?
 		ruleTypeRefWithModifiers
 		?
+		ruleAsyncNoTrailingLineBreak
 		(
 			'*'
 			norm1_LiteralOrComputedPropertyName
@@ -3702,6 +3776,7 @@ norm1_PropertyMethodDeclaration:
 		ruleTypeVariables?
 		ruleTypeRefWithModifiers
 		?
+		ruleAsyncNoTrailingLineBreak
 		(
 			'*'
 			norm1_LiteralOrComputedPropertyName
@@ -7021,13 +7096,12 @@ ruleN4MemberDeclaration:
 			(ruleN4Modifier
 			*
 			ruleTypeVariables?
-			ruleBogusTypeRefFragment?
+			ruleAsyncNoTrailingLineBreak
 			(
 				'*'
 				ruleLiteralOrComputedPropertyName
 				'('
 				    |
-				ruleAsyncNoTrailingLineBreak
 				ruleLiteralOrComputedPropertyName
 				'('
 			)
@@ -7209,13 +7283,12 @@ norm1_N4MemberDeclaration:
 			(ruleN4Modifier
 			*
 			ruleTypeVariables?
-			ruleBogusTypeRefFragment?
+			ruleAsyncNoTrailingLineBreak
 			(
 				'*'
 				norm1_LiteralOrComputedPropertyName
 				'('
 				    |
-				ruleAsyncNoTrailingLineBreak
 				norm1_LiteralOrComputedPropertyName
 				'('
 			)
@@ -7421,7 +7494,6 @@ ruleAnnotatedN4MemberDeclaration:
 			(ruleN4Modifier
 			*
 			ruleTypeVariables?
-			ruleBogusTypeRefFragment?
 			(
 				'*'
 				ruleLiteralOrComputedPropertyName
@@ -7435,7 +7507,6 @@ ruleAnnotatedN4MemberDeclaration:
 			ruleN4Modifier
 			*
 			ruleTypeVariables?
-			ruleBogusTypeRefFragment?
 			(
 				'*'
 				ruleLiteralOrComputedPropertyName
@@ -7650,7 +7721,6 @@ norm1_AnnotatedN4MemberDeclaration:
 			(ruleN4Modifier
 			*
 			ruleTypeVariables?
-			ruleBogusTypeRefFragment?
 			(
 				'*'
 				norm1_LiteralOrComputedPropertyName
@@ -7664,7 +7734,6 @@ norm1_AnnotatedN4MemberDeclaration:
 			ruleN4Modifier
 			*
 			ruleTypeVariables?
-			ruleBogusTypeRefFragment?
 			(
 				'*'
 				norm1_LiteralOrComputedPropertyName
@@ -7691,7 +7760,6 @@ norm1_AnnotatedN4MemberDeclaration:
 ruleFieldDeclarationImpl:
 	ruleN4Modifier
 	*
-	ruleBogusTypeRefFragment?
 	ruleLiteralOrComputedPropertyName
 	'?'
 	?
@@ -7707,7 +7775,6 @@ ruleFieldDeclarationImpl:
 norm1_FieldDeclarationImpl:
 	ruleN4Modifier
 	*
-	ruleBogusTypeRefFragment?
 	norm1_LiteralOrComputedPropertyName
 	'?'
 	?
@@ -7735,13 +7802,12 @@ ruleN4MethodDeclaration:
 		(ruleN4Modifier
 		*
 		ruleTypeVariables?
-		ruleBogusTypeRefFragment?
+		ruleAsyncNoTrailingLineBreak
 		(
 			'*'
 			ruleLiteralOrComputedPropertyName
 			'('
 			    |
-			ruleAsyncNoTrailingLineBreak
 			ruleLiteralOrComputedPropertyName
 			'('
 		)
@@ -7749,7 +7815,7 @@ ruleN4MethodDeclaration:
 		ruleN4Modifier
 		*
 		ruleTypeVariables?
-		ruleBogusTypeRefFragment?
+		ruleAsyncNoTrailingLineBreak
 		(
 			'*'
 			ruleLiteralOrComputedPropertyName
@@ -7758,7 +7824,6 @@ ruleN4MethodDeclaration:
 				norm1_MethodParamsReturnAndBody
 			)
 			    |
-			ruleAsyncNoTrailingLineBreak
 			ruleLiteralOrComputedPropertyName
 			(
 				('(')=>
@@ -7775,13 +7840,12 @@ norm1_N4MethodDeclaration:
 		(ruleN4Modifier
 		*
 		ruleTypeVariables?
-		ruleBogusTypeRefFragment?
+		ruleAsyncNoTrailingLineBreak
 		(
 			'*'
 			norm1_LiteralOrComputedPropertyName
 			'('
 			    |
-			ruleAsyncNoTrailingLineBreak
 			norm1_LiteralOrComputedPropertyName
 			'('
 		)
@@ -7789,7 +7853,7 @@ norm1_N4MethodDeclaration:
 		ruleN4Modifier
 		*
 		ruleTypeVariables?
-		ruleBogusTypeRefFragment?
+		ruleAsyncNoTrailingLineBreak
 		(
 			'*'
 			norm1_LiteralOrComputedPropertyName
@@ -7798,7 +7862,6 @@ norm1_N4MethodDeclaration:
 				norm1_MethodParamsReturnAndBody
 			)
 			    |
-			ruleAsyncNoTrailingLineBreak
 			norm1_LiteralOrComputedPropertyName
 			(
 				('(')=>
@@ -7903,7 +7966,6 @@ norm1_N4GetterDeclaration:
 
 // Rule GetterHeader
 ruleGetterHeader:
-	ruleBogusTypeRefFragment?
 	'get'
 	(
 		('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
@@ -7918,7 +7980,6 @@ ruleGetterHeader:
 
 // Rule GetterHeader
 norm1_GetterHeader:
-	ruleBogusTypeRefFragment?
 	'get'
 	(
 		('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>

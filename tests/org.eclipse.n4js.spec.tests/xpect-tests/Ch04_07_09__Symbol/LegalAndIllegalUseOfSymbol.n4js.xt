@@ -1,0 +1,130 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+//
+// legal use of 'Symbol'
+//
+
+// reading from an Iterable ...
+
+// XPECT noerrors -->
+var sym : symbol = Symbol.iterator;
+
+var myIterable : Iterable<?>;
+var myAsyncIterable : AsyncIterable<?>;
+
+// XPECT noerrors -->
+var getIterFun = myIterable[Symbol.iterator];
+// XPECT noerrors -->
+var getAsyncIterFun = myAsyncIterable[Symbol.asyncIterator];
+
+// XPECT noerrors -->
+var iter0 = myIterable[Symbol.iterator]();
+// XPECT noerrors -->
+var asyncIter0 = myAsyncIterable[Symbol.asyncIterator]();
+
+
+// reading and writing an immediate instance of Object
+// (as part of the general use case of using instances of Object as a map) ...
+
+var myObj : Object;
+// XPECT noerrors -->
+var iter1 = myObj[Symbol.iterator];
+// XPECT noerrors -->
+var asyncIter1 = myObj[Symbol.asyncIterator];
+// XPECT noerrors -->
+myObj[Symbol.iterator] = null;
+// XPECT noerrors -->
+myObj[Symbol.asyncIterator] = null;
+
+
+// reading and writing a dynamic type
+
+var myAnyDyn : any+;
+// XPECT noerrors -->
+myAnyDyn[Symbol.iterator];
+// XPECT noerrors -->
+myAnyDyn[Symbol.asyncIterator];
+// XPECT noerrors -->
+myAnyDyn[Symbol.iterator] = null;
+// XPECT noerrors -->
+myAnyDyn[Symbol.asyncIterator] = null;
+
+class C {}
+var myCustomClassDyn : C+;
+// XPECT noerrors -->
+myCustomClassDyn[Symbol.iterator];
+// XPECT noerrors -->
+myCustomClassDyn[Symbol.asyncIterator];
+// XPECT noerrors -->
+myCustomClassDyn[Symbol.iterator] = null;
+// XPECT noerrors -->
+myCustomClassDyn[Symbol.asyncIterator] = null;
+
+
+// creating symbols with Symbol('description')
+
+// XPECT noerrors -->
+var localSym1 = Symbol();
+// XPECT noerrors -->
+var localSym2 = Symbol("description");
+
+
+// XPECT noerrors -->
+var sharedSym = Symbol.for("key");
+
+// XPECT noerrors -->
+var sharedKey = Symbol.keyFor(sharedSym);
+
+
+//
+// all other uses are bad, bad, bad:
+//
+
+// write access on an Iterable is bad ...
+
+// XPECT errors --> "Access to property Symbol.iterator of an Iterable is read-only." at "Symbol.iterator"
+myIterable[Symbol.iterator] = null;
+// XPECT errors --> "Access to property Symbol.asyncIterator of an AsyncIterable is read-only." at "Symbol.asyncIterator"
+myAsyncIterable[Symbol.asyncIterator] = null;
+
+
+// receiver types other than Iterable / Object are bad ...
+
+var myAny : any;
+var myN4Obj : N4Object;
+var myObjStruct : ~Object;
+
+// XPECT errors --> "Access of property Symbol.iterator only allowed for instances of Iterable, immediate instances of Object, and dynamic types." at "Symbol.iterator"
+var iter2 = myN4Obj[Symbol.iterator];
+// XPECT errors --> "Access of property Symbol.asyncIterator only allowed for instances of AsyncIterable, immediate instances of Object, and dynamic types." at "Symbol.asyncIterator"
+var asyncIter2 = myN4Obj[Symbol.asyncIterator];
+
+// XPECT errors --> "Access of property Symbol.iterator only allowed for instances of Iterable, immediate instances of Object, and dynamic types." at "Symbol.iterator"
+var iter3 = myAny[Symbol.iterator];
+// XPECT errors --> "Access of property Symbol.asyncIterator only allowed for instances of AsyncIterable, immediate instances of Object, and dynamic types." at "Symbol.asyncIterator"
+var asyncIter3 = myAny[Symbol.asyncIterator];
+
+// XPECT errors --> "Access of property Symbol.iterator only allowed for instances of Iterable, immediate instances of Object, and dynamic types." at "Symbol.iterator"
+var iter4 = myObjStruct[Symbol.iterator];
+// XPECT errors --> "Access of property Symbol.asyncIterator only allowed for instances of AsyncIterable, immediate instances of Object, and dynamic types." at "Symbol.asyncIterator"
+var asyncIter4 = myObjStruct[Symbol.asyncIterator];
+
+
+// wrong location (i.e. other than in a property access expression) is bad ...
+
+// XPECT errors --> "Invalid use of Symbol: may only be used to create symbols (i.e. Symbol()) or to access built-in symbols (e.g. Symbol.iterator)." at "Symbol"
+var v : Symbol;
+
+// XPECT errors --> "Invalid use of Symbol: may only be used to create symbols (i.e. Symbol()) or to access built-in symbols (e.g. Symbol.iterator)." at "Symbol"
+function foo(sym : Symbol) {}

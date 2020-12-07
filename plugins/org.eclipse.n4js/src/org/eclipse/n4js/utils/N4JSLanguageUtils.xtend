@@ -1090,4 +1090,13 @@ public class N4JSLanguageUtils {
 
 		return OptionalFieldStrategy.OFF;
 	}
+
+	/**
+	 * Tells whether the given AST node is at a valid location for an await expression or a for-await-of loop.
+	 * Does not check whether the given node is actually an await expression/statement.
+	 */
+	def static boolean isValidLocationForAwait(EObject astNode) {
+		val containingFunDef = EcoreUtil2.getContainerOfType(astNode, FunctionDefinition);
+		return containingFunDef !== null && containingFunDef.async;
+	}
 }

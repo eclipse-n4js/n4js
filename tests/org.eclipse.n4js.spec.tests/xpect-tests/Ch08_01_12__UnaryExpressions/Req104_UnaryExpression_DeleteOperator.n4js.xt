@@ -1,0 +1,41 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+
+    ResourceSet {
+		ThisFile {}
+		File "ExampleClasses.n4js" {}
+	}
+
+   END_SETUP
+ */
+
+import * as EC from "Ch08_01_12__UnaryExpressions/ExampleClasses";
+
+
+
+///////////////////////////////////
+// unary expressions
+//  delete
+//    - can be applied to anything,
+//    - does nothing & returns true if expression is not a reference
+///////////////////////////////////
+var d : any = new EC.D();
+// d.added = 4
+// var boolean del1 = delete d.added
+var del2 : boolean = delete d
+var del3 : boolean = delete this
+var xa = new Array<number>(1,2,3);
+var xb = ["a",,,,"e"];
+var del4 : boolean = delete xa[2];
+var del5 : boolean = delete xb[2];
+var del6 : boolean = delete new EC.D().v()

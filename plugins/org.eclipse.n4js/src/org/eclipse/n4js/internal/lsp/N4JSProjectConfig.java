@@ -22,6 +22,7 @@ import java.util.Set;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.internal.N4JSProject;
+import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
@@ -177,11 +178,6 @@ public class N4JSProjectConfig implements XIProjectConfig {
 	 */
 	@Override
 	public boolean indexOnly() {
-		String outputPath = delegate.getOutputPath();
-		if (".".equals(outputPath)) {
-			return true;
-		}
-
 		URI projectBase = getPath();
 		String lastSegment = projectBase.lastSegment();
 		if (lastSegment == null || lastSegment.isBlank()) {
@@ -198,6 +194,12 @@ public class N4JSProjectConfig implements XIProjectConfig {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public boolean isGeneratorEnabled() {
+		ProjectType projectType = delegate.getProjectType();
+		return !N4JSGlobals.PROJECT_TYPES_WITHOUT_GENERATION.contains(projectType);
 	}
 
 	/**

@@ -324,8 +324,6 @@ class N4JSFormatter extends TypeExpressionsFormatter {
 		field.regionFor.keyword("=").prepend[oneSpace].append[oneSpace];
 		field.expression.format;
 		field.declaredTypeRef.format;
-
-		field.bogusTypeRef.format;
 	}
 
 

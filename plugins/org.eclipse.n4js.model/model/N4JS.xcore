@@ -289,7 +289,6 @@ interface TypeProvidingElement {
 // TODO reconsider the approach on how to handle inferred types, accessors on the model etc
 abstract class TypedElement extends TypeProvidingElement {
 	contains TypeRef declaredTypeRef
-	contains TypeRef bogusTypeRef
 }
 
 // TODO jvp: check ECMAScript spec and probably update this environment things with function and classes
@@ -934,6 +933,8 @@ class WhileStatement extends IterationStatement {
 class ForStatement extends VariableDeclarationContainer, IterationStatement, VariableEnvironmentElement {
 	contains Expression initExpr
 	contains Expression updateExpr
+	/* Note: it is a syntax error if this is true while {@code #forOf} is false. */
+	boolean await
 	boolean forIn
 	boolean forOf
 	op boolean isForPlain() {

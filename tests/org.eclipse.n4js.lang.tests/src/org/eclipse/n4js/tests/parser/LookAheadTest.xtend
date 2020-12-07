@@ -296,6 +296,7 @@ class LookAheadTest extends AbstractParserTest{
 	@Test
 	def void testComplexScenario() {
 		val script = '''
+			
 			import CollectionChangedEvent      from 'n4/events/CollectionChangedEvent';
 			import Event                 	   from 'n4/events/Event';
 			import ChangeEvent                 from 'n4/events/ChangeEvent';
@@ -306,7 +307,7 @@ class LookAheadTest extends AbstractParserTest{
 			import DataObject                  from 'n4/model/DataObject';
 			import Change                      from 'n4/model/persistence/Change';
 			import ChangeType                  from 'n4/model/persistence/ChangeType';
-			import *  from "n4/model/internal/ObservableHelper";
+			import * as X from "n4/model/internal/ObservableHelper";
 			import _                           from 'underscore/underscore';
 			    
 			/////////////////////////////////////////////////////////////////////////    
@@ -315,21 +316,21 @@ class LookAheadTest extends AbstractParserTest{
 			/////////////////////////////////////////////////////////////////////////    
 			
 			class ObservableHelper{
-				static void callListenersWithEvent(any p1, any p2) {}
+			    static callListenersWithEvent(p1: any, p2: any) : void{}
 			}
 			class ObservableItem extends IDO {
-				boolean _$observable;
-				Array<ChangeBroker> _$listeners;
+			    _$observable: boolean;
+			    _$listeners: Array<ChangeBroker>;
 			}
 			class ChangeBroker {
-				any _$list;
+			    _$list: any;
 			}
 			
 			class IDO {
-				boolean _$n4ido; 
-				string id;
-				boolean _$reference;
-				void getID() {}
+			    _$n4ido: boolean; 
+			    id: string;
+			    _$reference: boolean;
+			    getID() : void {}
 			}
 			
 			/**
@@ -343,7 +344,7 @@ class LookAheadTest extends AbstractParserTest{
 			     * @return {Boolean}
 			     * @public
 			     */
-			    public static boolean isList(any val) { return null; }
+			    public static isList(val: any) : boolean{ return null; }
 			    
 			    
 			    /**
@@ -351,19 +352,19 @@ class LookAheadTest extends AbstractParserTest{
 			     * 
 			     *  @type {Boolean} 
 			     */
-			    boolean _$collectable = true;
+			    _$collectable : boolean = true;
 			    /**
 			     * Duck types instances of this class as being a lists.
 			     * 
 			     *  @type {Boolean} 
 			     */
-			    boolean _$isList = true;
+			    _$isList : boolean = true;
 			    /**
 			     * List is defined as observable.
 			     *  
 			     * @type {Boolean} 
 			     */
-			    boolean _$observable = true;
+			    _$observable : boolean = true;
 			
 			    
 			    /**
@@ -371,7 +372,7 @@ class LookAheadTest extends AbstractParserTest{
 			     *  
 			     * @type {Array.<T>} 
 			     */
-			    Array<T> items_;
+			    items_: Array<T>;
 			    
 			    /**
 			     * The number of items in the list.
@@ -379,7 +380,7 @@ class LookAheadTest extends AbstractParserTest{
 			     * @type {Number}
 			     * @public 
 			     */
-			    public number length = 0;
+			    public length : number = 0;
 			    
 			    /** 
 			     * properties to handle change detection / notification
@@ -390,14 +391,14 @@ class LookAheadTest extends AbstractParserTest{
 			     *  
 			     * @type {Boolean} 
 			     */
-			    boolean observing = false;
+			    observing : boolean = false;
 			    
 			    /**
 			     * Array of change listeners of the list.
 			     *  
 			     * @type {Array<Function>} 
 			     */
-			    Array<{function()}> _$listeners;
+			    _$listeners: Array<{function()}>;
 			    // TODO {
 			    //    init : Joose.I.Array
 			    // },
@@ -407,33 +408,33 @@ class LookAheadTest extends AbstractParserTest{
 			     *  
 			     * @type {Array.<n4/model/persistence/Change>} 
 			     */
-			    Array<Change> _$activeChanges = {}; // TODO
+			   _$activeChanges : Array<Change> = {}; // TODO
 			    
 			    /**
 			     * Flag to check on add/insert only mutable objects
 			     * @type {Boolean}  
 			     */
-			    boolean _$checkForMutableOnly = void 0; // undef;;
+			    _$checkForMutableOnly : boolean = void 0; // undef;;
 			    /**
 			     * Flag defines if change events are tracked as changes. 
 			     * If switched off no change delta calculation is possible.
 			     * 
 			     * @type {Boolean}
 			     */
-			    boolean _$trackChanges = true;
+			    _$trackChanges : boolean = true;
 			
 			    /**
-				  * @param {Map<String,Object>=} spec
-				  * @this {n4/lang/ListBase}
-				  */
-				// TODO spec is a map?  
-			    ListBase(~Object with {Array<T> items_; number length;} spec) {
-				    spec = spec || {};
-				    this.items_ = spec.items_ || [];
-				    this.length = spec.length || 0;
-				    this.observing = false;
-				    this._$listeners = [];
-				    this._$trackChanges = true;
+			      * @param {Map<String,Object>=} spec
+			      * @this {n4/lang/ListBase}
+			      */
+			    // TODO spec is a map?  
+			    ListBase(spec: ~Object with {Array<T> items_; number length;}) {
+			        spec = spec || {};
+			        this.items_ = spec.items_ || [];
+			        this.length = spec.length || 0;
+			        this.observing = false;
+			        this._$listeners = [];
+			        this._$trackChanges = true;
 			    }
 			    
 			    /**
@@ -442,8 +443,8 @@ class LookAheadTest extends AbstractParserTest{
 			     * @param {n4/events/Event} event
 			     * @param {Number=} repetition - if item exit multiple in the list
 			     */
-			    fireListeners(Event event, number? repetition) {
-			    	var /** @type {n4/events/ChangeEvent}*/ ChangeEvent ce;
+			    fireListeners(event : Event, repetition : number = ) {
+			        var ce : /** @type {n4/events/ChangeEvent}*/ ChangeEvent;
 			    
 			        if (this.observing && this._$trackChanges && event instanceof ChangeEvent) {
 			            ce = event;
@@ -456,15 +457,15 @@ class LookAheadTest extends AbstractParserTest{
 			     * Send event if the size of the list has been changed.
 			     * @param {Number} oldLen
 			     */
-			    fireSizeChangedEvent(number oldLen) {
-			    	var Event event;
-					
-					//var l = this.length;
+			    fireSizeChangedEvent(oldLen: number) {
+			        var event: Event;
+			        
+			        //var l = this.length;
 			                
 			        if (this.observing && oldLen !== this.length) {
 			            event = new PropertyChangedEvent({
-			            	length: 0,
-			            	source: this,
+			                length: 0,
+			                source: this,
 			                value: this.length,
 			                oldValue: oldLen,
 			                propertyName: "length",
@@ -480,8 +481,8 @@ class LookAheadTest extends AbstractParserTest{
 			     *  @return {Number}
 			     *  @public
 			     */
-			    public number size() {
-			    	return this.items_.length;
+			    public size() : number {
+			        return this.items_.length;
 			    }
 			    
 			    /**
@@ -491,8 +492,8 @@ class LookAheadTest extends AbstractParserTest{
 			     * @return {T}
 			     * @public
 			     */
-			    public T get(number index) {
-			    	 return this.items_[index];
+			    public get(index: number) : T {
+			         return this.items_[index];
 			    }
 			    
 			    /**
@@ -506,8 +507,8 @@ class LookAheadTest extends AbstractParserTest{
 			     * @param {Number} to       The upper bound of the range, should be `<= this.size()`
 			     * @return {?Array.<T>}
 			     */
-			    public Array<T> getRange(number from, number to) {
-			    	var number tmp, /** @type {Array<T>} */ Array<T> ret;
+			    public getRange(from : number, to : number) : Array<T> {
+			        var tmp: number, ret : /** @type {Array<T>} */ Array<T>;
 			        if (to < from) { // swap
 			            tmp = to;
 			            to = from;
@@ -531,8 +532,8 @@ class LookAheadTest extends AbstractParserTest{
 			     *  @return {Number}            The index of that item, or -1 if it wasn't found.
 			     *  @public
 			     */
-			    public number indexOf(T item) {
-			    	return _.indexOf(this.items_, item, undefined);
+			    public indexOf(item : T) : number{
+			        return _.indexOf(this.items_, item, undefined);
 			    }
 			    
 			    /**
@@ -540,8 +541,8 @@ class LookAheadTest extends AbstractParserTest{
 			     * @return {n4/lang/ListBase<T>}
 			     * @public
 			     */
-			    public ListBase<T> push(T value) {
-			    	var number idx, oldLen = this.length;
+			    public push(value : T) : ListBase<T> {
+			        var idx: number, oldLen = this.length;
 			                
 			        if (this._$checkForMutableOnly && true === value['_$immutable']) {
 			            throw new Error("Not allow to insert immutable objects");
@@ -571,8 +572,8 @@ class LookAheadTest extends AbstractParserTest{
 			     * @return {T}         The item which was removed.
 			     * @public
 			     */
-			    public T remove(number index) {
-			    	var /** @type {T} */ T item, oldLen = this.length;
+			    public remove(index: number) : T {
+			        var item : /** @type {T} */ T , oldLen = this.length;
 			    
 			        if (this.observing) {
 			            this._$unobserveItem(this.items_[index]);
@@ -598,8 +599,8 @@ class LookAheadTest extends AbstractParserTest{
 			     * @public
 			     */
 			    public clear() {
-			    	var self = this, 
-			            /** @type {Array<n4/events/CollectionChangedItemsEntry>}*/ Array<n4/events/CollectionChangedItemsEntry> entries = [];
+			        var self = this, 
+			            entries: /** @type {Array<n4/events/CollectionChangedItemsEntry>}*/ Array<n4/events/CollectionChangedItemsEntry> = [];
 			        
 			        if (this.observing) {
 			           _.each(this.items_, function(any item, number? idx){
@@ -617,7 +618,7 @@ class LookAheadTest extends AbstractParserTest{
 			            this.fireSizeChangedEvent(entries.length);
 			        }
 			        
-			        var Event e;
+			        var e : Event;
 			        e.mergeWith(undefined);
 			    }
 			    
@@ -629,8 +630,8 @@ class LookAheadTest extends AbstractParserTest{
 			     * @return {T}
 			     * @public
 			     */
-			    public T getByID(string itemID) {
-			    	 var /** @type {T}*/ T ido = _.detect(this.items_, function(IDO item){
+			    public getByID(itemID: string) : T {
+			         var ido : /** @type {T}*/ T = _.detect(this.items_, function(item: IDO){
 			                return (item._$n4ido && item.id === itemID) || 
 			                        (item._$reference && item.getID() === itemID);
 			            }) || null;
@@ -643,8 +644,8 @@ class LookAheadTest extends AbstractParserTest{
 			     * @public 
 			     * @return {n4/lang/ListBase<T>} the current list
 			     */
-			    public ListBase<T> observe() {
-			    	var self = this;
+			    public observe() : ListBase<T> {
+			        var self = this;
 			    
 			        if (this.observing === false) {
 			            _.each(this.items_, function(item){
@@ -662,8 +663,8 @@ class LookAheadTest extends AbstractParserTest{
 			     * @public 
 			     * @return {n4/lang/ListBase<T>} the list
 			     */
-			    public ListBase<T> unobserve() {
-			    	var self = this;
+			    public unobserve() : ListBase<T> {
+			        var self = this;
 			    
 			        if (this.observing === true) {
 			            _.each(this.items_, function(item) {
@@ -685,8 +686,8 @@ class LookAheadTest extends AbstractParserTest{
 			     * @internal 
 			     */
 			     // TODO internal?
-			    setTrackingChanges(boolean track) {
-			    	this._$trackChanges = track;
+			    setTrackingChanges(track: boolean) {
+			        this._$trackChanges = track;
 			        this._$activeChanges = undef;
 			    }
 			    
@@ -694,8 +695,8 @@ class LookAheadTest extends AbstractParserTest{
 			     * Set value as new length; own method to optional overload by derived classes
 			     * @param {Number} newLen
 			     */
-			    _$setLength (number newLen) {
-			    	 this.length = newLen;
+			    _$setLength (newLen: number) {
+			         this.length = newLen;
 			    }
 			    
 			    /**
@@ -706,20 +707,20 @@ class LookAheadTest extends AbstractParserTest{
 			     * 
 			     * @param {T} item - The item to observe.
 			     */
-			    _$observeItem(T item) {
-			    	var isObservingAlready, ChangeBroker handler, list = this;
+			    _$observeItem(item: T) {
+			        var isObservingAlready, handler: ChangeBroker, list = this;
 			                
 			//        list = this;
 			
 			        if (item && item._$observable) {
-			            isObservingAlready = _.any(item._$listeners, function(ChangeBroker cb) {
+			            isObservingAlready = _.any(item._$listeners, function(cb: ChangeBroker) {
 			                return cb._$list === list;
 			            });
 			        
 			            if (!isObservingAlready) {
-			                handler = function (Event e) {
+			                handler = function (e: Event) {
 			                    var repetition = 0, length = list._$listeners.length,
-			                        /** @type {n4/events/ConstraintCollectEvent} */ ConstraintCollectEvent eventClone,
+			                        eventClone: /** @type {n4/events/ConstraintCollectEvent} */ ConstraintCollectEvent,
 			                        isConstraintEvent, isChangedEvent = false;
 			
 			                    isConstraintEvent = e instanceof ConstraintCollectEvent;
@@ -735,7 +736,7 @@ class LookAheadTest extends AbstractParserTest{
 			                         * find the current index(es) of the item to fire the right
 			                         * event(s)
 			                         */
-			                        _.each(list.items_, function(itm, number idx) {
+			                        _.each(list.items_, function(itm, idx: number) {
 			                            if (itm === item) {
 			                                if (isConstraintEvent) {
 			                                    if( length ) {
@@ -767,7 +768,7 @@ class LookAheadTest extends AbstractParserTest{
 			                    item._$listeners.push(handler);
 			                }
 			            }
-			    	
+			        
 			    }
 			    
 			    /**
@@ -777,8 +778,8 @@ class LookAheadTest extends AbstractParserTest{
 			     * @param {T} item - The item to stop observing
 			     * @param {Boolean=} withoutMultipleCheck - dont check for multiple added items
 			     */
-			    _$unobserveItem(T item, boolean? withoutMultipleCheck) {
-			    	var ListBase<T> list, number repetition = 0;
+			    _$unobserveItem(item: T, withoutMultipleCheck : boolean = ) {
+			        var list: ListBase<T>, repetition : number = 0;
 			                
 			        list = this;
 			
@@ -791,24 +792,24 @@ class LookAheadTest extends AbstractParserTest{
 			                // Same item but not the first one
 			                return itm === item && 0 !== repetition++;
 			            })) {
-			                item._$listeners = _.select(item._$listeners, function(ChangeBroker cb) {
+			                item._$listeners = _.select(item._$listeners, function(cb: ChangeBroker) {
 			                    return cb._$list !== list;
 			                });
 			            }
-			                }
+			        }
 			    }
 			    
 			    /** 
 			     * Private method to collect all changes  
 			     * @param {n4/events/ChangeEvent} event
 			     */
-			    _$trackChange(ChangeEvent event) {
-			    	var /**@type{Array.<n4/model/persistence/Change>}*/ Array<Change> changes, self = this;
+			    _$trackChange(event: ChangeEvent) {
+			        var changes, self = this;
 			                
 			        changes = Change.createChangesFromEvent(event);
 			        if (changes) {
 			            this._$activeChanges = this._$activeChanges || [];
-			            _.each(changes, function(Change change) { 
+			            _.each(changes, function(change: Change) { 
 			                change.addToExistingChanges(self._$activeChanges);     
 			            });
 			        }
@@ -818,9 +819,9 @@ class LookAheadTest extends AbstractParserTest{
 			     * Returns the list of all created or modified changes
 			     * @return {Array.<n4/model/persistence/Change>}
 			     */
-			    Array<Change> _$getCreateOrModifyChanges() {
-			    	if (this._$activeChanges)
-			            return _.select(this._$activeChanges,function(Change change){
+			    _$getCreateOrModifyChanges() : Array<Change> {
+			        if (this._$activeChanges)
+			            return _.select(this._$activeChanges,function(change: Change){
 			                return ChangeType.CREATED === change.type || ChangeType.MODIFIED === change.type;
 			            });
 			        return [];
@@ -830,9 +831,9 @@ class LookAheadTest extends AbstractParserTest{
 			     * Returns the list of all deleted changes
 			     * @return {Array.<n4/model/persistence/Change>}
 			     */
-			    Array<Change> _$getDeleteChanges () {
-			    	if (this._$activeChanges)
-			            return _.select(this._$activeChanges,function(Change change){
+			    _$getDeleteChanges () : Array<Change> {
+			        if (this._$activeChanges)
+			            return _.select(this._$activeChanges,function(change: Change){
 			                return ChangeType.DELETED === change.type;
 			            });
 			        return [];
@@ -842,15 +843,15 @@ class LookAheadTest extends AbstractParserTest{
 			     * Returns if any change is tracked
 			     * @return {Boolean}
 			     */
-			    boolean _$hasAnyChanges () {
-			    	return this._$activeChanges ? 0 !== this._$activeChanges.length : false;
+			    _$hasAnyChanges () : boolean{
+			        return this._$activeChanges ? 0 !== this._$activeChanges.length : false;
 			    }
 			 
 			    /**
 			     * Set a new root for list deltas. All until now collected changes will be removed.
 			     */
 			    _$setDeltaRoot() {
-			    	this._$activeChanges = undef;
+			        this._$activeChanges = undef;
 			    }
 			
 			    /** 
@@ -862,8 +863,8 @@ class LookAheadTest extends AbstractParserTest{
 			     * @param {n4/model/DataObject} copiedFrom
 			     * @param {Boolean} toMutable
 			     */
-			    _$cloned(DataObject copiedFrom, boolean toMutable) {
-			    	this.unobserve();
+			    _$cloned(copiedFrom: DataObject, toMutable: boolean) {
+			        this.unobserve();
 			        if (copiedFrom.observing || toMutable) {
 			            this.observe();
 			        }
@@ -873,8 +874,8 @@ class LookAheadTest extends AbstractParserTest{
 			     * Private debug method to show content of the list
 			     * @return {String}
 			     */
-			    string toString() {
-			    	var number i, number l, Array<String> out = [];
+			    toString() : string {
+			        var i: number, l: number, out: Array<String> = [];
 			        for (i = 0, l = this.size(); i < l; ++i) {
 			            out.push(String(this.get(i)));
 			        }
@@ -892,7 +893,7 @@ class LookAheadTest extends AbstractParserTest{
 		var max = 0;
 		// Array<{function()}> _$listeners;
 		// has exactly 10 tokens LA
-		val expectedMax = 10;
+		val expectedMax = 7;
 		for(node: NodeModelUtils.getNode(classDecl).asTreeIterable) {
 			if (node instanceof ICompositeNode) {
 				val la = node.lookAhead
