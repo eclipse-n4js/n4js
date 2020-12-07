@@ -2,7 +2,7 @@
 	"name": "react",
 	"version": "16.0.0",
 	"n4js": {
-		"projectType": "library",
+		"projectType": "definition",
 		"vendorId": "npm",
 		"vendorName": "npm",
 		"output": ".",

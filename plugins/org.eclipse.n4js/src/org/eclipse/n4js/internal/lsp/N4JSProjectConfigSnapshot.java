@@ -38,12 +38,12 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 
 	/** Creates a new {@link N4JSProjectConfigSnapshot}. */
 	public N4JSProjectConfigSnapshot(String name, URI path,
-			ProjectType type, N4JSProjectName definesPackage, boolean indexOnly,
+			ProjectType type, N4JSProjectName definesPackage, boolean indexOnly, boolean generatorEnabled,
 			Iterable<String> dependencies, Iterable<String> sortedDependencies,
 			Iterable<? extends SourceFolderSnapshot> sourceFolders) {
 
 		super(name, path, Collections.singleton(path.trimSegments(1).appendSegment(N4JSGlobals.PACKAGE_JSON)),
-				indexOnly, dependencies, sourceFolders);
+				indexOnly, generatorEnabled, dependencies, sourceFolders);
 
 		this.type = type;
 		this.definesPackage = definesPackage;

@@ -45,6 +45,7 @@ public class N4JSConfigSnapshotFactory extends ConfigSnapshotFactory {
 				project.getProjectType(),
 				project.getDefinesPackageName(),
 				projectConfig.indexOnly(),
+				projectConfig.isGeneratorEnabled(),
 				projectConfig.getDependencies(),
 				sortedDependencies,
 				Iterables.transform(projectConfig.getSourceFolders(), this::createSourceFolderSnapshot));

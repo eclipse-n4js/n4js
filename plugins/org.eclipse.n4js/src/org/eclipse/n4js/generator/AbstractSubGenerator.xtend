@@ -21,7 +21,6 @@ import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.generator.IGeneratorMarkerSupport.Severity
 import org.eclipse.n4js.internal.RaceDetectionHelper
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.resource.N4JSCache
@@ -236,13 +235,11 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 	}
 
 	/** @return true iff the current project has a project type that is supposed to generate code. */
-	def boolean isGenerateProjectType(URI n4jsSourceURI) {
+	def protected boolean isGenerateProjectType(URI n4jsSourceURI) {
 		val project = n4jsCore.findProject(n4jsSourceURI).orNull();
 		if (project !== null) {
 			val projectType = project.getProjectType();
-			if (projectType == ProjectType.VALIDATION || 
-				projectType == ProjectType.DEFINITION ||
-				projectType == ProjectType.PLAINJS) {
+			if (N4JSGlobals.PROJECT_TYPES_WITHOUT_GENERATION.contains(projectType)) {
 				return false;
 			}
 		}
