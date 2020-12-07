@@ -56,6 +56,8 @@ export PATH=${PATH}:`pwd`/node_modules/.bin
 
 echo "==== STEP 4/5: build n4jsd-generator"
 tsc
+ls -al
+ls -al src-gen
 
 echo "==== STEP 5/5: Now publishing with version '${PUBLISH_VERSION}' to registry ${NPM_REGISTRY}"
 echo "Using .npmrc configuration at ${NPM_CONFIG_GLOBALCONFIG}"
