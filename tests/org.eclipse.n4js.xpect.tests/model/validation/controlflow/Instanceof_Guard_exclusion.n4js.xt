@@ -52,7 +52,7 @@ function f21(a : String) {
 		// XPECT type of 'a' --> intersection{Number,String}
 		a;
 		if (!(a instanceof Number)) {
-			// XPECT instanceofguard of 'a' --> a!<:Number, a<:Number // continue here!
+			// XPECT instanceofguard of 'a' --> a!<:Number, a<:Number // continue here! --> use stack of guards
 			// XPECT type of 'a' --> String
 			a;
 		}
