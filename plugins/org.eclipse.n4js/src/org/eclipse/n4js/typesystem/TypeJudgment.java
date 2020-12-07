@@ -47,11 +47,10 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.undefi
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.voidType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.wrap;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
@@ -591,9 +590,9 @@ import com.google.inject.Inject;
 					.getDefinitiveGuards(idref);
 
 			if (!definitiveGuards.isEmpty()) {
-				final Collection<TypeRef> allTypes = new LinkedList<>();
-				final Collection<TypeRef> reducedTypes = new LinkedList<>();
-				final Set<TypeRef> neverHoldingTypes = new HashSet<>();
+				final Collection<TypeRef> allTypes = new ArrayList<>();
+				final Collection<TypeRef> excludedTypes = new ArrayList<>();
+				final Collection<TypeRef> remainingTypes = new ArrayList<>();
 				if (T != null) {
 					allTypes.add(T);
 				}
@@ -616,22 +615,22 @@ import com.google.inject.Inject;
 							if (ioGuard.asserts == GuardAssertion.AlwaysHolds) {
 								allTypes.add(instanceofType);
 							} else if (ioGuard.asserts == GuardAssertion.NeverHolds) {
-								neverHoldingTypes.add(instanceofType);
+								excludedTypes.add(instanceofType);
 							}
 						}
 					}
 				}
 
-				if (neverHoldingTypes.isEmpty()) {
-					reducedTypes.addAll(allTypes);
+				if (excludedTypes.isEmpty()) {
+					remainingTypes.addAll(allTypes);
 				} else {
 					for (TypeRef origType : allTypes) {
-						TypeRef reducedType = origType;
+						TypeRef reducedType = null;
 						if (origType instanceof UnionTypeExpression) {
 							final UnionTypeExpression union = (UnionTypeExpression) origType;
 							final Collection<TypeRef> newUnionTypes = new LinkedList<>();
 							for (TypeRef unionType : union.getTypeRefs()) {
-								for (TypeRef neverHoldingType : neverHoldingTypes) {
+								for (TypeRef neverHoldingType : excludedTypes) {
 									if (!ts.equaltypeSucceeded(G, unionType, neverHoldingType)) {
 										newUnionTypes.add(unionType);
 									}
@@ -641,14 +640,27 @@ import com.google.inject.Inject;
 								reducedType = tsh.createUnionType(G,
 										newUnionTypes.toArray(new TypeRef[newUnionTypes.size()]));
 							}
+						} else {
+
+							boolean removeType = false;
+							for (TypeRef neverHoldingType : excludedTypes) {
+								if (ts.equaltypeSucceeded(G, origType, neverHoldingType)) {
+									removeType = true;
+								}
+							}
+							if (!removeType) {
+								reducedType = origType;
+							}
 						}
 
-						reducedTypes.add(reducedType);
+						if (reducedType != null) {
+							remainingTypes.add(reducedType);
+						}
 					}
 				}
 
-				if (!reducedTypes.isEmpty()) {
-					T = tsh.createIntersectionType(G, reducedTypes.toArray(new TypeRef[reducedTypes.size()]));
+				if (!remainingTypes.isEmpty()) {
+					T = tsh.createIntersectionType(G, remainingTypes.toArray(new TypeRef[remainingTypes.size()]));
 				}
 			}
 
