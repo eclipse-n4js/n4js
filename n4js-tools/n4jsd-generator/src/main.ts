@@ -21,10 +21,14 @@ import { Converter } from "./convert";
 import * as utils from "./utils";
 
 
+export let globalOptions: Options = undefined;
+
+
 runN4jsdGen(process.argv.slice(2)); // strip the first two args (path of node binary and main script)
 
 function runN4jsdGen(args: string[]) {
 	const opts = parseCommandLineOptions(args);
+	globalOptions = opts;
 	if (opts.error !== undefined) {
 		exitWithError(opts.error, true);
 	}

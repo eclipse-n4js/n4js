@@ -10,6 +10,7 @@
  */
 
 import { CodeBuffer } from "./CodeBuffer";
+import { globalOptions } from "./main";
 import * as utils from "./utils";
 
 export enum DTSMode {
@@ -54,7 +55,7 @@ export abstract class ExportableElement extends NamedElement {
 
 export class Variable extends ExportableElement {
 	keyword: 'var' | 'let' | 'const';
-	typeStr: string;
+	type: TypeRef;
 }
 
 export class Function extends ExportableElement {
@@ -76,18 +77,24 @@ export class EnumLiteral extends NamedElement {
 export class Member extends NamedElement {
 	kind: 'ctor' | 'field' | 'getter' | 'setter' | 'method';
 	accessibility: Accessibility;
-	typeStr?: string;
+	/** Will be defined iff this member is a data field or field accessor. */
+	type?: TypeRef;
 	signatures?: Signature[];
 }
 
 export class Signature {
 	parameters: Parameter[] = [];
 	/** Will be undefined iff this signature belongs to a constructor. */
-	returnTypeStr?: string;
+	returnType?: TypeRef;
 }
 
 export class Parameter extends NamedElement {
-	typeStr: string = 'any+';
+	type: TypeRef;
+}
+
+export class TypeRef {
+	/** The type reference as given in the TypeScript source code. */
+	tsSourceString: string;
 }
 
 
@@ -163,7 +170,7 @@ class Emitter {
 		buff.push(variable.keyword);
 		buff.push(" ");
 		buff.push(variable.name);
-		buff.push(": ", variable.typeStr);
+		this.emitTypeRef(variable.type);
 		buff.push(";");
 	}
 
@@ -250,13 +257,19 @@ class Emitter {
 				buff.push(";");
 				break;
 			case 'field':
-				buff.push(member.name, ": ", member.typeStr, ";");
+				buff.push(member.name);
+				this.emitTypeRef(member.type);
+				buff.push(";");
 				break;
 			case 'getter':
-				buff.push("get ", member.name, "(): ", member.typeStr, ";");
+				buff.push("get ", member.name, "()");
+				this.emitTypeRef(member.type);
+				buff.push(";");
 				break;
 			case 'setter':
-				buff.push("set ", member.name, "(", "value: ", member.typeStr, ");");
+				buff.push("set ", member.name, "(", "value");
+				this.emitTypeRef(member.type);
+				buff.push(");");
 				break;
 			case 'method':
 				buff.push(member.name);
@@ -283,14 +296,13 @@ class Emitter {
 			needSep = true;
 		}
 		buff.push(")");
-		if (sig.returnTypeStr !== undefined) {
-			buff.push(": ", sig.returnTypeStr);
-		}
+		this.emitTypeRef(sig.returnType);
 	}
 
 	emitParameter(param: Parameter) {
 		const buff = this.buff;
-		buff.push(param.name, ": ", param.typeStr);
+		buff.push(param.name);
+		this.emitTypeRef(param.type);
 	}
 
 	emitAccessibility(member: Member) {
@@ -305,6 +317,21 @@ class Emitter {
 			buff.push("private");
 		} else {
 			throw "unkown member accessibility: " + Accessibility[member.accessibility];
+		}
+	}
+
+	emitTypeRef(typeRef: TypeRef) {
+		const buff = this.buff;
+		if (globalOptions.copyTypeRefs) {
+			if (typeRef) {
+				buff.push(": ");
+				buff.push(typeRef.tsSourceString);
+			}
+		} else {
+			// note: in "any+ mode" we write out "any+" even in case
+			// the type was undeclared on the TypeScript side, because
+			// N4JS would infer the type to "any" instead of "any+":
+			buff.push(": ", "any+");
 		}
 	}
 }
