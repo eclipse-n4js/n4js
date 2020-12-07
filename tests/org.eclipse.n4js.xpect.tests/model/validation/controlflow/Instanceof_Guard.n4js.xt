@@ -34,7 +34,7 @@ function f1() {
 function f2() {
 	let a = 2;
 	if (!(a instanceof Number)) {
-		// XPECT instanceofguard of 'a' -->
+		// XPECT instanceofguard of 'a' --> a!<:Number
 		a;
 	}
 }
@@ -54,7 +54,7 @@ function f4() {
 	if (a instanceof Number) {
 		return;
 	}
-	// XPECT instanceofguard of 'a' -->
+	// XPECT instanceofguard of 'a' --> a!<:Number
 	a;
 }
 
@@ -92,7 +92,7 @@ function f7() {
 function f8() {
 	let a = 2;
 	if (a instanceof Number ||
-		// XPECT instanceofguard of 'a' -->
+		// XPECT instanceofguard of 'a' --> a!<:Number
 		a
 	) {
 	}
@@ -102,7 +102,7 @@ function f8() {
 function f9() {
 	let a = 2;
 	if (!(a instanceof Number) &&
-		// XPECT instanceofguard of 'a' -->
+		// XPECT instanceofguard of 'a' --> a!<:Number
 		a
 	) {
 	}
@@ -113,7 +113,7 @@ function f9() {
 function f10() {
 	let a = 2;
 	if (!(a instanceof Number) &&
-		// XPECT instanceofguard of 'a' -->
+		// XPECT instanceofguard of 'a' --> a!<:Number
 		a
 	) {
 	}
@@ -253,7 +253,7 @@ function f31() {
 function f32() {
 	let a = 2;
 	(a instanceof Number) ?
-		// XPECT instanceofguard of 'a' -->
+		// XPECT instanceofguard of 'a' --> a!<:Number
 		3 : a;
 }
 
