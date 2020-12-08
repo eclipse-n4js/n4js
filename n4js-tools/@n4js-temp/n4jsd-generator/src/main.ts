@@ -1,3 +1,15 @@
+#!/usr/bin/env node
+/**
+ * Copyright (c) 2020 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
 import * as ts from "typescript";
 import * as fs_lib from "fs";
 import * as path_lib from "path";
@@ -9,10 +21,14 @@ import { Converter } from "./convert";
 import * as utils from "./utils";
 
 
+export let globalOptions: Options = undefined;
+
+
 runN4jsdGen(process.argv.slice(2)); // strip the first two args (path of node binary and main script)
 
 function runN4jsdGen(args: string[]) {
 	const opts = parseCommandLineOptions(args);
+	globalOptions = opts;
 	if (opts.error !== undefined) {
 		exitWithError(opts.error, true);
 	}

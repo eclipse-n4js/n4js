@@ -1,3 +1,14 @@
+/**
+ * Copyright (c) 2020 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
 import * as ts from "typescript";
 import * as path_lib from "path";
 import * as model from "./model";
@@ -147,7 +158,7 @@ export class Converter {
 		const result = new model.Variable();
 		result.name = varName;
 		result.keyword = keyword;
-		result.typeStr = this.convertTypeReference(node.type);
+		result.type = this.convertTypeReference(node.type);
 		result.exported = utils_ts.isExported(node);
 		return result;
 	}
@@ -259,15 +270,15 @@ export class Converter {
 
 		if (ts.isPropertyDeclaration(representativeNode)) {
 			result.kind = 'field';
-			result.typeStr = this.convertTypeReferenceOfTypedSymbol(symMember);
+			result.type = this.convertTypeReferenceOfTypedSymbol(symMember);
 			return result;
 		} else if (ts.isGetAccessorDeclaration(representativeNode)) {
 			result.kind = 'getter';
-			result.typeStr = this.convertTypeReferenceOfTypedSymbol(symMember);
+			result.type = this.convertTypeReferenceOfTypedSymbol(symMember);
 			return result;
 		} else if (ts.isSetAccessorDeclaration(representativeNode)) {
 			result.kind = 'setter';
-			result.typeStr = this.convertTypeReferenceOfTypedDeclaration(representativeNode.parameters[0]);
+			result.type = this.convertTypeReferenceOfTypedDeclaration(representativeNode.parameters[0]);
 			return result;
 		} else if (ts.isMethodDeclaration(representativeNode)
 				|| ts.isMethodSignature(representativeNode)) {
@@ -295,7 +306,7 @@ export class Converter {
 		for (const sig of signatures) {
 			const result = new model.Signature();
 			result.parameters = sig.getParameters().map(param => this.convertParameter(param));
-			result.returnTypeStr = this.convertTypeReferenceOfTypedDeclaration(sig.declaration);
+			result.returnType = this.convertTypeReferenceOfTypedDeclaration(sig.declaration);
 			results.push(result);
 		}
 		return results;
@@ -304,7 +315,7 @@ export class Converter {
 	private convertParameter(param: ts.Symbol): model.Parameter {
 		const result = new model.Parameter();
 		result.name = param.getName();
-		result.typeStr = this.convertTypeReferenceOfTypedSymbol(param);
+		result.type = this.convertTypeReferenceOfTypedSymbol(param);
 		return result;
 	}
 
@@ -367,21 +378,26 @@ export class Converter {
 		return moduleSpecStr;
 	}
 
-	private convertTypeReferenceOfTypedSymbol(sym: ts.Symbol): string {
+	private convertTypeReferenceOfTypedSymbol(sym: ts.Symbol): model.TypeRef {
 		// note: the following API might be of use when proper handling of type references is being implemented:
 		// const symType = this.checker.getTypeOfSymbolAtLocation(sym, sym.valueDeclaration!);
 		// const typeAsStr = this.checker.typeToString(symType);
 		return this.convertTypeReferenceOfTypedDeclaration(sym?.valueDeclaration);
 	}
-	private convertTypeReferenceOfTypedDeclaration(decl: ts.Declaration): string {
+	private convertTypeReferenceOfTypedDeclaration(decl: ts.Declaration): model.TypeRef {
 		const typeRef = (decl as any)?.type; // no common interface available
-		if (typeRef !== undefined && ts.isTypeNode(typeRef)) {
+		if (typeRef && ts.isTypeNode(typeRef)) {
 			return this.convertTypeReference(typeRef);
 		}
 		return undefined;
 	}
-	private convertTypeReference(node?: ts.TypeNode): string {
-		return node?.getText().trim();
+	private convertTypeReference(node?: ts.TypeNode): model.TypeRef {
+		if (node) {
+			const result = new model.TypeRef();
+			result.tsSourceString = node.getText().trim();
+			return result;
+		}
+		return undefined;
 	}
 
 	private createIssueForUnsupportedNode(node: ts.Node, superKind: string = "node") {

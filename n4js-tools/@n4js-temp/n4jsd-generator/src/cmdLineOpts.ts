@@ -1,3 +1,14 @@
+/**
+ * Copyright (c) 2020 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
 import * as fs_lib from "fs";
 import * as glob_lib from "glob"
 
@@ -19,6 +30,11 @@ OPTIONS
     When converting folders, create the generated projects in the given output folder. Ignored when converting
     individual '.d.ts' files.
 
+--copy-type-refs
+	Converting type references is not supported, at the moment. By default, all type references are written
+	out as 'any+'. When this option is given, type references will be copied over from the TypeScript source
+	code without change (might cause syntax errors, etc. on the N4JS side).
+
 --verbose, -v
     Print more information while running.
 
@@ -39,6 +55,7 @@ export interface Options {
 	/** The actual input paths as resolved from the 'inputPathsOrGlobs'. */
 	inputPaths: string[],
 	outputPath?: string,
+	copyTypeRefs: boolean,
 	verbose: boolean,
 	force: boolean,
 	/** A fatal error encountered during command line option parsing. */
@@ -57,11 +74,12 @@ class Option {
 	}
 }
 
-const OPT_FORCE   = new Option([ "--force", "-f" ],   false, (opts) => opts.force = true);
-const OPT_OUTPUT  = new Option([ "--output", "-o" ],  true,  (opts, arg) => opts.outputPath = arg);
-const OPT_VERBOSE = new Option([ "--verbose", "-v" ], false, (opts) => opts.verbose = true);
+const OPT_FORCE          = new Option([ "--force", "-f" ],    false, (opts) => opts.force = true);
+const OPT_OUTPUT         = new Option([ "--output", "-o" ],   true,  (opts, arg) => opts.outputPath = arg);
+const OPT_COPY_TYPE_REFS = new Option([ "--copy-type-refs" ], false, (opts) => opts.copyTypeRefs = true);
+const OPT_VERBOSE        = new Option([ "--verbose", "-v" ],  false, (opts) => opts.verbose = true);
 
-const allOptions = [ OPT_FORCE, OPT_OUTPUT, OPT_VERBOSE  ];
+const allOptions = [ OPT_FORCE, OPT_OUTPUT, OPT_COPY_TYPE_REFS, OPT_VERBOSE  ];
 
 export function parseCommandLineOptions(args: string[]): Options {
 	const result = {
