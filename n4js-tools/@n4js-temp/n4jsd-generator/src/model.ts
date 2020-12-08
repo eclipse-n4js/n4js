@@ -253,7 +253,7 @@ class Emitter {
 		switch(member.kind) {
 			case 'ctor':
 				buff.push("constructor");
-				this.emitSignature(member.signatures[0]);
+				this.emitSignature(member.signatures[0], true);
 				buff.push(";");
 				break;
 			case 'field':
@@ -284,7 +284,7 @@ class Emitter {
 		}
 	}
 
-	emitSignature(sig: Signature) {
+	emitSignature(sig: Signature, ignoreReturnType: boolean = false) {
 		const buff = this.buff;
 		buff.push("(");
 		let needSep = false;
@@ -296,7 +296,9 @@ class Emitter {
 			needSep = true;
 		}
 		buff.push(")");
-		this.emitTypeRef(sig.returnType);
+		if (!ignoreReturnType) {
+			this.emitTypeRef(sig.returnType);
+		}
 	}
 
 	emitParameter(param: Parameter) {
