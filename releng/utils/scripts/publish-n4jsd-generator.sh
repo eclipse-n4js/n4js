@@ -30,7 +30,7 @@ echo "Version  : $PUBLISH_VERSION"
 # Set working directory to folder of n4jsd-generator project
 # (we assume this script is located in folder .../n4js-extended/releng/utils/scripts)
 cd `dirname $0`
-cd ../../../../n4js/n4js-tools/n4jsd-generator
+cd ../../../../n4js/n4js-tools/@n4js-temp/n4jsd-generator
 echo "Current working directory: $PWD"
 
 echo "==== STEP 1/5: check preconditions"
