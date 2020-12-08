@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.validation.validators
 
+import com.google.common.base.Optional
 import com.google.inject.Inject
 import java.util.Map
 import org.eclipse.emf.ecore.EObject
@@ -121,7 +122,7 @@ class N4JSDestructureValidator extends AbstractN4JSDeclarativeValidator {
 		}
 		val G = RuleEnvironmentExtensions.newRuleEnvironment(contextObject);
 		val valueTypePerNode = newHashMap;
-		destructureHelper.buildValueTypesMap(G, rootNode, valueTypePerNode, contextObject);
+		destructureHelper.buildValueTypesMap(G, rootNode, Optional.absent(), valueTypePerNode, contextObject);
 		internal_checkDestructNode(G, null, rootNode, null, valueTypePerNode, contextObject);
 	}
 

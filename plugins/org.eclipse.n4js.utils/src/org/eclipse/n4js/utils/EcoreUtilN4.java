@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -70,6 +71,21 @@ public class EcoreUtilN4 {
 				return res;
 		}
 		return null;
+	}
+
+	/**
+	 * Returns all predecessors of <code>eobj</code> up to and including <code>lastPredecessorToInclude</code> in the
+	 * order from highest depth to lowest depth. If <code>lastPredecessorToInclude</code> is is not a predecessor of
+	 * <code>eobj</code> or is <code>null</code> then all predecessors up to and including the root will be returned.
+	 */
+	public static LinkedHashSet<EObject> getAllPredecessorsUpTo(EObject eobj, EObject lastPredecessorToInclude) {
+		LinkedHashSet<EObject> result = new LinkedHashSet<>();
+		EObject curr = eobj.eContainer();
+		while (curr != null && curr != lastPredecessorToInclude) {
+			result.add(curr);
+			curr = curr.eContainer();
+		}
+		return result;
 	}
 
 	/**
