@@ -164,35 +164,33 @@ export class Converter {
 	}
 
 	private convertVariable(node: ts.VariableDeclaration, keyword: 'var' | 'let' | 'const'): model.Variable {
-		const sym = this.checker.getSymbolAtLocation(node.name);
-		const varName = sym.getName();
-
 		const result = new model.Variable();
-		result.name = varName;
+		result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker);
 		result.keyword = keyword;
 		result.type = this.convertTypeReference(node.type);
 		result.exported = utils_ts.isExported(node);
+		result.exportedAsDefault = utils_ts.isExportedAsDefault(node);
 		return result;
 	}
 
 	private convertFunction(node: ts.FunctionDeclaration): model.Function {
 		const sym = this.checker.getSymbolAtLocation(node.name);
-		const funName = sym.getName();
 		const funSigs = this.convertCallSignatures(sym);
 
 		const result = new model.Function();
-		result.name = funName;
+		result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker);
 		result.signatures = funSigs;
 		result.exported = utils_ts.isExported(node);
+		result.exportedAsDefault = utils_ts.isExportedAsDefault(node);
 		return result;
 	}
 
 	private convertEnum(node: ts.EnumDeclaration): model.Type {
-		const sym = this.checker.getSymbolAtLocation(node.name);
 		let result = new model.Type();
-		result.name = sym.getName();
+		result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker);
 		result.kind = 'enum';
 		result.exported = utils_ts.isExported(node);
+		result.exportedAsDefault = utils_ts.isExportedAsDefault(node);
 
 		const flags = ts.getCombinedModifierFlags(node);
 		const isConst = utils.testFlag(flags, ts.ModifierFlags.Const);
@@ -230,24 +228,24 @@ export class Converter {
 	}
 
 	private convertInterface(node: ts.InterfaceDeclaration): model.Type {
-		const sym = this.checker.getSymbolAtLocation(node.name);
 		let result = new model.Type();
-		result.name = sym.getName();
+		result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker);
 		result.kind = 'interface';
 		result.defSiteStructural = true;
 		result.members.push(...this.convertMembers(node));
 		result.exported = utils_ts.isExported(node);
+		result.exportedAsDefault = utils_ts.isExportedAsDefault(node);
 		return result;
 	}
 
 	private convertClass(node: ts.ClassDeclaration): model.Type {
-		const sym = this.checker.getSymbolAtLocation(node.name);
 		let result = new model.Type();
-		result.name = sym.getName();
+		result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker);
 		result.kind = 'class';
 		result.defSiteStructural = true;
 		result.members.push(...this.convertMembers(node));
 		result.exported = utils_ts.isExported(node);
+		result.exportedAsDefault = utils_ts.isExportedAsDefault(node);
 		return result;
 	}
 
@@ -361,11 +359,11 @@ export class Converter {
 			return undefined;
 		}
 
-		const sym = this.checker.getSymbolAtLocation(node.name);
 		const result = new model.Type();
-		result.name = sym.getName();
+		result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker);
 		result.kind = 'enum';
 		result.exported = utils_ts.isExported(node);
+		result.exportedAsDefault = utils_ts.isExportedAsDefault(node);
 		result.primitiveBased = isAllString ? 'string' : 'number';
 		result.literals.push(...utils_ts.createEnumLiteralsFromValues(literalValues));
 		return result;
