@@ -36,6 +36,10 @@ export abstract class Import {
 	moduleSpecifier: string;
 }
 
+export class DefaultImport extends Import {
+	localName: string;
+}
+
 export class NamespaceImport extends Import {
 	namespaceName: string;
 }
@@ -136,7 +140,9 @@ class Emitter {
 	emitImport(elem: Import) {
 		const buff = this.buff;
 		buff.push("import ");
-		if (elem instanceof NamespaceImport) {
+		if (elem instanceof DefaultImport) {
+			buff.push(elem.localName, " ");
+		} else if (elem instanceof NamespaceImport) {
 			buff.push("* as ", elem.namespaceName, " ");
 		} else if (elem instanceof NamedImport) {
 			buff.push("{ ", elem.importedElementName);
