@@ -18,9 +18,8 @@ NPM_REGISTRY="https://nexus3.internal.numberfour.eu/repository/npm-internal/"
 BASE_VERSION="0.0.1"
 
 # Choose a version for publishing
-TIMESTAMP_DATE=`date "+%Y%m%d"`
-TIMESTAMP_TIME=`date "+%H%M"`
-PUBLISH_VERSION="$BASE_VERSION-v$TIMESTAMP_DATE-$TIMESTAMP_TIME"
+TIMESTAMP=`date "+%Y%m%d-%H%M"`
+PUBLISH_VERSION="$BASE_VERSION-v$TIMESTAMP"
 
 
 echo "==== PUBLISH N4JSD-GENERATOR"
