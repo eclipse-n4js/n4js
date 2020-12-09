@@ -1111,7 +1111,6 @@ ruleBindingElementFragment:
 		    |
 		ruleAnnotation
 		*
-		ruleBogusTypeRefFragment?
 		'...'
 		?
 		ruleBindingIdentifier
@@ -1135,7 +1134,6 @@ norm1_BindingElementFragment:
 		    |
 		ruleAnnotation
 		*
-		ruleBogusTypeRefFragment?
 		'...'
 		?
 		norm1_BindingIdentifier
@@ -1146,11 +1144,6 @@ norm1_BindingElementFragment:
 		norm3_AssignmentExpression
 		?
 	)?
-;
-
-// Rule BogusTypeRefFragment
-ruleBogusTypeRefFragment:
-	ruleTypeRefWithModifiers
 ;
 
 // Rule Block
@@ -2599,7 +2592,6 @@ ruleCatchVariable:
 			)
 		)
 		    |
-		ruleBogusTypeRefFragment?
 		ruleBindingIdentifier
 	)
 ;
@@ -2624,7 +2616,6 @@ norm1_CatchVariable:
 			)
 		)
 		    |
-		ruleBogusTypeRefFragment?
 		norm1_BindingIdentifier
 	)
 ;
@@ -7505,7 +7496,6 @@ ruleAnnotatedN4MemberDeclaration:
 			(ruleN4Modifier
 			*
 			ruleTypeVariables?
-			ruleBogusTypeRefFragment?
 			(
 				'*'
 				ruleLiteralOrComputedPropertyName
@@ -7519,7 +7509,6 @@ ruleAnnotatedN4MemberDeclaration:
 			ruleN4Modifier
 			*
 			ruleTypeVariables?
-			ruleBogusTypeRefFragment?
 			(
 				'*'
 				ruleLiteralOrComputedPropertyName
@@ -7734,7 +7723,6 @@ norm1_AnnotatedN4MemberDeclaration:
 			(ruleN4Modifier
 			*
 			ruleTypeVariables?
-			ruleBogusTypeRefFragment?
 			(
 				'*'
 				norm1_LiteralOrComputedPropertyName
@@ -7748,7 +7736,6 @@ norm1_AnnotatedN4MemberDeclaration:
 			ruleN4Modifier
 			*
 			ruleTypeVariables?
-			ruleBogusTypeRefFragment?
 			(
 				'*'
 				norm1_LiteralOrComputedPropertyName
@@ -7775,7 +7762,6 @@ norm1_AnnotatedN4MemberDeclaration:
 ruleFieldDeclarationImpl:
 	ruleN4Modifier
 	*
-	ruleBogusTypeRefFragment?
 	ruleLiteralOrComputedPropertyName
 	'?'
 	?
@@ -7791,7 +7777,6 @@ ruleFieldDeclarationImpl:
 norm1_FieldDeclarationImpl:
 	ruleN4Modifier
 	*
-	ruleBogusTypeRefFragment?
 	norm1_LiteralOrComputedPropertyName
 	'?'
 	?
@@ -7983,7 +7968,6 @@ norm1_N4GetterDeclaration:
 
 // Rule GetterHeader
 ruleGetterHeader:
-	ruleBogusTypeRefFragment?
 	'get'
 	(
 		('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
@@ -7998,7 +7982,6 @@ ruleGetterHeader:
 
 // Rule GetterHeader
 norm1_GetterHeader:
-	ruleBogusTypeRefFragment?
 	'get'
 	(
 		('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
