@@ -20,6 +20,8 @@
 class A {}
 
 /* XPECT errors ---
+"constructor{A} is not a subtype of number." at "A"
+"extraneous input '}' expecting EOF" at "}"
 "no viable alternative at input '{'" at "{"
 "no viable alternative at input '~'" at "~"
 --- */
