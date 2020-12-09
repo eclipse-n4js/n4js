@@ -625,7 +625,7 @@ import com.google.inject.Inject;
 					remainingTypes.addAll(allTypes);
 				} else {
 					for (TypeRef origType : allTypes) {
-						TypeRef reducedType = null;
+						TypeRef remainingType = null;
 						if (origType instanceof UnionTypeExpression) {
 							final UnionTypeExpression union = (UnionTypeExpression) origType;
 							final Collection<TypeRef> newUnionTypes = new LinkedList<>();
@@ -637,7 +637,7 @@ import com.google.inject.Inject;
 								}
 							}
 							if (newUnionTypes.size() < union.getTypeRefs().size()) {
-								reducedType = tsh.createUnionType(G,
+								remainingType = tsh.createUnionType(G,
 										newUnionTypes.toArray(new TypeRef[newUnionTypes.size()]));
 							}
 						} else {
@@ -649,12 +649,12 @@ import com.google.inject.Inject;
 								}
 							}
 							if (!removeType) {
-								reducedType = origType;
+								remainingType = origType;
 							}
 						}
 
-						if (reducedType != null) {
-							remainingTypes.add(reducedType);
+						if (remainingType != null) {
+							remainingTypes.add(remainingType);
 						}
 					}
 				}
