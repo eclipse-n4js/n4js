@@ -21,7 +21,6 @@ function f10(a : Number|String) {
 	}
 }
 
-
 function f11(a : Number|String) {
 	if (a instanceof Number) {
 		
@@ -32,8 +31,7 @@ function f11(a : Number|String) {
 	}
 }
 
-
-function f42(a : Number|String) {
+function f12(a : Number|String) {
 	if (a instanceof Number) {
 		return;
 	}
@@ -58,6 +56,24 @@ function f21(a : String) {
 		}
 	} else {
 		// XPECT instanceofguard of 'a' --> a!<:Number
+		// XPECT type of 'a' --> String
+		a;
+	}
+}
+
+
+
+function f30(a : Number|String) {
+	if (a instanceof Number) {
+		// XPECT instanceofguard of 'a' --> a<:Number
+		// XPECT type of 'a' --> Number
+		a;
+	}
+}
+
+function f31(a : Number|String) {
+	if (a instanceof String) {
+		// XPECT instanceofguard of 'a' --> a<:String
 		// XPECT type of 'a' --> String
 		a;
 	}
