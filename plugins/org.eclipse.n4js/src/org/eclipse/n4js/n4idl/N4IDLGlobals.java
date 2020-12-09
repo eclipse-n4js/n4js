@@ -32,6 +32,11 @@ public class N4IDLGlobals {
 	public static final String VERSION_SEPARATOR = "#";
 
 	/**
+	 * The hashbang prefix is used to start a hashbang at the beginning of a module or script. E.g. #!/usr/bin/env node
+	 */
+	public static final String HASHBANG_PREFIX = "#!";
+
+	/**
 	 * The set of annotations that enable a context to declare explicit type version requests (declare a context to be
 	 * version-aware).
 	 */

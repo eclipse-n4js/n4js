@@ -39,11 +39,13 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.Script");
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Action cScriptAction_0 = (Action)cGroup.eContents().get(0);
-		private final Alternatives cAlternatives_1 = (Alternatives)cGroup.eContents().get(1);
-		private final Assignment cAnnotationsAssignment_1_0 = (Assignment)cAlternatives_1.eContents().get(0);
-		private final RuleCall cAnnotationsScriptAnnotationParserRuleCall_1_0_0 = (RuleCall)cAnnotationsAssignment_1_0.eContents().get(0);
-		private final Assignment cScriptElementsAssignment_1_1 = (Assignment)cAlternatives_1.eContents().get(1);
-		private final RuleCall cScriptElementsScriptElementParserRuleCall_1_1_0 = (RuleCall)cScriptElementsAssignment_1_1.eContents().get(0);
+		private final Assignment cHashbangAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cHashbangHASH_BANGTerminalRuleCall_1_0 = (RuleCall)cHashbangAssignment_1.eContents().get(0);
+		private final Alternatives cAlternatives_2 = (Alternatives)cGroup.eContents().get(2);
+		private final Assignment cAnnotationsAssignment_2_0 = (Assignment)cAlternatives_2.eContents().get(0);
+		private final RuleCall cAnnotationsScriptAnnotationParserRuleCall_2_0_0 = (RuleCall)cAnnotationsAssignment_2_0.eContents().get(0);
+		private final Assignment cScriptElementsAssignment_2_1 = (Assignment)cAlternatives_2.eContents().get(1);
+		private final RuleCall cScriptElementsScriptElementParserRuleCall_2_1_0 = (RuleCall)cScriptElementsAssignment_2_1.eContents().get(0);
 		
 		//// ****************************************************************************************************
 		//// [ECM11] A.5 Functions and Programs (p. 224)
@@ -51,30 +53,36 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//// [ECMWiki] http://wiki.ecmascript.org/doku.php?id=harmony:modules
 		//// ****************************************************************************************************
 		//Script:
-		//	{Script} (annotations+=ScriptAnnotation
+		//	{Script} hashbang=HASH_BANG? (annotations+=ScriptAnnotation
 		//	| scriptElements+=ScriptElement)*;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//{Script} (annotations+=ScriptAnnotation | scriptElements+=ScriptElement)*
+		//{Script} hashbang=HASH_BANG? (annotations+=ScriptAnnotation | scriptElements+=ScriptElement)*
 		public Group getGroup() { return cGroup; }
 		
 		//{Script}
 		public Action getScriptAction_0() { return cScriptAction_0; }
 		
+		//hashbang=HASH_BANG?
+		public Assignment getHashbangAssignment_1() { return cHashbangAssignment_1; }
+		
+		//HASH_BANG
+		public RuleCall getHashbangHASH_BANGTerminalRuleCall_1_0() { return cHashbangHASH_BANGTerminalRuleCall_1_0; }
+		
 		//(annotations+=ScriptAnnotation | scriptElements+=ScriptElement)*
-		public Alternatives getAlternatives_1() { return cAlternatives_1; }
+		public Alternatives getAlternatives_2() { return cAlternatives_2; }
 		
 		//annotations+=ScriptAnnotation
-		public Assignment getAnnotationsAssignment_1_0() { return cAnnotationsAssignment_1_0; }
+		public Assignment getAnnotationsAssignment_2_0() { return cAnnotationsAssignment_2_0; }
 		
 		//ScriptAnnotation
-		public RuleCall getAnnotationsScriptAnnotationParserRuleCall_1_0_0() { return cAnnotationsScriptAnnotationParserRuleCall_1_0_0; }
+		public RuleCall getAnnotationsScriptAnnotationParserRuleCall_2_0_0() { return cAnnotationsScriptAnnotationParserRuleCall_2_0_0; }
 		
 		//scriptElements+=ScriptElement
-		public Assignment getScriptElementsAssignment_1_1() { return cScriptElementsAssignment_1_1; }
+		public Assignment getScriptElementsAssignment_2_1() { return cScriptElementsAssignment_2_1; }
 		
 		//ScriptElement
-		public RuleCall getScriptElementsScriptElementParserRuleCall_1_1_0() { return cScriptElementsScriptElementParserRuleCall_1_1_0; }
+		public RuleCall getScriptElementsScriptElementParserRuleCall_2_1_0() { return cScriptElementsScriptElementParserRuleCall_2_1_0; }
 	}
 	public class ScriptElementElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.ScriptElement");
@@ -10442,6 +10450,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	private final TerminalRule tEXPONENT_PART;
 	private final TerminalRule tSIGNED_INT;
 	private final TerminalRule tSTRING;
+	private final TerminalRule tHASH_BANG;
 	private final TerminalRule tDOUBLE_STRING_CHAR;
 	private final TerminalRule tSINGLE_STRING_CHAR;
 	private final TerminalRule tBACKSLASH_SEQUENCE;
@@ -10700,6 +10709,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		this.tEXPONENT_PART = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.EXPONENT_PART");
 		this.tSIGNED_INT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.SIGNED_INT");
 		this.tSTRING = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.STRING");
+		this.tHASH_BANG = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.HASH_BANG");
 		this.tDOUBLE_STRING_CHAR = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.DOUBLE_STRING_CHAR");
 		this.tSINGLE_STRING_CHAR = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.SINGLE_STRING_CHAR");
 		this.tBACKSLASH_SEQUENCE = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.BACKSLASH_SEQUENCE");
@@ -10815,7 +10825,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	//// [ECMWiki] http://wiki.ecmascript.org/doku.php?id=harmony:modules
 	//// ****************************************************************************************************
 	//Script:
-	//	{Script} (annotations+=ScriptAnnotation
+	//	{Script} hashbang=HASH_BANG? (annotations+=ScriptAnnotation
 	//	| scriptElements+=ScriptElement)*;
 	public ScriptElements getScriptAccess() {
 		return pScript;
@@ -12750,6 +12760,12 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	//	| "'" SINGLE_STRING_CHAR* "'"?;
 	public TerminalRule getSTRINGRule() {
 		return tSTRING;
+	}
+	
+	//terminal HASH_BANG:
+	//	'#!' !LINE_TERMINATOR_FRAGMENT*;
+	public TerminalRule getHASH_BANGRule() {
+		return tHASH_BANG;
 	}
 	
 	//terminal fragment DOUBLE_STRING_CHAR:

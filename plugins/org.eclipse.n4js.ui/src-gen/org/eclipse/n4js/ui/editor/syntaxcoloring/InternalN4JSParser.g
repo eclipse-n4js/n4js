@@ -64,17 +64,24 @@ ruleScript
 (
 	(
 		(
+			HashbangHASH_BANGTerminalRuleCall_1_0=RULE_HASH_BANG{
+				announce($HashbangHASH_BANGTerminalRuleCall_1_0, grammarAccess.getScriptAccess().getHashbangAssignment_1());
+			}
+		)
+	)?
+	(
+		(
 			(
-				AnnotationsScriptAnnotationParserRuleCall_1_0_0=ruleScriptAnnotation{
-					announce($AnnotationsScriptAnnotationParserRuleCall_1_0_0.start, $AnnotationsScriptAnnotationParserRuleCall_1_0_0.stop, grammarAccess.getScriptAccess().getAnnotationsAssignment_1_0());
+				AnnotationsScriptAnnotationParserRuleCall_2_0_0=ruleScriptAnnotation{
+					announce($AnnotationsScriptAnnotationParserRuleCall_2_0_0.start, $AnnotationsScriptAnnotationParserRuleCall_2_0_0.stop, grammarAccess.getScriptAccess().getAnnotationsAssignment_2_0());
 				}
 			)
 		)
 		    |
 		(
 			(
-				ScriptElementsScriptElementParserRuleCall_1_1_0=ruleScriptElement{
-					announce($ScriptElementsScriptElementParserRuleCall_1_1_0.start, $ScriptElementsScriptElementParserRuleCall_1_1_0.stop, grammarAccess.getScriptAccess().getScriptElementsAssignment_1_1());
+				ScriptElementsScriptElementParserRuleCall_2_1_0=ruleScriptElement{
+					announce($ScriptElementsScriptElementParserRuleCall_2_1_0.start, $ScriptElementsScriptElementParserRuleCall_2_1_0.stop, grammarAccess.getScriptAccess().getScriptElementsAssignment_2_1());
 				}
 			)
 		)

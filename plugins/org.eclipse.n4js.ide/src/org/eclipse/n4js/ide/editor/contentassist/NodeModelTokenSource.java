@@ -90,7 +90,7 @@ public class NodeModelTokenSource implements TokenSource {
 		this.rightCurlyInBlock = grammarAccess.getBlockAccess().getRightCurlyBracketKeyword_2();
 		this.rightCurlyInArrowExpression = grammarAccess.getArrowExpressionAccess().getRightCurlyBracketKeyword_1_0_2();
 		this.semicolon = grammarAccess.getSemiAccess().getSemicolonKeyword();
-		this.scriptElementCall = grammarAccess.getScriptAccess().getScriptElementsScriptElementParserRuleCall_1_1_0();
+		this.scriptElementCall = grammarAccess.getScriptAccess().getScriptElementsScriptElementParserRuleCall_2_1_0();
 		this.memberDeclarationCall = grammarAccess.getMembersAccess()
 				.getOwnedMembersRawN4MemberDeclarationParserRuleCall_1_0();
 		this.statementsCall = grammarAccess.getBlockAccess().getStatementsStatementParserRuleCall_1_0();

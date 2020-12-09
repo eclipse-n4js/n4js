@@ -95,11 +95,29 @@ ruleScript returns [EObject current=null]
 		)
 		(
 			(
+				lv_hashbang_1_0=RULE_HASH_BANG
+				{
+					newLeafNode(lv_hashbang_1_0, grammarAccess.getScriptAccess().getHashbangHASH_BANGTerminalRuleCall_1_0());
+				}
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getScriptRule());
+					}
+					setWithLastConsumed(
+						$current,
+						"hashbang",
+						lv_hashbang_1_0,
+						"org.eclipse.n4js.N4JS.HASH_BANG");
+				}
+			)
+		)?
+		(
+			(
 				(
 					{
-						newCompositeNode(grammarAccess.getScriptAccess().getAnnotationsScriptAnnotationParserRuleCall_1_0_0());
+						newCompositeNode(grammarAccess.getScriptAccess().getAnnotationsScriptAnnotationParserRuleCall_2_0_0());
 					}
-					lv_annotations_1_0=ruleScriptAnnotation
+					lv_annotations_2_0=ruleScriptAnnotation
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getScriptRule());
@@ -107,7 +125,7 @@ ruleScript returns [EObject current=null]
 						add(
 							$current,
 							"annotations",
-							lv_annotations_1_0,
+							lv_annotations_2_0,
 							"org.eclipse.n4js.N4JS.ScriptAnnotation");
 						afterParserOrEnumRuleCall();
 					}
@@ -117,9 +135,9 @@ ruleScript returns [EObject current=null]
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getScriptAccess().getScriptElementsScriptElementParserRuleCall_1_1_0());
+						newCompositeNode(grammarAccess.getScriptAccess().getScriptElementsScriptElementParserRuleCall_2_1_0());
 					}
-					lv_scriptElements_2_0=ruleScriptElement
+					lv_scriptElements_3_0=ruleScriptElement
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getScriptRule());
@@ -127,7 +145,7 @@ ruleScript returns [EObject current=null]
 						add(
 							$current,
 							"scriptElements",
-							lv_scriptElements_2_0,
+							lv_scriptElements_3_0,
 							"org.eclipse.n4js.N4JS.ScriptElement");
 						afterParserOrEnumRuleCall();
 					}

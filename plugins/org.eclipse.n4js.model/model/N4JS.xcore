@@ -96,6 +96,7 @@ interface ControlFlowElement {
  * Root element
  */
 class Script extends VariableEnvironmentElement, AnnotableElement, ControlFlowElement {
+	String hashbang
 	contains Annotation[] annotations
 	contains ScriptElement[] scriptElements
 	refers transient TModule module
@@ -289,6 +290,7 @@ interface TypeProvidingElement {
 // TODO reconsider the approach on how to handle inferred types, accessors on the model etc
 abstract class TypedElement extends TypeProvidingElement {
 	contains TypeRef declaredTypeRef
+	contains TypeRef bogusTypeRef
 }
 
 // TODO jvp: check ECMAScript spec and probably update this environment things with function and classes

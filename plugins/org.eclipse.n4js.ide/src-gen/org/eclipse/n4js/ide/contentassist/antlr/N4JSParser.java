@@ -38,7 +38,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 		}
 		
 		private static void init(ImmutableMap.Builder<AbstractElement, String> builder, N4JSGrammarAccess grammarAccess) {
-			builder.put(grammarAccess.getScriptAccess().getAlternatives_1(), "rule__Script__Alternatives_1");
+			builder.put(grammarAccess.getScriptAccess().getAlternatives_2(), "rule__Script__Alternatives_2");
 			builder.put(grammarAccess.getScriptElementAccess().getAlternatives(), "rule__ScriptElement__Alternatives");
 			builder.put(grammarAccess.getAnnotatedScriptElementAccess().getAlternatives_1(), "rule__AnnotatedScriptElement__Alternatives_1");
 			builder.put(grammarAccess.getAnnotatedScriptElementAccess().getAlternatives_1_3_0(), "rule__AnnotatedScriptElement__Alternatives_1_3_0");
@@ -622,8 +622,9 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getWildcardOldNotationWithoutBoundAccess().getGroup(), "rule__WildcardOldNotationWithoutBound__Group__0");
 			builder.put(grammarAccess.getWildcardNewNotationAccess().getGroup_0(), "rule__WildcardNewNotation__Group_0__0");
 			builder.put(grammarAccess.getWildcardNewNotationAccess().getGroup_1(), "rule__WildcardNewNotation__Group_1__0");
-			builder.put(grammarAccess.getScriptAccess().getAnnotationsAssignment_1_0(), "rule__Script__AnnotationsAssignment_1_0");
-			builder.put(grammarAccess.getScriptAccess().getScriptElementsAssignment_1_1(), "rule__Script__ScriptElementsAssignment_1_1");
+			builder.put(grammarAccess.getScriptAccess().getHashbangAssignment_1(), "rule__Script__HashbangAssignment_1");
+			builder.put(grammarAccess.getScriptAccess().getAnnotationsAssignment_2_0(), "rule__Script__AnnotationsAssignment_2_0");
+			builder.put(grammarAccess.getScriptAccess().getScriptElementsAssignment_2_1(), "rule__Script__ScriptElementsAssignment_2_1");
 			builder.put(grammarAccess.getAnnotatedScriptElementAccess().getDeclaredModifiersAssignment_1_2_1_0_0(), "rule__AnnotatedScriptElement__DeclaredModifiersAssignment_1_2_1_0_0");
 			builder.put(grammarAccess.getAnnotatedScriptElementAccess().getDeclaredModifiersAssignment_1_3_0_0_1(), "rule__AnnotatedScriptElement__DeclaredModifiersAssignment_1_3_0_0_1");
 			builder.put(grammarAccess.getAnnotatedScriptElementAccess().getTypingStrategyAssignment_1_3_0_0_3(), "rule__AnnotatedScriptElement__TypingStrategyAssignment_1_3_0_0_3");

@@ -45,6 +45,7 @@ import "http://www.eclipse.org/n4js/ts/TypeRefs" as types
 // [ECMWiki] http://wiki.ecmascript.org/doku.php?id=harmony:modules
 // ****************************************************************************************************
 Script: {Script}
+	(hashbang=HASH_BANG)?
 	( annotations+=ScriptAnnotation
 	| scriptElements+=ScriptElement )*;
 
@@ -1077,6 +1078,10 @@ terminal STRING:
 	| "'" SINGLE_STRING_CHAR* "'"?
 ;
 
+terminal HASH_BANG returns ecore::EString:
+	  '#!' (!LINE_TERMINATOR_FRAGMENT)*
+;
+
 terminal fragment DOUBLE_STRING_CHAR:
 	  !(LINE_TERMINATOR_FRAGMENT | '"' | '\\')
 	| '\\' (LINE_TERMINATOR_SEQUENCE_FRAGMENT | !LINE_TERMINATOR_FRAGMENT)?
@@ -1390,7 +1395,7 @@ N4FieldDeclaration <Yield>:
 
 N4MethodDeclaration <Yield>:
 	=> ({N4MethodDeclaration} (declaredModifiers+=N4Modifier)* TypeVariables?
-		AsyncNoTrailingLineBreak 
+		AsyncNoTrailingLineBreak
 		(
 				generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=true>
 			|	declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=false>

@@ -24940,7 +24940,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     Script returns Script
 	 *
 	 * Constraint:
-	 *     (annotations+=ScriptAnnotation | scriptElements+=ScriptElement)*
+	 *     (hashbang=HASH_BANG? (annotations+=ScriptAnnotation | scriptElements+=ScriptElement)*)
 	 */
 	protected void sequence_Script(ISerializationContext context, Script semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

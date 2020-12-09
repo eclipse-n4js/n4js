@@ -11,32 +11,23 @@
 package org.eclipse.n4js.transpiler.im.impl;
 
 import com.google.common.base.Objects;
-
 import java.lang.reflect.InvocationTargetException;
-
 import java.util.Collection;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
-
 import org.eclipse.emf.ecore.xcore.lib.XcoreEListExtensions;
-
 import org.eclipse.n4js.transpiler.im.ImPackage;
 import org.eclipse.n4js.transpiler.im.ParameterizedTypeRefStructural_IM;
 import org.eclipse.n4js.transpiler.im.ParameterizedTypeRef_IM;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry;
-
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural;
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef;
@@ -44,15 +35,12 @@ import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.typeRefs.TypeVariableMapping;
-
 import org.eclipse.n4js.ts.types.TStructMember;
 import org.eclipse.n4js.ts.types.TStructuralType;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypingStrategy;
-
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
-
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 /**
@@ -81,7 +69,6 @@ public class ParameterizedTypeRefStructural_IMImpl extends ParameterizedTypeRef_
 	 * @ordered
 	 */
 	protected EList<TStructMember> astStructuralMembers;
-
 	/**
 	 * The cached value of the '{@link #getStructuralType() <em>Structural Type</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -91,7 +78,6 @@ public class ParameterizedTypeRefStructural_IMImpl extends ParameterizedTypeRef_
 	 * @ordered
 	 */
 	protected TStructuralType structuralType;
-
 	/**
 	 * The cached value of the '{@link #getGenStructuralMembers() <em>Gen Structural Members</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -101,7 +87,6 @@ public class ParameterizedTypeRefStructural_IMImpl extends ParameterizedTypeRef_
 	 * @ordered
 	 */
 	protected EList<TStructMember> genStructuralMembers;
-
 	/**
 	 * The cached value of the '{@link #getPostponedSubstitutions() <em>Postponed Substitutions</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
