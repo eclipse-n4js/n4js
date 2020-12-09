@@ -1235,9 +1235,21 @@ import com.google.inject.Inject;
 		}
 
 		@Override
-		public TypeRef caseBinaryLogicalExpression(BinaryLogicalExpression e) {
-			final Expression lhs = e.getLhs();
-			final Expression rhs = e.getRhs();
+		public TypeRef caseBinaryLogicalExpression(BinaryLogicalExpression expr) {
+			return simplifyUnionWithEmptyAnyArray(expr.getLhs(), expr.getRhs());
+		}
+
+		@Override
+		public TypeRef caseConditionalExpression(ConditionalExpression expr) {
+			return simplifyUnionWithEmptyAnyArray(expr.getTrueExpression(), expr.getFalseExpression());
+		}
+
+		@Override
+		public TypeRef caseCoalesceExpression(CoalesceExpression expr) {
+			return simplifyUnionWithEmptyAnyArray(expr.getExpression(), expr.getDefaultExpression());
+		}
+
+		private TypeRef simplifyUnionWithEmptyAnyArray(Expression lhs, Expression rhs) {
 			final boolean lhsIsEmptyArrayLiteral = lhs instanceof ArrayLiteral
 					&& ((ArrayLiteral) lhs).getElements().isEmpty();
 			final boolean rhsIsEmptyArrayLiteral = rhs instanceof ArrayLiteral
@@ -1253,22 +1265,7 @@ import com.google.inject.Inject;
 				// case: someArray || []
 				return L;
 			}
-
 			return typeSystemHelper.createUnionType(G, L, R);
-		}
-
-		@Override
-		public TypeRef caseConditionalExpression(ConditionalExpression expr) {
-			final TypeRef left = ts.type(G, expr.getTrueExpression());
-			final TypeRef right = ts.type(G, expr.getFalseExpression());
-			return typeSystemHelper.createUnionType(G, left, right);
-		}
-
-		@Override
-		public TypeRef caseCoalesceExpression(CoalesceExpression expr) {
-			final TypeRef value = ts.type(G, expr.getExpression());
-			final TypeRef dflt = ts.type(G, expr.getDefaultExpression());
-			return typeSystemHelper.createUnionType(G, value, dflt);
 		}
 
 		@Override

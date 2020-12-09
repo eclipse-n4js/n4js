@@ -256,7 +256,7 @@ public class XWorkspaceBuilder {
 						projectBuilder.getProjectConfig(), Collections.emptySet(), Collections.emptySet(),
 						Collections.emptyList());
 
-				projectBuilder.doClean(buildRequest::afterDelete, CancelIndicator.NullImpl);
+				projectBuilder.doClean(buildRequest, CancelIndicator.NullImpl);
 			}
 			return new CoarseGrainedChangeEvent();
 		};

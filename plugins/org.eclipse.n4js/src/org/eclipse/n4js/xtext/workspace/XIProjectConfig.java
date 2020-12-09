@@ -44,6 +44,11 @@ public interface XIProjectConfig extends IProjectConfig {
 		return false;
 	}
 
+	/** Returns <code>true</code> iff this project generates output files for its source files. */
+	default boolean isGeneratorEnabled() {
+		return true;
+	}
+
 	/** Returns the names of all other projects the receiving project depends on. */
 	Set<String> getDependencies();
 

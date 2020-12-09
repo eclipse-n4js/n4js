@@ -48,15 +48,15 @@ public class SuppressAccessInfoTest extends AbstractCompletionTest {
 			    c;
 			}
 		''', '''
-			(__proto__, Text, __proto__, , , 00000, , , , ([5:10 - 5:10], __proto__), [], [], , )
-			(constructor, Text, constructor, , , 00001, , , , ([5:10 - 5:10], constructor), [], [], , )
+			(__proto__, Property, __proto__, , , 00000, , , , ([5:10 - 5:10], __proto__), [], [], , )
+			(constructor, Method, constructor, , , 00001, , , , ([5:10 - 5:10], constructor), [], [], , )
 			(field, Field, field, , , 00002, , , , ([5:10 - 5:10], field), [], [], , )
-			(hasOwnProperty, Text, hasOwnProperty, , , 00003, , , , ([5:10 - 5:10], hasOwnProperty), [], [], , )
-			(isPrototypeOf, Text, isPrototypeOf, , , 00004, , , , ([5:10 - 5:10], isPrototypeOf), [], [], , )
-			(propertyIsEnumerable, Text, propertyIsEnumerable, , , 00005, , , , ([5:10 - 5:10], propertyIsEnumerable), [], [], , )
-			(toLocaleString, Text, toLocaleString, , , 00006, , , , ([5:10 - 5:10], toLocaleString), [], [], , )
-			(toString, Text, toString, , , 00007, , , , ([5:10 - 5:10], toString), [], [], , )
-			(valueOf, Text, valueOf, , , 00008, , , , ([5:10 - 5:10], valueOf), [], [], , )
+			(hasOwnProperty, Method, hasOwnProperty, , , 00003, , , , ([5:10 - 5:10], hasOwnProperty), [], [], , )
+			(isPrototypeOf, Method, isPrototypeOf, , , 00004, , , , ([5:10 - 5:10], isPrototypeOf), [], [], , )
+			(propertyIsEnumerable, Method, propertyIsEnumerable, , , 00005, , , , ([5:10 - 5:10], propertyIsEnumerable), [], [], , )
+			(toLocaleString, Method, toLocaleString, , , 00006, , , , ([5:10 - 5:10], toLocaleString), [], [], , )
+			(toString, Method, toString, , , 00007, , , , ([5:10 - 5:10], toString), [], [], , )
+			(valueOf, Method, valueOf, , , 00008, , , , ([5:10 - 5:10], valueOf), [], [], , )
 		''');
 	}
 
@@ -73,15 +73,15 @@ public class SuppressAccessInfoTest extends AbstractCompletionTest {
 			    c;
 			}
 		''', '''
-			(__proto__, Text, __proto__, , , 00000, , , , ([5:10 - 5:10], __proto__), [], [], , )
-			(constructor, Text, constructor, , , 00001, , , , ([5:10 - 5:10], constructor), [], [], , )
+			(__proto__, Property, __proto__, , , 00000, , , , ([5:10 - 5:10], __proto__), [], [], , )
+			(constructor, Method, constructor, , , 00001, , , , ([5:10 - 5:10], constructor), [], [], , )
 			(field, Field, field, , , 00002, , , , ([5:10 - 5:10], field), [], [], , )
-			(hasOwnProperty, Text, hasOwnProperty, , , 00003, , , , ([5:10 - 5:10], hasOwnProperty), [], [], , )
-			(isPrototypeOf, Text, isPrototypeOf, , , 00004, , , , ([5:10 - 5:10], isPrototypeOf), [], [], , )
-			(propertyIsEnumerable, Text, propertyIsEnumerable, , , 00005, , , , ([5:10 - 5:10], propertyIsEnumerable), [], [], , )
-			(toLocaleString, Text, toLocaleString, , , 00006, , , , ([5:10 - 5:10], toLocaleString), [], [], , )
-			(toString, Text, toString, , , 00007, , , , ([5:10 - 5:10], toString), [], [], , )
-			(valueOf, Text, valueOf, , , 00008, , , , ([5:10 - 5:10], valueOf), [], [], , )
+			(hasOwnProperty, Method, hasOwnProperty, , , 00003, , , , ([5:10 - 5:10], hasOwnProperty), [], [], , )
+			(isPrototypeOf, Method, isPrototypeOf, , , 00004, , , , ([5:10 - 5:10], isPrototypeOf), [], [], , )
+			(propertyIsEnumerable, Method, propertyIsEnumerable, , , 00005, , , , ([5:10 - 5:10], propertyIsEnumerable), [], [], , )
+			(toLocaleString, Method, toLocaleString, , , 00006, , , , ([5:10 - 5:10], toLocaleString), [], [], , )
+			(toString, Method, toString, , , 00007, , , , ([5:10 - 5:10], toString), [], [], , )
+			(valueOf, Method, valueOf, , , 00008, , , , ([5:10 - 5:10], valueOf), [], [], , )
 		''');
 	}
 
@@ -98,15 +98,15 @@ public class SuppressAccessInfoTest extends AbstractCompletionTest {
 			    c;
 			}
 		''', '''
-			(__proto__, Text, __proto__, , , 00000, , , , ([5:10 - 5:10], __proto__), [], [], , )
-			(constructor, Text, constructor, , , 00001, , , , ([5:10 - 5:10], constructor), [], [], , )
+			(__proto__, Property, __proto__, , , 00000, , , , ([5:10 - 5:10], __proto__), [], [], , )
+			(constructor, Method, constructor, , , 00001, , , , ([5:10 - 5:10], constructor), [], [], , )
 			(field, Field, field, , , 00002, , , , ([5:10 - 5:10], field), [], [], , )
-			(hasOwnProperty, Text, hasOwnProperty, , , 00003, , , , ([5:10 - 5:10], hasOwnProperty), [], [], , )
-			(isPrototypeOf, Text, isPrototypeOf, , , 00004, , , , ([5:10 - 5:10], isPrototypeOf), [], [], , )
-			(propertyIsEnumerable, Text, propertyIsEnumerable, , , 00005, , , , ([5:10 - 5:10], propertyIsEnumerable), [], [], , )
-			(toLocaleString, Text, toLocaleString, , , 00006, , , , ([5:10 - 5:10], toLocaleString), [], [], , )
-			(toString, Text, toString, , , 00007, , , , ([5:10 - 5:10], toString), [], [], , )
-			(valueOf, Text, valueOf, , , 00008, , , , ([5:10 - 5:10], valueOf), [], [], , )
+			(hasOwnProperty, Method, hasOwnProperty, , , 00003, , , , ([5:10 - 5:10], hasOwnProperty), [], [], , )
+			(isPrototypeOf, Method, isPrototypeOf, , , 00004, , , , ([5:10 - 5:10], isPrototypeOf), [], [], , )
+			(propertyIsEnumerable, Method, propertyIsEnumerable, , , 00005, , , , ([5:10 - 5:10], propertyIsEnumerable), [], [], , )
+			(toLocaleString, Method, toLocaleString, , , 00006, , , , ([5:10 - 5:10], toLocaleString), [], [], , )
+			(toString, Method, toString, , , 00007, , , , ([5:10 - 5:10], toString), [], [], , )
+			(valueOf, Method, valueOf, , , 00008, , , , ([5:10 - 5:10], valueOf), [], [], , )
 		''');
 	}
 
@@ -123,15 +123,15 @@ public class SuppressAccessInfoTest extends AbstractCompletionTest {
 			    c;
 			}
 		''', '''
-			(__proto__, Text, __proto__, , , 00000, , , , ([5:10 - 5:10], __proto__), [], [], , )
-			(constructor, Text, constructor, , , 00001, , , , ([5:10 - 5:10], constructor), [], [], , )
+			(__proto__, Property, __proto__, , , 00000, , , , ([5:10 - 5:10], __proto__), [], [], , )
+			(constructor, Method, constructor, , , 00001, , , , ([5:10 - 5:10], constructor), [], [], , )
 			(field, Field, field, , , 00002, , , , ([5:10 - 5:10], field), [], [], , )
-			(hasOwnProperty, Text, hasOwnProperty, , , 00003, , , , ([5:10 - 5:10], hasOwnProperty), [], [], , )
-			(isPrototypeOf, Text, isPrototypeOf, , , 00004, , , , ([5:10 - 5:10], isPrototypeOf), [], [], , )
-			(propertyIsEnumerable, Text, propertyIsEnumerable, , , 00005, , , , ([5:10 - 5:10], propertyIsEnumerable), [], [], , )
-			(toLocaleString, Text, toLocaleString, , , 00006, , , , ([5:10 - 5:10], toLocaleString), [], [], , )
-			(toString, Text, toString, , , 00007, , , , ([5:10 - 5:10], toString), [], [], , )
-			(valueOf, Text, valueOf, , , 00008, , , , ([5:10 - 5:10], valueOf), [], [], , )
+			(hasOwnProperty, Method, hasOwnProperty, , , 00003, , , , ([5:10 - 5:10], hasOwnProperty), [], [], , )
+			(isPrototypeOf, Method, isPrototypeOf, , , 00004, , , , ([5:10 - 5:10], isPrototypeOf), [], [], , )
+			(propertyIsEnumerable, Method, propertyIsEnumerable, , , 00005, , , , ([5:10 - 5:10], propertyIsEnumerable), [], [], , )
+			(toLocaleString, Method, toLocaleString, , , 00006, , , , ([5:10 - 5:10], toLocaleString), [], [], , )
+			(toString, Method, toString, , , 00007, , , , ([5:10 - 5:10], toString), [], [], , )
+			(valueOf, Method, valueOf, , , 00008, , , , ([5:10 - 5:10], valueOf), [], [], , )
 		''');
 	}
 
@@ -148,15 +148,15 @@ public class SuppressAccessInfoTest extends AbstractCompletionTest {
 			    c;
 			}
 		''', '''
-			(__proto__, Text, __proto__, , , 00000, , , , ([5:10 - 5:10], __proto__), [], [], , )
-			(constructor, Text, constructor, , , 00001, , , , ([5:10 - 5:10], constructor), [], [], , )
+			(__proto__, Property, __proto__, , , 00000, , , , ([5:10 - 5:10], __proto__), [], [], , )
+			(constructor, Method, constructor, , , 00001, , , , ([5:10 - 5:10], constructor), [], [], , )
 			(field, Field, field, , , 00002, , , , ([5:10 - 5:10], field), [], [], , )
-			(hasOwnProperty, Text, hasOwnProperty, , , 00003, , , , ([5:10 - 5:10], hasOwnProperty), [], [], , )
-			(isPrototypeOf, Text, isPrototypeOf, , , 00004, , , , ([5:10 - 5:10], isPrototypeOf), [], [], , )
-			(propertyIsEnumerable, Text, propertyIsEnumerable, , , 00005, , , , ([5:10 - 5:10], propertyIsEnumerable), [], [], , )
-			(toLocaleString, Text, toLocaleString, , , 00006, , , , ([5:10 - 5:10], toLocaleString), [], [], , )
-			(toString, Text, toString, , , 00007, , , , ([5:10 - 5:10], toString), [], [], , )
-			(valueOf, Text, valueOf, , , 00008, , , , ([5:10 - 5:10], valueOf), [], [], , )
+			(hasOwnProperty, Method, hasOwnProperty, , , 00003, , , , ([5:10 - 5:10], hasOwnProperty), [], [], , )
+			(isPrototypeOf, Method, isPrototypeOf, , , 00004, , , , ([5:10 - 5:10], isPrototypeOf), [], [], , )
+			(propertyIsEnumerable, Method, propertyIsEnumerable, , , 00005, , , , ([5:10 - 5:10], propertyIsEnumerable), [], [], , )
+			(toLocaleString, Method, toLocaleString, , , 00006, , , , ([5:10 - 5:10], toLocaleString), [], [], , )
+			(toString, Method, toString, , , 00007, , , , ([5:10 - 5:10], toString), [], [], , )
+			(valueOf, Method, valueOf, , , 00008, , , , ([5:10 - 5:10], valueOf), [], [], , )
 		''');
 	}
 }

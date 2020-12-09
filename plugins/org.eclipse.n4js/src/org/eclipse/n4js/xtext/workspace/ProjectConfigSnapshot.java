@@ -27,17 +27,20 @@ public class ProjectConfigSnapshot {
 	private final URI path;
 	private final ImmutableSet<URI> projectDescriptionUris;
 	private final boolean indexOnly;
+	private final boolean generatorEnabled;
 	private final ImmutableSet<String> dependencies;
 	private final ImmutableSet<SourceFolderSnapshot> sourceFolders;
 
 	/** See {@link ProjectConfigSnapshot}. */
 	public ProjectConfigSnapshot(String name, URI path, Iterable<? extends URI> projectDescriptionUris,
-			boolean indexOnly, Iterable<String> dependencies, Iterable<? extends SourceFolderSnapshot> sourceFolders) {
+			boolean indexOnly, boolean generatorEnabled, Iterable<String> dependencies,
+			Iterable<? extends SourceFolderSnapshot> sourceFolders) {
 
 		this.name = name;
 		this.path = path;
 		this.projectDescriptionUris = ImmutableSet.copyOf(projectDescriptionUris);
 		this.indexOnly = indexOnly;
+		this.generatorEnabled = generatorEnabled;
 		this.dependencies = ImmutableSet.copyOf(dependencies);
 		this.sourceFolders = ImmutableSet.copyOf(sourceFolders);
 	}
@@ -64,6 +67,11 @@ public class ProjectConfigSnapshot {
 	 */
 	public boolean indexOnly() {
 		return indexOnly;
+	}
+
+	/** Tells whether this project emits output files for its source files. */
+	public boolean isGeneratorEnabled() {
+		return generatorEnabled;
 	}
 
 	/** Return the project dependencies. */
