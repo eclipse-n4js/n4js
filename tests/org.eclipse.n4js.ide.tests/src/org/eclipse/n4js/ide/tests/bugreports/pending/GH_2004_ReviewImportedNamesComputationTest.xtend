@@ -22,9 +22,9 @@ import org.junit.Assert
 import org.junit.Test
 
 /**
- * See IDE-3441.
+ * See GH-2004.
  */
-class IDE_3441_ReviewImportedNamesComputationTest extends AbstractIdeTest {
+class GH_2004_ReviewImportedNamesComputationTest extends AbstractIdeTest {
 
 	@Test
 	def void testMainModuleMissingInImportedNamesOfPackageJsonFile() throws Exception {
