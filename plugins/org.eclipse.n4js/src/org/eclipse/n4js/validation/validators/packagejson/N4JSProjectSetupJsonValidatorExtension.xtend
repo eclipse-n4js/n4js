@@ -248,7 +248,15 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 					)
 				}
 			} else {
-				throw new IllegalStateException("No container library found for " + ieoT.qualifiedName + " with URI: " + ieoT.EObjectURI)
+				// TODO GH-1959 consider removing temporary debug logging
+				val containingProject = findProject(ieoT.EObjectURI);
+				val projectLookupInfo = if (containingProject.isPresent) {
+					"(info: found containing project " + containingProject.get.projectName + ")"
+				} else {
+					"(info: could not find containing project for URI)"
+				};
+				throw new IllegalStateException("No container library found for " + ieoT.qualifiedName + " with URI: " + ieoT.EObjectURI + "\n"
+					+ projectLookupInfo)
 			}
 		}
 
@@ -1116,6 +1124,9 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 
 		val projectDescriptionFileURI = document.eResource.URI;
 		val currentProject = findProject(projectDescriptionFileURI).orNull;
+		if (currentProject === null) {
+			// TODO
+		}
 
 		val allReferencedProjectNames = references.map[referencedProjectName].toSet;
 
