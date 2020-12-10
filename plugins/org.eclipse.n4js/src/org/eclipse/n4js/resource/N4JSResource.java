@@ -1181,7 +1181,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		try {
 			result = super.getEObject(uriFragment);
 		} catch (Throwable th) {
-			// GH-1938: TEMPORARY DEBUG LOGGING
+			// GH-2002: TEMPORARY DEBUG LOGGING
 			// The logging in LazyLinkingResource#getEObject(String) does not emit the stack trace of the caught
 			// exception in all logger configurations; we therefore log the error again and include the stack trace in
 			// the main message:

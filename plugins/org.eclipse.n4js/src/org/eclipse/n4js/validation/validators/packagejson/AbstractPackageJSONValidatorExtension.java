@@ -160,7 +160,7 @@ public abstract class AbstractPackageJSONValidatorExtension extends AbstractDecl
 					} catch (IllegalAccessException | IllegalArgumentException e) {
 						throw new IllegalStateException("Failed to invoke @CheckProperty method " + method + ": " + e);
 					} catch (InvocationTargetException e) {
-						// GH-1938: TEMPORARY DEBUG LOGGING
+						// GH-2002: TEMPORARY DEBUG LOGGING
 						// Only passing the exception to Logger#error(String,Throwable) does not emit the stack trace of
 						// the caught exception in all logger configurations; we therefore include the stack trace in
 						// the main message:
