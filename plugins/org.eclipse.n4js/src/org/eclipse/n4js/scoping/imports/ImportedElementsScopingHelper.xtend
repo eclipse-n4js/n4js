@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.scoping.imports
 
+import com.google.common.base.Throwables
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import java.util.HashMap
@@ -258,19 +259,21 @@ class ImportedElementsScopingHelper {
 		if (namespaceType === null) {
 			// TODO GH-1959 remove this temporary debug logging
 			val sb = new StringBuilder();
-			sb.append("contextResource?.getURI(): " + contextResource?.getURI());
-			sb.append("specifier.definedType" + specifier.definedType);
-			sb.append("imp.module: " + imp.module);
-			sb.append("script.module: " + script.module);
-			sb.append("script.module.isPreLinkingPhase: " + script.module.isPreLinkingPhase);
-			sb.append("script.module.isReconciled: " + script.module.isReconciled);
-			sb.append("script.module.internalTypes.size: " + script.module.internalTypes.size);
-			sb.append("script.module.exposedInternalTypes.size: " + script.module.exposedInternalTypes.size);
+			sb.append("contextResource?.getURI(): " + contextResource?.getURI() + "\n");
+			sb.append("specifier.definedType: " + specifier.definedType + "\n");
+			sb.append("imp.module: " + imp.module + "\n");
+			sb.append("script.module: " + script.module + "\n");
+			sb.append("script.module.isPreLinkingPhase: " + script.module.isPreLinkingPhase + "\n");
+			sb.append("script.module.isReconciled: " + script.module.isReconciled + "\n");
+			sb.append("script.module.internalTypes.size: " + script.module.internalTypes.size + "\n");
+			sb.append("script.module.exposedInternalTypes.size: " + script.module.exposedInternalTypes.size + "\n");
 			for (type : (script.module.internalTypes + script.module.exposedInternalTypes)) {
 				if (type instanceof ModuleNamespaceVirtualType) {
-					sb.append("type[n].module: " + type.module);
+					sb.append("type[n].module: " + type.module + "\n");
 				}
 			}
+			sb.append("\n");
+			sb.append(Throwables.getStackTraceAsString(new IllegalStateException()));
 			LOGGER.error("namespaceType not found\n" + sb.toString);
 			return;
 		}
