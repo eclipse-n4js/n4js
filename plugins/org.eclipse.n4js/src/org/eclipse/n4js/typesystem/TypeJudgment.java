@@ -631,7 +631,7 @@ import com.google.inject.Inject;
 							final Collection<TypeRef> newUnionTypes = new LinkedList<>();
 							for (TypeRef unionType : union.getTypeRefs()) {
 								for (TypeRef neverHoldingType : excludedTypes) {
-									if (!ts.equaltypeSucceeded(G, unionType, neverHoldingType)) {
+									if (!ts.subtypeSucceeded(G, unionType, neverHoldingType)) {
 										newUnionTypes.add(unionType);
 									}
 								}
@@ -644,8 +644,9 @@ import com.google.inject.Inject;
 
 							boolean removeType = false;
 							for (TypeRef neverHoldingType : excludedTypes) {
-								if (ts.equaltypeSucceeded(G, origType, neverHoldingType)) {
+								if (ts.subtypeSucceeded(G, origType, neverHoldingType)) {
 									removeType = true;
+									break;
 								}
 							}
 							if (!removeType) {

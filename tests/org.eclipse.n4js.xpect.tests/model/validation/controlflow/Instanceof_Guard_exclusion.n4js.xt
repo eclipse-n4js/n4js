@@ -12,7 +12,6 @@
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
 
 
-
 function f10(a : Number|String) {
 	if (!(a instanceof Number)) {
 		// XPECT instanceofguard of 'a' --> a!<:Number
@@ -76,6 +75,32 @@ function f31(a : Number|String) {
 		// XPECT instanceofguard of 'a' --> a<:String
 		// XPECT type of 'a' --> String
 		a;
+	}
+}
+
+
+
+
+class A {}
+class BSuper {}
+class B extends BSuper {}
+
+function f40(p: A|B) {
+	if (p instanceof BSuper) {
+		// XPECT type of 'p' --> intersection{union{A,B},BSuper}
+		p;
+		return;
+	}
+	// XPECT type of 'p' --> A
+	p;
+}
+
+function f41(p: any) {
+	if (p instanceof A && p instanceof B) {
+		if (!(p instanceof BSuper)) {
+			// XPECT type of 'p' --> A
+			p;
+		}
 	}
 }
 
