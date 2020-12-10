@@ -18,7 +18,10 @@
     "n4js-runtime-esnext": "^0.24.18"
   },
   "devDependencies": {
-    "n4js-cli": "^0.24.18"
+    "n4js-cli": "^0.24.18",
+    "n4js-mangelhaft-cli": "^0.24.18",
+    "org.eclipse.n4js.mangelhaft": "^0.24.18",
+    "org.eclipse.n4js.mangelhaft.assert": "^0.24.18"
   },
   "n4js": {
     "projectType": "library",
@@ -29,6 +32,9 @@
     "sources": {
       "source": [
         "src/n4js"
+      ],
+      "test": [
+        "test/n4js"
       ]
     },
     "requiredRuntimeLibraries": [
