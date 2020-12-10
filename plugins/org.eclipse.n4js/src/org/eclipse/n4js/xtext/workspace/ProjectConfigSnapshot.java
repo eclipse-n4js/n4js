@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.xtext.workspace;
 
+import java.util.Collection;
+
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.xtext.workspace.IProjectConfig;
 
@@ -23,32 +25,39 @@ public class ProjectConfigSnapshot {
 
 	private final String name;
 	private final URI path;
+	private final ImmutableSet<URI> projectDescriptionUris;
 	private final boolean indexOnly;
+	private final boolean generatorEnabled;
 	private final ImmutableSet<String> dependencies;
 	private final ImmutableSet<SourceFolderSnapshot> sourceFolders;
 
 	/** See {@link ProjectConfigSnapshot}. */
-	public ProjectConfigSnapshot(String name, URI path, boolean indexOnly, Iterable<String> dependencies,
+	public ProjectConfigSnapshot(String name, URI path, Iterable<? extends URI> projectDescriptionUris,
+			boolean indexOnly, boolean generatorEnabled, Iterable<String> dependencies,
 			Iterable<? extends SourceFolderSnapshot> sourceFolders) {
+
 		this.name = name;
 		this.path = path;
+		this.projectDescriptionUris = ImmutableSet.copyOf(projectDescriptionUris);
 		this.indexOnly = indexOnly;
+		this.generatorEnabled = generatorEnabled;
 		this.dependencies = ImmutableSet.copyOf(dependencies);
 		this.sourceFolders = ImmutableSet.copyOf(sourceFolders);
 	}
 
-	/**
-	 * Return the project name.
-	 */
+	/** Return the project name. */
 	public String getName() {
 		return name;
 	}
 
-	/**
-	 * Return the project path.
-	 */
+	/** Return the project path. */
 	public URI getPath() {
 		return path;
+	}
+
+	/** Return all {@link URI} of files that describe the project. */
+	public Collection<URI> getProjectDescriptionUris() {
+		return projectDescriptionUris;
 	}
 
 	/**
@@ -60,16 +69,17 @@ public class ProjectConfigSnapshot {
 		return indexOnly;
 	}
 
-	/**
-	 * Return the project dependencies.
-	 */
+	/** Tells whether this project emits output files for its source files. */
+	public boolean isGeneratorEnabled() {
+		return generatorEnabled;
+	}
+
+	/** Return the project dependencies. */
 	public ImmutableSet<String> getDependencies() {
 		return dependencies;
 	}
 
-	/**
-	 * Return the project source folders.
-	 */
+	/** Return the project source folders. */
 	public ImmutableSet<? extends SourceFolderSnapshot> getSourceFolders() {
 		return sourceFolders;
 	}
@@ -82,6 +92,7 @@ public class ProjectConfigSnapshot {
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((path == null) ? 0 : path.hashCode());
 		result = prime * result + ((sourceFolders == null) ? 0 : sourceFolders.hashCode());
+		result = prime * result + ((projectDescriptionUris == null) ? 0 : projectDescriptionUris.hashCode());
 		return result;
 	}
 
@@ -113,6 +124,11 @@ public class ProjectConfigSnapshot {
 			if (other.sourceFolders != null)
 				return false;
 		} else if (!sourceFolders.equals(other.sourceFolders))
+			return false;
+		if (projectDescriptionUris == null) {
+			if (other.projectDescriptionUris != null)
+				return false;
+		} else if (!projectDescriptionUris.equals(other.projectDescriptionUris))
 			return false;
 		return true;
 	}

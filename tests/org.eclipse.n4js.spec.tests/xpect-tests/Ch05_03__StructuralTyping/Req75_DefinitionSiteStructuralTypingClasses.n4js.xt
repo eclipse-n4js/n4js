@@ -1,0 +1,70 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+    ResourceSet {
+		ThisFile {}
+		File "Externals.n4jsd" {}
+	}
+
+   END_SETUP
+ */
+
+import * as Ex from "Ch05_03__StructuralTyping/Externals";
+
+class ~E{
+	public s : string;
+	public foo(p : number) : void{};
+	private n : number;
+	private bar(p : string) : void{};
+}
+var x;
+function f(e : E) {}
+
+
+function g(e : E) {
+	// XPECT errors --> "method bar is not available for structurally defined type E." at "bar"
+	e.bar("");
+	// ok
+	e.foo(1);
+}
+
+
+// XPECT errors --> "instanceof cannot be used with structurally defined type E." at "E"
+x instanceof E;
+
+class SomeN4Object{
+	public s : string;
+	public foo(p : number) : void{};
+	private n : number;
+	private bar(p : string) : void{};
+}
+var someN4Object : SomeN4Object;
+
+// XPECT errors --> "All N4Objects must explicitly extend/implement definition site structural type E." at "someN4Object"
+f(someN4Object);
+
+
+var a : Ex.A;
+// ok (A is external, i.e., it's not an N4Object)
+f(a);
+
+var b : Ex.B;
+// XPECT errors --> "B is not a structural subtype of E: missing field s." at "b"
+f(b);
+
+var c : Ex.C;
+// XPECT errors --> "C is not a structural subtype of E: missing method foo." at "c"
+f(c);
+
+var d : Ex.D;
+// XPECT errors --> "D is not a structural subtype of E: foo failed: {function(string):void} is not a subtype of {function(number):void}." at "d"
+f(d);

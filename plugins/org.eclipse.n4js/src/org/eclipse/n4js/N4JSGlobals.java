@@ -146,6 +146,14 @@ public final class N4JSGlobals {
 			ProjectType.TEST);
 
 	/**
+	 * Project types for which the generator is disabled.
+	 */
+	public static final Set<ProjectType> PROJECT_TYPES_WITHOUT_GENERATION = ImmutableSet.of(
+			ProjectType.PLAINJS,
+			ProjectType.DEFINITION,
+			ProjectType.VALIDATION);
+
+	/**
 	 * The name of an npm command.
 	 */
 	public static final String NPM = "npm";

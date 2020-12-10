@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.validation.validators
 
+import com.google.common.base.Strings
 import com.google.inject.Inject
 import com.google.inject.Provider
 import java.util.List
@@ -37,6 +38,8 @@ import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
 
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils
+import org.eclipse.n4js.n4JS.N4JSPackage
 
 /**
  * Contains module-level validations, i.e. validations that need to be checked once per module / file.
@@ -65,6 +68,23 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	override register(EValidatorRegistrar registrar) {
 		// nop
+	}
+
+	/**
+	 * 
+	 */
+	@Check
+	def void checkHashbang(Script script) {
+		if (!Strings.isNullOrEmpty(script.hashbang)) {
+			val nodes = NodeModelUtils.findNodesForFeature(script, N4JSPackage.eINSTANCE.script_Hashbang);
+			if (nodes.size > 0) {
+				val offset = nodes.get(0).offset;
+				if (offset !== 0) {
+					val message = IssueCodes.getMessageForSCR_HASHBANG_WRONG_LOCATION();
+					addIssue(message, script, N4JSPackage.eINSTANCE.script_Hashbang, IssueCodes.SCR_HASHBANG_WRONG_LOCATION);
+				}
+			}
+		}
 	}
 
 	/**

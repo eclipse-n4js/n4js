@@ -10,9 +10,7 @@
  */
 package org.eclipse.n4js.xtext.workspace;
 
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
@@ -45,11 +43,4 @@ public interface XIWorkspaceConfig extends IWorkspaceConfig {
 	WorkspaceChanges update(WorkspaceConfigSnapshot oldWorkspaceConfig, Set<URI> dirtyFiles, Set<URI> deletedFiles,
 			boolean refresh);
 
-	/** Returns a snapshot of the current state of the workspace represented by this {@link XIWorkspaceConfig}. */
-	default WorkspaceConfigSnapshot toSnapshot() {
-		List<ProjectConfigSnapshot> projectSnapshots = getProjects().stream()
-				.map(XIProjectConfig::toSnapshot)
-				.collect(Collectors.toList());
-		return new WorkspaceConfigSnapshot(getPath(), projectSnapshots);
-	}
 }

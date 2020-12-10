@@ -19,6 +19,7 @@ import static org.eclipse.n4js.validation.IssueCodes.getMessageForTYS_FOR_IN_VAR
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.ForStatement;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
+import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.Statement;
 import org.eclipse.n4js.n4JS.VariableBinding;
@@ -32,7 +33,9 @@ import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.typesystem.utils.Result;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator;
+import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.EValidatorRegistrar;
@@ -151,4 +154,19 @@ public class N4JSStatementValidator extends AbstractN4JSDeclarativeValidator {
 		}
 	}
 
+	/***/
+	@Check
+	public void checkForAwaitOfLoop(ForStatement forStatement) {
+		if (!forStatement.isAwait()) {
+			return; // not a case covered by this method
+		}
+		if (!forStatement.isForOf()) {
+			return; // ASTStructureValidator already emitted an error for this
+		}
+
+		if (!N4JSLanguageUtils.isValidLocationForAwait(forStatement)) {
+			addIssue(IssueCodes.getMessageForEXP_MISPLACED_AWAIT("for-await-of", "async"), forStatement,
+					N4JSPackage.Literals.FOR_STATEMENT__AWAIT, IssueCodes.EXP_MISPLACED_AWAIT);
+		}
+	}
 }

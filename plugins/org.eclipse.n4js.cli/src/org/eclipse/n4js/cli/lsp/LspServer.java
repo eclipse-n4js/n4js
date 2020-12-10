@@ -255,7 +255,7 @@ public class LspServer {
 		return appender;
 	}
 
-	/** TEMPORARY functionality (see {@link ServerIncidentLogger} for details). */
+	/** TODO GH-2002: TEMPORARY functionality (see {@link ServerIncidentLogger} for details). */
 	private static final class ServerIncidentAppender extends AppenderSkeleton {
 
 		private final ServerIncidentLogger delegate;
@@ -283,7 +283,7 @@ public class LspServer {
 					msg += Joiner.on(Layout.LINE_SEP).join(s);
 				}
 			}
-			delegate.reportError(msg);
+			delegate.report(msg, true);
 		}
 
 		@Override

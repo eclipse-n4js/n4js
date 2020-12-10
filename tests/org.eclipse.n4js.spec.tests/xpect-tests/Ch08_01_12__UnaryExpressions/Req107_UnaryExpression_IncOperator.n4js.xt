@@ -1,0 +1,84 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+
+    ResourceSet {
+		ThisFile {}
+		File "ExampleClasses.n4js" {}
+	}
+
+   END_SETUP
+ */
+
+import * as EC from "Ch08_01_12__UnaryExpressions/ExampleClasses";
+
+
+
+
+///////////////////////////////////
+// unary expressions
+//  inc=’++’
+///////////////////////////////////
+var  nInc1 =  12; //
+var  nInc2 : boolean = true; //
+var  nInc3 =  2^32; //
+var  nInc4 =  +1; //
+var  nInc5 =  2; //
+var  nInc6 : number =  4; //
+var  nInc7 : any =  8; //
+var  nInc8 =  +255; //
+var  nInc9 =  "4"; //
+var  nInc10 =  Infinity; //
+var  nInc11 =  {}; //
+var  nInc12 =  NaN; //
+var  nInc13 =  new EC.C(); //
+var  nInc14 =  this; //
+
+var nInc1r : number = ++ nInc1
+var nInc2r : number = ++
+// XPECT errors --> "boolean is not a subtype of number." at "nInc2"
+nInc2
+var nInc3r : number = ++ nInc3
+var nInc4r : number = ++ nInc4
+var nInc5r : number = ++ nInc5
+var nInc6r : number = ++ nInc6
+var nInc7r : number = ++
+// XPECT errors --> "any is not a subtype of number." at "nInc7"
+nInc7
+var nInc8r : number = ++ nInc8
+//var number nInc9r = ++ nInc9  should work
+var nInc10r : number = ++ nInc10
+var nInc11r : number = ++
+// XPECT errors --> "Structural type ~Object is not a subtype of non-structural type number." at "nInc11"
+nInc11
+var nInc12r : number = ++ nInc12
+var nInc13r : number = ++
+// XPECT errors --> "C is not a subtype of number." at "nInc13"
+nInc13
+var nInc14r : number = ++
+// XPECT errors --> "any is not a subtype of number." at "nInc14"
+nInc14
+
+var nInc15 : number = ++
+/* XPECT errors ---
+    "The operation requires both read and write access, but only write-access is available." at "numSetOnly"
+ --- */
+new EC.C().numSetOnly;
+
+var nInc16 : number = ++
+/* XPECT errors ---
+"Property numGetOnly has no setter." at "numGetOnly"
+"The operation requires both read and write access, but only read-access is available." at "numGetOnly"
+--- */
+new EC.C().numGetOnly;
+
+var nInc17 : number = ++ new EC.C().numGetAndSet;

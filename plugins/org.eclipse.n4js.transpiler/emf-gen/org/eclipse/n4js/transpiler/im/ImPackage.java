@@ -15,9 +15,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-
 import org.eclipse.n4js.n4JS.N4JSPackage;
-
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 
 /**
@@ -88,6 +86,15 @@ public interface ImPackage extends EPackage {
 	 * @generated
 	 */
 	int SCRIPT_IM = 0;
+
+	/**
+	 * The feature id for the '<em><b>Hashbang</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCRIPT_IM__HASHBANG = N4JSPackage.SCRIPT__HASHBANG;
 
 	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.

@@ -88,9 +88,9 @@ class MemberScopingHelper {
 	public def IScope createMemberScope(TypeRef receiverTypeRef, MemberAccess context,
 		boolean checkVisibility, boolean staticAccess, boolean structFieldInitMode) {
 
-		val isDynamicType = receiverTypeRef.isDynamic;
-		return decoratedMemberScopeFor(receiverTypeRef,
-			new MemberScopeRequest(receiverTypeRef, context, true, checkVisibility, staticAccess, structFieldInitMode, isDynamicType));
+		val request = new MemberScopeRequest(receiverTypeRef, context, true, checkVisibility, staticAccess,
+			structFieldInitMode, receiverTypeRef.isDynamic);
+		return decoratedMemberScopeFor(receiverTypeRef, request);
 	}
 
 	/**
@@ -110,9 +110,9 @@ class MemberScopingHelper {
 	public def IScope createMemberScopeAllowingNonContainedMembers(TypeRef receiverTypeRef, EObject context,
 		boolean checkVisibility, boolean staticAccess, boolean structFieldInitMode) {
 
-		val isDynamicType = receiverTypeRef.isDynamic;
-		return decoratedMemberScopeFor(receiverTypeRef,
-			new MemberScopeRequest(receiverTypeRef, context, false, checkVisibility, staticAccess, structFieldInitMode, isDynamicType));
+		val request = new MemberScopeRequest(receiverTypeRef, context, false, checkVisibility, staticAccess,
+			structFieldInitMode, receiverTypeRef.isDynamic);
+		return decoratedMemberScopeFor(receiverTypeRef, request);
 	}
 
 	/**

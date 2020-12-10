@@ -1,0 +1,25 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+// IDE-977
+
+/* XPECT output ---
+Ch18__N4JSObjects/A2_N4Class/N4Class_of/C
+--- */
+
+interface R {
+	f() : void {
+	 	console.log(N4Class.of(this).fqn)
+	}
+}
+class C implements R {}
+new C().f();

@@ -391,9 +391,6 @@ public class SemanticChangeProvider {
 
 				if (nodes.isEmpty())
 					nodes = NodeModelUtils.findNodesForFeature(element,
-							N4JSPackage.Literals.TYPED_ELEMENT__BOGUS_TYPE_REF);
-				if (nodes.isEmpty())
-					nodes = NodeModelUtils.findNodesForFeature(element,
 							N4JSPackage.Literals.FUNCTION_DEFINITION__GENERATOR);
 				if (nodes.isEmpty())
 					nodes = NodeModelUtils.findNodesForFeature(element,

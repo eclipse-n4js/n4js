@@ -325,7 +325,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				sequence_CatchBlock(context, (CatchBlock) semanticObject); 
 				return; 
 			case N4JSPackage.CATCH_VARIABLE:
-				sequence_BogusTypeRefFragment_CatchVariable_ColonSepDeclaredTypeRef(context, (CatchVariable) semanticObject); 
+				sequence_CatchVariable_ColonSepDeclaredTypeRef(context, (CatchVariable) semanticObject); 
 				return; 
 			case N4JSPackage.COALESCE_EXPRESSION:
 				sequence_CoalesceExpression(context, (CoalesceExpression) semanticObject); 
@@ -421,7 +421,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				return; 
 			case N4JSPackage.FORMAL_PARAMETER:
 				if (rule == grammarAccess.getFormalParameterRule()) {
-					sequence_BindingElementFragment_BogusTypeRefFragment_ColonSepDeclaredTypeRef_FormalParameter(context, (FormalParameter) semanticObject); 
+					sequence_BindingElementFragment_ColonSepDeclaredTypeRef_FormalParameter(context, (FormalParameter) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getBindingIdentifierAsFormalParameterRule()) {
@@ -431,32 +431,32 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				else break;
 			case N4JSPackage.FUNCTION_DECLARATION:
 				if (rule == grammarAccess.getExportableElementRule()) {
-					sequence_AnnotatedExportableElement_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionDeclaration_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables_VersionDeclaration(context, (FunctionDeclaration) semanticObject); 
+					sequence_AnnotatedExportableElement_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionDeclaration_FunctionHeader_FunctionImplWithoutKeyword_StrictFormalParameters_TypeVariables_VersionDeclaration(context, (FunctionDeclaration) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getAnnotatedExportableElementRule()) {
-					sequence_AnnotatedExportableElement_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables_VersionDeclaration(context, (FunctionDeclaration) semanticObject); 
+					sequence_AnnotatedExportableElement_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionHeader_FunctionImplWithoutKeyword_StrictFormalParameters_TypeVariables_VersionDeclaration(context, (FunctionDeclaration) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getStatementRule()) {
-					sequence_AnnotatedFunctionDeclaration_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionDeclaration_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables_VersionDeclaration(context, (FunctionDeclaration) semanticObject); 
+					sequence_AnnotatedFunctionDeclaration_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionDeclaration_FunctionHeader_FunctionImplWithoutKeyword_StrictFormalParameters_TypeVariables_VersionDeclaration(context, (FunctionDeclaration) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getAnnotatedFunctionDeclarationRule()) {
-					sequence_AnnotatedFunctionDeclaration_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables_VersionDeclaration(context, (FunctionDeclaration) semanticObject); 
+					sequence_AnnotatedFunctionDeclaration_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionHeader_FunctionImplWithoutKeyword_StrictFormalParameters_TypeVariables_VersionDeclaration(context, (FunctionDeclaration) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getScriptElementRule()) {
-					sequence_AnnotatedScriptElement_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionDeclaration_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables_VersionDeclaration(context, (FunctionDeclaration) semanticObject); 
+					sequence_AnnotatedScriptElement_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionDeclaration_FunctionHeader_FunctionImplWithoutKeyword_StrictFormalParameters_TypeVariables_VersionDeclaration(context, (FunctionDeclaration) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getAnnotatedScriptElementRule()) {
-					sequence_AnnotatedScriptElement_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables_VersionDeclaration(context, (FunctionDeclaration) semanticObject); 
+					sequence_AnnotatedScriptElement_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionHeader_FunctionImplWithoutKeyword_StrictFormalParameters_TypeVariables_VersionDeclaration(context, (FunctionDeclaration) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getFunctionDeclarationRule()
 						|| rule == grammarAccess.getRootStatementRule()) {
-					sequence_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionDeclaration_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables_VersionDeclaration(context, (FunctionDeclaration) semanticObject); 
+					sequence_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionDeclaration_FunctionHeader_FunctionImplWithoutKeyword_StrictFormalParameters_TypeVariables_VersionDeclaration(context, (FunctionDeclaration) semanticObject); 
 					return; 
 				}
 				else break;
@@ -501,19 +501,19 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| action == grammarAccess.getAssignmentExpressionAccess().getAssignmentExpressionLhsAction_4_1_0_0_0()
 						|| rule == grammarAccess.getExpressionRule()
 						|| action == grammarAccess.getExpressionAccess().getCommaExpressionExprsAction_1_0()) {
-					sequence_AnnotatedExpression_AsyncFunctionExpression_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionExpression_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables_VersionDeclaration(context, (FunctionExpression) semanticObject); 
+					sequence_AnnotatedExpression_AsyncFunctionExpression_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionExpression_FunctionHeader_FunctionImplWithoutKeyword_StrictFormalParameters_TypeVariables_VersionDeclaration(context, (FunctionExpression) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getAnnotatedExpressionRule()) {
-					sequence_AnnotatedExpression_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables_VersionDeclaration(context, (FunctionExpression) semanticObject); 
+					sequence_AnnotatedExpression_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionHeader_FunctionImplWithoutKeyword_StrictFormalParameters_TypeVariables_VersionDeclaration(context, (FunctionExpression) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getAsyncFunctionExpressionRule()) {
-					sequence_AsyncFunctionExpression_ColonSepReturnTypeRef_FunctionBody_FunctionHeader_StrictFormalParameters_TypeVariables_VersionDeclaration(context, (FunctionExpression) semanticObject); 
+					sequence_AsyncFunctionExpression_ColonSepReturnTypeRef_FunctionBody_FunctionHeader_FunctionImplWithoutKeyword_StrictFormalParameters_TypeVariables_VersionDeclaration(context, (FunctionExpression) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getFunctionExpressionRule()) {
-					sequence_ColonSepReturnTypeRef_FunctionBody_FunctionExpression_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables_VersionDeclaration(context, (FunctionExpression) semanticObject); 
+					sequence_ColonSepReturnTypeRef_FunctionBody_FunctionExpression_FunctionHeader_FunctionImplWithoutKeyword_StrictFormalParameters_TypeVariables_VersionDeclaration(context, (FunctionExpression) semanticObject); 
 					return; 
 				}
 				else break;
@@ -795,29 +795,29 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				return; 
 			case N4JSPackage.N4_FIELD_DECLARATION:
 				if (rule == grammarAccess.getAnnotatedN4MemberDeclarationRule()) {
-					sequence_AnnotatedN4MemberDeclaration_BogusTypeRefFragment_ColonSepDeclaredTypeRef_FieldDeclarationImpl(context, (N4FieldDeclaration) semanticObject); 
+					sequence_AnnotatedN4MemberDeclaration_ColonSepDeclaredTypeRef_FieldDeclarationImpl(context, (N4FieldDeclaration) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getN4MemberDeclarationRule()) {
-					sequence_AnnotatedN4MemberDeclaration_BogusTypeRefFragment_ColonSepDeclaredTypeRef_FieldDeclarationImpl_N4FieldDeclaration(context, (N4FieldDeclaration) semanticObject); 
+					sequence_AnnotatedN4MemberDeclaration_ColonSepDeclaredTypeRef_FieldDeclarationImpl_N4FieldDeclaration(context, (N4FieldDeclaration) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getN4FieldDeclarationRule()) {
-					sequence_BogusTypeRefFragment_ColonSepDeclaredTypeRef_FieldDeclarationImpl_N4FieldDeclaration(context, (N4FieldDeclaration) semanticObject); 
+					sequence_ColonSepDeclaredTypeRef_FieldDeclarationImpl_N4FieldDeclaration(context, (N4FieldDeclaration) semanticObject); 
 					return; 
 				}
 				else break;
 			case N4JSPackage.N4_GETTER_DECLARATION:
 				if (rule == grammarAccess.getAnnotatedN4MemberDeclarationRule()) {
-					sequence_AnnotatedN4MemberDeclaration_BogusTypeRefFragment_ColonSepDeclaredTypeRef_GetterHeader(context, (N4GetterDeclaration) semanticObject); 
+					sequence_AnnotatedN4MemberDeclaration_ColonSepDeclaredTypeRef_GetterHeader(context, (N4GetterDeclaration) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getN4MemberDeclarationRule()) {
-					sequence_AnnotatedN4MemberDeclaration_BogusTypeRefFragment_ColonSepDeclaredTypeRef_GetterHeader_N4GetterDeclaration(context, (N4GetterDeclaration) semanticObject); 
+					sequence_AnnotatedN4MemberDeclaration_ColonSepDeclaredTypeRef_GetterHeader_N4GetterDeclaration(context, (N4GetterDeclaration) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getN4GetterDeclarationRule()) {
-					sequence_BogusTypeRefFragment_ColonSepDeclaredTypeRef_GetterHeader_N4GetterDeclaration(context, (N4GetterDeclaration) semanticObject); 
+					sequence_ColonSepDeclaredTypeRef_GetterHeader_N4GetterDeclaration(context, (N4GetterDeclaration) semanticObject); 
 					return; 
 				}
 				else break;
@@ -848,15 +848,15 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				return; 
 			case N4JSPackage.N4_METHOD_DECLARATION:
 				if (rule == grammarAccess.getN4MemberDeclarationRule()) {
-					sequence_AnnotatedN4MemberDeclaration_AsyncNoTrailingLineBreak_BogusTypeRefFragment_ColonSepReturnTypeRef_MethodParamsReturnAndBody_N4MethodDeclaration_StrictFormalParameters_TypeVariables(context, (N4MethodDeclaration) semanticObject); 
+					sequence_AnnotatedN4MemberDeclaration_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_MethodParamsReturnAndBody_N4MethodDeclaration_StrictFormalParameters_TypeVariables(context, (N4MethodDeclaration) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getAnnotatedN4MemberDeclarationRule()) {
-					sequence_AnnotatedN4MemberDeclaration_AsyncNoTrailingLineBreak_BogusTypeRefFragment_ColonSepReturnTypeRef_MethodParamsReturnAndBody_StrictFormalParameters_TypeVariables(context, (N4MethodDeclaration) semanticObject); 
+					sequence_AnnotatedN4MemberDeclaration_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_MethodParamsReturnAndBody_StrictFormalParameters_TypeVariables(context, (N4MethodDeclaration) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getN4MethodDeclarationRule()) {
-					sequence_AsyncNoTrailingLineBreak_BogusTypeRefFragment_ColonSepReturnTypeRef_MethodParamsReturnAndBody_N4MethodDeclaration_StrictFormalParameters_TypeVariables(context, (N4MethodDeclaration) semanticObject); 
+					sequence_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_MethodParamsReturnAndBody_N4MethodDeclaration_StrictFormalParameters_TypeVariables(context, (N4MethodDeclaration) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getN4CallableConstructorDeclarationRule()) {
@@ -1084,21 +1084,21 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				return; 
 			case N4JSPackage.PROPERTY_GETTER_DECLARATION:
 				if (rule == grammarAccess.getAnnotatedPropertyAssignmentRule()) {
-					sequence_AnnotatedPropertyAssignment_BogusTypeRefFragment_ColonSepDeclaredTypeRef_GetterHeader(context, (PropertyGetterDeclaration) semanticObject); 
+					sequence_AnnotatedPropertyAssignment_ColonSepDeclaredTypeRef_GetterHeader(context, (PropertyGetterDeclaration) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getPropertyAssignmentRule()) {
-					sequence_AnnotatedPropertyAssignment_BogusTypeRefFragment_ColonSepDeclaredTypeRef_GetterHeader_PropertyGetterDeclaration(context, (PropertyGetterDeclaration) semanticObject); 
+					sequence_AnnotatedPropertyAssignment_ColonSepDeclaredTypeRef_GetterHeader_PropertyGetterDeclaration(context, (PropertyGetterDeclaration) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getPropertyGetterDeclarationRule()) {
-					sequence_BogusTypeRefFragment_ColonSepDeclaredTypeRef_GetterHeader_PropertyGetterDeclaration(context, (PropertyGetterDeclaration) semanticObject); 
+					sequence_ColonSepDeclaredTypeRef_GetterHeader_PropertyGetterDeclaration(context, (PropertyGetterDeclaration) semanticObject); 
 					return; 
 				}
 				else break;
 			case N4JSPackage.PROPERTY_METHOD_DECLARATION:
 				if (rule == grammarAccess.getPropertyAssignmentRule()) {
-					sequence_AnnotatedPropertyAssignment_MethodParamsAndBody_PropertyMethodDeclaration_StrictFormalParameters_TypeVariables(context, (PropertyMethodDeclaration) semanticObject); 
+					sequence_AnnotatedPropertyAssignment_AsyncNoTrailingLineBreak_MethodParamsAndBody_PropertyMethodDeclaration_StrictFormalParameters_TypeVariables(context, (PropertyMethodDeclaration) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getAnnotatedPropertyAssignmentRule()) {
@@ -1106,7 +1106,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 					return; 
 				}
 				else if (rule == grammarAccess.getPropertyMethodDeclarationRule()) {
-					sequence_MethodParamsAndBody_PropertyMethodDeclaration_StrictFormalParameters_TypeVariables(context, (PropertyMethodDeclaration) semanticObject); 
+					sequence_AsyncNoTrailingLineBreak_MethodParamsAndBody_PropertyMethodDeclaration_StrictFormalParameters_TypeVariables(context, (PropertyMethodDeclaration) semanticObject); 
 					return; 
 				}
 				else break;
@@ -2028,7 +2028,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         body=Block?
 	 *     )
 	 */
-	protected void sequence_AnnotatedExportableElement_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionDeclaration_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables_VersionDeclaration(ISerializationContext context, FunctionDeclaration semanticObject) {
+	protected void sequence_AnnotatedExportableElement_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionDeclaration_FunctionHeader_FunctionImplWithoutKeyword_StrictFormalParameters_TypeVariables_VersionDeclaration(ISerializationContext context, FunctionDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -2052,7 +2052,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         body=Block?
 	 *     )
 	 */
-	protected void sequence_AnnotatedExportableElement_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables_VersionDeclaration(ISerializationContext context, FunctionDeclaration semanticObject) {
+	protected void sequence_AnnotatedExportableElement_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionHeader_FunctionImplWithoutKeyword_StrictFormalParameters_TypeVariables_VersionDeclaration(ISerializationContext context, FunctionDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -2894,7 +2894,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         body=Block
 	 *     )
 	 */
-	protected void sequence_AnnotatedExpression_AsyncFunctionExpression_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionExpression_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables_VersionDeclaration(ISerializationContext context, FunctionExpression semanticObject) {
+	protected void sequence_AnnotatedExpression_AsyncFunctionExpression_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionExpression_FunctionHeader_FunctionImplWithoutKeyword_StrictFormalParameters_TypeVariables_VersionDeclaration(ISerializationContext context, FunctionExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -2917,7 +2917,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         body=Block
 	 *     )
 	 */
-	protected void sequence_AnnotatedExpression_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables_VersionDeclaration(ISerializationContext context, FunctionExpression semanticObject) {
+	protected void sequence_AnnotatedExpression_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionHeader_FunctionImplWithoutKeyword_StrictFormalParameters_TypeVariables_VersionDeclaration(ISerializationContext context, FunctionExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -3618,7 +3618,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         body=Block?
 	 *     )
 	 */
-	protected void sequence_AnnotatedFunctionDeclaration_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionDeclaration_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables_VersionDeclaration(ISerializationContext context, FunctionDeclaration semanticObject) {
+	protected void sequence_AnnotatedFunctionDeclaration_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionDeclaration_FunctionHeader_FunctionImplWithoutKeyword_StrictFormalParameters_TypeVariables_VersionDeclaration(ISerializationContext context, FunctionDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -3644,7 +3644,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         body=Block?
 	 *     )
 	 */
-	protected void sequence_AnnotatedFunctionDeclaration_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables_VersionDeclaration(ISerializationContext context, FunctionDeclaration semanticObject) {
+	protected void sequence_AnnotatedFunctionDeclaration_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionHeader_FunctionImplWithoutKeyword_StrictFormalParameters_TypeVariables_VersionDeclaration(ISerializationContext context, FunctionDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -3658,37 +3658,11 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     (
 	 *         (
 	 *             (
-	 *                 (
-	 *                     (annotationList=AnnotatedN4MemberDeclaration_N4MethodDeclaration_1_2_0_0_0 declaredModifiers+=N4Modifier* bogusTypeRef=TypeRefWithModifiers?) | 
-	 *                     (
-	 *                         ((annotationList=AnnotatedN4MemberDeclaration_N4MethodDeclaration_1_2_0_0_0 declaredModifiers+=N4Modifier*) | declaredModifiers+=N4Modifier+) 
-	 *                         typeVars+=TypeVariable 
-	 *                         typeVars+=TypeVariable* 
-	 *                         bogusTypeRef=TypeRefWithModifiers?
-	 *                     ) | 
-	 *                     declaredModifiers+=N4Modifier+ | 
-	 *                     (declaredModifiers+=N4Modifier+ bogusTypeRef=TypeRefWithModifiers?)
-	 *                 )? 
-	 *                 declaredAsync?='async' 
-	 *                 (declaredName=LiteralOrComputedPropertyName | declaredName=LiteralOrComputedPropertyName)
-	 *             ) | 
-	 *             (
 	 *                 annotationList=AnnotatedN4MemberDeclaration_N4MethodDeclaration_1_2_0_0_0 
 	 *                 declaredModifiers+=N4Modifier* 
 	 *                 (
-	 *                     (bogusTypeRef=TypeRefWithModifiers? generator?='*' declaredName=LiteralOrComputedPropertyName) | 
-	 *                     (bogusTypeRef=TypeRefWithModifiers? generator?='*' declaredName=LiteralOrComputedPropertyName) | 
-	 *                     declaredName=LiteralOrComputedPropertyName
-	 *                 )
-	 *             ) | 
-	 *             (
-	 *                 ((annotationList=AnnotatedN4MemberDeclaration_N4MethodDeclaration_1_2_0_0_0 declaredModifiers+=N4Modifier*) | declaredModifiers+=N4Modifier+) 
-	 *                 typeVars+=TypeVariable 
-	 *                 typeVars+=TypeVariable* 
-	 *                 (
-	 *                     (bogusTypeRef=TypeRefWithModifiers? generator?='*' declaredName=LiteralOrComputedPropertyName) | 
-	 *                     (bogusTypeRef=TypeRefWithModifiers? generator?='*' declaredName=LiteralOrComputedPropertyName) | 
-	 *                     declaredName=LiteralOrComputedPropertyName | 
+	 *                     (declaredAsync?='async' declaredName=LiteralOrComputedPropertyName) | 
+	 *                     (generator?='*' declaredName=LiteralOrComputedPropertyName) | 
 	 *                     declaredName=LiteralOrComputedPropertyName
 	 *                 )
 	 *             ) | 
@@ -3697,28 +3671,38 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *                     (
 	 *                         annotationList=AnnotatedN4MemberDeclaration_N4MethodDeclaration_1_2_0_0_0 
 	 *                         declaredModifiers+=N4Modifier* 
-	 *                         (typeVars+=TypeVariable typeVars+=TypeVariable*)?
+	 *                         typeVars+=TypeVariable 
+	 *                         typeVars+=TypeVariable*
+	 *                     ) | 
+	 *                     (declaredModifiers+=N4Modifier+ typeVars+=TypeVariable typeVars+=TypeVariable*)
+	 *                 ) 
+	 *                 (
+	 *                     (declaredAsync?='async' declaredName=LiteralOrComputedPropertyName) | 
+	 *                     (generator?='*' declaredName=LiteralOrComputedPropertyName) | 
+	 *                     declaredName=LiteralOrComputedPropertyName
+	 *                 )
+	 *             ) | 
+	 *             (
+	 *                 (
+	 *                     (
+	 *                         annotationList=AnnotatedN4MemberDeclaration_N4MethodDeclaration_1_2_0_0_0 
+	 *                         declaredModifiers+=N4Modifier* 
+	 *                         (declaredAsync?='async' | (typeVars+=TypeVariable typeVars+=TypeVariable* declaredAsync?='async'))?
 	 *                     ) | 
 	 *                     declaredModifiers+=N4Modifier+ | 
-	 *                     (declaredModifiers+=N4Modifier+ (typeVars+=TypeVariable typeVars+=TypeVariable*)?)
-	 *                 ) 
-	 *                 bogusTypeRef=TypeRefWithModifiers? 
-	 *                 (declaredName=LiteralOrComputedPropertyName | declaredName=LiteralOrComputedPropertyName)
+	 *                     (declaredModifiers+=N4Modifier+ declaredAsync?='async') | 
+	 *                     (declaredModifiers+=N4Modifier+ typeVars+=TypeVariable typeVars+=TypeVariable* declaredAsync?='async')
+	 *                 )? 
+	 *                 ((generator?='*' declaredName=LiteralOrComputedPropertyName) | declaredName=LiteralOrComputedPropertyName)
 	 *             ) | 
-	 *             (declaredModifiers+=N4Modifier+ bogusTypeRef=TypeRefWithModifiers? generator?='*' declaredName=LiteralOrComputedPropertyName) | 
-	 *             (declaredModifiers+=N4Modifier+ declaredName=LiteralOrComputedPropertyName) | 
-	 *             (
-	 *                 (declaredModifiers+=N4Modifier+ | (declaredModifiers+=N4Modifier+ bogusTypeRef=TypeRefWithModifiers?)) 
-	 *                 generator?='*' 
-	 *                 declaredName=LiteralOrComputedPropertyName
-	 *             )
+	 *             (declaredModifiers+=N4Modifier+ declaredAsync?='async' declaredName=LiteralOrComputedPropertyName)
 	 *         )? 
 	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
 	 *         returnTypeRef=TypeRef? 
 	 *         body=Block?
 	 *     )
 	 */
-	protected void sequence_AnnotatedN4MemberDeclaration_AsyncNoTrailingLineBreak_BogusTypeRefFragment_ColonSepReturnTypeRef_MethodParamsReturnAndBody_N4MethodDeclaration_StrictFormalParameters_TypeVariables(ISerializationContext context, N4MethodDeclaration semanticObject) {
+	protected void sequence_AnnotatedN4MemberDeclaration_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_MethodParamsReturnAndBody_N4MethodDeclaration_StrictFormalParameters_TypeVariables(ISerializationContext context, N4MethodDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -3733,14 +3717,13 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         annotationList=AnnotatedN4MemberDeclaration_N4MethodDeclaration_1_2_0_0_0 
 	 *         declaredModifiers+=N4Modifier* 
 	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
-	 *         bogusTypeRef=TypeRefWithModifiers? 
 	 *         ((declaredAsync?='async'? declaredName=LiteralOrComputedPropertyName) | (generator?='*' declaredName=LiteralOrComputedPropertyName)) 
 	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
 	 *         returnTypeRef=TypeRef? 
 	 *         body=Block?
 	 *     )
 	 */
-	protected void sequence_AnnotatedN4MemberDeclaration_AsyncNoTrailingLineBreak_BogusTypeRefFragment_ColonSepReturnTypeRef_MethodParamsReturnAndBody_StrictFormalParameters_TypeVariables(ISerializationContext context, N4MethodDeclaration semanticObject) {
+	protected void sequence_AnnotatedN4MemberDeclaration_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_MethodParamsReturnAndBody_StrictFormalParameters_TypeVariables(ISerializationContext context, N4MethodDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -3754,14 +3737,13 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     (
 	 *         annotationList=AnnotatedN4MemberDeclaration_N4FieldDeclaration_1_3_0 
 	 *         declaredModifiers+=N4Modifier* 
-	 *         bogusTypeRef=TypeRefWithModifiers? 
 	 *         declaredName=LiteralOrComputedPropertyName 
 	 *         declaredOptional?='?'? 
 	 *         declaredTypeRef=TypeRef? 
 	 *         expression=Expression?
 	 *     )
 	 */
-	protected void sequence_AnnotatedN4MemberDeclaration_BogusTypeRefFragment_ColonSepDeclaredTypeRef_FieldDeclarationImpl(ISerializationContext context, N4FieldDeclaration semanticObject) {
+	protected void sequence_AnnotatedN4MemberDeclaration_ColonSepDeclaredTypeRef_FieldDeclarationImpl(ISerializationContext context, N4FieldDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -3775,14 +3757,13 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     (
 	 *         annotationList=AnnotatedN4MemberDeclaration_N4FieldDeclaration_1_3_0? 
 	 *         declaredModifiers+=N4Modifier* 
-	 *         bogusTypeRef=TypeRefWithModifiers? 
 	 *         declaredName=LiteralOrComputedPropertyName 
 	 *         declaredOptional?='?'? 
 	 *         declaredTypeRef=TypeRef? 
 	 *         expression=Expression?
 	 *     )
 	 */
-	protected void sequence_AnnotatedN4MemberDeclaration_BogusTypeRefFragment_ColonSepDeclaredTypeRef_FieldDeclarationImpl_N4FieldDeclaration(ISerializationContext context, N4FieldDeclaration semanticObject) {
+	protected void sequence_AnnotatedN4MemberDeclaration_ColonSepDeclaredTypeRef_FieldDeclarationImpl_N4FieldDeclaration(ISerializationContext context, N4FieldDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -3796,14 +3777,13 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     (
 	 *         annotationList=AnnotatedN4MemberDeclaration_N4GetterDeclaration_1_0_0_0_0 
 	 *         declaredModifiers+=N4Modifier* 
-	 *         bogusTypeRef=TypeRefWithModifiers? 
 	 *         declaredName=LiteralOrComputedPropertyName 
 	 *         declaredOptional?='?'? 
 	 *         declaredTypeRef=TypeRef? 
 	 *         body=Block?
 	 *     )
 	 */
-	protected void sequence_AnnotatedN4MemberDeclaration_BogusTypeRefFragment_ColonSepDeclaredTypeRef_GetterHeader(ISerializationContext context, N4GetterDeclaration semanticObject) {
+	protected void sequence_AnnotatedN4MemberDeclaration_ColonSepDeclaredTypeRef_GetterHeader(ISerializationContext context, N4GetterDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -3816,14 +3796,13 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (
 	 *         ((annotationList=AnnotatedN4MemberDeclaration_N4GetterDeclaration_1_0_0_0_0 declaredModifiers+=N4Modifier*) | declaredModifiers+=N4Modifier+)? 
-	 *         bogusTypeRef=TypeRefWithModifiers? 
 	 *         declaredName=LiteralOrComputedPropertyName 
 	 *         declaredOptional?='?'? 
 	 *         declaredTypeRef=TypeRef? 
 	 *         (body=Block | body=Block)?
 	 *     )
 	 */
-	protected void sequence_AnnotatedN4MemberDeclaration_BogusTypeRefFragment_ColonSepDeclaredTypeRef_GetterHeader_N4GetterDeclaration(ISerializationContext context, N4GetterDeclaration semanticObject) {
+	protected void sequence_AnnotatedN4MemberDeclaration_ColonSepDeclaredTypeRef_GetterHeader_N4GetterDeclaration(ISerializationContext context, N4GetterDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -3873,46 +3852,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
-	 *     AnnotatedPropertyAssignment<Yield> returns PropertyGetterDeclaration
-	 *     AnnotatedPropertyAssignment returns PropertyGetterDeclaration
-	 *
-	 * Constraint:
-	 *     (
-	 *         annotationList=AnnotatedPropertyAssignment_PropertyGetterDeclaration_1_1_0_0_0 
-	 *         bogusTypeRef=TypeRefWithModifiers? 
-	 *         declaredName=LiteralOrComputedPropertyName 
-	 *         declaredOptional?='?'? 
-	 *         declaredTypeRef=TypeRef? 
-	 *         body=Block
-	 *     )
-	 */
-	protected void sequence_AnnotatedPropertyAssignment_BogusTypeRefFragment_ColonSepDeclaredTypeRef_GetterHeader(ISerializationContext context, PropertyGetterDeclaration semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     PropertyAssignment<Yield> returns PropertyGetterDeclaration
-	 *     PropertyAssignment returns PropertyGetterDeclaration
-	 *
-	 * Constraint:
-	 *     (
-	 *         annotationList=AnnotatedPropertyAssignment_PropertyGetterDeclaration_1_1_0_0_0? 
-	 *         bogusTypeRef=TypeRefWithModifiers? 
-	 *         declaredName=LiteralOrComputedPropertyName 
-	 *         declaredOptional?='?'? 
-	 *         declaredTypeRef=TypeRef? 
-	 *         (body=Block | body=Block)
-	 *     )
-	 */
-	protected void sequence_AnnotatedPropertyAssignment_BogusTypeRefFragment_ColonSepDeclaredTypeRef_GetterHeader_PropertyGetterDeclaration(ISerializationContext context, PropertyGetterDeclaration semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
 	 *     PropertyAssignment<Yield> returns PropertyMethodDeclaration
 	 *     PropertyAssignment returns PropertyMethodDeclaration
 	 *
@@ -3922,6 +3861,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *             (
 	 *                 (annotationList=AnnotatedPropertyAssignment_PropertyMethodDeclaration_1_3_0_0_0 typeVars+=TypeVariable typeVars+=TypeVariable*) 
 	 *                 returnTypeRef=TypeRefWithModifiers? 
+	 *                 declaredAsync?='async'? 
 	 *                 ((generator?='*' declaredName=LiteralOrComputedPropertyName) | declaredName=LiteralOrComputedPropertyName)
 	 *             ) | 
 	 *             (
@@ -3937,7 +3877,45 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         body=Block?
 	 *     )
 	 */
-	protected void sequence_AnnotatedPropertyAssignment_MethodParamsAndBody_PropertyMethodDeclaration_StrictFormalParameters_TypeVariables(ISerializationContext context, PropertyMethodDeclaration semanticObject) {
+	protected void sequence_AnnotatedPropertyAssignment_AsyncNoTrailingLineBreak_MethodParamsAndBody_PropertyMethodDeclaration_StrictFormalParameters_TypeVariables(ISerializationContext context, PropertyMethodDeclaration semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     AnnotatedPropertyAssignment<Yield> returns PropertyGetterDeclaration
+	 *     AnnotatedPropertyAssignment returns PropertyGetterDeclaration
+	 *
+	 * Constraint:
+	 *     (
+	 *         annotationList=AnnotatedPropertyAssignment_PropertyGetterDeclaration_1_1_0_0_0 
+	 *         declaredName=LiteralOrComputedPropertyName 
+	 *         declaredOptional?='?'? 
+	 *         declaredTypeRef=TypeRef? 
+	 *         body=Block
+	 *     )
+	 */
+	protected void sequence_AnnotatedPropertyAssignment_ColonSepDeclaredTypeRef_GetterHeader(ISerializationContext context, PropertyGetterDeclaration semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     PropertyAssignment<Yield> returns PropertyGetterDeclaration
+	 *     PropertyAssignment returns PropertyGetterDeclaration
+	 *
+	 * Constraint:
+	 *     (
+	 *         annotationList=AnnotatedPropertyAssignment_PropertyGetterDeclaration_1_1_0_0_0? 
+	 *         declaredName=LiteralOrComputedPropertyName 
+	 *         declaredOptional?='?'? 
+	 *         declaredTypeRef=TypeRef? 
+	 *         (body=Block | body=Block)
+	 *     )
+	 */
+	protected void sequence_AnnotatedPropertyAssignment_ColonSepDeclaredTypeRef_GetterHeader_PropertyGetterDeclaration(ISerializationContext context, PropertyGetterDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -4131,7 +4109,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         body=Block?
 	 *     )
 	 */
-	protected void sequence_AnnotatedScriptElement_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionDeclaration_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables_VersionDeclaration(ISerializationContext context, FunctionDeclaration semanticObject) {
+	protected void sequence_AnnotatedScriptElement_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionDeclaration_FunctionHeader_FunctionImplWithoutKeyword_StrictFormalParameters_TypeVariables_VersionDeclaration(ISerializationContext context, FunctionDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -4154,7 +4132,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         body=Block?
 	 *     )
 	 */
-	protected void sequence_AnnotatedScriptElement_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables_VersionDeclaration(ISerializationContext context, FunctionDeclaration semanticObject) {
+	protected void sequence_AnnotatedScriptElement_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionHeader_FunctionImplWithoutKeyword_StrictFormalParameters_TypeVariables_VersionDeclaration(ISerializationContext context, FunctionDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -7382,6 +7360,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (
 	 *         declaredAsync?='async' 
+	 *         generator?='*'? 
 	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
 	 *         name=BindingIdentifier? 
 	 *         declaredVersion=VERSION? 
@@ -7390,28 +7369,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         body=Block
 	 *     )
 	 */
-	protected void sequence_AsyncFunctionExpression_ColonSepReturnTypeRef_FunctionBody_FunctionHeader_StrictFormalParameters_TypeVariables_VersionDeclaration(ISerializationContext context, FunctionExpression semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     N4MethodDeclaration<Yield> returns N4MethodDeclaration
-	 *     N4MethodDeclaration returns N4MethodDeclaration
-	 *
-	 * Constraint:
-	 *     (
-	 *         declaredModifiers+=N4Modifier* 
-	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
-	 *         bogusTypeRef=TypeRefWithModifiers? 
-	 *         ((declaredAsync?='async'? declaredName=LiteralOrComputedPropertyName) | (generator?='*' declaredName=LiteralOrComputedPropertyName)) 
-	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
-	 *         returnTypeRef=TypeRef? 
-	 *         body=Block?
-	 *     )
-	 */
-	protected void sequence_AsyncNoTrailingLineBreak_BogusTypeRefFragment_ColonSepReturnTypeRef_MethodParamsReturnAndBody_N4MethodDeclaration_StrictFormalParameters_TypeVariables(ISerializationContext context, N4MethodDeclaration semanticObject) {
+	protected void sequence_AsyncFunctionExpression_ColonSepReturnTypeRef_FunctionBody_FunctionHeader_FunctionImplWithoutKeyword_StrictFormalParameters_TypeVariables_VersionDeclaration(ISerializationContext context, FunctionExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -7436,7 +7394,48 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         body=Block?
 	 *     )
 	 */
-	protected void sequence_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionDeclaration_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables_VersionDeclaration(ISerializationContext context, FunctionDeclaration semanticObject) {
+	protected void sequence_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionDeclaration_FunctionHeader_FunctionImplWithoutKeyword_StrictFormalParameters_TypeVariables_VersionDeclaration(ISerializationContext context, FunctionDeclaration semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     N4MethodDeclaration<Yield> returns N4MethodDeclaration
+	 *     N4MethodDeclaration returns N4MethodDeclaration
+	 *
+	 * Constraint:
+	 *     (
+	 *         declaredModifiers+=N4Modifier* 
+	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
+	 *         declaredAsync?='async'? 
+	 *         ((generator?='*' declaredName=LiteralOrComputedPropertyName) | declaredName=LiteralOrComputedPropertyName) 
+	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
+	 *         returnTypeRef=TypeRef? 
+	 *         body=Block?
+	 *     )
+	 */
+	protected void sequence_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_MethodParamsReturnAndBody_N4MethodDeclaration_StrictFormalParameters_TypeVariables(ISerializationContext context, N4MethodDeclaration semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     PropertyMethodDeclaration<Yield> returns PropertyMethodDeclaration
+	 *     PropertyMethodDeclaration returns PropertyMethodDeclaration
+	 *
+	 * Constraint:
+	 *     (
+	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
+	 *         returnTypeRef=TypeRefWithModifiers? 
+	 *         declaredAsync?='async'? 
+	 *         ((generator?='*' declaredName=LiteralOrComputedPropertyName) | declaredName=LiteralOrComputedPropertyName) 
+	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
+	 *         body=Block?
+	 *     )
+	 */
+	protected void sequence_AsyncNoTrailingLineBreak_MethodParamsAndBody_PropertyMethodDeclaration_StrictFormalParameters_TypeVariables(ISerializationContext context, PropertyMethodDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -8126,14 +8125,11 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (
-	 *         (
-	 *             bindingPattern=BindingPattern | 
-	 *             (annotations+=Annotation* bogusTypeRef=TypeRefWithModifiers? variadic?='...'? name=BindingIdentifier declaredTypeRef=TypeRef?)
-	 *         ) 
+	 *         (bindingPattern=BindingPattern | (annotations+=Annotation* variadic?='...'? name=BindingIdentifier declaredTypeRef=TypeRef?)) 
 	 *         (hasInitializerAssignment?='=' initializer=AssignmentExpression?)?
 	 *     )
 	 */
-	protected void sequence_BindingElementFragment_BogusTypeRefFragment_ColonSepDeclaredTypeRef_FormalParameter(ISerializationContext context, FormalParameter semanticObject) {
+	protected void sequence_BindingElementFragment_ColonSepDeclaredTypeRef_FormalParameter(ISerializationContext context, FormalParameter semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -8478,72 +8474,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     statements+=Statement*
 	 */
 	protected void sequence_Block(ISerializationContext context, Block semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     CatchVariable<Yield> returns CatchVariable
-	 *     CatchVariable returns CatchVariable
-	 *
-	 * Constraint:
-	 *     ((bogusTypeRef=TypeRefWithModifiers? name=BindingIdentifier) | bindingPattern=BindingPattern | (name=BindingIdentifier declaredTypeRef=TypeRef))
-	 */
-	protected void sequence_BogusTypeRefFragment_CatchVariable_ColonSepDeclaredTypeRef(ISerializationContext context, CatchVariable semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     N4FieldDeclaration<Yield> returns N4FieldDeclaration
-	 *     N4FieldDeclaration returns N4FieldDeclaration
-	 *
-	 * Constraint:
-	 *     (
-	 *         declaredModifiers+=N4Modifier* 
-	 *         bogusTypeRef=TypeRefWithModifiers? 
-	 *         declaredName=LiteralOrComputedPropertyName 
-	 *         declaredOptional?='?'? 
-	 *         declaredTypeRef=TypeRef? 
-	 *         expression=Expression?
-	 *     )
-	 */
-	protected void sequence_BogusTypeRefFragment_ColonSepDeclaredTypeRef_FieldDeclarationImpl_N4FieldDeclaration(ISerializationContext context, N4FieldDeclaration semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     N4GetterDeclaration<Yield> returns N4GetterDeclaration
-	 *     N4GetterDeclaration returns N4GetterDeclaration
-	 *
-	 * Constraint:
-	 *     (
-	 *         declaredModifiers+=N4Modifier* 
-	 *         bogusTypeRef=TypeRefWithModifiers? 
-	 *         declaredName=LiteralOrComputedPropertyName 
-	 *         declaredOptional?='?'? 
-	 *         declaredTypeRef=TypeRef? 
-	 *         body=Block?
-	 *     )
-	 */
-	protected void sequence_BogusTypeRefFragment_ColonSepDeclaredTypeRef_GetterHeader_N4GetterDeclaration(ISerializationContext context, N4GetterDeclaration semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     PropertyGetterDeclaration<Yield> returns PropertyGetterDeclaration
-	 *     PropertyGetterDeclaration returns PropertyGetterDeclaration
-	 *
-	 * Constraint:
-	 *     (bogusTypeRef=TypeRefWithModifiers? declaredName=LiteralOrComputedPropertyName declaredOptional?='?'? declaredTypeRef=TypeRef? body=Block)
-	 */
-	protected void sequence_BogusTypeRefFragment_ColonSepDeclaredTypeRef_GetterHeader_PropertyGetterDeclaration(ISerializationContext context, PropertyGetterDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -9632,6 +9562,19 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
+	 *     CatchVariable<Yield> returns CatchVariable
+	 *     CatchVariable returns CatchVariable
+	 *
+	 * Constraint:
+	 *     (bindingPattern=BindingPattern | (name=BindingIdentifier declaredTypeRef=TypeRef) | name=BindingIdentifier)
+	 */
+	protected void sequence_CatchVariable_ColonSepDeclaredTypeRef(ISerializationContext context, CatchVariable semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
 	 *     N4ClassDeclaration<Yield> returns N4ClassDeclaration
 	 *     N4ClassDeclaration returns N4ClassDeclaration
 	 *
@@ -9775,6 +9718,45 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
+	 *     N4FieldDeclaration<Yield> returns N4FieldDeclaration
+	 *     N4FieldDeclaration returns N4FieldDeclaration
+	 *
+	 * Constraint:
+	 *     (declaredModifiers+=N4Modifier* declaredName=LiteralOrComputedPropertyName declaredOptional?='?'? declaredTypeRef=TypeRef? expression=Expression?)
+	 */
+	protected void sequence_ColonSepDeclaredTypeRef_FieldDeclarationImpl_N4FieldDeclaration(ISerializationContext context, N4FieldDeclaration semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     N4GetterDeclaration<Yield> returns N4GetterDeclaration
+	 *     N4GetterDeclaration returns N4GetterDeclaration
+	 *
+	 * Constraint:
+	 *     (declaredModifiers+=N4Modifier* declaredName=LiteralOrComputedPropertyName declaredOptional?='?'? declaredTypeRef=TypeRef? body=Block?)
+	 */
+	protected void sequence_ColonSepDeclaredTypeRef_GetterHeader_N4GetterDeclaration(ISerializationContext context, N4GetterDeclaration semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     PropertyGetterDeclaration<Yield> returns PropertyGetterDeclaration
+	 *     PropertyGetterDeclaration returns PropertyGetterDeclaration
+	 *
+	 * Constraint:
+	 *     (declaredName=LiteralOrComputedPropertyName declaredOptional?='?'? declaredTypeRef=TypeRef? body=Block)
+	 */
+	protected void sequence_ColonSepDeclaredTypeRef_GetterHeader_PropertyGetterDeclaration(ISerializationContext context, PropertyGetterDeclaration semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
 	 *     VariableDeclarationOrBinding<In,Yield,OptionalInit> returns VariableDeclaration
 	 *     VariableDeclarationOrBinding<In,Yield> returns VariableDeclaration
 	 *     VariableDeclarationOrBinding<In,OptionalInit> returns VariableDeclaration
@@ -9811,7 +9793,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         body=Block
 	 *     )
 	 */
-	protected void sequence_ColonSepReturnTypeRef_FunctionBody_FunctionExpression_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables_VersionDeclaration(ISerializationContext context, FunctionExpression semanticObject) {
+	protected void sequence_ColonSepReturnTypeRef_FunctionBody_FunctionExpression_FunctionHeader_FunctionImplWithoutKeyword_StrictFormalParameters_TypeVariables_VersionDeclaration(ISerializationContext context, FunctionExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -12152,6 +12134,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (
+	 *         await?='await'? 
 	 *         (
 	 *             (initExpr=LetIdentifierRef forIn?='in' expression=Expression) | 
 	 *             (
@@ -19517,25 +19500,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
-	 *     PropertyMethodDeclaration<Yield> returns PropertyMethodDeclaration
-	 *     PropertyMethodDeclaration returns PropertyMethodDeclaration
-	 *
-	 * Constraint:
-	 *     (
-	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
-	 *         returnTypeRef=TypeRefWithModifiers? 
-	 *         ((generator?='*' declaredName=LiteralOrComputedPropertyName) | declaredName=LiteralOrComputedPropertyName) 
-	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
-	 *         body=Block?
-	 *     )
-	 */
-	protected void sequence_MethodParamsAndBody_PropertyMethodDeclaration_StrictFormalParameters_TypeVariables(ISerializationContext context, PropertyMethodDeclaration semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
 	 *     MultiplicativeExpression<Yield> returns MultiplicativeExpression
 	 *     MultiplicativeExpression returns MultiplicativeExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<Yield> returns MultiplicativeExpression
@@ -24976,7 +24940,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     Script returns Script
 	 *
 	 * Constraint:
-	 *     (annotations+=ScriptAnnotation | scriptElements+=ScriptElement)*
+	 *     (hashbang=HASH_BANG? (annotations+=ScriptAnnotation | scriptElements+=ScriptElement)*)
 	 */
 	protected void sequence_Script(ISerializationContext context, Script semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

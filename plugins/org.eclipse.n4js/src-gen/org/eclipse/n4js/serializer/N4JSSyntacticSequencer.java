@@ -404,6 +404,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     declaredAsync?='async' (ambiguity) 'function' generator?='*'
 	 *     declaredAsync?='async' (ambiguity) 'function' name=BindingIdentifier
 	 *     declaredAsync?='async' (ambiguity) declaredName=LiteralOrComputedPropertyName
+	 *     declaredAsync?='async' (ambiguity) generator?='*'
 	 */
 	protected void emit_NoLineTerminator_NO_LINE_TERMINATORTerminalRuleCall_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);

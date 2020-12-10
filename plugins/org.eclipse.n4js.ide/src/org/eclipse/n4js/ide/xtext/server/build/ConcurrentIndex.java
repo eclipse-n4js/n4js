@@ -21,8 +21,10 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.n4js.xtext.workspace.ConfigSnapshotFactory;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
+import org.eclipse.n4js.xtext.workspace.XWorkspaceConfigSnapshotProvider;
 import org.eclipse.xtext.resource.impl.ChunkedResourceDescriptions;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 
@@ -31,6 +33,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
@@ -47,7 +50,10 @@ import com.google.inject.Singleton;
  * </ul>
  */
 @Singleton
-public class ConcurrentIndex {
+public class ConcurrentIndex implements XWorkspaceConfigSnapshotProvider {
+
+	@Inject
+	private ConfigSnapshotFactory configSnapshotFactory;
 
 	/** Map of all project indices. */
 	private final Map<String, ResourceDescriptionsData> project2Index = new HashMap<>();
@@ -95,7 +101,7 @@ public class ConcurrentIndex {
 		synchronized (this) {
 			removedProjectNames = ImmutableSet.copyOf(project2Index.keySet());
 			project2Index.clear();
-			workspaceConfigNew = workspaceConfig.clear();
+			workspaceConfigNew = configSnapshotFactory.clear(workspaceConfig);
 			workspaceConfig = workspaceConfigNew;
 		}
 		notifyListeners(workspaceConfigNew, ImmutableMap.of(), ImmutableList.of(), removedProjectNames);
@@ -107,8 +113,8 @@ public class ConcurrentIndex {
 		return project2Index.get(projectName);
 	}
 
-	/** Returns the workspace configuration */
-	public synchronized WorkspaceConfigSnapshot getWorkspaceConfig() {
+	@Override
+	public synchronized WorkspaceConfigSnapshot getWorkspaceConfigSnapshot() {
 		return workspaceConfig;
 	}
 
@@ -165,7 +171,9 @@ public class ConcurrentIndex {
 					actuallyRemovedProjectsBuilder.add(removedProjectName);
 				}
 			}
-			newWorkspaceConfig = workspaceConfig.update(changedProjectsCpy, removedProjectsCpy);
+
+			newWorkspaceConfig = configSnapshotFactory.update(workspaceConfig, changedProjectsCpy, removedProjectsCpy);
+
 			workspaceConfig = newWorkspaceConfig;
 		}
 		ImmutableSet<String> actuallyRemovedProjects = actuallyRemovedProjectsBuilder.build();

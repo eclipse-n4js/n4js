@@ -11,7 +11,6 @@
 package org.eclipse.n4js.transpiler.im;
 
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural;
-
 import org.eclipse.n4js.ts.types.Type;
 
 /**

@@ -1,19 +1,6 @@
-# Testcases that create the synthetic error message: Single name syntax in object literals is unsupported
+# Testcases making use of unsupported feature "class expressions"
 
 test/language/computed-property-names/class/static/generator-prototype.js
 test/language/computed-property-names/class/static/getter-prototype.js
 test/language/computed-property-names/class/static/method-prototype.js
 test/language/computed-property-names/class/static/setter-prototype.js
-test/language/object-literal/yield-non-strict-syntax.js
-test/language/object-literal/yield-non-strict-access.js
-test/language/object-literal/let-non-strict-syntax.js
-test/language/object-literal/let-non-strict-access.js
-test/language/object-literal/identifier-reference-property-get-access.js
-test/language/object-literal/descriptor.js
-test/language/object-literal/not-defined.js
-test/language/expressions/object/prop-def-id-valid.js
-test/language/expressions/object/prop-def-id-get-error.js
-test/language/expressions/object/prop-def-id-eval-error.js
-test/language/expressions/object/prop-def-id-eval-error-2.js
-test/language/statements/for-in/const-bound-names-fordecl-tdz-for-in.js
-test/language/statements/for-in/let-bound-names-fordecl-tdz-for-in.js

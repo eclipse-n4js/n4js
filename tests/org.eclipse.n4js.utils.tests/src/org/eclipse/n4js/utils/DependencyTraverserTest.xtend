@@ -12,9 +12,12 @@ package org.eclipse.n4js.utils
 
 import org.junit.Assert
 import org.junit.Test
+import org.eclipse.n4js.xtext.workspace.BuildOrderInfo
 
 /**
  * Tests for the generic dependency traverser.
+ *
+ * Note that dependency cycles are detected using {@link BuildOrderInfo} (see GH-1964)
  */
 class DependencyTraverserTest {
 

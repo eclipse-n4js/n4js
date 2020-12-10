@@ -40,6 +40,7 @@ import org.eclipse.n4js.xtext.server.LSPIssue;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.SourceFolderScanner;
 import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
+import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.generator.OutputConfiguration;
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
@@ -152,9 +153,8 @@ public class ProjectBuilder {
 	 * Initial build reads the project state and resolves changes. Generate output files.
 	 * <p>
 	 * This method assumes that it is only invoked in situations when the client does not have any diagnostics stored,
-	 * e.g. directly after invoking {@link #doClean(AfterDeleteListener, CancelIndicator)}. Therefore no
-	 * 'publishDiagnostics' events with an empty list of diagnostics need to be sent to the client in order to remove
-	 * obsolete diagnostics.
+	 * e.g. directly after invoking {@link #doClean(XBuildRequest, CancelIndicator)}. Therefore no 'publishDiagnostics'
+	 * events with an empty list of diagnostics need to be sent to the client in order to remove obsolete diagnostics.
 	 * <p>
 	 * NOTE: this is not only invoked shortly after server startup but also at various other occasions, for example
 	 * <ul>
@@ -209,8 +209,7 @@ public class ProjectBuilder {
 
 		@Override
 		public void afterBuild(XBuildRequest request, XBuildResult buildResult) {
-			updateProjectState(request, buildResult, newValidationIssues, deleted);
-
+			updateProjectState(buildResult, newValidationIssues, deleted);
 		}
 
 		public void attachTo(XBuildRequest request) {
@@ -231,9 +230,13 @@ public class ProjectBuilder {
 		}
 
 		@Override
-		public XBuildRequest getBuildRequest(String projectName, Set<URI> changedFiles, Set<URI> deletedFiles,
+		public XBuildRequest getBuildRequest(WorkspaceConfigSnapshot workspaceConfig,
+				ProjectConfigSnapshot projectConfig, Set<URI> changedFiles, Set<URI> deletedFiles,
 				List<Delta> externalDeltas) {
-			XBuildRequest request = delegate.getBuildRequest(projectName, changedFiles, deletedFiles, externalDeltas);
+
+			XBuildRequest request = delegate.getBuildRequest(workspaceConfig, projectConfig, changedFiles, deletedFiles,
+					externalDeltas);
+
 			updater.attachTo(request);
 			return request;
 		}
@@ -358,31 +361,42 @@ public class ProjectBuilder {
 	}
 
 	/** Deletes the contents of the output directory */
-	public void doClean(AfterDeleteListener deleteListener, CancelIndicator cancelIndicator) {
+	public void doClean(XBuildRequest buildRequest, CancelIndicator cancelIndicator) {
 		deletePersistenceFile();
 		doClearWithNotification();
 
-		if (projectConfig.indexOnly()) {
+		if (!buildRequest.canGenerate()) {
+			// if we do not generate anything for a project, there won't be anything to clean
 			return;
 		}
 
-		for (File outputDirectory : getOutputDirectories()) {
+		for (File outputDirectory : getOutputDirectories(true)) {
 			File[] childFiles = outputDirectory.listFiles();
 			if (childFiles != null) {
 				for (int i = 0; i < childFiles.length; i++) {
 					operationCanceledManager.checkCanceled(cancelIndicator);
-					deleteFileOrFolder(deleteListener, childFiles[i]);
+					deleteFileOrFolder(buildRequest::afterDelete, childFiles[i]);
 				}
 			}
 		}
 	}
 
-	/** @return list of output directories of this project */
-	public List<File> getOutputDirectories() {
+	/**
+	 * Returns the output directories of this builder's project.
+	 *
+	 * @param onlyCanClear
+	 *            if <code>true</code>, only such output directories are returned that
+	 *            {@link OutputConfiguration#setCanClearOutputDirectory(boolean) can be cleared}.
+	 * @return list of output directories of this project
+	 */
+	public List<File> getOutputDirectories(boolean onlyCanClear) {
 		List<File> outputDirs = new ArrayList<>();
 		Set<OutputConfiguration> outputConfigurations = outputConfigProvider.getOutputConfigurations(resourceSet);
 		URI projectBaseUri = projectConfig.getPath();
 		for (OutputConfiguration outputConf : outputConfigurations) {
+			if (onlyCanClear && !outputConf.isCanClearOutputDirectory()) {
+				continue;
+			}
 			for (String outputDirName : outputConf.getOutputDirectories()) {
 				URI outputUri = projectBaseUri.appendSegment(outputDirName);
 				File outputDirectory = URIUtils.toFile(outputUri);
@@ -408,7 +422,7 @@ public class ProjectBuilder {
 		}
 	}
 
-	/** Report an issue. */
+	/** Report an issue related to the whole project. */
 	public void reportProjectIssue(String message, String code, Severity severity) {
 		URI uri = getBaseDir();
 		LSPIssue issue = new LSPIssue();
@@ -416,6 +430,11 @@ public class ProjectBuilder {
 		issue.setCode(code);
 		issue.setSeverity(severity);
 		issue.setUriToProblem(uri);
+		// we need to set these values, otherwise VSCode would not show the issue:
+		issue.setLineNumber(1);
+		issue.setLineNumberEnd(1);
+		issue.setColumn(1);
+		issue.setColumnEnd(1);
 
 		ImmutableProjectState updatedState = projectStateSnapshot.updateAndGet(snapshot -> {
 			ImmutableListMultimap.Builder<URI, LSPIssue> builder = ImmutableListMultimap.builder();
@@ -435,8 +454,8 @@ public class ProjectBuilder {
 			List<IResourceDescription.Delta> externalDeltas,
 			CancelIndicator cancelIndicator) {
 
-		XBuildRequest request = buildRequestFactory.getBuildRequest(projectConfig.getName(), changedFiles, deletedFiles,
-				externalDeltas);
+		XBuildRequest request = buildRequestFactory.getBuildRequest(workspaceManager.getWorkspaceConfig(),
+				projectConfig, changedFiles, deletedFiles, externalDeltas);
 
 		ImmutableProjectState currentProjectState = this.projectStateSnapshot.get();
 
@@ -449,7 +468,6 @@ public class ProjectBuilder {
 		request.setResourceSet(resourceSet);
 		request.setCancelIndicator(cancelIndicator);
 		request.setBaseDir(getBaseDir());
-		request.setIndexOnly(projectConfig.indexOnly());
 
 		return request;
 	}
@@ -577,8 +595,14 @@ public class ProjectBuilder {
 		for (URI uri : urisWithIssues) {
 			issuePublisher.accept(uri, Collections.emptyList());
 		}
+		clearProjectIssues();
 		// actually clear internal state
 		doClearWithoutNotification();
+	}
+
+	/** Clears all project issues. Counterpart is {@link #reportProjectIssue(String, String, Severity)} */
+	public void clearProjectIssues() {
+		issuePublisher.accept(getBaseDir(), Collections.emptyList());
 	}
 
 	/**
@@ -694,7 +718,6 @@ public class ProjectBuilder {
 
 	/** Updates the index state, file hashes and validation issues */
 	private void updateProjectState(
-			XBuildRequest request,
 			XBuildResult result,
 			Map<URI, ? extends List<? extends LSPIssue>> issuesFromIncrementalBuild,
 			List<URI> deletedFiles) {
@@ -734,7 +757,9 @@ public class ProjectBuilder {
 		});
 		setProjectIndex(newState.internalGetResourceDescriptions());
 
-		if (request.isGeneratorEnabled() && (!result.getAffectedResources().isEmpty() || dependenciesChanged)) {
+		if (!result.getAffectedResources().isEmpty() || dependenciesChanged) {
+			// note: write project state even if projectConfig.isGeneratorEnabled() returns false
+			// (there might still be project configuration or index information we might want to persist)
 			writeProjectState(newState);
 		}
 	}

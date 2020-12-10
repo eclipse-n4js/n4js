@@ -15,6 +15,7 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.addThi
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.anyTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.argumentsTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.arrayType;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.asyncIterableTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.booleanTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.bottomTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.functionTypeRef;
@@ -695,7 +696,12 @@ import com.google.inject.Inject;
 						wildThing.setDeclaredUpperBound(TypeUtils.copyIfContained(varTypeRef));
 					}
 				}
-				return iterableTypeRef(G, wildThing);
+				TypeRef result = iterableTypeRef(G, wildThing);
+				if (forStmnt.isAwait()) {
+					// note: for-await-of loops may be used with ordinary, synchronous iterables!
+					result = TypeUtils.createNonSimplifiedUnionType(asyncIterableTypeRef(G, wildThing), result);
+				}
+				return result;
 			} else if (forStmnt.isForIn() && expression == forStmnt.getExpression()) {
 				// expected type of the 'in' part in a for...in statement: object
 				return TypeUtils.createNonSimplifiedUnionType(objectTypeRef(G), stringTypeRef(G), argumentsTypeRef(G));

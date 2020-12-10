@@ -40,8 +40,10 @@ public class TypingStrategyAwareMemberScope extends FilterWithErrorMarkerScope {
 	 */
 	public TypingStrategyAwareMemberScope(IScope parent, TypeRef receiverType, EObject context) {
 		super(parent);
+		TypingStrategy typingStrategy = TypeUtils.retrieveTypingStrategy(receiverType);
+
 		boolean isLeftHand = ExpressionExtensions.isLeftHandSide(context);
-		strategyFilter = new TypingStrategyFilterDesc(TypeUtils.retrieveTypingStrategy(receiverType), isLeftHand);
+		strategyFilter = new TypingStrategyFilterDesc(typingStrategy, isLeftHand);
 		useSite = receiverType != null && receiverType.isUseSiteStructuralTyping();
 		receiverTypeName = (receiverType == null || receiverType.eIsProxy()) ? "unknown type"
 				: receiverType.getTypeRefAsString();

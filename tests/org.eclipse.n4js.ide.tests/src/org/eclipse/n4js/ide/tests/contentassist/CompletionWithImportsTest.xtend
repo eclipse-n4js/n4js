@@ -237,7 +237,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 		testAtCursor('''
 			Obj<|>
 		''', ''' 
-			(Object, Text, Object, , , 00000, , , , ([0:0 - 0:3], Object), [], [], , )
+			(Object, Class, Object, , , 00000, , , , ([0:0 - 0:3], Object), [], [], , )
 		''');
 	}
 
@@ -246,7 +246,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 		testAtCursor('''
 			N4En<|>
 		''', ''' 
-			(N4Enum, Text, N4Enum, , , 00000, , , , ([0:0 - 0:4], N4Enum), [], [], , )
+			(N4Enum, Class, N4Enum, , , 00000, , , , ([0:0 - 0:4], N4Enum), [], [], , )
 			(N4EnumType, Class, N4EnumType, , , 00001, , , , ([0:0 - 0:4], N4EnumType), [], [], , )
 		''');
 	}
@@ -256,7 +256,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 		testAtCursor('''
 			isNaN<|>
 		''', ''' 
-			(isNaN, Text, isNaN, , , 00000, , , , ([0:0 - 0:5], isNaN), [], [], , )
+			(isNaN, Method, isNaN, , , 00000, , , , ([0:0 - 0:5], isNaN), [], [], , )
 		''');
 	}
 
@@ -268,8 +268,11 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 			(A1, Class, MA, , , 00000, , , , ([0:8 - 0:9], A1), [], [], , )
 			(A2, Class, MA, , , 00001, , , , ([0:8 - 0:9], A2), [], [], , )
 			(A2, Class, MBA, , , 00002, , , , ([0:8 - 0:9], A2), [], [], , )
-			(any, Text, any, , , 00003, , , , ([0:8 - 0:9], any), [], [], , )
-			(Array, Text, Array, , , 00004, , , , ([0:8 - 0:9], Array), [], [], , )
+			(any, Keyword, any, , , 00003, , , , ([0:8 - 0:9], any), [], [], , )
+			(Array, Class, Array, , , 00004, , , , ([0:8 - 0:9], Array), [], [], , )
+			(AsyncGenerator, Interface, AsyncGenerator, , , 00005, , , , ([0:8 - 0:9], AsyncGenerator), [], [], , )
+			(AsyncIterable, Interface, AsyncIterable, , , 00006, , , , ([0:8 - 0:9], AsyncIterable), [], [], , )
+			(AsyncIterator, Interface, AsyncIterator, , , 00007, , , , ([0:8 - 0:9], AsyncIterator), [], [], , )
 		''');
 	}
 
@@ -281,8 +284,11 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 			(A1, Class, MA, , , 00000, , , , ([0:8 - 0:9], A1), [], [], , )
 			(A2, Class, MA, , , 00001, , , , ([0:8 - 0:9], A2), [], [], , )
 			(A2, Class, MBA, , , 00002, , , , ([0:8 - 0:9], A2), [], [], , )
-			(any, Text, any, , , 00003, , , , ([0:8 - 0:9], any), [], [], , )
-			(Array, Text, Array, , , 00004, , , , ([0:8 - 0:9], Array), [], [], , )
+			(any, Keyword, any, , , 00003, , , , ([0:8 - 0:9], any), [], [], , )
+			(Array, Class, Array, , , 00004, , , , ([0:8 - 0:9], Array), [], [], , )
+			(AsyncGenerator, Interface, AsyncGenerator, , , 00005, , , , ([0:8 - 0:9], AsyncGenerator), [], [], , )
+			(AsyncIterable, Interface, AsyncIterable, , , 00006, , , , ([0:8 - 0:9], AsyncIterable), [], [], , )
+			(AsyncIterator, Interface, AsyncIterator, , , 00007, , , , ([0:8 - 0:9], AsyncIterator), [], [], , )
 		''');
 	}
 

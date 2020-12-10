@@ -45,6 +45,7 @@ import "http://www.eclipse.org/n4js/ts/TypeRefs" as types
 // [ECMWiki] http://wiki.ecmascript.org/doku.php?id=harmony:modules
 // ****************************************************************************************************
 Script: {Script}
+	(hashbang=HASH_BANG)?
 	( annotations+=ScriptAnnotation
 	| scriptElements+=ScriptElement )*;
 
@@ -234,10 +235,12 @@ fragment AsyncNoTrailingLineBreak *: (declaredAsync?='async' NoLineTerminator)?;
 
 fragment FunctionImpl<Yield, YieldIfGenerator, Expression>*:
 	'function'
-	(
-		generator?='*' FunctionHeader<YieldIfGenerator,Generator=true> FunctionBody<Yield=true,Expression>
-	| 	FunctionHeader<Yield,Generator=false> FunctionBody<Yield=false,Expression>
-	)
+	FunctionImplWithoutKeyword<Yield, YieldIfGenerator, Expression>
+;
+
+fragment FunctionImplWithoutKeyword<Yield, YieldIfGenerator, Expression>*:
+	generator?='*' FunctionHeader<YieldIfGenerator,Generator=true> FunctionBody<Yield=true,Expression>
+| 	FunctionHeader<Yield,Generator=false> FunctionBody<Yield=false,Expression>
 ;
 
 fragment FunctionHeader<Yield, Generator>*:
@@ -275,8 +278,8 @@ FunctionExpression:
  * We cannot use fragments here since we have to combine the terminals into a syntactic predicate.
  */
 AsyncFunctionExpression returns FunctionExpression:
-	 =>(declaredAsync?='async' NoLineTerminator 'function')
-		FunctionHeader<Yield=false,Generator=false> FunctionBody<Yield=false,Expression=true>
+	=> (declaredAsync?='async' NoLineTerminator 'function')
+	FunctionImplWithoutKeyword<Yield=false,YieldIfGenerator=true,Expression=true>
 ;
 
 ArrowExpression <In, Yield> returns ArrowFunction:
@@ -337,13 +340,9 @@ FormalParameter <Yield>:
 
 fragment BindingElementFragment <Yield>*:
 	( => bindingPattern=BindingPattern<Yield>
-	| annotations+=Annotation* BogusTypeRefFragment? variadic?='...'? name=BindingIdentifier<Yield> ColonSepDeclaredTypeRef?
+	| annotations+=Annotation* variadic?='...'? name=BindingIdentifier<Yield> ColonSepDeclaredTypeRef?
 	)
 	(hasInitializerAssignment?='=' initializer=AssignmentExpression<In=true, Yield>?)?
-;
-
-fragment BogusTypeRefFragment*:
-	bogusTypeRef=TypeRefWithModifiers
 ;
 
 Block <Yield>: => ({Block} '{') statements+=Statement<Yield>* '}';
@@ -463,7 +462,7 @@ DoStatement <Yield>: 'do' statement=Statement<Yield> 'while' '(' expression=Expr
 WhileStatement <Yield>: 'while' '(' expression=Expression<In=true,Yield> ')' statement=Statement<Yield>;
 
 ForStatement <Yield>:
-	{ForStatement} 'for' '('
+	{ForStatement} 'for' (await?='await')? '('
 	(
 		// this is not in the spec as far as I can tell, but there are tests that rely on this to be valid JS
 			=>(initExpr=LetIdentifierRef forIn?='in' expression=Expression<In=true,Yield> ')')
@@ -553,7 +552,7 @@ CatchBlock <Yield>:	{CatchBlock} 'catch' '(' catchVariable=CatchVariable<Yield> 
 CatchVariable <Yield>:
 		=>bindingPattern=BindingPattern<Yield>
 	|	=>(name=BindingIdentifier<Yield> -> ColonSepDeclaredTypeRef)
-	|	BogusTypeRefFragment? name=BindingIdentifier<Yield>
+	|	name=BindingIdentifier<Yield>
 ;
 
 FinallyBlock <Yield>: {FinallyBlock} 'finally' block=Block<Yield>;
@@ -680,6 +679,7 @@ AnnotatedPropertyAssignment <Yield> returns PropertyAssignment:
 PropertyMethodDeclaration <Yield>:
 	=> ({PropertyMethodDeclaration}
 		TypeVariables? returnTypeRef=TypeRefWithModifiers?
+		AsyncNoTrailingLineBreak
 			(
 				generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> ->MethodParamsAndBody<Generator=true>
 				| declaredName=LiteralOrComputedPropertyName<Yield> ->MethodParamsAndBody <Generator=false>
@@ -1078,6 +1078,10 @@ terminal STRING:
 	| "'" SINGLE_STRING_CHAR* "'"?
 ;
 
+terminal HASH_BANG returns ecore::EString:
+	  '#!' (!LINE_TERMINATOR_FRAGMENT)*
+;
+
 terminal fragment DOUBLE_STRING_CHAR:
 	  !(LINE_TERMINATOR_FRAGMENT | '"' | '\\')
 	| '\\' (LINE_TERMINATOR_SEQUENCE_FRAGMENT | !LINE_TERMINATOR_FRAGMENT)?
@@ -1365,7 +1369,7 @@ AnnotatedN4MemberDeclaration <Yield> returns N4MemberDeclaration:
 		| 	=> ({N4SetterDeclaration.annotationList=current} (declaredModifiers+=N4Modifier)* 'set' -> declaredName=LiteralOrComputedPropertyName <Yield>)
 				(declaredOptional?='?')? '(' fpar=FormalParameter<Yield> ')' (body=Block<Yield>)? ';'?
 		| 	=> (
-				{N4MethodDeclaration.annotationList=current} (declaredModifiers+=N4Modifier)* TypeVariables? BogusTypeRefFragment?
+				{N4MethodDeclaration.annotationList=current} (declaredModifiers+=N4Modifier)* TypeVariables?
 				(
 						generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=true>
 					| 	AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=false>
@@ -1376,7 +1380,7 @@ AnnotatedN4MemberDeclaration <Yield> returns N4MemberDeclaration:
 ;
 
 fragment FieldDeclarationImpl <Yield>*:
-	(declaredModifiers+=N4Modifier)* BogusTypeRefFragment?
+	(declaredModifiers+=N4Modifier)*
 	declaredName=LiteralOrComputedPropertyName<Yield>
 	(declaredOptional?='?')?
 	ColonSepDeclaredTypeRef?
@@ -1390,10 +1394,11 @@ N4FieldDeclaration <Yield>:
 ;
 
 N4MethodDeclaration <Yield>:
-	=> ({N4MethodDeclaration} (declaredModifiers+=N4Modifier)* TypeVariables? BogusTypeRefFragment?
+	=> ({N4MethodDeclaration} (declaredModifiers+=N4Modifier)* TypeVariables?
+		AsyncNoTrailingLineBreak
 		(
 				generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=true>
-			|	AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=false>
+			|	declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=false>
 		)
 	) ';'?
 ;
@@ -1424,7 +1429,7 @@ N4GetterDeclaration <Yield>:
 ;
 
 fragment GetterHeader <Yield>*:
-	BogusTypeRefFragment? 'get' -> declaredName=LiteralOrComputedPropertyName<Yield> (declaredOptional?='?')? '(' ')' ColonSepDeclaredTypeRef?
+	'get' -> declaredName=LiteralOrComputedPropertyName<Yield> (declaredOptional?='?')? '(' ')' ColonSepDeclaredTypeRef?
 ;
 
 N4SetterDeclaration <Yield>:

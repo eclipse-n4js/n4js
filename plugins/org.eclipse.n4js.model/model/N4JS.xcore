@@ -96,6 +96,7 @@ interface ControlFlowElement {
  * Root element
  */
 class Script extends VariableEnvironmentElement, AnnotableElement, ControlFlowElement {
+	String hashbang
 	contains Annotation[] annotations
 	contains ScriptElement[] scriptElements
 	refers transient TModule module
@@ -934,6 +935,8 @@ class WhileStatement extends IterationStatement {
 class ForStatement extends VariableDeclarationContainer, IterationStatement, VariableEnvironmentElement {
 	contains Expression initExpr
 	contains Expression updateExpr
+	/* Note: it is a syntax error if this is true while {@code #forOf} is false. */
+	boolean await
 	boolean forIn
 	boolean forOf
 	op boolean isForPlain() {

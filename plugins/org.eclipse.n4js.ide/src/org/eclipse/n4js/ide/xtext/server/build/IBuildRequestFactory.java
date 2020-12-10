@@ -14,7 +14,10 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
+import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.resource.IResourceDescription;
+import org.eclipse.xtext.resource.IResourceDescription.Delta;
 
 /**
  * Factory to create instances of {@link XBuildRequest}s
@@ -24,8 +27,10 @@ public interface IBuildRequestFactory {
 	/**
 	 * Create the build request for the given sets of files and deltas.
 	 *
-	 * @param projectName
-	 *            name of the containing project.
+	 * @param workspaceConfig
+	 *            workspace configuration snapshot containing the project
+	 * @param projectConfig
+	 *            project configuration snapshot containing the {@link URI}s and {@link Delta}s
 	 * @param changedFiles
 	 *            set of changed files
 	 * @param deletedFiles
@@ -35,7 +40,8 @@ public interface IBuildRequestFactory {
 	 * @return the build request used during the build process.
 	 */
 	XBuildRequest getBuildRequest(
-			String projectName,
+			WorkspaceConfigSnapshot workspaceConfig,
+			ProjectConfigSnapshot projectConfig,
 			Set<URI> changedFiles,
 			Set<URI> deletedFiles,
 			List<IResourceDescription.Delta> externalDeltas);

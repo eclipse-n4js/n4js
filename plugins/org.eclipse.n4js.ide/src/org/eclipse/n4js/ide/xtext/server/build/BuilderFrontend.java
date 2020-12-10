@@ -132,7 +132,7 @@ public class BuilderFrontend {
 	 */
 	public void didSave(DidSaveTextDocumentParams params) {
 		URI uri = paramHelper.getURI(params);
-		if (!isSourceFile(concurrentIndex.getWorkspaceConfig(), uri)) {
+		if (!isSourceFile(concurrentIndex.getWorkspaceConfigSnapshot(), uri)) {
 			return;
 		}
 		asyncRunBuildTask("didSave", () -> workspaceBuilder.createIncrementalBuildTask(Collections.singletonList(uri),
@@ -145,7 +145,7 @@ public class BuilderFrontend {
 	public void didChangeWatchedFiles(DidChangeWatchedFilesParams params) {
 		List<URI> dirtyFiles = new ArrayList<>();
 		List<URI> deletedFiles = new ArrayList<>();
-		WorkspaceConfigSnapshot workspaceConfig = concurrentIndex.getWorkspaceConfig();
+		WorkspaceConfigSnapshot workspaceConfig = concurrentIndex.getWorkspaceConfigSnapshot();
 		for (FileEvent fileEvent : params.getChanges()) {
 			URI uri = paramHelper.getURI(fileEvent);
 			if (!isSourceFile(workspaceConfig, uri)) {

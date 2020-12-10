@@ -192,13 +192,22 @@ public interface N4JSPackage extends EPackage {
 	int SCRIPT = 2;
 
 	/**
+	 * The feature id for the '<em><b>Hashbang</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCRIPT__HASHBANG = VARIABLE_ENVIRONMENT_ELEMENT_FEATURE_COUNT + 0;
+
+	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SCRIPT__ANNOTATIONS = VARIABLE_ENVIRONMENT_ELEMENT_FEATURE_COUNT + 0;
+	int SCRIPT__ANNOTATIONS = VARIABLE_ENVIRONMENT_ELEMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Script Elements</b></em>' containment reference list.
@@ -207,7 +216,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCRIPT__SCRIPT_ELEMENTS = VARIABLE_ENVIRONMENT_ELEMENT_FEATURE_COUNT + 1;
+	int SCRIPT__SCRIPT_ELEMENTS = VARIABLE_ENVIRONMENT_ELEMENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Module</b></em>' reference.
@@ -216,7 +225,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCRIPT__MODULE = VARIABLE_ENVIRONMENT_ELEMENT_FEATURE_COUNT + 2;
+	int SCRIPT__MODULE = VARIABLE_ENVIRONMENT_ELEMENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Flagged Usage Marking Finished</b></em>' attribute.
@@ -225,7 +234,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCRIPT__FLAGGED_USAGE_MARKING_FINISHED = VARIABLE_ENVIRONMENT_ELEMENT_FEATURE_COUNT + 3;
+	int SCRIPT__FLAGGED_USAGE_MARKING_FINISHED = VARIABLE_ENVIRONMENT_ELEMENT_FEATURE_COUNT + 4;
 
 	/**
 	 * The number of structural features of the '<em>Script</em>' class.
@@ -234,7 +243,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCRIPT_FEATURE_COUNT = VARIABLE_ENVIRONMENT_ELEMENT_FEATURE_COUNT + 4;
+	int SCRIPT_FEATURE_COUNT = VARIABLE_ENVIRONMENT_ELEMENT_FEATURE_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Applies Only To Block Scoped Elements</em>' operation.
@@ -4525,13 +4534,22 @@ public interface N4JSPackage extends EPackage {
 	int FOR_STATEMENT__UPDATE_EXPR = VARIABLE_DECLARATION_CONTAINER_FEATURE_COUNT + 3;
 
 	/**
+	 * The feature id for the '<em><b>Await</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FOR_STATEMENT__AWAIT = VARIABLE_DECLARATION_CONTAINER_FEATURE_COUNT + 4;
+
+	/**
 	 * The feature id for the '<em><b>For In</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FOR_STATEMENT__FOR_IN = VARIABLE_DECLARATION_CONTAINER_FEATURE_COUNT + 4;
+	int FOR_STATEMENT__FOR_IN = VARIABLE_DECLARATION_CONTAINER_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>For Of</b></em>' attribute.
@@ -4540,7 +4558,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FOR_STATEMENT__FOR_OF = VARIABLE_DECLARATION_CONTAINER_FEATURE_COUNT + 5;
+	int FOR_STATEMENT__FOR_OF = VARIABLE_DECLARATION_CONTAINER_FEATURE_COUNT + 6;
 
 	/**
 	 * The number of structural features of the '<em>For Statement</em>' class.
@@ -4549,7 +4567,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FOR_STATEMENT_FEATURE_COUNT = VARIABLE_DECLARATION_CONTAINER_FEATURE_COUNT + 6;
+	int FOR_STATEMENT_FEATURE_COUNT = VARIABLE_DECLARATION_CONTAINER_FEATURE_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Get Var Decl</em>' operation.
@@ -16382,6 +16400,17 @@ public interface N4JSPackage extends EPackage {
 	EClass getScript();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4JS.Script#getHashbang <em>Hashbang</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Hashbang</em>'.
+	 * @see org.eclipse.n4js.n4JS.Script#getHashbang()
+	 * @see #getScript()
+	 * @generated
+	 */
+	EAttribute getScript_Hashbang();
+
+	/**
 	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.n4JS.Script#getAnnotations <em>Annotations</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -18187,6 +18216,17 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getForStatement_UpdateExpr();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4JS.ForStatement#isAwait <em>Await</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Await</em>'.
+	 * @see org.eclipse.n4js.n4JS.ForStatement#isAwait()
+	 * @see #getForStatement()
+	 * @generated
+	 */
+	EAttribute getForStatement_Await();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4JS.ForStatement#isForIn <em>For In</em>}'.
@@ -22398,6 +22438,14 @@ public interface N4JSPackage extends EPackage {
 		EClass SCRIPT = eINSTANCE.getScript();
 
 		/**
+		 * The meta object literal for the '<em><b>Hashbang</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SCRIPT__HASHBANG = eINSTANCE.getScript_Hashbang();
+
+		/**
 		 * The meta object literal for the '<em><b>Annotations</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -23888,6 +23936,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EReference FOR_STATEMENT__UPDATE_EXPR = eINSTANCE.getForStatement_UpdateExpr();
+
+		/**
+		 * The meta object literal for the '<em><b>Await</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute FOR_STATEMENT__AWAIT = eINSTANCE.getForStatement_Await();
 
 		/**
 		 * The meta object literal for the '<em><b>For In</b></em>' attribute feature.

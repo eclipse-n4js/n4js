@@ -243,8 +243,8 @@ public class XStatefulIncrementalBuilder {
 			// next line required, because #validate() sometimes returns null when canceled:
 			operationCanceledManager.checkCanceled(cancelIndicator);
 			request.afterValidate(source, issues);
-			boolean proceedGenerate = !containsValidationErrors(issues);
 
+			boolean proceedGenerate = !containsValidationErrors(issues);
 			if (proceedGenerate) {
 				operationCanceledManager.checkCanceled(cancelIndicator);
 				generate(resource, newSource2GeneratedMapping, serviceProvider);

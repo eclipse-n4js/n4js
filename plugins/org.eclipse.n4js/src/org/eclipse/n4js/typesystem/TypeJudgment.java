@@ -365,14 +365,15 @@ import com.google.inject.Inject;
 				}
 			} else if (vdecl.eContainer() instanceof ForStatement && ((ForStatement) vdecl.eContainer()).isForOf()) {
 				final ForStatement forOfStmnt = (ForStatement) vdecl.eContainer();
-				// we have a situation like this: for(var x of myList) { ... }
+				// we have a situation like this: for [await](var x of myList) { ... }
 				// --> infer type of 'x' to the first type argument of the type of 'myList'
 				final Pair<String, EObject> guardKey = Pair.of(GUARD_VARIABLE_DECLARATION, vdecl.eContainer());
 				if (G.get(guardKey) == null) {
 					final RuleEnvironment G2 = wrap(G);
 					G2.put(guardKey, Boolean.TRUE);
 					final TypeRef ofPartTypeRef = ts.type(G2, forOfStmnt.getExpression());
-					final TypeArgument elemType = tsh.extractIterableElementType(G2, ofPartTypeRef);
+					final TypeArgument elemType = tsh.extractIterableElementType(G2, ofPartTypeRef,
+							forOfStmnt.isAwait());
 					if (elemType != null) {
 						T = typeSystemHelper.sanitizeTypeOfVariableFieldPropertyParameter(G2, elemType);
 					} else {
@@ -737,7 +738,7 @@ import com.google.inject.Inject;
 				final Expression yieldValue = y.getExpression();
 				TypeRef yieldValueTypeRef = ts.type(G, yieldValue);
 				final BuiltInTypeScope scope = getPredefinedTypes(G).builtInTypeScope;
-				if (TypeUtils.isGenerator(yieldValueTypeRef, scope)) {
+				if (TypeUtils.isGeneratorOrAsyncGenerator(yieldValueTypeRef, scope)) {
 					t = typeSystemHelper.getGeneratorTReturn(G, yieldValueTypeRef);
 				} else {
 					final ParameterizedTypeRef itTypeRef = iterableTypeRef(G, TypeUtils.createWildcard());
@@ -1186,9 +1187,21 @@ import com.google.inject.Inject;
 		}
 
 		@Override
-		public TypeRef caseBinaryLogicalExpression(BinaryLogicalExpression e) {
-			final Expression lhs = e.getLhs();
-			final Expression rhs = e.getRhs();
+		public TypeRef caseBinaryLogicalExpression(BinaryLogicalExpression expr) {
+			return simplifyUnionWithEmptyAnyArray(expr.getLhs(), expr.getRhs());
+		}
+
+		@Override
+		public TypeRef caseConditionalExpression(ConditionalExpression expr) {
+			return simplifyUnionWithEmptyAnyArray(expr.getTrueExpression(), expr.getFalseExpression());
+		}
+
+		@Override
+		public TypeRef caseCoalesceExpression(CoalesceExpression expr) {
+			return simplifyUnionWithEmptyAnyArray(expr.getExpression(), expr.getDefaultExpression());
+		}
+
+		private TypeRef simplifyUnionWithEmptyAnyArray(Expression lhs, Expression rhs) {
 			final boolean lhsIsEmptyArrayLiteral = lhs instanceof ArrayLiteral
 					&& ((ArrayLiteral) lhs).getElements().isEmpty();
 			final boolean rhsIsEmptyArrayLiteral = rhs instanceof ArrayLiteral
@@ -1204,22 +1217,7 @@ import com.google.inject.Inject;
 				// case: someArray || []
 				return L;
 			}
-
 			return typeSystemHelper.createUnionType(G, L, R);
-		}
-
-		@Override
-		public TypeRef caseConditionalExpression(ConditionalExpression expr) {
-			final TypeRef left = ts.type(G, expr.getTrueExpression());
-			final TypeRef right = ts.type(G, expr.getFalseExpression());
-			return typeSystemHelper.createUnionType(G, left, right);
-		}
-
-		@Override
-		public TypeRef caseCoalesceExpression(CoalesceExpression expr) {
-			final TypeRef value = ts.type(G, expr.getExpression());
-			final TypeRef dflt = ts.type(G, expr.getDefaultExpression());
-			return typeSystemHelper.createUnionType(G, value, dflt);
 		}
 
 		@Override

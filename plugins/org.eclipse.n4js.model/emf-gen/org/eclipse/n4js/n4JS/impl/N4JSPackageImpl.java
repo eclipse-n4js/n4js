@@ -1713,8 +1713,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getScript_Annotations() {
-		return (EReference)scriptEClass.getEStructuralFeatures().get(0);
+	public EAttribute getScript_Hashbang() {
+		return (EAttribute)scriptEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -1723,7 +1723,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getScript_ScriptElements() {
+	public EReference getScript_Annotations() {
 		return (EReference)scriptEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -1733,7 +1733,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getScript_Module() {
+	public EReference getScript_ScriptElements() {
 		return (EReference)scriptEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -1743,8 +1743,18 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
+	public EReference getScript_Module() {
+		return (EReference)scriptEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EAttribute getScript_FlaggedUsageMarkingFinished() {
-		return (EAttribute)scriptEClass.getEStructuralFeatures().get(3);
+		return (EAttribute)scriptEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -3453,7 +3463,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getForStatement_ForIn() {
+	public EAttribute getForStatement_Await() {
 		return (EAttribute)forStatementEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -3463,8 +3473,18 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getForStatement_ForOf() {
+	public EAttribute getForStatement_ForIn() {
 		return (EAttribute)forStatementEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getForStatement_ForOf() {
+		return (EAttribute)forStatementEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -7482,6 +7502,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		controlFlowElementEClass = createEClass(CONTROL_FLOW_ELEMENT);
 
 		scriptEClass = createEClass(SCRIPT);
+		createEAttribute(scriptEClass, SCRIPT__HASHBANG);
 		createEReference(scriptEClass, SCRIPT__ANNOTATIONS);
 		createEReference(scriptEClass, SCRIPT__SCRIPT_ELEMENTS);
 		createEReference(scriptEClass, SCRIPT__MODULE);
@@ -7706,6 +7727,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		forStatementEClass = createEClass(FOR_STATEMENT);
 		createEReference(forStatementEClass, FOR_STATEMENT__INIT_EXPR);
 		createEReference(forStatementEClass, FOR_STATEMENT__UPDATE_EXPR);
+		createEAttribute(forStatementEClass, FOR_STATEMENT__AWAIT);
 		createEAttribute(forStatementEClass, FOR_STATEMENT__FOR_IN);
 		createEAttribute(forStatementEClass, FOR_STATEMENT__FOR_OF);
 		createEOperation(forStatementEClass, FOR_STATEMENT___IS_FOR_PLAIN);
@@ -8539,6 +8561,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEClass(controlFlowElementEClass, ControlFlowElement.class, "ControlFlowElement", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(scriptEClass, Script.class, "Script", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getScript_Hashbang(), theEcorePackage.getEString(), "hashbang", null, 0, 1, Script.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getScript_Annotations(), this.getAnnotation(), null, "annotations", null, 0, -1, Script.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getScript_ScriptElements(), this.getScriptElement(), null, "scriptElements", null, 0, -1, Script.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getScript_Module(), theTypesPackage.getTModule(), null, "module", null, 0, 1, Script.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -8820,6 +8843,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEClass(forStatementEClass, ForStatement.class, "ForStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getForStatement_InitExpr(), this.getExpression(), null, "initExpr", null, 0, 1, ForStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getForStatement_UpdateExpr(), this.getExpression(), null, "updateExpr", null, 0, 1, ForStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getForStatement_Await(), theEcorePackage.getEBoolean(), "await", null, 0, 1, ForStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getForStatement_ForIn(), theEcorePackage.getEBoolean(), "forIn", null, 0, 1, ForStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getForStatement_ForOf(), theEcorePackage.getEBoolean(), "forOf", null, 0, 1, ForStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 

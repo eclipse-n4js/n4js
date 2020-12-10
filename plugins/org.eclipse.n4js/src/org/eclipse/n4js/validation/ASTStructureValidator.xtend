@@ -730,7 +730,7 @@ class ASTStructureValidator {
 				issueArgumentsError(model, name, constraints.isStrict, producer)
 			} else {
 				if (name != YIELD_KEYWORD && (languageHelper.getECMAKeywords.contains(name)
-					|| 'enum'.equals(name) || 'await'.equals(name) || 'let'.equals(name)
+					|| 'enum'.equals(name) || 'await'.equals(name)
 					|| 'true'.equals(name) || 'false'.equals(name) || 'null'.equals(name))) {
 					issueNameDiagnostic(model, producer, name)
 				} else if (constraints.isStrict) {
@@ -921,6 +921,15 @@ class ASTStructureValidator {
 		Set<LabelledStatement> validLabels,
 		Constraints constraints
 	) {
+		if (model.isAwait && !model.isForOf) {
+			val nodes = NodeModelUtils.findNodesForFeature(model, N4JSPackage.Literals.FOR_STATEMENT__AWAIT);
+			val target = nodes.head ?: NodeModelUtils.findActualNodeFor(model);
+			if (target !== null) {
+				producer.node = target;
+				producer.addDiagnostic(new DiagnosticMessage(IssueCodes.messageForAST_INVALID_FOR_AWAIT,
+					IssueCodes.getDefaultSeverity(IssueCodes.AST_INVALID_FOR_AWAIT), IssueCodes.AST_INVALID_FOR_AWAIT));
+			}
+		}
 		if (!model.isForPlain) {
 			if (! model.varDeclsOrBindings.empty) {
 				model.varDecl.forEach[ varDecl |

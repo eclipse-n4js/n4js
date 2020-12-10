@@ -10,10 +10,12 @@
  */
 package org.eclipse.n4js.utils
 
+import com.google.common.base.Optional
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import java.util.ArrayList
 import java.util.Map
+import java.util.Set
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.DestructNode
@@ -83,8 +85,12 @@ class DestructureHelper {
 			};
 
 			if(rootNode!==null) {
+
+				val astNodesToConsider = EcoreUtilN4.getAllPredecessorsUpTo(vdecl, root);
+				astNodesToConsider.add(vdecl);
+
 				val valueTypePerNode = newHashMap;
-				buildValueTypesMap(G, rootNode, valueTypePerNode, rootParent.pattern);
+				buildValueTypesMap(G, rootNode, Optional.of(astNodesToConsider), valueTypePerNode, rootParent.pattern);
 				val node = rootNode.stream().filter[variableDeclaration===vdecl].findFirst.orElse(null);
 				return valueTypePerNode.get(node);
 			}
@@ -102,10 +108,15 @@ class DestructureHelper {
 	 *
 	 * @param G  rule environment (used for type inference).
 	 * @param rootNode  root of the destructuring pattern.
+	 * @param astNodesToConsider  if present, only {@link DestructNode}s are processed that have a {@link DestructNode#astElement
+	 *                            corresponding AST node} contained in this set or do not have a corresponding AST node at all;
+	 *                            if absent, all {@code DestructNode}s are processed. The given root node is always processed.
 	 * @param addHere  types for each node will be added here.
 	 * @param contextObj  context object (used for member scoping and obtaining the containing resource or resource set).
 	 */
-	public def void buildValueTypesMap(RuleEnvironment G, DestructNode rootNode, Map<DestructNode,TypeRef> addHere, EObject contextObj) {
+	public def void buildValueTypesMap(RuleEnvironment G, DestructNode rootNode, Optional<Set<EObject>> astNodesToConsider,
+		Map<DestructNode,TypeRef> addHere, EObject contextObj) {
+
 		if(rootNode?.defaultExpr===null) {
 			return;
 		}
@@ -125,12 +136,14 @@ class DestructureHelper {
 			addHere.put(rootNode, valueTypeRef);
 			val nestedNodes = rootNode.nestedNodes;
 			if(nestedNodes!==null && !nestedNodes.empty) {
-				buildValueTypesMap(G, nestedNodes, valueTypeRef, addHere, contextObj);
+				buildValueTypesMap(G, nestedNodes, valueTypeRef, astNodesToConsider, addHere, contextObj);
 			}
 		}
 	}
 
-	private def void buildValueTypesMap(RuleEnvironment G, DestructNode[] nodes, TypeRef valueTypeRef, Map<DestructNode,TypeRef> addHere, EObject contextObj) {
+	private def void buildValueTypesMap(RuleEnvironment G, DestructNode[] nodes, TypeRef valueTypeRef,
+		Optional<Set<EObject>> astNodesToConsider, Map<DestructNode,TypeRef> addHere, EObject contextObj) {
+
 		// for all non-root nodes, we have to destructure the type of the value,
 		// depending on whether we are in an array or object destructuring (sub-)pattern
 		if(nodes.arePositional) {
@@ -140,8 +153,10 @@ class DestructureHelper {
 				val maxIdx = elementTypeRefs.size-1;
 				for(var idx=0;idx<nodes.size;idx++) {
 					val currNode = nodes.get(idx);
-					val currValueTypeRef = elementTypeRefs.get(Math.min(idx,maxIdx));
-					addTypeAndContinueWithChildren(G, currNode, currValueTypeRef, addHere, contextObj);
+					if (isToBeConsidered(currNode, astNodesToConsider)) {
+						val currValueTypeRef = elementTypeRefs.get(Math.min(idx,maxIdx));
+						addTypeAndContinueWithChildren(G, currNode, currValueTypeRef, astNodesToConsider, addHere, contextObj);
+					}
 				}
 			}
 		}
@@ -149,9 +164,11 @@ class DestructureHelper {
 			// non-positional
 			val memberScope = createMemberScopeForPropertyAccess(valueTypeRef, contextObj, false); // do not check visibility
 			for(currNode : nodes) {
-				val currValueTypeRef = getPropertyTypeForNode(G, valueTypeRef, memberScope, currNode.propName, null);
-				if(currValueTypeRef!==null) {
-					addTypeAndContinueWithChildren(G, currNode, currValueTypeRef, addHere, contextObj);
+				if (isToBeConsidered(currNode, astNodesToConsider)) {
+					val currValueTypeRef = getPropertyTypeForNode(G, valueTypeRef, memberScope, currNode.propName, null);
+					if(currValueTypeRef!==null) {
+						addTypeAndContinueWithChildren(G, currNode, currValueTypeRef, astNodesToConsider, addHere, contextObj);
+					}
 				}
 			}
 		}
@@ -228,7 +245,9 @@ class DestructureHelper {
 	 * and non-positional case. IMPORTANT: this method must also be called if valueTypeRef===null,
 	 * because there might be a default expression in 'currNode' that provides a type.
 	 */
-	private def void addTypeAndContinueWithChildren(RuleEnvironment G, DestructNode currNode, TypeRef valueTypeRef, Map<DestructNode,TypeRef> addHere, EObject contextObj) {
+	private def void addTypeAndContinueWithChildren(RuleEnvironment G, DestructNode currNode, TypeRef valueTypeRef,
+		Optional<Set<EObject>> astNodesToConsider, Map<DestructNode,TypeRef> addHere, EObject contextObj) {
+
 		val actualValueTypeRef = if(currNode.rest) {
 			G.arrayTypeRef(valueTypeRef) // wrap in Array<> if rest operator used
 		} else {
@@ -241,7 +260,7 @@ class DestructureHelper {
 			// continue with children of currNode
 			if(currNode.nestedNodes!==null && !currNode.nestedNodes.empty) {
 				// TODO should do this also if currTypeRef===null (because lower-level default expressions may provide further types)
-				buildValueTypesMap(G, currNode.nestedNodes, currTypeRef, addHere, contextObj);
+				buildValueTypesMap(G, currNode.nestedNodes, currTypeRef, astNodesToConsider, addHere, contextObj);
 			}
 		}
 	}
@@ -272,6 +291,11 @@ class DestructureHelper {
 			return exprTypeRef;
 		}
 		return null;
+	}
+
+	private def boolean isToBeConsidered(DestructNode node, Optional<Set<EObject>> astNodesToConsider) {
+		return node !== null
+			&& (node.astElement === null || !astNodesToConsider.isPresent || astNodesToConsider.get().contains(node.astElement));
 	}
 
 

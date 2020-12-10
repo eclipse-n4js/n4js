@@ -24,10 +24,10 @@ import org.eclipse.xtend.lib.annotations.Data
  * Destructuring patterns can appear in very different forms within the AST and in different contexts.
  * This helper class is used to transform those heterogeneous representations into a single, uniform
  * structure, that can be traversed more easily.
- * 
+ * <p>
  * All fields are optional, i.e. may be 'null'. At most one of 'varRef', 'varDecl' and 'nestedPattern'
  * may be non-null; if all three are 'null' the node is a padding node.
- * 
+ *
  * <h2>Overview of Destructuring Patterns in the AST</h2>
  * Different forms:
  * <ol>

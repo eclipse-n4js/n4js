@@ -1,0 +1,60 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+
+    ResourceSet {
+		ThisFile {}
+		File "ExampleClasses.n4js" {}
+	}
+
+   END_SETUP
+ */
+
+import * as EC from "Ch08_01_12__UnaryExpressions/ExampleClasses";
+
+
+
+
+///////////////////////////////////
+// unary expressions
+//  neg='-'
+//    See ToNumber() (§9.3 ECMA-262-5.1)
+///////////////////////////////////
+var nNeg1 : number = - 12; //
+var nNeg2 : number = - 0; //
+var nNeg3 : number = - 2^32; //
+var nNeg4 : number = - -1; //
+var nNeg5 : number = - 2; //
+var nNeg6 : number = - 4; //
+var nNeg7 : number = - 8; //
+var nNeg8 : number = - - 255; //
+// XPECT errors --> "string is not a subtype of number." at ""4""
+var nNeg9 : number = - "4";
+var nNeg10 : number = - Infinity; //
+// XPECT errors --> "Structural type ~Object is not a subtype of non-structural type number." at "{}"
+var nNeg11 : number = - {};
+var nNeg11b : number = - NaN; // NaN
+// XPECT errors --> "boolean is not a subtype of number." at "true"
+var nNeg12 : number = - true;
+// XPECT errors --> "C is not a subtype of number." at "new EC.C()"
+var nNeg13 : number = - new EC.C();
+
+var var14 = this;
+// XPECT errors --> "any is not a subtype of number." at "var14"
+var nNeg14 : number = - var14;
+
+// XPECT errors --> "The accessor numSetOnly is write-only." at "numSetOnly"
+var nNeg15 : number = - new EC.C().numSetOnly;
+
+var nNeg16 : number = - new EC.C().numGetOnly;
+
+var nNeg17 : number = - new EC.C().numGetAndSet;

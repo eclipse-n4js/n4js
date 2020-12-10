@@ -10,11 +10,12 @@
  */
 package org.eclipse.n4js.xtext.workspace;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Set;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.xtext.workspace.IProjectConfig;
-
-import com.google.common.collect.ImmutableSet;
 
 /**
  * Extension of {@link IProjectConfig} to include project dependencies and support for snapshots.
@@ -26,8 +27,10 @@ public interface XIProjectConfig extends IProjectConfig {
 	@Override
 	String getName();
 
-	@Override
-	Set<? extends XISourceFolder> getSourceFolders();
+	/** Return all {@link URI} of files that describe the project. */
+	default Collection<URI> getProjectDescriptionUris() {
+		return Collections.emptySet();
+	}
 
 	/**
 	 * Returns true iff this project will be indexed only, i.e. neither validated nor generated.
@@ -41,14 +44,12 @@ public interface XIProjectConfig extends IProjectConfig {
 		return false;
 	}
 
+	/** Returns <code>true</code> iff this project generates output files for its source files. */
+	default boolean isGeneratorEnabled() {
+		return true;
+	}
+
 	/** Returns the names of all other projects the receiving project depends on. */
 	Set<String> getDependencies();
 
-	/** Returns a snapshot of the current state of the workspace represented by this {@link XIProjectConfig}. */
-	default ProjectConfigSnapshot toSnapshot() {
-		ImmutableSet<SourceFolderSnapshot> sourceFolderSnapshots = getSourceFolders().stream()
-				.map(XISourceFolder::toSnapshot)
-				.collect(ImmutableSet.toImmutableSet());
-		return new ProjectConfigSnapshot(getName(), getPath(), indexOnly(), getDependencies(), sourceFolderSnapshots);
-	}
 }

@@ -1,0 +1,173 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+// yield* can have 'null' as return, since 'null()' also is not validated.
+function * g3a() {
+	// XPECT noerrors
+	let x = yield * null;
+}
+async function * ag3a() {
+	// XPECT noerrors
+	let x = yield * null;
+}
+
+
+// yield* has return type undefined, by default (warning case)
+function * g3b() {
+	// XPECT warnings --> "The type of this expression is undefined, so it will never evaluate to a value other than undefined." at "yield * g3b()"
+	let x : string = yield * g3b();
+}
+async function * ag3b() {
+	// XPECT warnings --> "The type of this expression is undefined, so it will never evaluate to a value other than undefined." at "yield * ag3b()"
+	let x : string = yield * ag3b();
+}
+
+
+// yield* returns a value
+function * g3c() : Generator<?,?,int> {
+	// XPECT noerrors
+	let x = yield * g3c();
+}
+async function * ag3c() : AsyncGenerator<?,?,int> {
+	// XPECT noerrors
+	let x = yield * ag3c();
+}
+
+
+// yield* returns a value of type any, error case
+function * g4() : Generator<?,?,string> {
+	// XPECT errors --> "any is not a subtype of string." at "yield * g4()"
+	let x : string = yield * g4();
+}
+async function * ag4() : AsyncGenerator<?,?,string> {
+	// XPECT errors --> "any is not a subtype of string." at "yield * ag4()"
+	let x : string = yield * ag4();
+}
+
+
+// yield* may not have a return value
+function * g6() {
+	// XPECT noerrors
+	yield *;
+}
+async function * ag6() {
+	// XPECT noerrors
+	yield *;
+}
+
+
+// yield* can provide a return expression using the shorthand form
+function * g7() : int {
+	// XPECT noerrors
+	yield * g7();
+}
+async function * ag7() : int {
+	// XPECT noerrors
+	yield * ag7();
+}
+
+
+// yield can provide a return expression using the explicit form
+function * g8() : Generator<int, ?, ?> {
+	// XPECT noerrors
+	yield * g7();
+}
+async function * ag8() : AsyncGenerator<int, ?, ?> {
+	// XPECT noerrors
+	yield * ag7();
+}
+
+
+function *g9a(): Generator<string,string,any> {}
+function *g9b() {
+    // XPECT noerrors -->
+    let x: string = yield* g9a();
+}
+async function *ag9a(): AsyncGenerator<string,string,any> {}
+async function *ag9b() {
+    // XPECT noerrors -->
+    let x: string = yield* ag9a();
+}
+
+
+function *it0() {
+    // XPECT noerrors
+    yield* (["a", "b", "c"]);
+}
+async function *ait0() {
+    // XPECT noerrors
+    yield* (["a", "b", "c"]);
+}
+
+function *it1() : string {
+    // XPECT noerrors
+    yield* (["a", "b", "c"]);
+}
+async function *ait1() : string {
+    // XPECT noerrors
+    yield* (["a", "b", "c"]);
+}
+
+function *it2() : Generator<string,int,boolean> {
+    // XPECT noerrors
+    yield* (["a", "b", "c"]);
+}
+async function *ait2() : AsyncGenerator<string,int,boolean> {
+    // XPECT noerrors
+    yield* (["a", "b", "c"]);
+}
+
+function *it3() : Generator<string,int,boolean> {
+    // XPECT errors --> "Array<int> is not a structural subtype of Iterable<string>: #iterator failed: {function():Iterator<int>} is not a subtype of {function():Iterator<string>}." at "([1,2,3])"
+    yield* ([1,2,3]);
+}
+async function *ait3() : AsyncGenerator<string,int,boolean> {
+    // XPECT errors --> "Array<int> is not a structural subtype of Iterable<string>: #iterator failed: {function():Iterator<int>} is not a subtype of {function():Iterator<string>}." at "([1,2,3])"
+    yield* ([1,2,3]);
+}
+
+// infer type from iterable object
+function *it4() {
+	// XPECT noerrors
+	// XPECT type of 'x' --> any
+    let x = yield* (["a", "b", "c"]);
+}
+async function *ait4() {
+	// XPECT noerrors
+	// XPECT type of 'x' --> any
+    let x = yield* (["a", "b", "c"]);
+}
+
+// infer type from returned iterable object
+function getIt() : Iterable<string> { return null; }
+function *itTest() : Generator<string,int,boolean> {
+	// XPECT type of 'i' --> any
+    let i = yield* getIt();
+}
+async function *aitTest() : AsyncGenerator<string,int,boolean> {
+	// XPECT type of 'i' --> any
+    let i = yield* getIt();
+}
+
+// infer type from returned generator object
+function getGO() : Generator<string,int,boolean> { return null; }
+function *goTest() : Generator<string,int,boolean> {
+	// XPECT type of 'i' --> int
+    let i = yield* getGO();
+}
+async function agetGO() : AsyncGenerator<string,int,boolean> { return null; }
+async function *agoTest() : AsyncGenerator<string,int,boolean> {
+	// XPECT type of 'i' --> int
+    let i = yield* getGO();
+}

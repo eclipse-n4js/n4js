@@ -51,6 +51,7 @@ import org.eclipse.n4js.ts.types.TModule;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.ScriptImpl#getHashbang <em>Hashbang</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ScriptImpl#getAnnotations <em>Annotations</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ScriptImpl#getScriptElements <em>Script Elements</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ScriptImpl#getModule <em>Module</em>}</li>
@@ -60,6 +61,26 @@ import org.eclipse.n4js.ts.types.TModule;
  * @generated
  */
 public class ScriptImpl extends VariableEnvironmentElementImpl implements Script {
+	/**
+	 * The default value of the '{@link #getHashbang() <em>Hashbang</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getHashbang()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String HASHBANG_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getHashbang() <em>Hashbang</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getHashbang()
+	 * @generated
+	 * @ordered
+	 */
+	protected String hashbang = HASHBANG_EDEFAULT;
+
 	/**
 	 * The cached value of the '{@link #getAnnotations() <em>Annotations</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -127,6 +148,29 @@ public class ScriptImpl extends VariableEnvironmentElementImpl implements Script
 	@Override
 	protected EClass eStaticClass() {
 		return N4JSPackage.Literals.SCRIPT;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getHashbang() {
+		return hashbang;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setHashbang(String newHashbang) {
+		String oldHashbang = hashbang;
+		hashbang = newHashbang;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.SCRIPT__HASHBANG, oldHashbang, hashbang));
 	}
 
 	/**
@@ -260,6 +304,8 @@ public class ScriptImpl extends VariableEnvironmentElementImpl implements Script
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case N4JSPackage.SCRIPT__HASHBANG:
+				return getHashbang();
 			case N4JSPackage.SCRIPT__ANNOTATIONS:
 				return getAnnotations();
 			case N4JSPackage.SCRIPT__SCRIPT_ELEMENTS:
@@ -282,6 +328,9 @@ public class ScriptImpl extends VariableEnvironmentElementImpl implements Script
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
+			case N4JSPackage.SCRIPT__HASHBANG:
+				setHashbang((String)newValue);
+				return;
 			case N4JSPackage.SCRIPT__ANNOTATIONS:
 				getAnnotations().clear();
 				getAnnotations().addAll((Collection<? extends Annotation>)newValue);
@@ -308,6 +357,9 @@ public class ScriptImpl extends VariableEnvironmentElementImpl implements Script
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
+			case N4JSPackage.SCRIPT__HASHBANG:
+				setHashbang(HASHBANG_EDEFAULT);
+				return;
 			case N4JSPackage.SCRIPT__ANNOTATIONS:
 				getAnnotations().clear();
 				return;
@@ -332,6 +384,8 @@ public class ScriptImpl extends VariableEnvironmentElementImpl implements Script
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case N4JSPackage.SCRIPT__HASHBANG:
+				return HASHBANG_EDEFAULT == null ? hashbang != null : !HASHBANG_EDEFAULT.equals(hashbang);
 			case N4JSPackage.SCRIPT__ANNOTATIONS:
 				return annotations != null && !annotations.isEmpty();
 			case N4JSPackage.SCRIPT__SCRIPT_ELEMENTS:
@@ -390,7 +444,9 @@ public class ScriptImpl extends VariableEnvironmentElementImpl implements Script
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (flaggedUsageMarkingFinished: ");
+		result.append(" (hashbang: ");
+		result.append(hashbang);
+		result.append(", flaggedUsageMarkingFinished: ");
 		result.append(flaggedUsageMarkingFinished);
 		result.append(')');
 		return result.toString();

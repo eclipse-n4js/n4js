@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ide.xtext.server.build;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -18,6 +19,8 @@ import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterBuildListener;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterDeleteListener;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterGenerateListener;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterValidateListener;
+import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
+import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 
 import com.google.inject.Inject;
@@ -57,12 +60,26 @@ public class DefaultBuildRequestFactory implements IBuildRequestFactory {
 	}
 
 	@Override
-	public XBuildRequest getBuildRequest(String projectName, Set<URI> changedFiles, Set<URI> deletedFiles,
-			List<Delta> externalDeltas) {
+	public XBuildRequest getBuildRequest(WorkspaceConfigSnapshot workspaceConfig, ProjectConfigSnapshot projectConfig,
+			Set<URI> changedFiles, Set<URI> deletedFiles, List<Delta> externalDeltas) {
+
+		String projectName = projectConfig.getName();
 		XBuildRequest result = getBuildRequest(projectName);
+
+		result.setIndexOnly(projectConfig.indexOnly());
+		result.setGeneratorEnabled(projectConfig.isGeneratorEnabled());
+
+		if (workspaceConfig.isInDependencyCycle(projectName)) {
+			changedFiles = new HashSet<>(changedFiles);
+			changedFiles.retainAll(projectConfig.getProjectDescriptionUris());
+			deletedFiles = new HashSet<>(deletedFiles);
+			deletedFiles.retainAll(projectConfig.getProjectDescriptionUris());
+		}
 		result.setDirtyFiles(changedFiles);
 		result.setDeletedFiles(deletedFiles);
+
 		result.setExternalDeltas(externalDeltas);
+
 		return result;
 	}
 

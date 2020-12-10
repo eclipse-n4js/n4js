@@ -444,6 +444,8 @@ ruleTMember:
 				    |
 				'static'
 			)?
+			'async'
+			?
 			ruleTypeVariables?
 			(
 				ruleTypesIdentifier
@@ -468,6 +470,8 @@ ruleTMethod:
 			    |
 			'static'
 		)?
+		'async'
+		?
 		ruleTypeVariables?
 		(
 			ruleTypesIdentifier
@@ -482,6 +486,8 @@ ruleTMethod:
 			    |
 			'static'
 		)?
+		'async'
+		?
 		ruleTypeVariables?
 		(
 			ruleTypesIdentifier

@@ -1,0 +1,35 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+import { C2 } from "Ch08_02_01__SuperKeyword/superGetterSetterAccess/remote_static/C2"
+import { C1 } from "Ch08_02_01__SuperKeyword/superGetterSetterAccess/remote_static/C1"
+
+
+export public class C3 extends C2 {
+	static test() {
+		console.log('* testing access with "this"');
+		this.g;
+		/*this*/C1.s = 42; // this-Dissallowed since IDE-1071
+		this.m();
+// does not apply to static case (see IDE-1453)
+//		this.gI;
+//		this.sI = 42;
+//		this.mI();
+		console.log('* testing access with "super"');
+		super.g;
+		/*super*/C1.s = 42; // super-Dissallowed since IDE-1071
+		super.m();
+// does not apply to static case (see IDE-1453)
+//		super.gI;
+//		super.sI = 42;
+//		super.mI();
+	}
+}

@@ -133,14 +133,41 @@ public class ImportsAwareReferenceProposalCreator {
 		if (TypesPackage.eINSTANCE.getTClass() == eClass) {
 			return ContentAssistEntry.KIND_CLASS;
 		}
+		if (TypesPackage.eINSTANCE.getBuiltInType() == eClass) {
+			return ContentAssistEntry.KIND_CLASS;
+		}
+		if (TypesPackage.eINSTANCE.getTObjectPrototype() == eClass) {
+			return ContentAssistEntry.KIND_CLASS;
+		}
+		if (TypesPackage.eINSTANCE.getPrimitiveType() == eClass) {
+			return ContentAssistEntry.KIND_KEYWORD;
+		}
+		if (TypesPackage.eINSTANCE.getUndefinedType() == eClass) {
+			return ContentAssistEntry.KIND_KEYWORD;
+		}
+		if (TypesPackage.eINSTANCE.getAnyType() == eClass) {
+			return ContentAssistEntry.KIND_KEYWORD;
+		}
 		if (TypesPackage.eINSTANCE.getTInterface() == eClass) {
 			return ContentAssistEntry.KIND_INTERFACE;
 		}
 		if (TypesPackage.eINSTANCE.getTField() == eClass) {
 			return ContentAssistEntry.KIND_FIELD;
 		}
+		if (TypesPackage.eINSTANCE.getTMethod() == eClass) {
+			return ContentAssistEntry.KIND_METHOD;
+		}
+		if (TypesPackage.eINSTANCE.getTGetter() == eClass) {
+			return ContentAssistEntry.KIND_PROPERTY;
+		}
+		if (TypesPackage.eINSTANCE.getTSetter() == eClass) {
+			return ContentAssistEntry.KIND_PROPERTY;
+		}
 		if (TypesPackage.eINSTANCE.getTEnum() == eClass) {
 			return ContentAssistEntry.KIND_ENUM;
+		}
+		if (TypesPackage.eINSTANCE.getTEnumLiteral() == eClass) {
+			return ContentAssistEntry.KIND_VALUE;
 		}
 		if (TypesPackage.eINSTANCE.getTFunction() == eClass) {
 			return ContentAssistEntry.KIND_FUNCTION;

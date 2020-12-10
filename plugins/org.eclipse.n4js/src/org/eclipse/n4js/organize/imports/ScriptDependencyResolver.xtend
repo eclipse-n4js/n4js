@@ -10,6 +10,12 @@
  */
 package org.eclipse.n4js.organize.imports
 
+import java.util.ArrayList
+import java.util.Collection
+import java.util.Collections
+import java.util.List
+import java.util.Map
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.AnnotableElement
 import org.eclipse.n4js.n4JS.IdentifierRef
@@ -30,12 +36,7 @@ import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.Type
-import java.util.ArrayList
-import java.util.Collection
-import java.util.Collections
-import java.util.List
-import java.util.Map
-import org.eclipse.emf.ecore.EObject
+import org.eclipse.xtext.EcoreUtil2
 
 import static extension org.eclipse.n4js.organize.imports.InjectedTypesResolverUtility.*
 import static extension org.eclipse.n4js.organize.imports.RefNameUtil.*
@@ -268,21 +269,22 @@ class ScriptDependencyResolver {
 	/**
 	 * Resolves dependency from identifier reference.
 	 */
-	def private static dispatch Iterable<ScriptDependency> handle(IdentifierRef eo,
+	def private static dispatch Iterable<ScriptDependency> handle(IdentifierRef idRef,
 		Map<String, NamedImportSpecifier> nameToNamedImportSpecifiers,
 		Map<NamespaceImportSpecifier, Boolean> usedNamespaceSpecifiers, (EObject)=>boolean compare) {
 
-		if(eo.id === null){
+		val targetElem = idRef.id;
+		if(targetElem === null){
 			//broken identifier ref? smoke tests?
 			return newArrayList()
 		}
 
-		if (compare.apply(eo.id)) {
+		if (compare.apply(targetElem)) {
+			val containingModule = EcoreUtil2.getContainerOfType(targetElem, TModule);
 			return newArrayList(
-				new ScriptDependency(eo.findIdentifierName, eo.id.name, eo.id, (eo.id.eContainer as TModule)))
-		} else if (eo.id instanceof ModuleNamespaceVirtualType) {
-			val namespace = eo.id as ModuleNamespaceVirtualType
-			val targMod = namespace.module
+				new ScriptDependency(idRef.findIdentifierName, targetElem.name, targetElem, containingModule))
+		} else if (targetElem instanceof ModuleNamespaceVirtualType) {
+			val targMod = targetElem.module
 
 			if (isNamespaceDependencyHandlingNeeded(usedNamespaceSpecifiers, targMod)) {
 				return newArrayList(createDependencyOnNamespace(usedNamespaceSpecifiers, targMod))
