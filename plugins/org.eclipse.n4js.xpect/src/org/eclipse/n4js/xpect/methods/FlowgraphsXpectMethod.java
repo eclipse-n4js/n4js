@@ -32,6 +32,7 @@ import org.eclipse.n4js.flowgraphs.analysers.DummyForwardVisitor;
 import org.eclipse.n4js.flowgraphs.analysers.InstanceofGuardAnalyser;
 import org.eclipse.n4js.flowgraphs.analysis.GraphVisitor;
 import org.eclipse.n4js.flowgraphs.analysis.TraverseDirection;
+import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardAssertion;
 import org.eclipse.n4js.flowgraphs.dataflow.guards.InstanceofGuard;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.Node;
@@ -378,13 +379,19 @@ public class FlowgraphsXpectMethod {
 		N4JSFlowAnalyser flowAnalyzer = createFlowAnalyzer(cfe);
 		flowAnalyzer.accept(iga);
 
-		Collection<InstanceofGuard> ioGuards = iga.getAlwaysHoldingTypes(cfe);
+		Collection<InstanceofGuard> ioGuards = iga.getDefinitiveGuards(cfe);
 
 		List<String> commonPredStrs = new LinkedList<>();
 		for (InstanceofGuard ioGuard : ioGuards) {
-			String symbolText = FGUtils.getSourceText(ioGuard.symbolCFE);
-			String typeText = FGUtils.getSourceText(ioGuard.typeIdentifier);
-			commonPredStrs.add(symbolText + "<:" + typeText);
+			if (ioGuard.asserts == GuardAssertion.AlwaysHolds) {
+				String symbolText = FGUtils.getSourceText(ioGuard.symbolCFE);
+				String typeText = FGUtils.getSourceText(ioGuard.typeIdentifier);
+				commonPredStrs.add(symbolText + "<:" + typeText);
+			} else if (ioGuard.asserts == GuardAssertion.NeverHolds) {
+				String symbolText = FGUtils.getSourceText(ioGuard.symbolCFE);
+				String typeText = FGUtils.getSourceText(ioGuard.typeIdentifier);
+				commonPredStrs.add(symbolText + "!<:" + typeText);
+			}
 		}
 
 		expectation.assertEquals(commonPredStrs);

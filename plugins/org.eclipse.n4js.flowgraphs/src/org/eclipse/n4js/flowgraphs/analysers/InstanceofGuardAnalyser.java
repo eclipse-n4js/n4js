@@ -10,12 +10,15 @@
  */
 package org.eclipse.n4js.flowgraphs.analysers;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.n4js.flowgraphs.analysis.BranchWalkerInternal;
 import org.eclipse.n4js.flowgraphs.analysis.GraphExplorerInternal;
@@ -24,6 +27,7 @@ import org.eclipse.n4js.flowgraphs.analysis.TraverseDirection;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectInfo;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectType;
 import org.eclipse.n4js.flowgraphs.dataflow.guards.Guard;
+import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardAssertion;
 import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardStructure;
 import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardStructureFactory;
 import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardType;
@@ -36,6 +40,7 @@ import org.eclipse.n4js.n4JS.IdentifierRef;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
 
 /**
  * This analyzer detects and holds information about all instanceof guards at a given source location. It differentiates
@@ -50,10 +55,28 @@ public class InstanceofGuardAnalyser extends GraphVisitorInternal {
 		super(TraverseDirection.Forward);
 	}
 
-	/** @return all RHS expressions of {@code instanceof} guards that <b>always</b> hold at the given element */
-	public Collection<InstanceofGuard> getAlwaysHoldingTypes(ControlFlowElement cfe) {
+	/** @return all {@code instanceof} guards that <b>always</b> hold at the given element */
+	public Collection<InstanceofGuard> getAlwaysHoldingGuards(ControlFlowElement cfe) {
+		return getGuards(cfe, GuardAssertion.AlwaysHolds);
+	}
+
+	/** @return all {@code instanceof} guards that <b>never</b> hold at the given element */
+	public Collection<InstanceofGuard> getDefinitiveGuards(ControlFlowElement cfe) {
+		return getGuards(cfe, GuardAssertion.AlwaysHolds, GuardAssertion.NeverHolds);
+	}
+
+	/** @return all {@code instanceof} guards that have the given {@link GuardAssertion} */
+	protected Collection<InstanceofGuard> getGuards(ControlFlowElement cfe, GuardAssertion... guardAssertions) {
 		if (cfe instanceof IdentifierRef) {
-			return guardsOnIRef.get((IdentifierRef) cfe);
+			Collection<InstanceofGuard> assertedGuards = new ArrayList<>();
+			Set<GuardAssertion> gaSet = Sets.newHashSet(guardAssertions);
+			for (InstanceofGuard guard : guardsOnIRef.get((IdentifierRef) cfe)) {
+				if (gaSet.contains(guard.asserts)) {
+					assertedGuards.add(guard);
+				}
+			}
+
+			return assertedGuards;
 		}
 		return Collections.emptyList();
 	}
@@ -87,8 +110,11 @@ public class InstanceofGuardAnalyser extends GraphVisitorInternal {
 					continue;
 				}
 
-				joinedIBW.guards.keySet().retainAll(ibw.guards.keySet());
-				for (Symbol symbol : joinedIBW.guards.keySet()) {
+				Set<Symbol> joinedKeySet = joinedIBW.guards.keySet();
+				joinedKeySet.retainAll(ibw.guards.keySet());
+				// avoid ConcurrentModificationException since entries of key set might be removed in the following loop
+				HashSet<Symbol> joinedKeySetCopy = new HashSet<>(joinedKeySet);
+				for (Symbol symbol : joinedKeySetCopy) {
 					joinedIBW.guards.get(symbol).retainAll(ibw.guards.get(symbol));
 				}
 			}
@@ -98,7 +124,7 @@ public class InstanceofGuardAnalyser extends GraphVisitorInternal {
 	}
 
 	class InstanceofBranchWalker extends BranchWalkerInternal {
-		Multimap<Symbol, InstanceofGuard> guards = HashMultimap.create();
+		final Multimap<Symbol, InstanceofGuard> guards = HashMultimap.create();
 
 		@Override
 		protected BranchWalkerInternal fork() {
@@ -146,6 +172,7 @@ public class InstanceofGuardAnalyser extends GraphVisitorInternal {
 							guards.put(guard.getSymbol(), instanceofGuard);
 							break;
 						case NeverHolds:
+							guards.put(guard.getSymbol(), instanceofGuard);
 							break;
 						case MayHolds:
 							break;

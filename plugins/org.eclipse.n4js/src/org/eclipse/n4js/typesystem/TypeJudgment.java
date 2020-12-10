@@ -47,6 +47,7 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.undefi
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.voidType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.wrap;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -55,6 +56,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.compileTime.CompileTimeValue;
+import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardAssertion;
 import org.eclipse.n4js.flowgraphs.dataflow.guards.InstanceofGuard;
 import org.eclipse.n4js.n4JS.AdditiveExpression;
 import org.eclipse.n4js.n4JS.AdditiveOperator;
@@ -142,6 +144,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
+import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
@@ -583,15 +586,17 @@ import com.google.inject.Inject;
 			TypeRef T = ts.type(G, idref.getId());
 
 			final ASTFlowInfo flowInfo = ((N4JSResource) idref.eResource()).getASTMetaInfoCache().getFlowInfo();
-			final Collection<InstanceofGuard> alwaysHoldingTypes = flowInfo.instanceofGuardAnalyser
-					.getAlwaysHoldingTypes(idref);
+			final Collection<InstanceofGuard> definitiveGuards = flowInfo.instanceofGuardAnalyser
+					.getDefinitiveGuards(idref);
 
-			if (!alwaysHoldingTypes.isEmpty()) {
-				final Collection<TypeRef> intersectionTypes = new LinkedList<>();
+			if (!definitiveGuards.isEmpty()) {
+				final Collection<TypeRef> allTypes = new ArrayList<>();
+				final Collection<TypeRef> excludedTypes = new ArrayList<>();
+				final Collection<TypeRef> remainingTypes = new ArrayList<>();
 				if (T != null) {
-					intersectionTypes.add(T);
+					allTypes.add(T);
 				}
-				for (InstanceofGuard ioGuard : alwaysHoldingTypes) {
+				for (InstanceofGuard ioGuard : definitiveGuards) {
 					if (ioGuard.symbolCFE instanceof IdentifierRef) {
 						final IdentifiableElement guardedElement = ((IdentifierRef) ioGuard.symbolCFE).getId();
 						if (guardedElement != null && idref.getId() == guardedElement) {
@@ -607,12 +612,56 @@ import com.google.inject.Inject;
 							}
 
 							TypeUtils.sanitizeRawTypeRef(instanceofType);
-							intersectionTypes.add(instanceofType);
+							if (ioGuard.asserts == GuardAssertion.AlwaysHolds) {
+								allTypes.add(instanceofType);
+							} else if (ioGuard.asserts == GuardAssertion.NeverHolds) {
+								excludedTypes.add(instanceofType);
+							}
 						}
 					}
 				}
-				if (!intersectionTypes.isEmpty()) {
-					T = tsh.createIntersectionType(G, intersectionTypes.toArray(new TypeRef[intersectionTypes.size()]));
+
+				if (excludedTypes.isEmpty()) {
+					remainingTypes.addAll(allTypes);
+				} else {
+					for (TypeRef origType : allTypes) {
+						TypeRef remainingType = null;
+						if (origType instanceof UnionTypeExpression) {
+							final UnionTypeExpression union = (UnionTypeExpression) origType;
+							final Collection<TypeRef> newUnionTypes = new LinkedList<>();
+							for (TypeRef unionType : union.getTypeRefs()) {
+								for (TypeRef neverHoldingType : excludedTypes) {
+									if (!ts.subtypeSucceeded(G, unionType, neverHoldingType)) {
+										newUnionTypes.add(unionType);
+									}
+								}
+							}
+							if (newUnionTypes.size() < union.getTypeRefs().size()) {
+								remainingType = tsh.createUnionType(G,
+										newUnionTypes.toArray(new TypeRef[newUnionTypes.size()]));
+							}
+						} else {
+
+							boolean removeType = false;
+							for (TypeRef neverHoldingType : excludedTypes) {
+								if (ts.subtypeSucceeded(G, origType, neverHoldingType)) {
+									removeType = true;
+									break;
+								}
+							}
+							if (!removeType) {
+								remainingType = origType;
+							}
+						}
+
+						if (remainingType != null) {
+							remainingTypes.add(remainingType);
+						}
+					}
+				}
+
+				if (!remainingTypes.isEmpty()) {
+					T = tsh.createIntersectionType(G, remainingTypes.toArray(new TypeRef[remainingTypes.size()]));
 				}
 			}
 
