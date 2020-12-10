@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -109,8 +110,11 @@ public class InstanceofGuardAnalyser extends GraphVisitorInternal {
 					continue;
 				}
 
-				joinedIBW.guards.keySet().retainAll(ibw.guards.keySet());
-				for (Symbol symbol : joinedIBW.guards.keySet()) {
+				Set<Symbol> joinedKeySet = joinedIBW.guards.keySet();
+				joinedKeySet.retainAll(ibw.guards.keySet());
+				// avoid ConcurrentModificationException since entries of key set might be removed in the following loop
+				HashSet<Symbol> joinedKeySetCopy = new HashSet<>(joinedKeySet);
+				for (Symbol symbol : joinedKeySetCopy) {
 					joinedIBW.guards.get(symbol).retainAll(ibw.guards.get(symbol));
 				}
 			}
@@ -120,7 +124,7 @@ public class InstanceofGuardAnalyser extends GraphVisitorInternal {
 	}
 
 	class InstanceofBranchWalker extends BranchWalkerInternal {
-		Multimap<Symbol, InstanceofGuard> guards = HashMultimap.create();
+		final Multimap<Symbol, InstanceofGuard> guards = HashMultimap.create();
 
 		@Override
 		protected BranchWalkerInternal fork() {
