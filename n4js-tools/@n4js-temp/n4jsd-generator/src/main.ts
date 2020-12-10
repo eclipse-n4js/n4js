@@ -13,7 +13,7 @@
 import * as ts from "typescript";
 import * as fs_lib from "fs";
 import * as path_lib from "path";
-import * as glob_lib from "glob"
+import * as glob_lib from "glob";
 
 import { USAGE, Options, parseCommandLineOptions } from "./cmdLineOpts";
 import * as model from "./model";

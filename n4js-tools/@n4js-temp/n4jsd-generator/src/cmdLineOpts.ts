@@ -10,7 +10,8 @@
  */
 
 import * as fs_lib from "fs";
-import * as glob_lib from "glob"
+import * as process_lib from "process";
+import * as glob_lib from "glob";
 
 
 export const USAGE = `\
@@ -122,7 +123,7 @@ function resolveInputPathsOrGlobs(opts: Options): void {
 	const paths = [] as string[];
 	for (let pathGlob of opts.inputPathsOrGlobs) {
 		if (!pathGlob.startsWith("/")) {
-			pathGlob = __dirname + "/" + pathGlob;
+			pathGlob = process_lib.cwd() + "/" + pathGlob;
 		}
 		const currPaths = glob_lib.sync(pathGlob, {});
 		if (currPaths.length === 0) {

@@ -35,10 +35,29 @@ export function traverse(sourceFile: ts.SourceFile, fn: (node: ts.Node, indent: 
 	doTraverse(sourceFile, 0);
 }
 
-export function isExported(node: ts.Node): boolean {
-	const flags = ts.getCombinedModifierFlags(node as ts.Declaration);
+export function isExported(node: ts.Declaration): boolean {
+	const flags = ts.getCombinedModifierFlags(node);
 	return utils.testFlag(flags, ts.ModifierFlags.Export)
 		|| (!!node.parent && node.parent.kind === ts.SyntaxKind.SourceFile);
+}
+
+export function isExportedAsDefault(node: ts.Declaration): boolean {
+	const flags = ts.getCombinedModifierFlags(node);
+	return isExported(node) && utils.testFlag(flags, ts.ModifierFlags.ExportDefault);
+}
+
+export function getLocalNameOfExportableElement(node: ts.NamedDeclaration, checker: ts.TypeChecker): string {
+	if (isExportedAsDefault(node)) {
+		// could not find a public API for obtaining the local symbol:
+		const localSym = (node as any).localSymbol as ts.Symbol;
+		if (localSym) {
+			return localSym.getName();
+		}
+	}
+	// this seems to be the ordinary approach for obtaining names,
+	// but would return "default" for default-exported elements
+	const sym = checker.getSymbolAtLocation(node.name);
+	return sym.getName();
 }
 
 export function getAccessibility(node: ts.Declaration): model.Accessibility {

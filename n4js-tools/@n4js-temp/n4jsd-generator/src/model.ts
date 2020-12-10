@@ -36,6 +36,10 @@ export abstract class Import {
 	moduleSpecifier: string;
 }
 
+export class DefaultImport extends Import {
+	localName: string;
+}
+
 export class NamespaceImport extends Import {
 	namespaceName: string;
 }
@@ -51,6 +55,7 @@ export abstract class NamedElement {
 
 export abstract class ExportableElement extends NamedElement {
 	exported: boolean;
+	exportedAsDefault: boolean;
 }
 
 export class Variable extends ExportableElement {
@@ -136,7 +141,9 @@ class Emitter {
 	emitImport(elem: Import) {
 		const buff = this.buff;
 		buff.push("import ");
-		if (elem instanceof NamespaceImport) {
+		if (elem instanceof DefaultImport) {
+			buff.push(elem.localName, " ");
+		} else if (elem instanceof NamespaceImport) {
 			buff.push("* as ", elem.namespaceName, " ");
 		} else if (elem instanceof NamedImport) {
 			buff.push("{ ", elem.importedElementName);
@@ -162,11 +169,19 @@ class Emitter {
 		}
 	}
 
+	emitExportKeywordIfNecessary(elem: ExportableElement) {
+		const buff = this.buff;
+		if (elem.exported) {
+			buff.push("export ");
+			if (elem.exportedAsDefault) {
+				buff.push("default ");
+			}
+		}
+	}
+
 	emitVariable(variable: Variable) {
 		const buff = this.buff;
-		if (variable.exported) {
-			buff.push("export ");
-		}
+		this.emitExportKeywordIfNecessary(variable);
 		buff.push(variable.keyword);
 		buff.push(" ");
 		buff.push(variable.name);
@@ -176,9 +191,7 @@ class Emitter {
 
 	emitFunction(fun: Function) {
 		const buff = this.buff;
-		if (fun.exported) {
-			buff.push("export ");
-		}
+		this.emitExportKeywordIfNecessary(fun);
 		buff.push("external ");
 		buff.push("function ");
 		buff.push(fun.name);
@@ -193,9 +206,7 @@ class Emitter {
 		} else if (type.primitiveBased == 'number') {
 			buff.pushln("@NumberBased");
 		}
-		if (type.exported) {
-			buff.push("export ");
-		}
+		this.emitExportKeywordIfNecessary(type);
 		buff.push("external ");
 		buff.push(type.kind, " ");
 		if (type.defSiteStructural) {
