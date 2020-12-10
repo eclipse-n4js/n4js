@@ -255,7 +255,7 @@ public class LspServer {
 		return appender;
 	}
 
-	/** TEMPORARY functionality (see {@link ServerIncidentLogger} for details). */
+	/** TODO GH-2002: TEMPORARY functionality (see {@link ServerIncidentLogger} for details). */
 	private static final class ServerIncidentAppender extends AppenderSkeleton {
 
 		private final ServerIncidentLogger delegate;

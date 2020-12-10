@@ -36,7 +36,7 @@ import com.google.inject.Singleton;
  * Writes diagnosis information as returned by {@link DebugService#getDebugInfo()} to disk when one of the
  * report-methods is invoked.
  * <p>
- * This is TEMPORARY functionality for debugging that will be removed in the future.
+ * TODO GH-2002: this is TEMPORARY functionality for debugging that will be removed in the future.
  */
 @Singleton
 public class ServerIncidentLogger {

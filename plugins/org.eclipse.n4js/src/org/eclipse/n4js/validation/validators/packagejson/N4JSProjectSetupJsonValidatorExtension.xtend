@@ -248,7 +248,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 					)
 				}
 			} else {
-				// TODO GH-1959 consider removing temporary debug logging
+				// TODO GH-2002 consider removing temporary debug logging
 				val containingProject = findProject(ieoT.EObjectURI);
 				val projectLookupInfo = if (containingProject.isPresent) {
 					"(info: found containing project " + containingProject.get.projectName + ")"

@@ -192,7 +192,7 @@ package abstract class AbstractProcessor {
 	def protected static Throwable logException(String msg, Throwable th) {
 		// always log exceptions, even if !isDEBUG_LOG()
 		th.printStackTrace // enforce dumping all exceptions to stderr
-		// GH-1938: TEMPORARY DEBUG LOGGING
+		// GH-2002: TEMPORARY DEBUG LOGGING
 		// Only passing the exception to Logger#error(String,Throwable) does not emit the stack trace of the caught
 		// exception in all logger configurations; we therefore include the stack trace in the main message:
 		LOG.error(msg + "\n" + Throwables.getStackTraceAsString(th), th);
