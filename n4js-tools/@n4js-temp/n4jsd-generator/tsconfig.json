@@ -1,5 +1,5 @@
 {
-    "include": ["src/**/*.ts"],
+    "include": ["src/ts/**/*.ts"],
     "exclude": ["node_modules", "**/*.spec.ts"],
     "compilerOptions": {
         "target": "es5",

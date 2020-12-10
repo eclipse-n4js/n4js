@@ -10,8 +10,7 @@
  */
 
 import * as fs_lib from "fs";
-import * as process_lib from "process";
-import * as glob_lib from "glob";
+import * as utils from "utils";
 
 
 export const USAGE = `\
@@ -52,15 +51,15 @@ dts2n4jsd -o ../n4jsd-gen node_modules/*
 
 
 export interface Options {
-	inputPathsOrGlobs: string[],
+	inputPathsOrGlobs: string[];
 	/** The actual input paths as resolved from the 'inputPathsOrGlobs'. */
-	inputPaths: string[],
-	outputPath?: string,
-	copyTypeRefs: boolean,
-	verbose: boolean,
-	force: boolean,
+	inputPaths: string[];
+	outputPath?: string;
+	copyTypeRefs: boolean;
+	verbose: boolean;
+	force: boolean;
 	/** A fatal error encountered during command line option parsing. */
-	error?: string
+	error?: string;
 }
 
 class Option {
@@ -82,6 +81,13 @@ const OPT_VERBOSE        = new Option([ "--verbose", "-v" ],  false, (opts) => o
 
 const allOptions = [ OPT_FORCE, OPT_OUTPUT, OPT_COPY_TYPE_REFS, OPT_VERBOSE  ];
 
+/** Will be set by function <code>parseCommandLineOptions()</code>. */
+let globalOptions: Options = undefined;
+
+export function getGlobalOptions(): Options {
+	return globalOptions;
+}
+
 export function parseCommandLineOptions(args: string[]): Options {
 	const result = {
 		inputPathsOrGlobs: [],
@@ -98,7 +104,7 @@ export function parseCommandLineOptions(args: string[]): Options {
 				result.error = "unknown option: " + currArg;
 				return result;
 			}
-			let nextArg = undefined;
+			let nextArg: string;
 			if (currOpt.requiresArgument) {
 				nextArg = i < args.length && !args[i].startsWith("-") ? args[i++] : undefined;
 				if (nextArg === undefined) {
@@ -112,6 +118,7 @@ export function parseCommandLineOptions(args: string[]): Options {
 		}
 	}
 	resolveInputPathsOrGlobs(result);
+	globalOptions = result;
 	return result;
 }
 
@@ -123,14 +130,16 @@ function resolveInputPathsOrGlobs(opts: Options): void {
 	const paths = [] as string[];
 	for (let pathGlob of opts.inputPathsOrGlobs) {
 		if (!pathGlob.startsWith("/")) {
-			pathGlob = process_lib.cwd() + "/" + pathGlob;
+			pathGlob = process.cwd() + "/" + pathGlob;
 		}
-		const currPaths = glob_lib.sync(pathGlob, {});
+		const currPaths = utils.resolveGlobPattern(pathGlob);
 		if (currPaths.length === 0) {
 			opts.error = "input path does not exist: " + pathGlob;
 			continue;
 		}
-		paths.push(...currPaths);
+		for (const currPath of currPaths) {
+			paths.push(currPath);
+		}
 	}
 	const errors = [] as string[];
 	for (const path of paths) {
@@ -148,10 +157,12 @@ function resolveInputPathsOrGlobs(opts: Options): void {
 		opts.error = "invalid input path(s):\n    " + errors.join("\n    ");
 		return;
 	}
-	opts.inputPaths.push(...paths);
+	for (const path of paths) {
+		opts.inputPaths.push(path);
+	}
 }
 
-function findOption(optionStr: string): Option | undefined {
+function findOption(optionStr: string): Option {
 	optionStr = optionStr.trim();
 	for (const opt of allOptions) {
 		for (const name of opt.names) {

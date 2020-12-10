@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+//#!/usr/bin/env node
 /**
  * Copyright (c) 2020 NumberFour AG.
  * All rights reserved. This program and the accompanying materials
@@ -10,25 +10,19 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-import * as ts from "typescript";
 import * as fs_lib from "fs";
 import * as path_lib from "path";
-import * as glob_lib from "glob";
 
-import { USAGE, Options, parseCommandLineOptions } from "./cmdLineOpts";
-import * as model from "./model";
-import { Converter } from "./convert";
-import * as utils from "./utils";
-
-
-export let globalOptions: Options = undefined;
+import { USAGE, Options, parseCommandLineOptions } from "cmdLineOpts";
+import * as model from "model";
+import { Converter } from "convert";
+import * as utils from "utils";
 
 
 runN4jsdGen(process.argv.slice(2)); // strip the first two args (path of node binary and main script)
 
 function runN4jsdGen(args: string[]) {
 	const opts = parseCommandLineOptions(args);
-	globalOptions = opts;
 	if (opts.error !== undefined) {
 		exitWithError(opts.error, true);
 	}
@@ -52,7 +46,7 @@ function processFileOrFolder(inputPath: string, opts: Options) {
 		return;
 	}
 
-	let sourceProjectPath = undefined;
+	let sourceProjectPath: string = undefined;
 	const sourceDtsFilePaths = [] as string[];
 	const stats = fs_lib.statSync(inputPath);
 	if (stats.isFile() && inputPath.endsWith(".d.ts")) {
@@ -60,7 +54,8 @@ function processFileOrFolder(inputPath: string, opts: Options) {
 	} else if (stats.isDirectory()) {
 		sourceProjectPath = path_lib.isAbsolute(inputPath) ? inputPath : path_lib.resolve(inputPath);
 		const globStr = path_lib.join(inputPath, "**", "*.d.ts");
-		sourceDtsFilePaths.push(...glob_lib.sync(globStr, {}));
+		const resolvedPaths = utils.resolveGlobPattern(globStr);
+		utils.pushAll(sourceDtsFilePaths, resolvedPaths);
 		if (sourceDtsFilePaths.length === 0) {
 			logError("no '.d.ts' files found in folder: " + inputPath);
 			return;
@@ -70,8 +65,7 @@ function processFileOrFolder(inputPath: string, opts: Options) {
 		return;
 	}
 
-	const program = ts.createProgram(sourceDtsFilePaths, { allowJs: true });
-	const converter = new Converter(program, sourceProjectPath);
+	const converter = new Converter(sourceDtsFilePaths, sourceProjectPath);
 	const scripts = new Map<string,model.Script>();
 	let hasIssues = false;
 	for (const srcDtsPath of sourceDtsFilePaths) {
@@ -94,7 +88,7 @@ function processFileOrFolder(inputPath: string, opts: Options) {
 	}
 
 	// create target project (if necessary)
-	let targetProjectPath = undefined;
+	let targetProjectPath: string = undefined;
 	if (sourceProjectPath !== undefined) {
 		targetProjectPath = createTargetProject(sourceProjectPath, opts);
 		if (targetProjectPath === undefined) {
@@ -111,8 +105,8 @@ function processFileOrFolder(inputPath: string, opts: Options) {
 		if (opts.verbose) {
 			console.log("Writing n4jsd-file: " + trgtN4jsdPath);
 		}
-		fs_lib.mkdirSync(path_lib.dirname(trgtN4jsdPath), { recursive: true });
-		fs_lib.writeFileSync(trgtN4jsdPath, n4jsdStr + "\n");
+		fs_lib.mkdirSync(path_lib.dirname(trgtN4jsdPath), ({ recursive: true } as any) as string); // incorrect signature in n4jsd for fs!
+		fs_lib.writeFileSync(trgtN4jsdPath, n4jsdStr + "\n", undefined);
 	}
 }
 
@@ -123,10 +117,10 @@ function createTargetProject(srcPath: string, opts: Options): string {
 	const trgtPath = opts.outputPath !== undefined
 		? path_lib.join(opts.outputPath, trgtName)
 		: path_lib.dirname(srcPath);
-	fs_lib.mkdirSync(trgtPath, { recursive: true });
+	fs_lib.mkdirSync(trgtPath, ({ recursive: true } as any) as string); // incorrect signature in n4jsd for fs!
 
 	const srcPackageJsonPath = path_lib.join(srcPath, utils.PACKAGE_JSON);
-	const trgtPackageJson: any = {
+	const trgtPackageJson = {
 		name: trgtName,
 		repository: {
 			type: "git",
@@ -134,6 +128,8 @@ function createTargetProject(srcPath: string, opts: Options): string {
 		},
 		description: "N4JS type definitions for " + srcName,
 		keywords: [ "n4js" ],
+		private: false,
+		dependencies: {},
 		n4js: {
 			projectType: "definition",
 			definesPackage: srcName,
@@ -150,8 +146,8 @@ function createTargetProject(srcPath: string, opts: Options): string {
 		// dependencies will be added below from original package.json
 	};
 	if (fs_lib.existsSync(srcPackageJsonPath)) {
-		const srcPackageJsonStr = fs_lib.readFileSync(srcPackageJsonPath).toString();
-		const srcPackageJson = JSON.parse(srcPackageJsonStr);
+		const srcPackageJsonStr = fs_lib.readFileSync(srcPackageJsonPath, undefined).toString();
+		const srcPackageJson: any+ = JSON.parse(srcPackageJsonStr);
 		if (srcPackageJson) {
 			if (srcPackageJson.dependencies) {
 				trgtPackageJson.dependencies = srcPackageJson.dependencies;
@@ -162,7 +158,7 @@ function createTargetProject(srcPath: string, opts: Options): string {
 		}
 	}
 	const trgtPackageJsonPath = path_lib.join(trgtPath, utils.PACKAGE_JSON);
-	fs_lib.writeFileSync(trgtPackageJsonPath, JSON.stringify(trgtPackageJson, undefined, "\t"));
+	fs_lib.writeFileSync(trgtPackageJsonPath, JSON.stringify(trgtPackageJson, undefined, "\t"), undefined);
 
 	return trgtPath;
 }
@@ -182,7 +178,7 @@ function chooseTargetN4jsdPath(sourceDtsFilePath: string, sourceProjectPath: str
 
 function logIssues(issues: utils.Issue[]) {
 	for (const issue of issues) {
-		console.log(issue.kind.toUpperCase() + ": " + issue.message);
+		console.log(issue.kind.name + ": " + issue.message);
 	}
 }
 
@@ -190,7 +186,7 @@ function logError(msg: string) {
 	console.log("ERROR: " + msg);
 }
 
-function exitWithError(msg: string, showUsage?: boolean): never {
+function exitWithError(msg: string, showUsage: boolean = false): void {
 	logError(msg);
 	if (showUsage) {
 		console.log();

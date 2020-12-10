@@ -9,9 +9,9 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-import { CodeBuffer } from "./CodeBuffer";
-import { globalOptions } from "./main";
-import * as utils from "./utils";
+import { CodeBuffer } from "CodeBuffer";
+import { getGlobalOptions } from "cmdLineOpts";
+import * as utils from "utils";
 
 export enum DTSMode {
 	NONE,
@@ -58,8 +58,12 @@ export abstract class ExportableElement extends NamedElement {
 	exportedAsDefault: boolean;
 }
 
+export enum VariableKeyword {
+	VAR, LET, CONST
+}
+
 export class Variable extends ExportableElement {
-	keyword: 'var' | 'let' | 'const';
+	keyword: VariableKeyword;
 	type: TypeRef;
 }
 
@@ -67,10 +71,18 @@ export class Function extends ExportableElement {
 	signatures: Signature[] = [];
 }
 
+export enum TypeKind {
+	INTERFACE, CLASS, ENUM, ALIAS
+}
+
+export enum PrimitiveBasedKind {
+	STRING_BASED, NUMBER_BASED
+}
+
 export class Type extends ExportableElement {
-	kind: 'enum' | 'interface' | 'class' | 'alias';
+	kind: TypeKind;
 	defSiteStructural?: boolean;
-	primitiveBased?: 'string' | 'number';
+	primitiveBased?: PrimitiveBasedKind;
 	literals: EnumLiteral[] = [];
 	members: Member[] = [];
 }
@@ -79,8 +91,12 @@ export class EnumLiteral extends NamedElement {
 	value?: string | number;
 }
 
+export enum MemberKind {
+	CTOR, FIELD, GETTER, SETTER, METHOD
+}
+
 export class Member extends NamedElement {
-	kind: 'ctor' | 'field' | 'getter' | 'setter' | 'method';
+	kind: MemberKind;
 	accessibility: Accessibility;
 	/** Will be defined iff this member is a data field or field accessor. */
 	type?: TypeRef;
@@ -182,7 +198,7 @@ class Emitter {
 	emitVariable(variable: Variable) {
 		const buff = this.buff;
 		this.emitExportKeywordIfNecessary(variable);
-		buff.push(variable.keyword);
+		buff.push(variable.keyword.name.toLowerCase());
 		buff.push(" ");
 		buff.push(variable.name);
 		this.emitTypeRef(variable.type);
@@ -201,23 +217,23 @@ class Emitter {
 
 	emitType(type: Type) {
 		const buff = this.buff;
-		if (type.primitiveBased == 'string') {
+		if (type.primitiveBased === PrimitiveBasedKind.STRING_BASED) {
 			buff.pushln("@StringBased");
-		} else if (type.primitiveBased == 'number') {
+		} else if (type.primitiveBased === PrimitiveBasedKind.NUMBER_BASED) {
 			buff.pushln("@NumberBased");
 		}
 		this.emitExportKeywordIfNecessary(type);
 		buff.push("external ");
-		buff.push(type.kind, " ");
+		buff.push(type.kind.name.toLowerCase(), " ");
 		if (type.defSiteStructural) {
 			buff.push("~");
 		}
 		buff.pushln(type.name, " {");
 		buff.indent();
-		if (type.kind == 'interface' || type.kind == 'class') {
+		if (type.kind === TypeKind.INTERFACE || type.kind === TypeKind.CLASS) {
 			this.emitMembers(type.members);
-		} else if (type.kind == 'enum') {
-			this.emitEnumLiterals(type.literals, type.primitiveBased == 'string');
+		} else if (type.kind === TypeKind.ENUM) {
+			this.emitEnumLiterals(type.literals, type.primitiveBased === PrimitiveBasedKind.STRING_BASED);
 		} else {
 			throw "unknown kind of type: " + type.kind;
 		}
@@ -262,27 +278,27 @@ class Emitter {
 			buff.push(" ");
 		}
 		switch(member.kind) {
-			case 'ctor':
+			case MemberKind.CTOR:
 				buff.push("constructor");
 				this.emitSignature(member.signatures[0], true);
 				buff.push(";");
 				break;
-			case 'field':
+			case MemberKind.FIELD:
 				buff.push(member.name);
 				this.emitTypeRef(member.type);
 				buff.push(";");
 				break;
-			case 'getter':
+			case MemberKind.GETTER:
 				buff.push("get ", member.name, "()");
 				this.emitTypeRef(member.type);
 				buff.push(";");
 				break;
-			case 'setter':
+			case MemberKind.SETTER:
 				buff.push("set ", member.name, "(", "value");
 				this.emitTypeRef(member.type);
 				buff.push(");");
 				break;
-			case 'method':
+			case MemberKind.METHOD:
 				buff.push(member.name);
 				this.emitSignature(member.signatures[0]);
 				buff.push(";");
@@ -322,20 +338,20 @@ class Emitter {
 		const buff = this.buff;
 		if (member.accessibility === undefined) {
 			// ignore
-		} else if (member.accessibility == Accessibility.PUBLIC) {
+		} else if (member.accessibility === Accessibility.PUBLIC) {
 			buff.push("public");
-		} else if (member.accessibility == Accessibility.PROTECTED) {
+		} else if (member.accessibility === Accessibility.PROTECTED) {
 			buff.push("protected");
-		} else if (member.accessibility == Accessibility.PRIVATE) {
+		} else if (member.accessibility === Accessibility.PRIVATE) {
 			buff.push("private");
 		} else {
-			throw "unkown member accessibility: " + Accessibility[member.accessibility];
+			throw "unkown member accessibility: " + member.accessibility?.name;
 		}
 	}
 
 	emitTypeRef(typeRef: TypeRef) {
 		const buff = this.buff;
-		if (globalOptions.copyTypeRefs) {
+		if (getGlobalOptions()?.copyTypeRefs) {
 			if (typeRef) {
 				buff.push(": ");
 				buff.push(typeRef.tsSourceString);
