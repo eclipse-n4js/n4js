@@ -55,6 +55,7 @@ export PATH=${PATH}:`pwd`/node_modules/.bin
 
 echo "==== STEP 4/5: build n4jsd-generator"
 tsc
+n4jsc compile .
 ls -al
 ls -al src-gen
 

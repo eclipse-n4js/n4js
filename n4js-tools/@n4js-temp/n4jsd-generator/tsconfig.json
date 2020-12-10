@@ -3,6 +3,7 @@
     "exclude": ["node_modules", "**/*.spec.ts"],
     "compilerOptions": {
         "target": "es5",
+        "lib": ["es2019", "es2020.promise", "es2020.string"],
         "module": "commonjs",
         "noImplicitAny": false,
         "removeComments": true,
