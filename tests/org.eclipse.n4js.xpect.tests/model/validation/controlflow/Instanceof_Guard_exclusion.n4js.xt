@@ -11,7 +11,8 @@
 
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
 
-/*function f10(a : Number|String) {
+
+function f10(a : Number|String) {
 	if (!(a instanceof Number)) {
 		// XPECT instanceofguard of 'a' --> a!<:Number
 		// XPECT type of 'a' --> String
@@ -102,7 +103,6 @@ function f41(p: any) {
 		}
 	}
 }
-*/
 
 
 interface I51 {}
