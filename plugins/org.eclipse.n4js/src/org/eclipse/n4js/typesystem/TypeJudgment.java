@@ -630,10 +630,15 @@ import com.google.inject.Inject;
 							final UnionTypeExpression union = (UnionTypeExpression) origType;
 							final Collection<TypeRef> newUnionTypes = new LinkedList<>();
 							for (TypeRef unionType : union.getTypeRefs()) {
+								boolean removeType = false;
 								for (TypeRef neverHoldingType : excludedTypes) {
-									if (!ts.subtypeSucceeded(G, unionType, neverHoldingType)) {
-										newUnionTypes.add(unionType);
+									if (ts.subtypeSucceeded(G, unionType, neverHoldingType)) {
+										removeType = true;
+										break;
 									}
+								}
+								if (!removeType) {
+									newUnionTypes.add(unionType);
 								}
 							}
 							if (newUnionTypes.size() < union.getTypeRefs().size()) {
