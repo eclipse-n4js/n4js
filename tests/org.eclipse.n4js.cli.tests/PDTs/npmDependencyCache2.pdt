@@ -1,0 +1,21 @@
+# Project Discovery Test
+# working dir marked with '*'
+
+
+FOLDERS
+-*P1 [PROJECT dependencies={"Lib1":"*", "Lib2":"*"}]
+-- node_modules
+--- Lib1 [PROJECT]
+--- Lib2 [PROJECT plainJS dependencies={"Lib3":"*"}]
+--- Lib3 [PROJECT plainJS]
+--- .cache
+---- @n4jsd
+----- Lib2 [PROJECT package.json = {"name": "@n4jsd/Lib2", "dependencies":{"@n4jsd/Lib3":"*"}, "n4js": {"projectType": "definition", "definesPackage": "Lib2"}}]
+----- Lib3 [PROJECT package.json = {"name": "@n4jsd/Lib3", "n4js": {"projectType": "definition", "definesPackage": "Lib3"}}]
+
+EXPECT
+- P1
+- P1/node_modules/Lib1
+- P1/node_modules/Lib2
+- P1/node_modules/.cache/@n4jsd/Lib2
+- P1/node_modules/.cache/@n4jsd/Lib3
