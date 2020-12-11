@@ -177,6 +177,16 @@ public final class N4JSGlobals {
 	public static final String TEST_CATALOG = "test-catalog.json";
 
 	/**
+	 * The name of cache folder inside the {@code node_modules} folder
+	 */
+	public static final String NODE_MODULES_CACHE = ".cache";
+
+	/**
+	 * The name of the npm scope for n4js-definition projects
+	 */
+	public static final String N4JSD_SCOPE = "@n4jsd";
+
+	/**
 	 * String used to separate segments in the string representation of a {@link QualifiedName qualified name}.
 	 *
 	 * @see N4JSQualifiedNameConverter#DELIMITER
