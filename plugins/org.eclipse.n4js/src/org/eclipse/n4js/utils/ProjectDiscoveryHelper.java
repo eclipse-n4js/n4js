@@ -371,8 +371,8 @@ public class ProjectDiscoveryHelper {
 		Set<File> n4jsdScopes = new HashSet<>();
 		for (Path project : allProjectDirs.values()) {
 			NodeModulesFolder nodeModulesFolder = nodeModulesDiscoveryHelper.getNodeModulesFolder(project, pdCache);
-			if (nodeModulesFolder.localNodeModulesFolder != null) {
-				Path n4jsdScope = nodeModulesFolder.localNodeModulesFolder.toPath()
+			if (!nodeModulesFolder.getNodeModulesFoldersInOrderOfPriority().isEmpty()) {
+				Path n4jsdScope = nodeModulesFolder.getNodeModulesFoldersInOrderOfPriority().get(0).toPath()
 						.resolve(N4JSGlobals.NODE_MODULES_CACHE)
 						.resolve(N4JSGlobals.N4JSD_SCOPE);
 

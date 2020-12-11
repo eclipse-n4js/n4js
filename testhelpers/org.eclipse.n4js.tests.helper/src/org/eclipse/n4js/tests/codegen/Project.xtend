@@ -96,6 +96,7 @@ public class Project {
 	final List<SourceFolder> sourceFolders = newLinkedList();
 	final Set<String> projectDependencies = newLinkedHashSet();
 	final Map<String, Project> nodeModuleProjects = newHashMap();
+	final Map<String, Project> nodeModuleCacheProjects = newHashMap();
 	ProjectType projectType;
 	String projectVersion = "1.0.0";
 	String mainModule = null;
@@ -286,8 +287,16 @@ public class Project {
 		this.nodeModuleProjects.put(project.projectName, project);
 	}
 	
+	public def void addNodeModuleCacheProject(Project project) {
+		this.nodeModuleCacheProjects.put(project.projectName, project);
+	}
+	
 	public def Project getNodeModuleProject(String projectName) {
 		return this.nodeModuleProjects.get(projectName);
+	}
+	
+	public def Project getNodeModuleCacheProject(String projectName) {
+		return this.nodeModuleCacheProjects.get(projectName);
 	}
 	
 	/**
@@ -382,6 +391,15 @@ public class Project {
 			nodeModulesDirectory.mkdir();
 			createNodeModuleProjects(nodeModulesDirectory);
 		}
+		
+		if (!nodeModuleCacheProjects.isEmpty()) {
+			val File nodeModulesDirectory = new File(projectDirectory, N4JSGlobals.NODE_MODULES);
+			val File nodeModulesCacheDirectory = new File(nodeModulesDirectory, N4JSGlobals.NODE_MODULES_CACHE);
+			if (nodeModulesCacheDirectory.exists)
+				FileDeleter.delete(nodeModulesCacheDirectory);
+			nodeModulesCacheDirectory.mkdir();
+			createNodeModuleCacheProjects(nodeModulesCacheDirectory);
+		}
 
 		return projectDirectory;
 	}
@@ -406,5 +424,10 @@ public class Project {
 	private def void createNodeModuleProjects(File parentDirectory) {
 		for (nodeModuleProject: nodeModuleProjects.values)
 			nodeModuleProject.create(parentDirectory.toPath());
+	}
+
+	private def void createNodeModuleCacheProjects(File parentDirectory) {
+		for (nodeModuleCacheProject: nodeModuleCacheProjects.values)
+			nodeModuleCacheProject.create(parentDirectory.toPath());
 	}
 }

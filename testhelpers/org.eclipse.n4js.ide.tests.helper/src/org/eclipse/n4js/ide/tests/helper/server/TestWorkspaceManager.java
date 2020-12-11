@@ -87,6 +87,10 @@ public class TestWorkspaceManager {
 	 */
 	static final public String CFG_NODE_MODULES = "#NODE_MODULES:";
 	/**
+	 * Reserved string to identify the directory 'node_modules/.cache'
+	 */
+	static final public String CFG_NODE_MODULES_CACHE = "#NODE_MODULES_CACHE:";
+	/**
 	 * Reserved string to identify the src folder of a project<br>
 	 * see {@link #CFG_NODE_MODULES}
 	 */
@@ -476,6 +480,10 @@ public class TestWorkspaceManager {
 				prjName = prjName.substring(CFG_NODE_MODULES.length());
 				Project project = createSimpleProject(prjName, moduleContents, dependencies, ProjectKind.NodeModule);
 				yarnProject.addNodeModuleProject(project);
+			} else if (prjName.startsWith(CFG_NODE_MODULES_CACHE)) {
+				prjName = prjName.substring(CFG_NODE_MODULES_CACHE.length());
+				Project project = createSimpleProject(prjName, moduleContents, dependencies, ProjectKind.NodeModule);
+				yarnProject.addNodeModuleCacheProject(project);
 			} else {
 				Project project = createSimpleProject(prjName, moduleContents, dependencies, ProjectKind.Member);
 				yarnProject.addMemberProject(project);
