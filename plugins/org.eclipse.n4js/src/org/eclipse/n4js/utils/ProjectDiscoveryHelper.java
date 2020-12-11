@@ -36,13 +36,17 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.projectDescription.DependencyType;
 import org.eclipse.n4js.projectDescription.ProjectDependency;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectDescriptionFactory;
 import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.semver.SemverUtils;
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper.NodeModulesFolder;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
@@ -397,11 +401,14 @@ public class ProjectDiscoveryHelper {
 			ProjectDescription depPD = getCachedProjectDescription(genPrjPath, pdCache);
 			String projectName = depPD.getProjectName();
 			String definesPackageName = depPD.getDefinesPackage();
+
 			if ((dependencies.containsKey(definesPackageName) && !dependencies.containsKey(projectName))
 					|| requiredN4jsds.contains(projectName)) {
 
 				requiredN4jsds.remove(projectName);
 				dependencies.put(projectName, genPrjPath);
+
+				addImplicitDependency(pdCache, dependencies, projectName, definesPackageName);
 
 				for (ProjectDependency dependency : depPD.getProjectDependencies()) {
 					String requiredDepName = dependency.getProjectName();
@@ -414,6 +421,34 @@ public class ProjectDiscoveryHelper {
 
 			} else {
 				skippedGenPrjs.put(projectName, genPrjDir);
+			}
+		}
+	}
+
+	private void addImplicitDependency(Map<Path, ProjectDescription> pdCache, Map<String, Path> dependencies,
+			String projectName, String definesPackageName) {
+
+		Path definedPackagePath = dependencies.get(definesPackageName);
+		if (definedPackagePath != null) {
+			ProjectDescription definedPD = getCachedProjectDescription(definedPackagePath, pdCache);
+			if (definedPD != null) {
+				boolean hasDependencyToDefinitionProject = false;
+				for (ProjectDependency dependency : definedPD.getProjectDependencies()) {
+					if (Objects.equal(dependency.getProjectName(), projectName)) {
+						hasDependencyToDefinitionProject = true;
+						break;
+					}
+				}
+				if (!hasDependencyToDefinitionProject) {
+					// add dependency to @n4jd/... project
+					ProjectDependency dependencyToCache = ProjectDescriptionFactory.eINSTANCE.createProjectDependency();
+					dependencyToCache.setProjectName(projectName);
+					dependencyToCache.setType(DependencyType.IMPLICIT);
+					dependencyToCache.setVersionRequirementString("");
+					dependencyToCache.setVersionRequirement(SemverUtils.createEmptyVersionRequirement());
+					definedPD.getProjectDependencies().add(dependencyToCache);
+					// TODO: Check whether sorted dependencies got updated!
+				}
 			}
 		}
 	}
