@@ -56,7 +56,7 @@ export public class AbstractN4jsdGeneratorTest {
 		fs_lib.writeFileSync(pathAndName, contentAdjusted, undefined);
 	}
 
-	protected createPackageJson(relativePath: string, projectName: string) {
+	protected createProject(relativePath: string, projectName: string) {
 		const relPathAndName = (relativePath && relativePath.length > 0 ? relativePath + "/" : "")
 			+ projectName + "/" + utils.PACKAGE_JSON;
 		const obj = {
@@ -72,14 +72,14 @@ export public class AbstractN4jsdGeneratorTest {
 		this.createFile(relPathAndName, JSON.stringify(obj, undefined, "\t"));
 	}
 
-	protected runN4jsdGen(...args: string) {
+	protected runN4jsdGenerator(...args: string) {
 		const err = runN4jsdGenerator(args);
 		if (err) {
 			Assert.fail("n4js-generator reported an unexpected error: " + err.message + "\n" + JSON.stringify(err, undefined, "    "));
 		}
 	}
 
-	protected runN4jsdGenWithError(args: string[], expectedMessage: string, expectedExitCode: int) {
+	protected runN4jsdGeneratorWithError(args: string[], expectedMessage: string, expectedExitCode: int) {
 		const err = runN4jsdGenerator(args);
 		if (!err) {
 			Assert.fail("n4js-generator did not report an error, even though an error was expected");
@@ -105,6 +105,30 @@ export public class AbstractN4jsdGeneratorTest {
 			"file does not have the expected content: " + relativePathAndName);
 	}
 
+	protected assertConversion(dtsModules: string[], expectedGeneratedModules: string[]) {
+		Assert.isTrue(dtsModules.length > 0, "at least one dtsModules must be given");
+		Assert.isTrue(expectedGeneratedModules.length > 0, "at least one expectedGeneratedModules must be given");
+		const projectName = "TestProject";
+		this.createProject("input", projectName);
+		for (const dtsModuleRaw of dtsModules) {
+			const dtsModule = utils.trimMultiLineString(dtsModuleRaw);
+			const [ fileName, content ] = splitFileNameAndContentOfModule(dtsModule);
+			if (!fileName.endsWith(".d.ts")) {
+				Assert.fail("file names of dtsModules must end with .d.ts, but was: " + fileName);
+			}
+			this.createFile("input/" + projectName + "/" + fileName, content);
+		}
+		this.runN4jsdGenerator("-o", ROOT + "/output", ROOT + "/input/" + projectName);
+		for (const expGenModuleRaw of expectedGeneratedModules) {
+			const expGenModule = utils.trimMultiLineString(expGenModuleRaw);
+			const [ fileName, content ] = splitFileNameAndContentOfModule(expGenModule);
+			if (!fileName.endsWith(".n4jsd")) {
+				Assert.fail("file names of expected generated modules must end with .n4jsd, but was: " + fileName);
+			}
+			this.assertFileContent("output/@n4jsd/" + projectName + "/" + fileName, content);
+		}
+	}
+
 	protected assertStringEquals(actual: string, expected: string, message: string = "unexpected string") {
 		Assert.equal(actual, expected, message + `
 ${message}
@@ -121,4 +145,16 @@ ${actual}
 	protected relativizePaths(str: string): string {
 		return str.split(ROOT).join(".../" + path_lib.basename(ROOT));
 	}
+}
+
+
+function splitFileNameAndContentOfModule(moduleStr: string): Iterable2<string, string> {
+	const idx = moduleStr.indexOf("\n");
+	const firstLine = idx >= 0 ? moduleStr.substring(0, idx) : "";
+	const content = idx >= 0 ? moduleStr.substring(idx + 1) : "";
+	const match = firstLine.match(/^\s*\/\/\s*(.*)\s*$/);
+	if (!match || match.length < 2) {
+		Assert.fail("every module must start with: // <file name with extension>");
+	}
+	return [ match[1], content ];
 }

@@ -19,26 +19,26 @@ export public class ArgsTest extends AbstractN4jsdGeneratorTest {
 
 	@Test
 	public testUnknownOption() {
-		this.runN4jsdGenWithError([ "--oops" ],
+		this.runN4jsdGeneratorWithError([ "--oops" ],
 			"unknown option: --oops", 1);
 	}
 
 	@Test
 	public testArgumentMissingForOption() {
-		this.runN4jsdGenWithError([ "-o" ],
+		this.runN4jsdGeneratorWithError([ "-o" ],
 			"argument missing for option -o", 1);
 	}
 
 	@Test
 	public testNoInputPath() {
-		this.runN4jsdGenWithError([ "-o", ROOT ],
+		this.runN4jsdGeneratorWithError([ "-o", ROOT ],
 			"no input path or glob pattern given", 1);
 	}
 
 	@Test
 	public testIncorrectInputPath() {
 		this.createFile("Test.txt", "Some test file.");
-		this.runN4jsdGenWithError([ ROOT + "/Test.txt" ],
+		this.runN4jsdGeneratorWithError([ ROOT + "/Test.txt" ],
 			"invalid input path(s):\n"
 			+ "    neither a folder nor a '.d.ts' file: .../temp_test_data/Test.txt", 1);
 	}
@@ -48,7 +48,7 @@ export public class ArgsTest extends AbstractN4jsdGeneratorTest {
 		this.createFile("Test1.txt", "Some test file.");
 		this.createFile("Test2.d.ts", "// empty .d.ts file");
 		this.createFile("Test3.txt", "Some test file.");
-		this.runN4jsdGenWithError([ ROOT + "/Test*" ],
+		this.runN4jsdGeneratorWithError([ ROOT + "/Test*" ],
 			"invalid input path(s):\n"
 			+ "    neither a folder nor a '.d.ts' file: .../temp_test_data/Test1.txt\n"
 			+ "    neither a folder nor a '.d.ts' file: .../temp_test_data/Test3.txt", 1);
@@ -56,7 +56,7 @@ export public class ArgsTest extends AbstractN4jsdGeneratorTest {
 
 	@Test
 	public testFileNotFound() {
-		this.runN4jsdGenWithError([ ROOT + "/DoesNotExist.d.ts" ],
+		this.runN4jsdGeneratorWithError([ ROOT + "/DoesNotExist.d.ts" ],
 			"input path does not exist: .../temp_test_data/DoesNotExist.d.ts", 1);
 	}
 }

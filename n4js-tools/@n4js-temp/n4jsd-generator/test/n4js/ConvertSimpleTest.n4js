@@ -10,23 +10,26 @@
  */
 
 import {AbstractN4jsdGeneratorTest} from "AbstractN4jsdGeneratorTest";
-import {ROOT} from "AbstractN4jsdGeneratorTest";
 
 /**
- * Tests parsing of command line arguments.
+ * Tests some simple conversions.
  */
 export public class ConvertSimpleTest extends AbstractN4jsdGeneratorTest {
 
 	@Test
-	public testTEMP() {
-		this.createPackageJson("input", "P");
-		this.createFile("input/P/TestModule.d.ts", `
-			export class Buffer {}
-		`);
-		this.runN4jsdGen("-o", ROOT + "/output", ROOT + "/input/P");
-		this.assertFileContent("output/@n4jsd/P/TestModule.n4jsd",`
-			export external class ~Buffer {
-			}
-		`);
+	public testClass() {
+		this.assertConversion([
+			`
+				// TestModule.d.ts
+				export class Buffer {}
+			`
+		], [
+			`
+				// TestModule.n4jsd
+				export external class ~Buffer {
+				}
+			`
+		]);
 	}
+
 }
