@@ -9,6 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
+import * as fs_lib from "fs";
 import * as glob_lib+ from "glob"
 
 export const PACKAGE_JSON = "package.json";
@@ -34,8 +35,47 @@ export function warning(msg: string): Issue {
 }
 
 
+export function logIssues(issues: Issue[]) {
+	for (const issue of issues) {
+		log(issue.kind.name + ": " + issue.message);
+	}
+}
+export function logError(msg: string) {
+	log("ERROR: " + msg);
+}
+export function log(msg: string = "") {
+	console.log(msg);
+}
+
+
 export function resolveGlobPattern(pathWithGlob: string): string[] {
 	return glob_lib.sync(pathWithGlob, {}) as string[];
+}
+
+
+export function mkdirs(path: string) {
+	fs_lib.mkdirSync(path, ({ recursive: true } as any) as string); // incorrect signature in n4jsd for fs!
+}
+
+
+export function trimMultiLineString(str: string): string {
+	let strs = str.split('\n');
+	while (strs.length > 0 && strs[0].trim().length === 0) {
+		strs.splice(0, 1);
+	}
+	while (strs.length > 0 && strs[strs.length - 1].trim().length === 0) {
+		strs.splice(strs.length - 1, 1);
+	}
+	if (strs.length > 0) {
+		while (true) {
+			const ch = strs[0].charAt(0);
+			if (ch === "" || ch.trim() !== "" || !strs.every(s => s.charAt(0) === ch)) {
+				break;
+			}
+			strs = strs.map(s => s.substring(1));
+		}
+	}
+	return strs.join('\n');
 }
 
 
