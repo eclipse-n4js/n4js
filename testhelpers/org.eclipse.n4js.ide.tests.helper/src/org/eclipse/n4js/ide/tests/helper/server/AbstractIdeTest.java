@@ -147,8 +147,6 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	public static final String CFG_SOURCE_FOLDER = TestWorkspaceManager.CFG_SOURCE_FOLDER;
 	/** @see TestWorkspaceManager#CFG_NODE_MODULES */
 	public static final String CFG_NODE_MODULES = TestWorkspaceManager.CFG_NODE_MODULES;
-	/** @see TestWorkspaceManager#CFG_NODE_MODULES_CACHE */
-	public static final String CFG_NODE_MODULES_CACHE = TestWorkspaceManager.CFG_NODE_MODULES_CACHE;
 	/** @see TestWorkspaceManager#CFG_SRC */
 	public static final String CFG_SRC = TestWorkspaceManager.CFG_SRC;
 	/** Name of the package.json file. */

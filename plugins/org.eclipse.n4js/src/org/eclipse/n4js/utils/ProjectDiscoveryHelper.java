@@ -23,7 +23,6 @@ import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -36,18 +35,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.projectDescription.DependencyType;
 import org.eclipse.n4js.projectDescription.ProjectDependency;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
-import org.eclipse.n4js.projectDescription.ProjectDescriptionFactory;
 import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.locations.FileURI;
-import org.eclipse.n4js.semver.SemverUtils;
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper.NodeModulesFolder;
 
-import com.google.common.base.Objects;
-import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 /**
@@ -114,7 +108,7 @@ public class ProjectDiscoveryHelper {
 
 		Map<String, Path> allProjectDirs = collectAllProjects(workspaceRoots, pdCache);
 
-		Map<String, Path> dependencies = collectNecessaryDependencies(allProjectDirs, true, pdCache);
+		Map<String, Path> dependencies = collectNecessaryDependencies(allProjectDirs, pdCache);
 		dependencies.forEach(allProjectDirs::putIfAbsent);
 
 		return new LinkedHashSet<>(allProjectDirs.values());
@@ -349,7 +343,7 @@ public class ProjectDiscoveryHelper {
 	 * dependencies of N4JS projects.
 	 */
 	private Map<String, Path> collectNecessaryDependencies(Map<String, Path> allProjectDirs,
-			boolean loadFromNodeModulesCache, Map<Path, ProjectDescription> pdCache) {
+			Map<Path, ProjectDescription> pdCache) {
 
 		Map<String, Path> dependencies = new LinkedHashMap<>();
 
@@ -357,105 +351,12 @@ public class ProjectDiscoveryHelper {
 			collectProjectDependencies(nextProject, pdCache, dependencies);
 		}
 
-		if (loadFromNodeModulesCache) {
-			collectDefinitionsFromNMCache(allProjectDirs, pdCache, dependencies);
-		}
-
 		return dependencies;
 	}
 
-	/** Collects all generated @n4jsd projects inside folder {@link N4JSGlobals#NODE_MODULES_CACHE} */
-	private void collectDefinitionsFromNMCache(Map<String, Path> allProjectDirs, Map<Path, ProjectDescription> pdCache,
-			Map<String, Path> dependencies) {
-
-		Set<File> n4jsdScopes = new HashSet<>();
-		for (Path project : allProjectDirs.values()) {
-			NodeModulesFolder nodeModulesFolder = nodeModulesDiscoveryHelper.getNodeModulesFolder(project, pdCache);
-			if (!nodeModulesFolder.getNodeModulesFoldersInOrderOfPriority().isEmpty()) {
-				Path n4jsdScope = nodeModulesFolder.getNodeModulesFoldersInOrderOfPriority().get(0).toPath()
-						.resolve(N4JSGlobals.NODE_MODULES_CACHE)
-						.resolve(N4JSGlobals.N4JSD_SCOPE);
-
-				if (n4jsdScope.toFile().isDirectory()) {
-					n4jsdScopes.add(n4jsdScope.toFile());
-				}
-			}
-		}
-
-		for (File n4jsdScope : n4jsdScopes) {
-			addGeneratedDefinitionProjects(n4jsdScope, pdCache, dependencies);
-		}
-	}
-
-	private void addGeneratedDefinitionProjects(File n4jsdScope, Map<Path, ProjectDescription> pdCache,
-			Map<String, Path> dependencies) {
-
-		List<File> generatedProjects = Lists.newArrayList(n4jsdScope.listFiles((file) -> file.isDirectory()));
-		Map<String, File> skippedGenPrjs = new HashMap<>();
-		List<File> worklist = new ArrayList<>(generatedProjects);
-		Set<String> requiredN4jsds = new HashSet<>();
-
-		while (!worklist.isEmpty()) {
-			File genPrjDir = worklist.remove(0);
-			Path genPrjPath = genPrjDir.toPath();
-			ProjectDescription depPD = getCachedProjectDescription(genPrjPath, pdCache);
-			String projectName = depPD.getProjectName();
-			String definesPackageName = depPD.getDefinesPackage();
-
-			if ((dependencies.containsKey(definesPackageName) && !dependencies.containsKey(projectName))
-					|| requiredN4jsds.contains(projectName)) {
-
-				requiredN4jsds.remove(projectName);
-				dependencies.put(projectName, genPrjPath);
-
-				addImplicitDependency(pdCache, dependencies, projectName, definesPackageName);
-
-				for (ProjectDependency dependency : depPD.getProjectDependencies()) {
-					String requiredDepName = dependency.getProjectName();
-					requiredN4jsds.add(requiredDepName);
-					if (skippedGenPrjs.containsKey(requiredDepName)) {
-						// visit again
-						worklist.add(skippedGenPrjs.remove(requiredDepName));
-					}
-				}
-
-			} else {
-				skippedGenPrjs.put(projectName, genPrjDir);
-			}
-		}
-	}
-
-	private void addImplicitDependency(Map<Path, ProjectDescription> pdCache, Map<String, Path> dependencies,
-			String projectName, String definesPackageName) {
-
-		Path definedPackagePath = dependencies.get(definesPackageName);
-		if (definedPackagePath != null) {
-			ProjectDescription definedPD = getCachedProjectDescription(definedPackagePath, pdCache);
-			if (definedPD != null) {
-				boolean hasDependencyToDefinitionProject = false;
-				for (ProjectDependency dependency : definedPD.getProjectDependencies()) {
-					if (Objects.equal(dependency.getProjectName(), projectName)) {
-						hasDependencyToDefinitionProject = true;
-						break;
-					}
-				}
-				if (!hasDependencyToDefinitionProject) {
-					// add dependency to @n4jd/... project
-					ProjectDependency dependencyToCache = ProjectDescriptionFactory.eINSTANCE.createProjectDependency();
-					dependencyToCache.setProjectName(projectName);
-					dependencyToCache.setType(DependencyType.IMPLICIT);
-					dependencyToCache.setVersionRequirementString("");
-					dependencyToCache.setVersionRequirement(SemverUtils.createEmptyVersionRequirement());
-					definedPD.getProjectDependencies().add(dependencyToCache);
-					// TODO: Check whether sorted dependencies got updated!
-				}
-			}
-		}
-	}
-
 	/** Collects all (transitive) dependencies of the given project */
-	private void collectProjectDependencies(Path projectDir,
-			Map<Path, ProjectDescription> pdCache, Map<String, Path> dependencies) {
+	private void collectProjectDependencies(Path projectDir, Map<Path, ProjectDescription> pdCache,
+			Map<String, Path> dependencies) {
 
 		NodeModulesFolder nodeModulesFolder = nodeModulesDiscoveryHelper.getNodeModulesFolder(projectDir, pdCache);
 		LinkedHashSet<Path> workList = new LinkedHashSet<>();
