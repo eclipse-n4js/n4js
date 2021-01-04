@@ -152,7 +152,5 @@ enum DependencyType {
 	/** Dependencies of this type must always be present. */
 	RUNTIME,
 	/** Dependencies of this type must be present at development-time. */
-	DEVELOPMENT,
-	/** Dependencies of this type are added by n4jsc during project discovery. */
-	IMPLICIT
+	DEVELOPMENT
 }
