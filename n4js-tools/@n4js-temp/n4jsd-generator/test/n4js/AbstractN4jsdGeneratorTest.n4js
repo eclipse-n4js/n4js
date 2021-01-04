@@ -15,18 +15,28 @@ import * as utils from "utils";
 import {runN4jsdGenerator} from "generator";
 import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert";
 
+/** Same as 'this.getTestFolder()'. Provided for readability. */
+export let ROOT: string = undefined;
+/** Same as 'ROOT', but as a relative path based on the current working directory. */
+export let ROOT_RELATIVE: string = undefined;
+
 export public class AbstractN4jsdGeneratorTest {
 
 	@Before
 	protected cleanupBefore() {
 		this.cleanup();
+		ROOT = this.getTestFolder();
+		ROOT_RELATIVE = path_lib.relative(process.cwd(), ROOT);
 	}
 
 	@After
 	protected cleanupAfter() {
+		ROOT = undefined;
+		ROOT_RELATIVE = undefined;
 		//this.cleanup();
 	}
 
+	/** Returns the absolute path to the temporary test folder. */
 	protected getTestFolder(): string {
 		return process.cwd() + "/test/temp_test_data";
 	}
@@ -63,7 +73,19 @@ export public class AbstractN4jsdGeneratorTest {
 	}
 
 	protected runN4jsdGen(...args: string) {
-		runN4jsdGenerator(args);
+		const err = runN4jsdGenerator(args);
+		if (err) {
+			Assert.fail("n4js-generator reported an unexpected error: " + err.message + "\n" + JSON.stringify(err, undefined, "    "));
+		}
+	}
+
+	protected runN4jsdGenWithError(args: string[], expectedMessage: string, expectedExitCode: int) {
+		const err = runN4jsdGenerator(args);
+		if (!err) {
+			Assert.fail("n4js-generator did not report an error, even though an error was expected");
+		}
+		Assert.equal(this.relativizePaths(err.message), expectedMessage);
+		Assert.equal(err.exitCode, expectedExitCode);
 	}
 
 	protected assertFileExists(relativePathAndName: string) {
@@ -94,5 +116,9 @@ ACTUAL:
 -----------------------------
 ${actual}
 -----------------------------`);
+	}
+
+	protected relativizePaths(str: string): string {
+		return str.split(ROOT).join(".../" + path_lib.basename(ROOT));
 	}
 }

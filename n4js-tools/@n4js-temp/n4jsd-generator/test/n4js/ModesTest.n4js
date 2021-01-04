@@ -1,0 +1,183 @@
+/**
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+import {AbstractN4jsdGeneratorTest} from "AbstractN4jsdGeneratorTest";
+import {ROOT} from "AbstractN4jsdGeneratorTest";
+import {ROOT_RELATIVE} from "AbstractN4jsdGeneratorTest";
+
+/**
+ * Tests the basic modes of the n4jsd-generator tool:
+ * 1) single file mode: converting one or more individual .d.ts files,
+ * 2) project mode: converting one or more entire definition projects.
+ */
+export public class ModesTest extends AbstractN4jsdGeneratorTest {
+
+	@Test
+	public testConvertSingleFile() {
+		this.createPackageJson("", "P");
+		this.createFile("P/TestModule.d.ts", "");
+		this.runN4jsdGen(ROOT + "/P/TestModule.d.ts");
+		this.assertFileExists("P/TestModule.n4jsd");
+	}
+
+	@Test
+	public testConvertSingleFileRelativePath() {
+		this.createPackageJson("", "P");
+		this.createFile("P/TestModule.d.ts", "");
+		this.runN4jsdGen(ROOT_RELATIVE + "/P/TestModule.d.ts");
+		this.assertFileExists("P/TestModule.n4jsd");
+	}
+
+	@Test
+	public testConvertSingleFileWithOutputFolder() {
+		this.createPackageJson("", "P");
+		this.createFile("P/TestModule.d.ts", "");
+		this.runN4jsdGen("-o", ROOT + "/output", ROOT + "/P/TestModule.d.ts");
+		// option -o is being ignored in single-file-mode (i.e. output file will be placed next to input file):
+		this.assertFileExists("P/TestModule.n4jsd");
+	}
+
+	@Test
+	public testConvertManyFiles() {
+		this.createPackageJson("", "P");
+		this.createFile("P/TestModule1.d.ts", "");
+		this.createFile("P/TestModule2.d.ts", "");
+		this.runN4jsdGen(ROOT + "/P/TestModule1.d.ts", ROOT + "/P/TestModule2.d.ts");
+		this.assertFileExists("P/TestModule1.n4jsd");
+		this.assertFileExists("P/TestModule2.n4jsd");
+	}
+
+	@Test
+	public testConvertManyFilesWildcard01() {
+		this.createPackageJson("", "P");
+		this.createFile("P/TestModule1.d.ts", "");
+		this.createFile("P/TestModule2.d.ts", "");
+		this.runN4jsdGen(ROOT + "/P/TestModule*.d.ts");
+		this.assertFileExists("P/TestModule1.n4jsd");
+		this.assertFileExists("P/TestModule2.n4jsd");
+	}
+
+	@Test
+	public testConvertManyFilesWildcard02() {
+		this.createPackageJson("", "P");
+		this.createFile("P/TestModule1.d.ts", "");
+		this.createFile("P/TestModule2.d.ts", "");
+		this.createFile("P/subFolder/TestModule3.d.ts", "");
+		this.runN4jsdGen(ROOT + "/**/*.d.ts");
+		this.assertFileExists("P/TestModule1.n4jsd");
+		this.assertFileExists("P/TestModule2.n4jsd");
+		this.assertFileExists("P/subFolder/TestModule3.n4jsd");
+	}
+
+	@Test
+	public testConvertSingleProject() {
+		this.createPackageJson("", "P");
+		this.createFile("P/TestModule.d.ts", "");
+		this.runN4jsdGen(ROOT + "/P");
+		this.assertFileExists("@n4jsd/P/package.json");
+		this.assertFileExists("@n4jsd/P/TestModule.n4jsd");
+	}
+
+	@Test
+	public testConvertSingleProjectRelativePath() {
+		this.createPackageJson("", "P");
+		this.createFile("P/TestModule.d.ts", "");
+		this.runN4jsdGen(ROOT_RELATIVE + "/P");
+		this.assertFileExists("@n4jsd/P/package.json");
+		this.assertFileExists("@n4jsd/P/TestModule.n4jsd");
+	}
+
+	@Test
+	public testConvertSingleProjectWithOutputFolder() {
+		this.createPackageJson("input", "P");
+		this.createFile("input/P/TestModule.d.ts", "");
+		this.runN4jsdGen("-o", ROOT + "/output", ROOT + "/input/P");
+		this.assertFileExists("output/@n4jsd/P/package.json");
+		this.assertFileExists("output/@n4jsd/P/TestModule.n4jsd");
+	}
+
+	@Test
+	public testConvertSingleProjectWithOutputFolderRelativePath() {
+		this.createPackageJson("input", "P");
+		this.createFile("input/P/TestModule.d.ts", "");
+		this.runN4jsdGen("-o", ROOT_RELATIVE + "/output", ROOT_RELATIVE + "/input/P");
+		this.assertFileExists("output/@n4jsd/P/package.json");
+		this.assertFileExists("output/@n4jsd/P/TestModule.n4jsd");
+	}
+
+	@Test
+	public testConvertManyProjects() {
+		this.createPackageJson("", "P1");
+		this.createFile("P1/TestModule.d.ts", "");
+		this.createPackageJson("", "P2");
+		this.createFile("P2/TestModule.d.ts", "");
+		this.createPackageJson("subFolder", "P3");
+		this.createFile("subFolder/P3/TestModule.d.ts", "");
+		this.runN4jsdGen(ROOT + "/P1", ROOT + "/P2", ROOT + "/subFolder/P3");
+		this.assertFileExists("@n4jsd/P1/package.json");
+		this.assertFileExists("@n4jsd/P1/TestModule.n4jsd");
+		this.assertFileExists("@n4jsd/P2/package.json");
+		this.assertFileExists("@n4jsd/P2/TestModule.n4jsd");
+		this.assertFileExists("subFolder/@n4jsd/P3/package.json");
+		this.assertFileExists("subFolder/@n4jsd/P3/TestModule.n4jsd");
+	}
+
+	@Test
+	public testConvertManyProjectsWildcard() {
+		this.createPackageJson("", "P1");
+		this.createFile("P1/TestModule.d.ts", "");
+		this.createPackageJson("", "P2");
+		this.createFile("P2/TestModule.d.ts", "");
+		this.createPackageJson("subFolder", "P3");
+		this.createFile("subFolder/P3/TestModule.d.ts", "");
+		this.runN4jsdGen(ROOT + "/**/P*");
+		this.assertFileExists("@n4jsd/P1/package.json");
+		this.assertFileExists("@n4jsd/P1/TestModule.n4jsd");
+		this.assertFileExists("@n4jsd/P2/package.json");
+		this.assertFileExists("@n4jsd/P2/TestModule.n4jsd");
+		this.assertFileExists("subFolder/@n4jsd/P3/package.json");
+		this.assertFileExists("subFolder/@n4jsd/P3/TestModule.n4jsd");
+	}
+
+	@Test
+	public testConvertManyProjectsWildcardWithOutputFolder() {
+		this.createPackageJson("input", "P1");
+		this.createFile("input/P1/TestModule.d.ts", "");
+		this.createPackageJson("input", "P2");
+		this.createFile("input/P2/TestModule.d.ts", "");
+		this.createPackageJson("input/subFolder", "P3");
+		this.createFile("input/subFolder/P3/TestModule.d.ts", "");
+		this.runN4jsdGen("-o", ROOT + "/output", ROOT + "/input/**/P*");
+		this.assertFileExists("output/@n4jsd/P1/package.json");
+		this.assertFileExists("output/@n4jsd/P1/TestModule.n4jsd");
+		this.assertFileExists("output/@n4jsd/P2/package.json");
+		this.assertFileExists("output/@n4jsd/P2/TestModule.n4jsd");
+		this.assertFileExists("output/@n4jsd/P3/package.json");
+		this.assertFileExists("output/@n4jsd/P3/TestModule.n4jsd");
+	}
+
+	@Test
+	public testConvertManyProjectsWildcardWithOutputFolderRelativePath() {
+		this.createPackageJson("input", "P1");
+		this.createFile("input/P1/TestModule.d.ts", "");
+		this.createPackageJson("input", "P2");
+		this.createFile("input/P2/TestModule.d.ts", "");
+		this.createPackageJson("input/subFolder", "P3");
+		this.createFile("input/subFolder/P3/TestModule.d.ts", "");
+		this.runN4jsdGen("-o", ROOT_RELATIVE + "/output", ROOT_RELATIVE + "/input/**/P*");
+		this.assertFileExists("output/@n4jsd/P1/package.json");
+		this.assertFileExists("output/@n4jsd/P1/TestModule.n4jsd");
+		this.assertFileExists("output/@n4jsd/P2/package.json");
+		this.assertFileExists("output/@n4jsd/P2/TestModule.n4jsd");
+		this.assertFileExists("output/@n4jsd/P3/package.json");
+		this.assertFileExists("output/@n4jsd/P3/TestModule.n4jsd");
+	}
+}
