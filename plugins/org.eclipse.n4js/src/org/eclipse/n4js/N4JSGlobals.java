@@ -158,6 +158,10 @@ public final class N4JSGlobals {
 	 */
 	public static final String NPM = "npm";
 	/**
+	 * Name of the npm scope of n4js definition projects.
+	 */
+	public static final String N4JSD_SCOPE = "@n4jsd";
+	/**
 	 * Name of the npm node_modules folder.
 	 */
 	public static final String NODE_MODULES = "node_modules";
