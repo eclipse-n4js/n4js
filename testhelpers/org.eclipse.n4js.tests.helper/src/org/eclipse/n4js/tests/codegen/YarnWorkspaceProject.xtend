@@ -56,6 +56,7 @@ public class YarnWorkspaceProject extends Project {
 	}
 
 	public def void addMemberProject(String workspaceFolderName, Project project) {
+		this.memberProjects.putIfAbsent(workspaceFolderName, newHashMap());
 		this.memberProjects.get(workspaceFolderName).put(project.name, project);
 	}
 
@@ -84,7 +85,7 @@ public class YarnWorkspaceProject extends Project {
 			"version": "«version»",
 			"private": true,
 			"workspaces": [
-			    "«Strings.join(", ", [wsName | wsName + "/*"], memberProjects.keySet())»"
+			    «Strings.join(", ", [wsName | '''"«wsName»/*"'''], memberProjects.keySet())»
 		    ],
 			"dependencies": {
 					«IF !projectDependencies.nullOrEmpty»

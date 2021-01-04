@@ -87,6 +87,11 @@ public class TestWorkspaceManager {
 	 */
 	static final public String CFG_NODE_MODULES = "#NODE_MODULES:";
 	/**
+	 * Reserved string to identify the name of the workspaces folder name<br>
+	 * see {@link Documentation#CFG_WORKSPACES_FOLDER}
+	 */
+	static final public String CFG_WORKSPACES_FOLDER = "#CFG_WORKSPACES_FOLDER:";
+	/**
 	 * Reserved string to identify the src folder of a project<br>
 	 * see {@link #CFG_NODE_MODULES}
 	 */
@@ -476,6 +481,15 @@ public class TestWorkspaceManager {
 				prjName = prjName.substring(CFG_NODE_MODULES.length());
 				Project project = createSimpleProject(prjName, moduleContents, dependencies, ProjectKind.NodeModule);
 				yarnProject.addNodeModuleProject(project);
+
+			} else if (prjName.startsWith(CFG_WORKSPACES_FOLDER)) {
+				int idxCFG = CFG_WORKSPACES_FOLDER.length();
+				int idxSlash = prjName.indexOf("/");
+				String wsFolder = prjName.substring(idxCFG, idxSlash);
+				prjName = prjName.substring(idxSlash + 1);
+				Project project = createSimpleProject(prjName, moduleContents, dependencies, ProjectKind.Member);
+				yarnProject.addMemberProject(wsFolder, project);
+
 			} else {
 				Project project = createSimpleProject(prjName, moduleContents, dependencies, ProjectKind.Member);
 				yarnProject.addMemberProject(project);
