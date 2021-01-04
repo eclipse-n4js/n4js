@@ -29,8 +29,10 @@ import java.util.Set;
 import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.internal.MultiCleartriggerCache.CleartriggerSupplier;
+import org.eclipse.n4js.projectDescription.ProjectDependency;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.projectDescription.ProjectType;
@@ -62,7 +64,7 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 	protected ExternalLibraryWorkspace externalLibraryWorkspace;
 
 	@Inject
-	protected FileBasedExternalPackageManager packageManager;
+	protected FileBasedExternalPackageManager packageManager; // FIXME: remove?
 
 	@Inject
 	private MultiCleartriggerCache cache;
@@ -262,6 +264,23 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 		cache.clear(location.toURI());
 	}
 
+	public ImmutableList<String> getDependenciesUnresolved(N4JSProject project) {
+		final ProjectDescription pd = getProjectDescription(project);
+		if (pd == null) {
+			return ImmutableList.of();
+		}
+		ImmutableList.Builder<String> result = ImmutableList.builder();
+		String defPrjName = N4JSGlobals.N4JSD_SCOPE + "/" + project.getProjectName().getRawName();
+		IN4JSProject defPrj = findProject(new N4JSProjectName(defPrjName));
+		if (defPrj != null) {
+			result.add(defPrj.getProjectName().getRawName());
+		}
+		for (ProjectDependency prjDep : pd.getProjectDependencies()) {
+			result.add(prjDep.getProjectName());
+		}
+		return result.build();
+	}
+
 	public ImmutableList<? extends IN4JSProject> getDependencies(N4JSProject project,
 			boolean includeAbsentProjects) {
 		return getDependencies(project, false, includeAbsentProjects);
@@ -277,6 +296,12 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 		ImmutableList.Builder<IN4JSProject> result = ImmutableList.builder();
 		ProjectDescription description = getProjectDescription(project);
 		if (description != null) {
+			String defPrjName = N4JSGlobals.N4JSD_SCOPE + "/" + project.getProjectName().getRawName();
+			IN4JSProject defPrj = findProject(new N4JSProjectName(defPrjName));
+			if (defPrj != null) {
+				result.add(defPrj);
+			}
+
 			result.addAll(
 					resolveProjectReferences(project, description.getProjectDependencies(), includeAbsentProjects));
 			if (includeApis) {
