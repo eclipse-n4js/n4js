@@ -14,14 +14,34 @@ import {AbstractN4jsdGeneratorTest} from "AbstractN4jsdGeneratorTest";
 export public class SomeTest extends AbstractN4jsdGeneratorTest {
 
 	@Test
-	public testConvertProject() {
-		this.createPackageJson("input", "test_project");
-		this.createFile("input/test_project/TestModule.d.ts", `
+	public testConvertSingleProject() {
+		this.createPackageJson("", "P");
+		this.createFile("P/TestModule.d.ts", "");
+		const root = this.getTestFolder();
+		this.runN4jsdGen(root + "/P");
+		this.assertFileExists("@n4jsd/P/package.json");
+		this.assertFileExists("@n4jsd/P/TestModule.n4jsd");
+	}
+
+	@Test
+	public testConvertSingleProjectWithOutputFolder() {
+		this.createPackageJson("input", "P");
+		this.createFile("input/P/TestModule.d.ts", "");
+		const root = this.getTestFolder();
+		this.runN4jsdGen("-o", root + "/output", root + "/input/P");
+		this.assertFileExists("output/@n4jsd/P/package.json");
+		this.assertFileExists("output/@n4jsd/P/TestModule.n4jsd");
+	}
+
+	@Test
+	public testTEMP() {
+		this.createPackageJson("input", "P");
+		this.createFile("input/P/TestModule.d.ts", `
 			export class Buffer {}
 		`);
 		const root = this.getTestFolder();
-		this.runN4jsdGen("-o", root + "/output", root + "/input/test_project");
-		this.assertFileContent("output/@n4jsd/test_project/TestModule.n4jsd",`
+		this.runN4jsdGen("-o", root + "/output", root + "/input/P");
+		this.assertFileContent("output/@n4jsd/P/TestModule.n4jsd",`
 			export external class ~Buffer {
 			}
 		`);

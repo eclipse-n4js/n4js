@@ -66,14 +66,20 @@ export public class AbstractN4jsdGeneratorTest {
 		runN4jsdGenerator(args);
 	}
 
-	protected assertFileContent(relativePathAndName: string, expectedContent: string) {
+	protected assertFileExists(relativePathAndName: string) {
 		const testFolderPath = this.getTestFolder();
 		const pathAndName = testFolderPath + "/" + relativePathAndName;
 		Assert.isTrue(fs_lib.existsSync(pathAndName), "file does not exist: " + pathAndName);
+	}
+
+	protected assertFileContent(relativePathAndName: string, expectedContent: string) {
+		this.assertFileExists(relativePathAndName);
+		const testFolderPath = this.getTestFolder();
+		const pathAndName = testFolderPath + "/" + relativePathAndName;
 		const actualContent = fs_lib.readFileSync(pathAndName, undefined).toString();
 		const actualContentTrimmed = utils.trimMultiLineString(actualContent);
 		const expectedContentTrimmed = utils.trimMultiLineString(expectedContent);
-		Assert.equal(actualContentTrimmed, expectedContentTrimmed,
+		this.assertStringEquals(actualContentTrimmed, expectedContentTrimmed,
 			"file does not have the expected content: " + relativePathAndName);
 	}
 
