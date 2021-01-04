@@ -64,9 +64,6 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 	protected ExternalLibraryWorkspace externalLibraryWorkspace;
 
 	@Inject
-	protected FileBasedExternalPackageManager packageManager; // FIXME: remove?
-
-	@Inject
 	private MultiCleartriggerCache cache;
 
 	@Inject
@@ -270,8 +267,8 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 			return ImmutableList.of();
 		}
 		ImmutableList.Builder<String> result = ImmutableList.builder();
-		String defPrjName = N4JSGlobals.N4JSD_SCOPE + "/" + project.getProjectName().getRawName();
-		IN4JSProject defPrj = findProject(new N4JSProjectName(defPrjName));
+
+		IN4JSProject defPrj = findScopedProject(project);
 		if (defPrj != null) {
 			result.add(defPrj.getProjectName().getRawName());
 		}
@@ -296,8 +293,7 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 		ImmutableList.Builder<IN4JSProject> result = ImmutableList.builder();
 		ProjectDescription description = getProjectDescription(project);
 		if (description != null) {
-			String defPrjName = N4JSGlobals.N4JSD_SCOPE + "/" + project.getProjectName().getRawName();
-			IN4JSProject defPrj = findProject(new N4JSProjectName(defPrjName));
+			IN4JSProject defPrj = findScopedProject(project);
 			if (defPrj != null) {
 				result.add(defPrj);
 			}
@@ -310,6 +306,11 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 			}
 		}
 		return result.build();
+	}
+
+	private IN4JSProject findScopedProject(N4JSProject project) {
+		String defPrjName = N4JSGlobals.N4JSD_SCOPE + "/" + project.getProjectName().getRawName();
+		return findProject(new N4JSProjectName(defPrjName));
 	}
 
 	public Optional<IN4JSProject> getExtendedRuntimeEnvironment(N4JSProject project) {
