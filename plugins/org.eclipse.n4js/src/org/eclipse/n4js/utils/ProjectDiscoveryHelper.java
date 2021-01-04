@@ -364,7 +364,7 @@ public class ProjectDiscoveryHelper {
 		return dependencies;
 	}
 
-	/** Collects all generated @n4jsd */
+	/** Collects all generated @n4jsd projects inside folder {@link N4JSGlobals#NODE_MODULES_CACHE} */
 	private void collectDefinitionsFromNMCache(Map<String, Path> allProjectDirs, Map<Path, ProjectDescription> pdCache,
 			Map<String, Path> dependencies) {
 
