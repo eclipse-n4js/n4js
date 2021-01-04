@@ -105,7 +105,7 @@ class BuildOrderSideLoadTest extends AbstractIdeTest {
 					}
 				'''
 			],
-			CFG_NODE_MODULES_CACHE + "@n4jsd/Lib1" -> #[
+			CFG_WORKSPACES_FOLDER + "packages-gen/@n4jsd/Lib1" -> #[
 				"package.json" -> '''
 					{
 						"name": "@n4jsd/Lib1",
@@ -116,7 +116,7 @@ class BuildOrderSideLoadTest extends AbstractIdeTest {
 					}
 				'''
 			],
-			CFG_NODE_MODULES_CACHE + "@n4jsd/Lib2" -> #[
+			CFG_WORKSPACES_FOLDER + "packages-gen/@n4jsd/Lib2" -> #[
 				"package.json" -> '''
 					{
 						"name": "@n4jsd/Lib2",
@@ -130,7 +130,7 @@ class BuildOrderSideLoadTest extends AbstractIdeTest {
 					}
 				'''
 			],
-			CFG_NODE_MODULES_CACHE + "@n4jsd/Lib3" -> #[
+			CFG_WORKSPACES_FOLDER + "packages-gen/@n4jsd/Lib3" -> #[
 				"package.json" -> '''
 					{
 						"name": "@n4jsd/Lib3",
