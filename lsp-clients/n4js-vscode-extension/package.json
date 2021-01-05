@@ -62,6 +62,62 @@
         "path": "./syntaxes/n4js.json.tmLanguage.json"
       }
     ],
+    "debuggers": [
+      {
+        "type": "n4js",
+        "label": "N4JS Debug",
+        "languages": [ "n4js" ],
+        "configurationSnippets": [
+          {
+            "label": "N4JS: Launch/Debug N4JS",
+            "description": "Launches and debugs the N4JS file in the currently active editor.",
+            "body": {
+              "type": "node",
+              "request": "launch",
+              "name": "Launch/Debug N4JS",
+              "runtimeExecutable": "/usr/local/bin/node",
+              "runtimeArgs": [ "-r", "esm" ],
+              "program": "${file}",
+              "args": [],
+              "sourceMaps": true,
+              "outFiles": [
+                "${workspaceFolder}/**/src-gen/**/*.js"
+              ],
+              "skipFiles": [
+                "<node_internals>/**",
+                "**/esm/esm.js"
+              ],
+              "console": "internalConsole"
+            }
+          }
+        ],
+        "initialConfigurations": [
+          {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch/Debug N4JS",
+            "runtimeExecutable": "/usr/local/bin/node",
+            "runtimeArgs": [ "-r", "esm" ],
+            "program": "${file}",
+            "args": [],
+            "sourceMaps": true,
+            "outFiles": [
+              "${workspaceFolder}/**/src-gen/**/*.js"
+            ],
+            "skipFiles": [
+              "<node_internals>/**",
+              "**/esm/esm.js"
+            ],
+            "console": "internalConsole"
+          }
+        ]
+      }
+    ],
+    "breakpoints": [
+      {
+        "language": "n4js"
+      }
+    ],
     "commands": [
       {
         "command": "n4js.refresh",
