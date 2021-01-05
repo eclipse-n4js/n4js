@@ -66,6 +66,9 @@ function processFileOrFolder(inputPath: string, opts: Options) {
 	}
 
 	const converter = new Converter(sourceDtsFilePaths, sourceProjectPath);
+
+	// check for compile errors on TypeScript side
+	// TODO: this seems to take a long time and is not strictly necessary; consider removing it or making it optional!
 	const tsDiagnostics = converter.getDiagnostics();
 	if (tsDiagnostics.length > 0) {
 		utils.logError("compile error(s) in '.d.ts' input files:\n    " + tsDiagnostics.join("\n    "));
