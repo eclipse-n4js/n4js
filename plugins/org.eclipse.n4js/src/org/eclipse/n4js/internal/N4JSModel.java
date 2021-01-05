@@ -29,7 +29,6 @@ import java.util.Set;
 import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.internal.MultiCleartriggerCache.CleartriggerSupplier;
 import org.eclipse.n4js.projectDescription.ProjectDependency;
@@ -267,11 +266,6 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 			return ImmutableList.of();
 		}
 		ImmutableList.Builder<String> result = ImmutableList.builder();
-
-		IN4JSProject defPrj = findScopedProject(project);
-		if (defPrj != null) {
-			result.add(defPrj.getProjectName().getRawName());
-		}
 		for (ProjectDependency prjDep : pd.getProjectDependencies()) {
 			result.add(prjDep.getProjectName());
 		}
@@ -290,14 +284,10 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 
 	private ImmutableList<? extends IN4JSProject> getDependencies(N4JSProject project, boolean includeApis,
 			boolean includeAbsentProjects) {
+
 		ImmutableList.Builder<IN4JSProject> result = ImmutableList.builder();
 		ProjectDescription description = getProjectDescription(project);
 		if (description != null) {
-			IN4JSProject defPrj = findScopedProject(project);
-			if (defPrj != null) {
-				result.add(defPrj);
-			}
-
 			result.addAll(
 					resolveProjectReferences(project, description.getProjectDependencies(), includeAbsentProjects));
 			if (includeApis) {
@@ -306,11 +296,6 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 			}
 		}
 		return result.build();
-	}
-
-	private IN4JSProject findScopedProject(N4JSProject project) {
-		String defPrjName = N4JSGlobals.N4JSD_SCOPE + "/" + project.getProjectName().getRawName();
-		return findProject(new N4JSProjectName(defPrjName));
 	}
 
 	public Optional<IN4JSProject> getExtendedRuntimeEnvironment(N4JSProject project) {
