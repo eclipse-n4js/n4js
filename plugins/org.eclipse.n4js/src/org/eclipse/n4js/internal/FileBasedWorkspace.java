@@ -50,7 +50,7 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace<FileURI> {
 	/** container-prefix for file-based projects */
 	public final static String N4FBPRJ = "n4fbprj:";
 
-	private final Map<FileURI, ProjectDescription> projectDescriptions = Maps.newConcurrentMap();
+	private final Map<FileURI, ProjectDescription> projectDescriptions = Maps.newLinkedHashMap();
 	private final Map<N4JSProjectName, FileURI> nameToLocation = Maps.newConcurrentMap();
 	private final BiMap<N4JSProjectName, N4JSProjectName> definitionProjects = HashBiMap.create();
 	private final Multimap<N4JSProjectName, N4JSProjectName> reversedDependencies = HashMultimap.create();

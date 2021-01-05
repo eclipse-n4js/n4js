@@ -12,7 +12,6 @@ package org.eclipse.n4js.internal.lsp;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -84,7 +83,7 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 
 	@Override
 	public Set<? extends XIProjectConfig> getProjects() {
-		Set<XIProjectConfig> pConfigs = new HashSet<>();
+		Set<XIProjectConfig> pConfigs = new LinkedHashSet<>();
 		for (IN4JSProject project : delegate.findAllProjects()) {
 			pConfigs.add(new N4JSProjectConfig(this, project));
 		}
