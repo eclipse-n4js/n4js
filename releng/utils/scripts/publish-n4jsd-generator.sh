@@ -54,13 +54,12 @@ npm install
 export PATH=${PATH}:`pwd`/node_modules/.bin
 
 echo "==== STEP 4/6: build n4jsd-generator"
-tsc
-n4jsc compile .
+npm run build
 ls -al
 ls -al src-gen
 
 echo "==== STEP 5/6: test n4jsd-generator"
-n4js-mangelhaft
+npm test
 
 echo "==== STEP 6/6: Now publishing with version '${PUBLISH_VERSION}' to registry ${NPM_REGISTRY}"
 echo "Using .npmrc configuration at ${NPM_CONFIG_GLOBALCONFIG}"
