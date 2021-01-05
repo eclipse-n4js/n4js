@@ -64,6 +64,10 @@ abstract class AbstractBuildOrderTest extends AbstractIdeTest {
 		startAndWaitForLspServer();
 	}
 
+	final void assertBuildOrder(String buildOrder) {
+		assertBuildOrder(buildOrder, Collections.emptyList());
+	}
+
 	final void assertBuildOrder(String buildOrder, Collection<Collection<String>> cycles) {
 		WorkspaceConfigSnapshot workspaceConfig = workspaceConfigProvider.getWorkspaceConfigSnapshot();
 		BuildOrderInfo projectBuildOrderInfo = projectBuildOrderFactory.createBuildOrderInfo(workspaceConfig);

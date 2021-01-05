@@ -18,77 +18,80 @@ import org.junit.Test
 class BuildOrderImplicitTypeDefinitionsActionTest extends AbstractBuildOrderTest {
 
 	@Test
-	def void testSingleDependency1() {
-		test("yarn-test-project, @n4jsd/Lib1, @n4jsd/Lib3, @n4jsd/Lib2, n4js-runtime, Lib1, Lib2, P1",
-			CFG_NODE_MODULES + "n4js-runtime" -> null,
-			CFG_NODE_MODULES + "Lib1" -> #[
-				"package.json" -> '''
-					{
-						"name": "Lib1"
-					}
-				'''
-			],
-			CFG_NODE_MODULES + "Lib2" -> #[
-				"package.json" -> '''
-					{
-						"name": "Lib2",
-						"dependencies": {
-							"Lib3": "*"
-						}
-					}
-				'''
-			],
-			CFG_NODE_MODULES + "Lib3" -> #[
-				"package.json" -> '''
-					{
-						"name": "Lib3"
-					}
-				'''
-			],
-			CFG_WORKSPACES_FOLDER + "packages-gen/@n4jsd/Lib1" -> #[
-				"package.json" -> '''
-					{
-						"name": "@n4jsd/Lib1",
-						"n4js": {
-							"projectType": "definition",
-							"definesPackage": "Lib1"
-						}
-					}
-				'''
-			],
-			CFG_WORKSPACES_FOLDER + "packages-gen/@n4jsd/Lib2" -> #[
-				"package.json" -> '''
-					{
-						"name": "@n4jsd/Lib2",
-						"dependencies": {
-							"@n4jsd/Lib3": "*"
-						},
-						"n4js": {
-							"projectType": "definition",
-							"definesPackage": "Lib2"
-						}
-					}
-				'''
-			],
-			CFG_WORKSPACES_FOLDER + "packages-gen/@n4jsd/Lib3" -> #[
-				"package.json" -> '''
-					{
-						"name": "@n4jsd/Lib3",
-						"n4js": {
-							"projectType": "definition",
-							"definesPackage": "Lib3"
-						}
-					}
-				'''
-			],
-			"P1" -> #[
+	def void testRemoveDepToPlainJS() {
+		init(
+			"P" -> #[
 				CFG_DEPENDENCIES -> '''
-					n4js-runtime,
-					Lib1,
-					Lib2
+					JS1
+				'''
+			],
+			"JS1" -> #[
+				"package.json" -> '''
+					{
+						"name": "JS1"
+					}
+				'''
+			],
+			"@n4jsd/DEF1" -> #[
+				"package.json" -> '''
+					{
+						"name": "@n4jsd/DEF1",
+						"n4js": {
+							"projectType": "definition",
+							"definesPackage": "JS1"
+						},
+						"dependencies": {
+							"n4js-runtime": ""
+						}
+					}
 				'''
 			]
 		);
+		
+		assertBuildOrder("yarn-test-project, n4js-runtime, @n4jsd/DEF1, JS1, P");
+		
+		changeNonOpenedFile("P/package.json", '''"JS1"''' -> '''JS_UNAVAILABLE''');
+		
+		assertBuildOrder("yarn-test-project, n4js-runtime, @n4jsd/DEF1, P");
 	}
 	
+
+	@Test
+	def void testChangeDefinesProperty() {
+		init(
+			"P" -> #[
+				CFG_DEPENDENCIES -> '''
+					JS1
+				'''
+			],
+			"JS1" -> #[
+				"package.json" -> '''
+					{
+						"name": "JS1"
+					}
+				'''
+			],
+			"@n4jsd/DEF1" -> #[
+				"package.json" -> '''
+					{
+						"name": "@n4jsd/DEF1",
+						"n4js": {
+							"projectType": "definition",
+							"definesPackage": "JS1"
+						},
+						"dependencies": {
+							"n4js-runtime": ""
+						}
+					}
+				'''
+			]
+		);
+		
+		assertBuildOrder("yarn-test-project, n4js-runtime, @n4jsd/DEF1, JS1, P");
+		
+		changeNonOpenedFile("@n4jsd/DEF1/package.json", '''"definesPackage": "JS1"''' -> '''"definesPackage": "JS_UNAVAILABLE"''');
+		
+		assertBuildOrder("yarn-test-project, n4js-runtime, @n4jsd/DEF1, JS1, P");
+	}
+//*/	
 }
