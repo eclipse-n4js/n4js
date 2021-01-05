@@ -767,6 +767,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 		initEEnum(dependencyTypeEEnum, DependencyType.class, "DependencyType");
 		addEEnumLiteral(dependencyTypeEEnum, DependencyType.RUNTIME);
 		addEEnumLiteral(dependencyTypeEEnum, DependencyType.DEVELOPMENT);
+		addEEnumLiteral(dependencyTypeEEnum, DependencyType.IMPLICIT);
 
 		// Create resource
 		createResource(eNS_URI);
