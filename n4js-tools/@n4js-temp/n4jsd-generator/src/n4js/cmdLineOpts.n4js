@@ -137,9 +137,7 @@ function resolveInputPathsOrGlobs(opts: Options): void {
 			opts.error = "input path does not exist: " + pathGlob;
 			continue;
 		}
-		for (const currPath of currPaths) {
-			paths.push(currPath);
-		}
+		utils.pushAll(paths, currPaths);
 	}
 	const errors = [] as string[];
 	for (const path of paths) {
@@ -157,9 +155,7 @@ function resolveInputPathsOrGlobs(opts: Options): void {
 		opts.error = "invalid input path(s):\n    " + errors.join("\n    ");
 		return;
 	}
-	for (const path of paths) {
-		opts.inputPaths.push(path);
-	}
+	utils.pushAll(opts.inputPaths, paths);
 }
 
 function findOption(optionStr: string): Option {

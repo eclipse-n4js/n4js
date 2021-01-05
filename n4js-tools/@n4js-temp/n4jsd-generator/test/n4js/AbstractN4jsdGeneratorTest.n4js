@@ -52,7 +52,7 @@ export public class AbstractN4jsdGeneratorTest {
 	protected cleanupAfter() {
 		_ROOT = undefined;
 		_ROOT_RELATIVE = undefined;
-		//this.cleanup();
+		this.cleanup();
 	}
 
 	/** Returns the absolute path to the temporary test folder. */
