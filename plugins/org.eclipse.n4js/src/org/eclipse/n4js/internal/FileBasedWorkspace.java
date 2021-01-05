@@ -10,22 +10,34 @@
  */
 package org.eclipse.n4js.internal;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.projectDescription.DependencyType;
+import org.eclipse.n4js.projectDescription.ProjectDependency;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectDescriptionFactory;
 import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
+import org.eclipse.n4js.semver.SemverUtils;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.xtext.util.UriExtensions;
 
+import com.google.common.base.Strings;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -38,8 +50,10 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace<FileURI> {
 	/** container-prefix for file-based projects */
 	public final static String N4FBPRJ = "n4fbprj:";
 
-	private final Map<FileURI, LazyProjectDescriptionHandle> projectElementHandles = Maps.newConcurrentMap();
+	private final Map<FileURI, ProjectDescription> projectDescriptions = Maps.newConcurrentMap();
 	private final Map<N4JSProjectName, FileURI> nameToLocation = Maps.newConcurrentMap();
+	private final BiMap<N4JSProjectName, N4JSProjectName> definitionProjects = HashBiMap.create();
+	private final Multimap<N4JSProjectName, N4JSProjectName> reversedDependencies = HashMultimap.create();
 
 	private final ProjectDescriptionLoader projectDescriptionLoader;
 
@@ -62,24 +76,92 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace<FileURI> {
 
 	/**
 	 *
-	 * @param location
+	 * @param pLocation
 	 *            project directory containing package.json directly
 	 */
-	public void registerProject(FileURI location) {
-		// URI location = URIUtils.normalize(unsafeLocation);
-		if (!isRegistered(location)) {
-			LazyProjectDescriptionHandle lazyDescriptionHandle = createLazyDescriptionHandle(location);
-			projectElementHandles.put(location, lazyDescriptionHandle);
+	public void registerProject(FileURI pLocation) {
+		if (isRegistered(pLocation)) {
+			return;
 		}
-		nameToLocation.putIfAbsent(location.getProjectName(), location);
+		ProjectDescription pDescription = projectDescriptionLoader.loadProjectDescriptionAtLocation(pLocation);
+		if (pDescription == null) {
+			return;
+		}
+		registerProject(pLocation, pDescription);
 	}
 
-	public void registerProject(FileURI location, ProjectDescription resolvedDescription) {
-		if (!isRegistered(location)) {
-			LazyProjectDescriptionHandle lazyDescriptionHandle = createDescriptionHandle(location, resolvedDescription);
-			projectElementHandles.put(location, lazyDescriptionHandle);
+	public void registerProject(FileURI pLocation, ProjectDescription pDescription) {
+		if (isRegistered(pLocation)) {
+			return;
 		}
-		nameToLocation.putIfAbsent(location.getProjectName(), location);
+		if (pDescription == null) {
+			return;
+		}
+
+		N4JSProjectName projectName = pLocation.getProjectName();
+		projectDescriptions.put(pLocation, pDescription);
+		nameToLocation.putIfAbsent(projectName, pLocation);
+
+		if (!pDescription.isHasN4JSNature()) {
+			return;
+		}
+
+		String definesPackageString = projectDescriptions.get(pLocation).getDefinesPackage();
+		if (!Strings.isNullOrEmpty(definesPackageString)) {
+			definitionProjects.putIfAbsent(projectName, new N4JSProjectName(definesPackageString));
+		}
+
+		for (ProjectDependency dependency : pDescription.getProjectDependencies()) {
+			N4JSProjectName dependencyName = new N4JSProjectName(dependency.getProjectName());
+			reversedDependencies.put(dependencyName, new N4JSProjectName(pDescription.getProjectName()));
+		}
+
+		addImplicitTypeDefinitionDependencies(pDescription);
+
+		if (!Strings.isNullOrEmpty(definesPackageString)) {
+			N4JSProjectName definesPackageName = new N4JSProjectName(definesPackageString);
+			for (N4JSProjectName dependingProjectName : reversedDependencies.get(definesPackageName)) {
+				FileURI dependingProjectLocation = nameToLocation.get(dependingProjectName);
+				if (dependingProjectLocation != null) {
+					addImplicitTypeDefinitionDependencies(projectDescriptions.get(dependingProjectLocation));
+				}
+			}
+		}
+	}
+
+	private void addImplicitTypeDefinitionDependencies(ProjectDescription pDescr) {
+		Set<String> implicitDependencies = new LinkedHashSet<>();
+		Set<String> existingDependencies = new LinkedHashSet<>();
+		List<ProjectDependency> moveToTop = new ArrayList<>();
+
+		N4JSProjectName pName = new N4JSProjectName(pDescr.getProjectName());
+		boolean sawDefinitionsOnly = true;
+		for (ProjectDependency dependency : pDescr.getProjectDependencies()) {
+			N4JSProjectName dependencyName = new N4JSProjectName(dependency.getProjectName());
+			existingDependencies.add(dependency.getProjectName());
+			if (definitionProjects.inverse().containsKey(dependencyName)) {
+				N4JSProjectName definitionProjectName = definitionProjects.inverse().get(dependencyName);
+				implicitDependencies.add(definitionProjectName.getRawName());
+			}
+
+			sawDefinitionsOnly &= dependencyName.isScopeN4jsd();
+			if (!sawDefinitionsOnly && dependencyName.isScopeN4jsd()) {
+				moveToTop.add(0, dependency); // add at index 0 to keep order. note below move(0, ...);
+			}
+		}
+		implicitDependencies.removeAll(existingDependencies);
+		for (String implicitDependencyString : implicitDependencies) {
+			ProjectDependency implicitDependency = ProjectDescriptionFactory.eINSTANCE.createProjectDependency();
+			implicitDependency.setProjectName(implicitDependencyString);
+			implicitDependency.setType(DependencyType.IMPLICIT);
+			implicitDependency.setVersionRequirementString("");
+			implicitDependency.setVersionRequirement(SemverUtils.createEmptyVersionRequirement());
+			pDescr.getProjectDependencies().add(0, implicitDependency);
+			reversedDependencies.put(new N4JSProjectName(implicitDependencyString), pName);
+		}
+		for (ProjectDependency moveToTopDep : moveToTop) {
+			pDescr.getProjectDependencies().move(0, moveToTopDep);
+		}
 	}
 
 	@Override
@@ -89,33 +171,33 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace<FileURI> {
 
 	/** Remove all entries from this workspace. */
 	public void clear() {
-		projectElementHandles.clear();
+		projectDescriptions.clear();
+		nameToLocation.clear();
+		definitionProjects.clear();
+		reversedDependencies.clear();
 	}
 
 	/** @return true iff the project at the given location was registered before */
 	public boolean isRegistered(FileURI location) {
-		return projectElementHandles.containsKey(location);
+		return projectDescriptions.containsKey(location);
 	}
 
 	/** Deregisters the project at the given location */
 	public void deregister(FileURI location) {
-		projectElementHandles.remove(location);
-		String prjName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location);
-		nameToLocation.remove(new N4JSProjectName(prjName));
+		ProjectDescription pDescr = projectDescriptions.remove(location);
+		String prjNameString = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location);
+		N4JSProjectName prjName = new N4JSProjectName(prjNameString);
+		nameToLocation.remove(prjName);
+		definitionProjects.remove(prjName);
+		for (ProjectDependency dependency : pDescr.getProjectDependencies()) {
+			N4JSProjectName dependencyProjectName = new N4JSProjectName(dependency.getProjectName());
+			reversedDependencies.remove(dependencyProjectName, prjName);
+		}
 	}
 
 	/** Deregisters all projects */
 	public void deregisterAll() {
-		projectElementHandles.clear();
-		nameToLocation.clear();
-	}
-
-	protected LazyProjectDescriptionHandle createLazyDescriptionHandle(FileURI location) {
-		return new LazyProjectDescriptionHandle(location, projectDescriptionLoader);
-	}
-
-	protected LazyProjectDescriptionHandle createDescriptionHandle(FileURI location, ProjectDescription description) {
-		return new LazyProjectDescriptionHandle(location, projectDescriptionLoader, description);
+		clear();
 	}
 
 	@Override
@@ -124,7 +206,7 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace<FileURI> {
 
 		// determine longest registered project location, that is a prefix of 'key'
 		do {
-			LazyProjectDescriptionHandle match = this.projectElementHandles.get(key);
+			ProjectDescription match = this.projectDescriptions.get(key);
 			if (match != null) {
 				return key;
 			}
@@ -137,41 +219,40 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace<FileURI> {
 	@Override
 	public ProjectDescription getProjectDescription(FileURI location) {
 		// URI location = URIUtils.normalize(unsafeLocation);
-		LazyProjectDescriptionHandle handle = projectElementHandles.get(location);
-		if (handle == null) {
+		ProjectDescription pDescr = projectDescriptions.get(location);
+		if (pDescr == null) {
 			return null;
 		}
 
-		ProjectDescription description = handle.resolve();
-		return description;
+		return pDescr;
 	}
 
 	@Override
 	public void invalidateProject(FileURI location) {
 		if (isRegistered(location)) {
-			LazyProjectDescriptionHandle handle = projectElementHandles.get(location);
-			handle.invalidate();
+			deregister(location);
+			registerProject(location);
 		}
 	}
 
 	public Iterator<FileURI> getAllProjectLocationsIterator() {
-		return projectElementHandles.values().stream().map(handle -> handle.getLocation()).iterator();
+		return projectDescriptions.keySet().stream().iterator();
 	}
 
 	@Override
 	public Collection<FileURI> getAllProjectLocations() {
-		return projectElementHandles.values().stream().map(handle -> handle.getLocation()).collect(Collectors.toList());
+		return projectDescriptions.keySet();
 	}
 
 	@Override
 	public FileURI getLocation(ProjectReference projectReference) {
 		String projectName = projectReference.getProjectName();
-		for (FileURI siblingProject : projectElementHandles.keySet()) {
+		for (FileURI siblingProject : projectDescriptions.keySet()) {
 			String candidateProjectName = siblingProject.getProjectName().getRawName();
 			if (candidateProjectName.equals(projectName)) {
-				LazyProjectDescriptionHandle lazyHandle = projectElementHandles.get(siblingProject);
+				ProjectDescription lazyHandle = projectDescriptions.get(siblingProject);
 				if (lazyHandle != null) {
-					return lazyHandle.getLocation();
+					return siblingProject;
 				}
 			}
 		}
