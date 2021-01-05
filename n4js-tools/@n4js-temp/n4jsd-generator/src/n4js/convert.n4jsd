@@ -16,4 +16,6 @@ export external public class Converter {
 	constructor(sourceDtsFilePaths: string[], projectPath: string =);
 
 	convertScript(sourceFilePath: string): model.Script;
+
+	getDiagnostics(): string[];
 }

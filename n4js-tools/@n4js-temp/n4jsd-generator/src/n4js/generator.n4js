@@ -12,35 +12,27 @@
 import * as fs_lib from "fs";
 import * as path_lib from "path";
 
-import { Options, parseCommandLineOptions } from "cmdLineOpts";
+import { Options, parseCommandLineOptions, USAGE } from "cmdLineOpts";
 import * as model from "model";
 import { Converter } from "convert";
 import * as utils from "utils";
 
 
-export public interface ~GeneratorError {
-	message: string;
-	showUsage: boolean;
-	exitCode: int;
-}
-
-export public function runN4jsdGenerator(args: string[]): GeneratorError {
+export public function runN4jsdGenerator(args: string[]) {
 	const opts = parseCommandLineOptions(args);
 	if (opts.error !== undefined) {
-		return {
-			message: opts.error,
-			showUsage: true,
-			exitCode: 1
-		};
+		utils.logError(opts.error);
+		utils.log();
+		utils.log(USAGE);
+		return;
 	}
 	for (const inputPath of opts.inputPaths) {
 		if(opts.verbose) {
-			console.log();
-			console.log("Input path: " + inputPath);
+			utils.log();
+			utils.log("Input path: " + inputPath);
 		}
 		processFileOrFolder(inputPath, opts);
 	}
-	return undefined;
 }
 
 /**
@@ -74,6 +66,12 @@ function processFileOrFolder(inputPath: string, opts: Options) {
 	}
 
 	const converter = new Converter(sourceDtsFilePaths, sourceProjectPath);
+	const tsDiagnostics = converter.getDiagnostics();
+	if (tsDiagnostics.length > 0) {
+		utils.logError("compile error(s) in '.d.ts' input files:\n    " + tsDiagnostics.join("\n    "));
+		return;
+	}
+
 	const scripts = new Map<string,model.Script>();
 	let hasIssues = false;
 	for (const srcDtsPath of sourceDtsFilePaths) {
@@ -86,7 +84,7 @@ function processFileOrFolder(inputPath: string, opts: Options) {
 		for (const srcDtsPath of sourceDtsFilePaths) {
 			const script = scripts.get(srcDtsPath);
 			if (script.issues.length > 0) {
-				console.log(srcDtsPath + ":");
+				utils.log(srcDtsPath + ":");
 				utils.logIssues(script.issues);
 			}
 		}
@@ -111,7 +109,7 @@ function processFileOrFolder(inputPath: string, opts: Options) {
 		const n4jsdStr = model.scriptToString(script);
 		const trgtN4jsdPath = chooseTargetN4jsdPath(srcDtsPath, sourceProjectPath, targetProjectPath);
 		if (opts.verbose) {
-			console.log("Writing n4jsd-file: " + trgtN4jsdPath);
+			utils.log("Writing n4jsd-file: " + trgtN4jsdPath);
 		}
 		utils.mkdirs(path_lib.dirname(trgtN4jsdPath));
 		fs_lib.writeFileSync(trgtN4jsdPath, n4jsdStr + "\n", undefined);

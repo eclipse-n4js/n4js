@@ -35,16 +35,31 @@ export function warning(msg: string): Issue {
 }
 
 
-export function logIssues(issues: Issue[]) {
-	for (const issue of issues) {
-		log(issue.kind.name + ": " + issue.message);
-	}
+export enum LogKind {
+	ERROR, ISSUE, INFO
+}
+let logListener: (LogKind,string)=>void = undefined;
+export function setLogListener(listener: (LogKind,string)=>void) {
+	logListener = listener;
 }
 export function logError(msg: string) {
-	log("ERROR: " + msg);
+	doLog(LogKind.ERROR, msg);
+}
+export function logIssues(issues: Issue[]) {
+	for (const issue of issues) {
+		logIssue(issue);
+	}
+}
+export function logIssue(issue: Issue) {
+	doLog(LogKind.ISSUE, issue.kind.name + ": " + issue.message);
 }
 export function log(msg: string = "") {
-	console.log(msg);
+	doLog(LogKind.INFO, msg);
+}
+function doLog(kind: LogKind, msg: string) {
+	if (logListener) {
+		logListener(kind, msg);
+	}
 }
 
 
@@ -69,10 +84,10 @@ export function trimMultiLineString(str: string): string {
 	if (strs.length > 0) {
 		while (true) {
 			const ch = strs[0].charAt(0);
-			if (ch === "" || ch.trim() !== "" || !strs.every(s => s.charAt(0) === ch)) {
+			if (ch === "" || ch.trim() !== "" || !strs.every(s => s.startsWith(ch) || s.trim() === "")) {
 				break;
 			}
-			strs = strs.map(s => s.substring(1));
+			strs = strs.map(s => s.startsWith(ch) ? s.substring(1) : s);
 		}
 	}
 	return strs.join('\n');

@@ -1,0 +1,142 @@
+/**
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+import {AbstractN4jsdGeneratorTest} from "AbstractN4jsdGeneratorTest";
+
+export public class ConvertClassifiersTest extends AbstractN4jsdGeneratorTest {
+
+	@Test
+	public testClassifiers() {
+		this.assertConversion(
+			{
+				name: "buffer",
+				dts: `
+					export class Buffer {}
+				`
+			},
+			{
+				name: "main",
+				dts: `
+					import { Buffer } from "./buffer"
+
+					export interface Writable {}
+					export interface Writable2 extends Writable {} // TODO "extends" not yet supported by n4jsd-generator
+
+					export class Stream implements Writable {}
+					export class Stream2 extends Stream implements Writable2 {} // TODO "extends"/"implements" not yet supported by n4jsd-generator
+				`,
+				n4jsd: `
+					import { Buffer } from "buffer";
+
+					export external interface ~Writable {
+					}
+
+					export external interface ~Writable2 {
+					}
+
+					export external class ~Stream {
+					}
+
+					export external class ~Stream2 {
+					}
+				`
+			}
+		);
+	}
+
+	@Test
+	public testMembers() {
+		this.assertConversion(
+			{
+				name: "buffer",
+				dts: `
+					export class Buffer {}
+				`
+			},
+			{
+				name: "main",
+				dts: `
+					import { Buffer } from "./buffer"
+
+					export interface Writable {
+						field: string; // TODO not yet supported by n4jsd-generator
+
+						write(chunk: any, fn: () => void): Buffer;
+						write(chunk: any, encoding: string, fn: () => void): boolean;
+
+						readonly getter: Buffer; // TODO not yet supported by n4jsd-generator
+						// set setter(value: Buffer); // not supported by TypeScript
+					}
+
+					export class Stream implements Writable {
+						public field: string;
+
+						public constructor(buff: Buffer);
+						public constructor(opts: {fastMode: boolean});
+
+						public write(chunk: any, fn: () => void): Buffer;
+						public write(chunk: any, encoding: string, fn: () => void): boolean;
+
+						get getter(): Buffer;
+						set setter(value: Buffer);
+					}
+				`,
+				n4jsd: `
+					import { Buffer } from "buffer";
+
+					export external interface ~Writable {
+						write(chunk: any+, fn: any+): any+; // further signatures were omitted
+					}
+
+					export external class ~Stream {
+						public field: any+;
+						public constructor(buff: any+); // further signatures were omitted
+						public write(chunk: any+, fn: any+): any+; // further signatures were omitted
+						get getter(): any+;
+						set setter(value: any+);
+					}
+				`
+			}
+		);
+	}
+
+	@Test
+	public testMembersAccesibility() {
+		this.assertConversion(
+			{
+				name: "main",
+				dts: `
+					export interface SomeInterface {
+						m1(): void; // accesibility modifiers not allowed here!
+					}
+					export class SomeClass {
+						m1(): void;
+						public m2(): void;
+						protected m3(): void;
+						private m4(): void;
+					}
+				`,
+				n4jsd: `
+					export external interface ~SomeInterface {
+						m1(): any+;
+					}
+
+					export external class ~SomeClass {
+						m1(): any+;
+						public m2(): any+;
+						protected m3(): any+;
+						private m4(): any+;
+					}
+				`
+			}
+		);
+	}
+}

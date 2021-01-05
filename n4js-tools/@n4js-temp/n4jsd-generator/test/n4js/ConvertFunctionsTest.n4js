@@ -11,25 +11,23 @@
 
 import {AbstractN4jsdGeneratorTest} from "AbstractN4jsdGeneratorTest";
 
-/**
- * Tests some simple conversions.
- */
-export public class ConvertSimpleTest extends AbstractN4jsdGeneratorTest {
+export public class ConvertFunctionsTest extends AbstractN4jsdGeneratorTest {
 
 	@Test
-	public testClass() {
-		this.assertConversion([
-			`
-				// TestModule.d.ts
-				export class Buffer {}
-			`
-		], [
-			`
-				// TestModule.n4jsd
-				export external class ~Buffer {
-				}
-			`
-		]);
-	}
+	public testFunctions() {
+		this.assertConversion(
+			{
+				name: "main",
+				dts: `
+					export function decode(str: string): string[];
+					export function encode(segments: string[]): string;
+				`,
+				n4jsd: `
+					export external function decode(str: any+): any+;
 
+					export external function encode(segments: any+): any+;
+				`
+			}
+		);
+	}
 }

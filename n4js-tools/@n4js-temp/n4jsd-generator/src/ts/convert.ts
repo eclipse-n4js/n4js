@@ -34,6 +34,23 @@ export class Converter {
 		this.projectPath = projectPath;
 	}
 
+	getDiagnostics(): string[] {
+		const diagnostics = [] as ts.Diagnostic[];
+		diagnostics.push(...this.program.getSyntacticDiagnostics());
+		diagnostics.push(...this.program.getDeclarationDiagnostics());
+		diagnostics.push(...this.program.getSemanticDiagnostics());
+		const result = [] as string[];
+		for (const diag of diagnostics) {
+			const msg = diag?.messageText;
+			if (typeof msg === 'string') {
+				result.push(msg);
+			} else if (typeof msg === 'object' && msg.messageText) {
+				result.push(msg.messageText); // only use the head of the DiagnosticMessageChain
+			}
+		}
+		return result;
+	}
+
 	convertScript(sourceFilePath: string): model.Script {
 		// clean up
 		this.legacyExportedNamespace = undefined;

@@ -10,22 +10,21 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-import { USAGE } from "cmdLineOpts";
 import { runN4jsdGenerator } from "generator";
 import * as utils from "utils";
 
-
-const err = runN4jsdGenerator(process.argv.slice(2)); // strip the first two args (path of node binary and main script)
-if (err !== undefined) {
-	exitWithError(err.message, err.showUsage, err.exitCode);
-}
-
-
-function exitWithError(msg: string, showUsage: boolean = false, exitCode: int = 1): void {
-	utils.logError(msg);
-	if (showUsage) {
-		utils.log();
-		utils.log(USAGE);
+let didLogErrors = false;
+utils.setLogListener((kind, msg) => {
+	let actualMsg = msg;
+	if (kind === utils.LogKind.ERROR) {
+		didLogErrors = true;
+		actualMsg = "ERROR: " + actualMsg;
 	}
-	process.exit(exitCode);
+	console.log(actualMsg);
+});
+
+runN4jsdGenerator(process.argv.slice(2)); // strip the first two args (path of node binary and main script)
+
+if (didLogErrors) {
+	process.exit(1);
 }

@@ -20,7 +20,24 @@ export let ROOT: string = undefined;
 /** Same as 'ROOT', but as a relative path based on the current working directory. */
 export let ROOT_RELATIVE: string = undefined;
 
+export public interface ~ModuleDesc {
+	/** Module name without file extension. May also be a relative(!) path using '/' as delimiter. */
+	name: string;
+	/** Content of the module on the TypeScript side (i.e. content of the .d.ts input file). */
+	dts: string;
+	/**
+	 * Expected content of the module on the N4JS side (i.e. expected content of the generated
+	 * .n4sjd output file). If omitted, generated output file won't be checked for this module.
+	 */
+	n4jsd?: string;
+}
+
 export public class AbstractN4jsdGeneratorTest {
+
+	loggedErrors: string[] = [];
+	loggedIssues: string[] = [];
+	loggedInfos: string[] = [];
+	loggedMessages: string[] = [];
 
 	@Before
 	protected cleanupBefore() {
@@ -73,19 +90,53 @@ export public class AbstractN4jsdGeneratorTest {
 	}
 
 	protected runN4jsdGenerator(...args: string) {
-		const err = runN4jsdGenerator(args);
-		if (err) {
-			Assert.fail("n4js-generator reported an unexpected error: " + err.message + "\n" + JSON.stringify(err, undefined, "    "));
+		this.doRunN4jsdGenerator(args, []);
+	}
+
+	protected runN4jsdGeneratorWithErrors(args: string[], ...expectedErrors: string) {
+		this.doRunN4jsdGenerator(args, expectedErrors);
+	}
+
+	private doRunN4jsdGenerator(args: string[], expectedErrors: string[]) {
+		this.runN4jsdGeneratorWithoutCheckingErrors(args);
+		if (expectedErrors.length === 0) {
+			if (this.loggedErrors.length > 0) {
+				Assert.fail("n4js-generator reported one or more unexpected errors:\n" + this.loggedErrors.join("\n"));
+			}
+		} else {
+			if (this.loggedErrors.length === 0) {
+				Assert.fail("n4js-generator did not report an error, even though an error was expected");
+			}
+			const actualErrorsSanitized = this.loggedErrors.map(err => this.relativizePaths(err));
+			Assert.deepEqual(actualErrorsSanitized, expectedErrors);
 		}
 	}
 
-	protected runN4jsdGeneratorWithError(args: string[], expectedMessage: string, expectedExitCode: int) {
-		const err = runN4jsdGenerator(args);
-		if (!err) {
-			Assert.fail("n4js-generator did not report an error, even though an error was expected");
-		}
-		Assert.equal(this.relativizePaths(err.message), expectedMessage);
-		Assert.equal(err.exitCode, expectedExitCode);
+	/**
+	 * Runs the generator, updates the 'logged*' fields, but does not check the actually logged messages.
+	 * Usually, methods #runN4jsdGenerator() or #runN4jsdGeneratorWithError() should be used instead.
+	 */
+	protected runN4jsdGeneratorWithoutCheckingErrors(args: string[]) {
+		this.loggedErrors.splice(0);
+		this.loggedIssues.splice(0);
+		this.loggedInfos.splice(0);
+		this.loggedMessages.splice(0);
+		utils.setLogListener((kind, msg) => {
+			switch(kind) {
+				case utils.LogKind.ERROR:
+					this.loggedErrors.push(msg);
+					break;
+				case utils.LogKind.ISSUE:
+					this.loggedIssues.push(msg);
+					break;
+				case utils.LogKind.INFO:
+					this.loggedInfos.push(msg);
+					break;
+			}
+			this.loggedMessages.push(msg);
+		})
+		runN4jsdGenerator(args);
+		utils.setLogListener(undefined);
 	}
 
 	protected assertFileExists(relativePathAndName: string) {
@@ -105,27 +156,36 @@ export public class AbstractN4jsdGeneratorTest {
 			"file does not have the expected content: " + relativePathAndName);
 	}
 
-	protected assertConversion(dtsModules: string[], expectedGeneratedModules: string[]) {
-		Assert.isTrue(dtsModules.length > 0, "at least one dtsModules must be given");
-		Assert.isTrue(expectedGeneratedModules.length > 0, "at least one expectedGeneratedModules must be given");
+	protected assertConversion(...modules: ModuleDesc) {
+		this.doAssertConversion(modules, []);
+	}
+
+	protected assertConversionWithErrors(modules: ModuleDesc[], ...expectedErrors: string) {
+		this.doAssertConversion(modules, expectedErrors);
+	}
+
+	private doAssertConversion(modules: ModuleDesc[], expectedErrors: string[]) {
+		Assert.isTrue(modules.length > 0, "at least one module description must be given");
 		const projectName = "TestProject";
 		this.createProject("input", projectName);
-		for (const dtsModuleRaw of dtsModules) {
-			const dtsModule = utils.trimMultiLineString(dtsModuleRaw);
-			const [ fileName, content ] = splitFileNameAndContentOfModule(dtsModule);
-			if (!fileName.endsWith(".d.ts")) {
-				Assert.fail("file names of dtsModules must end with .d.ts, but was: " + fileName);
-			}
-			this.createFile("input/" + projectName + "/" + fileName, content);
+		for (const currModule of modules) {
+			const fileName = currModule.name + ".d.ts";
+			const path = "input/" + projectName + "/" + fileName;
+			this.createFile(path, currModule.dts);
 		}
-		this.runN4jsdGenerator("-o", ROOT + "/output", ROOT + "/input/" + projectName);
-		for (const expGenModuleRaw of expectedGeneratedModules) {
-			const expGenModule = utils.trimMultiLineString(expGenModuleRaw);
-			const [ fileName, content ] = splitFileNameAndContentOfModule(expGenModule);
-			if (!fileName.endsWith(".n4jsd")) {
-				Assert.fail("file names of expected generated modules must end with .n4jsd, but was: " + fileName);
+		const args = [ "-f", "-o", ROOT + "/output", ROOT + "/input/" + projectName ];
+		if (expectedErrors.length === 0) {
+			this.doRunN4jsdGenerator(args, []);
+		} else {
+			this.doRunN4jsdGenerator(args, expectedErrors);
+		}
+		for (const currModule of modules) {
+			if (!currModule.n4jsd) {
+				continue; // no expectation given
 			}
-			this.assertFileContent("output/@n4jsd/" + projectName + "/" + fileName, content);
+			const fileName = currModule.name + ".n4jsd";
+			const path = "output/@n4jsd/" + projectName + "/" + fileName;
+			this.assertFileContent(path, currModule.n4jsd);
 		}
 	}
 
@@ -145,16 +205,4 @@ ${actual}
 	protected relativizePaths(str: string): string {
 		return str.split(ROOT).join(".../" + path_lib.basename(ROOT));
 	}
-}
-
-
-function splitFileNameAndContentOfModule(moduleStr: string): Iterable2<string, string> {
-	const idx = moduleStr.indexOf("\n");
-	const firstLine = idx >= 0 ? moduleStr.substring(0, idx) : "";
-	const content = idx >= 0 ? moduleStr.substring(idx + 1) : "";
-	const match = firstLine.match(/^\s*\/\/\s*(.*)\s*$/);
-	if (!match || match.length < 2) {
-		Assert.fail("every module must start with: // <file name with extension>");
-	}
-	return [ match[1], content ];
 }
