@@ -21,30 +21,16 @@ import java.util.stream.Collectors;
 
 import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest;
 import org.eclipse.n4js.utils.Strings;
-import org.eclipse.n4js.xtext.workspace.BuildOrderFactory;
 import org.eclipse.n4js.xtext.workspace.BuildOrderInfo;
 import org.eclipse.n4js.xtext.workspace.BuildOrderIterator;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
-import org.eclipse.n4js.xtext.workspace.XWorkspaceConfigSnapshotProvider;
 import org.eclipse.xtext.xbase.lib.IteratorExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
-
-import com.google.inject.Injector;
 
 /**
  * Test for build order
  */
 abstract class AbstractBuildOrderTest extends AbstractIdeTest {
-	protected XWorkspaceConfigSnapshotProvider workspaceConfigProvider;
-	protected BuildOrderFactory projectBuildOrderFactory;
-
-	@Override
-	protected Injector createInjector() {
-		Injector injector = super.createInjector();
-		workspaceConfigProvider = injector.getInstance(XWorkspaceConfigSnapshotProvider.class);
-		projectBuildOrderFactory = injector.getInstance(BuildOrderFactory.class);
-		return injector;
-	}
 
 	/**
 	 * @param buildOrder
