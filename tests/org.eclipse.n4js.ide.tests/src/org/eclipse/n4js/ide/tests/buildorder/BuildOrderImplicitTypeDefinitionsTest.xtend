@@ -24,7 +24,7 @@ import org.eclipse.n4js.xtext.workspace.BuildOrderFactory
 /**
  * Test for build order
  */
-class BuildOrderSideLoadTest extends AbstractIdeTest {
+class BuildOrderImplicitTypeDefinitionsTest extends AbstractIdeTest {
 
 	private XWorkspaceConfigSnapshotProvider workspaceConfigProvider;
 	private BuildOrderFactory projectBuildOrderFactory;
