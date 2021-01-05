@@ -15,8 +15,8 @@ import org.junit.Test
 /**
  * Test for build order
  */
-class BuildOrderImplicitTypeDefinitionsTest extends AbstractBuildOrderTest {
-	
+class BuildOrderImplicitTypeDefinitionsActionTest extends AbstractBuildOrderTest {
+
 	@Test
 	def void testSingleDependency1() {
 		test("yarn-test-project, @n4jsd/Lib1, @n4jsd/Lib3, @n4jsd/Lib2, n4js-runtime, Lib1, Lib2, P1",
