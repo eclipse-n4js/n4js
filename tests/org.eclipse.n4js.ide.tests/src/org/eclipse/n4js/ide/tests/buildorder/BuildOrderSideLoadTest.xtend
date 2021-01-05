@@ -78,7 +78,7 @@ class BuildOrderSideLoadTest extends AbstractIdeTest {
 	
 	@Test
 	def void testSingleDependency1() {
-		test("yarn-test-project, n4js-runtime, @n4jsd/Lib1, Lib1, @n4jsd/Lib3, @n4jsd/Lib2, Lib2, P1",
+		test("yarn-test-project, @n4jsd/Lib1, @n4jsd/Lib3, @n4jsd/Lib2, n4js-runtime, Lib1, Lib2, P1",
 			CFG_NODE_MODULES + "n4js-runtime" -> null,
 			CFG_NODE_MODULES + "Lib1" -> #[
 				"package.json" -> '''
