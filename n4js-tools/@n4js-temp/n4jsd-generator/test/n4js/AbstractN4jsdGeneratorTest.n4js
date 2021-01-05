@@ -15,10 +15,12 @@ import * as utils from "utils";
 import {runN4jsdGenerator} from "generator";
 import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert";
 
+// must use '_' as prefix of following constants to avoid N4JS warning
+
 /** Same as 'this.getTestFolder()'. Provided for readability. */
-export let ROOT: string = undefined;
+export let _ROOT: string = undefined;
 /** Same as 'ROOT', but as a relative path based on the current working directory. */
-export let ROOT_RELATIVE: string = undefined;
+export let _ROOT_RELATIVE: string = undefined;
 
 export public interface ~ModuleDesc {
 	/** Module name without file extension. May also be a relative(!) path using '/' as delimiter. */
@@ -42,14 +44,14 @@ export public class AbstractN4jsdGeneratorTest {
 	@Before
 	protected cleanupBefore() {
 		this.cleanup();
-		ROOT = this.getTestFolder();
-		ROOT_RELATIVE = path_lib.relative(process.cwd(), ROOT);
+		_ROOT = this.getTestFolder();
+		_ROOT_RELATIVE = path_lib.relative(process.cwd(), _ROOT);
 	}
 
 	@After
 	protected cleanupAfter() {
-		ROOT = undefined;
-		ROOT_RELATIVE = undefined;
+		_ROOT = undefined;
+		_ROOT_RELATIVE = undefined;
 		//this.cleanup();
 	}
 
@@ -173,7 +175,7 @@ export public class AbstractN4jsdGeneratorTest {
 			const path = "input/" + projectName + "/" + fileName;
 			this.createFile(path, currModule.dts);
 		}
-		const args = [ "-f", "-o", ROOT + "/output", ROOT + "/input/" + projectName ];
+		const args = [ "-f", "-o", _ROOT + "/output", _ROOT + "/input/" + projectName ];
 		if (expectedErrors.length === 0) {
 			this.doRunN4jsdGenerator(args, []);
 		} else {
@@ -203,6 +205,6 @@ ${actual}
 	}
 
 	protected relativizePaths(str: string): string {
-		return str.split(ROOT).join(".../" + path_lib.basename(ROOT));
+		return str.split(_ROOT).join(".../" + path_lib.basename(_ROOT));
 	}
 }
