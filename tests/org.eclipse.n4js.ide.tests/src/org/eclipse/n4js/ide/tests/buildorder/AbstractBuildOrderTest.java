@@ -83,7 +83,8 @@ abstract class AbstractBuildOrderTest extends AbstractIdeTest {
 		Set<String> expectedCycles = cycles.stream().map(it -> Strings.join(", ", it)).collect(Collectors.toSet());
 		for (List<String> cycle : projectBuildOrderInfo.getProjectCycles()) {
 			String detectedCycle = Strings.join(", ", cycle);
-			assertTrue(expectedCycles.contains(detectedCycle));
+			assertTrue("Cycle " + detectedCycle + " not found in " + expectedCycles,
+					expectedCycles.contains(detectedCycle));
 		}
 	}
 

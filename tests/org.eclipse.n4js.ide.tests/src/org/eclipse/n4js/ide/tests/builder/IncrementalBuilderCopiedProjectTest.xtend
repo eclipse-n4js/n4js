@@ -56,13 +56,13 @@ class IncrementalBuilderCopiedProjectTest extends AbstractIncrementalBuilderTest
 		val projectFolder2 = new File(getRoot(), DEFAULT_PROJECT_NAME+"2");
 		FileCopier.copy(projectFolder, projectFolder2);
 		val packagejson2 = new FileURI(new File(getRoot(), DEFAULT_PROJECT_NAME+"2/package.json"));
-		changeFileOnDiskWithoutNotification(packagejson2, "test-project" -> "test-project2");
+		changeFileOnDiskWithoutNotification(packagejson2, DEFAULT_PROJECT_NAME -> DEFAULT_PROJECT_NAME+"2");
 
 
 		startAndWaitForLspServer();
 		val myModule1 = new FileURI(new File(getRoot(), DEFAULT_PROJECT_NAME+"/src/MyModule.n4js"));
 		val myModule2 = new FileURI(new File(getRoot(), DEFAULT_PROJECT_NAME+"2/src/MyModule.n4js"));
-		assertProjectBuildOrder("[lib, n4js-runtime, test-project, test-project2]");
+		assertProjectBuildOrder("[lib, n4js-runtime, test-project2, test-project]");
 		assertIssues(Map.of(
 			myModule1, #["(Error, [0:0 - 0:11], Couldn't resolve reference to IdentifiableElement '_globalThis'.)"],
 			myModule2, #["(Error, [0:0 - 0:11], Couldn't resolve reference to IdentifiableElement '_globalThis'.)"]

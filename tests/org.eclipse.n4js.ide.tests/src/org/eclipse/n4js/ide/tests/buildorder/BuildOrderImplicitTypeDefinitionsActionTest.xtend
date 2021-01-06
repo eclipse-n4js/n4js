@@ -52,7 +52,7 @@ class BuildOrderImplicitTypeDefinitionsActionTest extends AbstractBuildOrderTest
 		
 		changeNonOpenedFile("P/package.json", '''"JS1"''' -> '''JS_UNAVAILABLE''');
 		
-		assertBuildOrder("yarn-test-project, n4js-runtime, @n4jsd/DEF1, P");
+		assertBuildOrder("yarn-test-project, n4js-runtime, @n4jsd/DEF1, JS1, P");
 	}
 	
 

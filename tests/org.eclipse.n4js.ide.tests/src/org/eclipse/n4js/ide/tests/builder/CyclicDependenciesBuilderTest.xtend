@@ -105,8 +105,8 @@ class CyclicDependenciesBuilderTest extends AbstractIncrementalBuilderTest {
 		saveOpenedFile("P1/package.json");
 		
 		assertIssues(
-			"P1/package.json" -> #["(Error, [15:24 - 15:28], Dependency cycle of the projects: P1, P2.)"],
-			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"]
+			"P1/package.json" -> #["(Error, [15:24 - 15:28], Dependency cycle of the projects: P2, P1.)"],
+			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P2, P1.)"]
 		);
 	}
 
@@ -117,8 +117,8 @@ class CyclicDependenciesBuilderTest extends AbstractIncrementalBuilderTest {
 		startAndWaitForLspServer();
 		
 		assertIssues(
-			"P1/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
-			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"]
+			"P1/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P2, P1.)"],
+			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P2, P1.)"]
 		);
 		
 		openFile("P1/package.json");
@@ -137,8 +137,8 @@ class CyclicDependenciesBuilderTest extends AbstractIncrementalBuilderTest {
 		startAndWaitForLspServer();
 		
 		assertIssues(
-			"P1/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
-			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"]
+			"P1/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P2, P1.)"],
+			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P2, P1.)"]
 		);
 		
 		openFile("M1");
@@ -146,24 +146,24 @@ class CyclicDependenciesBuilderTest extends AbstractIncrementalBuilderTest {
 		changeOpenedFile("M1", "export public class C1 {" -> "export public class C1 { #");
 		
 		assertIssues(
-			"P1/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
-			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
+			"P1/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P2, P1.)"],
+			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P2, P1.)"],
 			"M1"              -> #["(Error, [0:25 - 0:26], extraneous input '#' expecting '}')"]
 		);
 		
 		saveOpenedFile("M1");
 		
 		assertIssues(
-			"P1/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
-			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
+			"P1/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P2, P1.)"],
+			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P2, P1.)"],
 			"M1"              -> #["(Error, [0:25 - 0:26], extraneous input '#' expecting '}')"]
 		);
 		
 		closeFile("M1");
 		
 		assertIssues(
-			"P1/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
-			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"]
+			"P1/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P2, P1.)"],
+			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P2, P1.)"]
 		);
 	}
 
@@ -174,8 +174,8 @@ class CyclicDependenciesBuilderTest extends AbstractIncrementalBuilderTest {
 		startAndWaitForLspServer();
 		
 		assertIssues(
-			"P1/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
-			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"]
+			"P1/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P2, P1.)"],
+			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P2, P1.)"]
 		);
 		
 		openFile("M1");
@@ -183,24 +183,24 @@ class CyclicDependenciesBuilderTest extends AbstractIncrementalBuilderTest {
 		changeOpenedFile("M1", "export public class C1 {" -> "export public class C1 { #");
 		
 		assertIssues(
-			"P1/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
-			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
+			"P1/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P2, P1.)"],
+			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P2, P1.)"],
 			"M1"              -> #["(Error, [0:25 - 0:26], extraneous input '#' expecting '}')"]
 		);
 		
 		saveOpenedFile("M1");
 		
 		assertIssues(
-			"P1/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
-			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
+			"P1/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P2, P1.)"],
+			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P2, P1.)"],
 			"M1"              -> #["(Error, [0:25 - 0:26], extraneous input '#' expecting '}')"]
 		);
 		
 		closeFile("M1");
 		
 		assertIssues(
-			"P1/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
-			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"]
+			"P1/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P2, P1.)"],
+			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P2, P1.)"]
 		);
 			
 		
@@ -222,8 +222,8 @@ class CyclicDependenciesBuilderTest extends AbstractIncrementalBuilderTest {
 		startAndWaitForLspServer();
 		
 		assertIssues(
-			"P1/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
-			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"]
+			"P1/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P2, P1.)"],
+			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P2, P1.)"]
 		);
 		
 		openFile("M1");
@@ -231,16 +231,16 @@ class CyclicDependenciesBuilderTest extends AbstractIncrementalBuilderTest {
 		changeOpenedFile("M1", "export public class C1 {" -> "export public class C1 { #");
 		
 		assertIssues(
-			"P1/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
-			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
+			"P1/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P2, P1.)"],
+			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P2, P1.)"],
 			"M1"              -> #["(Error, [0:25 - 0:26], extraneous input '#' expecting '}')"]
 		);
 		
 		saveOpenedFile("M1");
 		
 		assertIssues(
-			"P1/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
-			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P1, P2.)"],
+			"P1/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P2, P1.)"],
+			"P2/package.json" -> #["(Error, [15:3 - 15:7], Dependency cycle of the projects: P2, P1.)"],
 			"M1"              -> #["(Error, [0:25 - 0:26], extraneous input '#' expecting '}')"]
 		);
 			
