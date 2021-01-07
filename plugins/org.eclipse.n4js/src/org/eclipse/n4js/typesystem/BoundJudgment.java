@@ -129,7 +129,7 @@ import com.google.common.base.Optional;
 					? wildcard.getDeclaredOrImplicitUpperBound()
 					: wildcard.getDeclaredLowerBound();
 			if (declBound != null) {
-				return declBound;
+				return bound(declBound);
 			}
 			return getFallbackBoundForWildcard(wildcard);
 		}
@@ -187,8 +187,14 @@ import com.google.common.base.Optional;
 		@Override
 		public TypeRef caseParameterizedTypeRef(ParameterizedTypeRef ptr) {
 			final Type declType = ptr.getDeclaredType();
-			if (declType instanceof TypeVariable) {
-				if (resolve) {
+			if (resolve) {
+				// a) resolve type aliases
+				final TypeRef ptrResolved = tsh.resolveAlias(G, ptr);
+				if (ptrResolved != ptr) {
+					return bound(ptrResolved);
+				}
+				// b) resolve type variables
+				if (declType instanceof TypeVariable) {
 					switch (boundType) {
 					case UPPER:
 						final TypeRef upperBound = ((TypeVariable) declType).getDeclaredUpperBound();

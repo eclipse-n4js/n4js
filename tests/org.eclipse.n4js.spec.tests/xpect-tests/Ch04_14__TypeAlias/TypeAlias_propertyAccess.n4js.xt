@@ -1,0 +1,62 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+class A {
+}
+
+class B {
+	field: A;
+}
+
+type AliasB = B;
+
+
+let aliasB: AliasB;
+// XPECT noerrors -->
+let test01 = aliasB.field;
+// XPECT type of 'test01' --> A
+test01;
+
+
+class G<T extends AliasB> {
+	value: T;
+
+	m() {
+		let x: T;
+		// XPECT noerrors -->
+		let test02 = x.field;
+		// XPECT type of 'test02' --> A
+		test02;
+	}
+}
+
+
+let gAliasB: G<AliasB>;
+// XPECT noerrors -->
+let test03 = gAliasB.value.field;
+// XPECT type of 'test03' --> A
+test03;
+
+
+let gAliasExtB: G<? extends AliasB>;
+// XPECT noerrors -->
+let test04 = gAliasExtB.value.field;
+// XPECT type of 'test04' --> A
+test04;
+
+
+let gw: G<?>;
+// XPECT noerrors -->
+let test05 = gw.value.field;
+// XPECT type of 'test05' --> A
+test05;
