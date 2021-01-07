@@ -25,7 +25,6 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.n4Enum
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.n4NumberBasedEnumType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.n4ObjectType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.n4StringBasedEnumType;
-import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.newRuleEnvironment;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.nullType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.numberObjectType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.numberType;
@@ -62,7 +61,6 @@ import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TInterface;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.Type;
-import org.eclipse.n4js.ts.types.TypeAlias;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypingStrategy;
 import org.eclipse.n4js.ts.types.util.AllSuperTypeRefsCollector;
@@ -202,37 +200,14 @@ import com.google.common.collect.Iterables;
 
 	private TypeRef replaceAndResolveAlias(RuleEnvironment G, TypeRef typeRef) {
 		if (!hasReplacements(G)) {
-			return resolveAlias(G, typeRef);
+			return tsh.resolveAlias(G, typeRef);
 		}
 		TypeRef lastTypeRef;
 		do {
 			lastTypeRef = typeRef;
 			typeRef = getReplacement(G, typeRef);
-			typeRef = resolveAlias(G, typeRef);
+			typeRef = tsh.resolveAlias(G, typeRef);
 		} while (typeRef != lastTypeRef);
-		return typeRef;
-	}
-
-	// FIXME move this to a more appropriate place!!!
-	/**
-	 * Replaces the given type reference by its {@link TypeAlias#getActualTypeRef() actualTypeRef} until obtaining a
-	 * type reference that is not an alias. Does not resolve nested type aliases, i.e. aliases <em>contained</em> in the
-	 * given type reference or its <code>actualTypeRef(s)</code>.
-	 */
-	private TypeRef resolveAlias(RuleEnvironment G, TypeRef typeRef) {
-		Type declType = typeRef.getDeclaredType();
-		while (declType instanceof TypeAlias) {
-			RuleEnvironment G_temp = newRuleEnvironment(G); // FIXME or do we have to wrap?
-			tsh.addSubstitutions(G_temp, typeRef);
-			typeRef = ((TypeAlias) declType).getActualTypeRef();
-			if (typeRef != null) {
-				typeRef = ts.substTypeVariables(G_temp, typeRef);
-				declType = typeRef.getDeclaredType();
-			} else {
-				typeRef = unknown();
-				declType = null;
-			}
-		}
 		return typeRef;
 	}
 

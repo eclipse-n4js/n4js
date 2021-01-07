@@ -49,6 +49,7 @@ import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TObjectPrototype
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.Type
+import org.eclipse.n4js.ts.types.TypeAlias
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.ts.utils.TypeExtensions
 import org.eclipse.n4js.ts.utils.TypeUtils
@@ -248,6 +249,29 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * Replaces the given type reference by its {@link TypeAlias#getActualTypeRef() actualTypeRef} until obtaining a
+	 * type reference that is not an alias. Does not resolve nested type aliases, i.e. aliases <em>contained</em> in the
+	 * given type reference or its <code>actualTypeRef(s)</code>.
+	 */
+	public def TypeRef resolveAlias(RuleEnvironment G, TypeRef typeRef) {
+		var currTypeRef = typeRef;
+		var declType = currTypeRef.getDeclaredType();
+		while (declType instanceof TypeAlias) {
+			val G_temp = newRuleEnvironment(G); // FIXME or do we have to wrap G?
+			addSubstitutions(G_temp, currTypeRef);
+			currTypeRef = declType.getActualTypeRef();
+			if (currTypeRef !== null) {
+				currTypeRef = ts.substTypeVariables(G_temp, currTypeRef);
+				declType = currTypeRef.getDeclaredType();
+			} else {
+				currTypeRef = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
+				declType = null;
+			}
+		}
+		return currTypeRef;
 	}
 
 	public def TypeRef sanitizeTypeOfVariableFieldPropertyParameter(RuleEnvironment G, TypeArgument typeRaw) {
