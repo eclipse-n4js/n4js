@@ -16,21 +16,39 @@ import * as utils from "./utils";
 import * as utils_ts from "./utils_ts";
 
 export class Converter {
-	readonly program: ts.Program;
-	readonly checker: ts.TypeChecker;
-	readonly projectPath?: string;
+	private readonly program: ts.Program;
+	private readonly checker: ts.TypeChecker;
+	private readonly projectPath?: string;
 
-	legacyExportedNamespace: ts.Symbol;
-	readonly issues: utils.Issue[] = [];
+	private legacyExportedNamespace: ts.Symbol;
+	private readonly issues: utils.Issue[] = [];
 
-	constructor(program: ts.Program, projectPath?: string) {
+	constructor(sourceDtsFilePaths: string[], projectPath?: string) {
 		if (projectPath !== undefined && !path_lib.isAbsolute(projectPath)) {
 			throw "projectPath must be absolute";
 		}
 
+		const program = ts.createProgram(sourceDtsFilePaths, { allowJs: true });
 		this.program = program;
 		this.checker = program.getTypeChecker();
 		this.projectPath = projectPath;
+	}
+
+	getDiagnostics(): string[] {
+		const diagnostics = [] as ts.Diagnostic[];
+		diagnostics.push(...this.program.getSyntacticDiagnostics());
+		diagnostics.push(...this.program.getDeclarationDiagnostics());
+		diagnostics.push(...this.program.getSemanticDiagnostics());
+		const result = [] as string[];
+		for (const diag of diagnostics) {
+			const msg = diag?.messageText;
+			if (typeof msg === 'string') {
+				result.push(msg);
+			} else if (typeof msg === 'object' && msg.messageText) {
+				result.push(msg.messageText); // only use the head of the DiagnosticMessageChain
+			}
+		}
+		return result;
 	}
 
 	convertScript(sourceFilePath: string): model.Script {
@@ -163,7 +181,7 @@ export class Converter {
 		return result;
 	}
 
-	private convertVariable(node: ts.VariableDeclaration, keyword: 'var' | 'let' | 'const'): model.Variable {
+	private convertVariable(node: ts.VariableDeclaration, keyword: model.VariableKeyword): model.Variable {
 		const result = new model.Variable();
 		result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker);
 		result.keyword = keyword;
@@ -188,7 +206,7 @@ export class Converter {
 	private convertEnum(node: ts.EnumDeclaration): model.Type {
 		let result = new model.Type();
 		result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker);
-		result.kind = 'enum';
+		result.kind = model.TypeKind.ENUM;
 		result.exported = utils_ts.isExported(node);
 		result.exportedAsDefault = utils_ts.isExportedAsDefault(node);
 
@@ -199,11 +217,14 @@ export class Converter {
 			const singleValueType = valueTypes.size === 1 ? valueTypes.values().next().value : undefined;
 			if (valueTypes.size === 0) {
 				// in TypeScript, const enums are number-based by default:
-				result.primitiveBased = 'number';
-			} else if (singleValueType == 'string' || singleValueType == 'number') {
-				result.primitiveBased = singleValueType;
+				result.primitiveBased = model.PrimitiveBasedKind.NUMBER_BASED;
+			} else if (singleValueType == 'string') {
+				result.primitiveBased = model.PrimitiveBasedKind.STRING_BASED;
+			} else if (singleValueType == 'number') {
+				result.primitiveBased = model.PrimitiveBasedKind.NUMBER_BASED;
 			} else {
-				result.primitiveBased = 'string'; // use @StringBased enum in error case
+				// use @StringBased enum in error case
+				result.primitiveBased = model.PrimitiveBasedKind.STRING_BASED;
 				this.createIssueForNode("unsupported value types in const enum: " + Array.from(valueTypes).join(", "), node);
 			}
 		}
@@ -230,7 +251,7 @@ export class Converter {
 	private convertInterface(node: ts.InterfaceDeclaration): model.Type {
 		let result = new model.Type();
 		result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker);
-		result.kind = 'interface';
+		result.kind = model.TypeKind.INTERFACE;
 		result.defSiteStructural = true;
 		result.members.push(...this.convertMembers(node));
 		result.exported = utils_ts.isExported(node);
@@ -241,7 +262,7 @@ export class Converter {
 	private convertClass(node: ts.ClassDeclaration): model.Type {
 		let result = new model.Type();
 		result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker);
-		result.kind = 'class';
+		result.kind = model.TypeKind.CLASS;
 		result.defSiteStructural = true;
 		result.members.push(...this.convertMembers(node));
 		result.exported = utils_ts.isExported(node);
@@ -271,7 +292,7 @@ export class Converter {
 		result.accessibility = utils_ts.getAccessibility(representativeNode);
 
 		if (ts.isConstructorDeclaration(representativeNode)) {
-			result.kind = 'ctor';
+			result.kind = model.MemberKind.CTOR;
 			result.signatures = this.convertConstructSignatures(symOwner);
 			return result;
 		}
@@ -279,21 +300,21 @@ export class Converter {
 		result.name = symMember.getName();
 
 		if (ts.isPropertyDeclaration(representativeNode)) {
-			result.kind = 'field';
+			result.kind = model.MemberKind.FIELD;
 			result.type = this.convertTypeReferenceOfTypedSymbol(symMember);
 			return result;
 		} else if (ts.isGetAccessorDeclaration(representativeNode)) {
-			result.kind = 'getter';
+			result.kind = model.MemberKind.GETTER;
 			result.type = this.convertTypeReferenceOfTypedSymbol(symMember);
 			return result;
 		} else if (ts.isSetAccessorDeclaration(representativeNode)) {
-			result.kind = 'setter';
+			result.kind = model.MemberKind.SETTER;
 			result.type = this.convertTypeReferenceOfTypedDeclaration(representativeNode.parameters[0]);
 			return result;
 		} else if (ts.isMethodDeclaration(representativeNode)
 				|| ts.isMethodSignature(representativeNode)) {
 			const sigs = this.convertCallSignatures(symMember);
-			result.kind = 'method';
+			result.kind = model.MemberKind.METHOD;
 			result.signatures = sigs;
 			return result;
 		}
@@ -361,10 +382,10 @@ export class Converter {
 
 		const result = new model.Type();
 		result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker);
-		result.kind = 'enum';
+		result.kind = model.TypeKind.ENUM;
 		result.exported = utils_ts.isExported(node);
 		result.exportedAsDefault = utils_ts.isExportedAsDefault(node);
-		result.primitiveBased = isAllString ? 'string' : 'number';
+		result.primitiveBased = isAllString ? model.PrimitiveBasedKind.STRING_BASED : model.PrimitiveBasedKind.NUMBER_BASED;
 		result.literals.push(...utils_ts.createEnumLiteralsFromValues(literalValues));
 		return result;
 	}

@@ -1,0 +1,30 @@
+#!/usr/bin/env node
+/**
+ * Copyright (c) 2020 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+import { runN4jsdGenerator } from "generator";
+import * as utils from "utils";
+
+let didLogErrors = false;
+utils.setLogListener((kind, msg) => {
+	let actualMsg = msg;
+	if (kind === utils.LogKind.ERROR) {
+		didLogErrors = true;
+		actualMsg = "ERROR: " + actualMsg;
+	}
+	console.log(actualMsg);
+});
+
+runN4jsdGenerator(process.argv.slice(2)); // strip the first two args (path of node binary and main script)
+
+if (didLogErrors) {
+	process.exit(1);
+}

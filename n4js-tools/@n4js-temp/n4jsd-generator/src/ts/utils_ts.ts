@@ -25,7 +25,7 @@ export function getAllChildNodes(node: ts.Node): ts.Node[] {
 	return result;
 }
 
-export function traverse(sourceFile: ts.SourceFile, fn: (node: ts.Node, indent: number)=>boolean) {
+export function traverse(sourceFile: ts.SourceFile, fn: (node: ts.Node, indent: number)=>boolean): void {
 	const doTraverse = (node: ts.Node, indent: number) => {
 		const traverseChildren = fn(node, indent);
 		if (traverseChildren) {
@@ -91,26 +91,26 @@ export function getExportEquals(file: ts.SourceFile): ts.ExportAssignment {
 	return undefined;
 }
 
-export function getVarDeclKeyword(node: ts.VariableDeclarationList): 'var' | 'let' | 'const' {
+export function getVarDeclKeyword(node: ts.VariableDeclarationList): model.VariableKeyword {
 	const flags = ts.getCombinedNodeFlags(node);
 	if (utils.testFlag(flags, ts.NodeFlags.Let)) {
-		return 'let';
+		return model.VariableKeyword.LET;
 	} else if (utils.testFlag(flags, ts.NodeFlags.Const)) {
-		return 'const';
+		return model.VariableKeyword.CONST;
 	}
-	return 'var';
+	return model.VariableKeyword.VAR;
 }
 
-export function getTypeKind(decl: ts.Node) {
+export function getTypeKind(decl: ts.Node): model.TypeKind {
 	if (decl) {
 		if (ts.isClassDeclaration(decl)) {
-			return 'class';
+			return model.TypeKind.CLASS;
 		} else if (ts.isInterfaceDeclaration(decl)) {
-			return 'interface';
+			return model.TypeKind.INTERFACE;
 		} else if (ts.isEnumDeclaration(decl)) {
-			return 'enum';
+			return model.TypeKind.ENUM;
 		} else if (ts.isTypeAliasDeclaration(decl)) {
-			return 'alias';
+			return model.TypeKind.ALIAS;
 		}
 	}
 	return undefined;

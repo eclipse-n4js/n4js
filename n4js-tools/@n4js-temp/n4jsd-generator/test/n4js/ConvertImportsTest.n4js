@@ -1,0 +1,141 @@
+/**
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+import {AbstractN4jsdGeneratorTest} from "AbstractN4jsdGeneratorTest";
+
+export public class ConvertImportsTest extends AbstractN4jsdGeneratorTest {
+
+	@Test
+	public testNamedImport() {
+		this.assertConversion(
+			{
+				name: "buffer",
+				dts: `
+					export class Buffer1 {}
+					export class Buffer2 {}
+				`
+			},
+			{
+				name: "main",
+				dts: `
+					import { Buffer1, Buffer2 } from "./buffer"
+					export const buff1: Buffer1;
+					export const buff2: Buffer2;
+				`,
+				n4jsd: `
+					import { Buffer1 } from "buffer";
+					import { Buffer2 } from "buffer";
+
+					export const buff1: any+;
+
+					export const buff2: any+;
+				`
+			}
+		);
+	}
+
+	@Test
+	public testNamespaceImport() {
+		this.assertConversion(
+			{
+				name: "buffer",
+				dts: `
+					export class Buffer1 {}
+					export class Buffer2 {}
+				`
+			},
+			{
+				name: "main",
+				dts: `
+					import * as NS from "./buffer"
+					export const buff1: NS.Buffer1;
+					export const buff2: NS.Buffer2;
+				`,
+				n4jsd: `
+					import * as NS from "buffer";
+
+					export const buff1: any+;
+
+					export const buff2: any+;
+				`
+			}
+		);
+	}
+
+	@Test
+	public testDefaultImport() {
+		this.assertConversion(
+			{
+				name: "defaultBuffer",
+				dts: `
+					export default class DefaultBuffer {}
+				`
+			},
+			{
+				name: "main",
+				dts: `
+					import MyDefaultBuffer from "./defaultBuffer"
+					export const buff: MyDefaultBuffer;
+				`,
+				n4jsd: `
+					import MyDefaultBuffer from "defaultBuffer";
+
+					export const buff: any+;
+				`
+			}
+		);
+	}
+
+	@Test
+	public testBareImport() {
+		this.assertConversion(
+			{
+				name: "someModule",
+				dts: `
+					// empty
+				`
+			},
+			{
+				name: "main",
+				dts: `
+					import "./someModule"
+				`,
+				n4jsd: `
+				`
+			}
+		);
+	}
+
+	@Test
+	public testNestedModule() {
+		this.assertConversion(
+			{
+				name: "folder/nested",
+				dts: `
+					export class ClassFromModuleNested {}
+				`
+			},
+			{
+				name: "main",
+				dts: `
+					import { ClassFromModuleNested } from "./folder/nested"
+
+					export const someConst: ClassFromModuleNested;
+				`,
+				n4jsd: `
+					import { ClassFromModuleNested } from "folder/nested";
+
+					export const someConst: any+;
+				`
+			}
+		);
+	}
+}

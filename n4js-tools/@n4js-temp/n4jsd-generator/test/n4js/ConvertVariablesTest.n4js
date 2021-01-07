@@ -1,0 +1,75 @@
+/**
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+import {AbstractN4jsdGeneratorTest} from "AbstractN4jsdGeneratorTest";
+
+export public class ConvertVariablesTest extends AbstractN4jsdGeneratorTest {
+
+	@Test
+	public testVar() {
+		this.assertConversion(
+			{
+				name: "main",
+				dts: `
+					export var someVar: string, anotherVar: number;
+					export var someVarUntyped;
+				`,
+				n4jsd: `
+					export var someVar: any+;
+
+					export var anotherVar: any+;
+
+					export var someVarUntyped: any+;
+				`
+			}
+		);
+	}
+
+	@Test
+	public testLet() {
+		this.assertConversion(
+			{
+				name: "main",
+				dts: `
+					export let someLet: string, anotherLet: number;
+					export let someLetUntyped;
+				`,
+				n4jsd: `
+					export let someLet: any+;
+
+					export let anotherLet: any+;
+
+					export let someLetUntyped: any+;
+				`
+			}
+		);
+	}
+
+	@Test
+	public testConst() {
+		this.assertConversion(
+			{
+				name: "main",
+				dts: `
+					export const someConst: string, anotherConst: string;
+					export const someConstUntyped;
+				`,
+				n4jsd: `
+					export const someConst: any+;
+
+					export const anotherConst: any+;
+
+					export const someConstUntyped: any+;
+				`
+			}
+		);
+	}
+}

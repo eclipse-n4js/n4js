@@ -35,16 +35,22 @@ export class CodeBuffer {
 		this.requiresIndent = false;
 	}
 
-	push(...strs: string[]) {
+	push(...strs: string) {
+		this.pushAll(strs);
+	}
+
+	pushln(...strs: string) {
+		this.pushAll(strs);
+		this.lineBreak();
+	}
+
+	pushAll(strs: string[]) {
 		if (this.requiresIndent) {
 			this.pushIndent();
 		}
-		this.buff.push(...strs);
-	}
-
-	pushln(...strs: string[]) {
-		this.push(...strs);
-		this.lineBreak();
+		for (const str of strs) {
+			this.buff.push(str);
+		}
 	}
 
 	getCode(): string {
