@@ -34,7 +34,7 @@ import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
  * @model
  * @generated
  */
-public interface TObjectPrototype extends TClassifier, DeclaredTypeWithAccessModifier, ArrayLike {
+public interface TObjectPrototype extends TClassifier, AccessibleTypeElement, ArrayLike {
 	/**
 	 * Returns the value of the '<em><b>Super Type</b></em>' containment reference.
 	 * <!-- begin-user-doc -->

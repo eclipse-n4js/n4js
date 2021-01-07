@@ -189,13 +189,31 @@ ruleScriptElement
 	)
 	    |
 	(
-		(ruleImportDeclaration)=>
-		ImportDeclarationParserRuleCall_4=ruleImportDeclaration{ announce($ImportDeclarationParserRuleCall_4.start, $ImportDeclarationParserRuleCall_4.stop, grammarAccess.getScriptElementAccess().getImportDeclarationParserRuleCall_4()); }
+		((
+			(
+				(
+					ruleN4Modifier
+				)
+			)*
+			Type
+			(
+				(
+					ruleBindingIdentifier
+				)
+			)?
+		)
+		)=>
+		N4TypeAliasDeclarationParserRuleCall_4=ruleN4TypeAliasDeclaration{ announce($N4TypeAliasDeclarationParserRuleCall_4.start, $N4TypeAliasDeclarationParserRuleCall_4.stop, grammarAccess.getScriptElementAccess().getN4TypeAliasDeclarationParserRuleCall_4()); }
 	)
 	    |
-	ExportDeclarationParserRuleCall_5=ruleExportDeclaration{ announce($ExportDeclarationParserRuleCall_5.start, $ExportDeclarationParserRuleCall_5.stop, grammarAccess.getScriptElementAccess().getExportDeclarationParserRuleCall_5()); }
+	(
+		(ruleImportDeclaration)=>
+		ImportDeclarationParserRuleCall_5=ruleImportDeclaration{ announce($ImportDeclarationParserRuleCall_5.start, $ImportDeclarationParserRuleCall_5.stop, grammarAccess.getScriptElementAccess().getImportDeclarationParserRuleCall_5()); }
+	)
 	    |
-	RootStatementParserRuleCall_6=ruleRootStatement{ announce($RootStatementParserRuleCall_6.start, $RootStatementParserRuleCall_6.stop, grammarAccess.getScriptElementAccess().getRootStatementParserRuleCall_6()); }
+	ExportDeclarationParserRuleCall_6=ruleExportDeclaration{ announce($ExportDeclarationParserRuleCall_6.start, $ExportDeclarationParserRuleCall_6.stop, grammarAccess.getScriptElementAccess().getExportDeclarationParserRuleCall_6()); }
+	    |
+	RootStatementParserRuleCall_7=ruleRootStatement{ announce($RootStatementParserRuleCall_7.start, $RootStatementParserRuleCall_7.stop, grammarAccess.getScriptElementAccess().getRootStatementParserRuleCall_7()); }
 )
 ;
 
@@ -385,6 +403,39 @@ ruleAnnotatedScriptElement
 				announce($RightCurlyBracketKeyword_1_4_8, grammarAccess.getAnnotatedScriptElementAccess().getRightCurlyBracketKeyword_1_4_8());
 			}
 		)
+		    |
+		(
+			(
+				(
+					ruleN4Modifier
+				)
+			)*
+			TypeKeyword_1_5_2=Type
+			 {
+				announce($TypeKeyword_1_5_2, grammarAccess.getAnnotatedScriptElementAccess().getTypeKeyword_1_5_2());
+			}
+			(
+				(
+					NameBindingIdentifierParserRuleCall_1_5_3_0=ruleBindingIdentifier{
+						announce($NameBindingIdentifierParserRuleCall_1_5_3_0.start, $NameBindingIdentifierParserRuleCall_1_5_3_0.stop, grammarAccess.getAnnotatedScriptElementAccess().getNameAssignment_1_5_3());
+					}
+				)
+			)
+			(
+				TypeVariablesParserRuleCall_1_5_4=ruleTypeVariables{ announce($TypeVariablesParserRuleCall_1_5_4.start, $TypeVariablesParserRuleCall_1_5_4.stop, grammarAccess.getAnnotatedScriptElementAccess().getTypeVariablesParserRuleCall_1_5_4()); }
+			)?
+			EqualsSignKeyword_1_5_5=EqualsSign
+			 {
+				announce($EqualsSignKeyword_1_5_5, grammarAccess.getAnnotatedScriptElementAccess().getEqualsSignKeyword_1_5_5());
+			}
+			(
+				(
+					ActualTypeRefTypeRefParserRuleCall_1_5_6_0=ruleTypeRef{
+						announce($ActualTypeRefTypeRefParserRuleCall_1_5_6_0.start, $ActualTypeRefTypeRefParserRuleCall_1_5_6_0.stop, grammarAccess.getAnnotatedScriptElementAccess().getActualTypeRefAssignment_1_5_6());
+					}
+				)
+			)
+		)
 	)
 )
 ;
@@ -469,6 +520,7 @@ ruleExportDeclarationImpl
 					Class | 
 					Interface | 
 					Enum | 
+					Type | 
 					Async | 
 					Function | 
 					Var | 
@@ -702,14 +754,32 @@ ruleExportableElement
 					ruleN4Modifier
 				)
 			)*
+			Type
+			(
+				(
+					ruleBindingIdentifier
+				)
+			)?
+		)
+		)=>
+		N4TypeAliasDeclarationParserRuleCall_4=ruleN4TypeAliasDeclaration{ announce($N4TypeAliasDeclarationParserRuleCall_4.start, $N4TypeAliasDeclarationParserRuleCall_4.stop, grammarAccess.getExportableElementAccess().getN4TypeAliasDeclarationParserRuleCall_4()); }
+	)
+	    |
+	(
+		((
+			(
+				(
+					ruleN4Modifier
+				)
+			)*
 			ruleAsyncNoTrailingLineBreak
 			Function
 		)
 		)=>
-		FunctionDeclarationParserRuleCall_4=ruleFunctionDeclaration{ announce($FunctionDeclarationParserRuleCall_4.start, $FunctionDeclarationParserRuleCall_4.stop, grammarAccess.getExportableElementAccess().getFunctionDeclarationParserRuleCall_4()); }
+		FunctionDeclarationParserRuleCall_5=ruleFunctionDeclaration{ announce($FunctionDeclarationParserRuleCall_5.start, $FunctionDeclarationParserRuleCall_5.stop, grammarAccess.getExportableElementAccess().getFunctionDeclarationParserRuleCall_5()); }
 	)
 	    |
-	ExportedVariableStatementParserRuleCall_5=ruleExportedVariableStatement{ announce($ExportedVariableStatementParserRuleCall_5.start, $ExportedVariableStatementParserRuleCall_5.stop, grammarAccess.getExportableElementAccess().getExportedVariableStatementParserRuleCall_5()); }
+	ExportedVariableStatementParserRuleCall_6=ruleExportedVariableStatement{ announce($ExportedVariableStatementParserRuleCall_6.start, $ExportedVariableStatementParserRuleCall_6.stop, grammarAccess.getExportableElementAccess().getExportedVariableStatementParserRuleCall_6()); }
 )
 ;
 
@@ -897,6 +967,39 @@ ruleAnnotatedExportableElement
 			 {
 				announce($RightCurlyBracketKeyword_1_3_7, grammarAccess.getAnnotatedExportableElementAccess().getRightCurlyBracketKeyword_1_3_7());
 			}
+		)
+		    |
+		(
+			(
+				(
+					ruleN4Modifier
+				)
+			)*
+			TypeKeyword_1_4_2=Type
+			 {
+				announce($TypeKeyword_1_4_2, grammarAccess.getAnnotatedExportableElementAccess().getTypeKeyword_1_4_2());
+			}
+			(
+				(
+					NameBindingIdentifierParserRuleCall_1_4_3_0=ruleBindingIdentifier{
+						announce($NameBindingIdentifierParserRuleCall_1_4_3_0.start, $NameBindingIdentifierParserRuleCall_1_4_3_0.stop, grammarAccess.getAnnotatedExportableElementAccess().getNameAssignment_1_4_3());
+					}
+				)
+			)
+			(
+				TypeVariablesParserRuleCall_1_4_4=ruleTypeVariables{ announce($TypeVariablesParserRuleCall_1_4_4.start, $TypeVariablesParserRuleCall_1_4_4.stop, grammarAccess.getAnnotatedExportableElementAccess().getTypeVariablesParserRuleCall_1_4_4()); }
+			)?
+			EqualsSignKeyword_1_4_5=EqualsSign
+			 {
+				announce($EqualsSignKeyword_1_4_5, grammarAccess.getAnnotatedExportableElementAccess().getEqualsSignKeyword_1_4_5());
+			}
+			(
+				(
+					ActualTypeRefTypeRefParserRuleCall_1_4_6_0=ruleTypeRef{
+						announce($ActualTypeRefTypeRefParserRuleCall_1_4_6_0.start, $ActualTypeRefTypeRefParserRuleCall_1_4_6_0.stop, grammarAccess.getAnnotatedExportableElementAccess().getActualTypeRefAssignment_1_4_6());
+					}
+				)
+			)
 		)
 	)
 )
@@ -16405,6 +16508,68 @@ ruleN4EnumLiteral
 			)
 		)
 	)?
+)
+;
+
+// Entry rule entryRuleN4TypeAliasDeclaration
+entryRuleN4TypeAliasDeclaration
+	:
+	ruleN4TypeAliasDeclaration
+	EOF;
+
+// Rule N4TypeAliasDeclaration
+ruleN4TypeAliasDeclaration
+@init {
+}:
+(
+	(
+		((
+			(
+				(
+					ruleN4Modifier
+				)
+			)*
+			Type
+			(
+				(
+					ruleBindingIdentifier
+				)
+			)?
+		)
+		)=>
+		(
+			(
+				(
+					ruleN4Modifier
+				)
+			)*
+			TypeKeyword_0_0_2=Type
+			 {
+				announce($TypeKeyword_0_0_2, grammarAccess.getN4TypeAliasDeclarationAccess().getTypeKeyword_0_0_2());
+			}
+			(
+				(
+					NameBindingIdentifierParserRuleCall_0_0_3_0=ruleBindingIdentifier{
+						announce($NameBindingIdentifierParserRuleCall_0_0_3_0.start, $NameBindingIdentifierParserRuleCall_0_0_3_0.stop, grammarAccess.getN4TypeAliasDeclarationAccess().getNameAssignment_0_0_3());
+					}
+				)
+			)?
+		)
+	)
+	(
+		TypeVariablesParserRuleCall_1=ruleTypeVariables{ announce($TypeVariablesParserRuleCall_1.start, $TypeVariablesParserRuleCall_1.stop, grammarAccess.getN4TypeAliasDeclarationAccess().getTypeVariablesParserRuleCall_1()); }
+	)?
+	EqualsSignKeyword_2=EqualsSign
+	 {
+		announce($EqualsSignKeyword_2, grammarAccess.getN4TypeAliasDeclarationAccess().getEqualsSignKeyword_2());
+	}
+	(
+		(
+			ActualTypeRefTypeRefParserRuleCall_3_0=ruleTypeRef{
+				announce($ActualTypeRefTypeRefParserRuleCall_3_0.start, $ActualTypeRefTypeRefParserRuleCall_3_0.stop, grammarAccess.getN4TypeAliasDeclarationAccess().getActualTypeRefAssignment_3());
+			}
+		)
+	)
 )
 ;
 

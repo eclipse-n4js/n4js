@@ -299,6 +299,10 @@ class RuleEnvironmentExtensions {
 		return if(storage!==null) storage.get(typeVar) else Collections.emptyList();
 	}
 
+	def static boolean hasReplacements(RuleEnvironment G) {
+		return G.get(KEY__TYPE_REPLACEMENT) !== null;
+	}
+
 	def static void setTypeReplacement(RuleEnvironment G, ITypeReplacementProvider replacementProvider) {
 		G.put(KEY__TYPE_REPLACEMENT, replacementProvider);
 	}

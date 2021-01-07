@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.transpiler.es.transform
 
+import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration
 import org.eclipse.n4js.n4JS.TypedElement
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.ts.typeRefs.TypeRef
@@ -24,6 +25,7 @@ import org.eclipse.n4js.ts.types.TypeVariable
  * <ul>
  * <li>declared type references of {@link TypedElement}s
  * <li>type variable references of {@link Type}
+ * <li>type alias declarations
  * </ul>
  * Note: cast expressions are already removed by {@link ExpressionTransformation}.
  */
@@ -45,5 +47,7 @@ class TrimTransformation extends Transformation {
 		collectNodes(state.im, TypeRef, false).forEach[remove(it)];
 		// 2) remove all type typeVars:
 		collectNodes(state.im, TypeVariable, false).forEach[remove(it)]
+		// 3) remove all type alias declarations
+		collectNodes(state.im, N4TypeAliasDeclaration, false).forEach[remove(it)]
 	}
 }

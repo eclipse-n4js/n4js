@@ -1626,6 +1626,23 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case N4JSPackage.N4_TYPE_ALIAS_DECLARATION: {
+				N4TypeAliasDeclaration n4TypeAliasDeclaration = (N4TypeAliasDeclaration)theEObject;
+				T result = caseN4TypeAliasDeclaration(n4TypeAliasDeclaration);
+				if (result == null) result = caseN4TypeDeclaration(n4TypeAliasDeclaration);
+				if (result == null) result = caseGenericDeclaration(n4TypeAliasDeclaration);
+				if (result == null) result = caseN4TypeDefinition(n4TypeAliasDeclaration);
+				if (result == null) result = caseAnnotableScriptElement(n4TypeAliasDeclaration);
+				if (result == null) result = caseModifiableElement(n4TypeAliasDeclaration);
+				if (result == null) result = caseExportableElement(n4TypeAliasDeclaration);
+				if (result == null) result = caseNamedElement(n4TypeAliasDeclaration);
+				if (result == null) result = caseAnnotableElement(n4TypeAliasDeclaration);
+				if (result == null) result = caseTypeDefiningElement(n4TypeAliasDeclaration);
+				if (result == null) result = caseScriptElement(n4TypeAliasDeclaration);
+				if (result == null) result = caseTypableElement(n4TypeAliasDeclaration);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case N4JSPackage.MODIFIABLE_ELEMENT: {
 				ModifiableElement modifiableElement = (ModifiableElement)theEObject;
 				T result = caseModifiableElement(modifiableElement);
@@ -4187,6 +4204,21 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseN4EnumLiteral(N4EnumLiteral object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>N4 Type Alias Declaration</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>N4 Type Alias Declaration</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseN4TypeAliasDeclaration(N4TypeAliasDeclaration object) {
 		return null;
 	}
 

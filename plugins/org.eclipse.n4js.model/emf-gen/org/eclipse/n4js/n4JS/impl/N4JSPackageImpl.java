@@ -145,6 +145,7 @@ import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.n4JS.N4MethodDeclaration;
 import org.eclipse.n4js.n4JS.N4Modifier;
 import org.eclipse.n4js.n4JS.N4SetterDeclaration;
+import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeDefinition;
 import org.eclipse.n4js.n4JS.NamedElement;
@@ -1278,6 +1279,13 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	private EClass n4EnumLiteralEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass n4TypeAliasDeclarationEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -6403,6 +6411,26 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
+	public EClass getN4TypeAliasDeclaration() {
+		return n4TypeAliasDeclarationEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getN4TypeAliasDeclaration_ActualTypeRef() {
+		return (EReference)n4TypeAliasDeclarationEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getModifiableElement() {
 		return modifiableElementEClass;
 	}
@@ -8119,6 +8147,9 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEReference(n4EnumLiteralEClass, N4_ENUM_LITERAL__VALUE_EXPRESSION);
 		createEReference(n4EnumLiteralEClass, N4_ENUM_LITERAL__DEFINED_LITERAL);
 
+		n4TypeAliasDeclarationEClass = createEClass(N4_TYPE_ALIAS_DECLARATION);
+		createEReference(n4TypeAliasDeclarationEClass, N4_TYPE_ALIAS_DECLARATION__ACTUAL_TYPE_REF);
+
 		modifiableElementEClass = createEClass(MODIFIABLE_ELEMENT);
 		createEAttribute(modifiableElementEClass, MODIFIABLE_ELEMENT__DECLARED_MODIFIERS);
 
@@ -8508,6 +8539,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		n4EnumDeclarationEClass.getESuperTypes().add(this.getVersionedElement());
 		n4EnumLiteralEClass.getESuperTypes().add(this.getNamedElement());
 		n4EnumLiteralEClass.getESuperTypes().add(theTypesPackage.getTypableElement());
+		n4TypeAliasDeclarationEClass.getESuperTypes().add(this.getN4TypeDeclaration());
+		n4TypeAliasDeclarationEClass.getESuperTypes().add(this.getGenericDeclaration());
 		n4MemberDeclarationEClass.getESuperTypes().add(this.getAnnotableElement());
 		n4MemberDeclarationEClass.getESuperTypes().add(this.getModifiableElement());
 		n4MemberDeclarationEClass.getESuperTypes().add(this.getTypeProvidingElement());
@@ -9310,6 +9343,9 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEAttribute(getN4EnumLiteral_Name(), theEcorePackage.getEString(), "name", null, 0, 1, N4EnumLiteral.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getN4EnumLiteral_ValueExpression(), this.getExpression(), null, "valueExpression", null, 0, 1, N4EnumLiteral.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getN4EnumLiteral_DefinedLiteral(), theTypesPackage.getTEnumLiteral(), null, "definedLiteral", null, 0, 1, N4EnumLiteral.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(n4TypeAliasDeclarationEClass, N4TypeAliasDeclaration.class, "N4TypeAliasDeclaration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getN4TypeAliasDeclaration_ActualTypeRef(), theTypeRefsPackage.getTypeRef(), null, "actualTypeRef", null, 0, 1, N4TypeAliasDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(modifiableElementEClass, ModifiableElement.class, "ModifiableElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getModifiableElement_DeclaredModifiers(), this.getN4Modifier(), "declaredModifiers", null, 0, -1, ModifiableElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

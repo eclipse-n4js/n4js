@@ -24,6 +24,7 @@ import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.N4JSPackage
+import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.n4JS.Script
@@ -71,6 +72,7 @@ public class N4JSTypesBuilder {
 	@Inject extension N4JSClassDeclarationTypesBuilder
 	@Inject extension N4JSInterfaceDeclarationTypesBuilder
 	@Inject extension N4JSEnumDeclarationTypesBuilder
+	@Inject extension N4JSTypeAliasDeclarationTypesBuilder
 	@Inject extension N4JSObjectLiteralTypesBuilder
 	@Inject extension N4JSFunctionDefinitionTypesBuilder
 	@Inject extension N4JSVariableStatementTypesBuilder
@@ -304,6 +306,13 @@ public class N4JSTypesBuilder {
 		return idx;
 	}
 
+	def protected dispatch int relinkType(N4TypeAliasDeclaration n4TypeAlias, TModule target, boolean preLinkingPhase, int idx) {
+		if (n4TypeAlias.relinkTypeAlias(target, preLinkingPhase, idx)) {
+			return idx + 1;
+		}
+		return idx;
+	}
+
 	def protected dispatch int relinkType(ObjectLiteral objectLiteral, TModule target, boolean preLinkingPhase,
 		int idx) {
 		objectLiteral.createObjectLiteral(target, preLinkingPhase)
@@ -371,6 +380,10 @@ public class N4JSTypesBuilder {
 
 	def protected dispatch void createType(N4EnumDeclaration n4Enum, TModule target, boolean preLinkingPhase) {
 		n4Enum.createTEnum(target, preLinkingPhase)
+	}
+
+	def protected dispatch void createType(N4TypeAliasDeclaration n4TypeAliasDecl, TModule target, boolean preLinkingPhase) {
+		n4TypeAliasDecl.createTypeAlias(target, preLinkingPhase)
 	}
 
 	def protected dispatch void createType(ObjectLiteral objectLiteral, TModule target, boolean preLinkingPhase) {

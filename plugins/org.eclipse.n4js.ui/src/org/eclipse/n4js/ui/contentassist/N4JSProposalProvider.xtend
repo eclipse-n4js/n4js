@@ -18,6 +18,7 @@ import org.eclipse.emf.ecore.EReference
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.jface.text.contentassist.ICompletionProposal
 import org.eclipse.jface.viewers.StyledString
+import org.eclipse.n4js.ide.editor.contentassist.ContentAssistDataCollectors
 import org.eclipse.n4js.n4JS.JSXElement
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4idl.N4IDLGlobals
@@ -25,7 +26,7 @@ import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy
 import org.eclipse.n4js.services.N4JSGrammarAccess
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
-import org.eclipse.n4js.ts.types.DeclaredTypeWithAccessModifier
+import org.eclipse.n4js.ts.types.AccessibleTypeElement
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TExportableElement
@@ -55,7 +56,6 @@ import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor
 
 import static extension org.eclipse.n4js.ui.utils.ConfigurableCompletionProposalExtensions.*
-import org.eclipse.n4js.ide.editor.contentassist.ContentAssistDataCollectors
 
 /**
  * see http://www.eclipse.org/Xtext/documentation.html#contentAssist on how to customize content assistant
@@ -298,7 +298,7 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 		if (type instanceof TExportableElement) {
 			type.exportedName = if (N4JSResourceDescriptionStrategy.getExported(description)) " " else null;
 		}
-		if (type instanceof DeclaredTypeWithAccessModifier) {
+		if (type instanceof AccessibleTypeElement) {
 			type.declaredTypeAccessModifier = N4JSResourceDescriptionStrategy.getTypeAccessModifier(description);
 		}
 		if (type instanceof TFunction) {

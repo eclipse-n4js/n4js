@@ -20,6 +20,7 @@ import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.AnnotableElement
 import org.eclipse.n4js.n4JS.Annotation
 import org.eclipse.n4js.n4JS.FunctionDefinition
+import org.eclipse.n4js.n4JS.GenericDeclaration
 import org.eclipse.n4js.n4JS.LiteralAnnotationArgument
 import org.eclipse.n4js.n4JS.ModifiableElement
 import org.eclipse.n4js.n4JS.ModifierUtils
@@ -34,8 +35,8 @@ import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.AccessibleTypeElement
-import org.eclipse.n4js.ts.types.DeclaredTypeWithAccessModifier
 import org.eclipse.n4js.ts.types.FieldAccessor
+import org.eclipse.n4js.ts.types.GenericType
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.MemberAccessModifier
 import org.eclipse.n4js.ts.types.TAnnotableElement
@@ -57,6 +58,7 @@ package class N4JSTypesBuilderHelper {
 
 	def protected <T extends AnnotableElement & ModifiableElement> void setTypeAccessModifier(
 		AccessibleTypeElement classifier, T definition) {
+
 		val isPlainJS = jsVariantHelper.isPlainJS(definition);
 		// IDEBUG-861 assume public visibility if plain JS
 		if (isPlainJS) {
@@ -67,7 +69,7 @@ package class N4JSTypesBuilderHelper {
 		}
 	}
 
-	def package void setProvidedByRuntime(DeclaredTypeWithAccessModifier declaredType,
+	def package void setProvidedByRuntime(AccessibleTypeElement declaredType,
 		AnnotableElement annotableElement, boolean preLinkingPhase) {
 
 		declaredType.declaredProvidedByRuntime = AnnotationDefinition.PROVIDED_BY_RUNTIME.hasAnnotation(
@@ -96,6 +98,18 @@ package class N4JSTypesBuilderHelper {
 			return
 		}
 		target += values.map[TypeUtils.copyWithProxies(it)]
+	}
+
+	def package void addCopyOfTypeParameters(GenericType target, GenericDeclaration decl, boolean preLinkingPhase) {
+		val copiedTypeVars = newArrayList;
+		addCopyOfReferences(copiedTypeVars, decl.typeVars);
+		target.typeVars.addAll(copiedTypeVars);
+		// link AST's TypeVariables to corresponding TypeVariables in TModule
+		for (var i = 0; i < copiedTypeVars.length; i++) {
+			val astTypeVar = decl.typeVars.get(i);
+			val definedTypeVar = copiedTypeVars.get(i);
+			astTypeVar.definedTypeVariable = definedTypeVar;
+		}
 	}
 
 	/**

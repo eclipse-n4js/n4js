@@ -57,6 +57,7 @@ ScriptElement:
 	| N4ClassDeclaration<Yield=false>
 	| N4InterfaceDeclaration<Yield=false>
 	| N4EnumDeclaration<Yield=false>
+	| N4TypeAliasDeclaration<Yield=false>
 	| => ImportDeclaration // syntactic predicate required due to RootStatement > ExpressionStatement > ... > ImportCallExpression
 	| ExportDeclaration
 	| RootStatement<Yield=false>
@@ -103,6 +104,12 @@ AnnotatedScriptElement returns ScriptElement:
 		'{'
 			literals+=N4EnumLiteral (',' literals+= N4EnumLiteral)*
 		'}'
+	|	{N4TypeAliasDeclaration.annotationList=current}
+		(declaredModifiers+=N4Modifier)*
+		'type' name=BindingIdentifier<Yield=false>
+		TypeVariables?
+		'='	
+		actualTypeRef=TypeRef
 	)
 ;
 
@@ -139,6 +146,7 @@ ExportableElement:
 	| N4ClassDeclaration<Yield=false>
 	| N4InterfaceDeclaration<Yield=false>
 	| N4EnumDeclaration<Yield=false>
+	| N4TypeAliasDeclaration<Yield=false>
 	| FunctionDeclaration<Yield=false>
 	| ExportedVariableStatement
 ;
@@ -181,6 +189,12 @@ AnnotatedExportableElement <Yield> returns ExportableElement:
 		'{'
 			literals+=N4EnumLiteral (',' literals+= N4EnumLiteral)*
 		'}'
+	|	{N4TypeAliasDeclaration.annotationList=current}
+		(declaredModifiers+=N4Modifier)*
+		'type' name=BindingIdentifier<Yield=false>
+		TypeVariables?
+		'='	
+		actualTypeRef=TypeRef
 	)
 ;
 
@@ -1342,6 +1356,19 @@ N4EnumDeclaration <Yield>:
 ;
 
 N4EnumLiteral: name=IdentifierName (':' valueExpression=AssignmentExpression<In=true,Yield=false>)?;
+
+
+N4TypeAliasDeclaration <Yield>:
+	=>(
+		{N4TypeAliasDeclaration}
+		(declaredModifiers+=N4Modifier)*
+		'type' name=BindingIdentifier<Yield>?
+	)
+	TypeVariables?
+	'='	
+	actualTypeRef=TypeRef
+;
+
 
 // grammar allows use of these modifiers in many places that are not actually valid;
 // this is checked in N4JSSyntaxValidator (see N4Modifier in N4JS.xcore for details)

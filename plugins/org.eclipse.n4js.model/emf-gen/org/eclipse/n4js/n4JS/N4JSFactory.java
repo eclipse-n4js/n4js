@@ -1011,6 +1011,15 @@ public interface N4JSFactory extends EFactory {
 	N4EnumLiteral createN4EnumLiteral();
 
 	/**
+	 * Returns a new object of class '<em>N4 Type Alias Declaration</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>N4 Type Alias Declaration</em>'.
+	 * @generated
+	 */
+	N4TypeAliasDeclaration createN4TypeAliasDeclaration();
+
+	/**
 	 * Returns a new object of class '<em>N4 Member Annotation List</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

@@ -80,7 +80,7 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 		functionType.setTypeAccessModifier(functionDecl)
 		functionType.setProvidedByRuntime(functionDecl, preLinkingPhase)
 		functionType.setReturnType(functionDecl, builtInTypeScope, preLinkingPhase)
-		functionType.addTypeVariables(functionDecl, preLinkingPhase)
+		functionType.addCopyOfTypeParameters(functionDecl, preLinkingPhase)
 		functionType.setDeclaredThisTypeFromAnnotation(functionDecl, preLinkingPhase)
 		functionType.copyAnnotations(functionDecl, preLinkingPhase)
 		functionType.declaredAsync = functionDecl.async // TODO change to declaredAsync once the annotation is gone
@@ -128,7 +128,7 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 
 		functionType.addFormalParametersWithInferredType(functionExpr, builtInTypeScope, preLinkingPhase)
 		functionType.setReturnTypeWithInferredType(functionExpr, builtInTypeScope, preLinkingPhase)
-		functionType.addTypeVariables(functionExpr, preLinkingPhase)
+		functionType.addCopyOfTypeParameters(functionExpr, preLinkingPhase)
 		functionType.setDeclaredThisTypeFromAnnotation(functionExpr, preLinkingPhase)
 
 		functionType.copyAnnotations(functionExpr, preLinkingPhase)

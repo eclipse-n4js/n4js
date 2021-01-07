@@ -2114,6 +2114,12 @@ class N4EnumLiteral extends NamedElement, TypableElement {
 	refers transient TEnumLiteral definedLiteral
 }
 
+
+class N4TypeAliasDeclaration extends N4TypeDeclaration, GenericDeclaration {
+	contains TypeRef actualTypeRef
+}
+
+
 /*
  * On AST side, all modifiers are included in this enumeration. In the types model, however,
  * the individual modifiers are mapped to two different enumerations of <em>access</em> modifiers

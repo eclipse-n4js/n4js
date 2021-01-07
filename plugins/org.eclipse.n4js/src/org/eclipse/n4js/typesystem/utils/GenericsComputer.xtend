@@ -32,9 +32,10 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeVariableMapping
 import org.eclipse.n4js.ts.typeRefs.Wildcard
-import org.eclipse.n4js.ts.types.ContainerType
+import org.eclipse.n4js.ts.types.GenericType
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
+import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeVariable
@@ -108,19 +109,21 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 	 */
 	private def void primAddSubstitutions(RuleEnvironment G, TypeRef typeRef) {
 		if (typeRef instanceof ParameterizedTypeRef) {
-			if (! typeRef.typeArgs.empty) {
-				var gen = typeRef.declaredType
-				if (gen instanceof ContainerType<?>) {
-					var varIter = gen.typeVars.iterator
-					for (typeArg : typeRef.typeArgs) {
-						if (varIter.hasNext) {
-							var TypeVariable typeVar = varIter.next;
-							addSubstitution(G,typeVar,typeArg);
+			if (!typeRef.typeArgs.empty) {
+				val gen = typeRef.declaredType
+				if (gen instanceof GenericType) {
+					if (!(gen instanceof TFunction)) { // FIXME legacy behavior; is this correct???
+						val varIter = gen.typeVars.iterator
+						for (typeArg : typeRef.typeArgs) {
+							if (varIter.hasNext) {
+								val typeVar = varIter.next;
+								addSubstitution(G, typeVar, typeArg);
+							}
 						}
 					}
 				}
 			}
-			if(typeRef instanceof StructuralTypeRef) {
+			if (typeRef instanceof StructuralTypeRef) {
 				G.restorePostponedSubstitutionsFrom(typeRef)
 			}
 		}

@@ -30,14 +30,13 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.eclipse.n4js.ts.types.ContainerType#getOwnedMembersByNameAndAccess <em>Owned Members By Name And Access</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.ContainerType#getOwnedMembers <em>Owned Members</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.ContainerType#getCallableCtor <em>Callable Ctor</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.ContainerType#getTypeVars <em>Type Vars</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.ts.types.TypesPackage#getContainerType()
  * @model abstract="true"
  * @generated
  */
-public interface ContainerType<MT extends TMember> extends Type {
+public interface ContainerType<MT extends TMember> extends GenericType {
 	/**
 	 * Returns the value of the '<em><b>Owned Members By Name And Access</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -92,21 +91,6 @@ public interface ContainerType<MT extends TMember> extends Type {
 	 * @generated
 	 */
 	void setCallableCtor(TMethod value);
-
-	/**
-	 * Returns the value of the '<em><b>Type Vars</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.n4js.ts.types.TypeVariable}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * type parameters of generic types
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Type Vars</em>' containment reference list.
-	 * @see org.eclipse.n4js.ts.types.TypesPackage#getContainerType_TypeVars()
-	 * @model containment="true"
-	 * @generated
-	 */
-	EList<TypeVariable> getTypeVars();
 
 	/**
 	 * <!-- begin-user-doc -->

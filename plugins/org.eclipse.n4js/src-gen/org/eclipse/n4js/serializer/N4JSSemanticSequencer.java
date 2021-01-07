@@ -90,6 +90,7 @@ import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4MemberAnnotationList;
 import org.eclipse.n4js.n4JS.N4MethodDeclaration;
 import org.eclipse.n4js.n4JS.N4SetterDeclaration;
+import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
 import org.eclipse.n4js.n4JS.NewExpression;
@@ -875,6 +876,28 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				}
 				else if (rule == grammarAccess.getN4SetterDeclarationRule()) {
 					sequence_N4SetterDeclaration(context, (N4SetterDeclaration) semanticObject); 
+					return; 
+				}
+				else break;
+			case N4JSPackage.N4_TYPE_ALIAS_DECLARATION:
+				if (rule == grammarAccess.getExportableElementRule()) {
+					sequence_AnnotatedExportableElement_N4TypeAliasDeclaration_TypeVariables(context, (N4TypeAliasDeclaration) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getAnnotatedExportableElementRule()) {
+					sequence_AnnotatedExportableElement_TypeVariables(context, (N4TypeAliasDeclaration) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getScriptElementRule()) {
+					sequence_AnnotatedScriptElement_N4TypeAliasDeclaration_TypeVariables(context, (N4TypeAliasDeclaration) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getAnnotatedScriptElementRule()) {
+					sequence_AnnotatedScriptElement_TypeVariables(context, (N4TypeAliasDeclaration) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getN4TypeAliasDeclarationRule()) {
+					sequence_N4TypeAliasDeclaration_TypeVariables(context, (N4TypeAliasDeclaration) semanticObject); 
 					return; 
 				}
 				else break;
@@ -2250,6 +2273,54 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     )
 	 */
 	protected void sequence_AnnotatedExportableElement_N4EnumDeclaration_VersionDeclaration(ISerializationContext context, N4EnumDeclaration semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     ExportableElement returns N4TypeAliasDeclaration
+	 *
+	 * Constraint:
+	 *     (
+	 *         (
+	 *             annotationList=AnnotatedExportableElement_N4TypeAliasDeclaration_1_4_0 
+	 *             declaredModifiers+=N4Modifier* 
+	 *             name=BindingIdentifier 
+	 *             actualTypeRef=TypeRef
+	 *         ) | 
+	 *         (
+	 *             (
+	 *                 (annotationList=AnnotatedExportableElement_N4TypeAliasDeclaration_1_4_0 declaredModifiers+=N4Modifier* name=BindingIdentifier) | 
+	 *                 (declaredModifiers+=N4Modifier* name=BindingIdentifier?)
+	 *             ) 
+	 *             typeVars+=TypeVariable 
+	 *             typeVars+=TypeVariable* 
+	 *             (actualTypeRef=TypeRef | actualTypeRef=TypeRef)
+	 *         ) | 
+	 *         (declaredModifiers+=N4Modifier* name=BindingIdentifier? actualTypeRef=TypeRef)
+	 *     )
+	 */
+	protected void sequence_AnnotatedExportableElement_N4TypeAliasDeclaration_TypeVariables(ISerializationContext context, N4TypeAliasDeclaration semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     AnnotatedExportableElement<Yield> returns N4TypeAliasDeclaration
+	 *     AnnotatedExportableElement returns N4TypeAliasDeclaration
+	 *
+	 * Constraint:
+	 *     (
+	 *         annotationList=AnnotatedExportableElement_N4TypeAliasDeclaration_1_4_0 
+	 *         declaredModifiers+=N4Modifier* 
+	 *         name=BindingIdentifier 
+	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
+	 *         actualTypeRef=TypeRef
+	 *     )
+	 */
+	protected void sequence_AnnotatedExportableElement_TypeVariables(ISerializationContext context, N4TypeAliasDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -4363,6 +4434,48 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
+	 *     ScriptElement returns N4TypeAliasDeclaration
+	 *
+	 * Constraint:
+	 *     (
+	 *         (annotationList=AnnotatedScriptElement_N4TypeAliasDeclaration_1_5_0 declaredModifiers+=N4Modifier* name=BindingIdentifier actualTypeRef=TypeRef) | 
+	 *         (
+	 *             (
+	 *                 (annotationList=AnnotatedScriptElement_N4TypeAliasDeclaration_1_5_0 declaredModifiers+=N4Modifier* name=BindingIdentifier) | 
+	 *                 (declaredModifiers+=N4Modifier* name=BindingIdentifier?)
+	 *             ) 
+	 *             typeVars+=TypeVariable 
+	 *             typeVars+=TypeVariable* 
+	 *             (actualTypeRef=TypeRef | actualTypeRef=TypeRef)
+	 *         ) | 
+	 *         (declaredModifiers+=N4Modifier* name=BindingIdentifier? actualTypeRef=TypeRef)
+	 *     )
+	 */
+	protected void sequence_AnnotatedScriptElement_N4TypeAliasDeclaration_TypeVariables(ISerializationContext context, N4TypeAliasDeclaration semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     AnnotatedScriptElement returns N4TypeAliasDeclaration
+	 *
+	 * Constraint:
+	 *     (
+	 *         annotationList=AnnotatedScriptElement_N4TypeAliasDeclaration_1_5_0 
+	 *         declaredModifiers+=N4Modifier* 
+	 *         name=BindingIdentifier 
+	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
+	 *         actualTypeRef=TypeRef
+	 *     )
+	 */
+	protected void sequence_AnnotatedScriptElement_TypeVariables(ISerializationContext context, N4TypeAliasDeclaration semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
 	 *     AnnotatedScriptElement returns N4EnumDeclaration
 	 *
 	 * Constraint:
@@ -4388,6 +4501,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     AnnotatedScriptElement.N4ClassDeclaration_1_3_0_0_0 returns AnnotationList
 	 *     AnnotatedScriptElement.N4InterfaceDeclaration_1_3_0_1_0 returns AnnotationList
 	 *     AnnotatedScriptElement.N4EnumDeclaration_1_4_0 returns AnnotationList
+	 *     AnnotatedScriptElement.N4TypeAliasDeclaration_1_5_0 returns AnnotationList
 	 *     AnnotatedExportableElement.FunctionDeclaration_1_0_0<Yield> returns AnnotationList
 	 *     AnnotatedExportableElement.FunctionDeclaration_1_0_0 returns AnnotationList
 	 *     AnnotatedExportableElement.ExportedVariableStatement_1_1_0<Yield> returns AnnotationList
@@ -4398,6 +4512,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     AnnotatedExportableElement.N4InterfaceDeclaration_1_2_0_1_0 returns AnnotationList
 	 *     AnnotatedExportableElement.N4EnumDeclaration_1_3_0<Yield> returns AnnotationList
 	 *     AnnotatedExportableElement.N4EnumDeclaration_1_3_0 returns AnnotationList
+	 *     AnnotatedExportableElement.N4TypeAliasDeclaration_1_4_0<Yield> returns AnnotationList
+	 *     AnnotatedExportableElement.N4TypeAliasDeclaration_1_4_0 returns AnnotationList
 	 *     AnnotationList returns AnnotationList
 	 *
 	 * Constraint:
@@ -19946,6 +20062,19 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     (declaredModifiers+=N4Modifier* declaredName=LiteralOrComputedPropertyName declaredOptional?='?'? fpar=FormalParameter body=Block?)
 	 */
 	protected void sequence_N4SetterDeclaration(ISerializationContext context, N4SetterDeclaration semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     N4TypeAliasDeclaration<Yield> returns N4TypeAliasDeclaration
+	 *     N4TypeAliasDeclaration returns N4TypeAliasDeclaration
+	 *
+	 * Constraint:
+	 *     (declaredModifiers+=N4Modifier* name=BindingIdentifier? (typeVars+=TypeVariable typeVars+=TypeVariable*)? actualTypeRef=TypeRef)
+	 */
+	protected void sequence_N4TypeAliasDeclaration_TypeVariables(ISerializationContext context, N4TypeAliasDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

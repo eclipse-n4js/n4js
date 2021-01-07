@@ -27,7 +27,6 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
 import org.eclipse.n4js.ts.types.AccessibleTypeElement;
-import org.eclipse.n4js.ts.types.DeclaredTypeWithAccessModifier;
 import org.eclipse.n4js.ts.types.TMigratable;
 import org.eclipse.n4js.ts.types.TMigration;
 import org.eclipse.n4js.ts.types.TN4Classifier;
@@ -413,11 +412,6 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 				default: return -1;
 			}
 		}
-		if (baseClass == DeclaredTypeWithAccessModifier.class) {
-			switch (derivedFeatureID) {
-				default: return -1;
-			}
-		}
 		if (baseClass == TMigratable.class) {
 			switch (derivedFeatureID) {
 				case TypesPackage.TN4_CLASSIFIER__MIGRATIONS: return TypesPackage.TMIGRATABLE__MIGRATIONS;
@@ -438,11 +432,6 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 			switch (baseFeatureID) {
 				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT__DECLARED_TYPE_ACCESS_MODIFIER: return TypesPackage.TN4_CLASSIFIER__DECLARED_TYPE_ACCESS_MODIFIER;
 				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT__DECLARED_PROVIDED_BY_RUNTIME: return TypesPackage.TN4_CLASSIFIER__DECLARED_PROVIDED_BY_RUNTIME;
-				default: return -1;
-			}
-		}
-		if (baseClass == DeclaredTypeWithAccessModifier.class) {
-			switch (baseFeatureID) {
 				default: return -1;
 			}
 		}
@@ -474,11 +463,6 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT___IS_PROVIDED_BY_RUNTIME: return TypesPackage.TN4_CLASSIFIER___IS_PROVIDED_BY_RUNTIME;
 				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT___GET_TYPE_ACCESS_MODIFIER: return TypesPackage.TN4_CLASSIFIER___GET_TYPE_ACCESS_MODIFIER;
 				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT___IS_EXPORTED: return TypesPackage.TN4_CLASSIFIER___IS_EXPORTED;
-				default: return -1;
-			}
-		}
-		if (baseClass == DeclaredTypeWithAccessModifier.class) {
-			switch (baseOperationID) {
 				default: return -1;
 			}
 		}

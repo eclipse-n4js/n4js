@@ -17,6 +17,7 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.anyTyp
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.collectAllImplicitSuperTypes;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.getContextResource;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.getReplacement;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.hasReplacements;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.intType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.isFunction;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.isObject;
@@ -60,6 +61,7 @@ import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TInterface;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.Type;
+import org.eclipse.n4js.ts.types.TypeAlias;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypingStrategy;
 import org.eclipse.n4js.ts.types.util.AllSuperTypeRefsCollector;
@@ -94,11 +96,14 @@ import com.google.common.collect.Iterables;
 	private Result doApply(RuleEnvironment G, TypeArgument leftArg, TypeArgument rightArg) {
 
 		// get rid of wildcards by taking their upper/lower bound
-		final TypeRef left = leftArg instanceof Wildcard ? ts.upperBound(G, leftArg) : (TypeRef) leftArg;
-		final TypeRef right = rightArg instanceof Wildcard ? ts.lowerBound(G, rightArg) : (TypeRef) rightArg;
-		if (left == null || right == null) {
+		final TypeRef leftRef = leftArg instanceof Wildcard ? ts.upperBound(G, leftArg) : (TypeRef) leftArg;
+		final TypeRef rightRef = rightArg instanceof Wildcard ? ts.lowerBound(G, rightArg) : (TypeRef) rightArg;
+		if (leftRef == null || rightRef == null) {
 			return failure();
 		}
+
+		final TypeRef left = replaceAndResolveAlias(G, leftRef);
+		final TypeRef right = replaceAndResolveAlias(G, rightRef);
 
 		// ComposedTypeRef
 		if (left instanceof UnionTypeExpression) {
@@ -194,6 +199,42 @@ import com.google.common.collect.Iterables;
 		return failure();
 	}
 
+	private TypeRef replaceAndResolveAlias(RuleEnvironment G, TypeRef typeRef) {
+		if (!hasReplacements(G)) {
+			return resolveAlias(G, typeRef);
+		}
+		TypeRef lastTypeRef;
+		do {
+			lastTypeRef = typeRef;
+			typeRef = getReplacement(G, typeRef);
+			typeRef = resolveAlias(G, typeRef);
+		} while (typeRef != lastTypeRef);
+		return typeRef;
+	}
+
+	// FIXME move this to a more appropriate place!!!
+	/**
+	 * Replaces the given type reference by its {@link TypeAlias#getActualTypeRef() actualTypeRef} until obtaining a
+	 * type reference that is not an alias. Does not resolve nested type aliases, i.e. aliases <em>contained</em> in the
+	 * given type reference or its <code>actualTypeRef(s)</code>.
+	 */
+	private TypeRef resolveAlias(RuleEnvironment G, TypeRef typeRef) {
+		Type declType = typeRef.getDeclaredType();
+		while (declType instanceof TypeAlias) {
+			// RuleEnvironment G_temp = newRuleEnvironment(G); // FIXME or do we have to wrap?
+			// tsh.addSubstitutions(G_temp, typeRef);
+			typeRef = ((TypeAlias) declType).getActualTypeRef();
+			if (typeRef != null) {
+				// typeRef = ts.substTypeVariables(G_temp, typeRef);
+				declType = typeRef.getDeclaredType();
+			} else {
+				typeRef = unknown();
+				declType = null;
+			}
+		}
+		return typeRef;
+	}
+
 	private Result applyUnion_Left(RuleEnvironment G,
 			UnionTypeExpression U, TypeRef S) {
 		return requireAllSuccess(
@@ -226,10 +267,7 @@ import com.google.common.collect.Iterables;
 								.trimCauses(); // legacy behavior; could improve error messages here!
 	}
 
-	private Result applyParameterizedTypeRef(RuleEnvironment G,
-			ParameterizedTypeRef leftOriginal, ParameterizedTypeRef rightOriginal) {
-		final TypeRef left = getReplacement(G, leftOriginal);
-		final TypeRef right = getReplacement(G, rightOriginal);
+	private Result applyParameterizedTypeRef(RuleEnvironment G, ParameterizedTypeRef left, ParameterizedTypeRef right) {
 		final Type leftDeclType = left.getDeclaredType();
 		final Type rightDeclType = right.getDeclaredType();
 		if (leftDeclType == null || rightDeclType == null) {

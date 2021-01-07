@@ -75,6 +75,16 @@ ruleScriptElement:
 		)
 		    |
 		(
+			(ruleN4Modifier
+			*
+			'type'
+			ruleBindingIdentifier
+			?
+			)=>
+			ruleN4TypeAliasDeclaration
+		)
+		    |
+		(
 			(ruleImportDeclaration)=>
 			ruleImportDeclaration
 		)
@@ -154,6 +164,14 @@ ruleAnnotatedScriptElement:
 			ruleN4EnumLiteral
 		)*
 		'}'
+		    |
+		ruleN4Modifier
+		*
+		'type'
+		ruleBindingIdentifier
+		ruleTypeVariables?
+		'='
+		ruleTypeRef
 	)
 ;
 
@@ -182,7 +200,7 @@ ruleExportDeclarationImpl:
 		'default'
 		(
 			(
-				('@' | 'private' | 'project' | 'protected' | 'public' | 'external' | 'abstract' | 'static' | 'const' | 'class' | 'interface' | 'enum' | 'async' | 'function' | 'var' | 'let')=>
+				('@' | 'private' | 'project' | 'protected' | 'public' | 'external' | 'abstract' | 'static' | 'const' | 'class' | 'interface' | 'enum' | 'type' | 'async' | 'function' | 'var' | 'let')=>
 				ruleExportableElement
 			)
 			    |
@@ -277,6 +295,16 @@ ruleExportableElement:
 		(
 			(ruleN4Modifier
 			*
+			'type'
+			ruleBindingIdentifier
+			?
+			)=>
+			ruleN4TypeAliasDeclaration
+		)
+		    |
+		(
+			(ruleN4Modifier
+			*
 			ruleAsyncNoTrailingLineBreak
 			'function'
 			)=>
@@ -349,6 +377,14 @@ ruleAnnotatedExportableElement:
 			ruleN4EnumLiteral
 		)*
 		'}'
+		    |
+		ruleN4Modifier
+		*
+		'type'
+		ruleBindingIdentifier
+		ruleTypeVariables?
+		'='
+		ruleTypeRef
 	)
 ;
 
@@ -6928,6 +6964,26 @@ ruleN4EnumLiteral:
 		':'
 		norm1_AssignmentExpression
 	)?
+;
+
+// Rule N4TypeAliasDeclaration
+ruleN4TypeAliasDeclaration:
+	(
+		(ruleN4Modifier
+		*
+		'type'
+		ruleBindingIdentifier
+		?
+		)=>
+		ruleN4Modifier
+		*
+		'type'
+		ruleBindingIdentifier
+		?
+	)
+	ruleTypeVariables?
+	'='
+	ruleTypeRef
 ;
 
 // Rule N4MemberDeclaration

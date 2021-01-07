@@ -32,7 +32,6 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.AccessibleTypeElement;
 import org.eclipse.n4js.ts.types.ArrayLike;
 import org.eclipse.n4js.ts.types.ContainerType;
-import org.eclipse.n4js.ts.types.DeclaredTypeWithAccessModifier;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TObjectPrototype;
@@ -504,11 +503,6 @@ public class TObjectPrototypeImpl extends TClassifierImpl implements TObjectProt
 				default: return -1;
 			}
 		}
-		if (baseClass == DeclaredTypeWithAccessModifier.class) {
-			switch (derivedFeatureID) {
-				default: return -1;
-			}
-		}
 		if (baseClass == ArrayLike.class) {
 			switch (derivedFeatureID) {
 				case TypesPackage.TOBJECT_PROTOTYPE__DECLARED_ELEMENT_TYPE: return TypesPackage.ARRAY_LIKE__DECLARED_ELEMENT_TYPE;
@@ -529,11 +523,6 @@ public class TObjectPrototypeImpl extends TClassifierImpl implements TObjectProt
 			switch (baseFeatureID) {
 				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT__DECLARED_TYPE_ACCESS_MODIFIER: return TypesPackage.TOBJECT_PROTOTYPE__DECLARED_TYPE_ACCESS_MODIFIER;
 				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT__DECLARED_PROVIDED_BY_RUNTIME: return TypesPackage.TOBJECT_PROTOTYPE__DECLARED_PROVIDED_BY_RUNTIME;
-				default: return -1;
-			}
-		}
-		if (baseClass == DeclaredTypeWithAccessModifier.class) {
-			switch (baseFeatureID) {
 				default: return -1;
 			}
 		}
@@ -578,11 +567,6 @@ public class TObjectPrototypeImpl extends TClassifierImpl implements TObjectProt
 				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT___IS_PROVIDED_BY_RUNTIME: return TypesPackage.TOBJECT_PROTOTYPE___IS_PROVIDED_BY_RUNTIME;
 				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT___GET_TYPE_ACCESS_MODIFIER: return TypesPackage.TOBJECT_PROTOTYPE___GET_TYPE_ACCESS_MODIFIER;
 				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT___IS_EXPORTED: return TypesPackage.TOBJECT_PROTOTYPE___IS_EXPORTED;
-				default: return -1;
-			}
-		}
-		if (baseClass == DeclaredTypeWithAccessModifier.class) {
-			switch (baseOperationID) {
 				default: return -1;
 			}
 		}

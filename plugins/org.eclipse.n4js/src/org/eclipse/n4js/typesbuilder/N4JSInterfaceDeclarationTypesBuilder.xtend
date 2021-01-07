@@ -45,7 +45,7 @@ public class N4JSInterfaceDeclarationTypesBuilder extends N4JSClassifierDeclarat
 
 		interfaceType.setProvidedByRuntime(n4Interface, preLinkingPhase)
 		interfaceType.declaredCovariantConstructor = n4Interface.isDeclaredCovariantConstructor;
-		interfaceType.addTypeParameters(n4Interface, preLinkingPhase)
+		interfaceType.addCopyOfTypeParameters(n4Interface, preLinkingPhase)
 		interfaceType.addExtendedInterfaces(n4Interface, preLinkingPhase)
 
 		interfaceType.addFields(n4Interface, preLinkingPhase)

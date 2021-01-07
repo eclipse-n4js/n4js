@@ -115,7 +115,7 @@ package class N4JSMethodTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 		val builtInTypeScope = BuiltInTypeScope.get(methodDecl.eResource.resourceSet)
 
 		methodType.setMemberAccessModifier(methodDecl)
-		methodType.addTypeVariables(methodDecl, preLinkingPhase)
+		methodType.addCopyOfTypeParameters(methodDecl, preLinkingPhase)
 		methodType.addFormalParameters(methodDecl, builtInTypeScope, preLinkingPhase)
 		methodType.setReturnTypeConsideringThis(methodDecl, builtInTypeScope, preLinkingPhase)
 		methodType.setDeclaredThisTypeFromAnnotation(methodDecl, preLinkingPhase)

@@ -32,7 +32,6 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
  *   <li>{@link org.eclipse.n4js.ts.types.TFunction#getFpars <em>Fpars</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TFunction#isReturnValueMarkedOptional <em>Return Value Marked Optional</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TFunction#getReturnTypeRef <em>Return Type Ref</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.TFunction#getTypeVars <em>Type Vars</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TFunction#getDeclaredThisType <em>Declared This Type</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TFunction#isDeclaredAsync <em>Declared Async</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TFunction#isDeclaredGenerator <em>Declared Generator</em>}</li>
@@ -43,7 +42,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
  * @model
  * @generated
  */
-public interface TFunction extends DeclaredTypeWithAccessModifier, SyntaxRelatedTElement, TVersionable {
+public interface TFunction extends GenericType, AccessibleTypeElement, SyntaxRelatedTElement, TVersionable {
 	/**
 	 * Returns the value of the '<em><b>External</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -133,21 +132,6 @@ public interface TFunction extends DeclaredTypeWithAccessModifier, SyntaxRelated
 	 * @generated
 	 */
 	void setReturnTypeRef(TypeRef value);
-
-	/**
-	 * Returns the value of the '<em><b>Type Vars</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.n4js.ts.types.TypeVariable}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * Type parameters of a generic function or method. Do not confuse this with the formal parameters.
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Type Vars</em>' containment reference list.
-	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTFunction_TypeVars()
-	 * @model containment="true"
-	 * @generated
-	 */
-	EList<TypeVariable> getTypeVars();
 
 	/**
 	 * Returns the value of the '<em><b>Declared This Type</b></em>' containment reference.

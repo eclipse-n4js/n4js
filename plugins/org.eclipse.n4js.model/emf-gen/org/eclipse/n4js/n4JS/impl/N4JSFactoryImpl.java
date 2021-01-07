@@ -176,6 +176,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 			case N4JSPackage.N4_INTERFACE_DECLARATION: return createN4InterfaceDeclaration();
 			case N4JSPackage.N4_ENUM_DECLARATION: return createN4EnumDeclaration();
 			case N4JSPackage.N4_ENUM_LITERAL: return createN4EnumLiteral();
+			case N4JSPackage.N4_TYPE_ALIAS_DECLARATION: return createN4TypeAliasDeclaration();
 			case N4JSPackage.N4_MEMBER_ANNOTATION_LIST: return createN4MemberAnnotationList();
 			case N4JSPackage.N4_FIELD_DECLARATION: return createN4FieldDeclaration();
 			case N4JSPackage.N4_METHOD_DECLARATION: return createN4MethodDeclaration();
@@ -1494,6 +1495,17 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	public N4EnumLiteral createN4EnumLiteral() {
 		N4EnumLiteralImpl n4EnumLiteral = new N4EnumLiteralImpl();
 		return n4EnumLiteral;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public N4TypeAliasDeclaration createN4TypeAliasDeclaration() {
+		N4TypeAliasDeclarationImpl n4TypeAliasDeclaration = new N4TypeAliasDeclarationImpl();
+		return n4TypeAliasDeclaration;
 	}
 
 	/**
