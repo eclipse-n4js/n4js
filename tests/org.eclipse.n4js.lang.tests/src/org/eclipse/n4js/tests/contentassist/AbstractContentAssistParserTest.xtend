@@ -13,11 +13,12 @@ package org.eclipse.n4js.tests.contentassist
 import com.google.inject.Inject
 import java.util.Collection
 import org.eclipse.n4js.N4JSInjectorProvider
+import org.eclipse.n4js.ide.contentassist.antlr.N4JSParser.NameMappings
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.services.N4JSGrammarAccess
-import org.eclipse.n4js.ide.contentassist.antlr.N4JSParser.NameMappings
 import org.eclipse.xtext.AbstractElement
 import org.eclipse.xtext.Alternatives
+import org.eclipse.xtext.Assignment
 import org.eclipse.xtext.ide.editor.contentassist.antlr.FollowElement
 import org.eclipse.xtext.nodemodel.INode
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
@@ -25,10 +26,9 @@ import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.util.ParseHelper
 import org.junit.Assert
+import org.junit.FixMethodOrder
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.junit.FixMethodOrder
-import org.eclipse.xtext.Assignment
 
 /**
  */
@@ -349,8 +349,9 @@ abstract class AbstractContentAssistParserTest extends Assert {
 			  req.'''.toNode
 		val followElements = getFollowElements(node, false)
 		val grammarElements = followElements.map [ grammarElement ].toSet
-		assertEquals(grammarElements.prettyPrint, 2, grammarElements.size)
+		assertEquals(grammarElements.prettyPrint, 3, grammarElements.size)
 		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getFunctionBodyAccess().getBodyAssignment_1_0))
+		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getExportableElementAccess().alternatives))
 		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getScriptAccess().alternatives_2))
 	}
 	
@@ -363,8 +364,9 @@ abstract class AbstractContentAssistParserTest extends Assert {
 			  req.'''.toNode
 		val followElements = getFollowElements(node, true)
 		val grammarElements = followElements.map [ grammarElement ].toSet
-		assertEquals(grammarElements.prettyPrint, 1, grammarElements.size)
+		assertEquals(grammarElements.prettyPrint, 2, grammarElements.size)
 		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getFunctionBodyAccess().getBodyAssignment_1_0))
+		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getExportableElementAccess().alternatives))
 	}
 	
 	@Test
@@ -376,8 +378,9 @@ abstract class AbstractContentAssistParserTest extends Assert {
 			  req.'''.toNode
 		val followElements = getFollowElements(node, true)
 		val grammarElements = followElements.map [ grammarElement ].toSet
-		assertEquals(grammarElements.prettyPrint, 1, grammarElements.size)
+		assertEquals(grammarElements.prettyPrint, 2, grammarElements.size)
 		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getFunctionBodyAccess().getBodyAssignment_1_0))
+		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getExportableElementAccess().alternatives))
 	}
 	
 	@Test
