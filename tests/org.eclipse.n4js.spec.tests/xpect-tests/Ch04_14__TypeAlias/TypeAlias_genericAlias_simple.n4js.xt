@@ -1,0 +1,145 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+class A {}
+class B extends A {}
+class C extends B {}
+
+class G<T> {}
+
+type AG<T> = G<T>;
+
+let gw: G<?>;
+let gwsupb: G<? super B>;
+let gwextb: G<? extends B>;
+let ga: G<A>;
+let gb: G<B>;
+let gc: G<C>;
+
+let agw: AG<?>;
+let agwsupb: AG<? super B>;
+let agwextb: AG<? extends B>;
+let agb: AG<B>;
+
+
+// ======================================================================
+// no wildcard inside alias
+
+// XPECT errors --> "G<A> is not a subtype of AG<B>." at "ga"
+agb = ga;
+// XPECT noerrors -->
+agb = gb;
+// XPECT errors --> "G<C> is not a subtype of AG<B>." at "gc"
+agb = gc;
+// XPECT noerrors -->
+gb = agb;
+
+// XPECT errors --> "G<?> is not a subtype of AG<B>." at "gw"
+agb = gw;
+// XPECT noerrors -->
+gw = agb;
+
+// XPECT errors --> "G<? extends B> is not a subtype of AG<B>." at "gwextb"
+agb = gwextb;
+// XPECT noerrors -->
+gwextb = agb;
+
+// XPECT errors --> "G<? super B> is not a subtype of AG<B>." at "gwsupb"
+agb = gwsupb;
+// XPECT noerrors -->
+gwsupb = agb;
+
+
+// ======================================================================
+// wildcard inside alias (without bound)
+
+// XPECT noerrors -->
+agw = ga;
+// XPECT noerrors -->
+agw = gb;
+// XPECT noerrors -->
+agw = gc;
+// XPECT errors --> "AG<?> is not a subtype of G<B>." at "agw"
+gb = agw;
+
+// XPECT noerrors -->
+agw = gw;
+// XPECT noerrors -->
+gw = agw;
+
+// XPECT noerrors -->
+agw = gwextb;
+// XPECT errors --> "AG<?> is not a subtype of G<? extends B>." at "agw"
+gwextb = agw;
+
+// XPECT noerrors -->
+agw = gwsupb;
+// XPECT errors --> "AG<?> is not a subtype of G<? super B>." at "agw"
+gwsupb = agw;
+
+
+// ======================================================================
+// wildcard inside alias (with upper bound)
+
+// XPECT errors --> "G<A> is not a subtype of AG<? extends B>." at "ga"
+agwextb = ga;
+// XPECT noerrors -->
+agwextb = gb;
+// XPECT noerrors -->
+agwextb = gc;
+// XPECT errors --> "AG<? extends B> is not a subtype of G<B>." at "agwextb"
+gb = agwextb;
+
+// XPECT errors --> "G<?> is not a subtype of AG<? extends B>." at "gw"
+agwextb = gw;
+// XPECT noerrors -->
+gw = agwextb;
+
+// XPECT noerrors -->
+agwextb = gwextb;
+// XPECT noerrors -->
+gwextb = agwextb;
+
+// XPECT errors --> "G<? super B> is not a subtype of AG<? extends B>." at "gwsupb"
+agwextb = gwsupb;
+// XPECT errors --> "AG<? extends B> is not a subtype of G<? super B>." at "agwextb"
+gwsupb = agwextb;
+
+
+// ======================================================================
+// wildcard inside alias (with lower bound)
+
+// XPECT noerrors -->
+agwsupb = ga;
+// XPECT noerrors -->
+agwsupb = gb;
+// XPECT errors --> "G<C> is not a subtype of AG<? super B>." at "gc"
+agwsupb = gc;
+// XPECT errors --> "AG<? super B> is not a subtype of G<B>." at "agwsupb"
+gb = agwsupb;
+
+// XPECT errors --> "G<?> is not a subtype of AG<? super B>." at "gw"
+agwsupb = gw;
+// XPECT noerrors -->
+gw = agwsupb;
+
+// XPECT errors --> "G<? extends B> is not a subtype of AG<? super B>." at "gwextb"
+agwsupb = gwextb;
+// XPECT errors --> "AG<? super B> is not a subtype of G<? extends B>." at "agwsupb"
+gwextb = agwsupb;
+
+// XPECT noerrors -->
+agwsupb = gwsupb;
+// XPECT noerrors -->
+gwsupb = agwsupb;

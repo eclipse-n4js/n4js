@@ -25,6 +25,7 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.n4Enum
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.n4NumberBasedEnumType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.n4ObjectType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.n4StringBasedEnumType;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.newRuleEnvironment;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.nullType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.numberObjectType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.numberType;
@@ -221,11 +222,11 @@ import com.google.common.collect.Iterables;
 	private TypeRef resolveAlias(RuleEnvironment G, TypeRef typeRef) {
 		Type declType = typeRef.getDeclaredType();
 		while (declType instanceof TypeAlias) {
-			// RuleEnvironment G_temp = newRuleEnvironment(G); // FIXME or do we have to wrap?
-			// tsh.addSubstitutions(G_temp, typeRef);
+			RuleEnvironment G_temp = newRuleEnvironment(G); // FIXME or do we have to wrap?
+			tsh.addSubstitutions(G_temp, typeRef);
 			typeRef = ((TypeAlias) declType).getActualTypeRef();
 			if (typeRef != null) {
-				// typeRef = ts.substTypeVariables(G_temp, typeRef);
+				typeRef = ts.substTypeVariables(G_temp, typeRef);
 				declType = typeRef.getDeclaredType();
 			} else {
 				typeRef = unknown();
