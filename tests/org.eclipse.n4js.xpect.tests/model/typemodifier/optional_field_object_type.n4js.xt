@@ -21,7 +21,7 @@ abstract class Component<PropsT extends ComponentProps, StateT extends Object> {
     		return undefined;
     }
 }
- //XPECT errors --> "Object+ is not a structural subtype of ComponentProps: missing field a and 1 more." at "Object"
+ //XPECT noerrors --> "Object+ is not a structural subtype of ComponentProps: missing field a and 1 more." at "Object"
 class A extends Component<Object+, Object+> {
 }
 
