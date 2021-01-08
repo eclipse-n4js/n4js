@@ -80,22 +80,24 @@ import com.google.common.collect.Iterables;
 /* package */ final class SubtypeJudgment extends AbstractJudgment {
 
 	/** See {@link N4JSTypeSystem#subtype(RuleEnvironment, TypeArgument, TypeArgument)}. */
-	public Result apply(RuleEnvironment G, TypeArgument left, TypeArgument right) {
-		Result result = doApply(G, left, right);
+	public Result apply(RuleEnvironment G, TypeArgument leftArg, TypeArgument rightArg) {
+		// get rid of wildcards by taking their upper/lower bound
+		final TypeRef left = leftArg instanceof Wildcard ? ts.upperBound(G, leftArg) : (TypeRef) leftArg;
+		final TypeRef right = rightArg instanceof Wildcard ? ts.lowerBound(G, rightArg) : (TypeRef) rightArg;
+
+		final Result result = (left.isDynamic()) // right<:left => left+<:right
+				? doApply(G, right, left)
+				: doApply(G, left, right);
 		if (result.isFailure()) {
 			// set default failure message
-			final String leftMsg = left != null ? left.getTypeRefAsString() : "<null>";
-			final String rightMsg = right != null ? right.getTypeRefAsString() : "<null>";
+			final String leftMsg = leftArg != null ? leftArg.getTypeRefAsString() : "<null>";
+			final String rightMsg = rightArg != null ? rightArg.getTypeRefAsString() : "<null>";
 			return result.setDefaultFailureMessage(leftMsg + " is not a subtype of " + rightMsg);
 		}
 		return result;
 	}
 
-	private Result doApply(RuleEnvironment G, TypeArgument leftArg, TypeArgument rightArg) {
-
-		// get rid of wildcards by taking their upper/lower bound
-		final TypeRef left = leftArg instanceof Wildcard ? ts.upperBound(G, leftArg) : (TypeRef) leftArg;
-		final TypeRef right = rightArg instanceof Wildcard ? ts.lowerBound(G, rightArg) : (TypeRef) rightArg;
+	private Result doApply(RuleEnvironment G, TypeRef left, TypeRef right) {
 		if (left == null || right == null) {
 			return failure();
 		}
