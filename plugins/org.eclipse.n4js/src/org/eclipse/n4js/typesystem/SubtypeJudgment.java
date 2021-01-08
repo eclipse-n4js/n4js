@@ -48,6 +48,7 @@ import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef;
@@ -84,10 +85,8 @@ import com.google.common.collect.Iterables;
 		// get rid of wildcards by taking their upper/lower bound
 		final TypeRef left = leftArg instanceof Wildcard ? ts.upperBound(G, leftArg) : (TypeRef) leftArg;
 		final TypeRef right = rightArg instanceof Wildcard ? ts.lowerBound(G, rightArg) : (TypeRef) rightArg;
+		Result result = getResult(G, left, right);
 
-		final Result result = (left.isDynamic()) // right<:left => left+<:right
-				? doApply(G, right, left)
-				: doApply(G, left, right);
 		if (result.isFailure()) {
 			// set default failure message
 			final String leftMsg = leftArg != null ? leftArg.getTypeRefAsString() : "<null>";
@@ -95,6 +94,17 @@ import com.google.common.collect.Iterables;
 			return result.setDefaultFailureMessage(leftMsg + " is not a subtype of " + rightMsg);
 		}
 		return result;
+	}
+
+	private Result getResult(RuleEnvironment G, TypeRef left, TypeRef right) {
+		final Result firstResult = doApply(G, left, right);
+		if (firstResult.isFailure() && left.isDynamic()) {
+			// right<:left => left+<:right
+			final TypeRef nonDynamicCopy = TypeUtils.copy(left);
+			nonDynamicCopy.eSet(TypeRefsPackage.eINSTANCE.getBaseTypeRef_Dynamic(), false);
+			return doApply(G, right, nonDynamicCopy);
+		}
+		return firstResult;
 	}
 
 	private Result doApply(RuleEnvironment G, TypeRef left, TypeRef right) {
@@ -118,7 +128,7 @@ import com.google.common.collect.Iterables;
 
 		// internal top/bottom type 'UnkownTypeRef'
 		if (left instanceof UnknownTypeRef || right instanceof UnknownTypeRef) {
-			return success();
+			return failure();
 		}
 
 		// void is unrelated to all other types (not even sub-/super-type of top/bottom type)
