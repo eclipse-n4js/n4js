@@ -162,7 +162,7 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 
 		ProjectDiscoveryHelper projectDiscoveryHelper = ((N4JSRuntimeCore) delegate).getProjectDiscoveryHelper();
 		Path baseDir = new FileURI(getPath()).toFile().toPath();
-		LinkedHashSet<Path> newProjectPaths = projectDiscoveryHelper.collectAllProjectDirs(baseDir);
+		List<Path> newProjectPaths = projectDiscoveryHelper.collectAllProjectDirs(baseDir);
 		for (Path newProjectPath : newProjectPaths) {
 			((N4JSRuntimeCore) delegate).registerProject(newProjectPath.toFile());
 		}

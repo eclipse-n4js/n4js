@@ -23,6 +23,8 @@ import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -42,6 +44,7 @@ import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper.NodeModulesFolder;
 
+import com.google.common.collect.HashBiMap;
 import com.google.inject.Inject;
 
 /**
@@ -100,23 +103,35 @@ public class ProjectDiscoveryHelper {
 	/**
 	 * Collects all projects and uses the approach described above with each of the given workspace root folders.
 	 * <p>
+	 * Note that projects and dependencies are sorted to avoid indeterminism from file system.
+	 * <p>
 	 * Note that the dependencies (i.e. projects in {@code node_modules} folders) are listed after all workspace
 	 * projects.
 	 */
-	public LinkedHashSet<Path> collectAllProjectDirs(Path... workspaceRoots) {
+	public List<Path> collectAllProjectDirs(Path... workspaceRoots) {
 		Map<Path, ProjectDescription> pdCache = new HashMap<>();
 
 		Map<String, Path> allProjectDirs = collectAllProjects(workspaceRoots, pdCache);
 
 		Map<String, Path> dependencies = collectNecessaryDependencies(allProjectDirs, pdCache);
-		dependencies.forEach(allProjectDirs::putIfAbsent);
 
-		return new LinkedHashSet<>(allProjectDirs.values());
+		List<Path> sortedProjects = new ArrayList<>(allProjectDirs.values());
+		Collections.sort(sortedProjects);
+
+		List<Path> sortedDependecies = new ArrayList<>(dependencies.values());
+		Collections.sort(sortedDependecies);
+
+		for (Path dependency : sortedDependecies) {
+			if (!allProjectDirs.containsValue(dependency)) {
+				sortedProjects.add(dependency);
+			}
+		}
+		return sortedProjects;
 	}
 
 	/** Searches all projects in the given array of workspace directories */
 	private Map<String, Path> collectAllProjects(Path[] workspaceRoots, Map<Path, ProjectDescription> pdCache) {
-		Map<String, Path> allProjectDirs = new LinkedHashMap<>();
+		Map<String, Path> allProjectDirs = HashBiMap.create(); // use BiMap to speed up: allProjectDirs.containsValue
 		for (Path wsRoot : workspaceRoots) {
 
 			Path projectRoot = getProjectRootOrUnchanged(wsRoot);
