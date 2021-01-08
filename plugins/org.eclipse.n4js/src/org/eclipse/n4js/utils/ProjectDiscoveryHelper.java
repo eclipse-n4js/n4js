@@ -44,7 +44,6 @@ import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper.NodeModulesFolder;
 
-import com.google.common.collect.HashBiMap;
 import com.google.inject.Inject;
 
 /**
@@ -111,27 +110,28 @@ public class ProjectDiscoveryHelper {
 	public List<Path> collectAllProjectDirs(Path... workspaceRoots) {
 		Map<Path, ProjectDescription> pdCache = new HashMap<>();
 
-		Map<String, Path> allProjectDirs = collectAllProjects(workspaceRoots, pdCache);
+		Map<String, Path> projects = collectAllProjects(workspaceRoots, pdCache);
+		Map<String, Path> dependencies = collectNecessaryDependencies(projects, pdCache);
 
-		Map<String, Path> dependencies = collectNecessaryDependencies(allProjectDirs, pdCache);
-
-		List<Path> sortedProjects = new ArrayList<>(allProjectDirs.values());
+		List<Path> sortedProjects = new ArrayList<>(projects.values());
 		Collections.sort(sortedProjects);
 
-		List<Path> sortedDependecies = new ArrayList<>(dependencies.values());
-		Collections.sort(sortedDependecies);
-
-		for (Path dependency : sortedDependecies) {
-			if (!allProjectDirs.containsValue(dependency)) {
-				sortedProjects.add(dependency);
+		List<Path> sortedDependecies = new ArrayList<>();
+		for (Map.Entry<String, Path> dependency : dependencies.entrySet()) {
+			if (!projects.containsKey(dependency.getKey())) {
+				sortedDependecies.add(dependency.getValue());
 			}
 		}
+		Collections.sort(sortedDependecies);
+
+		sortedProjects.addAll(sortedDependecies);
+
 		return sortedProjects;
 	}
 
 	/** Searches all projects in the given array of workspace directories */
 	private Map<String, Path> collectAllProjects(Path[] workspaceRoots, Map<Path, ProjectDescription> pdCache) {
-		Map<String, Path> allProjectDirs = HashBiMap.create(); // use BiMap to speed up: allProjectDirs.containsValue
+		Map<String, Path> allProjectDirs = new HashMap<>();
 		for (Path wsRoot : workspaceRoots) {
 
 			Path projectRoot = getProjectRootOrUnchanged(wsRoot);
