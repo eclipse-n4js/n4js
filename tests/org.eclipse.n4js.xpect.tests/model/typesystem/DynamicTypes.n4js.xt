@@ -18,7 +18,6 @@ class D extends C {
 	g: string;
 }
 
-/*
 
 let a1: any+ = 3;
 // X PECT noerrors --> any+ is not a subtype of C.
@@ -36,14 +35,11 @@ let o3: Object+ = null;
 // X PECT noerrors -->
 let a3: any = o3;
 
-//*/
 
-
-let c2: C+ = null;
-let d2: any = null;
-
+let c4: C+ = null;
+let a4: any = null;
 
 // XPECT noerrors -->
-d2 = c2;
-// XPECT errors --> "any is not a subtype of C+." at "d2"
-c2 = d2;
+a4 = c4;
+// XPECT errors --> "any is not a subtype of C+." at "a4"
+c4 = a4;
