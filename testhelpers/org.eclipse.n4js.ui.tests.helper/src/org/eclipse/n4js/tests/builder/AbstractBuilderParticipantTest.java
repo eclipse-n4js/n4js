@@ -295,7 +295,6 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 	}
 
 	/***/
-	@SuppressWarnings("resource")
 	protected IFile doCreateTestFile(IFolder folder, String fullName, CharSequence content) throws CoreException {
 		IFile file = folder.getFile(fullName);
 		createFolder(folder);
@@ -307,7 +306,6 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 	/**
 	 * Changes content of an existing file to the given {@link CharSequence}.
 	 */
-	@SuppressWarnings("resource")
 	protected IFile changeTestFile(IFile file, CharSequence newContent) throws CoreException {
 		assertTrue("test file should exist", file.exists());
 		file.setContents(new StringInputStream(newContent.toString()), true, true, monitor());

@@ -15,6 +15,7 @@ import java.util.function.BiFunction;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.n4js.n4JS.DefaultImportSpecifier;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
+import org.eclipse.n4js.n4JS.ModuleSpecifierForm;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
@@ -108,8 +109,11 @@ public class ImportsFactory {
 		return createImportDeclaration(qn, name, project, nodelessMarker, this::addNamespaceImport);
 	}
 
+	/**
+	 * If project is {@code null} then the we will use {@link ModuleSpecifierForm#PLAIN} which is not using project
+	 * data.
+	 */
 	@SuppressWarnings("null")
-	/** If project is {@code null} then the we will use {@link #SIMPLE_IMPORT} which is not using project data. */
 	private ImportDeclaration createImportDeclaration(QualifiedName qn, String usedName, IN4JSProject fromProject,
 			Adapter nodelessMarker,
 			BiFunction<String, ImportDeclaration, ImportDeclaration> specifierFactory) {

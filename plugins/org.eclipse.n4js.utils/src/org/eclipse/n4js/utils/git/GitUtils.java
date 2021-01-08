@@ -65,6 +65,7 @@ import org.eclipse.jgit.api.errors.WrongRepositoryStateException;
 import org.eclipse.jgit.errors.RepositoryNotFoundException;
 import org.eclipse.jgit.lib.ProgressMonitor;
 import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.TextProgressMonitor;
 import org.eclipse.jgit.submodule.SubmoduleStatus;
 import org.eclipse.jgit.transport.RemoteConfig;
@@ -143,7 +144,9 @@ public abstract class GitUtils {
 		}
 
 		try (final Git git = open(localClonePath.toFile())) {
-			final String currentBranch = git.getRepository().getBranch();
+			@SuppressWarnings("resource")
+			final Repository repository = git.getRepository();
+			final String currentBranch = repository.getBranch();
 			if (!currentBranch.equals(branch)) {
 				LOGGER.info("Current branch is: '" + currentBranch + "'.");
 				LOGGER.info("Switching to desired '" + branch + "' branch...");
@@ -154,7 +157,7 @@ public abstract class GitUtils {
 				git.checkout().setCreateBranch(createLocalBranch).setName(branch)
 						.setStartPoint(R_REMOTES + "origin/" + branch).call();
 
-				checkState(git.getRepository().getBranch().equals(branch),
+				checkState(repository.getBranch().equals(branch),
 						"Error when checking out '" + branch + "' branch.");
 				LOGGER.info("Switched to '" + branch + "' branch.");
 				pull(git);
@@ -449,7 +452,9 @@ public abstract class GitUtils {
 					deleteRecursively(destinationFolder);
 					clone(remoteUri, localClonePath, branch);
 				} else {
-					final String currentBranch = git.getRepository().getBranch();
+					@SuppressWarnings("resource")
+					final Repository repository = git.getRepository();
+					final String currentBranch = repository.getBranch();
 					if (!currentBranch.equals(branch)) {
 						LOGGER.info("Desired branch differs from the current one. Desired: '" + branch + "' current: '"
 								+ currentBranch + "'.");
@@ -491,8 +496,9 @@ public abstract class GitUtils {
 				.setTransportConfigCallback(TRANSPORT_CALLBACK);
 
 		try (final Git git = cloneCommand.call()) {
-			LOGGER.info(
-					"Repository content has been successfully cloned to '" + git.getRepository().getDirectory() + "'.");
+			@SuppressWarnings("resource")
+			final Repository repository = git.getRepository();
+			LOGGER.info("Repository content has been successfully cloned to '" + repository.getDirectory() + "'.");
 		} catch (final GitAPIException e) {
 			final String message = "Error while cloning repository.";
 			LOGGER.error(message, e);

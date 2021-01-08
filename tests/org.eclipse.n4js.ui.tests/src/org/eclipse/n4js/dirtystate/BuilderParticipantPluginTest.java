@@ -84,7 +84,6 @@ public class BuilderParticipantPluginTest extends AbstractBuilderParticipantTest
 	}
 
 	// @formatter:off
-	@SuppressWarnings({ "resource", "javadoc" })
 	/**
 	 *
 	 * 01. B requires A, B calls method of A
@@ -95,6 +94,7 @@ public class BuilderParticipantPluginTest extends AbstractBuilderParticipantTest
 	 *
 	 * @throws Exception
 	 */
+	@SuppressWarnings("javadoc")
 	//@formatter:on
 	@Test
 	public void testMethodInRequiredClassRenamed() throws Exception {
@@ -180,7 +180,6 @@ public class BuilderParticipantPluginTest extends AbstractBuilderParticipantTest
 	 * 07. Brother should have no error markers
 	 */
 	//@formatter:on
-	@SuppressWarnings("resource")
 	@Test
 	// TODO: while running there is a java.lang.IndexOutOfBoundsException: Index: 2, Size: 0 at at
 	// org.eclipse.n4js.resource.N4JSResource.getEncodedURI(N4JSResource.java:446)
@@ -229,7 +228,7 @@ public class BuilderParticipantPluginTest extends AbstractBuilderParticipantTest
 	}
 
 	// @formatter:off
-	@SuppressWarnings({ "resource", "javadoc" })
+	@SuppressWarnings("javadoc")
 	/**
 	 *
 	 * 01. CRole consumes BRole, BRole consumes ARole
@@ -280,7 +279,7 @@ public class BuilderParticipantPluginTest extends AbstractBuilderParticipantTest
 	}
 
 	// @formatter:off
-	@SuppressWarnings({ "resource", "javadoc" })
+	@SuppressWarnings("javadoc")
 	/**
 	 *
 	 * 01. CRole consumes BRole, BRole consumes ARole
@@ -329,7 +328,7 @@ public class BuilderParticipantPluginTest extends AbstractBuilderParticipantTest
 	}
 
 	// @formatter:off
-	@SuppressWarnings({ "resource", "javadoc" })
+	@SuppressWarnings("javadoc")
 	/**
 	 *
 	 * 01. CRole consumes BRole, BRole consumes ARole
@@ -378,7 +377,7 @@ public class BuilderParticipantPluginTest extends AbstractBuilderParticipantTest
 	}
 
 	// @formatter:off
-	@SuppressWarnings({ "resource", "javadoc" })
+	@SuppressWarnings("javadoc")
 	/**
 	 *
 	 * 01. class E extends class D and consumes role BRole
@@ -430,7 +429,7 @@ public class BuilderParticipantPluginTest extends AbstractBuilderParticipantTest
 	}
 
 	// @formatter:off
-	@SuppressWarnings({ "resource", "javadoc" })
+	@SuppressWarnings("javadoc")
 	/**
 	 *
 	 * 01. ClassWithInterfaces implements InterfaceB, InterfaceB extends InterfaceA
@@ -483,7 +482,7 @@ public class BuilderParticipantPluginTest extends AbstractBuilderParticipantTest
 	}
 
 	// @formatter:off
-	@SuppressWarnings({ "resource", "javadoc" })
+	@SuppressWarnings("javadoc")
 	/**
 	 *
 	 * 01. MyClassOne import MyVariableTwo, calls in chain
@@ -587,7 +586,6 @@ public class BuilderParticipantPluginTest extends AbstractBuilderParticipantTest
 	 *
 	 * @throws Exception when creating resources fails
 	 */
-	@SuppressWarnings("resource")
 	//@formatter:on
 	@Test
 	public void testRenamingMethodAccessedViaSubclass() throws Exception {
@@ -625,7 +623,7 @@ public class BuilderParticipantPluginTest extends AbstractBuilderParticipantTest
 	}
 
 	// @formatter:off
-	@SuppressWarnings({ "resource", "javadoc" })
+	@SuppressWarnings("javadoc")
 	/**
 	 *
 	 * 01. Caller calls callee methods, who just differs in lower/upper case
@@ -670,7 +668,7 @@ public class BuilderParticipantPluginTest extends AbstractBuilderParticipantTest
 	}
 
 	// @formatter:off
-	@SuppressWarnings({ "resource", "javadoc" })
+	@SuppressWarnings("javadoc")
 	/**
 	 *
 	 * 01. static called member is changed to non-static -> errors at callers and errors gone, when changed back
@@ -756,7 +754,7 @@ public class BuilderParticipantPluginTest extends AbstractBuilderParticipantTest
 	}
 
 	// @formatter:off
-	@SuppressWarnings({ "resource", "javadoc" })
+	@SuppressWarnings("javadoc")
 	/**
 	 * 01. class accesses literal from enumeration
 	 * 02. literal is renamed

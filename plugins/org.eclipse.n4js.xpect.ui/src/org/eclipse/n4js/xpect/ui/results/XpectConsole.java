@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.xpect.ui.results;
 
+import java.io.IOException;
 import java.util.Optional;
 
 import org.eclipse.swt.SWT;
@@ -65,8 +66,11 @@ public class XpectConsole {
 		Display.getDefault().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				getNewMessageConsoleStream(msgKind).println(msg);
-				// messageConsole.clearConsole();
+				try (MessageConsoleStream mcs = getNewMessageConsoleStream(msgKind)) {
+					mcs.println(msg);
+				} catch (IOException e) {
+					// ignore
+				}
 			}
 		});
 	}

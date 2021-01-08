@@ -10,10 +10,12 @@
  */
 package org.eclipse.n4js.xpect.ui.results;
 
+import java.io.IOException;
 import java.util.Optional;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.console.MessageConsole;
+import org.eclipse.ui.console.MessageConsoleStream;
 
 /**
  * Custom console for displaying test exceptions stack trace.
@@ -30,12 +32,14 @@ public class TraceConsole {
 		if (msg == null) {
 			return;
 		}
-		// messageConsole.activate();
 		Display.getDefault().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				messageConsole.newMessageStream().print(msg);
-				// messageConsole.clearConsole();
+				try (MessageConsoleStream mcs = messageConsole.newMessageStream()) {
+					mcs.println(msg);
+				} catch (IOException e) {
+					// ignore
+				}
 			}
 		});
 	}

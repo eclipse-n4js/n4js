@@ -106,7 +106,6 @@ public class EclipseBasedProjectModelSetup extends AbstractProjectModelSetup<Pla
 			throws CoreException, UnsupportedEncodingException {
 		IProject project = workspace.getProject(projectName.toEclipseProjectName().getRawName());
 		IFile projectDescriptionFile = project.getFile(PROJECT_DESCRIPTION_FILENAME);
-		@SuppressWarnings("resource")
 		StringInputStream content = new StringInputStream(string, Charsets.UTF_8.name());
 		projectDescriptionFile.create(content, false, null);
 		projectDescriptionFile.setCharset(Charsets.UTF_8.name(), null);

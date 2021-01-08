@@ -105,7 +105,6 @@ public abstract class AbstractN4JSContentAssistPluginUITest extends Assert imple
 	/**
 	 * Creates a project with two files.
 	 */
-	@SuppressWarnings("resource")
 	@BeforeClass
 	public static void createTestProject() throws Exception {
 		staticProject = ProjectTestsUtils.createJSProject(PROJECT_NAME);

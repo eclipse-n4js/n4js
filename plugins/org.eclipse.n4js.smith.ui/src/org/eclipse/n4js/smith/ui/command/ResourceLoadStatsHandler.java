@@ -81,12 +81,15 @@ public class ResourceLoadStatsHandler implements IHandler {
 		final XtextEditor xeddy = eddy instanceof XtextEditor ? (XtextEditor) eddy : null;
 		if (xeddy != null) {
 			xeddy.getDocument().readOnly((resource) -> {
-				resourceLoadingStatistics.computeAndShowStatsForResourceSet(resource.getResourceSet(),
-						getConsolePrintStream());
+				try (PrintStream ps = getConsolePrintStream()) {
+					resourceLoadingStatistics.computeAndShowStatsForResourceSet(resource.getResourceSet(), ps);
+				}
 				return null;
 			});
 		} else {
-			getConsolePrintStream().println("No active N4JS editor found.");
+			try (PrintStream ps = getConsolePrintStream()) {
+				ps.println("No active N4JS editor found.");
+			}
 		}
 	}
 

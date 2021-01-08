@@ -14,6 +14,8 @@ import static org.eclipse.core.resources.IResource.DEPTH_INFINITE;
 import static org.eclipse.xtext.ui.XtextProjectHelper.BUILDER_ID;
 import static org.eclipse.xtext.ui.XtextProjectHelper.NATURE_ID;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.charset.UnsupportedCharsetException;
@@ -291,9 +293,12 @@ public class N4JSProjectCreator extends AbstractProjectCreator {
 			IProgressMonitor monitor) throws CoreException {
 		IFile file = project.getFile(relativePath);
 		if (!file.exists()) {
-			file.create(FileContentUtil.from(contents, charset), false, monitor);
+			try (InputStream is = FileContentUtil.from(contents, charset)) {
+				file.create(is, false, monitor);
+			} catch (IOException e) {
+				// ignore
+			}
 		}
-
 	}
 
 	/**

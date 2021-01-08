@@ -133,7 +133,9 @@ public class WorkspaceRepositoriesProvider {
 	/** invoked for each repository mapping change */
 	private void repositoryChanged(RepositoryMapping which) {
 		// if a so-far unknown repository appears in a changed mapping
-		if (null != knownRepositories && !knownRepositories.contains(which.getRepository())) {
+		@SuppressWarnings("resource")
+		Repository repository = which.getRepository();
+		if (null != knownRepositories && !knownRepositories.contains(repository)) {
 			// trigger workspace repositories changed listener
 			this.fireWorkspaceRepositoriesChanged();
 		}
