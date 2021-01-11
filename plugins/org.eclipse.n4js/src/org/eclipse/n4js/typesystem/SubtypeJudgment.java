@@ -128,7 +128,7 @@ import com.google.common.collect.Iterables;
 
 		// internal top/bottom type 'UnkownTypeRef'
 		if (left instanceof UnknownTypeRef || right instanceof UnknownTypeRef) {
-			return failure();
+			return success();
 		}
 
 		// void is unrelated to all other types (not even sub-/super-type of top/bottom type)

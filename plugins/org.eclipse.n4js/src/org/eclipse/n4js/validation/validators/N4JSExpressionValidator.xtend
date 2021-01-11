@@ -1436,6 +1436,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		if (targetTypeRef.dynamic) {
 			// allowed: indexing into dynamic receiver
 		} else if (G.objectType === targetDeclType && !(targetTypeRef.useSiteStructuralTyping)) {
+			// TODO: remove special case, see GH-2022
 			// allowed: index into exact-type Object instance (not subtype thereof)
 		} else if (accessedStaticType instanceof TEnum) { // Constraints 69.2
 			// disallowed: index access into an enum
