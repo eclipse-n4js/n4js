@@ -21,6 +21,8 @@ let arr: Array<?>;
 let arrStr: Array<string>;
 let fn: (any)=>boolean;
 let fnStr: (string)=>boolean;
+let obj: ~Object with { prop: any };
+let objStr: ~Object with { prop: string };
 
 
 type A1 = string;
@@ -69,3 +71,15 @@ fn = a5;
 a5 = fnStr;
 // XPECT noerrors -->
 fnStr = a5;
+
+
+type A6 = ~Object with { prop: string };
+let a6: A6;
+// XPECT errors --> "~Object with { prop: any } is not a structural subtype of ~Object with { prop: string }: prop failed: any is not equal to string." at "obj"
+a6 = obj;
+// XPECT errors --> "~Object with { prop: string } is not a structural subtype of ~Object with { prop: any }: prop failed: string is not equal to any." at "a6"
+obj = a6;
+// XPECT noerrors -->
+a6 = objStr;
+// XPECT noerrors -->
+objStr = a6;
