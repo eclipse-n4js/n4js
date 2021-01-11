@@ -219,7 +219,7 @@ class MemberScopingHelper {
 	private def dispatch IScope members(TypeTypeRef ttr, MemberScopeRequest request) {
 		val MemberScopeRequest staticRequest = request.enforceStatic;
 		val G = RuleEnvironmentExtensions.newRuleEnvironment(request.context);
-		val ctrStaticType = tsh.getStaticType(G, ttr);
+		val ctrStaticType = tsh.getStaticType(G, ttr, true);
 		var IScope staticMembers = membersOfType(ctrStaticType, staticRequest) // staticAccess is always true in this case
 		if (ctrStaticType instanceof TEnum) {
 			// enums have their literals as static members

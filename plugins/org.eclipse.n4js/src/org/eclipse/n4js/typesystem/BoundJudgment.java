@@ -51,8 +51,9 @@ import com.google.common.base.Optional;
 /* package */ class BoundJudgment extends AbstractJudgment {
 
 	/** See {@link N4JSTypeSystem#upperBound(RuleEnvironment, TypeArgument)}. */
-	public TypeRef applyUpperBound(RuleEnvironment G, TypeArgument typeArg, boolean reopen, boolean resolve) {
-		final BoundSwitch theSwitch = new BoundSwitch(G, BoundType.UPPER, reopen, resolve);
+	public TypeRef applyUpperBound(RuleEnvironment G, TypeArgument typeArg, boolean reopen,
+			boolean resolveAliases, boolean resolveTypeVariables) {
+		final BoundSwitch theSwitch = new BoundSwitch(G, BoundType.UPPER, reopen, resolveAliases, resolveTypeVariables);
 		final TypeRef result = theSwitch.doSwitch(typeArg);
 		if (result == null) {
 			final String stringRep = typeArg != null ? typeArg.getTypeRefAsString() : "<null>";
@@ -62,8 +63,9 @@ import com.google.common.base.Optional;
 	}
 
 	/** See {@link N4JSTypeSystem#lowerBound(RuleEnvironment, TypeArgument)}. */
-	public TypeRef applyLowerBound(RuleEnvironment G, TypeArgument typeArg, boolean reopen, boolean resolve) {
-		final BoundSwitch theSwitch = new BoundSwitch(G, BoundType.LOWER, reopen, resolve);
+	public TypeRef applyLowerBound(RuleEnvironment G, TypeArgument typeArg, boolean reopen,
+			boolean resolveAliases, boolean resolveTypeVariables) {
+		final BoundSwitch theSwitch = new BoundSwitch(G, BoundType.LOWER, reopen, resolveAliases, resolveTypeVariables);
 		final TypeRef result = theSwitch.doSwitch(typeArg);
 		if (result == null) {
 			final String stringRep = typeArg != null ? typeArg.getTypeRefAsString() : "<null>";
@@ -77,29 +79,34 @@ import com.google.common.base.Optional;
 		private final RuleEnvironment G;
 		private final BoundType boundType;
 		private final boolean reopen;
-		private final boolean resolve;
+		private final boolean resolveAliases;
+		private final boolean resolveTypeVariables;
 
 		private final RecursionGuard<EObject> guard = new RecursionGuard<>();
 
-		public BoundSwitch(RuleEnvironment G, BoundType boundType, boolean reopen, boolean resolve) {
+		public BoundSwitch(RuleEnvironment G, BoundType boundType, boolean reopen, boolean resolveAliases,
+				boolean resolveTypeVariables) {
 			this.G = G;
 			this.boundType = boundType;
 			this.reopen = reopen;
-			this.resolve = resolve;
+			this.resolveAliases = resolveAliases;
+			this.resolveTypeVariables = resolveTypeVariables;
 		}
 
 		// the following two methods are provided to increase readability of recursive invocations of #doSwitch()
 
 		private TypeRef bound(TypeArgument typeArg) {
-			return bound(G, typeArg, boundType, reopen, resolve);
+			return bound(G, typeArg, boundType, reopen, resolveAliases, resolveTypeVariables);
 		}
 
 		private TypeRef bound(RuleEnvironment G_NEW, TypeArgument typeArg, BoundType boundTypeNEW, boolean reopenNEW,
-				boolean resolveNEW) {
-			if (G_NEW == G && boundTypeNEW == boundType && reopenNEW == reopen && resolveNEW == resolve) {
+				boolean resolveAliasesNEW, boolean resolveTypeVariablesNEW) {
+			if (G_NEW == G && boundTypeNEW == boundType && reopenNEW == reopen
+					&& resolveAliasesNEW == resolveAliases && resolveTypeVariablesNEW == resolveTypeVariables) {
 				return doSwitch(typeArg);
 			} else {
-				final BoundSwitch nestedSwitch = new BoundSwitch(G_NEW, boundTypeNEW, reopenNEW, resolveNEW);
+				final BoundSwitch nestedSwitch = new BoundSwitch(G_NEW, boundTypeNEW, reopenNEW,
+						resolveAliasesNEW, resolveTypeVariablesNEW);
 				return nestedSwitch.doSwitch(typeArg);
 			}
 		}
@@ -187,12 +194,14 @@ import com.google.common.base.Optional;
 		@Override
 		public TypeRef caseParameterizedTypeRef(ParameterizedTypeRef ptr) {
 			final Type declType = ptr.getDeclaredType();
-			if (resolve) {
+			if (resolveAliases) {
 				// a) resolve type aliases
 				final TypeRef ptrResolved = tsh.resolveAlias(G, ptr);
 				if (ptrResolved != ptr) {
 					return bound(ptrResolved);
 				}
+			}
+			if (resolveTypeVariables) {
 				// b) resolve type variables
 				if (declType instanceof TypeVariable) {
 					switch (boundType) {
@@ -255,7 +264,7 @@ import com.google.common.base.Optional;
 				}
 				// STEP 2: actually push the bound into the desired direction
 				if (boundToBePushed != null) {
-					TypeRef boundOfBoundToBePushed = bound(G, boundToBePushed, pushDirection, reopen, false);
+					TypeRef boundOfBoundToBePushed = bound(G, boundToBePushed, pushDirection, reopen, false, false);
 					if (boundOfBoundToBePushed != boundToBePushed) {
 						final Wildcard wildcardCpy = TypeUtils.copy(wildcard);
 						if (upperBound != null) {
@@ -274,7 +283,7 @@ import com.google.common.base.Optional;
 				// treat 'typeArg' like the upper bound of a wildcard
 				final TypeRef boundToBePushed = (TypeRef) typeArg; // n.b. we know 'typeArg' isn't a Wildcard
 				final BoundType pushDirection = boundType;
-				final TypeRef boundOfBoundToBePushed = bound(G, boundToBePushed, pushDirection, reopen, false);
+				final TypeRef boundOfBoundToBePushed = bound(G, boundToBePushed, pushDirection, reopen, false, false);
 				if (boundOfBoundToBePushed != boundToBePushed) {
 					return boundOfBoundToBePushed;
 				}
@@ -282,7 +291,7 @@ import com.google.common.base.Optional;
 				// treat 'typeArg' like the lower bound of a wildcard
 				final TypeRef boundToBePushed = (TypeRef) typeArg; // n.b. we know 'typeArg' isn't a Wildcard
 				final BoundType pushDirection = boundType.inverse();
-				final TypeRef boundOfBoundToBePushed = bound(G, boundToBePushed, pushDirection, reopen, false);
+				final TypeRef boundOfBoundToBePushed = bound(G, boundToBePushed, pushDirection, reopen, false, false);
 				if (boundOfBoundToBePushed != boundToBePushed) {
 					return boundOfBoundToBePushed;
 				}
@@ -309,7 +318,7 @@ import com.google.common.base.Optional;
 			// upper/lower bound of return type
 			final TypeRef returnTypeRef = F.getReturnTypeRef();
 			final TypeRef resultReturnTypeRef = returnTypeRef != null
-					? bound(G, F.getReturnTypeRef(), boundType, reopen, false)
+					? bound(G, F.getReturnTypeRef(), boundType, reopen, false, false)
 					: null;
 			haveReplacement |= resultReturnTypeRef != returnTypeRef;
 
@@ -329,7 +338,7 @@ import com.google.common.base.Optional;
 
 				final TypeRef oldParTypeRef = oldPar.getTypeRef();
 				if (oldParTypeRef != null) {
-					final TypeRef newParTypeRef = bound(G, oldParTypeRef, boundType.inverse(), reopen, false);
+					final TypeRef newParTypeRef = bound(G, oldParTypeRef, boundType.inverse(), reopen, false, false);
 					newPar.setTypeRef(TypeUtils.copyIfContained(newParTypeRef));
 					haveReplacement |= newParTypeRef != oldParTypeRef;
 				}

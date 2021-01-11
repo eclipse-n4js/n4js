@@ -1417,7 +1417,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		if (targetTypeRefRaw instanceof UnknownTypeRef) {
 			return; // saw an UnknownTypeRef -> so we are expected to suppress all follow-up errors
 		}
-		val targetTypeRef = ts.upperBoundWithReopenAndResolve(G, targetTypeRefRaw);
+		val targetTypeRef = ts.upperBoundWithReopenAndResolve(G, targetTypeRefRaw, true, true);
 		val indexTypeRef = ts.type(G, index);
 		if (indexTypeRef instanceof UnknownTypeRef) {
 			return; // saw an UnknownTypeRef -> so we are expected to suppress all follow-up errors

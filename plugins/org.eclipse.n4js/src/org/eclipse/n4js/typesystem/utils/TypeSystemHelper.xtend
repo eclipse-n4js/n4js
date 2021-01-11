@@ -26,9 +26,7 @@ import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.ReturnStatement
 import org.eclipse.n4js.n4JS.YieldExpression
 import org.eclipse.n4js.n4idl.versioning.N4IDLVersionResolver
-import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
-import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
@@ -38,7 +36,6 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef
-import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TClass
@@ -432,24 +429,32 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		return null;
 	}
 
+	/** Same as {@link #getStaticType(RuleEnvironment, TypeTypeRef, boolean)} without resolving type variables. */
+	def public Type getStaticType(RuleEnvironment G, TypeTypeRef typeTypeRef) {
+		return getStaticType(G, typeTypeRef, false);
+	}
+
 	/**
 	 * Returns the so-called "static type" of the given {@link TypeTypeRef} or <code>null</code> if not
-	 * available.
+	 * available. Iff {@code resolveTypeVariables} is <code>true</code>, then type variables will be resolved
+	 * (i.e. replaced by their explicit or implicit upper bound).
 	 * <p>
 	 * Formerly, this was a utility operation in {@code TypeRefs.xcore} but since the introduction of wildcards in
 	 * {@code TypeTypeRef}s the 'upperBound' judgment (and thus a RuleEnvironment) is required to compute this
 	 * and hence it was moved here.
 	 */
-	def public Type getStaticType(RuleEnvironment G, TypeTypeRef ctorTypeRef) {
-		return getStaticTypeRef(G, ctorTypeRef)?.declaredType; // will return null if #getStaticTypeRef() is not of type ParameterizedTypeRef
+	def public Type getStaticType(RuleEnvironment G, TypeTypeRef typeTypeRef, boolean resolveTypeVariables) {
+		return getStaticTypeRef(G, typeTypeRef, resolveTypeVariables)?.declaredType; // will return null if #getStaticTypeRef() is not of type ParameterizedTypeRef
 	}
 
-	def public TypeRef getStaticTypeRef(RuleEnvironment G, TypeTypeRef ctorTypeRef) {
-		var typeArg = ctorTypeRef.typeArg;
-		while(typeArg instanceof Wildcard || typeArg instanceof ExistentialTypeRef || typeArg instanceof BoundThisTypeRef) {
-			typeArg = ts.upperBoundWithReopen(G, typeArg);
-		}
-		return typeArg as TypeRef;
+	def public TypeRef getStaticTypeRef(RuleEnvironment G, TypeTypeRef typeTypeRef) {
+		return getStaticTypeRef(G, typeTypeRef, false);
+	}
+
+	def public TypeRef getStaticTypeRef(RuleEnvironment G, TypeTypeRef typeTypeRef, boolean resolveTypeVariables) {
+		val typeArg = typeTypeRef.typeArg;
+		val typeArgUB = ts.upperBoundWithReopenAndResolve(G, typeArg, true, resolveTypeVariables);
+		return typeArgUB;
 	}
 
 	/**

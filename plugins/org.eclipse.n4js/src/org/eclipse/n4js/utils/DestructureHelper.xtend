@@ -123,7 +123,7 @@ class DestructureHelper {
 		// in the root node, the defaultExpr is the main value to be destructured and
 		// the node's type is simply the type of that value (nothing needs to be destructured yet)
 		var valueTypeRef = ts.type(G,rootNode.defaultExpr);
-		valueTypeRef = ts.upperBoundWithReopenAndResolve(G, valueTypeRef);
+		valueTypeRef = ts.upperBoundWithReopenAndResolve(G, valueTypeRef, true, true);
 		// special case: ForStatement
 		// we might have something like for([a,b] of expr){} (in which case rootNode.defaultExpr points to the 'expr')
 		if(rootNode.defaultExpr.eContainer instanceof ForStatement) {
