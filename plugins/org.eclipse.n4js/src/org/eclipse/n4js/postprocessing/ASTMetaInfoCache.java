@@ -29,6 +29,7 @@ import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
+import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TypableElement;
@@ -59,12 +60,14 @@ public final class ASTMetaInfoCache {
 	private final Map<ParameterizedCallExpression, List<TypeRef>> inferredTypeArgs = new HashMap<>();
 	private final Map<Expression, CompileTimeValue> compileTimeValue = new HashMap<>();
 	private final Map<VariableDeclaration, List<EObject>> localVariableReferences = new HashMap<>();
+	private boolean hasUnknownTypeRef;
 
 	/* package */ ASTMetaInfoCache(N4JSResource resource, boolean hasBrokenAST, ASTFlowInfo flowInfo) {
 		this.resource = resource;
 		this.projectName = resource.getModule().getProjectName();
 		this.hasBrokenAST = hasBrokenAST;
 		this.flowInfo = flowInfo;
+		this.hasUnknownTypeRef = false;
 	}
 
 	/** @return the {@link N4JSResource} the receiving cache belongs to. */
@@ -80,6 +83,11 @@ public final class ASTMetaInfoCache {
 	/** @return if the resource of this cache has a broken AST. */
 	public boolean hasBrokenAST() {
 		return hasBrokenAST;
+	}
+
+	/** @return if one of the actual type refs is a {@link UnknownTypeRef}. */
+	public boolean hasUnknownTypeRef() {
+		return hasUnknownTypeRef;
 	}
 
 	/** @return the flow information for this resource */
@@ -131,6 +139,7 @@ public final class ASTMetaInfoCache {
 					"cache collision: multiple actual types put into cache for AST node: " + astNode +
 							" in resource: " + resource.getURI()));
 		}
+		hasUnknownTypeRef |= actualType.isUnknown();
 	}
 
 	/**
