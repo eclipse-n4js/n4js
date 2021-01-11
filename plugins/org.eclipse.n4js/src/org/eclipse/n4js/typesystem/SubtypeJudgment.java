@@ -15,6 +15,7 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.addThisType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.anyType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.collectAllImplicitSuperTypes;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.functionTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.getContextResource;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.getReplacement;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.intType;
@@ -179,6 +180,12 @@ import com.google.common.collect.Iterables;
 				final FunctionTypeRef rightFixed = (FunctionTypeRef) TypeUtils.createTypeRef(right.getDeclaredType());
 				TypeUtils.copyTypeModifiers(rightFixed, right);
 				return applyFunctionTypeExprOrRef(G, (FunctionTypeExprOrRef) left, rightFixed);
+			} else if (right instanceof ParameterizedTypeRef
+					&& (right.isUseSiteStructuralTyping() || right.isDefSiteStructuralTyping())) {
+				// special case: (string)=>number <: ~Object with { prop: string }
+				// Here, the actual function signature of 'left' is irrelevant and we can thus simply perform
+				// a structural subtype check with the built-in 'Function' on the left-hand side:
+				return applyParameterizedTypeRef(G, functionTypeRef(G), (ParameterizedTypeRef) right);
 			} else {
 				return resultFromBoolean(
 						isObject(G, right)

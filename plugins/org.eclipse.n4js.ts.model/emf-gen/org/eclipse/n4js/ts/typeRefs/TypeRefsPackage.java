@@ -122,7 +122,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getTypeArgument()
 	 * @generated
 	 */
-	int TYPE_ARGUMENT = 17;
+	int TYPE_ARGUMENT = 1;
 
 	/**
 	 * The number of structural features of the '<em>Type Argument</em>' class.
@@ -134,31 +134,13 @@ public interface TypeRefsPackage extends EPackage {
 	int TYPE_ARGUMENT_FEATURE_COUNT = 0;
 
 	/**
-	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * The operation id for the '<em>Is Type Ref</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING = 0;
-
-	/**
-	 * The operation id for the '<em>Contains Wildcards</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TYPE_ARGUMENT___CONTAINS_WILDCARDS = 1;
-
-	/**
-	 * The operation id for the '<em>Contains Unbound Type Variables</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TYPE_ARGUMENT___CONTAINS_UNBOUND_TYPE_VARIABLES = 2;
+	int TYPE_ARGUMENT___IS_TYPE_REF = 0;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type</em>' operation.
@@ -167,7 +149,16 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ARGUMENT___GET_DECLARED_TYPE = 3;
+	int TYPE_ARGUMENT___GET_DECLARED_TYPE = 1;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING = 2;
 
 	/**
 	 * The number of operations of the '<em>Type Argument</em>' class.
@@ -176,7 +167,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ARGUMENT_OPERATION_COUNT = 4;
+	int TYPE_ARGUMENT_OPERATION_COUNT = 3;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.TypeRefImpl <em>Type Ref</em>}' class.
@@ -186,7 +177,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getTypeRef()
 	 * @generated
 	 */
-	int TYPE_REF = 1;
+	int TYPE_REF = 2;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -207,24 +198,6 @@ public interface TypeRefsPackage extends EPackage {
 	int TYPE_REF_FEATURE_COUNT = TYPE_ARGUMENT_FEATURE_COUNT + 1;
 
 	/**
-	 * The operation id for the '<em>Contains Wildcards</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TYPE_REF___CONTAINS_WILDCARDS = TYPE_ARGUMENT___CONTAINS_WILDCARDS;
-
-	/**
-	 * The operation id for the '<em>Contains Unbound Type Variables</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES = TYPE_ARGUMENT___CONTAINS_UNBOUND_TYPE_VARIABLES;
-
-	/**
 	 * The operation id for the '<em>Get Declared Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -243,13 +216,22 @@ public interface TypeRefsPackage extends EPackage {
 	int TYPE_REF___GET_MODIFIERS_AS_STRING = TYPE_ARGUMENT_OPERATION_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>Is Type Ref</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_REF___IS_TYPE_REF = TYPE_ARGUMENT_OPERATION_COUNT + 2;
+
+	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_FINAL_BY_TYPE = TYPE_ARGUMENT_OPERATION_COUNT + 2;
+	int TYPE_REF___IS_FINAL_BY_TYPE = TYPE_ARGUMENT_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Is Array Like</em>' operation.
@@ -258,7 +240,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_ARRAY_LIKE = TYPE_ARGUMENT_OPERATION_COUNT + 3;
+	int TYPE_REF___IS_ARRAY_LIKE = TYPE_ARGUMENT_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Is Unknown</em>' operation.
@@ -267,7 +249,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_UNKNOWN = TYPE_ARGUMENT_OPERATION_COUNT + 4;
+	int TYPE_REF___IS_UNKNOWN = TYPE_ARGUMENT_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Is Dynamic</em>' operation.
@@ -276,7 +258,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_DYNAMIC = TYPE_ARGUMENT_OPERATION_COUNT + 5;
+	int TYPE_REF___IS_DYNAMIC = TYPE_ARGUMENT_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Is Existential</em>' operation.
@@ -285,7 +267,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_EXISTENTIAL = TYPE_ARGUMENT_OPERATION_COUNT + 6;
+	int TYPE_REF___IS_EXISTENTIAL = TYPE_ARGUMENT_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Is Generic</em>' operation.
@@ -294,7 +276,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_GENERIC = TYPE_ARGUMENT_OPERATION_COUNT + 7;
+	int TYPE_REF___IS_GENERIC = TYPE_ARGUMENT_OPERATION_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Is Parameterized</em>' operation.
@@ -303,7 +285,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_PARAMETERIZED = TYPE_ARGUMENT_OPERATION_COUNT + 8;
+	int TYPE_REF___IS_PARAMETERIZED = TYPE_ARGUMENT_OPERATION_COUNT + 9;
 
 	/**
 	 * The operation id for the '<em>Is Raw</em>' operation.
@@ -312,7 +294,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_RAW = TYPE_ARGUMENT_OPERATION_COUNT + 9;
+	int TYPE_REF___IS_RAW = TYPE_ARGUMENT_OPERATION_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Get Declared Upper Bound</em>' operation.
@@ -321,7 +303,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___GET_DECLARED_UPPER_BOUND = TYPE_ARGUMENT_OPERATION_COUNT + 10;
+	int TYPE_REF___GET_DECLARED_UPPER_BOUND = TYPE_ARGUMENT_OPERATION_COUNT + 11;
 
 	/**
 	 * The operation id for the '<em>Get Declared Lower Bound</em>' operation.
@@ -330,7 +312,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___GET_DECLARED_LOWER_BOUND = TYPE_ARGUMENT_OPERATION_COUNT + 11;
+	int TYPE_REF___GET_DECLARED_LOWER_BOUND = TYPE_ARGUMENT_OPERATION_COUNT + 12;
 
 	/**
 	 * The operation id for the '<em>Get Type Args</em>' operation.
@@ -339,7 +321,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___GET_TYPE_ARGS = TYPE_ARGUMENT_OPERATION_COUNT + 12;
+	int TYPE_REF___GET_TYPE_ARGS = TYPE_ARGUMENT_OPERATION_COUNT + 13;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -348,7 +330,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___GET_TYPE_REF_AS_STRING = TYPE_ARGUMENT_OPERATION_COUNT + 13;
+	int TYPE_REF___GET_TYPE_REF_AS_STRING = TYPE_ARGUMENT_OPERATION_COUNT + 14;
 
 	/**
 	 * The operation id for the '<em>To String</em>' operation.
@@ -357,7 +339,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___TO_STRING = TYPE_ARGUMENT_OPERATION_COUNT + 14;
+	int TYPE_REF___TO_STRING = TYPE_ARGUMENT_OPERATION_COUNT + 15;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -366,7 +348,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_TOP_TYPE = TYPE_ARGUMENT_OPERATION_COUNT + 15;
+	int TYPE_REF___IS_TOP_TYPE = TYPE_ARGUMENT_OPERATION_COUNT + 16;
 
 	/**
 	 * The operation id for the '<em>Is Bottom Type</em>' operation.
@@ -375,7 +357,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_BOTTOM_TYPE = TYPE_ARGUMENT_OPERATION_COUNT + 16;
+	int TYPE_REF___IS_BOTTOM_TYPE = TYPE_ARGUMENT_OPERATION_COUNT + 17;
 
 	/**
 	 * The operation id for the '<em>Get Typing Strategy</em>' operation.
@@ -384,7 +366,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___GET_TYPING_STRATEGY = TYPE_ARGUMENT_OPERATION_COUNT + 17;
+	int TYPE_REF___GET_TYPING_STRATEGY = TYPE_ARGUMENT_OPERATION_COUNT + 18;
 
 	/**
 	 * The operation id for the '<em>Get Structural Members</em>' operation.
@@ -393,7 +375,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___GET_STRUCTURAL_MEMBERS = TYPE_ARGUMENT_OPERATION_COUNT + 18;
+	int TYPE_REF___GET_STRUCTURAL_MEMBERS = TYPE_ARGUMENT_OPERATION_COUNT + 19;
 
 	/**
 	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
@@ -402,7 +384,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING = TYPE_ARGUMENT_OPERATION_COUNT + 19;
+	int TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING = TYPE_ARGUMENT_OPERATION_COUNT + 20;
 
 	/**
 	 * The operation id for the '<em>Is Def Site Structural Typing</em>' operation.
@@ -411,7 +393,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = TYPE_ARGUMENT_OPERATION_COUNT + 20;
+	int TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = TYPE_ARGUMENT_OPERATION_COUNT + 21;
 
 	/**
 	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
@@ -420,7 +402,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = TYPE_ARGUMENT_OPERATION_COUNT + 21;
+	int TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = TYPE_ARGUMENT_OPERATION_COUNT + 22;
 
 	/**
 	 * The operation id for the '<em>Get Version</em>' operation.
@@ -429,7 +411,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___GET_VERSION = TYPE_ARGUMENT_OPERATION_COUNT + 22;
+	int TYPE_REF___GET_VERSION = TYPE_ARGUMENT_OPERATION_COUNT + 23;
 
 	/**
 	 * The number of operations of the '<em>Type Ref</em>' class.
@@ -438,7 +420,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF_OPERATION_COUNT = TYPE_ARGUMENT_OPERATION_COUNT + 23;
+	int TYPE_REF_OPERATION_COUNT = TYPE_ARGUMENT_OPERATION_COUNT + 24;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.StaticBaseTypeRefImpl <em>Static Base Type Ref</em>}' class.
@@ -448,7 +430,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getStaticBaseTypeRef()
 	 * @generated
 	 */
-	int STATIC_BASE_TYPE_REF = 2;
+	int STATIC_BASE_TYPE_REF = 3;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -469,24 +451,6 @@ public interface TypeRefsPackage extends EPackage {
 	int STATIC_BASE_TYPE_REF_FEATURE_COUNT = TYPE_REF_FEATURE_COUNT + 0;
 
 	/**
-	 * The operation id for the '<em>Contains Wildcards</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int STATIC_BASE_TYPE_REF___CONTAINS_WILDCARDS = TYPE_REF___CONTAINS_WILDCARDS;
-
-	/**
-	 * The operation id for the '<em>Contains Unbound Type Variables</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int STATIC_BASE_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES = TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES;
-
-	/**
 	 * The operation id for the '<em>Get Declared Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -503,6 +467,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int STATIC_BASE_TYPE_REF___GET_MODIFIERS_AS_STRING = TYPE_REF___GET_MODIFIERS_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Is Type Ref</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STATIC_BASE_TYPE_REF___IS_TYPE_REF = TYPE_REF___IS_TYPE_REF;
 
 	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
@@ -710,7 +683,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getBaseTypeRef()
 	 * @generated
 	 */
-	int BASE_TYPE_REF = 3;
+	int BASE_TYPE_REF = 4;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -740,24 +713,6 @@ public interface TypeRefsPackage extends EPackage {
 	int BASE_TYPE_REF_FEATURE_COUNT = STATIC_BASE_TYPE_REF_FEATURE_COUNT + 1;
 
 	/**
-	 * The operation id for the '<em>Contains Wildcards</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASE_TYPE_REF___CONTAINS_WILDCARDS = STATIC_BASE_TYPE_REF___CONTAINS_WILDCARDS;
-
-	/**
-	 * The operation id for the '<em>Contains Unbound Type Variables</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASE_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES = STATIC_BASE_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES;
-
-	/**
 	 * The operation id for the '<em>Get Declared Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -765,6 +720,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int BASE_TYPE_REF___GET_DECLARED_TYPE = STATIC_BASE_TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
+	 * The operation id for the '<em>Is Type Ref</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_TYPE_REF___IS_TYPE_REF = STATIC_BASE_TYPE_REF___IS_TYPE_REF;
 
 	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
@@ -981,7 +945,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getComposedTypeRef()
 	 * @generated
 	 */
-	int COMPOSED_TYPE_REF = 4;
+	int COMPOSED_TYPE_REF = 5;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -1011,24 +975,6 @@ public interface TypeRefsPackage extends EPackage {
 	int COMPOSED_TYPE_REF_FEATURE_COUNT = STATIC_BASE_TYPE_REF_FEATURE_COUNT + 1;
 
 	/**
-	 * The operation id for the '<em>Contains Wildcards</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int COMPOSED_TYPE_REF___CONTAINS_WILDCARDS = STATIC_BASE_TYPE_REF___CONTAINS_WILDCARDS;
-
-	/**
-	 * The operation id for the '<em>Contains Unbound Type Variables</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int COMPOSED_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES = STATIC_BASE_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES;
-
-	/**
 	 * The operation id for the '<em>Get Declared Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1045,6 +991,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int COMPOSED_TYPE_REF___GET_MODIFIERS_AS_STRING = STATIC_BASE_TYPE_REF___GET_MODIFIERS_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Is Type Ref</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMPOSED_TYPE_REF___IS_TYPE_REF = STATIC_BASE_TYPE_REF___IS_TYPE_REF;
 
 	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
@@ -1252,7 +1207,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getUnionTypeExpression()
 	 * @generated
 	 */
-	int UNION_TYPE_EXPRESSION = 5;
+	int UNION_TYPE_EXPRESSION = 6;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -1282,24 +1237,6 @@ public interface TypeRefsPackage extends EPackage {
 	int UNION_TYPE_EXPRESSION_FEATURE_COUNT = COMPOSED_TYPE_REF_FEATURE_COUNT + 0;
 
 	/**
-	 * The operation id for the '<em>Contains Wildcards</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int UNION_TYPE_EXPRESSION___CONTAINS_WILDCARDS = COMPOSED_TYPE_REF___CONTAINS_WILDCARDS;
-
-	/**
-	 * The operation id for the '<em>Contains Unbound Type Variables</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int UNION_TYPE_EXPRESSION___CONTAINS_UNBOUND_TYPE_VARIABLES = COMPOSED_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES;
-
-	/**
 	 * The operation id for the '<em>Get Declared Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1316,6 +1253,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int UNION_TYPE_EXPRESSION___GET_MODIFIERS_AS_STRING = COMPOSED_TYPE_REF___GET_MODIFIERS_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Is Type Ref</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNION_TYPE_EXPRESSION___IS_TYPE_REF = COMPOSED_TYPE_REF___IS_TYPE_REF;
 
 	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
@@ -1523,7 +1469,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getIntersectionTypeExpression()
 	 * @generated
 	 */
-	int INTERSECTION_TYPE_EXPRESSION = 6;
+	int INTERSECTION_TYPE_EXPRESSION = 7;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -1553,24 +1499,6 @@ public interface TypeRefsPackage extends EPackage {
 	int INTERSECTION_TYPE_EXPRESSION_FEATURE_COUNT = COMPOSED_TYPE_REF_FEATURE_COUNT + 0;
 
 	/**
-	 * The operation id for the '<em>Contains Wildcards</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERSECTION_TYPE_EXPRESSION___CONTAINS_WILDCARDS = COMPOSED_TYPE_REF___CONTAINS_WILDCARDS;
-
-	/**
-	 * The operation id for the '<em>Contains Unbound Type Variables</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERSECTION_TYPE_EXPRESSION___CONTAINS_UNBOUND_TYPE_VARIABLES = COMPOSED_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES;
-
-	/**
 	 * The operation id for the '<em>Get Declared Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1587,6 +1515,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int INTERSECTION_TYPE_EXPRESSION___GET_MODIFIERS_AS_STRING = COMPOSED_TYPE_REF___GET_MODIFIERS_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Is Type Ref</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERSECTION_TYPE_EXPRESSION___IS_TYPE_REF = COMPOSED_TYPE_REF___IS_TYPE_REF;
 
 	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
@@ -1794,7 +1731,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getThisTypeRef()
 	 * @generated
 	 */
-	int THIS_TYPE_REF = 7;
+	int THIS_TYPE_REF = 8;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -1824,24 +1761,6 @@ public interface TypeRefsPackage extends EPackage {
 	int THIS_TYPE_REF_FEATURE_COUNT = BASE_TYPE_REF_FEATURE_COUNT + 0;
 
 	/**
-	 * The operation id for the '<em>Contains Wildcards</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THIS_TYPE_REF___CONTAINS_WILDCARDS = BASE_TYPE_REF___CONTAINS_WILDCARDS;
-
-	/**
-	 * The operation id for the '<em>Contains Unbound Type Variables</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THIS_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES = BASE_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES;
-
-	/**
 	 * The operation id for the '<em>Get Declared Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1849,6 +1768,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int THIS_TYPE_REF___GET_DECLARED_TYPE = BASE_TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
+	 * The operation id for the '<em>Is Type Ref</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int THIS_TYPE_REF___IS_TYPE_REF = BASE_TYPE_REF___IS_TYPE_REF;
 
 	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
@@ -2065,7 +1993,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getThisTypeRefNominal()
 	 * @generated
 	 */
-	int THIS_TYPE_REF_NOMINAL = 8;
+	int THIS_TYPE_REF_NOMINAL = 9;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -2095,24 +2023,6 @@ public interface TypeRefsPackage extends EPackage {
 	int THIS_TYPE_REF_NOMINAL_FEATURE_COUNT = THIS_TYPE_REF_FEATURE_COUNT + 0;
 
 	/**
-	 * The operation id for the '<em>Contains Wildcards</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THIS_TYPE_REF_NOMINAL___CONTAINS_WILDCARDS = THIS_TYPE_REF___CONTAINS_WILDCARDS;
-
-	/**
-	 * The operation id for the '<em>Contains Unbound Type Variables</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THIS_TYPE_REF_NOMINAL___CONTAINS_UNBOUND_TYPE_VARIABLES = THIS_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES;
-
-	/**
 	 * The operation id for the '<em>Get Declared Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2120,6 +2030,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int THIS_TYPE_REF_NOMINAL___GET_DECLARED_TYPE = THIS_TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
+	 * The operation id for the '<em>Is Type Ref</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int THIS_TYPE_REF_NOMINAL___IS_TYPE_REF = THIS_TYPE_REF___IS_TYPE_REF;
 
 	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
@@ -2336,7 +2255,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getThisTypeRefStructural()
 	 * @generated
 	 */
-	int THIS_TYPE_REF_STRUCTURAL = 9;
+	int THIS_TYPE_REF_STRUCTURAL = 10;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -2411,24 +2330,6 @@ public interface TypeRefsPackage extends EPackage {
 	int THIS_TYPE_REF_STRUCTURAL_FEATURE_COUNT = THIS_TYPE_REF_FEATURE_COUNT + 5;
 
 	/**
-	 * The operation id for the '<em>Contains Wildcards</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THIS_TYPE_REF_STRUCTURAL___CONTAINS_WILDCARDS = THIS_TYPE_REF___CONTAINS_WILDCARDS;
-
-	/**
-	 * The operation id for the '<em>Contains Unbound Type Variables</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THIS_TYPE_REF_STRUCTURAL___CONTAINS_UNBOUND_TYPE_VARIABLES = THIS_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES;
-
-	/**
 	 * The operation id for the '<em>Get Declared Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2436,6 +2337,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int THIS_TYPE_REF_STRUCTURAL___GET_DECLARED_TYPE = THIS_TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
+	 * The operation id for the '<em>Is Type Ref</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int THIS_TYPE_REF_STRUCTURAL___IS_TYPE_REF = THIS_TYPE_REF___IS_TYPE_REF;
 
 	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
@@ -2670,7 +2580,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getBoundThisTypeRef()
 	 * @generated
 	 */
-	int BOUND_THIS_TYPE_REF = 10;
+	int BOUND_THIS_TYPE_REF = 11;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -2754,24 +2664,6 @@ public interface TypeRefsPackage extends EPackage {
 	int BOUND_THIS_TYPE_REF_FEATURE_COUNT = THIS_TYPE_REF_FEATURE_COUNT + 6;
 
 	/**
-	 * The operation id for the '<em>Contains Wildcards</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BOUND_THIS_TYPE_REF___CONTAINS_WILDCARDS = THIS_TYPE_REF___CONTAINS_WILDCARDS;
-
-	/**
-	 * The operation id for the '<em>Contains Unbound Type Variables</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BOUND_THIS_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES = THIS_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES;
-
-	/**
 	 * The operation id for the '<em>Get Declared Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2779,6 +2671,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int BOUND_THIS_TYPE_REF___GET_DECLARED_TYPE = THIS_TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
+	 * The operation id for the '<em>Is Type Ref</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOUND_THIS_TYPE_REF___IS_TYPE_REF = THIS_TYPE_REF___IS_TYPE_REF;
 
 	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
@@ -3013,7 +2914,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getParameterizedTypeRef()
 	 * @generated
 	 */
-	int PARAMETERIZED_TYPE_REF = 11;
+	int PARAMETERIZED_TYPE_REF = 12;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -3122,6 +3023,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int PARAMETERIZED_TYPE_REF___GET_DECLARED_TYPE = BASE_TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
+	 * The operation id for the '<em>Is Type Ref</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF___IS_TYPE_REF = BASE_TYPE_REF___IS_TYPE_REF;
 
 	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
@@ -3268,22 +3178,13 @@ public interface TypeRefsPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF___GET_TYPING_STRATEGY = BASE_TYPE_REF_OPERATION_COUNT + 0;
 
 	/**
-	 * The operation id for the '<em>Contains Wildcards</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF___CONTAINS_WILDCARDS = BASE_TYPE_REF_OPERATION_COUNT + 1;
-
-	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING = BASE_TYPE_REF_OPERATION_COUNT + 2;
+	int PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING = BASE_TYPE_REF_OPERATION_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Is Parameterized</em>' operation.
@@ -3292,7 +3193,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF___IS_PARAMETERIZED = BASE_TYPE_REF_OPERATION_COUNT + 3;
+	int PARAMETERIZED_TYPE_REF___IS_PARAMETERIZED = BASE_TYPE_REF_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Is Generic</em>' operation.
@@ -3301,7 +3202,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF___IS_GENERIC = BASE_TYPE_REF_OPERATION_COUNT + 4;
+	int PARAMETERIZED_TYPE_REF___IS_GENERIC = BASE_TYPE_REF_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Is Raw</em>' operation.
@@ -3310,16 +3211,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF___IS_RAW = BASE_TYPE_REF_OPERATION_COUNT + 5;
-
-	/**
-	 * The operation id for the '<em>Contains Unbound Type Variables</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES = BASE_TYPE_REF_OPERATION_COUNT + 6;
+	int PARAMETERIZED_TYPE_REF___IS_RAW = BASE_TYPE_REF_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
@@ -3328,7 +3220,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING = BASE_TYPE_REF_OPERATION_COUNT + 7;
+	int PARAMETERIZED_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING = BASE_TYPE_REF_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Is Def Site Structural Typing</em>' operation.
@@ -3337,7 +3229,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = BASE_TYPE_REF_OPERATION_COUNT + 8;
+	int PARAMETERIZED_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = BASE_TYPE_REF_OPERATION_COUNT + 6;
 
 	/**
 	 * The number of operations of the '<em>Parameterized Type Ref</em>' class.
@@ -3346,7 +3238,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_OPERATION_COUNT = BASE_TYPE_REF_OPERATION_COUNT + 9;
+	int PARAMETERIZED_TYPE_REF_OPERATION_COUNT = BASE_TYPE_REF_OPERATION_COUNT + 7;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.StructuralTypeRefImpl <em>Structural Type Ref</em>}' class.
@@ -3356,7 +3248,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getStructuralTypeRef()
 	 * @generated
 	 */
-	int STRUCTURAL_TYPE_REF = 12;
+	int STRUCTURAL_TYPE_REF = 13;
 
 	/**
 	 * The feature id for the '<em><b>Ast Structural Members</b></em>' containment reference list.
@@ -3456,7 +3348,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getParameterizedTypeRefStructural()
 	 * @generated
 	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL = 13;
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL = 14;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -3603,6 +3495,15 @@ public interface TypeRefsPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_DECLARED_TYPE = PARAMETERIZED_TYPE_REF___GET_DECLARED_TYPE;
 
 	/**
+	 * The operation id for the '<em>Is Type Ref</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL___IS_TYPE_REF = PARAMETERIZED_TYPE_REF___IS_TYPE_REF;
+
+	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3729,15 +3630,6 @@ public interface TypeRefsPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_MODIFIERS_AS_STRING = PARAMETERIZED_TYPE_REF___GET_MODIFIERS_AS_STRING;
 
 	/**
-	 * The operation id for the '<em>Contains Wildcards</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL___CONTAINS_WILDCARDS = PARAMETERIZED_TYPE_REF___CONTAINS_WILDCARDS;
-
-	/**
 	 * The operation id for the '<em>Is Parameterized</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3763,15 +3655,6 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL___IS_RAW = PARAMETERIZED_TYPE_REF___IS_RAW;
-
-	/**
-	 * The operation id for the '<em>Contains Unbound Type Variables</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL___CONTAINS_UNBOUND_TYPE_VARIABLES = PARAMETERIZED_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES;
 
 	/**
 	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
@@ -3853,7 +3736,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getExistentialTypeRef()
 	 * @generated
 	 */
-	int EXISTENTIAL_TYPE_REF = 14;
+	int EXISTENTIAL_TYPE_REF = 15;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -3901,24 +3784,6 @@ public interface TypeRefsPackage extends EPackage {
 	int EXISTENTIAL_TYPE_REF_FEATURE_COUNT = TYPE_REF_FEATURE_COUNT + 3;
 
 	/**
-	 * The operation id for the '<em>Contains Wildcards</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EXISTENTIAL_TYPE_REF___CONTAINS_WILDCARDS = TYPE_REF___CONTAINS_WILDCARDS;
-
-	/**
-	 * The operation id for the '<em>Contains Unbound Type Variables</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EXISTENTIAL_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES = TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES;
-
-	/**
 	 * The operation id for the '<em>Get Declared Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3935,6 +3800,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int EXISTENTIAL_TYPE_REF___GET_MODIFIERS_AS_STRING = TYPE_REF___GET_MODIFIERS_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Is Type Ref</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXISTENTIAL_TYPE_REF___IS_TYPE_REF = TYPE_REF___IS_TYPE_REF;
 
 	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
@@ -4142,7 +4016,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getUnknownTypeRef()
 	 * @generated
 	 */
-	int UNKNOWN_TYPE_REF = 15;
+	int UNKNOWN_TYPE_REF = 16;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -4163,24 +4037,6 @@ public interface TypeRefsPackage extends EPackage {
 	int UNKNOWN_TYPE_REF_FEATURE_COUNT = TYPE_REF_FEATURE_COUNT + 0;
 
 	/**
-	 * The operation id for the '<em>Contains Wildcards</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int UNKNOWN_TYPE_REF___CONTAINS_WILDCARDS = TYPE_REF___CONTAINS_WILDCARDS;
-
-	/**
-	 * The operation id for the '<em>Contains Unbound Type Variables</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int UNKNOWN_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES = TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES;
-
-	/**
 	 * The operation id for the '<em>Get Declared Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4197,6 +4053,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int UNKNOWN_TYPE_REF___GET_MODIFIERS_AS_STRING = TYPE_REF___GET_MODIFIERS_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Is Type Ref</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNKNOWN_TYPE_REF___IS_TYPE_REF = TYPE_REF___IS_TYPE_REF;
 
 	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
@@ -4404,7 +4269,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getTypeTypeRef()
 	 * @generated
 	 */
-	int TYPE_TYPE_REF = 16;
+	int TYPE_TYPE_REF = 17;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -4452,24 +4317,6 @@ public interface TypeRefsPackage extends EPackage {
 	int TYPE_TYPE_REF_FEATURE_COUNT = BASE_TYPE_REF_FEATURE_COUNT + 2;
 
 	/**
-	 * The operation id for the '<em>Contains Wildcards</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TYPE_TYPE_REF___CONTAINS_WILDCARDS = BASE_TYPE_REF___CONTAINS_WILDCARDS;
-
-	/**
-	 * The operation id for the '<em>Contains Unbound Type Variables</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TYPE_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES = BASE_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES;
-
-	/**
 	 * The operation id for the '<em>Get Declared Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4477,6 +4324,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int TYPE_TYPE_REF___GET_DECLARED_TYPE = BASE_TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
+	 * The operation id for the '<em>Is Type Ref</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_TYPE_REF___IS_TYPE_REF = BASE_TYPE_REF___IS_TYPE_REF;
 
 	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
@@ -4732,22 +4588,13 @@ public interface TypeRefsPackage extends EPackage {
 	int WILDCARD_FEATURE_COUNT = TYPE_ARGUMENT_FEATURE_COUNT + 3;
 
 	/**
-	 * The operation id for the '<em>Contains Wildcards</em>' operation.
+	 * The operation id for the '<em>Is Type Ref</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int WILDCARD___CONTAINS_WILDCARDS = TYPE_ARGUMENT___CONTAINS_WILDCARDS;
-
-	/**
-	 * The operation id for the '<em>Contains Unbound Type Variables</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int WILDCARD___CONTAINS_UNBOUND_TYPE_VARIABLES = TYPE_ARGUMENT___CONTAINS_UNBOUND_TYPE_VARIABLES;
+	int WILDCARD___IS_TYPE_REF = TYPE_ARGUMENT___IS_TYPE_REF;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type</em>' operation.
@@ -4823,24 +4670,6 @@ public interface TypeRefsPackage extends EPackage {
 	int FUNCTION_TYPE_EXPR_OR_REF_FEATURE_COUNT = STATIC_BASE_TYPE_REF_FEATURE_COUNT + 0;
 
 	/**
-	 * The operation id for the '<em>Contains Wildcards</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FUNCTION_TYPE_EXPR_OR_REF___CONTAINS_WILDCARDS = STATIC_BASE_TYPE_REF___CONTAINS_WILDCARDS;
-
-	/**
-	 * The operation id for the '<em>Contains Unbound Type Variables</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FUNCTION_TYPE_EXPR_OR_REF___CONTAINS_UNBOUND_TYPE_VARIABLES = STATIC_BASE_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES;
-
-	/**
 	 * The operation id for the '<em>Get Declared Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4857,6 +4686,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int FUNCTION_TYPE_EXPR_OR_REF___GET_MODIFIERS_AS_STRING = STATIC_BASE_TYPE_REF___GET_MODIFIERS_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Is Type Ref</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_EXPR_OR_REF___IS_TYPE_REF = STATIC_BASE_TYPE_REF___IS_TYPE_REF;
 
 	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
@@ -5247,6 +5085,15 @@ public interface TypeRefsPackage extends EPackage {
 	int FUNCTION_TYPE_REF___GET_DECLARED_TYPE = PARAMETERIZED_TYPE_REF___GET_DECLARED_TYPE;
 
 	/**
+	 * The operation id for the '<em>Is Type Ref</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_REF___IS_TYPE_REF = PARAMETERIZED_TYPE_REF___IS_TYPE_REF;
+
+	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5391,15 +5238,6 @@ public interface TypeRefsPackage extends EPackage {
 	int FUNCTION_TYPE_REF___GET_TYPING_STRATEGY = PARAMETERIZED_TYPE_REF___GET_TYPING_STRATEGY;
 
 	/**
-	 * The operation id for the '<em>Contains Wildcards</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FUNCTION_TYPE_REF___CONTAINS_WILDCARDS = PARAMETERIZED_TYPE_REF___CONTAINS_WILDCARDS;
-
-	/**
 	 * The operation id for the '<em>Is Parameterized</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5407,15 +5245,6 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int FUNCTION_TYPE_REF___IS_PARAMETERIZED = PARAMETERIZED_TYPE_REF___IS_PARAMETERIZED;
-
-	/**
-	 * The operation id for the '<em>Contains Unbound Type Variables</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FUNCTION_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES = PARAMETERIZED_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES;
 
 	/**
 	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
@@ -5653,24 +5482,6 @@ public interface TypeRefsPackage extends EPackage {
 	int FUNCTION_TYPE_EXPRESSION_FEATURE_COUNT = FUNCTION_TYPE_EXPR_OR_REF_FEATURE_COUNT + 9;
 
 	/**
-	 * The operation id for the '<em>Contains Wildcards</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FUNCTION_TYPE_EXPRESSION___CONTAINS_WILDCARDS = FUNCTION_TYPE_EXPR_OR_REF___CONTAINS_WILDCARDS;
-
-	/**
-	 * The operation id for the '<em>Contains Unbound Type Variables</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FUNCTION_TYPE_EXPRESSION___CONTAINS_UNBOUND_TYPE_VARIABLES = FUNCTION_TYPE_EXPR_OR_REF___CONTAINS_UNBOUND_TYPE_VARIABLES;
-
-	/**
 	 * The operation id for the '<em>Get Declared Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5687,6 +5498,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int FUNCTION_TYPE_EXPRESSION___GET_MODIFIERS_AS_STRING = FUNCTION_TYPE_EXPR_OR_REF___GET_MODIFIERS_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Is Type Ref</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_EXPRESSION___IS_TYPE_REF = FUNCTION_TYPE_EXPR_OR_REF___IS_TYPE_REF;
 
 	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
@@ -5987,24 +5807,6 @@ public interface TypeRefsPackage extends EPackage {
 	int DEFERRED_TYPE_REF_FEATURE_COUNT = TYPE_REF_FEATURE_COUNT + 0;
 
 	/**
-	 * The operation id for the '<em>Contains Wildcards</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DEFERRED_TYPE_REF___CONTAINS_WILDCARDS = TYPE_REF___CONTAINS_WILDCARDS;
-
-	/**
-	 * The operation id for the '<em>Contains Unbound Type Variables</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DEFERRED_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES = TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES;
-
-	/**
 	 * The operation id for the '<em>Get Declared Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6021,6 +5823,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int DEFERRED_TYPE_REF___GET_MODIFIERS_AS_STRING = TYPE_REF___GET_MODIFIERS_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Is Type Ref</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DEFERRED_TYPE_REF___IS_TYPE_REF = TYPE_REF___IS_TYPE_REF;
 
 	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
@@ -6449,6 +6260,15 @@ public interface TypeRefsPackage extends EPackage {
 	int VERSIONED_PARAMETERIZED_TYPE_REF___GET_DECLARED_TYPE = PARAMETERIZED_TYPE_REF___GET_DECLARED_TYPE;
 
 	/**
+	 * The operation id for the '<em>Is Type Ref</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF___IS_TYPE_REF = PARAMETERIZED_TYPE_REF___IS_TYPE_REF;
+
+	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6584,15 +6404,6 @@ public interface TypeRefsPackage extends EPackage {
 	int VERSIONED_PARAMETERIZED_TYPE_REF___GET_TYPING_STRATEGY = PARAMETERIZED_TYPE_REF___GET_TYPING_STRATEGY;
 
 	/**
-	 * The operation id for the '<em>Contains Wildcards</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF___CONTAINS_WILDCARDS = PARAMETERIZED_TYPE_REF___CONTAINS_WILDCARDS;
-
-	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6627,15 +6438,6 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int VERSIONED_PARAMETERIZED_TYPE_REF___IS_RAW = PARAMETERIZED_TYPE_REF___IS_RAW;
-
-	/**
-	 * The operation id for the '<em>Contains Unbound Type Variables</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES = PARAMETERIZED_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES;
 
 	/**
 	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
@@ -6819,6 +6621,15 @@ public interface TypeRefsPackage extends EPackage {
 	int VERSIONED_FUNCTION_TYPE_REF___GET_DECLARED_TYPE = VERSIONED_PARAMETERIZED_TYPE_REF___GET_DECLARED_TYPE;
 
 	/**
+	 * The operation id for the '<em>Is Type Ref</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_FUNCTION_TYPE_REF___IS_TYPE_REF = VERSIONED_PARAMETERIZED_TYPE_REF___IS_TYPE_REF;
+
+	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6954,15 +6765,6 @@ public interface TypeRefsPackage extends EPackage {
 	int VERSIONED_FUNCTION_TYPE_REF___GET_TYPING_STRATEGY = VERSIONED_PARAMETERIZED_TYPE_REF___GET_TYPING_STRATEGY;
 
 	/**
-	 * The operation id for the '<em>Contains Wildcards</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_FUNCTION_TYPE_REF___CONTAINS_WILDCARDS = VERSIONED_PARAMETERIZED_TYPE_REF___CONTAINS_WILDCARDS;
-
-	/**
 	 * The operation id for the '<em>Is Parameterized</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6970,15 +6772,6 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int VERSIONED_FUNCTION_TYPE_REF___IS_PARAMETERIZED = VERSIONED_PARAMETERIZED_TYPE_REF___IS_PARAMETERIZED;
-
-	/**
-	 * The operation id for the '<em>Contains Unbound Type Variables</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_FUNCTION_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES = VERSIONED_PARAMETERIZED_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES;
 
 	/**
 	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
@@ -7297,6 +7090,15 @@ public interface TypeRefsPackage extends EPackage {
 	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_DECLARED_TYPE = VERSIONED_PARAMETERIZED_TYPE_REF___GET_DECLARED_TYPE;
 
 	/**
+	 * The operation id for the '<em>Is Type Ref</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___IS_TYPE_REF = VERSIONED_PARAMETERIZED_TYPE_REF___IS_TYPE_REF;
+
+	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -7414,15 +7216,6 @@ public interface TypeRefsPackage extends EPackage {
 	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_MODIFIERS_AS_STRING = VERSIONED_PARAMETERIZED_TYPE_REF___GET_MODIFIERS_AS_STRING;
 
 	/**
-	 * The operation id for the '<em>Contains Wildcards</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___CONTAINS_WILDCARDS = VERSIONED_PARAMETERIZED_TYPE_REF___CONTAINS_WILDCARDS;
-
-	/**
 	 * The operation id for the '<em>Is Parameterized</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -7448,15 +7241,6 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___IS_RAW = VERSIONED_PARAMETERIZED_TYPE_REF___IS_RAW;
-
-	/**
-	 * The operation id for the '<em>Contains Unbound Type Variables</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___CONTAINS_UNBOUND_TYPE_VARIABLES = VERSIONED_PARAMETERIZED_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES;
 
 	/**
 	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
@@ -7599,6 +7383,46 @@ public interface TypeRefsPackage extends EPackage {
 	EOperation getVersionable__GetVersion();
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.TypeArgument <em>Type Argument</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Type Argument</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeArgument
+	 * @generated
+	 */
+	EClass getTypeArgument();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeArgument#isTypeRef() <em>Is Type Ref</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Type Ref</em>' operation.
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeArgument#isTypeRef()
+	 * @generated
+	 */
+	EOperation getTypeArgument__IsTypeRef();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeArgument#getDeclaredType() <em>Get Declared Type</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Declared Type</em>' operation.
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeArgument#getDeclaredType()
+	 * @generated
+	 */
+	EOperation getTypeArgument__GetDeclaredType();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeArgument#getTypeRefAsString() <em>Get Type Ref As String</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Type Ref As String</em>' operation.
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeArgument#getTypeRefAsString()
+	 * @generated
+	 */
+	EOperation getTypeArgument__GetTypeRefAsString();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.TypeRef <em>Type Ref</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -7628,6 +7452,16 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getTypeRef__GetModifiersAsString();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeRef#isTypeRef() <em>Is Type Ref</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Type Ref</em>' operation.
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRef#isTypeRef()
+	 * @generated
+	 */
+	EOperation getTypeRef__IsTypeRef();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeRef#isFinalByType() <em>Is Final By Type</em>}' operation.
@@ -8313,16 +8147,6 @@ public interface TypeRefsPackage extends EPackage {
 	EOperation getParameterizedTypeRef__GetTypingStrategy();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#containsWildcards() <em>Contains Wildcards</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Contains Wildcards</em>' operation.
-	 * @see org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#containsWildcards()
-	 * @generated
-	 */
-	EOperation getParameterizedTypeRef__ContainsWildcards();
-
-	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getTypeRefAsString() <em>Get Type Ref As String</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -8361,16 +8185,6 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getParameterizedTypeRef__IsRaw();
-
-	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#containsUnboundTypeVariables() <em>Contains Unbound Type Variables</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Contains Unbound Type Variables</em>' operation.
-	 * @see org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#containsUnboundTypeVariables()
-	 * @generated
-	 */
-	EOperation getParameterizedTypeRef__ContainsUnboundTypeVariables();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isUseSiteStructuralTyping() <em>Is Use Site Structural Typing</em>}' operation.
@@ -8690,56 +8504,6 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getTypeTypeRef__GetTypeRefAsString();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.TypeArgument <em>Type Argument</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Type Argument</em>'.
-	 * @see org.eclipse.n4js.ts.typeRefs.TypeArgument
-	 * @generated
-	 */
-	EClass getTypeArgument();
-
-	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeArgument#getTypeRefAsString() <em>Get Type Ref As String</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Type Ref As String</em>' operation.
-	 * @see org.eclipse.n4js.ts.typeRefs.TypeArgument#getTypeRefAsString()
-	 * @generated
-	 */
-	EOperation getTypeArgument__GetTypeRefAsString();
-
-	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeArgument#containsWildcards() <em>Contains Wildcards</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Contains Wildcards</em>' operation.
-	 * @see org.eclipse.n4js.ts.typeRefs.TypeArgument#containsWildcards()
-	 * @generated
-	 */
-	EOperation getTypeArgument__ContainsWildcards();
-
-	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeArgument#containsUnboundTypeVariables() <em>Contains Unbound Type Variables</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Contains Unbound Type Variables</em>' operation.
-	 * @see org.eclipse.n4js.ts.typeRefs.TypeArgument#containsUnboundTypeVariables()
-	 * @generated
-	 */
-	EOperation getTypeArgument__ContainsUnboundTypeVariables();
-
-	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeArgument#getDeclaredType() <em>Get Declared Type</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Declared Type</em>' operation.
-	 * @see org.eclipse.n4js.ts.typeRefs.TypeArgument#getDeclaredType()
-	 * @generated
-	 */
-	EOperation getTypeArgument__GetDeclaredType();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.Wildcard <em>Wildcard</em>}'.
@@ -9329,6 +9093,40 @@ public interface TypeRefsPackage extends EPackage {
 		EOperation VERSIONABLE___GET_VERSION = eINSTANCE.getVersionable__GetVersion();
 
 		/**
+		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.impl.TypeArgumentImpl <em>Type Argument</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeArgumentImpl
+		 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getTypeArgument()
+		 * @generated
+		 */
+		EClass TYPE_ARGUMENT = eINSTANCE.getTypeArgument();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Type Ref</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TYPE_ARGUMENT___IS_TYPE_REF = eINSTANCE.getTypeArgument__IsTypeRef();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Declared Type</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TYPE_ARGUMENT___GET_DECLARED_TYPE = eINSTANCE.getTypeArgument__GetDeclaredType();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Type Ref As String</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING = eINSTANCE.getTypeArgument__GetTypeRefAsString();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.impl.TypeRefImpl <em>Type Ref</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -9353,6 +9151,14 @@ public interface TypeRefsPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation TYPE_REF___GET_MODIFIERS_AS_STRING = eINSTANCE.getTypeRef__GetModifiersAsString();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Type Ref</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TYPE_REF___IS_TYPE_REF = eINSTANCE.getTypeRef__IsTypeRef();
 
 		/**
 		 * The meta object literal for the '<em><b>Is Final By Type</b></em>' operation.
@@ -9911,14 +9717,6 @@ public interface TypeRefsPackage extends EPackage {
 		EOperation PARAMETERIZED_TYPE_REF___GET_TYPING_STRATEGY = eINSTANCE.getParameterizedTypeRef__GetTypingStrategy();
 
 		/**
-		 * The meta object literal for the '<em><b>Contains Wildcards</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation PARAMETERIZED_TYPE_REF___CONTAINS_WILDCARDS = eINSTANCE.getParameterizedTypeRef__ContainsWildcards();
-
-		/**
 		 * The meta object literal for the '<em><b>Get Type Ref As String</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -9949,14 +9747,6 @@ public interface TypeRefsPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation PARAMETERIZED_TYPE_REF___IS_RAW = eINSTANCE.getParameterizedTypeRef__IsRaw();
-
-		/**
-		 * The meta object literal for the '<em><b>Contains Unbound Type Variables</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation PARAMETERIZED_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES = eINSTANCE.getParameterizedTypeRef__ContainsUnboundTypeVariables();
 
 		/**
 		 * The meta object literal for the '<em><b>Is Use Site Structural Typing</b></em>' operation.
@@ -10215,48 +10005,6 @@ public interface TypeRefsPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation TYPE_TYPE_REF___GET_TYPE_REF_AS_STRING = eINSTANCE.getTypeTypeRef__GetTypeRefAsString();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.impl.TypeArgumentImpl <em>Type Argument</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeArgumentImpl
-		 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getTypeArgument()
-		 * @generated
-		 */
-		EClass TYPE_ARGUMENT = eINSTANCE.getTypeArgument();
-
-		/**
-		 * The meta object literal for the '<em><b>Get Type Ref As String</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING = eINSTANCE.getTypeArgument__GetTypeRefAsString();
-
-		/**
-		 * The meta object literal for the '<em><b>Contains Wildcards</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation TYPE_ARGUMENT___CONTAINS_WILDCARDS = eINSTANCE.getTypeArgument__ContainsWildcards();
-
-		/**
-		 * The meta object literal for the '<em><b>Contains Unbound Type Variables</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation TYPE_ARGUMENT___CONTAINS_UNBOUND_TYPE_VARIABLES = eINSTANCE.getTypeArgument__ContainsUnboundTypeVariables();
-
-		/**
-		 * The meta object literal for the '<em><b>Get Declared Type</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation TYPE_ARGUMENT___GET_DECLARED_TYPE = eINSTANCE.getTypeArgument__GetDeclaredType();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.impl.WildcardImpl <em>Wildcard</em>}' class.
