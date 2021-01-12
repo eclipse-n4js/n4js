@@ -38,6 +38,7 @@ import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.Type
+import org.eclipse.n4js.ts.types.TypeAlias
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.ts.utils.TypeCompareHelper
@@ -83,16 +84,28 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 		val declType = typeRef.declaredType;
 		if(typeRef instanceof ExistentialTypeRef) {
 			val wildcard = typeRef.wildcard;
-			val wildcardUB = ts.upperBound(G, wildcard);
-			addSubstitutions(G, wildcardUB);
+			if (wildcard !== null) {
+				val wildcardUB = ts.upperBound(G, wildcard);
+				addSubstitutions(G, wildcardUB);
+			}
 		}
 		else if(typeRef instanceof BoundThisTypeRef) {
-			addSubstitutions(G,typeRef.actualThisTypeRef);
+			val actualThisTypeRef = typeRef.actualThisTypeRef;
+			if (actualThisTypeRef !== null) {
+				addSubstitutions(G, actualThisTypeRef);
+			}
+		}
+		else if(declType instanceof TypeAlias) {
+			primAddSubstitutions(G, typeRef);
+			val actualTypeRef = declType.actualTypeRef;
+			if (actualTypeRef !== null) {
+				addSubstitutions(G, actualTypeRef);
+			}
 		}
 		else if(declType instanceof TypeVariable) {
 			val currBound = declType.declaredUpperBound;
-			if(currBound!==null) {
-				addSubstitutions(G,currBound);
+			if(currBound !== null) {
+				addSubstitutions(G, currBound);
 			}
 		}
 		else if(declType instanceof TClassifier) {
@@ -105,15 +118,15 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 	}
 	/**
 	 * Adds substitutions for an individual type reference (i.e. without taking
-	 * into account inheritance hierarchies).
+	 * into account inheritance hierarchies, bounds, aliases, etc.).
 	 */
 	private def void primAddSubstitutions(RuleEnvironment G, TypeRef typeRef) {
 		if (typeRef instanceof ParameterizedTypeRef) {
 			if (!typeRef.typeArgs.empty) {
-				val gen = typeRef.declaredType
-				if (gen instanceof GenericType) {
-					if (!(gen instanceof TFunction)) { // FIXME legacy behavior; is this correct???
-						val varIter = gen.typeVars.iterator
+				val declType = typeRef.declaredType
+				if (declType instanceof GenericType) {
+					if (!(declType instanceof TFunction)) { // FIXME legacy behavior; is this correct???
+						val varIter = declType.typeVars.iterator
 						for (typeArg : typeRef.typeArgs) {
 							if (varIter.hasNext) {
 								val typeVar = varIter.next;
