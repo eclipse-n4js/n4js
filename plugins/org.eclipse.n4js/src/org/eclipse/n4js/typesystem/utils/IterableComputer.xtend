@@ -84,8 +84,9 @@ class IterableComputer extends TypeSystemHelperStrategy {
 		return result;
 	}
 
-	private def Iterable<? extends TypeRef> extractIterableElementTypes(RuleEnvironment G, TypeRef typeRef, Type iterableType, boolean includeIterableN) {
+	private def Iterable<? extends TypeRef> extractIterableElementTypes(RuleEnvironment G, TypeRef typeRefRaw, Type iterableType, boolean includeIterableN) {
 		var Iterable<? extends TypeRef> result = null;
+		val typeRef = ts.upperBoundWithReopenAndResolve(G, typeRefRaw, true, true);
 		val declType = typeRef?.declaredType;
 		if(declType===iterableType || (includeIterableN && G.isIterableN(declType))) {
 			// simple: typeRef directly points to Iterable<> or an IterableN<>
