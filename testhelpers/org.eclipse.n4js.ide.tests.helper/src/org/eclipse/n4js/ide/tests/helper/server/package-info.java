@@ -90,8 +90,8 @@ abstract class Documentation {
 	 * </pre>
 	 *
 	 * It is necessary to select one of the project as the selected project. This is done by appending the
-	 * {@link org.eclipse.n4js.ide.tests.helper.server.TestWorkspaceManager#MODULE_SELECTOR MODULE_SELECTOR} at the end of a
-	 * project name. The result is, that the implicit test module is added to the selected project. Similar to the
+	 * {@link org.eclipse.n4js.ide.tests.helper.server.TestWorkspaceManager#MODULE_SELECTOR MODULE_SELECTOR} at the end
+	 * of a project name. The result is, that the implicit test module is added to the selected project. Similar to the
 	 * default test project, the implicit module will be the selected module and be opened during execution of the test.
 	 */
 	static int DEFAULT_TEST_WORKSPACE;
@@ -111,8 +111,8 @@ abstract class Documentation {
 
 	/**
 	 * {@code package.json} files are created automatically. In case this should be overridden by a custom file, use
-	 * {@link org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest#PACKAGE_JSON PACKAGE_JSON} as a module name and define
-	 * its contents.
+	 * {@link org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest#PACKAGE_JSON PACKAGE_JSON} as a module name and
+	 * define its contents.
 	 *
 	 * <p>
 	 * <b>Simple example</b>
@@ -151,9 +151,9 @@ abstract class Documentation {
 
 	/**
 	 * Instead of a module name, also the reserved string
-	 * {@link org.eclipse.n4js.ide.tests.helper.server.TestWorkspaceManager#CFG_DEPENDENCIES CFG_DEPENDENCIES} can be given. As
-	 * the contents of this entry, a comma separated list of project names is expected. These dependencies will be added
-	 * to the current project.
+	 * {@link org.eclipse.n4js.ide.tests.helper.server.TestWorkspaceManager#CFG_DEPENDENCIES CFG_DEPENDENCIES} can be
+	 * given. As the contents of this entry, a comma separated list of project names is expected. These dependencies
+	 * will be added to the current project.
 	 * <p>
 	 * <b>Simple example</b>
 	 *
@@ -176,9 +176,10 @@ abstract class Documentation {
 
 	/**
 	 * Instead of a module name, also the reserved string
-	 * {@link org.eclipse.n4js.ide.tests.helper.server.TestWorkspaceManager#CFG_MAIN_MODULE CFG_MAIN_MODULE} can be given. This
-	 * will set the package.json property {@link org.eclipse.n4js.packagejson.PackageJsonProperties#MAIN_MODULE
-	 * "mainModule"} to the value given as argument.
+	 * {@link org.eclipse.n4js.ide.tests.helper.server.TestWorkspaceManager#CFG_MAIN_MODULE CFG_MAIN_MODULE} can be
+	 * given. This will set the package.json property
+	 * {@link org.eclipse.n4js.packagejson.PackageJsonProperties#MAIN_MODULE "mainModule"} to the value given as
+	 * argument.
 	 * <p>
 	 * <b>Simple example</b>
 	 *
@@ -219,16 +220,16 @@ abstract class Documentation {
 	 * <p>
 	 * The modules inside node_module projects are defined using two registered strings.
 	 * {@link org.eclipse.n4js.ide.tests.helper.server.TestWorkspaceManager#CFG_NODE_MODULES CFG_NODE_MODULES} and
-	 * {@link org.eclipse.n4js.ide.tests.helper.server.TestWorkspaceManager#CFG_SRC CFG_SRC} separated the name of the project
-	 * and one of its modules. It is possible to define several modules of a single node_modules projects.
+	 * {@link org.eclipse.n4js.ide.tests.helper.server.TestWorkspaceManager#CFG_SRC CFG_SRC} separated the name of the
+	 * project and one of its modules. It is possible to define several modules of a single node_modules projects.
 	 */
 	static int PROJECT_NODE_MODULES;
 
 	/**
 	 * {@code node_modules} folders of a workspace are located in the base directory of the yarn workspace project. To
 	 * define projects at this location, use the registered string
-	 * {@link org.eclipse.n4js.ide.tests.helper.server.TestWorkspaceManager#CFG_NODE_MODULES CFG_NODE_MODULES} followed by a
-	 * project name.
+	 * {@link org.eclipse.n4js.ide.tests.helper.server.TestWorkspaceManager#CFG_NODE_MODULES CFG_NODE_MODULES} followed
+	 * by a project name.
 	 * <p>
 	 * <b>Simple example for default project</b>
 	 *
@@ -279,4 +280,27 @@ abstract class Documentation {
 	 * node_modules folder instead of the workspace's node_modules folder.
 	 */
 	static int WORKSPACE_NODE_MODULES;
+
+	/**
+	 * When defining a yarn workspace structure, it can be necessary to use multiple workspaces folders which are
+	 * usually defined by with property {@code workspaces} in the package.json of the yarn workspace project. The
+	 * default folder name 'packages' is used when no explicit definition is given. To explicitly define the workspaces
+	 * folder name of a project, prepend the string {@code #CFG_WORKSPACES_FOLDER:} to the folder name followed by a '/'
+	 * and the project name. See in the example below how the project 'P1' is put in the workspaces folder called
+	 * 'my_packages'.
+	 * <p>
+	 * <b>Example to explicitly define the workspaces folder name 'my_packages'</b>
+	 *
+	 * <pre>
+	 * override final List<Pair<String, String>> getDefaultTestModules() {
+	 * 	return #[
+	 * 		"#CFG_WORKSPACES_FOLDER:my_packages/P1"  -> #[
+	 * 			"MA"  -> '''
+	 * 					export class A1 {}
+	 * 				'''
+	 * 		];
+	 * }
+	 * </pre>
+	 */
+	static int CFG_WORKSPACES_FOLDER;
 }
