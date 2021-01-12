@@ -109,7 +109,10 @@ public class ImportsFactory {
 	}
 
 	@SuppressWarnings("null")
-	/** If project is {@code null} then the we will use {@link #SIMPLE_IMPORT} which is not using project data. */
+	/**
+	 * If project is {@code null} then the we will use {@link ModuleSpecifierForm#PLAIN} which is not using project
+	 * data.
+	 */
 	private ImportDeclaration createImportDeclaration(QualifiedName qn, String usedName, IN4JSProject fromProject,
 			Adapter nodelessMarker,
 			BiFunction<String, ImportDeclaration, ImportDeclaration> specifierFactory) {
