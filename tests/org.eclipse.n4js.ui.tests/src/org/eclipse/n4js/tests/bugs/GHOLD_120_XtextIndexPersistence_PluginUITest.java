@@ -13,11 +13,15 @@ package org.eclipse.n4js.tests.bugs;
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Iterables.size;
 import static com.google.common.collect.Lists.newArrayList;
+import static org.eclipse.n4js.N4JSGlobals.MANGELHAFT;
+import static org.eclipse.n4js.N4JSGlobals.MANGELHAFT_ASSERT;
+import static org.eclipse.n4js.N4JSGlobals.N4JS_RUNTIME;
 import static org.eclipse.n4js.resource.UserDataMapper.USER_DATA_KEY_SERIALIZED_SCRIPT;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,6 +32,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.ui.building.ResourceDescriptionWithoutModuleUserData;
 import org.eclipse.n4js.ui.external.ExternalProjectMappings;
@@ -43,6 +48,7 @@ import org.junit.Test;
 import com.google.common.base.Joiner;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 /**
@@ -98,7 +104,9 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 
 	@Override
 	protected ProjectImporter getProjectImporter() {
-		return new ProjectImporter(new File(new File("probands/" + PROJECT_NAME + "/").getAbsolutePath()));
+		File absoluteFile = new File("probands/" + PROJECT_NAME + "/").getAbsoluteFile();
+		ArrayList<N4JSProjectName> dependencies = Lists.newArrayList(N4JS_RUNTIME, MANGELHAFT, MANGELHAFT_ASSERT);
+		return new ProjectImporter(absoluteFile, dependencies);
 	}
 
 	/***/
@@ -108,7 +116,6 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 		final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(PROJECT_NAME);
 		assertTrue("Test project is not accessible.", project.isAccessible());
 
-		libraryManager.runNpmYarnInstallOnAllProjects(new NullProgressMonitor());
 		syncExtAndBuild();
 		// Since we do not know whether the built-in initialization or the test project import happened earlier...
 		// Make sure both test module and project description file get into the index.

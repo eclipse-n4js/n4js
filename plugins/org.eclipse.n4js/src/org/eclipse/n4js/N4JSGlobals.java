@@ -138,6 +138,11 @@ public final class N4JSGlobals {
 	public static final N4JSProjectName N4JS_RUNTIME = new N4JSProjectName("n4js-runtime");
 
 	/**
+	 * Runtime for node.js
+	 */
+	public static final N4JSProjectName N4JS_RUNTIME_NODE = new N4JSProjectName("n4js-runtime-node");
+
+	/**
 	 * Project types for which a dependency to the {@link #N4JS_RUNTIME n4js-runtime} is mandatory.
 	 */
 	public static final Set<ProjectType> PROJECT_TYPES_REQUIRING_N4JS_RUNTIME = ImmutableSet.of(
