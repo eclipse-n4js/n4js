@@ -109,7 +109,6 @@ public class ImportsFactory {
 		return createImportDeclaration(qn, name, project, nodelessMarker, this::addNamespaceImport);
 	}
 
-	@SuppressWarnings("null")
 	/**
 	 * If project is {@code null} then the we will use {@link ModuleSpecifierForm#PLAIN} which is not using project
 	 * data.
@@ -121,12 +120,14 @@ public class ImportsFactory {
 		boolean considerProjectName = fromProject != null;
 		switch (ImportSpecifierUtil.computeImportType(qn, considerProjectName, fromProject)) {
 		case PROJECT:
+			assert (fromProject != null);
 			return specifierFactory.apply(usedName,
 					createImportDeclaration(nodelessMarker, fromProject.getProjectName().getRawName()));
 		case PLAIN:
 			return specifierFactory.apply(usedName,
 					createImportDeclaration(nodelessMarker, qualifiedNameConverter.toString(qn)));
 		case COMPLETE:
+			assert (fromProject != null);
 			return specifierFactory.apply(usedName, createImportDeclaration(nodelessMarker,
 					fromProject.getProjectName() + N4JSQualifiedNameConverter.DELIMITER +
 							qualifiedNameConverter.toString(qn)));
