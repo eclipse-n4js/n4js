@@ -558,17 +558,4 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		}
 		return nextTypeRef;
 	}
-
-	/**
-	 * Given a {@link TypeRef} to an {@code Iterable<T>}, this method returns T, if existent.
-	 */
-	def TypeRef getIterableTypeArg(RuleEnvironment G, TypeRef iterableTypeRef) {
-		var TypeRef typeRef = null;
-		if (iterableTypeRef.typeArgs.length === 1) {
-			val nextTypeArg = iterableTypeRef.typeArgs.get(0);
-			if (nextTypeArg !== null)
-				typeRef = ts.upperBound(G, nextTypeArg); // take upper bound to get rid of Wildcard, etc.
-		}
-		return typeRef;
-	}
 }

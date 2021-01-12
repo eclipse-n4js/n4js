@@ -496,22 +496,21 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 		if (!funDef.generator) {
 			return;
 		}
-		val returnTypeRef = funDef.returnTypeRef;
-		if (returnTypeRef === null) {
+		val returnTypeRefRaw = funDef.returnTypeRef;
+		if (returnTypeRefRaw === null) {
 			return;
 		}
-		val returnType = returnTypeRef.declaredType;
-		if (returnType === null || returnType.eIsProxy) {
-			return; // a type reference other than ParameterizedTypeRef or unresolved
-		}
 		val G = funDef.newRuleEnvironment;
+		val returnTypeRef = ts.upperBoundWithReopenAndResolve(G, returnTypeRefRaw, true, true);
 		val async = funDef.async;
-		if (async && returnType === G.generatorType) {
-			addIssue(getMessageForFUN_GENERATOR_RETURN_TYPE_MISMATCH(returnType.name, "synchronous", G.asyncGeneratorType.name),
-				returnTypeRef, TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE, FUN_GENERATOR_RETURN_TYPE_MISMATCH);
-		} else if (!async && returnType === G.asyncGeneratorType) {
-			addIssue(getMessageForFUN_GENERATOR_RETURN_TYPE_MISMATCH(returnType.name, "asynchronous", G.generatorType.name),
-				returnTypeRef, TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE, FUN_GENERATOR_RETURN_TYPE_MISMATCH);
+		val isGeneratorType = TypeUtils.isGenerator(returnTypeRef, G.builtInTypeScope);
+		val isAsyncGeneratorType = TypeUtils.isAsyncGenerator(returnTypeRef, G.builtInTypeScope);
+		if (async && isGeneratorType) {
+			addIssue(getMessageForFUN_GENERATOR_RETURN_TYPE_MISMATCH(G.generatorType.name, "synchronous", G.asyncGeneratorType.name),
+				returnTypeRefRaw, TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE, FUN_GENERATOR_RETURN_TYPE_MISMATCH);
+		} else if (!async && isAsyncGeneratorType) {
+			addIssue(getMessageForFUN_GENERATOR_RETURN_TYPE_MISMATCH(G.asyncGeneratorType.name, "asynchronous", G.generatorType.name),
+				returnTypeRefRaw, TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE, FUN_GENERATOR_RETURN_TYPE_MISMATCH);
 		}
 	}
 

@@ -112,11 +112,12 @@ package abstract class AbstractProcessor {
 			if(tFunction instanceof TFunction) {
 				val innerReturnTypeRef = tFunction.returnTypeRef;
 				if (innerReturnTypeRef !== null && !(innerReturnTypeRef instanceof DeferredTypeRef)) {
+					val innerReturnTypeRefResolved = ts.upperBoundWithReopenAndResolve(G, innerReturnTypeRef, true, true);
 					val scope = G.builtInTypeScope;
 					val needsRewrite =
-						(isAsync && !isGenerator && !TypeUtils.isPromise(innerReturnTypeRef, scope)) ||
-						(!isAsync && isGenerator && !TypeUtils.isGenerator(innerReturnTypeRef, scope)) ||
-						(isAsync && isGenerator && !TypeUtils.isAsyncGenerator(innerReturnTypeRef, scope));
+						(isAsync && !isGenerator && !TypeUtils.isPromise(innerReturnTypeRefResolved, scope)) ||
+						(!isAsync && isGenerator && !TypeUtils.isGenerator(innerReturnTypeRefResolved, scope)) ||
+						(isAsync && isGenerator && !TypeUtils.isAsyncGenerator(innerReturnTypeRefResolved, scope));
 					if (needsRewrite) {
 						val outerReturnTypeRef = if (!isGenerator) {
 							TypeUtils.createPromiseTypeRef(scope, innerReturnTypeRef, null);
