@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.utils.Strings;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.workspace.ISourceFolder;
 
@@ -41,9 +40,6 @@ public class ConfigSnapshotFactory {
 
 	/** Creates an instance of {@link WorkspaceConfigSnapshot} */
 	public WorkspaceConfigSnapshot createWorkspaceConfigSnapshot(XIWorkspaceConfig workspaceConfig) {
-
-		System.out.println("projects::: " + Strings.join(", ", p -> p.getName(), workspaceConfig.getProjects()));
-
 		List<? extends XIProjectConfig> projects = new ArrayList<>(workspaceConfig.getProjects());
 		List<ProjectConfigSnapshot> projectSnapshots = Lists.transform(projects, this::createProjectConfigSnapshot);
 
