@@ -129,7 +129,7 @@ class DestructureHelper {
 		if(rootNode.defaultExpr.eContainer instanceof ForStatement) {
 			// valueTypeRef is currently the type of 'expr' and thus something like Iterable<T>
 			// -> we are interested in the T
-			valueTypeRef = tsh.extractIterableElementTypeUB(G, valueTypeRef);
+			valueTypeRef = tsh.extractIterableElementType(G, valueTypeRef, false);
 		}
 		// now, valueTypeRef is the type of the root value to be destructured by rootNode.nestedNodes (or null if invalid)
 		if(valueTypeRef!==null) {
@@ -148,7 +148,7 @@ class DestructureHelper {
 		// depending on whether we are in an array or object destructuring (sub-)pattern
 		if(nodes.arePositional) {
 			// positional
-			val elementTypeRefs = tsh.extractIterableElementTypesUBs(G,valueTypeRef).toList;
+			val elementTypeRefs = tsh.extractIterableElementTypes(G,valueTypeRef);
 			if(!elementTypeRefs.empty) {
 				val maxIdx = elementTypeRefs.size-1;
 				for(var idx=0;idx<nodes.size;idx++) {

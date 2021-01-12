@@ -10,13 +10,14 @@
  */
 package org.eclipse.n4js.typesystem.utils
 
+import com.google.common.collect.Lists
 import com.google.inject.Inject
+import java.util.List
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.ts.conversions.ComputedPropertyNameValueConverter
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
-import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression
 import org.eclipse.n4js.ts.types.ContainerType
@@ -29,6 +30,7 @@ import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.ContainerTypesHelper
 
+import static extension org.eclipse.n4js.ts.utils.TypeUtils.convertTypeArgsToRefs
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
@@ -41,40 +43,26 @@ class IterableComputer extends TypeSystemHelperStrategy {
 	@Inject private ContainerTypesHelper containerTypesHelper;
 
 	/**
-	 * Same as {@link #extractIterableElementTypes(RuleEnvironment,TypeRef)}, but returns the upper bounds.
-	 */
-	public def Iterable<TypeRef> extractIterableElementTypesUBs(RuleEnvironment G, TypeRef typeRef) {
-		return extractIterableElementTypes(G,typeRef).map[ts.upperBound(G,it)];
-	}
-
-	/**
 	 * Given a type that is or (directly or indirectly) implements one of the Iterable or IterableN built-in types,
 	 * this method will return the type of the first N elements returned by the Iterable's iterator. The last returned
 	 * type will be the type of all remaining elements (if any).
-	 *
+	 * <p>
 	 * Never returns <code>null</code> but may return an empty result if 'typeRef' does not implement any of the
 	 * Iterable or IterableN interfaces. Usually never returns a result longer than {@link BuiltInTypeScope#ITERABLE_N__MAX_LEN},
 	 * but if there are invalid type references with too many arguments, this might happen.
 	 */
-	public def Iterable<? extends TypeRef> extractIterableElementTypes(RuleEnvironment G, TypeRef typeRef) {
-		return extractIterableElementTypes(G, typeRef, G.iterableType, true);
-	}
-
-	/**
-	 * Same as {@link #extractIterableElementType(RuleEnvironment,TypeRef)}, but returns the upper bound.
-	 */
-	public def TypeRef extractIterableElementTypeUB(RuleEnvironment G, TypeRef typeRef) {
-		return extractIterableElementTypes(G, typeRef, G.iterableType, false).map[ts.upperBound(G,it)].head;
+	public def List<TypeRef> extractIterableElementTypes(RuleEnvironment G, TypeRef typeRef) {
+		return Lists.newArrayList(extractIterableElementTypes(G, typeRef, G.iterableType, true));
 	}
 
 	/**
 	 * Given a type that is or (directly or indirectly) implements the Iterable built-in types, this method will
 	 * return the type of the elements returned by the Iterable's iterator.
-	 *
+	 * <p>
 	 * Returns <code>null</code> if 'typeRef' does not implement Iterable.
 	 */
-	public def TypeArgument extractIterableElementType(RuleEnvironment G, TypeRef typeRef, boolean includeAsyncIterable) {
-		var result = null as TypeArgument;
+	public def TypeRef extractIterableElementType(RuleEnvironment G, TypeRef typeRef, boolean includeAsyncIterable) {
+		var result = null as TypeRef;
 		if (includeAsyncIterable) {
 			result = extractIterableElementTypes(G, typeRef, G.asyncIterableType, false).head;
 		}
@@ -90,7 +78,7 @@ class IterableComputer extends TypeSystemHelperStrategy {
 		val declType = typeRef?.declaredType;
 		if(declType===iterableType || (includeIterableN && G.isIterableN(declType))) {
 			// simple: typeRef directly points to Iterable<> or an IterableN<>
-			result = typeRef.typeArgs.toUpperBounds(G);
+			result = typeRef.typeArgs.convertTypeArgsToRefs;
 		} else if(declType instanceof PrimitiveType) {
 			// note: the 'elementType' property we read in the next line is also used with instances of TObjectPrototype
 			// (e.g. upper-case 'String'), but we need not and should not handle those within this block, because those
@@ -127,7 +115,7 @@ class IterableComputer extends TypeSystemHelperStrategy {
 					// (but only required if including the IterableN)
 					val isContainedInIterable = G.isIterableN(superTypeRef.eContainer);
 					if(!(includeIterableN && isContainedInIterable)) {
-						results.add(superTypeRef.typeArgs.toUpperBounds(G));
+						results.add(superTypeRef.typeArgs.convertTypeArgsToRefs);
 					}
 				}
 			}
@@ -152,10 +140,10 @@ class IterableComputer extends TypeSystemHelperStrategy {
 					};
 					val m = containerTypesHelper.fromContext(res).findMember(declType,memberName,false,false);
 					if(m instanceof TMethod) {
-						result = m.returnTypeRef?.typeArgs.toUpperBounds(G); // no problem if we set 'result' to null (it's the default anyway)
+						result = m.returnTypeRef?.typeArgs.convertTypeArgsToRefs; // no problem if we set 'result' to null (it's the default anyway)
 					}
 					else if(m instanceof TGetter) {
-						result = m.declaredTypeRef?.typeArgs.toUpperBounds(G); // no problem if we set 'result' to null (it's the default anyway)
+						result = m.declaredTypeRef?.typeArgs.convertTypeArgsToRefs; // no problem if we set 'result' to null (it's the default anyway)
 					}
 				}
 				else {
@@ -172,10 +160,6 @@ class IterableComputer extends TypeSystemHelperStrategy {
 		val resultSubst = result.map[ts.substTypeVariables(G2,it)]
 				.filter(TypeRef); // note the invariant of judgment 'substTypeVariables': if you put TypeRefs in, you'll get TypeRefs back
 		return resultSubst;
-	}
-
-	private def Iterable<TypeRef> toUpperBounds(Iterable<TypeArgument> typeArgs, RuleEnvironment G) {
-		typeArgs.map[ts.upperBound(G,it)]
 	}
 
 	private def Iterable<? extends TypeRef> mergeListsOfTypeRefs(RuleEnvironment G, Class<? extends ComposedTypeRef> type, Iterable<? extends TypeRef>... iterablesToMerge) {

@@ -362,7 +362,7 @@ import com.google.inject.Inject;
 					G2.put(guardKey, Boolean.TRUE);
 					// compute the value type at this location in the destructuring pattern
 					final TypeRef raw = destructureHelper.getTypeOfVariableDeclarationInDestructuringPattern(G2, vdecl);
-					T = raw != null ? raw : anyTypeRef(G);
+					T = typeSystemHelper.sanitizeTypeOfVariableFieldPropertyParameter(G, raw);
 				} else {
 					T = anyTypeRef(G);
 				}

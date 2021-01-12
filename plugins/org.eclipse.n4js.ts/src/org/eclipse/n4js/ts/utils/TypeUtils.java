@@ -89,6 +89,7 @@ import org.eclipse.n4js.ts.types.UndefinedType;
 import org.eclipse.n4js.ts.types.VoidType;
 import org.eclipse.n4js.utils.RecursionGuard;
 import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.collect.Iterables;
 
@@ -372,6 +373,36 @@ public class TypeUtils {
 		etr.setId(UUID.randomUUID());
 		etr.setWildcard(wildcard);
 		return etr;
+	}
+
+	/**
+	 * If the given type argument is not a {@link TypeRef}, an equivalent {@code TypeRef} is created and returned;
+	 * otherwise, the given {@code TypeRef} is returned unchanged.
+	 * <p>
+	 * BACKGROUND: this is intended for cases when the only motivation for changing a type is that a {@link TypeRef} is
+	 * required instead of a {@link TypeArgument} (e.g. for passing it to a utility method that only accepts
+	 * {@link TypeRef}s). For a long time, we've been using {@code N4JSTypeSystem#upperBound()} for this purpose, but
+	 * <ul>
+	 * <li>taking the upper bound may lead to other, undesired/unnecessary changes and a loss of information,
+	 * <li>taking the upper bound is an operation with important semantic implications and must be done in just the
+	 * right places during type checking, so also taking upper bounds only for technical reasons to work around
+	 * intricacies in the structure of our <code>TypeRefs.xcore</code> data model would be confusing.
+	 * </ul>
+	 * TODO consider refactoring TypeRefs.xcore such that {@link Wildcard} is a subtype of {@link TypeRef} (then this
+	 * method will no longer be required)
+	 */
+	public static TypeRef convertTypeArgToRef(TypeArgument typeArg) {
+		if (typeArg instanceof Wildcard) {
+			final ExistentialTypeRef etr = captureWildcard((Wildcard) typeArg);
+			etr.setReopened(true);
+			return etr;
+		}
+		return (TypeRef) typeArg;
+	}
+
+	/** Same as {@link #convertTypeArgToRef(TypeArgument)}, but for many type arguments. */
+	public static Iterable<? extends TypeRef> convertTypeArgsToRefs(Iterable<? extends TypeArgument> typeArgs) {
+		return IterableExtensions.map(typeArgs, TypeUtils::convertTypeArgToRef);
 	}
 
 	/**

@@ -209,23 +209,13 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		return thisTypeComputer.getThisTypeAtLocation(G, location);
 	}
 
-	/** @see IterableComputer#extractIterableElementTypesUBs(RuleEnvironment, TypeRef) */
-	public def Iterable<TypeRef> extractIterableElementTypesUBs(RuleEnvironment G, TypeRef typeRef) {
-		return iterableComputer.extractIterableElementTypesUBs(G, typeRef);
-	}
-
 	/** @see IterableComputer#extractIterableElementTypes(RuleEnvironment, TypeRef) */
-	public def Iterable<? extends TypeRef> extractIterableElementTypes(RuleEnvironment G, TypeRef typeRef) {
+	public def List<TypeRef> extractIterableElementTypes(RuleEnvironment G, TypeRef typeRef) {
 		return iterableComputer.extractIterableElementTypes(G, typeRef);
 	}
 
-	/** @see IterableComputer#extractIterableElementTypeUB(RuleEnvironment, TypeRef) */
-	public def TypeRef extractIterableElementTypeUB(RuleEnvironment G, TypeRef typeRef) {
-		return iterableComputer.extractIterableElementTypeUB(G, typeRef);
-	}
-
 	/** @see IterableComputer#extractIterableElementType(RuleEnvironment, TypeRef, boolean) */
-	public def TypeArgument extractIterableElementType(RuleEnvironment G, TypeRef typeRef, boolean includeAsyncIterable) {
+	public def TypeRef extractIterableElementType(RuleEnvironment G, TypeRef typeRef, boolean includeAsyncIterable) {
 		return iterableComputer.extractIterableElementType(G, typeRef, includeAsyncIterable);
 	}
 
