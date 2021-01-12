@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /**
  * Copyright (c) 2020 NumberFour AG.
  * All rights reserved. This program and the accompanying materials
@@ -10,32 +9,27 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-import * as ts from "typescript";
 import * as fs_lib from "fs";
 import * as path_lib from "path";
-import * as glob_lib from "glob";
 
-import { USAGE, Options, parseCommandLineOptions } from "./cmdLineOpts";
-import * as model from "./model";
-import { Converter } from "./convert";
-import * as utils from "./utils";
-
-
-export let globalOptions: Options = undefined;
+import { USAGE, Options, parseCommandLineOptions } from "cmdLineOpts";
+import * as model from "model";
+import { Converter } from "convert";
+import * as utils from "utils";
 
 
-runN4jsdGen(process.argv.slice(2)); // strip the first two args (path of node binary and main script)
-
-function runN4jsdGen(args: string[]) {
+export public function runN4jsdGenerator(args: string[]) {
 	const opts = parseCommandLineOptions(args);
-	globalOptions = opts;
 	if (opts.error !== undefined) {
-		exitWithError(opts.error, true);
+		utils.logError(opts.error);
+		utils.log();
+		utils.log(USAGE);
+		return;
 	}
 	for (const inputPath of opts.inputPaths) {
 		if(opts.verbose) {
-			console.log();
-			console.log("Input path: " + inputPath);
+			utils.log();
+			utils.log("Input path: " + inputPath);
 		}
 		processFileOrFolder(inputPath, opts);
 	}
@@ -48,11 +42,11 @@ function runN4jsdGen(args: string[]) {
  */
 function processFileOrFolder(inputPath: string, opts: Options) {
 	if (!fs_lib.existsSync(inputPath)) {
-		logError("does not exist: " + inputPath);
+		utils.logError("does not exist: " + inputPath);
 		return;
 	}
 
-	let sourceProjectPath = undefined;
+	let sourceProjectPath: string = undefined;
 	const sourceDtsFilePaths = [] as string[];
 	const stats = fs_lib.statSync(inputPath);
 	if (stats.isFile() && inputPath.endsWith(".d.ts")) {
@@ -60,18 +54,27 @@ function processFileOrFolder(inputPath: string, opts: Options) {
 	} else if (stats.isDirectory()) {
 		sourceProjectPath = path_lib.isAbsolute(inputPath) ? inputPath : path_lib.resolve(inputPath);
 		const globStr = path_lib.join(inputPath, "**", "*.d.ts");
-		sourceDtsFilePaths.push(...glob_lib.sync(globStr, {}));
+		const resolvedPaths = utils.resolveGlobPattern(globStr);
+		utils.pushAll(sourceDtsFilePaths, resolvedPaths);
 		if (sourceDtsFilePaths.length === 0) {
-			logError("no '.d.ts' files found in folder: " + inputPath);
+			utils.logError("no '.d.ts' files found in folder: " + inputPath);
 			return;
 		}
 	} else {
-		logError("neither a '.d.ts' file nor a folder: " + inputPath);
+		utils.logError("neither a '.d.ts' file nor a folder: " + inputPath);
 		return;
 	}
 
-	const program = ts.createProgram(sourceDtsFilePaths, { allowJs: true });
-	const converter = new Converter(program, sourceProjectPath);
+	const converter = new Converter(sourceDtsFilePaths, sourceProjectPath);
+
+	// check for compile errors on TypeScript side
+	// TODO: this seems to take a long time and is not strictly necessary; consider removing it or making it optional!
+	const tsDiagnostics = converter.getDiagnostics();
+	if (tsDiagnostics.length > 0) {
+		utils.logError("compile error(s) in '.d.ts' input files:\n    " + tsDiagnostics.join("\n    "));
+		return;
+	}
+
 	const scripts = new Map<string,model.Script>();
 	let hasIssues = false;
 	for (const srcDtsPath of sourceDtsFilePaths) {
@@ -84,8 +87,8 @@ function processFileOrFolder(inputPath: string, opts: Options) {
 		for (const srcDtsPath of sourceDtsFilePaths) {
 			const script = scripts.get(srcDtsPath);
 			if (script.issues.length > 0) {
-				console.log(srcDtsPath + ":");
-				logIssues(script.issues);
+				utils.log(srcDtsPath + ":");
+				utils.logIssues(script.issues);
 			}
 		}
 		if (!opts.force) {
@@ -94,11 +97,11 @@ function processFileOrFolder(inputPath: string, opts: Options) {
 	}
 
 	// create target project (if necessary)
-	let targetProjectPath = undefined;
+	let targetProjectPath: string = undefined;
 	if (sourceProjectPath !== undefined) {
 		targetProjectPath = createTargetProject(sourceProjectPath, opts);
 		if (targetProjectPath === undefined) {
-			logError("failed to create target project");
+			utils.logError("failed to create target project");
 			return; // skip creating n4jsd-files for this project (even if opts.force is true)
 		}
 	}
@@ -109,31 +112,33 @@ function processFileOrFolder(inputPath: string, opts: Options) {
 		const n4jsdStr = model.scriptToString(script);
 		const trgtN4jsdPath = chooseTargetN4jsdPath(srcDtsPath, sourceProjectPath, targetProjectPath);
 		if (opts.verbose) {
-			console.log("Writing n4jsd-file: " + trgtN4jsdPath);
+			utils.log("Writing n4jsd-file: " + trgtN4jsdPath);
 		}
-		fs_lib.mkdirSync(path_lib.dirname(trgtN4jsdPath), { recursive: true });
-		fs_lib.writeFileSync(trgtN4jsdPath, n4jsdStr + "\n");
+		utils.mkdirs(path_lib.dirname(trgtN4jsdPath));
+		fs_lib.writeFileSync(trgtN4jsdPath, n4jsdStr + "\n", undefined);
 	}
 }
 
 // TODO error handling!
 function createTargetProject(srcPath: string, opts: Options): string {
 	const srcName = path_lib.basename(srcPath);
-	const trgtName = "@n4jsd/" + srcName;
+	const trgtNameAsPath = path_lib.join("@n4jsd", srcName);
 	const trgtPath = opts.outputPath !== undefined
-		? path_lib.join(opts.outputPath, trgtName)
-		: path_lib.dirname(srcPath);
-	fs_lib.mkdirSync(trgtPath, { recursive: true });
+		? path_lib.join(opts.outputPath, trgtNameAsPath)
+		: path_lib.join(path_lib.dirname(srcPath), trgtNameAsPath);
+	utils.mkdirs(trgtPath);
 
 	const srcPackageJsonPath = path_lib.join(srcPath, utils.PACKAGE_JSON);
-	const trgtPackageJson: any = {
-		name: trgtName,
+	const trgtPackageJson = {
+		name: "@n4jsd/" + srcName,
 		repository: {
 			type: "git",
 			url: "https://github.com/NumberFour/n4jsd"
 		},
 		description: "N4JS type definitions for " + srcName,
 		keywords: [ "n4js" ],
+		private: false,
+		dependencies: {},
 		n4js: {
 			projectType: "definition",
 			definesPackage: srcName,
@@ -150,8 +155,8 @@ function createTargetProject(srcPath: string, opts: Options): string {
 		// dependencies will be added below from original package.json
 	};
 	if (fs_lib.existsSync(srcPackageJsonPath)) {
-		const srcPackageJsonStr = fs_lib.readFileSync(srcPackageJsonPath).toString();
-		const srcPackageJson = JSON.parse(srcPackageJsonStr);
+		const srcPackageJsonStr = fs_lib.readFileSync(srcPackageJsonPath, undefined).toString();
+		const srcPackageJson: any+ = JSON.parse(srcPackageJsonStr);
 		if (srcPackageJson) {
 			if (srcPackageJson.dependencies) {
 				trgtPackageJson.dependencies = srcPackageJson.dependencies;
@@ -162,7 +167,7 @@ function createTargetProject(srcPath: string, opts: Options): string {
 		}
 	}
 	const trgtPackageJsonPath = path_lib.join(trgtPath, utils.PACKAGE_JSON);
-	fs_lib.writeFileSync(trgtPackageJsonPath, JSON.stringify(trgtPackageJson, undefined, "\t"));
+	fs_lib.writeFileSync(trgtPackageJsonPath, JSON.stringify(trgtPackageJson, undefined, "\t"), undefined);
 
 	return trgtPath;
 }
@@ -178,23 +183,4 @@ function chooseTargetN4jsdPath(sourceDtsFilePath: string, sourceProjectPath: str
 		trgtN4jsdPath = path_lib.resolve(targetProjectPath, projectRelativePath);
 	}
 	return trgtN4jsdPath;
-}
-
-function logIssues(issues: utils.Issue[]) {
-	for (const issue of issues) {
-		console.log(issue.kind.toUpperCase() + ": " + issue.message);
-	}
-}
-
-function logError(msg: string) {
-	console.log("ERROR: " + msg);
-}
-
-function exitWithError(msg: string, showUsage?: boolean): never {
-	logError(msg);
-	if (showUsage) {
-		console.log();
-		console.log(USAGE);
-	}
-	process.exit(1);
 }

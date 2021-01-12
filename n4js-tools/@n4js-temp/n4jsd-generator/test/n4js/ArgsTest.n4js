@@ -1,0 +1,62 @@
+/**
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+import {AbstractN4jsdGeneratorTest} from "AbstractN4jsdGeneratorTest";
+import {_ROOT} from "AbstractN4jsdGeneratorTest";
+
+/**
+ * Tests parsing of command line arguments.
+ */
+export public class ArgsTest extends AbstractN4jsdGeneratorTest {
+
+	@Test
+	public testUnknownOption() {
+		this.runN4jsdGeneratorWithErrors([ "--oops" ],
+			"unknown option: --oops");
+	}
+
+	@Test
+	public testArgumentMissingForOption() {
+		this.runN4jsdGeneratorWithErrors([ "-o" ],
+			"argument missing for option -o");
+	}
+
+	@Test
+	public testNoInputPath() {
+		this.runN4jsdGeneratorWithErrors([ "-o", _ROOT ],
+			"no input path or glob pattern given");
+	}
+
+	@Test
+	public testIncorrectInputPath() {
+		this.createFile("Test.txt", "Some test file.");
+		this.runN4jsdGeneratorWithErrors([ _ROOT + "/Test.txt" ],
+			"invalid input path(s):\n"
+			+ "    neither a folder nor a '.d.ts' file: .../temp_test_data/Test.txt");
+	}
+
+	@Test
+	public testIncorrectInputPathMany() {
+		this.createFile("Test1.txt", "Some test file.");
+		this.createFile("Test2.d.ts", "// empty .d.ts file");
+		this.createFile("Test3.txt", "Some test file.");
+		this.runN4jsdGeneratorWithErrors([ _ROOT + "/Test*" ],
+			"invalid input path(s):\n"
+			+ "    neither a folder nor a '.d.ts' file: .../temp_test_data/Test1.txt\n"
+			+ "    neither a folder nor a '.d.ts' file: .../temp_test_data/Test3.txt");
+	}
+
+	@Test
+	public testFileNotFound() {
+		this.runN4jsdGeneratorWithErrors([ _ROOT + "/DoesNotExist.d.ts" ],
+			"input path does not exist: .../temp_test_data/DoesNotExist.d.ts");
+	}
+}
