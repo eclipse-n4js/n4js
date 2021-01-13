@@ -16,6 +16,8 @@ import static org.eclipse.n4js.N4JSGlobals.N4JSD_FILE_EXTENSION;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -25,20 +27,21 @@ import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ModuleSpecifierForm;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.EcoreUtilN4;
+import org.eclipse.n4js.utils.Strings;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.EObjectDescription;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
-import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 
 /**
  * Normally we import from a module by only supplying the module specifier without the project ID of the containing
@@ -130,30 +133,49 @@ public class ProjectImportEnablingScope implements IScope {
 
 	@Override
 	public IEObjectDescription getSingleElement(QualifiedName name) {
-		final Iterable<IEObjectDescription> result = getElements(name);
-		int size = Iterables.size(result);
+		final List<IEObjectDescription> result = Lists.newArrayList(getElements(name));
+		int size = result.size();
 		if (size == 1) {
-			return result.iterator().next();
+			// main case
+			return result.get(0);
+		}
+
+		// use linked map for determinism in error message
+		final Map<IEObjectDescription, IN4JSProject> descriptionsToProject = new LinkedHashMap<>();
+		for (IEObjectDescription objDescr : result) {
+			IN4JSProject n4jsdProject = n4jsCore.findProject(objDescr.getEObjectURI()).orNull();
+			descriptionsToProject.put(objDescr, n4jsdProject);
 		}
 
 		// Special case handling when we have a definition and a pure JS file in the scope.
 		// In such cases we return with the description that corresponds to the definition file.
 		if (size == 2) {
-
-			final IEObjectDescription first = Iterables.get(result, 0);
-			final IEObjectDescription second = Iterables.get(result, 1);
-
+			final IEObjectDescription first = result.get(0);
+			final IEObjectDescription second = result.get(1);
 			final String firstExtension = first.getEObjectURI().fileExtension();
 			final String secondExtension = second.getEObjectURI().fileExtension();
+			IEObjectDescription n4jsdObjDescr = null;
+			IEObjectDescription jsObjDescr = null;
 
 			if (JS_FILE_EXTENSION.equals(firstExtension) && N4JSD_FILE_EXTENSION.equals(secondExtension)) {
-				return second;
+				n4jsdObjDescr = second;
+				jsObjDescr = first;
+			} else if (N4JSD_FILE_EXTENSION.equals(firstExtension) && JS_FILE_EXTENSION.equals(secondExtension)) {
+				n4jsdObjDescr = first;
+				jsObjDescr = second;
 			}
 
-			if (N4JSD_FILE_EXTENSION.equals(firstExtension) && JS_FILE_EXTENSION.equals(secondExtension)) {
-				return first;
-			}
+			if (n4jsdObjDescr != null && jsObjDescr != null) {
+				IN4JSProject n4jsdProject = descriptionsToProject.get(n4jsdObjDescr);
+				IN4JSProject jsProject = descriptionsToProject.get(jsObjDescr);
 
+				if (n4jsdProject != null && jsProject != null
+						&& n4jsdProject.getProjectType() == ProjectType.DEFINITION
+						&& Objects.equals(n4jsdProject.getDefinesPackageName(), jsProject.getProjectName())) {
+
+					return n4jsdObjDescr;
+				}
+			}
 		}
 
 		// if no import declaration was given, we skip the advanced error reporting
@@ -189,7 +211,13 @@ public class ProjectImportEnablingScope implements IScope {
 				sbErrrorMessage.append("no matching module found");
 			} else {
 				sbErrrorMessage.append("multiple matching modules found: ");
-				sbErrrorMessage.append(IterableExtensions.join(result, ","));
+
+				String matchingModules = Strings.join(", ",
+						e -> //
+						e.getValue().getProjectName().getRawName() + "/" + e.getKey().getQualifiedName().toString(),
+						descriptionsToProject.entrySet());
+
+				sbErrrorMessage.append(matchingModules);
 			}
 		}
 
