@@ -42,6 +42,7 @@ import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.util.AllSuperTypesCollector;
 import org.eclipse.n4js.ts.types.util.Variance;
+import org.eclipse.n4js.ts.utils.TypeCompareUtils;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
@@ -730,6 +731,23 @@ import com.google.common.base.Optional;
 			return reduceStructuralTypeRef(right, left, CO);
 		}
 		// now, variance is either CO or INV
+
+		// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		// recursion guard
+		// TODO consider applying this guard to all kinds of reductions
+		// (i.e. move this code to entry method #reduce(TypeArgument, TypeArgument, Variance))
+		final Object key = Pair.of(
+				RuleEnvironmentExtensions.GUARD_REDUCER_REDUCE_STRUCTURAL_TYPE_REF,
+				Pair.of(
+						Pair.of(
+								new TypeCompareUtils.SemanticEqualsWrapper(left),
+								new TypeCompareUtils.SemanticEqualsWrapper(right)),
+						variance));
+		if (G.get(key) != null) {
+			return true;
+		}
+		G.put(key, Boolean.TRUE);
+		// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 		final RuleEnvironment G2 = RuleEnvironmentExtensions.wrap(G);
 		final StructTypingInfo infoFaked = new StructTypingInfo(G2, left, right, // <- G2 will be changed!

@@ -115,6 +115,7 @@ class RuleEnvironmentExtensions {
 	public static final String GUARD_STRUCTURAL_TYPING_COMPUTER = "StructuralTypingComputer";
 	public static final String GUARD_CHECK_TYPE_ARGUMENT_COMPATIBILITY = "N4JSTypeSystem#checkTypeArgumentCompatibility";
 	public static final String GUARD_REDUCER_IS_SUBTYPE_OF = "Reducer#isSubtypeOf";
+	public static final String GUARD_REDUCER_REDUCE_STRUCTURAL_TYPE_REF = "Reducer#reduceStructuralTypeRef";
 
 	/**
 	 * Returns a new {@code RuleEnvironment}; we need this because of the
