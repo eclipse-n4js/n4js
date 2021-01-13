@@ -169,11 +169,16 @@ public class ProjectImportEnablingScope implements IScope {
 				IN4JSProject n4jsdProject = descriptionsToProject.get(n4jsdObjDescr);
 				IN4JSProject jsProject = descriptionsToProject.get(jsObjDescr);
 
-				if (n4jsdProject != null && jsProject != null
-						&& n4jsdProject.getProjectType() == ProjectType.DEFINITION
-						&& Objects.equals(n4jsdProject.getDefinesPackageName(), jsProject.getProjectName())) {
+				if (n4jsdProject != null && jsProject != null) {
+					if (Objects.equals(n4jsdProject.getLocation(), jsProject.getLocation())) {
+						// case: n4jsd and js file are inside the same project
+						return n4jsdObjDescr;
 
-					return n4jsdObjDescr;
+					} else if (n4jsdProject.getProjectType() == ProjectType.DEFINITION
+							&& Objects.equals(n4jsdProject.getDefinesPackageName(), jsProject.getProjectName())) {
+						// case: n4jsd and js file are inside an n4js-definition and a plain-js project
+						return n4jsdObjDescr;
+					}
 				}
 			}
 		}
