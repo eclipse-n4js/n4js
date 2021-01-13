@@ -112,7 +112,8 @@ class RuleEnvironmentExtensions {
 	public static final String GUARD_SUBTYPE_PARAMETERIZED_TYPE_REF__STRUCT = "subtypeRefParameterizedTypeRef__struct";
 	public static final String GUARD_SUBST_TYPE_VARS = "substTypeVariablesInParameterizedTypeRef";
 	public static final String GUARD_SUBST_TYPE_VARS__IMPLICIT_UPPER_BOUND_OF_WILDCARD = "substTypeVars_implicitUpperBoundOfWildcard";
-	public static final String GUARD_STRUCTURAL_TYPING_COMPUTER = "StructuralTypingComputer";
+	public static final String GUARD_STRUCTURAL_TYPING_COMPUTER__IN_PROGRESS = "StructuralTypingComputer__inProgress";
+	public static final String GUARD_STRUCTURAL_TYPING_COMPUTER__IN_PROGRESS_FOR_TYPE_REF = "StructuralTypingComputer__inProgressForTypeRef";
 	public static final String GUARD_CHECK_TYPE_ARGUMENT_COMPATIBILITY = "N4JSTypeSystem#checkTypeArgumentCompatibility";
 	public static final String GUARD_REDUCER_IS_SUBTYPE_OF = "Reducer#isSubtypeOf";
 	public static final String GUARD_REDUCER_REDUCE_STRUCTURAL_TYPE_REF = "Reducer#reduceStructuralTypeRef";
