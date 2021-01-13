@@ -20,19 +20,19 @@ class D extends C {
 
 
 let a1: any+ = 3;
-// X PECT noerrors --> any+ is not a subtype of C.
+// XPECT noerrors --> any+ is not a subtype of C.
 let c1: C = a1;
 
 
 
 
 let c2: C+ = new C();
-// X PECT noerrors -->
+// XPECT noerrors -->
 let d2: D = c2;
 
 
 let o3: Object+ = null;
-// X PECT noerrors -->
+// XPECT noerrors -->
 let a3: any = o3;
 
 
