@@ -12,6 +12,7 @@ package org.eclipse.n4js.projectModel.names;
 
 import static org.eclipse.n4js.utils.ProjectDescriptionUtils.NPM_SCOPE_SEPARATOR_ECLIPSE;
 
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -79,6 +80,13 @@ public final class N4JSProjectName implements Comparable<N4JSProjectName> {
 	 */
 	public boolean isEmpty() {
 		return name.isEmpty();
+	}
+
+	/**
+	 * Return true, if this name starts with {@link N4JSGlobals#N4JSD_SCOPE} followed by a slash.
+	 */
+	public boolean isScopeN4jsd() {
+		return name.startsWith(N4JSGlobals.N4JSD_SCOPE + "/");
 	}
 
 	@Override

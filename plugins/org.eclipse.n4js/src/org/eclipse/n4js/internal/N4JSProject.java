@@ -13,7 +13,6 @@ package org.eclipse.n4js.internal;
 import static com.google.common.base.Optional.fromNullable;
 import static java.util.Collections.emptyList;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -21,7 +20,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectDescription.ModuleFilter;
 import org.eclipse.n4js.projectDescription.ModuleFilterType;
-import org.eclipse.n4js.projectDescription.ProjectDependency;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
@@ -179,15 +177,7 @@ public class N4JSProject implements IN4JSProject {
 		if (!exists()) {
 			return ImmutableList.of();
 		}
-		final ProjectDescription pd = model.getProjectDescription(this);
-		if (pd == null) {
-			return ImmutableList.of();
-		}
-		List<String> allDependencyNames = new ArrayList<>();
-		for (ProjectDependency prjDep : pd.getProjectDependencies()) {
-			allDependencyNames.add(prjDep.getProjectName());
-		}
-		return ImmutableList.copyOf(allDependencyNames);
+		return model.getDependenciesUnresolved(this);
 	}
 
 	@Override

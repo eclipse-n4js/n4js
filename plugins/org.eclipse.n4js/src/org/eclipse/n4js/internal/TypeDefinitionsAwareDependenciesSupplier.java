@@ -28,7 +28,7 @@ import com.google.common.collect.ImmutableList;
 
 /**
  * Supplier for the ordered list of dependencies of a given {@link IN4JSProject} such that it is assured that type
- * definitions shadow their implementation projects..
+ * definitions shadow their implementation projects.
  *
  * In contrast to {@link IN4JSProject#getDependencies()}, this supplier applies an explicit ordering that is of
  * significance when using the list of dependencies for constructing scopes.

@@ -53,7 +53,20 @@ public enum DependencyType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	DEVELOPMENT(0, "DEVELOPMENT", "DEVELOPMENT");
+	DEVELOPMENT(0, "DEVELOPMENT", "DEVELOPMENT"),
+
+	/**
+	 * The '<em><b>IMPLICIT</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * * Dependencies of this type are added by n4jsc during project discovery.
+	 * <!-- end-model-doc -->
+	 * @see #IMPLICIT_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	IMPLICIT(0, "IMPLICIT", "IMPLICIT");
 
 	/**
 	 * The '<em><b>RUNTIME</b></em>' literal value.
@@ -84,6 +97,20 @@ public enum DependencyType implements Enumerator {
 	public static final int DEVELOPMENT_VALUE = 0;
 
 	/**
+	 * The '<em><b>IMPLICIT</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * * Dependencies of this type are added by n4jsc during project discovery.
+	 * <!-- end-model-doc -->
+	 * @see #IMPLICIT
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IMPLICIT_VALUE = 0;
+
+	/**
 	 * An array of all the '<em><b>Dependency Type</b></em>' enumerators.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -93,6 +120,7 @@ public enum DependencyType implements Enumerator {
 		new DependencyType[] {
 			RUNTIME,
 			DEVELOPMENT,
+			IMPLICIT,
 		};
 
 	/**
