@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.tests.hyperlink;
 
+import static org.eclipse.n4js.N4JSGlobals.N4JS_RUNTIME;
+import static org.eclipse.n4js.N4JSGlobals.N4JS_RUNTIME_NODE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -17,6 +19,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.eclipse.core.resources.IFile;
@@ -56,6 +59,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 /**
@@ -85,14 +89,14 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 	@Test
 	public void testHyperlinks() throws CoreException {
 		File prjDir = new File(getResourceUri(PROBANDS, SUBFOLDER));
-		IProject project = ProjectTestsUtils.importProject(prjDir, PROJECT_NAME);
+		ArrayList<N4JSProjectName> dependencies = Lists.newArrayList(N4JS_RUNTIME, N4JS_RUNTIME_NODE);
+		IProject project = ProjectTestsUtils.importProject(prjDir, PROJECT_NAME, dependencies);
 
 		IResource resourceABC = project.findMember("src/ABC.n4js");
 		IFile fileABC = ResourcesPlugin.getWorkspace().getRoot().getFile(resourceABC.getFullPath());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 
-		libraryManager.runNpmYarnInstallOnAllProjects(new NullProgressMonitor());
 		syncExtAndBuild();
 		ProjectTestsUtils.assertNoErrors();
 
@@ -147,10 +151,10 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 	@Test
 	public void testHyperlinksWhenOpenedFromExplorer() throws CoreException {
 		File prjDir = new File(getResourceUri(PROBANDS, SUBFOLDER));
-		ProjectTestsUtils.importProject(prjDir, PROJECT_NAME);
+		ArrayList<N4JSProjectName> dependencies = Lists.newArrayList(N4JS_RUNTIME, N4JS_RUNTIME_NODE);
+		ProjectTestsUtils.importProject(prjDir, PROJECT_NAME, dependencies);
 		waitForAutoBuild();
 
-		libraryManager.runNpmYarnInstallOnAllProjects(new NullProgressMonitor());
 		syncExtAndBuild();
 		UIUtils.waitForUiThread();
 		assertNoErrors();
@@ -159,7 +163,7 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 		XtextEditor editor = openAndGetXtextEditorViaProjectExplorer(page,
 				PROJECT_NAME.toEclipseProjectName().getRawName(),
 				N4JSGlobals.NODE_MODULES,
-				"n4js-runtime-node 0.13.4 [Runtime library]",
+				"n4js-runtime-node 0.1.0 [Runtime library]",
 				"src",
 				"n4js",
 				"process.n4jsd");
@@ -237,10 +241,10 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 	@Test
 	public void testHyperlinksOnPackageJson() throws CoreException {
 		File prjDir = new File(getResourceUri(PROBANDS, SUBFOLDER));
-		ProjectTestsUtils.importProject(prjDir, PROJECT_NAME);
+		ArrayList<N4JSProjectName> dependencies = Lists.newArrayList(N4JS_RUNTIME, N4JS_RUNTIME_NODE);
+		ProjectTestsUtils.importProject(prjDir, PROJECT_NAME, dependencies);
 		waitForAutoBuild();
 
-		libraryManager.runNpmYarnInstallOnAllProjects(new NullProgressMonitor());
 		syncExtAndBuild();
 		UIUtils.waitForUiThread();
 		assertNoErrors();

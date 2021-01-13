@@ -22,19 +22,19 @@ const PROPERTY_N4TYPE = "n4type";
 
 
 export function interfaceFieldInits(obj: any+) : Object {
-    return (obj[INTERFACE_FIELD_INITS] || {}) as Object;
+    return obj[INTERFACE_FIELD_INITS] || {};
 }
 
 export function interfaceDefaultMembers(obj: any+) : Object {
-    return (obj[INTERFACE_DEFAULT_MEMBERS] || {}) as Object;
+    return obj[INTERFACE_DEFAULT_MEMBERS] || {};
 }
 
 export function interfaceExtends(obj: any+) : type{N4Object}[] {
-    return obj[INTERFACE_EXTENDS] as type{N4Object}[];
+    return obj[INTERFACE_EXTENDS];
 }
 
 export function classImplements(obj: any+) : type{N4Object}[] {
-    return obj[CLASS_IMPLEMENTS] as type{N4Object}[];
+    return obj[CLASS_IMPLEMENTS];
 }
 
 export function makeReflectionsForClass(staticProto: constructor{?}, reflectionString: string): N4Class {
@@ -194,7 +194,7 @@ function parseMemberString(memberString: string): MemberInfo {
     }
     
     const name = memberString.substring(idxNameStart);
-    const jsFunctionRef = ((name.startsWith(SYMBOL_IDENTIFIER_PREFIX)) ? (Symbol as any+)[name.substring(1)] : name) as Object;
+    const jsFunctionRef = ((name.startsWith(SYMBOL_IDENTIFIER_PREFIX)) ? (Symbol as any+)[name.substring(1)] : name);
 
     return {memberString: memberString, name:name, kind:kind, isStatic: isUpperCase, isConsumed:isConsumed, jsFunctionRef:jsFunctionRef};
 }
@@ -207,10 +207,9 @@ function createMember(instanceProto: any+, staticProto: any+, memberInfo: Member
             break;
         case 'm': 
             member = new N4Method();
-            (member as N4Method).jsFunction = (memberInfo.isStatic
+            (member as N4Method).jsFunction = memberInfo.isStatic
                 ? staticProto[memberInfo.jsFunctionRef]
-                : instanceProto[memberInfo.jsFunctionRef])
-                as Function;
+                : instanceProto[memberInfo.jsFunctionRef];
             break;
         case 'g': 
             member = new N4Accessor();
@@ -226,7 +225,7 @@ function createMember(instanceProto: any+, staticProto: any+, memberInfo: Member
     
     member.name = memberInfo.name;
     member.isStatic = memberInfo.isStatic;
-    member.setAnnotations(annotations[memberInfo.memberString] as N4Annotation[] || []);
+    member.setAnnotations(annotations[memberInfo.memberString] || []);
     return member;
 }
 
@@ -421,7 +420,7 @@ class ~MemberInfo {
     public kind: string;
     public isStatic: boolean;
     public isConsumed: boolean;
-    public jsFunctionRef: Object;
+    public jsFunctionRef: string;
 }
 
 class ~MemberContainer {

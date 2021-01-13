@@ -1225,6 +1225,9 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		// avoid consequential errors
 		if (S === null || T === null || T instanceof UnknownTypeRef || S instanceof UnknownTypeRef) return;
 
+		// casts from dynamically typed variables introduce more type information. Hence do not show warning.
+		if (BooleanExtensions::xor(S.isDynamic, T.isDynamic)) return;
+
 		if (ts.subtypeSucceeded(G, S, T)) { // Constraint 81.2 (Cast Validation At Compile-Time): 1
 			addIssue(IssueCodes.getMessageForEXP_CAST_UNNECESSARY(S.typeRefAsString, T.typeRefAsString),
 				castExpression, IssueCodes.EXP_CAST_UNNECESSARY);
@@ -1436,6 +1439,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		if (targetTypeRef.dynamic) {
 			// allowed: indexing into dynamic receiver
 		} else if (G.objectType === targetDeclType && !(targetTypeRef.useSiteStructuralTyping)) {
+			// TODO: remove special case, see GH-2022
 			// allowed: index into exact-type Object instance (not subtype thereof)
 		} else if (accessedStaticType instanceof TEnum) { // Constraints 69.2
 			// disallowed: index access into an enum
