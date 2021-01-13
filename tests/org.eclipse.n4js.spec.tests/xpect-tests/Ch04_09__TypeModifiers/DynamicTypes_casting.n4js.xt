@@ -19,27 +19,16 @@ class D extends C {
 }
 
 
-let a1: any+ = 3;
-// XPECT noerrors --> any+ is not a subtype of C.
-let c1: C = a1;
+let z: string;
+// XPECT nowarnings -->
+(z as any+);
 
 
+let d: D;
+// XPECT nowarnings -->
+(d as C+);
 
 
-let c2: C+ = new C();
-// XPECT noerrors -->
-let d2: D = c2;
-
-
-let o3: Object+ = null;
-// XPECT noerrors -->
-let a3: any = o3;
-
-
-let c4: C+ = null;
-let a4: any = null;
-
-// XPECT noerrors -->
-a4 = c4;
-// XPECT errors --> "any is not a subtype of C+." at "a4"
-c4 = a4;
+let dd: D+;
+// XPECT nowarnings -->
+(dd as D);

@@ -1226,7 +1226,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		if (S === null || T === null || T instanceof UnknownTypeRef || S instanceof UnknownTypeRef) return;
 
 		// casts from dynamically typed variables introduce more type information. Hence do not show warning.
-		if (S.isDynamic) return;
+		if (BooleanExtensions::xor(S.isDynamic, T.isDynamic)) return;
 
 		if (ts.subtypeSucceeded(G, S, T)) { // Constraint 81.2 (Cast Validation At Compile-Time): 1
 			addIssue(IssueCodes.getMessageForEXP_CAST_UNNECESSARY(S.typeRefAsString, T.typeRefAsString),
