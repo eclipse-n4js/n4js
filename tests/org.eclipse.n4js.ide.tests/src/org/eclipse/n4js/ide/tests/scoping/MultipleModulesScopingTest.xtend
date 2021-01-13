@@ -51,7 +51,7 @@ class MultipleModulesScopingTest extends AbstractIdeTest {
 	}
 
 	@Test
-	def void testN4jsdAndJsModulesWithSameName() throws Exception {
+	def void testN4jsdAndJsModulesWithSameNameInDifferentProjects() throws Exception {
 		testWorkspaceManager.createTestOnDisk(
 			"Project" -> #[
 				"Client" -> '''
@@ -83,6 +83,86 @@ class MultipleModulesScopingTest extends AbstractIdeTest {
 		);
 		startAndWaitForLspServer();
 		assertIssues("Client" -> #["(Error, [0:19 - 0:27], Cannot resolve plain module specifier (without project name as first segment): multiple matching modules found: P1/Module, PLAINJS/Module.)"]);
+	}
+
+	@Test
+	def void testN4jsAndJsModulesWithSameNameInSameProjectError() throws Exception {
+		testWorkspaceManager.createTestProjectOnDisk(
+			#[
+				"Client" -> '''
+					import * as M from "Module";
+					M;
+				''',
+				"Module" -> '''
+					export const C = 1;
+				''',
+				"/src-js/Module.js" -> '''
+					export const C = 2;
+				''',
+				"package.json" -> '''
+					{
+					    "name": "test-project",
+					    "n4js": {
+					        "projectType": "library",
+					        "output": "src-gen",
+					        "sources": {
+					            "source": [
+					                "src"
+					            ],
+								"external": [
+									"src-js"
+								]
+					        }
+					    },
+					    "dependencies": {
+					        "n4js-runtime": ""
+					    }
+					}
+				'''
+			]
+		);
+		startAndWaitForLspServer();
+		assertIssues("Client" -> #["(Error, [0:19 - 0:27], Cannot resolve plain module specifier (without project name as first segment): multiple matching modules found: test-project/Module, test-project/Module.)"]);
+	}
+
+	@Test
+	def void testN4jsdAndJsModulesWithSameNameInSameProjectOK() throws Exception {
+		testWorkspaceManager.createTestProjectOnDisk(
+			#[
+				"Client" -> '''
+					import * as M from "Module";
+					M;
+				''',
+				"Module.n4jsd" -> '''
+					export external const C;
+				''',
+				"/src-js/Module.js" -> '''
+					export const C = 2;
+				''',
+				"package.json" -> '''
+					{
+					    "name": "test-project",
+					    "n4js": {
+					        "projectType": "library",
+					        "output": "src-gen",
+					        "sources": {
+					            "source": [
+					                "src"
+					            ],
+								"external": [
+									"src-js"
+								]
+					        }
+					    },
+					    "dependencies": {
+					        "n4js-runtime": ""
+					    }
+					}
+				'''
+			]
+		);
+		startAndWaitForLspServer();
+		assertNoIssues();
 	}
 
 }
