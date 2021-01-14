@@ -39,9 +39,9 @@
    *   NumberFour AG - Initial API and implementation
    *\/
   //var string placeholder;
-| import { [A|B] } from "[d|a]/[|a1/]A"[|;]
-| import { [B|B1] } from "a/a1/A"[|;]
-| import { [B1|IB] } from "a/[a1|a2/A";]
+| import { [A|B] } from "[d|P2]/[|a/a1/]A"[|;]
+| import { [B|B1] } from "P2/a/a1/A"[|;]
+| import { [B1|IB] } from "[P2/|]a[|/a2]/[a1|A";]
 | [|import {A} from "d]/A"[|;]
 | import { IA } from "d/A"[|;]
   var a : A = new A();
@@ -54,9 +54,9 @@
 import { A } from "d/A"
 
 // XPECT errors --> "The type B is not visible." at "B"
-import { B } from "a/a1/A"
+import { B } from "P2/a/a1/A"
 
-import { B1 } from "a/a1/A"
+import { B1 } from "P2/a/a1/A"
 
 import { IA } from "d/A"
 
