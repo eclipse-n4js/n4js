@@ -164,5 +164,45 @@ class MultipleModulesScopingTest extends AbstractIdeTest {
 		startAndWaitForLspServer();
 		assertNoIssues();
 	}
+	
+	@Test
+	def void testN4jsdAndJsModulesWithSameNameInSameSourceFolderOK() throws Exception {
+		testWorkspaceManager.createTestProjectOnDisk(
+			#[
+				"Client" -> '''
+					import {C} from "Module";
+					C;
+				''',
+				"Module.n4jsd" -> '''
+					export external const C;
+				''',
+				"Module.js" -> '''
+					export const C = 2;
+				'''
+			]
+		);
+		startAndWaitForLspServer();
+		assertNoIssues();
+	}
+
+	@Test
+	def void testDynamicImportWarning() throws Exception {
+		testWorkspaceManager.createTestProjectOnDisk(
+			#[
+				"Client" -> '''
+					import * as M+ from "Module";
+					M.C;
+				''',
+				"Module.n4jsd" -> '''
+					export external const C;
+				''',
+				"Module.js" -> '''
+					export const C = 2;
+				'''
+			]
+		);
+		startAndWaitForLspServer();
+		assertIssues("Client" -> #["(Warning, [0:7 - 0:14], N4JSD module Module should not be imported dynamically.)"]);
+	}
 
 }
