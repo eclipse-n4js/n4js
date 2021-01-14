@@ -42,6 +42,7 @@ import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.util.AllSuperTypesCollector;
 import org.eclipse.n4js.ts.types.util.Variance;
+import org.eclipse.n4js.ts.utils.TypeCompareUtils;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
@@ -731,6 +732,17 @@ import com.google.common.base.Optional;
 		}
 		// now, variance is either CO or INV
 
+		// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		// recursion guard
+		// TODO consider applying this guard to all kinds of reductions
+		// (i.e. move this code to entry method #reduce(TypeArgument, TypeArgument, Variance))
+		final Object key = createRecursionGuardKeyForReduceStructuralTypeRef(left, right, variance);
+		if (G.get(key) != null) {
+			return true;
+		}
+		G.put(key, Boolean.TRUE);
+		// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 		final RuleEnvironment G2 = RuleEnvironmentExtensions.wrap(G);
 		final StructTypingInfo infoFaked = new StructTypingInfo(G2, left, right, // <- G2 will be changed!
 				left.getTypingStrategy(), right.getTypingStrategy());
@@ -767,6 +779,17 @@ import com.google.common.base.Optional;
 		return wasAdded;
 	}
 
+	private Object createRecursionGuardKeyForReduceStructuralTypeRef(TypeRef left, TypeRef right, Variance variance) {
+		// (left -> right) -> variance
+		return Pair.of(
+				RuleEnvironmentExtensions.GUARD_REDUCER__REDUCE_STRUCTURAL_TYPE_REF,
+				Pair.of(
+						Pair.of(
+								new TypeCompareUtils.SemanticEqualsWrapper(left),
+								new TypeCompareUtils.SemanticEqualsWrapper(right)),
+						variance));
+	}
+
 	/**
 	 * Convenience method to perform subtype checks. Depending on the given variance, this will check
 	 * <code>left &lt;: right</code> OR <code>left >: right</code> OR both.
@@ -774,7 +797,7 @@ import com.google.common.base.Optional;
 	private boolean isSubtypeOf(TypeRef left, TypeRef right, Variance variance) {
 		// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 		// recursion guard
-		final Pair<String, Pair<TypeRef, TypeRef>> key = Pair.of(RuleEnvironmentExtensions.GUARD_REDUCER_IS_SUBTYPE_OF,
+		final Pair<String, Pair<TypeRef, TypeRef>> key = Pair.of(RuleEnvironmentExtensions.GUARD_REDUCER__IS_SUBTYPE_OF,
 				Pair.of(left, right));
 		if (G.get(key) != null) {
 			return true;
