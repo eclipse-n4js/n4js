@@ -106,7 +106,6 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 		val G2 = G.wrapIfInitialInvocation; // don't pollute incoming rule environment with our recursion guard
 		G2.rememberStructuralSubtypingInProgressFor(left, right);
 
-//println("!!!");
 		val info = new StructTypingInfo(G2, left, right, leftStrategy, rightStrategy); // we'll collect error messages in here
 
 		val iter = structuralTypesHelper.getMembersTripleIterator(G2, left, right, true);
