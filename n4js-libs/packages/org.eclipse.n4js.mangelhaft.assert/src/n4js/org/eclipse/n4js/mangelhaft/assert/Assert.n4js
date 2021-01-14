@@ -288,10 +288,10 @@ export public class Assert {
     /**
      * checks that the actual object is an instance of the expected object
      */
-    public static isInstanceOf(actual: any, expected: type{Object} & ~Object with {n4type:N4Type;}, message: string=) {
+    public static isInstanceOf(actual: any, expected: type{Object}, message: string=) {
         if (!(actual instanceof expected)) {
             let actualName = getTypeName(actual),
-                expectedName = (expected as type{N4Object}).n4type.fqn; // TODO IDE-385
+                expectedName = getTypeName(expected);
             this.fail_(actualName, expectedName, message, "instanceof");
         }
     }
@@ -299,10 +299,10 @@ export public class Assert {
     /**
      * checks that the actual object is not an instance of the expected object
      */
-    public static isNotInstanceOf(actual: any, expected: type{Object} & ~Object with {n4type:N4Type}, message: string=) {
+    public static isNotInstanceOf(actual: any, expected: type{Object}, message: string=) {
         if (actual instanceof expected) {
             let actualName = getTypeName(actual),
-                expectedName = (expected as type{N4Object}).n4type.fqn; // TODO IDE-385
+                expectedName = getTypeName(expected);
             this.fail_(actualName, expectedName, message, "not instanceof");
         }
     }

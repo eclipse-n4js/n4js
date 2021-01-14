@@ -33,39 +33,12 @@ public interface TypeArgument extends EObject {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * Convenience method, returns the type expression, usually the type name, as a string. Basically used for testing.
-	 * As the returned string is used for comparison in tests, this method should not be changed.
+	 *  Tells whether this type argument is a type reference. Used to avoid instanceof checks.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
-	String getTypeRefAsString();
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * Convenience method, returns true if this type reference or one of its type arguments (transitively) contains references to type variables, or if the reference is not parameterized and the referenced type is generic.
-	 * Returns false for all type arguments and type references except parameterized type references.
-	 * <!-- end-model-doc -->
-	 * @model unique="false"
-	 * @generated
-	 */
-	boolean containsWildcards();
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * Convenience method, returns true if type reference or one of its type
-	 * arguments (transitively) contains references to type variables, or if the
-	 * reference is not parameterized  (or one of its nested references) but refers to a generic type.
-	 * Returns false for all type references except parameterized type references.
-	 * <!-- end-model-doc -->
-	 * @model unique="false"
-	 * @generated
-	 */
-	boolean containsUnboundTypeVariables();
+	boolean isTypeRef();
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -78,5 +51,17 @@ public interface TypeArgument extends EObject {
 	 * @generated
 	 */
 	Type getDeclaredType();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Convenience method, returns the type expression, usually the type name, as a string. Basically used for testing.
+	 * As the returned string is used for comparison in tests, this method should not be changed.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	String getTypeRefAsString();
 
 } // TypeArgument
