@@ -76,7 +76,7 @@ export project abstract class N4Type extends N4NamedElement {
 	public fqn: string;
 
 	public static of(n4object: any+): N4Type {
-		return (n4object?.n4type || n4object?.constructor?.n4type) as N4Type;
+		return n4object?.n4type || n4object?.constructor?.n4type;
 	}
 
 	public get isClass(): boolean {

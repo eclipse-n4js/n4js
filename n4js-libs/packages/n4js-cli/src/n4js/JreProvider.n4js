@@ -20,7 +20,7 @@ import * as followRedirects+ from 'follow-redirects';
 import {JreInfo, Platform, JRE_INFO_MAP, JAVA_DEFAULT, BIN_DIR, JRE_URL_DIR, JRE_DIR} from 'Globals';
 import {detectJavaVersion} from 'JavaVersion';
 
-const decompress = (lib_decompress.default as any+) as {function(string, string): Promise<any,any>};
+const decompress: {function(string, string): Promise<any,any>} = lib_decompress.default;
 export const JRE_VERSION = 11;
 
 

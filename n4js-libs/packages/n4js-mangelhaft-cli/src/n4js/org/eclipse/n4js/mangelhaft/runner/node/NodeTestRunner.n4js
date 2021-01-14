@@ -155,7 +155,7 @@ class NodeTestRunner  {
 
 function loadTestCatalog(log: {function(any):void}, testCatalogFile: string) : TestInfos {
     log("Loading test catalog: " + testCatalogFile);
-    return readJsonFile(testCatalogFile) as TestInfos;
+    return readJsonFile(testCatalogFile);
 }
 
 function loadTestCatalogsInDirectories(log: {function(any):void}, projectDirs: string[]) : TestInfos[] {

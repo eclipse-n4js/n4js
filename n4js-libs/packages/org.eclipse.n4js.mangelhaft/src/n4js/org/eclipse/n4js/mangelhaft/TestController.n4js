@@ -139,14 +139,14 @@ export public class TestController {
         try {
             let groupModule: Object;
             try {
-                groupModule = (await import(`${info.origin}/${moduleName}`)) as Object;
+                groupModule = await import(`${info.origin}/${moduleName}`);
             } catch (exc) { // find package.json
                 const packageJsonPath = findPackageJson(process.cwd());
                 if (!packageJsonPath || readJsonFile(packageJsonPath).name !== info.origin) {
                     throw exc;
                 }
                 const fpath = `${lib_path.dirname(packageJsonPath)}${lib_path.sep}${moduleName.split("/").join(lib_path.sep)}.js`;
-                groupModule = (await import(fpath)) as Object;
+                groupModule = await import(fpath);
             }
             testClasses = [groupModule[ctorName] as constructor{N4Object}];
         } catch (ex) {

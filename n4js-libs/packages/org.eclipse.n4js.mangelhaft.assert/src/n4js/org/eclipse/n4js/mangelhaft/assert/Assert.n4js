@@ -78,7 +78,7 @@ export public class Assert {
      */
     protected static fail_(actual: any, expected: any, message: string=, operator: string=, stackStartFunction: Function=) {
         let obj: Object = this,
-            fail_ = obj["fail_"],
+            fail_ = obj["fail_"] as Function,
             error = new AssertionError({
                 string message: message,
                 any actual: actual,
