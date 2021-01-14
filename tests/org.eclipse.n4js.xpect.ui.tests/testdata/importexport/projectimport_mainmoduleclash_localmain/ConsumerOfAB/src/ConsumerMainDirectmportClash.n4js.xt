@@ -15,6 +15,7 @@
 		Project "ConsumerOfAB" {
 			Folder "src" {
 				ThisFile {}
+				File "Main.n4js" { from="../src/Main.n4js" }
 			}
 			File "package.json" { from="../package.json"}
 		}
@@ -36,10 +37,9 @@
 */
 
 
-//actually two MainModules are found, one in A, other in B
-//since calling project does not have "Main" first one found wins (ambiguity is not the resolved by using project import, or preficing module with project id)
-//TODO it would be nice to have validation giving a warning saying project import should be used for MainModules
-// XPECT noerrors --> resolves to first found, e.g. A/Main
+// three MainModules are found in projects ConsumerOfAB, A, and B
+// but unresolved reference is forced in scoping
+// XPECT errors --> "Cannot resolve plain module specifier (without project name as first segment): multiple matching modules found: ConsumerOfAB/Main, A/Main, B/Main." at ""Main""
 import * as SpaceMain from "Main"
 
 console.log("\nA" + SpaceMain)
