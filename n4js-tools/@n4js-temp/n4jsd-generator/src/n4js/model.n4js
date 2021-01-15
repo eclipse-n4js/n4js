@@ -111,6 +111,8 @@ export class Signature {
 
 export class Parameter extends NamedElement {
 	type: TypeRef;
+	isOptional: boolean;
+	isVariadic: boolean;
 }
 
 export class TypeRef {
@@ -333,8 +335,14 @@ class Emitter {
 
 	emitParameter(param: Parameter) {
 		const buff = this.buff;
+		if (param.isVariadic) {
+			buff.push("...");
+		}
 		buff.push(param.name);
 		this.emitTypeRef(param.type);
+		if (param.isOptional) {
+			buff.push("= ");
+		}
 	}
 
 	emitAccessibility(member: Member) {
