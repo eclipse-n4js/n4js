@@ -22,6 +22,7 @@ import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.utils.io.FileDeleter
+import java.util.LinkedHashSet
 
 /**
  * Generates the code for a project.
@@ -88,12 +89,23 @@ public class Project {
 			for (module: modules)
 				module.create(sourceFolder)
 		}
+		
+		override equals(Object o) {
+			if (o instanceof SourceFolder) {
+				Objects.equals(name, o.name);
+			}
+			return false;
+		}
+		
+		override hashCode() {
+			return name.hashCode();
+		}
 	}
 
 	final String projectName;
 	final String vendorId;
 	final String vendorName;
-	final List<SourceFolder> sourceFolders = newLinkedList();
+	final LinkedHashSet<SourceFolder> sourceFolders = newLinkedHashSet();
 	final Set<String> projectDependencies = newLinkedHashSet();
 	final Map<String, Project> nodeModuleProjects = newHashMap();
 	ProjectType projectType;
@@ -259,7 +271,7 @@ public class Project {
 	 *
 	 * @return list of all source folders of this project.
 	 */
-	public def List<SourceFolder> getSourceFolders() {
+	public def LinkedHashSet<SourceFolder> getSourceFolders() {
 		return sourceFolders;
 	}
 

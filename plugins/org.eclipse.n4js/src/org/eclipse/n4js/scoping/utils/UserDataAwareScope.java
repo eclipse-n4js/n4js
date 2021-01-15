@@ -232,6 +232,11 @@ public class UserDataAwareScope extends PolyfillAwareSelectableBasedScope {
 		});
 	}
 
+	@Override
+	protected boolean isShadowed(IEObjectDescription input) {
+		return false;
+	}
+
 	/**
 	 * {@link EcoreUtil#resolve(EObject, EObject)} pretty much does the same thing but will eagerly load the resource.
 	 * We are happy with the content that we just put into it.
