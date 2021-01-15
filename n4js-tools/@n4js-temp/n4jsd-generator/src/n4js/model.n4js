@@ -198,6 +198,7 @@ class Emitter {
 	emitVariable(variable: Variable) {
 		const buff = this.buff;
 		this.emitExportKeywordIfNecessary(variable);
+		buff.push("public ");
 		buff.push(variable.keyword.name.toLowerCase());
 		buff.push(" ");
 		buff.push(variable.name);
@@ -209,6 +210,7 @@ class Emitter {
 		const buff = this.buff;
 		this.emitExportKeywordIfNecessary(fun);
 		buff.push("external ");
+		buff.push("public ");
 		buff.push("function ");
 		buff.push(fun.name);
 		this.emitSignature(fun.signatures[0]);
@@ -224,6 +226,7 @@ class Emitter {
 		}
 		this.emitExportKeywordIfNecessary(type);
 		buff.push("external ");
+		buff.push("public ");
 		buff.push(type.kind.name.toLowerCase(), " ");
 		if (type.defSiteStructural) {
 			buff.push("~");

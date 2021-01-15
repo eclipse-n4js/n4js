@@ -34,9 +34,9 @@ export public class ConvertImportsTest extends AbstractN4jsdGeneratorTest {
 					import { Buffer1 } from "buffer";
 					import { Buffer2 } from "buffer";
 
-					export const buff1: any+;
+					export public const buff1: any+;
 
-					export const buff2: any+;
+					export public const buff2: any+;
 				`
 			}
 		);
@@ -62,9 +62,9 @@ export public class ConvertImportsTest extends AbstractN4jsdGeneratorTest {
 				n4jsd: `
 					import * as NS from "buffer";
 
-					export const buff1: any+;
+					export public const buff1: any+;
 
-					export const buff2: any+;
+					export public const buff2: any+;
 				`
 			}
 		);
@@ -88,7 +88,7 @@ export public class ConvertImportsTest extends AbstractN4jsdGeneratorTest {
 				n4jsd: `
 					import MyDefaultBuffer from "defaultBuffer";
 
-					export const buff: any+;
+					export public const buff: any+;
 				`
 			}
 		);
@@ -133,7 +133,7 @@ export public class ConvertImportsTest extends AbstractN4jsdGeneratorTest {
 				n4jsd: `
 					import { ClassFromModuleNested } from "folder/nested";
 
-					export const someConst: any+;
+					export public const someConst: any+;
 				`
 			}
 		);

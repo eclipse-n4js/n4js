@@ -23,9 +23,9 @@ export public class ConvertFunctionsTest extends AbstractN4jsdGeneratorTest {
 					export function encode(segments: string[]): string;
 				`,
 				n4jsd: `
-					export external function decode(str: any+): any+;
+					export external public function decode(str: any+): any+;
 
-					export external function encode(segments: any+): any+;
+					export external public function encode(segments: any+): any+;
 				`
 			}
 		);

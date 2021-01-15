@@ -29,11 +29,11 @@ export public class ConvertMiscellaneousTest extends AbstractN4jsdGeneratorTest 
 					}
 				`,
 				n4jsd: `
-					export var someVarUndeclared: any+;
+					export public var someVarUndeclared: any+;
 
-					export external function funUndeclared(p: any+): any+;
+					export external public function funUndeclared(p: any+): any+;
 
-					export external class ~ClassUndeclared {
+					export external public class ~ClassUndeclared {
 						field: any+;
 						get getter(): any+;
 						set setter(value: any+);
@@ -57,7 +57,7 @@ export public class ConvertMiscellaneousTest extends AbstractN4jsdGeneratorTest 
 				`,
 				n4jsd: `
 					@StringBased
-					export external enum AliasedUnionOfLiteralStringTypes {
+					export external public enum AliasedUnionOfLiteralStringTypes {
 						GOOD: 'GOOD',
 						BAD: 'BAD',
 						IN_BETWEEN: 'IN BETWEEN',
@@ -67,7 +67,7 @@ export public class ConvertMiscellaneousTest extends AbstractN4jsdGeneratorTest 
 					}
 
 					@NumberBased
-					export external enum AliasedUnionOfLiteralNumberTypes {
+					export external public enum AliasedUnionOfLiteralNumberTypes {
 						L1: 1,
 						L2: 2,
 						L4: 4,

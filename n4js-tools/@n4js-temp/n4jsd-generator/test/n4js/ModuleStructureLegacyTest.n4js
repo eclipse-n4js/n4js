@@ -45,14 +45,14 @@ export public class ModuleStructureLegacyTest extends AbstractN4jsdGeneratorTest
 				n4jsd: `
 					import { Buffer } from "buffer";
 
-					export var cachedBuffer: any+;
+					export public var cachedBuffer: any+;
 
-					export external interface ~Ifc {
+					export external public interface ~Ifc {
 					}
 
-					export external function getBufferSize(buff: any+): any+;
+					export external public function getBufferSize(buff: any+): any+;
 
-					export external function createBuffer(): any+;
+					export external public function createBuffer(): any+;
 				`
 			}
 		);
