@@ -739,8 +739,9 @@ import com.google.common.collect.Sets;
 		// TODO consider applying this guard to all kinds of reductions
 		// (i.e. move this code to entry method #reduce(TypeArgument, TypeArgument, Variance))
 
-		// due to the prototypical implementation of SemanticEqualsWrapper#hashCode() we cannot use
-		// the following guard implementation (would lead to performance issues):
+		// TODO GH-2036 remove work-around for performance issues in hash code computation
+		// Due to the prototypical implementation of SemanticEqualsWrapper#hashCode() we cannot use
+		// the following straightforward guard implementation (would lead to performance issues):
 
 		// final Object key = createRecursionGuardKeyForReduceStructuralTypeRef(left, right, variance);
 		// if (G.get(key) != null) {
@@ -803,7 +804,7 @@ import com.google.common.collect.Sets;
 		return wasAdded;
 	}
 
-	@SuppressWarnings("unused")
+	@SuppressWarnings("unused") // TODO GH-2036 use this method for creating the recursion guard key
 	private Object createRecursionGuardKeyForReduceStructuralTypeRef(TypeRef left, TypeRef right, Variance variance) {
 		// (left -> right) -> variance
 		return Pair.of(
