@@ -233,8 +233,7 @@ class DestructureHelper {
 				val G2 = G.wrap;
 				tsh.addSubstitutions(G2, parentValueTypeRef);
 				val resultSubst = ts.substTypeVariables(G2, result);
-				val resultSubstUB = if(resultSubst!==null) ts.upperBound(G2, resultSubst);
-				return resultSubstUB;
+				return resultSubst;
 			}
 		}
 		return null;
@@ -270,9 +269,7 @@ class DestructureHelper {
 	 * Both the given value type and inferred expression type may be null and then this returns null.
 	 */
 	private def TypeRef mergeWithTypeOfDefaultExpression(RuleEnvironment G, TypeRef valueTypeRef, DestructNode node) {
-		val exprTypeRefRaw = if(node.defaultExpr!==null) ts.type(G, node.defaultExpr);
-		val isNullOrUndef = if(exprTypeRefRaw!==null) ts.subtypeSucceeded(G,exprTypeRefRaw,G.undefinedTypeRef) || ts.subtypeSucceeded(G,exprTypeRefRaw,G.nullTypeRef);
-		val exprTypeRef = if(exprTypeRefRaw!==null && !isNullOrUndef) ts.upperBound(G,exprTypeRefRaw);
+		val exprTypeRef = if(node.defaultExpr!==null) ts.type(G, node.defaultExpr);
 		if(valueTypeRef!==null && exprTypeRef!==null) {
 			// we have to merge the two types ...
 			// (the small optimization with the subtype checks should be done by #createUnionType(), but isn't)
