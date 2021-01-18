@@ -19,6 +19,7 @@ import static org.eclipse.n4js.typesystem.constraints.Reducer.BooleanOp.DISJUNCT
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef;
@@ -55,6 +56,7 @@ import org.eclipse.n4js.utils.StructuralTypesHelper;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.Sets;
 
 /**
  * Contains all logic for reduction, i.e. for reducing a {@link TypeConstraint} into simpler {@link TypeBound}s. A
@@ -736,11 +738,33 @@ import com.google.common.base.Optional;
 		// recursion guard
 		// TODO consider applying this guard to all kinds of reductions
 		// (i.e. move this code to entry method #reduce(TypeArgument, TypeArgument, Variance))
-		final Object key = createRecursionGuardKeyForReduceStructuralTypeRef(left, right, variance);
-		if (G.get(key) != null) {
-			return true;
+
+		// due to the prototypical implementation of SemanticEqualsWrapper#hashCode() we cannot use
+		// the following guard implementation (would lead to performance issues):
+
+		// final Object key = createRecursionGuardKeyForReduceStructuralTypeRef(left, right, variance);
+		// if (G.get(key) != null) {
+		// return true;
+		// }
+		// G.put(key, Boolean.TRUE);
+
+		// temporary, two-stage guard implementation:
+		Object semanticEqualsPair = Pair.of(
+				new TypeCompareUtils.SemanticEqualsWrapper(left),
+				new TypeCompareUtils.SemanticEqualsWrapper(right));
+		final Object key = createTemporaryRecursionGuardKeyForReduceStructuralTypeRef(left, right, variance);
+		final Object value = G.get(key);
+		if (value != null) {
+			@SuppressWarnings("unchecked")
+			final Set<Object> valueCasted = (Set<Object>) value;
+			if (valueCasted.contains(semanticEqualsPair)) {
+				return true;
+			} else {
+				valueCasted.add(semanticEqualsPair);
+			}
+		} else {
+			G.put(key, Sets.newHashSet(semanticEqualsPair));
 		}
-		G.put(key, Boolean.TRUE);
 		// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 		final RuleEnvironment G2 = RuleEnvironmentExtensions.wrap(G);
@@ -779,6 +803,7 @@ import com.google.common.base.Optional;
 		return wasAdded;
 	}
 
+	@SuppressWarnings("unused")
 	private Object createRecursionGuardKeyForReduceStructuralTypeRef(TypeRef left, TypeRef right, Variance variance) {
 		// (left -> right) -> variance
 		return Pair.of(
@@ -788,6 +813,23 @@ import com.google.common.base.Optional;
 								new TypeCompareUtils.SemanticEqualsWrapper(left),
 								new TypeCompareUtils.SemanticEqualsWrapper(right)),
 						variance));
+	}
+
+	private Object createTemporaryRecursionGuardKeyForReduceStructuralTypeRef(TypeRef left, TypeRef right,
+			Variance variance) {
+		// use declared types, if available:
+		Object actualLeft = left.getDeclaredType();
+		if (actualLeft == null) {
+			actualLeft = left;
+		}
+		Object actualRight = right.getDeclaredType();
+		if (actualRight == null) {
+			actualRight = right;
+		}
+		// (left -> right) -> variance
+		return Pair.of(
+				RuleEnvironmentExtensions.GUARD_REDUCER__REDUCE_STRUCTURAL_TYPE_REF,
+				Pair.of(Pair.of(actualLeft, actualRight), variance));
 	}
 
 	/**
