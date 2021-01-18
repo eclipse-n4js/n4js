@@ -56,29 +56,7 @@ public abstract class TypeArgumentImpl extends ProxyResolvingEObjectImpl impleme
 	 * @generated
 	 */
 	@Override
-	public String getTypeRefAsString() {
-		// TODO: implement this method
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public boolean containsWildcards() {
-		return false;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public boolean containsUnboundTypeVariables() {
+	public boolean isTypeRef() {
 		return false;
 	}
 
@@ -98,16 +76,26 @@ public abstract class TypeArgumentImpl extends ProxyResolvingEObjectImpl impleme
 	 * @generated
 	 */
 	@Override
+	public String getTypeRefAsString() {
+		// TODO: implement this method
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
-			case TypeRefsPackage.TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING:
-				return getTypeRefAsString();
-			case TypeRefsPackage.TYPE_ARGUMENT___CONTAINS_WILDCARDS:
-				return containsWildcards();
-			case TypeRefsPackage.TYPE_ARGUMENT___CONTAINS_UNBOUND_TYPE_VARIABLES:
-				return containsUnboundTypeVariables();
+			case TypeRefsPackage.TYPE_ARGUMENT___IS_TYPE_REF:
+				return isTypeRef();
 			case TypeRefsPackage.TYPE_ARGUMENT___GET_DECLARED_TYPE:
 				return getDeclaredType();
+			case TypeRefsPackage.TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING:
+				return getTypeRefAsString();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

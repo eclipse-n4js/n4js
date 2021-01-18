@@ -250,17 +250,6 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 *  @see TypeArgument#containsWildcard()
-	 * <!-- end-model-doc -->
-	 * @model unique="false"
-	 * @generated
-	 */
-	boolean containsWildcards();
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
 	 * Overrides {@link TypeRef#getTypeRefAsString()}
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
@@ -300,17 +289,6 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	 * @generated
 	 */
 	boolean isRaw();
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * @see TypeArgument#containsUnboundTypeVariables()
-	 * <!-- end-model-doc -->
-	 * @model unique="false"
-	 * @generated
-	 */
-	boolean containsUnboundTypeVariables();
 
 	/**
 	 * <!-- begin-user-doc -->

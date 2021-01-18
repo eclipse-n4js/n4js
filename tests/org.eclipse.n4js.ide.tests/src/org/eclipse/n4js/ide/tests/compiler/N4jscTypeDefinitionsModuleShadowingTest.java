@@ -57,11 +57,13 @@ public class N4jscTypeDefinitionsModuleShadowingTest extends AbstractCliCompileT
 
 		Collection<String> fileNames = cliResult.getTranspiledFileNames();
 
-		assertEquals(cliResult.toString(), 1, cliResult.getTranspiledFilesCount());
-		assertEquals(cliResult.toString(), "packages/Client/src-gen/Client.js", String.join(", ", fileNames));
-		assertEquals(cliResult.toString(), //
-				"packages/Broken_Client/package.json, "//
-						+ "packages/Broken_Client/src/Client.n4js, "//
+		assertEquals(cliResult.toString(), 2, cliResult.getTranspiledFilesCount());
+		assertEquals(cliResult.toString(),
+				"packages/Broken_Client/src-gen/Client.js, "
+						+ "packages/Client/src-gen/Client.js",
+				String.join(", ", fileNames));
+		assertEquals(cliResult.toString(),
+				"packages/Broken_Client/package.json, "
 						+ "packages/Client/package.json",
 				String.join(", ", cliResult.getErrFiles()));
 	}

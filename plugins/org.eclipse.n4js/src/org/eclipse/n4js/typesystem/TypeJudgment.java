@@ -995,16 +995,8 @@ import com.google.inject.Inject;
 						? TypeUtils.createTypeTypeRef(ctorTypeArg, true)
 						: unknown();
 			} else if (receiverTypeRefUB.isDynamic() && prop != null && prop.eIsProxy()) {
-				if (receiverTypeRefUB.getDeclaredType() instanceof ModuleNamespaceVirtualType) {
-					// temporary special case for backward compatibility:
-					// access to an unknown property of a dynamic namespace import
-					// --> any+ would be correct but use UnknownTypeRef to not break existing code
-					// TODO GH-1814 remove this special case (i.e. use anyTypeRefDynamic(G2) instead)
-					propTypeRef = unknown();
-				} else {
-					// access to an unknown property of a dynamic type
-					propTypeRef = anyTypeRefDynamic(G2);
-				}
+				// access to an unknown property of a dynamic type
+				propTypeRef = anyTypeRefDynamic(G2);
 			} else {
 				propTypeRef = ts.type(wrap(G2), prop);
 				if (expr.isParameterized()) {

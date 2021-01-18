@@ -62,4 +62,41 @@ class PerformanceSubtypeTest extends AbstractTypesystemForPerformanceTest {
 		'''.assertValidate(0)
 	}
 
+	@Test(timeout=1000)
+	def void testRecursiveStructuralType() {
+		'''
+			class A {}
+			class B {}
+			class C {}
+			class D {}
+			class E {}
+			class F {}
+			interface ~I<T> {
+				public m01(): ~I<A>
+				public m02(): ~I<B>
+				public m03(): ~I<C>
+				public m04(): ~I<D>
+				public m05(): ~I<E>
+				public m06(): ~I<F>
+
+				public m11(): ~I<A>
+				public m12(): ~I<B>
+				public m13(): ~I<C>
+				public m14(): ~I<D>
+				public m15(): ~I<E>
+				public m16(): ~I<F>
+
+				public m21(): ~I<A>
+				public m22(): ~I<B>
+				public m23(): ~I<C>
+				public m24(): ~I<D>
+				public m25(): ~I<E>
+				public m26(): ~I<F>
+			}
+			
+			let i1: I<string>;
+			let i2: I<number>;
+			i1 = i2; // <-- took extremely long
+		'''.assertValidate(0)
+	}
 }

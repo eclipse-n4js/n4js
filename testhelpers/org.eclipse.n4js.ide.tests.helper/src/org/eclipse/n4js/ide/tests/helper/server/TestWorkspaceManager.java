@@ -72,22 +72,27 @@ public class TestWorkspaceManager {
 	 */
 	static final public String CFG_DEPENDENCIES = "#DEPENDENCY";
 	/**
-	 * Reserved string to define the main module property "main" in the package.json.<br>
+	 * Reserved string to define the main module property "main" of a project, usually done in the package.json.<br>
 	 * see {@link Documentation#CFG_MAIN_MODULE}
 	 */
 	static final public String CFG_MAIN_MODULE = "#MAIN_MODULE";
 	/**
-	 * Reserved string to defined the source folder in the package.json.<br>
+	 * Reserved string to define the source folder of a project, usually done in the package.json.<br>
 	 * Usage is similar to {@link #CFG_MAIN_MODULE}, see {@link Documentation#CFG_MAIN_MODULE}.
 	 */
 	static final public String CFG_SOURCE_FOLDER = "#SOURCE_FOLDER";
 	/**
-	 * Reserved string to identify the directory 'node_modules'<br>
+	 * Reserved string placeholder for the directory 'node_modules'<br>
 	 * see {@link Documentation#PROJECT_NODE_MODULES} and {@link Documentation#WORKSPACE_NODE_MODULES}
 	 */
 	static final public String CFG_NODE_MODULES = "#NODE_MODULES:";
 	/**
-	 * Reserved string to identify the src folder of a project<br>
+	 * Reserved string to define the workspaces folder name, usually done in the package.json of a yarn project.<br>
+	 * see {@link Documentation#CFG_WORKSPACES_FOLDER}
+	 */
+	static final public String CFG_WORKSPACES_FOLDER = "#CFG_WORKSPACES_FOLDER:";
+	/**
+	 * Reserved string placeholder for the src folder of a project<br>
 	 * see {@link #CFG_NODE_MODULES}
 	 */
 	static final public String CFG_SRC = "#SRC:";
@@ -429,7 +434,7 @@ public class TestWorkspaceManager {
 						project.addNodeModuleProject(nmProject);
 						project.addProjectDependency(nmProject.getName());
 					}
-					SourceFolder nmSourceFolder = nmProject.getSourceFolders().get(0);
+					SourceFolder nmSourceFolder = nmProject.getSourceFolders().iterator().next();
 					createAndAddModule(contents, nmModuleName, nmSourceFolder);
 				}
 
@@ -438,7 +443,16 @@ public class TestWorkspaceManager {
 					throw new IllegalArgumentException("unknown reserved string: " + moduleName);
 				}
 
-				createAndAddModule(contents, moduleName, sourceFolder);
+				SourceFolder moduleSpecificSourceFolder = sourceFolder;
+				if (moduleName.startsWith("/")) {
+					// use first segment as source folder
+					int endOfFirstSegment = moduleName.indexOf("/", 1);
+					String sourceFolderName = moduleName.subSequence(1, endOfFirstSegment).toString();
+					moduleName = moduleName.substring(endOfFirstSegment + 1);
+					moduleSpecificSourceFolder = project.createSourceFolder(sourceFolderName);
+				}
+
+				createAndAddModule(contents, moduleName, moduleSpecificSourceFolder);
 			}
 		}
 
@@ -476,6 +490,15 @@ public class TestWorkspaceManager {
 				prjName = prjName.substring(CFG_NODE_MODULES.length());
 				Project project = createSimpleProject(prjName, moduleContents, dependencies, ProjectKind.NodeModule);
 				yarnProject.addNodeModuleProject(project);
+
+			} else if (prjName.startsWith(CFG_WORKSPACES_FOLDER)) {
+				int idxCFG = CFG_WORKSPACES_FOLDER.length();
+				int idxSlash = prjName.indexOf("/");
+				String wsFolder = prjName.substring(idxCFG, idxSlash);
+				prjName = prjName.substring(idxSlash + 1);
+				Project project = createSimpleProject(prjName, moduleContents, dependencies, ProjectKind.Member);
+				yarnProject.addMemberProject(wsFolder, project);
+
 			} else {
 				Project project = createSimpleProject(prjName, moduleContents, dependencies, ProjectKind.Member);
 				yarnProject.addMemberProject(project);

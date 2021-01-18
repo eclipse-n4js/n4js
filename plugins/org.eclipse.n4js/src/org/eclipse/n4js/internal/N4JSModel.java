@@ -31,6 +31,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.internal.MultiCleartriggerCache.CleartriggerSupplier;
+import org.eclipse.n4js.projectDescription.ProjectDependency;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.projectDescription.ProjectType;
@@ -60,9 +61,6 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 
 	@Inject
 	protected ExternalLibraryWorkspace externalLibraryWorkspace;
-
-	@Inject
-	protected FileBasedExternalPackageManager packageManager;
 
 	@Inject
 	private MultiCleartriggerCache cache;
@@ -262,6 +260,18 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 		cache.clear(location.toURI());
 	}
 
+	public ImmutableList<String> getDependenciesUnresolved(N4JSProject project) {
+		final ProjectDescription pd = getProjectDescription(project);
+		if (pd == null) {
+			return ImmutableList.of();
+		}
+		ImmutableList.Builder<String> result = ImmutableList.builder();
+		for (ProjectDependency prjDep : pd.getProjectDependencies()) {
+			result.add(prjDep.getProjectName());
+		}
+		return result.build();
+	}
+
 	public ImmutableList<? extends IN4JSProject> getDependencies(N4JSProject project,
 			boolean includeAbsentProjects) {
 		return getDependencies(project, false, includeAbsentProjects);
@@ -274,6 +284,7 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 
 	private ImmutableList<? extends IN4JSProject> getDependencies(N4JSProject project, boolean includeApis,
 			boolean includeAbsentProjects) {
+
 		ImmutableList.Builder<IN4JSProject> result = ImmutableList.builder();
 		ProjectDescription description = getProjectDescription(project);
 		if (description != null) {

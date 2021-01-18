@@ -57,7 +57,7 @@ export default public class NodeTestAPI {
 
             const execArgv = process.execArgv.slice();
             const execArgvOptions = execArgv.join(" ");
-            const nodeOptions = process.env.NODE_OPTIONS as string || "";
+            const nodeOptions = process.env.NODE_OPTIONS || "";
             const checkOption = (str: string, opt: string): boolean => str.endsWith(opt) || str.indexOf(`${opt} `) >= 0;
             const hasOption = (opt: string): boolean => checkOption(execArgvOptions, opt) || checkOption(nodeOptions, opt);
             

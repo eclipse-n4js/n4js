@@ -154,7 +154,7 @@ export public async function createN4JSProcess(args: N4jscArguments, spawnOption
 
 async function modifyArgs(args: N4jscArguments, log: {function(string)}): N4jscArguments {
     // set java option -Xmx
-    const envJavaToolOptions = process.env.JAVA_TOOL_OPTIONS as string;
+    const envJavaToolOptions: string = process.env.JAVA_TOOL_OPTIONS;
     const match = envJavaToolOptions?.match(/-xmx(?<size>[\S]*)/);
     const size = match?.groups?.size;
     if (size) {
@@ -218,7 +218,7 @@ export public function findN4jscJarValue(workingDir: string, log: {function(stri
     if (process.env.N4JSC_JAR) {
         // custom n4jsc.jar given as environment variable
         log("picked up environment variable N4JSC_JAR");
-        return process.env.N4JSC_JAR as string;
+        return process.env.N4JSC_JAR;
     }
     if (workingDir && fs.existsSync(workingDir)) {
         // n4js-cli config file exists
@@ -276,7 +276,7 @@ function getN4jscJarFromConfig(pathN4jscliConfigFile : string) : string {
         const data = fs.readFileSync(pathN4jscliConfigFile, {encoding : 'utf8'});
         const n4jscliConfig : any+ = JSON.parse(data);
         if (n4jscliConfig && n4jscliConfig["n4jsc.jar"]) {
-            return n4jscliConfig["n4jsc.jar"] as string;
+            return n4jscliConfig["n4jsc.jar"];
         }
     }
     return null;

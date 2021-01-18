@@ -138,6 +138,11 @@ public final class N4JSGlobals {
 	public static final N4JSProjectName N4JS_RUNTIME = new N4JSProjectName("n4js-runtime");
 
 	/**
+	 * Runtime for node.js
+	 */
+	public static final N4JSProjectName N4JS_RUNTIME_NODE = new N4JSProjectName("n4js-runtime-node");
+
+	/**
 	 * Project types for which a dependency to the {@link #N4JS_RUNTIME n4js-runtime} is mandatory.
 	 */
 	public static final Set<ProjectType> PROJECT_TYPES_REQUIRING_N4JS_RUNTIME = ImmutableSet.of(
@@ -157,6 +162,10 @@ public final class N4JSGlobals {
 	 * The name of an npm command.
 	 */
 	public static final String NPM = "npm";
+	/**
+	 * Name of the npm scope of n4js definition projects.
+	 */
+	public static final String N4JSD_SCOPE = "@n4jsd";
 	/**
 	 * Name of the npm node_modules folder.
 	 */

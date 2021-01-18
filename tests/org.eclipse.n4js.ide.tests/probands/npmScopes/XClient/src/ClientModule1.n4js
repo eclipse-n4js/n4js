@@ -3,7 +3,7 @@
 
 import {A} from "A"
 import {B} from "B"
-import {C as C1} from "C"
+import {C as C1} from "@myScope/Lib/C"
 import {C as C2} from "Lib/C"
 import {D as D1} from "@myScope/Lib"
 import {D as D2} from "Lib"

@@ -89,6 +89,28 @@ enum OptionalFieldStrategy {
 }
 
 /*
+ * Type argument used in parameterized types.
+ */
+abstract class TypeArgument {
+	/* Tells whether this type argument is a type reference. Used to avoid instanceof checks. */
+	op boolean isTypeRef() {
+		return false;
+	}
+	/*
+	 * Convenience method, returns null for all type arguments except parameterized type references.
+	 * Reduces number of casts in client code.
+	 */
+	op Type getDeclaredType() {
+		return null;
+	}
+	/*
+	 * Convenience method, returns the type expression, usually the type name, as a string. Basically used for testing.
+	 * As the returned string is used for comparison in tests, this method should not be changed.
+	 */
+	op String getTypeRefAsString()
+}
+
+/*
  * Base class for all type references
  */
 abstract class TypeRef extends TypeArgument, Versionable {
@@ -110,6 +132,13 @@ abstract class TypeRef extends TypeArgument, Versionable {
 	 */
 	op String getModifiersAsString() {
 		 return "";
+	}
+
+	/*
+	 * Overrides {@link TypeArgument#isTypeRef()}.
+	 */
+	op boolean isTypeRef() {
+		return true;
 	}
 	/*
 	 * Returns true if the type referenced is either class which is declared final, an enum or a primitive. This is needed in case of type
@@ -514,10 +543,6 @@ class ParameterizedTypeRef extends BaseTypeRef {
 		}
 		return definedTypingStrategy
 	}
-	/* @see TypeArgument#containsWildcard() */
-	op boolean containsWildcards() {
-		return (typeArgs.empty && ! declaredType.generic) || typeArgs.exists[it.containsWildcards]
-	}
 	/*
 	 * Overrides {@link TypeRef#getTypeRefAsString()}
 	 */
@@ -548,14 +573,6 @@ class ParameterizedTypeRef extends BaseTypeRef {
 	 */
 	op boolean isRaw() {
 		return isGeneric() && typeArgs.size<declaredType.typeVars.size;
-	}
-	/*
-	 * @see TypeArgument#containsUnboundTypeVariables()
-	 */
-	op boolean containsUnboundTypeVariables() {
-		return declaredType instanceof TypeVariable // ok, that's simple
-		|| (!parameterized && declaredType.generic) // no type args, type variable is indirectly referenced from raw type
-		|| typeArgs.exists[it.containsUnboundTypeVariables] // transitively
 	}
 
 	/*
@@ -841,40 +858,6 @@ class TypeTypeRef extends BaseTypeRef {
 	}
 
 	// note: operation getStaticType moved to TypeSystemHelper#getStaticType()
-}
-
-/*
- * Type argument used in parameterized types.
- */
-abstract class TypeArgument {
-	/*
-	 * Convenience method, returns the type expression, usually the type name, as a string. Basically used for testing.
-	 * As the returned string is used for comparison in tests, this method should not be changed.
-	 */
-	op String getTypeRefAsString()
-	/*
-	 * Convenience method, returns true if this type reference or one of its type arguments (transitively) contains references to type variables, or if the reference is not parameterized and the referenced type is generic.
-	 * Returns false for all type arguments and type references except parameterized type references.
-	 */
-	op boolean containsWildcards() {
-		return false
-	}
-	/*
-	 * Convenience method, returns true if type reference or one of its type
-	 * arguments (transitively) contains references to type variables, or if the
-	 * reference is not parameterized  (or one of its nested references) but refers to a generic type.
-	 * Returns false for all type references except parameterized type references.
-	 */
-	op boolean containsUnboundTypeVariables() {
-		return false
-	}
-	/*
-	 * Convenience method, returns null for all type arguments except parameterized type references.
-	 * Reduces number of casts in client code.
-	 */
-	op Type getDeclaredType() {
-		return null;
-	}
 }
 
 /*

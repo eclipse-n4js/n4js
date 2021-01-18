@@ -37,5 +37,5 @@ export public async function createTempDir(): string {
 
 export public function readJsonFile(path: string): Object+ {
     const content = String(readFileSync(path, { encoding: "UTF-8" }));
-    return JSON.parse(content) as Object;
+    return JSON.parse(content) as Object+;
 }

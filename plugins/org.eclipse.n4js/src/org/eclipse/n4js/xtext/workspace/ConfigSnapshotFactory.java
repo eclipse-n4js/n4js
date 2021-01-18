@@ -12,7 +12,7 @@ package org.eclipse.n4js.xtext.workspace;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -50,9 +50,9 @@ public class ConfigSnapshotFactory {
 	public WorkspaceConfigSnapshot createWorkspaceConfigSnapshot(URI path,
 			Iterable<? extends ProjectConfigSnapshot> projects) {
 
-		Map<String, ProjectConfigSnapshot> lookupName2Project = new HashMap<>();
-		Map<URI, ProjectConfigSnapshot> lookupProjectPath2Project = new HashMap<>();
-		Map<URI, ProjectConfigSnapshot> lookupSourceFolderPath2Project = new HashMap<>();
+		Map<String, ProjectConfigSnapshot> lookupName2Project = new LinkedHashMap<>();
+		Map<URI, ProjectConfigSnapshot> lookupProjectPath2Project = new LinkedHashMap<>();
+		Map<URI, ProjectConfigSnapshot> lookupSourceFolderPath2Project = new LinkedHashMap<>();
 		updateWorkspaceConfigSnapshotLookupMaps(lookupName2Project, lookupProjectPath2Project,
 				lookupSourceFolderPath2Project, projects, Collections.emptyList());
 
@@ -99,9 +99,11 @@ public class ConfigSnapshotFactory {
 			ImmutableList<? extends ProjectConfigSnapshot> changedProjects,
 			ImmutableSet<String> removedProjects) {
 
-		Map<String, ProjectConfigSnapshot> lookupName2Project = new HashMap<>(wcs.name2Project);
-		Map<URI, ProjectConfigSnapshot> lookupProjectPath2Project = new HashMap<>(wcs.projectPath2Project);
-		Map<URI, ProjectConfigSnapshot> lookupSourceFolderPath2Project = new HashMap<>(wcs.sourceFolderPath2Project);
+		Map<String, ProjectConfigSnapshot> lookupName2Project = new LinkedHashMap<>(wcs.name2Project);
+		Map<URI, ProjectConfigSnapshot> lookupProjectPath2Project = new LinkedHashMap<>(wcs.projectPath2Project);
+		Map<URI, ProjectConfigSnapshot> lookupSourceFolderPath2Project = new LinkedHashMap<>(
+				wcs.sourceFolderPath2Project);
+
 		updateWorkspaceConfigSnapshotLookupMaps(lookupName2Project,
 				lookupProjectPath2Project,
 				lookupSourceFolderPath2Project,

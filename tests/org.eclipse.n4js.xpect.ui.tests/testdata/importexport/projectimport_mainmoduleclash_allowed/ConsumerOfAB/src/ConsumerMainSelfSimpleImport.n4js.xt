@@ -38,7 +38,7 @@
 
 
 // XPECT noerrors --> resolves as simple module import from project
-import * as SpaceMain3 from "Main"
+import * as SpaceMain3 from "ConsumerOfAB/Main"
 
 //XPECT type of 'main3' --> constructor{MainC}
 var main3 = SpaceMain3.MainC;

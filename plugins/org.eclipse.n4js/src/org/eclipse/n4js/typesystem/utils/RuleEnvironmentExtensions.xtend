@@ -112,9 +112,11 @@ class RuleEnvironmentExtensions {
 	public static final String GUARD_SUBTYPE_PARAMETERIZED_TYPE_REF__STRUCT = "subtypeRefParameterizedTypeRef__struct";
 	public static final String GUARD_SUBST_TYPE_VARS = "substTypeVariablesInParameterizedTypeRef";
 	public static final String GUARD_SUBST_TYPE_VARS__IMPLICIT_UPPER_BOUND_OF_WILDCARD = "substTypeVars_implicitUpperBoundOfWildcard";
-	public static final String GUARD_STRUCTURAL_TYPING_COMPUTER = "StructuralTypingComputer";
+	public static final String GUARD_STRUCTURAL_TYPING_COMPUTER__IN_PROGRESS = "StructuralTypingComputer__inProgress";
+	public static final String GUARD_STRUCTURAL_TYPING_COMPUTER__IN_PROGRESS_FOR_TYPE_REF = "StructuralTypingComputer__inProgressForTypeRef";
 	public static final String GUARD_CHECK_TYPE_ARGUMENT_COMPATIBILITY = "N4JSTypeSystem#checkTypeArgumentCompatibility";
-	public static final String GUARD_REDUCER_IS_SUBTYPE_OF = "Reducer#isSubtypeOf";
+	public static final String GUARD_REDUCER__IS_SUBTYPE_OF = "Reducer#isSubtypeOf";
+	public static final String GUARD_REDUCER__REDUCE_STRUCTURAL_TYPE_REF = "Reducer#reduceStructuralTypeRef";
 
 	/**
 	 * Returns a new {@code RuleEnvironment}; we need this because of the
@@ -742,39 +744,43 @@ class RuleEnvironmentExtensions {
 	}
 
 	/**
-	 * Returns true if the given type is one of the {@link BuiltInTypeScope#isNumeric(Type) numeric} primitive
-	 * built-in types.
-	 */
-	public def static boolean isNumeric(RuleEnvironment G, Type type) {
-		G.predefinedTypes.builtInTypeScope.isNumeric(type)
-	}
-
-	/**
 	 * Returns true if the given type is any.
 	 */
 	public def static boolean isAny(RuleEnvironment G, TypeArgument typeArg) {
-		return typeArg!==null && typeArg.declaredType == anyType(G);
+		return typeArg!==null && typeArg.declaredType == anyType(G) && isNominal(typeArg);
 	}
 
 	/**
 	 * Returns true if the given type reference refers to the built-in type {@link #objectType(RuleEnvironment) Object}.
 	 */
 	public def static boolean isObject(RuleEnvironment G, TypeArgument typeArg) {
-		return typeArg!==null && typeArg.declaredType == objectType(G);
+		return typeArg!==null && typeArg.declaredType == objectType(G) && isNominal(typeArg);
 	}
 
 	/**
 	 * Returns true if the given type reference refers to the built-in type {@link #functionType(RuleEnvironment) Function}.
 	 */
 	public def static boolean isFunction(RuleEnvironment G, TypeArgument typeArg) {
-		return typeArg!==null && typeArg.declaredType == functionType(G);
+		return typeArg!==null && typeArg.declaredType == functionType(G) && isNominal(typeArg);
 	}
 
 	/**
 	 * Returns true if the given type is symbol.
 	 */
 	public def static boolean isSymbol(RuleEnvironment G, TypeArgument typeArg) {
-		return typeArg!==null && typeArg.declaredType == symbolType(G);
+		return typeArg!==null && typeArg.declaredType == symbolType(G) && isNominal(typeArg);
+	}
+
+	private def static boolean isNominal(TypeArgument typeArg) {
+		return typeArg.isTypeRef() && !TypeUtils.isStructural(typeArg as TypeRef);
+	}
+
+	/**
+	 * Returns true if the given type is one of the {@link BuiltInTypeScope#isNumeric(Type) numeric} primitive
+	 * built-in types.
+	 */
+	public def static boolean isNumeric(RuleEnvironment G, Type type) {
+		G.predefinedTypes.builtInTypeScope.isNumeric(type)
 	}
 
 	/**
@@ -796,9 +802,7 @@ class RuleEnvironmentExtensions {
 		}
 		return false;
 	}
-	
-	
-	
+
 	/**
 	 * Returns true iff typeRef is a union type and one if its elements
 	 * is numeric, boolean, null or undefined or contains one of these types.

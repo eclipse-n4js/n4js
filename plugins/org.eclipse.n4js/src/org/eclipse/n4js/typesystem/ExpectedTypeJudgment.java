@@ -13,6 +13,7 @@ package org.eclipse.n4js.typesystem;
 import static org.eclipse.n4js.ts.utils.TypeExtensions.ref;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.addThisType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.anyTypeRef;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.anyTypeRefDynamic;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.argumentsTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.arrayType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.asyncIterableTypeRef;
@@ -288,6 +289,8 @@ import com.google.inject.Inject;
 							return paramTypeRefSubst;
 						}
 					}
+				} else if (targetTypeRef.isDynamic()) {
+					return anyTypeRefDynamic(G);
 				} else {
 					return unknown();
 				}

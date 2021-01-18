@@ -1470,6 +1470,11 @@ public class TypeUtils {
 
 	}
 
+	/** Tells whether the given type reference has a typing strategy that denotes structural typing. */
+	public static boolean isStructural(TypeRef typeRef) {
+		return typeRef != null && isStructural(typeRef.getTypingStrategy());
+	}
+
 	/**
 	 * Tells whether the given typing strategy denotes structural typing.
 	 */
