@@ -1025,6 +1025,15 @@ public interface ImPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_IM_FEATURE_COUNT = TypeRefsPackage.PARAMETERIZED_TYPE_REF_FEATURE_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>Is Type Ref</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_IM___IS_TYPE_REF = TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_TYPE_REF;
+
+	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1169,15 +1178,6 @@ public interface ImPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_IM___GET_TYPING_STRATEGY = TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_TYPING_STRATEGY;
 
 	/**
-	 * The operation id for the '<em>Contains Wildcards</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_IM___CONTAINS_WILDCARDS = TypeRefsPackage.PARAMETERIZED_TYPE_REF___CONTAINS_WILDCARDS;
-
-	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1212,15 +1212,6 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int PARAMETERIZED_TYPE_REF_IM___IS_RAW = TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_RAW;
-
-	/**
-	 * The operation id for the '<em>Contains Unbound Type Variables</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_IM___CONTAINS_UNBOUND_TYPE_VARIABLES = TypeRefsPackage.PARAMETERIZED_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES;
 
 	/**
 	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
@@ -1449,6 +1440,15 @@ public interface ImPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM_FEATURE_COUNT = PARAMETERIZED_TYPE_REF_IM_FEATURE_COUNT + 4;
 
 	/**
+	 * The operation id for the '<em>Is Type Ref</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_TYPE_REF = PARAMETERIZED_TYPE_REF_IM___IS_TYPE_REF;
+
+	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1575,15 +1575,6 @@ public interface ImPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_MODIFIERS_AS_STRING = PARAMETERIZED_TYPE_REF_IM___GET_MODIFIERS_AS_STRING;
 
 	/**
-	 * The operation id for the '<em>Contains Wildcards</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___CONTAINS_WILDCARDS = PARAMETERIZED_TYPE_REF_IM___CONTAINS_WILDCARDS;
-
-	/**
 	 * The operation id for the '<em>Is Parameterized</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1609,15 +1600,6 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_RAW = PARAMETERIZED_TYPE_REF_IM___IS_RAW;
-
-	/**
-	 * The operation id for the '<em>Contains Unbound Type Variables</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___CONTAINS_UNBOUND_TYPE_VARIABLES = PARAMETERIZED_TYPE_REF_IM___CONTAINS_UNBOUND_TYPE_VARIABLES;
 
 	/**
 	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
@@ -3301,6 +3283,15 @@ public interface ImPackage extends EPackage {
 	int VERSIONED_PARAMETERIZED_TYPE_REF_IM_FEATURE_COUNT = PARAMETERIZED_TYPE_REF_IM_FEATURE_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>Is Type Ref</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___IS_TYPE_REF = PARAMETERIZED_TYPE_REF_IM___IS_TYPE_REF;
+
+	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3436,15 +3427,6 @@ public interface ImPackage extends EPackage {
 	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___GET_TYPING_STRATEGY = PARAMETERIZED_TYPE_REF_IM___GET_TYPING_STRATEGY;
 
 	/**
-	 * The operation id for the '<em>Contains Wildcards</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___CONTAINS_WILDCARDS = PARAMETERIZED_TYPE_REF_IM___CONTAINS_WILDCARDS;
-
-	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3479,15 +3461,6 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___IS_RAW = PARAMETERIZED_TYPE_REF_IM___IS_RAW;
-
-	/**
-	 * The operation id for the '<em>Contains Unbound Type Variables</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___CONTAINS_UNBOUND_TYPE_VARIABLES = PARAMETERIZED_TYPE_REF_IM___CONTAINS_UNBOUND_TYPE_VARIABLES;
 
 	/**
 	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
@@ -3752,6 +3725,15 @@ public interface ImPackage extends EPackage {
 	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM_FEATURE_COUNT = PARAMETERIZED_TYPE_REF_IM_FEATURE_COUNT + 5;
 
 	/**
+	 * The operation id for the '<em>Is Type Ref</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_TYPE_REF = PARAMETERIZED_TYPE_REF_IM___IS_TYPE_REF;
+
+	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3869,15 +3851,6 @@ public interface ImPackage extends EPackage {
 	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_MODIFIERS_AS_STRING = PARAMETERIZED_TYPE_REF_IM___GET_MODIFIERS_AS_STRING;
 
 	/**
-	 * The operation id for the '<em>Contains Wildcards</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___CONTAINS_WILDCARDS = PARAMETERIZED_TYPE_REF_IM___CONTAINS_WILDCARDS;
-
-	/**
 	 * The operation id for the '<em>Is Parameterized</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3903,15 +3876,6 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_RAW = PARAMETERIZED_TYPE_REF_IM___IS_RAW;
-
-	/**
-	 * The operation id for the '<em>Contains Unbound Type Variables</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___CONTAINS_UNBOUND_TYPE_VARIABLES = PARAMETERIZED_TYPE_REF_IM___CONTAINS_UNBOUND_TYPE_VARIABLES;
 
 	/**
 	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.

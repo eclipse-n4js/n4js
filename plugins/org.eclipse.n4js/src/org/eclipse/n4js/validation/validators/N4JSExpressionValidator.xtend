@@ -78,6 +78,7 @@ import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
+import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
@@ -135,6 +136,7 @@ import org.eclipse.xtext.validation.EValidatorRegistrar
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
 
 /**
  */
@@ -1290,6 +1292,16 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			}
 		} else if (canCheck(G, S, T, actualSourceTypeIsCPOE)) { // Constraint 81.3 (Cast Validation At Compile-Time):
 			var castOK = ts.subtypeSucceeded(G, T, S);
+			if (!castOK && S.isUseSiteStructuralTyping && S instanceof StructuralTypeRef && !(S as StructuralTypeRef).structuralMembers.empty) {
+				// allow "~X with { ... } as Y" if "~X as Y" would be legal
+				// Rationale: just because the source type has additional properties the cast should not be disallowed
+				// (only necessary as a special case because the cast validation is too strict, at the moment)
+				val S_withoutStructMembers = TypeUtils.copyPartial(S,
+					TypeRefsPackage.Literals.STRUCTURAL_TYPE_REF__AST_STRUCTURAL_MEMBERS,
+					TypeRefsPackage.Literals.STRUCTURAL_TYPE_REF__GEN_STRUCTURAL_MEMBERS,
+					TypeRefsPackage.Literals.STRUCTURAL_TYPE_REF__STRUCTURAL_TYPE);
+				castOK = ts.subtypeSucceeded(G, T, S_withoutStructMembers);
+			}
 			if (! castOK && (T instanceof ParameterizedTypeRef && S instanceof ParameterizedTypeRef)) {
 				val ptrT = T as ParameterizedTypeRef;
 				val ptrS = S as ParameterizedTypeRef;

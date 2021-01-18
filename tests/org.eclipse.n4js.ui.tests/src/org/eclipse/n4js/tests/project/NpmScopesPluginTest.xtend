@@ -146,7 +146,7 @@ class NpmScopesPluginTest extends AbstractBuilderParticipantTest {
 	@Test
 	def void testImportModuleThatExistsInBothProjects() throws CoreException {
 		setContentsOfClientModule('''
-			import {C} from "C"
+			import {C} from "@myScope/Lib/C"
 			new C().foo();
 		''')
 		assertNoIssues();
@@ -170,7 +170,7 @@ class NpmScopesPluginTest extends AbstractBuilderParticipantTest {
 	@Test
 	def void testImportModuleThatExistsInBothProjectsInSubFolders() throws CoreException {
 		setContentsOfClientModule('''
-			import {C} from "folder1/folder2/C"
+			import {C} from "@myScope/Lib/folder1/folder2/C"
 			new C().foo();
 		''')
 		assertNoIssues();

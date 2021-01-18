@@ -127,6 +127,16 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 	 * @generated
 	 */
 	@Override
+	public boolean isTypeRef() {
+		return true;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public boolean isFinalByType() {
 		final Type dtype = this.getDeclaredType();
 		return ((dtype != null) && dtype.isFinal());
@@ -411,6 +421,7 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
 		if (baseClass == TypeArgument.class) {
 			switch (baseOperationID) {
+				case TypeRefsPackage.TYPE_ARGUMENT___IS_TYPE_REF: return TypeRefsPackage.TYPE_REF___IS_TYPE_REF;
 				case TypeRefsPackage.TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING: return TypeRefsPackage.TYPE_REF___GET_TYPE_REF_AS_STRING;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
@@ -434,6 +445,8 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 		switch (operationID) {
 			case TypeRefsPackage.TYPE_REF___GET_MODIFIERS_AS_STRING:
 				return getModifiersAsString();
+			case TypeRefsPackage.TYPE_REF___IS_TYPE_REF:
+				return isTypeRef();
 			case TypeRefsPackage.TYPE_REF___IS_FINAL_BY_TYPE:
 				return isFinalByType();
 			case TypeRefsPackage.TYPE_REF___IS_ARRAY_LIKE:

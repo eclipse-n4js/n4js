@@ -39,7 +39,6 @@ import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
 import org.eclipse.n4js.ts.types.TN4Classifier;
 import org.eclipse.n4js.ts.types.TStructuralType;
 import org.eclipse.n4js.ts.types.Type;
-import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypingStrategy;
 
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
@@ -451,20 +450,6 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	 * @generated
 	 */
 	@Override
-	public boolean containsWildcards() {
-		return ((this.getTypeArgs().isEmpty() && (!this.getDeclaredType().isGeneric())) || IterableExtensions.<TypeArgument>exists(this.getTypeArgs(), new Function1<TypeArgument, Boolean>() {
-			public Boolean apply(final TypeArgument it) {
-				return Boolean.valueOf(it.containsWildcards());
-			}
-		}));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public String getTypeRefAsString() {
 		Type _declaredType = this.getDeclaredType();
 		String _rawTypeAsString = null;
@@ -530,20 +515,6 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	@Override
 	public boolean isRaw() {
 		return (this.isGeneric() && (this.getTypeArgs().size() < this.getDeclaredType().getTypeVars().size()));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public boolean containsUnboundTypeVariables() {
-		return (((this.getDeclaredType() instanceof TypeVariable) || ((!this.isParameterized()) && this.getDeclaredType().isGeneric())) || IterableExtensions.<TypeArgument>exists(this.getTypeArgs(), new Function1<TypeArgument, Boolean>() {
-			public Boolean apply(final TypeArgument it) {
-				return Boolean.valueOf(it.containsUnboundTypeVariables());
-			}
-		}));
 	}
 
 	/**
@@ -733,8 +704,6 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 		if (baseClass == TypeArgument.class) {
 			switch (baseOperationID) {
 				case TypeRefsPackage.TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING: return TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING;
-				case TypeRefsPackage.TYPE_ARGUMENT___CONTAINS_WILDCARDS: return TypeRefsPackage.PARAMETERIZED_TYPE_REF___CONTAINS_WILDCARDS;
-				case TypeRefsPackage.TYPE_ARGUMENT___CONTAINS_UNBOUND_TYPE_VARIABLES: return TypeRefsPackage.PARAMETERIZED_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
@@ -763,8 +732,6 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 		switch (operationID) {
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_TYPING_STRATEGY:
 				return getTypingStrategy();
-			case TypeRefsPackage.PARAMETERIZED_TYPE_REF___CONTAINS_WILDCARDS:
-				return containsWildcards();
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING:
 				return getTypeRefAsString();
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_PARAMETERIZED:
@@ -773,8 +740,6 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 				return isGeneric();
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_RAW:
 				return isRaw();
-			case TypeRefsPackage.PARAMETERIZED_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES:
-				return containsUnboundTypeVariables();
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING:
 				return isUseSiteStructuralTyping();
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING:

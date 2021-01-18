@@ -1,5 +1,5 @@
 // import typed 'A' from type definitions
-import {A} from "A";
+import {A} from "Broken_Def/A";
 // dynamic namespace import from module 'B' for which no type definitions exists
 import * as B+ from "B";
 
