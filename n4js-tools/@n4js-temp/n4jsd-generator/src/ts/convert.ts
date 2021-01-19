@@ -347,6 +347,11 @@ export class Converter {
 		const result = new model.Parameter();
 		result.name = param.getName();
 		result.type = this.convertTypeReferenceOfTypedSymbol(param);
+		if (param.declarations && param.declarations[0] && param.declarations[0].kind == ts.SyntaxKind.Parameter) {
+			let paramDecl = param.declarations[0] as ts.ParameterDeclaration;
+			result.isOptional = !!paramDecl.questionToken;
+			result.isVariadic = !!paramDecl.dotDotDotToken;
+		}
 		return result;
 	}
 

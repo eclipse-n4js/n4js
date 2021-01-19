@@ -46,7 +46,28 @@ export public class ConvertFunctionsTest extends AbstractN4jsdGeneratorTest {
 
 					export external public function f2(p1: any+, p2: any+= ): any+;
 
-					export external public function f2(p1: any+= , p2: any+= ): any+;
+					export external public function f3(p1: any+= , p2: any+= ): any+;
+				`
+			}
+		);
+	}
+
+	@Test
+	public testFunctionWithVariadicParameter() {
+		this.assertConversion(
+			{
+				name: "main",
+				dts: `
+					export function f1(...p1: string[]);
+					export function f2(p1: string, ...p2: string[]);
+					export function f3(p1?: string, ...p2: string[]);
+				`,
+				n4jsd: `
+					export external public function f1(...p1: any+): any+;
+
+					export external public function f2(p1: any+, ...p2: any+): any+;
+
+					export external public function f3(p1: any+= , ...p2: any+): any+;
 				`
 			}
 		);
