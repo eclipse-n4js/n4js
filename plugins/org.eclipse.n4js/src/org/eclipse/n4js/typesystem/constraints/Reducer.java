@@ -19,6 +19,7 @@ import static org.eclipse.n4js.typesystem.constraints.Reducer.BooleanOp.DISJUNCT
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef;
@@ -42,6 +43,7 @@ import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.util.AllSuperTypesCollector;
 import org.eclipse.n4js.ts.types.util.Variance;
+import org.eclipse.n4js.ts.utils.TypeCompareUtils;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
@@ -54,6 +56,7 @@ import org.eclipse.n4js.utils.StructuralTypesHelper;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.Sets;
 
 /**
  * Contains all logic for reduction, i.e. for reducing a {@link TypeConstraint} into simpler {@link TypeBound}s. A
@@ -731,6 +734,40 @@ import com.google.common.base.Optional;
 		}
 		// now, variance is either CO or INV
 
+		// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		// recursion guard
+		// TODO consider applying this guard to all kinds of reductions
+		// (i.e. move this code to entry method #reduce(TypeArgument, TypeArgument, Variance))
+
+		// TODO GH-2036 remove work-around for performance issues in hash code computation
+		// Due to the prototypical implementation of SemanticEqualsWrapper#hashCode() we cannot use
+		// the following straightforward guard implementation (would lead to performance issues):
+
+		// final Object key = createRecursionGuardKeyForReduceStructuralTypeRef(left, right, variance);
+		// if (G.get(key) != null) {
+		// return true;
+		// }
+		// G.put(key, Boolean.TRUE);
+
+		// temporary, two-stage guard implementation:
+		Object semanticEqualsPair = Pair.of(
+				new TypeCompareUtils.SemanticEqualsWrapper(left),
+				new TypeCompareUtils.SemanticEqualsWrapper(right));
+		final Object key = createTemporaryRecursionGuardKeyForReduceStructuralTypeRef(left, right, variance);
+		final Object value = G.get(key);
+		if (value != null) {
+			@SuppressWarnings("unchecked")
+			final Set<Object> valueCasted = (Set<Object>) value;
+			if (valueCasted.contains(semanticEqualsPair)) {
+				return true;
+			} else {
+				valueCasted.add(semanticEqualsPair);
+			}
+		} else {
+			G.put(key, Sets.newHashSet(semanticEqualsPair));
+		}
+		// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 		final RuleEnvironment G2 = RuleEnvironmentExtensions.wrap(G);
 		final StructTypingInfo infoFaked = new StructTypingInfo(G2, left, right, // <- G2 will be changed!
 				left.getTypingStrategy(), right.getTypingStrategy());
@@ -767,6 +804,35 @@ import com.google.common.base.Optional;
 		return wasAdded;
 	}
 
+	@SuppressWarnings("unused") // TODO GH-2036 use this method for creating the recursion guard key
+	private Object createRecursionGuardKeyForReduceStructuralTypeRef(TypeRef left, TypeRef right, Variance variance) {
+		// (left -> right) -> variance
+		return Pair.of(
+				RuleEnvironmentExtensions.GUARD_REDUCER__REDUCE_STRUCTURAL_TYPE_REF,
+				Pair.of(
+						Pair.of(
+								new TypeCompareUtils.SemanticEqualsWrapper(left),
+								new TypeCompareUtils.SemanticEqualsWrapper(right)),
+						variance));
+	}
+
+	private Object createTemporaryRecursionGuardKeyForReduceStructuralTypeRef(TypeRef left, TypeRef right,
+			Variance variance) {
+		// use declared types, if available:
+		Object actualLeft = left.getDeclaredType();
+		if (actualLeft == null) {
+			actualLeft = left;
+		}
+		Object actualRight = right.getDeclaredType();
+		if (actualRight == null) {
+			actualRight = right;
+		}
+		// (left -> right) -> variance
+		return Pair.of(
+				RuleEnvironmentExtensions.GUARD_REDUCER__REDUCE_STRUCTURAL_TYPE_REF,
+				Pair.of(Pair.of(actualLeft, actualRight), variance));
+	}
+
 	/**
 	 * Convenience method to perform subtype checks. Depending on the given variance, this will check
 	 * <code>left &lt;: right</code> OR <code>left >: right</code> OR both.
@@ -774,7 +840,7 @@ import com.google.common.base.Optional;
 	private boolean isSubtypeOf(TypeRef left, TypeRef right, Variance variance) {
 		// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 		// recursion guard
-		final Pair<String, Pair<TypeRef, TypeRef>> key = Pair.of(RuleEnvironmentExtensions.GUARD_REDUCER_IS_SUBTYPE_OF,
+		final Pair<String, Pair<TypeRef, TypeRef>> key = Pair.of(RuleEnvironmentExtensions.GUARD_REDUCER__IS_SUBTYPE_OF,
 				Pair.of(left, right));
 		if (G.get(key) != null) {
 			return true;
