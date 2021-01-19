@@ -57,4 +57,25 @@ export public class ModuleStructureLegacyTest extends AbstractN4jsdGeneratorTest
 			}
 		);
 	}
+	@Test
+	public testLegacyDefaultExport() {
+		this.assertConversion(
+			{
+				name: "buffer",
+				dts: `
+					export class Buffer {}
+				`
+			},
+			{
+				name: "main",
+				dts: `
+					declare function f(p: any): boolean;
+					export = f;
+				`,
+				n4jsd: `
+					export default external public function f(p: any+): any+;
+				`
+			}
+		);
+	}
 }

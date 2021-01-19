@@ -19,7 +19,7 @@ export function getAllChildNodes(node: ts.Node): ts.Node[] {
 	// for some reason, node.getChildren() does not do the trick in all cases, it seems
 	const result = [] as ts.Node[];
 	node.forEachChild(child => {
-		//console.log(ts.SyntaxKind[child.kind]);
+		//(ts.SyntaxKind[child.kind]);
 		result.push(child);
 	});
 	return result;
@@ -41,13 +41,29 @@ export function isExported(node: ts.Declaration): boolean {
 		|| (!!node.parent && node.parent.kind === ts.SyntaxKind.SourceFile);
 }
 
-export function isExportedAsDefault(node: ts.Declaration): boolean {
+export function isExportedAsDefault(node: ts.NamedDeclaration, checker: ts.TypeChecker, exportAssignment?: ts.ExportAssignment): boolean {
+	if (!isExported(node)) {
+		return false;
+	}
 	const flags = ts.getCombinedModifierFlags(node);
-	return isExported(node) && utils.testFlag(flags, ts.ModifierFlags.ExportDefault);
+	if (utils.testFlag(flags, ts.ModifierFlags.ExportDefault)) {
+		return true;
+	}
+	if (exportAssignment) {
+		// legacy, e.g.: export = myFunction;
+		const exportSymbol = checker.getSymbolAtLocation(exportAssignment.expression);
+		const exportSymbol2 = checker.getSymbolAtLocation(node.name);
+
+		if (exportSymbol === exportSymbol2) {
+			return true;
+		}
+	}
+
+	return false;
 }
 
-export function getLocalNameOfExportableElement(node: ts.NamedDeclaration, checker: ts.TypeChecker): string {
-	if (isExportedAsDefault(node)) {
+export function getLocalNameOfExportableElement(node: ts.NamedDeclaration, checker: ts.TypeChecker, exportAssignment?: ts.ExportAssignment): string {
+	if (isExportedAsDefault(node, checker, exportAssignment)) {
 		// could not find a public API for obtaining the local symbol:
 		const localSym = (node as any).localSymbol as ts.Symbol;
 		if (localSym) {

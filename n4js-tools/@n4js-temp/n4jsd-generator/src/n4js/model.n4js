@@ -341,7 +341,7 @@ class Emitter {
 		buff.push(param.name);
 		this.emitTypeRef(param.type);
 		if (param.isOptional) {
-			buff.push("= ");
+			buff.push(" = ");
 		}
 	}
 
