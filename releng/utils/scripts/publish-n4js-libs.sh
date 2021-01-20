@@ -69,6 +69,7 @@ echo "Current working directory: $PWD"
 
 echo "==== STEP 1/7: check preconditions"
 
+chmod +x ./packages/n4js-cli/src-gen/n4jsc.js
 ./packages/n4js-cli/src-gen/n4jsc.js --version
 
 if [ "$DESTINATION" != "local" ]; then
