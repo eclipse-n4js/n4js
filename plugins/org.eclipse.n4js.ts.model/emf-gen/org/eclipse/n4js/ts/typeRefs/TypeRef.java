@@ -29,6 +29,7 @@ import org.eclipse.n4js.ts.types.TypingStrategy;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.TypeRef#isFollowedByQuestionMark <em>Followed By Question Mark</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.TypeRef#getOriginalAliasTypeRef <em>Original Alias Type Ref</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getTypeRef()
@@ -67,6 +68,34 @@ public interface TypeRef extends TypeArgument, Versionable {
 	void setFollowedByQuestionMark(boolean value);
 
 	/**
+	 * Returns the value of the '<em><b>Original Alias Type Ref</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * If this type reference represents a resolved(!) reference to an alias, this property is
+	 * the original, unresolved type reference to the alias, i.e. {@link TypeRef#isAliasUnresolved()}
+	 * will always return <code>true</code> for the value of this property. In all other cases,
+	 * this property is <code>null</code>.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Original Alias Type Ref</em>' containment reference.
+	 * @see #setOriginalAliasTypeRef(ParameterizedTypeRef)
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getTypeRef_OriginalAliasTypeRef()
+	 * @model containment="true"
+	 * @generated
+	 */
+	ParameterizedTypeRef getOriginalAliasTypeRef();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.TypeRef#getOriginalAliasTypeRef <em>Original Alias Type Ref</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Original Alias Type Ref</em>' containment reference.
+	 * @see #getOriginalAliasTypeRef()
+	 * @generated
+	 */
+	void setOriginalAliasTypeRef(ParameterizedTypeRef value);
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
@@ -89,6 +118,28 @@ public interface TypeRef extends TypeArgument, Versionable {
 	 * @generated
 	 */
 	boolean isTypeRef();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 *  Returns true iff this is an <em>unresolved</em> reference to an alias.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isAliasUnresolved();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 *  Returns true iff this is a <em>resolved</em> reference to an alias.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isAliasResolved();
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -226,16 +277,18 @@ public interface TypeRef extends TypeArgument, Versionable {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * Convenience method, returns the type expression, usually the type name, as a string. The
-	 * returned string representation usually reflect the N4JS syntax. Basically used for testing.
-	 * As the returned string is used for comparison in tests, this method should not be changed.
-	 * This method actually overrides {@link TypeArgument#getTypeRefAsString()}.
-	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
 	String getTypeRefAsString();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model unique="false"
+	 * @generated
+	 */
+	String internalGetTypeRefAsString();
 
 	/**
 	 * <!-- begin-user-doc -->

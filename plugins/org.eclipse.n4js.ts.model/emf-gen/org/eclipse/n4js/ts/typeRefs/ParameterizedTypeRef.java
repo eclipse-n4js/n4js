@@ -250,12 +250,12 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * Overrides {@link TypeRef#getTypeRefAsString()}
+	 * Overrides {@link TypeRef#internalGetTypeRefAsString()}
 	 * <!-- end-model-doc -->
-	 * @model kind="operation" unique="false"
+	 * @model unique="false"
 	 * @generated
 	 */
-	String getTypeRefAsString();
+	String internalGetTypeRefAsString();
 
 	/**
 	 * <!-- begin-user-doc -->

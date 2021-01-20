@@ -267,6 +267,16 @@ public class TypeAliasImpl extends GenericTypeImpl implements TypeAlias {
 	 * @generated
 	 */
 	@Override
+	public boolean isAlias() {
+		return true;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public boolean isProvidedByRuntime() {
 		return this.isDeclaredProvidedByRuntime();
 	}
@@ -450,6 +460,7 @@ public class TypeAliasImpl extends GenericTypeImpl implements TypeAlias {
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
 		if (baseClass == Type.class) {
 			switch (baseOperationID) {
+				case TypesPackage.TYPE___IS_ALIAS: return TypesPackage.TYPE_ALIAS___IS_ALIAS;
 				case TypesPackage.TYPE___IS_PROVIDED_BY_RUNTIME: return TypesPackage.TYPE_ALIAS___IS_PROVIDED_BY_RUNTIME;
 				case TypesPackage.TYPE___GET_TYPE_ACCESS_MODIFIER: return TypesPackage.TYPE_ALIAS___GET_TYPE_ACCESS_MODIFIER;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
@@ -479,6 +490,8 @@ public class TypeAliasImpl extends GenericTypeImpl implements TypeAlias {
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
+			case TypesPackage.TYPE_ALIAS___IS_ALIAS:
+				return isAlias();
 			case TypesPackage.TYPE_ALIAS___IS_PROVIDED_BY_RUNTIME:
 				return isProvidedByRuntime();
 			case TypesPackage.TYPE_ALIAS___GET_TYPE_ACCESS_MODIFIER:

@@ -56,12 +56,26 @@ public interface TypeArgument extends EObject {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * Convenience method, returns the type expression, usually the type name, as a string. Basically used for testing.
-	 * As the returned string is used for comparison in tests, this method should not be changed.
+	 *  Returns the type argument/reference as a string, usually according to N4JS syntax.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
 	String getTypeRefAsString();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Actual computation of the string representation of this type argument/reference.
+	 * Returns the same value as {@link #getTypeRefAsString()}, except for resolved
+	 * aliases: if the receiving instance is a resolved alias, this method will
+	 * return the string representation of the actual type whereas {@code #getTypeRefAsString()}
+	 * will return the string representation of the reference to the alias.
+	 * <!-- end-model-doc -->
+	 * @model unique="false"
+	 * @generated
+	 */
+	String internalGetTypeRefAsString();
 
 } // TypeArgument

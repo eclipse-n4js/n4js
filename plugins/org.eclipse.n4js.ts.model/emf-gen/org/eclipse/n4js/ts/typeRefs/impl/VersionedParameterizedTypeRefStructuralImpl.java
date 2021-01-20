@@ -271,7 +271,7 @@ public class VersionedParameterizedTypeRefStructuralImpl extends VersionedParame
 	 * @generated
 	 */
 	@Override
-	public String getTypeRefAsString() {
+	public String internalGetTypeRefAsString() {
 		TypingStrategy _typingStrategy = this.getTypingStrategy();
 		Type _declaredType = this.getDeclaredType();
 		String _rawTypeAsString = null;
@@ -519,13 +519,12 @@ public class VersionedParameterizedTypeRefStructuralImpl extends VersionedParame
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
 		if (baseClass == TypeArgument.class) {
 			switch (baseOperationID) {
-				case TypeRefsPackage.TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING: return TypeRefsPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_TYPE_REF_AS_STRING;
+				case TypeRefsPackage.TYPE_ARGUMENT___INTERNAL_GET_TYPE_REF_AS_STRING: return TypeRefsPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___INTERNAL_GET_TYPE_REF_AS_STRING;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
 		if (baseClass == TypeRef.class) {
 			switch (baseOperationID) {
-				case TypeRefsPackage.TYPE_REF___GET_TYPE_REF_AS_STRING: return TypeRefsPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_TYPE_REF_AS_STRING;
 				case TypeRefsPackage.TYPE_REF___GET_TYPING_STRATEGY: return TypeRefsPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_TYPING_STRATEGY;
 				case TypeRefsPackage.TYPE_REF___GET_STRUCTURAL_MEMBERS: return TypeRefsPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_STRUCTURAL_MEMBERS;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
@@ -534,7 +533,7 @@ public class VersionedParameterizedTypeRefStructuralImpl extends VersionedParame
 		if (baseClass == ParameterizedTypeRef.class) {
 			switch (baseOperationID) {
 				case TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_TYPING_STRATEGY: return TypeRefsPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_TYPING_STRATEGY;
-				case TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING: return TypeRefsPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_TYPE_REF_AS_STRING;
+				case TypeRefsPackage.PARAMETERIZED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING: return TypeRefsPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___INTERNAL_GET_TYPE_REF_AS_STRING;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
@@ -552,7 +551,7 @@ public class VersionedParameterizedTypeRefStructuralImpl extends VersionedParame
 				case TypeRefsPackage.PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_TYPING_STRATEGY: return TypeRefsPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_TYPING_STRATEGY;
 				case TypeRefsPackage.PARAMETERIZED_TYPE_REF_STRUCTURAL___SET_TYPING_STRATEGY__TYPINGSTRATEGY: return TypeRefsPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___SET_TYPING_STRATEGY__TYPINGSTRATEGY;
 				case TypeRefsPackage.PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_STRUCTURAL_MEMBERS: return TypeRefsPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_STRUCTURAL_MEMBERS;
-				case TypeRefsPackage.PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_TYPE_REF_AS_STRING: return TypeRefsPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_TYPE_REF_AS_STRING;
+				case TypeRefsPackage.PARAMETERIZED_TYPE_REF_STRUCTURAL___INTERNAL_GET_TYPE_REF_AS_STRING: return TypeRefsPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___INTERNAL_GET_TYPE_REF_AS_STRING;
 				default: return -1;
 			}
 		}
@@ -574,8 +573,8 @@ public class VersionedParameterizedTypeRefStructuralImpl extends VersionedParame
 				return null;
 			case TypeRefsPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_STRUCTURAL_MEMBERS:
 				return getStructuralMembers();
-			case TypeRefsPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_TYPE_REF_AS_STRING:
-				return getTypeRefAsString();
+			case TypeRefsPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___INTERNAL_GET_TYPE_REF_AS_STRING:
+				return internalGetTypeRefAsString();
 			case TypeRefsPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___HAS_POSTPONED_SUBSTITUTION_FOR__TYPEVARIABLE:
 				return hasPostponedSubstitutionFor((TypeVariable)arguments.get(0));
 		}

@@ -236,7 +236,7 @@ public class ExistentialTypeRefImpl extends TypeRefImpl implements ExistentialTy
 	 * @generated
 	 */
 	@Override
-	public String getTypeRefAsString() {
+	public String internalGetTypeRefAsString() {
 		Wildcard _wildcard = this.getWildcard();
 		String _typeRefAsString = null;
 		if (_wildcard!=null) {
@@ -333,7 +333,7 @@ public class ExistentialTypeRefImpl extends TypeRefImpl implements ExistentialTy
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
 		if (baseClass == TypeArgument.class) {
 			switch (baseOperationID) {
-				case TypeRefsPackage.TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING: return TypeRefsPackage.EXISTENTIAL_TYPE_REF___GET_TYPE_REF_AS_STRING;
+				case TypeRefsPackage.TYPE_ARGUMENT___INTERNAL_GET_TYPE_REF_AS_STRING: return TypeRefsPackage.EXISTENTIAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
@@ -342,7 +342,6 @@ public class ExistentialTypeRefImpl extends TypeRefImpl implements ExistentialTy
 				case TypeRefsPackage.TYPE_REF___IS_EXISTENTIAL: return TypeRefsPackage.EXISTENTIAL_TYPE_REF___IS_EXISTENTIAL;
 				case TypeRefsPackage.TYPE_REF___IS_GENERIC: return TypeRefsPackage.EXISTENTIAL_TYPE_REF___IS_GENERIC;
 				case TypeRefsPackage.TYPE_REF___IS_PARAMETERIZED: return TypeRefsPackage.EXISTENTIAL_TYPE_REF___IS_PARAMETERIZED;
-				case TypeRefsPackage.TYPE_REF___GET_TYPE_REF_AS_STRING: return TypeRefsPackage.EXISTENTIAL_TYPE_REF___GET_TYPE_REF_AS_STRING;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
@@ -363,8 +362,8 @@ public class ExistentialTypeRefImpl extends TypeRefImpl implements ExistentialTy
 				return isGeneric();
 			case TypeRefsPackage.EXISTENTIAL_TYPE_REF___IS_PARAMETERIZED:
 				return isParameterized();
-			case TypeRefsPackage.EXISTENTIAL_TYPE_REF___GET_TYPE_REF_AS_STRING:
-				return getTypeRefAsString();
+			case TypeRefsPackage.EXISTENTIAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING:
+				return internalGetTypeRefAsString();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

@@ -13,10 +13,12 @@ package org.eclipse.n4js.ts.typeRefs.impl;
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
@@ -44,6 +46,7 @@ import org.eclipse.n4js.ts.types.UndefinedType;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.TypeRefImpl#isFollowedByQuestionMark <em>Followed By Question Mark</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.TypeRefImpl#getOriginalAliasTypeRef <em>Original Alias Type Ref</em>}</li>
  * </ul>
  *
  * @generated
@@ -68,6 +71,16 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 	 * @ordered
 	 */
 	protected boolean followedByQuestionMark = FOLLOWED_BY_QUESTION_MARK_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getOriginalAliasTypeRef() <em>Original Alias Type Ref</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getOriginalAliasTypeRef()
+	 * @generated
+	 * @ordered
+	 */
+	protected ParameterizedTypeRef originalAliasTypeRef;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -117,6 +130,51 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 	 * @generated
 	 */
 	@Override
+	public ParameterizedTypeRef getOriginalAliasTypeRef() {
+		return originalAliasTypeRef;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetOriginalAliasTypeRef(ParameterizedTypeRef newOriginalAliasTypeRef, NotificationChain msgs) {
+		ParameterizedTypeRef oldOriginalAliasTypeRef = originalAliasTypeRef;
+		originalAliasTypeRef = newOriginalAliasTypeRef;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, TypeRefsPackage.TYPE_REF__ORIGINAL_ALIAS_TYPE_REF, oldOriginalAliasTypeRef, newOriginalAliasTypeRef);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setOriginalAliasTypeRef(ParameterizedTypeRef newOriginalAliasTypeRef) {
+		if (newOriginalAliasTypeRef != originalAliasTypeRef) {
+			NotificationChain msgs = null;
+			if (originalAliasTypeRef != null)
+				msgs = ((InternalEObject)originalAliasTypeRef).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - TypeRefsPackage.TYPE_REF__ORIGINAL_ALIAS_TYPE_REF, null, msgs);
+			if (newOriginalAliasTypeRef != null)
+				msgs = ((InternalEObject)newOriginalAliasTypeRef).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - TypeRefsPackage.TYPE_REF__ORIGINAL_ALIAS_TYPE_REF, null, msgs);
+			msgs = basicSetOriginalAliasTypeRef(newOriginalAliasTypeRef, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypeRefsPackage.TYPE_REF__ORIGINAL_ALIAS_TYPE_REF, newOriginalAliasTypeRef, newOriginalAliasTypeRef));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public String getModifiersAsString() {
 		return "";
 	}
@@ -129,6 +187,28 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 	@Override
 	public boolean isTypeRef() {
 		return true;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isAliasUnresolved() {
+		final Type declType = this.getDeclaredType();
+		return ((declType != null) && declType.isAlias());
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isAliasResolved() {
+		ParameterizedTypeRef _originalAliasTypeRef = this.getOriginalAliasTypeRef();
+		return (_originalAliasTypeRef != null);
 	}
 
 	/**
@@ -250,7 +330,11 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 	 */
 	@Override
 	public String getTypeRefAsString() {
-		return null;
+		final ParameterizedTypeRef oatr = this.getOriginalAliasTypeRef();
+		if ((oatr != null)) {
+			return oatr.getTypeRefAsString();
+		}
+		return this.internalGetTypeRefAsString();
 	}
 
 	/**
@@ -360,10 +444,26 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 	 * @generated
 	 */
 	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case TypeRefsPackage.TYPE_REF__ORIGINAL_ALIAS_TYPE_REF:
+				return basicSetOriginalAliasTypeRef(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case TypeRefsPackage.TYPE_REF__FOLLOWED_BY_QUESTION_MARK:
 				return isFollowedByQuestionMark();
+			case TypeRefsPackage.TYPE_REF__ORIGINAL_ALIAS_TYPE_REF:
+				return getOriginalAliasTypeRef();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -378,6 +478,9 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 		switch (featureID) {
 			case TypeRefsPackage.TYPE_REF__FOLLOWED_BY_QUESTION_MARK:
 				setFollowedByQuestionMark((Boolean)newValue);
+				return;
+			case TypeRefsPackage.TYPE_REF__ORIGINAL_ALIAS_TYPE_REF:
+				setOriginalAliasTypeRef((ParameterizedTypeRef)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -394,6 +497,9 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 			case TypeRefsPackage.TYPE_REF__FOLLOWED_BY_QUESTION_MARK:
 				setFollowedByQuestionMark(FOLLOWED_BY_QUESTION_MARK_EDEFAULT);
 				return;
+			case TypeRefsPackage.TYPE_REF__ORIGINAL_ALIAS_TYPE_REF:
+				setOriginalAliasTypeRef((ParameterizedTypeRef)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -408,6 +514,8 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 		switch (featureID) {
 			case TypeRefsPackage.TYPE_REF__FOLLOWED_BY_QUESTION_MARK:
 				return followedByQuestionMark != FOLLOWED_BY_QUESTION_MARK_EDEFAULT;
+			case TypeRefsPackage.TYPE_REF__ORIGINAL_ALIAS_TYPE_REF:
+				return originalAliasTypeRef != null;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -447,6 +555,10 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 				return getModifiersAsString();
 			case TypeRefsPackage.TYPE_REF___IS_TYPE_REF:
 				return isTypeRef();
+			case TypeRefsPackage.TYPE_REF___IS_ALIAS_UNRESOLVED:
+				return isAliasUnresolved();
+			case TypeRefsPackage.TYPE_REF___IS_ALIAS_RESOLVED:
+				return isAliasResolved();
 			case TypeRefsPackage.TYPE_REF___IS_FINAL_BY_TYPE:
 				return isFinalByType();
 			case TypeRefsPackage.TYPE_REF___IS_ARRAY_LIKE:

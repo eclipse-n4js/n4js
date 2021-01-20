@@ -31,9 +31,9 @@ public interface DeferredTypeRef extends TypeRef {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @model kind="operation" unique="false"
+	 * @model unique="false"
 	 * @generated
 	 */
-	String getTypeRefAsString();
+	String internalGetTypeRefAsString();
 
 } // DeferredTypeRef

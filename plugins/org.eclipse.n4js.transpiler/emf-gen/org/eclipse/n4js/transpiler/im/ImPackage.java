@@ -926,6 +926,15 @@ public interface ImPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_IM__FOLLOWED_BY_QUESTION_MARK = TypeRefsPackage.PARAMETERIZED_TYPE_REF__FOLLOWED_BY_QUESTION_MARK;
 
 	/**
+	 * The feature id for the '<em><b>Original Alias Type Ref</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_IM__ORIGINAL_ALIAS_TYPE_REF = TypeRefsPackage.PARAMETERIZED_TYPE_REF__ORIGINAL_ALIAS_TYPE_REF;
+
+	/**
 	 * The feature id for the '<em><b>Dynamic</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1034,6 +1043,24 @@ public interface ImPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_IM___IS_TYPE_REF = TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_TYPE_REF;
 
 	/**
+	 * The operation id for the '<em>Is Alias Unresolved</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_IM___IS_ALIAS_UNRESOLVED = TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_ALIAS_UNRESOLVED;
+
+	/**
+	 * The operation id for the '<em>Is Alias Resolved</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_IM___IS_ALIAS_RESOLVED = TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_ALIAS_RESOLVED;
+
+	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1104,6 +1131,15 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int PARAMETERIZED_TYPE_REF_IM___GET_TYPE_ARGS = TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_IM___GET_TYPE_REF_AS_STRING = TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING;
 
 	/**
 	 * The operation id for the '<em>To String</em>' operation.
@@ -1178,13 +1214,13 @@ public interface ImPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_IM___GET_TYPING_STRATEGY = TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_TYPING_STRATEGY;
 
 	/**
-	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * The operation id for the '<em>Internal Get Type Ref As String</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_IM___GET_TYPE_REF_AS_STRING = TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING;
+	int PARAMETERIZED_TYPE_REF_IM___INTERNAL_GET_TYPE_REF_AS_STRING = TypeRefsPackage.PARAMETERIZED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING;
 
 	/**
 	 * The operation id for the '<em>Is Parameterized</em>' operation.
@@ -1303,6 +1339,15 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__FOLLOWED_BY_QUESTION_MARK = PARAMETERIZED_TYPE_REF_IM__FOLLOWED_BY_QUESTION_MARK;
+
+	/**
+	 * The feature id for the '<em><b>Original Alias Type Ref</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__ORIGINAL_ALIAS_TYPE_REF = PARAMETERIZED_TYPE_REF_IM__ORIGINAL_ALIAS_TYPE_REF;
 
 	/**
 	 * The feature id for the '<em><b>Dynamic</b></em>' attribute.
@@ -1449,6 +1494,24 @@ public interface ImPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_TYPE_REF = PARAMETERIZED_TYPE_REF_IM___IS_TYPE_REF;
 
 	/**
+	 * The operation id for the '<em>Is Alias Unresolved</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_ALIAS_UNRESOLVED = PARAMETERIZED_TYPE_REF_IM___IS_ALIAS_UNRESOLVED;
+
+	/**
+	 * The operation id for the '<em>Is Alias Resolved</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_ALIAS_RESOLVED = PARAMETERIZED_TYPE_REF_IM___IS_ALIAS_RESOLVED;
+
+	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1519,6 +1582,15 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_TYPE_ARGS = PARAMETERIZED_TYPE_REF_IM___GET_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_TYPE_REF_AS_STRING = PARAMETERIZED_TYPE_REF_IM___GET_TYPE_REF_AS_STRING;
 
 	/**
 	 * The operation id for the '<em>To String</em>' operation.
@@ -1665,13 +1737,13 @@ public interface ImPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_STRUCTURAL_MEMBERS = PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT + 6;
 
 	/**
-	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * The operation id for the '<em>Internal Get Type Ref As String</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_TYPE_REF_AS_STRING = PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT + 7;
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___INTERNAL_GET_TYPE_REF_AS_STRING = PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type IM</em>' operation.
@@ -2017,15 +2089,6 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int DELEGATING_GETTER_DECLARATION__DECLARED_TYPE_REF = N4JSPackage.N4_GETTER_DECLARATION__DECLARED_TYPE_REF;
-
-	/**
-	 * The feature id for the '<em><b>Bogus Type Ref</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DELEGATING_GETTER_DECLARATION__BOGUS_TYPE_REF = N4JSPackage.N4_GETTER_DECLARATION__BOGUS_TYPE_REF;
 
 	/**
 	 * The feature id for the '<em><b>Defined Getter</b></em>' reference.
@@ -2786,15 +2849,6 @@ public interface ImPackage extends EPackage {
 	int DELEGATING_METHOD_DECLARATION__DECLARED_TYPE_REF = N4JSPackage.N4_METHOD_DECLARATION__DECLARED_TYPE_REF;
 
 	/**
-	 * The feature id for the '<em><b>Bogus Type Ref</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DELEGATING_METHOD_DECLARATION__BOGUS_TYPE_REF = N4JSPackage.N4_METHOD_DECLARATION__BOGUS_TYPE_REF;
-
-	/**
 	 * The feature id for the '<em><b>Declared Name</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3175,6 +3229,15 @@ public interface ImPackage extends EPackage {
 	int VERSIONED_PARAMETERIZED_TYPE_REF_IM__FOLLOWED_BY_QUESTION_MARK = PARAMETERIZED_TYPE_REF_IM__FOLLOWED_BY_QUESTION_MARK;
 
 	/**
+	 * The feature id for the '<em><b>Original Alias Type Ref</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM__ORIGINAL_ALIAS_TYPE_REF = PARAMETERIZED_TYPE_REF_IM__ORIGINAL_ALIAS_TYPE_REF;
+
+	/**
 	 * The feature id for the '<em><b>Dynamic</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3292,6 +3355,24 @@ public interface ImPackage extends EPackage {
 	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___IS_TYPE_REF = PARAMETERIZED_TYPE_REF_IM___IS_TYPE_REF;
 
 	/**
+	 * The operation id for the '<em>Is Alias Unresolved</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___IS_ALIAS_UNRESOLVED = PARAMETERIZED_TYPE_REF_IM___IS_ALIAS_UNRESOLVED;
+
+	/**
+	 * The operation id for the '<em>Is Alias Resolved</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___IS_ALIAS_RESOLVED = PARAMETERIZED_TYPE_REF_IM___IS_ALIAS_RESOLVED;
+
+	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3364,6 +3445,15 @@ public interface ImPackage extends EPackage {
 	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___GET_TYPE_ARGS = PARAMETERIZED_TYPE_REF_IM___GET_TYPE_ARGS;
 
 	/**
+	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___GET_TYPE_REF_AS_STRING = PARAMETERIZED_TYPE_REF_IM___GET_TYPE_REF_AS_STRING;
+
+	/**
 	 * The operation id for the '<em>To String</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3427,13 +3517,13 @@ public interface ImPackage extends EPackage {
 	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___GET_TYPING_STRATEGY = PARAMETERIZED_TYPE_REF_IM___GET_TYPING_STRATEGY;
 
 	/**
-	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * The operation id for the '<em>Internal Get Type Ref As String</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___GET_TYPE_REF_AS_STRING = PARAMETERIZED_TYPE_REF_IM___GET_TYPE_REF_AS_STRING;
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___INTERNAL_GET_TYPE_REF_AS_STRING = PARAMETERIZED_TYPE_REF_IM___INTERNAL_GET_TYPE_REF_AS_STRING;
 
 	/**
 	 * The operation id for the '<em>Is Parameterized</em>' operation.
@@ -3579,6 +3669,15 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__FOLLOWED_BY_QUESTION_MARK = PARAMETERIZED_TYPE_REF_IM__FOLLOWED_BY_QUESTION_MARK;
+
+	/**
+	 * The feature id for the '<em><b>Original Alias Type Ref</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__ORIGINAL_ALIAS_TYPE_REF = PARAMETERIZED_TYPE_REF_IM__ORIGINAL_ALIAS_TYPE_REF;
 
 	/**
 	 * The feature id for the '<em><b>Dynamic</b></em>' attribute.
@@ -3734,6 +3833,24 @@ public interface ImPackage extends EPackage {
 	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_TYPE_REF = PARAMETERIZED_TYPE_REF_IM___IS_TYPE_REF;
 
 	/**
+	 * The operation id for the '<em>Is Alias Unresolved</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_ALIAS_UNRESOLVED = PARAMETERIZED_TYPE_REF_IM___IS_ALIAS_UNRESOLVED;
+
+	/**
+	 * The operation id for the '<em>Is Alias Resolved</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_ALIAS_RESOLVED = PARAMETERIZED_TYPE_REF_IM___IS_ALIAS_RESOLVED;
+
+	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3804,6 +3921,15 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_TYPE_ARGS = PARAMETERIZED_TYPE_REF_IM___GET_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_TYPE_REF_AS_STRING = PARAMETERIZED_TYPE_REF_IM___GET_TYPE_REF_AS_STRING;
 
 	/**
 	 * The operation id for the '<em>To String</em>' operation.
@@ -4004,13 +4130,13 @@ public interface ImPackage extends EPackage {
 	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_STRUCTURAL_MEMBERS = PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT + 9;
 
 	/**
-	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * The operation id for the '<em>Internal Get Type Ref As String</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_TYPE_REF_AS_STRING = PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT + 10;
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___INTERNAL_GET_TYPE_REF_AS_STRING = PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT + 10;
 
 	/**
 	 * The number of operations of the '<em>Versioned Parameterized Type Ref Structural IM</em>' class.

@@ -107,6 +107,16 @@ public class TypeImpl extends TExportableElementImpl implements Type {
 	 * @generated
 	 */
 	@Override
+	public boolean isAlias() {
+		return false;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public boolean isProvidedByRuntime() {
 		return true;
 	}
@@ -413,6 +423,8 @@ public class TypeImpl extends TExportableElementImpl implements Type {
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
+			case TypesPackage.TYPE___IS_ALIAS:
+				return isAlias();
 			case TypesPackage.TYPE___IS_PROVIDED_BY_RUNTIME:
 				return isProvidedByRuntime();
 			case TypesPackage.TYPE___IS_POLYFILL:

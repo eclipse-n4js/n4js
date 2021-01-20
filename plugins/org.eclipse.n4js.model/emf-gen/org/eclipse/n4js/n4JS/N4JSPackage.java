@@ -1096,22 +1096,13 @@ public interface N4JSPackage extends EPackage {
 	int TYPED_ELEMENT__DECLARED_TYPE_REF = TYPE_PROVIDING_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Bogus Type Ref</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TYPED_ELEMENT__BOGUS_TYPE_REF = TYPE_PROVIDING_ELEMENT_FEATURE_COUNT + 1;
-
-	/**
 	 * The number of structural features of the '<em>Typed Element</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPED_ELEMENT_FEATURE_COUNT = TYPE_PROVIDING_ELEMENT_FEATURE_COUNT + 2;
+	int TYPED_ELEMENT_FEATURE_COUNT = TYPE_PROVIDING_ELEMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type Ref</em>' operation.
@@ -1205,15 +1196,6 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int VARIABLE__DECLARED_TYPE_REF = TYPED_ELEMENT__DECLARED_TYPE_REF;
-
-	/**
-	 * The feature id for the '<em><b>Bogus Type Ref</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VARIABLE__BOGUS_TYPE_REF = TYPED_ELEMENT__BOGUS_TYPE_REF;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3058,15 +3040,6 @@ public interface N4JSPackage extends EPackage {
 	int LOCAL_ARGUMENTS_VARIABLE__DECLARED_TYPE_REF = VARIABLE__DECLARED_TYPE_REF;
 
 	/**
-	 * The feature id for the '<em><b>Bogus Type Ref</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int LOCAL_ARGUMENTS_VARIABLE__BOGUS_TYPE_REF = VARIABLE__BOGUS_TYPE_REF;
-
-	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3149,22 +3122,13 @@ public interface N4JSPackage extends EPackage {
 	int FORMAL_PARAMETER__DECLARED_TYPE_REF = ANNOTABLE_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Bogus Type Ref</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FORMAL_PARAMETER__BOGUS_TYPE_REF = ANNOTABLE_ELEMENT_FEATURE_COUNT + 1;
-
-	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FORMAL_PARAMETER__NAME = ANNOTABLE_ELEMENT_FEATURE_COUNT + 2;
+	int FORMAL_PARAMETER__NAME = ANNOTABLE_ELEMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -3173,7 +3137,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FORMAL_PARAMETER__ANNOTATIONS = ANNOTABLE_ELEMENT_FEATURE_COUNT + 3;
+	int FORMAL_PARAMETER__ANNOTATIONS = ANNOTABLE_ELEMENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Variadic</b></em>' attribute.
@@ -3182,7 +3146,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FORMAL_PARAMETER__VARIADIC = ANNOTABLE_ELEMENT_FEATURE_COUNT + 4;
+	int FORMAL_PARAMETER__VARIADIC = ANNOTABLE_ELEMENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Defined Type Element</b></em>' reference.
@@ -3191,7 +3155,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FORMAL_PARAMETER__DEFINED_TYPE_ELEMENT = ANNOTABLE_ELEMENT_FEATURE_COUNT + 5;
+	int FORMAL_PARAMETER__DEFINED_TYPE_ELEMENT = ANNOTABLE_ELEMENT_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Has Initializer Assignment</b></em>' attribute.
@@ -3200,7 +3164,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FORMAL_PARAMETER__HAS_INITIALIZER_ASSIGNMENT = ANNOTABLE_ELEMENT_FEATURE_COUNT + 6;
+	int FORMAL_PARAMETER__HAS_INITIALIZER_ASSIGNMENT = ANNOTABLE_ELEMENT_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Initializer</b></em>' containment reference.
@@ -3209,7 +3173,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FORMAL_PARAMETER__INITIALIZER = ANNOTABLE_ELEMENT_FEATURE_COUNT + 7;
+	int FORMAL_PARAMETER__INITIALIZER = ANNOTABLE_ELEMENT_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Binding Pattern</b></em>' containment reference.
@@ -3218,7 +3182,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FORMAL_PARAMETER__BINDING_PATTERN = ANNOTABLE_ELEMENT_FEATURE_COUNT + 8;
+	int FORMAL_PARAMETER__BINDING_PATTERN = ANNOTABLE_ELEMENT_FEATURE_COUNT + 7;
 
 	/**
 	 * The number of structural features of the '<em>Formal Parameter</em>' class.
@@ -3227,7 +3191,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FORMAL_PARAMETER_FEATURE_COUNT = ANNOTABLE_ELEMENT_FEATURE_COUNT + 9;
+	int FORMAL_PARAMETER_FEATURE_COUNT = ANNOTABLE_ELEMENT_FEATURE_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Get Annotations</em>' operation.
@@ -3932,22 +3896,13 @@ public interface N4JSPackage extends EPackage {
 	int VARIABLE_DECLARATION__DECLARED_TYPE_REF = VARIABLE_DECLARATION_OR_BINDING_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Bogus Type Ref</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VARIABLE_DECLARATION__BOGUS_TYPE_REF = VARIABLE_DECLARATION_OR_BINDING_FEATURE_COUNT + 1;
-
-	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE_DECLARATION__NAME = VARIABLE_DECLARATION_OR_BINDING_FEATURE_COUNT + 2;
+	int VARIABLE_DECLARATION__NAME = VARIABLE_DECLARATION_OR_BINDING_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -3956,7 +3911,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE_DECLARATION__ANNOTATIONS = VARIABLE_DECLARATION_OR_BINDING_FEATURE_COUNT + 3;
+	int VARIABLE_DECLARATION__ANNOTATIONS = VARIABLE_DECLARATION_OR_BINDING_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Expression</b></em>' containment reference.
@@ -3965,7 +3920,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE_DECLARATION__EXPRESSION = VARIABLE_DECLARATION_OR_BINDING_FEATURE_COUNT + 4;
+	int VARIABLE_DECLARATION__EXPRESSION = VARIABLE_DECLARATION_OR_BINDING_FEATURE_COUNT + 3;
 
 	/**
 	 * The number of structural features of the '<em>Variable Declaration</em>' class.
@@ -3974,7 +3929,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE_DECLARATION_FEATURE_COUNT = VARIABLE_DECLARATION_OR_BINDING_FEATURE_COUNT + 5;
+	int VARIABLE_DECLARATION_FEATURE_COUNT = VARIABLE_DECLARATION_OR_BINDING_FEATURE_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Get Variable Declarations</em>' operation.
@@ -4075,15 +4030,6 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int EXPORTED_VARIABLE_DECLARATION__DECLARED_TYPE_REF = VARIABLE_DECLARATION__DECLARED_TYPE_REF;
-
-	/**
-	 * The feature id for the '<em><b>Bogus Type Ref</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EXPORTED_VARIABLE_DECLARATION__BOGUS_TYPE_REF = VARIABLE_DECLARATION__BOGUS_TYPE_REF;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -5296,15 +5242,6 @@ public interface N4JSPackage extends EPackage {
 	int CATCH_VARIABLE__DECLARED_TYPE_REF = VARIABLE__DECLARED_TYPE_REF;
 
 	/**
-	 * The feature id for the '<em><b>Bogus Type Ref</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CATCH_VARIABLE__BOGUS_TYPE_REF = VARIABLE__BOGUS_TYPE_REF;
-
-	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6494,22 +6431,13 @@ public interface N4JSPackage extends EPackage {
 	int PROPERTY_NAME_VALUE_PAIR__DECLARED_TYPE_REF = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Bogus Type Ref</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROPERTY_NAME_VALUE_PAIR__BOGUS_TYPE_REF = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 1;
-
-	/**
 	 * The feature id for the '<em><b>Defined Field</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_NAME_VALUE_PAIR__DEFINED_FIELD = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 2;
+	int PROPERTY_NAME_VALUE_PAIR__DEFINED_FIELD = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Declared Optional</b></em>' attribute.
@@ -6518,7 +6446,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_NAME_VALUE_PAIR__DECLARED_OPTIONAL = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 3;
+	int PROPERTY_NAME_VALUE_PAIR__DECLARED_OPTIONAL = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Expression</b></em>' containment reference.
@@ -6527,7 +6455,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_NAME_VALUE_PAIR__EXPRESSION = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 4;
+	int PROPERTY_NAME_VALUE_PAIR__EXPRESSION = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The number of structural features of the '<em>Property Name Value Pair</em>' class.
@@ -6536,7 +6464,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_NAME_VALUE_PAIR_FEATURE_COUNT = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 5;
+	int PROPERTY_NAME_VALUE_PAIR_FEATURE_COUNT = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Get All Annotations</em>' operation.
@@ -6655,15 +6583,6 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int PROPERTY_NAME_VALUE_PAIR_SINGLE_NAME__DECLARED_TYPE_REF = PROPERTY_NAME_VALUE_PAIR__DECLARED_TYPE_REF;
-
-	/**
-	 * The feature id for the '<em><b>Bogus Type Ref</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROPERTY_NAME_VALUE_PAIR_SINGLE_NAME__BOGUS_TYPE_REF = PROPERTY_NAME_VALUE_PAIR__BOGUS_TYPE_REF;
 
 	/**
 	 * The feature id for the '<em><b>Defined Field</b></em>' reference.
@@ -6910,22 +6829,13 @@ public interface N4JSPackage extends EPackage {
 	int PROPERTY_METHOD_DECLARATION__DECLARED_TYPE_REF = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 9;
 
 	/**
-	 * The feature id for the '<em><b>Bogus Type Ref</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROPERTY_METHOD_DECLARATION__BOGUS_TYPE_REF = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 10;
-
-	/**
 	 * The number of structural features of the '<em>Property Method Declaration</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_METHOD_DECLARATION_FEATURE_COUNT = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 11;
+	int PROPERTY_METHOD_DECLARATION_FEATURE_COUNT = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Get All Annotations</em>' operation.
@@ -7154,22 +7064,13 @@ public interface N4JSPackage extends EPackage {
 	int GETTER_DECLARATION__DECLARED_TYPE_REF = FIELD_ACCESSOR_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Bogus Type Ref</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GETTER_DECLARATION__BOGUS_TYPE_REF = FIELD_ACCESSOR_FEATURE_COUNT + 1;
-
-	/**
 	 * The feature id for the '<em><b>Defined Getter</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int GETTER_DECLARATION__DEFINED_GETTER = FIELD_ACCESSOR_FEATURE_COUNT + 2;
+	int GETTER_DECLARATION__DEFINED_GETTER = FIELD_ACCESSOR_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Getter Declaration</em>' class.
@@ -7178,7 +7079,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GETTER_DECLARATION_FEATURE_COUNT = FIELD_ACCESSOR_FEATURE_COUNT + 3;
+	int GETTER_DECLARATION_FEATURE_COUNT = FIELD_ACCESSOR_FEATURE_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Get Annotations</em>' operation.
@@ -7559,15 +7460,6 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int PROPERTY_GETTER_DECLARATION__DECLARED_TYPE_REF = GETTER_DECLARATION__DECLARED_TYPE_REF;
-
-	/**
-	 * The feature id for the '<em><b>Bogus Type Ref</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROPERTY_GETTER_DECLARATION__BOGUS_TYPE_REF = GETTER_DECLARATION__BOGUS_TYPE_REF;
 
 	/**
 	 * The feature id for the '<em><b>Defined Getter</b></em>' reference.
@@ -13601,22 +13493,13 @@ public interface N4JSPackage extends EPackage {
 	int N4_FIELD_DECLARATION__DECLARED_TYPE_REF = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Bogus Type Ref</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4_FIELD_DECLARATION__BOGUS_TYPE_REF = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 1;
-
-	/**
 	 * The feature id for the '<em><b>Declared Name</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_FIELD_DECLARATION__DECLARED_NAME = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 2;
+	int N4_FIELD_DECLARATION__DECLARED_NAME = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Defined Field</b></em>' reference.
@@ -13625,7 +13508,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_FIELD_DECLARATION__DEFINED_FIELD = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 3;
+	int N4_FIELD_DECLARATION__DEFINED_FIELD = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Declared Optional</b></em>' attribute.
@@ -13634,7 +13517,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_FIELD_DECLARATION__DECLARED_OPTIONAL = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 4;
+	int N4_FIELD_DECLARATION__DECLARED_OPTIONAL = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Expression</b></em>' containment reference.
@@ -13643,7 +13526,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_FIELD_DECLARATION__EXPRESSION = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 5;
+	int N4_FIELD_DECLARATION__EXPRESSION = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 4;
 
 	/**
 	 * The number of structural features of the '<em>N4 Field Declaration</em>' class.
@@ -13652,7 +13535,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_FIELD_DECLARATION_FEATURE_COUNT = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 6;
+	int N4_FIELD_DECLARATION_FEATURE_COUNT = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Get All Annotations</em>' operation.
@@ -13917,22 +13800,13 @@ public interface N4JSPackage extends EPackage {
 	int METHOD_DECLARATION__DECLARED_TYPE_REF = FUNCTION_DEFINITION_FEATURE_COUNT + 1;
 
 	/**
-	 * The feature id for the '<em><b>Bogus Type Ref</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int METHOD_DECLARATION__BOGUS_TYPE_REF = FUNCTION_DEFINITION_FEATURE_COUNT + 2;
-
-	/**
 	 * The feature id for the '<em><b>Declared Name</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int METHOD_DECLARATION__DECLARED_NAME = FUNCTION_DEFINITION_FEATURE_COUNT + 3;
+	int METHOD_DECLARATION__DECLARED_NAME = FUNCTION_DEFINITION_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of structural features of the '<em>Method Declaration</em>' class.
@@ -13941,7 +13815,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int METHOD_DECLARATION_FEATURE_COUNT = FUNCTION_DEFINITION_FEATURE_COUNT + 4;
+	int METHOD_DECLARATION_FEATURE_COUNT = FUNCTION_DEFINITION_FEATURE_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Get Annotations</em>' operation.
@@ -14233,22 +14107,13 @@ public interface N4JSPackage extends EPackage {
 	int N4_METHOD_DECLARATION__DECLARED_TYPE_REF = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 9;
 
 	/**
-	 * The feature id for the '<em><b>Bogus Type Ref</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4_METHOD_DECLARATION__BOGUS_TYPE_REF = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 10;
-
-	/**
 	 * The feature id for the '<em><b>Declared Name</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_METHOD_DECLARATION__DECLARED_NAME = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 11;
+	int N4_METHOD_DECLARATION__DECLARED_NAME = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 10;
 
 	/**
 	 * The number of structural features of the '<em>N4 Method Declaration</em>' class.
@@ -14257,7 +14122,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_METHOD_DECLARATION_FEATURE_COUNT = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 12;
+	int N4_METHOD_DECLARATION_FEATURE_COUNT = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 11;
 
 	/**
 	 * The operation id for the '<em>Get All Annotations</em>' operation.
@@ -14827,15 +14692,6 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int N4_GETTER_DECLARATION__DECLARED_TYPE_REF = GETTER_DECLARATION__DECLARED_TYPE_REF;
-
-	/**
-	 * The feature id for the '<em><b>Bogus Type Ref</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4_GETTER_DECLARATION__BOGUS_TYPE_REF = GETTER_DECLARATION__BOGUS_TYPE_REF;
 
 	/**
 	 * The feature id for the '<em><b>Defined Getter</b></em>' reference.
@@ -16261,15 +16117,6 @@ public interface N4JSPackage extends EPackage {
 	int MIGRATION_CONTEXT_VARIABLE__DECLARED_TYPE_REF = VARIABLE__DECLARED_TYPE_REF;
 
 	/**
-	 * The feature id for the '<em><b>Bogus Type Ref</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MIGRATION_CONTEXT_VARIABLE__BOGUS_TYPE_REF = VARIABLE__BOGUS_TYPE_REF;
-
-	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -17048,17 +16895,6 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getTypedElement_DeclaredTypeRef();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4JS.TypedElement#getBogusTypeRef <em>Bogus Type Ref</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Bogus Type Ref</em>'.
-	 * @see org.eclipse.n4js.n4JS.TypedElement#getBogusTypeRef()
-	 * @see #getTypedElement()
-	 * @generated
-	 */
-	EReference getTypedElement_BogusTypeRef();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.VariableEnvironmentElement <em>Variable Environment Element</em>}'.
@@ -23009,14 +22845,6 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EReference TYPED_ELEMENT__DECLARED_TYPE_REF = eINSTANCE.getTypedElement_DeclaredTypeRef();
-
-		/**
-		 * The meta object literal for the '<em><b>Bogus Type Ref</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference TYPED_ELEMENT__BOGUS_TYPE_REF = eINSTANCE.getTypedElement_BogusTypeRef();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.VariableEnvironmentElementImpl <em>Variable Environment Element</em>}' class.

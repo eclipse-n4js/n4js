@@ -2191,16 +2191,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getTypedElement_BogusTypeRef() {
-		return (EReference)typedElementEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EClass getVariableEnvironmentElement() {
 		return variableEnvironmentElementEClass;
 	}
@@ -7588,7 +7578,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		typedElementEClass = createEClass(TYPED_ELEMENT);
 		createEReference(typedElementEClass, TYPED_ELEMENT__DECLARED_TYPE_REF);
-		createEReference(typedElementEClass, TYPED_ELEMENT__BOGUS_TYPE_REF);
 
 		variableEnvironmentElementEClass = createEClass(VARIABLE_ENVIRONMENT_ELEMENT);
 		createEOperation(variableEnvironmentElementEClass, VARIABLE_ENVIRONMENT_ELEMENT___APPLIES_ONLY_TO_BLOCK_SCOPED_ELEMENTS);
@@ -8662,7 +8651,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEClass(typedElementEClass, TypedElement.class, "TypedElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getTypedElement_DeclaredTypeRef(), theTypeRefsPackage.getTypeRef(), null, "declaredTypeRef", null, 0, 1, TypedElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getTypedElement_BogusTypeRef(), theTypeRefsPackage.getTypeRef(), null, "bogusTypeRef", null, 0, 1, TypedElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(variableEnvironmentElementEClass, VariableEnvironmentElement.class, "VariableEnvironmentElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

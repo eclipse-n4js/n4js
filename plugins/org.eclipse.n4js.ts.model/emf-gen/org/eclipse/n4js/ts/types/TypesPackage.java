@@ -966,13 +966,22 @@ public interface TypesPackage extends EPackage {
 	int TYPE___GET_VERSION = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
+	 * The operation id for the '<em>Is Alias</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE___IS_ALIAS = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 1;
+
+	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE___IS_PROVIDED_BY_RUNTIME = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 1;
+	int TYPE___IS_PROVIDED_BY_RUNTIME = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Is Polyfill</em>' operation.
@@ -981,7 +990,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE___IS_POLYFILL = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 2;
+	int TYPE___IS_POLYFILL = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Is Static Polyfill</em>' operation.
@@ -990,7 +999,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE___IS_STATIC_POLYFILL = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 3;
+	int TYPE___IS_STATIC_POLYFILL = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Is Final</em>' operation.
@@ -999,7 +1008,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE___IS_FINAL = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 4;
+	int TYPE___IS_FINAL = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Is Dynamizable</em>' operation.
@@ -1008,7 +1017,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE___IS_DYNAMIZABLE = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 5;
+	int TYPE___IS_DYNAMIZABLE = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Is Array Like</em>' operation.
@@ -1017,7 +1026,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE___IS_ARRAY_LIKE = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 6;
+	int TYPE___IS_ARRAY_LIKE = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Get Element Type</em>' operation.
@@ -1026,7 +1035,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE___GET_ELEMENT_TYPE = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 7;
+	int TYPE___GET_ELEMENT_TYPE = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Get Type Access Modifier</em>' operation.
@@ -1035,7 +1044,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE___GET_TYPE_ACCESS_MODIFIER = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 8;
+	int TYPE___GET_TYPE_ACCESS_MODIFIER = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 9;
 
 	/**
 	 * The operation id for the '<em>Is Generic</em>' operation.
@@ -1044,7 +1053,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE___IS_GENERIC = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 9;
+	int TYPE___IS_GENERIC = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Get Type Vars</em>' operation.
@@ -1053,7 +1062,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE___GET_TYPE_VARS = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 10;
+	int TYPE___GET_TYPE_VARS = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 11;
 
 	/**
 	 * The operation id for the '<em>Get Variance Of Type Var</em>' operation.
@@ -1062,7 +1071,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE___GET_VARIANCE_OF_TYPE_VAR__INT = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 11;
+	int TYPE___GET_VARIANCE_OF_TYPE_VAR__INT = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 12;
 
 	/**
 	 * The operation id for the '<em>Get Raw Type As String</em>' operation.
@@ -1071,7 +1080,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE___GET_RAW_TYPE_AS_STRING = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 12;
+	int TYPE___GET_RAW_TYPE_AS_STRING = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 13;
 
 	/**
 	 * The operation id for the '<em>Get Type As String</em>' operation.
@@ -1080,7 +1089,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE___GET_TYPE_AS_STRING = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 13;
+	int TYPE___GET_TYPE_AS_STRING = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 14;
 
 	/**
 	 * The number of operations of the '<em>Type</em>' class.
@@ -1089,7 +1098,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_OPERATION_COUNT = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 14;
+	int TYPE_OPERATION_COUNT = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 15;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TypeVariableImpl <em>Type Variable</em>}' class.
@@ -1199,6 +1208,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TYPE_VARIABLE___GET_VERSION = TYPE___GET_VERSION;
+
+	/**
+	 * The operation id for the '<em>Is Alias</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_VARIABLE___IS_ALIAS = TYPE___IS_ALIAS;
 
 	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
@@ -1454,6 +1472,15 @@ public interface TypesPackage extends EPackage {
 	int INFERENCE_VARIABLE___GET_VERSION = TYPE_VARIABLE___GET_VERSION;
 
 	/**
+	 * The operation id for the '<em>Is Alias</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INFERENCE_VARIABLE___IS_ALIAS = TYPE_VARIABLE___IS_ALIAS;
+
+	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1678,6 +1705,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int GENERIC_TYPE___GET_VERSION = TYPE___GET_VERSION;
+
+	/**
+	 * The operation id for the '<em>Is Alias</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GENERIC_TYPE___IS_ALIAS = TYPE___IS_ALIAS;
 
 	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
@@ -1976,6 +2012,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TFUNCTION___GET_CONTAINING_MODULE = GENERIC_TYPE___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Is Alias</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFUNCTION___IS_ALIAS = GENERIC_TYPE___IS_ALIAS;
 
 	/**
 	 * The operation id for the '<em>Is Polyfill</em>' operation.
@@ -2340,6 +2385,15 @@ public interface TypesPackage extends EPackage {
 	int CONTAINER_TYPE___GET_VERSION = GENERIC_TYPE___GET_VERSION;
 
 	/**
+	 * The operation id for the '<em>Is Alias</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONTAINER_TYPE___IS_ALIAS = GENERIC_TYPE___IS_ALIAS;
+
+	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2629,6 +2683,15 @@ public interface TypesPackage extends EPackage {
 	int VIRTUAL_BASE_TYPE___GET_VERSION = CONTAINER_TYPE___GET_VERSION;
 
 	/**
+	 * The operation id for the '<em>Is Alias</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VIRTUAL_BASE_TYPE___IS_ALIAS = CONTAINER_TYPE___IS_ALIAS;
+
+	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2889,6 +2952,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int MODULE_NAMESPACE_VIRTUAL_TYPE___GET_VERSION = TYPE___GET_VERSION;
+
+	/**
+	 * The operation id for the '<em>Is Alias</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODULE_NAMESPACE_VIRTUAL_TYPE___IS_ALIAS = TYPE___IS_ALIAS;
 
 	/**
 	 * The operation id for the '<em>Is Polyfill</em>' operation.
@@ -3153,6 +3225,15 @@ public interface TypesPackage extends EPackage {
 	int PRIMITIVE_TYPE___GET_VERSION = CONTAINER_TYPE___GET_VERSION;
 
 	/**
+	 * The operation id for the '<em>Is Alias</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PRIMITIVE_TYPE___IS_ALIAS = CONTAINER_TYPE___IS_ALIAS;
+
+	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3388,6 +3469,15 @@ public interface TypesPackage extends EPackage {
 	int BUILT_IN_TYPE___GET_VERSION = TYPE___GET_VERSION;
 
 	/**
+	 * The operation id for the '<em>Is Alias</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BUILT_IN_TYPE___IS_ALIAS = TYPE___IS_ALIAS;
+
+	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3585,6 +3675,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int ANY_TYPE___GET_VERSION = BUILT_IN_TYPE___GET_VERSION;
+
+	/**
+	 * The operation id for the '<em>Is Alias</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ANY_TYPE___IS_ALIAS = BUILT_IN_TYPE___IS_ALIAS;
 
 	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
@@ -3786,6 +3885,15 @@ public interface TypesPackage extends EPackage {
 	int UNDEFINED_TYPE___GET_VERSION = BUILT_IN_TYPE___GET_VERSION;
 
 	/**
+	 * The operation id for the '<em>Is Alias</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNDEFINED_TYPE___IS_ALIAS = BUILT_IN_TYPE___IS_ALIAS;
+
+	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3985,6 +4093,15 @@ public interface TypesPackage extends EPackage {
 	int NULL_TYPE___GET_VERSION = BUILT_IN_TYPE___GET_VERSION;
 
 	/**
+	 * The operation id for the '<em>Is Alias</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NULL_TYPE___IS_ALIAS = BUILT_IN_TYPE___IS_ALIAS;
+
+	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4182,6 +4299,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int VOID_TYPE___GET_VERSION = BUILT_IN_TYPE___GET_VERSION;
+
+	/**
+	 * The operation id for the '<em>Is Alias</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VOID_TYPE___IS_ALIAS = BUILT_IN_TYPE___IS_ALIAS;
 
 	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
@@ -4428,6 +4554,15 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCTURAL_TYPE___GET_VERSION = CONTAINER_TYPE___GET_VERSION;
 
 	/**
+	 * The operation id for the '<em>Is Alias</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCTURAL_TYPE___IS_ALIAS = CONTAINER_TYPE___IS_ALIAS;
+
+	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4661,6 +4796,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TVERSIONABLE___IS_EXPORTED = TYPE___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Alias</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVERSIONABLE___IS_ALIAS = TYPE___IS_ALIAS;
 
 	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
@@ -5061,6 +5205,15 @@ public interface TypesPackage extends EPackage {
 	int TMIGRATION___GET_CONTAINING_MODULE = TFUNCTION___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Is Alias</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMIGRATION___IS_ALIAS = TFUNCTION___IS_ALIAS;
+
+	/**
 	 * The operation id for the '<em>Is Polyfill</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5384,6 +5537,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TCLASSIFIER___IS_EXPORTED = CONTAINER_TYPE___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Alias</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCLASSIFIER___IS_ALIAS = CONTAINER_TYPE___IS_ALIAS;
 
 	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
@@ -5754,6 +5916,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TOBJECT_PROTOTYPE___GET_CONTAINING_MODULE = TCLASSIFIER___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Is Alias</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TOBJECT_PROTOTYPE___IS_ALIAS = TCLASSIFIER___IS_ALIAS;
 
 	/**
 	 * The operation id for the '<em>Is Polyfill</em>' operation.
@@ -6179,6 +6350,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TN4_CLASSIFIER___GET_CONTAINING_MODULE = TCLASSIFIER___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Is Alias</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TN4_CLASSIFIER___IS_ALIAS = TCLASSIFIER___IS_ALIAS;
 
 	/**
 	 * The operation id for the '<em>Is Polyfill</em>' operation.
@@ -6641,6 +6821,15 @@ public interface TypesPackage extends EPackage {
 	int TCLASS___GET_CONTAINING_MODULE = TN4_CLASSIFIER___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Is Alias</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCLASS___IS_ALIAS = TN4_CLASSIFIER___IS_ALIAS;
+
+	/**
 	 * The operation id for the '<em>Is Dynamizable</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -7045,6 +7234,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TINTERFACE___GET_CONTAINING_MODULE = TN4_CLASSIFIER___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Is Alias</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINTERFACE___IS_ALIAS = TN4_CLASSIFIER___IS_ALIAS;
 
 	/**
 	 * The operation id for the '<em>Is Polyfill</em>' operation.
@@ -8401,6 +8599,15 @@ public interface TypesPackage extends EPackage {
 	int TMETHOD___GET_CONTAINING_MODULE = TFUNCTION___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Is Alias</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMETHOD___IS_ALIAS = TFUNCTION___IS_ALIAS;
+
+	/**
 	 * The operation id for the '<em>Is Polyfill</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -9003,6 +9210,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCT_METHOD___GET_CONTAINING_MODULE = TMETHOD___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Is Alias</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_METHOD___IS_ALIAS = TMETHOD___IS_ALIAS;
 
 	/**
 	 * The operation id for the '<em>Is Polyfill</em>' operation.
@@ -12219,6 +12435,15 @@ public interface TypesPackage extends EPackage {
 	int TENUM___GET_CONTAINING_MODULE = TYPE___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Is Alias</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TENUM___IS_ALIAS = TYPE___IS_ALIAS;
+
+	/**
 	 * The operation id for the '<em>Is Polyfill</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -12671,13 +12896,22 @@ public interface TypesPackage extends EPackage {
 	int TYPE_ALIAS___IS_EXPORTED = GENERIC_TYPE_OPERATION_COUNT + 2;
 
 	/**
+	 * The operation id for the '<em>Is Alias</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_ALIAS___IS_ALIAS = GENERIC_TYPE_OPERATION_COUNT + 3;
+
+	/**
 	 * The number of operations of the '<em>Type Alias</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS_OPERATION_COUNT = GENERIC_TYPE_OPERATION_COUNT + 3;
+	int TYPE_ALIAS_OPERATION_COUNT = GENERIC_TYPE_OPERATION_COUNT + 4;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TConstableElementImpl <em>TConstable Element</em>}' class.
@@ -13842,6 +14076,16 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getType();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.Type#isAlias() <em>Is Alias</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Alias</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.Type#isAlias()
+	 * @generated
+	 */
+	EOperation getType__IsAlias();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.Type#isProvidedByRuntime() <em>Is Provided By Runtime</em>}' operation.
@@ -15856,6 +16100,16 @@ public interface TypesPackage extends EPackage {
 	EReference getTypeAlias_ActualTypeRef();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TypeAlias#isAlias() <em>Is Alias</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Alias</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.TypeAlias#isAlias()
+	 * @generated
+	 */
+	EOperation getTypeAlias__IsAlias();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.SyntaxRelatedTElement <em>Syntax Related TElement</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -16755,6 +17009,14 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EClass TYPE = eINSTANCE.getType();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Alias</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TYPE___IS_ALIAS = eINSTANCE.getType__IsAlias();
 
 		/**
 		 * The meta object literal for the '<em><b>Is Provided By Runtime</b></em>' operation.
@@ -18391,6 +18653,14 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EReference TYPE_ALIAS__ACTUAL_TYPE_REF = eINSTANCE.getTypeAlias_ActualTypeRef();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Alias</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TYPE_ALIAS___IS_ALIAS = eINSTANCE.getTypeAlias__IsAlias();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.SyntaxRelatedTElementImpl <em>Syntax Related TElement</em>}' class.

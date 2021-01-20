@@ -90,7 +90,6 @@ import org.eclipse.xtext.xbase.lib.Procedures.Procedure0;
  *   <li>{@link org.eclipse.n4js.n4JS.impl.PropertyMethodDeclarationImpl#isDeclaredAsync <em>Declared Async</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.PropertyMethodDeclarationImpl#getTypeVars <em>Type Vars</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.PropertyMethodDeclarationImpl#getDeclaredTypeRef <em>Declared Type Ref</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.PropertyMethodDeclarationImpl#getBogusTypeRef <em>Bogus Type Ref</em>}</li>
  * </ul>
  *
  * @generated
@@ -225,16 +224,6 @@ public class PropertyMethodDeclarationImpl extends AnnotablePropertyAssignmentIm
 	 * @ordered
 	 */
 	protected TypeRef declaredTypeRef;
-
-	/**
-	 * The cached value of the '{@link #getBogusTypeRef() <em>Bogus Type Ref</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getBogusTypeRef()
-	 * @generated
-	 * @ordered
-	 */
-	protected TypeRef bogusTypeRef;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -576,51 +565,6 @@ public class PropertyMethodDeclarationImpl extends AnnotablePropertyAssignmentIm
 	 * @generated
 	 */
 	@Override
-	public TypeRef getBogusTypeRef() {
-		return bogusTypeRef;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public NotificationChain basicSetBogusTypeRef(TypeRef newBogusTypeRef, NotificationChain msgs) {
-		TypeRef oldBogusTypeRef = bogusTypeRef;
-		bogusTypeRef = newBogusTypeRef;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.PROPERTY_METHOD_DECLARATION__BOGUS_TYPE_REF, oldBogusTypeRef, newBogusTypeRef);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setBogusTypeRef(TypeRef newBogusTypeRef) {
-		if (newBogusTypeRef != bogusTypeRef) {
-			NotificationChain msgs = null;
-			if (bogusTypeRef != null)
-				msgs = ((InternalEObject)bogusTypeRef).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.PROPERTY_METHOD_DECLARATION__BOGUS_TYPE_REF, null, msgs);
-			if (newBogusTypeRef != null)
-				msgs = ((InternalEObject)newBogusTypeRef).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.PROPERTY_METHOD_DECLARATION__BOGUS_TYPE_REF, null, msgs);
-			msgs = basicSetBogusTypeRef(newBogusTypeRef, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.PROPERTY_METHOD_DECLARATION__BOGUS_TYPE_REF, newBogusTypeRef, newBogusTypeRef));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public TStructMethod getDefinedMember() {
 		Type _definedType = this.getDefinedType();
 		return ((TStructMethod) _definedType);
@@ -816,8 +760,6 @@ public class PropertyMethodDeclarationImpl extends AnnotablePropertyAssignmentIm
 				return ((InternalEList<?>)getTypeVars()).basicRemove(otherEnd, msgs);
 			case N4JSPackage.PROPERTY_METHOD_DECLARATION__DECLARED_TYPE_REF:
 				return basicSetDeclaredTypeRef(null, msgs);
-			case N4JSPackage.PROPERTY_METHOD_DECLARATION__BOGUS_TYPE_REF:
-				return basicSetBogusTypeRef(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -851,8 +793,6 @@ public class PropertyMethodDeclarationImpl extends AnnotablePropertyAssignmentIm
 				return getTypeVars();
 			case N4JSPackage.PROPERTY_METHOD_DECLARATION__DECLARED_TYPE_REF:
 				return getDeclaredTypeRef();
-			case N4JSPackage.PROPERTY_METHOD_DECLARATION__BOGUS_TYPE_REF:
-				return getBogusTypeRef();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -898,9 +838,6 @@ public class PropertyMethodDeclarationImpl extends AnnotablePropertyAssignmentIm
 			case N4JSPackage.PROPERTY_METHOD_DECLARATION__DECLARED_TYPE_REF:
 				setDeclaredTypeRef((TypeRef)newValue);
 				return;
-			case N4JSPackage.PROPERTY_METHOD_DECLARATION__BOGUS_TYPE_REF:
-				setBogusTypeRef((TypeRef)newValue);
-				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -943,9 +880,6 @@ public class PropertyMethodDeclarationImpl extends AnnotablePropertyAssignmentIm
 			case N4JSPackage.PROPERTY_METHOD_DECLARATION__DECLARED_TYPE_REF:
 				setDeclaredTypeRef((TypeRef)null);
 				return;
-			case N4JSPackage.PROPERTY_METHOD_DECLARATION__BOGUS_TYPE_REF:
-				setBogusTypeRef((TypeRef)null);
-				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -978,8 +912,6 @@ public class PropertyMethodDeclarationImpl extends AnnotablePropertyAssignmentIm
 				return typeVars != null && !typeVars.isEmpty();
 			case N4JSPackage.PROPERTY_METHOD_DECLARATION__DECLARED_TYPE_REF:
 				return declaredTypeRef != null;
-			case N4JSPackage.PROPERTY_METHOD_DECLARATION__BOGUS_TYPE_REF:
-				return bogusTypeRef != null;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -1038,7 +970,6 @@ public class PropertyMethodDeclarationImpl extends AnnotablePropertyAssignmentIm
 		if (baseClass == TypedElement.class) {
 			switch (derivedFeatureID) {
 				case N4JSPackage.PROPERTY_METHOD_DECLARATION__DECLARED_TYPE_REF: return N4JSPackage.TYPED_ELEMENT__DECLARED_TYPE_REF;
-				case N4JSPackage.PROPERTY_METHOD_DECLARATION__BOGUS_TYPE_REF: return N4JSPackage.TYPED_ELEMENT__BOGUS_TYPE_REF;
 				default: return -1;
 			}
 		}
@@ -1104,7 +1035,6 @@ public class PropertyMethodDeclarationImpl extends AnnotablePropertyAssignmentIm
 		if (baseClass == TypedElement.class) {
 			switch (baseFeatureID) {
 				case N4JSPackage.TYPED_ELEMENT__DECLARED_TYPE_REF: return N4JSPackage.PROPERTY_METHOD_DECLARATION__DECLARED_TYPE_REF;
-				case N4JSPackage.TYPED_ELEMENT__BOGUS_TYPE_REF: return N4JSPackage.PROPERTY_METHOD_DECLARATION__BOGUS_TYPE_REF;
 				default: return -1;
 			}
 		}

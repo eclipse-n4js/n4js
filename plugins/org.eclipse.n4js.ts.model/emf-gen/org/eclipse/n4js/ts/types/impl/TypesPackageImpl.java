@@ -1446,7 +1446,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getType__IsProvidedByRuntime() {
+	public EOperation getType__IsAlias() {
 		return typeEClass.getEOperations().get(0);
 	}
 
@@ -1456,7 +1456,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getType__IsPolyfill() {
+	public EOperation getType__IsProvidedByRuntime() {
 		return typeEClass.getEOperations().get(1);
 	}
 
@@ -1466,7 +1466,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getType__IsStaticPolyfill() {
+	public EOperation getType__IsPolyfill() {
 		return typeEClass.getEOperations().get(2);
 	}
 
@@ -1476,7 +1476,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getType__IsFinal() {
+	public EOperation getType__IsStaticPolyfill() {
 		return typeEClass.getEOperations().get(3);
 	}
 
@@ -1486,7 +1486,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getType__IsDynamizable() {
+	public EOperation getType__IsFinal() {
 		return typeEClass.getEOperations().get(4);
 	}
 
@@ -1496,7 +1496,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getType__IsArrayLike() {
+	public EOperation getType__IsDynamizable() {
 		return typeEClass.getEOperations().get(5);
 	}
 
@@ -1506,7 +1506,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getType__GetElementType() {
+	public EOperation getType__IsArrayLike() {
 		return typeEClass.getEOperations().get(6);
 	}
 
@@ -1516,7 +1516,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getType__GetTypeAccessModifier() {
+	public EOperation getType__GetElementType() {
 		return typeEClass.getEOperations().get(7);
 	}
 
@@ -1526,7 +1526,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getType__IsGeneric() {
+	public EOperation getType__GetTypeAccessModifier() {
 		return typeEClass.getEOperations().get(8);
 	}
 
@@ -1536,7 +1536,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getType__GetTypeVars() {
+	public EOperation getType__IsGeneric() {
 		return typeEClass.getEOperations().get(9);
 	}
 
@@ -1546,7 +1546,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getType__GetVarianceOfTypeVar__int() {
+	public EOperation getType__GetTypeVars() {
 		return typeEClass.getEOperations().get(10);
 	}
 
@@ -1556,7 +1556,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getType__GetRawTypeAsString() {
+	public EOperation getType__GetVarianceOfTypeVar__int() {
 		return typeEClass.getEOperations().get(11);
 	}
 
@@ -1566,8 +1566,18 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getType__GetTypeAsString() {
+	public EOperation getType__GetRawTypeAsString() {
 		return typeEClass.getEOperations().get(12);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getType__GetTypeAsString() {
+		return typeEClass.getEOperations().get(13);
 	}
 
 	/**
@@ -3396,6 +3406,16 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
+	public EOperation getTypeAlias__IsAlias() {
+		return typeAliasEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getSyntaxRelatedTElement() {
 		return syntaxRelatedTElementEClass;
 	}
@@ -3714,6 +3734,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEOperation(tFunctionEClass, TFUNCTION___IS_FINAL);
 
 		typeEClass = createEClass(TYPE);
+		createEOperation(typeEClass, TYPE___IS_ALIAS);
 		createEOperation(typeEClass, TYPE___IS_PROVIDED_BY_RUNTIME);
 		createEOperation(typeEClass, TYPE___IS_POLYFILL);
 		createEOperation(typeEClass, TYPE___IS_STATIC_POLYFILL);
@@ -3947,6 +3968,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 
 		typeAliasEClass = createEClass(TYPE_ALIAS);
 		createEReference(typeAliasEClass, TYPE_ALIAS__ACTUAL_TYPE_REF);
+		createEOperation(typeAliasEClass, TYPE_ALIAS___IS_ALIAS);
 
 		syntaxRelatedTElementEClass = createEClass(SYNTAX_RELATED_TELEMENT);
 		createEReference(syntaxRelatedTElementEClass, SYNTAX_RELATED_TELEMENT__AST_ELEMENT);
@@ -4232,6 +4254,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEOperation(getTFunction__IsFinal(), theEcorePackage.getEBoolean(), "isFinal", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(typeEClass, Type.class, "Type", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEOperation(getType__IsAlias(), theEcorePackage.getEBoolean(), "isAlias", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getType__IsProvidedByRuntime(), theEcorePackage.getEBoolean(), "isProvidedByRuntime", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
@@ -4585,6 +4609,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 
 		initEClass(typeAliasEClass, TypeAlias.class, "TypeAlias", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getTypeAlias_ActualTypeRef(), theTypeRefsPackage.getTypeRef(), null, "actualTypeRef", null, 0, 1, TypeAlias.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getTypeAlias__IsAlias(), theEcorePackage.getEBoolean(), "isAlias", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(syntaxRelatedTElementEClass, SyntaxRelatedTElement.class, "SyntaxRelatedTElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getSyntaxRelatedTElement_AstElement(), theEcorePackage.getEObject(), null, "astElement", null, 0, 1, SyntaxRelatedTElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

@@ -450,7 +450,7 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	 * @generated
 	 */
 	@Override
-	public String getTypeRefAsString() {
+	public String internalGetTypeRefAsString() {
 		Type _declaredType = this.getDeclaredType();
 		String _rawTypeAsString = null;
 		if (_declaredType!=null) {
@@ -703,7 +703,7 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
 		if (baseClass == TypeArgument.class) {
 			switch (baseOperationID) {
-				case TypeRefsPackage.TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING: return TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING;
+				case TypeRefsPackage.TYPE_ARGUMENT___INTERNAL_GET_TYPE_REF_AS_STRING: return TypeRefsPackage.PARAMETERIZED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
@@ -712,7 +712,6 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 				case TypeRefsPackage.TYPE_REF___IS_GENERIC: return TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_GENERIC;
 				case TypeRefsPackage.TYPE_REF___IS_PARAMETERIZED: return TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_PARAMETERIZED;
 				case TypeRefsPackage.TYPE_REF___IS_RAW: return TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_RAW;
-				case TypeRefsPackage.TYPE_REF___GET_TYPE_REF_AS_STRING: return TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING;
 				case TypeRefsPackage.TYPE_REF___GET_TYPING_STRATEGY: return TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_TYPING_STRATEGY;
 				case TypeRefsPackage.TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING: return TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING;
 				case TypeRefsPackage.TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING: return TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING;
@@ -732,8 +731,8 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 		switch (operationID) {
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_TYPING_STRATEGY:
 				return getTypingStrategy();
-			case TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING:
-				return getTypeRefAsString();
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING:
+				return internalGetTypeRefAsString();
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_PARAMETERIZED:
 				return isParameterized();
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_GENERIC:

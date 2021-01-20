@@ -59,7 +59,7 @@ public class ThisTypeRefImpl extends BaseTypeRefImpl implements ThisTypeRef {
 	 * @generated
 	 */
 	@Override
-	public String getTypeRefAsString() {
+	public String internalGetTypeRefAsString() {
 		String _modifiersAsString = this.getModifiersAsString();
 		return ("this" + _modifiersAsString);
 	}
@@ -103,13 +103,12 @@ public class ThisTypeRefImpl extends BaseTypeRefImpl implements ThisTypeRef {
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
 		if (baseClass == TypeArgument.class) {
 			switch (baseOperationID) {
-				case TypeRefsPackage.TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING: return TypeRefsPackage.THIS_TYPE_REF___GET_TYPE_REF_AS_STRING;
+				case TypeRefsPackage.TYPE_ARGUMENT___INTERNAL_GET_TYPE_REF_AS_STRING: return TypeRefsPackage.THIS_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
 		if (baseClass == TypeRef.class) {
 			switch (baseOperationID) {
-				case TypeRefsPackage.TYPE_REF___GET_TYPE_REF_AS_STRING: return TypeRefsPackage.THIS_TYPE_REF___GET_TYPE_REF_AS_STRING;
 				case TypeRefsPackage.TYPE_REF___GET_TYPING_STRATEGY: return TypeRefsPackage.THIS_TYPE_REF___GET_TYPING_STRATEGY;
 				case TypeRefsPackage.TYPE_REF___GET_STRUCTURAL_MEMBERS: return TypeRefsPackage.THIS_TYPE_REF___GET_STRUCTURAL_MEMBERS;
 				case TypeRefsPackage.TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING: return TypeRefsPackage.THIS_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING;
@@ -127,8 +126,8 @@ public class ThisTypeRefImpl extends BaseTypeRefImpl implements ThisTypeRef {
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
-			case TypeRefsPackage.THIS_TYPE_REF___GET_TYPE_REF_AS_STRING:
-				return getTypeRefAsString();
+			case TypeRefsPackage.THIS_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING:
+				return internalGetTypeRefAsString();
 			case TypeRefsPackage.THIS_TYPE_REF___GET_TYPING_STRATEGY:
 				return getTypingStrategy();
 			case TypeRefsPackage.THIS_TYPE_REF___GET_STRUCTURAL_MEMBERS:

@@ -18,7 +18,6 @@ import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
-import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression;
 
@@ -55,9 +54,9 @@ public class UnionTypeExpressionImpl extends ComposedTypeRefImpl implements Unio
 	 * @generated
 	 */
 	@Override
-	public String getTypeRefAsString() {
-		String _typeRefAsString = super.getTypeRefAsString();
-		return ("union" + _typeRefAsString);
+	public String internalGetTypeRefAsString() {
+		String _internalGetTypeRefAsString = super.internalGetTypeRefAsString();
+		return ("union" + _internalGetTypeRefAsString);
 	}
 
 	/**
@@ -69,19 +68,13 @@ public class UnionTypeExpressionImpl extends ComposedTypeRefImpl implements Unio
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
 		if (baseClass == TypeArgument.class) {
 			switch (baseOperationID) {
-				case TypeRefsPackage.TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING: return TypeRefsPackage.UNION_TYPE_EXPRESSION___GET_TYPE_REF_AS_STRING;
-				default: return super.eDerivedOperationID(baseOperationID, baseClass);
-			}
-		}
-		if (baseClass == TypeRef.class) {
-			switch (baseOperationID) {
-				case TypeRefsPackage.TYPE_REF___GET_TYPE_REF_AS_STRING: return TypeRefsPackage.UNION_TYPE_EXPRESSION___GET_TYPE_REF_AS_STRING;
+				case TypeRefsPackage.TYPE_ARGUMENT___INTERNAL_GET_TYPE_REF_AS_STRING: return TypeRefsPackage.UNION_TYPE_EXPRESSION___INTERNAL_GET_TYPE_REF_AS_STRING;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
 		if (baseClass == ComposedTypeRef.class) {
 			switch (baseOperationID) {
-				case TypeRefsPackage.COMPOSED_TYPE_REF___GET_TYPE_REF_AS_STRING: return TypeRefsPackage.UNION_TYPE_EXPRESSION___GET_TYPE_REF_AS_STRING;
+				case TypeRefsPackage.COMPOSED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING: return TypeRefsPackage.UNION_TYPE_EXPRESSION___INTERNAL_GET_TYPE_REF_AS_STRING;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
@@ -96,8 +89,8 @@ public class UnionTypeExpressionImpl extends ComposedTypeRefImpl implements Unio
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
-			case TypeRefsPackage.UNION_TYPE_EXPRESSION___GET_TYPE_REF_AS_STRING:
-				return getTypeRefAsString();
+			case TypeRefsPackage.UNION_TYPE_EXPRESSION___INTERNAL_GET_TYPE_REF_AS_STRING:
+				return internalGetTypeRefAsString();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

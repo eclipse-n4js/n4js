@@ -55,4 +55,12 @@ public interface TypeAlias extends GenericType, AccessibleTypeElement, SyntaxRel
 	 */
 	void setActualTypeRef(TypeRef value);
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isAlias();
+
 } // TypeAlias

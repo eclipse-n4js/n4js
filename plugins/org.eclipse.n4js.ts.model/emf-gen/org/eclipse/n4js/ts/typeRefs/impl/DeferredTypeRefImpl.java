@@ -17,8 +17,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef;
-import org.eclipse.n4js.ts.typeRefs.TypeArgument;
-import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 
 /**
@@ -54,30 +52,8 @@ public class DeferredTypeRefImpl extends TypeRefImpl implements DeferredTypeRef 
 	 * @generated
 	 */
 	@Override
-	public String getTypeRefAsString() {
+	public String internalGetTypeRefAsString() {
 		return "*deferred*";
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
-		if (baseClass == TypeArgument.class) {
-			switch (baseOperationID) {
-				case TypeRefsPackage.TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING: return TypeRefsPackage.DEFERRED_TYPE_REF___GET_TYPE_REF_AS_STRING;
-				default: return super.eDerivedOperationID(baseOperationID, baseClass);
-			}
-		}
-		if (baseClass == TypeRef.class) {
-			switch (baseOperationID) {
-				case TypeRefsPackage.TYPE_REF___GET_TYPE_REF_AS_STRING: return TypeRefsPackage.DEFERRED_TYPE_REF___GET_TYPE_REF_AS_STRING;
-				default: return super.eDerivedOperationID(baseOperationID, baseClass);
-			}
-		}
-		return super.eDerivedOperationID(baseOperationID, baseClass);
 	}
 
 	/**
@@ -88,8 +64,8 @@ public class DeferredTypeRefImpl extends TypeRefImpl implements DeferredTypeRef 
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
-			case TypeRefsPackage.DEFERRED_TYPE_REF___GET_TYPE_REF_AS_STRING:
-				return getTypeRefAsString();
+			case TypeRefsPackage.DEFERRED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING:
+				return internalGetTypeRefAsString();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

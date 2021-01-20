@@ -304,7 +304,7 @@ public class VersionedParameterizedTypeRefStructural_IMImpl extends Parameterize
 	 * @generated
 	 */
 	@Override
-	public String getTypeRefAsString() {
+	public String internalGetTypeRefAsString() {
 		TypingStrategy _typingStrategy = this.getTypingStrategy();
 		Type _declaredType = this.getDeclaredType();
 		String _rawTypeAsString = null;
@@ -641,7 +641,7 @@ public class VersionedParameterizedTypeRefStructural_IMImpl extends Parameterize
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
 		if (baseClass == TypeArgument.class) {
 			switch (baseOperationID) {
-				case TypeRefsPackage.TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING: return ImPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_TYPE_REF_AS_STRING;
+				case TypeRefsPackage.TYPE_ARGUMENT___INTERNAL_GET_TYPE_REF_AS_STRING: return ImPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___INTERNAL_GET_TYPE_REF_AS_STRING;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
@@ -653,7 +653,6 @@ public class VersionedParameterizedTypeRefStructural_IMImpl extends Parameterize
 		}
 		if (baseClass == TypeRef.class) {
 			switch (baseOperationID) {
-				case TypeRefsPackage.TYPE_REF___GET_TYPE_REF_AS_STRING: return ImPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_TYPE_REF_AS_STRING;
 				case TypeRefsPackage.TYPE_REF___GET_TYPING_STRATEGY: return ImPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_TYPING_STRATEGY;
 				case TypeRefsPackage.TYPE_REF___GET_STRUCTURAL_MEMBERS: return ImPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_STRUCTURAL_MEMBERS;
 				case TypeRefsPackage.TYPE_REF___GET_VERSION: return ImPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_VERSION;
@@ -663,7 +662,7 @@ public class VersionedParameterizedTypeRefStructural_IMImpl extends Parameterize
 		if (baseClass == ParameterizedTypeRef.class) {
 			switch (baseOperationID) {
 				case TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_TYPING_STRATEGY: return ImPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_TYPING_STRATEGY;
-				case TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING: return ImPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_TYPE_REF_AS_STRING;
+				case TypeRefsPackage.PARAMETERIZED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING: return ImPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___INTERNAL_GET_TYPE_REF_AS_STRING;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
@@ -694,7 +693,7 @@ public class VersionedParameterizedTypeRefStructural_IMImpl extends Parameterize
 				case TypeRefsPackage.PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_TYPING_STRATEGY: return ImPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_TYPING_STRATEGY;
 				case TypeRefsPackage.PARAMETERIZED_TYPE_REF_STRUCTURAL___SET_TYPING_STRATEGY__TYPINGSTRATEGY: return ImPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___SET_TYPING_STRATEGY__TYPINGSTRATEGY;
 				case TypeRefsPackage.PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_STRUCTURAL_MEMBERS: return ImPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_STRUCTURAL_MEMBERS;
-				case TypeRefsPackage.PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_TYPE_REF_AS_STRING: return ImPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_TYPE_REF_AS_STRING;
+				case TypeRefsPackage.PARAMETERIZED_TYPE_REF_STRUCTURAL___INTERNAL_GET_TYPE_REF_AS_STRING: return ImPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___INTERNAL_GET_TYPE_REF_AS_STRING;
 				default: return -1;
 			}
 		}
@@ -721,8 +720,8 @@ public class VersionedParameterizedTypeRefStructural_IMImpl extends Parameterize
 				return null;
 			case ImPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_STRUCTURAL_MEMBERS:
 				return getStructuralMembers();
-			case ImPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_TYPE_REF_AS_STRING:
-				return getTypeRefAsString();
+			case ImPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___INTERNAL_GET_TYPE_REF_AS_STRING:
+				return internalGetTypeRefAsString();
 			case ImPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___HAS_POSTPONED_SUBSTITUTION_FOR__TYPEVARIABLE:
 				return hasPostponedSubstitutionFor((TypeVariable)arguments.get(0));
 			case ImPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_VERSION:
