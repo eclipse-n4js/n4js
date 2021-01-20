@@ -14,7 +14,6 @@ import static org.eclipse.n4js.ts.utils.TypeExtensions.ref;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_TYPE_CALL_EXPRESSION;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_TYPE_PROPERTY_ACCESS_EXPRESSION;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_VARIABLE_DECLARATION;
-import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.addThisType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.anyTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.anyTypeRefDynamic;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.argumentsTypeRef;
@@ -40,6 +39,7 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.object
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.promiseType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.promiseTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.regexpTypeRef;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.setThisBinding;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.stringType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.stringTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.undefinedType;
@@ -880,7 +880,7 @@ import com.google.inject.Inject;
 				} else {
 					final RuleEnvironment G2 = wrap(G);
 					typeSystemHelper.addSubstitutions(G2, targetTypeRef);
-					addThisType(G2, targetTypeRef);
+					setThisBinding(G2, targetTypeRef);
 					final TypeRef elementTypeRef = targetIsLiteralOfStringBasedEnum
 							? stringType(G).getElementType()
 							: targetDeclType.getElementType();
@@ -907,7 +907,7 @@ import com.google.inject.Inject;
 					TypeRef memberTypeRef = ts.type(G, (TMember) member);
 					final RuleEnvironment G2 = wrap(G);
 					typeSystemHelper.addSubstitutions(G2, targetTypeRef);
-					addThisType(G2, targetTypeRef);
+					setThisBinding(G2, targetTypeRef);
 					T = ts.substTypeVariables(G2, memberTypeRef);
 				} else if (targetTypeRef.isDynamic()) {
 					T = anyTypeRefDynamic(G);
@@ -939,7 +939,7 @@ import com.google.inject.Inject;
 			final TypeRef receiverTypeRef = ts.type(G2, expr.getTarget());
 
 			typeSystemHelper.addSubstitutions(G2, receiverTypeRef);
-			addThisType(G2, receiverTypeRef);
+			setThisBinding(G2, receiverTypeRef);
 
 			// add parameterization stemming from super types, e.g., "class C extends G<string>",
 			// in case of super or this literals

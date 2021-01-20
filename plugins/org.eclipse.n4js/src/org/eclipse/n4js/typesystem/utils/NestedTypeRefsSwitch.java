@@ -141,7 +141,7 @@ public abstract class NestedTypeRefsSwitch extends TypeRefsSwitch<TypeArgument> 
 		// this-binding in the rule environment (if any).
 
 		if (caseThisTypeRef_shouldBind(typeRef)) {
-			final TypeRef boundRefFromEnvUncasted = RuleEnvironmentExtensions.getThisType(G);
+			final TypeRef boundRefFromEnvUncasted = RuleEnvironmentExtensions.getThisBinding(G);
 			if (boundRefFromEnvUncasted instanceof BoundThisTypeRef) {
 				final BoundThisTypeRef boundRefFromEnv = (BoundThisTypeRef) boundRefFromEnvUncasted;
 				final BoundThisTypeRef resultTypeRef = typeRef instanceof ThisTypeRefStructural

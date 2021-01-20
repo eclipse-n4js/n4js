@@ -11,7 +11,6 @@
 package org.eclipse.n4js.typesystem;
 
 import static org.eclipse.n4js.ts.utils.TypeExtensions.ref;
-import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.addThisType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.anyTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.anyTypeRefDynamic;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.argumentsTypeRef;
@@ -26,6 +25,7 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.n4Enum
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.nullTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.numberTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.objectTypeRef;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.setThisBinding;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.stringType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.stringTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.symbolTypeRef;
@@ -206,8 +206,8 @@ import com.google.inject.Inject;
 					final ContainerType<?> typeOfInstanceToCreate = (ContainerType<?>) typeOfInstanceToCreatePlain;
 					final RuleEnvironment G2 = wrap(G);
 					typeSystemHelper.addSubstitutions(G2, typeRefOfInstanceToCreate);
-					addThisType(G2, typeRefOfInstanceToCreate); // required if we refer to a ctor with a parameter of
-																// type [~]~this (esp. default ctor)
+					setThisBinding(G2, typeRefOfInstanceToCreate); // required if we refer to a ctor with a parameter of
+																	// type [~]~this (esp. default ctor)
 
 					final TMethod ctor = containerTypesHelper.fromContext(expr.eResource())
 							.findConstructor(typeOfInstanceToCreate);
@@ -270,14 +270,14 @@ import com.google.inject.Inject;
 										? containingClassDecl.getDefinedType()
 										: null;
 								if (containingClass instanceof TClass) {
-									addThisType(G2, ref(containingClass));
+									setThisBinding(G2, ref(containingClass));
 									final TypeRef superClassRef = ((TClass) containingClass).getSuperClassRef();
 									if (superClassRef != null) {
 										typeSystemHelper.addSubstitutions(G2, superClassRef);
 										// IDEBUG-262 special handling of spec-style constructor fpars:
 										if (paramTypeRef instanceof ThisTypeRefStructural) {
 											// needs this-type Binding to parent-class
-											addThisType(G2, superClassRef);
+											setThisBinding(G2, superClassRef);
 										}
 									}
 								}
@@ -752,7 +752,7 @@ import com.google.inject.Inject;
 				if (propsTypeRef != null) {
 					final RuleEnvironment G2 = wrap(G);
 					typeSystemHelper.addSubstitutions(G2, propsTypeRef);
-					addThisType(G2, propsTypeRef);
+					setThisBinding(G2, propsTypeRef);
 					final TypeRef propertyTypeRef = ts.type(G2, container.getProperty());
 					if (propertyTypeRef == null) {
 						return unknown();
