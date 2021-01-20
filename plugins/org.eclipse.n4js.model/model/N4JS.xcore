@@ -287,10 +287,8 @@ interface TypeProvidingElement {
  * Note that a function definition is not a typed element, as it is a type definition rather than a type reference.
  * This is indicated by possibly unbound type parameters!
  */
-// TODO reconsider the approach on how to handle inferred types, accessors on the model etc
 abstract class TypedElement extends TypeProvidingElement {
 	contains TypeRef declaredTypeRef
-	contains TypeRef bogusTypeRef
 }
 
 // TODO jvp: check ECMAScript spec and probably update this environment things with function and classes

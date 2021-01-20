@@ -103,11 +103,18 @@ abstract class TypeArgument {
 	op Type getDeclaredType() {
 		return null;
 	}
+	/* Returns the type argument/reference as a string, usually according to N4JS syntax. */
+	op String getTypeRefAsString() {
+		return internalGetTypeRefAsString();
+	}
 	/*
-	 * Convenience method, returns the type expression, usually the type name, as a string. Basically used for testing.
-	 * As the returned string is used for comparison in tests, this method should not be changed.
+	 * Actual computation of the string representation of this type argument/reference.
+	 * Returns the same value as {@link #getTypeRefAsString()}, except for resolved
+	 * aliases: if the receiving instance is a resolved alias, this method will
+	 * return the string representation of the actual type whereas {@code #getTypeRefAsString()}
+	 * will return the string representation of the reference to the alias.
 	 */
-	op String getTypeRefAsString()
+	op String internalGetTypeRefAsString()
 }
 
 /*
@@ -126,6 +133,14 @@ abstract class TypeRef extends TypeArgument, Versionable {
 	boolean followedByQuestionMark
 
 	/*
+	 * If this type reference represents a resolved(!) reference to an alias, this property is
+	 * the original, unresolved type reference to the alias, i.e. {@link TypeRef#isAliasUnresolved()}
+	 * will always return <code>true</code> for the value of this property. In all other cases,
+	 * this property is <code>null</code>.
+	 */
+	contains ParameterizedTypeRef originalAliasTypeRef
+
+	/*
 	 * Returns all type modifiers of the receiving type reference as a string, similar to N4JS syntax. This method is
 	 * called by subclasses in overridden method. Currently, the <code>+</code> for dynamic is the only existing type
 	 * modifier.
@@ -140,6 +155,18 @@ abstract class TypeRef extends TypeArgument, Versionable {
 	op boolean isTypeRef() {
 		return true;
 	}
+
+	/* Returns true iff this is an <em>unresolved</em> reference to an alias. */
+	op boolean isAliasUnresolved() {
+		val declType = declaredType;
+		return declType !== null && declType.isAlias();
+	}
+
+	/* Returns true iff this is a <em>resolved</em> reference to an alias. */
+	op boolean isAliasResolved() {
+		return originalAliasTypeRef !== null;
+	}
+
 	/*
 	 * Returns true if the type referenced is either class which is declared final, an enum or a primitive. This is needed in case of type
 	 * casts, for example.
@@ -221,17 +248,14 @@ abstract class TypeRef extends TypeArgument, Versionable {
 	op TypeArgument[] getTypeArgs() {
 		return emptyEList
 	}
-	/*
-	 * Convenience method, returns the type expression, usually the type name, as a string. The
-	 * returned string representation usually reflect the N4JS syntax. Basically used for testing.
-	 * As the returned string is used for comparison in tests, this method should not be changed.
-	 * This method actually overrides {@link TypeArgument#getTypeRefAsString()}.
-	 */
 	op String getTypeRefAsString() {
+		val oatr = originalAliasTypeRef;
+		if (oatr !== null) {
+			return oatr.getTypeRefAsString();
+		}
+		return this.internalGetTypeRefAsString();
 	}
-//	op String getTypeRefAsHTML() {
-//		return UtilN4.sanitizeForHTML(getTypeRefAsString());
-//	}
+	op String internalGetTypeRefAsString()
 	op String toString() {
 		return getTypeRefAsString();
 	}
@@ -323,9 +347,9 @@ abstract class ComposedTypeRef extends StaticBaseTypeRef {
 	}
 	contains TypeRef[] typeRefs
 	/*
-	 * Overrides {@link TypeRef#getTypeRefAsString()}, only returns list of composed members, to be called by subclass.
+	 * Overrides {@link TypeRef#internalGetTypeRefAsString()}, only returns list of composed members, to be called by subclass.
 	 */
-	op String getTypeRefAsString() {
+	op String internalGetTypeRefAsString() {
 		return "{" + typeRefs.map[it.typeRefAsString].join(',') + "}" + getModifiersAsString();
 	}
 }
@@ -335,10 +359,10 @@ abstract class ComposedTypeRef extends StaticBaseTypeRef {
  */
 class UnionTypeExpression extends ComposedTypeRef {
 	/*
-	 * Overrides {@link TypeRef#getTypeRefAsString()}
+	 * Overrides {@link TypeRef#internalGetTypeRefAsString()}
 	 */
-	op String getTypeRefAsString() {
-		return "union" + super.getTypeRefAsString();
+	op String internalGetTypeRefAsString() {
+		return "union" + super.internalGetTypeRefAsString();
 	}
 }
 
@@ -348,10 +372,10 @@ class UnionTypeExpression extends ComposedTypeRef {
  */
 class IntersectionTypeExpression extends ComposedTypeRef {
 	/*
-	 * Overrides {@link TypeRef#getTypeRefAsString()}
+	 * Overrides {@link TypeRef#internalGetTypeRefAsString()}
 	 */
-	op String getTypeRefAsString() {
-		return "intersection" + super.getTypeRefAsString();
+	op String internalGetTypeRefAsString() {
+		return "intersection" + super.internalGetTypeRefAsString();
 	}
 }
 
@@ -361,9 +385,9 @@ class IntersectionTypeExpression extends ComposedTypeRef {
 // TODO kick me!
 class ThisTypeRef extends BaseTypeRef {
 	/*
-	 * Overrides {@link TypeRef#getTypeRefAsString()}
+	 * Overrides {@link TypeRef#internalGetTypeRefAsString()}
 	 */
-	op String getTypeRefAsString() {
+	op String internalGetTypeRefAsString() {
 		return "this" + getModifiersAsString();
 	}
 	/**
@@ -424,9 +448,9 @@ class  ThisTypeRefStructural extends ThisTypeRef, StructuralTypeRef {
 			unmodifiableView;
 	}
 	/*
-	 * Overrides {@link TypeRef#getTypeRefAsString()}
+	 * Overrides {@link TypeRef#internalGetTypeRefAsString()}
 	 */
-	op String getTypeRefAsString() {
+	op String internalGetTypeRefAsString() {
 		return typingStrategy + "this" + getModifiersAsString();
 	}
 }
@@ -457,10 +481,10 @@ class BoundThisTypeRef extends ThisTypeRef, StructuralTypeRef {
 		definedTypingStrategy = typingStrategy;
 	}
 	/*
-	 * Overrides {@link TypeRef#getTypeRefAsString()}
+	 * Overrides {@link TypeRef#internalGetTypeRefAsString()}
 	 */
-	op String getTypeRefAsString() {
-		return typingStrategy + "this[" + actualThisTypeRef.getTypeRefAsString() + "]" + getModifiersAsString();
+	op String internalGetTypeRefAsString() {
+		return typingStrategy + "this[" + actualThisTypeRef.internalGetTypeRefAsString() + "]" + getModifiersAsString();
 	}
 	op ParameterizedTypeRef getDeclaredUpperBound() {
 		return actualThisTypeRef;
@@ -544,9 +568,9 @@ class ParameterizedTypeRef extends BaseTypeRef {
 		return definedTypingStrategy
 	}
 	/*
-	 * Overrides {@link TypeRef#getTypeRefAsString()}
+	 * Overrides {@link TypeRef#internalGetTypeRefAsString()}
 	 */
-	op String getTypeRefAsString() {
+	op String internalGetTypeRefAsString() {
 		return declaredType?.rawTypeAsString
 		+ if (version > 0) { "#" + version } else { "" }
 		+ (if (typeArgs.empty) {
@@ -720,9 +744,9 @@ class ParameterizedTypeRefStructural extends ParameterizedTypeRef, StructuralTyp
 			unmodifiableView;
 	}
 	/*
-	 * Overrides {@link TypeRef#getTypeRefAsString()}
+	 * Overrides {@link TypeRef#internalGetTypeRefAsString()}
 	 */
-	op String getTypeRefAsString() {
+	op String internalGetTypeRefAsString() {
 		return typingStrategy + declaredType?.rawTypeAsString + (if (typeArgs.empty) {
 			""
 		} else {
@@ -801,9 +825,9 @@ class ExistentialTypeRef extends TypeRef {
 		return true;
 	}
 	/*
-	 * Overrides {@link TypeRef#getTypeRefAsString()}
+	 * Overrides {@link TypeRef#internalGetTypeRefAsString()}
 	 */
-	op String getTypeRefAsString() {
+	op String internalGetTypeRefAsString() {
 		return getWildcard?.typeRefAsString
 	}
 }
@@ -825,9 +849,9 @@ class UnknownTypeRef extends TypeRef {
 		return true;
 	}
 	/*
-	 * Overrides {@link TypeRef#getTypeRefAsString()}
+	 * Overrides {@link TypeRef#internalGetTypeRefAsString()}
 	 */
-	op String getTypeRefAsString() {
+	op String internalGetTypeRefAsString() {
 		return "[unknown]";
 	}
 }
@@ -849,9 +873,9 @@ class TypeTypeRef extends BaseTypeRef {
 	 */
 	boolean constructorRef
 	/*
-	 * Overrides {@link TypeRef#getTypeRefAsString()}
+	 * Overrides {@link TypeRef#internalGetTypeRefAsString()}
 	 */
-	op String getTypeRefAsString() {
+	op String internalGetTypeRefAsString() {
 		val kwd = if (isConstructorRef) "constructor" else "type";
 		val refName = if (null === getTypeArg) '' else getTypeArg.typeRefAsString;
 		return kwd + "{" + refName + "}" + getModifiersAsString();
@@ -935,10 +959,10 @@ class Wildcard extends TypeArgument {
 	}
 	/*
 	 * Convenience method, returns the type expression, usually the type name, as a string. Basically used for testing.
-	 * See {@link TypeRef#getTypeRefAsString()}
+	 * See {@link TypeRef#internalGetTypeRefAsString()}
 	 */
-	op String getTypeRefAsString() {
-		return WildcardAsStringUtils.getTypeRefAsString_workaround(this);
+	op String internalGetTypeRefAsString() {
+		return WildcardAsStringUtils.internalGetTypeRefAsString_workaround(this);
 	}
 }
 
@@ -1009,9 +1033,9 @@ abstract class FunctionTypeExprOrRef extends StaticBaseTypeRef {
 		return null;
 	}
 	/*
-	 * Overrides {@link TypeRef#getTypeRefAsString()}
+	 * Overrides {@link TypeRef#internalGetTypeRefAsString()}
 	 */
-	op String getTypeRefAsString() {
+	op String internalGetTypeRefAsString() {
 		return "{" + (if (declaredThisType !== null) "@This(" + declaredThisType.typeRefAsString + ") " else "")
 			+ "function"
 			+ (if (generic) {
@@ -1211,7 +1235,7 @@ class FunctionTypeExpression extends FunctionTypeExprOrRef {
  * for creating a certain type reference. FIXME more info
  */
 class DeferredTypeRef extends TypeRef {
-	op String getTypeRefAsString() {
+	op String internalGetTypeRefAsString() {
 		return "*deferred*";
 	}
 }
