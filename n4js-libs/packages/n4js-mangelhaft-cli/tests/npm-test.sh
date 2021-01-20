@@ -12,6 +12,12 @@
 set -e
 cd `dirname $0`/TestPrj
 
+echo "which env"
+echo $(which env)
+
+echo "which node"
+echo $(which node)
+
 echo "Create test catalogs"
 ../../../n4js-cli/src-gen/n4jsc.js compile ../../../..
 
