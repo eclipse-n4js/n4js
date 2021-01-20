@@ -137,12 +137,8 @@ public abstract class NestedTypeRefsSwitch extends TypeRefsSwitch<TypeArgument> 
 
 	@Override
 	public TypeRef caseThisTypeRef(ThisTypeRef typeRef) {
-		// note: we know 'typeRef' is *not* an instance of 'BoundThisTypeRef' because #caseBoundThisTypeRef()
-		// is overridden below and never returns 'null'; however, a subclass might override #caseBoundThisTypeRef()
-		// to return 'null', so we double check:
-		if (typeRef instanceof BoundThisTypeRef) {
-			return typeRef; // this method is only responsible for unbound ThisTypeRefs
-		}
+		// note: if 'typeRef' is already a BoundThisTypeRef (which is legal), we will "re-bind" it to the new
+		// this-binding in the rule environment (if any).
 
 		if (caseThisTypeRef_shouldBind(typeRef)) {
 			final TypeRef boundRefFromEnvUncasted = RuleEnvironmentExtensions.getThisType(G);
@@ -183,6 +179,16 @@ public abstract class NestedTypeRefsSwitch extends TypeRefsSwitch<TypeArgument> 
 
 	@Override
 	public TypeRef caseBoundThisTypeRef(BoundThisTypeRef typeRef) {
+		if (caseBoundThisTypeRef_shouldRebind(typeRef)) {
+			// re-binding of the already bound 'typeRef' was requested
+			// -> delegate to #caseThisTypeRef()
+			final TypeRef reboundTypeRef = caseThisTypeRef(typeRef);
+			if (reboundTypeRef != typeRef) {
+				return reboundTypeRef;
+			}
+			// re-binding did not take place (e.g. no this-binding in rule environment)
+			// -> proceed as usual for BoundThisTypeRefs
+		}
 		final ParameterizedTypeRef actualThisTypeRef = typeRef.getActualThisTypeRef();
 		final ParameterizedTypeRef actualThisTypeRefNew = caseBoundThisTypeRef_modifyActualTypeRef(actualThisTypeRef);
 		if (actualThisTypeRefNew != actualThisTypeRef) {
@@ -191,6 +197,10 @@ public abstract class NestedTypeRefsSwitch extends TypeRefsSwitch<TypeArgument> 
 			return resultTypeRef;
 		}
 		return typeRef;
+	}
+
+	protected boolean caseBoundThisTypeRef_shouldRebind(BoundThisTypeRef boundThisTypeRef) {
+		return false;
 	}
 
 	protected ParameterizedTypeRef caseBoundThisTypeRef_modifyActualTypeRef(ParameterizedTypeRef actualThisTypeRef) {

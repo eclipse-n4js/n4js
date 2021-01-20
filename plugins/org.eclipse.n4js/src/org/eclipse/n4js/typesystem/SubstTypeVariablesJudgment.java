@@ -16,6 +16,7 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.wrap;
 
 import java.util.List;
 
+import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
@@ -77,22 +78,27 @@ import org.eclipse.xtext.xbase.lib.Pair;
 		// the following 3 methods are provided to increase readability of recursive invocations of #doSwitch()
 
 		@SuppressWarnings("unused")
-		private Wildcard substTypeVariables(RuleEnvironment G2, Wildcard wildcard,
+		private Wildcard substTypeVariables(RuleEnvironment G_NEW, Wildcard wildcard,
 				boolean captureContainedWildcardsNEW) {
-			return (Wildcard) substTypeVariables(G2, (TypeArgument) wildcard, captureContainedWildcardsNEW);
+			return (Wildcard) substTypeVariables(G_NEW, (TypeArgument) wildcard, captureContainedWildcardsNEW);
 		}
 
-		private TypeRef substTypeVariables(RuleEnvironment G2, TypeRef typeRef,
+		private TypeRef substTypeVariables(RuleEnvironment G_NEW, TypeRef typeRef,
 				boolean captureContainedWildcardsNEW) {
-			return (TypeRef) substTypeVariables(G2, (TypeArgument) typeRef, captureContainedWildcardsNEW);
+			return (TypeRef) substTypeVariables(G_NEW, (TypeArgument) typeRef, captureContainedWildcardsNEW);
 		}
 
-		private TypeArgument substTypeVariables(RuleEnvironment G2, TypeArgument typeArg,
+		private TypeArgument substTypeVariables(RuleEnvironment G_NEW, TypeArgument typeArg,
 				boolean captureContainedWildcardsNEW) {
-			if (G2 == this.G && captureContainedWildcardsNEW == this.captureContainedWildcards) {
+			if (typeArg == null) {
+				return null;
+			}
+			if (G_NEW == this.G && captureContainedWildcardsNEW == this.captureContainedWildcards) {
 				return doSwitch(typeArg);
 			} else {
-				return apply(G2, typeArg, captureContainedWildcardsNEW, this.captureUponSubstitution);
+				SubstTypeVariablesSwitch nestedSwitch = new SubstTypeVariablesSwitch(
+						G_NEW, captureContainedWildcardsNEW, this.captureUponSubstitution);
+				return nestedSwitch.doSwitch(typeArg);
 			}
 		}
 
@@ -136,6 +142,11 @@ import org.eclipse.xtext.xbase.lib.Pair;
 
 		@Override
 		protected boolean caseThisTypeRef_shouldBind(ThisTypeRef thisTypeRef) {
+			return true;
+		}
+
+		@Override
+		protected boolean caseBoundThisTypeRef_shouldRebind(BoundThisTypeRef boundThisTypeRef) {
 			return true;
 		}
 
