@@ -69,9 +69,6 @@ echo "Current working directory: $PWD"
 
 echo "==== STEP 1/7: check preconditions"
 
-chmod +x ./packages/n4js-cli/src-gen/n4jsc.js
-./packages/n4js-cli/src-gen/n4jsc.js --version
-
 if [ "$DESTINATION" != "local" ]; then
     # check NPM_TOKEN
     if [ -z "$NPM_TOKEN" ]; then
@@ -122,6 +119,10 @@ export PATH=`pwd`/node_modules/.bin:${PATH}
 echo "==== STEP 4/7: run 'lerna run build/test' on n4js-libs"
 export N4_N4JSC_JAR="${REPO_ROOT_DIR}/target/n4jsc.jar"
 lerna run build
+
+chmod +x ./packages/n4js-cli/src-gen/n4jsc.js
+./packages/n4js-cli/src-gen/n4jsc.js --version
+
 lerna run test
 
 export NPM_CONFIG_GLOBALCONFIG="$REPO_ROOT_DIR/n4js-libs"
