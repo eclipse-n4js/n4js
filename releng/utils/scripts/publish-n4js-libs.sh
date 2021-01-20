@@ -68,6 +68,9 @@ echo "Repository root directory: ${REPO_ROOT_DIR}"
 echo "Current working directory: $PWD"
 
 echo "==== STEP 1/7: check preconditions"
+
+./packages/n4js-cli/src-gen/n4jsc.js --version
+
 if [ "$DESTINATION" != "local" ]; then
     # check NPM_TOKEN
     if [ -z "$NPM_TOKEN" ]; then
