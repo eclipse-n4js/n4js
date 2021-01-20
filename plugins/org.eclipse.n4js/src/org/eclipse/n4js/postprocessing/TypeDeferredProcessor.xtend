@@ -63,7 +63,7 @@ package class TypeDeferredProcessor extends AbstractProcessor {
 						assertTrueIfRigid(cache, "TMethod in TModule should be a constructor", tCtor.isConstructor);
 						assertTrueIfRigid(cache, "return type of constructor in TModule should be a DeferredTypeRef",
 							tCtor.returnTypeRef instanceof DeferredTypeRef);
-						val implicitReturnTypeRef = TypeRefsFactory.eINSTANCE.createThisTypeRef;
+						val implicitReturnTypeRef = TypeRefsFactory.eINSTANCE.createThisTypeRefNominal;
 						val boundThisTypeRef = tsh.bindAndSubstituteThisTypeRef(G, obj, implicitReturnTypeRef);
 						EcoreUtilN4.doWithDeliver(false, [
 							tCtor.returnValueMarkedOptional = true;

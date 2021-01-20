@@ -359,7 +359,7 @@ class IntersectionTypeExpression extends ComposedTypeRef {
  * Unbound this type reference.
  */
 // TODO kick me!
-class ThisTypeRef extends BaseTypeRef {
+abstract class ThisTypeRef extends BaseTypeRef {
 	/*
 	 * Overrides {@link TypeRef#getTypeRefAsString()}
 	 */

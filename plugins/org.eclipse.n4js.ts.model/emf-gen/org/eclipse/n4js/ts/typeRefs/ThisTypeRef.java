@@ -26,7 +26,7 @@ import org.eclipse.n4js.ts.types.TypingStrategy;
  *
  *
  * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getThisTypeRef()
- * @model
+ * @model abstract="true"
  * @generated
  */
 public interface ThisTypeRef extends BaseTypeRef {

@@ -33,7 +33,7 @@ import org.eclipse.n4js.ts.types.TypingStrategy;
  *
  * @generated
  */
-public class ThisTypeRefImpl extends BaseTypeRefImpl implements ThisTypeRef {
+public abstract class ThisTypeRefImpl extends BaseTypeRefImpl implements ThisTypeRef {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
