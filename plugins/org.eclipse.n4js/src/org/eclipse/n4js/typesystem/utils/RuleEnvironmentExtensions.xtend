@@ -117,6 +117,7 @@ class RuleEnvironmentExtensions {
 	public static final String GUARD_CHECK_TYPE_ARGUMENT_COMPATIBILITY = "N4JSTypeSystem#checkTypeArgumentCompatibility";
 	public static final String GUARD_REDUCER__IS_SUBTYPE_OF = "Reducer#isSubtypeOf";
 	public static final String GUARD_REDUCER__REDUCE_STRUCTURAL_TYPE_REF = "Reducer#reduceStructuralTypeRef";
+	public static final String GUARD_TYPE_REFS_NESTED_MODIFICATION_SWITCH__MODIFY_BOUNDS_OF_WILDCARD = "TypeRefsNestedModificationSwitch#modifyBoundsOfWildcard";
 
 	/**
 	 * Returns a new {@code RuleEnvironment}; we need this because of the
