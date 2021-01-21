@@ -484,7 +484,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		} else if (expression instanceof ArrayLiteral) {
 			if (!expectedTypeRef.typeArgs.empty) {
 				val arrayElementType = expectedTypeRef.typeArgs.get(0);
-				val typeArgTypeRef = ts.upperBoundWithReopenAndResolve(G, arrayElementType, true, true);
+				val typeArgTypeRef = ts.upperBoundWithReopenAndResolve(G, arrayElementType, true);
 				for (arrElem : expression.elements) {
 					val arrExpr = arrElem.expression;
 					internalCheckSuperfluousPropertiesInObjectLiteralRek(G, typeArgTypeRef, arrExpr);

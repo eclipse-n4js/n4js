@@ -197,11 +197,11 @@ public class N4JSTypeSystem {
 	 * <li>{@link TypeVariable}s.
 	 * </ul>
 	 * Use methods {@link #upperBoundWithReopen(RuleEnvironment, TypeArgument) #upperBoundWithReopen()} or
-	 * {@link #upperBoundWithReopenAndResolve(RuleEnvironment, TypeArgument, boolean, boolean)
-	 * #upperBoundWithReopenAndResolve()} for this purpose.
+	 * {@link #upperBoundWithReopenAndResolve(RuleEnvironment, TypeArgument, boolean) #upperBoundWithReopenAndResolve()}
+	 * for this purpose.
 	 */
 	public TypeRef upperBound(RuleEnvironment G, TypeArgument typeArgument) {
-		return boundJudgment.applyUpperBound(G, typeArgument, false, false, false);
+		return boundJudgment.applyUpperBound(G, typeArgument, false, false);
 	}
 
 	/**
@@ -212,7 +212,7 @@ public class N4JSTypeSystem {
 	 * can be defined via {@link RuleEnvironmentExtensions#addFixedCapture(RuleEnvironment, ExistentialTypeRef)}.
 	 */
 	public TypeRef upperBoundWithReopen(RuleEnvironment G, TypeArgument typeArgument) {
-		return boundJudgment.applyUpperBound(G, typeArgument, true, false, false);
+		return boundJudgment.applyUpperBound(G, typeArgument, true, false);
 	}
 
 	/**
@@ -224,8 +224,8 @@ public class N4JSTypeSystem {
 	 * or inside a {@link FunctionTypeExprOrRef} (as parameter or return type).
 	 */
 	public TypeRef upperBoundWithReopenAndResolve(RuleEnvironment G, TypeArgument typeArgument,
-			boolean resolveAliases, boolean resolveTypeVariables) {
-		return boundJudgment.applyUpperBound(G, typeArgument, true, resolveAliases, resolveTypeVariables);
+			boolean resolveTypeVariables) {
+		return boundJudgment.applyUpperBound(G, typeArgument, true, resolveTypeVariables);
 	}
 
 	/**
@@ -244,11 +244,11 @@ public class N4JSTypeSystem {
 	 * <li>{@link TypeVariable}s.
 	 * </ul>
 	 * Use methods {@link #lowerBoundWithReopen(RuleEnvironment, TypeArgument) #lowerBoundWithReopen()} or
-	 * {@link #lowerBoundWithReopenAndResolve(RuleEnvironment, TypeArgument, boolean, boolean)
-	 * #lowerBoundWithReopenAndResolve()} for this purpose.
+	 * {@link #lowerBoundWithReopenAndResolve(RuleEnvironment, TypeArgument, boolean) #lowerBoundWithReopenAndResolve()}
+	 * for this purpose.
 	 */
 	public TypeRef lowerBound(RuleEnvironment G, TypeArgument typeArgument) {
-		return boundJudgment.applyLowerBound(G, typeArgument, false, false, false);
+		return boundJudgment.applyLowerBound(G, typeArgument, false, false);
 	}
 
 	/**
@@ -259,7 +259,7 @@ public class N4JSTypeSystem {
 	 * can be defined via {@link RuleEnvironmentExtensions#addFixedCapture(RuleEnvironment, ExistentialTypeRef)}.
 	 */
 	public TypeRef lowerBoundWithReopen(RuleEnvironment G, TypeArgument typeArgument) {
-		return boundJudgment.applyLowerBound(G, typeArgument, true, false, false);
+		return boundJudgment.applyLowerBound(G, typeArgument, true, false);
 	}
 
 	/**
@@ -271,8 +271,8 @@ public class N4JSTypeSystem {
 	 * or inside a {@link FunctionTypeExprOrRef} (as parameter or return type).
 	 */
 	public TypeRef lowerBoundWithReopenAndResolve(RuleEnvironment G, TypeArgument typeArgument,
-			boolean resolveAliases, boolean resolveTypeVariables) {
-		return boundJudgment.applyLowerBound(G, typeArgument, true, resolveAliases, resolveTypeVariables);
+			boolean resolveTypeVariables) {
+		return boundJudgment.applyLowerBound(G, typeArgument, true, resolveTypeVariables);
 	}
 
 	/**

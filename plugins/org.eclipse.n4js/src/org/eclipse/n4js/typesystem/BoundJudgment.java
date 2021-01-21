@@ -34,9 +34,8 @@ import org.eclipse.n4js.utils.RecursionGuard;
 /* package */ class BoundJudgment extends AbstractJudgment {
 
 	/** See {@link N4JSTypeSystem#upperBound(RuleEnvironment, TypeArgument)}. */
-	public TypeRef applyUpperBound(RuleEnvironment G, TypeArgument typeArg, boolean reopen, boolean resolveAliases,
-			boolean resolveTypeVariables) {
-		final BoundSwitch theSwitch = new BoundSwitch(G, BoundType.UPPER, reopen, resolveTypeVariables);
+	public TypeRef applyUpperBound(RuleEnvironment G, TypeArgument typeArg, boolean reopen, boolean resolve) {
+		final BoundSwitch theSwitch = new BoundSwitch(G, BoundType.UPPER, reopen, resolve);
 		final TypeRef result = theSwitch.doSwitch(typeArg);
 		if (result == null) {
 			final String stringRep = typeArg != null ? typeArg.getTypeRefAsString() : "<null>";
@@ -46,9 +45,8 @@ import org.eclipse.n4js.utils.RecursionGuard;
 	}
 
 	/** See {@link N4JSTypeSystem#lowerBound(RuleEnvironment, TypeArgument)}. */
-	public TypeRef applyLowerBound(RuleEnvironment G, TypeArgument typeArg, boolean reopen, boolean resolveAliases,
-			boolean resolveTypeVariables) {
-		final BoundSwitch theSwitch = new BoundSwitch(G, BoundType.LOWER, reopen, resolveTypeVariables);
+	public TypeRef applyLowerBound(RuleEnvironment G, TypeArgument typeArg, boolean reopen, boolean resolve) {
+		final BoundSwitch theSwitch = new BoundSwitch(G, BoundType.LOWER, reopen, resolve);
 		final TypeRef result = theSwitch.doSwitch(typeArg);
 		if (result == null) {
 			final String stringRep = typeArg != null ? typeArg.getTypeRefAsString() : "<null>";
