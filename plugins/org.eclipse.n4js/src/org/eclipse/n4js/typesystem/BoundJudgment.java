@@ -77,9 +77,9 @@ import org.eclipse.n4js.utils.RecursionGuard;
 			return new BoundSwitch(G_NEW, boundType, reopen, resolve);
 		}
 
-		// the following two methods are provided to increase readability of recursive invocations of #doSwitch()
+		// the following method is provided to increase readability of recursive invocations of #doSwitch()
 
-		protected TypeRef modify(RuleEnvironment G_NEW, TypeArgument typeArg, BoundType boundTypeNEW,
+		private TypeRef modify(RuleEnvironment G_NEW, TypeArgument typeArg, BoundType boundTypeNEW,
 				boolean reopenNEW, boolean resolveNEW) {
 			if (G_NEW == G && boundTypeNEW == boundType && reopenNEW == reopen && resolveNEW == resolve) {
 				return doSwitch(typeArg);
@@ -114,7 +114,7 @@ import org.eclipse.n4js.utils.RecursionGuard;
 					? wildcard.getDeclaredOrImplicitUpperBound()
 					: wildcard.getDeclaredLowerBound();
 			if (declBound != null) {
-				return declBound;
+				return modify(G, declBound);
 			}
 			return getFallbackBoundForWildcard(wildcard);
 		}
