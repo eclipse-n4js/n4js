@@ -123,8 +123,11 @@ lerna run build
 echo "chmod +x ./packages/n4js-cli/src-gen/n4jsc.js"
 chmod +x ./packages/n4js-cli/src-gen/n4jsc.js
 
-echo "./packages/n4js-cli/src-gen/n4jsc.js --version"
-./packages/n4js-cli/src-gen/n4jsc.js --version
+echo "/usr/bin/env node --version"
+/usr/bin/env node --version
+
+echo "/usr/bin/env node -r esm --version"
+/usr/bin/env node -r esm --version
 
 echo "lerna run test"
 lerna run test
