@@ -218,13 +218,13 @@ import com.google.common.collect.Iterables;
 
 	private TypeRef replaceAndResolveAlias(RuleEnvironment G, TypeRef typeRef) {
 		if (!hasReplacements(G)) {
-			return tsh.resolveAlias(G, typeRef);
+			return tsh.resolveTypeAliasFlat(G, typeRef);
 		}
 		TypeRef lastTypeRef;
 		do {
 			lastTypeRef = typeRef;
 			typeRef = getReplacement(G, typeRef);
-			typeRef = tsh.resolveAlias(G, typeRef);
+			typeRef = tsh.resolveTypeAliasFlat(G, typeRef);
 		} while (typeRef != lastTypeRef);
 		return typeRef;
 	}

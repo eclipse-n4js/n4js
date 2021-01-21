@@ -29,77 +29,77 @@ package class TypeAliasComputer extends TypeSystemHelperStrategy {
 	private N4JSTypeSystem ts;
 
 	// FIXME API doc
+	def package TypeRef resolveTypeAliasFlat(RuleEnvironment G, TypeRef typeRef) {
+		if (!typeRef.isAliasUnresolved) {
+			return typeRef;
+		}
+
+		var RecursionGuard<TypeAlias> guard = null;
+		var currTypeRef = typeRef;
+		while (true) {
+			val typeAlias = currTypeRef.declaredType as TypeAlias; // this is non-null and of type TypeAlias, because #isAliasUnresolved() returned true
+			val actualTypeRef = typeAlias.actualTypeRef;
+			if (actualTypeRef === null) {
+				return currTypeRef;
+			}
+
+			// convert to a resolved type alias reference
+			var resolvedTypeRef = TypeUtils.copy(actualTypeRef);
+			resolvedTypeRef.originalAliasTypeRef = TypeUtils.copy(currTypeRef as ParameterizedTypeRef);
+			// FIXME merge type modifiers, etc.
+
+			// if we have a parameterized type reference to a generic type alias, we have to substitute
+			// to not lose the bindings defined by the type arguments in 'typeRef':
+			if (!currTypeRef.typeArgs.empty) {
+				val G_temp = RuleEnvironmentExtensions.wrap(G);
+				tsh.addSubstitutions(G_temp, currTypeRef);
+				resolvedTypeRef = ts.substTypeVariables(G_temp, resolvedTypeRef);
+			}
+
+			// done?
+			if (!resolvedTypeRef.isAliasUnresolved) {
+				return resolvedTypeRef;
+			}
+
+			if (guard === null) {
+				guard = new RecursionGuard<TypeAlias>();
+			}
+			if (!guard.tryNext(typeAlias)) {
+				// cyclic type alias declaration
+				return TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
+			}
+
+			currTypeRef = resolvedTypeRef;
+		}
+	}
+
+	// FIXME API doc
 	def package TypeRef resolveTypeAliases(RuleEnvironment G, TypeRef typeRef) {
 		return resolveTypeAliases(G, typeRef as TypeArgument) as TypeRef;
 	}
 
 	// FIXME API doc
 	def package TypeArgument resolveTypeAliases(RuleEnvironment G, TypeArgument typeArg) {
-		val theSwitch = new ResolveTypeAliasesSwitch(G, ts, tsh);
+		val theSwitch = new ResolveTypeAliasesSwitch(G, this);
 		val result = theSwitch.doSwitch(typeArg);
 		return result;
 	}
 
 	private static class ResolveTypeAliasesSwitch extends NestedTypeRefsSwitch {
 
-		private final N4JSTypeSystem ts;
-		private final TypeSystemHelper tsh;
+		private final TypeAliasComputer tac; // required, because inner classes not supported
 
-		new(RuleEnvironment G, N4JSTypeSystem ts, TypeSystemHelper tsh) {
+		new(RuleEnvironment G, TypeAliasComputer tac) {
 			super(G);
-			this.ts = ts;
-			this.tsh = tsh;
+			this.tac = tac;
 		}
 
 		override protected derive(RuleEnvironment G_NEW) {
-			return new ResolveTypeAliasesSwitch(G_NEW, ts, tsh);
+			return new ResolveTypeAliasesSwitch(G_NEW, tac);
 		}
 
 		override protected caseParameterizedTypeRef_modifyDeclaredType(ParameterizedTypeRef typeRef) {
-			return resolveTypeAlias(typeRef);
-		}
-
-		def private TypeRef resolveTypeAlias(TypeRef typeRef) {
-			if (!typeRef.isAliasUnresolved) {
-				return typeRef;
-			}
-			var RecursionGuard<TypeAlias> guard = null;
-			var currTypeRef = typeRef;
-			while (true) {
-				val typeAlias = currTypeRef.declaredType as TypeAlias; // this is non-null and of type TypeAlias, because #isAliasUnresolved() returned true
-				val actualTypeRef = typeAlias.actualTypeRef;
-				if (actualTypeRef === null) {
-					return currTypeRef;
-				}
-
-				// convert to a resolved type alias reference
-				var resolvedTypeRef = TypeUtils.copy(actualTypeRef);
-				resolvedTypeRef.originalAliasTypeRef = TypeUtils.copy(currTypeRef as ParameterizedTypeRef);
-				// FIXME merge type modifiers, etc.
-
-				// if we have a parameterized type reference to a generic type alias, we have to substitute
-				// to not lose the bindings defined by the type arguments in 'typeRef':
-				if (!currTypeRef.typeArgs.empty) {
-					val G_temp = RuleEnvironmentExtensions.wrap(G);
-					tsh.addSubstitutions(G_temp, currTypeRef);
-					resolvedTypeRef = ts.substTypeVariables(G_temp, resolvedTypeRef);
-				}
-
-				// done?
-				if (!resolvedTypeRef.isAliasUnresolved) {
-					return resolvedTypeRef;
-				}
-
-				if (guard === null) {
-					guard = new RecursionGuard<TypeAlias>();
-				}
-				if (!guard.tryNext(typeAlias)) {
-					// cyclic type alias declaration
-					return TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
-				}
-
-				currTypeRef = resolvedTypeRef;
-			}
+			return tac.resolveTypeAliasFlat(G, typeRef);
 		}
 	}
 }

@@ -219,6 +219,11 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		return iterableComputer.extractIterableElementType(G, typeRef, includeAsyncIterable);
 	}
 
+	/** @see TypeAliasComputer#resolveTypeAliasFlat(RuleEnvironment, TypeRef) */
+	public def TypeRef resolveTypeAliasFlat(RuleEnvironment G, TypeRef typeRef) {
+		return typeAliasComputer.resolveTypeAliasFlat(G, typeRef);
+	}
+
 	/** @see TypeAliasComputer#resolveTypeAliases(RuleEnvironment, TypeRef) */
 	public def TypeRef resolveTypeAliases(RuleEnvironment G, TypeRef typeRef) {
 		return typeAliasComputer.resolveTypeAliases(G, typeRef);
