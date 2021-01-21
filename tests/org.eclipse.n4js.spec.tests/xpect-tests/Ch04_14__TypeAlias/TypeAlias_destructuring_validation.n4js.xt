@@ -42,7 +42,7 @@ let { field: t11 } = ac;
 let { getter: t12 } = ac;
 // XPECT errors --> "Property named "setter" is not readable: The accessor setter is write-only." at "setter"
 let { setter: t13 } = ac;
-// XPECT errors --> "Value to be destructured does not contain a property, field or getter named "missing": C." at "missing"
+// XPECT errors --> "Value to be destructured does not contain a property, field or getter named "missing": AC." at "missing"
 let { missing: t14 } = ac;
 
 

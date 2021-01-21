@@ -75,9 +75,9 @@ fnStr = a5;
 
 type A6 = ~Object with { prop: string };
 let a6: A6;
-// XPECT errors --> "~Object with { prop: any } is not a structural subtype of ~Object with { prop: string }: prop failed: any is not equal to string." at "obj"
+// XPECT errors --> "~Object with { prop: any } is not a structural subtype of A6: prop failed: any is not equal to string." at "obj"
 a6 = obj;
-// XPECT errors --> "~Object with { prop: string } is not a structural subtype of ~Object with { prop: any }: prop failed: string is not equal to any." at "a6"
+// XPECT errors --> "A6 is not a structural subtype of ~Object with { prop: any }: prop failed: string is not equal to any." at "a6"
 obj = a6;
 // XPECT noerrors -->
 a6 = objStr;

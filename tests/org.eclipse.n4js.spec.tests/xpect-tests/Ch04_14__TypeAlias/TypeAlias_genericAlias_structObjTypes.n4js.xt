@@ -30,12 +30,12 @@ let aoc: AO<C>;
 aob = oa;
 // XPECT noerrors -->
 aob = ob;
-// XPECT errors --> "~Object with { m(_par_0: C): void } is not a structural subtype of ~Object with { m(_par_0: T): void } [[T->B]]: m failed: {function(C):void} is not a subtype of {function(B):void}." at "oc"
+// XPECT errors --> "~Object with { m(_par_0: C): void } is not a structural subtype of AO<B>: m failed: {function(C):void} is not a subtype of {function(B):void}." at "oc"
 aob = oc;
 
 // XPECT noerrors -->
 ob = aoa;
 // XPECT noerrors -->
 ob = aob;
-// XPECT errors --> "~Object with { m(_par_0: T): void } [[T->C]] is not a structural subtype of ~Object with { m(_par_0: B): void }: m failed: {function(C):void} is not a subtype of {function(B):void}." at "aoc"
+// XPECT errors --> "AO<C> is not a structural subtype of ~Object with { m(_par_0: B): void }: m failed: {function(C):void} is not a subtype of {function(B):void}." at "aoc"
 ob = aoc;
