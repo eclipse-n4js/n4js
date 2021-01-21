@@ -130,6 +130,10 @@ echo "/usr/bin/env node -r esm --version"
 /usr/bin/env node -r esm --version
 
 set +e
+echo "which node"
+which node
+
+
 echo "./packages/n4js-cli/src-gen/n4jsc.js --version"
 ./packages/n4js-cli/src-gen/n4jsc.js --version
 
