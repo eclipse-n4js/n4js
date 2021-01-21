@@ -343,7 +343,7 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		// create a BoundThisTypeRef for given location
 		val boundThisTypeRef = getThisTypeAtLocation(G, location);
 		val localG = G.wrap;
-		localG.addThisType(boundThisTypeRef);
+		localG.setThisBinding(boundThisTypeRef);
 		// substitute all unbound ThisTypeRefs with the newly created BoundThisTypeRef
 		return ts.substTypeVariables(localG, typeRef);
 	}
@@ -504,7 +504,7 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		val funDef = EcoreUtil2.getContainerOfType(expr?.eContainer, FunctionDefinition);
 		val G2 = G.wrap;
 		val myThisTypeRef = getThisTypeAtLocation(G, expr);
-		G2.addThisType(myThisTypeRef); // takes the real-this type even if it is a type{this} reference.
+		G2.setThisBinding(myThisTypeRef); // takes the real-this type even if it is a type{this} reference.
 
 		if (funDef === null || !funDef.isGenerator)
 			return null; // yield only occurs in generator functions

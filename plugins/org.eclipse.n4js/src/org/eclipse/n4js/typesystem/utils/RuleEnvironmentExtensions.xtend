@@ -117,6 +117,7 @@ class RuleEnvironmentExtensions {
 	public static final String GUARD_CHECK_TYPE_ARGUMENT_COMPATIBILITY = "N4JSTypeSystem#checkTypeArgumentCompatibility";
 	public static final String GUARD_REDUCER__IS_SUBTYPE_OF = "Reducer#isSubtypeOf";
 	public static final String GUARD_REDUCER__REDUCE_STRUCTURAL_TYPE_REF = "Reducer#reduceStructuralTypeRef";
+	public static final String GUARD_TYPE_REFS_NESTED_MODIFICATION_SWITCH__MODIFY_BOUNDS_OF_WILDCARD = "TypeRefsNestedModificationSwitch#modifyBoundsOfWildcard";
 
 	/**
 	 * Returns a new {@code RuleEnvironment}; we need this because of the
@@ -249,11 +250,11 @@ class RuleEnvironmentExtensions {
 	 * a  ParameterizedTypeRef or a BoundThisTypeRef. The latter case happens if the receiver
 	 * of a function call is a function call itself, returning a this type.
 	 */
-	def static void addThisType(RuleEnvironment G, TypeRef actualThisTypeRef) {
+	def static void setThisBinding(RuleEnvironment G, TypeRef actualThisTypeRef) {
 		switch (actualThisTypeRef) {
 			TypeTypeRef: // IDE-785 decompose
 				if (actualThisTypeRef.getTypeArg instanceof TypeRef) {
-					addThisType(G,actualThisTypeRef.getTypeArg as TypeRef)
+					setThisBinding(G,actualThisTypeRef.getTypeArg as TypeRef)
 				}
 			ParameterizedTypeRef:
 				G.put(KEY__THIS_BINDING, TypeUtils.createBoundThisTypeRef(actualThisTypeRef))
@@ -266,7 +267,7 @@ class RuleEnvironmentExtensions {
 	 * Returns the current this type, this must have been added before via
 	 * {@link #addThisType(RuleEnvironment, TypeRef)}
 	 */
-	def static TypeRef getThisType(RuleEnvironment G) {
+	def static TypeRef getThisBinding(RuleEnvironment G) {
 		G.get(KEY__THIS_BINDING) as TypeRef;
 	}
 

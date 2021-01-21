@@ -12,7 +12,6 @@ package org.eclipse.n4js.typesystem;
 
 import static org.eclipse.n4js.ts.utils.TypeExtensions.ref;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_SUBTYPE_PARAMETERIZED_TYPE_REF__STRUCT;
-import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.addThisType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.anyType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.collectAllImplicitSuperTypes;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.functionTypeRef;
@@ -30,6 +29,7 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.nullTy
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.numberObjectType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.numberType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.objectType;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.setThisBinding;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.stringObjectType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.stringType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.undefinedType;
@@ -525,9 +525,9 @@ import com.google.common.collect.Iterables;
 				final RuleEnvironment G_left = wrap(G);
 				final RuleEnvironment G_right = wrap(G);
 				typeSystemHelper.addSubstitutions(G_left, ref(left_staticType));
-				addThisType(G_left, ref(left_staticType));
+				setThisBinding(G_left, ref(left_staticType));
 				typeSystemHelper.addSubstitutions(G_right, ref(right_staticType));
-				addThisType(G_right, ref(right_staticType));
+				setThisBinding(G_right, ref(right_staticType));
 				final TypeRef leftCtorRefSubst = ts.substTypeVariables(G_left, leftCtorRef);
 				final TypeRef rightCtorRefSubst = ts.substTypeVariables(G_right, rightCtorRef);
 
