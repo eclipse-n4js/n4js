@@ -352,7 +352,9 @@ import com.google.inject.Inject;
 			// note: keep this rule aligned with rules caseN4FieldDeclaration and casePropertyNameValuePair
 			final TypeRef T;
 			if (vdecl.getDeclaredTypeRef() != null) {
-				T = vdecl.getDeclaredTypeRef();
+				final TypeRef declaredTypeRef = vdecl.getDeclaredTypeRef();
+				// since we take this type reference directly from the AST, we still need to resolve aliases:
+				T = tsh.resolveTypeAliases(G, declaredTypeRef);
 			} else if (vdecl.eContainer() instanceof BindingElement) {
 				// guard against infinite recursion, e.g. for vars like this:
 				// var [a,b] = b; / var {a,b} = b;

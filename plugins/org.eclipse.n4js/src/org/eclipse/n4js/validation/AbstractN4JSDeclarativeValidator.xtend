@@ -174,6 +174,7 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 	def protected void internalCheckTypeArguments(List<? extends TypeVariable> typeVars,
 		List<? extends TypeArgument> typeArgs, boolean allowAutoInference, IdentifiableElement parameterizedElement,
 		EObject source, EStructuralFeature feature) {
+
 		val typeParameterCount = typeVars.size
 		val typeArgumentCount = typeArgs.size
 
@@ -250,7 +251,8 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 				if(!isExceptionCase) {
 					val typeParamUB = typeParameter.declaredUpperBound ?: N4JSLanguageUtils.getTypeVariableImplicitUpperBound(G_subst);
 					val typeParamUBSubst = ts.substTypeVariables(G_subst, typeParamUB);
-					val typeArgSubst = ts.substTypeVariables(G_subst, typeArgument);
+					val typeArgResolved = tsh.resolveTypeAliases(G_subst, typeArgument); // typeArgument was taken directly from AST -> must resolve aliases
+					val typeArgSubst = ts.substTypeVariables(G_subst, typeArgResolved);
 					val result = ts.subtype(G_subst, typeArgSubst, typeParamUBSubst);
 					if (result.failure) {
 						createTypeError(result, typeArgument);
