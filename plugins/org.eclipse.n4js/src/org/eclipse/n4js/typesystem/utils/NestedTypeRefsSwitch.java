@@ -55,17 +55,18 @@ public abstract class NestedTypeRefsSwitch extends TypeRefsSwitch<TypeArgument> 
 
 	// the following two methods are provided to increase readability of recursive invocations of #doSwitch()
 
-	protected abstract NestedTypeRefsSwitch derive(RuleEnvironment G);
+	protected abstract NestedTypeRefsSwitch derive(RuleEnvironment G_NEW);
 
-	protected TypeRef modify(RuleEnvironment G2, TypeRef typeRef) {
-		return (TypeRef) modify(G2, (TypeArgument) typeRef);
+	protected TypeRef modify(RuleEnvironment G_NEW, TypeRef typeRef) {
+		return (TypeRef) modify(G_NEW, (TypeArgument) typeRef);
 	}
 
-	protected TypeArgument modify(RuleEnvironment G2, TypeArgument typeArg) {
-		if (G2 == this.G) {
+	protected TypeArgument modify(RuleEnvironment G_NEW, TypeArgument typeArg) {
+		if (G_NEW == this.G) {
 			return doSwitch(typeArg);
 		} else {
-			return derive(G2).doSwitch(typeArg);
+			final NestedTypeRefsSwitch nestedSwitch = derive(G_NEW);
+			return nestedSwitch.doSwitch(typeArg);
 		}
 	}
 
