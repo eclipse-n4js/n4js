@@ -68,7 +68,6 @@ echo "Repository root directory: ${REPO_ROOT_DIR}"
 echo "Current working directory: $PWD"
 
 echo "==== STEP 1/7: check preconditions"
-
 if [ "$DESTINATION" != "local" ]; then
     # check NPM_TOKEN
     if [ -z "$NPM_TOKEN" ]; then
@@ -119,35 +118,6 @@ export PATH=`pwd`/node_modules/.bin:${PATH}
 echo "==== STEP 4/7: run 'lerna run build/test' on n4js-libs"
 export N4_N4JSC_JAR="${REPO_ROOT_DIR}/target/n4jsc.jar"
 lerna run build
-
-echo "chmod +x ./packages/n4js-cli/src-gen/n4jsc.js"
-chmod +x ./packages/n4js-cli/src-gen/n4jsc.js
-
-echo "/usr/bin/env node --version"
-/usr/bin/env node --version
-
-echo "/usr/bin/env node -r esm --version"
-/usr/bin/env node -r esm --version
-
-set +e
-echo "which node"
-which node
-
-echo "/usr/bin/node -r esm --version"
-/usr/bin/node -r esm --version
-
-echo "./packages/n4js-cli/src-gen/n4jsc.js --version"
-./packages/n4js-cli/src-gen/n4jsc.js --version
-
-echo "chmod +x ./packages/n4js-cli/src-gen/n4jsc.js"
-chmod +x ./packages/n4js-cli/src-gen/n4jsc.js
-
-echo "./packages/n4js-cli/src-gen/n4jsc.js --version"
-./packages/n4js-cli/src-gen/n4jsc.js --version
-
-
-set -e
-echo "lerna run test"
 lerna run test
 
 export NPM_CONFIG_GLOBALCONFIG="$REPO_ROOT_DIR/n4js-libs"
