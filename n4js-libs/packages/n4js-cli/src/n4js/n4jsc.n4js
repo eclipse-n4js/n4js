@@ -1,4 +1,4 @@
-#!/usr/bin/env node -r esm
+#!/usr/bin/env node
 
 /**
  * Copyright (c) 2016 NumberFour AG.
