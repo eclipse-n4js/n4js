@@ -34,6 +34,7 @@ import com.google.common.collect.Lists;
  */
 public enum PackageJsonProperties {
 
+	// NPM properties
 	/** Key of package.json property "name". */
 	NAME("name", "Npm name"),
 	/** Key of package.json property "version". */
@@ -46,14 +47,28 @@ public enum PackageJsonProperties {
 	DEV_DEPENDENCIES(UtilN4.PACKAGE_JSON__DEV_DEPENDENCIES, "Development dependencies of this npm", JSONObject.class),
 	/** Key of package.json property "main". */
 	MAIN("main", "Main module. Path is relative to package root"),
+
+	// Yarn properties
+	/**
+	 * Short version of {@link #WORKSPACES_OBJECT}. @see {@link #PACKAGES}.
+	 */
+	WORKSPACES_ARRAY("workspaces", "Array of projects names or glob that are members of the yarn workspace",
+			JSONArray.class, "[packages/*]"),
+	/** Key of package.json property used by yarn workspace concept to define the workspace. */
+	WORKSPACES_OBJECT("workspaces", "Projects definition of the yarn workspace", JSONObject.class),
+	/**
+	 * Key of package.json property used by yarn workspace concept denoting projects Array of projects names or glob
+	 * contained in the workspace.
+	 */
+	PACKAGES("packages", "Array of projects names or glob that are members of the yarn workspace", JSONArray.class,
+			"[packages/*]", WORKSPACES_OBJECT),
+	/** Key of package.json property used by yarn workspace concept denoting projects contained in the workspace. */
+	NOHOIST("nohoist", "Array of project names or glob that will not be hoisted by yarn", JSONArray.class,
+			"[packages/*]", WORKSPACES_OBJECT),
+
+	// N4JS properties
 	/** Key of package.json property "n4js". */
 	N4JS("n4js", "N4JS section", JSONObject.class),
-
-	// properties of other tools:
-	/** Key of package.json property used by yarn workspace concept denoting projects contained in the workspace. */
-	WORKSPACES("workspaces", "Projects that are members of the yarn workspace", JSONArray.class),
-
-	// properties in section "n4js":
 	/** Key of package.json property "projectType". */
 	PROJECT_TYPE("projectType", ProjectType.PLAINJS.getLiteral().toLowerCase(), N4JS),
 	/** Key of package.json property "vendorId". */
@@ -95,7 +110,7 @@ public enum PackageJsonProperties {
 	/** Key of package.json property "test" inside "sources". */
 	TEST("test", "List of source folders for tests", JSONArray.class, N4JS, SOURCES);
 
-	/** section of the property within the package.json */
+	/** section of the property within the package.json as a path of parents starting at the top level */
 	final public PackageJsonProperties[] parents;
 	/** name of the property */
 	final public String name;

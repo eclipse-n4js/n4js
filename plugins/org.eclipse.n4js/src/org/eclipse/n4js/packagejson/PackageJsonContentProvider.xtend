@@ -38,7 +38,7 @@ import static org.eclipse.n4js.packagejson.PackageJsonProperties.TESTED_PROJECTS
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.VENDOR_ID
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.VENDOR_NAME
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.VERSION
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.WORKSPACES
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.WORKSPACES_ARRAY
 
 /**
  * Class for providing the content of N4JS-specific package.json files.
@@ -100,7 +100,7 @@ package class PackageJsonContentProvider {
 		}
 
 		if (!workspaces.empty) {
-			JSONModelUtils.addProperty(root, WORKSPACES.name,
+			JSONModelUtils.addProperty(root, WORKSPACES_ARRAY.name,
 				JSONModelUtils.createStringArray(workspaces));
 		}
 

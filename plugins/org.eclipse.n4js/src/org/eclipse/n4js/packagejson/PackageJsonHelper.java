@@ -119,7 +119,11 @@ public class PackageJsonHelper {
 				target.setHasN4JSNature(true);
 				convertN4jsPairs(target, asNameValuePairsOrEmpty(value));
 				break;
-			case WORKSPACES:
+			case WORKSPACES_ARRAY:
+				target.setYarnWorkspaceRoot(true);
+				target.getWorkspaces().addAll(asStringsInArrayOrEmpty(value));
+				break;
+			case PACKAGES:
 				target.setYarnWorkspaceRoot(true);
 				target.getWorkspaces().addAll(asStringsInArrayOrEmpty(value));
 				break;
