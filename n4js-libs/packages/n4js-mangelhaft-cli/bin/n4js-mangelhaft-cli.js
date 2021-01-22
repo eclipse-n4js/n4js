@@ -12,5 +12,6 @@
  */
 /*eslint-disable no-empty */
 
+// TODO GH-2044: Remove this file
 require = require("esm")(module);
 require("../src-gen/org/eclipse/n4js/mangelhaft/runner/node/NodeTestMain.js");

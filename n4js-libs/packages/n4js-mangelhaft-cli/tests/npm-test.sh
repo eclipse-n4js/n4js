@@ -12,19 +12,9 @@
 set -e
 cd `dirname $0`/TestPrj
 
-echo "which env"
-echo $(which env)
-
-echo "which node"
-echo $(which node)
-
-echo "node version"
-echo $(/usr/bin/env node --version)
-echo "node version -r esm"
-echo $(/usr/bin/env node -r esm --version)
 
 echo "Create test catalogs"
-../../../n4js-cli/src-gen/n4jsc.js compile ../../../..
+../../../n4js-cli/bin/n4jsc.js compile ../../../..
 
 
 REPORT_NAME="./build/report.xml"
