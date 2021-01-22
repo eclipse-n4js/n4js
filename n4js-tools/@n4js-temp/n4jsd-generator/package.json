@@ -6,7 +6,7 @@
   "license": "EPL-1.0",
   "main": "./src-gen/dts2n4jsd.js",
   "bin": {
-    "dts2n4jsd": "./src-gen/dts2n4jsd.js"
+    "dts2n4jsd": "./bin/dts2n4jsd.js"
   },
   "scripts": {
     "build": "./npm-build.sh",
