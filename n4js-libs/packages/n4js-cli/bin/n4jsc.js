@@ -15,5 +15,5 @@
 
 // TODO GH-2044: Remove this file
 require = require("esm")(module);
-require("../src-gen/n4js.js");
+require("../src-gen/n4jsc.js");
 
