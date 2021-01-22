@@ -276,8 +276,8 @@ public class PackageJsonHyperlinkHelperExtension implements IJSONHyperlinkHelper
 		EObject tmpObj = eObject;
 		while (tmpObj != null) {
 			if (tmpObj instanceof NameValuePair) {
-				String name = ((NameValuePair) tmpObj).getName();
-				PackageJsonProperties pjp = PackageJsonProperties.valueOfNameOrNull(name);
+				NameValuePair nvPair = (NameValuePair) tmpObj;
+				PackageJsonProperties pjp = PackageJsonProperties.valueOfNameValuePairOrNull(nvPair);
 				if (pjp != null) {
 					return pjp;
 				}

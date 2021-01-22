@@ -22,6 +22,7 @@ import org.eclipse.n4js.json.JSON.JSONBooleanLiteral;
 import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONStringLiteral;
 import org.eclipse.n4js.json.JSON.JSONValue;
+import org.eclipse.n4js.json.JSON.NameValuePair;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.utils.UtilN4;
@@ -147,20 +148,36 @@ public enum PackageJsonProperties {
 		this.valueType = valueType;
 	}
 
-	static private Map<String, PackageJsonProperties> nameToEnum = new HashMap<>();
+	static private Map<String, Map<Class<? extends JSONValue>, PackageJsonProperties>> nameToEnum = new HashMap<>();
+
 	static {
 		for (PackageJsonProperties prop : PackageJsonProperties.values()) {
-			if (nameToEnum.containsKey(prop.name)) {
-				nameToEnum.put(prop.name, null); // ensure that props with the same name return null here
-			} else {
-				nameToEnum.put(prop.name, prop);
+			if (!nameToEnum.containsKey(prop.name)) {
+				nameToEnum.put(prop.name, new HashMap<>());
 			}
+			Map<Class<? extends JSONValue>, PackageJsonProperties> typeMap = nameToEnum.get(prop.name);
+			if (typeMap.containsKey(prop.valueType)) {
+				throw new IllegalStateException("");
+			}
+			typeMap.put(prop.valueType, prop);
 		}
 	}
 
 	/** @return the result of {@link Enum#valueOf(Class, String)} or null. Does not throw an {@link Exception}. */
-	static public PackageJsonProperties valueOfNameOrNull(String name) {
-		return nameToEnum.get(name);
+	static public PackageJsonProperties valueOfNameValuePairOrNull(NameValuePair nvPair) {
+		Map<Class<? extends JSONValue>, PackageJsonProperties> typeMap = nameToEnum.get(nvPair.getName());
+		if (typeMap != null) {
+			Class<? extends JSONValue> valueClass = nvPair.getValue().getClass();
+			if (valueClass != null) {
+				if (valueClass.isInterface()) {
+					return typeMap.get(valueClass);
+				} else if (valueClass.getInterfaces().length > 0) {
+					Class<?>[] valueInterfaces = valueClass.getInterfaces();
+					return typeMap.get(valueInterfaces[0]);
+				}
+			}
+		}
+		return null;
 	}
 
 	/**
