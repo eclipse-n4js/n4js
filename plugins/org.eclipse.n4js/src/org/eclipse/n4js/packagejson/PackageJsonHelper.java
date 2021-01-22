@@ -18,6 +18,7 @@ import static org.eclipse.n4js.json.model.utils.JSONModelUtils.getProperty;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.MAIN;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.MAIN_MODULE;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.OUTPUT;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.PACKAGES;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.PROJECT_TYPE;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.VENDOR_ID;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.VERSION;
@@ -122,9 +123,17 @@ public class PackageJsonHelper {
 				target.setYarnWorkspaceRoot(true);
 				target.getWorkspaces().addAll(asStringsInArrayOrEmpty(value));
 				break;
-			case PACKAGES:
+			case WORKSPACES_OBJECT:
 				target.setYarnWorkspaceRoot(true);
-				target.getWorkspaces().addAll(asStringsInArrayOrEmpty(value));
+				JSONObject workspaces = (JSONObject) value;
+				for (NameValuePair pairOfWorkspaces : workspaces.getNameValuePairs()) {
+					PackageJsonProperties wProp = PackageJsonProperties.valueOfNameValuePairOrNull(pairOfWorkspaces);
+					if (wProp == PACKAGES) {
+						JSONValue packagesValue = pairOfWorkspaces.getValue();
+						target.getWorkspaces().addAll(asStringsInArrayOrEmpty(packagesValue));
+						break;
+					}
+				}
 				break;
 			default:
 				break;
