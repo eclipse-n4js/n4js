@@ -89,8 +89,7 @@ public class PackageJsonHelper {
 
 	private void convertRootPairs(LazyParsingProjectDescriptionImpl target, List<NameValuePair> rootPairs) {
 		for (NameValuePair pair : rootPairs) {
-			String name = pair.getName();
-			PackageJsonProperties property = PackageJsonProperties.valueOfNameOrNull(name);
+			PackageJsonProperties property = PackageJsonProperties.valueOfNameValuePairOrNull(pair);
 			if (property == null) {
 				continue;
 			}
@@ -119,7 +118,11 @@ public class PackageJsonHelper {
 				target.setHasN4JSNature(true);
 				convertN4jsPairs(target, asNameValuePairsOrEmpty(value));
 				break;
-			case WORKSPACES:
+			case WORKSPACES_ARRAY:
+				target.setYarnWorkspaceRoot(true);
+				target.getWorkspaces().addAll(asStringsInArrayOrEmpty(value));
+				break;
+			case PACKAGES:
 				target.setYarnWorkspaceRoot(true);
 				target.getWorkspaces().addAll(asStringsInArrayOrEmpty(value));
 				break;
@@ -131,8 +134,7 @@ public class PackageJsonHelper {
 
 	private void convertN4jsPairs(ProjectDescription target, List<NameValuePair> n4jsPairs) {
 		for (NameValuePair pair : n4jsPairs) {
-			String name = pair.getName();
-			PackageJsonProperties property = PackageJsonProperties.valueOfNameOrNull(name);
+			PackageJsonProperties property = PackageJsonProperties.valueOfNameValuePairOrNull(pair);
 			if (property == null) {
 				continue;
 			}

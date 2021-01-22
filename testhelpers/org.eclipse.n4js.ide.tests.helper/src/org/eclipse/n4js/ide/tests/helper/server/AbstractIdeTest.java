@@ -151,6 +151,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	public static final String CFG_WORKSPACES_FOLDER = TestWorkspaceManager.CFG_WORKSPACES_FOLDER;
 	/** @see TestWorkspaceManager#CFG_SRC */
 	public static final String CFG_SRC = TestWorkspaceManager.CFG_SRC;
+	/** @see TestWorkspaceManager#CFG_YARN_PROJECT */
+	public static final String CFG_YARN_PROJECT = TestWorkspaceManager.CFG_YARN_PROJECT;
 	/** Name of the package.json file. */
 	protected static final String PACKAGE_JSON = N4JSGlobals.PACKAGE_JSON;
 	/** Name of n4js library 'n4js-runtime'. */
