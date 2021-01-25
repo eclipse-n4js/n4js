@@ -25,6 +25,7 @@ import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeVariable;
@@ -218,8 +219,8 @@ import org.eclipse.xtext.xbase.lib.Pair;
 				if (replacementFromEnvUntyped instanceof TypeArgument) {
 					// we have a single substitution!
 					final TypeArgument replacementFromEnv = (TypeArgument) replacementFromEnvUntyped;
-					final TypeArgument replacement = TypeUtils.mergeTypeModifiers(replacementFromEnv, typeRef);
-					final TypeRef replacementPrepared = prepareTypeVariableReplacement(typeVar, replacement);
+					final TypeRef replacementPrepared = prepareTypeVariableReplacement(typeRef, typeVar,
+							replacementFromEnv);
 					result = replacementPrepared;
 				} else if (replacementFromEnvUntyped instanceof List<?>) {
 					// we have multiple substitutions!
@@ -229,8 +230,9 @@ import org.eclipse.xtext.xbase.lib.Pair;
 					final List<TypeArgument> l_raw = (List<TypeArgument>) replacementFromEnvUntyped;
 					final List<TypeRef> l = CollectionLiterals.newArrayList();
 					for (int i = 0; i < l_raw.size(); i++) {
-						final TypeArgument replacement = l_raw.get(i);
-						final TypeRef replacementPrepared = prepareTypeVariableReplacement(typeVar, replacement);
+						final TypeArgument replacementFromEnv = l_raw.get(i);
+						final TypeRef replacementPrepared = prepareTypeVariableReplacement(typeRef, typeVar,
+								replacementFromEnv);
 						l.add(replacementPrepared);
 					}
 					if (typeVar.isDeclaredCovariant()) {
@@ -242,7 +244,6 @@ import org.eclipse.xtext.xbase.lib.Pair;
 						// on by a validation (see method RuleEnvironmentExtensions#recordInconsistentSubstitutions())
 						result = unknown();
 					}
-					TypeUtils.copyTypeModifiers(result, typeRef);
 				} else {
 					// we have no substitutions at all!
 					// -> no need to change anything here
@@ -252,7 +253,24 @@ import org.eclipse.xtext.xbase.lib.Pair;
 			return result;
 		}
 
-		private TypeRef prepareTypeVariableReplacement(TypeVariable typeVar, TypeArgument replacementArg) {
+		private TypeRef prepareTypeVariableReplacement(ParameterizedTypeRef originalTypeRef, TypeVariable typeVar,
+				TypeArgument replacementArg) {
+
+			// merge type modifiers
+			replacementArg = TypeUtils.mergeTypeModifiers(replacementArg, originalTypeRef);
+			if (replacementArg instanceof TypeRef) {
+				final TypeRef aliasTypeRef = ((TypeRef) replacementArg).getOriginalAliasTypeRef();
+				if (aliasTypeRef != null) {
+					final TypeRef aliasTypeRefMerged = TypeUtils.mergeTypeModifiers(aliasTypeRef, originalTypeRef);
+					if (aliasTypeRefMerged != aliasTypeRef
+							&& aliasTypeRefMerged instanceof ParameterizedTypeRef) {
+						final ParameterizedTypeRef aliasTypeRefMergedCasted = (ParameterizedTypeRef) aliasTypeRefMerged;
+						replacementArg = TypeUtils.copyPartial(replacementArg,
+								TypeRefsPackage.Literals.TYPE_REF__ORIGINAL_ALIAS_TYPE_REF);
+						((TypeRef) replacementArg).setOriginalAliasTypeRef(aliasTypeRefMergedCasted);
+					}
+				}
+			}
 
 			// capture wildcards
 			TypeRef replacement;

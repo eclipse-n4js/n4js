@@ -34,6 +34,7 @@ package class TypeAliasComputer extends TypeSystemHelperStrategy {
 			return typeRef;
 		}
 
+		var ParameterizedTypeRef originalAliasTypeRef = null;
 		var RecursionGuard<TypeAlias> guard = null;
 		var currTypeRef = typeRef;
 		while (true) {
@@ -45,8 +46,11 @@ package class TypeAliasComputer extends TypeSystemHelperStrategy {
 
 			// convert to a resolved type alias reference
 			var resolvedTypeRef = TypeUtils.copy(actualTypeRef);
-			resolvedTypeRef.originalAliasTypeRef = TypeUtils.copy(currTypeRef as ParameterizedTypeRef);
-			// FIXME merge type modifiers, etc.
+			if (originalAliasTypeRef === null) {
+				originalAliasTypeRef = TypeUtils.copy(typeRef as ParameterizedTypeRef);
+			}
+			resolvedTypeRef.originalAliasTypeRef = originalAliasTypeRef;
+			resolvedTypeRef = TypeUtils.mergeTypeModifiers(resolvedTypeRef, currTypeRef);
 
 			// if we have a parameterized type reference to a generic type alias, we have to substitute
 			// to not lose the bindings defined by the type arguments in 'typeRef':

@@ -255,6 +255,13 @@ abstract class TypeRef extends TypeArgument, Versionable {
 		}
 		return this.internalGetTypeRefAsString();
 	}
+	op String getTypeRefAsStringWithAliasResolution() {
+		val oatr = originalAliasTypeRef;
+		if (oatr !== null) {
+			return oatr.getTypeRefAsString() + " <=> " + this.internalGetTypeRefAsString();
+		}
+		return this.internalGetTypeRefAsString();
+	}
 	op String internalGetTypeRefAsString()
 	op String toString() {
 		return getTypeRefAsString();

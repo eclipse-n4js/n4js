@@ -1142,6 +1142,15 @@ public interface ImPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_IM___GET_TYPE_REF_AS_STRING = TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING;
 
 	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_IM___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
+
+	/**
 	 * The operation id for the '<em>To String</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1591,6 +1600,15 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_TYPE_REF_AS_STRING = PARAMETERIZED_TYPE_REF_IM___GET_TYPE_REF_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = PARAMETERIZED_TYPE_REF_IM___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
 
 	/**
 	 * The operation id for the '<em>To String</em>' operation.
@@ -3454,6 +3472,15 @@ public interface ImPackage extends EPackage {
 	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___GET_TYPE_REF_AS_STRING = PARAMETERIZED_TYPE_REF_IM___GET_TYPE_REF_AS_STRING;
 
 	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = PARAMETERIZED_TYPE_REF_IM___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
+
+	/**
 	 * The operation id for the '<em>To String</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3930,6 +3957,15 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_TYPE_REF_AS_STRING = PARAMETERIZED_TYPE_REF_IM___GET_TYPE_REF_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = PARAMETERIZED_TYPE_REF_IM___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
 
 	/**
 	 * The operation id for the '<em>To String</em>' operation.

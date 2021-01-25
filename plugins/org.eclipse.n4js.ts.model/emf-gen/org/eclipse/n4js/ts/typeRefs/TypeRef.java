@@ -285,6 +285,14 @@ public interface TypeRef extends TypeArgument, Versionable {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	String getTypeRefAsStringWithAliasResolution();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @model unique="false"
 	 * @generated
 	 */

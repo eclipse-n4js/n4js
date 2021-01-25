@@ -66,7 +66,20 @@ public class TypeXpectMethod {
 	public void type(
 			@StringExpectation IStringExpectation expectation,
 			IEObjectCoveringRegion arg1) { // ICrossEReferenceAndEObject arg1) {
-		String actual = getTypeString(arg1, false);
+		String actual = getTypeString(arg1, false, false);
+		if (expectation == null) {
+			throw new IllegalStateException("No expectation specified, add '--> Type'");
+		}
+		expectation.assertEquals(actual);
+	}
+
+	/** Same as {@link #type(IStringExpectation, IEObjectCoveringRegion)}, but includes resolution of type aliases. */
+	@ParameterParser(syntax = "('of' arg1=OFFSET)?")
+	@Xpect
+	public void typeWithAliasResolution(
+			@StringExpectation IStringExpectation expectation,
+			IEObjectCoveringRegion arg1) {
+		String actual = getTypeString(arg1, false, true);
 		if (expectation == null) {
 			throw new IllegalStateException("No expectation specified, add '--> Type'");
 		}
@@ -93,14 +106,14 @@ public class TypeXpectMethod {
 	public void expectedType(
 			@StringExpectation IStringExpectation expectation,
 			IEObjectCoveringRegion arg1) { // ICrossEReferenceAndEObject arg1) {
-		String actual = getTypeString(arg1, true);
+		String actual = getTypeString(arg1, true, false);
 		if (expectation == null) {
 			throw new IllegalStateException("No expectation specified, add '--> Type'");
 		}
 		expectation.assertEquals(actual);
 	}
 
-	private String getTypeString(IEObjectCoveringRegion offset, boolean expectedType) {
+	private String getTypeString(IEObjectCoveringRegion offset, boolean expectedType, boolean withAliasResolution) {
 		final String calculatedString;
 		EObject eobject = offset.getEObject();
 		if (eobject instanceof LiteralOrComputedPropertyName) {
@@ -132,7 +145,9 @@ public class TypeXpectMethod {
 				return "Not a TypableElement at given region; got instead: " + eobject.eClass().getName();
 			result = ts.type(G, (TypableElement) eobject);
 		}
-		calculatedString = result.getTypeRefAsString();
+		calculatedString = withAliasResolution
+				? result.getTypeRefAsStringWithAliasResolution()
+				: result.getTypeRefAsString();
 		return calculatedString;
 	}
 

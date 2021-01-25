@@ -343,6 +343,23 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 	 * @generated
 	 */
 	@Override
+	public String getTypeRefAsStringWithAliasResolution() {
+		final ParameterizedTypeRef oatr = this.getOriginalAliasTypeRef();
+		if ((oatr != null)) {
+			String _typeRefAsString = oatr.getTypeRefAsString();
+			String _plus = (_typeRefAsString + " <=> ");
+			String _internalGetTypeRefAsString = this.internalGetTypeRefAsString();
+			return (_plus + _internalGetTypeRefAsString);
+		}
+		return this.internalGetTypeRefAsString();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public String toString() {
 		return this.getTypeRefAsString();
 	}
@@ -583,6 +600,8 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 				return getTypeArgs();
 			case TypeRefsPackage.TYPE_REF___GET_TYPE_REF_AS_STRING:
 				return getTypeRefAsString();
+			case TypeRefsPackage.TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION:
+				return getTypeRefAsStringWithAliasResolution();
 			case TypeRefsPackage.TYPE_REF___TO_STRING:
 				return toString();
 			case TypeRefsPackage.TYPE_REF___IS_TOP_TYPE:
