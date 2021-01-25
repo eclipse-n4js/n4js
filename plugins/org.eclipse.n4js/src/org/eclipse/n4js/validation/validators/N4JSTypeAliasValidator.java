@@ -13,9 +13,12 @@ package org.eclipse.n4js.validation.validators;
 import java.util.Stack;
 import java.util.stream.Collectors;
 
+import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeAlias;
 import org.eclipse.n4js.utils.RecursionGuard;
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator;
@@ -39,9 +42,7 @@ public class N4JSTypeAliasValidator extends AbstractN4JSDeclarativeValidator {
 		/* nop */
 	}
 
-	/**
-	 * Disallow cyclic alias declarations.
-	 */
+	/** Disallow cyclic alias declarations. */
 	@Check
 	public void checkCyclicAliasDeclaration(N4TypeAliasDeclaration n4TypeAliasDecl) {
 		Stack<TypeAlias> cycle = collectTypeAliasCycle(n4TypeAliasDecl.getDefinedTypeAsTypeAlias());
@@ -74,5 +75,14 @@ public class N4JSTypeAliasValidator extends AbstractN4JSDeclarativeValidator {
 			currAlias = (TypeAlias) currActualTypeRef.getDeclaredType();
 		} while (guard.tryNext(currAlias));
 		return guard.getElements();
+	}
+
+	/** Disallow use of type aliases as values (for now). */
+	@Check
+	public void checkAliasAsValue(IdentifierRef idRef) {
+		IdentifiableElement id = idRef.getId();
+		if (id != null && id instanceof Type && ((Type) id).isAlias()) {
+			addIssue(IssueCodes.getMessageForALI_TYPE_ALIAS_AS_VALUE(), idRef, IssueCodes.ALI_TYPE_ALIAS_AS_VALUE);
+		}
 	}
 }
