@@ -80,6 +80,9 @@ public class YarnWorkspaceProject extends Project {
 	 * Generates the {@link IN4JSProject#PACKAGE_JSON} for this project.
 	 */
 	public override String generate() '''
+		«IF !projectDescriptionContent.nullOrEmpty»«
+			projectDescriptionContent»
+		«ELSE»
 		{
 			"name": "«name»",
 			"version": "«version»",
@@ -95,6 +98,7 @@ public class YarnWorkspaceProject extends Project {
 					«ENDIF»
 			}
 		}
+		«ENDIF»
 	'''
 
 

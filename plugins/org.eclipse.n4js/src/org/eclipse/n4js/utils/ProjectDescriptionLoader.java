@@ -13,8 +13,9 @@ package org.eclipse.n4js.utils;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNonEmptyStringOrNull;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.MAIN;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.N4JS;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.PACKAGES;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.VERSION;
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.WORKSPACES;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.WORKSPACES_ARRAY;
 
 import java.io.File;
 import java.io.IOException;
@@ -130,7 +131,10 @@ public class ProjectDescriptionLoader {
 	public List<String> loadWorkspacesFromProjectDescriptionAtLocation(SafeURI<?> location) {
 		JSONDocument packageJSON = loadPackageJSONAtLocation(location);
 		if (packageJSON != null) {
-			JSONValue value = JSONModelUtils.getProperty(packageJSON, WORKSPACES.name).orElse(null);
+			JSONValue value = JSONModelUtils.getProperty(packageJSON, WORKSPACES_ARRAY.name).orElse(null);
+			if (value == null) {
+				value = JSONModelUtils.getProperty(packageJSON, PACKAGES.name).orElse(null);
+			}
 			if (value instanceof JSONArray) {
 				List<String> result = new ArrayList<>();
 				for (JSONValue element : ((JSONArray) value).getElements()) {

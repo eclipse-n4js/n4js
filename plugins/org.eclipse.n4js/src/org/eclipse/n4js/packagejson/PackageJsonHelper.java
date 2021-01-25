@@ -18,6 +18,7 @@ import static org.eclipse.n4js.json.model.utils.JSONModelUtils.getProperty;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.MAIN;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.MAIN_MODULE;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.OUTPUT;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.PACKAGES;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.PROJECT_TYPE;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.VENDOR_ID;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.VERSION;
@@ -89,8 +90,7 @@ public class PackageJsonHelper {
 
 	private void convertRootPairs(LazyParsingProjectDescriptionImpl target, List<NameValuePair> rootPairs) {
 		for (NameValuePair pair : rootPairs) {
-			String name = pair.getName();
-			PackageJsonProperties property = PackageJsonProperties.valueOfNameOrNull(name);
+			PackageJsonProperties property = PackageJsonProperties.valueOfNameValuePairOrNull(pair);
 			if (property == null) {
 				continue;
 			}
@@ -119,9 +119,21 @@ public class PackageJsonHelper {
 				target.setHasN4JSNature(true);
 				convertN4jsPairs(target, asNameValuePairsOrEmpty(value));
 				break;
-			case WORKSPACES:
+			case WORKSPACES_ARRAY:
 				target.setYarnWorkspaceRoot(true);
 				target.getWorkspaces().addAll(asStringsInArrayOrEmpty(value));
+				break;
+			case WORKSPACES_OBJECT:
+				target.setYarnWorkspaceRoot(true);
+				JSONObject workspaces = (JSONObject) value;
+				for (NameValuePair pairOfWorkspaces : workspaces.getNameValuePairs()) {
+					PackageJsonProperties wProp = PackageJsonProperties.valueOfNameValuePairOrNull(pairOfWorkspaces);
+					if (wProp == PACKAGES) {
+						JSONValue packagesValue = pairOfWorkspaces.getValue();
+						target.getWorkspaces().addAll(asStringsInArrayOrEmpty(packagesValue));
+						break;
+					}
+				}
 				break;
 			default:
 				break;
@@ -131,8 +143,7 @@ public class PackageJsonHelper {
 
 	private void convertN4jsPairs(ProjectDescription target, List<NameValuePair> n4jsPairs) {
 		for (NameValuePair pair : n4jsPairs) {
-			String name = pair.getName();
-			PackageJsonProperties property = PackageJsonProperties.valueOfNameOrNull(name);
+			PackageJsonProperties property = PackageJsonProperties.valueOfNameValuePairOrNull(pair);
 			if (property == null) {
 				continue;
 			}

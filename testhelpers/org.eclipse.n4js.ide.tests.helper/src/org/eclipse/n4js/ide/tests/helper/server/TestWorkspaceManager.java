@@ -96,6 +96,8 @@ public class TestWorkspaceManager {
 	 * see {@link #CFG_NODE_MODULES}
 	 */
 	static final public String CFG_SRC = "#SRC:";
+	/** Reserved string placeholder for the name of the yarn project */
+	static final public String CFG_YARN_PROJECT = "#CFG_YARN_PROJECT:";
 	/** Name of n4js library 'n4js-runtime' */
 	static final public String N4JS_RUNTIME = N4JSGlobals.N4JS_RUNTIME.getRawName();
 	/** Default project object for 'n4js-runtime' */
@@ -499,6 +501,10 @@ public class TestWorkspaceManager {
 				Project project = createSimpleProject(prjName, moduleContents, dependencies, ProjectKind.Member);
 				yarnProject.addMemberProject(wsFolder, project);
 
+			} else if (prjName.equals(CFG_YARN_PROJECT)) {
+				if (moduleContents.containsKey(N4JSGlobals.PACKAGE_JSON)) {
+					yarnProject.setProjectDescriptionContent(moduleContents.get(N4JSGlobals.PACKAGE_JSON));
+				}
 			} else {
 				Project project = createSimpleProject(prjName, moduleContents, dependencies, ProjectKind.Member);
 				yarnProject.addMemberProject(project);
