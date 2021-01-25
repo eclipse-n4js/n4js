@@ -98,7 +98,7 @@ package class TypeAliasComputer extends TypeSystemHelperStrategy {
 			return new ResolveTypeAliasesSwitch(G_NEW, tac);
 		}
 
-		override protected caseParameterizedTypeRef_modifyDeclaredType(ParameterizedTypeRef typeRef) {
+		override protected caseParameterizedTypeRef_processDeclaredType(ParameterizedTypeRef typeRef) {
 			return tac.resolveTypeAliasFlat(G, typeRef);
 		}
 	}

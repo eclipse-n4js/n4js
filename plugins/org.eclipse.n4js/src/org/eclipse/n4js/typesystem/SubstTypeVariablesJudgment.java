@@ -120,12 +120,12 @@ import org.eclipse.xtext.xbase.lib.Pair;
 		}
 
 		@Override
-		protected TypeRef caseWildcard_modifyUpperBound(RuleEnvironment G2, TypeRef ub) {
+		protected TypeRef caseWildcard_processUpperBound(RuleEnvironment G2, TypeRef ub) {
 			return substTypeVariables(G2, ub, false);
 		}
 
 		@Override
-		protected TypeRef caseWildcard_modifyLowerBound(RuleEnvironment G2, TypeRef lb) {
+		protected TypeRef caseWildcard_processLowerBound(RuleEnvironment G2, TypeRef lb) {
 			return substTypeVariables(G2, lb, false);
 		}
 
@@ -158,22 +158,22 @@ import org.eclipse.xtext.xbase.lib.Pair;
 		}
 
 		@Override
-		protected TypeRef caseFunctionTypeExprOrRef_modifyTypeParameterUpperBound(TypeRef ub) {
+		protected TypeRef caseFunctionTypeExprOrRef_processTypeParameterUpperBound(TypeRef ub) {
 			return substTypeVariables(G, ub, false);
 		}
 
 		@Override
-		protected TypeRef caseFunctionTypeExprOrRef_modifyDeclaredThisType(TypeRef declThisType) {
+		protected TypeRef caseFunctionTypeExprOrRef_processDeclaredThisType(TypeRef declThisType) {
 			return substTypeVariables(G, declThisType, false);
 		}
 
 		@Override
-		protected TypeRef caseFunctionTypeExprOrRef_modifyReturnType(TypeRef returnTypeRef) {
+		protected TypeRef caseFunctionTypeExprOrRef_processReturnType(TypeRef returnTypeRef) {
 			return substTypeVariables(G, returnTypeRef, false);
 		}
 
 		@Override
-		protected TypeRef caseFunctionTypeExprOrRef_modifyParameterType(TypeRef fparTypeRef) {
+		protected TypeRef caseFunctionTypeExprOrRef_processParameterType(TypeRef fparTypeRef) {
 			return substTypeVariables(G, fparTypeRef, false);
 		}
 
@@ -193,17 +193,17 @@ import org.eclipse.xtext.xbase.lib.Pair;
 		 */
 
 		@Override
-		protected TypeRef caseComposedTypeRef_modifyMemberType(TypeRef memberTypeRef) {
+		protected TypeRef caseComposedTypeRef_processMemberType(TypeRef memberTypeRef) {
 			return substTypeVariables(G, memberTypeRef, captureContainedWildcards);
 		}
 
 		@Override
-		protected TypeArgument caseTypeTypeRef_modifyTypeArg(TypeArgument typeArg) {
+		protected TypeArgument caseTypeTypeRef_processTypeArg(TypeArgument typeArg) {
 			return substTypeVariables(G, typeArg, captureContainedWildcards);
 		}
 
 		@Override
-		protected TypeRef caseParameterizedTypeRef_modifyDeclaredType(ParameterizedTypeRef typeRef) {
+		protected TypeRef caseParameterizedTypeRef_processDeclaredType(ParameterizedTypeRef typeRef) {
 			TypeRef result;
 
 			// (1) start with unchanged typeRef as result (will be copied and changed below if needed)
@@ -306,7 +306,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 		}
 
 		@Override
-		protected TypeArgument caseParameterizedTypeRef_modifyTypeArgument(RuleEnvironment G2, TypeVariable typeParam,
+		protected TypeArgument caseParameterizedTypeRef_processTypeArgument(RuleEnvironment G2, TypeVariable typeParam,
 				TypeArgument typeArg) {
 			final boolean captureContainedWildcardsNEW = typeArg instanceof Wildcard
 					? captureContainedWildcards
@@ -319,7 +319,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 		}
 
 		@Override
-		protected TypeRef caseParameterizedTypeRef_modifyStructuralMembers(StructuralTypeRef typeRef,
+		protected TypeRef caseParameterizedTypeRef_processStructuralMembers(StructuralTypeRef typeRef,
 				boolean alreadyCopied) {
 			return typeSystemHelper.substTypeVariablesInStructuralMembers(G, typeRef);
 		}

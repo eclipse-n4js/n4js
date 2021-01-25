@@ -16,6 +16,7 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.wrap;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef;
@@ -44,24 +45,66 @@ import org.eclipse.xtext.xbase.lib.Pair;
 /**
  * Base implementation of an EMF switch for applying some modification to a type argument/reference <em>including</em>
  * its contained nested type arguments/references.
+ * <p>
+ * This implementation is based on the following rules that also all subclasses must comply to:
+ * <ol>
+ * <li>only instances of {@link TypeArgument} are passed in,
+ * <li>{@link TypeRef}s are never converted to {@link Wildcard}s, i.e. when passing in a {@code TypeRef} you get back a
+ * {@code TypeRef},
+ * <li>if a change occurs, a newly created instance is returned that may be used by client code in any way (e.g. adding
+ * it to a containment reference without further copying); otherwise, the given instance is returned directly (thus,
+ * client code can use an identity check to find out whether a change occurred).
+ * </ol>
  */
+@SuppressWarnings("javadoc")
 public abstract class NestedTypeRefsSwitch extends TypeRefsSwitch<TypeArgument> {
 
+	/** The {@link RuleEnvironment} to be used by this switch. */
 	protected final RuleEnvironment G;
 
+	/** Creates a new {@link NestedTypeRefsSwitch}. */
 	public NestedTypeRefsSwitch(RuleEnvironment G) {
 		this.G = G;
 	}
 
-	// the following two methods are provided to increase readability of recursive invocations of #doSwitch()
-
-	protected abstract NestedTypeRefsSwitch derive(RuleEnvironment G_NEW);
-
-	protected TypeRef modify(RuleEnvironment G_NEW, TypeRef typeRef) {
-		return (TypeRef) modify(G_NEW, (TypeArgument) typeRef);
+	/**
+	 * This overload implements the rule that type references are never converted to {@link Wildcard}s, i.e. when
+	 * passing in a {@link TypeRef}, you get a {@code TypeRef} back.
+	 */
+	public TypeRef doSwitch(TypeRef typeRef) {
+		return (TypeRef) super.doSwitch(typeRef);
 	}
 
-	protected TypeArgument modify(RuleEnvironment G_NEW, TypeArgument typeArg) {
+	/** Main entry method. */
+	public TypeArgument doSwitch(TypeArgument eObject) {
+		return super.doSwitch(eObject);
+	}
+
+	/** @deprecated will throw an exception; use {@link #doSwitch(TypeArgument)} instead. */
+	@Override
+	@Deprecated
+	public TypeArgument doSwitch(EObject eObject) {
+		throw new UnsupportedOperationException("this switch is only intended for TypeArguments");
+	}
+
+	// the following two methods are provided to increase readability of recursive invocations of #doSwitch()
+
+	/**
+	 * Subclasses must implement this to return a newly created switch of the same type as the receiving instance, but
+	 * with the given rule environment. If subclasses add other configuration values, those should remain unchanged.
+	 */
+	protected abstract NestedTypeRefsSwitch derive(RuleEnvironment G_NEW);
+
+	/** Same as {@link #processNested(RuleEnvironment, TypeArgument)}, but for {@link TypeRef}s. */
+	protected TypeRef processNested(RuleEnvironment G_NEW, TypeRef typeRef) {
+		return (TypeRef) processNested(G_NEW, (TypeArgument) typeRef);
+	}
+
+	/**
+	 * Invoke {@link #doSwitch(TypeArgument)} for the given type argument, creating a new, temporary switch iff
+	 * <code>G_NEW</code> is different from the receiving switch's rule environment.
+	 */
+	protected TypeArgument processNested(RuleEnvironment G_NEW, TypeArgument typeArg) {
 		if (G_NEW == this.G) {
 			return doSwitch(typeArg);
 		} else {
@@ -70,7 +113,13 @@ public abstract class NestedTypeRefsSwitch extends TypeRefsSwitch<TypeArgument> 
 		}
 	}
 
-	/** Base case. */
+	/** Negative base case. */
+	@Override
+	public TypeArgument defaultCase(EObject object) {
+		throw new UnsupportedOperationException("this switch is only intended for TypeArguments");
+	}
+
+	/** Positive base case. */
 	@Override
 	public TypeArgument caseTypeArgument(TypeArgument typeArg) {
 		return typeArg;
@@ -78,10 +127,10 @@ public abstract class NestedTypeRefsSwitch extends TypeRefsSwitch<TypeArgument> 
 
 	@Override
 	public TypeArgument caseWildcard(Wildcard wildcard) {
-		return caseWildcard_modifyBounds(wildcard);
+		return caseWildcard_processBounds(wildcard);
 	}
 
-	protected Wildcard caseWildcard_modifyBounds(Wildcard wildcard) {
+	protected Wildcard caseWildcard_processBounds(Wildcard wildcard) {
 		final RuleEnvironment G2;
 		final TypeRef ub;
 		if (wildcard.isImplicitUpperBoundInEffect()) {
@@ -103,8 +152,8 @@ public abstract class NestedTypeRefsSwitch extends TypeRefsSwitch<TypeArgument> 
 			G2 = G;
 		}
 		final TypeRef lb = wildcard.getDeclaredLowerBound();
-		final TypeRef ubSubst = ub != null ? caseWildcard_modifyUpperBound(G2, ub) : null;
-		final TypeRef lbSubst = lb != null ? caseWildcard_modifyLowerBound(G2, lb) : null;
+		final TypeRef ubSubst = ub != null ? caseWildcard_processUpperBound(G2, ub) : null;
+		final TypeRef lbSubst = lb != null ? caseWildcard_processLowerBound(G2, lb) : null;
 		if (ubSubst != ub || lbSubst != lb) {
 			final Wildcard cpy = TypeUtils.copy(wildcard);
 			cpy.setDeclaredUpperBound(TypeUtils.copyIfContained(ubSubst));
@@ -114,19 +163,19 @@ public abstract class NestedTypeRefsSwitch extends TypeRefsSwitch<TypeArgument> 
 		return wildcard;
 	}
 
-	protected TypeRef caseWildcard_modifyUpperBound(RuleEnvironment G2, TypeRef ub) {
-		return modify(G2, ub);
+	protected TypeRef caseWildcard_processUpperBound(RuleEnvironment G2, TypeRef ub) {
+		return processNested(G2, ub);
 	}
 
-	protected TypeRef caseWildcard_modifyLowerBound(RuleEnvironment G2, TypeRef lb) {
-		return modify(G2, lb);
+	protected TypeRef caseWildcard_processLowerBound(RuleEnvironment G2, TypeRef lb) {
+		return processNested(G2, lb);
 	}
 
 	@Override
 	public TypeRef caseExistentialTypeRef(ExistentialTypeRef typeRef) {
 		final Wildcard w = typeRef.getWildcard();
 		if (w != null) {
-			final Wildcard wModified = caseWildcard_modifyBounds(w);
+			final Wildcard wModified = caseWildcard_processBounds(w);
 			if (wModified != w) {
 				final ExistentialTypeRef typeRefCpy = TypeUtils.copy(typeRef);
 				typeRefCpy.setWildcard(TypeUtils.copyIfContained(wModified));
@@ -155,7 +204,7 @@ public abstract class NestedTypeRefsSwitch extends TypeRefsSwitch<TypeArgument> 
 				TypeUtils.copyTypeModifiers(resultTypeRef, typeRef);
 
 				final ParameterizedTypeRef actualThisTypeRef = resultTypeRef.getActualThisTypeRef();
-				final ParameterizedTypeRef actualThisTypeRefNew = caseThisTypeRef_modifyActualTypeRefAfterBinding(
+				final ParameterizedTypeRef actualThisTypeRefNew = caseThisTypeRef_processActualTypeRefAfterBinding(
 						actualThisTypeRef);
 				if (actualThisTypeRefNew != actualThisTypeRef) {
 					resultTypeRef.setActualThisTypeRef(actualThisTypeRefNew);
@@ -167,11 +216,11 @@ public abstract class NestedTypeRefsSwitch extends TypeRefsSwitch<TypeArgument> 
 		return typeRef;
 	}
 
-	protected boolean caseThisTypeRef_shouldBind(ThisTypeRef thisTypeRef) {
+	protected boolean caseThisTypeRef_shouldBind(@SuppressWarnings("unused") ThisTypeRef thisTypeRef) {
 		return false;
 	}
 
-	protected ParameterizedTypeRef caseThisTypeRef_modifyActualTypeRefAfterBinding(
+	protected ParameterizedTypeRef caseThisTypeRef_processActualTypeRefAfterBinding(
 			ParameterizedTypeRef actualThisTypeRef) {
 		// cannot delegate back to #modify()/#doSwitch() methods, because they do not guarantee to return a
 		// ParameterizedTypeRef -> subclasses must handle this as a special case (if required)
@@ -191,7 +240,7 @@ public abstract class NestedTypeRefsSwitch extends TypeRefsSwitch<TypeArgument> 
 			// -> proceed as usual for BoundThisTypeRefs
 		}
 		final ParameterizedTypeRef actualThisTypeRef = typeRef.getActualThisTypeRef();
-		final ParameterizedTypeRef actualThisTypeRefNew = caseBoundThisTypeRef_modifyActualTypeRef(actualThisTypeRef);
+		final ParameterizedTypeRef actualThisTypeRefNew = caseBoundThisTypeRef_processActualTypeRef(actualThisTypeRef);
 		if (actualThisTypeRefNew != actualThisTypeRef) {
 			final BoundThisTypeRef resultTypeRef = TypeUtils.copy(typeRef);
 			resultTypeRef.setActualThisTypeRef(actualThisTypeRefNew);
@@ -200,11 +249,11 @@ public abstract class NestedTypeRefsSwitch extends TypeRefsSwitch<TypeArgument> 
 		return typeRef;
 	}
 
-	protected boolean caseBoundThisTypeRef_shouldRebind(BoundThisTypeRef boundThisTypeRef) {
+	protected boolean caseBoundThisTypeRef_shouldRebind(@SuppressWarnings("unused") BoundThisTypeRef boundThisTypeRef) {
 		return false;
 	}
 
-	protected ParameterizedTypeRef caseBoundThisTypeRef_modifyActualTypeRef(ParameterizedTypeRef actualThisTypeRef) {
+	protected ParameterizedTypeRef caseBoundThisTypeRef_processActualTypeRef(ParameterizedTypeRef actualThisTypeRef) {
 		// cannot delegate back to #modify()/#doSwitch() methods, because they do not guarantee to return a
 		// ParameterizedTypeRef -> subclasses must handle this as a special case (if required)
 		return actualThisTypeRef;
@@ -232,7 +281,7 @@ public abstract class NestedTypeRefsSwitch extends TypeRefsSwitch<TypeArgument> 
 				final TypeRef declUB = currTV.getDeclaredUpperBound();
 				if (declUB != null) {
 					final TypeRef oldUB = F.getTypeVarUpperBound(currTV);
-					final TypeRef newUB = caseFunctionTypeExprOrRef_modifyTypeParameterUpperBound(oldUB);
+					final TypeRef newUB = caseFunctionTypeExprOrRef_processTypeParameterUpperBound(oldUB);
 					if (newUB != declUB) { // note: identity compare is what we want
 						while (resultUnboundTypeVarsUpperBounds.size() < resultUnboundTypeVars.size() - 1) {
 							// add an UnknownTypeRef as padding entry
@@ -256,14 +305,14 @@ public abstract class NestedTypeRefsSwitch extends TypeRefsSwitch<TypeArgument> 
 		// handle declared this type
 		final TypeRef declaredThisType = F.getDeclaredThisType();
 		final TypeRef resultDeclaredThisType = declaredThisType != null
-				? caseFunctionTypeExprOrRef_modifyDeclaredThisType(declaredThisType)
+				? caseFunctionTypeExprOrRef_processDeclaredThisType(declaredThisType)
 				: null;
 		haveReplacement |= resultDeclaredThisType != declaredThisType;
 
 		// handle return type
 		final TypeRef returnTypeRef = F.getReturnTypeRef();
 		final TypeRef resultReturnTypeRef = returnTypeRef != null
-				? caseFunctionTypeExprOrRef_modifyReturnType(returnTypeRef)
+				? caseFunctionTypeExprOrRef_processReturnType(returnTypeRef)
 				: null;
 		haveReplacement |= resultReturnTypeRef != returnTypeRef;
 
@@ -283,7 +332,7 @@ public abstract class NestedTypeRefsSwitch extends TypeRefsSwitch<TypeArgument> 
 
 			final TypeRef oldParTypeRef = oldPar.getTypeRef();
 			if (oldParTypeRef != null) {
-				final TypeRef newParTypeRef = caseFunctionTypeExprOrRef_modifyParameterType(oldParTypeRef);
+				final TypeRef newParTypeRef = caseFunctionTypeExprOrRef_processParameterType(oldParTypeRef);
 				newPar.setTypeRef(TypeUtils.copyIfContained(newParTypeRef));
 				haveReplacement |= newParTypeRef != oldParTypeRef;
 			}
@@ -323,24 +372,26 @@ public abstract class NestedTypeRefsSwitch extends TypeRefsSwitch<TypeArgument> 
 		return F;
 	}
 
-	protected boolean caseFunctionTypeExprOrRef_isTypeParameterRetained(FunctionTypeExprOrRef F, TypeVariable tv) {
+	protected boolean caseFunctionTypeExprOrRef_isTypeParameterRetained(
+			@SuppressWarnings("unused") FunctionTypeExprOrRef F,
+			@SuppressWarnings("unused") TypeVariable tv) {
 		return true;
 	}
 
-	protected TypeRef caseFunctionTypeExprOrRef_modifyTypeParameterUpperBound(TypeRef ub) {
-		return modify(G, ub);
+	protected TypeRef caseFunctionTypeExprOrRef_processTypeParameterUpperBound(TypeRef ub) {
+		return processNested(G, ub);
 	}
 
-	protected TypeRef caseFunctionTypeExprOrRef_modifyDeclaredThisType(TypeRef declThisType) {
-		return modify(G, declThisType);
+	protected TypeRef caseFunctionTypeExprOrRef_processDeclaredThisType(TypeRef declThisType) {
+		return processNested(G, declThisType);
 	}
 
-	protected TypeRef caseFunctionTypeExprOrRef_modifyReturnType(TypeRef returnTypeRef) {
-		return modify(G, returnTypeRef);
+	protected TypeRef caseFunctionTypeExprOrRef_processReturnType(TypeRef returnTypeRef) {
+		return processNested(G, returnTypeRef);
 	}
 
-	protected TypeRef caseFunctionTypeExprOrRef_modifyParameterType(TypeRef fparTypeRef) {
-		return modify(G, fparTypeRef);
+	protected TypeRef caseFunctionTypeExprOrRef_processParameterType(TypeRef fparTypeRef) {
+		return processNested(G, fparTypeRef);
 	}
 
 	@Override
@@ -348,7 +399,7 @@ public abstract class NestedTypeRefsSwitch extends TypeRefsSwitch<TypeArgument> 
 		boolean haveReplacement = false;
 		final ArrayList<TypeRef> resultTypeRefs = CollectionLiterals.newArrayList();
 		for (TypeRef currTypeRef : typeRef.getTypeRefs()) {
-			TypeRef resultTypeRef = caseComposedTypeRef_modifyMemberType(currTypeRef);
+			TypeRef resultTypeRef = caseComposedTypeRef_processMemberType(currTypeRef);
 			resultTypeRefs.add(resultTypeRef);
 			haveReplacement |= resultTypeRef != currTypeRef;
 		}
@@ -362,8 +413,8 @@ public abstract class NestedTypeRefsSwitch extends TypeRefsSwitch<TypeArgument> 
 		return typeRef;
 	}
 
-	protected TypeRef caseComposedTypeRef_modifyMemberType(TypeRef memberTypeRef) {
-		return modify(G, memberTypeRef);
+	protected TypeRef caseComposedTypeRef_processMemberType(TypeRef memberTypeRef) {
+		return processNested(G, memberTypeRef);
 	}
 
 	@Override
@@ -371,7 +422,7 @@ public abstract class NestedTypeRefsSwitch extends TypeRefsSwitch<TypeArgument> 
 		TypeArgument typeArg = typeTypeRef.getTypeArg();
 		if (typeArg != null) {
 			// substitute in type argument
-			TypeArgument resultTypeArg = caseTypeTypeRef_modifyTypeArg(typeArg);
+			TypeArgument resultTypeArg = caseTypeTypeRef_processTypeArg(typeArg);
 			if (resultTypeArg != typeArg) {
 				// changed
 				TypeTypeRef result = TypeUtils.copyPartial(typeTypeRef,
@@ -384,33 +435,33 @@ public abstract class NestedTypeRefsSwitch extends TypeRefsSwitch<TypeArgument> 
 		return typeTypeRef;
 	}
 
-	protected TypeArgument caseTypeTypeRef_modifyTypeArg(TypeArgument typeArg) {
-		return modify(G, typeArg);
+	protected TypeArgument caseTypeTypeRef_processTypeArg(TypeArgument typeArg) {
+		return processNested(G, typeArg);
 	}
 
 	@Override
 	public TypeRef caseParameterizedTypeRef(ParameterizedTypeRef typeRef) {
-		TypeRef resultTypeRef = caseParameterizedTypeRef_modifyDeclaredType(typeRef);
+		TypeRef resultTypeRef = caseParameterizedTypeRef_processDeclaredType(typeRef);
 
 		final Type resultDeclType = resultTypeRef.getDeclaredType();
 		if (resultDeclType != null && resultDeclType.isGeneric()) {
-			resultTypeRef = caseParameterizedTypeRef_modifyTypeArguments(resultTypeRef, resultDeclType,
+			resultTypeRef = caseParameterizedTypeRef_processTypeArguments(resultTypeRef, resultDeclType,
 					resultTypeRef != typeRef);
 		}
 
 		if (resultTypeRef instanceof StructuralTypeRef) {
-			resultTypeRef = caseParameterizedTypeRef_modifyStructuralMembers((StructuralTypeRef) resultTypeRef,
+			resultTypeRef = caseParameterizedTypeRef_processStructuralMembers((StructuralTypeRef) resultTypeRef,
 					resultTypeRef != typeRef);
 		}
 
 		return resultTypeRef;
 	}
 
-	protected TypeRef caseParameterizedTypeRef_modifyDeclaredType(ParameterizedTypeRef typeRef) {
+	protected TypeRef caseParameterizedTypeRef_processDeclaredType(ParameterizedTypeRef typeRef) {
 		return typeRef;
 	}
 
-	protected TypeRef caseParameterizedTypeRef_modifyTypeArguments(TypeRef typeRef, Type declType,
+	protected TypeRef caseParameterizedTypeRef_processTypeArguments(TypeRef typeRef, Type declType,
 			boolean alreadyCopied) {
 
 		final List<TypeVariable> typeParams = declType.getTypeVars();
@@ -426,7 +477,7 @@ public abstract class NestedTypeRefsSwitch extends TypeRefsSwitch<TypeArgument> 
 		for (int i = 0; i < lenArgs; i++) {
 			final TypeVariable param = i < lenParams ? typeParams.get(i) : null;
 			final TypeArgument arg = typeArgs.get(i);
-			TypeArgument argChanged = caseParameterizedTypeRef_modifyTypeArgument(G2, param, arg);
+			TypeArgument argChanged = caseParameterizedTypeRef_processTypeArgument(G2, param, arg);
 			if (argChanged != arg) {
 				// n.b.: will only add to argsChanged if changed! (otherwise argsChanged[i] will remain null)
 				argsChanged[i] = argChanged;
@@ -450,13 +501,13 @@ public abstract class NestedTypeRefsSwitch extends TypeRefsSwitch<TypeArgument> 
 		return typeRef;
 	}
 
-	protected TypeArgument caseParameterizedTypeRef_modifyTypeArgument(RuleEnvironment G2, TypeVariable typeParam,
-			TypeArgument typeArg) {
-		return modify(G2, typeArg);
+	protected TypeArgument caseParameterizedTypeRef_processTypeArgument(RuleEnvironment G2,
+			@SuppressWarnings("unused") TypeVariable typeParam, TypeArgument typeArg) {
+		return processNested(G2, typeArg);
 	}
 
-	protected TypeRef caseParameterizedTypeRef_modifyStructuralMembers(StructuralTypeRef typeRef,
-			boolean alreadyCopied) {
+	protected TypeRef caseParameterizedTypeRef_processStructuralMembers(StructuralTypeRef typeRef,
+			@SuppressWarnings("unused") boolean alreadyCopied) {
 		return (TypeRef) typeRef;
 	}
 }

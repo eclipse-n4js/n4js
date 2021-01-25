@@ -77,7 +77,7 @@ import org.eclipse.n4js.utils.RecursionGuard;
 
 		// the following method is provided to increase readability of recursive invocations of #doSwitch()
 
-		private TypeRef modify(RuleEnvironment G_NEW, TypeArgument typeArg, BoundType boundTypeNEW,
+		private TypeRef bound(RuleEnvironment G_NEW, TypeArgument typeArg, BoundType boundTypeNEW,
 				boolean reopenNEW, boolean resolveNEW) {
 			if (G_NEW == G && boundTypeNEW == boundType && reopenNEW == reopen && resolveNEW == resolve) {
 				return doSwitch(typeArg);
@@ -87,8 +87,12 @@ import org.eclipse.n4js.utils.RecursionGuard;
 			}
 		}
 
+		/**
+		 * This switch converts all wildcards to {@link TypeRef}s, so you always get a {@code TypeRef} when passing in a
+		 * {@link TypeArgument}.
+		 */
 		@Override
-		public TypeRef doSwitch(EObject eObject) {
+		public TypeRef doSwitch(TypeArgument eObject) {
 			return (TypeRef) super.doSwitch(eObject);
 		}
 
@@ -112,7 +116,7 @@ import org.eclipse.n4js.utils.RecursionGuard;
 					? wildcard.getDeclaredOrImplicitUpperBound()
 					: wildcard.getDeclaredLowerBound();
 			if (declBound != null) {
-				return modify(G, declBound);
+				return processNested(G, declBound);
 			}
 			return getFallbackBoundForWildcard(wildcard);
 		}
@@ -133,7 +137,7 @@ import org.eclipse.n4js.utils.RecursionGuard;
 		}
 
 		@Override
-		protected TypeRef caseParameterizedTypeRef_modifyDeclaredType(ParameterizedTypeRef typeRef) {
+		protected TypeRef caseParameterizedTypeRef_processDeclaredType(ParameterizedTypeRef typeRef) {
 			if (resolve) {
 				final Type declType = typeRef.getDeclaredType();
 				if (declType instanceof TypeVariable) {
@@ -141,7 +145,12 @@ import org.eclipse.n4js.utils.RecursionGuard;
 					case UPPER:
 						final TypeRef upperBound = ((TypeVariable) declType).getDeclaredUpperBound();
 						if (upperBound != null) {
-							final TypeRef upperBoundOfUpperBound = modify(G, upperBound);
+							TypeRef upperBoundOfUpperBound = processNested(G, upperBound);
+							if (upperBoundOfUpperBound == upperBound) {
+								// IMPORTANT: in order to comply with rule #3 described in API doc of
+								// NestedTypeRefsSwitch, we need to create a copy, here:
+								upperBoundOfUpperBound = TypeUtils.copy(upperBoundOfUpperBound);
+							}
 							return upperBoundOfUpperBound;
 						}
 						return RuleEnvironmentExtensions.topTypeRef(G);
@@ -154,13 +163,7 @@ import org.eclipse.n4js.utils.RecursionGuard;
 		}
 
 		@Override
-		protected TypeRef caseParameterizedTypeRef_modifyTypeArguments(TypeRef typeRef, Type declType,
-				boolean alreadyCopied) {
-			return super.caseParameterizedTypeRef_modifyTypeArguments(typeRef, declType, false);
-		}
-
-		@Override
-		protected TypeArgument caseParameterizedTypeRef_modifyTypeArgument(RuleEnvironment G2, TypeVariable typeParam,
+		protected TypeArgument caseParameterizedTypeRef_processTypeArgument(RuleEnvironment G2, TypeVariable typeParam,
 				TypeArgument typeArg) {
 			final Variance defSiteVariance = typeParam != null ? typeParam.getVariance() : Variance.INV;
 			TypeArgument typeArgPushed = pushBoundOfTypeArgument(typeArg, defSiteVariance);
@@ -204,7 +207,7 @@ import org.eclipse.n4js.utils.RecursionGuard;
 				}
 				// STEP 2: actually push the bound into the desired direction
 				if (boundToBePushed != null) {
-					TypeRef boundOfBoundToBePushed = modify(G, boundToBePushed, pushDirection, reopen, false);
+					TypeRef boundOfBoundToBePushed = bound(G, boundToBePushed, pushDirection, reopen, false);
 					if (boundOfBoundToBePushed != boundToBePushed) {
 						final Wildcard wildcardCpy = TypeUtils.copy(wildcard);
 						if (upperBound != null) {
@@ -223,7 +226,7 @@ import org.eclipse.n4js.utils.RecursionGuard;
 				// treat 'typeArg' like the upper bound of a wildcard
 				final TypeRef boundToBePushed = (TypeRef) typeArg; // n.b. we know 'typeArg' isn't a Wildcard
 				final BoundType pushDirection = boundType;
-				final TypeRef boundOfBoundToBePushed = modify(G, boundToBePushed, pushDirection, reopen, false);
+				final TypeRef boundOfBoundToBePushed = bound(G, boundToBePushed, pushDirection, reopen, false);
 				if (boundOfBoundToBePushed != boundToBePushed) {
 					return boundOfBoundToBePushed;
 				}
@@ -231,7 +234,7 @@ import org.eclipse.n4js.utils.RecursionGuard;
 				// treat 'typeArg' like the lower bound of a wildcard
 				final TypeRef boundToBePushed = (TypeRef) typeArg; // n.b. we know 'typeArg' isn't a Wildcard
 				final BoundType pushDirection = boundType.inverse();
-				final TypeRef boundOfBoundToBePushed = modify(G, boundToBePushed, pushDirection, reopen, false);
+				final TypeRef boundOfBoundToBePushed = bound(G, boundToBePushed, pushDirection, reopen, false);
 				if (boundOfBoundToBePushed != boundToBePushed) {
 					return boundOfBoundToBePushed;
 				}
@@ -245,20 +248,20 @@ import org.eclipse.n4js.utils.RecursionGuard;
 		}
 
 		@Override
-		protected TypeRef caseFunctionTypeExprOrRef_modifyReturnType(TypeRef returnTypeRef) {
-			return modify(G, returnTypeRef, boundType, reopen, false);
+		protected TypeRef caseFunctionTypeExprOrRef_processReturnType(TypeRef returnTypeRef) {
+			return bound(G, returnTypeRef, boundType, reopen, false);
 		}
 
 		@Override
-		protected TypeRef caseFunctionTypeExprOrRef_modifyParameterType(TypeRef fparTypeRef) {
-			return modify(G, fparTypeRef, boundType.inverse(), reopen, false);
+		protected TypeRef caseFunctionTypeExprOrRef_processParameterType(TypeRef fparTypeRef) {
+			return bound(G, fparTypeRef, boundType.inverse(), reopen, false);
 		}
 
 		@Override
 		public TypeRef caseBoundThisTypeRef(BoundThisTypeRef boundThisTypeRef) {
 			if (reopen) {
 				if (boundType == BoundType.UPPER) {
-					return modify(G, TypeUtils.createResolvedThisTypeRef(boundThisTypeRef));
+					return processNested(G, TypeUtils.createResolvedThisTypeRef(boundThisTypeRef));
 				} else {
 					final TypeRef result = bottomTypeRef(G);
 					TypeUtils.copyTypeModifiers(result, boundThisTypeRef);
@@ -288,7 +291,7 @@ import org.eclipse.n4js.utils.RecursionGuard;
 		}
 
 		@Override
-		protected TypeArgument caseTypeTypeRef_modifyTypeArg(TypeArgument typeArg) {
+		protected TypeArgument caseTypeTypeRef_processTypeArg(TypeArgument typeArg) {
 			TypeArgument typeArgPushed = pushBoundOfTypeArgument(typeArg, Variance.INV);
 			if (typeArgPushed != typeArg) {
 				typeArgPushed = TypeUtils.copyIfContained(typeArgPushed);
