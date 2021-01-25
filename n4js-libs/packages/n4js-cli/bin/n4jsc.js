@@ -13,7 +13,7 @@
 "use strict";
 
 
+// TODO GH-2044: Remove this file
 require = require("esm")(module);
-let n4jscli = require("../src-gen/index.js");
+require("../src-gen/n4jsc.js");
 
-n4jscli.runN4jscSync();

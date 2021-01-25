@@ -23,11 +23,11 @@ export public class ConvertVariablesTest extends AbstractN4jsdGeneratorTest {
 					export var someVarUntyped;
 				`,
 				n4jsd: `
-					export var someVar: any+;
+					export public var someVar: any+;
 
-					export var anotherVar: any+;
+					export public var anotherVar: any+;
 
-					export var someVarUntyped: any+;
+					export public var someVarUntyped: any+;
 				`
 			}
 		);
@@ -43,11 +43,11 @@ export public class ConvertVariablesTest extends AbstractN4jsdGeneratorTest {
 					export let someLetUntyped;
 				`,
 				n4jsd: `
-					export let someLet: any+;
+					export public let someLet: any+;
 
-					export let anotherLet: any+;
+					export public let anotherLet: any+;
 
-					export let someLetUntyped: any+;
+					export public let someLetUntyped: any+;
 				`
 			}
 		);
@@ -63,11 +63,11 @@ export public class ConvertVariablesTest extends AbstractN4jsdGeneratorTest {
 					export const someConstUntyped;
 				`,
 				n4jsd: `
-					export const someConst: any+;
+					export public const someConst: any+;
 
-					export const anotherConst: any+;
+					export public const anotherConst: any+;
 
-					export const someConstUntyped: any+;
+					export public const someConstUntyped: any+;
 				`
 			}
 		);

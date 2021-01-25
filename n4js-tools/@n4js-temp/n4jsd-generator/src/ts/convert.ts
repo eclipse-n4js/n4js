@@ -20,7 +20,7 @@ export class Converter {
 	private readonly checker: ts.TypeChecker;
 	private readonly projectPath?: string;
 
-	private legacyExportedNamespace: ts.Symbol;
+	private exportAssignment: ts.ExportAssignment;
 	private readonly issues: utils.Issue[] = [];
 
 	constructor(sourceDtsFilePaths: string[], projectPath?: string) {
@@ -53,18 +53,14 @@ export class Converter {
 
 	convertScript(sourceFilePath: string): model.Script {
 		// clean up
-		this.legacyExportedNamespace = undefined;
+		this.exportAssignment = undefined;
 		this.issues.length = 0;
 
 		const sourceFile = this.program.getSourceFile(sourceFilePath);
 		const dtsMode = utils_ts.getDTSMode(sourceFile);
 
 		if (dtsMode == model.DTSMode.LEGACY) {
-			const legacyExport = utils_ts.getExportEquals(sourceFile);
-			const sym = this.checker.getSymbolAtLocation(legacyExport.expression);
-			if (utils.testFlagsOR(sym.flags, ts.SymbolFlags.ValueModule, ts.SymbolFlags.NamespaceModule)) {
-				this.legacyExportedNamespace = sym;
-			}
+			this.exportAssignment = utils_ts.getExportEquals(sourceFile);
 		}
 
 		const result = new model.Script();
@@ -159,13 +155,20 @@ export class Converter {
 				return this.convertVariableDeclList(children[1] as ts.VariableDeclarationList);
 			}
 		} else if (ts.isModuleDeclaration(node)) {
-			const sym = this.checker.getSymbolAtLocation(node.name);
-			if (sym === this.legacyExportedNamespace) {
-				const result = [];
-				node.body.forEachChild(child => {
-					result.push(...this.convertExportableElement(child));
-				});
-				return result;
+			const exportSymbol = this.checker.getSymbolAtLocation(this.exportAssignment.expression);
+			
+			if (utils.testFlagsOR(exportSymbol.flags,
+				ts.SymbolFlags.ValueModule,
+				ts.SymbolFlags.NamespaceModule)) {
+				
+				const sym = this.checker.getSymbolAtLocation(node.name);
+				if (sym === exportSymbol) {
+					const result = [];
+					node.body.forEachChild(child => {
+						result.push(...this.convertExportableElement(child));
+					});
+					return result;
+				}
 			}
 		}
 		this.createIssueForUnsupportedNode(node);
@@ -183,32 +186,34 @@ export class Converter {
 
 	private convertVariable(node: ts.VariableDeclaration, keyword: model.VariableKeyword): model.Variable {
 		const result = new model.Variable();
-		result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker);
+		result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker, this.exportAssignment);
 		result.keyword = keyword;
 		result.type = this.convertTypeReference(node.type);
 		result.exported = utils_ts.isExported(node);
-		result.exportedAsDefault = utils_ts.isExportedAsDefault(node);
+		result.exportedAsDefault = utils_ts.isExportedAsDefault(node, this.checker, this.exportAssignment);
 		return result;
 	}
 
 	private convertFunction(node: ts.FunctionDeclaration): model.Function {
 		const sym = this.checker.getSymbolAtLocation(node.name);
 		const funSigs = this.convertCallSignatures(sym);
-
+		
 		const result = new model.Function();
-		result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker);
+		result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker, this.exportAssignment);
+		const expOfModule = this.checker.getExportSymbolOfSymbol(sym);
+		
 		result.signatures = funSigs;
 		result.exported = utils_ts.isExported(node);
-		result.exportedAsDefault = utils_ts.isExportedAsDefault(node);
+		result.exportedAsDefault = utils_ts.isExportedAsDefault(node, this.checker, this.exportAssignment);
 		return result;
 	}
 
 	private convertEnum(node: ts.EnumDeclaration): model.Type {
 		let result = new model.Type();
-		result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker);
+		result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker, this.exportAssignment);
 		result.kind = model.TypeKind.ENUM;
 		result.exported = utils_ts.isExported(node);
-		result.exportedAsDefault = utils_ts.isExportedAsDefault(node);
+		result.exportedAsDefault = utils_ts.isExportedAsDefault(node, this.checker, this.exportAssignment);
 
 		const flags = ts.getCombinedModifierFlags(node);
 		const isConst = utils.testFlag(flags, ts.ModifierFlags.Const);
@@ -250,23 +255,23 @@ export class Converter {
 
 	private convertInterface(node: ts.InterfaceDeclaration): model.Type {
 		let result = new model.Type();
-		result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker);
+		result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker, this.exportAssignment);
 		result.kind = model.TypeKind.INTERFACE;
 		result.defSiteStructural = true;
 		result.members.push(...this.convertMembers(node));
 		result.exported = utils_ts.isExported(node);
-		result.exportedAsDefault = utils_ts.isExportedAsDefault(node);
+		result.exportedAsDefault = utils_ts.isExportedAsDefault(node, this.checker, this.exportAssignment);
 		return result;
 	}
 
 	private convertClass(node: ts.ClassDeclaration): model.Type {
 		let result = new model.Type();
-		result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker);
+		result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker, this.exportAssignment);
 		result.kind = model.TypeKind.CLASS;
 		result.defSiteStructural = true;
 		result.members.push(...this.convertMembers(node));
 		result.exported = utils_ts.isExported(node);
-		result.exportedAsDefault = utils_ts.isExportedAsDefault(node);
+		result.exportedAsDefault = utils_ts.isExportedAsDefault(node, this.checker, this.exportAssignment);
 		return result;
 	}
 
@@ -347,6 +352,11 @@ export class Converter {
 		const result = new model.Parameter();
 		result.name = param.getName();
 		result.type = this.convertTypeReferenceOfTypedSymbol(param);
+		if (param.declarations && param.declarations[0] && param.declarations[0].kind == ts.SyntaxKind.Parameter) {
+			let paramDecl = param.declarations[0] as ts.ParameterDeclaration;
+			result.isOptional = this.checker.isOptionalParameter(paramDecl);
+			result.isVariadic = !!paramDecl.dotDotDotToken;
+		}
 		return result;
 	}
 
@@ -381,10 +391,10 @@ export class Converter {
 		}
 
 		const result = new model.Type();
-		result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker);
+		result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker, this.exportAssignment);
 		result.kind = model.TypeKind.ENUM;
 		result.exported = utils_ts.isExported(node);
-		result.exportedAsDefault = utils_ts.isExportedAsDefault(node);
+		result.exportedAsDefault = utils_ts.isExportedAsDefault(node, this.checker, this.exportAssignment);
 		result.primitiveBased = isAllString ? model.PrimitiveBasedKind.STRING_BASED : model.PrimitiveBasedKind.NUMBER_BASED;
 		result.literals.push(...utils_ts.createEnumLiteralsFromValues(literalValues));
 		return result;
