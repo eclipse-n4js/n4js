@@ -66,6 +66,8 @@ package class TypeAliasComputer extends TypeSystemHelperStrategy {
 			}
 			if (!guard.tryNext(typeAlias)) {
 				// cyclic type alias declaration
+				// NOTE: we could set 'originalAliasTypeRef' in the UnknownTypeRef, but we do not want
+				// to hide the fact that an error occurred!
 				return TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
 			}
 

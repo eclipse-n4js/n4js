@@ -12,6 +12,8 @@ package org.eclipse.n4js.n4JS;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
+import org.eclipse.n4js.ts.types.TypeAlias;
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>N4 Type Alias Declaration</b></em>'.
@@ -50,5 +52,13 @@ public interface N4TypeAliasDeclaration extends N4TypeDeclaration, GenericDeclar
 	 * @generated
 	 */
 	void setActualTypeRef(TypeRef value);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	TypeAlias getDefinedTypeAsTypeAlias();
 
 } // N4TypeAliasDeclaration

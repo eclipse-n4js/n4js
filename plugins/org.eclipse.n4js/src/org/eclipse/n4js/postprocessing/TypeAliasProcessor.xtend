@@ -19,6 +19,7 @@ import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.types.Type
+import org.eclipse.n4js.ts.types.TypeAlias
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 
@@ -50,6 +51,9 @@ class TypeAliasProcessor extends AbstractProcessor {
 	}
 
 	def private void resolveAliasInType(RuleEnvironment G, Type type) {
+		if (type instanceof TypeAlias) {
+			return; // do not resolve the 'actualTypeRef' property in type alias itself
+		}
 		val l = newArrayList; // create list up-front to not confuse tree iterator when replacing nodes!
 		val iter = type.eAllContents;
 		while (iter.hasNext) {

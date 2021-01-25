@@ -58,6 +58,7 @@ import org.eclipse.n4js.ts.types.TStructSetter
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.ts.types.Type
+import org.eclipse.n4js.ts.types.TypeAlias
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.utils.EcoreUtilN4
@@ -2115,6 +2116,10 @@ class N4EnumLiteral extends NamedElement, TypableElement {
 
 class N4TypeAliasDeclaration extends N4TypeDeclaration, GenericDeclaration {
 	contains TypeRef actualTypeRef
+
+	op TypeAlias getDefinedTypeAsTypeAlias() {
+		return definedType as TypeAlias;
+	}
 }
 
 

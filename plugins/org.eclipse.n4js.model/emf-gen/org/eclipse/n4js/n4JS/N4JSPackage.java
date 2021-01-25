@@ -12894,13 +12894,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_TYPE_ALIAS_DECLARATION___IS_EXTERNAL = N4_TYPE_DECLARATION___IS_EXTERNAL;
 
 	/**
+	 * The operation id for the '<em>Get Defined Type As Type Alias</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_TYPE_ALIAS_DECLARATION___GET_DEFINED_TYPE_AS_TYPE_ALIAS = N4_TYPE_DECLARATION_OPERATION_COUNT + 0;
+
+	/**
 	 * The number of operations of the '<em>N4 Type Alias Declaration</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_ALIAS_DECLARATION_OPERATION_COUNT = N4_TYPE_DECLARATION_OPERATION_COUNT + 0;
+	int N4_TYPE_ALIAS_DECLARATION_OPERATION_COUNT = N4_TYPE_DECLARATION_OPERATION_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.ModifiableElementImpl <em>Modifiable Element</em>}' class.
@@ -21290,6 +21299,16 @@ public interface N4JSPackage extends EPackage {
 	EReference getN4TypeAliasDeclaration_ActualTypeRef();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4TypeAliasDeclaration#getDefinedTypeAsTypeAlias() <em>Get Defined Type As Type Alias</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Defined Type As Type Alias</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.N4TypeAliasDeclaration#getDefinedTypeAsTypeAlias()
+	 * @generated
+	 */
+	EOperation getN4TypeAliasDeclaration__GetDefinedTypeAsTypeAlias();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.ModifiableElement <em>Modifiable Element</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -26503,6 +26522,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EReference N4_TYPE_ALIAS_DECLARATION__ACTUAL_TYPE_REF = eINSTANCE.getN4TypeAliasDeclaration_ActualTypeRef();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Defined Type As Type Alias</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation N4_TYPE_ALIAS_DECLARATION___GET_DEFINED_TYPE_AS_TYPE_ALIAS = eINSTANCE.getN4TypeAliasDeclaration__GetDefinedTypeAsTypeAlias();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.ModifiableElementImpl <em>Modifiable Element</em>}' class.

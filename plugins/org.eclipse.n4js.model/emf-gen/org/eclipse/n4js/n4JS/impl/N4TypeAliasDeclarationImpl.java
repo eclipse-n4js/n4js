@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.n4JS.impl;
 
+import java.lang.reflect.InvocationTargetException;
+
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -31,6 +33,8 @@ import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
+import org.eclipse.n4js.ts.types.Type;
+import org.eclipse.n4js.ts.types.TypeAlias;
 import org.eclipse.n4js.ts.types.TypeVariable;
 
 /**
@@ -151,6 +155,17 @@ public class N4TypeAliasDeclarationImpl extends N4TypeDeclarationImpl implements
 	 * @generated
 	 */
 	@Override
+	public TypeAlias getDefinedTypeAsTypeAlias() {
+		Type _definedType = this.getDefinedType();
+		return ((TypeAlias) _definedType);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case N4JSPackage.N4_TYPE_ALIAS_DECLARATION__TYPE_VARS:
@@ -261,6 +276,20 @@ public class N4TypeAliasDeclarationImpl extends N4TypeDeclarationImpl implements
 			}
 		}
 		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case N4JSPackage.N4_TYPE_ALIAS_DECLARATION___GET_DEFINED_TYPE_AS_TYPE_ALIAS:
+				return getDefinedTypeAsTypeAlias();
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 } //N4TypeAliasDeclarationImpl
