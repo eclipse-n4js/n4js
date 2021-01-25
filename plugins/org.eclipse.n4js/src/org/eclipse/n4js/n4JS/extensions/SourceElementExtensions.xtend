@@ -24,6 +24,7 @@ import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
+import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration
 import org.eclipse.n4js.n4JS.TypeDefiningElement
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement
 import org.eclipse.n4js.ts.typeRefs.TypeRef
@@ -157,6 +158,10 @@ class SourceElementExtensions {
 					allContents.prune
 				}
 				N4EnumDeclaration: {
+					next.collectVisibleTypedElement(addHere)
+					allContents.prune
+				}
+				N4TypeAliasDeclaration: {
 					next.collectVisibleTypedElement(addHere)
 					allContents.prune
 				}
