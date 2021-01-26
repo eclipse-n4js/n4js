@@ -11,7 +11,6 @@
 package org.eclipse.n4js.internal;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -79,7 +78,7 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace<FileURI> {
 	 * @param pLocation
 	 *            project directory containing package.json directly
 	 */
-	public void registerProject(FileURI pLocation) {
+	synchronized public void registerProject(FileURI pLocation) {
 		if (isRegistered(pLocation)) {
 			return;
 		}
@@ -90,7 +89,7 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace<FileURI> {
 		registerProject(pLocation, pDescription);
 	}
 
-	public void registerProject(FileURI pLocation, ProjectDescription pDescription) {
+	synchronized public void registerProject(FileURI pLocation, ProjectDescription pDescription) {
 		if (isRegistered(pLocation)) {
 			return;
 		}
@@ -129,7 +128,7 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace<FileURI> {
 		}
 	}
 
-	private void addImplicitTypeDefinitionDependencies(ProjectDescription pDescr) {
+	synchronized private void addImplicitTypeDefinitionDependencies(ProjectDescription pDescr) {
 		Set<String> implicitDependencies = new LinkedHashSet<>();
 		Set<String> existingDependencies = new LinkedHashSet<>();
 		List<ProjectDependency> moveToTop = new ArrayList<>();
@@ -165,12 +164,12 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace<FileURI> {
 	}
 
 	@Override
-	public FileURI getProjectLocation(N4JSProjectName name) {
+	synchronized public FileURI getProjectLocation(N4JSProjectName name) {
 		return nameToLocation.get(name);
 	}
 
 	/** Remove all entries from this workspace. */
-	public void clear() {
+	synchronized public void clear() {
 		projectDescriptions.clear();
 		nameToLocation.clear();
 		definitionProjects.clear();
@@ -178,12 +177,12 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace<FileURI> {
 	}
 
 	/** @return true iff the project at the given location was registered before */
-	public boolean isRegistered(FileURI location) {
+	synchronized public boolean isRegistered(FileURI location) {
 		return projectDescriptions.containsKey(location);
 	}
 
 	/** Deregisters the project at the given location */
-	public void deregister(FileURI location) {
+	synchronized public void deregister(FileURI location) {
 		ProjectDescription pDescr = projectDescriptions.remove(location);
 		String prjNameString = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location);
 		N4JSProjectName prjName = new N4JSProjectName(prjNameString);
@@ -201,7 +200,7 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace<FileURI> {
 	}
 
 	@Override
-	public FileURI findProjectWith(FileURI nestedLocation) {
+	synchronized public FileURI findProjectWith(FileURI nestedLocation) {
 		FileURI key = nestedLocation.trimFragment();
 
 		// determine longest registered project location, that is a prefix of 'key'
@@ -217,7 +216,7 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace<FileURI> {
 	}
 
 	@Override
-	public ProjectDescription getProjectDescription(FileURI location) {
+	synchronized public ProjectDescription getProjectDescription(FileURI location) {
 		// URI location = URIUtils.normalize(unsafeLocation);
 		ProjectDescription pDescr = projectDescriptions.get(location);
 		if (pDescr == null) {
@@ -236,16 +235,16 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace<FileURI> {
 	}
 
 	public Iterator<FileURI> getAllProjectLocationsIterator() {
-		return projectDescriptions.keySet().stream().iterator();
+		return getAllProjectLocations().iterator();
 	}
 
 	@Override
-	public Collection<FileURI> getAllProjectLocations() {
-		return projectDescriptions.keySet();
+	synchronized public List<FileURI> getAllProjectLocations() {
+		return new ArrayList<>(projectDescriptions.keySet());
 	}
 
 	@Override
-	public FileURI getLocation(ProjectReference projectReference) {
+	synchronized public FileURI getLocation(ProjectReference projectReference) {
 		String projectName = projectReference.getProjectName();
 		for (FileURI siblingProject : projectDescriptions.keySet()) {
 			String candidateProjectName = siblingProject.getProjectName().getRawName();

@@ -287,6 +287,7 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 
 	private void findSourceActions(Options options, CodeActionAcceptor acceptor) {
 		for (SourceActionImplementation impl : sourceActions) {
+			cancelManager.checkCanceled(options.getCancelIndicator());
 			impl.compute(options, acceptor);
 		}
 	}

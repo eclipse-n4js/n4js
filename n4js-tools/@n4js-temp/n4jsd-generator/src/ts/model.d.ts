@@ -109,6 +109,8 @@ export class Signature {
 
 export class Parameter extends NamedElement {
 	type: TypeRef;
+	isOptional: boolean;
+	isVariadic: boolean;
 }
 
 export class TypeRef {

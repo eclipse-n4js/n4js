@@ -14,6 +14,8 @@ import org.eclipse.xtext.testing.AbstractLanguageServerTest
 import org.junit.Test
 import org.eclipse.lsp4j.CompletionItem
 
+// FIXME: GH-2045: Tests in this bundle seem to use plain Xtext test infrastructure that differs from ours.
+// This results (sometimes) in wrong results. E.g.: The result of testNameValuePairs_01 is incomplete.
 class JSONCompletionTest extends AbstractLanguageServerTest {
 	new() {
 		super("json")
@@ -52,7 +54,7 @@ class JSONCompletionTest extends AbstractLanguageServerTest {
 				}$0 [[0, 1] .. [0, 1]]
 				[Property, Snippet] name (Npm name) -> "name": "$1"$0 [[0, 1] .. [0, 1]]
 				[Property, Snippet] version (Npm semver version) -> "version": "$1"$0 [[0, 1] .. [0, 1]]
-				[Value, Snippet] workspaces (Projects that are members of the yarn workspace) -> "workspaces": [
+				[Value, Snippet] workspaces (Array of projects names or glob that are members of the yarn workspace) -> "workspaces": [
 				    $1
 				]$0 [[0, 1] .. [0, 1]]
 			'''
@@ -79,7 +81,7 @@ class JSONCompletionTest extends AbstractLanguageServerTest {
 				}$0 [[3, 1] .. [3, 1]]
 				[Property, Snippet] name (Npm name) -> "name": "$1"$0 [[3, 1] .. [3, 1]]
 				[Property, Snippet] version (Npm semver version) -> "version": "$1"$0 [[3, 1] .. [3, 1]]
-				[Value, Snippet] workspaces (Projects that are members of the yarn workspace) -> "workspaces": [
+				[Value, Snippet] workspaces (Array of projects names or glob that are members of the yarn workspace) -> "workspaces": [
 				    $1
 				]$0 [[3, 1] .. [3, 1]]
 			'''

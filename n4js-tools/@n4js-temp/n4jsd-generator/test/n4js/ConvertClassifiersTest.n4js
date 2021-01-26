@@ -36,16 +36,16 @@ export public class ConvertClassifiersTest extends AbstractN4jsdGeneratorTest {
 				n4jsd: `
 					import { Buffer } from "buffer";
 
-					export external interface ~Writable {
+					export external public interface ~Writable {
 					}
 
-					export external interface ~Writable2 {
+					export external public interface ~Writable2 {
 					}
 
-					export external class ~Stream {
+					export external public class ~Stream {
 					}
 
-					export external class ~Stream2 {
+					export external public class ~Stream2 {
 					}
 				`
 			}
@@ -92,11 +92,11 @@ export public class ConvertClassifiersTest extends AbstractN4jsdGeneratorTest {
 				n4jsd: `
 					import { Buffer } from "buffer";
 
-					export external interface ~Writable {
+					export external public interface ~Writable {
 						write(chunk: any+, fn: any+): any+; // further signatures were omitted
 					}
 
-					export external class ~Stream {
+					export external public class ~Stream {
 						public field: any+;
 						public constructor(buff: any+); // further signatures were omitted
 						public write(chunk: any+, fn: any+): any+; // further signatures were omitted
@@ -125,11 +125,11 @@ export public class ConvertClassifiersTest extends AbstractN4jsdGeneratorTest {
 					}
 				`,
 				n4jsd: `
-					export external interface ~SomeInterface {
+					export external public interface ~SomeInterface {
 						m1(): any+;
 					}
 
-					export external class ~SomeClass {
+					export external public class ~SomeClass {
 						m1(): any+;
 						public m2(): any+;
 						protected m3(): any+;

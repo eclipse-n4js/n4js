@@ -4,9 +4,9 @@
   "description": "N4JS Definition Generator",
   "author": "Eclipse N4JS Project",
   "license": "EPL-1.0",
-  "main": "./src-gen/main.js",
+  "main": "./src-gen/dts2n4jsd.js",
   "bin": {
-    "dts2n4jsd": "./src-gen/main.js"
+    "dts2n4jsd": "./bin/dts2n4jsd.js"
   },
   "scripts": {
     "build": "./npm-build.sh",
@@ -32,7 +32,7 @@
     "vendorId": "org.eclipse.n4js",
     "vendorName": "Eclipse N4JS Project",
     "output": "src-gen",
-    "mainModule": "main",
+    "mainModule": "dts2n4jsd",
     "sources": {
       "source": [
         "src/n4js"

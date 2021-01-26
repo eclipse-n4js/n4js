@@ -29,10 +29,11 @@ public class PatchedLauncherBuilder<T> extends Launcher.Builder<T> {
 		outgoingMessageStream = wrapMessageConsumer(outgoingMessageStream);
 		Endpoint localEndpoint = ServiceEndpoints.toEndpoint(localServices);
 		RemoteEndpoint remoteEndpoint;
-		if (exceptionHandler == null)
+		if (exceptionHandler == null) {
 			remoteEndpoint = new PatchedRemoteEndpoint(outgoingMessageStream, localEndpoint);
-		else
+		} else {
 			remoteEndpoint = new PatchedRemoteEndpoint(outgoingMessageStream, localEndpoint, exceptionHandler);
+		}
 		jsonHandler.setMethodProvider(remoteEndpoint);
 		return remoteEndpoint;
 	}
