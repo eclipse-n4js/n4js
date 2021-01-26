@@ -277,6 +277,9 @@ public interface TypeRef extends TypeArgument, Versionable {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 *  See {@link TypeArgument#getTypeRefAsString()}.
+	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
@@ -293,6 +296,9 @@ public interface TypeRef extends TypeArgument, Versionable {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 *  See {@link TypeArgument#internalGetTypeRefAsString()}.
+	 * <!-- end-model-doc -->
 	 * @model unique="false"
 	 * @generated
 	 */

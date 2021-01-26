@@ -248,6 +248,7 @@ abstract class TypeRef extends TypeArgument, Versionable {
 	op TypeArgument[] getTypeArgs() {
 		return emptyEList
 	}
+	/* See {@link TypeArgument#getTypeRefAsString()}. */
 	op String getTypeRefAsString() {
 		val oatr = originalAliasTypeRef;
 		if (oatr !== null) {
@@ -262,6 +263,7 @@ abstract class TypeRef extends TypeArgument, Versionable {
 		}
 		return this.internalGetTypeRefAsString();
 	}
+	/* See {@link TypeArgument#internalGetTypeRefAsString()}. */
 	op String internalGetTypeRefAsString()
 	op String toString() {
 		return getTypeRefAsString();
