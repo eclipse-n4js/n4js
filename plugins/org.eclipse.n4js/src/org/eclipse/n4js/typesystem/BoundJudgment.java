@@ -138,8 +138,9 @@ import org.eclipse.n4js.utils.RecursionGuard;
 
 		@Override
 		protected TypeRef caseParameterizedTypeRef_processDeclaredType(ParameterizedTypeRef typeRef) {
+			TypeRef result = typeRef;
 			if (resolve) {
-				final Type declType = typeRef.getDeclaredType();
+				final Type declType = result.getDeclaredType();
 				if (declType instanceof TypeVariable) {
 					switch (boundType) {
 					case UPPER:
@@ -148,18 +149,24 @@ import org.eclipse.n4js.utils.RecursionGuard;
 							TypeRef upperBoundOfUpperBound = processNested(G, upperBound);
 							if (upperBoundOfUpperBound == upperBound) {
 								// IMPORTANT: in order to comply with rule #3 described in API doc of
-								// NestedTypeRefsSwitch, we need to create a copy, here:
+								// NestedTypeRefsSwitch, we always need to create a copy, here:
 								upperBoundOfUpperBound = TypeUtils.copy(upperBoundOfUpperBound);
 							}
-							return upperBoundOfUpperBound;
+							result = upperBoundOfUpperBound;
+						} else {
+							result = RuleEnvironmentExtensions.topTypeRef(G);
 						}
-						return RuleEnvironmentExtensions.topTypeRef(G);
+						break;
 					case LOWER:
-						return RuleEnvironmentExtensions.bottomTypeRef(G);
+						result = RuleEnvironmentExtensions.bottomTypeRef(G);
+						break;
+					}
+					if (result != typeRef) {
+						result = TypeUtils.mergeTypeModifiers(result, typeRef, true);
 					}
 				}
 			}
-			return typeRef;
+			return result;
 		}
 
 		@Override
